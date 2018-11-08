@@ -200,11 +200,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             if(bestCouponListVO!=null){
                 couponUser = amTradeClient.getCouponUser(Integer.parseInt(bestCouponListVO.getUserCouponId()),tender.getUserId());
             }
-            BestCouponListVO couponFront = new BestCouponListVO();
-            couponFront.setCouponQuotaStr(bestCouponListVO.getCouponQuotaStr());
-            couponFront.setUserCouponId(bestCouponListVO.getUserCouponId());
-            couponFront.setCouponType(bestCouponListVO.getCouponType());
-            investInfo.setCouponConfig(couponFront);
+            investInfo.setCouponConfig(bestCouponListVO);
+            investInfo.setIsThereCoupon(1);
         }
         /** 可用优惠券张数结束 */
 
@@ -298,7 +295,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             //resultVo.setButtonWord("确认加入" + CommonUtils.formatAmount(null, money) + "元");
             resultVo.setButtonWord("确认授权" + CommonUtils.formatAmount(null, money) + "元");
         }else if(StringUtils.isBlank(money) || new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0){
-            resultVo.setRealAmount("0");
+            resultVo.setRealAmount("¥0.00");
             resultVo.setButtonWord("确认");
         }
 
@@ -405,7 +402,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     resultVo.setConfirmCouponDescribe("代金券: " + couponConfig.getCouponQuota() + "元");
                     resultVo.setCouponType("代金券");
                     resultVo.setUsedCouponDes("代金券: " + couponConfig.getCouponQuota() + "元");
-                    resultVo.setRealAmount("¥" + CommonUtils.formatAmount(null, new BigDecimal(money).add(couponConfig.getCouponQuota())));
+                    //resultVo.setRealAmount("¥" + CommonUtils.formatAmount(null, new BigDecimal(money).add(couponConfig.getCouponQuota())));
 
                 }
                 resultVo.setCouponName(couponConfig.getCouponName());

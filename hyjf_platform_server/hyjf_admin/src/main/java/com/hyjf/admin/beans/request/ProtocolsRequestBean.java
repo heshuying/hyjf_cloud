@@ -65,7 +65,7 @@ public class ProtocolsRequestBean extends FddTempletVO {
 	}
 
 	public int getLimitStart() {
-		return (getCurrPage() - 1) * (getPageSize());
+		return limitStart;
 	}
 
 	public void setLimitStart(int limitStart) {
@@ -73,7 +73,7 @@ public class ProtocolsRequestBean extends FddTempletVO {
 	}
 
 	public int getLimitEnd() {
-		return (getCurrPage()) * (getPageSize());
+		return limitEnd;
 	}
 
 	public void setLimitEnd(int limitEnd) {

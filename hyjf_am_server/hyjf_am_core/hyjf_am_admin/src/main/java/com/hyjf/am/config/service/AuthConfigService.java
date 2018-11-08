@@ -46,7 +46,7 @@ public interface AuthConfigService {
      * @param id
      * @return
      */
-    HjhUserAuthConfig getAuthConfigById(Integer id);
+    HjhUserAuthConfigCustomize getAuthConfigById(Integer id);
 
     /**
      * 修改授权配置

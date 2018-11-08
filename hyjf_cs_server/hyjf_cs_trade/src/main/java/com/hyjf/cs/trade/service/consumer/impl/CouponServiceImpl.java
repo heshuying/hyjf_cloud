@@ -617,6 +617,13 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
                 // 计算历史回报
                 earnings = AverageCapitalPlusInterestUtils.getInterestCount(accountDecimal, borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
                 break;
+            // 还款方式为”等额本金“
+            case CalculatesUtil.STYLE_PRINCIPAL:
+                if(money==null||"".equals(money)){
+                    money = "0";
+                }
+                earnings = AverageCapitalUtils.getInterestCount(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                break;
             default:
                 break;
         }

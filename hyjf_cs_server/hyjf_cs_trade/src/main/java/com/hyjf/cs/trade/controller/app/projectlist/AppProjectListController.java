@@ -172,7 +172,7 @@ public class AppProjectListController extends BaseTradeController {
     @ApiOperation(value = "计划列表", notes = "计划列表")
     @PostMapping(value = "/projectlist/planList", produces = "application/json; charset=utf-8")
     public Object getPlanList(@ModelAttribute @Valid ProjectListRequest request) {
-        JSONObject result = null;
+        JSONObject result = new JSONObject();
         try {
             result = appProjectListService.searchAppPlanList(request);
         } catch (Exception e) {

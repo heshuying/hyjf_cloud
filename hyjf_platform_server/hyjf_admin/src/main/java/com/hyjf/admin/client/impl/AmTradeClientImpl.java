@@ -3354,7 +3354,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 查找汇付银行开户记录列表
+     * 根据BorrowTender表的id和TenderType查询条数
      *
      * @param request
      * @return
@@ -3363,7 +3363,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public Integer getCountTenderCommissionByTenderIdAndTenderType(TenderCommissionRequest request) {
 
         TenderCommissionResponse response = restTemplate
-                .postForEntity("http://AM-ADMIN/am-trade/tenderCommission/countTenderCommissionByTenderIdAndTenderType/",
+                .postForEntity("http://AM-ADMIN/am-trade/pushMoneyRecord/countTenderCommissionByTenderIdAndTenderType/",
                         request, TenderCommissionResponse.class).getBody();
         if (response != null) {
             return response.getCount();
@@ -3379,7 +3379,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int saveTenderCommission(TenderCommissionRequest request) {
-        String url = "http://AM-MARKET/am-trade/tenderCommission/insertTenderCommission/";
+        String url = "http://AM-ADMIN/am-trade/pushMoneyRecord/insertTenderCommission/";
         TenderCommissionResponse response = restTemplate.postForEntity(url, request, TenderCommissionResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getFlag();
@@ -4796,8 +4796,8 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public FddTempletCustomizeResponse selectFddTempletList(ProtocolsRequestBean request) {
         ProtocolsRequest requestT = new ProtocolsRequest();
-        requestT.setCurrPage(request.getCurrPage());
-        requestT.setPageSize(request.getPageSize());
+        requestT.setLimitStart(request.getLimitStart());
+        requestT.setLimitEnd(request.getLimitEnd());
         return restTemplate.postForObject("http://AM-ADMIN/am-trade/protocol/selectfddtempletlist", requestT, FddTempletCustomizeResponse.class);
     }
 

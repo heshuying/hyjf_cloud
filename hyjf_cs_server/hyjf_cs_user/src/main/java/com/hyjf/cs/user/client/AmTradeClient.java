@@ -3,6 +3,10 @@
  */
 package com.hyjf.cs.user.client;
 
+import com.hyjf.am.response.trade.WrbInvestRecordResponse;
+import com.hyjf.am.response.trade.wrbInvestRecoverPlanResponse;
+import com.hyjf.am.response.user.WrbAccountResponse;
+import com.hyjf.am.response.user.WrbInvestSumResponse;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
 import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
 import com.hyjf.am.resquest.trade.ApiUserWithdrawRequest;
@@ -16,14 +20,19 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
+import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
+import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderCustomizeVO;
+import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderSumCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
+import com.hyjf.am.resquest.api.WrbInvestRecordRequest;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -341,4 +350,65 @@ public interface AmTradeClient {
      */
     CouponConfigVO getCouponByCouponCode(String couponCode);
 
+    /**
+     *获取某天投资情况汇总
+     * @param date
+     * @return
+     */
+    WrbInvestSumResponse getDaySum(Date date);
+
+    /**
+     * 根据平台用户id获取账户信息
+     * @param userId
+     * @return
+     */
+    WrbAccountResponse getAccountInfo(String userId);
+
+    /**
+     * 获取用户优惠券信息
+     * @param userId
+     * @return
+     */
+    WrbAccountResponse getCouponInfo(String userId);
+
+    /**
+     * 投资记录查询
+     * @param request
+     * @return 投资记录
+     * @throws Exception
+     */
+    WrbInvestRecordResponse getInvestRecord(WrbInvestRecordRequest request);
+
+    /**
+     * 获取投资记录回款计划
+     * @param userId
+     * @param investRecordId 流水号
+     * @param borrowNid
+     * @return
+     */
+    wrbInvestRecoverPlanResponse getRecoverPlan(String userId, String investRecordId, String borrowNid);
+    /**
+     * 获取某天投资情况
+     * @param invest_date
+     * @param limit
+     * @param page
+     * @return
+     */
+    List<BorrowTenderVO> getInvestDetail(Date invest_date, Integer limit, Integer page);
+
+    /**
+     * 查询标的投资情况
+     * @param borrowNid
+     * @param investTime
+     * @return
+     */
+    List<WrbBorrowTenderCustomizeVO> selectWrbBorrowTender(String borrowNid, Date investTime);
+
+    /**
+     * 根据标的号和投资时间查询投资情况
+     * @param borrowNid
+     * @param investTime
+     * @return
+     */
+    WrbBorrowTenderSumCustomizeVO searchBorrowTenderSumByNidAndTime(String borrowNid, Date investTime);
 }

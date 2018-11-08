@@ -60,7 +60,7 @@ public class FddConsumer extends Consumer {
 	public class MessageListener implements MessageListenerConcurrently {
 		@Override
 		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
-			logger.debug("法大大 收到消息，开始处理....msgs is :{}", msgs);
+			logger.info("法大大 收到消息，开始处理....msgs is :{}", msgs);
 
 			for (MessageExt msg : msgs) {
 				if (MQConstant.FDD_GENERATE_CONTRACT_TAG.equals(msg.getTags())) {
@@ -91,6 +91,10 @@ public class FddConsumer extends Consumer {
 							fddHandle.creditGenerateContract(bean);
 						} else if (FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET == transType) {// 计划债转
 							fddHandle.planCreditGenerateContract(bean);
+						}else if(FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET == transType){//垫付债转投资
+							fddHandle.creditGenerateContractApply(bean);
+						}else if(FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET == transType ){//计划垫付债转
+							fddHandle.planCreditGenerateContractApply(bean);
 						}
 
 					} catch (Exception e) {

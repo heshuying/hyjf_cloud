@@ -26,6 +26,8 @@ public interface AssetListService {
 	boolean updateCashDepositeStatus(String assetId, String menuHide);
 
     List<AssetListCustomizeVO> findBZJBZList(Map<String,Object> mapParam, int offset, int limit);
+
+    Integer getBZJBZCount(Map<String,Object> mapParam);
 }
 
 

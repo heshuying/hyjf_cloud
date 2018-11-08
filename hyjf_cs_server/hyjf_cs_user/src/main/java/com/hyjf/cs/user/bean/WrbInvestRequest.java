@@ -3,6 +3,8 @@
  */
 package com.hyjf.cs.user.bean;
 
+import java.util.Date;
+
 /**
  * @author fq
  * @version WrbInvestRequest, v0.1 2018/9/26 9:40
@@ -16,6 +18,16 @@ public class WrbInvestRequest {
 
     /** 页数 */
     private Integer page;
+
+    /**
+     * 投资日期
+     */
+    private Date date;
+
+    /**
+     * 标的号
+     */
+    private String borrowNid;
 
     public String getInvest_date() {
         return invest_date;
@@ -39,5 +51,21 @@ public class WrbInvestRequest {
 
     public void setPage(Integer page) {
         this.page = page;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
+
+    public String getBorrowNid() {
+        return borrowNid;
+    }
+
+    public void setBorrowNid(String borrowNid) {
+        this.borrowNid = borrowNid;
     }
 }

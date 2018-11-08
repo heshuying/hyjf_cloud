@@ -4800,7 +4800,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = urlBase + "projectlist/app/getIncreaseInterestInvestByOrdId/" + orderId;
         IncreaseInterestInvestResponse response = restTemplate.getForEntity(url,IncreaseInterestInvestResponse.class).getBody();
         if(Response.isSuccess(response)){
-            response.getResult();
+            return response.getResult();
         }
         return null;
     }
@@ -5852,6 +5852,22 @@ public class AmTradeClientImpl implements AmTradeClient {
         BorrowCustomizeResponse response = restTemplate.postForEntity(url,borrowCommonCustomize,BorrowCustomizeResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据contract_id查询垫付协议生成详情
+     * @author Zha Daojian
+     * @date 2018/8/23 15:47
+     * @param contractId
+     * @return ApplyAgreementInfoVO
+     **/
+    public ApplyAgreementInfoVO selectApplyAgreementInfoByContractId(String contractId) {
+        String url = "http://AM-ADMIN/am-trade/applyAgreement/selectApplyAgreementInfoByContractId/"+contractId;
+        ApplyAgreementInfoResponse response = restTemplate.getForEntity(url,ApplyAgreementInfoResponse.class).getBody();
+        if (response != null) {
+            return response.getResult();
         }
         return null;
     }
