@@ -209,7 +209,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/failed?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
         //成功页
         String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/success?logOrdId=" +callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid()
-                +"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId()+"&isPrincipal=1");
+                +"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId())+"&isPrincipal=1";
         if(request.getToken() != null && !"".equals(request.getToken())){
             retUrl += "&token=1";
             successUrl += "&token=1";
@@ -220,7 +220,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         // 异步调用路
         String bgRetUrl = "http://CS-TRADE/hyjf-web/tender/borrow/bgReturn?platform="+request.getPlatform()+"&couponGrantId=" + (request.getCouponGrantId()==null?"0":request.getCouponGrantId());
-        logger.info("异步调用路径为：{}",bgRetUrl);
         //忘记密码url
         String forgetPassWoredUrl = CustomConstants.FORGET_PASSWORD_URL;
         callBean.setRetUrl(retUrl);
