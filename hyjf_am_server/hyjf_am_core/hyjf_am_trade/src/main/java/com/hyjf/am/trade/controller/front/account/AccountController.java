@@ -214,6 +214,7 @@ public class AccountController extends BaseController {
             try{
                 int updateFlag = accountService.updateOfLoansTender(accountVO);
                 response.setUpdateFlag(updateFlag);
+                logger.info("updateOfLoansTender更新用户账户状态:"+ updateFlag);
             }catch (Exception e){
                 logger.error("updateOfLoansTender更新用户账户异常",e);
             }
