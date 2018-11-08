@@ -106,6 +106,7 @@ public class CouponLoansMessageConsumer extends Consumer {
                         logger.info("【优惠券放款】优惠券使用orderId: " + borrowTenderCpn.getNid() + " borrowNid: " + loansBean.getBorrowNid());
                         List<Map<String, String>> msgList =
                                 couponLoansService.updateCouponRecover(borrowTenderCpn);
+                        logger.info("散标优惠券放款短信和消息推送开始："+ msgList.size());
                         if (msgList != null && msgList.size() > 0) {
                             // 发送短信
                             couponLoansService.sendSmsCoupon(msgList);
@@ -114,6 +115,7 @@ public class CouponLoansMessageConsumer extends Consumer {
                             couponLoansService.sendAppMSCoupon(msgList);
                             logger.info("--------------调用sendAppMSCoupon方法发送push消息结束");
                         }
+                        logger.info("散标优惠券放款短信和消息推送结束："+ msgList.size());
                     } catch (Exception e) {
                         logger.error("---优惠券放款异常。。。"+"标的编号："+loansBean.getBorrowNid() + " 优惠券使用orderId: " + borrowTenderCpn.getNid(), e);
                     }

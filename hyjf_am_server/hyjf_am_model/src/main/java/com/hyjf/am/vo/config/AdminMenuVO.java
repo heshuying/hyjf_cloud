@@ -31,8 +31,17 @@ public class AdminMenuVO implements Serializable {
     private Date createTime;
 
     private Date updateTime;
+    private String pMenuName;
+    
+    public String getpMenuName() {
+		return pMenuName;
+	}
 
-    private static final long serialVersionUID = 1L;
+	public void setpMenuName(String pMenuName) {
+		this.pMenuName = pMenuName;
+	}
+
+	private static final long serialVersionUID = 1L;
 
     public String getMenuUuid() {
         return menuUuid;

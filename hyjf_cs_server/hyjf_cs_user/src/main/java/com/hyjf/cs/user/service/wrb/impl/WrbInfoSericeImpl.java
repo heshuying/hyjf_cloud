@@ -1,5 +1,9 @@
 package com.hyjf.cs.user.service.wrb.impl;
 
+import com.hyjf.am.response.trade.WrbInvestRecordResponse;
+import com.hyjf.am.response.trade.wrbInvestRecoverPlanResponse;
+import com.hyjf.am.response.user.WrbAccountResponse;
+import com.hyjf.am.response.user.WrbInvestSumResponse;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
@@ -8,6 +12,7 @@ import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderSumCustomizeVO;
+import com.hyjf.am.resquest.api.WrbInvestRecordRequest;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmTradeClient;
@@ -77,6 +82,31 @@ public class WrbInfoSericeImpl implements WrbInfoServcie {
     @Override
     public List<BorrowTenderVO> getInvestDetail(Date invest_date, Integer limit, Integer page) {
         return amTradeClient.getInvestDetail(invest_date, limit, page);
+    }
+
+    @Override
+    public WrbInvestSumResponse getDaySum(Date date) {
+        return amTradeClient.getDaySum(date);
+    }
+
+    @Override
+    public WrbAccountResponse getCouponInfo(String userId) {
+        return amTradeClient.getCouponInfo(userId);
+    }
+
+    @Override
+    public WrbAccountResponse getAccountInfo(String userId) {
+        return amTradeClient.getAccountInfo(userId);
+    }
+
+    @Override
+    public WrbInvestRecordResponse getInvestRecord(WrbInvestRecordRequest request) {
+        return amTradeClient.getInvestRecord(request);
+    }
+
+    @Override
+    public wrbInvestRecoverPlanResponse getRecoverPlan(String userId, String investRecordId, String borrowNid) {
+        return amTradeClient.getRecoverPlan(userId,investRecordId,borrowNid);
     }
 
 }

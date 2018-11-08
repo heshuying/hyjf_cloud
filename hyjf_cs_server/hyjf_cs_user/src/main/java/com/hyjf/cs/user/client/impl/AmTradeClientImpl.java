@@ -12,6 +12,8 @@ import com.hyjf.am.response.trade.account.AccountResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponseForCoupon;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
+import com.hyjf.am.response.user.WrbAccountResponse;
+import com.hyjf.am.response.user.WrbInvestSumResponse;
 import com.hyjf.am.resquest.api.WrbInvestRequest;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
 import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
@@ -36,6 +38,7 @@ import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderSumCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.am.resquest.api.WrbInvestRecordRequest;
 import com.hyjf.cs.user.client.AmTradeClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -764,6 +767,37 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response.getResult();
         }
         return null;
+    }
+
+    @Override
+    public WrbInvestSumResponse getDaySum(Date date) {
+        return restTemplate.getForObject(
+                "http://AM-TRADE/am-trade/wrb/ws_sum/" + date, WrbInvestSumResponse.class);
+
+    }
+
+    @Override
+    public WrbAccountResponse getAccountInfo(String userId) {
+        return restTemplate.getForObject(
+                "http://AM-TRADE/am-trade/wrb/getAccountInfo/" + userId, WrbAccountResponse.class);
+    }
+
+    @Override
+    public WrbAccountResponse getCouponInfo(String userId) {
+        return restTemplate.getForObject(
+                "http://AM-TRADE/am-trade/wrb/getCouponInfo/" + userId, WrbAccountResponse.class);
+    }
+
+    @Override
+    public WrbInvestRecordResponse getInvestRecord(WrbInvestRecordRequest request) {
+        return restTemplate.postForObject(
+                "http://AM-TRADE/am-trade/wrb/getInvestRecord" ,request, WrbInvestRecordResponse.class);
+    }
+
+    @Override
+    public wrbInvestRecoverPlanResponse getRecoverPlan(String userId, String investRecordId, String borrowNid) {
+        return restTemplate.getForObject(
+                "http://AM-TRADE/am-trade/wrb/getRecoverPlan/" + userId+"/"+investRecordId+"/"+borrowNid, wrbInvestRecoverPlanResponse.class);
     }
 
 

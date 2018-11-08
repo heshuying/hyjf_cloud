@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.config.dao.mapper.customize.HjhUserAuthConfigCustomizeMapper" >
 
-  <select id="selectCustomizeAuthConfigList" resultType="com.hyjf.am.config.dao.model.customize.HjhUserAuthConfigCustomize">
-      select
+
+    <sql id="Base_Column_List" >
       a.id,
       a.auth_type authType,
       ROUND(a.personal_max_amount/10000,2) personalMaxAmount,
@@ -18,8 +18,21 @@
       a.update_time updateTime,
       date_format(a.update_time,'%Y-%m-%d %H:%i:%s') updateTimeStr,
       b.truename updateUserStr
+  </sql>
+
+  <select id="selectCustomizeAuthConfigList" resultType="com.hyjf.am.config.dao.model.customize.HjhUserAuthConfigCustomize">
+      select
+      <include refid="Base_Column_List" />
       from ht_hjh_user_auth_config a left join ht_admin b on a.update_user_id = b.id
   </select>
 
-
+    <select id="getAuthConfigById" resultType="com.hyjf.am.config.dao.model.customize.HjhUserAuthConfigCustomize" parameterType="java.lang.Integer">
+        select
+        <include refid="Base_Column_List" />
+        from  ht_hjh_user_auth_config left join ht_admin b on a.update_user_id = b.id
+        where id = #{id,jdbcType=INTEGER}
+    </select>
+    
+    
+    
 </mapper>
