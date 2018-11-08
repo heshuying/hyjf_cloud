@@ -201,6 +201,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 couponUser = amTradeClient.getCouponUser(Integer.parseInt(bestCouponListVO.getUserCouponId()),tender.getUserId());
             }
             investInfo.setCouponConfig(bestCouponListVO);
+            investInfo.setIsThereCoupon(1);
         }
         /** 可用优惠券张数结束 */
 

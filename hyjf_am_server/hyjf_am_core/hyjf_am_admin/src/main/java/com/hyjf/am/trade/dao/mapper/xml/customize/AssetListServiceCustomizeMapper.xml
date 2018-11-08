@@ -119,6 +119,18 @@
     </select>
 
 
+	<select id="getBZJBZCount" parameterType="Map" resultType="java.lang.Integer">
+		SELECT
+		count(1)
+		FROM ht_hjh_plan_asset hpa
+		LEFT JOIN ht_hjh_inst_config hic on hpa.inst_code = hic.inst_code
+		LEFT JOIN ht_hjh_asset_type hat on hpa.inst_code = hat.inst_code AND hpa.asset_type = hat.asset_type
+		LEFT JOIN ht_borrow_style bs on hpa.borrow_style = bs.nid
+		LEFT JOIN ht_r_user u on hpa.user_id = u.user_id
+		<include refid="Where_Clause_bzjbz" />
+	</select>
+
+
 	<sql id="Where_Clause">
 		<where>
 			<!-- 资产编号 -->

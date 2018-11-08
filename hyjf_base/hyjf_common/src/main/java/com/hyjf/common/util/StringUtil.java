@@ -3,6 +3,7 @@ package com.hyjf.common.util;
 import com.hyjf.common.constants.MsgCode;
 import com.hyjf.common.validator.Validator;
 
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -3151,5 +3152,54 @@ public class StringUtil {
     public static String getEnumMessage(MsgCode msgCode, Object... params) {
         String message = msgCode.getMsg();
         return getMessage(message, params);
+    }
+
+
+    /**
+     * 将一个数字处理为以万为单位的字符串，保留两位小数
+     *
+     * @param num
+     * @return
+     */
+    public static String getTenThousandOfANumber(Integer num) {
+        if (num < 10000) {
+            return String.valueOf(num);
+        }
+        String numStr = new DecimalFormat("#.00").format(num / 10000d);
+        String[] ss = numStr.split("\\.");
+        if ("00".equals(ss[1])) {
+            return ss[0] + "万";
+        } else if ('0' == (ss[1].charAt(1))) {
+            return ss[0] + "." + ss[1].charAt(0) + "万";
+        } else {
+            return numStr + "万";
+        }
+    }
+
+    /**
+     * 将一个日期加一秒方法
+     *
+     * @param date
+     * @return Date
+     */
+    public static Date addOneSecond(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.SECOND, 1);
+        return calendar.getTime();
+    }
+
+    /**
+     * 将一个日期减一秒加一天方法
+     *
+     * @param date
+     * @return Date
+     */
+    public static Date delOneSecond(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.SECOND, -1);
+        calendar.add(Calendar.DATE,1);
+        return calendar.getTime();
     }
 }

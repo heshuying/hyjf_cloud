@@ -29,9 +29,9 @@ public class TenderCommissionServiceImpl  extends BaseServiceImpl implements Ten
      */
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public boolean insertTenderCommission(TenderCommissionRequest request) {
+    public int insertTenderCommission(TenderCommissionRequest request) {
         TenderCommission tenderCommission = CommonUtils.convertBean(request,TenderCommission.class);
-        return tenderCommissionMapper.insertSelective(tenderCommission)>0;
+        return tenderCommissionMapper.insertSelective(tenderCommission);
     }
 
     /**
@@ -44,9 +44,9 @@ public class TenderCommissionServiceImpl  extends BaseServiceImpl implements Ten
     public int countTenderCommissionByTenderIdAndTenderType(TenderCommissionRequest request) {
         TenderCommissionExample tenderCommissionExample = new TenderCommissionExample();
         TenderCommissionExample.Criteria criteria = tenderCommissionExample.createCriteria();
-        criteria.andTenderIdEqualTo(request.getTenderId());
         criteria.andBorrowNidEqualTo(request.getBorrowNid());
-        criteria.andTenderTimeEqualTo(1);
+        criteria.andOrdidEqualTo(request.getOrdid());
+        criteria.andTenderTypeEqualTo(1);
         return tenderCommissionMapper.countByExample(tenderCommissionExample);
     }
 }

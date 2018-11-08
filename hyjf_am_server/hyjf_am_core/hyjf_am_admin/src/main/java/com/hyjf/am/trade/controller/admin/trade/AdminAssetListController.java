@@ -77,7 +77,9 @@ public class AdminAssetListController extends BaseController {
 	@RequestMapping(value = "/findBZJBZList", method = RequestMethod.POST)
 	public AssetListCustomizeResponse findBZJBZList(@RequestBody @Valid AssetListRequest request){
 		AssetListCustomizeResponse response = new AssetListCustomizeResponse();
-		Integer registCount = assetListService.getRecordCount(request);
+		//设置保证金不足查询条件
+		Map<String, Object> mapParam = setBZJBZQueryCondition(request);
+		Integer registCount = assetListService.getBZJBZCount(mapParam);
 		// 查询列表传入分页
 		Paginator paginator = new Paginator(request.getCurrPage(), registCount,request.getPageSize());
 		if(request.getPageSize() == 0){
@@ -93,8 +95,6 @@ public class AdminAssetListController extends BaseController {
 		response.setCount(registCount);
 		//代表成功
 		String returnCode = "0";
-		//设置保证金不足查询条件
-		Map<String, Object> mapParam = setBZJBZQueryCondition(request);
 		//获取保证金不足列表
 		List<AssetListCustomizeVO> assetList = assetListService.findBZJBZList(mapParam, limitStart, limitEnd);
 		if(registCount>0){
