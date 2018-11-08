@@ -190,8 +190,9 @@ public class AppHomeServiceImpl implements AppHomeService {
         if (null != totalInvestAndInterestVO){
             BigDecimal totalInvestAmount = totalInvestAndInterestVO.getTotalInvestAmount();
             String totalInvest = totalInvestAmount.toString();
-            String totalInvestStr = formatTotalInvest(totalInvest);
-            info.put("totalInvestmentAmount", totalInvestStr);
+            logger.info("-----------------app首页累计投资金额：" + totalInvest);
+//            String totalInvestStr = formatTotalInvest(totalInvest);
+//            info.put("totalInvestmentAmount", totalInvestStr);
         }else{
             info.put("totalInvestmentAmount", DF_FOR_VIEW.format(new BigDecimal("0")));
         }
