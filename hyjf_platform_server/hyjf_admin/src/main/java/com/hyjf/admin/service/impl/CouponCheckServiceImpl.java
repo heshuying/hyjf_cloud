@@ -108,7 +108,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         String today = format.format(date);
 
-        String logoRealPathDir = filePhysicalPath + today;
+        String logoRealPathDir = filePhysicalPath + "/" + today;
         File logoSaveFile = new File(logoRealPathDir);
         if (!logoSaveFile.exists()) {
             logoSaveFile.mkdirs();
