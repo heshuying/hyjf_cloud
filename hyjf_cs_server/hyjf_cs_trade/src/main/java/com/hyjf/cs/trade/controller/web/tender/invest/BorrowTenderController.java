@@ -110,7 +110,7 @@ public class BorrowTenderController extends BaseTradeController {
                                                                @RequestParam String logOrdId,
                                                                @RequestParam String borrowNid,
                                                                HttpServletRequest request) {
-        logger.info("web端请求获取投资结果接口，logOrdId:{}  borrowNid:{} ",logOrdId , borrowNid);
+        logger.info("web端请求获取投资结果接口，logOrdId:{}  borrowNid:{} isPrincipal:{}",logOrdId , borrowNid);
         return  borrowTenderService.getBorrowTenderResult(userId,logOrdId,borrowNid);
     }
 
@@ -119,9 +119,10 @@ public class BorrowTenderController extends BaseTradeController {
     public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(@RequestHeader(value = "userId") Integer userId,
                                                                        @RequestParam String logOrdId,
                                                                        @RequestParam Integer couponGrantId,
-                                                                       @RequestParam String borrowNid) {
-        logger.info("web端散标投资获取投资成功结果，logOrdId{}  couponGrantId {}  borrowNid {}   borrowNid2 {}", logOrdId,couponGrantId,borrowNid,borrowNid);
-        return borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId);
+                                                                       @RequestParam String borrowNid,
+                                                                       @RequestParam String isPrincipal) {
+        logger.info("web端散标投资获取投资成功结果，logOrdId{}  couponGrantId {}  borrowNid {}   isPrincipal {}", logOrdId,couponGrantId,borrowNid,isPrincipal);
+        return borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId,isPrincipal);
     }
 
     @ApiOperation(value = "web端获取投资信息", notes = "web端获取投资信息")
