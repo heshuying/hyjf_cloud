@@ -343,9 +343,9 @@ public class CouponLoansServiceImpl implements CouponLoansService {
         account.setPlanAccountWait(allAccount);
 
         int accountCnt = this.borrowClient.updateOfLoansTenderHjh(account);
-//        if (accountCnt == 0) {
-//            throw new RuntimeException("投资人资金记录(huiyingdai_account)更新失败!" + "[投资订单号：" + ordId + "]");
-//        }
+        if (accountCnt == 0) {
+            throw new RuntimeException("投资人资金记录(huiyingdai_account)更新失败!" + "[投资订单号：" + ordId + "]");
+        }
         // 取得账户信息(投资人)
         account = borrowClient.getAccountByUserId(borrowTenderCpn.getUserId());
         if (account == null) {
@@ -687,9 +687,9 @@ public class CouponLoansServiceImpl implements CouponLoansService {
 
         logger.info("更新用户账户："+account.getUserId());
         int accountCnt = this.borrowClient.updateOfLoansTender(account);
-//        if (accountCnt == 0) {
-//            throw new RuntimeException("投资人资金记录(huiyingdai_account)更新失败!" + "[投资订单号：" + ordId + "]");
-//        }
+        if (accountCnt == 0) {
+            throw new RuntimeException("投资人资金记录(huiyingdai_account)更新失败!" + "[投资订单号：" + ordId + "]");
+        }
         // 取得账户信息(投资人)
         account = borrowClient.getAccountByUserId(borrowTenderCpn.getUserId());
         if (account == null) {
