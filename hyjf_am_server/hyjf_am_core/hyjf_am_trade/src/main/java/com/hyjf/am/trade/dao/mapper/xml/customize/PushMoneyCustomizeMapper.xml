@@ -68,7 +68,7 @@
                 AND b.borrow_nid = #{borrowNid}
             </if>
             <if test="borrowName != null and borrowName !='' ">
-                AND b.`name` LIKE CONCAT( #{borrowName}, '%')
+                AND bi.`name` LIKE CONCAT( #{borrowName}, '%')
             </if>
             <if test="recoverLastTimeStart != null and recoverLastTimeStart !='' ">
                 AND FROM_UNIXTIME( b.recover_last_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{recoverLastTimeStart}
@@ -167,7 +167,7 @@
             AND tc.status = #{statusSearch}
         </if>
         <if test="borrowName != null and borrowName != ''">
-            AND b.`name` LIKE CONCAT( #{borrowName}, '%')
+            AND bi.`name` LIKE CONCAT( #{borrowName}, '%')
         </if>
         <if test="recoverDateStart != null and recoverDateStart != ''">
             <!-- 优化sql(字段类型转换) int-->
@@ -310,7 +310,7 @@
         LEFT JOIN ht_r_oa_department od2 ON od2.id = od.parentid
         LEFT JOIN ht_r_oa_department od3 on od3.id = od2.parentid
         WHERE 1=1
-        <if test="user_id != null">
+        <if test="userId != null">
             AND u.user_id= #{userId}
         </if>
         group by u.user_id
