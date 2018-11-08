@@ -5102,7 +5102,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         AccountResponse result = restTemplate.postForEntity(
                 "http://AM-TRADE/am-trade/account/updateofrepaycouponhjh/", account,
                 AccountResponse.class).getBody();
-        if (result == null) {
+        if (result != null) {
             return result.getUpdateFlag();
         }
         return 0;
@@ -5124,7 +5124,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         BankMerchantAccountResponse result = restTemplate.postForEntity(
                 "http://AM-TRADE/am-trade/account/updatebankmerchantaccount",account,
                 BankMerchantAccountResponse.class).getBody();
-        if (result == null) {
+        if (result != null) {
             return result.getRecordTotal();
         }
         return 0;
@@ -5135,7 +5135,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         BankMerchantAccountListResponse result = restTemplate.postForEntity(
                 "http://AM-TRADE/am-trade/account/insertbankmerchantaccount",bankMerchantAccountList,
                 BankMerchantAccountListResponse.class).getBody();
-        if (result == null) {
+        if (result != null) {
             return result.getFlag();
         }
         return 0;
@@ -5146,7 +5146,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         AccountResponse result = restTemplate.postForEntity(
                 "http://AM-TRADE/am-trade/account/updateofrepaytender",account,
                 AccountResponse.class).getBody();
-        if (result == null) {
+        if (result != null) {
             return result.getUpdateFlag();
         }
         return 0;
