@@ -366,8 +366,7 @@
 		WHERE ou.hyd_id= #{userId}
 	</select>
     <!-- 根据员工user_id 查询员工信息  -->
-    <select id="queryUserInfoByUserId" resultType="com.hyjf.am.vo.user.UserInfoCustomizeVO"
-            parameterType="java.lang.Integer">
+    <select id="queryUserInfoByUserId" resultType="com.hyjf.am.vo.user.UserInfoCustomizeVO" parameterType="java.lang.Integer">
         SELECT u.user_id AS userId, u.username AS userName, u.truename AS trueName,u.mobile,u.attribute,
         od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName
         FROM ht_r_user u
@@ -377,7 +376,7 @@
         LEFT JOIN ht_r_oa_department od3 on od3.id = od2.parentid
         WHERE 1=1
         <if test="user_id != null">
-            AND u.user_id= #{user_id}
+            AND u.user_id= #{userId}
         </if>
         group by u.user_id
     </select>
