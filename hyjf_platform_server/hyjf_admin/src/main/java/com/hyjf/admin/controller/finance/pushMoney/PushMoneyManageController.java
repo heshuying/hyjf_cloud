@@ -319,17 +319,18 @@ public class PushMoneyManageController extends BaseController {
     }
 
 
-
-
     @ApiOperation(value = "发提成",notes = "发提成")
     @PostMapping(value = "/confirmPushMoneyAction")
     public AdminResult confirmPushMoneyAction(HttpServletRequest request, @RequestBody PushMoneyRequest pushMoneyRequest){
         Integer userId = Integer.valueOf(getUser(request).getId());
-        AdminResult result = new AdminResult();
         Integer id = pushMoneyRequest.getId();
         JSONObject jsonObject = pushMoneyManageService.pushMoney(request,id,userId);
-        result.setStatusInfo(jsonObject.getString("status"),jsonObject.getString("statusDesc"));
-        return result;
+        String status = jsonObject.getString("status");
+        String statusDesc = jsonObject.getString("statusDesc");
+        if("success".equals(status)){
+            return new AdminResult(SUCCESS,statusDesc);
+        }
+        return new AdminResult(FAIL,statusDesc);
     }
 
 }
