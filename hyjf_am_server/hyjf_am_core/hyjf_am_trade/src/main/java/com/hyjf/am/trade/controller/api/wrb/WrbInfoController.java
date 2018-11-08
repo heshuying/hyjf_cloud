@@ -6,16 +6,20 @@ package com.hyjf.am.trade.controller.api.wrb;
 import com.hyjf.am.response.trade.BorrowTenderResponse;
 import com.hyjf.am.response.trade.WrbBorrowListResponse;
 import com.hyjf.am.response.trade.WrbBorrowTenderCustomizeResponse;
+import com.hyjf.am.response.trade.WrbBorrowTenderSumCustomizeResponse;
 import com.hyjf.am.resquest.api.WrbInvestRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowTender;
 import com.hyjf.am.trade.dao.model.customize.WrbBorrowListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WrbBorrowTenderCustomize;
+import com.hyjf.am.trade.dao.model.customize.WrbBorrowTenderSumCustomize;
 import com.hyjf.am.trade.service.api.wrb.WrbInfoService;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderCustomizeVO;
+import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderSumCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -80,6 +84,23 @@ public class WrbInfoController extends BaseController {
         if (!CollectionUtils.isEmpty(list)) {
             List<WrbBorrowTenderCustomizeVO> voList = CommonUtils.convertBeanList(list, WrbBorrowTenderCustomizeVO.class);
             response.setResultList(voList);
+        }
+        return response;
+    }
+
+    /**
+     * 根据标的号和日期查询投资情况
+     * @return
+     */
+    @RequestMapping("/search_borrow_tender_sum")
+    public WrbBorrowTenderSumCustomizeResponse getBorrowTenderByBorrowNidAndTime(@RequestBody WrbInvestRequest request) {
+        WrbBorrowTenderSumCustomizeResponse response = new WrbBorrowTenderSumCustomizeResponse();
+        // 查询标的投资情况
+        WrbBorrowTenderSumCustomize customize = wrbInfoService.getBorrowTenderByBorrowNidAndTime(request);
+        if (customize != null) {
+            WrbBorrowTenderSumCustomizeVO vo = new WrbBorrowTenderSumCustomizeVO();
+            BeanUtils.copyProperties(customize, vo);
+            response.setResult(vo);
         }
         return response;
     }
