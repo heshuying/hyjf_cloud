@@ -326,13 +326,11 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
                 bankMerchantAccountList.setCreateUserId(loginUserId);
                 bankMerchantAccountList.setUpdateUserId(loginUserId);
                 bankMerchantAccountList.setRemark("投资推广提成");
-                if(userInfoCustomize != null){
-                    bankMerchantAccountList.setRegionName(StringUtils.isBlank(userInfoCustomize.getRegionName())?"":userInfoCustomize.getRegionName());
-                    bankMerchantAccountList.setBranchName(StringUtils.isBlank(userInfoCustomize.getBranchName())?"":userInfoCustomize.getBranchName());
-                    bankMerchantAccountList.setDepartmentName(StringUtils.isBlank(userInfoCustomize.getDepartmentName())?"":userInfoCustomize.getDepartmentName());
-                    bankMerchantAccountList.setCreateUserName(StringUtils.isBlank(userInfoCustomize.getUserName())?"":userInfoCustomize.getUserName());
-                    bankMerchantAccountList.setUpdateUserName(StringUtils.isBlank(userInfoCustomize.getUserName())?"":userInfoCustomize.getUserName());
-                }
+                bankMerchantAccountList.setRegionName(StringUtils.isBlank(userInfoCustomize.getRegionName())?"":userInfoCustomize.getRegionName());
+                bankMerchantAccountList.setBranchName(StringUtils.isBlank(userInfoCustomize.getBranchName())?"":userInfoCustomize.getBranchName());
+                bankMerchantAccountList.setDepartmentName(StringUtils.isBlank(userInfoCustomize.getDepartmentName())?"":userInfoCustomize.getDepartmentName());
+                bankMerchantAccountList.setCreateUserName(StringUtils.isBlank(userInfoCustomize.getUserName())?"":userInfoCustomize.getUserName());
+                bankMerchantAccountList.setUpdateUserName(StringUtils.isBlank(userInfoCustomize.getUserName())?"":userInfoCustomize.getUserName());
                 this.bankMerchantAccountListMapper.insertSelective(bankMerchantAccountList);
             }
 
