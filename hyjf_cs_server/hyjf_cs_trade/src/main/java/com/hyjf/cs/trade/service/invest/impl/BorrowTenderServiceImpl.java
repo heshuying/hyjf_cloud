@@ -625,6 +625,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
                 logger.info("获取投资成功结果2为:"+JSONObject.toJSONString(borrowTender));
             }
+            if(borrowTender==null){
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {}
+                borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
+                logger.info("获取投资成功结果3为:"+JSONObject.toJSONString(borrowTender));
+            }
         }
 
         BigDecimal earnings = new BigDecimal("0");
@@ -874,12 +881,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 investInfo.setCapitalInterest(df.format(earnings.add(couponUser.getCouponQuota()).subtract(couponInterest)));
             } else if (couponUser != null && couponUser.getCouponType() == 1) {
                 earnings = earnings.add(couponInterest);
-                investInfo.setEarnings(df.format(earnings.add(couponInterest)));
+                investInfo.setEarnings(df.format(earnings));
                 investInfo.setCapitalInterest(df.format(earnings));
             } else {
                 earnings = earnings.add(couponInterest);
                 investInfo.setCapitalInterest(df.format(earnings.subtract(couponInterest)));
-                investInfo.setEarnings(df.format(earnings.add(couponInterest)));
+                investInfo.setEarnings(df.format(earnings));
             }
             investInfo.setCouponUser(couponUser);
             logger.info("本金+优惠券收益  "+investInfo.getEarnings().toString());
