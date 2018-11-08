@@ -212,15 +212,15 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
                         replaceMap.put("val_sex", info.getSex() == 2 ? "女士" : "先生");
                         if (users != null && users.getWithdrawSms() != null && users.getWithdrawSms() == 0) {
                             // 替换参数
-                            SmsMessage smsMessage = new SmsMessage(userId, replaceMap, null, null, MessageConstant.SMSSENDFORUSER, null, CustomConstants.PARAM_TPL_TIXIAN_SUCCESS,
+                            SmsMessage smsMessage = new SmsMessage(userId, replaceMap, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_TIXIAN_SUCCESS,
                                     CustomConstants.CHANNEL_TYPE_NORMAL);
-                            AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APPMSSENDFORUSER, CustomConstants.JYTZ_TPL_TIXIAN_SUCCESS);
+                            AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_TIXIAN_SUCCESS);
                             // 发送
                             smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
                             appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
                         } else {
                             // 替换参数
-                            AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APPMSSENDFORUSER, CustomConstants.JYTZ_TPL_TIXIAN_SUCCESS);
+                            AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_TIXIAN_SUCCESS);
                             appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
                         }
                         return true;
@@ -345,15 +345,15 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
                         replaceMap.put("val_sex", info.getSex() == 2 ? "女士" : "先生");
                         if (users != null && users.getWithdrawSms() != null && users.getWithdrawSms() == 0) {
                             // 替换参数
-                            SmsMessage smsMessage = new SmsMessage(userId, replaceMap, null, null, MessageConstant.SMSSENDFORUSER, null, CustomConstants.PARAM_TPL_TIXIAN_SUCCESS,
+                            SmsMessage smsMessage = new SmsMessage(userId, replaceMap, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_TIXIAN_SUCCESS,
                                     CustomConstants.CHANNEL_TYPE_NORMAL);
-                            AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APPMSSENDFORUSER, CustomConstants.JYTZ_TPL_TIXIAN_SUCCESS);
+                            AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_TIXIAN_SUCCESS);
                             // 发送
                             smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
                             appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
                         } else {
                             // 替换参数
-                            AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APPMSSENDFORUSER, CustomConstants.JYTZ_TPL_TIXIAN_SUCCESS);
+                            AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_TIXIAN_SUCCESS);
                             appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
                         }
                         return true;
