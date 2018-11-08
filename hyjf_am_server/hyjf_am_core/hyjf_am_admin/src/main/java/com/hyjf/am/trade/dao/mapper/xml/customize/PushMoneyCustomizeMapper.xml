@@ -349,7 +349,7 @@
         LEFT JOIN ht_r_oa_department od2 ON od2.id = od.parentid
         LEFT JOIN ht_r_oa_department od3 on od3.id = od2.parentid
         WHERE 1=1
-        <if test="user_id != null">
+        <if test="userId != null">
             AND u.user_id= #{userId}
         </if>
         group by u.user_id
