@@ -182,12 +182,16 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
                     borrow.getProjectType(), // 0汇保贷 1汇典贷 2汇小贷 3汇车贷 4新手标
                     borrow.getBorrowApr(), // 借款利率`
                     is51);
-
+            logger.info("计算提成tenderCommissionRequest.getCommission()：" + JSONObject.toJSON(tenderCommissionRequest));
             if (tenderCommissionRequest.getCommission()!=null && tenderCommissionRequest.getCommission().compareTo(BigDecimal.ZERO) > 0) {
                 Integer counts = amTradeClient.getCountTenderCommissionByTenderIdAndTenderType(tenderCommissionRequest);
+                logger.info("查询counts：" + counts);
+                logger.info("查询tenderCommissionRequest：" + JSONObject.toJSON(tenderCommissionRequest));
                 if (counts == 0) {
                     // 执行插入
                     ret += this.amTradeClient.saveTenderCommission(tenderCommissionRequest);
+                    logger.info("执行插入tenderCommissionRequest：" + JSONObject.toJSON(tenderCommissionRequest));
+                    logger.info("执行插入ret：" + ret);
                 } else {
                     ret++;
                 }
@@ -195,6 +199,7 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
         }
 
         // 更新借款API表
+
         ret += this.amTradeClient.updateBorrowApicronByPrimaryKeySelective(apicornId+"");
 
         return ret;

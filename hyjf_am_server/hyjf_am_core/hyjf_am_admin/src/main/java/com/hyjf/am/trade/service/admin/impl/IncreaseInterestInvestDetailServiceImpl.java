@@ -9,13 +9,16 @@ import com.hyjf.am.trade.service.admin.IncreaseInterestInvestDetailService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.IncreaseInterestInvestVO;
 import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.StringUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -44,9 +47,26 @@ public class IncreaseInterestInvestDetailServiceImpl extends BaseServiceImpl imp
             cra.andBorrowNidEqualTo(request.getBorrowNidSrch());
         }
         // 投资时间
-        if (StringUtils.isNotEmpty(request.getTimeStartSrch())) {
-            cra.andCreateTimeBetween(GetDate.str2Timestamp(request.getTimeStartSrch()), GetDate.str2Timestamp(request.getTimeEndSrch()));
+        //if (StringUtils.isNotEmpty(request.getTimeStartSrch())) {
+        //    cra.andCreateTimeBetween(GetDate.str2Timestamp(request.getTimeStartSrch()), GetDate.str2Timestamp(request.getTimeEndSrch()));
+        //}
+
+        // 投资时间结束时间加一秒
+        if (StringUtils.isNotEmpty(request.getTimeStartSrch())&&StringUtils.isNotEmpty(request.getTimeEndSrch())) {
+            SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date timeStart = null;
+            Date timeEnd = null;
+            try {
+                timeStart = (Date)formatter.parseObject(request.getTimeStartSrch() + " 00:00:00");
+                timeEnd = StringUtil.delOneSecond((Date)formatter.parseObject(request.getTimeEndSrch() + " 00:00:00"));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            //cra.andCreateTimeBetween(timeStart,timeEnd);
+            cra.andCreateTimeLessThanOrEqualTo(timeEnd);
+            cra.andCreateTimeGreaterThanOrEqualTo(timeStart);
         }
+
         return increaseInterestInvestMapper.countByExample(example);
     }
 
@@ -64,9 +84,25 @@ public class IncreaseInterestInvestDetailServiceImpl extends BaseServiceImpl imp
             cra.andBorrowNidEqualTo(request.getBorrowNidSrch());
         }
         // 投资时间
-        if (StringUtils.isNotEmpty(request.getTimeStartSrch())) {
-            cra.andCreateTimeBetween(GetDate.str2Timestamp(request.getTimeStartSrch()), GetDate.str2Timestamp(request.getTimeEndSrch()));
+        //if (StringUtils.isNotEmpty(request.getTimeStartSrch())) {
+        //    cra.andCreateTimeBetween(GetDate.str2Timestamp(request.getTimeStartSrch()), GetDate.str2Timestamp(request.getTimeEndSrch()));
+        //}
+        // 投资时间结束时间加一秒
+        if (StringUtils.isNotEmpty(request.getTimeStartSrch())&&StringUtils.isNotEmpty(request.getTimeEndSrch())) {
+            SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date timeStart = null;
+            Date timeEnd = null;
+            try {
+                timeStart = (Date)formatter.parseObject(request.getTimeStartSrch() + " 00:00:00");
+                timeEnd = StringUtil.delOneSecond((Date)formatter.parseObject(request.getTimeEndSrch() + " 00:00:00"));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            //cra.andCreateTimeBetween(timeStart,timeEnd);
+            cra.andCreateTimeLessThanOrEqualTo(timeEnd);
+            cra.andCreateTimeGreaterThanOrEqualTo(timeStart);
         }
+
         if (request.getLimitStart() != -1) {
             example.setLimitStart(request.getLimitStart());
             example.setLimitEnd(request.getLimitEnd());
@@ -100,10 +136,25 @@ public class IncreaseInterestInvestDetailServiceImpl extends BaseServiceImpl imp
             cra.andBorrowNidEqualTo(form.getBorrowNidSrch());
         }
         // 投资时间
-        if (StringUtils.isNotEmpty(form.getTimeStartSrch())) {
-            cra.andCreateTimeBetween(GetDate.str2Timestamp(form.getTimeStartSrch()), GetDate.str2Timestamp(form.getTimeEndSrch()));
-        }
+        //if (StringUtils.isNotEmpty(form.getTimeStartSrch())) {
+        //    cra.andCreateTimeBetween(GetDate.str2Timestamp(form.getTimeStartSrch()), GetDate.str2Timestamp(form.getTimeEndSrch()));
+        //}
 
+        // 投资时间结束时间加一秒
+        if (StringUtils.isNotEmpty(form.getTimeStartSrch())&&StringUtils.isNotEmpty(form.getTimeEndSrch())) {
+            SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date timeStart = null;
+            Date timeEnd = null;
+            try {
+                timeStart = (Date)formatter.parseObject(form.getTimeStartSrch() + " 00:00:00");
+                timeEnd = StringUtil.delOneSecond((Date)formatter.parseObject(form.getTimeEndSrch() + " 00:00:00"));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+            //cra.andCreateTimeBetween(timeStart,timeEnd);
+            cra.andCreateTimeLessThanOrEqualTo(timeEnd);
+            cra.andCreateTimeGreaterThanOrEqualTo(timeStart);
+        }
         return this.increaseInterestInvestCustomizeMapper.sumAccount(example);
     }
 }

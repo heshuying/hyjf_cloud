@@ -726,7 +726,7 @@ public class AllocationEngineController extends BaseController{
 		}
 		hjhLabelRequest.setLabelNameSrch(labelName);
 		List<HjhLabelCustomizeVO> list = this.labelService.getHjhLabelListByLabelName(hjhLabelRequest);
-		if(list==null){
+		if(CollectionUtils.isEmpty(list)){
 			jsonObject.put("info", "标签数据不存在，请先查看标签列表是否已经添加");
 			jsonObject.put("status", "99");
 			return jsonObject;

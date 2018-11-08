@@ -67,8 +67,8 @@ public class AuthConfigServiceImpl implements AuthConfigService {
     }
 
     @Override
-    public HjhUserAuthConfig getAuthConfigById(Integer id) {
-        return hjhUserAuthConfigMapper.selectByPrimaryKey(id);
+    public HjhUserAuthConfigCustomize getAuthConfigById(Integer id) {
+        return hjhUserAuthConfigCustomizeMapper.getAuthConfigById(id);
     }
 
     @Override

@@ -52,4 +52,11 @@ public interface AssetListServiceCustomizeMapper {
 	 * @return
 	 */
 	List<AssetListCustomizeVO> findBZJBZList(Map<String,Object> mapParam);
+
+	/**
+	 * 查询保证金不足总记录数
+	 * @param mapParam
+	 * @return
+	 */
+    Integer getBZJBZCount(Map<String,Object> mapParam);
 }

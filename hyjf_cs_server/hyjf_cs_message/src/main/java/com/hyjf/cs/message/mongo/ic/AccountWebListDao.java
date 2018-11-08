@@ -90,7 +90,7 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
             if (StringUtils.isNotBlank(accountWebList.getStartDate())&&StringUtils.isNotBlank(accountWebList.getEndDate())){
                 Integer begin = GetDate.dateString2Timestamp(accountWebList.getStartDate());
                 Integer end = GetDate.dateString2Timestamp(accountWebList.getEndDate());
-                criteria = criteria.and("createTime").gte(begin).lt(end);
+                criteria = criteria.and("createTime").gte(begin).lte(end);
             }else if(StringUtils.isNotBlank(accountWebList.getStartDate())){
                 Integer begin = GetDate.dateString2Timestamp(accountWebList.getStartDate());
                 criteria = criteria.and("createTime").gte(begin);

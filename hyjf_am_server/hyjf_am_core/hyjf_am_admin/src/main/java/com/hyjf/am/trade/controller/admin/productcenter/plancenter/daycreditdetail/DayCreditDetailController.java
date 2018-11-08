@@ -57,9 +57,7 @@ public class DayCreditDetailController {
         params.put("creditStatus", request.getCreditStatus());
         params.put("repayStatus", request.getRepayStatus());
         params.put("liquidatesTimeStart", StringUtils.isNotBlank(request.getDate())?request.getDate():null);
-        //TODO : 测试使用
-//        params.put("liquidatesTimeEnd", StringUtils.isNotBlank(request.getDate())?request.getDate():null);
-        params.put("liquidatesTimeEnd", "2018-09-30");
+        params.put("liquidatesTimeEnd", StringUtils.isNotBlank(request.getDate())?request.getDate():null);
         params.put("repayNextTimeStart", StringUtils.isNotBlank(request.getRepayNextTimeStart())?request.getRepayNextTimeStart():null);
         params.put("repayNextTimeEnd",StringUtils.isNotBlank(request.getRepayNextTimeEnd())?request.getRepayNextTimeEnd():null);
         params.put("endTimeStart", StringUtils.isNotBlank(request.getEndTimeStart())?request.getEndTimeStart():null);

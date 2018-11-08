@@ -14,7 +14,7 @@ public interface TenderCommissionService {
      *
      * @return
      */
-    boolean insertTenderCommission(TenderCommissionRequest request);
+    int insertTenderCommission(TenderCommissionRequest request);
 
     /**
      * 根据BorrowTender表的id和TenderType查询条数

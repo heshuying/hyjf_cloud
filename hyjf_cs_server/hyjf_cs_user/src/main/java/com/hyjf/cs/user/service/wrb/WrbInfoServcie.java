@@ -1,8 +1,14 @@
 package com.hyjf.cs.user.service.wrb;
 
+import com.hyjf.am.response.trade.WrbInvestRecordResponse;
+import com.hyjf.am.response.trade.wrbInvestRecoverPlanResponse;
+import com.hyjf.am.response.user.WrbAccountResponse;
+import com.hyjf.am.response.user.WrbInvestSumResponse;
+import com.hyjf.am.resquest.api.WrbInvestRecordRequest;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import com.hyjf.am.vo.trade.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
@@ -44,7 +50,7 @@ public interface WrbInfoServcie {
      * @param borrowNid
      * @return
      */
-    BorrowVO selectBorrowByBorrowNid(String borrowNid);
+    BorrowAndInfoVO selectBorrowByBorrowNid(String borrowNid);
 
     /**
      * 根据标的号和投资开始时间查询投资信息
@@ -70,4 +76,43 @@ public interface WrbInfoServcie {
      * @return
      */
     List<BorrowTenderVO> getInvestDetail(Date invest_date, Integer limit, Integer page);
+
+    /**
+     *获取某天投资情况汇总
+     * @param date
+     * @return
+     */
+    WrbInvestSumResponse getDaySum(Date date);
+
+    /**
+     * 获取用户优惠券信息
+     * @param userId
+     * @return
+     */
+    WrbAccountResponse getCouponInfo(String userId);
+
+    /**
+     * 根据平台用户id获取账户信息
+     * @param userId
+     * @return
+     */
+    WrbAccountResponse getAccountInfo(String userId);
+
+    /**
+     * 投资记录查询
+     * @param request
+     * @return 投资记录
+     * @throws Exception
+     */
+    WrbInvestRecordResponse getInvestRecord(WrbInvestRecordRequest request);
+
+    /**
+     * 获取投资记录回款计划
+     * @param userId
+     * @param investRecordId 流水号
+     * @param borrowNid
+     * @return
+     */
+    wrbInvestRecoverPlanResponse getRecoverPlan(String userId, String investRecordId, String borrowNid);
+
 }
