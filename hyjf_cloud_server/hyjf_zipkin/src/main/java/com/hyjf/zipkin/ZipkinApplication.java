@@ -1,13 +1,15 @@
 package com.hyjf.zipkin;
 
+import java.util.Collections;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
 import org.springframework.context.annotation.Bean;
-import zipkin2.server.internal.EnableZipkinServer;
-import zipkin2.storage.mysql.v1.MySQLStorage;
 
-import javax.sql.DataSource;
+import zipkin2.elasticsearch.ElasticsearchStorage;
+import zipkin2.server.internal.EnableZipkinServer;
 
 /**
  * ZipKin Server
@@ -19,12 +21,20 @@ import javax.sql.DataSource;
 @EnableDiscoveryClient
 @EnableZipkinServer
 public class ZipkinApplication {
+	
+	@Value("${zipkin.storage.elasticsearch.url}")
+	private String esHost;
+	
+	@Value("${zipkin.storage.elasticsearch.index}")
+	private String esIndex;
+	
 	public static void main(String[] args) {
 		SpringApplication.run(ZipkinApplication.class, args);
 	}
 
 	@Bean
-	public MySQLStorage mySQLStorage(DataSource datasource) {
-		return MySQLStorage.newBuilder().datasource(datasource).executor(Runnable::run).build();
+	public ElasticsearchStorage elasticsearchStorage() {
+		return ElasticsearchStorage.newBuilder().hosts(Collections.singletonList(esHost)).index(esIndex).build();
+//		return ElasticsearchStorage.newBuilder().build();
 	}
 }
