@@ -3,7 +3,7 @@
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.ApiRepayListCustomizeMapper">
 
     <select id="searchRepayList" resultMap="RepayListMap" parameterType="com.hyjf.am.resquest.api.ApiRepayListRequest">
-        SELECT ac.account AS account,bt.nid AS nid,bt.borrow_nid AS borrowNid
+        SELECT ac.account_id AS account,bt.nid AS nid,bt.borrow_nid AS borrowNid
         ,ifnull(re.recover_capital,'') AS recoverCapital
         ,ifnull(FROM_UNIXTIME( re.recover_time, '%Y-%m-%d %H:%i:%s' ),'') AS recoverTime
         ,ifnull(re.recover_interest,'') AS recoverInterest,ifnull(recover_account,'') AS recoverAccount,
@@ -14,15 +14,15 @@
         case iii.repay_action_time when '0' then '' else
         ifnull(FROM_UNIXTIME( iii.repay_action_time, '%Y-%m-%d %H:%i:%s' ),'') end AS repay_action_time
         FROM
-        huiyingdai_borrow_tender bt
-        INNER JOIN huiyingdai_borrow b ON bt.borrow_nid = b.borrow_nid
-        LEFT JOIN hyjf_increase_interest_invest iii ON iii.tender_nid = bt.nid
-        LEFT JOIN huiyingdai_borrow_style bs ON bs.nid = b.borrow_style
-        LEFT JOIN hyjf_param_name pnai ON CAST(bt.invest_type AS CHAR) = pnai.name_cd AND pnai.name_class = 'INVEST_TYPE'
-        LEFT JOIN hyjf_hjh_inst_config hic ON hic.inst_code = b.inst_code
-        LEFT JOIN huiyingdai_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
-        LEFT JOIN huiyingdai_borrow_recover re ON bt.id = re.tender_id
-        LEFT JOIN hyjf_bank_open_account ac ON bt.user_id = ac.user_id
+        ht_borrow_tender bt
+        INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
+        LEFT JOIN ht_borrow_info info ON info.borrow_nid = bt.borrow_nid
+        LEFT JOIN ht_increase_interest_invest iii ON iii.tender_nid = bt.nid
+        LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = info.inst_code
+        LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
+        LEFT JOIN ht_borrow_recover re ON bt.id = re.tender_id
+        LEFT JOIN ht_account ac ON bt.user_id = ac.user_id
         WHERE 1=1
         <if test="instCode != null and instCode !=null" >
             AND b.inst_code = #{instCode}

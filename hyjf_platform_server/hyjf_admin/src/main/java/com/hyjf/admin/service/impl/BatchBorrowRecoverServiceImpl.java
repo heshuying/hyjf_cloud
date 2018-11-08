@@ -112,6 +112,10 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
                     vo.setExtraYieldRepayStatus("待还款");
                 }else if("1".equals(vo.getExtraYieldRepayStatus())){
                     vo.setExtraYieldRepayStatus("还款完成");
+                }else if("2".equals(vo.getExtraYieldRepayStatus())){
+                    vo.setExtraYieldRepayStatus("还款执行中");
+                }else if("9".equals(vo.getExtraYieldRepayStatus())){
+                    vo.setExtraYieldRepayStatus("还款失败");
                 }
             }
         }

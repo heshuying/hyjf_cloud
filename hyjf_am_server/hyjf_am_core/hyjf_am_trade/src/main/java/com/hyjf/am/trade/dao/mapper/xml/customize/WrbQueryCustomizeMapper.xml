@@ -107,7 +107,26 @@
 		</where>
 	</sql>
 
-<select id="searchBorrowListByNid">
+	<resultMap id="borrowListMap" type="com.hyjf.am.trade.dao.model.customize.WrbBorrowListCustomize">
+		<id column="invest_id" property="invest_id"/>
+		<id column="invest_title" property="invest_title"/>
+		<id column="invest_url" property="invest_url"/>
+		<id column="time_limit" property="time_limit"/>
+		<id column="time_limit_desc" property="time_limit_desc"/>
+		<id column="buy_limit" property="buy_limit"/>
+		<id column="buy_unit" property="buy_unit"/>
+		<id column="invested_amount" property="invested_amount"/>
+		<id column="total_amount" property="total_amount"/>
+		<id column="rate" property="rate"/>
+		<id column="progress" property="progress"/>
+		<id column="start_time" property="start_time"/>
+		<id column="payback_way" property="payback_way"/>
+		<id column="invest_condition" property="invest_condition"/>
+		<id column="project_description" property="project_description"/>
+		<id column="lose_invest" property="lose_invest"/>
+	</resultMap>
+
+<select id="searchBorrowListByNid" resultMap="borrowListMap">
 		SELECT
 			hydb.borrow_nid invest_id,
 			hbi.`name` AS invest_title,

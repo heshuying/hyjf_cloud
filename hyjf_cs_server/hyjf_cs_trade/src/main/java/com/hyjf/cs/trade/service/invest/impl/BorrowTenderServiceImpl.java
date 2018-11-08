@@ -209,7 +209,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/failed?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
         //成功页
         String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/success?logOrdId=" +callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid()
-                +"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId());
+                +"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId()+"&isPrincipal=1");
         if(request.getToken() != null && !"".equals(request.getToken())){
             retUrl += "&token=1";
             successUrl += "&token=1";
@@ -602,21 +602,32 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @return
      */
     @Override
-    public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(Integer userId, String logOrdId, String borrowNid, Integer couponGrantId) {
+    public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(Integer userId, String logOrdId, String borrowNid, Integer couponGrantId,String isPrincipal) {
         Map<String, Object> data = new HashedMap();
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
         BorrowAndInfoVO borrow = amTradeClient.getBorrowByNid(borrowNid);
         BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(borrowNid);
         // 查看tmp表
-        BorrowTenderRequest borrowTenderRequest = new BorrowTenderRequest();
-        borrowTenderRequest.setBorrowNid(borrowNid);
-        borrowTenderRequest.setTenderNid(logOrdId);
-        borrowTenderRequest.setTenderUserId(userId);
+        BorrowTenderVO borrowTender = null;
         data.put("borrowNid",borrow.getBorrowNid());
         data.put("investDesc","恭喜您，投资成功！");
-        logger.info("获取投资成功结果参数 userId {}  logOrdId {} borrowNid {}",userId,logOrdId,borrowNid);
-        BorrowTenderVO borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
-        logger.info("获取投资成功结果为:"+JSONObject.toJSONString(borrowTender));
+        if(isPrincipal!=null && "1".equals(isPrincipal)){
+            BorrowTenderRequest borrowTenderRequest = new BorrowTenderRequest();
+            borrowTenderRequest.setBorrowNid(borrowNid);
+            borrowTenderRequest.setTenderNid(logOrdId);
+            borrowTenderRequest.setTenderUserId(userId);
+            logger.info("获取投资成功结果参数 userId {}  logOrdId {} borrowNid {}",userId,logOrdId,borrowNid);
+            borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
+            logger.info("获取投资成功结果为:"+JSONObject.toJSONString(borrowTender));
+            if(borrowTender==null){
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {}
+                borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
+                logger.info("获取投资成功结果2为:"+JSONObject.toJSONString(borrowTender));
+            }
+        }
+
         BigDecimal earnings = new BigDecimal("0");
         // 计算历史回报
         String interest = null;

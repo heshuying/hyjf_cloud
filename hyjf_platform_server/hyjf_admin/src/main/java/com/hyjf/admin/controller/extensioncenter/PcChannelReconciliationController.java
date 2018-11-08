@@ -195,6 +195,17 @@ public class PcChannelReconciliationController extends BaseController {
     @PostMapping("/export")
     public void exportAction(@RequestBody ChannelReconciliationRequest request, HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
 
+        List<UtmVO> list = channelService.searchUtmList(0);
+        if (request.getUtmPlat() == null) {
+            List<String> utmList = new ArrayList<>();
+            for (UtmVO vo : list) {
+                utmList.add(vo.getSourceId().toString());
+            }
+            String[] integers = new String[utmList.size()];
+            String[] array = utmList.toArray(integers);
+            request.setUtmPlat(array);
+        }
+
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
@@ -384,6 +395,18 @@ public class PcChannelReconciliationController extends BaseController {
     @ApiOperation(value = "导出计划列表", notes = "导出计划列表")
     @RequestMapping("/export_hjh")
     public void exportHjhAction(@RequestBody ChannelReconciliationRequest request, HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
+
+        List<UtmVO> list = channelService.searchUtmList(0);
+        if (request.getUtmPlat() == null) {
+            List<String> utmList = new ArrayList<>();
+            for (UtmVO vo : list) {
+                utmList.add(vo.getSourceId().toString());
+            }
+            String[] integers = new String[utmList.size()];
+            String[] array = utmList.toArray(integers);
+            request.setUtmPlat(array);
+        }
+
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
