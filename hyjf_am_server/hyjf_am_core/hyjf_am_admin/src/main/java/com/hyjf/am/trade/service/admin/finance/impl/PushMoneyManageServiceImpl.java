@@ -5,6 +5,7 @@ package com.hyjf.am.trade.service.admin.finance.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.admin.mq.base.MessageContent;
+import com.hyjf.am.admin.mq.producer.AccountWebListProducer;
 import com.hyjf.am.admin.mq.producer.AppMessageProducer;
 import com.hyjf.am.admin.mq.producer.SmsProducer;
 import com.hyjf.am.response.Response;
@@ -29,6 +30,7 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -53,7 +55,8 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
     private AppMessageProducer appMessageProducer;
     @Autowired
     private RestTemplate restTemplate;
-
+    @Autowired
+    private AccountWebListProducer accountWebListProducer;
     /**
      * 提成管理 （列表）
      *
@@ -166,8 +169,6 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
     @Override
     public int updateTenderCommissionRecord(PushMoneyRequest request) {
         int ret = 0;
-        Integer loginUserId = request.getLoginUserId();
-
         TenderCommissionVO tenderCommissionVO = request.getTenderCommissionVO();
 
         BankCallBeanVO bankBean = request.getBankCallBeanVO();
@@ -282,12 +283,15 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
             accountWebList.setTradeType(CustomConstants.TRADE_TGTC_NM); // 投资推广提成
             accountWebList.setRemark(getBorrowNidByOrdId(accountList.getNid())); // 投资推广提成
             accountWebList.setCreateTime(GetterUtil.getInteger(accountList.getCreateTime()));
-            AccountWebListResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/accountweblist/insertaccountweblist", accountWebList, AccountWebListResponse.class).getBody();
-            if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-                ret += response.getRecordTotal();
+            try {
+                logger.debug("发送收支明细:[{}]",JSON.toJSONString(accountWebList));
+                boolean success = accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+                if(success){
+                    ret += 1;
+                }
+            } catch (MQException e) {
+                logger.error("发送MQ失败:" + e);
             }
-
-
             BankMerchantAccount nowBankMerchantAccount = this.getBankMerchantAccount(bankBean.getAccountId());
             nowBankMerchantAccount.setAvailableBalance(nowBankMerchantAccount.getAvailableBalance().subtract(money));
             nowBankMerchantAccount.setAccountBalance(nowBankMerchantAccount.getAccountBalance().subtract(money));
@@ -317,15 +321,22 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
                 bankMerchantAccountList.setCreateTime(new Date());
                 bankMerchantAccountList.setUpdateTime(new Date());
                 bankMerchantAccountList.setUpdateTime(new Date());
-                bankMerchantAccountList.setRegionName(userInfoCustomize.getRegionName());
-                bankMerchantAccountList.setBranchName(userInfoCustomize.getBranchName());
-                bankMerchantAccountList.setDepartmentName(userInfoCustomize.getDepartmentName());
-                bankMerchantAccountList.setCreateUserId(loginUserId);
-                bankMerchantAccountList.setUpdateUserId(loginUserId);
-                bankMerchantAccountList.setCreateUserName(userInfoCustomize.getUserName());
-                bankMerchantAccountList.setUpdateUserName(userInfoCustomize.getUserName());
+                bankMerchantAccountList.setCreateUserId(userId);
+                bankMerchantAccountList.setUpdateUserId(userId);
                 bankMerchantAccountList.setRemark("投资推广提成");
-
+                if(userInfoCustomize != null){
+                    bankMerchantAccountList.setRegionName(StringUtils.isBlank(userInfoCustomize.getRegionName())?"":userInfoCustomize.getRegionName());
+                    bankMerchantAccountList.setBranchName(StringUtils.isBlank(userInfoCustomize.getBranchName())?"":userInfoCustomize.getBranchName());
+                    bankMerchantAccountList.setDepartmentName(StringUtils.isBlank(userInfoCustomize.getDepartmentName())?"":userInfoCustomize.getDepartmentName());
+                    bankMerchantAccountList.setCreateUserName(StringUtils.isBlank(userInfoCustomize.getUserName())?"":userInfoCustomize.getUserName());
+                    bankMerchantAccountList.setUpdateUserName(StringUtils.isBlank(userInfoCustomize.getUserName())?"":userInfoCustomize.getUserName());
+                }else{
+                    bankMerchantAccountList.setRegionName("");
+                    bankMerchantAccountList.setBranchName("");
+                    bankMerchantAccountList.setDepartmentName("");
+                    bankMerchantAccountList.setCreateUserName("");
+                    bankMerchantAccountList.setUpdateUserName("");
+                }
                 this.bankMerchantAccountListMapper.insertSelective(bankMerchantAccountList);
             }
 

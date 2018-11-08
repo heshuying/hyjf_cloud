@@ -11,6 +11,7 @@ import com.hyjf.am.response.user.WrbAccountResponse;
 import com.hyjf.am.response.user.WrbInvestSumResponse;
 import com.hyjf.am.resquest.api.WrbInvestRecordRequest;
 import com.hyjf.am.response.trade.WrbBorrowTenderCustomizeResponse;
+import com.hyjf.am.response.trade.WrbBorrowTenderSumCustomizeResponse;
 import com.hyjf.am.resquest.api.WrbInvestRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Account;
@@ -20,12 +21,15 @@ import com.hyjf.am.trade.dao.model.auto.BorrowTender;
 import com.hyjf.am.trade.dao.model.customize.WrbBorrowListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WrbInvestRecordCustomize;
 import com.hyjf.am.trade.dao.model.customize.WrbBorrowTenderCustomize;
+import com.hyjf.am.trade.dao.model.customize.WrbBorrowTenderSumCustomize;
 import com.hyjf.am.trade.service.api.wrb.WrbInfoService;
 import com.hyjf.am.vo.api.WrbInvestRecordVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderCustomizeVO;
+import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderSumCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
+import org.springframework.beans.BeanUtils;
 import com.hyjf.common.util.GetDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -243,6 +247,23 @@ public class WrbInfoController extends BaseController {
         if (!CollectionUtils.isEmpty(list)) {
             List<WrbBorrowTenderCustomizeVO> voList = CommonUtils.convertBeanList(list, WrbBorrowTenderCustomizeVO.class);
             response.setResultList(voList);
+        }
+        return response;
+    }
+
+    /**
+     * 根据标的号和日期查询投资情况
+     * @return
+     */
+    @RequestMapping("/search_borrow_tender_sum")
+    public WrbBorrowTenderSumCustomizeResponse getBorrowTenderByBorrowNidAndTime(@RequestBody WrbInvestRequest request) {
+        WrbBorrowTenderSumCustomizeResponse response = new WrbBorrowTenderSumCustomizeResponse();
+        // 查询标的投资情况
+        WrbBorrowTenderSumCustomize customize = wrbInfoService.getBorrowTenderByBorrowNidAndTime(request);
+        if (customize != null) {
+            WrbBorrowTenderSumCustomizeVO vo = new WrbBorrowTenderSumCustomizeVO();
+            BeanUtils.copyProperties(customize, vo);
+            response.setResult(vo);
         }
         return response;
     }

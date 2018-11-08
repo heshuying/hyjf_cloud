@@ -195,9 +195,11 @@ public class PushMoneyManageController extends BaseController {
      */
     @PostMapping("/countTenderCommissionByTenderIdAndTenderType")
     public TenderCommissionResponse countTenderCommissionByTenderIdAndTenderType(@RequestBody TenderCommissionRequest request){
+        logger.info("根据BorrowTender表的id和TenderType查询条数countTenderCommissionByTenderIdAndTenderType::::::::::",JSONObject.toJSON(request));
         TenderCommissionResponse response =  new TenderCommissionResponse();
         int count = tenderCommissionService.countTenderCommissionByTenderIdAndTenderType(request);
         response.setCount(count);
+        logger.info("根据BorrowTender表的id和TenderType查询条数count::::::::::",count);
         return  response;
     }
 
@@ -207,7 +209,8 @@ public class PushMoneyManageController extends BaseController {
      * @return
      */
     @PostMapping("/insertTenderCommission")
-    public TenderCommissionResponse insertTenderCommission(TenderCommissionRequest request){
+    public TenderCommissionResponse insertTenderCommission(@RequestBody TenderCommissionRequest request){
+        logger.info("添加提成insertTenderCommission::::::::::",JSONObject.toJSON(request));
         TenderCommissionResponse response =  new TenderCommissionResponse();
         int flag = tenderCommissionService.insertTenderCommission(request);
         response.setFlag(flag);

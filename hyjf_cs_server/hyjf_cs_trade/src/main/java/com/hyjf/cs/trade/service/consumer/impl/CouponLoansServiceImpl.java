@@ -343,9 +343,9 @@ public class CouponLoansServiceImpl implements CouponLoansService {
         account.setPlanAccountWait(allAccount);
 
         int accountCnt = this.borrowClient.updateOfLoansTenderHjh(account);
-        if (accountCnt == 0) {
-            throw new RuntimeException("投资人资金记录(huiyingdai_account)更新失败!" + "[投资订单号：" + ordId + "]");
-        }
+//        if (accountCnt == 0) {
+//            throw new RuntimeException("投资人资金记录(huiyingdai_account)更新失败!" + "[投资订单号：" + ordId + "]");
+//        }
         // 取得账户信息(投资人)
         account = borrowClient.getAccountByUserId(borrowTenderCpn.getUserId());
         if (account == null) {
@@ -373,6 +373,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
 
     @Override
     public void sendSmsCoupon(List<Map<String, String>> msgList) {
+        logger.info("优惠券放款,短信发送开始："+ msgList.size());
         if (msgList != null && msgList.size() > 0) {
             for (Map<String, String> msg : msgList) {
                 if (Validator.isNotNull(msg.get(USERID)) && Validator.isNotNull(msg.get(VAL_AMOUNT))
@@ -392,6 +393,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
                 }
             }
         }
+        logger.info("优惠券放款,短信发送结束："+ msgList.size());
     }
 
     @Override
@@ -685,9 +687,9 @@ public class CouponLoansServiceImpl implements CouponLoansService {
 
         logger.info("更新用户账户："+account.getUserId());
         int accountCnt = this.borrowClient.updateOfLoansTender(account);
-        if (accountCnt == 0) {
-            throw new RuntimeException("投资人资金记录(huiyingdai_account)更新失败!" + "[投资订单号：" + ordId + "]");
-        }
+//        if (accountCnt == 0) {
+//            throw new RuntimeException("投资人资金记录(huiyingdai_account)更新失败!" + "[投资订单号：" + ordId + "]");
+//        }
         // 取得账户信息(投资人)
         account = borrowClient.getAccountByUserId(borrowTenderCpn.getUserId());
         if (account == null) {

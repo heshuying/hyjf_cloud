@@ -97,9 +97,10 @@ public class AppBorrowTenderController extends BaseTradeController {
     public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(@RequestHeader(value = "userId") Integer userId,
                                                                        @RequestParam String logOrdId,
                                                                        @RequestParam Integer couponGrantId,
-                                                                       @RequestParam String borrowNid) {
+                                                                       @RequestParam String borrowNid,
+                                                                       @RequestParam String isPrincipal) {
         logger.info("APP端散标投资获取投资成功结果，logOrdId{}", logOrdId);
-        return borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId);
+        return borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId,isPrincipal);
     }
 
     @ApiOperation(value = "APP端获取投资信息", notes = "APP端获取投资信息")

@@ -26,6 +26,7 @@ import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderCustomizeVO;
+import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderSumCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
 import com.hyjf.am.resquest.api.WrbInvestRecordRequest;
@@ -402,4 +403,12 @@ public interface AmTradeClient {
      * @return
      */
     List<WrbBorrowTenderCustomizeVO> selectWrbBorrowTender(String borrowNid, Date investTime);
+
+    /**
+     * 根据标的号和投资时间查询投资情况
+     * @param borrowNid
+     * @param investTime
+     * @return
+     */
+    WrbBorrowTenderSumCustomizeVO searchBorrowTenderSumByNidAndTime(String borrowNid, Date investTime);
 }
