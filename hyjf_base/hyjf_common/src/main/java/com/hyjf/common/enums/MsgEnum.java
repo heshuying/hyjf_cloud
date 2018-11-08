@@ -169,7 +169,7 @@ public enum MsgEnum implements MsgCode {
 	ERROR_BANK_SEND_CODE("EBK0000010", "短信验证码发送失败，请稍后再试！"),
 
 	// 银行卡相关错误信息ERR_CARD_
-	ERR_CARD_UNBIND_HAVE_BALANCE("ECD000001", "账户尚有余额，不能解绑银行卡"),
+	ERR_CARD_UNBIND_HAVE_BALANCE("ECD000001", "抱歉，请先清空当前余额和待收后，再申请解绑。"),
 	ERR_CARD_SAVE("ECD000002", "银行卡信息保存失败"),
 	ERR_CARD_NOT_EXIST("ECD000003", "没有要解绑的银行卡"),
 	ERR_CARD_DELETE("ECD000004", "银行卡删除失败"),

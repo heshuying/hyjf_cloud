@@ -30,6 +30,7 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang.math.NumberUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -322,15 +323,14 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
                 bankMerchantAccountList.setCreateTime(new Date());
                 bankMerchantAccountList.setUpdateTime(new Date());
                 bankMerchantAccountList.setUpdateTime(new Date());
-                bankMerchantAccountList.setRegionName(userInfoCustomize.getRegionName());
-                bankMerchantAccountList.setBranchName(userInfoCustomize.getBranchName());
-                bankMerchantAccountList.setDepartmentName(userInfoCustomize.getDepartmentName());
                 bankMerchantAccountList.setCreateUserId(loginUserId);
                 bankMerchantAccountList.setUpdateUserId(loginUserId);
-                bankMerchantAccountList.setCreateUserName(userInfoCustomize.getUserName());
-                bankMerchantAccountList.setUpdateUserName(userInfoCustomize.getUserName());
                 bankMerchantAccountList.setRemark("投资推广提成");
-
+                bankMerchantAccountList.setRegionName(StringUtils.isBlank(userInfoCustomize.getRegionName())?"":userInfoCustomize.getRegionName());
+                bankMerchantAccountList.setBranchName(StringUtils.isBlank(userInfoCustomize.getBranchName())?"":userInfoCustomize.getBranchName());
+                bankMerchantAccountList.setDepartmentName(StringUtils.isBlank(userInfoCustomize.getDepartmentName())?"":userInfoCustomize.getDepartmentName());
+                bankMerchantAccountList.setCreateUserName(StringUtils.isBlank(userInfoCustomize.getUserName())?"":userInfoCustomize.getUserName());
+                bankMerchantAccountList.setUpdateUserName(StringUtils.isBlank(userInfoCustomize.getUserName())?"":userInfoCustomize.getUserName());
                 this.bankMerchantAccountListMapper.insertSelective(bankMerchantAccountList);
             }
 
