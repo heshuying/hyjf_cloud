@@ -210,7 +210,7 @@ public class PushMoneyManageController extends BaseController {
      */
     @PostMapping("/insertTenderCommission")
     public TenderCommissionResponse insertTenderCommission(@RequestBody TenderCommissionRequest request){
-        logger.info("添加提成insertTenderCommission::::::::::",JSONObject.toJSON(request));
+        logger.info("添加提成insertTenderCommission::::::::::[{}]",JSONObject.toJSON(request));
         TenderCommissionResponse response =  new TenderCommissionResponse();
         int flag = tenderCommissionService.insertTenderCommission(request);
         response.setFlag(flag);
