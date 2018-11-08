@@ -3,11 +3,9 @@ package com.hyjf.am.trade.service.admin.impl;
 import com.hyjf.am.resquest.admin.IncreaseInterestRepayDetailRequest;
 import com.hyjf.am.trade.dao.mapper.auto.IncreaseInterestRepayMapper;
 import com.hyjf.am.trade.dao.mapper.customize.admin.AdminIncreaseInterestRepayCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepayExample;
 import com.hyjf.am.trade.service.admin.IncreaseInterestRepayDetailService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.AdminIncreaseInterestRepayCustomizeVO;
-import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,22 +35,21 @@ public class IncreaseInterestRepayDetailServiceImpl extends BaseServiceImpl impl
      */
     @Override
     public int getIncreaseInterestRepayDetailCount(IncreaseInterestRepayDetailRequest form) {
-        IncreaseInterestRepayExample example = new IncreaseInterestRepayExample();
-        IncreaseInterestRepayExample.Criteria cra = example.createCriteria();
+        Map<String, Object> param = new HashMap<String, Object>();
         // 项目编号
         if (StringUtils.isNotEmpty(form.getBorrowNidSrch())) {
-            cra.andBorrowNidEqualTo(form.getBorrowNidSrch());
+            param.put("borrowNidSrch", form.getBorrowNidSrch());
         }
         // 项目状态
         if (StringUtils.isNotEmpty(form.getRepayStatusSrch())) {
-            cra.andRepayStatusEqualTo(Integer.parseInt(form.getRepayStatusSrch()));
+            param.put("repayStatusSrch", form.getRepayStatusSrch());
         }
         // 应还时间
         if (StringUtils.isNotEmpty(form.getTimeStartSrch())) {
-            cra.andRepayTimeGreaterThanOrEqualTo(GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayStart(form.getTimeStartSrch())));
-            cra.andRepayTimeLessThanOrEqualTo( GetDate.strYYYYMMDDHHMMSS2Timestamp(GetDate.getDayEnd(form.getTimeEndSrch())));
+            param.put("timeStartSrch", form.getTimeStartSrch());
+            param.put("timeEndSrch", form.getTimeEndSrch());
         }
-        return this.increaseInterestRepayMapper.countByExample(example);
+        return adminIncreaseInterestRepayCustomizeMapper.countRecordList(param);
     }
 
     /**
@@ -84,7 +81,7 @@ public class IncreaseInterestRepayDetailServiceImpl extends BaseServiceImpl impl
             param.put("limitStart", form.getLimitStart());
             param.put("limitEnd", form.getLimitEnd());
         }
-        return adminIncreaseInterestRepayCustomizeMapper.selectBorrowRepaymentInfoListList(param);
+        return adminIncreaseInterestRepayCustomizeMapper.selectBorrowRepaymentInfoList(param);
     }
 
     /**
