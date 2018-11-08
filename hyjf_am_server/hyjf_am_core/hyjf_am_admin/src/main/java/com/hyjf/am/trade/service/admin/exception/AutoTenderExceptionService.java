@@ -6,7 +6,12 @@ package com.hyjf.am.trade.service.admin.exception;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmp;
 import com.hyjf.am.trade.dao.model.customize.AdminPlanAccedeListCustomize;
+import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
+import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
+import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -52,4 +57,47 @@ public interface AutoTenderExceptionService {
      * 更改状态
      */
     boolean updateTender(Map<String,Object> mapParam);
+    /**
+     * 银行自动投资成功后，更新投资数据
+     *
+     * @param borrowNid
+     * @param accedeOrderId
+     * @param bean
+     * @return
+     */
+    boolean updateBorrowForAutoTender(String borrowNid, String accedeOrderId, BankCallBean bean);
+    /**
+     * 保存用户的债转承接log数据
+     *
+     * @param credit
+     * @param debtPlanAccede
+     * @param creditOrderId
+     * @param creditOrderDate
+     * @param account
+     * @return
+     * @throws Exception
+     */
+    HjhCreditCalcResultVO saveCreditTenderLogNoSave(HjhDebtCreditVO credit, HjhAccedeVO debtPlanAccede, String creditOrderId, String creditOrderDate, BigDecimal account, Boolean isLast);
+    /**
+     * 银行自动投资成功后，更新投资数据
+     *
+     * @param creditNid
+     * @param accedeOrderId
+     * @param planNid
+     * @param bean
+     * @param tenderUsrcustid
+     * @param sellerUsrcustid
+     * @param resultVO
+     * @return
+     */
+    boolean updateCreditForAutoTender(String creditNid, String accedeOrderId, String planNid, BankCallBean bean,
+                                             String tenderUsrcustid, String sellerUsrcustid, HjhCreditCalcResultVO resultVO);
+    /**
+     * 删除 自动投资临时表
+     *
+     * @param borrowNid
+     * @param accedeOrderId
+     * @return
+     */
+    boolean deleteBorrowTmp(String borrowNid, String accedeOrderId);
 }
