@@ -53,7 +53,7 @@ public interface BorrowTenderService extends BaseTradeService {
      * @param couponGrantId
      * @return
      */
-    WebResult<Map<String,Object>> getBorrowTenderResultSuccess(Integer userId, String logOrdId, String borrowNid, Integer couponGrantId);
+    WebResult<Map<String,Object>> getBorrowTenderResultSuccess(Integer userId, String logOrdId, String borrowNid, Integer couponGrantId,String isPrincipal);
 
     /**
      * 获取投资信息

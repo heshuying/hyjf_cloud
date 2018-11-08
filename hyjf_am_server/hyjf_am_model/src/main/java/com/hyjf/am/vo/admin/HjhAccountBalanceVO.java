@@ -80,7 +80,7 @@ public class HjhAccountBalanceVO extends BaseVO implements Serializable {
         this.id = id;
     }
 
-    @JsonFormat(pattern="yyyy-MM-dd")
+    @JsonFormat(pattern="yyyy-MM-dd", timezone = "GMT+8")
     public Date getRptDate() {
         return rptDate;
     }
