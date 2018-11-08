@@ -35,10 +35,6 @@
 		ht_increase_interest_loan AS hiil ON hiil.borrow_nid = b.borrow_nid
 		LEFT join
 		ht_increase_interest_invest AS hiii ON hiil.invest_id= hiii.id
-		LEFT JOIN
-		ht_users AS u1 ON hiil.borrow_user_id = u1.user_id
-		LEFT JOIN
-		ht_users AS u2 ON hiil.user_id = u2.user_id
 		<include refid="Where_Clause" />
 	</select>
 
