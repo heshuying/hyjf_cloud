@@ -882,7 +882,6 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         bean.setProductId(borrowNid);
         BankCallBean callBackBean = BankCallUtils.callApiBg(bean);
         String respCode = callBackBean == null ? "" : callBackBean.getRetCode();
-        respCode = "111";//  测试借款人还款异常 2018/11/8
         // 申请冻结资金失败
         if (StringUtils.isBlank(respCode) || !BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
             if (!"".equals(respCode)) {

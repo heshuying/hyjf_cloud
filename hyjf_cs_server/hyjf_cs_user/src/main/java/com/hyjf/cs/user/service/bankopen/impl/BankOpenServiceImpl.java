@@ -410,13 +410,6 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             resultMap.put("mess", "真实姓名不能为空");
             return resultMap;
         }
-        // 身份证号
-        if (Validator.isNull(requestBean.getIdNo())) {
-            logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
-            resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
-            resultMap.put("mess", "身份证号不能为空");
-            return resultMap;
-        }
         // 渠道
         if (Validator.isNull(requestBean.getChannel())) {
             logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
@@ -450,23 +443,6 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             logger.info("身份属性参数错误[" + JSONObject.toJSONString(requestBean, true) + "]");
             resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
             resultMap.put("mess", "身份属性参数错误");
-            return resultMap;
-        }
-
-        if (requestBean.getIdNo().length() != 18) {
-            logger.info("身份证(18位)校验位错误[" + JSONObject.toJSONString(requestBean, true) + "]");
-            resultMap.put("status", ErrorCodeConstant.STATUS_ZC000021);
-            resultMap.put("mess", "身份证(18位)校验位错误");
-            return resultMap;
-        }
-        String replaceIdNo = replaceIdNo(requestBean.getIdNo());
-        requestBean.setIdNo(replaceIdNo);
-        // 检查用户身份证号是否在汇盈已经存在
-        UserInfoVO userInfo = amUserClient.getUserByIdNo(requestBean.getIdNo());
-        if (userInfo!=null) {
-            logger.info("身份证已存在[" + JSONObject.toJSONString(requestBean, true) + "]");
-            resultMap.put("status", ErrorCodeConstant.STATUS_ZC000021);
-            resultMap.put("mess", "身份证已存在");
             return resultMap;
         }
         // 根据手机号查询用户
