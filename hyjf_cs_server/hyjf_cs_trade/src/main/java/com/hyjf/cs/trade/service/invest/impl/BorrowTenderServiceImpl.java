@@ -210,6 +210,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         //成功页
         String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/success?logOrdId=" +callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid()
                 +"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId()+"&isPrincipal=1");
+        logger.info("同步路径为："+successUrl);
         if(request.getToken() != null && !"".equals(request.getToken())){
             retUrl += "&token=1";
             successUrl += "&token=1";

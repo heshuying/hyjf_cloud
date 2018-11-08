@@ -81,6 +81,8 @@ public class OpenAccountPageBean {
      * 跳转到哪一个前端
      */
     private  String clientHeader;
+
+    private  String successfulUrl;
     
     public String getMobile() {
         return mobile;
@@ -188,5 +190,13 @@ public class OpenAccountPageBean {
 
     public void setClientHeader(String clientHeader) {
         this.clientHeader = clientHeader;
+    }
+
+    public String getSuccessfulUrl() {
+        return successfulUrl;
+    }
+
+    public void setSuccessfulUrl(String successfulUrl) {
+        this.successfulUrl = successfulUrl;
     }
 }
