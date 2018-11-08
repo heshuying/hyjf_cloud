@@ -162,7 +162,12 @@ public class BorrowCommonController extends BaseController {
 //			return new AdminResult<>(FAIL, FAIL_DESC);
 //		}
 		if (!Response.isSuccess(bcr)) {
-			return new AdminResult<>(FAIL, bcr.getMessage());
+			if(bcr.getRtn().equals("1")) {
+				return new AdminResult<>("98", bcr.getMessage());
+			}else {
+				return new AdminResult<>(FAIL, bcr.getMessage());
+			}
+			
 
 		}
 		bcr.setHousesTypeList(customerTransferService.searchParamNameList(CustomConstants.HOUSES_TYPE));
