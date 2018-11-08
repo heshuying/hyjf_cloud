@@ -55,7 +55,6 @@ public class AppRepayAuthPagePlusController extends BaseUserController {
     /**
      * 用户还款授权
      * @param userId
-     * @param authorizedVO
      * @return
      */
     @ApiOperation(value = "用户还款授权", notes = "用户还款授权")
@@ -78,7 +77,7 @@ public class AppRepayAuthPagePlusController extends BaseUserController {
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         // 同步地址  是否跳转到前端页面
         String retUrl = super.getFrontHost(systemConfig,platform) + errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_REPAY_AUTH;
-        String successUrl = super.getFrontHost(systemConfig,platform) + successPath+ errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_REPAY_AUTH;
+        String successUrl = super.getFrontHost(systemConfig,platform) + successPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_REPAY_AUTH;
         String bgRetUrl = "http://CS-USER/hyjf-app/bank/user/auth/repayauthpageplus/repayauthBgreturn" ;
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);

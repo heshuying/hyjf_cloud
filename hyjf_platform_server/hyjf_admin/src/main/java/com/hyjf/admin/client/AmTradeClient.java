@@ -3217,5 +3217,11 @@ public interface AmTradeClient {
      * @return
      */
     AssetListCustomizeResponse findAssetListWithoutPage(AssetListRequest request);
+    /**
+     * 删除 自动投资临时表
+     * @auther: nxl
+     * @date: 2018/7/10
+     */
+   Boolean deleteBorrowTmp(String borrowNid, String accedeOrderId);
 }
 

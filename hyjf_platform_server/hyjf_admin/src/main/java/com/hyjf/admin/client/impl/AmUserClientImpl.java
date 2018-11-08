@@ -2691,4 +2691,20 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	/**
+	 * 根据用户Id查询开户信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public List<BankOpenAccountLogVO> getBankOpenAccountLogVOByUserId(Integer userId) {
+		String url = "http://AM-ADMIN/am-user/borrowOpenaccountenquiryException/selectBankOpenAccountLogByUserId/"+userId;
+		BankOpenAccountLogResponse response = restTemplate.getForEntity(url, BankOpenAccountLogResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
 }

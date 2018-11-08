@@ -205,7 +205,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
     }
 
     @Override
-    public boolean batchCheck(String path, HttpServletResponse response, String userId) throws Exception {
+    public boolean batchCheck(String path, HttpServletResponse response, String loginUserId) throws Exception {
         try {
             String[] split = path.split(",");
             String filePath = split[1];
@@ -249,7 +249,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                         if (StringUtils.isBlank(userName)) {
                             continue;
                         }
-                        batchInsertUserCoupon(userName, copuncodes, totalcouponCount, succouponCount, activityId, couponSource);
+                        batchInsertUserCoupon(userName, copuncodes, totalcouponCount, succouponCount, activityId, couponSource, loginUserId);
 
                     }
                 }
@@ -264,7 +264,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
 
     }
 
-    private boolean batchInsertUserCoupon(String userName, List<String> copuncodes, int totalcouponCount, int succouponCount, Integer activityId, int couponSource) {
+    private boolean batchInsertUserCoupon(String userName, List<String> copuncodes, int totalcouponCount, int succouponCount, Integer activityId, int couponSource, String loginUserId) {
         UserVO user = this.getUserByUserName(userName);
         logger.info("批量发放优惠券User：" + user);
         if(user == null){
@@ -277,7 +277,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
         // 发放优惠券
         int couponCount = 0;
         try {
-            couponCount = this.sendConponAction(copuncodes, String.valueOf(user.getUserId()), activityId, couponSource);
+            couponCount = this.sendConponAction(copuncodes, String.valueOf(user.getUserId()), activityId, couponSource, loginUserId);
         } catch (Exception e) {
             logger.error("用户："+userName + "发送优惠券失败！",e);
             e.printStackTrace();
@@ -287,13 +287,13 @@ public class CouponCheckServiceImpl implements CouponCheckService {
         return true;
     }
 
-    private synchronized int sendConponAction(List<String> couponCodeList, String userId, Integer activityId, int couponSource) throws Exception {
+    private synchronized int sendConponAction(List<String> couponCodeList, String userId, Integer activityId, int couponSource, String loginUserId) throws Exception {
         // sendflg设置1跳过活动id不设置的逻辑
-        return sendUserConponAction(couponCodeList, userId, 1, activityId, couponSource,"上传csv文件，批量发券");
+        return sendUserConponAction(couponCodeList, userId, 1, activityId, couponSource, loginUserId, "上传csv文件，批量发券");
     }
 
     public int sendUserConponAction(List<String> couponCodeList, String userId, Integer sendFlg, Integer activityId,
-                                    Integer couponSource, String content) throws Exception {
+                                    Integer couponSource, String loginUserId, String content) throws Exception {
         logger.info("用户："+userId+",执行发券逻辑开始  " + GetDate.dateToString(new Date()));
         String methodName = "sendConponAction";
         int nowTime = GetDate.getNowTime10();
@@ -337,11 +337,11 @@ public class CouponCheckServiceImpl implements CouponCheckService {
 
                 // 根据优惠券编码查询优惠券
                 CouponConfigResponse configResponse = amTradeClient.selectCouponConfig(couponCode);
-                List<CouponConfigVO> configList = configResponse.getResultList();
-                if (configList == null || configList.isEmpty()) {
+                CouponConfigVO config = configResponse.getResult();
+                if (config == null) {
                     continue;
                 }
-                CouponConfigVO config = configList.get(0);
+//                CouponConfigVO config = configList.get(0);
 
                 Integer status = config.getStatus();
                 if(status==null||status==1||status==3){
@@ -369,6 +369,8 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                 couponUser.setContent(StringUtils.isEmpty(content)?"":content);
                 CouponUserRequest couponUserRequest = new CouponUserRequest();
                 BeanUtils.copyProperties(couponUser,couponUserRequest);
+                couponUserRequest.setCreateUserId(Integer.parseInt(loginUserId));
+                couponUserRequest.setUpdateUserId(Integer.parseInt(loginUserId));
                 CouponUserResponse response = amTradeClient.insertCouponUser(couponUserRequest);
                 couponCount++;
             }

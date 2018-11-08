@@ -323,4 +323,9 @@ public class CategoryServiceImpl implements CategoryService {
         return   helpCustomizeMapper.selectSunContentCategory(map);
 
     }
+
+    @Override
+    public Integer selectCategoryPid() {
+        return helpCustomizeMapper.selectCategoryPid();
+    }
 }

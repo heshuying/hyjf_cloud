@@ -80,10 +80,8 @@ public class WrbInfoServiceImpl implements WrbInfoService {
 
     @Override
     public WrbInvestSumResponse getDaySum(Date date) {
-        // 查询开始时间
-        Integer timeStart = new Long(date.getTime() / 1000).intValue();
-        // 查询结束时间
-        Integer timeEnd = new Long(date.getTime() / 1000 + 24 * 60 * 60).intValue();
+        Date timeStart = GetDate.getDayStartOfSomeDay(date);
+        Date timeEnd= GetDate.getDayEndOfSomeDay(date);
         WrbDaySumCustomize wrbSumCustomize = wrbQueryCustomizeMapper.getDaySum(timeStart, timeEnd);
         WrbInvestSumResponse response = new WrbInvestSumResponse();
         BigDecimal bd=new BigDecimal(0);
