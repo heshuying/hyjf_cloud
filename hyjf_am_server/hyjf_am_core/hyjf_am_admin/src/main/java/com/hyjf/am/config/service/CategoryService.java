@@ -266,4 +266,10 @@ public interface CategoryService {
      * @date:   2
      */
     List<HelpContentCustomize> selectSunContentCategory(String type, String pid);
+
+    /**
+     * 查詢父幫助中心父id
+     * @return
+     */
+    Integer selectCategoryPid();
 }
