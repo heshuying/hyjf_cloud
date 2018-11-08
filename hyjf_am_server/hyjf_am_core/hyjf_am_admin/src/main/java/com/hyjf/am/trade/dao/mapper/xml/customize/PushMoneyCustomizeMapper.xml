@@ -20,6 +20,7 @@
         FROM
         (SELECT * FROM ht_borrow_apicron a WHERE a.api_type = 0 ) api
         JOIN ht_borrow b ON api.borrow_nid = b.borrow_nid AND (b.`status` = 4 OR b.`status` = 5) AND b.plan_nid IS NULL
+        JOIN ht_borrow_info info ON b.borrow_nid = info.borrow_nid
         <include refid="where-all-page-condition"/>
     </select>
     <select id="queryPushMoneyList" resultMap="PushMoneyMap"
@@ -104,34 +105,6 @@
         )
         )
         )
-        -- 		OR (
-        -- 			1 = (
-        -- 				SELECT
-        -- 					reward_send
-        -- 				FROM
-        -- 					ht_push_money
-        -- 				WHERE
-        -- 					project_type = 1
-        -- 				AND type = '51老用户'
-        -- 			)
-        -- 			AND EXISTS (
-        -- 				SELECT
-        -- 					t.id
-        -- 				FROM
-        -- 					ht_borrow_tender t
-        -- 				JOIN ht_r_user t2 ON t.user_id = t2.user_id
-        -- 				JOIN ht_r_user t3 ON t2.spreads_user_id = t3.user_id
-        -- 				WHERE
-        -- 					t.borrow_nid = b.borrow_nid
-        -- 				AND (
-        -- 					t3.is51 = 1
-        -- 					AND (
-        -- 						t3.attribute = 0
-        -- 						OR t3.attribute = 1
-        -- 					)
-        -- 				)
-        -- 			)
-        -- 		)
         OR (api.web_status = 1)
         )
 
