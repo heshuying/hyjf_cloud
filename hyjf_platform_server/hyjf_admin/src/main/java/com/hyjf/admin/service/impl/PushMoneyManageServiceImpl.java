@@ -500,7 +500,6 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
                     // 发提成处理
                     PushMoneyRequest pushMoneyRequest = new PushMoneyRequest();
                     pushMoneyRequest.setTenderCommissionVO(tenderCommissionVO);
-                    pushMoneyRequest.setLoginUserId(loginUserId);
                     AdminSystemVO adminSystemVO = amConfigClient.getUserInfoById(loginUserId);
                     pushMoneyRequest.setLoginUserName(adminSystemVO.getUsername());
                     pushMoneyRequest.setBankOpenAccountVO(bankOpenAccountVO);
