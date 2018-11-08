@@ -343,7 +343,7 @@ public class TransPasswordController extends BaseUserController{
         // 接口版本号
         bean.setVersion(BankCallConstant.VERSION_10);
         // 消息类型(用户开户)
-        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_RESET);
+        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_RESET_PAGE);
         // 机构代码
         bean.setInstCode(systemConfig.getBankInstcode());
         bean.setBankCode(systemConfig.getBankCode());
@@ -367,7 +367,7 @@ public class TransPasswordController extends BaseUserController{
         bean.setLogAcqResBean(acqRes);
         // 操作者ID
         bean.setLogUserId(String.valueOf(userId));
-        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE);
+        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDRESETPAGE);
         bean.setLogOrderId(GetOrderIdUtils.getUsrId(userId));
         // 跳转到汇付天下画面
         try {
