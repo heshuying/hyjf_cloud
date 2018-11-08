@@ -5,6 +5,7 @@ package com.hyjf.am.trade.service.admin.finance.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.admin.mq.base.MessageContent;
+import com.hyjf.am.admin.mq.producer.AccountWebListProducer;
 import com.hyjf.am.admin.mq.producer.AppMessageProducer;
 import com.hyjf.am.admin.mq.producer.SmsProducer;
 import com.hyjf.am.response.Response;
@@ -53,7 +54,8 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
     private AppMessageProducer appMessageProducer;
     @Autowired
     private RestTemplate restTemplate;
-
+    @Autowired
+    private AccountWebListProducer accountWebListProducer;
     /**
      * 提成管理 （列表）
      *
@@ -282,12 +284,15 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
             accountWebList.setTradeType(CustomConstants.TRADE_TGTC_NM); // 投资推广提成
             accountWebList.setRemark(getBorrowNidByOrdId(accountList.getNid())); // 投资推广提成
             accountWebList.setCreateTime(GetterUtil.getInteger(accountList.getCreateTime()));
-            AccountWebListResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/accountweblist/insertaccountweblist", accountWebList, AccountWebListResponse.class).getBody();
-            if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-                ret += response.getRecordTotal();
+            try {
+                logger.debug("发送收支明细:[{}]",JSON.toJSONString(accountWebList));
+                boolean success = accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+                if(success){
+                    ret += 1;
+                }
+            } catch (MQException e) {
+                logger.error("发送MQ失败:" + e);
             }
-
-
             BankMerchantAccount nowBankMerchantAccount = this.getBankMerchantAccount(bankBean.getAccountId());
             nowBankMerchantAccount.setAvailableBalance(nowBankMerchantAccount.getAvailableBalance().subtract(money));
             nowBankMerchantAccount.setAccountBalance(nowBankMerchantAccount.getAccountBalance().subtract(money));
