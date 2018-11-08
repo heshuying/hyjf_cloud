@@ -132,7 +132,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                     AdminCouponCheckRequest accr = new AdminCouponCheckRequest();
                     accr.setFileName(originalFilename);
                     accr.setCreateTime(String.valueOf(createTime));
-                    accr.setFilePath(FILEUPLOADPATH + "/" + fileRealName);
+                    accr.setFilePath(FILEUPLOADPATH + "/" + today + "/" + fileRealName);
                     accr.setDeFlag(0);
                     accr.setStatus(1);
                     checkResponse = amConfigClient.insert(accr);
@@ -210,9 +210,9 @@ public class CouponCheckServiceImpl implements CouponCheckService {
             String[] split = path.split(",");
             String filePath = split[1];
             Map<String, String> nameMaps = new HashMap<>();
-            nameMaps.put("couponCode", "couponCode");
-            nameMaps.put("activityId", "activityId");
             nameMaps.put("userName", "userName");
+            nameMaps.put("activityId", "activityId");
+            nameMaps.put("couponCode", "couponCode");
             ReadExcel readExcel = new ReadExcel();
             List<JSONObject> list = new ArrayList<>();
             try {

@@ -17,6 +17,7 @@ import com.hyjf.admin.service.OpenAccountEnquiryService;
 import com.hyjf.admin.utils.BankUtil;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankOpenAccountRequest;
+import com.hyjf.am.vo.admin.BankOpenAccountLogVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
@@ -45,10 +46,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @version OpenAccountEnquiryServiceImpl, v0.1 2018/8/20 16:36
@@ -163,7 +161,15 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
                             result.setAddr((String) jso.get("addr"));
                             result.setName(userInfoVO.getTruename());
                             result.setRoleId((String) jso.get("identity"));
-                            result.setPlatform(1+"");
+                            List<BankOpenAccountLogVO> log = amUserClient.getBankOpenAccountLogVOByUserId(user.getUserId());
+                            Integer platform = 1;
+                            if(log!=null && log.size()>0){
+                                platform = log.get(0).getClient();
+                            }
+                            if(platform==null){
+                                platform = 1;
+                            }
+                            result.setPlatform(platform+"");
                             result.setUserid(user.getUserId()+"");
                             result.setChannel(BankCallConstant.CHANNEL_PC);
                             return result;

@@ -35,4 +35,10 @@ public interface HelpCustomizeMapper {
      * 查询首页文章数据 单独
      */
     List<ContentArticle> selectByExampleWithBLOBsAlone(ContentArticleExample example);
+
+    /**
+     * 查詢幫助中心菜单父id
+     * @return
+     */
+    Integer selectCategoryPid();
 }

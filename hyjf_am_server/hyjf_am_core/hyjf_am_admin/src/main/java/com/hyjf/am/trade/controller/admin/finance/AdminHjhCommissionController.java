@@ -60,21 +60,23 @@ public class AdminHjhCommissionController {
 			// 前台未传分页那默认 10
 			paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
 		}
-		List<HjhCommissionCustomizeVO> list = adminHjhCommissionService.selectHjhCommissionList(request,paginator.getOffset(), paginator.getLimit());
         if(count > 0){
+			List<HjhCommissionCustomizeVO> list = adminHjhCommissionService.selectHjhCommissionList(request,paginator.getOffset(), paginator.getLimit());
             if (!CollectionUtils.isEmpty(list)) {
                 response.setResultList(list);
-                response.setCount(count);
                 //代表成功
                 response.setRtn(Response.SUCCESS);
-            }
+            }else{
+				response.setResultList(null);
+			}
         }
+		response.setCount(count);
         return response;
 	}
 	
     /**
      * 查询金额总计 
-     * @param id
+     * @param request
      * @return
      */
 	@RequestMapping(value = "/selecthjhCommissionTotal",method = RequestMethod.POST)
@@ -106,7 +108,7 @@ public class AdminHjhCommissionController {
 	
    /**
 	 * 查询汇计划提成是否已经发放
-	 * @param id
+	 * @param ids
 	 * @return
 	 */
 	@RequestMapping("/queryTenderCommissionByPrimaryKey/{ids}")
@@ -135,7 +137,7 @@ public class AdminHjhCommissionController {
 	
    /**
 	 * 提成发放方式
-	 * @param id
+	 * @param userId
 	 * @return
 	 */
 	@RequestMapping("/queryCrmCuttype/{userId}")
@@ -150,7 +152,7 @@ public class AdminHjhCommissionController {
 	
    /**
 	 * 发提成
-	 * @param id
+	 * @param request
 	 * @return
 	 */
 	@PostMapping(value = "/updateTenderCommissionRecord")

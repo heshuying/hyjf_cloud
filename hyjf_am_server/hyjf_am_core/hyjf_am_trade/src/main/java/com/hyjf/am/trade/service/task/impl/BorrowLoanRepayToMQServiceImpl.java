@@ -108,6 +108,14 @@ public class BorrowLoanRepayToMQServiceImpl extends BaseServiceImpl implements B
 						// 计划类还款
 						sendMessage(MQConstant.BORROW_REPAY_PLAN_RESULT_TOPIC, apicron);
                     	logger.info("发送计划还款结果处理消息:还款项目编号:[" + apicron.getBorrowNid() + "],计划编号:" + apicron.getPlanNid());
+                    	
+					}else if(TASK_LOAN_TYPE.equals(apicron.getApiType()) && StringUtils.isBlank(apicron.getPlanNid()) ) {
+						sendMessage(MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_TOPIC, apicron);
+                    	logger.info("发送散标放款结果处理:项目编号:[" + apicron.getBorrowNid() + "]");
+                    	
+					}else if(TASK_LOAN_TYPE.equals(apicron.getApiType()) && StringUtils.isNotBlank(apicron.getPlanNid()) ) {
+						sendMessage(MQConstant.BORROW_REALTIMELOAN_PLAN_REQUEST_TOPIC, apicron);
+                    	logger.info("发送计划放款结果处理:项目编号:[" + apicron.getBorrowNid() + "],计划编号:" + apicron.getPlanNid());
 					}
 					
 				}else if(status.equals(CustomConstants.BANK_BATCH_STATUS_FAIL)){
@@ -119,10 +127,10 @@ public class BorrowLoanRepayToMQServiceImpl extends BaseServiceImpl implements B
 							logger.info("------------开始修复标的号:" + apicron.getBorrowNid() + ",放款异常!计划编号:" + apicron.getPlanNid());
 							if (StringUtils.isBlank(apicron.getPlanNid())) {//直投标的
 								sendMessage(MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_TOPIC, apicron);
-		                    	logger.info("发送散标放款请求:还款项目编号:[" + apicron.getBorrowNid() + "]");
+		                    	logger.info("发送散标放款异常结果处理:项目编号:[" + apicron.getBorrowNid() + "]");
 							}else if(StringUtils.isNotBlank(apicron.getPlanNid())){//计划标的
 								sendMessage(MQConstant.BORROW_REALTIMELOAN_PLAN_REQUEST_TOPIC, apicron);
-		                    	logger.info("发送计划放款请求:还款项目编号:[" + apicron.getBorrowNid() + "],计划编号:" + apicron.getPlanNid());
+		                    	logger.info("发送计划放款异常结果处理:项目编号:[" + apicron.getBorrowNid() + "],计划编号:" + apicron.getPlanNid());
 							}
 						}
 					}
@@ -270,8 +278,8 @@ public class BorrowLoanRepayToMQServiceImpl extends BaseServiceImpl implements B
     public void sendMessage(String topic, BorrowApicron apiCron){
     	
         try {
-			borrowLoanRepayProducer.messageSend(
-			        new MessageContent(topic, apiCron.getBorrowNid(), JSON.toJSONBytes(apiCron)));
+			borrowLoanRepayProducer.messageSendDelay(
+			        new MessageContent(topic, apiCron.getBorrowNid(), JSON.toJSONBytes(apiCron)), 2);
 			
 		} catch (MQException e) {
 			e.printStackTrace();

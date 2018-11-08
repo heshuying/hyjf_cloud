@@ -169,8 +169,6 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
     @Override
     public int updateTenderCommissionRecord(PushMoneyRequest request) {
         int ret = 0;
-        Integer loginUserId = request.getLoginUserId();
-
         TenderCommissionVO tenderCommissionVO = request.getTenderCommissionVO();
 
         BankCallBeanVO bankBean = request.getBankCallBeanVO();
@@ -323,14 +321,22 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
                 bankMerchantAccountList.setCreateTime(new Date());
                 bankMerchantAccountList.setUpdateTime(new Date());
                 bankMerchantAccountList.setUpdateTime(new Date());
-                bankMerchantAccountList.setCreateUserId(loginUserId);
-                bankMerchantAccountList.setUpdateUserId(loginUserId);
+                bankMerchantAccountList.setCreateUserId(userId);
+                bankMerchantAccountList.setUpdateUserId(userId);
                 bankMerchantAccountList.setRemark("投资推广提成");
-                bankMerchantAccountList.setRegionName(StringUtils.isBlank(userInfoCustomize.getRegionName())?"":userInfoCustomize.getRegionName());
-                bankMerchantAccountList.setBranchName(StringUtils.isBlank(userInfoCustomize.getBranchName())?"":userInfoCustomize.getBranchName());
-                bankMerchantAccountList.setDepartmentName(StringUtils.isBlank(userInfoCustomize.getDepartmentName())?"":userInfoCustomize.getDepartmentName());
-                bankMerchantAccountList.setCreateUserName(StringUtils.isBlank(userInfoCustomize.getUserName())?"":userInfoCustomize.getUserName());
-                bankMerchantAccountList.setUpdateUserName(StringUtils.isBlank(userInfoCustomize.getUserName())?"":userInfoCustomize.getUserName());
+                if(userInfoCustomize != null){
+                    bankMerchantAccountList.setRegionName(StringUtils.isBlank(userInfoCustomize.getRegionName())?"":userInfoCustomize.getRegionName());
+                    bankMerchantAccountList.setBranchName(StringUtils.isBlank(userInfoCustomize.getBranchName())?"":userInfoCustomize.getBranchName());
+                    bankMerchantAccountList.setDepartmentName(StringUtils.isBlank(userInfoCustomize.getDepartmentName())?"":userInfoCustomize.getDepartmentName());
+                    bankMerchantAccountList.setCreateUserName(StringUtils.isBlank(userInfoCustomize.getUserName())?"":userInfoCustomize.getUserName());
+                    bankMerchantAccountList.setUpdateUserName(StringUtils.isBlank(userInfoCustomize.getUserName())?"":userInfoCustomize.getUserName());
+                }else{
+                    bankMerchantAccountList.setRegionName("");
+                    bankMerchantAccountList.setBranchName("");
+                    bankMerchantAccountList.setDepartmentName("");
+                    bankMerchantAccountList.setCreateUserName("");
+                    bankMerchantAccountList.setUpdateUserName("");
+                }
                 this.bankMerchantAccountListMapper.insertSelective(bankMerchantAccountList);
             }
 

@@ -96,6 +96,9 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
         // 根据项目编号取得borrow表
 
         BorrowAndInfoVO borrow = this.amTradeClient.selectBorrowByNid(borrowNid);
+        if(borrow==null){
+            logger.info("根据项目编号取得borrow表失敗borrowNid："+borrowNid);
+        }
 
         // 根据项目编号取得borrowTender表
         List<BorrowTenderVO> borrowTenderList = this.amTradeClient.searchBorrowTenderByBorrowNid(borrowNid);
@@ -175,6 +178,7 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
             }
 
             // 计算提成(提成金额,提成人,提成人部门ID,投资人部门ID)
+            logger.info("计算提成borrow：" + JSONObject.toJSON(borrow));
             calculaeCommission(tenderCommissionRequest, borrowTender.getTenderUserAttribute(), // 投资时投资人的用户属性
                     borrowTender.getInviteUserAttribute(), // 投资时推荐人的用户属性
                     borrow.getBorrowStyle(), // 还款方式（endday表示天，其它表示月）
@@ -500,7 +504,6 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
                     // 发提成处理
                     PushMoneyRequest pushMoneyRequest = new PushMoneyRequest();
                     pushMoneyRequest.setTenderCommissionVO(tenderCommissionVO);
-                    pushMoneyRequest.setLoginUserId(loginUserId);
                     AdminSystemVO adminSystemVO = amConfigClient.getUserInfoById(loginUserId);
                     pushMoneyRequest.setLoginUserName(adminSystemVO.getUsername());
                     pushMoneyRequest.setBankOpenAccountVO(bankOpenAccountVO);

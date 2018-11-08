@@ -94,8 +94,6 @@ public class PushMoneyRequest extends PushMoneyVO implements Serializable {
 	@ApiModelProperty(value = "ids(支持批量删除)")
 	private String ids;
 
-	@ApiModelProperty(value = "登录用户id(后台用)")
-	private Integer loginUserId;
 	@ApiModelProperty(value = "登录用户名(后台用)")
 	private String loginUserName;
 	private TenderCommissionVO tenderCommissionVO;
@@ -364,14 +362,6 @@ public class PushMoneyRequest extends PushMoneyVO implements Serializable {
 
 	public void setRecoverDateEnd(String recoverDateEnd) {
 		this.recoverDateEnd = recoverDateEnd;
-	}
-
-	public Integer getLoginUserId() {
-		return loginUserId;
-	}
-
-	public void setLoginUserId(Integer loginUserId) {
-		this.loginUserId = loginUserId;
 	}
 
 	public String getLoginUserName() {
