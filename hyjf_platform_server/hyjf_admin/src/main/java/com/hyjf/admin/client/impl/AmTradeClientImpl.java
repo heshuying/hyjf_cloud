@@ -749,9 +749,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<BankRepayFreezeLogVO> getFreezeLogValidAll(Integer limitStart, Integer limitEnd) {
-        Map<String, String> params = new HashMap<>();
-        params.put("limitStart", "1");
-        params.put("limitEnd", "10");
+        Map<String, Object> params = new HashMap<>();
+        params.put("limitStart", limitStart);
+        params.put("limitEnd", limitEnd);
         String url = "http://AM-ADMIN/am-admin/repayfreezelog/get_logvalid_all";
         BankRepayFreezeLogResponse response = restTemplate.postForEntity(url, params, BankRepayFreezeLogResponse.class).getBody();
         if (response != null) {
