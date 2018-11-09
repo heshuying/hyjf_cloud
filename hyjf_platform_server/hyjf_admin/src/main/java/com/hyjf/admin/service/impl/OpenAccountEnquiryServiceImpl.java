@@ -14,7 +14,6 @@ import com.hyjf.admin.mq.FddCertificateProducer;
 import com.hyjf.admin.mq.SmsProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.OpenAccountEnquiryService;
-import com.hyjf.admin.utils.BankUtil;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankOpenAccountRequest;
 import com.hyjf.am.vo.admin.BankOpenAccountLogVO;
@@ -159,7 +158,6 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
                             result.setIdcard((String) jso.get("idNo"));
                             result.setName((String) jso.get("name"));
                             result.setAddr((String) jso.get("addr"));
-                            result.setName(userInfoVO.getTruename());
                             result.setRoleId((String) jso.get("identity"));
                             List<BankOpenAccountLogVO> log = amUserClient.getBankOpenAccountLogVOByUserId(user.getUserId());
                             Integer platform = 1;
