@@ -19,7 +19,7 @@
 			u.username,
 			t.account_tender,
 			t.commission,
-		    t.update_time  AS rewardTime,
+			FROM_UNIXTIME(t.send_time, '%Y-%m-%d %H:%i:%s') AS rewardTime,
 			t.borrow_nid,
 			0 type,
 			0 coupon_type
