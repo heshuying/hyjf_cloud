@@ -18,6 +18,8 @@ import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
@@ -451,6 +453,55 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         logger.info("creditAssign {}", JSONObject.toJSONString(creditAssign));
         // 检查金额
         this.checkTenderMoney(request, tenderAccount,creditAssign);
+        //判断用户的测评金额上限
+        // TODO: 2018/10/13  校验用户测评金额和类型并返回
+        //从user中获取客户类型，ht_user_evalation_result（用户测评总结表）
+        UserEvalationResultVO userEvalationResultCustomize = amUserClient.selectUserEvalationResultByUserId(userId);
+        if(userEvalationResultCustomize != null){
+            //返回限额和类型组装成json数据
+            JSONObject jsonObj = new JSONObject();
+            //从redis中获取测评类型和上限金额
+            String revaluation_money = null;
+            String eval_type = userEvalationResultCustomize.getEvalType();
+            switch (eval_type){
+                case "保守型":
+                    revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE);
+                    break;
+                case "稳健型":
+                    revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS);
+                    break;
+                case "成长型":
+                    revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_GROWTH) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_GROWTH);
+                    break;
+                case "进取型":
+                    revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE);
+                    break;
+                default:
+                    revaluation_money = null;
+            }
+            if(revaluation_money == null){
+                logger.info("=============从redis中获取测评类型和上限金额异常!(没有获取到对应类型的限额数据) eval_type="+eval_type);
+            }else {
+                //当前日期
+				/*Long lNow = System.currentTimeMillis();
+				if (lCreate <= lNow) {
+					//已过期需要重新评测
+					result.put("error", CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED);
+					return result;
+				}*/
+                //金额对比判断（校验金额 大于 设置测评金额）
+                if (new BigDecimal(request.getAccount()).compareTo(new BigDecimal(revaluation_money)) > 0) {
+                    //返回类型和限额
+                    Map<String,Object> map = new HashedMap();
+                    map.put("evalType",eval_type);
+                    map.put("revaluationMoney",StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money)));
+                    //返回错误码
+                    throw new CheckException(CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS,"测评限额超额",map);
+                }
+            }
+        }else{
+            logger.info("=============该用户测评总结数据为空! userId="+userId);
+        }
         logger.info("债转投资校验通过始   userId:{},credNid:{},ip:{},平台{}", userId, request.getCreditNid(), request.getIp(), request.getPlatform());
         return new WebResult<Map<String, Object>>();
     }
@@ -1080,6 +1131,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 assignPayInterest = creditInterest;
                 // 实付金额 承接本金*（1-折价率）+应垫付利息
                 assignPay = assignPrice.add(assignInterestAdvance);
+                logger.info("1垫付利息::"+assignInterestAdvance);
             } else {// 按月
                 // 债转本息
                 creditAccount = DuePrincipalAndInterestUtils.getMonthPrincipalInterestAfterCredit(new BigDecimal(assignCapital), sellerCapitalWait, sellerInterestWait, yearRate,
@@ -1091,6 +1143,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 // 垫息总额=债权本金*年化收益÷12*融资期限-债权本金*年化收益÷360*剩余天数
                 assignInterestAdvance = DuePrincipalAndInterestUtils.getMonthAssignInterestAdvanceAfterCredit(new BigDecimal(assignCapital), sellerCapitalWait,
                         sellerInterestAdvanceWait, yearRate, borrow.getBorrowPeriod(), new BigDecimal(lastDays));
+                logger.info("2垫付利息::"+assignInterestAdvance);
                 // 债转利息
                 // assignPayInterest =
                 // creditInterest.subtract(assignInterestAdvance);
@@ -1125,6 +1178,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 assignInterestAdvance = sellerInterestAdvanceWait;
                 // 实付金额 承接本金*（1-折价率）+应垫付利息
                 assignPay = assignPrice.add(assignInterestAdvance);
+                logger.info("3垫付利息::"+assignInterestAdvance);
             } else {
                 // 承接人每月应还利息
                 BigDecimal interestAssign = BeforeInterestAfterPrincipalUtils.getPerTermInterest(new BigDecimal(assignCapital), borrowCredit.getBidApr().divide(new BigDecimal(100)),
@@ -1147,6 +1201,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 assignPay = assignPrice.add(assignInterestAdvance);
             }
         }
+        logger.info("4assignInterestAdvance:{} ",assignInterestAdvance);
         // 保存credit_tender_log表
         creditTenderLog.setUserId(user.getUserId());
         creditTenderLog.setCreditUserId(borrowCredit.getCreditUserId());

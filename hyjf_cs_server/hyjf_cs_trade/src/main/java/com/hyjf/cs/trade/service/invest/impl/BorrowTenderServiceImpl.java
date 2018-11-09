@@ -966,7 +966,62 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 return resultVo;
             }
         }
-
+        if (!(tender.getMoney() == null || "".equals(tender.getMoney()) || (new BigDecimal(tender.getMoney()).compareTo(BigDecimal.ZERO) == 0))) {
+            //从user中获取客户类型，ht_user_evalation_result（用户测评总结表）
+            UserEvalationResultVO userEvalationResultCustomize = amUserClient.selectUserEvalationResultByUserId(tender.getUserId());
+            if (userEvalationResultCustomize != null) {
+                //从redis中获取测评类型和上限金额
+                String revaluation_money = null;
+                String eval_type = userEvalationResultCustomize.getEvalType();
+                switch (eval_type) {
+                    case "保守型":
+                        revaluation_money = RedisUtils.get(com.hyjf.common.cache.RedisConstants.REVALUATION_CONSERVATIVE);
+                        break;
+                    case "稳健型":
+                        revaluation_money = RedisUtils.get(com.hyjf.common.cache.RedisConstants.REVALUATION_ROBUSTNESS);
+                        break;
+                    case "成长型":
+                        revaluation_money = RedisUtils.get(com.hyjf.common.cache.RedisConstants.REVALUATION_GROWTH);
+                        break;
+                    case "进取型":
+                        revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE);
+                        break;
+                    default:
+                        revaluation_money = null;
+                }
+                //计划类判断用户类型为稳健型以上才可以投资
+                if("HJH".equals(investType)) {
+                    if (userEvalationResultCustomize != null) {
+                        if (!CommonUtils.checkStandardInvestment(userEvalationResultCustomize.getEvalType())) {
+                            //是否需要重新测评
+                            //返回类型和限额
+                            investInfo.setProjectRevalJudge(true);
+                            investInfo.setEvalType(eval_type);
+                            investInfo.setProjectRiskLevelDesc(CommonUtils.DESC_PROJECT_RISK_LEVEL_DESC.replace("{0}", userEvalationResultCustomize.getEvalType()));
+                        }
+                    }
+                }
+                if (revaluation_money == null) {
+                    logger.info("=============从redis中获取测评类型和上限金额异常!(没有获取到对应类型的限额数据) eval_type=" + eval_type);
+                }else {
+                    //金额对比判断（校验金额 大于 设置测评金额）
+                    if (new BigDecimal(tender.getMoney()).compareTo(new BigDecimal(revaluation_money)) > 0) {
+                        //返回错误码
+                        //resultVo.setStatus("0");
+                        //是否需要重新测评
+                        investInfo.setRevalJudge(true);
+                        //返回类型和限额
+                        investInfo.setEvalType(eval_type);
+                        investInfo.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money)));
+                        investInfo.setRiskLevelDesc("您当前的风险测评类型为 #"+eval_type+"# \n根据监管要求,\n"+eval_type+"用户单笔最高投资限额 #"
+                                +StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money))+"# 。");
+                        //return resultVo;
+                    }
+                }
+            } else {
+                logger.info("=============该用户测评总结数据为空! userId=" + tender.getUserId());
+            }
+        }
         logger.info("investType:[{}]",investType);
         String money = tender.getMoney();
         {
@@ -1568,6 +1623,44 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         // 检查金额
         this.checkTenderMoney(request, borrow, cuc, tenderAccount );
+        //从user中获取客户类型，ht_user_evalation_result（用户测评总结表）
+        UserEvalationResultVO userEvalationResultCustomize = amUserClient.selectUserEvalationResultByUserId(userId);
+        if(userEvalationResultCustomize != null){
+            Map<String, Object> result = new HashMap<String, Object>();
+            //从redis中获取测评类型和上限金额
+            String revaluation_money = null;
+            String eval_type = userEvalationResultCustomize.getEvalType();
+            switch (eval_type){
+                case "保守型":
+                    revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE);
+                    break;
+                case "稳健型":
+                    revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS);
+                    break;
+                case "成长型":
+                    revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_GROWTH) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_GROWTH);
+                    break;
+                case "进取型":
+                    revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE);
+                    break;
+                default:
+                    revaluation_money = null;
+            }
+            if(revaluation_money == null){
+                logger.info("=============从redis中获取测评类型和上限金额异常!(没有获取到对应类型的限额数据) eval_type="+eval_type);
+            }else {
+                //金额对比判断（校验金额 大于 设置测评金额）
+                if (new BigDecimal(request.getAccount()).compareTo(new BigDecimal(revaluation_money)) > 0) {
+                    //返回类型和限额
+                    result.put("evalType",eval_type);
+                    result.put("revaluationMoney",StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money)));
+                    //返回错误码
+                    throw new CheckException(CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS,"测评限额超额",result);
+                }
+            }
+        }else{
+            logger.info("=============该用户测评总结数据为空! userId="+userId);
+        }
         logger.info("所有参数都已检查通过!");
         return new WebResult<Map<String, Object>>();
     }
