@@ -1773,7 +1773,7 @@ public class BorrowCommonController extends BaseController {
 			// 单元格为公式类型时
 			if (hssfCell.getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC) {
 				// 返回数值类型的值
-				return String.valueOf(hssfCell.getNumericCellValue());
+				return String.valueOf((int)hssfCell.getNumericCellValue());
 			}else{
 				// 返回字符串类型的值
 				return String.valueOf(hssfCell.getStringCellValue());
