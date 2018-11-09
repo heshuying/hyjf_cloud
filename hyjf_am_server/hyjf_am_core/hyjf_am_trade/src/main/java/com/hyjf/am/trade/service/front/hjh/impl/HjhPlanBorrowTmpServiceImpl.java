@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 public class HjhPlanBorrowTmpServiceImpl extends BaseServiceImpl implements HjhPlanBorrowTmpService {
     @Override
     public int insertHjhPlanBorrowTmp(HjhPlanBorrowTmp hjhPlanBorrowTmp) {
-        return this.hjhPlanBorrowTmpMapper.insertSelective(hjhPlanBorrowTmp);
+        return this.hjhPlanBorrowTmpMapper.insert(hjhPlanBorrowTmp);
     }
 
     @Override
