@@ -19,6 +19,8 @@ public class BankRepayFreezeOrgCheckResponseBean {
     private String orderId;
     @ApiModelProperty(value = "冻结记录添加时间")
     private Date createTime;
+    @ApiModelProperty(value = "冻结记录添加时间10位时间戳")
+    private String createTimeInt;
     @ApiModelProperty(value = "返回描述")
     private String msg;
 
@@ -68,5 +70,13 @@ public class BankRepayFreezeOrgCheckResponseBean {
 
     public void setMsg(String msg) {
         this.msg = msg;
+    }
+
+    public String getCreateTimeInt() {
+        return createTimeInt;
+    }
+
+    public void setCreateTimeInt(String createTimeInt) {
+        this.createTimeInt = createTimeInt;
     }
 }
