@@ -226,7 +226,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
             return resultBean;
         }
         Integer userId = Integer.parseInt(requestBean.getUserid());
-       boolean deleteLogFlag = this.amUserClient.deleteBankOpenAccountLogByUserId(userId);
+      boolean deleteLogFlag = this.amUserClient.deleteBankOpenAccountLogByUserId(userId);
         if (!deleteLogFlag) {
             logger.error("删除用户开户日志表失败，用户userId:" + userId);
             resultBean.setStatus("n");
@@ -244,7 +244,6 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         }
         // 获取用户信息
         UserVO user = amUserClient.getUserByUserId(userId);
-        String userName = user.getUsername();
         String trueName = requestBean.getName();
         if (idCard.length() < 18) {
             try {
@@ -311,7 +310,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         openAccount.setUserId(userId);
         openAccount.setUserName(user.getUsername());
         openAccount.setAccount(requestBean.getAccountId());
-        openAccount.setCreateTime(GetDate.stringToDate(requestBean.getRegTimeEnd()));
+        //openAccount.setCreateTime(GetDate.stringToDate(requestBean.getRegTimeEnd()));
         openAccount.setCreateUserId(userId);
         boolean openAccountFlag = amUserClient.insertBankOpenAccount(openAccount)> 0 ? true : false;
         if (!openAccountFlag) {
@@ -348,8 +347,6 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         } catch (Exception e) {
             logger.error("开户掉单处理成功之后 发送法大大CA认证MQ消息失败！userId:[{}]",userId);
         }
-        //rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_COUPON, RabbitMQConstants.ROUTINGKEY_CERTIFICATE_AUTHORITY, JSONObject.toJSONString(params));
-        // add by liuyang 20180227 开户掉单处理成功之后 发送法大大CA认证MQ  end
         resultBean.setStatus("y");
         resultBean.setResult("开户掉单同步成功!");
         return resultBean;

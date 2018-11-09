@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.CommisionComputeService;
 import com.hyjf.am.vo.trade.HjhLockVo;
@@ -173,6 +174,7 @@ public class CommisionComputeServiceImpl extends BaseServiceImpl implements Comm
                     .andTenderIdEqualTo(record.getId());
             if (this.tenderCommissionMapper.countByExample(tenderCommissionExample) == 0) {
                 // 执行插入
+                logger.info("tenderCommission:::::[{}]", JSON.toJSONString(tenderCommission));
                 int result = this.tenderCommissionMapper.insertSelective(tenderCommission);
                 if(result > 0){
                     statusUpdate(record, 1);

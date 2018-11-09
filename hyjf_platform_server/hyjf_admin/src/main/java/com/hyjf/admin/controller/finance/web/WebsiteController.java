@@ -35,10 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author zhangqingqing
@@ -208,7 +205,7 @@ public class WebsiteController extends BaseController {
             @Override
             public String format(Object object) {
                 Double amount = (Double) object;
-                return amount == null ? "0.00" : amount.toString();
+                return amount == null ? "0.00" : String.format("%.2f",amount);
             }
         };
         IValueFormatter createTimeAdapter = new IValueFormatter() {
