@@ -94,8 +94,8 @@ public class CrmBankOpenMessageConsumer extends Consumer{
                 try {
                     Integer userId = Integer.parseInt(String.valueOf(msgMap.get("userId")).trim());
                     logger.info("crmInsertUrl================:"+crmInsertUrl+"；buildData(userId) is null："+(buildData(userId)==null));
-                    result = restTemplate.postForEntity(crmInsertUrl, buildData(userId).toJSONString(),CloseableHttpResponse.class).getBody();
-                    //result = postJson(crmInsertUrl, buildData(userId).toJSONString());
+                   // result = restTemplate.postForEntity(crmInsertUrl, buildData(userId).toJSONString(),CloseableHttpResponse.class).getBody();
+                    result = postJson(crmInsertUrl, buildData(userId).toJSONString());
                 } catch (Exception e) {
                     logger.error("【crm开户同步】异常，重新投递", e);
                     return ConsumeConcurrentlyStatus.RECONSUME_LATER;
