@@ -71,8 +71,8 @@ public class IncreaseInterestRepayPlanController extends BaseController {
 	 * @param form
 	 */
 	@ApiOperation(value = "产品中心-加息还款计划", notes = "产品中心-加息还款计划 导出还款计划详情")
-	@GetMapping("/export")
-	public void exportAction(HttpServletRequest request, HttpServletResponse response, IncreaseInterestRepayPlanRequest form) throws Exception {
+	@PostMapping("/export")
+	public void exportAction(HttpServletRequest request, HttpServletResponse response,@RequestBody IncreaseInterestRepayPlanRequest form) throws Exception {
 		//sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 		// 表格sheet名称
