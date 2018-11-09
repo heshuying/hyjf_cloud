@@ -202,6 +202,17 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             }
             investInfo.setCouponConfig(bestCouponListVO);
             investInfo.setIsThereCoupon(1);
+        }else{
+            if(couponUser!=null){
+                BestCouponListVO couponConfig = new BestCouponListVO();
+                couponConfig.setCouponType(couponUser.getCouponType());
+                couponConfig.setUserCouponId(couponUser.getId()+"");
+                couponConfig.setCouponQuota(couponUser.getCouponQuota());
+                couponConfig.setCouponQuotaStr(couponConfig.getCouponQuotaStr());
+                couponConfig.setTenderQuotaType(couponUser.getCouponType());
+                investInfo.setIsThereCoupon(1);
+                investInfo.setCouponConfig(couponConfig);
+            }
         }
         /** 可用优惠券张数结束 */
 
