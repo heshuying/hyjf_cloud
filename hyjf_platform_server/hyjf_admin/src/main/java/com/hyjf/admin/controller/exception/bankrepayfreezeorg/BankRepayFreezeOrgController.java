@@ -150,7 +150,7 @@ public class BankRepayFreezeOrgController extends BaseController {
             RedisUtils.del("batchOrgRepayUserid_" + form.getRepayUserId());
             result.setStatusInfo(AdminResult.FAIL, "未冻结状态,解除冻结");
             return result;
-        } else if (form.getCreateTime() != null && GetDate.getNowTime10() < form.getCreateTimeInt() + 60 * 20) {
+        } else if (form.getCreateTimeInt() != null && GetDate.getNowTime10() < form.getCreateTimeInt() + 60 * 20) {
             logger.info("【代偿冻结异常处理】订单号：{},冻结时间不满20分钟，不予处理！",orderId);
             result.setStatusInfo(AdminResult.FAIL, "处理失败，请稍后再试！");
             return result;
