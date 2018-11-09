@@ -81,6 +81,7 @@ public class BankRepayFreezeOrgController extends BaseController {
     /**
      * 冻结异常情况查询
      */
+    @ApiOperation(value = "冻结异常情况查询", notes = "冻结异常情况查询")
     @ResponseBody
     @PostMapping(value = "/check")
     public AdminResult<BankRepayFreezeOrgCheckResponseBean> checkRepayFreezeOrgAction(HttpServletRequest request, @RequestBody BankRepayFreezeOrgCheckRequestBean form) {
@@ -126,6 +127,7 @@ public class BankRepayFreezeOrgController extends BaseController {
     /**
      * 冻结异常情况处理
      */
+    @ApiOperation(value = "冻结异常情况处理", notes = "冻结异常情况处理")
     @ResponseBody
     @PostMapping("/process")
     public AdminResult bankAccountCheckAction(HttpServletRequest request, @RequestBody BankRepayFreezeOrgProcessRequestBean form) {
