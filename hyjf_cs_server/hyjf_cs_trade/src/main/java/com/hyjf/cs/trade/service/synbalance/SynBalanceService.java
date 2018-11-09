@@ -55,13 +55,17 @@ public interface SynBalanceService extends BaseTradeService {
      * @Date
      */
     String getBankRetMsg(String retCode);
+
     /**
-     * @Description 插入用户线下充值信息
+     * 插入用户线下充值信息
+     * @param accountUser
+     * @param synBalanceBean
+     * @param user
+     * @param ipAddr
      * @Author pangchengchao
-     * @Version v0.1
-     * @Date
+     * @return
      */
-    boolean insertAccountDetails(AccountVO accountUser, SynBalanceVO synBalanceBean, String username, String ipAddr);
+    boolean insertAccountDetails(AccountVO accountUser, SynBalanceVO synBalanceBean, UserVO user, String ipAddr);
 
     /**
      * 获取数据表中线下充值类型

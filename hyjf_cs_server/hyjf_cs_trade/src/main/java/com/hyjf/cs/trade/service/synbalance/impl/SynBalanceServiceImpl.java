@@ -6,6 +6,7 @@ import com.hyjf.am.vo.admin.UnderLineRechargeVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.SynBalanceVO;
+import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.GetOrderIdUtils;
@@ -16,6 +17,7 @@ import com.hyjf.cs.trade.service.synbalance.SynBalanceService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -149,16 +151,21 @@ public class SynBalanceServiceImpl extends BaseTradeServiceImpl implements SynBa
      * @Date
      */
     @Override
-    public boolean insertAccountDetails(AccountVO accountUser, SynBalanceVO synBalanceBean, String username, String ipAddr) {
+    public boolean insertAccountDetails(AccountVO accountUser, SynBalanceVO synBalanceBean, UserVO user, String ipAddr) {
         SynBalanceBeanRequest synBalanceBeanRequest=new SynBalanceBeanRequest();
         synBalanceBeanRequest.setAccountUser(accountUser);
         synBalanceBeanRequest.setSynBalanceBean(synBalanceBean);
-        synBalanceBeanRequest.setUsername(username);
+        synBalanceBeanRequest.setUsername(user.getUsername());
         synBalanceBeanRequest.setIpAddr(ipAddr);
 
-        return  amTradeClient.insertAccountDetails(synBalanceBeanRequest);
-
-
+        // 获取用户绑卡信息
+        BankCardVO bankCardVO = amUserClient.getBankCardByUserId(user.getUserId());
+        if (null != bankCardVO){
+            synBalanceBeanRequest.setBankCardVO(bankCardVO);
+            return  amTradeClient.insertAccountDetails(synBalanceBeanRequest);
+        } else {
+            return false;
+        }
     }
 
     /**
