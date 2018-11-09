@@ -55,6 +55,9 @@ public class UserManagerRequestBean extends BasePage {
     @ApiModelProperty(value = "用户来源")
     public String instCodeSrch;
 
+    @ApiModelProperty(value = "是否具有组织架构查看权限")
+    private String isOrganizationView;
+
     //
     public String getRegTimeStart() {
         return regTimeStart;
@@ -168,4 +171,11 @@ public class UserManagerRequestBean extends BasePage {
         this.instCodeSrch = instCodeSrch;
     }
 
+    public String getIsOrganizationView() {
+        return isOrganizationView;
+    }
+
+    public void setIsOrganizationView(String isOrganizationView) {
+        this.isOrganizationView = isOrganizationView;
+    }
 }

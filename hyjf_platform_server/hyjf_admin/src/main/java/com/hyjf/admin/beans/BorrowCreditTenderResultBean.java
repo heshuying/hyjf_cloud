@@ -1,6 +1,5 @@
 package com.hyjf.admin.beans;
 
-import com.hyjf.am.vo.admin.BorrowCreditTenderVO;
 
 import java.io.Serializable;
 import java.util.List;
@@ -14,17 +13,17 @@ import java.util.Map;
 public class BorrowCreditTenderResultBean implements Serializable {
 
 
-    private List<BorrowCreditTenderVO> recordList;
+    private List<BorrowCreditTenderBean> recordList;
 
     private Map<String,Object> sumData;
 
     private Integer total;
 
-    public List<BorrowCreditTenderVO> getRecordList() {
+    public List<BorrowCreditTenderBean> getRecordList() {
         return recordList;
     }
 
-    public void setRecordList(List<BorrowCreditTenderVO> recordList) {
+    public void setRecordList(List<BorrowCreditTenderBean> recordList) {
         this.recordList = recordList;
     }
 
