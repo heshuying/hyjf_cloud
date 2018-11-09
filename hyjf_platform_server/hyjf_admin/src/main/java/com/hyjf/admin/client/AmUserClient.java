@@ -1,25 +1,27 @@
 package com.hyjf.admin.client;
 
+import java.util.List;
+import java.util.Map;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -1146,16 +1148,16 @@ public interface AmUserClient {
      * @param userId
      * @return java.lang.Boolean
      **/
-    AppChannelStatisticsDetailVO getAppChannelStatisticsDetailByUserId(Integer userId);
+    AppUtmRegVO getAppChannelStatisticsDetailByUserId(Integer userId);
 
     /**
      * 开户更新开户渠道统计开户时间
      * @author Zha Daojian
      * @date 2018/8/22 13:38
-     * @param appChannelStatisticsDetailVO
+     * @param appUtmRegVO
      * @return java.lang.Boolean
      **/
-    Boolean updateByPrimaryKeySelective(AppChannelStatisticsDetailVO appChannelStatisticsDetailVO);
+    Boolean updateByPrimaryKeySelective(AppUtmRegVO appUtmRegVO);
 
 	int isExistsUser(String userId);
     /**
@@ -1314,6 +1316,13 @@ public interface AmUserClient {
     int sourceIdIsExists(Integer sourceId);
 
     HjhUserAuthVO getHjhUserAuthByUserId(Integer userId);
+
+    /**
+     * 导出app渠道统计明细
+     * @param request
+     * @return
+     */
+    AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request);
 
     /**
      * 根据用户Id查询开户信息
