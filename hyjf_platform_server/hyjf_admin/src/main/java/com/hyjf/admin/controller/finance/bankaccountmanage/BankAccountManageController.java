@@ -381,6 +381,9 @@ public class BankAccountManageController extends BaseController {
     @PostMapping("/export_account_detail_excel")
     public void exportAccountsExcel(@RequestBody BankAccountManageRequest request, HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
 
+        // 是否具有组织机构查看权限
+        String isOrganizationView = request.getIsOrganizationView();
+
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
@@ -393,7 +396,7 @@ public class BankAccountManageController extends BaseController {
 
         int sheetCount = 0;
         String sheetNameTmp = sheetName + "_第1页";
-        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         request.setCurrPage(1);
         request.setPageSize(defaultRowMaxCount);
@@ -429,13 +432,15 @@ public class BankAccountManageController extends BaseController {
 
 
 
-    private Map<String, String> buildMap() {
+    private Map<String, String> buildMap(String isOrganizationView) {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("userId", "用户ID");
         map.put("username", "用户名");
-        map.put("regionName", "分公司");
-        map.put("branchName", "分部");
-        map.put("departmentName", "团队");
+        if (StringUtils.isNotBlank(isOrganizationView)) {
+            map.put("regionName", "分公司");
+            map.put("branchName", "分部");
+            map.put("departmentName", "团队");
+        }
         map.put("bankTotal", "资产总额");
         map.put("account", "电子账号");
         map.put("vipName", "会员等级");

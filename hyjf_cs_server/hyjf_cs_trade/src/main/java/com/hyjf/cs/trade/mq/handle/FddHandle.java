@@ -968,7 +968,7 @@ public class FddHandle {
 		paramter = bean.getParamter();
 		String paramStr = paramter.toJSONString();
 		//垫付协议发大大Contract_id
-		String contract_id = bean.getTeString()+"-"+bean.getRepayPeriod()+"-"+bean.getOrdid();
+		String contract_id = bean.getTeString()+"-"+bean.getRepayPeriod()+"-"+bean.getOrdid()+"-"+bean.getRepayPeriod();
 		bean.setOrdid(contract_id);
 		bean.setContractName(FddGenerateContractConstant.CONTRACT_DOC_TITLE_CREDIT);
 		//bean.setTransType(3);
@@ -1023,7 +1023,7 @@ public class FddHandle {
 		// bean.setTransType(3);
 		//垫付协议发大大Contract_id
 		//GetDate.getNowTime10()測試
-		String contract_id = bean.getTeString()+"-"+bean.getRepayPeriod()+"-"+bean.getOrdid();
+		String contract_id = bean.getTeString()+"-"+bean.getRepayPeriod()+"-"+bean.getOrdid()+"-"+bean.getRepayPeriod();
 		bean.setOrdid(contract_id);
 		JSONObject paramter = new JSONObject();
 		paramter = bean.getParamter();
