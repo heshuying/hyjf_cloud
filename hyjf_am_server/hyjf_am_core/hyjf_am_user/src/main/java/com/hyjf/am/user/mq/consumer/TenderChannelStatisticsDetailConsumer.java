@@ -1,13 +1,9 @@
-package com.hyjf.cs.message.mq.consumer;
+package com.hyjf.am.user.mq.consumer;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.user.UtmRegVO;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.message.bean.ic.AppChannelStatisticsDetail;
-import com.hyjf.cs.message.client.AmUserClient;
-import com.hyjf.cs.message.mongo.ic.AppChannelStatisticsDetailDao;
-import com.hyjf.cs.message.mq.base.Consumer;
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -19,28 +15,29 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
-import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.user.dao.model.auto.AppUtmReg;
+import com.hyjf.am.user.dao.model.auto.UtmReg;
+import com.hyjf.am.user.mq.base.Consumer;
+import com.hyjf.am.user.service.front.user.AppUtmRegService;
+import com.hyjf.am.user.service.front.user.UserService;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.validator.Validator;
 
 /**
  * @Description 投资更新首投信息等
  * @Author sunss
  * @Date 2018/9/5 9:45
  */
-@Component
+//@Component
 public class TenderChannelStatisticsDetailConsumer extends Consumer {
     private static final Logger logger = LoggerFactory.getLogger(TenderChannelStatisticsDetailConsumer.class);
 
     @Autowired
-    private AppChannelStatisticsDetailDao dao;
+    private AppUtmRegService appUtmRegService;
     @Autowired
-    private AmUserClient amUserClient;
+    private UserService userService;
 
     @Override
     public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
@@ -67,42 +64,34 @@ public class TenderChannelStatisticsDetailConsumer extends Consumer {
                 JSONObject entity = JSONObject.parseObject(msg.getBody(),
                         JSONObject.class);
                 logger.info("entity：{}",JSONObject.toJSONString(entity));
-                //查询mongo里面是否已经有数据了
+                //查询mysql里面是否已经有数据了
                 Integer userId = entity.getInteger("userId");
-                AppChannelStatisticsDetail appChannelStatisticsDetails = dao.findByUserId(userId);
-                logger.info("AppChannelStatisticsDetail:{}",JSONObject.toJSONString(appChannelStatisticsDetails));
-                if (appChannelStatisticsDetails != null) {
+                AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
+                logger.info("AppUtmReg:{}",JSONObject.toJSONString(appUtmReg));
+                if (appUtmReg != null) {
                     if (Validator.isNotNull(entity)) {
-                        Integer investFlag = amUserClient.countNewUserTotal(userId);
+                        Integer investFlag = userService.selectTenderCount(userId);
                         if (investFlag >1) {
                             // 累计投资
-                            Query query = new Query();
-                            Criteria criteria = Criteria.where("userId").is(userId);
-                            query.addCriteria(criteria);
-                            Update update = new Update();
-                            BigDecimal accountDecimal = entity.getBigDecimal("accountDecimal");
-                            update.inc("cumulativeInvest", accountDecimal);
-                            dao.update(query, update);
+                            BigDecimal accountDecimal = entity.getBigDecimal("accountDecimal")==null?BigDecimal.ZERO:entity.getBigDecimal("accountDecimal");
+                            BigDecimal cumulativeInvest = appUtmReg.getCumulativeInvest()==null?BigDecimal.ZERO:appUtmReg.getCumulativeInvest();
+                            appUtmReg.setCumulativeInvest(cumulativeInvest.add(accountDecimal));
+                            appUtmRegService.update(appUtmReg);
                         } else if (investFlag == 1) {
                             logger.info("开始更新首次投资信息....userId:"+userId);
                             // 首次投资
                             try{
-                                Query query = new Query();
-                                Criteria criteria = Criteria.where("userId").is(userId);
-                                query.addCriteria(criteria);
-
-                                Update update = new Update();
-
-                                BigDecimal accountDecimal = entity.getBigDecimal("accountDecimal");
+                                BigDecimal accountDecimal = entity.getBigDecimal("accountDecimal")==null?BigDecimal.ZERO:entity.getBigDecimal("accountDecimal");
                                 String projectType = entity.getString("projectType");
                                 Integer investTime = entity.getInteger("investTime");
                                 String investProjectPeriod = entity.getString("investProjectPeriod");
 
-                                update.inc("cumulativeInvest", accountDecimal).set("investAmount", accountDecimal)
-                                        .set("investProjectType", projectType).set("firstInvestTime", investTime)
-                                        .set("investProjectPeriod", investProjectPeriod);
-
-                                dao.update(query, update);
+                                appUtmReg.setCumulativeInvest(accountDecimal.add(accountDecimal));
+                                appUtmReg.setInvestAmount(accountDecimal);
+                                appUtmReg.setInvestProjectType(projectType);
+                                appUtmReg.setFirstInvestTime(investTime);
+                                appUtmReg.setInvestProjectPeriod(investProjectPeriod);
+                                appUtmRegService.update(appUtmReg);
                             }catch (Exception e){
                                 logger.error("报错了。。。",e);
                             }
@@ -110,7 +99,7 @@ public class TenderChannelStatisticsDetailConsumer extends Consumer {
                     }
                 } else {
                     // 更新huiyingdai_utm_reg的首投信息
-                    UtmRegVO utmReg = amUserClient.findUtmRegByUserId(userId);
+                    UtmReg utmReg = userService.findUtmRegByUserId(userId);
                     if (utmReg != null) {
                         boolean isTender = checkIsNewUserCanInvest(userId);
                         // 更新渠道统计用户累计投资
@@ -119,7 +108,7 @@ public class TenderChannelStatisticsDetailConsumer extends Consumer {
                             try {
                                 HashMap<String, Object> params = JSONObject.parseObject(msg.getBody(), HashMap.class);
                                 params.put("investFlag", isTender);
-                                amUserClient.updateFirstUtmReg(params);
+                                userService.updateFirstUtmReg(params);
                             } catch (Exception e) {
                                 e.printStackTrace();
                                 logger.error("更新huiyingdai_utm_reg的首投信息失败");
@@ -142,7 +131,7 @@ public class TenderChannelStatisticsDetailConsumer extends Consumer {
      */
     private boolean checkIsNewUserCanInvest(Integer userId) {
         // 新的判断是否为新用户方法
-        int total = amUserClient.countNewUserTotal(userId);
+        int total = userService.selectTenderCount(userId);
         if (total == 0) {
             return true;
         } else {

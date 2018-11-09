@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.service.myproject.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
@@ -58,11 +59,13 @@ public class MyProjectServiceImpl extends BaseUserServiceImpl implements MyProje
                 }
                 //判断type是否为4（4加息），将couponType设置为4
                 if("4".equals(customize.getType())){
+                    logger.info("微信端查询我的资产...[{}]数据的type:[{}]",customize.getBorrowNid(),customize.getType());
                     customize.setCouponType("4");
                     //将"borrowExtraYield": 替换为 "data":
                     customize.setData(customize.getBorrowExtraYield());
                 }
             }
+            logger.info("微信端查询我的资产:[{}]", JSON.toJSONString(lst));
             vo.getLstProject().addAll(lst);
         }
         boolean isEnd = pageSize * currentPage >= total;

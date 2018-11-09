@@ -1,5 +1,15 @@
 package com.hyjf.admin.service.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.*;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -14,11 +24,11 @@ import com.hyjf.admin.mq.FddCertificateProducer;
 import com.hyjf.admin.mq.SmsProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.OpenAccountEnquiryService;
-import com.hyjf.admin.utils.BankUtil;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankOpenAccountRequest;
+import com.hyjf.am.vo.admin.BankOpenAccountLogVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
@@ -37,18 +47,6 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 /**
  * @version OpenAccountEnquiryServiceImpl, v0.1 2018/8/20 16:36
@@ -161,9 +159,16 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
                             result.setIdcard((String) jso.get("idNo"));
                             result.setName((String) jso.get("name"));
                             result.setAddr((String) jso.get("addr"));
-                            result.setName(userInfoVO.getTruename());
                             result.setRoleId((String) jso.get("identity"));
-                            result.setPlatform(1+"");
+                            List<BankOpenAccountLogVO> log = amUserClient.getBankOpenAccountLogVOByUserId(user.getUserId());
+                            Integer platform = 1;
+                            if(log!=null && log.size()>0){
+                                platform = log.get(0).getClient();
+                            }
+                            if(platform==null){
+                                platform = 1;
+                            }
+                            result.setPlatform(platform+"");
                             result.setUserid(user.getUserId()+"");
                             result.setChannel(BankCallConstant.CHANNEL_PC);
                             return result;
@@ -220,7 +225,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
             return resultBean;
         }
         Integer userId = Integer.parseInt(requestBean.getUserid());
-       boolean deleteLogFlag = this.amUserClient.deleteBankOpenAccountLogByUserId(userId);
+      boolean deleteLogFlag = this.amUserClient.deleteBankOpenAccountLogByUserId(userId);
         if (!deleteLogFlag) {
             logger.error("删除用户开户日志表失败，用户userId:" + userId);
             resultBean.setStatus("n");
@@ -238,7 +243,6 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         }
         // 获取用户信息
         UserVO user = amUserClient.getUserByUserId(userId);
-        String userName = user.getUsername();
         String trueName = requestBean.getName();
         if (idCard.length() < 18) {
             try {
@@ -305,7 +309,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         openAccount.setUserId(userId);
         openAccount.setUserName(user.getUsername());
         openAccount.setAccount(requestBean.getAccountId());
-        openAccount.setCreateTime(GetDate.stringToDate(requestBean.getRegTimeEnd()));
+        //openAccount.setCreateTime(GetDate.stringToDate(requestBean.getRegTimeEnd()));
         openAccount.setCreateUserId(userId);
         boolean openAccountFlag = amUserClient.insertBankOpenAccount(openAccount)> 0 ? true : false;
         if (!openAccountFlag) {
@@ -326,10 +330,10 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         }
 
         // 开户更新开户渠道统计开户时间
-        AppChannelStatisticsDetailVO appChannelStatisticsDetailVO = amUserClient.getAppChannelStatisticsDetailByUserId(userId);
-        if (appChannelStatisticsDetailVO != null) {
-            appChannelStatisticsDetailVO.setOpenAccountTime(GetDate.stringToDate(requestBean.getRegTimeEnd()));
-            amUserClient.updateByPrimaryKeySelective(appChannelStatisticsDetailVO);
+        AppUtmRegVO appUtmRegVO = amUserClient.getAppChannelStatisticsDetailByUserId(userId);
+        if (appUtmRegVO != null) {
+            appUtmRegVO.setOpenAccountTime(GetDate.stringToDate(requestBean.getRegTimeEnd()));
+            amUserClient.updateByPrimaryKeySelective(appUtmRegVO);
         }
         // add by liuyang 20180227 开户掉单处理成功之后 发送法大大CA认证MQ  start
         // 加入到消息队列
@@ -342,8 +346,6 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         } catch (Exception e) {
             logger.error("开户掉单处理成功之后 发送法大大CA认证MQ消息失败！userId:[{}]",userId);
         }
-        //rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_COUPON, RabbitMQConstants.ROUTINGKEY_CERTIFICATE_AUTHORITY, JSONObject.toJSONString(params));
-        // add by liuyang 20180227 开户掉单处理成功之后 发送法大大CA认证MQ  end
         resultBean.setStatus("y");
         resultBean.setResult("开户掉单同步成功!");
         return resultBean;

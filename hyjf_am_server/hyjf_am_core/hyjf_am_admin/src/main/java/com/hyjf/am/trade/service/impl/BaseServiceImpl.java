@@ -60,11 +60,11 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
      * @return
      */
     @Override
-    public BorrowInfo getBorrowInfoByNid(String borrowNid) {
+    public BorrowInfoWithBLOBs getBorrowInfoByNid(String borrowNid) {
         BorrowInfoExample example = new BorrowInfoExample();
         BorrowInfoExample.Criteria cra = example.createCriteria();
         cra.andBorrowNidEqualTo(borrowNid);
-        List<BorrowInfo> list=this.borrowInfoMapper.selectByExample(example);
+        List<BorrowInfoWithBLOBs> list=this.borrowInfoMapper.selectByExampleWithBLOBs(example);
         if (CollectionUtils.isNotEmpty(list)){
             return list.get(0);
         }
@@ -75,7 +75,7 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
     public BorrowAndInfoVO getBorrowAndInfoByNid(String borrowNid) {
         if(StringUtils.isNotBlank(borrowNid)){
             Borrow borrow = this.getBorrow(borrowNid);
-            BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
+            BorrowInfoWithBLOBs borrowInfo = this.getBorrowInfoByNid(borrowNid);
             if(borrow != null && borrowInfo != null) {
                 return copyToBorrowAndInfo(borrow,borrowInfo);
             }
@@ -500,7 +500,7 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
      * @param
      * @return
      */
-    private BorrowAndInfoVO copyToBorrowAndInfo(Borrow borrow,BorrowInfo info){
+    private BorrowAndInfoVO copyToBorrowAndInfo(Borrow borrow,BorrowInfoWithBLOBs info){
         BorrowAndInfoVO borrowAndInfoVO = CommonUtils.convertBean(borrow,BorrowAndInfoVO.class);
         borrowAndInfoVO.setBorrowPreNid(info.getBorrowPreNid());
         borrowAndInfoVO.setBorrowPreNidNew(info.getBorrowPreNidNew());

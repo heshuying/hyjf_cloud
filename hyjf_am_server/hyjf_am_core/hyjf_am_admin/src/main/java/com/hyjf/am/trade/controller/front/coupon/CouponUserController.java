@@ -112,6 +112,7 @@ public class CouponUserController extends BaseController {
             int count = couponUserService.insertCouponUser(request);
             if (count > 0) {
                 response.setRtn("0");
+                response.setCount(count);
             }
         } catch (Exception e) {
             e.printStackTrace();

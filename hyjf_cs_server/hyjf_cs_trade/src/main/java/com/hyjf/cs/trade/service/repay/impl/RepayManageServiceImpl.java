@@ -761,7 +761,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         requestBean.setPlanNid(borrow.getPlanNid());// 计划编号
         requestBean.setInstCode(borrowInfo.getInstCode());// 资产来源
         requestBean.setAmount(borrow.getAccount());// 借款金额
-        requestBean.setAmountFreeze(borrow.getRepayAccountAll());// 冻结金额
+        requestBean.setAmountFreeze(repay.getRepayAccountAll());// 冻结金额
         requestBean.setRepayAccount(repay.getRepayAccount());// 应还本息
         requestBean.setRepayFee(repay.getRepayFee());// 还款服务费
         requestBean.setLowerInterest(BigDecimal.ZERO.subtract(repay.getChargeInterest()));// 减息金额
@@ -882,7 +882,6 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         bean.setProductId(borrowNid);
         BankCallBean callBackBean = BankCallUtils.callApiBg(bean);
         String respCode = callBackBean == null ? "" : callBackBean.getRetCode();
-        respCode = "";//  测试借款人还款异常 2018/11/8
         // 申请冻结资金失败
         if (StringUtils.isBlank(respCode) || !BankCallConstant.RESPCODE_SUCCESS.equals(respCode)) {
             if (!"".equals(respCode)) {

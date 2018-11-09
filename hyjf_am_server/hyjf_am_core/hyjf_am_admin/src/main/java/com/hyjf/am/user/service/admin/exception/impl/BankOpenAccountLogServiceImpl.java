@@ -136,4 +136,25 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
         boolean deleteLogFlag = this.bankOpenAccountLogMapper.deleteByExample(accountLogExample) > 0 ? true : false;
         return  deleteLogFlag;
     }
+
+    /**
+     * 根据USERID查询开户掉单
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<BankOpenAccountLog> selectBankOpenAccountLogByUserId(Integer userId) {
+        // 借款人用户
+        BankOpenAccountLogExample openAccoutLogExample = new BankOpenAccountLogExample();
+        BankOpenAccountLogExample.Criteria crt = openAccoutLogExample.createCriteria();
+        crt.andUserIdEqualTo(userId);
+        crt.andStatusEqualTo(0);
+        openAccoutLogExample.setOrderByClause("id asc");
+        List<BankOpenAccountLog> openAccountLogs = this.bankOpenAccountLogMapper.selectByExample(openAccoutLogExample);
+        if (openAccountLogs != null && openAccountLogs.size()> 0) {
+            return openAccountLogs;
+        }
+        return null;
+    }
 }

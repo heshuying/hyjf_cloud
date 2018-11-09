@@ -96,6 +96,10 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
         // 根据项目编号取得borrow表
 
         BorrowAndInfoVO borrow = this.amTradeClient.selectBorrowByNid(borrowNid);
+        if(borrow==null){
+            logger.info("根据项目编号取得borrow表失敗borrowNid："+borrowNid);
+            return ret;
+        }
 
         // 根据项目编号取得borrowTender表
         List<BorrowTenderVO> borrowTenderList = this.amTradeClient.searchBorrowTenderByBorrowNid(borrowNid);
@@ -115,7 +119,7 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
             // 投资ID
             tenderCommissionRequest.setTenderId(borrowTender.getId());
             // 投资时间
-            tenderCommissionRequest.setTenderTime(borrowTender.getAddTime());
+            tenderCommissionRequest.setTenderTime(GetDate.getTime10(borrowTender.getCreateTime()));
             // 状态 0：未发放；1：已发放
             tenderCommissionRequest.setStatus(0);
             // 备注
@@ -175,6 +179,7 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
             }
 
             // 计算提成(提成金额,提成人,提成人部门ID,投资人部门ID)
+            logger.info("计算提成borrow：" + JSONObject.toJSON(borrow));
             calculaeCommission(tenderCommissionRequest, borrowTender.getTenderUserAttribute(), // 投资时投资人的用户属性
                     borrowTender.getInviteUserAttribute(), // 投资时推荐人的用户属性
                     borrow.getBorrowStyle(), // 还款方式（endday表示天，其它表示月）
