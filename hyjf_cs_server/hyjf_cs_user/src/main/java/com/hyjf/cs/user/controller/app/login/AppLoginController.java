@@ -276,7 +276,7 @@ public class AppLoginController extends BaseUserController {
         String order = request.getParameter("order");
 
         // 检查参数正确性
-        /*if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(token) || Validator.isNull(sign) || Validator.isNull(randomString) || Validator.isNull(order)) {
+        if (Validator.isNull(version) || Validator.isNull(netStatus) || Validator.isNull(platform) || Validator.isNull(token) || Validator.isNull(sign) || Validator.isNull(randomString) || Validator.isNull(order)) {
             ret.put("status", "1");
             ret.put("statusDesc", "请求参数非法");
             return ret;
@@ -287,12 +287,12 @@ public class AppLoginController extends BaseUserController {
             ret.put("status", "1");
             ret.put("statusDesc", "请求参数非法");
             return ret;
-        }*/
+        }
 
         // 业务逻辑
         try {
+            Integer userId = SecretUtil.getUserId(sign);
             // 取得用户ID
-            Integer userId = 4415;
             if (userId != null) {
                 UserParameters userParameters = loginService.getUserParameters(userId,platform, request);
                 if (StringUtils.isBlank(userParameters.getIdcard()) || userParameters.getIdcard().length() < 15) {
