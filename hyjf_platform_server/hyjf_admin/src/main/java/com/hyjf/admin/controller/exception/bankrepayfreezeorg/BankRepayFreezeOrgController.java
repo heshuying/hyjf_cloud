@@ -86,15 +86,19 @@ public class BankRepayFreezeOrgController extends BaseController {
     public AdminResult<BankRepayFreezeOrgCheckResponseBean> checkRepayFreezeOrgAction(HttpServletRequest request, @RequestBody BankRepayFreezeOrgCheckRequestBean form) {
         AdminResult result = new AdminResult();
         BankRepayFreezeOrgCheckResponseBean responseBean = new BankRepayFreezeOrgCheckResponseBean();
+        result.setData(responseBean);
+        logger.info("请求参数：" + JSON.toJSONString(form));
 
         String orderId = form.getOrderId();
         String borrowNid = form.getBorrowNid();
         if (StringUtils.isBlank(orderId) || StringUtils.isBlank(borrowNid)) {
+            logger.info("请求参数不全");
             result.setStatusInfo(AdminResult.FAIL, "参数错误，请稍后再试！");
             return result;
         }
         BankRepayOrgFreezeLogVO repayFreezeFlog = this.bankRepayFreezeOrgService.getBankRepayOrgFreezeLogList(orderId);
         if (Validator.isNull(repayFreezeFlog)) {
+            logger.info("处理失败，代偿冻结记录不存在");
             result.setStatusInfo(AdminResult.FAIL, "处理失败，代偿冻结记录不存在");
             return result;
         }
@@ -113,6 +117,7 @@ public class BankRepayFreezeOrgController extends BaseController {
         if (callApiBg != null) {
             responseBean.setRetCode(callApiBg.getRetCode());
             responseBean.setState(callApiBg.getState());
+            responseBean.setMsg(callApiBg.getRetMsg());
             result.setStatusInfo(AdminResult.SUCCESS, StringUtils.isNotBlank(callApiBg.getRetMsg())?callApiBg.getRetMsg():AdminResult.SUCCESS_DESC);
         }
         return result;
