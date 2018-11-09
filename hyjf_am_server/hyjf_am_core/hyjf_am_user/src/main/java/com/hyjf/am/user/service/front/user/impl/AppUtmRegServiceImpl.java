@@ -1,20 +1,19 @@
 package com.hyjf.am.user.service.front.user.impl;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.user.dao.mapper.auto.AppUtmRegMapper;
 import com.hyjf.am.user.dao.model.auto.AppUtmReg;
 import com.hyjf.am.user.dao.model.auto.AppUtmRegExample;
 import com.hyjf.am.user.service.front.user.AppUtmRegService;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -107,4 +106,37 @@ public class AppUtmRegServiceImpl implements AppUtmRegService {
     public List<AppUtmReg> findAll() {
         return appUtmRegMapper.selectByExample(new AppUtmRegExample());
     }
+
+	@Override
+	public Integer countAppUtmReg(AppChannelStatisticsDetailRequest request) {
+		AppUtmRegExample appUtmRegExample = new AppUtmRegExample();
+		AppUtmRegExample.Criteria criteria = appUtmRegExample.createCriteria();
+		if (StringUtils.isNotBlank(request.getUserNameSrch())) {
+			criteria.andSourceNameEqualTo(request.getUserNameSrch());
+		}
+		if (request.getSourceIdSrch()!=null) {
+			criteria.andSourceIdEqualTo(request.getSourceIdSrch());
+		}
+		return appUtmRegMapper.countByExample(appUtmRegExample);
+	}
+
+	@Override
+	public List<AppUtmReg> findAppUtmReg(AppChannelStatisticsDetailRequest request, Paginator paginator) {
+		AppUtmRegExample appUtmRegExample = new AppUtmRegExample();
+		AppUtmRegExample.Criteria criteria = appUtmRegExample.createCriteria();
+		if (StringUtils.isNotBlank(request.getUserNameSrch())) {
+			criteria.andSourceNameEqualTo(request.getUserNameSrch());
+		}
+		if (request.getSourceIdSrch()!=null) {
+			criteria.andSourceIdEqualTo(request.getSourceIdSrch());
+		}
+		if (paginator.getLimit() >= 0 && paginator.getOffset() >= 0) {
+			appUtmRegExample.setLimitStart(paginator.getLimit());
+			appUtmRegExample.setLimitEnd(paginator.getOffset());
+		}
+		return appUtmRegMapper.selectByExample(appUtmRegExample);
+
+	}
+
+
 }

@@ -1131,6 +1131,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 assignPayInterest = creditInterest;
                 // 实付金额 承接本金*（1-折价率）+应垫付利息
                 assignPay = assignPrice.add(assignInterestAdvance);
+                logger.info("1垫付利息::"+assignInterestAdvance);
             } else {// 按月
                 // 债转本息
                 creditAccount = DuePrincipalAndInterestUtils.getMonthPrincipalInterestAfterCredit(new BigDecimal(assignCapital), sellerCapitalWait, sellerInterestWait, yearRate,
@@ -1142,6 +1143,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 // 垫息总额=债权本金*年化收益÷12*融资期限-债权本金*年化收益÷360*剩余天数
                 assignInterestAdvance = DuePrincipalAndInterestUtils.getMonthAssignInterestAdvanceAfterCredit(new BigDecimal(assignCapital), sellerCapitalWait,
                         sellerInterestAdvanceWait, yearRate, borrow.getBorrowPeriod(), new BigDecimal(lastDays));
+                logger.info("2垫付利息::"+assignInterestAdvance);
                 // 债转利息
                 // assignPayInterest =
                 // creditInterest.subtract(assignInterestAdvance);
@@ -1176,6 +1178,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 assignInterestAdvance = sellerInterestAdvanceWait;
                 // 实付金额 承接本金*（1-折价率）+应垫付利息
                 assignPay = assignPrice.add(assignInterestAdvance);
+                logger.info("3垫付利息::"+assignInterestAdvance);
             } else {
                 // 承接人每月应还利息
                 BigDecimal interestAssign = BeforeInterestAfterPrincipalUtils.getPerTermInterest(new BigDecimal(assignCapital), borrowCredit.getBidApr().divide(new BigDecimal(100)),
@@ -1198,6 +1201,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 assignPay = assignPrice.add(assignInterestAdvance);
             }
         }
+        logger.info("4assignInterestAdvance:{} ",assignInterestAdvance);
         // 保存credit_tender_log表
         creditTenderLog.setUserId(user.getUserId());
         creditTenderLog.setCreditUserId(borrowCredit.getCreditUserId());

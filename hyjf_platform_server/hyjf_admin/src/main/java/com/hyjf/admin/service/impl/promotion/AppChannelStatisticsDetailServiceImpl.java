@@ -1,17 +1,15 @@
 package com.hyjf.admin.service.impl.promotion;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Service;
-
 import com.hyjf.admin.client.AmAdminClient;
-import com.hyjf.admin.client.CsMessageClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.promotion.AppChannelStatisticsDetailService;
 import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.user.UtmPlatVO;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author lisheng
@@ -21,9 +19,9 @@ import com.hyjf.am.vo.user.UtmPlatVO;
 public class AppChannelStatisticsDetailServiceImpl implements AppChannelStatisticsDetailService {
     @Resource
     private AmAdminClient amAdminClient;
-
     @Resource
-    private CsMessageClient csMessageClient;
+    private AmUserClient amUserClient;
+
     @Override
     public List<UtmPlatVO> getAppUtm(){
         return amAdminClient.getAppUtm();
@@ -31,10 +29,10 @@ public class AppChannelStatisticsDetailServiceImpl implements AppChannelStatisti
 
     @Override
     public AppUtmRegResponse getstatisticsList(AppChannelStatisticsDetailRequest request) {
-        return csMessageClient.getstatisticsList(request);
+        return amUserClient.getstatisticsList(request);
     }
     @Override
     public AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request) {
-        return csMessageClient.exportStatisticsList(request);
+        return amUserClient.exportStatisticsList(request);
     }
 }

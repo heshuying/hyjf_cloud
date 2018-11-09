@@ -69,7 +69,7 @@ public class MessageServiceImpl implements MessageService {
 		StringBuffer sbError = new StringBuffer();
 		logger.info("定时发短信任务开始。手机号：{}", apicron.getMobile());
 		// 更新任务API状态为进行中
-		this.updatetOntime(apicron.getId(), STATUS_RUNNING, null);
+		this.updatetOntime(apicron, STATUS_RUNNING, null);
 		if (apicron.getContent() == null) {
 			sbError.append("发送消息不能为空");
 			return;
@@ -149,7 +149,7 @@ public class MessageServiceImpl implements MessageService {
 			throw new Exception("定时发送短信时发生错误。" + "[错误记录id：" + apicron.getId() + "]," + "[错误件数：" + errorCnt + "]");
 		}
 		// 更新任务API状态为完成
-		updatetOntime(apicron.getId(), STATUS_RUNNING, null);
+		updatetOntime(apicron, STATUS_RUNNING, null);
 	}
 
 	/**
@@ -195,13 +195,11 @@ public class MessageServiceImpl implements MessageService {
 	/**
 	 * 更新定时发短信API任务表
 	 * 
-	 * @param id
+	 * @param record
 	 * @param status
 	 * @param data
 	 */
-	private void updatetOntime(String id, Integer status, String data) {
-		SmsOntime record = new SmsOntime();
-		record.setId(id);
+	private void updatetOntime(SmsOntime record, Integer status, String data) {
 		record.setStatus(status);
 		if (Validator.isNotNull(data) || status == 2) {
 			record.setRemark(data);
