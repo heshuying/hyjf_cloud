@@ -125,21 +125,21 @@ public class CrmBankOpenMessageConsumer extends Consumer{
         if(spreadsUsers != null){
             UserInfo referrerInfo = fddCertificateService.findUsersInfo(spreadsUsers.getSpreadsUserId());
             User referrerUser = fddCertificateService.findUserByUserId(spreadsUsers.getSpreadsUserId());
-            map.put("recommendCardId", referrerInfo.getIdcard());
-            map.put("recommendName", referrerInfo.getTruename());
-            map.put("recommondUsername", referrerUser.getUsername());
-            map.put("recommendMobile", referrerUser.getMobile());
-            map.put("recommondId", referrerUser.getUserId());
+            map.put("recommendCardId", referrerInfo!=null?referrerInfo.getIdcard():"");
+            map.put("recommendName", referrerInfo!=null?referrerInfo.getTruename():"");
+            map.put("recommondUsername", referrerUser!=null?referrerUser.getUsername():"");
+            map.put("recommendMobile", referrerUser!=null?referrerUser.getMobile():"");
+            map.put("recommondId", referrerUser!=null?referrerUser.getUserId():"");
         }
-        map.put("customerCardId", userInfo.getIdcard());
+        map.put("customerCardId", userInfo!=null?userInfo.getIdcard():"");
         map.put("availableBalance", 0);
         map.put("customerId", String.valueOf(userId));
-        map.put("customerMobile", user.getMobile());
-        map.put("customerName", userInfo.getTruename());
-        map.put("customerUsername", user.getUsername());
-        map.put("openingTimeStr", GetDate.dateToDateFormatStr(account.getCreateTime(), "yyyy-MM-dd HH:mm:ss"));
+        map.put("customerMobile", user!=null?user.getMobile():"");
+        map.put("customerName", userInfo!=null?userInfo.getTruename():"");
+        map.put("customerUsername", user!=null?user.getUsername():"");
+        map.put("openingTimeStr", account!=null?GetDate.dateToDateFormatStr(account.getCreateTime(), "yyyy-MM-dd HH:mm:ss"):"");
         map.put("platformInstcode", 10000001);
-        map.put("registerTimeStr", GetDate.dateToDateFormatStr(user.getRegTime(), "yyyy-MM-dd HH:mm:ss"));
+        map.put("registerTimeStr", user!=null?GetDate.dateToDateFormatStr(user.getRegTime(), "yyyy-MM-dd HH:mm:ss"):"");
 
         String sign = encryptByRSA(map, "10000001");
         ret.put("instCode", "10000001");
