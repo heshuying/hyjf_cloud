@@ -1,15 +1,17 @@
 package com.hyjf.admin.service.impl.promotion;
 
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.service.promotion.AppChannelStatisticsDetailService;
-import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
+import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.user.UtmPlatVO;
-import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @author lisheng
@@ -28,11 +30,11 @@ public class AppChannelStatisticsDetailServiceImpl implements AppChannelStatisti
     }
 
     @Override
-    public AppChannelStatisticsDetailResponse getstatisticsList(AppChannelStatisticsDetailRequest request) {
+    public AppUtmRegResponse getstatisticsList(AppChannelStatisticsDetailRequest request) {
         return csMessageClient.getstatisticsList(request);
     }
     @Override
-    public AppChannelStatisticsDetailResponse exportStatisticsList(AppChannelStatisticsDetailRequest request) {
+    public AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request) {
         return csMessageClient.exportStatisticsList(request);
     }
 }

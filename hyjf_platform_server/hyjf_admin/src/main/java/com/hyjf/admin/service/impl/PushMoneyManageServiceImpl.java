@@ -98,6 +98,7 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
         BorrowAndInfoVO borrow = this.amTradeClient.selectBorrowByNid(borrowNid);
         if(borrow==null){
             logger.info("根据项目编号取得borrow表失敗borrowNid："+borrowNid);
+            return ret;
         }
 
         // 根据项目编号取得borrowTender表
@@ -118,7 +119,7 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
             // 投资ID
             tenderCommissionRequest.setTenderId(borrowTender.getId());
             // 投资时间
-            tenderCommissionRequest.setTenderTime(borrowTender.getAddTime());
+            tenderCommissionRequest.setTenderTime(GetDate.getTime10(borrowTender.getCreateTime()));
             // 状态 0：未发放；1：已发放
             tenderCommissionRequest.setStatus(0);
             // 备注

@@ -800,7 +800,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		}
 		borrowinfo.setTrusteePayTime(0);
 
-		this.borrowInfoMapper.insert(borrowinfo);
+		this.borrowInfoMapper.insertSelective(borrowinfo);
 		// 个人信息(信批新增字段)
 		this.insertBorrowManinfo(borrowNid, borrowBean, borrow);
 		// 公司信息(信批新增字段)

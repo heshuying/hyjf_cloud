@@ -3490,9 +3490,7 @@ public class BorrowCommonRequest extends BasePage implements Serializable {
 	}
 
 	public String getComIsFunds() {
-		if(comIsFunds==null) {
-			return "0";
-		}
+
 		return comIsFunds;
 	}
 
@@ -3502,9 +3500,7 @@ public class BorrowCommonRequest extends BasePage implements Serializable {
 	}
 
 	public String getComIsManaged() {
-		if(comIsManaged==null) {
-			return "0";
-		}
+
 		return comIsManaged;
 	}
 
@@ -3513,9 +3509,7 @@ public class BorrowCommonRequest extends BasePage implements Serializable {
 	}
 
 	public String getComIsAbility() {
-		if(comIsAbility==null) {
-			return "0";
-		}
+
 		return comIsAbility;
 	}
 
@@ -3525,9 +3519,6 @@ public class BorrowCommonRequest extends BasePage implements Serializable {
 	}
 
 	public String getComIsOverdue() {
-		if(comIsOverdue==null) {
-			return "0";
-		}
 		return comIsOverdue;
 	}
 
@@ -3536,9 +3527,6 @@ public class BorrowCommonRequest extends BasePage implements Serializable {
 	}
 
 	public String getComIsComplaint() {
-		if(comIsComplaint==null) {
-			return "0";
-		}
 		return comIsComplaint;
 	}
 
@@ -3547,9 +3535,6 @@ public class BorrowCommonRequest extends BasePage implements Serializable {
 	}
 
 	public String getComIsPunished() {
-		if(comIsPunished==null) {
-			return "0";
-		}
 		return comIsPunished;
 	}
 

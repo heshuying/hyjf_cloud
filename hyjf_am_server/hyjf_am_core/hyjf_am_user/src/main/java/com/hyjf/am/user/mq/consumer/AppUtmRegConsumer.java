@@ -1,11 +1,9 @@
-package com.hyjf.cs.message.mq.consumer;
+package com.hyjf.am.user.mq.consumer;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.message.bean.ic.AppChannelStatisticsDetail;
-import com.hyjf.cs.message.mongo.ic.AppChannelStatisticsDetailDao;
-import com.hyjf.cs.message.mq.base.Consumer;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -17,26 +15,26 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.user.dao.model.auto.AppUtmReg;
+import com.hyjf.am.user.mq.base.Consumer;
+import com.hyjf.am.user.service.front.user.AppUtmRegService;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.validator.Validator;
 
 /**
  * @author xiasq
- * @version AppChannelStatisticsDetailConsumer, v0.1 2018/4/12 14:58
+ * @version AppUtmRegConsumer, v0.1 2018/4/12 14:58
  */
 
 @Component
-public class AppChannelStatisticsDetailConsumer extends Consumer {
-	private static final Logger logger = LoggerFactory.getLogger(AppChannelStatisticsDetailConsumer.class);
+public class AppUtmRegConsumer extends Consumer {
+	private static final Logger logger = LoggerFactory.getLogger(AppUtmRegConsumer.class);
 
 	@Autowired
-	private AppChannelStatisticsDetailDao appChannelStatisticsDetailDao;
+	private AppUtmRegService appUtmRegService;
 
 	@Override
 	public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
@@ -69,17 +67,17 @@ public class AppChannelStatisticsDetailConsumer extends Consumer {
 						return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 					}
 					// 更新AppChannelStatisticsDetailDao开户时间
-					AppChannelStatisticsDetail entity = appChannelStatisticsDetailDao.findByUserId(userId);
+					AppUtmReg entity = appUtmRegService.findByUserId(userId);
 					if (entity != null) {
 						entity.setOpenAccountTime(new Date());
-						appChannelStatisticsDetailDao.save(entity);
+						appUtmRegService.update(entity);
 					}
 				} else if (MQConstant.APP_CHANNEL_STATISTICS_DETAIL_SAVE_TAG.equals(msg.getTags())) {
 					logger.info("app渠道统计保存消息....");
-					AppChannelStatisticsDetail entity = JSONObject.parseObject(msg.getBody(),
-							AppChannelStatisticsDetail.class);
+					AppUtmReg entity = JSONObject.parseObject(msg.getBody(),
+							AppUtmReg.class);
 					if (entity != null) {
-						appChannelStatisticsDetailDao.save(entity);
+						appUtmRegService.insert(entity);
 					}
 				} else if (MQConstant.APP_CHANNEL_STATISTICS_DETAIL_CREDIT_TAG.equals(msg.getTags())
 						|| MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG.equals(msg.getTags())) {
@@ -87,29 +85,25 @@ public class AppChannelStatisticsDetailConsumer extends Consumer {
 					if (Validator.isNotNull(entity)) {
 						Integer investFlag = entity.getInteger("investFlag");
 						if (investFlag == 1) {
-							Query query = new Query();
 							Integer userId = entity.getInteger("userId");
-							Criteria criteria = Criteria.where("userId").is(userId);
-							query.addCriteria(criteria);
-							Update update = new Update();
-							BigDecimal accountDecimal = entity.getBigDecimal("accountDecimal");
-							update.inc("cumulativeInvest", accountDecimal);
-							appChannelStatisticsDetailDao.update(query, update);
+							AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
+							BigDecimal accountDecimal = entity.getBigDecimal("accountDecimal")==null?BigDecimal.ZERO:entity.getBigDecimal("accountDecimal");
+                            BigDecimal invest = appUtmReg.getCumulativeInvest() == null? BigDecimal.ZERO: appUtmReg.getCumulativeInvest();
+                            appUtmReg.setCumulativeInvest(invest.add(accountDecimal));
+                            appUtmRegService.update(appUtmReg);
 						} else if (investFlag == 0) {
-							Query query = new Query();
-							Integer userId = entity.getInteger("userId");
-							Criteria criteria = Criteria.where("userId").is(userId);
-							query.addCriteria(criteria);
-							Update update = new Update();
-							BigDecimal accountDecimal = entity.getBigDecimal("accountDecimal");
+                            Integer userId = entity.getInteger("userId");
+                            AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
+							BigDecimal accountDecimal = entity.getBigDecimal("accountDecimal")==null?BigDecimal.ZERO:entity.getBigDecimal("accountDecimal");
 							String projectType = entity.getString("projectType");
 							Integer investTime = entity.getInteger("investTime");
 							String investProjectPeriod = entity.getString("investProjectPeriod");
-
-							update.inc("cumulativeInvest", accountDecimal).set("investAmount", accountDecimal)
-									.set("investProjectType", projectType).set("firstInvestTime", investTime)
-									.set("investProjectPeriod", investProjectPeriod);
-							appChannelStatisticsDetailDao.update(query, update);
+                            appUtmReg.setCumulativeInvest(accountDecimal.add(accountDecimal));
+                            appUtmReg.setInvestAmount(accountDecimal);
+                            appUtmReg.setInvestProjectType(projectType);
+                            appUtmReg.setFirstInvestTime(investTime);
+                            appUtmReg.setInvestProjectPeriod(investProjectPeriod);
+                            appUtmRegService.update(appUtmReg);
 						}
 					}
 				}

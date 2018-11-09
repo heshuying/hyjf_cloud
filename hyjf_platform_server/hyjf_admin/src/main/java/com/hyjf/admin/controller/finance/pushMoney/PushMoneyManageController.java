@@ -206,6 +206,7 @@ public class PushMoneyManageController extends BaseController {
     @ApiOperation(value = "直投提成列表", notes = "直投提成列表")
     @PostMapping(value = "/pushMoneyList")
     public AdminResult pushMoneyList(@RequestBody PushMoneyRequest request){
+        //选择1直投类，而非2计划类数据
         request.setTenderType(1);
         Map<String,Object> result = new HashMap<>();
         Integer count = pushMoneyManageService.getPushMoneyListCount(request);
@@ -227,6 +228,8 @@ public class PushMoneyManageController extends BaseController {
     @ApiOperation(value = "直投提成列表导出",notes = "直投提成列表导出")
     @PostMapping(value = "/exportPushMoneyDetailExcelAction")
     public void exportPushMoneyDetailExcelAction(HttpServletRequest request, HttpServletResponse response,@RequestBody PushMoneyRequest requestBean) throws Exception {
+        //选择1直投类，而非2计划类数据
+        requestBean.setTenderType(1);
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
