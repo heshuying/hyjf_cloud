@@ -104,7 +104,7 @@ public class MongoSeachController extends BaseController {
      *
      * @return
      */
-    @RequestMapping("/getappchannelstatisticsdetail")
+   /* @RequestMapping("/getappchannelstatisticsdetail")
     public AppUtmRegResponse selectAppChannelStatistics() {
         List<AppChannelStatisticsDetail> list = appChannelStatisticsDetailDao.find(new Query());
         AppUtmRegResponse response = new AppUtmRegResponse();
@@ -113,7 +113,7 @@ public class MongoSeachController extends BaseController {
             response.setResultList(voList);
         }
         return response;
-    }
+    }*/
     /**
      * 分页查询所有渠道投资信息
      *

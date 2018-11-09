@@ -441,7 +441,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	private List<Integer> getIAppChannerUserIdList() {
 		AppUtmRegResponse detailResponse = restTemplate.getForObject(
-				"http://CS-MESSAGE/am-statistics/getappchannelstatisticsdetail",
+				"http://AM-USER/am-user/app_utm_reg/getappchannelstatisticsdetail",
 				AppUtmRegResponse.class);
 		List<Integer> userIdList = new ArrayList<>();
 		if (detailResponse != null) {
