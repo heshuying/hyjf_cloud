@@ -307,21 +307,18 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                         // 更改加入明细状态和投资临时表状态
                         updateTenderByParam(orderStatus,hjhAccede.getId());
                         // 只有不是接口成功表失败的情况才会退回队列
-                        // 此处 if判断为汇计划三期优化改动
-//                        if(!BankCallConstant.RESPCODE_SUCCESS.equals(hjhPlanBorrowTmp.getRespCode())){
-                            // 投资成功后减掉redis 钱
-                            String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_INVEST + RedisConstants.HJH_SLASH + hjhAccede.getPlanNid();
-                            RedisBorrow redisBorrow = new RedisBorrow();
-                            redisBorrow.setBorrowAccountWait(borrow.getBorrowAccountWait().subtract(hjhPlanBorrowTmp.getAccount()));
-                            redisBorrow.setBorrowNid(borrow.getBorrowNid());
+                        // 投资成功后减掉redis 钱
+                        String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_INVEST + RedisConstants.HJH_SLASH + hjhAccede.getPlanNid();
+                        RedisBorrow redisBorrow = new RedisBorrow();
+                        redisBorrow.setBorrowAccountWait(borrow.getBorrowAccountWait().subtract(hjhPlanBorrowTmp.getAccount()));
+                        redisBorrow.setBorrowNid(borrow.getBorrowNid());
 
-                            // 银行成功后，如果标的可投金额非0，推回队列的头部，标的可投金额为0，不再推回队列
-                            if (redisBorrow.getBorrowAccountWait().compareTo(BigDecimal.ZERO) != 0) {
-                                String redisStr = JSON.toJSONString(redisBorrow);
-                                logger.info("退回队列 " + queueName + redisStr);
-                                RedisUtils.rightpush(queueName,redisStr);
-                            }
-//                        }
+                        // 银行成功后，如果标的可投金额非0，推回队列的头部，标的可投金额为0，不再推回队列
+                        if (redisBorrow.getBorrowAccountWait().compareTo(BigDecimal.ZERO) != 0) {
+                            String redisStr = JSON.toJSONString(redisBorrow);
+                            logger.info("退回队列 " + queueName + redisStr);
+                            RedisUtils.rightpush(queueName,redisStr);
+                        }
                     }
                     // 投标记录不存在才会继续，不然属于未知情况
                 }else if ("CA101141".equals(queryRetCode)){

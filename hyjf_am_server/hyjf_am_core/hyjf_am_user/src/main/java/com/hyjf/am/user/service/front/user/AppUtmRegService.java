@@ -38,4 +38,10 @@ public interface AppUtmRegService {
     List<AppUtmReg> exportStatisticsList(AppChannelStatisticsDetailRequest request);
 
     List<AppUtmReg> getAppUtmRegVO(AppChannelStatisticsRequest request);
+
+    /**
+     *
+     * @return
+     */
+    List<AppUtmReg> findAll();
 }
