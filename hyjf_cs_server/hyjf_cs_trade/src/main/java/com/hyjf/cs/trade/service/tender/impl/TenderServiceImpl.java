@@ -3,10 +3,20 @@
  */
 package com.hyjf.cs.trade.service.tender.impl;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
@@ -36,15 +46,10 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
-
-import java.math.BigDecimal;
-import java.util.*;
 /**
  * @author libin
  * @version TenderServiceImpl.java, v0.1 2018年8月24日 上午10:42:54
@@ -818,7 +823,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
         /*projectType = 8 是汇消费　不需要判断了*/
         if (users != null) {
             // 更新渠道统计用户累计投资 从mongo里面查询
-            AppChannelStatisticsDetailVO appChannelStatisticsDetails = amMongoClient.getAppChannelStatisticsDetailByUserId(users.getUserId());
+            AppUtmRegVO appChannelStatisticsDetails = amMongoClient.getAppChannelStatisticsDetailByUserId(users.getUserId());
             if (appChannelStatisticsDetails != null) {
                 Map<String, Object> params = new HashMap<String, Object>();
                 // 认购本金

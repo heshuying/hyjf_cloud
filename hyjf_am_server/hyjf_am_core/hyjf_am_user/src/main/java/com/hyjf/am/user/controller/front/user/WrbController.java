@@ -24,7 +24,8 @@ public class WrbController {
     @PostMapping("/register")
     public  IntegerResponse register(@RequestBody WrbRegisterRequest wrbRegisterRequest) {
         IntegerResponse response = new IntegerResponse();
-        wrbService.insertUserAction(wrbRegisterRequest);
+        Integer userId = wrbService.insertUserAction(wrbRegisterRequest);
+        response.setResultInt(userId);
         return response;
     }
 }

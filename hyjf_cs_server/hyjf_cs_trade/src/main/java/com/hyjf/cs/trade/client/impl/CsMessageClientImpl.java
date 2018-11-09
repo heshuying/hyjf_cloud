@@ -3,14 +3,15 @@
  */
 package com.hyjf.cs.trade.client.impl;
 
-import com.hyjf.am.response.admin.AccountWebListResponse;
-import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
-import com.hyjf.am.vo.datacollect.AccountWebListVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
-import com.hyjf.cs.trade.client.CsMessageClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import com.hyjf.am.response.admin.AccountWebListResponse;
+import com.hyjf.am.response.app.AppUtmRegResponse;
+import com.hyjf.am.vo.datacollect.AccountWebListVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
+import com.hyjf.cs.trade.client.CsMessageClient;
 
 /**
  * @author yaoyong
@@ -38,10 +39,10 @@ public class CsMessageClientImpl implements CsMessageClient {
      * @return
      */
     @Override
-    public AppChannelStatisticsDetailVO getAppChannelStatisticsDetailByUserId(Integer userId) {
-        AppChannelStatisticsDetailResponse response = restTemplate.getForEntity(
-                "http://CS-MESSAGE/cs-message/search/getAppChannelStatisticsDetailByUserId/" + userId,
-                AppChannelStatisticsDetailResponse.class).getBody();
+    public AppUtmRegVO getAppChannelStatisticsDetailByUserId(Integer userId) {
+        AppUtmRegResponse response = restTemplate.getForEntity(
+                "http://AM-USER/am-user/app_utm_reg/findByUserId/" + userId,
+                AppUtmRegResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }

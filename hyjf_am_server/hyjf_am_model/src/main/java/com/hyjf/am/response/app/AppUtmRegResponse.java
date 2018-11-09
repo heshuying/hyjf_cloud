@@ -1,18 +1,21 @@
-package com.hyjf.am.response.admin;
-
-import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
-import com.hyjf.am.vo.user.UtmPlatVO;
+/*
+ * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
+ */
+package com.hyjf.am.response.app;
 
 import java.util.List;
 
-/**
- * @author lisheng
- * @version AppChannelStatisticsDetailResponse, v0.1 2018/9/21 17:26
- */
+import com.hyjf.am.response.Response;
+import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
+import com.hyjf.am.vo.user.UtmPlatVO;
 
-public class AppChannelStatisticsDetailResponse extends Response<AppChannelStatisticsDetailVO> {
+/**
+ * @Description app渠道统计
+ * @Author sunss
+ * @Date 2018/6/23 9:59
+ */
+public class AppUtmRegResponse extends Response<AppUtmRegVO> {
     private Long count;
     List<UtmPlatVO> appUtm;
     AdminUtmReadPermissionsVO adminUtmReadPermissions;
