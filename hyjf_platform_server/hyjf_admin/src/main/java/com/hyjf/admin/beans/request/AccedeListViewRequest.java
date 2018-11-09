@@ -58,6 +58,9 @@ public class AccedeListViewRequest extends BaseRequest implements Serializable{
 	@ApiModelProperty(value = "投资笔数查询")
 	private String investCountsSrch;
 
+	@ApiModelProperty(value = "是否具有组织架构查看权限")
+	private String isOrganizationView;
+
 	/**
 	 * 翻页机能用的隐藏变量
 	 */
@@ -216,4 +219,11 @@ public class AccedeListViewRequest extends BaseRequest implements Serializable{
 		this.email = email;
 	}
 
+	public String getIsOrganizationView() {
+		return isOrganizationView;
+	}
+
+	public void setIsOrganizationView(String isOrganizationView) {
+		this.isOrganizationView = isOrganizationView;
+	}
 }

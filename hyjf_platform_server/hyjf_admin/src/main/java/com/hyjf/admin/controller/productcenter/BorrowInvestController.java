@@ -386,6 +386,10 @@ public class BorrowInvestController extends BaseController {
     @PostMapping("/export_list")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportList(HttpServletRequest request, HttpServletResponse response, @RequestBody BorrowInvestRequestBean borrowInvestRequestBean) throws Exception {
+
+        // 用户是否具有组织机构查看权限
+        String isOrganizationView = borrowInvestRequestBean.getIsOrganizationView();
+
         //查询类赋值
         BorrowInvestRequest borrowInvestRequest = new BorrowInvestRequest();
         BeanUtils.copyProperties(borrowInvestRequestBean, borrowInvestRequest);
@@ -407,7 +411,7 @@ public class BorrowInvestController extends BaseController {
         // mod by liuyang 20181102 需求迁移 投资明细导出追加时间判断 对应svn 版本号:53180 end
         Integer totalCount = resultList.size();
 
-        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
@@ -420,7 +424,7 @@ public class BorrowInvestController extends BaseController {
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
 
-    private Map<String, String> buildMap() {
+    private Map<String, String> buildMap(String isOrganizationView) {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("borrowNid", "借款编号");
         map.put("planNid", "计划编号");
@@ -436,15 +440,19 @@ public class BorrowInvestController extends BaseController {
         map.put("tenderUsername", "投资人用户名");
         map.put("tenderUserId", "投资人ID");
         map.put("tenderUserAttributeNow", "投资人用户属性（当前）");
-        map.put("tenderRegionName", "投资人所属一级分部（当前）");
-        map.put("tenderBranchName", "投资人所属二级分部（当前）");
-        map.put("tenderDepartmentName", "投资人所属团队（当前）");
+        if (StringUtils.isNotBlank(isOrganizationView)) {
+            map.put("tenderRegionName", "投资人所属一级分部（当前）");
+            map.put("tenderBranchName", "投资人所属二级分部（当前）");
+            map.put("tenderDepartmentName", "投资人所属团队（当前）");
+        }
         map.put("referrerName", "推荐人（当前）");
         map.put("referrerUserId", "推荐人ID（当前）");
         map.put("referrerTrueName", "推荐人姓名（当前）");
-        map.put("referrerRegionName", "推荐人所属一级分部（当前）");
-        map.put("referrerBranchName", "推荐人所属二级分部（当前）");
-        map.put("referrerDepartmentName", "推荐人所属团队（当前）");
+        if (StringUtils.isNotBlank(isOrganizationView)) {
+            map.put("referrerRegionName", "推荐人所属一级分部（当前）");
+            map.put("referrerBranchName", "推荐人所属二级分部（当前）");
+            map.put("referrerDepartmentName", "推荐人所属团队（当前）");
+        }
         map.put("tenderUserAttribute", "投资人用户属性（投资时）");
         map.put("inviteUserAttribute", "推荐人用户属性（投资时）");
         map.put("tenderReferrerUsername", "推荐人（投资时）");

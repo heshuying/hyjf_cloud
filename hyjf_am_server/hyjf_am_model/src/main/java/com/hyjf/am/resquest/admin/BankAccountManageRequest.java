@@ -29,6 +29,9 @@ public class BankAccountManageRequest extends BasePage implements Serializable {
     @ApiModelProperty(value = "会员等级(检索用)")
     private String vipSrch;
 
+    @ApiModelProperty(value = "是否具有组织架构查看权限")
+    private String isOrganizationView;
+
     /**
      * 分页变量
      */
@@ -91,5 +94,13 @@ public class BankAccountManageRequest extends BasePage implements Serializable {
 
     public void setInitQuery(int initQuery) {
         this.initQuery = initQuery;
+    }
+
+    public String getIsOrganizationView() {
+        return isOrganizationView;
+    }
+
+    public void setIsOrganizationView(String isOrganizationView) {
+        this.isOrganizationView = isOrganizationView;
     }
 }
