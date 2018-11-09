@@ -70,7 +70,7 @@ public class WebEvaluationController extends BaseUserController {
         result.put("questionList", list);
         result.put("listSize", list.size());
         //评分标准
-        List<EvalationVO> evalationList = evaluationService.getEvalationRecord();
+        List<EvalationCustomizeVO> evalationList = evaluationService.getEvalationRecord();
         result.put("evalationList", evalationList);
         webResult.setData(result);
         return webResult;
@@ -118,7 +118,7 @@ public class WebEvaluationController extends BaseUserController {
                 List<QuestionCustomizeVO> list = evaluationService.getNewQuestionList();
                 resultMap.put("questionList", list);
                 //评分标准
-                List<EvalationVO> evalationList = evaluationService.getEvalationRecord();
+                List<EvalationCustomizeVO> evalationList = evaluationService.getEvalationRecord();
                 resultMap.put("evalationList", evalationList);
             } else {
                 //测评结果
@@ -129,7 +129,7 @@ public class WebEvaluationController extends BaseUserController {
             List<QuestionCustomizeVO> list = evaluationService.getNewQuestionList();
             resultMap.put("questionList", list);
             //评分标准
-            List<EvalationVO> evalationList = evaluationService.getEvalationRecord();
+            List<EvalationCustomizeVO> evalationList = evaluationService.getEvalationRecord();
             resultMap.put("evalationList", evalationList);
         }
         result.setData(resultMap);

@@ -141,7 +141,25 @@ public class AppInvestInfoResultVO implements Serializable {
 
     // 微信端用户可用余额
     private String userBalance;
-    
+
+    /**测评类型*/
+    private String evalType;
+    /**测评上限金额*/
+    private String revaluationMoney;
+    /**是否需要重新测评*/
+    private boolean revalJudge;
+
+    /**
+     * 是否显示项目风险测评弹窗
+     */
+    private boolean projectRevalJudge;
+    /**
+     * 项目要求投资者风险测评类型描述
+     */
+    private String projectRiskLevelDesc;
+
+    /**个人风险测评描述*/
+    private String riskLevelDesc;
 //    static class ProtocolBean{
 //        public ProtocolBean(String name, String url) {
 //            this.name = name;
@@ -176,6 +194,54 @@ public class AppInvestInfoResultVO implements Serializable {
 //        this.protocols = protocols;
 //    }
 
+
+    public String getEvalType() {
+        return evalType;
+    }
+
+    public void setEvalType(String evalType) {
+        this.evalType = evalType;
+    }
+
+    public String getRevaluationMoney() {
+        return revaluationMoney;
+    }
+
+    public void setRevaluationMoney(String revaluationMoney) {
+        this.revaluationMoney = revaluationMoney;
+    }
+
+    public boolean isRevalJudge() {
+        return revalJudge;
+    }
+
+    public void setRevalJudge(boolean revalJudge) {
+        this.revalJudge = revalJudge;
+    }
+
+    public boolean isProjectRevalJudge() {
+        return projectRevalJudge;
+    }
+
+    public void setProjectRevalJudge(boolean projectRevalJudge) {
+        this.projectRevalJudge = projectRevalJudge;
+    }
+
+    public String getProjectRiskLevelDesc() {
+        return projectRiskLevelDesc;
+    }
+
+    public void setProjectRiskLevelDesc(String projectRiskLevelDesc) {
+        this.projectRiskLevelDesc = projectRiskLevelDesc;
+    }
+
+    public String getRiskLevelDesc() {
+        return riskLevelDesc;
+    }
+
+    public void setRiskLevelDesc(String riskLevelDesc) {
+        this.riskLevelDesc = riskLevelDesc;
+    }
 
     public String getUsedCouponDes() {
         return usedCouponDes;

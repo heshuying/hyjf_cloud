@@ -935,4 +935,20 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	/**
+	 * 返回用户测评信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserEvalationResultVO selectUserEvalationResultByUserId(Integer userId) {
+		UserEvalationResultResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/evaluationManager/selectEvaluationDetailById/" + userId, UserEvalationResultResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
 }

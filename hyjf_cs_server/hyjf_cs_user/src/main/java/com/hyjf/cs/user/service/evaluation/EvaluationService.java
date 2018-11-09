@@ -56,7 +56,7 @@ public interface EvaluationService extends BaseUserService {
      * 评分标准
      * @return
      */
-    List<EvalationVO> getEvalationRecord();
+    List<EvalationCustomizeVO> getEvalationRecord();
 
     /**
      * 插入评测数据并发券

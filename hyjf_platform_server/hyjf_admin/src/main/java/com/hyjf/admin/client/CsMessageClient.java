@@ -3,8 +3,6 @@
  */
 package com.hyjf.admin.client;
 
-import java.util.List;
-
 import com.hyjf.admin.beans.request.SmsLogRequestBean;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.promotion.PcChannelStatisticsResponse;
@@ -25,6 +23,8 @@ import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
 import com.hyjf.am.vo.admin.MessagePushMsgVO;
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
+
+import java.util.List;
 
 /**
  * @author zhangqingqing
@@ -294,12 +294,7 @@ public interface CsMessageClient {
      */
     AppChannelStatisticsResponse exportList(AppChannelStatisticsRequest statisticsRequest);
 
-    /**
-     *分页查询所有渠道投资信息
-     * @param request
-     * @return
-     */
-    AppUtmRegResponse getstatisticsList(AppChannelStatisticsDetailRequest request);
+
 
     /**
      * 查找pc渠道统计

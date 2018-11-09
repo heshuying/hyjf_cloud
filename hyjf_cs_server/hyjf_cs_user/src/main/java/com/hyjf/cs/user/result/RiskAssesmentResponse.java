@@ -25,6 +25,16 @@ public class RiskAssesmentResponse extends BaseResultBeanFrontEnd {
 
     //优惠券发放结果
     private String sendResult;
+    //测评上限金额
+    private String revaluationMoney;
+
+    public String getRevaluationMoney() {
+        return revaluationMoney;
+    }
+
+    public void setRevaluationMoney(String revaluationMoney) {
+        this.revaluationMoney = revaluationMoney;
+    }
 
     public String getCouponResult() {
         return couponResult;
