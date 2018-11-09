@@ -4,6 +4,7 @@
 package com.hyjf.cs.market.client;
 
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
+import com.hyjf.am.vo.user.EvalationCustomizeVO;
 
 import java.util.List;
 import java.util.Map;
@@ -20,4 +21,10 @@ public interface AmHomePageClient {
      * @return
      */
     List<AppAdsCustomizeVO> searchBannerList(Map<String, Object> ads);
+
+    /**
+     * 获取评分标准列表
+     * @return
+     */
+    List<EvalationCustomizeVO> getEvalationRecord();
 }

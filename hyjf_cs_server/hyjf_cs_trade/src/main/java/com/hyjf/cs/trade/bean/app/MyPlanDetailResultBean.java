@@ -173,6 +173,8 @@ public class MyPlanDetailResultBean extends BaseResultBeanFrontEnd {
 		private String interestOnCall = "";
 		// 待收总额
 		private String capitalInterestOnCall = "";
+		//优惠券类型编号
+		private Integer couponTypeCode;
 
 		public String getCouponType() {
 			return couponType;
@@ -212,6 +214,14 @@ public class MyPlanDetailResultBean extends BaseResultBeanFrontEnd {
 
 		public void setCapitalInterestOnCall(String capitalInterestOnCall) {
 			this.capitalInterestOnCall = capitalInterestOnCall;
+		}
+
+		public Integer getCouponTypeCode() {
+			return couponTypeCode;
+		}
+
+		public void setCouponTypeCode(Integer couponTypeCode) {
+			this.couponTypeCode = couponTypeCode;
 		}
 	}
 
