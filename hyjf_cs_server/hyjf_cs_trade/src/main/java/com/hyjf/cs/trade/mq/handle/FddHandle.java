@@ -740,6 +740,8 @@ public class FddHandle {
         request.setBidNid(borrowNid);
         request.setCreditNid(creditNid);
         request.setCreditTenderNid(creditTenderNid);
+        logger.info("查询ht_credit_tender表:传入参数assign_nid="+assignOrderId+"," +
+				"bid_nid="+borrowNid+",credit_nid="+creditNid+",credit_tender_nid="+creditTenderNid);
         List<CreditTenderVO> creditTenderList = this.amTradeClient.getCreditTenderList(request);
         if (creditTenderList != null && creditTenderList.size() > 0) {
 

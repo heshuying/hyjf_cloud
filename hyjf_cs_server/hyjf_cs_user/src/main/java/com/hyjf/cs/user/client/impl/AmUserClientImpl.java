@@ -1167,5 +1167,11 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
-
+	@Override
+	public boolean insertAppChannelStatisticsDetail(WrbRegisterRequest wrbRegisterRequest) {
+		boolean body = restTemplate
+				.postForEntity("http://AM-USER/am-user/app_utm_reg/insertAppChannelStatisticsDetail", wrbRegisterRequest, BooleanResponse.class)
+				.getBody().getResultBoolean();
+		return body;
+	}
 }
