@@ -98,6 +98,7 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
         BorrowAndInfoVO borrow = this.amTradeClient.selectBorrowByNid(borrowNid);
         if(borrow==null){
             logger.info("根据项目编号取得borrow表失敗borrowNid："+borrowNid);
+            return ret;
         }
 
         // 根据项目编号取得borrowTender表

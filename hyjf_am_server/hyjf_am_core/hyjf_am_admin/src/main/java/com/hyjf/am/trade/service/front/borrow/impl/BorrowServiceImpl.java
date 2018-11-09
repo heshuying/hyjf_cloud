@@ -138,11 +138,11 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @return
      */
     @Override
-    public BorrowInfo getBorrowInfoByNid(String borrowNid) {
+    public BorrowInfoWithBLOBs getBorrowInfoByNid(String borrowNid) {
         BorrowInfoExample example = new BorrowInfoExample();
         BorrowInfoExample.Criteria cra = example.createCriteria();
         cra.andBorrowNidEqualTo(borrowNid);
-        List<BorrowInfo> list=this.borrowInfoMapper.selectByExample(example);
+        List<BorrowInfoWithBLOBs> list=this.borrowInfoMapper.selectByExampleWithBLOBs(example);
         if (CollectionUtils.isNotEmpty(list)){
             return list.get(0);
         }
