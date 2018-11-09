@@ -966,6 +966,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 return resultVo;
             }
         }
+        logger.info("investType:[{}]",investType);
+        String money = tender.getMoney();
+        {
+            this.setProtocolsToResultVO(investInfo, investType);
+        }
+        //风险测评
         if (!(tender.getMoney() == null || "".equals(tender.getMoney()) || (new BigDecimal(tender.getMoney()).compareTo(BigDecimal.ZERO) == 0))) {
             //从user中获取客户类型，ht_user_evalation_result（用户测评总结表）
             UserEvalationResultVO userEvalationResultCustomize = amUserClient.selectUserEvalationResultByUserId(tender.getUserId());
@@ -993,7 +999,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 if("HJH".equals(investType)) {
                     if (userEvalationResultCustomize != null) {
                         if (!CommonUtils.checkStandardInvestment(userEvalationResultCustomize.getEvalType())) {
-                            //是否需要重新测评
                             //返回类型和限额
                             investInfo.setProjectRevalJudge(true);
                             investInfo.setEvalType(eval_type);
@@ -1006,8 +1011,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 }else {
                     //金额对比判断（校验金额 大于 设置测评金额）
                     if (new BigDecimal(tender.getMoney()).compareTo(new BigDecimal(revaluation_money)) > 0) {
-                        //返回错误码
-                        //resultVo.setStatus("0");
                         //是否需要重新测评
                         investInfo.setRevalJudge(true);
                         //返回类型和限额
@@ -1015,31 +1018,24 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                         investInfo.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money)));
                         investInfo.setRiskLevelDesc("您当前的风险测评类型为 #"+eval_type+"# \n根据监管要求,\n"+eval_type+"用户单笔最高投资限额 #"
                                 +StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money))+"# 。");
-                        //return resultVo;
                     }
                 }
             } else {
                 logger.info("=============该用户测评总结数据为空! userId=" + tender.getUserId());
             }
         }
-        logger.info("investType:[{}]",investType);
-        String money = tender.getMoney();
-        {
-            this.setProtocolsToResultVO(investInfo, investType);
-        }
+
         // 转让的
         if ("HZR".equals(investType) && StringUtils.isNotEmpty(creditNid)) {
-            AppInvestInfoResultVO result = borrowTenderService.getInterestInfoApp(tender,creditNid,tender.getMoney());
-            this.setProtocolsToResultVO(result, investType);
-
-            return result;
+            investInfo = borrowTenderService.getInterestInfoApp(tender,creditNid,tender.getMoney());
+            this.setProtocolsToResultVO(investInfo, investType);
+            return investInfo;
         }
         // 计划的
         if ("HJH".equals(investType)) {
-            AppInvestInfoResultVO result = hjhTenderService.getInvestInfoApp(tender);
-            this.setProtocolsToResultVO(result, investType);
-
-            return result;
+            investInfo = hjhTenderService.getInvestInfoApp(tender);
+            this.setProtocolsToResultVO(investInfo, investType);
+            return investInfo;
         }
 
         if ((!("HZR".equals(investType))) && (!("HJH".equals(investType)))) {
@@ -1310,7 +1306,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 investInfo.setRealAmount("¥" + CommonUtils.formatAmount(null, new BigDecimal(money)));
                 investInfo.setButtonWord("确认投资" + CommonUtils.formatAmount(null, money) + "元");
             }
-
             return investInfo;
         }
         return null;
