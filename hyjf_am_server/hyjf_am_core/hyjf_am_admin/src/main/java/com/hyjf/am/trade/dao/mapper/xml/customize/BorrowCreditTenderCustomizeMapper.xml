@@ -151,7 +151,6 @@
         <include refid="TENDER_WHERE_COLUMN"/>
 	</select>
 
-
 	<select id="searchBorrowCreditTender" resultType="com.hyjf.am.vo.admin.BorrowCreditTenderVO">
 		SELECT
 		ct.assign_nid              AS assignNid,
@@ -159,7 +158,17 @@
 		ct.credit_nid              AS creditNid,
 		ct.bid_nid                 AS bidNid,
 		ct.credit_user_name      AS creditUserName,
+		CASE WHEN credit_users.attribute = 0 THEN '无主单' WHEN credit_users.attribute = 1 THEN '有主单'  WHEN credit_users.attribute = 2 THEN '线下员工'  WHEN credit_users.attribute = 3 THEN '线上员工'ELSE '' END recommendAttrCreditSelf,
+		`od3_credit`.`name` AS `regionNameCreditSelf`,
+		`od2_credit`.`name` AS `branchNameCreditSelf`,
+		`od_credit`.`name` AS `departmentNameCreditSelf`,
+
+
 		ct.user_name                 AS userName,
+		CASE WHEN pna_u.attribute = 0 THEN '无主单' WHEN pna_u.attribute = 1 THEN '有主单'  WHEN pna_u.attribute = 2 THEN '线下员工'  WHEN pna_u.attribute = 3 THEN '线上员工'ELSE '' END recommendAttrSelf,
+		`od3_u`.`name` AS `regionNameSelf`,
+		`od2_u`.`name` AS `branchNameSelf`,
+		`od_u`.`name` AS `departmentNameSelf`,
 		FORMAT(ct.assign_capital, 2)          AS assignCapital,
 		FORMAT(bc.credit_discount, 2)         AS creditDiscount,
 		FORMAT(ct.assign_capital, 2)          AS assignCapitalPrice,
@@ -167,7 +176,30 @@
 		FORMAT(ct.assign_interest_advance, 2) AS assignInterestAdvance,
 		FORMAT(ct.credit_fee, 2)              AS creditFee,
 		FORMAT(ct.assign_pay, 2)              AS assignPay,
-		 ct.create_time  AS addTime,
+		DATE_FORMAT(ct.create_time, '%Y-%m-%d %H:%i:%s')  AS addTime,
+		u_re.username AS recommendName,
+		CASE WHEN u_re.attribute = 0 THEN '无主单' WHEN u_re.attribute = 1 THEN '有主单'  WHEN u_re.attribute = 2 THEN '线下员工'  WHEN u_re.attribute = 3 THEN '线上员工'ELSE '' END recommendAttr,
+		`od3_re`.`name` AS `regionName`,
+		`od2_re`.`name` AS `branchName`,
+		`od_re`.`name` AS `departmentName`,
+
+		u_credit_re.username AS recommendNameCredit,
+		CASE WHEN u_credit_re.attribute = 0 THEN '无主单' WHEN u_credit_re.attribute = 1 THEN '有主单'  WHEN u_credit_re.attribute = 2 THEN '线下员工'  WHEN u_credit_re.attribute = 3 THEN '线上员工'ELSE '' END recommendAttrCredit,
+		`od3_credit_re`.`name` AS `regionNameCredit`,
+		`od2_credit_re`.`name` AS `branchNameCredit`,
+		`od_credit_re`.`name` AS `departmentNameCredit`,
+
+		ct.invite_user_name AS inviteUserName,
+		CASE WHEN ct.invite_user_attribute = 0 THEN '无主单' WHEN ct.invite_user_attribute = 1 THEN '有主单'  WHEN ct.invite_user_attribute = 2 THEN '线下员工'  WHEN ct.invite_user_attribute = 3 THEN '线上员工'ELSE '' END inviteUserAttribute,
+		ct.invite_user_regionname AS inviteUserRegionname,
+		ct.invite_user_branchname AS inviteUserBranchname,
+		ct.invite_user_departmentname AS inviteUserDepartmentname,
+
+		ct.invite_user_credit_name AS inviteUserCreditName,
+		CASE WHEN ct.invite_user_credit_attribute = 0 THEN '无主单' WHEN ct.invite_user_credit_attribute = 1 THEN '有主单'  WHEN ct.invite_user_credit_attribute = 2 THEN '线下员工'  WHEN ct.invite_user_credit_attribute = 3 THEN '线上员工'ELSE '' END inviteUserCreditAttribute,
+		ct.invite_user_credit_regionname AS inviteUserCreditRegionname,
+		ct.invite_user_credit_branchname AS inviteUserCreditBranchname,
+		ct.invite_user_credit_departmentname AS inviteUserCreditDepartmentname,
 
 		hta.status AS contractStatus,
 		hta.contract_number AS contractNumber,
@@ -176,9 +208,51 @@
 		hta.download_url AS downloadUrl,
 		hta.viewpdf_url AS viewUrl,
 		hta.img_url AS imgUrl
+
+
 		FROM
 		ht_credit_tender ct
 		INNER JOIN ht_borrow_credit bc ON bc.bid_nid = ct.bid_nid AND bc.credit_nid = ct.credit_nid
+		LEFT JOIN ht_r_user pna_u ON pna_u.user_id = ct.user_id
+		-- LEFT JOIN huiyingdai_users_info hui ON u.user_id = hui.user_id
+		-- LEFT JOIN hyjf_param_name pna_u ON cast(hui.attribute AS CHAR) = pna_u.name_cd AND pna_u.name_class = 'USER_PROPERTY'
+		LEFT JOIN `ht_r_oa_users` `ou_u` ON `ou_u`.hyd_id = pna_u.user_id AND ou_u.user_status IN ('E','Q1','Q11','Q2','Q21')
+		LEFT JOIN `ht_r_oa_department` `od_u` ON `od_u`.`id` = `ou_u`.`departmentid` AND `od_u`.id IS NOT NULL
+		LEFT JOIN `ht_r_oa_department` `od2_u` ON `od2_u`.`id` = `od_u`.`parentid`
+		LEFT JOIN `ht_r_oa_department` `od3_u` ON `od3_u`.`id` = `od2_u`.`parentid`
+
+		-- LEFT JOIN huiyingdai_spreads_users hydsu ON u.user_id = hydsu.user_id
+		LEFT JOIN ht_r_user u_re ON u_re.user_id = pna_u.spreads_user_id
+		-- LEFT JOIN huiyingdai_users_info hui_re ON hui_re.user_id = hydsu.spreads_userid
+		-- LEFT JOIN hyjf_param_name pna_re ON cast(hui_re.attribute AS CHAR) = pna_re.name_cd AND pna_re.name_class = 'USER_PROPERTY'
+		LEFT JOIN `ht_r_oa_users` `ou_re` ON `ou_re`.hyd_id = u_re.user_id AND ou_re.user_status IN ('E','Q1','Q11','Q2','Q21')
+		LEFT JOIN `ht_r_oa_department` `od_re` ON `od_re`.`id` = `ou_re`.`departmentid` AND `od_re`.id IS NOT NULL
+		LEFT JOIN `ht_r_oa_department` `od2_re` ON `od2_re`.`id` = `od_re`.`parentid`
+		LEFT JOIN `ht_r_oa_department` `od3_re` ON `od3_re`.`id` = `od2_re`.`parentid`
+
+
+		LEFT JOIN ht_r_user credit_users ON credit_users.user_id = ct.credit_user_id
+		-- LEFT JOIN huiyingdai_users_info hui_credit ON hui_credit.user_id = credit_users.user_id
+		-- LEFT JOIN hyjf_param_name pna_credit ON cast(hui_credit.attribute AS CHAR) = pna_credit.name_cd AND pna_credit.name_class = 'USER_PROPERTY'
+		LEFT JOIN `ht_r_oa_users` `ou_credit` ON `ou_credit`.hyd_id = pna_u.user_id AND ou_credit.user_status IN ('E','Q1','Q11','Q2','Q21')
+		LEFT JOIN `ht_r_oa_department` `od_credit` ON `od_credit`.`id` = `ou_credit`.`departmentid` AND `od_credit`.id IS NOT NULL
+		LEFT JOIN `ht_r_oa_department` `od2_credit` ON `od2_credit`.`id` = `od_credit`.`parentid`
+		LEFT JOIN `ht_r_oa_department` `od3_credit` ON `od3_credit`.`id` = `od2_credit`.`parentid`
+
+
+		-- LEFT JOIN huiyingdai_spreads_users hydsu_credit ON credit_users.user_id = hydsu_credit.user_id
+		LEFT JOIN ht_r_user u_credit_re ON u_credit_re.user_id = credit_users.spreads_user_id
+		-- LEFT JOIN huiyingdai_users_info ui_credit_re ON ui_credit_re.user_id = hydsu_credit.spreads_userid
+		-- LEFT JOIN hyjf_param_name pna_credit_re ON cast(ui_credit_re.attribute AS CHAR) = pna_credit_re.name_cd AND pna_credit_re.name_class = 'USER_PROPERTY'
+		LEFT JOIN `ht_r_oa_users` `ou_credit_re` ON `ou_credit_re`.hyd_id = u_credit_re.user_id AND ou_credit_re.user_status IN ('E','Q1','Q11','Q2','Q21')
+		LEFT JOIN `ht_r_oa_department` `od_credit_re` ON `od_credit_re`.`id` = `ou_credit_re`.`departmentid` AND `od_credit_re`.id IS NOT NULL
+		LEFT JOIN `ht_r_oa_department` `od2_credit_re` ON `od2_credit_re`.`id` = `od_credit_re`.`parentid`
+		LEFT JOIN `ht_r_oa_department` `od3_credit_re` ON `od3_credit_re`.`id` = `od2_credit_re`.`parentid`
+
+		-- LEFT JOIN hyjf_param_name pna_re_tender ON cast(ct.invite_user_attribute AS CHAR) = pna_re_tender.name_cd AND pna_re_tender.name_class = 'USER_PROPERTY'
+		-- LEFT JOIN hyjf_param_name pna_re_credit_tender ON cast(ct.invite_user_credit_attribute AS CHAR) = pna_re_credit_tender.name_cd AND pna_re_credit_tender.name_class = 'USER_PROPERTY'
+
+
 		LEFT JOIN ht_tender_agreement hta ON hta.tender_nid = ct.assign_nid
 		<include refid="TENDER_WHERE_COLUMN"/>
 		ORDER BY

@@ -325,15 +325,6 @@ public interface AmUserClient {
      */
     int insertCorpOpenAccountRecord(CorpOpenAccountRecordRequest request);
 
-
-    /**
-     * 获取银行卡配置信息
-     * @auth nxl
-     * @param bankId
-     * @return
-     */
-//    BanksConfigVO getBanksConfigByBankId(int bankId);
-
     /**
      * 更新用户绑定的银行卡
      *
