@@ -143,7 +143,12 @@ public class LoginController extends BaseController {
 		}
 		permission.put(key, val.toString().split(","));
 		request.getSession().setAttribute("permission", perm);
-		return new AdminResult<Map<String,Object>>(permission);
+		if(!permission.isEmpty()) {
+			return new AdminResult<Map<String,Object>>(permission);
+		}else{
+			return new AdminResult<Map<String,Object>>(new HashMap<String, Object>());
+		}
+		
 	}
     /**
      * 验证码
