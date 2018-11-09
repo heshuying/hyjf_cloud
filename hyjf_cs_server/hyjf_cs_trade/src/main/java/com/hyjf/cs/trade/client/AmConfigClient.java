@@ -5,7 +5,6 @@ import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 
 import java.util.Date;
@@ -58,7 +57,7 @@ public interface AmConfigClient {
 	 */
 	JxBankConfigVO getBankNameByBankId(String bankId);
 
-    List<BanksConfigVO> getRechargeQuotaLimit();
+    List<JxBankConfigVO> getRechargeQuotaLimit();
 
 	/**
 	 * 判断某天是否是节假日
@@ -89,7 +88,7 @@ public interface AmConfigClient {
 	 * @return
 	 */
     SiteSettingsVO selectSiteSetting();
-	BanksConfigVO getBanksConfigByBankId(String bankId);
+	JxBankConfigVO getBanksConfigByBankId(String bankId);
 	Integer getBankInterfaceFlagByType(String type);
 
 	/**

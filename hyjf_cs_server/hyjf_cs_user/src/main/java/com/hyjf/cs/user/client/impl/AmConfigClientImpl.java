@@ -5,7 +5,6 @@ import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.trade.BankInterfaceResponse;
 import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
-import com.hyjf.am.response.trade.BanksConfigResponse;
 import com.hyjf.am.response.user.NewAppQuestionCustomizeResponse;
 import com.hyjf.am.response.user.QuestionCustomizeResponse;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
@@ -13,7 +12,6 @@ import com.hyjf.am.resquest.user.AnswerRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 import com.hyjf.common.validator.Validator;
@@ -62,23 +60,6 @@ public class AmConfigClientImpl implements AmConfigClient {
     public String getBankIdByCardNo(String cardNo) {
         return restTemplate
                 .getForEntity(configService+"/config/queryBankIdByCardNo/" + cardNo, String.class).getBody();
-    }
-
-    /**
-     * @param bankId
-     * @Description 根据bankId查询所属银行
-     * @Author sunss
-     * @Version v0.1
-     * @Date 2018/6/5 15:13
-     */
-    @Override
-    public BanksConfigVO getBankNameByBankId(String bankId) {
-        BanksConfigResponse response = restTemplate
-                .getForEntity(configService+"/config/getBanksConfigByBankId/" + bankId, BanksConfigResponse.class).getBody();
-        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response.getResult();
-        }
-        return null;
     }
 
     @Override
@@ -149,9 +130,9 @@ public class AmConfigClientImpl implements AmConfigClient {
      * @return
      */
     @Override
-    public BanksConfigVO getBanksConfigByBankId(String bankId) {
-        BanksConfigResponse response = restTemplate
-                .getForEntity(configService+"/config/getBanksConfigByBankId/" + bankId, BanksConfigResponse.class).getBody();
+    public JxBankConfigVO getJxBankConfigByBankId(String bankId) {
+        JxBankConfigResponse response = restTemplate
+                .getForEntity(configService+"/config/getBanksConfigByBankId/" + bankId, JxBankConfigResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }

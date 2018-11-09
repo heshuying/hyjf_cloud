@@ -26,6 +26,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -325,6 +326,10 @@ public class AccountRechargeController extends BaseController {
     @ApiOperation(value = "充值管理数据导出",notes = "资金中心->充值管理数据导出")
     @PostMapping(value = "/exportAction")
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody AccountRechargeRequestBean accountRechargeRequestBean) throws Exception {
+
+        // 是否具有组织机构查看权限
+        String isOrganizationView = accountRechargeRequestBean.getIsOrganizationView();
+
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
@@ -346,7 +351,7 @@ public class AccountRechargeController extends BaseController {
         Integer totalCount = rechargeResponse.getCount();
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
-        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
@@ -369,7 +374,7 @@ public class AccountRechargeController extends BaseController {
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
 
-    private Map<String, String> buildMap() {
+    private Map<String, String> buildMap(String isOrganizationView) {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("nid", "订单号");
         map.put("username", "用户名");
@@ -379,14 +384,18 @@ public class AccountRechargeController extends BaseController {
         map.put("isBank", "资金托管平台");
         map.put("roleId", "用户角色");
         map.put("userAttribute", "用户属性（当前）");
-        map.put("userRegionName", "用户所属一级分部（当前）");
-        map.put("userBranchName", "用户所属二级分部（当前）");
-        map.put("userDepartmentName", "用户所属团队（当前）");
+        if (StringUtils.isNotBlank(isOrganizationView)) {
+            map.put("userRegionName", "用户所属一级分部（当前）");
+            map.put("userBranchName", "用户所属二级分部（当前）");
+            map.put("userDepartmentName", "用户所属团队（当前）");
+        }
         map.put("referrerName", "推荐人用户名（当前）");
         map.put("referrerTrueName", "推荐人姓名（当前）");
-        map.put("referrerRegionName", "推荐人所属一级分部（当前）");
-        map.put("referrerBranchName", "推荐人所属二级分部（当前）");
-        map.put("referrerDepartmentName", "推荐人所属团队（当前）");
+        if (StringUtils.isNotBlank(isOrganizationView)) {
+            map.put("referrerRegionName", "推荐人所属一级分部（当前）");
+            map.put("referrerBranchName", "推荐人所属二级分部（当前）");
+            map.put("referrerDepartmentName", "推荐人所属团队（当前）");
+        }
         map.put("type", "充值渠道");
         map.put("gateType", "充值类型");
         map.put("bankName", "充值银行");

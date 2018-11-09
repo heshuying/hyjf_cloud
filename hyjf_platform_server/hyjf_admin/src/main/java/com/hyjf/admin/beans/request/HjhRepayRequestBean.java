@@ -37,6 +37,10 @@ public class HjhRepayRequestBean extends BasePage {
 
     @ApiModelProperty(value = "实际退出结束日期")
     private String actulRepayTimeEnd;
+
+    @ApiModelProperty(value = "是否具有组织架构查看权限")
+    private String isOrganizationView;
+
     /**
      * 检索条件 还款方式
      */
@@ -141,5 +145,13 @@ public class HjhRepayRequestBean extends BasePage {
 
     public void setRepayStatusSrch(String repayStatusSrch) {
         this.repayStatusSrch = repayStatusSrch;
+    }
+
+    public String getIsOrganizationView() {
+        return isOrganizationView;
+    }
+
+    public void setIsOrganizationView(String isOrganizationView) {
+        this.isOrganizationView = isOrganizationView;
     }
 }

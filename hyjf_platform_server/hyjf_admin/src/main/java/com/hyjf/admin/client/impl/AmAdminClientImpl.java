@@ -17,6 +17,7 @@ import com.hyjf.am.response.config.ParamNameResponse;
 import com.hyjf.am.response.config.SubmissionsResponse;
 import com.hyjf.am.response.config.VersionConfigBeanResponse;
 import com.hyjf.am.response.market.AppBannerResponse;
+import com.hyjf.am.response.trade.BankRepayOrgFreezeLogResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
 import com.hyjf.am.response.trade.BorrowStyleResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
@@ -1307,7 +1308,7 @@ public class AmAdminClientImpl implements AmAdminClient {
     public List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String orderId) {
         StringBuilder url = new StringBuilder("http://AM-ADMIN/am-admin/exception/bankRepayFreezeOrg/getValid/");
         url.append(orderId);
-        IntegerResponse response = restTemplate.getForEntity(url.toString(), IntegerResponse.class).getBody();
+        BankRepayOrgFreezeLogResponse response = restTemplate.getForEntity(url.toString(), BankRepayOrgFreezeLogResponse.class).getBody();
         if (Response.isSuccess(response)) {
             return response.getResultList();
         }

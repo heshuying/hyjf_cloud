@@ -5,6 +5,7 @@ package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.mq.AccountWebListProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.SubCommissionService;
@@ -31,7 +32,6 @@ import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -46,11 +46,8 @@ import java.util.UUID;
 @Service
 public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements SubCommissionService {
 
-    @Value("${hyjf.bank.mers.account}")
-    private String HYJF_BANK_MERS_ACCOUNT;
-
-    @Value("${hyjf.sub.commission.password}")
-    private String SUB_COMMISSION_PASSWORD;
+    @Autowired
+    private SystemConfig systemConfig;
     @Autowired
     private AccountWebListProducer accountWebListProducer;
 
@@ -62,10 +59,10 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
     @Override
     public JSONObject searchDetails(Integer loginUserId) {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put("accountId",HYJF_BANK_MERS_ACCOUNT);
+        jsonObject.put("accountId",systemConfig.BANK_MERS_ACCOUNT);
         List<SubCommissionListConfigVO> subCommissionListConfigVOList = amTradeClient.searchSubCommissionListConfig();
         jsonObject.put("userNameList",subCommissionListConfigVOList);
-        BigDecimal balance = getBankBalance(loginUserId,HYJF_BANK_MERS_ACCOUNT);
+        BigDecimal balance = getBankBalance(loginUserId,systemConfig.BANK_MERS_ACCOUNT);
         jsonObject.put("balance",balance);
         return jsonObject;
     }
@@ -363,7 +360,8 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
         //验证余额是否充足
         CheckUtil.check(new BigDecimal(request.getBalance()).compareTo(new BigDecimal(request.getTxAmount())) > 0, MsgEnum.ERR_AMT_NO_MONEY);
         // 验证交易密码正确性
-        CheckUtil.check(SUB_COMMISSION_PASSWORD.equals(MD5Utils.MD5(request.getPassword())),MsgEnum.ERR_TRADE_PASSWORD);
+        logger.info("交易密码 => 配置文件中:[{}],参数MD5加密:[{}],参数不加密:[{}]",systemConfig.SUB_COMMISSION_PASSWORD,MD5Utils.MD5(request.getPassword()),request.getPassword());
+        CheckUtil.check(systemConfig.SUB_COMMISSION_PASSWORD.equals(MD5Utils.MD5(request.getPassword())),MsgEnum.ERR_TRADE_PASSWORD);
         //验证remark长度
         CheckUtil.check(request.getRemark().length()<50,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"说明");
     }

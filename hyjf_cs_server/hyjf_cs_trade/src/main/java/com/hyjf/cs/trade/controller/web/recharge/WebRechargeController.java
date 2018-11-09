@@ -1,7 +1,7 @@
 package com.hyjf.cs.trade.controller.web.recharge;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.CommonConstant;
@@ -15,7 +15,6 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.UserDirectRechargeBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.recharge.RechargeService;
 import com.hyjf.cs.trade.vo.BankRechargeVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -178,14 +177,14 @@ public class WebRechargeController extends BaseTradeController{
 	public WebResult<Object> rechargeQuotaLimit() {
 		logger.info("web端快捷充值限额开始");
 		WebResult<Object> result = new WebResult<Object>();
-		List<BanksConfigVO> list = userRechargeService.getRechargeQuotaLimit();
-		for (BanksConfigVO banksConfig : list) {
-			BigDecimal monthCardQuota = banksConfig.getMonthCardQuota();
-			BigDecimal singleQuota = banksConfig.getSingleQuota();
-			BigDecimal singleCardQuota = banksConfig.getSingleCardQuota();
-			banksConfig.setSingleQuota(new BigDecimal(CommonUtils.formatBigDecimal(singleQuota.divide(new BigDecimal(10000)))));
-			banksConfig.setSingleCardQuota(new BigDecimal(CommonUtils.formatBigDecimal(singleCardQuota.divide(new BigDecimal(10000)))));
-			banksConfig.setMonthCardQuota(new BigDecimal(CommonUtils.formatBigDecimal(monthCardQuota.divide(new BigDecimal(10000)))));
+		List<JxBankConfigVO> list = userRechargeService.getRechargeQuotaLimit();
+		for (JxBankConfigVO jxBankConfigVO : list) {
+			BigDecimal monthCardQuota = jxBankConfigVO.getMonthCardQuota();
+			BigDecimal singleQuota = jxBankConfigVO.getSingleQuota();
+			BigDecimal singleCardQuota = jxBankConfigVO.getSingleCardQuota();
+			jxBankConfigVO.setSingleQuota(new BigDecimal(CommonUtils.formatBigDecimal(singleQuota.divide(new BigDecimal(10000)))));
+			jxBankConfigVO.setSingleCardQuota(new BigDecimal(CommonUtils.formatBigDecimal(singleCardQuota.divide(new BigDecimal(10000)))));
+			jxBankConfigVO.setMonthCardQuota(new BigDecimal(CommonUtils.formatBigDecimal(monthCardQuota.divide(new BigDecimal(10000)))));
 		}
 		result.setData(list);
 		return result;

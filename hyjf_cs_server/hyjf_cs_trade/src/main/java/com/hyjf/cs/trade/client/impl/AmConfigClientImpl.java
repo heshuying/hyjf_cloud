@@ -9,7 +9,6 @@ import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import org.apache.commons.lang3.StringUtils;
@@ -122,9 +121,9 @@ public class AmConfigClientImpl implements AmConfigClient {
 	}
 
 	@Override
-	public List<BanksConfigVO> getRechargeQuotaLimit() {
-		BanksConfigResponse response = restTemplate
-				.getForEntity("http://AM-CONFIG/am-config/config/getbanklist" , BanksConfigResponse.class).getBody();
+	public List<JxBankConfigVO> getRechargeQuotaLimit() {
+		JxBankConfigResponse response = restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/config/getbanklist" , JxBankConfigResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}
@@ -207,9 +206,9 @@ public class AmConfigClientImpl implements AmConfigClient {
 		return null;
 	}
 	@Override
-	public BanksConfigVO getBanksConfigByBankId(String bankId) {
-		BanksConfigResponse response = restTemplate
-				.getForEntity("http://AM-CONFIG/am-config/config/getBanksConfigByBankId/" + bankId, BanksConfigResponse.class).getBody();
+	public JxBankConfigVO getBanksConfigByBankId(String bankId) {
+		JxBankConfigResponse response = restTemplate
+				.getForEntity("http://AM-CONFIG/am-config/config/getBanksConfigByBankId/" + bankId, JxBankConfigResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}

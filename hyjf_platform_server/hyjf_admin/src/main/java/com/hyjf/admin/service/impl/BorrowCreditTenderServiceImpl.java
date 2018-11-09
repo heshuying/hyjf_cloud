@@ -2,10 +2,7 @@ package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.beans.BorrowCreditRepayInfoResultBean;
-import com.hyjf.admin.beans.BorrowCreditRepayResultBean;
-import com.hyjf.admin.beans.BorrowCreditTenderResultBean;
-import com.hyjf.admin.beans.CreditUserInfoBean;
+import com.hyjf.admin.beans.*;
 import com.hyjf.admin.beans.request.BorrowCreditRepayRequest;
 import com.hyjf.admin.beans.request.BorrowCreditTenderInfoRequest;
 import com.hyjf.admin.beans.request.BorrowCreditTenderPDFSignReq;
@@ -222,7 +219,10 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
             req.setLimitEnd(page.getLimit());
             response = baseClient.postExe(TENDER_LIST_URL, req, AdminCreditTenderResponse.class);
             List<BorrowCreditTenderVO> list = response.getResultList();
-            bean.setRecordList(list);
+            bean.setRecordList(new ArrayList<>());
+            if (CollectionUtils.isNotEmpty(list)){
+                bean.setRecordList(CommonUtils.convertBeanList(list,BorrowCreditTenderBean.class));
+            }
             response = baseClient.postExe(TENDER_SUM_URL, req, AdminCreditTenderResponse.class);
             bean.setSumData(response.getSumData());
         }
@@ -247,8 +247,22 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         //String[] titles = new String[] { "序号","订单号","债转编号","项目编号","出让人","出让人当前的推荐人的用户名","出让人当前的推荐人的用户属性","出让人当前的推荐人的分公司","出让人当前的推荐人的部门","出让人当前的推荐人的团队","出让人承接时的推荐人的用户名", "出让人承接时的推荐人的用户属性", "出让人承接时的推荐人的分公司", "出让人承接时的推荐人的部门", "出让人承接时的推荐人的团队", "承接人","承接人当前的推荐人的用户名","承接人当前的推荐人的用户属性","承接人当前的推荐人的分公司","承接人当前的推荐人的部门","承接人当前的推荐人的团队","承接人承接时的推荐人的用户名", "承接人承接时的推荐人的用户属性", "承接人承接时的推荐人的分公司", "承接人承接时的推荐人的部门", "承接人承接时的推荐人的团队", "承接本金","折让率","认购价格","垫付利息", "债转服务费", "实付金额","承接平台", "承接时间" };
-        String[] titles = new String[]{"序号", "订单号", "债转编号", "项目编号", "出让人", "承接人", "承接本金", "折让率", "认购价格", "垫付利息", "债转服务费", "实付金额", "承接平台", "承接时间"};
-        exportTenderExcel(sheetName, fileName, titles, list, response);
+       // String[] titles = new String[]{"序号", "订单号", "债转编号", "项目编号", "出让人", "承接人", "承接本金", "折让率", "认购价格", "垫付利息", "债转服务费", "实付金额", "承接平台", "承接时间"};
+        String[] titles = null;
+        if (StringUtils.isNotBlank(request.getIsOrganizationView())){
+            titles = new String[]{"序号", "订单号", "债转编号", "项目编号", "出让人", "出让人当前的推荐人的用户名", "出让人当前的推荐人的用户属性", "出让人当前的推荐人的分公司", "出让人当前的推荐人的部门", "出让人当前的推荐人的团队",
+                    "出让人承接时的推荐人的用户名", "出让人承接时的推荐人的用户属性", "出让人承接时的推荐人的分公司", "出让人承接时的推荐人的部门", "出让人承接时的推荐人的团队",
+                    "承接人", "承接人当前的推荐人的用户名", "承接人当前的推荐人的用户属性", "承接人当前的推荐人的分公司", "承接人当前的推荐人的部门", "承接人当前的推荐人的团队",
+                    "承接人承接时的推荐人的用户名", "承接人承接时的推荐人的用户属性", "承接人承接时的推荐人的分公司", "承接人承接时的推荐人的部门", "承接人承接时的推荐人的团队",
+                    "承接本金", "折让率", "认购价格", "垫付利息", "债转服务费", "实付金额", "承接平台", "承接时间"};
+        }else {
+            titles = new String[]{"序号", "订单号", "债转编号", "项目编号", "出让人", "出让人当前的推荐人的用户名", "出让人当前的推荐人的用户属性",
+                    "出让人承接时的推荐人的用户名", "出让人承接时的推荐人的用户属性",
+                    "承接人", "承接人当前的推荐人的用户名", "承接人当前的推荐人的用户属性",
+                    "承接人承接时的推荐人的用户名", "承接人承接时的推荐人的用户属性",
+                    "承接本金", "折让率", "认购价格", "垫付利息", "债转服务费", "实付金额", "承接平台", "承接时间"};
+        }
+        exportTenderExcel(request.getIsOrganizationView(), sheetName, fileName, titles, list, response);
     }
 
 
@@ -402,7 +416,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
      * @author zhangyk
      * @date 2018/7/13 11:10
      */
-    private void exportTenderExcel(String sheetName, String fileName, String[] titles, List<BorrowCreditTenderVO> resultList, HttpServletResponse response) {
+    private void exportTenderExcel(String isOrganizationView, String sheetName, String fileName, String[] titles, List<BorrowCreditTenderVO> resultList, HttpServletResponse response) {
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
 
@@ -423,78 +437,318 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
                 Row row = sheet.createRow(rowNum);
                 // 循环数据
                 for (int celLength = 0; celLength < titles.length; celLength++) {
-                    BorrowCreditTenderVO creditTenderVo = resultList.get(i);
+                    BorrowCreditTenderVO borrowCommonCustomize = resultList.get(i);
 
                     // 创建相应的单元格
                     Cell cell = row.createCell(celLength);
-                    // 序号
+                    if (StringUtils.isNotBlank(isOrganizationView)){
                     if (celLength == 0) {
                         cell.setCellValue(i + 1);
                     }
                     // 订单号
                     else if (celLength == 1) {
-                        cell.setCellValue(creditTenderVo.getAssignNid());
+                        cell.setCellValue(borrowCommonCustomize.getAssignNid());
                     }
                     // 债转编号
                     else if (celLength == 2) {
-                        cell.setCellValue(creditTenderVo.getCreditNid());
+                        cell.setCellValue(borrowCommonCustomize.getCreditNid());
                     }
                     // 项目编号
                     else if (celLength == 3) {
-                        cell.setCellValue(creditTenderVo.getBidNid());
+                        cell.setCellValue(borrowCommonCustomize.getBidNid());
                     }
                     // 出让人用户名
                     else if (celLength == 4) {
-                        cell.setCellValue(creditTenderVo.getCreditUserName());
+                        cell.setCellValue(borrowCommonCustomize.getCreditUserName());
                     }
-                    // 承接人
+                    // 出让人推荐人信息---start
+                    // 出让人当前
                     else if (celLength == 5) {
-                        cell.setCellValue(creditTenderVo.getUserName());
+                        if(StringUtils.isNotBlank(borrowCommonCustomize.getRecommendAttrCreditSelf()) && (borrowCommonCustomize.getRecommendAttrCreditSelf().equals("线上员工") || borrowCommonCustomize.getRecommendAttrCreditSelf().equals("线下员工"))){
+                            cell.setCellValue(borrowCommonCustomize.getCreditUserName());
+                        }else{
+                            cell.setCellValue(borrowCommonCustomize.getRecommendNameCredit());
+                        }
+
+                    }
+                    else if (celLength == 6) {
+                        if(StringUtils.isNotBlank(borrowCommonCustomize.getRecommendAttrCreditSelf()) && (borrowCommonCustomize.getRecommendAttrCreditSelf().equals("线上员工") || borrowCommonCustomize.getRecommendAttrCreditSelf().equals("线下员工"))){
+                            cell.setCellValue(borrowCommonCustomize.getRecommendAttrCreditSelf());
+                        }else{
+                            cell.setCellValue(borrowCommonCustomize.getRecommendAttrCredit());
+                        }
+
+                    }
+                    else if (celLength == 7) {
+                        if(StringUtils.isNotBlank(borrowCommonCustomize.getRecommendAttrCreditSelf()) && (borrowCommonCustomize.getRecommendAttrCreditSelf().equals("线上员工") || borrowCommonCustomize.getRecommendAttrCreditSelf().equals("线下员工"))){
+                            cell.setCellValue(borrowCommonCustomize.getRegionNameCreditSelf());
+                        }else{
+                            cell.setCellValue(borrowCommonCustomize.getRegionNameCredit());
+                        }
+
+                    }
+                    else if (celLength == 8) {
+                        if(StringUtils.isNotBlank(borrowCommonCustomize.getRecommendAttrCreditSelf()) && (borrowCommonCustomize.getRecommendAttrCreditSelf().equals("线上员工") || borrowCommonCustomize.getRecommendAttrCreditSelf().equals("线下员工"))){
+                            cell.setCellValue(borrowCommonCustomize.getBranchNameCreditSelf());
+                        }else{
+                            cell.setCellValue(borrowCommonCustomize.getBranchNameCredit());
+                        }
+
+                    }
+                    else if (celLength == 9) {
+                        if(StringUtils.isNotBlank(borrowCommonCustomize.getRecommendAttrCreditSelf()) && (borrowCommonCustomize.getRecommendAttrCreditSelf().equals("线上员工") || borrowCommonCustomize.getRecommendAttrCreditSelf().equals("线下员工"))){
+                            cell.setCellValue(borrowCommonCustomize.getDepartmentNameCreditSelf());
+                        }else{
+                            cell.setCellValue(borrowCommonCustomize.getDepartmentNameCredit());
+                        }
+
                     }
 
+                    //出让人承接
+                    else if (celLength == 10) {
+                        cell.setCellValue(borrowCommonCustomize.getInviteUserCreditName());
+                    }
+                    else if (celLength == 11) {
+                        cell.setCellValue(borrowCommonCustomize.getInviteUserCreditAttribute());
+                    }
+                    else if (celLength == 12) {
+                        cell.setCellValue(borrowCommonCustomize.getInviteUserCreditRegionName());
+                    }
+                    else if (celLength == 13) {
+                        cell.setCellValue(borrowCommonCustomize.getInviteUserCreditBranchName());
+                    }
+                    else if (celLength == 14) {
+                        cell.setCellValue(borrowCommonCustomize.getInviteUserCreditDepartmentName());
+                    }
+                    // 出让人推荐人信息---end
+                    // 承接人用户名
+                    else if (celLength == 15) {
+                        cell.setCellValue(borrowCommonCustomize.getUserName());
+                    }
+                    // 承接人推荐人信息---start
+                    // 承接人当前
+                    else if (celLength == 16) {
+                        if(StringUtils.isNotBlank(borrowCommonCustomize.getRecommendAttrSelf()) && (borrowCommonCustomize.getRecommendAttrSelf().equals("线上员工") || borrowCommonCustomize.getRecommendAttrSelf().equals("线下员工"))){
+                            cell.setCellValue(borrowCommonCustomize.getUserName());
+                        }else{
+                            cell.setCellValue(borrowCommonCustomize.getRecommendName());
+                        }
+
+                    }
+                    else if (celLength == 17) {
+                        if(StringUtils.isNotBlank(borrowCommonCustomize.getRecommendAttrSelf()) && (borrowCommonCustomize.getRecommendAttrSelf().equals("线上员工") || borrowCommonCustomize.getRecommendAttrSelf().equals("线下员工"))){
+                            cell.setCellValue(borrowCommonCustomize.getRecommendAttrSelf());
+                        }else{
+                            cell.setCellValue(borrowCommonCustomize.getRecommendAttr());
+                        }
+
+                    }
+                    else if (celLength == 18) {
+                        if(StringUtils.isNotBlank(borrowCommonCustomize.getRecommendAttrSelf()) && (borrowCommonCustomize.getRecommendAttrSelf().equals("线上员工") || borrowCommonCustomize.getRecommendAttrSelf().equals("线下员工"))){
+                            cell.setCellValue(borrowCommonCustomize.getRegionNameSelf());
+                        }else{
+                            cell.setCellValue(borrowCommonCustomize.getRegionName());
+                        }
+
+                    }
+                    else if (celLength == 19) {
+                        if(StringUtils.isNotBlank(borrowCommonCustomize.getRecommendAttrSelf()) && (borrowCommonCustomize.getRecommendAttrSelf().equals("线上员工") || borrowCommonCustomize.getRecommendAttrSelf().equals("线下员工"))){
+                            cell.setCellValue(borrowCommonCustomize.getBranchNameSelf());
+                        }else{
+                            cell.setCellValue(borrowCommonCustomize.getBranchName());
+                        }
+
+                    }
+                    else if (celLength == 20) {
+                        if(StringUtils.isNotBlank(borrowCommonCustomize.getRecommendAttrSelf()) && (borrowCommonCustomize.getRecommendAttrSelf().equals("线上员工") || borrowCommonCustomize.getRecommendAttrSelf().equals("线下员工"))){
+                            cell.setCellValue(borrowCommonCustomize.getDepartmentNameSelf());
+                        }else{
+                            cell.setCellValue(borrowCommonCustomize.getDepartmentName());
+                        }
+
+                    }
+
+                    // 承接人承接时
+                    else if (celLength == 21) {
+                        cell.setCellValue(borrowCommonCustomize.getInviteUserName());
+                    }
+                    else if (celLength == 22) {
+                        cell.setCellValue(borrowCommonCustomize.getInviteUserAttribute());
+                    }
+                    else if (celLength == 23) {
+                        cell.setCellValue(borrowCommonCustomize.getInviteUseRegionname());
+                    }
+                    else if (celLength == 24) {
+                        cell.setCellValue(borrowCommonCustomize.getInviteUserBranchname());
+                    }
+                    else if (celLength == 25) {
+                        cell.setCellValue(borrowCommonCustomize.getInviteUserDepartmentName());
+                    }
+                    // 承接人承接时推荐人信息---end
                     // 承接本金
-                    else if (celLength == 6) {
-                        cell.setCellValue(creditTenderVo.getAssignCapital());
+                    else if (celLength == 26) {
+                        cell.setCellValue(borrowCommonCustomize.getAssignCapital());
                     }
                     // 折让率
-                    else if (celLength == 7) {
-                        cell.setCellValue(creditTenderVo.getCreditDiscount());
+                    else if (celLength == 27) {
+                        cell.setCellValue(borrowCommonCustomize.getCreditDiscount());
                     }
                     // 认购价格
-                    else if (celLength == 8) {
-                        cell.setCellValue(creditTenderVo.getAssignPrice());
+                    else if (celLength == 28) {
+                        cell.setCellValue(borrowCommonCustomize.getAssignPrice());
                     }
                     // 垫付利息
-                    else if (celLength == 9) {
-                        cell.setCellValue(creditTenderVo.getAssignInterestAdvance());
+                    else if (celLength == 29) {
+                        cell.setCellValue(borrowCommonCustomize.getAssignInterestAdvance());
                     }
                     // 服务费
-                    else if (celLength == 10) {
-                        cell.setCellValue(creditTenderVo.getCreditFee());
+                    else if (celLength == 30) {
+                        cell.setCellValue(borrowCommonCustomize.getCreditFee());
                     }
                     // 实付金额
-                    else if (celLength == 11) {
-                        cell.setCellValue(creditTenderVo.getAssignPay());
+                    else if (celLength == 31) {
+                        cell.setCellValue(borrowCommonCustomize.getAssignPay());
                     }
                     // 客户端
-                    else if (celLength == 12) {
-                        if (creditTenderVo.getClient() != null && !"".equals(creditTenderVo.getClient())
-                                && "0".equals(creditTenderVo.getClient())) {
+                    else if (celLength == 32) {
+                        if (borrowCommonCustomize.getClient()!=null&&!borrowCommonCustomize.getClient().equals("")
+                                &&borrowCommonCustomize.getClient().equals("0")) {
                             cell.setCellValue("pc");
-                        } else if (creditTenderVo.getClient() != null && !"".equals(creditTenderVo.getClient())
-                                && "1".equals(creditTenderVo.getClient())) {
+                        }else if (borrowCommonCustomize.getClient()!=null&&!borrowCommonCustomize.getClient().equals("")
+                                &&borrowCommonCustomize.getClient().equals("1")) {
                             cell.setCellValue("微信");
-                        } else if (creditTenderVo.getClient() != null && !"".equals(creditTenderVo.getClient())
-                                && "2".equals(creditTenderVo.getClient())) {
+                        }else if (borrowCommonCustomize.getClient()!=null&&!borrowCommonCustomize.getClient().equals("")
+                                &&borrowCommonCustomize.getClient().equals("2")) {
                             cell.setCellValue("android");
-                        } else if (creditTenderVo.getClient() != null && !"".equals(creditTenderVo.getClient())
-                                && "3".equals(creditTenderVo.getClient())) {
+                        }else if (borrowCommonCustomize.getClient()!=null&&!borrowCommonCustomize.getClient().equals("")
+                                &&borrowCommonCustomize.getClient().equals("3")) {
                             cell.setCellValue("ios");
                         }
                     }
                     // 承接时间
-                    else if (celLength == 13) {
-                        cell.setCellValue(creditTenderVo.getAddTime());
+                    else if (celLength == 33) {
+                        cell.setCellValue(borrowCommonCustomize.getAddTime());
+                    }
+                    }else {
+                        if (celLength == 0) {
+                            cell.setCellValue(i + 1);
+                        }
+                        // 订单号
+                        else if (celLength == 1) {
+                            cell.setCellValue(borrowCommonCustomize.getAssignNid());
+                        }
+                        // 债转编号
+                        else if (celLength == 2) {
+                            cell.setCellValue(borrowCommonCustomize.getCreditNid());
+                        }
+                        // 项目编号
+                        else if (celLength == 3) {
+                            cell.setCellValue(borrowCommonCustomize.getBidNid());
+                        }
+                        // 出让人用户名
+                        else if (celLength == 4) {
+                            cell.setCellValue(borrowCommonCustomize.getCreditUserName());
+                        }
+                        // 出让人推荐人信息---start
+                        // 出让人当前
+                        else if (celLength == 5) {
+                            if(StringUtils.isNotBlank(borrowCommonCustomize.getRecommendAttrCreditSelf()) && (borrowCommonCustomize.getRecommendAttrCreditSelf().equals("线上员工") || borrowCommonCustomize.getRecommendAttrCreditSelf().equals("线下员工"))){
+                                cell.setCellValue(borrowCommonCustomize.getCreditUserName());
+                            }else{
+                                cell.setCellValue(borrowCommonCustomize.getRecommendNameCredit());
+                            }
+
+                        }
+                        else if (celLength == 6) {
+                            if(StringUtils.isNotBlank(borrowCommonCustomize.getRecommendAttrCreditSelf()) && (borrowCommonCustomize.getRecommendAttrCreditSelf().equals("线上员工") || borrowCommonCustomize.getRecommendAttrCreditSelf().equals("线下员工"))){
+                                cell.setCellValue(borrowCommonCustomize.getRecommendAttrCreditSelf());
+                            }else{
+                                cell.setCellValue(borrowCommonCustomize.getRecommendAttrCredit());
+                            }
+
+                        }
+                        //出让人承接
+                        else if (celLength == 7) {
+                            cell.setCellValue(borrowCommonCustomize.getInviteUserCreditName());
+                        }
+                        else if (celLength == 8) {
+                            cell.setCellValue(borrowCommonCustomize.getInviteUserCreditAttribute());
+                        }
+                        // 出让人推荐人信息---end
+                        // 承接人用户名
+                        else if (celLength == 9) {
+                            cell.setCellValue(borrowCommonCustomize.getUserName());
+                        }
+                        // 承接人推荐人信息---start
+                        // 承接人当前
+                        else if (celLength == 10) {
+                            if(StringUtils.isNotBlank(borrowCommonCustomize.getRecommendAttrSelf()) && (borrowCommonCustomize.getRecommendAttrSelf().equals("线上员工") || borrowCommonCustomize.getRecommendAttrSelf().equals("线下员工"))){
+                                cell.setCellValue(borrowCommonCustomize.getUserName());
+                            }else{
+                                cell.setCellValue(borrowCommonCustomize.getRecommendName());
+                            }
+
+                        }
+                        else if (celLength == 11) {
+                            if(StringUtils.isNotBlank(borrowCommonCustomize.getRecommendAttrSelf()) && (borrowCommonCustomize.getRecommendAttrSelf().equals("线上员工") || borrowCommonCustomize.getRecommendAttrSelf().equals("线下员工"))){
+                                cell.setCellValue(borrowCommonCustomize.getRecommendAttrSelf());
+                            }else{
+                                cell.setCellValue(borrowCommonCustomize.getRecommendAttr());
+                            }
+
+                        }
+                        // 承接人承接时
+                        else if (celLength == 12) {
+                            cell.setCellValue(borrowCommonCustomize.getInviteUserName());
+                        }
+                        else if (celLength == 13) {
+                            cell.setCellValue(borrowCommonCustomize.getInviteUserAttribute());
+                        }
+                        // 承接人承接时推荐人信息---end
+                        // 承接本金
+                        else if (celLength == 14) {
+                            cell.setCellValue(borrowCommonCustomize.getAssignCapital());
+                        }
+                        // 折让率
+                        else if (celLength == 15) {
+                            cell.setCellValue(borrowCommonCustomize.getCreditDiscount());
+                        }
+                        // 认购价格
+                        else if (celLength == 16) {
+                            cell.setCellValue(borrowCommonCustomize.getAssignPrice());
+                        }
+                        // 垫付利息
+                        else if (celLength == 17) {
+                            cell.setCellValue(borrowCommonCustomize.getAssignInterestAdvance());
+                        }
+                        // 服务费
+                        else if (celLength == 18) {
+                            cell.setCellValue(borrowCommonCustomize.getCreditFee());
+                        }
+                        // 实付金额
+                        else if (celLength == 19) {
+                            cell.setCellValue(borrowCommonCustomize.getAssignPay());
+                        }
+                        // 客户端
+                        else if (celLength == 20) {
+                            if (borrowCommonCustomize.getClient()!=null&&!borrowCommonCustomize.getClient().equals("")
+                                    &&borrowCommonCustomize.getClient().equals("0")) {
+                                cell.setCellValue("pc");
+                            }else if (borrowCommonCustomize.getClient()!=null&&!borrowCommonCustomize.getClient().equals("")
+                                    &&borrowCommonCustomize.getClient().equals("1")) {
+                                cell.setCellValue("微信");
+                            }else if (borrowCommonCustomize.getClient()!=null&&!borrowCommonCustomize.getClient().equals("")
+                                    &&borrowCommonCustomize.getClient().equals("2")) {
+                                cell.setCellValue("android");
+                            }else if (borrowCommonCustomize.getClient()!=null&&!borrowCommonCustomize.getClient().equals("")
+                                    &&borrowCommonCustomize.getClient().equals("3")) {
+                                cell.setCellValue("ios");
+                            }
+                        }
+                        // 承接时间
+                        else if (celLength == 21) {
+                            cell.setCellValue(borrowCommonCustomize.getAddTime());
+                        }
                     }
                 }
             }
