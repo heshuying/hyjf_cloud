@@ -393,4 +393,12 @@ public interface AmUserClient {
 	 * @return
 	 */
 	UserLoginLogVO getUserLoginById(Integer userId);
+
+	/**
+	 * 返回用户测评信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	public UserEvalationResultVO selectUserEvalationResultByUserId(Integer userId);
 }

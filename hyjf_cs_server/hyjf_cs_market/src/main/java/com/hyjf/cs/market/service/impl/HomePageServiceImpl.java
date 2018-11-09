@@ -4,6 +4,7 @@
 package com.hyjf.cs.market.service.impl;
 
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
+import com.hyjf.am.vo.user.EvalationCustomizeVO;
 import com.hyjf.cs.market.client.AmHomePageClient;
 import com.hyjf.cs.market.service.HomePageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +31,15 @@ public class HomePageServiceImpl implements HomePageService {
     @Override
     public List<AppAdsCustomizeVO> searchBannerList(Map<String, Object> ads) {
         return amHomePageClient.searchBannerList(ads);
+    }
+
+    /**
+     * 获取评分标准列表
+     * @return
+     * @author Michael
+     */
+    @Override
+    public List<EvalationCustomizeVO> getEvalationRecord() {
+        return amHomePageClient.getEvalationRecord();
     }
 }
