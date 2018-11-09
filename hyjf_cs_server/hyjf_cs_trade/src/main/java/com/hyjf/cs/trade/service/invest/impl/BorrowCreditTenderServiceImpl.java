@@ -490,7 +490,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
 					return result;
 				}*/
                 //金额对比判断（校验金额 大于 设置测评金额）
-                if (new BigDecimal(request.getAccount()).compareTo(new BigDecimal(revaluation_money)) > 0) {
+                if (new BigDecimal(request.getAssignCapital()).compareTo(new BigDecimal(revaluation_money)) > 0) {
                     //返回类型和限额
                     Map<String,Object> map = new HashedMap();
                     map.put("evalType",eval_type);
