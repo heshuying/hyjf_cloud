@@ -1259,7 +1259,9 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         String orderId = GetOrderIdUtils.getOrderId2(user.getUserId());
         bean.setOrderId(orderId);
         bean.setLogOrderId(orderId);
+        logger.info("creditTenderLog.getCreditUserId():"+creditTenderLog.getCreditUserId());
         BankOpenAccountVO accountChinapnrCrediter = amUserClient.selectBankAccountById(creditTenderLog.getCreditUserId());
+        logger.info("accountChinapnrCrediter:{}",JSONObject.toJSONString(accountChinapnrCrediter));
         bean.setAccountId(bankOpenAccount.getAccount());
         // 实付金额 承接本金*（1-折价率）+应垫付利息
         bean.setTxAmount(creditAssign.getAssignPay().replaceAll(",",""));
