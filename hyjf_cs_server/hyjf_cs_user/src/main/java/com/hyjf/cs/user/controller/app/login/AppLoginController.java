@@ -290,7 +290,7 @@ public class AppLoginController extends BaseUserController {
         }*/
 
         // 业务逻辑
-      //  try {
+        try {
             // 取得用户ID
             Integer userId = 4415;
             if (userId != null) {
@@ -306,11 +306,11 @@ public class AppLoginController extends BaseUserController {
                 ret.put("statusDesc", "用户信息不存在");
             }
 
-       /* } catch (Exception e) {
+        } catch (Exception e) {
             logger.error("异常信息打印："+e);
             ret.put("status", "1");
             ret.put("statusDesc", "获取用户相关数据发生错误");
-        }*/
+        }
         return ret;
     }
 
