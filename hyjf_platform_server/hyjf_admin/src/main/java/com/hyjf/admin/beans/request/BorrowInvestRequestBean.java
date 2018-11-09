@@ -64,6 +64,9 @@ public class BorrowInvestRequestBean extends BaseRequest implements Serializable
     @ApiModelProperty(value = "是否从其他页面跳转到投资明细（1：是）(汇计划三期)")
     private String isOptFlag;
 
+    @ApiModelProperty(value = "是否具有组织架构查看权限")
+    private String isOrganizationView;
+
     public String getBorrowNidSrch() {
         return borrowNidSrch;
     }
@@ -198,5 +201,13 @@ public class BorrowInvestRequestBean extends BaseRequest implements Serializable
 
     public void setIsOptFlag(String isOptFlag) {
         this.isOptFlag = isOptFlag;
+    }
+
+    public String getIsOrganizationView() {
+        return isOrganizationView;
+    }
+
+    public void setIsOrganizationView(String isOrganizationView) {
+        this.isOrganizationView = isOrganizationView;
     }
 }

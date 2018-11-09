@@ -163,7 +163,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
             }
             //是否与本金公用
             boolean addFlg = false;
-            if (bestCoupon.getAddFlag()!=null&&bestCoupon.getAddFlag() == 1 && (!"0".equals(money) || !"".equals(money))) {
+            if (bestCoupon.getAddFlag()!=null&&bestCoupon.getAddFlag() == 1 && (!"0".equals(money) && !"".equals(money))) {
                 addFlg = true;
             }
             if (addFlg) {
