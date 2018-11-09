@@ -354,6 +354,9 @@ public class BorrowRepaymentInfoController extends BaseController {
         BeanUtils.copyProperties(form, copyForm);
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
+        // 是否具有组织机构查看权限
+        String isOrganizationView = form.getIsOrganizationView();
+
         if(copyForm.getYesTimeStartSrch() != null&&!"".equals(copyForm.getYesTimeStartSrch())) {
             Date date;
             try {
@@ -397,7 +400,7 @@ public class BorrowRepaymentInfoController extends BaseController {
         Integer totalCount = resultList.size();
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
-        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
@@ -421,7 +424,7 @@ public class BorrowRepaymentInfoController extends BaseController {
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
 
-    private Map<String, String> buildMap() {
+    private Map<String, String> buildMap(String isOrganizationView) {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("borrowNid","借款编号");
         map.put("instName","资产来源");
@@ -438,14 +441,18 @@ public class BorrowRepaymentInfoController extends BaseController {
         map.put("recoverUserName","投资人用户名");
         map.put("recoverUserId","投资人ID");
         map.put("recoverUserAttribute","投资人用户属性（当前）");
-        map.put("recoverRegionName","投资人所属一级分部（当前）");
-        map.put("recoverBranchName","投资人所属二级分部（当前）");
-        map.put("recoverDepartmentName","投资人所属团队（当前）");
+        if (StringUtils.isNotBlank(isOrganizationView)) {
+            map.put("recoverRegionName", "投资人所属一级分部（当前）");
+            map.put("recoverBranchName", "投资人所属二级分部（当前）");
+            map.put("recoverDepartmentName", "投资人所属团队（当前）");
+        }
         map.put("referrerName","推荐人用户名（当前）");
         map.put("referrerTrueName","推荐人姓名（当前）");
-        map.put("referrerRegionName","推荐人所属一级分部（当前）");
-        map.put("referrerBranchName","推荐人所属二级分部（当前）");
-        map.put("referrerDepartmentName","推荐人所属团队（当前）");
+        if (StringUtils.isNotBlank(isOrganizationView)) {
+            map.put("referrerRegionName", "推荐人所属一级分部（当前）");
+            map.put("referrerBranchName", "推荐人所属二级分部（当前）");
+            map.put("referrerDepartmentName", "推荐人所属团队（当前）");
+        }
         map.put("recoverTotal","投资金额");
         map.put("recoverCapital","应还本金");
         map.put("recoverInterest","应还利息");

@@ -495,6 +495,10 @@ public class UserCenterController extends BaseController {
     @ApiOperation(value = "导出会员管理列表", notes = "导出会员管理列表")
     @PostMapping(value = "/exportusers")
     public void exportToExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody UserManagerRequestBean userManagerRequestBean) throws Exception {
+
+        // 用户是否具有组织机构查看权限
+        String isOrganizationView = userManagerRequestBean.getIsOrganizationView();
+
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
@@ -517,7 +521,7 @@ public class UserCenterController extends BaseController {
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         int minId = 0;
-        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
@@ -541,11 +545,13 @@ public class UserCenterController extends BaseController {
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
 
-    private Map<String, String> buildMap() {
+    private Map<String, String> buildMap(String isOrganizationView) {
         Map<String, String> map = Maps.newLinkedHashMap();
-        map.put("regionName", "分公司");
-        map.put("branchName", "分部");
-        map.put("departmentName", "团队");
+        if (StringUtils.isNotBlank(isOrganizationView)) {
+            map.put("regionName", "分公司");
+            map.put("branchName", "分部");
+            map.put("departmentName", "团队");
+        }
         map.put("instName", "用户来源");
         map.put("userName", "用户名");
         map.put("realName", "姓名");

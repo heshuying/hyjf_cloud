@@ -33,6 +33,9 @@ public class WebBean extends AccountWebListVO implements Serializable {
 	@ApiModelProperty(value = "列表画面自定义标签上的用翻页对象")
 	private Paginator paginator;
 
+	@ApiModelProperty(value = "是否具有组织架构查看权限")
+	private String isOrganizationView;
+
 	@Override
     public int getPaginatorPage() {
 		if (paginatorPage == 0) {
@@ -72,6 +75,14 @@ public class WebBean extends AccountWebListVO implements Serializable {
 
 	public void setTradeList(List<AccountTradeVO> tradeList) {
 		this.tradeList = tradeList;
+	}
+
+	public String getIsOrganizationView() {
+		return isOrganizationView;
+	}
+
+	public void setIsOrganizationView(String isOrganizationView) {
+		this.isOrganizationView = isOrganizationView;
 	}
 }
 

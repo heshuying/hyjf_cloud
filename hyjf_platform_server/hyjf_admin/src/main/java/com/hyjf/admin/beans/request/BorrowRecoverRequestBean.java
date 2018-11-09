@@ -82,7 +82,8 @@ public class BorrowRecoverRequestBean extends BaseRequest implements Serializabl
     @ApiModelProperty(value = "放款批次号")
     private String loanBatchNo;
 
-
+    @ApiModelProperty(value = "是否具有组织架构查看权限")
+    private String isOrganizationView;
 
     /**
      * borrowNidSrch
@@ -296,5 +297,13 @@ public class BorrowRecoverRequestBean extends BaseRequest implements Serializabl
 
     public void setBorrowNameSrch(String borrowNameSrch) {
         this.borrowNameSrch = borrowNameSrch;
+    }
+
+    public String getIsOrganizationView() {
+        return isOrganizationView;
+    }
+
+    public void setIsOrganizationView(String isOrganizationView) {
+        this.isOrganizationView = isOrganizationView;
     }
 }
