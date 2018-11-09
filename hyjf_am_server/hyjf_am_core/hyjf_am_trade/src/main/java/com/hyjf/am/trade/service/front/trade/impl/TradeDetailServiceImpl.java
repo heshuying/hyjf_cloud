@@ -59,7 +59,7 @@ public class TradeDetailServiceImpl extends BaseServiceImpl implements TradeDeta
         String startDate = StringUtils.isNotEmpty(request.getStartDate()) ? request.getStartDate() : null;
         String endDate = StringUtils.isNotEmpty(request.getEndDate()) ? request.getEndDate() : null;
         params.put("userId", userId);
-        params.put("trade", trade);
+        params.put("tradeType", trade);
         params.put("startDate", startDate);
         params.put("endDate", endDate);
         int total = userTradeDetailCustomizeMapper.countUserTradeRecordTotal(params);
