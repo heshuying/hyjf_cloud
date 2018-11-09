@@ -490,7 +490,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
 					return result;
 				}*/
                 //金额对比判断（校验金额 大于 设置测评金额）
-                if (new BigDecimal(request.getAccount()).compareTo(new BigDecimal(revaluation_money)) > 0) {
+                if (new BigDecimal(request.getAssignCapital()).compareTo(new BigDecimal(revaluation_money)) > 0) {
                     //返回类型和限额
                     Map<String,Object> map = new HashedMap();
                     map.put("evalType",eval_type);
@@ -1259,7 +1259,9 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         String orderId = GetOrderIdUtils.getOrderId2(user.getUserId());
         bean.setOrderId(orderId);
         bean.setLogOrderId(orderId);
+        logger.info("creditTenderLog.getCreditUserId():"+creditTenderLog.getCreditUserId());
         BankOpenAccountVO accountChinapnrCrediter = amUserClient.selectBankAccountById(creditTenderLog.getCreditUserId());
+        logger.info("accountChinapnrCrediter:{}",JSONObject.toJSONString(accountChinapnrCrediter));
         bean.setAccountId(bankOpenAccount.getAccount());
         // 实付金额 承接本金*（1-折价率）+应垫付利息
         bean.setTxAmount(creditAssign.getAssignPay().replaceAll(",",""));

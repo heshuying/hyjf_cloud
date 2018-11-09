@@ -14,7 +14,6 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.ic.AppAccesStatistics;
 import com.hyjf.cs.message.mongo.ic.AppAccesStatisticsDao;
-import com.hyjf.cs.message.mongo.ic.AppChannelStatisticsDetailDao;
 import com.hyjf.cs.message.service.access.AppChannelStatisticsService;
 import com.mongodb.BasicDBObject;
 import com.mongodb.DBObject;
@@ -28,9 +27,6 @@ public class AppChannelStatisticsServiceImpl implements AppChannelStatisticsServ
 
     @Autowired
     private AppAccesStatisticsDao appAccesStatisticsDao;
-
-    @Autowired
-    private AppChannelStatisticsDetailDao appChannelStatisticsDetailDao;
 
     /**
      * 根据开始时间、结束时间和来源查询数据
