@@ -93,7 +93,7 @@ public class CrmBankOpenMessageConsumer extends Consumer{
                 logger.info(msgMap.get("userId")+"");
                 try {
                     Integer userId = Integer.parseInt(String.valueOf(msgMap.get("userId")).trim());
-                    logger.info("crmInsertUrl================:"+crmInsertUrl);
+                    logger.info("crmInsertUrl================:"+crmInsertUrl+"；buildData(userId) is null："+(buildData(userId)==null));
                     result = restTemplate.postForEntity(crmInsertUrl, buildData(userId).toJSONString(),CloseableHttpResponse.class).getBody();
                     //result = postJson(crmInsertUrl, buildData(userId).toJSONString());
                 } catch (Exception e) {
