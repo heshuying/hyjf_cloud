@@ -5,7 +5,6 @@ import com.hyjf.am.resquest.user.AnswerRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
 
@@ -29,14 +28,6 @@ public interface AmConfigClient {
      * @Date 2018/6/5 14:57
      */
     String getBankIdByCardNo(String cardNo);
-
-    /**
-     * @Description 根据bankId查询所属银行
-     * @Author sunss
-     * @Version v0.1
-     * @Date 2018/6/5 15:13
-     */
-    BanksConfigVO getBankNameByBankId(String bankId);
 
     /**
      * 测评问题列表
@@ -78,7 +69,7 @@ public interface AmConfigClient {
      * @param bankId
      * @return
      */
-    BanksConfigVO getBanksConfigByBankId(String bankId);
+    JxBankConfigVO getJxBankConfigByBankId(String bankId);
 
     /**
      * 获取数据字典表的下拉列表

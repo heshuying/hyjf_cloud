@@ -645,21 +645,6 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
-	 * 获取银行卡配置信息
-	 *
-	 * @auther: nxl
-	 * @param bankId
-	 * @return
-	 */
-	/*
-	 * @Override public BanksConfigVO getBanksConfigByBankId(int bankId) {
-	 * BanksConfigResponse response = restTemplate
-	 * .getForEntity("http://AM-ADMIN/AM-ADMIN/config/getBanksConfigByBankId/" +
-	 * bankId, BanksConfigResponse.class).getBody(); if (response != null) { return
-	 * response.getResult(); } return null; }
-	 */
-
-	/**
 	 * 更新用户绑定的银行卡
 	 *
 	 * @auther: nxl
