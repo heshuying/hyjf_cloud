@@ -159,7 +159,6 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
                             result.setIdcard((String) jso.get("idNo"));
                             result.setName((String) jso.get("name"));
                             result.setAddr((String) jso.get("addr"));
-                            result.setName(userInfoVO.getTruename());
                             result.setRoleId((String) jso.get("identity"));
                             List<BankOpenAccountLogVO> log = amUserClient.getBankOpenAccountLogVOByUserId(user.getUserId());
                             Integer platform = 1;
@@ -197,16 +196,25 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
     @Override
     public OpenAccountEnquiryDefineResultBean openAccountEnquiryUpdate(OpenAccountEnquiryDefineResultBean requestBean) {
         OpenAccountEnquiryDefineResultBean resultBean= new OpenAccountEnquiryDefineResultBean();
-        String userid = requestBean.getUserid().trim();
-        String channel =requestBean.getChannel().trim();
-        String accountId = requestBean.getAccountId().trim();
-        String tResult = "开户掉单同步成功";//返回结果
-        if(userid!=null||channel!=null||accountId!=null){
-            return updateUserAccount(requestBean);
+        String userid = requestBean.getUserid();
+        String channel =requestBean.getChannel();
+        String accountId = requestBean.getAccountId();
+        if(StringUtils.isEmpty(userid)){
+            resultBean.setStatus("n");
+            resultBean.setResult("用户id不能为空");
+            return resultBean;
         }
-        resultBean.setStatus("y");
-        resultBean.setResult(tResult);
-        return resultBean;
+        if(StringUtils.isEmpty(channel)){
+            resultBean.setStatus("n");
+            resultBean.setResult("交易渠道不能为空");
+            return resultBean;
+        }
+        if(StringUtils.isEmpty(accountId)){
+            resultBean.setStatus("n");
+            resultBean.setResult("电子账号不能为空");
+            return resultBean;
+        }
+        return updateUserAccount(requestBean);
     }
     /**
      * 保存开户的数据
