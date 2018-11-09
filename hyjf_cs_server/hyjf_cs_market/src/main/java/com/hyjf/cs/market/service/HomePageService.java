@@ -4,6 +4,7 @@
 package com.hyjf.cs.market.service;
 
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
+import com.hyjf.am.vo.user.EvalationCustomizeVO;
 
 import java.util.List;
 import java.util.Map;
@@ -20,4 +21,11 @@ public interface HomePageService {
      * @return
      */
     List<AppAdsCustomizeVO> searchBannerList(Map<String, Object> ads);
+
+    /**
+     * 测评说明
+     * @return
+     */
+    List<EvalationCustomizeVO> getEvalationRecord();
+
 }

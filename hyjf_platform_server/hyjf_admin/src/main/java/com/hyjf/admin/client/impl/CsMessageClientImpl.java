@@ -8,8 +8,8 @@ import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.promotion.PcChannelStatisticsResponse;
-import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.app.AppChannelStatisticsResponse;
+import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.response.message.UserOperationLogResponse;
 import com.hyjf.am.resquest.admin.*;
@@ -19,7 +19,10 @@ import com.hyjf.am.resquest.message.MessagePushMsgRequest;
 import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.resquest.message.SmsLogRequest;
-import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.AssociatedRecordListVO;
+import com.hyjf.am.vo.admin.BindLogVO;
+import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
+import com.hyjf.am.vo.admin.MessagePushMsgVO;
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -448,15 +451,7 @@ public class CsMessageClientImpl implements CsMessageClient {
         return null;
     }
 
-    @Override
-    public AppChannelStatisticsDetailResponse getstatisticsList(AppChannelStatisticsDetailRequest request) {
-        AppChannelStatisticsDetailResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/search/getstatisticsList", request, AppChannelStatisticsDetailResponse.class).getBody();
-        if (response != null) {
-            return response;
-        }
-        return null;
 
-    }
 
     @Override
     public PcChannelStatisticsResponse searchPcChannelStatistics(PcChannelStatisticsRequest request) {
@@ -468,8 +463,8 @@ public class CsMessageClientImpl implements CsMessageClient {
     }
 
     @Override
-    public AppChannelStatisticsDetailResponse exportStatisticsList(AppChannelStatisticsDetailRequest request) {
-        AppChannelStatisticsDetailResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/search/exportStatisticsList", request, AppChannelStatisticsDetailResponse.class).getBody();
+    public AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request) {
+        AppUtmRegResponse response = restTemplate.postForEntity("http://AM-USER//am-user/app_utm_reg/exportStatisticsList", request, AppUtmRegResponse.class).getBody();
         if (response != null) {
             return response;
         }

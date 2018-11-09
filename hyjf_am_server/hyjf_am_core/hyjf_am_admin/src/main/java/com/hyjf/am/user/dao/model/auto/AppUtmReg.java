@@ -1,49 +1,105 @@
-package com.hyjf.cs.message.bean.ic;
-
-import org.springframework.data.mongodb.core.mapping.Document;
+package com.hyjf.am.user.dao.model.auto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
-/**
- * @author xiasq
- * @version AppChannelStatisticsDetail, v0.1 2018/5/15 15:03
- */
+public class AppUtmReg implements Serializable {
+    private Long id;
 
-@Document(collection = "ht_app_channel_statistics_detail")
-public class AppChannelStatisticsDetail implements Serializable {
-    private String id;
-
+    /**
+     * 渠道编号
+     *
+     * @mbggenerated
+     */
     private Integer sourceId;
 
+    /**
+     * 渠道名称
+     *
+     * @mbggenerated
+     */
     private String sourceName;
 
     private Integer userId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 注册时间
+     *
+     * @mbggenerated
+     */
     private Date registerTime;
 
+    /**
+     * 开户时间
+     *
+     * @mbggenerated
+     */
     private Date openAccountTime;
 
+    /**
+     * 首次投资时间
+     *
+     * @mbggenerated
+     */
     private Integer firstInvestTime;
 
+    /**
+     * 首投金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal investAmount;
 
+    /**
+     * 首次投资标的的项目类型
+     *
+     * @mbggenerated
+     */
     private String investProjectType;
 
+    /**
+     * 首次投资标的的项目期限
+     *
+     * @mbggenerated
+     */
     private String investProjectPeriod;
 
+    /**
+     * 累积投资金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal cumulativeInvest;
+
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
+    private Date createTime;
+
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
+    private Date updateTime;
 
     private static final long serialVersionUID = 1L;
 
-    public String getId() {
+    public Long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -133,5 +189,21 @@ public class AppChannelStatisticsDetail implements Serializable {
 
     public void setCumulativeInvest(BigDecimal cumulativeInvest) {
         this.cumulativeInvest = cumulativeInvest;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
+
+    public Date getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
     }
 }

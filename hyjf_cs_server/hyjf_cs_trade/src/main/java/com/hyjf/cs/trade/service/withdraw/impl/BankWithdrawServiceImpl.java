@@ -11,7 +11,6 @@ import com.hyjf.am.vo.config.FeeConfigVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
@@ -402,11 +401,11 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             bankCardBean.setIsDefault("2");// 卡类型
 
             Integer bankId = banks.getBankId();
-            BanksConfigVO banksConfig = amConfigClient.getBanksConfigByBankId(bankId + "");
-            if (banksConfig != null && StringUtils.isNotEmpty(banksConfig.getBankName())) {
-                bankCardBean.setBank(banksConfig.getBankName()==null?"":banksConfig.getBankName());
-                bankCardBean.setBankCode(banksConfig.getBankCode()==null?"":banksConfig.getBankCode());
-                bankCardBean.setLogo(banksConfig.getBankLogo()==null?"":banksConfig.getBankLogo());
+            JxBankConfigVO jxBankConfigVO = amConfigClient.getBanksConfigByBankId(bankId + "");
+            if (jxBankConfigVO != null && StringUtils.isNotEmpty(jxBankConfigVO.getBankName())) {
+                bankCardBean.setBank(jxBankConfigVO.getBankName()==null?"":jxBankConfigVO.getBankName());
+                bankCardBean.setBankCode(jxBankConfigVO.getBankCode()==null?"":jxBankConfigVO.getBankCode());
+                bankCardBean.setLogo(jxBankConfigVO.getBankLogo()==null?"":jxBankConfigVO.getBankLogo());
             }
             bankcards.add(bankCardBean);
 
@@ -923,10 +922,10 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         if (bankCard != null) {
             Integer bankId = bankCard.getBankId();
             // 取得费率
-            BanksConfigVO banksConfig = amConfigClient.getBanksConfigByBankId(bankId+"");
-            if (banksConfig != null) {
-                if (Validator.isNotNull(banksConfig.getFeeWithdraw())) {
-                    return banksConfig.getFeeWithdraw().toString();
+            JxBankConfigVO jxBankConfigVO = amConfigClient.getBanksConfigByBankId(bankId+"");
+            if (jxBankConfigVO != null) {
+                if (Validator.isNotNull(jxBankConfigVO.getFeeWithdraw())) {
+                    return jxBankConfigVO.getFeeWithdraw().toString();
                 }else{
                     return feetmp;
                 }

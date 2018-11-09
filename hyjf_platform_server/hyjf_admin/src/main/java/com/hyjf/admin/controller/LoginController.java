@@ -141,7 +141,9 @@ public class LoginController extends BaseController {
 					perm.add(adminSystemVO.getMenuCtrl()+":"+adminSystemVO.getPermission());
 				}
 		}
-		permission.put(key, val.toString().split(","));
+		 if(key!=null) {
+				permission.put(key, val.toString().split(",")); 
+		 }
 		request.getSession().setAttribute("permission", perm);
 		return new AdminResult<Map<String,Object>>(permission);
 	}

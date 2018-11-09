@@ -1,27 +1,14 @@
 package com.hyjf.am.user.controller.front.user;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.BooleanResponse;
-import com.hyjf.am.response.IntegerResponse;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.UtmResponse;
-import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
-import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
-import com.hyjf.am.response.user.*;
-import com.hyjf.am.resquest.user.*;
-import com.hyjf.am.user.controller.BaseController;
-import com.hyjf.am.user.dao.model.auto.*;
-import com.hyjf.am.user.service.front.user.UserService;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
-import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
-import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.user.*;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.MD5Utils;
-import com.hyjf.common.validator.Validator;
-import io.swagger.models.auth.In;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.validation.Valid;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -29,13 +16,28 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
+import com.hyjf.am.response.user.*;
+import com.hyjf.am.resquest.user.*;
+import com.hyjf.am.user.controller.BaseController;
+import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.service.front.user.UserService;
+import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
+import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.user.*;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.util.StringUtil;
+import com.hyjf.common.validator.Validator;
 
 /**
  * @author xiasq
@@ -531,11 +533,33 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping("/getEvalationRecord")
-    public EvalationResponse getEvalationRecord() {
-        EvalationResponse response = new EvalationResponse();
+    public EvalationCustomizeResponse getEvalationRecord() {
+        EvalationCustomizeResponse response = new EvalationCustomizeResponse();
         List<Evalation> evalationList = userService.getEvalationRecord();
         if (!CollectionUtils.isEmpty(evalationList)) {
-            List<EvalationVO> evalationVOList = CommonUtils.convertBeanList(evalationList, EvalationVO.class);
+            List<EvalationCustomizeVO> evalationVOList = CommonUtils.convertBeanList(evalationList, EvalationCustomizeVO.class);
+            for(EvalationCustomizeVO evalStr : evalationVOList){
+                switch (evalStr.getEvalType()){
+                    case "保守型":
+                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
+                                RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE))));
+                        break;
+                    case "稳健型":
+                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
+                                RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS))));
+                        break;
+                    case "成长型":
+                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
+                                RedisUtils.get(RedisConstants.REVALUATION_GROWTH) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_GROWTH))));
+                        break;
+                    case "进取型":
+                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
+                                RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE))));
+                        break;
+                    default:
+                        evalStr.setRevaluationMoney("0");
+                }
+            }
             response.setResultList(evalationVOList);
         }
         return response;

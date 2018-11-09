@@ -3,25 +3,26 @@
  */
 package com.hyjf.cs.market.client.impl;
 
+import java.math.BigDecimal;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import com.hyjf.am.response.BigDecimalResponse;
 import com.hyjf.am.response.IntegerResponse;
-import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
+import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.response.message.AppAccesStatisticsResponse;
 import com.hyjf.am.response.message.BorrowUserStatisticResponse;
 import com.hyjf.am.response.message.OperationReportEntityResponse;
 import com.hyjf.am.response.trade.CalculateInvestInterestResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.vo.datacollect.AppAccesStatisticsVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.datacollect.BorrowUserStatisticVO;
 import com.hyjf.am.vo.datacollect.OperationReportEntityVO;
 import com.hyjf.cs.market.client.CsMessageClient;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.math.BigDecimal;
-import java.util.List;
 
 /**
  * @author fuqiang
@@ -115,10 +116,10 @@ public class CsMessageClientImpl implements CsMessageClient {
      * @return
      */
     @Override
-    public List<AppChannelStatisticsDetailVO> getAppChannelStatisticsDetailVO(AppChannelStatisticsRequest request) {
-        AppChannelStatisticsDetailResponse response = restTemplate.postForObject(
-                "http://CS-MESSAGE/cs-message/app_channel_statistics/getRegistNumber",request,
-                AppChannelStatisticsDetailResponse.class);
+    public List<AppUtmRegVO> getAppChannelStatisticsDetailVO(AppChannelStatisticsRequest request) {
+        AppUtmRegResponse response = restTemplate.postForObject(
+                "http://AM-USER/am-user/app_utm_reg/getRegistNumber",request,
+                AppUtmRegResponse.class);
 
         return response.getResultList();
     }

@@ -1,7 +1,7 @@
 package com.hyjf.cs.trade.service.recharge;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
@@ -88,5 +88,5 @@ public interface RechargeService extends BaseTradeService {
 	 * 获取快捷充值银行限额
 	 * @return
 	 */
-    List<BanksConfigVO> getRechargeQuotaLimit();
+    List<JxBankConfigVO> getRechargeQuotaLimit();
 }

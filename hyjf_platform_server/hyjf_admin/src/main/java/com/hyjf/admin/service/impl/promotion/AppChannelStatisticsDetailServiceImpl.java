@@ -1,9 +1,9 @@
 package com.hyjf.admin.service.impl.promotion;
 
 import com.hyjf.admin.client.AmAdminClient;
-import com.hyjf.admin.client.CsMessageClient;
+import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.promotion.AppChannelStatisticsDetailService;
-import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
+import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import org.springframework.stereotype.Service;
@@ -19,20 +19,20 @@ import java.util.List;
 public class AppChannelStatisticsDetailServiceImpl implements AppChannelStatisticsDetailService {
     @Resource
     private AmAdminClient amAdminClient;
-
     @Resource
-    private CsMessageClient csMessageClient;
+    private AmUserClient amUserClient;
+
     @Override
     public List<UtmPlatVO> getAppUtm(){
         return amAdminClient.getAppUtm();
     }
 
     @Override
-    public AppChannelStatisticsDetailResponse getstatisticsList(AppChannelStatisticsDetailRequest request) {
-        return csMessageClient.getstatisticsList(request);
+    public AppUtmRegResponse getstatisticsList(AppChannelStatisticsDetailRequest request) {
+        return amUserClient.getstatisticsList(request);
     }
     @Override
-    public AppChannelStatisticsDetailResponse exportStatisticsList(AppChannelStatisticsDetailRequest request) {
-        return csMessageClient.exportStatisticsList(request);
+    public AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request) {
+        return amUserClient.exportStatisticsList(request);
     }
 }

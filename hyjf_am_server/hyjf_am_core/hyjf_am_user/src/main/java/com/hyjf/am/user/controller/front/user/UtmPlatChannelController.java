@@ -3,24 +3,22 @@
  */
 package com.hyjf.am.user.controller.front.user;
 
-import com.hyjf.am.response.admin.UtmResponse;
-import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
-import com.hyjf.am.response.user.UtmPlatResponse;
-import com.hyjf.am.response.user.UtmVOResponse;
-import com.hyjf.am.resquest.user.AppChannelStatisticsDetailRequest;
-import com.hyjf.am.resquest.user.UtmPlatRequest;
-import com.hyjf.am.resquest.user.UtmRequest;
-import com.hyjf.am.user.controller.BaseController;
-import com.hyjf.am.user.service.front.user.UtmPlatChannelService;
-import com.hyjf.am.vo.admin.UtmVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
-import com.hyjf.am.vo.user.UtmPlatVO;
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
+import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.response.user.UtmPlatResponse;
+import com.hyjf.am.response.user.UtmVOResponse;
+import com.hyjf.am.resquest.user.UtmPlatRequest;
+import com.hyjf.am.resquest.user.UtmRequest;
+import com.hyjf.am.user.controller.BaseController;
+import com.hyjf.am.user.service.front.user.UtmPlatChannelService;
+import com.hyjf.am.vo.admin.UtmVO;
+import com.hyjf.am.vo.user.UtmPlatVO;
 
 /**
  * 用户渠道相关

@@ -3,9 +3,18 @@
  */
 package com.hyjf.cs.trade.service.consumer.impl;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.admin.UtmVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
@@ -21,14 +30,6 @@ import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.consumer.SensorsDataLoginService;
 import com.sensorsdata.analytics.javasdk.SensorsAnalytics;
 import com.sensorsdata.analytics.javasdk.exceptions.InvalidArgumentException;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 神策数据统计:用户登陆事件Service
@@ -121,7 +122,7 @@ public class SensorsDataLoginServiceImpl extends BaseServiceImpl implements Sens
         }
 
         // 如果 是用户app注册渠道过来的
-        AppChannelStatisticsDetailVO appChannelStatisticsDetail = this.csMessageClient.getAppChannelStatisticsDetailByUserId(userId);
+        AppUtmRegVO appChannelStatisticsDetail = this.csMessageClient.getAppChannelStatisticsDetailByUserId(userId);
         if (appChannelStatisticsDetail != null) {
             // 注册渠道
             profiles.put("registerChannel", StringUtils.isBlank(appChannelStatisticsDetail.getSourceName()) ? "" : appChannelStatisticsDetail.getSourceName());

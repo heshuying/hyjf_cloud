@@ -93,7 +93,7 @@ public class WebBindCardController extends BaseUserController {
 		//已绑卡
 		resultMap.put("bindType", 1);
 		if(bankConfigVO != null){
-            resultMap.put("bankicon", systemConfig.getFrontHost() +bankConfigVO.getBankLogo());
+            resultMap.put("bankicon", systemConfig.getFrontHost() +bankConfigVO.getBankIcon());
             resultMap.put("bankname", bankConfigVO.getBankName());
         }else{
             resultMap.put("bankicon", systemConfig.getFrontHost() + "/data/upfiles/filetemp/image/bank_log.png");

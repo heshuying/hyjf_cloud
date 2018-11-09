@@ -1463,7 +1463,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
                 }
                 //邮箱
                 if (StringUtils.isNotBlank(request.getEmail())) {
-//                    changeLog.setEmail(request.getEmail());
+                    changeLog.setEmail(request.getEmail());
                 }
                 changeLog.setUpdateUser(request.getLoginUserName());
                 changeLog.setUpdateUserId(request.getLoginUserId());
