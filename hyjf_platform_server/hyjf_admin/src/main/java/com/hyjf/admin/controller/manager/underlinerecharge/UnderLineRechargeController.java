@@ -169,7 +169,12 @@ public class UnderLineRechargeController extends BaseController {
             return jsonObject;
         }
 
-        // TODO: code长度
+        //长度限制
+        if (requestBean.getCode().length() != 4){
+            jsonObject.put("code", "Code必须为四位!");
+            return jsonObject;
+        }
+
         return jsonObject;
     }
 
