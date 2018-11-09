@@ -579,6 +579,10 @@ public class GetDate extends PropertyEditorSupport {
 		return date.getTime();
 	}
 
+	public static long getMillis10(Date date) {
+		return date.getTime()/1000;
+	}
+
 	/**
 	 * 指定时间戳的毫秒数
 	 *
@@ -2176,6 +2180,6 @@ public class GetDate extends PropertyEditorSupport {
 	// add 汇计划三期 汇计划自动投资 liubin 20180515 end
 
 	public static void main(String[] args) {
-		System.out.println(getDateTimeMyTimeInMillis(1483163187));
+		System.out.println(getMillis10(new Date()));
 	}
 }

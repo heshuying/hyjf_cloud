@@ -103,6 +103,9 @@ public class BankRepayFreezeOrgController extends BaseController {
             result.setStatusInfo(AdminResult.FAIL, "处理失败，代偿冻结记录不存在");
             return result;
         }
+        if(repayFreezeFlog.getCreateTime() != null){
+            responseBean.setCreateTimeInt(String.valueOf(GetDate.getMillis10(repayFreezeFlog.getCreateTime())));
+        }
         BeanUtils.copyProperties(repayFreezeFlog, responseBean);
         BankCallBean bean = new BankCallBean();
         bean.setTxCode(BankCallConstant.TXCODE_BALANCE_FREEZE_QUERY);// 消息类型
