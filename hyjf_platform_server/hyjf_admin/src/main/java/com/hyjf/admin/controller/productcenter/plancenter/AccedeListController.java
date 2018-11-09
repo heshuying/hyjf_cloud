@@ -1091,6 +1091,11 @@ public class AccedeListController extends BaseController{
 			return ret;
 		}
 		List<TenderAgreementVO> tenderAgreementList = this.accedeListService.selectTenderAgreementByNid(planOrderId);
+		if(tenderAgreementList == null){
+			ret.put("result", "协议不存在!");
+			ret.put("status", FAIL);
+			return ret;
+		}
 		tenderAgreement = tenderAgreementList.get(0);
 		if(tenderAgreement != null && tenderAgreement.getStatus() == 2){
 			// PDF下载加脱敏
