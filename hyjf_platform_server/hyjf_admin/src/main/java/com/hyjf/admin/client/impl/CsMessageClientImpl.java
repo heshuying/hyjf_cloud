@@ -3,12 +3,6 @@
  */
 package com.hyjf.admin.client.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
 import com.hyjf.admin.beans.request.SmsLogRequestBean;
 import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.am.response.Response;
@@ -31,6 +25,11 @@ import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
 import com.hyjf.am.vo.admin.MessagePushMsgVO;
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 /**
  * @author zhangqingqing
@@ -452,15 +451,7 @@ public class CsMessageClientImpl implements CsMessageClient {
         return null;
     }
 
-    @Override
-    public AppUtmRegResponse getstatisticsList(AppChannelStatisticsDetailRequest request) {
-        AppUtmRegResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/search/getstatisticsList", request, AppUtmRegResponse.class).getBody();
-        if (response != null) {
-            return response;
-        }
-        return null;
 
-    }
 
     @Override
     public PcChannelStatisticsResponse searchPcChannelStatistics(PcChannelStatisticsRequest request) {
@@ -473,7 +464,7 @@ public class CsMessageClientImpl implements CsMessageClient {
 
     @Override
     public AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request) {
-        AppUtmRegResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/search/exportStatisticsList", request, AppUtmRegResponse.class).getBody();
+        AppUtmRegResponse response = restTemplate.postForEntity("http://AM-USER//am-user/app_utm_reg/exportStatisticsList", request, AppUtmRegResponse.class).getBody();
         if (response != null) {
             return response;
         }

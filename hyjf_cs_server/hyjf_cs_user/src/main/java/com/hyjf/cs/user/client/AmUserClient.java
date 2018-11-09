@@ -564,4 +564,12 @@ public interface AmUserClient {
 	 * @return
 	 */
 	BankCardVO getBankCardById(int userId, String cardId);
+
+	/**
+	 * 插入app渠道统计数据
+	 * @param wrbRegisterRequest
+	 * @return
+	 */
+	boolean insertAppChannelStatisticsDetail(WrbRegisterRequest wrbRegisterRequest);
+
 }

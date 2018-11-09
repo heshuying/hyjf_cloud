@@ -383,7 +383,6 @@ public class RepayManageController extends BaseTradeController {
         resultMap.put("isAllRepay", isAllRepay ? "1" : "0");
         resultMap.put("paymentAuthStatus", "");
         resultMap.put("repayAuthStatus", "");
-        resultMap.put("isAllRepay", isAllRepay);
         resultMap.put("repayAuthOn","0");
         HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(userId);
         resultMap.put("repayAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoRepayStatus());

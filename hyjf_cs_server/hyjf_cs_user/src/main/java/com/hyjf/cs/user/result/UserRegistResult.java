@@ -25,6 +25,9 @@ public class UserRegistResult extends BaseResultBean {
 	//登录完成后的sign值
 	private String sign;
 
+	// 注册成功后,返回前端用户ID
+	private Integer userId;
+
 	public UserRegistResult() {
 	}
 
@@ -61,5 +64,13 @@ public class UserRegistResult extends BaseResultBean {
 	public void setSign(String sign) {
 		this.sign = sign;
 	}
-	
+
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
+	}
 }

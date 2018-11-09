@@ -1,7 +1,17 @@
 package com.hyjf.am.user.controller.front.user;
 
-import java.util.List;
-
+import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.app.AppUtmRegResponse;
+import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
+import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
+import com.hyjf.am.resquest.api.WrbRegisterRequest;
+import com.hyjf.am.user.controller.BaseController;
+import com.hyjf.am.user.dao.model.auto.AppUtmReg;
+import com.hyjf.am.user.service.front.user.AppUtmRegService;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
+import com.hyjf.am.vo.user.UtmPlatVO;
+import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -10,14 +20,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.response.app.AppUtmRegResponse;
-import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
-import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
-import com.hyjf.am.user.controller.BaseController;
-import com.hyjf.am.user.dao.model.auto.AppUtmReg;
-import com.hyjf.am.user.service.front.user.AppUtmRegService;
-import com.hyjf.am.vo.datacollect.AppUtmRegVO;
-import com.hyjf.common.util.CommonUtils;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -92,4 +97,44 @@ public class AppUtmRegController extends BaseController {
         }
         return response;
     }
+
+    /**
+     *插入app渠道注册统计数据
+     * @return
+     */
+    @RequestMapping("/insertAppChannelStatisticsDetail")
+    public BooleanResponse insertAppChannelStatisticsDetail(@RequestBody WrbRegisterRequest request) {
+        UtmPlatVO utmPlat = request.getUtmPlat();
+        BooleanResponse booleanResponse = new BooleanResponse();
+        AppUtmReg detail = new AppUtmReg();
+        detail.setSourceId(utmPlat.getSourceId());
+        detail.setSourceName(utmPlat.getSourceName() != null ? utmPlat.getSourceName() : "");
+        detail.setUserId(request.getUserId());
+        detail.setRegisterTime(new Date());
+        detail.setCumulativeInvest(BigDecimal.ZERO);
+        appUtmRegService.insert(detail);
+        return booleanResponse;
+    }
+
+    /**
+     * 分页查询所有渠道投资信息
+     *
+     * @return
+     */
+    @RequestMapping("/getstatisticsList")
+    public AppUtmRegResponse getstatisticsList(@RequestBody  AppChannelStatisticsDetailRequest request) {
+        AppUtmRegResponse response = new AppUtmRegResponse();
+        Integer count = appUtmRegService.countAppUtmReg(request);
+        if (count>0) {
+            Paginator paginator = new Paginator(request.getCurrPage(),count,request.getPageSize());
+            List<AppUtmReg> list = appUtmRegService.findAppUtmReg(request,paginator);
+            if (!CollectionUtils.isEmpty(list)) {
+                List<AppUtmRegVO> voList = CommonUtils.convertBeanList(list, AppUtmRegVO.class);
+                response.setResultList(voList);
+            }
+        }
+        response.setCount(count);
+        return response;
+    }
+
 }
