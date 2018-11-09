@@ -5,6 +5,7 @@ package com.hyjf.cs.user.controller.app.login;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.UserInfoVO;
