@@ -16,15 +16,15 @@ import com.hyjf.am.vo.user.UtmPlatVO;
  * @Date 2018/6/23 9:59
  */
 public class AppUtmRegResponse extends Response<AppUtmRegVO> {
-    private Long count;
+    private Integer count;
     List<UtmPlatVO> appUtm;
     AdminUtmReadPermissionsVO adminUtmReadPermissions;
 
-    public Long getCount() {
+    public Integer getCount() {
         return count;
     }
 
-    public void setCount(Long count) {
+    public void setCount(Integer count) {
         this.count = count;
     }
 
