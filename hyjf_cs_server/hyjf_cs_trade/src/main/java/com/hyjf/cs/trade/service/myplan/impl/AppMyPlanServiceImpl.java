@@ -240,7 +240,33 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
      */
     private void copyPlanCouponInfoToResult(MyPlanDetailResultBean result, AppCouponCustomizeVO appCouponCustomize) {
         MyPlanDetailResultBean.CouponIntr couponIntr = result.getCouponIntr();
-        couponIntr.setCouponType(appCouponCustomize.getCouponType());
+
+        if (Arrays.asList("1","2","3").contains(appCouponCustomize.getCouponType())){
+
+            switch (appCouponCustomize.getCouponType()) {
+                case "1":
+                    couponIntr.setCouponTypeCode(1);
+                    couponIntr.setCouponType("体验金");
+                    break;
+                case "2":
+                    couponIntr.setCouponTypeCode(2);
+                    couponIntr.setCouponType("加息券");
+                    break;
+                case "3":
+                    couponIntr.setCouponTypeCode(3);
+                    couponIntr.setCouponType("代金券");
+                    break;
+                default:
+                    logger.error("coupon type is error");
+                    break;
+            }
+
+        }else if (Validator.isNumber(appCouponCustomize.getCouponType())
+                && !Arrays.asList("0","1","2","3").contains(appCouponCustomize.getCouponType())){
+            couponIntr.setCouponTypeCode(Integer.parseInt(appCouponCustomize.getCouponType()));
+            couponIntr.setCouponType("体验金");
+        }
+
         couponIntr.setCouponAmount(appCouponCustomize.getCouponAmount());
         couponIntr.setInterestOnCall(appCouponCustomize.getRecoverAccountInterestWait());
         couponIntr.setCapitalOnCall(appCouponCustomize.getRecoverAccountCapitalWait());
