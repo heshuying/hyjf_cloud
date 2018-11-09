@@ -1,20 +1,20 @@
 package com.hyjf.cs.message.controller.client;
 
-import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
-import com.hyjf.am.response.message.AppAccesStatisticsResponse;
-import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
-import com.hyjf.am.vo.datacollect.AppAccesStatisticsVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
-import com.hyjf.cs.common.controller.BaseController;
-import com.hyjf.cs.message.service.access.AppChannelStatisticsService;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import springfox.documentation.annotations.ApiIgnore;
 
-import java.util.List;
+import com.hyjf.am.response.message.AppAccesStatisticsResponse;
+import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
+import com.hyjf.am.vo.datacollect.AppAccesStatisticsVO;
+import com.hyjf.cs.common.controller.BaseController;
+import com.hyjf.cs.message.service.access.AppChannelStatisticsService;
+
+import springfox.documentation.annotations.ApiIgnore;
 
 /**
  * APP渠道统计
@@ -47,13 +47,13 @@ public class AppChannelStatisticsController  extends BaseController {
      * 根据开始时间、结束时间和来源查询数据
      * @return
      */
-    @RequestMapping("/getRegistNumber")
-    public AppChannelStatisticsDetailResponse getRegistNumber(@RequestBody AppChannelStatisticsRequest request) {
-        AppChannelStatisticsDetailResponse response = new AppChannelStatisticsDetailResponse();
-        List<AppChannelStatisticsDetailVO>  list = appChannelStatisticsService.getAppChannelStatisticsDetailVO(request);
+  /*  @RequestMapping("/getRegistNumber")
+    public AppUtmRegResponse getRegistNumber(@RequestBody AppChannelStatisticsRequest request) {
+        AppUtmRegResponse response = new AppUtmRegResponse();
+        List<AppUtmRegVO>  list = appChannelStatisticsService.getAppChannelStatisticsDetailVO(request);
         if (!CollectionUtils.isEmpty(list)) {
             response.setResultList(list);
         }
         return response;
-    }
+    }*/
 }

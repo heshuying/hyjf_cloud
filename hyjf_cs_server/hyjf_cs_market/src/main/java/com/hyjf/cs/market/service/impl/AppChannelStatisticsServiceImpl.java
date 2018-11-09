@@ -3,12 +3,22 @@
  */
 package com.hyjf.cs.market.service.impl;
 
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.AppAccesStatisticsVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
@@ -20,15 +30,6 @@ import com.hyjf.cs.market.mq.base.MessageContent;
 import com.hyjf.cs.market.mq.producer.AppChannelStatisticsProducer;
 import com.hyjf.cs.market.service.AppChannelStatisticsService;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * @author fuqiang
@@ -151,7 +152,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 	 */
 	public Integer getRegistNumber(AppChannelStatisticsRequest request){
 		request.setSourceIdSrch("registerTime");
-		List<AppChannelStatisticsDetailVO> list = csMessageClient.getAppChannelStatisticsDetailVO(request);
+		List<AppUtmRegVO> list = csMessageClient.getAppChannelStatisticsDetailVO(request);
 		if(list == null || list.size() == 0){
 			return 0;
 		}
@@ -166,7 +167,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 	 */
 	public Integer getOpenAccountNumber(AppChannelStatisticsRequest request){
 		request.setSourceIdSrch("openAccountTime");
-		List<AppChannelStatisticsDetailVO> list = csMessageClient.getAppChannelStatisticsDetailVO(request);
+		List<AppUtmRegVO> list = csMessageClient.getAppChannelStatisticsDetailVO(request);
 		if(list == null || list.size() == 0){
 			return 0;
 		}
@@ -181,7 +182,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 	 */
 	public Integer getOpenAccountAttrCount(AppChannelStatisticsRequest request){
 		request.setSourceIdSrch("openAccountTime");
-		List<AppChannelStatisticsDetailVO> list = csMessageClient.getAppChannelStatisticsDetailVO(request);
+		List<AppUtmRegVO> list = csMessageClient.getAppChannelStatisticsDetailVO(request);
 		if(list == null || list.size() == 0){
 			return 0;
 		}
@@ -192,7 +193,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 		}
 
 		int i = 0;
-		for(AppChannelStatisticsDetailVO vo : list){
+		for(AppUtmRegVO vo : list){
 			boolean flag = listUserId.contains(vo.getUserId());
 			if(flag){
 				i++;
@@ -208,13 +209,13 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 	 * @return
 	 */
 	public BigDecimal getCumulativeRecharge(AppChannelStatisticsRequest request){
-		List<AppChannelStatisticsDetailVO> list = csMessageClient.getAppChannelStatisticsDetailVO(request);
+		List<AppUtmRegVO> list = csMessageClient.getAppChannelStatisticsDetailVO(request);
 		if(list == null || list.size() == 0){
 			return BigDecimal.ZERO;
 		}
 
 		Set<Integer> setUserId = new HashSet<>();
-		for(AppChannelStatisticsDetailVO appVo : list){
+		for(AppUtmRegVO appVo : list){
 
 			setUserId.add(appVo.getUserId());
 		}
@@ -240,7 +241,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 	 */
 	public BigDecimal getCumulativeAttrCharge(AppChannelStatisticsRequest request){
 		request.setSourceIdSrch("hxfTenderPrice");
-		List<AppChannelStatisticsDetailVO> list = csMessageClient.getAppChannelStatisticsDetailVO(request);
+		List<AppUtmRegVO> list = csMessageClient.getAppChannelStatisticsDetailVO(request);
 		if(list == null || list.size() == 0){
 			return BigDecimal.ZERO;
 		}
@@ -248,7 +249,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 		List<Integer> integerList = amAdminClient.getUsersInfoList();
 		Set<Integer> setUnUserId = new HashSet<>();
 		Set<Integer> setUserId = new HashSet<>();
-		for(AppChannelStatisticsDetailVO appVo : list){
+		for(AppUtmRegVO appVo : list){
 			setUnUserId.add(appVo.getUserId());
 		}
 
@@ -281,13 +282,13 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 	 */
 	public BigDecimal getHztTenderPrice(AppChannelStatisticsRequest request){
 		request.setSourceIdSrch("hztTenderPrice");
-		List<AppChannelStatisticsDetailVO> list = csMessageClient.getAppChannelStatisticsDetailVO(request);
+		List<AppUtmRegVO> list = csMessageClient.getAppChannelStatisticsDetailVO(request);
 		if(list == null || list.size() == 0){
 			return BigDecimal.ZERO;
 		}
 
 		Set<Integer> setUserId = new HashSet<>();
-		for(AppChannelStatisticsDetailVO appVo : list){
+		for(AppUtmRegVO appVo : list){
 
 			setUserId.add(appVo.getUserId());
 		}
@@ -313,13 +314,13 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 	 */
 	public BigDecimal getHxfTenderPrice(AppChannelStatisticsRequest request){
 		request.setSourceIdSrch("hxfTenderPrice");
-		List<AppChannelStatisticsDetailVO> list = csMessageClient.getAppChannelStatisticsDetailVO(request);
+		List<AppUtmRegVO> list = csMessageClient.getAppChannelStatisticsDetailVO(request);
 		if(list == null || list.size() == 0){
 			return BigDecimal.ZERO;
 		}
 
 		Set<Integer> setUserId = new HashSet<>();
-		for(AppChannelStatisticsDetailVO appVo : list){
+		for(AppUtmRegVO appVo : list){
 
 			setUserId.add(appVo.getUserId());
 		}
@@ -344,13 +345,13 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 	 * @return
 	 */
 	public BigDecimal getHzrTenderPrice(AppChannelStatisticsRequest request){
-		List<AppChannelStatisticsDetailVO> list = csMessageClient.getAppChannelStatisticsDetailVO(request);
+		List<AppUtmRegVO> list = csMessageClient.getAppChannelStatisticsDetailVO(request);
 		if(list == null || list.size() == 0){
 			return BigDecimal.ZERO;
 		}
 
 		Set<Integer> setUserId = new HashSet<>();
-		for(AppChannelStatisticsDetailVO appVo : list){
+		for(AppUtmRegVO appVo : list){
 
 			setUserId.add(appVo.getUserId());
 		}
@@ -376,7 +377,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 	 */
 	public BigDecimal getRegisterAttrCount(AppChannelStatisticsRequest request){
 		request.setSourceIdSrch("registerTime");
-		List<AppChannelStatisticsDetailVO> list = csMessageClient.getAppChannelStatisticsDetailVO(request);
+		List<AppUtmRegVO> list = csMessageClient.getAppChannelStatisticsDetailVO(request);
 		if(list == null || list.size() == 0){
 			return BigDecimal.ZERO;
 		}
@@ -391,7 +392,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 	 */
 	public Integer getAccountNumber(AppChannelStatisticsRequest request,String source){
 		request.setSourceIdSrch("openAccountTime");
-		List<AppChannelStatisticsDetailVO> list = csMessageClient.getAppChannelStatisticsDetailVO(request);
+		List<AppUtmRegVO> list = csMessageClient.getAppChannelStatisticsDetailVO(request);
 		if(list == null || list.size() == 0){
 			return 0;
 		}
@@ -402,7 +403,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 		}
 
 		int i = 0;
-		for(AppChannelStatisticsDetailVO vo : list){
+		for(AppUtmRegVO vo : list){
 			boolean flag = listUserId.contains(vo.getUserId());
 			if(flag){
 				i++;
@@ -419,7 +420,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 	 */
 	public Integer getTenderNumber(AppChannelStatisticsRequest request,String source){
 		request.setSourceIdSrch("hxfTenderPrice");
-		List<AppChannelStatisticsDetailVO> list = csMessageClient.getAppChannelStatisticsDetailVO(request);
+		List<AppUtmRegVO> list = csMessageClient.getAppChannelStatisticsDetailVO(request);
 		if(list == null || list.size() == 0){
 			return 0;
 		}
@@ -429,7 +430,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 		List<WrbTenderNotifyCustomizeVO> list1 = amAdminClient.getBorrowTenderByClient(request);
 		if(list1.size() > 0){
 
-			for(AppChannelStatisticsDetailVO vo : list){
+			for(AppUtmRegVO vo : list){
 
 				for(WrbTenderNotifyCustomizeVO tender : list1 ){
 					if(vo.getUserId().equals(tender.getUserId())){
@@ -445,7 +446,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 		List<WrbTenderNotifyCustomizeVO> list2 = amAdminClient.getProductListByClient(request);
 		if(list2.size() > 0){
 
-			for(AppChannelStatisticsDetailVO vo : list){
+			for(AppUtmRegVO vo : list){
 
 				for(WrbTenderNotifyCustomizeVO tender : list2 ){
 					if(vo.getUserId().equals(tender.getUserId())){
@@ -461,7 +462,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 		List<WrbTenderNotifyCustomizeVO> list3 = amAdminClient.getDebtPlanAccedeByClient(request);
 		if(list3.size() > 0){
 
-			for(AppChannelStatisticsDetailVO vo : list){
+			for(AppUtmRegVO vo : list){
 
 				for(WrbTenderNotifyCustomizeVO tender : list3 ){
 					if(vo.getUserId().equals(tender.getUserId())){
@@ -477,7 +478,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 		List<WrbTenderNotifyCustomizeVO> list4 = amAdminClient.getCreditTenderByClient(request);
 		if(list4.size() > 0){
 
-			for(AppChannelStatisticsDetailVO vo : list){
+			for(AppUtmRegVO vo : list){
 
 				for(WrbTenderNotifyCustomizeVO tender : list4 ){
 					if(vo.getUserId().equals(tender.getUserId())){

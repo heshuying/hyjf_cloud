@@ -1,22 +1,8 @@
 package com.hyjf.cs.market.client.impl;
 
-import com.hyjf.am.response.IntegerResponse;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.UtmResponse;
-import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
-import com.hyjf.am.response.datacollect.TzjDayReportResponse;
-import com.hyjf.am.response.market.UtmRegResponse;
-import com.hyjf.am.response.trade.BorrowTenderResponse;
-import com.hyjf.am.response.trade.account.AccountRechargeResponse;
-import com.hyjf.am.response.user.SmsCodeResponse;
-import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
-import com.hyjf.am.resquest.user.SmsCodeRequest;
-import com.hyjf.am.vo.admin.UtmVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
-import com.hyjf.am.vo.datacollect.TzjDayReportVO;
-import com.hyjf.am.vo.user.UtmRegVO;
-import com.hyjf.common.annotation.Cilent;
-import com.hyjf.cs.market.client.AmUserClient;
+import java.math.BigDecimal;
+import java.util.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -26,8 +12,23 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
-import java.math.BigDecimal;
-import java.util.*;
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.response.app.AppUtmRegResponse;
+import com.hyjf.am.response.datacollect.TzjDayReportResponse;
+import com.hyjf.am.response.market.UtmRegResponse;
+import com.hyjf.am.response.trade.BorrowTenderResponse;
+import com.hyjf.am.response.trade.account.AccountRechargeResponse;
+import com.hyjf.am.response.user.SmsCodeResponse;
+import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
+import com.hyjf.am.resquest.user.SmsCodeRequest;
+import com.hyjf.am.vo.admin.UtmVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
+import com.hyjf.am.vo.datacollect.TzjDayReportVO;
+import com.hyjf.am.vo.user.UtmRegVO;
+import com.hyjf.common.annotation.Cilent;
+import com.hyjf.cs.market.client.AmUserClient;
 
 /**
  * @author xiasq
@@ -439,14 +440,14 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	private List<Integer> getIAppChannerUserIdList() {
-		AppChannelStatisticsDetailResponse detailResponse = restTemplate.getForObject(
-				"http://CS-MESSAGE/am-statistics/getappchannelstatisticsdetail",
-				AppChannelStatisticsDetailResponse.class);
+		AppUtmRegResponse detailResponse = restTemplate.getForObject(
+				"http://AM-USER/am-user/app_utm_reg/getappchannelstatisticsdetail",
+				AppUtmRegResponse.class);
 		List<Integer> userIdList = new ArrayList<>();
 		if (detailResponse != null) {
-			List<AppChannelStatisticsDetailVO> resultList = detailResponse.getResultList();
+			List<AppUtmRegVO> resultList = detailResponse.getResultList();
 			if (!CollectionUtils.isEmpty(resultList)) {
-				for (AppChannelStatisticsDetailVO vo : resultList) {
+				for (AppUtmRegVO vo : resultList) {
 					userIdList.add(vo.getUserId());
 				}
 			}

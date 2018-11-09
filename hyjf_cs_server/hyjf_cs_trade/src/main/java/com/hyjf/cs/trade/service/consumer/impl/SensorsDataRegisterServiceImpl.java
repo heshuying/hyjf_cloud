@@ -3,9 +3,17 @@
  */
 package com.hyjf.cs.trade.service.consumer.impl;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.admin.UtmVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.service.BaseServiceImpl;
@@ -15,13 +23,6 @@ import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.consumer.SensorsDataRegisterService;
 import com.sensorsdata.analytics.javasdk.SensorsAnalytics;
 import com.sensorsdata.analytics.javasdk.exceptions.InvalidArgumentException;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 神策数据统计:注册相关Service实现类
@@ -124,7 +125,7 @@ public class SensorsDataRegisterServiceImpl extends BaseServiceImpl implements S
         }
 
         // 如果 是用户app注册渠道过来的
-        AppChannelStatisticsDetailVO appChannelStatisticsDetail = this.csMessageClient.getAppChannelStatisticsDetailByUserId(userId);
+        AppUtmRegVO appChannelStatisticsDetail = this.csMessageClient.getAppChannelStatisticsDetailByUserId(userId);
         if (appChannelStatisticsDetail != null) {
             // 注册渠道
             profiles.put("registerChannel", StringUtils.isBlank(appChannelStatisticsDetail.getSourceName()) ? "" : appChannelStatisticsDetail.getSourceName());
