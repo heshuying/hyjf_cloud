@@ -37,29 +37,19 @@ public class AdminInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		logger.info("admin接收到请求,请求接口为:" + request.getRequestURI());
-		/*try {
-			try {
-				String username = ((AdminSystemVO) request.getSession().getAttribute("user")).getUsername();
-				String val = RedisUtils.get("admin@" + username);
-				if (val != null && !val.equals(request.getHeader("Cookies"))) {
-					request.getSession().removeAttribute("user");
-//				JSONObject res = new JSONObject();
-//				res.put("success", "99");
-//				res.put("msg", "未登录,登陆超时,其他地方已登陆");
-//				PrintWriter out = response.getWriter();
-//				out.append(res.toString());
-					throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
-					//return false;
-				} else {
-					if(val!=null) {
-						RedisUtils.set("admin@" + username, val, 3600);
-					}
-
+		try {
+			String username = ((AdminSystemVO) request.getSession().getAttribute("user")).getUsername();
+			String val = RedisUtils.get("admin@" + username);
+			if (val != null && !val.equals(request.getHeader("Cookies"))) {
+				request.getSession().removeAttribute("user");
+				throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
+				//return false;
+			} else {
+				if(val!=null) {
+					RedisUtils.set("admin@" + username, val, 3600);
 				}
-			}catch (Exception e){
-				logger.error("--------获取用户信息异常----------",e);
-			}
 
+			}
 
 		} catch (NullPointerException e) {
 			throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
@@ -73,29 +63,18 @@ public class AdminInterceptor implements HandlerInterceptor {
 				return true;
 			}
 			// 获取该角色 权限列表
-			try {
-				List<String> perm = (List<String>) request.getSession().getAttribute("permission");
-				for (String string : perm) {
-					if (string.equals(authorityAnnotation.key() + ":" + authorityAnnotation.value())) {
-						return true;
-					}
+			List<String> perm = (List<String>) request.getSession().getAttribute("permission");
+			for (String string : perm) {
+				if (string.equals(authorityAnnotation.key() + ":" + authorityAnnotation.value())) {
+					return true;
 				}
-			}catch (Exception e){
-				logger.error("---获取该角色 权限列表异常----",e );
 			}
-//			response.setCharacterEncoding("UTF-8");
-//			response.setContentType("application/json; charset=utf-8");
-//			JSONObject res = new JSONObject();
-//			res.put("success", "99");
-//			res.put("msg", "您没有权限使用此接口");
-//			PrintWriter out = response.getWriter();
-//			out.append(res.toString());
 
 			logger.info("权限的key为:" + authorityAnnotation.key() + "权限的val:" + authorityAnnotation.value());
 			throw new ReturnMessageException(MsgEnum.ERR_USER_AUTHORITY);
 			//		return false;
 
-		}*/
+		}
 
 		return true;
 

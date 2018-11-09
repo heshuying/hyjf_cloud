@@ -62,6 +62,21 @@ public class AppUtmRegController extends BaseController {
     }
 
     /**
+     * 查询所有app渠道注册信息
+     */
+    @RequestMapping("/getappchannelstatisticsdetail")
+    public AppUtmRegResponse getappchannelstatisticsdetail() {
+        AppUtmRegResponse response = new AppUtmRegResponse();
+        List<AppUtmReg> list = appUtmRegService.findAll();
+        if (!CollectionUtils.isEmpty(list)) {
+            List<AppUtmRegVO> voList = null;
+            voList = CommonUtils.convertBeanList(list, AppUtmRegVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+
+    /**
      *根据开始时间、结束时间和来源查询数据
      * @param request
      * @return
