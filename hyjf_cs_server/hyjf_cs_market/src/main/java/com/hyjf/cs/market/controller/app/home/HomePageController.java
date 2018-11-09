@@ -6,6 +6,7 @@ package com.hyjf.cs.market.controller.app.home;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
+import com.hyjf.am.vo.user.EvalationCustomizeVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.market.controller.BaseMarketController;
 import com.hyjf.cs.market.service.HomePageService;
@@ -109,5 +110,20 @@ public class HomePageController extends BaseMarketController {
         baseResultBeanFrontEnd.setStatusDesc(BaseResultBeanFrontEnd.SUCCESS_MSG);
         logger.info(HomePageController.class.toString(), "endLog -- /hyjf-app/homepage/getJumpCommend");
         return baseResultBeanFrontEnd;
+    }
+
+    /**
+     * 评分标准接口
+     *
+     * */
+    @ApiOperation(value = "评分标准", httpMethod = "POST", notes = "评分标准")
+    @PostMapping("/gradingStandardResult")
+    public JSONObject gradingStandardResult() {
+        JSONObject map = new JSONObject();
+        List<EvalationCustomizeVO> evalationCustomizeList = homePageService.getEvalationRecord();
+        map.put("status", "000");
+        map.put("statusDesc", "请求成功");
+        map.put("evalationList", evalationCustomizeList);
+        return map;
     }
 }

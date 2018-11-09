@@ -209,7 +209,7 @@ public interface AmUserClient {
 
 	String selectBankSmsLog(BankSmsLogRequest request);
 
-	List<EvalationVO> getEvalationRecord();
+	List<EvalationCustomizeVO> getEvalationRecord();
 
 	/**
 	 * 获取测评结果

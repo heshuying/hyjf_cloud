@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 @EnableDiscoveryClient
 @EnableCircuitBreaker
-@EnableRedisHttpSession
+@EnableRedisHttpSession(cleanupCron="0 */1 * * * ?")
 @CrossOrigin(origins = "*")
 @ComponentScan(basePackages = "com.hyjf")
 public class AdminApplication {

@@ -550,10 +550,10 @@
 		END borrowPeriod,
 		 hbc.credit_price AS creditPrice,
 		 FROM_UNIXTIME(
-			hbc.add_time,
+			hbc.create_time,
 			'%Y-%m-%d %H:%i:%s'
 		) AS creditTime,
-		 hbc.add_time AS creditTimeInt,
+		 hbc.create_time AS creditTimeInt,
 		 hru.truename AS creditUserTrueName,
 		 hbc.credit_user_id AS creditUserId,
 		 hbc.credit_repay_end_time AS creditRepayEndTime,
@@ -597,7 +597,7 @@
 				END AS `status`,
 				
 				FROM_UNIXTIME(
-					hhh.add_time,
+					hhh.create_time,
 					'%Y-%m-%d'
 				) AS signTime
 				
@@ -605,7 +605,7 @@
 			ht_borrow_credit hbc
 		LEFT JOIN ht_credit_tender hhh ON hbc.credit_nid = hhh.credit_nid
 		LEFT JOIN ht_borrow hb ON hbc.bid_nid = hb.borrow_nid
-		LEFT JOIN ht_borrow_info hbi
+		LEFT JOIN ht_borrow_info hbi ON hb.borrow_nid = hbi.borrow_nid
 		LEFT JOIN ht_r_user hru ON hru.user_id = hbc.credit_user_id
 		WHERE
 			hbc.credit_nid = #{creditNid}

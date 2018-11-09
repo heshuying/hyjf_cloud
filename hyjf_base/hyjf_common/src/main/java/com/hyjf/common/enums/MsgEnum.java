@@ -336,6 +336,9 @@ public enum MsgEnum implements MsgCode {
 	STATUS_EV000001("EV000001","未找到对应测评结果"),
 	STATUS_EV000003("EV000003", "用户已测评"),
 	STATUS_EV000004("EV000004", "用户测评已过期"),
+	STATUS_EV000005("EV000005","测评限额超额"),
+	STATUS_EV000006("EV000006","测评标的用户类型不匹配"),
+
 	//----------上传用户头像错误信息-------------
 	STATUS_EV000002("EV000002","头像修改失败,请刷新重试！"),
 
@@ -408,6 +411,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_USERNAME_NOT_RELEVANT("99","受托人用户名与资产来源不一致。"),
 	ERR_USERNAME_IS_DISABLE("99","受托人在白名单中被禁用。"),
 	ERR_PAYMENT_AUTH("99","未进行服务费授权。"),
+
 
 
 	// 枚举终结

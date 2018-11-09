@@ -512,9 +512,9 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public List<EvalationVO> getEvalationRecord() {
-		EvalationResponse response = restTemplate
-				.getForEntity(userService+"/user/getEvalationRecord", EvalationResponse.class).getBody();
+	public List<EvalationCustomizeVO> getEvalationRecord() {
+		EvalationCustomizeResponse response = restTemplate
+				.getForEntity(userService+"/user/getEvalationRecord", EvalationCustomizeResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}

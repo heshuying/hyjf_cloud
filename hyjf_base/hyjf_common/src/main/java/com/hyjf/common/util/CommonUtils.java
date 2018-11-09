@@ -36,6 +36,9 @@ public class CommonUtils {
 	public final static String KEY_AUTO_CREDIT_AUTH = "AUTHCONFIG:autoCreditAuth"; // 自动债转
 	public final static String KEY_IS_CHECK_USER_ROLES = "CHECKE:ISCHECKUSERROLES"; // 是否校验用户角色
 
+	// 项目要求投资者风险测评类型描述
+	public final static String DESC_PROJECT_RISK_LEVEL_DESC = "您的风险等级为 #{0}# \n达到 #稳健型# 及以上才可以出借此项目";
+
 	/**
 	 * 提供对象属性null转""方法，目前只支持String的属性
 	 * 
@@ -438,5 +441,37 @@ public class CommonUtils {
 			}
 		}
 		return 1;
+	}
+
+	/**
+	 * 获取标的投资等级和用户等级进行校验(只适用于计划)
+	 * @author wenxin
+	 * @param UserLevel 用户等级
+	 * @return true能投资 false 不能投资
+	 */
+	public static Boolean checkStandardInvestment(String UserLevel){
+		boolean bolStr = false;
+		//判断入参
+		if(StringUtils.isNotEmpty(UserLevel)){
+			//过滤空格
+			UserLevel = UserLevel.trim();
+			switch (UserLevel){
+				case "保守型":
+					bolStr = false;
+					break;
+				case "稳健型":
+					bolStr = true;
+					break;
+				case "成长型":
+					bolStr = true;
+					break;
+				case "进取型":
+					bolStr = true;
+					break;
+				default:
+					bolStr = false;
+			}
+		}
+		return bolStr;
 	}
 }

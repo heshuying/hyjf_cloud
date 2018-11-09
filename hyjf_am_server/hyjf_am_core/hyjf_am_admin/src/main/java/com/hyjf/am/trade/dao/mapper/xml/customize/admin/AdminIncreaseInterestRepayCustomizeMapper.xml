@@ -21,7 +21,7 @@
 			</if>
 			<!-- 还款状态 -->
 			<if test="repayStatus != null and repayStatus != ''">
-				AND hiil.repay_status LIKE CONCAT( #{repayStatus},'%')
+				AND hiil.repay_status LIKE CONCAT( #{repayStatusSrch},'%')
 			</if>
 		</where>
 	</sql>
