@@ -6396,7 +6396,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateAccountNumberByUserId(Integer userId, String accountId) {
-        String url = "http://AM-ADMIN/am-trade/"+ "account/updateAccountNumberByUserId/" + userId+"/"+accountId;
+        String url = "http://AM-ADMIN/am-trade/adminAccountDetail/updateAccountNumberByUserId/" + userId+"/"+accountId;
         IntegerResponse response = restTemplate.getForEntity(url, IntegerResponse.class).getBody();
         if(IntegerResponse.isSuccess(response)){
             return response.getResultInt()>0?true:false;

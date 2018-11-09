@@ -269,10 +269,10 @@ public class BorrowCommonController extends BaseController {
 			if (user == null || user.size() == 0) {
 				return new AdminResult<>(FAIL, "请填写用户角色为垫付机构的已开户用户！！");
 			}
-				 UserInfoVO userinfo = borrowCommonService.findUserInfoById(user.get(0).getUserId());
-				if(userinfo.getRoleId()!=3) {
-					return new AdminResult<>(FAIL, "请填写用户角色为垫付机构的已开户用户！！");
-				}
+//				 UserInfoVO userinfo = borrowCommonService.findUserInfoById(user.get(0).getUserId());
+//				if(userinfo.getRoleId()!=3) {
+//					return new AdminResult<>(FAIL, "请填写用户角色为垫付机构的已开户用户！！");
+//				}
 		Integer authState = CommonUtils.checkPaymentAuthStatus(user.get(0).getPaymentAuthStatus());
 		if (authState == 0) {
 			return new AdminResult<>(FAIL, "未开通服务费授权！");
