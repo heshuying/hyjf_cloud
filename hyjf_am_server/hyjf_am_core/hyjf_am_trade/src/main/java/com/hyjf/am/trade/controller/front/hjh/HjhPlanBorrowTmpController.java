@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.hjh;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmp;
@@ -31,7 +32,10 @@ public class HjhPlanBorrowTmpController extends BaseController {
     public IntegerResponse insertHjhPlanBorrowTmp(@RequestBody HjhPlanBorrowTmpVO hjhPlanBorrowTmpVO) {
         HjhPlanBorrowTmp hjhPlanBorrowTmp = new HjhPlanBorrowTmp();
         BeanUtils.copyProperties(hjhPlanBorrowTmpVO, hjhPlanBorrowTmp);
-        return new IntegerResponse(this.hjhPlanBorrowTmpService.insertHjhPlanBorrowTmp(hjhPlanBorrowTmp));
+        logger.info("=====insertHjhPlanBorrowTmp,参数为:"+ JSONObject.toJSON(hjhPlanBorrowTmp));
+        int intInsert = this.hjhPlanBorrowTmpService.insertHjhPlanBorrowTmp(hjhPlanBorrowTmp);
+        logger.info("===intInsert :"+intInsert+"====");
+        return new IntegerResponse(intInsert);
     }
 
     @RequestMapping("/deleteHjhPlanBorrowTmp")
