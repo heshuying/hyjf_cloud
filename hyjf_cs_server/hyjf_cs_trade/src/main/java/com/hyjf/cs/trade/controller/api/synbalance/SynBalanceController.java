@@ -240,7 +240,7 @@ public class SynBalanceController extends BaseTradeController {
                     boolean flag=false;
 
                     try {
-                        flag = synBalanceService.insertAccountDetails(accountUser,synBalanceBean,user.getUsername(),GetCilentIP.getIpAddr(request));
+                        flag = synBalanceService.insertAccountDetails(accountUser,synBalanceBean,user,GetCilentIP.getIpAddr(request));
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

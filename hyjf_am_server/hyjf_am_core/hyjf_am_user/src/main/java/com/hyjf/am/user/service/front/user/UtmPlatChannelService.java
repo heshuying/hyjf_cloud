@@ -5,7 +5,6 @@ package com.hyjf.am.user.service.front.user;
 
 import com.hyjf.am.user.service.BaseService;
 import com.hyjf.am.vo.admin.UtmVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 
 /**

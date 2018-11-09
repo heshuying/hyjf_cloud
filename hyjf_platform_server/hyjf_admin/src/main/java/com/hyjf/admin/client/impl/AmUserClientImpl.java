@@ -1,28 +1,8 @@
 package com.hyjf.admin.client.impl;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.beans.request.SmsCodeRequestBean;
-import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
-import com.hyjf.admin.client.AmUserClient;
-import com.hyjf.am.response.BooleanResponse;
-import com.hyjf.am.response.IntegerResponse;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.StringResponse;
-import com.hyjf.am.response.admin.*;
-import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
-import com.hyjf.am.response.config.WhereaboutsPageResponse;
-import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
-import com.hyjf.am.response.user.*;
-import com.hyjf.am.resquest.admin.*;
-import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
-import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
-import com.hyjf.am.resquest.user.*;
-import com.hyjf.am.vo.admin.*;
-import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
-import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
-import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.user.*;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -35,8 +15,29 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-import java.util.Map;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.request.SmsCodeRequestBean;
+import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
+import com.hyjf.admin.client.AmUserClient;
+import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
+import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.app.AppUtmRegResponse;
+import com.hyjf.am.response.config.WhereaboutsPageResponse;
+import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
+import com.hyjf.am.response.user.*;
+import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
+import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
+import com.hyjf.am.resquest.user.*;
+import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
+import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
+import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.user.*;
 
 /**
  * @author zhangqingqing
@@ -2348,10 +2349,10 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public AppChannelStatisticsDetailVO getAppChannelStatisticsDetailByUserId(Integer userId) {
-		AppChannelStatisticsDetailResponse response = restTemplate.getForEntity(
-				"http://CS-MESSAGE/cs-message/search/getAppChannelStatisticsDetailByUserId/" + userId,
-				AppChannelStatisticsDetailResponse.class).getBody();
+	public AppUtmRegVO getAppChannelStatisticsDetailByUserId(Integer userId) {
+		AppUtmRegResponse response = restTemplate.getForEntity(
+				"http://AM-ADMIN/am-admin/app_utm_reg/findByUserId/" + userId,
+				AppUtmRegResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -2361,16 +2362,16 @@ public class AmUserClientImpl implements AmUserClient {
 	/**
 	 * 开户更新开户渠道统计开户时间
 	 *
-	 * @param appChannelStatisticsDetailVO
+	 * @param appUtmRegVO
 	 * @return java.lang.Boolean
 	 * @author Zha Daojian
 	 * @date 2018/8/22 13:38
 	 **/
 	@Override
-	public Boolean updateByPrimaryKeySelective(AppChannelStatisticsDetailVO appChannelStatisticsDetailVO) {
+	public Boolean updateByPrimaryKeySelective(AppUtmRegVO appUtmRegVO) {
 
 		AppChannelStatisticsDetailRequest request = new AppChannelStatisticsDetailRequest();
-		BeanUtils.copyProperties(appChannelStatisticsDetailVO, request);
+		BeanUtils.copyProperties(appUtmRegVO, request);
 		Boolean result = restTemplate.postForEntity("http://AM-ADMIN/am-user/userManager/updateUser", request, Boolean.class)
 				.getBody();
 		return result;
@@ -2688,6 +2689,18 @@ public class AmUserClientImpl implements AmUserClient {
 				.getBody();
 		if (response != null) {
 			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request) {
+		AppUtmRegResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-admin/app_utm_reg/exportStatisticsList", request,
+						AppUtmRegResponse.class)
+				.getBody();
+		if (response != null) {
+			return response;
 		}
 		return null;
 	}
