@@ -5139,22 +5139,6 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据userid查询 crm  cuttype
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-/*    @Override
-    public int queryCrmCuttype(Integer userId) {
-        String url = tradeService + "/pushMoneyRecord/queryCrmCuttype/" + userId;
-        PushMoneyResponse response = restTemplate.getForEntity(url,PushMoneyResponse.class).getBody();
-        if (Response.isSuccess(response)) {
-            return response.getCuttype();
-        }
-        return 0;
-    }*/
-
-    /**
      * 发提成包含参数：TenderCommissionVO tenderCommissionVO, BankCallBean resultBean
      * @auth sunpeikai
      * @param
