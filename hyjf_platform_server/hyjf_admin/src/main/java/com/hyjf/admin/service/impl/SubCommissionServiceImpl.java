@@ -264,6 +264,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
             }
         } catch (Exception e) {
             logger.info("转账发生异常:异常信息:[" + e.getMessage() + "].");
+            logger.info("转账发生异常:"+e);
             CheckUtil.check(false,MsgEnum.ERR_AMT_TRANSFER);
             return jsonObject;
         }

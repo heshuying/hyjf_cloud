@@ -1476,6 +1476,7 @@ public class FddHandle {
 			}
 		}else if(FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET == transType || //垫付债转服务协议
 				FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET == transType){// 垫付计划债转服务协议
+		    logger.info("--------------------------------垫付计划债转服务协议获取签署信息contract_id："+contract_id);
 			ApplyAgreementInfoVO applyAgreementInfo =  this.amTradeClient.selectApplyAgreementInfoByContractId(contract_id);
 			if (applyAgreementInfo != null ) {
 				userId = Integer.valueOf(applyAgreementInfo.getUserId());// 承接人
