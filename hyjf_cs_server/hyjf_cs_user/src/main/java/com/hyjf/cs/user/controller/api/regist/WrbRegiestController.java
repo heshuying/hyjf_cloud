@@ -33,7 +33,7 @@ import java.util.Map;
  */
 @RestController
 @Api(tags = "风车理财用户注册")
-@RequestMapping(value = "/server/wrb/register")
+@RequestMapping(value = "/server/wrb")
 public class WrbRegiestController {
 
     Logger log = LoggerFactory.getLogger(WrbRegiestController.class);
@@ -114,9 +114,9 @@ public class WrbRegiestController {
             }
             // 根据手机号检索用户是否存在
             UserVO user = this.userRegisterService.findUserByMobile(mobile);
-            String user_id = String.valueOf(user.getUserId());
             // 如果用户已经存在,表示该手机号已经注册
             if (user != null) {
+                String user_id = String.valueOf(user.getUserId());
                 Integer bindUsers = userRegisterService.selectByUserId(user.getUserId(), instCode);
                 if (bindUsers == null) {
                     log.info("用户手机号已在平台注册:用户名:{},用户手机号:{}", user.getUsername(), mobile);
@@ -183,13 +183,13 @@ public class WrbRegiestController {
                     resultBean.setRetcode(RETCODE2);
                     resultBean.setRetmsg("注册成功");
                     // 用户Id
-                    resultBean.setPf_user_id(user_id);
+                    resultBean.setPf_user_id(String.valueOf(userId));
                     resultBean.setPf_user_name(userName);
                     return resultBean;
                 }
             }
         } catch (Exception e) {
-            log.info("用户注册失败~,手机号:{},失败原因:{}", mobile, e.getMessage());
+            log.info("用户注册失败~,手机号:{},失败原因:{}", mobile, e);
             resultBean.setRetcode(RETCODE);
             resultBean.setRetmsg("注册失败");
             return resultBean;
