@@ -6,16 +6,11 @@ package com.hyjf.admin.controller.user;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
-import com.hyjf.admin.beans.request.AdminUserRecommendRequestBean;
-import com.hyjf.admin.beans.request.CompanyInfoInstRequesetBean;
-import com.hyjf.admin.beans.request.UserManagerRequestBean;
-import com.hyjf.admin.beans.request.UserManagerUpdateRequestBean;
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.beans.response.*;
 import com.hyjf.admin.beans.vo.*;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
@@ -41,10 +36,6 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -839,6 +830,9 @@ public class UserCenterController extends BaseController {
     @PostMapping(value = "/searchPayAllianceCode")
     @ApiOperation(value = "查找联行号", notes = "查找联行号")
     public AdminResult<Response>  searchPayAllianceCode(@RequestBody UserInfosUpdCustomizeRequestBean userInfosUpdCustomizeRequestBean) {
+        if(StringUtils.isBlank(userInfosUpdCustomizeRequestBean.getUserId()) || "null".equals(userInfosUpdCustomizeRequestBean.getUserId())){
+            return new AdminResult<>(FAIL, "用户id不能为空");
+        }
         BankCallBean bankCallBean = userCenterService.payAllianceCodeQuery(userInfosUpdCustomizeRequestBean.getCardNo(), Integer.parseInt(userInfosUpdCustomizeRequestBean.getUserId()));
         AdminResult<Response> result = new AdminResult<Response>();
         Response response = new Response();
