@@ -264,6 +264,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
             }
         } catch (Exception e) {
             logger.info("转账发生异常:异常信息:[" + e.getMessage() + "].");
+            logger.info("转账发生异常:"+e);
             CheckUtil.check(false,MsgEnum.ERR_AMT_TRANSFER);
             return jsonObject;
         }
@@ -360,6 +361,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
         //验证余额是否充足
         CheckUtil.check(new BigDecimal(request.getBalance()).compareTo(new BigDecimal(request.getTxAmount())) > 0, MsgEnum.ERR_AMT_NO_MONEY);
         // 验证交易密码正确性
+        logger.info("交易密码 => 配置文件中:[{}],参数MD5加密:[{}],参数不加密:[{}]",systemConfig.SUB_COMMISSION_PASSWORD,MD5Utils.MD5(request.getPassword()),request.getPassword());
         CheckUtil.check(systemConfig.SUB_COMMISSION_PASSWORD.equals(MD5Utils.MD5(request.getPassword())),MsgEnum.ERR_TRADE_PASSWORD);
         //验证remark长度
         CheckUtil.check(request.getRemark().length()<50,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"说明");

@@ -20,7 +20,7 @@
 				AND FROM_UNIXTIME( hiil.repay_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{timeEndSrch}
 			</if>
 			<!-- 还款状态 -->
-			<if test="repayStatus != null and repayStatus != ''">
+			<if test="repayStatusSrch != null and repayStatusSrch != ''">
 				AND hiil.repay_status LIKE CONCAT( #{repayStatusSrch},'%')
 			</if>
 		</where>
