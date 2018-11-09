@@ -645,7 +645,7 @@ public class FddHandle {
 	        paramter.put("planPeriod",bean.getBorrowDate());//计划期限
 	        paramter.put("planApr", bean.getBorrowRate());//计划收益率
 	        paramter.put("countInterestTime",bean.getPlanStartDate());//计划生效日期
-//	        paramter.put("quitTime",bean.getPlanEndDate());//计划到期日期
+	        paramter.put("quitTime",bean.getPlanEndDate());//计划到期日期
 //	        paramter.put("shouyifutou",FddGenerateContractConstant.SHOUYI_FUTOU);//收益处理方式
 //	        paramter.put("shouldPayTotal", bean.getTenderInterestFmt());//计划本金及预期收益
 	        
@@ -740,6 +740,8 @@ public class FddHandle {
         request.setBidNid(borrowNid);
         request.setCreditNid(creditNid);
         request.setCreditTenderNid(creditTenderNid);
+        logger.info("查询ht_credit_tender表:传入参数assign_nid="+assignOrderId+"," +
+				"bid_nid="+borrowNid+",credit_nid="+creditNid+",credit_tender_nid="+creditTenderNid);
         List<CreditTenderVO> creditTenderList = this.amTradeClient.getCreditTenderList(request);
         if (creditTenderList != null && creditTenderList.size() > 0) {
 

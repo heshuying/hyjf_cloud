@@ -43,7 +43,7 @@ public class EventServiceImpl implements EventService {
 			example.setLimitStart(limitStart);
 			example.setLimitEnd(limitEnd);
 		}
-		example.setOrderByClause("act_time DESC, create_time DESC");
+		example.setOrderByClause("event_time DESC, create_time DESC");
 		return eventMapper.selectByExample(example);
 	}
 

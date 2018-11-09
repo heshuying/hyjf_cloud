@@ -288,7 +288,7 @@ public class CouponTenderHztController extends BaseController {
         map.put("couponUserCode", "优惠券id");
         map.put("couponCode", "优惠券类型编号");
         map.put("couponTypeStr", "优惠券类型");
-        map.put("couponType", "面值");
+        map.put("couponQuota", "面值");
         map.put("couponFrom", "来源");
         map.put("couponContent", "内容");
         map.put("borrowNid", "项目编号");
@@ -302,6 +302,22 @@ public class CouponTenderHztController extends BaseController {
 
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter operatingDeck = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String operatingDeck = (String) object;
+                //操作平台
+                Map<String, String> map =  CacheUtil.getParamNameMap("CLIENT");
+                for (String key : map.keySet()) {
+                    //System.out.println("key= "+ key + " and value= " + map.get(key));
+                    if(operatingDeck.equals(key)){
+                        operatingDeck = map.get(key);
+                    }
+                }
+                return operatingDeck;
+            }
+        };
+        mapAdapter.put("operatingDeck", operatingDeck);
         return mapAdapter;
     }
 

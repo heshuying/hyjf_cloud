@@ -40,6 +40,10 @@ public class IncreaseInterestRepayDetailServiceImpl extends BaseServiceImpl impl
         if (StringUtils.isNotEmpty(form.getBorrowNidSrch())) {
             param.put("borrowNidSrch", form.getBorrowNidSrch());
         }
+        // 投资人
+        if (StringUtils.isNotEmpty(form.getUserNameSrch())) {
+            param.put("userNameSrch", form.getUserNameSrch());
+        }
         // 项目状态
         if (StringUtils.isNotEmpty(form.getRepayStatusSrch())) {
             param.put("repayStatusSrch", form.getRepayStatusSrch());
@@ -66,6 +70,10 @@ public class IncreaseInterestRepayDetailServiceImpl extends BaseServiceImpl impl
         // 项目编号
         if (StringUtils.isNotEmpty(form.getBorrowNidSrch())) {
             param.put("borrowNidSrch", form.getBorrowNidSrch());
+        }
+        // 投资人
+        if (StringUtils.isNotEmpty(form.getUserNameSrch())) {
+            param.put("userNameSrch", form.getUserNameSrch());
         }
         // 项目状态
         if (StringUtils.isNotEmpty(form.getRepayStatusSrch())) {
@@ -97,6 +105,10 @@ public class IncreaseInterestRepayDetailServiceImpl extends BaseServiceImpl impl
         // 借款编号
         if (StringUtils.isNotEmpty(form.getBorrowNidSrch())) {
             param.put("borrowNidSrch", form.getBorrowNidSrch());
+        }
+        // 投资人
+        if (StringUtils.isNotEmpty(form.getUserNameSrch())) {
+            param.put("userNameSrch", form.getUserNameSrch());
         }
         // 用户名
         if (StringUtils.isNotEmpty(form.getUserNameSrch())) {

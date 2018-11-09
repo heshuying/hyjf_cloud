@@ -1348,6 +1348,15 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /**未获得自动授权--dzs*/
     public static final String BANK_TENDER_RETURN_AUTH_ALL_FAIL = "713";
 
+    /**测评过期*/
+    public static final String BANK_TENDER_RETURN_ANSWER_EXPIRED = "714";
+
+    /**测评限额超额*/
+    public static final String BANK_TENDER_RETURN_LIMIT_EXCESS = "715";
+
+    /**测评标的用户类型不匹配*/
+    public static final String BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL = "716";
+
     /**************************************汇计划机构代码****************************/
     
     /** 汇盈平台  */
@@ -1494,4 +1503,5 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
 
     /** 首页项目列表  @RequestMapping值 */
     public static final String START_PAGE_ACTION = "/getStartPage";
+
 }

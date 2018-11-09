@@ -1330,4 +1330,11 @@ public interface AmUserClient {
      * @return
      */
     List<BankOpenAccountLogVO>  getBankOpenAccountLogVOByUserId(Integer userId);
+
+    /**
+     *分页查询所有渠道投资信息
+     * @param request
+     * @return
+     */
+    AppUtmRegResponse getstatisticsList(AppChannelStatisticsDetailRequest request);
 }

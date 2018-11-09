@@ -47,8 +47,10 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.HashMap;
@@ -122,8 +124,10 @@ public class WeChatRegistController extends BaseUserController {
         String verificationCode = request.getParameter("verificationCode");
         // 登录密码
         String password = request.getParameter("password");
-        // 神策预置属性
-        String presetProps = request.getParameter("presetProps");
+        // 神策数据统计追加 add by liuyang 20180725 start
+        // 神策数据统计的预置属性
+        String presetProps = getStringFromStream(request);
+        // 神策数据统计追加 add by liuyang 20180725 end
         //密码解密
         password = RSAJSPUtil.rsaToPassword(password);
         // 推荐人
@@ -152,6 +156,8 @@ public class WeChatRegistController extends BaseUserController {
              return ret;
          }
 
+         // 注册成功后,将userId返回前端
+         ret.setUserId(userVO.getUserId());
         // add by liuyang 神策数据统计追加 20181029 start
         if (StringUtils.isNotBlank(presetProps)) {
             try {
@@ -264,6 +270,12 @@ public class WeChatRegistController extends BaseUserController {
         JSONObject ret = new JSONObject();
         // 手机号
         String mobile = bean.getMobile();
+        // 神策数据统计追加 add by liuyang 20181105 start
+        // 神策数据统计的预置属性
+        String presetProps = getStringFromStream(request);
+        // 神策数据统计追加 add by liuyang 20181105 end
+
+
         logger.info("当前注册手机号: {}", mobile);
         if (Validator.isNull(mobile)) {
             ret.put("status", "99");
@@ -373,6 +385,27 @@ public class WeChatRegistController extends BaseUserController {
 
                 String statusDesc = "注册成功";
 
+
+                // 神策数据统计 add by liuyang 20180725 start
+                // 注册成功后将用户ID返给前端
+                ret.put("userId",String.valueOf(userId));
+                if (StringUtils.isNotBlank(presetProps)) {
+                    logger.info("注册时预置属性:presetProps" + presetProps);
+                    try {
+                        SensorsDataBean sensorsDataBean = new SensorsDataBean();
+                        // 将json串转换成Bean
+                        Map<String, Object> sensorsDataMap = JSONObject.parseObject(presetProps, new TypeReference<Map<String, Object>>() {
+                        });
+                        sensorsDataBean.setPresetProps(sensorsDataMap);
+                        sensorsDataBean.setUserId(userId);
+                        // 发送神策数据统计MQ E
+                        this.registService.sendSensorsDataMQ(sensorsDataBean);
+                        // add by liuyang 神策数据统计追加 登录成功后 将用户ID返回前端 20180717 end
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                // 神策数据统计 add by liuyang 20180725 end
                 // add by zhangjinpeng 注册送888元新手红包 start
                 String activityId = CustomConstants.REGIST_888_ACTIVITY_ID;
                 // 活动有效期校验
@@ -660,5 +693,31 @@ public class WeChatRegistController extends BaseUserController {
 
         logger.info("执行登录操作结束,手机号为：【"+userName+"】");
         return result;
+    }
+
+    /**
+     * 从payload里面取神策预置属性,为解决从request里面取乱码的问题
+     *
+     * @param req
+     * @return
+     */
+    private String getStringFromStream(HttpServletRequest req) {
+        ServletInputStream is;
+        try {
+            is = req.getInputStream();
+            int nRead = 1;
+            int nTotalRead = 0;
+            byte[] bytes = new byte[10240];
+            while (nRead > 0) {
+                nRead = is.read(bytes, nTotalRead, bytes.length - nTotalRead);
+                if (nRead > 0)
+                    nTotalRead = nTotalRead + nRead;
+            }
+            String str = new String(bytes, 0, nTotalRead, "utf-8");
+            return str;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 }

@@ -512,9 +512,9 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public List<EvalationVO> getEvalationRecord() {
-		EvalationResponse response = restTemplate
-				.getForEntity(userService+"/user/getEvalationRecord", EvalationResponse.class).getBody();
+	public List<EvalationCustomizeVO> getEvalationRecord() {
+		EvalationCustomizeResponse response = restTemplate
+				.getForEntity(userService+"/user/getEvalationRecord", EvalationCustomizeResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}
@@ -1167,5 +1167,11 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
-
+	@Override
+	public boolean insertAppChannelStatisticsDetail(WrbRegisterRequest wrbRegisterRequest) {
+		boolean body = restTemplate
+				.postForEntity("http://AM-USER/am-user/app_utm_reg/insertAppChannelStatisticsDetail", wrbRegisterRequest, BooleanResponse.class)
+				.getBody().getResultBoolean();
+		return body;
+	}
 }

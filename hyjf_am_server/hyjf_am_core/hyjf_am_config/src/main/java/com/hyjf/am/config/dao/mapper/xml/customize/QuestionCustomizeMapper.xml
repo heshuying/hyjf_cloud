@@ -26,7 +26,11 @@
 
 
     <select id="getNewAnswerList" parameterType="java.lang.Integer" resultMap="AnswerCustomizeResultMap">
-        select id,question_id,answer,score from ht_answer where question_id=#{id} AND status=0
+        select id,question_id,
+        /*answer*/
+         CONCAT(
+          REPLACE(answer,"."," "),"   （",score,"分）") AS answer,
+          score from ht_answer where question_id=#{id} AND status=0
     </select>
 
     <select id="countScore"  parameterType="map" resultType="java.lang.Integer">
@@ -55,6 +59,10 @@
         <result column="answer" property="quesText" jdbcType="VARCHAR" />
     </resultMap>
     <select id="getNewAppAnswerList" parameterType="java.lang.Integer" resultMap="NewAppAnswerResultMap">
-        select CONCAT(question_id,"_",id) as ques_id,replace(answer,"."," ") as answer from ht_answer where question_id=#{id} AND status=0
+        select CONCAT(question_id,"_",id) as ques_id,
+        /*replace(answer,"."," ") as answer */
+        CONCAT(
+          REPLACE(answer,"."," "),"   （",score,"分）") AS answer
+        from ht_answer where question_id=#{id} AND status=0
     </select>
 </mapper>
