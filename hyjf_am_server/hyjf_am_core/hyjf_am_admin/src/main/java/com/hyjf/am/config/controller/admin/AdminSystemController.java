@@ -160,6 +160,17 @@ public class AdminSystemController extends BaseConfigController {
     @RequestMapping("/updatePasswordAction")
     public AdminSystemResponse updatePasswordAction(@RequestBody AdminSystemRequest adminSystemR) {
     	AdminSystemResponse response = new AdminSystemResponse();
+    	if(adminSystemR.getId()!=null&&adminSystemR.getId().equals("1")) {
+    		AdminSystem adminSystem = new AdminSystem();
+    		adminSystem.setUsername(adminSystemR.getUsername());
+    		adminSystem.setPassword(MD5.toMD5Code(adminSystemR.getOldPassword()));
+    		AdminSystem adminSystemr = adminSystemService.getUserInfo(adminSystem);
+                if (adminSystemr == null) {
+                	response.setRtn(Response.FAIL);
+                	response.setMessage("旧密码不正确");
+                }
+                return response;
+    	}
         if (Validator.isNull(adminSystemR.getPassword()) && Validator.isNull(adminSystemR.getOldPassword())) {
         	response.setRtn(Response.FAIL);
         	response.setMessage("新密码和旧密码都不能为空！");

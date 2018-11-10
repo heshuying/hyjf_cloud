@@ -118,6 +118,9 @@ public class PushMoneyRequest extends PushMoneyVO implements Serializable {
 	@ApiModelProperty(value = "当前页条数")
 	private int pageSize = 10;
 
+	@ApiModelProperty(value = "是否具有组织架构查看权限")
+	private String isOrganizationView;
+
 	public String getIds() {
 		return ids;
 	}
@@ -431,5 +434,13 @@ public class PushMoneyRequest extends PushMoneyVO implements Serializable {
 
 	public void setTenderType(Integer tenderType) {
 		this.tenderType = tenderType;
+	}
+
+	public String getIsOrganizationView() {
+		return isOrganizationView;
+	}
+
+	public void setIsOrganizationView(String isOrganizationView) {
+		this.isOrganizationView = isOrganizationView;
 	}
 }

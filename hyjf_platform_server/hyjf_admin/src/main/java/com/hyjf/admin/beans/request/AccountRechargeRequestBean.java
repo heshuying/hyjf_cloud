@@ -60,6 +60,8 @@ public class AccountRechargeRequestBean extends BasePage {
 //    @ApiModelProperty(value = "充值状态:0:充值中,1:充值失败,2:充值成功")
 //    private String status;
 
+    @ApiModelProperty(value = "是否具有组织架构查看权限")
+    private String isOrganizationView;
 
 
     public String getStartDate() {
@@ -182,4 +184,11 @@ public class AccountRechargeRequestBean extends BasePage {
         this.userId = userId;
     }
 
+    public String getIsOrganizationView() {
+        return isOrganizationView;
+    }
+
+    public void setIsOrganizationView(String isOrganizationView) {
+        this.isOrganizationView = isOrganizationView;
+    }
 }

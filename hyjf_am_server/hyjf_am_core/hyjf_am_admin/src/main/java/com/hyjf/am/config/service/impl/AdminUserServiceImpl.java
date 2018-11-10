@@ -181,7 +181,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 //		String userId = ShiroUtil.getLoginUserId();
 		Admin record = new Admin();
 		record.setState("1");
-//		record.setDelFlag(CustomConstants.FLAG_DELETE);
+		record.setDelFlag(1);
 		record.setUpdateTime(new Date());
 		record.setUpdateUserId(adminId);
 
@@ -288,6 +288,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 	@Override
 	public List<AdminRole> getAdminRoleList() {
 		AdminRoleExample example = new AdminRoleExample();
+			example.or().andStatusEqualTo(1);
 		example.setOrderByClause(" sort ");
 		return adminRoleMapper.selectByExample(example);
 	}

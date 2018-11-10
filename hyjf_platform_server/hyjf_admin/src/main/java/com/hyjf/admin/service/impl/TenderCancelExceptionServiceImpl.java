@@ -123,9 +123,11 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
                 bidCancelFlag = true;
             }
         }
+        logger.info("bidCancelFlag:::::::::[{}]",bidCancelFlag);
         if (bidCancelFlag) {
             try {
                 boolean tenderCancelFlag = this.updateBidCancelRecord(tenderTmp,adminSystemVO);
+                logger.info("tenderCancelFlag:::::::::[{}]",tenderCancelFlag);
                 if (tenderCancelFlag) {
                     jsonObject.put("status","success");
                     if (status == 1) {
