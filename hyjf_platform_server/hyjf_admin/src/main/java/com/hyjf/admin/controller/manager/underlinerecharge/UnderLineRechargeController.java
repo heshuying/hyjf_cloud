@@ -106,7 +106,7 @@ public class UnderLineRechargeController extends BaseController {
         boolean checkCode = this.underLineRechargeService.checkValidate(requestBean.getCode());
 
         if (checkCode){
-            return new AdminResult<>(FAIL, "当前Code已存在!");
+            return new AdminResult<>(FAIL, "线下交易类型已存在,请重新输入!");
         }
         return new AdminResult<>();
     }

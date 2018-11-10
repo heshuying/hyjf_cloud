@@ -2646,7 +2646,7 @@
 		4 AS type,
 		0 coupon_type,
 		hiii.repay_interest_wait AS total_wait,
-		'加息收益' AS coupon_name,
+		CONCAT('加息',FORMAT(hiii.borrow_extra_yield, 2),'%'	) AS coupon_name,
 		CASE WHEN borrow.borrow_style = 'endday' THEN CONCAT(borrow.borrow_period, '天')
 		ELSE CONCAT(borrow.borrow_period, '个月') END borrow_period,
 		hiii.tender_nid as order_id,
@@ -3223,7 +3223,7 @@
 			hcr.assign_capital recover_capital_wait,
 			hcr.assign_interest recover_interest_wait,
 			hcr.assign_repay_account recover_account,
-			FROM_UNIXTIME(IF(hcr.assign_repay_yes_time=0,hcr.assign_repay_end_time,hcr.assign_repay_yes_time), '%Y-%m-%d' ) recover_time,
+			FROM_UNIXTIME(IF(hcr.assign_repay_yes_time=0,hcr.assign_repay_next_time,hcr.assign_repay_yes_time), '%Y-%m-%d' ) recover_time,
 			IF(hcr.status=0,'未还款','已还款') recover_status
 		FROM
 			ht_credit_repay hcr

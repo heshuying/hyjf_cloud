@@ -1235,7 +1235,7 @@ public class FddHandle {
 	 * @param tenderCreditAssignedBean
 	 * @return
 	 */
-	private Map<String,Object> selectHJHUserCreditContract(CreditAssignedBean tenderCreditAssignedBean) {
+	public Map<String,Object> selectHJHUserCreditContract(CreditAssignedBean tenderCreditAssignedBean) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		// 获取债转投资信息
 		//查询 hyjf_hjh_debt_credit_tender 表

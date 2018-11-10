@@ -359,33 +359,26 @@ public class WeChatRegistController extends BaseUserController {
         }
         //推荐人userId
         String refferUserId=bean.getRefferUserId();
-        UserVO user = new UserVO();
         logger.info("utmId: {}", bean.getUtmId());
         logger.info("refferUserId: {}", refferUserId);
         logger.info("utmSource: {}", bean.getUtmSource());
         logger.info("verificationCode: {}", bean.getVerificationCode());
 
-        user =  registService.insertUserActionUtm(mobile, password,bean.getVerificationCode(), refferUserId, CustomUtil.getIpAddr(request),
-                CustomConstants.CLIENT_WECHAT,bean.getUtmId(),bean.getUtmSource());
-        //int userId = registService.insertUserActionUtm(mobile, password,request.getParameter("verificationCode"), refferUserId, CustomUtil.getIpAddr(request),CustomConstants.CLIENT_WECHAT,request.getParameter("utmId"),request.getParameter("utmSource"));
+       /* user =  registService.insertUserActionUtm(mobile, password,bean.getVerificationCode(), refferUserId, CustomUtil.getIpAddr(request),
+                CustomConstants.CLIENT_WECHAT,bean.getUtmId(),bean.getUtmSource());*/
+        WebViewUserVO user = registService.register(mobile,bean.getVerificationCode(), password,refferUserId, CommonConstant.HYJF_INST_CODE,bean.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT),GetCilentIP.getIpAddr(request));
+        WebViewUserVO userVO = loginService.login(user.getUsername(), password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI);
+        if(null!=userVO){
+            ret.put("sign",userVO.getToken());
+        }else {
+            ret.put("status", "99");
+            ret.put("statusDesc","登陆失败");
+            ret.put("successUrl","");
+            return ret;
+        }
         Integer userId = user.getUserId();
         try {
             if (userId != 0) {
-                //user.setUserId(userId);
-                //完成注册同时完成登录返回sign值 add by jijun 2018/03/30
-                LoginResultBean resultOfLogin=(LoginResultBean) this.proceedLoginAction(request,mobile,password);
-                if(Validator.isNull(resultOfLogin.getSign())) {
-                    //sign为空时代表登录失败
-                    ret.put("status", resultOfLogin.getStatus());
-                    ret.put("statusDesc", resultOfLogin.getStatusDesc());
-                    return ret;
-                }else {
-                    ret.put("sign",resultOfLogin.getSign());
-                }
-
-                String statusDesc = "注册成功";
-
-
                 // 神策数据统计 add by liuyang 20180725 start
                 // 注册成功后将用户ID返给前端
                 ret.put("userId",String.valueOf(userId));
@@ -405,74 +398,38 @@ public class WeChatRegistController extends BaseUserController {
                         e.printStackTrace();
                     }
                 }
-                // 神策数据统计 add by liuyang 20180725 end
-                // add by zhangjinpeng 注册送888元新手红包 start
-                String activityId = CustomConstants.REGIST_888_ACTIVITY_ID;
-                // 活动有效期校验
-                boolean isAvailable = registService.checkActivityIfAvailable(Integer.valueOf(activityId));
-                if(isAvailable){
-//                CommonParamBean paramBean = new CommonParamBean();
-//                paramBean.setUserId(user.getUserId().toString());
-//                paramBean.setSendFlg(11);
-//                // 发放888元新手红包
-//                CommonSoaUtils.sendUserCouponNoRet(paramBean);
-
-                    // 发放注册888红包
-                    sendCoupon(user);
-
-                    AdsRequest adsRequest = new AdsRequest();
-                    adsRequest.setCode("registpop");
-                    adsRequest.setHost(systemConfig.fileDomainUrl);
-                    adsRequest.setLimitStart(0);
-                    adsRequest.setLimitEnd(1);
-
-                    AppAdsCustomizeVO record = registService.searchBanner(adsRequest);
-                    if(record != null){
-                        // 注册成功发券提示
-                        String operationUrl = "://jumpCouponsList/?"; //record.getUrl() + "?couponStatus=0&sign=" + sign + "&platform" + platform;
-//                    ret.put("imageUrl", record.getImage());
-//                    ret.put("imageUrlOperation", operationUrl);
-                        BaseMapBean baseMapBean=new BaseMapBean();
-                        baseMapBean.set("imageUrl", record.getImage());
-                        baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-                        baseMapBean.set(CustomConstants.APP_STATUS_DESC, URLEncoder.encode(statusDesc, "UTF-8"));
-                        baseMapBean.set("imageUrlOperation", operationUrl);
-                        baseMapBean.setCallBackAction(CustomConstants.HOST+REGIST_RESULT_SUCCESS);
-
-                        ret.put("status", "000");
-                        ret.put("statusDesc", "注册成功");
-                        ret.put("successUrl", baseMapBean.getUrl());
-                        return ret;
-                    }
-
-                    // 发券成功
-                    // 发送短信通知
-                    user.setMobile(mobile);
-                    sendSmsCoupon(user);
-                }else {
-//                ret.put("imageUrl", "");
-//                ret.put("imageUrlOperation", "");
+                String statusDesc = "注册成功";
+                if (registService.checkActivityIfAvailable(systemConfig.getActivity888Id())) {
                     BaseMapBean baseMapBean=new BaseMapBean();
                     baseMapBean.set("imageUrl", "");
                     baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
                     baseMapBean.set(CustomConstants.APP_STATUS_DESC, URLEncoder.encode(statusDesc, "UTF-8"));
                     baseMapBean.set("imageUrlOperation", "");
-                    baseMapBean.setCallBackAction(CustomConstants.HOST+REGIST_RESULT_SUCCESS);
-
+                    baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+"/user/regist/result/success");
                     ret.put("status", "000");
-                    ret.put("statusDesc", "注册成功");
+                    ret.put("statusDesc", statusDesc);
+                    ret.put("successUrl",baseMapBean.getUrl());
+                    return ret;
+                }else {
+                    AdsRequest adsRequest = new AdsRequest();
+                    adsRequest.setLimitStart(0);
+                    adsRequest.setLimitEnd(1);
+                    adsRequest.setHost(systemConfig.getFileDomainUrl());
+                    adsRequest.setCode("registpop");
+                    AppAdsCustomizeVO record = registService.searchBanner(adsRequest);
+                    // 注册成功发券提示
+                    String operationUrl = "://jumpCouponsList/?";
+                    BaseMapBean baseMapBean = new BaseMapBean();
+                    baseMapBean.set("imageUrl", record.getImage());
+                    baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
+                    baseMapBean.set(CustomConstants.APP_STATUS_DESC, URLEncoder.encode(statusDesc, "UTF-8"));
+                    baseMapBean.set("imageUrlOperation", operationUrl);
+                    baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+"/user/regist/result/success");
+                    ret.put("status", "000");
+                    ret.put("statusDesc",statusDesc);
                     ret.put("successUrl",baseMapBean.getUrl());
                     return ret;
                 }
-                BaseMapBean baseMapBean=new BaseMapBean();
-                baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-                baseMapBean.set(CustomConstants.APP_STATUS_DESC, URLEncoder.encode(statusDesc, "UTF-8"));
-                baseMapBean.setCallBackAction(CustomConstants.HOST+REGIST_RESULT_SUCCESS);
-
-                ret.put("status", "000");
-                ret.put("statusDesc", "注册成功");
-                ret.put("successUrl",baseMapBean.getUrl());
-                return ret;
             } else {
                 //注册失败,参数异常
                 ret.put("status", "99");

@@ -5,7 +5,10 @@ import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
 import com.hyjf.am.vo.trade.BorrowListVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.borrow.DebtBorrowCustomizeVO;
+import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.file.FavFTPUtil;
 import com.hyjf.common.file.SFTPParameter;
@@ -14,11 +17,13 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.util.Page;
+import com.hyjf.cs.trade.bean.CreditAssignedBean;
 import com.hyjf.cs.trade.bean.ProtocolRequest;
 import com.hyjf.cs.trade.bean.repay.ProjectRepayListBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.mq.handle.FddHandle;
 import com.hyjf.cs.trade.service.projectlist.WebProtocolService;
 import com.hyjf.cs.trade.util.PdfGenerator;
 import org.apache.commons.lang3.StringUtils;
@@ -52,6 +57,9 @@ public class WebProtocolServiceImpl implements WebProtocolService {
     @Autowired
     private AmUserClient amUserClient;
 
+    @Autowired
+    private FddHandle fddHandle;
+
     /**
      * 下载脱敏后居间服务借款协议（原始标的）_计划投资人
      * @author zhangyk
@@ -63,6 +71,15 @@ public class WebProtocolServiceImpl implements WebProtocolService {
         CheckUtil.check(StringUtils.isNotBlank(form.getBorrowNid()),MsgEnum.ERR_OBJECT_REQUIRED, "借款编号");
         Map<String,Object> param = new HashMap<>();
         String borrowNid = form.getBorrowNid();
+        String random = form.getRandom();
+        if (StringUtils.isNotBlank(random) && userId == null){
+            userId = Integer.valueOf(random);
+        }
+        if (userId == null){
+            logger.info(">>>>>>> random(userId) is null  exit <<<<<<<<");
+            return null;
+        }
+
         String nid = form.getNid();
         param.put("borrowNidSrch",borrowNid);
         List<BorrowListVO> recordList1 = amTradeClient.searchBorrowList4Protocol(param);
@@ -295,7 +312,129 @@ public class WebProtocolServiceImpl implements WebProtocolService {
         }
         return null;
     }
-    private List<WebUserInvestListCustomizeVO> myTenderSelectUserInvestList(ProtocolRequest form , int limitStart,int limitEnd){
+
+    @Override
+    public void downloadIntermediaryPdf(ProtocolRequest form, Integer userId, HttpServletRequest request, HttpServletResponse response) {
+        String random = form.getRandom();
+        String nid = form.getNid();
+        String assignNid = form.getAssignNid();
+        String borrowNid = form.getBorrowNid();
+        if (StringUtils.isAnyBlank(random,nid,assignNid,borrowNid)){
+            logger.info(">>>>>> 参数缺少,协议下载退出 <<<<<<<<");
+            return;
+        }
+
+        userId = Integer.valueOf(random);
+        UserVO userVO =  amUserClient.findUserById(userId);
+        if (userVO == null){
+            return ;
+        }
+
+        List<File> files = new ArrayList<File>();
+        RightBorrowVO borrowVO = amTradeClient.getRightBorrowByNid(borrowNid);
+        if( borrowVO != null ){
+            if(StringUtils.isNotEmpty(borrowVO.getPlanNid())){
+                TenderAgreementVO tenderAgreement = new TenderAgreementVO();
+                List<TenderAgreementVO> tenderAgreementsNid= amTradeClient.selectTenderAgreementByNid(assignNid);//居间协议
+                if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
+
+
+                    //计划中的标的---法大大
+                    List<TenderAgreementVO>  tenderAgreementsAss;
+                    while (true) {
+                        List<HjhDebtCreditTenderVO> hjhCreditTenderList = amTradeClient.selectHjhCreditTenderListByAssignOrderId(nid);//hyjf_hjh_debt_credit_tender
+                        if(hjhCreditTenderList!=null && hjhCreditTenderList.size()>0){
+                            HjhDebtCreditTenderVO hjhCreditTender = hjhCreditTenderList.get(0);
+                            logger.info("调用下载计划债转协议的方法 ---------------------:"+assignNid);
+                            tenderAgreementsAss= amTradeClient.selectTenderAgreementByNid(hjhCreditTender.getAssignOrderId());//债转协议
+                            //下载法大大协议--债转
+                            if(tenderAgreementsAss!=null && tenderAgreementsAss.size()>0){
+                                tenderAgreement = tenderAgreementsAss.get(0);
+                                files = this.createFaddPDFImgFile(files,tenderAgreement);//下载脱敏
+                            }
+                            nid = hjhCreditTender.getSellOrderId();
+                            if(nid.equals(hjhCreditTender.getInvestOrderId())){
+                                //下载法大大协议--居间
+                                tenderAgreementsNid= amTradeClient.selectTenderAgreementByNid(nid);//居间
+                                if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
+                                    tenderAgreement = tenderAgreementsNid.get(0);
+                                    if(tenderAgreement!=null){
+                                        files = this.createFaddPDFImgFile(files,tenderAgreement);//下载脱敏
+                                    }
+                                }
+                                break;
+                            }
+                        }else {
+                            break;
+                        }
+                    }
+                }else{
+
+                    //计划中的标的
+                    while (true) {
+                        List<HjhDebtCreditTenderVO> hjhCreditTenderList = amTradeClient.selectHjhCreditTenderListByAssignOrderId(nid);//hyjf_hjh_debt_credit_tender
+                        if(hjhCreditTenderList!=null && hjhCreditTenderList.size()>0){
+                            HjhDebtCreditTenderVO hjhCreditTender = hjhCreditTenderList.get(0);
+                            System.out.println("调用下载计划债转协议的方法 ---------------------:"+assignNid);
+                            //调用下载计划债转协议的方法
+                            CreditAssignedBean tenderCreditAssignedBean  = new CreditAssignedBean();
+                            Map<String, Object> creditContract = null;
+                            tenderCreditAssignedBean.setBidNid(hjhCreditTender.getBorrowNid());// 标号
+                            tenderCreditAssignedBean.setCreditNid(hjhCreditTender.getCreditNid());// 债转编号
+                            tenderCreditAssignedBean.setCreditTenderNid(hjhCreditTender.getInvestOrderId());//原始投资订单号
+                            tenderCreditAssignedBean.setAssignNid(hjhCreditTender.getAssignOrderId());//债转后的新的"投资"订单号
+                            if(userId != null){
+                                tenderCreditAssignedBean.setCurrentUserId(userId);
+                            }
+                            // 模板参数对象(查新表)
+                            creditContract = fddHandle.selectHJHUserCreditContract(tenderCreditAssignedBean);
+                            if(creditContract!=null){
+                                try {
+                                    File filetender = PdfGenerator.generatePdfFile(request, response, ((HjhDebtCreditTenderVO) creditContract.get("creditTender")).getAssignOrderId() + ".pdf", CustomConstants.HJH_CREDIT_CONTRACT, creditContract);
+                                    if(filetender!=null){
+                                        files.add(filetender);
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                            nid = hjhCreditTender.getSellOrderId();
+                            if(nid.equals(hjhCreditTender.getInvestOrderId())){
+                                //原始标的居间协议
+                                ProtocolRequest req;
+                                req = new ProtocolRequest();
+                                req.setBorrowNid(borrowNid);
+                                req.setNid(nid);//huiyingdai_borrow_tender--nid(取自银行)字段
+                                req.setFlag("1");
+                                File file;
+                                //居间服务于借款协议时展示标的维度的借款方与出借方的关系的，出借方来自于 huiyingdai_borrow_tender
+                                //原居间协议(注掉) file = createAgreementPDFFile(request, response, form, tmp.getUserId());
+                                //(1)调用新作的居间借款协议
+                                file = creditPaymentPlan(req,userId,request, response);
+                                if (file != null) {
+                                    files.add(file);
+                                }
+                                break;
+                            }
+                        }else {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        if(files!=null && files.size()>0){
+            ZIPGenerator.generateZip(response, files, borrowNid);
+        }
+    }
+
+
+
+
+
+
+    private List<WebUserInvestListCustomizeVO> myTenderSelectUserInvestList(ProtocolRequest form , int limitStart, int limitEnd){
         String borrowNid = org.apache.commons.lang.StringUtils.isNotEmpty(form.getBorrowNid()) ? form.getBorrowNid() : null;
         String userId = org.apache.commons.lang.StringUtils.isNotEmpty(form.getUserId()) ? form.getUserId() : null;
         String nid = org.apache.commons.lang.StringUtils.isNotEmpty(form.getNid()) ? form.getNid() : null;

@@ -2,7 +2,6 @@ package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
-import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;

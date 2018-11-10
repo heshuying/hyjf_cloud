@@ -54,6 +54,7 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
     @Override
     public List<SubCommissionListConfig> searchSubCommissionListConfig() {
         SubCommissionListConfigExample example = new SubCommissionListConfigExample();
+        example.createCriteria().andStatusEqualTo(0);
         return subCommissionListConfigMapper.selectByExample(example);
     }
 
@@ -279,7 +280,7 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
         }
         // 添加时间结束
         if (StringUtils.isNotEmpty(request.getTimeEndSrch())) {
-            criteria.andCreateTimeLessThan(GetDate.stringToDate(GetDate.getDayStart(request.getTimeEndSrch())));
+            criteria.andCreateTimeLessThan(GetDate.stringToDate(GetDate.getDayEnd(request.getTimeEndSrch())));
         }
         example.setOrderByClause("create_time desc");
         if (request.getLimitStart() != -1) {
