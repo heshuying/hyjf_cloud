@@ -63,6 +63,13 @@ public class WebProtocolServiceImpl implements WebProtocolService {
         CheckUtil.check(StringUtils.isNotBlank(form.getBorrowNid()),MsgEnum.ERR_OBJECT_REQUIRED, "借款编号");
         Map<String,Object> param = new HashMap<>();
         String borrowNid = form.getBorrowNid();
+        String random = form.getRandom();
+        if (StringUtils.isNotBlank(random)){
+            userId = Integer.valueOf(random);
+        }else{
+            logger.info(">>>>>>> random(userId) is null  exit <<<<<<<<");
+            return null;
+        }
         String nid = form.getNid();
         param.put("borrowNidSrch",borrowNid);
         List<BorrowListVO> recordList1 = amTradeClient.searchBorrowList4Protocol(param);
