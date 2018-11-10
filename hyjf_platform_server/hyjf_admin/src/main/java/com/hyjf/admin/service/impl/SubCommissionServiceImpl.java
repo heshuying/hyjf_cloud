@@ -125,10 +125,14 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
             if (insertFlag) {
                 // 调用银行接口
                 BankCallBean resultBean = BankCallUtils.callApiBg(bean);
-                // 银行返回错误信息
-                String errorMsg = amConfigClient.getBankRetMsg(bean.getRetCode() == null ? "" : bean.getRetCode());
 
-                request.setErrorMsg(errorMsg);
+                String retCode = resultBean.getRetCode() == null ? "" : resultBean.getRetCode();
+                logger.info("处理前retCode:[{}],处理后retCode:[{}]",resultBean.getRetCode(),retCode);
+                // 银行返回错误信息
+                if(StringUtils.isNotBlank(retCode) && !"null".equals(retCode)){
+                    String errorMsg = amConfigClient.getBankRetMsg(resultBean.getRetCode() == null ? "" : resultBean.getRetCode());
+                    request.setErrorMsg(errorMsg);
+                }
                 request.setResultBean(CommonUtils.convertBean(resultBean,BankCallBeanVO.class));
                 request.setAdminSystemVO(adminSystemVO);
 
@@ -139,7 +143,6 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
                     CheckUtil.check(false,MsgEnum.ERR_BANK_CALL);
                 }
                 // 银行返回响应代码
-                String retCode = resultBean.getRetCode() == null ? "" : resultBean.getRetCode();
                 if("CA51".equals(retCode)){
                     // 更新订单状态:失败
                     request.setCallBankSuccess(false);
@@ -264,7 +267,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
             }
         } catch (Exception e) {
             logger.info("转账发生异常:异常信息:[" + e.getMessage() + "].");
-            logger.info("转账发生异常:"+e);
+            logger.info("转账发生异常:"+e.toString());
             CheckUtil.check(false,MsgEnum.ERR_AMT_TRANSFER);
             return jsonObject;
         }
