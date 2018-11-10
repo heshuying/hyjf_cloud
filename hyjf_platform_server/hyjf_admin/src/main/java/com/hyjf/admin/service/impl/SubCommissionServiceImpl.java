@@ -132,6 +132,8 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
                 if(StringUtils.isNotBlank(retCode) && !"null".equals(retCode)){
                     String errorMsg = amConfigClient.getBankRetMsg(bean.getRetCode() == null ? "" : bean.getRetCode());
                     request.setErrorMsg(errorMsg);
+                }else{
+                    logger.info("处理前retCode:[{}],处理后retCode:[{}]",bean.getRetCode(),retCode);
                 }
 
                 request.setResultBean(CommonUtils.convertBean(resultBean,BankCallBeanVO.class));
