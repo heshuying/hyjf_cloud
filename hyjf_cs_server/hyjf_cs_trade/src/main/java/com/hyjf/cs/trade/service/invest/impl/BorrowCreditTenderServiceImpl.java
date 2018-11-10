@@ -1156,7 +1156,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         if (borrowStyle.equals(CalculatesUtil.STYLE_ENDMONTH)) {
             int lastDays = 0;
             String bidNid = borrow.getBorrowNid();
-            List<BorrowRepayPlanVO> borrowRepayPlans = amTradeClient.getBorrowRepayPlansByPeriod(bidNid, borrowRecover.getRecoverPeriod()+1);
+            List<BorrowRepayPlanVO> borrowRepayPlans = amTradeClient.getBorrowRepayPlansByPeriod(bidNid, borrowRecover.getRecoverPeriod());
 
             if (borrowRepayPlans != null && borrowRepayPlans.size() > 0) {
                 try {
@@ -1247,6 +1247,11 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         return creditTenderLog;
     }
 
+    public static void main(String[] args) {
+        System.out.println("args = " + BeforeInterestAfterPrincipalUtils.getAssignInterestAdvance(new BigDecimal("1000"), new BigDecimal("10000"),
+                new BigDecimal("0.08"), new BigDecimal("66.66"),
+                new BigDecimal(27 + "")));
+    }
     /**
      * 获取调用银行的参数
      * @param request
