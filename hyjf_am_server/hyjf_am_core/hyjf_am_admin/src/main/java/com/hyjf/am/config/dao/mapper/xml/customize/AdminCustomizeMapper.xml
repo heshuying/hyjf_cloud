@@ -79,7 +79,7 @@
 			<if test="addtimeEndSrch != null and addtimeEndSrch != ''">
 				AND admin.create_time <![CDATA[<=]]> #{addtimeEndSrch}
 			</if>
-			and del_flag=0
+			and admin.del_flag=0
 		ORDER BY
 			admin.create_time DESC
 		<if test="limitStart >= 0" >
