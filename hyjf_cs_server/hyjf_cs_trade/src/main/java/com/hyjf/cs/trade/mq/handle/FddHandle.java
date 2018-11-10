@@ -1477,16 +1477,21 @@ public class FddHandle {
 		}else if(FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET == transType || //垫付债转服务协议
 				FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET == transType){// 垫付计划债转服务协议
 		    logger.info("--------------------------------垫付计划债转服务协议获取签署信息contract_id："+contract_id);
-			ApplyAgreementInfoVO applyAgreementInfo =  this.amTradeClient.selectApplyAgreementInfoByContractId(contract_id);
-			logger.info("--------------------------------垫付计划债转服务协议获取签署信息applyAgreementInfo："+JSONObject.toJSON(applyAgreementInfo));
-			if (applyAgreementInfo != null ) {
+            List<ApplyAgreementInfoVO> voList  =  this.amTradeClient.selectApplyAgreementInfoByContractId(contract_id);
+
+			if (voList != null && voList.size()>0) {
+                logger.info("--------------------------------垫付计划债转服务协议获取签署信息voList："+JSONObject.toJSON(voList));
+                ApplyAgreementInfoVO applyAgreementInfo = voList.get(0);
 				userId = Integer.valueOf(applyAgreementInfo.getUserId());// 承接人
 				borrowNid = applyAgreementInfo.getBorrowNid();// 原标的号
 				BorrowInfoWithBLOBsVO borrow = this.amTradeClient.selectBorrowInfoWithBLOBSVOByBorrowId(borrowNid);
 				instCode = borrow.getInstCode();// 机构编号
 				creditUserId = Integer.valueOf(applyAgreementInfo.getCreditUserId());// 出让人
 				borrowerCustomerID = getCustomerIDByUserID(creditUserId);
-			}
+			}else{
+                logger.info("--------------------------------垫付计划债转服务协议获取签署信息失败");
+            }
+
 		}
 
 
