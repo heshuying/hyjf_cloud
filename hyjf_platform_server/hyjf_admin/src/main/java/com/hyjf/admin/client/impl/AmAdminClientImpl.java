@@ -1292,7 +1292,7 @@ public class AmAdminClientImpl implements AmAdminClient {
      */
     @Override
     public Integer deleteOrgFreezeLog(String orderId) {
-        StringBuilder url = new StringBuilder("http://AM-ADMIN/am-admin/exception/bankRepayFreezeOrg/delete");
+        StringBuilder url = new StringBuilder("http://AM-ADMIN/am-admin/exception/bankRepayFreezeOrg/delete/");
         url.append(orderId);
         IntegerResponse response = restTemplate.getForEntity(url.toString(), IntegerResponse.class).getBody();
         if (Response.isSuccess(response)) {
