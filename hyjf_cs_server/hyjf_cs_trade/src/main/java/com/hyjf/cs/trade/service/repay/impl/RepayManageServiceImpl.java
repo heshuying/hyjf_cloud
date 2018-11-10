@@ -392,10 +392,11 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      * @date: 2018/7/10
      */
     @Override
-    public Boolean updateForRepayRequest(RepayBean repayBean, BankCallBean bankCallBean){
+    public Boolean updateForRepayRequest(RepayBean repayBean, BankCallBean bankCallBean, boolean isAllRepay){
         RepayRequestUpdateRequest requestBean = new RepayRequestUpdateRequest();
         requestBean.setRepayBeanData(JSON.toJSONString(repayBean));
         requestBean.setBankCallBeanData(JSON.toJSONString(bankCallBean));
+        requestBean.setAllRepay(isAllRepay);
         logger.info("updateForRepayRequest 请求参数：" + JSON.toJSONString(repayBean));
         return amTradeClient.repayRequestUpdate(requestBean);
     }
@@ -861,7 +862,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      * @date: 2018/10/16
      */
     @Override
-    public  WebResult getBalanceFreeze(WebViewUserVO userVO, String borrowNid, RepayBean repayBean, String orderId, String account, WebResult webResult) {
+    public  WebResult getBalanceFreeze(WebViewUserVO userVO, String borrowNid, RepayBean repayBean, String orderId, String account, WebResult webResult, boolean isAllRepay) {
         Integer userId = userVO.getUserId();
         String userName = userVO.getUsername();
         String ip = repayBean.getIp();
@@ -893,7 +894,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
             return webResult;
         }
         //还款后变更数据
-        boolean updateResult = this.updateForRepayRequest(repayBean, callBackBean);
+        boolean updateResult = this.updateForRepayRequest(repayBean, callBackBean, isAllRepay);
         if(updateResult){
             updateResult = this.updateBorrowCreditStautus(borrowNid);
             if(!updateResult){
