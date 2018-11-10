@@ -397,7 +397,6 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         requestBean.setRepayBeanData(JSON.toJSONString(repayBean));
         requestBean.setBankCallBeanData(JSON.toJSONString(bankCallBean));
         requestBean.setAllRepay(isAllRepay);
-        logger.info("updateForRepayRequest 请求参数：" + JSON.toJSONString(repayBean));
         return amTradeClient.repayRequestUpdate(requestBean);
     }
 
