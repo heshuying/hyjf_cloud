@@ -5,12 +5,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SystemConfig {
-	
-	@Value("${hyjf.env.test}")
-	private boolean envTest;
-	
-    @Value("${hostFtp.hostName}")
-    public String ftpHostName;
 
     @Value("${hostFtp.userName}")
     public String ftpUserName;
@@ -33,36 +27,11 @@ public class SystemConfig {
     @Value("${evefile.name}")
     public String eveFileName;
 
-    @Value("${batch.repay.verify.url}")
-    private String repayVerifyUrl;
-
-    @Value("${batch.repay.result.url}")
-    private String repayResultUrl;
-
     @Value("${hyjf.bank.instcode}")
     private String bankInstcode;
 
     @Value("${hyjf.bank.bankcode}")
     private String bankBankcode;
-
-     /** 风车理财回调服务器url */
-     @Value("${wrb.callback.notify.url}")
-     private String WRB_CALLBACK_NOTIFY_URL;
-     
-    @Value("${hyjf.mail.loadrepay}")
-    private String[] loadRepayMailAddrs;
-
-    /**
-     * 测试环境发送邮件列表
-     */
-    @Value("${hyjf.alerm.email.test}")
-    private String hyjfAlertEmailTest;
-
-    /**
-     * 正式环境发送邮件列表
-     */
-    @Value("${hyjf.alerm.email}")
-    private String hyjfAlertEmail;
     
     @Value("${hyjf.web.host}")
     private String webHost;
@@ -91,14 +60,6 @@ public class SystemConfig {
 
     public void setBankBankcode(String bankBankcode) {
         this.bankBankcode = bankBankcode;
-    }
-
-    public String getFtpHostName() {
-        return ftpHostName;
-    }
-
-    public void setFtpHostName(String ftpHostName) {
-        this.ftpHostName = ftpHostName;
     }
 
     public String getFtpUserName() {
@@ -155,62 +116,6 @@ public class SystemConfig {
 
     public void setEveFileName(String eveFileName) {
         this.eveFileName = eveFileName;
-    }
-
-	public String getRepayVerifyUrl() {
-		return repayVerifyUrl;
-	}
-
-	public void setRepayVerifyUrl(String repayVerifyUrl) {
-		this.repayVerifyUrl = repayVerifyUrl;
-	}
-
-	public String getRepayResultUrl() {
-		return repayResultUrl;
-	}
-
-	public void setRepayResultUrl(String repayResultUrl) {
-		this.repayResultUrl = repayResultUrl;
-	}
-
-    public String getWRB_CALLBACK_NOTIFY_URL() {
-        return WRB_CALLBACK_NOTIFY_URL;
-    }
-
-    public void setWRB_CALLBACK_NOTIFY_URL(String WRB_CALLBACK_NOTIFY_URL) {
-        this.WRB_CALLBACK_NOTIFY_URL = WRB_CALLBACK_NOTIFY_URL;
-    }
-
-	public boolean isEnvTest() {
-		return envTest;
-	}
-
-	public void setEnvTest(boolean envTest) {
-		this.envTest = envTest;
-	}
-
-	public String[] getLoadRepayMailAddrs() {
-		return loadRepayMailAddrs;
-	}
-
-	public void setLoadRepayMailAddrs(String[] loadRepayMailAddrs) {
-		this.loadRepayMailAddrs = loadRepayMailAddrs;
-	}
-
-    public String getHyjfAlertEmailTest() {
-        return hyjfAlertEmailTest;
-    }
-
-    public void setHyjfAlertEmailTest(String hyjfAlertEmailTest) {
-        this.hyjfAlertEmailTest = hyjfAlertEmailTest;
-    }
-
-    public String getHyjfAlertEmail() {
-        return hyjfAlertEmail;
-    }
-
-    public void setHyjfAlertEmail(String hyjfAlertEmail) {
-        this.hyjfAlertEmail = hyjfAlertEmail;
     }
 
     public String getWebHost() {
