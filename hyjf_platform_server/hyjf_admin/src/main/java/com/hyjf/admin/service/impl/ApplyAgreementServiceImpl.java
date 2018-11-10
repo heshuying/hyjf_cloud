@@ -16,6 +16,7 @@ import com.hyjf.admin.service.ApplyAgreementService;
 import com.hyjf.admin.service.AutoTenderExceptionService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
+import com.hyjf.am.response.admin.ApplyAgreementInfoResponse;
 import com.hyjf.am.response.trade.ApplyAgreementResponse;
 import com.hyjf.am.response.trade.BorrowRepayAgreementResponse;
 import com.hyjf.am.resquest.admin.*;
@@ -630,7 +631,9 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         applyAgreementInfo.setUserId(repayOrgUserId);//投资人(出让人)
         applyAgreementInfo.setCreditUserId(creditUserId+"");//承接人-垫付机构
         applyAgreementInfo.setStatus(transType);
-        amTradeClient.saveApplyAgreementInfo(applyAgreementInfo);
+        logger.info("--------------------填充所有债转信息getFddGenerateContractBean:applyAgreementInfo:"+JSONObject.toJSON(applyAgreementInfo));
+        ApplyAgreementInfoResponse response = amTradeClient.saveApplyAgreementInfo(applyAgreementInfo);
+        logger.info("--------------------填充所有债转信息getFddGenerateContractBean:ApplyAgreementInfoResponse:"+JSONObject.toJSON(response));
         bean.setBorrowNid(borrow_nid);//标的编号
         bean.setRepayPeriod(repay_period);//期数
         bean.setTransType(transType);//交易类型

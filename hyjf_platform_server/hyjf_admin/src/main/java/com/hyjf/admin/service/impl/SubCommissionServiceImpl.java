@@ -92,7 +92,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
         //校验参数
         this.checkParam(request);
         // 调用江西银行接口分佣
-/*        try {*/
+        try {
             BankCallBean bean = new BankCallBean();
             String channel = BankCallConstant.CHANNEL_PC;
             String orderDate = GetOrderIdUtils.getOrderDate();
@@ -127,15 +127,12 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
                 BankCallBean resultBean = BankCallUtils.callApiBg(bean);
 
                 String retCode = resultBean.getRetCode() == null ? "" : resultBean.getRetCode();
-
+                logger.info("处理前retCode:[{}],处理后retCode:[{}]",resultBean.getRetCode(),retCode);
                 // 银行返回错误信息
                 if(StringUtils.isNotBlank(retCode) && !"null".equals(retCode)){
                     String errorMsg = amConfigClient.getBankRetMsg(resultBean.getRetCode() == null ? "" : resultBean.getRetCode());
                     request.setErrorMsg(errorMsg);
-                }else{
-                    logger.info("处理前retCode:[{}],处理后retCode:[{}]",resultBean.getRetCode(),retCode);
                 }
-
                 request.setResultBean(CommonUtils.convertBean(resultBean,BankCallBeanVO.class));
                 request.setAdminSystemVO(adminSystemVO);
 
@@ -268,12 +265,12 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
                     return jsonObject;
                 }
             }
-/*        } catch (Exception e) {
+        } catch (Exception e) {
             logger.info("转账发生异常:异常信息:[" + e.getMessage() + "].");
-            logger.info("转账发生异常:"+e);
+            logger.info("转账发生异常:"+e.toString());
             CheckUtil.check(false,MsgEnum.ERR_AMT_TRANSFER);
             return jsonObject;
-        }*/
+        }
         return jsonObject;
     }
 

@@ -479,13 +479,6 @@ public interface AmUserClient {
 	BankCardVO getBankCardByUserId(Integer userId);
 
 	/**
-	 * 插入各种信息
-	 * @param userActionUtmRequest
-	 * @return
-	 */
-	UserVO insertUserActionUtm(UserActionUtmRequest userActionUtmRequest);
-
-	/**
 	 * 插入测评结果
 	 * @param userId
 	 * @param countScore

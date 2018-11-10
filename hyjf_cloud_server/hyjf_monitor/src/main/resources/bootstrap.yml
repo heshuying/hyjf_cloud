@@ -1,6 +1,10 @@
 spring:
   application:
     name: MONITOR-SERVER
+  cloud: 
+   config:
+      uri: http://micoserver:2222/
+      name: MONITOR-SERVER
   profiles:
     active: dev
   security:

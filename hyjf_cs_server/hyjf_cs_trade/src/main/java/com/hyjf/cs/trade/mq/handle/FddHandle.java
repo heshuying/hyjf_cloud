@@ -1235,7 +1235,7 @@ public class FddHandle {
 	 * @param tenderCreditAssignedBean
 	 * @return
 	 */
-	private Map<String,Object> selectHJHUserCreditContract(CreditAssignedBean tenderCreditAssignedBean) {
+	public Map<String,Object> selectHJHUserCreditContract(CreditAssignedBean tenderCreditAssignedBean) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		// 获取债转投资信息
 		//查询 hyjf_hjh_debt_credit_tender 表
@@ -1478,6 +1478,7 @@ public class FddHandle {
 				FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET == transType){// 垫付计划债转服务协议
 		    logger.info("--------------------------------垫付计划债转服务协议获取签署信息contract_id："+contract_id);
 			ApplyAgreementInfoVO applyAgreementInfo =  this.amTradeClient.selectApplyAgreementInfoByContractId(contract_id);
+			logger.info("--------------------------------垫付计划债转服务协议获取签署信息applyAgreementInfo："+JSONObject.toJSON(applyAgreementInfo));
 			if (applyAgreementInfo != null ) {
 				userId = Integer.valueOf(applyAgreementInfo.getUserId());// 承接人
 				borrowNid = applyAgreementInfo.getBorrowNid();// 原标的号
