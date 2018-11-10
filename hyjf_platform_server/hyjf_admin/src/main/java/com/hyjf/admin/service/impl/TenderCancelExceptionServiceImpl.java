@@ -103,7 +103,7 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
         BankOpenAccountVO bankAccount = amUserClient.searchBankOpenAccount(userId);
         if (Validator.isNull(bankAccount)) {
             jsonObject.put("status","error");
-            jsonObject.put("result","投资撤销失败，请联系客服！");
+            jsonObject.put("result","投资人的账户信息不存在");
             return jsonObject;
         }
         String accountId = bankAccount.getAccount();
@@ -111,8 +111,10 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
         boolean bidCancelFlag = false;
         BankCallBean bean = this.bidCancel(userId, accountId, productId, orgOrderId, txAmount.toString(),adminSystemVO);
         logger.info("bean:[{}]", JSON.toJSONString(bean));
+        String retCode = "";
+        String retMsg = "投资撤销失败，请联系客服！";
         if (Validator.isNotNull(bean)) {
-            String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
+            retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
             if (retCode.equals(BankCallConstant.RESPCODE_SUCCESS)) {
                 bidCancelFlag = true;
             } else if (retCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_EXIST1) || retCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_EXIST2)) {
@@ -141,8 +143,11 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
                 e.printStackTrace();
             }
         }
+        if(StringUtils.isNotBlank(retCode)){
+            retMsg = amConfigClient.getBankRetMsg(retCode);
+        }
         jsonObject.put("status","error");
-        jsonObject.put("result","投资撤销失败，请联系客服！");
+        jsonObject.put("result",retMsg);
         return jsonObject;
     }
 
