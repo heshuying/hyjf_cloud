@@ -62,7 +62,6 @@ public class AdminSystemController extends BaseConfigController {
 		AdminSystem adminSystem = new AdminSystem();
 		adminSystem.setUsername(adminSystemR.getUsername());
 		adminSystem.setPassword(MD5.toMD5Code(adminSystemR.getPassword()));
-		adminSystem.setState("NOT CHECK");
 		AdminSystem adminSystemr = adminSystemService.getUserInfo(adminSystem);
 		if (adminSystemr != null) {
 			AdminSystemVO asv = new AdminSystemVO();

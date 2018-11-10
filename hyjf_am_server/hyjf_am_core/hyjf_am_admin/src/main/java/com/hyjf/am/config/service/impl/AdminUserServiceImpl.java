@@ -204,6 +204,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 			criteria.andIdNotEqualTo(id);
 		}
 		criteria.andMobileEqualTo(mobile);
+		criteria.andDelFlagEqualTo(0);
 		int cnt = adminMapper.countByExample(example);
 		return cnt;
 	}
@@ -220,6 +221,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 		if (Validator.isNotNull(id)) {
 			criteria.andIdNotEqualTo(id);
 		}
+		criteria.andDelFlagEqualTo(0);
 		criteria.andUsernameEqualTo(username);
 		//criteria.andDelFlagEqualTo("0");// 未删除
 		int cnt = adminMapper.countByExample(example);
@@ -238,6 +240,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 		if (Validator.isNotNull(id)) {
 			criteria.andIdNotEqualTo(id);
 		}
+		criteria.andDelFlagEqualTo(0);
 		criteria.andEmailEqualTo(email);
 		int cnt = adminMapper.countByExample(example);
 		return cnt;
