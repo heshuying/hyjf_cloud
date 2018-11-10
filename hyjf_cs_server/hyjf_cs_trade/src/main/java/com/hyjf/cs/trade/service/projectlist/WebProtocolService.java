@@ -14,4 +14,11 @@ public interface WebProtocolService{
      * @date 2018/10/18 11:34
      */
     public File creditPaymentPlan(ProtocolRequest form, Integer userId, HttpServletRequest request, HttpServletResponse response);
+
+    /**
+     * 债转投资协议
+     * @author zhangyk
+     * @date 2018/11/10 14:03
+     */
+    public void downloadIntermediaryPdf(ProtocolRequest form, Integer userId, HttpServletRequest request, HttpServletResponse response);
 }
