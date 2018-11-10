@@ -127,15 +127,12 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
                 BankCallBean resultBean = BankCallUtils.callApiBg(bean);
 
                 String retCode = resultBean.getRetCode() == null ? "" : resultBean.getRetCode();
-
+                logger.info("处理前retCode:[{}],处理后retCode:[{}]",resultBean.getRetCode(),retCode);
                 // 银行返回错误信息
                 if(StringUtils.isNotBlank(retCode) && !"null".equals(retCode)){
                     String errorMsg = amConfigClient.getBankRetMsg(resultBean.getRetCode() == null ? "" : resultBean.getRetCode());
                     request.setErrorMsg(errorMsg);
-                }else{
-                    logger.info("处理前retCode:[{}],处理后retCode:[{}]",resultBean.getRetCode(),retCode);
                 }
-
                 request.setResultBean(CommonUtils.convertBean(resultBean,BankCallBeanVO.class));
                 request.setAdminSystemVO(adminSystemVO);
 
