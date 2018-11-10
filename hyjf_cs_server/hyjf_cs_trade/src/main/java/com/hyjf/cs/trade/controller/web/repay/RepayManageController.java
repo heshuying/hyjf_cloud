@@ -484,7 +484,7 @@ public class RepayManageController extends BaseTradeController {
                 repayManageService.addFreezeLog(userVO.getUserId(), orderId, account, requestBean.getBorrowNid(), repayTotal, userVO.getUsername());
                 // 申请还款冻结资金
                 // 调用江西银行还款申请冻结资金
-                return repayManageService.getBalanceFreeze(userVO, requestBean.getBorrowNid(), repayBean, orderId, account, webResult);
+                return repayManageService.getBalanceFreeze(userVO, requestBean.getBorrowNid(), repayBean, orderId, account, webResult, isAllRepay);
             }
         } catch (Exception e) {
             logger.error("还款申请冻结资金异常", e);
@@ -1057,7 +1057,7 @@ public class RepayManageController extends BaseTradeController {
                         // 还款后变更数据
                         callBackBean.setOrderId(orderId);
                         //还款后变更数据
-                        boolean updateResult = this.repayManageService.updateForRepayRequest(repay, callBackBean);
+                        boolean updateResult = this.repayManageService.updateForRepayRequest(repay, callBackBean, isAllRepay);
                         if (updateResult) {
                             // 如果有正在出让的债权,先去把出让状态停止
                             this.repayManageService.updateBorrowCreditStautus(borrowNid);
