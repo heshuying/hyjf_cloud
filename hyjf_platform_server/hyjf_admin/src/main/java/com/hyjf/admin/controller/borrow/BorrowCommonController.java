@@ -886,9 +886,9 @@ public class BorrowCommonController extends BaseController {
 						}else if(rowNum == 46){//户籍地
 							resultMap.put("domicile", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 47){//在平台逾期次数
-							resultMap.put("overdueTimes", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("overdueTimes", this.getValue(hssfRow.getCell(1)).replace(".0", ""));
 						}else if(rowNum == 48){//在平台逾期金额
-							resultMap.put("overdueAmount", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("overdueAmount", this.getValue(hssfRow.getCell(1)).replace(".0", ""));
 						}else if(rowNum == 49){//涉诉情况
 							resultMap.put("litigation", this.getValue(hssfRow.getCell(1)));
 						}
