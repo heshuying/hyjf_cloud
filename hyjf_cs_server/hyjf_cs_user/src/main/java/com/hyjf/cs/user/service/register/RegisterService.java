@@ -117,21 +117,6 @@ public interface RegisterService extends BaseUserService {
     UserRegistResult wechatCheckParam(String mobile, String password, String reffer, String verificationCode);
 
     /**
-     * 保存用户信息
-     *
-     * @param mobile
-     * @param password
-     * @param verificationCode
-     * @param reffer
-     * @param loginIp
-     * @param platform
-     * @param utm_id
-     * @param utm_source
-     * @return
-     */
-    UserVO insertUserActionUtm(String mobile, String password, String verificationCode, String reffer, String loginIp, String platform, String utm_id, String utm_source);
-
-    /**
      * 登录操作
      *
      * @param

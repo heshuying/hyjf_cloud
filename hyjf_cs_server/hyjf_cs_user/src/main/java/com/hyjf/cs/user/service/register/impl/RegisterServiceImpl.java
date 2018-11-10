@@ -8,7 +8,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
-import com.hyjf.am.resquest.user.UserActionUtmRequest;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -45,7 +44,6 @@ import com.hyjf.cs.user.util.GetInfoByUserIp;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import com.netflix.hystrix.contrib.javanica.annotation.DefaultProperties;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -531,23 +529,6 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             return vo;
         }
         return vo;
-    }
-
-    /**
-     * 保存用户信息
-     */
-    @Override
-    public UserVO insertUserActionUtm(String mobile, String password, String verificationCode, String reffer, String loginIp, String platform, String utm_id, String utm_source) {
-        UserActionUtmRequest request = new UserActionUtmRequest();
-        request.setMobile(mobile);
-        request.setPassword(password);
-        request.setVerificationCode(verificationCode);
-        request.setReffer(reffer);
-        request.setLoginIp(loginIp);
-        request.setPlatform(platform);
-        request.setUtm_id(utm_id);
-        request.setUtm_source(utm_source);
-        return amUserClient.insertUserActionUtm(request);
     }
 
     /**

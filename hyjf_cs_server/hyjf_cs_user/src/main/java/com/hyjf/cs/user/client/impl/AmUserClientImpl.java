@@ -1007,22 +1007,6 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
-	/**
-	 * 插入各种信息
-	 * @auth sunpeikai
-	 * @param
-	 * @return
-	 */
-	@Override
-	public UserVO insertUserActionUtm(UserActionUtmRequest userActionUtmRequest) {
-		String url = userService + "/user/insertUserActionUtm";
-		UserResponse response = restTemplate.postForEntity(url,userActionUtmRequest,UserResponse.class).getBody();
-		if (Response.isSuccess(response)) {
-			return response.getResult();
-		}
-		return null;
-	}
-
 	@Override
 	public UserEvalationResultVO skipEvaluate(Integer userId, int countScore) {
 		UserEvalationResultResponse response = restTemplate.getForEntity(userService+"/user/skipEvaluate/"+userId+"/"+countScore,UserEvalationResultResponse.class).getBody();
