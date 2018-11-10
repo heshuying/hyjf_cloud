@@ -90,12 +90,12 @@ public class BorrowTenderController extends BaseTradeController {
     @ResponseBody
     public BankCallResult borrowTenderBgReturn(@RequestBody BankCallBean bean ,Integer platform, @RequestParam("couponGrantId") String couponGrantId) {
         logger.info("web端散标投资异步处理start,userId:{}", bean.getLogUserId());
-        BankCallResult result =null ;
+        BankCallResult result ;
         try{
             if (platform != null && platform.intValue() >= 0) {
                 bean.setLogClient(platform);
             }
-            //result = borrowTenderService.borrowTenderBgReturn(bean,couponGrantId);
+            result = borrowTenderService.borrowTenderBgReturn(bean,couponGrantId);
         }catch (CheckException e){
             throw e;
         }finally {
