@@ -2424,6 +2424,6 @@ public interface AmTradeClient {
      * @param contractId
      * @return com.hyjf.am.response.admin.ApplyAgreementInfoResponse
      **/
-    ApplyAgreementInfoVO selectApplyAgreementInfoByContractId(String contractId);
+    List<ApplyAgreementInfoVO>  selectApplyAgreementInfoByContractId(String contractId);
 
 }
