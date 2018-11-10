@@ -45,17 +45,5 @@ public class WebProtocolController extends BaseController {
         return file;
     }
 
-    /**
-     *
-     * @param request
-     * 原接口：com.hyjf.web.agreement.CreateAgreementController.createAgreementPDFFile()
-     */
-    @ApiOperation(value = "协议下载", notes = "协议下载")
-    @GetMapping(value = "/creditPaymentPlan2")
-    public void homeBorrowProjectList2(@ModelAttribute ProtocolRequest form, HttpServletRequest request, HttpServletResponse response,@RequestHeader(value = "userId",required = false) Integer userId){
-        File  file = webProtocolService.creditPaymentPlan(form,userId,request,response);
-        if (null == file){
-            logger.info("get result file is null");
-        }
-    }
+
 }

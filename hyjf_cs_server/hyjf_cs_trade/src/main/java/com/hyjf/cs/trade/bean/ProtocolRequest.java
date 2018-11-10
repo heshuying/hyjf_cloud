@@ -16,6 +16,16 @@ public class ProtocolRequest implements Serializable {
 
     private String creditUserId;
 
+    private String random;
+
+    public String getRandom() {
+        return random;
+    }
+
+    public void setRandom(String random) {
+        this.random = random;
+    }
+
     public String getCreditUserId() {
         return creditUserId;
     }
