@@ -309,7 +309,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         //应还本金-当期
         BigDecimal recoverCapital = borrowRecover.getRecoverCapital();
         //当前期数
-        int repay_period = borrowRecoverP.getRecoverPeriod();
+        int repay_period = borrowRecover.getRecoverPeriod();
         int recoverUserId= borrowRecover.getUserId();
         List<CreditRepayVO> creditRepayListPlan = this.selectCreditRepay(nid,repay_period);
         if(creditRepayListPlan!=null && creditRepayListPlan.size()>0){//债转
@@ -396,7 +396,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         //应还本金-当期
         BigDecimal recoverCapital = borrowRecover.getRecoverCapital();
         //当前期数
-        int repay_period = borrowRecoverP.getRecoverPeriod();
+        int repay_period = borrowRecover.getRecoverPeriod();
         int recoverUserId= borrowRecover.getUserId();
         List<CreditRepayVO> creditRepayListPlan = this.selectCreditRepay(nid,repay_period);
         if(creditRepayListPlan!=null && creditRepayListPlan.size()>0){//债转
