@@ -25,6 +25,8 @@ public class UserInvestListBeanRequest extends WebUserInvestListCustomizeVO impl
 
     public String flag;
 
+    private String random;
+
     //承接人id
     public String creditUserId;
 
@@ -125,5 +127,13 @@ public class UserInvestListBeanRequest extends WebUserInvestListCustomizeVO impl
 
     public void setLimitEnd(int limitEnd) {
         this.limitEnd = limitEnd;
+    }
+
+    public String getRandom() {
+        return random;
+    }
+
+    public void setRandom(String random) {
+        this.random = random;
     }
 }

@@ -304,7 +304,7 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
         if(openAccountRecords != null && openAccountRecords.size() > 0){
             applyAgreementInfo.setId(openAccountRecords.get(0).getId());
             applyAgreementInfo.setUpdateTime(new Date());
-            applyAgreementInfo.setUpdateTime(openAccountRecords.get(0).getCreateTime());
+            applyAgreementInfo.setCreateTime(openAccountRecords.get(0).getCreateTime());
             return this.applyAgreementInfoMapper.updateByPrimaryKey(applyAgreementInfo);
 
         }else {
