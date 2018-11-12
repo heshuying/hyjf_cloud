@@ -3,8 +3,8 @@ package com.hyjf.cs.message.controller.app.operationaldata;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hyjf.cs.message.bean.ic.OperationMongoGroupEntity;
-import com.hyjf.cs.message.bean.ic.OperationReportEntity;
+import com.hyjf.cs.message.bean.ic.OperationGroupReport;
+import com.hyjf.cs.message.bean.ic.OperationReport;
 import com.hyjf.cs.message.bean.ic.SubEntity;
 import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import io.swagger.annotations.Api;
@@ -52,7 +52,7 @@ public class OperationalDataController {
 		result.put("statusDesc", "成功");
 		try {
 
-			OperationReportEntity oe = platDataStatisticsService.findOneOperationReportEntity();
+			OperationReport oe = platDataStatisticsService.findOneOperationReportEntity();
 			if(oe==null){
 				result.put("status", "999");
 				result.put("statusDesc", "暂无任何数据");
@@ -72,7 +72,7 @@ public class OperationalDataController {
 			
 			// 获取12个月的数据
 
-			List<OperationReportEntity> list = platDataStatisticsService.findOperationReportEntityList();
+			List<OperationReport> list = platDataStatisticsService.findOperationReportEntityList();
 
 			List<String> xlist = new ArrayList<String>();
 			List<String> yMoneytlist = new ArrayList<String>();
@@ -116,7 +116,7 @@ public class OperationalDataController {
 		result.put("status", "000");
 		result.put("statusDesc", "成功");
 		try {
-			OperationReportEntity oe = platDataStatisticsService.findOneOperationReportEntity();
+			OperationReport oe = platDataStatisticsService.findOneOperationReportEntity();
 			JSONObject detail = new JSONObject();
 			if(oe != null){
 				detail.put("CumulativeTransactionTotal", oe.getWillPayMoney());
@@ -167,7 +167,7 @@ public class OperationalDataController {
 		result.put("status", "000");
 		result.put("statusDesc", "成功");
 		try {
-			OperationMongoGroupEntity oe = platDataStatisticsService.findOneOperationMongoGroupEntity();
+			OperationGroupReport oe = platDataStatisticsService.findOneOperationMongoGroupEntity();
 			if(oe==null){
 				result.put("status", "999");
 				result.put("statusDesc", "暂无任何数据");
@@ -204,7 +204,7 @@ public class OperationalDataController {
 		result.put("statusDesc", "成功");
 		try {
 			JSONObject info = new JSONObject();
-			OperationMongoGroupEntity oe = platDataStatisticsService.findOneOperationMongoGroupEntity();
+			OperationGroupReport oe = platDataStatisticsService.findOneOperationMongoGroupEntity();
 			if(oe==null){
 				result.put("status", "999");
 				result.put("statusDesc", "暂无任何数据");
@@ -212,8 +212,8 @@ public class OperationalDataController {
 			}
 			// 投资人性别的分布
 			Map<Integer, Integer> sexMap = oe.getInvestorSexMap();
-			int maleCount = sexMap.get(OperationMongoGroupEntity.MALE);
-			int femaleCount = sexMap.get(OperationMongoGroupEntity.FEMALE);
+			int maleCount = sexMap.get(OperationGroupReport.MALE);
+			int femaleCount = sexMap.get(OperationGroupReport.FEMALE);
 			float malePer = (float) maleCount * 100 / (maleCount + femaleCount);
 			float femalePer = (float) femaleCount * 100 / (maleCount + femaleCount);
 			info.put("InvestorRegionMenRate", oe.formatDate(malePer) + "%");
@@ -221,20 +221,20 @@ public class OperationalDataController {
 
 			// 投资人年龄分布
 			Map<Integer, Integer> ageMap = oe.getInvestorAgeMap();
-			int r1 = ageMap.get(OperationMongoGroupEntity.ageRange1);
-			int r2 = ageMap.get(OperationMongoGroupEntity.ageRange2);
-			int r3 = ageMap.get(OperationMongoGroupEntity.ageRange3);
-			int r4 = ageMap.get(OperationMongoGroupEntity.ageRange4);
+			int r1 = ageMap.get(OperationGroupReport.ageRange1);
+			int r2 = ageMap.get(OperationGroupReport.ageRange2);
+			int r3 = ageMap.get(OperationGroupReport.ageRange3);
+			int r4 = ageMap.get(OperationGroupReport.ageRange4);
 			int total = r1 + r2 + r3 + r4;
 
 			List<String> list = new ArrayList<String>();
-			list.add(oe.getAge(OperationMongoGroupEntity.ageRange1Desc, OperationMongoGroupEntity.ageRange1Color,
+			list.add(oe.getAge(OperationGroupReport.ageRange1Desc, OperationGroupReport.ageRange1Color,
 					oe.formatDate((float) r1 * 100 / total)));
-			list.add(oe.getAge(OperationMongoGroupEntity.ageRange2Desc, OperationMongoGroupEntity.ageRange2Color,
+			list.add(oe.getAge(OperationGroupReport.ageRange2Desc, OperationGroupReport.ageRange2Color,
 					oe.formatDate((float) r2 * 100 / total)));
-			list.add(oe.getAge(OperationMongoGroupEntity.ageRange3Desc, OperationMongoGroupEntity.ageRange3Color,
+			list.add(oe.getAge(OperationGroupReport.ageRange3Desc, OperationGroupReport.ageRange3Color,
 					oe.formatDate((float) r3 * 100 / total)));
-			list.add(oe.getAge(OperationMongoGroupEntity.ageRange4Desc, OperationMongoGroupEntity.ageRange4Color,
+			list.add(oe.getAge(OperationGroupReport.ageRange4Desc, OperationGroupReport.ageRange4Color,
 					oe.formatDate((float) r4 * 100 / total)));
 
 			info.put("InvestorAgeList", list);

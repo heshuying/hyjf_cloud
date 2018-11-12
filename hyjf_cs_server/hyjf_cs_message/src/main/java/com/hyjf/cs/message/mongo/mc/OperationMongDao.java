@@ -1,6 +1,6 @@
 package com.hyjf.cs.message.mongo.mc;
 
-import com.hyjf.cs.message.bean.ic.OperationReportEntity;
+import com.hyjf.cs.message.bean.ic.OperationReport;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
@@ -8,15 +8,15 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public class OperationMongDao extends BaseMongoDao<OperationReportEntity> {
+public class OperationMongDao extends BaseMongoDao<OperationReport> {
 
 	
 	@Override
-	protected Class<OperationReportEntity> getEntityClass() {
-		return OperationReportEntity.class;
+	protected Class<OperationReport> getEntityClass() {
+		return OperationReport.class;
 	}
 	@Override
-	public List<OperationReportEntity> find(Query query){
+	public List<OperationReport> find(Query query){
 		return this.mongoTemplate.find(query, getEntityClass());
 	}
 }

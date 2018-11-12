@@ -275,7 +275,13 @@ public class AccessFilter extends ZuulFilter {
         }
 
         // jwt解析token
-        AccessToken accessToken = JwtHelper.parseToken(token);
+        AccessToken accessToken = null;
+        try {
+            accessToken = JwtHelper.parseToken(token);
+        } catch (Exception e) {
+            logger.error("jwt parse token error...", e);
+        }
+
         if (accessToken == null) {
             logger.error("user is not exist...");
             return executeResultOfTokenInvalid(ctx, isNecessary, GatewayConstant.WEB_CHANNEL);

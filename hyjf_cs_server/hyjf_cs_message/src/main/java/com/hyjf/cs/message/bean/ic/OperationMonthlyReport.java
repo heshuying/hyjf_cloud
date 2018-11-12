@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.message.bean.mc;
+package com.hyjf.cs.message.bean.ic;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -11,10 +11,10 @@ import java.math.BigDecimal;
 /**
  * 月度运营报告
  * @author tanyy
- * @version MonthlyOperationReportEntity, v0.1 2018/6/27 10:01
+ * @version OperationMonthlyReport, v0.1 2018/6/27 10:01
  */
 @Document(collection = "ht_operation_monthly_report")
-public class MonthlyOperationReportEntity implements Serializable {
+public class OperationMonthlyReport implements Serializable {
 
     private String id;
 
