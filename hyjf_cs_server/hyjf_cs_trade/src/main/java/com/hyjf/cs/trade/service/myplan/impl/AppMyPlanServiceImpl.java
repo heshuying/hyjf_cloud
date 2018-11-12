@@ -387,7 +387,14 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
     private void copyPlanBaseInfoToResult(MyPlanDetailResultBean result, UserHjhInvistDetailCustomizeVO customize,
                                           String type) {
         MyPlanDetailResultBean.ProjectIntr projectIntr = result.getProjectIntr();
-
+        // 计划处于投资中状态(orderStatus1锁定中 2退出中 3已退出)
+        String orderStatus = customize.getOrderStatus();
+        if(StringUtils.isNotBlank(orderStatus)){
+            //非锁定中,app端隐藏投资服务协议按钮
+            projectIntr.setType(orderStatus);
+        }else{
+            projectIntr.setType("0");
+        }
         // 计划处于投资中状态
         List<String> statusList = Arrays.asList("0", "2", "99", "9");
         // 投资中状态不显示持有列表
