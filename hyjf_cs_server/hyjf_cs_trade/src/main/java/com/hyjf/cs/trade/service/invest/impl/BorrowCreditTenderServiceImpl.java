@@ -832,7 +832,6 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     }
                     borrowRecover.setCreditAmount(borrowRecover.getCreditAmount().add(creditTender.getAssignCapital()));
                     borrowRecover.setCreditInterestAmount(borrowRecover.getCreditInterestAmount().add(creditTender.getAssignInterestAdvance()));
-                    borrowRecover.setCreditStatus(borrowCredit.getCreditStatus());
                     // 已收债转管理费
                     borrowRecover.setCreditManageFee(borrowRecover.getCreditManageFee().add(perManageSum));
                     logger.info("borrowCredit.getCreditCapitalAssigned():{}    borrowCredit.getCreditCapital():{}",borrowCredit.getCreditCapitalAssigned(),borrowCredit.getCreditCapital());
@@ -842,7 +841,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     }
                     // 债权是否结束状态
                     borrowRecover.setDebtStatus(debtEndFlag);
-
+                    borrowRecover.setCreditStatus(borrowCredit.getCreditStatus());
                     creditTenderBg.setAssignAccountNew(assignAccountNew);
                     creditTenderBg.setBorrowCredit(borrowCredit);
                     creditTenderBg.setCreditTender(creditTender);
