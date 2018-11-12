@@ -679,7 +679,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                         .replace("{statusDesc}",URLEncoder.encode(CustomConstants.APP_STATUS_DESC_SUCCESS,"utf-8"))
                         .replace(accountStr,URLEncoder.encode(request.getCreditCapital(),"utf-8"))
                         .replace(priceStr,URLEncoder.encode(request.getCreditPrice(),"utf-8"))
-                        .replace(endTimeStr, URLEncoder.encode(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(request.getCreditEndTime()),"utf-8"));
+                        .replace(endTimeStr, URLEncoder.encode(GetDate.timestamptoStrYYYYMMDD(request.getCreditEndTime()),"utf-8"));
                 // 业务手动抛出的异常
                 // 保存成功后,发送神策统计数据
                 if(StringUtils.isNotEmpty(request.getPresetProps())){
