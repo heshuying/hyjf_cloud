@@ -172,8 +172,10 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
                             }
                             tenderAgreementCout++;
                         }
-                        if (tenderAgreementCout == applyAgreement.getAgreementNumber()) {
+                        if (tenderAgreementCout == applyAgreement.getAgreementNumber() && applyAgreement.getAgreementNumber()>0) {
                             applyAgreement.setStatus(3);
+                        }else{
+                            applyAgreement.setStatus(1);
                         }
                     } else {
                         applyAgreement.setStatus(1);
