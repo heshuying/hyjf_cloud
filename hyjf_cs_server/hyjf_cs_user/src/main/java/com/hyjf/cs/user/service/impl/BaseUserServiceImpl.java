@@ -659,6 +659,9 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		if (retCode==null){
 			return "未知错误";
 		}
+		if(retCode.equals("00000000")){
+			return "00000000";
+		}
 		//根据retCode获取retMsg
 		String retMsg = this.getBankRetMsg(retCode);
 		return retMsg;

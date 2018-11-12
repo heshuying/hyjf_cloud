@@ -123,7 +123,8 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
             jsonObject.put("isUpdate",isUpdate);
         }else{
             // 调用银行接口失败
-            updateSubCommission(request);
+            boolean isUpdate = updateSubCommission(request);
+            jsonObject.put("isUpdate",isUpdate);
         }
         return jsonObject;
     }
@@ -134,7 +135,7 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
      * @param request
      */
     @Transactional(rollbackFor = Exception.class)
-    public void updateSubCommission(SubCommissionRequest request) {
+    public boolean updateSubCommission(SubCommissionRequest request) {
         BankCallBeanVO bean = request.getResultBean();
         AdminSystemVO adminSystemVO = request.getAdminSystemVO();
 
@@ -147,8 +148,9 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
             subCommission.setUpdateTime(nowTime);
             subCommission.setUpdateUserId(Integer.parseInt(adminSystemVO.getId()));
             subCommission.setUpdateUserName(adminSystemVO.getUsername());
-            subCommissionMapper.updateByPrimaryKeySelective(subCommission);
+            return subCommissionMapper.updateByPrimaryKeySelective(subCommission)>0;
         }
+        return false;
     }
 
     @Transactional(rollbackFor = Exception.class)
