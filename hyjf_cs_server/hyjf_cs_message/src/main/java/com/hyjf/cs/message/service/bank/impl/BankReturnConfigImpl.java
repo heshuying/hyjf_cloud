@@ -3,7 +3,7 @@
  */
 package com.hyjf.cs.message.service.bank.impl;
 
-import com.hyjf.cs.message.bean.mc.BankExclusiveLog;
+import com.hyjf.cs.message.bean.ic.BankExclusiveLog;
 import com.hyjf.cs.message.mongo.mc.BankReturnConfigDao;
 import com.hyjf.cs.message.service.bank.BankReturnConfig;
 import org.springframework.beans.factory.annotation.Autowired;

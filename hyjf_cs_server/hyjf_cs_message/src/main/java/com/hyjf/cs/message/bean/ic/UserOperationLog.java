@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.message.bean.mc;
+package com.hyjf.cs.message.bean.ic;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,11 +10,11 @@ import java.util.Date;
 
 /**
  * @author yaoyong
- * @version UserOperationLogEntity, v0.1 2018/10/8 16:52
+ * @version UserOperationLog, v0.1 2018/10/8 16:52
  *
  */
 @Document(collection = "useroperationlog")
-public class UserOperationLogEntity implements Serializable {
+public class UserOperationLog implements Serializable {
     /**
      * 活动类型：1.登录 2登出 3.开户 4.出借确认 5.转让确认 6.修改交易密码 7.修改登录密码 8.绑定邮箱 9.修改邮箱 10.绑定银行卡 11.解绑银行卡 12.风险测评
      */

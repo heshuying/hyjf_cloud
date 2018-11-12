@@ -75,7 +75,7 @@ public class ApiBankOpenController extends BaseUserController {
         if (uflag == 0) {
             logger.info("保存开户日志失败,手机号:[" + requestBean.getMobile() + "],用户ID:[" + user.getUserId() + "]");
             paramMap.put("status", ErrorCodeConstant.STATUS_CE999999);
-            paramMap.put("statusDesc", "机构编号不能为空");
+            paramMap.put("statusDesc", "请求银行错误");
             return callbackErrorView(paramMap);
         }
         logger.info("开户end");

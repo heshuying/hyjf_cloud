@@ -1,6 +1,6 @@
 package com.hyjf.cs.message.mongo.mc;
 
-import com.hyjf.cs.message.bean.ic.OperationMongoGroupEntity;
+import com.hyjf.cs.message.bean.ic.OperationGroupReport;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import org.springframework.stereotype.Repository;
 
@@ -10,12 +10,12 @@ import org.springframework.stereotype.Repository;
  *
  */
 @Repository
-public class OperationMongoGroupDao extends BaseMongoDao<OperationMongoGroupEntity> {
+public class OperationMongoGroupDao extends BaseMongoDao<OperationGroupReport> {
 
 	
 	@Override
-	protected Class<OperationMongoGroupEntity> getEntityClass() {
-		return OperationMongoGroupEntity.class;
+	protected Class<OperationGroupReport> getEntityClass() {
+		return OperationGroupReport.class;
 	}
 
 }

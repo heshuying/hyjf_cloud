@@ -3,7 +3,7 @@ package com.hyjf.cs.message.mq.consumer;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.datacollect.OperationMongoGroupEntityVO;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.cs.message.bean.ic.OperationMongoGroupEntity;
+import com.hyjf.cs.message.bean.ic.OperationGroupReport;
 import com.hyjf.cs.message.mongo.mc.OperationMongoGroupDao;
 import com.hyjf.cs.message.mq.base.Consumer;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
@@ -58,7 +58,7 @@ public class StatisticsConsumer  extends Consumer {
             OperationMongoGroupEntityVO vo = JSONObject.parseObject(msg.getBody(), OperationMongoGroupEntityVO.class);
             logger.info("StatisticsConsumer 收到消息，开始处理....vo is :{}", vo);
             if (null != vo) {
-                OperationMongoGroupEntity groupEntity = new OperationMongoGroupEntity();
+                OperationGroupReport groupEntity = new OperationGroupReport();
                 BeanUtils.copyProperties(vo,groupEntity);
                 operationMongoGroupDao.insert(groupEntity);
             }
