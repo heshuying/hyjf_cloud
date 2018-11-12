@@ -176,15 +176,12 @@ public class AppPassWordController extends BaseUserController {
         BankCallBean bean = new BankCallBean(userId,txcode, ClientConstants.APP_CLIENT);
         // 同步调用路径
         String retUrl = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/failed?status=99&statusDesc=&logOrdId="+bean.getLogOrderId();
-        String success = systemConfig.getAppFrontHost() +"/user/setting/bankPassword/result/success?status=000&statusDesc=" ;
         retUrl += "&token=1&sign=" +sign;
-        success += "&token=1&sign=" +sign;
         // 异步调用路
         String bgRetUrl = "http://CS-USER" + request.getContextPath() +  CommonConstant.REQUEST_MAPPING
                 + CommonConstant.RETURN_ASY_PASSWORD_ACTION;
 
         bean.setRetUrl(retUrl);
-        bean.setSuccessfulUrl(success);
         bean.setNotifyUrl(bgRetUrl+"?sign=" + sign);
         Map<String,Object> data = passWordService.setAppPassword(bean,user,usersInfo,bankOpenAccount);
         result.setData(data);
@@ -248,7 +245,7 @@ public class AppPassWordController extends BaseUserController {
         UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
         userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE6);
         userOperationLogEntity.setIp(com.hyjf.cs.user.util.GetCilentIP.getIpAddr(request));
-        userOperationLogEntity.setPlatform(request.getParameter("realPlatform")==null?Integer.valueOf(platform):Integer.valueOf(request.getParameter("realPlatform")));
+        userOperationLogEntity.setPlatform(Integer.valueOf(platform));
         userOperationLogEntity.setRemark("");
         userOperationLogEntity.setOperationTime(new Date());
         userOperationLogEntity.setUserName(user.getUsername());

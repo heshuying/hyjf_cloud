@@ -69,6 +69,9 @@ public class CouponCheckServiceImpl implements CouponCheckService {
     @Value("${file.physical.path}")
     private String PHYSICAL_PATH;
 
+    @Value("${admin.front.host}")
+    private String ADMIN_HOST;
+
     /**
      * 查询优惠券列表
      *
@@ -156,17 +159,20 @@ public class CouponCheckServiceImpl implements CouponCheckService {
         FileInputStream in = null;
         OutputStream out = null;
         CouponCheckVO couponCheck = amConfigClient.selectCoupon(Integer.valueOf(id));
-        String fileP = "";
-        String fileN = "";
+        String filePath = "";
+        String fileName = "";
         if (couponCheck != null) {
-            fileP = couponCheck.getFilePath();
-            fileN = couponCheck.getFileName();
+            filePath = couponCheck.getFilePath();
+            fileName = couponCheck.getFileName();
         }
         try {
             response.setHeader("content-disposition",
-                    "attachment;filename=" + URLEncoder.encode(fileN, "utf-8"));
-            response.setContentType("multipart/form-data");
-            in = new FileInputStream(fileP);
+                    "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));
+            logger.info("ADMIN_HOST is : {}", ADMIN_HOST);
+            String path = ADMIN_HOST + filePath;
+            logger.info("path is : {}", path);
+            path = path.replace("/","\\");
+            in = new FileInputStream(path);
             // 创建输出流
             out = response.getOutputStream();
             // 创建缓冲区
@@ -177,30 +183,12 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                 // 输出缓冲区内容到浏览器，实现文件下载
                 out.write(buffer, 0, len);
             }
-            out.flush();
-            // 关闭输出流
-            out.close();
             // 关闭文件流
             in.close();
+            // 关闭输出流
+            out.close();
         } catch (Exception e) {
-            logger.error(couponCheck.getFileName() + "下载失败");
-        } finally {
-            try{
-                if(out != null){
-                    out.flush();
-                    out.close();
-                }
-            }catch (Exception e){
-                logger.info("关闭输出流失败");
-            }
-            // 关闭输入流
-            try{
-                if(in != null){
-                    in.close();
-                }
-            }catch (Exception e){
-                logger.info("关闭输入流失败");
-            }
+            logger.error(couponCheck.getFileName() + "下载失败, 失败原因 ：", e);
         }
     }
 

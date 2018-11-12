@@ -401,7 +401,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             bankCardBean.setIsDefault("2");// 卡类型
 
             Integer bankId = banks.getBankId();
-            JxBankConfigVO jxBankConfigVO = amConfigClient.getBanksConfigByBankId(bankId + "");
+            JxBankConfigVO jxBankConfigVO = amConfigClient.getBankNameByBankId(bankId + "");
             if (jxBankConfigVO != null && StringUtils.isNotEmpty(jxBankConfigVO.getBankName())) {
                 bankCardBean.setBank(jxBankConfigVO.getBankName()==null?"":jxBankConfigVO.getBankName());
                 bankCardBean.setBankCode(jxBankConfigVO.getBankCode()==null?"":jxBankConfigVO.getBankCode());
@@ -922,7 +922,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         if (bankCard != null) {
             Integer bankId = bankCard.getBankId();
             // 取得费率
-            JxBankConfigVO jxBankConfigVO = amConfigClient.getBanksConfigByBankId(bankId+"");
+            JxBankConfigVO jxBankConfigVO = amConfigClient.getBankNameByBankId(bankId+"");
             if (jxBankConfigVO != null) {
                 if (Validator.isNotNull(jxBankConfigVO.getFeeWithdraw())) {
                     return jxBankConfigVO.getFeeWithdraw().toString();

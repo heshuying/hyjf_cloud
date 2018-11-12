@@ -92,7 +92,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
         //校验参数
         this.checkParam(request);
         // 调用江西银行接口分佣
-        try {
+/*        try {*/
             BankCallBean bean = new BankCallBean();
             String channel = BankCallConstant.CHANNEL_PC;
             String orderDate = GetOrderIdUtils.getOrderDate();
@@ -205,8 +205,9 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
                         if (attribute != null) {
                             // 查找用户的的推荐人
                             SpreadsUserVO spreadsUserVO = amUserClient.searchSpreadsUserByUserId(receiveUserId);
+                            Integer refUserId = (spreadsUserVO == null || spreadsUserVO.getSpreadsUserId() == null)?null:spreadsUserVO.getSpreadsUserId();
                             UserVO user = amUserClient.findUserById(receiveUserId);
-                            Integer refUserId = spreadsUserVO.getSpreadsUserId();
+
 
                             // 如果是线上员工或线下员工，推荐人的userId和username不插
                             if (user != null && (attribute == 2 || attribute == 3)) {
@@ -221,7 +222,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
                             // 如果是无主单，全插
                             else if (user != null && (attribute == 1)) {
                                 // 查找用户推荐人
-                                EmployeeCustomizeVO employeeCustomizeVO = amUserClient.searchEmployeeBuUserId(receiveUserId);
+                                EmployeeCustomizeVO employeeCustomizeVO = amUserClient.searchEmployeeBuUserId(refUserId);
                                 if (employeeCustomizeVO != null) {
                                     accountWebList.setRegionName(employeeCustomizeVO.getRegionName());
                                     accountWebList.setBranchName(employeeCustomizeVO.getBranchName());
@@ -231,7 +232,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
                             // 如果是有主单
                             else if (user != null && (attribute == 0)) {
                                 // 查找用户推荐人
-                                EmployeeCustomizeVO employeeCustomizeVO = amUserClient.searchEmployeeBuUserId(receiveUserId);
+                                EmployeeCustomizeVO employeeCustomizeVO = amUserClient.searchEmployeeBuUserId(refUserId);
                                 if (employeeCustomizeVO != null) {
                                     accountWebList.setRegionName(employeeCustomizeVO.getRegionName());
                                     accountWebList.setBranchName(employeeCustomizeVO.getBranchName());
@@ -265,12 +266,12 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
                     return jsonObject;
                 }
             }
-        } catch (Exception e) {
+/*        } catch (Exception e) {
             logger.info("转账发生异常:异常信息:[" + e.getMessage() + "].");
             logger.info("转账发生异常:"+e.toString());
             CheckUtil.check(false,MsgEnum.ERR_AMT_TRANSFER);
             return jsonObject;
-        }
+        }*/
         return jsonObject;
     }
 

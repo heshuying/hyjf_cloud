@@ -790,6 +790,11 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                         } else {
                             Transaction tx = jedis.multi();
                             // 事务：计划当前可用额度 = 计划未投前可用余额 - 用户投资额度
+                            if (new BigDecimal(balance).compareTo(decimalAccount) < 0) {
+                                logger.info("计划可用开放额度redis扣除失败redis值不够了：userId:{},planNid{},balance:{}元  decimalAccount:{}", userId, plan.getPlanNid(), balance,decimalAccount);
+                                redisMsgCode = MsgEnum.ERR_AMT_TENDER_INVESTMENT;
+                                throw new CheckException(redisMsgCode);
+                            }
                             BigDecimal lastAccount = new BigDecimal(balance).subtract(decimalAccount);
                             tx.set(redisKey, lastAccount + "");
                             List<Object> result1 = tx.exec();
@@ -799,7 +804,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                                 redisMsgCode = MsgEnum.ERR_AMT_TENDER_INVESTMENT;
                                 throw new CheckException(redisMsgCode);
                             } else {
-                                logger.info("加计划redis操作成功userId:{},平台:{},planNid{},计划扣除后可用开放额度redis", userId, request.getPlatform(), plan.getPlanNid(), lastAccount);
+                                logger.info("加计划redis操作成功userId:{},平台:{},planNid{},计划扣除后可用开放额度redis:{}", userId, request.getPlatform(), plan.getPlanNid(), lastAccount);
                                 // 写队列
                                 break;
                             }
@@ -1047,6 +1052,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             //加入明细表插表成功的前提下，继续
             //crm投资推送
             try {
+                logger.info("投资成功后,发送CRM投资统计MQ:智投服务订单号:[" + planAccede.getAccedeOrderId() + "].");
                 amTradeProducer.messageSendDelay(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(crmInvestMsgBean)),2);
             } catch (Exception e) {
                 logger.error("发送CRM消息失败:" + e.getMessage());

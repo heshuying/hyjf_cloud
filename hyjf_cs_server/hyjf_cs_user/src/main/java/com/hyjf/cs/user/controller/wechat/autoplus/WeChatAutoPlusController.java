@@ -11,7 +11,6 @@ import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.bean.AutoPlusResultBean;
 import com.hyjf.cs.user.bean.BaseMapBean;
@@ -262,12 +261,17 @@ public class WeChatAutoPlusController extends BaseUserController {
     @PostMapping("/searchFiledMess")
     @ApiImplicitParam(name = "param",value = "{logOrdId:String}",dataType = "Map")
     @ResponseBody
-    public AppResult<Object> searchFiledMess(@RequestBody Map<String,String> param) {
+    public WeChatResult<Object> searchFiledMess(@RequestBody Map<String,String> param) {
         logger.info("调用银行失败原因start,logOrdId:{}", param);
-        AppResult<Object> result = new AppResult<Object>();
-        String retMsg = autoPlusService.getFailedMess(param.get("logOrdId"));
+        WeChatResult<Object> result = new WeChatResult<Object>();
         Map<String,String> map = new HashedMap();
-        map.put("error",retMsg);
+        map.put("isSetPassword","0");
+        String retMsg = autoPlusService.getFailedMess(param.get("logOrdId"));
+        if(retMsg.equals("00000000")){
+            map.put("isSetPassword","1");
+        }else {
+            map.put("error",retMsg);
+        }
         result.setData(map);
         result.setStatus("000");
         return result;
