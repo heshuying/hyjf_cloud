@@ -131,7 +131,7 @@ public class ApiBankOpenController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "第三方端用户同步回调", notes = "用户开户")
-    @PostMapping(value = "/return")
+    @RequestMapping(value = "/return")
     public ModelAndView returnPage(HttpServletRequest request) {
         String isSuccess = request.getParameter("isSuccess");
         String url = request.getParameter("callback").replace("*-*-*", "#");
@@ -200,7 +200,7 @@ public class ApiBankOpenController extends BaseUserController {
         } else {
             params.put("status", ErrorCodeConstant.SUCCESS);
             resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
-            params.put("statusDesc", "开户失败,调用银行接口失败");
+            params.put("statusDesc", "开户成功");
             params.put("chkValue", resultBean.getChkValue());
             params.put("accountId", bean.getAccountId());
             params.put("payAllianceCode", bean.getPayAllianceCode());
