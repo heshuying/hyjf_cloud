@@ -204,7 +204,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 		}
 		return null;
 	}
-	@Override
+/*	@Override
 	public JxBankConfigVO getBanksConfigByBankId(String bankId) {
 		JxBankConfigResponse response = restTemplate
 				.getForEntity("http://AM-CONFIG/am-config/config/getBanksConfigByBankId/" + bankId, JxBankConfigResponse.class).getBody();
@@ -212,7 +212,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 			return response.getResult();
 		}
 		return null;
-	}
+	}*/
     @Override
     public Integer getBankInterfaceFlagByType(String type) {
         BankInterfaceResponse response = restTemplate

@@ -1981,13 +1981,13 @@ public class AmTradeClientImpl implements AmTradeClient {
     /**
      * 标的放款记录列表
      *
-     * @param borrowNid
+     * @param nid
      * @param repayPeriod
      * @return
      */
     @Override
-    public List<BorrowRecoverPlanVO> selectBorrowRecoverPlanList(String borrowNid, int repayPeriod) {
-        String url = "http://AM-ADMIN/am-trade/applyAgreement/select_borrow_recover_plan_list/" + borrowNid + "/" + repayPeriod;
+    public List<BorrowRecoverPlanVO> selectBorrowRecoverPlanList(String nid, int repayPeriod) {
+        String url = "http://AM-ADMIN/am-trade/applyAgreement/select_borrow_recover_plan_list/" + nid + "/" + repayPeriod;
         BorrowRecoverPlanResponse response = restTemplate.getForEntity(url, BorrowRecoverPlanResponse.class).getBody();
         if (response != null) {
             return response.getResultList();

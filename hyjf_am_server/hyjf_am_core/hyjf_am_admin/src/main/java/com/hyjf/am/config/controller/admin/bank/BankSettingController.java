@@ -43,7 +43,10 @@ public class BankSettingController {
     @RequestMapping("/list")
     public AdminBankSettingResponse selectBankSettingListByPage(@RequestBody AdminBankSettingRequest adminRequest) {
         AdminBankSettingResponse  response = new AdminBankSettingResponse();
-        List<JxBankConfig> recordList = this.bankSettingService.getRecordList(new JxBankConfig(), -1, -1);
+        JxBankConfig bc=new JxBankConfig();
+        bc.setBankName(adminRequest.getBankName());
+        bc.setPayAllianceCode(adminRequest.getPayAllianceCode());
+        List<JxBankConfig> recordList = this.bankSettingService.getRecordList(bc, -1, -1);
         if (recordList != null) {
             for(JxBankConfig banksConfig : recordList) {
                 // 不支持快捷支付
@@ -52,12 +55,8 @@ public class BankSettingController {
                 }
             }
             Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordList.size(), adminRequest.getPageSize() == 0 ? 10 : adminRequest.getPageSize());
-            JxBankConfig bc=new JxBankConfig();
-            bc.setBankName(adminRequest.getBankName());
-            bc.setPayAllianceCode(adminRequest.getPayAllianceCode());
             response.setRecordTotal(recordList.size());
-            recordList = this.bankSettingService.getRecordList(bc, paginator.getOffset(),
-                    paginator.getLimit());
+            recordList = this.bankSettingService.getRecordList(bc, paginator.getOffset(), paginator.getLimit());
             if(CollectionUtils.isNotEmpty(recordList)){
                 List<JxBankConfigVO> jxBankConfigList = CommonUtils.convertBeanList(recordList, JxBankConfigVO.class);
                 response.setPaginator(paginator);

@@ -3,7 +3,7 @@
  */
 package com.hyjf.cs.message.mongo.mc;
 
-import com.hyjf.cs.message.bean.mc.BankExclusiveLog;
+import com.hyjf.cs.message.bean.ic.BankExclusiveLog;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;

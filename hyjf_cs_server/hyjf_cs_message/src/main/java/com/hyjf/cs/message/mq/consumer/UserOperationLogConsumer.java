@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.cs.message.bean.mc.UserOperationLogEntity;
+import com.hyjf.cs.message.bean.ic.UserOperationLog;
 import com.hyjf.cs.message.mongo.mc.UserOperationLogMongDao;
 import com.hyjf.cs.message.mq.base.Consumer;
 import org.apache.commons.lang3.StringUtils;
@@ -62,7 +62,7 @@ public class UserOperationLogConsumer extends Consumer {
 			logger.debug("UserOperationLogConsumer 收到请求，userOperationLogEntity is：{}", userOperationLogEntity);
 			if (null != userOperationLogEntity&& StringUtils.isNotBlank(userOperationLogEntity.getUserName())) {
 				userOperationLogEntity.setOperationTime(new Date());
-                UserOperationLogEntity operationLogEntity = new UserOperationLogEntity();
+                UserOperationLog operationLogEntity = new UserOperationLog();
                 BeanUtils.copyProperties(userOperationLogEntity,operationLogEntity);
                 userOperationLogMongDao.save(operationLogEntity);
 			}

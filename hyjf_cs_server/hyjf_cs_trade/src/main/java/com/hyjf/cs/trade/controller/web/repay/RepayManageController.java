@@ -897,8 +897,8 @@ public class RepayManageController extends BaseTradeController {
      * @author renxingchen
      */
     @ApiOperation(value = "下载借款用户的协议", notes = "下载借款用户的协议")
-    @GetMapping("/downloadBorrowerPdf/{borrowNid}")
-    public void downloadBorrowerPdf(@RequestHeader(value = "userId") Integer currentUserId, @PathVariable String borrowNid, HttpServletRequest request, HttpServletResponse response) {
+    @GetMapping("/downloadBorrowerPdf/{borrowNid}/{random}")
+    public void downloadBorrowerPdf(@PathVariable Integer random, @PathVariable String borrowNid, HttpServletRequest request, HttpServletResponse response) {
         List<File> files = new ArrayList<File>();
 
         //CreateAgreementController createAgreementController = new CreateAgreementController();
@@ -913,7 +913,7 @@ public class RepayManageController extends BaseTradeController {
             //原居间协议(注掉) file = createAgreementPDFFile(request, response, form, tmp.getUserId());
             //(1)调用新作的居间借款协议
             //file = createAgreementController.createAgreementPDFFile(request, response, form);
-            file = repayManageService.createAgreementPDFFileRepay(request, response, borrowNid, tmp.getNid(), flag, currentUserId);
+            file = repayManageService.createAgreementPDFFileRepay(request, response, borrowNid, tmp.getNid(), flag, random);
 
             if (file != null) {
                 files.add(file);
