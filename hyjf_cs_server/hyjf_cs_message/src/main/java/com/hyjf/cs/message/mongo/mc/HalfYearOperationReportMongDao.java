@@ -3,7 +3,7 @@
  */
 package com.hyjf.cs.message.mongo.mc;
 
-import com.hyjf.cs.message.bean.mc.HalfYearOperationReportEntity;
+import com.hyjf.cs.message.bean.ic.OperationHalfYearReport;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import org.springframework.stereotype.Service;
 
@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
  * @version HalfYearOperationReportMongDao, v0.1 2018/7/23 10:07
  */
 @Service
-public class HalfYearOperationReportMongDao extends BaseMongoDao<HalfYearOperationReportEntity> {
+public class HalfYearOperationReportMongDao extends BaseMongoDao<OperationHalfYearReport> {
     @Override
-    protected Class<HalfYearOperationReportEntity> getEntityClass() {
-        return HalfYearOperationReportEntity.class;
+    protected Class<OperationHalfYearReport> getEntityClass() {
+        return OperationHalfYearReport.class;
     }
 }

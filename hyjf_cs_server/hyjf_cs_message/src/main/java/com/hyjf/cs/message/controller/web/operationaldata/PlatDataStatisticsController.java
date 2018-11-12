@@ -4,8 +4,8 @@ package com.hyjf.cs.message.controller.web.operationaldata;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.message.PlatDataAgeDataBean;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.message.bean.ic.OperationMongoGroupEntity;
-import com.hyjf.cs.message.bean.ic.OperationReportEntity;
+import com.hyjf.cs.message.bean.ic.OperationGroupReport;
+import com.hyjf.cs.message.bean.ic.OperationReport;
 import com.hyjf.cs.message.bean.ic.SubEntity;
 import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import io.swagger.annotations.Api;
@@ -53,7 +53,7 @@ public class PlatDataStatisticsController {
 		WebResult result = new WebResult();
 		JSONObject jsonObject = new JSONObject();
 		DecimalFormat df = new DecimalFormat("#,##0");
-		OperationReportEntity oe = platDataStatisticsService.findOneOperationReportEntity();
+		OperationReport oe = platDataStatisticsService.findOneOperationReportEntity();
 		// 累计投资
 		jsonObject.put("investTotal", df.format(platDataStatisticsService.selectTotalInvest().setScale(0, BigDecimal.ROUND_DOWN)));
 		// 累计收益
@@ -70,12 +70,12 @@ public class PlatDataStatisticsController {
 		// 投资人总数
 		jsonObject.put("registerCounts", oe.getTenderCount());
 
-		OperationMongoGroupEntity oegroup = platDataStatisticsService.findOneOperationMongoGroupEntity();
+		OperationGroupReport oegroup = platDataStatisticsService.findOneOperationMongoGroupEntity();
 		Map<Integer, Integer> ageMap = oegroup.getInvestorAgeMap();
-		int r1 = ageMap.get(OperationMongoGroupEntity.ageRange1);
-		int r2 = ageMap.get(OperationMongoGroupEntity.ageRange2);
-		int r3 = ageMap.get(OperationMongoGroupEntity.ageRange3);
-		int r4 = ageMap.get(OperationMongoGroupEntity.ageRange4);
+		int r1 = ageMap.get(OperationGroupReport.ageRange1);
+		int r2 = ageMap.get(OperationGroupReport.ageRange2);
+		int r3 = ageMap.get(OperationGroupReport.ageRange3);
+		int r4 = ageMap.get(OperationGroupReport.ageRange4);
 		int total = r1 + r2 + r3 + r4;
 
 		// 年龄
@@ -114,8 +114,8 @@ public class PlatDataStatisticsController {
 		// 性别
 
 		Map<Integer, Integer> sexMap = oegroup.getInvestorSexMap();
-		int maleCount = sexMap.get(OperationMongoGroupEntity.MALE);
-		int femaleCount = sexMap.get(OperationMongoGroupEntity.FEMALE);
+		int maleCount = sexMap.get(OperationGroupReport.MALE);
+		int femaleCount = sexMap.get(OperationGroupReport.FEMALE);
 		float malePer = (float) maleCount * 100 / (maleCount + femaleCount);
 		float femalePer = (float) femaleCount * 100 / (maleCount + femaleCount);
 
@@ -140,7 +140,7 @@ public class PlatDataStatisticsController {
 		jsonObject.put("ageData", JSONObject.parseArray(ageData, Object.class));
 
 		// 区域
-		OperationMongoGroupEntity region = platDataStatisticsService.findOneOperationMongoGroupEntity();
+		OperationGroupReport region = platDataStatisticsService.findOneOperationMongoGroupEntity();
 
 		Map<Integer, String> cityMap = region.getInvestorRegionMap();
 		List<SubEntity> list = region.orgnizeData(cityMap);
@@ -189,7 +189,7 @@ public class PlatDataStatisticsController {
 		List<PlatDataAgeDataBean> regionDataList = getTop(sublist);
 
 		// 获取12个月的数据
-		List<OperationReportEntity> slist = platDataStatisticsService.findOperationReportEntityList();
+		List<OperationReport> slist = platDataStatisticsService.findOperationReportEntityList();
 		// 每月交易总额
 		List<String> monthlyTenderTitle = new ArrayList<String>();
 		List<String> monthlyTenderData = new ArrayList<String>();
