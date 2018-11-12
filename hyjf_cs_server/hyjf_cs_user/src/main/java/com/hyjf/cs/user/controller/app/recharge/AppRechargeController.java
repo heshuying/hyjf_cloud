@@ -233,8 +233,8 @@ public class AppRechargeController extends BaseUserController {
                                 money = Long.parseLong(requestBean.getMoney());
                             } catch (Exception e) {
                                 result = new AppRechargeInfoResult("/hyjf-app/user/bank/recharge/getQpRechargeInfo");
-                                result.setRechargeRuleUrl("http://frontapp1.hyjf.com/user/bank/recharge/rechargeRule");
-                                result.setOtherUrl("http://frontapp1.hyjf.com/hyjf-app/user/bank/recharge/offLineRechageInfo?sign=" + requestBean.getSign());
+                                result.setRechargeRuleUrl(systemConfig.getAppFrontHost() + "/user/bank/recharge/rechargeRule");
+                                result.setOtherUrl(systemConfig.getAppFrontHost() + "/hyjf-app/user/bank/recharge/offLineRechageInfo?sign=" + requestBean.getSign());
 
                                 //result.setRequest("/hyjf-app/user/bank/recharge/getQpRechargeInfo");
                                 //result.setRechargeRuleUrl(systemConfig.webHost + "/user/bank/recharge/rechargeRule");
