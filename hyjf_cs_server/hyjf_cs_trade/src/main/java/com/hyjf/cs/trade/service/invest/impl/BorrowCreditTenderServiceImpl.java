@@ -6,13 +6,14 @@ package com.hyjf.cs.trade.service.invest.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
+import com.hyjf.am.response.config.DebtConfigResponse;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.am.vo.config.DebtConfigVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.*;
-import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
@@ -831,7 +832,6 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     }
                     borrowRecover.setCreditAmount(borrowRecover.getCreditAmount().add(creditTender.getAssignCapital()));
                     borrowRecover.setCreditInterestAmount(borrowRecover.getCreditInterestAmount().add(creditTender.getAssignInterestAdvance()));
-                    borrowRecover.setCreditStatus(borrowCredit.getCreditStatus());
                     // 已收债转管理费
                     borrowRecover.setCreditManageFee(borrowRecover.getCreditManageFee().add(perManageSum));
                     logger.info("borrowCredit.getCreditCapitalAssigned():{}    borrowCredit.getCreditCapital():{}",borrowCredit.getCreditCapitalAssigned(),borrowCredit.getCreditCapital());
@@ -841,7 +841,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     }
                     // 债权是否结束状态
                     borrowRecover.setDebtStatus(debtEndFlag);
-
+                    borrowRecover.setCreditStatus(borrowCredit.getCreditStatus());
                     creditTenderBg.setAssignAccountNew(assignAccountNew);
                     creditTenderBg.setBorrowCredit(borrowCredit);
                     creditTenderBg.setCreditTender(creditTender);
@@ -1247,8 +1247,15 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         } catch (Exception e) {
             logger.error("债转算是否是新旧标区分时间错误，债转标号:" + borrowCredit.getCreditNid());
         }
+        DebtConfigResponse response = amConfigClient.getDebtConfig();
+        DebtConfigVO config = response.getResult();
         if (ifOldDate != null && ifOldDate <= GetDate.getTime10(borrowCredit.getCreateTime())) {
             creditTenderLog.setCreditFee(assignPay.multiply(new BigDecimal(0.01)));
+            if(config!=null) {
+                creditTenderLog.setCreditFee(assignPay.multiply(config.getAttornRate().divide(new BigDecimal(100))).setScale(2, BigDecimal.ROUND_DOWN));
+            }else {
+                creditTenderLog.setCreditFee(assignPay.multiply(new BigDecimal(0.01)));
+            }
         } else {
             creditTenderLog.setCreditFee(assignPay.multiply(new BigDecimal(0.005)));
         }
