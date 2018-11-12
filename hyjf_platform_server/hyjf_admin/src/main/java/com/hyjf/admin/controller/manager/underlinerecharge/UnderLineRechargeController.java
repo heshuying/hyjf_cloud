@@ -1,6 +1,5 @@
 package com.hyjf.admin.controller.manager.underlinerecharge;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.UnderLineRechargeRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -66,18 +65,23 @@ public class UnderLineRechargeController extends BaseController {
     public AdminResult<UnderLineRechargeVO> add(HttpServletRequest request, @RequestBody UnderLineRechargeRequestBean requestBean){
 
         // 当前用户的UserID
-//        requestBean.setCreateUserId(Integer.valueOf(this.getUser(request).getId()));
-        requestBean.setCreateUserId(1);
+        requestBean.setCreateUserId(Integer.valueOf(this.getUser(request).getId()));
         // 当前用户用户名
-//        requestBean.setCreateUserName(this.getUser(request).getUsername());
-        requestBean.setCreateUserName("admin");
+        requestBean.setCreateUserName(this.getUser(request).getUsername());
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject = this.validatorFieldCheck(jsonObject, requestBean);
+        // 返回的错误信息
+        String backMsg = this.validatorFieldCheck(requestBean);
 
         // 验证字符串
-        if (jsonObject.size() > 0){
-            return new AdminResult<>(FAIL, jsonObject.toString());
+        if (StringUtils.isNotBlank(backMsg)){
+            return new AdminResult<>(FAIL, backMsg);
+        }
+
+        // 验证提交的Code是否已存在
+        boolean checkCode = this.underLineRechargeService.checkValidate(requestBean.getCode());
+
+        if (checkCode){
+            return new AdminResult<>(FAIL, "线下交易类型已存在,请重新输入!");
         }
 
         UnderLineRechargeResponse response = this.underLineRechargeService.insertRecord(requestBean);
@@ -95,12 +99,12 @@ public class UnderLineRechargeController extends BaseController {
     @PostMapping("/checkValidate")
     public AdminResult<UnderLineRechargeVO> checkValidate(@RequestBody UnderLineRechargeRequestBean requestBean){
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject = this.validatorFieldCheck(jsonObject, requestBean);
+        // 返回的错误信息
+        String backMsg = this.validatorFieldCheck(requestBean);
 
         // 验证字符串
-        if (jsonObject.size() > 0){
-            return new AdminResult<>(FAIL, jsonObject.toString());
+        if (StringUtils.isNotBlank(backMsg)){
+            return new AdminResult<>(FAIL, backMsg);
         }
 
         boolean checkCode = this.underLineRechargeService.checkValidate(requestBean.getCode());
@@ -113,16 +117,34 @@ public class UnderLineRechargeController extends BaseController {
 
     @ApiOperation(value = "线下充值类型更新", notes = "更新当前 Code .")
     @PostMapping("/update")
-    public AdminResult<UnderLineRechargeVO> update(@RequestBody UnderLineRechargeRequestBean requestBean){
+    public AdminResult<UnderLineRechargeVO> update(HttpServletRequest request, @RequestBody UnderLineRechargeRequestBean requestBean){
 
-        JSONObject jsonObject = new JSONObject();
-        jsonObject = this.validatorFieldCheck(jsonObject, requestBean);
+        // 当前用户的UserID
+        requestBean.setCreateUserId(Integer.valueOf(this.getUser(request).getId()));
+        // 当前用户用户名
+        requestBean.setCreateUserName(this.getUser(request).getUsername());
+
+        // 返回的错误信息
+        String backMsg = this.validatorFieldCheck(requestBean);
 
         // 验证字符串
-        if (jsonObject.size() > 0){
-            return new AdminResult<>(FAIL, jsonObject.toString());
+        if (StringUtils.isNotBlank(backMsg)){
+            return new AdminResult<>(FAIL, backMsg);
         }
 
+        // 验证提交的Code是否已存在
+        boolean checkCode = this.underLineRechargeService.checkValidate(requestBean.getCode());
+
+        if (checkCode){
+            return new AdminResult<>(FAIL, "线下交易类型已存在,请重新输入!");
+        }
+
+        // 需要更新的数据的ID
+        if (StringUtils.isBlank(requestBean.getId().toString())){
+            return new AdminResult<>(FAIL, "更新数据ID必填!");
+        }
+
+        // 更新操作
         boolean response = this.underLineRechargeService.updateUnderLineRecharge(requestBean);
 
         if (!response) {
@@ -151,31 +173,28 @@ public class UnderLineRechargeController extends BaseController {
 
     /**
      * 數據校驗
-     * @param jsonObject
      * @param requestBean
      * @return
      */
-    private JSONObject validatorFieldCheck(JSONObject jsonObject, UnderLineRechargeRequestBean requestBean) {
+    private String validatorFieldCheck(UnderLineRechargeRequestBean requestBean) {
 
+        String returnMsg = null;
         // 不可为空
         if (StringUtils.isBlank(requestBean.getCode())){
-            jsonObject.put("code", "Code不能为空!");
-            return jsonObject;
+            return returnMsg = "Code不能为空!";
         }
 
         // 必须为数字
         if (!StringUtils.isNumeric(requestBean.getCode())){
-            jsonObject.put("code", "Code必须为数字!");
-            return jsonObject;
+            return returnMsg = "Code必须为数字!";
         }
 
         //长度限制
         if (requestBean.getCode().length() != 4){
-            jsonObject.put("code", "Code必须为四位!");
-            return jsonObject;
+            return returnMsg = "Code必须为四位!";
         }
 
-        return jsonObject;
+        return returnMsg;
     }
 
 }

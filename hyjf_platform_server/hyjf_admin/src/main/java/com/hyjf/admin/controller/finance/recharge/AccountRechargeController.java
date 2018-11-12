@@ -15,7 +15,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.account.AccountRechargeCustomizeResponse;
 import com.hyjf.am.resquest.admin.AccountRechargeRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.trade.JxBankConfigVO;
+import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -74,13 +74,13 @@ public class AccountRechargeController extends BaseController {
         }
 
         // 充值银行列表
-        List<JxBankConfigVO> banks = this.rechargeService.getBankcardList();
+        List<BankConfigVO> banks = this.rechargeService.getBankcardList();
         logger.info(JSON.toJSONString(paramList));
         List<Object> banksList = new ArrayList<>();
         for(int i = 0; i<banks.size(); i++){
             Map<String, Object> banksMap = new HashedMap();
-            banksMap.put("key", banks.get(i).getBankName());
-            banksMap.put("value", banks.get(i).getBankName());
+            banksMap.put("key", banks.get(i).getName());
+            banksMap.put("value", banks.get(i).getName());
             banksList.add(banksMap);
         }
 

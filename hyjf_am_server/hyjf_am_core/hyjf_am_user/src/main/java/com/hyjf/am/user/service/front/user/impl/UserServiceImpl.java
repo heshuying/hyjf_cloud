@@ -105,7 +105,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         }
 
         // 5. 有推广，插入utmReg表
-        if (StringUtils.isNotEmpty(utmId) && Validator.isNumber(utmId)) {
+        if (StringUtils.isNotEmpty(utmId) && Validator.isNumber(utmId)&&!(platform.equals(ClientConstants.APP_CLIENT)||platform.equals(ClientConstants.APP_CLIENT_IOS))) {
             this.insertUtmReg(userId, utmId);
         }
 

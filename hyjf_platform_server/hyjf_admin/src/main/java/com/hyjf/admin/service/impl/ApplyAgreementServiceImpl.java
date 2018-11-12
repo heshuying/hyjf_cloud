@@ -193,6 +193,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         //获取借款编号和期数组合
         List<String> recordList = request.getIds();
         if (recordList==null) {
+            logger.error("-------------------------垫付机构协议管理， 借款编号和期数组合不能为空："+ request.getIds());
             return new AdminResult(BaseResult.FAIL, "借款编号和期数组合不能为空");
         }
 
@@ -205,10 +206,13 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 int agreements = 0;
                 String borrow_nid = paemStrings[0];//借款编号
                 int repay_period = Integer.valueOf(paemStrings[1]);//期数
+                logger.info("-------------------------垫付机构协议管理， 生成垫付债转协议借款编号："+ borrow_nid);
+                logger.info("-------------------------垫付机构协议管理， 生成垫付债转协议期数："+ repay_period);
                 // 获取标的信息
                 BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrow_nid);
                 BorrowInfoVO borrowInfo = amTradeClient.selectBorrowInfoByNid(borrow_nid);
                 if (borrow == null || borrowInfo == null) {
+                    logger.error("-------------------------垫付机构协议管理， 标的不存在borrow_nid："+borrow_nid);
                     return new AdminResult(BaseResult.FAIL, "标的不存在");
                 }
                 //还款方式
@@ -224,6 +228,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                  */
                 List<BorrowRecoverVO> borrowRecoverPlist = amTradeClient.selectBorrowRecoverList(borrow_nid);
                 if (borrowRecoverPlist == null || borrowRecoverPlist.size()==0) {
+                    logger.error("-------------------------垫付机构协议管理， 标的不存在borrow_nid："+borrow_nid);
                     return new AdminResult(BaseResult.FAIL, "标的不存在");
                 }
                 boolean isNotPlan = StringUtils.isEmpty(planNid);//是否是直投标
@@ -234,10 +239,11 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                      * 3：已债转金额(creditAmountp)为0--非承接债转
                      */
                     if(isMonth) {//分期
+                        logger.info("-------------------------垫付机构协议管理， 处理分期:"+borrowRecoverP.getNid());
                         List<BorrowRecoverPlanVO> borrowRecoverList = amTradeClient.selectBorrowRecoverPlanList(borrowRecoverP.getNid(),repay_period);
                         if (borrowRecoverList == null || borrowRecoverList.size()==0) {
                             logger.error("-------------------------垫付机构协议管理， 标的放款记录列表获取失败borrowRecoverP.getNid():"+borrowRecoverP.getNid());
-                            logger.error("-------------------------垫付机构协议管理， 标的放款记录列表获取失败repay_period:"+borrowRecoverP.getNid());
+                            logger.error("-------------------------垫付机构协议管理， 标的放款记录列表获取失败repay_period:"+repay_period);
                             break;
                         }
                         for (BorrowRecoverPlanVO borrowRecover : borrowRecoverList) {
@@ -250,6 +256,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                             }
                         }
                     }else{//不分期
+                        logger.info("-------------------------垫付机构协议管理， 处理不分期:"+borrowRecoverP.getNid());
                         if(isNotPlan) {//直投
                             agreements = convertAndSend(borrow, borrowInfo, borrowRecoverP);
                             agreementsSUM = agreementsSUM+agreements;
@@ -302,7 +309,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         //应还本金-当期
         BigDecimal recoverCapital = borrowRecover.getRecoverCapital();
         //当前期数
-        int repay_period = borrowRecoverP.getRecoverPeriod();
+        int repay_period = borrowRecover.getRecoverPeriod();
         int recoverUserId= borrowRecover.getUserId();
         List<CreditRepayVO> creditRepayListPlan = this.selectCreditRepay(nid,repay_period);
         if(creditRepayListPlan!=null && creditRepayListPlan.size()>0){//债转
@@ -389,7 +396,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         //应还本金-当期
         BigDecimal recoverCapital = borrowRecover.getRecoverCapital();
         //当前期数
-        int repay_period = borrowRecoverP.getRecoverPeriod();
+        int repay_period = borrowRecover.getRecoverPeriod();
         int recoverUserId= borrowRecover.getUserId();
         List<CreditRepayVO> creditRepayListPlan = this.selectCreditRepay(nid,repay_period);
         if(creditRepayListPlan!=null && creditRepayListPlan.size()>0){//债转

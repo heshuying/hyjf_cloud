@@ -8,7 +8,7 @@ import com.hyjf.am.vo.admin.SellDailyDistributionVO;
  */
 
 public class EmailRecipientResponse extends Response<SellDailyDistributionVO> {
-    private Integer count;
+    private Integer count=0;
 
     public Integer getCount() {
         return count;

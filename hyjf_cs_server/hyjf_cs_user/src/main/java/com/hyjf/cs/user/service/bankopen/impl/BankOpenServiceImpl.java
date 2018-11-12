@@ -236,15 +236,16 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         }
         // 更新redis里面的值
         WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
-        user.setBankOpenAccount(true);
-        // 开户+设密的话   状态改为已设置交易密码
-        if (BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE.equals(bean.getTxCode())
-                && "1".equals(bean.getStatus())) {
-            user.setIsSetPassword(1);
+        if(user!=null){
+            user.setBankOpenAccount(true);
+            // 开户+设密的话   状态改为已设置交易密码
+            if (BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE.equals(bean.getTxCode())
+                    && "1".equals(bean.getStatus())) {
+                user.setIsSetPassword(1);
+            }
+            user.setRoleId(bean.getIdentity());
+            RedisUtils.setObj(RedisConstants.USERID_KEY + userId,user);
         }
-        user.setRoleId(bean.getIdentity());
-        RedisUtils.setObj(RedisConstants.USERID_KEY + userId,user);
-
         // 更新account表的电子帐户号
         Integer saveResult = amTradeClient.updateAccountNumberByUserId(userId,bean.getAccountId());
 

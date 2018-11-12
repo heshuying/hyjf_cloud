@@ -88,7 +88,7 @@ public interface AmConfigClient {
 	 * @return
 	 */
     SiteSettingsVO selectSiteSetting();
-	JxBankConfigVO getBanksConfigByBankId(String bankId);
+	/*JxBankConfigVO getBanksConfigByBankId(String bankId);*/
 	Integer getBankInterfaceFlagByType(String type);
 
 	/**
