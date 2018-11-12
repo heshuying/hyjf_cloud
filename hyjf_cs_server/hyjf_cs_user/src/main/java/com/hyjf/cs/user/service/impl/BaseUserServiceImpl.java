@@ -161,6 +161,10 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			//设置交易密码验签
 			ThirdPartyTransPasswordRequestBean bean = (ThirdPartyTransPasswordRequestBean) paramBean;
 			sign = bean.getChannel() + bean.getAccountId() + bean.getRetUrl() + bean.getBgRetUrl()+ bean.getTimestamp();
+		}else if (BaseDefine.METHOD_SERVER_UNBIND_CARD_PAGE.equals(methodName)) {
+			// 解卡(页面调用)合规
+			UnbindCardPageRequestBean bean = (UnbindCardPageRequestBean) paramBean;
+			sign = bean.getInstCode()+ bean.getAccountId() + bean.getMobile() + bean.getCardNo()+bean.getTimestamp();
 		}
 
 		return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
