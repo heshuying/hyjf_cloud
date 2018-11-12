@@ -15,6 +15,7 @@ import com.hyjf.admin.service.BankAleveService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.BankAleveRequest;
+import com.hyjf.am.vo.admin.AssociatedRecordListVO;
 import com.hyjf.am.vo.admin.BankAleveVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -126,17 +127,19 @@ public class BankAleveController {
         // 需要输出的结果列表
         Integer count = bankAleveService.queryBankAleveCount(bankAleveRequest);
 
-        if (count == null || count <= 0){
+        // 检索列表
+
+        List<BankAleveVO> bankAleveList =bankAleveService.queryBankAleveList(bankAleveRequest);
+        if (count == null || count.equals(0)){
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }else{
-            List<BankAleveVO> bankAleveList =bankAleveService.queryBankAleveList(bankAleveRequest);
             int totalCount = count;
             sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, bankAleveList);
         }
 
         for (int i = 1; i < sheetCount; i++) {
-            bankAleveRequest.setPaginatorPage(i +1);
+            bankAleveRequest.setCurrPage(i +1);
             List<BankAleveVO> bankAleveList2 = bankAleveService.queryBankAleveList(bankAleveRequest);
             if (!CollectionUtils.isEmpty(bankAleveList2)) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
