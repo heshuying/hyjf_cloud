@@ -23,10 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -165,6 +162,7 @@ public class ApiBankOpenController extends BaseUserController {
      */
     @ApiOperation(value = "页面开户异步处理", notes = "页面开户异步处理")
     @PostMapping("/bgReturn")
+    @ResponseBody
     public BankCallResult openAccountBgReturn(HttpServletRequest request,
                                               @RequestBody BankCallBean bean,
                                               @RequestParam("phone") String mobile,
