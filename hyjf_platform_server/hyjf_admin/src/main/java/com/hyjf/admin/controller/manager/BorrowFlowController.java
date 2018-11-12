@@ -159,7 +159,7 @@ public class BorrowFlowController extends BaseController {
 
     @ApiOperation(value = "修改流程配置", notes = "修改流程配置")
     @PostMapping("/updateAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateBorrowFlowRecord(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
         if(adminRequest.getId() == null){
             return new AdminResult<>(FAIL, "id不能为空");
