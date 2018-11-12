@@ -30,6 +30,11 @@ public class TenderBorrowCreditCustomize extends CreditDetailsRequestBean{
 	 * 转让价格
 	 */
 	private String creditPrice;
+
+	/**
+	 * 转让服务费
+	 */
+	private String attornRate;
 	/**
 	 * 服务费
 	 */
@@ -159,5 +164,13 @@ public class TenderBorrowCreditCustomize extends CreditDetailsRequestBean{
 
 	public void setCreditNid(String creditNid) {
 		this.creditNid = creditNid;
+	}
+
+	public String getAttornRate() {
+		return attornRate;
+	}
+
+	public void setAttornRate(String attornRate) {
+		this.attornRate = attornRate;
 	}
 }

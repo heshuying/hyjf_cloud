@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service.projectlist;
 
+import com.hyjf.cs.trade.bean.CreditAssignedBean;
 import com.hyjf.cs.trade.bean.ProtocolRequest;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,4 +22,14 @@ public interface WebProtocolService{
      * @date 2018/11/10 14:03
      */
     public void downloadIntermediaryPdf(ProtocolRequest form, Integer userId, HttpServletRequest request, HttpServletResponse response);
+
+    /**
+     * 资产管理-散标-转让记录-查看详情-下载协议
+     * @param tenderCreditAssignedBean
+     * @param currentUserId
+     * @param request
+     * @param response
+     * @return
+     */
+    void creditTransferAgreement(CreditAssignedBean tenderCreditAssignedBean, Integer currentUserId, HttpServletRequest request, HttpServletResponse response);
 }

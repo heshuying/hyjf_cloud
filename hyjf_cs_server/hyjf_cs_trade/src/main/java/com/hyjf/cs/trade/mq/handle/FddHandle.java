@@ -549,6 +549,7 @@ public class FddHandle {
             tenderAgreement.setUpdateUserName(tenderAgreement.getUserName());
             tenderAgreement.setStatus(2);//签署成功
             int update = this.amTradeClient.updateTenderAgreement(tenderAgreement);
+            logger.info("------------------------------------保存签署成功后的数据update:"+update);
             if (update > 0) {
                 String savePath = null;
                 String path = "/pdf_tem/";
@@ -563,6 +564,8 @@ public class FddHandle {
                     savePath = path + "pdf/" + instCode ;
                     ftpPath = "PDF/" + instCode  + "/" + contract_id + "/";
                 }
+				logger.info("------------------------------------拼接签署成功后协议savePath:"+update);
+				logger.info("------------------------------------拼接签署成功后协议ftpPath:"+ftpPath);
                 //下载协议并脱敏
                 FddDessenesitizationBean bean = new FddDessenesitizationBean();
                 bean.setAgrementID(tenderAgreement.getId().toString());
@@ -574,6 +577,7 @@ public class FddHandle {
                 bean.setTenderCompany(isTenderCompany);
                 bean.setCreditCompany(isCreditCompany);
                 try {
+					logger.info("------------------------------------调用法大大发送下载脱敏消息:"+update);
 					fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG,UUID.randomUUID().toString(),JSON.toJSONBytes(bean)));
 				} catch (MQException e) {
 					e.printStackTrace();
@@ -1489,13 +1493,12 @@ public class FddHandle {
             List<ApplyAgreementInfoVO> voList  =  this.amTradeClient.selectApplyAgreementInfoByContractId(contract_id);
 
 			if (voList != null && voList.size()>0) {
-                logger.info("--------------------------------垫付计划债转服务协议获取签署信息voList："+JSONObject.toJSON(voList));
                 ApplyAgreementInfoVO applyAgreementInfo = voList.get(0);
 				userId = Integer.valueOf(applyAgreementInfo.getUserId());// 承接人
 				borrowNid = applyAgreementInfo.getBorrowNid();// 原标的号
 				BorrowInfoWithBLOBsVO borrow = this.amTradeClient.selectBorrowInfoWithBLOBSVOByBorrowId(borrowNid);
 
-				logger.info("=================更新自动签署数据(计划债转服务协议):instCode="+borrow.getInstCode());
+				logger.info("=================-垫付计划债转服务协议获取签署信息更新自动签署数据(计划债转服务协议):instCode="+borrow.getInstCode());
 
 				instCode = borrow.getInstCode();// 机构编号
 				creditUserId = Integer.valueOf(applyAgreementInfo.getCreditUserId());// 出让人
@@ -1647,6 +1650,7 @@ public class FddHandle {
 	 * @param creditCompany
 	 */
 	public void downPDFAndDesensitization(String savePath, String tenderAgreementID, String transType, String ftpPath, String download_url, boolean tenderCompany, boolean creditCompany) {
+        logger.info("---------------下载并脱敏处理tenderAgreementID：" + tenderAgreementID+"---------------------开始");
 		String fileName = null;
 		String fileType = null;
 		if (Integer.valueOf(transType) == FddGenerateContractConstant.PROTOCOL_TYPE_TENDER){
@@ -1701,14 +1705,14 @@ public class FddHandle {
 			List jointPathList = new ArrayList();
 			String imageSavePath = savePath + fileName;
 			//转换成图片
-			logger.info("---------------脱敏下载开始将PDF转换成图片：" + filePath);
+			logger.info("---------------脱敏下载开始将PDF转换成图片：tenderAgreementID："+tenderAgreementID+"-----" + filePath);
 			PDFToImage.pdf2img(filePath, imageSavePath, PDFToImage.IMG_TYPE_PNG);
-			logger.info("---------------脱敏下载将PDF转换成图片完成，pages:" + pages);
+			logger.info("---------------脱敏下载将PDF转换成图片完成，pages:tenderAgreementID："+tenderAgreementID+"-----" + pages);
 			List fileNamelist = FileUtil.getFileName(imageSavePath);
 			if(!fileNamelist.isEmpty()){
 				for (Object name: fileNamelist
 					 ) {
-					logger.info("---------------脱敏下载将PDF转换成图片完成，转换后图片:" + name);
+					logger.info("---------------脱敏下载将PDF转换成图片完成，转换后图片:tenderAgreementID："+tenderAgreementID+"-----" + name);
 				}
 			}
 
@@ -1716,10 +1720,10 @@ public class FddHandle {
 			String imageFilePath = imageSavePath +"/"+  fileName + fileType;
 			//真实姓名待脱敏图片地址
 			String trueImageFilePath = imageSavePath +"/"+  fileName + "0.png";
-			logger.info("---------------待脱敏图片地址：" + imageFilePath);
+			logger.info("---------------待脱敏图片地址：tenderAgreementID："+tenderAgreementID+"-----" + imageFilePath);
 			File tmfile = new File(imageFilePath);
 			String upParentDir = tmfile.getParent();
-			logger.info("---------------脱敏图片上级目录：" + upParentDir);
+			logger.info("---------------脱敏图片上级目录：tenderAgreementID："+tenderAgreementID+"-----" + upParentDir);
 			//图片脱敏并存储
 			if (FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(transType)){
 
@@ -1747,12 +1751,12 @@ public class FddHandle {
 			replaceImageToPdf(jointPathList,tmpdfPath);
 
 			boolean uploadPDF = uplodTmImage(tmpdfPath, ftpPath, 0);
-			logger.info("------------------脱敏pdf完成，上传PDF是否成功：" + uploadPDF);
+			logger.info("------------------脱敏pdf完成，上传PDF是否成功tenderAgreementID："+tenderAgreementID+"-----" + uploadPDF);
 			if(uploadPDF){
 				boolean upResult = uplodTmImage(imageSavePath + "/pdfimage.png",ftpPath,1);
-				logger.info("------------------上传pdf完成，上传脱敏图片是否成功：" + upResult);
+				logger.info("------------------上传pdf完成，上传脱敏图片是否成功：tenderAgreementID："+tenderAgreementID+"-----"+ upResult);
 				if(upResult){
-					logger.info("------------------上传脱敏图片完成，开始变更数据库数据");
+					logger.info("------------------上传脱敏图片完成，开始变更数据库数据"+tenderAgreementID);
 
 					this.updateTenderAgreementImageURL(tenderAgreementID,ftpPath+"pdfimage.png",ftpPath + fileName +"_tm.pdf");
 
@@ -1767,16 +1771,16 @@ public class FddHandle {
 						this.sendPlanMail(hjhAccede);
 					}
 				}else{
-					logger.info("----------脱敏图片上传失败-----------");
+					logger.info("----------脱敏图片上传失败-----------"+tenderAgreementID);
 				}
 			}else{
-				logger.info("----------脱敏PDF上传失败-----------");
+				logger.info("----------脱敏PDF上传失败-----------"+tenderAgreementID);
 			}
 
 		} catch (Exception e) {
-			logger.error("-----------脱敏协议错误，错误信息",e);
+			logger.error("-----------脱敏协议错误，错误信息"+tenderAgreementID,e);
 		}
-
+        logger.info("---------------下载并脱敏处理tenderAgreementID：" + tenderAgreementID+"---------------------结束");
 	}
 
 	/**

@@ -23,10 +23,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -98,10 +95,9 @@ public class ApiBankOpenController extends BaseUserController {
         openAccoutBean.setAcctUse(BankCallConstant.ACCOUNT_USE_COMMON);
         openAccoutBean.setIdentity(openBean.getIdentity());
         // 同步地址  是否跳转到前端页面
-        String bgRetUrl = "http://CS-USER/hyjf-api/server/user/accountOpenEncryptPage?phone=" + openBean.getMobile()+"&openclient="+openBean.getPlatform()+"&roleId="+openBean.getIdentity();
         openAccoutBean.setRetUrl(openBean.getRetUrl());
         openAccoutBean.setSuccessfulUrl(openBean.getSuccessfulUrl());
-        openAccoutBean.setNotifyUrl(bgRetUrl);
+        openAccoutBean.setNotifyUrl(openBean.getNotifyUrl());
         openAccoutBean.setCoinstName(openBean.getCoinstName()==null?"汇盈金服":openBean.getCoinstName());
         openAccoutBean.setLogRemark("开户+设密码页面");
         openAccoutBean.setLogIp(openBean.getIp());
@@ -114,13 +110,14 @@ public class ApiBankOpenController extends BaseUserController {
         OpenAccountPageBean bean = new OpenAccountPageBean();
         BeanUtils.copyProperties(requestBean,bean);
         String retUrl = systemConfig.getServerHost()+"/hyjf-api/server/user/accountOpenEncryptPage";
-        String successUrl = "http://CS-USER/hyjf-api/server/user/accountOpenEncryptPage";
+        String successUrl = systemConfig.getServerHost()+"/hyjf-api/server/user/accountOpenEncryptPage";
         // 异步调用路
         String bgRetUrl = "http://CS-USER/hyjf-api/server/user/accountOpenEncryptPage";
         // 调用设置密码接口
         retUrl += "/return?acqRes="+requestBean.getAcqRes()+"&callback="+requestBean.getRetUrl().replace("#", "*-*-*");
         successUrl += "/return?acqRes="+requestBean.getAcqRes()+"&isSuccess=1&callback="+requestBean.getRetUrl().replace("#", "*-*-*");
-        bgRetUrl += "/bgReturn?acqRes="+requestBean.getAcqRes()+"&callback="+requestBean.getBgRetUrl().replace("#", "*-*-*");
+        bgRetUrl += "/bgReturn?acqRes="+requestBean.getAcqRes()+"&phone=" + requestBean.getMobile()+"&openclient="+requestBean.getPlatform()+"&roleId="+requestBean.getIdentity()+
+        "&callback="+requestBean.getBgRetUrl().replace("#", "*-*-*");
         bean.setRetUrl(retUrl);
         bean.setNotifyUrl(bgRetUrl);
         bean.setSuccessfulUrl(successUrl);
@@ -134,7 +131,7 @@ public class ApiBankOpenController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "第三方端用户同步回调", notes = "用户开户")
-    @PostMapping(value = "/return")
+    @RequestMapping(value = "/return")
     public ModelAndView returnPage(HttpServletRequest request) {
         String isSuccess = request.getParameter("isSuccess");
         String url = request.getParameter("callback").replace("*-*-*", "#");
@@ -142,12 +139,12 @@ public class ApiBankOpenController extends BaseUserController {
         logger.info("第三方端开户同步请求,isSuccess:{}", isSuccess);
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("status", "success");
+        resultMap.put("callBackAction", url);
         if (isSuccess == null || !"1".equals(isSuccess)) {
             // 失败
             resultMap.put("status", ErrorCodeConstant.STATUS_CE999999);
             resultMap.put("statusDesc", "开户失败,调用银行接口失败");
             resultMap.put("acqRes", request.getParameter("acqRes"));
-            resultMap.put("callBackAction", url);
             return callbackErrorView(resultMap);
         } else {
             resultMap.put("status", ErrorCodeConstant.SUCCESS);
@@ -165,6 +162,7 @@ public class ApiBankOpenController extends BaseUserController {
      */
     @ApiOperation(value = "页面开户异步处理", notes = "页面开户异步处理")
     @PostMapping("/bgReturn")
+    @ResponseBody
     public BankCallResult openAccountBgReturn(HttpServletRequest request,
                                               @RequestBody BankCallBean bean,
                                               @RequestParam("phone") String mobile,
@@ -202,7 +200,7 @@ public class ApiBankOpenController extends BaseUserController {
         } else {
             params.put("status", ErrorCodeConstant.SUCCESS);
             resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
-            params.put("statusDesc", "开户失败,调用银行接口失败");
+            params.put("statusDesc", "开户成功");
             params.put("chkValue", resultBean.getChkValue());
             params.put("accountId", bean.getAccountId());
             params.put("payAllianceCode", bean.getPayAllianceCode());
