@@ -12,7 +12,7 @@ import java.math.BigDecimal;
  * @author tanyy
  * @version HalfYearOperationReportEntity, v0.1 2018/6/27 10:06
  */
-@Document(collection = "ht_half_year_roperation_report")
+@Document(collection = "ht_operation_half_year_report")
 public class HalfYearOperationReportEntity implements Serializable{
 
     private String id;
