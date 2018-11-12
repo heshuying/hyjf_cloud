@@ -3,15 +3,6 @@
  */
 package com.hyjf.cs.trade.service.credit.impl;
 
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.*;
-
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
@@ -62,6 +53,14 @@ import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.credit.MyCreditListService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.smscode.SmsCodeService;
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.*;
 
 /**
  * @Description 资产管理  我要债转相关
@@ -588,7 +587,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         // 总收入,
         borrowCredit.setCreditIncome(creditCreateMap.get("assignPay"));
         // 服务费
-        borrowCredit.setCreditFee(creditCreateMap.get("assignPay").multiply(new BigDecimal(0.01)).setScale(2, BigDecimal.ROUND_DOWN));
+        borrowCredit.setCreditFee(creditCreateMap.get("assignPay").multiply(org.apache.commons.lang.StringUtils.isEmpty(request.getAttornRate())?new BigDecimal(0.01):new BigDecimal(request.getAttornRate()).divide(new BigDecimal(100))).setScale(2, BigDecimal.ROUND_DOWN));
         // 出让价格
         borrowCredit.setCreditPrice(creditCreateMap.get("creditPrice"));
         // 已认购本金
@@ -663,6 +662,8 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         BigDecimal assignPay = BigDecimal.ZERO;
         // 预计收益 承接人债转本息—实付金额
         BigDecimal assignInterest = BigDecimal.ZERO;
+        // 预计收益 出让人预期收益 =本金+本金持有期利息-本金*折让率-服务费
+        BigDecimal expectInterest = BigDecimal.ZERO;
         // 可转本金
         BigDecimal creditCapital = BigDecimal.ZERO;
         // 折后价格
@@ -710,6 +711,9 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
                 assignPay = creditPrice.add(assignInterestAdvance);
                 // 预计收益 承接人债转本息—实付金额
                 assignInterest = creditAccount.subtract(assignPay);// 计算投资收益
+                // 预计收益 出让人预期收益 =本金+本金持有期利息-本金*折让率-服务费
+                expectInterest = creditCapital.add(assignInterestAdvance).subtract(creditCapital.multiply(new BigDecimal(creditDiscount).divide(new BigDecimal(100))))
+                        .subtract(assignPay.multiply(new BigDecimal(0.01)).setScale(2, BigDecimal.ROUND_DOWN));
             } else {// 按月
                 // 债转本息
                 creditAccount = DuePrincipalAndInterestUtils.getMonthPrincipalInterest(creditCapital, yearRate, borrow.getBorrowPeriod());
@@ -723,6 +727,9 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
                 assignPay = creditPrice.add(assignInterestAdvance);
                 // 预计收益 承接人债转本息—实付金额
                 assignInterest = creditAccount.subtract(assignPay);// 计算投资收益
+                // 预计到账金额 出让人预期收益 =本金+本金持有期利息-本金*折让率-服务费
+                expectInterest = creditCapital.add(assignInterestAdvance).subtract(creditCapital.multiply(new BigDecimal(creditDiscount).divide(new BigDecimal(100))))
+                        .subtract(assignPay.multiply(config.getAttornRate().divide(new BigDecimal(100))).setScale(2, BigDecimal.ROUND_DOWN));
             }
         }
         // 等额本息和等额本金和先息后本
@@ -765,6 +772,9 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             assignPay = creditPrice.add(assignInterestAdvance);
             // 预计收益 承接人债转本息—实付金额
             assignInterest = creditAccount.subtract(assignPay);// 计算投资收益
+            // 预计到账金额 出让人预期收益 =本金+本金持有期利息-本金*折让率-服务费
+            expectInterest = creditCapital.add(assignInterestAdvance).subtract(creditCapital.multiply(new BigDecimal(creditDiscount).divide(new BigDecimal(100))))
+                    .subtract(assignPay.multiply(config.getAttornRate().divide(new BigDecimal(100))).setScale(2, BigDecimal.ROUND_DOWN));
         }
         // 服务费
         creditFee = assignPay.multiply(config.getAttornRate().divide(new BigDecimal(100))).setScale(2, BigDecimal.ROUND_DOWN);
