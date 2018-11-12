@@ -3,7 +3,7 @@
  */
 package com.hyjf.cs.message.mongo.mc;
 
-import com.hyjf.cs.message.bean.mc.OperationReportActivityEntity;
+import com.hyjf.cs.message.bean.ic.OperationActivityReport;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import org.springframework.stereotype.Repository;
 
@@ -13,10 +13,10 @@ import org.springframework.stereotype.Repository;
  * @version OperationReportActivityMongDao, v0.1 2018/7/23 10:03
  */
 @Repository
-public class OperationReportActivityMongDao  extends BaseMongoDao<OperationReportActivityEntity> {
+public class OperationReportActivityMongDao  extends BaseMongoDao<OperationActivityReport> {
 
     @Override
-    protected Class<OperationReportActivityEntity> getEntityClass() {
-        return OperationReportActivityEntity.class;
+    protected Class<OperationActivityReport> getEntityClass() {
+        return OperationActivityReport.class;
     }
 }

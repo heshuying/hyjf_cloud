@@ -128,6 +128,17 @@ public class SystemConfig {
     @Value("${hyjf.role.isopen}")
     private String roleIsopen;
 
+    @Value("${hyjf.third.party.user.password}")
+    private String apiPass;
+
+    public String getApiPass() {
+        return apiPass;
+    }
+
+    public void setApiPass(String apiPass) {
+        this.apiPass = apiPass;
+    }
+
     public String getWrncallbackbindurl() {
         return wrncallbackbindurl;
     }

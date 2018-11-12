@@ -1396,6 +1396,9 @@ public class FddHandle {
 				borrowNid = borrowTender.getBorrowNid();//标的号
 				BorrowAndInfoVO borrow = this.amTradeClient.getBorrowByNid(borrowNid);
 				instCode = borrow.getInstCode();//机构编号
+
+				logger.info("==============更新自动签署数据(居间服务协议):instCode="+borrow.getInstCode());
+
 				//判断是否为企业借款
 				boolean result = this.isCompanyUser(borrow);
 				if (result){
@@ -1448,6 +1451,9 @@ public class FddHandle {
 			}
 		}else if(FddGenerateContractConstant.PROTOCOL_TYPE_PLAN == transType){//计划加入协议
 			HjhAccedeVO hjhAccede=this.amTradeClient.getHjhAccedeByAccedeOrderId(contract_id);
+
+			logger.info("=================更新自动签署数据(计划加入协议):userId="+hjhAccede.getUserId()+",instCode="+hjhAccede.getPlanNid());
+
 			if(Validator.isNotNull(hjhAccede)){
 				userId = hjhAccede.getUserId();
 				instCode = hjhAccede.getPlanNid();
@@ -1471,6 +1477,9 @@ public class FddHandle {
 				borrowNid = hjhCreditTender.getBorrowNid();// 标的号
 				BorrowAndInfoVO borrow=this.amTradeClient.getBorrowByNid(borrowNid);
 				instCode = borrow.getInstCode();// 机构编号
+
+				logger.info("=================更新自动签署数据(计划债转服务协议):instCode="+borrow.getInstCode());
+
 				creditUserId = hjhCreditTender.getCreditUserId();// 出让人
 				borrowerCustomerID = getCustomerIDByUserID(creditUserId);
 			}
@@ -1485,6 +1494,9 @@ public class FddHandle {
 				userId = Integer.valueOf(applyAgreementInfo.getUserId());// 承接人
 				borrowNid = applyAgreementInfo.getBorrowNid();// 原标的号
 				BorrowInfoWithBLOBsVO borrow = this.amTradeClient.selectBorrowInfoWithBLOBSVOByBorrowId(borrowNid);
+
+				logger.info("=================更新自动签署数据(计划债转服务协议):instCode="+borrow.getInstCode());
+
 				instCode = borrow.getInstCode();// 机构编号
 				creditUserId = Integer.valueOf(applyAgreementInfo.getCreditUserId());// 出让人
 				borrowerCustomerID = getCustomerIDByUserID(creditUserId);

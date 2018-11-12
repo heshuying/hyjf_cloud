@@ -3,7 +3,7 @@
  */
 package com.hyjf.cs.message.mongo.mc;
 
-import com.hyjf.cs.message.bean.mc.QuarterOperationReportEntity;
+import com.hyjf.cs.message.bean.ic.OperationQuarterReport;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
  * @version QuarterOperationReportMongDao, v0.1 2018/7/23 10:03
  */
 @Service
-public class QuarterOperationReportMongDao extends BaseMongoDao<QuarterOperationReportEntity> {
+public class QuarterOperationReportMongDao extends BaseMongoDao<OperationQuarterReport> {
 
     @Override
-    protected Class<QuarterOperationReportEntity> getEntityClass() {
-        return QuarterOperationReportEntity.class;
+    protected Class<OperationQuarterReport> getEntityClass() {
+        return OperationQuarterReport.class;
     }
 }

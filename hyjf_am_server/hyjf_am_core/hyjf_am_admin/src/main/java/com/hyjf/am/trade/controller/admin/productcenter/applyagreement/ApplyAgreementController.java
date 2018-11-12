@@ -1,6 +1,8 @@
 package com.hyjf.am.trade.controller.admin.productcenter.applyagreement;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.google.gson.JsonObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.ApplyAgreementInfoResponse;
 import com.hyjf.am.response.trade.*;
@@ -247,7 +249,7 @@ public class ApplyAgreementController extends BaseController {
     @RequestMapping("/saveApplyAgreement")
     public ApplyAgreementResponse saveApplyAgreement(@RequestBody ApplyAgreementVO request) {
         ApplyAgreementResponse response = new ApplyAgreementResponse();
-        logger.info("saveApplyAgreement::::::::::");
+        logger.info("saveApplyAgreement::::::::::"+JSONObject.toJSON(request));
         int re = applyAgreementService.saveApplyAgreement(request);
         response.setCount(re);
         response.setRtn(Response.SUCCESS);

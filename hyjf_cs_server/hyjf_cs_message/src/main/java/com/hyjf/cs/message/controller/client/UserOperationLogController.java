@@ -9,7 +9,7 @@ import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.controller.BaseController;
-import com.hyjf.cs.message.bean.mc.UserOperationLogEntity;
+import com.hyjf.cs.message.bean.ic.UserOperationLog;
 import com.hyjf.cs.message.service.operationlog.OperationLogService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -54,7 +54,7 @@ public class UserOperationLogController extends BaseController {
         //封装查询条件
         Map<String, Object> operationLog = this.buildQueryCondition(form);
         int recordTotal = operationLogService.countOperationLog(operationLog);
-        List<UserOperationLogEntity> recordList = new ArrayList<>();
+        List<UserOperationLog> recordList = new ArrayList<>();
         if (recordTotal > 0) {
             response.setCount(recordTotal);
 
