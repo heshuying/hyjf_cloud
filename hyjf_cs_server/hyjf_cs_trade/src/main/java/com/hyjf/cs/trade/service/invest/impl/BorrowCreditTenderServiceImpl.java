@@ -831,16 +831,16 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     }
                     borrowRecover.setCreditAmount(borrowRecover.getCreditAmount().add(creditTender.getAssignCapital()));
                     borrowRecover.setCreditInterestAmount(borrowRecover.getCreditInterestAmount().add(creditTender.getAssignInterestAdvance()));
-                    borrowRecover.setCreditStatus(borrowCredit.getCreditStatus());
                     // 已收债转管理费
                     borrowRecover.setCreditManageFee(borrowRecover.getCreditManageFee().add(perManageSum));
+                    logger.info("borrowCredit.getCreditCapitalAssigned():{}    borrowCredit.getCreditCapital():{}",borrowCredit.getCreditCapitalAssigned(),borrowCredit.getCreditCapital());
                     if (borrowCredit.getCreditCapitalAssigned().compareTo(borrowCredit.getCreditCapital()) == 0) {
                         debtEndFlag = 1;
                         borrowCredit.setCreditStatus(2);
                     }
                     // 债权是否结束状态
                     borrowRecover.setDebtStatus(debtEndFlag);
-
+                    borrowRecover.setCreditStatus(borrowCredit.getCreditStatus());
                     creditTenderBg.setAssignAccountNew(assignAccountNew);
                     creditTenderBg.setBorrowCredit(borrowCredit);
                     creditTenderBg.setCreditTender(creditTender);
@@ -856,6 +856,16 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     }
                     // 发送法大大协议
                     this.sendPdfMQ(userId, creditTender.getBidNid(),creditTender.getAssignNid(), creditTender.getCreditNid(), creditTender.getCreditTenderNid());
+                    // 发送承接完成短信
+                    if (borrowCredit.getCreditCapitalAssigned().compareTo(borrowCredit.getCreditCapital()) == 0) {
+                        try {
+                            logger.info("发送承接完成短信 mq ");
+                            this.sendCreditSuccessMessage(creditTender,borrowCredit);
+                        } catch (MQException e) {
+                            logger.error("e   :",e);
+                            e.printStackTrace();
+                        }
+                    }
                     //----------------------------------准备开始操作运营数据等  用mq----------------------------------
                     logger.info("开始更新运营数据等 updateUtm ");
                     updateUtm(userId, creditTenderLog.getAssignCapital(), GetDate.getNowTime10(), borrowCredit.getCreditTerm() + "天");
