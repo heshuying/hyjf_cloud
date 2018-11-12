@@ -6,6 +6,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -63,6 +64,33 @@ public class ReadExcel extends XxlsAbstract {
 
     }
 
+
+    /**
+     * Excel解析开始
+     *
+     * @param filePath 文件流
+     * @param nameMaps Excel表头
+     * @return List<JSONObject>
+     * @throws IOException
+     */
+    public List<JSONObject> readExcel(InputStream filePath, Map<String, String> nameMaps) throws IOException {
+        resumeList.clear();
+        titleMap = nameMaps;
+        nameMap = nameMaps;
+        try {
+            if (filePath != null && !EMPTY.equals(filePath)) {
+                logger.info("文件路径 ：" + filePath);
+                readXlsx1(filePath, resumeList);
+            } else {
+                logger.info(NOT_EXCEL_FILE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return resumeList;
+
+    }
+
     /**
      * get postfix of the path
      *
@@ -94,9 +122,27 @@ public class ReadExcel extends XxlsAbstract {
             new ReadExcel().processOneSheet(path, 1, resumeList);
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("读取excel文件失败,失败原因 ：", e);
         }
     }
 
+
+    /**
+     * Read the Excel 2010
+     *
+     * @param in         文件流
+     * @param resumeList 返回结果list
+     * @return
+     * @throws IOException
+     */
+    public void readXlsx1(InputStream in, List<JSONObject> resumeList) throws IOException {
+        try {
+            new ReadExcel().processOneSheet(in, 1, resumeList);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("读取excel文件失败,失败原因 ：", e);
+        }
+    }
 
     /**
      * 输出解析的数据

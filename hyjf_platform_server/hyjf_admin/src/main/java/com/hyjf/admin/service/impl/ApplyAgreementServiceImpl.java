@@ -275,6 +275,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 applyAgreement.setStatus(1);
                 applyAgreement.setCreateTime(new Date());
                 applyAgreement.setDelFlag(0);
+                logger.info("-------------------------垫付机构协议管理，更新applyAgreement:"+JSONObject.toJSON(applyAgreement));
                 amTradeClient.saveApplyAgreement(applyAgreement);
 
             }
@@ -481,8 +482,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         String nid = borrowRecover.getNid();
         List<CreditRepayVO> creditRepayList = this.selectCreditRepay(nid,repay_period);
         logger.info("-------------------------处理不分期债转，填充所有债转信息creditRepayList："+JSONObject.toJSON(creditRepayList));
+        logger.info("-------------------------处理不分期债转，已承接债转本金creditAmount："+creditAmount);
         if(creditRepayList!=null && creditRepayList.size()>0){//债转
-            boolean creditRepayAll = (creditAmount.compareTo(new BigDecimal("0.00"))==1) && (creditAmount.compareTo(creditAmount)==0);//是否是全部债转
+            boolean creditRepayAll = (creditAmount.compareTo(new BigDecimal("0.00"))==1) && (creditAmount.compareTo(recoverCapital)==0);//是否是全部债转
+            logger.info("-------------------------处理不分期债转，已承接债转本金creditRepayAll："+creditRepayAll);
             BigDecimal assignPay  = new BigDecimal("0.00");//所有债转已还利息总和（结算剩余部分用）
             //填充所有债转信息
             for (CreditRepayVO creditRepay : creditRepayList) {
@@ -494,6 +497,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 bean.setParamter(paramter);
                 bean.setTeString(DF);
                 logger.info("-------------------------处理不分期债转，填充所有债转信息paramter："+JSONObject.toJSON(paramter));
+                logger.info("-------------------------处理不分期债转，填充所有债转信息bean："+JSONObject.toJSON(bean));
                 // 法大大生成合同
                 try {
                     fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
@@ -566,7 +570,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         String nid = borrowRecover.getNid();
         List<HjhDebtCreditRepayVO> hjhDebtCreditRepayList = this.selectHjhCreditRepay(nid,repay_period);
         if(hjhDebtCreditRepayList!=null && hjhDebtCreditRepayList.size()>0){//债转
-            boolean creditRepayAll = (creditAmount.compareTo(new BigDecimal("0.00"))==1) && (creditAmount.compareTo(creditAmount)==0);//是否是全部债转
+            boolean creditRepayAll = (creditAmount.compareTo(new BigDecimal("0.00"))==1) && (creditAmount.compareTo(recoverCapital)==0);//是否是全部债转
             BigDecimal assignPay  = new BigDecimal("0.00");//所有债转已还利息总和（结算剩余部分用）
             //填充所有债转信息
             for (HjhDebtCreditRepayVO hjhDebtCreditRepayVO : hjhDebtCreditRepayList) {
@@ -1150,7 +1154,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         // 标的编号
         paramter.put("borrowNid", borrow.getBorrowNid());
         //编号
-        paramter.put("NID", creditRepay.getAssignNid()+"_"+creditRepay.getRecoverPeriod());
+        paramter.put("NID", creditRepay.getUniqueNid());
         //借款本金总额
         paramter.put("borrowAccount", borrow.getAccount().toString());
         // 借款利率
@@ -1194,6 +1198,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         bean.setAssignOrderId(creditRepay.getUniqueNid());
         bean.setCreditNid(creditRepay.getCreditNid());//债转编号
         bean.setCreditTenderNid(creditRepay.getCreditTenderNid());//原始投资订单号
+        logger.info("-------------------------处理不分期债转，填充所有债转信息bean2："+JSONObject.toJSON(bean));
         return paramter;
     }
 
