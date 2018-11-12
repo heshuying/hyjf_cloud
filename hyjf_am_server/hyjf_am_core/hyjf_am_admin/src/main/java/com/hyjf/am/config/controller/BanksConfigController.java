@@ -438,8 +438,8 @@ public class BanksConfigController extends BaseConfigController{
         return jxBankConfigResponse;
     }
 
-    @GetMapping("/getBankConfigByBankName/{bankName}")
-    public JxBankConfigResponse getBankConfigByBankName(@PathVariable String bankName){
+    @GetMapping("/getJxBankConfigByBankName/{bankName}")
+    public JxBankConfigResponse getJxBankConfigByBankName(@PathVariable String bankName){
         JxBankConfigResponse response = new JxBankConfigResponse();
         JxBankConfig bankConfig = bankConfigService.getBankConfigByBankName(bankName);
         if(null != bankConfig){
