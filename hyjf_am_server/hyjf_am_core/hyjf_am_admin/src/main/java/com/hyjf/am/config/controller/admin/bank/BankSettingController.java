@@ -13,6 +13,8 @@ import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,6 +32,8 @@ import java.util.List;
 @RequestMapping("/am-config/banksetting")
 public class BankSettingController {
 
+    private static final Logger logger = LoggerFactory.getLogger(BankSettingController.class);
+
     @Autowired
     private BankSettingService bankSettingService;
 
@@ -42,21 +46,44 @@ public class BankSettingController {
      */
     @RequestMapping("/list")
     public AdminBankSettingResponse selectBankSettingListByPage(@RequestBody AdminBankSettingRequest adminRequest) {
-        AdminBankSettingResponse  response = new AdminBankSettingResponse();
-        JxBankConfig bc=new JxBankConfig();
+        JxBankConfig bc = new JxBankConfig();
+        List<JxBankConfig> recordList = null;
         bc.setBankName(adminRequest.getBankName());
         bc.setPayAllianceCode(adminRequest.getPayAllianceCode());
-        List<JxBankConfig> recordList = this.bankSettingService.getRecordList(bc, -1, -1);
-        if (recordList != null) {
+        AdminBankSettingResponse response = new AdminBankSettingResponse();
+
+        try {
+            // 数据查询
+            recordList = this.bankSettingService.getRecordList(bc, -1, -1);
+        } catch (Exception e) {
+            logger.info("Admin江西银行数据查询异常！requestParam:{}", bc.toString());
+            e.printStackTrace();
+            response.setRtn(Response.FAIL);
+            response.setMessage("Admin江西银行数据查询异常！具体原因详见日志");
+            return response;
+        }
+
+        if (CollectionUtils.isNotEmpty(recordList)) {
             for(JxBankConfig banksConfig : recordList) {
                 // 不支持快捷支付
                 if (0 == banksConfig.getQuickPayment()) {
                     banksConfig.setMonthCardQuota(new BigDecimal(0));
                 }
             }
-            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordList.size(), adminRequest.getPageSize() == 0 ? 10 : adminRequest.getPageSize());
             response.setRecordTotal(recordList.size());
-            recordList = this.bankSettingService.getRecordList(bc, paginator.getOffset(), paginator.getLimit());
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordList.size(), adminRequest.getPageSize() == 0 ? 10 : adminRequest.getPageSize());
+
+            try {
+                // 数据查询
+                recordList = this.bankSettingService.getRecordList(bc, paginator.getOffset(), paginator.getLimit());
+            } catch (Exception e) {
+                logger.info("Admin江西银行数据查询异常！requestParam:{}", bc.toString());
+                e.printStackTrace();
+                response.setRtn(Response.FAIL);
+                response.setMessage("Admin江西银行数据查询异常！具体原因详见日志");
+                return response;
+            }
+
             if(CollectionUtils.isNotEmpty(recordList)){
                 List<JxBankConfigVO> jxBankConfigList = CommonUtils.convertBeanList(recordList, JxBankConfigVO.class);
                 response.setPaginator(paginator);
@@ -66,12 +93,7 @@ public class BankSettingController {
                 response.setFileDomainUrl(fileDomainUrl);
                 return response;
             }
-            response.setRtn(Response.FAIL);
-            response.setMessage(Response.FAIL_MSG);
-            return response;
         }
-        response.setRtn(Response.FAIL);
-        response.setMessage(Response.FAIL_MSG);
         return response;
     }
 
@@ -82,15 +104,24 @@ public class BankSettingController {
      */
     @RequestMapping("/info")
     public AdminBankSettingResponse bankSettingInfo(@RequestBody AdminBankSettingRequest adminRequest) {
+        JxBankConfig jxBankConfigList = null;
         AdminBankSettingResponse  response = new AdminBankSettingResponse();
-        JxBankConfig jxBankConfigList = bankSettingService.bankSettingInfo(adminRequest);
+
+        try {
+            // 数据查询
+            jxBankConfigList = bankSettingService.bankSettingInfo(adminRequest);
+        } catch (Exception e) {
+            logger.info("Admin江西银行数据查询异常！requestParam:{}", adminRequest.toString());
+            e.printStackTrace();
+            response.setRtn(Response.FAIL);
+            response.setMessage("Admin江西银行数据查询异常！具体原因详见日志");
+            return response;
+        }
+
         if(jxBankConfigList != null){
             JxBankConfigVO jxBankConfigVO = CommonUtils.convertBean(jxBankConfigList, JxBankConfigVO.class);
             response.setResult(jxBankConfigVO);
-            return response;
         }
-        response.setRtn(Response.FAIL);
-        response.setMessage(Response.FAIL_MSG);
         return response;
     }
 
@@ -100,10 +131,22 @@ public class BankSettingController {
      */
     @RequestMapping("/searchForInsert")
     public AdminBankSettingResponse searchForInsert(@RequestBody AdminBankSettingRequest adminRequest) {
-        AdminBankSettingResponse response = new AdminBankSettingResponse();
+        List<JxBankConfig> recordList = null;
         JxBankConfig bc = new JxBankConfig();
         bc.setBankName(adminRequest.getBankName());
-        List<JxBankConfig> recordList = this.bankSettingService.getRecordList(bc, -1, -1);
+        AdminBankSettingResponse response = new AdminBankSettingResponse();
+
+        try {
+            // 数据查询
+            recordList = this.bankSettingService.getRecordList(bc, -1, -1);
+        } catch (Exception e) {
+            logger.info("Admin江西银行数据查询异常！requestParam:{}", adminRequest.toString());
+            e.printStackTrace();
+            response.setRtn(Response.FAIL);
+            response.setMessage("Admin江西银行数据查询异常！具体原因详见日志");
+            return response;
+        }
+
         if (CollectionUtils.isNotEmpty(recordList)){
             List<JxBankConfigVO> jxBankConfigVO = CommonUtils.convertBeanList(recordList, JxBankConfigVO.class);
             response.setResultList(jxBankConfigVO);
@@ -120,17 +163,24 @@ public class BankSettingController {
      */
     @RequestMapping("/insert")
     public AdminBankSettingResponse insertBankSetting(@RequestBody AdminBankSettingRequest adminRequest) {
-        AdminBankSettingResponse  response = new AdminBankSettingResponse();
-        try{
-            int result =this.bankSettingService.insertBankSetting(adminRequest);
-            if(result > 0 ){
-                return response;
-            }
-        }catch (Exception e){
+        int result = 0;
+        AdminBankSettingResponse response = new AdminBankSettingResponse();
+
+        try {
+            // 数据添加
+            result = this.bankSettingService.insertBankSetting(adminRequest);
+        } catch (Exception e) {
+            logger.info("Admin江西银行数据添加异常！requestParam:{}", adminRequest.toString());
             e.printStackTrace();
+            response.setRtn(Response.FAIL);
+            response.setMessage("Admin江西银行数据添加异常！具体原因详见日志");
+            return response;
         }
-        response.setRtn(Response.FAIL);
-        response.setMessage(Response.FAIL_MSG);
+
+        if(result <= 0 ){
+            response.setRtn(Response.FAIL);
+            response.setMessage(Response.FAIL_MSG);
+        }
         return response;
     }
 
@@ -141,17 +191,24 @@ public class BankSettingController {
      */
     @RequestMapping("/update")
     public AdminBankSettingResponse updateBankSetting(@RequestBody AdminBankSettingRequest adminRequest) {
+        int result = 0;
         AdminBankSettingResponse  response = new AdminBankSettingResponse();
-        try{
-            int result = this.bankSettingService.updateBankSetting(adminRequest);
-            if(result > 0 ){
-                return response;
-            }
-        }catch (Exception e){
+
+        try {
+            // 数据修改
+            result = this.bankSettingService.updateBankSetting(adminRequest);
+        } catch (Exception e) {
+            logger.info("Admin江西银行数据修改异常！requestParam:{}", adminRequest.toString());
             e.printStackTrace();
+            response.setRtn(Response.FAIL);
+            response.setMessage("Admin江西银行数据修改异常！具体原因详见日志");
+            return response;
         }
-        response.setRtn(Response.FAIL);
-        response.setMessage(Response.FAIL_MSG);
+
+        if(result <= 0 ){
+            response.setRtn(Response.FAIL);
+            response.setMessage(Response.FAIL_MSG);
+        }
         return response;
     }
 
@@ -162,16 +219,22 @@ public class BankSettingController {
      */
     @RequestMapping("/delete")
     public AdminBankSettingResponse deleteFeeConfig(@RequestBody AdminBankSettingRequest adminRequest) {
-        AdminBankSettingResponse  response = new AdminBankSettingResponse();
-        if(adminRequest.getId() != null){
-            this.bankSettingService.deleteFeeConfig(adminRequest.getId());
-            return  response;
+        AdminBankSettingResponse response = new AdminBankSettingResponse();
+        if(adminRequest.getId() == null){
+            response.setRtn(Response.FAIL);
+            response.setMessage("id字段为必传！");
+            return response;
         }
-        response.setRtn(Response.FAIL);
-        response.setMessage(Response.FAIL_MSG);
-        return  response;
+        try {
+            // 数据删除
+            bankSettingService.deleteFeeConfig(adminRequest.getId());
+        } catch (Exception e) {
+            logger.info("Admin江西银行数据删除异常！requestParam:{}", adminRequest.toString());
+            e.printStackTrace();
+            response.setRtn(Response.FAIL);
+            response.setMessage("Admin江西银行数据删除异常！具体原因详见日志");
+            return response;
+        }
+        return response;
     }
-
-
-
 }
