@@ -3,6 +3,7 @@ package com.hyjf.zuul.config;
 import com.hyjf.zuul.client.AmConfigClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.web.ServerProperties;
+import org.springframework.boot.autoconfigure.web.servlet.DispatcherServletPath;
 import org.springframework.cloud.netflix.zuul.filters.ZuulProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +15,9 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class CustomZuulConfig {
 	@Autowired
-    ZuulProperties zuulProperties;
+	private ZuulProperties zuulProperties;
 	@Autowired
-    ServerProperties server;
+	private DispatcherServletPath dispatcherServletPath;
 	@Autowired
 	private AmConfigClient amConfigClient;
 	@Autowired
@@ -24,7 +25,7 @@ public class CustomZuulConfig {
 
 	@Bean
 	public CustomRouteLocator routeLocator() {
-		CustomRouteLocator routeLocator = new CustomRouteLocator(this.server.getServlet().getServletPrefix(), this.zuulProperties);
+		CustomRouteLocator routeLocator = new CustomRouteLocator(dispatcherServletPath.getPrefix(), this.zuulProperties);
 		routeLocator.setAmConfigClient(amConfigClient);
 		routeLocator.setFlag(flag);
 		return routeLocator;
