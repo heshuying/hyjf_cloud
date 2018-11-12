@@ -204,9 +204,15 @@ public class BorrowController extends BaseController {
 	public BorrowResponse getBorrowByNid(@PathVariable String borrowId){
 		BorrowResponse response = new BorrowResponse();
 		Borrow borrow = borrowService.getBorrow(borrowId);
+		BorrowInfo borrowInfo=borrowService.getBorrowInfoByNid(borrowId);
+		BorrowAndInfoVO borrrowAndInfoVo = new BorrowAndInfoVO();
 		if (Validator.isNotNull(borrow)){
-			response.setResult(CommonUtils.convertBean(borrow,BorrowAndInfoVO.class));
+			borrrowAndInfoVo=CommonUtils.convertBean(borrow,BorrowAndInfoVO.class);
 		}
+		if (Validator.isNotNull(borrowInfo)){
+			borrrowAndInfoVo.setInstCode(borrowInfo.getInstCode());
+		}
+		response.setResult(borrrowAndInfoVo);
 		return response;
 	}
 

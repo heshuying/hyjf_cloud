@@ -21,6 +21,7 @@ import com.hyjf.am.response.trade.ApplyAgreementResponse;
 import com.hyjf.am.response.trade.BorrowRepayAgreementResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.BorrowRepayAgreementCustomizeVO;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.CreditRepayVO;
@@ -187,8 +188,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
      * @date 2018/7/12 10:52
      */
     @Override
-    public AdminResult generateContract(BorrowRepayAgreementRequest request) {
-        AdminResult result = new AdminResult();
+    public AdminResult generateContract(BorrowRepayAgreementRequest request,AdminSystemVO currUser) {
+
         //获取借款编号和期数组合
         List<String> recordList = request.getIds();
         if (recordList==null) {
@@ -259,8 +260,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 ApplyAgreementVO applyAgreement = new ApplyAgreementVO();
                 applyAgreement.setBorrowNid(borrow_nid);
                 applyAgreement.setRepayPeriod(repay_period);
-                applyAgreement.setApplyUserId(0);
-                applyAgreement.setApplyUserName("");
+                applyAgreement.setApplyUserId(Integer.valueOf(currUser.getId()));
+                applyAgreement.setApplyUserName(currUser.getUsername());
                 applyAgreement.setAgreementNumber(agreementsSUM);
                 applyAgreement.setStatus(1);
                 applyAgreement.setCreateTime(new Date());
