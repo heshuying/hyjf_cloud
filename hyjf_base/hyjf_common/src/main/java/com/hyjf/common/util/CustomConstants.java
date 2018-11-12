@@ -1503,5 +1503,8 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
 
     /** 首页项目列表  @RequestMapping值 */
     public static final String START_PAGE_ACTION = "/getStartPage";
+    
+    /** 首页列表缓存存活时间 秒 */
+    public static final int HOME_CACHE_LIVE_TIME = 12*60*60;
 
 }

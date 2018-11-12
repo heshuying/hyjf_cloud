@@ -1,6 +1,9 @@
 package com.hyjf.cs.trade.service.home.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alicp.jetcache.anno.CacheRefresh;
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.WechatProjectListResponse;
 import com.hyjf.am.resquest.market.AdsRequest;
@@ -56,6 +59,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class WechatProjectListServiceImpl implements WechatProjectListService {
@@ -833,7 +837,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                 HomePageDefine.WECHAT_REQUEST_MAPPING + HomePageDefine.WECHAT_HOME_INDEX_DATA_METHOD);
 
         // 添加顶部活动图片总数和顶部活动图片数组
-        this.createBannerPage(result);
+        this.createBannerPage(result);//加缓存
 
         return result;
     }
@@ -858,14 +862,14 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         WechatHomePageResult vo = new WechatHomePageResult();
         vo.setCurrentPage(currPage);
         vo.setPageSize(pageSize);
-        result = getProjectListAsyn(result, currPage, pageSize, showPlanFlag);
+        result = getProjectListAsyn(result, currPage, pageSize, showPlanFlag);//加缓存(新手标之外的散标和计划)
 
         if (currPage == 1) {
             String HOST = systemConfig.getWebHost();
             //判断用户是否登录
             if (userId == null || userId <= 0) {
                 //获取新手标
-                vo.setHomeXshProjectList(this.createProjectNewPage(userId, HOST));
+                vo.setHomeXshProjectList(this.createProjectNewPage(userId, HOST));//加缓存(新手标)
             } else {
                 //查询用户是否开户
                 UserVO userVO = amUserClient.findUserById(userId);
@@ -1193,11 +1197,13 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 
 
     /**
-     * 分页获取首页数据
+     * 分页获取首页数据(新手标之外的散标还有计划)
      *
      * @param
      * @return
      */
+	@Cached(name="wechatProjectListAsynCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     private WechatHomePageResult getProjectListAsyn(WechatHomePageResult vo, int currentPage, int pageSize, String showPlanFlag) {
 
         List<WechatHomeProjectListVO> list = null;
@@ -1317,7 +1323,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
         List<WechatHomeProjectListVO> list = new ArrayList<>();
         String host = HomePageDefine.WECHAT_DETAIL_REQUEST_MAPPING + HomePageDefine.WECHAT_DETAIL_METHOD;
-        List<AppProjectListCustomizeVO> projectList = searchProjectNewList(host);
+        List<AppProjectListCustomizeVO> projectList = searchProjectNewList(host);//加缓存
         if (projectList != null && !projectList.isEmpty() && projectList.size() != 0) {
             if (list.size() == 0 && projectList.size() != 0) {
                 AppProjectListCustomizeVO project = projectList.get(0);
@@ -1360,7 +1366,14 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         return list;
     }
 
-
+    /**
+     * 获取新手标数据
+     *
+     * @param
+     * @author
+     */
+	@Cached(name="wechatHomeProjectNewListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     private List<AppProjectListCustomizeVO> searchProjectNewList(String host) {
         List<AppProjectListCustomizeVO> projectList = new ArrayList<>();
 
