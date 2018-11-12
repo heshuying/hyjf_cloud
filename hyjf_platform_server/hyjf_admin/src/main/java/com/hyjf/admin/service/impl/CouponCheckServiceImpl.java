@@ -169,7 +169,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
             response.setHeader("content-disposition",
                     "attachment;filename=" + URLEncoder.encode(fileN, "utf-8"));
 
-            in = new FileInputStream(ADMIN_HOST + "/" + fileP);
+            in = new FileInputStream(ADMIN_HOST + fileP);
             // 创建输出流
             out = response.getOutputStream();
             // 创建缓冲区
