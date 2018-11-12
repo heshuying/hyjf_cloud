@@ -195,6 +195,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
         try {
             String[] split = path.split(",");
             String filePath = ADMIN_HOST + split[1];
+            URL url = new URL(filePath);
             Map<String, String> nameMaps = new HashMap<>();
             nameMaps.put("userName", "userName");
             nameMaps.put("activityId", "activityId");
@@ -202,7 +203,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
             ReadExcel readExcel = new ReadExcel();
             List<JSONObject> list = new ArrayList<>();
             try {
-                list = readExcel.readExcel(filePath, nameMaps);
+                list = readExcel.readExcel(url.openStream(), nameMaps);
             } catch (IOException e) {
                 logger.error("批量发送优惠券，解析Excel：" + filePath + "失败！", e);
                 return false;

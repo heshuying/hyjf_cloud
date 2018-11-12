@@ -58,6 +58,22 @@ public abstract class XxlsAbstract extends DefaultHandler {
 		sheet2.close();
 	}
 
+
+    public void processOneSheet(InputStream in,int sheetId,List<JSONObject> resumeList) throws Exception {
+        OPCPackage pkg = OPCPackage.open(in);
+        XSSFReader r = new XSSFReader(pkg);
+        SharedStringsTable sst = r.getSharedStringsTable();
+        XMLReader parser = fetchSheetParser(sst);
+        // rId2 found by processing the Workbook
+        // 根据 rId# 或 rSheet# 查找sheet
+        InputStream sheet2 = r.getSheet("rId"+sheetId);
+        resumeLists = resumeList;
+        sheetIndex++;
+        InputSource sheetSource = new InputSource(sheet2);
+        parser.parse(sheetSource);
+        sheet2.close();
+    }
+
 	/**
 	 * 遍历 excel 文件
 	 */
