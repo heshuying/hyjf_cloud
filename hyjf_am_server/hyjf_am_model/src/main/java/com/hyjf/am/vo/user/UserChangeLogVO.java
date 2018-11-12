@@ -38,6 +38,7 @@ public class UserChangeLogVO extends BaseVO implements Serializable {
     private String updateUser;
 
     private String updateTime;
+    private String email;
 
     private static final long serialVersionUID = 1L;
 
@@ -176,5 +177,13 @@ public class UserChangeLogVO extends BaseVO implements Serializable {
 
     public void setUpdateTime(String updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 }
