@@ -163,7 +163,7 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
                     criteria.andBorrowNidEqualTo(applyAgreement.getBorrowNid());
                     List<TenderAgreement> tenderAgreements = this.tenderAgreementMapper.selectByExample(example);
                     //申请状态 0 全部；1申请失败(hyjf_tender_agreement没有记录)：2申请中；3申请成功
-                    if (tenderAgreements != null) {
+                    if (tenderAgreements != null && tenderAgreements.size()>0) {
                         int tenderAgreementCout = 0;//hyjf_tender_agreement状态为3的数量和hyjf_apply_agreement协议份数相同表示都生成成功
                         for (TenderAgreement tenderAgreement : tenderAgreements) {
                             if (tenderAgreement.getStatus() == 1 || tenderAgreement.getStatus() == 2) {
@@ -185,29 +185,6 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
             }
         }
         return  listVo;
-    }
-
-    /**
-     * 封装查询条件
-     * @param request
-     * @return ApplyAgreementExample
-     */
-    private ApplyAgreementExample convertExample(ApplyAgreementRequest request){
-        ApplyAgreementExample applyAgreementExample = new ApplyAgreementExample();
-        ApplyAgreementExample.Criteria agreementcriteria = applyAgreementExample.createCriteria();
-        if(org.apache.commons.lang3.StringUtils.isNotEmpty(request.getBorrowNid())){
-            agreementcriteria.andBorrowNidEqualTo(request.getBorrowNid());
-        }
-        if(org.apache.commons.lang3.StringUtils.isNotEmpty(request.getBorrowPeriod())){
-            agreementcriteria.andRepayPeriodEqualTo(Integer.valueOf(request.getBorrowPeriod()));
-        }
-        if(org.apache.commons.lang3.StringUtils.isNotEmpty(request.getTimeStart()) &&
-                org.apache.commons.lang3.StringUtils.isNotEmpty(request.getTimeEnd())){
-            Date endDate = GetDate.stringToDate(request.getTimeEnd());
-            Date startDate = GetDate.stringToDate(request.getTimeStart());
-            agreementcriteria.andCreateTimeBetween(startDate, endDate);
-        }
-        return applyAgreementExample;
     }
 
     /**

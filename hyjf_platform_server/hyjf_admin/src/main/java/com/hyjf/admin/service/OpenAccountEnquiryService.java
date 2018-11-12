@@ -1,7 +1,6 @@
 package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.OpenAccountEnquiryDefineResultBean;
-import com.hyjf.admin.beans.OpenAccountEnquiryErrorResultBean;
 import com.hyjf.admin.beans.request.OpenAccountEnquiryDefineRequestBean;
 import com.hyjf.am.vo.config.AdminSystemVO;
 
