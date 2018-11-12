@@ -34,7 +34,7 @@ public class BankCallUtils implements Serializable {
 	private static final long serialVersionUID = -6921342106125704382L;
 
 	/** 跳转的jsp页面 */
-	private static final String SEND_JSP = "/bank/bank_send.html";
+	private static final String SEND_JSP = "bank/bank_send.html";
 
 	/** 接口路径(页面) */
 	private static final String REQUEST_MAPPING_CALLAPIPAGE = "/callApiPage.json";
