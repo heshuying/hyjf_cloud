@@ -92,186 +92,186 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
         //校验参数
         this.checkParam(request);
         // 调用江西银行接口分佣
-        try {
-            BankCallBean bean = new BankCallBean();
-            String channel = BankCallConstant.CHANNEL_PC;
-            String orderDate = GetOrderIdUtils.getOrderDate();
-            String txDate = GetOrderIdUtils.getTxDate();
-            String txTime = GetOrderIdUtils.getTxTime();
-            String seqNo = GetOrderIdUtils.getSeqNo(6);
-            // 版本号
-            bean.setVersion(BankCallConstant.VERSION_10);
-            // 交易代码
-            bean.setTxCode(BankCallConstant.TXCODE_FEE_SHARE);
-            bean.setTxDate(txDate);
-            bean.setTxTime(txTime);
-            bean.setSeqNo(seqNo);
-            bean.setChannel(channel);
-            // 电子账号
-            bean.setAccountId(request.getAccountId());
-            // 币种
-            bean.setCurrency(BankCallConstant.CURRENCY_TYPE_RMB);
-            // 分账金额
-            bean.setTxAmount(CustomUtil.formatAmount(request.getTxAmount()));
-            // 对手电子账号
-            bean.setForAccountId(request.getReceiveAccountId());
-            bean.setDescription("手续费分账");
-            bean.setLogOrderId(GetOrderIdUtils.getOrderId2(loginUserId));
-            bean.setLogUserId(String.valueOf(loginUserId));
-            bean.setLogOrderDate(orderDate);
-            bean.setLogRemark("手续费分账");
-            // 请求前插入记录表
-            boolean insertFlag = this.insertSubCommissionLog(bean, request, adminSystemVO);
-            if (insertFlag) {
-                // 调用银行接口
-                BankCallBean resultBean = BankCallUtils.callApiBg(bean);
+        /*        try {*/
+        BankCallBean bean = new BankCallBean();
+        String channel = BankCallConstant.CHANNEL_PC;
+        String orderDate = GetOrderIdUtils.getOrderDate();
+        String txDate = GetOrderIdUtils.getTxDate();
+        String txTime = GetOrderIdUtils.getTxTime();
+        String seqNo = GetOrderIdUtils.getSeqNo(6);
+        // 版本号
+        bean.setVersion(BankCallConstant.VERSION_10);
+        // 交易代码
+        bean.setTxCode(BankCallConstant.TXCODE_FEE_SHARE);
+        bean.setTxDate(txDate);
+        bean.setTxTime(txTime);
+        bean.setSeqNo(seqNo);
+        bean.setChannel(channel);
+        // 电子账号
+        bean.setAccountId(request.getAccountId());
+        // 币种
+        bean.setCurrency(BankCallConstant.CURRENCY_TYPE_RMB);
+        // 分账金额
+        bean.setTxAmount(CustomUtil.formatAmount(request.getTxAmount()));
+        // 对手电子账号
+        bean.setForAccountId(request.getReceiveAccountId());
+        bean.setDescription("手续费分账");
+        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(loginUserId));
+        bean.setLogUserId(String.valueOf(loginUserId));
+        bean.setLogOrderDate(orderDate);
+        bean.setLogRemark("手续费分账");
+        // 请求前插入记录表
+        boolean insertFlag = this.insertSubCommissionLog(bean, request, adminSystemVO);
+        if (insertFlag) {
+            // 调用银行接口
+            BankCallBean resultBean = BankCallUtils.callApiBg(bean);
 
-                String retCode = resultBean.getRetCode() == null ? "" : resultBean.getRetCode();
-                logger.info("处理前retCode:[{}],处理后retCode:[{}]",resultBean.getRetCode(),retCode);
-                // 银行返回错误信息
-                if(StringUtils.isNotBlank(retCode) && !"null".equals(retCode)){
-                    String errorMsg = amConfigClient.getBankRetMsg(resultBean.getRetCode() == null ? "" : resultBean.getRetCode());
-                    request.setErrorMsg(errorMsg);
-                }
-                request.setResultBean(CommonUtils.convertBean(resultBean,BankCallBeanVO.class));
-                request.setAdminSystemVO(adminSystemVO);
+            String retCode = resultBean.getRetCode() == null ? "" : resultBean.getRetCode();
+            logger.info("处理前retCode:[{}],处理后retCode:[{}]",resultBean.getRetCode(),retCode);
+            // 银行返回错误信息
+            if(StringUtils.isNotBlank(retCode) && !"null".equals(retCode)){
+                String errorMsg = amConfigClient.getBankRetMsg(resultBean.getRetCode() == null ? "" : resultBean.getRetCode());
+                request.setErrorMsg(errorMsg);
+            }
+            request.setResultBean(CommonUtils.convertBean(resultBean,BankCallBeanVO.class));
+            request.setAdminSystemVO(adminSystemVO);
 
-                if (resultBean == null) {
-                    logger.info("调用银行接口失败,银行返回空.订单号:[" + bean.getLogOrderId() + "].");
-                    request.setCallBankSuccess(false);
-                    jsonObject = amTradeClient.subCommission(request);
-                    CheckUtil.check(false,MsgEnum.ERR_BANK_CALL);
-                }
-                // 银行返回响应代码
-                if("CA51".equals(retCode)){
-                    // 更新订单状态:失败
-                    request.setCallBankSuccess(false);
-                    jsonObject = amTradeClient.subCommission(request);
-                    // 转账成功，更新状态失败
-                    CheckUtil.check(false,MsgEnum.ERR_AMT_NO_MONEY);
-                }
-                // 调用银行接口失败
-                if (!BankCallStatusConstant.RESPCODE_SUCCESS.equals(retCode)) {
-                    // 更新订单状态:失败
-                    request.setCallBankSuccess(false);
-                    jsonObject = amTradeClient.subCommission(request);
-                    // 转账成功，更新状态失败
-                    CheckUtil.check(false,MsgEnum.ERR_BANK_CALL);
-                }
-                // 银行返回成功
-                // 更新订单,用户账户等信息
+            if (resultBean == null) {
+                logger.info("调用银行接口失败,银行返回空.订单号:[" + bean.getLogOrderId() + "].");
+                request.setCallBankSuccess(false);
+                jsonObject = amTradeClient.subCommission(request);
+                CheckUtil.check(false,MsgEnum.ERR_BANK_CALL);
+            }
+            // 银行返回响应代码
+            if("CA51".equals(retCode)){
+                // 更新订单状态:失败
+                request.setCallBankSuccess(false);
+                jsonObject = amTradeClient.subCommission(request);
+                // 转账成功，更新状态失败
+                CheckUtil.check(false,MsgEnum.ERR_AMT_NO_MONEY);
+            }
+            // 调用银行接口失败
+            if (!BankCallStatusConstant.RESPCODE_SUCCESS.equals(retCode)) {
+                // 更新订单状态:失败
+                request.setCallBankSuccess(false);
+                jsonObject = amTradeClient.subCommission(request);
+                // 转账成功，更新状态失败
+                CheckUtil.check(false,MsgEnum.ERR_BANK_CALL);
+            }
+            // 银行返回成功
+            // 更新订单,用户账户等信息
 
-                Integer nowTime = GetDate.getNowTime10();
-                // 转账订单号
-                String orderId = resultBean.getLogOrderId();
-                // 转入用户ID
-                Integer receiveUserId = request.getReceiveUserId();
-                // 交易金额
-                String txAmount = resultBean.getTxAmount();
+            Integer nowTime = GetDate.getNowTime10();
+            // 转账订单号
+            String orderId = resultBean.getLogOrderId();
+            // 转入用户ID
+            Integer receiveUserId = request.getReceiveUserId();
+            // 交易金额
+            String txAmount = resultBean.getTxAmount();
 
-                // 查询交易记录
-                AccountWebListVO accountWebListVO = new AccountWebListVO();
-                accountWebListVO.setOrdid(orderId);
-                boolean isExistFlag = csMessageClient.queryAccountWebList(accountWebListVO).getResultList().size()>0;
-                if (isExistFlag) {
-                    logger.info("重复转账:转账订单号:[" + orderId + "].");
-                    throw new RuntimeException("重复转账:转账订单号:[" + orderId + "].");
-                }
+            // 查询交易记录
+            AccountWebListVO accountWebListVO = new AccountWebListVO();
+            accountWebListVO.setOrdid(orderId);
+            boolean isExistFlag = csMessageClient.queryAccountWebList(accountWebListVO).getResultList().size()>0;
+            if (isExistFlag) {
+                logger.info("重复转账:转账订单号:[" + orderId + "].");
+                throw new RuntimeException("重复转账:转账订单号:[" + orderId + "].");
+            }
 
-                // 插入网站收支明细记录
-                AccountWebListVO accountWebList = new AccountWebListVO();
-                // 订单号
-                accountWebList.setOrdid(orderId);
-                // 投资编号
-                accountWebList.setBorrowNid("");
-                accountWebList.setUserId(receiveUserId);
-                // 管理费
-                accountWebList.setAmount(Double.valueOf(txAmount));
-                // 类型1收入,2支出
-                accountWebList.setType(CustomConstants.TYPE_OUT);
-                // 管理费
-                accountWebList.setTrade("fee_share_out");
-                // 账户管理费
-                accountWebList.setTradeType("手续费分佣");
-                // 备注
-                accountWebList.setRemark(request.getRemark());
-                accountWebList.setCreateTime(nowTime);
-                accountWebList.setOperator(adminSystemVO.getUsername());
-                int webListCount = csMessageClient.queryAccountWebList(accountWebList).getResultList().size();
-                if (webListCount == 0) {
-                    UserInfoVO userInfo = amUserClient.findUsersInfoById(receiveUserId);
-                    if (userInfo != null) {
-                        Integer attribute = userInfo.getAttribute();
-                        if (attribute != null) {
-                            // 查找用户的的推荐人
-                            SpreadsUserVO spreadsUserVO = amUserClient.searchSpreadsUserByUserId(receiveUserId);
-                            Integer refUserId = (spreadsUserVO == null || spreadsUserVO.getSpreadsUserId() == null)?null:spreadsUserVO.getSpreadsUserId();
-                            UserVO user = amUserClient.findUserById(receiveUserId);
+            // 插入网站收支明细记录
+            AccountWebListVO accountWebList = new AccountWebListVO();
+            // 订单号
+            accountWebList.setOrdid(orderId);
+            // 投资编号
+            accountWebList.setBorrowNid("");
+            accountWebList.setUserId(receiveUserId);
+            // 管理费
+            accountWebList.setAmount(Double.valueOf(txAmount));
+            // 类型1收入,2支出
+            accountWebList.setType(CustomConstants.TYPE_OUT);
+            // 管理费
+            accountWebList.setTrade("fee_share_out");
+            // 账户管理费
+            accountWebList.setTradeType("手续费分佣");
+            // 备注
+            accountWebList.setRemark(request.getRemark());
+            accountWebList.setCreateTime(nowTime);
+            accountWebList.setOperator(adminSystemVO.getUsername());
+            int webListCount = csMessageClient.queryAccountWebList(accountWebList).getResultList().size();
+            if (webListCount == 0) {
+                UserInfoVO userInfo = amUserClient.findUsersInfoById(receiveUserId);
+                if (userInfo != null) {
+                    Integer attribute = userInfo.getAttribute();
+                    if (attribute != null) {
+                        // 查找用户的的推荐人
+                        SpreadsUserVO spreadsUserVO = amUserClient.searchSpreadsUserByUserId(receiveUserId);
+                        Integer refUserId = (spreadsUserVO == null || spreadsUserVO.getSpreadsUserId() == null)?null:spreadsUserVO.getSpreadsUserId();
+                        UserVO user = amUserClient.findUserById(receiveUserId);
 
 
-                            // 如果是线上员工或线下员工，推荐人的userId和username不插
-                            if (user != null && (attribute == 2 || attribute == 3)) {
-                                // 查找用户信息
-                                EmployeeCustomizeVO employeeCustomizeVO = amUserClient.searchEmployeeBuUserId(receiveUserId);
-                                if (employeeCustomizeVO != null) {
-                                    accountWebList.setRegionName(employeeCustomizeVO.getRegionName());
-                                    accountWebList.setBranchName(employeeCustomizeVO.getBranchName());
-                                    accountWebList.setDepartmentName(employeeCustomizeVO.getDepartmentName());
-                                }
-                            }
-                            // 如果是无主单，全插
-                            else if (user != null && (attribute == 1)) {
-                                // 查找用户推荐人
-                                EmployeeCustomizeVO employeeCustomizeVO = amUserClient.searchEmployeeBuUserId(refUserId);
-                                if (employeeCustomizeVO != null) {
-                                    accountWebList.setRegionName(employeeCustomizeVO.getRegionName());
-                                    accountWebList.setBranchName(employeeCustomizeVO.getBranchName());
-                                    accountWebList.setDepartmentName(employeeCustomizeVO.getDepartmentName());
-                                }
-                            }
-                            // 如果是有主单
-                            else if (user != null && (attribute == 0)) {
-                                // 查找用户推荐人
-                                EmployeeCustomizeVO employeeCustomizeVO = amUserClient.searchEmployeeBuUserId(refUserId);
-                                if (employeeCustomizeVO != null) {
-                                    accountWebList.setRegionName(employeeCustomizeVO.getRegionName());
-                                    accountWebList.setBranchName(employeeCustomizeVO.getBranchName());
-                                    accountWebList.setDepartmentName(employeeCustomizeVO.getDepartmentName());
-                                }
+                        // 如果是线上员工或线下员工，推荐人的userId和username不插
+                        if (user != null && (attribute == 2 || attribute == 3)) {
+                            // 查找用户信息
+                            EmployeeCustomizeVO employeeCustomizeVO = amUserClient.searchEmployeeBuUserId(receiveUserId);
+                            if (employeeCustomizeVO != null) {
+                                accountWebList.setRegionName(employeeCustomizeVO.getRegionName());
+                                accountWebList.setBranchName(employeeCustomizeVO.getBranchName());
+                                accountWebList.setDepartmentName(employeeCustomizeVO.getDepartmentName());
                             }
                         }
-                        accountWebList.setTruename(userInfo.getTruename());
-                        accountWebList.setFlag(1);
+                        // 如果是无主单，全插
+                        else if (user != null && (attribute == 1)) {
+                            // 查找用户推荐人
+                            EmployeeCustomizeVO employeeCustomizeVO = amUserClient.searchEmployeeBuUserId(refUserId);
+                            if (employeeCustomizeVO != null) {
+                                accountWebList.setRegionName(employeeCustomizeVO.getRegionName());
+                                accountWebList.setBranchName(employeeCustomizeVO.getBranchName());
+                                accountWebList.setDepartmentName(employeeCustomizeVO.getDepartmentName());
+                            }
+                        }
+                        // 如果是有主单
+                        else if (user != null && (attribute == 0)) {
+                            // 查找用户推荐人
+                            EmployeeCustomizeVO employeeCustomizeVO = amUserClient.searchEmployeeBuUserId(refUserId);
+                            if (employeeCustomizeVO != null) {
+                                accountWebList.setRegionName(employeeCustomizeVO.getRegionName());
+                                accountWebList.setBranchName(employeeCustomizeVO.getBranchName());
+                                accountWebList.setDepartmentName(employeeCustomizeVO.getDepartmentName());
+                            }
+                        }
                     }
-                    //boolean accountWebListFlag = csMessageClient.insertAccountWebList(accountWebList) > 0;
-                    try {
-                        // 发mq 插入accountWebList
-                        accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebListVO)));
-                    } catch (MQException e) {
-                        e.printStackTrace();
-                        throw new RuntimeException("发送MQ(ht_account_web_list)失败！" + "[订单号：" + orderId + "]");
-                    }
-                } else {
-                    throw new RuntimeException("网站收支记录(ht_account_web_list)已存在!" + "[投资订单号：" + orderId + "]");
+                    accountWebList.setTruename(userInfo.getTruename());
+                    accountWebList.setFlag(1);
                 }
-
-                request.setCallBankSuccess(true);
-                jsonObject = amTradeClient.subCommission(request);
-
-                boolean updateFlag = jsonObject.getBoolean("isUpdate");
-                if (!updateFlag) {
-                    logger.info("调用银行成功后,更新数据失败");
-                    // 转账成功，更新状态失败
-                    CheckUtil.check(false,MsgEnum.ERR_BANK_UPDATE_AFTER_CALL);
-                    return jsonObject;
+                //boolean accountWebListFlag = csMessageClient.insertAccountWebList(accountWebList) > 0;
+                try {
+                    // 发mq 插入accountWebList
+                    accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebListVO)));
+                } catch (MQException e) {
+                    e.printStackTrace();
+                    throw new RuntimeException("发送MQ(ht_account_web_list)失败！" + "[订单号：" + orderId + "]");
                 }
+            } else {
+                throw new RuntimeException("网站收支记录(ht_account_web_list)已存在!" + "[投资订单号：" + orderId + "]");
             }
-        } catch (Exception e) {
+
+            request.setCallBankSuccess(true);
+            jsonObject = amTradeClient.subCommission(request);
+
+            boolean updateFlag = jsonObject.getBoolean("isUpdate");
+            if (!updateFlag) {
+                logger.info("调用银行成功后,更新数据失败");
+                // 转账成功，更新状态失败
+                CheckUtil.check(false,MsgEnum.ERR_BANK_UPDATE_AFTER_CALL);
+                return jsonObject;
+            }
+        }
+/*        } catch (Exception e) {
             logger.info("转账发生异常:异常信息:[" + e.getMessage() + "].");
             logger.info("转账发生异常:" + e);
             CheckUtil.check(false,MsgEnum.ERR_AMT_TRANSFER);
             return jsonObject;
-        }
+        }*/
         return jsonObject;
     }
 
