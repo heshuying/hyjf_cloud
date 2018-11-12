@@ -11,6 +11,7 @@ import com.hyjf.admin.service.BankJournalService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.BankEveRequest;
+import com.hyjf.am.vo.admin.BankAleveVO;
 import com.hyjf.am.vo.admin.BankEveVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -116,19 +117,17 @@ public class BankJournalController {
 
 
         Integer count = bankJournalService.queryBankEveCount(bankEveRequest);
-
-
-        if (count == null || count <= 0){
+        List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
+        if (count == null || count.equals(0)){
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }else{
-            List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
             int totalCount = count;
             sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, bankEveList);
         }
 
         for (int i = 1; i < sheetCount; i++) {
-            bankEveRequest.setPaginatorPage(i +1);
+            bankEveRequest.setCurrPage(i +1);
             // 需要输出的结果列表
             List<BankEveVO> bankEveList2 =bankJournalService.queryBankEveList(bankEveRequest);
             if (!CollectionUtils.isEmpty(bankEveList2)) {

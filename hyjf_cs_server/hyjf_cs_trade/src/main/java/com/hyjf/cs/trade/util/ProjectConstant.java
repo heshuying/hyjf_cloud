@@ -76,7 +76,9 @@ public class ProjectConstant {
     /**
      * 计息时间
      */
-    public static String PLAN_ON_ACCRUAL = "计划进入锁定期后开始计息";
+    // mod by nxl 智投服务修改计息时间
+//    public static String PLAN_ON_ACCRUAL = "计划进入锁定期后开始计息";
+    public static String PLAN_ON_ACCRUAL = "从授权出借本金全部放款成功之日开始，至服务回报期限届满。";
     /**
      * 汇计划类型简称
      */
