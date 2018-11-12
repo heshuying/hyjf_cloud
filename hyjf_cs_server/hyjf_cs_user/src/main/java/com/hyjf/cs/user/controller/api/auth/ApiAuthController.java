@@ -65,7 +65,7 @@ public class ApiAuthController extends BaseUserController {
 
     @ApiOperation(value = "多合一授权", notes = "多合一授权")
     @PostMapping(value = "/page.do", produces = "application/json; charset=utf-8")
-    public ModelAndView openBankAccount(@RequestBody @Valid ApiAuthRequesBean requestBean , HttpServletRequest request) {
+    public ModelAndView mergeAuthPage(@RequestBody @Valid ApiAuthRequesBean requestBean , HttpServletRequest request) {
         logger.info("第三方请求页面多合一授权, ApiAuthRequesBean is :{}", JSONObject.toJSONString(requestBean));
         ModelAndView modelAndView = new ModelAndView();
         Map<String, String> paramMap = authService.checkApiParam(requestBean);
@@ -175,7 +175,7 @@ public class ApiAuthController extends BaseUserController {
      */
     @ApiOperation(value = "页面开户异步处理", notes = "页面开户异步处理")
     @PostMapping("/bgReturn")
-    public BankCallResult openAccountBgReturn(HttpServletRequest request,@RequestBody BankCallBean bean) {
+    public BankCallResult bgReturn(HttpServletRequest request,@RequestBody BankCallBean bean) {
         logger.info("多合一授权异步回调start");
         BankCallResult result = new BankCallResult();
         BaseResultBean resultBean = new BaseResultBean();
