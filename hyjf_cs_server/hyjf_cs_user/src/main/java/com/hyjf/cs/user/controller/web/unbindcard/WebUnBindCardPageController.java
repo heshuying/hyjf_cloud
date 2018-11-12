@@ -5,6 +5,7 @@ import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.DeleteCardPageBean;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -70,9 +71,10 @@ public class WebUnBindCardPageController extends BaseUserController{
         deleteCardPageBean.setCardNo(bankCardVO.getCardNo());// 银行卡号
         deleteCardPageBean.setNotifyUrl(bgRetUrl);
         deleteCardPageBean.setMobile(user.getMobile());
+        deleteCardPageBean.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
 
         //调用解绑银行卡接口
-        Map<String,Object> data = unBindCardService.callUnBindCardPage(deleteCardPageBean,BankCallConstant.CHANNEL_PC,null,"0",request);
+        Map<String,Object> data = unBindCardService.callUnBindCardPage(deleteCardPageBean,BankCallConstant.CHANNEL_PC,null,request);
         result.setData(data);
         return result;
     }

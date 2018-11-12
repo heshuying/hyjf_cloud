@@ -6,13 +6,14 @@ package com.hyjf.cs.trade.service.invest.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
+import com.hyjf.am.response.config.DebtConfigResponse;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.am.vo.config.DebtConfigVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.*;
-import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
@@ -831,16 +832,16 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     }
                     borrowRecover.setCreditAmount(borrowRecover.getCreditAmount().add(creditTender.getAssignCapital()));
                     borrowRecover.setCreditInterestAmount(borrowRecover.getCreditInterestAmount().add(creditTender.getAssignInterestAdvance()));
-                    borrowRecover.setCreditStatus(borrowCredit.getCreditStatus());
                     // 已收债转管理费
                     borrowRecover.setCreditManageFee(borrowRecover.getCreditManageFee().add(perManageSum));
+                    logger.info("borrowCredit.getCreditCapitalAssigned():{}    borrowCredit.getCreditCapital():{}",borrowCredit.getCreditCapitalAssigned(),borrowCredit.getCreditCapital());
                     if (borrowCredit.getCreditCapitalAssigned().compareTo(borrowCredit.getCreditCapital()) == 0) {
                         debtEndFlag = 1;
                         borrowCredit.setCreditStatus(2);
                     }
                     // 债权是否结束状态
                     borrowRecover.setDebtStatus(debtEndFlag);
-
+                    borrowRecover.setCreditStatus(borrowCredit.getCreditStatus());
                     creditTenderBg.setAssignAccountNew(assignAccountNew);
                     creditTenderBg.setBorrowCredit(borrowCredit);
                     creditTenderBg.setCreditTender(creditTender);
@@ -856,6 +857,16 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     }
                     // 发送法大大协议
                     this.sendPdfMQ(userId, creditTender.getBidNid(),creditTender.getAssignNid(), creditTender.getCreditNid(), creditTender.getCreditTenderNid());
+                    // 发送承接完成短信
+                    if (borrowCredit.getCreditCapitalAssigned().compareTo(borrowCredit.getCreditCapital()) == 0) {
+                        try {
+                            logger.info("发送承接完成短信 mq ");
+                            this.sendCreditSuccessMessage(creditTender,borrowCredit);
+                        } catch (MQException e) {
+                            logger.error("e   :",e);
+                            e.printStackTrace();
+                        }
+                    }
                     //----------------------------------准备开始操作运营数据等  用mq----------------------------------
                     logger.info("开始更新运营数据等 updateUtm ");
                     updateUtm(userId, creditTenderLog.getAssignCapital(), GetDate.getNowTime10(), borrowCredit.getCreditTerm() + "天");
@@ -1236,8 +1247,15 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         } catch (Exception e) {
             logger.error("债转算是否是新旧标区分时间错误，债转标号:" + borrowCredit.getCreditNid());
         }
+        DebtConfigResponse response = amConfigClient.getDebtConfig();
+        DebtConfigVO config = response.getResult();
         if (ifOldDate != null && ifOldDate <= GetDate.getTime10(borrowCredit.getCreateTime())) {
             creditTenderLog.setCreditFee(assignPay.multiply(new BigDecimal(0.01)));
+            if(config!=null) {
+                creditTenderLog.setCreditFee(assignPay.multiply(config.getAttornRate().divide(new BigDecimal(100))).setScale(2, BigDecimal.ROUND_DOWN));
+            }else {
+                creditTenderLog.setCreditFee(assignPay.multiply(new BigDecimal(0.01)));
+            }
         } else {
             creditTenderLog.setCreditFee(assignPay.multiply(new BigDecimal(0.005)));
         }
