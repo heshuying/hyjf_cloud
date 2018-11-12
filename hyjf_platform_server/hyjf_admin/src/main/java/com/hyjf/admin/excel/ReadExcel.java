@@ -2,6 +2,8 @@ package com.hyjf.admin.excel;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -12,6 +14,7 @@ import java.util.Map;
 
 
 public class ReadExcel extends XxlsAbstract {
+    private Logger logger = LoggerFactory.getLogger(ReadExcel.class);
     public static final String OFFICE_EXCEL_2003_POSTFIX = "xls";
     public static final String OFFICE_EXCEL_2010_POSTFIX = "xlsx";
 
@@ -39,17 +42,18 @@ public class ReadExcel extends XxlsAbstract {
         nameMap = nameMaps;
         try {
             if (filePath == null || EMPTY.equals(filePath)) {
-                System.out.println("文件地址为空！");
+                logger.info("文件地址为空！");
             } else {
                 String postfix = getPostfix(filePath);
                 if (!EMPTY.equals(postfix)) {
                     if (OFFICE_EXCEL_2003_POSTFIX.equals(postfix)) {
                         new HxlsPrint(filePath).parseXls(filePath, titleMap, resumeList);
                     } else if (OFFICE_EXCEL_2010_POSTFIX.equals(postfix)) {
+                        logger.info("文件路径 ：" + filePath);
                         readXlsx1(filePath, resumeList);
                     }
                 } else {
-                    System.out.println(NOT_EXCEL_FILE);
+                    logger.info(NOT_EXCEL_FILE);
                 }
             }
         } catch (Exception e) {
@@ -85,7 +89,7 @@ public class ReadExcel extends XxlsAbstract {
      * @throws IOException
      */
     public void readXlsx1(String path, List<JSONObject> resumeList) throws IOException {
-        System.out.println(PROCESSING + path);
+        logger.info(PROCESSING + path);
         try {
             new ReadExcel().processOneSheet(path, 1, resumeList);
         } catch (Exception e) {
