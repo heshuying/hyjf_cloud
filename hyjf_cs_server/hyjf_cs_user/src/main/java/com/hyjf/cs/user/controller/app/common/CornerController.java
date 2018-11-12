@@ -16,10 +16,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -271,5 +268,23 @@ public class CornerController extends BaseController {
         result.setData(map);*/
         result.setStatusInfo("0","设置成功");
         return result;
+    }
+
+    /**
+     * 获取最新版本号下载地址
+     * @param request
+     * @param response
+     * @return
+     */
+    @ResponseBody
+    @PostMapping(value = "/getNewVersionURL")
+    public JSONObject getNewVersionURL(HttpServletRequest request, HttpServletResponse response) {
+        JSONObject map = new JSONObject();
+        map.put("status", "000");
+        map.put("request", "/hyjf-app/app/common/getVersion");
+        map.put("statusDesc", "请求成功");
+        VersionVO version = cornerService.getNewVersionByType(1);
+        map.put("url", version.getUrl());
+        return map;
     }
 }

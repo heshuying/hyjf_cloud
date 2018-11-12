@@ -203,12 +203,12 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
     /**
      * 获取用户投资协议分期
      *
-     * @param borrowNid
+     * @param nid
      * @return
      */
     @Override
-    public List<BorrowRecoverPlan> selectBorrowRecoverPlanList(String borrowNid, int period) {
-        return this.getBorrowRecoverPlan(borrowNid,period);
+    public List<BorrowRecoverPlan> selectBorrowRecoverPlanList(String nid, int period) {
+        return this.getBorrowRecoverPlan(nid,period);
     }
 
     /**

@@ -431,7 +431,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 			isBundCardFlag = 1;
 
 			Integer bankId = bankCard.getBankId();
-			JxBankConfigVO jxBankConfigVO = amConfigClient.getBanksConfigByBankId(bankId + "");
+			JxBankConfigVO jxBankConfigVO = amConfigClient.getBankNameByBankId(bankId + "");
 			if (jxBankConfigVO != null && jxBankConfigVO.getQuickPayment() == 1 && jxBankConfigVO.getSingleQuota() != null && jxBankConfigVO.getSingleCardQuota() != null) {
 				if(jxBankConfigVO.getSingleQuota().compareTo(BigDecimal.ZERO) > 0){
 					singleQuota = CommonUtils.formatBigDecimal(jxBankConfigVO.getSingleQuota().divide(new BigDecimal(10000))) + "万";
