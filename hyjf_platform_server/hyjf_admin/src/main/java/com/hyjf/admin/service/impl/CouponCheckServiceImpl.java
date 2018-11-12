@@ -40,10 +40,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -156,7 +154,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
 
     @Override
     public void downloadFile(String id, HttpServletResponse response) {
-        FileInputStream in = null;
+        BufferedInputStream in = null;
         OutputStream out = null;
         CouponCheckVO couponCheck = amConfigClient.selectCoupon(Integer.valueOf(id));
         String filePath = "";
@@ -171,8 +169,8 @@ public class CouponCheckServiceImpl implements CouponCheckService {
             logger.info("ADMIN_HOST is : {}", ADMIN_HOST);
             String path = ADMIN_HOST + filePath;
             logger.info("path is : {}", path);
-            path = path.replace("/","\\");
-            in = new FileInputStream(path);
+            URL url = new URL(path);
+            in = new BufferedInputStream(url.openStream());
             // 创建输出流
             out = response.getOutputStream();
             // 创建缓冲区

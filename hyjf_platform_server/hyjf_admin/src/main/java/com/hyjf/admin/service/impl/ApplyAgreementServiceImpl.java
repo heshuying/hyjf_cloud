@@ -480,6 +480,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         //债转投标单号
         String nid = borrowRecover.getNid();
         List<CreditRepayVO> creditRepayList = this.selectCreditRepay(nid,repay_period);
+        logger.info("-------------------------处理不分期债转，填充所有债转信息creditRepayList："+JSONObject.toJSON(creditRepayList));
         if(creditRepayList!=null && creditRepayList.size()>0){//债转
             boolean creditRepayAll = (creditAmount.compareTo(new BigDecimal("0.00"))==1) && (creditAmount.compareTo(creditAmount)==0);//是否是全部债转
             BigDecimal assignPay  = new BigDecimal("0.00");//所有债转已还利息总和（结算剩余部分用）
@@ -492,6 +493,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 JSONObject paramter = getAllcreditParamter(creditRepay,bean,borrow);
                 bean.setParamter(paramter);
                 bean.setTeString(DF);
+                logger.info("-------------------------处理不分期债转，填充所有债转信息paramter："+JSONObject.toJSON(paramter));
                 // 法大大生成合同
                 try {
                     fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
@@ -511,6 +513,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 borrowRecover.setRecoverInterestYes(assignPay);//剩余部分已还利息
                 JSONObject paramter = getNocreditParamter(borrowRecover,bean,borrow);
                 bean.setParamter(paramter); bean.setTeString(DF);
+                logger.info("-------------------------处理不分期债转，填充计算剩余部分paramter："+JSONObject.toJSON(paramter));
                 // 法大大生成合同
                 try {
                     fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
@@ -526,6 +529,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"-"+repay_period,repayOrgUserId,5,2);
             JSONObject paramter = getNocreditParamter(borrowRecover,bean,borrow);
             bean.setParamter(paramter); bean.setTeString(DF);
+            logger.info("-------------------------处理不分期债转，填充非债转paramter："+JSONObject.toJSON(paramter));
             // 法大大生成合同
             try {
                 fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
