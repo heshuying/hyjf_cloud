@@ -234,6 +234,8 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             result.setMessage("开户失败,保存用户开户信息失败");
             return result;
         }
+        // 更新account表的电子帐户号
+        Integer saveResult = amTradeClient.updateAccountNumberByUserId(userId,bean.getAccountId());
         // 更新redis里面的值
         WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
         if(user!=null){
@@ -246,9 +248,6 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             user.setRoleId(bean.getIdentity());
             RedisUtils.setObj(RedisConstants.USERID_KEY + userId,user);
         }
-        // 更新account表的电子帐户号
-        Integer saveResult = amTradeClient.updateAccountNumberByUserId(userId,bean.getAccountId());
-
         // 查询银行卡绑定信息
         Integer saveBankCardFlag = saveCardNoToBank(bean);
         if (saveBankCardFlag.intValue() != 1) {
