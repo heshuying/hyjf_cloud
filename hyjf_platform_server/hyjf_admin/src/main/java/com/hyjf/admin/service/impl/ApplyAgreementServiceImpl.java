@@ -206,6 +206,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 int agreements = 0;
                 String borrow_nid = paemStrings[0];//借款编号
                 int repay_period = Integer.valueOf(paemStrings[1]);//期数
+                logger.info("-------------------------垫付机构协议管理， 生成垫付债转协议借款编号："+ borrow_nid);
+                logger.info("-------------------------垫付机构协议管理， 生成垫付债转协议期数："+ repay_period);
                 // 获取标的信息
                 BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrow_nid);
                 BorrowInfoVO borrowInfo = amTradeClient.selectBorrowInfoByNid(borrow_nid);
