@@ -276,6 +276,7 @@ public class CornerController extends BaseController {
      * @param response
      * @return
      */
+    @ApiOperation("获取最新版本号下载地址")
     @ResponseBody
     @PostMapping(value = "/getNewVersionURL")
     public JSONObject getNewVersionURL(HttpServletRequest request, HttpServletResponse response) {

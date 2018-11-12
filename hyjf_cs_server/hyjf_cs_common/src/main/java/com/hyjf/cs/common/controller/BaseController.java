@@ -26,7 +26,7 @@ public class BaseController {
     protected static final Logger logger = LoggerFactory.getLogger(BaseController.class);
 
     private static final String CALL_BACK_ACTION = "callBackAction";
-    private static final String HIDE_SUBMIT_JSP_ERROR = "/api/api_error_send.html";
+    private static final String HIDE_SUBMIT_JSP_ERROR = "api/api_error_send.html";
     private static final String CHECK_SIGN_STR = "status";
     private static final String CHECK_VALUE = "chkValue";
 
