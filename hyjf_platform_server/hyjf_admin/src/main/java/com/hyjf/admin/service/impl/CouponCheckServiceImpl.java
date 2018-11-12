@@ -165,6 +165,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
         try {
             response.setHeader("content-disposition",
                     "attachment;filename=" + URLEncoder.encode(fileN, "utf-8"));
+
             in = new FileInputStream(fileP);
             // 创建输出流
             out = response.getOutputStream();
@@ -176,30 +177,13 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                 // 输出缓冲区内容到浏览器，实现文件下载
                 out.write(buffer, 0, len);
             }
-            out.flush();
-            // 关闭输出流
-            out.close();
             // 关闭文件流
             in.close();
+            // 关闭输出流
+            out.close();
         } catch (Exception e) {
-            logger.error(couponCheck.getFileName() + "下载失败");
-        } finally {
-            try{
-                if(out != null){
-                    out.flush();
-                    out.close();
-                }
-            }catch (Exception e){
-                logger.info("关闭输出流失败");
-            }
-            // 关闭输入流
-            try{
-                if(in != null){
-                    in.close();
-                }
-            }catch (Exception e){
-                logger.info("关闭输入流失败");
-            }
+            e.printStackTrace();
+            logger.error(couponCheck.getFileName() + "下载失败, 失败原因 ：" + e);
         }
     }
 

@@ -1047,6 +1047,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             //加入明细表插表成功的前提下，继续
             //crm投资推送
             try {
+                logger.info("投资成功后,发送CRM投资统计MQ:智投服务订单号:[" + planAccede.getAccedeOrderId() + "].");
                 amTradeProducer.messageSendDelay(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(crmInvestMsgBean)),2);
             } catch (Exception e) {
                 logger.error("发送CRM消息失败:" + e.getMessage());

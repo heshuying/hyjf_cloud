@@ -48,6 +48,8 @@ public class MyPlanDetailResultBean extends BaseResultBeanFrontEnd {
 		private String onAccrual = "";
 		//计划名称
 		private String planName = "";
+		// 项目进度状态
+		private  String type = "0";
 		
 		
 		public String getStatus() {
@@ -104,6 +106,14 @@ public class MyPlanDetailResultBean extends BaseResultBeanFrontEnd {
 
 		public void setPlanName(String planName) {
 			this.planName = planName;
+		}
+
+		public String getType() {
+			return type;
+		}
+
+		public void setType(String type) {
+			this.type = type;
 		}
 	}
 
