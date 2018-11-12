@@ -2033,12 +2033,18 @@
 		) AS interest,
 		hydb.borrow_account_scale AS borrow_schedule,
 		CONCAT(#{host},'?borrowNid=',hydb.borrow_nid,'&amp;tenderNid=',hiii.tender_nid,'&amp;investType=3') AS borrow_url,
-		'产品加息' label,
-		'' as coupon_type,
+		CONCAT('加息',FORMAT(hiii.borrow_extra_yield, 2),'%') label,
+		'4' as coupon_type,
 		hiil.repay_action_time AS recover_time_sort,
 		'3' AS invest_type,
 		hydbpt.borrow_class project_type,
-		hiii.tender_nid as order_id
+		hiii.tender_nid as order_id,
+		case when hydb.borrow_extra_yield=0 then
+		''
+		else
+		CONCAT('加息',hydb.borrow_extra_yield, '%')
+		end
+		borrow_extra_yield
 		FROM
 		ht_borrow hydb
 		INNER JOIN ht_borrow_info hydbinfo ON hydb.borrow_nid = hydbinfo.borrow_nid
@@ -2046,8 +2052,7 @@
 		LEFT JOIN ht_increase_interest_invest hiii ON hiii.borrow_nid = hydb.borrow_nid
 		LEFT JOIN ht_increase_interest_loan hiil ON hiil.invest_order_id = hiii.order_id
 		WHERE
-		hydb.project_type=13
-		AND hiil.user_id = #{userId,jdbcType=INTEGER}
+		hiil.user_id = #{userId,jdbcType=INTEGER}
 		AND hiil.repay_status = 1
 		GROUP BY
 		hiil.invest_order_id
