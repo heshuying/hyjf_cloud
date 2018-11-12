@@ -69,6 +69,9 @@ public class CouponCheckServiceImpl implements CouponCheckService {
     @Value("${file.physical.path}")
     private String PHYSICAL_PATH;
 
+    @Value("${admin.front.host}")
+    private String ADMIN_HOST;
+
     /**
      * 查询优惠券列表
      *
@@ -166,7 +169,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
             response.setHeader("content-disposition",
                     "attachment;filename=" + URLEncoder.encode(fileN, "utf-8"));
 
-            in = new FileInputStream(fileP);
+            in = new FileInputStream(ADMIN_HOST + fileP);
             // 创建输出流
             out = response.getOutputStream();
             // 创建缓冲区
