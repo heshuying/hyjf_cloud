@@ -98,10 +98,9 @@ public class ApiBankOpenController extends BaseUserController {
         openAccoutBean.setAcctUse(BankCallConstant.ACCOUNT_USE_COMMON);
         openAccoutBean.setIdentity(openBean.getIdentity());
         // 同步地址  是否跳转到前端页面
-        String bgRetUrl = "http://CS-USER/hyjf-api/server/user/accountOpenEncryptPage?phone=" + openBean.getMobile()+"&openclient="+openBean.getPlatform()+"&roleId="+openBean.getIdentity();
         openAccoutBean.setRetUrl(openBean.getRetUrl());
         openAccoutBean.setSuccessfulUrl(openBean.getSuccessfulUrl());
-        openAccoutBean.setNotifyUrl(bgRetUrl);
+        openAccoutBean.setNotifyUrl(openBean.getNotifyUrl());
         openAccoutBean.setCoinstName(openBean.getCoinstName()==null?"汇盈金服":openBean.getCoinstName());
         openAccoutBean.setLogRemark("开户+设密码页面");
         openAccoutBean.setLogIp(openBean.getIp());
@@ -114,13 +113,14 @@ public class ApiBankOpenController extends BaseUserController {
         OpenAccountPageBean bean = new OpenAccountPageBean();
         BeanUtils.copyProperties(requestBean,bean);
         String retUrl = systemConfig.getServerHost()+"/hyjf-api/server/user/accountOpenEncryptPage";
-        String successUrl = "http://CS-USER/hyjf-api/server/user/accountOpenEncryptPage";
+        String successUrl = systemConfig.getServerHost()+"/hyjf-api/server/user/accountOpenEncryptPage";
         // 异步调用路
         String bgRetUrl = "http://CS-USER/hyjf-api/server/user/accountOpenEncryptPage";
         // 调用设置密码接口
         retUrl += "/return?acqRes="+requestBean.getAcqRes()+"&callback="+requestBean.getRetUrl().replace("#", "*-*-*");
         successUrl += "/return?acqRes="+requestBean.getAcqRes()+"&isSuccess=1&callback="+requestBean.getRetUrl().replace("#", "*-*-*");
-        bgRetUrl += "/bgReturn?acqRes="+requestBean.getAcqRes()+"&callback="+requestBean.getBgRetUrl().replace("#", "*-*-*");
+        bgRetUrl += "/bgReturn?acqRes="+requestBean.getAcqRes()+"&phone=" + requestBean.getMobile()+"&openclient="+requestBean.getPlatform()+"&roleId="+requestBean.getIdentity()+
+        "&callback="+requestBean.getBgRetUrl().replace("#", "*-*-*");
         bean.setRetUrl(retUrl);
         bean.setNotifyUrl(bgRetUrl);
         bean.setSuccessfulUrl(successUrl);
