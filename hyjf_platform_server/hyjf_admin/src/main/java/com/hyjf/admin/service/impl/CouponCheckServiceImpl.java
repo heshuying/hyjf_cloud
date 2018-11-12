@@ -171,7 +171,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
             logger.info("ADMIN_HOST is : {}", ADMIN_HOST);
             String path = ADMIN_HOST + filePath;
             logger.info("path is : {}", path);
-            path = path.replace("/","\\");
+            path = path.replace("https://","https:///");
             in = new FileInputStream(path);
             // 创建输出流
             out = response.getOutputStream();
