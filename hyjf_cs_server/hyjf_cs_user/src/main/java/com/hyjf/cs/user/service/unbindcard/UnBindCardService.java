@@ -53,7 +53,7 @@ public interface UnBindCardService extends BaseUserService {
      * @param request
      * @return
      */
-    Map<String,Object> callUnBindCardPage(DeleteCardPageBean deleteCardPageBean,String channel, String sign, String platform, HttpServletRequest request);
+    Map<String,Object> callUnBindCardPage(DeleteCardPageBean deleteCardPageBean,String channel, String sign,HttpServletRequest request);
     /**
      * 解绑银行卡后(异步回调删除)
      * 合规四期(解卡页面调用)

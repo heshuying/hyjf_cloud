@@ -85,7 +85,6 @@ public class VipManagementController extends BaseController {
     public VipDetailListResponse getDetailList(@RequestBody VipDetailListRequest request) {
         VipDetailListResponse response = new VipDetailListResponse();
         Map<String, Object> mapParam = new HashMap<>();
-        mapParam.put("userId", request.getUserId());
         int count = vipManagementService.countDetailRecord(mapParam);
         Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
         if (request.getPageSize() == 0) {
@@ -113,7 +112,6 @@ public class VipManagementController extends BaseController {
     public VipUpdateGradeListResponse getUpdateGradeList(@RequestBody VipUpdateGradeListRequest request) {
         VipUpdateGradeListResponse response = new VipUpdateGradeListResponse();
         Map<String, Object> mapParam = new HashMap<>();
-        mapParam.put("userId", request.getUserId());
         int count = vipManagementService.countUpdateGradeList(mapParam);
         Paginator paginator = new Paginator(request.getCurrPage(), count, request.getPageSize());
         if (request.getPageSize() == 0) {
