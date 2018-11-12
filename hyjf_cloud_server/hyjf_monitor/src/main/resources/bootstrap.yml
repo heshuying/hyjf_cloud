@@ -11,7 +11,13 @@ spring:
     user:
       name: "hyjf"
       password: "hyjf1234"
-      
+  boot:
+    admin:
+      notify:
+        dingding:
+          switch_on : true
+          access_token: a032a81f62766780d77cadb81dfa016feb605e43881b442f16078d7c2d34ade0
+
 eureka:
   instance:
     preferIpAddress: true
@@ -37,37 +43,3 @@ management:
     health:
       # 详细信息显示给所有用户
       show-details: ALWAYS
-
-
-
-spring: 
-  profiles: dev
-# dingding robot
-  boot:
-    admin:
-      notify:
-        dingding:
-          switch_on : true
-          access_token: a032a81f62766780d77cadb81dfa016feb605e43881b442f16078d7c2d34ade0
-
-
-spring: 
-  profiles: beta
-# dingding robot
-  boot:
-    admin:
-      notify:
-        dingding:
-          switch_on : true
-          access_token: 7a08138cb378a89b921b89fe475b7a6762722a2ee2623991db98444c64af9605
-
-
-spring:
-  profiles: test
-# dingding robot
-  boot:
-    admin:
-      notify:
-        dingding:
-          switch_on : true
-          access_token: a032a81f62766780d77cadb81dfa016feb605e43881b442f16078d7c2d34ade0
