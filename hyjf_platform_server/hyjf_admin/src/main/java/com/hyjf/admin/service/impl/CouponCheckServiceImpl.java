@@ -194,7 +194,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
     public boolean batchCheck(String path, HttpServletResponse response, String loginUserId) throws Exception {
         try {
             String[] split = path.split(",");
-            String filePath = split[1];
+            String filePath = ADMIN_HOST + split[1];
             Map<String, String> nameMaps = new HashMap<>();
             nameMaps.put("userName", "userName");
             nameMaps.put("activityId", "activityId");
