@@ -114,13 +114,14 @@ public class ApiBankOpenController extends BaseUserController {
         OpenAccountPageBean bean = new OpenAccountPageBean();
         BeanUtils.copyProperties(requestBean,bean);
         String retUrl = systemConfig.getServerHost()+"/hyjf-api/server/user/accountOpenEncryptPage";
-        String successUrl = "http://CS-USER/hyjf-api/server/user/accountOpenEncryptPage";
+        String successUrl = systemConfig.getServerHost()+"/hyjf-api/server/user/accountOpenEncryptPage";
         // 异步调用路
         String bgRetUrl = "http://CS-USER/hyjf-api/server/user/accountOpenEncryptPage";
         // 调用设置密码接口
         retUrl += "/return?acqRes="+requestBean.getAcqRes()+"&callback="+requestBean.getRetUrl().replace("#", "*-*-*");
         successUrl += "/return?acqRes="+requestBean.getAcqRes()+"&isSuccess=1&callback="+requestBean.getRetUrl().replace("#", "*-*-*");
-        bgRetUrl += "/bgReturn?acqRes="+requestBean.getAcqRes()+"&callback="+requestBean.getBgRetUrl().replace("#", "*-*-*");
+        bgRetUrl += "/bgReturn?acqRes="+requestBean.getAcqRes()+"&phone=" + requestBean.getMobile()+"&openclient="+requestBean.getPlatform()+"&roleId="+requestBean.getIdentity()+
+        "&callback="+requestBean.getBgRetUrl().replace("#", "*-*-*");
         bean.setRetUrl(retUrl);
         bean.setNotifyUrl(bgRetUrl);
         bean.setSuccessfulUrl(successUrl);
