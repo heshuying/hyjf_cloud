@@ -1431,7 +1431,6 @@ WHERE
 			hydu.truename AS real_name,
 			hydu.username,
 			hydat.recover_account_interest,
-			-- hydui.idcard,
 			'' idcard,
 
 			SUBSTRING(FORMAT(hydat.account,4),1,LENGTH(FORMAT(hydat.account,4))-2) AS account,
