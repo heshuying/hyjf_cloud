@@ -35,6 +35,9 @@ public class EmailRecipientController extends BaseController {
     @PostMapping("/init")
     public AdminResult<ListResult<SellDailyDistributionVO>> init(@RequestBody EmailRecipientRequest recipientRequest) {
         EmailRecipientResponse recordList = emailRecipientService.getRecordList(recipientRequest);
+        if (recordList == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
         return new AdminResult<>(ListResult.build(recordList.getResultList(), recordList.getCount()));
     }
 
@@ -42,6 +45,9 @@ public class EmailRecipientController extends BaseController {
     @PostMapping("/get_record_by_id")
     public AdminResult<SellDailyDistributionVO> getRecordById(@RequestBody EmailRecipientRequest recipientRequest) {
         EmailRecipientResponse recordList = emailRecipientService.getRecordById(recipientRequest);
+        if (recordList == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
         return new AdminResult<>(recordList.getResult());
     }
 
@@ -51,6 +57,9 @@ public class EmailRecipientController extends BaseController {
         AdminSystemVO user = getUser(request);
         recipientRequest.setCreateName(user.getUsername());
         EmailRecipientResponse response = emailRecipientService.insertAction(recipientRequest);
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
@@ -64,6 +73,9 @@ public class EmailRecipientController extends BaseController {
         AdminSystemVO user = getUser(request);
         recipientRequest.setUpdateName(user.getUsername());
         EmailRecipientResponse response = emailRecipientService.updateEmailRecipient(recipientRequest);
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
@@ -76,6 +88,9 @@ public class EmailRecipientController extends BaseController {
         AdminSystemVO user = getUser(request);
         recipientRequest.setUpdateName(user.getUsername());
         EmailRecipientResponse response = emailRecipientService.forbiddenAction(recipientRequest);
+        if (response == null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
