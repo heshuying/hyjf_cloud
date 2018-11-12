@@ -842,9 +842,18 @@ public class UserCenterController extends BaseController {
         BankCallBean bankCallBean = userCenterService.payAllianceCodeQuery(userInfosUpdCustomizeRequestBean.getCardNo(), Integer.parseInt(userInfosUpdCustomizeRequestBean.getUserId()));
         AdminResult<Response> result = new AdminResult<Response>();
         Response response = new Response();
+        logger.info("=======用户修改银行卡,查找银联号返回结果为:"+JSONObject.toJSON(bankCallBean+"========="));
         if (null != bankCallBean && BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankCallBean.getRetCode())) {
             //如果调用银行接口没有返回联行号,则查找本地联行号
-            if (StringUtils.isBlank(bankCallBean.getPayAllianceCode())) {
+            if (StringUtils.isNotBlank(bankCallBean.getPayAllianceCode())) {
+                //如果调用银行接口查找到银联号,则进行显示
+                response.setResult(bankCallBean.getPayAllianceCode());
+                result.setData(response);
+                result.setStatus(SUCCESS);
+                logger.info("============银行查询银联号为:", bankCallBean.getPayAllianceCode());
+                return result;
+            } else {
+                logger.info("调用银行接口未能查找到银联号,调用本地数据库查找");
                 JxBankConfigVO banksConfig = userCenterService.getBankConfigByBankName(userInfosUpdCustomizeRequestBean.getBank());
                 if (null != banksConfig) {
                     response.setResult(banksConfig.getPayAllianceCode());
@@ -856,13 +865,6 @@ public class UserCenterController extends BaseController {
                 } else {
                     return new AdminResult<>(FAIL, "未查询到联行号");
                 }
-            } else {
-                //如果调用银行接口查找到银联号,则进行显示
-                response.setResult(bankCallBean.getPayAllianceCode());
-                result.setData(response);
-                result.setStatus(SUCCESS);
-                logger.info("============银行查询银联号为:", bankCallBean.getPayAllianceCode());
-                return result;
             }
         } else {
             return new AdminResult<>(FAIL, "银行接口调用失败");
