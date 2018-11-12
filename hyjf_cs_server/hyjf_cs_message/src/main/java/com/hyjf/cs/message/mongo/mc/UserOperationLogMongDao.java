@@ -3,7 +3,7 @@
  */
 package com.hyjf.cs.message.mongo.mc;
 
-import com.hyjf.cs.message.bean.mc.UserOperationLogEntity;
+import com.hyjf.cs.message.bean.ic.UserOperationLog;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import org.springframework.stereotype.Service;
 
@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
  * @version UserOperationLogMongDao, v0.1 2018/7/23 10:03
  */
 @Service
-public class UserOperationLogMongDao extends BaseMongoDao<UserOperationLogEntity> {
+public class UserOperationLogMongDao extends BaseMongoDao<UserOperationLog> {
 
     @Override
-    protected Class<UserOperationLogEntity> getEntityClass() {
-        return UserOperationLogEntity.class;
+    protected Class<UserOperationLog> getEntityClass() {
+        return UserOperationLog.class;
     }
 }

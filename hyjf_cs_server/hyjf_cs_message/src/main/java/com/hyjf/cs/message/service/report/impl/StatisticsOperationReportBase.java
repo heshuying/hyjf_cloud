@@ -7,8 +7,8 @@ import com.hyjf.am.vo.datacollect.*;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.service.BaseServiceImpl;
-import com.hyjf.cs.message.bean.mc.OperationReportColumnEntity;
-import com.hyjf.cs.message.bean.mc.UserOperationReportEntity;
+import com.hyjf.cs.message.bean.ic.OperationColumnReport;
+import com.hyjf.cs.message.bean.ic.OperationUserReport;
 import com.hyjf.cs.message.client.OperationReportJobClient;
 import com.hyjf.cs.message.mongo.mc.*;
 import org.springframework.beans.BeanUtils;
@@ -91,10 +91,10 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         operationReport.setYear(year);//年
 
 //        operationReportMapper.insert(operationReport);
-        OperationReportColumnEntity operationReportColumnEntity = new OperationReportColumnEntity();
-        BeanUtils.copyProperties(operationReport, operationReportColumnEntity);
-        operationReportColumnMongDao.insert(operationReportColumnEntity);
-        String id = operationReportColumnEntity.getId();
+        OperationColumnReport operationColumnReport = new OperationColumnReport();
+        BeanUtils.copyProperties(operationReport, operationColumnReport);
+        operationReportColumnMongDao.insert(operationColumnReport);
+        String id = operationColumnReport.getId();
         return id;
 
     }
@@ -202,12 +202,12 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
             userOperationReport.setAmountFirveStageTenderProportion(assignCompute(amountFirveStageTenderNum, amountStageTenderNumSum, bigflag));//50万以上投资人数（%）
         }
 
-        UserOperationReportEntity userOperationReportEntity = new UserOperationReportEntity();
-        BeanUtils.copyProperties(userOperationReport,userOperationReportEntity);
-        userOperationReportEntity.setOperationReportId(operationReportId);//运营报告ID
+        OperationUserReport operationUserReport = new OperationUserReport();
+        BeanUtils.copyProperties(userOperationReport, operationUserReport);
+        operationUserReport.setOperationReportId(operationReportId);//运营报告ID
 
 //        userOperationReportMapper.insert(userOperationReport);
-        userOperationReportMongDao.insert(userOperationReportEntity);
+        userOperationReportMongDao.insert(operationUserReport);
     }
 
     /**

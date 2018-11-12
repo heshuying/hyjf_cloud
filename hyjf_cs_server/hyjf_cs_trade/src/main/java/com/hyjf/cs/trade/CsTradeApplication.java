@@ -9,11 +9,18 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.client.RestTemplate;
+
+import com.alicp.jetcache.anno.config.EnableCreateCacheAnnotation;
+import com.alicp.jetcache.anno.config.EnableMethodCache;
+
+
 @CrossOrigin(origins = "*")
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableCircuitBreaker
 @ComponentScan(basePackages={"com.hyjf.cs","com.hyjf.common", "com.hyjf.cs.trade","com.hyjf.pay"})
+@EnableMethodCache(basePackages = "com.hyjf.cs")
+@EnableCreateCacheAnnotation
 public class CsTradeApplication {
 
 	@Bean

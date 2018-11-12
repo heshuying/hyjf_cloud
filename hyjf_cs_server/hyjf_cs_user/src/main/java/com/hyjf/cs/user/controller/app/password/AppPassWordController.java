@@ -248,7 +248,7 @@ public class AppPassWordController extends BaseUserController {
         UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
         userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE6);
         userOperationLogEntity.setIp(com.hyjf.cs.user.util.GetCilentIP.getIpAddr(request));
-        userOperationLogEntity.setPlatform(request.getParameter("realPlatform")==null?Integer.valueOf(platform):Integer.valueOf(request.getParameter("realPlatform")));
+        userOperationLogEntity.setPlatform(Integer.valueOf(platform));
         userOperationLogEntity.setRemark("");
         userOperationLogEntity.setOperationTime(new Date());
         userOperationLogEntity.setUserName(user.getUsername());

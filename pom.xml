@@ -42,7 +42,7 @@
 		<druid.version>1.1.10</druid.version>
 		<fastjson.version>1.2.47</fastjson.version>
 		<rocketmq.version>4.3.0</rocketmq.version>
-		<jetcache.version>2.5.7</jetcache.version>
+		<jetcache.version>2.5.9</jetcache.version>
 
 		<common.pool2.version>2.4.2</common.pool2.version>
 		<commons.lang.version>2.4</commons.lang.version>
