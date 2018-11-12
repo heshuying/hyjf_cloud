@@ -94,6 +94,7 @@ public class ReadExcel extends XxlsAbstract {
             new ReadExcel().processOneSheet(path, 1, resumeList);
         } catch (Exception e) {
             e.printStackTrace();
+            logger.error("读取excel文件失败,失败原因 ：",e);
         }
     }
 
