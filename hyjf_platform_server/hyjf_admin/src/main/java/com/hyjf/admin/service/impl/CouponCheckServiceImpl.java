@@ -165,7 +165,6 @@ public class CouponCheckServiceImpl implements CouponCheckService {
         try {
             response.setHeader("content-disposition",
                     "attachment;filename=" + URLEncoder.encode(fileN, "utf-8"));
-            response.setContentType("multipart/form-data");
             in = new FileInputStream(fileP);
             // 创建输出流
             out = response.getOutputStream();
