@@ -6,7 +6,7 @@ import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.vo.datacollect.*;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.cs.message.bean.mc.*;
+import com.hyjf.cs.message.bean.ic.*;
 import com.hyjf.cs.message.mongo.mc.*;
 import com.hyjf.cs.message.service.report.OperationReportService;
 import org.apache.commons.lang.StringUtils;
@@ -51,9 +51,9 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		Query query = new Query();
 		Criteria criteria = getCriteria(record,query);
 		query.addCriteria(criteria);
-		List<OperationReportColumnEntity> list =  operationReportColumnMongDao.find(query);
+		List<OperationColumnReport> list =  operationReportColumnMongDao.find(query);
 
-		for(OperationReportColumnEntity dto : list){
+		for(OperationColumnReport dto : list){
 			OperationReportVO OperationReportVO = new OperationReportVO();
 			BeanUtils.copyProperties(dto,OperationReportVO);
 			OperationReportVO.setIds(dto.getId());
@@ -82,7 +82,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		Criteria criteria = getCriteria(map, query);
 		query.addCriteria(criteria);
 
-		List<OperationReportColumnEntity> list = operationReportColumnMongDao.find(query);
+		List<OperationColumnReport> list = operationReportColumnMongDao.find(query);
 		Integer count = list.size();
 		//response.setCount(count);
 		if (count != null && count > 0) {
@@ -97,10 +97,10 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			Query query2 = new Query();
 			Criteria criteria2 = getCriteria(map, query2);
 			query2.addCriteria(criteria2);
-			List<OperationReportColumnEntity> mongodbList = operationReportColumnMongDao.find(query2);
+			List<OperationColumnReport> mongodbList = operationReportColumnMongDao.find(query2);
 
 			Query queryReport = null;
-			for (OperationReportColumnEntity dto : mongodbList) {
+			for (OperationColumnReport dto : mongodbList) {
 				OperationReportVO operationReportCustomize = new OperationReportVO();
 				BeanUtils.copyProperties(dto, operationReportCustomize);
 
@@ -109,21 +109,21 @@ public class OperationReportServiceImpl  implements OperationReportService {
 					queryReport = new Query();
 					Criteria criteriaQuarter = Criteria.where("operationReportId").is(dto.getId());
 					queryReport.addCriteria(criteriaQuarter);
-					MonthlyOperationReportEntity monthlyOperationReportEntity = monthlyOperationReportMongDao.findOne(queryReport);
-					if (monthlyOperationReportEntity != null) {
-						operationReportCustomize.setTypeRealName(monthlyOperationReportEntity.getMonth() + "月份");
-						operationReportCustomize.setSortMonth(monthlyOperationReportEntity.getMonth());
+					OperationMonthlyReport operationMonthlyReport = monthlyOperationReportMongDao.findOne(queryReport);
+					if (operationMonthlyReport != null) {
+						operationReportCustomize.setTypeRealName(operationMonthlyReport.getMonth() + "月份");
+						operationReportCustomize.setSortMonth(operationMonthlyReport.getMonth());
 					}
 
 				} else if (2 == operationReportCustomize.getOperationReportType().intValue()) {//季度
 					queryReport = new Query();
 					Criteria criteriaQuarter = Criteria.where("operationReportId").is(dto.getId());
 					queryReport.addCriteria(criteriaQuarter);
-					QuarterOperationReportEntity quarterOperationReportEntity = quarterOperationReportMongDao.findOne(queryReport);
-					if (quarterOperationReportEntity != null) {
+					OperationQuarterReport operationQuarterReport = quarterOperationReportMongDao.findOne(queryReport);
+					if (operationQuarterReport != null) {
 						//季度类型(1.一季度2.二季度3.三季度4.四季度)
-						operationReportCustomize.setSortMonth(quarterOperationReportEntity.getQuarterType());
-						if (1 == quarterOperationReportEntity.getQuarterType()) {
+						operationReportCustomize.setSortMonth(operationQuarterReport.getQuarterType());
+						if (1 == operationQuarterReport.getQuarterType()) {
 							operationReportCustomize.setTypeRealName("一季度");
 						} else {
 							operationReportCustomize.setTypeRealName("三季度");
@@ -198,7 +198,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		Query query = new Query();
         Criteria criteria = getCriteria(record,query);
         query.addCriteria(criteria);
-		List<OperationReportColumnEntity> list = operationReportColumnMongDao.find(query);
+		List<OperationColumnReport> list = operationReportColumnMongDao.find(query);
 		return list.size();
 	}
 
@@ -238,7 +238,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 	 */
 	@Override
 	public List<OperationReportVO> getRecordListByMonth(Map<String, Object> record) {
-		List<OperationReportVO> list = quarterCountRecord(record,1,new MonthlyOperationReportEntity());
+		List<OperationReportVO> list = quarterCountRecord(record,1,new OperationMonthlyReport());
 		for(OperationReportVO dto : list){
 			if(dto.getReleaseTime() != null){
 				dto.setReleaseTimeStr(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(dto.getReleaseTime()));
@@ -254,12 +254,12 @@ public class OperationReportServiceImpl  implements OperationReportService {
 	 */
 	@Override
 	public Integer countRecordByMonth(Map<String, Object> record) {
-		return quarterCountRecord(record,1,new MonthlyOperationReportEntity()).size();
+		return quarterCountRecord(record,1,new OperationMonthlyReport()).size();
 	}
 
 	@Override
 	public List<OperationReportVO> getRecordListByQuarter(Map<String, Object> record) {
-		List<OperationReportVO> list = quarterCountRecord(record, 2,new QuarterOperationReportEntity());
+		List<OperationReportVO> list = quarterCountRecord(record, 2,new OperationQuarterReport());
 		for(OperationReportVO dto : list){
 			if(dto.getReleaseTime() != null){
 				dto.setReleaseTimeStr(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(dto.getReleaseTime()));
@@ -290,16 +290,16 @@ public class OperationReportServiceImpl  implements OperationReportService {
 
 		query.addCriteria(criteria);
 		query.with(new Sort(Sort.Direction.DESC,"createTime"));
-		List<OperationReportColumnEntity> list = operationReportColumnMongDao.find(query);
-		for(OperationReportColumnEntity dto :list){
+		List<OperationColumnReport> list = operationReportColumnMongDao.find(query);
+		for(OperationColumnReport dto :list){
 			Query query2 = new Query();
 
 			//月度
-			if(object instanceof  MonthlyOperationReportEntity) {
+			if(object instanceof OperationMonthlyReport) {
 				Criteria criteria2 = Criteria.where("month").is(record.get("monthType")).and("operationReportId").is(dto.getId());
 				query2.addCriteria(criteria2);
-				MonthlyOperationReportEntity monthlyOperationReportEntity = monthlyOperationReportMongDao.findOne(query2);
-				if (monthlyOperationReportEntity != null) {
+				OperationMonthlyReport operationMonthlyReport = monthlyOperationReportMongDao.findOne(query2);
+				if (operationMonthlyReport != null) {
 					OperationReportVO OperationReportVO = new OperationReportVO();
 					BeanUtils.copyProperties(dto, OperationReportVO);
 					listOperationReportVO.add(OperationReportVO);
@@ -307,11 +307,11 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			}
 
 			//季度
-			if(object instanceof  QuarterOperationReportEntity){
+			if(object instanceof OperationQuarterReport){
 				Criteria criteria2 = Criteria.where("quarterType").is(record.get("quarterType")).and("operationReportId").is(dto.getId());
 				query2.addCriteria(criteria2);
-				QuarterOperationReportEntity quarterOperationReportEntity = quarterOperationReportMongDao.findOne(query2);
-				if(quarterOperationReportEntity != null){
+				OperationQuarterReport operationQuarterReport = quarterOperationReportMongDao.findOne(query2);
+				if(operationQuarterReport != null){
 					OperationReportVO OperationReportVO = new OperationReportVO();
 					BeanUtils.copyProperties(dto,OperationReportVO);
 					listOperationReportVO.add(OperationReportVO);
@@ -319,11 +319,11 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			}
 
 			//半年度
-			if(object instanceof HalfYearOperationReportEntity){
+			if(object instanceof OperationHalfYearReport){
 				Criteria criteria2 = Criteria.where("operationReportId").is(dto.getId());
 				query2.addCriteria(criteria2);
-				HalfYearOperationReportEntity halfYearOperationReportEntity = halfYearOperationReportMongDao.findOne(query2);
-				if(halfYearOperationReportEntity != null){
+				OperationHalfYearReport operationHalfYearReport = halfYearOperationReportMongDao.findOne(query2);
+				if(operationHalfYearReport != null){
 					OperationReportVO OperationReportVO = new OperationReportVO();
 					BeanUtils.copyProperties(dto,OperationReportVO);
 					listOperationReportVO.add(OperationReportVO);
@@ -331,11 +331,11 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			}
 
 			//全年度
-			if(object instanceof YearOperationReportEntity){
+			if(object instanceof OperationYearReport){
 				Criteria criteria2 = Criteria.where("operationReportId").is(dto.getId());
 				query2.addCriteria(criteria2);
-				YearOperationReportEntity yearOperationReportEntity = yearOperationReportMongDao.findOne(query2);
-				if(yearOperationReportEntity != null){
+				OperationYearReport operationYearReport = yearOperationReportMongDao.findOne(query2);
+				if(operationYearReport != null){
 					OperationReportVO OperationReportVO = new OperationReportVO();
 					BeanUtils.copyProperties(dto,OperationReportVO);
 					listOperationReportVO.add(OperationReportVO);
@@ -352,12 +352,12 @@ public class OperationReportServiceImpl  implements OperationReportService {
 	 */
 	@Override
 	public Integer countRecordByQuarter(Map<String, Object> record) {
-		return quarterCountRecord(record,2,new QuarterOperationReportEntity()).size();
+		return quarterCountRecord(record,2,new OperationQuarterReport()).size();
 	}
 
 	@Override
 	public List<OperationReportVO> getRecordListByHalfYear(Map<String, Object> record) {
-		List<OperationReportVO> list = quarterCountRecord(record,3,new HalfYearOperationReportEntity());
+		List<OperationReportVO> list = quarterCountRecord(record,3,new OperationHalfYearReport());
 		for(OperationReportVO dto : list){
 			if(dto.getReleaseTime() != null){
 				dto.setReleaseTimeStr(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(dto.getReleaseTime()));
@@ -369,13 +369,13 @@ public class OperationReportServiceImpl  implements OperationReportService {
 	@Override
 	public Integer countRecordByHalfYear(Map<String, Object> record) {
 //		return contentOperationReportVOMapper.countRecordByHalfYear(record);
-		return quarterCountRecord(record,3,new HalfYearOperationReportEntity()).size();
+		return quarterCountRecord(record,3,new OperationHalfYearReport()).size();
 	}
 
 	@Override
 	public List<OperationReportVO> getRecordListByYear(Map<String, Object> record) {
 //		return contentOperationReportVOMapper.getRecordListByYear(record);
-		List<OperationReportVO> list = quarterCountRecord(record,4,new YearOperationReportEntity());
+		List<OperationReportVO> list = quarterCountRecord(record,4,new OperationYearReport());
 		for(OperationReportVO dto : list){
 			if(dto.getReleaseTime() != null){
 				dto.setReleaseTimeStr(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(dto.getReleaseTime()));
@@ -387,7 +387,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 	@Override
 	public Integer countRecordByYear(Map<String, Object> record) {
 //		return contentOperationReportVOMapper.countRecordByYear(record);
-		return quarterCountRecord(record,4,new YearOperationReportEntity()).size();
+		return quarterCountRecord(record,4,new OperationYearReport()).size();
 	}
 
 	@Override
@@ -396,10 +396,10 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		Query query = new Query();
 		Criteria criteria = Criteria.where("_id").is(record.getId()).and("isDelete").is(0);
 		query.addCriteria(criteria);
-		OperationReportColumnEntity operationReportColumnEntity = operationReportColumnMongDao.findOne(query);
-		if(operationReportColumnEntity != null){
-			operationReportColumnEntity.setIsDelete(record.getIsDelete());
-			operationReportColumnMongDao.save(operationReportColumnEntity);
+		OperationColumnReport operationColumnReport = operationReportColumnMongDao.findOne(query);
+		if(operationColumnReport != null){
+			operationColumnReport.setIsDelete(record.getIsDelete());
+			operationReportColumnMongDao.save(operationColumnReport);
 		}
 		return 0;
 	}
@@ -414,7 +414,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		Query query = new Query();
 		Criteria criteria = Criteria.where("_id").is(id);
 		query.addCriteria(criteria);
-		OperationReportColumnEntity operationReportColumn = operationReportColumnMongDao.findOne(query);
+		OperationColumnReport operationReportColumn = operationReportColumnMongDao.findOne(query);
 		if (operationReportColumn != null) {
 			OperationReportVO operationReport = new OperationReportVO();
 			BeanUtils.copyProperties(operationReportColumn,operationReport);
@@ -426,19 +426,19 @@ public class OperationReportServiceImpl  implements OperationReportService {
             query2.addCriteria(criteria2);
 			if (type == 1) {
 				//查询月度运营报告
-				MonthlyOperationReportEntity monthlyOperationReportEntity = monthlyOperationReportMongDao.findOne(query2);
-				if (monthlyOperationReportEntity != null) {
+				OperationMonthlyReport operationMonthlyReport = monthlyOperationReportMongDao.findOne(query2);
+				if (operationMonthlyReport != null) {
 					MonthlyOperationReportVO monthlyOperationReport = new MonthlyOperationReportVO();
-					BeanUtils.copyProperties(monthlyOperationReportEntity,monthlyOperationReport);
+					BeanUtils.copyProperties(operationMonthlyReport,monthlyOperationReport);
 					response.setMonthlyOperationReport(monthlyOperationReport);
 //					}
 				}
 			} else if (type == 2) {
 				//查询季度运营报告
-				QuarterOperationReportEntity  quarterOperationReportEntity= quarterOperationReportMongDao.findOne(query2);
-				if (quarterOperationReportEntity != null ) {
+				OperationQuarterReport operationQuarterReport = quarterOperationReportMongDao.findOne(query2);
+				if (operationQuarterReport != null ) {
 					QuarterOperationReportVO quarterOperationReport = new QuarterOperationReportVO();
-					BeanUtils.copyProperties(quarterOperationReportEntity,quarterOperationReport);
+					BeanUtils.copyProperties(operationQuarterReport,quarterOperationReport);
 					Integer quarterType = quarterOperationReport.getQuarterType();
 					if (quarterType.intValue() == 1) {
 						operationReport.setOperationReportType(5);
@@ -450,18 +450,18 @@ public class OperationReportServiceImpl  implements OperationReportService {
 				}
 			} else if (type == 3) {
 				//查询半年度度运营报告
-				HalfYearOperationReportEntity halfYearOperationReportEntity= halfYearOperationReportMongDao.findOne(query2);
-				if (halfYearOperationReportEntity != null ) {
+				OperationHalfYearReport operationHalfYearReport = halfYearOperationReportMongDao.findOne(query2);
+				if (operationHalfYearReport != null ) {
 					HalfYearOperationReportVO halfYearOperationReport = new HalfYearOperationReportVO();
-					BeanUtils.copyProperties(halfYearOperationReportEntity,halfYearOperationReport);
+					BeanUtils.copyProperties(operationHalfYearReport,halfYearOperationReport);
 					response.setHalfYearOperationReport(halfYearOperationReport);
 				}
 			} else {
 				//查询年度运营报告
-				YearOperationReportEntity yearOperationReportEntity= yearOperationReportMongDao.findOne(query2);
-				if (yearOperationReportEntity != null ) {
+				OperationYearReport operationYearReport = yearOperationReportMongDao.findOne(query2);
+				if (operationYearReport != null ) {
 					YearOperationReportVO yearOperationReport = new YearOperationReportVO();
-					BeanUtils.copyProperties(yearOperationReportEntity,yearOperationReport);
+					BeanUtils.copyProperties(operationYearReport,yearOperationReport);
 					BigDecimal appProportion =yearOperationReport.getYearAppAmountProportion()==null?new BigDecimal(0):yearOperationReport.getYearAppAmountProportion();
 					appProportion = appProportion.setScale(2, BigDecimal.ROUND_DOWN);
 					yearOperationReport.setYearAppAmountProportion(appProportion);
@@ -477,14 +477,14 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			Query query3 = new Query();
 			Criteria criteria3 = Criteria.where("operationReportId").is(operationReportColumn.getId());
 			query3.addCriteria(criteria3);
-			List<OperationReportActivityEntity> operationReportActivityList = operationReportActivityMongDao.find(query3);
+			List<OperationActivityReport> operationReportActivityList = operationReportActivityMongDao.find(query3);
 			List<OperationReportActivityVO> footprints = new ArrayList<OperationReportActivityVO>();
 			List<OperationReportActivityVO> goodExperiences = new ArrayList<OperationReportActivityVO>();
 			List<OperationReportActivityVO> wonderfulActivities = new ArrayList<OperationReportActivityVO>();
 			if (operationReportActivityList != null && operationReportActivityList.size() > 0) {
-				for (OperationReportActivityEntity operationReportActivityEntity : operationReportActivityList) {
+				for (OperationActivityReport operationActivityReport : operationReportActivityList) {
 					OperationReportActivityVO operationReportActivity =new OperationReportActivityVO();
-					BeanUtils.copyProperties(operationReportActivityEntity,operationReportActivity);
+					BeanUtils.copyProperties(operationActivityReport,operationReportActivity);
 					OperationReportActivityVO operationReportActivityCustomize = new OperationReportActivityVO();
 					operationReportActivityCustomize.setOperationReportId(operationReportActivity.getOperationReportId());
 					operationReportActivityCustomize.setActivtyName(operationReportActivity.getActivtyName());
@@ -553,11 +553,11 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			Query query5 = new Query();
 			Criteria criteria5= Criteria.where("operationReportId").is(operationReportColumn.getId());
 			query5.addCriteria(criteria5);
-			List<UserOperationReportEntity> UserOperationReportList = userOperationReportMongDao.find(query5);
+			List<OperationUserReport> UserOperationReportList = userOperationReportMongDao.find(query5);
 			if (UserOperationReportList != null && UserOperationReportList.size() > 0) {
-				for (UserOperationReportEntity userOperationReportEntity : UserOperationReportList) {
+				for (OperationUserReport operationUserReport : UserOperationReportList) {
 					UserOperationReportVO userOperationReport =new UserOperationReportVO();
-					BeanUtils.copyProperties(userOperationReportEntity,userOperationReport);
+					BeanUtils.copyProperties(operationUserReport,userOperationReport);
 					response.setUserOperationReport(userOperationReport);
 				}
 			}
@@ -574,7 +574,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		Query query = new Query();
 		Criteria criteria = getCriteria(paraMap, query);
 		query.addCriteria(criteria);
-		OperationReportColumnEntity report = operationReportColumnMongDao.findOne(query);
+		OperationColumnReport report = operationReportColumnMongDao.findOne(query);
 		OperationReportVO operationReport = new OperationReportVO();
 		Query query2 = new Query();
 		Criteria criteria2 = Criteria.where("operationReportId").is(id);
@@ -585,50 +585,50 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			response.put("report", report);
 			if (reportType == 1) {
 				//查询月度报告明细
-				MonthlyOperationReportEntity monthlyOperationReportEntity = monthlyOperationReportMongDao.findOne(query2);
+				OperationMonthlyReport operationMonthlyReport = monthlyOperationReportMongDao.findOne(query2);
 				MonthlyOperationReportVO monthlyOperationReport = new MonthlyOperationReportVO();
-				if (monthlyOperationReportEntity != null) {
-					BeanUtils.copyProperties(monthlyOperationReportEntity, monthlyOperationReport);
-					response.put("monthlyOperationReport", monthlyOperationReportEntity);
+				if (operationMonthlyReport != null) {
+					BeanUtils.copyProperties(operationMonthlyReport, monthlyOperationReport);
+					response.put("monthlyOperationReport", operationMonthlyReport);
 				}
 
 			} else if (reportType == 2) {
 				//查询季度报告明细
-				QuarterOperationReportEntity quarterOperationReportEntity = quarterOperationReportMongDao.findOne(query2);
+				OperationQuarterReport operationQuarterReport = quarterOperationReportMongDao.findOne(query2);
 				QuarterOperationReportVO quarterOperationReport = new QuarterOperationReportVO();
-				if (quarterOperationReportEntity != null) {
-					BeanUtils.copyProperties(quarterOperationReportEntity, quarterOperationReport);
-					response.put("quarterOperationReport", quarterOperationReportEntity);
+				if (operationQuarterReport != null) {
+					BeanUtils.copyProperties(operationQuarterReport, quarterOperationReport);
+					response.put("quarterOperationReport", operationQuarterReport);
 				}
 
 			} else if (reportType == 3) {
 				//查询半年报告明细
-				HalfYearOperationReportEntity halfYearOperationReportEntity = halfYearOperationReportMongDao.findOne(query2);
+				OperationHalfYearReport operationHalfYearReport = halfYearOperationReportMongDao.findOne(query2);
 				HalfYearOperationReportVO halfYearOperationReport = new HalfYearOperationReportVO();
-				if (halfYearOperationReportEntity != null) {
-					BeanUtils.copyProperties(halfYearOperationReportEntity, halfYearOperationReport);
-					response.put("halfYearOperationReport", halfYearOperationReportEntity);
+				if (operationHalfYearReport != null) {
+					BeanUtils.copyProperties(operationHalfYearReport, halfYearOperationReport);
+					response.put("halfYearOperationReport", operationHalfYearReport);
 				}
 			} else if (reportType == 4) {
 				//查询全年报告明细
-				YearOperationReportEntity yearOperationReportEntity = yearOperationReportMongDao.findOne(query2);
+				OperationYearReport operationYearReport = yearOperationReportMongDao.findOne(query2);
 				YearOperationReportVO yearOperationReport = new YearOperationReportVO();
-				if (yearOperationReportEntity != null) {
-					BeanUtils.copyProperties(yearOperationReportEntity, yearOperationReport);
-					response.put("yearOperationReport", yearOperationReportEntity);
+				if (operationYearReport != null) {
+					BeanUtils.copyProperties(operationYearReport, yearOperationReport);
+					response.put("yearOperationReport", operationYearReport);
 				}
 			}
 
-			List<UserOperationReportEntity> userOperationReportList = getUserOperationReport(id, query2);
+			List<OperationUserReport> userOperationReportList = getUserOperationReport(id, query2);
 			if (userOperationReportList != null && userOperationReportList.size() > 0) {
 				response.put("userOperationReport", userOperationReportList.get(0));
 			}
 			query2.with(new Sort(Sort.Direction.ASC, "activtyTime"));
-			List<OperationReportActivityEntity> operationReportActiveList = getOperationReportActive(id, query2);
+			List<OperationActivityReport> operationReportActiveList = getOperationReportActive(id, query2);
 			if(operationReportActiveList!=null){
 				response.put("operationReportActiveList", operationReportActiveList);
 				/*List<OperationReportActivityVO> vos = new ArrayList<>();
-				for(OperationReportActivityEntity operationReportActivityEntity:operationReportActiveList){
+				for(OperationActivityReport operationReportActivityEntity:operationReportActiveList){
 					OperationReportActivityVO operationReportActivity = new OperationReportActivityVO();
 					BeanUtils.copyProperties(operationReportActivityEntity,operationReportActivity);
 					vos.add(operationReportActivity);
@@ -701,15 +701,15 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		return  response;
 	}
 	//查询用户分析详情
-	public List<UserOperationReportEntity> getUserOperationReport(String id, Query query2) {
-		List<UserOperationReportEntity> userOperationReportEntity = userOperationReportMongDao.find(query2);
-		return userOperationReportEntity;
+	public List<OperationUserReport> getUserOperationReport(String id, Query query2) {
+		List<OperationUserReport> operationUserReport = userOperationReportMongDao.find(query2);
+		return operationUserReport;
 	}
 
 	//查询运营报告活动
-	public List<OperationReportActivityEntity> getOperationReportActive(String id, Query query2) {
-		List<OperationReportActivityEntity> operationReportActivityEntity = operationReportActivityMongDao.find(query2);
-		return operationReportActivityEntity;
+	public List<OperationActivityReport> getOperationReportActive(String id, Query query2) {
+		List<OperationActivityReport> operationActivityReport = operationReportActivityMongDao.find(query2);
+		return operationActivityReport;
 	}
 
 	//查询十大投资详情
@@ -736,7 +736,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			response.setMessage("失败");
 		}
 		if (monthlyOperationReport != null) {
-			MonthlyOperationReportEntity entity = new MonthlyOperationReportEntity();
+			OperationMonthlyReport entity = new OperationMonthlyReport();
 			//添加月度报告
 			monthlyOperationReport.setCreateTime(createTime);
 			//monthlyOperationReport.setCreateUserId(null);
@@ -782,7 +782,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		if (StringUtils.isNotBlank(operationId)) {
 			response.setOperationId(operationId);
 			if (monthlyOperationReport != null) {
-				MonthlyOperationReportEntity entity = new MonthlyOperationReportEntity();
+				OperationMonthlyReport entity = new OperationMonthlyReport();
 				//添加月度报告
 				monthlyOperationReport.setOperationReportId(operationId);
 				monthlyOperationReport.setCreateTime(createTime);
@@ -856,10 +856,10 @@ public class OperationReportServiceImpl  implements OperationReportService {
 				if(StringUtils.isNotBlank(operationId)){
 					halfYearOperationReport.setOperationReportId(operationId);
 				}
-				HalfYearOperationReportEntity halfYearOperationReportEntity = new HalfYearOperationReportEntity();
-				BeanUtils.copyProperties(halfYearOperationReport,halfYearOperationReportEntity);
-				halfYearOperationReportEntity.setId(null);
-				halfYearOperationReportMongDao.insert(halfYearOperationReportEntity);
+				OperationHalfYearReport operationHalfYearReport = new OperationHalfYearReport();
+				BeanUtils.copyProperties(halfYearOperationReport, operationHalfYearReport);
+				operationHalfYearReport.setId(null);
+				halfYearOperationReportMongDao.insert(operationHalfYearReport);
 				response.setHalfYearOperationReportId(halfYearOperationReport.getId());
 			}
 			//添加其他公用报告
@@ -909,7 +909,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 				response.setMessage("失败");
 			}
 			//添加季度报告
-			QuarterOperationReportEntity entity = new QuarterOperationReportEntity();
+			OperationQuarterReport entity = new OperationQuarterReport();
 			quarterOperationReport.setOperationReportId(operationId);
 			quarterOperationReport.setCreateTime(operationReport.getCreateTime());
 			quarterOperationReport.setCreateUserId(operationReport.getCreateUserId());
@@ -948,7 +948,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		if (operationId != null && operationId !="") {
 			response.setOperationId(operationId);
 			if (quarterOperationReport != null) {
-				QuarterOperationReportEntity entity = new QuarterOperationReportEntity();
+				OperationQuarterReport entity = new OperationQuarterReport();
 				//添加季度报告
 				//type==5，是第一季度    6是第三季度
 				if(type.intValue() == 5){
@@ -1022,7 +1022,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		if(operationReport.getOperationReportType() == 5||operationReport.getOperationReportType() == 6){
 			operationReport.setOperationReportType(2);
 		}
-		OperationReportColumnEntity entity =new OperationReportColumnEntity();
+		OperationColumnReport entity =new OperationColumnReport();
 		BeanUtils.copyProperties(operationReport,entity);
 		entity.setId(null);
 		operationReportColumnMongDao.save(entity);
@@ -1066,14 +1066,14 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			Query query = new Query();
 			Criteria criteria = Criteria.where("operationReportId").is(operationId);
 			query.addCriteria(criteria);
-			MonthlyOperationReportEntity monOperationReportEntity = monthlyOperationReportMongDao.findOne(query);
+			OperationMonthlyReport monOperationReportEntity = monthlyOperationReportMongDao.findOne(query);
 			if (monOperationReportEntity != null) {
 				//新增月度报告
 				monthlyOperationReport.setCreateTime(monOperationReportEntity.getCreateTime());
 				monthlyOperationReport.setCreateUserId(monOperationReportEntity.getCreateUserId());
 				monthlyOperationReport.setUpdateTime(updateTime);
 				monthlyOperationReport.setUpdateUserId(updateUserId);
-				MonthlyOperationReportEntity entity = new MonthlyOperationReportEntity();
+				OperationMonthlyReport entity = new OperationMonthlyReport();
 				BeanUtils.copyProperties(monthlyOperationReport,entity);
 				monthlyOperationReportMongDao.save(entity);
 				response.setMonthlyOperationReportId(monthId);
@@ -1093,9 +1093,9 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		Query query2 = new Query();
 		Criteria criteria2 = Criteria.where("operationReportId").is(form.getOperationReport().getId());
 		query2.addCriteria(criteria2);
-		List<OperationReportActivityEntity> operationReportActivityEntity = operationReportActivityMongDao.find(query2);
-		if (!CollectionUtils.isEmpty(operationReportActivityEntity)) {
-			operationReportActivityMongDao.deleteBatch(operationReportActivityEntity);
+		List<OperationActivityReport> operationActivityReport = operationReportActivityMongDao.find(query2);
+		if (!CollectionUtils.isEmpty(operationActivityReport)) {
+			operationReportActivityMongDao.deleteBatch(operationActivityReport);
 		}
 		//插入精彩活动-->运营报告活动
 		insertOperationReportActivity(form.getWonderfulActivities(), form.getOperationReport().getId(), form.getOperationReport().getOperationReportType(), updateTime, updateUserId);
@@ -1118,7 +1118,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		UserOperationReportVO userOperationReport = form.getUserOperationReport();
 		String userOperationReportId = "";
 		if (userOperationReport != null) {
-			UserOperationReportEntity entity = new UserOperationReportEntity();
+			OperationUserReport entity = new OperationUserReport();
 			userOperationReport.setOperationReportId(id);
 			userOperationReport.setOperationReportType(operationReportType);
 			userOperationReport.setCreateTime(time);
@@ -1163,18 +1163,18 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		Query query = new Query();
 		Criteria criteria = Criteria.where("operationReportId").is(operationReport.getId());
 		query.addCriteria(criteria);
-		MonthlyOperationReportEntity monthlyOperationReportEntity = monthlyOperationReportMongDao.findOne(query);
-		if (monthlyOperationReportEntity != null) {
+		OperationMonthlyReport operationMonthlyReport = monthlyOperationReportMongDao.findOne(query);
+		if (operationMonthlyReport != null) {
 			//新增月度报告
-			monthlyOperationReport.setCreateTime(monthlyOperationReportEntity.getCreateTime());
-			monthlyOperationReport.setCreateUserId(monthlyOperationReportEntity.getCreateUserId());
+			monthlyOperationReport.setCreateTime(operationMonthlyReport.getCreateTime());
+			monthlyOperationReport.setCreateUserId(operationMonthlyReport.getCreateUserId());
 		}
 		//修改月度报告
 		monthlyOperationReport.setOperationReportId(operationReport.getId());
 		monthlyOperationReport.setUpdateTime(updateTime);
 		monthlyOperationReport.setUpdateUserId(updateUserId);
-		BeanUtils.copyProperties(monthlyOperationReport,monthlyOperationReportEntity);
-		monthlyOperationReportMongDao.save(monthlyOperationReportEntity);
+		BeanUtils.copyProperties(monthlyOperationReport, operationMonthlyReport);
+		monthlyOperationReportMongDao.save(operationMonthlyReport);
 		//对其他几个表进行修改
 		//修改用户报告
 		updateUserOperationReport(form, updateTime, updateUserId);
@@ -1184,9 +1184,9 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		Query query2 = new Query();
 		Criteria criteria2 = Criteria.where("operationReportId").is(form.getOperationReport().getId());
 		query2.addCriteria(criteria2);
-		List<OperationReportActivityEntity> operationReportActivityEntity = operationReportActivityMongDao.find(query2);
-		if (!CollectionUtils.isEmpty(operationReportActivityEntity)) {
-			operationReportActivityMongDao.deleteBatch(operationReportActivityEntity);
+		List<OperationActivityReport> operationActivityReport = operationReportActivityMongDao.find(query2);
+		if (!CollectionUtils.isEmpty(operationActivityReport)) {
+			operationReportActivityMongDao.deleteBatch(operationActivityReport);
 		}
 		//修改活动
 		//updateoperationReportActivity(form, updateTime, updateUserId);
@@ -1241,7 +1241,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			for (OperationReportActivityVO operationReportActivityCustomize : operationReportActivityCustomizes) {
 				//若活动标题为空，则不添加
 				if(operationReportActivityCustomize.getActivtyName() != null&&operationReportActivityCustomize.getActivtyName() !=""){
-					OperationReportActivityEntity entity = new OperationReportActivityEntity();
+					OperationActivityReport entity = new OperationActivityReport();
 					OperationReportActivityVO operationReportActivity = new OperationReportActivityVO();
 					operationReportActivity.setOperationReportType(operationReportType);
 					operationReportActivity.setCreateTime(time);
@@ -1298,7 +1298,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		Query query = new Query();
 		Criteria criteria = Criteria.where("operationReportId").is(id);
 		query.addCriteria(criteria);
-		List<OperationReportActivityEntity> operationReportActivitylist = operationReportActivityMongDao.find(query);
+		List<OperationActivityReport> operationReportActivitylist = operationReportActivityMongDao.find(query);
 		if(!CollectionUtils.isEmpty(operationReportActivitylist)){
 			operationReportActivityMongDao.deleteBatch(operationReportActivitylist);
 		}
@@ -1339,17 +1339,17 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		Query query = new Query();
 		Criteria criteria = Criteria.where("operationReportId").is(operationReport.getId()   );
 		query.addCriteria(criteria);
-		QuarterOperationReportEntity quarterOperationReportEntity = quarterOperationReportMongDao.findOne(query);
-		if (quarterOperationReportEntity != null) {
-			quarterOperationReport.setCreateTime(quarterOperationReportEntity.getCreateTime());
-			quarterOperationReport.setCreateUserId(quarterOperationReportEntity.getCreateUserId());
+		OperationQuarterReport operationQuarterReport = quarterOperationReportMongDao.findOne(query);
+		if (operationQuarterReport != null) {
+			quarterOperationReport.setCreateTime(operationQuarterReport.getCreateTime());
+			quarterOperationReport.setCreateUserId(operationQuarterReport.getCreateUserId());
 		}
-		quarterOperationReport.setQuarterType(quarterOperationReportEntity.getQuarterType());
+		quarterOperationReport.setQuarterType(operationQuarterReport.getQuarterType());
 		quarterOperationReport.setOperationReportId(id);
 		quarterOperationReport.setUpdateTime(updateTime);
 		quarterOperationReport.setUpdateUserId(updateUserId);
 		//根据运营报告id查询上半年度报告
-		QuarterOperationReportEntity entity =new QuarterOperationReportEntity();
+		OperationQuarterReport entity =new OperationQuarterReport();
 		BeanUtils.copyProperties(quarterOperationReport,entity);
 		quarterOperationReportMongDao.save(entity);
 		//修改用户报告
@@ -1360,9 +1360,9 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		Query query2 = new Query();
 		Criteria criteria2 = Criteria.where("operationReportId").is(form.getOperationReport().getId());
 		query2.addCriteria(criteria2);
-		List<OperationReportActivityEntity> operationReportActivityEntity = operationReportActivityMongDao.find(query);
-		if (!CollectionUtils.isEmpty(operationReportActivityEntity)) {
-			operationReportActivityMongDao.deleteBatch(operationReportActivityEntity);
+		List<OperationActivityReport> operationActivityReport = operationReportActivityMongDao.find(query);
+		if (!CollectionUtils.isEmpty(operationActivityReport)) {
+			operationReportActivityMongDao.deleteBatch(operationActivityReport);
 		}
 		//修改活动
 //		updateoperationReportActivity(form, updateTime, updateUserId);
@@ -1403,15 +1403,15 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		//根据运营报告id查询月度报告
 		String quarterOperationReportId = form.getQuarterOperationReport().getId();
 		if (StringUtils.isNotBlank(quarterOperationReportId)) {
-			QuarterOperationReportEntity entity = new QuarterOperationReportEntity();
+			OperationQuarterReport entity = new OperationQuarterReport();
 			Query query = new Query();
 			Criteria criteria = Criteria.where("operationReportId").is(operationReport.getId());
 			query.addCriteria(criteria);
-			QuarterOperationReportEntity quarterOperationReportEntity = quarterOperationReportMongDao.findOne(query);
+			OperationQuarterReport operationQuarterReport = quarterOperationReportMongDao.findOne(query);
 			//根据id修改季度运营报告
-			quarterOperationReport.setQuarterType(quarterOperationReportEntity.getQuarterType());
-			quarterOperationReport.setCreateTime(quarterOperationReportEntity.getCreateTime());
-			quarterOperationReport.setCreateUserId(quarterOperationReportEntity.getCreateUserId());
+			quarterOperationReport.setQuarterType(operationQuarterReport.getQuarterType());
+			quarterOperationReport.setCreateTime(operationQuarterReport.getCreateTime());
+			quarterOperationReport.setCreateUserId(operationQuarterReport.getCreateUserId());
 			quarterOperationReport.setUpdateTime(updateTime);
 			quarterOperationReport.setUpdateUserId(updateUserId);
 			BeanUtils.copyProperties(quarterOperationReport,entity);
@@ -1433,9 +1433,9 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		Query query = new Query();
 		Criteria criteria = Criteria.where("operationReportId").is(form.getOperationReport().getId());
 		query.addCriteria(criteria);
-		List<OperationReportActivityEntity> operationReportActivityEntity = operationReportActivityMongDao.find(query);
-		if (!CollectionUtils.isEmpty(operationReportActivityEntity)) {
-			operationReportActivityMongDao.deleteBatch(operationReportActivityEntity);
+		List<OperationActivityReport> operationActivityReport = operationReportActivityMongDao.find(query);
+		if (!CollectionUtils.isEmpty(operationActivityReport)) {
+			operationReportActivityMongDao.deleteBatch(operationActivityReport);
 		}
 		//修改活动
 		//插入精彩活动-->运营报告活动
@@ -1461,7 +1461,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		Query query = new Query();
 		Criteria criteria = Criteria.where("_id").is(operationReport.getId());
 		query.addCriteria(criteria);
-		OperationReportColumnEntity entity = operationReportColumnMongDao.findOne(query);
+		OperationColumnReport entity = operationReportColumnMongDao.findOne(query);
 		//设置运营报告字段，修改运营报告
 		operationReport.setIsDelete(entity.getIsDelete());
 		if (operationReport.getIsRelease() != null && operationReport.getIsRelease().intValue() == 1) {
@@ -1477,13 +1477,13 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		operationReport.setUpdateUserId(updateUserId);
 		operationReport.setOperationReportType(entity.getOperationReportType());
 		String id = form.getOperationReport().getId();
-		OperationReportColumnEntity operationReportColumnEntity = new OperationReportColumnEntity();
-		BeanUtils.copyProperties(operationReport,operationReportColumnEntity);
+		OperationColumnReport operationColumnReport = new OperationColumnReport();
+		BeanUtils.copyProperties(operationReport, operationColumnReport);
 		if (StringUtils.isBlank(id)) {
-			operationReportColumnMongDao.save(operationReportColumnEntity);
+			operationReportColumnMongDao.save(operationColumnReport);
 			id=operationReport.getId();
 		} else {
-			operationReportColumnMongDao.insert(operationReportColumnEntity);
+			operationReportColumnMongDao.insert(operationColumnReport);
 			id = operationReport.getId();
 		}
 		return id;
@@ -1504,7 +1504,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		Query query = new Query();
 		Criteria criteria = Criteria.where("_id").is(operationReport.getId()   );
 		query.addCriteria(criteria);
-		OperationReportColumnEntity entity = operationReportColumnMongDao.findOne(query);
+		OperationColumnReport entity = operationReportColumnMongDao.findOne(query);
 		//设置运营报告字段，修改运营报告
 		if (operationReport.getIsRelease() != null && operationReport.getIsRelease().intValue() == 1) {
 			operationReport.setIsRelease(1);
@@ -1519,9 +1519,9 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		operationReport.setUpdateTime(updateTime);
 		operationReport.setUpdateUserId(updateUserId);
 		operationReport.setOperationReportType(entity.getOperationReportType());
-		OperationReportColumnEntity operationReportColumnEntity = new OperationReportColumnEntity();
-		BeanUtils.copyProperties(operationReport,operationReportColumnEntity);
-		this.operationReportColumnMongDao.save(operationReportColumnEntity);
+		OperationColumnReport operationColumnReport = new OperationColumnReport();
+		BeanUtils.copyProperties(operationReport, operationColumnReport);
+		this.operationReportColumnMongDao.save(operationColumnReport);
 		return form.getOperationReport().getId();
 	}
 
@@ -1558,10 +1558,10 @@ public class OperationReportServiceImpl  implements OperationReportService {
 					halfYearOperationReport.setEnName(enName);
 				}
 				halfYearOperationReport.setOperationReportId(operationId);
-				HalfYearOperationReportEntity halfYearOperationReportEntity = new HalfYearOperationReportEntity();
-				BeanUtils.copyProperties(halfYearOperationReport,halfYearOperationReportEntity);
-				halfYearOperationReportEntity.setId(null);
-				halfYearOperationReportMongDao.insert(halfYearOperationReportEntity);
+				OperationHalfYearReport operationHalfYearReport = new OperationHalfYearReport();
+				BeanUtils.copyProperties(halfYearOperationReport, operationHalfYearReport);
+				operationHalfYearReport.setId(null);
+				halfYearOperationReportMongDao.insert(operationHalfYearReport);
 			}
 			//添加其他公用报告
 			//添加其他报告 运营报告类型是季度 2
@@ -1592,9 +1592,9 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		Query query = new Query();
 		Criteria criteria = Criteria.where("operationReportId").is(form.getOperationReport().getId());
 		query.addCriteria(criteria);
-		List<OperationReportActivityEntity> operationReportActivityEntity = operationReportActivityMongDao.find(query);
-		if (!CollectionUtils.isEmpty(operationReportActivityEntity)) {
-			operationReportActivityMongDao.deleteBatch(operationReportActivityEntity);
+		List<OperationActivityReport> operationActivityReport = operationReportActivityMongDao.find(query);
+		if (!CollectionUtils.isEmpty(operationActivityReport)) {
+			operationReportActivityMongDao.deleteBatch(operationActivityReport);
 		}
 		//修改活动
 		//插入精彩活动-->运营报告活动
@@ -1642,13 +1642,13 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			Query query = new Query();
 			Criteria criteria = Criteria.where("id").is(halfYearOperationReportId);
 			query.addCriteria(criteria);
-			HalfYearOperationReportEntity halfYearOperationReportEntity = halfYearOperationReportMongDao.findOne(query);
+			OperationHalfYearReport operationHalfYearReport = halfYearOperationReportMongDao.findOne(query);
 			//新增月度报告
-			halfYearOperationReport.setCreateTime(halfYearOperationReportEntity.getCreateTime());
-			halfYearOperationReport.setCreateUserId(halfYearOperationReportEntity.getCreateUserId());
+			halfYearOperationReport.setCreateTime(operationHalfYearReport.getCreateTime());
+			halfYearOperationReport.setCreateUserId(operationHalfYearReport.getCreateUserId());
 			halfYearOperationReport.setUpdateTime(updateTime);
 			halfYearOperationReport.setUpdateUserId(updateUserId);
-			HalfYearOperationReportEntity entity = null;
+			OperationHalfYearReport entity = null;
 			BeanUtils.copyProperties(halfYearOperationReport,entity);
 			halfYearOperationReportMongDao.save(entity);
 			response.setHalfYearOperationReport(halfYearOperationReport);
@@ -1666,9 +1666,9 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		Query query = new Query();
 		Criteria criteria = Criteria.where("operationReportId").is(form.getOperationReport().getId());
 		query.addCriteria(criteria);
-		List<OperationReportActivityEntity> operationReportActivityEntity = operationReportActivityMongDao.find(query);
-		if (!CollectionUtils.isEmpty(operationReportActivityEntity)) {
-			operationReportActivityMongDao.deleteBatch(operationReportActivityEntity);
+		List<OperationActivityReport> operationActivityReport = operationReportActivityMongDao.find(query);
+		if (!CollectionUtils.isEmpty(operationActivityReport)) {
+			operationReportActivityMongDao.deleteBatch(operationActivityReport);
 		}
 		//添加活动
 		//插入精彩活动-->运营报告活动
@@ -1712,10 +1712,10 @@ public class OperationReportServiceImpl  implements OperationReportService {
 					yearOperationReport.setEnName(enName);
 				}
 				yearOperationReport.setOperationReportId(operationId);
-				YearOperationReportEntity yearOperationReportEntity = new YearOperationReportEntity();
-				BeanUtils.copyProperties(yearOperationReport,yearOperationReportEntity);
-                yearOperationReportEntity.setId(null);
-				this.yearOperationReportMongDao.insert(yearOperationReportEntity);
+				OperationYearReport operationYearReport = new OperationYearReport();
+				BeanUtils.copyProperties(yearOperationReport, operationYearReport);
+                operationYearReport.setId(null);
+				this.yearOperationReportMongDao.insert(operationYearReport);
 			}
 			//添加其他公用报告
 			//添加其他报告 运营报告类型是季度 2
@@ -1755,9 +1755,9 @@ public class OperationReportServiceImpl  implements OperationReportService {
         Query query = new Query();
         Criteria criteria = Criteria.where("operationReportId").is(operationReport.getId());
         query.addCriteria(criteria);
-		YearOperationReportEntity yearOperationReportEntity = yearOperationReportMongDao.findOne(query);
-		BeanUtils.copyProperties(yearOperationReport,yearOperationReportEntity);
-		yearOperationReportMongDao.save(yearOperationReportEntity);
+		OperationYearReport operationYearReport = yearOperationReportMongDao.findOne(query);
+		BeanUtils.copyProperties(yearOperationReport, operationYearReport);
+		yearOperationReportMongDao.save(operationYearReport);
 		//修改用户报告
 		updateUserOperationReport(form, updateTime, updateUserId);
 		//修改十大投资人
@@ -1766,9 +1766,9 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		Query query2 = new Query();
 		Criteria criteria2 = Criteria.where("operationReportId").is(form.getOperationReport().getId());
 		query2.addCriteria(criteria2);
-		List<OperationReportActivityEntity> operationReportActivityEntity = operationReportActivityMongDao.find(query2);
-		if (!CollectionUtils.isEmpty(operationReportActivityEntity)) {
-			operationReportActivityMongDao.deleteBatch(operationReportActivityEntity);
+		List<OperationActivityReport> operationActivityReport = operationReportActivityMongDao.find(query2);
+		if (!CollectionUtils.isEmpty(operationActivityReport)) {
+			operationReportActivityMongDao.deleteBatch(operationActivityReport);
 		}
 		//插入精彩活动-->运营报告活动
 		insertOperationReportActivity(form.getWonderfulActivities(), form.getOperationReport().getId(), form.getOperationReport().getOperationReportType(), updateTime, updateUserId);
@@ -1806,10 +1806,10 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		if (enName != null && enName != "") {
 			halfYearOperationReport.setEnName(enName);
 		}
-		HalfYearOperationReportEntity halfYearOperationReportEntity = new HalfYearOperationReportEntity();
-		BeanUtils.copyProperties(halfYearOperationReport,halfYearOperationReportEntity);
+		OperationHalfYearReport operationHalfYearReport = new OperationHalfYearReport();
+		BeanUtils.copyProperties(halfYearOperationReport, operationHalfYearReport);
 		//修改季度报告
-		this.halfYearOperationReportMongDao.save(halfYearOperationReportEntity);
+		this.halfYearOperationReportMongDao.save(operationHalfYearReport);
 	}
 
 	/*
@@ -1830,7 +1830,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		if(StringUtils.isNotBlank(operationId)){
 			response.setOperationId(operationId);
 			if(StringUtils.isBlank(yearlyOperationReportId)){
-                YearOperationReportEntity yearOperationReportEntity = new YearOperationReportEntity();
+                OperationYearReport operationYearReport = new OperationYearReport();
 				//添加年度报告
 				yearOperationReport.setCreateTime(createTime);
 				yearOperationReport.setCreateUserId(createUserId);
@@ -1841,10 +1841,10 @@ public class OperationReportServiceImpl  implements OperationReportService {
 					yearOperationReport.setEnName(enName);
 				}
 				yearOperationReport.setOperationReportId(operationId);
-				BeanUtils.copyProperties(yearOperationReport,yearOperationReportEntity);
-				yearOperationReportEntity.setId(null);
-				yearOperationReportMongDao.insert(yearOperationReportEntity);
-				yearlyOperationReportId=yearOperationReportEntity.getId();
+				BeanUtils.copyProperties(yearOperationReport, operationYearReport);
+				operationYearReport.setId(null);
+				yearOperationReportMongDao.insert(operationYearReport);
+				yearlyOperationReportId= operationYearReport.getId();
 				if(yearlyOperationReportId !=null&&yearlyOperationReportId!=""){
 					response.setYearlyOperationReportId(yearlyOperationReportId);
 				}
@@ -1906,14 +1906,14 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			Query query = new Query();
 			Criteria criteria = Criteria.where("operationReportId").is(operationId);
 			query.addCriteria(criteria);
-			YearOperationReportEntity yearOperationReportEntity = yearOperationReportMongDao.findOne(query);
-			if(yearOperationReportEntity != null){
+			OperationYearReport operationYearReport = yearOperationReportMongDao.findOne(query);
+			if(operationYearReport != null){
 				//根据id修改年度运营报告
-				yearOperationReport.setCreateTime(yearOperationReportEntity.getCreateTime());
-				yearOperationReport.setCreateUserId(yearOperationReportEntity.getCreateUserId());
+				yearOperationReport.setCreateTime(operationYearReport.getCreateTime());
+				yearOperationReport.setCreateUserId(operationYearReport.getCreateUserId());
 				yearOperationReport.setUpdateTime(updateTime);
 				yearOperationReport.setUpdateUserId(updateUserId);
-				YearOperationReportEntity entity = new YearOperationReportEntity();
+				OperationYearReport entity = new OperationYearReport();
 				BeanUtils.copyProperties(yearOperationReport,entity);
 				yearOperationReportMongDao.save(entity);
 				response.setYearlyOperationReportId(yearId);
@@ -1934,9 +1934,9 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		Query query = new Query();
 		Criteria criteria = Criteria.where("operationReportId").is(form.getOperationReport().getId());
 		query.addCriteria(criteria);
-		List<OperationReportActivityEntity> operationReportActivityEntity = operationReportActivityMongDao.find(query);
-		if (!CollectionUtils.isEmpty(operationReportActivityEntity)) {
-			operationReportActivityMongDao.deleteBatch(operationReportActivityEntity);
+		List<OperationActivityReport> operationActivityReport = operationReportActivityMongDao.find(query);
+		if (!CollectionUtils.isEmpty(operationActivityReport)) {
+			operationReportActivityMongDao.deleteBatch(operationActivityReport);
 		}
 		//插入精彩活动-->运营报告活动
 		insertOperationReportActivity(form.getWonderfulActivities(), operationId, operationReport.getOperationReportType(), updateTime, updateUserId);
@@ -1948,13 +1948,13 @@ public class OperationReportServiceImpl  implements OperationReportService {
 
 	}
 	@Override
-	public OperationReportColumnEntity selectByPrimaryKey(String id){
+	public OperationColumnReport selectByPrimaryKey(String id){
 		Map<String, Object> paraMap = new HashMap<>();
 		paraMap.put("id", id);
 		Query query = new Query();
 		Criteria criteria = getCriteria(paraMap, query);
 		query.addCriteria(criteria);
-		OperationReportColumnEntity listMongodb = operationReportColumnMongDao.findOne(query);
+		OperationColumnReport listMongodb = operationReportColumnMongDao.findOne(query);
 		return listMongodb;
 	}
 	/**
@@ -1967,7 +1967,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		Query query = new Query();
 		Criteria criteria = Criteria.where("id").is(form.getOperationReport().getId());
 		query.addCriteria(criteria);
-		OperationReportColumnEntity operationReportEntity = operationReportColumnMongDao.findOne(query);
+		OperationColumnReport operationReportEntity = operationReportColumnMongDao.findOne(query);
 		UserOperationReportVO userOperationReport = form.getUserOperationReport();
 		if (userOperationReport == null) {
 			return null;
@@ -1980,7 +1980,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		userOperationReport.setUpdateUserId(updateUserId);
 		//修改用户运营报告
 		String userOperationReportId = userOperationReport.getId();
-		UserOperationReportEntity entity = new UserOperationReportEntity();
+		OperationUserReport entity = new OperationUserReport();
 		BeanUtils.copyProperties(userOperationReport,entity);
 		if (StringUtils.isNotBlank(userOperationReportId)) {
 			userOperationReportMongDao.save(entity);
@@ -1998,7 +1998,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		Query query = new Query();
 		Criteria criteria = Criteria.where("id").is(form.getOperationReport().getId());
 		query.addCriteria(criteria);
-		OperationReportColumnEntity operationReportEntity = operationReportColumnMongDao.findOne(query);
+		OperationColumnReport operationReportEntity = operationReportColumnMongDao.findOne(query);
 		TenthOperationReportVO tenthOperationReport = form.getTenthOperationReport();
 		if (tenthOperationReport == null) {
 			return null;

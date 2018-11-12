@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.message.bean.mc;
+package com.hyjf.cs.message.bean.ic;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -10,10 +10,10 @@ import java.io.Serializable;
 /**
  * 运营报告活动
  * @author tanyy
- * @version OperationReportActivityEntity, v0.1 2018/6/27 9:45
+ * @version OperationActivityReport, v0.1 2018/6/27 9:45
  */
-@Document(collection = "ht_operation_report_activity")
-public class OperationReportActivityEntity implements Serializable {
+@Document(collection = "ht_operation_activity_report")
+public class OperationActivityReport implements Serializable {
 
     private String id;
 

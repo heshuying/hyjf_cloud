@@ -18,10 +18,10 @@ import java.util.*;
 
 /**
  * @author tanyy
- * @version OperationMongoGroupEntity, v0.1 2018/8/1 9:45
+ * @version OperationGroupReport, v0.1 2018/8/1 9:45
  */
-@Document(collection = "ht_operation_report_group")
-public class OperationMongoGroupEntity implements Serializable {
+@Document(collection = "ht_operation_group_report")
+public class OperationGroupReport implements Serializable {
     /**
      *
      */

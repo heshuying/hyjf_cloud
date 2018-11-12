@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.controller.web.projectlist;
 
 import com.hyjf.cs.common.controller.BaseController;
+import com.hyjf.cs.trade.bean.CreditAssignedBean;
 import com.hyjf.cs.trade.bean.ProtocolRequest;
 import com.hyjf.cs.trade.service.projectlist.WebProtocolService;
 import io.swagger.annotations.Api;
@@ -56,5 +57,16 @@ public class WebProtocolController extends BaseController {
         webProtocolService.downloadIntermediaryPdf(form,userId,request,response);
     }
 
-
+    /**
+     * 资产管理-散标-转让记录-查看详情-下载协议
+     * @param tenderCreditAssignedBean
+     * @param request
+     * @param response
+     * 原接口：com.hyjf.web.agreement.CreateAgreementController.userCreditContractToSealPDF()
+     */
+    @ApiOperation(value = "资产管理-散标-转让记录-查看详情-下载协议", notes = "资产管理-散标-转让记录-查看详情-下载协议")
+    @GetMapping(value = "/creditTransferAgreement")
+    public void creditTransferAgreement(@ModelAttribute CreditAssignedBean tenderCreditAssignedBean, HttpServletRequest request, HttpServletResponse response){
+        webProtocolService.creditTransferAgreement(tenderCreditAssignedBean, tenderCreditAssignedBean.getRandom(), request, response);
+    }
 }

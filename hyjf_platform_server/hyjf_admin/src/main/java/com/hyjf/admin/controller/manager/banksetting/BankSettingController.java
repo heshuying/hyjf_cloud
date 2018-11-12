@@ -80,7 +80,7 @@ public class BankSettingController extends BaseController {
     @ApiOperation(value = "画面迁移(含有id更新，不含有id添加)", httpMethod = "POST", notes = "画面迁移(含有id更新，不含有id添加)")
     @ApiParam(required = true, name = "bankSettingRequestBean", value = "根据id查询详情")
     @PostMapping("/info")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult bankSettingInfo(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
         logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/info");
         AdminBankSettingRequest request = new AdminBankSettingRequest();
@@ -225,6 +225,7 @@ public class BankSettingController extends BaseController {
     @ApiOperation(value = "资料上传", httpMethod = "POST", notes = "资料上传")
     @PostMapping(value = "/upLoadFile")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {
@@ -239,6 +240,7 @@ public class BankSettingController extends BaseController {
 
     @ApiOperation(value = "列表导出", httpMethod = "POST", notes = "列表导出")
     @PostMapping(value = "/exportregist")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody AdminBankSettingRequest adminRequest) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());

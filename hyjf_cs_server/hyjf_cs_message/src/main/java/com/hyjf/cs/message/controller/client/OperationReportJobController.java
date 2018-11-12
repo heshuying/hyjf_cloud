@@ -13,7 +13,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.ic.BorrowUserStatistic;
-import com.hyjf.cs.message.bean.ic.OperationReportEntity;
+import com.hyjf.cs.message.bean.ic.OperationReport;
 import com.hyjf.cs.message.service.report.OperationReportJobService;
 import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import io.swagger.annotations.ApiOperation;
@@ -140,10 +140,10 @@ public class OperationReportJobController extends BaseController {
 	public OperationReportEntityResponse getBorrowUserStatistic(@PathVariable Integer month) {
 		OperationReportEntityResponse response = new OperationReportEntityResponse();
 		OperationReportEntityVO vo = new OperationReportEntityVO();
-		OperationReportEntity operationReportEntity = platDataStatisticsService.findOneOperationMongDaoByMonth(month);
-		if(operationReportEntity != null){
+		OperationReport operationReport = platDataStatisticsService.findOneOperationMongDaoByMonth(month);
+		if(operationReport != null){
 
-			BeanUtils.copyProperties(operationReportEntity,vo);
+			BeanUtils.copyProperties(operationReport,vo);
 		}
 		response.setResult(vo);
 		return response;

@@ -4,6 +4,9 @@
 package com.hyjf.admin.controller.finance.bankaleve;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
@@ -172,24 +175,54 @@ public class BankAleveController {
         return map;
     }
 
+
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
-        IValueFormatter amountAdapter = new IValueFormatter() {
+        IValueFormatter revindAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
-                BigDecimal amount = (BigDecimal) object;
-                return amount + "";
+                if(object instanceof Integer){
+                    Integer revind = (Integer) object;
+                    return revind == 1 ? "已撤销/冲正" : "";
+                }
+                return "";
             }
+
         };
-        IValueFormatter currBalAdapter = new IValueFormatter() {
+        mapAdapter.put("revind", revindAdapter);
+
+        IValueFormatter accchgAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
-                BigDecimal currBal = (BigDecimal) object;
-                return currBal + "";
+                if (object instanceof String) {
+                    String accchg = (String) object;
+                    return accchg.equals("1") ? "调账" : "";
+                }
+                return null;
             }
         };
-        mapAdapter.put("amount",amountAdapter);
-        mapAdapter.put("currBal",currBalAdapter);
+        mapAdapter.put("accchg", accchgAdapter);
+        IValueFormatter inptimeFormatter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                if (object instanceof Integer) {
+                    String inptimeStr = String.valueOf(object);
+                    if (inptimeStr.length() == 8) {
+                        String[] parts = Iterables.toArray(
+                                Splitter
+                                        .fixedLength(2)
+                                        .split(inptimeStr),
+                                String.class
+                        );
+                        return Joiner.on(":").join(parts);
+                    } else {
+                        return inptimeStr;
+                    }
+                }
+                return "";
+            }
+        };
+        mapAdapter.put("inptime", inptimeFormatter);
         return mapAdapter;
     }
 }
