@@ -41,40 +41,6 @@ public class BanksConfigController extends BaseConfigController{
 
     @Autowired
     private QuestionService questionService;
-    
-    /**
-     * 获取银行卡配置信息
-     * @param bankId
-     * @return
-     */
-    @GetMapping("/getBanksConfigByBankId/{bankId}")
-    public BankConfigResponse getBanksConfigByBankId(@PathVariable Integer bankId){
-        BankConfigResponse response = new BankConfigResponse();
-        BankConfig bankConfig = bankConfigService.getBankConfigByBankId(bankId);
-        if(null != bankConfig){
-            BankConfigVO banksConfigVO = new BankConfigVO();
-            BeanUtils.copyProperties(bankConfig,banksConfigVO);
-            response.setResult(banksConfigVO);
-        }
-        return response;
-    }
-
-    /**
-     * 江西银行的银行卡配置表
-     * @param bankId
-     * @return
-
-    @GetMapping("/getJxBankConfigByBankId/{bankId}")
-    public JxBankConfigResponse getJxBankConfigByBankId(@PathVariable Integer bankId) {
-        JxBankConfigResponse response = new JxBankConfigResponse();
-        JxBankConfig jxBankConfig = bankConfigService.getJxBankConfigByBankId(bankId);
-        if (null != jxBankConfig) {
-            JxBankConfigVO jxBankConfigVO = new JxBankConfigVO();
-            BeanUtils.copyProperties(jxBankConfig, jxBankConfigVO);
-            response.setResult(jxBankConfigVO);
-        }
-        return response;
-    }*/
 
     /**
      * 获取银行卡配置信息
