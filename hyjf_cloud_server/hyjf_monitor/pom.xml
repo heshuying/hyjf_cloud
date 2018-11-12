@@ -69,7 +69,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>com.hyjf.monitor.SpringBootAdminApplication</mainClass>
+					<mainClass>com.hyjf.monitor.MonitorApplication</mainClass>
 					<requiresUnpack>
 						<dependency>
 							<groupId>org.apache.axis2</groupId>

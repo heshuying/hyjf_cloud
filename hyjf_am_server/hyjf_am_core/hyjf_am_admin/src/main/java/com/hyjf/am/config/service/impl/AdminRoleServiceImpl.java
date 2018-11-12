@@ -189,7 +189,7 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
 
         // 删除角色表
         AdminRole record = new AdminRole();
-        record.setStatus(1);
+        record.setDelFlag(1);
         record.setUpdateTime(new Date());
         record.setUpdateUserId(adminId);
         AdminRoleExample example = new AdminRoleExample();
