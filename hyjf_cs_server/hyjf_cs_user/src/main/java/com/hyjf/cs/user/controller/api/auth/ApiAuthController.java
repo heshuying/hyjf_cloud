@@ -144,10 +144,10 @@ public class ApiAuthController extends BaseUserController {
      */
     @ApiOperation(value = "第三方端多合一授权同步回调", notes = "多合一授权")
     @PostMapping(value = "/return")
-    public ModelAndView returnPage(HttpServletRequest request) {
+    public ModelAndView returnPage(HttpServletRequest request,@RequestBody BankCallBean bean) {
         String isSuccess = request.getParameter("isSuccess");
         String url = request.getParameter("callback").replace("*-*-*", "#");
-        String phone = request.getParameter("phone");
+        String authType=request.getParameter("authType");
         logger.info("第三方端开户同步请求,isSuccess:{}", isSuccess);
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("status", "success");
@@ -159,10 +159,17 @@ public class ApiAuthController extends BaseUserController {
             resultMap.put("callBackAction", url);
             return callbackErrorView(resultMap);
         } else {
-
+            if(authService.checkDefaultConfig(bean, authType)){
+                authService.updateUserAuthLog(bean.getLogOrderId(),"QuotaError");
+                resultMap.put("status", ErrorCodeConstant.STATUS_CE999999);
+                resultMap.put("statusDesc", "多合一授权申请失败,失败原因：授权期限过短或额度过低，<br>请重新授权！");
+                resultMap.put("acqRes", request.getParameter("acqRes"));
+                resultMap.put("callBackAction", url);
+                return callbackErrorView(resultMap);
+            }
             resultMap.put("status", ErrorCodeConstant.SUCCESS);
             resultMap.put("status", "多合一授权成功");
-            resultMap.put("phone", phone);
+            resultMap.put("deadline", bean.getDeadline());
             return callbackErrorView(resultMap);
         }
     }
