@@ -4,6 +4,7 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.resquest.admin.ApplyAgreementRequest;
 import com.hyjf.am.resquest.admin.BorrowRepayAgreementRequest;
 import com.hyjf.am.resquest.admin.DownloadAgreementRequest;
+import com.hyjf.am.vo.config.AdminSystemVO;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -32,7 +33,7 @@ public interface ApplyAgreementService {
      * @author Zha Daojian
      * @date 2018/7/12 10:52
      */
-    AdminResult generateContract(BorrowRepayAgreementRequest request);
+    AdminResult generateContract(BorrowRepayAgreementRequest request,AdminSystemVO currUser);
 
     /**
      * 下载文件签署
