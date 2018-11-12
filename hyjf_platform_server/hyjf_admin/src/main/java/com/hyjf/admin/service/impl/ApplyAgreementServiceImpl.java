@@ -16,6 +16,7 @@ import com.hyjf.admin.service.ApplyAgreementService;
 import com.hyjf.admin.service.AutoTenderExceptionService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
+import com.hyjf.am.response.admin.ApplyAgreementInfoResponse;
 import com.hyjf.am.response.trade.ApplyAgreementResponse;
 import com.hyjf.am.response.trade.BorrowRepayAgreementResponse;
 import com.hyjf.am.resquest.admin.*;
@@ -188,7 +189,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
     @Override
     public AdminResult generateContract(BorrowRepayAgreementRequest request) {
         AdminResult result = new AdminResult();
-        //获取借款编号和期数组合1111
+        //获取借款编号和期数组合
         List<String> recordList = request.getIds();
         if (recordList==null) {
             return new AdminResult(BaseResult.FAIL, "借款编号和期数组合不能为空");
@@ -305,7 +306,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 if(!creditRepayAll) {//部分债转
                     assignPay = assignPay.add(creditRepay.getAssignRepayInterest());
                 }
-                FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,creditRepay.getAssignNid()+"_"+repay_period,creditRepay.getCreditUserId(),2,5);
+                FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,creditRepay.getAssignNid()+"-"+repay_period,creditRepay.getCreditUserId(),5,2);
                 JSONObject paramter = getAllcreditParamter(creditRepay,bean,borrow);
                 bean.setParamter(paramter);
                 bean.setTeString(DF);
@@ -321,7 +322,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             if(!creditRepayAll) {
                 /***************计算剩余部分********/
                 //垫付协议申请-协议生成详情
-                FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"_"+repay_period,recoverUserId,2,5);
+                FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"-"+repay_period,recoverUserId,5,2);
                 BigDecimal assignCapital = recoverCapital.subtract(creditAmount);
                 assignPay = borrowRecover.getRecoverInterestYes().subtract(assignPay);
                 borrowRecover.setRecoverCapital(assignCapital);//剩余部分已还本金
@@ -340,7 +341,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             }
         }else {//非债转
             //垫付协议申请-协议生成详情
-            FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"_"+repay_period,recoverUserId,2,5);
+            FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"-"+repay_period,recoverUserId,5,2);
             JSONObject paramter = getNocreditParamterPlan(borrowRecover,bean,borrow);
             bean.setParamter(paramter); bean.setTeString(DF);
             // 法大大生成合同
@@ -388,7 +389,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 if(!creditRepayAll) {//部分债转
                     assignPay = assignPay.add(creditRepay.getAssignRepayInterest());
                 }
-                FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,creditRepay.getAssignNid()+"_"+repay_period,creditRepay.getCreditUserId(),2,5);
+                FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,creditRepay.getAssignNid()+"-"+repay_period,creditRepay.getCreditUserId(),6,2);
                 JSONObject paramter = getAllcreditParamter(creditRepay,bean,borrow);
                 bean.setParamter(paramter);
                 bean.setTeString(DF);
@@ -404,7 +405,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             if(!creditRepayAll) {
                 /***************计算剩余部分********/
                 //垫付协议申请-协议生成详情
-                FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"_"+repay_period,recoverUserId,2,5);
+                FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"-"+repay_period,recoverUserId,6,2);
                 BigDecimal assignCapital = recoverCapital.subtract(creditAmount);
                 assignPay = borrowRecover.getRecoverInterestYes().subtract(assignPay);
                 borrowRecover.setRecoverCapital(assignCapital);//剩余部分已还本金
@@ -423,7 +424,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             }
         }else {//非债转
             //垫付协议申请-协议生成详情
-            FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"_"+repay_period,recoverUserId,2,5);
+            FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"-"+repay_period,recoverUserId,6,2);
             JSONObject paramter = getNocreditParamterPlan(borrowRecover,bean,borrow);
             bean.setParamter(paramter); bean.setTeString(DF);
             // 法大大生成合同
@@ -466,7 +467,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 if(!creditRepayAll) {//部分债转
                     assignPay = assignPay.add(creditRepay.getAssignRepayInterest());
                 }
-                FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,creditRepay.getAssignNid()+"_"+repay_period,creditRepay.getCreditUserId(),2,5);
+                FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,creditRepay.getAssignNid()+"-"+repay_period,creditRepay.getCreditUserId(),5,2);
                 JSONObject paramter = getAllcreditParamter(creditRepay,bean,borrow);
                 bean.setParamter(paramter);
                 bean.setTeString(DF);
@@ -482,7 +483,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             if(!creditRepayAll) {
                 /***************计算剩余部分********/
                 //垫付协议申请-协议生成详情
-                FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"_"+repay_period,repayOrgUserId,2,5);
+                FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"-"+repay_period,repayOrgUserId,5,2);
                 BigDecimal assignCapital = recoverCapital.subtract(creditAmount);
                 assignPay = borrowRecover.getRecoverInterestYes().subtract(assignPay);
                 borrowRecover.setRecoverCapital(assignCapital);//剩余部分已还本金
@@ -501,7 +502,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             }
         }else {//非债转
             //垫付协议申请-协议生成详情
-            FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"_"+repay_period,repayOrgUserId,2,5);
+            FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"-"+repay_period,repayOrgUserId,5,2);
             JSONObject paramter = getNocreditParamter(borrowRecover,bean,borrow);
             bean.setParamter(paramter); bean.setTeString(DF);
             // 法大大生成合同
@@ -544,7 +545,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 if(!creditRepayAll) {//部分债转
                     assignPay = assignPay.add(hjhDebtCreditRepayVO.getRepayInterest()).add(hjhDebtCreditRepayVO.getRepayAdvanceInterest()).add(hjhDebtCreditRepayVO.getRepayLateInterest()).add(hjhDebtCreditRepayVO.getRepayDelayInterest());
                 }
-                FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,hjhDebtCreditRepayVO.getUniqueNid()+"_"+repay_period,hjhDebtCreditRepayVO.getCreditUserId(),2,6);
+                FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,hjhDebtCreditRepayVO.getUniqueNid()+"-"+repay_period,hjhDebtCreditRepayVO.getCreditUserId(),6,2);
                 JSONObject paramter = getAllcreditParamterHjh(hjhDebtCreditRepayVO,bean,borrow);
                 bean.setParamter(paramter);
                 bean.setTeString(DF);
@@ -560,7 +561,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             if(!creditRepayAll) {
                 /***************计算剩余部分********/
                 //垫付协议申请-协议生成详情
-                FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"_"+repay_period,repayOrgUserId,2,5);
+                FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"-"+repay_period,repayOrgUserId,6,2);
                 BigDecimal assignCapital = recoverCapital.subtract(creditAmount);
                 assignPay = borrowRecover.getRecoverInterestYes().subtract(assignPay);
                 borrowRecover.setRecoverCapital(assignCapital);//剩余部分已还本金
@@ -579,7 +580,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             }
         }else {//非债转
             //垫付协议申请-协议生成详情
-            FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"_"+repay_period,repayOrgUserId,2,5);
+            FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"-"+repay_period,repayOrgUserId,6,2);
             JSONObject paramter = getNocreditParamter(borrowRecover,bean,borrow);
             bean.setParamter(paramter); bean.setTeString(DF);
             // 法大大生成合同
@@ -630,7 +631,9 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         applyAgreementInfo.setUserId(repayOrgUserId);//投资人(出让人)
         applyAgreementInfo.setCreditUserId(creditUserId+"");//承接人-垫付机构
         applyAgreementInfo.setStatus(transType);
-        amTradeClient.saveApplyAgreementInfo(applyAgreementInfo);
+        logger.info("--------------------填充所有债转信息getFddGenerateContractBean:applyAgreementInfo:"+JSONObject.toJSON(applyAgreementInfo));
+        ApplyAgreementInfoResponse response = amTradeClient.saveApplyAgreementInfo(applyAgreementInfo);
+        logger.info("--------------------填充所有债转信息getFddGenerateContractBean:ApplyAgreementInfoResponse:"+JSONObject.toJSON(response));
         bean.setBorrowNid(borrow_nid);//标的编号
         bean.setRepayPeriod(repay_period);//期数
         bean.setTransType(transType);//交易类型

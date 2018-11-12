@@ -1,17 +1,17 @@
 package com.hyjf.am.vo.datacollect;
 
-import com.hyjf.am.vo.BaseVO;
-import com.hyjf.common.util.GetDate;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
 
+import com.hyjf.am.vo.BaseVO;
+import com.hyjf.common.util.GetDate;
+
 /**
  * @author xiasq
- * @version AppChannelStatisticsDetailVO, v0.1 2018/5/15 17:16
+ * @version AppUtmRegVO, v0.1 2018/5/15 17:16
  */
-public class AppChannelStatisticsDetailVO extends BaseVO implements Serializable {
+public class AppUtmRegVO extends BaseVO implements Serializable {
 
     private Integer sourceId;
 

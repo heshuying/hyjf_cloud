@@ -37,7 +37,7 @@ public class WebProtocolController extends BaseController {
      */
     @ApiOperation(value = "协议下载", notes = "协议下载")
     @GetMapping(value = "/creditPaymentPlan")
-    public File homeBorrowProjectList(@ModelAttribute ProtocolRequest form, HttpServletRequest request, HttpServletResponse response,@RequestHeader(value = "userId",required = false) Integer userId){
+    public File creditPaymentPlan(@ModelAttribute ProtocolRequest form, HttpServletRequest request, HttpServletResponse response,@RequestHeader(value = "userId",required = false) Integer userId){
         File  file = webProtocolService.creditPaymentPlan(form,userId,request,response);
         if (null == file){
             logger.info("get result file is null");
@@ -46,16 +46,15 @@ public class WebProtocolController extends BaseController {
     }
 
     /**
-     *
-     * @param request
-     * 原接口：com.hyjf.web.agreement.CreateAgreementController.createAgreementPDFFile()
+     *债转被投资的协议PDF文件下载
+     * @author zhangyk
+     * 原接口： com.hyjf.web.bank.web.user.repay.RepayController.downloadIntermediaryPdf()
      */
-    @ApiOperation(value = "协议下载", notes = "协议下载")
-    @GetMapping(value = "/creditPaymentPlan2")
-    public void homeBorrowProjectList2(@ModelAttribute ProtocolRequest form, HttpServletRequest request, HttpServletResponse response,@RequestHeader(value = "userId",required = false) Integer userId){
-        File  file = webProtocolService.creditPaymentPlan(form,userId,request,response);
-        if (null == file){
-            logger.info("get result file is null");
-        }
+    @ApiOperation(value = "债转投资协议",notes = "债转投资协议")
+    @GetMapping(value = "/downloadIntermediaryPdf")
+    public void downloadIntermediaryPdf(@ModelAttribute ProtocolRequest form, HttpServletRequest request, HttpServletResponse response, @RequestHeader(value = "userId",required = false) Integer userId){
+        webProtocolService.downloadIntermediaryPdf(form,userId,request,response);
     }
+
+
 }

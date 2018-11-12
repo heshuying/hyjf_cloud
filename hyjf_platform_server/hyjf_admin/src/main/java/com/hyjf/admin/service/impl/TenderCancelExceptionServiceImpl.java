@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.service.TenderCancelExceptionService;
 import com.hyjf.am.resquest.admin.TenderCancelExceptionRequest;
@@ -22,7 +23,6 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -80,7 +80,6 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
      * @return
      */
     @Override
-    @Transactional(rollbackFor = Exception.class)
     public JSONObject handleTenderCancelException(TenderCancelExceptionRequest request,Integer loginUserId) {
         AdminSystemVO adminSystemVO = amConfigClient.getUserInfoById(loginUserId);
         JSONObject jsonObject = new JSONObject();
@@ -104,15 +103,18 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
         BankOpenAccountVO bankAccount = amUserClient.searchBankOpenAccount(userId);
         if (Validator.isNull(bankAccount)) {
             jsonObject.put("status","error");
-            jsonObject.put("result","投资撤销失败，请联系客服！");
+            jsonObject.put("result","投资人的账户信息不存在");
             return jsonObject;
         }
         String accountId = bankAccount.getAccount();
         int status = 0;//撤销成功状态 0:正常撤销 1:异常记录处理
         boolean bidCancelFlag = false;
         BankCallBean bean = this.bidCancel(userId, accountId, productId, orgOrderId, txAmount.toString(),adminSystemVO);
+        logger.info("bean:[{}]", JSON.toJSONString(bean));
+        String retCode = "";
+        String retMsg = "投资撤销失败，请联系客服！";
         if (Validator.isNotNull(bean)) {
-            String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
+            retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
             if (retCode.equals(BankCallConstant.RESPCODE_SUCCESS)) {
                 bidCancelFlag = true;
             } else if (retCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_EXIST1) || retCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_EXIST2)) {
@@ -123,9 +125,11 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
                 bidCancelFlag = true;
             }
         }
+        logger.info("bidCancelFlag:::::::::[{}]",bidCancelFlag);
         if (bidCancelFlag) {
             try {
                 boolean tenderCancelFlag = this.updateBidCancelRecord(tenderTmp,adminSystemVO);
+                logger.info("tenderCancelFlag:::::::::[{}]",tenderCancelFlag);
                 if (tenderCancelFlag) {
                     jsonObject.put("status","success");
                     if (status == 1) {
@@ -139,8 +143,11 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
                 e.printStackTrace();
             }
         }
+        if(StringUtils.isNotBlank(retCode)){
+            retMsg = amConfigClient.getBankRetMsg(retCode);
+        }
         jsonObject.put("status","error");
-        jsonObject.put("result","投资撤销失败，请联系客服！");
+        jsonObject.put("result",retMsg);
         return jsonObject;
     }
 
@@ -153,7 +160,6 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
      * @param txAmount
      * @return
      */
-    @Transactional(rollbackFor = Exception.class)
     public BankCallBean bidCancel(Integer userId, String accountId, String productId, String orgOrderId, String txAmount,AdminSystemVO adminSystemVO) {
         // 标的投资撤销
         BankCallBean bean = new BankCallBean();
@@ -181,7 +187,6 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
         return result;
     }
 
-    @Transactional(rollbackFor = Exception.class)
     public boolean updateBidCancelRecord(BorrowTenderTmpVO tenderTmp,AdminSystemVO adminSystemVO) throws Exception {
 
         boolean tenderTmpFlag = amTradeClient.deleteBorrowTenderTmpById(tenderTmp.getId()) > 0;

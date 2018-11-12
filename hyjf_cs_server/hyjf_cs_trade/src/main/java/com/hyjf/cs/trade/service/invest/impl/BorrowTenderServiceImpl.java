@@ -625,6 +625,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
                 logger.info("获取投资成功结果2为:"+JSONObject.toJSONString(borrowTender));
             }
+            if(borrowTender==null){
+                try {
+                    Thread.sleep(1000);
+                } catch (InterruptedException e) {}
+                borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
+                logger.info("获取投资成功结果3为:"+JSONObject.toJSONString(borrowTender));
+            }
         }
 
         BigDecimal earnings = new BigDecimal("0");
@@ -673,10 +680,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 查询优惠券信息
         CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
         if (couponUser != null) {
-            // 查询优惠券的投资
-            //BorrowTenderCpnVO borrowTenderCpn = amTradeClient.getCouponTenderByTender(userId,borrowNid,borrowTender.getNid(),couponGrantId);
-            // 优惠券收益
-
             data.put("couponType", couponUser.getCouponType());
             BigDecimal couponInterest = BigDecimal.ZERO;
             if (couponUser.getCouponType() == 1) {
@@ -691,8 +694,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             logger.info("获取投资成功结果  earnings:{} ",earnings.toString());
             logger.info("获取投资成功结果  couponInterest:{} ",couponInterest.toString());
             if (couponUser != null && couponUser.getCouponType() == 3) {
-                //couponInterest = couponInterest.subtract(couponUser.getCouponQuota());
-                data.put("income", df.format(earnings.add(couponInterest)));
+                data.put("income", df.format(earnings.add(couponInterest).subtract(couponUser.getCouponQuota())));
                 data.put("couponQuota", couponUser.getCouponQuota()+"元");
             } else if (couponUser != null && couponUser.getCouponType() == 1) {
                 data.put("income", df.format(earnings.add(couponInterest)));
@@ -701,7 +703,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 data.put("income", df.format(earnings.add(couponInterest)));
                 data.put("couponQuota", couponUser.getCouponQuota()+ "%");
             }
-            //BigDecimal couponInterest = couponService.getInterest(borrow.getBorrowStyle(),couponUser.getCouponType(),borrow.getBorrowApr(),couponUser.getCouponQuota(),borrowTender.getAccount().toString(),borrow.getBorrowPeriod());
             data.put("couponInterest", df.format(couponInterest));
 
         } else {
@@ -874,12 +875,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 investInfo.setCapitalInterest(df.format(earnings.add(couponUser.getCouponQuota()).subtract(couponInterest)));
             } else if (couponUser != null && couponUser.getCouponType() == 1) {
                 earnings = earnings.add(couponInterest);
-                investInfo.setEarnings(df.format(earnings.add(couponInterest)));
+                investInfo.setEarnings(df.format(earnings));
                 investInfo.setCapitalInterest(df.format(earnings));
             } else {
                 earnings = earnings.add(couponInterest);
                 investInfo.setCapitalInterest(df.format(earnings.subtract(couponInterest)));
-                investInfo.setEarnings(df.format(earnings.add(couponInterest)));
+                investInfo.setEarnings(df.format(earnings));
             }
             investInfo.setCouponUser(couponUser);
             logger.info("本金+优惠券收益  "+investInfo.getEarnings().toString());
@@ -965,25 +966,76 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 return resultVo;
             }
         }
-
         logger.info("investType:[{}]",investType);
         String money = tender.getMoney();
         {
             this.setProtocolsToResultVO(investInfo, investType);
         }
+        //风险测评
+        if (!(tender.getMoney() == null || "".equals(tender.getMoney()) || (new BigDecimal(tender.getMoney()).compareTo(BigDecimal.ZERO) == 0))) {
+            //从user中获取客户类型，ht_user_evalation_result（用户测评总结表）
+            UserEvalationResultVO userEvalationResultCustomize = amUserClient.selectUserEvalationResultByUserId(tender.getUserId());
+            if (userEvalationResultCustomize != null) {
+                //从redis中获取测评类型和上限金额
+                String revaluation_money = null;
+                String eval_type = userEvalationResultCustomize.getEvalType();
+                switch (eval_type) {
+                    case "保守型":
+                        revaluation_money = RedisUtils.get(com.hyjf.common.cache.RedisConstants.REVALUATION_CONSERVATIVE);
+                        break;
+                    case "稳健型":
+                        revaluation_money = RedisUtils.get(com.hyjf.common.cache.RedisConstants.REVALUATION_ROBUSTNESS);
+                        break;
+                    case "成长型":
+                        revaluation_money = RedisUtils.get(com.hyjf.common.cache.RedisConstants.REVALUATION_GROWTH);
+                        break;
+                    case "进取型":
+                        revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE);
+                        break;
+                    default:
+                        revaluation_money = null;
+                }
+                //计划类判断用户类型为稳健型以上才可以投资
+                if("HJH".equals(investType)) {
+                    if (userEvalationResultCustomize != null) {
+                        if (!CommonUtils.checkStandardInvestment(userEvalationResultCustomize.getEvalType())) {
+                            //返回类型和限额
+                            investInfo.setProjectRevalJudge(true);
+                            investInfo.setEvalType(eval_type);
+                            investInfo.setProjectRiskLevelDesc(CommonUtils.DESC_PROJECT_RISK_LEVEL_DESC.replace("{0}", userEvalationResultCustomize.getEvalType()));
+                        }
+                    }
+                }
+                if (revaluation_money == null) {
+                    logger.info("=============从redis中获取测评类型和上限金额异常!(没有获取到对应类型的限额数据) eval_type=" + eval_type);
+                }else {
+                    //金额对比判断（校验金额 大于 设置测评金额）
+                    if (new BigDecimal(tender.getMoney()).compareTo(new BigDecimal(revaluation_money)) > 0) {
+                        //是否需要重新测评
+                        investInfo.setRevalJudge(true);
+                        //返回类型和限额
+                        investInfo.setEvalType(eval_type);
+                        investInfo.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money)));
+                        investInfo.setRiskLevelDesc("您当前的风险测评类型为 #"+eval_type+"# \n根据监管要求,\n"+eval_type+"用户单笔最高投资限额 #"
+                                +StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money))+"# 。");
+                    }
+                }
+            } else {
+                logger.info("=============该用户测评总结数据为空! userId=" + tender.getUserId());
+            }
+        }
+
         // 转让的
         if ("HZR".equals(investType) && StringUtils.isNotEmpty(creditNid)) {
-            AppInvestInfoResultVO result = borrowTenderService.getInterestInfoApp(tender,creditNid,tender.getMoney());
-            this.setProtocolsToResultVO(result, investType);
-
-            return result;
+            investInfo = borrowTenderService.getInterestInfoApp(tender,creditNid,tender.getMoney());
+            this.setProtocolsToResultVO(investInfo, investType);
+            return investInfo;
         }
         // 计划的
         if ("HJH".equals(investType)) {
-            AppInvestInfoResultVO result = hjhTenderService.getInvestInfoApp(tender);
-            this.setProtocolsToResultVO(result, investType);
-
-            return result;
+            investInfo = hjhTenderService.getInvestInfoApp(tender);
+            this.setProtocolsToResultVO(investInfo, investType);
+            return investInfo;
         }
 
         if ((!("HZR".equals(investType))) && (!("HJH".equals(investType)))) {
@@ -1254,7 +1306,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 investInfo.setRealAmount("¥" + CommonUtils.formatAmount(null, new BigDecimal(money)));
                 investInfo.setButtonWord("确认投资" + CommonUtils.formatAmount(null, money) + "元");
             }
-
             return investInfo;
         }
         return null;
@@ -1397,6 +1448,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
         vo.setBorrowApr(borrow.getBorrowApr() + "%");
+
+        // 产品加息
+        if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
+            vo.setBorrowApr(borrow.getBorrowApr() + "% + "
+                    + borrowInfo.getBorrowExtraYield() + "%");
+        }
+
         vo.setBorrowNid(tender.getBorrowNid());
 
         //设置是否有可用优惠券
@@ -1460,8 +1518,16 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 couponInterest = calculateCouponTenderInterest(couponConfig, money, borrow);
             }
             vo.setDesc("年化利率: " + borrow.getBorrowApr() + "%      预期收益: " + CommonUtils.formatAmount(null, earnings.add(couponInterest)) + "元");
-            vo.setProspectiveEarnings(CommonUtils.formatAmount(null, earnings.add(couponInterest)) + "元");
+            earnings = earnings.add(couponInterest);
+            vo.setProspectiveEarnings(CommonUtils.formatAmount(null,earnings ) + "元");
 
+        }
+
+        // 产品加息预期收益
+        if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
+            BigDecimal incEarnings = increaseCalculate(borrow.getBorrowPeriod(), borrow.getBorrowStyle(), money, borrowInfo.getBorrowExtraYield());
+            earnings = incEarnings.add(earnings);
+            vo.setProspectiveEarnings(CommonUtils.formatAmount(null, earnings) + "元");
         }
 
         vo.setInitMoney(borrowInfo.getTenderAccountMin() + "");
@@ -1552,6 +1618,44 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         // 检查金额
         this.checkTenderMoney(request, borrow, cuc, tenderAccount );
+        //从user中获取客户类型，ht_user_evalation_result（用户测评总结表）
+        UserEvalationResultVO userEvalationResultCustomize = amUserClient.selectUserEvalationResultByUserId(userId);
+        if(userEvalationResultCustomize != null){
+            Map<String, Object> result = new HashMap<String, Object>();
+            //从redis中获取测评类型和上限金额
+            String revaluation_money = null;
+            String eval_type = userEvalationResultCustomize.getEvalType();
+            switch (eval_type){
+                case "保守型":
+                    revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE);
+                    break;
+                case "稳健型":
+                    revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS);
+                    break;
+                case "成长型":
+                    revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_GROWTH) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_GROWTH);
+                    break;
+                case "进取型":
+                    revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE);
+                    break;
+                default:
+                    revaluation_money = null;
+            }
+            if(revaluation_money == null){
+                logger.info("=============从redis中获取测评类型和上限金额异常!(没有获取到对应类型的限额数据) eval_type="+eval_type);
+            }else {
+                //金额对比判断（校验金额 大于 设置测评金额）
+                if (new BigDecimal(request.getAccount()).compareTo(new BigDecimal(revaluation_money)) > 0) {
+                    //返回类型和限额
+                    result.put("evalType",eval_type);
+                    result.put("revaluationMoney",StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money)));
+                    //返回错误码
+                    throw new CheckException(CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS,"测评限额超额",result);
+                }
+            }
+        }else{
+            logger.info("=============该用户测评总结数据为空! userId="+userId);
+        }
         logger.info("所有参数都已检查通过!");
         return new WebResult<Map<String, Object>>();
     }

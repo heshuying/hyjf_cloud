@@ -7,7 +7,6 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
-import com.hyjf.cs.user.client.CsMessageClient;
 import com.hyjf.cs.user.service.wrb.UserRegisterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,8 +24,6 @@ public class UserRegisterServiceImpl implements UserRegisterService {
     @Autowired
     AmUserClient amUserClient;
 
-    @Autowired
-    CsMessageClient csMessageClient;
 
     @Override
     public HjhInstConfigVO selectHjhInstConfig(String instcode) {
@@ -75,7 +72,7 @@ public class UserRegisterServiceImpl implements UserRegisterService {
 
     @Override
     public boolean insertAppChannelStatisticsDetail(WrbRegisterRequest wrbRegisterRequest) {
-        return csMessageClient.insertAppChannelStatisticsDetail(wrbRegisterRequest);
+        return amUserClient.insertAppChannelStatisticsDetail(wrbRegisterRequest);
     }
 
 

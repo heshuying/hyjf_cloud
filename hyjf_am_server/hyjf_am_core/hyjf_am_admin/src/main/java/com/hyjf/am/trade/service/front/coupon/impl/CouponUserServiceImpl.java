@@ -269,6 +269,7 @@ public class CouponUserServiceImpl implements CouponUserService {
     public int insertCouponUser(CouponUserRequest request) {
         CouponUser couponUser = new CouponUser();
         couponUser.setCouponCode(request.getCouponCode());
+        couponUser.setActivityId(request.getActivityId());
         couponUser.setContent(request.getContent());
         couponUser.setEndTime(request.getEndTime());
         couponUser.setUserId(request.getUserId());

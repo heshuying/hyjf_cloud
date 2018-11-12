@@ -1,9 +1,17 @@
 spring:
   application:
-    name: MONOTOR-SERVER
+    name: MONITOR-SERVER
+  cloud: 
+   config:
+      uri: http://micoserver:2222/
+      name: MONITOR-SERVER
   profiles:
-    active: secure
-
+    active: dev
+  security:
+    user:
+      name: "hyjf"
+      password: "hyjf1234"
+      
 eureka:
   instance:
     preferIpAddress: true
@@ -30,20 +38,36 @@ management:
       # 详细信息显示给所有用户
       show-details: ALWAYS
 
+
 ---
-spring:
-  profiles: insecure
+spring: 
+  profiles: dev
+# dingding robot
+  boot:
+    admin:
+      notify:
+        dingding:
+          switch_on : true
+          access_token: a032a81f62766780d77cadb81dfa016feb605e43881b442f16078d7c2d34ade0
+
+---
+spring: 
+  profiles: beta
+# dingding robot
+  boot:
+    admin:
+      notify:
+        dingding:
+          switch_on : true
+          access_token: 7a08138cb378a89b921b89fe475b7a6762722a2ee2623991db98444c64af9605
 
 ---
 spring:
-  profiles: secure
-  security:
-    user:
-      name: "hyjf"
-      password: "hyjf1234"
-eureka:
-  instance:
-    metadata-map:
-      #These two are needed so that the server can access the protected client endpoints
-      user.name: "hyjf"
-      user.password: "hyjf1234"
+  profiles: test
+# dingding robot
+  boot:
+    admin:
+      notify:
+        dingding:
+          switch_on : true
+          access_token: a032a81f62766780d77cadb81dfa016feb605e43881b442f16078d7c2d34ade0

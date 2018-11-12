@@ -269,10 +269,10 @@ public class BorrowCommonController extends BaseController {
 			if (user == null || user.size() == 0) {
 				return new AdminResult<>(FAIL, "请填写用户角色为垫付机构的已开户用户！！");
 			}
-				 UserInfoVO userinfo = borrowCommonService.findUserInfoById(user.get(0).getUserId());
-				if(userinfo.getRoleId()!=3) {
-					return new AdminResult<>(FAIL, "请填写用户角色为垫付机构的已开户用户！！");
-				}
+//				 UserInfoVO userinfo = borrowCommonService.findUserInfoById(user.get(0).getUserId());
+//				if(userinfo.getRoleId()!=3) {
+//					return new AdminResult<>(FAIL, "请填写用户角色为垫付机构的已开户用户！！");
+//				}
 		Integer authState = CommonUtils.checkPaymentAuthStatus(user.get(0).getPaymentAuthStatus());
 		if (authState == 0) {
 			return new AdminResult<>(FAIL, "未开通服务费授权！");
@@ -832,9 +832,9 @@ public class BorrowCommonController extends BaseController {
 						}else if(rowNum == 30){//主营业务
 							resultMap.put("comMainBusiness", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 31){//在平台逾期次数
-							resultMap.put("comOverdueTimes", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("comOverdueTimes", this.getValue(hssfRow.getCell(1)).replace(".0", ""));
 						}else if(rowNum == 32){//在平台逾期金额
-							resultMap.put("comOverdueAmount", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("comOverdueAmount", this.getValue(hssfRow.getCell(1)).replace(".0", ""));
 						}else if(rowNum == 33){//注册时间
 							resultMap.put("comRegTime", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 34){//统一社会信用代码
@@ -860,7 +860,7 @@ public class BorrowCommonController extends BaseController {
 						}else if(rowNum == 40){//身份证号
 							resultMap.put("cardNo", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 41){//年龄
-							resultMap.put("old", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("old", this.getValue(hssfRow.getCell(1)).replace(".0", ""));
 						}else if(rowNum == 42){//岗位职业
 							resultMap.put("position", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 43){//性别
@@ -886,9 +886,9 @@ public class BorrowCommonController extends BaseController {
 						}else if(rowNum == 46){//户籍地
 							resultMap.put("domicile", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 47){//在平台逾期次数
-							resultMap.put("overdueTimes", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("overdueTimes", this.getValue(hssfRow.getCell(1)).replace(".0", ""));
 						}else if(rowNum == 48){//在平台逾期金额
-							resultMap.put("overdueAmount", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("overdueAmount", this.getValue(hssfRow.getCell(1)).replace(".0", ""));
 						}else if(rowNum == 49){//涉诉情况
 							resultMap.put("litigation", this.getValue(hssfRow.getCell(1)));
 						}
@@ -1773,7 +1773,7 @@ public class BorrowCommonController extends BaseController {
 			// 单元格为公式类型时
 			if (hssfCell.getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC) {
 				// 返回数值类型的值
-				return String.valueOf(hssfCell.getNumericCellValue());
+				return String.valueOf((int)hssfCell.getNumericCellValue());
 			}else{
 				// 返回字符串类型的值
 				return String.valueOf(hssfCell.getStringCellValue());

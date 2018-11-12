@@ -19,7 +19,7 @@ import java.lang.reflect.InvocationTargetException;
  * @date 2018/09/04 17:00
  * @version V1.0  
  */
-@Api(value = "系统中心-用户管理&角色权限&菜单管理", tags = "系统中心用户管理&角色权限&菜单管理")
+@Api(value = "系统中心-用户管理", tags = "系统中心用户管理")
 @RestController
 @RequestMapping("/hyjf-admin/adminuser")
 public class AdminUserController extends BaseController {

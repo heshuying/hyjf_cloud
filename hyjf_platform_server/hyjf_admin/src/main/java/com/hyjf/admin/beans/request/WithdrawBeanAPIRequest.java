@@ -61,6 +61,9 @@ public class WithdrawBeanAPIRequest extends BaseRequest implements Serializable{
     @ApiModelProperty(value="查询条件-状态")
     private Integer status;
 
+    @ApiModelProperty(value = "是否具有组织架构查看权限")
+    private String isOrganizationView;
+
     /** 翻页开始 */
     protected int limitStart = -1;
     /** 翻页结束 */
@@ -200,5 +203,13 @@ public class WithdrawBeanAPIRequest extends BaseRequest implements Serializable{
 
     public void setStatusExceptionSrch(String statusExceptionSrch) {
         this.statusExceptionSrch = statusExceptionSrch;
+    }
+
+    public String getIsOrganizationView() {
+        return isOrganizationView;
+    }
+
+    public void setIsOrganizationView(String isOrganizationView) {
+        this.isOrganizationView = isOrganizationView;
     }
 }

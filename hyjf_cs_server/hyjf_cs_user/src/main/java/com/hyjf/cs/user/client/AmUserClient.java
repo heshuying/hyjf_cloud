@@ -209,7 +209,7 @@ public interface AmUserClient {
 
 	String selectBankSmsLog(BankSmsLogRequest request);
 
-	List<EvalationVO> getEvalationRecord();
+	List<EvalationCustomizeVO> getEvalationRecord();
 
 	/**
 	 * 获取测评结果
@@ -479,13 +479,6 @@ public interface AmUserClient {
 	BankCardVO getBankCardByUserId(Integer userId);
 
 	/**
-	 * 插入各种信息
-	 * @param userActionUtmRequest
-	 * @return
-	 */
-	UserVO insertUserActionUtm(UserActionUtmRequest userActionUtmRequest);
-
-	/**
 	 * 插入测评结果
 	 * @param userId
 	 * @param countScore
@@ -564,4 +557,12 @@ public interface AmUserClient {
 	 * @return
 	 */
 	BankCardVO getBankCardById(int userId, String cardId);
+
+	/**
+	 * 插入app渠道统计数据
+	 * @param wrbRegisterRequest
+	 * @return
+	 */
+	boolean insertAppChannelStatisticsDetail(WrbRegisterRequest wrbRegisterRequest);
+
 }

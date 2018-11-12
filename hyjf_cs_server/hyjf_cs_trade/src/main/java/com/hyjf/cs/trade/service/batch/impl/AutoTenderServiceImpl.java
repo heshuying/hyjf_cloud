@@ -4,6 +4,7 @@
 package com.hyjf.cs.trade.service.batch.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
@@ -672,6 +673,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         bean.setContOrderId(hjhUserAuth.getAutoOrderId());// 签约订单号
 
         try {
+            logger.info("=======atuoTenderServiceImpl 插入自动投资临时表=======");
             // 插入 自动投资临时表
             Integer idKey = this.insertBorrowTmp(borrow, null, hjhAccede, account, hjhUserAuth, bean, RedisConstants.HJH_BORROW_INVEST, isLast ? 1 : 0);
 
@@ -791,9 +793,13 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         record.setCreateTime(nowDate);
         record.setUpdateUserId(1);
         record.setUpdateTime(nowDate);
+        logger.info("===============insertBorrowTmp ,record为:"+ JSONObject.toJSON(record)+"===============");
 
-        this.amTradeClient.insertHjhPlanBorrowTmp(record);
-
+        int intInsetFlg = this.amTradeClient.insertHjhPlanBorrowTmp(record);
+        if(intInsetFlg >0){
+            logger.info("ht_hjh_plan_borrow_tmp 插入成功! ");
+        }
+        logger.info("===============insertBorrowTmp ,id为:"+record.getId()+"===============");
         return record.getId();
     }
 

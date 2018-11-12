@@ -91,6 +91,8 @@ public class UnderLineRechargeServiceImpl implements UnderLineRechargeService {
 
         // 启用状态的
         criteria.andStatusEqualTo(0);
+        example.setLimitStart(request.getLimitStart());
+        example.setLimitEnd(request.getLimitEnd());
         example.setOrderByClause("create_time DESC");
         return underLineRechargeMapper.selectByExample(example);
     }

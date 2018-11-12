@@ -121,4 +121,17 @@ public class OpenAccountEnquiryController extends BaseController {
         response.setBankOpenFlag(checkAccount);
         return response;
     }
+
+    @ApiOperation(value = "通过手机号和身份证查询掉单信息", notes = "通过手机号和身份证查询掉单信息")
+    @GetMapping(value = "/selectBankOpenAccountLogByUserId/{userId}")
+    public BankOpenAccountLogResponse selectBankOpenAccountLogByUserId(@PathVariable Integer userId){
+        BankOpenAccountLogResponse response = new BankOpenAccountLogResponse();
+        List<BankOpenAccountLog> bankOpenAccountLogList = bankOpenAccountLogSrvice.selectBankOpenAccountLogByUserId(userId);
+        if(!CollectionUtils.isEmpty(bankOpenAccountLogList)){
+            List<BankOpenAccountLogVO> bankCardExceptionCustomizeVOList = CommonUtils.convertBeanList(bankOpenAccountLogList,BankOpenAccountLogVO.class);
+            response.setResultList(bankCardExceptionCustomizeVOList);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
 }

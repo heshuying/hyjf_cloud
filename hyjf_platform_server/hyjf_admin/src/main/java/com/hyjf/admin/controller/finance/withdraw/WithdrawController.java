@@ -168,6 +168,10 @@ public class WithdrawController extends BaseController {
 	@PostMapping("/exportWithdrawExcel")
 	//@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
 	public void exportWithdrawExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody WithdrawBeanAPIRequest form) throws Exception {
+
+		// 是否具有组织机构查看权限
+		String isOrganizationView = form.getIsOrganizationView();
+
 		//sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 		// 表格sheet名称
@@ -187,7 +191,7 @@ public class WithdrawController extends BaseController {
 		Integer totalCount = recordListResponse.getCount();
 
 		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
-		Map<String, String> beanPropertyColumnMap = buildMap();
+		Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
 		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
 		if (totalCount == 0) {
 			String sheetNameTmp = sheetName + "_第1页";
@@ -208,7 +212,7 @@ public class WithdrawController extends BaseController {
 		DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
 	}
 
-	private Map<String, String> buildMap() {
+	private Map<String, String> buildMap(String isOrganizationView) {
 		Map<String, String> map = Maps.newLinkedHashMap();
 		map.put("username", "用户名");
 		map.put("accountId", "电子帐号");
@@ -217,14 +221,18 @@ public class WithdrawController extends BaseController {
 		map.put("mobile", "手机号");
 		map.put("roleid", "用户角色");
 		map.put("userAttribute", "用户属性（当前）");
-		map.put("userRegionName", "用户所属一级分部（当前）");
-		map.put("userBranchName", "用户所属二级分部（当前）");
-		map.put("userDepartmentName", "用户所属团队（当前）");
+		if (StringUtils.isNotBlank(isOrganizationView)) {
+			map.put("userRegionName", "用户所属一级分部（当前）");
+			map.put("userBranchName", "用户所属二级分部（当前）");
+			map.put("userDepartmentName", "用户所属团队（当前）");
+		}
 		map.put("referrerName", "推荐人用户名（当前）");
 		map.put("referrerTrueName", "推荐人姓名（当前）");
-		map.put("referrerRegionName", "推荐人所属一级分部（当前）");
-		map.put("referrerBranchName", "推荐人所属二级分部（当前）");
-		map.put("referrerDepartmentName", "推荐人所属团队（当前）");
+		if (StringUtils.isNotBlank(isOrganizationView)) {
+			map.put("referrerRegionName", "推荐人所属一级分部（当前）");
+			map.put("referrerBranchName", "推荐人所属二级分部（当前）");
+			map.put("referrerDepartmentName", "推荐人所属团队（当前）");
+		}
 		map.put("ordid", "订单号");
 		map.put("total", "提现金额");
 		map.put("fee", "手续费");

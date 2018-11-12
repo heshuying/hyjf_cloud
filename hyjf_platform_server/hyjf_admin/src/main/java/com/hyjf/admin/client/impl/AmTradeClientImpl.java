@@ -1371,7 +1371,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public HjhCreditCalcResultVO saveCreditTenderLogNoSave(HjhDebtCreditVO credit, HjhAccedeVO hjhAccede, String orderId, String orderDate, BigDecimal yujiAmoust, boolean isLast) {
-        String url = "http://AM-TRADE/am-trade/autoTenderController/saveCreditTenderLogNoSave";
+        String url = "http://AM-ADMIN/am-trade/autotenderexception/saveCreditTenderLogNoSave";
         SaveCreditTenderLogRequest request = new SaveCreditTenderLogRequest(credit, hjhAccede, orderId, orderDate, yujiAmoust, isLast);
         HjhCreditCalcResultResponse response = restTemplate.postForEntity(url, request, HjhCreditCalcResultResponse.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
@@ -1389,7 +1389,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public boolean updateCreditForAutoTender(String creditNid, String accedeOrderId, String planNid, BankCallBean bean,
                                              String tenderUsrcustid, String sellerUsrcustid, HjhCreditCalcResultVO resultVO) {
-        String url = "http://AM-TRADE/am-trade/autoTenderController/updateCreditForAutoTender";
+        String url = "http://AM-TRADE/am-trade/autotenderexception/updateCreditForAutoTender";
         BankCallBeanVO bankCallBeanVO = new BankCallBeanVO();
         BeanUtils.copyProperties(bean, bankCallBeanVO);
         UpdateCreditForAutoTenderRequest request = new UpdateCreditForAutoTenderRequest(creditNid, accedeOrderId, planNid, bankCallBeanVO, tenderUsrcustid, sellerUsrcustid, resultVO);
@@ -5139,22 +5139,6 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据userid查询 crm  cuttype
-     * @auth sunpeikai
-     * @param
-     * @return
-     */
-/*    @Override
-    public int queryCrmCuttype(Integer userId) {
-        String url = tradeService + "/pushMoneyRecord/queryCrmCuttype/" + userId;
-        PushMoneyResponse response = restTemplate.getForEntity(url,PushMoneyResponse.class).getBody();
-        if (Response.isSuccess(response)) {
-            return response.getCuttype();
-        }
-        return 0;
-    }*/
-
-    /**
      * 发提成包含参数：TenderCommissionVO tenderCommissionVO, BankCallBean resultBean
      * @auth sunpeikai
      * @param
@@ -6396,7 +6380,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public boolean updateAccountNumberByUserId(Integer userId, String accountId) {
-        String url = "http://AM-ADMIN/am-trade/"+ "account/updateAccountNumberByUserId/" + userId+"/"+accountId;
+        String url = "http://AM-ADMIN/am-trade/adminAccountDetail/updateAccountNumberByUserId/" + userId+"/"+accountId;
         IntegerResponse response = restTemplate.getForEntity(url, IntegerResponse.class).getBody();
         if(IntegerResponse.isSuccess(response)){
             return response.getResultInt()>0?true:false;
@@ -6691,5 +6675,19 @@ public class AmTradeClientImpl implements AmTradeClient {
             return JSON.parseObject(response.getResultStr(),RepayBean.class);
         }
         return null;
+    }
+    /**
+     * 删除 自动投资临时表
+     * @auther: nxl
+     * @date: 2018/7/10
+     */
+    @Override
+    public Boolean deleteBorrowTmp(String borrowNid, String accedeOrderId){
+        BooleanResponse response = restTemplate
+                .getForEntity( "http://AM-ADMIN/am-trade/autotenderexception/deleteBorrowTmp/"+borrowNid+"/"+accedeOrderId, BooleanResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultBoolean();
+        }
+        return false;
     }
 }

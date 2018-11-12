@@ -289,8 +289,8 @@ public class WrbInfoController {
                     userName = userName.substring(0, 1).concat("**");
                 }
                 investDetail.setInvest_user(userName);
-                Integer addtime = borrowTender.getAddTime();
-                investDetail.setInvest_time(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(addtime));
+                Date createTime = borrowTender.getCreateTime();
+                investDetail.setInvest_time(GetDate.dateToString(createTime));
                 investDetail.setInvest_money(borrowTender.getAccount());
                 investDetail.setBid_id(borrowNid);
                 detailList.add(investDetail);

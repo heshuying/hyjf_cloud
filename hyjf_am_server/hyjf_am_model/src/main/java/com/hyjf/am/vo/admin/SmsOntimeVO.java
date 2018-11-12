@@ -226,4 +226,31 @@ public class SmsOntimeVO extends BaseVO {
     public void setPostString(String postString) {
         this.postString = postString;
     }
+
+    @Override
+    public String toString() {
+        return "SmsOntimeVO{" +
+                "id='" + id + '\'' +
+                ", channelType='" + channelType + '\'' +
+                ", starttime=" + starttime +
+                ", endtime=" + endtime +
+                ", status=" + status +
+                ", openAccount=" + openAccount +
+                ", addMoneyCount=" + addMoneyCount +
+                ", addTimeBegin='" + addTimeBegin + '\'' +
+                ", addTimeEnd='" + addTimeEnd + '\'' +
+                ", reTimeBegin='" + reTimeBegin + '\'' +
+                ", reTimeEnd='" + reTimeEnd + '\'' +
+                ", ip='" + ip + '\'' +
+                ", remark='" + remark + '\'' +
+                ", createUserId=" + createUserId +
+                ", createUserName='" + createUserName + '\'' +
+                ", createTime=" + createTime +
+                ", limitStart=" + limitStart +
+                ", limitEnd=" + limitEnd +
+                ", mobile='" + mobile + '\'' +
+                ", content='" + content + '\'' +
+                ", postString='" + postString + '\'' +
+                '}';
+    }
 }

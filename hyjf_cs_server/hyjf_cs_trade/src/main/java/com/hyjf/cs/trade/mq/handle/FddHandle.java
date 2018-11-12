@@ -645,7 +645,7 @@ public class FddHandle {
 	        paramter.put("planPeriod",bean.getBorrowDate());//计划期限
 	        paramter.put("planApr", bean.getBorrowRate());//计划收益率
 	        paramter.put("countInterestTime",bean.getPlanStartDate());//计划生效日期
-//	        paramter.put("quitTime",bean.getPlanEndDate());//计划到期日期
+	        paramter.put("quitTime",bean.getPlanEndDate());//计划到期日期
 //	        paramter.put("shouyifutou",FddGenerateContractConstant.SHOUYI_FUTOU);//收益处理方式
 //	        paramter.put("shouldPayTotal", bean.getTenderInterestFmt());//计划本金及预期收益
 	        
@@ -740,6 +740,8 @@ public class FddHandle {
         request.setBidNid(borrowNid);
         request.setCreditNid(creditNid);
         request.setCreditTenderNid(creditTenderNid);
+        logger.info("查询ht_credit_tender表:传入参数assign_nid="+assignOrderId+"," +
+				"bid_nid="+borrowNid+",credit_nid="+creditNid+",credit_tender_nid="+creditTenderNid);
         List<CreditTenderVO> creditTenderList = this.amTradeClient.getCreditTenderList(request);
         if (creditTenderList != null && creditTenderList.size() > 0) {
 
@@ -966,7 +968,7 @@ public class FddHandle {
 		paramter = bean.getParamter();
 		String paramStr = paramter.toJSONString();
 		//垫付协议发大大Contract_id
-		String contract_id = bean.getTeString()+"-"+bean.getRepayPeriod()+"-"+bean.getOrdid();
+		String contract_id = bean.getTeString()+"-"+bean.getRepayPeriod()+"-"+bean.getOrdid()+"-"+bean.getRepayPeriod();
 		bean.setOrdid(contract_id);
 		bean.setContractName(FddGenerateContractConstant.CONTRACT_DOC_TITLE_CREDIT);
 		//bean.setTransType(3);
@@ -1021,7 +1023,7 @@ public class FddHandle {
 		// bean.setTransType(3);
 		//垫付协议发大大Contract_id
 		//GetDate.getNowTime10()測試
-		String contract_id = bean.getTeString()+"-"+bean.getRepayPeriod()+"-"+bean.getOrdid();
+		String contract_id = bean.getTeString()+"-"+bean.getRepayPeriod()+"-"+bean.getOrdid()+"-"+bean.getRepayPeriod();
 		bean.setOrdid(contract_id);
 		JSONObject paramter = new JSONObject();
 		paramter = bean.getParamter();
@@ -1233,7 +1235,7 @@ public class FddHandle {
 	 * @param tenderCreditAssignedBean
 	 * @return
 	 */
-	private Map<String,Object> selectHJHUserCreditContract(CreditAssignedBean tenderCreditAssignedBean) {
+	public Map<String,Object> selectHJHUserCreditContract(CreditAssignedBean tenderCreditAssignedBean) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		// 获取债转投资信息
 		//查询 hyjf_hjh_debt_credit_tender 表
@@ -1474,15 +1476,22 @@ public class FddHandle {
 			}
 		}else if(FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET == transType || //垫付债转服务协议
 				FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET == transType){// 垫付计划债转服务协议
-			ApplyAgreementInfoVO applyAgreementInfo =  this.amTradeClient.selectApplyAgreementInfoByContractId(contract_id);
-			if (applyAgreementInfo != null ) {
+		    logger.info("--------------------------------垫付计划债转服务协议获取签署信息contract_id："+contract_id);
+            List<ApplyAgreementInfoVO> voList  =  this.amTradeClient.selectApplyAgreementInfoByContractId(contract_id);
+
+			if (voList != null && voList.size()>0) {
+                logger.info("--------------------------------垫付计划债转服务协议获取签署信息voList："+JSONObject.toJSON(voList));
+                ApplyAgreementInfoVO applyAgreementInfo = voList.get(0);
 				userId = Integer.valueOf(applyAgreementInfo.getUserId());// 承接人
 				borrowNid = applyAgreementInfo.getBorrowNid();// 原标的号
 				BorrowInfoWithBLOBsVO borrow = this.amTradeClient.selectBorrowInfoWithBLOBSVOByBorrowId(borrowNid);
 				instCode = borrow.getInstCode();// 机构编号
 				creditUserId = Integer.valueOf(applyAgreementInfo.getCreditUserId());// 出让人
 				borrowerCustomerID = getCustomerIDByUserID(creditUserId);
-			}
+			}else{
+                logger.info("--------------------------------垫付计划债转服务协议获取签署信息失败");
+            }
+
 		}
 
 

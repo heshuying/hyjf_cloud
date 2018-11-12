@@ -5,11 +5,11 @@ package com.hyjf.cs.user.controller.app.login;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.alibaba.fastjson.TypeReference;
-import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -45,7 +45,6 @@ import java.io.File;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
-import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -292,8 +291,8 @@ public class AppLoginController extends BaseUserController {
 
         // 业务逻辑
         try {
-            // 取得用户ID
             Integer userId = SecretUtil.getUserId(sign);
+            // 取得用户ID
             if (userId != null) {
                 UserParameters userParameters = loginService.getUserParameters(userId,platform, request);
                 if (StringUtils.isBlank(userParameters.getIdcard()) || userParameters.getIdcard().length() < 15) {
@@ -308,6 +307,7 @@ public class AppLoginController extends BaseUserController {
             }
 
         } catch (Exception e) {
+            logger.error("异常信息打印："+e);
             ret.put("status", "1");
             ret.put("statusDesc", "获取用户相关数据发生错误");
         }

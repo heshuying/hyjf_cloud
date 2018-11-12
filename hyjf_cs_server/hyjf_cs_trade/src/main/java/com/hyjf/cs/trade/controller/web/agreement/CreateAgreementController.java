@@ -61,12 +61,13 @@ public class CreateAgreementController extends BaseTradeController {
      * @return
      */
     @ApiOperation(value = "账户中心-资产管理-当前持有-- 投资协议(实际为散标居间协议)下载", httpMethod = "POST", notes = "账户中心-资产管理-当前持有-- 投资协议(实际为散标居间协议)下载")
-    @PostMapping("/intermediaryAgreementPDF")
-    public void downloadIntermediaryAgreementPDF(@RequestHeader(value = "userId") Integer userId,HttpServletRequest request, HttpServletResponse response,
+    @GetMapping("/intermediaryAgreementPDF")
+    public void downloadIntermediaryAgreementPDF(HttpServletRequest request, HttpServletResponse response,
                                                  @RequestBody @Valid UserInvestListBeanRequest form) {
+        Integer userId=Integer.parseInt(form.getRandom());
         logger.info(CreateAgreementController.class.toString(), "createAgreementPDF 导出PDF文件（汇盈金服互联网金融服务平台居间服务协议）");
         if (form.getBorrowNid() == null || "".equals(form.getBorrowNid().trim())) {
-            System.out.println("标的信息不存在,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。");
+            logger.info(CreateAgreementController.class.toString(), "标的信息不存在,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。");
             return;
         }
         // 查询借款人用户名
@@ -133,7 +134,7 @@ public class CreateAgreementController extends BaseTradeController {
                 debtBorrowCommonCustomize.setBorrowNidSrch(form.getBorrowNid());
                 List<DebtBorrowCustomizeVO> recordList = createAgreementService.selectDebtBorrowList(debtBorrowCommonCustomize);
                 if (recordList.size() != 1) {
-                    System.out.println("标的信息异常（0条或者大于1条信息）,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。");
+                    logger.info(CreateAgreementController.class.toString(), "标的信息异常（0条或者大于1条信息）,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。");
                     return;
                 }
                 contents.put("borrowNid", form.getBorrowNid());

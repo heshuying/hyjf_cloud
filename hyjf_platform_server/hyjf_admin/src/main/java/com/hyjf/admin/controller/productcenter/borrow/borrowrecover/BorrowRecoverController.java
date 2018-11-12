@@ -20,6 +20,7 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +91,10 @@ public class BorrowRecoverController extends BaseController {
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid BorrowRecoverRequestBean form) throws Exception {
         BorrowRecoverRequest copyForm=new BorrowRecoverRequest();
         BeanUtils.copyProperties(form, copyForm);
+
+        // 用户是否具有组织机构查看权限
+        String isOrganizationView = form.getIsOrganizationView();
+
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
@@ -106,7 +111,7 @@ public class BorrowRecoverController extends BaseController {
         List<BorrowRecoverCustomizeVO> resultList = this.borrowRecoverService.exportBorrowRecoverList(copyForm);
         Integer totalCount = resultList.size();
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
-        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
@@ -131,7 +136,7 @@ public class BorrowRecoverController extends BaseController {
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
 
-    private Map<String, String> buildMap() {
+    private Map<String, String> buildMap(String isOrganizationView) {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("borrowNid","借款编号");
         map.put("instName","资产来源");
@@ -162,9 +167,11 @@ public class BorrowRecoverController extends BaseController {
         map.put("inviteUserAttribute","推荐人用户属性（投资时）");
         map.put("tenderReferrerUsername","推荐人（投资时）");
         map.put("tenderReferrerUserId","推荐人ID（投资时）");
-        map.put("departmentLevel1Name","一级分部（投资时）");
-        map.put("departmentLevel2Name","二级分部（投资时）");
-        map.put("teamName","团队（投资时）");
+        if (StringUtils.isNotBlank(isOrganizationView)) {
+            map.put("departmentLevel1Name", "一级分部（投资时）");
+            map.put("departmentLevel2Name", "二级分部（投资时）");
+            map.put("teamName", "团队（投资时）");
+        }
         return map;
     }
     private Map<String, IValueFormatter> buildValueAdapter() {

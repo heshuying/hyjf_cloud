@@ -3,6 +3,15 @@
  */
 package com.hyjf.cs.trade.service.credit.impl;
 
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.util.*;
+
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
@@ -13,7 +22,7 @@ import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.resquest.trade.MyCreditListRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.config.DebtConfigVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
@@ -31,7 +40,6 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.BeforeInterestAfterPrincipalUtils;
 import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
@@ -54,15 +62,6 @@ import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.credit.MyCreditListService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.smscode.SmsCodeService;
-import com.jcraft.jsch.UserInfo;
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.text.DecimalFormat;
-import java.util.*;
 
 /**
  * @Description 资产管理  我要债转相关
@@ -119,7 +118,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             logger.info("判断用户所处渠道不允许债转,可债转金额0....userId is:{}", userId);
             throw new CheckException(MsgEnum.ERR_ALLOW_CHANNEL_ATTORN);
         }
-        AppChannelStatisticsDetailVO appChannelStatisticsDetails = amMongoClient.getAppChannelStatisticsDetailByUserId(userId);
+        AppUtmRegVO appChannelStatisticsDetails = amMongoClient.getAppChannelStatisticsDetailByUserId(userId);
         if (appChannelStatisticsDetails != null) {
             UtmPlatVO utmPlat = amUserClient.selectUtmPlatByUtmId(userId);
             if (utmPlat != null && utmPlat.getAttornFlag() == 0) {

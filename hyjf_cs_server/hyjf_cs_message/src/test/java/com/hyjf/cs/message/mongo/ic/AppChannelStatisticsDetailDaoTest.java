@@ -1,17 +1,12 @@
 package com.hyjf.cs.message.mongo.ic;
 
-import com.hyjf.cs.message.CsMessageApplication;
-import com.hyjf.cs.message.bean.ic.AppChannelStatisticsDetail;
-import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import java.util.List;
+import com.hyjf.cs.message.CsMessageApplication;
 
 /**
  * @author xiasq
@@ -23,7 +18,7 @@ public class AppChannelStatisticsDetailDaoTest {
 
     private Logger logger = LoggerFactory.getLogger(getClass());
 
-    @Autowired
+ /*   @Autowired
     private AppChannelStatisticsDetailDao appChannelStatisticsDetailDao;
 
     @Test
@@ -35,6 +30,6 @@ public class AppChannelStatisticsDetailDaoTest {
         logger.info("end query, list is {}", list);
 
 
-    }
+    }*/
 }
 
