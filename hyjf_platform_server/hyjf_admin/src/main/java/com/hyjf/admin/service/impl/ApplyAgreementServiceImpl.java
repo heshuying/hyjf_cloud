@@ -275,6 +275,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 applyAgreement.setStatus(1);
                 applyAgreement.setCreateTime(new Date());
                 applyAgreement.setDelFlag(0);
+                logger.info("-------------------------垫付机构协议管理，更新applyAgreement:"+JSONObject.toJSON(applyAgreement));
                 amTradeClient.saveApplyAgreement(applyAgreement);
 
             }
@@ -1150,7 +1151,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         // 标的编号
         paramter.put("borrowNid", borrow.getBorrowNid());
         //编号
-        paramter.put("NID", creditRepay.getAssignNid()+"_"+creditRepay.getRecoverPeriod());
+        paramter.put("NID", creditRepay.getUniqueNid());
         //借款本金总额
         paramter.put("borrowAccount", borrow.getAccount().toString());
         // 借款利率
