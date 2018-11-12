@@ -47,7 +47,7 @@ public class LandingPageServiceImpl implements LandingPageService {
 			criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Date(GetDate.getDayStart(request.getStartTime()),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
 		}
 		if(StringUtils.isNotEmpty(request.getEndTime())){
-			criteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Date(GetDate.getDayEnd(request.getStartTime()),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
+			criteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Date(GetDate.getDayEnd(request.getEndTime()),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
 		}
 
 		example.setOrderByClause("create_time Desc");

@@ -40,10 +40,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -68,6 +66,9 @@ public class CouponCheckServiceImpl implements CouponCheckService {
 
     @Value("${file.physical.path}")
     private String PHYSICAL_PATH;
+
+    @Value("${admin.front.host}")
+    private String ADMIN_HOST;
 
     /**
      * 查询优惠券列表
@@ -153,20 +154,23 @@ public class CouponCheckServiceImpl implements CouponCheckService {
 
     @Override
     public void downloadFile(String id, HttpServletResponse response) {
-        FileInputStream in = null;
+        BufferedInputStream in = null;
         OutputStream out = null;
         CouponCheckVO couponCheck = amConfigClient.selectCoupon(Integer.valueOf(id));
-        String fileP = "";
-        String fileN = "";
+        String filePath = "";
+        String fileName = "";
         if (couponCheck != null) {
-            fileP = couponCheck.getFilePath();
-            fileN = couponCheck.getFileName();
+            filePath = couponCheck.getFilePath();
+            fileName = couponCheck.getFileName();
         }
         try {
             response.setHeader("content-disposition",
-                    "attachment;filename=" + URLEncoder.encode(fileN, "utf-8"));
-
-            in = new FileInputStream(fileP);
+                    "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));
+            logger.info("ADMIN_HOST is : {}", ADMIN_HOST);
+            String path = ADMIN_HOST + filePath;
+            logger.info("path is : {}", path);
+            URL url = new URL(path);
+            in = new BufferedInputStream(url.openStream());
             // 创建输出流
             out = response.getOutputStream();
             // 创建缓冲区
@@ -182,8 +186,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
             // 关闭输出流
             out.close();
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(couponCheck.getFileName() + "下载失败, 失败原因 ：" + e);
+            logger.error(couponCheck.getFileName() + "下载失败, 失败原因 ：", e);
         }
     }
 
@@ -191,7 +194,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
     public boolean batchCheck(String path, HttpServletResponse response, String loginUserId) throws Exception {
         try {
             String[] split = path.split(",");
-            String filePath = split[1];
+            String filePath = ADMIN_HOST + split[1];
             Map<String, String> nameMaps = new HashMap<>();
             nameMaps.put("userName", "userName");
             nameMaps.put("activityId", "activityId");
