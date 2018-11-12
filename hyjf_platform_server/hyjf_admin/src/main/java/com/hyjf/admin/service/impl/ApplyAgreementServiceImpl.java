@@ -482,8 +482,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         String nid = borrowRecover.getNid();
         List<CreditRepayVO> creditRepayList = this.selectCreditRepay(nid,repay_period);
         logger.info("-------------------------处理不分期债转，填充所有债转信息creditRepayList："+JSONObject.toJSON(creditRepayList));
+        logger.info("-------------------------处理不分期债转，已承接债转本金creditAmount："+creditAmount);
         if(creditRepayList!=null && creditRepayList.size()>0){//债转
             boolean creditRepayAll = (creditAmount.compareTo(new BigDecimal("0.00"))==1) && (creditAmount.compareTo(creditAmount)==0);//是否是全部债转
+            logger.info("-------------------------处理不分期债转，已承接债转本金creditRepayAll："+creditRepayAll);
             BigDecimal assignPay  = new BigDecimal("0.00");//所有债转已还利息总和（结算剩余部分用）
             //填充所有债转信息
             for (CreditRepayVO creditRepay : creditRepayList) {
