@@ -398,8 +398,9 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
         } else{
             projectIntr.setStatus("未回款");
         }
+        // mod by nxl 智投服务 修改锁定期显示 start
         // add 汇计划二期前端优化 修改锁定期的显示方式  nxl 20180426 start
-        SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd");
+       /* SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd");
         Date datePeriod = null;
         if (NULL_STR.equals(customize.getCountInterestTime()) || DOUBLE_NULL_STR.equals(customize.getCountInterestTime())) {
             customize.setPlanPeriod("— —");
@@ -430,7 +431,8 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
             }
         }
         customize.getPlanPeriod();
-        projectIntr.setBorrowPeriod(customize.getPlanPeriod());
+        projectIntr.setBorrowPeriod(customize.getPlanPeriod());*/
+        // mod by nxl 智投服务 修改锁定期显示 end
         // add 汇计划二期前端优化 修改锁定期的显示方式  nxl 20180426 end
         projectIntr.setBorrowApr(StringUtils.isBlank(customize.getPlanApr()) ? "" :customize.getPlanApr().replace("%",""));
         projectIntr.setBorrowPeriod(customize.getPlanPeriod());
