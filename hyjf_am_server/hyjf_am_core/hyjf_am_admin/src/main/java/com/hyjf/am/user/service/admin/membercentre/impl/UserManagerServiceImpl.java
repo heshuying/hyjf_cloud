@@ -1501,8 +1501,8 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
     public int updateUserBankInfo(BankCard bankCard, BankCardLog bankAccountLog) {
         if (null != bankCard && null != bankAccountLog) {
             //修改银行卡信息
-            bankCardMapper.updateByPrimaryKey(bankCard);
-            bankCardLogMapper.insert(bankAccountLog);
+            bankCardMapper.updateByPrimaryKeySelective(bankCard);
+            bankCardLogMapper.insertSelective(bankAccountLog);
             return 1;
         }
         return 0;
