@@ -343,6 +343,9 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         // 根据渠道号检索推广渠道是否存在
         UtmPlatVO utmPlat = this.amUserClient.selectUtmPlatByUtmId(registerRequest.getUtmId());
         CheckUtil.check(null != utmPlat, MsgEnum.STATUS_ZC000020);
+        //密码
+
+        registerUserRequest.setPassword(systemConfig.getApiPass());
         // 2.注册
         UserVO userVO = amUserClient.register(registerUserRequest);
         CheckUtil.check(userVO != null, MsgEnum.ERR_USER_REGISTER);
