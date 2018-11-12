@@ -183,7 +183,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
             out.close();
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error(couponCheck.getFileName() + "下载失败");
+            logger.error(couponCheck.getFileName() + "下载失败, 失败原因 ：" + e);
         }
     }
 
