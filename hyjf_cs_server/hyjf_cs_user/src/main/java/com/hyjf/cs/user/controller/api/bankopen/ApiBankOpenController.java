@@ -98,10 +98,9 @@ public class ApiBankOpenController extends BaseUserController {
         openAccoutBean.setAcctUse(BankCallConstant.ACCOUNT_USE_COMMON);
         openAccoutBean.setIdentity(openBean.getIdentity());
         // 同步地址  是否跳转到前端页面
-        String bgRetUrl = "http://CS-USER/hyjf-api/server/user/accountOpenEncryptPage?phone=" + openBean.getMobile()+"&openclient="+openBean.getPlatform()+"&roleId="+openBean.getIdentity();
         openAccoutBean.setRetUrl(openBean.getRetUrl());
         openAccoutBean.setSuccessfulUrl(openBean.getSuccessfulUrl());
-        openAccoutBean.setNotifyUrl(bgRetUrl);
+        openAccoutBean.setNotifyUrl(openBean.getNotifyUrl());
         openAccoutBean.setCoinstName(openBean.getCoinstName()==null?"汇盈金服":openBean.getCoinstName());
         openAccoutBean.setLogRemark("开户+设密码页面");
         openAccoutBean.setLogIp(openBean.getIp());
