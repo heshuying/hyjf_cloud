@@ -21,6 +21,7 @@ import com.hyjf.am.response.trade.ApplyAgreementResponse;
 import com.hyjf.am.response.trade.BorrowRepayAgreementResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.vo.admin.BorrowRepayAgreementCustomizeVO;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.CreditRepayVO;
@@ -187,11 +188,12 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
      * @date 2018/7/12 10:52
      */
     @Override
-    public AdminResult generateContract(BorrowRepayAgreementRequest request) {
-        AdminResult result = new AdminResult();
+    public AdminResult generateContract(BorrowRepayAgreementRequest request,AdminSystemVO currUser) {
+
         //获取借款编号和期数组合
         List<String> recordList = request.getIds();
         if (recordList==null) {
+            logger.error("-------------------------垫付机构协议管理， 借款编号和期数组合不能为空："+ request.getIds());
             return new AdminResult(BaseResult.FAIL, "借款编号和期数组合不能为空");
         }
 
@@ -208,6 +210,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrow_nid);
                 BorrowInfoVO borrowInfo = amTradeClient.selectBorrowInfoByNid(borrow_nid);
                 if (borrow == null || borrowInfo == null) {
+                    logger.error("-------------------------垫付机构协议管理， 标的不存在borrow_nid："+borrow_nid);
                     return new AdminResult(BaseResult.FAIL, "标的不存在");
                 }
                 //还款方式
@@ -223,6 +226,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                  */
                 List<BorrowRecoverVO> borrowRecoverPlist = amTradeClient.selectBorrowRecoverList(borrow_nid);
                 if (borrowRecoverPlist == null || borrowRecoverPlist.size()==0) {
+                    logger.error("-------------------------垫付机构协议管理， 标的不存在borrow_nid："+borrow_nid);
                     return new AdminResult(BaseResult.FAIL, "标的不存在");
                 }
                 boolean isNotPlan = StringUtils.isEmpty(planNid);//是否是直投标
@@ -233,8 +237,11 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                      * 3：已债转金额(creditAmountp)为0--非承接债转
                      */
                     if(isMonth) {//分期
+                        logger.info("-------------------------垫付机构协议管理， 处理分期:"+borrowRecoverP.getNid());
                         List<BorrowRecoverPlanVO> borrowRecoverList = amTradeClient.selectBorrowRecoverPlanList(borrowRecoverP.getNid(),repay_period);
                         if (borrowRecoverList == null || borrowRecoverList.size()==0) {
+                            logger.error("-------------------------垫付机构协议管理， 标的放款记录列表获取失败borrowRecoverP.getNid():"+borrowRecoverP.getNid());
+                            logger.error("-------------------------垫付机构协议管理， 标的放款记录列表获取失败repay_period:"+repay_period);
                             break;
                         }
                         for (BorrowRecoverPlanVO borrowRecover : borrowRecoverList) {
@@ -247,6 +254,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                             }
                         }
                     }else{//不分期
+                        logger.info("-------------------------垫付机构协议管理， 处理不分期:"+borrowRecoverP.getNid());
                         if(isNotPlan) {//直投
                             agreements = convertAndSend(borrow, borrowInfo, borrowRecoverP);
                             agreementsSUM = agreementsSUM+agreements;
@@ -259,8 +267,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 ApplyAgreementVO applyAgreement = new ApplyAgreementVO();
                 applyAgreement.setBorrowNid(borrow_nid);
                 applyAgreement.setRepayPeriod(repay_period);
-                applyAgreement.setApplyUserId(0);
-                applyAgreement.setApplyUserName("");
+                applyAgreement.setApplyUserId(Integer.valueOf(currUser.getId()));
+                applyAgreement.setApplyUserName(currUser.getUsername());
                 applyAgreement.setAgreementNumber(agreementsSUM);
                 applyAgreement.setStatus(1);
                 applyAgreement.setCreateTime(new Date());
@@ -280,6 +288,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
      * @param borrowRecover
      */
     private int convertAndSendPlan(BorrowAndInfoVO borrow,BorrowInfoVO borrowInfo,BorrowRecoverVO borrowRecoverP, BorrowRecoverPlanVO borrowRecover){
+        logger.info("-------------------------垫付机构协议管理，处理分期债转borrow"+JSONObject.toJSON(borrow));
+        logger.info("-------------------------垫付机构协议管理，处理分期债转borrowInfo"+JSONObject.toJSON(borrowInfo));
+        logger.info("-------------------------垫付机构协议管理，处理分期债转borrowRecoverP"+JSONObject.toJSON(borrowRecoverP));
+        logger.info("-------------------------垫付机构协议管理，处理分期债转borrowRecover"+JSONObject.toJSON(borrowRecover));
         int agreements = 0;
         String borrow_nid = borrow.getBorrowNid();
         //承接人都是垫付机构
@@ -363,6 +375,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
      * @param borrowRecover
      */
     private int hjhConvertAndSendPlan(BorrowAndInfoVO borrow,BorrowInfoVO borrowInfo,BorrowRecoverVO borrowRecoverP, BorrowRecoverPlanVO borrowRecover){
+        logger.info("-------------------------处理分期债转-汇计划，处理分期债转borrow"+JSONObject.toJSON(borrow));
+        logger.info("-------------------------处理分期债转-汇计划，处理分期债转borrowInfo"+JSONObject.toJSON(borrowInfo));
+        logger.info("-------------------------处理分期债转-汇计划，处理分期债转borrowRecoverP"+JSONObject.toJSON(borrowRecoverP));
+        logger.info("-------------------------处理分期债转-汇计划，处理分期债转borrowRecover"+JSONObject.toJSON(borrowRecover));
         int agreements= 0;
         String borrow_nid = borrow.getBorrowNid();
         //承接人都是垫付机构
@@ -446,6 +462,9 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
      * @param borrowRecover
      */
     private int convertAndSend(BorrowAndInfoVO borrow,BorrowInfoVO borrowInfo,BorrowRecoverVO borrowRecover){
+        logger.info("-------------------------处理不分期债转，处理分期债转borrow"+JSONObject.toJSON(borrow));
+        logger.info("-------------------------处理不分期债转，处理分期债转borrowInfo"+JSONObject.toJSON(borrowInfo));
+        logger.info("-------------------------处理不分期债转，处理分期债转borrowRecover"+JSONObject.toJSON(borrowRecover));
         int agreements = 0;
         String borrow_nid = borrow.getBorrowNid();
         //承接人都是垫付机构
@@ -524,6 +543,9 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
      * @param borrowRecover
      */
     private int hjhConvertAndSend(BorrowAndInfoVO borrow,BorrowInfoVO borrowInfo,BorrowRecoverVO borrowRecover){
+        logger.info("-------------------------处理不分期债转-汇计划，处理分期债转borrow"+JSONObject.toJSON(borrow));
+        logger.info("-------------------------处理不分期债转-汇计划，处理分期债转borrowInfo"+JSONObject.toJSON(borrowInfo));
+        logger.info("-------------------------处理不分期债转-汇计划，处理分期债转borrowRecover"+JSONObject.toJSON(borrowRecover));
         int agreements = 0;
         String borrow_nid = borrow.getBorrowNid();
         //承接人都是垫付机构

@@ -46,7 +46,10 @@ public class BaseTradeController extends BaseController {
         }
         if (ClientConstants.APP_CLIENT_IOS == client || ClientConstants.APP_CLIENT == client) {
             String sign=request.getParameter("sign");
-            return sysConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD;
+            return sysConfig.getAppFrontHost()+"/public/formsubmit?sign=" + sign +
+                    "&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD +
+                    "&realPlatform="+request.getParameter("realPlatform") +
+                    "&platform="+request.getParameter("platform");
         }
         if (ClientConstants.WECHAT_CLIENT == client) {
             String sign=request.getParameter("sign");

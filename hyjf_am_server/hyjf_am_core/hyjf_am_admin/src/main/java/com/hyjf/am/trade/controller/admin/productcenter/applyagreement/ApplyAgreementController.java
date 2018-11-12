@@ -1,6 +1,8 @@
 package com.hyjf.am.trade.controller.admin.productcenter.applyagreement;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.google.gson.JsonObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.ApplyAgreementInfoResponse;
 import com.hyjf.am.response.trade.*;
@@ -173,13 +175,14 @@ public class ApplyAgreementController extends BaseController {
     /**
      * 获取用户投资协议列表-分期，垫付协议用
      *
-     * @param borrowNid
+     * @param nid
+     * @param repayPeriod
      * @return
      */
-    @RequestMapping("/select_borrow_recover_plan_list/{borrowNid}/{repayPeriod}")
-    public BorrowRecoverPlanResponse selectBorrowRecoverPlanList(@PathVariable(value = "borrowNid") String borrowNid, @PathVariable(value = "repayPeriod") int repayPeriod){
+    @RequestMapping("/select_borrow_recover_plan_list/{nid}/{repayPeriod}")
+    public BorrowRecoverPlanResponse selectBorrowRecoverPlanList(@PathVariable(value = "nid") String nid, @PathVariable(value = "repayPeriod") int repayPeriod){
         BorrowRecoverPlanResponse response = new BorrowRecoverPlanResponse();
-        List<BorrowRecoverPlan> list = applyAgreementService.selectBorrowRecoverPlanList(borrowNid,repayPeriod);
+        List<BorrowRecoverPlan> list = applyAgreementService.selectBorrowRecoverPlanList(nid,repayPeriod);
         List<BorrowRecoverPlanVO> voList = null;
         if(!CollectionUtils.isEmpty(list)){
             voList = CommonUtils.convertBeanList(list, BorrowRecoverPlanVO.class);
@@ -247,7 +250,7 @@ public class ApplyAgreementController extends BaseController {
     @RequestMapping("/saveApplyAgreement")
     public ApplyAgreementResponse saveApplyAgreement(@RequestBody ApplyAgreementVO request) {
         ApplyAgreementResponse response = new ApplyAgreementResponse();
-        logger.info("saveApplyAgreement::::::::::");
+        logger.info("saveApplyAgreement::::::::::"+JSONObject.toJSON(request));
         int re = applyAgreementService.saveApplyAgreement(request);
         response.setCount(re);
         response.setRtn(Response.SUCCESS);

@@ -63,19 +63,20 @@ public class ApiBankOpenController extends BaseUserController {
         OpenAccountPageBean openAccountPageBean = getOpenAccountPageBean(requestBean);
         openAccountPageBean.setUserId(user.getUserId());
         openAccountPageBean.setClientHeader(ClientConstants.CLIENT_HEADER_API);
-        //保存开户日志  银行卡号不必传了
-        int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), requestBean.getMobile(), openAccountPageBean.getOrderId(), requestBean.getPlatform(), requestBean.getTrueName(), requestBean.getIdNo(), "", "");
-        if (uflag == 0) {
-            logger.info("保存开户日志失败,手机号:[" + requestBean.getMobile() + "],用户ID:[" + user.getUserId() + "]");
-            paramMap.put("status", ErrorCodeConstant.STATUS_CE999999);
-            paramMap.put("statusDesc", "机构编号不能为空");
-            return callbackErrorView(paramMap);
-        }
+
         try {
             BankCallBean bean = getCallbankMV(openAccountPageBean);
             modelAndView = BankCallUtils.callApi(bean);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        //保存开户日志  银行卡号不必传了
+        int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), requestBean.getMobile(), openAccountPageBean.getOrderId(), requestBean.getPlatform(), requestBean.getTrueName(), requestBean.getIdNo(), "", "");
+        if (uflag == 0) {
+            logger.info("保存开户日志失败,手机号:[" + requestBean.getMobile() + "],用户ID:[" + user.getUserId() + "]");
+            paramMap.put("status", ErrorCodeConstant.STATUS_CE999999);
+            paramMap.put("statusDesc", "请求银行错误");
+            return callbackErrorView(paramMap);
         }
         logger.info("开户end");
         return modelAndView;
