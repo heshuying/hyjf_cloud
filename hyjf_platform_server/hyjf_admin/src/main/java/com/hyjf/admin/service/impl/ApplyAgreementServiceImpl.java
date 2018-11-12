@@ -1198,6 +1198,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         bean.setAssignOrderId(creditRepay.getUniqueNid());
         bean.setCreditNid(creditRepay.getCreditNid());//债转编号
         bean.setCreditTenderNid(creditRepay.getCreditTenderNid());//原始投资订单号
+        logger.info("-------------------------处理不分期债转，填充所有债转信息bean2："+JSONObject.toJSON(bean));
         return paramter;
     }
 
