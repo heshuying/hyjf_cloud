@@ -195,7 +195,9 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
         receiveUserAccount.setUserId(receiveUserId);
         receiveUserAccount.setBankTotal(new BigDecimal(txAmount));
         receiveUserAccount.setBankBalance(new BigDecimal(txAmount));
-        boolean isUpdateFlag = accountMapper.updateByPrimaryKeySelective(CommonUtils.convertBean(receiveUserAccount,Account.class)) > 0;
+        AccountExample accountExample = new AccountExample();
+        accountExample.createCriteria().andUserIdEqualTo(receiveUserId);
+        boolean isUpdateFlag = accountMapper.updateByExampleSelective(CommonUtils.convertBean(receiveUserAccount,Account.class),accountExample) > 0;
         if (!isUpdateFlag) {
             logger.info("更新转入用户的账户信息失败,用户ID:[" + receiveUserId + "].订单号:[" + orderId + "].");
             throw new RuntimeException("更新转入用户的账户信息失败,用户ID:[" + receiveUserId + "].订单号:[" + orderId + "].");
