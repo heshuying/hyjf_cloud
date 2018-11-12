@@ -12,7 +12,7 @@ import java.io.Serializable;
  * @author tanyy
  * @version OperationReportActivityEntity, v0.1 2018/6/27 9:45
  */
-@Document(collection = "ht_operation_report_activity")
+@Document(collection = "ht_operation_activity_report")
 public class OperationReportActivityEntity implements Serializable {
 
     private String id;

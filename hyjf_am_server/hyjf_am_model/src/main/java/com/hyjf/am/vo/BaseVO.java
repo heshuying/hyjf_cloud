@@ -1,10 +1,12 @@
 package com.hyjf.am.vo;
 
+import java.io.Serializable;
+
 /**
  * @author xiasq
  * @version BaseVO, v0.1 2018/1/21 22:18
  */
-public class BaseVO {
+public class BaseVO implements Serializable {
 
 
 }
