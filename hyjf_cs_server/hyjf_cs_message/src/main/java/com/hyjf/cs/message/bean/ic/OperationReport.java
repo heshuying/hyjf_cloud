@@ -10,10 +10,10 @@ import java.math.BigDecimal;
 
 /**
  * @author tanyy
- * @version OperationReportEntity, v0.1 2018/8/1 11:32
+ * @version OperationReport, v0.1 2018/8/1 11:32
  */
 @Document(collection = "ht_operation_report")
-public class OperationReportEntity {
+public class OperationReport {
     /**
      *
      */
@@ -229,7 +229,7 @@ public class OperationReportEntity {
 
     @Override
     public String toString() {
-        return "OperationReportEntity{" +
+        return "OperationReport{" +
                 "id='" + id + '\'' +
                 ", statisticsMonth=" + statisticsMonth +
                 ", insertDate=" + insertDate +

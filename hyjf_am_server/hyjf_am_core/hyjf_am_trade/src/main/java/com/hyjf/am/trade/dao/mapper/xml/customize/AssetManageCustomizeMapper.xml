@@ -3223,7 +3223,7 @@
 			hcr.assign_capital recover_capital_wait,
 			hcr.assign_interest recover_interest_wait,
 			hcr.assign_repay_account recover_account,
-			FROM_UNIXTIME(IF(hcr.assign_repay_yes_time=0,hcr.assign_repay_end_time,hcr.assign_repay_yes_time), '%Y-%m-%d' ) recover_time,
+			FROM_UNIXTIME(IF(hcr.assign_repay_yes_time=0,hcr.assign_repay_next_time,hcr.assign_repay_yes_time), '%Y-%m-%d' ) recover_time,
 			IF(hcr.status=0,'未还款','已还款') recover_status
 		FROM
 			ht_credit_repay hcr

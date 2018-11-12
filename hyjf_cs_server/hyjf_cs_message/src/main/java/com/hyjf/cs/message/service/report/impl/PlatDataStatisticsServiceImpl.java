@@ -1,8 +1,8 @@
 package com.hyjf.cs.message.service.report.impl;
 
 import com.hyjf.cs.common.service.BaseServiceImpl;
-import com.hyjf.cs.message.bean.ic.OperationMongoGroupEntity;
-import com.hyjf.cs.message.bean.ic.OperationReportEntity;
+import com.hyjf.cs.message.bean.ic.OperationGroupReport;
+import com.hyjf.cs.message.bean.ic.OperationReport;
 import com.hyjf.cs.message.bean.ic.TotalInvestAndInterestEntity;
 import com.hyjf.cs.message.mongo.ic.TotalInvestAndInterestMongoDao;
 import com.hyjf.cs.message.mongo.mc.OperationMongDao;
@@ -66,14 +66,14 @@ public class PlatDataStatisticsServiceImpl extends BaseServiceImpl implements Pl
         return totalInvestAndInterestMongoDao.findOne(new Query());
     }
     @Override
-    public OperationReportEntity findOneOperationReportEntity(){
+    public OperationReport findOneOperationReportEntity(){
         Query query = new Query();
         query.limit(1);
         query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
         return operationMongDao.findOne(query);
     }
     @Override
-    public OperationMongoGroupEntity findOneOperationMongoGroupEntity(){
+    public OperationGroupReport findOneOperationMongoGroupEntity(){
         Query query = new Query();
         query.limit(1);
         query.with(new Sort(Sort.Direction.DESC, "statisticsMonth"));
@@ -81,7 +81,7 @@ public class PlatDataStatisticsServiceImpl extends BaseServiceImpl implements Pl
     }
 
     @Override
-    public List<OperationReportEntity> findOperationReportEntityList(){
+    public List<OperationReport> findOperationReportEntityList(){
         Document dbObject = new Document();
         Document fieldsObject = new Document();
         // 指定返回的字段
@@ -95,12 +95,12 @@ public class PlatDataStatisticsServiceImpl extends BaseServiceImpl implements Pl
     }
 
     @Override
-    public OperationReportEntity findOneOperationMongDaoByMonth(int month){
+    public OperationReport findOneOperationMongDaoByMonth(int month){
 
         Query query = new Query();
         Criteria criteria = Criteria.where("statisticsMonth").is(month);
         query.addCriteria(criteria);
-        OperationReportEntity oe = operationMongDao.findOne(query);
+        OperationReport oe = operationMongDao.findOne(query);
         return oe;
     }
 

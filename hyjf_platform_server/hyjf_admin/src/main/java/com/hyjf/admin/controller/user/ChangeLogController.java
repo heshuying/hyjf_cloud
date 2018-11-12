@@ -222,15 +222,17 @@ public class ChangeLogController extends BaseController {
     public void exportToExcelLog(HttpServletRequest request,HttpServletResponse response,@RequestBody Map<String, String> map) throws Exception {
         // 封装查询条件
         ChangeLogRequest clr = new ChangeLogRequest();
-        clr.setUsername(map.get("username"));
-        clr.setRealName(map.get("realName"));
-        clr.setMobile(map.get("mobile"));
-        clr.setRecommendUser(map.get("recommendUser"));
-        clr.setStartTime(map.get("startTime"));
-        clr.setEndTime(map.get("endTime"));
-        clr.setAttribute(map.get("attribute"));
-        clr.setCurrPage(-1);
-        clr.setPageSize(-1);
+		clr.setUsername(map.get("username"));
+		clr.setRealName(map.get("realName"));
+		clr.setMobile(map.get("mobile"));
+		clr.setRecommendUser(map.get("recommendUser"));
+		clr.setStartTime(map.get("startTime"));
+		clr.setEndTime(map.get("endTime"));
+		clr.setCurrPage(Integer.valueOf(map.get("currPage")));
+		clr.setPageSize(Integer.valueOf(map.get("pageSize")));
+		clr.setAttribute(map.get("attribute"));
+		//add by nxl 添加邮箱查询
+        clr.setEmail(map.get("email"));
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称

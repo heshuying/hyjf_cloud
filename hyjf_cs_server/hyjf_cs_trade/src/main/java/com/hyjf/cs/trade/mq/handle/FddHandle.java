@@ -1235,7 +1235,7 @@ public class FddHandle {
 	 * @param tenderCreditAssignedBean
 	 * @return
 	 */
-	private Map<String,Object> selectHJHUserCreditContract(CreditAssignedBean tenderCreditAssignedBean) {
+	public Map<String,Object> selectHJHUserCreditContract(CreditAssignedBean tenderCreditAssignedBean) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		// 获取债转投资信息
 		//查询 hyjf_hjh_debt_credit_tender 表
@@ -1396,6 +1396,9 @@ public class FddHandle {
 				borrowNid = borrowTender.getBorrowNid();//标的号
 				BorrowAndInfoVO borrow = this.amTradeClient.getBorrowByNid(borrowNid);
 				instCode = borrow.getInstCode();//机构编号
+
+				logger.info("==============更新自动签署数据(居间服务协议):instCode="+borrow.getInstCode());
+
 				//判断是否为企业借款
 				boolean result = this.isCompanyUser(borrow);
 				if (result){
@@ -1448,6 +1451,9 @@ public class FddHandle {
 			}
 		}else if(FddGenerateContractConstant.PROTOCOL_TYPE_PLAN == transType){//计划加入协议
 			HjhAccedeVO hjhAccede=this.amTradeClient.getHjhAccedeByAccedeOrderId(contract_id);
+
+			logger.info("=================更新自动签署数据(计划加入协议):userId="+hjhAccede.getUserId()+",instCode="+hjhAccede.getPlanNid());
+
 			if(Validator.isNotNull(hjhAccede)){
 				userId = hjhAccede.getUserId();
 				instCode = hjhAccede.getPlanNid();
@@ -1471,22 +1477,33 @@ public class FddHandle {
 				borrowNid = hjhCreditTender.getBorrowNid();// 标的号
 				BorrowAndInfoVO borrow=this.amTradeClient.getBorrowByNid(borrowNid);
 				instCode = borrow.getInstCode();// 机构编号
+
+				logger.info("=================更新自动签署数据(计划债转服务协议):instCode="+borrow.getInstCode());
+
 				creditUserId = hjhCreditTender.getCreditUserId();// 出让人
 				borrowerCustomerID = getCustomerIDByUserID(creditUserId);
 			}
 		}else if(FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET == transType || //垫付债转服务协议
 				FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET == transType){// 垫付计划债转服务协议
 		    logger.info("--------------------------------垫付计划债转服务协议获取签署信息contract_id："+contract_id);
-			ApplyAgreementInfoVO applyAgreementInfo =  this.amTradeClient.selectApplyAgreementInfoByContractId(contract_id);
-			logger.info("--------------------------------垫付计划债转服务协议获取签署信息applyAgreementInfo："+JSONObject.toJSON(applyAgreementInfo));
-			if (applyAgreementInfo != null ) {
+            List<ApplyAgreementInfoVO> voList  =  this.amTradeClient.selectApplyAgreementInfoByContractId(contract_id);
+
+			if (voList != null && voList.size()>0) {
+                logger.info("--------------------------------垫付计划债转服务协议获取签署信息voList："+JSONObject.toJSON(voList));
+                ApplyAgreementInfoVO applyAgreementInfo = voList.get(0);
 				userId = Integer.valueOf(applyAgreementInfo.getUserId());// 承接人
 				borrowNid = applyAgreementInfo.getBorrowNid();// 原标的号
 				BorrowInfoWithBLOBsVO borrow = this.amTradeClient.selectBorrowInfoWithBLOBSVOByBorrowId(borrowNid);
+
+				logger.info("=================更新自动签署数据(计划债转服务协议):instCode="+borrow.getInstCode());
+
 				instCode = borrow.getInstCode();// 机构编号
 				creditUserId = Integer.valueOf(applyAgreementInfo.getCreditUserId());// 出让人
 				borrowerCustomerID = getCustomerIDByUserID(creditUserId);
-			}
+			}else{
+                logger.info("--------------------------------垫付计划债转服务协议获取签署信息失败");
+            }
+
 		}
 
 

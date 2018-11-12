@@ -3,10 +3,14 @@
  */
 package com.hyjf.am.config.controller;
 
+import com.hyjf.am.config.dao.model.auto.BankConfig;
 import com.hyjf.am.config.dao.model.auto.JxBankConfig;
+import com.hyjf.am.config.service.BankConfigService;
 import com.hyjf.am.config.service.JxBankConfigService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.AdminBankConfigResponse;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
+import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
@@ -24,6 +28,8 @@ import java.util.List;
 public class JxBankConfigController {
     @Autowired
     JxBankConfigService jxBankConfigService;
+    @Autowired
+    BankConfigService bankConfigService;
     /**
      * 获取江西银行配置（快捷支付）
      */
@@ -71,5 +77,24 @@ public class JxBankConfigController {
             response.setRtn(Response.SUCCESS);
         }
         return response;
+    }
+    /**
+     * 根据bankName查询银行配置
+     * @param bankName
+     * @return
+     */
+    @GetMapping("/selectBankConfigByBankName/{bankName}")
+    public AdminBankConfigResponse selectBankConfigByBankName(@PathVariable String bankName){
+        AdminBankConfigResponse response = new AdminBankConfigResponse();
+        BankConfigVO bankConfig = new BankConfigVO();
+        bankConfig.setName(bankName);
+        List<BankConfig> list = bankConfigService.selectBankConfigByBankName(bankConfig,-1,-1);
+        if(!CollectionUtils.isEmpty(list)){
+            List<BankConfigVO> res=CommonUtils.convertBeanList(list,BankConfigVO.class);
+            response.setResultList(res);
+            response.setRecordTotal(res.size());
+            return response;
+        }
+        return null;
     }
 }

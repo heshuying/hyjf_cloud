@@ -54,6 +54,7 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
     @Override
     public List<SubCommissionListConfig> searchSubCommissionListConfig() {
         SubCommissionListConfigExample example = new SubCommissionListConfigExample();
+        example.createCriteria().andStatusEqualTo(0);
         return subCommissionListConfigMapper.selectByExample(example);
     }
 

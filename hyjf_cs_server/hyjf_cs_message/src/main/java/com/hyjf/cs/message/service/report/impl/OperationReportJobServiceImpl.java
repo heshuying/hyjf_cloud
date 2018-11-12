@@ -6,12 +6,12 @@ import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.common.enums.DateEnum;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.ic.BorrowUserStatistic;
-import com.hyjf.cs.message.bean.ic.OperationMongoGroupEntity;
-import com.hyjf.cs.message.bean.ic.OperationReportEntity;
-import com.hyjf.cs.message.bean.mc.HalfYearOperationReportEntity;
-import com.hyjf.cs.message.bean.mc.MonthlyOperationReportEntity;
-import com.hyjf.cs.message.bean.mc.QuarterOperationReportEntity;
-import com.hyjf.cs.message.bean.mc.YearOperationReportEntity;
+import com.hyjf.cs.message.bean.ic.OperationGroupReport;
+import com.hyjf.cs.message.bean.ic.OperationReport;
+import com.hyjf.cs.message.bean.ic.OperationHalfYearReport;
+import com.hyjf.cs.message.bean.ic.OperationMonthlyReport;
+import com.hyjf.cs.message.bean.ic.OperationQuarterReport;
+import com.hyjf.cs.message.bean.ic.OperationYearReport;
 import com.hyjf.cs.message.client.OperationReportJobClient;
 import com.hyjf.cs.message.mongo.mc.BorrowUserStatisticMongDao;
 import com.hyjf.cs.message.mongo.mc.OperationMongDao;
@@ -62,9 +62,9 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         Query query = new Query();
         Criteria criteria = Criteria.where("statisticsMonth").is(transferDateToInt(cal, sdf));
         query.addCriteria(criteria);
-        OperationReportEntity oe = operationMongDao.findOne(query);
+        OperationReport oe = operationMongDao.findOne(query);
         if (oe == null) {
-            oe = new OperationReportEntity();
+            oe = new OperationReport();
         }
         oe.setInsertDate(transferDateToInt(cal, sdf));
 
@@ -107,7 +107,7 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
 
     @Override
     public void insertOperationGroupData(Calendar cal) {
-        OperationMongoGroupEntity oegroup = new OperationMongoGroupEntity();
+        OperationGroupReport oegroup = new OperationGroupReport();
         // 插入统计日期
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         oegroup.setInsertDate(transferDateToInt(cal, sdf));
@@ -132,20 +132,20 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         Map<Integer, Integer> ageMap = new HashMap<Integer, Integer>();
         //代码拆分先查出所有符合条件的用户
         List<OperationReportJobVO> ageRangeUserIds = operationReportJobClient.getTenderAgeByRangeList(getLastDay(cal), 0,
-                OperationMongoGroupEntity.ageRange1);
+                OperationGroupReport.ageRange1);
         if(!CollectionUtils.isEmpty(ageRangeUserIds)){
             int age = operationReportJobClient.getTenderAgeByRange(getLastDay(cal), 0,
-                    OperationMongoGroupEntity.ageRange1, ageRangeUserIds);
-            ageMap.put(OperationMongoGroupEntity.ageRange1, age);
-            age = operationReportJobClient.getTenderAgeByRange(getLastDay(cal), OperationMongoGroupEntity.ageRange1,
-                    OperationMongoGroupEntity.ageRange2, ageRangeUserIds);
-            ageMap.put(OperationMongoGroupEntity.ageRange2, age);
-            age = operationReportJobClient.getTenderAgeByRange(getLastDay(cal), OperationMongoGroupEntity.ageRange2,
-                    OperationMongoGroupEntity.ageRange3, ageRangeUserIds);
-            ageMap.put(OperationMongoGroupEntity.ageRange3, age);
-            age = operationReportJobClient.getTenderAgeByRange(getLastDay(cal), OperationMongoGroupEntity.ageRange3,
-                    OperationMongoGroupEntity.ageRange4, ageRangeUserIds);
-            ageMap.put(OperationMongoGroupEntity.ageRange4, age);
+                    OperationGroupReport.ageRange1, ageRangeUserIds);
+            ageMap.put(OperationGroupReport.ageRange1, age);
+            age = operationReportJobClient.getTenderAgeByRange(getLastDay(cal), OperationGroupReport.ageRange1,
+                    OperationGroupReport.ageRange2, ageRangeUserIds);
+            ageMap.put(OperationGroupReport.ageRange2, age);
+            age = operationReportJobClient.getTenderAgeByRange(getLastDay(cal), OperationGroupReport.ageRange2,
+                    OperationGroupReport.ageRange3, ageRangeUserIds);
+            ageMap.put(OperationGroupReport.ageRange3, age);
+            age = operationReportJobClient.getTenderAgeByRange(getLastDay(cal), OperationGroupReport.ageRange3,
+                    OperationGroupReport.ageRange4, ageRangeUserIds);
+            ageMap.put(OperationGroupReport.ageRange4, age);
 
             oegroup.setInvestorAgeMap(ageMap);
 
@@ -378,12 +378,12 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         monthlyOperationReport.setCreateTime(GetDate.getNowTime10());
         monthlyOperationReport.setCreateUserId(1);
 
-        MonthlyOperationReportEntity monthlyOperationReportEntity = new MonthlyOperationReportEntity();
-        BeanUtils.copyProperties(monthlyOperationReport, monthlyOperationReportEntity);
-        monthlyOperationReportEntity.setOperationReportId(operationReportId);//运营报告ID
+        OperationMonthlyReport operationMonthlyReport = new OperationMonthlyReport();
+        BeanUtils.copyProperties(monthlyOperationReport, operationMonthlyReport);
+        operationMonthlyReport.setOperationReportId(operationReportId);//运营报告ID
 
 //        monthlyOperationReportMapper.insert(monthlyOperationReport);
-        monthlyOperationReportMongDao.insert(monthlyOperationReportEntity);
+        monthlyOperationReportMongDao.insert(operationMonthlyReport);
 
     }
 
@@ -582,12 +582,12 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         quarterOperationReport.setCreateTime(GetDate.getNowTime10());
         quarterOperationReport.setCreateUserId(1);
 
-        QuarterOperationReportEntity quarterOperationReportEntity = new QuarterOperationReportEntity();
-        BeanUtils.copyProperties(quarterOperationReport, quarterOperationReportEntity);
-        quarterOperationReportEntity.setOperationReportId(operationReportId);//运营报告ID
+        OperationQuarterReport operationQuarterReport = new OperationQuarterReport();
+        BeanUtils.copyProperties(quarterOperationReport, operationQuarterReport);
+        operationQuarterReport.setOperationReportId(operationReportId);//运营报告ID
 
 //        quarterOperationReportMapper.insert(quarterOperationReport);
-        quarterOperationReportMongDao.insert(quarterOperationReportEntity);
+        quarterOperationReportMongDao.insert(operationQuarterReport);
     }
 
     //保存半年度运营报告
@@ -690,12 +690,12 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
     }
 
     private void saveHalfYearOperationReport(HalfYearOperationReportVO halfYearOperationReport, String operationReportId) {
-        HalfYearOperationReportEntity halfYearOperationReportEntity = new HalfYearOperationReportEntity();
-        BeanUtils.copyProperties(halfYearOperationReport, halfYearOperationReportEntity);
-        halfYearOperationReportEntity.setOperationReportId(operationReportId);//运营报告ID
+        OperationHalfYearReport operationHalfYearReport = new OperationHalfYearReport();
+        BeanUtils.copyProperties(halfYearOperationReport, operationHalfYearReport);
+        operationHalfYearReport.setOperationReportId(operationReportId);//运营报告ID
 
 //        halfYearOperationReportMapper.insert(halfYearOperationReport);
-        halfYearOperationReportMongDao.insert(halfYearOperationReportEntity);
+        halfYearOperationReportMongDao.insert(operationHalfYearReport);
     }
 
     /**
@@ -877,12 +877,12 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
     }
 
     private void saveYearOperationReport(YearOperationReportVO yearOperationReport, String operationReportId) {
-        YearOperationReportEntity yearOperationReportEntity = new YearOperationReportEntity();
-        BeanUtils.copyProperties(yearOperationReport, yearOperationReportEntity);
-        yearOperationReportEntity.setOperationReportId(operationReportId);//运营报告ID
+        OperationYearReport operationYearReport = new OperationYearReport();
+        BeanUtils.copyProperties(yearOperationReport, operationYearReport);
+        operationYearReport.setOperationReportId(operationReportId);//运营报告ID
 
 //        yearOperationReportMapper.insert(YearOperationReport);
-        yearOperationReportMongDao.insert(yearOperationReportEntity);
+        yearOperationReportMongDao.insert(operationYearReport);
     }
 
 }

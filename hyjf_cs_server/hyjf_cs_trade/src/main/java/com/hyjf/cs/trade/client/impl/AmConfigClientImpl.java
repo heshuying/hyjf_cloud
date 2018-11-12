@@ -2,7 +2,6 @@ package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
-import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
@@ -62,7 +61,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 	@Override
 	public List<BankConfigVO> getBankConfigRecordList(String bankName){
 		AdminBankConfigResponse response = restTemplate
-				.postForEntity("http://AM-ADMIN/am-config/config/selectBankConfigByBankName" , bankName, AdminBankConfigResponse.class).getBody();
+				.getForEntity("http://AM-CONFIG/am-config/config/selectBankConfigByBankName/"+bankName, AdminBankConfigResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}

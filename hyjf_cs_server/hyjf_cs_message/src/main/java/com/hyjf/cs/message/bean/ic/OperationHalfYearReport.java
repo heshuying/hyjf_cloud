@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.message.bean.mc;
+package com.hyjf.cs.message.bean.ic;
 
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -9,12 +9,11 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- *  年度运营报告
  * @author tanyy
- * @version YearOperationReportEntity, v0.1 2018/6/27 10:08
+ * @version OperationHalfYearReport, v0.1 2018/6/27 10:06
  */
-@Document(collection = "ht_year_operation_report")
-public class YearOperationReportEntity implements Serializable {
+@Document(collection = "ht_operation_half_year_report")
+public class OperationHalfYearReport implements Serializable{
 
     private String id;
 
@@ -36,53 +35,33 @@ public class YearOperationReportEntity implements Serializable {
 
     private BigDecimal sixthMonthAmount;
 
-    private BigDecimal seventhMonthAmoun;
+    private BigDecimal halfYearAmount;
 
-    private BigDecimal eighteenMonthAmount;
+    private BigDecimal halfYearProfit;
 
-    private BigDecimal ninthMonthAmount;
+    private Integer halfYearSuccessDeal;
 
-    private BigDecimal tenthMonthAmount;
+    private Integer halfYearRechargeDeal;
 
-    private BigDecimal eleventhMonthAmount;
+    private BigDecimal halfYearRechargeAmount;
 
-    private BigDecimal twelveMonthAmount;
+    private Integer halfYearSuccessMonth;
 
-    private BigDecimal yearAmount;
+    private BigDecimal halfYearSuccessMonthAmount;
 
-    private BigDecimal yearProfit;
+    private BigDecimal halfYearAvgProfit;
 
-    private Integer yearSuccessDeal;
+    private Integer halfYearAppDealNum;
 
-    private Integer yearSuccessMonth;
+    private BigDecimal halfYearAppDealProportion;
 
-    private BigDecimal yearSuccessMonthAmount;
+    private Integer halfYearWechatDealNum;
 
-    private BigDecimal yearAvgProfit;
+    private BigDecimal halfYearWechatDealProportion;
 
-    private Integer yearAppDealNum;
+    private Integer halfYearPcDealNum;
 
-    private BigDecimal yearAppDealProportion;
-
-    private Integer yearWechatDealNum;
-
-    private BigDecimal yearWechatDealProportion;
-
-    private Integer yearPcDealNum;
-
-    private BigDecimal yearPcDealProportion;
-
-    private BigDecimal yearAppDealAmount;
-
-    private BigDecimal yearAppAmountProportion;
-
-    private BigDecimal yearWechatDealAmount;
-
-    private BigDecimal yearWechatAmountProportion;
-
-    private BigDecimal yearPcDealAmount;
-
-    private BigDecimal yearPcAmountProportion;
+    private BigDecimal halfYearPcDealProportion;
 
     private Integer lessThirtyDayNum;
 
@@ -103,10 +82,6 @@ public class YearOperationReportEntity implements Serializable {
     private Integer threeMonthNum;
 
     private BigDecimal threeMonthProportion;
-
-    private Integer twentyFourMonthNum;
-
-    private BigDecimal twentyFourMonthProportion;
 
     private Integer fourMonthNum;
 
@@ -139,6 +114,10 @@ public class YearOperationReportEntity implements Serializable {
     private Integer eighteenMonthNum;
 
     private BigDecimal eighteenMonthProportion;
+
+    private Integer twentyFourMonthNum;
+
+    private BigDecimal twentyFourMonthProportion;
 
     private Long phoneNum;
 
@@ -238,196 +217,116 @@ public class YearOperationReportEntity implements Serializable {
         this.sixthMonthAmount = sixthMonthAmount;
     }
 
-    public BigDecimal getSeventhMonthAmoun() {
-        return seventhMonthAmoun;
+    public BigDecimal getHalfYearAmount() {
+        return halfYearAmount;
     }
 
-    public void setSeventhMonthAmoun(BigDecimal seventhMonthAmoun) {
-        this.seventhMonthAmoun = seventhMonthAmoun;
+    public void setHalfYearAmount(BigDecimal halfYearAmount) {
+        this.halfYearAmount = halfYearAmount;
     }
 
-    public BigDecimal getEighteenMonthAmount() {
-        return eighteenMonthAmount;
+    public BigDecimal getHalfYearProfit() {
+        return halfYearProfit;
     }
 
-    public void setEighteenMonthAmount(BigDecimal eighteenMonthAmount) {
-        this.eighteenMonthAmount = eighteenMonthAmount;
+    public void setHalfYearProfit(BigDecimal halfYearProfit) {
+        this.halfYearProfit = halfYearProfit;
     }
 
-    public BigDecimal getNinthMonthAmount() {
-        return ninthMonthAmount;
+    public Integer getHalfYearSuccessDeal() {
+        return halfYearSuccessDeal;
     }
 
-    public void setNinthMonthAmount(BigDecimal ninthMonthAmount) {
-        this.ninthMonthAmount = ninthMonthAmount;
+    public void setHalfYearSuccessDeal(Integer halfYearSuccessDeal) {
+        this.halfYearSuccessDeal = halfYearSuccessDeal;
     }
 
-    public BigDecimal getTenthMonthAmount() {
-        return tenthMonthAmount;
+    public Integer getHalfYearRechargeDeal() {
+        return halfYearRechargeDeal;
     }
 
-    public void setTenthMonthAmount(BigDecimal tenthMonthAmount) {
-        this.tenthMonthAmount = tenthMonthAmount;
+    public void setHalfYearRechargeDeal(Integer halfYearRechargeDeal) {
+        this.halfYearRechargeDeal = halfYearRechargeDeal;
     }
 
-    public BigDecimal getEleventhMonthAmount() {
-        return eleventhMonthAmount;
+    public BigDecimal getHalfYearRechargeAmount() {
+        return halfYearRechargeAmount;
     }
 
-    public void setEleventhMonthAmount(BigDecimal eleventhMonthAmount) {
-        this.eleventhMonthAmount = eleventhMonthAmount;
+    public void setHalfYearRechargeAmount(BigDecimal halfYearRechargeAmount) {
+        this.halfYearRechargeAmount = halfYearRechargeAmount;
     }
 
-    public BigDecimal getTwelveMonthAmount() {
-        return twelveMonthAmount;
+    public Integer getHalfYearSuccessMonth() {
+        return halfYearSuccessMonth;
     }
 
-    public void setTwelveMonthAmount(BigDecimal twelveMonthAmount) {
-        this.twelveMonthAmount = twelveMonthAmount;
+    public void setHalfYearSuccessMonth(Integer halfYearSuccessMonth) {
+        this.halfYearSuccessMonth = halfYearSuccessMonth;
     }
 
-    public BigDecimal getYearAmount() {
-        return yearAmount;
+    public BigDecimal getHalfYearSuccessMonthAmount() {
+        return halfYearSuccessMonthAmount;
     }
 
-    public void setYearAmount(BigDecimal yearAmount) {
-        this.yearAmount = yearAmount;
+    public void setHalfYearSuccessMonthAmount(BigDecimal halfYearSuccessMonthAmount) {
+        this.halfYearSuccessMonthAmount = halfYearSuccessMonthAmount;
     }
 
-    public BigDecimal getYearProfit() {
-        return yearProfit;
+    public BigDecimal getHalfYearAvgProfit() {
+        return halfYearAvgProfit;
     }
 
-    public void setYearProfit(BigDecimal yearProfit) {
-        this.yearProfit = yearProfit;
+    public void setHalfYearAvgProfit(BigDecimal halfYearAvgProfit) {
+        this.halfYearAvgProfit = halfYearAvgProfit;
     }
 
-    public Integer getYearSuccessDeal() {
-        return yearSuccessDeal;
+    public Integer getHalfYearAppDealNum() {
+        return halfYearAppDealNum;
     }
 
-    public void setYearSuccessDeal(Integer yearSuccessDeal) {
-        this.yearSuccessDeal = yearSuccessDeal;
+    public void setHalfYearAppDealNum(Integer halfYearAppDealNum) {
+        this.halfYearAppDealNum = halfYearAppDealNum;
     }
 
-    public Integer getYearSuccessMonth() {
-        return yearSuccessMonth;
+    public BigDecimal getHalfYearAppDealProportion() {
+        return halfYearAppDealProportion;
     }
 
-    public void setYearSuccessMonth(Integer yearSuccessMonth) {
-        this.yearSuccessMonth = yearSuccessMonth;
+    public void setHalfYearAppDealProportion(BigDecimal halfYearAppDealProportion) {
+        this.halfYearAppDealProportion = halfYearAppDealProportion;
     }
 
-    public BigDecimal getYearSuccessMonthAmount() {
-        return yearSuccessMonthAmount;
+    public Integer getHalfYearWechatDealNum() {
+        return halfYearWechatDealNum;
     }
 
-    public void setYearSuccessMonthAmount(BigDecimal yearSuccessMonthAmount) {
-        this.yearSuccessMonthAmount = yearSuccessMonthAmount;
+    public void setHalfYearWechatDealNum(Integer halfYearWechatDealNum) {
+        this.halfYearWechatDealNum = halfYearWechatDealNum;
     }
 
-    public BigDecimal getYearAvgProfit() {
-        return yearAvgProfit;
+    public BigDecimal getHalfYearWechatDealProportion() {
+        return halfYearWechatDealProportion;
     }
 
-    public void setYearAvgProfit(BigDecimal yearAvgProfit) {
-        this.yearAvgProfit = yearAvgProfit;
+    public void setHalfYearWechatDealProportion(BigDecimal halfYearWechatDealProportion) {
+        this.halfYearWechatDealProportion = halfYearWechatDealProportion;
     }
 
-    public Integer getYearAppDealNum() {
-        return yearAppDealNum;
+    public Integer getHalfYearPcDealNum() {
+        return halfYearPcDealNum;
     }
 
-    public void setYearAppDealNum(Integer yearAppDealNum) {
-        this.yearAppDealNum = yearAppDealNum;
+    public void setHalfYearPcDealNum(Integer halfYearPcDealNum) {
+        this.halfYearPcDealNum = halfYearPcDealNum;
     }
 
-    public BigDecimal getYearAppDealProportion() {
-        return yearAppDealProportion;
+    public BigDecimal getHalfYearPcDealProportion() {
+        return halfYearPcDealProportion;
     }
 
-    public void setYearAppDealProportion(BigDecimal yearAppDealProportion) {
-        this.yearAppDealProportion = yearAppDealProportion;
-    }
-
-    public Integer getYearWechatDealNum() {
-        return yearWechatDealNum;
-    }
-
-    public void setYearWechatDealNum(Integer yearWechatDealNum) {
-        this.yearWechatDealNum = yearWechatDealNum;
-    }
-
-    public BigDecimal getYearWechatDealProportion() {
-        return yearWechatDealProportion;
-    }
-
-    public void setYearWechatDealProportion(BigDecimal yearWechatDealProportion) {
-        this.yearWechatDealProportion = yearWechatDealProportion;
-    }
-
-    public Integer getYearPcDealNum() {
-        return yearPcDealNum;
-    }
-
-    public void setYearPcDealNum(Integer yearPcDealNum) {
-        this.yearPcDealNum = yearPcDealNum;
-    }
-
-    public BigDecimal getYearPcDealProportion() {
-        return yearPcDealProportion;
-    }
-
-    public void setYearPcDealProportion(BigDecimal yearPcDealProportion) {
-        this.yearPcDealProportion = yearPcDealProportion;
-    }
-
-    public BigDecimal getYearAppDealAmount() {
-        return yearAppDealAmount;
-    }
-
-    public void setYearAppDealAmount(BigDecimal yearAppDealAmount) {
-        this.yearAppDealAmount = yearAppDealAmount;
-    }
-
-    public BigDecimal getYearAppAmountProportion() {
-        return yearAppAmountProportion;
-    }
-
-    public void setYearAppAmountProportion(BigDecimal yearAppAmountProportion) {
-        this.yearAppAmountProportion = yearAppAmountProportion;
-    }
-
-    public BigDecimal getYearWechatDealAmount() {
-        return yearWechatDealAmount;
-    }
-
-    public void setYearWechatDealAmount(BigDecimal yearWechatDealAmount) {
-        this.yearWechatDealAmount = yearWechatDealAmount;
-    }
-
-    public BigDecimal getYearWechatAmountProportion() {
-        return yearWechatAmountProportion;
-    }
-
-    public void setYearWechatAmountProportion(BigDecimal yearWechatAmountProportion) {
-        this.yearWechatAmountProportion = yearWechatAmountProportion;
-    }
-
-    public BigDecimal getYearPcDealAmount() {
-        return yearPcDealAmount;
-    }
-
-    public void setYearPcDealAmount(BigDecimal yearPcDealAmount) {
-        this.yearPcDealAmount = yearPcDealAmount;
-    }
-
-    public BigDecimal getYearPcAmountProportion() {
-        return yearPcAmountProportion;
-    }
-
-    public void setYearPcAmountProportion(BigDecimal yearPcAmountProportion) {
-        this.yearPcAmountProportion = yearPcAmountProportion;
+    public void setHalfYearPcDealProportion(BigDecimal halfYearPcDealProportion) {
+        this.halfYearPcDealProportion = halfYearPcDealProportion;
     }
 
     public Integer getLessThirtyDayNum() {
@@ -508,22 +407,6 @@ public class YearOperationReportEntity implements Serializable {
 
     public void setThreeMonthProportion(BigDecimal threeMonthProportion) {
         this.threeMonthProportion = threeMonthProportion;
-    }
-
-    public Integer getTwentyFourMonthNum() {
-        return twentyFourMonthNum;
-    }
-
-    public void setTwentyFourMonthNum(Integer twentyFourMonthNum) {
-        this.twentyFourMonthNum = twentyFourMonthNum;
-    }
-
-    public BigDecimal getTwentyFourMonthProportion() {
-        return twentyFourMonthProportion;
-    }
-
-    public void setTwentyFourMonthProportion(BigDecimal twentyFourMonthProportion) {
-        this.twentyFourMonthProportion = twentyFourMonthProportion;
     }
 
     public Integer getFourMonthNum() {
@@ -652,6 +535,22 @@ public class YearOperationReportEntity implements Serializable {
 
     public void setEighteenMonthProportion(BigDecimal eighteenMonthProportion) {
         this.eighteenMonthProportion = eighteenMonthProportion;
+    }
+
+    public Integer getTwentyFourMonthNum() {
+        return twentyFourMonthNum;
+    }
+
+    public void setTwentyFourMonthNum(Integer twentyFourMonthNum) {
+        this.twentyFourMonthNum = twentyFourMonthNum;
+    }
+
+    public BigDecimal getTwentyFourMonthProportion() {
+        return twentyFourMonthProportion;
+    }
+
+    public void setTwentyFourMonthProportion(BigDecimal twentyFourMonthProportion) {
+        this.twentyFourMonthProportion = twentyFourMonthProportion;
     }
 
     public Long getPhoneNum() {

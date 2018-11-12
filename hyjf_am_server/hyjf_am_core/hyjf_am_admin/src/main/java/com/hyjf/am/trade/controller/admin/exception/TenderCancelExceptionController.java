@@ -139,7 +139,7 @@ public class TenderCancelExceptionController extends BaseController {
      * @return
      */
     @ApiOperation(value = "根据id删除BorrowTenderTmp", notes = "根据id删除BorrowTenderTmp")
-    @PostMapping(value = "/deleteborrowtendertmpbyid/{id}")
+    @GetMapping(value = "/deleteborrowtendertmpbyid/{id}")
     public Integer deleteBorrowTenderTmpById(@PathVariable Integer id){
         return tenderCancelExceptionService.deleteBorrowTenderTmpById(id);
     }

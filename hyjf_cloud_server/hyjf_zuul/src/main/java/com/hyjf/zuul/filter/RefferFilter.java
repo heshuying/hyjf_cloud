@@ -1,5 +1,6 @@
 package com.hyjf.zuul.filter;
 
+import com.hyjf.zuul.contant.GatewayConstant;
 import com.netflix.zuul.ZuulFilter;
 import com.netflix.zuul.context.RequestContext;
 import com.netflix.zuul.exception.ZuulException;
@@ -7,6 +8,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cloud.netflix.zuul.filters.support.FilterConstants;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.regex.Matcher;
@@ -15,7 +17,9 @@ import java.util.regex.Pattern;
 /**
  * @author xiasq
  * @version RefferFilter, v0.1 2018/7/2 14:36
+ * 弃用
  */
+@Deprecated
 public class RefferFilter extends ZuulFilter {
 	private static Logger logger = LoggerFactory.getLogger(RefferFilter.class);
 
@@ -24,12 +28,12 @@ public class RefferFilter extends ZuulFilter {
 
 	@Override
 	public String filterType() {
-		return "pre";
+		return GatewayConstant.PRE;
 	}
 
 	@Override
 	public int filterOrder() {
-		return 0;
+		return FilterConstants.PRE_DECORATION_FILTER_ORDER + 2;
 	}
 
 	@Override
@@ -57,7 +61,7 @@ public class RefferFilter extends ZuulFilter {
 			}
 		}
 
-		return null;
+		return ctx;
 	}
 
 	private String getDnFromReferer(String referer) {

@@ -18,6 +18,16 @@ public class ProtocolRequest implements Serializable {
 
     private String random;
 
+    private String assignNid;
+
+    public String getAssignNid() {
+        return assignNid;
+    }
+
+    public void setAssignNid(String assignNid) {
+        this.assignNid = assignNid;
+    }
+
     public String getRandom() {
         return random;
     }

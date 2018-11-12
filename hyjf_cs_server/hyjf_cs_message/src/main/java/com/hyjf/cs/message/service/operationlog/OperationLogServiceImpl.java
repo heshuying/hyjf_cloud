@@ -1,7 +1,7 @@
 package com.hyjf.cs.message.service.operationlog;
 
 import com.hyjf.common.util.GetDate;
-import com.hyjf.cs.message.bean.mc.UserOperationLogEntity;
+import com.hyjf.cs.message.bean.ic.UserOperationLog;
 import com.hyjf.cs.message.mongo.mc.UserOperationLogMongDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
@@ -40,12 +40,12 @@ public class OperationLogServiceImpl  implements OperationLogService {
 			criteria.and("operationTime").gte(operationTimeStart).lte(operationTimeEnd);
 		}
 		query.addCriteria(criteria);
-		List<UserOperationLogEntity> list = userOperationLogMongDao.find(query);
+		List<UserOperationLog> list = userOperationLogMongDao.find(query);
         return list.size();
     }
 
 	@Override
-	public List<UserOperationLogEntity> getOperationLogList(Map<String, Object> operationLog, int limitStart, int limitEnd) {
+	public List<UserOperationLog> getOperationLogList(Map<String, Object> operationLog, int limitStart, int limitEnd) {
 		Query query = new Query();
 		Criteria criteria = new Criteria();
 		if (operationLog.get("userName") != null) {
@@ -65,7 +65,7 @@ public class OperationLogServiceImpl  implements OperationLogService {
 		query.addCriteria(criteria);
 		query.skip(limitStart).limit(limitEnd);
 		query.with(new Sort(Sort.Direction.DESC, "operationTime"));
-		List<UserOperationLogEntity> list = userOperationLogMongDao.find(query);
+		List<UserOperationLog> list = userOperationLogMongDao.find(query);
 		return list;
 	}
 

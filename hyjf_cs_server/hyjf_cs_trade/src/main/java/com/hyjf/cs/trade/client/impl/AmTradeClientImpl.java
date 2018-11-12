@@ -5863,11 +5863,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @param contractId
      * @return ApplyAgreementInfoVO
      **/
-    public ApplyAgreementInfoVO selectApplyAgreementInfoByContractId(String contractId) {
+    public List<ApplyAgreementInfoVO>  selectApplyAgreementInfoByContractId(String contractId) {
         String url = "http://AM-TRADE/am-trade/applyAgreement/selectApplyAgreementInfoByContractId/"+contractId;
         ApplyAgreementInfoResponse response = restTemplate.getForEntity(url,ApplyAgreementInfoResponse.class).getBody();
         if (response != null) {
-            return response.getResult();
+            return response.getResultList();
         }
         return null;
     }

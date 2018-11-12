@@ -61,7 +61,7 @@ public class WrbInfoController extends BaseController {
      * @param borrowNid
      * @return
      */
-    @RequestMapping("/borrow_list")
+    @RequestMapping("/borrow_list/{borrowNid}")
     public WrbBorrowListResponse borrowList(@PathVariable String borrowNid) {
         WrbBorrowListResponse response = new WrbBorrowListResponse();
         List<WrbBorrowListCustomize> list = wrbInfoService.borrowList(borrowNid);
