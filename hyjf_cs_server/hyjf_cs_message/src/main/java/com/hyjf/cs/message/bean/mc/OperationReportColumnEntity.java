@@ -13,7 +13,7 @@ import java.math.BigDecimal;
  * @author tanyy
  * @version OperationReportColumnEntity, v0.1 2018/7/23 16:20
  */
-@Document(collection = "ht_operation_report_column")
+@Document(collection = "ht_operation_column_report")
 public class OperationReportColumnEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
