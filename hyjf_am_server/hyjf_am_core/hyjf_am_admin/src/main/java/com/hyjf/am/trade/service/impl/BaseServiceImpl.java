@@ -298,10 +298,10 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
     }
 
     @Override
-    public List<BorrowRecoverPlan> getBorrowRecoverPlan(String borrowNid, int period) {
+    public List<BorrowRecoverPlan> getBorrowRecoverPlan(String nid, int period) {
         BorrowRecoverPlanExample example = new BorrowRecoverPlanExample();
         BorrowRecoverPlanExample.Criteria crt = example.createCriteria();
-        crt.andBorrowNidEqualTo(borrowNid);
+        crt.andNidEqualTo(nid);
         crt.andRecoverPeriodEqualTo(period);
         List<BorrowRecoverPlan> borrowRecovers = borrowRecoverPlanMapper.selectByExample(example);
         return borrowRecovers;
