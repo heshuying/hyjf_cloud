@@ -110,7 +110,6 @@ public class BaseUserController extends BaseController {
             String sign=request.getParameter("sign");
             return sysConfig.getAppFrontHost()+"/public/formsubmit?sign=" + sign +
                     "&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_RESET_PASSWORD +
-                    "&realPlatform="+request.getParameter("realPlatform") +
                     "&platform="+request.getParameter("platform");
         }
         if (ClientConstants.WECHAT_CLIENT == client) {
