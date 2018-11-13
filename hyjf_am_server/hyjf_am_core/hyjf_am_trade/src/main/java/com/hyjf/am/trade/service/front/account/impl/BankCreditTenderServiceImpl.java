@@ -214,7 +214,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 		Integer borrowUserId = borrowRecover.getBorrowUserid();
 		String orderId = GetOrderIdUtils.getOrderId2(tenderUserId);
 		Account borrowUserAccount=this.getAccount(borrowUserId);
-		logger.info(borrowRecover.getBorrowNid() + " 异常修复承接结束债权  借款人: " + borrowUserId + "-" + borrowUserAccount == null ? "" : borrowUserAccount.getAccountId() + " 投资人: "
+		logger.info(borrowRecover.getBorrowNid() + " 承接结束债权  借款人: " + borrowUserId + "-" + borrowUserAccount == null ? "" : borrowUserAccount.getAccountId() + " 投资人: "
 				+ tenderUserId + "-" + tenderAccountId + " 授权码: " + borrowRecover == null ? "" : borrowRecover.getAuthCode() + " 原始订单号: " + borrowRecover == null ? "" : borrowRecover.getNid());
 
 		BankCreditEnd record = new BankCreditEnd();
@@ -226,7 +226,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 		record.setOrderId(orderId);
 		record.setBorrowNid(borrowRecover.getBorrowNid());
 		record.setAuthCode(borrowRecover.getAuthCode());
-		record.setCreditEndType(3); // 结束债权类型（1:还款，2:散标债转，3:计划债转）'
+		record.setCreditEndType(2); // 结束债权类型（1:还款，2:散标债转，3:计划债转）'
 		record.setStatus(0);
 		record.setOrgOrderId(borrowRecover.getNid());
 
@@ -1477,7 +1477,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 		// 调用银行结束债转接口
 		BorrowCredit borrowCredit = CommonUtils.convertBean(request.getBorrowCredit(),BorrowCredit.class);
 		// 更新borrowCredit
-		logger.info("borrowCredit:{}",borrowCredit);
+		logger.info("borrowCredit:{}",JSONObject.toJSONString(borrowCredit));
 		Integer borrowCreditResult = this.borrowCreditMapper.updateByPrimaryKeySelective(borrowCredit);
 		logger.info("更新borrowCredit结果:{}",borrowCreditResult);
 		logger.info("borrowCredit.getCreditCapitalAssigned():{}    borrowCredit.getCreditCapital():{} ",borrowCredit.getCreditCapitalAssigned(),borrowCredit.getCreditCapital());
