@@ -1,5 +1,8 @@
 package com.hyjf.cs.trade.client.impl;
 
+import com.alicp.jetcache.anno.CacheRefresh;
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
 import com.hyjf.am.response.config.*;
@@ -9,6 +12,7 @@ import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -19,6 +23,7 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 配置中心请求
@@ -167,6 +172,8 @@ public class AmConfigClientImpl implements AmConfigClient {
 
 
 	@Override
+	@Cached(name="webHomeCompanyCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+	@CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
 	public List<ContentArticleVO> searchContentArticleList(ContentArticleRequest request) {
 		ContentArticleResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/article/contentArticleList",request,ContentArticleResponse.class).getBody();
 		if (Response.isSuccess(response)){
