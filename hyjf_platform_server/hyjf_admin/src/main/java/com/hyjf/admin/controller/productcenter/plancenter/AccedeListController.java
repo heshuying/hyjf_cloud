@@ -1059,7 +1059,7 @@ public class AccedeListController extends BaseController{
 	 * @return
 	 * @throws MQException 
 	 */
-	@ApiOperation(value = "汇计划加入明细列表", notes = "PDF文件签署")
+	@ApiOperation(value = "汇计划-计划订单PDF签署", notes = "汇计划-计划订单PDF签署")
     @PostMapping(value = "/pdfsign")
     @ResponseBody
     public JSONObject pdfSignAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AccedeListViewRequest viewRequest) throws MQException {
