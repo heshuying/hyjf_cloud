@@ -1075,7 +1075,7 @@ public class AccedeListController extends BaseController{
 		String planOrderId = viewRequest.getAccedeOrderIdSrch();
 		// 参数判断
 		if(StringUtils.isBlank(userid) || StringUtils.isBlank(planOrderId)){
-			ret.put("result", "请求参数为空");
+			ret.put("statusDesc", "请求参数为空");
 			ret.put("status", FAIL);
 			return ret;
 		}
@@ -1085,24 +1085,24 @@ public class AccedeListController extends BaseController{
 			if(resultList.get(0) != null){
 				accede = resultList.get(0);
 			} else {
-				ret.put("result", "用户加入记录不存在");
+				ret.put("statusDesc", "用户加入记录不存在");
 				ret.put("status", FAIL);
 				return ret;
 			}
 		} else {
-			ret.put("result", "用户加入记录不存在");
+			ret.put("statusDesc", "用户加入记录不存在");
 			ret.put("status", FAIL);
 			return ret;
 		}
     	UserVO users = this.accedeListService.getUserByUserId(Integer.valueOf(userid));
 		if(users == null ){
-			ret.put("result", "用户不存在");
+			ret.put("statusDesc", "用户不存在");
 			ret.put("status", FAIL);
 			return ret;
 		}
 		List<TenderAgreementVO> tenderAgreementList = this.accedeListService.selectTenderAgreementByNid(planOrderId);
-		if(tenderAgreementList == null){
-			ret.put("result", "协议不存在!");
+		if(CollectionUtils.isEmpty(tenderAgreementList)){
+			ret.put("statusDesc", "协议不存在!");
 			ret.put("status", FAIL);
 			return ret;
 		}
@@ -1127,7 +1127,7 @@ public class AccedeListController extends BaseController{
             _log.info("==========汇计划-计划订单PDF签署发送法大大MQ(生成合同)=========");
             fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
 		}
-		ret.put("result", "操作成功,签署MQ已发送");
+		ret.put("statusDesc", "操作成功,签署MQ已发送");
 		ret.put("status", SUCCESS);
 		return ret;
     }

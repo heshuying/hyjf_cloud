@@ -124,12 +124,10 @@ public class BorrowController extends BaseController {
 		BorrowAndInfoVO borrowVO = new BorrowAndInfoVO();
 		if (Validator.isNotNull(borrow)){
 			borrowVO=CommonUtils.convertBean(borrow,BorrowAndInfoVO.class);
-
 		}
 		if (Validator.isNotNull(borrowInfo)){
 			borrowVO.setInstCode(borrowInfo.getInstCode());
 		}
-
 		response.setResult(borrowVO);
 		return response;
 	}

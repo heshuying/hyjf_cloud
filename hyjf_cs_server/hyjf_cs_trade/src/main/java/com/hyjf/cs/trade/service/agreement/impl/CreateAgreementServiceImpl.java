@@ -24,30 +24,8 @@ import java.util.Map;
 @Service
 public class CreateAgreementServiceImpl extends BaseTradeServiceImpl implements CreateAgreementService {
     @Override
-    public JSONObject getIntermediaryAgreementPDFUrl(String nid) {
-        JSONObject object=new JSONObject();
-        List<TenderAgreementVO> list=amTradeClient.selectTenderAgreementByNid(nid);
-        if(list!=null&&list.size()>0){
-            TenderAgreementVO agreementVO=list.get(0);
-            if(agreementVO.getStatus()==3){
-                //本地pdf文件路径
-                object.put("pdfUrl",agreementVO.getPdfUrl());
-                //合同查看地址
-                object.put("viewpdfUrl",agreementVO.getViewpdfUrl());
-                //合同下载地址
-                object.put("downloadUrl",agreementVO.getDownloadUrl());
-                //脱敏图片存放地址
-                object.put("imgUrl",agreementVO.getImgUrl());
-                object.put("status",BaseResult.SUCCESS);
-                object.put("statusDesc",BaseResult.SUCCESS_DESC);
-            }else{
-                object.put("status",BaseResult.ERROR);
-                object.put("statusDesc","暂无可下载协议");
-            }
-        }else {
-            object.put("status",BaseResult.ERROR);
-            object.put("statusDesc","暂无可下载协议");
-        }
-        return object;
+    public List<TenderAgreementVO> getIntermediaryAgreementPDFUrl(String nid) {
+
+        return amTradeClient.selectTenderAgreementByNid(nid);
     }
 }
