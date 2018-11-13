@@ -11,7 +11,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -34,7 +33,6 @@ public class UpdateVersionController {
      * @return
      */
     @ApiOperation("版本更新")
-    @ResponseBody
     @GetMapping(value = "/hjh-update-android.jsp")
     public String hjhUpdateAndroid(HttpServletRequest request, Model model) {
         String sign = request.getParameter("sign");
