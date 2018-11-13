@@ -454,55 +454,6 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         logger.info("creditAssign {}", JSONObject.toJSONString(creditAssign));
         // 检查金额
         this.checkTenderMoney(request, tenderAccount,creditAssign);
-        //判断用户的测评金额上限
-        // TODO: 2018/10/13  校验用户测评金额和类型并返回
-        //从user中获取客户类型，ht_user_evalation_result（用户测评总结表）
-        UserEvalationResultVO userEvalationResultCustomize = amUserClient.selectUserEvalationResultByUserId(userId);
-        if(userEvalationResultCustomize != null){
-            //返回限额和类型组装成json数据
-            JSONObject jsonObj = new JSONObject();
-            //从redis中获取测评类型和上限金额
-            String revaluation_money = null;
-            String eval_type = userEvalationResultCustomize.getEvalType();
-            switch (eval_type){
-                case "保守型":
-                    revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE);
-                    break;
-                case "稳健型":
-                    revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS);
-                    break;
-                case "成长型":
-                    revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_GROWTH) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_GROWTH);
-                    break;
-                case "进取型":
-                    revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE);
-                    break;
-                default:
-                    revaluation_money = null;
-            }
-            if(revaluation_money == null){
-                logger.info("=============从redis中获取测评类型和上限金额异常!(没有获取到对应类型的限额数据) eval_type="+eval_type);
-            }else {
-                //当前日期
-				/*Long lNow = System.currentTimeMillis();
-				if (lCreate <= lNow) {
-					//已过期需要重新评测
-					result.put("error", CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED);
-					return result;
-				}*/
-                //金额对比判断（校验金额 大于 设置测评金额）
-                if (new BigDecimal(request.getAssignCapital()).compareTo(new BigDecimal(revaluation_money)) > 0) {
-                    //返回类型和限额
-                    Map<String,Object> map = new HashedMap();
-                    map.put("evalType",eval_type);
-                    map.put("revaluationMoney",StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money)));
-                    //返回错误码
-                    throw new CheckException(CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS,"测评限额超额",map);
-                }
-            }
-        }else{
-            logger.info("=============该用户测评总结数据为空! userId="+userId);
-        }
         logger.info("债转投资校验通过始   userId:{},credNid:{},ip:{},平台{}", userId, request.getCreditNid(), request.getIp(), request.getPlatform());
         return new WebResult<Map<String, Object>>();
     }

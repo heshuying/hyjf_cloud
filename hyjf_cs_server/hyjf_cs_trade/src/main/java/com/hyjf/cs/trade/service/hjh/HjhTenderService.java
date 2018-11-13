@@ -58,4 +58,11 @@ public interface HjhTenderService extends BaseTradeService {
      * @param sensorsDataBean
      */
     void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException;
+
+    /**
+     * 检查计划投资的合规自查
+     *
+     * @param request
+     */
+    public Map<String, Object> checkEvaluationTypeMoney(TenderRequest request);
 }
