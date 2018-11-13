@@ -95,6 +95,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     @Autowired
     private AuthService authService ;
     @Autowired
+    private HjhTenderService hjhTenderService;
+    @Autowired
     private SensorsDataHjhInvestProducer sensorsDataHjhInvestProducer;
     /**
      * @param request
@@ -539,7 +541,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      * @param request
      */
     @Override
-    public void checkPlan(TenderRequest request) {
+    public WebResult<Map<String, Object>>  checkPlan(TenderRequest request) {
+        WebResult<Map<String, Object>> resultMap = new WebResult<Map<String, Object>>();
         UserVO loginUser = amUserClient.findUserById(request.getUserId());
         Integer userId = loginUser.getUserId();
         request.setUser(loginUser);
@@ -585,7 +588,11 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         // 检查投资金额
         checkTenderMoney(request, plan, account, cuc, tenderAccount);
         //从user中获取客户类型，ht_user_evalation_result（用户测评总结表）
+        //校验用户测评
+        Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(request);
+        resultMap.setData(resultEval);
         logger.info("加入计划投资校验通过userId:{},ip:{},平台{},优惠券为:{}", userId, request.getIp(), request.getPlatform(), request.getCouponGrantId());
+        return resultMap;
     }
 
     /**
@@ -603,7 +610,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         UserEvalationResultVO userEvalationResultCustomize = amUserClient.selectUserEvalationResultByUserId(userId);
         if(userEvalationResultCustomize != null){
             //从redis中获取测评类型和上限金额
-            String revaluation_money = null;
+            String revaluation_money;
             String eval_type = userEvalationResultCustomize.getEvalType();
             switch (eval_type){
                 case "保守型":
@@ -619,7 +626,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE);
                     break;
                 default:
-                    revaluation_money = null;
+                    revaluation_money = "0";
             }
             if(revaluation_money == null){
                 logger.info("=============从redis中获取测评类型和上限金额异常!(没有获取到对应类型的限额数据) eval_type="+eval_type);

@@ -146,7 +146,7 @@ public class AutoTenderExceptionController  extends BaseController {
     /**
      * 更改加入明细状态
      */
-    @RequestMapping(value = "/updateTenderByParam/{status}/{accedeId}", method = RequestMethod.POST)
+    @GetMapping(value = "/updateTenderByParam/{status}/{accedeId}")
     public Response<Boolean> updateTenderByParam(@PathVariable String status, @PathVariable String accedeId){
         Map<String,Object> mapParam = new HashMap<String,Object>();
         mapParam.put("status",status);
