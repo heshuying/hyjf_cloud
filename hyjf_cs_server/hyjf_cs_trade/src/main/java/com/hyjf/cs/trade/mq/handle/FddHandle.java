@@ -1399,6 +1399,8 @@ public class FddHandle {
 				userId = borrowTender.getUserId(); //投资人
 				borrowNid = borrowTender.getBorrowNid();//标的号
 				BorrowAndInfoVO borrow = this.amTradeClient.getBorrowByNid(borrowNid);
+				BorrowInfoVO borrowInfoByNid = amTradeClient.getBorrowInfoByNid(borrowNid);
+				borrow.setCompanyOrPersonal(borrowInfoByNid.getCompanyOrPersonal().toString());
 				instCode = borrow.getInstCode();//机构编号
 
 				logger.info("==============更新自动签署数据(居间服务协议):instCode="+borrow.getInstCode());
