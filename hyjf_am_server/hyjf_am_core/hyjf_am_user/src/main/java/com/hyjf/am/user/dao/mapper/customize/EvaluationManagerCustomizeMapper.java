@@ -29,7 +29,7 @@ public interface EvaluationManagerCustomizeMapper {
 
     /**
      * 查找用户测评问题及答案
-     * @param evalationId
+     * @param mapParam
      * @return
      */
     List<UserEvalationQuestionCustomize> getUserEvalation(Map<String, Object> mapParam);
