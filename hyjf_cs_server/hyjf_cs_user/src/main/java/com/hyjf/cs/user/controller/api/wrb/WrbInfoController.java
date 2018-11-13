@@ -126,7 +126,11 @@ public class WrbInfoController {
         Map<String, String> request = WrbParseParamUtil.parseParam(param);
         try {
             // 标的id
-            String borrowNid = request.get("invest_id");
+            String borrowNid = null;
+            if (request != null) {
+                borrowNid = request.get("invest_id");
+            }
+
 
             // 1. 查询投资明细
             List<WrbBorrowListCustomizeVO> investList = wrbInvestServcie.searchBorrowListByNid(borrowNid);
