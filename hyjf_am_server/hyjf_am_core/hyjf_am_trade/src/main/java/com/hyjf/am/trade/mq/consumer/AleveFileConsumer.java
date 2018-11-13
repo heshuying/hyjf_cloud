@@ -105,16 +105,40 @@ public class AleveFileConsumer extends Consumer{
                 TransUtil.readFileAleve(fin,aleveLogs,aleveErrorLogs);
 
                 //插入数据
+                //数据量太大 事务占用时间太长导致主从不同步 改成单条插入提交
                 if(!CollectionUtils.isEmpty(aleveLogs)){
-                    aleveLogFileService.insertAleveLog(aleveLogs);
-                    logger.info("AleveLog已插入 " + aleveLogs.size() + " 条记录");
+                    //成功插入条数
+                    int successCount = aleveLogs.size();
+                    for (AleveLog aleveLog : aleveLogs) {
+                        try {
+                            //插入aleveLog表
+                            aleveLogFileService.insertAleveLog(aleveLog);
+                        }
+                        catch (Exception e){
+                            logger.error("AleveLog插入失败，电子账号：{}，交易金额：{}，流水号：{}", aleveLog.getCardnbr(), aleveLog.getAmount(), aleveLog.getTranno());
+                            successCount -= 1;
+                            continue;
+                        }
+                    }
+                    logger.info("AleveLog已插入 " + successCount + " 条记录");
                 }
                 if(!CollectionUtils.isEmpty(aleveErrorLogs)){
-                    aleveLogFileService.insertAleveErrorLog(aleveErrorLogs);//异常记录
-                    logger.info("AleveErrorLog已插入 " + aleveErrorLogs.size() + " 条记录");
+                    int successCount = aleveErrorLogs.size();
+                    for(AleveErrorLog aleveErrorLog : aleveErrorLogs){
+                        try {
+                            //插入aleveErrorLog表
+                            aleveLogFileService.insertAleveErrorLog(aleveErrorLog);
+                        }
+                        catch (Exception e){
+                            logger.error("AleveErrorLog插入失败");
+                            successCount -= 1;
+                            continue;
+                        }
+                    }
+                    logger.info("AleveErrorLog已插入 " + successCount + " 条记录");
                 }
             } catch (Exception e) {
-                logger.error("AleveLog插入失败",e);
+                logger.error("AleveLog插入失败", e);
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
             JSONObject params = new JSONObject();
