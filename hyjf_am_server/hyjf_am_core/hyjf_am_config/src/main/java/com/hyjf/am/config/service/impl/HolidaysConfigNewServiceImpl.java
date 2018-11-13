@@ -7,10 +7,12 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.hyjf.am.config.dao.mapper.auto.HolidaysConfigMapper;
+import com.hyjf.am.config.dao.mapper.auto.HolidaysConfigNewMapper;
 import com.hyjf.am.config.dao.mapper.customize.HolidaysConfigCustomizeMapper;
-import com.hyjf.am.config.dao.model.auto.HolidaysConfig;
+import com.hyjf.am.config.dao.model.auto.HolidaysConfigNew;
 import com.hyjf.am.config.dao.model.auto.HolidaysConfigExample;
-import com.hyjf.am.config.service.HolidaysConfigService;
+import com.hyjf.am.config.dao.model.auto.HolidaysConfigNewExample;
+import com.hyjf.am.config.service.HolidaysConfigNewService;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.http.HttpDeal;
 import org.slf4j.Logger;
@@ -29,11 +31,11 @@ import java.util.*;
  * @version HolidaysConfigServiceImpl, v0.1 2018/6/22 10:15
  */
 @Service
-public class HolidaysConfigServiceImpl implements HolidaysConfigService {
-	private Logger logger = LoggerFactory.getLogger(HolidaysConfigServiceImpl.class);
+public class HolidaysConfigNewServiceImpl implements HolidaysConfigNewService {
+	private Logger logger = LoggerFactory.getLogger(HolidaysConfigNewServiceImpl.class);
 
 	@Autowired
-	private HolidaysConfigMapper holidaysConfigMapper;
+	private HolidaysConfigNewMapper holidaysConfigNewMapper;
 	@Autowired
 	private HolidaysConfigCustomizeMapper holidaysConfigCustomizeMapper;
 
@@ -55,8 +57,8 @@ public class HolidaysConfigServiceImpl implements HolidaysConfigService {
 		for (int index = 1; index <= 12; index++) {
 			month = String.format("%02d", index);
 			String date = currentYear +"-"+ month;
-			List<HolidaysConfig> list = this.holidaysConfigCustomizeMapper.selectByYearMonth(currentYear, index);
-			List<HolidaysConfig> updateList = new ArrayList<>(list.size());
+			List<HolidaysConfigNew> list = this.holidaysConfigCustomizeMapper.selectByYearMonth(currentYear, index);
+			List<HolidaysConfigNew> updateList = new ArrayList<>(list.size());
 			// {"201801":{"01":"2","06":"2","07":"2","13":"1","14":"2","20":"2","21":"1","27":"2","28":"1"}}
 			String result = HttpDeal.get(url + date);
 			logger.info("{}月份节假日查询结果：{}", month, result);
@@ -70,12 +72,12 @@ public class HolidaysConfigServiceImpl implements HolidaysConfigService {
 				Map<String, Object> detailMap = (Map<String, Object>) map.get(ymStr);
 				for (String dayStr : detailMap.keySet()) {
 					int holidaysFlag = Integer.parseInt((String) detailMap.get(dayStr));
-					for (HolidaysConfig holidaysConfig : list) {
+					for (HolidaysConfigNew holidaysConfigNew : list) {
 						String apiQueryStr = date.concat("-").concat(dayStr);
-						String sdfStr = sdf.format(holidaysConfig.getDayTime());
+						String sdfStr = sdf.format(holidaysConfigNew.getDayTime());
 						if (apiQueryStr.equals(sdfStr)) {
-							holidaysConfig.setHolidayFlag(holidaysFlag);
-							updateList.add(holidaysConfig);
+							holidaysConfigNew.setHolidayFlag(holidaysFlag);
+							updateList.add(holidaysConfigNew);
 						}
 					}
 				}
@@ -98,17 +100,17 @@ public class HolidaysConfigServiceImpl implements HolidaysConfigService {
 	@Override
 	@Transactional(rollbackFor = Exception.class)
 	public void initCurrentYearConfig(int year) {
-		List<HolidaysConfig> list = new ArrayList<>(366);
-		HolidaysConfig holidaysConfig = null;
+		List<HolidaysConfigNew> list = new ArrayList<>(366);
+		HolidaysConfigNew holidaysConfigNew = null;
 		Calendar c = Calendar.getInstance();
 		for (int month = 0; month < 12; month++) {
 			c.set(year, month, 1);
 			int lastDay = c.getActualMaximum(Calendar.DAY_OF_MONTH);
 			for (int day = 1; day <= lastDay; day++) {
-				holidaysConfig = new HolidaysConfig();
+				holidaysConfigNew = new HolidaysConfigNew();
 				c.set(year, month, day);
-				holidaysConfig.setDayTime(c.getTime());
-				list.add(holidaysConfig);
+				holidaysConfigNew.setDayTime(c.getTime());
+				list.add(holidaysConfigNew);
 			}
 		}
 		// 先删除在插入， 防止重复
@@ -125,16 +127,16 @@ public class HolidaysConfigServiceImpl implements HolidaysConfigService {
 	 */
 	@Override
 	public boolean isWorkdateOnSomeDay(Date date) {
-		HolidaysConfigExample example = new HolidaysConfigExample();
-		HolidaysConfigExample.Criteria criteria = example.createCriteria();
+		HolidaysConfigNewExample example = new HolidaysConfigNewExample();
+		HolidaysConfigNewExample.Criteria criteria = example.createCriteria();
 		criteria.andDayTimeEqualTo(date);
-		List<HolidaysConfig> list = holidaysConfigMapper.selectByExample(example);
+		List<HolidaysConfigNew> list = holidaysConfigNewMapper.selectByExample(example);
 
 		if (CollectionUtils.isEmpty(list)) {
 			throw new RuntimeException("日历配置错误...");
 		}
-		HolidaysConfig holidaysConfigNew = list.get(0);
-		if (holidaysConfigNew.getHolidayFlag() == 0) {
+		HolidaysConfigNew holidaysConfigNewNew = list.get(0);
+		if (holidaysConfigNewNew.getHolidayFlag() == 0) {
 			return true;
 		}
 		return false;
@@ -147,12 +149,12 @@ public class HolidaysConfigServiceImpl implements HolidaysConfigService {
 	 */
 	@Override
 	public Date getFirstWorkdateAfterSomedate(Date somedate) {
-		HolidaysConfigExample example = new HolidaysConfigExample();
-		HolidaysConfigExample.Criteria criteria = example.createCriteria();
+		HolidaysConfigNewExample example = new HolidaysConfigNewExample();
+		HolidaysConfigNewExample.Criteria criteria = example.createCriteria();
 		criteria.andDayTimeGreaterThan(somedate);
 		criteria.andHolidayFlagEqualTo(0);
 		example.setOrderByClause("day_time desc");
-		List<HolidaysConfig> list = holidaysConfigMapper.selectByExample(example);
+		List<HolidaysConfigNew> list = holidaysConfigNewMapper.selectByExample(example);
 		if (CollectionUtils.isEmpty(list)) {
 			throw new RuntimeException("日历配置错误...");
 		}

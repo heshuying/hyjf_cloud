@@ -40,7 +40,8 @@ public class AppAlreadyRepayListCustomize implements Serializable {
     private String orderId;
     // 项目期限
     private String period;
-
+    //加息收益率
+    private String borrowExtraYield;
     public String getPeriod() {
         return period;
     }
@@ -162,4 +163,11 @@ public class AppAlreadyRepayListCustomize implements Serializable {
         this.label = label;
     }
 
+    public String getBorrowExtraYield() {
+        return borrowExtraYield;
+    }
+
+    public void setBorrowExtraYield(String borrowExtraYield) {
+        this.borrowExtraYield = borrowExtraYield;
+    }
 }

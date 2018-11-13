@@ -4,7 +4,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 
-@Document(collection = "t__userdevice_uniquecode")
+@Document(collection = "ht_user_device_unique_code")
 public class UserDeviceUniqueCodeEntity implements Serializable {
     private Integer id;
 
