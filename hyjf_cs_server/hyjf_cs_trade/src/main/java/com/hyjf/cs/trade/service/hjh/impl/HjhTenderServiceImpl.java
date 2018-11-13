@@ -628,7 +628,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 default:
                     revaluation_money = "0";
             }
-            if(revaluation_money == null){
+            if("0".equals(revaluation_money) || revaluation_money == null){
                 logger.info("=============从redis中获取测评类型和上限金额异常!(没有获取到对应类型的限额数据) eval_type="+eval_type);
             }else {
                 //测评到期日
