@@ -68,7 +68,8 @@ public class ApiUnBindCardPageController extends BaseUserController {
                     Validator.isNull(unbindCardPageRequestBean.getInstCode())||
                     Validator.isNull(unbindCardPageRequestBean.getRetUrl())||
                     Validator.isNull(unbindCardPageRequestBean.getNotifyUrl())||
-                    Validator.isNull(unbindCardPageRequestBean.getForgotPwdUrl())){
+                    Validator.isNull(unbindCardPageRequestBean.getForgotPwdUrl())||
+                    Validator.isNull(unbindCardPageRequestBean.getPlatform())){
 
                 logger.info("-------------------请求参数非法--------------------");
                 paramMap.put("status", ErrorCodeConstant.STATUS_CE000001);
@@ -91,7 +92,7 @@ public class ApiUnBindCardPageController extends BaseUserController {
                 return callbackErrorView(paramMap);
             }
 
-            UserVO user =unBindCardService.getUsersById(unbindCardPageRequestBean.getUserId());//用户ID
+            UserVO user =unBindCardService.getUsersById(bankOpenAccount.getUserId());//用户ID
             if(user.getUserType()==1){
                 //企业用户提示联系客服
                 logger.info("-------------------企业用户解绑请联系客服！--------------------");
