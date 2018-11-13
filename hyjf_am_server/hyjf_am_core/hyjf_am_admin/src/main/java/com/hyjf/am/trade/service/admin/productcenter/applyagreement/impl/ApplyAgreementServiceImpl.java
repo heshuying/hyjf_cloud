@@ -314,8 +314,8 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
         if(applyAgreements != null && applyAgreements.size() > 0){
             applyAgreement.setId(applyAgreements.get(0).getId());
             applyAgreement.setUpdateTime(new Date());
+            applyAgreement.setCreateTime(applyAgreements.get(0).getCreateTime());
             this.applyAgreementMapper.updateByPrimaryKey(applyAgreement);
-
         }else {
             applyAgreement.setCreateTime(new Date());
             return this.applyAgreementMapper.insert(applyAgreement);

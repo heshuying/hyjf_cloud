@@ -85,33 +85,46 @@ public class UnderLineRechargeController {
      */
     @RequestMapping( value = "/insterUnderRechargeCode", method = RequestMethod.POST)
     public UnderLineRechargeResponse insterUnderRechargeCode(@RequestBody UnderLineRechargeRequest request){
-
         UnderLineRechargeResponse response = new UnderLineRechargeResponse();
+
+        /**
+         * 读取已存在与数据库中在已有数据,在写入前留存:
+         * 以防止数据写入失败导致Redis与数据表中数据存在差异.
+         * 或者写库与读库时差导致的Redis与数据表的数据差异.
+         */
+
+        // 需写入Redis中的数组
+        List<String> codeList = new ArrayList<String>();
+
+        // 写入之前的列表
+        // 查询所有记录, 初始化空对象
+        UnderLineRechargeRequest emptyRequest = new UnderLineRechargeRequest();
+        List<UnderLineRecharge> insertBeforeList = this.underLineRechargeService.getUnderLineRechargeListByCode(emptyRequest);
+        if (insertBeforeList.size() > 0){
+
+            for (UnderLineRecharge code : insertBeforeList ){
+                codeList.add(code.getCode());
+            }
+            // 将所有code 写入Redis
+            String codeListString = JSONObject.toJSONString(codeList);
+            RedisUtils.set(RedisConstants.UNDER_LINE_RECHARGE_TYPE, codeListString);
+        }
 
         //写入返回
         int returnCode = underLineRechargeService.insterUnderRechargeCode(request);
 
         if (returnCode > 0){
-            //数据写入数据库成功后,将所有code写入Redis
-            int count = this.underLineRechargeService.getUnderLineRechaegeCount(request);
-            if (count > 0){
-                List<String> codeList = new ArrayList<String>();
-                // 获取充值类型列表
-                List<UnderLineRecharge> underLineRechargeList = this.underLineRechargeService.getUnderLineRechargeList(request);
-
-                for (UnderLineRecharge code : underLineRechargeList){
-                    codeList.add(code.getCode());
-                }
-
-                // 将所有code 写入Redis
-                String codeListString = JSONObject.toJSONString(codeList);
-                RedisUtils.set(RedisConstants.UNDER_LINE_RECHARGE_TYPE, codeListString);
-            }
+            // 将当前新增的Code 写入Redis.  预防读库未同步到写入数据导致的数据差异.
+            codeList.add(request.getCode());
             response.setRtn(AdminResponse.SUCCESS);
         }else {
             response.setRtn(AdminResponse.FAIL);
             response.setMessage("添加失败!");
         }
+
+        // 将所有code 写入Redis
+        String codeListString = JSONObject.toJSONString(codeList);
+        RedisUtils.set(RedisConstants.UNDER_LINE_RECHARGE_TYPE, codeListString);
         return response;
     }
 
@@ -143,18 +156,33 @@ public class UnderLineRechargeController {
      */
     @RequestMapping( value = "/updateUnderLineRecharge", method = RequestMethod.POST)
     public boolean updateUnderLineRecharge(@RequestBody UnderLineRechargeRequest request){
+
+        // 写入之前的列表
+        // 查询所有记录, 初始化空对象
+        UnderLineRechargeRequest emptyRequest = new UnderLineRechargeRequest();
+        List<UnderLineRecharge> updateBeforeList = this.underLineRechargeService.getUnderLineRechargeListByCode(emptyRequest);
+
+        List<String> codeList = new ArrayList<String>();
+
+        // 数据库中所有数据
+        if (updateBeforeList.size() > 0){
+
+            for (UnderLineRecharge code : updateBeforeList ){
+                // 当前提交的要修改的数据的ID的除外
+                if (!code.getId().equals(request.getId())) {
+                    codeList.add(code.getCode());
+                }
+            }
+        }
+
+        // 更新操作
         Integer updateStatus = this.underLineRechargeService.updateAction(request);
 
+        // 更新成功
         if (updateStatus > 0){
 
-            List<String> codeList = new ArrayList<String>();
-            // 获取充值类型列表
-            List<UnderLineRecharge> underLineRechargeList = this.underLineRechargeService.getUnderLineRechargeList(request);
-
-            for (UnderLineRecharge code : underLineRechargeList){
-                codeList.add(code.getCode());
-            }
-
+            // 当前更新的Code的值, 为防止读写数据库的时差,更新成功时,将当前更新到数据表的Code进行拼接.
+            codeList.add(request.getCode());
             // 将所有code 写入Redis
             String codeListString = JSONObject.toJSONString(codeList);
             RedisUtils.set(RedisConstants.UNDER_LINE_RECHARGE_TYPE, codeListString);

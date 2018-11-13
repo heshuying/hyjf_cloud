@@ -1480,6 +1480,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 		logger.info("borrowCredit:{}",borrowCredit);
 		Integer borrowCreditResult = this.borrowCreditMapper.updateByPrimaryKeySelective(borrowCredit);
 		logger.info("更新borrowCredit结果:{}",borrowCreditResult);
+		logger.info("borrowCredit.getCreditCapitalAssigned():{}    borrowCredit.getCreditCapital():{} ",borrowCredit.getCreditCapitalAssigned(),borrowCredit.getCreditCapital());
 		if (borrowCredit.getCreditCapitalAssigned().compareTo(borrowCredit.getCreditCapital()) == 0) {
 			logger.info("调用银行结束债转接口");
 			this.requestDebtEnd(borrowRecover, request.getSellerBankAccount().getAccount());
