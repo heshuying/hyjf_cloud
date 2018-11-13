@@ -3224,7 +3224,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				// 用户信息 所在地区 省
 			//	borrowBean.setComLocationProvince(this.getValue(record.getProvince()));
 				// 用户信息 所在地区 市
-				//borrowBean.setComLocationCity(this.getValue(record.getCity()));
+	//			borrowBean.setComLocationCity(this.getValue(record.getCity()));
 				// 用户信息 所在地区 区
 				borrowBean.setComLocationArea(this.getValue(record.getArea()));
 				// 用户信息 注册资本
