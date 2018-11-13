@@ -157,9 +157,6 @@ public class UnderLineRechargeController {
     @RequestMapping( value = "/updateUnderLineRecharge", method = RequestMethod.POST)
     public boolean updateUnderLineRecharge(@RequestBody UnderLineRechargeRequest request){
 
-
-        Integer updateStatus = this.underLineRechargeService.updateAction(request);
-
         // 写入之前的列表
         // 查询所有记录, 初始化空对象
         UnderLineRechargeRequest emptyRequest = new UnderLineRechargeRequest();
@@ -167,19 +164,22 @@ public class UnderLineRechargeController {
 
         List<String> codeList = new ArrayList<String>();
 
-        // 更新成功
-        if (updateStatus > 0){
+        // 数据库中所有数据
+        if (updateBeforeList.size() > 0){
 
-            // 数据库中所有数据
-            if (updateBeforeList.size() > 0){
-
-                for (UnderLineRecharge code : updateBeforeList ){
-                    // 当前提交的要修改的数据的ID的除外
-                    if (!code.getId().equals(request.getId())) {
-                        codeList.add(code.getCode());
-                    }
+            for (UnderLineRecharge code : updateBeforeList ){
+                // 当前提交的要修改的数据的ID的除外
+                if (!code.getId().equals(request.getId())) {
+                    codeList.add(code.getCode());
                 }
             }
+        }
+
+        // 更新操作
+        Integer updateStatus = this.underLineRechargeService.updateAction(request);
+
+        // 更新成功
+        if (updateStatus > 0){
 
             // 当前更新的Code的值, 为防止读写数据库的时差,更新成功时,将当前更新到数据表的Code进行拼接.
             codeList.add(request.getCode());
@@ -188,17 +188,6 @@ public class UnderLineRechargeController {
             RedisUtils.set(RedisConstants.UNDER_LINE_RECHARGE_TYPE, codeListString);
 
             return true;
-        }else {
-            // 更新失败时, 仍取数据库中的所有值,不进行改变.
-            if (updateBeforeList.size() > 0){
-                for (UnderLineRecharge code : updateBeforeList ){
-                    codeList.add(code.getCode());
-                }
-            }
-
-            // 将所有code 写入Redis
-            String codeListString = JSONObject.toJSONString(codeList);
-            RedisUtils.set(RedisConstants.UNDER_LINE_RECHARGE_TYPE, codeListString);
         }
         return false;
     }
