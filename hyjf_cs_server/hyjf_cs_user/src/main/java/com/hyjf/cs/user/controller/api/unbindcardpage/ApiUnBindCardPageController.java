@@ -68,7 +68,8 @@ public class ApiUnBindCardPageController extends BaseUserController {
                     Validator.isNull(unbindCardPageRequestBean.getInstCode())||
                     Validator.isNull(unbindCardPageRequestBean.getRetUrl())||
                     Validator.isNull(unbindCardPageRequestBean.getNotifyUrl())||
-                    Validator.isNull(unbindCardPageRequestBean.getForgotPwdUrl())){
+                    Validator.isNull(unbindCardPageRequestBean.getForgotPwdUrl())||
+                    Validator.isNull(unbindCardPageRequestBean.getPlatform())){
 
                 logger.info("-------------------请求参数非法--------------------");
                 paramMap.put("status", ErrorCodeConstant.STATUS_CE000001);
@@ -91,7 +92,7 @@ public class ApiUnBindCardPageController extends BaseUserController {
                 return callbackErrorView(paramMap);
             }
 
-            UserVO user =unBindCardService.getUsersById(unbindCardPageRequestBean.getUserId());//用户ID
+            UserVO user =unBindCardService.getUsersById(bankOpenAccount.getUserId());//用户ID
             if(user.getUserType()==1){
                 //企业用户提示联系客服
                 logger.info("-------------------企业用户解绑请联系客服！--------------------");
@@ -227,45 +228,56 @@ public class ApiUnBindCardPageController extends BaseUserController {
     /**
      * 页面解卡同步回调
      * @param request
-     * @param response
      * @return
      */
     @PostMapping("/return")
     @ApiOperation(value = "页面解卡同步回调", notes = "页面解卡同步回调")
-    public ModelAndView unbindCardReturn(HttpServletRequest request, HttpServletResponse response,@ModelAttribute BankCallBean bean) {
+    public ModelAndView unbindCardReturn(HttpServletRequest request) {
         logger.info("==========解卡同步回调开始==============");
         ModelAndView modelAndView = new ModelAndView("/callback/callback_trusteepay");
         UnbindCardPageResultBean unbindCardPageResultBean = new UnbindCardPageResultBean();
         unbindCardPageResultBean.setCallBackAction(request.getParameter("callback").replace("*-*-*","#"));
         String isSuccess = request.getParameter("isSuccess");
-        bean.convert();
+        Map<String, String> resultMap = new HashMap<>();
+       /* bean.convert();
         // 银行返回响应代码
         String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
-        logger.info("解卡同步返回值,用户ID:[" + bean.getLogUserId() + "],retCode:[" + retCode + "]");
+        logger.info("解卡同步返回值,用户ID:[" + bean.getLogUserId() + "],retCode:[" + retCode + "]");*/
         // 解卡后处理
         try {
-            BaseResultBean resultBean = new BaseResultBean();
-            if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)||"1".equals(isSuccess)) {
+                BaseResultBean resultBean = new BaseResultBean();
+//            if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)||"1".equals(isSuccess)) {
+            if ("1".equals(isSuccess)) {
                 // 成功
-                modelAndView.addObject("statusDesc", "解绑银行卡成功！");
-                resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
                 logger.info("================交易完成后,回调结束================");
+                resultMap.put("status", ErrorCodeConstant.SUCCESS);
+                resultMap.put("statusDesc", "解绑银行卡成功");
+                resultMap.put("acqRes", request.getParameter("acqRes"));
+                return callbackErrorView(resultMap);
+
+               /* modelAndView.addObject("statusDesc", "解绑银行卡成功！");
+                resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);*/
             } else {
                 //解卡失败
-                modelAndView.addObject("statusDesc", "银行解卡失败");
-                resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
+/*                modelAndView.addObject("statusDesc", "解绑银行卡失败");
+                resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);*/
                 logger.info("================交易完成后,回调结束(银行解卡失败)================");
+                resultMap.put("status", ErrorCodeConstant.STATUS_CE999999);
+                resultMap.put("statusDesc", "解绑银行卡失败");
+                return callbackErrorView(resultMap);
             }
-            unbindCardPageResultBean.set("chkValue", resultBean.getChkValue());
+            /*unbindCardPageResultBean.set("chkValue", resultBean.getChkValue());
             unbindCardPageResultBean.set("status", resultBean.getStatus());
             unbindCardPageResultBean.set("acqRes",request.getParameter("acqRes"));
             modelAndView.addObject("callBackForm", unbindCardPageResultBean);
-            return modelAndView;
+            return modelAndView;*/
         } catch (Exception e) {
-            BaseResultBean resultBean = new BaseResultBean();
+            /*BaseResultBean resultBean = new BaseResultBean();
             resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
+            resultBean.setStatusDesc("系统异常,请稍后再试!");*/
             logger.info("操作异常");
-            resultBean.setStatusDesc("系统异常,请稍后再试!");
+            resultMap.put("status", ErrorCodeConstant.STATUS_CE999999);
+            resultMap.put("statusDesc", "系统异常,请稍后再试!");
             e.printStackTrace();
         }
         return modelAndView;
@@ -280,7 +292,7 @@ public class ApiUnBindCardPageController extends BaseUserController {
      */
     @PostMapping("/notifyReturn")
     @ApiOperation(value = "解卡异步回调方法", notes = "解卡异步回调方法")
-    public BankCallResult bgreturn(HttpServletRequest request, HttpServletResponse response, @ModelAttribute BankCallBean bean) {
+    public BankCallResult bgreturn(HttpServletRequest request, @ModelAttribute BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         BaseResultBean resultBean = new BaseResultBean();
         Map<String, String> params = new HashMap<String, String>();

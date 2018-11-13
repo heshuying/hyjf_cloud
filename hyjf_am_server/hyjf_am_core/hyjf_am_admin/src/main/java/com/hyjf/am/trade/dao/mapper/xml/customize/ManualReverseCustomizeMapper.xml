@@ -21,7 +21,7 @@
 			</if>
 			<!-- 用户Id -->
 			<if test="userIdSrch != null and userIdSrch != ''">
-				AND hus.user_id = #{userIdSrch}
+				AND hru.user_id = #{userIdSrch}
 			</if>
 			<!-- 用户名 -->
 			<if test="userNameSrch != null and userNameSrch != ''">
@@ -32,11 +32,10 @@
 				AND hmr.account_id = #{accountIdSrch}
 			</if>
 			<if test="txTimeStartSrch != null and txTimeStartSrch != ''">
-				AND DATE_FORMAT(hmr.tx_time, '%Y-%m-%d') <![CDATA[>=]]> DATE_FORMAT(#{txTimeStartSrch },'%Y-%m-%d') 
+				AND hmr.tx_time <![CDATA[>=]]> DATE_FORMAT(#{txTimeStartSrch },'%Y-%m-%d %H:%I:%S')
 			</if>
 			<if test="txTimeEndSrch != null and txTimeEndSrch != ''">
-				AND DATE_FORMAT(hmr.tx_time, '%Y-%m-%d') <![CDATA[<=]]> DATE_FORMAT(#{txTimeEndSrch },'%Y-%m-%d')
-			</if>
+				AND hmr.tx_time <![CDATA[<=]]> DATE_FORMAT(#{txTimeEndSrch },'%Y-%m-%d %H:%I:%S')
 		</where>
 	</sql>
 
@@ -113,14 +112,14 @@
 		FROM
 			ht_account ha
 		INNER JOIN ht_r_user hru ON ha.user_id = hru.user_id
-		WHERE ha.account = #{accountId}
+		WHERE ha.account_id = #{accountId}
 	</select> 
 	
 	<select id="selectUserNamebyAccountId" parameterType="java.util.Map" resultType="java.lang.String">
 		SELECT ha.user_name
 		FROM ht_account	 ha
 		INNER JOIN ht_r_user hru ON ha.user_id = hru.user_id
-		where ha.account = #{accountId}
+		where ha.account_id = #{accountId}
 	</select>
 	
 	<select id="countAccountList"  parameterType="java.util.Map" resultType="java.lang.Integer">

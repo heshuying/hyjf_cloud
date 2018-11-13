@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.config.dao.mapper.auto.HolidaysConfigMapper" >
-  <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.HolidaysConfig" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.HolidaysConfigNew" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="day_time" property="dayTime" jdbcType="DATE" />
     <result column="holiday_flag" property="holidayFlag" jdbcType="TINYINT" />
@@ -102,7 +102,7 @@
       <include refid="Example_Where_Clause" />
     </if>
   </delete>
-  <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.HolidaysConfig" >
+  <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.HolidaysConfigNew" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -111,7 +111,7 @@
     values (#{dayTime,jdbcType=DATE}, #{holidayFlag,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
       #{updateTime,jdbcType=TIMESTAMP})
   </insert>
-  <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.HolidaysConfig" >
+  <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.HolidaysConfigNew" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
@@ -185,7 +185,7 @@
       <include refid="Update_By_Example_Where_Clause" />
     </if>
   </update>
-  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.HolidaysConfig" >
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.HolidaysConfigNew" >
     update ht_holidays_config
     <set >
       <if test="dayTime != null" >
@@ -203,7 +203,7 @@
     </set>
     where id = #{id,jdbcType=INTEGER}
   </update>
-  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.HolidaysConfig" >
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.HolidaysConfigNew" >
     update ht_holidays_config
     set day_time = #{dayTime,jdbcType=DATE},
       holiday_flag = #{holidayFlag,jdbcType=TINYINT},

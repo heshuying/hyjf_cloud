@@ -306,7 +306,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 	}
 
 	@Override
-	public Map<String,Object> getCallbankMap(BindCardPageBean bean, String sign, String token) {
+	public Map<String,Object> getCallbankMap(BindCardPageBean bean, String sign, String token, String platform) {
 		UserVO userVO = this.getUsersById(bean.getUserId());
 
 		// 获取共同参数
@@ -324,8 +324,8 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		bindCardBean.setUserIP(bean.getUserIP());
 
 		// 同步调用路径
-		String retUrl = systemConfig.getAppFrontHost() + "/user/bankCard/bind/result/failed?logOrdId=" + orderId + "&sign=" + sign + "&token=1";
-		String successUrl = systemConfig.getAppFrontHost() + "/user/bankCard/bind/result/success?sign=" + sign + "&token=1";
+		String retUrl = systemConfig.getAppFrontHost() + "/user/bankCard/bind/result/failed?logOrdId=" + orderId + "&sign=" + sign + "&token=" + token + "&platform" + platform;
+		String successUrl = systemConfig.getAppFrontHost() + "/user/bankCard/bind/result/success?sign=" + sign + "&token=" + token + "&platform" + platform;
 		// 异步调用路
 		String bgRetUrl = "http://CS-USER/hyjf-app/bank/user/bindCardPage/notifyReturn?phone=" + userVO.getMobile();
 		// 拼装参数 调用江西银行

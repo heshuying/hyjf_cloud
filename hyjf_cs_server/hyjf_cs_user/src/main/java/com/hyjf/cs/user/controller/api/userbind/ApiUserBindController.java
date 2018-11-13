@@ -9,22 +9,19 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.security.util.RSA_Hjs;
 import com.hyjf.common.security.util.SignUtil;
-import com.hyjf.common.util.CookieUtils;
-import com.hyjf.common.util.CustomUtil;
-import com.hyjf.common.util.SecretUtil;
-import com.hyjf.common.util.WrbParseParamUtil;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.user.bean.ApiLoginBean;
-import com.hyjf.cs.user.bean.ApiResultPageBean;
-import com.hyjf.cs.user.bean.ApiUserPostBean;
-import com.hyjf.cs.user.bean.LoginResultBean;
+import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.controller.web.login.WebLoginController;
+import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
+import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.cs.user.service.login.LoginService;
+import com.hyjf.cs.user.service.wrb.UserRegisterService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.LoginRequestVO;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
@@ -33,11 +30,9 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -59,8 +54,22 @@ public class ApiUserBindController extends BaseUserController {
 	private LoginService loginService;
 	@Autowired
 	private WebLoginController loginController;
+	@Autowired
+	private UserRegisterService userRegisterService;
+	@Autowired
+	BindCardService bindCardService;
+
+	@Value("${hyjf.front.wei.host}")
+	public String wechatHost;
+
 	//风车理财机构编号
 	public static final Integer FCLC_INSTCODE = 11000003;
+
+	// 跳转失败页面
+	public static final String JUMP_FAILE_HTML = "/thirdparty/thirdAuthorResult/failed";
+	// 跳转授权页面
+	public static final String JUMP_BIND_HTML = "/thirdparty/login";
+
 
 	/**
 	 * 页面授权绑定 - 汇盈金服开放平台接口_投资端_v1.3.2
@@ -69,7 +78,7 @@ public class ApiUserBindController extends BaseUserController {
 	 * @return
 	 */
 	@ApiOperation(value = "页面授权绑定api-跳转登陆授权页面",notes = "页面授权绑定api-跳转登陆授权页面")
-	@PostMapping(value = "/bindApi.do")
+	@GetMapping(value = "/bindApi.do")
 	public ModelAndView bindApi(HttpServletRequest request, HttpServletResponse response, ApiUserPostBean apiUserPostBean){
 		// 设置接口结果页的信息（返回Url）
 		this.initCheckUtil(apiUserPostBean);
@@ -124,6 +133,97 @@ public class ApiUserBindController extends BaseUserController {
 
 
 	/**
+	 * 跳转登陆授权页面
+	 * @return
+	 */
+	@RequestMapping("bind_api")
+	public ModelAndView bindApi(HttpServletRequest request, HttpServletResponse response, @RequestParam String param,
+								@RequestParam(value = "sign", required = false) String sign){
+		logger.info("风车理财登陆授权, param is :{}, sign is :{}", param, sign);
+		Map<String, String> paramMap = WrbParseParamUtil.parseParam(param);
+		ModelAndView modelAndView = new ModelAndView("wrb/wrb_result");
+
+		// 回调url（h5错误页面）
+		BaseMapBean baseMapBean=new BaseMapBean();
+		ApiUserPostBean apiUserPostBean = null;
+		try {
+			apiUserPostBean = WrbParseParamUtil.mapToBean(paramMap, ApiUserPostBean.class);
+			// 验证
+			//apiCommonService.checkPostBeanOfWeb(apiUserPostBean);
+			if(!(StringUtils.isNotBlank(apiUserPostBean.getFrom()) && "wrb".equals(apiUserPostBean.getFrom()))){
+				baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.FAIL);
+				baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户授权平台异常！");
+				baseMapBean.setCallBackAction(CustomConstants.WECHAT_HOST+JUMP_FAILE_HTML);
+				modelAndView.addObject("callBackForm", baseMapBean);
+				return modelAndView;
+			}
+			if (StringUtils.isNotBlank(apiUserPostBean.getWrb_user_id())) {
+				modelAndView.addObject("instcode", WrbCommonDateUtil.FCLC_INSTCODE);
+				baseMapBean.set("instcode", WrbCommonDateUtil.FCLC_INSTCODE+"");
+				// 已授权验证
+				Integer userid = userRegisterService.selectByUserId(Integer.valueOf(apiUserPostBean.getWrb_user_id()), "11000003");
+				logger.info("apiUserPostBean is :{}", apiUserPostBean);
+				if(userid == null||userid==0){
+					// 跳转登陆授权画面
+					baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
+					baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户授权！");
+					baseMapBean.setCallBackAction(wechatHost+JUMP_BIND_HTML);
+					baseMapBean.setAll(paramMap);
+				}else{
+					UserVO users = bindCardService.getUsersById(userid);
+					BankOpenAccountVO account = bindCardService.getBankOpenAccount(userid);
+					String accountId = null;
+					if(account!=null&&StringUtils.isNoneBlank(account.getAccount())){
+						accountId = account.getAccount();
+						/*********** 登录时自动同步线下充值记录 start ***********/
+						if (users.getBankOpenAccount() == 1) {
+							CommonSoaUtils.synBalance(users.getUserId());
+						}
+						/*********** 登录时自动同步线下充值记录 end ***********/
+					}
+					String loginsign = SecretUtil.createToken(userid, users.getUsername(), accountId);
+					//登录成功之后风车理财的特殊标记，供后续投资使用
+					CookieUtils.addCookie(request, response, CustomConstants.TENDER_FROM_TAG,
+							CustomConstants.WRB_CHANNEL_CODE);
+					RedisUtils.del("loginFrom"+userid);
+					RedisUtils.set("loginFrom"+userid, "2", 1800);
+					baseMapBean.setCallBackAction(wechatHost);
+					baseMapBean.set("sign", loginsign);
+				}
+				String idCard = apiUserPostBean.getId_no();
+				String phone = apiUserPostBean.getMobile();
+				String mobile = apiUserPostBean.getMobile()==null?"":phone;
+				String readonly = "";
+				if (!StringUtils.isEmpty(idCard)) {
+					UserVO userVO = loginService.getUserByIdCard(idCard);
+					String hyjfMobile = userVO.getMobile();
+					if(hyjfMobile != null){
+						mobile = hyjfMobile;
+						readonly = "readonly";
+					}
+				}else {
+					if (!StringUtils.isEmpty(phone)) {
+						readonly = "readonly";
+					}
+				}
+				baseMapBean.set("mobile", mobile);
+				baseMapBean.set("readonly", readonly);
+			}else{
+				baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.FAIL);
+				baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户授权参数参数异常！");
+				baseMapBean.setCallBackAction(CustomConstants.WECHAT_HOST+JUMP_FAILE_HTML);
+			}
+		} catch (Exception e) {
+			logger.error("参数解析失败, paramMap is :"+ paramMap, e);
+			baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.FAIL);
+			baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户授权参数解析失败！");
+			baseMapBean.setCallBackAction(CustomConstants.WECHAT_HOST+JUMP_FAILE_HTML);
+
+		}
+		modelAndView.addObject("callBackForm", baseMapBean);
+		return modelAndView;
+	}
+	/**
 	 * 授权按钮
 	 * @param
 	 * @return
@@ -133,7 +233,7 @@ public class ApiUserBindController extends BaseUserController {
 	@ResponseBody
 	@PostMapping(value = "/bind")
 	public JSONObject bind(HttpServletRequest request, HttpServletResponse response,
-						   @ModelAttribute ApiUserPostBean apiUserPostBean, @ModelAttribute ApiLoginBean apiLoginBean) throws Exception{
+						   @ModelAttribute("apiUserPostBean") ApiUserPostBean apiUserPostBean, @ModelAttribute ("loginBean") ApiLoginBean apiLoginBean) throws Exception{
 		// 返回对象
 		JSONObject jsonObj = new JSONObject();
 		logger.info(JSON.toJSONString(apiUserPostBean));
@@ -145,6 +245,14 @@ public class ApiUserBindController extends BaseUserController {
 		Integer userId = null;
 		//用户名
 		String userName = null;
+
+		if(!StringUtils.isNotBlank(bindUniqueId)){
+			jsonObj = new JSONObject();
+			jsonObj.put("status", "99");
+			jsonObj.put("statusCode", "99");
+			jsonObj.put("statusDesc", "授权失败，风车理财用户id为空");
+			return jsonObj;
+		}
 		// 用户接受协议验证
 		if(!apiLoginBean.getReadAgreement()){
 			jsonObj = new JSONObject();
@@ -154,15 +262,16 @@ public class ApiUserBindController extends BaseUserController {
 			return jsonObj;
 		}
 		// 用户手机号码验证
-		if(!StringUtils.isNotBlank(apiLoginBean.getLoginUserName())){
+		if(!StringUtils.isNotBlank(apiLoginBean.getLoginBean_loginUserName())){
 			jsonObj = new JSONObject();
 			jsonObj.put("status", "99");
 			jsonObj.put("statusCode", "99");
 			jsonObj.put("statusDesc", "授权失败，请输入正确的手机号码");
 			return jsonObj;
 		}
+
 		//根据登陆账户名取得用户ID和用户名
-		UserVO users = loginService.getUser(apiLoginBean.getLoginUserName());
+		UserVO users = loginService.getUser(apiLoginBean.getLoginBean_loginUserName());
 		logger.info("users is :{}", users);
 		// 未获取的验证在下面登陆时 验证
 		if (users != null) {
@@ -175,7 +284,7 @@ public class ApiUserBindController extends BaseUserController {
 			// 第三方用户已授权验证
 			Integer userid = loginService.getUserIdByBind(Integer.valueOf(bindUniqueId),FCLC_INSTCODE);
 			logger.info("userid is:{}", userid);
-			if(userid != null){
+			if(userid != null&&userid!=0){
 				JSONObject jsonResult = new JSONObject();
 				jsonResult.put("status", "99");
 				jsonResult.put("statusCode","99");
@@ -204,8 +313,8 @@ public class ApiUserBindController extends BaseUserController {
 			return jsonObj;
 		}
 		LoginRequestVO user=new LoginRequestVO();
-		user.setUsername(apiLoginBean.getLoginUserName());
-		user.setPassword(apiLoginBean.getLoginPassword());
+		user.setUsername(apiLoginBean.getLoginBean_loginUserName());
+		user.setPassword(apiLoginBean.getLoginBean_loginPassword());
 		// 登陆
 		WebResult<WebViewUserVO> login = loginController.login( user,request);
 		if (!"000".equals(login.getStatus())) {
@@ -263,112 +372,6 @@ public class ApiUserBindController extends BaseUserController {
 		params.put("reg_time", simpleDateFormat.format(users.getRegTime()));
 		WrbParseParamUtil.wrbCallback(systemConfig.getWrncallbackbindurl(), params);
     	
-  /*  	
-    	// 设置接口结果页的信息（返回Url）
-    	this.initCheckUtil(apiUserPostBean);
-    	// 返回对象
-    	JSONObject jsonObj = new JSONObject();
-    	
-    	// 验证
-    	this.checkPostBeanOfWeb(apiUserPostBean);
-		// 验签
-    	this.checkSign(apiUserPostBean);
-		// 解密
-		int bindUniqueId = this.decrypt(apiUserPostBean);
-		logger.info("bindUniqueId is :{}", bindUniqueId);
-		//用户Id
-		Integer userId = null;
-		//用户名
-		String userName = null;
-		
-		
-        // 用户接受协议验证
-			CheckUtil.check(!apiUserPostBean.getReadAgreement(),MsgEnum.ERR_BIND);
-		// 用户手机号码验证
-			CheckUtil.check(!StringUtils.isNotBlank(apiUserPostBean.getLoginUserName()),MsgEnum.ERR_OBJECT_REQUIRED, "手机号码");
-
-		
-    	
-		//根据登陆账户名取得用户ID和用户名
-		UserVO users = loginService.getUser(apiUserPostBean.getLoginUserName());
-		logger.info("users is :{}", users);
-		// 未获取的验证在下面登陆时 验证
-		if (users != null) {
-			//用户Id
-			userId = users.getUserId();
-			logger.info("userId is :{}", userId);
-			//用户名
-			userName = users.getUsername();
-			
-	        // 第三方用户已授权验证
-	        Integer userid = loginService.getUserIdByBind(bindUniqueId, apiUserPostBean.getPid());
-	        logger.info("userid is:{}", userid);
-	        if(userid != null){
-                // 纳觅财富
-                if (NMCF_PID.equals(apiUserPostBean.getPid())) {
-                    JSONObject jsonResult = new JSONObject();
-                    jsonResult.put("status", true);
-                    jsonResult.put("statusCode", "0");
-                    jsonResult.put("statusDesc", "该用户已绑定汇盈金服，不能重复绑定");
-
-                    jsonResult.put("bindUniqueIdScy", apiUserPostBean.getBindUniqueIdScy());
-                    jsonResult.put("hyjfUserName",userName );
-                    jsonResult.put("userId",users.getUserId() );
-                    Long timestamp = System.currentTimeMillis();
-                    jsonResult.put("timestamp",timestamp);
-                    jsonResult.put("chkValue",ApiSignUtil.encryptByRSA(apiUserPostBean.getPid()+timestamp+""));
-					String str = jsonResult.toJSONString();
-					jsonResult.put("retUrl", apiUserPostBean.getRetUrl() + "?datajson=" + URLEncoder.encode(str, "UTF-8"));
-                    return jsonResult;
-                }
-	        	jsonObj = new JSONObject();
-	            jsonObj.put("status", false);
-	            jsonObj.put("error", "重复绑定");
-	            return jsonObj;
-	        }
-	        
-	        // 汇盈金服账号已绑定其他用户验证
-	        String binduniqueid = loginService.getBindUniqueIdByUserId(userId, apiUserPostBean.getPid());
-	        if(binduniqueid != null){
-	        	jsonObj = new JSONObject();
-	            jsonObj.put("status", false);
-	            jsonObj.put("error", "该用户未绑定");
-	            return jsonObj;
-	        }
-		}
-		 LoginRequestVO user=new LoginRequestVO();
-		 user.setUsername(apiUserPostBean.getLoginUserName());
-		 user.setPassword(apiUserPostBean.getLoginPassword());
-		// 登陆
-		 WebResult<WebViewUserVO> login = loginController.login( user,request);
-        if (!"000".equals(login.getStatus())) {
-            // 登陆失败，返回失败信息
-            return jsonObj;
-        }
-
-        // 授权
-        Boolean result = loginService.bindThirdUser(userId, bindUniqueId, apiUserPostBean.getPid());
-        if(!result){
-        	jsonObj = new JSONObject();
-            jsonObj.put("status", false);
-            jsonObj.put("error", "授权失败，请联系汇盈金服客服。");
-            return jsonObj;
-        }
-        
-        // 返回第三方页面
-        JSONObject jsonResult = new JSONObject();
-        jsonResult.put("status", true);
-        jsonResult.put("statusCode", "0");
-        jsonResult.put("statusDesc", "授权成功"); 
-        jsonResult.put("retUrl", apiUserPostBean.getRetUrl());
-        jsonResult.put("bindUniqueIdScy", apiUserPostBean.getBindUniqueIdScy());
-        jsonResult.put("hyjfUserName",userName ); 
-        jsonResult.put("userId",users.getUserId() ); 
-        Long timestamp = System.currentTimeMillis();
-        jsonResult.put("timestamp",timestamp); 
-        jsonResult.put("chkValue",ApiSignUtil.encryptByRSA(apiUserPostBean.getPid()+timestamp+"")); 
-        logger.info("chkValue:"+ApiSignUtil.encryptByRSA(apiUserPostBean.getPid()+timestamp+""));
-		*/
 		return jsonObj;
 	}
 	/**

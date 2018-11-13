@@ -64,6 +64,7 @@ public class AppBindCardPageController extends BaseUserController {
         String sign = request.getParameter("sign");
         String token = request.getParameter("token");
         String platform = request.getParameter("platform");
+        logger.info("bindCardPage请求参数：sign=" + sign + " token=" + token + " platform=" + platform);
         WebViewUserVO webViewUserVO = bindCardService.getWebViewUserByUserId(userId);
         // 检查参数
         String checkResult = bindCardService.checkParamBindCardPageAPP(webViewUserVO);
@@ -73,6 +74,7 @@ public class AppBindCardPageController extends BaseUserController {
             result.setStatusInfo(AppResult.FAIL, checkResult);
             return result;
         }
+        logger.info("platform==="+platform);
         UserInfoVO userInfoVO =  bindCardService.getUserInfo(userId);
         UserVO userVO = bindCardService.getUsersById(userId);
         UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
@@ -101,7 +103,7 @@ public class AppBindCardPageController extends BaseUserController {
             bean.setUserId(userId);
             // 微官网 1
             bean.setPlatform("1");
-            Map<String,Object> map = bindCardService.getCallbankMap(bean,sign,token);
+            Map<String,Object> map = bindCardService.getCallbankMap(bean,sign,token,platform);
             if(map == null){
                 map = Collections.emptyMap();
             }
