@@ -92,7 +92,12 @@ public class ApiBankOpenController extends BaseUserController {
         openAccoutBean.setGender(openBean.getGender());
         openAccoutBean.setMobile(openBean.getMobile());
         // 代偿角色的账户类型为  00100-担保账户  其他的是 00000-普通账户
-        openAccoutBean.setAcctUse(BankCallConstant.ACCOUNT_USE_COMMON);
+        if(openBean.getIdentity().equals("3")){
+            openAccoutBean.setAcctUse(BankCallConstant.ACCOUNT_USE_GUARANTEE);
+        }else{
+            openAccoutBean.setAcctUse(BankCallConstant.ACCOUNT_USE_COMMON);
+        }
+
         openAccoutBean.setIdentity(openBean.getIdentity());
         // 同步地址  是否跳转到前端页面
         openAccoutBean.setRetUrl(openBean.getRetUrl());
