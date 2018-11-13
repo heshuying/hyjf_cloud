@@ -60,7 +60,7 @@ public class MessagePushMessageDao extends BaseMongoDao<MessagePushMsg> {
         int currPage = request.getCurrPage();
         int pageSize = request.getPageSize();
         int limitStart = (currPage - 1) * pageSize;
-        int limitEnd = limitStart + pageSize;
+        int limitEnd = pageSize;
         query.addCriteria(criteria);
         query.skip(limitStart).limit(limitEnd);
         query.with(new Sort(Sort.Direction.DESC, "lastUpdateTime"));
