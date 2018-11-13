@@ -98,16 +98,40 @@ public class EveFileConsumer extends Consumer{
 
                 //插入数据
                 if(!CollectionUtils.isEmpty(eveLogs)){
-                    aleveLogFileService.insertEveLog(eveLogs);
-                    logger.info("EveLog已插入 " + eveLogs.size() + " 条记录");
+                    //成功插入条数
+                    int successCount = eveLogs.size();
+                    for (EveLog eveLog : eveLogs){
+                        try {
+                            //插入eveLog表
+                            aleveLogFileService.insertEveLog(eveLog);
+                        }
+                        catch (Exception e){
+                            logger.error("EveLog插入失败，电子账号：{}，交易金额：{}，流水号：{}", eveLog.getCardnbr(), eveLog.getAmount(), eveLog.getTranno());
+                            successCount -= 1;
+                            continue;
+                        }
+                    }
+
+                    logger.info("EveLog已插入 " + successCount + " 条记录");
                 }
                 if(!CollectionUtils.isEmpty(aleveErrorLogs)){
-                    aleveLogFileService.insertAleveErrorLog(aleveErrorLogs);//异常记录
-                    logger.info("AleveErrorLog已插入 " + aleveErrorLogs.size() + " 条记录");
+                    int successCount = aleveErrorLogs.size();
+                    for(AleveErrorLog aleveErrorLog : aleveErrorLogs){
+                        try {
+                            //插入aleveErrorLog表
+                            aleveLogFileService.insertAleveErrorLog(aleveErrorLog);//异常记录
+                        }
+                        catch (Exception e){
+                            logger.error("AleveErrorLog插入失败");
+                            successCount -= 1;
+                            continue;
+                        }
+                    }
+                    logger.info("AleveErrorLog已插入 " + successCount + " 条记录");
                 }
 
             } catch (Exception e) {
-                logger.error("eveLog插入失败",e);
+                logger.error("EveLog插入失败", e);
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
             logger.info("********************导入流水明细Eve结束*************************");
