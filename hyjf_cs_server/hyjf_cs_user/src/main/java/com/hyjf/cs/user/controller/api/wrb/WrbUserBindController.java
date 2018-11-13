@@ -1,46 +1,32 @@
 package com.hyjf.cs.user.controller.api.wrb;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.TypeReference;
-import com.hyjf.am.resquest.trade.SensorsDataBean;
-import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.security.util.RSA_Hjs;
-import com.hyjf.common.security.util.SignUtil;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.ApiResult;
-import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.user.bean.*;
+import com.hyjf.cs.user.bean.ApiLoginBean;
+import com.hyjf.cs.user.bean.ApiUserPostBean;
+import com.hyjf.cs.user.bean.BaseMapBean;
+import com.hyjf.cs.user.bean.LoginResultBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.controller.web.login.WebLoginController;
-import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
-import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.service.wrb.UserRegisterService;
-import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.util.RSAJSPUtil;
-import com.hyjf.cs.user.vo.LoginRequestVO;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.soa.apiweb.CommonSoaUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -49,15 +35,12 @@ import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author dongzeshan
@@ -103,7 +86,7 @@ public class WrbUserBindController extends BaseUserController {
 	 * 跳转登陆授权页面
 	 * @return
 	 */
-	@RequestMapping("bind_api")
+	@RequestMapping("bind_api.do")
 	public ModelAndView bindApi(HttpServletRequest request, HttpServletResponse response, @RequestParam String param,
 								@RequestParam(value = "sign", required = false) String sign){
 		logger.info("风车理财登陆授权, param is :{}, sign is :{}", param, sign);
@@ -243,7 +226,7 @@ public class WrbUserBindController extends BaseUserController {
             // 第三方用户已授权验证
             Integer userid = loginService.getUserIdByBind(Integer.parseInt(bindUniqueId), WrbCommonDateUtil.FCLC_INSTCODE);
             logger.info("userid is:{}", userid);
-            if(userid != null){
+            if(userid != null&&userid!=0){
                 JSONObject jsonResult = new JSONObject();
                 jsonResult.put("status", BaseResultBeanFrontEnd.FAIL);
                 jsonResult.put("statusCode", BaseResultBeanFrontEnd.FAIL);
