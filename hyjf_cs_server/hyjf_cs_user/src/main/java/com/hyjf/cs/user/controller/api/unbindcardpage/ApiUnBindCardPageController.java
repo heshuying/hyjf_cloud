@@ -68,7 +68,8 @@ public class ApiUnBindCardPageController extends BaseUserController {
                     Validator.isNull(unbindCardPageRequestBean.getInstCode())||
                     Validator.isNull(unbindCardPageRequestBean.getRetUrl())||
                     Validator.isNull(unbindCardPageRequestBean.getNotifyUrl())||
-                    Validator.isNull(unbindCardPageRequestBean.getForgotPwdUrl())){
+                    Validator.isNull(unbindCardPageRequestBean.getForgotPwdUrl())||
+                    Validator.isNull(unbindCardPageRequestBean.getPlatform())){
 
                 logger.info("-------------------请求参数非法--------------------");
                 paramMap.put("status", ErrorCodeConstant.STATUS_CE000001);
