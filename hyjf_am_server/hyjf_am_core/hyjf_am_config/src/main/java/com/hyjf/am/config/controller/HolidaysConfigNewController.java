@@ -1,6 +1,6 @@
 package com.hyjf.am.config.controller;
 
-import com.hyjf.am.config.service.HolidaysConfigService;
+import com.hyjf.am.config.service.HolidaysConfigNewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -14,16 +14,16 @@ import java.time.LocalDate;
  */
 @RestController
 @RequestMapping("/am-config/holidays")
-public class HolidaysAmConfigController extends BaseConfigController{
+public class HolidaysConfigNewController extends BaseConfigController{
 
     @Autowired
-    private HolidaysConfigService holidaysConfigService;
+    private HolidaysConfigNewService holidaysConfigNewService;
 
     @RequestMapping("/save")
     public String save(){
         int currentYear = LocalDate.now().getYear();
-        holidaysConfigService.initCurrentYearConfig(currentYear);
-        holidaysConfigService.updateHolidaysConfig(currentYear);
+        holidaysConfigNewService.initCurrentYearConfig(currentYear);
+        holidaysConfigNewService.updateHolidaysConfig(currentYear);
         return "success";
     }
 }

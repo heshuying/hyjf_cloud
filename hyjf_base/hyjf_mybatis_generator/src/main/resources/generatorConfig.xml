@@ -1622,6 +1622,10 @@
 
         <table tableName="ht_holidays_config" domainObjectName="HolidaysConfig">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+
+        <table tableName="ht_holidays_config_new" domainObjectName="HolidaysConfigNew">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="holiday_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
