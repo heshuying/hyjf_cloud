@@ -199,4 +199,29 @@ public class JxBankConfigVO implements Serializable {
     public void setMonthCardQuota(BigDecimal monthCardQuota) {
         this.monthCardQuota = monthCardQuota;
     }
+
+    @Override
+    public String toString() {
+        return "JxBankConfigVO{" +
+                "id=" + id +
+                ", bankId=" + bankId +
+                ", bankName='" + bankName + '\'' +
+                ", payAllianceCode='" + payAllianceCode + '\'' +
+                ", bankCode='" + bankCode + '\'' +
+                ", bankIcon='" + bankIcon + '\'' +
+                ", bankLogo='" + bankLogo + '\'' +
+                ", quickPayment=" + quickPayment +
+                ", singleQuota=" + singleQuota +
+                ", singleCardQuota=" + singleCardQuota +
+                ", feeWithdraw=" + feeWithdraw +
+                ", sortId=" + sortId +
+                ", remark='" + remark + '\'' +
+                ", createUserId=" + createUserId +
+                ", updateUserId=" + updateUserId +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", delFlag=" + delFlag +
+                ", monthCardQuota=" + monthCardQuota +
+                '}';
+    }
 }

@@ -1158,7 +1158,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         // 借款项目编号
         params.put("orderId", hjhAccede.getAccedeOrderId());
         //优惠券还款队列
-        couponRepayMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+        couponRepayMessageProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
     }
 
     /**

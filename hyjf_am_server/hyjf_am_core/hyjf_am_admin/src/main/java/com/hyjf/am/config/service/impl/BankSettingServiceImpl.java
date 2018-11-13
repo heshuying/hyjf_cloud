@@ -9,6 +9,7 @@ import com.hyjf.am.config.dao.model.auto.JxBankConfigExample;
 import com.hyjf.am.config.service.BankSettingService;
 import com.hyjf.am.resquest.admin.AdminBankSettingRequest;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -42,20 +43,15 @@ public class BankSettingServiceImpl implements BankSettingService {
         }
         example.setOrderByClause("sort_id ASC");
         JxBankConfigExample.Criteria criteria = example.createCriteria();
+        //删除标识
         criteria.andDelFlagEqualTo(0);
-
-        // 条件查询
-        if (jxBankConfig.getBankName() != null) {
-            if(!jxBankConfig.getBankName().isEmpty()){
-                criteria.andBankNameEqualTo(jxBankConfig.getBankName());
-            }
-
+        //银行名称
+        if(StringUtils.isNotBlank(jxBankConfig.getBankName())){
+            criteria.andBankNameEqualTo(jxBankConfig.getBankName());
         }
-        if (jxBankConfig.getPayAllianceCode() != null) {
-            if(!jxBankConfig.getPayAllianceCode().isEmpty()){
-                criteria.andPayAllianceCodeEqualTo(jxBankConfig.getPayAllianceCode());
-            }
-
+        //银行联行号
+        if(StringUtils.isNotBlank(jxBankConfig.getPayAllianceCode())){
+            criteria.andPayAllianceCodeEqualTo(jxBankConfig.getPayAllianceCode());
         }
         return jxBankConfigMapper.selectByExample(example);
     }
@@ -79,7 +75,7 @@ public class BankSettingServiceImpl implements BankSettingService {
         JxBankConfig jxBankConfig = new JxBankConfig();
         adminRequest.setCreateTime(GetDate.getNowTime10());
         adminRequest.setUpdateTime(GetDate.getNowTime10());
-        BeanUtils.copyProperties(adminRequest,jxBankConfig);
+        BeanUtils.copyProperties(adminRequest, jxBankConfig);
         jxBankConfig.setSortId(adminRequest.getSortId().shortValue());
         return jxBankConfigMapper.insertSelective(jxBankConfig);
     }
