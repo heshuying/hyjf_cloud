@@ -133,5 +133,68 @@
 		ORDER BY inpdate DESC,inptime DESC
 	</select>
 
+	<insert id="insertAleveLogByList" parameterType="java.util.List" useGeneratedKeys="true" keyProperty="id">
+		INSERT INTO `ht_aleve_log` (
+		`bank`,
+		`cardnbr`,
+		`amount`,
+		`cur_num`,
+		`crflag`,
+		`valdate`,
+		`inpdate`,
+		`reldate`,
+		`inptime`,
+		`tranno`,
+		`ori_tranno`,
+		`transtype`,
+		`desline`,
+		`curr_bal`,
+		`forcardnbr`,
+		`revind`,
+		`accchg`,
+		`seqno`,
+		`ori_num`,
+		`resv`,
+		`create_day`,
+		`create_user_id`,
+		`create_time`,
+		`update_user_id`,
+		`update_time`,
+		`del_flag`,
+		`upd_flag`
+		)
+		VALUES
+		<foreach collection="list" item="item" separator=",">
+			(
+				#{item.bank},
+				#{item.cardnbr},
+				#{item.amount},
+				#{item.curNum},
+				#{item.crflag},
+				#{item.valdate},
+				#{item.inpdate},
+				#{item.reldate},
+				#{item.inptime},
+				#{item.tranno},
+				#{item.oriTranno},
+				#{item.transtype},
+				#{item.desline},
+				#{item.currBal},
+				#{item.forcardnbr},
+				#{item.revind},
+				#{item.accchg},
+				#{item.seqno},
+				#{item.oriNum},
+				#{item.resv},
+				#{item.createDay},
+				1,
+				now(),
+				#{item.updateUserId},
+				now(),
+				0,
+				0
+			)
+		</foreach>
+	</insert>
 </mapper>
 

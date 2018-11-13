@@ -108,19 +108,25 @@ public class AleveFileConsumer extends Consumer{
                 //数据量太大 事务占用时间太长导致主从不同步 改成单条插入提交
                 if(!CollectionUtils.isEmpty(aleveLogs)){
                     //成功插入条数
-                    int successCount = aleveLogs.size();
-                    for (AleveLog aleveLog : aleveLogs) {
-                        try {
-                            //插入aleveLog表
-                            aleveLogFileService.insertAleveLog(aleveLog);
-                        }
-                        catch (Exception e){
-                            logger.error("AleveLog插入失败，电子账号：{}，交易金额：{}，流水号：{}", aleveLog.getCardnbr(), aleveLog.getAmount(), aleveLog.getTranno());
-                            successCount -= 1;
-                            continue;
-                        }
+//                    int successCount = aleveLogs.size();
+//                    for (AleveLog aleveLog : aleveLogs) {
+//                        try {
+//                            //插入aleveLog表
+//                            aleveLogFileService.insertAleveLog(aleveLog);
+//                        }
+//                        catch (Exception e){
+//                            logger.error("AleveLog插入失败，电子账号：{}，交易金额：{}，流水号：{}", aleveLog.getCardnbr(), aleveLog.getAmount(), aleveLog.getTranno());
+//                            successCount -= 1;
+//                            continue;
+//                        }
+//                    }
+//                    logger.info("AleveLog已插入 " + successCount + " 条记录");
+                    try {
+                        aleveLogFileService.insertAleveLogByList(aleveLogs);
+                        logger.info("AleveLog已插入 " + aleveLogs.size() + " 条记录");
+                    } catch (Exception e){
+                        logger.error("AleveLog插入失败", e);
                     }
-                    logger.info("AleveLog已插入 " + successCount + " 条记录");
                 }
                 if(!CollectionUtils.isEmpty(aleveErrorLogs)){
                     int successCount = aleveErrorLogs.size();

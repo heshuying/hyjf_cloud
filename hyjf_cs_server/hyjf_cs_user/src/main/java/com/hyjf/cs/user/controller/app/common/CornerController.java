@@ -289,17 +289,4 @@ public class CornerController extends BaseController {
         return map;
     }
 
-    /**
-     * 获取最新版本号下载地址
-     * @param request
-     * @param response
-     * @return
-     */
-    @ApiOperation("版本更新")
-    @ResponseBody
-    @PostMapping(value = "/hjh-update-android.jsp")
-    public String hjhUpdateAndroid(HttpServletRequest request, HttpServletResponse response) {
-
-        return "111";
-    }
 }

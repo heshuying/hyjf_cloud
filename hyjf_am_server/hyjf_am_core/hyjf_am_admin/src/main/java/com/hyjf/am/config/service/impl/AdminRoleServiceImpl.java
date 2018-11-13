@@ -480,32 +480,33 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
 						List<String> permissionId = adminRoleMenuPermissionsCustomizeMapper.selectMenuPerssion(perm);
 						for (String pId : permissionId) {
 							firstClass.add(perm + "_" + pId);
-							List<String> list2 = adminRoleMenuPermissionsCustomizeMapper.selectChildMenu(s1);
-							for (String s2 : list2) {
-								List<String> list3 = adminRoleMenuPermissionsCustomizeMapper.selectChildMenu(s2);
-								if(!list3.isEmpty()) {
-									firstClass.add(s2 + "_" + VIEW);
-									for(String s3:list3) {
-										List<String> permissionId2 = adminRoleMenuPermissionsCustomizeMapper
-												.selectMenuPerssion(s3);
-										for (String pId2 : permissionId2) {
-											firstClass.add(s3 + "_" + pId2);
-										}
-									}
-								}else {
-									List<String> permissionId2 = adminRoleMenuPermissionsCustomizeMapper
-											.selectMenuPerssion(s2);
-									for (String pId2 : permissionId2) {
-										firstClass.add(s2 + "_" + pId2);
-									}
-								}
-							}
+
 							// AdminRoleMenuPermissions permissions = new
 							// AdminRoleMenuPermissions();
 							// permissions.setRoleId(roleId);
 							// permissions.setMenuUuid(perm);
 							// permissions.setPermissionUuid(pId);
 							// adminList.add(permissions);
+						}
+						List<String> list2 = adminRoleMenuPermissionsCustomizeMapper.selectChildMenu(perm);
+						for (String s2 : list2) {
+							List<String> list3 = adminRoleMenuPermissionsCustomizeMapper.selectChildMenu(s2);
+							if(!list3.isEmpty()) {
+								firstClass.add(s2 + "_" + VIEW);
+								for(String s3:list3) {
+									List<String> permissionId2 = adminRoleMenuPermissionsCustomizeMapper
+											.selectMenuPerssion(s3);
+									for (String pId2 : permissionId2) {
+										firstClass.add(s3 + "_" + pId2);
+									}
+								}
+							}else {
+								List<String> permissionId2 = adminRoleMenuPermissionsCustomizeMapper
+										.selectMenuPerssion(s2);
+								for (String pId2 : permissionId2) {
+									firstClass.add(s2 + "_" + pId2);
+								}
+							}
 						}
 					}
 				}

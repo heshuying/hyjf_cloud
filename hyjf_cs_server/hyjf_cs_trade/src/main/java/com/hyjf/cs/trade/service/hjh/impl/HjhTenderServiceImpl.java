@@ -628,7 +628,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 default:
                     revaluation_money = "0";
             }
-            if(revaluation_money == null){
+            if("0".equals(revaluation_money) || revaluation_money == null){
                 logger.info("=============从redis中获取测评类型和上限金额异常!(没有获取到对应类型的限额数据) eval_type="+eval_type);
             }else {
                 //测评到期日
@@ -649,7 +649,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL);
                     result.put("message","您的风险等级为 #"+eval_type+"# \\n达到 #稳健型# 及以上才可以出借此项目");
                 }
-                //金额对比判断（校验金额 大于 设置测评金额）
+                //金额对比判断（校验金额 大于 设置测评金额）request.getAccount()_计划,request.getAssignCapital()_债转
                 if (new BigDecimal(request.getAccount()).compareTo(new BigDecimal(revaluation_money)) > 0) {
                     //返回类型和限额
                     result.put("evalType",eval_type);

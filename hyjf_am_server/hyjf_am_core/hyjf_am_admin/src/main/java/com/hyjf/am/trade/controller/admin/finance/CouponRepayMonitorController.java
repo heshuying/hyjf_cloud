@@ -36,16 +36,16 @@ public class CouponRepayMonitorController extends BaseController {
     @Autowired
     private CouponRepayMonitorService couponRepayMonitorService;
 
-    @GetMapping("/selectCouponRepayMonitor/{nowDay}")
-    public CouponRepayMonitorResponse selectCouponRepayMonitor(@PathVariable String nowDay) {
-        CouponRepayMonitorResponse response = new CouponRepayMonitorResponse();
-        List<CouponRepayMonitor> couponRepayMonitorList = couponRepayMonitorService.selectCouponRepayMonitor(nowDay);
-        if (!CollectionUtils.isEmpty(couponRepayMonitorList)) {
-            List<CouponRepayMonitorVO> couponRepayMonitorVOList = CommonUtils.convertBeanList(couponRepayMonitorList,CouponRepayMonitorVO.class);
-            response.setResultList(couponRepayMonitorVOList);
-        }
-        return response;
-    }
+//    @GetMapping("/selectCouponRepayMonitor/{nowDay}")
+//    public CouponRepayMonitorResponse selectCouponRepayMonitor(@PathVariable String nowDay) {
+//        CouponRepayMonitorResponse response = new CouponRepayMonitorResponse();
+//        List<CouponRepayMonitor> couponRepayMonitorList = couponRepayMonitorService.selectCouponRepayMonitor(nowDay);
+//        if (!CollectionUtils.isEmpty(couponRepayMonitorList)) {
+//            List<CouponRepayMonitorVO> couponRepayMonitorVOList = CommonUtils.convertBeanList(couponRepayMonitorList,CouponRepayMonitorVO.class);
+//            response.setResultList(couponRepayMonitorVOList);
+//        }
+//        return response;
+//    }
 
 
     @PostMapping("/selectCouponRepayMonitorPage")
@@ -102,27 +102,27 @@ public class CouponRepayMonitorController extends BaseController {
         return response;
     }
 
-    @PostMapping("/insertCouponRepayMonitor")
-    public CouponRepayMonitorResponse insertCouponRepayMonitor(@RequestBody CouponRepayMonitorVO couponRepayMonitorVO ) {
-        CouponRepayMonitorResponse response = new CouponRepayMonitorResponse();
-        if (couponRepayMonitorVO != null) {
-            CouponRepayMonitor couponRepayMonitor = new CouponRepayMonitor();
-            BeanUtils.copyProperties(couponRepayMonitorVO,couponRepayMonitor);
-            int insertFlag = couponRepayMonitorService.insertCouponRepayMonitor(couponRepayMonitor);
-            response.setInsertFlag(insertFlag);
-        }
-        return response;
-    }
+//    @PostMapping("/insertCouponRepayMonitor")
+//    public CouponRepayMonitorResponse insertCouponRepayMonitor(@RequestBody CouponRepayMonitorVO couponRepayMonitorVO ) {
+//        CouponRepayMonitorResponse response = new CouponRepayMonitorResponse();
+//        if (couponRepayMonitorVO != null) {
+//            CouponRepayMonitor couponRepayMonitor = new CouponRepayMonitor();
+//            BeanUtils.copyProperties(couponRepayMonitorVO,couponRepayMonitor);
+//            int insertFlag = couponRepayMonitorService.insertCouponRepayMonitor(couponRepayMonitor);
+//            response.setInsertFlag(insertFlag);
+//        }
+//        return response;
+//    }
 
-    @PostMapping("/updateCouponRepayMonitor")
-    public CouponRepayMonitorResponse updateCouponRepayMonitor(@RequestBody CouponRepayMonitorVO couponRepayMonitorVO) {
-        CouponRepayMonitorResponse response = new CouponRepayMonitorResponse();
-        if (couponRepayMonitorVO != null) {
-            CouponRepayMonitor couponRepayMonitor = new CouponRepayMonitor();
-            BeanUtils.copyProperties(couponRepayMonitorVO,couponRepayMonitor);
-            int updateFlag = couponRepayMonitorService.updateCouponRepayMonitor(couponRepayMonitor);
-            response.getUpdateFlag();
-        }
-        return response;
-    }
+//    @PostMapping("/updateCouponRepayMonitor")
+//    public CouponRepayMonitorResponse updateCouponRepayMonitor(@RequestBody CouponRepayMonitorVO couponRepayMonitorVO) {
+//        CouponRepayMonitorResponse response = new CouponRepayMonitorResponse();
+//        if (couponRepayMonitorVO != null) {
+//            CouponRepayMonitor couponRepayMonitor = new CouponRepayMonitor();
+//            BeanUtils.copyProperties(couponRepayMonitorVO,couponRepayMonitor);
+//            int updateFlag = couponRepayMonitorService.updateCouponRepayMonitor(couponRepayMonitor);
+//            response.getUpdateFlag();
+//        }
+//        return response;
+//    }
 }
