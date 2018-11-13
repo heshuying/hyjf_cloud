@@ -110,7 +110,19 @@ public class HjhPlanController extends BaseTradeController {
         tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
         hjhTenderService.checkPlan(tender);
+        //校验用户测评
+        Map<String, Object> result = hjhTenderService.checkEvaluationTypeMoney(tender);
         WebResult<TenderInfoResult> resultWebResult = new WebResult();
+        //返回参数拼装
+        if(result != null){
+            TenderInfoResult tenderInfo = new TenderInfoResult();
+            tenderInfo.setStatus(false);
+            tenderInfo.setEvalType((String) result.get("evalType"));
+            tenderInfo.setRevaluationMoney((String) result.get("revaluationMoney"));
+            tenderInfo.setRiskTested((String) result.get("riskTested"));
+            tenderInfo.setMessage((String) result.get("message"));
+            resultWebResult.setData(tenderInfo);
+        }
         return resultWebResult;
     }
 

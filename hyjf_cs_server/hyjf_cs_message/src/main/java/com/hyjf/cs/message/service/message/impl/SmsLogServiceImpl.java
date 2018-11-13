@@ -83,7 +83,7 @@ public class SmsLogServiceImpl implements SmsLogService {
 			criteria.and("endtime").gte(begin).lte(end);
 		}
 
-		if (status != null && status != 2) {
+		if (status != null) {
 			criteria.and("status").is(status);
 		}
 		query.addCriteria(criteria);

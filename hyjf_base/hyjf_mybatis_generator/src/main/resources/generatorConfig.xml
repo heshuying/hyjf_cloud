@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_user.properties"/>
+    <properties resource="init_config.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -1621,6 +1621,10 @@
         </table>
 
         <table tableName="ht_holidays_config" domainObjectName="HolidaysConfig">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+
+        <table tableName="ht_holidays_config_new" domainObjectName="HolidaysConfigNew">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="holiday_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>

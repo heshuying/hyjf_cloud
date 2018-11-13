@@ -13,6 +13,7 @@ import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -127,7 +128,11 @@ public class UserInfoController extends BaseController {
 
 
 	@GetMapping("/selectEmployeeByUserId/{userId}")
-	public EmployeeCustomizeResponse selectEmployeeByUserId(@PathVariable Integer userId){
+	public EmployeeCustomizeResponse selectEmployeeByUserId(@PathVariable(value = "userId") String userIdStr){
+		if(StringUtils.isBlank(userIdStr) || "null".equals(userIdStr)){
+			return null;
+		}
+		Integer userId = Integer.valueOf(userIdStr);
 		EmployeeCustomizeResponse response = new EmployeeCustomizeResponse();
 		EmployeeCustomize employeeCustomize=userInfoService.selectEmployeeByUserId(userId);
 		if (employeeCustomize!=null){

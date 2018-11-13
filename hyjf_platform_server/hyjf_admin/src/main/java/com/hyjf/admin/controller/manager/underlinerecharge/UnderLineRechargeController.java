@@ -181,17 +181,17 @@ public class UnderLineRechargeController extends BaseController {
         String returnMsg = null;
         // 不可为空
         if (StringUtils.isBlank(requestBean.getCode())){
-            return returnMsg = "Code不能为空!";
+            return returnMsg = "线下交易类型不能为空!";
         }
 
         // 必须为数字
         if (!StringUtils.isNumeric(requestBean.getCode())){
-            return returnMsg = "Code必须为数字!";
+            return returnMsg = "线下交易类型必须为数字!";
         }
 
         //长度限制
         if (requestBean.getCode().length() != 4){
-            return returnMsg = "Code必须为四位!";
+            return returnMsg = "线下交易类型长度必须为4位!";
         }
 
         return returnMsg;

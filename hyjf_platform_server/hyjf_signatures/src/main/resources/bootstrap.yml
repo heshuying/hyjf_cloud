@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: SIGNATURES
+  cloud:
+    config:
+      uri: http://micoserver:2222/
+      name: batch
+  boot:
+    admin:
+      client:
+        url: http://micoserver:18080
+# zipkin 监控端点
+  zipkin: 
+    base-url: http://micoserver:9411
+  sleuth:
+    sampler:
+    percentage: 0.1
+    
+  profiles:
+    active: dev
+server:
+  port: 9095
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+logging:
+  file: signatures.log
+  file.max-size: 100MB

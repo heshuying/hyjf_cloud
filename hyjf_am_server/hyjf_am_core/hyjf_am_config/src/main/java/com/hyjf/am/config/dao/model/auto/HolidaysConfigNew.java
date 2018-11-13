@@ -1,26 +1,42 @@
-/*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
- */
-package com.hyjf.am.vo.trade;
-
-import com.hyjf.am.vo.BaseVO;
+package com.hyjf.am.config.dao.model.auto;
 
 import java.io.Serializable;
 import java.util.Date;
 
-/**
- * @author yaoy
- * @version HolidaysConfigVO, v0.1 2018/6/20 16:52
- */
-public class HolidaysConfigVO extends BaseVO implements Serializable {
+public class HolidaysConfigNew implements Serializable {
+    /**
+     * id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
-    private Date day;
+    /**
+     * yyyymmdd
+     *
+     * @mbggenerated
+     */
+    private Date dayTime;
 
+    /**
+     * 节假日标识: 工作日-0, 休息日-1, 节假日-2
+     *
+     * @mbggenerated
+     */
     private Integer holidayFlag;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;
@@ -33,12 +49,12 @@ public class HolidaysConfigVO extends BaseVO implements Serializable {
         this.id = id;
     }
 
-    public Date getDay() {
-        return day;
+    public Date getDayTime() {
+        return dayTime;
     }
 
-    public void setDay(Date day) {
-        this.day = day;
+    public void setDayTime(Date dayTime) {
+        this.dayTime = dayTime;
     }
 
     public Integer getHolidayFlag() {

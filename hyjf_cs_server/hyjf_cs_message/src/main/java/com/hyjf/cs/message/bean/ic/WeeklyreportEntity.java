@@ -9,7 +9,7 @@ import java.math.BigDecimal;
  * @author lisheng
  * @version WeeklyreportEntity, v0.1 2018/7/27 15:51
  */
-@Document(collection = "ht_weeklyreport")
+@Document(collection = "ht_weekly_report")
 public class WeeklyreportEntity implements Serializable {
     private static final long serialVersionUID = 1L;
 
