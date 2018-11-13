@@ -1,5 +1,7 @@
 package com.hyjf.cs.trade.service.agreement.impl;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.resquest.trade.UserInvestListBeanRequest;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
@@ -22,54 +24,30 @@ import java.util.Map;
 @Service
 public class CreateAgreementServiceImpl extends BaseTradeServiceImpl implements CreateAgreementService {
     @Override
-    public List<BorrowCustomizeVO> selectBorrowList(BorrowCommonCustomizeVO borrowCommonCustomize) {
-        return amTradeClient.searchBorrowCustomizeList(borrowCommonCustomize);
-    }
-
-    @Override
-    public List<TenderAgreementVO> selectTenderAgreementByNid(String nid) {
-        return this.amTradeClient.selectTenderAgreementByNid(nid);
-    }
-
-    @Override
-    public List<WebUserInvestListCustomizeVO> selectUserInvestList(UserInvestListBeanRequest form) {
-        Map<String, Object> params = new HashMap<String, Object>();
-        params.put("borrowNid", form.getBorrowNid());
-        params.put("userId", form.getUserId());
-        params.put("nid", form.getNid());
-
-        return amTradeClient.selectUserInvestList(params);
-    }
-
-    @Override
-    public ProjectCustomeDetailVO selectProjectDetail(String borrowNid) {
-        return amTradeClient.selectProjectDetail(borrowNid);
-    }
-
-    @Override
-    public List<DebtBorrowCustomizeVO> selectDebtBorrowList(DebtBorrowCommonCustomizeVO debtBorrowCommonCustomize) {
-        Map<String,Object> param = new HashMap<>();
-        String borrowNid = debtBorrowCommonCustomize.getBorrowNid();
-        param.put("borrowNidSrch",borrowNid);
-        return amTradeClient.searchDebtBorrowList4Protocol(param);
-    }
-
-    @Override
-    public int countProjectRepayPlanRecordTotal(ProjectRepayListBeanVO bean) {
-        Map<String,Object> paraBean = new HashMap<>();
-        paraBean.put("userId", bean.getUserId());
-        paraBean.put("borrowNid", bean.getBorrowNid());
-        paraBean.put("nid", bean.getNid());
-        int recordTotal = amTradeClient.countProjectRepayPlanRecordTotal(paraBean);
-        return recordTotal;
-    }
-
-    @Override
-    public List<WebProjectRepayListCustomizeVO> selectProjectRepayPlanList(ProjectRepayListBeanVO bean) {
-        Map<String,Object> paraBean = new HashMap<>();
-        paraBean.put("userId", bean.getUserId());
-        paraBean.put("borrowNid", bean.getBorrowNid());
-        paraBean.put("nid", bean.getNid());
-        return  amTradeClient.selectProjectRepayPlanList(paraBean);
+    public JSONObject getIntermediaryAgreementPDFUrl(String nid) {
+        JSONObject object=new JSONObject();
+        List<TenderAgreementVO> list=amTradeClient.selectTenderAgreementByNid(nid);
+        if(list!=null&&list.size()>0){
+            TenderAgreementVO agreementVO=list.get(0);
+            if(agreementVO.getStatus()==3){
+                //本地pdf文件路径
+                object.put("pdfUrl",agreementVO.getPdfUrl());
+                //合同查看地址
+                object.put("viewpdfUrl",agreementVO.getViewpdfUrl());
+                //合同下载地址
+                object.put("downloadUrl",agreementVO.getDownloadUrl());
+                //脱敏图片存放地址
+                object.put("imgUrl",agreementVO.getImgUrl());
+                object.put("status",BaseResult.SUCCESS);
+                object.put("statusDesc",BaseResult.SUCCESS_DESC);
+            }else{
+                object.put("status",BaseResult.ERROR);
+                object.put("statusDesc","暂无可下载协议");
+            }
+        }else {
+            object.put("status",BaseResult.ERROR);
+            object.put("statusDesc","暂无可下载协议");
+        }
+        return object;
     }
 }
