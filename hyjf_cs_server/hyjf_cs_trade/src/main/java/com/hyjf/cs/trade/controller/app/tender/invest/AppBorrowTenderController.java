@@ -52,11 +52,8 @@ public class AppBorrowTenderController extends BaseTradeController {
         tender.setIp(ip);
         tender.setUserId(userId);
         WebResult<Map<String,Object>> result = null;
-        //校验用户测评
-        Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(tender);
         try{
             result =  borrowTenderService.borrowTender(tender);
-            result.setData(resultEval);
         }catch (CheckException e){
             throw e;
         }finally {

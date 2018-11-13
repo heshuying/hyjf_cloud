@@ -81,7 +81,7 @@ public class AdminMenuController extends BaseConfigController {
 		// return modelAndView;
 		// }
 
-		this.adminMenuService.insertRecord(form);
+		String uuid=this.adminMenuService.insertRecord(form);
 
 		// // 更新权限
 		// ShiroUtil.updateAuth();
@@ -91,7 +91,11 @@ public class AdminMenuController extends BaseConfigController {
 		// AdminMenuDefine.REQUEST_MAPPING + "/" + AdminMenuDefine.INIT);
 		// LogUtil.endLog(THIS_CLASS, AdminMenuDefine.INSERT_ACTION);
 		// return modelAndView;
-		return new AdminSystemResponse();
+		AdminSystemResponse asr=new AdminSystemResponse();
+		AdminSystemVO result=new AdminSystemVO();
+		result.setMenuUuid(uuid);
+		asr.setResult(result);
+		return asr;
 	}
 
 	/**

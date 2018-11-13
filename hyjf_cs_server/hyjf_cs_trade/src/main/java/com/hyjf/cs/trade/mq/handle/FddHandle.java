@@ -1688,6 +1688,8 @@ public class FddHandle {
 			String borrowNid = tenderAgrementInfo.getBorrowNid();
 			if(StringUtils.isNotBlank(borrowNid)){
 				BorrowAndInfoVO borrow=this.amTradeClient.getBorrowByNid(borrowNid);
+				BorrowInfoVO borrowInfoByNid = this.amTradeClient.getBorrowInfoByNid(borrowNid);
+				borrow.setCompanyOrPersonal(borrowInfoByNid.getCompanyOrPersonal().toString());
 				String planNid = borrow.getPlanNid();
 				if(StringUtils.isNotBlank(planNid)){//计划标的
 					Integer borrowUserId = borrow.getUserId();
