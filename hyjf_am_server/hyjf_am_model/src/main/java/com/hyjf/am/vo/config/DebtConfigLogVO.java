@@ -24,7 +24,7 @@ public class DebtConfigLogVO extends BaseVO implements Serializable {
     private String closeDes;
 
     private Integer updateUser;
-    private String updateUserName;
+    private String updateUsername;
     private Date updateTime;
     private String updateTimeStr;
 
@@ -122,12 +122,12 @@ public class DebtConfigLogVO extends BaseVO implements Serializable {
         this.macAddress = macAddress == null ? null : macAddress.trim();
     }
 
-    public String getUpdateUserName() {
-        return updateUserName;
+    public String getUpdateUsername() {
+        return updateUsername;
     }
 
-    public void setUpdateUserName(String updateUserName) {
-        this.updateUserName = updateUserName;
+    public void setUpdateUsername(String updateUsername) {
+        this.updateUsername = updateUsername;
     }
 
     public String getUpdateTimeStr() {
