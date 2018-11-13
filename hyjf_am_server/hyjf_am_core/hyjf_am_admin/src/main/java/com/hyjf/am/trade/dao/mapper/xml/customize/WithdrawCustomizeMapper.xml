@@ -123,10 +123,7 @@
 			a.credited,
 			a.bank AS bank,
 			a.account,
-			FROM_UNIXTIME(
-				a.create_time,
-				'%Y-%m-%d %H:%i:%s'
-			) AS create_time_str,
+			date_format(a.create_time,'%Y-%m-%d %H:%i:%s') AS create_time_str,
 			a.client AS client_str,
 			a.`status` AS `status`,
 			a.`status` AS status_str,
