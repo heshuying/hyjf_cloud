@@ -96,6 +96,8 @@
     </dependencies>
 
     <build>
+        <finalName>hyjf-am-trade</finalName>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -108,7 +110,7 @@
                             <artifactId>axis2</artifactId>
                         </dependency>
                     </requiresUnpack>
-                    <finalName>hyjf-am-trade</finalName>
+
                 </configuration>
             </plugin>
             <plugin>

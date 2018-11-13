@@ -118,7 +118,7 @@ public class DebtConfigLogController extends BaseController {
 					} else if (celLength == 4) {
 						cell.setCellValue(log.getToggle()==1?"开":"关");
 					} else if (celLength == 5) {
-						cell.setCellValue(log.getUpdateUserName());
+						cell.setCellValue(log.getUpdateUsername());
 					} else if (celLength == 6) {
 						SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 						cell.setCellValue(df.format(log.getUpdateTime()));

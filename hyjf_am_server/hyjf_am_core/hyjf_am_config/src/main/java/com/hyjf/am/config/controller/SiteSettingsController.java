@@ -39,4 +39,24 @@ public class SiteSettingsController extends BaseConfigController {
         response.setResult(siteSettingsVO);
         return response;
     }
+
+    /**
+     * 查询邮件配置
+     *
+     * @return
+     */
+    @RequestMapping("/findOne")
+    public SiteSettingsResponse findOne() {
+        logger.info("查询邮件配置开始...");
+        SiteSettingsResponse response = new SiteSettingsResponse();
+        SiteSettingsVO siteSettingsVO = null;
+        SiteSetting siteSettings = siteSettingsService.findOne();
+        if (siteSettings != null) {
+            siteSettingsVO = new SiteSettingsVO();
+            BeanUtils.copyProperties(siteSettings, siteSettingsVO);
+        }
+        logger.info("siteSettingsVO is {}", siteSettingsVO);
+        response.setResult(siteSettingsVO);
+        return response;
+    }
 }

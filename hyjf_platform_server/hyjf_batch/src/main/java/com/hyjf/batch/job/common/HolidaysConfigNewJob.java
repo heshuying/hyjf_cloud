@@ -11,7 +11,7 @@ import org.quartz.JobExecutionException;
  * @version HolidaysConfigJob, v0.1 2018/7/18 16:08
  */
 @DisallowConcurrentExecution
-public class HolidaysConfigJob extends BaseJob implements Job {
+public class HolidaysConfigNewJob extends BaseJob implements Job {
 	@Override
 	public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 		logger.info("HolidaysConfigJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());

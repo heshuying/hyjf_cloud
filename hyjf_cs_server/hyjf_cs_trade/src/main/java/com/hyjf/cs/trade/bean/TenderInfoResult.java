@@ -119,7 +119,63 @@ public class TenderInfoResult extends BaseResultBean {
     /**优惠券信息*/
     private CouponUserVO couponUser;
 
-	public String getEarnings() {
+    /**风险测评返回参数*/
+    private String errorCode;
+    private String message;
+    private String evalType;
+    private String revaluationMoney;
+    private boolean status;
+    private String riskTested;
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public String getRiskTested() {
+        return riskTested;
+    }
+
+    public void setRiskTested(String riskTested) {
+        this.riskTested = riskTested;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
+    }
+
+    public String getErrorCode() {
+        return errorCode;
+    }
+
+    public void setErrorCode(String errorCode) {
+        this.errorCode = errorCode;
+    }
+
+    public String getEvalType() {
+        return evalType;
+    }
+
+    public void setEvalType(String evalType) {
+        this.evalType = evalType;
+    }
+
+    public String getRevaluationMoney() {
+        return revaluationMoney;
+    }
+
+    public void setRevaluationMoney(String revaluationMoney) {
+        this.revaluationMoney = revaluationMoney;
+    }
+
+    public String getEarnings() {
 		return earnings;
 	}
 

@@ -12,18 +12,46 @@ public class HolidaysConfig implements Serializable {
     private Integer id;
 
     /**
-     * yyyymmdd
+     * 年份
      *
      * @mbggenerated
      */
-    private Date dayTime;
+    private String year;
 
     /**
-     * 节假日标识: 工作日-0, 休息日-1, 节假日-2
+     * 假日名称
      *
      * @mbggenerated
      */
-    private Integer holidayFlag;
+    private String eventsName;
+
+    /**
+     * 开始时间
+     *
+     * @mbggenerated
+     */
+    private String statrTime;
+
+    /**
+     * 结束时间
+     *
+     * @mbggenerated
+     */
+    private String endTime;
+
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
+    private Integer createUserId;
+
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
+    private Integer updateUserId;
 
     /**
      * 创建时间
@@ -33,11 +61,18 @@ public class HolidaysConfig implements Serializable {
     private Date createTime;
 
     /**
-     * 修改时间
+     * 最后修改时间
      *
      * @mbggenerated
      */
     private Date updateTime;
+
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
+    private String remarks;
 
     private static final long serialVersionUID = 1L;
 
@@ -49,20 +84,52 @@ public class HolidaysConfig implements Serializable {
         this.id = id;
     }
 
-    public Date getDayTime() {
-        return dayTime;
+    public String getYear() {
+        return year;
     }
 
-    public void setDayTime(Date dayTime) {
-        this.dayTime = dayTime;
+    public void setYear(String year) {
+        this.year = year == null ? null : year.trim();
     }
 
-    public Integer getHolidayFlag() {
-        return holidayFlag;
+    public String getEventsName() {
+        return eventsName;
     }
 
-    public void setHolidayFlag(Integer holidayFlag) {
-        this.holidayFlag = holidayFlag;
+    public void setEventsName(String eventsName) {
+        this.eventsName = eventsName == null ? null : eventsName.trim();
+    }
+
+    public String getStatrTime() {
+        return statrTime;
+    }
+
+    public void setStatrTime(String statrTime) {
+        this.statrTime = statrTime == null ? null : statrTime.trim();
+    }
+
+    public String getEndTime() {
+        return endTime;
+    }
+
+    public void setEndTime(String endTime) {
+        this.endTime = endTime == null ? null : endTime.trim();
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 
     public Date getCreateTime() {
@@ -79,5 +146,13 @@ public class HolidaysConfig implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks == null ? null : remarks.trim();
     }
 }

@@ -87,7 +87,9 @@ public interface AmUserClient {
 	int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
 						Integer searchStatus, Integer updateStatus,boolean isUpdate);
 
-	/**
+    UserVO updateByCondition(String loginUserName);
+
+    /**
 	 * 更新登录信息
 	 * @param userId
 	 * @param ip

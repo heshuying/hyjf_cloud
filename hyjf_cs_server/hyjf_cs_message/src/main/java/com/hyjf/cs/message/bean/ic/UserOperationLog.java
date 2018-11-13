@@ -13,7 +13,7 @@ import java.util.Date;
  * @version UserOperationLog, v0.1 2018/10/8 16:52
  *
  */
-@Document(collection = "useroperationlog")
+@Document(collection = "ht_user_operation_log")
 public class UserOperationLog implements Serializable {
     /**
      * 活动类型：1.登录 2登出 3.开户 4.出借确认 5.转让确认 6.修改交易密码 7.修改登录密码 8.绑定邮箱 9.修改邮箱 10.绑定银行卡 11.解绑银行卡 12.风险测评
