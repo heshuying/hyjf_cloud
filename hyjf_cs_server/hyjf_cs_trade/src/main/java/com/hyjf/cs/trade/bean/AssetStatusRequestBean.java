@@ -8,6 +8,8 @@ import io.swagger.annotations.ApiModelProperty;
  */
 public class AssetStatusRequestBean extends BaseBean {
 
+    @ApiModelProperty(value = "机构编号（必填）")
+    private String instCode;
     @ApiModelProperty(value = "资产编号")
     private String assetId;
 
@@ -17,5 +19,15 @@ public class AssetStatusRequestBean extends BaseBean {
 
     public void setAssetId(String assetId) {
         this.assetId = assetId;
+    }
+
+    @Override
+    public String getInstCode() {
+        return instCode;
+    }
+
+    @Override
+    public void setInstCode(String instCode) {
+        this.instCode = instCode;
     }
 }

@@ -1,7 +1,7 @@
 package com.hyjf.cs.trade.service.asset.impl;
 
-import com.hyjf.am.resquest.admin.AssetListRequest;
-import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
+import com.hyjf.am.resquest.api.AsseStatusRequest;
+import com.hyjf.am.vo.api.ApiAssetStatusCustomizeVO;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.service.asset.AssetSearchService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
@@ -22,13 +22,13 @@ public class AssetSearchServiceImpl extends BaseTradeServiceImpl implements Asse
      * 查询资产状态
      * @author Zha Daojian
      * @date 2018/8/27 10:27
-     * @param assetListRequest
+     * @param request
      * @return com.hyjf.am.vo.admin.AssetDetailCustomizeVO
      **/
     @Override
-    public AssetDetailCustomizeVO selectStatusById(AssetListRequest assetListRequest) {
-        AssetDetailCustomizeVO assetDetailCustomizeVO = amTradeClient.findDetailById(assetListRequest);
-        return assetDetailCustomizeVO;
+    public ApiAssetStatusCustomizeVO selectAssetStatusById(AsseStatusRequest request) {
+        ApiAssetStatusCustomizeVO apiAssetStatusCustomizeVO = amTradeClient.selectAssetStatusById(request);
+        return apiAssetStatusCustomizeVO;
     }
 
 }

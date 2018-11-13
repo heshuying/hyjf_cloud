@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.*;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.api.ApiAssetStatusCustomizeResponse;
 import com.hyjf.am.response.app.AppNewAgreementResponse;
 import com.hyjf.am.response.app.AppProjectInvestListCustomizeResponse;
 import com.hyjf.am.response.app.AppProjectListResponse;
@@ -24,6 +25,7 @@ import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.api.ApiRepayListRequest;
+import com.hyjf.am.resquest.api.AsseStatusRequest;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.assetpush.InfoBean;
@@ -34,6 +36,7 @@ import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.api.ApiAssetStatusCustomizeVO;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
 import com.hyjf.am.vo.api.ApiRepayListCustomizeVO;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
@@ -501,16 +504,16 @@ public class AmTradeClientImpl implements AmTradeClient {
     /**
      * 查询资产状态
      *
-     * @param assetListRequest
+     * @param request
      * @return com.hyjf.am.vo.admin.AssetDetailCustomizeVO
      * @author Zha Daojian
      * @date 2018/8/27 10:27
      **/
     @Override
-    public AssetDetailCustomizeVO findDetailById(AssetListRequest assetListRequest) {
-        AssetDetailCustomizeResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/assetList/findDetailById", assetListRequest,
-                        AssetDetailCustomizeResponse.class)
+    public ApiAssetStatusCustomizeVO selectAssetStatusById(AsseStatusRequest request) {
+        ApiAssetStatusCustomizeResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/assetList/selectAssetStatusById", request,
+                        ApiAssetStatusCustomizeResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();

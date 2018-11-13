@@ -1,19 +1,16 @@
-package com.hyjf.am.trade.dao.mapper.customize;
+package com.hyjf.am.trade.service.api.asset;
 
 import com.hyjf.am.resquest.api.AsseStatusRequest;
 import com.hyjf.am.vo.api.ApiAssetStatusCustomizeVO;
 
 /**
- * 资产
- * @author Zha Daojian
- * @date 2018/11/13 18:06
- * @param
- * @return
- **/
-public interface AssetListServiceCustomizeMapper {
-	
-
-
+*第三方资产状态查询接口
+* @author Zha Daojian
+* @date 2018/11/13 18:03
+* @param
+* @return
+**/
+public interface AssetListService {
 	/**
 	 * 查询资产状态
 	 * @author Zha Daojian
@@ -21,4 +18,7 @@ public interface AssetListServiceCustomizeMapper {
 	 * @param request
 	 **/
 	ApiAssetStatusCustomizeVO selectAssetStatusById(AsseStatusRequest request);
+
 }
+
+
