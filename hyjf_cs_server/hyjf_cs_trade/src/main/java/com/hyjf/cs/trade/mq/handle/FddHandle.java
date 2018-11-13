@@ -1703,7 +1703,7 @@ public class FddHandle {
 
 			//拼接URL
 			List jointPathList = new ArrayList();
-			String imageSavePath = savePath + fileName;
+			String imageSavePath = savePath + tenderAgreementID;
 			//转换成图片
 			logger.info("---------------脱敏下载开始将PDF转换成图片：tenderAgreementID："+tenderAgreementID+"-----" + filePath);
 			PDFToImage.pdf2img(filePath, imageSavePath, PDFToImage.IMG_TYPE_PNG);
