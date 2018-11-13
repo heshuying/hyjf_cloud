@@ -4,7 +4,7 @@
 package com.hyjf.am.config.controller.batch;
 
 import com.hyjf.am.config.controller.BaseConfigController;
-import com.hyjf.am.config.service.HolidaysConfigService;
+import com.hyjf.am.config.service.HolidaysConfigNewService;
 import com.hyjf.am.response.trade.HolidaysConfigResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,7 +23,7 @@ import java.util.Date;
 public class HolidaysConfigController extends BaseConfigController {
 
 	@Autowired
-	private HolidaysConfigService holidaysConfigService;
+	private HolidaysConfigNewService holidaysConfigNewService;
 
     /**
      * 判断某天是工作日还是节假日
@@ -33,7 +33,7 @@ public class HolidaysConfigController extends BaseConfigController {
 	@GetMapping("/checkSomedayIsWorkDate/{somedate}")
 	public HolidaysConfigResponse selectHolidaysConfig(@PathVariable Date somedate) {
 		HolidaysConfigResponse response = new HolidaysConfigResponse();
-		Boolean flag = holidaysConfigService.isWorkdateOnSomeDay(somedate);
+		Boolean flag = holidaysConfigNewService.isWorkdateOnSomeDay(somedate);
 		response.setWorkDateFlag(flag == null ? false : flag);
 		return response;
 	}
@@ -46,7 +46,7 @@ public class HolidaysConfigController extends BaseConfigController {
     @GetMapping("/getFirstWorkdateAfterSomedate/{somedate}")
     public HolidaysConfigResponse getFirstWorkdateAfterSomedate(@PathVariable Date somedate) {
         HolidaysConfigResponse response = new HolidaysConfigResponse();
-        Date date = holidaysConfigService.getFirstWorkdateAfterSomedate(somedate);
+        Date date = holidaysConfigNewService.getFirstWorkdateAfterSomedate(somedate);
         response.setSomedate(date);
         return response;
     }

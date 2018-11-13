@@ -4,7 +4,7 @@
 package com.hyjf.am.response.trade;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.trade.HolidaysConfigVO;
+import com.hyjf.am.vo.trade.HolidaysConfigNewVO;
 
 import java.util.Date;
 
@@ -12,7 +12,7 @@ import java.util.Date;
  * @author yaoy
  * @version HolidaysConfigResponse, v0.1 2018/6/21 17:38
  */
-public class HolidaysConfigResponse extends Response<HolidaysConfigVO> {
+public class HolidaysConfigResponse extends Response<HolidaysConfigNewVO> {
 
     private int recordTotal;
 
