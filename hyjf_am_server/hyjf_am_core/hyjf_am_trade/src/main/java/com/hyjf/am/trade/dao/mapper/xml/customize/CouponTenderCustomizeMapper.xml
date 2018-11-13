@@ -712,8 +712,8 @@
 
 	<select id="getHjhCouponTenderDetailCustomize" resultMap="selectCouponTenderDetailMap" parameterType="java.util.Map">
 		SELECT
-		-- hu.username username,
-		hcu.create_user_id username,
+		hu.username username,
+		-- hcu.create_user_id username,
 		hcu.coupon_user_code coupon_code,
 		hcc.coupon_name coupon_name,
 		hcu.coupon_user_code,

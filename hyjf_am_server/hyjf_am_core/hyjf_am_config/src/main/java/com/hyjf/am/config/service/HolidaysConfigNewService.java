@@ -11,7 +11,7 @@ import java.util.Date;
  * @author yaoy
  * @version HolidaysConfigService, v0.1 2018/6/22 10:14
  */
-public interface HolidaysConfigService {
+public interface HolidaysConfigNewService {
 
     /**
      * 更新节假日配置表

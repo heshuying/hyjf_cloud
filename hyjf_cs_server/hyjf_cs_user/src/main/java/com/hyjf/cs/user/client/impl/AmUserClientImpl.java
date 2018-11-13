@@ -222,6 +222,17 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
+	public UserVO updateByCondition(String loginUserName) {
+		UserResponse response = restTemplate
+				.getForEntity(userService+"/user/updateByCondition/" + loginUserName, UserResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
 	public void updateLoginUser(int userId, String ip) {
 		/**
 		 * ip version等作为请求一部分的时候，用base64转码
