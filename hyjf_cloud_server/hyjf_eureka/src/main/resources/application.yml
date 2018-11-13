@@ -1,6 +1,10 @@
 spring:
   application:
     name: eureka-server
+  boot:
+    admin:
+      client:
+        url: http://micoserver:18080
 server:
   port: 1111
 eureka:
@@ -11,3 +15,17 @@ eureka:
     fetch-registry: false
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+logging:
+  file: eureka.log
+  file.max-size: 100MB
