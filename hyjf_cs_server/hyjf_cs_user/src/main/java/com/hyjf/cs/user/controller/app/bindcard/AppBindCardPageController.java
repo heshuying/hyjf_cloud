@@ -73,6 +73,7 @@ public class AppBindCardPageController extends BaseUserController {
             result.setStatusInfo(AppResult.FAIL, checkResult);
             return result;
         }
+        logger.info("platform==="+platform);
         UserInfoVO userInfoVO =  bindCardService.getUserInfo(userId);
         UserVO userVO = bindCardService.getUsersById(userId);
         UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
