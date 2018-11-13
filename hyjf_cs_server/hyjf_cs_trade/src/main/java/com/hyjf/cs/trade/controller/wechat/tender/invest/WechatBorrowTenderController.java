@@ -26,6 +26,7 @@ import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.trade.service.consumer.NifaContractEssenceMessageService;
+import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.invest.BorrowTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -55,6 +56,8 @@ public class WechatBorrowTenderController extends BaseTradeController {
     NifaContractEssenceMessageService nifaContractEssenceMessageService;
     @Autowired
     UserOperationLogProducer userOperationLogProducer;
+    @Autowired
+    private HjhTenderService hjhTenderService;
 
     @ApiOperation(value = "散标投资", notes = "散标投资")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
@@ -69,8 +72,11 @@ public class WechatBorrowTenderController extends BaseTradeController {
         logger.info("sign:{}",request.getParameter("sign"));
         WebResult<Map<String,Object>> result = null;
         WeChatResult weChatResult = new WeChatResult();
+        //校验用户测评
+        Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(tender);
         try{
             result =  borrowTenderService.borrowTender(tender);
+            result.setData(resultEval);
             BorrowAndInfoVO borrow = this.nifaContractEssenceMessageService.selectBorrowByBorrowNid(tender.getBorrowNid());
             boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_MONTH.equals(borrow.getBorrowStyle())
                     || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrow.getBorrowStyle())|| CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle());

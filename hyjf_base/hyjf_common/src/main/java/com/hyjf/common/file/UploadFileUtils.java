@@ -18,7 +18,7 @@ public abstract class UploadFileUtils {
 	public static String path = "/upload/";
 	// 定义可以上传文件的后缀数组,默认"*"，代表所有
 	public static String[] filePostfixs = { "*" };
-	public static String[] typeImages = { "gif", "jpeg", "png", "jpg", "tif", "bmp","xls","xlsx" };
+	public static String[] typeImages = { "gif", "jpeg", "png", "jpg", "tif", "bmp","xls","xlsx", "pdf" };
 	public static String[] typeOthers = { "html", "htm", "doc", "xls", "txt", "zip", "rar", "pdf", "cll" };
 
 	// 一次读取多少字节

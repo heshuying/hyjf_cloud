@@ -72,6 +72,8 @@
     </dependencies>
 
     <build>
+        <finalName>hyjf-am-market</finalName>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -84,7 +86,6 @@
                             <artifactId>axis2</artifactId>
                         </dependency>
                     </requiresUnpack>
-                    <finalName>hyjf-am-market</finalName>
                 </configuration>
             </plugin>
             <plugin>
