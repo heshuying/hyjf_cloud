@@ -218,6 +218,7 @@ public class ProtocolServiceImpl implements ProtocolService {
         if(operation.intValue() == 0){
             //添加协议时候，设置创建时间
             protocolLog.setCreateUser(protocolTemplate.getCreateUserId());
+            protocolLog.setUpdateUser(protocolTemplate.getUpdateUserId());
             protocolLog.setCreateTime(new Date());
         } else if(operation.intValue() == 1){
             //修改协议时候，设置修改时间
@@ -227,6 +228,7 @@ public class ProtocolServiceImpl implements ProtocolService {
         if(operation.intValue() == 2){
             //删除协议时候，设置删除时间
             protocolLog.setDeleteUser(protocolTemplate.getUpdateUserId());
+            protocolLog.setUpdateUser(protocolTemplate.getUpdateUserId());
             protocolLog.setDeleteTime(new Date());
         }
         list.add(protocolLog);
