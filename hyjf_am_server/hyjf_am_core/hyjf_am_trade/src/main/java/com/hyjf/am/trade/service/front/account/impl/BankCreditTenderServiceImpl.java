@@ -1477,7 +1477,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 		// 调用银行结束债转接口
 		BorrowCredit borrowCredit = CommonUtils.convertBean(request.getBorrowCredit(),BorrowCredit.class);
 		// 更新borrowCredit
-		logger.info("borrowCredit:{}",borrowCredit);
+		logger.info("borrowCredit:{}",JSONObject.toJSONString(borrowCredit));
 		Integer borrowCreditResult = this.borrowCreditMapper.updateByPrimaryKeySelective(borrowCredit);
 		logger.info("更新borrowCredit结果:{}",borrowCreditResult);
 		logger.info("borrowCredit.getCreditCapitalAssigned():{}    borrowCredit.getCreditCapital():{} ",borrowCredit.getCreditCapitalAssigned(),borrowCredit.getCreditCapital());
