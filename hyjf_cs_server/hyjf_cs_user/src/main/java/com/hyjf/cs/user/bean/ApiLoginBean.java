@@ -9,9 +9,9 @@ package com.hyjf.cs.user.bean;
  */
 public class ApiLoginBean extends BaseBean {
 
-    private String loginBean_loginUserName;
+    private String loginUserName;
 
-    private String loginBean_loginPassword;
+    private String loginPassword;
 
     /** 同意协议 */
     private boolean readAgreement;
@@ -34,20 +34,20 @@ public class ApiLoginBean extends BaseBean {
     // add by zhangjp 支持登录完成后跳转回原页面 20161014 end
 
 
-    public String getLoginBean_loginUserName() {
-        return loginBean_loginUserName;
+    public String getLoginUserName() {
+        return loginUserName;
     }
 
-    public void setLoginBean_loginUserName(String loginBean_loginUserName) {
-        this.loginBean_loginUserName = loginBean_loginUserName;
+    public void setLoginUserName(String loginUserName) {
+        this.loginUserName = loginUserName;
     }
 
-    public String getLoginBean_loginPassword() {
-        return loginBean_loginPassword;
+    public String getLoginPassword() {
+        return loginPassword;
     }
 
-    public void setLoginBean_loginPassword(String loginBean_loginPassword) {
-        this.loginBean_loginPassword = loginBean_loginPassword;
+    public void setLoginPassword(String loginPassword) {
+        this.loginPassword = loginPassword;
     }
 
     public boolean isReadAgreement() {
