@@ -1815,6 +1815,7 @@
 		<result column="order_id" property="orderId" jdbcType="VARCHAR" />
 		<result column="period" property="period" jdbcType="VARCHAR" />
 		<result column="coupon_type" property="couponType" jdbcType="VARCHAR" />
+		<result column="borrow_extra_yield" property="borrowExtraYield" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="selectAppAlreadyRepayList" resultMap="AppAlreadyRepayListMap" parameterType="Map">
 		SELECT
