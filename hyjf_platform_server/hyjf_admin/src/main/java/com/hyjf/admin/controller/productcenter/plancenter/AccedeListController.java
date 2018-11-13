@@ -1101,7 +1101,7 @@ public class AccedeListController extends BaseController{
 			return ret;
 		}
 		List<TenderAgreementVO> tenderAgreementList = this.accedeListService.selectTenderAgreementByNid(planOrderId);
-		if(tenderAgreementList == null){
+		if(CollectionUtils.isEmpty(tenderAgreementList)){
 			ret.put("result", "协议不存在!");
 			ret.put("status", FAIL);
 			return ret;

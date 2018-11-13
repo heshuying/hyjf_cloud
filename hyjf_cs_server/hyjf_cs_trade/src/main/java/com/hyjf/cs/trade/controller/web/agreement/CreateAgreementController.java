@@ -71,13 +71,13 @@ public class CreateAgreementController extends BaseTradeController {
             TenderAgreementVO agreementVO=list.get(0);
             if(agreementVO.getStatus()==3){
                 //本地pdf文件路径
-                object.put("pdfUrl",systemConfig.getBasePathurl()+systemConfig.getHyjfFtpBasepathPdf()+agreementVO.getPdfUrl());
+                object.put("pdfUrl",systemConfig.getBasePathurl()+systemConfig.getHyjfFtpBasepathPdf()+"/"+agreementVO.getPdfUrl());
                 //合同查看地址
                 object.put("viewpdfUrl",agreementVO.getViewpdfUrl());
                 //合同下载地址
                 object.put("downloadUrl",agreementVO.getDownloadUrl());
                 //脱敏图片存放地址
-                object.put("imgUrl",systemConfig.getBasePathurl()+systemConfig.getHyjfFtpBasepathPdf()+agreementVO.getImgUrl());
+                object.put("imgUrl",systemConfig.getBasePathurl()+systemConfig.getHyjfFtpBasepathImg()+"/"+agreementVO.getImgUrl());
                 object.put("status",BaseResult.SUCCESS);
                 object.put("statusDesc",BaseResult.SUCCESS_DESC);
             }else{
