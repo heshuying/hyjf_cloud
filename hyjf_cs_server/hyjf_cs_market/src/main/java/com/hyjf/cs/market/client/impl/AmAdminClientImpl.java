@@ -1,29 +1,20 @@
 package com.hyjf.cs.market.client.impl;
 
-import com.hyjf.am.response.IntegerResponse;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.WrbTenderNotifyResponse;
-import com.hyjf.am.response.config.SmsConfigResponse;
-import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
-import com.hyjf.am.response.trade.TenderCityCountResponse;
-import com.hyjf.am.response.user.UtmPlatResponse;
-import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
-import com.hyjf.am.resquest.admin.SmsConfigRequest;
-import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
-import com.hyjf.am.resquest.trade.DataSearchRequest;
-import com.hyjf.am.resquest.trade.TenderCityCountRequest;
-import com.hyjf.am.vo.trade.TenderCityCountVO;
-import com.hyjf.am.vo.trade.TenderSexCountVO;
-import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
-import com.hyjf.am.vo.user.UtmPlatVO;
-import com.hyjf.cs.market.client.AmAdminClient;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.admin.WrbTenderNotifyResponse;
+import com.hyjf.am.response.config.SmsConfigResponse;
+import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
+import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
+import com.hyjf.am.resquest.admin.SmsConfigRequest;
+import com.hyjf.am.resquest.trade.DataSearchRequest;
+import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
+import com.hyjf.cs.market.client.AmAdminClient;
 
 /**
  * @author：yinhui
