@@ -141,14 +141,18 @@ public class BorrowController extends BaseController {
 	public BorrowResponse getBorrow(@PathVariable String borrowNid) {
 		BorrowResponse response = new BorrowResponse();
 		Borrow borrow = borrowService.getBorrow(borrowNid);
-		if (borrow != null) {
-			BorrowAndInfoVO borrowVO = new BorrowAndInfoVO();
-			BeanUtils.copyProperties(borrow, borrowVO);
+		BorrowInfo borrowInfo = borrowService.getBorrowInfoByNid(borrowNid);
+		BorrowAndInfoVO borrowVO = new BorrowAndInfoVO();
+		if (Validator.isNotNull(borrow)) {
+			borrowVO = CommonUtils.convertBean(borrow,BorrowAndInfoVO.class);
             borrowVO.setVerifyTimeInteger(borrow.getVerifyTime());
 			borrowVO.setReverifyTimeInt(borrow.getReverifyTime());
             logger.info("VerifyTime:"+borrow.getVerifyTime());
-			response.setResult(borrowVO);
 		}
+		if (Validator.isNotNull(borrowInfo)){
+			borrowVO.setInstCode(borrowInfo.getInstCode());
+		}
+		response.setResult(borrowVO);
 		return response;
 	}
 

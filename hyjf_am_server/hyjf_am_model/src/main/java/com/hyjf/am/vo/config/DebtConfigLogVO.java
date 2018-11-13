@@ -24,8 +24,11 @@ public class DebtConfigLogVO extends BaseVO implements Serializable {
     private String closeDes;
 
     private Integer updateUser;
+
     private String updateUsername;
+
     private Date updateTime;
+
     private String updateTimeStr;
 
     private String ipAddress;
