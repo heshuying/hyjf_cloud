@@ -44,7 +44,7 @@ public interface HjhTenderService extends BaseTradeService {
      * 检查计划投资的参数
      * @param tender
      */
-    void checkPlan(TenderRequest tender);
+    WebResult<Map<String, Object>>  checkPlan(TenderRequest tender);
 
     /**
      * 加入计划失败  恢复redis

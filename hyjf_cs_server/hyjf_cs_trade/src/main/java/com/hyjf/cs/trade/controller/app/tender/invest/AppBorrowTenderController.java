@@ -125,8 +125,8 @@ public class AppBorrowTenderController extends BaseTradeController {
         tender.setUserId(userId);
         JSONObject result = new JSONObject();
         try{
-            String url = borrowTenderService.getAppTenderUrl(tender);
-
+            //getTenderUrl 用于区分是否在 getAppTenderUrl 方法中判断用户测评
+            String url = borrowTenderService.getAppTenderUrl(tender,"getTenderUrl");
             result.put("tenderUrl", url);
             result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
             result.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_SUCCESS);
