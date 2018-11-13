@@ -134,10 +134,8 @@ public class WxTransPasswordController extends BaseUserController {
         BankCallBean bean = new BankCallBean(user.getUserId(),txcode, ClientConstants.WECHAT_CLIENT);
         // 同步调用路径
         String retUrl = systemConfig.getWeiFrontHost() +"/user/setting/bankPassword/result/failed?logOrdId="+bean.getLogOrderId()+"&sign=" + sign;
-        String success = systemConfig.getWeiFrontHost() +"/user/setting/bankPassword/result/success?sign=" + sign ;
         // 异步调用路
         String bgRetUrl = "http://CS-USER/hyjf-wechat/wx/transpassword/resetPasswordBgreturn?sign=" + sign;
-        bean.setSuccessfulUrl(success);
         // 页面同步返回 URL
         bean.setRetUrl(retUrl);
         // 页面异步返回URL(必须)

@@ -200,12 +200,10 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         bean.setAccountId(bankAccount.getAccount());
         bean.setMobile(user.getMobile());
         //channel=0：设置交易密码/1：重置交易密码
-        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/resultError"+"?channel=1&logOrdId="+bean.getLogOrderId();
-        String successUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) +"/user/resultSuccess?channel=1";
+        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/setPasswordResult"+"?channel=1&logOrdId="+bean.getLogOrderId();
         // 异步调用路
         String bgRetUrl = "http://CS-USER/hyjf-web/user/password/resetPasswordBgreturn";
         bean.setRetUrl(retUrl);
-        bean.setSuccessfulUrl(successUrl);
         bean.setNotifyUrl(bgRetUrl);
         // 商户私有域，存放开户平台,用户userId
         /*LogAcqResBean acqRes = new LogAcqResBean();
