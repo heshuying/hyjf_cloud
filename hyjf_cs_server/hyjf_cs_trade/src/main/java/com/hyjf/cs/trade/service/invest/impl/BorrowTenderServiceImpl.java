@@ -1348,7 +1348,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 if(result.getData()!=null){
                     String riskTested = (String) result.getData().get("riskTested");
                     String message = (String) result.getData().get("message");
-                    throw new CheckException(riskTested,message,result.getData());
+                    throw new CheckException(riskTested,message);
                 }
             }
             requestType = "9";
@@ -1365,7 +1365,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 if(result.getData()!=null){
                     String riskTested = (String) result.getData().get("riskTested");
                     String message = (String) result.getData().get("message");
-                    throw new CheckException(riskTested,message,result.getData());
+                    throw new CheckException(riskTested,message);
                 }
             }
             requestType = "10";
@@ -1381,7 +1381,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             if (result.getData() != null) {
                 String riskTested = (String) result.getData().get("riskTested");
                 String message = (String) result.getData().get("message");
-                throw new CheckException(riskTested, message, result.getData());
+                throw new CheckException(riskTested, message);
             }
         }
         url = baseUrl + requestMapping + requestType;
