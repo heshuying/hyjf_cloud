@@ -381,4 +381,13 @@ public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLog
         List<String> userIds = manualReverseCustomizeMapper.selectUserIdsByAccount(param);
         return userIds;
     }
+
+    /**
+     * aleveLog表数据插入
+     * @param list
+     */
+    @Override
+    public void insertAleveLogByList(List<AleveLog> list){
+        aleveCustomizeMapper.insertAleveLogByList(list);
+    }
 }
