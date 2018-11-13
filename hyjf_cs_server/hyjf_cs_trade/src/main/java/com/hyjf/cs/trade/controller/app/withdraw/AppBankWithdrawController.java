@@ -172,10 +172,10 @@ public class AppBankWithdrawController extends BaseTradeController {
             result.setCardNo_info(BankCardUtil.getCardNo(cardNo));
             JxBankConfigVO banksConfig = bankWithdrawService.getBanksConfigByBankId(bankCard.getBankId());
             if (banksConfig != null && StringUtils.isNotEmpty(banksConfig.getBankIcon())) {
-                result.setLogo(systemConfig.getWebHost() + banksConfig.getBankIcon());
+                result.setLogo(systemConfig.getAppFrontHost() + banksConfig.getBankIcon());
             } else {
                 // 应前台要求，logo路径给绝对路径
-                result.setLogo(systemConfig.getWebHost()  + BANK_LOG_LOGO_PATH);
+                result.setLogo(systemConfig.getAppFrontHost()  + BANK_LOG_LOGO_PATH);
             }
 
             BigDecimal feeWithdraw = BigDecimal.ONE;

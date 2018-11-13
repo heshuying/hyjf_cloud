@@ -52,11 +52,8 @@ public class AppBorrowTenderController extends BaseTradeController {
         tender.setIp(ip);
         tender.setUserId(userId);
         WebResult<Map<String,Object>> result = null;
-        //校验用户测评
-        Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(tender);
         try{
             result =  borrowTenderService.borrowTender(tender);
-            result.setData(resultEval);
         }catch (CheckException e){
             throw e;
         }finally {
@@ -128,8 +125,8 @@ public class AppBorrowTenderController extends BaseTradeController {
         tender.setUserId(userId);
         JSONObject result = new JSONObject();
         try{
-            String url = borrowTenderService.getAppTenderUrl(tender);
-
+            //getTenderUrl 用于区分是否在 getAppTenderUrl 方法中判断用户测评
+            String url = borrowTenderService.getAppTenderUrl(tender,"getTenderUrl");
             result.put("tenderUrl", url);
             result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
             result.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_SUCCESS);

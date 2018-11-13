@@ -72,11 +72,8 @@ public class WechatBorrowTenderController extends BaseTradeController {
         logger.info("sign:{}",request.getParameter("sign"));
         WebResult<Map<String,Object>> result = null;
         WeChatResult weChatResult = new WeChatResult();
-        //校验用户测评
-        Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(tender);
         try{
             result =  borrowTenderService.borrowTender(tender);
-            result.setData(resultEval);
             BorrowAndInfoVO borrow = this.nifaContractEssenceMessageService.selectBorrowByBorrowNid(tender.getBorrowNid());
             boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_MONTH.equals(borrow.getBorrowStyle())
                     || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrow.getBorrowStyle())|| CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle());

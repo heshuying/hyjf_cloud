@@ -199,8 +199,8 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
 			// 同步地址  是否跳转到前端页面
 			retUrl = super.getFrontHost(systemConfig,bean.getPlatform()) + errorPath +"?status=99";
 			successUrl = super.getFrontHost(systemConfig,bean.getPlatform()) + successPath+"?status=000&statusDesc=";
-			retUrl += "&token=1&sign=" +sign;
-			successUrl += "&token=1&sign=" +sign;
+			retUrl += "&token=1&sign=" +sign + "&platform=" + bean.getPlatform();
+			successUrl += "&token=1&sign=" +sign + "&platform=" + bean.getPlatform();
 		}
 
 		// 忘记密码跳转链接

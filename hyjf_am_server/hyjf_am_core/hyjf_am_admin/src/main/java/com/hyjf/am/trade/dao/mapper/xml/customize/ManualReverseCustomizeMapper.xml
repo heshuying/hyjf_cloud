@@ -36,6 +36,7 @@
 			</if>
 			<if test="txTimeEndSrch != null and txTimeEndSrch != ''">
 				AND hmr.tx_time <![CDATA[<=]]> DATE_FORMAT(#{txTimeEndSrch },'%Y-%m-%d %H:%I:%S')
+			</if>
 		</where>
 	</sql>
 

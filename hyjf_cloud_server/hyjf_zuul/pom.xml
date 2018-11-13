@@ -100,6 +100,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>hyjf-zuul</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -112,7 +113,7 @@
 							<artifactId>axis2</artifactId>
 						</dependency>
 					</requiresUnpack>
-					<finalName>hyjf-zuul</finalName>
+
 				</configuration>
 			</plugin>
 			<plugin>

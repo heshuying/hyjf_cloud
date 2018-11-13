@@ -150,7 +150,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	 * @return
 	 */
 	private WebViewUserVO doLogin(String loginUserName, String loginPassword, String ip, String channel) {
-		UserVO userVO = amUserClient.findUserByUserNameOrMobile(loginUserName);
+		UserVO userVO = amUserClient.updateByCondition(loginUserName);
 		WebViewUserVO webViewUserVO = new WebViewUserVO();
 		CheckUtil.check(userVO != null, MsgEnum.ERR_USER_LOGIN);
 		String codeSalt = userVO.getSalt();
