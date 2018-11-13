@@ -27,35 +27,35 @@ public class WrbCoopDESUtil {
 
 	private static final String encoding = "utf-8";
 
-	// 测试环境风车理财提供的密钥字符串
-//	public static final String KEY = "uaIH/eUCWHMxOxUyeUWirnzjf+kEEG1/";
+	// 测试环境风车理财提供的密钥字符串 todo  上线改成生产的key
+	public static final String KEY = "uaIH/eUCWHMxOxUyeUWirnzjf+kEEG1/";
 	// 测试环境汇盈金服使用的加解密的key， 主要用来屏蔽敏感字段，比如userId
-//	public static final String PF_KEY = "uaIH/eUCWHMxOxUyeUWirnzjf+kEEG1/";
+	public static final String PF_KEY = "uaIH/eUCWHMxOxUyeUWirnzjf+kEEG1/";
 	// 生产环境风车理财提供的密钥字符串
-	public static final String KEY = "ByAsy7z4UV61V83a9JR2aFcWI3/WKZez";
+	/*public static final String KEY = "ByAsy7z4UV61V83a9JR2aFcWI3/WKZez";
 	// 生产环境汇盈金服使用的加解密的key， 主要用来屏蔽敏感字段，比如userId
-	public static final String PF_KEY = "ByAsy7z4UV61V83a9JR2aFcWI3/WKZez";
+	public static final String PF_KEY = "ByAsy7z4UV61V83a9JR2aFcWI3/WKZez";*/
 
-	/**
-	 * des加密
-	 * 
-	 * @param keybyte
-	 * @param src
-	 * @return
-	 * @throws Exception
-	 */
+    /**
+     * des加密
+     *
+     * @param key
+     * @param src
+     * @return
+     * @throws Exception
+     */
 	public static String desEncrypt(String key, String src) throws Exception {
 		return Base64.encodeBase64String(desEncryptBytes(key, src));
 	}
 
-	/**
-	 * des加密
-	 * 
-	 * @param key
-	 * @param src
-	 * @param charSet
-	 * @return
-	 */
+    /**
+     * des加密
+     *
+     * @param key
+     * @param src
+     * @return
+     * @throws Exception
+     */
 	private static byte[] desEncryptBytes(String key, String src) throws Exception {
 		SecretKey deskey = new SecretKeySpec(Base64.decodeBase64(key), Algorithm); // 加密
 		Cipher c1 = Cipher.getInstance(Algorithm + "/CBC/PKCS5Padding");
@@ -64,27 +64,26 @@ public class WrbCoopDESUtil {
 		return c1.doFinal(regularCryptStr(src, encoding));
 	}
 
-	/**
-	 * des解密
-	 * 
-	 * @param keybyte
-	 * @param src
-	 * @return
-	 * @throws Exception
-	 */
+    /**
+     * des解密
+     *
+     * @param key
+     * @param src
+     * @return
+     * @throws Exception
+     */
 	public static String desDecrypt(String key, String src) throws Exception {
 		return desDecryptBytes(key, Base64.decodeBase64(src));
 	}
 
-	/**
-	 * des解密
-	 * 
-	 * @param keybyte
-	 * @param srcBytes
-	 * @return
-	 * @throws @throws
-	 *             Exception
-	 */
+    /**
+     * des解密
+     *
+     * @param key
+     * @param srcBytes
+     * @return
+     * @throws Exception
+     */
 	private static String desDecryptBytes(String key, byte[] srcBytes) throws Exception {
 		SecretKey deskey = new SecretKeySpec(Base64.decodeBase64(key), Algorithm); // 解密
 		IvParameterSpec IVSpec = IvGenerator(defaultIV);
