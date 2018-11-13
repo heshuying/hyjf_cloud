@@ -110,11 +110,8 @@ public class BorrowCreditTenderController extends BaseTradeController {
         tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
         WebResult<Map<String,Object>> result = null;
-        //校验用户测评
-        Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(tender);
         try{
             result =  borrowTenderService.borrowCreditCheck(tender);
-            result.setData(resultEval);
         }catch (CheckException e){
             throw e;
         }
