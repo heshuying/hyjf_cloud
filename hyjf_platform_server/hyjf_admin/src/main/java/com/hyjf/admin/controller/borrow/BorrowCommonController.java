@@ -828,7 +828,7 @@ public class BorrowCommonController extends BaseController {
 						}else if(rowNum == 28){//法人
 							resultMap.put("comLegalPerson", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 29){//注册地区
-							resultMap.put("comLocationCity", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("registrationAddress", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 30){//主营业务
 							resultMap.put("comMainBusiness", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 31){//在平台逾期次数
