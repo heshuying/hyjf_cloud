@@ -174,6 +174,24 @@ public class SmsCodeController extends BaseController {
                     return jsonObject;
                 }
             }
+
+            // 在筛选条件下查询出用户
+            List<SmsCodeCustomizeVO> smslist = smsCodeService.queryUser(form);
+            if (!CollectionUtils.isEmpty(smslist)) {
+                String phones = "";
+                for (int z = 0; z < smslist.size(); z++) {
+                    if (StringUtils.isNotEmpty(smslist.get(z).getUser_phones())
+                            && Validator.isPhoneNumber(smslist.get(z).getUser_phones())) {
+                        if (z < smslist.size() - 1) {
+                            phones += smslist.get(z).getUser_phones() + ",";
+                        } else {
+                            phones += smslist.get(z).getUser_phones();
+                        }
+                    }
+                }
+                form.setUser_phones(phones);
+            }
+
             flag = smsCodeService.sendSmsOntime(form);
             if (flag) {
                 jsonObject.put("success", true);
