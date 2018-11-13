@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.client.impl;
 
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.cs.user.client.AmDataCollectClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -45,7 +46,7 @@ public class  AmDataCollectClientImpl  implements AmDataCollectClient{
 
     @Override
     public String getRetCode(String logOrdId) {
-        String response = restTemplate.getForEntity(dataCollectService+"/search/getRetCode/" + logOrdId,String.class).getBody();
-        return response;
+        StringResponse response = restTemplate.getForEntity(dataCollectService+"/search/getRetCode/" + logOrdId,StringResponse.class).getBody();
+        return response.getResultStr();
     }
 }

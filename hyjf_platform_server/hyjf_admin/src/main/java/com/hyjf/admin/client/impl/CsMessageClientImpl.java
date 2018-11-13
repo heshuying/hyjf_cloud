@@ -6,6 +6,7 @@ package com.hyjf.admin.client.impl;
 import com.hyjf.admin.beans.request.SmsLogRequestBean;
 import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.promotion.PcChannelStatisticsResponse;
 import com.hyjf.am.response.app.AppChannelStatisticsResponse;
@@ -142,8 +143,8 @@ public class CsMessageClientImpl implements CsMessageClient {
 
     @Override
     public String getRetCode(String logOrdId) {
-        String response = restTemplate.getForEntity("http://CS-MESSAGE/cs-message/search/getRetCode/" + logOrdId, String.class).getBody();
-        return response;
+        StringResponse response = restTemplate.getForEntity("http://CS-MESSAGE/cs-message/search/getRetCode/" + logOrdId, StringResponse.class).getBody();
+        return response.getResultStr();
     }
 
     @Override

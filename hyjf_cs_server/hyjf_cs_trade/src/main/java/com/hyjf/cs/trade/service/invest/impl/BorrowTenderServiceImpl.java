@@ -1344,13 +1344,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if (CommonConstant.TENDER_TYPE_HJH.equalsIgnoreCase(borrowType)){
             // 计划的
             WebResult<Map<String, Object>> result = hjhTenderService.checkPlan(tender);
-            if("getTenderUrl".equals(flag)){
-                if(result.getData()!=null){
-                    String riskTested = (String) result.getData().get("riskTested");
-                    String message = (String) result.getData().get("message");
-                    throw new CheckException(riskTested,message);
-                }
-            }
+            //if("getTenderUrl".equals(flag)){
+                //if(result.getData()!=null){
+                    //String riskTested = (String) result.getData().get("riskTested");
+                    //String message = (String) result.getData().get("message");
+                    //throw new CheckException(riskTested,message);
+                //}
+           // }
             requestType = "9";
             url = baseUrl + "/join/plan?requestType=" + requestType;
             url += "&couponGrantId="+tender.getCouponGrantId()+"&borrowNid="+tender.getBorrowNid()+"&platform="+tender.getPlatform()+"&account="+tender.getAccount();

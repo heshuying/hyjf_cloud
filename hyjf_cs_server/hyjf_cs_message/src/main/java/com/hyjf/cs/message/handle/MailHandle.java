@@ -259,7 +259,7 @@ public class MailHandle {
 				}
 			}
 		}
-
+		logger.info("siteSetting is: {}", setting);
 		Properties prop = new Properties();
 		prop.put(CustomConstants.MAIL_SMTP_AUTH, setting.getSmtpVerify() == 1 ? "true" : "false");
 		prop.put(CustomConstants.MAIL_SMTP_TIMEOUT, smtpTimeout);
