@@ -3,19 +3,13 @@
  */
 package com.hyjf.admin.interceptor;
 
-import com.hyjf.am.vo.config.AdminSystemVO;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.exception.ReturnMessageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  * @author DongZeShan
@@ -37,44 +31,7 @@ public class AdminInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		logger.info("admin接收到请求,请求接口为:" + request.getRequestURI());
-		try {
-			String username = ((AdminSystemVO) request.getSession().getAttribute("user")).getUsername();
-			String val = RedisUtils.get("admin@" + username);
-			if (val != null && !val.equals(request.getHeader("Cookies"))) {
-				request.getSession().removeAttribute("user");
-				throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
-				//return false;
-			} else {
-				if(val!=null) {
-					RedisUtils.set("admin@" + username, val, 3600);
-				}
 
-			}
-
-		} catch (NullPointerException e) {
-			throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
-		}
-
-		if (handler instanceof HandlerMethod) {
-			AuthorityAnnotation authorityAnnotation = ((HandlerMethod) handler)
-					.getMethodAnnotation(AuthorityAnnotation.class);
-			// controller没有添加authorityAnnotation注解
-			if (authorityAnnotation == null) {
-				return true;
-			}
-			// 获取该角色 权限列表
-			List<String> perm = (List<String>) request.getSession().getAttribute("permission");
-			for (String string : perm) {
-				if (string.equals(authorityAnnotation.key() + ":" + authorityAnnotation.value())) {
-					return true;
-				}
-			}
-
-			logger.info("权限的key为:" + authorityAnnotation.key() + "权限的val:" + authorityAnnotation.value());
-			throw new ReturnMessageException(MsgEnum.ERR_USER_AUTHORITY);
-			//		return false;
-
-		}
 
 		return true;
 

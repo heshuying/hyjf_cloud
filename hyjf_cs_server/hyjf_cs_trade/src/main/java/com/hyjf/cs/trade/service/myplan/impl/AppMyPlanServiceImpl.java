@@ -314,8 +314,9 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
         }
         projectIntr.setPlanName(appCouponCustomize.getPlanName());
         projectIntr.setBorrowApr(appCouponCustomize.getPlanApr());
+        // mod by nxl 智投服务 修改优惠券锁定期显示 start
         // add 汇计划二期前端优化 持有中计划详情修改锁定期 nxl 20180420 start
-        SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd");
+      /*  SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd");
         Date datePeriod = null;
         if (NULL_STR.equals(appCouponCustomize.getCountInterestTime()) || DOUBLE_NULL_STR.equals(appCouponCustomize.getCountInterestTime())) {
             appCouponCustomize.setPlanPeriod("— —");
@@ -345,8 +346,9 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
         // add 汇计划二期前端优化 持有中计划详情修改锁定期 nxl 20180420 end
+        // mod by nxl 智投服务 修改优惠券锁定期显示 end
         projectIntr.setBorrowPeriod(appCouponCustomize.getPlanPeriod());
         projectIntr.setBorrowPeriodUnit(CommonUtils.getPeriodUnitByRepayStyle(appCouponCustomize.getRepayStyle()));
         projectIntr.setRepayStyle(appCouponCustomize.getRepayMethod());
@@ -387,7 +389,14 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
     private void copyPlanBaseInfoToResult(MyPlanDetailResultBean result, UserHjhInvistDetailCustomizeVO customize,
                                           String type) {
         MyPlanDetailResultBean.ProjectIntr projectIntr = result.getProjectIntr();
-
+        // 计划处于投资中状态(orderStatus1锁定中 2退出中 3已退出)
+        String orderStatus = customize.getOrderStatus();
+        if(StringUtils.isNotBlank(orderStatus)){
+            //非锁定中,app端隐藏投资服务协议按钮
+            projectIntr.setType(orderStatus);
+        }else{
+            projectIntr.setType("0");
+        }
         // 计划处于投资中状态
         List<String> statusList = Arrays.asList("0", "2", "99", "9");
         // 投资中状态不显示持有列表
@@ -398,8 +407,9 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
         } else{
             projectIntr.setStatus("未回款");
         }
+        // mod by nxl 智投服务 修改锁定期显示 start
         // add 汇计划二期前端优化 修改锁定期的显示方式  nxl 20180426 start
-        SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd");
+       /* SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd");
         Date datePeriod = null;
         if (NULL_STR.equals(customize.getCountInterestTime()) || DOUBLE_NULL_STR.equals(customize.getCountInterestTime())) {
             customize.setPlanPeriod("— —");
@@ -430,7 +440,8 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
             }
         }
         customize.getPlanPeriod();
-        projectIntr.setBorrowPeriod(customize.getPlanPeriod());
+        projectIntr.setBorrowPeriod(customize.getPlanPeriod());*/
+        // mod by nxl 智投服务 修改锁定期显示 end
         // add 汇计划二期前端优化 修改锁定期的显示方式  nxl 20180426 end
         projectIntr.setBorrowApr(StringUtils.isBlank(customize.getPlanApr()) ? "" :customize.getPlanApr().replace("%",""));
         projectIntr.setBorrowPeriod(customize.getPlanPeriod());

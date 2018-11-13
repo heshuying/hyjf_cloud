@@ -51,7 +51,7 @@ import java.util.Map;
  */
 @Api(value = "风车理财第三方登录",tags = "api端-风车理财第三方登录")
 @Controller
-@RequestMapping("/hyjf-api/api/user")
+@RequestMapping("/hyjf-wechat/api/user")
 public class ApiUserBindController extends BaseUserController {
 	@Autowired
 	SystemConfig systemConfig;
@@ -133,7 +133,7 @@ public class ApiUserBindController extends BaseUserController {
 	@ResponseBody
 	@PostMapping(value = "/bind")
 	public JSONObject bind(HttpServletRequest request, HttpServletResponse response,
-						   @ModelAttribute ApiUserPostBean apiUserPostBean, @ModelAttribute ApiLoginBean apiLoginBean) throws Exception{
+						   @ModelAttribute("apiUserPostBean") ApiUserPostBean apiUserPostBean, @ModelAttribute ("loginBean") ApiLoginBean apiLoginBean) throws Exception{
 		// 返回对象
 		JSONObject jsonObj = new JSONObject();
 		logger.info(JSON.toJSONString(apiUserPostBean));
@@ -145,6 +145,14 @@ public class ApiUserBindController extends BaseUserController {
 		Integer userId = null;
 		//用户名
 		String userName = null;
+
+		if(!StringUtils.isNotBlank(bindUniqueId)){
+			jsonObj = new JSONObject();
+			jsonObj.put("status", "99");
+			jsonObj.put("statusCode", "99");
+			jsonObj.put("statusDesc", "授权失败，风车理财用户id为空");
+			return jsonObj;
+		}
 		// 用户接受协议验证
 		if(!apiLoginBean.getReadAgreement()){
 			jsonObj = new JSONObject();
@@ -154,15 +162,16 @@ public class ApiUserBindController extends BaseUserController {
 			return jsonObj;
 		}
 		// 用户手机号码验证
-		if(!StringUtils.isNotBlank(apiLoginBean.getLoginUserName())){
+		if(!StringUtils.isNotBlank(apiLoginBean.getLoginBean_loginUserName())){
 			jsonObj = new JSONObject();
 			jsonObj.put("status", "99");
 			jsonObj.put("statusCode", "99");
 			jsonObj.put("statusDesc", "授权失败，请输入正确的手机号码");
 			return jsonObj;
 		}
+
 		//根据登陆账户名取得用户ID和用户名
-		UserVO users = loginService.getUser(apiLoginBean.getLoginUserName());
+		UserVO users = loginService.getUser(apiLoginBean.getLoginBean_loginUserName());
 		logger.info("users is :{}", users);
 		// 未获取的验证在下面登陆时 验证
 		if (users != null) {
@@ -204,8 +213,8 @@ public class ApiUserBindController extends BaseUserController {
 			return jsonObj;
 		}
 		LoginRequestVO user=new LoginRequestVO();
-		user.setUsername(apiLoginBean.getLoginUserName());
-		user.setPassword(apiLoginBean.getLoginPassword());
+		user.setUsername(apiLoginBean.getLoginBean_loginUserName());
+		user.setPassword(apiLoginBean.getLoginBean_loginPassword());
 		// 登陆
 		WebResult<WebViewUserVO> login = loginController.login( user,request);
 		if (!"000".equals(login.getStatus())) {

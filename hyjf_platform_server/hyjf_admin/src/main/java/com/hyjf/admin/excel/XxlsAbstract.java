@@ -5,6 +5,8 @@ import org.apache.poi.openxml4j.opc.OPCPackage;
 import org.apache.poi.xssf.eventusermodel.XSSFReader;
 import org.apache.poi.xssf.model.SharedStringsTable;
 import org.apache.poi.xssf.usermodel.XSSFRichTextString;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -22,6 +24,7 @@ import java.util.List;
  * XSSF and SAX (Event API)
  */
 public abstract class XxlsAbstract extends DefaultHandler {
+	private Logger logger = LoggerFactory.getLogger(XxlsAbstract.class);
 	private SharedStringsTable sst;
 	private String lastContents;
 	private boolean nextIsString;
@@ -43,9 +46,8 @@ public abstract class XxlsAbstract extends DefaultHandler {
 		OPCPackage pkg = OPCPackage.open(filename);
 		XSSFReader r = new XSSFReader(pkg);
 		SharedStringsTable sst = r.getSharedStringsTable();
-		
 		XMLReader parser = fetchSheetParser(sst);
-
+		logger.info(filename,sheetId,r,parser);
 		// rId2 found by processing the Workbook
 		// 根据 rId# 或 rSheet# 查找sheet
 		InputStream sheet2 = r.getSheet("rId"+sheetId);
@@ -55,6 +57,22 @@ public abstract class XxlsAbstract extends DefaultHandler {
 		parser.parse(sheetSource);
 		sheet2.close();
 	}
+
+
+    public void processOneSheet(InputStream in,int sheetId,List<JSONObject> resumeList) throws Exception {
+        OPCPackage pkg = OPCPackage.open(in);
+        XSSFReader r = new XSSFReader(pkg);
+        SharedStringsTable sst = r.getSharedStringsTable();
+        XMLReader parser = fetchSheetParser(sst);
+        // rId2 found by processing the Workbook
+        // 根据 rId# 或 rSheet# 查找sheet
+        InputStream sheet2 = r.getSheet("rId"+sheetId);
+        resumeLists = resumeList;
+        sheetIndex++;
+        InputSource sheetSource = new InputSource(sheet2);
+        parser.parse(sheetSource);
+        sheet2.close();
+    }
 
 	/**
 	 * 遍历 excel 文件
