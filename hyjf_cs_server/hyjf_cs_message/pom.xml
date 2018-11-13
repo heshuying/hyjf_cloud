@@ -91,6 +91,8 @@
 	</dependencies>
 
 	<build>
+		<finalName>hyjf-cs-message</finalName>
+
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -103,7 +105,6 @@
 							<artifactId>axis2</artifactId>
 						</dependency>
 					</requiresUnpack>
-					<finalName>hyjf-cs-message</finalName>
 				</configuration>
 			</plugin>
 			<plugin>
