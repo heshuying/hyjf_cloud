@@ -497,6 +497,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 bean.setParamter(paramter);
                 bean.setTeString(DF);
                 logger.info("-------------------------处理不分期债转，填充所有债转信息paramter："+JSONObject.toJSON(paramter));
+                logger.info("-------------------------处理不分期债转，填充所有债转信息bean："+JSONObject.toJSON(bean));
                 // 法大大生成合同
                 try {
                     fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
@@ -1153,7 +1154,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         // 标的编号
         paramter.put("borrowNid", borrow.getBorrowNid());
         //编号
-        paramter.put("NID", creditRepay.getUniqueNid());
+        paramter.put("NID", creditRepay.getAssignNid());
         //借款本金总额
         paramter.put("borrowAccount", borrow.getAccount().toString());
         // 借款利率
@@ -1193,10 +1194,11 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         paramter.put("BorrowUsername",borrowUsers.getUsername());
         bean.setTenderUserId(tenderUserId);
         bean.setTenderUserName(tenderUser.getUsername());
-        bean.setOrdid(creditRepay.getUniqueNid());//承接订单号
-        bean.setAssignOrderId(creditRepay.getUniqueNid());
+        bean.setOrdid(creditRepay.getAssignNid());//承接订单号
+        bean.setAssignOrderId(creditRepay.getAssignNid());
         bean.setCreditNid(creditRepay.getCreditNid());//债转编号
         bean.setCreditTenderNid(creditRepay.getCreditTenderNid());//原始投资订单号
+        logger.info("-------------------------处理不分期债转，填充所有债转信息bean2："+JSONObject.toJSON(bean));
         return paramter;
     }
 
