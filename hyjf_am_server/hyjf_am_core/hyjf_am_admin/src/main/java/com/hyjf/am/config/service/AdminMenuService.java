@@ -33,12 +33,12 @@ public interface AdminMenuService {
 	 */
 	public boolean isExistsRecord(Integer id);
 
-	/**
+	/**	
 	 * 菜单插入
 	 *
 	 * @param record
 	 */
-	public void insertRecord(AdminMenuRequest record);
+	public String insertRecord(AdminMenuRequest record);
 
 	/**
 	 * 菜单更新

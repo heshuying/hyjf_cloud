@@ -97,6 +97,8 @@
     </dependencies>
 
 	<build>
+		<finalName>hyjf-callcenter</finalName>
+
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -109,7 +111,7 @@
 							<artifactId>axis2</artifactId>
 						</dependency>
 					</requiresUnpack>
-					<finalName>hyjf-callcenter</finalName>
+
 				</configuration>
 			</plugin>
 			<plugin>

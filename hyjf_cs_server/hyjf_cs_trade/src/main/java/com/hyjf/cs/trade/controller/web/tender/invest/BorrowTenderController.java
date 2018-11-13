@@ -14,6 +14,7 @@ import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.invest.BorrowTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -44,6 +45,8 @@ public class BorrowTenderController extends BaseTradeController {
 
     @Autowired
     private BorrowTenderService borrowTenderService;
+    @Autowired
+    private HjhTenderService hjhTenderService;
 
     @ApiOperation(value = "散标投资", notes = "web端散标投资")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
@@ -75,7 +78,10 @@ public class BorrowTenderController extends BaseTradeController {
         tender.setIp(ip);
         tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
+        //校验用户测评
+        Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(tender);
         WebResult<Map<String,Object>>  result =  borrowTenderService.borrowTenderCheck(tender,null,null,null,null);
+        result.setData(resultEval);
         return result;
     }
 
