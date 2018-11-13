@@ -291,7 +291,9 @@ public class AdminUserServiceImpl implements AdminUserService {
 	@Override
 	public List<AdminRole> getAdminRoleList() {
 		AdminRoleExample example = new AdminRoleExample();
-			example.or().andStatusEqualTo(1);
+		com.hyjf.am.config.dao.model.auto.AdminRoleExample.Criteria criteria = example.createCriteria();
+			criteria.andStatusEqualTo(1);
+			criteria.andDelFlagEqualTo(0);
 		example.setOrderByClause(" sort ");
 		return adminRoleMapper.selectByExample(example);
 	}

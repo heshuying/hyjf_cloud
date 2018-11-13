@@ -828,7 +828,7 @@ public class BorrowCommonController extends BaseController {
 						}else if(rowNum == 28){//法人
 							resultMap.put("comLegalPerson", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 29){//注册地区
-							resultMap.put("comLocationCity", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("registrationAddress", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 30){//主营业务
 							resultMap.put("comMainBusiness", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 31){//在平台逾期次数
@@ -869,7 +869,7 @@ public class BorrowCommonController extends BaseController {
 							}else{
 								resultMap.put("sex", "2");
 							}
-							resultMap.put("sex", this.getValue(hssfRow.getCell(1)));
+							//resultMap.put("sex", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 44){//婚姻状况
 							if( this.getValue(hssfRow.getCell(1)).equals("已婚") ){
 								resultMap.put("merry", "1");
@@ -880,7 +880,7 @@ public class BorrowCommonController extends BaseController {
 							}else if(this.getValue(hssfRow.getCell(1)).equals("丧偶") ){
 								resultMap.put("merry", "4");
 							}
-							resultMap.put("merry", this.getValue(hssfRow.getCell(1)));
+						//	resultMap.put("merry", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 45){//工作城市
 							resultMap.put("location_c", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 46){//户籍地
@@ -1768,12 +1768,12 @@ public class BorrowCommonController extends BaseController {
 			return String.valueOf(hssfCell.getBooleanCellValue());
 		} else if (hssfCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
 			// 返回数值类型的值
-			return String.valueOf(hssfCell.getNumericCellValue());
+			return String.valueOf((int)hssfCell.getNumericCellValue());
 		} else if (hssfCell.getCellType() == Cell.CELL_TYPE_FORMULA) {
 			// 单元格为公式类型时
 			if (hssfCell.getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC) {
 				// 返回数值类型的值
-				return String.valueOf((int)hssfCell.getNumericCellValue());
+				return String.valueOf(hssfCell.getNumericCellValue());
 			}else{
 				// 返回字符串类型的值
 				return String.valueOf(hssfCell.getStringCellValue());

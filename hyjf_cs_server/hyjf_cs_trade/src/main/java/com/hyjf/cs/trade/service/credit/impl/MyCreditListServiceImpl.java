@@ -786,6 +786,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         resultMap.put("assignInterest", assignInterest.setScale(2, BigDecimal.ROUND_DOWN));// 债转期全部利息
         resultMap.put("creditCapital", creditCapital.setScale(2, BigDecimal.ROUND_DOWN));// 可转本金
         resultMap.put("creditPrice", creditPrice.setScale(2, BigDecimal.ROUND_DOWN));// 折后价格
+        resultMap.put("expectInterest", expectInterest.setScale(2, BigDecimal.ROUND_DOWN));// 预计到账金额
         resultMap.put("creditFee", creditFee.setScale(2, BigDecimal.ROUND_DOWN));// 服务费
         return resultMap;
     }

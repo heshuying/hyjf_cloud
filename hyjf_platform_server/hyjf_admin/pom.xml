@@ -151,6 +151,8 @@
 
 
 	<build>
+		<finalName>hyjf-admin</finalName>
+
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -163,7 +165,7 @@
 							<artifactId>axis2</artifactId>
 						</dependency>
 					</requiresUnpack>
-					<finalName>hyjf-admin</finalName>
+
 				</configuration>
 			</plugin>
 			<plugin>

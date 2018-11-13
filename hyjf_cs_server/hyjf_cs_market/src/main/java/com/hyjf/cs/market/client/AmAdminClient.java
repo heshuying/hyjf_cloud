@@ -21,29 +21,6 @@ import java.util.List;
 public interface AmAdminClient {
 
     /**
-     * 投资人按照地域分布
-     * @param lastDay 一个月的最后一天
-     * @return
-     */
-    List<TenderCityCountVO> getTenderCityGroupBy(Date lastDay);
-
-    /**
-     * 按照性别统计投资人的分布
-     * @param date 上个月的最后一天
-     */
-    List<TenderSexCountVO>  getTenderSexGroupBy(Date date);
-
-    /**
-     *
-     * @param date 上个月的最后一天
-     * @param firstAge  年龄下限
-     * @param endAge	年龄上限
-     * @return
-     */
-    int getTenderAgeByRange(Date date,int firstAge,int endAge);
-
-
-    /**
      * 查询千乐渠道散标数据
      * @return
      */
@@ -69,28 +46,6 @@ public interface AmAdminClient {
      * @author xiehuili
      */
      SmsConfigResponse initSmsConfig(SmsConfigRequest request);
-
-    /**
-     * 月交易金额
-     * @param firstDay 月第一天
-     * @param lastDay 月最后一天
-     * @return
-     */
-    BigDecimal getAccountByMonth(Date firstDay, Date lastDay);
-
-    Integer getTradeCountByMonth(Date firstDay, Date lastDay);
-
-    Integer getLoanNum(Date date);
-
-    BigDecimal getInvestLastDate(Date date);
-
-    Integer getTenderCount(Date date);
-
-    float getFullBillAverageTime(Date date);
-
-    BigDecimal getRepayTotal(Date date);
-
-    UtmPlatVO getUtmPlatVO(Integer sourceId);
 
     List<Integer> getUsersInfoList();
 

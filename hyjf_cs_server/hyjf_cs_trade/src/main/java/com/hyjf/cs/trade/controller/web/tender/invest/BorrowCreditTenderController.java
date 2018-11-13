@@ -10,6 +10,7 @@ import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.invest.BorrowCreditTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -36,6 +37,9 @@ public class BorrowCreditTenderController extends BaseTradeController {
 
     @Autowired
     private BorrowCreditTenderService borrowTenderService;
+
+    @Autowired
+    private HjhTenderService hjhTenderService;
 
     @ApiOperation(value = "web端-散标债转投资", notes = "web端-散标债转投资")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
@@ -105,7 +109,6 @@ public class BorrowCreditTenderController extends BaseTradeController {
         tender.setIp(ip);
         tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
-
         WebResult<Map<String,Object>> result = null;
         try{
             result =  borrowTenderService.borrowCreditCheck(tender);

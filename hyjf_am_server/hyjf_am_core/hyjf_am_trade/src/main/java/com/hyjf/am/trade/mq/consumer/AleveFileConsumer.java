@@ -106,15 +106,23 @@ public class AleveFileConsumer extends Consumer{
 
                 //插入数据
                 if(!CollectionUtils.isEmpty(aleveLogs)){
-                    aleveLogFileService.insertAleveLog(aleveLogs);
-                    logger.info("AleveLog已插入 " + aleveLogs.size() + " 条记录");
+                    try {
+                        aleveLogFileService.insertAleveLogByList(aleveLogs);
+                        logger.info("AleveLog已插入 " + aleveLogs.size() + " 条记录");
+                    } catch (Exception e){
+                        logger.error("AleveLog插入失败", e);
+                    }
                 }
                 if(!CollectionUtils.isEmpty(aleveErrorLogs)){
-                    aleveLogFileService.insertAleveErrorLog(aleveErrorLogs);//异常记录
-                    logger.info("AleveErrorLog已插入 " + aleveErrorLogs.size() + " 条记录");
+                    try {
+                        aleveLogFileService.insertAleveErrorLogByList(aleveErrorLogs);
+                        logger.info("AleveErrorLog已插入 " + aleveErrorLogs.size() + " 条记录");
+                    } catch (Exception e){
+                        logger.error("AleveErrorLog插入失败", e);
+                    }
                 }
             } catch (Exception e) {
-                logger.error("AleveLog插入失败",e);
+                logger.error("AleveLog插入失败", e);
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
             JSONObject params = new JSONObject();

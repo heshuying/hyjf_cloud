@@ -33,6 +33,7 @@ public class ApiLoginBean extends BaseBean {
     private String retUrl;
     // add by zhangjp 支持登录完成后跳转回原页面 20161014 end
 
+
     public String getLoginUserName() {
         return loginUserName;
     }
@@ -47,6 +48,10 @@ public class ApiLoginBean extends BaseBean {
 
     public void setLoginPassword(String loginPassword) {
         this.loginPassword = loginPassword;
+    }
+
+    public boolean isReadAgreement() {
+        return readAgreement;
     }
 
     public String getCaptcha() {

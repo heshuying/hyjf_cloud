@@ -120,11 +120,15 @@ public class BorrowController extends BaseController {
 	public BorrowResponse getBorrow(@PathVariable String borrowNid) {
 		BorrowResponse response = new BorrowResponse();
 		Borrow borrow = borrowService.getBorrow(borrowNid);
-		if (borrow != null) {
-			BorrowAndInfoVO borrowVO = new BorrowAndInfoVO();
-			BeanUtils.copyProperties(borrow, borrowVO);
-			response.setResult(borrowVO);
+		BorrowInfo borrowInfo = borrowService.getBorrowInfoByNid(borrowNid);
+		BorrowAndInfoVO borrowVO = new BorrowAndInfoVO();
+		if (Validator.isNotNull(borrow)){
+			borrowVO=CommonUtils.convertBean(borrow,BorrowAndInfoVO.class);
 		}
+		if (Validator.isNotNull(borrowInfo)){
+			borrowVO.setInstCode(borrowInfo.getInstCode());
+		}
+		response.setResult(borrowVO);
 		return response;
 	}
 
@@ -176,9 +180,15 @@ public class BorrowController extends BaseController {
 	public BorrowResponse getBorrowByNid(@PathVariable String borrowId){
 		BorrowResponse response = new BorrowResponse();
 		Borrow borrow = borrowService.getBorrow(borrowId);
+		BorrowInfo borrowInfo = borrowService.getBorrowInfoByNid(borrowId);
+		BorrowAndInfoVO baiv = new BorrowAndInfoVO();
 		if (Validator.isNotNull(borrow)){
-			response.setResult(CommonUtils.convertBean(borrow,BorrowAndInfoVO.class));
+			baiv=CommonUtils.convertBean(borrow,BorrowAndInfoVO.class);
 		}
+		if (Validator.isNotNull(borrowInfo)){
+			baiv.setInstCode(borrowInfo.getInstCode());
+		}
+		response.setResult(baiv);
 		return response;
 	}
 

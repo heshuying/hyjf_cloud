@@ -596,7 +596,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             }
 
             if (borrowTender.getCreateTime() != null) {
-                preckCredit(borrowBeansList1, "投资时间", GetDate.date2Str(borrowTender.getCreateTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
+                preckCredit(borrowBeansList1, "投资时间", GetDate.date2Str(borrowTender.getCreateTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm")));
             } else {
                 preckCredit(borrowBeansList1, "投资时间", "");
             }

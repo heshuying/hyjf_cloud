@@ -4818,7 +4818,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = urlBase + "projectlist/app/getIncreaseInterestInvestByTenderNid/" + tenderNid;
         IncreaseInterestInvestResponse response = restTemplate.getForEntity(url,IncreaseInterestInvestResponse.class).getBody();
         if(Response.isSuccess(response)){
-            response.getResult();
+           return response.getResult();
         }
         return null;
     }
@@ -5398,7 +5398,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public List<CouponRepayMonitorVO> selectCouponRepayMonitor(String nowDay) {
-        String url = "http://AM-ADMIN/am-trade/couponRepayMonitor/selectCouponRepayMonitor/"+nowDay;
+        String url = "http://AM-TRADE/am-trade/couponRepayMonitor/selectCouponRepayMonitor/"+nowDay;
         CouponRepayMonitorResponse response = restTemplate.getForEntity(url,CouponRepayMonitorResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -5408,7 +5408,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public int insertCouponRepayMonitor(CouponRepayMonitorVO monitor) {
-        String url = "http://AM-ADMIN/am-trade/couponRepayMonitor/insertCouponRepayMonitor";
+        String url = "http://AM-TRADE/am-trade/couponRepayMonitor/insertCouponRepayMonitor";
         CouponRepayMonitorResponse response = restTemplate.postForEntity(url,monitor, CouponRepayMonitorResponse.class).getBody();
         if (response != null) {
             return response.getInsertFlag();
@@ -5418,7 +5418,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public int updateCouponRepayMonitor(CouponRepayMonitorVO monitor) {
-        String url = "http://AM-ADMIN/am-trade/couponRepayMonitor/updateCouponRepayMonitor";
+        String url = "http://AM-TRADE/am-trade/couponRepayMonitor/updateCouponRepayMonitor";
         CouponRepayMonitorResponse response = restTemplate.postForEntity(url,monitor,CouponRepayMonitorResponse.class).getBody();
         if (response != null) {
             return response.getUpdateFlag();

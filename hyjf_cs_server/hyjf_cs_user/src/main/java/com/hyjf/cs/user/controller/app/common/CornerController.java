@@ -288,4 +288,5 @@ public class CornerController extends BaseController {
         map.put("url", version.getUrl());
         return map;
     }
+
 }

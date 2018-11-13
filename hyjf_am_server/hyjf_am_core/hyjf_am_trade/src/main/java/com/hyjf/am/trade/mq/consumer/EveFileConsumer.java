@@ -98,16 +98,24 @@ public class EveFileConsumer extends Consumer{
 
                 //插入数据
                 if(!CollectionUtils.isEmpty(eveLogs)){
-                    aleveLogFileService.insertEveLog(eveLogs);
-                    logger.info("EveLog已插入 " + eveLogs.size() + " 条记录");
+                    try {
+                        aleveLogFileService.insertEveLogByList(eveLogs);
+                        logger.info("EveLog已插入 " + eveLogs.size() + " 条记录");
+                    } catch (Exception e){
+                        logger.error("EveLog插入失败", e);
+                    }
                 }
                 if(!CollectionUtils.isEmpty(aleveErrorLogs)){
-                    aleveLogFileService.insertAleveErrorLog(aleveErrorLogs);//异常记录
-                    logger.info("AleveErrorLog已插入 " + aleveErrorLogs.size() + " 条记录");
+                    try {
+                        aleveLogFileService.insertAleveErrorLogByList(aleveErrorLogs);
+                        logger.info("AleveErrorLog已插入 " + aleveErrorLogs.size() + " 条记录");
+                    } catch (Exception e){
+                        logger.error("AleveErrorLog插入失败", e);
+                    }
                 }
 
             } catch (Exception e) {
-                logger.error("eveLog插入失败",e);
+                logger.error("EveLog插入失败", e);
                 return ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
             logger.info("********************导入流水明细Eve结束*************************");

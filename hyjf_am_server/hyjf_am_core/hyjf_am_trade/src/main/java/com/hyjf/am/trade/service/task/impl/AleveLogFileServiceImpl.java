@@ -103,42 +103,36 @@ public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLog
 
     /**
      * aleveLog表数据插入
-     * @param list
+     * @param aleveLog
      */
     @Override
-    public void insertAleveLog(List<AleveLog> list){
-        for (AleveLog aleve : list) {
-            aleve.setCreateTime(GetDate.getNowTime());
-            aleve.setCreateUserId(1);
-            aleve.setDelFlag(0);
-            aleve.setUpdFlag(0);
-            aleveLogMapper.insert(aleve);
-        }
+    public void insertAleveLog(AleveLog aleveLog){
+        aleveLog.setCreateTime(GetDate.getNowTime());
+        aleveLog.setCreateUserId(1);
+        aleveLog.setDelFlag(0);
+        aleveLog.setUpdFlag(0);
+        aleveLogMapper.insert(aleveLog);
     }
 
     /**
      * eveLog表数据插入
-     * @param list
+     * @param eveLog
      */
     @Override
-    public void insertEveLog(List<EveLog> list){
-        for (EveLog eve : list) {
-            eve.setCreateTime(GetDate.getNowTime());
-            eve.setCreateUserId(1);
-            eve.setDelFlag(0);
-            eveLogMapper.insert(eve);
-        }
+    public void insertEveLog(EveLog eveLog){
+        eveLog.setCreateTime(GetDate.getNowTime());
+        eveLog.setCreateUserId(1);
+        eveLog.setDelFlag(0);
+        eveLogMapper.insert(eveLog);
     }
 
     /**
      * aleveErrorLog表数据插入
-     * @param aleveErrorLogs
+     * @param aleveErrorLog
      */
     @Override
-    public void insertAleveErrorLog(List<AleveErrorLog> aleveErrorLogs){
-        for(AleveErrorLog aleveErrorLog : aleveErrorLogs){
-            aleveErrorLogMapper.insert(aleveErrorLog);
-        }
+    public void insertAleveErrorLog(AleveErrorLog aleveErrorLog){
+        aleveErrorLogMapper.insert(aleveErrorLog);
     }
 
     /**
@@ -386,5 +380,32 @@ public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLog
         param.put("accountId", accountId);
         List<String> userIds = manualReverseCustomizeMapper.selectUserIdsByAccount(param);
         return userIds;
+    }
+
+    /**
+     * aleveLog表数据插入
+     * @param list
+     */
+    @Override
+    public void insertAleveLogByList(List<AleveLog> list){
+        aleveCustomizeMapper.insertAleveLogByList(list);
+    }
+
+    /**
+     * eveLog表数据插入
+     * @param list
+     */
+    @Override
+    public void insertEveLogByList(List<EveLog> list){
+        aleveCustomizeMapper.insertEveLogByList(list);
+    }
+
+    /**
+     * aleveErrorLog表数据插入
+     * @param list
+     */
+    @Override
+    public void insertAleveErrorLogByList(List<AleveErrorLog> list){
+        aleveCustomizeMapper.insertAleveErrorLogByList(list);
     }
 }
