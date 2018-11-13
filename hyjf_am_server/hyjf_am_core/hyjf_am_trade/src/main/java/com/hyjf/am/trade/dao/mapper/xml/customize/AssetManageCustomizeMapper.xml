@@ -1860,15 +1860,16 @@
 		'1' AS invest_type,
 		hydbpt.borrow_class project_type,
 		hydbr.nid as order_id,
-		case when hydb.borrow_extra_yield=0 then
+		case when hydbinfo.borrow_extra_yield=0 then
 		''
 		else
-		CONCAT('加息',hydb.borrow_extra_yield, '%')
+		CONCAT('加息',hydbinfo.borrow_extra_yield, '%')
 		end
-		borrow_extra_yield
+        hydbinfo.borrow_extra_yield
 		FROM
 		ht_borrow_recover hydbr
 		INNER JOIN ht_borrow hydb ON hydbr.borrow_nid = hydb.borrow_nid
+        LEFT JOIN ht_borrow_info hydbinfo ON hydb.borrow_nid = hydbinfo.borrow_nid
 		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
 		WHERE
 		(hydbpt.borrow_project_type ='HZT' OR hydbpt.borrow_project_type ='HXF')
@@ -1898,15 +1899,16 @@
 		'' AS invest_type,
 		'HZR' AS project_type,
 		hct.assign_nid AS order_id,
-		case when hydb.borrow_extra_yield=0 then
+		case when hydbinfo.borrow_extra_yield=0 then
 		''
 		else
-		CONCAT('加息',hydb.borrow_extra_yield, '%')
+		CONCAT('加息',hydbinfo.borrow_extra_yield, '%')
 		end
-		borrow_extra_yield
+        hydbinfo.borrow_extra_yield
 		FROM
 		ht_credit_tender hct
 		INNER JOIN ht_borrow hydb ON hydb.borrow_nid = hct.bid_nid
+        LEFT JOIN ht_borrow_info hydbinfo ON hydb.borrow_nid = hydbinfo.borrow_nid
 		WHERE hct.user_id = #{userId}
 		AND hct.status = 1
 
@@ -1963,16 +1965,17 @@
 		'2' AS invest_type,
 		hydbpt.borrow_class project_type,
 		hcr.tender_id as order_id,
-		case when hydb.borrow_extra_yield=0 then
+		case when hydbinfo.borrow_extra_yield=0 then
 		''
 		else
-		CONCAT('加息',hydb.borrow_extra_yield, '%')
+		CONCAT('加息',hydbinfo.borrow_extra_yield, '%')
 		end
-		borrow_extra_yield
+        hydbinfo.borrow_extra_yield
 		FROM
 		ht_coupon_recover hcr
 		INNER JOIN ht_borrow_tender_cpn hbt ON hcr.tender_id = hbt.nid
 		INNER JOIN ht_borrow hydb ON hbt.borrow_nid = hydb.borrow_nid
+        LEFT JOIN ht_borrow_info hydbinfo ON hydb.borrow_nid = hydbinfo.borrow_nid
 		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
 		LEFT JOIN ht_coupon_tender hct ON hct.order_id = hbt.nid
 		LEFT JOIN ht_coupon_user hcu ON hcu.id = hct.coupon_grant_id
@@ -2040,12 +2043,12 @@
 		'3' AS invest_type,
 		hydbpt.borrow_class project_type,
 		hiii.tender_nid as order_id,
-		case when hydb.borrow_extra_yield=0 then
+		case when hydbinfo.borrow_extra_yield=0 then
 		''
 		else
-		CONCAT('加息',hydb.borrow_extra_yield, '%')
+		CONCAT('加息',hydbinfo.borrow_extra_yield, '%')
 		end
-		borrow_extra_yield
+        hydbinfo.borrow_extra_yield
 		FROM
 		ht_borrow hydb
 		INNER JOIN ht_borrow_info hydbinfo ON hydb.borrow_nid = hydbinfo.borrow_nid
