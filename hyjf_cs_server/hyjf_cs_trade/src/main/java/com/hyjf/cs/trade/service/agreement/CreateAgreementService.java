@@ -18,5 +18,5 @@ import java.util.List;
  */
 public interface CreateAgreementService extends BaseTradeService {
 
-    JSONObject getIntermediaryAgreementPDFUrl(String nid);
+    List<TenderAgreementVO> getIntermediaryAgreementPDFUrl(String nid);
 }

@@ -119,7 +119,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 	public SiteSettingsVO findSiteSetting() {
 
 		SiteSettingsResponse response = restTemplate
-				.getForEntity("http://AM-CONFIG/am-config/siteSettings/findOne/", SiteSettingsResponse.class).getBody();
+				.getForEntity("http://AM-CONFIG/am-config/site_settings/findOne/", SiteSettingsResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}

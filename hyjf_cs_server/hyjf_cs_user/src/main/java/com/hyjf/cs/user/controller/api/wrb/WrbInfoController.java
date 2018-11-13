@@ -46,7 +46,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  */
 @RestController
 @Api(tags = "风车理财-平台公告查询接口")
-@RequestMapping("/wrb_interface")
+@RequestMapping("/hyjf-api/wrb_interface")
 public class WrbInfoController {
     private Logger logger = LoggerFactory.getLogger(WrbInfoController.class);
     public static final String datetimeFormat_key = "yyyy-MM-dd HH:mm:ss";
