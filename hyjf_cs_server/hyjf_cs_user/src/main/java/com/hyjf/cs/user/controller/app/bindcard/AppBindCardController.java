@@ -45,7 +45,8 @@ public class AppBindCardController extends BaseUserController {
     public static final String JUMP_HTML_ERROR_PATH = "/user/bankCard/bind/result/failed";
     /** 绑卡成功页面 */
     public static final String JUMP_HTML_SUCCESS_PATH = "/user/bankCard/bind/result/success";
-    /** 绑卡处理中页面 */
+    /** 绑卡处
+     * 理中页面 */
     public static final String JUMP_HTML_HANDLING_PATH = "/user/bankCard/bind/result/handing";
 
     @Autowired
@@ -63,6 +64,7 @@ public class AppBindCardController extends BaseUserController {
         logger.info("获取绑卡数据接口开始，userId：" + userId);
 
 //        Integer userId = Integer.valueOf(request.getParameter("userId"));
+
 
         if(userId == null){
             resultBean.setStatus(CustomConstants.APP_STATUS_FAIL);
