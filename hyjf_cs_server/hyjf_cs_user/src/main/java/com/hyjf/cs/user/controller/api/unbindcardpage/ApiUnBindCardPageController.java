@@ -91,7 +91,7 @@ public class ApiUnBindCardPageController extends BaseUserController {
                 return callbackErrorView(paramMap);
             }
 
-            UserVO user =unBindCardService.getUsersById(unbindCardPageRequestBean.getUserId());//用户ID
+            UserVO user =unBindCardService.getUsersById(bankOpenAccount.getUserId());//用户ID
             if(user.getUserType()==1){
                 //企业用户提示联系客服
                 logger.info("-------------------企业用户解绑请联系客服！--------------------");
