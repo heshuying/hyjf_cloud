@@ -697,7 +697,7 @@ public class UserManagerController extends BaseController {
      * @return
      */
     @RequestMapping("/getBindUniqueIdByUserId/{userId}/{bindPlatformId}")
-    public String getBindUniqueIdByUserId(int userId, int bindPlatformId) {
+    public String getBindUniqueIdByUserId(@PathVariable Integer userId,@PathVariable Integer bindPlatformId) {
     	return userManagerService.getBindUniqueIdByUserId( userId,  bindPlatformId);
     }
 	/**

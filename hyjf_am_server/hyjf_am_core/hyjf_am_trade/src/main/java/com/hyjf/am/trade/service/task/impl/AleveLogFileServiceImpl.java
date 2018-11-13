@@ -390,4 +390,22 @@ public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLog
     public void insertAleveLogByList(List<AleveLog> list){
         aleveCustomizeMapper.insertAleveLogByList(list);
     }
+
+    /**
+     * eveLog表数据插入
+     * @param list
+     */
+    @Override
+    public void insertEveLogByList(List<EveLog> list){
+        aleveCustomizeMapper.insertEveLogByList(list);
+    }
+
+    /**
+     * aleveErrorLog表数据插入
+     * @param list
+     */
+    @Override
+    public void insertAleveErrorLogByList(List<AleveErrorLog> list){
+        aleveCustomizeMapper.insertAleveErrorLogByList(list);
+    }
 }
