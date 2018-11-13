@@ -1703,7 +1703,7 @@ public class FddHandle {
 
 			//拼接URL
 			List jointPathList = new ArrayList();
-			String imageSavePath = savePath + fileName;
+			String imageSavePath = savePath + tenderAgreementID;
 			//转换成图片
 			logger.info("---------------脱敏下载开始将PDF转换成图片：tenderAgreementID："+tenderAgreementID+"-----" + filePath);
 			PDFToImage.pdf2img(filePath, imageSavePath, PDFToImage.IMG_TYPE_PNG);
@@ -2124,6 +2124,7 @@ public class FddHandle {
 		}
 		String output = imageSavePath;
 		String source = imageFilePath;    //签章源图片路径
+        logger.info("-----------开始下载脱敏，获得签章源图片路径" + imageFilePath);
 		String fileParent = systemConfig.getFddFileUpload();
 		logger.info("-----------开始下载脱敏，获得签章图片父级别路径" + fileParent);
 		String signIcon = fileParent + borrowSigntmImage; //签章覆盖图片路径
