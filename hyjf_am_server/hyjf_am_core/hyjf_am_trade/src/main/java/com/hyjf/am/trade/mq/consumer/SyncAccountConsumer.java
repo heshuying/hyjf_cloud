@@ -15,6 +15,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -223,6 +224,15 @@ public class SyncAccountConsumer extends Consumer {
             httpPost.setEntity(uefEntity);
             // 执行post方法
             response = httpclient.execute(httpPost);
+
+            // 执行post方法
+            response = httpclient.execute(httpPost);
+            if (response != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
+                String content = EntityUtils.toString(response.getEntity());
+                logger.info("======"+ CONSUMER_NAME+" 投递返回结果 [{}]=====",content);
+            }else{
+                logger.info("=====" + CONSUMER_NAME +" 投递结果httpStatus异常=====");
+            }
         } catch (Exception e) {
             e.printStackTrace();
         } finally {

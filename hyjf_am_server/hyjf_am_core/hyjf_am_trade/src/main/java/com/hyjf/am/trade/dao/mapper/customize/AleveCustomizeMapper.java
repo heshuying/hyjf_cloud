@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
+import com.hyjf.am.trade.dao.model.auto.AleveLog;
 import com.hyjf.am.trade.dao.model.customize.AleveLogCustomize;
 
 import java.util.List;
@@ -31,4 +32,5 @@ public interface AleveCustomizeMapper {
 
     List<AleveLogCustomize> queryAleveLogListByTranstype(List<String> tranStype);
 
+    int insertAleveLogByList(List<AleveLog> list);
 }
