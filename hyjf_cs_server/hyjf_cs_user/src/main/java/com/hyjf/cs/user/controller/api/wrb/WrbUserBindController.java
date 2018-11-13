@@ -239,7 +239,8 @@ public class WrbUserBindController extends BaseUserController {
 
             // 汇盈金服账号已绑定其他用户验证
             String fcUserId = loginService.getBindUniqueIdByUserId(userId, WrbCommonDateUtil.FCLC_INSTCODE);
-            if(fcUserId != null){
+            logger.info("fcUserId is:{}", fcUserId);
+            if(StringUtils.isNotBlank(fcUserId)){
                 jsonObj = new JSONObject();
                 jsonObj.put("status", BaseResultBeanFrontEnd.FAIL);
                 jsonObj.put("statusCode", BaseResultBeanFrontEnd.FAIL);
