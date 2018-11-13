@@ -171,8 +171,7 @@ public class AutoTenderExceptionController  extends BaseController {
      */
     @RequestMapping("/updateBorrowForAutoTender")
     public Response updateBorrowForAutoTender(@RequestBody UpdateBorrowForAutoTenderRequest request) {
-        Borrow borrow = new Borrow();
-        HjhAccede hjhAccede = new HjhAccede();
+        logger.info("=========updateBorrowForAutoTender,参数为:"+JSONObject.toJSON(request)+"=======");
         BankCallBean bean = new BankCallBean();
         String borrowNid = request.getBorrowNid();
         String accedeOrderId = request.getAccedeOrderId();
