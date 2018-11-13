@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.controller.web.agreement;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.resquest.trade.UserInvestListBeanRequest;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
@@ -64,8 +65,30 @@ public class CreateAgreementController extends BaseTradeController {
     @ApiOperation(value = "账户中心-资产管理-当前持有-- 投资协议(实际为散标居间协议)下载", notes = "账户中心-资产管理-当前持有-- 投资协议(实际为散标居间协议)下载")
     @GetMapping("/intermediaryAgreementPDF")
     public JSONObject intermediaryAgreementPDF(HttpServletRequest request, HttpServletResponse response,UserInvestListBeanRequest form) {
-        JSONObject jsonObject = createAgreementService.getIntermediaryAgreementPDFUrl(form.getNid());
-        return jsonObject;
+        JSONObject object=new JSONObject();
+        List<TenderAgreementVO> list=createAgreementService.getIntermediaryAgreementPDFUrl(form.getNid());
+        if(list!=null&&list.size()>0){
+            TenderAgreementVO agreementVO=list.get(0);
+            if(agreementVO.getStatus()==3){
+                //本地pdf文件路径
+                object.put("pdfUrl",systemConfig.getBasePathurl()+systemConfig.getHyjfFtpBasepathPdf()+agreementVO.getPdfUrl());
+                //合同查看地址
+                object.put("viewpdfUrl",agreementVO.getViewpdfUrl());
+                //合同下载地址
+                object.put("downloadUrl",agreementVO.getDownloadUrl());
+                //脱敏图片存放地址
+                object.put("imgUrl",systemConfig.getBasePathurl()+systemConfig.getHyjfFtpBasepathPdf()+agreementVO.getImgUrl());
+                object.put("status",BaseResult.SUCCESS);
+                object.put("statusDesc",BaseResult.SUCCESS_DESC);
+            }else{
+                object.put("status",BaseResult.ERROR);
+                object.put("statusDesc","暂无可下载协议");
+            }
+        }else {
+            object.put("status",BaseResult.ERROR);
+            object.put("statusDesc","暂无可下载协议");
+        }
+        return object;
     }
 
 
