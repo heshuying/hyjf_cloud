@@ -7,9 +7,11 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.hyjf.am.config.dao.mapper.auto.HolidaysConfigMapper;
+import com.hyjf.am.config.dao.mapper.auto.HolidaysConfigNewMapper;
 import com.hyjf.am.config.dao.mapper.customize.HolidaysConfigCustomizeMapper;
 import com.hyjf.am.config.dao.model.auto.HolidaysConfigNew;
 import com.hyjf.am.config.dao.model.auto.HolidaysConfigExample;
+import com.hyjf.am.config.dao.model.auto.HolidaysConfigNewExample;
 import com.hyjf.am.config.service.HolidaysConfigNewService;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.http.HttpDeal;
@@ -33,7 +35,7 @@ public class HolidaysConfigNewServiceImpl implements HolidaysConfigNewService {
 	private Logger logger = LoggerFactory.getLogger(HolidaysConfigNewServiceImpl.class);
 
 	@Autowired
-	private HolidaysConfigMapper holidaysConfigMapper;
+	private HolidaysConfigNewMapper holidaysConfigNewMapper;
 	@Autowired
 	private HolidaysConfigCustomizeMapper holidaysConfigCustomizeMapper;
 
@@ -125,10 +127,10 @@ public class HolidaysConfigNewServiceImpl implements HolidaysConfigNewService {
 	 */
 	@Override
 	public boolean isWorkdateOnSomeDay(Date date) {
-		HolidaysConfigExample example = new HolidaysConfigExample();
-		HolidaysConfigExample.Criteria criteria = example.createCriteria();
+		HolidaysConfigNewExample example = new HolidaysConfigNewExample();
+		HolidaysConfigNewExample.Criteria criteria = example.createCriteria();
 		criteria.andDayTimeEqualTo(date);
-		List<HolidaysConfigNew> list = holidaysConfigMapper.selectByExample(example);
+		List<HolidaysConfigNew> list = holidaysConfigNewMapper.selectByExample(example);
 
 		if (CollectionUtils.isEmpty(list)) {
 			throw new RuntimeException("日历配置错误...");
@@ -147,12 +149,12 @@ public class HolidaysConfigNewServiceImpl implements HolidaysConfigNewService {
 	 */
 	@Override
 	public Date getFirstWorkdateAfterSomedate(Date somedate) {
-		HolidaysConfigExample example = new HolidaysConfigExample();
-		HolidaysConfigExample.Criteria criteria = example.createCriteria();
+		HolidaysConfigNewExample example = new HolidaysConfigNewExample();
+		HolidaysConfigNewExample.Criteria criteria = example.createCriteria();
 		criteria.andDayTimeGreaterThan(somedate);
 		criteria.andHolidayFlagEqualTo(0);
 		example.setOrderByClause("day_time desc");
-		List<HolidaysConfigNew> list = holidaysConfigMapper.selectByExample(example);
+		List<HolidaysConfigNew> list = holidaysConfigNewMapper.selectByExample(example);
 		if (CollectionUtils.isEmpty(list)) {
 			throw new RuntimeException("日历配置错误...");
 		}
