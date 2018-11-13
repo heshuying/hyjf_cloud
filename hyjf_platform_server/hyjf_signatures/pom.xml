@@ -76,6 +76,8 @@
     </dependencies>
 
     <build>
+        <finalName>hyjf-pay</finalName>
+
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
@@ -88,7 +90,6 @@
                             <artifactId>axis2</artifactId>
                         </dependency>
                     </requiresUnpack>
-                    <finalName>hyjf-pay</finalName>
                 </configuration>
             </plugin>
             <plugin>

@@ -70,6 +70,8 @@
 
 
 	<build>
+		<finalName>hyjf_zipkin</finalName>
+
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -82,7 +84,7 @@
 							<artifactId>axis2</artifactId>
 						</dependency>
 					</requiresUnpack>
-					<finalName>hyjf_zipkin</finalName>
+
 				</configuration>
 			</plugin>
 			<plugin>
