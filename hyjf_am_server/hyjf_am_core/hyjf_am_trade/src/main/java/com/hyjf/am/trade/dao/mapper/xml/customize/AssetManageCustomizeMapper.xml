@@ -1865,7 +1865,7 @@
 		else
 		CONCAT('加息',hydbinfo.borrow_extra_yield, '%')
 		end
-        hydbinfo.borrow_extra_yield
+        borrow_extra_yield
 		FROM
 		ht_borrow_recover hydbr
 		INNER JOIN ht_borrow hydb ON hydbr.borrow_nid = hydb.borrow_nid
@@ -1904,7 +1904,7 @@
 		else
 		CONCAT('加息',hydbinfo.borrow_extra_yield, '%')
 		end
-        hydbinfo.borrow_extra_yield
+        borrow_extra_yield
 		FROM
 		ht_credit_tender hct
 		INNER JOIN ht_borrow hydb ON hydb.borrow_nid = hct.bid_nid
@@ -1970,7 +1970,7 @@
 		else
 		CONCAT('加息',hydbinfo.borrow_extra_yield, '%')
 		end
-        hydbinfo.borrow_extra_yield
+        borrow_extra_yield
 		FROM
 		ht_coupon_recover hcr
 		INNER JOIN ht_borrow_tender_cpn hbt ON hcr.tender_id = hbt.nid
@@ -2048,7 +2048,7 @@
 		else
 		CONCAT('加息',hydbinfo.borrow_extra_yield, '%')
 		end
-        hydbinfo.borrow_extra_yield
+        borrow_extra_yield
 		FROM
 		ht_borrow hydb
 		INNER JOIN ht_borrow_info hydbinfo ON hydb.borrow_nid = hydbinfo.borrow_nid
