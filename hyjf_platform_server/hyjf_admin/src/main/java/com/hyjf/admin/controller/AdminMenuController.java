@@ -55,9 +55,8 @@ public class AdminMenuController extends BaseController  {
 		@ApiOperation(value = "系统中心-添加菜单管理信息", notes = "用户管理-添加菜单管理信息")
 		@PostMapping(value = "/insertAction")
 		@ResponseBody
-	    public AdminResult insertAction(@RequestBody AdminMenuRequest form) {
-			adminRoleService.insertAction(form);
-			return new AdminResult<>();
+	    public AdminResult<String> insertAction(@RequestBody AdminMenuRequest form) {
+			return new AdminResult<String>(adminRoleService.insertAction(form).getResult().getMenuUuid());
 	    }
 
 	    /**

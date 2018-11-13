@@ -4328,8 +4328,8 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			form.setBorrowHousesList(form.getBorrowHousesList());
 		}
 		// 认证信息
-		List<BorrowCommonCompanyAuthenVO> borrowCommonCompanyAuthenList = JSONArray.parseArray(form.getBorrowAuthenJson(), BorrowCommonCompanyAuthenVO.class);
-		form.setBorrowCommonCompanyAuthenList(borrowCommonCompanyAuthenList);
+//		List<BorrowCommonCompanyAuthenVO> borrowCommonCompanyAuthenList = JSONArray.parseArray(form.getBorrowAuthenJson(), BorrowCommonCompanyAuthenVO.class);
+//		form.setBorrowCommonCompanyAuthenList(borrowCommonCompanyAuthenList);
 		// 项目资料
 		List<BorrowCommonImageVO> borrowCommonImageList =form.getBorrowCommonImageList();
 		String fileDomainUrl = UploadFileUtils.getDoPath(url);
