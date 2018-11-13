@@ -626,8 +626,6 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		balanceRequestBean.setInstCode(instcode);
 		Long timestamp=System.currentTimeMillis()/ 1000;
 		balanceRequestBean.setTimestamp(timestamp);
-
-		// 优惠券投资url
 		String requestUrl = webHost + SYNBALANCE;
 		String sign = StringUtils.lowerCase(MD5.toMD5Code(aopAccesskey + account + instcode + timestamp + aopAccesskey));
 		balanceRequestBean.setChkValue(sign);
@@ -656,6 +654,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	public String getFailedMess(String logOrdId) {
 		//根据ordid获取retcode
 		String retCode = amDataCollectClient.getRetCode(logOrdId);
+		logger.info("根据"+logOrdId+"获取retcode="+retCode);
 		if (retCode==null){
 			return "未知错误";
 		}
