@@ -61,7 +61,6 @@ public class FddConsumer extends Consumer {
 		@Override
 		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
 			logger.info("法大大 收到消息，开始处理....msgs is :{}", msgs);
-
 			for (MessageExt msg : msgs) {
 				if (MQConstant.FDD_GENERATE_CONTRACT_TAG.equals(msg.getTags())) {
 					// 生成合同
@@ -129,7 +128,8 @@ public class FddConsumer extends Consumer {
 
 				} else if (MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG.equals(msg.getTags())) {
 					// 下载脱敏
-					FddDessenesitizationBean bean = JSONObject.parseObject(msg.getBody(),FddDessenesitizationBean.class);;
+					FddDessenesitizationBean bean = JSONObject.parseObject(msg.getBody(),FddDessenesitizationBean.class);
+					logger.info("-----------------开始处理法大大下载脱敏，FddDessenesitizationBean："+JSONObject.toJSON(bean));
 					String ordid = null;
 					try {
 						if (Validator.isNull(bean)){

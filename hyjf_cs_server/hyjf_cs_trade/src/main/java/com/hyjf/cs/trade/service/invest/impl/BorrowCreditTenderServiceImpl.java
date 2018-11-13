@@ -457,6 +457,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         // 检查金额
         this.checkTenderMoney(request, tenderAccount,creditAssign);
         //校验用户测评
+        //给测评接口金额赋值
+        request.setAccount(request.getAssignCapital());
         Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(request);
         resultMap.setData(resultEval);
         logger.info("债转投资校验通过始   userId:{},credNid:{},ip:{},平台{}", userId, request.getCreditNid(), request.getIp(), request.getPlatform());

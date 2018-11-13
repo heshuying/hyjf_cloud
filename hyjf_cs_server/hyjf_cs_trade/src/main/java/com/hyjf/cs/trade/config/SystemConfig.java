@@ -431,7 +431,8 @@ public class SystemConfig {
     }
 
     public String getHyjfPayFddNotifyUrl() {
-        return hyjfPayFddNotifyUrl;
+        return "219.147.28.242:9092/fddcal";
+        //return hyjfPayFddNotifyUrl;
     }
 
     public void setHyjfPayFddNotifyUrl(String hyjfPayFddNotifyUrl) {

@@ -195,4 +195,18 @@
 		  LEFT JOIN ht_r_user u on hpa.user_id = u.user_id
 		<include refid="Where_Clause" />
 	</select>
+
+	<resultMap id="selectAssetStatusMap" type="com.hyjf.am.vo.api.ApiAssetStatusCustomizeVO">
+		<result column="status" property="status" jdbcType="VARCHAR"/>
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectAssetStatusById" resultMap="selectAssetStatusMap" parameterType="com.hyjf.am.resquest.api.AsseStatusRequest">
+		SELECT
+			hpa.status,
+			hpa.borrow_nid,
+			hpa.plan_nid
+		FROM ht_hjh_plan_asset hpa
+		Where hpa.asset_id = #{assetId} AND hpa.inst_code = #{instCode}
+	</select>
 </mapper>
