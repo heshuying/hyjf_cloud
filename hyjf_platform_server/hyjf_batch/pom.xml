@@ -89,6 +89,8 @@
 	</dependencies>
 
 	<build>
+		<finalName>hyjf-batch</finalName>
+
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -101,7 +103,7 @@
 							<artifactId>axis2</artifactId>
 						</dependency>
 					</requiresUnpack>
-					<finalName>hyjf-batch</finalName>
+
 				</configuration>
 			</plugin>
 			<plugin>

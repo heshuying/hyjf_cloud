@@ -69,6 +69,8 @@
 
 
 	<build>
+		<finalName>hyjf_monitor</finalName>
+
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -81,7 +83,7 @@
 							<artifactId>axis2</artifactId>
 						</dependency>
 					</requiresUnpack>
-					<finalName>hyjf_monitor</finalName>
+
 				</configuration>
 			</plugin>
 			<plugin>
