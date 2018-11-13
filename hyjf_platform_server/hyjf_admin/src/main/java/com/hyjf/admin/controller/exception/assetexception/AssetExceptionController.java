@@ -14,9 +14,7 @@ import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
-import com.hyjf.am.resquest.admin.AccountExceptionRequest;
 import com.hyjf.am.resquest.admin.AssetExceptionRequest;
-import com.hyjf.am.vo.admin.AccountExceptionVO;
 import com.hyjf.am.vo.admin.AssetExceptionCustomizeVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.common.cache.CacheUtil;
@@ -332,13 +330,17 @@ public class AssetExceptionController extends BaseController {
 	        	
 	            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
 	        }else {
-	        	 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, assetExceptionCustomizeVOList.subList(0, defaultRowMaxCount));
-	        }
-	        for (int i = 1; i < sheetCount; i++) {
-	
-	                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-	                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, assetExceptionCustomizeVOList.subList(defaultRowMaxCount*i, defaultRowMaxCount*(i+1)));
-	            } 
+	            // 当前下载数据超过一页上限
+	            if(defaultRowMaxCount < assetExceptionCustomizeVOList.size()) {
+                    helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, assetExceptionCustomizeVOList.subList(0, defaultRowMaxCount));
+                    for (int i = 1; i < sheetCount; i++) {
+                        sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                        helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, assetExceptionCustomizeVOList.subList(defaultRowMaxCount * i, defaultRowMaxCount * (i + 1)));
+                    }
+                } else {
+                    helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, assetExceptionCustomizeVOList.subList(0, assetExceptionCustomizeVOList.size()));
+                }
+            }
 	        
 	        DataSet2ExcelSXSSFHelper.write2Response(requestt, response, fileName, workbook);
 	    }
