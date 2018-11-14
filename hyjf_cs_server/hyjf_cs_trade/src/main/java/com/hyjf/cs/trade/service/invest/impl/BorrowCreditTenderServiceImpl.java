@@ -430,8 +430,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      * @return
      */
     @Override
-    public WebResult<Map<String, Object>> borrowCreditCheck(TenderRequest request) {
-        WebResult<Map<String, Object>>  resultMap = new WebResult<Map<String, Object>>();
+    public Map<String, Object> borrowCreditCheck(TenderRequest request) {
         UserVO loginUser = amUserClient.findUserById(Integer.valueOf(request.getUserId()));
         Integer userId = loginUser.getUserId();
         request.setUser(loginUser);
@@ -460,9 +459,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         //给测评接口金额赋值
         request.setAccount(request.getAssignCapital());
         Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(request);
-        resultMap.setData(resultEval);
         logger.info("债转投资校验通过始   userId:{},credNid:{},ip:{},平台{}", userId, request.getCreditNid(), request.getIp(), request.getPlatform());
-        return resultMap;
+        return resultEval;
     }
 
     /**

@@ -109,9 +109,10 @@ public class BorrowCreditTenderController extends BaseTradeController {
         tender.setIp(ip);
         tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
-        WebResult<Map<String,Object>> result = null;
+        WebResult<Map<String,Object>> result = new WebResult<Map<String,Object>>();
         try{
-            result =  borrowTenderService.borrowCreditCheck(tender);
+            Map<String,Object> resultMap =  borrowTenderService.borrowCreditCheck(tender);
+            result.setData(resultMap);
         }catch (CheckException e){
             throw e;
         }

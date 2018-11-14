@@ -39,7 +39,7 @@ import java.util.Properties;
 public class MailHandle {
 
 	private static final Logger logger = LoggerFactory.getLogger(MailHandle.class);
-	private static volatile SiteSettingsVO setting = null;
+	private static SiteSettingsVO setting = null;
 	/** 超时时间 */
 	private static Integer smtpTimeout = 25000;
 

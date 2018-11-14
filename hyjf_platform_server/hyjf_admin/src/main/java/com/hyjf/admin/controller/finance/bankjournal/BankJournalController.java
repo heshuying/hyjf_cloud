@@ -112,9 +112,8 @@ public class BankJournalController {
         String sheetNameTmp = sheetName + "_第1页";
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
-        bankEveRequest.setPaginatorPage(1);
-        bankEveRequest.setLimit(defaultRowMaxCount);
-
+        bankEveRequest.setPageSize(defaultRowMaxCount);
+        bankEveRequest.setCurrPage(1);
 
         Integer count = bankJournalService.queryBankEveCount(bankEveRequest);
         List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
@@ -127,7 +126,8 @@ public class BankJournalController {
         }
 
         for (int i = 1; i < sheetCount; i++) {
-            bankEveRequest.setCurrPage(i +1);
+            bankEveRequest.setPageSize(defaultRowMaxCount);
+            bankEveRequest.setCurrPage(i+1);
             // 需要输出的结果列表
             List<BankEveVO> bankEveList2 =bankJournalService.queryBankEveList(bankEveRequest);
             if (!CollectionUtils.isEmpty(bankEveList2)) {
