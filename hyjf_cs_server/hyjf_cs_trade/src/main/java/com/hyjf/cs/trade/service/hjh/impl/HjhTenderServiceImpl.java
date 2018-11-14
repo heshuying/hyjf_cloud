@@ -577,6 +577,9 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         UserVO user = amUserClient.findUserById(userId);
         // 检查用户状态  角色  授权状态等  是否允许投资
         checkUser(user, userInfo);
+        //从user中获取客户类型，ht_user_evalation_result（用户测评总结表）
+        //校验用户测评
+        Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(request);
         // 检查江西银行账户
         BankOpenAccountVO account = amUserClient.selectBankAccountById(userId);
         if (account == null || user.getBankOpenAccount() == 0 || StringUtils.isEmpty(account.getAccount())) {
@@ -586,9 +589,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         AccountVO tenderAccount = amTradeClient.getAccount(userId);
         // 检查投资金额
         checkTenderMoney(request, plan, account, cuc, tenderAccount);
-        //从user中获取客户类型，ht_user_evalation_result（用户测评总结表）
-        //校验用户测评
-        Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(request);
         logger.info("加入计划投资校验通过userId:{},ip:{},平台{},优惠券为:{}", userId, request.getIp(), request.getPlatform(), request.getCouponGrantId());
         return resultEval;
     }
@@ -1324,18 +1324,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         if (user == null || userInfo == null) {
             throw new CheckException(MsgEnum.ERR_USER_NOT_EXISTS);
         }
-
-        String roleIsOpen = systemConfig.getRoleIsopen();
-        if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
-            if (userInfo.getRoleId().intValue() != 1) {
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
-            }
-        }
-
-        // 判断用户是否禁用
-        if (user.getStatus() == 1) {// 0启用，1禁用
-            throw new CheckException(MsgEnum.ERR_USER_INVALID);
-        }
         // 用户未开户
         if (user.getBankOpenAccount() == 0) {
             throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
@@ -1343,6 +1331,16 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         // 交易密码状态检查
         if (user.getIsSetPassword() == 0) {
             throw new CheckException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
+        }
+        // 判断用户是否禁用
+        if (user.getStatus() == 1) {// 0启用，1禁用
+            throw new CheckException(MsgEnum.ERR_USER_INVALID);
+        }
+        String roleIsOpen = systemConfig.getRoleIsopen();
+        if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
+            if (userInfo.getRoleId().intValue() != 1) {
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
+            }
         }
         // 检查用户授权状态
         HjhUserAuthVO userAuth = amUserClient.getHjhUserAuthVO(user.getUserId());
@@ -1370,7 +1368,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_PAYMENT_AUTH);
         }
         // 风险测评校验
-        this.checkEvaluation(user);
+        //this.checkEvaluation(user);
     }
 
 }
