@@ -90,7 +90,7 @@ public class TyjCouponRepayConsumer extends Consumer {
 		private List<String> splitString(String nids) {
 			List<String> list = null;
 			if (!StringUtils.isEmpty(nids)) {
-                list = Arrays.asList(nids.replace("\"","").split(","));
+                list = Arrays.asList(nids.split(","));
             }
 			return list;
 		}
