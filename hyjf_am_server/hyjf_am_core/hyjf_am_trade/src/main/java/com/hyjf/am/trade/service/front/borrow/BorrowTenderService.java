@@ -4,6 +4,7 @@ import com.hyjf.am.resquest.trade.BorrowTenderRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
+import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -136,4 +137,18 @@ public interface BorrowTenderService {
      * @return
      */
     List<BorrowTender> selectBorrowTenderByUserId(Integer userId);
+
+    List<WrbTenderNotifyCustomizeVO> getBorrowTenderByAddtime(String sourceIdSrch, String dayStart, String dayEnd);
+
+    List<WrbTenderNotifyCustomizeVO> getCreditTenderByAddtime(String dayStart, String dayEnd);
+
+    List<WrbTenderNotifyCustomizeVO> getAccountRechargeByAddtime(String dayStart, String dayEnd);
+
+    List<WrbTenderNotifyCustomizeVO> getBorrowTenderByClient(String source,String dayStart, String dayEnd);
+
+    List<WrbTenderNotifyCustomizeVO> getProductListByClient(String source,String dayStart, String dayEnd);
+
+    List<WrbTenderNotifyCustomizeVO> getDebtPlanAccedeByClient(String source,String dayStart, String dayEnd);
+
+    List<WrbTenderNotifyCustomizeVO> getCreditTenderByClient(String source,String dayStart, String dayEnd);
 }

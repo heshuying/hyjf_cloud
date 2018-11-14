@@ -130,98 +130,11 @@ public interface AmUserClient {
     BigDecimal getHzrTenderPrice(Integer sourceId, String type);
 
     /**
-     * app渠道主单注册数
-     * @param sourceId
-     * @return
-     */
-    BigDecimal getRegisterAttrCount(Integer sourceId);
-
-    /**
-     * 查询相应的app渠道Ios开户数
-     * @param sourceId
-     * @return
-     */
-    Integer getAccountNumberIos(Integer sourceId);
-
-    /**
-     * 查询相应的app渠道PC开户数
-     * @param sourceId
-     * @return
-     */
-    Integer getAccountNumberPc(Integer sourceId);
-
-    /**
-     * 查询相应的app渠道安卓开户数
-     * @param sourceId
-     * @return
-     */
-    Integer getAccountNumberAndroid(Integer sourceId);
-
-    /**
-     * 查询相应的app渠道微信开户数
-     * @param sourceId
-     * @return
-     */
-    Integer getAccountNumberWechat(Integer sourceId);
-
-    /**
-     * 查询相应的app渠道用户Android投资数
-     * @param sourceId
-     * @return
-     */
-    Integer getTenderNumberAndroid(Integer sourceId);
-
-    /**
-     * 查询相应的app渠道用户IOS投资数
-     * @param sourceId
-     * @return
-     */
-    Integer getTenderNumberIos(Integer sourceId);
-
-    /**
-     * 查询相应的app渠道用户PC投资数
-     * @param sourceId
-     * @return
-     */
-    Integer getTenderNumberPc(Integer sourceId);
-
-    /**
-     * 查询相应的app渠道用户微信投资数
-     * @param sourceId
-     * @return
-     */
-    Integer getTenderNumberWechat(Integer sourceId);
-
-    /**
-     * 查询相应的app渠道无主单用户充值数
-     * @param sourceId
-     * @return
-     */
-    BigDecimal getCumulativeAttrCharge(Integer sourceId);
-
-    /**
      * 查询相应的app渠道无主单开户数
      * @param sourceId
      * @return
      */
     Integer getOpenAccountAttrCount(Integer sourceId);
-
-    /**
-     * 查询相应的app渠道投资无主单用户数
-     * @param sourceId
-     * @return
-     */
-    Integer getInvestAttrNumber(Integer sourceId);
-
-    /**
-     * 查询相应的app渠道用户投资总额
-     * @param sourceId
-     * @return
-     */
-    BigDecimal getCumulativeAttrInvest(Integer sourceId);
-
-
-
 
     /**
      * 修改短信与邮件是否开启状态
@@ -250,5 +163,9 @@ public interface AmUserClient {
     int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform);
 
     int onlyCheckMobileCode(String mobile, String code);
+
+    List<Integer> getUsersInfoList();
+
+    List<Integer> getUsersList(String source);
 
 }
