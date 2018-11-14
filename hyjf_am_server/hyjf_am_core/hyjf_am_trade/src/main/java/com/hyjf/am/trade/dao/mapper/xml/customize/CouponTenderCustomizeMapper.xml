@@ -1222,6 +1222,10 @@
 			<if test="nid != null and nid != ''">
 				AND hbt.nid = #{nid}
 			</if>
+			<!-- 订单号 -->
+			<if test="orderId != null and orderId != ''">
+				AND hbt.nid = #{orderId}
+			</if>
 			<!-- 用户名 -->
 			<if test="username != null and username != ''">
 				AND hu.username = #{username}
@@ -1261,6 +1265,10 @@
 			<!-- 订单号 -->
 			<if test="nid != null and nid != ''">
 				AND hbt.nid LIKE CONCAT( #{nid}, '%')
+			</if>
+			<!-- 订单号 -->
+			<if test="orderId != null and orderId != ''">
+				AND hbt.nid LIKE CONCAT( #{orderId}, '%')
 			</if>
 			<!-- 用户名 -->
 			<if test="username != null and username != ''">
@@ -1499,6 +1507,10 @@
 			<!-- 订单号 -->
 			<if test="nid != null and nid != ''">
 				AND hbt.nid = #{nid}
+			</if>
+			<!-- 订单号 -->
+			<if test="orderId != null and orderId != ''">
+				AND hbt.nid = #{orderId}
 			</if>
 			<!-- 用户名 -->
 			<if test="username != null and username != ''">
