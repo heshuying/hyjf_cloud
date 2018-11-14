@@ -26,7 +26,7 @@ import com.hyjf.cs.trade.bean.repay.ProjectRepayListBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
-import com.hyjf.cs.trade.mq.handle.FddHandle;
+//import com.hyjf.cs.trade.mq.handle.FddHandle;
 import com.hyjf.cs.trade.service.projectlist.WebProtocolService;
 import com.hyjf.cs.trade.util.PdfGenerator;
 import org.apache.commons.lang3.StringUtils;
@@ -61,8 +61,8 @@ public class WebProtocolServiceImpl implements WebProtocolService {
     @Autowired
     private AmUserClient amUserClient;
 
-    @Autowired
-    private FddHandle fddHandle;
+//    @Autowired
+//    private FddHandle fddHandle;
 
     /**
      * 下载脱敏后居间服务借款协议（原始标的）_计划投资人
@@ -391,7 +391,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                                 tenderCreditAssignedBean.setCurrentUserId(userId);
                             }
                             // 模板参数对象(查新表)
-                            creditContract = fddHandle.selectHJHUserCreditContract(tenderCreditAssignedBean);
+//                            creditContract = fddHandle.selectHJHUserCreditContract(tenderCreditAssignedBean);
                             if(creditContract!=null){
                                 try {
                                     File filetender = PdfGenerator.generatePdfFile(request, response, ((HjhDebtCreditTenderVO) creditContract.get("creditTender")).getAssignOrderId() + ".pdf", CustomConstants.HJH_CREDIT_CONTRACT, creditContract);
