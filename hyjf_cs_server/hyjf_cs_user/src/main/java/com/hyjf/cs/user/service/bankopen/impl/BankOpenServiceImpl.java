@@ -3,6 +3,7 @@ package com.hyjf.cs.user.service.bankopen.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankOpenRequest;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
@@ -29,6 +30,7 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.FddCertificateProducer;
+import com.hyjf.cs.user.mq.producer.sensorsdate.openaccount.SensorsDataOpenAccountProducer;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.vo.BankOpenVO;
@@ -71,6 +73,9 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
 
     @Autowired
     private FddCertificateProducer fddCertificateProducer;
+
+    @Autowired
+    private SensorsDataOpenAccountProducer sensorsDataOpenAccountProducer;
 
     @Override
     public boolean checkIdNo(String idNo) {
@@ -237,6 +242,24 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         // 更新redis里面的值
         WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
         user.setBankOpenAccount(true);
+
+        UserVO userVO = this.amUserClient.findUserById(userId);
+        // add by liuyang 神策数据统计追加 20180927 start
+        if ("10000000".equals(userVO.getInstCode())) {
+            if (!RedisUtils.exists("SENSORS_DATA_OPEN_ACCOUNT:" + userId)) {
+                try {
+                    RedisUtils.sadd("SENSORS_DATA_OPEN_ACCOUNT:" + userId, String.valueOf(userId));
+                    // 开户成功后,发送神策数据统计MQ
+                    SensorsDataBean sensorsDataBean = new SensorsDataBean();
+                    sensorsDataBean.setUserId(userId);
+                    sensorsDataBean.setEventCode("open_success");
+                    this.sendSensorsDataMQ(sensorsDataBean);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        // add by liuyang 神策数据统计追加 20180927 end
         // 开户+设密的话   状态改为已设置交易密码
         if (BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE.equals(bean.getTxCode())
                 && "1".equals(bean.getStatus())) {
@@ -273,6 +296,15 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         result.setMessage("开户成功");
         logger.info("页面开户异步处理end,UserId:{} 开户平台为：{}", bean.getLogUserId(),bean.getLogClient());
         return result;
+    }
+
+    /**
+     * 开户成功后,发生神策数据统计MQ
+     *
+     * @param sensorsDataBean
+     */
+    private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
+        this.sensorsDataOpenAccountProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_OPEN_ACCOUNT_GROUP, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
     }
 
 
