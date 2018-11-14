@@ -1009,13 +1009,6 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
             debtCreditTenderCrt.andAssignOrderIdEqualTo(creditOrderId);
             debtCreditTenderCrt.andUserIdEqualTo(userId);
             List<HjhDebtCreditTender> creditTenderList = this.hjhDebtCreditTenderMapper.selectByExample(creditTenderExample);
-            logger.info("=====creditTenderList 参数为:liquidates_plan_nid ="+liquidatesPlanNid+"/n"+
-                    "assign_plan_nid = "+planNid+"/n"+
-                    "credit_nid = "+creditNid+"/n"+
-                    "sell_order_id = "+sellerOrderId+"/n"+
-                    "assign_order_id = "+creditOrderId+"/n"+
-                    "user_id = = "+userId+"/n"+
-                    "creditTenderList 的长度为:"+creditTenderList+"=====");
             if (creditTenderList == null || creditTenderList.size() <= 0) {
                 // 获取CreditTenderLog信息
                 HjhDebtCreditTenderLogExample debtCreditTenderLogExample = new HjhDebtCreditTenderLogExample();

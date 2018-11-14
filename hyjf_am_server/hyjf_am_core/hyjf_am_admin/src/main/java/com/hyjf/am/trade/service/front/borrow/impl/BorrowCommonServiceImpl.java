@@ -1432,10 +1432,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		/*-------------upd by liushouyi HJH3 End-----------------*/
 		this.borrowMapper.updateByPrimaryKeySelective(borrow);
 		borrow.setId(borrow.getInfoId());
-		BorrowInfo record=new BorrowInfo();
+		BorrowInfoWithBLOBs record=new BorrowInfoWithBLOBs();
 		BeanUtils.copyProperties(borrow,record);
 		 record.setId(infoId);
-		this.borrowInfoMapper.updateByPrimaryKey(record);
+		this.borrowInfoMapper.updateByPrimaryKeyWithBLOBs(record);
 		// 个人信息
 		this.insertBorrowManinfo(borrowNid, borrowBean, borrow);
 		// 公司信息
