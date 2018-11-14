@@ -152,11 +152,11 @@ public class ApiUserBindController extends BaseUserController {
 	@ResponseBody
 	@PostMapping(value = "/bind")
 	public JSONObject bind(HttpServletRequest request, HttpServletResponse response,
-						   @ModelAttribute("apiUserPostBean") ApiUserPostBean apiUserPostBean, @ModelAttribute ("loginBean") ApiLoginBean apiLoginBean) throws Exception{
+                           @ModelAttribute("apiUserPostBean") ApiUserPostBean apiUserPostBean, @ModelAttribute("loginBean") ApiLoginBean loginBean) throws Exception{
 		// 返回对象
 		JSONObject jsonObj = new JSONObject();
 		logger.info(JSON.toJSONString(apiUserPostBean));
-		logger.info(JSON.toJSONString(apiLoginBean));
+		logger.info(JSON.toJSONString(loginBean));
 		// 第三方用户ID
 //		Integer bindUniqueId = this.decrypt(apiUserPostBean);
 		Integer bindUniqueId = Integer.parseInt(apiUserPostBean.getBindUniqueIdScy());
@@ -174,7 +174,7 @@ public class ApiUserBindController extends BaseUserController {
 			return jsonObj;
 		}
 		// 用户接受协议验证
-		if(!apiLoginBean.getReadAgreement()){
+		if(!loginBean.getReadAgreement()){
 			jsonObj = new JSONObject();
 			jsonObj.put("status", "99");
 			jsonObj.put("statusCode", "99");
@@ -182,7 +182,7 @@ public class ApiUserBindController extends BaseUserController {
 			return jsonObj;
 		}
 		// 用户手机号码验证
-		if(!StringUtils.isNotBlank(apiLoginBean.getLoginUserName())){
+		if(!StringUtils.isNotBlank(loginBean.getLoginUserName())){
 			jsonObj = new JSONObject();
 			jsonObj.put("status", "99");
 			jsonObj.put("statusCode", "99");
@@ -191,7 +191,7 @@ public class ApiUserBindController extends BaseUserController {
 		}
 
 		//根据登陆账户名取得用户ID和用户名
-		UserVO users = loginService.getUser(apiLoginBean.getLoginUserName());
+		UserVO users = loginService.getUser(loginBean.getLoginUserName());
 		logger.info("users is :{}", users);
 		// 未获取的验证在下面登陆时 验证
 		if (users != null) {
@@ -233,8 +233,8 @@ public class ApiUserBindController extends BaseUserController {
 			return jsonObj;
 		}
 		LoginRequestVO user=new LoginRequestVO();
-		user.setUsername(apiLoginBean.getLoginUserName());
-		user.setPassword(apiLoginBean.getLoginPassword());
+		user.setUsername(loginBean.getLoginUserName());
+		user.setPassword(loginBean.getLoginPassword());
 		// 登陆
 		WebResult<WebViewUserVO> login = loginController.login( user,request);
 		if (!"000".equals(login.getStatus())) {
@@ -261,7 +261,7 @@ public class ApiUserBindController extends BaseUserController {
         jsonResult.put("retUrl", apiUserPostBean.getRetUrl());
         jsonResult.put("bindUniqueIdScy", apiUserPostBean.getBindUniqueIdScy());
         jsonResult.put("userId",users.getUserId() );
-        jsonResult.put("mobile",apiLoginBean.getLoginUserName() );
+        jsonResult.put("mobile",loginBean.getLoginUserName() );
         jsonResult.put("username",userName );
         jsonResult.put("token",userName );
         jsonResult.put("roleId",login.getData().getRoleId() );
