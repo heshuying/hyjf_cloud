@@ -1471,6 +1471,7 @@ public class FddHandle {
 				userId = creditTender.getUserId();// 承接人
 				borrowNid = creditTender.getBidNid();// 原标的号
 				BorrowAndInfoVO borrow=this.amTradeClient.getBorrowByNid(borrowNid);
+				instCode = borrow.getInstCode();// 机构编号
 				creditUserId = creditTender.getCreditUserId();// 出让人
 				borrowerCustomerID = getCustomerIDByUserID(creditUserId);
 			}

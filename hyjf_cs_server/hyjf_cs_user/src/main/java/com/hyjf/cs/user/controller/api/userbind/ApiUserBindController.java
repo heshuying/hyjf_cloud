@@ -2,30 +2,30 @@ package com.hyjf.cs.user.controller.api.userbind;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.security.util.RSA_Hjs;
 import com.hyjf.common.security.util.SignUtil;
-import com.hyjf.common.util.*;
+import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.ApiSignUtil;
-import com.hyjf.cs.user.bean.*;
+import com.hyjf.cs.user.bean.ApiLoginBean;
+import com.hyjf.cs.user.bean.ApiResultPageBean;
+import com.hyjf.cs.user.bean.ApiUserPostBean;
+import com.hyjf.cs.user.bean.LoginResultBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.controller.web.login.WebLoginController;
-import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.service.wrb.UserRegisterService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.LoginRequestVO;
-import com.hyjf.soa.apiweb.CommonSoaUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.beanutils.BeanMap;
@@ -39,8 +39,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -61,11 +59,8 @@ public class ApiUserBindController extends BaseUserController {
 	@Autowired
 	BindCardService bindCardService;
 
-	@Value("${hyjf.front.host}")
-	public String webHost;
-
-    // 跳转授权页面
-    public static final String JUMP_BIND_HTML = "/user/fastAuth/login";
+	@Value("${hyjf.front.wei.host}")
+	public String wechatHost;
 
 	@InitBinder("apiUserPostBean")
 	public void initBinderApiUserPostBean(WebDataBinder binder) {
@@ -89,7 +84,7 @@ public class ApiUserBindController extends BaseUserController {
 		// 设置接口结果页的信息（返回Url）
 		this.initCheckUtil(apiUserPostBean);
 		//TODO:用户登录授权页面
-		ModelAndView modelAndView = new ModelAndView("wrb/wrb_result");
+		ModelAndView result = new ModelAndView("wrb/wrb_result");
 		// 验证
 		//this.checkPostBeanOfWeb(apiUserPostBean);
 		logger.info("验签开始....");
@@ -97,18 +92,15 @@ public class ApiUserBindController extends BaseUserController {
 		//this.checkSign(apiUserPostBean);
 		logger.info("解密开始....apiUserPostBean is : {}", JSONObject.toJSONString(apiUserPostBean));
 		// 解密
-		int bindUniqueId = Integer.parseInt(apiUserPostBean.getBindUniqueIdScy());
-		logger.info("解密结果....bindUniqueId is : {}", bindUniqueId);
-        modelAndView.addObject("instcode",apiUserPostBean.getPid());
-		Integer userId = loginService.getUserIdByBind(bindUniqueId, apiUserPostBean.getPid());
-        // 回调url（h5错误页面）
-        BaseMapBean baseMapBean=new BaseMapBean();
+		//int bindUniqueId = this.decrypt(apiUserPostBean);
+//		logger.info("解密结果....bindUniqueId is : {}", bindUniqueId);
+		result.addObject("instcode",apiUserPostBean.getPid());
+		//Integer userId = loginService.getUserIdByBind(bindUniqueId, apiUserPostBean.getPid());
+		Integer userId = apiUserPostBean.getUserId();
 		if(userId == null){
-            // 跳转登陆授权画面
-            baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
-            baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户授权！");
-            baseMapBean.setCallBackAction(webHost+JUMP_BIND_HTML);
-            modelAndView.addObject("apiForm",new BeanMap(apiUserPostBean));
+			// 跳转登陆授权画面
+			result.addObject("apiForm",new BeanMap(apiUserPostBean));
+			//modelAndView.addObject("apiForm",new BeanMap(apiUserPostBean));
 		}else{
 			// 登陆
 			WebViewUserVO webUser = loginService.getWebViewUserByUserId(userId);
@@ -134,10 +126,10 @@ public class ApiUserBindController extends BaseUserController {
 				readonly = "readonly";
 			}
 		}
-        modelAndView.addObject("mobile", mobile);
-        modelAndView.addObject("readonly", readonly);
+		result.addObject("mobile", mobile);
+		result.addObject("readonly", readonly);
 
-		return modelAndView;
+		return result;
 	}
 
 	/**
@@ -156,8 +148,7 @@ public class ApiUserBindController extends BaseUserController {
 		logger.info(JSON.toJSONString(apiUserPostBean));
 		logger.info(JSON.toJSONString(apiLoginBean));
 		// 第三方用户ID
-//		Integer bindUniqueId = this.decrypt(apiUserPostBean);
-		Integer bindUniqueId = Integer.parseInt(apiUserPostBean.getBindUniqueIdScy());
+		Integer bindUniqueId = this.decrypt(apiUserPostBean);
 		logger.info("bindUniqueId is :{}", bindUniqueId);
 		//用户Id
 		Integer userId = null;

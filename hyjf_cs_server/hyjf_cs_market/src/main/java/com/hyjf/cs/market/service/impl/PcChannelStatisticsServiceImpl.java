@@ -4,22 +4,16 @@
 package com.hyjf.cs.market.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.PcChannelStatisticsVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.market.client.AmUserClient;
 import com.hyjf.cs.market.mq.base.MessageContent;
-import com.hyjf.cs.market.mq.producer.PcChannelStatisticsProducer;
+import com.hyjf.cs.market.mq.producer.PcChannelStatisticsAdminProducer;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
 import com.hyjf.cs.market.service.PcChannelStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
 
 /**
  * @author fuqiang
@@ -30,12 +24,19 @@ public class PcChannelStatisticsServiceImpl extends BaseMarketServiceImpl implem
 	@Autowired
 	private AmUserClient amUserClient;
 	@Autowired
-	private PcChannelStatisticsProducer producer;
+	private PcChannelStatisticsAdminProducer producer;
 
 	@Override
 	public void insertStatistics() {
 		logger.info("----------------PC渠道统计定时任务Start-------------");
-		// 查询所有pc渠道
+		try {
+			PcChannelStatisticsVO statisticsVO = new PcChannelStatisticsVO();
+			producer.messageSend(new MessageContent(MQConstant.PC_CHANNEL_STATISTICS_ADMIN_TOPIC,
+					System.currentTimeMillis() + "", JSONObject.toJSONBytes(statisticsVO) ));
+		} catch (MQException e) {
+			logger.error("PC渠道统计数据发送失败......", e);
+		}
+		/*// 查询所有pc渠道
 		List<UtmVO> voList = amUserClient.selectUtmPlatList("pc");
 		if (!CollectionUtils.isEmpty(voList)) {
 			for (UtmVO vo : voList) {
@@ -108,7 +109,7 @@ public class PcChannelStatisticsServiceImpl extends BaseMarketServiceImpl implem
 					logger.error("PC渠道统计数据定时任务出错......", e);
 				}
 			}
-		}
+		}*/
 
 	}
 }

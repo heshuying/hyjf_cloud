@@ -1,6 +1,6 @@
 package com.hyjf.am.config.dao.mapper.auto;
 
-import com.hyjf.am.config.dao.model.auto.HolidaysConfigNew;
+import com.hyjf.am.config.dao.model.auto.HolidaysConfig;
 import com.hyjf.am.config.dao.model.auto.HolidaysConfigExample;
 import org.apache.ibatis.annotations.Param;
 
@@ -13,19 +13,19 @@ public interface HolidaysConfigMapper {
 
     int deleteByPrimaryKey(Integer id);
 
-    int insert(HolidaysConfigNew record);
+    int insert(HolidaysConfig record);
 
-    int insertSelective(HolidaysConfigNew record);
+    int insertSelective(HolidaysConfig record);
 
-    List<HolidaysConfigNew> selectByExample(HolidaysConfigExample example);
+    List<HolidaysConfig> selectByExample(HolidaysConfigExample example);
 
-    HolidaysConfigNew selectByPrimaryKey(Integer id);
+    HolidaysConfig selectByPrimaryKey(Integer id);
 
-    int updateByExampleSelective(@Param("record") HolidaysConfigNew record, @Param("example") HolidaysConfigExample example);
+    int updateByExampleSelective(@Param("record") HolidaysConfig record, @Param("example") HolidaysConfigExample example);
 
-    int updateByExample(@Param("record") HolidaysConfigNew record, @Param("example") HolidaysConfigExample example);
+    int updateByExample(@Param("record") HolidaysConfig record, @Param("example") HolidaysConfigExample example);
 
-    int updateByPrimaryKeySelective(HolidaysConfigNew record);
+    int updateByPrimaryKeySelective(HolidaysConfig record);
 
-    int updateByPrimaryKey(HolidaysConfigNew record);
+    int updateByPrimaryKey(HolidaysConfig record);
 }

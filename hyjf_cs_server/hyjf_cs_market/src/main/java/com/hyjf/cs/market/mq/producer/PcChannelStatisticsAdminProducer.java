@@ -15,11 +15,11 @@ import org.springframework.stereotype.Component;
  * @version PcChannelStatisticsProducer, v0.1 2018/7/16 13:51
  */
 @Component
-public class PcChannelStatisticsProducer extends Producer {
+public class PcChannelStatisticsAdminProducer extends Producer {
 	@Override
 	protected ProducerFieldsWrapper getFieldsWrapper() {
 		ProducerFieldsWrapper wrapper = new ProducerFieldsWrapper();
-		wrapper.setGroup(MQConstant.PC_CHANNEL_STATISTICS_GROUP);
+		wrapper.setGroup(MQConstant.PC_CHANNEL_STATISTICS_ADMIN_GROUP);
 		wrapper.setInstanceName(String.valueOf(System.currentTimeMillis()));
 		return wrapper;
 	}

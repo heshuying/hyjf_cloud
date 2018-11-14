@@ -7,13 +7,16 @@ import com.hyjf.am.response.trade.WrbInvestRecordResponse;
 import com.hyjf.am.response.trade.wrbInvestRecoverPlanResponse;
 import com.hyjf.am.response.user.WrbAccountResponse;
 import com.hyjf.am.response.user.WrbInvestSumResponse;
+import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
 import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
 import com.hyjf.am.resquest.trade.ApiUserWithdrawRequest;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
+import com.hyjf.am.resquest.trade.SynBalanceBeanRequest;
 import com.hyjf.am.resquest.user.BatchUserPortraitRequest;
 import com.hyjf.am.resquest.user.HtlTradeRequest;
+import com.hyjf.am.vo.admin.UnderLineRechargeVO;
 import com.hyjf.am.vo.app.*;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -411,4 +414,8 @@ public interface AmTradeClient {
      * @return
      */
     WrbBorrowTenderSumCustomizeVO searchBorrowTenderSumByNidAndTime(String borrowNid, Date investTime);
+
+    boolean insertAccountDetails(SynBalanceBeanRequest synBalanceBeanRequest);
+
+    List<UnderLineRechargeVO> selectUnderLineRechargeList(UnderLineRechargeRequest request);
 }
