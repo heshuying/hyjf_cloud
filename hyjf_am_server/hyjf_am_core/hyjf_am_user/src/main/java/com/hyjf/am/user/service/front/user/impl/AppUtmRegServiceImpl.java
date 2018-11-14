@@ -93,10 +93,10 @@ public class AppUtmRegServiceImpl implements AppUtmRegService {
 				criteria.andOpenAccountTimeLessThanOrEqualTo(GetDate.stringToDate(timeStartSrch));
 			}
 
-			if (StringUtils.isNotBlank(sourceId)) {
-				criteria.andSourceIdEqualTo(Integer.valueOf(sourceId));
-			}
+		}
 
+		if (StringUtils.isNotBlank(sourceId)) {
+			criteria.andSourceIdEqualTo(Integer.valueOf(sourceId));
 		}
 		return appUtmRegMapper.selectByExample(example);
 

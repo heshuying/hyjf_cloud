@@ -7,14 +7,18 @@ import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.service.front.user.ChannelService;
+import com.hyjf.am.vo.admin.UtmVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author yaoyong
@@ -63,6 +67,22 @@ public class ChannelController extends BaseController {
         IntegerResponse response = new IntegerResponse();
         if (null != utmPlat) {
             response.setResult(utmPlat);
+        }
+        return response;
+    }
+
+    /**
+     * 分页获取数据
+     * @param map 查询参数
+     * @return
+     */
+    @RequestMapping("/getbypagelist")
+    public UtmResponse getByPageList(@RequestBody @Valid Map<String, Object> map) {
+        UtmResponse response = new UtmResponse();
+        List<UtmVO> pageList = channelService.getByPageList(map);
+        if (pageList != null) {
+            response.setResultList(pageList);
+            response.setResultListS(pageList);
         }
         return response;
     }
