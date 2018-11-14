@@ -243,30 +243,32 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         Integer saveResult = amTradeClient.updateAccountNumberByUserId(userId,bean.getAccountId());
         // 更新redis里面的值
         WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
-        if(user!=null){user.setBankOpenAccount(true);
-UserVO userVO = this.amUserClient.findUserById(userId);
-        // add by liuyang 神策数据统计追加 20180927 start
-        if ("10000000".equals(userVO.getInstCode())) {
-            if (!RedisUtils.exists("SENSORS_DATA_OPEN_ACCOUNT:" + userId)) {
-                try {
-                    RedisUtils.sadd("SENSORS_DATA_OPEN_ACCOUNT:" + userId, String.valueOf(userId));
-                    // 开户成功后,发送神策数据统计MQ
-                    SensorsDataBean sensorsDataBean = new SensorsDataBean();
-                    sensorsDataBean.setUserId(userId);
-                    sensorsDataBean.setEventCode("open_success");
-                    this.sendSensorsDataMQ(sensorsDataBean);
-                } catch (Exception e) {
-                    e.printStackTrace();
+        if (user != null) {
+            user.setBankOpenAccount(true);
+            UserVO userVO = this.amUserClient.findUserById(userId);
+            // add by liuyang 神策数据统计追加 20180927 start
+            if ("10000000".equals(userVO.getInstCode())) {
+                if (!RedisUtils.exists("SENSORS_DATA_OPEN_ACCOUNT:" + userId)) {
+                    try {
+                        RedisUtils.sadd("SENSORS_DATA_OPEN_ACCOUNT:" + userId, String.valueOf(userId));
+                        // 开户成功后,发送神策数据统计MQ
+                        SensorsDataBean sensorsDataBean = new SensorsDataBean();
+                        sensorsDataBean.setUserId(userId);
+                        sensorsDataBean.setEventCode("open_success");
+                        this.sendSensorsDataMQ(sensorsDataBean);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
-        }
-        // add by liuyang 神策数据统计追加 20180927 end        // 开户+设密的话   状态改为已设置交易密码
-        if (BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE.equals(bean.getTxCode())
-                && "1".equals(bean.getStatus())) {
-            user.setIsSetPassword(1);
-        }
-        user.setRoleId(bean.getIdentity());
-        RedisUtils.setObj(RedisConstants.USERID_KEY + userId,user);
+            // add by liuyang 神策数据统计追加 20180927 end
+            // 开户+设密的话   状态改为已设置交易密码
+            if (BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE.equals(bean.getTxCode())
+                    && "1".equals(bean.getStatus())) {
+                user.setIsSetPassword(1);
+            }
+            user.setRoleId(bean.getIdentity());
+            RedisUtils.setObj(RedisConstants.USERID_KEY + userId, user);
 
         }
         // 查询银行卡绑定信息
