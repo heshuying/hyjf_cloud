@@ -1002,6 +1002,8 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         } else {
             //角色认证是否打开
             userLoginInfo.setIsCheckUserRole(Boolean.parseBoolean(systemConfig.getRoleIsopen()));
+            UserInfoVO userInfoVO = amUserClient.findUserInfoById(userId);
+            userLoginInfo.setRoleId(userInfoVO.getRoleId());
             userLoginInfo.setLogined(Boolean.TRUE);
             // 2. 用户是否被禁用
             userLoginInfo.setAllowed(userVO.getStatus() == 0 ? Boolean.TRUE : Boolean.FALSE);

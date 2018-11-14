@@ -109,17 +109,17 @@ public class HjhPlanController extends BaseTradeController {
     public WebResult<TenderInfoResult> planCheck(@RequestHeader(value = "userId", required = false) Integer userId, @RequestBody TenderRequest tender) {
         tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
-        WebResult<Map<String, Object>> result = hjhTenderService.checkPlan(tender);
+        Map<String, Object> resultMap = hjhTenderService.checkPlan(tender);
         WebResult<TenderInfoResult> resultWebResult = new WebResult();
         //校验用户测评
         //返回参数拼装
-        if(result.getData() != null){
+        if(resultMap != null){
             TenderInfoResult tenderInfo = new TenderInfoResult();
             tenderInfo.setStatus(false);
-            tenderInfo.setEvalType((String) result.getData().get("evalType"));
-            tenderInfo.setRevaluationMoney((String) result.getData().get("revaluationMoney"));
-            tenderInfo.setRiskTested((String) result.getData().get("riskTested"));
-            tenderInfo.setMessage((String) result.getData().get("message"));
+            tenderInfo.setEvalType((String) resultMap.get("evalType"));
+            tenderInfo.setRevaluationMoney((String) resultMap.get("revaluationMoney"));
+            tenderInfo.setRiskTested((String) resultMap.get("riskTested"));
+            tenderInfo.setMessage((String) resultMap.get("message"));
             resultWebResult.setData(tenderInfo);
         }
         return resultWebResult;
