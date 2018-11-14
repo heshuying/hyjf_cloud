@@ -970,6 +970,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
                             CustomConstants.PARAM_TPL_COUPON_PROFIT, CustomConstants.CHANNEL_TYPE_NORMAL);
                     try {
                         smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, msg.get(USERID), JSON.toJSONBytes(smsMessage)));
+                        logger.info("优惠券还款，短信发送MQ成功！");
                     } catch (MQException e2) {
                         logger.error("发送短信失败..", e2);
                     }
