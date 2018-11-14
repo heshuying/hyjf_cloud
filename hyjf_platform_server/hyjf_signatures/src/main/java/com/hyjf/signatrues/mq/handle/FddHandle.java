@@ -1418,7 +1418,7 @@ public class FddHandle {
 						}
 					}else{
 						// 借款主体为企业借款
-						BorrowUserVO borrowUsers=this.amTradeClient.getBorrowUser(borrowNid);
+						BorrowUserVO borrowUsers = this.amTradeClient.getBorrowUser(borrowNid);
 						if (borrowUsers == null){
 							//logger.info("根据标的编号查询借款主体为企业借款的相关信息失败,标的编号:["+borrowNid+"]");
 							throw new RuntimeException("根据标的编号查询借款主体为企业借款的相关信息失败,标的编号:["+borrowNid+"]");
@@ -1470,6 +1470,7 @@ public class FddHandle {
 				userId = creditTender.getUserId();// 承接人
 				borrowNid = creditTender.getBidNid();// 原标的号
 				BorrowAndInfoVO borrow=this.amTradeClient.getBorrowByNid(borrowNid);
+				instCode = borrow.getInstCode();// 机构编号
 				creditUserId = creditTender.getCreditUserId();// 出让人
 				borrowerCustomerID = getCustomerIDByUserID(creditUserId);
 			}

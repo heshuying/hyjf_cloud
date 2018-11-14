@@ -78,7 +78,7 @@ public class TenderToCreditDetailCustomize implements Serializable {
 	/**
 	 * 转让时间
 	 */
-	private Date creditTime;
+	private String creditTime;
 
 	/**
 	 * 转让人
@@ -217,11 +217,11 @@ public class TenderToCreditDetailCustomize implements Serializable {
 		this.creditPrice = creditPrice;
 	}
 
-	public Date getCreditTime() {
+	public String getCreditTime() {
 		return creditTime;
 	}
 
-	public void setCreditTime(Date creditTime) {
+	public void setCreditTime(String creditTime) {
 		this.creditTime = creditTime;
 	}
 

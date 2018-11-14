@@ -16,6 +16,7 @@ import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.validator.Validator;
@@ -1168,5 +1169,10 @@ public class AmUserClientImpl implements AmUserClient {
 				.postForEntity("http://AM-USER/am-user/app_utm_reg/insertAppChannelStatisticsDetail", wrbRegisterRequest, BooleanResponse.class)
 				.getBody().getResultBoolean();
 		return body;
+	}
+
+	@Override
+	public AccountVO getAccount(Integer userId) {
+		return null;
 	}
 }

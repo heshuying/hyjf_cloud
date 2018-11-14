@@ -1,10 +1,7 @@
 package com.hyjf.cs.user.service.wrb;
 
 import com.hyjf.am.resquest.api.WrbRegisterRequest;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.UtmPlatVO;
+import com.hyjf.am.vo.user.*;
 
 /**
  * @author lisheng
@@ -85,6 +82,14 @@ public interface UserRegisterService {
      * @return
      */
     boolean insertAppChannelStatisticsDetail(WrbRegisterRequest wrbRegisterRequest);
+
+    /**
+     * 查询绑定用户
+     * @param userId
+     * @param bindPlatformId
+     * @return
+     */
+    BindUserVo getBindUser(Integer userId, Integer bindPlatformId) ;
 
 
 }
