@@ -21,6 +21,8 @@ public class HjhPlanVO extends BaseVO implements Serializable {
 
     private Integer lockPeriod;
 
+    private String lockPeriodView;
+
     private Integer isMonth;
 
     private BigDecimal expectApr;
@@ -101,6 +103,13 @@ public class HjhPlanVO extends BaseVO implements Serializable {
 
     public void setLockPeriod(Integer lockPeriod) {
         this.lockPeriod = lockPeriod;
+        if(this.isMonth != null){
+            if(this.isMonth == 0){
+                setLockPeriodView(lockPeriod + "天");
+            }else if(isMonth == 1){
+                setLockPeriodView(lockPeriod + "个月");
+            }
+        }
     }
 
     public Integer getIsMonth() {
@@ -109,6 +118,13 @@ public class HjhPlanVO extends BaseVO implements Serializable {
 
     public void setIsMonth(Integer isMonth) {
         this.isMonth = isMonth;
+        if(this.lockPeriod != null){
+            if(isMonth == 0){
+                setLockPeriodView(lockPeriod + "天");
+            }else if(isMonth == 1){
+                setLockPeriodView(lockPeriod + "个月");
+            }
+        }
     }
 
     public BigDecimal getExpectApr() {
@@ -293,5 +309,13 @@ public class HjhPlanVO extends BaseVO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getLockPeriodView() {
+        return lockPeriodView;
+    }
+
+    public void setLockPeriodView(String lockPeriodView) {
+        this.lockPeriodView = lockPeriodView;
     }
 }
