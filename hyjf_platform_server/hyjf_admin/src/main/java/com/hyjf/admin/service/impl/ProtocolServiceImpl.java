@@ -153,6 +153,8 @@ public class ProtocolServiceImpl implements ProtocolService {
                 imgUrl=savePath+"-"+img;
             }
             protocolTemplate.setImgUrl(imgUrl);
+            protocolTemplate.setCreateUserId(createUserId);
+            protocolTemplate.setUpdateUserId(createUserId);
 
             //新增协议模板
             protocolTemplateCommonVO.setProtocolTemplateVO(protocolTemplate);
