@@ -3,10 +3,9 @@
  */
 package com.hyjf.cs.trade.mq.consumer;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.cs.trade.mq.base.Consumer;
-import com.hyjf.cs.trade.service.consumer.TyjCouponRepayService;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -19,10 +18,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.cs.trade.mq.base.Consumer;
+import com.hyjf.cs.trade.service.consumer.TyjCouponRepayService;
 
 /**
  * @author yaoyong
@@ -59,21 +60,26 @@ public class TyjCouponRepayConsumer extends Consumer {
 
         @Override
         public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext consumeConcurrentlyContext) {
-            logger.info("收到消息  开始处理");
+            logger.info("体验金按收益期限还款收到消息， 开始处理");
             MessageExt messageExt = list.get(0);
-            Map<String, Object> map = new HashMap<>();
             String msgBody = new String(messageExt.getBody());
-            map = JSONObject.parseObject(msgBody, Map.class);
-            JSONObject result = new JSONObject();
+            Map<String, Object> map = JSONObject.parseObject(msgBody, Map.class);
             try {
                 List<String> recoverNidList = (List<String>) map.get("nidList");
-                for (String recoverNid : recoverNidList) {
-                    tyjCouponRepayService.updateCouponOnlyRecover(recoverNid);
-                }
+
+				if (CollectionUtils.isEmpty(recoverNidList)) {
+					logger.info("待还款列表 : {}", JSONObject.toJSONString(recoverNidList));
+					for (String recoverNid : recoverNidList) {
+						tyjCouponRepayService.updateCouponOnlyRecover(recoverNid);
+					}
+				} else {
+					logger.info("体验金按收益期限还款无数据....");
+				}
+
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("体验金按收益期限还款失败。。。", e);
             }
-            return null;
+            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
         }
     }
 }
