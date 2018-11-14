@@ -137,7 +137,7 @@ public class ApiUserBindController extends BaseUserController {
 		}
         modelAndView.addObject("mobile", mobile);
         modelAndView.addObject("readonly", readonly);
-
+        modelAndView.addObject("callBackForm", baseMapBean);
 		return modelAndView;
 	}
 
