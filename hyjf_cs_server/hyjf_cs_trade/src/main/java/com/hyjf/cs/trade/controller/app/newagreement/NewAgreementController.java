@@ -115,13 +115,13 @@ public class NewAgreementController extends BaseTradeController{
                         /*String basePathImage = PropUtils.getSystem(FddGenerateContractConstant.HYJF_FTP_BASEPATH_IMG);*/
                         //ftp文件路劲
                         String basePathImage = systemConfig.getBasePathImage();
-                        if(basePathImage.endsWith("/")){
+                        if(!basePathImage.endsWith("/")){
                             basePathImage = basePathImage.concat("/");
                         }
                         /*String basePathurl = PropUtils.getSystem(FddGenerateContractConstant.HYJF_FTP_URL);*/
                         //ftp映射路劲
                         String basePathurl = systemConfig.getBasePathurl();
-                        if (basePathurl.endsWith("/")){
+                        if (!basePathurl.endsWith("/")){
                             basePathurl = basePathurl.concat("/");
                         }
                         String url = basePathurl+basePathImage;
