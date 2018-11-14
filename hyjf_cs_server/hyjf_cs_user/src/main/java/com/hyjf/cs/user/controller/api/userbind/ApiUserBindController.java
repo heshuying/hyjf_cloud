@@ -104,7 +104,7 @@ public class ApiUserBindController extends BaseUserController {
         logger.info("用户ID："+userId);
         // 回调url（h5错误页面）
         BaseMapBean baseMapBean=new BaseMapBean();
-        if(userId == null){
+        if(userId == null||userId==0){
             // 跳转登陆授权画面
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
             baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户授权！");
