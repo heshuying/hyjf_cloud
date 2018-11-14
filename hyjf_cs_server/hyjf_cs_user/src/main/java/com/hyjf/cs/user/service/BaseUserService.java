@@ -1,6 +1,5 @@
 package com.hyjf.cs.user.service;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -8,6 +7,7 @@ import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.user.bean.AutoPlusRequestBean;
 import com.hyjf.cs.user.bean.BaseBean;
+import com.hyjf.cs.user.bean.SynBalanceRequestBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -158,7 +158,7 @@ public interface BaseUserService extends BaseService{
 
     String strEncode(String str);
 
-	JSONObject synBalance(String account, String instcode, String webHost, String aopAccesskey);
+    SynBalanceRequestBean synBalance(String account, String instcode, String aopAccesskey);
 
 	AccountVO getAccountByUserId(Integer userId);
 

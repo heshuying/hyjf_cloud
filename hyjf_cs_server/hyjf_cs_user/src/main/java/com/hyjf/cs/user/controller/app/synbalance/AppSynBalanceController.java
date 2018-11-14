@@ -7,8 +7,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.AppResult;
+import com.hyjf.cs.user.bean.SynBalanceRequestBean;
+import com.hyjf.cs.user.bean.SynBalanceResultBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.synbalance.SynBalanceService;
@@ -19,6 +22,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author: zhangqingqing
@@ -36,19 +41,20 @@ public class AppSynBalanceController extends BaseUserController {
 
     @ApiOperation(value = "同步余额", notes = "同步余额")
     @PostMapping(value = "/init",produces = "application/json; charset=utf-8")
-    public AppResult synBalance(@RequestHeader(value = "userId") Integer userId){
+    public AppResult synBalance(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request){
         AppResult result = new AppResult();
         JSONObject ret = new JSONObject();
         UserVO user = synBalanceService.getUsersById(userId);
         CheckUtil.check(null!=user, MsgEnum.ERR_USER_NOT_LOGIN);
-        JSONObject status=new JSONObject();
         CheckUtil.check(user.getBankOpenAccount()==1, MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         /***********同步线下充值记录 start***********/
         BankOpenAccountVO bankOpenAccountVO=synBalanceService.getBankOpenAccount(user.getUserId());
-        status= synBalanceService.synBalance(bankOpenAccountVO.getAccount(),user.getInstCode(),"http://CS-TRADE",systemConfig.getAopAccesskey());
-        CheckUtil.check("成功".equals(status.get("statusDesc").toString()), MsgEnum.ERR_OBJECT_GET,"余额");
+        String ip = GetCilentIP.getIpAddr(request);
+        SynBalanceRequestBean bean = synBalanceService.synBalance(bankOpenAccountVO.getAccount(), user.getInstCode(), systemConfig.getAopAccesskey());
+        SynBalanceResultBean resultBean = synBalanceService.synBalance(bean,ip);
+        CheckUtil.check("成功".equals(resultBean.getStatusDesc()), MsgEnum.ERR_OBJECT_GET,"余额");
         //余额数据
-        ret.put("info",status.get("bankBalance").toString());
+        ret.put("info",resultBean.getBankBalance());
         result.setData(ret);
         /***********同步线下充值记录 start***********/
 

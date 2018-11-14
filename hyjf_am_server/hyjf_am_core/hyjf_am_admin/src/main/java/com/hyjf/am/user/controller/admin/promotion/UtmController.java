@@ -367,4 +367,21 @@ public class UtmController extends BaseController {
         response.setRecordTotal(total);
         return response;
     }
+
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据sourceID和utmterm获取总数
+     * @Date 15:26 2018/11/14
+     * @Param sourceId
+     * @Param utmTerm
+     * @return
+     */
+    @RequestMapping("/getbysourceidandterm/{sourceId}/{utmTerm}")
+    public UtmResponse getBySourceIdAndTerm(@PathVariable String sourceId,@PathVariable String utmTerm) {
+        UtmResponse response = new UtmResponse();
+        Integer total = utmService.getBySourceIdAndTerm(sourceId,utmTerm);
+        response.setRecordTotal(total);
+        return response;
+    }
 }

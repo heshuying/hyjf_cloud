@@ -117,7 +117,7 @@ public class HomePageController extends BaseMarketController {
      *
      * */
     @ApiOperation(value = "评分标准", httpMethod = "POST", notes = "评分标准")
-    @PostMapping("/gradingStandardResult")
+    @PostMapping(value = "/gradingStandardResult")
     public JSONObject gradingStandardResult() {
         JSONObject map = new JSONObject();
         List<EvalationCustomizeVO> evalationCustomizeList = homePageService.getEvalationRecord();

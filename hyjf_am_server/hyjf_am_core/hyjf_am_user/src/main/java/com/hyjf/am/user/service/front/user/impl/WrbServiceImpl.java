@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -60,28 +61,27 @@ public class WrbServiceImpl implements WrbService {
     private String HYJF_THIRD_PARTY_USER_PASSWORD;
 
     @Override
-    public Integer insertUserAction(WrbRegisterRequest wrbRegisterRequest) {
+    @Transactional(rollbackFor = Exception.class)
+    public Integer insertUserAction(WrbRegisterRequest wrbRegisterRequest) throws Exception {
         int userId = 0;
-        try {
-            User user = new User();
-            user.setIsInstFlag(1);
-            user.setInstCode(wrbRegisterRequest.getInstCode());
-            // 插入huiyingdai_users表
-            this.insertUser(wrbRegisterRequest.getMobile(), user, wrbRegisterRequest.getIpAddr(), wrbRegisterRequest.getPlatform(), wrbRegisterRequest.getInstCode());
-            userId = user.getUserId();
-            // 插入huiyingdai_users_info
-            this.insertUsersInfo(userId, wrbRegisterRequest.getInstType());
-            // 插入huiyingdai_account表
-            this.sendMqToSaveAccount(userId, user.getUsername());
-            // 插入注册渠道
-            UtmPlatVO utmPlat = wrbRegisterRequest.getUtmPlat();
-            UtmPlat utm = CommonUtils.convertBean(utmPlat, UtmPlat.class);
-            this.insertUtmInfo(userId, user.getUsername(), utm);
-            // 插入注册记录表
-            this.insertUsersLog(userId, wrbRegisterRequest.getIpAddr());
-        } catch (Exception e) {
-            return userId;
-        }
+        User user = new User();
+        user.setIsInstFlag(1);
+        user.setInstCode(wrbRegisterRequest.getInstCode());
+        // 插入huiyingdai_users表
+        this.insertUser(wrbRegisterRequest.getMobile(), user, wrbRegisterRequest.getIpAddr(), wrbRegisterRequest.getPlatform(), wrbRegisterRequest.getInstCode());
+        userId = user.getUserId();
+        // 插入huiyingdai_users_info
+        this.insertUsersInfo(userId, wrbRegisterRequest.getInstType());
+        // 插入huiyingdai_account表
+        this.sendMqToSaveAccount(userId, user.getUsername());
+        // 插入注册渠道
+        UtmPlatVO utmPlat = wrbRegisterRequest.getUtmPlat();
+        UtmPlat utm = CommonUtils.convertBean(utmPlat, UtmPlat.class);
+        this.insertUtmInfo(userId, user.getUsername(), utm);
+        // 插入注册记录表
+        this.insertUsersLog(userId, wrbRegisterRequest.getIpAddr());
+
+        log.info("风车理财插入"+userId);
         return userId;
     }
 

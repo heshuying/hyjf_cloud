@@ -2714,4 +2714,54 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 
 	}
+
+	/**
+	 * 保存验证码
+	 * @param mobile
+	 * @param checkCode
+	 * @param validCodeType
+	 * @param status
+	 * @param platform
+	 * @return
+	 */
+	@Override
+	public int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform) {
+		SmsCodeRequest request = new SmsCodeRequest();
+		request.setMobile(mobile);
+		request.setVerificationCode(checkCode);
+		request.setVerificationType(validCodeType);
+		request.setStatus(status);
+		request.setPlatform(platform);
+		SmsCodeResponse response = restTemplate
+				.postForEntity(userService+"/smsCode/save", request, SmsCodeResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getCnt();
+		} else {
+			throw new RuntimeException("发送验证码失败...");
+		}
+	}
+
+	@Override
+	public int onlyCheckMobileCode(String mobile, String code) {
+		SmsCodeRequest request = new SmsCodeRequest();
+		request.setMobile(mobile);
+		request.setVerificationCode(code);
+		Integer result = restTemplate.postForEntity("http://AM-USER/am-user/smsCode/qianle_check/", request, IntegerResponse.class)
+				.getBody().getResultInt();
+		if (result == null) {
+			return 0;
+		}
+		return result;
+	}
+
+    @Override
+    public Integer getBySourceIdAndTerm(String sourceId, String utmTerm) {
+		UtmResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/promotion/utm/getbysourceidandterm/"+sourceId+"/"+utmTerm, UtmResponse.class).getBody();
+		if (response != null) {
+			return response.getRecordTotal();
+		}else{
+			return  0;
+		}
+    }
 }
