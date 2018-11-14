@@ -187,7 +187,7 @@ public class WrbRegiestController {
                 }
             }
         } catch (Exception e) {
-            log.info("用户注册失败~,手机号:{},失败原因:{}", mobile, e);
+            log.error("用户注册失败~,手机号:{},失败原因:", mobile, e);
             resultBean.setRetcode(RETCODE);
             resultBean.setRetmsg("注册失败");
             return resultBean;
