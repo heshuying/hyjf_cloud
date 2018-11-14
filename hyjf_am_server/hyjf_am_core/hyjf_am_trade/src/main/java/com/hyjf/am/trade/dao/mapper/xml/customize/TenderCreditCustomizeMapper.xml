@@ -549,11 +549,10 @@
 			CONCAT(hb.borrow_period, '个月')
 		END borrowPeriod,
 		 hbc.credit_price AS creditPrice,
-		 FROM_UNIXTIME(
+		date_format(
 			hbc.create_time,
 			'%Y-%m-%d %H:%i:%s'
 		) AS creditTime,
-		 hbc.create_time AS creditTimeInt,
 		 hru.truename AS creditUserTrueName,
 		 hbc.credit_user_id AS creditUserId,
 		 hbc.credit_repay_end_time AS creditRepayEndTime,
@@ -595,8 +594,8 @@
 				ELSE
 					''
 				END AS `status`,
-				
-				FROM_UNIXTIME(
+
+				date_format(
 					hhh.create_time,
 					'%Y-%m-%d'
 				) AS signTime

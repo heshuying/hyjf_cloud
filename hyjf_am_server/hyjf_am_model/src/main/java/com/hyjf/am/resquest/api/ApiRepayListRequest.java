@@ -18,9 +18,11 @@ public class ApiRepayListRequest extends BasePage implements Serializable {
     /*结束时间（必填）*/
     private String endTime;
     /*电子账号（选填）*/
-    private String accountId;
+    private String account;
     /*标的编号（选填）*/
     private String borrowNid;
+    private Integer limitStart;
+    private Integer limitEnd;
 
     public String getInstCode() {
         return instCode;
@@ -46,12 +48,12 @@ public class ApiRepayListRequest extends BasePage implements Serializable {
         this.endTime = endTime;
     }
 
-    public String getAccountId() {
-        return accountId;
+    public String getAccount() {
+        return account;
     }
 
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
+    public void setAccount(String account) {
+        this.account = account;
     }
 
     public String getBorrowNid() {
@@ -97,5 +99,21 @@ public class ApiRepayListRequest extends BasePage implements Serializable {
 
     public void setPaginatorPage(int paginatorPage) {
         this.paginatorPage = paginatorPage;
+    }
+
+    public Integer getLimitStart() {
+        return limitStart;
+    }
+
+    public void setLimitStart(Integer limitStart) {
+        this.limitStart = limitStart;
+    }
+
+    public Integer getLimitEnd() {
+        return limitEnd;
+    }
+
+    public void setLimitEnd(Integer limitEnd) {
+        this.limitEnd = limitEnd;
     }
 }

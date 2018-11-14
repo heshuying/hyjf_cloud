@@ -95,6 +95,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     @Autowired
     private AuthService authService ;
     @Autowired
+    private HjhTenderService hjhTenderService;
+    @Autowired
     private SensorsDataHjhInvestProducer sensorsDataHjhInvestProducer;
     /**
      * @param request
@@ -539,7 +541,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      * @param request
      */
     @Override
-    public void checkPlan(TenderRequest request) {
+    public Map<String, Object>  checkPlan(TenderRequest request) {
         UserVO loginUser = amUserClient.findUserById(request.getUserId());
         Integer userId = loginUser.getUserId();
         request.setUser(loginUser);
@@ -585,7 +587,10 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         // 检查投资金额
         checkTenderMoney(request, plan, account, cuc, tenderAccount);
         //从user中获取客户类型，ht_user_evalation_result（用户测评总结表）
+        //校验用户测评
+        Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(request);
         logger.info("加入计划投资校验通过userId:{},ip:{},平台{},优惠券为:{}", userId, request.getIp(), request.getPlatform(), request.getCouponGrantId());
+        return resultEval;
     }
 
     /**
@@ -603,7 +608,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         UserEvalationResultVO userEvalationResultCustomize = amUserClient.selectUserEvalationResultByUserId(userId);
         if(userEvalationResultCustomize != null){
             //从redis中获取测评类型和上限金额
-            String revaluation_money = null;
+            String revaluation_money;
             String eval_type = userEvalationResultCustomize.getEvalType();
             switch (eval_type){
                 case "保守型":
@@ -619,9 +624,9 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE);
                     break;
                 default:
-                    revaluation_money = null;
+                    revaluation_money = "0";
             }
-            if(revaluation_money == null){
+            if("0".equals(revaluation_money) || revaluation_money == null){
                 logger.info("=============从redis中获取测评类型和上限金额异常!(没有获取到对应类型的限额数据) eval_type="+eval_type);
             }else {
                 //测评到期日
@@ -642,7 +647,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL);
                     result.put("message","您的风险等级为 #"+eval_type+"# \\n达到 #稳健型# 及以上才可以出借此项目");
                 }
-                //金额对比判断（校验金额 大于 设置测评金额）
+                //金额对比判断（校验金额 大于 设置测评金额）request.getAccount()_计划,request.getAssignCapital()_债转
                 if (new BigDecimal(request.getAccount()).compareTo(new BigDecimal(revaluation_money)) > 0) {
                     //返回类型和限额
                     result.put("evalType",eval_type);

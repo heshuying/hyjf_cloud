@@ -59,11 +59,8 @@ public class BorrowTenderController extends BaseTradeController {
         tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
         WebResult<Map<String,Object>> result = null;
-        //校验用户测评
-        Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(tender);
         try{
             result =  borrowTenderService.borrowTender(tender);
-            result.setData(resultEval);
         }catch (CheckException e){
             throw e;
         }finally {
@@ -76,15 +73,14 @@ public class BorrowTenderController extends BaseTradeController {
     @PostMapping(value = "/investCheck", produces = "application/json; charset=utf-8")
     public WebResult<Map<String,Object>> investCheck(@RequestHeader(value = "userId", required = false) Integer userId,
                                                       @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
+        WebResult<Map<String,Object>> result = new WebResult<Map<String,Object>>();
         logger.info("web端请求投资校验接口");
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
         tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
-        //校验用户测评
-        Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(tender);
-        WebResult<Map<String,Object>>  result =  borrowTenderService.borrowTenderCheck(tender,null,null,null,null);
-        result.setData(resultEval);
+        Map<String,Object>  resultMap =  borrowTenderService.borrowTenderCheck(tender,null,null,null,null);
+        result.setData(resultMap);
         return result;
     }
 

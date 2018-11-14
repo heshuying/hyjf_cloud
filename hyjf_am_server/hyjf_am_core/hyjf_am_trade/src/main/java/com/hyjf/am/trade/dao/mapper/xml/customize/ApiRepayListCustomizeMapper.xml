@@ -25,14 +25,15 @@
         LEFT JOIN ht_account ac ON bt.user_id = ac.user_id
         WHERE 1=1
         <if test="instCode != null and instCode !=null" >
-            AND b.inst_code = #{instCode}
+            AND info.inst_code = #{instCode}
         </if>
         <if test="startTime != null and startTime != ''">
-            AND bt.addtime <![CDATA[>=]]>  unix_timestamp(#{startTime})
+            AND unix_timestamp(bt.create_time) <![CDATA[>=]]>  unix_timestamp(#{startTime})
         </if>
         <if test="endTime != null and endTime != ''">
-            AND bt.addtime <![CDATA[<=]]>  unix_timestamp(#{endTime})+86399
+            AND unix_timestamp(bt.create_time) <![CDATA[<=]]>  unix_timestamp(#{endTime})+86399
         </if>
+
         <if test="account != null and account != ''">
             AND ac.account = #{account}
         </if>

@@ -42,6 +42,7 @@ import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.*;
 import com.hyjf.cs.trade.mq.producer.sensorsdate.credit.SensorsDataCreditProducer;
 import com.hyjf.cs.trade.service.auth.AuthService;
+import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.invest.BorrowCreditTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -88,7 +89,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     private CalculateInvestInterestProducer calculateInvestInterestProducer;
     @Autowired
     private FddProducer fddProducer;
-
+    @Autowired
+    private HjhTenderService hjhTenderService;
     @Autowired
     private SensorsDataCreditProducer sensorsDataCreditProducer;
 
@@ -428,9 +430,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      * @return
      */
     @Override
-    public WebResult<Map<String, Object>> borrowCreditCheck(TenderRequest request) {
+    public Map<String, Object> borrowCreditCheck(TenderRequest request) {
         UserVO loginUser = amUserClient.findUserById(Integer.valueOf(request.getUserId()));
-
         Integer userId = loginUser.getUserId();
         request.setUser(loginUser);
         // 检查请求参数是否正确
@@ -454,8 +455,12 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         logger.info("creditAssign {}", JSONObject.toJSONString(creditAssign));
         // 检查金额
         this.checkTenderMoney(request, tenderAccount,creditAssign);
+        //校验用户测评
+        //给测评接口金额赋值
+        request.setAccount(request.getAssignCapital());
+        Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(request);
         logger.info("债转投资校验通过始   userId:{},credNid:{},ip:{},平台{}", userId, request.getCreditNid(), request.getIp(), request.getPlatform());
-        return new WebResult<Map<String, Object>>();
+        return resultEval;
     }
 
     /**

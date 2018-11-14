@@ -1688,6 +1688,8 @@ public class FddHandle {
 			String borrowNid = tenderAgrementInfo.getBorrowNid();
 			if(StringUtils.isNotBlank(borrowNid)){
 				BorrowAndInfoVO borrow=this.amTradeClient.getBorrowByNid(borrowNid);
+				BorrowInfoVO borrowInfoByNid = this.amTradeClient.getBorrowInfoByNid(borrowNid);
+				borrow.setCompanyOrPersonal(borrowInfoByNid.getCompanyOrPersonal().toString());
 				String planNid = borrow.getPlanNid();
 				if(StringUtils.isNotBlank(planNid)){//计划标的
 					Integer borrowUserId = borrow.getUserId();
@@ -1717,7 +1719,6 @@ public class FddHandle {
 					logger.info("---------------脱敏下载将PDF转换成图片完成，转换后图片:tenderAgreementID："+tenderAgreementID+"-----" + name);
 				}
 			}
-
 			//签章待脱敏图片地址
 			String imageFilePath = imageSavePath +"/"+  fileName + fileType;
 			//真实姓名待脱敏图片地址
@@ -1759,7 +1760,6 @@ public class FddHandle {
 				logger.info("------------------上传pdf完成，上传脱敏图片是否成功：tenderAgreementID："+tenderAgreementID+"-----"+ upResult);
 				if(upResult){
 					logger.info("------------------上传脱敏图片完成，开始变更数据库数据"+tenderAgreementID);
-
 					this.updateTenderAgreementImageURL(tenderAgreementID,ftpPath+"pdfimage.png",ftpPath + fileName +"_tm.pdf");
 
 					// 发送邮件

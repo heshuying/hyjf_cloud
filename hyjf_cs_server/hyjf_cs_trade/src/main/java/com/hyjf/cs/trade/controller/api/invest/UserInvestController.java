@@ -10,6 +10,8 @@ import com.hyjf.cs.trade.bean.ApiRepayListRequestBean;
 import com.hyjf.cs.trade.bean.ResultApiBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.invest.UserInvestService;
+import com.hyjf.cs.trade.service.svrcheck.CommonSvrChkService;
+import com.hyjf.cs.trade.util.ErrorCodeConstant;
 import com.hyjf.cs.trade.util.SignUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -36,7 +38,9 @@ public class UserInvestController extends BaseTradeController {
 
     @Autowired
     private UserInvestService userInvestService;
-    @PostMapping("/repayList")
+    @Autowired
+    private CommonSvrChkService commonSvrChkService;
+    @PostMapping("/repayList.do")
     @ApiParam(required = true, name = "repaymentInfoList", value = " 第三方查询投资信息,获取回款记录")
     @ApiOperation(value = " 第三方查询投资信息,获取回款记录", httpMethod = "POST", notes = " 第三方查询投资信息,获取回款记录")
     public ResultApiBean repayList(@RequestBody ApiRepayListRequestBean bean) {
@@ -45,10 +49,11 @@ public class UserInvestController extends BaseTradeController {
         CheckUtil.check(Validator.isNotNull(bean.getStartTime()), MsgEnum.STATUS_CE000001);
         CheckUtil.check(Validator.isNotNull(bean.getEndTime()), MsgEnum.STATUS_CE000001);
 
-        logger.info("bean:{}", JSONObject.toJSONString(bean));
+        logger.info("api端-获取回款记录接口bean:{}", JSONObject.toJSONString(bean));
+        commonSvrChkService.checkLimit(bean.getLimitStart(), bean.getLimitEnd());
 
         // 验签
-        CheckUtil.check(SignUtil.verifyRequestSign(bean, "repayList"), MsgEnum.ERR_SIGN);
+        CheckUtil.check(SignUtil.verifyRequestSign(bean, "/server/invest/repayList"), MsgEnum.ERR_SIGN);
 
         ApiRepayListRequest request = new ApiRepayListRequest();
         BeanUtils.copyProperties(bean, request);

@@ -1,7 +1,9 @@
 package com.hyjf.am.trade.utils;
 
+import com.hyjf.am.trade.bean.WrbConstant;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
@@ -19,6 +21,7 @@ import java.util.UUID;
  * @Description: WrbCoopDESUtil
  */
 public class WrbCoopDESUtil {
+
     private static final Logger LOG = Logger.getLogger(WrbCoopDESUtil.class);
 
     private static byte[] defaultIV = { 0x23, (byte) 0xf2, (byte) 0xa3, (byte) 0xc6, 0x3e, 0x2b, (byte) 0xe7, 0x28 };
@@ -32,9 +35,9 @@ public class WrbCoopDESUtil {
     // 测试环境汇盈金服使用的加解密的key， 主要用来屏蔽敏感字段，比如userId
 //	public static final String PF_KEY = "uaIH/eUCWHMxOxUyeUWirnzjf+kEEG1/";
     // 生产环境风车理财提供的密钥字符串
-    public static final String KEY = "ByAsy7z4UV61V83a9JR2aFcWI3/WKZez";
+    public static final String KEY = WrbConstant.KEY;
     // 生产环境汇盈金服使用的加解密的key， 主要用来屏蔽敏感字段，比如userId
-    public static final String PF_KEY = "ByAsy7z4UV61V83a9JR2aFcWI3/WKZez";
+    public static final String PF_KEY = WrbConstant.PF_KEY;
 
     /**
      * des加密
