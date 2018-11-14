@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +63,7 @@ public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLog
         String beforeDay = DateUtils.getBeforeDay();//当前前时间前一天的日期
         String date = DateUtils.getNowDateOfDay();//当天日期返回时间类型 yyyyMMdd
         String localDir = systemConfig.getLocalDir();
-        Boolean dir = FileUtil.createDir(localDir+"/"+date);
+        FileUtil.createDir(localDir+"/"+date);
         String filePath = beforeYear+"/"+beforeMonth+"/"+beforeDay;
         para.downloadPath =systemConfig.getFtpDownloadPath()+ filePath;//ftp服务器文件目录
         para.savePath =localDir+"/"+date;
@@ -77,20 +78,27 @@ public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLog
                 if(!FtpUtil.downloadFiles(para)){
                     logger.error("下载ftp文件失败");
                 }else{
-                    JSONObject params = new JSONObject();
-                    params.put("status", "1");
-                    params.put("savePath", para.savePath);
-                    params.put("filePathEve", systemConfig.getEveFileName());
-                    params.put("filePathAleve", systemConfig.getAleveFileName());
-                    try {
-                        downloadFileProducer.messageSend(new MessageContent(MQConstant.ALEVE_FILE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
-                    } catch (MQException e) {
-                        logger.error("发送【导入手续费流水明细(aleve)】MQ失败...");
-                    }
-                    try {
-                        downloadFileProducer.messageSend(new MessageContent(MQConstant.EVE_FILE_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
-                    } catch (MQException e) {
-                        logger.error("发送【导入红包账户流水明细(eve)】MQ失败...");
+                    File dir = new File(para.savePath);
+                    // 只有aleve跟eve两个文件都下载成功才发MQ，否则不发，就是这么任性
+                    if(dir.listFiles().length == 2){
+                        logger.info("aleve与eve文件下载成功，开始发送MQ");
+                        JSONObject params = new JSONObject();
+                        params.put("status", "1");
+                        params.put("savePath", para.savePath);
+                        params.put("filePathEve", systemConfig.getEveFileName());
+                        params.put("filePathAleve", systemConfig.getAleveFileName());
+                        try {
+                            downloadFileProducer.messageSend(new MessageContent(MQConstant.ALEVE_FILE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                        } catch (MQException e) {
+                            logger.error("发送【导入手续费流水明细(aleve)】MQ失败...");
+                        }
+                        try {
+                            downloadFileProducer.messageSend(new MessageContent(MQConstant.EVE_FILE_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
+                        } catch (MQException e) {
+                            logger.error("发送【导入红包账户流水明细(eve)】MQ失败...");
+                        }
+                    } else {
+                        logger.info("下载文件失败或者不全。");
                     }
                     para.release();
                 }
