@@ -128,7 +128,9 @@ public class ApiUnBindCardPageController extends BaseUserController {
                     + unbindCardPageRequestBean.getRetUrl().replace("#", "*-*-*");
 
             // 异步调用路
-            String bgRetUrl =systemConfig.getServerHost()+"/hyjf-api/server/user/unbindCardPage/notifyReturn"+ "?acqRes="
+            // 异步调用路
+            String bgRetUrl = "http://CS-USER/hyjf-api/server/user/unbindCardPage";
+            bgRetUrl =bgRetUrl+"/notifyReturn"+ "?acqRes="
                     + unbindCardPageRequestBean.getAcqRes() + "&callback=" + unbindCardPageRequestBean.getNotifyUrl().replace("#", "*-*-*");
 
             // 拼装参数 调用江西银行
