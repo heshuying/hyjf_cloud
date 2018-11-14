@@ -42,10 +42,10 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
     private Boolean env_test;
 
     @Value("${hyjf.alerm.email.test}")
-    private static String emailList1;
+    private String emailList1;
 
     @Value("${hyjf.alerm.email}")
-    private static String emaillist2;
+    private String emaillist2;
 
     /**
      * 邮件发送key
@@ -241,6 +241,9 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
                 }else{
                     emailList = emaillist2;
                 }
+                logger.info("配置文件读取的测试邮件地址:[{}]",emailList1);
+                logger.info("配置文件读取的线上邮件地址:[{}]",emaillist2);
+                logger.info("赋值给本地变量的邮件地址:[{}]",emailList);
                 String [] toMail = emailList.split(",");
                 MailMessage mailMessage = new MailMessage(null, null, "资产ID为：" + hjhPlanAsset.getAssetId(), msg.toString(), null, toMail, CustomConstants.MAILSENDFORMAILINGADDRESSMSG,
                         MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);

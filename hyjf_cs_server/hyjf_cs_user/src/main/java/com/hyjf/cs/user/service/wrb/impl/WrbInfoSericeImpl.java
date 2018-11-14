@@ -71,7 +71,7 @@ public class WrbInfoSericeImpl implements WrbInfoServcie {
                 }
             }
         }
-        return null;
+        return list;
     }
 
     @Override
