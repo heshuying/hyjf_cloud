@@ -981,8 +981,16 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             UserEvalationResultVO userEvalationResultCustomize = amUserClient.selectUserEvalationResultByUserId(tender.getUserId());
             if (userEvalationResultCustomize != null) {
                 //从redis中获取测评类型和上限金额
-                String revaluation_money = null;
+                String revaluation_money;
                 String eval_type = userEvalationResultCustomize.getEvalType();
+                //初始化接口回传参数
+                investInfo.setRevalJudge(false);
+                investInfo.setProjectRevalJudge(false);
+                investInfo.setEvalType(eval_type);
+                investInfo.setRevaluationMoney("");
+                investInfo.setRiskLevelDesc("");
+                investInfo.setProjectRiskLevelDesc("");
+                //金额类型判断
                 switch (eval_type) {
                     case "保守型":
                         revaluation_money = RedisUtils.get(com.hyjf.common.cache.RedisConstants.REVALUATION_CONSERVATIVE);
@@ -997,20 +1005,20 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                         revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE);
                         break;
                     default:
-                        revaluation_money = null;
+                        revaluation_money = "0";
                 }
                 //计划类判断用户类型为稳健型以上才可以投资
                 if("HJH".equals(investType)) {
-                    if (userEvalationResultCustomize != null) {
+                    //if (!("0".equals(revaluation_money) || revaluation_money == null)) {
                         if (!CommonUtils.checkStandardInvestment(userEvalationResultCustomize.getEvalType())) {
                             //返回类型和限额
                             investInfo.setProjectRevalJudge(true);
                             investInfo.setEvalType(eval_type);
                             investInfo.setProjectRiskLevelDesc(CommonUtils.DESC_PROJECT_RISK_LEVEL_DESC.replace("{0}", userEvalationResultCustomize.getEvalType()));
                         }
-                    }
+                    //}
                 }
-                if (revaluation_money == null) {
+                if ("0".equals(revaluation_money) || revaluation_money == null) {
                     logger.info("=============从redis中获取测评类型和上限金额异常!(没有获取到对应类型的限额数据) eval_type=" + eval_type);
                 }else {
                     //金额对比判断（校验金额 大于 设置测评金额）

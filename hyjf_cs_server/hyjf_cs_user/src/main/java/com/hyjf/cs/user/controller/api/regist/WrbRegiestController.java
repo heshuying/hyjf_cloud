@@ -33,7 +33,7 @@ import java.util.Map;
  */
 @RestController
 @Api(tags = "风车理财用户注册")
-@RequestMapping(value = "/server/wrb")
+@RequestMapping(value = "/hyjf-api/server/wrb/register")
 public class WrbRegiestController {
 
     Logger log = LoggerFactory.getLogger(WrbRegiestController.class);
@@ -45,7 +45,7 @@ public class WrbRegiestController {
     @Autowired
     UserRegisterService userRegisterService;
 
-    @PostMapping("/register")
+    @PostMapping("/register.do")
     public WrbRegisterResultBean userRegister(@RequestParam String param,
                                               @RequestParam(value = "sign", required = false) String sign, HttpServletRequest request) {
         log.info("风车理财注册, param is :{}, sign is :{}", param, sign);
