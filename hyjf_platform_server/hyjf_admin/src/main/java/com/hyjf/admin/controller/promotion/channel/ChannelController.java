@@ -162,7 +162,13 @@ public class ChannelController extends BaseController {
             // 备注说明
             CheckUtil.check(channelCustomizeVO.getRemark()==null||channelCustomizeVO.getRemark().length()<=100, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"备注说明");
            // ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "remark", channelCustomizeVO.getRemark(), 100, false);
-            adminResult.setStatus(AdminResult.SUCCESS);
+            boolean check = channelService.getBySourceIdAndTerm(channelCustomizeVO.getSourceId(),channelCustomizeVO.getUtmTerm());
+            if(!check){
+                adminResult.setStatus(UtmResultResponse.FAIL);
+                adminResult.setStatusDesc("该渠道下关键字已经存在！");
+            }else{
+                adminResult.setStatus(AdminResult.SUCCESS);
+            }
         }else{
             adminResult.setStatus(UtmResultResponse.FAIL);
             adminResult.setStatusDesc("SourceId为空！");
