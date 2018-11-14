@@ -68,7 +68,7 @@ public class BatchCouponRepayController extends BaseController {
         Map<String,Object> map = new HashMap<>();
         map.put("tenderNid",couponTenderNid);
         map.put("periodNow",periodNow);
-        CouponRecoverCustomize customize = couponRepayService.aselectCurrentCouponRecover(map);
+        CouponRecoverCustomize customize = couponRepayService.selectCurrentCouponRecover(map);
         logger.info("return customize is : {}", customize);
         if (customize != null) {
             CouponRecoverCustomizeVO customizeVO = new CouponRecoverCustomizeVO();

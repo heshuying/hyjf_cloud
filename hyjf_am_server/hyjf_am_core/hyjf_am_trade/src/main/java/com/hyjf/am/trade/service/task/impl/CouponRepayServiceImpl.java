@@ -141,7 +141,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
     }
 
     @Override
-    public CouponRecoverCustomize aselectCurrentCouponRecover(Map<String, Object> map) {
+    public CouponRecoverCustomize selectCurrentCouponRecover(Map<String, Object> map) {
         return couponRecoverCustomizeMapper.selectCurrentCouponRecover(map);
     }
 
