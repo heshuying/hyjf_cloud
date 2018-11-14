@@ -39,6 +39,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -109,34 +110,34 @@ public class ApiUserBindController extends BaseUserController {
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
             baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户授权！");
             baseMapBean.setCallBackAction(webHost+JUMP_BIND_HTML);
-            modelAndView.addObject("apiForm",new BeanMap(apiUserPostBean));
         }else{
             // 登陆
-			WebViewUserVO webUser = loginService.getWebViewUserByUserId(userId);
-			loginService.setToken(webUser);
-			//WebUtils.sessionLogin(request, response, webUser);
+            WebViewUserVO webUser = loginService.getWebViewUserByUserId(userId);
+            loginService.setToken(webUser);
+            //WebUtils.sessionLogin(request, response, webUser);
 
-			//重复绑定
-			CheckUtil.check(false,MsgEnum.ERR_BIND_REPEAT);
-		}
-		String idCard = apiUserPostBean.getIdCard();
-		String phone = apiUserPostBean.getMobile();
-		String mobile = apiUserPostBean.getMobile()==null?"":phone;
-		String readonly = "";
-		if (!StringUtils.isEmpty(idCard)) {
-			UserVO userVO = loginService.getUserByIdCard(idCard);
-			String hyjfMobile = userVO.getMobile();
-			if(hyjfMobile != null){
-				mobile = hyjfMobile;
-				readonly = "readonly";
-			}
-		}else {
-			if (!StringUtils.isEmpty(phone)) {
-				readonly = "readonly";
-			}
-		}
-        modelAndView.addObject("mobile", mobile);
-        modelAndView.addObject("readonly", readonly);
+            //重复绑定
+            CheckUtil.check(false,MsgEnum.ERR_BIND_REPEAT);
+        }
+        String idCard = apiUserPostBean.getIdCard();
+        String phone = apiUserPostBean.getMobile();
+        String mobile = apiUserPostBean.getMobile()==null?"":phone;
+        String readonly = "";
+        if (!StringUtils.isEmpty(idCard)) {
+            UserVO userVO = loginService.getUserByIdCard(idCard);
+            String hyjfMobile = userVO.getMobile();
+            if(hyjfMobile != null){
+                mobile = hyjfMobile;
+                readonly = "readonly";
+            }
+        }else {
+            if (!StringUtils.isEmpty(phone)) {
+                readonly = "readonly";
+            }
+        }
+        baseMapBean.set("mobile", mobile);
+        baseMapBean.set("readonly", readonly);
+        baseMapBean.setAll(objectToMap(apiUserPostBean));
         modelAndView.addObject("callBackForm", baseMapBean);
 		return modelAndView;
 	}
@@ -379,4 +380,24 @@ public class ApiUserBindController extends BaseUserController {
 
 		return result;
 	}
+
+    public static Map<String, String> objectToMap(Object obj){
+        if(obj == null){
+            return null;
+        }
+
+        Map<String, String> map = new HashMap<String, String>();
+
+        Field[] declaredFields = obj.getClass().getDeclaredFields();
+        for (Field field : declaredFields) {
+            field.setAccessible(true);
+            try {
+                map.put(field.getName(), String.valueOf(field.get(obj)));
+            }catch (Exception e){
+                logger.error("转换异常！");
+            }
+        }
+
+        return map;
+    }
 }
