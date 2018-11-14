@@ -9,10 +9,7 @@ import com.hyjf.am.response.AppPushManageResponse;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.EmailRecipientResponse;
 import com.hyjf.am.response.IntegerResponse;
-import com.hyjf.am.response.admin.AdminSubConfigResponse;
-import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
-import com.hyjf.am.response.admin.HjhDebtCreditReponse;
-import com.hyjf.am.response.admin.PlatformCountCustomizeResponse;
+import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
@@ -729,4 +726,32 @@ public interface AmAdminClient {
      * @Author : huanghui
      */
     boolean deletePushManage(Integer id);
+
+    /**
+     * 节假日配置-列表查询
+     * @param request
+     * @return
+     */
+    AdminHolidaysConfigResponse getHolidaysConfigRecordList(AdminHolidaysConfigRequest request);
+
+    /**
+     * 节假日配置-画面迁移(含有id更新，不含有id添加)
+     * @param request
+     * @return
+     */
+    AdminHolidaysConfigResponse getInfoList(AdminHolidaysConfigRequest request);
+
+    /**
+     *节假日配置-添加活动信息
+     * @param request
+     * @return
+     */
+    AdminHolidaysConfigResponse insertHolidays(AdminHolidaysConfigRequest request);
+
+    /**
+     *节假日配置-修改活动维护信息
+     * @param request
+     * @return
+     */
+    AdminHolidaysConfigResponse updateHolidays(AdminHolidaysConfigRequest request);
 }
