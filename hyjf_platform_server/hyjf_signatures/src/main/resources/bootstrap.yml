@@ -4,7 +4,7 @@ spring:
   cloud:
     config:
       uri: http://micoserver:2222/
-      name: hyjf_signatures
+      name: hyjf-signatures
   boot:
     admin:
       client:
