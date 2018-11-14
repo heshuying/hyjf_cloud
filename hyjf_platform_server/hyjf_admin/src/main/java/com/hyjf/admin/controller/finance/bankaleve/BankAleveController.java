@@ -120,8 +120,8 @@ public class BankAleveController {
         String sheetNameTmp = sheetName + "_第1页";
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
-        bankAleveRequest.setPaginatorPage(1);
-        bankAleveRequest.setLimit(defaultRowMaxCount);
+        bankAleveRequest.setPageSize(defaultRowMaxCount);
+        bankAleveRequest.setCurrPage(1);
 
 
         // 需要输出的结果列表
@@ -139,7 +139,8 @@ public class BankAleveController {
         }
 
         for (int i = 1; i < sheetCount; i++) {
-            bankAleveRequest.setCurrPage(i +1);
+            bankAleveRequest.setPageSize(defaultRowMaxCount);
+            bankAleveRequest.setCurrPage(1);
             List<BankAleveVO> bankAleveList2 = bankAleveService.queryBankAleveList(bankAleveRequest);
             if (!CollectionUtils.isEmpty(bankAleveList2)) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
