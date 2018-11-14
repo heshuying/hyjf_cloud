@@ -63,10 +63,9 @@ public class TyjCouponRepayConsumer extends Consumer {
 		@Override
 		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list,
 				ConsumeConcurrentlyContext consumeConcurrentlyContext) {
-			logger.info("体验金按收益期限还款收到消息， 开始处理");
 			MessageExt messageExt = list.get(0);
+			logger.info("体验金按收益期限还款收到消息， 开始处理, messageExt is : {}", messageExt);
 			String nids = new String(messageExt.getBody());
-
 			try {
 				List<String> recoverNidList = splitString(nids);
 

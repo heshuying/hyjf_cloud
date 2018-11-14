@@ -1112,13 +1112,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
     @Override
     public void couponOnlyRepay(String nids) {
         try {
-            String timestamp = String.valueOf(GetDate.getNowTime10());
-            Map<String, String> params = new HashMap<String, String>();
-            // 借款项目编号
-            params.put("nids", nids);
-            // 时间戳
-            params.put("timestamp", timestamp);
-            couponRepayProducer.messageSend(new MessageContent(MQConstant.TYJ_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            couponRepayProducer.messageSend(new MessageContent(MQConstant.TYJ_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(nids)));
         } catch (MQException e) {
             e.printStackTrace();
             logger.info("体验金按收益期限还款消息队列 失败");
