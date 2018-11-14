@@ -51,4 +51,22 @@ public interface AleveLogFileService extends BaseService {
      * @param aleveLogCustomizeList
      */
     void updateAutoCorretion(List<AleveLogCustomize> aleveLogCustomizeList);
+
+    /**
+     * aleveLog表数据插入
+     * @param list
+     */
+    void insertAleveLogByList(List<AleveLog> list);
+
+    /**
+     * eveLog表数据插入
+     * @param list
+     */
+    void insertEveLogByList(List<EveLog> list);
+
+    /**
+     * aleveErrorLog表数据插入
+     * @param list
+     */
+    void insertAleveErrorLogByList(List<AleveErrorLog> list);
 }

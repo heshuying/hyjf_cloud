@@ -70,5 +70,5 @@ public interface BorrowCreditTenderService extends BaseTradeService {
      * @param tender
      * @return
      */
-    WebResult<Map<String,Object>> borrowCreditCheck(TenderRequest tender);
+    Map<String,Object> borrowCreditCheck(TenderRequest tender);
 }

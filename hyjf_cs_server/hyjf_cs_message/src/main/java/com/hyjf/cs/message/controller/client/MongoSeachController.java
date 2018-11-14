@@ -1,40 +1,31 @@
 package com.hyjf.cs.message.controller.client;
 
-import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.AccountWebListResponse;
 import com.hyjf.am.response.admin.AssociatedRecordListResponse;
 import com.hyjf.am.response.admin.BindLogResponse;
-import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.CalculateInvestInterestResponse;
-import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.resquest.admin.AssociatedRecordListRequest;
 import com.hyjf.am.resquest.admin.BindLogListRequest;
-import com.hyjf.am.resquest.api.WrbRegisterRequest;
 import com.hyjf.am.vo.admin.AssociatedRecordListVO;
 import com.hyjf.am.vo.admin.BindLogVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
-import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
-import com.hyjf.am.vo.user.UtmPlatVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.ic.*;
 import com.hyjf.cs.message.mongo.ic.*;
 import com.hyjf.cs.message.service.bank.BankReturnConfig;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.util.Date;
 import java.util.List;
 
 @ApiIgnore
@@ -72,9 +63,11 @@ public class MongoSeachController extends BaseController {
      * @return
      */
     @RequestMapping("/getRetCode/{logOrdId}")
-    public String getRetCode(@PathVariable String logOrdId) {
+    public StringResponse getRetCode(@PathVariable String logOrdId) {
+        StringResponse response = new StringResponse();
         String result = bankReturnConfig.getRetCode(logOrdId);
-        return result;
+        response.setResultStr(result);
+        return response;
     }
 
 

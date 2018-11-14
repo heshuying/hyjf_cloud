@@ -18,6 +18,13 @@ server:
   #servlet:
   #  context-path: /monitor
 
+eureka:
+  instance:
+    metadata-map:
+      #These two are needed so that the server can access the protected client endpoints
+      user.name: "hyjf"
+      user.password: "hyjf1234"
+
 management:
   endpoints:
     web:
