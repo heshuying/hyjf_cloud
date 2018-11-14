@@ -692,7 +692,7 @@ public class HjhCommissionController extends BaseController{
 			/** 验证员工在平台的身份属性是否和crm的一致 如果不一致则不发提成 begin */
 			/** redis 锁 */
 			/*原boolean reslut = RedisUtils.tranactionSet("PUSH_MONEY:" + id, 5);*/
-			boolean reslut = RedisUtils.tranactionSet(RedisConstants.PUSH_MONEY_ + id, 5);
+			boolean reslut = RedisUtils.tranactionSet(RedisConstants.PUSH_MONEY_ + id, 50);
 			// 如果没有设置成功，说明有请求来设置过
 			if(!reslut){
 				ret.put("status", FAIL);

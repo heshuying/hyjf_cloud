@@ -847,7 +847,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
     public boolean updateCreditForAutoTender(String creditNid, String accedeOrderId, String planNid, BankCallBean bean,
                                              String tenderUsrcustid, String sellerUsrcustid, HjhCreditCalcResultVO resultVO) {
         boolean result = false;
-
+        logger.info("======银行自动投资成功后，更新投资数据=====");
         // 防范主从数据库不同步，取读库传参改从写库拉数据
         HjhDebtCredit credit = this.selectCreditByNid(creditNid);
         HjhAccede hjhAccede = this.selectHjhAccedeByAccedeOrderId(accedeOrderId);

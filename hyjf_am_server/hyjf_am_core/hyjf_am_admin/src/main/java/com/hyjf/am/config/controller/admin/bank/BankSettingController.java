@@ -179,7 +179,7 @@ public class BankSettingController {
 
         if(result <= 0 ){
             response.setRtn(Response.FAIL);
-            response.setMessage(Response.FAIL_MSG);
+            response.setMessage("Admin江西银行数据添加异常！具体原因详见日志");
         }
         return response;
     }
