@@ -67,9 +67,10 @@ public class ApiPassWordController extends BaseController {
         ModelAndView modelAndView = new ModelAndView();
         logger.info("第三方请求参数："+JSONObject.toJSONString(transPasswordRequestBean));
         Map<String,Object> map = passWordService.apiCheack(transPasswordRequestBean,BankCallConstant.TXCODE_PASSWORD_RESET_PAGE, BaseDefine.METHOD_SERVER_SET_PASSWORD);
+        ModelAndView result = (ModelAndView) map.get("modelAndView");
+        result.addObject("callBackAction",transPasswordRequestBean.getRetUrl());
         if (null==map.get("flag")){
-            //return (ModelAndView) map.get("modelAndView");
-            return callbackErrorView((ModelAndView) map.get("modelAndView"));
+            return callbackErrorView(result);
         }
         UserVO user = (UserVO) map.get("user");
         BankOpenAccountVO bankOpenAccount = (BankOpenAccountVO) map.get("bankOpenAccount");
@@ -201,8 +202,10 @@ public class ApiPassWordController extends BaseController {
        ModelAndView modelAndView = new ModelAndView();
         logger.info("第三方请求参数："+JSONObject.toJSONString(transPasswordRequestBean));
         Map<String,Object> map = passWordService.apiCheack(transPasswordRequestBean, BankCallConstant.TXCODE_PASSWORD_RESET_PAGE,BaseDefine.METHOD_SERVER_RESET_PASSWORD);
+        ModelAndView result = (ModelAndView) map.get("modelAndView");
+        result.addObject("callBackAction",transPasswordRequestBean.getRetUrl());
         if (null==map.get("flag")){
-            return (ModelAndView) map.get("modelAndView");
+            return callbackErrorView(result);
         }
         UserVO user = (UserVO) map.get("user");
         BankOpenAccountVO bankOpenAccount = (BankOpenAccountVO) map.get("bankOpenAccount");
