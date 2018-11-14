@@ -190,9 +190,15 @@ public class WrbUserBindController extends BaseUserController {
                            @ModelAttribute("apiUserPostBean") ApiUserPostBean apiUserPostBean, @ModelAttribute("loginBean") ApiLoginBean loginBean) throws Exception{
         // 返回对象
         JSONObject jsonObj = new JSONObject();
-
         // 第三方用户ID
         String bindUniqueId = apiUserPostBean.getWrb_user_id();
+        if (StringUtils.isBlank(bindUniqueId)) {
+            jsonObj = new JSONObject();
+            jsonObj.put("status", BaseResultBeanFrontEnd.FAIL);
+            jsonObj.put("statusCode", BaseResultBeanFrontEnd.FAIL);
+            jsonObj.put("statusDesc", "授权失败，第三方用户ID为空");
+            return jsonObj;
+        }
         logger.info("bindUniqueId is :{}", bindUniqueId);
         //用户Id
         Integer userId = null;
@@ -293,7 +299,7 @@ public class WrbUserBindController extends BaseUserController {
         if (StringUtils.isNoneBlank(apiUserPostBean.getTarget_url())) {
             jsonResult.put("retUrl", apiUserPostBean.getTarget_url());
         }else {
-            jsonResult.put("retUrl", CustomConstants.WECHAT_HOST+"?sign=" + sign);
+            jsonResult.put("retUrl", wechatHost+"?sign=" + sign);
         }
         jsonResult.put("hyjfUserName",userName );
         jsonResult.put("userId",users.getUserId() );

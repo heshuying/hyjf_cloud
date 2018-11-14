@@ -378,9 +378,9 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         //拼装参数
         UserInfoVO usersInfo = getUserInfo(user.getUserId());
         // 同步调用路径
-        String retUrl = "http://CS-USER/user/password";
+        String retUrl = "http://CS-USER/hyjf-api/server/user/transpassword";
         // 异步调用路
-        String bgRetUrl = "http://CS-USER/user/password";
+        String bgRetUrl = "http://CS-USER/hyjf-api/server/user/transpassword";
         // 调用设置密码接口
         if(txCode.equals(BankCallConstant.TXCODE_PASSWORD_RESET_PAGE)){
             retUrl += "/passwordReturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&callback="+transPasswordRequestBean.getRetUrl().replace("#", "*-*-*");

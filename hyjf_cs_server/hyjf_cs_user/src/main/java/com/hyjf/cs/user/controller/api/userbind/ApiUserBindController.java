@@ -260,8 +260,13 @@ public class ApiUserBindController extends BaseUserController {
         jsonResult.put("statusDesc", "授权成功");
         jsonResult.put("retUrl", apiUserPostBean.getRetUrl());
         jsonResult.put("bindUniqueIdScy", apiUserPostBean.getBindUniqueIdScy());
-        jsonResult.put("hyjfUserName",userName );
         jsonResult.put("userId",users.getUserId() );
+        jsonResult.put("mobile",apiLoginBean.getLoginUserName() );
+        jsonResult.put("username",userName );
+        jsonResult.put("token",userName );
+        jsonResult.put("roleId",login.getData().getRoleId() );
+        jsonResult.put("iconUrl",login.getData().getIconUrl() );
+        jsonResult.put("hyjfUserName",userName );
         Long timestamp = System.currentTimeMillis();
         jsonResult.put("timestamp",timestamp);
         jsonResult.put("chkValue",ApiSignUtil.encryptByRSA(apiUserPostBean.getPid()+timestamp+""));

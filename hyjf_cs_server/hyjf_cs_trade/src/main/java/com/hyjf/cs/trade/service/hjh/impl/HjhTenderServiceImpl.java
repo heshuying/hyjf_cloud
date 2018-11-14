@@ -602,6 +602,11 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     public Map<String, Object> checkEvaluationTypeMoney(TenderRequest request) {
         //返回参数初始化
         Map<String, Object> result = new HashMap<String, Object>();
+        //初始化默认值
+        result.put("riskTested","");
+        result.put("message","");
+        result.put("evalType","");
+        result.put("revaluationMoney","");
         //测评判断逻辑开始
         UserVO loginUser = amUserClient.findUserById(request.getUserId());
         Integer userId = loginUser.getUserId();
@@ -610,6 +615,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             //从redis中获取测评类型和上限金额
             String revaluation_money;
             String eval_type = userEvalationResultCustomize.getEvalType();
+            result.put("evalType",eval_type);
             switch (eval_type){
                 case "保守型":
                     revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE);
@@ -1271,7 +1277,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 OpenAccount.getAccount());
         if (userBankBalance.compareTo(accountBigDecimal) < 0) {
             // 你又没钱了
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_NOT_ENOUGH);
+            //throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_NOT_ENOUGH);
         }
         // redis剩余金额不足判断逻辑
         if (accountBigDecimal.compareTo(new BigDecimal(balance)) == 1) {

@@ -18,6 +18,14 @@ spring:
     
   profiles:
     active: dev
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA.CLIENT.SERVICEURL}
+  instance:
+    preferIpAddress: true
+
 server:
   port: 9095
 
