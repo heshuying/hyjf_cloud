@@ -267,7 +267,7 @@
 
 	<select id="getInvestRecord" resultType="com.hyjf.am.trade.dao.model.customize.WrbInvestRecordCustomize">
 		SELECT
-		FROM_UNIXTIME(hbt.create_time, '%Y-%c-%d %h:%i:%s') AS invest_time,
+		DATE_FORMAT(hbt.create_time, '%Y-%c-%d %h:%i:%s') AS invest_time,
 		hbt.account AS invest_money,
 		hbt.recover_account_capital_yes AS all_back_principal,
 		hbt.recover_account_interest_yes AS all_back_interest,
