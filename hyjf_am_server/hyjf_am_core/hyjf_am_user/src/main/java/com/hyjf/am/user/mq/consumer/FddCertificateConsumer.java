@@ -85,7 +85,7 @@ public class FddCertificateConsumer extends Consumer {
                 try {
                     Integer userId = fddCertificateAuthorityVO.getUserId();
                     // 根据用户ID获取用户信息
-                    User user = fddCertificateService.findUserByUserId(userId);
+                    User user = fddCertificateService.fUserByUserId(userId);
                     if (user == null) {
                         logger.info("根据用户ID获取用户信息失败,用户ID:[" + userId + "].");
                         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;

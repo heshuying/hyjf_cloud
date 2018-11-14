@@ -60,6 +60,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.io.File;
 import java.math.BigDecimal;
@@ -176,6 +177,12 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
         BorrowInvestResponseBean responseBean = new BorrowInvestResponseBean();
         //根据银行返回内容编辑前端展示列表
         responseBean.setDetailList(this.getDetailList(results));
+        //前端需要total，加上
+        if(!CollectionUtils.isEmpty(responseBean.getDetailList())){
+            responseBean.setTotal(responseBean.getRecordList().size());
+        } else {
+            responseBean.setTotal(0);
+        }
         return new AdminResult(responseBean);
     }
 
