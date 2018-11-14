@@ -91,20 +91,20 @@ public class ApiUserBindController extends BaseUserController {
 		this.initCheckUtil(apiUserPostBean);
 		//TODO:用户登录授权页面
 		ModelAndView modelAndView = new ModelAndView("wrb/wrb_result");
-		// 验证
-		//this.checkPostBeanOfWeb(apiUserPostBean);
-		logger.info("验签开始....");
-		// 验签
-		//this.checkSign(apiUserPostBean);
-		logger.info("解密开始....apiUserPostBean is : {}", JSONObject.toJSONString(apiUserPostBean));
-		// 解密
-		int bindUniqueId = Integer.parseInt(apiUserPostBean.getBindUniqueIdScy());
-		logger.info("解密结果....bindUniqueId is : {}", bindUniqueId);
-        modelAndView.addObject("instcode",apiUserPostBean.getPid());
+        BaseMapBean baseMapBean=new BaseMapBean();
+        // 验证
+        //this.checkPostBeanOfWeb(apiUserPostBean);
+        logger.info("验签开始....");
+        // 验签
+        //this.checkSign(apiUserPostBean);
+        logger.info("解密开始....apiUserPostBean is : {}", JSONObject.toJSONString(apiUserPostBean));
+        // 解密
+        int bindUniqueId = Integer.parseInt(apiUserPostBean.getBindUniqueIdScy());
+        logger.info("解密结果....bindUniqueId is : {}", bindUniqueId);
+        baseMapBean.set("instcode",String.valueOf(apiUserPostBean.getPid()));
         Integer userId = loginService.getUserIdByBind(bindUniqueId, apiUserPostBean.getPid());
         logger.info("用户ID："+userId);
         // 回调url（h5错误页面）
-        BaseMapBean baseMapBean=new BaseMapBean();
         if(userId == null||userId==0){
             // 跳转登陆授权画面
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);

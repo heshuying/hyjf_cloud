@@ -980,7 +980,11 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	@Override
 	public UserVO getUserByIdCard(String idCard) {
 		UserInfoVO userInfoVO = amUserClient.getUserByIdNo(idCard);
-		return amUserClient.findUserById(userInfoVO.getUserId());
+		if (userInfoVO != null) {
+			return amUserClient.findUserById(userInfoVO.getUserId());
+
+		}
+		return null;
 	}
 
 	/**

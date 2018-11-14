@@ -73,5 +73,5 @@ public interface AssetManageService extends BaseTradeService {
      * @author zhangyk
      * @date 2018/8/18 16:06
      */
-    WebResult getMyPlanInfoDetail(AssetManagePlanRequest request, Integer userId);
+    WebResult getMyHjhPlanInfoDetail(AssetManagePlanRequest request, Integer userId);
 }
