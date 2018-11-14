@@ -51,7 +51,9 @@ public class WebSynBalanceController extends BaseUserController {
         /***********同步线下充值记录 start***********/
         BankOpenAccountVO bankOpenAccountVO=synBalanceService.getBankOpenAccount(user.getUserId());
         String ip = GetCilentIP.getIpAddr(request);
-        SynBalanceRequestBean bean = synBalanceService.synBalance(bankOpenAccountVO.getAccount(), user.getInstCode(), systemConfig.getAopAccesskey());
+        SynBalanceRequestBean bean = new SynBalanceRequestBean();
+        bean.setInstCode(user.getInstCode());
+        bean.setAccountId(bankOpenAccountVO.getAccount());
         SynBalanceResultBean resultBean = synBalanceService.synBalance(bean,ip);
         CheckUtil.check("成功".equals(resultBean.getStatusDesc()), MsgEnum.ERR_OBJECT_GET,"余额");
         //余额数据
