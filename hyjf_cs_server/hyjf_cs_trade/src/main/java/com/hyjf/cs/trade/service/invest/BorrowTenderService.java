@@ -92,5 +92,5 @@ public interface BorrowTenderService extends BaseTradeService {
      * @param account
      * @return
      */
-    WebResult<Map<String,Object>> borrowTenderCheck(TenderRequest request, BorrowAndInfoVO borrow, BorrowInfoVO borrowInfoVO ,CouponUserVO cuc,BankOpenAccountVO account);
+    Map<String,Object> borrowTenderCheck(TenderRequest request, BorrowAndInfoVO borrow, BorrowInfoVO borrowInfoVO ,CouponUserVO cuc,BankOpenAccountVO account);
 }
