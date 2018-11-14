@@ -69,7 +69,7 @@ public class TyjCouponRepayConsumer extends Consumer {
 			try {
 				List<String> recoverNidList = splitString(nids);
 
-				if (CollectionUtils.isEmpty(recoverNidList)) {
+				if (!CollectionUtils.isEmpty(recoverNidList)) {
 					logger.info("待还款列表 : {}", JSONObject.toJSONString(recoverNidList));
 					for (String recoverNid : recoverNidList) {
 						tyjCouponRepayService.updateCouponOnlyRecover(recoverNid);
