@@ -38,6 +38,6 @@ public class UpdateVersionController {
         String sign = request.getParameter("sign");
         String url = systemConfig.getAppFrontHost()+"/update/package?sign="+sign;
         model.addAttribute("action",url);
-        return "package";
+        return "/package";
     }
 }
