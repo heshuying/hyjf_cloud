@@ -255,7 +255,7 @@ public class ApiUserBindController extends BaseUserController {
 		}
         // 返回第三方页面
         JSONObject jsonResult = new JSONObject();
-        jsonResult.put("status", true);
+        jsonResult.put("status", "000");
         jsonResult.put("statusCode", "0");
         jsonResult.put("statusDesc", "授权成功");
         jsonResult.put("retUrl", apiUserPostBean.getRetUrl());
