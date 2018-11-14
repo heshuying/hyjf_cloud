@@ -1262,6 +1262,17 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 						// borrowNid，借款的borrowNid,account借款总额
 						RedisUtils.set(RedisConstants.BORROW_NID+borrowNid, borrow.getAccount().toString());
 					}
+					if (!CustomConstants.INST_CODE_HYJF.equals(borrowBean.getInstCode())) {
+						// 三方资产更新资产表状态
+						HjhPlanAsset hjhPlanAssetNew = this.selectHjhPlanAssetByBorrowNid(borrowNid);
+						// 受托支付，更新为待授权
+						//7 投资中
+						hjhPlanAssetNew.setStatus(7);
+						//获取当前时间
+						hjhPlanAssetNew.setUpdateTime(new Date());
+						hjhPlanAssetNew.setUpdateUserId(1);
+						this.hjhPlanAssetMapper.updateByPrimaryKeySelective(hjhPlanAssetNew);
+					}
 				}
 			}
 		}

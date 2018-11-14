@@ -435,27 +435,27 @@ public class HjhCreditTenderController extends BaseController{
         // 债转编号
         String creditNid = form.getCreditNidHidden();
         if (StringUtils.isBlank(userId) || StringUtils.isBlank(borrowNid) || StringUtils.isBlank(assignNid) || StringUtils.isBlank(creditNid)) {
-			ret.put("result", "请求参数为空");
+			ret.put("statusDesc", "请求参数为空");
 			ret.put("status", FAIL);
 			return ret;
         }
         // 查询标的详情
         BorrowAndInfoVO borrow = tenderCancelExceptionService.getBorrowByBorrowNid(borrowNid);
         if (borrow == null) {
-            ret.put("result", "标的不存在");
+            ret.put("statusDesc", "标的不存在");
             ret.put("status", FAIL);
             return ret;
         }
     	UserVO users = this.accedeListService.getUserByUserId(Integer.valueOf(userId));
 		if(users == null ){
-			ret.put("result", "获取用户信息异常");
+			ret.put("statusDesc", "获取用户信息异常");
 			ret.put("status", FAIL);
 			return ret;
 		}
 		// 获取承接记录
 		HjhDebtCreditTenderVO ct = this.hjhCreditTenderService.selectHjhCreditTenderRecord(form);
 		if (ct == null) {
-            ret.put("result", "获取承接记录失败");
+            ret.put("statusDesc", "获取承接记录失败");
             ret.put("status", FAIL);
             return ret;
         }
@@ -464,7 +464,7 @@ public class HjhCreditTenderController extends BaseController{
 		if(CollectionUtils.isNotEmpty(tenderAgreementList)){
 			tenderAgreement = tenderAgreementList.get(0);
 		} else {
-            ret.put("result", "获取协议记录失败");
+            ret.put("statusDesc", "获取协议记录失败");
             ret.put("status", FAIL);
             return ret;
 		}
@@ -481,7 +481,7 @@ public class HjhCreditTenderController extends BaseController{
             /*rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));*/
             fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
         }
-        ret.put("result", "操作成功,签署MQ已发送");
+        ret.put("statusDesc", "操作成功,签署MQ已发送");
         ret.put("status", SUCCESS);
     	return ret;
     	
