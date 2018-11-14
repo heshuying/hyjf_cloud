@@ -132,7 +132,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		String accountId = null;
 		if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
 			accountId = account.getAccount();
-			this.synBalance(accountId, systemConfig.getBankInstcode(), "http://CS-TRADE",
+			this.synBalance(accountId, systemConfig.getBankInstcode(), "http://CS-USER",
 					systemConfig.getAopAccesskey());
 		}
 		if (channel.equals(BankCallConstant.CHANNEL_WEI)) {
@@ -1096,7 +1096,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			String accountId = null;
 			if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
 				accountId = account.getAccount();
-				this.synBalance(accountId, systemConfig.getBankInstcode(), "http://CS-TRADE",
+				this.synBalance(accountId, systemConfig.getBankInstcode(), "http://CS-USER",
 						systemConfig.getAopAccesskey());
 			}
 			String sign = SecretUtil.createToken(userId, usernameString, accountId);
