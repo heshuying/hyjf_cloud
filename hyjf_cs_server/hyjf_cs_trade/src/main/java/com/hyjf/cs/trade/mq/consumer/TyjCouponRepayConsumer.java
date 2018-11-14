@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -65,7 +66,9 @@ public class TyjCouponRepayConsumer extends Consumer {
 				ConsumeConcurrentlyContext consumeConcurrentlyContext) {
 			MessageExt messageExt = list.get(0);
 			logger.info("体验金按收益期限还款收到消息， 开始处理, messageExt is : {}", messageExt);
-			String nids = new String(messageExt.getBody());
+
+			String nids = JSONObject.parseObject(messageExt.getBody(), String.class);
+			logger.info("nids: {}", nids);
 			try {
 				List<String> recoverNidList = splitString(nids);
 
@@ -87,7 +90,7 @@ public class TyjCouponRepayConsumer extends Consumer {
 		private List<String> splitString(String nids) {
 			List<String> list = null;
 			if (!StringUtils.isEmpty(nids)) {
-                list = Arrays.asList(nids.split(","));
+                list = Arrays.asList(nids.replace("\"","").split(","));
             }
 			return list;
 		}
