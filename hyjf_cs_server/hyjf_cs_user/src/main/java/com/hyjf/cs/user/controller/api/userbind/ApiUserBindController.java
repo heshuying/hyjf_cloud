@@ -84,7 +84,7 @@ public class ApiUserBindController extends BaseUserController {
 	 * @return
 	 */
 	@ApiOperation(value = "页面授权绑定api-跳转登陆授权页面",notes = "页面授权绑定api-跳转登陆授权页面")
-	@GetMapping(value = "/bindApi.do")
+	@GetMapping(value = "/bindApi")
 	public ModelAndView bindApi(HttpServletRequest request, HttpServletResponse response, ApiUserPostBean apiUserPostBean){
 		// 设置接口结果页的信息（返回Url）
 		this.initCheckUtil(apiUserPostBean);
@@ -100,17 +100,18 @@ public class ApiUserBindController extends BaseUserController {
 		int bindUniqueId = Integer.parseInt(apiUserPostBean.getBindUniqueIdScy());
 		logger.info("解密结果....bindUniqueId is : {}", bindUniqueId);
         modelAndView.addObject("instcode",apiUserPostBean.getPid());
-		Integer userId = loginService.getUserIdByBind(bindUniqueId, apiUserPostBean.getPid());
+        Integer userId = loginService.getUserIdByBind(bindUniqueId, apiUserPostBean.getPid());
+        logger.info("用户ID："+userId);
         // 回调url（h5错误页面）
         BaseMapBean baseMapBean=new BaseMapBean();
-		if(userId == null){
+        if(userId == null||userId==0){
             // 跳转登陆授权画面
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
             baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户授权！");
             baseMapBean.setCallBackAction(webHost+JUMP_BIND_HTML);
             modelAndView.addObject("apiForm",new BeanMap(apiUserPostBean));
-		}else{
-			// 登陆
+        }else{
+            // 登陆
 			WebViewUserVO webUser = loginService.getWebViewUserByUserId(userId);
 			loginService.setToken(webUser);
 			//WebUtils.sessionLogin(request, response, webUser);
@@ -136,7 +137,7 @@ public class ApiUserBindController extends BaseUserController {
 		}
         modelAndView.addObject("mobile", mobile);
         modelAndView.addObject("readonly", readonly);
-
+        modelAndView.addObject("callBackForm", baseMapBean);
 		return modelAndView;
 	}
 
