@@ -35,10 +35,9 @@ public class UpdateVersionController {
     @ApiOperation("版本更新")
     @GetMapping(value = "/hjh-update-android.jsp")
     public ModelAndView hjhUpdateAndroid(HttpServletRequest request) {
-        ModelAndView modelAndView = new ModelAndView("/update/updateVersion");
         String sign = request.getParameter("sign");
         String url = systemConfig.getAppFrontHost()+"/update/package?sign="+sign;
-        modelAndView.addObject("action",url);
+        ModelAndView modelAndView = new ModelAndView("redirect:"+url);
         return modelAndView;
     }
 }
