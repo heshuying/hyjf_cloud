@@ -6,6 +6,9 @@ import de.codecentric.boot.admin.server.domain.entities.InstanceRepository;
 import de.codecentric.boot.admin.server.domain.events.InstanceEvent;
 import de.codecentric.boot.admin.server.domain.events.InstanceStatusChangedEvent;
 import de.codecentric.boot.admin.server.notify.AbstractStatusChangeNotifier;
+
+import java.time.ZoneId;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -42,7 +45,7 @@ public class DingDingNotifier extends AbstractStatusChangeNotifier {
                         , instance.getId()
                         , from
                         , to
-                        , event.getTimestamp());
+                        , event.getTimestamp().atZone(ZoneId.systemDefault()));
 
                 if (switchOn) {
                     DingDingMessageUtil.sendTextMessage(text, accessToken);

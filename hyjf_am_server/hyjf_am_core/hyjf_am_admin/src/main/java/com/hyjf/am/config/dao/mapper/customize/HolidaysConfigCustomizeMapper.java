@@ -20,7 +20,7 @@ public interface HolidaysConfigCustomizeMapper {
 
     /**
      * 批量更新状态
-     * @param list
+     * @param updateList
      * @throws Exception
      */
     void batchUpdate(List<HolidaysConfigNew> updateList);
