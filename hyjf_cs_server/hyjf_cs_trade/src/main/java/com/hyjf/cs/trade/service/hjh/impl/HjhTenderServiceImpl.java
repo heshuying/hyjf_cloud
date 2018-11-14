@@ -1324,18 +1324,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         if (user == null || userInfo == null) {
             throw new CheckException(MsgEnum.ERR_USER_NOT_EXISTS);
         }
-
-        String roleIsOpen = systemConfig.getRoleIsopen();
-        if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
-            if (userInfo.getRoleId().intValue() != 1) {
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
-            }
-        }
-
-        // 判断用户是否禁用
-        if (user.getStatus() == 1) {// 0启用，1禁用
-            throw new CheckException(MsgEnum.ERR_USER_INVALID);
-        }
         // 用户未开户
         if (user.getBankOpenAccount() == 0) {
             throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
@@ -1343,6 +1331,16 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         // 交易密码状态检查
         if (user.getIsSetPassword() == 0) {
             throw new CheckException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
+        }
+        // 判断用户是否禁用
+        if (user.getStatus() == 1) {// 0启用，1禁用
+            throw new CheckException(MsgEnum.ERR_USER_INVALID);
+        }
+        String roleIsOpen = systemConfig.getRoleIsopen();
+        if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
+            if (userInfo.getRoleId().intValue() != 1) {
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
+            }
         }
         // 检查用户授权状态
         HjhUserAuthVO userAuth = amUserClient.getHjhUserAuthVO(user.getUserId());
