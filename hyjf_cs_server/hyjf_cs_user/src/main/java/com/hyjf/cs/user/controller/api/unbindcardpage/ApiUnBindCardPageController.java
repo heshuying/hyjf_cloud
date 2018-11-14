@@ -265,11 +265,12 @@ public class ApiUnBindCardPageController extends BaseUserController {
      */
     @PostMapping("/notifyReturn")
     @ApiOperation(value = "解卡异步回调方法", notes = "解卡异步回调方法")
-    public BankCallResult bgreturn(HttpServletRequest request, @ModelAttribute BankCallBean bean) {
+    public BankCallResult bgreturn(HttpServletRequest request, @RequestBody BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         BaseResultBean resultBean = new BaseResultBean();
         Map<String, String> params = new HashMap<String, String>();
         logger.info("api端页面解卡异步回调start,userId ="+bean.getLogUserId());
+        logger.info("api端页面解卡异步回调start,参数为 ="+JSONObject.toJSON(bean));
         //bean.convert();
         String message = "";
         String status = "";
