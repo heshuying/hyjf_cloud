@@ -23,6 +23,11 @@ public class ApiRepayListRequestBean extends BaseBean {
 
     @ApiModelProperty(value = "标的编号（选填）")
     private String borrowNid;
+    @ApiModelProperty(value = "检索开始行(必传默认0)")
+    private Integer limitStart = PAGE_STRAT;
+
+    @ApiModelProperty(value = "检索步长(必传默认100)")
+    private Integer limitEnd = PAGE_MAXSIZE;
 
     public String getInstCode() {
         return instCode;
@@ -62,5 +67,25 @@ public class ApiRepayListRequestBean extends BaseBean {
 
     public void setBorrowNid(String borrowNid) {
         this.borrowNid = borrowNid;
+    }
+
+    @Override
+    public Integer getLimitStart() {
+        return limitStart;
+    }
+
+    @Override
+    public void setLimitStart(Integer limitStart) {
+        this.limitStart = limitStart;
+    }
+
+    @Override
+    public Integer getLimitEnd() {
+        return limitEnd;
+    }
+
+    @Override
+    public void setLimitEnd(Integer limitEnd) {
+        this.limitEnd = limitEnd;
     }
 }

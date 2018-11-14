@@ -9,6 +9,7 @@ import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
@@ -87,7 +88,9 @@ public interface AmUserClient {
 	int checkMobileCode(String mobile, String verificationCode, String verificationType, String platform,
 						Integer searchStatus, Integer updateStatus,boolean isUpdate);
 
-	/**
+    UserVO updateByCondition(String loginUserName);
+
+    /**
 	 * 更新登录信息
 	 * @param userId
 	 * @param ip
@@ -565,4 +568,5 @@ public interface AmUserClient {
 	 */
 	boolean insertAppChannelStatisticsDetail(WrbRegisterRequest wrbRegisterRequest);
 
+    AccountVO getAccount(Integer userId);
 }

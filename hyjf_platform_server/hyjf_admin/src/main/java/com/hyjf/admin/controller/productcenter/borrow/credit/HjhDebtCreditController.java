@@ -107,9 +107,7 @@ public class HjhDebtCreditController extends BaseController{
 
     @ApiOperation(value = "汇计划-转让记录页面列表显示", notes = "页面列表显示")
     @PostMapping(value = "/queryHjhDebtCreditDetail")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "成功")
-    })
+    @ApiResponses({@ApiResponse(code = 200, message = "成功")})
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public JSONObject queryHjhDebtCreditDetail(@RequestBody HjhDebtCreditListRequest request) {
         logger.info("queryHjhDebtCreditDetail start, request is :{}", request);

@@ -113,11 +113,10 @@ public class VipManageController extends BaseController {
     }
 
     @ApiOperation(value = "VIP详情页面", notes = "VIP详情页面")
-    @RequestMapping (value = "/vipdetailInit/{userId}",method = RequestMethod.GET)
+    @RequestMapping (value = "/vipdetailInit",method = RequestMethod.POST)
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult vipDetailInit(@PathVariable String userId) {
+    public AdminResult vipDetailInit() {
         VipDetailListRequest vdr = new VipDetailListRequest();
-        vdr.setUserId(userId);
         VipDetailListResponse vdl = vipManageService.searchDetailList(vdr);
         if (!CollectionUtils.isEmpty(vdl.getResultList())) {
             List<VipDetailListVO> vipDetailListVOS = vdl.getResultList();
@@ -132,17 +131,15 @@ public class VipManageController extends BaseController {
         }
         if (!Response.isSuccess(vdl)) {
             return new AdminResult<>(FAIL, vdl.getMessage());
-
         }
         return new AdminResult<>(vdl);
     }
 
     @ApiOperation(value = "VIP升级详情页面", notes = "VIP升级详情页面")
-    @RequestMapping(value = "/vipupgradeInit/{userId}",method = RequestMethod.GET)
+    @RequestMapping(value = "/vipupgradeInit",method = RequestMethod.POST)
     @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult vipUpdateGradeInit(@PathVariable String userId) {
+    public AdminResult vipUpdateGradeInit() {
         VipUpdateGradeListRequest vgl = new VipUpdateGradeListRequest();
-        vgl.setUserId(userId);
         VipUpdateGradeListResponse vgr = vipManageService.searchUpdateGradeList(vgl);
         if (vgr == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);

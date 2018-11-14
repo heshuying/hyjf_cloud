@@ -254,7 +254,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
     public List<MessagePushTemplateVO> searchList(MsgPushTemplateRequest request) {
         MessagePushTemplateResponse response = restTemplate.postForObject(
-                "http://AM-ADMIN/am-config/messagePushTemplate/searchList",request ,MessagePushTemplateResponse.class);
+                "http://AM-CONFIG/am-config/messagePushTemplate/searchList",request ,MessagePushTemplateResponse.class);
         if (response != null) {
             return response.getResultList();
         }

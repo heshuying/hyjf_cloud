@@ -34,7 +34,7 @@ public class WrbParseParamUtil {
 
 		String signStr, key, value;
 		try {
-			signStr = WrbCoopDESUtil.desDecrypt(WrbCoopDESUtil.KEY, param);
+			signStr = WrbCoopDESUtil.desDecrypt(WrbCoopDESUtil.PF_KEY, param);
 		} catch (Exception e) {
 			logger.error("des解密失败...", e);
 			return result;
@@ -205,9 +205,9 @@ public class WrbParseParamUtil {
 
 
     public static void main(String[] args) throws Exception {
-        String str = "pf_user_id=1&invest_record_id=14982935328214308934&bid_id=HBD17060008";
-        str = "end_time=2014-06-10 00:00:00&limit=10&offset=10&pf_user_id=1&start_time=2014-05-10 00:00:00";
-        String signStr = WrbCoopDESUtil.desEncrypt(WrbCoopDESUtil.KEY, str);
+        String str = "";
+        str = "from=wrb&wrb_user_id=9961&wrb_user_name=wrb_user_name&email=1&mobile=18251359382&id_no=&true_name=";
+        String signStr = WrbCoopDESUtil.desEncrypt(WrbCoopDESUtil.PF_KEY, str);
         System.out.println("未做编码的字符串：" + signStr);
         String encodeStr = URLEncoder.encode(signStr, ENCODE_STRING);
         System.out.println("编码后的字符串：" + encodeStr);

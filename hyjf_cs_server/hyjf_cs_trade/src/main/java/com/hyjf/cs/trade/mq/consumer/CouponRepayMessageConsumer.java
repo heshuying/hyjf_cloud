@@ -62,9 +62,10 @@ public class CouponRepayMessageConsumer extends Consumer {
             String msgBody = new String(paramBean.getBody());
             try {
                 repayBean = JSONObject.parseObject(msgBody, CouponRepayBean.class);
-//验证请求参数
+                //验证请求参数
+                logger.info("【优惠券还款】，borrowNid:"+repayBean.getBorrowNid()+",periodNow:"+repayBean.getPeriodNow()+".");
                 if (Validator.isNull(repayBean.getBorrowNid()) || Validator.isNull(repayBean.getPeriodNow())) {
-                    logger.error("【优惠券还款】接收到的消息中信息不全");
+                    logger.error("【优惠券还款】接收到的消息中信息不全，borrowNid:"+repayBean.getBorrowNid()+",periodNow:"+repayBean.getPeriodNow()+".");
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
 

@@ -269,10 +269,10 @@ public class BorrowCommonController extends BaseController {
 			if (user == null || user.size() == 0) {
 				return new AdminResult<>(FAIL, "请填写用户角色为垫付机构的已开户用户！！");
 			}
-//				 UserInfoVO userinfo = borrowCommonService.findUserInfoById(user.get(0).getUserId());
-//				if(userinfo.getRoleId()!=3) {
-//					return new AdminResult<>(FAIL, "请填写用户角色为垫付机构的已开户用户！！");
-//				}
+				 UserInfoVO userinfo = borrowCommonService.findUserInfoById(user.get(0).getUserId());
+				if(userinfo.getRoleId()!=3) {
+					return new AdminResult<>(FAIL, "请填写用户角色为垫付机构的已开户用户！！");
+				}
 		Integer authState = CommonUtils.checkPaymentAuthStatus(user.get(0).getPaymentAuthStatus());
 		if (authState == 0) {
 			return new AdminResult<>(FAIL, "未开通服务费授权！");
@@ -764,7 +764,7 @@ public class BorrowCommonController extends BaseController {
 						}else if(rowNum == 3){//项目标题
 							resultMap.put("projectName", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 4){//借款标题
-							resultMap.put("jkName", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("name", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 5){//借款金额
 							resultMap.put("account", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 6){//年化收益
@@ -819,16 +819,16 @@ public class BorrowCommonController extends BaseController {
 							resultMap.put("housesBelong", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 26){//借款类型
 							if(this.getValue(hssfRow.getCell(1)).equals("个人")) {
-								resultMap.put("companyOrPersonal","1");
-							}else {
 								resultMap.put("companyOrPersonal","2");
+							}else {
+								resultMap.put("companyOrPersonal","1");
 							}
 						}else if(rowNum == 27){//融资主体
 							resultMap.put("comName", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 28){//法人
 							resultMap.put("comLegalPerson", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 29){//注册地区
-							resultMap.put("comLocationCity", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("registrationAddress", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 30){//主营业务
 							resultMap.put("comMainBusiness", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 31){//在平台逾期次数
@@ -869,7 +869,7 @@ public class BorrowCommonController extends BaseController {
 							}else{
 								resultMap.put("sex", "2");
 							}
-							resultMap.put("sex", this.getValue(hssfRow.getCell(1)));
+							//resultMap.put("sex", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 44){//婚姻状况
 							if( this.getValue(hssfRow.getCell(1)).equals("已婚") ){
 								resultMap.put("merry", "1");
@@ -880,7 +880,7 @@ public class BorrowCommonController extends BaseController {
 							}else if(this.getValue(hssfRow.getCell(1)).equals("丧偶") ){
 								resultMap.put("merry", "4");
 							}
-							resultMap.put("merry", this.getValue(hssfRow.getCell(1)));
+						//	resultMap.put("merry", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 45){//工作城市
 							resultMap.put("location_c", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 46){//户籍地
@@ -1010,7 +1010,7 @@ public class BorrowCommonController extends BaseController {
 						/** 原个人勾选内容改上传 end */
 						// 互金,添加借款人地址,企业组织机构代码,企业注册地 add by nxl 20180809 Start
 						else if(rowNum == 87){//(企业)企业注册地
-							resultMap.put("registrationAddress", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("registration", this.getValue(hssfRow.getCell(1)));
 						}
 						else if(rowNum == 88){//(个人)借款人地址
 							resultMap.put("address", this.getValue(hssfRow.getCell(1)));
@@ -1768,12 +1768,12 @@ public class BorrowCommonController extends BaseController {
 			return String.valueOf(hssfCell.getBooleanCellValue());
 		} else if (hssfCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
 			// 返回数值类型的值
-			return String.valueOf(hssfCell.getNumericCellValue());
+			return String.valueOf((int)hssfCell.getNumericCellValue());
 		} else if (hssfCell.getCellType() == Cell.CELL_TYPE_FORMULA) {
 			// 单元格为公式类型时
 			if (hssfCell.getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC) {
 				// 返回数值类型的值
-				return String.valueOf((int)hssfCell.getNumericCellValue());
+				return String.valueOf(hssfCell.getNumericCellValue());
 			}else{
 				// 返回字符串类型的值
 				return String.valueOf(hssfCell.getStringCellValue());

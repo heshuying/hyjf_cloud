@@ -293,4 +293,34 @@ public class AdminBankSettingRequest extends BasePage implements Serializable {
     public void setPaginator(Paginator paginator) {
         this.paginator = paginator;
     }
+
+    @Override
+    public String toString() {
+        return "AdminBankSettingRequest{" +
+                "ids='" + ids + '\'' +
+                ", startCreate='" + startCreate + '\'' +
+                ", endCreate='" + endCreate + '\'' +
+                ", id=" + id +
+                ", bankId=" + bankId +
+                ", bankName='" + bankName + '\'' +
+                ", payAllianceCode='" + payAllianceCode + '\'' +
+                ", bankCode='" + bankCode + '\'' +
+                ", bankIcon='" + bankIcon + '\'' +
+                ", bankLogo='" + bankLogo + '\'' +
+                ", quickPayment=" + quickPayment +
+                ", singleQuota=" + singleQuota +
+                ", singleCardQuota=" + singleCardQuota +
+                ", feeWithdraw=" + feeWithdraw +
+                ", sortId=" + sortId +
+                ", remark='" + remark + '\'' +
+                ", createUser=" + createUser +
+                ", createTime=" + createTime +
+                ", updateUser=" + updateUser +
+                ", updateTime=" + updateTime +
+                ", delFlg=" + delFlg +
+                ", monthCardQuota=" + monthCardQuota +
+                ", paginatorPage=" + paginatorPage +
+                ", paginator=" + paginator +
+                '}';
+    }
 }

@@ -42,10 +42,10 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
     private Boolean env_test;
 
     @Value("${hyjf.alerm.email.test}")
-    private static String emailList1;
+    private String emailList1;
 
     @Value("${hyjf.alerm.email}")
-    private static String emaillist2;
+    private String emaillist2;
 
     /**
      * 邮件发送key

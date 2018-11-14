@@ -175,13 +175,13 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
 	 * @return
 	 */
 	@Override
-	public Map<String,Object> callUnBindCardPage(DeleteCardPageBean bean,String channel,String sign,String platform,HttpServletRequest request){
+	public Map<String,Object> callUnBindCardPage(DeleteCardPageBean bean,String channel,String sign,HttpServletRequest request){
 		Map<String, Object> mv = new HashMap<>();
 		//
 		bean.setTxCode(BankCallConstant.TXCODE_ACCOUNT_UNBINDCARD_PAGE);
 		bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);
 		bean.setChannel(channel);// 交易渠道
-		bean.setPlatform(platform);
+		bean.setPlatform(bean.getPlatform());
 
 		BankCallBean bindCardBean = getCallbankMV(bean);
 
@@ -190,17 +190,17 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
 		// 成功页面
 		String successPath = "/user/bindCardSuccess?bind=false&unbind=true&msg=解绑银行卡成功!";
 		// 回调路径
-		String retUrl = super.getFrontHost(systemConfig,channel+"") + errorPath;
-		String successUrl = super.getFrontHost(systemConfig,channel) + successPath;
+		String retUrl = super.getFrontHost(systemConfig,bean.getPlatform()) + errorPath;
+		String successUrl = super.getFrontHost(systemConfig,bean.getPlatform()) + successPath;
 		if(!channel.contains(BankCallConstant.CHANNEL_PC)){
 			//返回路径
 			errorPath = "/user/bankCard/unbind/result/failed";
 			successPath = "/user/bankCard/unbind/result/success";
 			// 同步地址  是否跳转到前端页面
-			retUrl = super.getFrontHost(systemConfig,channel+"") + errorPath +"?status=99";
-			successUrl = super.getFrontHost(systemConfig,channel+"") + successPath+"?status=000&statusDesc=";
-			retUrl += "&token=1&sign=" +sign;
-			successUrl += "&token=1&sign=" +sign;
+			retUrl = super.getFrontHost(systemConfig,bean.getPlatform()) + errorPath +"?status=99";
+			successUrl = super.getFrontHost(systemConfig,bean.getPlatform()) + successPath+"?status=000&statusDesc=";
+			retUrl += "&token=1&sign=" +sign + "&platform=" + bean.getPlatform();
+			successUrl += "&token=1&sign=" +sign + "&platform=" + bean.getPlatform();
 		}
 
 		// 忘记密码跳转链接

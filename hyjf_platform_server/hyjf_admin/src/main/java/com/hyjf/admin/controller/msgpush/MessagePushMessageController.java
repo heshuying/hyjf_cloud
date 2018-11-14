@@ -8,7 +8,6 @@ import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.MessagePushMsgService;
-import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.admin.service.MessagePushTagService;
 import com.hyjf.admin.service.MessagePushTemplateService;
 import com.hyjf.admin.utils.FileUpLoadUtil;
@@ -49,8 +48,6 @@ public class MessagePushMessageController extends BaseController {
     private MessagePushTagService messagePushTagService;
     @Autowired
     private MessagePushTemplateService messagePushTemplateService;
-    @Autowired
-    private MessagePushNoticesService messagePushNoticesService;
 
     @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @RequestMapping(value = "/init", method = RequestMethod.POST)

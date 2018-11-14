@@ -817,6 +817,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         try {
             accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC,
                     UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+            return 1;
         } catch (MQException e) {
             logger.error("更新网站收支明细失败！");
         }

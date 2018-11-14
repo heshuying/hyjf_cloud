@@ -161,6 +161,10 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			//设置交易密码验签
 			ThirdPartyTransPasswordRequestBean bean = (ThirdPartyTransPasswordRequestBean) paramBean;
 			sign = bean.getChannel() + bean.getAccountId() + bean.getRetUrl() + bean.getBgRetUrl()+ bean.getTimestamp();
+		}else if (BaseDefine.METHOD_SERVER_UNBIND_CARD_PAGE.equals(methodName)) {
+			// 解卡(页面调用)合规
+			UnbindCardPageRequestBean bean = (UnbindCardPageRequestBean) paramBean;
+			sign = bean.getInstCode()+ bean.getAccountId() + bean.getMobile() + bean.getCardNo()+bean.getTimestamp();
 		}
 
 		return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
@@ -622,8 +626,6 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		balanceRequestBean.setInstCode(instcode);
 		Long timestamp=System.currentTimeMillis()/ 1000;
 		balanceRequestBean.setTimestamp(timestamp);
-
-		// 优惠券投资url
 		String requestUrl = webHost + SYNBALANCE;
 		String sign = StringUtils.lowerCase(MD5.toMD5Code(aopAccesskey + account + instcode + timestamp + aopAccesskey));
 		balanceRequestBean.setChkValue(sign);
@@ -652,8 +654,12 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	public String getFailedMess(String logOrdId) {
 		//根据ordid获取retcode
 		String retCode = amDataCollectClient.getRetCode(logOrdId);
+		logger.info("根据"+logOrdId+"获取retcode="+retCode);
 		if (retCode==null){
 			return "未知错误";
+		}
+		if(retCode.equals("00000000")){
+			return "00000000";
 		}
 		//根据retCode获取retMsg
 		String retMsg = this.getBankRetMsg(retCode);

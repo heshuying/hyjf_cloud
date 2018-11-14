@@ -92,7 +92,12 @@ public class ApiBankOpenController extends BaseUserController {
         openAccoutBean.setGender(openBean.getGender());
         openAccoutBean.setMobile(openBean.getMobile());
         // 代偿角色的账户类型为  00100-担保账户  其他的是 00000-普通账户
-        openAccoutBean.setAcctUse(BankCallConstant.ACCOUNT_USE_COMMON);
+        if(openBean.getIdentity().equals("3")){
+            openAccoutBean.setAcctUse(BankCallConstant.ACCOUNT_USE_GUARANTEE);
+        }else{
+            openAccoutBean.setAcctUse(BankCallConstant.ACCOUNT_USE_COMMON);
+        }
+
         openAccoutBean.setIdentity(openBean.getIdentity());
         // 同步地址  是否跳转到前端页面
         openAccoutBean.setRetUrl(openBean.getRetUrl());
@@ -139,12 +144,12 @@ public class ApiBankOpenController extends BaseUserController {
         logger.info("第三方端开户同步请求,isSuccess:{}", isSuccess);
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("status", "success");
+        resultMap.put("callBackAction", url);
         if (isSuccess == null || !"1".equals(isSuccess)) {
             // 失败
             resultMap.put("status", ErrorCodeConstant.STATUS_CE999999);
             resultMap.put("statusDesc", "开户失败,调用银行接口失败");
             resultMap.put("acqRes", request.getParameter("acqRes"));
-            resultMap.put("callBackAction", url);
             return callbackErrorView(resultMap);
         } else {
             resultMap.put("status", ErrorCodeConstant.SUCCESS);

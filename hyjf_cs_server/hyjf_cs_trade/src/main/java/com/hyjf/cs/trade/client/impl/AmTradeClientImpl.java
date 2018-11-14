@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.*;
 import com.hyjf.am.response.admin.*;
+import com.hyjf.am.response.api.ApiAssetStatusCustomizeResponse;
 import com.hyjf.am.response.app.AppNewAgreementResponse;
 import com.hyjf.am.response.app.AppProjectInvestListCustomizeResponse;
 import com.hyjf.am.response.app.AppProjectListResponse;
@@ -24,6 +25,7 @@ import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.api.ApiRepayListRequest;
+import com.hyjf.am.resquest.api.AsseStatusRequest;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.assetpush.InfoBean;
@@ -34,6 +36,7 @@ import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.api.ApiAssetStatusCustomizeVO;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
 import com.hyjf.am.vo.api.ApiRepayListCustomizeVO;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
@@ -501,16 +504,16 @@ public class AmTradeClientImpl implements AmTradeClient {
     /**
      * 查询资产状态
      *
-     * @param assetListRequest
+     * @param request
      * @return com.hyjf.am.vo.admin.AssetDetailCustomizeVO
      * @author Zha Daojian
      * @date 2018/8/27 10:27
      **/
     @Override
-    public AssetDetailCustomizeVO findDetailById(AssetListRequest assetListRequest) {
-        AssetDetailCustomizeResponse response = restTemplate
-                .postForEntity("http://AM-TRADE/am-trade/assetList/findDetailById", assetListRequest,
-                        AssetDetailCustomizeResponse.class)
+    public ApiAssetStatusCustomizeVO selectAssetStatusById(AsseStatusRequest request) {
+        ApiAssetStatusCustomizeResponse response = restTemplate
+                .postForEntity("http://AM-TRADE/am-trade/assetList/selectAssetStatusById", request,
+                        ApiAssetStatusCustomizeResponse.class)
                 .getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResult();
@@ -4815,7 +4818,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         String url = urlBase + "projectlist/app/getIncreaseInterestInvestByTenderNid/" + tenderNid;
         IncreaseInterestInvestResponse response = restTemplate.getForEntity(url,IncreaseInterestInvestResponse.class).getBody();
         if(Response.isSuccess(response)){
-            response.getResult();
+           return response.getResult();
         }
         return null;
     }
@@ -5113,7 +5116,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         BankMerchantAccountResponse response = restTemplate.getForEntity(
                 "http://AM-TRADE/am-trade/account/getbankmerchantaccount/"+accountCode,
                 BankMerchantAccountResponse.class).getBody();
-        if (response == null) {
+        if (response != null) {
             return response.getResult();
         }
         return null;
@@ -5395,7 +5398,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public List<CouponRepayMonitorVO> selectCouponRepayMonitor(String nowDay) {
-        String url = "http://AM-ADMIN/am-trade/couponRepayMonitor/selectCouponRepayMonitor/"+nowDay;
+        String url = "http://AM-TRADE/am-trade/couponRepayMonitor/selectCouponRepayMonitor/"+nowDay;
         CouponRepayMonitorResponse response = restTemplate.getForEntity(url,CouponRepayMonitorResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
@@ -5405,7 +5408,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public int insertCouponRepayMonitor(CouponRepayMonitorVO monitor) {
-        String url = "http://AM-ADMIN/am-trade/couponRepayMonitor/insertCouponRepayMonitor";
+        String url = "http://AM-TRADE/am-trade/couponRepayMonitor/insertCouponRepayMonitor";
         CouponRepayMonitorResponse response = restTemplate.postForEntity(url,monitor, CouponRepayMonitorResponse.class).getBody();
         if (response != null) {
             return response.getInsertFlag();
@@ -5415,7 +5418,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public int updateCouponRepayMonitor(CouponRepayMonitorVO monitor) {
-        String url = "http://AM-ADMIN/am-trade/couponRepayMonitor/updateCouponRepayMonitor";
+        String url = "http://AM-TRADE/am-trade/couponRepayMonitor/updateCouponRepayMonitor";
         CouponRepayMonitorResponse response = restTemplate.postForEntity(url,monitor,CouponRepayMonitorResponse.class).getBody();
         if (response != null) {
             return response.getUpdateFlag();

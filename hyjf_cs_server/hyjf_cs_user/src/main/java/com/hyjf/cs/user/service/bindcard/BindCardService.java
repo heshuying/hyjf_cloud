@@ -55,7 +55,7 @@ public interface BindCardService extends BaseUserService {
      */
 	BankCallBean callBankBindCard(BindCardVO bindCardVO, Integer userId, String userIp);
 
-    Map<String,Object> getCallbankMap(BindCardPageBean bean, String sign, String token);
+    Map<String,Object> getCallbankMap(BindCardPageBean bean, String sign, String token, String platform);
 
     ModelAndView getCallbankMV(BindCardPageBean bean);
     /**

@@ -239,11 +239,12 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             result.setMessage("开户失败,保存用户开户信息失败");
             return result;
         }
+        // 更新account表的电子帐户号
+        Integer saveResult = amTradeClient.updateAccountNumberByUserId(userId,bean.getAccountId());
         // 更新redis里面的值
         WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
-        user.setBankOpenAccount(true);
-
-        UserVO userVO = this.amUserClient.findUserById(userId);
+        if(user!=null){user.setBankOpenAccount(true);
+UserVO userVO = this.amUserClient.findUserById(userId);
         // add by liuyang 神策数据统计追加 20180927 start
         if ("10000000".equals(userVO.getInstCode())) {
             if (!RedisUtils.exists("SENSORS_DATA_OPEN_ACCOUNT:" + userId)) {
@@ -259,8 +260,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
                 }
             }
         }
-        // add by liuyang 神策数据统计追加 20180927 end
-        // 开户+设密的话   状态改为已设置交易密码
+        // add by liuyang 神策数据统计追加 20180927 end        // 开户+设密的话   状态改为已设置交易密码
         if (BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE.equals(bean.getTxCode())
                 && "1".equals(bean.getStatus())) {
             user.setIsSetPassword(1);
@@ -268,9 +268,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         user.setRoleId(bean.getIdentity());
         RedisUtils.setObj(RedisConstants.USERID_KEY + userId,user);
 
-        // 更新account表的电子帐户号
-        Integer saveResult = amTradeClient.updateAccountNumberByUserId(userId,bean.getAccountId());
-
+        }
         // 查询银行卡绑定信息
         Integer saveBankCardFlag = saveCardNoToBank(bean);
         if (saveBankCardFlag.intValue() != 1) {

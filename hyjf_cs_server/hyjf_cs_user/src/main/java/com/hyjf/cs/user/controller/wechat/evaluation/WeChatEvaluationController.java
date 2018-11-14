@@ -6,10 +6,7 @@ package com.hyjf.cs.user.controller.wechat.evaluation;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Lists;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
-import com.hyjf.am.vo.user.QuestionCustomizeVO;
-import com.hyjf.am.vo.user.UserEvalationResultVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
@@ -122,5 +119,24 @@ public class WeChatEvaluationController {
             resultBean.setObject((UserEvalationResultVO) returnMap.get("userEvalationResult"));
         }
         return resultBean;
+    }
+
+    /**
+     * 评分标准接口
+     *
+     * */
+    @ApiOperation(value = "评分标准", httpMethod = "POST", notes = "评分标准")
+    @PostMapping("/gradingStandardResult")
+    public JSONObject gradingStandardResult(
+            /*@RequestHeader(value = "userId") Integer userId, HttpServletRequest request*/
+                                                                                        ) {
+        //SimpleResultBean<List<QuestionCustomizeVO>> resultBean = new SimpleResultBean<>();
+        //CheckUtil.check(userId != null, MsgEnum.STATUS_CE000001);
+        JSONObject map = new JSONObject();
+        List<EvalationCustomizeVO> evalationCustomizeList = evaluationService.getEvalationRecord();
+        map.put("status", "000");
+        map.put("statusDesc", "请求成功");
+        map.put("evalationList", evalationCustomizeList);
+        return map;
     }
 }

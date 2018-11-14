@@ -847,7 +847,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
     public boolean updateCreditForAutoTender(String creditNid, String accedeOrderId, String planNid, BankCallBean bean,
                                              String tenderUsrcustid, String sellerUsrcustid, HjhCreditCalcResultVO resultVO) {
         boolean result = false;
-
+        logger.info("======银行自动投资成功后，更新投资数据=====");
         // 防范主从数据库不同步，取读库传参改从写库拉数据
         HjhDebtCredit credit = this.selectCreditByNid(creditNid);
         HjhAccede hjhAccede = this.selectHjhAccedeByAccedeOrderId(accedeOrderId);
@@ -1009,6 +1009,13 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
             debtCreditTenderCrt.andAssignOrderIdEqualTo(creditOrderId);
             debtCreditTenderCrt.andUserIdEqualTo(userId);
             List<HjhDebtCreditTender> creditTenderList = this.hjhDebtCreditTenderMapper.selectByExample(creditTenderExample);
+            logger.info("=====creditTenderList 参数为:liquidates_plan_nid ="+liquidatesPlanNid+"/n"+
+                    "assign_plan_nid = "+planNid+"/n"+
+                    "credit_nid = "+creditNid+"/n"+
+                    "sell_order_id = "+sellerOrderId+"/n"+
+                    "assign_order_id = "+creditOrderId+"/n"+
+                    "user_id = = "+userId+"/n"+
+                    "creditTenderList 的长度为:"+creditTenderList+"=====");
             if (creditTenderList == null || creditTenderList.size() <= 0) {
                 // 获取CreditTenderLog信息
                 HjhDebtCreditTenderLogExample debtCreditTenderLogExample = new HjhDebtCreditTenderLogExample();

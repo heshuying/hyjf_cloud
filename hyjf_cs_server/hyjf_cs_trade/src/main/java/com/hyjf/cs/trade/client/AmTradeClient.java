@@ -7,6 +7,7 @@ import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.api.ApiRepayListRequest;
+import com.hyjf.am.resquest.api.AsseStatusRequest;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.assetpush.InfoBean;
@@ -17,6 +18,7 @@ import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.api.ApiAssetStatusCustomizeVO;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
 import com.hyjf.am.vo.api.ApiRepayListCustomizeVO;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
@@ -1741,10 +1743,10 @@ public interface AmTradeClient {
      * 查询资产状态
      * @author Zha Daojian
      * @date 2018/8/27 10:27
-     * @param assetListRequest
+     * @param request
      * @return com.hyjf.am.vo.admin.AssetDetailCustomizeVO
      **/
-    AssetDetailCustomizeVO findDetailById(AssetListRequest assetListRequest);
+    ApiAssetStatusCustomizeVO selectAssetStatusById(AsseStatusRequest request);
 
     /**
      * 获取批次放款列表

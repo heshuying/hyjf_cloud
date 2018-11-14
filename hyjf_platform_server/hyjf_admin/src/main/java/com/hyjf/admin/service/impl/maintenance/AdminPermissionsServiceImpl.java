@@ -114,7 +114,7 @@ public class AdminPermissionsServiceImpl extends BaseAdminServiceImpl implements
         CheckUtil.check(StringUtils.isNotBlank(adminPermissionsVO.getPermissionName()),MsgEnum.ERR_OBJECT_REQUIRED,"权限名称");
         CheckUtil.check(adminPermissionsVO.getPermission().length()<=20,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"权限");
         CheckUtil.check(adminPermissionsVO.getPermissionName().length()<=20,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"权限名称");
-        CheckUtil.check(adminPermissionsVO.getDescription().length()<=255,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"描述");
+        CheckUtil.check(null == adminPermissionsVO.getDescription() || (null != adminPermissionsVO.getDescription() && adminPermissionsVO.getDescription().length()<=255),MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"描述");
     }
     /**
      * 检查update参数
@@ -130,6 +130,6 @@ public class AdminPermissionsServiceImpl extends BaseAdminServiceImpl implements
         CheckUtil.check(StringUtils.isNotBlank(adminPermissionsVO.getPermissionName()),MsgEnum.ERR_OBJECT_REQUIRED,"权限名称");
         CheckUtil.check(adminPermissionsVO.getPermission().length()<=20,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"权限");
         CheckUtil.check(adminPermissionsVO.getPermissionName().length()<=20,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"权限名称");
-        CheckUtil.check(adminPermissionsVO.getDescription().length()<=255,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"描述");
+        CheckUtil.check(null == adminPermissionsVO.getDescription() || (null != adminPermissionsVO.getDescription() && adminPermissionsVO.getDescription().length()<=255),MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"描述");
     }
 }

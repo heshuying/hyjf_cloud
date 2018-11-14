@@ -1,21 +1,5 @@
 package com.hyjf.am.user.controller.front.user;
 
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.validation.Valid;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
@@ -38,6 +22,20 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.util.StringUtil;
 import com.hyjf.common.validator.Validator;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author xiasq
@@ -182,6 +180,26 @@ public class UserController extends BaseController {
         }
         return response;
     }
+
+    /**
+     * 根据username 或者 mobile查询用户
+     *
+     * @param condition
+     * @return
+     */
+    @RequestMapping("/updateByCondition/{condition}")
+    public UserResponse updateByCondition(@PathVariable String condition) {
+        logger.info("findUserByCondition run...condition is :{}", condition);
+        UserResponse response = new UserResponse();
+        User user = userService.findUserByUsernameOrMobile(condition);
+        if (user != null) {
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(user, userVO);
+            response.setResult(userVO);
+        }
+        return response;
+    }
+
 
     /**
      * 根据userId 查询推荐人
@@ -776,23 +794,7 @@ public class UserController extends BaseController {
         response.setCount(userService.countAll());
         return response;
     }
-    /**
-     * 插入数据
-     * @auth sunpeikai
-     * @param userActionUtmRequest 插入数据参数
-     * @return
-     */
-    @PostMapping("/insertUserActionUtm")
-    public UserResponse insertUserActionUtm(@RequestBody UserActionUtmRequest userActionUtmRequest) {
-        UserResponse response = new UserResponse();
-        User user = userService.insertUserActionUtm(userActionUtmRequest);
-        if(user!=null){
-            UserVO userVO = CommonUtils.convertBean(user,UserVO.class);
-            response.setResult(userVO);
-            response.setRtn(Response.SUCCESS);
-        }
-        return response;
-    }
+
     /**
      * 输错密码次数超限的用户信息
      *

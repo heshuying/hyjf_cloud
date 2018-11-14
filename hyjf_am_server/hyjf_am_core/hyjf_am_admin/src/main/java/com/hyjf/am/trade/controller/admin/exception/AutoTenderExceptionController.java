@@ -146,7 +146,7 @@ public class AutoTenderExceptionController  extends BaseController {
     /**
      * 更改加入明细状态
      */
-    @RequestMapping(value = "/updateTenderByParam/{status}/{accedeId}", method = RequestMethod.POST)
+    @GetMapping(value = "/updateTenderByParam/{status}/{accedeId}")
     public Response<Boolean> updateTenderByParam(@PathVariable String status, @PathVariable String accedeId){
         Map<String,Object> mapParam = new HashMap<String,Object>();
         mapParam.put("status",status);
@@ -169,10 +169,9 @@ public class AutoTenderExceptionController  extends BaseController {
      * @param request
      * @return
      */
-    @RequestMapping("/updateBorrowForAutoTender")
+    @PostMapping("/updateBorrowForAutoTender")
     public Response updateBorrowForAutoTender(@RequestBody UpdateBorrowForAutoTenderRequest request) {
-        Borrow borrow = new Borrow();
-        HjhAccede hjhAccede = new HjhAccede();
+        logger.info("=========updateBorrowForAutoTender,参数为:"+JSONObject.toJSON(request)+"=======");
         BankCallBean bean = new BankCallBean();
         String borrowNid = request.getBorrowNid();
         String accedeOrderId = request.getAccedeOrderId();
@@ -189,8 +188,9 @@ public class AutoTenderExceptionController  extends BaseController {
      * @return
      * @author nxl
      */
-    @RequestMapping("/saveCreditTenderLogNoSave")
+    @PostMapping("/saveCreditTenderLogNoSave")
     public HjhCreditCalcResultResponse saveCreditTenderLogNoSave(@RequestBody SaveCreditTenderLogRequest request) {
+        logger.info("======saveCreditTenderLogNoSave=======");
         HjhCreditCalcResultResponse response = new HjhCreditCalcResultResponse();
         HjhCreditCalcResultVO resultVO = this.autoTenderExceptionService.saveCreditTenderLogNoSave(
                 request.getCredit(),
@@ -208,8 +208,9 @@ public class AutoTenderExceptionController  extends BaseController {
      * @param request
      * @return
      */
-    @RequestMapping("/updateCreditForAutoTender")
+    @PostMapping("/updateCreditForAutoTender")
     public Response updateCreditForAutoTender(@RequestBody UpdateCreditForAutoTenderRequest request) throws InterruptedException {
+        logger.info("=======updateCreditForAutoTender========");
         //参数转换
         BankCallBean bean = new BankCallBean();
         String creditNid = request.getCreditNid();
@@ -235,7 +236,7 @@ public class AutoTenderExceptionController  extends BaseController {
         return new Response();
     }
 
-    @RequestMapping("/deleteBorrowTmp/{borrowNid}/{accedeOrderId}")
+    @GetMapping("/deleteBorrowTmp/{borrowNid}/{accedeOrderId}")
     public BooleanResponse deleteBorrowTmp(@PathVariable  String borrowNid, @PathVariable String accedeOrderId){
         Boolean bool =autoTenderExceptionService.deleteBorrowTmp(borrowNid,accedeOrderId);
         BooleanResponse response = new BooleanResponse();

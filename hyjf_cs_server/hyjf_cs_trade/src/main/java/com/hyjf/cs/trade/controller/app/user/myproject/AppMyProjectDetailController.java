@@ -91,7 +91,7 @@ public class AppMyProjectDetailController extends BaseTradeController {
         UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
         userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE5);
         userOperationLogEntity.setIp(GetCilentIP.getIpAddr(httpServletRequest));
-        userOperationLogEntity.setPlatform(httpServletRequest.getParameter("realPlatform")==null?Integer.valueOf(platform):Integer.valueOf(httpServletRequest.getParameter("realPlatform")));
+        userOperationLogEntity.setPlatform(Integer.valueOf(platform));
         userOperationLogEntity.setRemark(dayOrMonth);
         userOperationLogEntity.setOperationTime(new Date());
         userOperationLogEntity.setUserName(userVO.getUsername());

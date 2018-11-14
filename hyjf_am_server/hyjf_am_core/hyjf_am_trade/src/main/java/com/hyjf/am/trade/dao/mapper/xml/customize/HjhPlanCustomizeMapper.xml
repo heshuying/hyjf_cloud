@@ -1050,7 +1050,7 @@ ORDER BY
 		ELSE
 		CONCAT(hb.borrow_period, '个月')
 		END AS borrow_period,
-		hhdc.create_time as addtime,
+		date_format(hhdc.create_time , '%Y-%m-%d') as addtime,
 
 		CASE
 		WHEN hhdc.assign_repay_next_time = 0 THEN
@@ -1080,7 +1080,7 @@ ORDER BY
 		WHEN hb.borrow_style = 'endday' THEN CONCAT(hb.borrow_period, '天')
 		ELSE CONCAT(hb.borrow_period, '个月')
 		END AS borrow_period,
-		date_format(hbt.create_time , '%Y-%m-%d %H:%i:%s') as addtime,
+		date_format(hbt.create_time , '%Y-%m-%d') as addtime,
 
 		CASE
 		WHEN hb.borrow_style = 'endday' or hb.borrow_style = 'end' or hb.borrow_style = 'endmonth'

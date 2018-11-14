@@ -14,7 +14,6 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringUtil;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -74,7 +73,7 @@ public class AppRiskAssesmentController extends BaseUserController {
         UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
         userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE12);
         userOperationLogEntity.setIp(com.hyjf.cs.user.util.GetCilentIP.getIpAddr(request));
-        userOperationLogEntity.setPlatform(request.getParameter("realPlatform")==null?Integer.valueOf(platform):Integer.valueOf(request.getParameter("realPlatform")));
+        userOperationLogEntity.setPlatform(Integer.valueOf(platform));
         userOperationLogEntity.setRemark("");
         userOperationLogEntity.setOperationTime(new Date());
         userOperationLogEntity.setUserName(userVO.getUsername());

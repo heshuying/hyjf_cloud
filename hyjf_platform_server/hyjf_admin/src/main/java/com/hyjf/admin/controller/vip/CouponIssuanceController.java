@@ -242,6 +242,7 @@ public class CouponIssuanceController extends BaseController {
         }
         if (couponConfigRequest.getCouponType() != 1) {
             couponConfigRequest.setAddFlag(0);
+            couponConfigRequest.setRepayTimeConfig(1);
         }
         couponConfigRequest.setCreateUserId(Integer.parseInt(userId));
         couponConfigRequest.setUpdateUserId(Integer.parseInt(userId));

@@ -9,18 +9,17 @@ import com.hyjf.am.response.AppPushManageResponse;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.EmailRecipientResponse;
 import com.hyjf.am.response.IntegerResponse;
-import com.hyjf.am.response.admin.AdminSubConfigResponse;
-import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
-import com.hyjf.am.response.admin.HjhDebtCreditReponse;
-import com.hyjf.am.response.admin.PlatformCountCustomizeResponse;
+import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
 import com.hyjf.am.response.config.AppBorrowImageResponse;
+import com.hyjf.am.response.config.SmsConfigResponse;
 import com.hyjf.am.response.config.SubmissionsResponse;
 import com.hyjf.am.response.config.VersionConfigBeanResponse;
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
+import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
@@ -29,6 +28,7 @@ import com.hyjf.am.resquest.config.AppBorrowImageRequest;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
+import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
@@ -41,6 +41,7 @@ import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -56,6 +57,98 @@ public interface AmAdminClient {
      */
      IntegerResponse countList(ChannelStatisticsDetailRequest request);
 
+    /**
+     * 获取所有渠道
+     * @param type 类型:app,pc
+     * @return
+     */
+    List<UtmVO> selectUtmPlatList(String type);
+    /**
+     * 访问数
+     * @param sourceId 账户推广平台
+     * @param type 类型: pc,app
+     * @return
+     */
+    Integer getAccessNumber(Integer sourceId, String type);
+    /**
+     * 注册数
+     * @param sourceId 账户推广平台
+     * @param type 类型: pc,app
+     * @return
+     */
+    Integer getRegistNumber(Integer sourceId, String type);
+
+    /**
+     * 开户数
+     * @param sourceId
+     * @param type 类型: pc,app
+     * @return
+     */
+    Integer getOpenAccountNumber(Integer sourceId, String type);
+
+    /**
+     * 投资人数
+     * @param sourceId
+     * @param type 类型: pc,app
+     * @return
+     */
+    Integer getTenderNumber(Integer sourceId, String type);
+
+    /**
+     * 累计充值
+     * @param sourceId
+     * @param type 类型: pc,app
+     * @return
+     */
+    BigDecimal getCumulativeRecharge(Integer sourceId, String type);
+
+    /**
+     * 汇直投投资金额
+     * @param sourceId
+     * @param type 类型: pc,app
+     * @return
+     */
+    BigDecimal getHztTenderPrice(Integer sourceId, String type);
+
+    /**
+     * 汇消费投资金额
+     * @param sourceId
+     * @param type 类型: pc,app
+     * @return
+     */
+    BigDecimal getHxfTenderPrice(Integer sourceId, String type);
+
+    /**
+     * 汇天利投资金额
+     * @param sourceId
+     * @param type 类型: pc,app
+     * @return
+     */
+    BigDecimal getHtlTenderPrice(Integer sourceId, String type);
+
+    /**
+     * 汇添金投资金额
+     * @param sourceId
+     * @param type 类型: pc,app
+     * @return
+     */
+    BigDecimal getHtjTenderPrice(Integer sourceId, String type);
+
+    /**
+     * 汇金理财投资金额
+     * @param sourceId
+     * @param type 类型: pc,app
+     * @return
+     */
+    BigDecimal getRtbTenderPrice(Integer sourceId, String type);
+
+    /**
+     * 汇转让投资金额
+     * @param sourceId
+     * @param type 类型: pc,app
+     * @return
+     */
+    BigDecimal getHzrTenderPrice(Integer sourceId, String type);
 
     /**
      * 根据条件查询PC统计明细
@@ -729,4 +822,60 @@ public interface AmAdminClient {
      * @Author : huanghui
      */
     boolean deletePushManage(Integer id);
+
+    /**
+     * 查询千乐渠道散标数据
+     * @return
+     */
+    DataSearchCustomizeResponse querySanList(DataSearchRequest dataSearchRequest);
+
+    /**
+     * 查询千乐渠道计划数据
+     * @return
+     */
+    DataSearchCustomizeResponse queryPlanList(DataSearchRequest dataSearchRequest);
+    /**
+     * 查询千乐渠道全部数据
+     * @return
+     */
+    DataSearchCustomizeResponse queryQianleList(DataSearchRequest dataSearchRequest);
+
+
+    /**
+     * 查询短信加固数据
+     *
+     * @param request
+     * @return
+     * @author xiehuili
+     */
+    SmsConfigResponse initSmsConfig(SmsConfigRequest request);
+
+
+    /**
+     * 节假日配置-列表查询
+     * @param request
+     * @return
+     */
+    AdminHolidaysConfigResponse getHolidaysConfigRecordList(AdminHolidaysConfigRequest request);
+
+    /**
+     * 节假日配置-画面迁移(含有id更新，不含有id添加)
+     * @param request
+     * @return
+     */
+    AdminHolidaysConfigResponse getInfoList(AdminHolidaysConfigRequest request);
+
+    /**
+     *节假日配置-添加活动信息
+     * @param request
+     * @return
+     */
+    AdminHolidaysConfigResponse insertHolidays(AdminHolidaysConfigRequest request);
+
+    /**
+     *节假日配置-修改活动维护信息
+     * @param request
+     * @return
+     */
+    AdminHolidaysConfigResponse updateHolidays(AdminHolidaysConfigRequest request);
 }
