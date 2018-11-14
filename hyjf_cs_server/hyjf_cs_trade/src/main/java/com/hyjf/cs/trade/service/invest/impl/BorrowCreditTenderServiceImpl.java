@@ -1350,16 +1350,6 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      */
     private void checkUser(UserVO user, UserInfoVO userInfo, BankOpenAccountVO bankOpenAccount, BorrowCreditVO borrowCredit) {
 
-        String roleIsOpen = systemConfig.getRoleIsopen();
-        if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
-            if (userInfo.getRoleId().intValue() != 1) {
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
-            }
-        }
-        // 判断用户是否禁用  0启用，1禁用
-        if (user.getStatus() == 1) {
-            throw new CheckException(MsgEnum.ERR_USER_INVALID);
-        }
         // 用户未开户
         if (user.getBankOpenAccount() == 0) {
             throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
@@ -1368,22 +1358,32 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         if (user.getIsSetPassword() == 0) {
             throw new CheckException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
         }
-        // 风险测评校验
-        this.checkEvaluation(user);
         if (bankOpenAccount == null || user.getBankOpenAccount() == 0 || StringUtils.isEmpty(bankOpenAccount.getAccount())) {
             // 未开户
             throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
-        if(borrowCredit.getCreditUserId().intValue()==user.getUserId().intValue()){
-            // 不可以承接自己出让的债权
-            throw new CheckException(MsgEnum.ERROR_CREDIT_CANT_BBY_YOURSELF);
+        // 判断用户是否禁用  0启用，1禁用
+        if (user.getStatus() == 1) {
+            throw new CheckException(MsgEnum.ERR_USER_INVALID);
         }
-
+        String roleIsOpen = systemConfig.getRoleIsopen();
+        if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
+            if (userInfo.getRoleId().intValue() != 1) {
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
+            }
+        }
         if (!authService.checkPaymentAuthStatus(user.getUserId())) {
             // 未进行服务费授权
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_PAYMENT_AUTH);
 
         }
+        // 风险测评校验
+        //this.checkEvaluation(user);
+        if(borrowCredit.getCreditUserId().intValue()==user.getUserId().intValue()){
+            // 不可以承接自己出让的债权
+            throw new CheckException(MsgEnum.ERROR_CREDIT_CANT_BBY_YOURSELF);
+        }
+
     }
 
     /**

@@ -223,7 +223,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 
 	/**
 	 * 获取各种用户属性
-	 * 
+	 *
 	 * @param userId
 	 * @param platform
 	 * @param request
@@ -859,7 +859,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 
 	/**
 	 * 检查是否是新手(未登录或已登录未投资)
-	 * 
+	 *
 	 * @param userId
 	 * @return
 	 */
@@ -934,7 +934,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 
 	/**
 	 * 根据绑定信息取得用户id
-	 * 
+	 *
 	 * @param bindUniqueId
 	 * @return
 	 */
@@ -947,7 +947,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 
 	/**
 	 * 根据绑定信息取得用户id
-	 * 
+	 *
 	 * @param
 	 * @return
 	 */
@@ -984,56 +984,56 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	@Override
 	public Map<String, String> insertErrorPassword(String userName,String loginPassword,String channel) {
 		UserVO userVO = amUserClient.findUserByUserNameOrMobile(userName);
-        Map<String, String> r=new HashMap<>();
+		Map<String, String> r=new HashMap<>();
 //		CheckUtil.check(userVO!=null,MsgEnum.ERR_USER_NOT_EXISTS);
-        if(userVO!=null){
-            //1.获取该用户密码错误次数
-            String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT_ALL + userVO.getUserId());
-            //2.获取用户允许输入的最大错误次数
-            Integer maxLoginErrorNum=LockedConfigManager.getInstance().getWebConfig().getMaxLoginErrorNum();
-            //3.redis配置的超限有效时间
-            long retTime  = RedisUtils.ttl(RedisConstants.PASSWORD_ERR_COUNT_ALL + userVO.getUserId());
-            //判断密码错误次数是否超限
-            if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>=maxLoginErrorNum) {
+		if(userVO!=null){
+			//1.获取该用户密码错误次数
+			String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT_ALL + userVO.getUserId());
+			//2.获取用户允许输入的最大错误次数
+			Integer maxLoginErrorNum=LockedConfigManager.getInstance().getWebConfig().getMaxLoginErrorNum();
+			//3.redis配置的超限有效时间
+			long retTime  = RedisUtils.ttl(RedisConstants.PASSWORD_ERR_COUNT_ALL + userVO.getUserId());
+			//判断密码错误次数是否超限
+			if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>=maxLoginErrorNum) {
 //			CheckUtil.check(false, MsgEnum.ERR_PASSWORD_ERROR_TOO_MAX,DateUtils.SToHMSStr(retTime));
-                r.put("info","您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
-            }
-            String codeSalt = userVO.getSalt();
-            String passwordDb = userVO.getPassword();
-            // 页面传来的密码
-            String password = "";
-            if (channel.equals(BankCallConstant.CHANNEL_PC)) {
-                password = MD5Utils.MD5(loginPassword + codeSalt);
-            }else {
-                password = MD5Utils.MD5(MD5Utils.MD5(loginPassword) + codeSalt);
-            }
-            logger.info("passwordDB:[{}],password:[{}],相等:[{}]",passwordDb,password,password.equals(passwordDb));
-            if (!password.equals(passwordDb)) {
-                long value = this.insertPassWordCount(RedisConstants.PASSWORD_ERR_COUNT_ALL+ userVO.getUserId());//以用户手机号为key
-                for (int i=1;i<4;i++){
-                    if (maxLoginErrorNum-value == i){
+				r.put("info","您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
+			}
+			String codeSalt = userVO.getSalt();
+			String passwordDb = userVO.getPassword();
+			// 页面传来的密码
+			String password = "";
+			if (channel.equals(BankCallConstant.CHANNEL_PC)) {
+				password = MD5Utils.MD5(loginPassword + codeSalt);
+			}else {
+				password = MD5Utils.MD5(MD5Utils.MD5(loginPassword) + codeSalt);
+			}
+			logger.info("passwordDB:[{}],password:[{}],相等:[{}]",passwordDb,password,password.equals(passwordDb));
+			if (!password.equals(passwordDb)) {
+				long value = this.insertPassWordCount(RedisConstants.PASSWORD_ERR_COUNT_ALL+ userVO.getUserId());//以用户手机号为key
+				for (int i=1;i<4;i++){
+					if (maxLoginErrorNum-value == i){
 //					CheckUtil.check(false, MsgEnum.ERR_PASSWORD_ERROR_MAX,i);
-                        r.put("info","登录失败,您的登录机会还剩"+i+"次!");
-                    }
-                }
-                if (maxLoginErrorNum - value == 0){
-                    logger.info("插入密码超限用户信息开始","-----userId:"+userVO.getUserId());
-                    Integer	loginLockTime=LockedConfigManager.getInstance().getWebConfig().getLockLong();//获取Redis配置的登录错误次数有效时间
-                    // 同步输错密码超限锁定用户信息接口
-                    LockedUserInfoVO lockedUserInfoVO=new LockedUserInfoVO();
-                    lockedUserInfoVO.setUserid(userVO.getUserId());
-                    lockedUserInfoVO.setUsername(userVO.getUsername());
-                    lockedUserInfoVO.setMobile(userVO.getMobile());
-                    lockedUserInfoVO.setLockTime(new Date());
-                    lockedUserInfoVO.setUnlockTime(DateUtils.nowDateAddDate(loginLockTime));
-                    lockedUserInfoVO.setFront(1);
-                    lockedUserInfoVO.setUnlocked(0);
-                    amUserClient.inserLockedUser(lockedUserInfoVO);
-                    r.put("info","您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
-                    logger.info("插入密码超限用户信息结束","-----userId:"+userVO.getUserId());
-                }
-            }
-        }
+						r.put("info","登录失败,您的登录机会还剩"+i+"次!");
+					}
+				}
+				if (maxLoginErrorNum - value == 0){
+					logger.info("插入密码超限用户信息开始","-----userId:"+userVO.getUserId());
+					Integer	loginLockTime=LockedConfigManager.getInstance().getWebConfig().getLockLong();//获取Redis配置的登录错误次数有效时间
+					// 同步输错密码超限锁定用户信息接口
+					LockedUserInfoVO lockedUserInfoVO=new LockedUserInfoVO();
+					lockedUserInfoVO.setUserid(userVO.getUserId());
+					lockedUserInfoVO.setUsername(userVO.getUsername());
+					lockedUserInfoVO.setMobile(userVO.getMobile());
+					lockedUserInfoVO.setLockTime(new Date());
+					lockedUserInfoVO.setUnlockTime(DateUtils.nowDateAddDate(loginLockTime));
+					lockedUserInfoVO.setFront(1);
+					lockedUserInfoVO.setUnlocked(0);
+					amUserClient.inserLockedUser(lockedUserInfoVO);
+					r.put("info","您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
+					logger.info("插入密码超限用户信息结束","-----userId:"+userVO.getUserId());
+				}
+			}
+		}
 		return  r;
 	}
 	/**
@@ -1047,74 +1047,74 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		RedisUtils.expire(key,loginErrorConfigManager*3600);//给key设置过期时间
 		return retValue;
 	}
-	 @Override
-	    public Map<String, String> updateLoginInAction(String userName, String password, String ipAddr) {
-		  Map<String, String> r=new HashMap<>();
-		  r.put("stt", "0");
-	        String codeSalt = "";
-	        String passwordDb = "";
-	        Integer userId = null;
-	        String usernameString=null;
-	        String mobileString=null;
+	@Override
+	public Map<String, String> updateLoginInAction(String userName, String password, String ipAddr) {
+		Map<String, String> r=new HashMap<>();
+		r.put("stt", "0");
+		String codeSalt = "";
+		String passwordDb = "";
+		Integer userId = null;
+		String usernameString=null;
+		String mobileString=null;
 
-	        UserVO u = amUserClient.findUserByUserNameOrMobile(userName);
-	        if (u == null) {
-	        	r.put("stt", "-1");
-	            return r;
-	        } else {
-	        		r.put("userId", u.getUserId().toString());
-	                userId = u.getUserId();
-	                codeSalt = u.getSalt();
-	                passwordDb =u.getPassword();
-	                usernameString=u.getUsername();
-					mobileString=u.getMobile();
-	            if (u.getStatus() == 1) {
-	            	r.put("stt", "-4");
-	                return r;
-	            }
-	        }
-	        
-	  		//1.获取该用户密码错误次数
-	  		String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT + userId);
-	        //2.获取用户允许输入的最大错误次数
-		 	Integer maxLoginErrorNum=LockedConfigManager.getInstance().getWebConfig().getMaxLoginErrorNum();//获取Redis配置的额登录最大错误次数
-		 	//判断密码错误次数是否超限
-	  		if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>maxLoginErrorNum) {
-         	r.put("stt", "-5");
-             return r;//密码错误次数已达上限
-	  		}
-	        // 验证用的password
-	        password = MD5Utils.MD5(MD5Utils.MD5(password) + codeSalt);
-	        // 密码正确时
-	        if (Validator.isNotNull(userId) && Validator.isNotNull(password) && password.equals(passwordDb)) {
-	            // 更新登录信息
-				amUserClient.updateLoginUser(userId, ipAddr);
-				updateUserByUserId(u);
-				// 1. 登录成功将登陆密码错误次数的key删除
-				RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT + userId);
-				BankOpenAccountVO account = this.getBankOpenAccount(userId);
-				String accountId = null;
-				if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
-					accountId = account.getAccount();
-					this.synBalance(accountId, systemConfig.getBankInstcode(), "http://CS-TRADE",
-							systemConfig.getAopAccesskey());
-				}
-				String sign = SecretUtil.createToken(userId, usernameString, accountId);
-				r.put("sign", sign);
-	            return r;
-	        } else {
-	        	//增加密码错误次数
-	        	RedisUtils.incr(RedisConstants.PASSWORD_ERR_COUNT + userId);;//以用户userId为key
-				//1.获取该用户密码错误次数，2.判断是否错误超过错误次数
-				if((Integer.valueOf(passwordErrorNum)+1) < maxLoginErrorNum){
-	            	r.put("stt", "-3");
-	                return r;
-				}else{
-	            	r.put("stt", "-5");
-	                return r;//用户当天密码错误次数已达上限
-				}
-	        }
-	    }
+		UserVO u = amUserClient.findUserByUserNameOrMobile(userName);
+		if (u == null) {
+			r.put("stt", "-1");
+			return r;
+		} else {
+			r.put("userId", u.getUserId().toString());
+			userId = u.getUserId();
+			codeSalt = u.getSalt();
+			passwordDb =u.getPassword();
+			usernameString=u.getUsername();
+			mobileString=u.getMobile();
+			if (u.getStatus() == 1) {
+				r.put("stt", "-4");
+				return r;
+			}
+		}
+
+		//1.获取该用户密码错误次数
+		String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT + userId);
+		//2.获取用户允许输入的最大错误次数
+		Integer maxLoginErrorNum=LockedConfigManager.getInstance().getWebConfig().getMaxLoginErrorNum();//获取Redis配置的额登录最大错误次数
+		//判断密码错误次数是否超限
+		if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>maxLoginErrorNum) {
+			r.put("stt", "-5");
+			return r;//密码错误次数已达上限
+		}
+		// 验证用的password
+		password = MD5Utils.MD5(MD5Utils.MD5(password) + codeSalt);
+		// 密码正确时
+		if (Validator.isNotNull(userId) && Validator.isNotNull(password) && password.equals(passwordDb)) {
+			// 更新登录信息
+			amUserClient.updateLoginUser(userId, ipAddr);
+			updateUserByUserId(u);
+			// 1. 登录成功将登陆密码错误次数的key删除
+			RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT + userId);
+			BankOpenAccountVO account = this.getBankOpenAccount(userId);
+			String accountId = null;
+			if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
+				accountId = account.getAccount();
+				this.synBalance(accountId, systemConfig.getBankInstcode(), "http://CS-TRADE",
+						systemConfig.getAopAccesskey());
+			}
+			String sign = SecretUtil.createToken(userId, usernameString, accountId);
+			r.put("sign", sign);
+			return r;
+		} else {
+			//增加密码错误次数
+			RedisUtils.incr(RedisConstants.PASSWORD_ERR_COUNT + userId);;//以用户userId为key
+			//1.获取该用户密码错误次数，2.判断是否错误超过错误次数
+			if((Integer.valueOf(passwordErrorNum)+1) < maxLoginErrorNum){
+				r.put("stt", "-3");
+				return r;
+			}else{
+				r.put("stt", "-5");
+				return r;//用户当天密码错误次数已达上限
+			}
+		}
+	}
 
 
 
