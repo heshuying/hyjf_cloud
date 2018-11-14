@@ -50,7 +50,7 @@ public interface OperationReportInfoJobCustomizeMapper {
      * 按照性别统计投资人的分布
      * @param date 上个月的最后一天
      */
-    List<OperationReportJobVO>  getTenderSexGroupByList(Date date);
+    List<OperationReportJobVO>  getTenderSexGroupByList(@Param("date") Date date);
 
     /**
      * 渠道分析 ，成交笔数
