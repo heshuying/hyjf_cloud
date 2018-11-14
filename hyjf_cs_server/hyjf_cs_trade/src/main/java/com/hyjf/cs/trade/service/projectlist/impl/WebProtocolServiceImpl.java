@@ -2,6 +2,8 @@ package com.hyjf.cs.trade.service.projectlist.impl;
 
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
+import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
+import com.hyjf.am.resquest.trade.HjhDebtCreditTenderRequest;
 import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
 import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
 import com.hyjf.am.vo.trade.*;
@@ -9,6 +11,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.DebtBorrowCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
@@ -26,7 +29,6 @@ import com.hyjf.cs.trade.bean.repay.ProjectRepayListBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
-//import com.hyjf.cs.trade.mq.handle.FddHandle;
 import com.hyjf.cs.trade.service.projectlist.WebProtocolService;
 import com.hyjf.cs.trade.util.PdfGenerator;
 import org.apache.commons.lang3.StringUtils;
@@ -61,8 +63,6 @@ public class WebProtocolServiceImpl implements WebProtocolService {
     @Autowired
     private AmUserClient amUserClient;
 
-//    @Autowired
-//    private FddHandle fddHandle;
 
     /**
      * 下载脱敏后居间服务借款协议（原始标的）_计划投资人
@@ -391,7 +391,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                                 tenderCreditAssignedBean.setCurrentUserId(userId);
                             }
                             // 模板参数对象(查新表)
-//                            creditContract = fddHandle.selectHJHUserCreditContract(tenderCreditAssignedBean);
+                            creditContract = this.selectHJHUserCreditContract(tenderCreditAssignedBean);
                             if(creditContract!=null){
                                 try {
                                     File filetender = PdfGenerator.generatePdfFile(request, response, ((HjhDebtCreditTenderVO) creditContract.get("creditTender")).getAssignOrderId() + ".pdf", CustomConstants.HJH_CREDIT_CONTRACT, creditContract);
@@ -836,6 +836,137 @@ public class WebProtocolServiceImpl implements WebProtocolService {
 //            } else {
 //                resultMap.put("phpWebHost", "http://site.hyjf.com");
 //            }
+        }
+        return resultMap;
+    }
+
+    /**
+     * 查询汇计划债转投资表
+     * @param tenderCreditAssignedBean
+     * @return
+     */
+    private Map<String,Object> selectHJHUserCreditContract(CreditAssignedBean tenderCreditAssignedBean) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        // 获取债转投资信息
+        //查询 hyjf_hjh_debt_credit_tender 表
+        HjhDebtCreditTenderRequest request = new HjhDebtCreditTenderRequest();
+        request.setBorrowNid(tenderCreditAssignedBean.getBidNid());
+        request.setCreditNid(tenderCreditAssignedBean.getCreditNid());
+        request.setInvestOrderId(tenderCreditAssignedBean.getCreditTenderNid());
+        request.setAssignOrderId(tenderCreditAssignedBean.getAssignNid());
+        List<HjhDebtCreditTenderVO> creditTenderList =this.amTradeClient.getHjhDebtCreditTenderList(request);
+        // 当前用户的id
+        Integer currentUserId = tenderCreditAssignedBean.getCurrentUserId();
+
+        if (creditTenderList != null && creditTenderList.size() > 0) {
+            HjhDebtCreditTenderVO creditTender = creditTenderList.get(0);
+            Map<String, Object> params = new HashMap<String, Object>();
+
+            params.put("creditNid", creditTender.getCreditNid());//取得 hyjf_hjh_debt_credit_tender 表的债转编号
+            params.put("assignOrderId", creditTender.getAssignOrderId());//取得 hyjf_hjh_debt_credit_tender 表的债转编号
+
+            //查看债转详情
+            List<TenderToCreditDetailCustomizeVO> tenderToCreditDetailList=this.amTradeClient.selectHJHWebCreditTenderDetail(params);
+
+            if (tenderToCreditDetailList != null && tenderToCreditDetailList.size() > 0) {
+                if (tenderToCreditDetailList.get(0).getCreditRepayEndTime() != null) {
+                    tenderToCreditDetailList.get(0).setCreditRepayEndTime(GetDate.getDateMyTimeInMillis(Integer.parseInt(tenderToCreditDetailList.get(0).getCreditRepayEndTime())));
+                }
+                if (tenderToCreditDetailList.get(0).getCreditTime() != null) {
+                    try {
+                        tenderToCreditDetailList.get(0).setCreditTime(GetDate.formatDate(GetDate.parseDate(tenderToCreditDetailList.get(0).getCreditTime(), "yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd"));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+                resultMap.put("tenderToCreditDetail", tenderToCreditDetailList.get(0));
+            }
+
+
+            // 获取借款标的信息
+            BorrowAndInfoVO borrow=this.amTradeClient.getBorrowByNid(creditTender.getBorrowNid());
+
+            // 获取债转信息(新表)
+            HjhDebtCreditRequest request1 = new HjhDebtCreditRequest();
+            request1.setBorrowNid(tenderCreditAssignedBean.getBidNid());
+            request1.setCreditNid(tenderCreditAssignedBean.getCreditNid());
+            request1.setInvestOrderId(tenderCreditAssignedBean.getCreditTenderNid());
+            List<HjhDebtCreditVO> borrowCredit=this.amTradeClient.getHjhDebtCreditList(request1);
+
+            // 获取承接人身份信息
+            UserInfoVO usersInfo=this.amUserClient.findUsersInfoById(creditTender.getUserId());
+            // 获取承接人平台信息
+            UserVO users=this.amUserClient.findUserById(creditTender.getUserId());
+
+            // 获取融资方平台信息
+            UserVO usersBorrow=this.amUserClient.findUserById(borrow.getUserId());
+
+            // 获取债转人身份信息
+            UserInfoVO usersInfoCredit=this.amUserClient.findUsersInfoById(creditTender.getCreditUserId());
+
+            // 获取债转人平台信息
+            UserVO usersCredit=this.amUserClient.findUserById(creditTender.getCreditUserId());
+
+            // 将int类型时间转成字符串
+            String createTime = GetDate.dateToString2(creditTender.getCreateTime(),"yyyyMMdd");
+            String addip = GetDate.getDateMyTimeInMillis(creditTender.getAssignRepayEndTime());// 借用ip字段存储最后还款时
+            resultMap.put("createTime", createTime);//记得去JSP上替换 creditResult.data.creditTender.addip 字段，要新建一个JSP
+            resultMap.put("addip", addip);//记得去JSP上替换 creditResult.data.creditTender.addip 字段，要新建一个JSP
+            resultMap.put("creditTender", creditTender);
+
+            if (borrow != null) {
+                if (borrow.getReverifyTime() != null) {
+                    borrow.setReverifyTime(GetDate.getDateMyTimeInMillis(Integer.parseInt(borrow.getReverifyTime())));
+                }
+                if (borrow.getRepayLastTime() != null) {
+                    borrow.setRepayLastTime(GetDate.getDateMyTimeInMillis(Integer.parseInt(borrow.getRepayLastTime())));
+                }
+                resultMap.put("borrow", borrow);
+                // 获取借款人信息
+                UserInfoVO usersInfoBorrow=this.amUserClient.findUsersInfoById(borrow.getUserId());
+
+
+                if (usersInfoBorrow != null) {
+                    resultMap.put("usersInfoBorrow", usersInfoBorrow);
+                }
+            }
+
+            if (borrowCredit != null && borrowCredit.size() > 0) {
+                resultMap.put("borrowCredit", borrowCredit);
+            }
+
+
+            if (usersInfo != null) {
+                resultMap.put("usersInfo", usersInfo);
+            }
+
+
+            if (usersBorrow != null) {
+
+                resultMap.put("usersBorrow", usersBorrow);
+            }
+
+            if (users != null) {
+                resultMap.put("users", users);
+            }
+
+            if (usersCredit != null) {
+                resultMap.put("usersCredit", usersCredit);
+            }
+
+            if (usersInfoCredit != null) {
+
+                resultMap.put("usersInfoCredit", usersInfoCredit);
+            }
+
+            String phpWebHost = "";
+            //PropUtils.getSystem("hyjf.web.host.php");
+            //hyjf.web.host.php 不再使用
+            if (org.apache.commons.lang.StringUtils.isNotEmpty(phpWebHost)) {
+                resultMap.put("phpWebHost", phpWebHost);
+            } else {
+                resultMap.put("phpWebHost", "http://site.hyjf.com");
+            }
         }
         return resultMap;
     }
