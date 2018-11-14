@@ -1348,8 +1348,16 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             if("getTenderUrl".equals(flag)){
                 if(result!=null){
                     String riskTested = (String) result.get("riskTested");
-                    String message = (String) result.get("message");
-                    throw new CheckException(riskTested,message);
+                    if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
+                        //已过期需要重新评测
+                        throw new CheckException(MsgEnum.STATUS_EV000004);
+                    }else if(CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)){
+                        //计划类判断用户类型为稳健型以上才可以投资
+                        throw new CheckException(MsgEnum.STATUS_EV000007);
+                    }else if(CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS.equals(riskTested)){
+                        //金额对比判断（校验金额 大于 设置测评金额）
+                        throw new CheckException(MsgEnum.STATUS_EV000005);
+                    }
                 }
             }
             requestType = "9";
@@ -1365,8 +1373,16 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             if("getTenderUrl".equals(flag)){
                 if(result!=null){
                     String riskTested = (String) result.get("riskTested");
-                    String message = (String) result.get("message");
-                    throw new CheckException(riskTested,message);
+                    if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
+                        //已过期需要重新评测
+                        throw new CheckException(MsgEnum.STATUS_EV000004);
+                    }else if(CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)){
+                        //计划类判断用户类型为稳健型以上才可以投资
+                        throw new CheckException(MsgEnum.STATUS_EV000007);
+                    }else if(CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS.equals(riskTested)){
+                        //金额对比判断（校验金额 大于 设置测评金额）
+                        throw new CheckException(MsgEnum.STATUS_EV000005);
+                    }
                 }
             }
             requestType = "10";
@@ -1381,8 +1397,16 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if("getTenderUrl".equals(flag)) {
             if (result!= null) {
                 String riskTested = (String) result.get("riskTested");
-                String message = (String) result.get("message");
-                throw new CheckException(riskTested, message);
+                if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
+                    //已过期需要重新评测
+                    throw new CheckException(MsgEnum.STATUS_EV000004);
+                }else if(CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)){
+                    //计划类判断用户类型为稳健型以上才可以投资
+                    throw new CheckException(MsgEnum.STATUS_EV000007);
+                }else if(CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS.equals(riskTested)){
+                    //金额对比判断（校验金额 大于 设置测评金额）
+                    throw new CheckException(MsgEnum.STATUS_EV000005);
+                }
             }
         }
         url = baseUrl + requestMapping + requestType;
