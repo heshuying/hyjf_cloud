@@ -17,7 +17,7 @@ spring:
     percentage: 0.1
     
   profiles:
-    active: dev
+    active: test
 server:
   port: 8092
 
@@ -30,3 +30,4 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
+hyjf.ip.taobo.url : 123

@@ -14,10 +14,12 @@ import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
 import com.hyjf.am.response.config.AppBorrowImageResponse;
+import com.hyjf.am.response.config.SmsConfigResponse;
 import com.hyjf.am.response.config.SubmissionsResponse;
 import com.hyjf.am.response.config.VersionConfigBeanResponse;
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
+import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
@@ -26,6 +28,7 @@ import com.hyjf.am.resquest.config.AppBorrowImageRequest;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
+import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
@@ -819,6 +822,34 @@ public interface AmAdminClient {
      * @Author : huanghui
      */
     boolean deletePushManage(Integer id);
+
+    /**
+     * 查询千乐渠道散标数据
+     * @return
+     */
+    DataSearchCustomizeResponse querySanList(DataSearchRequest dataSearchRequest);
+
+    /**
+     * 查询千乐渠道计划数据
+     * @return
+     */
+    DataSearchCustomizeResponse queryPlanList(DataSearchRequest dataSearchRequest);
+    /**
+     * 查询千乐渠道全部数据
+     * @return
+     */
+    DataSearchCustomizeResponse queryQianleList(DataSearchRequest dataSearchRequest);
+
+
+    /**
+     * 查询短信加固数据
+     *
+     * @param request
+     * @return
+     * @author xiehuili
+     */
+    SmsConfigResponse initSmsConfig(SmsConfigRequest request);
+
 
     /**
      * 节假日配置-列表查询

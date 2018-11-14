@@ -17,7 +17,7 @@ spring:
     percentage: 0.1
     
   profiles:
-    active: dev
+    active: test
 server:
   port: 8099
 
@@ -30,3 +30,19 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
+
+hyjf.env.test: true
+
+batch.repay.verify.url : 123
+
+batch.repay.result.url: 123
+
+wrb.callback.notify.url : 123
+
+hyjf.mail.loadrepay: 123
+
+hyjf.alerm.email.test: 123
+
+hyjf.alerm.email : 123
+
+hyjf.ip.taobo.url : 1234

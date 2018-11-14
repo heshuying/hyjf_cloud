@@ -12,15 +12,9 @@ import com.hyjf.am.response.admin.locked.LockedConfigResponse;
 import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
-import com.hyjf.am.response.config.AppBorrowImageResponse;
-import com.hyjf.am.response.config.ParamNameResponse;
-import com.hyjf.am.response.config.SubmissionsResponse;
-import com.hyjf.am.response.config.VersionConfigBeanResponse;
+import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.market.AppBannerResponse;
-import com.hyjf.am.response.trade.BankRepayOrgFreezeLogResponse;
-import com.hyjf.am.response.trade.BorrowApicronResponse;
-import com.hyjf.am.response.trade.BorrowStyleResponse;
-import com.hyjf.am.response.trade.STZHWhiteListResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.user.BankRepayFreezeOrgResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
@@ -32,6 +26,7 @@ import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
+import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
@@ -1547,5 +1542,47 @@ public class AmAdminClientImpl implements AmAdminClient {
     public AdminHolidaysConfigResponse updateHolidays(AdminHolidaysConfigRequest request) {
         return restTemplate.postForEntity("http://AM-ADMIN/am-config/adminHolidaysConfig/updateHolidays",
                 request, AdminHolidaysConfigResponse.class).getBody();
+    }
+
+    /**
+     * 查询千乐散标数据
+     * @param dataSearchRequest
+     * @return
+     */
+    @Override
+    public DataSearchCustomizeResponse querySanList(DataSearchRequest dataSearchRequest) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/qianle/querysanlist", dataSearchRequest, DataSearchCustomizeResponse.class).getBody();
+    }
+    /**
+     * 查询千乐计划数据
+     * @param dataSearchRequest
+     * @return
+     */
+    @Override
+    public DataSearchCustomizeResponse queryPlanList(DataSearchRequest dataSearchRequest) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/qianle/queryPlanList", dataSearchRequest, DataSearchCustomizeResponse.class).getBody();
+
+    }
+    /**
+     * 查询千乐全部数据
+     * @param dataSearchRequest
+     * @return
+     */
+    @Override
+    public DataSearchCustomizeResponse queryQianleList(DataSearchRequest dataSearchRequest) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/qianle/queryList", dataSearchRequest, DataSearchCustomizeResponse.class).getBody();
+
+    }
+
+    /**
+     * 查询短信加固数据
+     *
+     * @param request
+     * @return
+     * @author xiehuili
+     */
+    @Override
+    public SmsConfigResponse initSmsConfig(SmsConfigRequest request) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-config/smsConfig/initSmsConfig", request, SmsConfigResponse.class).getBody();
     }
 }
