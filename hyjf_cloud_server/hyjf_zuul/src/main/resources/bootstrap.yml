@@ -17,7 +17,7 @@ spring:
    percentage: 0.1
 
  profiles:
-   active: test
+   active: dev
 server:
  port: 8080
 
