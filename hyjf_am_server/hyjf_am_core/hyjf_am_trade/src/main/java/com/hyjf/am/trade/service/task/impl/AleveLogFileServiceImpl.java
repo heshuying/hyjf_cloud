@@ -79,7 +79,7 @@ public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLog
                     logger.error("下载ftp文件失败");
                 }else{
                     File dir = new File(para.savePath);
-                    // 只有aleve跟eve两个文件都下载成功才发MQ，否则不发，就是这么任性
+                    // 只有aleve跟eve两个文件都下载成功才发MQ
                     if(dir.listFiles().length == 2){
                         logger.info("aleve与eve文件下载成功，开始发送MQ");
                         JSONObject params = new JSONObject();
@@ -98,7 +98,7 @@ public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLog
                             logger.error("发送【导入红包账户流水明细(eve)】MQ失败...");
                         }
                     } else {
-                        logger.info("下载文件失败或者不全。");
+                        logger.info("下载文件失败或者不全。下载成功文件数：{}", dir.listFiles().length);
                     }
                     para.release();
                 }

@@ -126,12 +126,8 @@ public class WeChatEvaluationController {
      *
      * */
     @ApiOperation(value = "评分标准", httpMethod = "POST", notes = "评分标准")
-    @PostMapping("/gradingStandardResult")
-    public JSONObject gradingStandardResult(
-            /*@RequestHeader(value = "userId") Integer userId, HttpServletRequest request*/
-                                                                                        ) {
-        //SimpleResultBean<List<QuestionCustomizeVO>> resultBean = new SimpleResultBean<>();
-        //CheckUtil.check(userId != null, MsgEnum.STATUS_CE000001);
+    @PostMapping(value = "/gradingStandardResult.do")
+    public JSONObject gradingStandardResult() {
         JSONObject map = new JSONObject();
         List<EvalationCustomizeVO> evalationCustomizeList = evaluationService.getEvalationRecord();
         map.put("status", "000");

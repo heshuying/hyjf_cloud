@@ -351,4 +351,44 @@ public class UserVO extends BaseVO implements Serializable {
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
 	}
+
+	@Override
+	public String toString() {
+		return "UserVO{" +
+				"userId=" + userId +
+				", username='" + username + '\'' +
+				", mobile='" + mobile + '\'' +
+				", email='" + email + '\'' +
+				", password='" + password + '\'' +
+				", salt='" + salt + '\'' +
+				", status=" + status +
+				", openAccount=" + openAccount +
+				", rechargeSms=" + rechargeSms +
+				", withdrawSms=" + withdrawSms +
+				", ifReceiveNotice=" + ifReceiveNotice +
+				", investSms=" + investSms +
+				", recieveSms=" + recieveSms +
+				", regEsb=" + regEsb +
+				", eprovince='" + eprovince + '\'' +
+				", iconUrl='" + iconUrl + '\'' +
+				", evaluationExpiredTime=" + evaluationExpiredTime +
+				", sendSms=" + sendSms +
+				", isInstFlag=" + isInstFlag +
+				", instCode='" + instCode + '\'' +
+				", accountEsb=" + accountEsb +
+				", investflag=" + investflag +
+				", userType=" + userType +
+				", paymentAuthStatus=" + paymentAuthStatus +
+				", isSetPassword=" + isSetPassword +
+				", bankOpenAccount=" + bankOpenAccount +
+				", bankAccountEsb=" + bankAccountEsb +
+				", isEvaluationFlag=" + isEvaluationFlag +
+				", isCaFlag=" + isCaFlag +
+				", isSmtp=" + isSmtp +
+				", regIp='" + regIp + '\'' +
+				", regTime=" + regTime +
+				", createTime=" + createTime +
+				", updateTime=" + updateTime +
+				'}';
+	}
 }
