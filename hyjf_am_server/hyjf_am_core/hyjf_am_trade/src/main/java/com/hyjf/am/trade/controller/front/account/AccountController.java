@@ -159,7 +159,7 @@ public class AccountController extends BaseController {
      * @Param bankMerchantAccountVO
      * @return
      */
-    @PostMapping("/getbankmerchantaccount")
+    @PostMapping("/updatebankmerchantaccount")
     public BankMerchantAccountResponse updateBankMerchatAccount(@RequestBody BankMerchantAccountVO bankMerchantAccountVO) {
         BankMerchantAccountResponse response = new BankMerchantAccountResponse();
         Integer flag = accountService.updateBankMerchatAccount(bankMerchantAccountVO);
