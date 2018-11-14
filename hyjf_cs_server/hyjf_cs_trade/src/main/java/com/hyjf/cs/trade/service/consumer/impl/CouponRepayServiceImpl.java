@@ -525,7 +525,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
             account.setBankInterestSum(recoverAccount);
             account.setBankInvestSum(BigDecimal.ZERO);// 投资人累计投资
             account.setBankFrostCash(BigDecimal.ZERO);// 江西银行冻结金额
-
+            logger.info("优惠券还款更新账户表");
             int accountCnt = this.borrowClient.updateOfRepayTender(account);
             if (accountCnt == 0) {
                 throw new RuntimeException("投资人资金记录(huiyingdai_account)更新失败！" + "[优惠券投资编号：" + couponTenderNid + "]");
@@ -536,6 +536,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
                 throw new RuntimeException("投资人账户信息不存在。[投资人ID：" + borrowTenderCpn.getUserId() + "]，" + "[优惠券投资编号：" + couponTenderNid + "]");
             }
             // 写入收支明细
+            logger.info("优惠券还款写入收支明细");
             AccountListVO accountList = new AccountListVO();
             // 转账订单编号
             accountList.setNid(orderId);
