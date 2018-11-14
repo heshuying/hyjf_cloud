@@ -16,7 +16,6 @@ import com.hyjf.cs.trade.bean.repay.RepayProjectListBean;
 import com.hyjf.cs.trade.bean.repay.UserRepayProjectBean;
 import com.hyjf.cs.trade.service.repay.BatchHjhBorrowRepayApiService;
 import com.hyjf.cs.trade.service.repay.RepayService;
-import com.hyjf.cs.trade.service.synbalance.SynBalanceService;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -45,8 +44,6 @@ public class RepayController extends BaseController {
     @Autowired
     private BatchHjhBorrowRepayApiService batchBorrowRepayService;
 
-    @Autowired
-    private SynBalanceService synBalanceService;
 
     @Autowired
     private RepayService repayService;
@@ -108,7 +105,7 @@ public class RepayController extends BaseController {
 //            throw new RuntimeException("验签失败!");
 //
 //        }
-        BankOpenAccountVO bankOpenAccount = synBalanceService.getBankOpenAccount(info.getAccountId());
+        BankOpenAccountVO bankOpenAccount = repayService.getBankOpenAccount(info.getAccountId());
         if (bankOpenAccount == null) {
             logger.info("-------------------该用户没有在平台开户！--------------------");
         throw new RuntimeException("该用户没有在平台开户!");

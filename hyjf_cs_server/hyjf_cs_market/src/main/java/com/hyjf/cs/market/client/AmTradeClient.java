@@ -1,10 +1,12 @@
 package com.hyjf.cs.market.client;
 
 import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
+import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import com.hyjf.am.vo.trade.TenderCityCountVO;
 import com.hyjf.am.vo.trade.TenderSexCountVO;
+import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -112,5 +114,19 @@ public interface AmTradeClient {
 	Map<String,Object> querySanMoney(DataSearchRequest dataSearchRequest);
 
 	Map<String,Object> queryPlanMoney(DataSearchRequest dataSearchRequest);
+
+	List<WrbTenderNotifyCustomizeVO> getBorrowTenderByAddtime(AppChannelStatisticsRequest request);
+
+	List<WrbTenderNotifyCustomizeVO> getCreditTenderByAddtime(AppChannelStatisticsRequest request);
+
+	List<WrbTenderNotifyCustomizeVO> getAccountRechargeByAddtime(AppChannelStatisticsRequest request);
+
+	List<WrbTenderNotifyCustomizeVO> getBorrowTenderByClient(AppChannelStatisticsRequest request);
+
+	List<WrbTenderNotifyCustomizeVO> getProductListByClient(AppChannelStatisticsRequest request);
+
+	List<WrbTenderNotifyCustomizeVO> getDebtPlanAccedeByClient(AppChannelStatisticsRequest request);
+
+	List<WrbTenderNotifyCustomizeVO> getCreditTenderByClient(AppChannelStatisticsRequest request);
 
 }

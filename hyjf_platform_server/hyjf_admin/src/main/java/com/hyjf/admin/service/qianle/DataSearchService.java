@@ -1,4 +1,4 @@
-package com.hyjf.cs.market.service;
+package com.hyjf.admin.service.qianle;
 
 import com.hyjf.am.response.config.SmsConfigResponse;
 import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
@@ -22,7 +22,7 @@ public interface DataSearchService {
     SmsConfigResponse initSmsConfig();
 
 
-    void saveSmsCode(String checkCode, String mobile,String platform);
+    void saveSmsCode(String checkCode, String mobile, String platform);
 
     /**
      * 检查短信验证码

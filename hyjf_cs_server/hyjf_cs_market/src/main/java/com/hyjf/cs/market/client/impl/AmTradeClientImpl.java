@@ -1,13 +1,16 @@
 package com.hyjf.cs.market.client.impl;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.WrbTenderNotifyResponse;
 import com.hyjf.am.response.datacollect.TzjDayReportResponse;
 import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
+import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import com.hyjf.am.vo.trade.TenderCityCountVO;
 import com.hyjf.am.vo.trade.TenderSexCountVO;
+import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.market.client.AmTradeClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -162,6 +165,96 @@ public class AmTradeClientImpl implements AmTradeClient {
 		return response.getMoney();
 	}
 
+	/**
+	 *  汇直投投资总额
+	 */
+	@Override
+	public List<WrbTenderNotifyCustomizeVO> getBorrowTenderByAddtime(AppChannelStatisticsRequest request) {
+		WrbTenderNotifyResponse response = restTemplate.postForObject("http://AM-TRADE/am-trade/borrowTender/getBorrowTenderByAddtime",
+				request,WrbTenderNotifyResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 *  汇转让投资总额
+	 */
+	@Override
+	public List<WrbTenderNotifyCustomizeVO> getCreditTenderByAddtime(AppChannelStatisticsRequest request) {
+		WrbTenderNotifyResponse response = restTemplate.postForObject("http://AM-TRADE/am-trade/borrowTender/getCreditTenderByAddtime",
+				request,WrbTenderNotifyResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 *  app渠道用户充值金额
+	 */
+	@Override
+	public List<WrbTenderNotifyCustomizeVO> getAccountRechargeByAddtime(AppChannelStatisticsRequest request) {
+		WrbTenderNotifyResponse response = restTemplate.postForObject("http://AM-TRADE/am-trade/borrowTender/getAccountRechargeByAddtime",
+				request,WrbTenderNotifyResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 *  1
+	 */
+	@Override
+	public List<WrbTenderNotifyCustomizeVO> getBorrowTenderByClient(AppChannelStatisticsRequest request) {
+		WrbTenderNotifyResponse response = restTemplate.postForObject("http://AM-TRADE/am-trade/borrowTender/getBorrowTenderByClient",
+				request,WrbTenderNotifyResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 *  2
+	 */
+	@Override
+	public List<WrbTenderNotifyCustomizeVO> getProductListByClient(AppChannelStatisticsRequest request) {
+		WrbTenderNotifyResponse response = restTemplate.postForObject("http://AM-TRADE/am-trade/borrowTender/getProductListByClient",
+				request,WrbTenderNotifyResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 *  3
+	 */
+	@Override
+	public List<WrbTenderNotifyCustomizeVO> getDebtPlanAccedeByClient(AppChannelStatisticsRequest request) {
+		WrbTenderNotifyResponse response = restTemplate.postForObject("http://AM-TRADE/am-trade/borrowTender/getDebtPlanAccedeByClient",
+				request,WrbTenderNotifyResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 *  4
+	 */
+	@Override
+	public List<WrbTenderNotifyCustomizeVO> getCreditTenderByClient(AppChannelStatisticsRequest request) {
+		WrbTenderNotifyResponse response = restTemplate.postForObject("http://AM-TRADE/am-trade/borrowTender/getCreditTenderByClient",
+				request,WrbTenderNotifyResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
 
 
 }

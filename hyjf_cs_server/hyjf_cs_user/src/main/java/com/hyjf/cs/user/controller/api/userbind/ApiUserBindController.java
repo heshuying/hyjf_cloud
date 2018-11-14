@@ -39,6 +39,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
@@ -84,7 +85,7 @@ public class ApiUserBindController extends BaseUserController {
 	 * @return
 	 */
 	@ApiOperation(value = "页面授权绑定api-跳转登陆授权页面",notes = "页面授权绑定api-跳转登陆授权页面")
-	@GetMapping(value = "/bindApi.do")
+	@GetMapping(value = "/bindApi")
 	public ModelAndView bindApi(HttpServletRequest request, HttpServletResponse response, ApiUserPostBean apiUserPostBean){
 		// 设置接口结果页的信息（返回Url）
 		this.initCheckUtil(apiUserPostBean);
@@ -100,43 +101,44 @@ public class ApiUserBindController extends BaseUserController {
 		int bindUniqueId = Integer.parseInt(apiUserPostBean.getBindUniqueIdScy());
 		logger.info("解密结果....bindUniqueId is : {}", bindUniqueId);
         modelAndView.addObject("instcode",apiUserPostBean.getPid());
-		Integer userId = loginService.getUserIdByBind(bindUniqueId, apiUserPostBean.getPid());
+        Integer userId = loginService.getUserIdByBind(bindUniqueId, apiUserPostBean.getPid());
+        logger.info("用户ID："+userId);
         // 回调url（h5错误页面）
         BaseMapBean baseMapBean=new BaseMapBean();
-		if(userId == null){
+        if(userId == null||userId==0){
             // 跳转登陆授权画面
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
             baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户授权！");
             baseMapBean.setCallBackAction(webHost+JUMP_BIND_HTML);
-            modelAndView.addObject("apiForm",new BeanMap(apiUserPostBean));
-		}else{
-			// 登陆
-			WebViewUserVO webUser = loginService.getWebViewUserByUserId(userId);
-			loginService.setToken(webUser);
-			//WebUtils.sessionLogin(request, response, webUser);
+        }else{
+            // 登陆
+            WebViewUserVO webUser = loginService.getWebViewUserByUserId(userId);
+            loginService.setToken(webUser);
+            //WebUtils.sessionLogin(request, response, webUser);
 
-			//重复绑定
-			CheckUtil.check(false,MsgEnum.ERR_BIND_REPEAT);
-		}
-		String idCard = apiUserPostBean.getIdCard();
-		String phone = apiUserPostBean.getMobile();
-		String mobile = apiUserPostBean.getMobile()==null?"":phone;
-		String readonly = "";
-		if (!StringUtils.isEmpty(idCard)) {
-			UserVO userVO = loginService.getUserByIdCard(idCard);
-			String hyjfMobile = userVO.getMobile();
-			if(hyjfMobile != null){
-				mobile = hyjfMobile;
-				readonly = "readonly";
-			}
-		}else {
-			if (!StringUtils.isEmpty(phone)) {
-				readonly = "readonly";
-			}
-		}
-        modelAndView.addObject("mobile", mobile);
-        modelAndView.addObject("readonly", readonly);
-
+            //重复绑定
+            CheckUtil.check(false,MsgEnum.ERR_BIND_REPEAT);
+        }
+        String idCard = apiUserPostBean.getIdCard();
+        String phone = apiUserPostBean.getMobile();
+        String mobile = apiUserPostBean.getMobile()==null?"":phone;
+        String readonly = "";
+        if (!StringUtils.isEmpty(idCard)) {
+            UserVO userVO = loginService.getUserByIdCard(idCard);
+            String hyjfMobile = userVO.getMobile();
+            if(hyjfMobile != null){
+                mobile = hyjfMobile;
+                readonly = "readonly";
+            }
+        }else {
+            if (!StringUtils.isEmpty(phone)) {
+                readonly = "readonly";
+            }
+        }
+        baseMapBean.set("mobile", mobile);
+        baseMapBean.set("readonly", readonly);
+        baseMapBean.setAll(objectToMap(apiUserPostBean));
+        modelAndView.addObject("callBackForm", baseMapBean);
 		return modelAndView;
 	}
 
@@ -378,4 +380,24 @@ public class ApiUserBindController extends BaseUserController {
 
 		return result;
 	}
+
+    public static Map<String, String> objectToMap(Object obj){
+        if(obj == null){
+            return null;
+        }
+
+        Map<String, String> map = new HashMap<String, String>();
+
+        Field[] declaredFields = obj.getClass().getDeclaredFields();
+        for (Field field : declaredFields) {
+            field.setAccessible(true);
+            try {
+                map.put(field.getName(), String.valueOf(field.get(obj)));
+            }catch (Exception e){
+                logger.error("转换异常！");
+            }
+        }
+
+        return map;
+    }
 }
