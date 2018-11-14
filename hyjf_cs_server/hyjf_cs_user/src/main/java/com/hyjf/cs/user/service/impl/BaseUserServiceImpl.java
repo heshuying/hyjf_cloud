@@ -1,6 +1,5 @@
 package com.hyjf.cs.user.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -617,22 +616,18 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	}
 	@Autowired
 	private RestTemplate restTemplate;
-	// 同步余额接口
-	private static final String  SYNBALANCE= "/hyjf-api/server/synbalance/synbalance.do";
+
+
 	@Override
-	public JSONObject synBalance(String account, String instcode, String webHost, String aopAccesskey) {
+	public SynBalanceRequestBean synBalance(String account, String instcode, String aopAccesskey) {
 		SynBalanceRequestBean balanceRequestBean=new SynBalanceRequestBean();
 		balanceRequestBean.setAccountId(account);
 		balanceRequestBean.setInstCode(instcode);
 		Long timestamp=System.currentTimeMillis()/ 1000;
 		balanceRequestBean.setTimestamp(timestamp);
-		String requestUrl = webHost + SYNBALANCE;
 		String sign = StringUtils.lowerCase(MD5.toMD5Code(aopAccesskey + account + instcode + timestamp + aopAccesskey));
 		balanceRequestBean.setChkValue(sign);
-		logger.info("同步余额调用:" + requestUrl);
-		String result = restTemplate.postForEntity(requestUrl,balanceRequestBean,String.class).getBody();
-		JSONObject status = JSONObject.parseObject(result);
-		return status;
+		return balanceRequestBean;
 	}
 
 	@Override
