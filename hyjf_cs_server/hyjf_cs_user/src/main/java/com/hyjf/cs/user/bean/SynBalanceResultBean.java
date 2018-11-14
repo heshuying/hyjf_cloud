@@ -1,4 +1,4 @@
-package com.hyjf.cs.trade.bean;
+package com.hyjf.cs.user.bean;
 
 
 

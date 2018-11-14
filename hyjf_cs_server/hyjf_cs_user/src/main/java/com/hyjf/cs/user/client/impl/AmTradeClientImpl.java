@@ -6,6 +6,7 @@ package com.hyjf.cs.user.client.impl;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.UnderLineRechargeResponse;
 import com.hyjf.am.response.app.*;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountResponse;
@@ -14,14 +15,17 @@ import com.hyjf.am.response.user.HjhInstConfigResponse;
 import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
 import com.hyjf.am.response.user.WrbAccountResponse;
 import com.hyjf.am.response.user.WrbInvestSumResponse;
+import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
 import com.hyjf.am.resquest.api.WrbInvestRequest;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
 import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
 import com.hyjf.am.resquest.trade.ApiUserWithdrawRequest;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
+import com.hyjf.am.resquest.trade.SynBalanceBeanRequest;
 import com.hyjf.am.resquest.user.BatchUserPortraitRequest;
 import com.hyjf.am.resquest.user.HtlTradeRequest;
+import com.hyjf.am.vo.admin.UnderLineRechargeVO;
 import com.hyjf.am.vo.app.*;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -765,6 +769,33 @@ public class AmTradeClientImpl implements AmTradeClient {
         WrbBorrowTenderSumCustomizeResponse response = restTemplate.postForObject("http://AM-TRADE/am-trade/wrb/search_borrow_tender_sum", request, WrbBorrowTenderSumCustomizeResponse.class);
         if (response != null) {
             return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 插入线下充值同步余额信息账户明细
+     * @param synBalanceBeanRequest
+     * @return
+     */
+    @Override
+    public boolean insertAccountDetails(SynBalanceBeanRequest synBalanceBeanRequest) {
+        String url = "http://AM-TRADE/am-trade/synBalance/insertAccountDetails";
+        return restTemplate.postForEntity(url, synBalanceBeanRequest, Boolean.class).getBody();
+    }
+
+    /**
+     * 获取线下充值类型列表
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public List<UnderLineRechargeVO> selectUnderLineRechargeList(UnderLineRechargeRequest request) {
+        UnderLineRechargeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/underLineRecharge/selectUnderLineListBySyn", request, UnderLineRechargeResponse.class).getBody();
+
+        if (Response.isSuccess(response)){
+            return response.getResultList();
         }
         return null;
     }

@@ -9,6 +9,7 @@ import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
@@ -567,4 +568,5 @@ public interface AmUserClient {
 	 */
 	boolean insertAppChannelStatisticsDetail(WrbRegisterRequest wrbRegisterRequest);
 
+    AccountVO getAccount(Integer userId);
 }
