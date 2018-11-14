@@ -160,6 +160,21 @@ public class AccountController extends BaseController {
      * @return
      */
     @PostMapping("/updatebankmerchantaccount")
+    public BankMerchantAccountResponse updateBankMerchat(@RequestBody BankMerchantAccountVO bankMerchantAccountVO) {
+        BankMerchantAccountResponse response = new BankMerchantAccountResponse();
+        Integer flag = accountService.updateBankMerchatAccount(bankMerchantAccountVO);
+        response.setRecordTotal(flag);
+        return response;
+    }
+
+    /**
+     * @Author walter.limeng
+     * @Description  更新BankMerchatAccount
+     * @Date 14:21 2018/7/18
+     * @Param bankMerchantAccountVO
+     * @return
+     */
+    @PostMapping("/getbankmerchantaccount")
     public BankMerchantAccountResponse updateBankMerchatAccount(@RequestBody BankMerchantAccountVO bankMerchantAccountVO) {
         BankMerchantAccountResponse response = new BankMerchantAccountResponse();
         Integer flag = accountService.updateBankMerchatAccount(bankMerchantAccountVO);
