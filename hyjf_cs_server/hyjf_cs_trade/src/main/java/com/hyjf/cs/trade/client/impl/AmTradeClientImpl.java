@@ -4063,7 +4063,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponRecoverCustomizeVO selectCurrentCouponRecover(String couponTenderNid, int periodNow) {
-        CouponRecoverCustomizeResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponperiodrepay/selectcurrentcouponrecover/" + couponTenderNid + "/" +periodNow,CouponRecoverCustomizeResponse.class).getBody();
+        String url = "http://AM-TRADE/am-trade/couponperiodrepay/selectcurrentcouponrecover/" + couponTenderNid + "/" +periodNow;
+        logger.info("CouponRecoverCustomizeVO url is :{} ", url);
+        CouponRecoverCustomizeResponse response = restTemplate.getForEntity(url,CouponRecoverCustomizeResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }
