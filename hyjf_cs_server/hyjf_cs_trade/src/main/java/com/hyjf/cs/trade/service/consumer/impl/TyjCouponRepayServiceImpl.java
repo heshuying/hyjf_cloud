@@ -177,7 +177,7 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
             accountWebList.setCreateTime(nowTime);
             int accountWebListCnt = insertAccountWebList(accountWebList);
             if (accountWebListCnt == 0) {
-                throw new RuntimeException("网站收支记录(huiyingdai_account_web_list)更新失败！" + "[投资订单号：" + borrowTenderCpn.getNid() + "]");
+                throw new RuntimeException("网站收支记录(ht_account_web_list)更新失败！" + "[投资订单号：" + borrowTenderCpn.getNid() + "]");
             }
         }
 
