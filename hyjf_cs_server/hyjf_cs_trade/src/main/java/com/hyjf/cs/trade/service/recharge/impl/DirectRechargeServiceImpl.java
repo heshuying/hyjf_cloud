@@ -29,7 +29,6 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
-import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -472,6 +471,8 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
         repwdResult.put("status", resultBean.getStatus());
         repwdResult.put("acqRes",userOpenAccountRequestBean.getAcqRes());
         modelAndView.addObject("callBackForm", repwdResult);
+        modelAndView.addObject("callBackAction",userOpenAccountRequestBean.getRetUrl());
+        modelAndView.addObject("error",true);
         return modelAndView;
     }
 

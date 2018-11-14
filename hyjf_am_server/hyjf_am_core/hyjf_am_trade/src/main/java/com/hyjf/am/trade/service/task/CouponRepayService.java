@@ -57,7 +57,7 @@ public interface CouponRepayService {
      * @param map
      * @return
      */
-    CouponRecoverCustomize selectCurrentCouponRecover(Map<String, Object> map);
+    CouponRecoverCustomize aselectCurrentCouponRecover(Map<String, Object> map);
 
     /**
      * 更新优惠券还款

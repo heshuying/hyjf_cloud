@@ -74,11 +74,10 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
 
     @Override
     public void updateCouponOnlyRecover(String nid) throws Exception {
-        String methodName = "updateCouponOnlyRecover";
         List<Map<String, String>> retMsgList = new ArrayList<Map<String, String>>();
         Map<String, String> msg = new HashMap<String, String>();
         retMsgList.add(msg);
-        logger.info("还款开始，投资编号：" + nid);
+        logger.info("体验金收益期限还款开始，投资编号：" + nid);
         Integer nowTime = GetDate.getNowTime10();
         // 当前还款
         CouponRecoverCustomizeVO currentRecover = null;

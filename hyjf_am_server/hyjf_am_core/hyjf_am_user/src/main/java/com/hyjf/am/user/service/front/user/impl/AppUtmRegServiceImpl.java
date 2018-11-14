@@ -131,8 +131,8 @@ public class AppUtmRegServiceImpl implements AppUtmRegService {
 			criteria.andSourceIdEqualTo(request.getSourceIdSrch());
 		}
 		if (paginator.getLimit() >= 0 && paginator.getOffset() >= 0) {
-			appUtmRegExample.setLimitStart(paginator.getLimit());
-			appUtmRegExample.setLimitEnd(paginator.getOffset());
+			appUtmRegExample.setLimitStart(paginator.getOffset());
+			appUtmRegExample.setLimitEnd(paginator.getLimit());
 		}
 		return appUtmRegMapper.selectByExample(appUtmRegExample);
 
