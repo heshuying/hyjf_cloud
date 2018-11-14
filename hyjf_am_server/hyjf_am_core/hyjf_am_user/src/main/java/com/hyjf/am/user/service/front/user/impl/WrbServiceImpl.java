@@ -80,7 +80,6 @@ public class WrbServiceImpl implements WrbService {
         this.insertUtmInfo(userId, user.getUsername(), utm);
         // 插入注册记录表
         this.insertUsersLog(userId, wrbRegisterRequest.getIpAddr());
-
         log.info("风车理财插入"+userId);
         return userId;
     }

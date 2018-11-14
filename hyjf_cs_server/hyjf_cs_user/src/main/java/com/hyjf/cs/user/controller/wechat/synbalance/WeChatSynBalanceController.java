@@ -67,7 +67,9 @@ public class WeChatSynBalanceController extends BaseUserController {
         /***********同步线下充值记录 start***********/
         BankOpenAccountVO bankOpenAccountVO = synBalanceService.getBankOpenAccount(user.getUserId());
         String ip = GetCilentIP.getIpAddr(request);
-        SynBalanceRequestBean bean = synBalanceService.synBalance(bankOpenAccountVO.getAccount(), user.getInstCode(), systemConfig.getAopAccesskey());
+        SynBalanceRequestBean bean = new SynBalanceRequestBean();
+        bean.setInstCode(user.getInstCode());
+        bean.setAccountId(bankOpenAccountVO.getAccount());
         SynBalanceResultBean resultBean = synBalanceService.synBalance(bean,ip);
         //校验获取余额是否成功
         if ("成功".equals(resultBean.getStatusDesc().toString())) {
