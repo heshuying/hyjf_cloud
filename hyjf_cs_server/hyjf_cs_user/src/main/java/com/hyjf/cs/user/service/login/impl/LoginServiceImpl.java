@@ -27,6 +27,8 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.bean.BaseDefine;
+import com.hyjf.cs.user.bean.SynBalanceRequestBean;
+import com.hyjf.cs.user.bean.SynBalanceResultBean;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmTradeClient;
@@ -39,6 +41,7 @@ import com.hyjf.cs.user.mq.producer.sensorsdate.login.SensorsDataLoginProducer;
 import com.hyjf.cs.user.service.auth.AuthService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.login.LoginService;
+import com.hyjf.cs.user.service.synbalance.SynBalanceService;
 import com.hyjf.cs.user.vo.UserParameters;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.StringUtils;
@@ -62,6 +65,9 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	private static DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
 	@Value("${am.user.service.name}")
 	private String userService;
+
+    @Autowired
+    private SynBalanceService synBalanceService;
 
 	// 服务费授权描述
 	private static final String paymentAuthDesc = "部分交易过程中，会收取相应费用，请进行授权。\n例如：提现手续费，债转服务费等。";
@@ -132,8 +138,11 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		String accountId = null;
 		if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
 			accountId = account.getAccount();
-			this.synBalance(accountId, systemConfig.getBankInstcode(), "http://CS-USER",
-					systemConfig.getAopAccesskey());
+			UserVO user = synBalanceService.getUsersById(userId);
+			SynBalanceRequestBean bean = new SynBalanceRequestBean();
+			bean.setInstCode(user.getInstCode());
+			bean.setAccountId(accountId);
+            SynBalanceResultBean resultBean = synBalanceService.synBalance(bean,ip);
 		}
 		if (channel.equals(BankCallConstant.CHANNEL_WEI)) {
 			String sign = SecretUtil.createToken(userId, loginUserName, accountId);
@@ -1095,9 +1104,11 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			BankOpenAccountVO account = this.getBankOpenAccount(userId);
 			String accountId = null;
 			if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
-				accountId = account.getAccount();
-				this.synBalance(accountId, systemConfig.getBankInstcode(), "http://CS-USER",
-						systemConfig.getAopAccesskey());
+				UserVO user = synBalanceService.getUsersById(userId);
+				SynBalanceRequestBean bean = new SynBalanceRequestBean();
+				bean.setInstCode(user.getInstCode());
+				bean.setAccountId(accountId);
+                SynBalanceResultBean resultBean = synBalanceService.synBalance(bean,ipAddr);
 			}
 			String sign = SecretUtil.createToken(userId, usernameString, accountId);
 			r.put("sign", sign);

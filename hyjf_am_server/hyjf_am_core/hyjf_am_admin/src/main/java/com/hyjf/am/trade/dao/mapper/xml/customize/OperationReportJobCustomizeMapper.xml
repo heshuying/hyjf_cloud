@@ -62,8 +62,8 @@
 		ht_borrow_tender br
 		INNER JOIN ht_borrow b ON b.borrow_nid = br.borrow_nid
 		WHERE
-		b.recover_last_time <![CDATA[ <= ]]> UNIX_TIMESTAMP(#{1}) -- 放款时间
-		AND b.recover_last_time >= UNIX_TIMESTAMP(#{0})
+		b.recover_last_time <![CDATA[ <= ]]> UNIX_TIMESTAMP(#{endDate}) -- 放款时间
+		AND b.recover_last_time >= UNIX_TIMESTAMP(#{beginDate})
 		AND br.accede_order_id IS NULL -- 刨除汇计划
 		UNION ALL
 		-- 汇计划
@@ -72,8 +72,8 @@
 		FROM
 		ht_hjh_accede a
 		WHERE
-		a.create_time <![CDATA[ <= ]]> #{1} -- 加入时间
-		AND a.create_time >= #{0}
+		a.create_time <![CDATA[ <= ]]> #{endDate} -- 加入时间
+		AND a.create_time >= #{beginDate}
 		UNION ALL
 		-- 债转
 		SELECT
@@ -81,8 +81,8 @@
 		FROM
 		ht_credit_tender ct
 		WHERE
-		ct.create_time <![CDATA[ <= ]]> #{1} -- 承接时间
-		AND ct.create_time >= #{0}
+		ct.create_time <![CDATA[ <= ]]> #{endDate} -- 承接时间
+		AND ct.create_time >= #{beginDate}
 		) t
 	</select>
 	
@@ -247,7 +247,7 @@
 
 <!-- 	借贷笔数 -->
 	<select  id="getLoanNum"  parameterType="java.util.Date" resultType="int">
-		select count(*) from ht_borrow where create_time &lt;= #{0}
+		select count(*) from ht_borrow where create_time &lt;= #{date}
 	</select>
 <!-- 	人均投资金额 -->
 	<select id="getPerInvestTotal" resultType="java.math.BigDecimal">
@@ -256,8 +256,8 @@
 	
 	<select id="getInvestLastDate" parameterType="java.util.Date" resultType="java.lang.Double"  >
 		select sum(count) from(
-		select sum(already_invest) as count from ht_hjh_accede where  create_time &lt;= #{0} union all
-		select sum(accede_account) as count from ht_debt_plan_accede where create_time &lt;= #{0} union all
+		select sum(already_invest) as count from ht_hjh_accede where  create_time &lt;= #{date} union all
+		select sum(accede_account) as count from ht_debt_plan_accede where create_time &lt;= #{date} union all
 		select sum(account) from ht_borrow_tender where create_time &lt;= #{date}) as tmp
 
 	</select>

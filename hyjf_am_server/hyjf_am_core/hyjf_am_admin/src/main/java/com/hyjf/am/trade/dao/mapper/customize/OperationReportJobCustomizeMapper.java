@@ -29,7 +29,7 @@ public interface OperationReportJobCustomizeMapper {
 	 * @param endDate	统计月的最后一天
 	 * @return
 	 */
-	int getTradeCountByMonth(Date beginDate, Date endDate);
+	int getTradeCountByMonth(@Param("beginDate") Date beginDate,@Param("endDate") Date endDate);
 	/**
 	 * 累计交易笔数
 	 * @return
@@ -80,7 +80,7 @@ public interface OperationReportJobCustomizeMapper {
 	/**
 	 * 借贷笔数 
 	 */
-	int getLoanNum(Date date);
+	int getLoanNum(@Param("date") Date date);
 	
 	/**
 	 * 人均投资金额
@@ -90,7 +90,7 @@ public interface OperationReportJobCustomizeMapper {
 	/**
 	 * 获取截至日期的投资金额
 	 */
-	double getInvestLastDate(Date date);
+	double getInvestLastDate(@Param("date") Date date);
 
 	/**
 	 * 累计交易笔数(实时)
