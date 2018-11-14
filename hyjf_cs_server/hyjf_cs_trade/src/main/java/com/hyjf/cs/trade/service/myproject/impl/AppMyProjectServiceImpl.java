@@ -352,26 +352,28 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         jsonObject.put("projectDetail", detailBeansList);
         // 4. 转让信息
         if (orderId != null) {
-            List<BorrowCreditVO> borrowCreditList = amTradeClient.getBorrowCreditListByUserIdAndTenderNid(orderId,userId);//projectService.getBorrowList(orderId,userId);
-            JSONArray jsonArray = new JSONArray();
-            if (!CollectionUtils.isEmpty(borrowCreditList)) {
-                for (BorrowCreditVO borrowCredit : borrowCreditList) {
-                    Integer creditNid = borrowCredit.getCreditNid();
-                    JSONObject js = new JSONObject();
-                    js.put("date", GetDate.date2Str(borrowCredit.getCreateTime(),new SimpleDateFormat("yyyy-MM-dd")));
-                    js.put("transferPrice", CommonUtils.formatAmount(borrowCredit.getCreditCapital()));
-                    js.put("discount", CommonUtils.formatAmount(borrowCredit.getCreditDiscount()));
-                    js.put("remainTime", borrowCredit.getCreditTerm());
-                    js.put("realAmount", CommonUtils.formatAmount(borrowCredit.getCreditPrice()));
-                    js.put("hadTransfer", CommonUtils.formatAmount(borrowCredit.getCreditCapitalAssigned()));
-                    String fee = amTradeClient.getBorrowCreditTenderServiceFee(String.valueOf(creditNid));
-                    if (StringUtils.isBlank(fee)) {
-                        fee = "0";
+            if (isIncrease == null || "".equals(isIncrease)) {
+                List<BorrowCreditVO> borrowCreditList = amTradeClient.getBorrowCreditListByUserIdAndTenderNid(orderId,userId);//projectService.getBorrowList(orderId,userId);
+                JSONArray jsonArray = new JSONArray();
+                if (!CollectionUtils.isEmpty(borrowCreditList)) {
+                    for (BorrowCreditVO borrowCredit : borrowCreditList) {
+                        Integer creditNid = borrowCredit.getCreditNid();
+                        JSONObject js = new JSONObject();
+                        js.put("date", GetDate.date2Str(borrowCredit.getCreateTime(), new SimpleDateFormat("yyyy-MM-dd")));
+                        js.put("transferPrice", CommonUtils.formatAmount(borrowCredit.getCreditCapital()));
+                        js.put("discount", CommonUtils.formatAmount(borrowCredit.getCreditDiscount()));
+                        js.put("remainTime", borrowCredit.getCreditTerm());
+                        js.put("realAmount", CommonUtils.formatAmount(borrowCredit.getCreditPrice()));
+                        js.put("hadTransfer", CommonUtils.formatAmount(borrowCredit.getCreditCapitalAssigned()));
+                        String fee = amTradeClient.getBorrowCreditTenderServiceFee(String.valueOf(creditNid));
+                        if (StringUtils.isBlank(fee)) {
+                            fee = "0";
+                        }
+                        js.put("serviceCharge", CommonUtils.formatAmount(fee));
+                        jsonArray.add(js);
                     }
-                    js.put("serviceCharge", CommonUtils.formatAmount(fee));
-                    jsonArray.add(js);
+                    jsonObject.put("transferInfo", jsonArray);
                 }
-                jsonObject.put("transferInfo", jsonArray);
             }else{
                 jsonObject.put("transferInfo", null);
             }

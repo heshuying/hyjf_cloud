@@ -8,9 +8,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -34,11 +34,10 @@ public class UpdateVersionController {
      */
     @ApiOperation("版本更新")
     @GetMapping(value = "/hjh-update-android.jsp")
-    public ModelAndView hjhUpdateAndroid(HttpServletRequest request) {
-        ModelAndView modelAndView = new ModelAndView("/update/updateVersion");
+    public String hjhUpdateAndroid(HttpServletRequest request, Model model) {
         String sign = request.getParameter("sign");
         String url = systemConfig.getAppFrontHost()+"/update/package?sign="+sign;
-        modelAndView.addObject("action",url);
-        return modelAndView;
+        model.addAttribute("action",url);
+        return "/package";
     }
 }
