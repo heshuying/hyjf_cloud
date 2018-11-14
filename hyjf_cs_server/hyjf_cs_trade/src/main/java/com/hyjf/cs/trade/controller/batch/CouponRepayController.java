@@ -32,8 +32,9 @@ public class CouponRepayController extends BaseTradeController {
         try {
             List<String> recoverNidList = couponRepayService.selectNidForCouponOnly();
             if (!CollectionUtils.isEmpty(recoverNidList)) {
-                logger.info("体验金收益期限还款列表: {}", JSONObject.toJSONString(recoverNidList));
-                couponRepayService.couponOnlyRepay(recoverNidList);
+                String nids = String.join(",", recoverNidList);
+                logger.info("体验金收益期限还款列表: {}", nids);
+                couponRepayService.couponOnlyRepay(nids);
             } else {
                 logger.info("体验金收益期限还款没有待还的数据...");
             }
