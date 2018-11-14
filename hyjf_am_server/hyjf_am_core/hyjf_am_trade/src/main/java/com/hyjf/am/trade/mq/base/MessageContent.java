@@ -26,6 +26,6 @@ public class MessageContent implements Serializable {
      public MessageContent(String topic, String keys, byte[] body) {
          this(topic, MQConstant.HYJF_DEFAULT_TAG, keys, body);
      }
- 
+
 
 }

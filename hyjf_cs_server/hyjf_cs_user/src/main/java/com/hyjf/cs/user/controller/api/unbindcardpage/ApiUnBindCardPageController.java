@@ -123,12 +123,12 @@ public class ApiUnBindCardPageController extends BaseUserController {
             UserInfoVO usersInfo =unBindCardService.getUserInfo(userId);
             // 拼装参数 调用江西银行
             // 同步调用路径
-            String retUrl = systemConfig.getServerHost()+ "/hyjf-api/server/user/unbindCardPage/return"+".do?acqRes="
+            String retUrl = systemConfig.getServerHost()+ "/hyjf-api/server/user/unbindCardPage/return"+"?acqRes="
                     + unbindCardPageRequestBean.getAcqRes() + StringPool.AMPERSAND + "callback="
                     + unbindCardPageRequestBean.getRetUrl().replace("#", "*-*-*");
 
             // 异步调用路
-            String bgRetUrl =systemConfig.getServerHost()+"/hyjf-api/server/user/unbindCardPage/notifyReturn"+ ".do?acqRes="
+            String bgRetUrl =systemConfig.getServerHost()+"/hyjf-api/server/user/unbindCardPage/notifyReturn"+ "?acqRes="
                     + unbindCardPageRequestBean.getAcqRes() + "&callback=" + unbindCardPageRequestBean.getNotifyUrl().replace("#", "*-*-*");
 
             // 拼装参数 调用江西银行
@@ -230,63 +230,34 @@ public class ApiUnBindCardPageController extends BaseUserController {
      * @param request
      * @return
      */
-    @PostMapping("/return")
+    @RequestMapping("/return")
     @ApiOperation(value = "页面解卡同步回调", notes = "页面解卡同步回调")
     public ModelAndView unbindCardReturn(HttpServletRequest request) {
         logger.info("==========解卡同步回调开始==============");
-        ModelAndView modelAndView = new ModelAndView("/callback/callback_trusteepay");
-        UnbindCardPageResultBean unbindCardPageResultBean = new UnbindCardPageResultBean();
-        unbindCardPageResultBean.setCallBackAction(request.getParameter("callback").replace("*-*-*","#"));
         String isSuccess = request.getParameter("isSuccess");
         Map<String, String> resultMap = new HashMap<>();
-       /* bean.convert();
-        // 银行返回响应代码
-        String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
-        logger.info("解卡同步返回值,用户ID:[" + bean.getLogUserId() + "],retCode:[" + retCode + "]");*/
         // 解卡后处理
-        try {
-                BaseResultBean resultBean = new BaseResultBean();
-//            if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)||"1".equals(isSuccess)) {
-            if ("1".equals(isSuccess)) {
-                // 成功
-                logger.info("================交易完成后,回调结束================");
-                resultMap.put("status", ErrorCodeConstant.SUCCESS);
-                resultMap.put("statusDesc", "解绑银行卡成功");
-                resultMap.put("acqRes", request.getParameter("acqRes"));
-                return callbackErrorView(resultMap);
-
-               /* modelAndView.addObject("statusDesc", "解绑银行卡成功！");
-                resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);*/
-            } else {
-                //解卡失败
-/*                modelAndView.addObject("statusDesc", "解绑银行卡失败");
-                resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);*/
-                logger.info("================交易完成后,回调结束(银行解卡失败)================");
-                resultMap.put("status", ErrorCodeConstant.STATUS_CE999999);
-                resultMap.put("statusDesc", "解绑银行卡失败");
-                return callbackErrorView(resultMap);
-            }
-            /*unbindCardPageResultBean.set("chkValue", resultBean.getChkValue());
-            unbindCardPageResultBean.set("status", resultBean.getStatus());
-            unbindCardPageResultBean.set("acqRes",request.getParameter("acqRes"));
-            modelAndView.addObject("callBackForm", unbindCardPageResultBean);
-            return modelAndView;*/
-        } catch (Exception e) {
-            /*BaseResultBean resultBean = new BaseResultBean();
-            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
-            resultBean.setStatusDesc("系统异常,请稍后再试!");*/
-            logger.info("操作异常");
+        String url = request.getParameter("callback").replace("*-*-*", "#");
+        resultMap.put("callBackAction", url);
+        if ("1".equals(isSuccess)) {
+            // 成功
+            logger.info("================交易完成后,回调结束================");
+            resultMap.put("status", ErrorCodeConstant.SUCCESS);
+            resultMap.put("statusDesc", "解绑银行卡成功");
+            resultMap.put("acqRes", request.getParameter("acqRes"));
+            return callbackErrorView(resultMap);
+        } else {
+            //解卡失败
+            logger.info("================交易完成后,回调结束(银行解卡失败)================");
             resultMap.put("status", ErrorCodeConstant.STATUS_CE999999);
-            resultMap.put("statusDesc", "系统异常,请稍后再试!");
-            e.printStackTrace();
+            resultMap.put("statusDesc", "解绑银行卡失败");
+            return callbackErrorView(resultMap);
         }
-        return modelAndView;
     }
 
     /**
      * 解卡异步回调方法
      * @param request
-     * @param response
      * @param bean
      * @return
      */

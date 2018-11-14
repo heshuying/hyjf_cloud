@@ -27,7 +27,7 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
      * @return
      */
     @Override
-    public User findUserByUserId(int userId) {
+    public User fUserByUserId(int userId) {
         UserExample usersExample = new UserExample();
         usersExample.createCriteria().andUserIdEqualTo(userId);
         List<User> usersList = userMapper.selectByExample(usersExample);

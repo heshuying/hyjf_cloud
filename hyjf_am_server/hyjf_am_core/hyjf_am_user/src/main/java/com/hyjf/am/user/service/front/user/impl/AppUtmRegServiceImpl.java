@@ -77,7 +77,7 @@ public class AppUtmRegServiceImpl implements AppUtmRegService {
 
 			// 结束时间查询
 			if (StringUtils.isNotBlank(timeEndSrch)) {
-				criteria.andRegisterTimeLessThanOrEqualTo(GetDate.stringToDate(timeStartSrch));
+				criteria.andRegisterTimeLessThanOrEqualTo(GetDate.stringToDate(timeEndSrch));
 			}
 		}
 
@@ -90,13 +90,13 @@ public class AppUtmRegServiceImpl implements AppUtmRegService {
 
 			// 结束时间查询
 			if (StringUtils.isNotBlank(timeEndSrch)) {
-				criteria.andOpenAccountTimeLessThanOrEqualTo(GetDate.stringToDate(timeStartSrch));
+				criteria.andOpenAccountTimeLessThanOrEqualTo(GetDate.stringToDate(timeEndSrch));
 			}
 
-			if (StringUtils.isNotBlank(sourceId)) {
-				criteria.andSourceIdEqualTo(Integer.valueOf(sourceId));
-			}
+		}
 
+		if (StringUtils.isNotBlank(sourceId)) {
+			criteria.andSourceIdEqualTo(Integer.valueOf(sourceId));
 		}
 		return appUtmRegMapper.selectByExample(example);
 

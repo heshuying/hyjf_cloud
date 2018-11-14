@@ -164,6 +164,10 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			// 解卡(页面调用)合规
 			UnbindCardPageRequestBean bean = (UnbindCardPageRequestBean) paramBean;
 			sign = bean.getInstCode()+ bean.getAccountId() + bean.getMobile() + bean.getCardNo()+bean.getTimestamp();
+		}else if (BaseDefine.METHOD_SERVER_SYNBALANCE.equals(methodName)) {
+			// 解卡(页面调用)合规
+			SynBalanceRequestBean bean = (SynBalanceRequestBean) paramBean;
+			sign = bean.getInstCode() + bean.getAccountId() + bean.getTimestamp();
 		}
 
 		return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
@@ -617,18 +621,6 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	@Autowired
 	private RestTemplate restTemplate;
 
-
-	@Override
-	public SynBalanceRequestBean synBalance(String account, String instcode, String aopAccesskey) {
-		SynBalanceRequestBean balanceRequestBean=new SynBalanceRequestBean();
-		balanceRequestBean.setAccountId(account);
-		balanceRequestBean.setInstCode(instcode);
-		Long timestamp=System.currentTimeMillis()/ 1000;
-		balanceRequestBean.setTimestamp(timestamp);
-		String sign = StringUtils.lowerCase(MD5.toMD5Code(aopAccesskey + account + instcode + timestamp + aopAccesskey));
-		balanceRequestBean.setChkValue(sign);
-		return balanceRequestBean;
-	}
 
 	@Override
 	public AccountVO getAccountByUserId(Integer userId) {

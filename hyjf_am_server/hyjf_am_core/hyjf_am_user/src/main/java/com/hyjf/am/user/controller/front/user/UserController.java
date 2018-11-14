@@ -126,12 +126,12 @@ public class UserController extends BaseController {
      * @return
      */
     @RequestMapping("/findById/{userId}")
-    public UserResponse findUserByUserId(@PathVariable String userId) {
-        logger.debug("findUserByUserId run...userId is :{}", userId);
+    public UserResponse findUserByUserId(@PathVariable Integer userId) {
+        logger.info("findUserByUserId run...userId is :{}", userId);
         UserResponse response = new UserResponse();
-        if(StringUtils.isNotBlank(userId) && !"null".equals(userId) && !"NULL".equals(userId)){
-            Integer userIdInt = Integer.valueOf(userId);
-            User user = userService.findUserByUserId(userIdInt);
+        if(userId!=null){
+            User user = userService.fUserByUserId(userId);
+            logger.info("findUserByUserId run...user is :{}", user);
             if (user != null) {
                 UserVO userVO = new UserVO();
                 BeanUtils.copyProperties(user, userVO);
@@ -318,7 +318,7 @@ public class UserController extends BaseController {
             ret.put("statusDesc", "请求参数非法");
             return ret;
         }
-        User user = userService.findUserByUserId(userId);
+        User user = userService.fUserByUserId(userId);
 
         // 验证用的password
         oldPW = MD5Utils.MD5(MD5Utils.MD5(oldPW) + user.getSalt());

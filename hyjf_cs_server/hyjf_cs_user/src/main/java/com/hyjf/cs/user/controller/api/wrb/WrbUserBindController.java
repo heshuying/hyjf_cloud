@@ -145,11 +145,13 @@ public class WrbUserBindController extends BaseUserController {
 				String readonly = "";
 				if (!StringUtils.isEmpty(idCard)) {
 					UserVO userVO = loginService.getUserByIdCard(idCard);
-					String hyjfMobile = userVO.getMobile();
-					if(hyjfMobile != null){
-						mobile = hyjfMobile;
-						readonly = "readonly";
-					}
+                    if (userVO != null) {
+                        String hyjfMobile = userVO.getMobile();
+                        if (hyjfMobile != null) {
+                            mobile = hyjfMobile;
+                            readonly = "readonly";
+                        }
+                    }
 				}else {
 					if (!StringUtils.isEmpty(phone)) {
 						readonly = "readonly";
@@ -188,9 +190,15 @@ public class WrbUserBindController extends BaseUserController {
                            @ModelAttribute("apiUserPostBean") ApiUserPostBean apiUserPostBean, @ModelAttribute("loginBean") ApiLoginBean loginBean) throws Exception{
         // 返回对象
         JSONObject jsonObj = new JSONObject();
-
         // 第三方用户ID
         String bindUniqueId = apiUserPostBean.getWrb_user_id();
+        if (StringUtils.isBlank(bindUniqueId)) {
+            jsonObj = new JSONObject();
+            jsonObj.put("status", BaseResultBeanFrontEnd.FAIL);
+            jsonObj.put("statusCode", BaseResultBeanFrontEnd.FAIL);
+            jsonObj.put("statusDesc", "授权失败，第三方用户ID为空");
+            return jsonObj;
+        }
         logger.info("bindUniqueId is :{}", bindUniqueId);
         //用户Id
         Integer userId = null;
