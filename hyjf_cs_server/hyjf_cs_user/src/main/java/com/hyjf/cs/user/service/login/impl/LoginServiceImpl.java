@@ -138,7 +138,10 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		String accountId = null;
 		if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
 			accountId = account.getAccount();
-            SynBalanceRequestBean bean = this.synBalance(accountId, systemConfig.getBankInstcode(), systemConfig.getAopAccesskey());
+			UserVO user = synBalanceService.getUsersById(userId);
+			SynBalanceRequestBean bean = new SynBalanceRequestBean();
+			bean.setInstCode(user.getInstCode());
+			bean.setAccountId(accountId);
             SynBalanceResultBean resultBean = synBalanceService.synBalance(bean,ip);
 		}
 		if (channel.equals(BankCallConstant.CHANNEL_WEI)) {
@@ -1101,8 +1104,10 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			BankOpenAccountVO account = this.getBankOpenAccount(userId);
 			String accountId = null;
 			if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
-				accountId = account.getAccount();
-                SynBalanceRequestBean bean = this.synBalance(accountId, systemConfig.getBankInstcode(), systemConfig.getAopAccesskey());
+				UserVO user = synBalanceService.getUsersById(userId);
+				SynBalanceRequestBean bean = new SynBalanceRequestBean();
+				bean.setInstCode(user.getInstCode());
+				bean.setAccountId(accountId);
                 SynBalanceResultBean resultBean = synBalanceService.synBalance(bean,ipAddr);
 			}
 			String sign = SecretUtil.createToken(userId, usernameString, accountId);
