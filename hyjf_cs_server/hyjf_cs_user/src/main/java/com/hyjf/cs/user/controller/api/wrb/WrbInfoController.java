@@ -516,7 +516,6 @@ public class WrbInfoController {
         String investRecordId = request.getInvest_record_id();
         // 项目id
         String borrowNid = request.getBid_id();
-        response.setInvest_record_id(investRecordId);
         // 必填参数校验
         if (isBlank(userId) || isBlank(investRecordId) || isBlank(borrowNid)) {
             logger.error("缺少必填参数");
@@ -525,6 +524,7 @@ public class WrbInfoController {
             return response;
         }
         response = wrbInvestServcie.getRecoverPlan(userId, investRecordId, borrowNid);
+        response.setInvest_record_id(investRecordId);
         return response;
     }
 
