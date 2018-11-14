@@ -141,7 +141,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         BankOpenAccountVO account = amUserClient.selectBankAccountById(userId);
         logger.info("散标投资校验开始userId:{},planNid:{},ip:{},平台{},优惠券:{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform(), request.getCouponGrantId());
-        WebResult<Map<String, Object>> resultEval = borrowTenderCheck(request,borrow,borrowInfoVO,cuc,account);
+        Map<String, Object> resultEval = borrowTenderCheck(request,borrow,borrowInfoVO,cuc,account);
         logger.info("所有参数都已检查通过!");
         // 如果没有本金投资且有优惠券投资
         BigDecimal decimalAccount = StringUtils.isNotEmpty(request.getAccount()) ? new BigDecimal(request.getAccount()) : BigDecimal.ZERO;
@@ -157,12 +157,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             map.put("logOrdId","");
             map.put("couponGrantId",request.getCouponGrantId());
             map.put("borrowNid",request.getBorrowNid());
-            map.putAll(resultEval.getData());
+            map.putAll(resultEval);
             result.setData(map);
             return result;
         }else{
             logger.info("开始本金+优惠券投资");
-            result = tender(request, borrow, account, cuc,resultEval.getData());
+            result = tender(request, borrow, account, cuc,resultEval);
         }
         // 开始真正的投资逻辑
         return result;
@@ -1343,11 +1343,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 计划不需要跳转江西银行, 不能使用前端投资的统一页面，所以针对计划单独跳转前端处理页面
         if (CommonConstant.TENDER_TYPE_HJH.equalsIgnoreCase(borrowType)){
             // 计划的
-            WebResult<Map<String, Object>> result = hjhTenderService.checkPlan(tender);
+            Map<String, Object> result = hjhTenderService.checkPlan(tender);
             if("getTenderUrl".equals(flag)){
-                if(result.getData()!=null){
-                    String riskTested = (String) result.getData().get("riskTested");
-                    String message = (String) result.getData().get("message");
+                if(result!=null){
+                    String riskTested = (String) result.get("riskTested");
+                    String message = (String) result.get("message");
                     throw new CheckException(riskTested,message);
                 }
             }
@@ -1360,11 +1360,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             String creditNid = (StringUtils.isNotBlank(tender.getBorrowNid()) && tender.getBorrowNid().length() >3) ? tender.getBorrowNid().substring(3) : "";
             tender.setCreditNid(creditNid);
             tender.setAssignCapital(tender.getAccount());
-            WebResult<Map<String, Object>> result = borrowTenderService.borrowCreditCheck(tender);
+            Map<String, Object> result = borrowTenderService.borrowCreditCheck(tender);
             if("getTenderUrl".equals(flag)){
-                if(result.getData()!=null){
-                    String riskTested = (String) result.getData().get("riskTested");
-                    String message = (String) result.getData().get("message");
+                if(result!=null){
+                    String riskTested = (String) result.get("riskTested");
+                    String message = (String) result.get("message");
                     throw new CheckException(riskTested,message);
                 }
             }
@@ -1376,11 +1376,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             return url;
         }
         // 散标的
-        WebResult<Map<String, Object>> result = appTenderCheck(tender);
+        Map<String, Object> result = appTenderCheck(tender);
         if("getTenderUrl".equals(flag)) {
-            if (result.getData() != null) {
-                String riskTested = (String) result.getData().get("riskTested");
-                String message = (String) result.getData().get("message");
+            if (result!= null) {
+                String riskTested = (String) result.get("riskTested");
+                String message = (String) result.get("message");
                 throw new CheckException(riskTested, message);
             }
         }
@@ -1403,7 +1403,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * 散标投资校验
      * @param request
      */
-    private WebResult<Map<String, Object>> appTenderCheck(TenderRequest request) {
+    private Map<String, Object> appTenderCheck(TenderRequest request) {
         UserVO loginUser = amUserClient.findUserById(request.getUserId());
         Integer userId = loginUser.getUserId();
         logger.info("开始检查散标投资参数,userId:{}", userId);
@@ -1428,7 +1428,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         BankOpenAccountVO account = amUserClient.selectBankAccountById(userId);
         logger.info("散标投资校验开始userId:{},planNid:{},ip:{},平台{},优惠券:{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform(), request.getCouponGrantId());
-        WebResult<Map<String, Object>> result = borrowTenderCheck(request,borrow,borrowInfoVO,cuc,account);
+        Map<String, Object> result = borrowTenderCheck(request,borrow,borrowInfoVO,cuc,account);
         logger.info("所有参数都已检查通过!");
         return result;
     }
@@ -1594,7 +1594,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @return
      */
     @Override
-    public WebResult<Map<String, Object>> borrowTenderCheck(TenderRequest request,BorrowAndInfoVO borrow, BorrowInfoVO borrowInfoVO ,CouponUserVO cuc ,BankOpenAccountVO account) {
+    public Map<String, Object> borrowTenderCheck(TenderRequest request,BorrowAndInfoVO borrow, BorrowInfoVO borrowInfoVO ,CouponUserVO cuc ,BankOpenAccountVO account) {
         WebResult<Map<String, Object>> resultMap = new  WebResult<Map<String, Object>>();
         // 查询散标是否存在
         Integer userId = request.getUserId();
@@ -1646,9 +1646,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         this.checkTenderMoney(request, borrow, cuc, tenderAccount );
         //校验用户测评
         Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(request);
-        resultMap.setData(resultEval);
         logger.info("所有参数都已检查通过!");
-        return resultMap;
+        return resultEval;
     }
 
     /**

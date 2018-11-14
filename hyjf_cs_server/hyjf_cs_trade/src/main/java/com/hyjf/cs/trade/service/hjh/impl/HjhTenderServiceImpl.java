@@ -541,8 +541,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      * @param request
      */
     @Override
-    public WebResult<Map<String, Object>>  checkPlan(TenderRequest request) {
-        WebResult<Map<String, Object>> resultMap = new WebResult<Map<String, Object>>();
+    public Map<String, Object>  checkPlan(TenderRequest request) {
         UserVO loginUser = amUserClient.findUserById(request.getUserId());
         Integer userId = loginUser.getUserId();
         request.setUser(loginUser);
@@ -590,9 +589,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         //从user中获取客户类型，ht_user_evalation_result（用户测评总结表）
         //校验用户测评
         Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(request);
-        resultMap.setData(resultEval);
         logger.info("加入计划投资校验通过userId:{},ip:{},平台{},优惠券为:{}", userId, request.getIp(), request.getPlatform(), request.getCouponGrantId());
-        return resultMap;
+        return resultEval;
     }
 
     /**
