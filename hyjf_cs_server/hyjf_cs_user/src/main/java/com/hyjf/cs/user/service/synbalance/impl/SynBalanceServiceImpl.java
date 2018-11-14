@@ -17,10 +17,7 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.user.bean.BankResultBean;
-import com.hyjf.cs.user.bean.BaseResultBean;
-import com.hyjf.cs.user.bean.SynBalanceRequestBean;
-import com.hyjf.cs.user.bean.SynBalanceResultBean;
+import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
@@ -191,20 +188,6 @@ public class SynBalanceServiceImpl extends BaseUserServiceImpl implements SynBal
     @Override
     public SynBalanceResultBean synBalance(SynBalanceRequestBean synBalanceRequestBean, String ip) {
         SynBalanceResultBean resultBean = new SynBalanceResultBean();
-        //验证请求参数
-        if (Validator.isNull(synBalanceRequestBean.getAccountId())||Validator.isNull(synBalanceRequestBean.getInstCode())) {
-            logger.info("-------------------请求参数非法--------------------");
-            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000001);
-            resultBean.setStatusDesc("请求参数非法");
-            return resultBean;
-        }
-        //验签
-        if(!SignUtil.verifyRequestSign(synBalanceRequestBean, "/synbalance")){
-            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000002);
-            logger.info("-------------------验签失败！--------------------");
-            resultBean.setStatusDesc("验签失败！");
-            return resultBean;
-        }
         //根据账号找出用户ID
         BankOpenAccountVO bankOpenAccount = getBankOpenAccount(synBalanceRequestBean.getAccountId());
         if(bankOpenAccount == null){

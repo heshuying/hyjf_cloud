@@ -291,7 +291,7 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
      * @date 2018/8/18 16:07
      */
     @Override
-    public WebResult getMyPlanInfoDetail(AssetManagePlanRequest request, Integer userId) {
+    public WebResult getMyHjhPlanInfoDetail(AssetManagePlanRequest request, Integer userId) {
         WebResult result = new WebResult();
         Map<String,Object> info = new HashMap<>();
         if (null == userId){
