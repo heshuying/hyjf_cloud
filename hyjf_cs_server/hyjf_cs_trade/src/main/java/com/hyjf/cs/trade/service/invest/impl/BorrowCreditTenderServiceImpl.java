@@ -1378,7 +1378,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
 
         }
         // 风险测评校验
-        this.checkEvaluation(user);
+        //this.checkEvaluation(user);
         if(borrowCredit.getCreditUserId().intValue()==user.getUserId().intValue()){
             // 不可以承接自己出让的债权
             throw new CheckException(MsgEnum.ERROR_CREDIT_CANT_BBY_YOURSELF);

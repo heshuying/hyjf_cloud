@@ -124,11 +124,11 @@ public class SystemConfig {
     //是否是测试环境 true为测试环境  false为正式环境
     @Value("${hyjf.env.test}")
     private boolean hyjfEnvTest;
-    
+
     /*需要在cs-trade的工程配置里面添加     #ftp图片存放路径    hyjf.ftp.basepath.img=hyjfdata/upfiles/contract/img/    */
     @Value("${hyjf.ftp.basepath.img}")
     private String basePathImage;
-    
+
     /*需要在cs-trade的工程配置里面添加     #ftp图片映射路径    hyjf.ftp.url=http://testftp.hyjf.com  */
     @Value("${hyjf.ftp.url}")
     private String basePathurl;
@@ -431,8 +431,7 @@ public class SystemConfig {
     }
 
     public String getHyjfPayFddNotifyUrl() {
-        return "219.147.28.242:9092/fddcal";
-        //return hyjfPayFddNotifyUrl;
+        return hyjfPayFddNotifyUrl;
     }
 
     public void setHyjfPayFddNotifyUrl(String hyjfPayFddNotifyUrl) {
@@ -638,21 +637,21 @@ public class SystemConfig {
         WeiFrontHost = weiFrontHost;
     }
 
-	public String getBasePathImage() {
-		return basePathImage;
-	}
+    public String getBasePathImage() {
+        return basePathImage;
+    }
 
-	public void setBasePathImage(String basePathImage) {
-		this.basePathImage = basePathImage;
-	}
+    public void setBasePathImage(String basePathImage) {
+        this.basePathImage = basePathImage;
+    }
 
-	public String getBasePathurl() {
-		return basePathurl;
-	}
+    public String getBasePathurl() {
+        return basePathurl;
+    }
 
-	public void setBasePathurl(String basePathurl) {
-		this.basePathurl = basePathurl;
-	}
+    public void setBasePathurl(String basePathurl) {
+        this.basePathurl = basePathurl;
+    }
 
     public String getRegisterActivityId() {
         return registerActivityId;
