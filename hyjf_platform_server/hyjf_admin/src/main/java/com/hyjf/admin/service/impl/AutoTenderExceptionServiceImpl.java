@@ -394,6 +394,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                             + resultVO.toLog());
                     // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
                     bean.setOrderId(hjhPlanBorrowTmp.getOrderId());
+                    logger.info("===========updateCreditForAutoTender============");
                     boolean isOK = updateCreditForAutoTender(credit, hjhAccede, hjhPlan, bean, borrowUserAccountId, sellerUsrcustid, resultVO);
                     if(isOK){
                         // 更改加入明细状态和投资临时表状态
