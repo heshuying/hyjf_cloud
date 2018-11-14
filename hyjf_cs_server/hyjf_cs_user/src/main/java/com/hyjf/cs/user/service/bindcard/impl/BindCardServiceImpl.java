@@ -324,8 +324,8 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		bindCardBean.setUserIP(bean.getUserIP());
 
 		// 同步调用路径
-		String retUrl = systemConfig.getAppFrontHost() + "/user/bankCard/bind/result/failed?logOrdId=" + orderId + "&sign=" + sign + "&token=" + token + "&platform" + platform;
-		String successUrl = systemConfig.getAppFrontHost() + "/user/bankCard/bind/result/success?sign=" + sign + "&token=" + token + "&platform" + platform;
+		String retUrl = systemConfig.getAppFrontHost() + "/user/bankCard/bind/result/failed?logOrdId=" + orderId + "&sign=" + sign + "&token=1" + "&platform=" + platform;
+		String successUrl = systemConfig.getAppFrontHost() + "/user/bankCard/bind/result/success?sign=" + sign + "&token=1" + "&platform=" + platform;
 		// 异步调用路
 		String bgRetUrl = "http://CS-USER/hyjf-app/bank/user/bindCardPage/notifyReturn?phone=" + userVO.getMobile();
 		// 拼装参数 调用江西银行
