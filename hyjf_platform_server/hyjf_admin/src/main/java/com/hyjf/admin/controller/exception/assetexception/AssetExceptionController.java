@@ -318,7 +318,7 @@ public class AssetExceptionController extends BaseController {
 	        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
 	        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-	        List<AssetExceptionCustomizeVO> assetExceptionCustomizeVOList = assetExceptionService.selectAssetExceptionList(request);
+	        List<AssetExceptionCustomizeVO> assetExceptionCustomizeVOList = assetExceptionService.exportAssetExceptionList(request);
 	        
 	        Integer totalCount = assetExceptionCustomizeVOList.size();
 
