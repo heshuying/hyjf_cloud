@@ -9,6 +9,8 @@ import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.SynBalanceVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.cs.user.bean.SynBalanceRequestBean;
+import com.hyjf.cs.user.bean.SynBalanceResultBean;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
@@ -74,4 +76,12 @@ public interface SynBalanceService extends BaseUserService {
      * @Author : huanghui
      */
     List<UnderLineRechargeVO> selectUnderLineRechargeList(UnderLineRechargeRequest request);
+
+    /**
+     * 同步余额
+     * @param synBalanceRequestBean
+     * @param ip
+     * @return
+     */
+    SynBalanceResultBean synBalance(SynBalanceRequestBean synBalanceRequestBean, String ip);
 }
