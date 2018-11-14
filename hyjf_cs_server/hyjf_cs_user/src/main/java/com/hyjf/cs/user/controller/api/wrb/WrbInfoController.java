@@ -22,6 +22,7 @@ import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.bean.WrbNoticeinfoResponse.NoticeinfoDetail;
 import com.hyjf.cs.user.service.wrb.WrbInfoServcie;
 import io.swagger.annotations.Api;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -185,7 +186,7 @@ public class WrbInfoController {
             return response;
         }
         try {
-            if (startTime == null) {
+            if (StringUtils.isBlank(startTime)) {
                 BorrowAndInfoVO borrow = wrbInvestServcie.selectBorrowByBorrowNid(borrowNid);
                 if (borrow == null) {
                     response.setRetcode(WrbResponse.FAIL_RETCODE);
