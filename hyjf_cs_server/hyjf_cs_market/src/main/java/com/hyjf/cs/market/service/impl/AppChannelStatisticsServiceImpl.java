@@ -3,16 +3,6 @@
  */
 package com.hyjf.cs.market.service.impl;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.vo.admin.UtmVO;
@@ -23,16 +13,25 @@ import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.cs.market.client.AmAdminClient;
+import com.hyjf.cs.market.client.AmTradeClient;
 import com.hyjf.cs.market.client.AmUserClient;
 import com.hyjf.cs.market.client.CsMessageClient;
 import com.hyjf.cs.market.mq.base.MessageContent;
 import com.hyjf.cs.market.mq.producer.AppChannelStatisticsProducer;
 import com.hyjf.cs.market.service.AppChannelStatisticsService;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 /**
- * @author fuqiang
+ * @author 尹辉
  * @version AppChannelStatisticsServiceImpl, v0.1 2018/7/16 14:18
  */
 @Service
@@ -41,7 +40,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 	private AmUserClient amUserClient;
 
 	@Autowired
-	private AmAdminClient amAdminClient;
+	private AmTradeClient amTradeClient;
 
 	@Autowired
 	private CsMessageClient csMessageClient;
@@ -187,7 +186,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 			return 0;
 		}
 
-		List<Integer> listUserId = amAdminClient.getUsersInfoList();
+		List<Integer> listUserId = amUserClient.getUsersInfoList();
 		if(listUserId == null || listUserId.size() == 0){
 			return 0;
 		}
@@ -220,7 +219,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 			setUserId.add(appVo.getUserId());
 		}
 
-		List<WrbTenderNotifyCustomizeVO> tenderNotifyCustomizeVOList = amAdminClient.getAccountRechargeByAddtime(request);
+		List<WrbTenderNotifyCustomizeVO> tenderNotifyCustomizeVOList = amTradeClient.getAccountRechargeByAddtime(request);
 
 		BigDecimal money = BigDecimal.ZERO;
 		for(WrbTenderNotifyCustomizeVO vo : tenderNotifyCustomizeVOList){
@@ -246,7 +245,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 			return BigDecimal.ZERO;
 		}
 
-		List<Integer> integerList = amAdminClient.getUsersInfoList();
+		List<Integer> integerList = amUserClient.getUsersInfoList();
 		Set<Integer> setUnUserId = new HashSet<>();
 		Set<Integer> setUserId = new HashSet<>();
 		for(AppUtmRegVO appVo : list){
@@ -261,7 +260,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 			}
 		}
 
-		List<WrbTenderNotifyCustomizeVO> tenderNotifyCustomizeVOList = amAdminClient.getAccountRechargeByAddtime(request);
+		List<WrbTenderNotifyCustomizeVO> tenderNotifyCustomizeVOList = amTradeClient.getAccountRechargeByAddtime(request);
 
 		BigDecimal money = BigDecimal.ZERO;
 		for(WrbTenderNotifyCustomizeVO vo : tenderNotifyCustomizeVOList){
@@ -293,7 +292,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 			setUserId.add(appVo.getUserId());
 		}
 
-		List<WrbTenderNotifyCustomizeVO> tenderNotifyCustomizeVOList = amAdminClient.getBorrowTenderByAddtime(request);
+		List<WrbTenderNotifyCustomizeVO> tenderNotifyCustomizeVOList = amTradeClient.getBorrowTenderByAddtime(request);
 
 		BigDecimal money = BigDecimal.ZERO;
 		for(WrbTenderNotifyCustomizeVO vo : tenderNotifyCustomizeVOList){
@@ -325,7 +324,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 			setUserId.add(appVo.getUserId());
 		}
 
-		List<WrbTenderNotifyCustomizeVO> tenderNotifyCustomizeVOList = amAdminClient.getBorrowTenderByAddtime(request);
+		List<WrbTenderNotifyCustomizeVO> tenderNotifyCustomizeVOList = amTradeClient.getBorrowTenderByAddtime(request);
 
 		BigDecimal money = BigDecimal.ZERO;
 		for(WrbTenderNotifyCustomizeVO vo : tenderNotifyCustomizeVOList){
@@ -356,7 +355,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 			setUserId.add(appVo.getUserId());
 		}
 
-		List<WrbTenderNotifyCustomizeVO> tenderNotifyCustomizeVOList = amAdminClient.getCreditTenderByAddtime(request);
+		List<WrbTenderNotifyCustomizeVO> tenderNotifyCustomizeVOList = amTradeClient.getCreditTenderByAddtime(request);
 
 		BigDecimal money = BigDecimal.ZERO;
 		for(WrbTenderNotifyCustomizeVO vo : tenderNotifyCustomizeVOList){
@@ -397,7 +396,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 			return 0;
 		}
 
-		List<Integer> listUserId = amAdminClient.getUsersList(source);
+		List<Integer> listUserId = amUserClient.getUsersList(source);
 		if(listUserId == null || listUserId.size() == 0){
 			return 0;
 		}
@@ -427,7 +426,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 
 		int i = 0;
 		//1、
-		List<WrbTenderNotifyCustomizeVO> list1 = amAdminClient.getBorrowTenderByClient(request);
+		List<WrbTenderNotifyCustomizeVO> list1 = amTradeClient.getBorrowTenderByClient(request);
 		if(list1.size() > 0){
 
 			for(AppUtmRegVO vo : list){
@@ -443,7 +442,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 		}
 
 		//2、
-		List<WrbTenderNotifyCustomizeVO> list2 = amAdminClient.getProductListByClient(request);
+		List<WrbTenderNotifyCustomizeVO> list2 = amTradeClient.getProductListByClient(request);
 		if(list2.size() > 0){
 
 			for(AppUtmRegVO vo : list){
@@ -459,7 +458,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 		}
 
 		//3、
-		List<WrbTenderNotifyCustomizeVO> list3 = amAdminClient.getDebtPlanAccedeByClient(request);
+		List<WrbTenderNotifyCustomizeVO> list3 = amTradeClient.getDebtPlanAccedeByClient(request);
 		if(list3.size() > 0){
 
 			for(AppUtmRegVO vo : list){
@@ -475,7 +474,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 		}
 
 		//4、
-		List<WrbTenderNotifyCustomizeVO> list4 = amAdminClient.getCreditTenderByClient(request);
+		List<WrbTenderNotifyCustomizeVO> list4 = amTradeClient.getCreditTenderByClient(request);
 		if(list4.size() > 0){
 
 			for(AppUtmRegVO vo : list){
