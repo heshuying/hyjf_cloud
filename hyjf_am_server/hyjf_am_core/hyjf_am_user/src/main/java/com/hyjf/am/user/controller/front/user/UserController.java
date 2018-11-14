@@ -131,6 +131,7 @@ public class UserController extends BaseController {
         UserResponse response = new UserResponse();
         if(userId!=null){
             User user = userService.findUserByUserId(userId);
+            logger.info("findUserByUserId run...user is :{}", user);
             if (user != null) {
                 UserVO userVO = new UserVO();
                 BeanUtils.copyProperties(user, userVO);
