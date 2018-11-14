@@ -223,7 +223,7 @@ public class WebAssetManageController extends BaseTradeController {
     @ApiOperation(value = "获取我加入的计划详情信息" , notes = "获取我加入的计划详情信息")
     @PostMapping(value = "/getMyPlanInfoDetail",produces = "application/json;charset=utf-8")
     public WebResult<Object> getMyPlanInfoDetail(@RequestHeader(value = "userId" ,required = true) Integer userId , @RequestBody AssetManagePlanRequest request){
-        WebResult result = assetManageService.getMyPlanInfoDetail(request,userId);
+        WebResult result = assetManageService.getMyHjhPlanInfoDetail(request,userId);
         return result;
     }
 

@@ -145,11 +145,13 @@ public class WrbUserBindController extends BaseUserController {
 				String readonly = "";
 				if (!StringUtils.isEmpty(idCard)) {
 					UserVO userVO = loginService.getUserByIdCard(idCard);
-					String hyjfMobile = userVO.getMobile();
-					if(hyjfMobile != null){
-						mobile = hyjfMobile;
-						readonly = "readonly";
-					}
+                    if (userVO != null) {
+                        String hyjfMobile = userVO.getMobile();
+                        if (hyjfMobile != null) {
+                            mobile = hyjfMobile;
+                            readonly = "readonly";
+                        }
+                    }
 				}else {
 					if (!StringUtils.isEmpty(phone)) {
 						readonly = "readonly";

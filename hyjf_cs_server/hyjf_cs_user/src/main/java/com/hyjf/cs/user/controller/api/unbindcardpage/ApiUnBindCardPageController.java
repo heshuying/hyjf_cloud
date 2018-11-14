@@ -123,12 +123,12 @@ public class ApiUnBindCardPageController extends BaseUserController {
             UserInfoVO usersInfo =unBindCardService.getUserInfo(userId);
             // 拼装参数 调用江西银行
             // 同步调用路径
-            String retUrl = systemConfig.getServerHost()+ "/hyjf-api/server/user/unbindCardPage/return"+".do?acqRes="
+            String retUrl = systemConfig.getServerHost()+ "/hyjf-api/server/user/unbindCardPage/return"+"?acqRes="
                     + unbindCardPageRequestBean.getAcqRes() + StringPool.AMPERSAND + "callback="
                     + unbindCardPageRequestBean.getRetUrl().replace("#", "*-*-*");
 
             // 异步调用路
-            String bgRetUrl =systemConfig.getServerHost()+"/hyjf-api/server/user/unbindCardPage/notifyReturn"+ ".do?acqRes="
+            String bgRetUrl =systemConfig.getServerHost()+"/hyjf-api/server/user/unbindCardPage/notifyReturn"+ "?acqRes="
                     + unbindCardPageRequestBean.getAcqRes() + "&callback=" + unbindCardPageRequestBean.getNotifyUrl().replace("#", "*-*-*");
 
             // 拼装参数 调用江西银行
