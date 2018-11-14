@@ -76,8 +76,11 @@ public class ApiAutoPlusController extends BaseUserController {
     public ModelAndView userAuthInves(@RequestBody @Valid AutoPlusRequestBean payRequestBean) {
         ModelAndView modelAndView = new ModelAndView(PATH_TRUSTEE_PAY_ERROR);
         Map<String,Object> map  = autoPlusService.checkParam(payRequestBean,modelAndView,BankCallConstant.QUERY_TYPE_1);
+
         if (null!=map.get("modelAndView")) {
-            return modelAndView;
+            ModelAndView result = (ModelAndView) map.get("modelAndView");
+            result.addObject("callBackAction",payRequestBean.getRetUrl());
+            return callbackErrorView(result);
         }else {
             String smsSeq = map.get("smsSeq").toString();
             UserVO user = (UserVO) map.get("user");
@@ -91,8 +94,9 @@ public class ApiAutoPlusController extends BaseUserController {
                 logger.info("调用银行接口失败:"+e.getMessage());
                 Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE999999,"系统异常！");
                 payRequestBean.doNotify(params);
-                autoPlusService.getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE999999);
-                return modelAndView;
+                ModelAndView result=autoPlusService.getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE999999);
+                result.addObject("callBackAction",payRequestBean.getRetUrl());
+                return callbackErrorView(result);
             }
         }
         return modelAndView;
@@ -111,7 +115,9 @@ public class ApiAutoPlusController extends BaseUserController {
         ModelAndView modelAndView = new ModelAndView(PATH_TRUSTEE_PAY_ERROR);
         Map<String, Object> map = autoPlusService.checkParam(payRequestBean, modelAndView, BankCallConstant.QUERY_TYPE_2);
         if (null!=map.get("modelAndView")) {
-            return modelAndView;
+            ModelAndView result = (ModelAndView) map.get("modelAndView");
+            result.addObject("callBackAction",payRequestBean.getRetUrl());
+            return callbackErrorView(result);
         }else {
             String smsSeq = map.get("smsSeq").toString();
             UserVO user = (UserVO) map.get("user");
@@ -125,8 +131,9 @@ public class ApiAutoPlusController extends BaseUserController {
                 logger.info("调用银行接口失败:"+e.getMessage());
                 Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE999999,"系统异常！");
                 payRequestBean.doNotify(params);
-                autoPlusService.getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE999999);
-                return modelAndView;
+                ModelAndView result = autoPlusService.getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE999999);
+                result.addObject("callBackAction",payRequestBean.getRetUrl());
+                return callbackErrorView(result);
             }
         }
         return modelAndView;

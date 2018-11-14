@@ -117,14 +117,14 @@ public class CrmBankOpenMessageConsumer extends Consumer{
 
         UserInfo userInfo = fddCertificateService.findUsersInfo(userId);
         SpreadsUser spreadsUsers = fddCertificateService.selectSpreadsUsersByUserId(userId);
-        User user = fddCertificateService.findUserByUserId(userId);
+        User user = fddCertificateService.fUserByUserId(userId);
         BankOpenAccountExample accountExample = new BankOpenAccountExample();
         BankOpenAccountExample.Criteria crt = accountExample.createCriteria();
         crt.andUserIdEqualTo(userId);
         BankOpenAccount account = fddCertificateService.selectByExample(accountExample);
         if(spreadsUsers != null){
             UserInfo referrerInfo = fddCertificateService.findUsersInfo(spreadsUsers.getSpreadsUserId());
-            User referrerUser = fddCertificateService.findUserByUserId(spreadsUsers.getSpreadsUserId());
+            User referrerUser = fddCertificateService.fUserByUserId(spreadsUsers.getSpreadsUserId());
             map.put("recommendCardId", referrerInfo!=null?referrerInfo.getIdcard():"");
             map.put("recommendName", referrerInfo!=null?referrerInfo.getTruename():"");
             map.put("recommondUsername", referrerUser!=null?referrerUser.getUsername():"");

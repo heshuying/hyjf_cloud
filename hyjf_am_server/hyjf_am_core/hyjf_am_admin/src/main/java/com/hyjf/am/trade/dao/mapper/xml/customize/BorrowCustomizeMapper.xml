@@ -458,9 +458,6 @@ WHERE
 		ht_borrow_info b
 		WHERE
 		b.borrow_pre_nid_new LIKE CONCAT( #{mmdd, jdbcType=VARCHAR}, '%')
-		AND b.project_type != 15
-		AND b.project_type != 16
-		AND b.project_type != 19
 		AND b.inst_code = 10000000
 	</select>
 	<select id="getXJDBorrowPreNid" resultType="java.lang.String"

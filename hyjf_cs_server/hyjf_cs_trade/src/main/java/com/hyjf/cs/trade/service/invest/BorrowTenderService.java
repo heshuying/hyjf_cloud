@@ -93,4 +93,12 @@ public interface BorrowTenderService extends BaseTradeService {
      * @return
      */
     Map<String,Object> borrowTenderCheck(TenderRequest request, BorrowAndInfoVO borrow, BorrowInfoVO borrowInfoVO ,CouponUserVO cuc,BankOpenAccountVO account);
+
+    /**
+     * 校验风险测评
+     *
+     * @param tender
+     * @return
+     */
+    Map<String,Object> checkEvalApp(TenderRequest tender);
 }

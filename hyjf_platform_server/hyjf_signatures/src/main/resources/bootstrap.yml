@@ -4,7 +4,7 @@ spring:
   cloud:
     config:
       uri: http://micoserver:2222/
-      name: batch
+      name: hyjf-signatures
   boot:
     admin:
       client:
@@ -18,6 +18,14 @@ spring:
     
   profiles:
     active: dev
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: ${EUREKA.CLIENT.SERVICEURL}
+  instance:
+    preferIpAddress: true
+
 server:
   port: 9095
 

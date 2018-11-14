@@ -64,7 +64,7 @@ public class WrbInfoServiceImpl implements WrbInfoService {
 
         // 定向标过滤
         params.put("publishInstCode", "");
-        if (StringUtils.isNotBlank(borrowNid)) {
+        if (StringUtils.isNotBlank(borrowNid) && !"null".equals(borrowNid)) {
             params.put("borrowNid", borrowNid);
         }else{
             params.put("projectType", "HZT");

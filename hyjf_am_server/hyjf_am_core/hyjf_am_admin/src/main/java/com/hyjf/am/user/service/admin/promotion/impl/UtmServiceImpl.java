@@ -331,6 +331,19 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
         return 0;
     }
 
+    @Override
+    public Integer getBySourceIdAndTerm(String sourceId, String utmTerm) {
+        UtmExample example = new UtmExample();
+        UtmExample.Criteria cra = example.createCriteria();
+        cra.andSourceIdEqualTo(Integer.parseInt(sourceId));
+        cra.andUtmTermEqualTo(utmTerm);
+        List<Utm> utmList = this.utmMapper.selectByExample(example);
+        if (utmList != null && utmList.size() > 0) {
+            return utmList.size();
+        }
+        return 0;
+    }
+
     /**
      * @Author walter.limeng
      * @Description  转换utmplat对象

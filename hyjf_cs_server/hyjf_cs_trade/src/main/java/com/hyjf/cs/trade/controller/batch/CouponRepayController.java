@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.controller.batch;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.consumer.CouponRepayService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,10 @@ public class CouponRepayController extends BaseTradeController {
         try {
             List<String> recoverNidList = couponRepayService.selectNidForCouponOnly();
             if (!CollectionUtils.isEmpty(recoverNidList)) {
+                logger.info("体验金收益期限还款列表: {}", JSONObject.toJSONString(recoverNidList));
                 couponRepayService.couponOnlyRepay(recoverNidList);
+            } else {
+                logger.info("体验金收益期限还款没有待还的数据...");
             }
         }catch (Exception e) {
             e.printStackTrace();

@@ -115,6 +115,14 @@ public class AppBorrowTenderController extends BaseTradeController {
         }
         // 前端要求改成bean，不要封装
         AppInvestInfoResultVO result = borrowTenderService.getInvestInfoApp(tender);
+        // 校验风险测评
+        Map<String,Object>  resultEval = borrowTenderService.checkEvalApp(tender);
+        result.setRevalJudge((boolean) resultEval.get("revalJudge"));
+        result.setProjectRevalJudge((boolean) resultEval.get("projectRevalJudge"));
+        result.setEvalType((String) resultEval.get("evalType"));
+        result.setRevaluationMoney((String) resultEval.get("revaluationMoney"));
+        result.setRiskLevelDesc((String) resultEval.get("riskLevelDesc"));
+        result.setProjectRiskLevelDesc((String) resultEval.get("projectRiskLevelDesc"));
         return result;
     }
 

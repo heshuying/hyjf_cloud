@@ -8,6 +8,6 @@ import com.hyjf.am.resquest.api.WrbRegisterRequest;
  */
 
 public interface WrbService {
-    Integer insertUserAction(WrbRegisterRequest wrbRegisterRequest);
+    Integer insertUserAction(WrbRegisterRequest wrbRegisterRequest) throws Exception;
 
 }
