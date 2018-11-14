@@ -219,6 +219,8 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
         Map<String, Object> returnMap = new HashMap<String, Object>();
         //发放优惠券 start
         UserEvalationResultVO ueResult = this.selectUserEvalationResultByUserId(userId);
+        returnMap.put("revaluationMoney", "");
+        returnMap.put("evalType", "");
         //查询redis中的类型和返回增加金额上限
         if(ueResult != null){
             //从redis中获取测评类型和上限金额
@@ -241,6 +243,7 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
                     revaluation_money = "0";
             }
             returnMap.put("revaluationMoney", StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money)));
+            returnMap.put("evalType", eval_type);
         }
         // 是否已经参加过测评（true：已测评过，false：测评）
         boolean isAdvisor = ueResult != null ? true : false;
@@ -260,6 +263,8 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
         }
         // 1_1,2_8
         UserEvalationResultVO userEvalationResult = this.answerAnalysis(userAnswer, userId,behaviorId);
+        userEvalationResult.setEvalType((String) returnMap.get("eval_type"));
+        userEvalationResult.setRevaluationMoney((String) returnMap.get("revaluationMoney"));
         returnMap.put("userEvalationResult", userEvalationResult);
         return returnMap;
         // 发放优惠券 end

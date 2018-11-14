@@ -582,7 +582,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         HjhUserAuth hjhUserAuth=this.getHjhUserAuth(userId);
         // 更新用户签约授权状态信息表
         if (hjhUserAuth == null) {
-            User user= this.findUserByUserId(userId);
+            User user= this.fUserByUserId(userId);
             hjhUserAuth = new HjhUserAuth();
             // 设置状态
             setAuthType(hjhUserAuth, bean);

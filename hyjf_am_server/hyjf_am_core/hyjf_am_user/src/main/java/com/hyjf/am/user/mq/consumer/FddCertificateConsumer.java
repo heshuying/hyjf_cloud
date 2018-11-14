@@ -11,6 +11,7 @@ import com.hyjf.am.user.mq.producer.CrmBankOpenMessageProducer;
 import com.hyjf.am.user.service.front.ca.FddCertificateService;
 import com.hyjf.am.vo.user.FddCertificateAuthorityVO;
 import com.hyjf.common.constants.MQConstant;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -85,7 +86,7 @@ public class FddCertificateConsumer extends Consumer {
                 try {
                     Integer userId = fddCertificateAuthorityVO.getUserId();
                     // 根据用户ID获取用户信息
-                    User user = fddCertificateService.findUserByUserId(userId);
+                    User user = fddCertificateService.fUserByUserId(userId);
                     if (user == null) {
                         logger.info("根据用户ID获取用户信息失败,用户ID:[" + userId + "].");
                         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
@@ -99,9 +100,11 @@ public class FddCertificateConsumer extends Consumer {
                    fddCertificateService.updateUserCAInfo(userId,user,userInfo);
                     Map<String, String> map = Maps.newHashMap();
                     map.put("userId", String.valueOf(userId).trim());
-                    //crm投资推送
-                    crmBankOpenMessageProducer.messageSend(new MessageContent(MQConstant.CRM_ROUTINGKEY_BANCKOPEN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(map)));
-                    logger.info("开户发送MQ时间【{}】",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+                    if(!"mobileModify".equals(fddCertificateAuthorityVO.getCertFrom())){
+                        //crm投资推送
+                        crmBankOpenMessageProducer.messageSend(new MessageContent(MQConstant.CRM_ROUTINGKEY_BANCKOPEN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(map)));
+                        logger.info("开户发送MQ时间【{}】",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
