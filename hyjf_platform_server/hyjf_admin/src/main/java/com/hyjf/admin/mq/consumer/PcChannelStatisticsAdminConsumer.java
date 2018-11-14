@@ -37,8 +37,8 @@ import java.util.List;
 @Component
 public class PcChannelStatisticsAdminConsumer extends Consumer {
     Logger logger = LoggerFactory.getLogger(getClass());
-	@Autowired
-	private AmAdminClient amAdminClient;
+    @Autowired
+    private AmAdminClient amAdminClient;
     @Autowired
     private PcChannelStatisticsProducer producer;
 
@@ -62,81 +62,80 @@ public class PcChannelStatisticsAdminConsumer extends Consumer {
     public class MessageListener implements MessageListenerConcurrently {
         @Override
         public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
-            logger.info("PcChannelStatisticsConsumer 收到消息，开始处理....msgs is :{}", msgs);
-          	// 查询所有pc渠道
-		List<UtmVO> voList = amAdminClient.selectUtmPlatList("pc");
-		if (!CollectionUtils.isEmpty(voList)) {
-			for (UtmVO vo : voList) {
-				Integer sourceId = vo.getSourceId();
-				// 访问数
-				Integer accessNumber = amAdminClient.getAccessNumber(sourceId, "pc");
-				if(accessNumber==null){
-					accessNumber=0;
-				}
-				// 注册数
-				Integer registNumber = amAdminClient.getRegistNumber(sourceId, "pc");
-				if(registNumber==null){
-					registNumber=0;
-				}
-				// 开户数
-				Integer openaccountnumber = amAdminClient.getOpenAccountNumber(sourceId, "pc");
-				if(openaccountnumber==null){
-					openaccountnumber=0;
-				}
-				// 投资人数
-				Integer tenderNumber = amAdminClient.getTenderNumber(sourceId, "pc");
-				if(tenderNumber==null){
-					tenderNumber=0;
-				}
-				// 累计充值
-				BigDecimal cumulativeRecharge = amAdminClient.getCumulativeRecharge(sourceId, "pc");
-				if(cumulativeRecharge==null){
-					cumulativeRecharge= BigDecimal.ZERO;
-				}
-				// 汇直投投资金额
-				BigDecimal hztTenderPrice = amAdminClient.getHztTenderPrice(sourceId, "pc");
-				if(hztTenderPrice==null){
-					hztTenderPrice=BigDecimal.ZERO;
-				}
-				// 汇消费投资金额
-				BigDecimal hxfTenderPrice = amAdminClient.getHxfTenderPrice(sourceId, "pc");
-				if(hxfTenderPrice==null){
-					hxfTenderPrice=BigDecimal.ZERO;
-				}
-				// 汇天利投资金额
-				BigDecimal htlTenderPrice = amAdminClient.getHtlTenderPrice(sourceId, "pc");
-				if(htlTenderPrice==null){
-					htlTenderPrice=BigDecimal.ZERO;
-				}
-				// 汇添金投资金额
-				BigDecimal htjTenderPrice = amAdminClient.getHtjTenderPrice(sourceId, "pc");
-				if(htjTenderPrice==null){
-					htjTenderPrice=BigDecimal.ZERO;
-				}
-				// 汇金理财投资金额
-				BigDecimal rtbTenderPrice = amAdminClient.getRtbTenderPrice(sourceId, "pc");
-				if(rtbTenderPrice==null){
-					rtbTenderPrice=BigDecimal.ZERO;
-				}
-				// 汇转让投资金额//
-				BigDecimal hzrTenderPrice = amAdminClient.getHzrTenderPrice(sourceId, "pc");
-				if(hzrTenderPrice==null){
-					hzrTenderPrice=BigDecimal.ZERO;
-				}
-				PcChannelStatisticsVO statisticsVO = new PcChannelStatisticsVO(sourceId, vo.getSourceName(),
-						accessNumber, registNumber, openaccountnumber, tenderNumber, cumulativeRecharge, hztTenderPrice,
-						hxfTenderPrice, htlTenderPrice, htjTenderPrice, rtbTenderPrice, hzrTenderPrice, new Date());
-				statisticsVO.setCumulativeInvestment(hztTenderPrice.add(hxfTenderPrice).add(htlTenderPrice)
-						.add(htjTenderPrice).add(rtbTenderPrice).add(hzrTenderPrice));
-				try {
-					//  对应INSERT
-					producer.messageSend(new MessageContent(MQConstant.PC_CHANNEL_STATISTICS_TOPIC,
-							System.currentTimeMillis() + "", JSONObject.toJSONBytes(statisticsVO)));
-				} catch (MQException e) {
-					logger.error("PC渠道统计数据定时任务出错......", e);
-				}
-			}
-		}
+            // 查询所有pc渠道
+            List<UtmVO> voList = amAdminClient.selectUtmPlatList("pc");
+            if (!CollectionUtils.isEmpty(voList)) {
+                for (UtmVO vo : voList) {
+                    Integer sourceId = vo.getSourceId();
+                    // 访问数
+                    Integer accessNumber = amAdminClient.getAccessNumber(sourceId, "pc");
+                    if (accessNumber == null) {
+                        accessNumber = 0;
+                    }
+                    // 注册数
+                    Integer registNumber = amAdminClient.getRegistNumber(sourceId, "pc");
+                    if (registNumber == null) {
+                        registNumber = 0;
+                    }
+                    // 开户数
+                    Integer openaccountnumber = amAdminClient.getOpenAccountNumber(sourceId, "pc");
+                    if (openaccountnumber == null) {
+                        openaccountnumber = 0;
+                    }
+                    // 投资人数
+                    Integer tenderNumber = amAdminClient.getTenderNumber(sourceId, "pc");
+                    if (tenderNumber == null) {
+                        tenderNumber = 0;
+                    }
+                    // 累计充值
+                    BigDecimal cumulativeRecharge = amAdminClient.getCumulativeRecharge(sourceId, "pc");
+                    if (cumulativeRecharge == null) {
+                        cumulativeRecharge = BigDecimal.ZERO;
+                    }
+                    // 汇直投投资金额
+                    BigDecimal hztTenderPrice = amAdminClient.getHztTenderPrice(sourceId, "pc");
+                    if (hztTenderPrice == null) {
+                        hztTenderPrice = BigDecimal.ZERO;
+                    }
+                    // 汇消费投资金额
+                    BigDecimal hxfTenderPrice = amAdminClient.getHxfTenderPrice(sourceId, "pc");
+                    if (hxfTenderPrice == null) {
+                        hxfTenderPrice = BigDecimal.ZERO;
+                    }
+                    // 汇天利投资金额
+                    BigDecimal htlTenderPrice = amAdminClient.getHtlTenderPrice(sourceId, "pc");
+                    if (htlTenderPrice == null) {
+                        htlTenderPrice = BigDecimal.ZERO;
+                    }
+                    // 汇添金投资金额
+                    BigDecimal htjTenderPrice = amAdminClient.getHtjTenderPrice(sourceId, "pc");
+                    if (htjTenderPrice == null) {
+                        htjTenderPrice = BigDecimal.ZERO;
+                    }
+                    // 汇金理财投资金额
+                    BigDecimal rtbTenderPrice = amAdminClient.getRtbTenderPrice(sourceId, "pc");
+                    if (rtbTenderPrice == null) {
+                        rtbTenderPrice = BigDecimal.ZERO;
+                    }
+                    // 汇转让投资金额//
+                    BigDecimal hzrTenderPrice = amAdminClient.getHzrTenderPrice(sourceId, "pc");
+                    if (hzrTenderPrice == null) {
+                        hzrTenderPrice = BigDecimal.ZERO;
+                    }
+                    PcChannelStatisticsVO statisticsVO = new PcChannelStatisticsVO(sourceId, vo.getSourceName(),
+                            accessNumber, registNumber, openaccountnumber, tenderNumber, cumulativeRecharge, hztTenderPrice,
+                            hxfTenderPrice, htlTenderPrice, htjTenderPrice, rtbTenderPrice, hzrTenderPrice, new Date());
+                    statisticsVO.setCumulativeInvestment(hztTenderPrice.add(hxfTenderPrice).add(htlTenderPrice)
+                            .add(htjTenderPrice).add(rtbTenderPrice).add(hzrTenderPrice));
+                    try {
+                        //  对应INSERT
+                        producer.messageSend(new MessageContent(MQConstant.PC_CHANNEL_STATISTICS_TOPIC,
+                                System.currentTimeMillis() + "", JSONObject.toJSONBytes(statisticsVO)));
+                    } catch (MQException e) {
+                        logger.error("PC渠道统计数据定时任务出错......", e);
+                    }
+                }
+            }
 
             // 如果没有return success ，consumer会重新消费该消息，直到return success
             return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
