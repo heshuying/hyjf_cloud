@@ -5,7 +5,7 @@ package com.hyjf.cs.trade.service.consumer;
 
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.cs.common.service.BaseService;
-import com.sensorsdata.analytics.javasdk.exceptions.InvalidArgumentException;
+import com.sun.javaws.exceptions.InvalidArgumentException;
 
 import java.io.IOException;
 

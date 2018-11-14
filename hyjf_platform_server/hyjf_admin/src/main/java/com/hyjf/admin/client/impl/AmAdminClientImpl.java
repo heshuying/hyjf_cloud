@@ -43,15 +43,21 @@ import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collections;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author tanyy
@@ -70,6 +76,136 @@ public class AmAdminClientImpl implements AmAdminClient {
         return restTemplate.
                 postForEntity("http://AM-ADMIN/am-admin/extensioncenter/channelstatisticsdetail/count", request, IntegerResponse.class).getBody();
     }
+
+    @Override
+    public List<UtmVO> selectUtmPlatList(String type) {
+        Map<String, Object> params = new HashMap<>();
+        if ("pc".equals(type)) {
+            params.put("sourceType", 0);// 渠道0 PC
+            params.put("flagType", 0);// 未删除
+        } else if ("app".equals(type)) {
+            params.put("sourceType", 1);// 渠道1 APP
+            params.put("flagType", 0);// 未删除
+        }
+        List<UtmVO> getResultListS = new ArrayList<>();
+        HttpEntity httpEntity = new HttpEntity(params);
+        ResponseEntity<UtmResponse<UtmVO>> response =
+                restTemplate.exchange("http://AM-ADMIN/am-user/promotion/utm/getbypagelist",
+                        HttpMethod.POST, httpEntity, new ParameterizedTypeReference<UtmResponse<UtmVO>>() {});
+
+        if (response.getBody() != null) {
+            return response.getBody().getResultListS();
+        }
+        return getResultListS;
+    }
+    @Override
+    public Integer getAccessNumber(Integer sourceId, String type) {
+        UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/getaccessnumber/" + sourceId,
+                UtmResponse.class);
+        if (response != null) {
+            return response.getAccessNumber();
+        }
+        return null;
+    }
+    @Override
+    public Integer getRegistNumber(Integer sourceId, String type) {
+        UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/getregistnumber/" + sourceId,
+                UtmResponse.class);
+        if (response != null) {
+            return response.getRegistNumber();
+        }
+        return null;
+    }
+
+    @Override
+    public Integer getOpenAccountNumber(Integer sourceId, String type) {
+        UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/getopenaccountnumber/" + sourceId+"/"+type,
+                UtmResponse.class);
+        if (response != null) {
+            return response.getOpenAccountNumber();
+        }
+        return null;
+    }
+
+    @Override
+    public Integer getTenderNumber(Integer sourceId, String type) {
+        UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/gettendernumber/" + sourceId+"/"+type,
+                UtmResponse.class);
+        if (response != null) {
+            return response.getTenderNumber();
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal getCumulativeRecharge(Integer sourceId, String type) {
+        UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/getcumulativerecharge/" + sourceId+"/"+type,
+                UtmResponse.class);
+        if (response != null) {
+            return response.getCumulativeRecharge();
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal getHztTenderPrice(Integer sourceId, String type) {
+        UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/gethzttenderprice/" + sourceId+"/"+type,
+                UtmResponse.class);
+        if (response != null) {
+            return response.getHztTenderPrice();
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal getHxfTenderPrice(Integer sourceId, String type) {
+        UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/gethxftenderprice/" + sourceId+"/"+type,
+                UtmResponse.class);
+        if (response != null) {
+            return response.getHxfTenderPrice();
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal getHtlTenderPrice(Integer sourceId, String type) {
+        UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/gethtltenderprice/" + sourceId+"/"+type,
+                UtmResponse.class);
+        if (response != null) {
+            return response.getHtlTenderPrice();
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal getHtjTenderPrice(Integer sourceId, String type) {
+        UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/gethtjtenderprice/" + sourceId+"/"+type,
+                UtmResponse.class);
+        if (response != null) {
+            return response.getHtjTenderPrice();
+        }
+        return null;
+    }
+    @Override
+    public BigDecimal getRtbTenderPrice(Integer sourceId, String type) {
+        UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/getrtbtenderprice/" + sourceId+"/"+type,
+                UtmResponse.class);
+        if (response != null) {
+            return response.getRtbTenderPrice();
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal getHzrTenderPrice(Integer sourceId, String type) {
+        UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/gethzrtenderprice/" + sourceId+"/"+type,
+                UtmResponse.class);
+        if (response != null) {
+            return response.getHzrTenderPrice();
+        }
+        return null;
+    }
+
     @Override
     public ChannelStatisticsDetailResponse searchAction(ChannelStatisticsDetailRequest request){
         return restTemplate.
