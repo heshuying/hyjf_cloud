@@ -273,7 +273,6 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
                 Integer attribute = usersInfo.getAttribute();
 				if (attribute != null) {
 					// 查找用户的的推荐人
-					UserVO user = amUserClient.findUserById(userId);
 					SpreadsUserVO spreadsUserVO = amUserClient.querySpreadsUsersByUserId(userId);
 
 					// 推荐人id
@@ -283,7 +282,7 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
 					}
 
 					// 如果是线上员工或线下员工，推荐人的userId和username不插
-					if (user != null && (attribute == 2 || attribute == 3)) {
+					if (attribute == 2 || attribute == 3) {
 						// 查找用户信息
 						EmployeeCustomizeVO employeeCustomize = amUserClient.selectEmployeeByUserId(userId);
 						if (employeeCustomize != null) {
@@ -293,7 +292,7 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
 						}
 					}
 					// 如果是无主单，全插
-					else if (user != null && (attribute == 1)) {
+					else if (attribute == 1) {
 						// 查找用户推荐人
 						if (refUserId != null) {
 							EmployeeCustomizeVO employeeCustomize = amUserClient.selectEmployeeByUserId(refUserId);
@@ -306,7 +305,7 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
 
 					}
 					// 如果是有主单
-					else if (user != null && (attribute == 0)) {
+					else if (attribute == 0) {
 						if (refUserId != null) {
 							// 查找用户推荐人
 							EmployeeCustomizeVO employeeCustomize = amUserClient.selectEmployeeByUserId(refUserId);
