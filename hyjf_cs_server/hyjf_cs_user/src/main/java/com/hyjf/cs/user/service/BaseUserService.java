@@ -158,7 +158,6 @@ public interface BaseUserService extends BaseService{
 
     String strEncode(String str);
 
-    SynBalanceRequestBean synBalance(String account, String instcode, String aopAccesskey);
 
 	AccountVO getAccountByUserId(Integer userId);
 
