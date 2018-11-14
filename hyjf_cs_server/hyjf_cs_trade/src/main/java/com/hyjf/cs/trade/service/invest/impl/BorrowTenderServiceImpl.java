@@ -370,7 +370,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_PAYMENT_AUTH);
         }
         // 风险测评校验
-        this.checkEvaluation(user);
+        //this.checkEvaluation(user);
 
     }
 
@@ -1376,9 +1376,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
                         //已过期需要重新评测
                         throw new CheckException(MsgEnum.STATUS_EV000004);
-                    }else if(CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)){
+                    //}else if(CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)){
                         //计划类判断用户类型为稳健型以上才可以投资
-                        throw new CheckException(MsgEnum.STATUS_EV000007);
+                    //    throw new CheckException(MsgEnum.STATUS_EV000007);
                     }else if(CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS.equals(riskTested)){
                         //金额对比判断（校验金额 大于 设置测评金额）
                         throw new CheckException(MsgEnum.STATUS_EV000005);
@@ -1400,9 +1400,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
                     //已过期需要重新评测
                     throw new CheckException(MsgEnum.STATUS_EV000004);
-                }else if(CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)){
+                //}else if(CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)){
                     //计划类判断用户类型为稳健型以上才可以投资
-                    throw new CheckException(MsgEnum.STATUS_EV000007);
+                //    throw new CheckException(MsgEnum.STATUS_EV000007);
                 }else if(CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS.equals(riskTested)){
                     //金额对比判断（校验金额 大于 设置测评金额）
                     throw new CheckException(MsgEnum.STATUS_EV000005);
@@ -1652,6 +1652,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
         // 检查用户状态  角色  授权状态等  是否允许投资
         checkUser(user, userInfo);
+        //校验用户测评
+        Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(request);
         // 检查江西银行账户
         if(account ==null){
             account = amUserClient.selectBankAccountById(userId);
@@ -1669,8 +1671,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         // 检查金额
         this.checkTenderMoney(request, borrow, cuc, tenderAccount );
-        //校验用户测评
-        Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(request);
         logger.info("所有参数都已检查通过!");
         return resultEval;
     }
