@@ -1504,4 +1504,48 @@ public class AmAdminClientImpl implements AmAdminClient {
         BooleanResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/appPushManage/deletePushManage/" + id, BooleanResponse.class).getBody();
         return response.getResultBoolean();
     }
+
+    /**
+     * 节假日配置-列表查询
+     * @param request
+     * @return
+     */
+    @Override
+    public AdminHolidaysConfigResponse getHolidaysConfigRecordList(AdminHolidaysConfigRequest request) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-config/adminHolidaysConfig/getRecordList",
+                request, AdminHolidaysConfigResponse.class).getBody();
+    }
+
+    /**
+     * 节假日配置-画面迁移(含有id更新，不含有id添加)
+     * @param request
+     * @return
+     */
+    @Override
+    public AdminHolidaysConfigResponse getInfoList(AdminHolidaysConfigRequest request) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-config/adminHolidaysConfig/getInfoList",
+                request, AdminHolidaysConfigResponse.class).getBody();
+    }
+
+    /**
+     * 节假日配置-添加活动信息
+     * @param request
+     * @return
+     */
+    @Override
+    public AdminHolidaysConfigResponse insertHolidays(AdminHolidaysConfigRequest request) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-config/adminHolidaysConfig/insertHolidays",
+                request, AdminHolidaysConfigResponse.class).getBody();
+    }
+
+    /**
+     * 节假日配置-修改活动维护信息
+     * @param request
+     * @return
+     */
+    @Override
+    public AdminHolidaysConfigResponse updateHolidays(AdminHolidaysConfigRequest request) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-config/adminHolidaysConfig/updateHolidays",
+                request, AdminHolidaysConfigResponse.class).getBody();
+    }
 }

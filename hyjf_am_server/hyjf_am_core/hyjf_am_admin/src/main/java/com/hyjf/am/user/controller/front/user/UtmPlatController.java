@@ -1,6 +1,5 @@
 package com.hyjf.am.user.controller.front.user;
 
-import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.user.dao.model.auto.UtmPlat;
 import com.hyjf.am.user.service.front.user.UtmPlatService;
@@ -10,8 +9,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 /**
  * @author：yinhui
@@ -40,33 +37,4 @@ public class UtmPlatController {
         return response;
     }
 
-    /**
-     *  查询所有非主单的用户
-     *
-     * @return
-     */
-    @RequestMapping("/getUsersInfoList")
-    public IntegerResponse getUsersInfoList() {
-        List<Integer> utmPlat = utmPlatService.getUsersInfoList();
-        IntegerResponse response = new IntegerResponse();
-        if (null != utmPlat) {
-            response.setResult(utmPlat);
-        }
-        return response;
-    }
-
-    /**
-     *  app渠道Ios、pc、wechat、android开户数
-     *
-     * @return
-     */
-    @RequestMapping("/getUsersList/{sourceIdSrch}")
-    public IntegerResponse getUsersList(@PathVariable String sourceIdSrch) {
-        List<Integer> utmPlat = utmPlatService.getUsersList(sourceIdSrch);
-        IntegerResponse response = new IntegerResponse();
-        if (null != utmPlat) {
-            response.setResult(utmPlat);
-        }
-        return response;
-    }
 }

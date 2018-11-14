@@ -5,10 +5,16 @@ package com.hyjf.am.user.service.front.user;
 
 import com.hyjf.am.user.service.BaseService;
 
+import java.util.List;
+
 /**
  * @author yaoyong
  * @version ChannelService, v0.1 2018/7/9 12:00
  */
 public interface ChannelService extends BaseService {
     String selectChannelName(Integer userId);
+
+    List<Integer> getUsersInfoList();
+
+    List<Integer> getUsersList(String sourceIdSrch);
 }
