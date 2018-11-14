@@ -230,7 +230,7 @@ public class ApiUnBindCardPageController extends BaseUserController {
      * @param request
      * @return
      */
-    @PostMapping("/return")
+    @RequestMapping("/return")
     @ApiOperation(value = "页面解卡同步回调", notes = "页面解卡同步回调")
     public ModelAndView unbindCardReturn(HttpServletRequest request) {
         logger.info("==========解卡同步回调开始==============");
@@ -245,7 +245,7 @@ public class ApiUnBindCardPageController extends BaseUserController {
         logger.info("解卡同步返回值,用户ID:[" + bean.getLogUserId() + "],retCode:[" + retCode + "]");*/
         // 解卡后处理
         try {
-                BaseResultBean resultBean = new BaseResultBean();
+//                BaseResultBean resultBean = new BaseResultBean();
 //            if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)||"1".equals(isSuccess)) {
             if ("1".equals(isSuccess)) {
                 // 成功
@@ -286,7 +286,6 @@ public class ApiUnBindCardPageController extends BaseUserController {
     /**
      * 解卡异步回调方法
      * @param request
-     * @param response
      * @param bean
      * @return
      */

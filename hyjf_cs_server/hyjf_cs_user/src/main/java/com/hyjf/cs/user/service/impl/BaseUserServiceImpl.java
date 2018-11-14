@@ -164,6 +164,10 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			// 解卡(页面调用)合规
 			UnbindCardPageRequestBean bean = (UnbindCardPageRequestBean) paramBean;
 			sign = bean.getInstCode()+ bean.getAccountId() + bean.getMobile() + bean.getCardNo()+bean.getTimestamp();
+		}else if (BaseDefine.METHOD_SERVER_SYNBALANCE.equals(methodName)) {
+			// 解卡(页面调用)合规
+			SynBalanceRequestBean bean = (SynBalanceRequestBean) paramBean;
+			sign = bean.getInstCode() + bean.getAccountId() + bean.getTimestamp();
 		}
 
 		return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
