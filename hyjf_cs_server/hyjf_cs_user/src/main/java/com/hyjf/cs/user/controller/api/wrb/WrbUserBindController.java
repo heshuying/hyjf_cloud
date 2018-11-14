@@ -28,6 +28,8 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -49,6 +51,8 @@ import java.util.Map;
 @Controller
 @RequestMapping("/hyjf-wechat/api/user")
 public class WrbUserBindController extends BaseUserController {
+
+    public static final Logger logger = LoggerFactory.getLogger(WrbUserBindController.class);
 	@Autowired
 	SystemConfig systemConfig;
 	@Autowired
@@ -245,7 +249,6 @@ public class WrbUserBindController extends BaseUserController {
                 jsonObj.put("status", BaseResultBeanFrontEnd.FAIL);
                 jsonObj.put("statusCode", BaseResultBeanFrontEnd.FAIL);
                 jsonObj.put("statusDesc", "该汇盈账号以绑定其他用户，不能重复绑定");
-
                 jsonObj.put("hyjfUserName",userName );
                 jsonObj.put("userId",users.getUserId() );
                 return jsonObj;
@@ -257,8 +260,6 @@ public class WrbUserBindController extends BaseUserController {
             jsonObj.put("statusDesc", "请先注册汇盈金服账号！");
             return jsonObj;
         }
-
-
         // 登陆
         LoginResultBean baseResultBean = this.login(request, loginBean.getLoginUserName(),loginBean.getLoginPassword(),"2");
         if (!baseResultBean.getStatus().equals("000")) {

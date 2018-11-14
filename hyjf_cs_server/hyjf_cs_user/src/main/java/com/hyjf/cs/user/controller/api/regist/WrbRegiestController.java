@@ -2,10 +2,7 @@ package com.hyjf.cs.user.controller.api.regist;
 
 import com.hyjf.am.response.WrbResponse;
 import com.hyjf.am.resquest.api.WrbRegisterRequest;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.UtmPlatVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.util.WrbCommonDateUtil;
 import com.hyjf.common.util.WrbParseParamUtil;
@@ -117,7 +114,8 @@ public class WrbRegiestController {
             // 如果用户已经存在,表示该手机号已经注册
             if (user != null) {
                 String user_id = String.valueOf(user.getUserId());
-                Integer bindUsers = userRegisterService.selectByUserId(user.getUserId(), instCode);
+                BindUserVo bindUsers=
+                        userRegisterService.getBindUser(Integer.valueOf(wrbRegisterRequestBean.getWrb_user_id()), Integer.valueOf(instCode));
                 if (bindUsers == null) {
                     log.info("用户手机号已在平台注册:用户名:{},用户手机号:{}", user.getUsername(), mobile);
                     // 合作平台的老用户
@@ -126,7 +124,7 @@ public class WrbRegiestController {
                     resultBean.setPf_user_id(user_id);
                     return resultBean;
                 } else {
-                    if (user_id.equals(wrbRegisterRequestBean.getWrb_user_id())) {
+                    if (StringUtils.equals(bindUsers.getBindUniqueId()+"",wrbRegisterRequestBean.getWrb_user_id())) {
                         resultBean.setRetcode(RETCODE2);
                         resultBean.setRetmsg("注册成功");
                         // 用户Id
