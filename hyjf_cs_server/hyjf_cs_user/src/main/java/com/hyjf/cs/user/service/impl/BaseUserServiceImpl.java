@@ -623,18 +623,6 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 
 
 	@Override
-	public SynBalanceRequestBean synBalance(String account, String instcode, String aopAccesskey) {
-		SynBalanceRequestBean balanceRequestBean=new SynBalanceRequestBean();
-		balanceRequestBean.setAccountId(account);
-		balanceRequestBean.setInstCode(instcode);
-		Long timestamp=System.currentTimeMillis()/ 1000;
-		balanceRequestBean.setTimestamp(timestamp);
-		String sign = StringUtils.lowerCase(MD5.toMD5Code(aopAccesskey + account + instcode + timestamp + aopAccesskey));
-		balanceRequestBean.setChkValue(sign);
-		return balanceRequestBean;
-	}
-
-	@Override
 	public AccountVO getAccountByUserId(Integer userId) {
 		return amTradeClient.getAccount(userId);
 	}
