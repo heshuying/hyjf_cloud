@@ -4,6 +4,7 @@
 package com.hyjf.cs.trade.mq.consumer;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
@@ -87,12 +88,8 @@ public class TyjCouponRepayConsumer extends Consumer {
 		private List<String> splitString(String nids) {
 			List<String> list = null;
 			if (!StringUtils.isEmpty(nids)) {
-				list = new ArrayList<>();
-				String[] strNids = nids.split(",");
-				for (int i = 0; i < strNids.length; i++) {
-					list.add(strNids[i]);
-				}
-			}
+                list = Arrays.asList(nids.split(","));
+            }
 			return list;
 		}
 	}

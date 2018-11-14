@@ -32,8 +32,9 @@ public class CouponRepayController extends BaseTradeController {
         try {
             List<String> recoverNidList = couponRepayService.selectNidForCouponOnly();
             if (!CollectionUtils.isEmpty(recoverNidList)) {
-                logger.info("体验金收益期限还款列表: {}", JSONObject.toJSONString(recoverNidList));
-                couponRepayService.couponOnlyRepay(convertListToString(recoverNidList));
+                String nids = String.join(",", recoverNidList);
+                logger.info("体验金收益期限还款列表: {}", nids);
+                couponRepayService.couponOnlyRepay(nids);
             } else {
                 logger.info("体验金收益期限还款没有待还的数据...");
             }
@@ -41,17 +42,5 @@ public class CouponRepayController extends BaseTradeController {
             e.printStackTrace();
         }
         logger.info("体验金收益期限还款 结束");
-    }
-
-
-    private String convertListToString(List<String> list){
-        StringBuffer sb = new StringBuffer();
-        if(!CollectionUtils.isEmpty(list)){
-            for(String str: list){
-                sb.append(str).append(",");
-            }
-            sb = sb.deleteCharAt(sb.length() - 1);
-        }
-        return sb.toString();
     }
 }
