@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service.admin.productcenter.applyagreement.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.ApplyAgreementInfoRequest;
 import com.hyjf.am.resquest.admin.ApplyAgreementRequest;
 import com.hyjf.am.resquest.admin.BorrowRepayAgreementAmRequest;
@@ -59,6 +60,8 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
                 criteria.andBorrowNidEqualTo(customize.getBorrowNid());
                 criteria.andRepayPeriodEqualTo(customize.getRepayPeriod());
                 Integer count = this.applyAgreementMapper.countByExample(applyAgreement);
+                logger.info("--------------------垫付协议申请明细列表页--分期列表applyAgreement:"+JSONObject.toJSON(applyAgreement));
+                logger.info("--------------------垫付协议申请明细列表页--分期列表count:"+count);
                 if (count > 0) {
                     customize.setApplyagreements(1);
                 } else {
@@ -66,6 +69,7 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
                 }
             }
         }
+        logger.info("--------------------垫付协议申请明细列表页--分期列表list:"+JSONObject.toJSON(list));
         return  list;
     }
 
