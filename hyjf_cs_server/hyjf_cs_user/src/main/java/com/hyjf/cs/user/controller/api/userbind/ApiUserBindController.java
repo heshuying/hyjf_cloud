@@ -14,7 +14,10 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.ApiSignUtil;
-import com.hyjf.cs.user.bean.*;
+import com.hyjf.cs.user.bean.ApiResultPageBean;
+import com.hyjf.cs.user.bean.ApiUserPostBean;
+import com.hyjf.cs.user.bean.BaseMapBean;
+import com.hyjf.cs.user.bean.LoginResultBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -132,7 +135,7 @@ public class ApiUserBindController extends BaseUserController {
                 readonly = "readonly";
             }
         }
-        baseMapBean.set("mobile", mobile);
+        baseMapBean.set("mobile", mobile==null?"":mobile);
         baseMapBean.set("readonly", readonly);
         baseMapBean.setAll(objectToMap(apiUserPostBean));
         modelAndView.addObject("callBackForm", baseMapBean);
@@ -250,22 +253,21 @@ public class ApiUserBindController extends BaseUserController {
 			return jsonObj;
 		}
         // 返回第三方页面
-        JSONObject jsonResult = new JSONObject();
-        jsonResult.put("status", "000");
-        jsonResult.put("statusCode", "0");
-        jsonResult.put("statusDesc", "授权成功");
-        jsonResult.put("retUrl", apiUserPostBean.getRetUrl());
-        jsonResult.put("bindUniqueIdScy", apiUserPostBean.getBindUniqueIdScy());
-        jsonResult.put("userId",users.getUserId() );
-        jsonResult.put("mobile",apiUserPostBean.getLoginUserName() );
-        jsonResult.put("username",userName );
-        jsonResult.put("token",userName );
-        jsonResult.put("roleId",login.getData().getRoleId() );
-        jsonResult.put("iconUrl",login.getData().getIconUrl() );
-        jsonResult.put("hyjfUserName",userName );
+		jsonObj.put("status", "000");
+		jsonObj.put("statusCode", "0");
+		jsonObj.put("statusDesc", "授权成功");
+		jsonObj.put("retUrl", apiUserPostBean.getRetUrl());
+		jsonObj.put("bindUniqueIdScy", apiUserPostBean.getBindUniqueIdScy());
+		jsonObj.put("userId",users.getUserId() );
+		jsonObj.put("mobile",apiUserPostBean.getLoginUserName() );
+		jsonObj.put("username",userName );
+		jsonObj.put("token",userName );
+		jsonObj.put("roleId",login.getData().getRoleId() );
+		jsonObj.put("iconUrl",login.getData().getIconUrl() );
+		jsonObj.put("hyjfUserName",userName );
         Long timestamp = System.currentTimeMillis();
-        jsonResult.put("timestamp",timestamp);
-        jsonResult.put("chkValue",ApiSignUtil.encryptByRSA(apiUserPostBean.getPid()+timestamp+""));
+		jsonObj.put("timestamp",timestamp);
+		jsonObj.put("chkValue",ApiSignUtil.encryptByRSA(apiUserPostBean.getPid()+timestamp+""));
         logger.info("chkValue:"+ApiSignUtil.encryptByRSA(apiUserPostBean.getPid()+timestamp+""));
     	
 		return jsonObj;

@@ -8,34 +8,33 @@
  * Modification History:
  * Modified by : 
  */
-	
-package com.hyjf.cs.user.bean;
 
+package com.hyjf.cs.user.bean;
 
 
 /**
  * @author liubin
  */
 
-public class ApiUserPostBean  extends BaseBean {
+public class ApiUserPostBean {
 	/** 加密的汇晶社用户ID */
 	private String bindUniqueIdScy;
-	
+
 	/** 返回Url */
     private String retUrl;
-    
+
 	/** 平台id */
     private Integer pid;
-    
+
     /** 手机号码*/
     private String mobile;
-    
+
     /** 身份证号码*/
     private String idCard;
-    
+
     /** 姓名*/
     private String name;
-    
+
 	//来源
 	private String from;
 	//风车理财用户ID
@@ -49,7 +48,15 @@ public class ApiUserPostBean  extends BaseBean {
 	//真实姓名
 	private String true_name;
 	//目标url
-	private String target_url;  
+	private String target_url;
+    /**
+     * 验签
+     */
+    private String chkValue;
+    /**
+     * 当前时间戳（10位）
+     */
+    private Long timestamp;
 	public String getFrom() {
 		return from;
 	}
@@ -104,7 +111,7 @@ public class ApiUserPostBean  extends BaseBean {
 
 	public void setTarget_url(String target_url) {
 		this.target_url = target_url;
-	}    
+	}
 	/**
 	 * bindUniqueIdScy
 	 * @return the bindUniqueIdScy
@@ -112,35 +119,16 @@ public class ApiUserPostBean  extends BaseBean {
 	public String getBindUniqueIdScy() {
 		return bindUniqueIdScy;
 	}
-	
+
 	public void setBindUniqueIdScy(String bindUniqueIdScy) {
 		this.bindUniqueIdScy = bindUniqueIdScy;
-	}
-
-	/**
-	 * retUrl
-	 * @return the retUrl
-	 */
-	
-	@Override
-    public String getRetUrl() {
-		return retUrl;
-	}
-
-	/**
-	 * @param retUrl the retUrl to set
-	 */
-	
-	@Override
-    public void setRetUrl(String retUrl) {
-		this.retUrl = retUrl;
 	}
 
 	/**
 	 * pid
 	 * @return the pid
 	 */
-	
+
 	public Integer getPid() {
 		return pid;
 	}
@@ -148,7 +136,7 @@ public class ApiUserPostBean  extends BaseBean {
 	/**
 	 * @param pid the pid to set
 	 */
-	
+
 	public void setPid(Integer pid) {
 		this.pid = pid;
 	}
@@ -177,17 +165,13 @@ public class ApiUserPostBean  extends BaseBean {
 		this.name = name;
 	}
 
-	/**
-	 * 执行前每个方法前需要添加BusinessDesc描述
-	 * @return
-	 * @author lb
-	 */
-		
-	@Override
-	public String toString() {
-		return "ApiUserPostBean [bindUniqueIdScy=" + bindUniqueIdScy + ", retUrl=" + retUrl + ", pid=" + pid + ", timestamp=" + super.getTimestamp() +", chkValue=" + super.getChkValue() + "]";
-	}
+    public String getRetUrl() {
+        return retUrl;
+    }
 
+    public void setRetUrl(String retUrl) {
+        this.retUrl = retUrl;
+    }
 
 	private String loginUserName;
 
@@ -248,6 +232,21 @@ public class ApiUserPostBean  extends BaseBean {
 		this.presetProps = presetProps;
 	}
 
+    public String getChkValue() {
+        return chkValue;
+    }
+
+    public void setChkValue(String chkValue) {
+        this.chkValue = chkValue;
+    }
+
+    public Long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
+    }
 }
 
 	

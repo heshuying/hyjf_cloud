@@ -216,5 +216,5 @@ public interface UtmService extends BaseService {
      * @Param utmTerm
      * @return
      */
-    Integer getBySourceIdAndTerm(String sourceId, String utmTerm);
+    Integer getBySourceIdAndTerm(String sourceId, String utmTerm,String utmId);
 }

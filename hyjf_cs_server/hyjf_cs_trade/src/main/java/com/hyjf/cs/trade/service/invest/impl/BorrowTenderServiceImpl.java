@@ -62,11 +62,9 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
 
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.*;
 
 /**
@@ -641,7 +639,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
         BigDecimal earnings = new BigDecimal("0");
         // 计算历史回报
-        String interest = null;
+        String interest = "0";
         String borrowStyle = borrow.getBorrowStyle();// 项目还款方式
         Integer borrowPeriod = borrow.getBorrowPeriod();// 周期
         BigDecimal borrowApr = borrow.getBorrowApr();// 項目预期年化收益率
