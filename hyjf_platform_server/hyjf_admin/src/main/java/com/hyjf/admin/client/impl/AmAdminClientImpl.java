@@ -1639,4 +1639,25 @@ public class AmAdminClientImpl implements AmAdminClient {
             throw new RuntimeException("发送验证码失败...");
         }
     }
+
+    @Override
+    public AppUtmRegResponse getstatisticsList(AppChannelStatisticsDetailRequest request) {
+        AppUtmRegResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-admin/app_utm_reg/getstatisticsList", request, AppUtmRegResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+
+    }
+    @Override
+    public AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request) {
+        AppUtmRegResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-admin/app_utm_reg/exportStatisticsList", request,
+                        AppUtmRegResponse.class)
+                .getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+    }
 }
