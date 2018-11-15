@@ -36,9 +36,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-@Api(value = "风车理财第三方登录绑定",tags = "api端-风车理财第三方登录绑定")
+@Api(value = "风车理财第三方登录",tags = "api端-风车理财第三方登录")
 @Controller
-@RequestMapping("/api/user/login")
+@RequestMapping("/hyjf-wechat/api/user/login")
 public class ApiUserLoginController {
 
     Logger logger = LoggerFactory.getLogger(ApiUserLoginController.class);
@@ -59,7 +59,7 @@ public class ApiUserLoginController {
      * @param response
      * @return
      */
-    @RequestMapping(value = "/third_login")
+    @RequestMapping(value = "/third_login.do")
     public ModelAndView nfcfLogin(HttpServletRequest request, HttpServletResponse response,
                                   @RequestParam String param,
                                   @RequestParam(value = "sign", required = false) String sign) {
@@ -91,7 +91,7 @@ public class ApiUserLoginController {
                 // 查询userId
                 Integer userId = loginService.getUserIdByBind(Integer.parseInt(wrbUserId), WrbCommonDateUtil.FCLC_INSTCODE);
                 // userid不存在,跳转登录页面
-                if (userId != null) {
+                if (userId != null&&userId!=0) {
                     UserVO users = loginService.getUsersById(userId);
                     BankOpenAccountVO account = registService.getBankOpenAccount(userId);
                     String accountId = null;
