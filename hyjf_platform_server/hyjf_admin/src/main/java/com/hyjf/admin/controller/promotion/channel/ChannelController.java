@@ -166,7 +166,7 @@ public class ChannelController extends BaseController {
            // ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "remark", channelCustomizeVO.getRemark(), 100, false);
             boolean check = channelService.getBySourceIdAndTerm(channelCustomizeVO.getSourceId(),channelCustomizeVO.getUtmTerm());
             logger.info("校验sourceId和utmTerm结果 check："+check);
-            if(!check){
+            if(check){
                 adminResult.setStatus(UtmResultResponse.FAIL);
                 adminResult.setStatusDesc("该渠道下关键字已经存在！");
             }else{
