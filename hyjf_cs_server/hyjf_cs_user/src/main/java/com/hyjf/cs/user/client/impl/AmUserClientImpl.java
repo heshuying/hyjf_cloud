@@ -1,20 +1,5 @@
 package com.hyjf.cs.user.client.impl;
 
-import static org.slf4j.LoggerFactory.getLogger;
-
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
@@ -38,6 +23,20 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+
+import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * @author xiasq
@@ -146,6 +145,23 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	@Override
+	public UserVO fUserById(int userId) {
+		String url = userService + "/user/findMainById/" + userId;
+		logger.info("findUserById url is : {}", url);
+		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
+		if (response != null) {
+			if (Response.SUCCESS.equals(response.getRtn())) {
+				UserVO userVO =  response.getResult();
+				logger.info("findUserById userVO is :{}", userVO);
+				return userVO;
+			}
+			logger.info("response rtn is : {}", response.getRtn());
+		} else {
+			logger.info("response is null....");
+		}
+		return null;
+	}
 
 	@Override
 	public UserVO findUserById(int userId) {
@@ -174,7 +190,15 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
-
+	@Override
+	public UserInfoVO fUserInfoById(int userId) {
+		UserInfoResponse response = restTemplate
+				.getForEntity(userService+"/userInfo/findMainById/" + userId, UserInfoResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
 	/**
 	 * 保存验证码
 	 * @param mobile
