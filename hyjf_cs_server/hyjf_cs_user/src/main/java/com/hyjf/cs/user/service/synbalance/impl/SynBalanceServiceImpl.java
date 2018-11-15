@@ -219,7 +219,6 @@ public class SynBalanceServiceImpl extends BaseUserServiceImpl implements SynBal
             resultBean.setBankTotal(df.format(accountUser.getBankTotal()));
             resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
             resultBean.setStatusDesc("成功");
-
             return resultBean;
         }
 
