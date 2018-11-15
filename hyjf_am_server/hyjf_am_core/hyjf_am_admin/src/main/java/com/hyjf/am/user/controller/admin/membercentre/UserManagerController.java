@@ -922,6 +922,7 @@ public class UserManagerController extends BaseController {
     @RequestMapping("/updateUserBankInfo")
     public IntegerResponse updateUserBankInfo(@RequestBody UserInfosUpdCustomizeRequest request) {
         logger.info("---updateUserBankInfo---  " + JSONObject.toJSONString(request));
+        int updateUser = 0;
         //更新银行卡信息
         BankCard bankCard = userManagerService.selectBankCardByUserId(Integer.parseInt(request.getUserId()));
         User user = userManagerService.selectUserByUserId(Integer.parseInt(request.getUserId()));
@@ -941,8 +942,15 @@ public class UserManagerController extends BaseController {
         bankAccountLog.setOperationType(2);// 操作类型 0绑定 1删除 2:修改银行卡
         bankAccountLog.setStatus(0);// 成功
         bankAccountLog.setCreateTime(new Date());// 操作时间
-
-        int updateUser = userManagerService.updateUserBankInfo(bankCard,bankAccountLog);
+        if(null!=bankCard){
+            //银行卡
+            bankCard.setBank(request.getBank());
+            //联行号
+            bankCard.setPayAllianceCode(request.getPayAllianceCode());
+            //银行卡号
+            bankCard.setCardNo(request.getCardNo());
+            updateUser = userManagerService.updateUserBankInfo(bankCard,bankAccountLog);
+        }
         return new IntegerResponse(updateUser);
     }
 }
