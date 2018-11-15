@@ -153,6 +153,9 @@ public class UserParameters {
 	 */
 	private String paymentAuthDesc = "部分交易过程中，会收取相应费用，请进行授权。\n例如：提现手续费，债转服务费等。";
 
+	// 用户ID
+	private Integer userId;
+
 	public String getHuifuOpenAccount() {
 		return huifuOpenAccount;
 	}
@@ -900,5 +903,13 @@ public class UserParameters {
 
 	public void setPaymentAuthExpire(String paymentAuthExpire) {
 		this.paymentAuthExpire = paymentAuthExpire;
+	}
+
+	public Integer getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Integer userId) {
+		this.userId = userId;
 	}
 }

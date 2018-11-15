@@ -254,7 +254,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 					+ (user.getInvestSms() == null ? 0 : user.getInvestSms())
 					+ (user.getRechargeSms() == null ? 0 : user.getRechargeSms())
 					+ (user.getRecieveSms() == null ? 0 : user.getRecieveSms());
-
+			result.setUserId(userId);
 			if (smsOpenStatus == 4) {
 				result.setSmsOpenStatus("0");
 			} else {
