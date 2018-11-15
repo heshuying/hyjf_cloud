@@ -261,7 +261,7 @@ public class ApiUserBindController extends BaseUserController {
 		jsonObj.put("userId",users.getUserId() );
 		jsonObj.put("mobile",apiUserPostBean.getLoginUserName() );
 		jsonObj.put("username",userName );
-		jsonObj.put("token",userName );
+		jsonObj.put("token",login.getData().getToken() );
 		jsonObj.put("roleId",login.getData().getRoleId() );
 		jsonObj.put("iconUrl",login.getData().getIconUrl() );
 		jsonObj.put("hyjfUserName",userName );
