@@ -898,4 +898,17 @@ public interface AmAdminClient {
 
 
     int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform);
+
+    /**
+     * 查询app渠道统计数据
+     * @param request
+     * @return
+     */
+    AppUtmRegResponse getstatisticsList(AppChannelStatisticsDetailRequest request);
+    /**
+     * 导出app渠道统计数据
+     * @param request
+     * @return
+     */
+    AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request);
 }
