@@ -2221,11 +2221,11 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //				borrowUsers.setProvince(StringUtils.EMPTY);
 //			}
 //
-			if (StringUtils.isNotEmpty(borrowBean.getComLocationCity())) {
-				borrowUsers.setCity(borrowBean.getComLocationCity());
-			} else {
-				borrowUsers.setCity(StringUtils.EMPTY);
-			}
+//			if (StringUtils.isNotEmpty(borrowBean.getComLocationCity())) {
+//				borrowUsers.setCity(borrowBean.getComLocationCity());
+//			} else {
+//				borrowUsers.setCity(StringUtils.EMPTY);
+//			}
 
 			if (StringUtils.isNotEmpty(borrowBean.getComLocationArea())) {
 				borrowUsers.setArea(borrowBean.getComLocationArea());
@@ -3235,7 +3235,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				// 用户信息 所在地区 省
 			//	borrowBean.setComLocationProvince(this.getValue(record.getProvince()));
 				// 用户信息 所在地区 市
-				borrowBean.setComLocationCity(this.getValue(record.getCity()));
+	//			borrowBean.setComLocationCity(this.getValue(record.getCity()));
 				// 用户信息 所在地区 区
 				borrowBean.setComLocationArea(this.getValue(record.getArea()));
 				// 用户信息 注册资本
@@ -5765,10 +5765,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	@Override
 	public int isEntrustedExistsUser(String userName) {
 		if (StringUtils.isNotEmpty(userName)) {
-			UserExample example = new UserExample();
-			UserExample.Criteria cra = example.createCriteria();
-			cra.andUsernameEqualTo(userName);
-			List<User> userList = this.userMapper.selectByExample(example);
+//			UserExample example = new UserExample();
+//			UserExample.Criteria cra = example.createCriteria();
+//			cra.andUsernameEqualTo(userName);
+//			List<User> userList = this.userMapper.selectByExample(example);
 //			UserExample example = new UsersExample();
 //			UsersExample.Criteria cra = example.createCriteria();
 //			cra.andUsernameEqualTo(userName);
@@ -5799,12 +5799,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			}
 			if(whiteList.get(0).getState() == 0){//状态 1启用  0禁用
 				return 6;
-			}
-			// 检查是否服务费授权
-			Integer isPaymentAuth = CommonUtils.checkPaymentAuthStatus(userList.get(0).getPaymentAuthStatus());
-			if(isPaymentAuth-0==0){
-				// 未服务费授权
-				return 7;
 			}
 		}
 		return 0;

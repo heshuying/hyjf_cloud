@@ -15,9 +15,7 @@ import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
-import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
+import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -328,6 +326,50 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         result.setProspectiveEarnings("");
         result.setInterest("");
         result.setStandardValues("0");
+
+        // add by liuyang  神策数据统计 20180820 start
+        // 原标项目编号
+        String bidNid = creditAssign.getBorrowNid();
+        // 根据债转编号查询转让记录
+        BorrowCreditVO borrowCreditVO = this.amTradeClient.getBorrowCreditByCreditNid(creditNid);
+        if(borrowCreditVO == null){
+            logger.error("根据债转编号查询转让记录失败,转让编号:["+creditNid + "].");
+            return result;
+        }
+        // 根据原标标号取借款信息
+        RightBorrowVO borrow = this.amTradeClient.getRightBorrowByNid(bidNid);
+        if(borrow==null){
+            logger.error("根据标的号获取标的信息失败,标的编号:["+bidNid+"].");
+            return result;
+        }
+        BorrowInfoVO borrowInfoVO = this.amTradeClient.getBorrowInfoByNid(bidNid);
+        if (borrowInfoVO == null){
+            logger.error("根据标的号查询标的详情信息失败,标的编号:["+bidNid+"].");
+            return result;
+        }
+        if (borrow != null) {
+            BorrowStyleVO projectBorrowStyle = this.amTradeClient.getBorrowStyle(borrow.getBorrowStyle());
+            if (projectBorrowStyle != null) {
+                result.setBorrowStyleName(StringUtils.isBlank(projectBorrowStyle.getName()) ? "" : projectBorrowStyle.getName());
+            } else {
+                result.setBorrowStyleName("");
+            }
+        }
+
+        // 项目名称
+        result.setProjectName(borrowInfoVO.getProjectName());
+        // 借款期限
+        result.setBorrowPeriod(borrow.getBorrowPeriod());
+        if ("endday".equals(borrow.getBorrowStyle())) {
+            result.setDurationUnit("天");
+        } else {
+            result.setDurationUnit("月");
+        }
+        // 债转期限
+        result.setCreditPeriod(borrowCreditVO.getCreditTerm());
+        // 期限单位
+        result.setCreditDurationUnit("天");
+        // add by liuyang  神策数据统计 20180820 end
         if(creditAssign!=null){
             AccountVO account = this.getAccountByUserId(tender.getUserId());
             BigDecimal balance = account.getBankBalance();

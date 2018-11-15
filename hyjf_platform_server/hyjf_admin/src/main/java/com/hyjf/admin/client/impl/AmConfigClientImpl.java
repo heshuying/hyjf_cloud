@@ -1332,6 +1332,15 @@ public class AmConfigClientImpl implements AmConfigClient {
         return restTemplate.postForObject("http://AM-ADMIN/am-admin/feeConfig/delete",
                 req, AdminFeeConfigResponse.class);
     }
+    /**
+     * 手续费配置校验
+     * @return
+     */
+    @Override
+    public AdminFeeConfigResponse validateFeeConfigBeforeAction(AdminFeeConfigRequest request){
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/feeConfig/validateFeeConfigBeforeAction",
+                request, AdminFeeConfigResponse.class);
+    }
 
     @Override
     public List<AdminSystemVO> getUserPermission(String userName) {
