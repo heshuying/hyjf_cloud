@@ -17,14 +17,14 @@ spring:
     percentage: 0.1
     
   profiles:
-    active: dev
+    active: beta
 
-eureka:
-  client:
-    serviceUrl:
-      defaultZone: ${EUREKA.CLIENT.SERVICEURL}
-  instance:
-    preferIpAddress: true
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: ${EUREKA.CLIENT.SERVICEURL}
+#  instance:
+#    preferIpAddress: true
 
 server:
   port: 9095
