@@ -175,7 +175,7 @@ FROM
 	
 	<select id="getRepayTime" parameterType="java.lang.Integer" resultType="INTEGER">
 		SELECT MAX(recover_time) FROM (
-		SELECT MAX(a.recover_time) as recover_time FROM ht_borrow_recover a WHERE a.user_id = #{userId,jdbcType=INTEGER} and accede_order_id is null
+		SELECT MAX(a.recover_yestime) as recover_time FROM ht_borrow_recover a WHERE a.user_id = #{userId,jdbcType=INTEGER} and accede_order_id is null
 		UNION ALL
 		SELECT MAX(b.repay_actual_time) as recover_time FROM ht_hjh_repay b WHERE b.user_id = #{userId,jdbcType=INTEGER}
 		UNION ALL
