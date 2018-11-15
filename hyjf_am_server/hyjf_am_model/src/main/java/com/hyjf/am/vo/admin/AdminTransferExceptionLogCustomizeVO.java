@@ -14,32 +14,18 @@ public class AdminTransferExceptionLogCustomizeVO extends TransferExceptionLogVO
 
     private static final long serialVersionUID = 1L;
 
-    //用户名
-    private String username;
-
-    //交易类型
-    private String tradeType;
-
     //交易状态
     private String tradeStatus;
 
     //添加时间
-    private String addTimeView;
+    private String createTimeView;
 
-    public String getUsername() {
-        return username;
+    public String getCreateTimeView() {
+        return createTimeView;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getTradeType() {
-        return tradeType;
-    }
-
-    public void setTradeType(String tradeType) {
-        this.tradeType = tradeType;
+    public void setCreateTimeView(String createTimeView) {
+        this.createTimeView = createTimeView;
     }
 
     public String getTradeStatus() {
@@ -50,12 +36,6 @@ public class AdminTransferExceptionLogCustomizeVO extends TransferExceptionLogVO
         this.tradeStatus = tradeStatus;
     }
 
-    public String getAddTimeView() {
-        return addTimeView;
-    }
 
-    public void setAddTimeView(String addTimeView) {
-        this.addTimeView = addTimeView;
-    }
 
 }

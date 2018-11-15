@@ -48,12 +48,12 @@ public class UserRegisterServiceImpl implements UserRegisterService {
 
     @Override
     public UserVO checkUserByUserId(Integer userId) {
-        return amUserClient.findUserById(userId);
+        return amUserClient.fUserById(userId);
     }
 
     @Override
     public UserInfoVO getUserInfoByUserId(Integer userId) {
-        return amUserClient.findUserInfoById(userId);
+        return amUserClient.fUserInfoById(userId);
     }
 
     @Override

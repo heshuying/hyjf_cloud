@@ -58,6 +58,8 @@ public class MyPlanListResultBean {
 		/** 标签：无，加息券，体验金 */
 		private String label;
 
+		private String couponType;
+
 		public String getBorrowUrl() {
 			return borrowUrl;
 		}
@@ -144,6 +146,14 @@ public class MyPlanListResultBean {
 
 		public void setLabel(String label) {
 			this.label = label;
+		}
+
+		public String getCouponType() {
+			return couponType;
+		}
+
+		public void setCouponType(String couponType) {
+			this.couponType = couponType;
 		}
 	}
 

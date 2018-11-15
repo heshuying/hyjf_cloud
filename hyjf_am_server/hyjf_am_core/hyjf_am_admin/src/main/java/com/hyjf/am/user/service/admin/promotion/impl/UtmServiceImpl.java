@@ -332,14 +332,24 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
     }
 
     @Override
-    public Integer getBySourceIdAndTerm(String sourceId, String utmTerm) {
+    public Integer getBySourceIdAndTerm(String sourceId, String utmTerm,String utmId) {
         UtmExample example = new UtmExample();
         UtmExample.Criteria cra = example.createCriteria();
         cra.andSourceIdEqualTo(Integer.parseInt(sourceId));
         cra.andUtmTermEqualTo(utmTerm);
+        Utm utm = null;
         List<Utm> utmList = this.utmMapper.selectByExample(example);
         if (utmList != null && utmList.size() > 0) {
-            return utmList.size();
+            utm = utmList.get(0);
+            if (utm != null) {
+                if(StringUtils.isNotEmpty(utmId)){
+                    if(utm.getUtmId() != Integer.parseInt(utmId)){
+                        return 1;
+                    }
+                }else{
+                    return 1;
+                }
+            }
         }
         return 0;
     }

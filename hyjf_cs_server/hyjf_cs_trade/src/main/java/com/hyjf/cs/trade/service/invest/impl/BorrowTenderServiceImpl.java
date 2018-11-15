@@ -50,6 +50,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
@@ -61,11 +62,9 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
 
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.*;
 
 /**
@@ -108,6 +107,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @Date 2018/6/24 14:35
      */
     @Override
+    @HystrixCommand
     public WebResult<Map<String, Object>> borrowTender(TenderRequest request) {
         UserVO loginUser = amUserClient.findUserById(request.getUserId());
         Integer userId = loginUser.getUserId();
@@ -639,7 +639,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
         BigDecimal earnings = new BigDecimal("0");
         // 计算历史回报
-        String interest = null;
+        String interest = "0";
         String borrowStyle = borrow.getBorrowStyle();// 项目还款方式
         Integer borrowPeriod = borrow.getBorrowPeriod();// 周期
         BigDecimal borrowApr = borrow.getBorrowApr();// 項目预期年化收益率

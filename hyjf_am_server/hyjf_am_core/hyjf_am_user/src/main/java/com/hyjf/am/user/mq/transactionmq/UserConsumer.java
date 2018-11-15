@@ -55,7 +55,7 @@ public class UserConsumer extends Consumer {
 			Integer userId = JSONObject.parseObject(msg.getBody(), Integer.class);
 
 			try {
-				User user = userService.fUserByUserId(userId);
+				User user = userService.findUserByUserId(userId);
 				if (user == null) {
                     throw new RuntimeException("找不到用户，userId is : " + userId);
                 }

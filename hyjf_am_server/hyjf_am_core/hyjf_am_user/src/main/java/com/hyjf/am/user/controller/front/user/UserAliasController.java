@@ -75,7 +75,7 @@ public class UserAliasController extends BaseController {
 		UserAlias userAlias = userAliasService.findAliasesByUserId(userId);
 		if (null != userAlias) {
 			UserAliasVO userAliasVO = new UserAliasVO();
-			userAliasVO.setMobile(userAliasService.fUserByUserId(userId).getMobile());
+			userAliasVO.setMobile(userAliasService.findUserByUserId(userId).getMobile());
 			BeanUtils.copyProperties(userAlias, userAliasVO);
 			response.setResult(userAliasVO);
 		}
