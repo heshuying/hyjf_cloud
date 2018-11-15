@@ -23,6 +23,7 @@ public class DzqzCallUtil {
 
     public static DzqzCallBean callApiBg(DzqzCallBean bean){
         DzqzCallBean ret = null;
+        log.info("-----------法大大开始准备调用pay工程----");
         try {
             // 取出调用pay工程的url
             bean.setAllParams(new TreeMap<String, String>());
