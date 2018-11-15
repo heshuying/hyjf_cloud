@@ -253,15 +253,16 @@ public class FddHandle {
 		bean.setBorrowerCustomerID(borrowerCustomerID);
 		logger.info("-----------，合同编号：" + borrowTender.getNid() + ",获得借款人认证编号：" + bean.getBorrowerCustomerID());
 		bean.setContractName(FddGenerateContractConstant.CONTRACT_DOC_TITLE);
-
+		logger.info("-----------，合同编号：" + borrowTender.getNid() + ",开始判断合同状态");
 		boolean isSign = this.isCreatContract(borrowTender.getNid());
+		logger.info("-----------，合同编号：" + borrowTender.getNid() + ",合同状态为：" + isSign);
 		if (isSign) {// 单独走签署接口
 			logger.info("-------------nid:" + borrowTender.getNid() + ",合同已生成，开始签署合同--------");
 			this.updateSignContract(bean);
 		} else {
 			String paramStr = paramter.toJSONString();
-
-            List<FddTempletVO> fddTemplets = this.amTradeClient.getFddTempletList(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER);
+			logger.info("-----------，合同编号：" + borrowTender.getNid() + ",开始查询模板！");
+			List<FddTempletVO> fddTemplets = this.amTradeClient.getFddTempletList(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER);
             if (fddTemplets != null && fddTemplets.size() == 1) {
 				logger.info("----------------合同编号：" + borrowTender.getNid() + ",开始调用法大大接口生成居间服务协议-----");
                 FddTempletVO fddTemplet = fddTemplets.get(0);
