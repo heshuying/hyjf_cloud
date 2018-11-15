@@ -17,6 +17,7 @@ import java.util.List;
 public interface UserInfoService extends BaseService{
     UserInfo findUserInfoById(int userId);
 
+    UserInfo fUserInfoById(int userId);
     /**
      * @Description 根据身份证号查询用户信息
      * @Author sunss
