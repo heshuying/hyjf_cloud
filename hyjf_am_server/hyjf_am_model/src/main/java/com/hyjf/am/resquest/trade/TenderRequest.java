@@ -125,7 +125,11 @@ public class TenderRequest extends BaseVO {
      */
     private String userName;
 
-
+    /**
+     * 投资来源
+     * @return
+     */
+    private String tenderFrom;
 
     public String getIsConfirm() {
         return isConfirm;
@@ -373,6 +377,14 @@ public class TenderRequest extends BaseVO {
 
     public void setBorrowType(String borrowType) {
         this.borrowType = borrowType;
+    }
+
+    public String getTenderFrom() {
+        return tenderFrom;
+    }
+
+    public void setTenderFrom(String tenderFrom) {
+        this.tenderFrom = tenderFrom;
     }
 
     public String getPresetProps() {
