@@ -4,7 +4,7 @@
   <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.BorrowProjectType" >
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="borrow_project_type" property="borrowProjectType" jdbcType="VARCHAR" />
-    <result column="borrow_cd" property="borrowCd" jdbcType="BIT" />
+    <result column="borrow_cd" property="borrowCd" jdbcType="TINYINT" />
     <result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
     <result column="borrow_class" property="borrowClass" jdbcType="VARCHAR" />
     <result column="invest_user_type" property="investUserType" jdbcType="TINYINT" />
@@ -127,7 +127,7 @@
       create_user_id, create_time, update_user_id, 
       update_time, increase_money, interest_coupon, 
       taste_money, increase_interest_flag)
-    values (#{borrowProjectType,jdbcType=VARCHAR}, #{borrowCd,jdbcType=BIT}, #{borrowName,jdbcType=VARCHAR}, 
+    values (#{borrowProjectType,jdbcType=VARCHAR}, #{borrowCd,jdbcType=TINYINT}, #{borrowName,jdbcType=VARCHAR}, 
       #{borrowClass,jdbcType=VARCHAR}, #{investUserType,jdbcType=TINYINT}, #{status,jdbcType=TINYINT}, 
       #{investStart,jdbcType=VARCHAR}, #{investEnd,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
       #{createUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateUserId,jdbcType=INTEGER}, 
@@ -197,7 +197,7 @@
         #{borrowProjectType,jdbcType=VARCHAR},
       </if>
       <if test="borrowCd != null" >
-        #{borrowCd,jdbcType=BIT},
+        #{borrowCd,jdbcType=TINYINT},
       </if>
       <if test="borrowName != null" >
         #{borrowName,jdbcType=VARCHAR},
@@ -262,7 +262,7 @@
         borrow_project_type = #{record.borrowProjectType,jdbcType=VARCHAR},
       </if>
       <if test="record.borrowCd != null" >
-        borrow_cd = #{record.borrowCd,jdbcType=BIT},
+        borrow_cd = #{record.borrowCd,jdbcType=TINYINT},
       </if>
       <if test="record.borrowName != null" >
         borrow_name = #{record.borrowName,jdbcType=VARCHAR},
@@ -318,7 +318,7 @@
     update ht_borrow_project_type
     set id = #{record.id,jdbcType=INTEGER},
       borrow_project_type = #{record.borrowProjectType,jdbcType=VARCHAR},
-      borrow_cd = #{record.borrowCd,jdbcType=BIT},
+      borrow_cd = #{record.borrowCd,jdbcType=TINYINT},
       borrow_name = #{record.borrowName,jdbcType=VARCHAR},
       borrow_class = #{record.borrowClass,jdbcType=VARCHAR},
       invest_user_type = #{record.investUserType,jdbcType=TINYINT},
@@ -345,7 +345,7 @@
         borrow_project_type = #{borrowProjectType,jdbcType=VARCHAR},
       </if>
       <if test="borrowCd != null" >
-        borrow_cd = #{borrowCd,jdbcType=BIT},
+        borrow_cd = #{borrowCd,jdbcType=TINYINT},
       </if>
       <if test="borrowName != null" >
         borrow_name = #{borrowName,jdbcType=VARCHAR},
@@ -398,7 +398,7 @@
   <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowProjectType" >
     update ht_borrow_project_type
     set borrow_project_type = #{borrowProjectType,jdbcType=VARCHAR},
-      borrow_cd = #{borrowCd,jdbcType=BIT},
+      borrow_cd = #{borrowCd,jdbcType=TINYINT},
       borrow_name = #{borrowName,jdbcType=VARCHAR},
       borrow_class = #{borrowClass,jdbcType=VARCHAR},
       invest_user_type = #{investUserType,jdbcType=TINYINT},
