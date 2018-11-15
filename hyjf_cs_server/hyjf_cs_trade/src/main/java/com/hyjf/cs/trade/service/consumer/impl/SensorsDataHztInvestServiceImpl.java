@@ -250,7 +250,7 @@ public class SensorsDataHztInvestServiceImpl extends BaseServiceImpl implements 
             }
             // 优惠券ID
             Integer couponGrantId = couponTender.getCouponGrantId();
-
+            logger.info("优惠券ID:" + couponGrantId);
             // 根据优惠券ID查询优惠券信息
             CouponUserVO couponUser = this.amTradeClient.selectCouponUserById(couponGrantId);
             if (couponUser == null) {
@@ -259,9 +259,9 @@ public class SensorsDataHztInvestServiceImpl extends BaseServiceImpl implements 
             }
             // 优惠券编号
             String couponCode = couponUser.getCouponCode();
+            logger.info("优惠券编号:" + couponCode);
             // 获取优惠券配置信息
             CouponConfigVO couponConfig = this.amTradeClient.selectCouponConfig(couponCode);
-
             if (couponConfig == null) {
                 logger.error("根据优惠券编号查询优惠券配置信息失败,优惠券信息:[" + couponCode + "].");
                 return;
@@ -269,7 +269,6 @@ public class SensorsDataHztInvestServiceImpl extends BaseServiceImpl implements 
 
             // 根据优惠券投资订单号查询优惠券投资信息
             BorrowTenderCpnVO borrowTenderCpn = this.amTradeClient.selectBorrowTenderCpnByCouponTenderId(couponRealTender.getCouponTenderId());
-
             if (borrowTenderCpn == null) {
                 logger.error("根据优惠券投资订单号查询优惠券投资信息失败,优惠券投资订单号:[" + couponRealTender.getCouponTenderId() + "].");
                 return;
@@ -278,6 +277,8 @@ public class SensorsDataHztInvestServiceImpl extends BaseServiceImpl implements 
                 // 体验金
                 if (couponConfig.getCouponType() == 1) {
                     String tenderNid = borrowTenderCpn.getNid();
+                    // 优惠券投资订单号
+                    logger.info("投资订单号:[" + tenderNid + "].");
                     // 取得体验金收益期限
                     Integer couponProfitTime = this.amTradeClient.getCouponProfitTime(tenderNid);
                     // 计算体验金收益
@@ -363,7 +364,7 @@ public class SensorsDataHztInvestServiceImpl extends BaseServiceImpl implements 
             // 投资金额限制
             properties.put("tender_amount_limit", createCouponTenderMoney(couponConfig.getTenderQuotaType(), couponConfig.getTenderQuotaMin(), couponConfig.getTenderQuotaMax(), couponConfig.getTenderQuota()));
             // 奖励券创建时间 TODO CouponUserVO add_time 字段变更
-            properties.put("coupon_createtime", GetDate.getDateTimeMyTime(couponUser.getAddTime()));
+            properties.put("coupon_createtime", couponUser.getCreateTime());
             // 奖励券到期时间 TODO CouponUserVO end_time 字段变更
             properties.put("coupon_endtime", GetDate.getDateTimeMyTime(couponUser.getEndTime()));
         } else {

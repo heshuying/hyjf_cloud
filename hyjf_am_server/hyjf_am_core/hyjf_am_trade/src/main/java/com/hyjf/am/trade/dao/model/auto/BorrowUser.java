@@ -19,6 +19,8 @@ public class BorrowUser implements Serializable {
      */
     private String username;
 
+    private String city;
+
     private String area;
 
     /**
@@ -283,6 +285,14 @@ public class BorrowUser implements Serializable {
 
     public void setUsername(String username) {
         this.username = username == null ? null : username.trim();
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city == null ? null : city.trim();
     }
 
     public String getArea() {

@@ -886,4 +886,16 @@ public interface AmAdminClient {
      * @return
      */
     AdminHolidaysConfigResponse updateHolidays(AdminHolidaysConfigRequest request);
+
+
+    /**
+     * 校验千乐验证码
+     * @param mobile
+     * @param code
+ return
+     */
+    int onlyCheckMobileCode(String mobile, String code);
+
+
+    int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform);
 }
