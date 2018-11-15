@@ -168,7 +168,7 @@ public class ChannelController extends BaseController {
             logger.info("校验sourceId和utmTerm结果 check："+check);
             if(check){
                 adminResult.setStatus(UtmResultResponse.FAIL);
-                adminResult.setStatusDesc("该渠道下关键字已经存在！");
+                adminResult.setStatusDesc("渠道下的关键字已经存在！");
             }else{
                 adminResult.setStatus(AdminResult.SUCCESS);
             }
