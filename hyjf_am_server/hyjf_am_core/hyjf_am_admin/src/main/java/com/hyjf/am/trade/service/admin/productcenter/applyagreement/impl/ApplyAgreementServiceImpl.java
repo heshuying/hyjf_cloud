@@ -51,7 +51,22 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
     public List<BorrowRepayAgreementCustomizeVO> selectBorrowRepayPlan(BorrowRepayAgreementAmRequest request, int limitStart, int limitEnd) {
         request.setLimitStart(limitStart);
         request.setLimitEnd(limitEnd);
-        return this.borrowRepayAgreementCustomizeMapper.selectBorrowRepayPlan(request);
+        List<BorrowRepayAgreementCustomizeVO> list = this.borrowRepayAgreementCustomizeMapper.selectBorrowRepayPlan(request);
+        if (list != null && list.size() > 0) {
+            for (BorrowRepayAgreementCustomizeVO customize : list) {//判断是否申请过垫付协议
+                ApplyAgreementExample applyAgreement = new ApplyAgreementExample();
+                ApplyAgreementExample.Criteria criteria = applyAgreement.createCriteria();
+                criteria.andBorrowNidEqualTo(customize.getBorrowNid());
+                criteria.andRepayPeriodEqualTo(customize.getRepayPeriod());
+                Integer count = this.applyAgreementMapper.countByExample(applyAgreement);
+                if (count > 0) {
+                    customize.setApplyagreements(1);
+                } else {
+                    customize.setApplyagreements(0);
+                }
+            }
+        }
+        return  list;
     }
 
     /**
