@@ -20,6 +20,8 @@ import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.pdf.PdfToHtml;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -38,6 +40,8 @@ import java.util.*;
  */
 @Service
 public class ProtocolServiceImpl implements ProtocolService {
+
+    private static final Logger logger = LoggerFactory.getLogger(ProtocolServiceImpl.class);
 
     @Autowired
     private AmTradeClient client;
@@ -153,6 +157,8 @@ public class ProtocolServiceImpl implements ProtocolService {
                 imgUrl=savePath+"-"+img;
             }
             protocolTemplate.setImgUrl(imgUrl);
+            protocolTemplate.setCreateUserId(createUserId);
+            protocolTemplate.setUpdateUserId(createUserId);
 
             //新增协议模板
             protocolTemplateCommonVO.setProtocolTemplateVO(protocolTemplate);
@@ -165,7 +171,8 @@ public class ProtocolServiceImpl implements ProtocolService {
             //发往am里面进行保存
             listProtocolTemplateCommonVO.add(protocolTemplateCommonVO);
             request.setRecordList(listProtocolTemplateCommonVO);
-            client.insert(request);
+            int savenCount = client.insert(request);
+            logger.info("添加协议模板保存数据数量,savenCount="+savenCount);
 
             //将协议模板放入redis中
             RedisUtils.set(RedisConstants.PROTOCOL_TEMPLATE_URL+protocolTemplate.getProtocolId(),protocolTemplate.getProtocolUrl()+"&"+protocolTemplate.getImgUrl());

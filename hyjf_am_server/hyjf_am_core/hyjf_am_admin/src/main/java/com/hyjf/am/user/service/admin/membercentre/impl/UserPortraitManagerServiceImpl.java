@@ -148,7 +148,7 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
                     if (usersPortrait.getAge() != null && usersPortrait.getAge() > 100) {
                         age = "100";
                     }
-                    if (usersPortrait.getSex() != null && !("未知").equals(usersPortrait.getSex()) && usersPortrait.getAge() > 0) {
+                    if (usersPortrait.getSex() != null && null != usersPortrait.getAge() && usersPortrait.getAge() > 0) {
                         sex = usersPortrait.getSex().equals("男") ? "MAN" : "WOMAN";
                         String sexAge = jedis.hget(redisKey, sex + age);
                         customize.setSexAge(sexAge);

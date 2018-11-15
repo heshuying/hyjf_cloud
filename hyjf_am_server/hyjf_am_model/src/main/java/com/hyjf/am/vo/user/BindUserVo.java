@@ -14,7 +14,7 @@ public class BindUserVo extends BaseVO implements Serializable {
 
     private Integer userId;
 
-    private Long bindUniqueId;
+    private Integer bindUniqueId;
 
     private Integer bindPlatformId;
 
@@ -46,11 +46,11 @@ public class BindUserVo extends BaseVO implements Serializable {
         this.userId = userId;
     }
 
-    public Long getBindUniqueId() {
+    public Integer getBindUniqueId() {
         return bindUniqueId;
     }
 
-    public void setBindUniqueId(Long bindUniqueId) {
+    public void setBindUniqueId(Integer bindUniqueId) {
         this.bindUniqueId = bindUniqueId;
     }
 

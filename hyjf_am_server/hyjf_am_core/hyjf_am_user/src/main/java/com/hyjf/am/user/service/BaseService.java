@@ -23,6 +23,15 @@ public interface BaseService {
      * @param userId
      * @return
      */
+    User fUserByUserId(int userId);
+
+
+    /**
+     * 根据用户ID获取用户信息
+     *
+     * @param userId
+     * @return
+     */
     User findUserByUserId(int userId);
 
     /**

@@ -2,10 +2,7 @@ package com.hyjf.cs.user.controller.api.regist;
 
 import com.hyjf.am.response.WrbResponse;
 import com.hyjf.am.resquest.api.WrbRegisterRequest;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.UtmPlatVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.util.WrbCommonDateUtil;
 import com.hyjf.common.util.WrbParseParamUtil;
@@ -117,7 +114,8 @@ public class WrbRegiestController {
             // 如果用户已经存在,表示该手机号已经注册
             if (user != null) {
                 String user_id = String.valueOf(user.getUserId());
-                Integer bindUsers = userRegisterService.selectByUserId(user.getUserId(), instCode);
+                BindUserVo bindUsers=
+                        userRegisterService.getBindUser(Integer.valueOf(wrbRegisterRequestBean.getWrb_user_id()), Integer.valueOf(instCode));
                 if (bindUsers == null) {
                     log.info("用户手机号已在平台注册:用户名:{},用户手机号:{}", user.getUsername(), mobile);
                     // 合作平台的老用户
@@ -126,7 +124,7 @@ public class WrbRegiestController {
                     resultBean.setPf_user_id(user_id);
                     return resultBean;
                 } else {
-                    if (user_id.equals(wrbRegisterRequestBean.getWrb_user_id())) {
+                    if (StringUtils.equals(bindUsers.getBindUniqueId()+"",wrbRegisterRequestBean.getWrb_user_id())) {
                         resultBean.setRetcode(RETCODE2);
                         resultBean.setRetmsg("注册成功");
                         // 用户Id
@@ -169,10 +167,15 @@ public class WrbRegiestController {
 
                     //处理用户基本信息
                     UserInfoVO userInfo = userRegisterService.getUserInfoByUserId(users.getUserId());
+                    if (userInfo == null) {
+                        log.info("根据用户ID获取用户信息表失败 UserInfoVO,用户ID:{}", userId);
+                        resultBean.setRetcode(RETCODE);
+                        resultBean.setRetmsg("注册失败");
+                        return resultBean;
+                    }
                     userInfo.setIdcard(wrbRegisterRequestBean.getId_no());
                     userInfo.setTruename(wrbRegisterRequestBean.getTrue_name());
                     userRegisterService.updateUserInfoByUserInfo(userInfo);
-
                     //插入用户绑定表
                     userRegisterService.bindThirdUser(userId, Integer.valueOf(wrbRegisterRequestBean.getWrb_user_id()), Integer.valueOf(instCode));
                     log.info("汇盈金福用户：{} 跟风车理财用户：{}已经绑定！", userId, userId);
@@ -189,7 +192,7 @@ public class WrbRegiestController {
                 }
             }
         } catch (Exception e) {
-            log.info("用户注册失败~,手机号:{},失败原因:{}", mobile, e);
+            log.error("用户注册失败~,手机号:{},失败原因:", mobile, e);
             resultBean.setRetcode(RETCODE);
             resultBean.setRetmsg("注册失败");
             return resultBean;

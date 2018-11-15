@@ -309,4 +309,36 @@ public class CouponRecoverCustomize implements Serializable{
         this.couponUserCode = couponUserCode;
     }
 
+    @Override
+    public String toString() {
+        return "CouponRecoverCustomize{" +
+                "id=" + id +
+                ", borrowNid='" + borrowNid + '\'' +
+                ", recoverPeriod='" + recoverPeriod + '\'' +
+                ", recoverYestime='" + recoverYestime + '\'' +
+                ", recoverInterest='" + recoverInterest + '\'' +
+                ", recoverAccount='" + recoverAccount + '\'' +
+                ", recoverCapital='" + recoverCapital + '\'' +
+                ", recoverTime='" + recoverTime + '\'' +
+                ", expTime='" + expTime + '\'' +
+                ", transferId='" + transferId + '\'' +
+                ", receivedFlg='" + receivedFlg + '\'' +
+                ", receivedFlgOrigin='" + receivedFlgOrigin + '\'' +
+                ", recoverStatus='" + recoverStatus + '\'' +
+                ", transferTime='" + transferTime + '\'' +
+                ", updateTime=" + updateTime +
+                ", tenderNid='" + tenderNid + '\'' +
+                ", couponType=" + couponType +
+                ", addip='" + addip + '\'' +
+                ", couponUserCode='" + couponUserCode + '\'' +
+                ", timeStartSrch='" + timeStartSrch + '\'' +
+                ", timeEndSrch='" + timeEndSrch + '\'' +
+                ", limitStart=" + limitStart +
+                ", limitEnd=" + limitEnd +
+                ", userId='" + userId + '\'' +
+                ", bNid='" + bNid + '\'' +
+                ", tenderId='" + tenderId + '\'' +
+                ", orderId='" + orderId + '\'' +
+                '}';
+    }
 }

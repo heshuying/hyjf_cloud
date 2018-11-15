@@ -4063,7 +4063,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public CouponRecoverCustomizeVO selectCurrentCouponRecover(String couponTenderNid, int periodNow) {
-        CouponRecoverCustomizeResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/couponperiodrepay/selectcurrentcouponrecover/" + couponTenderNid + "/" +periodNow,CouponRecoverCustomizeResponse.class).getBody();
+        String url = "http://AM-TRADE/am-trade/couponperiodrepay/selectcurrentcouponrecover/" + couponTenderNid + "/" +periodNow;
+        logger.info("CouponRecoverCustomizeVO url is :{} ", url);
+        CouponRecoverCustomizeResponse response = restTemplate.getForEntity(url,CouponRecoverCustomizeResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }
@@ -5095,7 +5097,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public int countByNidAndTrade(String nid, String trade) {
         String url = "http://AM-TRADE/am-trade/accountList/countbynidandtrade/"+nid+"/"+trade;
         AccountListResponse response = restTemplate.getForEntity(url,AccountListResponse.class).getBody();
-        if (response != null && response.getResult() != null) {
+        if (response != null) {
             return response.getTotalRecord();
         }
         return 1;
@@ -5136,7 +5138,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public int insertBankMerchantAccountList(BankMerchantAccountListVO bankMerchantAccountList) {
         BankMerchantAccountListResponse result = restTemplate.postForEntity(
-                "http://AM-TRADE/am-trade/account/insertbankmerchantaccount",bankMerchantAccountList,
+                "http://AM-TRADE/am-trade/account/insertbankmerchantaccountlist",bankMerchantAccountList,
                 BankMerchantAccountListResponse.class).getBody();
         if (result != null) {
             return result.getFlag();

@@ -61,12 +61,15 @@ public class BatchCouponRepayController extends BaseController {
      * @return
      */
     @GetMapping("/selectcurrentcouponrecover/{couponTenderNid}/{periodNow}")
-    public CouponRecoverCustomizeResponse selectCurrentCouponRecover(@PathVariable String couponTenderNid,@PathVariable int periodNow) {
+    public CouponRecoverCustomizeResponse selectCurrentCouponRecover(@PathVariable String couponTenderNid,
+                                                                     @PathVariable int periodNow) {
+        logger.info("selectCurrentCouponRecover run, couponTenderNid is :{}, periodNow is: {}", couponTenderNid, periodNow);
         CouponRecoverCustomizeResponse response = new CouponRecoverCustomizeResponse();
         Map<String,Object> map = new HashMap<>();
         map.put("tenderNid",couponTenderNid);
         map.put("periodNow",periodNow);
         CouponRecoverCustomize customize = couponRepayService.selectCurrentCouponRecover(map);
+        logger.info("return customize is : {}", customize);
         if (customize != null) {
             CouponRecoverCustomizeVO customizeVO = new CouponRecoverCustomizeVO();
             BeanUtils.copyProperties(customize,customizeVO);

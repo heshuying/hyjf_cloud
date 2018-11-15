@@ -145,13 +145,38 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	@Override
+	public UserVO fUserById(int userId) {
+		String url = userService + "/user/findMainById/" + userId;
+		logger.info("findUserById url is : {}", url);
+		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
+		if (response != null) {
+			if (Response.SUCCESS.equals(response.getRtn())) {
+				UserVO userVO =  response.getResult();
+				logger.info("findUserById userVO is :{}", userVO);
+				return userVO;
+			}
+			logger.info("response rtn is : {}", response.getRtn());
+		} else {
+			logger.info("response is null....");
+		}
+		return null;
+	}
 
 	@Override
 	public UserVO findUserById(int userId) {
-		UserResponse response = restTemplate
-				.getForEntity(userService+"/user/findById/" + userId, UserResponse.class).getBody();
-		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return response.getResult();
+		String url = userService + "/user/findById/" + userId;
+		logger.info("findUserById url is : {}", url);
+		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
+		if (response != null) {
+			if (Response.SUCCESS.equals(response.getRtn())) {
+				UserVO userVO =  response.getResult();
+				logger.info("findUserById userVO is :{}", userVO);
+				return userVO;
+			}
+			logger.info("response rtn is : {}", response.getRtn());
+		} else {
+			logger.info("response is null....");
 		}
 		return null;
 	}
@@ -165,7 +190,15 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
-
+	@Override
+	public UserInfoVO fUserInfoById(int userId) {
+		UserInfoResponse response = restTemplate
+				.getForEntity(userService+"/userInfo/findMainById/" + userId, UserInfoResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
 	/**
 	 * 保存验证码
 	 * @param mobile

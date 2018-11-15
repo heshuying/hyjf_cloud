@@ -49,6 +49,17 @@ public class AssetExceptionServiceImpl extends BaseServiceImpl implements AssetE
     }
 
     /**
+     * 查询异常标的列表
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public List<AssetExceptionCustomizeVO> exportAssetExceptionList(AssetExceptionRequest request) {
+        return amAdminClient.exportAssetExceptionList(request);
+    }
+
+    /**
      * 插入异常标的并更新保证金
      *
      * @param assetExceptionRequest

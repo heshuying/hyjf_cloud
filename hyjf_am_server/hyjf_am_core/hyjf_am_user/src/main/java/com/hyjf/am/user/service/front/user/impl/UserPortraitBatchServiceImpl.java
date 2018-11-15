@@ -139,6 +139,10 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
                             userPortrait.setSex("未知");
                         }
                     }
+                    //有无主单
+                    if(null != userInfo.getAttribute()){
+                        userPortrait.setAttribute(userInfo.getAttribute());
+                    }
                     // 赋值身份证号码和城市
                     if (StringUtils.isNotBlank(userInfo.getIdcard())) {
                         try {
@@ -166,10 +170,6 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
                                 }
                             } else {
                                 userPortrait.setCity("");
-                            }
-
-                            if(null != userInfo.getAttribute()){
-                                userPortrait.setAttribute(userInfo.getAttribute());
                             }
 
                         } catch (Exception e) {

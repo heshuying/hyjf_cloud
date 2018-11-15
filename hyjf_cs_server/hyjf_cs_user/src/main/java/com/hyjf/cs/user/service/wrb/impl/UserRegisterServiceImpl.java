@@ -1,10 +1,7 @@
 package com.hyjf.cs.user.service.wrb.impl;
 
 import com.hyjf.am.resquest.api.WrbRegisterRequest;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.UtmPlatVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.service.wrb.UserRegisterService;
@@ -45,14 +42,18 @@ public class UserRegisterServiceImpl implements UserRegisterService {
         return amUserClient.getUserIdByBind(userId,Integer.valueOf(instCode));
     }
 
+
+
+
+
     @Override
     public UserVO checkUserByUserId(Integer userId) {
-        return amUserClient.findUserById(userId);
+        return amUserClient.fUserById(userId);
     }
 
     @Override
     public UserInfoVO getUserInfoByUserId(Integer userId) {
-        return amUserClient.findUserInfoById(userId);
+        return amUserClient.fUserInfoById(userId);
     }
 
     @Override
@@ -73,6 +74,11 @@ public class UserRegisterServiceImpl implements UserRegisterService {
     @Override
     public boolean insertAppChannelStatisticsDetail(WrbRegisterRequest wrbRegisterRequest) {
         return amUserClient.insertAppChannelStatisticsDetail(wrbRegisterRequest);
+    }
+
+    @Override
+    public BindUserVo getBindUser(Integer userId, Integer bindPlatformId) {
+        return amUserClient.getBindUser(userId, bindPlatformId);
     }
 
 

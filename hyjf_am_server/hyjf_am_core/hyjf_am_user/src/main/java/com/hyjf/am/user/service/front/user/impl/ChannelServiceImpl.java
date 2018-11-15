@@ -5,9 +5,11 @@ package com.hyjf.am.user.service.front.user.impl;
 
 import com.hyjf.am.user.service.front.user.ChannelService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.admin.UtmVO;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author yaoyong
@@ -38,5 +40,10 @@ public class ChannelServiceImpl extends BaseServiceImpl implements ChannelServic
         return utmPlat;
     }
 
+    @Override
+    public List<UtmVO> getByPageList(Map<String, Object> map) {
+        List<UtmVO> list = utmRegCustomizeMapper.getByPageList(map);
+        return list;
+    }
 
 }

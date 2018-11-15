@@ -12,15 +12,9 @@ import com.hyjf.am.response.admin.locked.LockedConfigResponse;
 import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
-import com.hyjf.am.response.config.AppBorrowImageResponse;
-import com.hyjf.am.response.config.ParamNameResponse;
-import com.hyjf.am.response.config.SubmissionsResponse;
-import com.hyjf.am.response.config.VersionConfigBeanResponse;
+import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.market.AppBannerResponse;
-import com.hyjf.am.response.trade.BankRepayOrgFreezeLogResponse;
-import com.hyjf.am.response.trade.BorrowApicronResponse;
-import com.hyjf.am.response.trade.BorrowStyleResponse;
-import com.hyjf.am.response.trade.STZHWhiteListResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.user.BankRepayFreezeOrgResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.response.user.HjhInstConfigResponse;
@@ -32,6 +26,7 @@ import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
+import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
@@ -46,10 +41,18 @@ import com.hyjf.am.vo.user.UtmPlatVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author tanyy
@@ -68,6 +71,136 @@ public class AmAdminClientImpl implements AmAdminClient {
         return restTemplate.
                 postForEntity("http://AM-ADMIN/am-admin/extensioncenter/channelstatisticsdetail/count", request, IntegerResponse.class).getBody();
     }
+
+    @Override
+    public List<UtmVO> selectUtmPlatList(String type) {
+        Map<String, Object> params = new HashMap<>();
+        if ("pc".equals(type)) {
+            params.put("sourceType", 0);// 渠道0 PC
+            params.put("flagType", 0);// 未删除
+        } else if ("app".equals(type)) {
+            params.put("sourceType", 1);// 渠道1 APP
+            params.put("flagType", 0);// 未删除
+        }
+        List<UtmVO> getResultListS = new ArrayList<>();
+        HttpEntity httpEntity = new HttpEntity(params);
+        ResponseEntity<UtmResponse<UtmVO>> response =
+                restTemplate.exchange("http://AM-ADMIN/am-user/promotion/utm/getbypagelist",
+                        HttpMethod.POST, httpEntity, new ParameterizedTypeReference<UtmResponse<UtmVO>>() {});
+
+        if (response.getBody() != null) {
+            return response.getBody().getResultListS();
+        }
+        return getResultListS;
+    }
+    @Override
+    public Integer getAccessNumber(Integer sourceId, String type) {
+        UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/getaccessnumber/" + sourceId,
+                UtmResponse.class);
+        if (response != null) {
+            return response.getAccessNumber();
+        }
+        return null;
+    }
+    @Override
+    public Integer getRegistNumber(Integer sourceId, String type) {
+        UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/getregistnumber/" + sourceId,
+                UtmResponse.class);
+        if (response != null) {
+            return response.getRegistNumber();
+        }
+        return null;
+    }
+
+    @Override
+    public Integer getOpenAccountNumber(Integer sourceId, String type) {
+        UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/getopenaccountnumber/" + sourceId+"/"+type,
+                UtmResponse.class);
+        if (response != null) {
+            return response.getOpenAccountNumber();
+        }
+        return null;
+    }
+
+    @Override
+    public Integer getTenderNumber(Integer sourceId, String type) {
+        UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/gettendernumber/" + sourceId+"/"+type,
+                UtmResponse.class);
+        if (response != null) {
+            return response.getTenderNumber();
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal getCumulativeRecharge(Integer sourceId, String type) {
+        UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/getcumulativerecharge/" + sourceId+"/"+type,
+                UtmResponse.class);
+        if (response != null) {
+            return response.getCumulativeRecharge();
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal getHztTenderPrice(Integer sourceId, String type) {
+        UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/gethzttenderprice/" + sourceId+"/"+type,
+                UtmResponse.class);
+        if (response != null) {
+            return response.getHztTenderPrice();
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal getHxfTenderPrice(Integer sourceId, String type) {
+        UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/gethxftenderprice/" + sourceId+"/"+type,
+                UtmResponse.class);
+        if (response != null) {
+            return response.getHxfTenderPrice();
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal getHtlTenderPrice(Integer sourceId, String type) {
+        UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/gethtltenderprice/" + sourceId+"/"+type,
+                UtmResponse.class);
+        if (response != null) {
+            return response.getHtlTenderPrice();
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal getHtjTenderPrice(Integer sourceId, String type) {
+        UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/gethtjtenderprice/" + sourceId+"/"+type,
+                UtmResponse.class);
+        if (response != null) {
+            return response.getHtjTenderPrice();
+        }
+        return null;
+    }
+    @Override
+    public BigDecimal getRtbTenderPrice(Integer sourceId, String type) {
+        UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/getrtbtenderprice/" + sourceId+"/"+type,
+                UtmResponse.class);
+        if (response != null) {
+            return response.getRtbTenderPrice();
+        }
+        return null;
+    }
+
+    @Override
+    public BigDecimal getHzrTenderPrice(Integer sourceId, String type) {
+        UtmResponse response = restTemplate.getForObject("http://AM-ADMIN/am-admin/promotion/utm/gethzrtenderprice/" + sourceId+"/"+type,
+                UtmResponse.class);
+        if (response != null) {
+            return response.getHzrTenderPrice();
+        }
+        return null;
+    }
+
     @Override
     public ChannelStatisticsDetailResponse searchAction(ChannelStatisticsDetailRequest request){
         return restTemplate.
@@ -1103,7 +1236,7 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
 
     /**
-     * 查询异常标的列表
+     * 导出异常标的列表
      *
      * @param request
      * @return
@@ -1111,6 +1244,22 @@ public class AmAdminClientImpl implements AmAdminClient {
     @Override
     public List<AssetExceptionCustomizeVO> selectAssetExceptionList(AssetExceptionRequest request) {
         String url = "http://AM-ADMIN/am-admin/asset_exception/select_asset_exception_list";
+        AssetExceptionCustomizeResponse response = restTemplate.postForEntity(url,request,AssetExceptionCustomizeResponse.class).getBody();
+        if (BailConfigCustomizeResponse.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 查询异常标的列表
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public List<AssetExceptionCustomizeVO> exportAssetExceptionList(AssetExceptionRequest request) {
+        String url = "http://AM-ADMIN/am-admin/asset_exception/export_asset_exception_list";
         AssetExceptionCustomizeResponse response = restTemplate.postForEntity(url,request,AssetExceptionCustomizeResponse.class).getBody();
         if (BailConfigCustomizeResponse.isSuccess(response)) {
             return response.getResultList();
@@ -1409,5 +1558,47 @@ public class AmAdminClientImpl implements AmAdminClient {
     public AdminHolidaysConfigResponse updateHolidays(AdminHolidaysConfigRequest request) {
         return restTemplate.postForEntity("http://AM-ADMIN/am-config/adminHolidaysConfig/updateHolidays",
                 request, AdminHolidaysConfigResponse.class).getBody();
+    }
+
+    /**
+     * 查询千乐散标数据
+     * @param dataSearchRequest
+     * @return
+     */
+    @Override
+    public DataSearchCustomizeResponse querySanList(DataSearchRequest dataSearchRequest) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/qianle/querysanlist", dataSearchRequest, DataSearchCustomizeResponse.class).getBody();
+    }
+    /**
+     * 查询千乐计划数据
+     * @param dataSearchRequest
+     * @return
+     */
+    @Override
+    public DataSearchCustomizeResponse queryPlanList(DataSearchRequest dataSearchRequest) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/qianle/queryPlanList", dataSearchRequest, DataSearchCustomizeResponse.class).getBody();
+
+    }
+    /**
+     * 查询千乐全部数据
+     * @param dataSearchRequest
+     * @return
+     */
+    @Override
+    public DataSearchCustomizeResponse queryQianleList(DataSearchRequest dataSearchRequest) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-admin/qianle/queryList", dataSearchRequest, DataSearchCustomizeResponse.class).getBody();
+
+    }
+
+    /**
+     * 查询短信加固数据
+     *
+     * @param request
+     * @return
+     * @author xiehuili
+     */
+    @Override
+    public SmsConfigResponse initSmsConfig(SmsConfigRequest request) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-config/smsConfig/initSmsConfig", request, SmsConfigResponse.class).getBody();
     }
 }

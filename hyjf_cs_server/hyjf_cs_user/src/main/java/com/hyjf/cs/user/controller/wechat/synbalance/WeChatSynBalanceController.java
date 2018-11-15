@@ -3,11 +3,13 @@
  */
 package com.hyjf.cs.user.controller.wechat.synbalance;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.user.bean.SynBalanceRequestBean;
+import com.hyjf.cs.user.bean.SynBalanceResultBean;
 import com.hyjf.cs.user.bean.WxSynBalanceResultBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ResultEnum;
@@ -22,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
@@ -42,7 +45,7 @@ public class WeChatSynBalanceController extends BaseUserController {
 
     @ApiOperation(value = "我的-刷新", notes = "我的-刷新")
     @PostMapping(value = "/init")
-    public BaseResultBean synBalance(@RequestHeader(value = "userId") Integer userId) {
+    public BaseResultBean synBalance(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
         logger.info("请求用户ID：" + userId);
         WxSynBalanceResultBean result = new WxSynBalanceResultBean();
         // 获取登陆用户userId
@@ -63,13 +66,17 @@ public class WeChatSynBalanceController extends BaseUserController {
         }
         /***********同步线下充值记录 start***********/
         BankOpenAccountVO bankOpenAccountVO = synBalanceService.getBankOpenAccount(user.getUserId());
-        JSONObject status = synBalanceService.synBalance(bankOpenAccountVO.getAccount(), user.getInstCode(), "http://CS-USER", systemConfig.getAopAccesskey());
+        String ip = GetCilentIP.getIpAddr(request);
+        SynBalanceRequestBean bean = new SynBalanceRequestBean();
+        bean.setInstCode(user.getInstCode());
+        bean.setAccountId(bankOpenAccountVO.getAccount());
+        SynBalanceResultBean resultBean = synBalanceService.synBalance(bean,ip);
         //校验获取余额是否成功
-        if ("成功".equals(status.get("statusDesc").toString())) {
+        if ("成功".equals(resultBean.getStatusDesc().toString())) {
             //余额数据
             DecimalFormat df = CustomConstants.DF_FOR_VIEW_V1;
-            BigDecimal bankBalance = new BigDecimal(status.get("bankBalance").toString().replaceAll(",", ""));
-            BigDecimal bankTotal = new BigDecimal(status.get("bankTotal").toString().replaceAll(",", ""));
+            BigDecimal bankBalance = new BigDecimal(resultBean.getBankBalance().replaceAll(",", ""));
+            BigDecimal bankTotal = new BigDecimal(resultBean.getBankTotal().replaceAll(",", ""));
             result.setEnum(ResultEnum.SUCCESS4);
             result.setBankBalance(df.format(bankBalance));
             result.setBankTotal(df.format(bankTotal));

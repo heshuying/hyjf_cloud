@@ -77,7 +77,7 @@ public class ChannelController extends BaseController {
             if (null == record || record.getUtmReferrer() == null || record.getUtmReferrer() == 0) {
                 adminResult.setUtmReferrer("");
             } else {
-                UserVO user = this.channelService.getUser(StringUtils.EMPTY, String.valueOf(record.getUtmReferrer()));
+                UserVO user = this.channelService.getUser(null, String.valueOf(record.getUtmReferrer()));
                 adminResult.setUtmReferrer(user.getUsername());
             }
             String url = "";
@@ -99,9 +99,11 @@ public class ChannelController extends BaseController {
     public UtmResultResponse insertAction(HttpServletRequest request, HttpServletResponse response, @RequestBody ChannelCustomizeVO channelCustomizeVO){
         UtmResultResponse adminResult = new UtmResultResponse();
         //根据utmId判断，如存在，则为修改，如不存在，则为新增
+        logger.info("新增或修改推广渠道，sourceId："+channelCustomizeVO.getSourceId()+",utmTerm:"+channelCustomizeVO.getUtmTerm());
         validatorFieldCheck(adminResult,channelCustomizeVO);
         if(AdminResult.SUCCESS.equals(adminResult.getStatus())){
             boolean flag = channelService.insertOrUpdateUtm(channelCustomizeVO);
+            logger.info("新增或修改推广渠道结果，flag："+flag);
             if(!flag){
                 adminResult.setStatus(AdminResult.FAIL);
                 adminResult.setStatusDesc("系统异常，请联系管理员!");
@@ -162,7 +164,14 @@ public class ChannelController extends BaseController {
             // 备注说明
             CheckUtil.check(channelCustomizeVO.getRemark()==null||channelCustomizeVO.getRemark().length()<=100, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"备注说明");
            // ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "remark", channelCustomizeVO.getRemark(), 100, false);
-            adminResult.setStatus(AdminResult.SUCCESS);
+            boolean check = channelService.getBySourceIdAndTerm(channelCustomizeVO.getSourceId(),channelCustomizeVO.getUtmTerm());
+            logger.info("校验sourceId和utmTerm结果 check："+check);
+            if(check){
+                adminResult.setStatus(UtmResultResponse.FAIL);
+                adminResult.setStatusDesc("渠道下的关键字已经存在！");
+            }else{
+                adminResult.setStatus(AdminResult.SUCCESS);
+            }
         }else{
             adminResult.setStatus(UtmResultResponse.FAIL);
             adminResult.setStatusDesc("SourceId为空！");
