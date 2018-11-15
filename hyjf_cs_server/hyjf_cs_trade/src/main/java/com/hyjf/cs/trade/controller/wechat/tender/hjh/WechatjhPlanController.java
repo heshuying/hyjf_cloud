@@ -61,6 +61,10 @@ public class WechatjhPlanController extends BaseTradeController {
         WeChatResult weChatResult = new WeChatResult();
         try {
             result = hjhTenderService.joinPlan(tender);
+            //用户测评校验状态转换
+            if(result.getStatus()!=null && result.getStatus()!=""){
+                weChatResult.setStatus(result.getStatus());
+            }
             weChatResult.setObject(result.getData());
         } catch (CheckException e) {
             throw e;
