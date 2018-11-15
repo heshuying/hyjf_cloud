@@ -38,6 +38,7 @@ import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.trade.mq.producer.CalculateInvestInterestProducer;
 import com.hyjf.cs.trade.mq.producer.CouponTenderProducer;
+import com.hyjf.cs.trade.mq.producer.WrbCallBackProducer;
 import com.hyjf.cs.trade.mq.producer.sensorsdate.hzt.SensorsDataHztInvestProducer;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.consumer.CouponService;
@@ -58,6 +59,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
@@ -102,6 +104,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     private AuthService authService;
     @Autowired
     private SensorsDataHztInvestProducer sensorsDataHztInvestProducer;
+    @Autowired
+    private WrbCallBackProducer wrbCallBackProducer;
     /**
      * @param request
      * @Description 散标投资
@@ -606,7 +610,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @return
      */
     @Override
-    public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(Integer userId, String logOrdId, String borrowNid, Integer couponGrantId,String isPrincipal,BigDecimal account) {
+    public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(Integer userId, String logOrdId, String borrowNid, Integer couponGrantId,String isPrincipal,String accountStr) {
         Map<String, Object> data = new HashedMap();
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
         BorrowAndInfoVO borrow = amTradeClient.getBorrowByNid(borrowNid);
@@ -620,6 +624,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         String borrowStyle = borrow.getBorrowStyle();// 项目还款方式
         Integer borrowPeriod = borrow.getBorrowPeriod();// 周期
         BigDecimal borrowApr = borrow.getBorrowApr();// 項目预期年化收益率
+        BigDecimal account = BigDecimal.ZERO;
+        if(accountStr!=null&&!accountStr.equals("")){
+            account = new BigDecimal(accountStr);
+        }
         if(logOrdId!=null && account!=null && !"".equals(account)){
             switch (borrowStyle) {
                 case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“：历史回报=投资金额*年化收益÷12*月数；
@@ -655,6 +663,18 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             data.put("income",df.format(earnings));
             // 本金
             data.put("account",df.format(account));
+
+            // 查询投资来源
+            List<BorrowTenderVO> list = amTradeClient.getBorrowTenderListByNid(logOrdId);
+            if (!CollectionUtils.isEmpty(list)) {
+                BorrowTenderVO vo = list.get(0);
+                if (CustomConstants.WRB_CHANNEL_CODE.equals(vo.getTenderFrom())) {
+                    // 同步回调通知
+                    logger.info("风车理财投资回调,订单Id :{}", logOrdId);
+                    this.notifyToWrb(userId, logOrdId);
+                }
+            }
+
         }
         // 查询优惠券信息
         CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
@@ -698,6 +718,22 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         return result;
     }
 
+    /**
+     * 风车理财投资同步回调通知
+     * @param userId
+     * @param logOrdId
+     */
+    private void notifyToWrb(Integer userId, String logOrdId) {
+        JSONObject params = new JSONObject();
+        params.put("userId", userId);
+        params.put("nid", logOrdId);
+        params.put("returnType", "1");
+        try {
+            wrbCallBackProducer.messageSend(new MessageContent(MQConstant.WRB_QUEUE_CALLBACK_NOTIFY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+        } catch (MQException e) {
+           logger.error("风车理财投资回调异常...", e);
+        }
+    }
 
 
     /**

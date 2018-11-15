@@ -20,6 +20,26 @@ public class ProtocolRequest implements Serializable {
 
     private String assignNid;
 
+    private String planNid;
+
+    private String accedeOrderId;
+
+    public String getPlanNid() {
+        return planNid;
+    }
+
+    public void setPlanNid(String planNid) {
+        this.planNid = planNid;
+    }
+
+    public String getAccedeOrderId() {
+        return accedeOrderId;
+    }
+
+    public void setAccedeOrderId(String accedeOrderId) {
+        this.accedeOrderId = accedeOrderId;
+    }
+
     public String getAssignNid() {
         return assignNid;
     }

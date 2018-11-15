@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 
 /**
  * web协议
@@ -38,12 +37,8 @@ public class WebProtocolController extends BaseController {
      */
     @ApiOperation(value = "协议下载", notes = "协议下载")
     @GetMapping(value = "/creditPaymentPlan")
-    public File creditPaymentPlan(@ModelAttribute ProtocolRequest form, HttpServletRequest request, HttpServletResponse response,@RequestHeader(value = "userId",required = false) Integer userId){
-        File  file = webProtocolService.creditPaymentPlan(form,userId,request,response);
-        if (null == file){
-            logger.info("get result file is null");
-        }
-        return file;
+    public void creditPaymentPlan(@ModelAttribute ProtocolRequest form, HttpServletRequest request, HttpServletResponse response,@RequestHeader(value = "userId",required = false) Integer userId){
+       webProtocolService.creditPaymentPlan(form,userId,request,response);
     }
 
     /**
@@ -68,5 +63,17 @@ public class WebProtocolController extends BaseController {
     @GetMapping(value = "/creditTransferAgreement")
     public void creditTransferAgreement(@ModelAttribute CreditAssignedBean tenderCreditAssignedBean, HttpServletRequest request, HttpServletResponse response){
         webProtocolService.creditTransferAgreement(tenderCreditAssignedBean, tenderCreditAssignedBean.getRandom(), request, response);
+    }
+
+
+    /**  
+     *  导出PDF文件 （汇盈金服互联网金融服务平台汇计划投资服务协议）
+     * @author zhangyk
+     * @date 2018/11/15 17:09   
+     */  
+    @ApiOperation(value = "资产管理-智投-智投详情:投资服务协议" , notes = "资产管理-智投-智投详情:投资服务协议")
+    @GetMapping(value = "newHjhInvestPDF.do")
+    public void newHjhInvestPDF(@ModelAttribute ProtocolRequest form, HttpServletRequest request, HttpServletResponse response){
+        webProtocolService.newHjhInvestPDF(form,request,response);
     }
 }

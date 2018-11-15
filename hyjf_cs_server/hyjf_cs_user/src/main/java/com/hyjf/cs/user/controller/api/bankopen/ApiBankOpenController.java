@@ -213,6 +213,7 @@ public class ApiBankOpenController extends BaseUserController {
             params.put("isOpenAccount", "1");
             result.setStatus(true);
         }
+        CommonSoaUtils.noRetPostThree(request.getParameter("callback").replace("*-*-*", "#"), params);
         return result;
     }
 
