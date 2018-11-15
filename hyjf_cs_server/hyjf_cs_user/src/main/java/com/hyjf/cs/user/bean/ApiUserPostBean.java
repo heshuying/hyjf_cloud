@@ -8,7 +8,7 @@
  * Modification History:
  * Modified by : 
  */
-	
+
 package com.hyjf.cs.user.bean;
 
 
@@ -20,22 +20,22 @@ package com.hyjf.cs.user.bean;
 public class ApiUserPostBean  extends BaseBean {
 	/** 加密的汇晶社用户ID */
 	private String bindUniqueIdScy;
-	
+
 	/** 返回Url */
     private String retUrl;
-    
+
 	/** 平台id */
     private Integer pid;
-    
+
     /** 手机号码*/
     private String mobile;
-    
+
     /** 身份证号码*/
     private String idCard;
-    
+
     /** 姓名*/
     private String name;
-    
+
 	//来源
 	private String from;
 	//风车理财用户ID
@@ -49,7 +49,7 @@ public class ApiUserPostBean  extends BaseBean {
 	//真实姓名
 	private String true_name;
 	//目标url
-	private String target_url;  
+	private String target_url;
 	public String getFrom() {
 		return from;
 	}
@@ -104,7 +104,7 @@ public class ApiUserPostBean  extends BaseBean {
 
 	public void setTarget_url(String target_url) {
 		this.target_url = target_url;
-	}    
+	}
 	/**
 	 * bindUniqueIdScy
 	 * @return the bindUniqueIdScy
@@ -112,7 +112,7 @@ public class ApiUserPostBean  extends BaseBean {
 	public String getBindUniqueIdScy() {
 		return bindUniqueIdScy;
 	}
-	
+
 	public void setBindUniqueIdScy(String bindUniqueIdScy) {
 		this.bindUniqueIdScy = bindUniqueIdScy;
 	}
@@ -121,7 +121,7 @@ public class ApiUserPostBean  extends BaseBean {
 	 * retUrl
 	 * @return the retUrl
 	 */
-	
+
 	@Override
     public String getRetUrl() {
 		return retUrl;
@@ -130,7 +130,7 @@ public class ApiUserPostBean  extends BaseBean {
 	/**
 	 * @param retUrl the retUrl to set
 	 */
-	
+
 	@Override
     public void setRetUrl(String retUrl) {
 		this.retUrl = retUrl;
@@ -140,7 +140,7 @@ public class ApiUserPostBean  extends BaseBean {
 	 * pid
 	 * @return the pid
 	 */
-	
+
 	public Integer getPid() {
 		return pid;
 	}
@@ -148,7 +148,7 @@ public class ApiUserPostBean  extends BaseBean {
 	/**
 	 * @param pid the pid to set
 	 */
-	
+
 	public void setPid(Integer pid) {
 		this.pid = pid;
 	}
@@ -182,7 +182,7 @@ public class ApiUserPostBean  extends BaseBean {
 	 * @return
 	 * @author lb
 	 */
-		
+
 	@Override
 	public String toString() {
 		return "ApiUserPostBean [bindUniqueIdScy=" + bindUniqueIdScy + ", retUrl=" + retUrl + ", pid=" + pid + ", timestamp=" + super.getTimestamp() +", chkValue=" + super.getChkValue() + "]";
