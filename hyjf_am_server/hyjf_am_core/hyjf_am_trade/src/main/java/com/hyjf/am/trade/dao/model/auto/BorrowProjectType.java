@@ -18,7 +18,7 @@ public class BorrowProjectType implements Serializable {
      *
      * @mbggenerated
      */
-    private String borrowCd;
+    private Boolean borrowCd;
 
     /**
      * 名称
@@ -143,12 +143,12 @@ public class BorrowProjectType implements Serializable {
         this.borrowProjectType = borrowProjectType == null ? null : borrowProjectType.trim();
     }
 
-    public String getBorrowCd() {
+    public Boolean getBorrowCd() {
         return borrowCd;
     }
 
-    public void setBorrowCd(String borrowCd) {
-        this.borrowCd = borrowCd == null ? null : borrowCd.trim();
+    public void setBorrowCd(Boolean borrowCd) {
+        this.borrowCd = borrowCd;
     }
 
     public String getBorrowName() {
