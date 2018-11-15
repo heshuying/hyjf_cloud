@@ -604,7 +604,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @return
      */
     @Override
-    public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(Integer userId, String logOrdId, String borrowNid, Integer couponGrantId,String isPrincipal,BigDecimal account) {
+    public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(Integer userId, String logOrdId, String borrowNid, Integer couponGrantId,String isPrincipal,String accountStr) {
         Map<String, Object> data = new HashedMap();
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
         BorrowAndInfoVO borrow = amTradeClient.getBorrowByNid(borrowNid);
@@ -618,6 +618,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         String borrowStyle = borrow.getBorrowStyle();// 项目还款方式
         Integer borrowPeriod = borrow.getBorrowPeriod();// 周期
         BigDecimal borrowApr = borrow.getBorrowApr();// 項目预期年化收益率
+        BigDecimal account = BigDecimal.ZERO;
+        if(accountStr!=null&&!accountStr.equals("")){
+            account = new BigDecimal(accountStr);
+        }
         if(logOrdId!=null && account!=null && !"".equals(account)){
             switch (borrowStyle) {
                 case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“：历史回报=投资金额*年化收益÷12*月数；
