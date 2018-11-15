@@ -15,10 +15,7 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.ClientConstants;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.CustomUtil;
-import com.hyjf.common.util.GetCilentIP;
+import com.hyjf.common.util.*;
 import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -36,8 +33,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
@@ -73,6 +72,13 @@ public class WechatBorrowTenderController extends BaseTradeController {
         WebResult<Map<String,Object>> result = null;
         WeChatResult weChatResult = new WeChatResult();
         try{
+            //如果是风车理财投资就将wrb插入到该表的tender_from中
+            Cookie cookie = CookieUtils.getCookieByName(request,CustomConstants.TENDER_FROM_TAG);
+            if (cookie != null && cookie.getValue() != null){
+                String cookieValue = cookie.getValue();
+                logger.info("投资来源为 ：{}", cookieValue);
+                tender.setTenderFrom(cookieValue);
+            }
             result =  borrowTenderService.borrowTender(tender);
             BorrowAndInfoVO borrow = this.nifaContractEssenceMessageService.selectBorrowByBorrowNid(tender.getBorrowNid());
             boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_MONTH.equals(borrow.getBorrowStyle())
@@ -101,6 +107,12 @@ public class WechatBorrowTenderController extends BaseTradeController {
                 logger.error("保存用户日志失败", e);
             }
             weChatResult.setStatus(result.getStatus());
+            //用户测评校验状态转换
+            if(result.getData()!=null){
+                if(result.getData().get("riskTested") != null && result.getData().get("riskTested") != ""){
+                    weChatResult.setStatus((String) result.getData().get("riskTested"));
+                }
+            }
             weChatResult.setData(result.getData());
         }catch (CheckException e){
             throw e;
@@ -151,9 +163,10 @@ public class WechatBorrowTenderController extends BaseTradeController {
                                                                        @RequestParam String logOrdId,
                                                                        @RequestParam Integer couponGrantId,
                                                                        @RequestParam String borrowNid,
-                                                                          @RequestParam String isPrincipal) {
+                                                                       @RequestParam String isPrincipal,
+                                                                       @RequestParam String account) {
         logger.info("wechat端-散标投资获取投资成功结果，logOrdId{}", logOrdId);
-        WebResult<Map<String,Object>> result = borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId,isPrincipal);
+        WebResult<Map<String,Object>> result = borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId,isPrincipal,account);
         WeChatResult weChatResult = new WeChatResult();
         weChatResult.setObject(result.getData());
         return  weChatResult;

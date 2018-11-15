@@ -77,7 +77,7 @@ public class ChannelController extends BaseController {
             if (null == record || record.getUtmReferrer() == null || record.getUtmReferrer() == 0) {
                 adminResult.setUtmReferrer("");
             } else {
-                UserVO user = this.channelService.getUser(StringUtils.EMPTY, String.valueOf(record.getUtmReferrer()));
+                UserVO user = this.channelService.getUser(null, String.valueOf(record.getUtmReferrer()));
                 adminResult.setUtmReferrer(user.getUsername());
             }
             String url = "";
@@ -164,7 +164,13 @@ public class ChannelController extends BaseController {
             // 备注说明
             CheckUtil.check(channelCustomizeVO.getRemark()==null||channelCustomizeVO.getRemark().length()<=100, MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"备注说明");
            // ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "remark", channelCustomizeVO.getRemark(), 100, false);
-            boolean check = channelService.getBySourceIdAndTerm(channelCustomizeVO.getSourceId(),channelCustomizeVO.getUtmTerm());
+            boolean check = true;
+            if (null != channelCustomizeVO.getUtmId()){
+                check = channelService.getBySourceIdAndTerm(channelCustomizeVO.getUtmId(),channelCustomizeVO.getSourceId(),channelCustomizeVO.getUtmTerm());
+            }else{
+                //新增数据
+                check = channelService.getBySourceIdAndTerm(null,channelCustomizeVO.getSourceId(),channelCustomizeVO.getUtmTerm());
+            }
             logger.info("校验sourceId和utmTerm结果 check："+check);
             if(check){
                 adminResult.setStatus(UtmResultResponse.FAIL);

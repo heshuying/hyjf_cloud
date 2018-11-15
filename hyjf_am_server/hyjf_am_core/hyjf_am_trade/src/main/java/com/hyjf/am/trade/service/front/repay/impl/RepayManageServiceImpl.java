@@ -369,8 +369,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         param.put("repayStatus", requestBean.getRepayStatus());
         param.put("startDate", requestBean.getStartDate());
         param.put("endDate", requestBean.getEndDate());
-        param.put("repayTimeOrder", requestBean.getRepayTimeOrder());
-        param.put("checkTimeOrder", requestBean.getCheckTimeOrder());
         param.put("borrowNid", requestBean.getBorrowNid());
 
         if (requestBean.getLimitStart() != null) {
@@ -384,7 +382,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             param.put("limitEnd", -1);
         }
 
-        List<RepayListCustomizeVO> list = repayManageCustomizeMapper.selectOrgRepayList(param);
+        List<RepayListCustomizeVO> list = repayManageCustomizeMapper.searchOrgRepayedList(param);
 
         for(RepayListCustomizeVO record : list){
             List<BorrowTender> tenderList = this.getBorrowTender(record.getBorrowNid());
@@ -423,8 +421,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         param.put("repayStatus", requestBean.getRepayStatus());
         param.put("startDate", requestBean.getStartDate());
         param.put("endDate", requestBean.getEndDate());
-        param.put("repayTimeOrder", requestBean.getRepayTimeOrder());
-        param.put("checkTimeOrder", requestBean.getCheckTimeOrder());
         param.put("borrowNid", requestBean.getBorrowNid());
 
         if (requestBean.getLimitStart() != null) {
@@ -438,7 +434,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             param.put("limitEnd", -1);
         }
 
-        Integer count = repayManageCustomizeMapper.selectOrgRepayCount(param);
+        Integer count = repayManageCustomizeMapper.selectOrgRepayedCount(param);
 
         return count;
     }

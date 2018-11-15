@@ -130,6 +130,30 @@ public class UserController extends BaseController {
         logger.info("findUserByUserId run...userId is :{}", userId);
         UserResponse response = new UserResponse();
         if(userId!=null){
+            User user = userService.findUserByUserId(userId);
+            logger.info("findUserByUserId run...user is :{}", user);
+            if (user != null) {
+                UserVO userVO = new UserVO();
+                BeanUtils.copyProperties(user, userVO);
+                response.setResult(userVO);
+                response.setRtn(Response.SUCCESS);
+            }
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 根据userId查询查询主库
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/findMainById/{userId}")
+    public UserResponse fMainUserByUserId(@PathVariable Integer userId) {
+        logger.info("findUserByUserId run...userId is :{}", userId);
+        UserResponse response = new UserResponse();
+        if(userId!=null){
             User user = userService.fUserByUserId(userId);
             logger.info("findUserByUserId run...user is :{}", user);
             if (user != null) {
@@ -318,7 +342,7 @@ public class UserController extends BaseController {
             ret.put("statusDesc", "请求参数非法");
             return ret;
         }
-        User user = userService.fUserByUserId(userId);
+        User user = userService.findUserByUserId(userId);
 
         // 验证用的password
         oldPW = MD5Utils.MD5(MD5Utils.MD5(oldPW) + user.getSalt());

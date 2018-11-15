@@ -332,7 +332,7 @@ public class SensorsDataHjhInvestServiceImpl extends BaseServiceImpl implements 
             // 投资金额限制
             properties.put("tender_amount_limit", createCouponTenderMoney(couponConfig.getTenderQuotaType(), couponConfig.getTenderQuotaMin(), couponConfig.getTenderQuotaMax(), couponConfig.getTenderQuota()));
             // 奖励券创建时间 TODO CouponUserVO add_time 字段变更
-            properties.put("coupon_createtime", GetDate.getDateTimeMyTime(couponUser.getAddTime()));
+            properties.put("coupon_createtime", couponUser.getCreateTime());
             // 奖励券到期时间 TODO CouponUserVO end_time 字段变更
             properties.put("coupon_endtime", GetDate.getDateTimeMyTime(couponUser.getEndTime()));
             // 是否用券

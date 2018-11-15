@@ -210,6 +210,9 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                         String investProjectPeriod = request.getBorrowCreditList().get(0).getCreditTerm() + "天";
                                         params.put("investProjectPeriod", investProjectPeriod);
 
+                                        //根据investFlag标志位来决定更新哪种投资
+                                        params.put("investFlag", checkIsNewUserCanInvest(userId));
+
                                         //推送mq
                                         this.appChannelStatisticsDetailProducer.messageSend(
                                                 new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
@@ -336,6 +339,27 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
         bean.setLogUserId(String.valueOf(userId));
         return BankCallUtils.callApiBg(bean);
+    }
+
+    /**
+     * 检查用户是否是新手 true 是  false 不是
+     *
+     * @param userId
+     * @return
+     */
+    public boolean checkIsNewUserCanInvest(Integer userId) {
+        // 新的判断是否为新用户方法
+        try {
+            int total = amTradeClient.countNewUserTotal(userId);
+            logger.info("获取用户投资数量 userID {} 数量 {} ",userId,total);
+            if (total == 0) {
+                return true;
+            } else {
+                return false;
+            }
+        }catch (Exception e) {
+            throw e;
+        }
     }
 
 

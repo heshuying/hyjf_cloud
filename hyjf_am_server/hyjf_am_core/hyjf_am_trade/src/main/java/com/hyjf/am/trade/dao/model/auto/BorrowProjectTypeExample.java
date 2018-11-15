@@ -295,16 +295,6 @@ public class BorrowProjectTypeExample {
             return (Criteria) this;
         }
 
-        public Criteria andBorrowCdLike(String value) {
-            addCriterion("borrow_cd like", value, "borrowCd");
-            return (Criteria) this;
-        }
-
-        public Criteria andBorrowCdNotLike(String value) {
-            addCriterion("borrow_cd not like", value, "borrowCd");
-            return (Criteria) this;
-        }
-
         public Criteria andBorrowCdIn(List<String> values) {
             addCriterion("borrow_cd in", values, "borrowCd");
             return (Criteria) this;

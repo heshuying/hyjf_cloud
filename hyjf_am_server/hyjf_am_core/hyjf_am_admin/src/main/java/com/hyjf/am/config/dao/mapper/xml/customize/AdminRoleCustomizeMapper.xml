@@ -67,4 +67,7 @@
 	    <select id="getPermissionId" resultType="java.lang.String" >
         select CONCAT(menu_uuid,'_',permission_uuid) from  ht_admin_role_menu_permissions where role_id= #{menuId,jdbcType=VARCHAR}
     </select>
+    	    <delete id="deleteRole" parameterType="java.lang.String" >
+        delete from  ht_admin_role_menu_permissions where menu_uuid in (select menu_uuid from ht_admin_menu where del_flag=1 or menu_hide=1)  and role_id = #{menuId,jdbcType=VARCHAR}
+    </delete>
 </mapper>

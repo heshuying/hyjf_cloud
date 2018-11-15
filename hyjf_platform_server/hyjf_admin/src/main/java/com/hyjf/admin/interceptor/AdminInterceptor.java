@@ -51,7 +51,7 @@ public class AdminInterceptor implements HandlerInterceptor {
 
 			}
 
-		} catch (NullPointerException e) {
+		} catch (Exception e) {
 			throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
 		}
 

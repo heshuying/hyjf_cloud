@@ -21,8 +21,13 @@ public class DzqzCallUtil {
     private static URLSystemConfig urlSystemConfig = SpringUtils.getBean(URLSystemConfig.class);
     private static RestTemplate restTemplate = SpringUtils.getBean(RestTemplate.class);
 
+    public static void testFDD(){
+        log.info("=================testFDD=============");
+    }
+
     public static DzqzCallBean callApiBg(DzqzCallBean bean){
         DzqzCallBean ret = null;
+        log.info("-----------法大大开始准备调用pay工程----");
         try {
             // 取出调用pay工程的url
             bean.setAllParams(new TreeMap<String, String>());
@@ -53,8 +58,7 @@ public class DzqzCallUtil {
                 ret = JSONObject.parseObject(result, DzqzCallBean.class);
             }
         } catch (Exception e) {
-            log.info("------------------调用法大大接口失败,失败原因：" + e.getMessage());
-            e.printStackTrace();
+            log.error("------------------调用法大大接口失败,失败原因：",e);
         } finally {
             log.info("------------------调用法大大接口结束！txCode:" + bean.getTxCode());
         }

@@ -253,28 +253,32 @@ public class FddHandle {
 		bean.setBorrowerCustomerID(borrowerCustomerID);
 		logger.info("-----------，合同编号：" + borrowTender.getNid() + ",获得借款人认证编号：" + bean.getBorrowerCustomerID());
 		bean.setContractName(FddGenerateContractConstant.CONTRACT_DOC_TITLE);
-
+		logger.info("-----------，合同编号：" + borrowTender.getNid() + ",开始判断合同状态");
 		boolean isSign = this.isCreatContract(borrowTender.getNid());
+		logger.info("-----------，合同编号：" + borrowTender.getNid() + ",合同状态为：" + isSign);
 		if (isSign) {// 单独走签署接口
 			logger.info("-------------nid:" + borrowTender.getNid() + ",合同已生成，开始签署合同--------");
 			this.updateSignContract(bean);
 		} else {
 			String paramStr = paramter.toJSONString();
-
-            List<FddTempletVO> fddTemplets = this.amTradeClient.getFddTempletList(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER);
+			logger.info("-----------，合同编号：" + borrowTender.getNid() + ",开始查询模板！");
+			List<FddTempletVO> fddTemplets = this.amTradeClient.getFddTempletList(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER);
             if (fddTemplets != null && fddTemplets.size() == 1) {
+				logger.info("----------------合同编号：" + borrowTender.getNid() + ",开始调用法大大接口生成居间服务协议-----");
                 FddTempletVO fddTemplet = fddTemplets.get(0);
+
                 String templetId = fddTemplet.getTempletId();
-                DzqzCallBean callBean = new DzqzCallBean();
-                callBean.setParameter_map(paramStr);
-                callBean.setTemplate_id(templetId);
-                callBean.setTxCode(DzqzConstant.FDD_GENERATECONTRACT);
-                callBean.setContract_id(bean.getOrdid());
-                callBean.setDoc_title(FddGenerateContractConstant.CONTRACT_DOC_TITLE);
-                callBean.setDynamic_tables(null);
-                callBean.setUserId(tenderUserId);
-                callBean.setFont_size("12");
-                callBean.setFont_type("1");
+				DzqzCallBean callBean = new DzqzCallBean();
+				callBean.setParameter_map(paramStr);
+				callBean.setTemplate_id(templetId);
+				callBean.setTxCode(DzqzConstant.FDD_GENERATECONTRACT);
+				callBean.setContract_id(bean.getOrdid());
+				callBean.setDoc_title(FddGenerateContractConstant.CONTRACT_DOC_TITLE);
+				callBean.setDynamic_tables(null);
+				callBean.setUserId(tenderUserId);
+				callBean.setFont_size("12");
+				callBean.setFont_type("1");
+				logger.info("----------------合同编号：" + borrowTender.getNid() + ",开始调用pay_lib请求pay工程-----");
                 DzqzCallBean dzqzCallBean = DzqzCallUtil.callApiBg(callBean);
                 logger.info("--------------法大大生成居间服务协议请求银行接口返回数据："+JSONObject.toJSONString(dzqzCallBean));
                 String result = dzqzCallBean.getResult();

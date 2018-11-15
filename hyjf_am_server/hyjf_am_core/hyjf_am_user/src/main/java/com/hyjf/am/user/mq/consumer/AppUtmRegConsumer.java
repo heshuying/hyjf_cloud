@@ -77,28 +77,32 @@ public class AppUtmRegConsumer extends Consumer {
 					AppUtmReg entity = JSONObject.parseObject(msg.getBody(),
 							AppUtmReg.class);
 					if (entity != null) {
+                        logger.info("entity: {}", JSONObject.toJSONString(entity));
 						appUtmRegService.insert(entity);
 					}
 				} else if (MQConstant.APP_CHANNEL_STATISTICS_DETAIL_CREDIT_TAG.equals(msg.getTags())
 						|| MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG.equals(msg.getTags())) {
 					JSONObject entity = JSONObject.parseObject(msg.getBody(), JSONObject.class);
+					logger.info("entity: {}", entity.toJSONString());
 					if (Validator.isNotNull(entity)) {
-						Integer investFlag = entity.getInteger("investFlag");
-						if (investFlag == 1) {
+						boolean investFlag = entity.getBooleanValue("investFlag");
+						// 不是首投
+						if (!investFlag) {
 							Integer userId = entity.getInteger("userId");
 							AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
 							BigDecimal accountDecimal = entity.getBigDecimal("accountDecimal")==null?BigDecimal.ZERO:entity.getBigDecimal("accountDecimal");
                             BigDecimal invest = appUtmReg.getCumulativeInvest() == null? BigDecimal.ZERO: appUtmReg.getCumulativeInvest();
                             appUtmReg.setCumulativeInvest(invest.add(accountDecimal));
                             appUtmRegService.update(appUtmReg);
-						} else if (investFlag == 0) {
+						} else {
+						    // 首投
                             Integer userId = entity.getInteger("userId");
                             AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
 							BigDecimal accountDecimal = entity.getBigDecimal("accountDecimal")==null?BigDecimal.ZERO:entity.getBigDecimal("accountDecimal");
 							String projectType = entity.getString("projectType");
 							Integer investTime = entity.getInteger("investTime");
 							String investProjectPeriod = entity.getString("investProjectPeriod");
-                            appUtmReg.setCumulativeInvest(accountDecimal.add(accountDecimal));
+                            appUtmReg.setCumulativeInvest(accountDecimal);
                             appUtmReg.setInvestAmount(accountDecimal);
                             appUtmReg.setInvestProjectType(projectType);
                             appUtmReg.setFirstInvestTime(investTime);

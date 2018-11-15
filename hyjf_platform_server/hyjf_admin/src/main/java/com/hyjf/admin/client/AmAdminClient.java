@@ -1033,4 +1033,29 @@ public interface AmAdminClient {
      * @return
      */
     AdminHolidaysConfigResponse updateHolidays(AdminHolidaysConfigRequest request);
+
+
+    /**
+     * 校验千乐验证码
+     * @param mobile
+     * @param code
+ return
+     */
+    int onlyCheckMobileCode(String mobile, String code);
+
+
+    int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform);
+
+    /**
+     * 查询app渠道统计数据
+     * @param request
+     * @return
+     */
+    AppUtmRegResponse getstatisticsList(AppChannelStatisticsDetailRequest request);
+    /**
+     * 导出app渠道统计数据
+     * @param request
+     * @return
+     */
+    AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request);
 }
