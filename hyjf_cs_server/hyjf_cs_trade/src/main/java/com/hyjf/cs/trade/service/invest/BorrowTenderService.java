@@ -12,6 +12,7 @@ import com.hyjf.cs.trade.service.BaseTradeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -53,7 +54,7 @@ public interface BorrowTenderService extends BaseTradeService {
      * @param couponGrantId
      * @return
      */
-    WebResult<Map<String,Object>> getBorrowTenderResultSuccess(Integer userId, String logOrdId, String borrowNid, Integer couponGrantId,String isPrincipal);
+    WebResult<Map<String,Object>> getBorrowTenderResultSuccess(Integer userId, String logOrdId, String borrowNid, Integer couponGrantId,String isPrincipal,BigDecimal account);
 
     /**
      * 获取投资信息
