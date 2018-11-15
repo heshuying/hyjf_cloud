@@ -12,6 +12,7 @@ import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.coupon.CouponBeanVo;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
@@ -328,6 +329,26 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         // 获取用户最优优惠券
         CouponUserVO couponConfig = null;
         if (null != planDetail) {
+
+            // add by liuyang 神策数据统计 20180820 start
+            BorrowStyleVO borrowStyle = this.amTradeClient.getBorrowStyle(plan.getBorrowStyle());
+            if (borrowStyle!=null){
+                resultVo.setBorrowStyleName(StringUtils.isBlank(borrowStyle.getName()) ? "" : borrowStyle.getName());
+            }else{
+                resultVo.setBorrowStyleName("");
+            }
+
+            // 项目名称
+            resultVo.setProjectName(plan.getPlanName());
+            // 借款期限
+            resultVo.setBorrowPeriod(plan.getLockPeriod());
+            if (plan.getIsMonth() == 0) {
+                resultVo.setDurationUnit("天");
+            } else {
+                resultVo.setDurationUnit("月");
+            }
+            // add by liuyang 神策数据统计 20180820 end
+
             resultVo.setBorrowNid(planNid);
             // -设置  开放额度剩余金额
             String borrowAccountWait = "0";

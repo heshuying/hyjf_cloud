@@ -78,4 +78,13 @@ public class FeeConfigServiceImpl implements FeeConfigService {
     public AdminFeeConfigResponse deleteFeeConfig(AdminFeeConfigRequest req){
         return amConfigClient.deleteFeeConfig(req);
     }
+
+    /**
+     * 校验
+     * @return
+     */
+    @Override
+    public AdminFeeConfigResponse validateBeforeAction(AdminFeeConfigRequest request) {
+        return amConfigClient.validateFeeConfigBeforeAction(request);
+    }
 }
