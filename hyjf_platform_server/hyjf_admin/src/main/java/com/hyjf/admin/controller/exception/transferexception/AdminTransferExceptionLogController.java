@@ -99,7 +99,7 @@ public class AdminTransferExceptionLogController extends BaseController {
 	/**
 	 * 转账确认
 	 */
-    @ApiOperation(value = "转账确认", notes = "转账确认")
+   /* @ApiOperation(value = "转账确认", notes = "转账确认")
 	@PostMapping("/transferConfirm")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_TRANSFER_EXCEPTION)
     public String confirmAction(TransferExceptionLogVO request) {
@@ -109,7 +109,7 @@ public class AdminTransferExceptionLogController extends BaseController {
 	    
 	    int result = transferLogService.updateRecordByUUID(request);
 	    return result + "";
-	}
+	}*/
 	
 	/**
 	 * 重新执行转账
