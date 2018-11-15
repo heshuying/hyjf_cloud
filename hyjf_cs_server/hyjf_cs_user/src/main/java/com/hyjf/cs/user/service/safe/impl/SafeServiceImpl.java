@@ -118,10 +118,14 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
 
         if (user.getMobile() != null && user.getMobile().length() == 11) {
             resultMap.put("mobile", user.getMobile().substring(0, 3) + "****" + user.getMobile().substring(user.getMobile().length() - 4));
+        }else {
+            resultMap.put("mobile","");
         }
         if (user.getEmail() != null && user.getEmail().length() >= 2) {
             String emails[] = user.getEmail().split("@");
             resultMap.put("email", AsteriskProcessUtil.getAsteriskedValue(emails[0], 2, emails[0].length() - 2) + "@" + emails[1]);
+        }else {
+            resultMap.put("email","");
         }
 
         UserLoginLogVO userLogin = amUserClient.getUserLoginById(user.getUserId());
