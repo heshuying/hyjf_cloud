@@ -144,6 +144,30 @@ public class UserController extends BaseController {
     }
 
     /**
+     * 根据userId查询查询主库
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/findMainById/{userId}")
+    public UserResponse fMainUserByUserId(@PathVariable Integer userId) {
+        logger.info("findUserByUserId run...userId is :{}", userId);
+        UserResponse response = new UserResponse();
+        if(userId!=null){
+            User user = userService.fUserByUserId(userId);
+            logger.info("findUserByUserId run...user is :{}", user);
+            if (user != null) {
+                UserVO userVO = new UserVO();
+                BeanUtils.copyProperties(user, userVO);
+                response.setResult(userVO);
+                response.setRtn(Response.SUCCESS);
+            }
+            return response;
+        }
+        return null;
+    }
+
+    /**
      * 根据mobile查找用户
      *
      * @param mobile

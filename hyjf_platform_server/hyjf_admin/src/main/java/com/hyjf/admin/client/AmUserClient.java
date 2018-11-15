@@ -1351,5 +1351,5 @@ public interface AmUserClient {
      * @Param utmTerm
      * @return
      */
-    Integer getBySourceIdAndTerm(String sourceId, String utmTerm);
+    Integer getBySourceIdAndTerm(String utmId,String sourceId, String utmTerm);
 }

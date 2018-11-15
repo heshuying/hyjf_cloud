@@ -569,4 +569,8 @@ public interface AmUserClient {
 	boolean insertAppChannelStatisticsDetail(WrbRegisterRequest wrbRegisterRequest);
 
     AccountVO getAccount(Integer userId);
+
+	UserVO fUserById(int userId);
+
+	UserInfoVO fUserInfoById(int userId);
 }

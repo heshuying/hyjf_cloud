@@ -2,19 +2,22 @@ package com.hyjf.cs.user.controller.api.userbind;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.security.util.RSA_Hjs;
 import com.hyjf.common.security.util.SignUtil;
-import com.hyjf.common.util.*;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.ApiSignUtil;
-import com.hyjf.cs.user.bean.*;
+import com.hyjf.cs.user.bean.ApiResultPageBean;
+import com.hyjf.cs.user.bean.ApiUserPostBean;
+import com.hyjf.cs.user.bean.BaseMapBean;
+import com.hyjf.cs.user.bean.LoginResultBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -25,10 +28,8 @@ import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.service.wrb.UserRegisterService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.LoginRequestVO;
-import com.hyjf.soa.apiweb.CommonSoaUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.beanutils.BeanMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -40,7 +41,6 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.lang.reflect.Field;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -91,20 +91,20 @@ public class ApiUserBindController extends BaseUserController {
 		this.initCheckUtil(apiUserPostBean);
 		//TODO:用户登录授权页面
 		ModelAndView modelAndView = new ModelAndView("wrb/wrb_result");
-		// 验证
-		//this.checkPostBeanOfWeb(apiUserPostBean);
-		logger.info("验签开始....");
-		// 验签
-		//this.checkSign(apiUserPostBean);
-		logger.info("解密开始....apiUserPostBean is : {}", JSONObject.toJSONString(apiUserPostBean));
-		// 解密
-		int bindUniqueId = Integer.parseInt(apiUserPostBean.getBindUniqueIdScy());
-		logger.info("解密结果....bindUniqueId is : {}", bindUniqueId);
-        modelAndView.addObject("instcode",apiUserPostBean.getPid());
+        BaseMapBean baseMapBean=new BaseMapBean();
+        // 验证
+        //this.checkPostBeanOfWeb(apiUserPostBean);
+        logger.info("验签开始....");
+        // 验签
+        //this.checkSign(apiUserPostBean);
+        logger.info("解密开始....apiUserPostBean is : {}", JSONObject.toJSONString(apiUserPostBean));
+        // 解密
+        int bindUniqueId = Integer.parseInt(apiUserPostBean.getBindUniqueIdScy());
+        logger.info("解密结果....bindUniqueId is : {}", bindUniqueId);
+        baseMapBean.set("instcode",String.valueOf(apiUserPostBean.getPid()));
         Integer userId = loginService.getUserIdByBind(bindUniqueId, apiUserPostBean.getPid());
         logger.info("用户ID："+userId);
         // 回调url（h5错误页面）
-        BaseMapBean baseMapBean=new BaseMapBean();
         if(userId == null||userId==0){
             // 跳转登陆授权画面
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
@@ -135,7 +135,7 @@ public class ApiUserBindController extends BaseUserController {
                 readonly = "readonly";
             }
         }
-        baseMapBean.set("mobile", mobile);
+        baseMapBean.set("mobile", mobile==null?"":mobile);
         baseMapBean.set("readonly", readonly);
         baseMapBean.setAll(objectToMap(apiUserPostBean));
         modelAndView.addObject("callBackForm", baseMapBean);
@@ -152,11 +152,10 @@ public class ApiUserBindController extends BaseUserController {
 	@ResponseBody
 	@PostMapping(value = "/bind")
 	public JSONObject bind(HttpServletRequest request, HttpServletResponse response,
-						   @ModelAttribute("apiUserPostBean") ApiUserPostBean apiUserPostBean, @ModelAttribute ("loginBean") ApiLoginBean apiLoginBean) throws Exception{
+                           @RequestBody ApiUserPostBean apiUserPostBean) throws Exception{
 		// 返回对象
 		JSONObject jsonObj = new JSONObject();
 		logger.info(JSON.toJSONString(apiUserPostBean));
-		logger.info(JSON.toJSONString(apiLoginBean));
 		// 第三方用户ID
 //		Integer bindUniqueId = this.decrypt(apiUserPostBean);
 		Integer bindUniqueId = Integer.parseInt(apiUserPostBean.getBindUniqueIdScy());
@@ -174,7 +173,7 @@ public class ApiUserBindController extends BaseUserController {
 			return jsonObj;
 		}
 		// 用户接受协议验证
-		if(!apiLoginBean.getReadAgreement()){
+		if(!apiUserPostBean.getReadAgreement()){
 			jsonObj = new JSONObject();
 			jsonObj.put("status", "99");
 			jsonObj.put("statusCode", "99");
@@ -182,7 +181,7 @@ public class ApiUserBindController extends BaseUserController {
 			return jsonObj;
 		}
 		// 用户手机号码验证
-		if(!StringUtils.isNotBlank(apiLoginBean.getLoginUserName())){
+		if(!StringUtils.isNotBlank(apiUserPostBean.getLoginUserName())){
 			jsonObj = new JSONObject();
 			jsonObj.put("status", "99");
 			jsonObj.put("statusCode", "99");
@@ -191,7 +190,7 @@ public class ApiUserBindController extends BaseUserController {
 		}
 
 		//根据登陆账户名取得用户ID和用户名
-		UserVO users = loginService.getUser(apiLoginBean.getLoginUserName());
+		UserVO users = loginService.getUser(apiUserPostBean.getLoginUserName());
 		logger.info("users is :{}", users);
 		// 未获取的验证在下面登陆时 验证
 		if (users != null) {
@@ -233,8 +232,8 @@ public class ApiUserBindController extends BaseUserController {
 			return jsonObj;
 		}
 		LoginRequestVO user=new LoginRequestVO();
-		user.setUsername(apiLoginBean.getLoginUserName());
-		user.setPassword(apiLoginBean.getLoginPassword());
+		user.setUsername(apiUserPostBean.getLoginUserName());
+		user.setPassword(apiUserPostBean.getLoginPassword());
 		// 登陆
 		WebResult<WebViewUserVO> login = loginController.login( user,request);
 		if (!"000".equals(login.getStatus())) {
@@ -254,17 +253,21 @@ public class ApiUserBindController extends BaseUserController {
 			return jsonObj;
 		}
         // 返回第三方页面
-        JSONObject jsonResult = new JSONObject();
-        jsonResult.put("status", true);
-        jsonResult.put("statusCode", "0");
-        jsonResult.put("statusDesc", "授权成功");
-        jsonResult.put("retUrl", apiUserPostBean.getRetUrl());
-        jsonResult.put("bindUniqueIdScy", apiUserPostBean.getBindUniqueIdScy());
-        jsonResult.put("hyjfUserName",userName );
-        jsonResult.put("userId",users.getUserId() );
+		jsonObj.put("status", "000");
+		jsonObj.put("statusCode", "0");
+		jsonObj.put("statusDesc", "授权成功");
+		jsonObj.put("retUrl", apiUserPostBean.getRetUrl());
+		jsonObj.put("bindUniqueIdScy", apiUserPostBean.getBindUniqueIdScy());
+		jsonObj.put("userId",users.getUserId() );
+		jsonObj.put("mobile",apiUserPostBean.getLoginUserName() );
+		jsonObj.put("username",userName );
+		jsonObj.put("token",login.getData().getToken() );
+		jsonObj.put("roleId",login.getData().getRoleId() );
+		jsonObj.put("iconUrl",login.getData().getIconUrl() );
+		jsonObj.put("hyjfUserName",userName );
         Long timestamp = System.currentTimeMillis();
-        jsonResult.put("timestamp",timestamp);
-        jsonResult.put("chkValue",ApiSignUtil.encryptByRSA(apiUserPostBean.getPid()+timestamp+""));
+		jsonObj.put("timestamp",timestamp);
+		jsonObj.put("chkValue",ApiSignUtil.encryptByRSA(apiUserPostBean.getPid()+timestamp+""));
         logger.info("chkValue:"+ApiSignUtil.encryptByRSA(apiUserPostBean.getPid()+timestamp+""));
     	
 		return jsonObj;

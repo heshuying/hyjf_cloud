@@ -17,7 +17,11 @@ public interface RepayManageCustomizeMapper {
 
     List<RepayListCustomizeVO> selectOrgRepayList(Map<String,Object> paraMap);
 
+    List<RepayListCustomizeVO> searchOrgRepayedList(Map<String,Object> paraMap);
+
     Integer selectOrgRepayCount(Map<String,Object> paraMap);
+
+    Integer selectOrgRepayedCount(Map<String,Object> paraMap);
 
     BigDecimal selectUserRepayFeeWaitTotal(Map<String,Object> paraMap);
 

@@ -4,6 +4,7 @@ import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
@@ -24,6 +25,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.catalina.User;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -283,7 +285,8 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
 		// 插入操作记录表
 		BankCardLogRequest bankCardLogRequest = new BankCardLogRequest();
 		bankCardLogRequest.setUserId(userId);
-		bankCardLogRequest.setUserName(user.getUsername());
+		UserVO user1 = amUserClient.findUserById(userId);
+		bankCardLogRequest.setUserName(user1.getUsername());
 
 		bankCardLogRequest.setBankCode(String.valueOf(bankCardVO.getBankId()));
 		bankCardLogRequest.setCardNo(bankCardVO.getCardNo());

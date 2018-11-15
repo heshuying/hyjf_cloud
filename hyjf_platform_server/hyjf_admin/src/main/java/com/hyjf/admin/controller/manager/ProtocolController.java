@@ -90,6 +90,7 @@ public class ProtocolController extends BaseController{
         //更新redis
         RedisUtils.del(RedisConstants.PROTOCOL_PARAMS);
         List<ProtocolTemplateVO> list = protocolService.getNewInfo();
+        logger.info("添加协议模板,查询所有模板list大小,list="+list);
         JSONObject jsonObject = new JSONObject();
         HashMap<String, Object> map = new HashMap<String, Object>();
         //是否在枚举中有定义

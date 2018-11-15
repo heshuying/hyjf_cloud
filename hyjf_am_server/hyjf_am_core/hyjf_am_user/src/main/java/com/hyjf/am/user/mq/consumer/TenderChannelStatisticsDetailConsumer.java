@@ -86,7 +86,7 @@ public class TenderChannelStatisticsDetailConsumer extends Consumer {
                                 Integer investTime = entity.getInteger("investTime");
                                 String investProjectPeriod = entity.getString("investProjectPeriod");
 
-                                appUtmReg.setCumulativeInvest(accountDecimal.add(accountDecimal));
+                                appUtmReg.setCumulativeInvest(accountDecimal);
                                 appUtmReg.setInvestAmount(accountDecimal);
                                 appUtmReg.setInvestProjectType(projectType);
                                 appUtmReg.setFirstInvestTime(investTime);

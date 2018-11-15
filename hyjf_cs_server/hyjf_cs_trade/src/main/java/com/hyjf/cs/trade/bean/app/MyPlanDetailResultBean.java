@@ -130,6 +130,17 @@ public class MyPlanDetailResultBean extends BaseResultBeanFrontEnd {
 		// 加入时间
 		private String addDate = "";
 
+		// 是否是横杠
+		private String isHyphen = "";
+
+		public String getIsHyphen() {
+			return isHyphen;
+		}
+
+		public void setIsHyphen(String isHyphen) {
+			this.isHyphen = isHyphen;
+		}
+
 		public String getCapital() {
 			return capital;
 		}

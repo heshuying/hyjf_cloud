@@ -4,7 +4,7 @@ spring:
   cloud:
     config:
       uri: http://micoserver:2222/
-      name: batch
+      name: hyjf-signatures
   boot:
     admin:
       client:
@@ -17,7 +17,15 @@ spring:
     percentage: 0.1
     
   profiles:
-    active: dev
+    active: beta
+
+#eureka:
+#  client:
+#    serviceUrl:
+#      defaultZone: ${EUREKA.CLIENT.SERVICEURL}
+#  instance:
+#    preferIpAddress: true
+
 server:
   port: 9095
 
@@ -29,7 +37,3 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
-
-logging:
-  file: signatures.log
-  file.max-size: 100MB

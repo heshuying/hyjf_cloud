@@ -86,9 +86,9 @@ public class ChannelServiceImpl implements ChannelService {
     }
 
     @Override
-    public boolean getBySourceIdAndTerm(String sourceId, String utmTerm) {
+    public boolean getBySourceIdAndTerm(String utmId,String sourceId, String utmTerm) {
         boolean flag = false;
-        Integer total = amUserClient.getBySourceIdAndTerm(sourceId,utmTerm);
+        Integer total = amUserClient.getBySourceIdAndTerm(utmId,sourceId,utmTerm);
         if(total != null && total > 0){
             flag = true;
         }

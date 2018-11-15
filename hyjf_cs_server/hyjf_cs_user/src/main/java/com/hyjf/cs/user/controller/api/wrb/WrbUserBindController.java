@@ -10,7 +10,6 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
-import com.hyjf.cs.user.bean.ApiLoginBean;
 import com.hyjf.cs.user.bean.ApiUserPostBean;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.bean.LoginResultBean;
@@ -180,19 +179,24 @@ public class WrbUserBindController extends BaseUserController {
      * @param request
      * @param response
      * @param apiUserPostBean
-     * @param loginBean
      * @return
      * @throws Exception
      */
     @ResponseBody
     @RequestMapping(value = "bind", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     public JSONObject bind(HttpServletRequest request, HttpServletResponse response,
-                           @ModelAttribute("apiUserPostBean") ApiUserPostBean apiUserPostBean, @ModelAttribute("loginBean") ApiLoginBean loginBean) throws Exception{
+                           @ModelAttribute("apiUserPostBean") ApiUserPostBean apiUserPostBean) throws Exception{
         // 返回对象
         JSONObject jsonObj = new JSONObject();
-
         // 第三方用户ID
         String bindUniqueId = apiUserPostBean.getWrb_user_id();
+        if (StringUtils.isBlank(bindUniqueId)) {
+            jsonObj = new JSONObject();
+            jsonObj.put("status", BaseResultBeanFrontEnd.FAIL);
+            jsonObj.put("statusCode", BaseResultBeanFrontEnd.FAIL);
+            jsonObj.put("statusDesc", "授权失败，第三方用户ID为空");
+            return jsonObj;
+        }
         logger.info("bindUniqueId is :{}", bindUniqueId);
         //用户Id
         Integer userId = null;
@@ -201,7 +205,7 @@ public class WrbUserBindController extends BaseUserController {
 
 
         // 用户接受协议验证
-        if(!loginBean.getReadAgreement()){
+        if(!apiUserPostBean.getReadAgreement()){
             jsonObj = new JSONObject();
             jsonObj.put("status", BaseResultBeanFrontEnd.FAIL);
             jsonObj.put("statusCode", BaseResultBeanFrontEnd.FAIL);
@@ -209,7 +213,7 @@ public class WrbUserBindController extends BaseUserController {
             return jsonObj;
         }
         // 用户手机号码验证
-        if(!StringUtils.isNotBlank(loginBean.getLoginUserName())){
+        if(!StringUtils.isNotBlank(apiUserPostBean.getLoginUserName())){
             jsonObj = new JSONObject();
             jsonObj.put("status", BaseResultBeanFrontEnd.FAIL);
             jsonObj.put("statusCode", BaseResultBeanFrontEnd.FAIL);
@@ -219,7 +223,7 @@ public class WrbUserBindController extends BaseUserController {
 
 
         //根据登陆账户名取得用户ID和用户名
-        UserVO users = loginService.getUser(loginBean.getLoginUserName());
+        UserVO users = loginService.getUser(apiUserPostBean.getLoginUserName());
         logger.info("users is :{}", users);
         // 未获取的验证在下面登陆时 验证
         if (users != null) {
@@ -263,7 +267,7 @@ public class WrbUserBindController extends BaseUserController {
             return jsonObj;
         }
         // 登陆
-        LoginResultBean baseResultBean = this.login(request, loginBean.getLoginUserName(),loginBean.getLoginPassword(),"2");
+        LoginResultBean baseResultBean = this.login(request, apiUserPostBean.getLoginUserName(),apiUserPostBean.getLoginPassword(),"2");
         if (!baseResultBean.getStatus().equals("000")) {
             // 登陆失败，返回失败信息
             jsonObj.put("status", baseResultBean.getStatus());
@@ -293,7 +297,7 @@ public class WrbUserBindController extends BaseUserController {
         if (StringUtils.isNoneBlank(apiUserPostBean.getTarget_url())) {
             jsonResult.put("retUrl", apiUserPostBean.getTarget_url());
         }else {
-            jsonResult.put("retUrl", CustomConstants.WECHAT_HOST+"?sign=" + sign);
+            jsonResult.put("retUrl", wechatHost+"?sign=" + sign);
         }
         jsonResult.put("hyjfUserName",userName );
         jsonResult.put("userId",users.getUserId() );
