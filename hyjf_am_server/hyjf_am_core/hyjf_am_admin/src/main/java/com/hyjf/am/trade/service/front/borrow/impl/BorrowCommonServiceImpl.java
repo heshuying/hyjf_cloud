@@ -145,41 +145,41 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					String borrowPreNidNew = "";
 					String borrowNid = "";
 					// 拿取实际的项目编号
-					// 如果是 现金贷  或者 汇分期  或者 汇融贷 的项目类型,
-					if(("15".equals(projectType)) || ("16".equals(projectType)) || ("19".equals(projectType))){
-						while ("OK".equals(jedis.watch("xjdBorrowPreNid"))) {
-							List<Object> result = null;
-							Transaction tx = jedis.multi();
-							borrowPreNidNew = RedisUtils.get("xjdBorrowPreNid");
-							if (StringUtils.isBlank(borrowPreNidNew)) {
-								tx.set("xjdBorrowPreNid", borrowPreNid);
-								borrowPreNidNew = borrowPreNid;
-								result = tx.exec();
-							} else if (borrowPreNidNew != null) {
-								if (Long.parseLong(borrowPreNid) > Long.parseLong(borrowPreNidNew)) {
-									borrowPreNidNew = (String.valueOf(borrowPreNid));
-								} else {
-									borrowPreNidNew = (String.valueOf(Long.valueOf(borrowPreNidNew) + 1));
-								}
-								tx.set("xjdBorrowPreNid", borrowPreNidNew);
-								result = tx.exec();
-							}
-							if (result == null || result.isEmpty()) {
-								jedis.unwatch();
-							} else {
-								String ret = (String) result.get(0);
-								if (ret != null && "OK".equals(ret)) {
-									if (i == 0) {
-										borrowPreNid = borrowPreNidNew;
-									}
-									borrowNid = beforeFix + borrowPreNidNew;
-									break;
-								} else {
-									jedis.unwatch();
-								}
-							}
-						}
-					}else{
+//					// 如果是 现金贷  或者 汇分期  或者 汇融贷 的项目类型,
+//					if(("15".equals(projectType)) || ("16".equals(projectType)) || ("19".equals(projectType))){
+//						while ("OK".equals(jedis.watch("xjdBorrowPreNid"))) {
+//							List<Object> result = null;
+//							Transaction tx = jedis.multi();
+//							borrowPreNidNew = RedisUtils.get("xjdBorrowPreNid");
+//							if (StringUtils.isBlank(borrowPreNidNew)) {
+//								tx.set("xjdBorrowPreNid", borrowPreNid);
+//								borrowPreNidNew = borrowPreNid;
+//								result = tx.exec();
+//							} else if (borrowPreNidNew != null) {
+//								if (Long.parseLong(borrowPreNid) > Long.parseLong(borrowPreNidNew)) {
+//									borrowPreNidNew = (String.valueOf(borrowPreNid));
+//								} else {
+//									borrowPreNidNew = (String.valueOf(Long.valueOf(borrowPreNidNew) + 1));
+//								}
+//								tx.set("xjdBorrowPreNid", borrowPreNidNew);
+//								result = tx.exec();
+//							}
+//							if (result == null || result.isEmpty()) {
+//								jedis.unwatch();
+//							} else {
+//								String ret = (String) result.get(0);
+//								if (ret != null && "OK".equals(ret)) {
+//									if (i == 0) {
+//										borrowPreNid = borrowPreNidNew;
+//									}
+//									borrowNid = beforeFix + borrowPreNidNew;
+//									break;
+//								} else {
+//									jedis.unwatch();
+//								}
+//							}
+//						}
+//					}else{
 						while ("OK".equals(jedis.watch("borrowPreNid"))) {
 							List<Object> result = null;
 							Transaction tx = jedis.multi();
@@ -212,7 +212,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 								}
 							}
 						}
-					}
+					
 					// 插入huiyingdai_borrow
 					BorrowWithBLOBs borrow = new BorrowWithBLOBs();
 					// 借款表插入
@@ -3675,6 +3675,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		String mmdd = yyyymm.substring(2);
 		String borrowPreNid = this.borrowCustomizeMapper.getBorrowPreNid(mmdd);
 		if (StringUtils.isEmpty(borrowPreNid)) {
+			RedisUtils.set("borrowPreNid", mmdd + "0000");
 			return mmdd + "0001";
 		}
 		if (borrowPreNid.length() == 7) {

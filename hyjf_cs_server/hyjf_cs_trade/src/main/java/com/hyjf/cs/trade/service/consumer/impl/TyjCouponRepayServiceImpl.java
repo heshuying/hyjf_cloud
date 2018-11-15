@@ -3,6 +3,16 @@
  */
 package com.hyjf.cs.trade.service.consumer.impl;
 
+import java.math.BigDecimal;
+import java.util.*;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.trade.CouponRecoverCustomizeRequest;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
@@ -21,15 +31,6 @@ import com.hyjf.cs.trade.client.CsMessageClient;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.consumer.TyjCouponRepayService;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import java.math.BigDecimal;
-import java.util.*;
 
 /**
  * @author yaoyong
@@ -74,11 +75,10 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
 
     @Override
     public void updateCouponOnlyRecover(String nid) throws Exception {
-        String methodName = "updateCouponOnlyRecover";
         List<Map<String, String>> retMsgList = new ArrayList<Map<String, String>>();
         Map<String, String> msg = new HashMap<String, String>();
         retMsgList.add(msg);
-        logger.info("还款开始，投资编号：" + nid);
+        logger.info("体验金收益期限还款开始，投资编号：" + nid);
         Integer nowTime = GetDate.getNowTime10();
         // 当前还款
         CouponRecoverCustomizeVO currentRecover = null;
@@ -177,7 +177,7 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
             accountWebList.setCreateTime(nowTime);
             int accountWebListCnt = insertAccountWebList(accountWebList);
             if (accountWebListCnt == 0) {
-                throw new RuntimeException("网站收支记录(huiyingdai_account_web_list)更新失败！" + "[投资订单号：" + borrowTenderCpn.getNid() + "]");
+                throw new RuntimeException("网站收支记录(ht_account_web_list)更新失败！" + "[投资订单号：" + borrowTenderCpn.getNid() + "]");
             }
         }
 
@@ -271,42 +271,52 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
             UserInfoVO usersInfo = amUserClient.findUsersInfoById(userId);
             if (usersInfo != null) {
                 Integer attribute = usersInfo.getAttribute();
-                if (attribute != null) {
-                    // 查找用户的的推荐人
-                    UserVO user = amUserClient.findUserById(userId);
-                    SpreadsUserVO spreadsUserVO = amUserClient.querySpreadsUsersByUserId(userId);
-                    Integer refUserId = spreadsUserVO.getSpreadsUserId();
-                    // 如果是线上员工或线下员工，推荐人的userId和username不插
-                    if (user != null && (attribute == 2 || attribute == 3)) {
-                        // 查找用户信息
-                        EmployeeCustomizeVO employeeCustomize = amUserClient.selectEmployeeByUserId(userId);
-                        if (employeeCustomize != null) {
-                            accountWebList.setRegionName(employeeCustomize.getRegionName());
-                            accountWebList.setBranchName(employeeCustomize.getBranchName());
-                            accountWebList.setDepartmentName(employeeCustomize.getDepartmentName());
-                        }
-                    }
-                    // 如果是无主单，全插
-                    else if (user != null && (attribute == 1)) {
-                        // 查找用户推荐人
-                        EmployeeCustomizeVO employeeCustomize = amUserClient.selectEmployeeByUserId(refUserId);
-                        if (employeeCustomize != null) {
-                            accountWebList.setRegionName(employeeCustomize.getRegionName());
-                            accountWebList.setBranchName(employeeCustomize.getBranchName());
-                            accountWebList.setDepartmentName(employeeCustomize.getDepartmentName());
-                        }
-                    }
-                    // 如果是有主单
-                    else if (user != null && (attribute == 0)) {
-                        // 查找用户推荐人
-                        EmployeeCustomizeVO employeeCustomize = amUserClient.selectEmployeeByUserId(refUserId);
-                        if (employeeCustomize != null) {
-                            accountWebList.setRegionName(employeeCustomize.getRegionName());
-                            accountWebList.setBranchName(employeeCustomize.getBranchName());
-                            accountWebList.setDepartmentName(employeeCustomize.getDepartmentName());
-                        }
-                    }
-                }
+				if (attribute != null) {
+					// 查找用户的的推荐人
+					SpreadsUserVO spreadsUserVO = amUserClient.querySpreadsUsersByUserId(userId);
+
+					// 推荐人id
+					Integer refUserId = null;
+					if (spreadsUserVO != null) {
+						refUserId = spreadsUserVO.getSpreadsUserId();
+					}
+
+					// 如果是线上员工或线下员工，推荐人的userId和username不插
+					if (attribute == 2 || attribute == 3) {
+						// 查找用户信息
+						EmployeeCustomizeVO employeeCustomize = amUserClient.selectEmployeeByUserId(userId);
+						if (employeeCustomize != null) {
+							accountWebList.setRegionName(employeeCustomize.getRegionName());
+							accountWebList.setBranchName(employeeCustomize.getBranchName());
+							accountWebList.setDepartmentName(employeeCustomize.getDepartmentName());
+						}
+					}
+					// 如果是无主单，全插
+					else if (attribute == 1) {
+						// 查找用户推荐人
+						if (refUserId != null) {
+							EmployeeCustomizeVO employeeCustomize = amUserClient.selectEmployeeByUserId(refUserId);
+							if (employeeCustomize != null) {
+								accountWebList.setRegionName(employeeCustomize.getRegionName());
+								accountWebList.setBranchName(employeeCustomize.getBranchName());
+								accountWebList.setDepartmentName(employeeCustomize.getDepartmentName());
+							}
+						}
+
+					}
+					// 如果是有主单
+					else if (attribute == 0) {
+						if (refUserId != null) {
+							// 查找用户推荐人
+							EmployeeCustomizeVO employeeCustomize = amUserClient.selectEmployeeByUserId(refUserId);
+							if (employeeCustomize != null) {
+								accountWebList.setRegionName(employeeCustomize.getRegionName());
+								accountWebList.setBranchName(employeeCustomize.getBranchName());
+								accountWebList.setDepartmentName(employeeCustomize.getDepartmentName());
+							}
+						}
+					}
+				}
                 accountWebList.setTruename(usersInfo.getTruename());
                 accountWebList.setFlag(1);
             }

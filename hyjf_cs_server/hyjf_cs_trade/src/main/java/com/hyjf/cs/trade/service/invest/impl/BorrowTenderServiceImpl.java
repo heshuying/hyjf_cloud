@@ -1309,25 +1309,20 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 }
                 //计划类判断用户类型为稳健型以上才可以投资
                 if("HJH".equals(investType)) {
-                    //if (!("0".equals(revaluation_money) || revaluation_money == null)) {
                     if (!CommonUtils.checkStandardInvestment(userEvalationResultCustomize.getEvalType())) {
                         //返回类型和限额
                         investInfo.put("projectRevalJudge",true);
-                        investInfo.put("evalType",eval_type);
                         investInfo.put("projectRiskLevelDesc",CommonUtils.DESC_PROJECT_RISK_LEVEL_DESC.replace("{0}", userEvalationResultCustomize.getEvalType()));
                     }
-                    //}
                 }
                 if ("0".equals(revaluation_money) || revaluation_money == null) {
                     logger.info("=============从redis中获取测评类型和上限金额异常!(没有获取到对应类型的限额数据) eval_type=" + eval_type);
                 }else {
+                    investInfo.put("revaluationMoney",StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money)));
                     //金额对比判断（校验金额 大于 设置测评金额）
                     if (new BigDecimal(tender.getMoney()).compareTo(new BigDecimal(revaluation_money)) > 0) {
                         //是否需要重新测评
                         investInfo.put("revalJudge",true);
-                        //返回类型和限额
-                        investInfo.put("evalType",eval_type);
-                        investInfo.put("revaluationMoney",StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money)));
                         investInfo.put("riskLevelDesc","您当前的风险测评类型为 #"+eval_type+"# \n根据监管要求,\n"+eval_type+"用户单笔最高投资限额 #"
                                 +StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money))+"# 。");
                     }
