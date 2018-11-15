@@ -38,19 +38,30 @@
 	</select>
 	<sql id="Where_Clause">
 		<where>
-			1 = 1
-			<if test="sourceType != null and sourceType != ''" >
-				and source_type =  #{sourceType}
+			<if test="sourceType != null" >
+				and source_type =  #{sourceType,jdbcType=INTEGER}
 			</if>
-			<if test="sourceId != null and sourceId != ''" >
+			<if test="sourceId != null" >
 				and source_id =  #{sourceId}
 			</if>
-			<if test="delFlag != null and delFlag != ''" >
+			<if test="sourceIdSrch != null" >
+				and source_id =  #{sourceIdSrch}
+			</if>
+			<if test="attornFlag != null" >
+				and attorn_flag =  #{attornFlag,jdbcType=INTEGER}
+			</if>
+			<if test="timeStartSrch != null " >
+				AND date_format(create_time,'%Y-%m-%d') <![CDATA[>=]]> #{timeStartSrch}
+			</if>
+			<if test="timeEndSrch != null " >
+				AND date_format(create_time,'%Y-%m-%d') <![CDATA[<=]]> #{timeEndSrch}
+			</if>
+			<if test="delFlag != null " >
 				and del_flag =  #{delFlag}
 			</if>
 		</where>
-		<if test="limitStart != null and limitStart >= 0">
-				limit #{limitStart} , #{limitEnd}
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
 	</sql>
 

@@ -50,6 +50,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
@@ -61,11 +62,9 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
 
-import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.*;
 
 /**
@@ -108,6 +107,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @Date 2018/6/24 14:35
      */
     @Override
+    @HystrixCommand
     public WebResult<Map<String, Object>> borrowTender(TenderRequest request) {
         UserVO loginUser = amUserClient.findUserById(request.getUserId());
         Integer userId = loginUser.getUserId();
@@ -639,7 +639,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
         BigDecimal earnings = new BigDecimal("0");
         // 计算历史回报
-        String interest = null;
+        String interest = "0";
         String borrowStyle = borrow.getBorrowStyle();// 项目还款方式
         Integer borrowPeriod = borrow.getBorrowPeriod();// 周期
         BigDecimal borrowApr = borrow.getBorrowApr();// 項目预期年化收益率
@@ -975,67 +975,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         {
             this.setProtocolsToResultVO(investInfo, investType);
         }
-        //风险测评
-        if (!(tender.getMoney() == null || "".equals(tender.getMoney()) || (new BigDecimal(tender.getMoney()).compareTo(BigDecimal.ZERO) == 0))) {
-            //从user中获取客户类型，ht_user_evalation_result（用户测评总结表）
-            UserEvalationResultVO userEvalationResultCustomize = amUserClient.selectUserEvalationResultByUserId(tender.getUserId());
-            if (userEvalationResultCustomize != null) {
-                //从redis中获取测评类型和上限金额
-                String revaluation_money;
-                String eval_type = userEvalationResultCustomize.getEvalType();
-                //初始化接口回传参数
-                investInfo.setRevalJudge(false);
-                investInfo.setProjectRevalJudge(false);
-                investInfo.setEvalType(eval_type);
-                investInfo.setRevaluationMoney("");
-                investInfo.setRiskLevelDesc("");
-                investInfo.setProjectRiskLevelDesc("");
-                //金额类型判断
-                switch (eval_type) {
-                    case "保守型":
-                        revaluation_money = RedisUtils.get(com.hyjf.common.cache.RedisConstants.REVALUATION_CONSERVATIVE);
-                        break;
-                    case "稳健型":
-                        revaluation_money = RedisUtils.get(com.hyjf.common.cache.RedisConstants.REVALUATION_ROBUSTNESS);
-                        break;
-                    case "成长型":
-                        revaluation_money = RedisUtils.get(com.hyjf.common.cache.RedisConstants.REVALUATION_GROWTH);
-                        break;
-                    case "进取型":
-                        revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE);
-                        break;
-                    default:
-                        revaluation_money = "0";
-                }
-                //计划类判断用户类型为稳健型以上才可以投资
-                if("HJH".equals(investType)) {
-                    //if (!("0".equals(revaluation_money) || revaluation_money == null)) {
-                        if (!CommonUtils.checkStandardInvestment(userEvalationResultCustomize.getEvalType())) {
-                            //返回类型和限额
-                            investInfo.setProjectRevalJudge(true);
-                            investInfo.setEvalType(eval_type);
-                            investInfo.setProjectRiskLevelDesc(CommonUtils.DESC_PROJECT_RISK_LEVEL_DESC.replace("{0}", userEvalationResultCustomize.getEvalType()));
-                        }
-                    //}
-                }
-                if ("0".equals(revaluation_money) || revaluation_money == null) {
-                    logger.info("=============从redis中获取测评类型和上限金额异常!(没有获取到对应类型的限额数据) eval_type=" + eval_type);
-                }else {
-                    //金额对比判断（校验金额 大于 设置测评金额）
-                    if (new BigDecimal(tender.getMoney()).compareTo(new BigDecimal(revaluation_money)) > 0) {
-                        //是否需要重新测评
-                        investInfo.setRevalJudge(true);
-                        //返回类型和限额
-                        investInfo.setEvalType(eval_type);
-                        investInfo.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money)));
-                        investInfo.setRiskLevelDesc("您当前的风险测评类型为 #"+eval_type+"# \n根据监管要求,\n"+eval_type+"用户单笔最高投资限额 #"
-                                +StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money))+"# 。");
-                    }
-                }
-            } else {
-                logger.info("=============该用户测评总结数据为空! userId=" + tender.getUserId());
-            }
-        }
 
         // 转让的
         if ("HZR".equals(investType) && StringUtils.isNotEmpty(creditNid)) {
@@ -1322,6 +1261,79 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         return null;
     }
+
+    /**
+     * 校验风险测评
+     *
+     * @param tender
+     * @return
+     */
+    @Override
+    public Map<String,Object> checkEvalApp(TenderRequest tender) {
+        Map<String,Object> investInfo = new HashMap<>();
+        //初始化接口回传参数
+        investInfo.put("revalJudge",false);
+        investInfo.put("projectRevalJudge",false);
+        investInfo.put("evalType","");
+        investInfo.put("revaluationMoney","");
+        investInfo.put("riskLevelDesc","");
+        investInfo.put("projectRiskLevelDesc","");
+        // 投资类型
+        String investType = tender.getBorrowNid().substring(0, 3);
+        //风险测评
+        if (!(tender.getMoney() == null || "".equals(tender.getMoney()) || (new BigDecimal(tender.getMoney()).compareTo(BigDecimal.ZERO) == 0))) {
+            //从user中获取客户类型，ht_user_evalation_result（用户测评总结表）
+            UserEvalationResultVO userEvalationResultCustomize = amUserClient.selectUserEvalationResultByUserId(tender.getUserId());
+            if (userEvalationResultCustomize != null) {
+                //从redis中获取测评类型和上限金额
+                String revaluation_money;
+                String eval_type = userEvalationResultCustomize.getEvalType();
+                //初始化接口回传参数
+                investInfo.put("evalType",eval_type);
+                //金额类型判断
+                switch (eval_type) {
+                    case "保守型":
+                        revaluation_money = RedisUtils.get(com.hyjf.common.cache.RedisConstants.REVALUATION_CONSERVATIVE);
+                        break;
+                    case "稳健型":
+                        revaluation_money = RedisUtils.get(com.hyjf.common.cache.RedisConstants.REVALUATION_ROBUSTNESS);
+                        break;
+                    case "成长型":
+                        revaluation_money = RedisUtils.get(com.hyjf.common.cache.RedisConstants.REVALUATION_GROWTH);
+                        break;
+                    case "进取型":
+                        revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE);
+                        break;
+                    default:
+                        revaluation_money = "0";
+                }
+                //计划类判断用户类型为稳健型以上才可以投资
+                if("HJH".equals(investType)) {
+                    if (!CommonUtils.checkStandardInvestment(userEvalationResultCustomize.getEvalType())) {
+                        //返回类型和限额
+                        investInfo.put("projectRevalJudge",true);
+                        investInfo.put("projectRiskLevelDesc",CommonUtils.DESC_PROJECT_RISK_LEVEL_DESC.replace("{0}", userEvalationResultCustomize.getEvalType()));
+                    }
+                }
+                if ("0".equals(revaluation_money) || revaluation_money == null) {
+                    logger.info("=============从redis中获取测评类型和上限金额异常!(没有获取到对应类型的限额数据) eval_type=" + eval_type);
+                }else {
+                    investInfo.put("revaluationMoney",StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money)));
+                    //金额对比判断（校验金额 大于 设置测评金额）
+                    if (new BigDecimal(tender.getMoney()).compareTo(new BigDecimal(revaluation_money)) > 0) {
+                        //是否需要重新测评
+                        investInfo.put("revalJudge",true);
+                        investInfo.put("riskLevelDesc","您当前的风险测评类型为 #"+eval_type+"# \n根据监管要求,\n"+eval_type+"用户单笔最高投资限额 #"
+                                +StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money))+"# 。");
+                    }
+                }
+            } else {
+                logger.info("=============该用户测评总结数据为空! userId=" + tender.getUserId());
+            }
+        }
+        return investInfo;
+    }
+
     /**
      * 投资协议列表
      * @param investInfo

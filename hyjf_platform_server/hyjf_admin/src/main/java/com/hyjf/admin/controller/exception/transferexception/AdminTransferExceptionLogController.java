@@ -39,6 +39,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -83,7 +84,7 @@ public class AdminTransferExceptionLogController extends BaseController {
     @ApiOperation(value = "银行转账异常页面载入", notes = "银行转账异常页面载入")
 	@PostMapping("/init")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-	public AdminResult<ListResult<AdminTransferExceptionLogAPIVO>> init(AdminTransferExceptionLogAPIRequest request) {
+	public AdminResult<ListResult<AdminTransferExceptionLogAPIVO>> init(@RequestBody AdminTransferExceptionLogAPIRequest request) {
         AdminTransferExceptionLogResponse response = transferLogService.getRecordList(CommonUtils.convertBean(request,TransferExceptionLogVO.class));
         if (response == null){
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -99,7 +100,7 @@ public class AdminTransferExceptionLogController extends BaseController {
 	/**
 	 * 转账确认
 	 */
-    @ApiOperation(value = "转账确认", notes = "转账确认")
+   /* @ApiOperation(value = "转账确认", notes = "转账确认")
 	@PostMapping("/transferConfirm")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_TRANSFER_EXCEPTION)
     public String confirmAction(TransferExceptionLogVO request) {
@@ -109,7 +110,7 @@ public class AdminTransferExceptionLogController extends BaseController {
 	    
 	    int result = transferLogService.updateRecordByUUID(request);
 	    return result + "";
-	}
+	}*/
 	
 	/**
 	 * 重新执行转账
@@ -118,9 +119,9 @@ public class AdminTransferExceptionLogController extends BaseController {
     @ApiOperation(value = "重新执行转账", notes = "重新执行转账")
     @PostMapping("/transferAgain")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_TRANSFER_EXCEPTION)
-    public String transferAgainAction(TransferExceptionLogVO request) {
+    public AdminResult transferAgainAction(@RequestBody TransferExceptionLogVO request) {
         if(StringUtils.isEmpty(request.getUuid())){
-            return "0:参数错误";
+            return new AdminResult<>(FAIL,"参数错误，请稍后再试！");
         }
 
         //同步块避免重复转账
@@ -128,10 +129,10 @@ public class AdminTransferExceptionLogController extends BaseController {
             TransferExceptionLogVO transfer = transferLogService.getRecordByUUID(request.getUuid());
 
             if(transfer == null){
-                return "0:data not found";
+                return new AdminResult<>(FAIL,"获取数据失败！");
             }
             if(transfer.getStatus() != 1){
-                return "0:status has updated";
+                return new AdminResult<>(FAIL,"状态已更新！");
             }
             if(StringUtils.isEmpty(transfer.getOrderId())){
                 String orderId = GetOrderIdUtils.getOrderId2(transfer.getUserId()); 
@@ -161,7 +162,7 @@ public class AdminTransferExceptionLogController extends BaseController {
             if (resultBean == null || !BankCallConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
                 System.out.println("[转账异常] 重新发起转账失败，失败原因：" + (resultBean !=null ? resultBean.getRetMsg() : ""));
                 // 转账失败
-               return "0:bank api call failed";
+                return new AdminResult<>(FAIL,"转账失败！");
             }
             logger.info(this.getClass().getName(), "transferAgainAction", "respcode: " + resultBean.getRetCode());
             
@@ -246,7 +247,7 @@ public class AdminTransferExceptionLogController extends BaseController {
 
             } catch (Exception e) {
                 e.printStackTrace();
-                return "0:update not success"; 
+                return new AdminResult<>(FAIL,"更新失败！");
             }
             logger.info(this.getClass().getName(), "transferAgainAction", "transferAfter result: " + resultBean.getRetCode());
             // 重新转账成功更新异常表状态
@@ -254,9 +255,10 @@ public class AdminTransferExceptionLogController extends BaseController {
                 //更新转账异常表状态
                 request.setStatus(CustomConstants.TRANSFER_EXCEPTION_STATUS_YES);
                 transferLogService.updateRecordByUUID(request);
-                return "1:success";
+                return new AdminResult<>(SUCCESS,"操作成功！");
+
             } else {
-                return "0:update not success";
+                return new AdminResult<>(FAIL,"更新失败！");
             }
         }
 	}

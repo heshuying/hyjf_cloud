@@ -84,4 +84,14 @@ public class ChannelServiceImpl implements ChannelService {
     public void insertUtmList(List<ChannelCustomizeVO> voList) {
         amUserClient.insertUtmList(voList);
     }
+
+    @Override
+    public boolean getBySourceIdAndTerm(String utmId,String sourceId, String utmTerm) {
+        boolean flag = false;
+        Integer total = amUserClient.getBySourceIdAndTerm(utmId,sourceId,utmTerm);
+        if(total != null && total > 0){
+            flag = true;
+        }
+        return flag;
+    }
 }

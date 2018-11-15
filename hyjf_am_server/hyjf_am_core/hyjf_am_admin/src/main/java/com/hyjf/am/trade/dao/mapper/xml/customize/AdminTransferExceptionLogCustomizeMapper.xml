@@ -75,7 +75,7 @@
 		 el.user_id,
 		 u.username,
 		 el.remark,
-		 FROM_UNIXTIME(
+		DATE_FORMAT(
 			el.create_time,
 			'%Y-%m-%d %H:%i:%S'
 		) AS create_time_view,

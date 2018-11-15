@@ -944,11 +944,10 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserEvalationResultVO selectUserEvalationResultByUserId(Integer userId) {
 		UserEvalationResultResponse response = restTemplate
-				.getForEntity("http://AM-ADMIN/am-user/evaluationManager/selectEvaluationDetailById/" + userId, UserEvalationResultResponse.class).getBody();
+				.getForEntity(userService + "/evaluationManager/selectEvaluationDetailById/" + userId, UserEvalationResultResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
 		return null;
 	}
-
 }

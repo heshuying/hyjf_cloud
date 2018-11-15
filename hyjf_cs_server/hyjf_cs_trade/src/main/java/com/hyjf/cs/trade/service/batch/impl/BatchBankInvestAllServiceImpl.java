@@ -164,7 +164,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 							}
 							params.put("investProjectPeriod", investProjectPeriod);
 							//根据investFlag标志位来决定更新哪种投资
-							params.put("investFlag",request.getLogUser().getInvestflag());
+							params.put("investFlag",request.getLogUser().getInvestflag() == 1 ? false:true);
 							//压入消息队列
 							try {
 								appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,

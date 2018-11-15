@@ -1343,4 +1343,13 @@ public interface AmUserClient {
 
     int onlyCheckMobileCode(String mobile, String code);
 
+    /**
+     * @Author walter.limeng
+     * @Description  根据渠道和关键字查询总条数
+     * @Date 15:17 2018/11/14
+     * @Param sourceId
+     * @Param utmTerm
+     * @return
+     */
+    Integer getBySourceIdAndTerm(String utmId,String sourceId, String utmTerm);
 }

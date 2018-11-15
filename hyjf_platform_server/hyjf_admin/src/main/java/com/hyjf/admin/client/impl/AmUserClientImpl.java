@@ -2753,4 +2753,15 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return result;
 	}
+
+    @Override
+    public Integer getBySourceIdAndTerm(String utmId,String sourceId, String utmTerm) {
+		UtmResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/promotion/utm/getbysourceidandterm/"+sourceId+"/"+utmTerm+"/"+utmId, UtmResponse.class).getBody();
+		if (response != null) {
+			return response.getRecordTotal();
+		}else{
+			return  0;
+		}
+    }
 }

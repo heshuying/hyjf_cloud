@@ -28,7 +28,17 @@ public class UserEvalationResultVO extends BaseVO implements Serializable {
 
     private Date updateTime;
 
+    private String revaluationMoney;
+
     private static final long serialVersionUID = 1L;
+
+    public String getRevaluationMoney() {
+        return revaluationMoney;
+    }
+
+    public void setRevaluationMoney(String revaluationMoney) {
+        this.revaluationMoney = revaluationMoney;
+    }
 
     public Integer getId() {
         return id;

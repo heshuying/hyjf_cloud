@@ -101,6 +101,12 @@ public class WechatBorrowTenderController extends BaseTradeController {
                 logger.error("保存用户日志失败", e);
             }
             weChatResult.setStatus(result.getStatus());
+            //用户测评校验状态转换
+            if(result.getData()!=null){
+                if(result.getData().get("riskTested") != null && result.getData().get("riskTested") != ""){
+                    weChatResult.setStatus((String) result.getData().get("riskTested"));
+                }
+            }
             weChatResult.setData(result.getData());
         }catch (CheckException e){
             throw e;

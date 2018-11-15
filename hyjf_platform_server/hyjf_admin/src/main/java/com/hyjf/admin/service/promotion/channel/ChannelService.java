@@ -93,4 +93,14 @@ public interface ChannelService {
      * @param voList
      */
     void insertUtmList(List<ChannelCustomizeVO> voList);
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据渠道和关键字判断是否已经存在
+     * @Date 15:17 2018/11/14
+     * @Param sourceId
+     * @Param utmTerm
+     * @return
+     */
+    boolean getBySourceIdAndTerm(String utmId, String sourceId, String utmTerm);
 }
