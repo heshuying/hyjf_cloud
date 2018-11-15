@@ -175,7 +175,7 @@ public class HolidaysConfigController extends BaseController {
         return new AdminResult(response);
     }
 
-    @ApiOperation(value = "节假日配置-保存之前的去重验证", notes = "节假日配置-保存之前的去重验证")
+    @ApiOperation(value = "节假日配置-保存之前的非空验证", notes = "节假日配置-保存之前的去重验证")
     @PostMapping("/validateBeforeAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult validate(@RequestBody HolidaysConfigRequestBean requestBean) {

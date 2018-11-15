@@ -53,8 +53,7 @@ public class DzqzCallUtil {
                 ret = JSONObject.parseObject(result, DzqzCallBean.class);
             }
         } catch (Exception e) {
-            log.info("------------------调用法大大接口失败,失败原因：" + e.getMessage());
-            e.printStackTrace();
+            log.error("------------------调用法大大接口失败,失败原因：",e);
         } finally {
             log.info("------------------调用法大大接口结束！txCode:" + bean.getTxCode());
         }

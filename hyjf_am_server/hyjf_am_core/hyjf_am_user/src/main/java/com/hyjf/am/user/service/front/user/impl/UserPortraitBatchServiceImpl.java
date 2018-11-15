@@ -194,7 +194,7 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
 
 
             // 从user中获取用户名，手机号
-            User user = this.fUserByUserId(userId);
+            User user = this.findUserByUserId(userId);
             if(user != null){
                 // username
                 if(user.getUsername() != null){

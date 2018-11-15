@@ -470,9 +470,11 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
         if (customize != null && statusList.contains(customize.getOrderStatus())) {
             investIntr.setCapitalOnCall("--");
             investIntr.setInterestOnCall("--");
+            investIntr.setIsHyphen("1");
         }else{
             investIntr.setCapitalOnCall(DF_FOR_VIEW.format(new BigDecimal(customize.getWaitCaptical())));
             investIntr.setInterestOnCall(customize.getWaitInterest());
+            investIntr.setIsHyphen("0");
         }
     }
 }

@@ -33,7 +33,16 @@ public class UserInfoServiceImpl extends BaseServiceImpl implements UserInfoServ
 		}
 		return null;
 	}
-
+	@Override
+	public UserInfo fUserInfoById(int userId) {
+		UserInfoExample UserInfoExample = new UserInfoExample();
+		UserInfoExample.createCriteria().andUserIdEqualTo(userId);
+		List<UserInfo> usersList = userInfoMapper.selectByExample(UserInfoExample);
+		if (!CollectionUtils.isEmpty(usersList)) {
+			return usersList.get(0);
+		}
+		return null;
+	}
 	/**
 	 * @param idNo
 	 * @Description 根据身份证号查询用户信息

@@ -176,7 +176,6 @@ public class WrbRegiestController {
                     userInfo.setIdcard(wrbRegisterRequestBean.getId_no());
                     userInfo.setTruename(wrbRegisterRequestBean.getTrue_name());
                     userRegisterService.updateUserInfoByUserInfo(userInfo);
-
                     //插入用户绑定表
                     userRegisterService.bindThirdUser(userId, Integer.valueOf(wrbRegisterRequestBean.getWrb_user_id()), Integer.valueOf(instCode));
                     log.info("汇盈金福用户：{} 跟风车理财用户：{}已经绑定！", userId, userId);
