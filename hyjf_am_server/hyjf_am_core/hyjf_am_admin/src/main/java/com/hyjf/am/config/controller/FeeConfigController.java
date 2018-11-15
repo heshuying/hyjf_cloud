@@ -132,5 +132,18 @@ public class FeeConfigController extends BaseConfigController{
         }
         return null;
     }
-
+    /**
+     * 手续费配置校验
+     * @return
+     */
+    @RequestMapping("/validateFeeConfigBeforeAction")
+    public AdminFeeConfigResponse validateFeeConfigBeforeAction(AdminFeeConfigRequest request){
+        AdminFeeConfigResponse response = new AdminFeeConfigResponse();
+        List<FeeConfig> feeConfigs=feeConfigService.validateFeeConfigBeforeAction(request.getName());
+        if(!CollectionUtils.isEmpty(feeConfigs)){
+            List<FeeConfigVO> feeConfigVos=CommonUtils.convertBeanList(feeConfigs,FeeConfigVO.class);
+            response.setResultList(feeConfigVos);
+        }
+        return response;
+    }
 }

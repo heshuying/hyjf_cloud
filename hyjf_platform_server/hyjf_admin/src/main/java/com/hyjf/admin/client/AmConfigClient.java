@@ -906,6 +906,11 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	public AdminFeeConfigResponse deleteFeeConfig(AdminFeeConfigRequest req);
+	/**
+	 * 手续费配置校验
+	 * @return
+	 */
+	public AdminFeeConfigResponse validateFeeConfigBeforeAction(AdminFeeConfigRequest request) ;
 
 	/**查询用户权限
 	 *
