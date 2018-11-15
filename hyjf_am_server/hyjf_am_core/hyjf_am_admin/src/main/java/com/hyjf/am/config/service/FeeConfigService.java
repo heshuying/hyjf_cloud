@@ -1,6 +1,7 @@
 package com.hyjf.am.config.service;
 
 import com.hyjf.am.config.dao.model.auto.FeeConfig;
+import com.hyjf.am.response.admin.AdminFeeConfigResponse;
 import com.hyjf.am.resquest.admin.AdminFeeConfigRequest;
 
 import java.util.List;
@@ -42,4 +43,9 @@ public interface FeeConfigService {
      * @param id
      */
     public void deleteFeeConfig( Integer id) ;
+    /**
+     * 手续费配置校验
+     * @return
+     */
+    public List<FeeConfig> validateFeeConfigBeforeAction(String name);
 }
