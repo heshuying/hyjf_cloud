@@ -21,6 +21,10 @@ public class DzqzCallUtil {
     private static URLSystemConfig urlSystemConfig = SpringUtils.getBean(URLSystemConfig.class);
     private static RestTemplate restTemplate = SpringUtils.getBean(RestTemplate.class);
 
+    public static void testFDD(){
+        log.info("=================testFDD=============");
+    }
+
     public static DzqzCallBean callApiBg(DzqzCallBean bean){
         DzqzCallBean ret = null;
         log.info("-----------法大大开始准备调用pay工程----");
