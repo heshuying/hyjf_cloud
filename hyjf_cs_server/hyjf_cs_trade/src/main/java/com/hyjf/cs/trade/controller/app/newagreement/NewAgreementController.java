@@ -189,8 +189,15 @@ public class NewAgreementController extends BaseTradeController{
                     if(StringUtils.isNotBlank(imgUrl) ){
                         //ftp文件路劲
                         String basePathImage = systemConfig.getBasePathImage();
+                        if(!basePathImage.endsWith("/")){
+                            basePathImage.concat("/");
+                        }
                         //ftp映射路劲
                         String basePathurl = systemConfig.getBasePathurl();
+                        if (!basePathurl.endsWith("/")){
+                            basePathurl.concat("/");
+                        }
+
                         String url = basePathurl+basePathImage;
                         imgUrl = imgUrl.replaceAll("PDF/", url+"PDF/");
                     }else{
@@ -288,9 +295,16 @@ public class NewAgreementController extends BaseTradeController{
                         	//ftp文件路劲
                         	/*原String basePathImage = PropUtils.getSystem(FddGenerateContractConstant.HYJF_FTP_BASEPATH_IMG);*/
                         	String basePathImage = systemConfig.getBasePathImage();
+                        	if (!basePathImage.endsWith("/")){
+                                basePathImage.concat("/");
+                            }
                         	//ftp映射路劲
                             /*原String basePathurl = PropUtils.getSystem(FddGenerateContractConstant.HYJF_FTP_URL);*/
                         	String basePathurl = systemConfig.getBasePathurl();
+                        	if (!basePathurl.endsWith("/")){
+                                basePathurl.concat("/");
+                            }
+
                             String url = basePathurl+basePathImage;
                             imgUrl = imgUrl.replaceAll("PDF/", url+"PDF/");
                         }else{
@@ -446,8 +460,16 @@ public class NewAgreementController extends BaseTradeController{
                         if(StringUtils.isNotBlank(imgUrl) ){
                             /*原 String basePathImage = PropUtils.getSystem(FddGenerateContractConstant.HYJF_FTP_BASEPATH_IMG);*/                          // ftp文件路劲
                             String basePathImage = systemConfig.getBasePathImage();
+                            if (!basePathImage.endsWith("/")){
+                                basePathImage.concat("/");
+                            }
                             /*原 String basePathurl = PropUtils.getSystem(FddGenerateContractConstant.HYJF_FTP_URL);*/                          //ftp映射路劲
                             String basePathurl = systemConfig.getBasePathurl();
+                            if (!basePathurl.endsWith("/")){
+                                basePathurl.concat("/");
+                            }
+
+
                             String url = basePathurl+basePathImage;
                             imgUrl = imgUrl.replaceAll("PDF/", url+"PDF/");
                         }else{
