@@ -350,7 +350,6 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
                     return 1;
                 }
             }
-            return utmList.size();
         }
         return 0;
     }
