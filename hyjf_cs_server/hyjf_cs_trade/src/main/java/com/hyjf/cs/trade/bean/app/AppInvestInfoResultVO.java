@@ -160,6 +160,23 @@ public class AppInvestInfoResultVO implements Serializable {
 
     /**个人风险测评描述*/
     private String riskLevelDesc;
+
+    // add by liuyang 神策数据统计 20180820 start
+    /** 还款方式*/
+    private String borrowStyleName;
+    // 项目名称
+    private String projectName;
+    // 项目期限
+    private Integer borrowPeriod;
+    // 期限单位
+    private String durationUnit;
+    // 债转期限
+    private Integer creditPeriod;
+
+    // 期限单位
+    private String creditDurationUnit;
+    // add by liuyang 神策数据统计 20180820 end
+
 //    static class ProtocolBean{
 //        public ProtocolBean(String name, String url) {
 //            this.name = name;
@@ -612,5 +629,53 @@ public class AppInvestInfoResultVO implements Serializable {
 
     public void setBorrowAccountWait1(String borrowAccountWait1) {
         this.borrowAccountWait1 = borrowAccountWait1;
+    }
+
+    public String getBorrowStyleName() {
+        return borrowStyleName;
+    }
+
+    public void setBorrowStyleName(String borrowStyleName) {
+        this.borrowStyleName = borrowStyleName;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public Integer getBorrowPeriod() {
+        return borrowPeriod;
+    }
+
+    public void setBorrowPeriod(Integer borrowPeriod) {
+        this.borrowPeriod = borrowPeriod;
+    }
+
+    public String getDurationUnit() {
+        return durationUnit;
+    }
+
+    public void setDurationUnit(String durationUnit) {
+        this.durationUnit = durationUnit;
+    }
+
+    public Integer getCreditPeriod() {
+        return creditPeriod;
+    }
+
+    public void setCreditPeriod(Integer creditPeriod) {
+        this.creditPeriod = creditPeriod;
+    }
+
+    public String getCreditDurationUnit() {
+        return creditDurationUnit;
+    }
+
+    public void setCreditDurationUnit(String creditDurationUnit) {
+        this.creditDurationUnit = creditDurationUnit;
     }
 }

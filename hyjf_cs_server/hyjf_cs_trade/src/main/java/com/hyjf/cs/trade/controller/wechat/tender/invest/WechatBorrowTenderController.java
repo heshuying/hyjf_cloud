@@ -164,7 +164,7 @@ public class WechatBorrowTenderController extends BaseTradeController {
                                                                        @RequestParam Integer couponGrantId,
                                                                        @RequestParam String borrowNid,
                                                                        @RequestParam String isPrincipal,
-                                                                       @RequestParam BigDecimal account) {
+                                                                       @RequestParam String account) {
         logger.info("wechat端-散标投资获取投资成功结果，logOrdId{}", logOrdId);
         WebResult<Map<String,Object>> result = borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId,isPrincipal,account);
         WeChatResult weChatResult = new WeChatResult();

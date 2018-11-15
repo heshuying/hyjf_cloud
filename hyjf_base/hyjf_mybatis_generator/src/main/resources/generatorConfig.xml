@@ -619,6 +619,7 @@
             <columnOverride column="interest_coupon" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="taste_money" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="increase_interest_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="borrow_cd" javaType="java.lang.String" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_borrow_recover" domainObjectName="BorrowRecover">

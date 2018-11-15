@@ -73,6 +73,8 @@ public class TenderRequest extends BaseVO {
     @ApiModelProperty(value = "是否最后确认")
     private String isConfirm;
 
+    @ApiModelProperty(value = "神策预置属性")
+    private String presetProps;
     // 内部操作用
     private BankOpenAccountVO bankOpenAccount;
 
@@ -383,5 +385,13 @@ public class TenderRequest extends BaseVO {
 
     public void setTenderFrom(String tenderFrom) {
         this.tenderFrom = tenderFrom;
+    }
+
+    public String getPresetProps() {
+        return presetProps;
+    }
+
+    public void setPresetProps(String presetProps) {
+        this.presetProps = presetProps;
     }
 }
