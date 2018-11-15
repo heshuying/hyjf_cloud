@@ -385,7 +385,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         String methodName = "updateCouponRecoverMoney";
         List<Map<String, String>> retMsgList = new ArrayList<Map<String, String>>();
         Map<String, String> msg = new HashMap<String, String>();
-        retMsgList.add(msg);
+
         /** 基本变量 */
         // 当前时间
         int nowTime = GetDate.getNowTime10();
@@ -753,6 +753,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         msg.put(VAL_COUPON_TYPE,
                 currentRecover.getCouponType() == 1 ? "体验金" : currentRecover.getCouponType() == 2 ? "加息券"
                         : currentRecover.getCouponType() == 3 ? "代金券" : "");
+        retMsgList.add(msg);
         // 发送短信
         this.sendSmsCoupon(retMsgList);
         // 发送push消息
@@ -957,7 +958,9 @@ public class CouponRepayServiceImpl implements CouponRepayService {
      */
     public void sendSmsCoupon(List<Map<String, String>> msgList) {
         if (msgList != null && msgList.size() > 0) {
+            logger.info("优惠券还款，短信发送："+msgList);
             for (Map<String, String> msg : msgList) {
+                logger.info("优惠券还款，短信发送："+msg);
                 if (Validator.isNotNull(msg.get(USERID)) && NumberUtils.isNumber(msg.get(USERID)) && Validator.isNotNull(msg.get(VAL_AMOUNT))) {
                     UserVO users = amUserClient.findUserById(Integer.valueOf(msg.get(USERID)));
                     if (users == null || Validator.isNull(users.getMobile()) || (users.getRecieveSms() != null && users.getRecieveSms() == 1)) {
@@ -967,6 +970,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
                             CustomConstants.PARAM_TPL_COUPON_PROFIT, CustomConstants.CHANNEL_TYPE_NORMAL);
                     try {
                         smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, msg.get(USERID), JSON.toJSONBytes(smsMessage)));
+                        logger.info("优惠券还款，短信发送MQ成功！");
                     } catch (MQException e2) {
                         logger.error("发送短信失败..", e2);
                     }
@@ -1103,18 +1107,12 @@ public class CouponRepayServiceImpl implements CouponRepayService {
     /**
      * 体验金按收益期限还款
      *
-     * @param recoverNidList
+     * @param nids
      */
     @Override
-    public void couponOnlyRepay(List<String> recoverNidList) {
+    public void couponOnlyRepay(String nids) {
         try {
-            String timestamp = String.valueOf(GetDate.getNowTime10());
-            Map<String, String> params = new HashMap<String, String>();
-            // 借款项目编号
-            params.put("nidList", JSONObject.toJSONString(recoverNidList));
-            // 时间戳
-            params.put("timestamp", timestamp);
-            couponRepayProducer.messageSend(new MessageContent(MQConstant.TYJ_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            couponRepayProducer.messageSend(new MessageContent(MQConstant.TYJ_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(nids)));
         } catch (MQException e) {
             e.printStackTrace();
             logger.info("体验金按收益期限还款消息队列 失败");

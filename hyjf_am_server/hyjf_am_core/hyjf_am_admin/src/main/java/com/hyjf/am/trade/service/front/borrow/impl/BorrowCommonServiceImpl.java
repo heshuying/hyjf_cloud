@@ -3675,10 +3675,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		String mmdd = yyyymm.substring(2);
 		String borrowPreNid = this.borrowCustomizeMapper.getBorrowPreNid(mmdd);
 		if (StringUtils.isEmpty(borrowPreNid)) {
-			Jedis jedis = pool.getResource();
-			Transaction tx = jedis.multi();
-			tx.set("borrowPreNid", mmdd + "0001");
-			jedis.unwatch();
+			RedisUtils.set("borrowPreNid", mmdd + "0000");
 			return mmdd + "0001";
 		}
 		if (borrowPreNid.length() == 7) {

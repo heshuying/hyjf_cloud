@@ -1236,7 +1236,7 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
 
     /**
-     * 查询异常标的列表
+     * 导出异常标的列表
      *
      * @param request
      * @return
@@ -1244,6 +1244,22 @@ public class AmAdminClientImpl implements AmAdminClient {
     @Override
     public List<AssetExceptionCustomizeVO> selectAssetExceptionList(AssetExceptionRequest request) {
         String url = "http://AM-ADMIN/am-admin/asset_exception/select_asset_exception_list";
+        AssetExceptionCustomizeResponse response = restTemplate.postForEntity(url,request,AssetExceptionCustomizeResponse.class).getBody();
+        if (BailConfigCustomizeResponse.isSuccess(response)) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 查询异常标的列表
+     *
+     * @param request
+     * @return
+     */
+    @Override
+    public List<AssetExceptionCustomizeVO> exportAssetExceptionList(AssetExceptionRequest request) {
+        String url = "http://AM-ADMIN/am-admin/asset_exception/export_asset_exception_list";
         AssetExceptionCustomizeResponse response = restTemplate.postForEntity(url,request,AssetExceptionCustomizeResponse.class).getBody();
         if (BailConfigCustomizeResponse.isSuccess(response)) {
             return response.getResultList();

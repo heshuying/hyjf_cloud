@@ -299,7 +299,7 @@ public class WrbUserBindController extends BaseUserController {
         if (StringUtils.isNoneBlank(apiUserPostBean.getTarget_url())) {
             jsonResult.put("retUrl", apiUserPostBean.getTarget_url());
         }else {
-            jsonResult.put("retUrl", CustomConstants.WECHAT_HOST+"?sign=" + sign);
+            jsonResult.put("retUrl", wechatHost+"?sign=" + sign);
         }
         jsonResult.put("hyjfUserName",userName );
         jsonResult.put("userId",users.getUserId() );
