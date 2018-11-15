@@ -62,8 +62,10 @@ import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
 
+import java.io.UnsupportedEncodingException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.util.*;
 
@@ -210,7 +212,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         String retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/failed?logOrdId="+callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid();
         //成功页
         String successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/borrow/" + request.getBorrowNid() + "/result/success?logOrdId=" +callBean.getLogOrderId() + "&borrowNid=" + request.getBorrowNid()
-                +"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId())+"&isPrincipal=1";
+                +"&couponGrantId="+(request.getCouponGrantId()==null?0:request.getCouponGrantId())+"&isPrincipal=1&account="+callBean.getTxAmount();
         if(request.getToken() != null && !"".equals(request.getToken())){
             retUrl += "&token=1";
             successUrl += "&token=1";
@@ -604,67 +606,45 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @return
      */
     @Override
-    public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(Integer userId, String logOrdId, String borrowNid, Integer couponGrantId,String isPrincipal) {
+    public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(Integer userId, String logOrdId, String borrowNid, Integer couponGrantId,String isPrincipal,String accountStr) {
         Map<String, Object> data = new HashedMap();
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
         BorrowAndInfoVO borrow = amTradeClient.getBorrowByNid(borrowNid);
         BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(borrowNid);
         // 查看tmp表
-        BorrowTenderVO borrowTender = null;
         data.put("borrowNid",borrow.getBorrowNid());
         data.put("investDesc","恭喜您，投资成功！");
-        if(isPrincipal!=null && "1".equals(isPrincipal)){
-            BorrowTenderRequest borrowTenderRequest = new BorrowTenderRequest();
-            borrowTenderRequest.setBorrowNid(borrowNid);
-            borrowTenderRequest.setTenderNid(logOrdId);
-            borrowTenderRequest.setTenderUserId(userId);
-            logger.info("获取投资成功结果参数 userId {}  logOrdId {} borrowNid {}",userId,logOrdId,borrowNid);
-            borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
-            logger.info("获取投资成功结果为:"+JSONObject.toJSONString(borrowTender));
-            if(borrowTender==null){
-                try {
-                    Thread.sleep(2000);
-                } catch (InterruptedException e) {}
-                borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
-                logger.info("获取投资成功结果2为:"+JSONObject.toJSONString(borrowTender));
-            }
-            if(borrowTender==null){
-                try {
-                    Thread.sleep(1000);
-                } catch (InterruptedException e) {}
-                borrowTender = amTradeClient.selectBorrowTender(borrowTenderRequest);
-                logger.info("获取投资成功结果3为:"+JSONObject.toJSONString(borrowTender));
-            }
-        }
-
         BigDecimal earnings = new BigDecimal("0");
         // 计算历史回报
         String interest = "0";
         String borrowStyle = borrow.getBorrowStyle();// 项目还款方式
         Integer borrowPeriod = borrow.getBorrowPeriod();// 周期
         BigDecimal borrowApr = borrow.getBorrowApr();// 項目预期年化收益率
-        if(borrowTender!=null){
-            String account = String.valueOf(borrowTender.getAccount());
+        BigDecimal account = BigDecimal.ZERO;
+        if(accountStr!=null&&!accountStr.equals("")){
+            account = new BigDecimal(accountStr);
+        }
+        if(logOrdId!=null && account!=null && !"".equals(account)){
             switch (borrowStyle) {
                 case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“：历史回报=投资金额*年化收益÷12*月数；
-                    earnings = DuePrincipalAndInterestUtils.getMonthInterest(new BigDecimal(account), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                    earnings = DuePrincipalAndInterestUtils.getMonthInterest(account, borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
                     interest = df.format(earnings);
                     break;
                 case CalculatesUtil.STYLE_ENDDAY:// 还款方式为”按天计息，到期还本还息“：历史回报=投资金额*年化收益÷360*天数；
-                    earnings = DuePrincipalAndInterestUtils.getDayInterest(new BigDecimal(account), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                    earnings = DuePrincipalAndInterestUtils.getDayInterest(account, borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
                     interest = df.format(earnings);
                     break;
                 case CalculatesUtil.STYLE_ENDMONTH:// 还款方式为”先息后本“：历史回报=投资金额*年化收益÷12*月数；
-                    earnings = BeforeInterestAfterPrincipalUtils.getInterestCount(new BigDecimal(account), borrowApr.divide(new BigDecimal("100")), borrowPeriod, borrowPeriod).setScale(2,
+                    earnings = BeforeInterestAfterPrincipalUtils.getInterestCount(account, borrowApr.divide(new BigDecimal("100")), borrowPeriod, borrowPeriod).setScale(2,
                             BigDecimal.ROUND_DOWN);
                     interest = df.format(earnings);
                     break;
                 case CalculatesUtil.STYLE_MONTH:// 还款方式为”等额本息“：历史回报=投资金额*年化收益÷12*月数；
-                    earnings = AverageCapitalPlusInterestUtils.getInterestCount(new BigDecimal(account), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                    earnings = AverageCapitalPlusInterestUtils.getInterestCount(account, borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
                     interest = df.format(earnings);
                     break;
                 case CalculatesUtil.STYLE_PRINCIPAL:// 还款方式为”等额本金“
-                    earnings = AverageCapitalUtils.getInterestCount(new BigDecimal(account), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                    earnings = AverageCapitalUtils.getInterestCount(account, borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
                     interest = df.format(earnings);
                     break;
                 default:
@@ -672,13 +652,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             }
             // 产品加息预期收益
             if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
-                BigDecimal incEarnings = increaseCalculate(borrow.getBorrowPeriod(), borrow.getBorrowStyle(),account , borrowInfo.getBorrowExtraYield());
+                BigDecimal incEarnings = increaseCalculate(borrow.getBorrowPeriod(), borrow.getBorrowStyle(),account.toString() , borrowInfo.getBorrowExtraYield());
                 BigDecimal oldEarnings = new BigDecimal(interest);
                 earnings = incEarnings.add(oldEarnings);
             }
             data.put("income",df.format(earnings));
             // 本金
-            data.put("account",df.format(borrowTender.getAccount()));
+            data.put("account",df.format(account));
         }
         // 查询优惠券信息
         CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
@@ -688,10 +668,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             if (couponUser.getCouponType() == 1) {
                 couponInterest = couponService.getInterestDj(couponUser.getCouponQuota(), couponUser.getCouponProfitTime().intValue(), borrowApr);
             } else {
-                BigDecimal account = BigDecimal.ZERO;
-                if(borrowTender!=null && borrowTender.getAccount()!=null && !"".equals(borrowTender.getAccount())){
-                    account = borrowTender.getAccount();
-                }
                 couponInterest = couponService.getInterest(borrowStyle, couponUser.getCouponType(), borrowApr, couponUser.getCouponQuota(),account.toString(), borrow.getBorrowPeriod());
             }
             logger.info("获取投资成功结果  earnings:{} ",earnings.toString());
@@ -1257,6 +1233,25 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 investInfo.setRealAmount("¥" + CommonUtils.formatAmount(null, new BigDecimal(money)));
                 investInfo.setButtonWord("确认投资" + CommonUtils.formatAmount(null, money) + "元");
             }
+
+            // add by liuyang 神策数据统计 20180820 start
+            // 获取标的还款方式
+            BorrowStyleVO projectBorrowStyle = this.amTradeClient.getBorrowStyle(borrow.getBorrowStyle());
+            if (projectBorrowStyle != null) {
+                investInfo.setBorrowStyleName(StringUtils.isBlank(projectBorrowStyle.getName()) ? "" : projectBorrowStyle.getName());
+            } else {
+                investInfo.setBorrowStyleName("");
+            }
+            // 项目名称
+            investInfo.setProjectName(borrow.getProjectName());
+            // 借款期限
+            investInfo.setBorrowPeriod(borrow.getBorrowPeriod());
+            if ("endday".equals(borrow.getBorrowStyle())) {
+                investInfo.setDurationUnit("天");
+            } else {
+                investInfo.setDurationUnit("月");
+            }
+            // add by liuyang 神策数据统计 20180820 end
             return investInfo;
         }
         return null;
@@ -1360,21 +1355,24 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         String requestType = CommonConstant.APP_BANK_REQUEST_TYPE_TENDER;
         String baseUrl = super.getFrontHost(systemConfig,tender.getPlatform());
         String requestMapping = "/public/formsubmit?requestType=";
+        String presetProps = tender.getPresetProps();
         String url = "";
         // 计划不需要跳转江西银行, 不能使用前端投资的统一页面，所以针对计划单独跳转前端处理页面
-        if (CommonConstant.TENDER_TYPE_HJH.equalsIgnoreCase(borrowType)){
+        if (CommonConstant.TENDER_TYPE_HJH.equalsIgnoreCase(borrowType)) {
+            logger.info(presetProps);
+
             // 计划的
             Map<String, Object> result = hjhTenderService.checkPlan(tender);
-            if("getTenderUrl".equals(flag)){
-                if(result!=null){
+            if ("getTenderUrl".equals(flag)) {
+                if (result != null) {
                     String riskTested = (String) result.get("riskTested");
-                    if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
+                    if (CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)) {
                         //已过期需要重新评测
                         throw new CheckException(MsgEnum.STATUS_EV000004);
-                    }else if(CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)){
+                    } else if (CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)) {
                         //计划类判断用户类型为稳健型以上才可以投资
                         throw new CheckException(MsgEnum.STATUS_EV000007);
-                    }else if(CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS.equals(riskTested)){
+                    } else if (CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS.equals(riskTested)) {
                         //金额对比判断（校验金额 大于 设置测评金额）
                         throw new CheckException(MsgEnum.STATUS_EV000005);
                     }
@@ -1382,7 +1380,18 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             }
             requestType = "9";
             url = baseUrl + "/join/plan?requestType=" + requestType;
-            url += "&couponGrantId="+tender.getCouponGrantId()+"&borrowNid="+tender.getBorrowNid()+"&platform="+tender.getPlatform()+"&account="+tender.getAccount();
+            url += "&couponGrantId=" + tender.getCouponGrantId() + "&borrowNid=" + tender.getBorrowNid() + "&platform=" + tender.getPlatform() + "&account=" + tender.getAccount();
+            // add by liuyang 神策数据统计 20180824 start
+            if (StringUtils.isNotBlank(presetProps)) {
+                try {
+                    presetProps = URLEncoder.encode(presetProps, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                }
+                url += ("&presetProps=") + (presetProps);
+            }
+            logger.info("投资URL:" + url.toString());
+            //  add by liuyang 神策数据统计 20180824 end
             return url;
         }else if (CommonConstant.TENDER_TYPE_CREDIT.equalsIgnoreCase(borrowType)){
             // 债转的

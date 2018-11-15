@@ -12,6 +12,7 @@ import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.coupon.CouponBeanVo;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
@@ -282,7 +283,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_FORMAT);
         }
         if(couponUser!=null && couponUser.getCouponType()==3){
-            investInfo.setCapitalInterest(df.format(earnings.add(couponInterest).subtract(couponUser.getCouponQuota())));
+            investInfo.setCapitalInterest(df.format(earnings));
         }else{
             investInfo.setCapitalInterest(df.format(earnings.add(couponInterest)));
         }
@@ -328,6 +329,26 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         // 获取用户最优优惠券
         CouponUserVO couponConfig = null;
         if (null != planDetail) {
+
+            // add by liuyang 神策数据统计 20180820 start
+            BorrowStyleVO borrowStyle = this.amTradeClient.getBorrowStyle(plan.getBorrowStyle());
+            if (borrowStyle!=null){
+                resultVo.setBorrowStyleName(StringUtils.isBlank(borrowStyle.getName()) ? "" : borrowStyle.getName());
+            }else{
+                resultVo.setBorrowStyleName("");
+            }
+
+            // 项目名称
+            resultVo.setProjectName(plan.getPlanName());
+            // 借款期限
+            resultVo.setBorrowPeriod(plan.getLockPeriod());
+            if (plan.getIsMonth() == 0) {
+                resultVo.setDurationUnit("天");
+            } else {
+                resultVo.setDurationUnit("月");
+            }
+            // add by liuyang 神策数据统计 20180820 end
+
             resultVo.setBorrowNid(planNid);
             // -设置  开放额度剩余金额
             String borrowAccountWait = "0";
@@ -784,20 +805,31 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      */
     private  WebResult<Map<String, Object>> tender(TenderRequest request, HjhPlanVO plan, BankOpenAccountVO account, CouponUserVO cuc, AccountVO tenderAccount) {
         WebResult<Map<String, Object>> result= new WebResult<Map<String, Object>>();
+        Map<String, Object> tenderEarnings;
         result.setStatus(WebResult.ERROR);
         Integer userId = request.getUser().getUserId();
         BigDecimal decimalAccount = new BigDecimal(request.getAccount());
         request.setBankOpenAccount(account);
         request.setTenderAccount(tenderAccount);
+        //校验用户测评
+        Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(request);
         // 体验金投资
         if (decimalAccount.compareTo(BigDecimal.ZERO) != 1 && cuc != null && (cuc.getCouponType() == 3 || cuc.getCouponType() == 1)) {
             logger.info("体验{},优惠金投资开始:userId:{},平台{},券为:{}", userId, request.getPlatform(), request.getCouponGrantId());
             // 体验金投资
             couponService.couponTender(request, plan,  cuc, userId);
             // 计算收益
-            Map<String, Object> tenderEarnings = getTenderEarnings(request,plan,cuc);
+            tenderEarnings = getTenderEarnings(request,plan,cuc);
+            //放入用户测评返回值
+            tenderEarnings.putAll(resultEval);
             result.setData(tenderEarnings);
             result.setStatus(WebResult.SUCCESS);
+            //用户测评校验状态转换
+            if(resultEval!=null){
+                if(resultEval.get("riskTested") != null && resultEval.get("riskTested") != ""){
+                    result.setStatus((String) resultEval.get("riskTested"));
+                }
+            }
             logger.info("体验金投资结束:userId{}" + userId);
             return result;
         }
@@ -872,8 +904,16 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         }
         if(afterDealFlag){
             // 计算收益
-            Map<String, Object> tenderEarnings = getTenderEarnings(request,plan,cuc);
+            tenderEarnings = getTenderEarnings(request,plan,cuc);
             result.setStatus(WebResult.SUCCESS);
+            //用户测评校验状态转换
+            if(resultEval!=null){
+                if(resultEval.get("riskTested") != null && resultEval.get("riskTested") != ""){
+                    result.setStatus((String) resultEval.get("riskTested"));
+                }
+            }
+            //放入用户测评返回值
+            tenderEarnings.putAll(resultEval);
             result.setData(tenderEarnings);
         }else{
             result.setStatus(AppResult.FAIL);

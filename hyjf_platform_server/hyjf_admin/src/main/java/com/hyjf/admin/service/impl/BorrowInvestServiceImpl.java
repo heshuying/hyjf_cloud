@@ -179,7 +179,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
         responseBean.setDetailList(this.getDetailList(results));
         //前端需要total，加上
         if(!CollectionUtils.isEmpty(responseBean.getDetailList())){
-            responseBean.setTotal(responseBean.getRecordList().size());
+            responseBean.setTotal(responseBean.getDetailList().size());
         } else {
             responseBean.setTotal(0);
         }

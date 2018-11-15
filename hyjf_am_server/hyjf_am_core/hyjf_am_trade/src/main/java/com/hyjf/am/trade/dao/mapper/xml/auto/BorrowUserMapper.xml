@@ -5,6 +5,7 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
     <result column="username" property="username" jdbcType="VARCHAR" />
+    <result column="city" property="city" jdbcType="VARCHAR" />
     <result column="area" property="area" jdbcType="VARCHAR" />
     <result column="currency_name" property="currencyName" jdbcType="VARCHAR" />
     <result column="reg_captial" property="regCaptial" jdbcType="VARCHAR" />
@@ -102,7 +103,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, borrow_nid, username, area, currency_name, reg_captial, industry, litigation, 
+    id, borrow_nid, username, city, area, currency_name, reg_captial, industry, litigation, 
     cre_report, credit, staff, com_reg_time, legal_person, social_credit_code, regist_code, 
     main_business, overdue_times, overdue_amount, is_certificate, is_operation, is_finance, 
     is_enterprise_creidt, is_legal_person, is_asset, is_purchase_contract, is_supply_contract, 
@@ -170,32 +171,32 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_borrow_user (borrow_nid, username, area, 
-      currency_name, reg_captial, industry, 
-      litigation, cre_report, credit, 
-      staff, com_reg_time, legal_person, 
-      social_credit_code, regist_code, main_business, 
-      overdue_times, overdue_amount, is_certificate, 
-      is_operation, is_finance, is_enterprise_creidt, 
-      is_legal_person, is_asset, is_purchase_contract, 
-      is_supply_contract, overdue_report, debt_situation, 
-      other_borrowed, is_funds, is_managed, 
-      is_ability, is_overdue, is_complaint, 
-      is_punished, corporate_code, registration_address, 
-      other_info)
-    values (#{borrowNid,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, 
-      #{currencyName,jdbcType=VARCHAR}, #{regCaptial,jdbcType=VARCHAR}, #{industry,jdbcType=VARCHAR}, 
-      #{litigation,jdbcType=VARCHAR}, #{creReport,jdbcType=VARCHAR}, #{credit,jdbcType=INTEGER}, 
-      #{staff,jdbcType=INTEGER}, #{comRegTime,jdbcType=VARCHAR}, #{legalPerson,jdbcType=VARCHAR}, 
-      #{socialCreditCode,jdbcType=VARCHAR}, #{registCode,jdbcType=VARCHAR}, #{mainBusiness,jdbcType=VARCHAR}, 
-      #{overdueTimes,jdbcType=VARCHAR}, #{overdueAmount,jdbcType=VARCHAR}, #{isCertificate,jdbcType=TINYINT}, 
-      #{isOperation,jdbcType=TINYINT}, #{isFinance,jdbcType=TINYINT}, #{isEnterpriseCreidt,jdbcType=TINYINT}, 
-      #{isLegalPerson,jdbcType=TINYINT}, #{isAsset,jdbcType=TINYINT}, #{isPurchaseContract,jdbcType=TINYINT}, 
-      #{isSupplyContract,jdbcType=VARCHAR}, #{overdueReport,jdbcType=VARCHAR}, #{debtSituation,jdbcType=VARCHAR}, 
-      #{otherBorrowed,jdbcType=VARCHAR}, #{isFunds,jdbcType=VARCHAR}, #{isManaged,jdbcType=VARCHAR}, 
-      #{isAbility,jdbcType=VARCHAR}, #{isOverdue,jdbcType=VARCHAR}, #{isComplaint,jdbcType=VARCHAR}, 
-      #{isPunished,jdbcType=VARCHAR}, #{corporateCode,jdbcType=VARCHAR}, #{registrationAddress,jdbcType=VARCHAR}, 
-      #{otherInfo,jdbcType=LONGVARCHAR})
+    insert into ht_borrow_user (borrow_nid, username, city, 
+      area, currency_name, reg_captial, 
+      industry, litigation, cre_report, 
+      credit, staff, com_reg_time, 
+      legal_person, social_credit_code, regist_code, 
+      main_business, overdue_times, overdue_amount, 
+      is_certificate, is_operation, is_finance, 
+      is_enterprise_creidt, is_legal_person, is_asset, 
+      is_purchase_contract, is_supply_contract, overdue_report, 
+      debt_situation, other_borrowed, is_funds, 
+      is_managed, is_ability, is_overdue, 
+      is_complaint, is_punished, corporate_code, 
+      registration_address, other_info)
+    values (#{borrowNid,jdbcType=VARCHAR}, #{username,jdbcType=VARCHAR}, #{city,jdbcType=VARCHAR}, 
+      #{area,jdbcType=VARCHAR}, #{currencyName,jdbcType=VARCHAR}, #{regCaptial,jdbcType=VARCHAR}, 
+      #{industry,jdbcType=VARCHAR}, #{litigation,jdbcType=VARCHAR}, #{creReport,jdbcType=VARCHAR}, 
+      #{credit,jdbcType=INTEGER}, #{staff,jdbcType=INTEGER}, #{comRegTime,jdbcType=VARCHAR}, 
+      #{legalPerson,jdbcType=VARCHAR}, #{socialCreditCode,jdbcType=VARCHAR}, #{registCode,jdbcType=VARCHAR}, 
+      #{mainBusiness,jdbcType=VARCHAR}, #{overdueTimes,jdbcType=VARCHAR}, #{overdueAmount,jdbcType=VARCHAR}, 
+      #{isCertificate,jdbcType=TINYINT}, #{isOperation,jdbcType=TINYINT}, #{isFinance,jdbcType=TINYINT}, 
+      #{isEnterpriseCreidt,jdbcType=TINYINT}, #{isLegalPerson,jdbcType=TINYINT}, #{isAsset,jdbcType=TINYINT}, 
+      #{isPurchaseContract,jdbcType=TINYINT}, #{isSupplyContract,jdbcType=VARCHAR}, #{overdueReport,jdbcType=VARCHAR}, 
+      #{debtSituation,jdbcType=VARCHAR}, #{otherBorrowed,jdbcType=VARCHAR}, #{isFunds,jdbcType=VARCHAR}, 
+      #{isManaged,jdbcType=VARCHAR}, #{isAbility,jdbcType=VARCHAR}, #{isOverdue,jdbcType=VARCHAR}, 
+      #{isComplaint,jdbcType=VARCHAR}, #{isPunished,jdbcType=VARCHAR}, #{corporateCode,jdbcType=VARCHAR}, 
+      #{registrationAddress,jdbcType=VARCHAR}, #{otherInfo,jdbcType=LONGVARCHAR})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowUser" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -208,6 +209,9 @@
       </if>
       <if test="username != null" >
         username,
+      </if>
+      <if test="city != null" >
+        city,
       </if>
       <if test="area != null" >
         area,
@@ -321,6 +325,9 @@
       </if>
       <if test="username != null" >
         #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        #{city,jdbcType=VARCHAR},
       </if>
       <if test="area != null" >
         #{area,jdbcType=VARCHAR},
@@ -447,6 +454,9 @@
       <if test="record.username != null" >
         username = #{record.username,jdbcType=VARCHAR},
       </if>
+      <if test="record.city != null" >
+        city = #{record.city,jdbcType=VARCHAR},
+      </if>
       <if test="record.area != null" >
         area = #{record.area,jdbcType=VARCHAR},
       </if>
@@ -562,6 +572,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
       username = #{record.username,jdbcType=VARCHAR},
+      city = #{record.city,jdbcType=VARCHAR},
       area = #{record.area,jdbcType=VARCHAR},
       currency_name = #{record.currencyName,jdbcType=VARCHAR},
       reg_captial = #{record.regCaptial,jdbcType=VARCHAR},
@@ -606,6 +617,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       borrow_nid = #{record.borrowNid,jdbcType=VARCHAR},
       username = #{record.username,jdbcType=VARCHAR},
+      city = #{record.city,jdbcType=VARCHAR},
       area = #{record.area,jdbcType=VARCHAR},
       currency_name = #{record.currencyName,jdbcType=VARCHAR},
       reg_captial = #{record.regCaptial,jdbcType=VARCHAR},
@@ -652,6 +664,9 @@
       </if>
       <if test="username != null" >
         username = #{username,jdbcType=VARCHAR},
+      </if>
+      <if test="city != null" >
+        city = #{city,jdbcType=VARCHAR},
       </if>
       <if test="area != null" >
         area = #{area,jdbcType=VARCHAR},
@@ -765,6 +780,7 @@
     update ht_borrow_user
     set borrow_nid = #{borrowNid,jdbcType=VARCHAR},
       username = #{username,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
       area = #{area,jdbcType=VARCHAR},
       currency_name = #{currencyName,jdbcType=VARCHAR},
       reg_captial = #{regCaptial,jdbcType=VARCHAR},
@@ -806,6 +822,7 @@
     update ht_borrow_user
     set borrow_nid = #{borrowNid,jdbcType=VARCHAR},
       username = #{username,jdbcType=VARCHAR},
+      city = #{city,jdbcType=VARCHAR},
       area = #{area,jdbcType=VARCHAR},
       currency_name = #{currencyName,jdbcType=VARCHAR},
       reg_captial = #{regCaptial,jdbcType=VARCHAR},

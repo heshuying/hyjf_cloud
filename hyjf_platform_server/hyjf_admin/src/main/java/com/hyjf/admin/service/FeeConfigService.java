@@ -1,8 +1,10 @@
 package com.hyjf.admin.service;
 
+import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.response.admin.AdminFeeConfigResponse;
 import com.hyjf.am.resquest.admin.AdminFeeConfigRequest;
 import com.hyjf.am.vo.trade.BankConfigVO;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -54,4 +56,9 @@ public interface FeeConfigService {
      * @return
      */
     public AdminFeeConfigResponse deleteFeeConfig(AdminFeeConfigRequest req);
+    /**
+     * 校验
+     * @return
+     */
+    public AdminFeeConfigResponse validateBeforeAction(AdminFeeConfigRequest request) ;
 }

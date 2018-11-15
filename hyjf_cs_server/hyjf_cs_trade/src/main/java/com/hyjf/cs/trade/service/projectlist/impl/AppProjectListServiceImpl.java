@@ -248,7 +248,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             borrowProjectInfoBean.setAccount(borrow.getBorrowAccount());
             borrowProjectInfoBean.setBorrowApr(borrow.getBorrowApr());
             borrowProjectInfoBean.setBorrowId(borrowNid);
-            borrowProjectInfoBean.setOnAccrual((borrow.getRecoverLastTime() == null ? "放款成功立即计息" : borrow.getRecoverLastTime()));
+            borrowProjectInfoBean.setOnAccrual((borrow.getReverifyTime() == null ? "放款成功立即计息" : borrow.getReverifyTime()));
             //0：备案中 1：初审中 2：投资中 3：复审中 4：还款中 5：已还款 6：已流标 7：待授权
             borrowProjectInfoBean.setStatus(borrow.getBorrowStatus());
             //0初始 1放款请求中 2放款请求成功 3放款校验成功 4放款校验失败 5放款失败 6放款成功
@@ -350,7 +350,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             // 信批需求新增(放款后才显示)
             if (Integer.parseInt(borrow.getBorrowStatus()) >= 4 && borrowRepay != null) {
                 //其他信息
-                String updateTime = ProjectConstant.getUpdateTime(borrowRepay.getAddTime(), borrowRepay.getRepayYestime());
+                Integer loanTime = (borrowRepay.getCreateTime() == null? null : GetDate.getTime10(borrowRepay.getCreateTime()));
+                String updateTime = ProjectConstant.getUpdateTime(loanTime, borrowRepay.getRepayYestime());
                 projectDetailList = dealDetail(projectDetailList, otherTableData, "otherTableData", updateTime);
             }
             jsonObject.put(ProjectConstant.RES_PROJECT_DETAIL, projectDetailList);
@@ -1250,7 +1251,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             // 信批需求新增(放款后才显示)
             if (borrow.getStatus() >= 4 && borrowRepay != null) {
                 //其他信息
-                String updateTime = ProjectConstant.getUpdateTime(borrowRepay.getAddTime(), borrowRepay.getRepayYestime());
+                Integer loanTime = (borrowRepay.getCreateTime() == null? null : GetDate.getTime10(borrowRepay.getCreateTime()));
+                String updateTime = ProjectConstant.getUpdateTime(loanTime, borrowRepay.getRepayYestime());
                 otherTableDataJson.put("title", "其他信息（更新于" + updateTime + "）");
                 otherTableDataJson.put("msg", otherTableData);
             }

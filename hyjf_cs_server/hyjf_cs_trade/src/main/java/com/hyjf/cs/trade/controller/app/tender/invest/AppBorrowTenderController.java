@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -100,9 +101,10 @@ public class AppBorrowTenderController extends BaseTradeController {
                                                                        @RequestParam String logOrdId,
                                                                        @RequestParam Integer couponGrantId,
                                                                        @RequestParam String borrowNid,
-                                                                       @RequestParam String isPrincipal) {
+                                                                       @RequestParam String isPrincipal,
+                                                                       @RequestParam String account) {
         logger.info("APP端散标投资获取投资成功结果，logOrdId{}", logOrdId);
-        return borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId,isPrincipal);
+        return borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId,isPrincipal,account);
     }
 
     @ApiOperation(value = "APP端获取投资信息", notes = "APP端获取投资信息")

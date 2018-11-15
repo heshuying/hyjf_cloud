@@ -15,10 +15,7 @@ import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.response.trade.*;
-import com.hyjf.am.response.user.BankRepayFreezeOrgResponse;
-import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
-import com.hyjf.am.response.user.HjhInstConfigResponse;
-import com.hyjf.am.response.user.UtmPlatResponse;
+import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
 import com.hyjf.am.resquest.config.AppBorrowImageRequest;
@@ -28,6 +25,7 @@ import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
+import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
@@ -1560,6 +1558,19 @@ public class AmAdminClientImpl implements AmAdminClient {
                 request, AdminHolidaysConfigResponse.class).getBody();
     }
 
+    @Override
+    public int onlyCheckMobileCode(String mobile, String code) {
+        SmsCodeRequest request = new SmsCodeRequest();
+        request.setMobile(mobile);
+        request.setVerificationCode(code);
+        Integer result = restTemplate.postForEntity("http://AM-ADMIN/am-trade/sms_code/qianle_check/", request, IntegerResponse.class)
+                .getBody().getResultInt();
+        if (result == null) {
+            return 0;
+        }
+        return result;
+    }
+
     /**
      * 查询千乐散标数据
      * @param dataSearchRequest
@@ -1600,5 +1611,53 @@ public class AmAdminClientImpl implements AmAdminClient {
     @Override
     public SmsConfigResponse initSmsConfig(SmsConfigRequest request) {
         return restTemplate.postForEntity("http://AM-ADMIN/am-config/smsConfig/initSmsConfig", request, SmsConfigResponse.class).getBody();
+    }
+
+
+    /**
+     * 保存验证码
+     * @param mobile
+     * @param checkCode
+     * @param validCodeType
+     * @param status
+     * @param platform
+     * @return
+     */
+    @Override
+    public int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform) {
+        SmsCodeRequest request = new SmsCodeRequest();
+        request.setMobile(mobile);
+        request.setVerificationCode(checkCode);
+        request.setVerificationType(validCodeType);
+        request.setStatus(status);
+        request.setPlatform(platform);
+        SmsCodeResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-trade/sms_code/save", request, SmsCodeResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getCnt();
+        } else {
+            throw new RuntimeException("发送验证码失败...");
+        }
+    }
+
+    @Override
+    public AppUtmRegResponse getstatisticsList(AppChannelStatisticsDetailRequest request) {
+        AppUtmRegResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-admin/app_utm_reg/getstatisticsList", request, AppUtmRegResponse.class).getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
+
+    }
+    @Override
+    public AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request) {
+        AppUtmRegResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-admin/app_utm_reg/exportStatisticsList", request,
+                        AppUtmRegResponse.class)
+                .getBody();
+        if (response != null) {
+            return response;
+        }
+        return null;
     }
 }

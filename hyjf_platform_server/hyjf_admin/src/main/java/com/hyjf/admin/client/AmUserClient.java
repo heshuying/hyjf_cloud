@@ -1308,12 +1308,6 @@ public interface AmUserClient {
 
     HjhUserAuthVO getHjhUserAuthByUserId(Integer userId);
 
-    /**
-     * 导出app渠道统计明细
-     * @param request
-     * @return
-     */
-    AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request);
 
     /**
      * 根据用户Id查询开户信息
@@ -1322,24 +1316,8 @@ public interface AmUserClient {
      */
     List<BankOpenAccountLogVO>  getBankOpenAccountLogVOByUserId(Integer userId);
 
-    /**
-     *分页查询所有渠道投资信息
-     * @param request
-     * @return
-     */
-    AppUtmRegResponse getstatisticsList(AppChannelStatisticsDetailRequest request);
 
 
-    /**
-     * 保存短信信息
-     * @param mobile
-     * @param checkCode
-     * @param validCodeType
-     * @param status
-     * @param platform
-     * @return
-     */
-    int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform);
 
     int onlyCheckMobileCode(String mobile, String code);
 
