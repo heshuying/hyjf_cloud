@@ -361,7 +361,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		return bean;
 	}
 	@Override
-	@HystrixCommand
+	@HystrixCommand(commandKey = "recharge")
 	public BankCallBean rechargeService(UserDirectRechargeBean directRechargeBean,int userId, String ipAddr, String mobile, String money) throws Exception {
 		WebViewUserVO user=this.getUserFromCache(userId);
 		// 信息校验
