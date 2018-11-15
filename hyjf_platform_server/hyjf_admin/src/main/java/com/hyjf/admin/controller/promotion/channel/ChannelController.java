@@ -99,9 +99,11 @@ public class ChannelController extends BaseController {
     public UtmResultResponse insertAction(HttpServletRequest request, HttpServletResponse response, @RequestBody ChannelCustomizeVO channelCustomizeVO){
         UtmResultResponse adminResult = new UtmResultResponse();
         //根据utmId判断，如存在，则为修改，如不存在，则为新增
+        logger.info("新增或修改推广渠道，sourceId："+channelCustomizeVO.getSourceId()+",utmTerm:"+channelCustomizeVO.getUtmTerm());
         validatorFieldCheck(adminResult,channelCustomizeVO);
         if(AdminResult.SUCCESS.equals(adminResult.getStatus())){
             boolean flag = channelService.insertOrUpdateUtm(channelCustomizeVO);
+            logger.info("新增或修改推广渠道结果，flag："+flag);
             if(!flag){
                 adminResult.setStatus(AdminResult.FAIL);
                 adminResult.setStatusDesc("系统异常，请联系管理员!");
