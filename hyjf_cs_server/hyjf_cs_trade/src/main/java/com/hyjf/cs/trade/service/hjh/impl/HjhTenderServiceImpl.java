@@ -782,20 +782,31 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      */
     private  WebResult<Map<String, Object>> tender(TenderRequest request, HjhPlanVO plan, BankOpenAccountVO account, CouponUserVO cuc, AccountVO tenderAccount) {
         WebResult<Map<String, Object>> result= new WebResult<Map<String, Object>>();
+        Map<String, Object> tenderEarnings;
         result.setStatus(WebResult.ERROR);
         Integer userId = request.getUser().getUserId();
         BigDecimal decimalAccount = new BigDecimal(request.getAccount());
         request.setBankOpenAccount(account);
         request.setTenderAccount(tenderAccount);
+        //校验用户测评
+        Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(request);
         // 体验金投资
         if (decimalAccount.compareTo(BigDecimal.ZERO) != 1 && cuc != null && (cuc.getCouponType() == 3 || cuc.getCouponType() == 1)) {
             logger.info("体验{},优惠金投资开始:userId:{},平台{},券为:{}", userId, request.getPlatform(), request.getCouponGrantId());
             // 体验金投资
             couponService.couponTender(request, plan,  cuc, userId);
             // 计算收益
-            Map<String, Object> tenderEarnings = getTenderEarnings(request,plan,cuc);
+            tenderEarnings = getTenderEarnings(request,plan,cuc);
+            //放入用户测评返回值
+            tenderEarnings.putAll(resultEval);
             result.setData(tenderEarnings);
             result.setStatus(WebResult.SUCCESS);
+            //用户测评校验状态转换
+            if(resultEval!=null){
+                if(resultEval.get("riskTested") != null && resultEval.get("riskTested") != ""){
+                    result.setStatus((String) resultEval.get("riskTested"));
+                }
+            }
             logger.info("体验金投资结束:userId{}" + userId);
             return result;
         }
@@ -870,8 +881,16 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         }
         if(afterDealFlag){
             // 计算收益
-            Map<String, Object> tenderEarnings = getTenderEarnings(request,plan,cuc);
+            tenderEarnings = getTenderEarnings(request,plan,cuc);
             result.setStatus(WebResult.SUCCESS);
+            //用户测评校验状态转换
+            if(resultEval!=null){
+                if(resultEval.get("riskTested") != null && resultEval.get("riskTested") != ""){
+                    result.setStatus((String) resultEval.get("riskTested"));
+                }
+            }
+            //放入用户测评返回值
+            tenderEarnings.putAll(resultEval);
             result.setData(tenderEarnings);
         }else{
             result.setStatus(AppResult.FAIL);
