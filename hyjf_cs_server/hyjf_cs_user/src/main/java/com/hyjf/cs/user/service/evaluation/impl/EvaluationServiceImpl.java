@@ -263,7 +263,7 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
         }
         // 1_1,2_8
         UserEvalationResultVO userEvalationResult = this.answerAnalysis(userAnswer, userId,behaviorId);
-        userEvalationResult.setEvalType((String) returnMap.get("eval_type"));
+        userEvalationResult.setEvalType((String) returnMap.get("evalType"));
         userEvalationResult.setRevaluationMoney((String) returnMap.get("revaluationMoney"));
         returnMap.put("userEvalationResult", userEvalationResult);
         return returnMap;

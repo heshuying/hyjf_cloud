@@ -178,6 +178,7 @@ public class AppMyPlanController extends BaseTradeController {
                 default:
                     project.setLabel("");
             }
+            project.setCouponType(label);
             //根据type判断计划是否已退出
             if ("1".equals(project.getType())) {
                 // mod by nxl 智投服务 修改加入时间-> 授权时间

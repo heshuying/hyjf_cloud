@@ -679,7 +679,7 @@ public class PlanListController extends BaseController{
 		map.put("planNid", "智投编号");
 		map.put("planName", "智投名称");
 		map.put("borrowStyle", "还款方式");
-		map.put("lockPeriod", "服务回报期限");
+		map.put("lockPeriodView", "服务回报期限");
 		map.put("expectApr", "参考年回报率");
 		map.put("minInvestment", "最低授权服务金额（元）");
 		map.put("maxInvestment", "最高授权服务金额（元）");
