@@ -27,6 +27,7 @@ import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
 import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
+import com.hyjf.am.resquest.trade.OperationReportJobRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
@@ -34,6 +35,7 @@ import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.SubmissionsVO;
 import com.hyjf.am.vo.market.AdsVO;
+import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
@@ -49,10 +51,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author tanyy
@@ -65,7 +64,203 @@ public class AmAdminClientImpl implements AmAdminClient {
     @Autowired
     private RestTemplate restTemplate;
 
+    @Override
+    public List<OperationReportJobVO> getTenderCityGroupByList(Date date){
+        OperationReportJobRequest request = new OperationReportJobRequest();
+        request.setDate(date);
+        OperationReportJobResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/tendercitygroupbylist",request, OperationReportJobResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
 
+    @Override
+    public  List<OperationReportJobVO> getTenderSexGroupByList(Date date) {
+        OperationReportJobRequest request = new OperationReportJobRequest();
+        request.setDate(date);
+        OperationReportJobResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/tendersexgroupbylist",request, OperationReportJobResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public List<OperationReportJobVO> getRechargeMoneyAndSum(int intervalMonth){
+        OperationReportJobRequest request = new OperationReportJobRequest();
+        request.setIntervalMonth(intervalMonth);
+        OperationReportJobResponse response  = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/rechargemoneyandsum",request, OperationReportJobResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public List<OperationReportJobVO> getCompleteCount(int intervalMonth){
+        OperationReportJobRequest request = new OperationReportJobRequest();
+        request.setIntervalMonth(intervalMonth);
+        OperationReportJobResponse response  = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/completecount",request, OperationReportJobResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public List<OperationReportJobVO> getSexDistribute( int intervalMonth){
+        OperationReportJobRequest request = new OperationReportJobRequest();
+        request.setIntervalMonth(intervalMonth);
+        OperationReportJobResponse response  = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/sexdistribute",request, OperationReportJobResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public List<OperationReportJobVO> getOneInvestMost(int intervalMonth){
+        OperationReportJobRequest request = new OperationReportJobRequest();
+        request.setIntervalMonth(intervalMonth);
+        OperationReportJobResponse response  = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/oneinvestmost",request, OperationReportJobResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public List<OperationReportJobVO> getBorrowPeriod(int intervalMonth){
+        OperationReportJobRequest request = new OperationReportJobRequest();
+        request.setIntervalMonth(intervalMonth);
+        OperationReportJobResponse response  = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/borrowperiod",request, OperationReportJobResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public List<OperationReportJobVO> getAgeDistribute( int intervalMonth){
+        OperationReportJobRequest request = new OperationReportJobRequest();
+        request.setIntervalMonth(intervalMonth);
+        OperationReportJobResponse response  = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/agedistribute",request, OperationReportJobResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public List<OperationReportJobVO> getOneInterestsMost(int intervalMonth){
+        OperationReportJobRequest request = new OperationReportJobRequest();
+        request.setIntervalMonth(intervalMonth);
+        OperationReportJobResponse response  = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/oneinterestsmost",request, OperationReportJobResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public List<OperationReportJobVO> getTenMostMoney( int intervalMonth){
+        OperationReportJobRequest request = new OperationReportJobRequest();
+        request.setIntervalMonth(intervalMonth);
+        OperationReportJobResponse response  = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/tenmostmoney",request, OperationReportJobResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public List<OperationReportJobVO> getMoneyDistribute( int intervalMonth){
+        OperationReportJobRequest request = new OperationReportJobRequest();
+        request.setIntervalMonth(intervalMonth);
+        OperationReportJobResponse response  = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/moneydistribute",request, OperationReportJobResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<OperationReportJobVO>  getTenderAgeByRangeList(Date date){
+        OperationReportJobRequest request = new OperationReportJobRequest();
+        request.setDate(date);
+        OperationReportJobResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/tenderagebyrangelist",request, OperationReportJobResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public float getFullBillAverageTime(Date date){
+        OperationReportJobRequest request = new OperationReportJobRequest();
+        request.setDate(date);
+        OperationReportJobResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/fullbillaveragetime",request, OperationReportJobResponse.class).getBody();
+        return response.getFullBillAverage();
+    }
+    @Override
+    public BigDecimal getRepayTotal(Date date) {
+        OperationReportJobRequest request = new OperationReportJobRequest();
+        request.setDate(date);
+        OperationReportJobResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/repaytotal",request, OperationReportJobResponse.class).getBody();
+        return response.getTotalAccount();
+    }
+    @Override
+    public List<OperationReportJobVO> getMonthDealMoney(int startMonth,int endMonth) {
+        OperationReportJobRequest request = new OperationReportJobRequest();
+        request.setStartMonth(startMonth);
+        request.setEndMonth(endMonth);
+        OperationReportJobResponse response  = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/monthdealmoney",request, OperationReportJobResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public List<OperationReportJobVO> getRevenueAndYield(int intervalMonth,int startMonth,int endMonth){
+        OperationReportJobRequest request = new OperationReportJobRequest();
+        request.setIntervalMonth(intervalMonth);
+        request.setStartMonth(startMonth);
+        request.setEndMonth(endMonth);
+        OperationReportJobResponse response  = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/revenueandyield",request, OperationReportJobResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public  int getTradeCountByMonth(Date beginDate,Date endDate) {
+        OperationReportJobRequest request = new OperationReportJobRequest();
+        request.setBeginDate(beginDate);
+        request.setEndDate(endDate);
+        OperationReportJobResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/tradecountbymonth",request, OperationReportJobResponse.class).getBody();
+        return response.getCount();
+    }
+    @Override
+    public  int getTenderCount(Date date) {
+        OperationReportJobRequest request = new OperationReportJobRequest();
+        request.setDate(date);
+        OperationReportJobResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/tendercount",request, OperationReportJobResponse.class).getBody();
+        return response.getCount();
+    }
+
+    @Override
+    public  double getInvestLastDate(Date date) {
+        OperationReportJobRequest request = new OperationReportJobRequest();
+        request.setDate(date);
+        OperationReportJobResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/investlastdate",request, OperationReportJobResponse.class).getBody();
+        return response.getAccount();
+    }
+    @Override
+    public  int getLoanNum(Date date) {
+        OperationReportJobRequest request = new OperationReportJobRequest();
+        request.setDate(date);
+        OperationReportJobResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/loannum",request, OperationReportJobResponse.class).getBody();
+        return response.getCount();
+    }
+    @Override
+    public BigDecimal getAccountByMonth(Date beginDate, Date endDate) {
+        OperationReportJobRequest request = new OperationReportJobRequest();
+        request.setBeginDate(beginDate);
+        request.setEndDate(endDate);
+        OperationReportJobResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/accountbymonth",request, OperationReportJobResponse.class).getBody();
+        return response.getTotalAccount();
+    }
     @Override
     public IntegerResponse countList(ChannelStatisticsDetailRequest request){
         return restTemplate.

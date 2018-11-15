@@ -4,6 +4,7 @@ import com.hyjf.am.vo.trade.OperationReportJobVO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -12,12 +13,18 @@ import java.util.List;
  * @Description: OperationReportJobBean
  */
 public class OperationReportJobBean implements Serializable {
+
+    private String status;
     //投资人按照地域分布
-    List<OperationReportJobVO> cityGroup;
+    private List<OperationReportJobVO> cityGroup;
     // 投资人按照性别分布
-    List<OperationReportJobVO> sexGroup;
+    private List<OperationReportJobVO> sexGroup;
     // 投资人按照年龄分布
-    List<OperationReportJobVO> ageRangeUserIds;
+    private  List<OperationReportJobVO> ageRangeUserIds;
+    //去年三个月成交金额
+    private  List<OperationReportJobVO> listLastMonthDealMoney;
+    //借款期限
+    private List<OperationReportJobVO> listBorrowPeriod;
     // 每月交易总额
     private BigDecimal accountMonth;
 
@@ -26,6 +33,12 @@ public class OperationReportJobBean implements Serializable {
 
     //借贷笔数
     private int loanNum;
+
+    private int startMonth;
+    private int lastMonth;
+    private int endMonth;
+
+    private int intervalMonth;
 
     //获取截至日期的投资金额
     private double investLastDate;
@@ -62,6 +75,9 @@ public class OperationReportJobBean implements Serializable {
     private List<OperationReportJobVO> listOneInterestsMost;
     //超活跃，投资笔数最多
     private List<OperationReportJobVO> listtOneInvestMost;
+    private Calendar calendar;
+    //人均投资金额
+    private int perInvest;
 
     public List<OperationReportJobVO> getCityGroup() {
         return cityGroup;
@@ -237,5 +253,77 @@ public class OperationReportJobBean implements Serializable {
 
     public void setListtOneInvestMost(List<OperationReportJobVO> listtOneInvestMost) {
         this.listtOneInvestMost = listtOneInvestMost;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public int getPerInvest() {
+        return perInvest;
+    }
+
+    public void setPerInvest(int perInvest) {
+        this.perInvest = perInvest;
+    }
+
+    public Calendar getCalendar() {
+        return calendar;
+    }
+
+    public void setCalendar(Calendar calendar) {
+        this.calendar = calendar;
+    }
+
+    public int getStartMonth() {
+        return startMonth;
+    }
+
+    public void setStartMonth(int startMonth) {
+        this.startMonth = startMonth;
+    }
+
+    public int getEndMonth() {
+        return endMonth;
+    }
+
+    public void setEndMonth(int endMonth) {
+        this.endMonth = endMonth;
+    }
+
+    public int getIntervalMonth() {
+        return intervalMonth;
+    }
+
+    public void setIntervalMonth(int intervalMonth) {
+        this.intervalMonth = intervalMonth;
+    }
+
+    public int getLastMonth() {
+        return lastMonth;
+    }
+
+    public void setLastMonth(int lastMonth) {
+        this.lastMonth = lastMonth;
+    }
+
+    public List<OperationReportJobVO> getListLastMonthDealMoney() {
+        return listLastMonthDealMoney;
+    }
+
+    public void setListLastMonthDealMoney(List<OperationReportJobVO> listLastMonthDealMoney) {
+        this.listLastMonthDealMoney = listLastMonthDealMoney;
+    }
+
+    public List<OperationReportJobVO> getListBorrowPeriod() {
+        return listBorrowPeriod;
+    }
+
+    public void setListBorrowPeriod(List<OperationReportJobVO> listBorrowPeriod) {
+        this.listBorrowPeriod = listBorrowPeriod;
     }
 }
