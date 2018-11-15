@@ -67,6 +67,24 @@ public class AssetExceptionController extends BaseController {
 
     /**
      * @Author: liushouyi
+     * @Desc :导出异常标的列表
+     */
+    @ApiOperation(value = "保证金查询列表")
+    @PostMapping("/export_asset_exception_list")
+    public AssetExceptionCustomizeResponse exportAssetExceptionRecordList(@RequestBody AssetExceptionRequest assetExceptionRequest) {
+        AssetExceptionCustomizeResponse response = new AssetExceptionCustomizeResponse();
+
+        List<AssetExceptionCustomizeVO> AssetExceptionCustomizeVOList = assetExceptionService.selectAssetExceptionRecordList(assetExceptionRequest);
+        if (null != AssetExceptionCustomizeVOList && AssetExceptionCustomizeVOList.size() > 0) {
+            List<AssetExceptionCustomizeVO> bankAccountManageCustomizeVOS = CommonUtils.convertBeanList(AssetExceptionCustomizeVOList, AssetExceptionCustomizeVO.class);
+            response.setResultList(bankAccountManageCustomizeVOS);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+    /**
+     * @Author: liushouyi
      * @Desc 插入异常标的并更新保证金
      */
     @ApiOperation(value = "插入异常标的并更新保证金")
