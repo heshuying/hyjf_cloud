@@ -25,6 +25,10 @@ public class AdminVersionRequest extends BasePage implements Serializable {
     private String url;
 
     private String content;
+
+    private Integer createUserId;
+
+    private Integer updateUserId;
     /*数据字典*/
     private List<ParamName> versionNames;
 
@@ -141,5 +145,21 @@ public class AdminVersionRequest extends BasePage implements Serializable {
 
     public void setIsUpdates(List<ParamName> isUpdates) {
         this.isUpdates = isUpdates;
+    }
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 }
