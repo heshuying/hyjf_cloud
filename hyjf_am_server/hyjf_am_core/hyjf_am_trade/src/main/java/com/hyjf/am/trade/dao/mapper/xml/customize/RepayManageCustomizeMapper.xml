@@ -446,6 +446,7 @@
 	<select id="selectOrgRepayedCount" resultType="java.lang.Integer" parameterType="Map">
 		SELECT
 			count(hba.id) as total
+        FROM
 		ht_borrow_apicron hba
 		INNER JOIN ht_borrow hydb ON hba.borrow_nid = hydb.borrow_nid
 		INNER JOIN ht_borrow_info hbi ON hydb.borrow_nid = hbi.borrow_nid
