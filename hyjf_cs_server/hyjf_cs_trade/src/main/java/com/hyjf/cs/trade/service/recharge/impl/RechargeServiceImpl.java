@@ -181,7 +181,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 						accountRecharge.setSeqNo(Integer.parseInt(seqNo));
 						BankAccountBeanRequest bankAccountBeanRequest = new BankAccountBeanRequest();
 						bankAccountBeanRequest.setAccountRecharge(accountRecharge);
-						bankAccountBeanRequest.setIp(ip);
+						bankAccountBeanRequest.setIp(accountRecharge.getAddIp());
 						boolean flag = amTradeClient.updateBanks(bankAccountBeanRequest);
 						if (flag) {
 							UserVO users = amUserClient.findUserById(userId);

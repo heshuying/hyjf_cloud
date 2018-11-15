@@ -77,11 +77,13 @@ public class AppUtmRegConsumer extends Consumer {
 					AppUtmReg entity = JSONObject.parseObject(msg.getBody(),
 							AppUtmReg.class);
 					if (entity != null) {
+                        logger.info("entity: {}", JSONObject.toJSONString(entity));
 						appUtmRegService.insert(entity);
 					}
 				} else if (MQConstant.APP_CHANNEL_STATISTICS_DETAIL_CREDIT_TAG.equals(msg.getTags())
 						|| MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG.equals(msg.getTags())) {
 					JSONObject entity = JSONObject.parseObject(msg.getBody(), JSONObject.class);
+					logger.info("entity: {}", entity.toJSONString());
 					if (Validator.isNotNull(entity)) {
 						boolean investFlag = entity.getBooleanValue("investFlag");
 						// 不是首投
