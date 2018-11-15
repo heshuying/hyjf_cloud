@@ -1706,6 +1706,10 @@ public class BorrowCommonController extends BaseController {
 		if (user.getStatus() != 0) {
 			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_USES);
 		}
+		if(user.getPaymentAuthStatus()==0){
+			// 未服务费授权
+			throw new ReturnMessageException(MsgEnum.ERR_PAYMENT_AUTH);
+		}
 		int usersFlag=this.borrowCommonService.isEntrustedExistsUser(userName.get("userName"));
 //		if (usersFlag == 1) {
 //			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_EXIST);
@@ -1718,9 +1722,7 @@ public class BorrowCommonController extends BaseController {
 			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_IN);
 		} else if (usersFlag == 6) {
 			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_IS_DISABLE);
-		} else if (usersFlag == 7) {
-			throw new ReturnMessageException(MsgEnum.ERR_PAYMENT_AUTH);
-		}
+		} 
 		return new AdminResult<>() ;
 	}
 
