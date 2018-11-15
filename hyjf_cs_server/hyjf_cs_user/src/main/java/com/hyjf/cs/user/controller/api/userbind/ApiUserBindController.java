@@ -132,7 +132,7 @@ public class ApiUserBindController extends BaseUserController {
                 readonly = "readonly";
             }
         }
-        baseMapBean.set("mobile", mobile);
+        baseMapBean.set("mobile", mobile==null?"":mobile);
         baseMapBean.set("readonly", readonly);
         baseMapBean.setAll(objectToMap(apiUserPostBean));
         modelAndView.addObject("callBackForm", baseMapBean);
