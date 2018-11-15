@@ -184,6 +184,7 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
             try {
                 modelAndView = BankCallUtils.callApi(bean);
             } catch (Exception e) {
+                logger.error("报错了 ",e);
                 e.printStackTrace();
             }
 

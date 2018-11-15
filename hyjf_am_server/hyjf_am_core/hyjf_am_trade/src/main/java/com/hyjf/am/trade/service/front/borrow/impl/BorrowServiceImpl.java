@@ -224,6 +224,9 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         }
         // 为投资完全掉单优惠券投资时修复做记录
         temp.setCouponGrantId(couponGrantId);
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(tenderRequest.getTenderFrom())) {
+            temp.setTenderFrom(tenderRequest.getTenderFrom());
+        }
         logger.info("开始插入temp表   {}",JSONObject.toJSONString(temp));
         boolean tenderTmpFlag = borrowTenderTmpMapper.insertSelective(temp) > 0 ? true : false;
         if (!tenderTmpFlag) {
