@@ -36,7 +36,22 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         }
         return null;
     }
-
+    /**
+     * 根据用户ID获取用户信息
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public User findUserByUserId(int userId) {
+        UserExample usersExample = new UserExample();
+        usersExample.createCriteria().andUserIdEqualTo(userId);
+        List<User> usersList = userMapper.selectByExample(usersExample);
+        if (!CollectionUtils.isEmpty(usersList)) {
+            return usersList.get(0);
+        }
+        return null;
+    }
 
     /**
      * 根据用户ID获取用户详情

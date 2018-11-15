@@ -102,5 +102,5 @@ public interface ChannelService {
      * @Param utmTerm
      * @return
      */
-    boolean getBySourceIdAndTerm(String sourceId, String utmTerm);
+    boolean getBySourceIdAndTerm(String utmId, String sourceId, String utmTerm);
 }

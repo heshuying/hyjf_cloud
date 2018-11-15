@@ -13,19 +13,6 @@ import java.util.List;
  */
 public interface OperationReportJobClient {
 
-    /**
-     * 按照省份统计投资人的分布  上个月的最后一天
-     *
-     * @param cityUserIds
-     */
-    List<OperationReportJobVO> getTenderCityGroupByUserIds(List<OperationReportJobVO> cityUserIds);
-
-    /**
-     * 按照省份统计投资人的分布  上个月的最后一天
-     *
-     * @param bms
-     */
-    List<OperationReportJobVO> getTenderCityGroupBy(List<OperationReportJobVO> bms);
 
     /**
      * 按照省份统计投资人的分布
@@ -33,11 +20,6 @@ public interface OperationReportJobClient {
      */
     List<OperationReportJobVO> getTenderCityGroupByList(Date date);
 
-    /**
-     * 按照性别统计投资人的分布
-     * @param date 上个月的最后一天
-     */
-    List<OperationReportJobVO>  getTenderSexGroupBy(Date date, List<OperationReportJobVO> ageRangeUserIds);
 
     /**
      * 按照性别统计投资人的分布
