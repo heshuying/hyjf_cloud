@@ -91,6 +91,9 @@ public class SensorsDataLoginServiceImpl extends BaseServiceImpl implements Sens
             logger.error("根据用户ID查询用户详情信息失败,用户ID:" + userId + "].");
             return;
         }
+        logger.info("------------------调用神策signUp事件-----------------------");
+        logger.info("------------------登陆用户ID;[" + userId + "]----------------");
+        logger.info("------------------匿名ID;[" + (StringUtils.isBlank(deviceId) ? distinctId : deviceId) + "]----------------");
         // 调用神策
         // 2.1 通过，trackSignUP，把匿名ID和注册ID贯通起来
         sa.trackSignUp(String.valueOf(userId), StringUtils.isBlank(deviceId) ? distinctId : deviceId);

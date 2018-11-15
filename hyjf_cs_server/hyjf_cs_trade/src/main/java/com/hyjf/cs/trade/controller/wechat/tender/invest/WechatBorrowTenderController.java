@@ -38,6 +38,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
@@ -101,6 +102,12 @@ public class WechatBorrowTenderController extends BaseTradeController {
                 logger.error("保存用户日志失败", e);
             }
             weChatResult.setStatus(result.getStatus());
+            //用户测评校验状态转换
+            if(result.getData()!=null){
+                if(result.getData().get("riskTested") != null && result.getData().get("riskTested") != ""){
+                    weChatResult.setStatus((String) result.getData().get("riskTested"));
+                }
+            }
             weChatResult.setData(result.getData());
         }catch (CheckException e){
             throw e;
@@ -151,9 +158,10 @@ public class WechatBorrowTenderController extends BaseTradeController {
                                                                        @RequestParam String logOrdId,
                                                                        @RequestParam Integer couponGrantId,
                                                                        @RequestParam String borrowNid,
-                                                                          @RequestParam String isPrincipal) {
+                                                                       @RequestParam String isPrincipal,
+                                                                       @RequestParam BigDecimal account) {
         logger.info("wechat端-散标投资获取投资成功结果，logOrdId{}", logOrdId);
-        WebResult<Map<String,Object>> result = borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId,isPrincipal);
+        WebResult<Map<String,Object>> result = borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId,isPrincipal,account);
         WeChatResult weChatResult = new WeChatResult();
         weChatResult.setObject(result.getData());
         return  weChatResult;

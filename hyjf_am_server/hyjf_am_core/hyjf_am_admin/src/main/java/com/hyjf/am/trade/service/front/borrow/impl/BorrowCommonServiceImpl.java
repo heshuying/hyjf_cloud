@@ -5765,10 +5765,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	@Override
 	public int isEntrustedExistsUser(String userName) {
 		if (StringUtils.isNotEmpty(userName)) {
-			UserExample example = new UserExample();
-			UserExample.Criteria cra = example.createCriteria();
-			cra.andUsernameEqualTo(userName);
-			List<User> userList = this.userMapper.selectByExample(example);
+//			UserExample example = new UserExample();
+//			UserExample.Criteria cra = example.createCriteria();
+//			cra.andUsernameEqualTo(userName);
+//			List<User> userList = this.userMapper.selectByExample(example);
 //			UserExample example = new UsersExample();
 //			UsersExample.Criteria cra = example.createCriteria();
 //			cra.andUsernameEqualTo(userName);
@@ -5799,12 +5799,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			}
 			if(whiteList.get(0).getState() == 0){//状态 1启用  0禁用
 				return 6;
-			}
-			// 检查是否服务费授权
-			Integer isPaymentAuth = CommonUtils.checkPaymentAuthStatus(userList.get(0).getPaymentAuthStatus());
-			if(isPaymentAuth-0==0){
-				// 未服务费授权
-				return 7;
 			}
 		}
 		return 0;

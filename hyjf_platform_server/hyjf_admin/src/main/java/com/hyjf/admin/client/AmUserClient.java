@@ -1330,16 +1330,6 @@ public interface AmUserClient {
     AppUtmRegResponse getstatisticsList(AppChannelStatisticsDetailRequest request);
 
 
-    /**
-     * 保存短信信息
-     * @param mobile
-     * @param checkCode
-     * @param validCodeType
-     * @param status
-     * @param platform
-     * @return
-     */
-    int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform);
 
     int onlyCheckMobileCode(String mobile, String code);
 
@@ -1351,5 +1341,5 @@ public interface AmUserClient {
      * @Param utmTerm
      * @return
      */
-    Integer getBySourceIdAndTerm(String sourceId, String utmTerm);
+    Integer getBySourceIdAndTerm(String utmId,String sourceId, String utmTerm);
 }

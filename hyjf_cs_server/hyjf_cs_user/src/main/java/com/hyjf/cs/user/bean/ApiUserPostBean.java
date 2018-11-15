@@ -12,12 +12,11 @@
 package com.hyjf.cs.user.bean;
 
 
-
 /**
  * @author liubin
  */
 
-public class ApiUserPostBean  extends BaseBean {
+public class ApiUserPostBean {
 	/** 加密的汇晶社用户ID */
 	private String bindUniqueIdScy;
 
@@ -50,6 +49,14 @@ public class ApiUserPostBean  extends BaseBean {
 	private String true_name;
 	//目标url
 	private String target_url;
+    /**
+     * 验签
+     */
+    private String chkValue;
+    /**
+     * 当前时间戳（10位）
+     */
+    private Long timestamp;
 	public String getFrom() {
 		return from;
 	}
@@ -118,25 +125,6 @@ public class ApiUserPostBean  extends BaseBean {
 	}
 
 	/**
-	 * retUrl
-	 * @return the retUrl
-	 */
-
-	@Override
-    public String getRetUrl() {
-		return retUrl;
-	}
-
-	/**
-	 * @param retUrl the retUrl to set
-	 */
-
-	@Override
-    public void setRetUrl(String retUrl) {
-		this.retUrl = retUrl;
-	}
-
-	/**
 	 * pid
 	 * @return the pid
 	 */
@@ -177,17 +165,13 @@ public class ApiUserPostBean  extends BaseBean {
 		this.name = name;
 	}
 
-	/**
-	 * 执行前每个方法前需要添加BusinessDesc描述
-	 * @return
-	 * @author lb
-	 */
+    public String getRetUrl() {
+        return retUrl;
+    }
 
-	@Override
-	public String toString() {
-		return "ApiUserPostBean [bindUniqueIdScy=" + bindUniqueIdScy + ", retUrl=" + retUrl + ", pid=" + pid + ", timestamp=" + super.getTimestamp() +", chkValue=" + super.getChkValue() + "]";
-	}
-
+    public void setRetUrl(String retUrl) {
+        this.retUrl = retUrl;
+    }
 
 	private String loginUserName;
 
@@ -248,6 +232,21 @@ public class ApiUserPostBean  extends BaseBean {
 		this.presetProps = presetProps;
 	}
 
+    public String getChkValue() {
+        return chkValue;
+    }
+
+    public void setChkValue(String chkValue) {
+        this.chkValue = chkValue;
+    }
+
+    public Long getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(Long timestamp) {
+        this.timestamp = timestamp;
+    }
 }
 
 	

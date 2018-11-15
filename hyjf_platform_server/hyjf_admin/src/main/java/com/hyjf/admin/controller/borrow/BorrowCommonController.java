@@ -1706,6 +1706,10 @@ public class BorrowCommonController extends BaseController {
 		if (user.getStatus() != 0) {
 			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_USES);
 		}
+		if(user.getPaymentAuthStatus()==0){
+			// 未服务费授权
+			throw new ReturnMessageException(MsgEnum.ERR_PAYMENT_AUTH);
+		}
 		int usersFlag=this.borrowCommonService.isEntrustedExistsUser(userName.get("userName"));
 //		if (usersFlag == 1) {
 //			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_EXIST);
@@ -1718,9 +1722,7 @@ public class BorrowCommonController extends BaseController {
 			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_IN);
 		} else if (usersFlag == 6) {
 			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_IS_DISABLE);
-		} else if (usersFlag == 7) {
-			throw new ReturnMessageException(MsgEnum.ERR_PAYMENT_AUTH);
-		}
+		} 
 		return new AdminResult<>() ;
 	}
 
@@ -1768,7 +1770,8 @@ public class BorrowCommonController extends BaseController {
 			return String.valueOf(hssfCell.getBooleanCellValue());
 		} else if (hssfCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
 			// 返回数值类型的值
-			return String.valueOf((int)hssfCell.getNumericCellValue());
+			String s=String.valueOf(hssfCell.getNumericCellValue());
+			return s.substring(0,s.indexOf("."));
 		} else if (hssfCell.getCellType() == Cell.CELL_TYPE_FORMULA) {
 			// 单元格为公式类型时
 			if (hssfCell.getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC) {
