@@ -377,10 +377,10 @@ public class UtmController extends BaseController {
      * @Param utmTerm
      * @return
      */
-    @RequestMapping("/getbysourceidandterm/{sourceId}/{utmTerm}")
-    public UtmResponse getBySourceIdAndTerm(@PathVariable String sourceId,@PathVariable String utmTerm) {
+    @RequestMapping("/getbysourceidandterm/{sourceId}/{utmTerm}/{utmId}")
+    public UtmResponse getBySourceIdAndTerm(@PathVariable String sourceId,@PathVariable String utmTerm,@PathVariable String utmId) {
         UtmResponse response = new UtmResponse();
-        Integer total = utmService.getBySourceIdAndTerm(sourceId,utmTerm);
+        Integer total = utmService.getBySourceIdAndTerm(sourceId,utmTerm,utmId);
         response.setRecordTotal(total);
         return response;
     }

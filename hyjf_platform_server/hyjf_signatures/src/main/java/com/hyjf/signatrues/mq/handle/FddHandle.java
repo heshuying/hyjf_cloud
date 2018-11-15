@@ -263,7 +263,9 @@ public class FddHandle {
 
             List<FddTempletVO> fddTemplets = this.amTradeClient.getFddTempletList(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER);
             if (fddTemplets != null && fddTemplets.size() == 1) {
+				logger.info("----------------合同编号：" + borrowTender.getNid() + ",开始调用法大大接口生成居间服务协议-----");
                 FddTempletVO fddTemplet = fddTemplets.get(0);
+
                 String templetId = fddTemplet.getTempletId();
                 DzqzCallBean callBean = new DzqzCallBean();
                 callBean.setParameter_map(paramStr);
