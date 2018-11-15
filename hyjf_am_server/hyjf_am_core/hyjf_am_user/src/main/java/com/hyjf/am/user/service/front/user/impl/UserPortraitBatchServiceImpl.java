@@ -111,11 +111,14 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
             UserPortrait userPortrait = CommonUtils.convertBean(userPortraitQueryVO,UserPortrait.class);
             // 如果投资进程在trade上未赋值，说明不是投资或者充值
             if (userPortrait.getInvestProcess() == null) {
-                BankCardExample bankCardExample = new BankCardExample();
-                BankCardExample.Criteria criteria2 = bankCardExample.createCriteria();
-                criteria2.andUserIdEqualTo(userId);
-                int count = bankCardMapper.countByExample(bankCardExample);
-                if (count > 0) {
+                UserExample userExample = new UserExample();
+                userExample.createCriteria().andUserIdEqualTo(userId);
+                List<User> users = userMapper.selectByExample(userExample);
+                User user = null;
+                if (!CollectionUtils.isEmpty(users)) {
+                    user = users.get(0);
+                }
+                if (user.getBankOpenAccount() == 1) {
                     userPortrait.setInvestProcess("开户");
                 } else {
                     userPortrait.setInvestProcess("注册");

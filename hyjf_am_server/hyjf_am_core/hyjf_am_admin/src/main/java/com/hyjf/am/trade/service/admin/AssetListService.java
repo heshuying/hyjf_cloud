@@ -18,7 +18,7 @@ public interface AssetListService {
 	List<AssetListCustomizeVO> findAssetListWithoutPage(Map<String, Object> mapParam);
 	
 	AssetDetailCustomizeVO findDetailById(Map<String, Object> mapParam);
-	
+
 	Integer getRecordCount(AssetListRequest request);
 	
 	BigDecimal getSumAccount(AssetListRequest request);
