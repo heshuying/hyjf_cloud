@@ -139,6 +139,10 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
                             userPortrait.setSex("未知");
                         }
                     }
+                    //有无主单
+                    if(null != userInfo.getAttribute()){
+                        userPortrait.setAttribute(userInfo.getAttribute());
+                    }
                     // 赋值身份证号码和城市
                     if (StringUtils.isNotBlank(userInfo.getIdcard())) {
                         try {
@@ -168,10 +172,6 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
                                 userPortrait.setCity("");
                             }
 
-                            if(null != userInfo.getAttribute()){
-                                userPortrait.setAttribute(userInfo.getAttribute());
-                            }
-
                         } catch (Exception e) {
                             continue;
                         }
@@ -194,7 +194,7 @@ public class UserPortraitBatchServiceImpl extends BaseServiceImpl implements Use
 
 
             // 从user中获取用户名，手机号
-            User user = this.fUserByUserId(userId);
+            User user = this.findUserByUserId(userId);
             if(user != null){
                 // username
                 if(user.getUsername() != null){

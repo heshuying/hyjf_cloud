@@ -69,9 +69,16 @@ public interface AssetManageService extends BaseTradeService {
     MyCreditDetailBean getMyCreditAssignDetail(String creditNid);
 
     /**
-     * 获取我加入的计划详情信息
+     * 获取我加入的汇计划详情信息
      * @author zhangyk
      * @date 2018/8/18 16:06
      */
     WebResult getMyHjhPlanInfoDetail(AssetManagePlanRequest request, Integer userId);
+
+    /**
+     * 获取我加入的计划详情信息
+     * @author zhangyk
+     * @date 2018/8/18 16:06
+     */
+    WebResult getMyPlanInfoDetail(AssetManagePlanRequest request, Integer userId);
 }

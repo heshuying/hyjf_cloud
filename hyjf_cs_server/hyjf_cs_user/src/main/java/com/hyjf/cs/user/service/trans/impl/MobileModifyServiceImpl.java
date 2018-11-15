@@ -139,6 +139,7 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
 
         FddCertificateAuthorityVO fddCertificateAuthorityVO = new FddCertificateAuthorityVO();
         fddCertificateAuthorityVO.setUserId(userId);
+        fddCertificateAuthorityVO.setCertFrom("mobileModify");
         fddProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC,
                 UUID.randomUUID().toString(), JSON.toJSONBytes(fddCertificateAuthorityVO)));
 

@@ -46,7 +46,17 @@ public class UserInfoController extends BaseController {
 		}
 		return response;
 	}
-
+	@RequestMapping("/findMainById/{userId}")
+	public UserInfoResponse findMainUserInfoById(@PathVariable int userId) {
+		UserInfoResponse response = new UserInfoResponse();
+		UserInfo usersInfo = userInfoService.fUserInfoById(userId);
+		if (usersInfo != null) {
+			UserInfoVO userInfoVO = new UserInfoVO();
+			BeanUtils.copyProperties(usersInfo, userInfoVO);
+			response.setResult(userInfoVO);
+		}
+		return response;
+	}
 	@RequestMapping("/findByIdNo/{idNo}")
 	public UserInfoResponse findUserInfoByIdNo(@PathVariable String idNo) {
 		UserInfoResponse response = new UserInfoResponse();

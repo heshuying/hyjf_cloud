@@ -12,6 +12,8 @@ public class FddCertificateAuthorityVO implements Serializable {
     private static final long serialVersionUID = -2739950621085835647L;
     // 用户ID
     private Integer userId;
+    // 认证来源（mobileModify：修改手机号）
+    private String certFrom = "";
 
 
     public Integer getUserId() {
@@ -20,5 +22,13 @@ public class FddCertificateAuthorityVO implements Serializable {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public String getCertFrom() {
+        return certFrom;
+    }
+
+    public void setCertFrom(String certFrom) {
+        this.certFrom = certFrom;
     }
 }

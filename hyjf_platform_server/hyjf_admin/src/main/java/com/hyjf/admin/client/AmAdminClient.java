@@ -691,6 +691,14 @@ public interface AmAdminClient {
     List<AssetExceptionCustomizeVO> selectAssetExceptionList(AssetExceptionRequest request);
 
     /**
+     * 导出异常标的列表
+     *
+     * @param request
+     * @return
+     */
+    List<AssetExceptionCustomizeVO> exportAssetExceptionList(AssetExceptionRequest request);
+
+    /**
      * 插入异常标的并更新保证金
      *
      * @param assetExceptionRequest

@@ -85,7 +85,7 @@ public class FddCertificateConsumer extends Consumer {
                 try {
                     Integer userId = fddCertificateAuthorityVO.getUserId();
                     // 根据用户ID获取用户信息
-                    User user = fddCertificateService.fUserByUserId(userId);
+                    User user = fddCertificateService.findUserByUserId(userId);
                     if (user == null) {
                         logger.info("根据用户ID获取用户信息失败,用户ID:[" + userId + "].");
                         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
@@ -99,9 +99,11 @@ public class FddCertificateConsumer extends Consumer {
                    fddCertificateService.updateUserCAInfo(userId,user,userInfo);
                     Map<String, String> map = Maps.newHashMap();
                     map.put("userId", String.valueOf(userId).trim());
-                    //crm投资推送
-                    crmBankOpenMessageProducer.messageSend(new MessageContent(MQConstant.CRM_ROUTINGKEY_BANCKOPEN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(map)));
-                    logger.info("开户发送MQ时间【{}】",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+                    if(!"mobileModify".equals(fddCertificateAuthorityVO.getCertFrom())){
+                        //crm投资推送
+                        crmBankOpenMessageProducer.messageSend(new MessageContent(MQConstant.CRM_ROUTINGKEY_BANCKOPEN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(map)));
+                        logger.info("开户发送MQ时间【{}】",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
+                    }
 
                 } catch (Exception e) {
                     e.printStackTrace();
