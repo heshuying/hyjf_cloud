@@ -62,7 +62,9 @@ public class CouponUserController extends BaseController {
      * 权限名称
      */
     private static final String PERMISSIONS = "couponuser";
-    /** 排他check */
+    /**
+     * 排他check
+     */
     private static final String SYN_OPERATION = "syn.operation";
 
     @Value("${coupon.audit.pwd}")
@@ -138,54 +140,54 @@ public class CouponUserController extends BaseController {
             couponUserBeanRequest.setAmount(1);
         }
 
-        CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
-        //根据用户名获取用户id
-        String userName = couponUserBeanRequest.getUserName();
-        UserVO userVO = couponUserService.getUser(userName);
-        Integer userId = userVO.getUserId();
-
-        //根据用户id获取用户详情信息
-        UserInfoVO userInfoVO = couponUserService.getUserInfo(userId);
-
-        //根据用户id获取注册时渠道名
-        UtmResponse utmResponse = couponUserService.getChannelName(userId);
-        String channelName = utmResponse.getChannelName();
-
-        //根据优惠券编码查询优惠券
-        CouponConfigResponse configResponse = couponUserService.getCouponConfig(couponUserBeanRequest.getCouponCode());
-        CouponConfigVO configVO = configResponse.getResult();
-
-        CouponUserRequest couponUserRequest = new CouponUserRequest();
-        //截止日
-        if (configVO.getExpirationType() == 1) {
-            couponUserRequest.setEndTime(configVO.getExpirationDate());
-        } else if (configVO.getExpirationType() == 2) {
-            Date endDate = GetDate.countDate(GetDate.getDate(), 2, configVO.getExpirationLength());
-            couponUserRequest.setEndTime((int) (endDate.getTime() / 1000));
-        } else if (configVO.getExpirationType() == 3) {
-            Date endDate = GetDate.countDate(GetDate.getDate(), 5, configVO.getExpirationLengthDay());
-            couponUserRequest.setEndTime((int) (endDate.getTime() / 1000));
-        }
-        couponUserRequest.setUserId(userId);
-        couponUserRequest.setCouponCode(configVO.getCouponCode());
-        couponUserRequest.setContent(couponUserBeanRequest.getContent());
-        couponUserRequest.setCouponUserCode(GetCode.getCouponUserCode(configVO.getCouponType()));
-        couponUserRequest.setCreateUserId(Integer.parseInt(loginUserId));
-        couponUserRequest.setCreateTime(GetDate.getDate());
-        couponUserRequest.setUpdateUserId(Integer.parseInt(loginUserId));
-        couponUserRequest.setUpdateTime(GetDate.getDate());
-        couponUserRequest.setDelFlag(CustomConstants.FALG_NOR);
-        couponUserRequest.setUsedFlag(CustomConstants.USER_COUPON_STATUS_WAITING_PUBLISH);
-        couponUserRequest.setReadFlag(CustomConstants.USER_COUPON_READ_FLAG_NO);
-        if (couponUserRequest.getActivityId() == null) {
-            couponUserRequest.setCouponSource(CustomConstants.USER_COUPON_SOURCE_MANUAL);
-        } else {
-            couponUserRequest.setCouponSource(CustomConstants.USER_COUPON_SOURCE_ACTIVE);
-        }
-        couponUserRequest.setAttribute(userInfoVO.getAttribute());
-        couponUserRequest.setChannel(channelName);
         for (int i = 0; i < couponUserBeanRequest.getAmount(); i++) {
-            boolean  result = couponCheckService.checkSendNum(couponUserBeanRequest.getCouponCode());
+            CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
+            //根据用户名获取用户id
+            String userName = couponUserBeanRequest.getUserName();
+            UserVO userVO = couponUserService.getUser(userName);
+            Integer userId = userVO.getUserId();
+
+            //根据用户id获取用户详情信息
+            UserInfoVO userInfoVO = couponUserService.getUserInfo(userId);
+
+            //根据用户id获取注册时渠道名
+            UtmResponse utmResponse = couponUserService.getChannelName(userId);
+            String channelName = utmResponse.getChannelName();
+
+            //根据优惠券编码查询优惠券
+            CouponConfigResponse configResponse = couponUserService.getCouponConfig(couponUserBeanRequest.getCouponCode());
+            CouponConfigVO configVO = configResponse.getResult();
+
+            CouponUserRequest couponUserRequest = new CouponUserRequest();
+            //截止日
+            if (configVO.getExpirationType() == 1) {
+                couponUserRequest.setEndTime(configVO.getExpirationDate());
+            } else if (configVO.getExpirationType() == 2) {
+                Date endDate = GetDate.countDate(GetDate.getDate(), 2, configVO.getExpirationLength());
+                couponUserRequest.setEndTime((int) (endDate.getTime() / 1000));
+            } else if (configVO.getExpirationType() == 3) {
+                Date endDate = GetDate.countDate(GetDate.getDate(), 5, configVO.getExpirationLengthDay());
+                couponUserRequest.setEndTime((int) (endDate.getTime() / 1000));
+            }
+            couponUserRequest.setUserId(userId);
+            couponUserRequest.setCouponCode(configVO.getCouponCode());
+            couponUserRequest.setContent(couponUserBeanRequest.getContent());
+            couponUserRequest.setCouponUserCode(GetCode.getCouponUserCode(configVO.getCouponType()));
+            couponUserRequest.setCreateUserId(Integer.parseInt(loginUserId));
+            couponUserRequest.setCreateTime(GetDate.getDate());
+            couponUserRequest.setUpdateUserId(Integer.parseInt(loginUserId));
+            couponUserRequest.setUpdateTime(GetDate.getDate());
+            couponUserRequest.setDelFlag(CustomConstants.FALG_NOR);
+            couponUserRequest.setUsedFlag(CustomConstants.USER_COUPON_STATUS_WAITING_PUBLISH);
+            couponUserRequest.setReadFlag(CustomConstants.USER_COUPON_READ_FLAG_NO);
+            if (couponUserRequest.getActivityId() == null) {
+                couponUserRequest.setCouponSource(CustomConstants.USER_COUPON_SOURCE_MANUAL);
+            } else {
+                couponUserRequest.setCouponSource(CustomConstants.USER_COUPON_SOURCE_ACTIVE);
+            }
+            couponUserRequest.setAttribute(userInfoVO.getAttribute());
+            couponUserRequest.setChannel(channelName);
+            boolean result = couponCheckService.checkSendNum(couponUserBeanRequest.getCouponCode());
             if (!result) {
                 return new AdminResult(AdminResult.FAIL, "优惠券发行数量超出上限，不再发放！");
             }
@@ -215,7 +217,7 @@ public class CouponUserController extends BaseController {
             response.setMessage(message);
             return new AdminResult<>(FAIL, message);
         }
-        return new AdminResult<>(SUCCESS,SUCCESS_DESC);
+        return new AdminResult<>(SUCCESS, SUCCESS_DESC);
     }
 
     @ApiOperation(value = "校验优惠券是否可用", notes = "校验优惠券是否可用")
@@ -229,7 +231,7 @@ public class CouponUserController extends BaseController {
         }
         if (StringUtils.isEmpty(couponCode)) {
             response.setMessage("请求参数不正确");
-            return new AdminResult<>(FAIL,response.getMessage());
+            return new AdminResult<>(FAIL, response.getMessage());
         }
         CouponUserResponse couponUserResponse = couponUserService.getCouponUserByCouponCode(couponCode);
         List<CouponUserVO> couponUserVOS = couponUserResponse.getResultList();
@@ -255,17 +257,17 @@ public class CouponUserController extends BaseController {
         String couponCode = request.getCouponCode();
         if (StringUtils.isEmpty(couponCode)) {
             response.setMessage("优惠券编码不能为空");
-            return new AdminResult<>(FAIL,response.getMessage());
+            return new AdminResult<>(FAIL, response.getMessage());
         }
         CouponConfigResponse configResponse = couponUserService.getCouponConfig(couponCode);
         CouponConfigVO configVO = configResponse.getResult();
         //截止日
-        if(configVO.getExpirationType() == 1){
+        if (configVO.getExpirationType() == 1) {
             configVO.setContent(GetDate.formatDate(Long.parseLong((configVO.getExpirationDate() + "000"))));
-        }else if(configVO.getExpirationType() == 2){
+        } else if (configVO.getExpirationType() == 2) {
             Date date = GetDate.countDate(GetDate.getDate(), 2, configVO.getExpirationLength());
             configVO.setContent(GetDate.formatDate(date));
-        }else if(configVO.getExpirationType() == 3){
+        } else if (configVO.getExpirationType() == 3) {
             Date date = GetDate.countDate(GetDate.getDate(), 5, configVO.getExpirationLengthDay());
             configVO.setContent(GetDate.formatDate(date));
         }
@@ -477,11 +479,11 @@ public class CouponUserController extends BaseController {
         CouponUserCustomizeResponse response = new CouponUserCustomizeResponse();
         CouponUserVO record = couponUserService.selectCouponUserById(couponUserBeanRequest.getId());
         if (record == null || StringUtils.isEmpty(record.getCouponCode())) {
-            return new AdminResult<>(FAIL,FAIL_DESC);
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
         CouponConfigResponse configResponse = couponUserService.getCouponConfig(record.getCouponCode());
         if (configResponse == null || configResponse.getResult() == null) {
-            return new AdminResult<>(FAIL,FAIL_DESC);
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
         String message = this.validatorFieldCheckAudit(couponUserBeanRequest, record);
         if (message == null) {
@@ -739,13 +741,13 @@ public class CouponUserController extends BaseController {
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-        }else{
+        } else {
             //操作平台
             Map<String, String> client = CacheUtil.getParamNameMap("CLIENT");
-            for(CouponUserCustomizeVO couponUserCustomizeVO:customizeResponse.getResultList()){
+            for (CouponUserCustomizeVO couponUserCustomizeVO : customizeResponse.getResultList()) {
                 //循环计数（每循环一次是一行）根据行数下标位置获取数组，无法确定当前行下标
                 String clientString = "";
-                if(StringUtils.isNotEmpty(couponUserCustomizeVO.getCouponSystem())){
+                if (StringUtils.isNotEmpty(couponUserCustomizeVO.getCouponSystem())) {
                     String clientSed[] = StringUtils.split(couponUserCustomizeVO.getCouponSystem(), ",");
                     for (int k = 0; k < clientSed.length; k++) {
                         if ("-1".equals(clientSed[k])) {
@@ -770,13 +772,13 @@ public class CouponUserController extends BaseController {
         }
         for (int i = 1; i < sheetCount; i++) {
             beanRequest.setPageSize(defaultRowMaxCount);
-            beanRequest.setCurrPage(i+1);
+            beanRequest.setCurrPage(i + 1);
             CouponUserCustomizeResponse customizeResponse2 = couponUserService.searchList(beanRequest);
             //操作平台
             Map<String, String> client = CacheUtil.getParamNameMap("CLIENT");
             //插入参数
-            if (customizeResponse2 != null && customizeResponse2.getResultList().size()> 0) {
-                for(CouponUserCustomizeVO couponUserCustomizeVO:customizeResponse2.getResultList()){
+            if (customizeResponse2 != null && customizeResponse2.getResultList().size() > 0) {
+                for (CouponUserCustomizeVO couponUserCustomizeVO : customizeResponse2.getResultList()) {
                     //循环计数（每循环一次是一行）根据行数下标位置获取数组，无法确定当前行下标
                     String clientString = "";
                     String clientSed[] = StringUtils.split(couponUserCustomizeVO.getCouponSystem(), ",");
@@ -799,7 +801,7 @@ public class CouponUserController extends BaseController {
                     couponUserCustomizeVO.setCouponSystem(clientString);
                 }
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  customizeResponse2.getResultList());
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, customizeResponse2.getResultList());
             } else {
                 break;
             }
@@ -892,7 +894,7 @@ public class CouponUserController extends BaseController {
      */
     private String validatorFieldCheckAudit(CouponUserBeanRequest request, CouponUserVO record) {
         String message = null;
-        if (GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getUpdateTime()) != (int)record.getUpdateTime()) {
+        if (GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getUpdateTime()) != (int) record.getUpdateTime()) {
             return message = "排他check" + SYN_OPERATION;
         }
         if (!Coupon_AUDIT_PWD.equals(MD5.toMD5Code(request.getCouponAuditPwd()))) {
