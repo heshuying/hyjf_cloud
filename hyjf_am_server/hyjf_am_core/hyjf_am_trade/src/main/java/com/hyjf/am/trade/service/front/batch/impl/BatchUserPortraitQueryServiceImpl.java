@@ -125,12 +125,9 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
                 }
 
                 // 最后一笔回款时间
-                BorrowRecoverExample borrowRecoverExample = new BorrowRecoverExample();
-                borrowRecoverExample.createCriteria().andUserIdEqualTo(userId);
-                borrowRecoverExample.setOrderByClause("create_time desc");
-                List<BorrowRecover> borrowRecovers = borrowRecoverMapper.selectByExample(borrowRecoverExample);
-                if (CollectionUtils.isNotEmpty(borrowRecovers)) {
-                    batchUserPortraitQueryVO.setLastRepayTime(borrowRecovers.get(0).getRecoverTime());
+                Integer recoverTime = batchUserPortraitQueryCustomizeMapper.getLastRepayTime(userId);
+                if (recoverTime != null) {
+                    batchUserPortraitQueryVO.setLastRepayTime(recoverTime);
                 }
 
                 //账户余额

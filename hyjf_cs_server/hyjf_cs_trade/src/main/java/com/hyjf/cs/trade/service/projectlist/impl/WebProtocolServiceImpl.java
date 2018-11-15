@@ -16,6 +16,7 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.file.FavFTPUtil;
+import com.hyjf.common.file.FileUtil;
 import com.hyjf.common.file.SFTPParameter;
 import com.hyjf.common.file.ZIPGenerator;
 import com.hyjf.common.util.CustomConstants;
@@ -40,6 +41,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -71,7 +73,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
      */
     @Override
     public File creditPaymentPlan(ProtocolRequest form, Integer userId, HttpServletRequest request, HttpServletResponse response) {
-        logger.info(">>>>>>>>>>>>协议下载开始<<<<<<<<<<<");
+        logger.info(">>>>>>>>>>>>creditPaymentPlan协议下载开始<<<<<<<<<<<");
         CheckUtil.check(StringUtils.isNotBlank(form.getBorrowNid()),MsgEnum.ERR_OBJECT_REQUIRED, "借款编号");
         Map<String,Object> param = new HashMap<>();
         String borrowNid = form.getBorrowNid();
@@ -969,5 +971,70 @@ public class WebProtocolServiceImpl implements WebProtocolService {
             }
         }
         return resultMap;
+    }
+
+
+    @Override
+    public void newHjhInvestPDF(ProtocolRequest form, HttpServletRequest request, HttpServletResponse response) {
+        logger.info(">>>>>>>>newHjhInvestPDF 协议下载开始<<<<<<<<<");
+        String random = form.getRandom();
+        String planNid = form.getPlanNid();
+        String accedeOrderNid = form.getAccedeOrderId();
+        if (StringUtils.isAnyBlank(random,planNid,accedeOrderNid)){
+            logger.info(">>>>>> 参数缺少,协议下载退出 <<<<<<<<");
+            return;
+        }
+
+        Integer userId = Integer.valueOf(random);
+        UserVO userVO =  amUserClient.findUserById(userId);
+        if (userVO == null){
+            logger.info(">>>>>>用户不存在<<<<<<<");
+            return ;
+        }
+
+        String nid  = accedeOrderNid;
+        //输出文件集合
+        List<File> files = new ArrayList<File>();
+        TenderAgreementVO tenderAgreement = new TenderAgreementVO();
+        List<TenderAgreementVO> tenderAgreementsNid = amTradeClient.selectTenderAgreementByNid(nid);//居间协议
+        /*******************************下载法大大合同************************************/
+
+        //下载法大大协议--债转
+        if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
+            tenderAgreement = tenderAgreementsNid.get(0);
+            try {
+                if(org.apache.commons.lang.StringUtils.isNotBlank(tenderAgreement.getDownloadUrl())){
+                    File filePdf= FileUtil.getFile(request,response,tenderAgreement.getDownloadUrl(),nid+".pdf");//债转协议
+                    if(filePdf!=null){
+                        files.add(filePdf);
+                    }
+                }
+                if(files!=null && files.size()>0){
+                    ZIPGenerator.generateZip(response, files, nid);
+
+                }
+            } catch (IOException e) {
+                logger.info("newHjhInvestPDF", "下载失败，请稍后重试。。。。");
+                return;
+            }
+        }else{//下载原来的
+            Map<String, Object> contents = new HashMap<String, Object>();
+            //1基本信息
+            Map<String ,Object> params=new HashMap<String ,Object>();
+            params.put("accedeOrderId", accedeOrderNid);
+            params.put("userId", userId);
+            UserInfoVO userInfo=amUserClient.findUserInfoById(userId);
+            contents.put("userInfo", userInfo);
+            contents.put("username", userVO.getUsername());
+            UserHjhInvistDetailCustomizeVO userHjhInvistDetailCustomize = amTradeClient.selectUserHjhInvistDetail(params);
+            contents.put("userHjhInvistDetail", userHjhInvistDetailCustomize);
+            // 导出PDF文件
+            try {
+                PdfGenerator.generatePdf(request, response, planNid + "_" + accedeOrderNid + ".pdf",
+                        CustomConstants.NEW_HJH_INVEST_CONTRACT, contents);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

@@ -102,7 +102,7 @@ public class AppBorrowTenderController extends BaseTradeController {
                                                                        @RequestParam Integer couponGrantId,
                                                                        @RequestParam String borrowNid,
                                                                        @RequestParam String isPrincipal,
-                                                                       @RequestParam BigDecimal account) {
+                                                                       @RequestParam String account) {
         logger.info("APP端散标投资获取投资成功结果，logOrdId{}", logOrdId);
         return borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId,isPrincipal,account);
     }
