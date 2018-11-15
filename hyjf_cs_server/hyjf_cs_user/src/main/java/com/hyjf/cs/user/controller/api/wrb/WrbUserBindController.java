@@ -89,7 +89,7 @@ public class WrbUserBindController extends BaseUserController {
 	 * 跳转登陆授权页面
 	 * @return
 	 */
-	@RequestMapping("bind_api.do")
+	@RequestMapping("bind_api")
 	public ModelAndView bindApi(HttpServletRequest request, HttpServletResponse response, @RequestParam String param,
 								@RequestParam(value = "sign", required = false) String sign){
 		logger.info("风车理财登陆授权, param is :{}, sign is :{}", param, sign);
@@ -330,7 +330,7 @@ public class WrbUserBindController extends BaseUserController {
      */
     @ApiOperation(value = "用户登录接口", notes = "用户登录接口")
     @ResponseBody
-    @PostMapping(value = "/doLogin.do")
+    @PostMapping(value = "/doLogin")
     public LoginResultBean login(HttpServletRequest request, @RequestParam String userName, @RequestParam String password,
                                 @RequestParam(value = "env", defaultValue = "") String env) {
         LoginResultBean result = new LoginResultBean();
