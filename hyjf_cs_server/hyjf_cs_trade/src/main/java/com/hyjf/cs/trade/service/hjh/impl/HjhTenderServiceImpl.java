@@ -282,7 +282,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_MONEY_FORMAT);
         }
         if(couponUser!=null && couponUser.getCouponType()==3){
-            investInfo.setCapitalInterest(df.format(earnings.add(couponInterest).subtract(couponUser.getCouponQuota())));
+            investInfo.setCapitalInterest(df.format(earnings));
         }else{
             investInfo.setCapitalInterest(df.format(earnings.add(couponInterest)));
         }

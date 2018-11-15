@@ -158,6 +158,16 @@ public class ProjectCustomeDetailVO  extends BaseVO {
 
     private String borrowStatus;
 
+    private String reverifyTime;
+
+    public String getReverifyTime() {
+        return reverifyTime;
+    }
+
+    public void setReverifyTime(String reverifyTime) {
+        this.reverifyTime = reverifyTime;
+    }
+
     public String getBorrowStatus() {
         return borrowStatus;
     }

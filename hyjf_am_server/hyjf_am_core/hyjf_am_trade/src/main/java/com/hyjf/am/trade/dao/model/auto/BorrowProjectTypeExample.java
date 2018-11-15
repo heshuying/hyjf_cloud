@@ -265,62 +265,52 @@ public class BorrowProjectTypeExample {
             return (Criteria) this;
         }
 
-        public Criteria andBorrowCdEqualTo(String value) {
+        public Criteria andBorrowCdEqualTo(Boolean value) {
             addCriterion("borrow_cd =", value, "borrowCd");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowCdNotEqualTo(String value) {
+        public Criteria andBorrowCdNotEqualTo(Boolean value) {
             addCriterion("borrow_cd <>", value, "borrowCd");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowCdGreaterThan(String value) {
+        public Criteria andBorrowCdGreaterThan(Boolean value) {
             addCriterion("borrow_cd >", value, "borrowCd");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowCdGreaterThanOrEqualTo(String value) {
+        public Criteria andBorrowCdGreaterThanOrEqualTo(Boolean value) {
             addCriterion("borrow_cd >=", value, "borrowCd");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowCdLessThan(String value) {
+        public Criteria andBorrowCdLessThan(Boolean value) {
             addCriterion("borrow_cd <", value, "borrowCd");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowCdLessThanOrEqualTo(String value) {
+        public Criteria andBorrowCdLessThanOrEqualTo(Boolean value) {
             addCriterion("borrow_cd <=", value, "borrowCd");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowCdLike(String value) {
-            addCriterion("borrow_cd like", value, "borrowCd");
-            return (Criteria) this;
-        }
-
-        public Criteria andBorrowCdNotLike(String value) {
-            addCriterion("borrow_cd not like", value, "borrowCd");
-            return (Criteria) this;
-        }
-
-        public Criteria andBorrowCdIn(List<String> values) {
+        public Criteria andBorrowCdIn(List<Boolean> values) {
             addCriterion("borrow_cd in", values, "borrowCd");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowCdNotIn(List<String> values) {
+        public Criteria andBorrowCdNotIn(List<Boolean> values) {
             addCriterion("borrow_cd not in", values, "borrowCd");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowCdBetween(String value1, String value2) {
+        public Criteria andBorrowCdBetween(Boolean value1, Boolean value2) {
             addCriterion("borrow_cd between", value1, value2, "borrowCd");
             return (Criteria) this;
         }
 
-        public Criteria andBorrowCdNotBetween(String value1, String value2) {
+        public Criteria andBorrowCdNotBetween(Boolean value1, Boolean value2) {
             addCriterion("borrow_cd not between", value1, value2, "borrowCd");
             return (Criteria) this;
         }

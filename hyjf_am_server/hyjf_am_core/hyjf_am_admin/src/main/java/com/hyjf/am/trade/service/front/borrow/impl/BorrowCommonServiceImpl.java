@@ -2221,11 +2221,11 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //				borrowUsers.setProvince(StringUtils.EMPTY);
 //			}
 //
-//			if (StringUtils.isNotEmpty(borrowBean.getComLocationCity())) {
-//				borrowUsers.setCity(borrowBean.getComLocationCity());
-//			} else {
-//				borrowUsers.setCity(StringUtils.EMPTY);
-//			}
+			if (StringUtils.isNotEmpty(borrowBean.getComLocationCity())) {
+				borrowUsers.setCity(borrowBean.getComLocationCity());
+			} else {
+				borrowUsers.setCity(StringUtils.EMPTY);
+			}
 
 			if (StringUtils.isNotEmpty(borrowBean.getComLocationArea())) {
 				borrowUsers.setArea(borrowBean.getComLocationArea());
@@ -3235,7 +3235,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				// 用户信息 所在地区 省
 			//	borrowBean.setComLocationProvince(this.getValue(record.getProvince()));
 				// 用户信息 所在地区 市
-	//			borrowBean.setComLocationCity(this.getValue(record.getCity()));
+				borrowBean.setComLocationCity(this.getValue(record.getCity()));
 				// 用户信息 所在地区 区
 				borrowBean.setComLocationArea(this.getValue(record.getArea()));
 				// 用户信息 注册资本
