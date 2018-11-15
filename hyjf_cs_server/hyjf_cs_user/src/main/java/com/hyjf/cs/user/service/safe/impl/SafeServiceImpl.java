@@ -105,6 +105,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         UserInfoVO userInfo = this.amUserClient.findUserInfoById(user.getUserId());
 
         resultMap.put("webViewUser", user);
+        resultMap.put("truename", "");
         if(userInfo!=null){
             if (userInfo.getTruename() != null && userInfo.getTruename().length() >= 1) {
                 resultMap.put("truename", userInfo.getTruename().substring(0, 1) + "**");
@@ -114,6 +115,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
             }
             resultMap.put("roleId", userInfo.getRoleId());
         }
+
         if (user.getMobile() != null && user.getMobile().length() == 11) {
             resultMap.put("mobile", user.getMobile().substring(0, 3) + "****" + user.getMobile().substring(user.getMobile().length() - 4));
         }

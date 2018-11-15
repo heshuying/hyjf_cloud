@@ -50,6 +50,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.*;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
@@ -102,17 +103,10 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
     @Value("${hyjf.bank.fee}")
     private String FEETMP;
-    /**
-     * url header获取
-     */
-    public static final Map<Integer,String> CLIENT_HEADER_MAP = new HashMap<Integer, String>(){{
-        put(0,"web");
-        put(1,"wechat");
-        put(2,"app");
-        put(3,"app");
-    }};
+
 
     @Override
+    @HystrixCommand
     public BankCallBean getUserBankWithdrawView(UserVO user, String transAmt, String cardNo, String payAllianceCode, String platform, String channel, String ip, String retUrl, String bgRetUrl, String successfulUrl, String forgotPwdUrl) {
 
 
