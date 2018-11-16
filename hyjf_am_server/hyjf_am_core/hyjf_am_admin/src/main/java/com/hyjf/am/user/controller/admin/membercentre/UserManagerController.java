@@ -14,7 +14,9 @@ import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
+import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.ROaDepartment;
+import com.hyjf.am.trade.service.admin.finance.BankAccountManageService;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.*;
@@ -51,7 +53,8 @@ public class UserManagerController extends BaseController {
     private JxBankConfigService jxBankConfigService;
     @Autowired
     private BankConfigService bankConfigService;
-
+    @Autowired
+    BankAccountManageService bankAccountManageService;
 
 
 
@@ -709,6 +712,14 @@ public class UserManagerController extends BaseController {
             }
         }
         response = userManagerService.saveCompanyInfo(updCompanyRequest, bankName, payAllianceCode, user, bankId);
+        //
+        if(response.getRtn()!=Response.SUCCESS){
+            return response;
+        }
+        //对account表accountId更新
+        Account account = bankAccountManageService.getAccount(Integer.parseInt(userId));
+        account.setAccountId(updCompanyRequest.getAccountId());
+        bankAccountManageService.updAccountId(account);
         return response;
     }
     @RequestMapping("/getUserIdByBind/{bindUniqueId}/{bindPlatformId}")
