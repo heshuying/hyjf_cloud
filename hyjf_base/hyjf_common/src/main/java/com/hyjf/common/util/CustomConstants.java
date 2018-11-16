@@ -1335,24 +1335,21 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     public static final String BANK_TENDER_RETURN_OPENACCOUNT_FAIL = "708";
     /**未设置交易密码*/
     public static final String BANK_TENDER_RETURN_SETPWD_FAIL = "709";
+    /**未测评*/
+    public static final String BANK_TENDER_RETURN_ANSWER_FAIL = "710";
     /**未获得自动授权*/
     public static final String BANK_TENDER_RETURN_AUTH_FAIL = "711";
     /**未获得自动授权*/
     public static final String BANK_TENDER_RETURN_AUTH_CREDIT_FAIL = "712";
     /**未获得自动授权--dzs*/
     public static final String BANK_TENDER_RETURN_AUTH_ALL_FAIL = "713";
-    /**未测评*/
-    public static final String BANK_TENDER_RETURN_ANSWER_FAIL = "710";
     /**测评过期*/
-    public static final String BANK_TENDER_RETURN_ANSWER_EXPIRED = "EV000004";
+    public static final String BANK_TENDER_RETURN_ANSWER_EXPIRED = "714";
     /**测评限额超额*/
-    public static final String BANK_TENDER_RETURN_LIMIT_EXCESS = "EV000005";
+    public static final String BANK_TENDER_RETURN_LIMIT_EXCESS = "715";
     /**测评标的用户类型不匹配*/
-    public static final String BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL = "EV000007";
-    //STATUS_EV000003("EV000003","用户已测评"),
-    //STATUS_EV000004("EV000004","用户测评已过期"),
-    //STATUS_EV000005("EV000005","测评限额超额"),
-    //STATUS_EV000007("EV000007","达到稳健型及以上才可以投资此项目"),
+    public static final String BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL = "716";
+
     /**************************************汇计划机构代码****************************/
     
     /** 汇盈平台  */
