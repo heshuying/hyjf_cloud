@@ -150,6 +150,9 @@ public class CategoryController extends BaseConfigController {
     public CategoryResponse insertCategory(@RequestBody CategoryVO categoryVO) {
         logger.info("帮助中心新增分类......");
         CategoryResponse response = new CategoryResponse();
+        if (categoryVO.getPid() == null) {
+            categoryVO.setPid(categoryService.selectCategoryPid());
+        }
         Integer flag = categoryService.insertCategory(categoryVO);
         response.setFlag(flag);
         return response;

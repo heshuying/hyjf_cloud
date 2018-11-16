@@ -55,14 +55,19 @@ public class IncreaseInterestRepayInfoListController extends BaseController {
 	@PostMapping("/search")
 	public AdminResult<ListResult<AdminIncreaseInterestRepayCustomizeVO>> search(@RequestBody IncreaseInterestRepayInfoListRequest request){
 		IncreaseInterestRepayInfoListResponse response = new IncreaseInterestRepayInfoListResponse();
+		AdminIncreaseInterestRepayCustomizeVO vo = new AdminIncreaseInterestRepayCustomizeVO();
 		response = increaseInterestRepayInfoListService.searchPage(request);
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
+		}else{
+			vo.setSumRepayInterest(response.getSumRepayInterest());
+			vo.setSumLoanInterest(response.getSumLoanInterest());
+			vo.setSumRepayCapital(response.getSumRepayCapital());
 		}
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
-		return new AdminResult<ListResult<AdminIncreaseInterestRepayCustomizeVO>>(ListResult.build(response.getResultList(), response.getTotal() == null ? 0 : response.getTotal())) ;
+		return new AdminResult<ListResult<AdminIncreaseInterestRepayCustomizeVO>>(ListResult.build2(response.getResultList(), response.getTotal() == null ? 0 : response.getTotal(), vo)) ;
 	}
 
 
@@ -72,8 +77,8 @@ public class IncreaseInterestRepayInfoListController extends BaseController {
 	 * @param form
 	 */
 	@ApiOperation(value = "产品中心-加息还款明细详情", notes = "产品中心-加息还款明细详情 导出还款明细详情")
-	@GetMapping("/export")
-	public void exportAction(HttpServletRequest request, HttpServletResponse response, IncreaseInterestRepayInfoListRequest form) throws Exception {
+	@PostMapping("/export")
+	public void exportAction(HttpServletRequest request, HttpServletResponse response,@RequestBody IncreaseInterestRepayInfoListRequest form) throws Exception {
 		//sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 		// 表格sheet名称

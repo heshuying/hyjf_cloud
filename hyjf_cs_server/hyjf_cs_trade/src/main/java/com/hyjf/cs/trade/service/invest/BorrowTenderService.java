@@ -12,6 +12,7 @@ import com.hyjf.cs.trade.service.BaseTradeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -53,7 +54,7 @@ public interface BorrowTenderService extends BaseTradeService {
      * @param couponGrantId
      * @return
      */
-    WebResult<Map<String,Object>> getBorrowTenderResultSuccess(Integer userId, String logOrdId, String borrowNid, Integer couponGrantId);
+    WebResult<Map<String,Object>> getBorrowTenderResultSuccess(Integer userId, String logOrdId, String borrowNid, Integer couponGrantId,String isPrincipal,String account);
 
     /**
      * 获取投资信息
@@ -74,7 +75,7 @@ public interface BorrowTenderService extends BaseTradeService {
      * @param tender
      * @return
      */
-    String getAppTenderUrl(TenderRequest tender);
+    String getAppTenderUrl(TenderRequest tender,String flag);
 
     /**
      * 微信端获取投资信息
@@ -92,5 +93,13 @@ public interface BorrowTenderService extends BaseTradeService {
      * @param account
      * @return
      */
-    WebResult<Map<String,Object>> borrowTenderCheck(TenderRequest request, BorrowAndInfoVO borrow, BorrowInfoVO borrowInfoVO ,CouponUserVO cuc,BankOpenAccountVO account);
+    Map<String,Object> borrowTenderCheck(TenderRequest request, BorrowAndInfoVO borrow, BorrowInfoVO borrowInfoVO ,CouponUserVO cuc,BankOpenAccountVO account);
+
+    /**
+     * 校验风险测评
+     *
+     * @param tender
+     * @return
+     */
+    Map<String,Object> checkEvalApp(TenderRequest tender);
 }

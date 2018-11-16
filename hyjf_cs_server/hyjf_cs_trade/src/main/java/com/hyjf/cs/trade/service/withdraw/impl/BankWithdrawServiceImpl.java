@@ -11,7 +11,6 @@ import com.hyjf.am.vo.config.FeeConfigVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
@@ -29,10 +28,7 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.trade.bean.BankCardBean;
-import com.hyjf.cs.trade.bean.BaseResultBean;
-import com.hyjf.cs.trade.bean.UserWithdrawRecordResultBean;
-import com.hyjf.cs.trade.bean.UserWithdrawResultBean;
+import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.bean.assetpush.UserWithdrawRequestBean;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
@@ -51,6 +47,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.*;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
@@ -103,17 +100,10 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
     @Value("${hyjf.bank.fee}")
     private String FEETMP;
-    /**
-     * url header获取
-     */
-    public static final Map<Integer,String> CLIENT_HEADER_MAP = new HashMap<Integer, String>(){{
-        put(0,"web");
-        put(1,"wechat");
-        put(2,"app");
-        put(3,"app");
-    }};
+
 
     @Override
+    @HystrixCommand
     public BankCallBean getUserBankWithdrawView(UserVO user, String transAmt, String cardNo, String payAllianceCode, String platform, String channel, String ip, String retUrl, String bgRetUrl, String successfulUrl, String forgotPwdUrl) {
 
 
@@ -402,11 +392,11 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             bankCardBean.setIsDefault("2");// 卡类型
 
             Integer bankId = banks.getBankId();
-            BanksConfigVO banksConfig = amConfigClient.getBanksConfigByBankId(bankId + "");
-            if (banksConfig != null && StringUtils.isNotEmpty(banksConfig.getBankName())) {
-                bankCardBean.setBank(banksConfig.getBankName()==null?"":banksConfig.getBankName());
-                bankCardBean.setBankCode(banksConfig.getBankCode()==null?"":banksConfig.getBankCode());
-                bankCardBean.setLogo(banksConfig.getBankLogo()==null?"":banksConfig.getBankLogo());
+            JxBankConfigVO jxBankConfigVO = amConfigClient.getBankNameByBankId(bankId + "");
+            if (jxBankConfigVO != null && StringUtils.isNotEmpty(jxBankConfigVO.getBankName())) {
+                bankCardBean.setBank(jxBankConfigVO.getBankName()==null?"":jxBankConfigVO.getBankName());
+                bankCardBean.setBankCode(jxBankConfigVO.getBankCode()==null?"":jxBankConfigVO.getBankCode());
+                bankCardBean.setLogo(jxBankConfigVO.getBankLogo()==null?"":jxBankConfigVO.getBankLogo());
             }
             bankcards.add(bankCardBean);
 
@@ -727,7 +717,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             throw new ReturnMessageException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
         }
 
-        if ((account.compareTo(new BigDecimal(50001)) > 0) && StringUtils.isBlank(payAllianceCode)) {
+        if ((account.compareTo(new BigDecimal(50000)) > 0) && StringUtils.isBlank(payAllianceCode)) {
             throw new ReturnMessageException(MsgEnum.ERR_AMT_WITHDRAW_BANK_ALLIANCE_CODE_REQUIRED);
         }
 
@@ -923,10 +913,10 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         if (bankCard != null) {
             Integer bankId = bankCard.getBankId();
             // 取得费率
-            BanksConfigVO banksConfig = amConfigClient.getBanksConfigByBankId(bankId+"");
-            if (banksConfig != null) {
-                if (Validator.isNotNull(banksConfig.getFeeWithdraw())) {
-                    return banksConfig.getFeeWithdraw().toString();
+            JxBankConfigVO jxBankConfigVO = amConfigClient.getBankNameByBankId(bankId+"");
+            if (jxBankConfigVO != null) {
+                if (Validator.isNotNull(jxBankConfigVO.getFeeWithdraw())) {
+                    return jxBankConfigVO.getFeeWithdraw().toString();
                 }else{
                     return feetmp;
                 }
@@ -1071,7 +1061,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      */
     @Override
     public ModelAndView withdraw(UserWithdrawRequestBean userWithdrawRequestBean, HttpServletRequest request) {
-        ModelAndView modelAndView = new ModelAndView("/callback/callback_post");
+        ModelAndView modelAndView = new ModelAndView("api/api_error_send.html");
         UserWithdrawResultBean userWithdrawResultBean = new UserWithdrawResultBean();
         try {
             // 用户电子账户号
@@ -1215,14 +1205,14 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                 return modelAndView;
             }
             // 验签  先去掉验签
-            if (!SignUtil.verifyRequestSign(userWithdrawRequestBean,"/withdraw")) {
+            if (!this.verifyRequestSign(userWithdrawRequestBean,BaseDefine.METHOD_SERVER_WITHDRAW)) {
                 logger.info("-------------------验签失败！--------------------");
                 BaseResultBean resultBean = new BaseResultBean();
                 resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000002);
                 userWithdrawResultBean.setCallBackAction(userWithdrawRequestBean.getRetUrl());
                 userWithdrawResultBean.set("accountId", userWithdrawRequestBean.getAccountId());
                 userWithdrawResultBean.set("acqRes", userWithdrawRequestBean.getAcqRes());
-                modelAndView = new ModelAndView("/callback/callback_transpassword");
+                modelAndView = new ModelAndView("api/api_error_send.html");
                 // 设置交易密码
                 modelAndView.addObject("statusDesc", "验签失败！");
                 userWithdrawResultBean.set("status", resultBean.getStatus());
@@ -1496,12 +1486,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             // 调用江西银行提现接口
             // 调用汇付接口(提现)
 
-            // todo  url的域名先干掉，应该加什么？？
-            String bankRetUrl =  "/server/user/withdraw/return.do?callback=" + retUrl.replace("#", "*-*-*");
-            // String bankRetUrl = systemConfig.httpWebHost + "/server/user/withdraw/return.do?callback=" + retUrl.replace("#", "*-*-*");
+            String bankRetUrl =  "http://CS-USER/hyjf-api/server/user/withdraw/return?callback=" + retUrl.replace("#", "*-*-*");
             // 支付工程路径
-            // String bankBgRetUrl = systemConfig.httpWebHost + "/server/user/withdraw/callback.do?callback=" + bgRetUrl.replace("#", "*-*-*");// 支付工程路径
-            String bankBgRetUrl = "/server/user/withdraw/callback.do?callback=" + bgRetUrl.replace("#", "*-*-*");// 支付工程路径
+            String bankBgRetUrl = "http://CS-USER/hyjf-api/server/user/withdraw/callback?callback=" + bgRetUrl.replace("#", "*-*-*");// 支付工程路径
 
             // 路由代码
             String routeCode = "";
@@ -1626,7 +1613,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
     private ModelAndView syncParam(UserWithdrawResultBean userWithdrawResultBean,UserWithdrawRequestBean userWithdrawRequestBean,String status,String statusDesc){
         BaseResultBean resultBean = new BaseResultBean();
         resultBean.setStatusForResponse(status);
-        ModelAndView modelAndView = new ModelAndView("/callback/callback_transpassword");
+        ModelAndView modelAndView = new ModelAndView("api/api_error_send.html");
         userWithdrawResultBean.setCallBackAction(userWithdrawRequestBean.getRetUrl());
         userWithdrawResultBean.set("accountId", userWithdrawRequestBean.getAccountId());
         userWithdrawResultBean.set("statusDesc", statusDesc);

@@ -100,6 +100,7 @@
 	</dependencies>
 
 	<build>
+		<finalName>hyjf-cs-user</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -112,7 +113,6 @@
 							<artifactId>axis2</artifactId>
 						</dependency>
 					</requiresUnpack>
-					<finalName>hyjf-cs-user</finalName>
 				</configuration>
 			</plugin>
 			<plugin>
@@ -133,6 +133,17 @@
 				</configuration>-->
 			</plugin>
 		</plugins>
+
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/**.*</include>
+				</includes>
+				<filtering>false</filtering>
+			</resource>
+		</resources>
 	</build>
 
 </project>

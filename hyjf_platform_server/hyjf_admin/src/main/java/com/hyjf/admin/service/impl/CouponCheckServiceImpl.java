@@ -40,10 +40,8 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
+import java.net.URL;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -62,8 +60,15 @@ public class CouponCheckServiceImpl implements CouponCheckService {
     AmUserClient amUserClient;
     @Autowired
     AmTradeClient amTradeClient;
+
     @Value("${file.upload.path}")
     private String FILEUPLOADPATH;
+
+    @Value("${file.physical.path}")
+    private String PHYSICAL_PATH;
+
+    @Value("${admin.front.host}")
+    private String ADMIN_HOST;
 
     /**
      * 查询优惠券列表
@@ -99,12 +104,12 @@ public class CouponCheckServiceImpl implements CouponCheckService {
         CouponCheckResponse checkResponse = new CouponCheckResponse();
         String errorMessage = "";
         MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
-        String filePhysicalPath = UploadFileUtils.getDoPath(FILEUPLOADPATH);
+        String filePhysicalPath = PHYSICAL_PATH + FILEUPLOADPATH;
         Date date = new Date();
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMdd");
         String today = format.format(date);
 
-        String logoRealPathDir = filePhysicalPath + today;
+        String logoRealPathDir = filePhysicalPath + "/" + today;
         File logoSaveFile = new File(logoRealPathDir);
         if (!logoSaveFile.exists()) {
             logoSaveFile.mkdirs();
@@ -128,7 +133,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                     AdminCouponCheckRequest accr = new AdminCouponCheckRequest();
                     accr.setFileName(originalFilename);
                     accr.setCreateTime(String.valueOf(createTime));
-                    accr.setFilePath(logoRealPathDir + "/" + fileRealName);
+                    accr.setFilePath(FILEUPLOADPATH + "/" + today + "/" + fileRealName);
                     accr.setDeFlag(0);
                     accr.setStatus(1);
                     checkResponse = amConfigClient.insert(accr);
@@ -149,20 +154,23 @@ public class CouponCheckServiceImpl implements CouponCheckService {
 
     @Override
     public void downloadFile(String id, HttpServletResponse response) {
-        FileInputStream in = null;
+        BufferedInputStream in = null;
         OutputStream out = null;
         CouponCheckVO couponCheck = amConfigClient.selectCoupon(Integer.valueOf(id));
-        String fileP = "";
-        String fileN = "";
+        String filePath = "";
+        String fileName = "";
         if (couponCheck != null) {
-            fileP = couponCheck.getFilePath();
-            fileN = couponCheck.getFileName();
+            filePath = couponCheck.getFilePath();
+            fileName = couponCheck.getFileName();
         }
         try {
             response.setHeader("content-disposition",
-                    "attachment;filename=" + URLEncoder.encode(fileN, "utf-8"));
-            response.setContentType("multipart/form-data");
-            in = new FileInputStream(fileP);
+                    "attachment;filename=" + URLEncoder.encode(fileName, "utf-8"));
+            logger.info("ADMIN_HOST is : {}", ADMIN_HOST);
+            String path = ADMIN_HOST + filePath;
+            logger.info("path is : {}", path);
+            URL url = new URL(path);
+            in = new BufferedInputStream(url.openStream());
             // 创建输出流
             out = response.getOutputStream();
             // 创建缓冲区
@@ -173,46 +181,29 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                 // 输出缓冲区内容到浏览器，实现文件下载
                 out.write(buffer, 0, len);
             }
-            out.flush();
-            // 关闭输出流
-            out.close();
             // 关闭文件流
             in.close();
+            // 关闭输出流
+            out.close();
         } catch (Exception e) {
-            logger.error(couponCheck.getFileName() + "下载失败");
-        } finally {
-            try{
-                if(out != null){
-                    out.flush();
-                    out.close();
-                }
-            }catch (Exception e){
-                logger.info("关闭输出流失败");
-            }
-            // 关闭输入流
-            try{
-                if(in != null){
-                    in.close();
-                }
-            }catch (Exception e){
-                logger.info("关闭输入流失败");
-            }
+            logger.error(couponCheck.getFileName() + "下载失败, 失败原因 ：", e);
         }
     }
 
     @Override
-    public boolean batchCheck(String path, HttpServletResponse response, String userId) throws Exception {
+    public boolean batchCheck(String path, HttpServletResponse response, String loginUserId) throws Exception {
         try {
             String[] split = path.split(",");
-            String filePath = split[1];
+            String filePath = ADMIN_HOST + split[1];
+            URL url = new URL(filePath);
             Map<String, String> nameMaps = new HashMap<>();
-            nameMaps.put("couponCode", "couponCode");
-            nameMaps.put("activityId", "activityId");
             nameMaps.put("userName", "userName");
+            nameMaps.put("activityId", "activityId");
+            nameMaps.put("couponCode", "couponCode");
             ReadExcel readExcel = new ReadExcel();
             List<JSONObject> list = new ArrayList<>();
             try {
-                list = readExcel.readExcel(filePath, nameMaps);
+                list = readExcel.readExcel(url.openStream(), nameMaps);
             } catch (IOException e) {
                 logger.error("批量发送优惠券，解析Excel：" + filePath + "失败！", e);
                 return false;
@@ -245,7 +236,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                         if (StringUtils.isBlank(userName)) {
                             continue;
                         }
-                        batchInsertUserCoupon(userName, copuncodes, totalcouponCount, succouponCount, activityId, couponSource);
+                        batchInsertUserCoupon(userName, copuncodes, totalcouponCount, succouponCount, activityId, couponSource, loginUserId);
 
                     }
                 }
@@ -260,7 +251,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
 
     }
 
-    private boolean batchInsertUserCoupon(String userName, List<String> copuncodes, int totalcouponCount, int succouponCount, Integer activityId, int couponSource) {
+    private boolean batchInsertUserCoupon(String userName, List<String> copuncodes, int totalcouponCount, int succouponCount, Integer activityId, int couponSource, String loginUserId) {
         UserVO user = this.getUserByUserName(userName);
         logger.info("批量发放优惠券User：" + user);
         if(user == null){
@@ -273,7 +264,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
         // 发放优惠券
         int couponCount = 0;
         try {
-            couponCount = this.sendConponAction(copuncodes, String.valueOf(user.getUserId()), activityId, couponSource);
+            couponCount = this.sendConponAction(copuncodes, String.valueOf(user.getUserId()), activityId, couponSource, loginUserId);
         } catch (Exception e) {
             logger.error("用户："+userName + "发送优惠券失败！",e);
             e.printStackTrace();
@@ -283,13 +274,13 @@ public class CouponCheckServiceImpl implements CouponCheckService {
         return true;
     }
 
-    private synchronized int sendConponAction(List<String> couponCodeList, String userId, Integer activityId, int couponSource) throws Exception {
+    private synchronized int sendConponAction(List<String> couponCodeList, String userId, Integer activityId, int couponSource, String loginUserId) throws Exception {
         // sendflg设置1跳过活动id不设置的逻辑
-        return sendUserConponAction(couponCodeList, userId, 1, activityId, couponSource,"上传csv文件，批量发券");
+        return sendUserConponAction(couponCodeList, userId, 1, activityId, couponSource, loginUserId, "上传csv文件，批量发券");
     }
 
     public int sendUserConponAction(List<String> couponCodeList, String userId, Integer sendFlg, Integer activityId,
-                                    Integer couponSource, String content) throws Exception {
+                                    Integer couponSource, String loginUserId, String content) throws Exception {
         logger.info("用户："+userId+",执行发券逻辑开始  " + GetDate.dateToString(new Date()));
         String methodName = "sendConponAction";
         int nowTime = GetDate.getNowTime10();
@@ -333,11 +324,11 @@ public class CouponCheckServiceImpl implements CouponCheckService {
 
                 // 根据优惠券编码查询优惠券
                 CouponConfigResponse configResponse = amTradeClient.selectCouponConfig(couponCode);
-                List<CouponConfigVO> configList = configResponse.getResultList();
-                if (configList == null || configList.isEmpty()) {
+                CouponConfigVO config = configResponse.getResult();
+                if (config == null) {
                     continue;
                 }
-                CouponConfigVO config = configList.get(0);
+//                CouponConfigVO config = configList.get(0);
 
                 Integer status = config.getStatus();
                 if(status==null||status==1||status==3){
@@ -365,6 +356,8 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                 couponUser.setContent(StringUtils.isEmpty(content)?"":content);
                 CouponUserRequest couponUserRequest = new CouponUserRequest();
                 BeanUtils.copyProperties(couponUser,couponUserRequest);
+                couponUserRequest.setCreateUserId(Integer.parseInt(loginUserId));
+                couponUserRequest.setUpdateUserId(Integer.parseInt(loginUserId));
                 CouponUserResponse response = amTradeClient.insertCouponUser(couponUserRequest);
                 couponCount++;
             }

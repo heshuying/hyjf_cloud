@@ -233,6 +233,8 @@
         <result column="increase_interest_flag" property="increaseInterestFlag" jdbcType="VARCHAR" />
 
         <result column="borrow_status" property="borrowStatus"></result>
+        <!-- 放款时间  -->
+        <result column="verify_over_time" property="reverifyTime" jdbcType="VARCHAR"></result>
     </resultMap>
     <!--Web端获取项目列表-->
     <select id="searchProjectList" resultMap="ProjectListNewMap" parameterType="Map">
@@ -445,12 +447,17 @@
         hydb.recover_last_time,
         '%Y年%m月%d日'
         ) recover_last_time,
+        DATE_FORMAT(
+        re.create_time,
+        '%Y-%m-%d %H:%i'
+        ) verify_over_time,
         htbi.borrow_level
         FROM
         ht_borrow hydb
         left join ht_borrow_info htbi on hydb.borrow_nid =  htbi.borrow_nid
         LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = htbi.project_type
         LEFT JOIN ht_borrow_style hydbs ON hydbs.nid = hydb.borrow_style
+        LEFT JOIN ht_borrow_repay re ON re.borrow_nid = hydb.borrow_nid
 
         WHERE 1=1
         <if test="isPreview == null or isPreview == ''">

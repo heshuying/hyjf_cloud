@@ -41,6 +41,10 @@ public class AssetListRequest extends BasePage implements Serializable {
 	private String recieveTimeEndSrch;
 	// 资产类型
 	private String userTypeSrch;
+
+	//默认为true ,获取全部数据，为false时，获取分页数据
+	public boolean limitFlg = false;
+
 	public int limit;
 
 	private int paginatorPage = 1;
@@ -133,5 +137,13 @@ public class AssetListRequest extends BasePage implements Serializable {
 	}
 	public void setLimit(int limit) {
 		this.limit = limit;
+	}
+
+	public boolean isLimitFlg() {
+		return limitFlg;
+	}
+
+	public void setLimitFlg(boolean limitFlg) {
+		this.limitFlg = limitFlg;
 	}
 }

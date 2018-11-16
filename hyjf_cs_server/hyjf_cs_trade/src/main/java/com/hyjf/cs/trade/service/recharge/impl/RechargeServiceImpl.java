@@ -8,8 +8,8 @@ import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
@@ -40,6 +40,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -180,7 +181,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 						accountRecharge.setSeqNo(Integer.parseInt(seqNo));
 						BankAccountBeanRequest bankAccountBeanRequest = new BankAccountBeanRequest();
 						bankAccountBeanRequest.setAccountRecharge(accountRecharge);
-						bankAccountBeanRequest.setIp(ip);
+						bankAccountBeanRequest.setIp(accountRecharge.getAddIp());
 						boolean flag = amTradeClient.updateBanks(bankAccountBeanRequest);
 						if (flag) {
 							UserVO users = amUserClient.findUserById(userId);
@@ -360,6 +361,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		return bean;
 	}
 	@Override
+	@HystrixCommand(commandKey = "recharge")
 	public BankCallBean rechargeService(UserDirectRechargeBean directRechargeBean,int userId, String ipAddr, String mobile, String money) throws Exception {
 		WebViewUserVO user=this.getUserFromCache(userId);
 		// 信息校验
@@ -431,24 +433,24 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 			isBundCardFlag = 1;
 
 			Integer bankId = bankCard.getBankId();
-			BanksConfigVO banksConfig = amConfigClient.getBanksConfigByBankId(bankId + "");
-			if (banksConfig != null && banksConfig.getQuickPayment() == 1 && banksConfig.getSingleQuota() != null && banksConfig.getSingleCardQuota() != null) {
-				if(banksConfig.getSingleQuota().compareTo(BigDecimal.ZERO) > 0){
-					singleQuota = CommonUtils.formatBigDecimal(banksConfig.getSingleQuota().divide(new BigDecimal(10000))) + "万";
+			JxBankConfigVO jxBankConfigVO = amConfigClient.getBankNameByBankId(bankId + "");
+			if (jxBankConfigVO != null && jxBankConfigVO.getQuickPayment() == 1 && jxBankConfigVO.getSingleQuota() != null && jxBankConfigVO.getSingleCardQuota() != null) {
+				if(jxBankConfigVO.getSingleQuota().compareTo(BigDecimal.ZERO) > 0){
+					singleQuota = CommonUtils.formatBigDecimal(jxBankConfigVO.getSingleQuota().divide(new BigDecimal(10000))) + "万";
 					concatAllQuota =" 单笔"+singleQuota;
 				}else{
 					singleQuota = "不限";
 				}
 
-				if(banksConfig.getSingleCardQuota().compareTo(BigDecimal.ZERO) > 0){
-					singleCardQuota = CommonUtils.formatBigDecimal(banksConfig.getSingleCardQuota().divide(new BigDecimal(10000))) + "万";
+				if(jxBankConfigVO.getSingleCardQuota().compareTo(BigDecimal.ZERO) > 0){
+					singleCardQuota = CommonUtils.formatBigDecimal(jxBankConfigVO.getSingleCardQuota().divide(new BigDecimal(10000))) + "万";
 					concatAllQuota+=", 单日"+singleCardQuota;
 				}else{
 					singleCardQuota = "不限";
 				}
 
-				if(banksConfig.getMonthCardQuota().compareTo(BigDecimal.ZERO) > 0){
-					monthCardQuota = CommonUtils.formatBigDecimal(banksConfig.getMonthCardQuota().divide(new BigDecimal(10000))) + "万";
+				if(jxBankConfigVO.getMonthCardQuota().compareTo(BigDecimal.ZERO) > 0){
+					monthCardQuota = CommonUtils.formatBigDecimal(jxBankConfigVO.getMonthCardQuota().divide(new BigDecimal(10000))) + "万";
 					concatAllQuota+=", 单月"+monthCardQuota;
 				}else{
 					monthCardQuota = "不限";
@@ -528,7 +530,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	}
 
 	@Override
-	public List<BanksConfigVO> getRechargeQuotaLimit() {
+	public List<JxBankConfigVO> getRechargeQuotaLimit() {
 		return amConfigClient.getRechargeQuotaLimit();
 	}
 

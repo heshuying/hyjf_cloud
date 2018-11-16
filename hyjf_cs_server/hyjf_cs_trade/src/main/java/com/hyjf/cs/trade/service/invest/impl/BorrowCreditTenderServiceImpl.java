@@ -6,17 +6,16 @@ package com.hyjf.cs.trade.service.invest.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
+import com.hyjf.am.response.config.DebtConfigResponse;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.am.vo.config.DebtConfigVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.*;
-import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
-import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
+import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -39,12 +38,14 @@ import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.*;
 import com.hyjf.cs.trade.mq.producer.sensorsdate.credit.SensorsDataCreditProducer;
 import com.hyjf.cs.trade.service.auth.AuthService;
+import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.invest.BorrowCreditTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -85,7 +86,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     private CalculateInvestInterestProducer calculateInvestInterestProducer;
     @Autowired
     private FddProducer fddProducer;
-
+    @Autowired
+    private HjhTenderService hjhTenderService;
     @Autowired
     private SensorsDataCreditProducer sensorsDataCreditProducer;
 
@@ -101,6 +103,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      * @return
      */
     @Override
+    @HystrixCommand
     public WebResult<Map<String, Object>> borrowCreditTender(TenderRequest request)  {
         UserVO loginUser = amUserClient.findUserById(Integer.valueOf(request.getUserId()));
 
@@ -312,7 +315,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         TenderToCreditAssignCustomizeVO creditAssign = this.amTradeClient.getInterestInfo(creditNid, assignCapital,tender.getUserId());
         if (money == null || "".equals(money) || (new BigDecimal(money).compareTo(BigDecimal.ZERO) == 0)) {
             money = "0";
-            result.setRealAmount("");
+            result.setRealAmount("¥0.00");
             result.setButtonWord("确认");
         } else {
             result.setRealAmount("¥" + CommonUtils.formatAmount(null, money));
@@ -323,6 +326,50 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         result.setProspectiveEarnings("");
         result.setInterest("");
         result.setStandardValues("0");
+
+        // add by liuyang  神策数据统计 20180820 start
+        // 原标项目编号
+        String bidNid = creditAssign.getBorrowNid();
+        // 根据债转编号查询转让记录
+        BorrowCreditVO borrowCreditVO = this.amTradeClient.getBorrowCreditByCreditNid(creditNid);
+        if(borrowCreditVO == null){
+            logger.error("根据债转编号查询转让记录失败,转让编号:["+creditNid + "].");
+            return result;
+        }
+        // 根据原标标号取借款信息
+        RightBorrowVO borrow = this.amTradeClient.getRightBorrowByNid(bidNid);
+        if(borrow==null){
+            logger.error("根据标的号获取标的信息失败,标的编号:["+bidNid+"].");
+            return result;
+        }
+        BorrowInfoVO borrowInfoVO = this.amTradeClient.getBorrowInfoByNid(bidNid);
+        if (borrowInfoVO == null){
+            logger.error("根据标的号查询标的详情信息失败,标的编号:["+bidNid+"].");
+            return result;
+        }
+        if (borrow != null) {
+            BorrowStyleVO projectBorrowStyle = this.amTradeClient.getBorrowStyle(borrow.getBorrowStyle());
+            if (projectBorrowStyle != null) {
+                result.setBorrowStyleName(StringUtils.isBlank(projectBorrowStyle.getName()) ? "" : projectBorrowStyle.getName());
+            } else {
+                result.setBorrowStyleName("");
+            }
+        }
+
+        // 项目名称
+        result.setProjectName(borrowInfoVO.getProjectName());
+        // 借款期限
+        result.setBorrowPeriod(borrow.getBorrowPeriod());
+        if ("endday".equals(borrow.getBorrowStyle())) {
+            result.setDurationUnit("天");
+        } else {
+            result.setDurationUnit("月");
+        }
+        // 债转期限
+        result.setCreditPeriod(borrowCreditVO.getCreditTerm());
+        // 期限单位
+        result.setCreditDurationUnit("天");
+        // add by liuyang  神策数据统计 20180820 end
         if(creditAssign!=null){
             AccountVO account = this.getAccountByUserId(tender.getUserId());
             BigDecimal balance = account.getBankBalance();
@@ -347,7 +394,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             result.setBorrowApr(creditAssign.getCreditDiscount()+"%");
             if (StringUtils.isNotEmpty(money) && !"0".equals(money)) {
                 // 实际支付金额
-                result.setRealAmount("实际支付金额:" + creditAssign.getAssignPay());
+                //result.setRealAmount("实际支付金额:" + creditAssign.getAssignPay());
                 // 历史回报
                 result.setProspectiveEarnings(creditAssign.getAssignInterest()+"元");
                 //BigDecimal assignInterest = new BigDecimal(bean.getAssignInterest()).add(new BigDecimal(money));
@@ -425,9 +472,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      * @return
      */
     @Override
-    public WebResult<Map<String, Object>> borrowCreditCheck(TenderRequest request) {
+    public Map<String, Object> borrowCreditCheck(TenderRequest request) {
         UserVO loginUser = amUserClient.findUserById(Integer.valueOf(request.getUserId()));
-
         Integer userId = loginUser.getUserId();
         request.setUser(loginUser);
         // 检查请求参数是否正确
@@ -451,8 +497,12 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         logger.info("creditAssign {}", JSONObject.toJSONString(creditAssign));
         // 检查金额
         this.checkTenderMoney(request, tenderAccount,creditAssign);
+        //校验用户测评
+        //给测评接口金额赋值
+        request.setAccount(request.getAssignCapital());
+        Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(request);
         logger.info("债转投资校验通过始   userId:{},credNid:{},ip:{},平台{}", userId, request.getCreditNid(), request.getIp(), request.getPlatform());
-        return new WebResult<Map<String, Object>>();
+        return resultEval;
     }
 
     /**
@@ -780,16 +830,16 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                     }
                     borrowRecover.setCreditAmount(borrowRecover.getCreditAmount().add(creditTender.getAssignCapital()));
                     borrowRecover.setCreditInterestAmount(borrowRecover.getCreditInterestAmount().add(creditTender.getAssignInterestAdvance()));
-                    borrowRecover.setCreditStatus(borrowCredit.getCreditStatus());
                     // 已收债转管理费
                     borrowRecover.setCreditManageFee(borrowRecover.getCreditManageFee().add(perManageSum));
+                    logger.info("borrowCredit.getCreditCapitalAssigned():{}    borrowCredit.getCreditCapital():{}",borrowCredit.getCreditCapitalAssigned(),borrowCredit.getCreditCapital());
                     if (borrowCredit.getCreditCapitalAssigned().compareTo(borrowCredit.getCreditCapital()) == 0) {
                         debtEndFlag = 1;
                         borrowCredit.setCreditStatus(2);
                     }
                     // 债权是否结束状态
                     borrowRecover.setDebtStatus(debtEndFlag);
-
+                    borrowRecover.setCreditStatus(borrowCredit.getCreditStatus());
                     creditTenderBg.setAssignAccountNew(assignAccountNew);
                     creditTenderBg.setBorrowCredit(borrowCredit);
                     creditTenderBg.setCreditTender(creditTender);
@@ -804,7 +854,20 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         throw  new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                     }
                     // 发送法大大协议
+                    logger.info("==========承接转让发送法大大协议:bidNid="+creditTender.getBidNid()+",assignNid="+creditTender.getAssignNid()+
+                            ",creditNid="+creditTender.getCreditNid()+",creditTenderNid="+creditTender.getCreditTenderNid());
+
                     this.sendPdfMQ(userId, creditTender.getBidNid(),creditTender.getAssignNid(), creditTender.getCreditNid(), creditTender.getCreditTenderNid());
+                    // 发送承接完成短信
+                    if (borrowCredit.getCreditCapitalAssigned().compareTo(borrowCredit.getCreditCapital()) == 0) {
+                        try {
+                            logger.info("发送承接完成短信 mq ");
+                            this.sendCreditSuccessMessage(creditTender,borrowCredit);
+                        } catch (MQException e) {
+                            logger.error("e   :",e);
+                            e.printStackTrace();
+                        }
+                    }
                     //----------------------------------准备开始操作运营数据等  用mq----------------------------------
                     logger.info("开始更新运营数据等 updateUtm ");
                     updateUtm(userId, creditTenderLog.getAssignCapital(), GetDate.getNowTime10(), borrowCredit.getCreditTerm() + "天");
@@ -895,7 +958,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         bean.setTenderType(1);
         try{
             logger.info("债转承接发送法大大协议----ing");
-            fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_GENERATE_CONTRACT_TAG,UUID.randomUUID().toString(),JSON.toJSONBytes(bean)));
+            fddProducer.messageSendDelay(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_GENERATE_CONTRACT_TAG,UUID.randomUUID().toString(),JSON.toJSONBytes(bean)),2);
         }catch (Exception e){
             logger.error("债转承接发送法大大协议失败  {}",JSONObject.toJSONString(bean));
         }
@@ -1080,6 +1143,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 assignPayInterest = creditInterest;
                 // 实付金额 承接本金*（1-折价率）+应垫付利息
                 assignPay = assignPrice.add(assignInterestAdvance);
+                logger.info("1垫付利息::"+assignInterestAdvance);
             } else {// 按月
                 // 债转本息
                 creditAccount = DuePrincipalAndInterestUtils.getMonthPrincipalInterestAfterCredit(new BigDecimal(assignCapital), sellerCapitalWait, sellerInterestWait, yearRate,
@@ -1091,6 +1155,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 // 垫息总额=债权本金*年化收益÷12*融资期限-债权本金*年化收益÷360*剩余天数
                 assignInterestAdvance = DuePrincipalAndInterestUtils.getMonthAssignInterestAdvanceAfterCredit(new BigDecimal(assignCapital), sellerCapitalWait,
                         sellerInterestAdvanceWait, yearRate, borrow.getBorrowPeriod(), new BigDecimal(lastDays));
+                logger.info("2垫付利息::"+assignInterestAdvance);
                 // 债转利息
                 // assignPayInterest =
                 // creditInterest.subtract(assignInterestAdvance);
@@ -1125,6 +1190,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 assignInterestAdvance = sellerInterestAdvanceWait;
                 // 实付金额 承接本金*（1-折价率）+应垫付利息
                 assignPay = assignPrice.add(assignInterestAdvance);
+                logger.info("3垫付利息::"+assignInterestAdvance);
             } else {
                 // 承接人每月应还利息
                 BigDecimal interestAssign = BeforeInterestAfterPrincipalUtils.getPerTermInterest(new BigDecimal(assignCapital), borrowCredit.getBidApr().divide(new BigDecimal(100)),
@@ -1140,13 +1206,16 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         borrow.getBorrowPeriod(), borrow.getBorrowPeriod());
                 // 垫息总额=投资人认购本金/出让人转让本金*出让人本期利息）-（债权本金*年化收益÷360*本期剩余天数
                 logger.info("assignCapital:{}   getCreditCapital:{}  yearRate:{}  interest:{}  lastDays:{} ",assignCapital, borrowCredit.getCreditCapital(),yearRate,interest,lastDays);
+
+                logger.info("assignInterestAdvance:{} ",assignInterestAdvance);
                 assignInterestAdvance = BeforeInterestAfterPrincipalUtils.getAssignInterestAdvance(new BigDecimal(assignCapital), borrowCredit.getCreditCapital(), yearRate, interest,
                         new BigDecimal(lastDays + ""));
-                logger.info("assignInterestAdvance:{} ",assignInterestAdvance);
+                logger.info("---assignInterestAdvance:{} ",assignInterestAdvance);
                 // 实付金额 承接本金*（1-折价率）+应垫付利息
                 assignPay = assignPrice.add(assignInterestAdvance);
             }
         }
+        logger.info("4assignInterestAdvance:{} ",assignInterestAdvance);
         // 保存credit_tender_log表
         creditTenderLog.setUserId(user.getUserId());
         creditTenderLog.setCreditUserId(borrowCredit.getCreditUserId());
@@ -1179,8 +1248,15 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         } catch (Exception e) {
             logger.error("债转算是否是新旧标区分时间错误，债转标号:" + borrowCredit.getCreditNid());
         }
+        DebtConfigResponse response = amConfigClient.getDebtConfig();
+        DebtConfigVO config = response.getResult();
         if (ifOldDate != null && ifOldDate <= GetDate.getTime10(borrowCredit.getCreateTime())) {
             creditTenderLog.setCreditFee(assignPay.multiply(new BigDecimal(0.01)));
+            if(config!=null) {
+                creditTenderLog.setCreditFee(assignPay.multiply(config.getAttornRate().divide(new BigDecimal(100))).setScale(2, BigDecimal.ROUND_DOWN));
+            }else {
+                creditTenderLog.setCreditFee(assignPay.multiply(new BigDecimal(0.01)));
+            }
         } else {
             creditTenderLog.setCreditFee(assignPay.multiply(new BigDecimal(0.005)));
         }
@@ -1190,6 +1266,11 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         return creditTenderLog;
     }
 
+    public static void main(String[] args) {
+        System.out.println("args = " + BeforeInterestAfterPrincipalUtils.getAssignInterestAdvance(new BigDecimal("1000"), new BigDecimal("10000"),
+                new BigDecimal("0.08"), new BigDecimal("66.66"),
+                new BigDecimal(27 + "")));
+    }
     /**
      * 获取调用银行的参数
      * @param request
@@ -1204,7 +1285,9 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         String orderId = GetOrderIdUtils.getOrderId2(user.getUserId());
         bean.setOrderId(orderId);
         bean.setLogOrderId(orderId);
+        logger.info("creditTenderLog.getCreditUserId():"+creditTenderLog.getCreditUserId());
         BankOpenAccountVO accountChinapnrCrediter = amUserClient.selectBankAccountById(creditTenderLog.getCreditUserId());
+        logger.info("accountChinapnrCrediter:{}",JSONObject.toJSONString(accountChinapnrCrediter));
         bean.setAccountId(bankOpenAccount.getAccount());
         // 实付金额 承接本金*（1-折价率）+应垫付利息
         bean.setTxAmount(creditAssign.getAssignPay().replaceAll(",",""));
@@ -1312,16 +1395,6 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      */
     private void checkUser(UserVO user, UserInfoVO userInfo, BankOpenAccountVO bankOpenAccount, BorrowCreditVO borrowCredit) {
 
-        String roleIsOpen = systemConfig.getRoleIsopen();
-        if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
-            if (userInfo.getRoleId().intValue() != 1) {
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
-            }
-        }
-        // 判断用户是否禁用  0启用，1禁用
-        if (user.getStatus() == 1) {
-            throw new CheckException(MsgEnum.ERR_USER_INVALID);
-        }
         // 用户未开户
         if (user.getBankOpenAccount() == 0) {
             throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
@@ -1330,22 +1403,32 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         if (user.getIsSetPassword() == 0) {
             throw new CheckException(MsgEnum.ERR_TRADE_PASSWORD_NOT_SET);
         }
-        // 风险测评校验
-        this.checkEvaluation(user);
         if (bankOpenAccount == null || user.getBankOpenAccount() == 0 || StringUtils.isEmpty(bankOpenAccount.getAccount())) {
             // 未开户
             throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
         }
-        if(borrowCredit.getCreditUserId().intValue()==user.getUserId().intValue()){
-            // 不可以承接自己出让的债权
-            throw new CheckException(MsgEnum.ERROR_CREDIT_CANT_BBY_YOURSELF);
+        // 判断用户是否禁用  0启用，1禁用
+        if (user.getStatus() == 1) {
+            throw new CheckException(MsgEnum.ERR_USER_INVALID);
         }
-
+        String roleIsOpen = systemConfig.getRoleIsopen();
+        if(StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
+            if (userInfo.getRoleId().intValue() != 1) {
+                throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
+            }
+        }
         if (!authService.checkPaymentAuthStatus(user.getUserId())) {
             // 未进行服务费授权
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_PAYMENT_AUTH);
 
         }
+        // 风险测评校验
+        //this.checkEvaluation(user);
+        if(borrowCredit.getCreditUserId().intValue()==user.getUserId().intValue()){
+            // 不可以承接自己出让的债权
+            throw new CheckException(MsgEnum.ERROR_CREDIT_CANT_BBY_YOURSELF);
+        }
+
     }
 
     /**

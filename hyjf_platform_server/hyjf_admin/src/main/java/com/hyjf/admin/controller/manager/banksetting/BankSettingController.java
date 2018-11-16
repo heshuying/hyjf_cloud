@@ -26,6 +26,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,15 +65,24 @@ public class BankSettingController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult initBankSettingList(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
         logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/list");
+
         AdminBankSettingRequest request = new AdminBankSettingRequest();
-        BeanUtils.copyProperties(bankSettingRequestBean, request);
-        AdminBankSettingResponse response = this.bankSettingService.selectBankSettingList(request);
-        if(response == null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
+        AdminBankSettingResponse response = new AdminBankSettingResponse();
+                BeanUtils.copyProperties(bankSettingRequestBean, request);
+
+        try {
+            // 数据查询
+            response = this.bankSettingService.selectBankSettingList(request);
+        } catch (Exception e) {
+            logger.info("Admin江西银行数据查询异常！requestParam:{}", request.toString());
+            e.printStackTrace();
+            return new AdminResult<>(FAIL, "Admin江西银行数据查询异常！具体原因详见日志");
         }
+
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
+
         logger.info(BankSettingController.class.toString(), "endLog -- /hyjf-admin/config/banksetting/list");
         return new AdminResult<>(response);
     }
@@ -80,20 +90,32 @@ public class BankSettingController extends BaseController {
     @ApiOperation(value = "画面迁移(含有id更新，不含有id添加)", httpMethod = "POST", notes = "画面迁移(含有id更新，不含有id添加)")
     @ApiParam(required = true, name = "bankSettingRequestBean", value = "根据id查询详情")
     @PostMapping("/info")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult bankSettingInfo(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
         logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/info");
+
         AdminBankSettingRequest request = new AdminBankSettingRequest();
         AdminBankSettingResponse response = new AdminBankSettingResponse();
-        BeanUtils.copyProperties(bankSettingRequestBean, request);
-        Integer id = request.getId();
-        if (id != null) {
+                BeanUtils.copyProperties(bankSettingRequestBean, request);
+        if (request.getId() == null) {
+            return new AdminResult<>(FAIL, "id字段为必传！");
+        }
+
+        try {
+            // 数据查询
             response = this.bankSettingService.getRecord(request);
-            response.setFileDomainUrl(DOMAIN_URL);
+        } catch (Exception e) {
+            logger.info("Admin江西银行数据查询异常！requestParam:{}", request.toString());
+            e.printStackTrace();
+            return new AdminResult<>(FAIL, "Admin江西银行数据查询异常！具体原因详见日志");
         }
-        if (response == null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
+
+        response.setFileDomainUrl(DOMAIN_URL);
+
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
         }
+
         logger.info(BankSettingController.class.toString(), "endLog -- /hyjf-admin/config/banksetting/info");
         return new AdminResult<>(response);
     }
@@ -104,33 +126,49 @@ public class BankSettingController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertBankSetting(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
         logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/insert");
+
         AdminBankSettingResponse response = null;
-        if (bankSettingRequestBean.getBankName() == null || bankSettingRequestBean.getBankName().equals("")){
-            // 失败返回
+        if (StringUtils.isBlank(bankSettingRequestBean.getBankName())){
             return new AdminResult<>(FAIL, "请求参数bankName不能为空！");
         }
+
         AdminBankSettingRequest request = new AdminBankSettingRequest();
         BeanUtils.copyProperties(bankSettingRequestBean,request);
         ModelAndView model =new ModelAndView();
+
         // 调用校验
         if (validatorFieldCheck(model, request) != null) {
-            // 失败返回
-            return new AdminResult<>(FAIL, "校验失败");
+            return new AdminResult<>(FAIL, "表单校验失败");
         }
+
         JxBankConfigVO bank = new JxBankConfigVO();
         bank.setBankName(request.getBankName());
-        List<JxBankConfigVO> banks = bankSettingService.getRecordList(bank, -1, -1);
+
+        List<JxBankConfigVO> banks = null;
+        try {
+            // 数据查询
+            banks = bankSettingService.getRecordList(bank, -1, -1);
+        } catch (Exception e) {
+            logger.info("Admin江西银行数据查询异常！requestParam:{}", bank.toString());
+            e.printStackTrace();
+            return new AdminResult<>(FAIL, "Admin江西银行数据查询异常！具体原因详见日志");
+        }
+
         if (CollectionUtils.isEmpty(banks)) {
             try {
                 // 数据插入
                 response = this.bankSettingService.insertRecord(request);
             } catch (Exception e) {
+                logger.info("Admin江西银行数据插入异常！requestParam:{}", request.toString());
                 e.printStackTrace();
+                return new AdminResult<>(FAIL, "Admin江西银行数据插入异常！具体原因详见日志");
             }
         }
+
         if(response == null) {
             return new AdminResult<>(FAIL, "银行名称重复");
         }
+
         logger.info(BankSettingController.class.toString(), "endLog -- /hyjf-admin/config/banksetting/insert");
         return new AdminResult<>(response);
     }
@@ -141,31 +179,41 @@ public class BankSettingController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateBankSetting(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
         logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/update");
+
         if (bankSettingRequestBean.getId() == null){
-            // 失败返回
-            return new AdminResult<>(FAIL, "修改id不能为空！");
+            return new AdminResult<>(FAIL, "id字段为必传！");
         }
-        if (bankSettingRequestBean.getBankName() == null || bankSettingRequestBean.getBankName().equals("")){
-            // 失败返回
+        if (StringUtils.isBlank(bankSettingRequestBean.getBankName())){
             return new AdminResult<>(FAIL, "请求参数bankName不能为空！");
         }
-        AdminBankSettingResponse response = null;
+
+        ModelAndView model = new ModelAndView();
         AdminBankSettingRequest request = new AdminBankSettingRequest();
+        AdminBankSettingResponse response = new AdminBankSettingResponse();
         BeanUtils.copyProperties(bankSettingRequestBean,request);
-        ModelAndView model =new ModelAndView();
+
         // 调用校验
         if (validatorFieldCheck(model, request) != null) {
-            return new AdminResult<>(FAIL, "校验失败");
+            return new AdminResult<>(FAIL, "表单校验失败");
         }
         // 根据id更新
         if (!ValidatorFieldCheckUtil.validateRequired(model, "id", request.getId().toString())) {
-            return new AdminResult<>(FAIL, "校验失败");
+            return new AdminResult<>(FAIL, "id字段校验失败");
         }
-        // 更新
-        response = this.bankSettingService.updateRecord(request);
-        if(response == null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
+
+        try {
+            // 数据修改
+            response = this.bankSettingService.updateRecord(request);
+        } catch (Exception e) {
+            logger.info("Admin江西银行数据修改异常！requestParam:{}", request.toString());
+            e.printStackTrace();
+            return new AdminResult<>(FAIL, "Admin江西银行数据修改异常！具体原因详见日志");
         }
+
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+
         logger.info(BankSettingController.class.toString(), "endLog -- /hyjf-admin/config/banksetting/update");
         return new AdminResult<>();
     }
@@ -176,16 +224,27 @@ public class BankSettingController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteBankSetting(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
         logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/delete");
-        AdminBankSettingResponse response = null;
+
         AdminBankSettingRequest request = new AdminBankSettingRequest();
+        AdminBankSettingResponse response = new AdminBankSettingResponse();
         BeanUtils.copyProperties(bankSettingRequestBean ,request);
-        Integer id = request.getId();
-        if(id != null){
+        if(request.getId() == null){
+            return new AdminResult<>(FAIL, "id字段为必传！");
+        }
+
+        try {
+            // 数据删除
             response = this.bankSettingService.deleteRecord(request);
+        } catch (Exception e) {
+            logger.info("Admin江西银行数据删除异常！requestParam:{}", request.toString());
+            e.printStackTrace();
+            return new AdminResult<>(FAIL, "Admin江西银行数据删除异常！具体原因详见日志");
         }
-        if(response == null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
+
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
         }
+
         logger.info(BankSettingController.class.toString(), "endLog -- /hyjf-admin/config/banksetting/delete");
         return new AdminResult<>();
     }
@@ -196,9 +255,20 @@ public class BankSettingController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult validateBeforeAction(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
         logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/validateBeforeAction");
+
+        List<JxBankConfigVO> list = null;
         JxBankConfigVO jxBankConfig = new JxBankConfigVO();
         BeanUtils.copyProperties(bankSettingRequestBean ,jxBankConfig);
-        List<JxBankConfigVO> list = bankSettingService.getRecordList(jxBankConfig, -1, -1);
+
+        try {
+            // 数据查询
+            list = bankSettingService.getRecordList(jxBankConfig, -1, -1);
+        } catch (Exception e) {
+            logger.info("Admin江西银行数据查询异常！requestParam:{}", jxBankConfig.toString());
+            e.printStackTrace();
+            return new AdminResult<>(FAIL, "Admin江西银行数据查询异常！具体原因详见日志");
+        }
+
         if (list != null && list.size() != 0) {
             if (bankSettingRequestBean.getId() != null) {
                 Boolean hasnot = true;
@@ -215,6 +285,7 @@ public class BankSettingController extends BaseController {
                 return new AdminResult<>(FAIL, "银行名称或银行代码不可重复添加");
             }
         }
+
         logger.info(BankSettingController.class.toString(), "endLog -- /hyjf-admin/config/banksetting/validateBeforeAction");
         return new AdminResult<>();
     }
@@ -225,6 +296,7 @@ public class BankSettingController extends BaseController {
     @ApiOperation(value = "资料上传", httpMethod = "POST", notes = "资料上传")
     @PostMapping(value = "/upLoadFile")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {
@@ -239,6 +311,7 @@ public class BankSettingController extends BaseController {
 
     @ApiOperation(value = "列表导出", httpMethod = "POST", notes = "列表导出")
     @PostMapping(value = "/exportregist")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody AdminBankSettingRequest adminRequest) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
@@ -277,6 +350,7 @@ public class BankSettingController extends BaseController {
         }
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
+
     private Map<String, String> buildMap() {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("bankName", "银行名称");
@@ -289,8 +363,10 @@ public class BankSettingController extends BaseController {
         map.put("feeWithdraw", "提现手续费");
         return map;
     }
+
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+
         IValueFormatter quickPaymentAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
@@ -302,6 +378,7 @@ public class BankSettingController extends BaseController {
                 }
             }
         };
+
         IValueFormatter bigDecimalAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
@@ -316,8 +393,6 @@ public class BankSettingController extends BaseController {
         mapAdapter.put("feeWithdraw", bigDecimalAdapter);
         return mapAdapter;
     }
-
-
 
     /**
      * 调用校验表单方法

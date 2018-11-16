@@ -347,7 +347,7 @@
 	<!-- 点击购买后对债转进行投资详情 -->
 	<select id="selectWebCreditTenderDetail" resultType="com.hyjf.am.trade.dao.model.customize.TenderToCreditDetailCustomize" parameterType="java.util.Map">
 		SELECT	hb.project_type type,
-			hb.company_or_personal AS comOrPer,
+			hbi.company_or_personal AS comOrPer,
 			hb.borrow_nid AS borrowNid,
 			hb.borrow_apr AS borrowApr,
 			hb.borrow_style AS borrowStyle,
@@ -367,12 +367,8 @@
 			CONCAT(hb.borrow_period, '个月')
 		END borrowPeriod,
 		 hbc.credit_price AS creditPrice,
-		 FROM_UNIXTIME(
-			hbc.add_time,
-			'%Y-%m-%d %H:%i:%s'
-		) AS creditTime,
-		 hbc.add_time AS creditTimeInt,
-		 hui.truename AS creditUserTrueName,
+		 hbc.create_time AS creditTime,
+		 hru.truename AS creditUserTrueName,
 		 hbc.credit_user_id AS creditUserId,
 		 hbc.credit_repay_end_time AS creditRepayEndTime,
 		 	CASE
@@ -416,8 +412,8 @@
 		FROM
 			ht_borrow_credit hbc
 		LEFT JOIN ht_borrow hb ON hbc.bid_nid = hb.borrow_nid
-		LEFT JOIN ht_users hu ON hu.user_id = hbc.credit_user_id
-		LEFT JOIN ht_users_info hui ON hui.user_id = hu.user_id
+		INNER JOIN ht_borrow_info hbi ON hb.borrow_nid = hbi.borrow_nid
+		LEFT JOIN ht_r_user hru ON hru.user_id = hbc.credit_user_id
 		WHERE
 			hbc.credit_nid = #{creditNid}
 	</select>
@@ -462,8 +458,8 @@
 		END borrowPeriod,
 
 		hbc.credit_price AS creditPrice,
-	 
-		FROM_UNIXTIME(
+
+		date_format(
 			hdct.create_time,
 			'%Y-%m-%d %H:%i:%s'
 		) AS signTime,
@@ -526,93 +522,92 @@
 		hbc.credit_nid = #{creditNid}
 		and hdct.assign_order_id=#{assignOrderId}
 	</select>
-	
-	
+
+
 	<select id="selectWebCreditTenderDetailForContract" resultType="com.hyjf.am.trade.dao.model.customize.TenderToCreditDetailCustomize" parameterType="java.util.Map">
-		SELECT	hb.project_type type,
-			hb.company_or_personal AS comOrPer,
-			hb.borrow_nid AS borrowNid,
-			hb.borrow_apr AS borrowApr,
-			hb.borrow_style AS borrowStyle,
-			hbc.credit_nid AS creditNid,
-			hbc.tender_nid AS tenderNid,
-			hbc.credit_capital AS creditCapital,
-			(
-				hbc.credit_capital - hbc.credit_capital_assigned
-			) AS creditAssignCapital,
-			hbc.credit_discount AS creditDiscount,
-			hbc.credit_term AS creditTerm,
-			hbc.credit_term_hold AS creditTermHold,
+		SELECT  hb.project_type type,
+		hbi.company_or_personal AS comOrPer,
+		hb.borrow_nid AS borrowNid,
+		hb.borrow_apr AS borrowApr,
+		hb.borrow_style AS borrowStyle,
+		hbc.credit_nid AS creditNid,
+		hbc.tender_nid AS tenderNid,
+		hbc.credit_capital AS creditCapital,
+		(
+		hbc.credit_capital - hbc.credit_capital_assigned
+		) AS creditAssignCapital,
+		hbc.credit_discount AS creditDiscount,
+		hbc.credit_term AS creditTerm,
+		hbc.credit_term_hold AS creditTermHold,
 		CASE
 		WHEN hb.borrow_style = 'endday' THEN
-			CONCAT(hb.borrow_period, '天')
+		CONCAT(hb.borrow_period, '天')
 		ELSE
-			CONCAT(hb.borrow_period, '个月')
+		CONCAT(hb.borrow_period, '个月')
 		END borrowPeriod,
-		 hbc.credit_price AS creditPrice,
-		 FROM_UNIXTIME(
-			hbc.add_time,
-			'%Y-%m-%d %H:%i:%s'
+		hbc.credit_price AS creditPrice,
+		date_format(
+		hbc.create_time,
+		'%Y-%m-%d %H:%i:%s'
 		) AS creditTime,
-		 hbc.add_time AS creditTimeInt,
-		 hui.truename AS creditUserTrueName,
-		 hbc.credit_user_id AS creditUserId,
-		 hbc.credit_repay_end_time AS creditRepayEndTime,
-		 	CASE
-				WHEN hb.`status` = 0
-				AND hb.verify_status = 1 THEN
-					'10'
-				WHEN hb.`status` = 1
-				AND hb.borrow_status = 1
-				AND hb.borrow_account_yes <![CDATA[<]]> hb.account
-				AND (
-					hb.verify_time + (
-						hb.borrow_valid_time * 24 * 60 * 60
-					) > UNIX_TIMESTAMP(NOW())
-				) THEN
-					'11'
-				WHEN hb.`status` = 1
-				AND hb.reverify_time = '0'
-				AND (
-					(
-						hb.reverify_status = 0
-						AND hb.borrow_account_yes >= hb.account
-					)
-					OR (
-						hb.verify_time + (
-							hb.borrow_valid_time * 24 * 60 * 60
-						) <![CDATA[<]]> UNIX_TIMESTAMP(NOW())
-					)
-				) THEN
-					'12'
-				WHEN hb.`status` = 3
-				AND hb.repay_full_status = 0 THEN
-					'13'
-				WHEN hb.`status` = 3
-				AND hb.repay_full_status = 1 THEN
-					'14'
-				<!-- WHEN hb.`status` = 2 THEN
-					'15' -->
-				ELSE
-					''
-				END AS `status`,
-				
-				FROM_UNIXTIME(
-					hhh.add_time,
-					'%Y-%m-%d'
-				) AS signTime
-				
+		hru.truename AS creditUserTrueName,
+		hbc.credit_user_id AS creditUserId,
+		hbc.credit_repay_end_time AS creditRepayEndTime,
+		CASE
+		WHEN hb.`status` = 0
+		AND hb.verify_status = 1 THEN
+		'10'
+		WHEN hb.`status` = 1
+		AND hb.borrow_status = 1
+		AND hb.borrow_account_yes <![CDATA[<]]> hb.account
+		AND (
+		hb.verify_time + (
+		hb.borrow_valid_time * 24 * 60 * 60
+		) > UNIX_TIMESTAMP(NOW())
+		) THEN
+		'11'
+		WHEN hb.`status` = 1
+		AND hb.reverify_time = '0'
+		AND (
+		(
+		hb.reverify_status = 0
+		AND hb.borrow_account_yes >= hb.account
+		)
+		OR (
+		hb.verify_time + (
+		hb.borrow_valid_time * 24 * 60 * 60
+		) <![CDATA[<]]> UNIX_TIMESTAMP(NOW())
+		)
+		) THEN
+		'12'
+		WHEN hb.`status` = 3
+		AND hb.repay_full_status = 0 THEN
+		'13'
+		WHEN hb.`status` = 3
+		AND hb.repay_full_status = 1 THEN
+		'14'
+		<!-- WHEN hb.`status` = 2 THEN
+          '15' -->
+		ELSE
+		''
+		END AS `status`,
+
+		date_format(
+		hhh.create_time,
+		'%Y-%m-%d'
+		) AS signTime
+
 		FROM
-			ht_borrow_credit hbc
+		ht_borrow_credit hbc
 		LEFT JOIN ht_credit_tender hhh ON hbc.credit_nid = hhh.credit_nid
 		LEFT JOIN ht_borrow hb ON hbc.bid_nid = hb.borrow_nid
-		LEFT JOIN ht_users hu ON hu.user_id = hbc.credit_user_id
-		LEFT JOIN ht_users_info hui ON hui.user_id = hu.user_id
+		LEFT JOIN ht_borrow_info hbi ON hb.borrow_nid = hbi.borrow_nid
+		LEFT JOIN ht_r_user hru ON hru.user_id = hbc.credit_user_id
 		WHERE
-			hbc.credit_nid = #{creditNid}
-			AND
-			hhh.assign_nid = #{assignNid}
-			
+		hbc.credit_nid = #{creditNid}
+		AND
+		hhh.assign_nid = #{assignNid}
+
 	</select>
 
 

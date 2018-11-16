@@ -369,8 +369,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         param.put("repayStatus", requestBean.getRepayStatus());
         param.put("startDate", requestBean.getStartDate());
         param.put("endDate", requestBean.getEndDate());
-        param.put("repayTimeOrder", requestBean.getRepayTimeOrder());
-        param.put("checkTimeOrder", requestBean.getCheckTimeOrder());
         param.put("borrowNid", requestBean.getBorrowNid());
 
         if (requestBean.getLimitStart() != null) {
@@ -384,7 +382,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             param.put("limitEnd", -1);
         }
 
-        List<RepayListCustomizeVO> list = repayManageCustomizeMapper.selectOrgRepayList(param);
+        List<RepayListCustomizeVO> list = repayManageCustomizeMapper.searchOrgRepayedList(param);
 
         for(RepayListCustomizeVO record : list){
             List<BorrowTender> tenderList = this.getBorrowTender(record.getBorrowNid());
@@ -423,8 +421,6 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         param.put("repayStatus", requestBean.getRepayStatus());
         param.put("startDate", requestBean.getStartDate());
         param.put("endDate", requestBean.getEndDate());
-        param.put("repayTimeOrder", requestBean.getRepayTimeOrder());
-        param.put("checkTimeOrder", requestBean.getCheckTimeOrder());
         param.put("borrowNid", requestBean.getBorrowNid());
 
         if (requestBean.getLimitStart() != null) {
@@ -438,7 +434,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             param.put("limitEnd", -1);
         }
 
-        Integer count = repayManageCustomizeMapper.selectOrgRepayCount(param);
+        Integer count = repayManageCustomizeMapper.selectOrgRepayedCount(param);
 
         return count;
     }
@@ -4317,32 +4313,36 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                         borrowRecoverOld.setInviteDepartmentName(employeeCustomize.getDepartmentName());
                                     }
                                 } else if (attribute == 1) {
-                                    int refUserId = users.getSpreadsUserId();
+                                    Integer refUserId = users.getSpreadsUserId();
                                     // 查找用户推荐人
-                                    RUser userss = this.getRUser(refUserId);
-                                    if (userss != null) {
-                                        borrowRecoverOld.setInviteUserId(userss.getUserId());
-                                        borrowRecoverOld.setInviteUserName(userss.getUsername());
-                                        borrowRecoverOld.setInviteUserAttribute(userss.getAttribute());
-                                    }
-                                    // 查找用户推荐人部门
-                                    EmployeeCustomize employeeCustomize = employeeCustomizeMapper.selectEmployeeByUserId(refUserId);
-                                    if (employeeCustomize != null) {
-                                        borrowRecoverOld.setInviteRegionId(employeeCustomize.getRegionId());
-                                        borrowRecoverOld.setInviteRegionName(employeeCustomize.getRegionName());
-                                        borrowRecoverOld.setInviteBranchId(employeeCustomize.getBranchId());
-                                        borrowRecoverOld.setInviteBranchName(employeeCustomize.getBranchName());
-                                        borrowRecoverOld.setInviteDepartmentId(employeeCustomize.getDepartmentId());
-                                        borrowRecoverOld.setInviteDepartmentName(employeeCustomize.getDepartmentName());
+                                    if(refUserId != null && refUserId != 0){
+                                        RUser userss = this.getRUser(refUserId);
+                                        if (userss != null) {
+                                            borrowRecoverOld.setInviteUserId(userss.getUserId());
+                                            borrowRecoverOld.setInviteUserName(userss.getUsername());
+                                            borrowRecoverOld.setInviteUserAttribute(userss.getAttribute());
+                                        }
+                                        // 查找用户推荐人部门
+                                        EmployeeCustomize employeeCustomize = employeeCustomizeMapper.selectEmployeeByUserId(refUserId);
+                                        if (employeeCustomize != null) {
+                                            borrowRecoverOld.setInviteRegionId(employeeCustomize.getRegionId());
+                                            borrowRecoverOld.setInviteRegionName(employeeCustomize.getRegionName());
+                                            borrowRecoverOld.setInviteBranchId(employeeCustomize.getBranchId());
+                                            borrowRecoverOld.setInviteBranchName(employeeCustomize.getBranchName());
+                                            borrowRecoverOld.setInviteDepartmentId(employeeCustomize.getDepartmentId());
+                                            borrowRecoverOld.setInviteDepartmentName(employeeCustomize.getDepartmentName());
+                                        }
                                     }
                                 } else if (attribute == 0) {
-                                    int refUserId = users.getSpreadsUserId();
+                                    Integer refUserId = users.getSpreadsUserId();
                                     // 查找推荐人
-                                    RUser userss = getRUser(refUserId);
-                                    if (userss != null) {
-                                        borrowRecoverOld.setInviteUserId(userss.getUserId());
-                                        borrowRecoverOld.setInviteUserName(userss.getUsername());
-                                        borrowRecoverOld.setInviteUserAttribute(userss.getAttribute());
+                                    if(refUserId != null && refUserId != 0){
+                                        RUser userss = getRUser(refUserId);
+                                        if (userss != null) {
+                                            borrowRecoverOld.setInviteUserId(userss.getUserId());
+                                            borrowRecoverOld.setInviteUserName(userss.getUsername());
+                                            borrowRecoverOld.setInviteUserAttribute(userss.getAttribute());
+                                        }
                                     }
                                 }
                             }
@@ -4703,32 +4703,36 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                         borrowRecoverPlanOld.setInviteDepartmentName(employeeCustomize.getDepartmentName());
                                     }
                                 } else if (attribute == 1) {
-                                    int refUserId = users.getSpreadsUserId();
+                                    Integer refUserId = users.getSpreadsUserId();
                                     // 查找用户推荐人
-                                    RUser userss = this.getRUser(refUserId);
-                                    if (userss != null) {
-                                        borrowRecoverPlanOld.setInviteUserId(userss.getUserId());
-                                        borrowRecoverPlanOld.setInviteUserName(userss.getUsername());
-                                        borrowRecoverPlanOld.setInviteUserAttribute(userss.getAttribute());
-                                    }
-                                    // 查找用户推荐人部门
-                                    EmployeeCustomize employeeCustomize = employeeCustomizeMapper.selectEmployeeByUserId(refUserId);
-                                    if (employeeCustomize != null) {
-                                        borrowRecoverPlanOld.setInviteRegionId(employeeCustomize.getRegionId());
-                                        borrowRecoverPlanOld.setInviteRegionName(employeeCustomize.getRegionName());
-                                        borrowRecoverPlanOld.setInviteBranchId(employeeCustomize.getBranchId());
-                                        borrowRecoverPlanOld.setInviteBranchName(employeeCustomize.getBranchName());
-                                        borrowRecoverPlanOld.setInviteDepartmentId(employeeCustomize.getDepartmentId());
-                                        borrowRecoverPlanOld.setInviteDepartmentName(employeeCustomize.getDepartmentName());
+                                    if(refUserId != null && refUserId != 0){
+                                        RUser userss = this.getRUser(refUserId);
+                                        if (userss != null) {
+                                            borrowRecoverPlanOld.setInviteUserId(userss.getUserId());
+                                            borrowRecoverPlanOld.setInviteUserName(userss.getUsername());
+                                            borrowRecoverPlanOld.setInviteUserAttribute(userss.getAttribute());
+                                        }
+                                        // 查找用户推荐人部门
+                                        EmployeeCustomize employeeCustomize = employeeCustomizeMapper.selectEmployeeByUserId(refUserId);
+                                        if (employeeCustomize != null) {
+                                            borrowRecoverPlanOld.setInviteRegionId(employeeCustomize.getRegionId());
+                                            borrowRecoverPlanOld.setInviteRegionName(employeeCustomize.getRegionName());
+                                            borrowRecoverPlanOld.setInviteBranchId(employeeCustomize.getBranchId());
+                                            borrowRecoverPlanOld.setInviteBranchName(employeeCustomize.getBranchName());
+                                            borrowRecoverPlanOld.setInviteDepartmentId(employeeCustomize.getDepartmentId());
+                                            borrowRecoverPlanOld.setInviteDepartmentName(employeeCustomize.getDepartmentName());
+                                        }
                                     }
                                 } else if (attribute == 0) {
-                                    int refUserId = users.getSpreadsUserId();
+                                    Integer refUserId = users.getSpreadsUserId();
                                     // 查找推荐人
-                                    RUser userss = this.getRUser(refUserId);
-                                    if (userss != null) {
-                                        borrowRecoverPlanOld.setInviteUserId(userss.getUserId());
-                                        borrowRecoverPlanOld.setInviteUserName(userss.getUsername());
-                                        borrowRecoverPlanOld.setInviteUserAttribute(userss.getAttribute());
+                                    if(refUserId !=null && refUserId != 0){
+                                        RUser userss = this.getRUser(refUserId);
+                                        if (userss != null) {
+                                            borrowRecoverPlanOld.setInviteUserId(userss.getUserId());
+                                            borrowRecoverPlanOld.setInviteUserName(userss.getUsername());
+                                            borrowRecoverPlanOld.setInviteUserAttribute(userss.getAttribute());
+                                        }
                                     }
                                 }
                             }

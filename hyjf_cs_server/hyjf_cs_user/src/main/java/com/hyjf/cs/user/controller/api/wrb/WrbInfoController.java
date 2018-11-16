@@ -2,13 +2,17 @@ package com.hyjf.cs.user.controller.api.wrb;
 
 import com.hyjf.am.response.WrbResponse;
 import com.hyjf.am.response.trade.WrbBorrowInvestResponse;
+import com.hyjf.am.response.trade.WrbInvestRecordResponse;
 import com.hyjf.am.response.trade.WrbInvestResponse;
+import com.hyjf.am.response.trade.wrbInvestRecoverPlanResponse;
+import com.hyjf.am.response.user.WrbAccountResponse;
+import com.hyjf.am.response.user.WrbInvestSumResponse;
+import com.hyjf.am.resquest.api.WrbInvestRecordRequest;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import com.hyjf.am.vo.trade.BorrowVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
-import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
-import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderSumCustomizeVO;
@@ -18,6 +22,7 @@ import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.bean.WrbNoticeinfoResponse.NoticeinfoDetail;
 import com.hyjf.cs.user.service.wrb.WrbInfoServcie;
 import io.swagger.annotations.Api;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +32,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -42,7 +47,7 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
  */
 @RestController
 @Api(tags = "风车理财-平台公告查询接口")
-@RequestMapping("/wrb_interface")
+@RequestMapping("/hyjf-api/wrb_interface")
 public class WrbInfoController {
     private Logger logger = LoggerFactory.getLogger(WrbInfoController.class);
     public static final String datetimeFormat_key = "yyyy-MM-dd HH:mm:ss";
@@ -50,7 +55,7 @@ public class WrbInfoController {
     @Autowired
     private WrbInfoServcie wrbInvestServcie;
 
-    @RequestMapping("/notice_info")
+    @RequestMapping("/notice_info.do")
     public WrbNoticeinfoResponse getNoticeinfoDetail(@RequestParam String param,
                                                      @RequestParam(value = "sign", required = false) String sign){
         logger.info("获取平台的公告信息, param is :{}, sign is :{}", param, sign);
@@ -113,7 +118,7 @@ public class WrbInfoController {
      * @param sign
      * @return
      */
-    @RequestMapping("/borrow_list")
+    @RequestMapping("/borrow_list.do")
     public WrbBorrowReturnBean getBorrowList(@RequestParam String param,
                                                @RequestParam(value = "sign", required = false) String sign) {
         logger.info("标的查询接口, param is :{}, sign is :{}", param, sign);
@@ -122,7 +127,11 @@ public class WrbInfoController {
         Map<String, String> request = WrbParseParamUtil.parseParam(param);
         try {
             // 标的id
-            String borrowNid = request.get("invest_id");
+            String borrowNid = null;
+            if (request != null) {
+                borrowNid = request.get("invest_id");
+            }
+
 
             // 1. 查询投资明细
             List<WrbBorrowListCustomizeVO> investList = wrbInvestServcie.searchBorrowListByNid(borrowNid);
@@ -142,7 +151,7 @@ public class WrbInfoController {
      * @param param
      * @param sign
      */
-    @RequestMapping("/bid_invest_list")
+    @RequestMapping("/bid_invest_list.do")
     public WrbBorrowInvestResponse getBorrowInvest(@RequestParam String param,
                                                    @RequestParam(value = "sign", required = false) String sign) {
         logger.info("查询标的投资情况, param is :{}, sign is :{}", param, sign);
@@ -177,8 +186,8 @@ public class WrbInfoController {
             return response;
         }
         try {
-            if (startTime == null) {
-                BorrowVO borrow = wrbInvestServcie.selectBorrowByBorrowNid(borrowNid);
+            if (StringUtils.isBlank(startTime)) {
+                BorrowAndInfoVO borrow = wrbInvestServcie.selectBorrowByBorrowNid(borrowNid);
                 if (borrow == null) {
                     response.setRetcode(WrbResponse.FAIL_RETCODE);
                     response.setRetmsg("标的不存在");
@@ -219,7 +228,7 @@ public class WrbInfoController {
      * 获取某天投资情况
      * @return
      */
-    @RequestMapping("/day_invest_list")
+    @RequestMapping("/day_invest_list.do")
     public WrbInvestResponse getInvestDetail(@RequestParam String param,
                                                    @RequestParam(value = "sign", required = false) String sign) {
 
@@ -276,7 +285,7 @@ public class WrbInfoController {
                 WrbInvestResponse.InvestDetail investDetail = new WrbInvestResponse.InvestDetail();
                 investDetail.setIndex(borrowTender.getNid());// 订单号
                 String borrowNid = borrowTender.getBorrowNid();
-                BorrowVO borrow = wrbInvestServcie.selectBorrowByBorrowNid(borrowNid);
+                BorrowAndInfoVO borrow = wrbInvestServcie.selectBorrowByBorrowNid(borrowNid);
                 if (borrow != null) {
                     investDetail.setBorrow_id(String.valueOf(borrow.getUserId()));// 借款人ID
                 }
@@ -285,8 +294,8 @@ public class WrbInfoController {
                     userName = userName.substring(0, 1).concat("**");
                 }
                 investDetail.setInvest_user(userName);
-                Integer addtime = borrowTender.getAddTime();
-                investDetail.setInvest_time(GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(addtime));
+                Date createTime = borrowTender.getCreateTime();
+                investDetail.setInvest_time(GetDate.dateToString(createTime));
                 investDetail.setInvest_money(borrowTender.getAccount());
                 investDetail.setBid_id(borrowNid);
                 detailList.add(investDetail);
@@ -296,53 +305,229 @@ public class WrbInfoController {
         return wrbInvestResponse;
     }
 
+    /**
+     * 获取某天汇总数据
+     *
+     * @param param
+     * @param sign
+     * @return
+     * @throws ParseException
+     */
+    @RequestMapping("/ws_sum.do")
+    public WrbInvestSumResponse getSum(@RequestParam String param,
+                                       @RequestParam(value = "sign", required = false) String sign) {
+        logger.info("获取某天汇总数据, param is :{}, sign is :{}", param, sign);
+        WrbInvestSumResponse response = new WrbInvestSumResponse();
+
+        WrbInvestSumRequest request = null;
+        try {
+            request = WrbParseParamUtil.mapToBean(WrbParseParamUtil.parseParam(param), WrbInvestSumRequest.class);
+        } catch (Exception e) {
+            logger.error("参数解析失败....", e);
+            response.setRetcode(WrbResponse.FAIL_RETCODE);
+            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+            return response;
+        } finally {
+            if (request == null) {
+                response.setRetcode(WrbResponse.FAIL_RETCODE);
+                response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+                return response;
+            }
+        }
+
+        Date date = null;
+        try {
+            date = GetDate.stringToDate2(request.getDate());
+        } catch (Exception e) {
+            response.setRetcode(WrbResponse.FAIL_RETCODE);
+            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+            return response;
+        }
+        if(date == null){
+            logger.error("参数解析失败....");
+            response.setRetcode(WrbResponse.FAIL_RETCODE);
+            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+            return response;
+        }
+        response = wrbInvestServcie.getDaySum(date);
+
+        return response;
+    }
+    /**
+     * 根据平台用户id获取账户信息
+     * @param param
+     * @param sign
+     * @return
+     */
+    @RequestMapping("/acc_info.do")
+    public WrbAccountResponse getAccountInfo(@RequestParam String param,
+                                             @RequestParam(value = "sign", required = false) String sign) {
+        logger.info("查询账户信息, param is :{}, sign is :{}", param, sign);
+
+        WrbAccountResponse response = new WrbAccountResponse();
+
+        WrbAccountRequest request = null;
+        try {
+            request = WrbParseParamUtil.mapToBean(WrbParseParamUtil.parseParam(param), WrbAccountRequest.class);
+        } catch (Exception e) {
+            logger.error("参数解析失败....", e);
+            response.setRetcode(WrbResponse.FAIL_RETCODE);
+            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+            return response;
+        } finally {
+            if (request == null) {
+                response.setRetcode(WrbResponse.FAIL_RETCODE);
+                response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+                return response;
+            }
+        }
+
+        // 获取平台用户id
+        String userId = request.getPf_user_id();
+
+        if (isBlank(userId)) {
+            response.setRetcode(WrbResponse.FAIL_RETCODE);
+            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+            return response;
+        }
+        response = wrbInvestServcie.getAccountInfo(userId);
+
+        // 获取优惠券信息
+        WrbAccountResponse response1 = wrbInvestServcie.getCouponInfo(userId);
+        response.setReward(response1.getReward());
+
+        return response;
+    }
+
+
 
 
     /**
-     * 格式化优惠券信息
-     * @param couponUser
+     * 查询投资记录
+     * @param param
+     * @param sign
      * @return
      */
-    private StringBuffer convertCouponInfo(CouponUserVO couponUser) {
-        StringBuffer sbf = new StringBuffer();
-        // 优惠券编号
-        String couponCode = couponUser.getCouponCode();
-        CouponConfigVO couponConfig = wrbInvestServcie.getCouponByCouponCode(couponCode);
-        if(couponConfig != null){
-            Integer couponType = couponConfig.getCouponType();
-            if (1 == couponType) {
-                sbf.append("体验金-");
-                sbf.append(couponConfig.getCouponQuota()).append("-元-");
-            } else if (2 == couponType) {
-                sbf.append("加息券-");
-                sbf.append(couponConfig.getCouponQuota()).append("%-无-");
-            } else {
-                sbf.append("代金券-");
-                sbf.append(couponConfig.getCouponQuota()).append("-元-");
-            }
+    @RequestMapping("/acc_invest.do")
+    public WrbInvestRecordResponse getInvestRecord(@RequestParam String param,
+                                                   @RequestParam(value = "sign", required = false) String sign) {
+        logger.info("查询投资记录, param is :{}, sign is :{}", param, sign);
+        WrbInvestRecordResponse response = new WrbInvestRecordResponse();
 
-            // 获取优惠券开始时间
-            SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-            Integer add = (int)(couponConfig.getCreateTime().getTime() / 1000L);
-            String addTime = "无";//开始和生效时间
-            if(add != null){
-                long addLong = add.longValue() * 1000;
-                Date addTimedate = new Date(addLong);
-                addTime = format.format(addTimedate);
-            }
+        WrbInvestRecordRequest request = null;
+        try {
+            request = WrbParseParamUtil.mapToBean(WrbParseParamUtil.parseParam(param), WrbInvestRecordRequest.class);
 
-            // 获取优惠券结束时间
-            Integer end = couponConfig.getExpirationDate();
-            String endTime = "无";//结束时间
-            if (end != null) {
-                long endLong = end.longValue() * 1000;
-                Date expirationDate = new Date(endLong);
-                endTime = format.format(expirationDate);
+        } catch (Exception e) {
+            logger.error("参数解析失败....", e);
+            response.setRetcode(WrbResponse.FAIL_RETCODE);
+            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+            return response;
+        } finally {
+            if (request == null) {
+                response.setRetcode(WrbResponse.FAIL_RETCODE);
+                response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+                return response;
             }
-            sbf.append(addTime).append("-").append(addTime).append("-").append(endTime);//开始时间与生效时间一样
         }
-        return sbf;
+
+        // 用户id
+        String userId = request.getPf_user_id();
+        Date startTime = null;
+        String timeStart = request.getStart_time();
+        String timeEnd = request.getEnd_time();
+        Date endTime = null;
+        try {
+            if (timeStart != null) {
+                // 开始时间
+                startTime = GetDate.stringToDate(timeStart);
+            }
+            endTime = null;
+            if (timeStart != null) {
+                // 结束时间
+                endTime = GetDate.stringToDate(timeEnd);
+            }
+        } catch (Exception e) {
+            logger.error("时间格式有误......");
+            response.setRetcode(WrbResponse.FAIL_RETCODE);
+            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+            return response;
+        }
+
+        // 偏移(页数)
+        Integer offset = request.getOffset();
+        // 每页查询条数
+        Integer limit = request.getLimit();
+        // 投资记录id
+        String investRecordId = request.getInvest_record_id();
+        //投资状态
+        Integer investStatus = request.getInvest_status();
+        // 必填参数校验
+        if (isBlank(userId) || offset == null || limit == null) {
+            logger.error("缺少必填参数");
+            response.setRetcode(WrbResponse.FAIL_RETCODE);
+            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+            return response;
+        }
+
+        // 获取投资记录详情
+        try {
+            response = wrbInvestServcie.getInvestRecord(request);
+            response.setPf_user_id(userId);
+        } catch (Exception e) {
+            logger.error("获取投资记录失败, param is :{}", param);
+            response.setRetcode(WrbResponse.FAIL_RETCODE);
+            response.setRetmsg("获取投资记录失败");
+            response.setPf_user_id(userId);
+        }
+
+        return response;
     }
+
+    /**
+     * 投资记录回款计划查询
+     * @param param
+     * @param sign
+     * @return
+     */
+    @RequestMapping("/acc_back_list.do")
+    public wrbInvestRecoverPlanResponse getRecoverPlan(@RequestParam String param,
+                                                       @RequestParam(value = "sign", required = false) String sign) {
+        logger.info("投资记录回款计划, param is :{}, sign is :{}", param, sign);
+        wrbInvestRecoverPlanResponse response = new wrbInvestRecoverPlanResponse();
+        WrbInvestRecoverPlanRequest request = null;
+        try {
+            request = WrbParseParamUtil.mapToBean(WrbParseParamUtil.parseParam(param), WrbInvestRecoverPlanRequest.class);
+        } catch (Exception e) {
+            logger.error("参数解析失败....", e);
+            response.setRetcode(WrbResponse.FAIL_RETCODE);
+            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+            return response;
+        } finally {
+            if (request == null) {
+                response.setRetcode(WrbResponse.FAIL_RETCODE);
+                response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+                return response;
+            }
+        }
+        // 平台用户id
+        String userId = request.getPf_user_id();
+        // 投资记录id
+        String investRecordId = request.getInvest_record_id();
+        // 项目id
+        String borrowNid = request.getBid_id();
+        // 必填参数校验
+        if (isBlank(userId) || isBlank(investRecordId) || isBlank(borrowNid)) {
+            logger.error("缺少必填参数");
+            response.setRetcode(WrbResponse.FAIL_RETCODE);
+            response.setRetmsg(WrbResponse.FAIL_RETMESSAGE);
+            return response;
+        }
+        response = wrbInvestServcie.getRecoverPlan(userId, investRecordId, borrowNid);
+        response.setInvest_record_id(investRecordId);
+        return response;
+    }
+
 
     private List<WrbBorrowInvestResponse.InvestInfo> copyBorrowTenderToResponse(List<WrbBorrowTenderCustomizeVO> list) {
         List<WrbBorrowInvestResponse.InvestInfo> investInfoList = null;

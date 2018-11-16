@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
+import com.hyjf.am.resquest.api.AsseStatusRequest;
 import com.hyjf.am.resquest.admin.AssetListRequest;
 import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
 import com.hyjf.am.vo.admin.AssetListCustomizeVO;
@@ -29,7 +30,15 @@ public interface AssetListServiceCustomizeMapper {
 	 * @return
 	 */
 	AssetDetailCustomizeVO selectAssetDetail(Map<String, Object> mapParam);
-	
+
+	/**
+	 * 查询资产状态
+	 * @author Zha Daojian
+	 * @date 2018/8/27 10:27
+	 * @param request
+	 **/
+	AssetDetailCustomizeVO selectAssetStatusById(AsseStatusRequest request);
+
 	/**
 	 * COUNT
 	 * 
@@ -52,4 +61,11 @@ public interface AssetListServiceCustomizeMapper {
 	 * @return
 	 */
 	List<AssetListCustomizeVO> findBZJBZList(Map<String,Object> mapParam);
+
+	/**
+	 * 查询保证金不足总记录数
+	 * @param mapParam
+	 * @return
+	 */
+    Integer getBZJBZCount(Map<String,Object> mapParam);
 }

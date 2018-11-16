@@ -7,6 +7,7 @@ import com.hyjf.am.response.trade.ProjectListResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.api.ApiRepayListRequest;
+import com.hyjf.am.resquest.api.AsseStatusRequest;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.assetpush.InfoBean;
@@ -17,6 +18,7 @@ import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
+import com.hyjf.am.vo.api.ApiAssetStatusCustomizeVO;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
 import com.hyjf.am.vo.api.ApiRepayListCustomizeVO;
 import com.hyjf.am.vo.app.AppNewAgreementVO;
@@ -26,6 +28,7 @@ import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
+import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.IncreaseInterestInvestVO;
@@ -1740,10 +1743,10 @@ public interface AmTradeClient {
      * 查询资产状态
      * @author Zha Daojian
      * @date 2018/8/27 10:27
-     * @param assetListRequest
+     * @param request
      * @return com.hyjf.am.vo.admin.AssetDetailCustomizeVO
      **/
-    AssetDetailCustomizeVO findDetailById(AssetListRequest assetListRequest);
+    ApiAssetStatusCustomizeVO selectAssetStatusById(AsseStatusRequest request);
 
     /**
      * 获取批次放款列表
@@ -2413,5 +2416,16 @@ public interface AmTradeClient {
      * @return
      */
     List<AppPushManageVO> getAnnouncements();
+
+    List<BorrowCustomizeVO> searchBorrowCustomizeList(BorrowCommonCustomizeVO borrowCommonCustomize);
+
+    /**
+     * 根据contract_id查询垫付协议生成详情
+     * @author Zha Daojian
+     * @date 2018/8/23 15:47
+     * @param contractId
+     * @return com.hyjf.am.response.admin.ApplyAgreementInfoResponse
+     **/
+    List<ApplyAgreementInfoVO>  selectApplyAgreementInfoByContractId(String contractId);
 
 }

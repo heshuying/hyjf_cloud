@@ -3,6 +3,7 @@ package com.hyjf.am.vo.admin;
 import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @Auther:yangchangwei
@@ -150,6 +151,19 @@ public class HjhDebtCreditVo extends BaseVO implements Serializable{
      * 剩余债权价值总和
      */
     private String remainCredit;
+
+    /**
+     * 预计开始退出时间
+     */
+    private Date endDate;
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
+    }
 
     public String getCreditStatus() {
         return creditStatus;

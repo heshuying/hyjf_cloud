@@ -22,6 +22,7 @@ import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -108,7 +109,7 @@ public class PushMoneyManageController extends BaseController {
         }
         int cnt = -1;
         try {
-            // 发提成处理
+            // 计算提成
             cnt = this.pushMoneyManageService.insertTenderCommissionRecord(apicron.getId(), form);
         } catch (Exception e) {
             //e.printStackTrace();
@@ -206,6 +207,7 @@ public class PushMoneyManageController extends BaseController {
     @ApiOperation(value = "直投提成列表", notes = "直投提成列表")
     @PostMapping(value = "/pushMoneyList")
     public AdminResult pushMoneyList(@RequestBody PushMoneyRequest request){
+        //选择1直投类，而非2计划类数据
         request.setTenderType(1);
         Map<String,Object> result = new HashMap<>();
         Integer count = pushMoneyManageService.getPushMoneyListCount(request);
@@ -227,6 +229,12 @@ public class PushMoneyManageController extends BaseController {
     @ApiOperation(value = "直投提成列表导出",notes = "直投提成列表导出")
     @PostMapping(value = "/exportPushMoneyDetailExcelAction")
     public void exportPushMoneyDetailExcelAction(HttpServletRequest request, HttpServletResponse response,@RequestBody PushMoneyRequest requestBean) throws Exception {
+
+        // 是否具有组织机构查看权限
+        String isOrganizationView = requestBean.getIsOrganizationView();
+
+        //选择1直投类，而非2计划类数据
+        requestBean.setTenderType(1);
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
@@ -242,7 +250,7 @@ public class PushMoneyManageController extends BaseController {
         Integer totalCount = pushMoneyManageService.getPushMoneyListCount(requestBean);
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
-        Map<String, String> beanPropertyColumnMap = buildDetailsMap();
+        Map<String, String> beanPropertyColumnMap = buildDetailsMap(isOrganizationView);
         Map<String, IValueFormatter> mapValueAdapter = buildDetailsValueAdapter();
         if (totalCount == 0) {
             String sheetNameTmp = sheetName + "_第1页";
@@ -262,13 +270,15 @@ public class PushMoneyManageController extends BaseController {
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
 
-    private Map<String, String> buildDetailsMap() {
+    private Map<String, String> buildDetailsMap(String isOrganizationView) {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("borrowNid", "项目编号");
         map.put("rzqx", "融资期限");
-        map.put("regionName", "分公司");
-        map.put("branchName", "分部");
-        map.put("departmentName", "团队");
+        if (StringUtils.isNotBlank(isOrganizationView)) {
+            map.put("regionName", "分公司");
+            map.put("branchName", "分部");
+            map.put("departmentName", "团队");
+        }
         map.put("username", "提成人");
         map.put("accountId", "电子账号");
         map.put("attribute", "用户属性");
@@ -319,17 +329,18 @@ public class PushMoneyManageController extends BaseController {
     }
 
 
-
-
     @ApiOperation(value = "发提成",notes = "发提成")
     @PostMapping(value = "/confirmPushMoneyAction")
     public AdminResult confirmPushMoneyAction(HttpServletRequest request, @RequestBody PushMoneyRequest pushMoneyRequest){
         Integer userId = Integer.valueOf(getUser(request).getId());
-        AdminResult result = new AdminResult();
         Integer id = pushMoneyRequest.getId();
         JSONObject jsonObject = pushMoneyManageService.pushMoney(request,id,userId);
-        result.setStatusInfo(jsonObject.getString("status"),jsonObject.getString("statusDesc"));
-        return result;
+        String status = jsonObject.getString("status");
+        String statusDesc = jsonObject.getString("statusDesc");
+        if("success".equals(status)){
+            return new AdminResult(SUCCESS,statusDesc);
+        }
+        return new AdminResult(FAIL,statusDesc);
     }
 
 }

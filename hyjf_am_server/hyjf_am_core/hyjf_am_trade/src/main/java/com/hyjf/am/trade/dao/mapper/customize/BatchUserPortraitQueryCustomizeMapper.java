@@ -51,4 +51,11 @@ public interface BatchUserPortraitQueryCustomizeMapper {
      * @return
      */
     BigDecimal getPlanSum(Integer userId);
+
+    /**
+     * 获取最后一笔回款时间
+     * @param userId
+     * @return
+     */
+    Integer getLastRepayTime(Integer userId);
 }

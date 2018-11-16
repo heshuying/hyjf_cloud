@@ -466,6 +466,10 @@ public class AccedeListController extends BaseController{
 	public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AccedeListViewRequest viewRequest) throws Exception {
 		//sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+
+		// 具有组织机构查看权限
+		String isOrganizationView = viewRequest.getIsOrganizationView();
+
 		// 表格sheet名称
 		String sheetName = "智投订单";
 		// 文件名称
@@ -483,7 +487,7 @@ public class AccedeListController extends BaseController{
 
 		Integer totalCount = resultList.size();
 
-		Map<String, String> beanPropertyColumnMap = buildMap();
+		Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
 		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
 		String sheetNameTmp = sheetName + "_第1页";
 		if (totalCount == 0) {
@@ -562,7 +566,7 @@ public class AccedeListController extends BaseController{
 		return resultList;
 	}
 
-	private Map<String, String> buildMap() {
+	private Map<String, String> buildMap(String isOrganizationView) {
 		Map<String, String> map = Maps.newLinkedHashMap();
 		map.put("planOrderId", "智投订单号");
 		map.put("debtPlanNid", "智投编号");
@@ -572,24 +576,30 @@ public class AccedeListController extends BaseController{
 		map.put("userName", "用户名（投资人）");
 		map.put("userId", "投资人id");
 		map.put("userAttribute", "投资人用户属性（当前)");
-		map.put("inviteUserRegionname2", "分公司(当前)");
-		map.put("inviteUserBranchname2", "部门(当前)");
-		map.put("inviteUserDepartmentname2", "团队(当前)");
+		if (StringUtils.isNotBlank(isOrganizationView)) {
+			map.put("inviteUserRegionname2", "分公司(当前)");
+			map.put("inviteUserBranchname2", "部门(当前)");
+			map.put("inviteUserDepartmentname2", "团队(当前)");
+		}
 		map.put("refereeUserName", "推荐人（当前）");
 		map.put("refereeUserId", "推荐人ID（当前）");
 		map.put("refereeTrueName", "推荐人姓名（当前）");
 		map.put("recommendAttr", "推荐人用户属性（当前）");
-		map.put("inviteUserRegionname1", "分公司(当前)");
-		map.put("inviteUserBranchname1", "部门(当前)");
-		map.put("inviteUserDepartmentname1", "团队(当前)");
+		if (StringUtils.isNotBlank(isOrganizationView)) {
+			map.put("inviteUserRegionname1", "分公司(当前)");
+			map.put("inviteUserBranchname1", "部门(当前)");
+			map.put("inviteUserDepartmentname1", "团队(当前)");
+		}
 		map.put("attribute", "投资人用户属性（投资时）");
 		map.put("inviteName", "推荐人(投资时)");
 		map.put("inviteUserId", "推荐人ID（投资时）");
 		map.put("inviteTrueName", "推荐人姓名（投资时）");
 		map.put("inviteUserAttributeName", "推荐人用户属性(投资时)");
-		map.put("inviteUserRegionname", "分公司(投资时)");
-		map.put("inviteUserBranchname", "部门(投资时)");
-		map.put("inviteUserDepartmentname", "团队(投资时)");
+		if (StringUtils.isNotBlank(isOrganizationView)) {
+			map.put("inviteUserRegionname", "分公司(投资时)");
+			map.put("inviteUserBranchname", "部门(投资时)");
+			map.put("inviteUserDepartmentname", "团队(投资时)");
+		}
 		map.put("accedeAccount", "授权服务金额");
 		map.put("investScaleView", "自动投标进度");
 		map.put("availableInvestAccount", "可用余额(元) ");
@@ -1049,7 +1059,7 @@ public class AccedeListController extends BaseController{
 	 * @return
 	 * @throws MQException 
 	 */
-	@ApiOperation(value = "汇计划加入明细列表", notes = "PDF文件签署")
+	@ApiOperation(value = "汇计划-计划订单PDF签署", notes = "汇计划-计划订单PDF签署")
     @PostMapping(value = "/pdfsign")
     @ResponseBody
     public JSONObject pdfSignAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AccedeListViewRequest viewRequest) throws MQException {
@@ -1065,7 +1075,7 @@ public class AccedeListController extends BaseController{
 		String planOrderId = viewRequest.getAccedeOrderIdSrch();
 		// 参数判断
 		if(StringUtils.isBlank(userid) || StringUtils.isBlank(planOrderId)){
-			ret.put("result", "请求参数为空");
+			ret.put("statusDesc", "请求参数为空");
 			ret.put("status", FAIL);
 			return ret;
 		}
@@ -1075,25 +1085,31 @@ public class AccedeListController extends BaseController{
 			if(resultList.get(0) != null){
 				accede = resultList.get(0);
 			} else {
-				ret.put("result", "用户加入记录不存在");
+				ret.put("statusDesc", "用户加入记录不存在");
 				ret.put("status", FAIL);
 				return ret;
 			}
 		} else {
-			ret.put("result", "用户加入记录不存在");
+			ret.put("statusDesc", "用户加入记录不存在");
 			ret.put("status", FAIL);
 			return ret;
 		}
     	UserVO users = this.accedeListService.getUserByUserId(Integer.valueOf(userid));
 		if(users == null ){
-			ret.put("result", "用户不存在");
+			ret.put("statusDesc", "用户不存在");
 			ret.put("status", FAIL);
 			return ret;
 		}
 		List<TenderAgreementVO> tenderAgreementList = this.accedeListService.selectTenderAgreementByNid(planOrderId);
+		if(CollectionUtils.isEmpty(tenderAgreementList)){
+			ret.put("statusDesc", "协议不存在!");
+			ret.put("status", FAIL);
+			return ret;
+		}
 		tenderAgreement = tenderAgreementList.get(0);
 		if(tenderAgreement != null && tenderAgreement.getStatus() == 2){
 			// PDF下载加脱敏
+			_log.info("==========汇计划-计划订单PDF签署发送法大大MQ(PDF下载脱敏)=========");
 			this.accedeListService.updateSaveSignInfo(tenderAgreement, "", FddGenerateContractConstant.PROTOCOL_TYPE_PLAN, accede.getDebtPlanNid());
 		} else {
 			FddGenerateContractBeanVO bean = new FddGenerateContractBeanVO();
@@ -1108,9 +1124,10 @@ public class AccedeListController extends BaseController{
 			bean.setTenderInterestFmt(String.valueOf(accede.getWaitTotal()));
 			// 法大大生成合同接口
 			/*this.rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));*/
+            _log.info("==========汇计划-计划订单PDF签署发送法大大MQ(生成合同)=========");
             fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
 		}
-		ret.put("result", "操作成功,签署MQ已发送");
+		ret.put("statusDesc", "操作成功,签署MQ已发送");
 		ret.put("status", SUCCESS);
 		return ret;
     }

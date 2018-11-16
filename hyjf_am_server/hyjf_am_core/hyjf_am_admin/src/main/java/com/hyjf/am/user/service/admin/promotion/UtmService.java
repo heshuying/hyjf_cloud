@@ -207,4 +207,14 @@ public interface UtmService extends BaseService {
      * @return
      */
     Integer sourceIdIsExists(Integer sourceId);
+
+    /**
+     * @Author walter.limeng
+     * @Description  根据sourceID和utmterm获取总数
+     * @Date 15:26 2018/11/14
+     * @Param sourceId
+     * @Param utmTerm
+     * @return
+     */
+    Integer getBySourceIdAndTerm(String sourceId, String utmTerm,String utmId);
 }

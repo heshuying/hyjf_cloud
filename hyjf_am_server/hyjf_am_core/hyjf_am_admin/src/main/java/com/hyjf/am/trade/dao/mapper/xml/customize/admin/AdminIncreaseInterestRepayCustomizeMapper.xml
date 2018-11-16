@@ -20,8 +20,8 @@
 				AND FROM_UNIXTIME( hiil.repay_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{timeEndSrch}
 			</if>
 			<!-- 还款状态 -->
-			<if test="repayStatus != null and repayStatus != ''">
-				AND hiil.repay_status LIKE CONCAT( #{repayStatus},'%')
+			<if test="repayStatusSrch != null and repayStatusSrch != ''">
+				AND hiil.repay_status LIKE CONCAT( #{repayStatusSrch},'%')
 			</if>
 		</where>
 	</sql>
@@ -35,10 +35,6 @@
 		ht_increase_interest_loan AS hiil ON hiil.borrow_nid = b.borrow_nid
 		LEFT join
 		ht_increase_interest_invest AS hiii ON hiil.invest_id= hiii.id
-		LEFT JOIN
-		ht_users AS u1 ON hiil.borrow_user_id = u1.user_id
-		LEFT JOIN
-		ht_users AS u2 ON hiil.user_id = u2.user_id
 		<include refid="Where_Clause" />
 	</select>
 
@@ -69,7 +65,7 @@
 		hiil.invest_id AS investId,
 		b.borrow_apr AS borrowApr,
 		b.borrow_style AS borrowStyle,
-		b.borrow_extra_yield AS borrowExtraYield,
+		info.borrow_extra_yield AS borrowExtraYield,
 		hiii.account AS repayCapital,
 		hiii.repay_interest AS repayInterest,
 		hiil.repay_time AS repayTime,
@@ -84,6 +80,7 @@
 		ht_borrow_style AS bs on b.borrow_style= bs.nid
 		LEFT JOIN
 		ht_increase_interest_invest AS hiii ON hiil.invest_id= hiii.id
+		LEFT JOIN ht_borrow_info AS info ON b.borrow_nid = info.borrow_nid
 		<include refid="Where_Clause" />
 		ORDER BY
 		hiil.repay_time ASC,b.id ASC

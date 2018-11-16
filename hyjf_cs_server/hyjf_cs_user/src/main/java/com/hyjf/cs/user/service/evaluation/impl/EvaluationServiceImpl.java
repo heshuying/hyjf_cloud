@@ -18,10 +18,7 @@ import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.ClientConstants;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.MD5;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
@@ -178,8 +175,8 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
     }
 
     @Override
-    public List<EvalationVO> getEvalationRecord() {
-        List<EvalationVO> evalationVOList = amUserClient.getEvalationRecord();
+    public List<EvalationCustomizeVO> getEvalationRecord() {
+        List<EvalationCustomizeVO> evalationVOList = amUserClient.getEvalationRecord();
         return evalationVOList;
     }
 
@@ -222,6 +219,32 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
         Map<String, Object> returnMap = new HashMap<String, Object>();
         //发放优惠券 start
         UserEvalationResultVO ueResult = this.selectUserEvalationResultByUserId(userId);
+        returnMap.put("revaluationMoney", "");
+        returnMap.put("evalType", "");
+        //查询redis中的类型和返回增加金额上限
+        if(ueResult != null){
+            //从redis中获取测评类型和上限金额
+            String revaluation_money = null;
+            String eval_type = ueResult.getEvalType();
+            switch (eval_type){
+                case "保守型":
+                    revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE);
+                    break;
+                case "稳健型":
+                    revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS);
+                    break;
+                case "成长型":
+                    revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_GROWTH) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_GROWTH);
+                    break;
+                case "进取型":
+                    revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE);
+                    break;
+                default:
+                    revaluation_money = "0";
+            }
+            returnMap.put("revaluationMoney", StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money)));
+            returnMap.put("evalType", eval_type);
+        }
         // 是否已经参加过测评（true：已测评过，false：测评）
         boolean isAdvisor = ueResult != null ? true : false;
         // 发放优惠券 start
@@ -240,6 +263,8 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
         }
         // 1_1,2_8
         UserEvalationResultVO userEvalationResult = this.answerAnalysis(userAnswer, userId,behaviorId);
+        userEvalationResult.setEvalType((String) returnMap.get("evalType"));
+        userEvalationResult.setRevaluationMoney((String) returnMap.get("revaluationMoney"));
         returnMap.put("userEvalationResult", userEvalationResult);
         return returnMap;
         // 发放优惠券 end

@@ -54,6 +54,11 @@ public class CreditAssignedBean {
 	/* 当前登陆者用户ID */
 	private Integer currentUserId;
 
+	/**
+	 * 下载协议传不了token，用random接受用户ID
+	 */
+	private Integer random;
+
 	public String getAssignId() {
 		return assignId;
 	}
@@ -262,4 +267,11 @@ public class CreditAssignedBean {
 		this.currentUserId = currentUserId;
 	}
 
+	public Integer getRandom() {
+		return random;
+	}
+
+	public void setRandom(Integer random) {
+		this.random = random;
+	}
 }

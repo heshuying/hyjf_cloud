@@ -6,16 +6,11 @@ package com.hyjf.admin.controller.user;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
-import com.hyjf.admin.beans.request.AdminUserRecommendRequestBean;
-import com.hyjf.admin.beans.request.CompanyInfoInstRequesetBean;
-import com.hyjf.admin.beans.request.UserManagerRequestBean;
-import com.hyjf.admin.beans.request.UserManagerUpdateRequestBean;
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.beans.response.*;
 import com.hyjf.admin.beans.vo.*;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
@@ -41,10 +36,6 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -504,6 +495,10 @@ public class UserCenterController extends BaseController {
     @ApiOperation(value = "导出会员管理列表", notes = "导出会员管理列表")
     @PostMapping(value = "/exportusers")
     public void exportToExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody UserManagerRequestBean userManagerRequestBean) throws Exception {
+
+        // 用户是否具有组织机构查看权限
+        String isOrganizationView = userManagerRequestBean.getIsOrganizationView();
+
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
@@ -526,7 +521,7 @@ public class UserCenterController extends BaseController {
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         int minId = 0;
-        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
@@ -550,11 +545,13 @@ public class UserCenterController extends BaseController {
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
 
-    private Map<String, String> buildMap() {
+    private Map<String, String> buildMap(String isOrganizationView) {
         Map<String, String> map = Maps.newLinkedHashMap();
-        map.put("regionName", "分公司");
-        map.put("branchName", "分部");
-        map.put("departmentName", "团队");
+        if (StringUtils.isNotBlank(isOrganizationView)) {
+            map.put("regionName", "分公司");
+            map.put("branchName", "分部");
+            map.put("departmentName", "团队");
+        }
         map.put("instName", "用户来源");
         map.put("userName", "用户名");
         map.put("realName", "姓名");
@@ -839,12 +836,24 @@ public class UserCenterController extends BaseController {
     @PostMapping(value = "/searchPayAllianceCode")
     @ApiOperation(value = "查找联行号", notes = "查找联行号")
     public AdminResult<Response>  searchPayAllianceCode(@RequestBody UserInfosUpdCustomizeRequestBean userInfosUpdCustomizeRequestBean) {
+        if(StringUtils.isBlank(userInfosUpdCustomizeRequestBean.getUserId()) || "null".equals(userInfosUpdCustomizeRequestBean.getUserId())){
+            return new AdminResult<>(FAIL, "用户id不能为空");
+        }
         BankCallBean bankCallBean = userCenterService.payAllianceCodeQuery(userInfosUpdCustomizeRequestBean.getCardNo(), Integer.parseInt(userInfosUpdCustomizeRequestBean.getUserId()));
         AdminResult<Response> result = new AdminResult<Response>();
         Response response = new Response();
+        logger.info("=======用户修改银行卡,查找银联号返回结果为:"+JSONObject.toJSON(bankCallBean+"========="));
         if (null != bankCallBean && BankCallStatusConstant.RESPCODE_SUCCESS.equals(bankCallBean.getRetCode())) {
             //如果调用银行接口没有返回联行号,则查找本地联行号
-            if (StringUtils.isBlank(bankCallBean.getPayAllianceCode())) {
+            if (StringUtils.isNotBlank(bankCallBean.getPayAllianceCode())) {
+                //如果调用银行接口查找到银联号,则进行显示
+                response.setResult(bankCallBean.getPayAllianceCode());
+                result.setData(response);
+                result.setStatus(SUCCESS);
+                logger.info("============银行查询银联号为:", bankCallBean.getPayAllianceCode());
+                return result;
+            } else {
+                logger.info("调用银行接口未能查找到银联号,调用本地数据库查找");
                 JxBankConfigVO banksConfig = userCenterService.getBankConfigByBankName(userInfosUpdCustomizeRequestBean.getBank());
                 if (null != banksConfig) {
                     response.setResult(banksConfig.getPayAllianceCode());
@@ -856,13 +865,6 @@ public class UserCenterController extends BaseController {
                 } else {
                     return new AdminResult<>(FAIL, "未查询到联行号");
                 }
-            } else {
-                //如果调用银行接口查找到银联号,则进行显示
-                response.setResult(bankCallBean.getPayAllianceCode());
-                result.setData(response);
-                result.setStatus(SUCCESS);
-                logger.info("============银行查询银联号为:", bankCallBean.getPayAllianceCode());
-                return result;
             }
         } else {
             return new AdminResult<>(FAIL, "银行接口调用失败");

@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
@@ -62,7 +63,7 @@ public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLog
         String beforeDay = DateUtils.getBeforeDay();//当前前时间前一天的日期
         String date = DateUtils.getNowDateOfDay();//当天日期返回时间类型 yyyyMMdd
         String localDir = systemConfig.getLocalDir();
-        Boolean dir = FileUtil.createDir(localDir+"/"+date);
+        FileUtil.createDir(localDir+"/"+date);
         String filePath = beforeYear+"/"+beforeMonth+"/"+beforeDay;
         para.downloadPath =systemConfig.getFtpDownloadPath()+ filePath;//ftp服务器文件目录
         para.savePath =localDir+"/"+date;
@@ -77,20 +78,27 @@ public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLog
                 if(!FtpUtil.downloadFiles(para)){
                     logger.error("下载ftp文件失败");
                 }else{
-                    JSONObject params = new JSONObject();
-                    params.put("status", "1");
-                    params.put("savePath", para.savePath);
-                    params.put("filePathEve", systemConfig.getEveFileName());
-                    params.put("filePathAleve", systemConfig.getAleveFileName());
-                    try {
-                        downloadFileProducer.messageSend(new MessageContent(MQConstant.ALEVE_FILE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
-                    } catch (MQException e) {
-                        logger.error("发送【导入手续费流水明细(aleve)】MQ失败...");
-                    }
-                    try {
-                        downloadFileProducer.messageSend(new MessageContent(MQConstant.EVE_FILE_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
-                    } catch (MQException e) {
-                        logger.error("发送【导入红包账户流水明细(eve)】MQ失败...");
+                    File dir = new File(para.savePath);
+                    // 只有aleve跟eve两个文件都下载成功才发MQ
+                    if(dir.listFiles().length == 2){
+                        logger.info("aleve与eve文件下载成功，开始发送MQ");
+                        JSONObject params = new JSONObject();
+                        params.put("status", "1");
+                        params.put("savePath", para.savePath);
+                        params.put("filePathEve", systemConfig.getEveFileName());
+                        params.put("filePathAleve", systemConfig.getAleveFileName());
+                        try {
+                            downloadFileProducer.messageSend(new MessageContent(MQConstant.ALEVE_FILE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                        } catch (MQException e) {
+                            logger.error("发送【导入手续费流水明细(aleve)】MQ失败...");
+                        }
+                        try {
+                            downloadFileProducer.messageSend(new MessageContent(MQConstant.EVE_FILE_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
+                        } catch (MQException e) {
+                            logger.error("发送【导入红包账户流水明细(eve)】MQ失败...");
+                        }
+                    } else {
+                        logger.info("下载文件失败或者不全。下载成功文件数：{}", dir.listFiles().length);
                     }
                     para.release();
                 }
@@ -103,42 +111,36 @@ public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLog
 
     /**
      * aleveLog表数据插入
-     * @param list
+     * @param aleveLog
      */
     @Override
-    public void insertAleveLog(List<AleveLog> list){
-        for (AleveLog aleve : list) {
-            aleve.setCreateTime(GetDate.getNowTime());
-            aleve.setCreateUserId(1);
-            aleve.setDelFlag(0);
-            aleve.setUpdFlag(0);
-            aleveLogMapper.insert(aleve);
-        }
+    public void insertAleveLog(AleveLog aleveLog){
+        aleveLog.setCreateTime(GetDate.getNowTime());
+        aleveLog.setCreateUserId(1);
+        aleveLog.setDelFlag(0);
+        aleveLog.setUpdFlag(0);
+        aleveLogMapper.insert(aleveLog);
     }
 
     /**
      * eveLog表数据插入
-     * @param list
+     * @param eveLog
      */
     @Override
-    public void insertEveLog(List<EveLog> list){
-        for (EveLog eve : list) {
-            eve.setCreateTime(GetDate.getNowTime());
-            eve.setCreateUserId(1);
-            eve.setDelFlag(0);
-            eveLogMapper.insert(eve);
-        }
+    public void insertEveLog(EveLog eveLog){
+        eveLog.setCreateTime(GetDate.getNowTime());
+        eveLog.setCreateUserId(1);
+        eveLog.setDelFlag(0);
+        eveLogMapper.insert(eveLog);
     }
 
     /**
      * aleveErrorLog表数据插入
-     * @param aleveErrorLogs
+     * @param aleveErrorLog
      */
     @Override
-    public void insertAleveErrorLog(List<AleveErrorLog> aleveErrorLogs){
-        for(AleveErrorLog aleveErrorLog : aleveErrorLogs){
-            aleveErrorLogMapper.insert(aleveErrorLog);
-        }
+    public void insertAleveErrorLog(AleveErrorLog aleveErrorLog){
+        aleveErrorLogMapper.insert(aleveErrorLog);
     }
 
     /**
@@ -386,5 +388,32 @@ public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLog
         param.put("accountId", accountId);
         List<String> userIds = manualReverseCustomizeMapper.selectUserIdsByAccount(param);
         return userIds;
+    }
+
+    /**
+     * aleveLog表数据插入
+     * @param list
+     */
+    @Override
+    public void insertAleveLogByList(List<AleveLog> list){
+        aleveCustomizeMapper.insertAleveLogByList(list);
+    }
+
+    /**
+     * eveLog表数据插入
+     * @param list
+     */
+    @Override
+    public void insertEveLogByList(List<EveLog> list){
+        aleveCustomizeMapper.insertEveLogByList(list);
+    }
+
+    /**
+     * aleveErrorLog表数据插入
+     * @param list
+     */
+    @Override
+    public void insertAleveErrorLogByList(List<AleveErrorLog> list){
+        aleveCustomizeMapper.insertAleveErrorLogByList(list);
     }
 }

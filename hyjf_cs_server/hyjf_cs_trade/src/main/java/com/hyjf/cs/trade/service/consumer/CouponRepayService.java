@@ -58,7 +58,7 @@ public interface CouponRepayService {
 
     /**
      * 体验金按受益期限还款
-     * @param recoverNidList
+     * @param nids
      */
-    void couponOnlyRepay(List<String> recoverNidList);
+    void couponOnlyRepay(String nids);
 }

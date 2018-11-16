@@ -3,9 +3,17 @@
  */
 package com.hyjf.cs.trade.service.consumer.impl;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.admin.UtmVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.service.BaseServiceImpl;
@@ -15,13 +23,6 @@ import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.consumer.SensorsDataRegisterService;
 import com.sensorsdata.analytics.javasdk.SensorsAnalytics;
 import com.sensorsdata.analytics.javasdk.exceptions.InvalidArgumentException;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * 神策数据统计:注册相关Service实现类
@@ -115,16 +116,22 @@ public class SensorsDataRegisterServiceImpl extends BaseServiceImpl implements S
             // 根据utmId查询渠道信息
             Integer utmId = utmReg.getUtmId();
             UtmVO utm = this.amUserClient.selectUtmByUtmId(utmId);
-            // 获取source_id
-            Integer sourceId = utm.getSourceId();
-            // 根据source_id 获取推过渠道信息
-            UtmPlatVO utmPlat = this.amUserClient.selectUtmPlatBySourceId(sourceId);
-            // 注册渠道
-            profiles.put("registerChannel", utmPlat == null ? "" : utmPlat.getSourceName());
+            if (utm!=null) {
+                // 获取source_id
+                Integer sourceId = utm.getSourceId();
+                // 根据source_id 获取推过渠道信息
+                UtmPlatVO utmPlat = this.amUserClient.selectUtmPlatBySourceId(sourceId);
+                // 注册渠道
+                profiles.put("registerChannel", utmPlat == null ? "" : utmPlat.getSourceName());
+            }else{
+                logger.error("根据utmId查询推广渠道失败,utmId:["+utmId+"]");
+                profiles.put("registerChannel", "");
+            }
+
         }
 
         // 如果 是用户app注册渠道过来的
-        AppChannelStatisticsDetailVO appChannelStatisticsDetail = this.csMessageClient.getAppChannelStatisticsDetailByUserId(userId);
+        AppUtmRegVO appChannelStatisticsDetail = this.csMessageClient.getAppChannelStatisticsDetailByUserId(userId);
         if (appChannelStatisticsDetail != null) {
             // 注册渠道
             profiles.put("registerChannel", StringUtils.isBlank(appChannelStatisticsDetail.getSourceName()) ? "" : appChannelStatisticsDetail.getSourceName());

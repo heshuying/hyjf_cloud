@@ -13,6 +13,7 @@ import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,7 +46,17 @@ public class UserInfoController extends BaseController {
 		}
 		return response;
 	}
-
+	@RequestMapping("/findMainById/{userId}")
+	public UserInfoResponse findMainUserInfoById(@PathVariable int userId) {
+		UserInfoResponse response = new UserInfoResponse();
+		UserInfo usersInfo = userInfoService.fUserInfoById(userId);
+		if (usersInfo != null) {
+			UserInfoVO userInfoVO = new UserInfoVO();
+			BeanUtils.copyProperties(usersInfo, userInfoVO);
+			response.setResult(userInfoVO);
+		}
+		return response;
+	}
 	@RequestMapping("/findByIdNo/{idNo}")
 	public UserInfoResponse findUserInfoByIdNo(@PathVariable String idNo) {
 		UserInfoResponse response = new UserInfoResponse();
@@ -127,7 +138,11 @@ public class UserInfoController extends BaseController {
 
 
 	@GetMapping("/selectEmployeeByUserId/{userId}")
-	public EmployeeCustomizeResponse selectEmployeeByUserId(@PathVariable Integer userId){
+	public EmployeeCustomizeResponse selectEmployeeByUserId(@PathVariable(value = "userId") String userIdStr){
+		if(StringUtils.isBlank(userIdStr) || "null".equals(userIdStr)){
+			return null;
+		}
+		Integer userId = Integer.valueOf(userIdStr);
 		EmployeeCustomizeResponse response = new EmployeeCustomizeResponse();
 		EmployeeCustomize employeeCustomize=userInfoService.selectEmployeeByUserId(userId);
 		if (employeeCustomize!=null){

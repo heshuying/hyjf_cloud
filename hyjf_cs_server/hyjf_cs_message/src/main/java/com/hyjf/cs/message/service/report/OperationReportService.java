@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.am.vo.datacollect.OperationReportVO;
-import com.hyjf.cs.message.bean.mc.OperationReportColumnEntity;
+import com.hyjf.cs.message.bean.ic.OperationColumnReport;
 
 import java.util.List;
 import java.util.Map;
@@ -203,7 +203,7 @@ public interface OperationReportService {
      * 获取运营报告主表
      *
      * @param id
-     * @return OperationReportColumnEntity
+     * @return OperationColumnReport
      */
-    OperationReportColumnEntity selectByPrimaryKey(String id);
+    OperationColumnReport selectByPrimaryKey(String id);
 }

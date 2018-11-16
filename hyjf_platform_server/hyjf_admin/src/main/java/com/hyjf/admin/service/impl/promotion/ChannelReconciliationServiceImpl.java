@@ -7,14 +7,14 @@ import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.service.promotion.ChannelReconciliationService;
+import com.hyjf.am.response.admin.AppUtmRegResponse;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
-import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.resquest.admin.ChannelReconciliationRequest;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelReconciliationVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -66,12 +66,12 @@ public class ChannelReconciliationServiceImpl implements ChannelReconciliationSe
         if (request.getUtmPlat() != null && request.getUtmPlat().length == 1) {
             request1.setSourceIdSrch(Integer.valueOf(request.getUtmPlat()[0]));
         }
-        AppChannelStatisticsDetailResponse appResponse = csMessageClient.exportStatisticsList(request1);
+        AppUtmRegResponse appResponse = amAdminClient.exportStatisticsList(request1);
         if (appResponse != null) {
-            List<AppChannelStatisticsDetailVO> appResultList = appResponse.getResultList();
+            List<AppUtmRegVO> appResultList = appResponse.getResultList();
             if (!CollectionUtils.isEmpty(appResultList)) {
                 List<Integer> userIdList = new ArrayList<>();
-                for (AppChannelStatisticsDetailVO appVo: appResultList) {
+                for (AppUtmRegVO appVo: appResultList) {
                     Integer userId = appVo.getUserId();
                     userIdList.add(userId);
                 }
@@ -89,9 +89,9 @@ public class ChannelReconciliationServiceImpl implements ChannelReconciliationSe
             if (!CollectionUtils.isEmpty(resultList)) {
                 for (ChannelReconciliationVO vo : resultList) {
                     if (appResponse != null) {
-                        List<AppChannelStatisticsDetailVO> appResultList = appResponse.getResultList();
+                        List<AppUtmRegVO> appResultList = appResponse.getResultList();
                         if (!CollectionUtils.isEmpty(appResultList)) {
-                            for (AppChannelStatisticsDetailVO appVo: appResultList) {
+                            for (AppUtmRegVO appVo: appResultList) {
                                 if (appVo.getUserId().equals(vo.getUserId())) {
                                     vo.setUtmName(appVo.getSourceName());
                                     break;
@@ -112,12 +112,12 @@ public class ChannelReconciliationServiceImpl implements ChannelReconciliationSe
         if (request.getUtmPlat() != null && request.getUtmPlat().length == 1) {
             request1.setSourceIdSrch(Integer.valueOf(request.getUtmPlat()[0]));
         }
-        AppChannelStatisticsDetailResponse appResponse = csMessageClient.exportStatisticsList(request1);
+          AppUtmRegResponse appResponse = amAdminClient.exportStatisticsList(request1);
         if (appResponse != null) {
-            List<AppChannelStatisticsDetailVO> appResultList = appResponse.getResultList();
+            List<AppUtmRegVO> appResultList = appResponse.getResultList();
             if (!CollectionUtils.isEmpty(appResultList)) {
                 List<Integer> userIdList = new ArrayList<>();
-                for (AppChannelStatisticsDetailVO appVo: appResultList) {
+                for (AppUtmRegVO appVo: appResultList) {
                     Integer userId = appVo.getUserId();
                     userIdList.add(userId);
                 }
@@ -135,9 +135,9 @@ public class ChannelReconciliationServiceImpl implements ChannelReconciliationSe
             if (!CollectionUtils.isEmpty(resultList)) {
                 for (ChannelReconciliationVO vo : resultList) {
                     if (appResponse != null) {
-                        List<AppChannelStatisticsDetailVO> appResultList = appResponse.getResultList();
+                        List<AppUtmRegVO> appResultList = appResponse.getResultList();
                         if (!CollectionUtils.isEmpty(appResultList)) {
-                            for (AppChannelStatisticsDetailVO appVo: appResultList) {
+                            for (AppUtmRegVO appVo: appResultList) {
                                 if (appVo.getUserId().equals(vo.getUserId())) {
                                     vo.setUtmName(appVo.getSourceName());
                                     break;

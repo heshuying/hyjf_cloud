@@ -14,9 +14,7 @@ import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
-import com.hyjf.am.resquest.admin.AccountExceptionRequest;
 import com.hyjf.am.resquest.admin.AssetExceptionRequest;
-import com.hyjf.am.vo.admin.AccountExceptionVO;
 import com.hyjf.am.vo.admin.AssetExceptionCustomizeVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.common.cache.CacheUtil;
@@ -315,12 +313,12 @@ public class AssetExceptionController extends BaseController {
 	        // 表格sheet名称
 	        String sheetName = "项目异常列表";
 	        // 文件名称
-	        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+	        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
 	        // 声明一个工作薄
 	        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
 	        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-	        List<AssetExceptionCustomizeVO> assetExceptionCustomizeVOList = assetExceptionService.selectAssetExceptionList(request);
+	        List<AssetExceptionCustomizeVO> assetExceptionCustomizeVOList = assetExceptionService.exportAssetExceptionList(request);
 	        
 	        Integer totalCount = assetExceptionCustomizeVOList.size();
 
@@ -332,13 +330,17 @@ public class AssetExceptionController extends BaseController {
 	        	
 	            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
 	        }else {
-	        	 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, assetExceptionCustomizeVOList.subList(0, defaultRowMaxCount));
-	        }
-	        for (int i = 1; i < sheetCount; i++) {
-	
-	                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-	                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, assetExceptionCustomizeVOList.subList(defaultRowMaxCount*i, defaultRowMaxCount*(i+1)));
-	            } 
+	            // 当前下载数据超过一页上限
+	            if(defaultRowMaxCount < assetExceptionCustomizeVOList.size()) {
+                    helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, assetExceptionCustomizeVOList.subList(0, defaultRowMaxCount));
+                    for (int i = 1; i < sheetCount; i++) {
+                        sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                        helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, assetExceptionCustomizeVOList.subList(defaultRowMaxCount * i, defaultRowMaxCount * (i + 1)));
+                    }
+                } else {
+                    helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, assetExceptionCustomizeVOList.subList(0, assetExceptionCustomizeVOList.size()));
+                }
+            }
 	        
 	        DataSet2ExcelSXSSFHelper.write2Response(requestt, response, fileName, workbook);
 	    }
@@ -359,8 +361,8 @@ public class AssetExceptionController extends BaseController {
 	        IValueFormatter exceptionTypeAdapter = new IValueFormatter() {
 	            @Override
 	            public String format(Object object) {
-	                String exceptionType = (String) object;
-	                if("0".equals(exceptionType)) {
+	                Integer exceptionType = (Integer) object;
+	                if(exceptionType == 0) {
 	                	return "流标";
 	                }else {
 	                	return "删标";

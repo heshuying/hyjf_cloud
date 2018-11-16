@@ -329,5 +329,8 @@ public class BaseDefine {
 
     // 绑卡
     public static final String METHOD_SERVER_BIND_CARD_PAGE = "/server/user/bindcardpage/bind";
+    //解绑银行卡(页面调用)
+    public static final String METHOD_SERVER_UNBIND_CARD_PAGE = "/server/user/unbindCardPage/deleteCardPage";
+
 
 }

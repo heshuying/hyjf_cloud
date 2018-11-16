@@ -54,8 +54,10 @@ public class CouponUserBeanRequest extends BasePage implements Serializable {
 
     private Integer userId;
 
-    @ApiModelProperty(value = "用户名")
     private String userName;
+
+    @ApiModelProperty(value = "用户名")
+    private String userNameSrch;
 
     //备注
     private String content;
@@ -471,5 +473,13 @@ public class CouponUserBeanRequest extends BasePage implements Serializable {
 
     public void setAuditStatus(String auditStatus) {
         this.auditStatus = auditStatus;
+    }
+
+    public String getUserNameSrch() {
+        return userNameSrch;
+    }
+
+    public void setUserNameSrch(String userNameSrch) {
+        this.userNameSrch = userNameSrch;
     }
 }

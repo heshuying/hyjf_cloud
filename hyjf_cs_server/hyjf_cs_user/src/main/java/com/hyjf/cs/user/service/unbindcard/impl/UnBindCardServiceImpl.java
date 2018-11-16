@@ -4,6 +4,7 @@ import com.hyjf.am.resquest.user.BankCardLogRequest;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
@@ -24,6 +25,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.catalina.User;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -175,13 +177,13 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
 	 * @return
 	 */
 	@Override
-	public Map<String,Object> callUnBindCardPage(DeleteCardPageBean bean,String channel,String sign,String platform,HttpServletRequest request){
+	public Map<String,Object> callUnBindCardPage(DeleteCardPageBean bean,String channel,String sign,HttpServletRequest request){
 		Map<String, Object> mv = new HashMap<>();
 		//
 		bean.setTxCode(BankCallConstant.TXCODE_ACCOUNT_UNBINDCARD_PAGE);
 		bean.setIdType(BankCallConstant.ID_TYPE_IDCARD);
 		bean.setChannel(channel);// 交易渠道
-		bean.setPlatform(platform);
+		bean.setPlatform(bean.getPlatform());
 
 		BankCallBean bindCardBean = getCallbankMV(bean);
 
@@ -190,17 +192,17 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
 		// 成功页面
 		String successPath = "/user/bindCardSuccess?bind=false&unbind=true&msg=解绑银行卡成功!";
 		// 回调路径
-		String retUrl = super.getFrontHost(systemConfig,channel+"") + errorPath;
-		String successUrl = super.getFrontHost(systemConfig,channel) + successPath;
+		String retUrl = super.getFrontHost(systemConfig,bean.getPlatform()) + errorPath;
+		String successUrl = super.getFrontHost(systemConfig,bean.getPlatform()) + successPath;
 		if(!channel.contains(BankCallConstant.CHANNEL_PC)){
 			//返回路径
 			errorPath = "/user/bankCard/unbind/result/failed";
 			successPath = "/user/bankCard/unbind/result/success";
 			// 同步地址  是否跳转到前端页面
-			retUrl = super.getFrontHost(systemConfig,channel+"") + errorPath +"?status=99";
-			successUrl = super.getFrontHost(systemConfig,channel+"") + successPath+"?status=000&statusDesc=";
-			retUrl += "&token=1&sign=" +sign;
-			successUrl += "&token=1&sign=" +sign;
+			retUrl = super.getFrontHost(systemConfig,bean.getPlatform()) + errorPath +"?status=99";
+			successUrl = super.getFrontHost(systemConfig,bean.getPlatform()) + successPath+"?status=000&statusDesc=";
+			retUrl += "&token=1&sign=" +sign + "&platform=" + bean.getPlatform();
+			successUrl += "&token=1&sign=" +sign + "&platform=" + bean.getPlatform();
 		}
 
 		// 忘记密码跳转链接
@@ -283,7 +285,8 @@ public class UnBindCardServiceImpl extends BaseUserServiceImpl implements UnBind
 		// 插入操作记录表
 		BankCardLogRequest bankCardLogRequest = new BankCardLogRequest();
 		bankCardLogRequest.setUserId(userId);
-		bankCardLogRequest.setUserName(user.getUsername());
+		UserVO user1 = amUserClient.findUserById(userId);
+		bankCardLogRequest.setUserName(user1.getUsername());
 
 		bankCardLogRequest.setBankCode(String.valueOf(bankCardVO.getBankId()));
 		bankCardLogRequest.setCardNo(bankCardVO.getCardNo());

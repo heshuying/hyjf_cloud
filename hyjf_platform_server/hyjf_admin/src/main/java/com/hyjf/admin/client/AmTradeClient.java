@@ -1608,6 +1608,14 @@ public interface AmTradeClient {
      */
     PushMoneyResponse findPushMoneyList(PushMoneyRequest request);
 
+    /*** 取得提成配置
+    * @author Zha Daojian
+    * @date 2018/11/7 11:23
+    * @param     request
+    * @return java.util.List<com.hyjf.am.vo.trade.PushMoneyVO>
+    **/
+    List<PushMoneyVO> getPushMoney(PushMoneyRequest request);
+
 
 
 
@@ -3209,5 +3217,11 @@ public interface AmTradeClient {
      * @return
      */
     AssetListCustomizeResponse findAssetListWithoutPage(AssetListRequest request);
+    /**
+     * 删除 自动投资临时表
+     * @auther: nxl
+     * @date: 2018/7/10
+     */
+   Boolean deleteBorrowTmp(String borrowNid, String accedeOrderId);
 }
 

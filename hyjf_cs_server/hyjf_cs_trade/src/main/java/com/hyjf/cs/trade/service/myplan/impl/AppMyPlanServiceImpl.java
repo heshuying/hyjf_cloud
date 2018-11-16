@@ -172,7 +172,7 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
             this.copyPlanCouponInfoToResult(result, appCouponCustomize);
 
             // 4.优惠券投资还款计划
-            String  couponRecoverPlanUrl = "http://AM-TRADE/am-trade/borrow/getCounponRecoverList/"+ orderId;
+            String  couponRecoverPlanUrl = "http://AM-TRADE/am-trade/coupon/getCounponRecoverList/"+ orderId;
             CouponRepayResponse res = baseClient.getExe(couponRecoverPlanUrl,CouponRepayResponse.class);
             List<CurrentHoldRepayMentPlanListVO> repaymentPlanList = res.getResultList();
             this.copyPlanCouponRepaymentToResult(result, repaymentPlanList);
@@ -240,7 +240,33 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
      */
     private void copyPlanCouponInfoToResult(MyPlanDetailResultBean result, AppCouponCustomizeVO appCouponCustomize) {
         MyPlanDetailResultBean.CouponIntr couponIntr = result.getCouponIntr();
-        couponIntr.setCouponType(appCouponCustomize.getCouponType());
+
+        if (Arrays.asList("1","2","3").contains(appCouponCustomize.getCouponType())){
+
+            switch (appCouponCustomize.getCouponType()) {
+                case "1":
+                    couponIntr.setCouponTypeCode(1);
+                    couponIntr.setCouponType("体验金");
+                    break;
+                case "2":
+                    couponIntr.setCouponTypeCode(2);
+                    couponIntr.setCouponType("加息券");
+                    break;
+                case "3":
+                    couponIntr.setCouponTypeCode(3);
+                    couponIntr.setCouponType("代金券");
+                    break;
+                default:
+                    logger.error("coupon type is error");
+                    break;
+            }
+
+        }else if (Validator.isNumber(appCouponCustomize.getCouponType())
+                && !Arrays.asList("0","1","2","3").contains(appCouponCustomize.getCouponType())){
+            couponIntr.setCouponTypeCode(Integer.parseInt(appCouponCustomize.getCouponType()));
+            couponIntr.setCouponType("体验金");
+        }
+
         couponIntr.setCouponAmount(appCouponCustomize.getCouponAmount());
         couponIntr.setInterestOnCall(appCouponCustomize.getRecoverAccountInterestWait());
         couponIntr.setCapitalOnCall(appCouponCustomize.getRecoverAccountCapitalWait());
@@ -288,8 +314,9 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
         }
         projectIntr.setPlanName(appCouponCustomize.getPlanName());
         projectIntr.setBorrowApr(appCouponCustomize.getPlanApr());
+        // mod by nxl 智投服务 修改优惠券锁定期显示 start
         // add 汇计划二期前端优化 持有中计划详情修改锁定期 nxl 20180420 start
-        SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd");
+      /*  SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd");
         Date datePeriod = null;
         if (NULL_STR.equals(appCouponCustomize.getCountInterestTime()) || DOUBLE_NULL_STR.equals(appCouponCustomize.getCountInterestTime())) {
             appCouponCustomize.setPlanPeriod("— —");
@@ -319,8 +346,9 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
             } catch (ParseException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
         // add 汇计划二期前端优化 持有中计划详情修改锁定期 nxl 20180420 end
+        // mod by nxl 智投服务 修改优惠券锁定期显示 end
         projectIntr.setBorrowPeriod(appCouponCustomize.getPlanPeriod());
         projectIntr.setBorrowPeriodUnit(CommonUtils.getPeriodUnitByRepayStyle(appCouponCustomize.getRepayStyle()));
         projectIntr.setRepayStyle(appCouponCustomize.getRepayMethod());
@@ -361,7 +389,14 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
     private void copyPlanBaseInfoToResult(MyPlanDetailResultBean result, UserHjhInvistDetailCustomizeVO customize,
                                           String type) {
         MyPlanDetailResultBean.ProjectIntr projectIntr = result.getProjectIntr();
-
+        // 计划处于投资中状态(orderStatus1锁定中 2退出中 3已退出)
+        String orderStatus = customize.getOrderStatus();
+        if(StringUtils.isNotBlank(orderStatus)){
+            //非锁定中,app端隐藏投资服务协议按钮
+            projectIntr.setType(orderStatus);
+        }else{
+            projectIntr.setType("0");
+        }
         // 计划处于投资中状态
         List<String> statusList = Arrays.asList("0", "2", "99", "9");
         // 投资中状态不显示持有列表
@@ -372,8 +407,9 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
         } else{
             projectIntr.setStatus("未回款");
         }
+        // mod by nxl 智投服务 修改锁定期显示 start
         // add 汇计划二期前端优化 修改锁定期的显示方式  nxl 20180426 start
-        SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd");
+       /* SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd");
         Date datePeriod = null;
         if (NULL_STR.equals(customize.getCountInterestTime()) || DOUBLE_NULL_STR.equals(customize.getCountInterestTime())) {
             customize.setPlanPeriod("— —");
@@ -404,7 +440,8 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
             }
         }
         customize.getPlanPeriod();
-        projectIntr.setBorrowPeriod(customize.getPlanPeriod());
+        projectIntr.setBorrowPeriod(customize.getPlanPeriod());*/
+        // mod by nxl 智投服务 修改锁定期显示 end
         // add 汇计划二期前端优化 修改锁定期的显示方式  nxl 20180426 end
         projectIntr.setBorrowApr(StringUtils.isBlank(customize.getPlanApr()) ? "" :customize.getPlanApr().replace("%",""));
         projectIntr.setBorrowPeriod(customize.getPlanPeriod());
@@ -433,9 +470,11 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
         if (customize != null && statusList.contains(customize.getOrderStatus())) {
             investIntr.setCapitalOnCall("--");
             investIntr.setInterestOnCall("--");
+            investIntr.setIsHyphen("1");
         }else{
             investIntr.setCapitalOnCall(DF_FOR_VIEW.format(new BigDecimal(customize.getWaitCaptical())));
             investIntr.setInterestOnCall(customize.getWaitInterest());
+            investIntr.setIsHyphen("0");
         }
     }
 }

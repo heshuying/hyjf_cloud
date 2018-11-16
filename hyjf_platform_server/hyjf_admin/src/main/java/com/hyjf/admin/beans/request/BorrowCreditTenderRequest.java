@@ -48,6 +48,9 @@ public class BorrowCreditTenderRequest extends BaseRequest implements Serializab
     @ApiModelProperty(value = "发起平台")
     private String client;
 
+    @ApiModelProperty(value = "是否具有组织架构查看权限")
+    private String isOrganizationView;
+
     public String getCreditUserName() {
         return creditUserName;
     }
@@ -118,5 +121,13 @@ public class BorrowCreditTenderRequest extends BaseRequest implements Serializab
 
     public void setClient(String client) {
         this.client = client;
+    }
+
+    public String getIsOrganizationView() {
+        return isOrganizationView;
+    }
+
+    public void setIsOrganizationView(String isOrganizationView) {
+        this.isOrganizationView = isOrganizationView;
     }
 }

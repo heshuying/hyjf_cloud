@@ -84,7 +84,7 @@ public class CategoryServiceImpl implements CategoryService {
         // 拼装查询条件
         CategoryExample exam = dealParam(categoryBeanRequest);
         exam.setLimitStart((categoryBeanRequest.getCurrPage()-1) * categoryBeanRequest.getPageSize());
-        exam.setLimitEnd((categoryBeanRequest.getCurrPage()) * categoryBeanRequest.getPageSize());
+        exam.setLimitEnd(categoryBeanRequest.getPageSize());
         return categoryMapper.selectByExample(exam);
     }
 
@@ -322,5 +322,10 @@ public class CategoryServiceImpl implements CategoryService {
         map.put("pid",pid);
         return   helpCustomizeMapper.selectSunContentCategory(map);
 
+    }
+
+    @Override
+    public Integer selectCategoryPid() {
+        return helpCustomizeMapper.selectCategoryPid();
     }
 }

@@ -1332,6 +1332,15 @@ public class AmConfigClientImpl implements AmConfigClient {
         return restTemplate.postForObject("http://AM-ADMIN/am-admin/feeConfig/delete",
                 req, AdminFeeConfigResponse.class);
     }
+    /**
+     * 手续费配置校验
+     * @return
+     */
+    @Override
+    public AdminFeeConfigResponse validateFeeConfigBeforeAction(AdminFeeConfigRequest request){
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/feeConfig/validateFeeConfigBeforeAction",
+                request, AdminFeeConfigResponse.class);
+    }
 
     @Override
     public List<AdminSystemVO> getUserPermission(String userName) {
@@ -1964,8 +1973,9 @@ public class AmConfigClientImpl implements AmConfigClient {
      * @Author : huanghui
      */
     @Override
-    public List<JxBankConfigVO> getBankcardList() {
-        JxBankConfigResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-config/config/JxBank/selectBankConfigList", JxBankConfigResponse.class).getBody();
+    public List<BankConfigVO> getBankcardList() {
+        AdminBankConfigResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-config/config/selectBankConfigList",
+                AdminBankConfigResponse.class).getBody();
         if (Validator.isNotNull(response)) {
             return response.getResultList();
         }
@@ -2294,7 +2304,7 @@ public class AmConfigClientImpl implements AmConfigClient {
      */
     @Override
     public JxBankConfigVO getBankConfigByBankName(String bankName) {
-        String url = "http://AM-ADMIN/am-config/config/getBankConfigByBankName/"+bankName;
+        String url = "http://AM-ADMIN/am-config/config/getJxBankConfigByBankName/"+bankName;
         JxBankConfigResponse response = restTemplate.getForEntity(url,JxBankConfigResponse.class).getBody();
         if (response != null) {
             return response.getResult();

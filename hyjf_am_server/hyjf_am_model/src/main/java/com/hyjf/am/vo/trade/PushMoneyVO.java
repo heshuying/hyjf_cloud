@@ -73,7 +73,10 @@ public class PushMoneyVO extends BaseVO {
     @ApiModelProperty(value = "放款时间结束")
     public String recoverLastTimeEnd;
 
-    // 提成列表用
+    @ApiModelProperty(value = "计算提成状态 0未计算 1已计算")
+    private String webStatus;
+
+    /******************************提成列表用*************************************/
     @ApiModelProperty(value = "融资期限")
     private String rzqx;
 
@@ -400,5 +403,13 @@ public class PushMoneyVO extends BaseVO {
 
     public void setSendTimeView(String sendTimeView) {
         this.sendTimeView = sendTimeView;
+    }
+
+    public String getWebStatus() {
+        return webStatus;
+    }
+
+    public void setWebStatus(String webStatus) {
+        this.webStatus = webStatus;
     }
 }

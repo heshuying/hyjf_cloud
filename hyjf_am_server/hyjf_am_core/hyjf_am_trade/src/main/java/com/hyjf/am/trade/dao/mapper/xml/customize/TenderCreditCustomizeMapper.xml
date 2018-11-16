@@ -350,7 +350,7 @@
 	<!-- 点击购买后对债转进行投资详情 -->
 	<select id="selectWebCreditTenderDetail" resultType="com.hyjf.am.trade.dao.model.customize.TenderToCreditDetailCustomize" parameterType="java.util.Map">
 		SELECT	hb.project_type type,
-			hb.company_or_personal AS comOrPer,
+			hbi.company_or_personal AS comOrPer,
 			hb.borrow_nid AS borrowNid,
 			hb.borrow_apr AS borrowApr,
 			hb.borrow_style AS borrowStyle,
@@ -370,12 +370,8 @@
 			CONCAT(hb.borrow_period, '个月')
 		END borrowPeriod,
 		 hbc.credit_price AS creditPrice,
-		 FROM_UNIXTIME(
-			hbc.add_time,
-			'%Y-%m-%d %H:%i:%s'
-		) AS creditTime,
-		 hbc.add_time AS creditTimeInt,
-		 hui.truename AS creditUserTrueName,
+		 hbc.create_time AS creditTime,
+		 hru.truename AS creditUserTrueName,
 		 hbc.credit_user_id AS creditUserId,
 		 hbc.credit_repay_end_time AS creditRepayEndTime,
 		 	CASE
@@ -419,8 +415,8 @@
 		FROM
 			ht_borrow_credit hbc
 		LEFT JOIN ht_borrow hb ON hbc.bid_nid = hb.borrow_nid
-		LEFT JOIN ht_users hu ON hu.user_id = hbc.credit_user_id
-		LEFT JOIN ht_users_info hui ON hui.user_id = hu.user_id
+		INNER JOIN ht_borrow_info hbi ON hb.borrow_nid = hbi.borrow_nid
+		LEFT JOIN ht_r_user hu ON hu.user_id = hbc.credit_user_id
 		WHERE
 			hbc.credit_nid = #{creditNid}
 	</select>
@@ -533,7 +529,7 @@
 	
 	<select id="selectWebCreditTenderDetailForContract" resultType="com.hyjf.am.trade.dao.model.customize.TenderToCreditDetailCustomize" parameterType="java.util.Map">
 		SELECT	hb.project_type type,
-			hb.company_or_personal AS comOrPer,
+			hbi.company_or_personal AS comOrPer,
 			hb.borrow_nid AS borrowNid,
 			hb.borrow_apr AS borrowApr,
 			hb.borrow_style AS borrowStyle,
@@ -553,11 +549,10 @@
 			CONCAT(hb.borrow_period, '个月')
 		END borrowPeriod,
 		 hbc.credit_price AS creditPrice,
-		 FROM_UNIXTIME(
-			hbc.add_time,
+		date_format(
+			hbc.create_time,
 			'%Y-%m-%d %H:%i:%s'
 		) AS creditTime,
-		 hbc.add_time AS creditTimeInt,
 		 hru.truename AS creditUserTrueName,
 		 hbc.credit_user_id AS creditUserId,
 		 hbc.credit_repay_end_time AS creditRepayEndTime,
@@ -599,9 +594,9 @@
 				ELSE
 					''
 				END AS `status`,
-				
-				FROM_UNIXTIME(
-					hhh.add_time,
+
+				date_format(
+					hhh.create_time,
 					'%Y-%m-%d'
 				) AS signTime
 				
@@ -609,6 +604,7 @@
 			ht_borrow_credit hbc
 		LEFT JOIN ht_credit_tender hhh ON hbc.credit_nid = hhh.credit_nid
 		LEFT JOIN ht_borrow hb ON hbc.bid_nid = hb.borrow_nid
+		LEFT JOIN ht_borrow_info hbi ON hb.borrow_nid = hbi.borrow_nid
 		LEFT JOIN ht_r_user hru ON hru.user_id = hbc.credit_user_id
 		WHERE
 			hbc.credit_nid = #{creditNid}

@@ -3,12 +3,12 @@ package com.hyjf.cs.user.service.bankopen.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankOpenRequest;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.trade.BanksConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
@@ -30,6 +30,7 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.FddCertificateProducer;
+import com.hyjf.cs.user.mq.producer.sensorsdate.openaccount.SensorsDataOpenAccountProducer;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.vo.BankOpenVO;
@@ -38,6 +39,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -72,6 +74,9 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
 
     @Autowired
     private FddCertificateProducer fddCertificateProducer;
+
+    @Autowired
+    private SensorsDataOpenAccountProducer sensorsDataOpenAccountProducer;
 
     @Override
     public boolean checkIdNo(String idNo) {
@@ -149,6 +154,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
      * @Date 2018/6/15 17:20
      */
     @Override
+    @HystrixCommand
     public Map<String,Object> getOpenAccountMV(OpenAccountPageBean openBean, String sign) {
         // 根据身份证号码获取性别
         String gender = "F";
@@ -235,20 +241,38 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             result.setMessage("开户失败,保存用户开户信息失败");
             return result;
         }
-        // 更新redis里面的值
-        WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
-        user.setBankOpenAccount(true);
-        // 开户+设密的话   状态改为已设置交易密码
-        if (BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE.equals(bean.getTxCode())
-                && "1".equals(bean.getStatus())) {
-            user.setIsSetPassword(1);
-        }
-        user.setRoleId(bean.getIdentity());
-        RedisUtils.setObj(RedisConstants.USERID_KEY + userId,user);
-
         // 更新account表的电子帐户号
         Integer saveResult = amTradeClient.updateAccountNumberByUserId(userId,bean.getAccountId());
+        // 更新redis里面的值
+        WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY + userId, WebViewUserVO.class);
+        if (user != null) {
+            user.setBankOpenAccount(true);
+            UserVO userVO = this.amUserClient.findUserById(userId);
+            // add by liuyang 神策数据统计追加 20180927 start
+            if ("10000000".equals(userVO.getInstCode())) {
+                if (!RedisUtils.exists("SENSORS_DATA_OPEN_ACCOUNT:" + userId)) {
+                    try {
+                        RedisUtils.sadd("SENSORS_DATA_OPEN_ACCOUNT:" + userId, String.valueOf(userId));
+                        // 开户成功后,发送神策数据统计MQ
+                        SensorsDataBean sensorsDataBean = new SensorsDataBean();
+                        sensorsDataBean.setUserId(userId);
+                        sensorsDataBean.setEventCode("open_success");
+                        this.sendSensorsDataMQ(sensorsDataBean);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            // add by liuyang 神策数据统计追加 20180927 end
+            // 开户+设密的话   状态改为已设置交易密码
+            if (BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE.equals(bean.getTxCode())
+                    && "1".equals(bean.getStatus())) {
+                user.setIsSetPassword(1);
+            }
+            user.setRoleId(bean.getIdentity());
+            RedisUtils.setObj(RedisConstants.USERID_KEY + userId, user);
 
+        }
         // 查询银行卡绑定信息
         Integer saveBankCardFlag = saveCardNoToBank(bean);
         if (saveBankCardFlag.intValue() != 1) {
@@ -274,6 +298,15 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         result.setMessage("开户成功");
         logger.info("页面开户异步处理end,UserId:{} 开户平台为：{}", bean.getLogUserId(),bean.getLogClient());
         return result;
+    }
+
+    /**
+     * 开户成功后,发生神策数据统计MQ
+     *
+     * @param sensorsDataBean
+     */
+    private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
+        this.sensorsDataOpenAccountProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_OPEN_ACCOUNT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
     }
 
 
@@ -410,13 +443,6 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             resultMap.put("mess", "真实姓名不能为空");
             return resultMap;
         }
-        // 身份证号
-        if (Validator.isNull(requestBean.getIdNo())) {
-            logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
-            resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
-            resultMap.put("mess", "身份证号不能为空");
-            return resultMap;
-        }
         // 渠道
         if (Validator.isNull(requestBean.getChannel())) {
             logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
@@ -450,23 +476,6 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             logger.info("身份属性参数错误[" + JSONObject.toJSONString(requestBean, true) + "]");
             resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
             resultMap.put("mess", "身份属性参数错误");
-            return resultMap;
-        }
-
-        if (requestBean.getIdNo().length() != 18) {
-            logger.info("身份证(18位)校验位错误[" + JSONObject.toJSONString(requestBean, true) + "]");
-            resultMap.put("status", ErrorCodeConstant.STATUS_ZC000021);
-            resultMap.put("mess", "身份证(18位)校验位错误");
-            return resultMap;
-        }
-        String replaceIdNo = replaceIdNo(requestBean.getIdNo());
-        requestBean.setIdNo(replaceIdNo);
-        // 检查用户身份证号是否在汇盈已经存在
-        UserInfoVO userInfo = amUserClient.getUserByIdNo(requestBean.getIdNo());
-        if (userInfo!=null) {
-            logger.info("身份证已存在[" + JSONObject.toJSONString(requestBean, true) + "]");
-            resultMap.put("status", ErrorCodeConstant.STATUS_ZC000021);
-            resultMap.put("mess", "身份证已存在");
             return resultMap;
         }
         // 根据手机号查询用户
@@ -520,25 +529,18 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
      * @return
      */
     @Override
-    public Map<String, Object> getAssureOpenAccountMV(OpenAccountPageBean openBean) {
+    public Map<String, Object> getAssureOpenAccountMV(OpenAccountPageBean openBean,String sign) {
         {
             // 根据身份证号码获取性别
-            String gender = "";
-            int sexInt = Integer.parseInt(openBean.getIdNo().substring(16, 17));
-            if (sexInt % 2 == 0) {
-                gender = "F";
-            } else {
-                gender = "M";
-            }
+            String gender = "M";
             // 获取共同参数
             String idType = BankCallConstant.ID_TYPE_IDCARD;
             // 调用开户接口
-            BankCallBean openAccoutBean = new BankCallBean(openBean.getUserId(), BankCallConstant.TXCODE_ACCOUNT_OPEN_PAGE, Integer.parseInt(openBean.getPlatform()), BankCallConstant.BANK_URL_ACCOUNT_OPEN_PAGE);
+            BankCallBean openAccoutBean = new BankCallBean(openBean.getUserId(), BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE, Integer.parseInt(openBean.getPlatform()), BankCallConstant.BANK_URL_ACCOUNT_OPEN_PAGE);
             openAccoutBean.setIdentity(openBean.getIdentity());
             /**1：出借角色2：借款角色3：代偿角色*/
             openAccoutBean.setChannel(openBean.getChannel());
             openAccoutBean.setIdType(idType);
-            openAccoutBean.setIdNo(openBean.getIdNo());
             openAccoutBean.setName(openBean.getTrueName());
             openAccoutBean.setGender(gender);
             openAccoutBean.setMobile(openBean.getMobile());
@@ -546,15 +548,20 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             openAccoutBean.setAcctUse(BankCallConstant.ACCOUNT_USE_GUARANTEE);
             openAccoutBean.setIdentity(openBean.getIdentity());
             // 同步地址  是否跳转到前端页面
-            String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + "/user/openError" + "?logOrdId=" + openAccoutBean.getLogOrderId();
-            String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + "/user/openSuccess";
+            // 失败页面
+            String errorPath = "/user/openError";
+            // 成功页面
+            String successPath = "/user/openSuccess";
+            // 同步地址  是否跳转到前端页面
+            String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + errorPath +"?logOrdId="+openAccoutBean.getLogOrderId()+"&sign=" +sign;
+            String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + successPath;
             // 异步调用路
-            String bgRetUrl = "http://CS-USER/hyjf-web/user/secure/assurebankopen/bgReturn?phone=" + openBean.getMobile();
+            String bgRetUrl = "http://CS-USER/hyjf-web/user/secure/open/bgReturn?phone=" + openBean.getMobile()+ openBean.getMobile()+"&openclient="+openBean.getPlatform()+"&roleId="+openBean.getIdentity();
             openAccoutBean.setRetUrl(retUrl);
             openAccoutBean.setSuccessfulUrl(successUrl);
             openAccoutBean.setNotifyUrl(bgRetUrl);
             openAccoutBean.setCoinstName(openBean.getCoinstName() == null ? "汇盈金服" : openBean.getCoinstName());
-            openAccoutBean.setLogRemark("页面开户");
+            openAccoutBean.setLogRemark("担保机构页面开户");
             openAccoutBean.setLogIp(openBean.getIp());
             openBean.setOrderId(openAccoutBean.getLogOrderId());
             try {
@@ -574,41 +581,38 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
      * @return
      */
     @Override
-    public Map<String, Object> getLoanOpenAccountMV(OpenAccountPageBean openBean) {
+    public Map<String, Object> getLoanOpenAccountMV(OpenAccountPageBean openBean,String sign) {
         {
             // 根据身份证号码获取性别
-            String gender = "";
-            int sexInt = Integer.parseInt(openBean.getIdNo().substring(16, 17));
-            if (sexInt % 2 == 0) {
-                gender = "F";
-            } else {
-                gender = "M";
-            }
+            String gender = "M";
             // 获取共同参数
             String idType = BankCallConstant.ID_TYPE_IDCARD;
             // 调用开户接口
-            BankCallBean openAccoutBean = new BankCallBean(openBean.getUserId(), BankCallConstant.TXCODE_ACCOUNT_OPEN_PAGE, Integer.parseInt(openBean.getPlatform()), BankCallConstant.BANK_URL_ACCOUNT_OPEN_PAGE);
+            BankCallBean openAccoutBean = new BankCallBean(openBean.getUserId(), BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE, Integer.parseInt(openBean.getPlatform()), BankCallConstant.BANK_URL_ACCOUNT_OPEN_PAGE);
             openAccoutBean.setIdentity(openBean.getIdentity());
             /**1：出借角色2：借款角色3：代偿角色*/
             openAccoutBean.setChannel(openBean.getChannel());
             openAccoutBean.setIdType(idType);
-            openAccoutBean.setIdNo(openBean.getIdNo());
             openAccoutBean.setName(openBean.getTrueName());
             openAccoutBean.setGender(gender);
             openAccoutBean.setMobile(openBean.getMobile());
             // 代偿角色的账户类型为  00100-担保账户  其他的是 00000-普通账户
             openAccoutBean.setAcctUse(BankCallConstant.ACCOUNT_USE_COMMON);
             openAccoutBean.setIdentity(openBean.getIdentity());
+            // 失败页面
+            String errorPath = "/user/openError";
+            // 成功页面
+            String successPath = "/user/openSuccess";
             // 同步地址  是否跳转到前端页面
-            String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + "/user/openError" + "?logOrdId=" + openAccoutBean.getLogOrderId();
-            String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + "/user/openSuccess";
+            String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + errorPath +"?logOrdId="+openAccoutBean.getLogOrderId()+"&sign=" +sign;
+            String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + successPath;
             // 异步调用路
-            String bgRetUrl = "http://CS-USER/hyjf-web/user/secure/loanbankopen/bgReturn?phone=" + openBean.getMobile();
+            String bgRetUrl = "http://CS-USER/hyjf-web/user/secure/open/bgReturn?phone=" + openBean.getMobile()+ openBean.getMobile()+"&openclient="+openBean.getPlatform()+"&roleId="+openBean.getIdentity();;
             openAccoutBean.setRetUrl(retUrl);
             openAccoutBean.setSuccessfulUrl(successUrl);
             openAccoutBean.setNotifyUrl(bgRetUrl);
             openAccoutBean.setCoinstName(openBean.getCoinstName() == null ? "汇盈金服" : openBean.getCoinstName());
-            openAccoutBean.setLogRemark("页面开户");
+            openAccoutBean.setLogRemark("借款人页面开户");
             openAccoutBean.setLogIp(openBean.getIp());
             openBean.setOrderId(openAccoutBean.getLogOrderId());
             try {

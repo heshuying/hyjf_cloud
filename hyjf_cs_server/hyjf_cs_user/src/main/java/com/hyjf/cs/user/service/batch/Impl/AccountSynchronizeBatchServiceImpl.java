@@ -7,7 +7,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.AccountMobileSynchRequest;
 import com.hyjf.am.resquest.user.BankCardRequest;
-import com.hyjf.am.vo.trade.BanksConfigVO;
+import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.AccountMobileSynchVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -150,9 +150,9 @@ public class AccountSynchronizeBatchServiceImpl implements AccountSynchronizeBat
                         String bankId = amConfigClient.queryBankIdByCardNo(cardNo);
                         logger.info(bankId + "==>" + "bankId！");
                         bank.setBankId(!StringUtils.isNotBlank(bankId) ? 0 : Integer.valueOf(bankId));
-                        BanksConfigVO banksConfigVO = amConfigClient.getBankNameByBankId(bankId);
-                        if(banksConfigVO != null){
-                            bank.setBank(banksConfigVO.getBankName());
+                        JxBankConfigVO jxBankConfigVO = amConfigClient.getJxBankConfigByBankId(bankId);
+                        if(jxBankConfigVO != null){
+                            bank.setBank(jxBankConfigVO.getBankName());
                         }
                         // 银行联号
                         String payAllianceCode = "";
@@ -163,7 +163,7 @@ public class AccountSynchronizeBatchServiceImpl implements AccountSynchronizeBat
                         }
                         // 如果此时银行联号还是为空,调用本地查询银行联号
                         if (StringUtils.isBlank(payAllianceCode)) {
-                            BanksConfigVO allianceCodeOfBanksConfig = amConfigClient.getBanksConfigByBankId(bankId);
+                            JxBankConfigVO allianceCodeOfBanksConfig = amConfigClient.getJxBankConfigByBankId(bankId);
                             if(allianceCodeOfBanksConfig!=null){
                                 payAllianceCode = allianceCodeOfBanksConfig.getPayAllianceCode();
                             } else{

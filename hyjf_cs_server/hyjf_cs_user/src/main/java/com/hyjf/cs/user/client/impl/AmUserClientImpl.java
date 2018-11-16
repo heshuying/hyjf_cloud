@@ -16,6 +16,7 @@ import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.validator.Validator;
@@ -144,13 +145,34 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	@Override
+	public UserVO fUserById(int userId) {
+		String url = userService + "/user/findMainById/" + userId;
+		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
+		if (response != null) {
+			if (Response.SUCCESS.equals(response.getRtn())) {
+				UserVO userVO =  response.getResult();
+				return userVO;
+			}
+			logger.info("response rtn is : {}", response.getRtn());
+		} else {
+			logger.info("response is null....");
+		}
+		return null;
+	}
 
 	@Override
 	public UserVO findUserById(int userId) {
-		UserResponse response = restTemplate
-				.getForEntity(userService+"/user/findById/" + userId, UserResponse.class).getBody();
-		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return response.getResult();
+		String url = userService + "/user/findById/" + userId;
+		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
+		if (response != null) {
+			if (Response.SUCCESS.equals(response.getRtn())) {
+				UserVO userVO =  response.getResult();
+				return userVO;
+			}
+			logger.info("response rtn is : {}", response.getRtn());
+		} else {
+			logger.info("response is null....");
 		}
 		return null;
 	}
@@ -164,7 +186,15 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
-
+	@Override
+	public UserInfoVO fUserInfoById(int userId) {
+		UserInfoResponse response = restTemplate
+				.getForEntity(userService+"/userInfo/findMainById/" + userId, UserInfoResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
 	/**
 	 * 保存验证码
 	 * @param mobile
@@ -214,6 +244,17 @@ public class AmUserClientImpl implements AmUserClient {
 	public UserVO findUserByUserNameOrMobile(String loginUserName) {
 		UserResponse response = restTemplate
 				.getForEntity(userService+"/user/findByCondition/" + loginUserName, UserResponse.class)
+				.getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	@Override
+	public UserVO updateByCondition(String loginUserName) {
+		UserResponse response = restTemplate
+				.getForEntity(userService+"/user/updateByCondition/" + loginUserName, UserResponse.class)
 				.getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
@@ -512,9 +553,9 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public List<EvalationVO> getEvalationRecord() {
-		EvalationResponse response = restTemplate
-				.getForEntity(userService+"/user/getEvalationRecord", EvalationResponse.class).getBody();
+	public List<EvalationCustomizeVO> getEvalationRecord() {
+		EvalationCustomizeResponse response = restTemplate
+				.getForEntity(userService+"/user/getEvalationRecord", EvalationCustomizeResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}
@@ -1007,22 +1048,6 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
-	/**
-	 * 插入各种信息
-	 * @auth sunpeikai
-	 * @param
-	 * @return
-	 */
-	@Override
-	public UserVO insertUserActionUtm(UserActionUtmRequest userActionUtmRequest) {
-		String url = userService + "/user/insertUserActionUtm";
-		UserResponse response = restTemplate.postForEntity(url,userActionUtmRequest,UserResponse.class).getBody();
-		if (Response.isSuccess(response)) {
-			return response.getResult();
-		}
-		return null;
-	}
-
 	@Override
 	public UserEvalationResultVO skipEvaluate(Integer userId, int countScore) {
 		UserEvalationResultResponse response = restTemplate.getForEntity(userService+"/user/skipEvaluate/"+userId+"/"+countScore,UserEvalationResultResponse.class).getBody();
@@ -1167,5 +1192,16 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+	@Override
+	public boolean insertAppChannelStatisticsDetail(WrbRegisterRequest wrbRegisterRequest) {
+		boolean body = restTemplate
+				.postForEntity("http://AM-USER/am-user/app_utm_reg/insertAppChannelStatisticsDetail", wrbRegisterRequest, BooleanResponse.class)
+				.getBody().getResultBoolean();
+		return body;
+	}
 
+	@Override
+	public AccountVO getAccount(Integer userId) {
+		return null;
+	}
 }

@@ -94,8 +94,6 @@ public class PushMoneyRequest extends PushMoneyVO implements Serializable {
 	@ApiModelProperty(value = "ids(支持批量删除)")
 	private String ids;
 
-	@ApiModelProperty(value = "登录用户id(后台用)")
-	private Integer loginUserId;
 	@ApiModelProperty(value = "登录用户名(后台用)")
 	private String loginUserName;
 	private TenderCommissionVO tenderCommissionVO;
@@ -119,6 +117,9 @@ public class PushMoneyRequest extends PushMoneyVO implements Serializable {
 	 */
 	@ApiModelProperty(value = "当前页条数")
 	private int pageSize = 10;
+
+	@ApiModelProperty(value = "是否具有组织架构查看权限")
+	private String isOrganizationView;
 
 	public String getIds() {
 		return ids;
@@ -366,14 +367,6 @@ public class PushMoneyRequest extends PushMoneyVO implements Serializable {
 		this.recoverDateEnd = recoverDateEnd;
 	}
 
-	public Integer getLoginUserId() {
-		return loginUserId;
-	}
-
-	public void setLoginUserId(Integer loginUserId) {
-		this.loginUserId = loginUserId;
-	}
-
 	public String getLoginUserName() {
 		return loginUserName;
 	}
@@ -441,5 +434,13 @@ public class PushMoneyRequest extends PushMoneyVO implements Serializable {
 
 	public void setTenderType(Integer tenderType) {
 		this.tenderType = tenderType;
+	}
+
+	public String getIsOrganizationView() {
+		return isOrganizationView;
+	}
+
+	public void setIsOrganizationView(String isOrganizationView) {
+		this.isOrganizationView = isOrganizationView;
 	}
 }

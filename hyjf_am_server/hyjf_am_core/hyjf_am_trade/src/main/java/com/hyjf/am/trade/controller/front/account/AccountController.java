@@ -159,6 +159,21 @@ public class AccountController extends BaseController {
      * @Param bankMerchantAccountVO
      * @return
      */
+    @PostMapping("/updatebankmerchantaccount")
+    public BankMerchantAccountResponse updateBankMerchat(@RequestBody BankMerchantAccountVO bankMerchantAccountVO) {
+        BankMerchantAccountResponse response = new BankMerchantAccountResponse();
+        Integer flag = accountService.updateBankMerchatAccount(bankMerchantAccountVO);
+        response.setRecordTotal(flag);
+        return response;
+    }
+
+    /**
+     * @Author walter.limeng
+     * @Description  更新BankMerchatAccount
+     * @Date 14:21 2018/7/18
+     * @Param bankMerchantAccountVO
+     * @return
+     */
     @PostMapping("/getbankmerchantaccount")
     public BankMerchantAccountResponse updateBankMerchatAccount(@RequestBody BankMerchantAccountVO bankMerchantAccountVO) {
         BankMerchantAccountResponse response = new BankMerchantAccountResponse();
@@ -210,8 +225,14 @@ public class AccountController extends BaseController {
     public AccountResponse updateOfLoansTender(@RequestBody AccountVO accountVO) {
         AccountResponse response = new AccountResponse();
         if (accountVO != null) {
-            int updateFlag = accountService.updateOfLoansTender(accountVO);
-            response.setUpdateFlag(updateFlag);
+            logger.info("updateOfLoansTender更新用户账户开始，accountVO："+ accountVO.toString());
+            try{
+                int updateFlag = accountService.updateOfLoansTender(accountVO);
+                response.setUpdateFlag(updateFlag);
+                logger.info("updateOfLoansTender更新用户账户状态:"+ updateFlag);
+            }catch (Exception e){
+                logger.error("updateOfLoansTender更新用户账户异常",e);
+            }
         }
         return response;
     }

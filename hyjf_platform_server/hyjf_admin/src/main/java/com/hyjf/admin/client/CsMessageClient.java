@@ -6,8 +6,8 @@ package com.hyjf.admin.client;
 import com.hyjf.admin.beans.request.SmsLogRequestBean;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.promotion.PcChannelStatisticsResponse;
-import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.app.AppChannelStatisticsResponse;
+import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.response.message.OperationReportResponse;
 import com.hyjf.am.response.message.UserOperationLogResponse;
 import com.hyjf.am.resquest.admin.*;
@@ -294,12 +294,7 @@ public interface CsMessageClient {
      */
     AppChannelStatisticsResponse exportList(AppChannelStatisticsRequest statisticsRequest);
 
-    /**
-     *分页查询所有渠道投资信息
-     * @param request
-     * @return
-     */
-    AppChannelStatisticsDetailResponse getstatisticsList(AppChannelStatisticsDetailRequest request);
+
 
     /**
      * 查找pc渠道统计
@@ -313,7 +308,7 @@ public interface CsMessageClient {
      * @param request
      * @return
      */
-    AppChannelStatisticsDetailResponse exportStatisticsList(AppChannelStatisticsDetailRequest request);
+    AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request);
 
 
 

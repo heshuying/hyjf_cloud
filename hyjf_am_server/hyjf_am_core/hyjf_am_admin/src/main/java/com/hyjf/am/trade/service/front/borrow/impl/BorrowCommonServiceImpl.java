@@ -145,41 +145,41 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					String borrowPreNidNew = "";
 					String borrowNid = "";
 					// 拿取实际的项目编号
-					// 如果是 现金贷  或者 汇分期  或者 汇融贷 的项目类型,
-					if(("15".equals(projectType)) || ("16".equals(projectType)) || ("19".equals(projectType))){
-						while ("OK".equals(jedis.watch("xjdBorrowPreNid"))) {
-							List<Object> result = null;
-							Transaction tx = jedis.multi();
-							borrowPreNidNew = RedisUtils.get("xjdBorrowPreNid");
-							if (StringUtils.isBlank(borrowPreNidNew)) {
-								tx.set("xjdBorrowPreNid", borrowPreNid);
-								borrowPreNidNew = borrowPreNid;
-								result = tx.exec();
-							} else if (borrowPreNidNew != null) {
-								if (Long.parseLong(borrowPreNid) > Long.parseLong(borrowPreNidNew)) {
-									borrowPreNidNew = (String.valueOf(borrowPreNid));
-								} else {
-									borrowPreNidNew = (String.valueOf(Long.valueOf(borrowPreNidNew) + 1));
-								}
-								tx.set("xjdBorrowPreNid", borrowPreNidNew);
-								result = tx.exec();
-							}
-							if (result == null || result.isEmpty()) {
-								jedis.unwatch();
-							} else {
-								String ret = (String) result.get(0);
-								if (ret != null && "OK".equals(ret)) {
-									if (i == 0) {
-										borrowPreNid = borrowPreNidNew;
-									}
-									borrowNid = beforeFix + borrowPreNidNew;
-									break;
-								} else {
-									jedis.unwatch();
-								}
-							}
-						}
-					}else{
+//					// 如果是 现金贷  或者 汇分期  或者 汇融贷 的项目类型,
+//					if(("15".equals(projectType)) || ("16".equals(projectType)) || ("19".equals(projectType))){
+//						while ("OK".equals(jedis.watch("xjdBorrowPreNid"))) {
+//							List<Object> result = null;
+//							Transaction tx = jedis.multi();
+//							borrowPreNidNew = RedisUtils.get("xjdBorrowPreNid");
+//							if (StringUtils.isBlank(borrowPreNidNew)) {
+//								tx.set("xjdBorrowPreNid", borrowPreNid);
+//								borrowPreNidNew = borrowPreNid;
+//								result = tx.exec();
+//							} else if (borrowPreNidNew != null) {
+//								if (Long.parseLong(borrowPreNid) > Long.parseLong(borrowPreNidNew)) {
+//									borrowPreNidNew = (String.valueOf(borrowPreNid));
+//								} else {
+//									borrowPreNidNew = (String.valueOf(Long.valueOf(borrowPreNidNew) + 1));
+//								}
+//								tx.set("xjdBorrowPreNid", borrowPreNidNew);
+//								result = tx.exec();
+//							}
+//							if (result == null || result.isEmpty()) {
+//								jedis.unwatch();
+//							} else {
+//								String ret = (String) result.get(0);
+//								if (ret != null && "OK".equals(ret)) {
+//									if (i == 0) {
+//										borrowPreNid = borrowPreNidNew;
+//									}
+//									borrowNid = beforeFix + borrowPreNidNew;
+//									break;
+//								} else {
+//									jedis.unwatch();
+//								}
+//							}
+//						}
+//					}else{
 						while ("OK".equals(jedis.watch("borrowPreNid"))) {
 							List<Object> result = null;
 							Transaction tx = jedis.multi();
@@ -212,7 +212,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 								}
 							}
 						}
-					}
+					
 					// 插入huiyingdai_borrow
 					BorrowWithBLOBs borrow = new BorrowWithBLOBs();
 					// 借款表插入
@@ -800,7 +800,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		}
 		borrowinfo.setTrusteePayTime(0);
 
-		this.borrowInfoMapper.insert(borrowinfo);
+		this.borrowInfoMapper.insertSelective(borrowinfo);
 		// 个人信息(信批新增字段)
 		this.insertBorrowManinfo(borrowNid, borrowBean, borrow);
 		// 公司信息(信批新增字段)
@@ -841,13 +841,15 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				borrowExample = new BorrowInfoExample();
 				borrowCra = borrowExample.createCriteria();
 				borrowCra.andBorrowPreNidNewEqualTo(borrowList.getBorrowPreNidNew());
-				
+				//添加修改日志
+				BorrowLog borrowLog = new BorrowLog();
 				List<BorrowInfo> borrowAllList = this.borrowInfoMapper.selectByExample(borrowExample);
 				if (borrowAllList != null && borrowAllList.size() > 0) {
 					for (BorrowInfo borrow : borrowAllList) {
 						BorrowWithBLOBs bwb=new BorrowWithBLOBs();
 						 BeanUtils.copyProperties(borrow,bwb);
 						 BeanUtils.copyProperties(this.getBorrow(borrowNid),bwb);
+						 borrowLog.setBorrowStatus(bwb.getStatus().toString());
 						 bwb.setInfoId(borrow.getId());
 						// 借款表更新(此更新中有关于散标进计划的redis判断)
 						this.updateBorrowCommonData(borrowBean, bwb, borrowNid,adminUsername,adminId,borrow.getId());
@@ -865,13 +867,12 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		                            }
 							}
 						}
-						//添加修改日志
-						BorrowLog borrowLog = new BorrowLog();
+
 						borrowLog.setBorrowNid(borrowNid);
 						Map<String, String> map = CacheUtil.getParamNameMap("BORROW_STATUS");
 						//String statusNameString = getBorrowStatusName(borrowBean.getStatus());
-						borrowLog.setBorrowStatus(map.get(borrowBean.getStatus()));
-						borrowLog.setBorrowStatusCd(StringUtil.isBlank(borrowBean.getStatus())?0:Integer.valueOf(borrowBean.getStatus()));
+						borrowLog.setBorrowStatusCd(StringUtil.isBlank(borrowLog.getBorrowStatus())?0:Integer.valueOf(borrowLog.getBorrowStatus()));
+						borrowLog.setBorrowStatus(map.get(borrowLog.getBorrowStatus()));
 						borrowLog.setType(BORROW_LOG_UPDATE);
 						borrowLog.setCreateTime(new Date());
 						borrowLog.setCreateUserId(adminId);
@@ -1261,6 +1262,17 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 						// borrowNid，借款的borrowNid,account借款总额
 						RedisUtils.set(RedisConstants.BORROW_NID+borrowNid, borrow.getAccount().toString());
 					}
+					if (!CustomConstants.INST_CODE_HYJF.equals(borrowBean.getInstCode())) {
+						// 三方资产更新资产表状态
+						HjhPlanAsset hjhPlanAssetNew = this.selectHjhPlanAssetByBorrowNid(borrowNid);
+						// 受托支付，更新为待授权
+						//7 投资中
+						hjhPlanAssetNew.setStatus(7);
+						//获取当前时间
+						hjhPlanAssetNew.setUpdateTime(new Date());
+						hjhPlanAssetNew.setUpdateUserId(1);
+						this.hjhPlanAssetMapper.updateByPrimaryKeySelective(hjhPlanAssetNew);
+					}
 				}
 			}
 		}
@@ -1420,10 +1432,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		/*-------------upd by liushouyi HJH3 End-----------------*/
 		this.borrowMapper.updateByPrimaryKeySelective(borrow);
 		borrow.setId(borrow.getInfoId());
-		BorrowInfo record=new BorrowInfo();
+		BorrowInfoWithBLOBs record=new BorrowInfoWithBLOBs();
 		BeanUtils.copyProperties(borrow,record);
 		 record.setId(infoId);
-		this.borrowInfoMapper.updateByPrimaryKey(record);
+		this.borrowInfoMapper.updateByPrimaryKeyWithBLOBs(record);
 		// 个人信息
 		this.insertBorrowManinfo(borrowNid, borrowBean, borrow);
 		// 公司信息
@@ -3223,7 +3235,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				// 用户信息 所在地区 省
 			//	borrowBean.setComLocationProvince(this.getValue(record.getProvince()));
 				// 用户信息 所在地区 市
-				//borrowBean.setComLocationCity(this.getValue(record.getCity()));
+	//			borrowBean.setComLocationCity(this.getValue(record.getCity()));
 				// 用户信息 所在地区 区
 				borrowBean.setComLocationArea(this.getValue(record.getArea()));
 				// 用户信息 注册资本
@@ -3663,6 +3675,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		String mmdd = yyyymm.substring(2);
 		String borrowPreNid = this.borrowCustomizeMapper.getBorrowPreNid(mmdd);
 		if (StringUtils.isEmpty(borrowPreNid)) {
+			RedisUtils.set("borrowPreNid", mmdd + "0000");
 			return mmdd + "0001";
 		}
 		if (borrowPreNid.length() == 7) {
@@ -4327,8 +4340,8 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			form.setBorrowHousesList(form.getBorrowHousesList());
 		}
 		// 认证信息
-		List<BorrowCommonCompanyAuthenVO> borrowCommonCompanyAuthenList = JSONArray.parseArray(form.getBorrowAuthenJson(), BorrowCommonCompanyAuthenVO.class);
-		form.setBorrowCommonCompanyAuthenList(borrowCommonCompanyAuthenList);
+//		List<BorrowCommonCompanyAuthenVO> borrowCommonCompanyAuthenList = JSONArray.parseArray(form.getBorrowAuthenJson(), BorrowCommonCompanyAuthenVO.class);
+//		form.setBorrowCommonCompanyAuthenList(borrowCommonCompanyAuthenList);
 		// 项目资料
 		List<BorrowCommonImageVO> borrowCommonImageList =form.getBorrowCommonImageList();
 		String fileDomainUrl = UploadFileUtils.getDoPath(url);
@@ -5752,10 +5765,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	@Override
 	public int isEntrustedExistsUser(String userName) {
 		if (StringUtils.isNotEmpty(userName)) {
-			UserExample example = new UserExample();
-			UserExample.Criteria cra = example.createCriteria();
-			cra.andUsernameEqualTo(userName);
-			List<User> userList = this.userMapper.selectByExample(example);
+//			UserExample example = new UserExample();
+//			UserExample.Criteria cra = example.createCriteria();
+//			cra.andUsernameEqualTo(userName);
+//			List<User> userList = this.userMapper.selectByExample(example);
 //			UserExample example = new UsersExample();
 //			UsersExample.Criteria cra = example.createCriteria();
 //			cra.andUsernameEqualTo(userName);
@@ -5786,12 +5799,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			}
 			if(whiteList.get(0).getState() == 0){//状态 1启用  0禁用
 				return 6;
-			}
-			// 检查是否服务费授权
-			Integer isPaymentAuth = CommonUtils.checkPaymentAuthStatus(userList.get(0).getPaymentAuthStatus());
-			if(isPaymentAuth-0==0){
-				// 未服务费授权
-				return 7;
 			}
 		}
 		return 0;

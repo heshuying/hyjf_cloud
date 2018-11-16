@@ -181,7 +181,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 //		String userId = ShiroUtil.getLoginUserId();
 		Admin record = new Admin();
 		record.setState("1");
-//		record.setDelFlag(CustomConstants.FLAG_DELETE);
+		record.setDelFlag(1);
 		record.setUpdateTime(new Date());
 		record.setUpdateUserId(adminId);
 
@@ -204,6 +204,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 			criteria.andIdNotEqualTo(id);
 		}
 		criteria.andMobileEqualTo(mobile);
+		criteria.andDelFlagEqualTo(0);
 		int cnt = adminMapper.countByExample(example);
 		return cnt;
 	}
@@ -220,6 +221,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 		if (Validator.isNotNull(id)) {
 			criteria.andIdNotEqualTo(id);
 		}
+		criteria.andDelFlagEqualTo(0);
 		criteria.andUsernameEqualTo(username);
 		//criteria.andDelFlagEqualTo("0");// 未删除
 		int cnt = adminMapper.countByExample(example);
@@ -238,6 +240,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 		if (Validator.isNotNull(id)) {
 			criteria.andIdNotEqualTo(id);
 		}
+		criteria.andDelFlagEqualTo(0);
 		criteria.andEmailEqualTo(email);
 		int cnt = adminMapper.countByExample(example);
 		return cnt;
@@ -288,6 +291,9 @@ public class AdminUserServiceImpl implements AdminUserService {
 	@Override
 	public List<AdminRole> getAdminRoleList() {
 		AdminRoleExample example = new AdminRoleExample();
+		com.hyjf.am.config.dao.model.auto.AdminRoleExample.Criteria criteria = example.createCriteria();
+			criteria.andStatusEqualTo(1);
+			criteria.andDelFlagEqualTo(0);
 		example.setOrderByClause(" sort ");
 		return adminRoleMapper.selectByExample(example);
 	}

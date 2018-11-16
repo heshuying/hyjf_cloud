@@ -9,7 +9,7 @@ import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.*;
-import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
+import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
@@ -20,7 +20,7 @@ import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.promotion.channel.ChannelCustomizeVO;
 import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
 import org.slf4j.Logger;
@@ -643,21 +643,6 @@ public class AmUserClientImpl implements AmUserClient {
 				.getBody();
 		return instFlg;
 	}
-
-	/**
-	 * 获取银行卡配置信息
-	 *
-	 * @auther: nxl
-	 * @param bankId
-	 * @return
-	 */
-	/*
-	 * @Override public BanksConfigVO getBanksConfigByBankId(int bankId) {
-	 * BanksConfigResponse response = restTemplate
-	 * .getForEntity("http://AM-ADMIN/AM-ADMIN/config/getBanksConfigByBankId/" +
-	 * bankId, BanksConfigResponse.class).getBody(); if (response != null) { return
-	 * response.getResult(); } return null; }
-	 */
 
 	/**
 	 * 更新用户绑定的银行卡
@@ -2348,10 +2333,10 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-	public AppChannelStatisticsDetailVO getAppChannelStatisticsDetailByUserId(Integer userId) {
-		AppChannelStatisticsDetailResponse response = restTemplate.getForEntity(
-				"http://CS-MESSAGE/cs-message/search/getAppChannelStatisticsDetailByUserId/" + userId,
-				AppChannelStatisticsDetailResponse.class).getBody();
+	public AppUtmRegVO getAppChannelStatisticsDetailByUserId(Integer userId) {
+		AppUtmRegResponse response = restTemplate.getForEntity(
+				"http://AM-ADMIN/am-admin/app_utm_reg/findByUserId/" + userId,
+				AppUtmRegResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -2361,16 +2346,16 @@ public class AmUserClientImpl implements AmUserClient {
 	/**
 	 * 开户更新开户渠道统计开户时间
 	 *
-	 * @param appChannelStatisticsDetailVO
+	 * @param appUtmRegVO
 	 * @return java.lang.Boolean
 	 * @author Zha Daojian
 	 * @date 2018/8/22 13:38
 	 **/
 	@Override
-	public Boolean updateByPrimaryKeySelective(AppChannelStatisticsDetailVO appChannelStatisticsDetailVO) {
+	public Boolean updateByPrimaryKeySelective(AppUtmRegVO appUtmRegVO) {
 
 		AppChannelStatisticsDetailRequest request = new AppChannelStatisticsDetailRequest();
-		BeanUtils.copyProperties(appChannelStatisticsDetailVO, request);
+		BeanUtils.copyProperties(appUtmRegVO, request);
 		Boolean result = restTemplate.postForEntity("http://AM-ADMIN/am-user/userManager/updateUser", request, Boolean.class)
 				.getBody();
 		return result;
@@ -2680,4 +2665,60 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return response.getResultInt().intValue();
 	}
+
+	@Override
+	public HjhUserAuthVO getHjhUserAuthByUserId(Integer userId) {
+		HjhUserAuthResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/user/getHjhUserAuthByUserId/"+userId, HjhUserAuthResponse.class)
+				.getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+
+
+	/**
+	 * 根据用户Id查询开户信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public List<BankOpenAccountLogVO> getBankOpenAccountLogVOByUserId(Integer userId) {
+		String url = "http://AM-ADMIN/am-user/borrowOpenaccountenquiryException/selectBankOpenAccountLogByUserId/"+userId;
+		BankOpenAccountLogResponse response = restTemplate.getForEntity(url, BankOpenAccountLogResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
+
+
+
+	@Override
+	public int onlyCheckMobileCode(String mobile, String code) {
+		SmsCodeRequest request = new SmsCodeRequest();
+		request.setMobile(mobile);
+		request.setVerificationCode(code);
+		Integer result = restTemplate.postForEntity("http://AM-ADMIN/am-trade/sms_code/qianle_check/", request, IntegerResponse.class)
+				.getBody().getResultInt();
+		if (result == null) {
+			return 0;
+		}
+		return result;
+	}
+
+    @Override
+    public Integer getBySourceIdAndTerm(String utmId,String sourceId, String utmTerm) {
+		UtmResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/promotion/utm/getbysourceidandterm/"+sourceId+"/"+utmTerm+"/"+utmId, UtmResponse.class).getBody();
+		if (response != null) {
+			return response.getRecordTotal();
+		}else{
+			return  0;
+		}
+    }
 }

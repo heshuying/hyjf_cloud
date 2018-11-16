@@ -59,6 +59,7 @@ public class ApiUnBindCardPageController extends BaseUserController {
         logger.info("-----------------------------"+unbindCardPageRequestBean.getAccountId() + "用户解除绑定银行卡开始-----------------------------");
         logger.info("第三方请求参数：" + JSONObject.toJSONString(unbindCardPageRequestBean));
         ModelAndView modelAndView = new ModelAndView("/bank/user/trusteePay/error");
+        Map<String, String> paramMap = new HashMap<String, String>();
         try {
             // 验证请求参数
             if (Validator.isNull(unbindCardPageRequestBean.getAccountId())||
@@ -67,31 +68,37 @@ public class ApiUnBindCardPageController extends BaseUserController {
                     Validator.isNull(unbindCardPageRequestBean.getInstCode())||
                     Validator.isNull(unbindCardPageRequestBean.getRetUrl())||
                     Validator.isNull(unbindCardPageRequestBean.getNotifyUrl())||
-                    Validator.isNull(unbindCardPageRequestBean.getForgotPwdUrl())){
-                getErrorMV(unbindCardPageRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000001, "请求参数非法");
+                    Validator.isNull(unbindCardPageRequestBean.getForgotPwdUrl())||
+                    Validator.isNull(unbindCardPageRequestBean.getPlatform())){
+
                 logger.info("-------------------请求参数非法--------------------");
-                return modelAndView;
+                paramMap.put("status", ErrorCodeConstant.STATUS_CE000001);
+                paramMap.put("statusDesc","请求参数非法");
+                return callbackErrorView(paramMap);
             }
             //验签
-            if(!unBindCardService.verifyRequestSign(unbindCardPageRequestBean, "/server/user/unbindCardPage/deleteCardPage")){
-                getErrorMV(unbindCardPageRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000002, "验签失败");
+            if(!unBindCardService.verifyRequestSign(unbindCardPageRequestBean, BaseDefine.METHOD_SERVER_UNBIND_CARD_PAGE)){
                 logger.info("-------------------验签失败！--------------------");
-                return modelAndView;
+                paramMap.put("status", ErrorCodeConstant.STATUS_CE000002);
+                paramMap.put("statusDesc","验签失败");
+                return callbackErrorView(paramMap);
             }
             //根据账号找出用户ID
             BankOpenAccountVO bankOpenAccount =unBindCardService.getBankOpenAccountByAccount(unbindCardPageRequestBean.getAccountId());
             if(bankOpenAccount == null){
-                getErrorMV(unbindCardPageRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000004, "没有根据电子银行卡找到用户");
                 logger.info("没有根据电子银行卡找到用户 "+unbindCardPageRequestBean.getAccountId());
-                return modelAndView;
+                paramMap.put("status",ErrorCodeConstant.STATUS_CE000004);
+                paramMap.put("statusDesc","没有根据电子银行卡找到用户");
+                return callbackErrorView(paramMap);
             }
 
-            UserVO user =unBindCardService.getUsersById(unbindCardPageRequestBean.getUserId());//用户ID
+            UserVO user =unBindCardService.getUsersById(bankOpenAccount.getUserId());//用户ID
             if(user.getUserType()==1){
                 //企业用户提示联系客服
-                getErrorMV(unbindCardPageRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000002, "企业用户解绑请联系客服");
                 logger.info("-------------------企业用户解绑请联系客服！--------------------");
-                return modelAndView;
+                paramMap.put("status",ErrorCodeConstant.STATUS_CE000002);
+                paramMap.put("statusDesc","企业用户解绑请联系客服");
+                return callbackErrorView(paramMap);
             }
             Integer userId=user.getUserId();
             // 用户余额大于零不让解绑
@@ -100,28 +107,30 @@ public class ApiUnBindCardPageController extends BaseUserController {
             BigDecimal bankBalance =unBindCardService.getBankBalance(userId,bankOpenAccount.getAccount());
             if ((Validator.isNotNull(account.getBankBalance()) && account.getBankBalance().compareTo(BigDecimal.ZERO) > 0)
                     || ((Validator.isNotNull(bankBalance) && bankBalance.compareTo(BigDecimal.ZERO) > 0))) {
-                getErrorMV(unbindCardPageRequestBean, modelAndView, ErrorCodeConstant.STATUS_BC000004, "抱歉，请先清空当前余额和待收后，再申请解绑。");
                 logger.info("解绑失败，余额大于0元是不能解绑银行卡"+unbindCardPageRequestBean.getAccountId());
-                return modelAndView;
+                paramMap.put("status",ErrorCodeConstant.STATUS_BC000004);
+                paramMap.put("statusDesc","抱歉，请先清空当前余额和待收后，再申请解绑。");
+                return callbackErrorView(paramMap);
             }
             // 根据银行卡Id获取用户的银行卡信息
             BankCardVO bankCard =unBindCardService.queryUserCardValid(userId.toString(),unbindCardPageRequestBean.getCardNo());
             if (bankCard == null || StringUtils.isEmpty(bankCard.getCardNo())) {
-                getErrorMV(unbindCardPageRequestBean, modelAndView, ErrorCodeConstant.STATUS_BC000002, "获取用户银行卡信息失败 ");
                 logger.info("获取用户银行卡信息失败"+unbindCardPageRequestBean.getCardNo());
-                return modelAndView;
+                paramMap.put("status",ErrorCodeConstant.STATUS_BC000002);
+                paramMap.put("statusDesc","获取用户银行卡信息失败");
+                return callbackErrorView(paramMap);
             }
             UserInfoVO usersInfo =unBindCardService.getUserInfo(userId);
             // 拼装参数 调用江西银行
             // 同步调用路径
-            String retUrl = systemConfig.getServerHost() + request.getContextPath()
-                    + "/server/user/unbindCardPage/return"+".do?acqRes="
+            String retUrl = systemConfig.getServerHost()+ "/hyjf-api/server/user/unbindCardPage/return"+"?acqRes="
                     + unbindCardPageRequestBean.getAcqRes() + StringPool.AMPERSAND + "callback="
                     + unbindCardPageRequestBean.getRetUrl().replace("#", "*-*-*");
 
             // 异步调用路
-            String bgRetUrl =systemConfig.getServerHost() + request.getContextPath()
-                    + "/server/user/unbindCardPage/notifyReturn"+ ".do?acqRes="
+            // 异步调用路
+            String bgRetUrl = "http://CS-USER/hyjf-api/server/user/unbindCardPage";
+            bgRetUrl =bgRetUrl+"/notifyReturn"+ "?acqRes="
                     + unbindCardPageRequestBean.getAcqRes() + "&callback=" + unbindCardPageRequestBean.getNotifyUrl().replace("#", "*-*-*");
 
             // 拼装参数 调用江西银行
@@ -140,7 +149,8 @@ public class ApiUnBindCardPageController extends BaseUserController {
             bean.setNotifyUrl(bgRetUrl);
             bean.setChannel(unbindCardPageRequestBean.getChannel());// 交易渠道
             bean.setPlatform(unbindCardPageRequestBean.getPlatform());
-            modelAndView =getCallbankMV(bean);
+            BankCallBean bankCallBean = getCallbankMV(bean);
+            modelAndView = BankCallUtils.callApi(bankCallBean);
             logger.info("解卡调用页面end");
             logger.info("-----------------------------"+unbindCardPageRequestBean.getAccountId() + "用户解除绑定银行卡结束-----------------------------");
             return modelAndView;
@@ -175,8 +185,7 @@ public class ApiUnBindCardPageController extends BaseUserController {
      * @param bean
      * @return
      */
-    public ModelAndView getCallbankMV(DeleteCardPageBean bean) {
-        ModelAndView mv = new ModelAndView();
+    public BankCallBean getCallbankMV(DeleteCardPageBean bean) {
         // 获取共同参数
         String bankCode =systemConfig.getBankCode();;
         String bankInstCode =systemConfig.getBankInstcode();
@@ -215,76 +224,54 @@ public class ApiUnBindCardPageController extends BaseUserController {
         bindCardBean.setLogRemark("外部服务接口:解卡页面");
         bindCardBean.setLogIp(bean.getIp());
         bindCardBean.setLogClient(Integer.parseInt(bean.getPlatform()));
-        try {
-            mv = BankCallUtils.callApi(bindCardBean);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return mv;
+        return bindCardBean;
     }
 
     /**
      * 页面解卡同步回调
      * @param request
-     * @param response
      * @return
      */
-    @PostMapping("/return")
+    @RequestMapping("/return")
     @ApiOperation(value = "页面解卡同步回调", notes = "页面解卡同步回调")
-    public ModelAndView unbindCardReturn(HttpServletRequest request, HttpServletResponse response,@ModelAttribute BankCallBean bean) {
+    public ModelAndView unbindCardReturn(HttpServletRequest request) {
         logger.info("==========解卡同步回调开始==============");
-        ModelAndView modelAndView = new ModelAndView("/callback/callback_trusteepay");
-        UnbindCardPageResultBean unbindCardPageResultBean = new UnbindCardPageResultBean();
-        unbindCardPageResultBean.setCallBackAction(request.getParameter("callback").replace("*-*-*","#"));
         String isSuccess = request.getParameter("isSuccess");
-        bean.convert();
-        // 银行返回响应代码
-        String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
-        logger.info("解卡同步返回值,用户ID:[" + bean.getLogUserId() + "],retCode:[" + retCode + "]");
+        Map<String, String> resultMap = new HashMap<>();
         // 解卡后处理
-        try {
-            BaseResultBean resultBean = new BaseResultBean();
-            if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)||"1".equals(isSuccess)) {
-                // 成功
-                modelAndView.addObject("statusDesc", "解绑银行卡成功！");
-                resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
-                logger.info("================交易完成后,回调结束================");
-            } else {
-                //解卡失败
-                modelAndView.addObject("statusDesc", "银行解卡失败");
-                resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
-                logger.info("================交易完成后,回调结束(银行解卡失败)================");
-            }
-            unbindCardPageResultBean.set("chkValue", resultBean.getChkValue());
-            unbindCardPageResultBean.set("status", resultBean.getStatus());
-            unbindCardPageResultBean.set("acqRes",request.getParameter("acqRes"));
-            modelAndView.addObject("callBackForm", unbindCardPageResultBean);
-            return modelAndView;
-        } catch (Exception e) {
-            BaseResultBean resultBean = new BaseResultBean();
-            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
-            logger.info("操作异常");
-            resultBean.setStatusDesc("系统异常,请稍后再试!");
-            e.printStackTrace();
+        String url = request.getParameter("callback").replace("*-*-*", "#");
+        resultMap.put("callBackAction", url);
+        if ("1".equals(isSuccess)) {
+            // 成功
+            logger.info("================交易完成后,回调结束================");
+            resultMap.put("status", ErrorCodeConstant.SUCCESS);
+            resultMap.put("statusDesc", "解绑银行卡成功");
+            resultMap.put("acqRes", request.getParameter("acqRes"));
+            return callbackErrorView(resultMap);
+        } else {
+            //解卡失败
+            logger.info("================交易完成后,回调结束(银行解卡失败)================");
+            resultMap.put("status", ErrorCodeConstant.STATUS_CE999999);
+            resultMap.put("statusDesc", "解绑银行卡失败");
+            return callbackErrorView(resultMap);
         }
-        return modelAndView;
     }
 
     /**
      * 解卡异步回调方法
      * @param request
-     * @param response
      * @param bean
      * @return
      */
     @PostMapping("/notifyReturn")
     @ApiOperation(value = "解卡异步回调方法", notes = "解卡异步回调方法")
-    public BankCallResult bgreturn(HttpServletRequest request, HttpServletResponse response, @ModelAttribute BankCallBean bean) {
+    public BankCallResult bgreturn(HttpServletRequest request, @RequestBody BankCallBean bean) {
         BankCallResult result = new BankCallResult();
         BaseResultBean resultBean = new BaseResultBean();
         Map<String, String> params = new HashMap<String, String>();
-        logger.info("页面解卡异步回调start");
-        bean.convert();
+        logger.info("api端页面解卡异步回调start,userId ="+ bean.getLogUserId());
+        logger.info("api端页面解卡异步回调start,参数为 ="+JSONObject.toJSON(bean));
+        //bean.convert();
         String message = "";
         String status = "";
         int userId = Integer.parseInt(bean.getLogUserId());
@@ -292,26 +279,32 @@ public class ApiUnBindCardPageController extends BaseUserController {
         try {
             // 删除银行卡信息
             if(BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())){
+                logger.info("======api端解绑银行卡异步返回成功============");
                 // 删除银行卡信息
                 unBindCardService.updateAfterUnBindCard(bean,userId);
                 message = "解绑成功";
                 status = ErrorCodeConstant.SUCCESS;
             }else {
-                message = "解绑失败，,失败原因：" + unBindCardService.getBankRetMsg(bean.getRetCode());
+                logger.info("======api端解绑银行卡解绑失败，失败原因：" +unBindCardService.getBankRetMsg(bean.getRetCode().toString()+"=============="));
+                message = "解绑失败,失败原因：" + unBindCardService.getBankRetMsg(bean.getRetCode());
                 status = ErrorCodeConstant.STATUS_CE999999;
             }
         } catch (Exception e) {
-            message = "解绑失败，,失败原因：" + unBindCardService.getBankRetMsg(bean.getRetCode());
-            status = ErrorCodeConstant.STATUS_CE999999;
-            e.printStackTrace();
+            logger.error("出错了",e);
+            params.put("status", ErrorCodeConstant.STATUS_CE999999);
+            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
+            params.put("statusDesc", "解绑失败,失败原因：" + unBindCardService.getBankRetMsg(bean.getRetCode()));
+            params.put("chkValue", resultBean.getChkValue());
+            result.setStatus(false);
+            CommonSoaUtils.noRetPostThree(request.getParameter("callback").replace("*-*-*", "#"), params);
+            return result;
         }
         params.put("accountId", bean.getAccountId());
         params.put("status", status);
         params.put("statusDesc",message);
-        resultBean.setStatusForResponse(status);
         params.put("chkValue", resultBean.getChkValue());
         params.put("acqRes",request.getParameter("acqRes"));
-        CommonSoaUtils.noRetPostThree(request.getParameter("callback").replace("*-*-*","#"), params);
+        resultBean.setStatusForResponse(status);
         logger.info("页面解卡成功,用户ID:[" + userId + ",用户电子账户号:[" + bean.getAccountId() + "]");
         result.setStatus(true);
         return result;

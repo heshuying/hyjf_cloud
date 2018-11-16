@@ -144,17 +144,18 @@ public class AdminMenuServiceImpl  implements AdminMenuService {
      *
      * @param record
      */
-    public void insertRecord(AdminMenuRequest record) {
-    	
+    public String insertRecord(AdminMenuRequest record) {
+    	String s=UUID.randomUUID().toString();
     	AdminMenu acv=new AdminMenu();
 		BeanUtils.copyProperties(record, acv);
-		acv.setMenuUuid(UUID.randomUUID().toString());
+		acv.setMenuUuid(s);
 		acv.setCreateTime(new Date());
 		acv.setCreateUserId(record.getAdminId());
 		acv.setUpdateTime(new Date());
 		acv.setUpdateUserId(record.getAdminId());
 		acv.setDelFlag(0);
         adminMenuMapper.insert(acv);
+        return s;
     }
 
     /**

@@ -18,14 +18,18 @@ public class HolidaysConfigRequestBean extends BaseRequest implements Serializab
     /**
      * 前台时间接收
      */
-    @ApiModelProperty(value = "查询ids ")
+    @ApiModelProperty(value = "画面迁移用ids ")
     private String ids;
+
     @ApiModelProperty(value = "前台时间接收 ")
     private String startCreate;
+
     @ApiModelProperty(value = "前台时间接收 ")
     private String endCreate;
-    @ApiModelProperty(value = "id ")
+
+    @ApiModelProperty(value = "修改id ")
     private Integer id;
+
     @ApiModelProperty(value = "年 ")
     private String year;
 
@@ -42,6 +46,7 @@ public class HolidaysConfigRequestBean extends BaseRequest implements Serializab
     private Date createtime;
 
     private Date updatetime;
+
     @ApiModelProperty(value = "说明 ")
     private String remarks;
 

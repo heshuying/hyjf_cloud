@@ -4,12 +4,14 @@ package com.hyjf.cs.message.service.report.impl;/*
 
 import com.hyjf.am.vo.config.IdCardCustomize;
 import com.hyjf.am.vo.datacollect.*;
+import com.hyjf.am.vo.message.OperationReportJobBean;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.service.BaseServiceImpl;
-import com.hyjf.cs.message.bean.mc.OperationReportColumnEntity;
-import com.hyjf.cs.message.bean.mc.UserOperationReportEntity;
-import com.hyjf.cs.message.client.OperationReportJobClient;
+import com.hyjf.cs.message.bean.ic.OperationColumnReport;
+import com.hyjf.cs.message.bean.ic.OperationUserReport;
+import com.hyjf.cs.message.client.AmConfigClient;
+import com.hyjf.cs.message.client.AmUserClient;
 import com.hyjf.cs.message.mongo.mc.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +34,9 @@ import java.util.Map;
 public class StatisticsOperationReportBase extends BaseServiceImpl {
 
     @Autowired
-    public OperationReportJobClient operationReportJobClient;
-
+    AmUserClient amUserClient;
+    @Autowired
+    AmConfigClient amConfigClient;
     @Autowired
     public OperationReportColumnMongDao operationReportColumnMongDao;//运营报告
     @Autowired
@@ -91,10 +94,10 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         operationReport.setYear(year);//年
 
 //        operationReportMapper.insert(operationReport);
-        OperationReportColumnEntity operationReportColumnEntity = new OperationReportColumnEntity();
-        BeanUtils.copyProperties(operationReport, operationReportColumnEntity);
-        operationReportColumnMongDao.insert(operationReportColumnEntity);
-        String id = operationReportColumnEntity.getId();
+        OperationColumnReport operationColumnReport = new OperationColumnReport();
+        BeanUtils.copyProperties(operationReport, operationColumnReport);
+        operationReportColumnMongDao.insert(operationColumnReport);
+        String id = operationColumnReport.getId();
         return id;
 
     }
@@ -104,9 +107,9 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
      *
      * @param operationReportId 运营报告Id
      * @param type              运营报告类型(1.月度2.季度3.上半年度4.年度)
-     * @param intervalMonth
+     * @param bean
      */
-    public void saveUserOperationReport(String operationReportId, Integer type, int intervalMonth) throws Exception {
+    public void saveUserOperationReport(String operationReportId, Integer type, OperationReportJobBean bean) throws Exception {
         Integer manTenderNum = 0;//男性投资人数
         Integer womanTenderNum = 0;//女性投资人数
         Integer ageFirstStageTenderNum = 0;//18~29岁投资人数（人）
@@ -130,7 +133,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         userOperationReport.setCreateUserId(1);
 
         //性别分布
-        Map<String, Integer> mapexDistribute = this.getSexDistribute(intervalMonth);
+        Map<String, Integer> mapexDistribute = this.getSexDistribute(bean);
         if (!CollectionUtils.isEmpty(mapexDistribute)) {
             manTenderNum = mapexDistribute.get("manTenderNum");
             womanTenderNum = mapexDistribute.get("womanTenderNum");
@@ -145,7 +148,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
 
 
         //年龄分布
-        Map<String, Integer> mapAgeDistribute = this.getAgeDistribute(intervalMonth);
+        Map<String, Integer> mapAgeDistribute = this.getAgeDistribute(bean);
         if (!CollectionUtils.isEmpty(mapAgeDistribute)) {
 
             ageFirstStageTenderNum = mapAgeDistribute.get("18-29");
@@ -175,7 +178,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         }
 
         //金额分布
-        Map<String, Integer> mapMoneyDistribute = this.getMoneyDistribute(intervalMonth);
+        Map<String, Integer> mapMoneyDistribute = this.getMoneyDistribute(bean);
         if (!CollectionUtils.isEmpty(mapMoneyDistribute)) {
             amountFirstStageTenderNum = mapMoneyDistribute.get("0-1");
             amountSecondStageTenderNum = mapMoneyDistribute.get("1-5");
@@ -202,12 +205,12 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
             userOperationReport.setAmountFirveStageTenderProportion(assignCompute(amountFirveStageTenderNum, amountStageTenderNumSum, bigflag));//50万以上投资人数（%）
         }
 
-        UserOperationReportEntity userOperationReportEntity = new UserOperationReportEntity();
-        BeanUtils.copyProperties(userOperationReport,userOperationReportEntity);
-        userOperationReportEntity.setOperationReportId(operationReportId);//运营报告ID
+        OperationUserReport operationUserReport = new OperationUserReport();
+        BeanUtils.copyProperties(userOperationReport, operationUserReport);
+        operationUserReport.setOperationReportId(operationReportId);//运营报告ID
 
 //        userOperationReportMapper.insert(userOperationReport);
-        userOperationReportMongDao.insert(userOperationReportEntity);
+        userOperationReportMongDao.insert(operationUserReport);
     }
 
     /**
@@ -215,10 +218,10 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
      *
      * @param operationReportId
      * @param type              运营报告类型(1.月度2.季度3.上半年度4.年度)
-     * @param intervalMonth
+     * @param bean
      * @param sumTenderAmount   累计成交金额
      */
-    public void saveTenthOperationReport(String operationReportId, Integer type, int intervalMonth, BigDecimal sumTenderAmount) {
+    public void saveTenthOperationReport(String operationReportId, Integer type,OperationReportJobBean bean, BigDecimal sumTenderAmount) {
         BigDecimal tenderAmountSum = BigDecimal.ZERO;//十大投资人投资总和
         String tenderUsername = null;//投资者用户名
         BigDecimal tenderAmountMoney = BigDecimal.ZERO;//投资金额
@@ -231,7 +234,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         tenthOperationReport.setCreateUserId(1);
 
         //计算 十大投资人投资金额
-        List<OperationReportJobVO> listTenMostMoney = this.getTenMostMoney(intervalMonth);
+        List<OperationReportJobVO> listTenMostMoney = this.getTenMostMoney(bean);
         if (!CollectionUtils.isEmpty(listTenMostMoney)) {
 
             for (int i = 0; i < listTenMostMoney.size(); i++) {
@@ -316,7 +319,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         }
 
         //大赢家，收益最高
-        List<OperationReportJobVO> listOneInterestsMost = this.getOneInterestsMost(intervalMonth);
+        List<OperationReportJobVO> listOneInterestsMost =  this.getOneInterestsMost(bean);
         if (!CollectionUtils.isEmpty(listOneInterestsMost)) {
             OperationReportJobVO interestsMostDto = listOneInterestsMost.get(0);
             userId = interestsMostDto.getUserId();
@@ -332,7 +335,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         }
 
         //超活跃，投资笔数最多
-        List<OperationReportJobVO> listtOneInvestMost = this.getOneInvestMost(intervalMonth);
+        List<OperationReportJobVO> listtOneInvestMost =this.getOneInvestMost(bean);
         if (!CollectionUtils.isEmpty(listtOneInvestMost)) {
             OperationReportJobVO investMostDto = listtOneInvestMost.get(0);
             userId = investMostDto.getUserId();
@@ -359,20 +362,19 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
     /**
      * 业绩总览
      */
-    public Map<String, BigDecimal> getPerformanceSum() {
+    public Map<String, BigDecimal> getPerformanceSum(OperationReportJobBean bean) {
         Map<String, BigDecimal> map = new HashMap<String, BigDecimal>();
-        List<OperationReportJobVO> listPerformanceSum = operationReportJobClient.getPerformanceSum();
+        List<OperationReportJobVO> listPerformanceSum = bean.getListPerformanceSum();
         //代码拆分
-        int countRegistUser =  operationReportJobClient.countRegistUser();
+        int countRegistUser =  amUserClient.countRegistUser();
         if (!CollectionUtils.isEmpty(listPerformanceSum)) {
             for (OperationReportJobVO opear : listPerformanceSum) {
                 if ("累计交易总额".equals(opear.getTitle())) {
                     map.put("allAmount", opear.getSumAccount());
                 } else if ("累计用户收益".equals(opear.getTitle())) {
                     map.put("allProfit", opear.getSumAccount());
-                } else if ("平台注册人数".equals(opear.getTitle())) {
-                    map.put("registNum", new BigDecimal(countRegistUser));
                 }
+                map.put("registNum", new BigDecimal(countRegistUser));
             }
 
             //null值转换
@@ -382,28 +384,15 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         return map;
     }
 
-    /**
-     * 当月、季、半年、全年业绩  下面的  成交金额,根据月份计算
-     *
-     * @param startMonth 开始月份，如果是当月就填 0
-     * @param endMonth   结束月份
-     * @return
-     */
-    public List<OperationReportJobVO> getMonthDealMoney(int startMonth, int endMonth) {
-        return operationReportJobClient.getMonthDealMoney(startMonth, endMonth);
-    }
 
     /**
      * 年这个时候到手收益 和 去年这个时候到手收益 和  预期收益率
      *
-     * @param intervalMonth 今年间隔月份
-     * @param startMonth    去年开始月份
-     * @param endMonth      去年结束月份
      * @return
      */
-    public Map<String, BigDecimal> getRevenueAndYield(int intervalMonth, int startMonth, int endMonth) {
+    public Map<String, BigDecimal> getRevenueAndYield(OperationReportJobBean bean) {
         Map<String, BigDecimal> map = new HashMap<String, BigDecimal>();
-        List<OperationReportJobVO> listOperationReportInfoCustomize = operationReportJobClient.getRevenueAndYield(intervalMonth, startMonth, endMonth);
+        List<OperationReportJobVO> listOperationReportInfoCustomize = bean.getListOperationReportInfoCustomize();
         if (!CollectionUtils.isEmpty(listOperationReportInfoCustomize)) {
             for (OperationReportJobVO opear : listOperationReportInfoCustomize) {
                 BigDecimal sumAccount = opear.getSumAccount()==null?new BigDecimal(0):opear.getSumAccount();
@@ -425,11 +414,10 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
     /**
      * 充值金额、充值笔数
      *
-     * @param intervalMonth 今年间隔月份
      */
-    public Map<String, BigDecimal> getRechargeMoneyAndSum(int intervalMonth) {
+    public Map<String, BigDecimal> getRechargeMoneyAndSum(OperationReportJobBean bean) {
         Map<String, BigDecimal> map = new HashMap<String, BigDecimal>();
-        List<OperationReportJobVO> listRechargeMoneyAndSum = operationReportJobClient.getRechargeMoneyAndSum(intervalMonth);
+        List<OperationReportJobVO> listRechargeMoneyAndSum = bean.getListRechargeMoneyAndSum();
         if (!CollectionUtils.isEmpty(listRechargeMoneyAndSum)) {
             for (OperationReportJobVO opear : listRechargeMoneyAndSum) {
                 if ("充值金额".equals(opear.getTitle())) {
@@ -448,14 +436,13 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
     /**
      * 渠道分析 ，成交笔数
      *
-     * @param intervalMonth 今年间隔月份
      * @return
      */
-    public List<OperationReportInfoVO> getCompleteCount(int intervalMonth) {
+    public List<OperationReportInfoVO> getCompleteCount(OperationReportJobBean bean) {
         List<OperationReportInfoVO> listOperation = new ArrayList<>();
         Integer appCount = 0;//app成交笔数
         BigDecimal appDealAmount = BigDecimal.ZERO;
-        List<OperationReportJobVO> listCompleteCount = operationReportJobClient.getCompleteCount(intervalMonth);
+        List<OperationReportJobVO> listCompleteCount = bean.getListCompleteCount();
         if (!CollectionUtils.isEmpty(listCompleteCount)) {
             OperationReportInfoVO dtoApp = new OperationReportInfoVO();
             for (OperationReportJobVO opear : listCompleteCount) {
@@ -488,14 +475,14 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
     /**
      * 借款期限
      *
-     * @param intervalMonth 今年间隔月份
+     * @param bean 今年间隔月份
      * @return
      */
-    public Map<String, Integer> getBorrowPeriod(int intervalMonth) {
+    public Map<String, Integer> getBorrowPeriod(OperationReportJobBean bean) {
         Map<String, Integer> map = new HashMap<String, Integer>();
         Integer sumPeriod = 0;
         Integer dayless30 = 0;
-        List<OperationReportJobVO> listBorrowPeriod = operationReportJobClient.getBorrowPeriod(intervalMonth);
+        List<OperationReportJobVO> listBorrowPeriod = bean.getListBorrowPeriod();
         if (!CollectionUtils.isEmpty(listBorrowPeriod)) {
             for (OperationReportJobVO opear : listBorrowPeriod) {
                 sumPeriod = sumPeriod + opear.getDealSum();
@@ -543,14 +530,13 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
     /**
      * 用户分析 - 性别分布
      *
-     * @param intervalMonth 今年间隔月份
      * @return
      */
-    public Map<String, Integer> getSexDistribute(int intervalMonth) {
+    public Map<String, Integer> getSexDistribute(OperationReportJobBean bean) {
         Map<String, Integer> map = new HashMap<String, Integer>();
-        List<OperationReportJobVO> listSexDistribute = operationReportJobClient.getSexDistribute(intervalMonth);
+        List<OperationReportJobVO> listSexDistribute = bean.getListSexDistribute();
         //代码拆分为2部分，第一部分查询出所有用户 封装到listSexDistribute里面，然后通过用户去查询其他库
-        listSexDistribute =  operationReportJobClient.getSexCount(listSexDistribute);
+        listSexDistribute =  amUserClient.getSexCount(listSexDistribute);
         if (!CollectionUtils.isEmpty(listSexDistribute)) {
             for (OperationReportJobVO opear : listSexDistribute) {
                 if ("男".equals(opear.getTitle())) {
@@ -570,14 +556,14 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
     /**
      * 用户分析 - 年龄分布
      *
-     * @param intervalMonth 今年间隔月份
+     * @param bean 今年间隔月份
      * @return
      */
-    public Map<String, Integer> getAgeDistribute(int intervalMonth) {
+    public Map<String, Integer> getAgeDistribute(OperationReportJobBean bean) {
         Map<String, Integer> map = new HashMap<String, Integer>();
-        List<OperationReportJobVO> listAgeDistribute = operationReportJobClient.getAgeDistribute(intervalMonth);
+        List<OperationReportJobVO> listAgeDistribute = bean.getListAgeDistribute();
         //代码拆分为2部分，第一部分查询出所有用户 封装到listSexDistribute里面，然后通过用户去查询其他库
-        listAgeDistribute =  operationReportJobClient.getAgeCount(listAgeDistribute);
+        listAgeDistribute =  amUserClient.getAgeCount(listAgeDistribute);
         if (!CollectionUtils.isEmpty(listAgeDistribute)) {
             for (OperationReportJobVO opear : listAgeDistribute) {
                 if ("18-29岁".equals(opear.getTitle())) {
@@ -602,12 +588,12 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
     /**
      * 用户分析 - 金额分布
      *
-     * @param intervalMonth 今年间隔月份
+     * @param bean 今年间隔月份
      * @return
      */
-    public Map<String, Integer> getMoneyDistribute(int intervalMonth) {
+    public Map<String, Integer> getMoneyDistribute(OperationReportJobBean bean) {
         Map<String, Integer> map = new HashMap<String, Integer>();
-        List<OperationReportJobVO> listMoneyDistribute = operationReportJobClient.getMoneyDistribute(intervalMonth);
+        List<OperationReportJobVO> listMoneyDistribute = bean.getListMoneyDistribute();
         if (!CollectionUtils.isEmpty(listMoneyDistribute)) {
             for (OperationReportJobVO opear : listMoneyDistribute) {
                 if ("1万以下".equals(opear.getTitle())) {
@@ -632,12 +618,11 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
     /**
      * 十大投资人
      *
-     * @param intervalMonth 今年间隔月份
      * @return
      */
-    public List<OperationReportJobVO> getTenMostMoney(int intervalMonth) {
-        List<OperationReportJobVO> list = operationReportJobClient.getTenMostMoney(intervalMonth);
-        List<OperationReportJobVO> userNames = operationReportJobClient.getUserNames(list);
+    public List<OperationReportJobVO> getTenMostMoney(OperationReportJobBean bean) {
+        List<OperationReportJobVO> list = bean.getListTenMostMoney();
+        List<OperationReportJobVO> userNames = amUserClient.getUserNames(list);
         for(int i=0;i<list.size();i++){
             OperationReportJobVO vo = list.get(i);
             for (int j=0;j<userNames.size();j++){
@@ -652,12 +637,12 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
     /**
      * 超活跃，投资笔数最多
      *
-     * @param intervalMonth 今年间隔月份
+     * @param bean 今年间隔月份
      * @return
      */
-    public List<OperationReportJobVO> getOneInvestMost(int intervalMonth) {
-        List<OperationReportJobVO> list = operationReportJobClient.getOneInvestMost(intervalMonth);
-        List<OperationReportJobVO> userNames = operationReportJobClient.getUserNames(list);
+    public List<OperationReportJobVO> getOneInvestMost(OperationReportJobBean bean) {
+        List<OperationReportJobVO> list = bean.getListtOneInvestMost();
+        List<OperationReportJobVO> userNames = amUserClient.getUserNames(list);
         for(int i=0;i<list.size();i++){
             OperationReportJobVO vo = list.get(i);
             for (int j=0;j<userNames.size();j++){
@@ -672,12 +657,12 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
     /**
      * 大赢家，收益最高
      *
-     * @param intervalMonth 今年间隔月份
+     * @param bean 今年间隔月份
      * @return
      */
-    public List<OperationReportJobVO> getOneInterestsMost(int intervalMonth) {
-        List<OperationReportJobVO> list = operationReportJobClient.getOneInterestsMost(intervalMonth);
-        List<OperationReportJobVO> userNames = operationReportJobClient.getUserNames(list);
+    public List<OperationReportJobVO> getOneInterestsMost(OperationReportJobBean bean) {
+        List<OperationReportJobVO> list = bean.getListOneInterestsMost();
+        List<OperationReportJobVO> userNames = amUserClient.getUserNames(list);
         for(int i=0;i<list.size();i++){
             OperationReportJobVO vo = list.get(i);
             for (int j=0;j<userNames.size();j++){
@@ -697,10 +682,10 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
      */
     public OperationReportJobVO getUserAgeAndArea(Integer userId) {
         IdCardCustomize idcard = new IdCardCustomize();
-        OperationReportJobVO vo =  operationReportJobClient.getUserAgeAndArea(userId);
+        OperationReportJobVO vo =  amUserClient.getUserAgeAndArea(userId);
         if(org.apache.commons.lang.StringUtils.isNotEmpty(vo.getTitle())) {
             idcard.setBm(vo.getTitle().substring(0, 6));
-            vo.setTitle(operationReportJobClient.getIdCardCustomize(idcard).getArea());
+            vo.setTitle(amConfigClient.getIdCardCustomize(idcard).getArea());
         }
         return vo;
     }
@@ -709,10 +694,10 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
      * set 渠道分析
      *
      * @param object        halfYearOperationReport YearOperationReport
-     * @param intervalMonth 间隔月份
+     * @param bean 间隔月份
      * @return 成交笔数总数
      */
-    public Integer setCompleteCount(Object object, Integer intervalMonth) {
+    public Integer setCompleteCount(Object object,OperationReportJobBean bean) {
         Integer sumCompleteCount = 0;//全年成交笔数
         Integer appDealNum = 0;//App成交笔数
         Integer pcDealNum = 0;//pc成交笔数
@@ -727,7 +712,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
         BigDecimal dealAmountPercent = new BigDecimal(100);// 成交金额占比差额计算
 
         //渠道分析
-        List<OperationReportInfoVO> listgetCompleteCount = getCompleteCount(intervalMonth);
+        List<OperationReportInfoVO> listgetCompleteCount = getCompleteCount(bean);
         for (OperationReportInfoVO completeCountDto : listgetCompleteCount) {
             if ("pcDealNum".equals(completeCountDto.getTitle())) {
                 pcDealNum = completeCountDto.getDealSum();//pc成交笔数
@@ -790,10 +775,10 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
      * set 借款期限
      *
      * @param object        halfYearOperationReport YearOperationReport
-     * @param intervalMonth
+     * @param bean
      */
-    public void setHalfYearAndYearLoanTime(Object object, Integer intervalMonth) {
-        Map<String, Integer> map = this.getBorrowPeriod(intervalMonth);
+    public void setHalfYearAndYearLoanTime(Object object, OperationReportJobBean bean) {
+        Map<String, Integer> map = this.getBorrowPeriod(bean);
         if (CollectionUtils.isEmpty(map)) {
             return;
         }

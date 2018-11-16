@@ -42,7 +42,7 @@ import java.util.List;
 public class BankConfigController extends BaseController {
 
     //权限名称
-    private static final String PERMISSIONS = "banksetting";
+    private static final String PERMISSIONS = "bankconfig";
     @Autowired
     private MessagePushNoticesService messagePushNoticesService;
     @Autowired

@@ -2,16 +2,14 @@ package com.hyjf.cs.user.controller.api.regist;
 
 import com.hyjf.am.response.WrbResponse;
 import com.hyjf.am.resquest.api.WrbRegisterRequest;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.UtmPlatVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.util.WrbCommonDateUtil;
 import com.hyjf.common.util.WrbParseParamUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.WrbRegisterRequestBean;
 import com.hyjf.cs.user.bean.WrbRegisterResultBean;
+import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.service.wrb.UserRegisterService;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
@@ -26,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author lisheng
@@ -33,7 +32,7 @@ import java.util.Map;
  */
 @RestController
 @Api(tags = "风车理财用户注册")
-@RequestMapping(value = "/server/wrb/register")
+@RequestMapping(value = "/hyjf-api/server/wrb/register")
 public class WrbRegiestController {
 
     Logger log = LoggerFactory.getLogger(WrbRegiestController.class);
@@ -44,8 +43,10 @@ public class WrbRegiestController {
     public static final String RETMSG = "注册平台异常，用户注册失败！";
     @Autowired
     UserRegisterService userRegisterService;
+    @Autowired
+    private LoginService loginService;
 
-    @PostMapping("/register")
+    @PostMapping("/register.do")
     public WrbRegisterResultBean userRegister(@RequestParam String param,
                                               @RequestParam(value = "sign", required = false) String sign, HttpServletRequest request) {
         log.info("风车理财注册, param is :{}, sign is :{}", param, sign);
@@ -73,6 +74,14 @@ public class WrbRegiestController {
         // 注册平台
         String from = wrbRegisterRequestBean.getFrom();
         if (!(StringUtils.isNotBlank(from) && WRB.equals(from))) {
+            return resultBean;
+        }
+
+        //用户已授权验证
+        Integer userid = loginService.getUserIdByBind(Integer.parseInt(wrbRegisterRequestBean.getWrb_user_id()), WrbCommonDateUtil.FCLC_INSTCODE);
+        if(userid != null&&userid!=0){
+            resultBean.setRetcode(RETCODE2);
+            resultBean.setRetmsg("该用户已绑定汇盈金服");
             return resultBean;
         }
         // 机构编号
@@ -114,10 +123,11 @@ public class WrbRegiestController {
             }
             // 根据手机号检索用户是否存在
             UserVO user = this.userRegisterService.findUserByMobile(mobile);
-            String user_id = String.valueOf(user.getUserId());
             // 如果用户已经存在,表示该手机号已经注册
             if (user != null) {
-                Integer bindUsers = userRegisterService.selectByUserId(user.getUserId(), instCode);
+                String user_id = String.valueOf(user.getUserId());
+                BindUserVo bindUsers=
+                        userRegisterService.getBindUser(Integer.valueOf(wrbRegisterRequestBean.getWrb_user_id()), Integer.valueOf(instCode));
                 if (bindUsers == null) {
                     log.info("用户手机号已在平台注册:用户名:{},用户手机号:{}", user.getUsername(), mobile);
                     // 合作平台的老用户
@@ -126,7 +136,7 @@ public class WrbRegiestController {
                     resultBean.setPf_user_id(user_id);
                     return resultBean;
                 } else {
-                    if (user_id.equals(wrbRegisterRequestBean.getWrb_user_id())) {
+                    if (StringUtils.equals(bindUsers.getBindUniqueId()+"",wrbRegisterRequestBean.getWrb_user_id())) {
                         resultBean.setRetcode(RETCODE2);
                         resultBean.setRetmsg("注册成功");
                         // 用户Id
@@ -159,6 +169,7 @@ public class WrbRegiestController {
                     resultBean.setRetmsg("注册失败");
                     return resultBean;
                 } else {
+                    TimeUnit.SECONDS.sleep(2);//秒
                     UserVO users = this.userRegisterService.checkUserByUserId(userId);
                     if (users == null) {
                         log.info("根据用户ID获取用户信息表失败,用户ID:{}", userId);
@@ -169,10 +180,15 @@ public class WrbRegiestController {
 
                     //处理用户基本信息
                     UserInfoVO userInfo = userRegisterService.getUserInfoByUserId(users.getUserId());
+                    if (userInfo == null) {
+                        log.info("根据用户ID获取用户信息表失败 UserInfoVO,用户ID:{}", userId);
+                        resultBean.setRetcode(RETCODE);
+                        resultBean.setRetmsg("注册失败");
+                        return resultBean;
+                    }
                     userInfo.setIdcard(wrbRegisterRequestBean.getId_no());
                     userInfo.setTruename(wrbRegisterRequestBean.getTrue_name());
                     userRegisterService.updateUserInfoByUserInfo(userInfo);
-
                     //插入用户绑定表
                     userRegisterService.bindThirdUser(userId, Integer.valueOf(wrbRegisterRequestBean.getWrb_user_id()), Integer.valueOf(instCode));
                     log.info("汇盈金福用户：{} 跟风车理财用户：{}已经绑定！", userId, userId);
@@ -183,13 +199,13 @@ public class WrbRegiestController {
                     resultBean.setRetcode(RETCODE2);
                     resultBean.setRetmsg("注册成功");
                     // 用户Id
-                    resultBean.setPf_user_id(user_id);
+                    resultBean.setPf_user_id(String.valueOf(userId));
                     resultBean.setPf_user_name(userName);
                     return resultBean;
                 }
             }
         } catch (Exception e) {
-            log.info("用户注册失败~,手机号:{},失败原因:{}", mobile, e.getMessage());
+            log.error("用户注册失败~,手机号:{},失败原因:", mobile, e);
             resultBean.setRetcode(RETCODE);
             resultBean.setRetmsg("注册失败");
             return resultBean;

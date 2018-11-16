@@ -5,6 +5,8 @@ package com.hyjf.am.trade.service.front.borrow.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
+import com.hyjf.am.bean.crmtender.CrmInvestMsgBean;
 import com.hyjf.am.resquest.trade.BatchCenterCustomizeRequest;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
@@ -14,6 +16,7 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BatchCenterCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.mq.producer.AmTradeProducer;
 import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.front.account.AccountService;
 import com.hyjf.am.trade.service.front.borrow.BorrowService;
@@ -66,6 +69,9 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
     @Autowired
     private AccountService accountService;
+
+    @Autowired
+    private AmTradeProducer amTradeProducer;
 
     @Override
     public BorrowFinmanNewCharge selectBorrowApr(BorrowFinmanNewChargeRequest request) {
@@ -218,6 +224,9 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         }
         // 为投资完全掉单优惠券投资时修复做记录
         temp.setCouponGrantId(couponGrantId);
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(tenderRequest.getTenderFrom())) {
+            temp.setTenderFrom(tenderRequest.getTenderFrom());
+        }
         logger.info("开始插入temp表   {}",JSONObject.toJSONString(temp));
         boolean tenderTmpFlag = borrowTenderTmpMapper.insertSelective(temp) > 0 ? true : false;
         if (!tenderTmpFlag) {
@@ -331,7 +340,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         borrowTender.setInviteDepartmentName(tenderBg.getInviteDepartmentName());
         borrowTender.setInviteUserId(tenderBg.getInviteUserId());
         borrowTender.setInviteUserName(tenderBg.getInviteUserName());
-        borrowTender.setInviteUserAttribute(tenderBg.getAttribute());
+        borrowTender.setInviteUserAttribute(tenderBg.getInviteUserAttribute());
+        borrowTender.setTenderUserAttribute(tenderBg.getTenderUserAttribute());
         borrowTender.setInvestType(0);
         // 单笔投资的融资服务费
         borrowTender.setLoanFee(tenderBg.getPerService());
@@ -435,15 +445,18 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             throw new RuntimeException("borrow表更新失败");
         }
 
-        // 投资、收益统计表  改为组合层调用
-       /* List<CalculateInvestInterest> calculates = this.calculateInvestInterestMapper.selectByExample(new CalculateInvestInterestExample());
-        if (calculates != null && calculates.size() > 0) {
-            CalculateInvestInterest calculateNew = new CalculateInvestInterest();
-            calculateNew.setTenderSum(tenderBg.getAccountDecimal());
-            calculateNew.setId(calculates.get(0).getId());
-            calculateNew.setCreateTime(GetDate.getDate(GetDate.getNowTime10()));
-            this.webCalculateInvestInterestCustomizeMapper.updateCalculateInvestByPrimaryKey(calculateNew);
-        }*/
+        // 投资成功后,发送CRM绩效统计
+        CrmInvestMsgBean crmInvestMsgBean = new CrmInvestMsgBean();
+        crmInvestMsgBean.setInvestType(0);
+        crmInvestMsgBean.setOrderId(borrowTender.getNid());
+        //加入明细表插表成功的前提下，继续
+        //crm投资推送
+        try {
+            logger.info("投资成功后,发送CRM投资统计MQ:投资订单号:[" + borrowTender.getNid() + "].");
+            amTradeProducer.messageSendDelay(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(crmInvestMsgBean)), 2);
+        } catch (Exception e) {
+            logger.error("发送CRM消息失败:" + e.getMessage());
+        }
 
         // 计算此时的剩余可投资金额
         BigDecimal accountWait = this.getBorrow(tenderBg.getBorrowNid()).getBorrowAccountWait();
@@ -488,6 +501,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                 e.printStackTrace();
                 logger.error("发送短信失败");
             }
+
         } else if (accountWait.compareTo(BigDecimal.ZERO) < 0) {
             logger.error("用户:" + userId + "项目编号:" + borrowNid + "***********************************项目暴标");
             throw new RuntimeException("用户:" + userId + "项目编号:" + borrowNid + "***********************************项目暴标");

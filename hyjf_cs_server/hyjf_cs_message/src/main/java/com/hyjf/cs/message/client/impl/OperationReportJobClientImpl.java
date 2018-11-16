@@ -24,42 +24,10 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 	private RestTemplate restTemplate;
 
 	@Override
-	public  List<OperationReportJobVO> getTenderCityGroupByUserIds(List<OperationReportJobVO> cityUserIds){
-		OperationReportJobRequest request = new OperationReportJobRequest();
-		request.setOperationReportJobVOList(cityUserIds);
-		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-USER/am-user/batch/operation_report_job/tendercitygroupbyuserids",request, OperationReportJobResponse.class).getBody();
-		if (response != null) {
-			return response.getResultList();
-		}
-		return null;
-	}
-	@Override
-	public List<OperationReportJobVO> getTenderCityGroupBy(List<OperationReportJobVO> bms){
-		OperationReportJobRequest request = new OperationReportJobRequest();
-		request.setOperationReportJobVOList(bms);
-		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-config/content/idcard/tendercitygroupby",request, OperationReportJobResponse.class).getBody();
-		if (response != null) {
-			return response.getResultList();
-		}
-		return null;
-	}
-	@Override
 	public List<OperationReportJobVO> getTenderCityGroupByList(Date date){
 		OperationReportJobRequest request = new OperationReportJobRequest();
 		request.setDate(date);
 		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/tendercitygroupbylist",request, OperationReportJobResponse.class).getBody();
-		if (response != null) {
-			return response.getResultList();
-		}
-		return null;
-	}
-
-	@Override
-	public  List<OperationReportJobVO> getTenderSexGroupBy(Date date,List<OperationReportJobVO> ageRangeUserIds) {
-		OperationReportJobRequest request = new OperationReportJobRequest();
-		request.setDate(date);
-		request.setOperationReportJobVOList(ageRangeUserIds);
-		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-USER/am-user/batch/operation_report_job/tendersexgroupby",request, OperationReportJobResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
 		}
@@ -89,18 +57,7 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 		}
 		return 0;
 	}
-	@Override
-	public List<OperationReportJobVO>  getTenderAgeByRangeList(Date date,int firstAge,int endAge){
-		OperationReportJobRequest request = new OperationReportJobRequest();
-		request.setDate(date);
-		request.setFirstAge(firstAge);
-		request.setEndAge(endAge);
-		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/tenderagebyrangelist",request, OperationReportJobResponse.class).getBody();
-		if (response != null) {
-			return response.getResultList();
-		}
-		return null;
-	}
+
 
 	@Override
 	public BigDecimal getAccountByMonth(Date beginDate, Date endDate) {
@@ -253,16 +210,7 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 		}
 		return null;
 	}
-	@Override
-	public List<OperationReportJobVO> getSexDistribute( int intervalMonth){
-		OperationReportJobRequest request = new OperationReportJobRequest();
-		request.setIntervalMonth(intervalMonth);
-		OperationReportJobResponse response  = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/sexdistribute",request, OperationReportJobResponse.class).getBody();
-		if (response != null) {
-			return response.getResultList();
-		}
-		return null;
-	}
+
 	@Override
 	public List<OperationReportJobVO> getAgeDistribute( int intervalMonth){
 		OperationReportJobRequest request = new OperationReportJobRequest();
@@ -323,10 +271,6 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 			return response.getResult();
 		}
 		return null;
-	}
-	@Override
-	public IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize){
-		return  restTemplate.postForEntity("http://AM-ADMIN/am-config/content/idcard/idcarddetail",idCardCustomize, IdCardCustomize.class).getBody();
 	}
 
 

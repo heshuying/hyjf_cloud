@@ -18,7 +18,7 @@ public interface AssetListService {
 	List<AssetListCustomizeVO> findAssetListWithoutPage(Map<String, Object> mapParam);
 	
 	AssetDetailCustomizeVO findDetailById(Map<String, Object> mapParam);
-	
+
 	Integer getRecordCount(AssetListRequest request);
 	
 	BigDecimal getSumAccount(AssetListRequest request);
@@ -26,6 +26,8 @@ public interface AssetListService {
 	boolean updateCashDepositeStatus(String assetId, String menuHide);
 
     List<AssetListCustomizeVO> findBZJBZList(Map<String,Object> mapParam, int offset, int limit);
+
+    Integer getBZJBZCount(Map<String,Object> mapParam);
 }
 
 

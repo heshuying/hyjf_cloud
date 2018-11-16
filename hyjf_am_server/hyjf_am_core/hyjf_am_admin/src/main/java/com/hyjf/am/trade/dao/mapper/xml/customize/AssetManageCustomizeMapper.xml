@@ -1343,6 +1343,8 @@
         <result column="order_id" property="orderId" jdbcType="VARCHAR" />
         <result column="period" property="period" jdbcType="VARCHAR" />
         <result column="coupon_type" property="couponType" jdbcType="VARCHAR" />
+        <!-- 产品加息收益率 -->
+        <result column="borrow_extra_yield" property="borrowExtraYield" jdbcType="VARCHAR" />
     </resultMap>
 
 
@@ -1389,10 +1391,17 @@
         hydbr.recover_yestime AS recover_time_sort,
         '1' AS invest_type,
         hydbpt.borrow_class project_type,
-        hydbr.nid as order_id
+        hydbr.nid as order_id,
+        case when info.borrow_extra_yield=0 then
+        ''
+        else
+        CONCAT('加息',info.borrow_extra_yield, '%')
+        end
+        borrow_extra_yield
         FROM
         ht_borrow_recover hydbr
         INNER JOIN ht_borrow hydb ON hydbr.borrow_nid = hydb.borrow_nid
+        LEFT JOIN ht_borrow_info AS info ON hydb.borrow_nid = info.borrow_nid
         LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
         (hydbpt.borrow_project_type ='HZT' OR hydbpt.borrow_project_type ='HXF')
         AND hydbr.user_id = #{userId,jdbcType=INTEGER}
@@ -1420,10 +1429,17 @@
         hct.assign_repay_yes_time AS recover_time_sort,
         '' AS invest_type,
         'HZR' AS project_type,
-        hct.assign_nid AS order_id
+        hct.assign_nid AS order_id,
+        case when info.borrow_extra_yield=0 then
+        ''
+        else
+        CONCAT('加息',info.borrow_extra_yield, '%')
+        end
+        borrow_extra_yield
         FROM
         ht_credit_tender hct
         INNER JOIN ht_borrow hydb ON hydb.borrow_nid = hct.bid_nid
+        LEFT JOIN ht_borrow_info AS info ON hydb.borrow_nid = info.borrow_nid
         WHERE hct.user_id = #{userId}
         AND hct.status = 1
 
@@ -1479,11 +1495,18 @@
         MAX(hcr.recover_yestime) AS recover_time_sort,
         '2' AS invest_type,
         hydbpt.borrow_class project_type,
-        hcr.tender_id as order_id
+        hcr.tender_id as order_id,
+        case when info.borrow_extra_yield=0 then
+        ''
+        else
+        CONCAT('加息',info.borrow_extra_yield, '%')
+        end
+        borrow_extra_yield
         FROM
         ht_coupon_recover hcr
         INNER JOIN ht_borrow_tender_cpn hbt ON hcr.tender_id = hbt.nid
         INNER JOIN ht_borrow hydb ON hbt.borrow_nid = hydb.borrow_nid
+        LEFT JOIN ht_borrow_info AS info ON hydb.borrow_nid = info.borrow_nid
         LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
         LEFT JOIN ht_coupon_tender hct ON hct.order_id = hbt.nid
         LEFT JOIN ht_coupon_user hcu ON hcu.id = hct.coupon_grant_id
@@ -1550,7 +1573,13 @@
         hiil.repay_action_time AS recover_time_sort,
         '3' AS invest_type,
         hydbpt.borrow_class project_type,
-        hiii.tender_nid as order_id
+        hiii.tender_nid as order_id,
+        case when hydbinfo.borrow_extra_yield=0 then
+        ''
+        else
+        CONCAT('加息',hydbinfo.borrow_extra_yield, '%')
+        end
+        borrow_extra_yield
         FROM
         ht_borrow hydb
         INNER JOIN ht_borrow_info hydbinfo ON hydb.borrow_nid = hydbinfo.borrow_nid
@@ -1594,6 +1623,7 @@
         <result column="order_id" property="orderId" jdbcType="VARCHAR" />
         <result column="period" property="period" jdbcType="VARCHAR" />
         <result column="coupon_type" property="couponType" jdbcType="VARCHAR" />
+        <result column="borrow_extra_yield" property="borrowExtraYield" jdbcType="VARCHAR" />
     </resultMap>
     <select id="selectAppAlreadyRepayList" resultMap="AppAlreadyRepayListMap" parameterType="Map">
         SELECT
@@ -1637,11 +1667,19 @@
         hydbr.recover_yestime AS recover_time_sort,
         '1' AS invest_type,
         hydbpt.borrow_class project_type,
-        hydbr.nid as order_id
+        hydbr.nid as order_id,
+        case when hydbinfo.borrow_extra_yield=0 then
+        ''
+        else
+        CONCAT('加息',hydbinfo.borrow_extra_yield, '%')
+        end
+        borrow_extra_yield
         FROM
         ht_borrow_recover hydbr
         INNER JOIN ht_borrow hydb ON hydbr.borrow_nid = hydb.borrow_nid
+        LEFT JOIN ht_borrow_info hydbinfo ON hydb.borrow_nid = hydbinfo.borrow_nid
         LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+        WHERE
         (hydbpt.borrow_project_type ='HZT' OR hydbpt.borrow_project_type ='HXF')
         AND hydbr.user_id = #{userId,jdbcType=INTEGER}
         AND hydbr.recover_status = 1
@@ -1668,10 +1706,17 @@
         hct.assign_repay_yes_time AS recover_time_sort,
         '' AS invest_type,
         'HZR' AS project_type,
-        hct.assign_nid AS order_id
+        hct.assign_nid AS order_id,
+        case when hydbinfo.borrow_extra_yield=0 then
+        ''
+        else
+        CONCAT('加息',hydbinfo.borrow_extra_yield, '%')
+        end
+        borrow_extra_yield
         FROM
         ht_credit_tender hct
         INNER JOIN ht_borrow hydb ON hydb.borrow_nid = hct.bid_nid
+        LEFT JOIN ht_borrow_info hydbinfo ON hydb.borrow_nid = hydbinfo.borrow_nid
         WHERE hct.user_id = #{userId}
         AND hct.status = 1
 
@@ -1727,11 +1772,18 @@
         MAX(hcr.recover_yestime) AS recover_time_sort,
         '2' AS invest_type,
         hydbpt.borrow_class project_type,
-        hcr.tender_id as order_id
+        hcr.tender_id as order_id,
+        case when hydbinfo.borrow_extra_yield=0 then
+        ''
+        else
+        CONCAT('加息',hydbinfo.borrow_extra_yield, '%')
+        end
+        borrow_extra_yield
         FROM
         ht_coupon_recover hcr
         INNER JOIN ht_borrow_tender_cpn hbt ON hcr.tender_id = hbt.nid
         INNER JOIN ht_borrow hydb ON hbt.borrow_nid = hydb.borrow_nid
+        LEFT JOIN ht_borrow_info hydbinfo ON hydb.borrow_nid = hydbinfo.borrow_nid
         LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
         LEFT JOIN ht_coupon_tender hct ON hct.order_id = hbt.nid
         LEFT JOIN ht_coupon_user hcu ON hcu.id = hct.coupon_grant_id
@@ -1793,12 +1845,18 @@
         ) AS interest,
         hydb.borrow_account_scale AS borrow_schedule,
         CONCAT(#{host},'?borrowNid=',hydb.borrow_nid,'&amp;tenderNid=',hiii.tender_nid,'&amp;investType=3') AS borrow_url,
-        '产品加息' label,
-        '' as coupon_type,
+        CONCAT('加息',FORMAT(hiii.borrow_extra_yield, 2),'%') label,
+        '4' as coupon_type,
         hiil.repay_action_time AS recover_time_sort,
         '3' AS invest_type,
         hydbpt.borrow_class project_type,
-        hiii.tender_nid as order_id
+        hiii.tender_nid as order_id,
+        case when hydbinfo.borrow_extra_yield=0 then
+        ''
+        else
+        CONCAT('加息',hydbinfo.borrow_extra_yield, '%')
+        end
+        borrow_extra_yield
         FROM
         ht_borrow hydb
         INNER JOIN ht_borrow_info hydbinfo ON hydb.borrow_nid = hydbinfo.borrow_nid
@@ -1806,8 +1864,7 @@
         LEFT JOIN ht_increase_interest_invest hiii ON hiii.borrow_nid = hydb.borrow_nid
         LEFT JOIN ht_increase_interest_loan hiil ON hiil.invest_order_id = hiii.order_id
         WHERE
-        hydb.project_type=13
-        AND hiil.user_id = #{userId,jdbcType=INTEGER}
+        hiil.user_id = #{userId,jdbcType=INTEGER}
         AND hiil.repay_status = 1
         GROUP BY
         hiil.invest_order_id

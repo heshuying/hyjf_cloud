@@ -1,6 +1,5 @@
 package com.hyjf.cs.user.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -161,6 +160,14 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			//设置交易密码验签
 			ThirdPartyTransPasswordRequestBean bean = (ThirdPartyTransPasswordRequestBean) paramBean;
 			sign = bean.getChannel() + bean.getAccountId() + bean.getRetUrl() + bean.getBgRetUrl()+ bean.getTimestamp();
+		}else if (BaseDefine.METHOD_SERVER_UNBIND_CARD_PAGE.equals(methodName)) {
+			// 解卡(页面调用)合规
+			UnbindCardPageRequestBean bean = (UnbindCardPageRequestBean) paramBean;
+			sign = bean.getInstCode()+ bean.getAccountId() + bean.getMobile() + bean.getCardNo()+bean.getTimestamp();
+		}else if (BaseDefine.METHOD_SERVER_SYNBALANCE.equals(methodName)) {
+			// 解卡(页面调用)合规
+			SynBalanceRequestBean bean = (SynBalanceRequestBean) paramBean;
+			sign = bean.getInstCode() + bean.getAccountId() + bean.getTimestamp();
 		}
 
 		return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
@@ -613,25 +620,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	}
 	@Autowired
 	private RestTemplate restTemplate;
-	// 同步余额接口
-	private static final String  SYNBALANCE= "/hyjf-api/server/synbalance/synbalance.do";
-	@Override
-	public JSONObject synBalance(String account, String instcode, String webHost, String aopAccesskey) {
-		SynBalanceRequestBean balanceRequestBean=new SynBalanceRequestBean();
-		balanceRequestBean.setAccountId(account);
-		balanceRequestBean.setInstCode(instcode);
-		Long timestamp=System.currentTimeMillis()/ 1000;
-		balanceRequestBean.setTimestamp(timestamp);
 
-		// 优惠券投资url
-		String requestUrl = webHost + SYNBALANCE;
-		String sign = StringUtils.lowerCase(MD5.toMD5Code(aopAccesskey + account + instcode + timestamp + aopAccesskey));
-		balanceRequestBean.setChkValue(sign);
-		logger.info("同步余额调用:" + requestUrl);
-		String result = restTemplate.postForEntity(requestUrl,balanceRequestBean,String.class).getBody();
-		JSONObject status = JSONObject.parseObject(result);
-		return status;
-	}
 
 	@Override
 	public AccountVO getAccountByUserId(Integer userId) {
@@ -652,8 +641,12 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	public String getFailedMess(String logOrdId) {
 		//根据ordid获取retcode
 		String retCode = amDataCollectClient.getRetCode(logOrdId);
+		logger.info("根据"+logOrdId+"获取retcode="+retCode);
 		if (retCode==null){
 			return "未知错误";
+		}
+		if(retCode.equals("00000000")){
+			return "00000000";
 		}
 		//根据retCode获取retMsg
 		String retMsg = this.getBankRetMsg(retCode);

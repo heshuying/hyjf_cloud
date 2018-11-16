@@ -1,6 +1,8 @@
 package com.hyjf.zuul;
 
 import com.hyjf.zuul.filter.AccessFilter;
+import com.hyjf.zuul.filter.RefferFilter;
+import com.hyjf.zuul.filter.XSSFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -16,18 +18,23 @@ import org.springframework.web.client.RestTemplate;
 @ComponentScan(basePackages = "com.hyjf")
 //@EnableHystrixDashboard
 public class ZuulApplication {
-	@Bean
-	@LoadBalanced
-	public RestTemplate restTemplate() {
-		return new RestTemplate();
-	}
+    @Bean
+    @LoadBalanced
+    public RestTemplate restTemplate() {
+        return new RestTemplate();
+    }
 
-	public static void main(String[] args) {
-		SpringApplication.run(ZuulApplication.class, args);
-	}
+    public static void main(String[] args) {
+        SpringApplication.run(ZuulApplication.class, args);
+    }
 
-	@Bean
-	public AccessFilter accessFilter() {
-		return new AccessFilter();
-	}
+    @Bean
+    public AccessFilter accessFilter() {
+        return new AccessFilter();
+    }
+
+    @Bean
+    public XSSFilter xssFilter() {
+        return new XSSFilter();
+    }
 }

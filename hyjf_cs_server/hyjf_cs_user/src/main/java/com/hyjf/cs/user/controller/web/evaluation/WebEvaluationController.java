@@ -13,7 +13,6 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCilentIP;
-import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -49,7 +48,8 @@ public class WebEvaluationController extends BaseUserController {
      */
     @ApiOperation(value = "测评问题以及评分标准", notes = "测评问题以及评分标准")
     @PostMapping(value = "/questionnaireInit", produces = "application/json; charset=utf-8")
-    public Map<String, Object> questionnaireInit(HttpServletRequest request,@RequestHeader(value = "userId") int userId) {
+    public WebResult<Map<String, Object>> questionnaireInit(HttpServletRequest request,@RequestHeader(value = "userId") int userId) {
+        WebResult<Map<String, Object>> webResult = new WebResult<>();
         Map<String, Object> result = new HashMap<>();
         //测评问题
         WebViewUserVO user = RedisUtils.getObj(RedisConstants.USERID_KEY+userId, WebViewUserVO.class);
@@ -70,9 +70,10 @@ public class WebEvaluationController extends BaseUserController {
         result.put("questionList", list);
         result.put("listSize", list.size());
         //评分标准
-        List<EvalationVO> evalationList = evaluationService.getEvalationRecord();
+        List<EvalationCustomizeVO> evalationList = evaluationService.getEvalationRecord();
         result.put("evalationList", evalationList);
-        return result;
+        webResult.setData(result);
+        return webResult;
     }
 
     /**
@@ -117,7 +118,7 @@ public class WebEvaluationController extends BaseUserController {
                 List<QuestionCustomizeVO> list = evaluationService.getNewQuestionList();
                 resultMap.put("questionList", list);
                 //评分标准
-                List<EvalationVO> evalationList = evaluationService.getEvalationRecord();
+                List<EvalationCustomizeVO> evalationList = evaluationService.getEvalationRecord();
                 resultMap.put("evalationList", evalationList);
             } else {
                 //测评结果
@@ -128,7 +129,7 @@ public class WebEvaluationController extends BaseUserController {
             List<QuestionCustomizeVO> list = evaluationService.getNewQuestionList();
             resultMap.put("questionList", list);
             //评分标准
-            List<EvalationVO> evalationList = evaluationService.getEvalationRecord();
+            List<EvalationCustomizeVO> evalationList = evaluationService.getEvalationRecord();
             resultMap.put("evalationList", evalationList);
         }
         result.setData(resultMap);
@@ -162,6 +163,7 @@ public class WebEvaluationController extends BaseUserController {
         }
         // userEvalationResult 测评结果
         resultMap.put("userEvalationResult", userEvalationResult);
+        resultMap.put("revaluationMoney", returnMap.get("revaluationMoney"));
         result.setData(resultMap);
         /**
          * 调用重新登录接口

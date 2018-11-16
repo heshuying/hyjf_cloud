@@ -141,7 +141,42 @@ public class AppInvestInfoResultVO implements Serializable {
 
     // 微信端用户可用余额
     private String userBalance;
-    
+
+    /**测评类型*/
+    private String evalType;
+    /**测评上限金额*/
+    private String revaluationMoney;
+    /**是否需要重新测评*/
+    private boolean revalJudge;
+
+    /**
+     * 是否显示项目风险测评弹窗
+     */
+    private boolean projectRevalJudge;
+    /**
+     * 项目要求投资者风险测评类型描述
+     */
+    private String projectRiskLevelDesc;
+
+    /**个人风险测评描述*/
+    private String riskLevelDesc;
+
+    // add by liuyang 神策数据统计 20180820 start
+    /** 还款方式*/
+    private String borrowStyleName;
+    // 项目名称
+    private String projectName;
+    // 项目期限
+    private Integer borrowPeriod;
+    // 期限单位
+    private String durationUnit;
+    // 债转期限
+    private Integer creditPeriod;
+
+    // 期限单位
+    private String creditDurationUnit;
+    // add by liuyang 神策数据统计 20180820 end
+
 //    static class ProtocolBean{
 //        public ProtocolBean(String name, String url) {
 //            this.name = name;
@@ -176,6 +211,54 @@ public class AppInvestInfoResultVO implements Serializable {
 //        this.protocols = protocols;
 //    }
 
+
+    public String getEvalType() {
+        return evalType;
+    }
+
+    public void setEvalType(String evalType) {
+        this.evalType = evalType;
+    }
+
+    public String getRevaluationMoney() {
+        return revaluationMoney;
+    }
+
+    public void setRevaluationMoney(String revaluationMoney) {
+        this.revaluationMoney = revaluationMoney;
+    }
+
+    public boolean isRevalJudge() {
+        return revalJudge;
+    }
+
+    public void setRevalJudge(boolean revalJudge) {
+        this.revalJudge = revalJudge;
+    }
+
+    public boolean isProjectRevalJudge() {
+        return projectRevalJudge;
+    }
+
+    public void setProjectRevalJudge(boolean projectRevalJudge) {
+        this.projectRevalJudge = projectRevalJudge;
+    }
+
+    public String getProjectRiskLevelDesc() {
+        return projectRiskLevelDesc;
+    }
+
+    public void setProjectRiskLevelDesc(String projectRiskLevelDesc) {
+        this.projectRiskLevelDesc = projectRiskLevelDesc;
+    }
+
+    public String getRiskLevelDesc() {
+        return riskLevelDesc;
+    }
+
+    public void setRiskLevelDesc(String riskLevelDesc) {
+        this.riskLevelDesc = riskLevelDesc;
+    }
 
     public String getUsedCouponDes() {
         return usedCouponDes;
@@ -546,5 +629,53 @@ public class AppInvestInfoResultVO implements Serializable {
 
     public void setBorrowAccountWait1(String borrowAccountWait1) {
         this.borrowAccountWait1 = borrowAccountWait1;
+    }
+
+    public String getBorrowStyleName() {
+        return borrowStyleName;
+    }
+
+    public void setBorrowStyleName(String borrowStyleName) {
+        this.borrowStyleName = borrowStyleName;
+    }
+
+    public String getProjectName() {
+        return projectName;
+    }
+
+    public void setProjectName(String projectName) {
+        this.projectName = projectName;
+    }
+
+    public Integer getBorrowPeriod() {
+        return borrowPeriod;
+    }
+
+    public void setBorrowPeriod(Integer borrowPeriod) {
+        this.borrowPeriod = borrowPeriod;
+    }
+
+    public String getDurationUnit() {
+        return durationUnit;
+    }
+
+    public void setDurationUnit(String durationUnit) {
+        this.durationUnit = durationUnit;
+    }
+
+    public Integer getCreditPeriod() {
+        return creditPeriod;
+    }
+
+    public void setCreditPeriod(Integer creditPeriod) {
+        this.creditPeriod = creditPeriod;
+    }
+
+    public String getCreditDurationUnit() {
+        return creditDurationUnit;
+    }
+
+    public void setCreditDurationUnit(String creditDurationUnit) {
+        this.creditDurationUnit = creditDurationUnit;
     }
 }

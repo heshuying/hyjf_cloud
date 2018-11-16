@@ -82,9 +82,17 @@
 			<artifactId>hyjf_cs_common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
+
+		<dependency>
+			<groupId>com.alicp.jetcache</groupId>
+			<artifactId>jetcache-starter-redis</artifactId>
+		</dependency>
+		
 	</dependencies>
 
 	<build>
+		<finalName>hyjf-cs-message</finalName>
+
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -97,7 +105,6 @@
 							<artifactId>axis2</artifactId>
 						</dependency>
 					</requiresUnpack>
-					<finalName>hyjf-cs-message</finalName>
 				</configuration>
 			</plugin>
 			<plugin>

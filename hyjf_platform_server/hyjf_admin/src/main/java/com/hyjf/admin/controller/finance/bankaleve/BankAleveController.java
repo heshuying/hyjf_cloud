@@ -4,6 +4,9 @@
 package com.hyjf.admin.controller.finance.bankaleve;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
@@ -12,6 +15,7 @@ import com.hyjf.admin.service.BankAleveService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.BankAleveRequest;
+import com.hyjf.am.vo.admin.AssociatedRecordListVO;
 import com.hyjf.am.vo.admin.BankAleveVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -67,8 +71,16 @@ public class BankAleveController {
         List<BankAleveVO> bankAleveList =bankAleveService.queryBankAleveList(bankAleveRequest);
         String status="000";
         String statusDesc = "未检索到相应的列表数据";
+        Integer count = bankAleveService.queryBankAleveCount(bankAleveRequest);
+        if(count<1){
+            jsonObject.put("count",0);
+            jsonObject.put("record",null);
+            jsonObject.put("status",status);
+            jsonObject.put("statusDesc",statusDesc);
+            return jsonObject;
+        }
+
         if(null!=bankAleveList&&bankAleveList.size()>0){
-            Integer count = bankAleveList.size();
             jsonObject.put("count",count);
             jsonObject.put("record",bankAleveList);
             status =  "000";
@@ -97,7 +109,7 @@ public class BankAleveController {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
-        String sheetName = "银行账户明细";
+        String sheetName = "银行账务明细";
         // 文件名称
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
         // 声明一个工作薄
@@ -108,24 +120,27 @@ public class BankAleveController {
         String sheetNameTmp = sheetName + "_第1页";
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
-        bankAleveRequest.setPaginatorPage(1);
-        bankAleveRequest.setLimit(defaultRowMaxCount);
+        bankAleveRequest.setPageSize(defaultRowMaxCount);
+        bankAleveRequest.setCurrPage(1);
 
 
         // 需要输出的结果列表
         Integer count = bankAleveService.queryBankAleveCount(bankAleveRequest);
 
-        if (count == null || count <= 0){
+        // 检索列表
+
+        List<BankAleveVO> bankAleveList =bankAleveService.queryBankAleveList(bankAleveRequest);
+        if (count == null || count.equals(0)){
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }else{
-            List<BankAleveVO> bankAleveList =bankAleveService.queryBankAleveList(bankAleveRequest);
             int totalCount = count;
             sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, bankAleveList);
         }
 
         for (int i = 1; i < sheetCount; i++) {
-            bankAleveRequest.setPaginatorPage(i +1);
+            bankAleveRequest.setPageSize(defaultRowMaxCount);
+            bankAleveRequest.setCurrPage(1);
             List<BankAleveVO> bankAleveList2 = bankAleveService.queryBankAleveList(bankAleveRequest);
             if (!CollectionUtils.isEmpty(bankAleveList2)) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
@@ -164,24 +179,54 @@ public class BankAleveController {
         return map;
     }
 
+
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
-        IValueFormatter amountAdapter = new IValueFormatter() {
+        IValueFormatter revindAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
-                BigDecimal amount = (BigDecimal) object;
-                return amount + "";
+                if(object instanceof Integer){
+                    Integer revind = (Integer) object;
+                    return revind == 1 ? "已撤销/冲正" : "";
+                }
+                return "";
             }
+
         };
-        IValueFormatter currBalAdapter = new IValueFormatter() {
+        mapAdapter.put("revind", revindAdapter);
+
+        IValueFormatter accchgAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
-                BigDecimal currBal = (BigDecimal) object;
-                return currBal + "";
+                if (object instanceof String) {
+                    String accchg = (String) object;
+                    return accchg.equals("1") ? "调账" : "";
+                }
+                return null;
             }
         };
-        mapAdapter.put("amount",amountAdapter);
-        mapAdapter.put("currBal",currBalAdapter);
+        mapAdapter.put("accchg", accchgAdapter);
+        IValueFormatter inptimeFormatter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                if (object instanceof Integer) {
+                    String inptimeStr = String.valueOf(object);
+                    if (inptimeStr.length() == 8) {
+                        String[] parts = Iterables.toArray(
+                                Splitter
+                                        .fixedLength(2)
+                                        .split(inptimeStr),
+                                String.class
+                        );
+                        return Joiner.on(":").join(parts);
+                    } else {
+                        return inptimeStr;
+                    }
+                }
+                return "";
+            }
+        };
+        mapAdapter.put("inptime", inptimeFormatter);
         return mapAdapter;
     }
 }

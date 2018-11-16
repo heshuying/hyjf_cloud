@@ -11,6 +11,7 @@ import com.hyjf.am.vo.trade.assetmanage.CurrentHoldObligatoryRightListCustomizeV
 import com.hyjf.am.vo.trade.assetmanage.CurrentHoldPlanListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.RepayMentListCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
+//import com.hyjf.am.vo.trade.hjh.PlanLockCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.UserHjhInvistListCustomizeVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
@@ -291,7 +292,7 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
      * @date 2018/8/18 16:07
      */
     @Override
-    public WebResult getMyPlanInfoDetail(AssetManagePlanRequest request, Integer userId) {
+    public WebResult getMyHjhPlanInfoDetail(AssetManagePlanRequest request, Integer userId) {
         WebResult result = new WebResult();
         Map<String,Object> info = new HashMap<>();
         if (null == userId){
@@ -401,6 +402,15 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
                 hjhInvistDetailVO.setRepayActualTime("— —");
             }*/
             // add 汇计划二期前端优化 持有中计划详情修改锁定期和实际退出时间 nxl 20180419 end
+            String addTime = hjhInvistDetailVO.getAddTime();
+            if (StringUtils.isNotBlank(addTime)){
+                SimpleDateFormat dt = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                try {
+                    hjhInvistDetailVO.setAddTime(dt.format(dt.parse(addTime)));
+                } catch (ParseException e) {
+                    logger.info("时间格式转换异常");
+                }
+            }
             info.put("userHjhInvistDetail", hjhInvistDetailVO);
             info.put("type", type);
 
@@ -460,5 +470,85 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
         }
         result.setData(info);
         return result;
+    }
+
+
+    @Override
+    public WebResult getMyPlanInfoDetail(AssetManagePlanRequest request, Integer userId) {
+        WebResult result = new WebResult();
+//        Map<String,Object> info = new HashMap<>();
+//        if (null == userId){
+//            throw new CheckException("用户信息失效，请重新登录");
+//        }
+//
+//        String accedeOrderId = request.getAccedeOrderId();
+//        // 页面固定传值0是投资中 1是锁定中 2是已回款
+//        String type = request.getType();
+//        CheckUtil.check(StringUtils.isNotBlank(accedeOrderId),MsgEnum.ERR_OBJECT_REQUIRED,"加入订单号");
+//
+//        // 1基本信息
+//        List<PlanLockCustomizeVO> recordList = amTradeClient.selectUserProjectListCapital(accedeOrderId,String.valueOf(userId));
+//        if (recordList != null && recordList.size() > 0) {
+//            PlanLockCustomizeVO planinfo = recordList.get(0);
+//            info.put("planinfo", planinfo);
+//            BigDecimal accedeAccount = new BigDecimal(planinfo.getAccedeAccount());
+//            BigDecimal lockPeriod = new BigDecimal(planinfo.getDebtLockPeriod());
+//            BigDecimal expectApr = new BigDecimal(planinfo.getExpectApr()).divide(new BigDecimal("100"));
+//            BigDecimal repayAccountYes = new BigDecimal(planinfo.getRepayAccountYes());
+//            // 2资产统计
+//            HashMap<String, Object> map = planInfoService.selectPlanInfoSum(accedeOrderId);
+//            BigDecimal investSum = BigDecimal.ZERO;
+//            if (map != null) {
+//                // 当前持有资产总计
+//                investSum = new BigDecimal(map.get("investSum") + "");
+//                info.put("investSum", investSum);
+//            }
+//            // 预计到期收益 加入计划金额*计划期限*计划收益率/12；
+//            BigDecimal expectIntrest = accedeAccount.multiply(lockPeriod).multiply(expectApr).divide(new BigDecimal("12"), 2, BigDecimal.ROUND_DOWN);
+//            info.put("expectIntrest", expectIntrest);
+//            // 回款总金额
+//            info.put("repayAccountYes", repayAccountYes);
+//            info.put("factIntrest", planinfo.getRepayInterestYes());
+//            Map<String, Object> params1 = new HashMap<String, Object>();
+//            params1.put("planOrderId", accedeOrderId);
+//            info.put("type", type);
+//            // params1.put("type", 1);
+//            // 3持有项目列表
+//            if (type != null && "1".equals(type)) {
+//                // 锁定中
+//                // TODO 不要分页 查两次 合并
+//                List<PlanInvestCustomize> debtInvestList = planInfoService.selectInvestCreditList(params1);
+//                List<PlanInvestCustomize> debtCreditList = planInfoService.selectCreditCreditList(params1);
+//                List<PlanInvestCustomize> tmpList = new ArrayList<PlanInvestCustomize>();
+//                if (debtInvestList != null) {
+//                    tmpList.addAll(debtInvestList);
+//                }
+//                if (debtCreditList != null) {
+//                    tmpList.addAll(debtCreditList);
+//                }
+//
+//                info.put("debtInvestList", tmpList);
+//               // modelAndView.setViewName(AssetManageDefine.TO_MY_PLAN_INFO_DETAIL_PAGE_PATH);
+//
+//            } else if (type != null && "2".equals(type)) {
+//                params1.put("status", "11");
+//                // 已退出
+//                List<PlanInvestCustomize> debtInvestList = planInfoService.selectInvestCreditList(params1);
+//                List<PlanInvestCustomize> debtCreditList = planInfoService.selectCreditCreditList(params1);
+//                List<PlanInvestCustomize> tmpList = new ArrayList<PlanInvestCustomize>();
+//                if (debtInvestList != null) {
+//                    tmpList.addAll(debtInvestList);
+//                }
+//                if (debtCreditList != null) {
+//                    tmpList.addAll(debtCreditList);
+//                }
+//                info.put("debtInvestList", tmpList);
+//            } else {
+//                // 申购中
+//                //modelAndView.setViewName(AssetManageDefine.TO_MY_PLAN_INFO_DETAIL_PAGE_PATH);
+//            }
+//        }
+
+     return  result;
     }
 }

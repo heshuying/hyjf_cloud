@@ -6,11 +6,11 @@ import com.hyjf.admin.service.promotion.AppChannelReconciliationService;
 import com.hyjf.admin.service.promotion.AppChannelStatisticsDetailService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
-import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
+import com.hyjf.am.response.admin.AppUtmRegResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -45,11 +45,11 @@ public class AppChannelStatisticsDetailController extends BaseController {
 
     @ApiOperation(value = "app渠道统计明细-画面初始化", notes = "app渠道统计明细-画面初始化")
     @PostMapping("/init")
-    public AppChannelStatisticsDetailResponse init(@RequestBody AppChannelStatisticsDetailRequest appChannelStatisticsDetailRequest,HttpServletRequest request){
+    public AppUtmRegResponse init(@RequestBody AppChannelStatisticsDetailRequest appChannelStatisticsDetailRequest, HttpServletRequest request){
         AdminSystemVO user = getUser(request);
         Integer userId = Integer.valueOf(user.getId());
         AdminUtmReadPermissionsVO adminUtmReadPermissions = this.appChannelReconciliationService.selectAdminUtmReadPermissions(userId);
-        AppChannelStatisticsDetailResponse response = appChannelStatisticsDetailService.getstatisticsList(appChannelStatisticsDetailRequest);
+        AppUtmRegResponse response = appChannelStatisticsDetailService.getstatisticsList(appChannelStatisticsDetailRequest);
         List<UtmPlatVO> appUtm = appChannelStatisticsDetailService.getAppUtm();
         response.setAdminUtmReadPermissions(adminUtmReadPermissions);
         response.setAppUtm(appUtm);
@@ -69,8 +69,8 @@ public class AppChannelStatisticsDetailController extends BaseController {
     public void exportAction(HttpServletRequest request, HttpServletResponse response, AppChannelStatisticsDetailRequest form) throws Exception {
         // 表格sheet名称
         String sheetName = "app渠道统计明细";
-        AppChannelStatisticsDetailResponse appChannelStatisticsDetailResponse = this.appChannelStatisticsDetailService.exportStatisticsList(form);
-        List<AppChannelStatisticsDetailVO> recordList = appChannelStatisticsDetailResponse.getResultList();
+        AppUtmRegResponse appChannelStatisticsDetailResponse = this.appChannelStatisticsDetailService.exportStatisticsList(form);
+        List<AppUtmRegVO> recordList = appChannelStatisticsDetailResponse.getResultList();
 
         String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
@@ -98,7 +98,7 @@ public class AppChannelStatisticsDetailController extends BaseController {
                 Row row = sheet.createRow(rowNum);
                 // 循环数据
                 for (int celLength = 0; celLength < titles.length; celLength++) {
-                    AppChannelStatisticsDetailVO record = recordList.get(i);
+                    AppUtmRegVO record = recordList.get(i);
 
                     // 创建相应的单元格
                     Cell cell = row.createCell(celLength);
@@ -194,8 +194,8 @@ public class AppChannelStatisticsDetailController extends BaseController {
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
-        AppChannelStatisticsDetailResponse appChannelStatisticsDetailResponse = this.appChannelStatisticsDetailService.exportStatisticsList(form);
-        List<AppChannelStatisticsDetailVO> resultList = appChannelStatisticsDetailResponse.getResultList();
+        AppUtmRegResponse appUtmRegResponse = this.appChannelStatisticsDetailService.exportStatisticsList(form);
+        List<AppUtmRegVO> resultList = appUtmRegResponse.getResultList();
 
 
         Integer totalCount = resultList.size();

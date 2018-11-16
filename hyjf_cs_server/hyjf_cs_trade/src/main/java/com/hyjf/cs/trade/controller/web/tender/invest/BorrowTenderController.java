@@ -14,6 +14,7 @@ import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.invest.BorrowTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -27,6 +28,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -44,6 +46,8 @@ public class BorrowTenderController extends BaseTradeController {
 
     @Autowired
     private BorrowTenderService borrowTenderService;
+    @Autowired
+    private HjhTenderService hjhTenderService;
 
     @ApiOperation(value = "散标投资", notes = "web端散标投资")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
@@ -70,12 +74,14 @@ public class BorrowTenderController extends BaseTradeController {
     @PostMapping(value = "/investCheck", produces = "application/json; charset=utf-8")
     public WebResult<Map<String,Object>> investCheck(@RequestHeader(value = "userId", required = false) Integer userId,
                                                       @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
+        WebResult<Map<String,Object>> result = new WebResult<Map<String,Object>>();
         logger.info("web端请求投资校验接口");
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
         tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
-        WebResult<Map<String,Object>>  result =  borrowTenderService.borrowTenderCheck(tender,null,null,null,null);
+        Map<String,Object>  resultMap =  borrowTenderService.borrowTenderCheck(tender,null,null,null,null);
+        result.setData(resultMap);
         return result;
     }
 
@@ -110,7 +116,7 @@ public class BorrowTenderController extends BaseTradeController {
                                                                @RequestParam String logOrdId,
                                                                @RequestParam String borrowNid,
                                                                HttpServletRequest request) {
-        logger.info("web端请求获取投资结果接口，logOrdId:{}  borrowNid:{} ",logOrdId , borrowNid);
+        logger.info("web端请求获取投资结果接口，logOrdId:{}  borrowNid:{} isPrincipal:{}",logOrdId , borrowNid);
         return  borrowTenderService.getBorrowTenderResult(userId,logOrdId,borrowNid);
     }
 
@@ -119,9 +125,11 @@ public class BorrowTenderController extends BaseTradeController {
     public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(@RequestHeader(value = "userId") Integer userId,
                                                                        @RequestParam String logOrdId,
                                                                        @RequestParam Integer couponGrantId,
-                                                                       @RequestParam String borrowNid) {
-        logger.info("web端散标投资获取投资成功结果，logOrdId{}  couponGrantId {}  borrowNid {}   borrowNid2 {}", logOrdId,couponGrantId,borrowNid,borrowNid);
-        return borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId);
+                                                                       @RequestParam String borrowNid,
+                                                                       @RequestParam String isPrincipal,
+                                                                       @RequestParam String account) {
+        logger.info("web端散标投资获取投资成功结果，logOrdId{}  couponGrantId {}  borrowNid {}   isPrincipal {}   account", logOrdId,couponGrantId,borrowNid,isPrincipal,account);
+        return borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId,isPrincipal,account);
     }
 
     @ApiOperation(value = "web端获取投资信息", notes = "web端获取投资信息")

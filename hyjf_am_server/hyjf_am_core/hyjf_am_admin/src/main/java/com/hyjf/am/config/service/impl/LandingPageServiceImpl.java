@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -43,10 +44,10 @@ public class LandingPageServiceImpl implements LandingPageService {
 			criteria.andPageNameLike("%" + request.getPageNameSrch() + "%");
 		}
 		if(StringUtils.isNotEmpty(request.getStartTime())){
-			criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Date(request.getStartTime(), GetDate.date_sdf));
+			criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Date(GetDate.getDayStart(request.getStartTime()),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
 		}
 		if(StringUtils.isNotEmpty(request.getEndTime())){
-			criteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Date(request.getEndTime(), GetDate.date_sdf));
+			criteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Date(GetDate.getDayEnd(request.getEndTime()),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
 		}
 
 		example.setOrderByClause("create_time Desc");

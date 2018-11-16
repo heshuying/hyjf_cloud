@@ -388,6 +388,8 @@ public class RedisConstants {
      * 登录失败配置项
      */
     public static final String LOCKED_CONFIG = "lock_config";
+
+
     /**
      * 测评到期时间和测评结果投资金额上限用
      */
@@ -397,4 +399,31 @@ public class RedisConstants {
      * 测评到期时间
      */
     public static final String REVALUATION_EXPIRED_DAY = REVALUATION  + "evaluation_expired_day";
+
+    /**
+     * 保守型
+     */
+    public static final String REVALUATION_CONSERVATIVE = REVALUATION  + "conservative";
+
+    /**
+     * 稳健型
+     */
+    public static final String REVALUATION_ROBUSTNESS = REVALUATION  + "robustness";
+
+    /**
+     * 成长型
+     */
+    public static final String REVALUATION_GROWTH = REVALUATION  + "growth";
+
+    /**
+     * 进取型
+     */
+    public static final String REVALUATION_AGGRESSIVE =  REVALUATION  + "aggressive";
+
+
+    /**
+     * 上传合同模板暂存地址
+     */
+    public static final String TEMPLATE_UPLOAD_URL = "template_upload_url:";
+
 }

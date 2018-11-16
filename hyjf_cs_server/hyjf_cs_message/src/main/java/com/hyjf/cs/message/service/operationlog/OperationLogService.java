@@ -1,6 +1,6 @@
 package com.hyjf.cs.message.service.operationlog;
 
-import com.hyjf.cs.message.bean.mc.UserOperationLogEntity;
+import com.hyjf.cs.message.bean.ic.UserOperationLog;
 
 import java.util.List;
 import java.util.Map;
@@ -22,5 +22,5 @@ public interface OperationLogService {
 	 * @param limit
 	 * @return
 	 */
-	List<UserOperationLogEntity> getOperationLogList(Map<String, Object> operationLog, int offset, int limit);
+	List<UserOperationLog> getOperationLogList(Map<String, Object> operationLog, int offset, int limit);
 }

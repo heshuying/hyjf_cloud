@@ -34,10 +34,10 @@ public class BankCallUtils implements Serializable {
 	private static final long serialVersionUID = -6921342106125704382L;
 
 	/** 跳转的jsp页面 */
-	private static final String SEND_JSP = "/bank/bank_send";
+	private static final String SEND_JSP = "bank/bank_send.html";
 
 	/** 接口路径(页面) */
-	private static final String REQUEST_MAPPING_CALLAPIPAGE = "/callApiPage.json";
+	private static final String  REQUEST_MAPPING_CALLAPIPAGE = "/callApiPage.json";
 
 	/** 接口路径(后台) */
 	private static final String REQUEST_MAPPING_CALLAPIBG = "/callApiBg.json";
@@ -215,7 +215,7 @@ public class BankCallUtils implements Serializable {
 			}
 			// 调用银行接口
 			String url = payurl + REQUEST_MAPPING_CALLAPIBG;
-			logger.info("调用银行接口url: {}, txCode: [{}], orderId: [{}]", url, bean == null ? "" : bean.getTxCode(), bean == null ? "" : bean.getOrderId());
+			logger.info("调用银行接口url: {}, txCode: [{}], orderId: [{}]", url, bean == null ? "" : bean.getTxCode(), bean == null ? "" : bean.getLogOrderId());
 //			String result = HttpDeal.post(url, allParams);
 			String result = restTemplate
 					 .postForEntity(url, allParams, String.class).getBody();

@@ -108,7 +108,7 @@ public interface RepayManageService extends BaseTradeService {
      * @auther: hesy
      * @date: 2018/7/10
      */
-    Boolean updateForRepayRequest(RepayBean repayBean, BankCallBean bankCallBean);
+    Boolean updateForRepayRequest(RepayBean repayBean, BankCallBean bankCallBean, boolean isAllRepay);
     /**
      * 如果有正在出让的债权,先去把出让状态停止
      * @param borrowNid
@@ -197,7 +197,7 @@ public interface RepayManageService extends BaseTradeService {
      * @auther: wgx
      * @date: 2018/10/16
      */
-    WebResult getBalanceFreeze(WebViewUserVO userVO, String borrowNid, RepayBean repayBean, String orderId, String account);
+    WebResult getBalanceFreeze(WebViewUserVO userVO, String borrowNid, RepayBean repayBean, String orderId, String account, WebResult webResult,  boolean isAllRepay);
     /**
      * 代偿冻结（合规要求）
      * @auther: wgx

@@ -383,7 +383,6 @@ public class RepayManageController extends BaseTradeController {
         resultMap.put("isAllRepay", isAllRepay ? "1" : "0");
         resultMap.put("paymentAuthStatus", "");
         resultMap.put("repayAuthStatus", "");
-        resultMap.put("isAllRepay", isAllRepay);
         resultMap.put("repayAuthOn","0");
         HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(userId);
         resultMap.put("repayAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoRepayStatus());
@@ -485,7 +484,7 @@ public class RepayManageController extends BaseTradeController {
                 repayManageService.addFreezeLog(userVO.getUserId(), orderId, account, requestBean.getBorrowNid(), repayTotal, userVO.getUsername());
                 // 申请还款冻结资金
                 // 调用江西银行还款申请冻结资金
-                return repayManageService.getBalanceFreeze(userVO, requestBean.getBorrowNid(), repayBean, orderId, account);
+                return repayManageService.getBalanceFreeze(userVO, requestBean.getBorrowNid(), repayBean, orderId, account, webResult, isAllRepay);
             }
         } catch (Exception e) {
             logger.error("还款申请冻结资金异常", e);
@@ -898,8 +897,8 @@ public class RepayManageController extends BaseTradeController {
      * @author renxingchen
      */
     @ApiOperation(value = "下载借款用户的协议", notes = "下载借款用户的协议")
-    @GetMapping("/downloadBorrowerPdf/{borrowNid}")
-    public void downloadBorrowerPdf(@RequestHeader(value = "userId") Integer currentUserId, @PathVariable String borrowNid, HttpServletRequest request, HttpServletResponse response) {
+    @GetMapping("/downloadBorrowerPdf/{borrowNid}/{random}")
+    public void downloadBorrowerPdf(@PathVariable Integer random, @PathVariable String borrowNid, HttpServletRequest request, HttpServletResponse response) {
         List<File> files = new ArrayList<File>();
 
         //CreateAgreementController createAgreementController = new CreateAgreementController();
@@ -914,7 +913,7 @@ public class RepayManageController extends BaseTradeController {
             //原居间协议(注掉) file = createAgreementPDFFile(request, response, form, tmp.getUserId());
             //(1)调用新作的居间借款协议
             //file = createAgreementController.createAgreementPDFFile(request, response, form);
-            file = repayManageService.createAgreementPDFFileRepay(request, response, borrowNid, tmp.getNid(), flag, currentUserId);
+            file = repayManageService.createAgreementPDFFileRepay(request, response, borrowNid, tmp.getNid(), flag, random);
 
             if (file != null) {
                 files.add(file);
@@ -1058,7 +1057,7 @@ public class RepayManageController extends BaseTradeController {
                         // 还款后变更数据
                         callBackBean.setOrderId(orderId);
                         //还款后变更数据
-                        boolean updateResult = this.repayManageService.updateForRepayRequest(repay, callBackBean);
+                        boolean updateResult = this.repayManageService.updateForRepayRequest(repay, callBackBean, isAllRepay);
                         if (updateResult) {
                             // 如果有正在出让的债权,先去把出让状态停止
                             this.repayManageService.updateBorrowCreditStautus(borrowNid);

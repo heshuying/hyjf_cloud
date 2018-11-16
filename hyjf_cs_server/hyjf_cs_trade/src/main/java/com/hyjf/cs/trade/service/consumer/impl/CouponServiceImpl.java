@@ -295,7 +295,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             // 如果是计划类的
             if (CustomConstants.COUPON_TENDER_TYPE_HJH.equals(bean.getTenderType())) {
                 try{
-                    couponLoansHjhMessageProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_LOAN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                    couponLoansHjhMessageProducer.messageSendDelay(new MessageContent(MQConstant.HJH_COUPON_LOAN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)),2);
                 }catch (Exception e){
                     logger.error("优惠券放款失败  {} ",JSONObject.toJSONString(params));
                     e.printStackTrace();
@@ -616,6 +616,13 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             case CalculatesUtil.STYLE_MONTH:
                 // 计算历史回报
                 earnings = AverageCapitalPlusInterestUtils.getInterestCount(accountDecimal, borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
+                break;
+            // 还款方式为”等额本金“
+            case CalculatesUtil.STYLE_PRINCIPAL:
+                if(money==null||"".equals(money)){
+                    money = "0";
+                }
+                earnings = AverageCapitalUtils.getInterestCount(new BigDecimal(money), borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
                 break;
             default:
                 break;

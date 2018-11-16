@@ -131,6 +131,10 @@
 		LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = hydb.borrow_nid
 		AND hba.api_type = 1
 		AND hba.`status` <![CDATA[<>]]> 6
+		AND CASE WHEN hydb.borrow_style in ('endday','end')
+		THEN hba.period_now = 1
+		ELSE hba.period_now = (hydb.borrow_period - hydbr.repay_period + 1)
+		END
 		LEFT JOIN ht_borrow_apicron hbap ON hbap.borrow_nid = hydb.borrow_nid
 		AND hbap.api_type = 0
 		AND hbap.`status` = 6
@@ -312,6 +316,10 @@
 		LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = hydb.borrow_nid
 		AND hba.api_type = 1
 		AND hba.`status` <![CDATA[<>]]> 6
+		AND CASE WHEN hydb.borrow_style in ('endday','end')
+		THEN hba.period_now = 1
+		ELSE hba.period_now = (hydb.borrow_period - hydbr.repay_period + 1)
+		END
 		LEFT JOIN ht_borrow_repay_plan plan ON plan.borrow_nid = hydb.borrow_nid
 		AND plan.repay_period = (
 		hydb.borrow_period - hydbr.repay_period + 1
@@ -389,6 +397,82 @@
 			</if>
 		</where>
 	</sql>
+
+	<select id="searchOrgRepayedList" resultMap="repayListResultMap" parameterType="Map">
+		SELECT
+		hydb.borrow_nid,
+		hbi.`name` AS borrow_name,
+		hydbpt.borrow_name AS project_type,
+		hydb.borrow_style,
+		hydb.borrow_apr AS borrow_interest,
+		FROM_UNIXTIME(
+		hydbr.repay_time,
+		'%Y-%m-%d'
+		) AS repay_time,
+		CASE WHEN hba.is_repay_org_flag = 1 THEN '机构垫付' ELSE '借款人还款' END AS repay_money_source,
+		FROM_UNIXTIME(
+		hydbr.repay_action_time,
+		'%Y-%m-%d'
+		) AS action_time,
+		hydbr.repay_capital_yes AS capital_yes,
+		hydbr.repay_account_yes AS account_yes,
+		hba.period_now AS repay_period,
+		hba.batch_amount AS repay_total,
+		CASE WHEN hydb.borrow_style = 'endday' or hydb.borrow_style = 'end' THEN FROM_UNIXTIME(hydbr.repay_time,'%Y-%m-%d')
+		ELSE FROM_UNIXTIME(hbrp.repay_time,'%Y-%m-%d') END AS repayYesTime
+		FROM
+		ht_borrow_apicron hba
+		INNER JOIN ht_borrow hydb ON hba.borrow_nid = hydb.borrow_nid
+		INNER JOIN ht_borrow_info hbi ON hydb.borrow_nid = hbi.borrow_nid
+		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		LEFT JOIN ht_borrow_repay hydbr ON hydbr.borrow_nid = hydb.borrow_nid
+		LEFT JOIN ht_borrow_repay_plan hbrp ON hbrp.borrow_nid = hydb.borrow_nid AND hba.period_now = hbrp.repay_period
+		<where>
+			hba.status = 6
+			AND hba.api_type = 1
+			AND hbi.repay_org_user_id = #{userId}
+			<if test="startDate != null and startDate != ''">
+				AND hydbr.repay_time <![CDATA[>=]]> unix_timestamp(#{startDate,jdbcType=VARCHAR})
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND hydbr.repay_time <![CDATA[<=]]> unix_timestamp(#{endDate,jdbcType=VARCHAR})
+			</if>
+			<if test="borrowNid != null and borrowNid !=''">
+				AND hydbr.borrow_nid like CONCAT('%', #{borrowNid}, '%')
+			</if>
+		</where>
+		ORDER BY hba.create_time
+		<if test="limitStart != null and limitEnd !=null" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<select id="selectOrgRepayedCount" resultType="java.lang.Integer" parameterType="Map">
+		SELECT
+			count(hba.id) as total
+        FROM
+		ht_borrow_apicron hba
+		INNER JOIN ht_borrow hydb ON hba.borrow_nid = hydb.borrow_nid
+		INNER JOIN ht_borrow_info hbi ON hydb.borrow_nid = hbi.borrow_nid
+		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		LEFT JOIN ht_borrow_repay hydbr ON hydbr.borrow_nid = hydb.borrow_nid
+		LEFT JOIN ht_borrow_repay_plan hbrp ON hbrp.borrow_nid = hydb.borrow_nid AND hba.period_now = hbrp.repay_period
+		<where>
+			hba.status = 6
+			AND hba.api_type = 1
+			AND hbi.repay_org_user_id = #{userId}
+			<if test="startDate != null and startDate != ''">
+				AND hydbr.repay_time <![CDATA[>=]]> unix_timestamp(#{startDate,jdbcType=VARCHAR})
+			</if>
+			<if test="endDate != null and endDate != ''">
+				AND hydbr.repay_time <![CDATA[<=]]> unix_timestamp(#{endDate,jdbcType=VARCHAR})
+			</if>
+			<if test="borrowNid != null and borrowNid !=''">
+				AND hydbr.borrow_nid like CONCAT('%', #{borrowNid}, '%')
+			</if>
+		</where>
+	</select>
+
 	<select id="selectUserRepayFeeWaitTotal" resultType="java.math.BigDecimal" parameterType="Map">
 		SELECT
 		IFNULL(SUM(IFNULL(hydbr.repay_fee,0)),0) AS all_repay_fee

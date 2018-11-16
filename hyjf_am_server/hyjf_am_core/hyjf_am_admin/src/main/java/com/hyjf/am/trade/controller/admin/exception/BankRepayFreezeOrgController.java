@@ -3,6 +3,7 @@ package com.hyjf.am.trade.controller.admin.exception;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.trade.BankRepayFreezeLogResponse;
+import com.hyjf.am.response.trade.BankRepayOrgFreezeLogResponse;
 import com.hyjf.am.response.user.BankRepayFreezeOrgResponse;
 import com.hyjf.am.resquest.admin.RepayFreezeOrgRequest;
 import com.hyjf.am.trade.controller.BaseController;
@@ -11,6 +12,7 @@ import com.hyjf.am.trade.dao.model.customize.BankRepayFreezeOrgCustomize;
 import com.hyjf.am.trade.service.admin.exception.BankRepayFreezeOrgService;
 import com.hyjf.am.vo.admin.BankRepayFreezeOrgCustomizeVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
+import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,11 +74,11 @@ public class BankRepayFreezeOrgController extends BaseController {
      * 获取当前有效的冻结记录
      */
     @RequestMapping("/getValid/{orderId}")
-    public BankRepayFreezeLogResponse getFreezeLogValid(@PathVariable String orderId) {
-        BankRepayFreezeLogResponse response = new BankRepayFreezeLogResponse();
+    public BankRepayOrgFreezeLogResponse getFreezeLogValid(@PathVariable String orderId) {
+        BankRepayOrgFreezeLogResponse response = new BankRepayOrgFreezeLogResponse();
         List<BankRepayOrgFreezeLog> logList = bankRepayFreezeOrgService.getBankRepayOrgFreezeLogList(orderId, null);
         if (Validator.isNotNull(logList)) {
-            response.setResultList(CommonUtils.convertBeanList(logList, BankRepayFreezeLogVO.class));
+            response.setResultList(CommonUtils.convertBeanList(logList, BankRepayOrgFreezeLogVO.class));
         }
         return response;
     }

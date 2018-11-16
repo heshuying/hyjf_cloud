@@ -5,23 +5,23 @@ import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UtmResponse;
-import com.hyjf.am.response.app.AppChannelStatisticsDetailResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.front.user.UserService;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.util.StringUtil;
 import com.hyjf.common.validator.Validator;
-import io.swagger.models.auth.In;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -126,12 +126,36 @@ public class UserController extends BaseController {
      * @return
      */
     @RequestMapping("/findById/{userId}")
-    public UserResponse findUserByUserId(@PathVariable String userId) {
-        logger.debug("findUserByUserId run...userId is :{}", userId);
+    public UserResponse findUserByUserId(@PathVariable Integer userId) {
+        logger.info("findUserByUserId run...userId is :{}", userId);
         UserResponse response = new UserResponse();
-        if(StringUtils.isNotBlank(userId) && !"null".equals(userId) && !"NULL".equals(userId)){
-            Integer userIdInt = Integer.valueOf(userId);
-            User user = userService.findUserByUserId(userIdInt);
+        if(userId!=null){
+            User user = userService.findUserByUserId(userId);
+            logger.info("findUserByUserId run...user is :{}", user);
+            if (user != null) {
+                UserVO userVO = new UserVO();
+                BeanUtils.copyProperties(user, userVO);
+                response.setResult(userVO);
+                response.setRtn(Response.SUCCESS);
+            }
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 根据userId查询查询主库
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/findMainById/{userId}")
+    public UserResponse fMainUserByUserId(@PathVariable Integer userId) {
+        logger.info("findUserByUserId run...userId is :{}", userId);
+        UserResponse response = new UserResponse();
+        if(userId!=null){
+            User user = userService.fUserByUserId(userId);
+            logger.info("findUserByUserId run...user is :{}", user);
             if (user != null) {
                 UserVO userVO = new UserVO();
                 BeanUtils.copyProperties(user, userVO);
@@ -180,6 +204,26 @@ public class UserController extends BaseController {
         }
         return response;
     }
+
+    /**
+     * 根据username 或者 mobile查询用户
+     *
+     * @param condition
+     * @return
+     */
+    @RequestMapping("/updateByCondition/{condition}")
+    public UserResponse updateByCondition(@PathVariable String condition) {
+        logger.info("findUserByCondition run...condition is :{}", condition);
+        UserResponse response = new UserResponse();
+        User user = userService.findUserByUsernameOrMobile(condition);
+        if (user != null) {
+            UserVO userVO = new UserVO();
+            BeanUtils.copyProperties(user, userVO);
+            response.setResult(userVO);
+        }
+        return response;
+    }
+
 
     /**
      * 根据userId 查询推荐人
@@ -531,11 +575,33 @@ public class UserController extends BaseController {
     }
 
     @RequestMapping("/getEvalationRecord")
-    public EvalationResponse getEvalationRecord() {
-        EvalationResponse response = new EvalationResponse();
+    public EvalationCustomizeResponse getEvalationRecord() {
+        EvalationCustomizeResponse response = new EvalationCustomizeResponse();
         List<Evalation> evalationList = userService.getEvalationRecord();
         if (!CollectionUtils.isEmpty(evalationList)) {
-            List<EvalationVO> evalationVOList = CommonUtils.convertBeanList(evalationList, EvalationVO.class);
+            List<EvalationCustomizeVO> evalationVOList = CommonUtils.convertBeanList(evalationList, EvalationCustomizeVO.class);
+            for(EvalationCustomizeVO evalStr : evalationVOList){
+                switch (evalStr.getEvalType()){
+                    case "保守型":
+                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
+                                RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE))));
+                        break;
+                    case "稳健型":
+                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
+                                RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS))));
+                        break;
+                    case "成长型":
+                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
+                                RedisUtils.get(RedisConstants.REVALUATION_GROWTH) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_GROWTH))));
+                        break;
+                    case "进取型":
+                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
+                                RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE))));
+                        break;
+                    default:
+                        evalStr.setRevaluationMoney("0");
+                }
+            }
             response.setResultList(evalationVOList);
         }
         return response;
@@ -752,23 +818,7 @@ public class UserController extends BaseController {
         response.setCount(userService.countAll());
         return response;
     }
-    /**
-     * 插入数据
-     * @auth sunpeikai
-     * @param userActionUtmRequest 插入数据参数
-     * @return
-     */
-    @PostMapping("/insertUserActionUtm")
-    public UserResponse insertUserActionUtm(@RequestBody UserActionUtmRequest userActionUtmRequest) {
-        UserResponse response = new UserResponse();
-        User user = userService.insertUserActionUtm(userActionUtmRequest);
-        if(user!=null){
-            UserVO userVO = CommonUtils.convertBean(user,UserVO.class);
-            response.setResult(userVO);
-            response.setRtn(Response.SUCCESS);
-        }
-        return response;
-    }
+
     /**
      * 输错密码次数超限的用户信息
      *

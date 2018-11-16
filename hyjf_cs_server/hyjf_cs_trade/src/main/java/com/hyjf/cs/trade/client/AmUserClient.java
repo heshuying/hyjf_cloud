@@ -1,19 +1,18 @@
 package com.hyjf.cs.trade.client;
 
+import java.util.List;
+import java.util.Map;
+
 import com.hyjf.am.resquest.trade.MyInviteListRequest;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.resquest.user.BankSmsLogRequest;
 import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
 import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
 import com.hyjf.am.vo.admin.UtmVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @Description 
@@ -393,4 +392,12 @@ public interface AmUserClient {
 	 * @return
 	 */
 	UserLoginLogVO getUserLoginById(Integer userId);
+
+	/**
+	 * 返回用户测评信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	public UserEvalationResultVO selectUserEvalationResultByUserId(Integer userId);
 }

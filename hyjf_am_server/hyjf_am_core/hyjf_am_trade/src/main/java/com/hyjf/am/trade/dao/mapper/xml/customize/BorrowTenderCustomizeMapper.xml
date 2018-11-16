@@ -168,12 +168,12 @@
 			<if test="sourceIdSrch != null and sourceIdSrch == 'hxfTenderPrice'">
 				borrow.project_type = 8
 			</if>
-		<if test="timeStartSrch != null and timeStartSrch != ''">
-			AND FROM_UNIXTIME( tender.create_time, '%Y-%m-%d %H:%i:%S' )  <![CDATA[>=]]> #{timeStartSrch}
-		</if>
-		<if test="timeEndSrch != null and timeEndSrch != ''">
-			AND FROM_UNIXTIME( tender.create_time, '%Y-%m-%d %H:%i:%S' )  <![CDATA[<=]]> #{timeEndSrch}
-		</if>
+			<if test="timeStartSrch != null and timeStartSrch != ''">
+				AND date_format( tender.create_time, '%Y-%m-%d %H:%i:%S' )  <![CDATA[>=]]> #{timeStartSrch}
+			</if>
+			<if test="timeEndSrch != null and timeEndSrch != ''">
+				AND date_format( tender.create_time, '%Y-%m-%d %H:%i:%S' )  <![CDATA[<=]]> #{timeEndSrch}
+			</if>
 		</where>
 	</select>
 
@@ -185,10 +185,10 @@
 		ht_credit_tender hct
 		<where>
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND FROM_UNIXTIME( hct.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+				AND date_format( hct.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND FROM_UNIXTIME( hct.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+				AND date_format( hct.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
 			</if>
 		</where>
 	</select>
@@ -200,12 +200,12 @@
 		FROM
 		ht_account_recharge recharge
 		<where>
-			recharge.`status` = 1
+			recharge.`status` = 2
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND FROM_UNIXTIME( recharge.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+				AND date_format( recharge.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND FROM_UNIXTIME( recharge.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+				AND date_format( recharge.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
 			</if>
 		</where>
 	</select>
@@ -230,10 +230,10 @@
 			</if>
 
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND FROM_UNIXTIME( tender.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+				AND date_format( tender.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND FROM_UNIXTIME( tender.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+				AND date_format( tender.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
 			</if>
 		</where>
 	</select>
@@ -260,10 +260,10 @@
 			</if>
 			AND list.invest_status = 0
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND FROM_UNIXTIME( list.invest_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+				AND date_format( list.invest_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND FROM_UNIXTIME( list.invest_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+				AND date_format( list.invest_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
 			</if>
 		</where>
 
@@ -288,10 +288,10 @@
 				hdpa.client = 1
 			</if>
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND FROM_UNIXTIME( hdpa.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+				AND date_format( hdpa.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND FROM_UNIXTIME( hdpa.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+				AND date_format( hdpa.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
 			</if>
 		</where>
 
@@ -316,10 +316,10 @@
 				hct.client = 1
 			</if>
 			<if test="timeStartSrch != null and timeStartSrch != ''">
-				AND FROM_UNIXTIME( hct.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
+				AND date_format( hct.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[>=]]> #{timeStartSrch}
 			</if>
 			<if test="timeEndSrch != null and timeEndSrch != ''">
-				AND FROM_UNIXTIME( hct.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
+				AND date_format( hct.create_time, '%Y-%m-%d %H:%i:%S' ) <![CDATA[<=]]> #{timeEndSrch}
 			</if>
 		</where>
 

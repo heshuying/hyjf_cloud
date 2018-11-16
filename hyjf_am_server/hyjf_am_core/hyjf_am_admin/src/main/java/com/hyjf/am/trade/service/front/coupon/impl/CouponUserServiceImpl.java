@@ -175,7 +175,7 @@ public class CouponUserServiceImpl implements CouponUserService {
         paraMap.put("userId", request.getUserId());
         paraMap.put("couponCode", request.getCouponCode());
         paraMap.put("couponUserCode", request.getCouponUserCode());
-        paraMap.put("username", request.getUserName());
+        paraMap.put("username", request.getUserNameSrch());
         paraMap.put("couponType", request.getCouponType());
         paraMap.put("usedFlag", request.getUsedFlag());
         paraMap.put("couponFrom", request.getCouponFrom());
@@ -215,8 +215,8 @@ public class CouponUserServiceImpl implements CouponUserService {
         if (request.getCouponUserCode() != null) {
             map.put("couponUserCode", request.getCouponUserCode());
         }
-        if (request.getUserName() != null) {
-            map.put("username", request.getUserName());
+        if (request.getUserNameSrch() != null) {
+            map.put("username", request.getUserNameSrch());
         }
         if (request.getCouponType() != null) {
             map.put("couponType", request.getCouponType());
@@ -269,6 +269,7 @@ public class CouponUserServiceImpl implements CouponUserService {
     public int insertCouponUser(CouponUserRequest request) {
         CouponUser couponUser = new CouponUser();
         couponUser.setCouponCode(request.getCouponCode());
+        couponUser.setActivityId(request.getActivityId());
         couponUser.setContent(request.getContent());
         couponUser.setEndTime(request.getEndTime());
         couponUser.setUserId(request.getUserId());

@@ -119,7 +119,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 	public SiteSettingsVO findSiteSetting() {
 
 		SiteSettingsResponse response = restTemplate
-				.getForEntity("http://AM-CONFIG/am-config/siteSettings/findOne/", SiteSettingsResponse.class).getBody();
+				.getForEntity("http://AM-CONFIG/am-config/site_settings/findOne/", SiteSettingsResponse.class).getBody();
 		if (response != null) {
 			return response.getResult();
 		}
@@ -233,4 +233,10 @@ public class AmConfigClientImpl implements AmConfigClient {
 		IntegerResponse response = restTemplate.postForEntity("http://AM-USER/am-user/user/updateByUserId", users, IntegerResponse.class).getBody();
 		return response;
 	}
+
+	@Override
+	public IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/content/idcard/idcarddetail",idCardCustomize, IdCardCustomize.class).getBody();
+	}
+
 }

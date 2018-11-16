@@ -42,9 +42,14 @@ public class BankEveController extends BaseController {
 		String returnCode = Response.FAIL;
 		Map<String, Object> mapParam = paramSet(request);
 		int count = eveService.countRecord(mapParam);
-		Paginator paginator = new Paginator(request.getPaginatorPage(), count, request.getLimit());
-		if (request.getLimit() == 0) {
-			paginator = new Paginator(request.getPaginatorPage(), count);
+		// 查询列表传入分页
+		Paginator paginator;
+		if(request.getLimit() == 0){
+			// 前台传分页
+			paginator = new Paginator(request.getCurrPage(), count);
+		} else {
+			// 前台未传分页那默认 10
+			paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
 		}
 		List<EveLogCustomize> manageList = eveService.selectBankEveInfoList(mapParam, paginator.getOffset(), paginator.getLimit());
 		if (count > 0) {
@@ -82,6 +87,8 @@ public class BankEveController extends BaseController {
 		mapParam.put("cardnbr", request.getCardnbr());
 		//系统跟踪号
 		mapParam.put("seqno", request.getSeqno());
+		//交易類型
+		mapParam.put("transtype", request.getTranstype());
 		//入交易传输时间
 		mapParam.put("startDate", request.getStartDate());
 		mapParam.put("endDate", request.getEndDate());

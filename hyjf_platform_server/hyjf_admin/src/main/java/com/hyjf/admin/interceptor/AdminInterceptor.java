@@ -3,13 +3,22 @@
  */
 package com.hyjf.admin.interceptor;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.ReturnMessageException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * @author DongZeShan
@@ -30,28 +39,31 @@ public class AdminInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-	/*	logger.info("admin接收到请求,请求接口为:" + request.getRequestURI());
+		logger.info("admin接收到请求,请求接口为:" + request.getRequestURI());
 		try {
 			String username = ((AdminSystemVO) request.getSession().getAttribute("user")).getUsername();
 			String val = RedisUtils.get("admin@" + username);
 			if (val != null && !val.equals(request.getHeader("Cookies"))) {
 				request.getSession().removeAttribute("user");
-//				JSONObject res = new JSONObject();
-//				res.put("success", "99");
-//				res.put("msg", "未登录,登陆超时,其他地方已登陆");
-//				PrintWriter out = response.getWriter();
-//				out.append(res.toString());
 				throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
 				//return false;
 			} else {
 				if(val!=null) {
 					RedisUtils.set("admin@" + username, val, 3600);
 				}
-				
+
 			}
 
-		} catch (NullPointerException e) {
-				throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
+//		} catch (NullPointerException e) {
+//			throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
+		}catch(Exception e) {
+			response.setContentType("application/json; charset=utf-8");  
+			JSONObject res = new JSONObject();
+			res.put("success", "EUS000010");
+			res.put("msg", "登录失效，请重新登陆");
+			PrintWriter out = response.getWriter();
+			out.append(res.toString());
+			return false;
 		}
 
 		if (handler instanceof HandlerMethod) {
@@ -68,19 +80,13 @@ public class AdminInterceptor implements HandlerInterceptor {
 					return true;
 				}
 			}
-//			response.setCharacterEncoding("UTF-8");
-//			response.setContentType("application/json; charset=utf-8");
-//			JSONObject res = new JSONObject();
-//			res.put("success", "99");
-//			res.put("msg", "您没有权限使用此接口");
-//			PrintWriter out = response.getWriter();
-//			out.append(res.toString());
-			
+
 			logger.info("权限的key为:" + authorityAnnotation.key() + "权限的val:" + authorityAnnotation.value());
 			throw new ReturnMessageException(MsgEnum.ERR_USER_AUTHORITY);
-	//		return false;
+			//		return false;
 
-		}*/
+		}
+
 
 		return true;
 

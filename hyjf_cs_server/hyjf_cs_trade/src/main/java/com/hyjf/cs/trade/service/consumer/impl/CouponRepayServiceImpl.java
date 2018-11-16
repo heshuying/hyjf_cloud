@@ -385,7 +385,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         String methodName = "updateCouponRecoverMoney";
         List<Map<String, String>> retMsgList = new ArrayList<Map<String, String>>();
         Map<String, String> msg = new HashMap<String, String>();
-        retMsgList.add(msg);
+
         /** 基本变量 */
         // 当前时间
         int nowTime = GetDate.getNowTime10();
@@ -525,7 +525,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
             account.setBankInterestSum(recoverAccount);
             account.setBankInvestSum(BigDecimal.ZERO);// 投资人累计投资
             account.setBankFrostCash(BigDecimal.ZERO);// 江西银行冻结金额
-
+            logger.info("优惠券还款更新账户表");
             int accountCnt = this.borrowClient.updateOfRepayTender(account);
             if (accountCnt == 0) {
                 throw new RuntimeException("投资人资金记录(huiyingdai_account)更新失败！" + "[优惠券投资编号：" + couponTenderNid + "]");
@@ -536,6 +536,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
                 throw new RuntimeException("投资人账户信息不存在。[投资人ID：" + borrowTenderCpn.getUserId() + "]，" + "[优惠券投资编号：" + couponTenderNid + "]");
             }
             // 写入收支明细
+            logger.info("优惠券还款写入收支明细");
             AccountListVO accountList = new AccountListVO();
             // 转账订单编号
             accountList.setNid(orderId);
@@ -752,6 +753,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         msg.put(VAL_COUPON_TYPE,
                 currentRecover.getCouponType() == 1 ? "体验金" : currentRecover.getCouponType() == 2 ? "加息券"
                         : currentRecover.getCouponType() == 3 ? "代金券" : "");
+        retMsgList.add(msg);
         // 发送短信
         this.sendSmsCoupon(retMsgList);
         // 发送push消息
@@ -817,6 +819,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         try {
             accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC,
                     UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+            return 1;
         } catch (MQException e) {
             logger.error("更新网站收支明细失败！");
         }
@@ -955,7 +958,9 @@ public class CouponRepayServiceImpl implements CouponRepayService {
      */
     public void sendSmsCoupon(List<Map<String, String>> msgList) {
         if (msgList != null && msgList.size() > 0) {
+            logger.info("优惠券还款，短信发送："+msgList);
             for (Map<String, String> msg : msgList) {
+                logger.info("优惠券还款，短信发送："+msg);
                 if (Validator.isNotNull(msg.get(USERID)) && NumberUtils.isNumber(msg.get(USERID)) && Validator.isNotNull(msg.get(VAL_AMOUNT))) {
                     UserVO users = amUserClient.findUserById(Integer.valueOf(msg.get(USERID)));
                     if (users == null || Validator.isNull(users.getMobile()) || (users.getRecieveSms() != null && users.getRecieveSms() == 1)) {
@@ -965,6 +970,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
                             CustomConstants.PARAM_TPL_COUPON_PROFIT, CustomConstants.CHANNEL_TYPE_NORMAL);
                     try {
                         smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, msg.get(USERID), JSON.toJSONBytes(smsMessage)));
+                        logger.info("优惠券还款，短信发送MQ成功！");
                     } catch (MQException e2) {
                         logger.error("发送短信失败..", e2);
                     }
@@ -1101,18 +1107,12 @@ public class CouponRepayServiceImpl implements CouponRepayService {
     /**
      * 体验金按收益期限还款
      *
-     * @param recoverNidList
+     * @param nids
      */
     @Override
-    public void couponOnlyRepay(List<String> recoverNidList) {
+    public void couponOnlyRepay(String nids) {
         try {
-            String timestamp = String.valueOf(GetDate.getNowTime10());
-            Map<String, String> params = new HashMap<String, String>();
-            // 借款项目编号
-            params.put("nidList", JSONObject.toJSONString(recoverNidList));
-            // 时间戳
-            params.put("timestamp", timestamp);
-            couponRepayProducer.messageSend(new MessageContent(MQConstant.TYJ_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            couponRepayProducer.messageSend(new MessageContent(MQConstant.TYJ_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(nids)));
         } catch (MQException e) {
             e.printStackTrace();
             logger.info("体验金按收益期限还款消息队列 失败");

@@ -121,13 +121,13 @@ public class AdminParamNamesServiceImpl extends BaseAdminServiceImpl implements 
         CheckUtil.check(StringUtils.isNotBlank(paramNameVO.getNameClass()),MsgEnum.ERR_OBJECT_REQUIRED,"字典区分");
         CheckUtil.check(StringUtils.isNotBlank(paramNameVO.getNameCd()),MsgEnum.ERR_OBJECT_REQUIRED,"字典编号");
         CheckUtil.check(StringUtils.isNotBlank(paramNameVO.getName()),MsgEnum.ERR_OBJECT_REQUIRED,"字典名称");
-        CheckUtil.check(paramNameVO.getNameClass().length()<=20,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"字典区分");
-        CheckUtil.check(paramNameVO.getNameCd().length()<=6,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"字典编号");
-        CheckUtil.check(paramNameVO.getName().length()<=100,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"字典名称");
-        CheckUtil.check(paramNameVO.getOther1().length()<=255,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"扩展项目1");
-        CheckUtil.check(paramNameVO.getOther2().length()<=255,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"扩展项目2");
-        CheckUtil.check(paramNameVO.getOther3().length()<=255,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"扩展项目3");
-        CheckUtil.check(paramNameVO.getSort()<=100,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"排序");
+        //CheckUtil.check(paramNameVO.getNameClass().length()<=20,MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"字典区分");
+        CheckUtil.check(null == paramNameVO.getNameCd()|| (null != paramNameVO.getNameCd() && paramNameVO.getNameCd().length()<=6),MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"字典编号");
+        CheckUtil.check(null == paramNameVO.getName() || (null != paramNameVO.getName() && paramNameVO.getName().length()<=100),MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"字典名称");
+        CheckUtil.check(null == paramNameVO.getOther1() || (null != paramNameVO.getOther1() && paramNameVO.getOther1().length()<=255),MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"扩展项目1");
+        CheckUtil.check(null == paramNameVO.getOther2() || (null != paramNameVO.getOther2() && paramNameVO.getOther2().length()<=255),MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"扩展项目2");
+        CheckUtil.check(null == paramNameVO.getOther3() || (null != paramNameVO.getOther3() && paramNameVO.getOther3().length()<=255),MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"扩展项目3");
+        CheckUtil.check(null == paramNameVO.getSort() || (null != paramNameVO.getSort() && paramNameVO.getSort()<=100),MsgEnum.ERR_OBJECT_EXCEED_LIMIT,"排序");
     }
 
     /**

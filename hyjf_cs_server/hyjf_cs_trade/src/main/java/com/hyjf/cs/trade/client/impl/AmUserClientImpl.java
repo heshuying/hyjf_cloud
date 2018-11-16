@@ -1,26 +1,8 @@
 package com.hyjf.cs.trade.client.impl;
 
-import com.hyjf.am.response.IntegerResponse;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.AppChannelStatisticsDetailResponse;
-import com.hyjf.am.response.admin.UtmResponse;
-import com.hyjf.am.response.trade.*;
-import com.hyjf.am.response.trade.BankCardResponse;
-import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
-import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
-import com.hyjf.am.response.trade.account.AccountResponse;
-import com.hyjf.am.response.user.*;
-import com.hyjf.am.resquest.trade.MyInviteListRequest;
-import com.hyjf.am.resquest.user.UtmRequest;
-import com.hyjf.am.resquest.user.*;
-import com.hyjf.am.vo.admin.UtmVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
-import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
-import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.user.*;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.client.AmUserClient;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,8 +10,23 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.List;
-import java.util.Map;
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.UtmResponse;
+import com.hyjf.am.response.trade.BankCardResponse;
+import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
+import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
+import com.hyjf.am.response.trade.account.AccountResponse;
+import com.hyjf.am.response.user.*;
+import com.hyjf.am.resquest.trade.MyInviteListRequest;
+import com.hyjf.am.resquest.user.*;
+import com.hyjf.am.vo.admin.UtmVO;
+import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.user.*;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.trade.client.AmUserClient;
 
 /**
  * @Description 
@@ -938,4 +935,19 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	/**
+	 * 返回用户测评信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserEvalationResultVO selectUserEvalationResultByUserId(Integer userId) {
+		UserEvalationResultResponse response = restTemplate
+				.getForEntity(userService + "/evaluationManager/selectEvaluationDetailById/" + userId, UserEvalationResultResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
 }

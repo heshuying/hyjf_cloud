@@ -54,6 +54,7 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
     @Override
     public List<SubCommissionListConfig> searchSubCommissionListConfig() {
         SubCommissionListConfigExample example = new SubCommissionListConfigExample();
+        example.createCriteria().andStatusEqualTo(0);
         return subCommissionListConfigMapper.selectByExample(example);
     }
 
@@ -122,7 +123,8 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
             jsonObject.put("isUpdate",isUpdate);
         }else{
             // 调用银行接口失败
-            updateSubCommission(request);
+            boolean isUpdate = updateSubCommission(request);
+            jsonObject.put("isUpdate",isUpdate);
         }
         return jsonObject;
     }
@@ -133,7 +135,7 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
      * @param request
      */
     @Transactional(rollbackFor = Exception.class)
-    public void updateSubCommission(SubCommissionRequest request) {
+    public boolean updateSubCommission(SubCommissionRequest request) {
         BankCallBeanVO bean = request.getResultBean();
         AdminSystemVO adminSystemVO = request.getAdminSystemVO();
 
@@ -146,8 +148,9 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
             subCommission.setUpdateTime(nowTime);
             subCommission.setUpdateUserId(Integer.parseInt(adminSystemVO.getId()));
             subCommission.setUpdateUserName(adminSystemVO.getUsername());
-            subCommissionMapper.updateByPrimaryKeySelective(subCommission);
+            return subCommissionMapper.updateByPrimaryKeySelective(subCommission)>0;
         }
+        return false;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -192,7 +195,9 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
         receiveUserAccount.setUserId(receiveUserId);
         receiveUserAccount.setBankTotal(new BigDecimal(txAmount));
         receiveUserAccount.setBankBalance(new BigDecimal(txAmount));
-        boolean isUpdateFlag = accountMapper.updateByPrimaryKeySelective(CommonUtils.convertBean(receiveUserAccount,Account.class)) > 0;
+        AccountExample accountExample = new AccountExample();
+        accountExample.createCriteria().andUserIdEqualTo(receiveUserId);
+        boolean isUpdateFlag = accountMapper.updateByExampleSelective(CommonUtils.convertBean(receiveUserAccount,Account.class),accountExample) > 0;
         if (!isUpdateFlag) {
             logger.info("更新转入用户的账户信息失败,用户ID:[" + receiveUserId + "].订单号:[" + orderId + "].");
             throw new RuntimeException("更新转入用户的账户信息失败,用户ID:[" + receiveUserId + "].订单号:[" + orderId + "].");
@@ -279,7 +284,7 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
         }
         // 添加时间结束
         if (StringUtils.isNotEmpty(request.getTimeEndSrch())) {
-            criteria.andCreateTimeLessThan(GetDate.stringToDate(GetDate.getDayStart(request.getTimeEndSrch())));
+            criteria.andCreateTimeLessThan(GetDate.stringToDate(GetDate.getDayEnd(request.getTimeEndSrch())));
         }
         example.setOrderByClause("create_time desc");
         if (request.getLimitStart() != -1) {

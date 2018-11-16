@@ -18,11 +18,6 @@
 	</parent>
 
 	<dependencies>
-		<!-- spring cloud config -->
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-config</artifactId>
-		</dependency>
 
         <dependency>
             <groupId>io.micrometer</groupId>
@@ -34,15 +29,16 @@
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>
 		</dependency>
-
+		
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-starter-client</artifactId>
 		</dependency>
+
 	</dependencies>
 
 	<build>
+		<finalName>hyjf-eureka</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -55,7 +51,7 @@
 							<artifactId>axis2</artifactId>
 						</dependency>
 					</requiresUnpack>
-					<finalName>hyjf-eureka</finalName>
+
 				</configuration>
 			</plugin>
 			<plugin>
@@ -70,12 +66,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<version>2.4</version>
-				<!--<configuration>
-					<excludes>
-						<exclude>**/application.yml</exclude>
-						<exclude>**/bootstrap.yml</exclude>
-					</excludes>
-				</configuration>-->
 			</plugin>
 		</plugins>
 	</build>

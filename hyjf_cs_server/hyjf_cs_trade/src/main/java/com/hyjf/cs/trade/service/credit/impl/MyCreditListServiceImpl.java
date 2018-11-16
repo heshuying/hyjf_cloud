@@ -13,7 +13,7 @@ import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.resquest.trade.MyCreditListRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.config.DebtConfigVO;
-import com.hyjf.am.vo.datacollect.AppChannelStatisticsDetailVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
@@ -31,7 +31,6 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.BeforeInterestAfterPrincipalUtils;
 import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
@@ -54,7 +53,6 @@ import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.credit.MyCreditListService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.smscode.SmsCodeService;
-import com.jcraft.jsch.UserInfo;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,7 +117,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             logger.info("判断用户所处渠道不允许债转,可债转金额0....userId is:{}", userId);
             throw new CheckException(MsgEnum.ERR_ALLOW_CHANNEL_ATTORN);
         }
-        AppChannelStatisticsDetailVO appChannelStatisticsDetails = amMongoClient.getAppChannelStatisticsDetailByUserId(userId);
+        AppUtmRegVO appChannelStatisticsDetails = amMongoClient.getAppChannelStatisticsDetailByUserId(userId);
         if (appChannelStatisticsDetails != null) {
             UtmPlatVO utmPlat = amUserClient.selectUtmPlatByUtmId(userId);
             if (utmPlat != null && utmPlat.getAttornFlag() == 0) {
@@ -589,7 +587,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         // 总收入,
         borrowCredit.setCreditIncome(creditCreateMap.get("assignPay"));
         // 服务费
-        borrowCredit.setCreditFee(creditCreateMap.get("assignPay").multiply(new BigDecimal(0.01)).setScale(2, BigDecimal.ROUND_DOWN));
+        borrowCredit.setCreditFee(creditCreateMap.get("assignPay").multiply(org.apache.commons.lang.StringUtils.isEmpty(request.getAttornRate())?new BigDecimal(0.01):new BigDecimal(request.getAttornRate()).divide(new BigDecimal(100))).setScale(2, BigDecimal.ROUND_DOWN));
         // 出让价格
         borrowCredit.setCreditPrice(creditCreateMap.get("creditPrice"));
         // 已认购本金
@@ -664,6 +662,8 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         BigDecimal assignPay = BigDecimal.ZERO;
         // 预计收益 承接人债转本息—实付金额
         BigDecimal assignInterest = BigDecimal.ZERO;
+        // 预计收益 出让人预期收益 =本金+本金持有期利息-本金*折让率-服务费
+        BigDecimal expectInterest = BigDecimal.ZERO;
         // 可转本金
         BigDecimal creditCapital = BigDecimal.ZERO;
         // 折后价格
@@ -711,6 +711,9 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
                 assignPay = creditPrice.add(assignInterestAdvance);
                 // 预计收益 承接人债转本息—实付金额
                 assignInterest = creditAccount.subtract(assignPay);// 计算投资收益
+                // 预计收益 出让人预期收益 =本金+本金持有期利息-本金*折让率-服务费
+                expectInterest = creditCapital.add(assignInterestAdvance).subtract(creditCapital.multiply(new BigDecimal(creditDiscount).divide(new BigDecimal(100))))
+                        .subtract(assignPay.multiply(new BigDecimal(0.01)).setScale(2, BigDecimal.ROUND_DOWN));
             } else {// 按月
                 // 债转本息
                 creditAccount = DuePrincipalAndInterestUtils.getMonthPrincipalInterest(creditCapital, yearRate, borrow.getBorrowPeriod());
@@ -724,6 +727,9 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
                 assignPay = creditPrice.add(assignInterestAdvance);
                 // 预计收益 承接人债转本息—实付金额
                 assignInterest = creditAccount.subtract(assignPay);// 计算投资收益
+                // 预计到账金额 出让人预期收益 =本金+本金持有期利息-本金*折让率-服务费
+                expectInterest = creditCapital.add(assignInterestAdvance).subtract(creditCapital.multiply(new BigDecimal(creditDiscount).divide(new BigDecimal(100))))
+                        .subtract(assignPay.multiply(config.getAttornRate().divide(new BigDecimal(100))).setScale(2, BigDecimal.ROUND_DOWN));
             }
         }
         // 等额本息和等额本金和先息后本
@@ -766,6 +772,9 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             assignPay = creditPrice.add(assignInterestAdvance);
             // 预计收益 承接人债转本息—实付金额
             assignInterest = creditAccount.subtract(assignPay);// 计算投资收益
+            // 预计到账金额 出让人预期收益 =本金+本金持有期利息-本金*折让率-服务费
+            expectInterest = creditCapital.add(assignInterestAdvance).subtract(creditCapital.multiply(new BigDecimal(creditDiscount).divide(new BigDecimal(100))))
+                    .subtract(assignPay.multiply(config.getAttornRate().divide(new BigDecimal(100))).setScale(2, BigDecimal.ROUND_DOWN));
         }
         // 服务费
         creditFee = assignPay.multiply(config.getAttornRate().divide(new BigDecimal(100))).setScale(2, BigDecimal.ROUND_DOWN);
@@ -777,6 +786,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         resultMap.put("assignInterest", assignInterest.setScale(2, BigDecimal.ROUND_DOWN));// 债转期全部利息
         resultMap.put("creditCapital", creditCapital.setScale(2, BigDecimal.ROUND_DOWN));// 可转本金
         resultMap.put("creditPrice", creditPrice.setScale(2, BigDecimal.ROUND_DOWN));// 折后价格
+        resultMap.put("expectInterest", expectInterest.setScale(2, BigDecimal.ROUND_DOWN));// 预计到账金额
         resultMap.put("creditFee", creditFee.setScale(2, BigDecimal.ROUND_DOWN));// 服务费
         return resultMap;
     }

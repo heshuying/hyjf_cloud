@@ -103,6 +103,7 @@ public class AutoReqRepayServiceImpl extends BaseServiceImpl implements AutoReqR
             repay = this.validatorFieldCheckRepay_org(info, userId, password, borrow, repayUserId,0);
         } else { // 借款人还款校验
             repay = this.validatorFieldCheckRepay(info, userId, password, borrow);
+            repay.setRepayUserId(borrow.getUserId());
         }
 
         if (!ValidatorCheckUtil.hasValidateError(info) && repay != null) {

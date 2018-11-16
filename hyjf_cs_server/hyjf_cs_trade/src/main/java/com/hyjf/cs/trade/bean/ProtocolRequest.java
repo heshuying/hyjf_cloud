@@ -16,6 +16,46 @@ public class ProtocolRequest implements Serializable {
 
     private String creditUserId;
 
+    private String random;
+
+    private String assignNid;
+
+    private String planNid;
+
+    private String accedeOrderId;
+
+    public String getPlanNid() {
+        return planNid;
+    }
+
+    public void setPlanNid(String planNid) {
+        this.planNid = planNid;
+    }
+
+    public String getAccedeOrderId() {
+        return accedeOrderId;
+    }
+
+    public void setAccedeOrderId(String accedeOrderId) {
+        this.accedeOrderId = accedeOrderId;
+    }
+
+    public String getAssignNid() {
+        return assignNid;
+    }
+
+    public void setAssignNid(String assignNid) {
+        this.assignNid = assignNid;
+    }
+
+    public String getRandom() {
+        return random;
+    }
+
+    public void setRandom(String random) {
+        this.random = random;
+    }
+
     public String getCreditUserId() {
         return creditUserId;
     }

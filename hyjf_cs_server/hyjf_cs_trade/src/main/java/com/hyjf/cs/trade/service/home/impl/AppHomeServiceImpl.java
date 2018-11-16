@@ -188,7 +188,10 @@ public class AppHomeServiceImpl implements AppHomeService {
         TotalInvestAndInterestResponse res = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
         TotalInvestAndInterestVO totalInvestAndInterestVO = res.getResult();
         if (null != totalInvestAndInterestVO){
-            info.put("totalInvestmentAmount", DF_FOR_VIEW.format(totalInvestAndInterestVO.getTotalInvestAmount()));
+            BigDecimal totalInvestAmount = totalInvestAndInterestVO.getTotalInvestAmount();
+            String totalInvest = totalInvestAmount.toString();
+            String totalInvestStr = formatTotalInvest(totalInvest);
+            info.put("totalInvestmentAmount", totalInvestStr);
         }else{
             info.put("totalInvestmentAmount", DF_FOR_VIEW.format(new BigDecimal("0")));
         }
@@ -251,6 +254,32 @@ public class AppHomeServiceImpl implements AppHomeService {
         CommonUtils.convertNullToEmptyString(info);
         return info;
     }
+
+    /**
+     * 格式化金额
+     * @param totalInvest
+     */
+    private String formatTotalInvest(String totalInvest) {
+
+        String[] split = totalInvest.split("\\.");
+        String money = split[0];
+        String substring ;
+        if(money.length() > 8){
+            substring = money.substring(0, money.length() - 8);
+            totalInvest = substring + "亿元";
+        }else if (money.length() <= 8){
+            int index = 8 - money.length();
+            String flagStr = "";
+            for (int i = 0; i < index; i++) {
+                flagStr += "0";
+            }
+            money = flagStr + money;
+            substring = money.substring(0, 2);
+            totalInvest = "0." + substring + "亿元";
+        }
+        return totalInvest;
+    }
+
 
     /**
      * 获取有效的公告内容

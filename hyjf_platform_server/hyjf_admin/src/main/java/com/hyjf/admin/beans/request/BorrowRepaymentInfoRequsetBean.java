@@ -70,6 +70,8 @@ public class BorrowRepaymentInfoRequsetBean extends BaseRequest implements Seria
     @ApiModelProperty(value = "实际还款时间结束")
     private String yesTimeEndSrch;
 
+    @ApiModelProperty(value = "是否具有组织架构查看权限")
+    private String isOrganizationView;
 
     /**
      * 列表来源标识 0：还款明细 1：批次还款-查看按钮
@@ -196,5 +198,13 @@ public class BorrowRepaymentInfoRequsetBean extends BaseRequest implements Seria
 
     public void setAccedeOrderIdSrch(String accedeOrderIdSrch) {
         this.accedeOrderIdSrch = accedeOrderIdSrch;
+    }
+
+    public String getIsOrganizationView() {
+        return isOrganizationView;
+    }
+
+    public void setIsOrganizationView(String isOrganizationView) {
+        this.isOrganizationView = isOrganizationView;
     }
 }

@@ -1,8 +1,8 @@
 package com.hyjf.cs.message.service.report;
 
 import com.hyjf.cs.common.service.BaseService;
-import com.hyjf.cs.message.bean.ic.OperationMongoGroupEntity;
-import com.hyjf.cs.message.bean.ic.OperationReportEntity;
+import com.hyjf.cs.message.bean.ic.OperationGroupReport;
+import com.hyjf.cs.message.bean.ic.OperationReport;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -37,17 +37,17 @@ public interface PlatDataStatisticsService extends BaseService {
      * mogo查询单个OperationReportEntity
      * @return
      */
-    OperationReportEntity findOneOperationReportEntity();
+    OperationReport findOneOperationReportEntity();
     /**
      * mogo查询单个OperationMongoGroupEntity
      * @return
      */
-    OperationMongoGroupEntity findOneOperationMongoGroupEntity();
+    OperationGroupReport findOneOperationMongoGroupEntity();
     /**
      * mogo查询多个OperationReportEntity  获取12个月的数据
      * @return
      */
-    List<OperationReportEntity> findOperationReportEntityList();
+    List<OperationReport> findOperationReportEntityList();
 
-    OperationReportEntity findOneOperationMongDaoByMonth(int month);
+    OperationReport findOneOperationMongDaoByMonth(int month);
 }

@@ -70,8 +70,8 @@ public class IncreaseInterestInvestDetailController extends BaseController {
 	 * @param form
 	 */
 	@ApiOperation(value = "产品中心-加息投资明细", notes = "产品中心-加息投资明细 导出投资明细")
-	@GetMapping("/export")
-	public void exportAction(HttpServletRequest request, HttpServletResponse response, IncreaseInterestInvestDetailRequest form) throws Exception {
+	@PostMapping("/export")
+	public void exportAction(HttpServletRequest request, HttpServletResponse response,@RequestBody IncreaseInterestInvestDetailRequest form) throws Exception {
 		//sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 		// 表格sheet名称

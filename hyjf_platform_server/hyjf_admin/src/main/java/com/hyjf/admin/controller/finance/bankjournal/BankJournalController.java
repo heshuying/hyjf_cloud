@@ -11,6 +11,7 @@ import com.hyjf.admin.service.BankJournalService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.BankEveRequest;
+import com.hyjf.am.vo.admin.BankAleveVO;
 import com.hyjf.am.vo.admin.BankEveVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -58,10 +59,18 @@ public class BankJournalController {
         JSONObject jsonObject = new JSONObject();
 
         List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
+        Integer count = bankJournalService.queryBankEveCount(bankEveRequest);
         String status="000";
         String statusDesc = "未检索到相应的列表数据";
+        if(count<1){
+            jsonObject.put("count",0);
+            jsonObject.put("record",null);
+            jsonObject.put("status",status);
+            jsonObject.put("statusDesc",statusDesc);
+            return jsonObject;
+        }
+
         if(null!=bankEveList&&bankEveList.size()>0){
-            Integer count = bankEveList.size();
             jsonObject.put("count",count);
             jsonObject.put("record",bankEveList);
             status =  "000";
@@ -84,7 +93,7 @@ public class BankJournalController {
      * @param response
      * @throws Exception
      */
-    @ApiOperation(value = "银行交易明细", notes = "银行交易明细导出")
+    @ApiOperation(value = "银行交易明细导出", notes = "银行交易明细导出")
     @PostMapping(value = "/exportbankeeve")
     public void exportBankeeveList(HttpServletRequest request , HttpServletResponse response, @RequestBody BankEveRequest bankEveRequest) throws UnsupportedEncodingException {
 
@@ -92,7 +101,7 @@ public class BankJournalController {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
-        String sheetName = "银行账务明细";
+        String sheetName = "银行交易明细";
         // 文件名称
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
         // 声明一个工作薄
@@ -103,24 +112,22 @@ public class BankJournalController {
         String sheetNameTmp = sheetName + "_第1页";
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
-        bankEveRequest.setPaginatorPage(1);
-        bankEveRequest.setLimit(defaultRowMaxCount);
-
+        bankEveRequest.setPageSize(defaultRowMaxCount);
+        bankEveRequest.setCurrPage(1);
 
         Integer count = bankJournalService.queryBankEveCount(bankEveRequest);
-
-
-        if (count == null || count <= 0){
+        List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
+        if (count == null || count.equals(0)){
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }else{
-            List<BankEveVO> bankEveList =bankJournalService.queryBankEveList(bankEveRequest);
             int totalCount = count;
             sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, bankEveList);
         }
 
         for (int i = 1; i < sheetCount; i++) {
-            bankEveRequest.setPaginatorPage(i +1);
+            bankEveRequest.setPageSize(defaultRowMaxCount);
+            bankEveRequest.setCurrPage(i+1);
             // 需要输出的结果列表
             List<BankEveVO> bankEveList2 =bankJournalService.queryBankEveList(bankEveRequest);
             if (!CollectionUtils.isEmpty(bankEveList2)) {

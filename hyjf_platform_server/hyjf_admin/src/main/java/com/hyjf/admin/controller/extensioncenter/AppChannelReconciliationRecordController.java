@@ -47,7 +47,7 @@ public class AppChannelReconciliationRecordController extends BaseController {
     @PostMapping("/search")
     public AdminResult searchAction(@RequestBody ChannelReconciliationRequest request) {
         List<UtmVO> list = channelService.searchUtmList(1);
-     /*   if (request.getUtmPlat() == null) {
+        if (request.getUtmPlat() == null) {
             List<String> utmList = new ArrayList<>();
             for (UtmVO vo : list) {
                 utmList.add(vo.getSourceId().toString());
@@ -55,7 +55,7 @@ public class AppChannelReconciliationRecordController extends BaseController {
             String[] integers = new String[utmList.size()];
             String[] array = utmList.toArray(integers);
             request.setUtmPlat(array);
-        }*/
+        }
         ChannelReconciliationResponse response = channelService.searchAppAction(request);
         return new AdminResult(response);
     }
@@ -95,6 +95,18 @@ public class AppChannelReconciliationRecordController extends BaseController {
     @ApiOperation(value = "导出散标列表", notes = "导出散标列表")
     @PostMapping("/export")
     public void exportAction(@RequestBody ChannelReconciliationRequest request, HttpServletResponse response) throws Exception {
+
+        List<UtmVO> list = channelService.searchUtmList(1);
+        if (request.getUtmPlat() == null) {
+            List<String> utmList = new ArrayList<>();
+            for (UtmVO vo : list) {
+                utmList.add(vo.getSourceId().toString());
+            }
+            String[] integers = new String[utmList.size()];
+            String[] array = utmList.toArray(integers);
+            request.setUtmPlat(array);
+        }
+
         // 表格sheet名称
         String sheetName = "PC渠道对账-散标";
 

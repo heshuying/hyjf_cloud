@@ -75,7 +75,7 @@
 			WHERE
 				a.auth_code IS NULL
 				AND o.account_id is not null and ifnull(o.del_flag,0) !=1
-				AND a.create_time >= UNIX_TIMESTAMP(SUBDATE(CURDATE(),INTERVAL 3 DAY))
+				AND a.create_time >= SUBDATE(CURDATE(),INTERVAL 3 DAY)
 	  </select>
   
   </mapper>

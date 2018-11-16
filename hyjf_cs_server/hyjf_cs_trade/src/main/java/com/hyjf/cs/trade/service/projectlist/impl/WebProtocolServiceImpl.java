@@ -1,19 +1,30 @@
 package com.hyjf.cs.trade.service.projectlist.impl;
 
+import com.hyjf.am.resquest.trade.BorrowCreditRequest;
+import com.hyjf.am.resquest.trade.CreditTenderRequest;
+import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
+import com.hyjf.am.resquest.trade.HjhDebtCreditTenderRequest;
 import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
 import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
-import com.hyjf.am.vo.trade.BorrowListVO;
-import com.hyjf.am.vo.trade.TenderAgreementVO;
+import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.DebtBorrowCustomizeVO;
+import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
+import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.file.FavFTPUtil;
+import com.hyjf.common.file.FileUtil;
 import com.hyjf.common.file.SFTPParameter;
 import com.hyjf.common.file.ZIPGenerator;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.util.Page;
+import com.hyjf.cs.trade.bean.CreditAssignedBean;
 import com.hyjf.cs.trade.bean.ProtocolRequest;
 import com.hyjf.cs.trade.bean.repay.ProjectRepayListBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
@@ -30,7 +41,9 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
+import java.io.IOException;
 import java.math.BigDecimal;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +65,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
     @Autowired
     private AmUserClient amUserClient;
 
+
     /**
      * 下载脱敏后居间服务借款协议（原始标的）_计划投资人
      * @author zhangyk
@@ -59,10 +73,19 @@ public class WebProtocolServiceImpl implements WebProtocolService {
      */
     @Override
     public File creditPaymentPlan(ProtocolRequest form, Integer userId, HttpServletRequest request, HttpServletResponse response) {
-        logger.info(">>>>>>>>>>>>协议下载开始<<<<<<<<<<<");
+        logger.info(">>>>>>>>>>>>creditPaymentPlan协议下载开始<<<<<<<<<<<");
         CheckUtil.check(StringUtils.isNotBlank(form.getBorrowNid()),MsgEnum.ERR_OBJECT_REQUIRED, "借款编号");
         Map<String,Object> param = new HashMap<>();
         String borrowNid = form.getBorrowNid();
+        String random = form.getRandom();
+        if (StringUtils.isNotBlank(random) && userId == null){
+            userId = Integer.valueOf(random);
+        }
+        if (userId == null){
+            logger.info(">>>>>>> random(userId) is null  exit <<<<<<<<");
+            return null;
+        }
+
         String nid = form.getNid();
         param.put("borrowNidSrch",borrowNid);
         List<BorrowListVO> recordList1 = amTradeClient.searchBorrowList4Protocol(param);
@@ -295,7 +318,129 @@ public class WebProtocolServiceImpl implements WebProtocolService {
         }
         return null;
     }
-    private List<WebUserInvestListCustomizeVO> myTenderSelectUserInvestList(ProtocolRequest form , int limitStart,int limitEnd){
+
+    @Override
+    public void downloadIntermediaryPdf(ProtocolRequest form, Integer userId, HttpServletRequest request, HttpServletResponse response) {
+        String random = form.getRandom();
+        String nid = form.getNid();
+        String assignNid = form.getAssignNid();
+        String borrowNid = form.getBorrowNid();
+        if (StringUtils.isAnyBlank(random,nid,assignNid,borrowNid)){
+            logger.info(">>>>>> 参数缺少,协议下载退出 <<<<<<<<");
+            return;
+        }
+
+        userId = Integer.valueOf(random);
+        UserVO userVO =  amUserClient.findUserById(userId);
+        if (userVO == null){
+            return ;
+        }
+
+        List<File> files = new ArrayList<File>();
+        RightBorrowVO borrowVO = amTradeClient.getRightBorrowByNid(borrowNid);
+        if( borrowVO != null ){
+            if(StringUtils.isNotEmpty(borrowVO.getPlanNid())){
+                TenderAgreementVO tenderAgreement = new TenderAgreementVO();
+                List<TenderAgreementVO> tenderAgreementsNid= amTradeClient.selectTenderAgreementByNid(assignNid);//居间协议
+                if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
+
+
+                    //计划中的标的---法大大
+                    List<TenderAgreementVO>  tenderAgreementsAss;
+                    while (true) {
+                        List<HjhDebtCreditTenderVO> hjhCreditTenderList = amTradeClient.selectHjhCreditTenderListByAssignOrderId(nid);//hyjf_hjh_debt_credit_tender
+                        if(hjhCreditTenderList!=null && hjhCreditTenderList.size()>0){
+                            HjhDebtCreditTenderVO hjhCreditTender = hjhCreditTenderList.get(0);
+                            logger.info("调用下载计划债转协议的方法 ---------------------:"+assignNid);
+                            tenderAgreementsAss= amTradeClient.selectTenderAgreementByNid(hjhCreditTender.getAssignOrderId());//债转协议
+                            //下载法大大协议--债转
+                            if(tenderAgreementsAss!=null && tenderAgreementsAss.size()>0){
+                                tenderAgreement = tenderAgreementsAss.get(0);
+                                files = this.createFaddPDFImgFile(files,tenderAgreement);//下载脱敏
+                            }
+                            nid = hjhCreditTender.getSellOrderId();
+                            if(nid.equals(hjhCreditTender.getInvestOrderId())){
+                                //下载法大大协议--居间
+                                tenderAgreementsNid= amTradeClient.selectTenderAgreementByNid(nid);//居间
+                                if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
+                                    tenderAgreement = tenderAgreementsNid.get(0);
+                                    if(tenderAgreement!=null){
+                                        files = this.createFaddPDFImgFile(files,tenderAgreement);//下载脱敏
+                                    }
+                                }
+                                break;
+                            }
+                        }else {
+                            break;
+                        }
+                    }
+                }else{
+
+                    //计划中的标的
+                    while (true) {
+                        List<HjhDebtCreditTenderVO> hjhCreditTenderList = amTradeClient.selectHjhCreditTenderListByAssignOrderId(nid);//hyjf_hjh_debt_credit_tender
+                        if(hjhCreditTenderList!=null && hjhCreditTenderList.size()>0){
+                            HjhDebtCreditTenderVO hjhCreditTender = hjhCreditTenderList.get(0);
+                            System.out.println("调用下载计划债转协议的方法 ---------------------:"+assignNid);
+                            //调用下载计划债转协议的方法
+                            CreditAssignedBean tenderCreditAssignedBean  = new CreditAssignedBean();
+                            Map<String, Object> creditContract = null;
+                            tenderCreditAssignedBean.setBidNid(hjhCreditTender.getBorrowNid());// 标号
+                            tenderCreditAssignedBean.setCreditNid(hjhCreditTender.getCreditNid());// 债转编号
+                            tenderCreditAssignedBean.setCreditTenderNid(hjhCreditTender.getInvestOrderId());//原始投资订单号
+                            tenderCreditAssignedBean.setAssignNid(hjhCreditTender.getAssignOrderId());//债转后的新的"投资"订单号
+                            if(userId != null){
+                                tenderCreditAssignedBean.setCurrentUserId(userId);
+                            }
+                            // 模板参数对象(查新表)
+                            creditContract = this.selectHJHUserCreditContract(tenderCreditAssignedBean);
+                            if(creditContract!=null){
+                                try {
+                                    File filetender = PdfGenerator.generatePdfFile(request, response, ((HjhDebtCreditTenderVO) creditContract.get("creditTender")).getAssignOrderId() + ".pdf", CustomConstants.HJH_CREDIT_CONTRACT, creditContract);
+                                    if(filetender!=null){
+                                        files.add(filetender);
+                                    }
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                            nid = hjhCreditTender.getSellOrderId();
+                            if(nid.equals(hjhCreditTender.getInvestOrderId())){
+                                //原始标的居间协议
+                                ProtocolRequest req;
+                                req = new ProtocolRequest();
+                                req.setBorrowNid(borrowNid);
+                                req.setNid(nid);//huiyingdai_borrow_tender--nid(取自银行)字段
+                                req.setFlag("1");
+                                File file;
+                                //居间服务于借款协议时展示标的维度的借款方与出借方的关系的，出借方来自于 huiyingdai_borrow_tender
+                                //原居间协议(注掉) file = createAgreementPDFFile(request, response, form, tmp.getUserId());
+                                //(1)调用新作的居间借款协议
+                                file = creditPaymentPlan(req,userId,request, response);
+                                if (file != null) {
+                                    files.add(file);
+                                }
+                                break;
+                            }
+                        }else {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        if(files!=null && files.size()>0){
+            ZIPGenerator.generateZip(response, files, borrowNid);
+        }
+    }
+
+
+
+
+
+
+    private List<WebUserInvestListCustomizeVO> myTenderSelectUserInvestList(ProtocolRequest form , int limitStart, int limitEnd){
         String borrowNid = org.apache.commons.lang.StringUtils.isNotEmpty(form.getBorrowNid()) ? form.getBorrowNid() : null;
         String userId = org.apache.commons.lang.StringUtils.isNotEmpty(form.getUserId()) ? form.getUserId() : null;
         String nid = org.apache.commons.lang.StringUtils.isNotEmpty(form.getNid()) ? form.getNid() : null;
@@ -400,5 +545,496 @@ public class WebProtocolServiceImpl implements WebProtocolService {
         files.add(file);
 
         return files;
+    }
+
+    /**
+     * 资产管理-散标-转让记录-查看详情-下载协议
+     * @param tenderCreditAssignedBean
+     * @param currentUserId
+     * @param request
+     * @param response
+     * @return
+     */
+    @Override
+    public void creditTransferAgreement(CreditAssignedBean tenderCreditAssignedBean, Integer currentUserId, HttpServletRequest request, HttpServletResponse response){
+        String borrowNid = tenderCreditAssignedBean.getBidNid();
+        String nid = tenderCreditAssignedBean.getCreditTenderNid();//原始标编号(取居间协议)
+        String assignNid = tenderCreditAssignedBean.getAssignNid();//承接订单号(取债转协议)
+        logger.info("散标-转让记录-下载协议开始，用户ID:{}，标的编号:{}，出让人原始投资单号:{}，承接单号:{}", currentUserId, borrowNid, nid, assignNid);
+        String flag = "1";
+        // 出让人userid
+        String creditUserId = tenderCreditAssignedBean.getCreditUserId();
+        //输出文件集合
+        List<File> files = new ArrayList<File>();
+        TenderAgreementVO tenderAgreement = new TenderAgreementVO();
+        List<TenderAgreementVO> tenderAgreementsNid= amTradeClient.selectTenderAgreementByNid(nid);//居间协议
+        List<TenderAgreementVO> tenderAgreementsAss= amTradeClient.selectTenderAgreementByNid(assignNid);//债转协议
+        if(tenderAgreementsAss!=null && tenderAgreementsAss.size()>0){
+            tenderAgreement = tenderAgreementsAss.get(0);
+            //下载法大大协议--债转
+            if(tenderAgreement!=null){
+                /** 脱敏规则三期
+                 *  投资债转：可以看到脱敏后的债权转让协议，出让人和承接人信息（姓名、证件号、盖章）均为脱敏后的信息*/
+                files = createFaddPDFImgFile(files,tenderAgreement);//下载脱敏
+            }
+            //下载法大大协议--居间
+            if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
+                tenderAgreement = tenderAgreementsNid.get(0);
+                if(tenderAgreement!=null){
+                    /** 脱敏规则三期
+                     *  投资债转：可以看到脱敏后的债权转让协议，出让人和承接人信息（姓名、证件号、盖章）均为脱敏后的信息*/
+                    files = createFaddPDFImgFile(files,tenderAgreement);//下载脱敏
+                }
+            }
+        }else{
+            // 下载平台老协议 单个文件 居间借款协议
+            File file1;
+            if (currentUserId != null && currentUserId.intValue() != 0) {
+                if (org.apache.commons.lang.StringUtils.isNotEmpty(borrowNid) && org.apache.commons.lang.StringUtils.isNotEmpty(nid)) {
+                    ProtocolRequest userInvestListBean = new ProtocolRequest();
+                    userInvestListBean.setBorrowNid(borrowNid);
+                    userInvestListBean.setNid(nid);
+                    userInvestListBean.setFlag(flag);
+                    userInvestListBean.setCreditUserId(creditUserId);
+                    file1 = creditPaymentPlan(userInvestListBean, currentUserId, request, response);
+                    if (file1 != null) {
+                        files.add(file1);
+                    }
+                }
+            }
+
+            //(2)债转协议
+            //这段代码没用了
+//            ServletContext sc = request.getSession().getServletContext();
+//            String webInfoPath = sc.getRealPath("/WEB-INF"); // 值为D:\apache-tomcat-6.0.26\webapps\webmonitor
+//            // 把路径中的反斜杠转成正斜杠
+//            webInfoPath = webInfoPath.replaceAll("\\\\", "/"); // 值为D:/apache-tomcat-6.0.26/webapps/webmonitor
+
+            try {
+                //以下参数为下载居间借款协议使用
+                //borrow表的borrowNid ：tenderCreditAssignedBean.getBidNid()
+                //huiyingdai_borrow_tender 的 nid : tenderCreditAssignedBean.getCreditTenderNid()
+                if (currentUserId != null && currentUserId.intValue() != 0) {
+                    if (org.apache.commons.lang.StringUtils.isEmpty(tenderCreditAssignedBean.getBidNid()) || org.apache.commons.lang.StringUtils.isEmpty(tenderCreditAssignedBean.getCreditNid())
+                            || org.apache.commons.lang.StringUtils.isEmpty(tenderCreditAssignedBean.getCreditTenderNid()) || org.apache.commons.lang.StringUtils.isEmpty(tenderCreditAssignedBean.getAssignNid())) {
+                        logger.info("下载协议参数不全。");
+                        return;
+                    }
+                    //将当前登陆者的ID传送
+                    tenderCreditAssignedBean.setCurrentUserId(currentUserId);
+                    // 模板参数对象
+                    Map<String, Object> creditContract = this.selectUserCreditContract(tenderCreditAssignedBean);
+                    // 临时文件夹生成PDF文件
+                    //generatePdfFile
+                    //原：PdfGenerator.generatePdf(request, response, ((CreditTender) creditContract.get("creditTender")).getAssignNid() + ".pdf", CustomConstants.CREDIT_CONTRACT, creditContract);
+                    File file2 = PdfGenerator.generatePdfFile(request, response, ((CreditTenderVO) creditContract.get("creditTender")).getAssignNid() + ".pdf", CustomConstants.CREDIT_CONTRACT, creditContract);
+                    if(file2!=null){
+                        files.add(file2);
+                    }
+                } else {
+                    logger.info("转让用户未登录！");
+                    return;
+                }
+            } catch (Exception e) {
+                logger.info("下载协议系统异常", e);
+                return ;
+            }
+        }
+        if(files!=null && files.size()>0){
+            ZIPGenerator.generateZip(response, files, tenderCreditAssignedBean.getBidNid());
+        }else{
+            logger.info("下载失败！");
+            return ;
+        }
+        logger.info("下载协议结束。");
+        return ;
+    }
+
+    public Map<String, Object> selectUserCreditContract(CreditAssignedBean tenderCreditAssignedBean) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        // 当前登陆者ID
+        Integer currentUserId = tenderCreditAssignedBean.getCurrentUserId();
+        // 获取债转投资信
+        //原代码
+//        CreditTenderExample creditTenderExample = new CreditTenderExample();
+//        CreditTenderExample.Criteria creditTenderCra = creditTenderExample.createCriteria();
+//        creditTenderCra.andAssignNidEqualTo(tenderCreditAssignedBean.getAssignNid()).andBidNidEqualTo(tenderCreditAssignedBean.getBidNid()).andCreditNidEqualTo(tenderCreditAssignedBean.getCreditNid())
+//                .andCreditTenderNidEqualTo(tenderCreditAssignedBean.getCreditTenderNid());
+//        List<CreditTender> creditTenderList = this.creditTenderMapper.selectByExample(creditTenderExample);
+
+        CreditTenderRequest creditTenderRequest = new CreditTenderRequest();
+        creditTenderRequest.setAssignNid(tenderCreditAssignedBean.getAssignNid());
+        creditTenderRequest.setBidNid(tenderCreditAssignedBean.getBidNid());
+        creditTenderRequest.setCreditNid(tenderCreditAssignedBean.getCreditNid());
+        creditTenderRequest.setCreditTenderNid(tenderCreditAssignedBean.getCreditTenderNid());
+        List<CreditTenderVO> creditTenderList = amTradeClient.getCreditTenderList(creditTenderRequest);
+        if (creditTenderList != null && creditTenderList.size() > 0) {
+            CreditTenderVO creditTender = creditTenderList.get(0);
+            Map<String, Object> params = new HashMap<String, Object>();
+            params.put("creditNid", creditTender.getCreditNid());
+            params.put("assignNid", creditTender.getAssignNid());
+            List<TenderToCreditDetailCustomizeVO> tenderToCreditDetailList = amTradeClient.selectWebCreditTenderDetailForContract(params);
+            if (tenderToCreditDetailList != null && tenderToCreditDetailList.size() > 0) {
+                if (tenderToCreditDetailList.get(0).getCreditRepayEndTime() != null) {
+                    tenderToCreditDetailList.get(0).setCreditRepayEndTime(GetDate.getDateMyTimeInMillis(Integer.parseInt(tenderToCreditDetailList.get(0).getCreditRepayEndTime())));
+                }
+                if (tenderToCreditDetailList.get(0).getCreditTime() != null) {
+                    try {
+                        tenderToCreditDetailList.get(0).setCreditTime(GetDate.formatDate(GetDate.parseDate(tenderToCreditDetailList.get(0).getCreditTime(), "yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd"));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+                resultMap.put("tenderToCreditDetail", tenderToCreditDetailList.get(0));
+            }
+            // 获取借款标的信息
+            BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(creditTender.getBidNid());
+
+            // 获取债转信息
+            BorrowCreditRequest borrowCreditRequest = new BorrowCreditRequest();
+            borrowCreditRequest.setCreditNid(tenderCreditAssignedBean.getCreditNid());
+            borrowCreditRequest.setBidNid(tenderCreditAssignedBean.getBidNid());
+            borrowCreditRequest.setTenderNid(tenderCreditAssignedBean.getCreditTenderNid());
+            List<BorrowCreditVO> borrowCredit = amTradeClient.getBorrowCreditList(borrowCreditRequest);
+
+            // 获取承接人身份信息
+            UserInfoVO usersInfo = amUserClient.findUsersInfoById(creditTender.getUserId());
+
+            // 获取承接人平台信息
+            UserVO users = amUserClient.findUserById(creditTender.getUserId());
+
+            // 获取融资方平台信息
+            UserVO usersBorrow = amUserClient.findUserById(borrow.getUserId());
+
+            // 获取债转人身份信息
+            UserInfoVO usersInfoCredit = amUserClient.findUsersInfoById(creditTender.getCreditUserId());
+
+            // 获取债转人平台信息
+            UserVO usersCredit = amUserClient.selectUsersById(creditTender.getCreditUserId());
+
+            // 将int类型时间转成字符串
+            //老代码
+//            creditTender.setAddTime(GetDate.times10toStrYYYYMMDD(Integer.valueOf(creditTender.getAddTime())));
+//            creditTender.setAddip(GetDate.getDateMyTimeInMillis(creditTender.getAssignRepayEndTime()));// 借用ip字段存储最后还款时间
+
+//            creditTender.setAddTime(GetDate.times10toStrYYYYMMDD(Integer.valueOf(creditTender.getAddTime())));
+            creditTender.setAddIp(GetDate.getDateMyTimeInMillis(creditTender.getAssignRepayEndTime()));// 借用ip字段存储最后还款时间
+            resultMap.put("creditTender", creditTender);
+            if (borrow != null) {
+                if (borrow.getReverifyTime() != null) {
+                    borrow.setReverifyTime(GetDate.getDateMyTimeInMillis(Integer.parseInt(borrow.getReverifyTime())));
+                }
+                if (borrow.getRepayLastTime() != null) {
+                    borrow.setRepayLastTime(GetDate.getDateMyTimeInMillis(Integer.parseInt(borrow.getRepayLastTime())));
+                }
+                resultMap.put("borrow", borrow);
+                // 获取借款人信息
+                UserInfoVO usersInfoBorrow = amUserClient.findUsersInfoById(borrow.getUserId());
+                if (usersInfoBorrow != null) {
+                    if (usersInfoBorrow.getTruename().length() > 1) {
+                        if (usersInfoBorrow.getUserId().equals(currentUserId)) {
+                            usersInfoBorrow.setTruename(usersInfoBorrow.getTruename());
+                        } else {
+                            usersInfoBorrow.setTruename(usersInfoBorrow.getTruename().substring(0, 1) + "**");
+                        }
+                    }
+                    if (usersInfoBorrow.getIdcard().length() > 8) {
+                        if (usersInfoBorrow.getUserId().equals(currentUserId)) {
+                            usersInfoBorrow.setIdcard(usersInfoBorrow.getIdcard());
+                        } else {
+                            usersInfoBorrow.setIdcard(usersInfoBorrow.getIdcard().substring(0, 4) + "**************");
+                        }
+                    }
+                    resultMap.put("usersInfoBorrow", usersInfoBorrow);
+                }
+            }
+            if (borrowCredit != null && borrowCredit.size() > 0) {
+                resultMap.put("borrowCredit", borrowCredit.get(0));
+            }
+
+            // 因为使用userid查询，所以只能有一条记录，取get(0)
+            if (usersInfo != null) {
+                if (usersInfo.getTruename().length() > 1) {
+                    if (usersInfo.getUserId().equals(currentUserId)) {
+                        // 本人信息不加密
+                        usersInfo.setTruename(usersInfo.getTruename());
+                    } else {
+
+                        usersInfo.setTruename(usersInfo.getTruename().substring(0, 1) + "**");
+                    }
+                }
+                if (usersInfo.getIdcard().length() > 8) {
+
+                    if (usersInfo.getUserId().equals(currentUserId)) {
+                        // 本人信息不加密
+                        usersInfo.setIdcard(usersInfo.getIdcard());
+                    } else {
+                        // 非本人加密
+                        usersInfo.setIdcard(usersInfo.getIdcard().substring(0, 4) + "**************");
+                    }
+                }
+                resultMap.put("usersInfo", usersInfo);
+            }
+
+            if (usersBorrow != null) {
+                if (usersBorrow.getUsername().length() > 1) {
+                    if (usersBorrow.getUserId().equals(currentUserId)) {
+                        usersBorrow.setUsername(usersBorrow.getUsername());
+                    } else {
+                        usersBorrow.setUsername(usersBorrow.getUsername().substring(0, 1) + "*****");
+                    }
+                }
+                resultMap.put("usersBorrow", usersBorrow);
+            }
+
+            if (users != null) {
+                if (users.getUsername().length() > 1) {
+
+                    if (users.getUserId().equals(currentUserId)) {
+                        users.setUsername(users.getUsername());
+                    } else {
+                        users.setUsername(users.getUsername().substring(0, 1) + "*****");
+                    }
+                }
+                resultMap.put("users", users);
+            }
+
+            if (usersCredit != null) {
+                if (usersCredit.getUsername().length() > 1) {
+                    if (usersCredit.getUserId().equals(currentUserId)) {
+                        usersCredit.setUsername(usersCredit.getUsername());
+                    } else {
+                        usersCredit.setUsername(usersCredit.getUsername().substring(0, 1) + "*****");
+                    }
+                }
+                resultMap.put("usersCredit", usersCredit);
+            }
+
+
+            //甲方(原债权人)
+            if (usersInfoCredit != null) {
+                if (usersInfoCredit.getTruename().length() > 1) {
+                    if (usersInfoCredit.getUserId().equals(currentUserId)) {
+                        usersInfoCredit.setTruename(usersInfoCredit.getTruename());
+                    } else {
+                        usersInfoCredit.setTruename(usersInfoCredit.getTruename().substring(0, 1) + "**");
+                    }
+                }
+
+                if (usersInfoCredit.getIdcard().length() > 8) {
+                    if (usersInfoCredit.getUserId().equals(currentUserId)) {
+                        usersInfoCredit.setIdcard(usersInfoCredit.getIdcard());
+                    } else {
+                        usersInfoCredit.setIdcard(usersInfoCredit.getIdcard().substring(0, 4) + "**************");
+                    }
+                }
+                resultMap.put("usersInfoCredit", usersInfoCredit);
+            }
+
+            //之前的PHP服务器 已经停用很久了。。
+//            String phpWebHost = PropUtils.getSystem("hyjf.web.host.php");
+//            if (org.apache.commons.lang.StringUtils.isNotEmpty(phpWebHost)) {
+//                resultMap.put("phpWebHost", phpWebHost);
+//            } else {
+//                resultMap.put("phpWebHost", "http://site.hyjf.com");
+//            }
+        }
+        return resultMap;
+    }
+
+    /**
+     * 查询汇计划债转投资表
+     * @param tenderCreditAssignedBean
+     * @return
+     */
+    private Map<String,Object> selectHJHUserCreditContract(CreditAssignedBean tenderCreditAssignedBean) {
+        Map<String, Object> resultMap = new HashMap<String, Object>();
+        // 获取债转投资信息
+        //查询 hyjf_hjh_debt_credit_tender 表
+        HjhDebtCreditTenderRequest request = new HjhDebtCreditTenderRequest();
+        request.setBorrowNid(tenderCreditAssignedBean.getBidNid());
+        request.setCreditNid(tenderCreditAssignedBean.getCreditNid());
+        request.setInvestOrderId(tenderCreditAssignedBean.getCreditTenderNid());
+        request.setAssignOrderId(tenderCreditAssignedBean.getAssignNid());
+        List<HjhDebtCreditTenderVO> creditTenderList =this.amTradeClient.getHjhDebtCreditTenderList(request);
+        // 当前用户的id
+        Integer currentUserId = tenderCreditAssignedBean.getCurrentUserId();
+
+        if (creditTenderList != null && creditTenderList.size() > 0) {
+            HjhDebtCreditTenderVO creditTender = creditTenderList.get(0);
+            Map<String, Object> params = new HashMap<String, Object>();
+
+            params.put("creditNid", creditTender.getCreditNid());//取得 hyjf_hjh_debt_credit_tender 表的债转编号
+            params.put("assignOrderId", creditTender.getAssignOrderId());//取得 hyjf_hjh_debt_credit_tender 表的债转编号
+
+            //查看债转详情
+            List<TenderToCreditDetailCustomizeVO> tenderToCreditDetailList=this.amTradeClient.selectHJHWebCreditTenderDetail(params);
+
+            if (tenderToCreditDetailList != null && tenderToCreditDetailList.size() > 0) {
+                if (tenderToCreditDetailList.get(0).getCreditRepayEndTime() != null) {
+                    tenderToCreditDetailList.get(0).setCreditRepayEndTime(GetDate.getDateMyTimeInMillis(Integer.parseInt(tenderToCreditDetailList.get(0).getCreditRepayEndTime())));
+                }
+                if (tenderToCreditDetailList.get(0).getCreditTime() != null) {
+                    try {
+                        tenderToCreditDetailList.get(0).setCreditTime(GetDate.formatDate(GetDate.parseDate(tenderToCreditDetailList.get(0).getCreditTime(), "yyyy-MM-dd HH:mm:ss"), "yyyy-MM-dd"));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+                resultMap.put("tenderToCreditDetail", tenderToCreditDetailList.get(0));
+            }
+
+
+            // 获取借款标的信息
+            BorrowAndInfoVO borrow=this.amTradeClient.getBorrowByNid(creditTender.getBorrowNid());
+
+            // 获取债转信息(新表)
+            HjhDebtCreditRequest request1 = new HjhDebtCreditRequest();
+            request1.setBorrowNid(tenderCreditAssignedBean.getBidNid());
+            request1.setCreditNid(tenderCreditAssignedBean.getCreditNid());
+            request1.setInvestOrderId(tenderCreditAssignedBean.getCreditTenderNid());
+            List<HjhDebtCreditVO> borrowCredit=this.amTradeClient.getHjhDebtCreditList(request1);
+
+            // 获取承接人身份信息
+            UserInfoVO usersInfo=this.amUserClient.findUsersInfoById(creditTender.getUserId());
+            // 获取承接人平台信息
+            UserVO users=this.amUserClient.findUserById(creditTender.getUserId());
+
+            // 获取融资方平台信息
+            UserVO usersBorrow=this.amUserClient.findUserById(borrow.getUserId());
+
+            // 获取债转人身份信息
+            UserInfoVO usersInfoCredit=this.amUserClient.findUsersInfoById(creditTender.getCreditUserId());
+
+            // 获取债转人平台信息
+            UserVO usersCredit=this.amUserClient.findUserById(creditTender.getCreditUserId());
+
+            // 将int类型时间转成字符串
+            String createTime = GetDate.dateToString2(creditTender.getCreateTime(),"yyyyMMdd");
+            String addip = GetDate.getDateMyTimeInMillis(creditTender.getAssignRepayEndTime());// 借用ip字段存储最后还款时
+            resultMap.put("createTime", createTime);//记得去JSP上替换 creditResult.data.creditTender.addip 字段，要新建一个JSP
+            resultMap.put("addip", addip);//记得去JSP上替换 creditResult.data.creditTender.addip 字段，要新建一个JSP
+            resultMap.put("creditTender", creditTender);
+
+            if (borrow != null) {
+                if (borrow.getReverifyTime() != null) {
+                    borrow.setReverifyTime(GetDate.getDateMyTimeInMillis(Integer.parseInt(borrow.getReverifyTime())));
+                }
+                if (borrow.getRepayLastTime() != null) {
+                    borrow.setRepayLastTime(GetDate.getDateMyTimeInMillis(Integer.parseInt(borrow.getRepayLastTime())));
+                }
+                resultMap.put("borrow", borrow);
+                // 获取借款人信息
+                UserInfoVO usersInfoBorrow=this.amUserClient.findUsersInfoById(borrow.getUserId());
+
+
+                if (usersInfoBorrow != null) {
+                    resultMap.put("usersInfoBorrow", usersInfoBorrow);
+                }
+            }
+
+            if (borrowCredit != null && borrowCredit.size() > 0) {
+                resultMap.put("borrowCredit", borrowCredit);
+            }
+
+
+            if (usersInfo != null) {
+                resultMap.put("usersInfo", usersInfo);
+            }
+
+
+            if (usersBorrow != null) {
+
+                resultMap.put("usersBorrow", usersBorrow);
+            }
+
+            if (users != null) {
+                resultMap.put("users", users);
+            }
+
+            if (usersCredit != null) {
+                resultMap.put("usersCredit", usersCredit);
+            }
+
+            if (usersInfoCredit != null) {
+
+                resultMap.put("usersInfoCredit", usersInfoCredit);
+            }
+
+            String phpWebHost = "";
+            //PropUtils.getSystem("hyjf.web.host.php");
+            //hyjf.web.host.php 不再使用
+            if (org.apache.commons.lang.StringUtils.isNotEmpty(phpWebHost)) {
+                resultMap.put("phpWebHost", phpWebHost);
+            } else {
+                resultMap.put("phpWebHost", "http://site.hyjf.com");
+            }
+        }
+        return resultMap;
+    }
+
+
+    @Override
+    public void newHjhInvestPDF(ProtocolRequest form, HttpServletRequest request, HttpServletResponse response) {
+        logger.info(">>>>>>>>newHjhInvestPDF 协议下载开始<<<<<<<<<");
+        String random = form.getRandom();
+        String planNid = form.getPlanNid();
+        String accedeOrderNid = form.getAccedeOrderId();
+        if (StringUtils.isAnyBlank(random,planNid,accedeOrderNid)){
+            logger.info(">>>>>> 参数缺少,协议下载退出 <<<<<<<<");
+            return;
+        }
+
+        Integer userId = Integer.valueOf(random);
+        UserVO userVO =  amUserClient.findUserById(userId);
+        if (userVO == null){
+            logger.info(">>>>>>用户不存在<<<<<<<");
+            return ;
+        }
+
+        String nid  = accedeOrderNid;
+        //输出文件集合
+        List<File> files = new ArrayList<File>();
+        TenderAgreementVO tenderAgreement = new TenderAgreementVO();
+        List<TenderAgreementVO> tenderAgreementsNid = amTradeClient.selectTenderAgreementByNid(nid);//居间协议
+        /*******************************下载法大大合同************************************/
+
+        //下载法大大协议--债转
+        if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
+            tenderAgreement = tenderAgreementsNid.get(0);
+            try {
+                if(org.apache.commons.lang.StringUtils.isNotBlank(tenderAgreement.getDownloadUrl())){
+                    File filePdf= FileUtil.getFile(request,response,tenderAgreement.getDownloadUrl(),nid+".pdf");//债转协议
+                    if(filePdf!=null){
+                        files.add(filePdf);
+                    }
+                }
+                if(files!=null && files.size()>0){
+                    ZIPGenerator.generateZip(response, files, nid);
+
+                }
+            } catch (IOException e) {
+                logger.info("newHjhInvestPDF", "下载失败，请稍后重试。。。。");
+                return;
+            }
+        }else{//下载原来的
+            Map<String, Object> contents = new HashMap<String, Object>();
+            //1基本信息
+            Map<String ,Object> params=new HashMap<String ,Object>();
+            params.put("accedeOrderId", accedeOrderNid);
+            params.put("userId", userId);
+            UserInfoVO userInfo=amUserClient.findUserInfoById(userId);
+            contents.put("userInfo", userInfo);
+            contents.put("username", userVO.getUsername());
+            UserHjhInvistDetailCustomizeVO userHjhInvistDetailCustomize = amTradeClient.selectUserHjhInvistDetail(params);
+            contents.put("userHjhInvistDetail", userHjhInvistDetailCustomize);
+            // 导出PDF文件
+            try {
+                PdfGenerator.generatePdf(request, response, planNid + "_" + accedeOrderNid + ".pdf",
+                        CustomConstants.NEW_HJH_INVEST_CONTRACT, contents);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

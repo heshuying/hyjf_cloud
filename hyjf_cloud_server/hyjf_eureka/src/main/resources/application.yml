@@ -1,13 +1,35 @@
 spring:
   application:
-    name: eureka-server
+    name: eureka-server  
+  profiles:
+    active: dev
+  boot:
+    admin:
+      client:
+        url: http://micoserver:18080
 server:
   port: 1111
 eureka:
   instance:
     hostname: localhost
+  environment: ${spring.profiles.active}
+  datacenter: Main
   client:
-    register-with-eureka: false
+    register-with-eureka: true
     fetch-registry: false
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  endpoint:
+    health:
+      show-details: ALWAYS
+
+logging:
+  file: eureka.log
+  file.max-size: 100MB

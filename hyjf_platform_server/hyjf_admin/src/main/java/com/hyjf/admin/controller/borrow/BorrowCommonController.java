@@ -162,7 +162,12 @@ public class BorrowCommonController extends BaseController {
 //			return new AdminResult<>(FAIL, FAIL_DESC);
 //		}
 		if (!Response.isSuccess(bcr)) {
-			return new AdminResult<>(FAIL, bcr.getMessage());
+			if(bcr.getRtn().equals("1")) {
+				return new AdminResult<>("98", bcr.getMessage());
+			}else {
+				return new AdminResult<>(FAIL, bcr.getMessage());
+			}
+			
 
 		}
 		bcr.setHousesTypeList(customerTransferService.searchParamNameList(CustomConstants.HOUSES_TYPE));
@@ -186,6 +191,7 @@ public class BorrowCommonController extends BaseController {
 	public AdminResult isExistsUser(@RequestBody @Valid Map<String, String> name) {
 
 		int usersFlag=this.borrowCommonService.isExistsUser(name.get("userName"));
+		logger.info("usersFlag is :{}", usersFlag);
 		if (usersFlag == 1) {
 			return new AdminResult<>(FAIL, "该用户不存在");
 		} else if (usersFlag == 2) {
@@ -758,7 +764,7 @@ public class BorrowCommonController extends BaseController {
 						}else if(rowNum == 3){//项目标题
 							resultMap.put("projectName", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 4){//借款标题
-							resultMap.put("jkName", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("name", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 5){//借款金额
 							resultMap.put("account", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 6){//年化收益
@@ -813,22 +819,22 @@ public class BorrowCommonController extends BaseController {
 							resultMap.put("housesBelong", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 26){//借款类型
 							if(this.getValue(hssfRow.getCell(1)).equals("个人")) {
-								resultMap.put("companyOrPersonal","1");
-							}else {
 								resultMap.put("companyOrPersonal","2");
+							}else {
+								resultMap.put("companyOrPersonal","1");
 							}
 						}else if(rowNum == 27){//融资主体
 							resultMap.put("comName", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 28){//法人
 							resultMap.put("comLegalPerson", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 29){//注册地区
-							resultMap.put("comLocationCity", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("registrationAddress", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 30){//主营业务
 							resultMap.put("comMainBusiness", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 31){//在平台逾期次数
-							resultMap.put("comOverdueTimes", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("comOverdueTimes", this.getValue(hssfRow.getCell(1)).replace(".0", ""));
 						}else if(rowNum == 32){//在平台逾期金额
-							resultMap.put("comOverdueAmount", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("comOverdueAmount", this.getValue(hssfRow.getCell(1)).replace(".0", ""));
 						}else if(rowNum == 33){//注册时间
 							resultMap.put("comRegTime", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 34){//统一社会信用代码
@@ -854,7 +860,7 @@ public class BorrowCommonController extends BaseController {
 						}else if(rowNum == 40){//身份证号
 							resultMap.put("cardNo", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 41){//年龄
-							resultMap.put("old", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("old", this.getValue(hssfRow.getCell(1)).replace(".0", ""));
 						}else if(rowNum == 42){//岗位职业
 							resultMap.put("position", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 43){//性别
@@ -863,7 +869,7 @@ public class BorrowCommonController extends BaseController {
 							}else{
 								resultMap.put("sex", "2");
 							}
-							resultMap.put("sex", this.getValue(hssfRow.getCell(1)));
+							//resultMap.put("sex", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 44){//婚姻状况
 							if( this.getValue(hssfRow.getCell(1)).equals("已婚") ){
 								resultMap.put("merry", "1");
@@ -874,15 +880,15 @@ public class BorrowCommonController extends BaseController {
 							}else if(this.getValue(hssfRow.getCell(1)).equals("丧偶") ){
 								resultMap.put("merry", "4");
 							}
-							resultMap.put("merry", this.getValue(hssfRow.getCell(1)));
+						//	resultMap.put("merry", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 45){//工作城市
 							resultMap.put("location_c", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 46){//户籍地
 							resultMap.put("domicile", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 47){//在平台逾期次数
-							resultMap.put("overdueTimes", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("overdueTimes", this.getValue(hssfRow.getCell(1)).replace(".0", ""));
 						}else if(rowNum == 48){//在平台逾期金额
-							resultMap.put("overdueAmount", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("overdueAmount", this.getValue(hssfRow.getCell(1)).replace(".0", ""));
 						}else if(rowNum == 49){//涉诉情况
 							resultMap.put("litigation", this.getValue(hssfRow.getCell(1)));
 						}
@@ -1004,7 +1010,7 @@ public class BorrowCommonController extends BaseController {
 						/** 原个人勾选内容改上传 end */
 						// 互金,添加借款人地址,企业组织机构代码,企业注册地 add by nxl 20180809 Start
 						else if(rowNum == 87){//(企业)企业注册地
-							resultMap.put("registrationAddress", this.getValue(hssfRow.getCell(1)));
+							resultMap.put("registration", this.getValue(hssfRow.getCell(1)));
 						}
 						else if(rowNum == 88){//(个人)借款人地址
 							resultMap.put("address", this.getValue(hssfRow.getCell(1)));
@@ -1700,6 +1706,10 @@ public class BorrowCommonController extends BaseController {
 		if (user.getStatus() != 0) {
 			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_USES);
 		}
+		if(user.getPaymentAuthStatus()==0){
+			// 未服务费授权
+			throw new ReturnMessageException(MsgEnum.ERR_PAYMENT_AUTH);
+		}
 		int usersFlag=this.borrowCommonService.isEntrustedExistsUser(userName.get("userName"));
 //		if (usersFlag == 1) {
 //			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_EXIST);
@@ -1712,9 +1722,7 @@ public class BorrowCommonController extends BaseController {
 			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_NOT_IN);
 		} else if (usersFlag == 6) {
 			throw new ReturnMessageException(MsgEnum.ERR_USERNAME_IS_DISABLE);
-		} else if (usersFlag == 7) {
-			throw new ReturnMessageException(MsgEnum.ERR_PAYMENT_AUTH);
-		}
+		} 
 		return new AdminResult<>() ;
 	}
 
@@ -1762,7 +1770,8 @@ public class BorrowCommonController extends BaseController {
 			return String.valueOf(hssfCell.getBooleanCellValue());
 		} else if (hssfCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
 			// 返回数值类型的值
-			return String.valueOf(hssfCell.getNumericCellValue());
+			String s=String.valueOf(hssfCell.getNumericCellValue());
+			return s.substring(0,s.indexOf("."));
 		} else if (hssfCell.getCellType() == Cell.CELL_TYPE_FORMULA) {
 			// 单元格为公式类型时
 			if (hssfCell.getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC) {

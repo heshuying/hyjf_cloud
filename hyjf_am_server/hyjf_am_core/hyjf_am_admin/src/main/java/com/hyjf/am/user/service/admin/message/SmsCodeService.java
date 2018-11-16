@@ -19,4 +19,18 @@ public interface SmsCodeService {
      * @return
      */
     List<SmsCodeCustomize> queryUser(SmsCodeUserRequest request);
+
+
+
+    /**
+     * 校验千乐验证码
+     * @param phone
+     * @param code
+     * @return
+     */
+    int checkQianleMobileCode(String phone, String code);
+
+
+    int save(String mobile, String verificationType, String verificationCode, String platform, Integer status);
+
 }

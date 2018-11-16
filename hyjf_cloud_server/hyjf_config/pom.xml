@@ -47,6 +47,8 @@
 	</dependencies>
 
 	<build>
+		<finalName>hyjf-config</finalName>
+
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
@@ -59,7 +61,6 @@
 							<artifactId>axis2</artifactId>
 						</dependency>
 					</requiresUnpack>
-					<finalName>hyjf-config</finalName>
 				</configuration>
 			</plugin>
 			<plugin>

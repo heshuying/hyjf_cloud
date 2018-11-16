@@ -14,6 +14,7 @@ import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.invest.BorrowTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -26,6 +27,7 @@ import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import java.math.BigDecimal;
 import java.util.Map;
 
 /**
@@ -39,6 +41,8 @@ public class AppBorrowTenderController extends BaseTradeController {
 
     @Autowired
     private BorrowTenderService borrowTenderService;
+    @Autowired
+    private HjhTenderService hjhTenderService;
 
     @ApiOperation(value = "APP端散标投资", notes = "APP端散标投资")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
@@ -48,7 +52,6 @@ public class AppBorrowTenderController extends BaseTradeController {
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
         tender.setUserId(userId);
-
         WebResult<Map<String,Object>> result = null;
         try{
             result =  borrowTenderService.borrowTender(tender);
@@ -97,9 +100,11 @@ public class AppBorrowTenderController extends BaseTradeController {
     public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(@RequestHeader(value = "userId") Integer userId,
                                                                        @RequestParam String logOrdId,
                                                                        @RequestParam Integer couponGrantId,
-                                                                       @RequestParam String borrowNid) {
+                                                                       @RequestParam String borrowNid,
+                                                                       @RequestParam String isPrincipal,
+                                                                       @RequestParam String account) {
         logger.info("APP端散标投资获取投资成功结果，logOrdId{}", logOrdId);
-        return borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId);
+        return borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId,isPrincipal,account);
     }
 
     @ApiOperation(value = "APP端获取投资信息", notes = "APP端获取投资信息")
@@ -112,6 +117,14 @@ public class AppBorrowTenderController extends BaseTradeController {
         }
         // 前端要求改成bean，不要封装
         AppInvestInfoResultVO result = borrowTenderService.getInvestInfoApp(tender);
+        // 校验风险测评
+        Map<String,Object>  resultEval = borrowTenderService.checkEvalApp(tender);
+        result.setRevalJudge((boolean) resultEval.get("revalJudge"));
+        result.setProjectRevalJudge((boolean) resultEval.get("projectRevalJudge"));
+        result.setEvalType((String) resultEval.get("evalType"));
+        result.setRevaluationMoney((String) resultEval.get("revaluationMoney"));
+        result.setRiskLevelDesc((String) resultEval.get("riskLevelDesc"));
+        result.setProjectRiskLevelDesc((String) resultEval.get("projectRiskLevelDesc"));
         return result;
     }
 
@@ -122,8 +135,8 @@ public class AppBorrowTenderController extends BaseTradeController {
         tender.setUserId(userId);
         JSONObject result = new JSONObject();
         try{
-            String url = borrowTenderService.getAppTenderUrl(tender);
-
+            //getTenderUrl 用于区分是否在 getAppTenderUrl 方法中判断用户测评
+            String url = borrowTenderService.getAppTenderUrl(tender,"getTenderUrl");
             result.put("tenderUrl", url);
             result.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
             result.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_SUCCESS);

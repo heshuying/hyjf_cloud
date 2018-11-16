@@ -81,22 +81,30 @@ public class BankRepayFreezeOrgController extends BaseController {
     /**
      * 冻结异常情况查询
      */
+    @ApiOperation(value = "冻结异常情况查询", notes = "冻结异常情况查询")
     @ResponseBody
     @PostMapping(value = "/check")
     public AdminResult<BankRepayFreezeOrgCheckResponseBean> checkRepayFreezeOrgAction(HttpServletRequest request, @RequestBody BankRepayFreezeOrgCheckRequestBean form) {
         AdminResult result = new AdminResult();
         BankRepayFreezeOrgCheckResponseBean responseBean = new BankRepayFreezeOrgCheckResponseBean();
+        result.setData(responseBean);
+        logger.info("请求参数：" + JSON.toJSONString(form));
 
         String orderId = form.getOrderId();
         String borrowNid = form.getBorrowNid();
         if (StringUtils.isBlank(orderId) || StringUtils.isBlank(borrowNid)) {
+            logger.info("请求参数不全");
             result.setStatusInfo(AdminResult.FAIL, "参数错误，请稍后再试！");
             return result;
         }
         BankRepayOrgFreezeLogVO repayFreezeFlog = this.bankRepayFreezeOrgService.getBankRepayOrgFreezeLogList(orderId);
         if (Validator.isNull(repayFreezeFlog)) {
+            logger.info("处理失败，代偿冻结记录不存在");
             result.setStatusInfo(AdminResult.FAIL, "处理失败，代偿冻结记录不存在");
             return result;
+        }
+        if(repayFreezeFlog.getCreateTime() != null){
+            responseBean.setCreateTimeInt(String.valueOf(GetDate.getMillis10(repayFreezeFlog.getCreateTime())));
         }
         BeanUtils.copyProperties(repayFreezeFlog, responseBean);
         BankCallBean bean = new BankCallBean();
@@ -113,6 +121,7 @@ public class BankRepayFreezeOrgController extends BaseController {
         if (callApiBg != null) {
             responseBean.setRetCode(callApiBg.getRetCode());
             responseBean.setState(callApiBg.getState());
+            responseBean.setMsg(callApiBg.getRetMsg());
             result.setStatusInfo(AdminResult.SUCCESS, StringUtils.isNotBlank(callApiBg.getRetMsg())?callApiBg.getRetMsg():AdminResult.SUCCESS_DESC);
         }
         return result;
@@ -121,9 +130,11 @@ public class BankRepayFreezeOrgController extends BaseController {
     /**
      * 冻结异常情况处理
      */
+    @ApiOperation(value = "冻结异常情况处理", notes = "冻结异常情况处理")
     @ResponseBody
     @PostMapping("/process")
     public AdminResult bankAccountCheckAction(HttpServletRequest request, @RequestBody BankRepayFreezeOrgProcessRequestBean form) {
+        logger.info("请求参数：" + form);
         AdminResult result = new AdminResult();
         JSONObject ret = new JSONObject();
         String orderId = form.getOrderId();
@@ -131,27 +142,35 @@ public class BankRepayFreezeOrgController extends BaseController {
             result.setStatusInfo(AdminResult.FAIL, "参数错误，请稍后再试！");
             return result;
         }
+        BankRepayOrgFreezeLogVO repayFreezeFlog = this.bankRepayFreezeOrgService.getBankRepayOrgFreezeLogList(orderId);
+        if (Validator.isNull(repayFreezeFlog)) {
+            logger.info("处理失败，代偿冻结记录不存在");
+            result.setStatusInfo(AdminResult.FAIL, "处理失败，代偿冻结记录不存在");
+            return result;
+        }
+        BeanUtils.copyProperties(repayFreezeFlog, form);
+
         BankCallBean callApiBg = new BankCallBean();
         if (BankCallConstant.RESPCODE_SUCCESS.equals(form.getRetCode()) && "0".equals(form.getState())) {
             return updateRepayMoney(form, callApiBg);
         } else if (BankCallConstant.RESPCODE_SUCCESS.equals(form.getRetCode()) && !"0".equals(form.getState())) {
             logger.info("【代偿冻结异常处理】订单号：{},未冻结状态,解除冻结！",orderId);
             bankRepayFreezeOrgService.deleteOrgFreezeTempLogs(orderId);
-            RedisUtils.del("batchOrgRepayUserid_" + form.getRepayUserId());
+            RedisUtils.del("batchOrgRepayUserid_" + repayFreezeFlog.getRepayUserId());
             result.setStatusInfo(AdminResult.FAIL, "未冻结状态,解除冻结");
             return result;
-        } else if (form.getCreateTime() != null && GetDate.getNowTime10() < form.getCreateTimeInt() + 60 * 20) {
+        } else if (form.getCreateTimeInt() != null && GetDate.getNowTime10() < form.getCreateTimeInt() + 60 * 20) {
             logger.info("【代偿冻结异常处理】订单号：{},冻结时间不满20分钟，不予处理！",orderId);
             result.setStatusInfo(AdminResult.FAIL, "处理失败，请稍后再试！");
             return result;
         } else {
             BankCallBean bean = new BankCallBean();
             bean.setTxCode(BankCallConstant.TXCODE_BALANCE_FREEZE_QUERY);// 消息类型
-            bean.setAccountId(form.getAccount());// 电子账号
-            bean.setOrgOrderId(form.getOrderId());
-            bean.setLogOrderId(GetOrderIdUtils.getUsrId(form.getRepayUserId()));
+            bean.setAccountId(repayFreezeFlog.getAccount());// 电子账号
+            bean.setOrgOrderId(repayFreezeFlog.getOrderId());
+            bean.setLogOrderId(GetOrderIdUtils.getUsrId(repayFreezeFlog.getRepayUserId()));
             bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单时间(必须)格式为yyyyMMdd，例如：20130307
-            bean.setLogUserId(String.valueOf(form.getRepayUserId())); // 操作者ID
+            bean.setLogUserId(String.valueOf(repayFreezeFlog.getRepayUserId())); // 操作者ID
             bean.setLogClient(0);
             // 调用接口
             callApiBg = BankCallUtils.callApiBg(bean);
@@ -160,7 +179,7 @@ public class BankRepayFreezeOrgController extends BaseController {
                 if (BankCallConstant.RESPCODE_SUCCESS.equals(callApiBg.getRetCode()) && !"0".equals(callApiBg.getState())) {
                     logger.info("【代偿冻结异常处理】订单号：{},未冻结状态,解除冻结！", orderId);
                     bankRepayFreezeOrgService.deleteOrgFreezeTempLogs(orderId);
-                    RedisUtils.del("batchOrgRepayUserid_" + form.getRepayUserId());
+                    RedisUtils.del("batchOrgRepayUserid_" + repayFreezeFlog.getRepayUserId());
                 } else if (BankCallConstant.RESPCODE_SUCCESS.equals(callApiBg.getRetCode()) && "0".equals(callApiBg.getState())) {
                     return updateRepayMoney(form, callApiBg);
                 } else {

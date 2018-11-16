@@ -46,9 +46,6 @@ import java.util.*;
 @Service
 public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements IncreaseInterestRepayService {
 
-	/** 类名 */
-	private static final String THIS_CLASS = IncreaseInterestRepayServiceImpl.class.getName();
-
 	/** 用户ID */
 	private static final String VAL_USERID = "userId";
 
@@ -276,7 +273,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 	@Override
 	public List<Map<String, String>> updateBorrowRepay(BorrowApicron apicron,Borrow borrow, IncreaseInterestLoan increaseInterestLoan, String borrowUserCust) {
 		String methodName = "updateBorrowRepay";
-		System.out.println("-----------融通宝加息还款开始---" + apicron.getBorrowNid() + "---------");
+		logger.info("-----------融通宝加息还款开始---" + apicron.getBorrowNid() + "---------");
 		List<Map<String, String>> retMsgList = new ArrayList<Map<String, String>>();
 		Map<String, String> msg = new HashMap<String, String>();
 		retMsgList.add(msg);
@@ -417,15 +414,14 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 			// 调用接口失败时(000以外)
 			if (!BankCallStatusConstant.RESPCODE_SUCCESS.equals(respCode)) {
 				String message = transferBean == null ? "" : transferBean.getRetMsg();
-				logger.error(THIS_CLASS, methodName, "融通宝自动还款调用转账接口失败。" + message + "，[投资订单号:" + investOrderId + "]", null);
+				logger.error("融通宝自动还款调用转账接口失败。" + message + "，[投资订单号:" + investOrderId + "]");
 				throw new RuntimeException("融通宝自动还款调用转账接口失败。" + respCode + ":" + message + "，[投资订单号:" + investOrderId + "]");
 			}
 			txDate = StringUtils.isNotBlank(transferBean.getTxDate()) ? Integer.parseInt(transferBean.getTxDate()) : 0;
 			txTime = StringUtils.isNotBlank(transferBean.getTxTime()) ? Integer.parseInt(transferBean.getTxTime()) : 0;
 			seqNo = StringUtils.isNotBlank(transferBean.getSeqNo()) ? Integer.parseInt(transferBean.getSeqNo()) : 0;
-			;
 		} else {
-			System.out.println("融通宝自动还款。" + "[还款金额:" + repayInterest + "，[公司子账户可用余额:" + account + "，[投资订单号:" + investOrderId + "]");
+			logger.info("融通宝自动还款。" + "[还款金额:" + repayInterest + "，[公司子账户可用余额:" + account + "，[投资订单号:" + investOrderId + "]");
 		}
 
 		// 判断该收支明细是否存在时,跳出本次循环
@@ -514,7 +510,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 						if (increaseInterestLoanFlag) {
 							// 更新总的还款明细
 							// 分期并且不是最后一期
-							logger.info("-----------------------加息还款判断是否分期，标的号：" + borrowNid + ",periodNext:" + periodNext);
+							logger.info(investUserId+" ---------加息还款判断是否分期，标的号：" + borrowNid + ",periodNext:" + periodNext);
 							if (increaseInterestLoanDetail != null && Validator.isNotNull(periodNext) && periodNext > 0) {
 								increaseInterestRepay.setRepayStatus(0); // 未还款
 								// 取得分期还款计划表下一期的还款
@@ -631,7 +627,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 				throw new RuntimeException("投资人资金记录(huiyingdai_account)更新失败!" + "[投资订单号:" + investOrderId + "]");
 			}
 		}
-		System.out.println("-----------融通宝加息还款结束-----------" + apicron.getBorrowNid() + "-----[还款订单号:----" + repayOrderId + "]");
+		logger.info("-----------融通宝加息还款结束-----------" + apicron.getBorrowNid() + "-----[还款订单号:----" + repayOrderId + "]");
 		return retMsgList;
 	}
 
@@ -879,7 +875,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 //						}
 //					}
 					logger.info("userid=" + msg.get(VAL_USERID) + ";开始发送短信,发送金额" + msg.get(VAL_AMOUNT));
-					SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, MessageConstant.SMSSENDFORUSER, null, CustomConstants.PARAM_TPL_JIAXIHUANKUAN,
+					SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_JIAXIHUANKUAN,
 							CustomConstants.CHANNEL_TYPE_NORMAL);
 
 					try {
@@ -927,7 +923,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 //						
 //					}
 					
-					AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, MessageConstant.APPMSSENDFORUSER, CustomConstants.JYTZ_TPL_JIAXIHUANKUAN);
+					AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_JIAXIHUANKUAN);
 					try {
 						appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, msg.get(VAL_USERID),
 								JSON.toJSONBytes(smsMessage)));
@@ -976,7 +972,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 			// 循环进行还款
 			for (BorrowApicron apicron : listApicron) {
 				//判断是否为一次性还款，并且排序正确
-				if("1".equals(apicron.getIsAllrepay()) && !sortRepay(apicron)){
+				if(1 == apicron.getIsAllrepay().intValue() && !sortRepay(apicron)){
 					continue;
 				}
 				int errorCnt = 0;
@@ -1018,7 +1014,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 						BigDecimal account = this.selectCompanyAccount();
 						// 还款金额大于公司子账户可用余额
 						if (repayAccount.compareTo(account) > 0) {
-							System.out.println("公司子账户可用金额不足。" + "[借款编号：" + borrowNid + "]，" + "[可用余额：" + account + "]，" + "[还款金额：" + repayAccount + "]");
+							logger.info("公司子账户可用金额不足。" + "[借款编号：" + borrowNid + "]，" + "[可用余额：" + account + "]，" + "[还款金额：" + repayAccount + "]");
 							throw new Exception("公司子账户可用金额不足。" + "[借款编号：" + borrowNid + "]，" + "[可用余额：" + account + "]，" + "[还款金额：" + repayAccount + "]");
 						}
 
@@ -1121,7 +1117,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 //					String[] toMail = new String[] {};
 					
 					MailMessage message = new MailMessage(null, null, "[" + online + "] " + apicron.getBorrowNid() + "-" + apicron.getPeriodNow() + "融通宝加息还款失败",
-							msg.toString(), null, toMail, null, MessageConstant.MAILSENDFORMAILINGADDRESSMSG);
+							msg.toString(), null, toMail, null, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
 					try {
 						mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, apicron.getBorrowNid(), JSON.toJSONBytes(message)));
 					} catch (Exception e2) {

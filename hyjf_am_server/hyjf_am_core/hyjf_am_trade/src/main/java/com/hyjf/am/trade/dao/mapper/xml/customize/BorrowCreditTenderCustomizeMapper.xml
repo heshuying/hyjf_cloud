@@ -216,7 +216,7 @@
 			</if>
 			<!-- 用户名 -->
 			<if test="userName != null and userName != ''">
-				AND bc.user_name LIKE CONCAT( #{userName}, '%')
+				AND ct.user_name LIKE CONCAT( #{userName}, '%')
 			</if>
 			<!-- 承接人-->
 			<if test="creditUserName != null and creditUserName != ''">

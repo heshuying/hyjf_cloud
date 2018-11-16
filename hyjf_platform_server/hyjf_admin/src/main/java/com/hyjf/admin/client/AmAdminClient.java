@@ -9,20 +9,18 @@ import com.hyjf.am.response.AppPushManageResponse;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.EmailRecipientResponse;
 import com.hyjf.am.response.IntegerResponse;
-import com.hyjf.am.response.admin.AdminSubConfigResponse;
-import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
-import com.hyjf.am.response.admin.HjhDebtCreditReponse;
-import com.hyjf.am.response.admin.PlatformCountCustomizeResponse;
+import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.admin.promotion.PlatformUserCountCustomizeResponse;
 import com.hyjf.am.response.config.AppBorrowImageResponse;
+import com.hyjf.am.response.config.SmsConfigResponse;
 import com.hyjf.am.response.config.SubmissionsResponse;
 import com.hyjf.am.response.config.VersionConfigBeanResponse;
 import com.hyjf.am.response.market.AppBannerResponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
+import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
-import com.hyjf.am.response.user.BankRepayFreezeOrgResponse;
 import com.hyjf.am.response.user.ChannelStatisticsDetailResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.admin.locked.LockedeUserListRequest;
@@ -30,6 +28,7 @@ import com.hyjf.am.resquest.config.AppBorrowImageRequest;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
+import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
@@ -37,11 +36,14 @@ import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.SubmissionsVO;
 import com.hyjf.am.vo.market.AdsVO;
+import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -51,12 +53,254 @@ import java.util.List;
 public interface AmAdminClient {
 
     /**
+     * 按照省份统计投资人的分布
+     * @param date 上个月的最后一天
+     */
+    List<OperationReportJobVO> getTenderCityGroupByList(Date date);
+
+    /**
+     * 业绩总览
+     */
+    List<OperationReportJobVO> getPerformanceSum();
+    /**
+     * 按照性别统计投资人的分布
+     * @param date 上个月的最后一天
+     */
+    List<OperationReportJobVO>  getTenderSexGroupByList(Date date);
+    /**
+     * 充值金额、充值笔数
+     *
+     * @param intervalMonth 今年间隔月份
+     */
+    List<OperationReportJobVO> getRechargeMoneyAndSum(int intervalMonth);
+    /**
+     * 渠道分析 ，成交笔数
+     *
+     * @param intervalMonth 今年间隔月份
+     * @return
+     */
+    List<OperationReportJobVO> getCompleteCount(int intervalMonth);
+    /**
+     * 用户分析 - 性别分布
+     *
+     * @param intervalMonth 今年间隔月份
+     * @return
+     */
+    List<OperationReportJobVO> getSexDistribute( int intervalMonth);
+
+    /**
+     * 用户分析 - 年龄分布
+     *
+     * @param intervalMonth 今年间隔月份
+     * @return
+     */
+    List<OperationReportJobVO> getAgeDistribute( int intervalMonth);
+
+    /**
+     * 用户分析 - 金额分布
+     *
+     * @param intervalMonth 今年间隔月份
+     * @return
+     */
+    List<OperationReportJobVO> getMoneyDistribute( int intervalMonth);
+    /**
+     * 当月、季、半年、全年业绩  下面的  成交金额,根据月份计算
+     *
+     * @param startMonth 开始月份
+     * @param endMonth   结束月份
+     * @return
+     */
+    List<OperationReportJobVO> getMonthDealMoney(int startMonth,int endMonth);
+
+    /**
+     * 大赢家，收益最高
+     *
+     * @param intervalMonth 今年间隔月份
+     * @return
+     */
+    List<OperationReportJobVO> getOneInterestsMost(int intervalMonth);
+    /**
+     * 超活跃，投资笔数最多
+     *
+     * @param intervalMonth 今年间隔月份
+     * @return
+     */
+    List<OperationReportJobVO> getOneInvestMost(int intervalMonth);
+    /**
+     * 借款期限
+     *
+     * @param intervalMonth 今年间隔月份
+     * @return
+     */
+    List<OperationReportJobVO> getBorrowPeriod(int intervalMonth);
+    /**
+     * 十大投资人
+     *
+     * @param intervalMonth 今年间隔月份
+     * @return
+     */
+    List<OperationReportJobVO> getTenMostMoney( int intervalMonth);
+
+    /**
+     * 今年这个时候到手收益 和 去年这个时候到手收益 和  预期收益率
+     *
+     * @param intervalMonth 今年间隔月份
+     * @param startMonth    去年开始月份
+     * @param endMonth      去年结束月份
+     * @return
+     */
+    List<OperationReportJobVO> getRevenueAndYield(int intervalMonth,int startMonth,int endMonth);
+    /**
+     * 按月统计交易笔数
+     * @param beginDate 统计月的第一天
+     * @param endDate	统计月的最后一天
+     * @return
+     */
+    int getTradeCountByMonth(Date beginDate,Date endDate);
+
+    /**
+     * 获取截至日期的投资金额
+     */
+    double getInvestLastDate(Date date);
+
+    /**
+     * 统计投资人总数，截至日期为上个月的最后一天
+     * @param date 上个月的最后一天
+     * @return
+     */
+    int getTenderCount(Date date);
+
+    /**
+     * 借贷笔数
+     */
+    int getLoanNum(Date date);
+    /**
+     * 按月统计平台的交易总额
+     *
+     * @param beginDate
+     *            统计月的第一天
+     * @param endDate
+     *            统计月的最后一天
+     * @return
+     */
+    BigDecimal getAccountByMonth(Date beginDate, Date endDate);
+    /**
+     *投资人按照年龄分布 返回符合条件所有用户
+     *
+     * @param date 上个月的最后一天
+     * @return
+     */
+    List<OperationReportJobVO>  getTenderAgeByRangeList(Date date);
+    /**
      * count PC统计明细列表
      *
      * @return
      */
      IntegerResponse countList(ChannelStatisticsDetailRequest request);
+    /**
+     * 平均满标时间
+     * @param date 统计月的最后一天
+     * @return
+     */
+    float getFullBillAverageTime(Date date);
+    /**
+     * 统计所有待偿金额，截至日期为上个月的最后一天
+     * @param date 上个月的最后一天
+     * @return
+     */
+    BigDecimal getRepayTotal(Date date);
+    /**
+     * 获取所有渠道
+     * @param type 类型:app,pc
+     * @return
+     */
+    List<UtmVO> selectUtmPlatList(String type);
+    /**
+     * 访问数
+     * @param sourceId 账户推广平台
+     * @param type 类型: pc,app
+     * @return
+     */
+    Integer getAccessNumber(Integer sourceId, String type);
+    /**
+     * 注册数
+     * @param sourceId 账户推广平台
+     * @param type 类型: pc,app
+     * @return
+     */
+    Integer getRegistNumber(Integer sourceId, String type);
 
+    /**
+     * 开户数
+     * @param sourceId
+     * @param type 类型: pc,app
+     * @return
+     */
+    Integer getOpenAccountNumber(Integer sourceId, String type);
+
+    /**
+     * 投资人数
+     * @param sourceId
+     * @param type 类型: pc,app
+     * @return
+     */
+    Integer getTenderNumber(Integer sourceId, String type);
+
+    /**
+     * 累计充值
+     * @param sourceId
+     * @param type 类型: pc,app
+     * @return
+     */
+    BigDecimal getCumulativeRecharge(Integer sourceId, String type);
+
+    /**
+     * 汇直投投资金额
+     * @param sourceId
+     * @param type 类型: pc,app
+     * @return
+     */
+    BigDecimal getHztTenderPrice(Integer sourceId, String type);
+
+    /**
+     * 汇消费投资金额
+     * @param sourceId
+     * @param type 类型: pc,app
+     * @return
+     */
+    BigDecimal getHxfTenderPrice(Integer sourceId, String type);
+
+    /**
+     * 汇天利投资金额
+     * @param sourceId
+     * @param type 类型: pc,app
+     * @return
+     */
+    BigDecimal getHtlTenderPrice(Integer sourceId, String type);
+
+    /**
+     * 汇添金投资金额
+     * @param sourceId
+     * @param type 类型: pc,app
+     * @return
+     */
+    BigDecimal getHtjTenderPrice(Integer sourceId, String type);
+
+    /**
+     * 汇金理财投资金额
+     * @param sourceId
+     * @param type 类型: pc,app
+     * @return
+     */
+    BigDecimal getRtbTenderPrice(Integer sourceId, String type);
+
+    /**
+     * 汇转让投资金额
+     * @param sourceId
+     * @param type 类型: pc,app
+     * @return
+     */
+    BigDecimal getHzrTenderPrice(Integer sourceId, String type);
 
     /**
      * 根据条件查询PC统计明细
@@ -599,6 +843,14 @@ public interface AmAdminClient {
     List<AssetExceptionCustomizeVO> selectAssetExceptionList(AssetExceptionRequest request);
 
     /**
+     * 导出异常标的列表
+     *
+     * @param request
+     * @return
+     */
+    List<AssetExceptionCustomizeVO> exportAssetExceptionList(AssetExceptionRequest request);
+
+    /**
      * 插入异常标的并更新保证金
      *
      * @param assetExceptionRequest
@@ -730,4 +982,85 @@ public interface AmAdminClient {
      * @Author : huanghui
      */
     boolean deletePushManage(Integer id);
+
+    /**
+     * 查询千乐渠道散标数据
+     * @return
+     */
+    DataSearchCustomizeResponse querySanList(DataSearchRequest dataSearchRequest);
+
+    /**
+     * 查询千乐渠道计划数据
+     * @return
+     */
+    DataSearchCustomizeResponse queryPlanList(DataSearchRequest dataSearchRequest);
+    /**
+     * 查询千乐渠道全部数据
+     * @return
+     */
+    DataSearchCustomizeResponse queryQianleList(DataSearchRequest dataSearchRequest);
+
+
+    /**
+     * 查询短信加固数据
+     *
+     * @param request
+     * @return
+     * @author xiehuili
+     */
+    SmsConfigResponse initSmsConfig(SmsConfigRequest request);
+
+
+    /**
+     * 节假日配置-列表查询
+     * @param request
+     * @return
+     */
+    AdminHolidaysConfigResponse getHolidaysConfigRecordList(AdminHolidaysConfigRequest request);
+
+    /**
+     * 节假日配置-画面迁移(含有id更新，不含有id添加)
+     * @param request
+     * @return
+     */
+    AdminHolidaysConfigResponse getInfoList(AdminHolidaysConfigRequest request);
+
+    /**
+     *节假日配置-添加活动信息
+     * @param request
+     * @return
+     */
+    AdminHolidaysConfigResponse insertHolidays(AdminHolidaysConfigRequest request);
+
+    /**
+     *节假日配置-修改活动维护信息
+     * @param request
+     * @return
+     */
+    AdminHolidaysConfigResponse updateHolidays(AdminHolidaysConfigRequest request);
+
+
+    /**
+     * 校验千乐验证码
+     * @param mobile
+     * @param code
+ return
+     */
+    int onlyCheckMobileCode(String mobile, String code);
+
+
+    int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform);
+
+    /**
+     * 查询app渠道统计数据
+     * @param request
+     * @return
+     */
+    AppUtmRegResponse getstatisticsList(AppChannelStatisticsDetailRequest request);
+    /**
+     * 导出app渠道统计数据
+     * @param request
+     * @return
+     */
+    AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request);
 }

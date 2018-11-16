@@ -115,7 +115,10 @@ public class UserParamExceptionController extends BaseController {
     // 判断一轮定时是否跑完,如果没跑完,不允许再跑一个
     private static Boolean isOver = true;
 
-    @ApiOperation(value = "更新全部用户属性", notes = "更新全部用户属性")
+    /**
+     * bug号15597  对应,注释掉更新全部和投资数据修复
+     */
+   /* @ApiOperation(value = "更新全部用户属性", notes = "更新全部用户属性")
     @PostMapping(value = "/updateAllUserParam")
     @ResponseBody
     public AdminResult updateAllUserParam() {
@@ -148,5 +151,5 @@ public class UserParamExceptionController extends BaseController {
         }
         return new AdminResult<>();
     }
-
+*/
 }

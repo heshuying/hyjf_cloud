@@ -48,6 +48,8 @@ public class MyPlanDetailResultBean extends BaseResultBeanFrontEnd {
 		private String onAccrual = "";
 		//计划名称
 		private String planName = "";
+		// 项目进度状态
+		private  String type = "0";
 		
 		
 		public String getStatus() {
@@ -105,6 +107,14 @@ public class MyPlanDetailResultBean extends BaseResultBeanFrontEnd {
 		public void setPlanName(String planName) {
 			this.planName = planName;
 		}
+
+		public String getType() {
+			return type;
+		}
+
+		public void setType(String type) {
+			this.type = type;
+		}
 	}
 
 	// 加入信息
@@ -119,6 +129,17 @@ public class MyPlanDetailResultBean extends BaseResultBeanFrontEnd {
 		private String interestOnCall = "";
 		// 加入时间
 		private String addDate = "";
+
+		// 是否是横杠
+		private String isHyphen = "";
+
+		public String getIsHyphen() {
+			return isHyphen;
+		}
+
+		public void setIsHyphen(String isHyphen) {
+			this.isHyphen = isHyphen;
+		}
 
 		public String getCapital() {
 			return capital;
@@ -173,6 +194,8 @@ public class MyPlanDetailResultBean extends BaseResultBeanFrontEnd {
 		private String interestOnCall = "";
 		// 待收总额
 		private String capitalInterestOnCall = "";
+		//优惠券类型编号
+		private Integer couponTypeCode;
 
 		public String getCouponType() {
 			return couponType;
@@ -212,6 +235,14 @@ public class MyPlanDetailResultBean extends BaseResultBeanFrontEnd {
 
 		public void setCapitalInterestOnCall(String capitalInterestOnCall) {
 			this.capitalInterestOnCall = capitalInterestOnCall;
+		}
+
+		public Integer getCouponTypeCode() {
+			return couponTypeCode;
+		}
+
+		public void setCouponTypeCode(Integer couponTypeCode) {
+			this.couponTypeCode = couponTypeCode;
 		}
 	}
 

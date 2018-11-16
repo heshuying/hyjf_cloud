@@ -620,6 +620,7 @@
             <columnOverride column="interest_coupon" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="taste_money" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="increase_interest_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="borrow_cd" javaType="java.lang.String" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_borrow_recover" domainObjectName="BorrowRecover">
@@ -1623,6 +1624,10 @@
 
         <table tableName="ht_holidays_config" domainObjectName="HolidaysConfig">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+
+        <table tableName="ht_holidays_config_new" domainObjectName="HolidaysConfigNew">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="holiday_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
@@ -1955,6 +1960,13 @@
         </table>
 
         <table tableName="ht_app_push_manage" domainObjectName="AppPushManage">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="jump_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="jump_content" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <table tableName="ht_app_utm_reg" domainObjectName="AppUtmReg">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="jump_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="jump_content" javaType="java.lang.Integer" jdbcType="TINYINT" />

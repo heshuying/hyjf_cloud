@@ -23,6 +23,7 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,10 +36,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author zhangqingqing
@@ -137,6 +135,10 @@ public class WebsiteController extends BaseController {
     @PostMapping(value = "/exportWeblistExcel")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportWeblistExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody WebBean form) throws Exception {
+
+        // 是否具有组织机构查看权限
+        String isOrganizationView = form.getIsOrganizationView();
+
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
@@ -156,15 +158,15 @@ public class WebsiteController extends BaseController {
         Integer totalCount = accountWebListResponse.getRecordTotal();
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
-        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         if (totalCount == 0) {
             String sheetNameTmp = sheetName + "_第1页";
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }
         //交易总金额
-        String sumAccount = this.websiteService.selectBorrowInvestAccount(accountWebList);
-        String[] lastRow = {"总计","","","","","","","",sumAccount};
+        //String sumAccount = this.websiteService.selectBorrowInvestAccount(accountWebList);
+        //String[] lastRow = {"总计","","","","","","","",sumAccount};
         for (int i = 1; i <= sheetCount; i++) {
             accountWebList.setPageSize(defaultRowMaxCount);
             accountWebList.setCurrPage(i);
@@ -172,7 +174,7 @@ public class WebsiteController extends BaseController {
             List<AccountWebListVO> record = webListResponse.getResultList();
             if (record != null && record.size()> 0) {
                 String sheetNameTmp = sheetName + "_第" + i + "页";
-                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,record,lastRow);
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,record);
             } else {
                 break;
             }
@@ -180,12 +182,14 @@ public class WebsiteController extends BaseController {
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
 
-    private Map<String, String> buildMap() {
+    private Map<String, String> buildMap(String isOrganizationView) {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("ordid", "订单号");
-        map.put("regionName", "分公司");
-        map.put("branchName", "分部");
-        map.put("departmentName", "团队");
+        if (StringUtils.isNotBlank(isOrganizationView)) {
+            map.put("regionName", "分公司");
+            map.put("branchName", "分部");
+            map.put("departmentName", "团队");
+        }
         map.put("username", "用户名");
         map.put("truename", "姓名");
         map.put("trade", "收支类型");
@@ -208,7 +212,7 @@ public class WebsiteController extends BaseController {
             @Override
             public String format(Object object) {
                 Double amount = (Double) object;
-                return amount == null ? "0.00" : amount.toString();
+                return amount == null ? "0.00" : String.format("%.2f",amount);
             }
         };
         IValueFormatter createTimeAdapter = new IValueFormatter() {

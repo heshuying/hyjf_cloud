@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service.admin.productcenter.applyagreement.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.ApplyAgreementInfoRequest;
 import com.hyjf.am.resquest.admin.ApplyAgreementRequest;
 import com.hyjf.am.resquest.admin.BorrowRepayAgreementAmRequest;
@@ -51,7 +52,25 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
     public List<BorrowRepayAgreementCustomizeVO> selectBorrowRepayPlan(BorrowRepayAgreementAmRequest request, int limitStart, int limitEnd) {
         request.setLimitStart(limitStart);
         request.setLimitEnd(limitEnd);
-        return this.borrowRepayAgreementCustomizeMapper.selectBorrowRepayPlan(request);
+        List<BorrowRepayAgreementCustomizeVO> list = this.borrowRepayAgreementCustomizeMapper.selectBorrowRepayPlan(request);
+        if (list != null && list.size() > 0) {
+            for (BorrowRepayAgreementCustomizeVO customize : list) {//判断是否申请过垫付协议
+                ApplyAgreementExample applyAgreement = new ApplyAgreementExample();
+                ApplyAgreementExample.Criteria criteria = applyAgreement.createCriteria();
+                criteria.andBorrowNidEqualTo(customize.getBorrowNid());
+                criteria.andRepayPeriodEqualTo(customize.getRepayPeriod());
+                Integer count = this.applyAgreementMapper.countByExample(applyAgreement);
+                logger.info("--------------------垫付协议申请明细列表页--分期列表applyAgreement:"+JSONObject.toJSON(applyAgreement));
+                logger.info("--------------------垫付协议申请明细列表页--分期列表count:"+count);
+                if (count > 0) {
+                    customize.setApplyagreements(1);
+                } else {
+                    customize.setApplyagreements(0);
+                }
+            }
+        }
+        logger.info("--------------------垫付协议申请明细列表页--分期列表list:"+JSONObject.toJSON(list));
+        return  list;
     }
 
     /**
@@ -75,7 +94,22 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
     public List<BorrowRepayAgreementCustomizeVO> selectBorrowRepay(BorrowRepayAgreementAmRequest request, int limitStart, int limitEnd) {
         request.setLimitStart(limitStart);
         request.setLimitEnd(limitEnd);
-        return this.borrowRepayAgreementCustomizeMapper.selectBorrowRepay(request);
+        List<BorrowRepayAgreementCustomizeVO> list =  this.borrowRepayAgreementCustomizeMapper.selectBorrowRepay(request);
+        for (BorrowRepayAgreementCustomizeVO customize : list) {//判断是否申请过垫付协议
+            ApplyAgreementExample applyAgreement = new ApplyAgreementExample();
+            ApplyAgreementExample.Criteria criteria = applyAgreement.createCriteria();
+            criteria.andBorrowNidEqualTo(customize.getBorrowNid());
+            criteria.andRepayPeriodEqualTo(customize.getRepayPeriod());
+            Integer count = this.applyAgreementMapper.countByExample(applyAgreement);
+            logger.info("--------------------垫付协议申请明细列表页--列表applyAgreement:"+JSONObject.toJSON(applyAgreement));
+            logger.info("--------------------垫付协议申请明细列表页--列表count:"+count);
+            if (count > 0) {
+                customize.setApplyagreements(1);
+            } else {
+                customize.setApplyagreements(0);
+            }
+        }
+        return list;
     }
 
     /**
@@ -163,7 +197,7 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
                     criteria.andBorrowNidEqualTo(applyAgreement.getBorrowNid());
                     List<TenderAgreement> tenderAgreements = this.tenderAgreementMapper.selectByExample(example);
                     //申请状态 0 全部；1申请失败(hyjf_tender_agreement没有记录)：2申请中；3申请成功
-                    if (tenderAgreements != null) {
+                    if (tenderAgreements != null && tenderAgreements.size()>0) {
                         int tenderAgreementCout = 0;//hyjf_tender_agreement状态为3的数量和hyjf_apply_agreement协议份数相同表示都生成成功
                         for (TenderAgreement tenderAgreement : tenderAgreements) {
                             if (tenderAgreement.getStatus() == 1 || tenderAgreement.getStatus() == 2) {
@@ -172,8 +206,10 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
                             }
                             tenderAgreementCout++;
                         }
-                        if (tenderAgreementCout == applyAgreement.getAgreementNumber()) {
+                        if (tenderAgreementCout == applyAgreement.getAgreementNumber() && applyAgreement.getAgreementNumber()>0) {
                             applyAgreement.setStatus(3);
+                        }else{
+                            applyAgreement.setStatus(1);
                         }
                     } else {
                         applyAgreement.setStatus(1);
@@ -185,29 +221,6 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
             }
         }
         return  listVo;
-    }
-
-    /**
-     * 封装查询条件
-     * @param request
-     * @return ApplyAgreementExample
-     */
-    private ApplyAgreementExample convertExample(ApplyAgreementRequest request){
-        ApplyAgreementExample applyAgreementExample = new ApplyAgreementExample();
-        ApplyAgreementExample.Criteria agreementcriteria = applyAgreementExample.createCriteria();
-        if(org.apache.commons.lang3.StringUtils.isNotEmpty(request.getBorrowNid())){
-            agreementcriteria.andBorrowNidEqualTo(request.getBorrowNid());
-        }
-        if(org.apache.commons.lang3.StringUtils.isNotEmpty(request.getBorrowPeriod())){
-            agreementcriteria.andRepayPeriodEqualTo(Integer.valueOf(request.getBorrowPeriod()));
-        }
-        if(org.apache.commons.lang3.StringUtils.isNotEmpty(request.getTimeStart()) &&
-                org.apache.commons.lang3.StringUtils.isNotEmpty(request.getTimeEnd())){
-            Date endDate = GetDate.stringToDate(request.getTimeEnd());
-            Date startDate = GetDate.stringToDate(request.getTimeStart());
-            agreementcriteria.andCreateTimeBetween(startDate, endDate);
-        }
-        return applyAgreementExample;
     }
 
     /**
@@ -224,12 +237,12 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
     /**
      * 获取用户投资协议分期
      *
-     * @param borrowNid
+     * @param nid
      * @return
      */
     @Override
-    public List<BorrowRecoverPlan> selectBorrowRecoverPlanList(String borrowNid, int period) {
-        return this.getBorrowRecoverPlan(borrowNid,period);
+    public List<BorrowRecoverPlan> selectBorrowRecoverPlanList(String nid, int period) {
+        return this.getBorrowRecoverPlan(nid,period);
     }
 
     /**
@@ -304,7 +317,7 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
         if(openAccountRecords != null && openAccountRecords.size() > 0){
             applyAgreementInfo.setId(openAccountRecords.get(0).getId());
             applyAgreementInfo.setUpdateTime(new Date());
-            applyAgreementInfo.setUpdateTime(openAccountRecords.get(0).getCreateTime());
+            applyAgreementInfo.setCreateTime(openAccountRecords.get(0).getCreateTime());
             return this.applyAgreementInfoMapper.updateByPrimaryKey(applyAgreementInfo);
 
         }else {
@@ -335,8 +348,8 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
         if(applyAgreements != null && applyAgreements.size() > 0){
             applyAgreement.setId(applyAgreements.get(0).getId());
             applyAgreement.setUpdateTime(new Date());
+            applyAgreement.setCreateTime(applyAgreements.get(0).getCreateTime());
             this.applyAgreementMapper.updateByPrimaryKey(applyAgreement);
-
         }else {
             applyAgreement.setCreateTime(new Date());
             return this.applyAgreementMapper.insert(applyAgreement);

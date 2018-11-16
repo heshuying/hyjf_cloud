@@ -1,48 +1,24 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import com.hyjf.am.resquest.admin.AssetListRequest;
-import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
-import com.hyjf.am.vo.admin.AssetListCustomizeVO;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Map;
+import com.hyjf.am.resquest.api.AsseStatusRequest;
+import com.hyjf.am.vo.api.ApiAssetStatusCustomizeVO;
 
 /**
- * @author libin
- * @version AssetListServiceImpl, v0.1 2018/6/13 17:23
- */
+ * 资产
+ * @author Zha Daojian
+ * @date 2018/11/13 18:06
+ * @param
+ * @return
+ **/
 public interface AssetListServiceCustomizeMapper {
 	
+
+
 	/**
-	 * 查询资产列表
-	 * @author libin
-	 * @param mapParam
-	 * @return
-	 */
-	List<AssetListCustomizeVO> queryAssetList(Map<String, Object> mapParam);
-	
-	/**
-	 * 查询资产详情
-	 * @author libin
-	 * @param mapParam
-	 * @return
-	 */
-	AssetDetailCustomizeVO selectAssetDetail(Map<String, Object> mapParam);
-	
-	/**
-	 * COUNT
-	 * 
+	 * 查询资产状态
+	 * @author Zha Daojian
+	 * @date 2018/8/27 10:27
 	 * @param request
-	 * @return
-	 */
-	Integer countAssetList(AssetListRequest request);
-	
-	/**
-	 * SUM
-	 *
-	 * @param request
-	 * @return
-	 */
-	BigDecimal getSumAccount(AssetListRequest request);
+	 **/
+	ApiAssetStatusCustomizeVO selectAssetStatusById(AsseStatusRequest request);
 }

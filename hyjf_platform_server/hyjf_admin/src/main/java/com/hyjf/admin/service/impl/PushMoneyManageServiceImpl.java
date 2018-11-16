@@ -96,6 +96,10 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
         // 根据项目编号取得borrow表
 
         BorrowAndInfoVO borrow = this.amTradeClient.selectBorrowByNid(borrowNid);
+        if(borrow==null){
+            logger.info("根据项目编号取得borrow表失敗borrowNid："+borrowNid);
+            return ret;
+        }
 
         // 根据项目编号取得borrowTender表
         List<BorrowTenderVO> borrowTenderList = this.amTradeClient.searchBorrowTenderByBorrowNid(borrowNid);
@@ -115,7 +119,7 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
             // 投资ID
             tenderCommissionRequest.setTenderId(borrowTender.getId());
             // 投资时间
-            tenderCommissionRequest.setTenderTime(borrowTender.getAddTime());
+            tenderCommissionRequest.setTenderTime(GetDate.getTime10(borrowTender.getCreateTime()));
             // 状态 0：未发放；1：已发放
             tenderCommissionRequest.setStatus(0);
             // 备注
@@ -175,6 +179,7 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
             }
 
             // 计算提成(提成金额,提成人,提成人部门ID,投资人部门ID)
+            logger.info("计算提成borrow：" + JSONObject.toJSON(borrow));
             calculaeCommission(tenderCommissionRequest, borrowTender.getTenderUserAttribute(), // 投资时投资人的用户属性
                     borrowTender.getInviteUserAttribute(), // 投资时推荐人的用户属性
                     borrow.getBorrowStyle(), // 还款方式（endday表示天，其它表示月）
@@ -182,12 +187,13 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
                     borrow.getProjectType(), // 0汇保贷 1汇典贷 2汇小贷 3汇车贷 4新手标
                     borrow.getBorrowApr(), // 借款利率`
                     is51);
-
+            logger.info("计算提成tenderCommissionRequest.getCommission()：" + JSONObject.toJSON(tenderCommissionRequest));
             if (tenderCommissionRequest.getCommission()!=null && tenderCommissionRequest.getCommission().compareTo(BigDecimal.ZERO) > 0) {
                 Integer counts = amTradeClient.getCountTenderCommissionByTenderIdAndTenderType(tenderCommissionRequest);
                 if (counts == 0) {
                     // 执行插入
                     ret += this.amTradeClient.saveTenderCommission(tenderCommissionRequest);
+                    logger.info("执行插入tenderCommissionRequest：" + JSONObject.toJSON(tenderCommissionRequest));
                 } else {
                     ret++;
                 }
@@ -195,6 +201,7 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
         }
 
         // 更新借款API表
+
         ret += this.amTradeClient.updateBorrowApicronByPrimaryKeySelective(apicornId+"");
 
         return ret;
@@ -210,7 +217,7 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
         PushMoneyRequest pushMoneyRequest = new PushMoneyRequest();
         pushMoneyRequest.setProjectType(1);
         pushMoneyRequest.setType(type);
-        List<PushMoneyVO> list = this.amTradeClient.findPushMoneyList(pushMoneyRequest).getResultList();
+        List<PushMoneyVO> list = this.amTradeClient.getPushMoney(pushMoneyRequest);
         if (list != null && list.size() > 0) {
             return list.get(0);
         }
@@ -498,7 +505,6 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
                     // 发提成处理
                     PushMoneyRequest pushMoneyRequest = new PushMoneyRequest();
                     pushMoneyRequest.setTenderCommissionVO(tenderCommissionVO);
-                    pushMoneyRequest.setLoginUserId(loginUserId);
                     AdminSystemVO adminSystemVO = amConfigClient.getUserInfoById(loginUserId);
                     pushMoneyRequest.setLoginUserName(adminSystemVO.getUsername());
                     pushMoneyRequest.setBankOpenAccountVO(bankOpenAccountVO);

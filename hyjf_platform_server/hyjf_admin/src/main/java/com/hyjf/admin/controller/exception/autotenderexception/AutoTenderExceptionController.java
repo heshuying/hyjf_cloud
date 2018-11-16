@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.exception.autotenderexception;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AutoTenderExceptionRequestBean;
 import com.hyjf.admin.beans.request.BorrowInvestRequestBean;
 import com.hyjf.admin.beans.request.TenderExceptionSolveRequestBean;

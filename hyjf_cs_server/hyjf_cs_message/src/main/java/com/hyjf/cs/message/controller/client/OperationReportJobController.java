@@ -3,18 +3,22 @@
  */
 package com.hyjf.cs.message.controller.client;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.message.BorrowUserStatisticResponse;
 import com.hyjf.am.response.message.OperationReportEntityResponse;
 import com.hyjf.am.vo.datacollect.BorrowUserStatisticVO;
 import com.hyjf.am.vo.datacollect.OperationReportEntityVO;
-import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.am.vo.message.OperationReportJobBean;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.ic.BorrowUserStatistic;
-import com.hyjf.cs.message.bean.ic.OperationReportEntity;
-import com.hyjf.cs.message.service.report.OperationReportJobService;
+import com.hyjf.cs.message.bean.ic.OperationReport;
+import com.hyjf.cs.message.mq.base.MessageContent;
+import com.hyjf.cs.message.mq.producer.OperationReportJobAdminProducer;
+import com.hyjf.cs.message.service.report.OperationReportJobNewService;
 import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -38,21 +42,36 @@ import java.util.Date;
 public class OperationReportJobController extends BaseController {
 
 	@Autowired
-	private OperationReportJobService operationReportJobService;
+	private OperationReportJobNewService operationReportJobNewService;
 
 	@Autowired
 	private PlatDataStatisticsService platDataStatisticsService;
+	@Autowired
+	OperationReportJobAdminProducer operationReportJobAdminProducer;
 
 	@ApiOperation(value = "统计报表-根据当前时间要获取到上个月的数据", notes = "根据当前时间要获取到上个月的数据")
 	@RequestMapping("/countOperationReport")
 	public StringResponse countOperationReport() {
-		logger.info("开始 从数据库获取运营报告的数据...");
+		logger.info("开始发送运营报告的mq...");
 		StringResponse response = new StringResponse();
-//		boolean flag = RedisUtils.tranactionSet(RedisConstants.Statistics_Operation_Report);
-//		if(!flag){
-//			return;
-//		}
+		OperationReportJobBean bean = new OperationReportJobBean();
 		Calendar cal = Calendar.getInstance();
+		bean.setCalendar(cal);
+		int lastMonth = getLastMonth(cal);
+		bean.setLastMonth(lastMonth);
+		String year = String.valueOf(GetDate.getYear());
+		String month = GetDate.getMonth();
+		bean.setYear(year);
+		bean.setMonth(month);
+		try {
+			operationReportJobAdminProducer.messageSend(new MessageContent(MQConstant.OPERATIONREPORT_JOB_ADMIN_TOPIC,
+					System.currentTimeMillis() + "", JSONObject.toJSONBytes(bean)));
+		} catch (MQException e) {
+			logger.error("运营报告的mq发送失败......", e);
+			return new StringResponse("error");
+		}
+
+	/*	Calendar cal = Calendar.getInstance();
 
 		try {
 			// 插入性别，性别 ，区域的统计信息
@@ -105,7 +124,7 @@ public class OperationReportJobController extends BaseController {
 
 		RedisUtils.del(RedisConstants.Statistics_Operation_Report);
 
-		logger.info("完成 插入统计数据到mongodb...");
+		logger.info("完成 插入统计数据到mongodb...");*/
 		return response;
 	}
 
@@ -127,7 +146,7 @@ public class OperationReportJobController extends BaseController {
 	public BorrowUserStatisticResponse getBorrowUserStatistic() {
 		BorrowUserStatisticResponse response = new BorrowUserStatisticResponse();
 		BorrowUserStatisticVO vo = new BorrowUserStatisticVO();
-		BorrowUserStatistic borrowUserStatistic = operationReportJobService.selectBorrowUserStatistic();
+		BorrowUserStatistic borrowUserStatistic = operationReportJobNewService.selectBorrowUserStatistic();
 		if(borrowUserStatistic != null){
 
 			BeanUtils.copyProperties(borrowUserStatistic,vo);
@@ -140,12 +159,24 @@ public class OperationReportJobController extends BaseController {
 	public OperationReportEntityResponse getBorrowUserStatistic(@PathVariable Integer month) {
 		OperationReportEntityResponse response = new OperationReportEntityResponse();
 		OperationReportEntityVO vo = new OperationReportEntityVO();
-		OperationReportEntity operationReportEntity = platDataStatisticsService.findOneOperationMongDaoByMonth(month);
-		if(operationReportEntity != null){
+		OperationReport operationReport = platDataStatisticsService.findOneOperationMongDaoByMonth(month);
+		if(operationReport != null){
 
-			BeanUtils.copyProperties(operationReportEntity,vo);
+			BeanUtils.copyProperties(operationReport,vo);
 		}
 		response.setResult(vo);
 		return response;
+	}
+	/**
+	 * 获得当前月份的上个月日期
+	 * @return
+	 */
+	public static int getLastMonth(Calendar calendar){
+		SimpleDateFormat sdf = new SimpleDateFormat("MM");
+		calendar.setTime(new Date());//设置当前日期
+		calendar.add(Calendar.MONTH, -1);//月份减一
+		//输出上个月的日期
+		int lastMonth = Integer.valueOf(sdf.format( calendar.getTime()));
+		return lastMonth;
 	}
 }
