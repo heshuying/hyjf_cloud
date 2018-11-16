@@ -57,18 +57,7 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 		}
 		return 0;
 	}
-	@Override
-	public List<OperationReportJobVO>  getTenderAgeByRangeList(Date date,int firstAge,int endAge){
-		OperationReportJobRequest request = new OperationReportJobRequest();
-		request.setDate(date);
-		request.setFirstAge(firstAge);
-		request.setEndAge(endAge);
-		OperationReportJobResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/tenderagebyrangelist",request, OperationReportJobResponse.class).getBody();
-		if (response != null) {
-			return response.getResultList();
-		}
-		return null;
-	}
+
 
 	@Override
 	public BigDecimal getAccountByMonth(Date beginDate, Date endDate) {
@@ -221,16 +210,7 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 		}
 		return null;
 	}
-	@Override
-	public List<OperationReportJobVO> getSexDistribute( int intervalMonth){
-		OperationReportJobRequest request = new OperationReportJobRequest();
-		request.setIntervalMonth(intervalMonth);
-		OperationReportJobResponse response  = restTemplate.postForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/sexdistribute",request, OperationReportJobResponse.class).getBody();
-		if (response != null) {
-			return response.getResultList();
-		}
-		return null;
-	}
+
 	@Override
 	public List<OperationReportJobVO> getAgeDistribute( int intervalMonth){
 		OperationReportJobRequest request = new OperationReportJobRequest();
@@ -291,10 +271,6 @@ public class OperationReportJobClientImpl implements OperationReportJobClient {
 			return response.getResult();
 		}
 		return null;
-	}
-	@Override
-	public IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize){
-		return  restTemplate.postForEntity("http://AM-ADMIN/am-config/content/idcard/idcarddetail",idCardCustomize, IdCardCustomize.class).getBody();
 	}
 
 
