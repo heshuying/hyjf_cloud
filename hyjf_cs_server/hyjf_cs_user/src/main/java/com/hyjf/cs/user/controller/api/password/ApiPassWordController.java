@@ -61,7 +61,7 @@ public class ApiPassWordController extends BaseController {
         logger.info("api端设置交易密码 start");
         ModelAndView modelAndView = new ModelAndView();
         logger.info("第三方请求参数："+JSONObject.toJSONString(transPasswordRequestBean));
-        Map<String,Object> map = passWordService.apiCheack(transPasswordRequestBean,BankCallConstant.TXCODE_PASSWORD_SET_PAGE, BaseDefine.METHOD_SERVER_SET_PASSWORD);
+        Map<String,Object> map = passWordService.apiCheack(transPasswordRequestBean,BankCallConstant.TXCODE_PASSWORD_SET_PAGE, BaseDefine.METHOD_SERVER_RESET_PASSWORD);
         map.put("callBackAction",transPasswordRequestBean.getRetUrl());
         if (null==map.get("flag")){
             return callbackErrorViewForMap(map);
