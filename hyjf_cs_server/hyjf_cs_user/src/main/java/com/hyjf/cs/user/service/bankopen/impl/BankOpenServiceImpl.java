@@ -536,7 +536,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             // 获取共同参数
             String idType = BankCallConstant.ID_TYPE_IDCARD;
             // 调用开户接口
-            BankCallBean openAccoutBean = new BankCallBean(openBean.getUserId(), BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE, Integer.parseInt(openBean.getPlatform()), BankCallConstant.BANK_URL_ACCOUNT_OPEN_PAGE);
+            BankCallBean openAccoutBean = new BankCallBean(openBean.getUserId(), BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE, Integer.parseInt(openBean.getPlatform()), BankCallConstant.BANK_URL_ACCOUNT_OPEN_ENCRYPT_PAGE);
             openAccoutBean.setIdentity(openBean.getIdentity());
             /**1：出借角色2：借款角色3：代偿角色*/
             openAccoutBean.setChannel(openBean.getChannel());
@@ -588,7 +588,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             // 获取共同参数
             String idType = BankCallConstant.ID_TYPE_IDCARD;
             // 调用开户接口
-            BankCallBean openAccoutBean = new BankCallBean(openBean.getUserId(), BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE, Integer.parseInt(openBean.getPlatform()), BankCallConstant.BANK_URL_ACCOUNT_OPEN_PAGE);
+            BankCallBean openAccoutBean = new BankCallBean(openBean.getUserId(), BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE, Integer.parseInt(openBean.getPlatform()), BankCallConstant.BANK_URL_ACCOUNT_OPEN_ENCRYPT_PAGE);
             openAccoutBean.setIdentity(openBean.getIdentity());
             /**1：出借角色2：借款角色3：代偿角色*/
             openAccoutBean.setChannel(openBean.getChannel());
