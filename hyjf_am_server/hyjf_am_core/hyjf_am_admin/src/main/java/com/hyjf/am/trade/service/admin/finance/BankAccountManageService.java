@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service.admin.finance;
 
 import com.hyjf.am.resquest.admin.BankAccountManageRequest;
+import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.customize.BankAccountManageCustomize;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
@@ -47,4 +48,10 @@ public interface BankAccountManageService extends BaseService {
      * @return
      */
     List<BankAccountManageCustomize> queryAccountInfos(BankAccountManageRequest bankAccountManageRequest);
+    /**
+     * add by nxl 更新account表的account_id
+     * @param account
+     * @return
+     */
+    Integer updAccountId(Account account);
 }

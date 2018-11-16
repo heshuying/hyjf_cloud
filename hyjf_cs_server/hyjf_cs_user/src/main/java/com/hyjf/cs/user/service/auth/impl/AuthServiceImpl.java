@@ -15,6 +15,7 @@ import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.ApiAuthRequesBean;
 import com.hyjf.cs.user.bean.AuthBean;
+import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.sensorsdate.auth.SensorsDataAuthProducer;
@@ -1022,7 +1023,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 			return resultMap;
 		}
 		// 验签
-        if (!this.verifyRequestSign(requestBean, "/server/user/mergeAuthPagePlus/page")) {
+        if (!this.verifyRequestSign(requestBean, BaseDefine.METHOD_MERGE_AUTH_PAGE_PLUS)) {
 			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
 			resultMap.put("status", ErrorCodeConstant.STATUS_CE000002);
 			resultMap.put("mess", "验签失败");

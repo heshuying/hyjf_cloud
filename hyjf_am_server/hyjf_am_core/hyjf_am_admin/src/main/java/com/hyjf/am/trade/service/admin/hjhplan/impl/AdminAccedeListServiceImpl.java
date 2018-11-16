@@ -264,6 +264,12 @@ public class AdminAccedeListServiceImpl implements AdminAccedeListService{
 		if (StringUtils.isNotEmpty(request.getUserNameSrch())) {
 			param.put("userNameSrch", request.getUserNameSrch());
 		}
+		
+		// 锁定期
+		if (StringUtils.isNotEmpty(request.getDebtLockPeriodSrch())) {
+			param.put("debtLockPeriodSrch", Integer.parseInt(request.getDebtLockPeriodSrch()));
+		}
+		
 		// 推荐人
 		if (StringUtils.isNotEmpty(request.getRefereeNameSrch())) {
 			param.put("refereeNameSrch", request.getRefereeNameSrch());
@@ -284,6 +290,24 @@ public class AdminAccedeListServiceImpl implements AdminAccedeListService{
 		if (StringUtils.isNotEmpty(request.getSearchEndDate())) {
 			param.put("searchEndDate", request.getSearchEndDate());
 		}
+		
+		// 加入开始时间(计息开始时间)
+		if (StringUtils.isNotEmpty(request.getCountInterestTimeStartDate())) {
+			param.put("countInterestTimeStartDate", request.getCountInterestTimeStartDate());
+		}
+		// 加入结束时间(计息结束时间)
+		if (StringUtils.isNotEmpty(request.getCountInterestTimeEndDate())) {
+			param.put("countInterestTimeEndDate", request.getCountInterestTimeEndDate());
+		}
+		// 匹配期查询传入
+		if (StringUtils.isNotEmpty(request.getMatchDatesSrch())) {
+			param.put("matchDatesSrch", request.getMatchDatesSrch());
+		}
+		// 投资笔数查询传入
+		if (StringUtils.isNotEmpty(request.getInvestCountsSrch())) {
+			param.put("investCountsSrch", request.getInvestCountsSrch());
+		}
+		
 		return this.adminPlanAccedeListCustomizeMapper.sumAccedeRecord(param);
 	}
 

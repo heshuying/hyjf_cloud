@@ -31,6 +31,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * @author fq
@@ -50,7 +51,9 @@ public class AppChannelReconciliationRecordController extends BaseController {
         if (request.getUtmPlat() == null) {
             List<String> utmList = new ArrayList<>();
             for (UtmVO vo : list) {
-                utmList.add(vo.getSourceId().toString());
+                if (Objects.equals(vo.getDelFlag(), 0)) {
+                    utmList.add(vo.getSourceId().toString());
+                }
             }
             String[] integers = new String[utmList.size()];
             String[] array = utmList.toArray(integers);
@@ -302,7 +305,7 @@ public class AppChannelReconciliationRecordController extends BaseController {
                         }
                         // 投资时间
                         else if (celLength == 9) {
-                            cell.setCellValue(record.getInvestTime()==null?"":GetDate.timestamptoStrYYYYMMDDHHMM(String.valueOf(record.getInvestTime())));
+                            cell.setCellValue(record.getInvestTime()==null?"":record.getInvestTime());
                         }
                     }
                 }

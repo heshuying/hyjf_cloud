@@ -313,7 +313,7 @@ public class HjhDebtCreditController extends BaseController{
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
-        String sheetName = "汇计划转让记录";
+        String sheetName = "智投服务转让记录";
         // 文件名称
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
         // 声明一个工作薄
@@ -362,22 +362,23 @@ public class HjhDebtCreditController extends BaseController{
         map.put("planOrderId", "出让人智投订单号");
         map.put("planNidNew", "清算后智投编号");
         map.put("userName", "出让人");
-        map.put("userName", "债转编号");
+        map.put("creditNid", "债转编号");
         map.put("borrowNid", "原项目编号");
         map.put("borrowApr", "原项目收益率");
         map.put("repayStyleName", "还款方式");
         map.put("creditCapital", "债权本金");
         map.put("liquidationFairValue", "债权价值");
-        map.put("actualApr", "预计实际收益率");
+        map.put("actualApr", "预期承接收益率");
         map.put("assignCapital", "已转让本金");
         map.put("assignAdvanceInterest", "垫付利息");
-        map.put("remainCredit", "在途资金");
+        map.put("remainCredit", "剩余债权价值");
         map.put("accountReceive", "出让人实际到账金额");
-        map.put("liquidatesTime", "实际清算时间");
+        map.put("liquidatesTime", "最新清算时间");
+        map.put("endDate", "预计开始退出时间");
         map.put("creditStatusName", "转让状态");
         map.put("repayStatusName", "还款状态");
-        map.put("borrowPeriod", "项目总期数");
         map.put("liquidatesPeriod", "清算时所在期数");
+        map.put("borrowPeriod", "项目期数");
         map.put("repayNextTime", "当期应还款时间");
 
         return map;

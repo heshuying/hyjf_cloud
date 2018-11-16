@@ -747,8 +747,6 @@ public class FddHandle {
         request.setBidNid(borrowNid);
         request.setCreditNid(creditNid);
         request.setCreditTenderNid(creditTenderNid);
-        logger.info("查询ht_credit_tender表:传入参数assign_nid="+assignOrderId+"," +
-				"bid_nid="+borrowNid+",credit_nid="+creditNid+",credit_tender_nid="+creditTenderNid);
         List<CreditTenderVO> creditTenderList = this.amTradeClient.getCreditTenderList(request);
         if (creditTenderList != null && creditTenderList.size() > 0) {
 
@@ -918,6 +916,7 @@ public class FddHandle {
 
             boolean isSign = isCreatContract(assignOrderId);
             if (isSign){//单独走签署接口
+            	logger.info("==================债转法大大协议单独走签署接口"+ JSONObject.toJSONString(bean));
                 updateSignContract(bean);
             }else {
 				logger.info("==================债转法大大协议开始生成，订单号：" + assignOrderId + ",开始调用接口----");
@@ -1328,8 +1327,8 @@ public class FddHandle {
 				}
 			}
 
-			if (borrowCredit != null && borrowCredit.size() > 0) {
-				resultMap.put("borrowCredit", borrowCredit);
+			if (CollectionUtils.isNotEmpty(borrowCredit)) {
+				resultMap.put("borrowCredit", borrowCredit.get(0));
 			}
 
 

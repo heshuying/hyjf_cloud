@@ -702,7 +702,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 }
                 params.put("investProjectPeriod", investProjectPeriod);
                 //根据investFlag标志位来决定更新哪种投资
-                params.put("investFlag", checkIsNewUserCanInvest(userId));
+                params.put("investFlag", checkAppUtmInvestFlag(userId));
                 // 用户id
                 params.put("userId", userId);
                 //压入消息队列
@@ -756,6 +756,26 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         WebResult<Map<String, Object>> result = new WebResult();
         result.setData(data);
         return result;
+    }
+
+    /**
+     * 查询appUtmReg是否首投
+     * @param userId
+     * @return
+     */
+    private boolean checkAppUtmInvestFlag(Integer userId) {
+        // 新的判断是否为新用户方法
+        try {
+            int total = amTradeClient.countNewUserTotal(userId);
+            logger.info("获取用户投资数量 userID {} 数量 {} ",userId,total);
+            if (total == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        }catch (Exception e) {
+            throw e;
+        }
     }
 
     /**
@@ -1347,6 +1367,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         investInfo.put("projectRiskLevelDesc","");
         // 投资类型
         String investType = tender.getBorrowNid().substring(0, 3);
+        //测评判断逻辑开始
+        UserVO loginUser = amUserClient.findUserById(tender.getUserId());
         //风险测评
         if (!(tender.getMoney() == null || "".equals(tender.getMoney()) || (new BigDecimal(tender.getMoney()).compareTo(BigDecimal.ZERO) == 0))) {
             //从user中获取客户类型，ht_user_evalation_result（用户测评总结表）
@@ -1373,6 +1395,27 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                         break;
                     default:
                         revaluation_money = "0";
+                }
+                //测评到期日
+                Long lCreate = loginUser.getEvaluationExpiredTime().getTime();
+                //当前日期
+                Long lNow = System.currentTimeMillis();
+                // 判断用户测评有效期
+                if (loginUser.getIsEvaluationFlag() == 0) {
+                    investInfo.put("riskTested",CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL);
+                    investInfo.put("riskLevelDesc","根据监管要求，投资前必须进行风险测评。");
+                } else {
+                    if(loginUser.getIsEvaluationFlag()==1 && null != loginUser.getEvaluationExpiredTime()){
+                        if (lCreate <= lNow) {
+                            //已过期需要重新评测
+                            //返回错误码
+                            investInfo.put("riskTested",CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED);
+                            investInfo.put("riskLevelDesc","根据监管要求，测评已过期，投资前必须进行风险测评。");
+                        }
+                    } else {
+                        investInfo.put("riskTested",CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL);
+                        investInfo.put("riskLevelDesc","根据监管要求，投资前必须进行风险测评。");
+                    }
                 }
                 //计划类判断用户类型为稳健型以上才可以投资
                 if("HJH".equals(investType)) {
@@ -1438,7 +1481,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             if ("getTenderUrl".equals(flag)) {
                 if (result != null) {
                     String riskTested = (String) result.get("riskTested");
-                    if (CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)) {
+                    if (CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL.equals(riskTested)) {
+                        //未测评新评测
+                        throw new CheckException(MsgEnum.STATUS_EV000008);
+                    } else if (CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)) {
                         //已过期需要重新评测
                         throw new CheckException(MsgEnum.STATUS_EV000004);
                     } else if (CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)) {
@@ -1474,7 +1520,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             if("getTenderUrl".equals(flag)){
                 if(result!=null){
                     String riskTested = (String) result.get("riskTested");
-                    if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
+                    if (CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL.equals(riskTested)) {
+                        //未测评新评测
+                        throw new CheckException(MsgEnum.STATUS_EV000008);
+                    } else if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
                         //已过期需要重新评测
                         throw new CheckException(MsgEnum.STATUS_EV000004);
                     //}else if(CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)){
@@ -1498,7 +1547,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if("getTenderUrl".equals(flag)) {
             if (result!= null) {
                 String riskTested = (String) result.get("riskTested");
-                if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
+                if (CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL.equals(riskTested)) {
+                    //未测评新评测
+                    throw new CheckException(MsgEnum.STATUS_EV000008);
+                } else if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
                     //已过期需要重新评测
                     throw new CheckException(MsgEnum.STATUS_EV000004);
                 //}else if(CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)){
