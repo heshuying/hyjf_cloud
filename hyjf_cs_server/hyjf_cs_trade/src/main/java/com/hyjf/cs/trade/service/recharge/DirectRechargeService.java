@@ -18,6 +18,6 @@ import java.util.Map;
  */
 public interface DirectRechargeService extends BaseTradeService {
     Map<String,Object> recharge(UserDirectRechargeRequestBean userRechargeRequestBean, HttpServletRequest request);
-    ModelAndView pageReturn(HttpServletRequest request, BankCallBean bean);
+    Map<String,Object> pageReturn(HttpServletRequest request, BankCallBean bean);
     BankCallResult bgreturn(HttpServletRequest request, BankCallBean bean);
 }
