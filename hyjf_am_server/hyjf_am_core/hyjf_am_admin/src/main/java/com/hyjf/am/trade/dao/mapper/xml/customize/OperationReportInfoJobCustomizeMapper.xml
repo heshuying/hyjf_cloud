@@ -984,8 +984,9 @@
 
     <!-- 	十大投资人 -->
     <select id="getTenMostMoney" resultMap="performanceMap">
-       SELECT
+        SELECT
         tmp.user_id as userId,
+        aa.username as userName,
         account as sumAccount
         FROM
         (
@@ -1020,15 +1021,15 @@
         FROM
         ht_hjh_accede a
         WHERE
-        a.create_time <![CDATA[ < ]]>
+        a.create_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        # 加入时间
-        AND a.create_time <![CDATA[ >= ]]>
+        ) # 加入时间
+        AND a.create_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-
+        )
         UNION ALL
         # 债转
         SELECT
@@ -1037,15 +1038,15 @@
         FROM
         ht_credit_tender ct
         WHERE
-        ct.create_time <![CDATA[ < ]]>
+        ct.create_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        # 承接时间
-        AND ct.create_time <![CDATA[ >= ]]>
+        ) # 承接时间
+        AND ct.create_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-
+        )
         UNION ALL
         # 汇添金
         SELECT
@@ -1054,15 +1055,15 @@
         FROM
         ht_debt_plan_accede
         WHERE
-        create_time <![CDATA[ < ]]>
+        create_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
-        # 加入时间
-        AND create_time <![CDATA[ >= ]]>
+        ) # 加入时间
+        AND create_time <![CDATA[ >= ]]> UNIX_TIMESTAMP(
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
         INTERVAL #{intervalMonth} MONTH
         )
-
+        )
         UNION ALL
         # 汇添利
         SELECT
@@ -1088,6 +1089,7 @@
         account DESC
         LIMIT 11
         ) tmp
+       INNER JOIN hyjf_user.ht_user aa ON tmp.user_id = aa.user_id;
     </select>
 
     <!-- 	超活跃，投资笔数最多 -->
