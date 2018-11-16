@@ -659,27 +659,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             if("0".equals(revaluation_money) || revaluation_money == null){
                 logger.info("=============从redis中获取测评类型和上限金额异常!(没有获取到对应类型的限额数据) eval_type="+eval_type);
             }else {
-                //测评到期日
-                Long lCreate = loginUser.getEvaluationExpiredTime().getTime();
-                //当前日期
-                Long lNow = System.currentTimeMillis();
-                // 判断用户测评有效期
-                if (loginUser.getIsEvaluationFlag() == 0) {
-                    result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL);
-                    result.put("message","根据监管要求，投资前必须进行风险测评。");
-                } else {
-                    if(loginUser.getIsEvaluationFlag()==1 && null != loginUser.getEvaluationExpiredTime()){
-                        if (lCreate <= lNow) {
-                            //已过期需要重新评测
-                            //返回错误码
-                            result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED);
-                            result.put("message","根据监管要求，测评已过期，投资前必须进行风险测评。");
-                        }
-                    } else {
-                        result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL);
-                        result.put("message","根据监管要求，投资前必须进行风险测评。");
-                    }
-                }
                 //计划类判断用户类型为稳健型以上才可以投资
                 if(!CommonUtils.checkStandardInvestment(eval_type)){
                     result.put("evalType",eval_type);
@@ -700,6 +679,27 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             }
         }else{
             logger.info("=============该用户测评总结数据为空! userId="+userId);
+        }
+        //测评到期日
+        Long lCreate = loginUser.getEvaluationExpiredTime().getTime();
+        //当前日期
+        Long lNow = System.currentTimeMillis();
+        // 判断用户测评有效期
+        if (loginUser.getIsEvaluationFlag() == 0) {
+            result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL);
+            result.put("message","根据监管要求，投资前必须进行风险测评。");
+        } else {
+            if(loginUser.getIsEvaluationFlag()==1 && null != loginUser.getEvaluationExpiredTime()){
+                if (lCreate <= lNow) {
+                    //已过期需要重新评测
+                    //返回错误码
+                    result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED);
+                    result.put("message","根据监管要求，测评已过期，投资前必须进行风险测评。");
+                }
+            } else {
+                result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL);
+                result.put("message","根据监管要求，投资前必须进行风险测评。");
+            }
         }
         return result;
     }
