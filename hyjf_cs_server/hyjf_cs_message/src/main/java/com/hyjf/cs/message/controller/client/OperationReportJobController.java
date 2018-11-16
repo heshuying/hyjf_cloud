@@ -63,6 +63,7 @@ public class OperationReportJobController extends BaseController {
 		String month = GetDate.getMonth();
 		bean.setYear(year);
 		bean.setMonth(month);
+		logger.info("生成报告year="+year+"生成报告month="+month);
 		try {
 			operationReportJobAdminProducer.messageSend(new MessageContent(MQConstant.OPERATIONREPORT_JOB_ADMIN_TOPIC,
 					System.currentTimeMillis() + "", JSONObject.toJSONBytes(bean)));

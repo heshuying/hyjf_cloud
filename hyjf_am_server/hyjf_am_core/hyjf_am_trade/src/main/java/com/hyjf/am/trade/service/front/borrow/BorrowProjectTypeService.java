@@ -65,7 +65,7 @@ public interface BorrowProjectTypeService {
      * 汇直投项目类型维护删除
      * @param borrowCd
      */
-    public void deleteProjectType(String borrowCd);
+    public void deleteProjectType(Integer borrowCd);
     /**
      * 汇直投项目类型维护删除
      * @param borrowCd
@@ -76,7 +76,7 @@ public interface BorrowProjectTypeService {
      * @param borrowCd
      * @return
      */
-    public int borrowCdIsExists( String borrowCd);
+    public int borrowCdIsExists( Integer borrowCd);
 
 
     /**

@@ -166,29 +166,15 @@ public class FeeConfigController extends BaseController {
     @PostMapping("/validateBeforeAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult validateBeforeAction(@RequestBody AdminFeeConfigRequest request) {
+        if(StringUtils.isBlank(request.getName())){
+            return new AdminResult<>(FAIL, "银行名称不能为空");
+        }
         AdminFeeConfigResponse response  = feeConfigService.validateBeforeAction(request);
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
-        }
-        List<FeeConfigVO> list = response.getResultList();
-        if (list != null && list.size() != 0) {
-            if (request.getId() != null) {
-                Boolean hasnot = true;
-                for (int i = 0; i < list.size(); i++) {
-                    if (list.get(i).getId().equals(request.getId())) {
-                        hasnot = false;
-                        break;
-                    }
-                }
-                if (!hasnot) {
-                    return new AdminResult<>(FAIL, "银行名称或银行代码不可重复添加");
-                }
-                return new AdminResult<>();
-            }
-            return new AdminResult<>(FAIL, "银行名称或银行代码不可重复添加");
         }
         return new AdminResult<>();
     }

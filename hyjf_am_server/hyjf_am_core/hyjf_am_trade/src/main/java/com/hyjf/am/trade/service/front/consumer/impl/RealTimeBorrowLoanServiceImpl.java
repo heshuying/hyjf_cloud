@@ -124,7 +124,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 			}
 
 			// 获取标的费率信息
-			String borrowClass = this.getBorrowProjectClass(borrowInfo.getProjectType()+ "");
+			String borrowClass = this.getBorrowProjectClass(borrowInfo.getProjectType());
 			String queryBorrowStyle = null;
 			if ("endday".equals(borrow.getBorrowStyle())) {//天标
 				queryBorrowStyle = "endday";
@@ -424,7 +424,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 			queryBorrowStyle = "month";
 		}
 		// 获取标的费率信息
-		String borrowClass = this.getBorrowProjectClass(borrowInfo.getProjectType()+ "");
+		String borrowClass = this.getBorrowProjectClass(borrowInfo.getProjectType());
 		BorrowFinmanNewCharge borrowFinmanNewCharge = this.selectBorrowApr(borrowClass,borrowInfo.getInstCode(),borrowInfo.getAssetType(),queryBorrowStyle,borrow.getBorrowPeriod());
 		if(borrowFinmanNewCharge == null || borrowFinmanNewCharge.getChargeMode() == null){
 			logger.info("获取标的费率信息失败。[用户ID：" + borrowInfo.getUserId() + "]," + "[借款编号：" + borrowNid + "]"+borrowClass);
@@ -607,7 +607,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 	 * @return
 	 * @author Administrator
 	 */
-	private String getBorrowProjectClass(String borrowCd) {
+	private String getBorrowProjectClass(Integer borrowCd) {
 		BorrowProjectTypeExample example = new BorrowProjectTypeExample();
 		BorrowProjectTypeExample.Criteria cra = example.createCriteria();
 		cra.andStatusEqualTo(CustomConstants.FLAG_STATUS_ENABLE);

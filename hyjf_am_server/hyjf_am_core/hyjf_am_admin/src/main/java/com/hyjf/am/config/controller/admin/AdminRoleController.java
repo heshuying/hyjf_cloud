@@ -280,7 +280,7 @@ public class AdminRoleController {
             adminRoleCustomize.setRoleId(roleId);
         }
         // 取得角色菜单权限表数据
-        JSONArray ja = this.adminRoleService.getAdminRoleMenu(adminRoleCustomize);
+        JSONArray ja = this.adminRoleService.deleteAndgetAdminRoleMenu(adminRoleCustomize);
         if (ja != null) {
             return ja.toString();
         }

@@ -226,6 +226,9 @@ public class BankCallConstant extends BankCallStatusConstant implements Serializ
 	 */
 	public static final String TXCODE_PASSWORD_RESET_PAGE = "passwordResetPage";
 
+
+	public static final String TXCODE_PASSWORD_SET_PAGE = "passwordSetPage";
+
 	public static final String BANK_URL_PASSWORDRESETPAGE = "/p2p/page/passwordResetPage";
 
 	/**（加密）开户设密页面*/
