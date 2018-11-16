@@ -5876,4 +5876,45 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+
+    @Override
+    public List<PlanInvestCustomizeVO> selectInvestCreditList(Map<String, Object> param) {
+        String url = "http://AM-TRADE/am-trade/htj/selectInvestCreditList";
+        PlanInvestResponse response = restTemplate.postForEntity(url,param,PlanInvestResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<PlanInvestCustomizeVO> selectCreditCreditList(Map<String, Object> param) {
+        String url = "http://AM-TRADE/am-trade/htj/selectCreditCreditList";
+        PlanInvestResponse response = restTemplate.postForEntity(url,param,PlanInvestResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<PlanLockCustomizeVO> selectUserProjectListCapital(Map<String, Object> param) {
+        String url = "http://AM-TRADE/am-trade/htj/selectUserProjectListCapital";
+        PlanLockResponse response = restTemplate.postForEntity(url,param,PlanLockResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public String selectPlanInfoSum(String accedeOrderId) {
+        String url = "http://AM-TRADE/am-trade/htj/selectPlanInfoSum/"+ accedeOrderId;
+        StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultStr();
+        }
+        return null;
+    }
 }

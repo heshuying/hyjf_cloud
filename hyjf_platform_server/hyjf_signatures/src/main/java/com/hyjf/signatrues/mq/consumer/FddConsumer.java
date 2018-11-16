@@ -88,7 +88,6 @@ public class FddConsumer extends Consumer {
 						} else if (FddGenerateContractConstant.PROTOCOL_TYPE_PLAN == transType) {// 计划加入
 							fddHandle.planJoinGenerateContract(bean);
 						} else if (FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT == transType) {// 债转投资
-							logger.info("fddConsumer承接债转bean="+JSONObject.toJSONString(bean));
 							fddHandle.creditGenerateContract(bean);
 						} else if (FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET == transType) {// 计划债转
 							fddHandle.planCreditGenerateContract(bean);
