@@ -2517,7 +2517,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		BorrowProjectTypeExample example = new BorrowProjectTypeExample();
 		BorrowProjectTypeExample.Criteria cra = example.createCriteria();
 		cra.andStatusEqualTo(Integer.valueOf(CustomConstants.FLAG_NORMAL));
-		cra.andBorrowCdEqualTo(borrowCd);
+		cra.andBorrowCdEqualTo(Integer.valueOf(borrowCd));
 		// 不查询融通宝相关
 		cra.andBorrowNameNotEqualTo(CustomConstants.RTB);
 		List<BorrowProjectType> list = this.borrowProjectTypeMapper.selectByExample(example);
@@ -6240,7 +6240,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	private BorrowProjectType getBrrowProjectTpyeByProjectType(String projectType) {
 		BorrowProjectTypeExample example = new BorrowProjectTypeExample();
 		BorrowProjectTypeExample.Criteria cra = example.createCriteria();
-		cra.andBorrowCdEqualTo(projectType);
+		cra.andBorrowCdEqualTo(Integer.valueOf(projectType));
 		List<BorrowProjectType> list = this.borrowProjectTypeMapper.selectByExample(example);
 		if (list != null && list.size() > 0) {
 			return list.get(0);

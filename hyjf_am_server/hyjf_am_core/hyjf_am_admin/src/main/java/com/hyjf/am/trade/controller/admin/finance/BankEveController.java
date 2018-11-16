@@ -43,15 +43,12 @@ public class BankEveController extends BaseController {
 		Map<String, Object> mapParam = paramSet(request);
 		int count = eveService.countRecord(mapParam);
 		// 查询列表传入分页
-		Paginator paginator;
-		if(request.getLimit() == 0){
-			// 前台传分页
-			paginator = new Paginator(request.getCurrPage(), count);
-		} else {
-			// 前台未传分页那默认 10
-			paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
+		if(request.getCurrPage()>0){
+			Paginator paginator = new Paginator(request.getCurrPage(),count,request.getPageSize());
+			mapParam.put("limitStart", paginator.getOffset());
+			mapParam.put("limitEnd", paginator.getLimit());
 		}
-		List<EveLogCustomize> manageList = eveService.selectBankEveInfoList(mapParam, paginator.getOffset(), paginator.getLimit());
+		List<EveLogCustomize> manageList = eveService.selectBankEveInfoList(mapParam);
 		if (count > 0) {
 			if (!CollectionUtils.isEmpty(manageList)) {
 				List<BankEveVO> vipManageVOS = CommonUtils.convertBeanList(manageList, BankEveVO.class);

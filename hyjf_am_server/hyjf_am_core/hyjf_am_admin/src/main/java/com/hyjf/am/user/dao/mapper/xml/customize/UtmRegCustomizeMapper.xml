@@ -781,31 +781,6 @@
 		FROM
 		hyjf_trade.ht_hjh_accede hbt
 		LEFT JOIN hyjf_trade.ht_hjh_plan hb ON hbt.plan_nid = hb.plan_nid
-		UNION ALL
-		SELECT
-		t.user_id,
-		t.accede_order_id AS order_code,
-		t.plan_nid,
-		CONCAT(
-		b.debt_lock_period,
-		'个月'
-		) AS borrow_period,
-		t.accede_account AS invest_amount,
-		t.create_time AS invest_time
-		FROM
-		hyjf_trade.ht_debt_plan_accede t
-		LEFT JOIN hyjf_trade.ht_debt_plan b ON t.plan_nid = b.debt_plan_nid
-		UNION ALL
-		SELECT
-		t.user_id,
-		t.assign_nid AS order_code,
-		CONCAT('HZR', t.credit_nid) AS borrow_nid,
-		CONCAT(b.credit_term, '天') AS borrow_period,
-		t.assign_capital AS invest_amount,
-		cast(t.create_time AS SIGNED) AS invest_time
-		FROM
-		hyjf_trade.ht_credit_tender t
-		LEFT JOIN hyjf_trade.ht_borrow_credit b ON t.credit_nid = b.credit_nid
 		) AS a
 		INNER JOIN ht_user u ON a.user_id = u.user_id
 		<if test="userIdList != null">

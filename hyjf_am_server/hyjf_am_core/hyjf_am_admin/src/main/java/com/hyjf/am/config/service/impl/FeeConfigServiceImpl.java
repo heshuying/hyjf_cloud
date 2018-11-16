@@ -123,9 +123,7 @@ public class FeeConfigServiceImpl implements FeeConfigService {
         FeeConfigExample example = new FeeConfigExample();
         FeeConfigExample.Criteria criteria = example.createCriteria();
         // 条件查询
-        if (StringUtils.isNotBlank(name)) {
-            criteria.andNameEqualTo(name);
-        }
+        criteria.andNameEqualTo(name);
         return feeConfigMapper.selectByExample(example);
     }
 }

@@ -13,34 +13,22 @@
 			AND transtype = #{transtype}
 		</if>
 		<if test="startValdate != null and startValdate != ''">
-
-			AND STR_TO_DATE(valdate, '%Y%m%d') &gt;= STR_TO_DATE(#{startValdate}, '%Y-%m-%d')
-
+			AND	valdate &gt;= DATE_FORMAT(#{startValdate}, '%Y%m%d')
 		</if>
 		<if test="endValdate != null and endValdate != ''">
-
-			AND STR_TO_DATE(valdate, '%Y%m%d') &lt;= STR_TO_DATE(#{endValdate}, '%Y-%m-%d')
-
+			AND	valdate&lt;= DATE_FORMAT(#{endValdate}, '%Y%m%d')
 		</if>
 		<if test="startInpdate != null and startInpdate != ''">
-
-			AND STR_TO_DATE(inpdate, '%Y%m%d') &gt;= STR_TO_DATE(#{startInpdate}, '%Y-%m-%d')
-
+			AND	inpdate &gt;= DATE_FORMAT(#{startInpdate}, '%Y%m%d')
 		</if>
 		<if test="endInpdate != null and endInpdate != ''">
-
-			AND STR_TO_DATE(inpdate, '%Y%m%d') &lt;= STR_TO_DATE(#{endInpdate}, '%Y-%m-%d')
-
+			AND	inpdate &lt;= DATE_FORMAT(#{endInpdate}, '%Y%m%d')
 		</if>
 		<if test="startReldate != null and startReldate != ''">
-
-			AND STR_TO_DATE(reldate, '%Y%m%d') &gt;= STR_TO_DATE(#{startReldate}, '%Y-%m-%d')
-
+			AND	reldate &gt;= DATE_FORMAT(#{startReldate}, '%Y%m%d')
 		</if>
 		<if test="endReldate != null and endReldate != ''">
-
-			AND STR_TO_DATE(reldate, '%Y%m%d') &lt;= STR_TO_DATE(#{endReldate}, '%Y-%m-%d')
-
+			AND	reldate&lt;= DATE_FORMAT(#{endReldate}, '%Y%m%d')
 		</if>
 	</sql>
 

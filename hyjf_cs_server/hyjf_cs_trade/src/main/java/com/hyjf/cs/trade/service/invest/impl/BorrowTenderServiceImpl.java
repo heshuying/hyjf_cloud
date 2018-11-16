@@ -9,6 +9,7 @@ import com.hyjf.am.resquest.trade.BorrowTenderRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
@@ -33,11 +34,13 @@ import com.hyjf.cs.trade.bean.newagreement.NewAgreementBean;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.client.CsMessageClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.cs.trade.mq.producer.CalculateInvestInterestProducer;
 import com.hyjf.cs.trade.mq.producer.CouponTenderProducer;
+import com.hyjf.cs.trade.mq.producer.WrbCallBackProducer;
 import com.hyjf.cs.trade.mq.producer.sensorsdate.hzt.SensorsDataHztInvestProducer;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.consumer.CouponService;
@@ -58,6 +61,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
@@ -102,6 +106,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     private AuthService authService;
     @Autowired
     private SensorsDataHztInvestProducer sensorsDataHztInvestProducer;
+    @Autowired
+    private WrbCallBackProducer wrbCallBackProducer;
+    @Autowired
+    private CsMessageClient amMongoClient;
     /**
      * @param request
      * @Description 散标投资
@@ -659,6 +667,54 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             data.put("income",df.format(earnings));
             // 本金
             data.put("account",df.format(account));
+
+            // 查询投资来源
+            List<BorrowTenderVO> list = amTradeClient.getBorrowTenderListByNid(logOrdId);
+            if (!CollectionUtils.isEmpty(list)) {
+                BorrowTenderVO vo = list.get(0);
+                if (CustomConstants.WRB_CHANNEL_CODE.equals(vo.getTenderFrom())) {
+                    // 同步回调通知
+                    logger.info("风车理财投资回调,订单Id :{}", logOrdId);
+                    this.notifyToWrb(userId, logOrdId);
+                }
+            }
+
+            AppUtmRegVO appChannelStatisticsDetails = amMongoClient.getAppChannelStatisticsDetailByUserId(userId);
+            if (appChannelStatisticsDetails != null) {
+                logger.info("更新app渠道统计表, userId is: {}", userId);
+                Map<String, Object> params = new HashMap<String, Object>();
+                // 认购本金
+                params.put("accountDecimal", account);
+                // 投资时间
+                params.put("investTime", GetDate.getNowTime10());
+                // 项目类型
+                if (borrow.getProjectType() == 13) {
+                    params.put("projectType", "汇金理财");
+                } else {
+                    params.put("projectType", "汇直投");
+                }
+                // 首次投标项目期限
+                String investProjectPeriod = "";
+                if ("endday".equals(borrowStyle)) {
+                    investProjectPeriod = borrow.getBorrowPeriod() + "天";
+                } else {
+                    investProjectPeriod = borrow.getBorrowPeriod() + "月";
+                }
+                params.put("investProjectPeriod", investProjectPeriod);
+                //根据investFlag标志位来决定更新哪种投资
+                params.put("investFlag", checkAppUtmInvestFlag(userId));
+                // 用户id
+                params.put("userId", userId);
+                //压入消息队列
+                try {
+                    appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                            MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                } catch (MQException e) {
+                    e.printStackTrace();
+                    logger.error("渠道统计用户累计投资推送消息队列失败！！！");
+                }
+            }
+
         }
         // 查询优惠券信息
         CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
@@ -702,6 +758,42 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         return result;
     }
 
+    /**
+     * 查询appUtmReg是否首投
+     * @param userId
+     * @return
+     */
+    private boolean checkAppUtmInvestFlag(Integer userId) {
+        // 新的判断是否为新用户方法
+        try {
+            int total = amTradeClient.countNewUserTotal(userId);
+            logger.info("获取用户投资数量 userID {} 数量 {} ",userId,total);
+            if (total == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        }catch (Exception e) {
+            throw e;
+        }
+    }
+
+    /**
+     * 风车理财投资同步回调通知
+     * @param userId
+     * @param logOrdId
+     */
+    private void notifyToWrb(Integer userId, String logOrdId) {
+        JSONObject params = new JSONObject();
+        params.put("userId", userId);
+        params.put("nid", logOrdId);
+        params.put("returnType", "1");
+        try {
+            wrbCallBackProducer.messageSend(new MessageContent(MQConstant.WRB_QUEUE_CALLBACK_NOTIFY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+        } catch (MQException e) {
+           logger.error("风车理财投资回调异常...", e);
+        }
+    }
 
 
     /**

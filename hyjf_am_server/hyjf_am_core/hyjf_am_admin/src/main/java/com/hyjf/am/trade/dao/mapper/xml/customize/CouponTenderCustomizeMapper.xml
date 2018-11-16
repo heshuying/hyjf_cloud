@@ -89,7 +89,7 @@
         <result column="recover_period" property="recoverPeriod" jdbcType="VARCHAR" />
         <result column="transfer_time" property="transferTime" jdbcType="INTEGER" />
         <result column="recover_interest" property="recoverInterest" jdbcType="VARCHAR" />
-        <result column="recover_yestime" property="recoverYestime" jdbcType="INTEGER" />
+        <result column="recover_yestime" property="recoverYestime" jdbcType="VARCHAR" />
         <result column="recover_time" property="recoverTime" jdbcType="INTEGER" />
         <result column="recover_time_string" property="recoverTimeString" jdbcType="VARCHAR" />
         <result column="exp_time" property="expTime" jdbcType="INTEGER" />

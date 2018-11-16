@@ -48,7 +48,7 @@ public class ApiAuthController extends BaseUserController {
     /**
      * 外部服务接口:缴费授权 @RequestMapping
      */
-    public static final String REQUEST_MAPPING = "/server/user/mergeAuthPagePlus";
+    public static final String REQUEST_MAPPING = "/hyjf-api/server/user/mergeAuthPagePlus";
     /**
      * 同步回调
      */
@@ -143,7 +143,7 @@ public class ApiAuthController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "第三方端多合一授权同步回调", notes = "多合一授权")
-    @PostMapping(value = "/return")
+    @RequestMapping(value = "/return")
     public ModelAndView returnPage(HttpServletRequest request,@RequestBody BankCallBean bean) {
         String isSuccess = request.getParameter("isSuccess");
         String url = request.getParameter("callback").replace("*-*-*", "#");
@@ -181,7 +181,7 @@ public class ApiAuthController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "页面开户异步处理", notes = "页面开户异步处理")
-    @PostMapping("/bgReturn")
+    @RequestMapping("/bgReturn")
     public BankCallResult bgReturn(HttpServletRequest request,@RequestBody BankCallBean bean) {
         logger.info("多合一授权异步回调start");
         BankCallResult result = new BankCallResult();

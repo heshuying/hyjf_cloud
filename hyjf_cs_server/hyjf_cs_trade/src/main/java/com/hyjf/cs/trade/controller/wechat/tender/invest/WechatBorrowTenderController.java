@@ -15,10 +15,7 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.ClientConstants;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.CustomUtil;
-import com.hyjf.common.util.GetCilentIP;
+import com.hyjf.common.util.*;
 import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -36,6 +33,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import springfox.documentation.annotations.ApiIgnore;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.math.BigDecimal;
@@ -74,6 +72,13 @@ public class WechatBorrowTenderController extends BaseTradeController {
         WebResult<Map<String,Object>> result = null;
         WeChatResult weChatResult = new WeChatResult();
         try{
+            //如果是风车理财投资就将wrb插入到该表的tender_from中
+            Cookie cookie = CookieUtils.getCookieByName(request,CustomConstants.TENDER_FROM_TAG);
+            if (cookie != null && cookie.getValue() != null){
+                String cookieValue = cookie.getValue();
+                logger.info("投资来源为 ：{}", cookieValue);
+                tender.setTenderFrom(cookieValue);
+            }
             result =  borrowTenderService.borrowTender(tender);
             BorrowAndInfoVO borrow = this.nifaContractEssenceMessageService.selectBorrowByBorrowNid(tender.getBorrowNid());
             boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_MONTH.equals(borrow.getBorrowStyle())
