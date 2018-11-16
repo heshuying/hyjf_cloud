@@ -40,6 +40,7 @@ public class UserDirectRechargeController extends BaseTradeController {
      * @return
      */
     @ApiOperation(value = "页面充值")
+    @ResponseBody
     @PostMapping(value = "/recharge.do")
     public ModelAndView recharge(@RequestBody UserDirectRechargeRequestBean userRechargeRequestBean, HttpServletRequest request) {
         logger.info("api充值   请求参数  ",userRechargeRequestBean);
@@ -72,7 +73,7 @@ public class UserDirectRechargeController extends BaseTradeController {
     @ApiIgnore
     @ResponseBody
     @PostMapping(value = "/directRechargePageBgreturn")
-    public BankCallResult bgreturn(HttpServletRequest request, @ModelAttribute BankCallBean bean) {
+    public BankCallResult bgreturn(HttpServletRequest request, @RequestBody BankCallBean bean) {
         logger.info("页面充值异步回调start");
         return directRechargeService.bgreturn(request, bean);
     }

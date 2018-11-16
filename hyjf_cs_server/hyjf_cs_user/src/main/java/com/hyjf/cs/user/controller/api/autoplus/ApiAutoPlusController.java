@@ -127,6 +127,7 @@ public class ApiAutoPlusController extends BaseUserController {
             } catch (Exception e) {
                 e.printStackTrace();
                 logger.info("调用银行接口失败:"+e.getMessage());
+
                 map.put("status", ErrorCodeConstant.STATUS_CE999999);
                 map.put("acqRes", payRequestBean.getAcqRes());
                 map.put("accountId", payRequestBean.getAccountId());
@@ -192,7 +193,7 @@ public class ApiAutoPlusController extends BaseUserController {
     @ResponseBody
     @ApiOperation(value = "授权自动投资异步回调",notes = "授权自动投资异步回调")
     @PostMapping(value = "/userAuthInvesBgreturn")
-    public BankCallResult userAuthInvesBgreturn(HttpServletRequest request,@ModelAttribute BankCallBean bean) {
+    public BankCallResult userAuthInvesBgreturn(HttpServletRequest request,@RequestBody BankCallBean bean) {
         String callback = request.getParameter("callback").replace("*-*-*", "#");
         String acqRes = request.getParameter("acqRes");
         BankCallResult result = autoPlusService.userAuthInvesBgreturn(bean, callback, acqRes);
@@ -208,7 +209,7 @@ public class ApiAutoPlusController extends BaseUserController {
     @ResponseBody
     @ApiOperation(value = "授权自动债转异步回调",notes = "授权自动债转异步回调")
     @PostMapping(value = "/userCreditAuthInvesBgreturn")
-    public BankCallResult userCreditAuthInvesBgreturn(HttpServletRequest request,@ModelAttribute BankCallBean bean) {
+    public BankCallResult userCreditAuthInvesBgreturn(HttpServletRequest request,@RequestBody BankCallBean bean) {
         String callback = request.getParameter("callback").replace("*-*-*", "#");
         String acqRes = request.getParameter("acqRes");
         BankCallResult result = autoPlusService.userAuthInvesBgreturn(bean, callback, acqRes);
