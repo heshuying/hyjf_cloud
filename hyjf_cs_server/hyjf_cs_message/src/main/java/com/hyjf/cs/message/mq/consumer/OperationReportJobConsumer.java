@@ -44,7 +44,7 @@ public class OperationReportJobConsumer extends Consumer {
         defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
         defaultMQPushConsumer.setConsumerGroup(MQConstant.OPERATIONREPORT_JOB_GROUP);
         // 订阅指定MyTopic下tags等于MyTag
-        defaultMQPushConsumer.subscribe(MQConstant.PC_CHANNEL_STATISTICS_TOPIC, "*");
+        defaultMQPushConsumer.subscribe(MQConstant.OPERATIONREPORT_JOB_TOPIC, "*");
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
         // 如果非第一次启动，那么按照上次消费的位置继续消费
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
@@ -88,18 +88,11 @@ public class OperationReportJobConsumer extends Consumer {
 
                     // 插入前台界面的运营报告(月，季，半年，全年)
                     try {
-                        Calendar cal =  bean.getCalendar();
-                        String year = String.valueOf(cal.get(Calendar.YEAR));
-                        String month = "";
-                        int monthnow = cal.get(Calendar.MONTH) + 1;
-                        if (monthnow < 10) {
-                            month =  "0" + String.valueOf(monthnow);
-                        } else {
-                            month =  String.valueOf(monthnow);
-                        }
+                        String year = bean.getYear();
+                        String month = bean.getMonth();
                         //输出上个月的日期
-                        int lastMonth = getLastMonth(cal);
-
+                        int lastMonth = bean.getLastMonth();
+                        logger.info("生成报告year="+year+"生成报告month="+month);
                         //每个月月初的1号，自动统计出上一个月的数据，统计顺序依次是：
                         //1月，2月，第一季度，4月，5月，上半年，7月，8月，第三季度，10月，11月，年度报告
                         if(lastMonth == 12){

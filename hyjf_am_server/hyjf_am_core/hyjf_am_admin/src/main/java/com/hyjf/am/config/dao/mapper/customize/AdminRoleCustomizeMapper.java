@@ -24,6 +24,6 @@ public interface AdminRoleCustomizeMapper {
     List<AdminRoleCustomize> selectRoleMenuPermissions(AdminRoleCustomize adminSystem);
 
 	List<String> getPermissionId(String menuId);
-	void  deleteRole(String role_id);
+	void  deleteRole(String roleId);
 
 }

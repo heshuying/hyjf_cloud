@@ -265,6 +265,7 @@ public class BankRechargeServiceImpl extends BaseServiceImpl implements BankRech
         // add by liubin 江西银行充值掉单异常处理修正 start
         status.add(3);
         // add by liubin 江西银行充值掉单异常处理修正 end
+        // 充值状态:0:初始,1:充值中,2:充值成功,3:充值失败
         cra.andStatusIn(status);// 充值状态为充值中和失败的
         cra.andIsBankEqualTo(1);// 充值平台:江西银行
         // 当前时间
