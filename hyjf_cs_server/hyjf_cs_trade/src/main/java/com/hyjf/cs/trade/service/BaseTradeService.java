@@ -5,6 +5,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.common.service.BaseService;
+import com.hyjf.cs.trade.bean.BaseBean;
 
 import java.math.BigDecimal;
 
@@ -80,4 +81,12 @@ public interface BaseTradeService extends BaseService{
      * @return
      */
     UserVO getUsers(Integer userId);
+
+    /**
+     * 验证外部请求签名
+     * @param paramBean
+     * @param methodName
+     * @return
+     */
+    boolean verifyRequestSign(BaseBean paramBean, String methodName);
 }

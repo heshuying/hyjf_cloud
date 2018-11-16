@@ -8,6 +8,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 public interface TrusteePayService extends BaseUserService {
     /**
@@ -26,7 +27,7 @@ public interface TrusteePayService extends BaseUserService {
      * @param bean
      * @return
      */
-    ModelAndView trusteePayReturn(HttpServletRequest request, BankCallBean bean);
+    Map<String, String> trusteePayReturn(HttpServletRequest request, BankCallBean bean);
 
     /**
      * 借款人受托支付申请异步回调

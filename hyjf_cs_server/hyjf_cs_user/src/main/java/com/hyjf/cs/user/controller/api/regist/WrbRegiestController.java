@@ -169,7 +169,7 @@ public class WrbRegiestController {
                     resultBean.setRetmsg("注册失败");
                     return resultBean;
                 } else {
-                    TimeUnit.SECONDS.sleep(5);//秒
+                    TimeUnit.SECONDS.sleep(2);//秒
                     UserVO users = this.userRegisterService.checkUserByUserId(userId);
                     if (users == null) {
                         log.info("根据用户ID获取用户信息表失败,用户ID:{}", userId);

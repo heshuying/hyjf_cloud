@@ -17,6 +17,7 @@ import org.springframework.web.servlet.ModelAndView;
 import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 /**
  * @author: sunpeikai
@@ -41,11 +42,12 @@ public class UserDirectRechargeController extends BaseTradeController {
     @PostMapping(value = "/recharge.do")
     public ModelAndView recharge(@RequestBody UserDirectRechargeRequestBean userRechargeRequestBean, HttpServletRequest request) {
         logger.info("api充值   请求参数  ",userRechargeRequestBean);
-        ModelAndView result = directRechargeService.recharge(userRechargeRequestBean, request);
-        if (null!=result&&result.getModel().get("error")!=null&&result.getModel().get("error").equals(true)){
-            return callbackErrorView(result);
+        Map<String,Object> result = directRechargeService.recharge(userRechargeRequestBean, request);
+        if (null!=result&&result.get("modelAndView")==null){
+            return callbackErrorViewForMap(result);
         }
-        return result;
+        ModelAndView modelAndView = (ModelAndView)result.get("modelAndView");
+        return modelAndView;
     }
 
     /**
