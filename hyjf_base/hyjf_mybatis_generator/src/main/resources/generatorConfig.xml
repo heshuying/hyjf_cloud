@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_user.properties"/>
+    <properties resource="init_trade.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -614,6 +614,7 @@
 
         <table tableName="ht_borrow_project_type" domainObjectName="BorrowProjectType">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="borrow_cd" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="invest_user_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="interest_coupon" javaType="java.lang.Integer" jdbcType="TINYINT" />
