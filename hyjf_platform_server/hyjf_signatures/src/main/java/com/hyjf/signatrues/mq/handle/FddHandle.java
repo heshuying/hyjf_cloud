@@ -1327,8 +1327,8 @@ public class FddHandle {
 				}
 			}
 
-			if (borrowCredit != null && borrowCredit.size() > 0) {
-				resultMap.put("borrowCredit", borrowCredit);
+			if (CollectionUtils.isNotEmpty(borrowCredit)) {
+				resultMap.put("borrowCredit", borrowCredit.get(0));
 			}
 
 
