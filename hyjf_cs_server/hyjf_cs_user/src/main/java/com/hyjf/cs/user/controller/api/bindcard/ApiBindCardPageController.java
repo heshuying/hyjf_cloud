@@ -148,7 +148,6 @@ public class ApiBindCardPageController extends BaseUserController {
      * 页面绑卡同步回调
      *
      * @param request
-     * @param response
      * @return
      */
     @PostMapping("/bindCardReturn")
@@ -176,7 +175,7 @@ public class ApiBindCardPageController extends BaseUserController {
             resultMap.put("statusDesc", "绑卡成功！");
         } else {
             resultMap.put("status", ErrorCodeConstant.STATUS_CE999999);
-            resultMap.put("statusDesc", "系统异常！");
+            resultMap.put("statusDesc", "绑卡失败！" + retCode);
         }
         logger.info("绑卡同步回调end");
         return callbackErrorView(resultMap);
