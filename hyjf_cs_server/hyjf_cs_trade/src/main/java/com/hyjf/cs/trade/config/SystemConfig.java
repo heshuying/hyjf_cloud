@@ -5,6 +5,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class SystemConfig {
+
+    @Value("${hyjf.server.host}")
+    public String serverHost;
     @Value("${hyjf.web.host}")
     public String webHost;
     @Value("${hyjf.app.host}")
@@ -805,5 +808,13 @@ public class SystemConfig {
 
     public void setSensorsDataLogPath(String sensorsDataLogPath) {
         this.sensorsDataLogPath = sensorsDataLogPath;
+    }
+
+    public String getServerHost() {
+        return "219.147.28.242:9280";
+    }
+
+    public void setServerHost(String serverHost) {
+        this.serverHost = serverHost;
     }
 }
