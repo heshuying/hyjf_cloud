@@ -306,7 +306,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
      * @param sensorsDataBean
      */
     private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
-        this.sensorsDataOpenAccountProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_OPEN_ACCOUNT_GROUP, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
+        this.sensorsDataOpenAccountProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_OPEN_ACCOUNT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
     }
 
 

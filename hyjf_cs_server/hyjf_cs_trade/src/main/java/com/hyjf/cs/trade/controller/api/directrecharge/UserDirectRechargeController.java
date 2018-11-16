@@ -40,6 +40,7 @@ public class UserDirectRechargeController extends BaseTradeController {
     @ResponseBody
     @PostMapping(value = "/recharge.do")
     public ModelAndView recharge(@RequestBody UserDirectRechargeRequestBean userRechargeRequestBean, HttpServletRequest request) {
+        logger.info("api充值   请求参数  ",userRechargeRequestBean);
         ModelAndView result = directRechargeService.recharge(userRechargeRequestBean, request);
         if (null!=result&&result.getModel().get("error")!=null&&result.getModel().get("error").equals(true)){
             return callbackErrorView(result);

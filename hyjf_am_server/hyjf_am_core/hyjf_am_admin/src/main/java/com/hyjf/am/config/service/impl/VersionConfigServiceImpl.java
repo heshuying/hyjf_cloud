@@ -105,6 +105,7 @@ public class VersionConfigServiceImpl implements VersionConfigService {
     public Integer updateVersionConfig( AdminVersionRequest req) {
         Version record = new Version();
         BeanUtils.copyProperties(req, record);
+        record.setIsUpdate(req.getIsupdate());
         return versionMapper.updateByPrimaryKeySelective(record);
     }
 
