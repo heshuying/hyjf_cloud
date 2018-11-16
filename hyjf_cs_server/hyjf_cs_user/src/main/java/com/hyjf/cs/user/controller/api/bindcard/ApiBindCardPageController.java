@@ -150,7 +150,7 @@ public class ApiBindCardPageController extends BaseUserController {
      * @param request
      * @return
      */
-    @PostMapping("/bindCardReturn")
+    @RequestMapping("/bindCardReturn")
     @ApiOperation(value = "绑卡同步回调", notes = "绑卡同步回调")
     public ModelAndView pageReturn(HttpServletRequest request, @RequestBody BankCallBean bean) {
         Map<String, String> resultMap = new HashMap<>();

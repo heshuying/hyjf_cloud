@@ -89,4 +89,6 @@ public interface BaseTradeService extends BaseService{
      * @return
      */
     boolean verifyRequestSign(BaseBean paramBean, String methodName);
+
+    boolean checkIsNewUserCanInvest2(Integer userId);
 }

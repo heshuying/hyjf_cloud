@@ -187,7 +187,7 @@ public class AppMyPlanController extends BaseTradeController {
                 project.setBorrowTheThird(entity.getCreateTime());
             } else {
                 // mod 汇计划二期前端优化 已退出的计划将回款时间改为退出时间  nxl 20180426 start
-                project.setBorrowTheThirdDesc("退出时间");
+                project.setBorrowTheThirdDesc("回款时间");
                 // mod 汇计划二期前端优化 已退出的计划将回款时间改为退出时间  nxl 20180426 end
                 project.setBorrowTheThird(entity.getRecoverTime());
             }
