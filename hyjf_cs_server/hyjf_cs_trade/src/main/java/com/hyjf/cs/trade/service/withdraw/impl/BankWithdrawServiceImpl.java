@@ -1060,9 +1060,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      * @return
      */
     @Override
-    public ModelAndView withdraw(UserWithdrawRequestBean userWithdrawRequestBean, HttpServletRequest request) {
-        ModelAndView modelAndView = new ModelAndView("api/api_error_send.html");
-        UserWithdrawResultBean userWithdrawResultBean = new UserWithdrawResultBean();
+    public  Map<String,Object> withdraw(UserWithdrawRequestBean userWithdrawRequestBean, HttpServletRequest request) {
+        ModelAndView modelAndView = new ModelAndView();
+        Map<String,Object> map = new HashMap<>();
         try {
             // 用户电子账户号
             String accountId = userWithdrawRequestBean.getAccountId();
@@ -1090,14 +1090,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"银行卡号不能为空");
                     CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
                 }
-                // 同步回调URL不为空
-                if (Validator.isNotNull(userWithdrawRequestBean.getRetUrl())) {
-                    // 同步回调
-                    return syncParam(userWithdrawResultBean,userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"银行卡号不能为空");
-                }
-                modelAndView = new ModelAndView("/withdraw/withdraw_cash_fail");
-                modelAndView.addObject("message", "银行卡号不能为空");
-                return modelAndView;
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"银行卡号不能为空");
             }
             // 银行电子账户号
             if (Validator.isNull(accountId)) {
@@ -1107,14 +1100,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"电子账户号不能为空");
                     CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
                 }
-                // 同步回调URL不为空
-                if (Validator.isNotNull(userWithdrawRequestBean.getRetUrl())) {
-                    // 同步回调
-                    return syncParam(userWithdrawResultBean,userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"电子账户号不能为空");
-                }
-                modelAndView = new ModelAndView("/withdraw/withdraw_cash_fail");
-                modelAndView.addObject("message", "电子账户号不能为空");
-                return modelAndView;
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"电子账户号不能为空");
             }
             // 渠道
             if (Validator.isNull(channel)) {
@@ -1123,14 +1109,8 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"渠道不能为空");
                     CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
                 }
-                // 同步回调URL不为空
-                if (Validator.isNotNull(userWithdrawRequestBean.getRetUrl())) {
-                    // 同步回调
-                    return syncParam(userWithdrawResultBean,userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"渠道不能为空");
-                }
-                modelAndView = new ModelAndView("/withdraw/withdraw_cash_fail");
-                modelAndView.addObject("message", "渠道不能为空");
-                return modelAndView;
+                // 同步回调
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"渠道不能为空");
             }
             // 充值金额
             if (Validator.isNull(account)) {
@@ -1139,17 +1119,10 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现金额不能为空");
                     CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
                 }
-                // 同步回调URL不为空
-                if (Validator.isNotNull(userWithdrawRequestBean.getRetUrl())) {
-                    // 同步回调
-                    return syncParam(userWithdrawResultBean,userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现金额不能为空");
-                }
-                modelAndView = new ModelAndView("/withdraw/withdraw_cash_fail");
-                modelAndView.addObject("message", "提现金额不能为空");
-                return modelAndView;
+                // 同步回调
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现金额不能为空");
             }
-
-            // 同步URL
+/*            // 同步URL
             if (Validator.isNull(retUrl)) {
                 // 异步回调URL不为空
                 if (Validator.isNotNull(bgRetUrl)) {
@@ -1159,18 +1132,11 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                 modelAndView = new ModelAndView("/withdraw/withdraw_cash_fail");
                 modelAndView.addObject("message", "请求参数异常");
                 return modelAndView;
-            }
+            }*/
             // 异步回调URL
             if (Validator.isNull(bgRetUrl)) {
-                // 同步地址不为空
-                if (Validator.isNotNull(retUrl)) {
-                    logger.info("异步回调URL为空");
-                    // 同步回调
-                    return syncParam(userWithdrawResultBean,userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"请求参数异常");
-                }
-                modelAndView = new ModelAndView("/withdraw/withdraw_cash_fail");
-                modelAndView.addObject("message", "请求参数异常");
-                return modelAndView;
+                logger.info("异步回调URL为空");
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"请求参数异常");
             }
             // 机构编号
             if (Validator.isNull(instCode)) {
@@ -1179,14 +1145,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"机构编号不能为空");
                     CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
                 }
-                // 同步回调URL不为空
-                if (Validator.isNotNull(userWithdrawRequestBean.getRetUrl())) {
-                    // 同步回调
-                    return syncParam(userWithdrawResultBean,userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"机构编号不能为空");
-                }
-                modelAndView = new ModelAndView("/withdraw/withdraw_cash_fail");
-                modelAndView.addObject("message", "机构编号不能为空");
-                return modelAndView;
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"机构编号不能为空");
             }
             // 忘记密码Url
             if (Validator.isNull(forgotPwdUrl)) {
@@ -1195,38 +1154,13 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"忘记密码URL不能为空");
                     CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
                 }
-                // 同步回调URL不为空
-                if (Validator.isNotNull(userWithdrawRequestBean.getRetUrl())) {
-                    // 同步回调
-                    return syncParam(userWithdrawResultBean,userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"忘记密码URL不能为空");
-                }
-                modelAndView = new ModelAndView("/withdraw/withdraw_cash_fail");
-                modelAndView.addObject("message", "忘记密码URL不能为空");
-                return modelAndView;
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"忘记密码URL不能为空");
             }
             // 验签  先去掉验签
             if (!this.verifyRequestSign(userWithdrawRequestBean,BaseDefine.METHOD_SERVER_WITHDRAW)) {
                 logger.info("-------------------验签失败！--------------------");
-                BaseResultBean resultBean = new BaseResultBean();
-                resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000002);
-                userWithdrawResultBean.setCallBackAction(userWithdrawRequestBean.getRetUrl());
-                userWithdrawResultBean.set("accountId", userWithdrawRequestBean.getAccountId());
-                userWithdrawResultBean.set("acqRes", userWithdrawRequestBean.getAcqRes());
-                modelAndView = new ModelAndView("api/api_error_send.html");
-                // 设置交易密码
-                modelAndView.addObject("statusDesc", "验签失败！");
-                userWithdrawResultBean.set("status", resultBean.getStatus());
-                userWithdrawResultBean.set("chkValue", resultBean.getChkValue());
-                modelAndView.addObject("callBackForm", userWithdrawResultBean);
-                //  返回第三方异步回调
-                if (Validator.isNotNull(userWithdrawRequestBean.getBgRetUrl())) {
-                    Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"验签失败");
-                    params.put("acqRes", userWithdrawRequestBean.getAcqRes());
-                    CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
-                }
-                return modelAndView;
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000002,"验签失败!");
             }
-
             // 充值金额校验
             if (!account.matches("-?[0-9]+.*[0-9]*")) {
                 logger.info("提现金额格式错误,充值金额:[" + account + "]");
@@ -1235,14 +1169,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现金额格式错误");
                     CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
                 }
-                // 同步回调URL不为空
-                if (Validator.isNotNull(userWithdrawRequestBean.getRetUrl())) {
-                    // 同步回调
-                    return syncParam(userWithdrawResultBean,userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现金额格式错误");
-                }
-                modelAndView = new ModelAndView("/withdraw/withdraw_cash_fail");
-                modelAndView.addObject("message", "提现金额格式错误");
-                return modelAndView;
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现金额格式错误");
             }
 
             // 根据机构编号检索机构信息
@@ -1255,14 +1182,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_ZC000004,"机构编号错误");
                     CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
                 }
-                // 同步回调URL不为空
-                if (Validator.isNotNull(userWithdrawRequestBean.getRetUrl())) {
-                    // 同步回调
-                    return syncParam(userWithdrawResultBean,userWithdrawRequestBean,ErrorCodeConstant.STATUS_ZC000004,"机构编号错误");
-                }
-                modelAndView = new ModelAndView("/withdraw/withdraw_cash_fail");
-                modelAndView.addObject("message", "机构编号错误");
-                return modelAndView;
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_ZC000004,"机构编号错误");
             }
             // 大额提现判断银行联行号
             if ((new BigDecimal(account).compareTo(new BigDecimal(50001)) > 0) && StringUtils.isBlank(payAllianceCode)) {
@@ -1272,14 +1192,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"大额提现时,银行联行号不能为空");
                     CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
                 }
-                // 同步回调URL不为空
-                if (Validator.isNotNull(userWithdrawRequestBean.getRetUrl())) {
-                    // 同步回调
-                    return syncParam(userWithdrawResultBean,userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"大额提现时,银行联行号不能为空");
-                }
-                modelAndView = new ModelAndView("/withdraw/withdraw_cash_fail");
-                modelAndView.addObject("message", "大额提现时,银行联行号不能为空");
-                return modelAndView;
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"大额提现时,银行联行号不能为空");
             }
             // 根据电子账户号查询用户ID
             BankOpenAccountVO bankOpenAccount = amUserClient.selectBankOpenAccountByAccountId(accountId);
@@ -1290,14 +1203,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现失败");
                     CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
                 }
-                // 同步回调URL不为空
-                if (Validator.isNotNull(userWithdrawRequestBean.getRetUrl())) {
-                    // 同步回调
-                    return syncParam(userWithdrawResultBean,userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现失败");
-                }
-                modelAndView = new ModelAndView("/withdraw/withdraw_cash_fail");
-                modelAndView.addObject("message", "提现失败");
-                return modelAndView;
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现失败");
             }
             // 用户ID
             Integer userId = bankOpenAccount.getUserId();
@@ -1310,14 +1216,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现失败");
                     CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
                 }
-                // 同步回调URL不为空
-                if (Validator.isNotNull(userWithdrawRequestBean.getRetUrl())) {
-                    // 同步回调
-                    return syncParam(userWithdrawResultBean,userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现失败");
-                }
-                modelAndView = new ModelAndView("/withdraw/withdraw_cash_fail");
-                modelAndView.addObject("message", "提现失败");
-                return modelAndView;
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现失败");
             }
 
             // 检查是否设置交易密码
@@ -1328,14 +1227,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_TP000002,"未设置交易密码");
                     CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
                 }
-                // 同步回调URL不为空
-                if (Validator.isNotNull(userWithdrawRequestBean.getRetUrl())) {
-                    // 同步回调
-                    return syncParam(userWithdrawResultBean,userWithdrawRequestBean,ErrorCodeConstant.STATUS_TP000002,"未设置交易密码");
-                }
-                modelAndView = new ModelAndView("/withdraw/withdraw_cash_fail");
-                modelAndView.addObject("message", "提现失败");
-                return modelAndView;
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_TP000002,"未设置交易密码");
             }
 
             // 服务费授权状态和开关
@@ -1346,14 +1238,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000011,"用户未进行缴费授权");
                     CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
                 }
-                // 同步回调URL不为空
-                if (Validator.isNotNull(userWithdrawRequestBean.getRetUrl())) {
-                    // 同步回调
-                    return syncParam(userWithdrawResultBean,userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000011,"用户未进行缴费授权");
-                }
-                modelAndView = new ModelAndView("/withdraw/withdraw_cash_fail");
-                modelAndView.addObject("message", "提现失败");
-                return modelAndView;
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000011,"用户未进行缴费授权");
             }
             // 根据用户ID查询用户详情
             UserInfoVO userInfo = amUserClient.findUserInfoById(userId);
@@ -1364,14 +1249,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现失败");
                     CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
                 }
-                // 同步回调URL不为空
-                if (Validator.isNotNull(userWithdrawRequestBean.getRetUrl())) {
-                    // 同步回调
-                    return syncParam(userWithdrawResultBean,userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现失败");
-                }
-                modelAndView = new ModelAndView("/withdraw/withdraw_cash_fail");
-                modelAndView.addObject("message", "提现失败");
-                return modelAndView;
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现失败");
             }
             // 身份证号
             String idNo = userInfo.getIdcard();
@@ -1390,14 +1268,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现失败");
                     CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
                 }
-                // 同步回调URL不为空
-                if (Validator.isNotNull(userWithdrawRequestBean.getRetUrl())) {
-                    // 同步回调
-                    return syncParam(userWithdrawResultBean,userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现失败");
-                }
-                modelAndView = new ModelAndView("/withdraw/withdraw_cash_fail");
-                modelAndView.addObject("message", "提现失败");
-                return modelAndView;
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现失败");
             }
             // 用户汇盈平台的银行卡卡号
             String localCardNo = bankCard.getCardNo() == null ? "" : bankCard.getCardNo();
@@ -1409,14 +1280,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现失败");
                     CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
                 }
-                // 同步回调URL不为空
-                if (Validator.isNotNull(userWithdrawRequestBean.getRetUrl())) {
-                    // 同步回调
-                    return syncParam(userWithdrawResultBean,userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现失败");
-                }
-                modelAndView = new ModelAndView("/withdraw/withdraw_cash_fail");
-                modelAndView.addObject("message", "提现失败");
-                return modelAndView;
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现失败");
             }
 
             // 根据用户ID查询用户账户信息
@@ -1429,14 +1293,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_NC000009,"查询用户账户信息失败");
                     CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
                 }
-                // 同步回调URL不为空
-                if (Validator.isNotNull(userWithdrawRequestBean.getRetUrl())) {
-                    // 同步回调
-                    return syncParam(userWithdrawResultBean,userWithdrawRequestBean,ErrorCodeConstant.STATUS_NC000009,"查询用户账户信息失败");
-                }
-                modelAndView = new ModelAndView("/withdraw/withdraw_cash_fail");
-                modelAndView.addObject("message", "查询用户账户信息失败");
-                return modelAndView;
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_NC000009,"查询用户账户信息失败");
             }
             // 提现金额大于汇盈账户余额
             if (new BigDecimal(account).compareTo(hyAccount.getBankBalance()) > 0) {
@@ -1446,49 +1303,30 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_NC000010,"用户账户余额不足");
                     CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
                 }
-                // 同步回调URL不为空
-                if (Validator.isNotNull(userWithdrawRequestBean.getRetUrl())) {
-                    // 同步回调
-                    return syncParam(userWithdrawResultBean,userWithdrawRequestBean,ErrorCodeConstant.STATUS_NC000010,"用户账户余额不足");
-                }
-                modelAndView = new ModelAndView("/withdraw/withdraw_cash_fail");
-                modelAndView.addObject("message", "用户账户余额不足");
-                return modelAndView;
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_NC000010,"用户账户余额不足");
             }
-
             // 取得手续费 默认1
             // 11-23  改为从数据库中读取配置的手续费
             String fee = instConfig.getCommissionFee().toString();
             //String fee = this.userWithdrawService.getWithdrawFee(userId, cardNo, new BigDecimal(account));
             // 实际取现金额
             // 去掉一块钱手续费
-
-
             if (!(new BigDecimal(account).compareTo(new BigDecimal(fee)) > 0)) {
-
                 // 异步回调URL
                 if (Validator.isNotNull(userWithdrawRequestBean.getBgRetUrl())) {
                     Map<String, String> params = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现金额不能小于手续费");
                     CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), params);
                 }
-                // 同步回调URL不为空
-                if (Validator.isNotNull(userWithdrawRequestBean.getRetUrl())) {
-                    // 同步回调
-                    return syncParam(userWithdrawResultBean,userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现金额不能小于手续费");
-                }
-                modelAndView = new ModelAndView("/withdraw/withdraw_cash_fail");
-                modelAndView.addObject("message", "提现金额不能小于手续费");
-                return modelAndView;
-
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现金额不能小于手续费");
             }
 
             account = new BigDecimal(account).subtract(new BigDecimal(Validator.isNull(fee) ? "0" : fee)).toString();
             // 调用江西银行提现接口
             // 调用汇付接口(提现)
 
-            String bankRetUrl =  systemConfig.getServerHost()+"/hyjf-api/server/user/withdraw/return?callback=" + retUrl.replace("#", "*-*-*");
+            String bankRetUrl =  "http://CS-TRADE/hyjf-api/server/user/withdraw/return?callback=" + retUrl.replace("#", "*-*-*");
             // 支付工程路径
-            String bankBgRetUrl = systemConfig.getServerHost()+"/hyjf-api/server/user/withdraw/callback?callback=" + bgRetUrl.replace("#", "*-*-*");// 支付工程路径
+            String bankBgRetUrl = "http://CS-TRADE/hyjf-api/server/user/withdraw/callback?callback=" + bgRetUrl.replace("#", "*-*-*");// 支付工程路径
 
             // 路由代码
             String routeCode = "";
@@ -1562,14 +1400,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                     Map<String, String> retParams = asyncParam(userWithdrawRequestBean, ErrorCodeConstant.STATUS_CE000001,"提现异常");
                     CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), retParams);
                 }
-                // 同步回调URL不为空
-                if (Validator.isNotNull(userWithdrawRequestBean.getRetUrl())) {
-                    // 同步回调
-                    return syncParam(userWithdrawResultBean,userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现异常");
-                }
-                modelAndView = new ModelAndView("/withdraw/withdraw_cash_fail");
-                modelAndView.addObject("message", "提现异常");
-                return modelAndView;
+                return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现异常");
             }
         } catch (Exception e) {
             logger.info("提现发生异常,异常信息:[" + e.getMessage() + "].");
@@ -1578,16 +1409,10 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                 Map<String, String> retParams = asyncParam(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现异常");
                 CommonSoaUtils.noRetPostThree(userWithdrawRequestBean.getBgRetUrl(), retParams);
             }
-            // 同步回调URL不为空
-            if (Validator.isNotNull(userWithdrawRequestBean.getRetUrl())) {
-                // 同步回调
-                return syncParam(userWithdrawResultBean,userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现异常");
-            }
-            modelAndView = new ModelAndView("/withdraw/withdraw_cash_fail");
-            modelAndView.addObject("message", "提现异常");
-            return modelAndView;
+            return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"提现异常");
         }
-        return modelAndView;
+        map.put("modelAndView",modelAndView);
+        return map;
     }
 
     /**
@@ -1622,6 +1447,22 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         modelAndView.addObject("callBackForm", userWithdrawResultBean);
         return modelAndView;
     }
+
+    /**
+     * 同步返回参数组装
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    private Map<String,Object> syncParamForMap(UserWithdrawRequestBean userWithdrawRequestBean,String status,String statusDesc){
+        Map<String,Object> result = new HashMap<>();
+        result.put("callBackAction",userWithdrawRequestBean.getRetUrl());
+        result.put("accountId", userWithdrawRequestBean.getAccountId());
+        result.put("statusDesc", statusDesc);
+        result.put("status",status);
+        return result;
+    }
+
 
     /**
      * 异步返回参数组装
@@ -1671,41 +1512,33 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      * @return
      */
     @Override
-    public ModelAndView cashReturn(HttpServletRequest request, BankCallBean bean) {
+    public  Map<String,Object> cashReturn(HttpServletRequest request, BankCallBean bean) {
         logger.info("用户提现后,同步处理");
-        ModelAndView modelAndView = new ModelAndView("/callback/callback_post");
+        Map<String,Object> result =new HashMap<>();
         bean.convert();
         String logOrderId = bean.getLogOrderId() == null ? "" : bean.getLogOrderId();
         // 提现订单号
         logger.info("提现订单号:[" + logOrderId + "].");
-        UserWithdrawResultBean resultBean = new UserWithdrawResultBean();
-        resultBean.setCallBackAction(request.getParameter("callback").replace("*-*-*", "#"));
+        String url = request.getParameter("callback").replace("*-*-*", "#");
         AccountWithdrawVO accountWithdrawVO = amTradeClient.getAccountWithdrawByOrderId(logOrderId);
         // 提现成功
         if (accountWithdrawVO != null) {
             logger.info("提现成功,提现订单号:[" + logOrderId + "]");
-            resultBean.setAmt(String.valueOf(accountWithdrawVO.getTotal()));// 交易金额
-            resultBean.setArrivalAmount(String.valueOf(accountWithdrawVO.getCredited()));// 到账金额
-            resultBean.setFee(accountWithdrawVO.getFee());// 提现手续费
-            modelAndView.addObject("statusDesc", "提现成功");
-            BaseResultBean baseResultBean = new BaseResultBean();
-            baseResultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
-            resultBean.set("chkValue", baseResultBean.getChkValue());
-            resultBean.set("status", baseResultBean.getStatus());
-            resultBean.set("amt", String.valueOf(accountWithdrawVO.getTotal()));// 交易金额
-            resultBean.set("arrivalAmount", String.valueOf(accountWithdrawVO.getCredited()));// 到账金额
-            resultBean.set("fee", accountWithdrawVO.getFee());// 提现手续费
-            resultBean.set("orderId", accountWithdrawVO.getNid());// 提现订单号
+            result.put("amt",String.valueOf(accountWithdrawVO.getTotal()));// 交易金额
+            result.put("arrivalAmount",String.valueOf(accountWithdrawVO.getCredited()));// 到账金额
+            result.put("fee",accountWithdrawVO.getFee());// 提现手续费
+            result.put("statusDesc", "提现成功");
+            result.put("status", ErrorCodeConstant.SUCCESS);
+            result.put("amt", String.valueOf(accountWithdrawVO.getTotal()));// 交易金额
+            result.put("arrivalAmount", String.valueOf(accountWithdrawVO.getCredited()));// 到账金额
+            result.put("fee", accountWithdrawVO.getFee());// 提现手续费
+            result.put("orderId", accountWithdrawVO.getNid());// 提现订单号
         } else {
             logger.info("银行处理中,请稍后查询交易明细");
-            modelAndView.addObject("statusDesc", "银行处理中,请稍后查询交易明细");
-            BaseResultBean baseResultBean = new BaseResultBean();
-            baseResultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000005);
-            resultBean.set("chkValue", baseResultBean.getChkValue());
-            resultBean.set("status", baseResultBean.getStatus());
+            result.put("statusDesc", "银行处理中,请稍后查询交易明细");
+            result.put("status", ErrorCodeConstant.STATUS_CE000005);
         }
-        modelAndView.addObject("callBackForm", resultBean);
-        return modelAndView;
+        return result;
     }
 
     /**
