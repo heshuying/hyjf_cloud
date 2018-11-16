@@ -19,10 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author fq
@@ -71,9 +68,13 @@ public class ChannelReconciliationServiceImpl implements ChannelReconciliationSe
             List<AppUtmRegVO> appResultList = appResponse.getResultList();
             if (!CollectionUtils.isEmpty(appResultList)) {
                 List<Integer> userIdList = new ArrayList<>();
+                List<String> list = Arrays.asList(request.getUtmPlat());
                 for (AppUtmRegVO appVo: appResultList) {
-                    Integer userId = appVo.getUserId();
-                    userIdList.add(userId);
+                    Integer sourceId = appVo.getSourceId();
+                    if (list.contains(sourceId.toString())) {
+                        Integer userId = appVo.getUserId();
+                        userIdList.add(userId);
+                    }
                 }
                 request.setUserIdList(userIdList);
             } else {
@@ -117,9 +118,13 @@ public class ChannelReconciliationServiceImpl implements ChannelReconciliationSe
             List<AppUtmRegVO> appResultList = appResponse.getResultList();
             if (!CollectionUtils.isEmpty(appResultList)) {
                 List<Integer> userIdList = new ArrayList<>();
+                List<String> list = Arrays.asList(request.getUtmPlat());
                 for (AppUtmRegVO appVo: appResultList) {
-                    Integer userId = appVo.getUserId();
-                    userIdList.add(userId);
+                    Integer sourceId = appVo.getSourceId();
+                    if (list.contains(sourceId.toString())) {
+                        Integer userId = appVo.getUserId();
+                        userIdList.add(userId);
+                    }
                 }
                 request.setUserIdList(userIdList);
             } else {
