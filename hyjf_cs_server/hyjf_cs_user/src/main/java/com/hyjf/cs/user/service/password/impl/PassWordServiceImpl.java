@@ -791,7 +791,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         }
         // 判断用户是否设置过交易密码
         Integer passwordFlag = user.getIsSetPassword();
-        if(type.equals(BankCallConstant.TXCODE_PASSWORD_RESET_PAGE)){
+        if(type.equals(BankCallConstant.TXCODE_PASSWORD_SET_PAGE)){
             if (passwordFlag == 1) {
                 result.put("accountId", account);
                 // 设置交易密码
