@@ -59,8 +59,8 @@ public class AdminInterceptor implements HandlerInterceptor {
 		}catch(Exception e) {
 			response.setContentType("application/json; charset=utf-8");  
 			JSONObject res = new JSONObject();
-			res.put("success", "EUS000010");
-			res.put("msg", "登录失效，请重新登陆");
+			res.put("status", "EUS000010");
+			res.put("statusDesc", "登录失效，请重新登陆");
 			PrintWriter out = response.getWriter();
 			out.append(res.toString());
 			return false;

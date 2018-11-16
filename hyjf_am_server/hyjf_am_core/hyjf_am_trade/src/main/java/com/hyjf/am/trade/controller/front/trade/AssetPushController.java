@@ -146,7 +146,7 @@ public class AssetPushController extends BaseController {
     @RequestMapping("/selectBorrowProjectByBorrowCd/{borrowCd}")
     public BorrowProjectTypeResponse selectBorrowProjectByBorrowCd(@PathVariable String borrowCd) {
         BorrowProjectTypeResponse response = new BorrowProjectTypeResponse();
-        List<BorrowProjectType> borrowProjectTypeList = assetPushService.selectBorrowProjectByBorrowCd(borrowCd);
+        List<BorrowProjectType> borrowProjectTypeList = assetPushService.selectBorrowProjectByBorrowCd(Integer.valueOf(borrowCd));
         if (!CollectionUtils.isEmpty(borrowProjectTypeList)) {
             List<BorrowProjectTypeVO> voList = CommonUtils.convertBeanList(borrowProjectTypeList, BorrowProjectTypeVO.class);
             response.setResultList(voList);
