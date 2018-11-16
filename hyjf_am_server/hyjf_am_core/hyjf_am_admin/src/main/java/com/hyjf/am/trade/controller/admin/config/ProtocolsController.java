@@ -242,7 +242,7 @@ public class ProtocolsController extends BaseController {
 	@RequestMapping("/getnewinfo")
 	public Response getnewinfo() {
 		Response<ProtocolTemplateVO> response = new Response<>();
-		List<ProtocolTemplateVO> list = protocolTemplateService.getnewinfo();
+		List<ProtocolTemplateVO> list = protocolTemplateService.protocolGetnewinfo();
 		response.setResultList(list);
 		return response;
 	}

@@ -1,6 +1,6 @@
-package com.hyjf.cs.message.client;
+package com.hyjf.am.trade.service.task;
 
-import com.hyjf.am.vo.config.IdCardCustomize;
+import com.hyjf.am.resquest.trade.OperationReportJobRequest;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 
 import java.math.BigDecimal;
@@ -9,37 +9,29 @@ import java.util.List;
 
 /**
  * @author tanyy
- * @version OperationReportJobClient, v0.1 2018/5/4 10:00
+ * @version OperationReportJobService, v0.1 2018/7/25 10:40
  */
-public interface OperationReportJobClient {
-
+public interface OperationReportJobService {
 
     /**
-     * 按照省份统计投资人的分布
-     * @param date 上个月的最后一天
+     * 按照省份统计投资人的分布  上个月的最后一天
+     * @param request
      */
-    List<OperationReportJobVO> getTenderCityGroupByList(Date date);
-
-
+    List<OperationReportJobVO> getTenderCityGroupBy(OperationReportJobRequest request);
     /**
-     * 按照性别统计投资人的分布
-     * @param date 上个月的最后一天
+     * 按照性别统计投资人的分布 上个月的最后一天
+     * @param request
      */
-    List<OperationReportJobVO>  getTenderSexGroupByList(Date date);
-
-
-
+    List<OperationReportJobVO>  getTenderSexGroupByList(OperationReportJobRequest request);
 
     /**
-     * 投资人按照年龄分布
      *
      * @param date 上个月的最后一天
      * @param firstAge  年龄下限
      * @param endAge	年龄上限
      * @return
      */
-    int getTenderAgeByRange(Date date,int firstAge,int endAge, List<OperationReportJobVO> ageRangeUserIds);
-
+    int getTenderAgeByRange(Date date, int firstAge, int endAge);
     /**
      * 按月统计平台的交易总额
      *
@@ -57,9 +49,7 @@ public interface OperationReportJobClient {
      * @param endDate	统计月的最后一天
      * @return
      */
-    int getTradeCountByMonth(Date beginDate,Date endDate);
-
-
+    int getTradeCountByMonth(Date beginDate, Date endDate);
 
     /**
      * 借贷笔数
@@ -71,6 +61,11 @@ public interface OperationReportJobClient {
      */
     double getInvestLastDate(Date date);
 
+    /**
+     * 累计交易笔数
+     * @return
+     */
+    int getTradeCount();
     /**
      * 统计投资人总数，截至日期为上个月的最后一天
      * @param date 上个月的最后一天
@@ -98,21 +93,13 @@ public interface OperationReportJobClient {
     List<OperationReportJobVO> getPerformanceSum();
 
     /**
-     * 通过时间统计平台注册人数
-     * @param
-     * @return
-     *
-     */
-    int countRegistUser();
-
-    /**
      * 当月、季、半年、全年业绩  下面的  成交金额,根据月份计算
      *
      * @param startMonth 开始月份
      * @param endMonth   结束月份
      * @return
      */
-    List<OperationReportJobVO> getMonthDealMoney(int startMonth,int endMonth);
+    List<OperationReportJobVO> getMonthDealMoney(int startMonth, int endMonth);
 
     /**
      * 今年这个时候到手收益 和 去年这个时候到手收益 和  预期收益率
@@ -122,7 +109,7 @@ public interface OperationReportJobClient {
      * @param endMonth      去年结束月份
      * @return
      */
-    List<OperationReportJobVO> getRevenueAndYield(int intervalMonth,int startMonth,int endMonth);
+    List<OperationReportJobVO> getRevenueAndYield(int intervalMonth, int startMonth, int endMonth);
 
     /**
      * 充值金额、充值笔数
@@ -147,37 +134,29 @@ public interface OperationReportJobClient {
      */
     List<OperationReportJobVO> getBorrowPeriod(int intervalMonth);
 
-
     /**
-     * 用户分析 - 性别分布拆分
+     * 用户分析 - 性别分布
      *
-     * @param list 用户ids
+     * @param intervalMonth 今年间隔月份
      * @return
      */
-    List<OperationReportJobVO> getSexCount( List<OperationReportJobVO> list);
+    List<OperationReportJobVO> getSexDistribute(int intervalMonth);
+
     /**
      * 用户分析 - 年龄分布
      *
      * @param intervalMonth 今年间隔月份
      * @return
      */
-    List<OperationReportJobVO> getAgeDistribute( int intervalMonth);
+    List<OperationReportJobVO> getAgeDistribute(int intervalMonth);
 
-    /**
-     * 用户分析 - 年龄分布拆分
-     *
-     * @param list 用户ids
-     * @return
-     */
-    List<OperationReportJobVO> getAgeCount(List<OperationReportJobVO> list);
     /**
      * 用户分析 - 金额分布
      *
      * @param intervalMonth 今年间隔月份
      * @return
      */
-    List<OperationReportJobVO> getMoneyDistribute( int intervalMonth);
-
+    List<OperationReportJobVO> getMoneyDistribute(int intervalMonth);
 
     /**
      * 十大投资人
@@ -185,16 +164,8 @@ public interface OperationReportJobClient {
      * @param intervalMonth 今年间隔月份
      * @return
      */
-    List<OperationReportJobVO> getTenMostMoney( int intervalMonth);
+    List<OperationReportJobVO> getTenMostMoney(int intervalMonth);
 
-
-    /**
-     * 十大投资人拆分
-     *
-     * @param list 多个用户id
-     * @return
-     */
-    List<OperationReportJobVO> getUserNames( List<OperationReportJobVO> list);
     /**
      * 超活跃，投资笔数最多
      *
@@ -219,5 +190,11 @@ public interface OperationReportJobClient {
      */
     OperationReportJobVO getUserAgeAndArea(Integer userId);
 
-
+    /**
+     *投资人按照年龄分布 返回符合条件所有用户
+     *
+     * @param date 上个月的最后一天
+     * @return
+     */
+    List<OperationReportJobVO>  getTenderAgeByRangeList(Date date);
 }

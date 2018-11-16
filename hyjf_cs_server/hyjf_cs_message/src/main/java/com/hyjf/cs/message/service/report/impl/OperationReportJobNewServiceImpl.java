@@ -2,21 +2,16 @@ package com.hyjf.cs.message.service.report.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.datacollect.*;
+import com.hyjf.am.vo.message.OperationReportJobBean;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.common.enums.DateEnum;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.cs.message.bean.ic.BorrowUserStatistic;
-import com.hyjf.cs.message.bean.ic.OperationGroupReport;
-import com.hyjf.cs.message.bean.ic.OperationReport;
-import com.hyjf.cs.message.bean.ic.OperationHalfYearReport;
-import com.hyjf.cs.message.bean.ic.OperationMonthlyReport;
-import com.hyjf.cs.message.bean.ic.OperationQuarterReport;
-import com.hyjf.cs.message.bean.ic.OperationYearReport;
-import com.hyjf.cs.message.client.OperationReportJobClient;
+import com.hyjf.cs.message.bean.ic.*;
+import com.hyjf.cs.message.client.AmUserClient;
 import com.hyjf.cs.message.mongo.mc.BorrowUserStatisticMongDao;
 import com.hyjf.cs.message.mongo.mc.OperationMongDao;
 import com.hyjf.cs.message.mongo.mc.OperationMongoGroupDao;
-import com.hyjf.cs.message.service.report.OperationReportJobService;
+import com.hyjf.cs.message.service.report.OperationReportJobNewService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -35,12 +30,9 @@ import java.util.*;
  * @version 2.0
  */
 @Service
-public class OperationReportJobServiceImpl extends StatisticsOperationReportBase implements OperationReportJobService {
-
-
+public class OperationReportJobNewServiceImpl extends StatisticsOperationReportBase implements OperationReportJobNewService {
     @Autowired
-    private OperationReportJobClient operationReportJobClient;
-
+    private AmUserClient amUserClient;
     @Autowired
     private OperationMongoGroupDao operationMongoGroupDao;
     @Autowired
@@ -49,11 +41,12 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
     @Autowired
     private BorrowUserStatisticMongDao borrowUserStatisticMongDao;
 
-    private Logger log = LoggerFactory.getLogger(OperationReportJobServiceImpl.class);
+    private Logger logger = LoggerFactory.getLogger(OperationReportJobNewServiceImpl.class);
 
     @Override
-    public Calendar insertOperationData(Calendar cal) {
+    public Calendar insertOperationData(OperationReportJobBean bean) {
         // 插入统计日期
+        Calendar cal = bean.getCalendar();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         // 要统计前一个月的数据，所以月份要减一
         cal.add(Calendar.MONTH, -1);
@@ -70,22 +63,20 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
 
         oe.setStatisticsMonth(transferDateToInt(cal, sdf));
         // 月交易金额
-        oe.setAccountMonth(operationReportJobClient.getAccountByMonth(getFirstDay(cal), getLastDay(cal)));
+        oe.setAccountMonth(bean.getAccountMonth());
         // 月交易笔数
-        oe.setTradeCountMonth(operationReportJobClient.getTradeCountByMonth(getFirstDay(cal), getLastDay(cal)));
+        oe.setTradeCountMonth(bean.getTradeCountMonth());
         //借贷笔数
-        oe.setLoanNum(operationReportJobClient.getLoanNum(getLastDay(cal)));
+        oe.setLoanNum(bean.getLoanNum());
         //人均投资金额
-        double bb=operationReportJobClient.getInvestLastDate(getLastDay(cal));
-        int aa=operationReportJobClient.getTenderCount(getLastDay(cal));
-        oe.setPerInvest((int)Math.ceil(bb/aa));
+        oe.setPerInvest(bean.getPerInvest());
         //平均满标时间
-        oe.setFullBillTimeCurrentMonth(operationReportJobClient.getFullBillAverageTime(getLastDay(cal)));
+        oe.setFullBillTimeCurrentMonth(bean.getFullBillTimeCurrentMonth());
         //投资人总数
-        oe.setTenderCount(operationReportJobClient.getTenderCount(getLastDay(cal)));
+        oe.setTenderCount(bean.getTenderCount());
 //		System.out.println(sdf.format(cal.getTime()));
         //代偿金额
-        oe.setWillPayMoney(operationReportJobClient.getRepayTotal(getLastDay(cal)));
+        oe.setWillPayMoney(bean.getWillPayMoney());
 
         BorrowUserStatistic borrowUserStatistic = this.selectBorrowUserStatistic();
         if(borrowUserStatistic!=null) {
@@ -100,14 +91,15 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
             // 前十大借款人待还金额占比
             oe.setBorrowuserMoneyTopten(borrowUserStatistic.getBorrowuserMoneyTopten().divide(borrowUserStatistic.getBorrowuserMoneyTotal(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(2, BigDecimal.ROUND_HALF_UP));
         }
-        log.info("借款数据....  oe is :{}", oe);
+        logger.info("借款数据....  oe is :{}", oe);
         operationMongDao.save(oe);
         return cal;
     }
 
     @Override
-    public void insertOperationGroupData(Calendar cal) {
+    public void insertOperationGroupData(OperationReportJobBean bean) {
         OperationGroupReport oegroup = new OperationGroupReport();
+        Calendar cal = bean.getCalendar();
         // 插入统计日期
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
         oegroup.setInsertDate(transferDateToInt(cal, sdf));
@@ -119,31 +111,30 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
 
         // 投资人按照地域分布
         //查询出所有符合条件用户
-        List<OperationReportJobVO> cityGroup = operationReportJobClient.getTenderCityGroupByList(getLastDay(cal));
+        List<OperationReportJobVO> cityGroup = bean.getCityGroup();
         Map<Integer, String> cityMap = cityGrouptoMap(cityGroup);
         oegroup.setInvestorRegionMap(cityMap);
 
         // 投资人按照性别分布
-        List<OperationReportJobVO> sexGroup = operationReportJobClient.getTenderSexGroupByList(getLastDay(cal));
+        List<OperationReportJobVO> sexGroup = bean.getSexGroup();
         Map<Integer, Integer> sexMap = sexGrouptoMap(sexGroup);
         oegroup.setInvestorSexMap(sexMap);
 
         // 投资人按照年龄分布
         Map<Integer, Integer> ageMap = new HashMap<Integer, Integer>();
         //代码拆分先查出所有符合条件的用户
-        List<OperationReportJobVO> ageRangeUserIds = operationReportJobClient.getTenderAgeByRangeList(getLastDay(cal), 0,
-                OperationGroupReport.ageRange1);
+        List<OperationReportJobVO> ageRangeUserIds = bean.getAgeRangeUserIds();
         if(!CollectionUtils.isEmpty(ageRangeUserIds)){
-            int age = operationReportJobClient.getTenderAgeByRange(getLastDay(cal), 0,
+            int age = amUserClient.getTenderAgeByRange(getLastDay(cal), 0,
                     OperationGroupReport.ageRange1, ageRangeUserIds);
             ageMap.put(OperationGroupReport.ageRange1, age);
-            age = operationReportJobClient.getTenderAgeByRange(getLastDay(cal), OperationGroupReport.ageRange1,
+            age = amUserClient.getTenderAgeByRange(getLastDay(cal), OperationGroupReport.ageRange1,
                     OperationGroupReport.ageRange2, ageRangeUserIds);
             ageMap.put(OperationGroupReport.ageRange2, age);
-            age = operationReportJobClient.getTenderAgeByRange(getLastDay(cal), OperationGroupReport.ageRange2,
+            age = amUserClient.getTenderAgeByRange(getLastDay(cal), OperationGroupReport.ageRange2,
                     OperationGroupReport.ageRange3, ageRangeUserIds);
             ageMap.put(OperationGroupReport.ageRange3, age);
-            age = operationReportJobClient.getTenderAgeByRange(getLastDay(cal), OperationGroupReport.ageRange3,
+            age = amUserClient.getTenderAgeByRange(getLastDay(cal), OperationGroupReport.ageRange3,
                     OperationGroupReport.ageRange4, ageRangeUserIds);
             ageMap.put(OperationGroupReport.ageRange4, age);
 
@@ -226,7 +217,7 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
 
     //保存月度运营报告
     @Override
-    public void setMonthReport(String year, String month) throws Exception {
+    public void setMonthReport(String year, String month,OperationReportJobBean bean) throws Exception {
 
         BigDecimal currentMonthDealMoney = BigDecimal.ZERO;//本月成交金额
         BigDecimal lastMonthDealMoney = BigDecimal.ZERO;//去年本月成交金额
@@ -257,19 +248,19 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         strEnName.append("Monthly Operation Report of ").append(monthValue).append(" ").append(year).toString();
 
         //业绩总览
-        Map<String, BigDecimal> mapPerformanceSum = getPerformanceSum();
+        Map<String, BigDecimal> mapPerformanceSum = getPerformanceSum(bean);
         if (CollectionUtils.isEmpty(mapPerformanceSum)) {
             throw new NullPointerException();
         }
         logger.info("mapPerformanceSum====="+ JSONObject.toJSONString(mapPerformanceSum));
         //本月成交金额
-        List<OperationReportJobVO> listMonthDealMoney = getMonthDealMoney(0, 1);
+        List<OperationReportJobVO> listMonthDealMoney = bean.getListMonthDealMoney();
         if (!CollectionUtils.isEmpty(listMonthDealMoney)) {
             currentMonthDealMoney = listMonthDealMoney.get(0).getSumAccount();
         }
         logger.info("listMonthDealMoney====="+ JSONObject.toJSONString(listMonthDealMoney));
         //去年本月成交金额
-        List<OperationReportJobVO> listLastMonthDealMoney = getMonthDealMoney(12, 13);
+        List<OperationReportJobVO> listLastMonthDealMoney = bean.getListLastMonthDealMoney();
         logger.info("listLastMonthDealMoney====="+ JSONObject.toJSONString(listLastMonthDealMoney));
         if (!CollectionUtils.isEmpty(listLastMonthDealMoney)) {
             lastMonthDealMoney = listLastMonthDealMoney.get(0).getSumAccount();
@@ -281,7 +272,7 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         dealMoneyPercent = this.computeRiseProportion(currentMonthDealMoney, lastMonthDealMoney);
 
         //本月赚取收益,去年本月赚取收益,本月平均年率
-        Map<String, BigDecimal> mapRevenueAndYield = getRevenueAndYield(1, 12, 13);
+        Map<String, BigDecimal> mapRevenueAndYield = getRevenueAndYield(bean);
         if (CollectionUtils.isEmpty(mapRevenueAndYield)) {
             throw new NullPointerException();
         }
@@ -294,7 +285,7 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         profitIncrease = this.computeRiseProportion(operationProfit, lastYearProfit);
         avgProfit = mapRevenueAndYield.get("avgProfit").setScale(2, BigDecimal.ROUND_DOWN);//本月平均年率
 
-        List<OperationReportInfoVO> listgetCompleteCount = getCompleteCount(1);
+        List<OperationReportInfoVO> listgetCompleteCount = getCompleteCount(bean);
         for (OperationReportInfoVO completeCountDto : listgetCompleteCount) {
             if ("pcDealNum".equals(completeCountDto.getTitle())) {
                 pcDealNum = completeCountDto.getDealSum();//pc成交笔数
@@ -327,10 +318,10 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
                 wechatDealNum, wechatDealProportion, pcDealNum, pcDealProportion);
 
         //保存 用户分析
-        this.saveUserOperationReport(operationReportId, 1, 1);
+        this.saveUserOperationReport(operationReportId, 1, bean);
 
         //保存 年度之最-十大投资人
-        this.saveTenthOperationReport(operationReportId, 1, 1, currentMonthDealMoney);
+        this.saveTenthOperationReport(operationReportId, 1, bean, currentMonthDealMoney);
     }
 
 
@@ -390,7 +381,7 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
 
     //保存季度运营报告
     @Override
-    public void setQuarterReport(String year, String month) throws Exception {
+    public void setQuarterReport(String year, String month,OperationReportJobBean bean) throws Exception {
 
         BigDecimal quarterDealMoney = BigDecimal.ZERO;//本季度成交金额 （3个月份）
         BigDecimal newQuarterDealMoney = BigDecimal.ZERO;//本月成交金额 （3月份）
@@ -432,14 +423,14 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         }
         logger.info("季度报告进入=====");
         //业绩总览
-        Map<String, BigDecimal> mapPerformanceSum = getPerformanceSum();
+        Map<String, BigDecimal> mapPerformanceSum = getPerformanceSum(bean);
         if (CollectionUtils.isEmpty(mapPerformanceSum)) {
             throw new NullPointerException();
         }
         logger.info("mapPerformanceSum====="+ JSONObject.toJSONString(mapPerformanceSum));
 
         //今年三个月成交金额
-        List<OperationReportJobVO> listMonthDealMoney = getMonthDealMoney(0, 3);
+        List<OperationReportJobVO> listMonthDealMoney = bean.getListMonthDealMoney();
         if (CollectionUtils.isEmpty(listMonthDealMoney)) {
             throw new NullPointerException();
         }
@@ -461,7 +452,7 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         quarterDealMoney = newQuarterDealMoney.add(agoCurrentQuarterDealMoney).add(beforeCurrentQuarterDealMoney);
 
         //去年三个月成交金额
-        List<OperationReportJobVO> listLastMonthDealMoney = getMonthDealMoney(12, 15);
+        List<OperationReportJobVO> listLastMonthDealMoney = bean.getListLastMonthDealMoney();
         if (CollectionUtils.isEmpty(listMonthDealMoney)) {
             throw new NullPointerException();
         }
@@ -473,7 +464,7 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         dealQuarterPercent = this.computeRiseProportion(quarterDealMoney, lastQuarterDealMoney);
 
         //本季度赚取收益,去年本季度赚取收益,本季度平均年率
-        Map<String, BigDecimal> mapRevenueAndYield = getRevenueAndYield(3, 12, 15);
+        Map<String, BigDecimal> mapRevenueAndYield = getRevenueAndYield(bean);
         if (CollectionUtils.isEmpty(mapRevenueAndYield)) {
             throw new NullPointerException();
         }
@@ -486,7 +477,7 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         avgProfit = mapRevenueAndYield.get("avgProfit").setScale(2, BigDecimal.ROUND_DOWN);//本季度平均年率
 
         //渠道分析
-        List<OperationReportInfoVO> listgetCompleteCount = getCompleteCount(3);
+        List<OperationReportInfoVO> listgetCompleteCount = getCompleteCount(bean);
         logger.info("listgetCompleteCount====="+ JSONObject.toJSONString(listgetCompleteCount));
         for (OperationReportInfoVO completeCountDto : listgetCompleteCount) {
             if ("pcDealNum".equals(completeCountDto.getTitle())) {
@@ -522,10 +513,10 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
                 wechatDealNum, wechatDealProportion, pcDealNum, pcDealProportion);
 
         //保存 用户分析
-        this.saveUserOperationReport(operationReportId, 2, 3);
+        this.saveUserOperationReport(operationReportId, 2, bean);
 
         //保存 年度之最-十大投资人
-        this.saveTenthOperationReport(operationReportId, 2, 3, quarterDealMoney);
+        this.saveTenthOperationReport(operationReportId, 2, bean, quarterDealMoney);
     }
 
     /**
@@ -592,7 +583,7 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
 
     //保存半年度运营报告
     @Override
-    public void setHalfYearReport(String year, String month) throws Exception {
+    public void setHalfYearReport(String year, String month,OperationReportJobBean bean) throws Exception {
 
         BigDecimal halfYearDealMoney = BigDecimal.ZERO;//上半年累计成交金额
         BigDecimal operationProfit = BigDecimal.ZERO;//上半年赚取收益
@@ -618,13 +609,13 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
 
 
         //业绩总览
-        Map<String, BigDecimal> mapPerformanceSum = getPerformanceSum();
+        Map<String, BigDecimal> mapPerformanceSum = getPerformanceSum(bean);
         if (CollectionUtils.isEmpty(mapPerformanceSum)) {
             throw new NullPointerException();
         }
 
         //上半年6个月成交金额
-        List<OperationReportJobVO> listMonthDealMoney = getMonthDealMoney(0, 6);
+        List<OperationReportJobVO> listMonthDealMoney = bean.getListMonthDealMoney();
         if (CollectionUtils.isEmpty(listMonthDealMoney)) {
             throw new NullPointerException();
         }
@@ -649,7 +640,7 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         }
 
         //上半年赚取收益,去年上半年赚取收益,上半年平均年率
-        Map<String, BigDecimal> mapRevenueAndYield = getRevenueAndYield(6, 12, 18);
+        Map<String, BigDecimal> mapRevenueAndYield = getRevenueAndYield(bean);
         if (CollectionUtils.isEmpty(mapRevenueAndYield)) {
             throw new NullPointerException();
         }
@@ -657,14 +648,14 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         avgProfit = mapRevenueAndYield.get("avgProfit").setScale(2, BigDecimal.ROUND_DOWN);//上半年平均年率
 
         //充值金额、充值笔数
-        Map<String, BigDecimal> mapRechargeMoneyAndSum = getRechargeMoneyAndSum(6);
+        Map<String, BigDecimal> mapRechargeMoneyAndSum = getRechargeMoneyAndSum(bean);
         if (!CollectionUtils.isEmpty(mapRechargeMoneyAndSum)) {
             halfYearRechargeMoney = mapRechargeMoneyAndSum.get("rechargeMoney");// 上半年累计充值金额
             halfYearRechargeCount = mapRechargeMoneyAndSum.get("rechargeCount").intValue();// 上半年累计充值笔数
         }
 
         //set渠道分析
-        sumCompleteCount = this.setCompleteCount(halfYearOperationReport, 6);
+        sumCompleteCount = this.setCompleteCount(halfYearOperationReport, bean);
 
         //保存 运营报告显示栏
         String operationReportId = this.saveOperationReport(strCnName.toString(),
@@ -678,15 +669,15 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
                 halfYearBaseMonth, halfYearBase, avgProfit);
 
         //set 借款期限
-        this.setHalfYearAndYearLoanTime(halfYearOperationReport, 6);
+        this.setHalfYearAndYearLoanTime(halfYearOperationReport, bean);
         //保存 半年度运营报告
         this.saveHalfYearOperationReport(halfYearOperationReport, operationReportId);
 
         //保存 用户分析
-        this.saveUserOperationReport(operationReportId, 3, 6);
+        this.saveUserOperationReport(operationReportId, 3, bean);
 
         //保存 年度之最-十大投资人
-        this.saveTenthOperationReport(operationReportId, 3, 6, halfYearDealMoney);
+        this.saveTenthOperationReport(operationReportId, 3, bean, halfYearDealMoney);
     }
 
     private void saveHalfYearOperationReport(HalfYearOperationReportVO halfYearOperationReport, String operationReportId) {
@@ -737,7 +728,7 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
 
     //保存全年度运营报告
     @Override
-    public void setYearReport(String year, String month) throws Exception {
+    public void setYearReport(String year, String month,OperationReportJobBean bean) throws Exception {
 
         BigDecimal yearDealMoney = BigDecimal.ZERO;//全年累计成交金额
         BigDecimal operationProfit = BigDecimal.ZERO;//全年赚取收益
@@ -763,13 +754,13 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
 
 
         //业绩总览
-        Map<String, BigDecimal> mapPerformanceSum = getPerformanceSum();
+        Map<String, BigDecimal> mapPerformanceSum = getPerformanceSum(bean);
         if (CollectionUtils.isEmpty(mapPerformanceSum)) {
             throw new NullPointerException();
         }
 
         //全年度12个月成交金额
-        List<OperationReportJobVO> listMonthDealMoney = getMonthDealMoney(0, 12);
+        List<OperationReportJobVO> listMonthDealMoney = bean.getListMonthDealMoney();
         if (CollectionUtils.isEmpty(listMonthDealMoney)) {
             throw new NullPointerException();
         }
@@ -801,7 +792,7 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         }
 
         //全年赚取收益,去年全年赚取收益,全年平均年率
-        Map<String, BigDecimal> mapRevenueAndYield = getRevenueAndYield(12, 12, 24);
+        Map<String, BigDecimal> mapRevenueAndYield = getRevenueAndYield(bean);
         if (CollectionUtils.isEmpty(mapRevenueAndYield)) {
             throw new NullPointerException();
         }
@@ -809,14 +800,14 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
         avgProfit = mapRevenueAndYield.get("avgProfit").setScale(2, BigDecimal.ROUND_DOWN);//全年平均年率
 
         //充值金额、充值笔数
-        Map<String, BigDecimal> mapRechargeMoneyAndSum = getRechargeMoneyAndSum(12);
+        Map<String, BigDecimal> mapRechargeMoneyAndSum = getRechargeMoneyAndSum(bean);
         if (!CollectionUtils.isEmpty(mapRechargeMoneyAndSum)) {
             yearRechargeMoney = mapRechargeMoneyAndSum.get("rechargeMoney");// 全年累计充值金额
             yearRechargeCount = mapRechargeMoneyAndSum.get("rechargeCount").intValue();// 全年累计充值笔数
         }
 
         //set渠道分析
-        sumCompleteCount = this.setCompleteCount(yearOperationReport, 12);
+        sumCompleteCount = this.setCompleteCount(yearOperationReport, bean);
 
         //保存 运营报告显示栏
         String operationReportId = this.saveOperationReport(strCnName.toString(),
@@ -830,15 +821,15 @@ public class OperationReportJobServiceImpl extends StatisticsOperationReportBase
                 yearBaseMonth, yearBase, avgProfit);
 
         //set 借款期限
-        this.setHalfYearAndYearLoanTime(yearOperationReport, 12);
+        this.setHalfYearAndYearLoanTime(yearOperationReport, bean);
         //保存 全年度运营报告
         this.saveYearOperationReport(yearOperationReport, operationReportId);
 
         //保存 用户分析
-        this.saveUserOperationReport(operationReportId, 4, 12);
+        this.saveUserOperationReport(operationReportId, 4, bean);
 
         //保存 年度之最-十大投资人
-        this.saveTenthOperationReport(operationReportId, 4, 12, yearDealMoney);
+        this.saveTenthOperationReport(operationReportId, 4, bean, yearDealMoney);
     }
 
     /**

@@ -14,10 +14,7 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.bean.BaseResultBean;
-import com.hyjf.cs.trade.bean.TrusteePayResultBean;
-import com.hyjf.cs.trade.bean.UserDirectRechargeRequestBean;
-import com.hyjf.cs.trade.bean.UserDirectRechargeResultBean;
+import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.recharge.DirectRechargeService;
@@ -58,82 +55,115 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
     private static final int RECHARGE_STATUS_SUCCESS = 2;
 
     @Override
-    public ModelAndView recharge(UserDirectRechargeRequestBean userRechargeRequestBean, HttpServletRequest request) {
-        ModelAndView modelAndView = new ModelAndView("/bank/user/trusteePay/error");
+    public Map<String,Object> recharge(UserDirectRechargeRequestBean userRechargeRequestBean, HttpServletRequest request) {
+        ModelAndView modelAndView = new ModelAndView();
+        Map<String,Object> map = new HashMap<>();
         logger.info("-----------充值页面-----------");
-        UserDirectRechargeResultBean resultBean = new UserDirectRechargeResultBean();
         try {
             if (checkIsNull(userRechargeRequestBean)) {
-                getErrorMV(userRechargeRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000001, "请求参数异常");
                 logger.info("请求参数异常[" + JSONObject.toJSONString(userRechargeRequestBean, true) + "]");
-                return modelAndView;
+                map.put("status", ErrorCodeConstant.STATUS_CE000001);
+                map.put("acqRes", userRechargeRequestBean.getAcqRes());
+                map.put("accountId", userRechargeRequestBean.getAccountId());
+                map.put("statusDesc","请求参数异常");
+                map.put("callBackAction",userRechargeRequestBean.getRetUrl());
+                return map;
             }
             // 加签字段     时间戳  电子帐户号   手机号  idno   cardNo  txamount   name
-            if (!SignUtil.verifyRequestSign(userRechargeRequestBean,"/server/user/directRechargePage/recharge")) {
+            if (!this.verifyRequestSign(userRechargeRequestBean,BaseDefine.METHOD_SERVER_RECHARGE)) {
                 logger.info("----验签失败----");
-                getErrorMV(userRechargeRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000002, "验签失败");
-                logger.info("验签失败[" + JSONObject.toJSONString(userRechargeRequestBean, true) + "]");
-                return modelAndView;
+                map.put("status", ErrorCodeConstant.STATUS_CE000002);
+                map.put("acqRes", userRechargeRequestBean.getAcqRes());
+                map.put("accountId", userRechargeRequestBean.getAccountId());
+                map.put("statusDesc","验签失败");
+                map.put("callBackAction",userRechargeRequestBean.getRetUrl());
+                return map;
             }
             // 根据用户电子账户号查询用户信息
             BankOpenAccountVO bankOpenAccount = amUserClient.selectBankOpenAccountByAccountId(userRechargeRequestBean.getAccountId());
             if (bankOpenAccount == null) {
                 logger.info("查询用户开户信息失败,用户电子账户号:[" + userRechargeRequestBean.getAccountId() + "]");
-                getErrorMV(userRechargeRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000006, "查询用户开户信息失败");
-                return modelAndView;
+                map.put("status", ErrorCodeConstant.STATUS_CE000006);
+                map.put("acqRes", userRechargeRequestBean.getAcqRes());
+                map.put("accountId", userRechargeRequestBean.getAccountId());
+                map.put("statusDesc","查询用户开户信息失败");
+                map.put("callBackAction",userRechargeRequestBean.getRetUrl());
+                return map;
             }
             // 用户ID
             Integer userId = bankOpenAccount.getUserId();
             // 根据用户ID查询用户信息
             UserVO user = amUserClient.findUserById(userId);
             if (user == null) {
-                getErrorMV(userRechargeRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000004, "查询用户开户信息失败");
-                return modelAndView;
+                map.put("status", ErrorCodeConstant.STATUS_CE000004);
+                map.put("acqRes", userRechargeRequestBean.getAcqRes());
+                map.put("accountId", userRechargeRequestBean.getAccountId());
+                map.put("statusDesc","查询用户开户信息失败");
+                map.put("callBackAction",userRechargeRequestBean.getRetUrl());
+                return map;
             }
             // 根据用户ID查询用户详情
             UserInfoVO userInfo = amUserClient.findUserInfoById(userId);
             if (userInfo == null) {
-                getErrorMV(userRechargeRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000004, "查询用户开户信息失败");
-                return modelAndView;
+                map.put("status", ErrorCodeConstant.STATUS_CE000004);
+                map.put("acqRes", userRechargeRequestBean.getAcqRes());
+                map.put("accountId", userRechargeRequestBean.getAccountId());
+                map.put("statusDesc","查询用户开户信息失败");
+                map.put("callBackAction",userRechargeRequestBean.getRetUrl());
+                return map;
             }
             // 根据用户ID查询用户平台银行卡信息
             BankCardVO bankCard = amUserClient.getBankCardByUserId(userId);
             if (bankCard == null) {
                 logger.info("根据用户ID查询用户银行卡信息失败,用户电子账户号:[" + userRechargeRequestBean.getAccountId() + "],用户ID:[" + userId + "].");
-                getErrorMV(userRechargeRequestBean, modelAndView, ErrorCodeConstant.STATUS_BC000002, "查询用户银行卡信息失败");
-                return modelAndView;
+                map.put("status", ErrorCodeConstant.STATUS_BC000002);
+                map.put("acqRes", userRechargeRequestBean.getAcqRes());
+                map.put("accountId", userRechargeRequestBean.getAccountId());
+                map.put("statusDesc","查询用户银行卡信息失败");
+                map.put("callBackAction",userRechargeRequestBean.getRetUrl());
+                return map;
             }
 
             // 用户汇盈平台的银行卡卡号
             String localCardNo = bankCard.getCardNo() == null ? "" : bankCard.getCardNo();
             if (!userRechargeRequestBean.getCardNo().equals(localCardNo)) {
                 logger.info("用户银行卡信息不一致,用户电子账户号:[" + userRechargeRequestBean.getAccountId() + "],请求银行卡号:[" + userRechargeRequestBean.getCardNo() + "],平台保存的银行卡号:[" + localCardNo + "].");
-                getErrorMV(userRechargeRequestBean, modelAndView, ErrorCodeConstant.STATUS_NC000002, "用户银行卡信息不一致");
-                return modelAndView;
+                map.put("status", ErrorCodeConstant.STATUS_BC000002);
+                map.put("acqRes", userRechargeRequestBean.getAcqRes());
+                map.put("accountId", userRechargeRequestBean.getAccountId());
+                map.put("statusDesc","用户银行卡信息不一致");
+                map.put("callBackAction",userRechargeRequestBean.getRetUrl());
+                return map;
             }
 
             // 检查是否设置交易密码
             Integer passwordFlag = user.getIsSetPassword();
             if (passwordFlag != 1) {// 未设置交易密码
-                getErrorMV(userRechargeRequestBean, modelAndView, ErrorCodeConstant.STATUS_TP000002, "未设置交易密码！");
-                return modelAndView;
+                map.put("status", ErrorCodeConstant.STATUS_BC000002);
+                map.put("acqRes", userRechargeRequestBean.getAcqRes());
+                map.put("accountId", userRechargeRequestBean.getAccountId());
+                map.put("statusDesc","未设置交易密码");
+                map.put("callBackAction",userRechargeRequestBean.getRetUrl());
+                return map;
             }
             // 缴费授权
             /*if (user.getPaymentAuthStatus() !=1) {
                 logger.info("用户未进行缴费授权,用户电子账户号:[" + userRechargeRequestBean.getAccountId() + "],用户ID:[" + userId + "].");
-                getErrorMV(userRechargeRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000011, "用户未进行缴费授权！");
-                return modelAndView;
+                map.put("status", ErrorCodeConstant.STATUS_CE000011);
+                map.put("acqRes", userRechargeRequestBean.getAcqRes());
+                map.put("accountId", userRechargeRequestBean.getAccountId());
+                map.put("statusDesc","用户未进行缴费授权");
+                map.put("callBackAction",userRechargeRequestBean.getRetUrl());
+                return map;
             }*/
 
             // 拼装参数  调用江西银行
             // 同步调用路径
-            String retUrl = systemConfig.webHost + request.getContextPath()
-                    + "/server/user/directRechargePage/directRechargePageReturn.do?acqRes="
+            String retUrl = "http://CS-USER/hyjf-api/server/user/directRechargePage/directRechargePageReturn.do?acqRes="
                     + userRechargeRequestBean.getAcqRes() + StringPool.AMPERSAND + "callback="
                     + userRechargeRequestBean.getRetUrl().replace("#", "*-*-*");
             // 异步调用路
-            String bgRetUrl = systemConfig.webHost + request.getContextPath()
-                    + "/server/user/directRechargePage/directRechargePageBgreturn.do?acqRes="
+            String bgRetUrl = "http://CS-USER/hyjf-api/server/user/directRechargePage/directRechargePageBgreturn.do?acqRes="
                     + userRechargeRequestBean.getAcqRes() + "&phone="+userRechargeRequestBean.getMobile()+"&callback=" + userRechargeRequestBean.getBgRetUrl().replace("#", "*-*-*");
 
             // 用户ID
@@ -188,15 +218,18 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
                 e.printStackTrace();
             }
 
-
-            return modelAndView;
+            map.put("modelAndView",modelAndView);
+            return map;
         } catch (Exception e) {
             e.printStackTrace();
             logger.info("充值发生异常,错误信息:[" + e.getMessage() + "]");
             // 充值失败
-            resultBean.setStatus(BaseResultBean.STATUS_FAIL);
-            resultBean.setStatusDesc("充值失败");
-            return modelAndView;
+            map.put("status", BaseResultBean.STATUS_FAIL);
+            map.put("acqRes", userRechargeRequestBean.getAcqRes());
+            map.put("accountId", userRechargeRequestBean.getAccountId());
+            map.put("statusDesc","充值失败");
+            map.put("callBackAction",userRechargeRequestBean.getRetUrl());
+            return map;
         }
     }
 

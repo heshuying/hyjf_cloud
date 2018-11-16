@@ -28,6 +28,17 @@ public interface MQConstant {
 	String MAIL_TOPIC = "MAIL_TOPIC";
 
 	/**
+	 * 发送运营报告admin group topic
+	 */
+	String OPERATIONREPORT_JOB_ADMIN_GROUP = "OPERATIONREPORT_JOB_ADMIN_GROUP";
+	String OPERATIONREPORT_JOB_ADMIN_TOPIC = "OPERATIONREPORT_JOB_ADMIN_TOPIC";
+
+	/**
+	 * 发送运营报告group topic
+	 */
+	String OPERATIONREPORT_JOB_GROUP = "OPERATIONREPORT_JOB_GROUP";
+	String OPERATIONREPORT_JOB_TOPIC = "OPERATIONREPORT_JOB_TOPIC";
+	/**
 	 * 发送app push group topic
 	 */
 	String APP_MESSAGE_GROUP = "APP_MESSAGE_GROUP";
