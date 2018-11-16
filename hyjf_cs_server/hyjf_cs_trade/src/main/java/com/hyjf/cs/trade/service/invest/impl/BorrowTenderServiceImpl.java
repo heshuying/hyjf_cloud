@@ -702,7 +702,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 }
                 params.put("investProjectPeriod", investProjectPeriod);
                 //根据investFlag标志位来决定更新哪种投资
-                params.put("investFlag", checkIsNewUserCanInvest(userId));
+                params.put("investFlag", checkAppUtmInvestFlag(userId));
                 // 用户id
                 params.put("userId", userId);
                 //压入消息队列
@@ -756,6 +756,26 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         WebResult<Map<String, Object>> result = new WebResult();
         result.setData(data);
         return result;
+    }
+
+    /**
+     * 查询appUtmReg是否首投
+     * @param userId
+     * @return
+     */
+    private boolean checkAppUtmInvestFlag(Integer userId) {
+        // 新的判断是否为新用户方法
+        try {
+            int total = amTradeClient.countNewUserTotal(userId);
+            logger.info("获取用户投资数量 userID {} 数量 {} ",userId,total);
+            if (total == 1) {
+                return true;
+            } else {
+                return false;
+            }
+        }catch (Exception e) {
+            throw e;
+        }
     }
 
     /**
