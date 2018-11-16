@@ -191,8 +191,7 @@ public class WrbRegiestController {
                     userRegisterService.updateUserInfoByUserInfo(userInfo);
                     //插入用户绑定表
                     userRegisterService.bindThirdUser(userId, Integer.valueOf(wrbRegisterRequestBean.getWrb_user_id()), Integer.valueOf(instCode));
-                    log.info("汇盈金福用户：{} 跟风车理财用户：{}已经绑定！", userId, userId);
-
+                    log.info("汇盈金服用户：{} 跟风车理财用户：{}已经绑定！", userId, userId);
                     String userName = users.getUsername();
                     // 用户注册成功
                     log.info("用户注册成功,手机号:{},用户ID:{},用户名:{}", mobile, userId, userName);

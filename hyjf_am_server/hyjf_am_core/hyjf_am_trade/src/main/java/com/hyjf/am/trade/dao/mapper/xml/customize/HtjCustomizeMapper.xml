@@ -1,0 +1,352 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.HtjCustomizeMapper">
+
+	<resultMap id="selectInvestListMap" type="com.hyjf.am.vo.trade.PlanInvestCustomizeVO">
+		<result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
+		<result column="plan_order_id" property="planOrderId" jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="order_id" property="orderId" jdbcType="VARCHAR" />
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="borrowTypeName" property="borrowTypeName" jdbcType="VARCHAR" />
+		<result column="name" property="borrowStyleName" jdbcType="VARCHAR" />
+		<result column="nid" property="borrowStyle" jdbcType="VARCHAR" />
+		<result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
+		<result column="account" property="account" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="hold_days" property="holdDays" jdbcType="VARCHAR" />
+		<result column="surplus_days" property="surplusDays" jdbcType="VARCHAR" />
+		<result column="fair_value" property="fairValue" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="type" property="type" jdbcType="VARCHAR" />
+		<result column="isDay" property="isDay" jdbcType="VARCHAR" />
+		<!-- A、项目最终一期还款时间大于（清算时间-3），则显示计划清算时间；B、项目最终一期还款时间小于等于（清算时间-3），则显示项目最终一期还款时间； -->
+		<result column="expectExitTime" property="expectExitTime" jdbcType="VARCHAR" />
+		<!-- 退出时间 -->
+		<result column="exitTime" property="exitTime" jdbcType="VARCHAR" />
+		<!-- 借款期限 -->
+		<result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectInvestCreditList" resultMap="selectInvestListMap" parameterType="java.util.HashMap">
+		SELECT 	hdi.plan_nid,
+		hdi.plan_order_id,
+		hdi.user_name,
+		hdi.order_id,
+		hdi.borrow_nid,
+		hbpt.borrow_name borrowTypeName,
+		hb.borrow_apr,
+		hdi.status,
+		hdi.account,
+		DATE_FORMAT( hdi.create_time, '%Y-%m-%d' ) create_time,
+		hb.borrow_period,
+		CASE
+		WHEN DATEDIFF(FROM_UNIXTIME(hdp.liquidate_should_time),
+		FROM_UNIXTIME(hb.repay_last_time)) <![CDATA[>]]> hdp.debt_quit_period
+		and hb.repay_last_time <![CDATA[<>]]> 0
+		THEN
+		FROM_UNIXTIME(hb.repay_last_time, '%Y-%m-%d')
+		ELSE
+		FROM_UNIXTIME(hdp.liquidate_should_time, '%Y-%m-%d')
+		END expectExitTime,
+		FROM_UNIXTIME(hdp.repay_time, '%Y-%m-%d')   exitTime,
+		0 type,
+		case when hb.borrow_style = 'endday'
+		then 1 else 0 end isDay
+		FROM ht_debt_invest hdi
+		LEFT JOIN ht_debt_borrow hb ON hdi.borrow_nid = hb.borrow_nid
+		LEFT JOIN ht_borrow_project_type hbpt ON hbpt.borrow_cd = hb.project_type
+		LEFT JOIN ht_debt_plan hdp ON hdp.debt_plan_nid = hdi.plan_nid
+		<include refid="Where_selectInvestCreditList" />
+		ORDER BY hdi.create_time DESC
+		<if test="limitStart !=null and limitStart >= 0" >
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
+	</select>
+
+
+	<select id="selectCreditCreditList" resultMap="selectInvestListMap" parameterType="java.util.HashMap">
+		SELECT 	hdct.assign_plan_nid plan_nid,
+		hdct.assign_plan_order_id plan_order_id,
+		hdct.user_name,
+		hdct.assign_order_id order_id,
+		hdct.credit_nid borrow_nid,
+		hbpt.borrow_name borrowTypeName,
+		hdc.actual_apr borrow_apr,
+		hdct.status,
+		hdct.assign_price account,
+		DATE_FORMAT( hdct.create_time, '%Y-%m-%d' ) create_time,
+		hdc.credit_term borrow_period,
+		CASE
+		WHEN DATEDIFF(FROM_UNIXTIME(hdp.liquidate_should_time),
+		FROM_UNIXTIME(hdc.credit_repay_end_time)) <![CDATA[>]]> hdp.debt_quit_period
+		and hdc.credit_repay_end_time <![CDATA[<>]]> 0
+		THEN
+		FROM_UNIXTIME(hdc.credit_repay_end_time, '%Y-%m-%d')
+		ELSE
+		FROM_UNIXTIME(hdp.liquidate_should_time, '%Y-%m-%d')
+		END expectExitTime,
+		FROM_UNIXTIME(hdp.liquidate_fact_time, '%Y-%m-%d')   exitTime,
+		1 type,
+		1 isDay
+		FROM ht_debt_credit_tender hdct
+		LEFT JOIN ht_debt_credit hdc ON hdct.credit_nid = hdc.credit_nid
+		LEFT JOIN ht_debt_borrow hb ON hdct.borrow_nid = hb.borrow_nid
+		LEFT JOIN ht_borrow_project_type hbpt ON hbpt.borrow_cd = hb.project_type
+		LEFT JOIN ht_debt_plan hdp ON hdp.debt_plan_nid = hdct.assign_plan_nid
+		<include refid="Where_selectCreditCreditList" />
+		ORDER BY hdct.create_time DESC
+		<if test="limitStart !=null and limitStart >= 0" >
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
+	</select>
+
+	<sql id="Where_selectInvestCreditList">
+		<where>
+			<if test="planOrderId != null and planOrderId != ''">
+				AND hdi.plan_order_id = #{planOrderId}
+			</if>
+			<if test="orderId != null and orderId != ''">
+				AND hdi.order_id= #{orderId}
+			</if>
+			<if test="status != null and (status == '11' or status == 11) ">
+				AND hdp.debt_plan_status = 11
+			</if>
+			<if test="status == null or status == '5' or status == 5">
+				AND hdp.debt_plan_status in (5,6,7,8,9,10)
+			</if>
+			<if test="type != null and type != ''">
+				AND type =#{type}
+			</if>
+		</where>
+	</sql>
+
+
+	<sql id="Where_selectCreditCreditList">
+		<where>
+			<if test="type == null or type == ''">
+				AND hdct.del_flag=1
+			</if>
+			<if test="planOrderId != null and planOrderId != ''">
+				AND hdct.assign_plan_order_id = #{planOrderId}
+			</if>
+			<if test="orderId != null and orderId != ''">
+				AND hdct.assign_order_id= #{orderId}
+			</if>
+			<if test="status != null and (status == '11' or status == 11) ">
+				AND hdp.debt_plan_status = 11
+			</if>
+			<if test="status == null or status == '5' or status == 5">
+				AND hdp.debt_plan_status in (5,6,7,8,9,10,11)
+			</if>
+			<if test="type != null and type != ''">
+				AND type =#{type}
+			</if>
+		</where>
+	</sql>
+
+
+
+
+	<select id="selectUserProjectListCapital" resultMap="selectPlanListMap" parameterType="java.util.HashMap">
+		SELECT
+		case when dp.liquidate_fact_time=0 then 0 else FROM_UNIXTIME(
+		dp.liquidate_fact_time,
+		'%Y-%m-%d'
+		) end liquidate_fact_time,
+		case when dp.liquidate_should_time=0 then 0 else  FROM_UNIXTIME(
+		dp.liquidate_should_time,
+		'%Y-%m-%d'
+		) end liquidate_should_time,
+		FROM_UNIXTIME(
+		dp.repay_time,
+		'%Y-%m-%d'
+		) repay_time,
+		DATE_FORMAT(
+		DATE_ADD(
+		FROM_UNIXTIME(
+		dp.liquidate_should_time,
+		'%Y-%m-%d'
+		),INTERVAL dp.debt_quit_period-1 DAY
+		),'%Y-%m-%d'
+		) last_repay_time,
+		dp.debt_lock_period,
+		dp.debt_quit_period,
+		dp.expect_apr,
+		dp.debt_plan_status,
+		dpa.id,
+		dpa.accede_order_id,
+		dpa.freeze_order_id,
+		dpa.plan_nid debt_plan_nid,
+		dp.debt_plan_name debt_plan_name,
+		dpa.user_id,
+		dpa.user_name,
+		dpa.accede_account,
+		dpa.accede_balance,
+		dpa.accede_frost,
+		dpa.repay_account,
+		dpa.liquidates_repay_frost,
+		dpa.service_fee,
+		dpa.service_fee_rate,
+		dpa.repay_account_yes  repay_account_fact,
+		dpa.repay_account_wait,
+		dpa.repay_account_yes,
+		dpa.repay_capital,
+		dpa.repay_capital_yes,
+		dpa.repay_interest,
+		dpa.repay_interest_yes  repay_interest_fact,
+		dpa.repay_interest_wait,
+		dpa.repay_interest_yes,
+		dpa.cycle_times,
+		dpa.status,
+		dpa.expire_fair_value,
+		IFNULL(dpa.repay_interest_yes,0.00)  money,
+		IFNULL(TRUNCATE (
+		(
+		(
+		SELECT
+		SUM(CASE WHEN hb.borrow_style='end'
+		THEN
+		TRUNCATE (	hdd.repay_capital_wait + hdd.repay_interest_wait*
+		datediff(DATE_FORMAT(NOW(),'%Y-%m-%d'),FROM_UNIXTIME(hb.recover_last_time,'%Y-%m-%d'))/
+		datediff(FROM_UNIXTIME(hb.repay_last_time,'%Y-%m-%d'),FROM_UNIXTIME(hb.recover_last_time,'%Y-%m-%d')) ,2)
+		WHEN hb.borrow_style='endday'
+		THEN
+		TRUNCATE (	hdd.repay_capital_wait + hdd.repay_interest_wait*
+		datediff(DATE_FORMAT(NOW(),'%Y-%m-%d'),FROM_UNIXTIME(hb.recover_last_time,'%Y-%m-%d'))/
+		hb.borrow_period,2)
+		ELSE
+		TRUNCATE (	(SELECT sum(repay_capital_wait) FROM ht_debt_detail WHERE order_id=hdd.order_id  and status=1) + IFNULL((SELECT SUM(repay_interest_wait) FROM ht_debt_detail   WHERE  order_id=hdd.order_id AND late_days!=0  and status=1),0) +
+		hdd.repay_interest_wait*
+		datediff(DATE_FORMAT(NOW(),'%Y-%m-%d'),
+		DATE_FORMAT(DATE_SUB(FROM_UNIXTIME(hdd.repay_time),INTERVAL 1 MONTH),'%Y-%m-%d'))/
+		ABS(datediff(DATE_FORMAT(DATE_SUB(FROM_UNIXTIME(hdd.repay_time),INTERVAL 1 MONTH),'%Y-%m-%d'),
+		FROM_UNIXTIME(hdd.repay_time,'%Y-%m-%d')))
+
+		,2)
+		END )
+		FROM
+		ht_debt_detail hdd
+		LEFT JOIN ht_debt_borrow hb ON hdd.borrow_nid = hb.borrow_nid
+		WHERE
+		hdd. STATUS = 1
+		AND hdd.plan_order_id = dpa.accede_order_id
+		AND plan_nid = dpa.plan_nid
+		AND
+		((	hb.borrow_style <![CDATA[<>]]> 'end' and hb.borrow_style <![CDATA[<>]]> 'endday'	AND	DATE_FORMAT(FROM_UNIXTIME(hdd.repay_time),'%Y-%m-%d') <![CDATA[>=]]> DATE_FORMAT(NOW(),'%Y-%m-%d')
+		AND 	DATE_FORMAT(DATE_SUB(FROM_UNIXTIME(hdd.repay_time),INTERVAL 1 MONTH),'%Y-%m-%d') <![CDATA[<]]> DATE_FORMAT(NOW(),'%Y-%m-%d'))
+		OR 		(	hb.borrow_style = 'end' or hb.borrow_style = 'endday'	)  )
+		) + dpa.accede_frost + dpa.accede_balance+dpa.liquidates_credit_frost+dpa.liquidates_repay_frost+dpa.service_fee - dpa.accede_account
+		) / dpa.accede_account * 360 / datediff(DATE_FORMAT(NOW(),'%Y-%m-%d'),FROM_UNIXTIME(dp.plan_lock_time,'%Y-%m-%d'))* 100,
+		2
+		),0) factApr,
+		DATE_FORMAT(
+		dpa.create_time,
+		'%Y-%m-%d %H:%i:%s'
+		) create_time,
+		DATE_FORMAT(
+		dpa.create_time,
+		'%Y-%m-%d'
+		) create_time_day,
+		DATE_FORMAT(
+		dpa.create_time,
+		'%Y-%m-%d %H:%i'
+		) create_time_fen,
+		'1' AS tender_type,
+		'' AS coupon_type,
+		'' AS coupon_user_code
+
+		FROM
+		ht_debt_plan_accede dpa
+		left join ht_debt_plan dp on dpa.plan_nid=dp.debt_plan_nid
+		<include refid="Where_Clause" />
+
+		ORDER BY create_time DESC
+		<if test="limitStart != null and limitStart >= 0" >
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
+	</select>
+
+
+	<sql id="Where_Clause">
+		<where>
+			<if test="userId != null and userId != ''">
+				AND dpa.user_id = #{userId}
+			</if>
+			<if test="accedeOrderId != null and accedeOrderId != ''">
+				AND dpa.accede_order_id LIKE CONCAT('%', #{accedeOrderId}, '%')
+			</if>
+		</where>
+	</sql>
+
+	<resultMap id="selectPlanListMap" type="com.hyjf.am.vo.trade.PlanLockCustomizeVO">
+		<result column="liquidate_fact_time" property="liquidateFactTime" jdbcType="VARCHAR" />
+		<result column="liquidate_should_time" property="liquidateShouldTime" jdbcType="VARCHAR" />
+		<result column="repay_time" property="repayTime" jdbcType="VARCHAR" />
+		<result column="id" property="id" jdbcType="VARCHAR" />
+		<result column="debt_plan_status" property="debtPlanStatus" jdbcType="VARCHAR" />
+		<result column="debt_lock_period" property="debtLockPeriod" jdbcType="VARCHAR" />
+		<result column="debt_quit_period" property="debtQuitPeriod" jdbcType="VARCHAR" />
+		<result column="expect_apr" property="expectApr" jdbcType="VARCHAR" />
+		<result column="accede_order_id" property="accedeOrderId" jdbcType="VARCHAR" />
+		<result column="freeze_order_id" property="freezeOrderId" jdbcType="VARCHAR" />
+		<result column="debt_plan_nid" property="debtPlanNid" jdbcType="VARCHAR" />
+		<result column="debt_plan_name" property="debtPlanName" jdbcType="VARCHAR" />
+		<result column="user_id" property="userId" jdbcType="VARCHAR" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="accede_account" property="accedeAccount" jdbcType="VARCHAR" />
+		<result column="accede_balance" property="accedeBalance" jdbcType="VARCHAR" />
+		<result column="accede_frost" property="accedeFrost" jdbcType="VARCHAR" />
+		<!-- 已派息  -->
+		<result column="money" property="money" jdbcType="VARCHAR" />
+		<result column="factApr" property="factApr" jdbcType="VARCHAR" />
+		<result column="cycle_times" property="cycleTimes" jdbcType="VARCHAR" />
+		<result column="status" property="status" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
+		<result column="create_time_day" property="createTimeDay" jdbcType="VARCHAR" />
+		<result column="create_time_fen" property="createTimeFen" jdbcType="VARCHAR" />
+		<result column="repay_account" property="repayAccount" jdbcType="VARCHAR" />
+		<result column="repay_account_wait" property="repayAccountWait" jdbcType="VARCHAR" />
+		<result column="repay_account_yes" property="repayAccountYes" jdbcType="VARCHAR" />
+		<result column="repay_time" property="repayTime" jdbcType="VARCHAR" />
+		<result column="repay_capital" property="repayCapital" jdbcType="VARCHAR" />
+		<result column="repay_capital_yes" property="repayCapitalYes" jdbcType="VARCHAR" />
+		<result column="repay_interest" property="repayInterest" jdbcType="VARCHAR" />
+		<result column="repay_interest_wait" property="repayInterestWait" jdbcType="VARCHAR" />
+		<result column="repay_interest_yes" property="repayInterestYes" jdbcType="VARCHAR" />
+		<result column="repay_account_fact" property="repayAccountFact" jdbcType="VARCHAR" />
+		<result column="repay_interest_fact" property="repayInterestFact" jdbcType="VARCHAR" />
+		<result column="service_fee" property="serviceFee" jdbcType="VARCHAR" />
+		<result column="service_fee_rate" property="serviceFeeRate" jdbcType="VARCHAR" />
+		<result column="expire_fair_value" property="expireFairValue" jdbcType="VARCHAR" />
+		<result column="liquidates_repay_frost" property="liquidatesRepayFrost" jdbcType="VARCHAR" />
+		<result column="last_repay_time" property="lastRepayTime" jdbcType="VARCHAR" />
+		<result column="tender_type" property="tenderType" jdbcType="VARCHAR" />
+		<result column="coupon_type" property="couponType" jdbcType="VARCHAR" />
+		<result column="coupon_user_code" property="couponUserCode" jdbcType="VARCHAR" />
+	</resultMap>
+
+
+	<select id="selectPlanInfoSum" resultType="java.lang.String" parameterType="java.lang.String">
+			SELECT
+			IFNULL((
+				SELECT
+					sum(account)
+				FROM
+					ht_debt_invest
+				WHERE
+					plan_order_id = #{value}
+			),0) + IFNULL((
+				SELECT
+					sum(assign_pay)
+				FROM
+					ht_debt_credit_tender
+				WHERE
+					assign_plan_order_id = #{value}
+				AND STATUS = 0
+			),0) investSum
+		FROM
+			DUAL
+	</select>
+
+</mapper>

@@ -589,4 +589,18 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
         }
         return dated;
     }
+    /**
+     * add by nxl 更新account表的account_id
+     * @param account
+     * @return
+     */
+    @Override
+    public Integer updAccountId(Account account){
+        int intUpd =accountMapper.updateByPrimaryKeySelective(account);
+        if(intUpd<=0){
+            throw new RuntimeException("更新accountId失败,id为:"+account.getId());
+        }
+        return intUpd;
+    }
+
 }

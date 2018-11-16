@@ -227,4 +227,12 @@ public class WebAssetManageController extends BaseTradeController {
         return result;
     }
 
+
+    @ApiOperation(value = "汇添金详情", notes = "汇添金详情")
+    @PostMapping(value = "getHtjDetail", produces = "application/json;charset=utf-8")
+    public WebResult<Object> getHtjDetail(@RequestHeader(value = "userId") Integer userId,AssetManagePlanRequest request){
+        WebResult result = assetManageService.getHtjDetail(request, userId);
+        return result;
+    }
+
 }
