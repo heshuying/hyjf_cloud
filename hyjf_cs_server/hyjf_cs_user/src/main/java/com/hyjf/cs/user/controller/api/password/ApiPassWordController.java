@@ -28,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -39,7 +38,6 @@ import java.util.Map;
  */
 @Api(value = "api端-密码相关服务",tags = "api端-密码相关服务")
 @Controller
-@RestController
 @RequestMapping("/hyjf-api/server/user/transpassword")
 public class ApiPassWordController extends BaseController {
     private static final Logger logger = LoggerFactory.getLogger(ApiPassWordController.class);
@@ -52,8 +50,11 @@ public class ApiPassWordController extends BaseController {
 
     public static final String CALL_BACK_TRANSPASSWORD_VIEW = "/callback/callback_transpassword";
 
-    /** 设置密码失败页面*/
-    public static final String PASSWORD_ERROR_PATH = "/bank/user/personalsetting/error";
+
+/*    @GetMapping("/password")
+    public String password(Model model){
+        return "password";
+    }*/
 
     /**
      * 设置交易密码
@@ -62,15 +63,14 @@ public class ApiPassWordController extends BaseController {
      */
     @ApiOperation(value = "设置交易密码", notes = "设置交易密码")
     @PostMapping(value = "/setPassword.do")
-    public ModelAndView setPassword(@RequestBody ThirdPartyTransPasswordRequestBean transPasswordRequestBean,RedirectAttributes redirectAttributes) {
+    public ModelAndView setPassword(@RequestBody ThirdPartyTransPasswordRequestBean transPasswordRequestBean) {
         logger.info("api端设置交易密码 start");
         ModelAndView modelAndView = new ModelAndView();
         logger.info("第三方请求参数："+JSONObject.toJSONString(transPasswordRequestBean));
         Map<String,Object> map = passWordService.apiCheack(transPasswordRequestBean,BankCallConstant.TXCODE_PASSWORD_RESET_PAGE, BaseDefine.METHOD_SERVER_SET_PASSWORD);
-        ModelAndView result = (ModelAndView) map.get("modelAndView");
-        result.addObject("callBackAction",transPasswordRequestBean.getRetUrl());
+        map.put("callBackAction",transPasswordRequestBean.getRetUrl());
         if (null==map.get("flag")){
-            return callbackErrorView(result);
+            return callbackErrorViewForMap(map);
         }
         UserVO user = (UserVO) map.get("user");
         BankOpenAccountVO bankOpenAccount = (BankOpenAccountVO) map.get("bankOpenAccount");
@@ -147,6 +147,7 @@ public class ApiPassWordController extends BaseController {
      * @return
      */
     @ApiOperation(value = " 设置交易密码异步回调",notes = " 设置交易密码异步回调")
+    @ResponseBody
     @PostMapping(value = "/passwordBgreturn")
     public BankCallResult passwordBgreturn(HttpServletRequest request, @ModelAttribute BankCallBean bean) {
         logger.info("api 交易密码异步回调start");
@@ -202,10 +203,9 @@ public class ApiPassWordController extends BaseController {
        ModelAndView modelAndView = new ModelAndView();
         logger.info("第三方请求参数："+JSONObject.toJSONString(transPasswordRequestBean));
         Map<String,Object> map = passWordService.apiCheack(transPasswordRequestBean, BankCallConstant.TXCODE_PASSWORD_RESET_PAGE,BaseDefine.METHOD_SERVER_RESET_PASSWORD);
-        ModelAndView result = (ModelAndView) map.get("modelAndView");
-        result.addObject("callBackAction",transPasswordRequestBean.getRetUrl());
+        map.put("callBackAction",transPasswordRequestBean.getRetUrl());
         if (null==map.get("flag")){
-            return callbackErrorView(result);
+            return callbackErrorViewForMap(map);
         }
         UserVO user = (UserVO) map.get("user");
         BankOpenAccountVO bankOpenAccount = (BankOpenAccountVO) map.get("bankOpenAccount");
