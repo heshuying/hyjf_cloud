@@ -10,6 +10,7 @@ import com.hyjf.cs.trade.service.recharge.DirectRechargeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -38,7 +39,7 @@ public class UserDirectRechargeController extends BaseTradeController {
      * @param request
      * @return
      */
-    @ResponseBody
+    @ApiOperation(value = "页面充值")
     @PostMapping(value = "/recharge.do")
     public ModelAndView recharge(@RequestBody UserDirectRechargeRequestBean userRechargeRequestBean, HttpServletRequest request) {
         logger.info("api充值   请求参数  ",userRechargeRequestBean);

@@ -14,12 +14,14 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.bean.*;
+import com.hyjf.cs.trade.bean.BaseDefine;
+import com.hyjf.cs.trade.bean.BaseResultBean;
+import com.hyjf.cs.trade.bean.TrusteePayResultBean;
+import com.hyjf.cs.trade.bean.UserDirectRechargeRequestBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.recharge.DirectRechargeService;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
-import com.hyjf.cs.trade.util.SignUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -159,11 +161,11 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
 
             // 拼装参数  调用江西银行
             // 同步调用路径
-            String retUrl = "http://CS-USER/hyjf-api/server/user/directRechargePage/directRechargePageReturn.do?acqRes="
+            String retUrl = "http://CS-TRADE/hyjf-api/server/user/directRechargePage/directRechargePageReturn?acqRes="
                     + userRechargeRequestBean.getAcqRes() + StringPool.AMPERSAND + "callback="
                     + userRechargeRequestBean.getRetUrl().replace("#", "*-*-*");
             // 异步调用路
-            String bgRetUrl = "http://CS-USER/hyjf-api/server/user/directRechargePage/directRechargePageBgreturn.do?acqRes="
+            String bgRetUrl = "http://CS-TRADE/hyjf-api/server/user/directRechargePage/directRechargePageBgreturn?acqRes="
                     + userRechargeRequestBean.getAcqRes() + "&phone="+userRechargeRequestBean.getMobile()+"&callback=" + userRechargeRequestBean.getBgRetUrl().replace("#", "*-*-*");
 
             // 用户ID
