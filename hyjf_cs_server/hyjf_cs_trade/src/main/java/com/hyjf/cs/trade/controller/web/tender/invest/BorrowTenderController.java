@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
@@ -82,6 +83,12 @@ public class BorrowTenderController extends BaseTradeController {
         tender.setPlatform(String.valueOf(ClientConstants.WEB_CLIENT));
         Map<String,Object>  resultMap =  borrowTenderService.borrowTenderCheck(tender,null,null,null,null);
         result.setData(resultMap);
+        //用户测评校验状态转换
+        if(resultMap!=null){
+            if(resultMap.get("riskTested") != null && resultMap.get("riskTested") != ""){
+                result.setStatus((String) resultMap.get("riskTested"));
+            }
+        }
         return result;
     }
 
