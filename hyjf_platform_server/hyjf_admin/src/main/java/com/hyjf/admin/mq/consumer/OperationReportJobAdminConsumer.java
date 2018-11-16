@@ -50,9 +50,9 @@ public class OperationReportJobAdminConsumer extends Consumer {
     @Override
     public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
         defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
-        defaultMQPushConsumer.setConsumerGroup(MQConstant.OPERATIONREPORT_JOB_ADMIN_TOPIC);
+        defaultMQPushConsumer.setConsumerGroup(MQConstant.OPERATIONREPORT_JOB_ADMIN_GROUP);
         // 订阅指定MyTopic下tags等于MyTag
-        defaultMQPushConsumer.subscribe(MQConstant.PC_CHANNEL_STATISTICS_ADMIN_TOPIC, "*");
+        defaultMQPushConsumer.subscribe(MQConstant.OPERATIONREPORT_JOB_ADMIN_TOPIC, "*");
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
         // 如果非第一次启动，那么按照上次消费的位置继续消费
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
@@ -95,6 +95,8 @@ public class OperationReportJobAdminConsumer extends Consumer {
                 bean.setTenderCount(aa);
                 //代偿金额
                 bean.setWillPayMoney(amAdminClient.getRepayTotal(getLastDay(cal)));
+                //业绩总览
+                bean.setListPerformanceSum(amAdminClient.getPerformanceSum());
                 if (lastMonth == 12) {
                     // 全年度12个月成交金额
                     bean.setListMonthDealMoney(amAdminClient.getMonthDealMoney(0, 12));
