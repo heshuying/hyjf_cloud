@@ -53,7 +53,7 @@
     </select>
 
     <resultMap id="searchBorrowRepayAgreementListResultMap"
-               type="com.hyjf.am.trade.dao.model.customize.BorrowRepayAgreementCustomize">
+               type="com.hyjf.am.vo.admin.BorrowRepayAgreementCustomizeVO">
         <result column="repayUserId" property="repayUserId" jdbcType="VARCHAR" />
         <result column="repayUsername" property="repayUsername" jdbcType="VARCHAR" />
         <result column="borrowNid" property="borrowNid" jdbcType="VARCHAR" />
