@@ -116,12 +116,17 @@ public class SensorsDataLoginServiceImpl extends BaseServiceImpl implements Sens
             // 根据utmId查询渠道信息
             Integer utmId = utmReg.getUtmId();
             UtmVO utm = this.amUserClient.selectUtmByUtmId(utmId);
-            // 获取source_id
-            Integer sourceId = utm.getSourceId();
-            // 根据source_id 获取推过渠道信息
-            UtmPlatVO utmPlat = this.amUserClient.selectUtmPlatBySourceId(sourceId);
-            // 注册渠道
-            profiles.put("registerChannel", utmPlat == null ? "" : utmPlat.getSourceName());
+            if (utm !=null) {
+                // 获取source_id
+                Integer sourceId = utm.getSourceId();
+                // 根据source_id 获取推过渠道信息
+                UtmPlatVO utmPlat = this.amUserClient.selectUtmPlatBySourceId(sourceId);
+                // 注册渠道
+                profiles.put("registerChannel", utmPlat == null ? "" : utmPlat.getSourceName());
+            }else{
+                logger.error("根据utmId查询推广渠道失败,utmId:["+utmId+"]");
+                profiles.put("registerChannel", "");
+            }
         }
 
         // 如果 是用户app注册渠道过来的

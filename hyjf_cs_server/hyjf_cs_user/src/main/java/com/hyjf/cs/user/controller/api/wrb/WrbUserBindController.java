@@ -46,7 +46,7 @@ import java.util.Map;
 /**
  * @author dongzeshan
  */
-@Api(value = "风车理财第三方登录",tags = "api端-风车理财第三方登录")
+@Api(value = "风车理财第三方登录绑定",tags = "api端-风车理财第三方登录绑定")
 @Controller
 @RequestMapping("/hyjf-wechat/api/user")
 public class WrbUserBindController extends BaseUserController {

@@ -1,9 +1,8 @@
 package com.hyjf.admin.service.impl.promotion;
 
 import com.hyjf.admin.client.AmAdminClient;
-import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.promotion.AppChannelStatisticsDetailService;
-import com.hyjf.am.response.app.AppUtmRegResponse;
+import com.hyjf.am.response.admin.AppUtmRegResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import org.springframework.stereotype.Service;
@@ -19,8 +18,6 @@ import java.util.List;
 public class AppChannelStatisticsDetailServiceImpl implements AppChannelStatisticsDetailService {
     @Resource
     private AmAdminClient amAdminClient;
-    @Resource
-    private AmUserClient amUserClient;
 
     @Override
     public List<UtmPlatVO> getAppUtm(){
@@ -29,10 +26,10 @@ public class AppChannelStatisticsDetailServiceImpl implements AppChannelStatisti
 
     @Override
     public AppUtmRegResponse getstatisticsList(AppChannelStatisticsDetailRequest request) {
-        return amUserClient.getstatisticsList(request);
+        return amAdminClient.getstatisticsList(request);
     }
     @Override
     public AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request) {
-        return amUserClient.exportStatisticsList(request);
+        return amAdminClient.exportStatisticsList(request);
     }
 }

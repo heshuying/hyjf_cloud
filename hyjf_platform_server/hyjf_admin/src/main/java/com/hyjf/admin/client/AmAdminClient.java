@@ -36,12 +36,14 @@ import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.config.SubmissionsVO;
 import com.hyjf.am.vo.market.AdsVO;
+import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -51,12 +53,157 @@ import java.util.List;
 public interface AmAdminClient {
 
     /**
+     * 按照省份统计投资人的分布
+     * @param date 上个月的最后一天
+     */
+    List<OperationReportJobVO> getTenderCityGroupByList(Date date);
+    /**
+     * 按照性别统计投资人的分布
+     * @param date 上个月的最后一天
+     */
+    List<OperationReportJobVO>  getTenderSexGroupByList(Date date);
+    /**
+     * 充值金额、充值笔数
+     *
+     * @param intervalMonth 今年间隔月份
+     */
+    List<OperationReportJobVO> getRechargeMoneyAndSum(int intervalMonth);
+    /**
+     * 渠道分析 ，成交笔数
+     *
+     * @param intervalMonth 今年间隔月份
+     * @return
+     */
+    List<OperationReportJobVO> getCompleteCount(int intervalMonth);
+    /**
+     * 用户分析 - 性别分布
+     *
+     * @param intervalMonth 今年间隔月份
+     * @return
+     */
+    List<OperationReportJobVO> getSexDistribute( int intervalMonth);
+
+    /**
+     * 用户分析 - 年龄分布
+     *
+     * @param intervalMonth 今年间隔月份
+     * @return
+     */
+    List<OperationReportJobVO> getAgeDistribute( int intervalMonth);
+
+    /**
+     * 用户分析 - 金额分布
+     *
+     * @param intervalMonth 今年间隔月份
+     * @return
+     */
+    List<OperationReportJobVO> getMoneyDistribute( int intervalMonth);
+    /**
+     * 当月、季、半年、全年业绩  下面的  成交金额,根据月份计算
+     *
+     * @param startMonth 开始月份
+     * @param endMonth   结束月份
+     * @return
+     */
+    List<OperationReportJobVO> getMonthDealMoney(int startMonth,int endMonth);
+
+    /**
+     * 大赢家，收益最高
+     *
+     * @param intervalMonth 今年间隔月份
+     * @return
+     */
+    List<OperationReportJobVO> getOneInterestsMost(int intervalMonth);
+    /**
+     * 超活跃，投资笔数最多
+     *
+     * @param intervalMonth 今年间隔月份
+     * @return
+     */
+    List<OperationReportJobVO> getOneInvestMost(int intervalMonth);
+    /**
+     * 借款期限
+     *
+     * @param intervalMonth 今年间隔月份
+     * @return
+     */
+    List<OperationReportJobVO> getBorrowPeriod(int intervalMonth);
+    /**
+     * 十大投资人
+     *
+     * @param intervalMonth 今年间隔月份
+     * @return
+     */
+    List<OperationReportJobVO> getTenMostMoney( int intervalMonth);
+
+    /**
+     * 今年这个时候到手收益 和 去年这个时候到手收益 和  预期收益率
+     *
+     * @param intervalMonth 今年间隔月份
+     * @param startMonth    去年开始月份
+     * @param endMonth      去年结束月份
+     * @return
+     */
+    List<OperationReportJobVO> getRevenueAndYield(int intervalMonth,int startMonth,int endMonth);
+    /**
+     * 按月统计交易笔数
+     * @param beginDate 统计月的第一天
+     * @param endDate	统计月的最后一天
+     * @return
+     */
+    int getTradeCountByMonth(Date beginDate,Date endDate);
+
+    /**
+     * 获取截至日期的投资金额
+     */
+    double getInvestLastDate(Date date);
+
+    /**
+     * 统计投资人总数，截至日期为上个月的最后一天
+     * @param date 上个月的最后一天
+     * @return
+     */
+    int getTenderCount(Date date);
+
+    /**
+     * 借贷笔数
+     */
+    int getLoanNum(Date date);
+    /**
+     * 按月统计平台的交易总额
+     *
+     * @param beginDate
+     *            统计月的第一天
+     * @param endDate
+     *            统计月的最后一天
+     * @return
+     */
+    BigDecimal getAccountByMonth(Date beginDate, Date endDate);
+    /**
+     *投资人按照年龄分布 返回符合条件所有用户
+     *
+     * @param date 上个月的最后一天
+     * @return
+     */
+    List<OperationReportJobVO>  getTenderAgeByRangeList(Date date);
+    /**
      * count PC统计明细列表
      *
      * @return
      */
      IntegerResponse countList(ChannelStatisticsDetailRequest request);
-
+    /**
+     * 平均满标时间
+     * @param date 统计月的最后一天
+     * @return
+     */
+    float getFullBillAverageTime(Date date);
+    /**
+     * 统计所有待偿金额，截至日期为上个月的最后一天
+     * @param date 上个月的最后一天
+     * @return
+     */
+    BigDecimal getRepayTotal(Date date);
     /**
      * 获取所有渠道
      * @param type 类型:app,pc
@@ -898,4 +1045,17 @@ public interface AmAdminClient {
 
 
     int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform);
+
+    /**
+     * 查询app渠道统计数据
+     * @param request
+     * @return
+     */
+    AppUtmRegResponse getstatisticsList(AppChannelStatisticsDetailRequest request);
+    /**
+     * 导出app渠道统计数据
+     * @param request
+     * @return
+     */
+    AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request);
 }
