@@ -154,8 +154,9 @@ public class BankCreditEndController extends BaseController {
     public IntegerResponse updateBankCreditEndForStatus(@RequestBody UpdateBankCreditEndForStatusRequest request){
         String batchNo = request.getBankCreditEndVO().getBatchNo();
         String txDate = request.getBankCreditEndVO().getTxDate();
+        Integer txCounts = request.getBankCreditEndVO().getTxCounts();
         int status = request.getStatus();
-        return new IntegerResponse(this.bankCreditEndService.updateBankCreditEndForStatus(batchNo, txDate, status));
+        return new IntegerResponse(this.bankCreditEndService.updateBankCreditEndForStatus(batchNo, txDate, txCounts, status));
     }
 
 

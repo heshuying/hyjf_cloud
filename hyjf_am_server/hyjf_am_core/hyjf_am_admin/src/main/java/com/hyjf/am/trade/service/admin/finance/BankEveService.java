@@ -22,7 +22,7 @@ public interface BankEveService {
      * 查询银行账务明细
      * @param mapParam
      */
-    List<EveLogCustomize> selectBankEveInfoList(Map<String, Object> mapParam, int offset, int limit);
+    List<EveLogCustomize> selectBankEveInfoList(Map<String, Object> mapParam);
 
 
 }

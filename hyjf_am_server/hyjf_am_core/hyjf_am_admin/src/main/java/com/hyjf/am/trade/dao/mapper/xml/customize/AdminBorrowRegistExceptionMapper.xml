@@ -36,7 +36,7 @@
 		ht_borrow b
 		LEFT JOIN ht_borrow_info bi ON bi.borrow_nid = b.borrow_nid
 		LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
-		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
+		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = b.project_type
 		<include refid="Where_Clause" />
 	</select>
 
@@ -80,7 +80,7 @@
 		ht_borrow b
 		LEFT JOIN ht_borrow_info bi ON bi.borrow_nid = b.borrow_nid
 		LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
-		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
+		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = b.project_type
 		<include refid="Where_Clause" />
 		ORDER BY
 		b.create_time DESC, b.id DESC

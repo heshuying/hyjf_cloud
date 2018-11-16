@@ -89,7 +89,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 				queryBorrowStyle = "month";
 			}
 			// 获取标的费率信息
-			String borrowClass = this.getBorrowProjectClass(borrowInfo.getProjectType()+ "");
+			String borrowClass = this.getBorrowProjectClass(borrowInfo.getProjectType());
 			BorrowFinmanNewCharge borrowFinmanNewCharge = this.selectBorrowApr(borrowClass,borrowInfo.getInstCode(),borrowInfo.getAssetType(),queryBorrowStyle,borrow.getBorrowPeriod());
 			if(borrowFinmanNewCharge == null || borrowFinmanNewCharge.getChargeMode() == null){
 				logger.info("获取标的费率信息失败。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]"+borrowClass);
@@ -455,7 +455,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		//确定是否自动还款
 		
 		// 获取标的费率信息
-		String borrowClass = this.getBorrowProjectClass(borrowInfo.getProjectType()+ "");
+		String borrowClass = this.getBorrowProjectClass(borrowInfo.getProjectType());
 		BorrowFinmanNewCharge borrowFinmanNewCharge = this.selectBorrowApr(borrowClass,borrowInfo.getInstCode(),borrowInfo.getAssetType(),queryBorrowStyle,borrow.getBorrowPeriod());
 		if(borrowFinmanNewCharge == null || borrowFinmanNewCharge.getChargeMode() == null){
 			logger.info("获取标的费率信息失败。[用户ID：" + borrowInfo.getUserId() + "]," + "[借款编号：" + borrowNid + "]"+borrowClass);
@@ -1636,7 +1636,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 	 * @return
 	 * @author Administrator
 	 */
-	private String getBorrowProjectClass(String borrowCd) {
+	private String getBorrowProjectClass(Integer borrowCd) {
 		BorrowProjectTypeExample example = new BorrowProjectTypeExample();
 		BorrowProjectTypeExample.Criteria cra = example.createCriteria();
 		cra.andStatusEqualTo(CustomConstants.FLAG_STATUS_ENABLE);

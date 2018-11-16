@@ -10,13 +10,11 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Map;
 
 @Api(value = "api端-受托支付申请接口", tags = "api端-受托支付申请接口")
 @Controller
@@ -35,7 +33,11 @@ public class ApiTrusteePayController extends BaseController {
     @ApiOperation(value = "借款人受托支付申请", notes = "借款人受托支付申请")
     @RequestMapping(value = "/page.do")
     public ModelAndView trusteePay(HttpServletRequest request, @RequestBody TrusteePayRequestBean payRequestBean) {
-        return trusteePayService.trusteePayApply(request, payRequestBean);
+        ModelAndView result = trusteePayService.trusteePayApply(request, payRequestBean);
+        if (null != result && result.getModel().get("error") != null && "true".equals(result.getModel().get("error"))) {
+            return callbackErrorView(result);
+        }
+        return result;
     }
 
     /**
@@ -47,7 +49,8 @@ public class ApiTrusteePayController extends BaseController {
      */
     @RequestMapping("/trusteePayReturn")
     public ModelAndView trusteePayReturn(HttpServletRequest request, BankCallBean bean) {
-        return trusteePayService.trusteePayReturn(request, bean);
+        Map<String, String> map = trusteePayService.trusteePayReturn(request, bean);
+        return callbackErrorView(map);
     }
 
     /**
