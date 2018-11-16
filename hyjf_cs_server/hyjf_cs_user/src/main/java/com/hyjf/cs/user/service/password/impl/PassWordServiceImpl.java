@@ -26,7 +26,6 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseResultBean;
 import com.hyjf.cs.user.bean.ThirdPartyTransPasswordRequestBean;
-import com.hyjf.cs.user.bean.ThirdPartyTransPasswordResultBean;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmDataCollectClient;
 import com.hyjf.cs.user.client.AmUserClient;
@@ -379,7 +378,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         // 异步调用路
         String bgRetUrl = "http://CS-USER/hyjf-api/server/user/transpassword";
         // 调用设置密码接口
-        if(txCode.equals(BankCallConstant.TXCODE_PASSWORD_RESET_PAGE)){
+        if(txCode.equals(BankCallConstant.TXCODE_PASSWORD_SET_PAGE)){
             retUrl += "/passwordReturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&callback="+transPasswordRequestBean.getRetUrl().replace("#", "*-*-*");
             bgRetUrl += "/passwordBgreturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&callback="+transPasswordRequestBean.getBgRetUrl().replace("#", "*-*-*");
         }else {
@@ -722,7 +721,6 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         }
         //验签  暂时去掉验签
         if(!this.verifyRequestSign(transPasswordRequestBean, verifyValue)){
-            ThirdPartyTransPasswordResultBean repwdResult = new ThirdPartyTransPasswordResultBean();
             result.put("accountId", account);
             result.put("acqRes",acqRes);
             // 设置交易密码
