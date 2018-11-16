@@ -532,22 +532,15 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
     public Map<String, Object> getAssureOpenAccountMV(OpenAccountPageBean openBean) {
         {
             // 根据身份证号码获取性别
-            String gender = "";
-            int sexInt = Integer.parseInt(openBean.getIdNo().substring(16, 17));
-            if (sexInt % 2 == 0) {
-                gender = "F";
-            } else {
-                gender = "M";
-            }
+            String gender = "M";
             // 获取共同参数
             String idType = BankCallConstant.ID_TYPE_IDCARD;
             // 调用开户接口
-            BankCallBean openAccoutBean = new BankCallBean(openBean.getUserId(), BankCallConstant.TXCODE_ACCOUNT_OPEN_PAGE, Integer.parseInt(openBean.getPlatform()), BankCallConstant.BANK_URL_ACCOUNT_OPEN_PAGE);
+            BankCallBean openAccoutBean = new BankCallBean(openBean.getUserId(), BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE, Integer.parseInt(openBean.getPlatform()), BankCallConstant.BANK_URL_ACCOUNT_OPEN_PAGE);
             openAccoutBean.setIdentity(openBean.getIdentity());
             /**1：出借角色2：借款角色3：代偿角色*/
             openAccoutBean.setChannel(openBean.getChannel());
             openAccoutBean.setIdType(idType);
-            openAccoutBean.setIdNo(openBean.getIdNo());
             openAccoutBean.setName(openBean.getTrueName());
             openAccoutBean.setGender(gender);
             openAccoutBean.setMobile(openBean.getMobile());
@@ -563,7 +556,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             openAccoutBean.setSuccessfulUrl(successUrl);
             openAccoutBean.setNotifyUrl(bgRetUrl);
             openAccoutBean.setCoinstName(openBean.getCoinstName() == null ? "汇盈金服" : openBean.getCoinstName());
-            openAccoutBean.setLogRemark("页面开户");
+            openAccoutBean.setLogRemark("担保机构页面开户");
             openAccoutBean.setLogIp(openBean.getIp());
             openBean.setOrderId(openAccoutBean.getLogOrderId());
             try {
@@ -586,22 +579,15 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
     public Map<String, Object> getLoanOpenAccountMV(OpenAccountPageBean openBean) {
         {
             // 根据身份证号码获取性别
-            String gender = "";
-            int sexInt = Integer.parseInt(openBean.getIdNo().substring(16, 17));
-            if (sexInt % 2 == 0) {
-                gender = "F";
-            } else {
-                gender = "M";
-            }
+            String gender = "M";
             // 获取共同参数
             String idType = BankCallConstant.ID_TYPE_IDCARD;
             // 调用开户接口
-            BankCallBean openAccoutBean = new BankCallBean(openBean.getUserId(), BankCallConstant.TXCODE_ACCOUNT_OPEN_PAGE, Integer.parseInt(openBean.getPlatform()), BankCallConstant.BANK_URL_ACCOUNT_OPEN_PAGE);
+            BankCallBean openAccoutBean = new BankCallBean(openBean.getUserId(), BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE, Integer.parseInt(openBean.getPlatform()), BankCallConstant.BANK_URL_ACCOUNT_OPEN_PAGE);
             openAccoutBean.setIdentity(openBean.getIdentity());
             /**1：出借角色2：借款角色3：代偿角色*/
             openAccoutBean.setChannel(openBean.getChannel());
             openAccoutBean.setIdType(idType);
-            openAccoutBean.setIdNo(openBean.getIdNo());
             openAccoutBean.setName(openBean.getTrueName());
             openAccoutBean.setGender(gender);
             openAccoutBean.setMobile(openBean.getMobile());
@@ -617,7 +603,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             openAccoutBean.setSuccessfulUrl(successUrl);
             openAccoutBean.setNotifyUrl(bgRetUrl);
             openAccoutBean.setCoinstName(openBean.getCoinstName() == null ? "汇盈金服" : openBean.getCoinstName());
-            openAccoutBean.setLogRemark("页面开户");
+            openAccoutBean.setLogRemark("借款人页面开户");
             openAccoutBean.setLogIp(openBean.getIp());
             openBean.setOrderId(openAccoutBean.getLogOrderId());
             try {
