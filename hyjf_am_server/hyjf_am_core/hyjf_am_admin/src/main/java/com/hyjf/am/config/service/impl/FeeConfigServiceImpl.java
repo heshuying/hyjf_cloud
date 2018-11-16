@@ -6,6 +6,7 @@ import com.hyjf.am.config.dao.model.auto.FeeConfigExample;
 import com.hyjf.am.config.service.FeeConfigService;
 import com.hyjf.am.resquest.admin.AdminFeeConfigRequest;
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -112,5 +113,19 @@ public class FeeConfigServiceImpl implements FeeConfigService {
     @Override
     public void deleteFeeConfig( Integer id) {
         feeConfigMapper.deleteByPrimaryKey(id);
+    }
+    /**
+     * 手续费配置校验
+     * @return
+     */
+    @Override
+    public List<FeeConfig> validateFeeConfigBeforeAction(String name){
+        FeeConfigExample example = new FeeConfigExample();
+        FeeConfigExample.Criteria criteria = example.createCriteria();
+        // 条件查询
+        if (StringUtils.isNotBlank(name)) {
+            criteria.andNameEqualTo(name);
+        }
+        return feeConfigMapper.selectByExample(example);
     }
 }

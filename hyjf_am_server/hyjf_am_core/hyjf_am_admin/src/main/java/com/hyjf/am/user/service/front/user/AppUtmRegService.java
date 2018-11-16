@@ -1,9 +1,10 @@
 package com.hyjf.am.user.service.front.user;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.user.dao.model.auto.AppUtmReg;
+import com.hyjf.common.paginator.Paginator;
+
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -35,4 +36,20 @@ public interface AppUtmRegService {
      * @return
      */
     List<AppUtmReg> exportStatisticsList(AppChannelStatisticsDetailRequest request);
+
+
+    /**
+     * 查询总数
+     * @param request
+     * @return
+     */
+    Integer countAppUtmReg(AppChannelStatisticsDetailRequest request);
+
+    /**
+     * 列表查询
+     * @param request
+     * @param paginator
+     * @return
+     */
+    List<AppUtmReg> findAppUtmReg(AppChannelStatisticsDetailRequest request,Paginator paginator);
 }

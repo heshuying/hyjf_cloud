@@ -233,4 +233,10 @@ public class AmConfigClientImpl implements AmConfigClient {
 		IntegerResponse response = restTemplate.postForEntity("http://AM-USER/am-user/user/updateByUserId", users, IntegerResponse.class).getBody();
 		return response;
 	}
+
+	@Override
+	public IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize){
+		return  restTemplate.postForEntity("http://AM-CONFIG/am-config/content/idcard/idcarddetail",idCardCustomize, IdCardCustomize.class).getBody();
+	}
+
 }

@@ -89,7 +89,7 @@
         <result column="recover_period" property="recoverPeriod" jdbcType="VARCHAR" />
         <result column="transfer_time" property="transferTime" jdbcType="INTEGER" />
         <result column="recover_interest" property="recoverInterest" jdbcType="VARCHAR" />
-        <result column="recover_yestime" property="recoverYestime" jdbcType="INTEGER" />
+        <result column="recover_yestime" property="recoverYestime" jdbcType="VARCHAR" />
         <result column="recover_time" property="recoverTime" jdbcType="INTEGER" />
         <result column="recover_time_string" property="recoverTimeString" jdbcType="VARCHAR" />
         <result column="exp_time" property="expTime" jdbcType="INTEGER" />
@@ -1225,6 +1225,10 @@
             <if test="username != null and username != ''">
                 AND hu.username = #{username}
             </if>
+            <!-- 订单号 -->
+            <if test="orderId != null and orderId != ''">
+                AND hbt.nid = #{orderId}
+            </if>
             <!-- 优惠券id -->
             <if test="couponUserCode != null and couponUserCode != ''">
                 AND hcu.coupon_user_code = #{couponUserCode}
@@ -1260,6 +1264,10 @@
             <!-- 订单号 -->
             <if test="nid != null and nid != ''">
                 AND hbt.nid LIKE CONCAT( #{nid}, '%')
+            </if>
+            <!-- 订单号 -->
+            <if test="orderId != null and orderId != ''">
+                AND hbt.nid LIKE CONCAT( #{orderId}, '%')
             </if>
             <!-- 用户名 -->
             <if test="username != null and username != ''">
@@ -1498,6 +1506,10 @@
             <!-- 订单号 -->
             <if test="nid != null and nid != ''">
                 AND hbt.nid = #{nid}
+            </if>
+            <!-- 订单号 -->
+            <if test="orderId != null and orderId != ''">
+                AND hbt.nid = #{orderId}
             </if>
             <!-- 用户名 -->
             <if test="username != null and username != ''">

@@ -1,8 +1,10 @@
 package com.hyjf.cs.message.client;
 
 import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
+import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.am.vo.user.*;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,6 +21,54 @@ public interface AmUserClient {
 	 * @return
 	 */
 	UserVO findUserByMobile(final String mobile);
+
+	/**
+	 * 投资人按照年龄分布
+	 *
+	 * @param date 上个月的最后一天
+	 * @param firstAge  年龄下限
+	 * @param endAge	年龄上限
+	 * @return
+	 */
+	int getTenderAgeByRange(Date date, int firstAge, int endAge, List<OperationReportJobVO> ageRangeUserIds);
+
+	/**
+	 * 用户分析 - 年龄分布拆分
+	 *
+	 * @param list 用户ids
+	 * @return
+	 */
+	List<OperationReportJobVO> getAgeCount(List<OperationReportJobVO> list);
+
+	/**
+	 * 十大投资人拆分
+	 *
+	 * @param list 多个用户id
+	 * @return
+	 */
+	List<OperationReportJobVO> getUserNames( List<OperationReportJobVO> list);
+	/**
+	 * 通过用户ID查询 用户年龄，用户地区
+	 *
+	 * @param userId 用户ID
+	 * @return
+	 */
+	OperationReportJobVO getUserAgeAndArea(Integer userId);
+	/**
+	 * 通过时间统计平台注册人数
+	 * @param
+	 * @return
+	 *
+	 */
+	int countRegistUser();
+
+	/**
+	 * 用户分析 - 性别分布拆分
+	 *
+	 * @param list 用户ids
+	 * @return
+	 */
+	List<OperationReportJobVO> getSexCount( List<OperationReportJobVO> list);
 
 	/**
 	 * 根据userId查询用户

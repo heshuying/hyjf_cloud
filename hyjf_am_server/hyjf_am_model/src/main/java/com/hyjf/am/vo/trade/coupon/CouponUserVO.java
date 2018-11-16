@@ -4,6 +4,7 @@ import com.hyjf.am.vo.BaseVO;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @Description 优惠券相关
@@ -104,6 +105,11 @@ public class CouponUserVO extends BaseVO implements Serializable {
     private String couponInterest;
 
 
+    private Integer createUserId;
+
+    private Integer updateUserId;
+
+    private Date createTime;
 
     public Integer getId() {
         return id;
@@ -447,5 +453,30 @@ public class CouponUserVO extends BaseVO implements Serializable {
 
     public void setCouponInterest(String couponInterest) {
         this.couponInterest = couponInterest;
+    }
+
+
+    public Integer getCreateUserId() {
+        return createUserId;
+    }
+
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
+    }
+
+    public Integer getUpdateUserId() {
+        return updateUserId;
+    }
+
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
+    }
+
+    public Date getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
     }
 }

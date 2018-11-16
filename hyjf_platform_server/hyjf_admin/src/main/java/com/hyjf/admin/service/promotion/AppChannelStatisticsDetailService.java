@@ -2,7 +2,6 @@ package com.hyjf.admin.service.promotion;
 
 import java.util.List;
 
-import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.user.UtmPlatVO;
 
@@ -24,12 +23,12 @@ public interface AppChannelStatisticsDetailService {
      * @param request
      * @return
      */
-    AppUtmRegResponse getstatisticsList(AppChannelStatisticsDetailRequest request);
+    com.hyjf.am.response.admin.AppUtmRegResponse getstatisticsList(AppChannelStatisticsDetailRequest request);
 
     /**
      *导出app渠道统计明细
      * @param request
      * @return
      */
-    AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request);
+    com.hyjf.am.response.admin.AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request);
 }

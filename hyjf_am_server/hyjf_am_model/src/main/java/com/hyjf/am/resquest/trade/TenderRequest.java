@@ -73,6 +73,8 @@ public class TenderRequest extends BaseVO {
     @ApiModelProperty(value = "是否最后确认")
     private String isConfirm;
 
+    @ApiModelProperty(value = "神策预置属性")
+    private String presetProps;
     // 内部操作用
     private BankOpenAccountVO bankOpenAccount;
 
@@ -123,7 +125,11 @@ public class TenderRequest extends BaseVO {
      */
     private String userName;
 
-
+    /**
+     * 投资来源
+     * @return
+     */
+    private String tenderFrom;
 
     public String getIsConfirm() {
         return isConfirm;
@@ -371,5 +377,21 @@ public class TenderRequest extends BaseVO {
 
     public void setBorrowType(String borrowType) {
         this.borrowType = borrowType;
+    }
+
+    public String getTenderFrom() {
+        return tenderFrom;
+    }
+
+    public void setTenderFrom(String tenderFrom) {
+        this.tenderFrom = tenderFrom;
+    }
+
+    public String getPresetProps() {
+        return presetProps;
+    }
+
+    public void setPresetProps(String presetProps) {
+        this.presetProps = presetProps;
     }
 }

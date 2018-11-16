@@ -9,6 +9,7 @@ import com.hyjf.common.util.WrbParseParamUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.WrbRegisterRequestBean;
 import com.hyjf.cs.user.bean.WrbRegisterResultBean;
+import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.service.wrb.UserRegisterService;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author lisheng
@@ -41,6 +43,8 @@ public class WrbRegiestController {
     public static final String RETMSG = "注册平台异常，用户注册失败！";
     @Autowired
     UserRegisterService userRegisterService;
+    @Autowired
+    private LoginService loginService;
 
     @PostMapping("/register.do")
     public WrbRegisterResultBean userRegister(@RequestParam String param,
@@ -70,6 +74,14 @@ public class WrbRegiestController {
         // 注册平台
         String from = wrbRegisterRequestBean.getFrom();
         if (!(StringUtils.isNotBlank(from) && WRB.equals(from))) {
+            return resultBean;
+        }
+
+        //用户已授权验证
+        Integer userid = loginService.getUserIdByBind(Integer.parseInt(wrbRegisterRequestBean.getWrb_user_id()), WrbCommonDateUtil.FCLC_INSTCODE);
+        if(userid != null&&userid!=0){
+            resultBean.setRetcode(RETCODE2);
+            resultBean.setRetmsg("该用户已绑定汇盈金服");
             return resultBean;
         }
         // 机构编号
@@ -157,6 +169,7 @@ public class WrbRegiestController {
                     resultBean.setRetmsg("注册失败");
                     return resultBean;
                 } else {
+                    TimeUnit.SECONDS.sleep(2);//秒
                     UserVO users = this.userRegisterService.checkUserByUserId(userId);
                     if (users == null) {
                         log.info("根据用户ID获取用户信息表失败,用户ID:{}", userId);

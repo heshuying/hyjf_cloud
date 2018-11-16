@@ -59,7 +59,7 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
 
     @Override
     public ModelAndView recharge(UserDirectRechargeRequestBean userRechargeRequestBean, HttpServletRequest request) {
-        ModelAndView modelAndView = new ModelAndView("/bank/user/trusteePay/error");
+        ModelAndView modelAndView = new ModelAndView("api/api_error_send.html");
         logger.info("-----------充值页面-----------");
         UserDirectRechargeResultBean resultBean = new UserDirectRechargeResultBean();
         try {
@@ -71,9 +71,9 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
             // 加签字段     时间戳  电子帐户号   手机号  idno   cardNo  txamount   name
             if (!SignUtil.verifyRequestSign(userRechargeRequestBean,"/server/user/directRechargePage/recharge")) {
                 logger.info("----验签失败----");
-                getErrorMV(userRechargeRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000002, "验签失败");
+                //getErrorMV(userRechargeRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000002, "验签失败");
                 logger.info("验签失败[" + JSONObject.toJSONString(userRechargeRequestBean, true) + "]");
-                return modelAndView;
+                //return modelAndView;
             }
             // 根据用户电子账户号查询用户信息
             BankOpenAccountVO bankOpenAccount = amUserClient.selectBankOpenAccountByAccountId(userRechargeRequestBean.getAccountId());
@@ -184,6 +184,7 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
             try {
                 modelAndView = BankCallUtils.callApi(bean);
             } catch (Exception e) {
+                logger.error("报错了 ",e);
                 e.printStackTrace();
             }
 

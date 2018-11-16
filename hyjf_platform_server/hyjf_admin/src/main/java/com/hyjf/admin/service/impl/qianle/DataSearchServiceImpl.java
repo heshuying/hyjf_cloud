@@ -77,13 +77,13 @@ public class DataSearchServiceImpl implements DataSearchService {
 
     @Override
     public void saveSmsCode(String checkCode, String mobile, String platform) {
-        amUserClient.saveSmsCode(mobile, checkCode, CustomConstants.PARAM_TPL_ZHAOHUIMIMA, CommonConstant.CKCODE_NEW, CustomConstants.CLIENT_WECHAT);
+        adminClient.saveSmsCode(mobile, checkCode, CustomConstants.PARAM_TPL_ZHAOHUIMIMA, CommonConstant.CKCODE_NEW, CustomConstants.CLIENT_WECHAT);
 
     }
 
     @Override
     public int checkMobileCode(String phone, String code) {
-        return amUserClient.onlyCheckMobileCode(phone,code);
+        return adminClient.onlyCheckMobileCode(phone,code);
     }
 
 
