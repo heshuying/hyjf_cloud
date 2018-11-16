@@ -73,7 +73,7 @@ public interface AssetPushService extends BaseService {
      * @param borrowCd
      * @return
      */
-    List<BorrowProjectType> selectBorrowProjectByBorrowCd(String borrowCd);
+    List<BorrowProjectType> selectBorrowProjectByBorrowCd(Integer borrowCd);
 
     /**
      * 更新资产表

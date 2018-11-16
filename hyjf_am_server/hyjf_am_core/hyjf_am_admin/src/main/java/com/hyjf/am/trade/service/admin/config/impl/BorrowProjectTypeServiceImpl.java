@@ -84,7 +84,7 @@ public class BorrowProjectTypeServiceImpl implements BorrowProjectTypeService {
      */
     @Override
     public boolean isExistsRecord(BorrowProjectTypeVO record){
-        if (StringUtils.isEmpty(record.getBorrowCd())) {
+        if (record.getBorrowCd()==null) {
             return false;
         }
         BorrowProjectTypeExample example = new BorrowProjectTypeExample();
@@ -151,7 +151,7 @@ public class BorrowProjectTypeServiceImpl implements BorrowProjectTypeService {
         BorrowProjectType record = new BorrowProjectType();
         BeanUtils.copyProperties(form, record);
         // 插入用户表
-        record.setBorrowCd(form.getBorrowCd());
+        record.setBorrowCd(Integer.valueOf(form.getBorrowCd()));
         record.setBorrowProjectType(form.getBorrowProjectType());
         record.setStatus(0);
         record.setInvestUserType(Integer.valueOf(form.getInvestUserType()));
@@ -201,7 +201,7 @@ public class BorrowProjectTypeServiceImpl implements BorrowProjectTypeService {
         //汇赢金服的类型
         record.setInstCode(CustomConstants.INST_CODE_HYJF);
         //项目类型里编号存放string类型、tinyint类型最大值存放127
-        record.setAssetType(Integer.parseInt(form.getBorrowCd()));
+        record.setAssetType(form.getBorrowCd());
         //名称
         record.setAssetTypeName(form.getBorrowName());
         //状态
@@ -262,7 +262,7 @@ public class BorrowProjectTypeServiceImpl implements BorrowProjectTypeService {
     public void updateAsset(BorrowProjectType form) {
         HjhAssetTypeExample example = new HjhAssetTypeExample();
         HjhAssetTypeExample.Criteria cra = example.createCriteria();
-        cra.andAssetTypeEqualTo(Integer.parseInt(form.getBorrowCd()));
+        cra.andAssetTypeEqualTo(form.getBorrowCd());
         cra.andInstCodeEqualTo(CustomConstants.INST_CODE_HYJF);
 
         HjhAssetType record = new HjhAssetType();
@@ -285,7 +285,7 @@ public class BorrowProjectTypeServiceImpl implements BorrowProjectTypeService {
      * @param borrowCd
      */
     @Override
-    public void deleteProjectType(String borrowCd){
+    public void deleteProjectType(Integer borrowCd){
         BorrowProjectTypeExample example = new BorrowProjectTypeExample();
         BorrowProjectTypeExample.Criteria cra = example.createCriteria();
         cra.andBorrowCdEqualTo(borrowCd);
@@ -309,7 +309,7 @@ public class BorrowProjectTypeServiceImpl implements BorrowProjectTypeService {
      * @return
      */
     @Override
-    public int borrowCdIsExists( String borrowCd){
+    public int borrowCdIsExists( Integer borrowCd){
         BorrowProjectTypeExample example = new BorrowProjectTypeExample();
         BorrowProjectTypeExample.Criteria criteria = example.createCriteria();
         criteria.andBorrowCdEqualTo(borrowCd);

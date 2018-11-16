@@ -35,19 +35,10 @@ public class BankEveServiceImpl implements BankEveService {
      * 根据查询条件查询列表
      *
      * @param mapParam
-     * @param limitStart
-     * @param limitEnd
      * @return
      */
     @Override
-    public List<EveLogCustomize> selectBankEveInfoList(Map<String, Object> mapParam, int limitStart, int limitEnd) {
-        // 封装查询条件
-        if (limitStart == 0 || limitStart > 0) {
-            mapParam.put("limitStart", limitStart);
-        }
-        if (limitEnd > 0) {
-            mapParam.put("limitEnd", limitEnd);
-        }
+    public List<EveLogCustomize> selectBankEveInfoList(Map<String, Object> mapParam) {
         List<EveLogCustomize> manageList = eveLogMapper.selectBankEveInfoList(mapParam);
         return manageList;
     }
