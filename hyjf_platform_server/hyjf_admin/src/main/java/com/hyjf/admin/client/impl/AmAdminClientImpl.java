@@ -72,7 +72,14 @@ public class AmAdminClientImpl implements AmAdminClient {
         }
         return null;
     }
-
+    @Override
+    public List<OperationReportJobVO> getPerformanceSum(){
+        OperationReportJobResponse response =  restTemplate.getForEntity("http://AM-ADMIN/am-trade/report/operationreportjob/performancesum", OperationReportJobResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
     @Override
     public  List<OperationReportJobVO> getTenderSexGroupByList(Date date) {
         OperationReportJobRequest request = new OperationReportJobRequest();

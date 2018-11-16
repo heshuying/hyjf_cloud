@@ -44,7 +44,7 @@ public class OperationReportJobConsumer extends Consumer {
         defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
         defaultMQPushConsumer.setConsumerGroup(MQConstant.OPERATIONREPORT_JOB_GROUP);
         // 订阅指定MyTopic下tags等于MyTag
-        defaultMQPushConsumer.subscribe(MQConstant.PC_CHANNEL_STATISTICS_TOPIC, "*");
+        defaultMQPushConsumer.subscribe(MQConstant.OPERATIONREPORT_JOB_TOPIC, "*");
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
         // 如果非第一次启动，那么按照上次消费的位置继续消费
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
