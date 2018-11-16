@@ -24,7 +24,7 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
     @ApiModelProperty(value = "项目类型")
     private String borrowProjectType;
     @ApiModelProperty(value = "参数唯一标识")
-    private String borrowCd;
+    private Integer borrowCd;
     @ApiModelProperty(value = "名称")
     private String borrowName;
     @ApiModelProperty(value = "项目编号")
@@ -109,12 +109,12 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
         this.borrowProjectType = borrowProjectType == null ? null : borrowProjectType.trim();
     }
 
-    public String getBorrowCd() {
+    public Integer getBorrowCd() {
         return borrowCd;
     }
 
-    public void setBorrowCd(String borrowCd) {
-        this.borrowCd = borrowCd == null ? null : borrowCd.trim();
+    public void setBorrowCd(Integer borrowCd) {
+        this.borrowCd = borrowCd == null ? null : borrowCd;
     }
 
     public String getBorrowName() {

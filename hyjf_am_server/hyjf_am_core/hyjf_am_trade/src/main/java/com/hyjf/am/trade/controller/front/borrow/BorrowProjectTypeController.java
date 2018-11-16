@@ -169,7 +169,7 @@ public class BorrowProjectTypeController extends BaseController {
             this.borrowProjectTypeService.deleteProjectType(adminRequest.getBorrowCd());
             /*--------------------------add by LSY START-----------------------------------*/
             //删除asset表相应数据
-            this.borrowProjectTypeService.deleteAsset(Integer.parseInt(adminRequest.getBorrowCd()));
+            this.borrowProjectTypeService.deleteAsset(adminRequest.getBorrowCd());
             /*--------------------------add by LSY END-----------------------------------*/
             resp.setRtn(Response.SUCCESS);
             return resp;
@@ -184,7 +184,7 @@ public class BorrowProjectTypeController extends BaseController {
      */
     @RequestMapping("/borrowCdIsExists")
     public IntegerResponse borrowCdIsExists(@RequestBody BorrowProjectTypeRequest request){
-        int count = borrowProjectTypeService.borrowCdIsExists(request.getBorrowCd());
+        int count = borrowProjectTypeService.borrowCdIsExists(Integer.valueOf(request.getBorrowCd()));
         IntegerResponse response=new IntegerResponse();
         response.setResultInt(count);
        return response;

@@ -121,22 +121,22 @@ public class CouponConfigServiceImpl implements CouponConfigService {
     public List<BorrowProjectTypeVO> getCouponProjectTypeList() {
         List<BorrowProjectTypeVO> list=new ArrayList<>();
         BorrowProjectTypeVO borrowProjectType1=new BorrowProjectTypeVO();
-        borrowProjectType1.setBorrowCd("1");
+        borrowProjectType1.setBorrowCd(1);
         borrowProjectType1.setBorrowName("汇直投");
         list.add(borrowProjectType1);
 
         BorrowProjectTypeVO borrowProjectType2=new BorrowProjectTypeVO();
-        borrowProjectType2.setBorrowCd("2");
+        borrowProjectType2.setBorrowCd(2);
         borrowProjectType2.setBorrowName("汇消费");
         list.add(borrowProjectType2);
 
         BorrowProjectTypeVO borrowProjectType3=new BorrowProjectTypeVO();
-        borrowProjectType3.setBorrowCd("3");
+        borrowProjectType3.setBorrowCd(3);
         borrowProjectType3.setBorrowName("新手汇");
         list.add(borrowProjectType3);
 
         BorrowProjectTypeVO borrowProjectType4=new BorrowProjectTypeVO();
-        borrowProjectType4.setBorrowCd("4");
+        borrowProjectType4.setBorrowCd(4);
         borrowProjectType4.setBorrowName("尊享汇");
         list.add(borrowProjectType4);
 
@@ -146,7 +146,7 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 //        list.add(borrowProjectType5);
 
         BorrowProjectTypeVO borrowProjectType6=new BorrowProjectTypeVO();
-        borrowProjectType6.setBorrowCd("6");
+        borrowProjectType6.setBorrowCd(6);
         borrowProjectType6.setBorrowName("汇计划");
         list.add(borrowProjectType6);
         return list;
