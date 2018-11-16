@@ -55,10 +55,11 @@ public interface BankCreditEndService extends BaseService {
      * 根据批次号和日期，更新结束债权任务状态
      * @param batchNo
      * @param txDate
+     * @param txCounts
      * @param status
      * @return
      */
-    int updateBankCreditEndForStatus(String batchNo, String txDate, int status);
+    int updateBankCreditEndForStatus(String batchNo, String txDate, Integer txCounts, int status);
 
     /**
      * 合法性检查后，更新批次结束债权任务
