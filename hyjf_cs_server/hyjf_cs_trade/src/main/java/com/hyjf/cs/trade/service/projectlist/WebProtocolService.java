@@ -32,4 +32,12 @@ public interface WebProtocolService{
      * @return
      */
     void creditTransferAgreement(CreditAssignedBean tenderCreditAssignedBean, Integer currentUserId, HttpServletRequest request, HttpServletResponse response);
+
+
+    /**
+     *  汇计划投资服务协议
+     * @author zhangyk
+     * @date 2018/11/15 17:23
+     */
+    void  newHjhInvestPDF(ProtocolRequest form, HttpServletRequest request, HttpServletResponse response);
 }

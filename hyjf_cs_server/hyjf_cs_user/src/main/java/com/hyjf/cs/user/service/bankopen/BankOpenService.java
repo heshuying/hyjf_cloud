@@ -64,14 +64,14 @@ public interface BankOpenService extends BaseUserService {
 	 * @param openBean
 	 * @return
 	 */
-	Map<String,Object> getAssureOpenAccountMV(OpenAccountPageBean openBean);
+	Map<String,Object> getAssureOpenAccountMV(OpenAccountPageBean openBean,String sign);
 
 	/**
 	 * 获得借款人开户调用银行的参数
 	 * @param openBean
 	 * @return
 	 */
-	Map<String,Object> getLoanOpenAccountMV(OpenAccountPageBean openBean);
+	Map<String,Object> getLoanOpenAccountMV(OpenAccountPageBean openBean,String sign);
 
     OpenAccountPlusResult checkAndUpdateForSendCode(OpenAccountPlusRequest openAccountRequestBean, String ipAddr);
 

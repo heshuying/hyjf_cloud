@@ -73,7 +73,7 @@ public class SensorsDataAuthServiceImpl extends BaseServiceImpl implements Senso
         // 授权类型
         String authType = sensorsDataBean.getAuthType();
         if (StringUtils.isBlank(authType)) {
-            logger.error("神策数据统计:授权相关,授权订单号为空");
+            logger.error("神策数据统计:授权相关授权类型为空");
             return;
         }
 
@@ -87,14 +87,17 @@ public class SensorsDataAuthServiceImpl extends BaseServiceImpl implements Senso
         if (!"paymentAuth".equals(authType)) {
             properties.put("auth_name", "智投授权");
             if ("autoBid".equals(authType)) {
+                logger.info("自动投资授权:[" + authType + "],授权用户ID:[" + userId + "].");
                 if (hjhUserAuth.getAutoBidTime() != null) {
                     properties.put("auth_time", GetDate.getDateTimeMyTime(hjhUserAuth.getAutoBidTime()));
                 }
             } else if ("autoCredit".equals(authType)) {
+                logger.info("自动转让授权:[" + authType + "],授权用户ID:[" + userId + "].");
                 if (hjhUserAuth.getAutoCreditTime() != null) {
                     properties.put("auth_time", GetDate.getDateTimeMyTime(hjhUserAuth.getAutoCreditTime()));
                 }
             } else {
+                logger.info("多合一授权:[" + authType + "],授权用户ID:[" + userId + "].");
                 if (hjhUserAuth.getAutoCreditTime() != null) {
                     properties.put("auth_time", GetDate.getDateTimeMyTime(hjhUserAuth.getAutoCreditTime()));
                 }
@@ -104,6 +107,7 @@ public class SensorsDataAuthServiceImpl extends BaseServiceImpl implements Senso
             sa.shutdown();
         } else {
             properties.put("auth_name", "服务费授权");
+            logger.info("服务费授权:[" + authType + "],授权用户ID:[" + userId + "].");
             if (hjhUserAuth.getAutoPaymentTime() != null) {
                 properties.put("auth_time", GetDate.getDateTimeMyTime(hjhUserAuth.getAutoPaymentTime()));
             }

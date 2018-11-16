@@ -209,7 +209,7 @@
 
     <select id="getTenderAgeByRange" resultType="int"  parameterType="com.hyjf.am.resquest.trade.OperationReportJobRequest">
         	SELECT
-			count(t.user_id)
+			count(u.user_id)
 			FROM
 			  ht_user  u
 			  LEFT JOIN ht_user_info ui ON u.user_id = ui.user_id

@@ -11,6 +11,11 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.common.service.BaseServiceImpl;
+import com.hyjf.cs.common.util.ApiSignUtil;
+import com.hyjf.cs.trade.bean.BaseBean;
+import com.hyjf.cs.trade.bean.BaseDefine;
+import com.hyjf.cs.trade.bean.UserDirectRechargeRequestBean;
+import com.hyjf.cs.trade.bean.assetpush.UserWithdrawRequestBean;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
@@ -21,6 +26,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -245,6 +251,35 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
         UserVO users = amUserClient.findUserById(userId);
         return users;
     }
+    /**
+     * 验证外部请求签名
+     *
+     * @param paramBean
+     * @return
+     */
+    @Override
+    public boolean verifyRequestSign(BaseBean paramBean, String methodName) {
 
+        String sign = StringUtils.EMPTY;
+
+        // 机构编号必须参数
+        String instCode = paramBean.getInstCode();
+        if (StringUtils.isEmpty(instCode)) {
+            return false;
+        }
+
+        if(BaseDefine.METHOD_SERVER_WITHDRAW.equals(methodName)){
+            // 用户提现
+            UserWithdrawRequestBean bean = (UserWithdrawRequestBean)paramBean;
+            sign = bean.getChannel() + bean.getAccountId() + bean.getAccount() + bean.getCardNo() + bean.getRetUrl() + bean.getBgRetUrl() + bean.getTimestamp();
+        }else if("/server/user/directRechargePage/recharge".equals(methodName)){
+            // 页面充值
+            UserDirectRechargeRequestBean bean = (UserDirectRechargeRequestBean) paramBean;
+            sign = bean.getInstCode() + bean.getAccountId() + bean.getMobile() + bean.getIdNo() + bean.getCardNo()
+                    + bean.getTxAmount() + bean.getName() + bean.getRetUrl() + bean.getBgRetUrl() + bean.getTimestamp();
+        }
+
+        return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
+    }
 
 }

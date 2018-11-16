@@ -854,6 +854,9 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         throw  new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                     }
                     // 发送法大大协议
+                    logger.info("==========承接转让发送法大大协议:bidNid="+creditTender.getBidNid()+",assignNid="+creditTender.getAssignNid()+
+                            ",creditNid="+creditTender.getCreditNid()+",creditTenderNid="+creditTender.getCreditTenderNid());
+
                     this.sendPdfMQ(userId, creditTender.getBidNid(),creditTender.getAssignNid(), creditTender.getCreditNid(), creditTender.getCreditTenderNid());
                     // 发送承接完成短信
                     if (borrowCredit.getCreditCapitalAssigned().compareTo(borrowCredit.getCreditCapital()) == 0) {
@@ -1165,7 +1168,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         if (borrowStyle.equals(CalculatesUtil.STYLE_ENDMONTH)) {
             int lastDays = 0;
             String bidNid = borrow.getBorrowNid();
-            List<BorrowRepayPlanVO> borrowRepayPlans = amTradeClient.getBorrowRepayPlansByPeriod(bidNid, borrowRecover.getRecoverPeriod()+1);
+            List<BorrowRepayPlanVO> borrowRepayPlans = amTradeClient.getBorrowRepayPlansByPeriod(bidNid, borrowCredit.getRecoverPeriod()+1);
 
             if (borrowRepayPlans != null && borrowRepayPlans.size() > 0) {
                 try {
