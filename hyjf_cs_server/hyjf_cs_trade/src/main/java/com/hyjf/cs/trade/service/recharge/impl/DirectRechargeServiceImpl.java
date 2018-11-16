@@ -14,9 +14,7 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.bean.BaseResultBean;
-import com.hyjf.cs.trade.bean.TrusteePayResultBean;
-import com.hyjf.cs.trade.bean.UserDirectRechargeRequestBean;
+import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.recharge.DirectRechargeService;
@@ -72,7 +70,7 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
                 return map;
             }
             // 加签字段     时间戳  电子帐户号   手机号  idno   cardNo  txamount   name
-            if (!SignUtil.verifyRequestSign(userRechargeRequestBean,"/server/user/directRechargePage/recharge")) {
+            if (!this.verifyRequestSign(userRechargeRequestBean,BaseDefine.METHOD_SERVER_RECHARGE)) {
                 logger.info("----验签失败----");
                 map.put("status", ErrorCodeConstant.STATUS_CE000002);
                 map.put("acqRes", userRechargeRequestBean.getAcqRes());
@@ -161,13 +159,11 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
 
             // 拼装参数  调用江西银行
             // 同步调用路径
-            String retUrl = systemConfig.webHost + request.getContextPath()
-                    + "/server/user/directRechargePage/directRechargePageReturn.do?acqRes="
+            String retUrl = "http://CS-USER/hyjf-api/server/user/directRechargePage/directRechargePageReturn.do?acqRes="
                     + userRechargeRequestBean.getAcqRes() + StringPool.AMPERSAND + "callback="
                     + userRechargeRequestBean.getRetUrl().replace("#", "*-*-*");
             // 异步调用路
-            String bgRetUrl = systemConfig.webHost + request.getContextPath()
-                    + "/server/user/directRechargePage/directRechargePageBgreturn.do?acqRes="
+            String bgRetUrl = "http://CS-USER/hyjf-api/server/user/directRechargePage/directRechargePageBgreturn.do?acqRes="
                     + userRechargeRequestBean.getAcqRes() + "&phone="+userRechargeRequestBean.getMobile()+"&callback=" + userRechargeRequestBean.getBgRetUrl().replace("#", "*-*-*");
 
             // 用户ID
