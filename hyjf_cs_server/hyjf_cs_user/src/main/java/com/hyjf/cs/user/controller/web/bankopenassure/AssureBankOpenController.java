@@ -99,7 +99,7 @@ public class AssureBankOpenController extends BaseUserController {
         openBean.setIdentity(BankCallConstant.ACCOUNT_USER_IDENTITY_3);
 
         // 组装参数
-        Map<String,Object> data = bankOpenService.getAssureOpenAccountMV(openBean);
+        Map<String,Object> data = bankOpenService.getAssureOpenAccountMV(openBean,null);
         result.setData(data);
         //保存开户日志
         int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), openBean.getMobile(), openBean.getOrderId(),CustomConstants.CLIENT_PC ,openBean.getTrueName(),openBean.getIdNo(),"", "");

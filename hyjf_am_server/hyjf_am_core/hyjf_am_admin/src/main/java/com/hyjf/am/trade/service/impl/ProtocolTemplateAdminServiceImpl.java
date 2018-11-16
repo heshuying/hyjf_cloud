@@ -256,7 +256,7 @@ public class ProtocolTemplateAdminServiceImpl implements ProtocolTemplateAdminSe
     }
 
     @Override
-    public List<ProtocolTemplateVO> getnewinfo() {
+    public List<ProtocolTemplateVO> protocolGetnewinfo() {
         List<ProtocolTemplate> list = protocolTemplateCustomizeMapper.getdisplayNameDynamic();
         List<ProtocolTemplateVO> ListVO = CommonUtils.convertBeanList(list, ProtocolTemplateVO.class);
         return ListVO;
