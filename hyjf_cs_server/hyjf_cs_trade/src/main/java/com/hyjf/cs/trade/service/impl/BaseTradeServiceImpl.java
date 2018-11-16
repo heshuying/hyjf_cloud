@@ -11,6 +11,11 @@ import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.common.service.BaseServiceImpl;
+import com.hyjf.cs.common.util.ApiSignUtil;
+import com.hyjf.cs.trade.bean.BaseBean;
+import com.hyjf.cs.trade.bean.BaseDefine;
+import com.hyjf.cs.trade.bean.UserDirectRechargeRequestBean;
+import com.hyjf.cs.trade.bean.assetpush.UserWithdrawRequestBean;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
@@ -21,6 +26,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -160,7 +166,27 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
             throw e;
         }
     }
-
+    /**
+     * 检查用户是否是新手 true 是  false 不是
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public boolean checkIsNewUserCanInvest2(Integer userId) {
+        // 新的判断是否为新用户方法
+        try {
+            int total = amTradeClient.countNewUserTotal(userId);
+            logger.info("获取用户投资数量 userID {} 数量 {} ",userId,total);
+            if (total <= 1) {
+                return true;
+            } else {
+                return false;
+            }
+        }catch (Exception e) {
+            throw e;
+        }
+    }
     /**
      * 获取account信息
      * @auther: hesy
@@ -245,6 +271,35 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
         UserVO users = amUserClient.findUserById(userId);
         return users;
     }
+    /**
+     * 验证外部请求签名
+     *
+     * @param paramBean
+     * @return
+     */
+    @Override
+    public boolean verifyRequestSign(BaseBean paramBean, String methodName) {
 
+        String sign = StringUtils.EMPTY;
+
+        // 机构编号必须参数
+        String instCode = paramBean.getInstCode();
+        if (StringUtils.isEmpty(instCode)) {
+            return false;
+        }
+
+        if(BaseDefine.METHOD_SERVER_WITHDRAW.equals(methodName)){
+            // 用户提现
+            UserWithdrawRequestBean bean = (UserWithdrawRequestBean)paramBean;
+            sign = bean.getChannel() + bean.getAccountId() + bean.getAccount() + bean.getCardNo() + bean.getRetUrl() + bean.getBgRetUrl() + bean.getTimestamp();
+        }else if(BaseDefine.METHOD_SERVER_RECHARGE.equals(methodName)){
+            // 页面充值
+            UserDirectRechargeRequestBean bean = (UserDirectRechargeRequestBean) paramBean;
+            sign = bean.getInstCode() + bean.getAccountId() + bean.getMobile() + bean.getIdNo() + bean.getCardNo()
+                    + bean.getTxAmount() + bean.getName() + bean.getRetUrl() + bean.getBgRetUrl() + bean.getTimestamp();
+        }
+
+        return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);
+    }
 
 }

@@ -11,13 +11,12 @@ import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.config.DebtConfigVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
-import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
+import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -261,6 +260,35 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     @Override
     public WebResult<Map<String, Object>> getSuccessResult(Integer userId, String logOrdId) {
         CreditTenderVO bean = amTradeClient.getCreditTenderByUserIdOrdId(logOrdId,userId);
+        BorrowCreditVO borrowCredit = amTradeClient.getBorrowCreditByCreditNid(bean.getCreditNid());        AppUtmRegVO appChannelStatisticsDetails = amUserClient.getAppChannelStatisticsDetailByUserId(userId);
+        if (appChannelStatisticsDetails != null) {
+            logger.info("更新app渠道统计表, userId is: {}", userId);
+            Map<String, Object> params = new HashMap<String, Object>();
+            // 认购本金
+            params.put("accountDecimal", bean.getAssignPrice());
+            // 投资时间
+            params.put("investTime", GetDate.getNowTime10());
+            // 项目类型
+            params.put("projectType", "智投");
+            // 首次投标项目期限
+            String investProjectPeriod = "";
+            investProjectPeriod = borrowCredit.getCreditTerm() + "天";
+            params.put("investProjectPeriod", investProjectPeriod);
+            //根据investFlag标志位来决定更新哪种投资
+            params.put("investFlag", checkIsNewUserCanInvest2(userId));
+            // 用户id
+            params.put("userId", userId);
+            //压入消息队列
+            try {
+                appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                        MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            } catch (MQException e) {
+                e.printStackTrace();
+                logger.error("渠道统计用户累计投资推送消息队列失败！！！");
+            }
+        }
+
+
         Map<String, Object> data = new HashedMap();
         if(bean!=null){
             // 投资金额
@@ -328,6 +356,50 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         result.setProspectiveEarnings("");
         result.setInterest("");
         result.setStandardValues("0");
+
+        // add by liuyang  神策数据统计 20180820 start
+        // 原标项目编号
+        String bidNid = creditAssign.getBorrowNid();
+        // 根据债转编号查询转让记录
+        BorrowCreditVO borrowCreditVO = this.amTradeClient.getBorrowCreditByCreditNid(creditNid);
+        if(borrowCreditVO == null){
+            logger.error("根据债转编号查询转让记录失败,转让编号:["+creditNid + "].");
+            return result;
+        }
+        // 根据原标标号取借款信息
+        RightBorrowVO borrow = this.amTradeClient.getRightBorrowByNid(bidNid);
+        if(borrow==null){
+            logger.error("根据标的号获取标的信息失败,标的编号:["+bidNid+"].");
+            return result;
+        }
+        BorrowInfoVO borrowInfoVO = this.amTradeClient.getBorrowInfoByNid(bidNid);
+        if (borrowInfoVO == null){
+            logger.error("根据标的号查询标的详情信息失败,标的编号:["+bidNid+"].");
+            return result;
+        }
+        if (borrow != null) {
+            BorrowStyleVO projectBorrowStyle = this.amTradeClient.getBorrowStyle(borrow.getBorrowStyle());
+            if (projectBorrowStyle != null) {
+                result.setBorrowStyleName(StringUtils.isBlank(projectBorrowStyle.getName()) ? "" : projectBorrowStyle.getName());
+            } else {
+                result.setBorrowStyleName("");
+            }
+        }
+
+        // 项目名称
+        result.setProjectName(borrowInfoVO.getProjectName());
+        // 借款期限
+        result.setBorrowPeriod(borrow.getBorrowPeriod());
+        if ("endday".equals(borrow.getBorrowStyle())) {
+            result.setDurationUnit("天");
+        } else {
+            result.setDurationUnit("月");
+        }
+        // 债转期限
+        result.setCreditPeriod(borrowCreditVO.getCreditTerm());
+        // 期限单位
+        result.setCreditDurationUnit("天");
+        // add by liuyang  神策数据统计 20180820 end
         if(creditAssign!=null){
             AccountVO account = this.getAccountByUserId(tender.getUserId());
             BigDecimal balance = account.getBankBalance();
@@ -812,6 +884,9 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         throw  new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                     }
                     // 发送法大大协议
+                    logger.info("==========承接转让发送法大大协议:bidNid="+creditTender.getBidNid()+",assignNid="+creditTender.getAssignNid()+
+                            ",creditNid="+creditTender.getCreditNid()+",creditTenderNid="+creditTender.getCreditTenderNid());
+
                     this.sendPdfMQ(userId, creditTender.getBidNid(),creditTender.getAssignNid(), creditTender.getCreditNid(), creditTender.getCreditTenderNid());
                     // 发送承接完成短信
                     if (borrowCredit.getCreditCapitalAssigned().compareTo(borrowCredit.getCreditCapital()) == 0) {
@@ -1123,7 +1198,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         if (borrowStyle.equals(CalculatesUtil.STYLE_ENDMONTH)) {
             int lastDays = 0;
             String bidNid = borrow.getBorrowNid();
-            List<BorrowRepayPlanVO> borrowRepayPlans = amTradeClient.getBorrowRepayPlansByPeriod(bidNid, borrowRecover.getRecoverPeriod()+1);
+            List<BorrowRepayPlanVO> borrowRepayPlans = amTradeClient.getBorrowRepayPlansByPeriod(bidNid, borrowCredit.getRecoverPeriod()+1);
 
             if (borrowRepayPlans != null && borrowRepayPlans.size() > 0) {
                 try {

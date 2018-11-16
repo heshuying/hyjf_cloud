@@ -123,4 +123,14 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	MessagePushTagVO selectMsgTagByTagId(String tagId);
+
+	/**
+	 * @Author walter.tanyy
+	 * @user walter.tanyy
+	 * @Description  根据条件查询身份证地区
+	 * @Date 2018/7/31 16:37
+	 * @Param idCardCustomize
+	 * @return
+	 */
+	IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize);
 }

@@ -11,7 +11,9 @@ import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.coupon.CouponBeanVo;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
@@ -328,6 +330,26 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         // 获取用户最优优惠券
         CouponUserVO couponConfig = null;
         if (null != planDetail) {
+
+            // add by liuyang 神策数据统计 20180820 start
+            BorrowStyleVO borrowStyle = this.amTradeClient.getBorrowStyle(plan.getBorrowStyle());
+            if (borrowStyle!=null){
+                resultVo.setBorrowStyleName(StringUtils.isBlank(borrowStyle.getName()) ? "" : borrowStyle.getName());
+            }else{
+                resultVo.setBorrowStyleName("");
+            }
+
+            // 项目名称
+            resultVo.setProjectName(plan.getPlanName());
+            // 借款期限
+            resultVo.setBorrowPeriod(plan.getLockPeriod());
+            if (plan.getIsMonth() == 0) {
+                resultVo.setDurationUnit("天");
+            } else {
+                resultVo.setDurationUnit("月");
+            }
+            // add by liuyang 神策数据统计 20180820 end
+
             resultVo.setBorrowNid(planNid);
             // -设置  开放额度剩余金额
             String borrowAccountWait = "0";
@@ -1092,6 +1114,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         logger.info("插入汇计划加入明细表  planAccede: {} ", JSONObject.toJSONString(planAccede) );
         boolean trenderFlag = amTradeClient.insertHJHPlanAccede(planAccede);
         logger.info("投资明细表插入完毕,userId{},平台{},结果{}", userId, request.getPlatform(), trenderFlag);
+        // 优惠券投资开始
         if (trenderFlag) {
             //加入明细表插表成功的前提下，继续
             // 投资成功后,发送CRM绩效统计
@@ -1124,7 +1147,39 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 e.printStackTrace();
             }
         }
-        // 优惠券投资开始
+        AppUtmRegVO appChannelStatisticsDetails = amUserClient.getAppChannelStatisticsDetailByUserId(userId);
+        if (appChannelStatisticsDetails != null) {
+            logger.info("更新app渠道统计表, userId is: {}", userId);
+            Map<String, Object> params = new HashMap<String, Object>();
+            // 认购本金
+            params.put("accountDecimal", accountDecimal);
+            // 投资时间
+            params.put("investTime", GetDate.getNowTime10());
+            // 项目类型
+            params.put("projectType", "智投");
+            // 首次投标项目期限
+            String investProjectPeriod = "";
+            if ("endday".equals(borrowStyle)) {
+                investProjectPeriod = planPeriod + "天";
+            } else {
+                investProjectPeriod = planPeriod + "月";
+            }
+            params.put("investProjectPeriod", investProjectPeriod);
+            //根据investFlag标志位来决定更新哪种投资
+            params.put("investFlag", checkIsNewUserCanInvest2(userId));
+            // 用户id
+            params.put("userId", userId);
+            //压入消息队列
+            try {
+                appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                        MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            } catch (MQException e) {
+                e.printStackTrace();
+                logger.error("渠道统计用户累计投资推送消息队列失败！！！");
+            }
+        }
+
+
         Integer couponGrantId = request.getCouponGrantId();
         if (couponGrantId != null && couponGrantId.intValue() >0) {
             logger.info("开始优惠券投资,userId{},平台{},优惠券{}", userId, request.getPlatform(), couponGrantId);

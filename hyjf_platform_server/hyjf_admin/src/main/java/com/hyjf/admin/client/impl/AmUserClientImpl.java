@@ -1843,7 +1843,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public MspResponse insertAction(MspRequest mspRequest) {
 		MspResponse mspResponse = restTemplate
-				.postForEntity("http://AM-ADMIN/am-user/mspapplyconfigure/searchAction" ,mspRequest,
+				.postForEntity("http://AM-ADMIN/am-user/mspapplyconfigure/insertAction" ,mspRequest,
 						MspResponse.class)
 				.getBody();
 		if (mspResponse != null) {
@@ -1855,7 +1855,7 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public MspResponse updateAction(MspRequest mspRequest) {
 		MspResponse mspResponse = restTemplate
-				.postForEntity("http://AM-ADMIN/am-user/mspapplyconfigure/insertAction" ,mspRequest,
+				.postForEntity("http://AM-ADMIN/am-user/mspapplyconfigure/updateAction" ,mspRequest,
 						MspResponse.class)
 				.getBody();
 		if (mspResponse != null) {
@@ -2677,17 +2677,7 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
-	@Override
-	public AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request) {
-		AppUtmRegResponse response = restTemplate
-				.postForEntity("http://AM-ADMIN/am-admin/app_utm_reg/exportStatisticsList", request,
-						AppUtmRegResponse.class)
-				.getBody();
-		if (response != null) {
-			return response;
-		}
-		return null;
-	}
+
 
 	/**
 	 * 根据用户Id查询开户信息
@@ -2705,15 +2695,6 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
-	@Override
-	public AppUtmRegResponse getstatisticsList(AppChannelStatisticsDetailRequest request) {
-		AppUtmRegResponse response = restTemplate.postForEntity("http://AM-USER/am-user/app_utm_reg/getstatisticsList", request, AppUtmRegResponse.class).getBody();
-		if (response != null) {
-			return response;
-		}
-		return null;
-
-	}
 
 
 

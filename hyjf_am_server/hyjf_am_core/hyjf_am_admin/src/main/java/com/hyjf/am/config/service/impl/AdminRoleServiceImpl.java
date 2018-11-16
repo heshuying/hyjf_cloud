@@ -213,7 +213,8 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
      * 
      * @return
      */
-    public JSONArray getAdminRoleMenu(AdminRoleCustomize adminRoleCustomize) {
+    public JSONArray deleteAndgetAdminRoleMenu(AdminRoleCustomize adminRoleCustomize) {
+    	adminRoleCustomizeMapper.deleteRole(adminRoleCustomize.getRoleId());
         List<AdminRoleCustomize> menuList = adminRoleCustomizeMapper.selectRoleMenuPermissions(adminRoleCustomize);
 
         Map<String, List<AdminRoleCustomize>> childPerm = null;

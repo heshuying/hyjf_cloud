@@ -132,5 +132,25 @@ public class FeeConfigController extends BaseConfigController{
         }
         return null;
     }
-
+    /**
+     * 手续费配置校验
+     * @return
+     */
+    @RequestMapping("/validateFeeConfigBeforeAction")
+    public AdminFeeConfigResponse validateFeeConfigBeforeAction(@RequestBody AdminFeeConfigRequest request){
+        AdminFeeConfigResponse response = new AdminFeeConfigResponse();
+        if(request.getId() != null){
+            FeeConfig record = this.feeConfigService.getFeeConfigInfoById(request.getId());
+            //修改，判断名称是否修改 ,若不修改，返回成功，修改，校验名称是否和其他名称重复
+            if(record == null||(record != null&& request.getName().equals(record.getName()))){
+                return response;
+            }
+        }
+        List<FeeConfig> feeConfigs=feeConfigService.validateFeeConfigBeforeAction(request.getName());
+        if(!CollectionUtils.isEmpty(feeConfigs)){
+            response.setRtn(Response.FAIL);
+            response.setMessage("银行名称不可重复添加");
+        }
+        return response;
+    }
 }

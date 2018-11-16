@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.service.admin.productcenter.applyagreement.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.ApplyAgreementInfoRequest;
 import com.hyjf.am.resquest.admin.ApplyAgreementRequest;
 import com.hyjf.am.resquest.admin.BorrowRepayAgreementAmRequest;
@@ -51,7 +52,25 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
     public List<BorrowRepayAgreementCustomizeVO> selectBorrowRepayPlan(BorrowRepayAgreementAmRequest request, int limitStart, int limitEnd) {
         request.setLimitStart(limitStart);
         request.setLimitEnd(limitEnd);
-        return this.borrowRepayAgreementCustomizeMapper.selectBorrowRepayPlan(request);
+        List<BorrowRepayAgreementCustomizeVO> list = this.borrowRepayAgreementCustomizeMapper.selectBorrowRepayPlan(request);
+        if (list != null && list.size() > 0) {
+            for (BorrowRepayAgreementCustomizeVO customize : list) {//判断是否申请过垫付协议
+                ApplyAgreementExample applyAgreement = new ApplyAgreementExample();
+                ApplyAgreementExample.Criteria criteria = applyAgreement.createCriteria();
+                criteria.andBorrowNidEqualTo(customize.getBorrowNid());
+                criteria.andRepayPeriodEqualTo(customize.getRepayPeriod());
+                Integer count = this.applyAgreementMapper.countByExample(applyAgreement);
+                logger.info("--------------------垫付协议申请明细列表页--分期列表applyAgreement:"+JSONObject.toJSON(applyAgreement));
+                logger.info("--------------------垫付协议申请明细列表页--分期列表count:"+count);
+                if (count > 0) {
+                    customize.setApplyagreements(1);
+                } else {
+                    customize.setApplyagreements(0);
+                }
+            }
+        }
+        logger.info("--------------------垫付协议申请明细列表页--分期列表list:"+JSONObject.toJSON(list));
+        return  list;
     }
 
     /**
@@ -75,7 +94,22 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
     public List<BorrowRepayAgreementCustomizeVO> selectBorrowRepay(BorrowRepayAgreementAmRequest request, int limitStart, int limitEnd) {
         request.setLimitStart(limitStart);
         request.setLimitEnd(limitEnd);
-        return this.borrowRepayAgreementCustomizeMapper.selectBorrowRepay(request);
+        List<BorrowRepayAgreementCustomizeVO> list =  this.borrowRepayAgreementCustomizeMapper.selectBorrowRepay(request);
+        for (BorrowRepayAgreementCustomizeVO customize : list) {//判断是否申请过垫付协议
+            ApplyAgreementExample applyAgreement = new ApplyAgreementExample();
+            ApplyAgreementExample.Criteria criteria = applyAgreement.createCriteria();
+            criteria.andBorrowNidEqualTo(customize.getBorrowNid());
+            criteria.andRepayPeriodEqualTo(customize.getRepayPeriod());
+            Integer count = this.applyAgreementMapper.countByExample(applyAgreement);
+            logger.info("--------------------垫付协议申请明细列表页--列表applyAgreement:"+JSONObject.toJSON(applyAgreement));
+            logger.info("--------------------垫付协议申请明细列表页--列表count:"+count);
+            if (count > 0) {
+                customize.setApplyagreements(1);
+            } else {
+                customize.setApplyagreements(0);
+            }
+        }
+        return list;
     }
 
     /**

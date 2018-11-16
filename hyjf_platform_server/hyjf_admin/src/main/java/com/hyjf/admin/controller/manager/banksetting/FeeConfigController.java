@@ -162,6 +162,22 @@ public class FeeConfigController extends BaseController {
         }
         return new AdminResult<>();
     }
+    @ApiOperation(value = "手续费配置校验", notes = "手续费配置校验")
+    @PostMapping("/validateBeforeAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult validateBeforeAction(@RequestBody AdminFeeConfigRequest request) {
+        if(StringUtils.isBlank(request.getName())){
+            return new AdminResult<>(FAIL, "银行名称不能为空");
+        }
+        AdminFeeConfigResponse response  = feeConfigService.validateBeforeAction(request);
+        if(response==null) {
+            return new AdminResult<>(FAIL, FAIL_DESC);
+        }
+        if (!Response.isSuccess(response)) {
+            return new AdminResult<>(FAIL, response.getMessage());
+        }
+        return new AdminResult<>();
+    }
 
     /**
      * 调用校验表单方法

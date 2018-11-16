@@ -339,7 +339,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 		// 查找用户
 		BorrowProjectTypeExample borrowProjectTypeExample = new BorrowProjectTypeExample();
 		BorrowProjectTypeExample.Criteria criteria2 = borrowProjectTypeExample.createCriteria();
-		criteria2.andBorrowCdEqualTo(projectType);
+		criteria2.andBorrowCdEqualTo(Integer.valueOf(projectType));
 		List<BorrowProjectType> list = this.borrowProjectTypeMapper.selectByExample(borrowProjectTypeExample);
 		BorrowProjectType borrowProjectType = null;
 		if (list != null && !list.isEmpty()) {

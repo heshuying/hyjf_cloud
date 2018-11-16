@@ -403,6 +403,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             DebtCreditRequest request = new DebtCreditRequest();
             request.setBorrowNid(borrowNid);
             List<HjhDebtCreditVO> listHjhDebtCredit = amTradeClient.selectHjhDebtCreditListByBorrowNidAndStatus(request);
+            Boolean isDept = false;
             if (null != listHjhDebtCredit && listHjhDebtCredit.size() > 0) {
                 // 部分承接
                 request.setCreditStatus(Arrays.asList(0, 1));
@@ -415,10 +416,11 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                     for (HjhDebtCreditVO deptcredit : listHjhDebtCredit) {
                         //待承接本金 = 0
                         if (null != deptcredit.getCreditCapitalWait() && deptcredit.getCreditCapitalWait().intValue() == 0) {
+                            int intCount = 0;
                             Map<String, Object> mapParam = new HashMap<String, Object>();
                             mapParam.put(ProjectConstant.PARAM_USER_ID, userId);
                             mapParam.put(ProjectConstant.PARAM_BORROW_NID, borrowNid);
-                            int intCount = amTradeClient.countCreditTenderByBorrowNidAndUserId(mapParam);
+                            amTradeClient.countCreditTenderByBorrowNidAndUserId(mapParam);
                             if (intCount > 0 || count > 0) {
                                 viewableFlag = true;
                             }
@@ -426,6 +428,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                     }
                 }
                 statusDescribe = "还款中";
+                isDept = true;
             } else {
                 // 原始标
                 // 复审中，还款中和已还款状态投资者(可看)
@@ -473,6 +476,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             }
             userValidation.put("viewableFlag", viewableFlag);
             userValidation.put("statusDescribe", statusDescribe);
+            // 是否发生过债转
+            userValidation.put("isDept", isDept);
             jsonObject.put("userValidation", userValidation);
             // add 汇计划二期前端优化  针对区分原始标与债转标  nxl 20180424 end
             jsonObject.put("repayPlan", repayPlanList);
