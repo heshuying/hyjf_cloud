@@ -703,6 +703,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 params.put("investProjectPeriod", investProjectPeriod);
                 //根据investFlag标志位来决定更新哪种投资
                 params.put("investFlag", checkIsNewUserCanInvest(userId));
+                // 用户id
+                params.put("userId", userId);
                 //压入消息队列
                 try {
                     appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
