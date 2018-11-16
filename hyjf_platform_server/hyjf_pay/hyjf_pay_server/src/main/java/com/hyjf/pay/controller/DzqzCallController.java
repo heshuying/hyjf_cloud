@@ -65,7 +65,7 @@ public class DzqzCallController extends BaseController {
             //失败率达到30百分比后熔断
           @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
           // 超时时间
-          @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000"),
+          @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000")},threadPoolProperties = {
           @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
     public String callApiBg(@RequestBody DzqzCallBean bean) {
         log.info("--------------开始调用pay工程-------------");
