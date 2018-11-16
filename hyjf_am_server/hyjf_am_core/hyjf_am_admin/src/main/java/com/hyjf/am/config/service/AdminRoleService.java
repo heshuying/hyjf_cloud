@@ -69,7 +69,7 @@ public interface AdminRoleService {
      * 
      * @return
      */
-    public JSONArray getAdminRoleMenu(AdminRoleCustomize adminRoleCustomize);
+    public JSONArray deleteAndgetAdminRoleMenu(AdminRoleCustomize adminRoleCustomize);
     
     /**
      * 插入或更新[角色菜单权限表]数据

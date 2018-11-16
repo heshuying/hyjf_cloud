@@ -95,12 +95,12 @@ public class ApiBindCardPageController extends BaseUserController {
         try {
             // 同步调用路径
             String retUrl = systemConfig.getServerHost()
-                    + "/hyjf-api/server/user/bindcardpage/bindCardReturn.do?acqRes="
+                    + "/hyjf-api/server/user/bindcardpage/bindCardReturn?acqRes="
                     + bankCardRequestBean.getAcqRes()
                     + "&callback=" + bankCardRequestBean.getRetUrl().replace("#", "*-*-*");
             // 异步调用路
             String bgRetUrl = systemConfig.getServerHost()
-                    + "/hyjf-api/server/user/bindcardpage/bindCardReturn.do?phone="+userVO.getMobile()+"&acqRes="
+                    + "/hyjf-api/server/user/bindcardpage/bindCardReturn?phone="+userVO.getMobile()+"&acqRes="
                     + bankCardRequestBean.getAcqRes() + "&callback=" + bankCardRequestBean.getNotifyUrl().replace("#", "*-*-*");
 
             // 拼装参数 调用江西银行
