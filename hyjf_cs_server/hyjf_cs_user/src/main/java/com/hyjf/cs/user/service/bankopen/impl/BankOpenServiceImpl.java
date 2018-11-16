@@ -529,7 +529,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
      * @return
      */
     @Override
-    public Map<String, Object> getAssureOpenAccountMV(OpenAccountPageBean openBean) {
+    public Map<String, Object> getAssureOpenAccountMV(OpenAccountPageBean openBean,String sign) {
         {
             // 根据身份证号码获取性别
             String gender = "M";
@@ -548,8 +548,13 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             openAccoutBean.setAcctUse(BankCallConstant.ACCOUNT_USE_GUARANTEE);
             openAccoutBean.setIdentity(openBean.getIdentity());
             // 同步地址  是否跳转到前端页面
-            String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + "/user/openError" + "?logOrdId=" + openAccoutBean.getLogOrderId();
-            String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + "/user/openSuccess";
+            // 失败页面
+            String errorPath = "/user/openError";
+            // 成功页面
+            String successPath = "/user/openSuccess";
+            // 同步地址  是否跳转到前端页面
+            String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + errorPath +"?logOrdId="+openAccoutBean.getLogOrderId()+"&sign=" +sign;
+            String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + successPath;
             // 异步调用路
             String bgRetUrl = "http://CS-USER/hyjf-web/user/secure/open/bgReturn?phone=" + openBean.getMobile()+ openBean.getMobile()+"&openclient="+openBean.getPlatform()+"&roleId="+openBean.getIdentity();
             openAccoutBean.setRetUrl(retUrl);
@@ -576,7 +581,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
      * @return
      */
     @Override
-    public Map<String, Object> getLoanOpenAccountMV(OpenAccountPageBean openBean) {
+    public Map<String, Object> getLoanOpenAccountMV(OpenAccountPageBean openBean,String sign) {
         {
             // 根据身份证号码获取性别
             String gender = "M";
@@ -594,9 +599,13 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             // 代偿角色的账户类型为  00100-担保账户  其他的是 00000-普通账户
             openAccoutBean.setAcctUse(BankCallConstant.ACCOUNT_USE_COMMON);
             openAccoutBean.setIdentity(openBean.getIdentity());
+            // 失败页面
+            String errorPath = "/user/openError";
+            // 成功页面
+            String successPath = "/user/openSuccess";
             // 同步地址  是否跳转到前端页面
-            String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + "/user/openError" + "?logOrdId=" + openAccoutBean.getLogOrderId();
-            String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + "/user/openSuccess";
+            String retUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + errorPath +"?logOrdId="+openAccoutBean.getLogOrderId()+"&sign=" +sign;
+            String successUrl = super.getFrontHost(systemConfig,openBean.getPlatform()) + successPath;
             // 异步调用路
             String bgRetUrl = "http://CS-USER/hyjf-web/user/secure/open/bgReturn?phone=" + openBean.getMobile()+ openBean.getMobile()+"&openclient="+openBean.getPlatform()+"&roleId="+openBean.getIdentity();;
             openAccoutBean.setRetUrl(retUrl);
