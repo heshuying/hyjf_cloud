@@ -12,6 +12,7 @@ import com.hyjf.am.vo.datacollect.OperationReportEntityVO;
 import com.hyjf.am.vo.message.OperationReportJobBean;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.ic.BorrowUserStatistic;
 import com.hyjf.cs.message.bean.ic.OperationReport;
@@ -58,6 +59,10 @@ public class OperationReportJobController extends BaseController {
 		bean.setCalendar(cal);
 		int lastMonth = getLastMonth(cal);
 		bean.setLastMonth(lastMonth);
+		String year = String.valueOf(GetDate.getYear());
+		String month = GetDate.getMonth();
+		bean.setYear(year);
+		bean.setMonth(month);
 		try {
 			operationReportJobAdminProducer.messageSend(new MessageContent(MQConstant.OPERATIONREPORT_JOB_ADMIN_TOPIC,
 					System.currentTimeMillis() + "", JSONObject.toJSONBytes(bean)));
