@@ -59,7 +59,7 @@ public class ApiUserLoginController {
      * @param response
      * @return
      */
-    @RequestMapping(value = "/third_login.do")
+    @RequestMapping(value = "/third_login")
     public ModelAndView nfcfLogin(HttpServletRequest request, HttpServletResponse response,
                                   @RequestParam String param,
                                   @RequestParam(value = "sign", required = false) String sign) {
