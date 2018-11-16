@@ -263,10 +263,11 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
             registEndTime = GetDate.getSomeDayEnd(registEndTime);
             request.setRegistEndTime(registEndTime);
         }
-        if (Objects.equals(request.getFirstFlag(), 1)) {
+        Integer firstFlag = request.getFirstFlag();
+        if (Objects.equals(firstFlag, 1)) {
             request.setFirstFlag(0);
         }
-        if (Objects.equals(request.getFirstFlag(), 0)) {
+        if (Objects.equals(firstFlag, 0)) {
             request.setFirstFlag(1);
         }
         return utmRegCustomizeMapper.selectAppChannelReconciliationRecord(request);
@@ -294,10 +295,11 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
             registEndTime = GetDate.getSomeDayEnd(registEndTime);
             request.setRegistEndTime(registEndTime);
         }
-        if (Objects.equals(request.getFirstFlag(), 1)) {
+        Integer firstFlag = request.getFirstFlag();
+        if (Objects.equals(firstFlag, 1)) {
             request.setFirstFlag(0);
         }
-        if (Objects.equals(request.getFirstFlag(), 0)) {
+        if (Objects.equals(firstFlag, 0)) {
             request.setFirstFlag(1);
         }
         return utmRegCustomizeMapper.selectAppChannelReconciliationRecordHjh(request);

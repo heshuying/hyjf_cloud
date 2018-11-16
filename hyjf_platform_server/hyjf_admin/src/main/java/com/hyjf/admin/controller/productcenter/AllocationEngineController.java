@@ -338,7 +338,7 @@ public class AllocationEngineController extends BaseController{
 		//sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 		// 表格sheet名称
-		String sheetName = "计划专区";
+		String sheetName = "智投专区";
 		// 文件名称
 		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
 		// 声明一个工作薄
@@ -368,8 +368,8 @@ public class AllocationEngineController extends BaseController{
 
 	private Map<String, String> buildMap() {
 		Map<String, String> map = Maps.newLinkedHashMap();
-		map.put("planNid", "计划编号");
-		map.put("planName", "计划名称");
+		map.put("planNid", "智投编号");
+		map.put("planName", "智投名称");
 		map.put("configAddTime", "添加时间");
 		map.put("configStatus", "状态");
 
