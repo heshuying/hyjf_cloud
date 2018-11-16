@@ -33,6 +33,7 @@ import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
+import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
@@ -831,5 +832,16 @@ public class AmTradeClientImpl implements AmTradeClient {
                 "http://AM-TRADE/am-trade/wrb/getRecoverPlan/" + userId+"/"+investRecordId+"/"+borrowNid, wrbInvestRecoverPlanResponse.class);
     }
 
-
+    /**
+     * 获取正确的borrowVo
+     */
+    @Override
+    public RightBorrowVO getRightBorrowByNid(String borrowId) {
+        String url = "http://AM-TRADE/am-trade/borrow/getRightBorrowByNid/"+ borrowId;
+        RightBorrowResponse response = restTemplate.getForEntity(url,RightBorrowResponse.class).getBody();
+        if (response!=null){
+            return response.getResult();
+        }
+        return null;
+    }
 }
