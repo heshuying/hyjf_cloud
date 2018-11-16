@@ -1486,9 +1486,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             // 调用江西银行提现接口
             // 调用汇付接口(提现)
 
-            String bankRetUrl =  "http://CS-USER/hyjf-api/server/user/withdraw/return?callback=" + retUrl.replace("#", "*-*-*");
+            String bankRetUrl =  systemConfig.getServerHost()+"/hyjf-api/server/user/withdraw/return?callback=" + retUrl.replace("#", "*-*-*");
             // 支付工程路径
-            String bankBgRetUrl = "http://CS-USER/hyjf-api/server/user/withdraw/callback?callback=" + bgRetUrl.replace("#", "*-*-*");// 支付工程路径
+            String bankBgRetUrl = systemConfig.getServerHost()+"/hyjf-api/server/user/withdraw/callback?callback=" + bgRetUrl.replace("#", "*-*-*");// 支付工程路径
 
             // 路由代码
             String routeCode = "";
