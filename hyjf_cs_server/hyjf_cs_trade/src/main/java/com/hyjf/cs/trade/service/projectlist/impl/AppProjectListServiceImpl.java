@@ -416,10 +416,11 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                     for (HjhDebtCreditVO deptcredit : listHjhDebtCredit) {
                         //待承接本金 = 0
                         if (null != deptcredit.getCreditCapitalWait() && deptcredit.getCreditCapitalWait().intValue() == 0) {
+                            int intCount = 0;
                             Map<String, Object> mapParam = new HashMap<String, Object>();
                             mapParam.put(ProjectConstant.PARAM_USER_ID, userId);
                             mapParam.put(ProjectConstant.PARAM_BORROW_NID, borrowNid);
-                            int intCount = amTradeClient.countCreditTenderByBorrowNidAndUserId(mapParam);
+                            amTradeClient.countCreditTenderByBorrowNidAndUserId(mapParam);
                             if (intCount > 0 || count > 0) {
                                 viewableFlag = true;
                             }

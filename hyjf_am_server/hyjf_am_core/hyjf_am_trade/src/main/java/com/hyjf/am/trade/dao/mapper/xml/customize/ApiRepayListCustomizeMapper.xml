@@ -20,7 +20,7 @@
         LEFT JOIN ht_increase_interest_invest iii ON iii.tender_nid = bt.nid
         LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
         LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = info.inst_code
-        LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
+        LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = b.project_type
         LEFT JOIN ht_borrow_recover re ON bt.id = re.tender_id
         LEFT JOIN ht_account ac ON bt.user_id = ac.user_id
         WHERE 1=1

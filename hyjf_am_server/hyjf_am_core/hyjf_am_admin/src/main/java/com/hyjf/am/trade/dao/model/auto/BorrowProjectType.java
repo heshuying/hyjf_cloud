@@ -6,38 +6,123 @@ import java.util.Date;
 public class BorrowProjectType implements Serializable {
     private Integer id;
 
+    /**
+     * 汇直投 汇消费
+     *
+     * @mbggenerated
+     */
     private String borrowProjectType;
 
-    private String borrowCd;
+    /**
+     * 参数唯一标识
+     *
+     * @mbggenerated
+     */
+    private Integer borrowCd;
 
+    /**
+     * 名称
+     *
+     * @mbggenerated
+     */
     private String borrowName;
 
+    /**
+     * 项目编号
+     *
+     * @mbggenerated
+     */
     private String borrowClass;
 
+    /**
+     * 投资用户类型0:51老用户 1:新用户 2: 全部
+     *
+     * @mbggenerated
+     */
     private Integer investUserType;
 
+    /**
+     * 状态
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 投资起始值
+     *
+     * @mbggenerated
+     */
     private String investStart;
 
+    /**
+     * 投资最大值
+     *
+     * @mbggenerated
+     */
     private String investEnd;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 建立用户id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 建立用户id
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
+    /**
+     * 递增金额
+     *
+     * @mbggenerated
+     */
     private Long increaseMoney;
 
+    /**
+     * 优惠券
+     *
+     * @mbggenerated
+     */
     private Integer interestCoupon;
 
+    /**
+     * 体验金
+     *
+     * @mbggenerated
+     */
     private Integer tasteMoney;
 
+    /**
+     * 是否加息标志位(0:否,1:是)
+     *
+     * @mbggenerated
+     */
     private Integer increaseInterestFlag;
 
     private static final long serialVersionUID = 1L;
@@ -58,12 +143,12 @@ public class BorrowProjectType implements Serializable {
         this.borrowProjectType = borrowProjectType == null ? null : borrowProjectType.trim();
     }
 
-    public String getBorrowCd() {
+    public Integer getBorrowCd() {
         return borrowCd;
     }
 
-    public void setBorrowCd(String borrowCd) {
-        this.borrowCd = borrowCd == null ? null : borrowCd.trim();
+    public void setBorrowCd(Integer borrowCd) {
+        this.borrowCd = borrowCd;
     }
 
     public String getBorrowName() {
