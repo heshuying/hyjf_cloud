@@ -4190,7 +4190,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public  List<BatchBorrowRecoverVo> getBatchBorrowRecoverList(BatchBorrowRecoverRequest request) {
         BatchBorrowRecoverReponse response = restTemplate.
-                postForEntity("http://AM-TRADE/am-trade/adminBatchBorrowRecover/getList", request, BatchBorrowRecoverReponse.class).
+                postForEntity("http://AM-TRADE/am-trade/apiBatchBorrowRecover/getList", request, BatchBorrowRecoverReponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
@@ -4209,7 +4209,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer getCountBatchCenter(BatchBorrowRecoverRequest request) {
         IntegerResponse result = restTemplate.postForEntity(
-                "http://AM-TRADE/am-trade/adminBatchBorrowRecover/getListTotal/", request,
+                "http://AM-TRADE/am-trade/apiBatchBorrowRecover/getListTotal/", request,
                 IntegerResponse.class).getBody();
         if (result == null) {
             return 0;
