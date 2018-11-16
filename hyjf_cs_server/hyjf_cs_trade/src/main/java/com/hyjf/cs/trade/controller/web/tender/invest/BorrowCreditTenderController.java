@@ -5,8 +5,10 @@ package com.hyjf.cs.trade.controller.web.tender.invest;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -116,7 +118,17 @@ public class BorrowCreditTenderController extends BaseTradeController {
             //用户测评校验状态转换
             if(resultMap!=null){
                 if(resultMap.get("riskTested") != null && resultMap.get("riskTested") != ""){
-                    result.setStatus((String) resultMap.get("riskTested"));
+                    String riskTested = (String) resultMap.get("riskTested");
+                    if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
+                        //已过期需要重新评测
+                        result.setStatus(MsgEnum.STATUS_EV000004.getCode());
+                    }else if(CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)){
+                        //计划类判断用户类型为稳健型以上才可以投资
+                        result.setStatus(MsgEnum.STATUS_EV000007.getCode());
+                    }else if(CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS.equals(riskTested)){
+                        //金额对比判断（校验金额 大于 设置测评金额）
+                        result.setStatus(MsgEnum.STATUS_EV000005.getCode());
+                    }
                 }
             }
         }catch (CheckException e){

@@ -48,7 +48,7 @@ public class ApiAuthController extends BaseUserController {
     /**
      * 外部服务接口:缴费授权 @RequestMapping
      */
-    public static final String REQUEST_MAPPING = "/server/user/mergeAuthPagePlus";
+    public static final String REQUEST_MAPPING = "/hyjf-api/server/user/mergeAuthPagePlus";
     /**
      * 同步回调
      */
