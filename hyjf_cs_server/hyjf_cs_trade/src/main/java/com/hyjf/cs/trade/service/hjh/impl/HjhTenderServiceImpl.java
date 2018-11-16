@@ -840,6 +840,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             if(resultEval!=null){
                 if(resultEval.get("riskTested") != null && resultEval.get("riskTested") != ""){
                     result.setStatus((String) resultEval.get("riskTested"));
+                    result.setStatusDesc((String) resultEval.get("message"));
                 }
             }
             logger.info("体验金投资结束:userId{}" + userId);
@@ -922,6 +923,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             if(resultEval!=null){
                 if(resultEval.get("riskTested") != null && resultEval.get("riskTested") != ""){
                     result.setStatus((String) resultEval.get("riskTested"));
+                    result.setStatusDesc((String) resultEval.get("message"));
                 }
             }
             //放入用户测评返回值

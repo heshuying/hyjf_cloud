@@ -111,6 +111,7 @@ public class WechatBorrowTenderController extends BaseTradeController {
             if(result.getData()!=null){
                 if(result.getData().get("riskTested") != null && result.getData().get("riskTested") != ""){
                     weChatResult.setStatus((String) result.getData().get("riskTested"));
+                    weChatResult.setStatusDesc((String) result.getData().get("message"));
                 }
             }
             weChatResult.setData(result.getData());
