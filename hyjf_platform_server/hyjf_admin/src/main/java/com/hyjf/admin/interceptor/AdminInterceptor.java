@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.interceptor;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
@@ -15,6 +16,8 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.PrintWriter;
 import java.util.List;
 
 /**
@@ -51,8 +54,16 @@ public class AdminInterceptor implements HandlerInterceptor {
 
 			}
 
-		} catch (Exception e) {
-			throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
+//		} catch (NullPointerException e) {
+//			throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
+		}catch(Exception e) {
+			response.setContentType("application/json; charset=utf-8");  
+			JSONObject res = new JSONObject();
+			res.put("success", "EUS000010");
+			res.put("msg", "登录失效，请重新登陆");
+			PrintWriter out = response.getWriter();
+			out.append(res.toString());
+			return false;
 		}
 
 		if (handler instanceof HandlerMethod) {

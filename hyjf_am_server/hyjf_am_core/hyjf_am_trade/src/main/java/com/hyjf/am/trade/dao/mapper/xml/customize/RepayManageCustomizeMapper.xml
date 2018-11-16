@@ -316,6 +316,10 @@
 		LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = hydb.borrow_nid
 		AND hba.api_type = 1
 		AND hba.`status` <![CDATA[<>]]> 6
+		AND CASE WHEN hydb.borrow_style in ('endday','end')
+		THEN hba.period_now = 1
+		ELSE hba.period_now = (hydb.borrow_period - hydbr.repay_period + 1)
+		END
 		LEFT JOIN ht_borrow_repay_plan plan ON plan.borrow_nid = hydb.borrow_nid
 		AND plan.repay_period = (
 		hydb.borrow_period - hydbr.repay_period + 1

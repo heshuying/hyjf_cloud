@@ -15,6 +15,10 @@ public class CouponBackMoneyCustomize extends BaseVO implements Serializable {
     private Integer id;
     //优惠券用户编号
     private String couponUserCode;
+    /**
+     * 检索条件 订单id
+     */
+    private String orderId;
     //订单号
     private String nid;
     //用户名
@@ -370,5 +374,13 @@ public class CouponBackMoneyCustomize extends BaseVO implements Serializable {
 
     public void setSon(String son) {
         this.son = son;
+    }
+
+    public String getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(String orderId) {
+        this.orderId = orderId;
     }
 }
