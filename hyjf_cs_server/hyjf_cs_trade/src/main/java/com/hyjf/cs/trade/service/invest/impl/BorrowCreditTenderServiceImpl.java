@@ -11,6 +11,7 @@ import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.config.DebtConfigVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.*;
@@ -259,6 +260,35 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     @Override
     public WebResult<Map<String, Object>> getSuccessResult(Integer userId, String logOrdId) {
         CreditTenderVO bean = amTradeClient.getCreditTenderByUserIdOrdId(logOrdId,userId);
+        BorrowCreditVO borrowCredit = amTradeClient.getBorrowCreditByCreditNid(bean.getCreditNid());        AppUtmRegVO appChannelStatisticsDetails = amUserClient.getAppChannelStatisticsDetailByUserId(userId);
+        if (appChannelStatisticsDetails != null) {
+            logger.info("更新app渠道统计表, userId is: {}", userId);
+            Map<String, Object> params = new HashMap<String, Object>();
+            // 认购本金
+            params.put("accountDecimal", bean.getAssignPrice());
+            // 投资时间
+            params.put("investTime", GetDate.getNowTime10());
+            // 项目类型
+            params.put("projectType", "智投");
+            // 首次投标项目期限
+            String investProjectPeriod = "";
+            investProjectPeriod = borrowCredit.getCreditTerm() + "天";
+            params.put("investProjectPeriod", investProjectPeriod);
+            //根据investFlag标志位来决定更新哪种投资
+            params.put("investFlag", checkIsNewUserCanInvest2(userId));
+            // 用户id
+            params.put("userId", userId);
+            //压入消息队列
+            try {
+                appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                        MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            } catch (MQException e) {
+                e.printStackTrace();
+                logger.error("渠道统计用户累计投资推送消息队列失败！！！");
+            }
+        }
+
+
         Map<String, Object> data = new HashedMap();
         if(bean!=null){
             // 投资金额
