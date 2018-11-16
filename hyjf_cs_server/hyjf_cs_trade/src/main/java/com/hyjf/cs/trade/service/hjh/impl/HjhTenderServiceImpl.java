@@ -663,11 +663,22 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 Long lCreate = loginUser.getEvaluationExpiredTime().getTime();
                 //当前日期
                 Long lNow = System.currentTimeMillis();
-                if (lCreate <= lNow) {
-                    //已过期需要重新评测
-                    //返回错误码
-                    result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED);
+                // 判断用户测评有效期
+                if (loginUser.getIsEvaluationFlag() == 0) {
+                    result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL);
                     result.put("message","根据监管要求，投资前必须进行风险测评。");
+                } else {
+                    if(loginUser.getIsEvaluationFlag()==1 && null != loginUser.getEvaluationExpiredTime()){
+                        if (lCreate <= lNow) {
+                            //已过期需要重新评测
+                            //返回错误码
+                            result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED);
+                            result.put("message","根据监管要求，测评已过期，投资前必须进行风险测评。");
+                        }
+                    } else {
+                        result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL);
+                        result.put("message","根据监管要求，投资前必须进行风险测评。");
+                    }
                 }
                 //计划类判断用户类型为稳健型以上才可以投资
                 if(!CommonUtils.checkStandardInvestment(eval_type)){

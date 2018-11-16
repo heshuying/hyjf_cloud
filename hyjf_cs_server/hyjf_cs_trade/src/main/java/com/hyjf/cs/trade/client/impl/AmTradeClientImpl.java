@@ -4190,7 +4190,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public  List<BatchBorrowRecoverVo> getBatchBorrowRecoverList(BatchBorrowRecoverRequest request) {
         BatchBorrowRecoverReponse response = restTemplate.
-                postForEntity("http://AM-TRADE/am-trade/adminBatchBorrowRecover/getList", request, BatchBorrowRecoverReponse.class).
+                postForEntity("http://AM-TRADE/am-trade/apiBatchBorrowRecover/getList", request, BatchBorrowRecoverReponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
@@ -4209,7 +4209,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer getCountBatchCenter(BatchBorrowRecoverRequest request) {
         IntegerResponse result = restTemplate.postForEntity(
-                "http://AM-TRADE/am-trade/adminBatchBorrowRecover/getListTotal/", request,
+                "http://AM-TRADE/am-trade/apiBatchBorrowRecover/getListTotal/", request,
                 IntegerResponse.class).getBody();
         if (result == null) {
             return 0;
@@ -5873,6 +5873,47 @@ public class AmTradeClientImpl implements AmTradeClient {
         ApplyAgreementInfoResponse response = restTemplate.getForEntity(url,ApplyAgreementInfoResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
+        }
+        return null;
+    }
+
+
+    @Override
+    public List<PlanInvestCustomizeVO> selectInvestCreditList(Map<String, Object> param) {
+        String url = "http://AM-TRADE/am-trade/htj/selectInvestCreditList";
+        PlanInvestResponse response = restTemplate.postForEntity(url,param,PlanInvestResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<PlanInvestCustomizeVO> selectCreditCreditList(Map<String, Object> param) {
+        String url = "http://AM-TRADE/am-trade/htj/selectCreditCreditList";
+        PlanInvestResponse response = restTemplate.postForEntity(url,param,PlanInvestResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<PlanLockCustomizeVO> selectUserProjectListCapital(Map<String, Object> param) {
+        String url = "http://AM-TRADE/am-trade/htj/selectUserProjectListCapital";
+        PlanLockResponse response = restTemplate.postForEntity(url,param,PlanLockResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public String selectPlanInfoSum(String accedeOrderId) {
+        String url = "http://AM-TRADE/am-trade/htj/selectPlanInfoSum/"+ accedeOrderId;
+        StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultStr();
         }
         return null;
     }

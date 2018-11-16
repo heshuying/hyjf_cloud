@@ -79,12 +79,12 @@ public class ApiAuthController extends BaseUserController {
         UserVO user = authService.getUsersById(bankOpenAccount.getUserId());//用户ID
         // 拼装参数 调用江西银行
         // 同步调用路径
-        String retUrl = systemConfig.getFrontHost() + request.getContextPath() + REQUEST_MAPPING + RETURL_SYN_ACTION + ".do?acqRes="
+        String retUrl = systemConfig.getFrontHost() + request.getContextPath() + REQUEST_MAPPING + RETURL_SYN_ACTION + "?acqRes="
                 + requestBean.getAcqRes()  + "&isSuccess=1&authType="
                 + requestBean.getAuthType()+ "&callback="
                 + requestBean.getRetUrl().replace("#", "*-*-*");
         // 异步调用路
-        String bgRetUrl = systemConfig.getFrontHost() + request.getContextPath() + REQUEST_MAPPING + RETURL_ASY_ACTION + ".do?acqRes="
+        String bgRetUrl = systemConfig.getFrontHost() + request.getContextPath() + REQUEST_MAPPING + RETURL_ASY_ACTION + "?acqRes="
                 + requestBean.getAcqRes() + "&authType="
                 + requestBean.getAuthType()+ "&callback="
                 + requestBean.getNotifyUrl().replace("#", "*-*-*");
