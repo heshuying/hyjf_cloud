@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -13,7 +14,6 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.bean.BaseResultBean;
 import com.hyjf.cs.user.bean.TrusteePayRequestBean;
-import com.hyjf.cs.user.bean.TrusteePayResultBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
@@ -51,7 +51,7 @@ public class TrusteePayServiceImpl extends BaseUserServiceImpl implements Truste
      */
     @Override
     public ModelAndView trusteePayApply(HttpServletRequest request, TrusteePayRequestBean payRequestBean) {
-        ModelAndView modelAndView = new ModelAndView("/bank/user/trusteePay/error");
+        ModelAndView modelAndView = new ModelAndView("api/api_error_send.html");
         logger.info("请求参数" + JSONObject.toJSONString(payRequestBean, true) + "]");
         // 检查参数是否为空
         if (payRequestBean.checkParmIsNull(modelAndView)) {
@@ -110,9 +110,9 @@ public class TrusteePayServiceImpl extends BaseUserServiceImpl implements Truste
         }
 
         // 检查标的是否存在
-        BorrowAndInfoVO borrow = amTradeClient.selectBorrowByBorrowNid(payRequestBean.getProductId());
+        RightBorrowVO borrow = amTradeClient.getRightBorrowByNid(payRequestBean.getProductId());
         if (borrow == null) {
-            logger.info("-------------------标的不存在！" + payRequestBean.getAccountId() + "！--------------------");
+            logger.info("-------------------标的不存在！" + payRequestBean.getProductId() + "！--------------------");
             Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_HK000001, "标的不存在！");
             payRequestBean.doNotify(params);
             getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_HK000001);
@@ -121,7 +121,7 @@ public class TrusteePayServiceImpl extends BaseUserServiceImpl implements Truste
 
         // 检查标的状态 // 待授权状态才可以
         if (!borrow.getStatus().equals(7)) {
-            logger.info("-------------------标的状态错误！" + payRequestBean.getAccountId() + "！--------------------status" + borrow.getStatus());
+            logger.info("-------------------标的状态错误！" + payRequestBean.getProductId() + "！--------------------status" + borrow.getStatus());
             Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_TR000001, "标的状态错误！");
             payRequestBean.doNotify(params);
             getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_TR000001);
@@ -189,11 +189,19 @@ public class TrusteePayServiceImpl extends BaseUserServiceImpl implements Truste
             return modelAndView;
         }
 
-        // 同步调用路径
+        // 同步调用路径 返回的银行类里面没有userId 所以加了一个
         String retUrl = systemConfig.getServerHost()
-                + "/server/trusteePay/trusteePayReturn?acqRes="
+                + "/hyjf-api/server/trusteePay/trusteePayReturn?acqRes="
                 + payRequestBean.getAcqRes()
                 + StringPool.AMPERSAND + BankCallConstant.PARAM_PRODUCTID + StringPool.EQUAL + payRequestBean.getProductId()
+                + "&userId=" + userId
+                + "&callback=" + payRequestBean.getRetUrl().replace("#", "*-*-*");
+
+        String successUrl = systemConfig.getServerHost()
+                + "/hyjf-api/server/trusteePay/trusteePayReturn?acqRes="
+                + payRequestBean.getAcqRes()
+                + StringPool.AMPERSAND + BankCallConstant.PARAM_PRODUCTID + StringPool.EQUAL + payRequestBean.getProductId()
+                + "&userId=" + userId
                 + "&callback=" + payRequestBean.getRetUrl().replace("#", "*-*-*");
         // 异步调用路
         String bgRetUrl = "http://CS-USER/hyjf-api/server/trusteePay/trusteePayBgreturn?acqRes="
@@ -217,6 +225,7 @@ public class TrusteePayServiceImpl extends BaseUserServiceImpl implements Truste
         bean.setMobile(user.getMobile());*/
 
         bean.setRetUrl(retUrl);// 页面同步返回 URL
+        bean.setSuccessfulUrl(successUrl);
         bean.setNotifyUrl(bgRetUrl);// 页面异步返回URL(必须)
         // 操作者ID
         bean.setLogUserId(String.valueOf(userId));
@@ -236,14 +245,14 @@ public class TrusteePayServiceImpl extends BaseUserServiceImpl implements Truste
     }
 
     private ModelAndView getErrorMV(TrusteePayRequestBean payRequestBean, ModelAndView modelAndView, String status) {
-        TrusteePayResultBean repwdResult = new TrusteePayResultBean();
         BaseResultBean resultBean = new BaseResultBean();
         resultBean.setStatusForResponse(status);
-        repwdResult.setCallBackAction(payRequestBean.getRetUrl());
-        repwdResult.set("chkValue", resultBean.getChkValue());
-        repwdResult.set("status", resultBean.getStatus());
-        repwdResult.set("acqRes", payRequestBean.getAcqRes());
-        modelAndView.addObject("callBackForm", repwdResult);
+        //为了重定向
+        modelAndView.addObject("callBackAction",payRequestBean.getRetUrl());
+        modelAndView.addObject("error","true");
+        modelAndView.addObject("chkValue", resultBean.getChkValue());
+        modelAndView.addObject("status", resultBean.getStatus());
+        modelAndView.addObject("acqRes", payRequestBean.getAcqRes());
         return modelAndView;
     }
 
@@ -255,18 +264,18 @@ public class TrusteePayServiceImpl extends BaseUserServiceImpl implements Truste
      * @return
      */
     @Override
-    public ModelAndView trusteePayReturn(HttpServletRequest request, BankCallBean bean){
+    public Map<String, String> trusteePayReturn(HttpServletRequest request, BankCallBean bean){
         logger.info("借款人受托支付申请同步回调start,请求参数为：【" + JSONObject.toJSONString(bean, true) + "】");
-        ModelAndView modelAndView = new ModelAndView("/callback/callback_trusteepay");
-        TrusteePayResultBean repwdResult = new TrusteePayResultBean();
-        repwdResult.setCallBackAction(request.getParameter("callback").replace("*-*-*", "#"));
+        Map<String, String> resultMap = new HashMap<>();
+        String url = request.getParameter("callback").replace("*-*-*", "#");
 
-        int userId = Integer.parseInt(bean.getLogUserId());
+        String userId = request.getParameter("userId");
+        bean.setLogUserId(userId);
         String productId = request.getParameter("productId");
-        BankOpenAccountVO bankOpenAccount = this.getBankOpenAccount(userId);
+        BankOpenAccountVO bankOpenAccount = this.getBankOpenAccount(Integer.parseInt((userId)));
         bean.convert();
         // 调用查询接口 查询是否成功授权
-        BankCallBean selectbean = this.queryTrusteePayState(bankOpenAccount.getAccount(), productId, bean.getLogUserId());
+        BankCallBean selectbean = this.queryTrusteePayState(bankOpenAccount.getAccount(), productId, userId);
         // 调用接口
         bean = BankCallUtils.callApiBg(selectbean);
 
@@ -275,26 +284,25 @@ public class TrusteePayServiceImpl extends BaseUserServiceImpl implements Truste
         if (bean != null && bean != null && ((BankCallConstant.RESPCODE_SUCCESS.equals(bean.get(BankCallConstant.PARAM_RETCODE))
                 && "1".equals(bean.getState())) || "JX900703".equals(bean.get(BankCallConstant.PARAM_RETCODE)))) {
             // 成功
-            modelAndView.addObject("statusDesc", "借款人受托支付申请成功！");
             BaseResultBean resultBean = new BaseResultBean();
             resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
-            repwdResult.set("chkValue", resultBean.getChkValue());
-            repwdResult.set("status", resultBean.getStatus());
+            resultMap.put("status", resultBean.getStatus());
+            resultMap.put("chkValue", resultBean.getChkValue());
+            resultMap.put("statusDesc", "借款人受托支付申请成功");
         } else {
             // 失败
-            modelAndView.addObject("statusDesc", "借款人受托支付申请失败,失败原因：" + this.getBankRetMsg(bean.getRetCode()));
-
             BaseResultBean resultBean = new BaseResultBean();
             resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
-            repwdResult.set("chkValue", resultBean.getChkValue());
-            repwdResult.set("status", resultBean.getStatus());
+            resultMap.put("status", resultBean.getStatus());
+            resultMap.put("chkValue", resultBean.getChkValue());
+            resultMap.put("statusDesc", "借款人受托支付申请失败,失败原因：" + this.getBankRetMsg(bean.getRetCode()));
         }
 
         //------------------------------------------------
-        repwdResult.set("acqRes", request.getParameter("acqRes"));
-        modelAndView.addObject("callBackForm", repwdResult);
+        resultMap.put("callBackAction", url);
+        resultMap.put("acqRes", request.getParameter("acqRes"));
         logger.info("借款人受托支付申请同步回调end");
-        return modelAndView;
+        return resultMap;
     }
 
     /**

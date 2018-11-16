@@ -85,7 +85,7 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
                 criteria = criteria.and("username").is(accountWebList.getUsernameSearch());
             }
             if (StringUtils.isNotBlank(accountWebList.getTradeTypeSearch())){
-                criteria = criteria.and("trade").is(accountWebList.getTradeTypeSearch());
+                criteria = criteria.and("trade").is(accountWebList.getTradeTypeSearch().toUpperCase());
             }
             if (StringUtils.isNotBlank(accountWebList.getStartDate())&&StringUtils.isNotBlank(accountWebList.getEndDate())){
                 String begin = GetDate.getSearchStartTime(accountWebList.getStartDate());
