@@ -166,7 +166,27 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
             throw e;
         }
     }
-
+    /**
+     * 检查用户是否是新手 true 是  false 不是
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public boolean checkIsNewUserCanInvest2(Integer userId) {
+        // 新的判断是否为新用户方法
+        try {
+            int total = amTradeClient.countNewUserTotal(userId);
+            logger.info("获取用户投资数量 userID {} 数量 {} ",userId,total);
+            if (total <= 1) {
+                return true;
+            } else {
+                return false;
+            }
+        }catch (Exception e) {
+            throw e;
+        }
+    }
     /**
      * 获取account信息
      * @auther: hesy
@@ -272,7 +292,7 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
             // 用户提现
             UserWithdrawRequestBean bean = (UserWithdrawRequestBean)paramBean;
             sign = bean.getChannel() + bean.getAccountId() + bean.getAccount() + bean.getCardNo() + bean.getRetUrl() + bean.getBgRetUrl() + bean.getTimestamp();
-        }else if("/server/user/directRechargePage/recharge".equals(methodName)){
+        }else if(BaseDefine.METHOD_SERVER_RECHARGE.equals(methodName)){
             // 页面充值
             UserDirectRechargeRequestBean bean = (UserDirectRechargeRequestBean) paramBean;
             sign = bean.getInstCode() + bean.getAccountId() + bean.getMobile() + bean.getIdNo() + bean.getCardNo()

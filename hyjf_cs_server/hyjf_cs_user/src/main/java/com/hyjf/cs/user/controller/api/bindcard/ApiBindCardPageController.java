@@ -148,13 +148,11 @@ public class ApiBindCardPageController extends BaseUserController {
      * 页面绑卡同步回调
      *
      * @param request
-     * @param response
      * @return
      */
-    @PostMapping("/bindCardReturn")
+    @RequestMapping("/bindCardReturn")
     @ApiOperation(value = "绑卡同步回调", notes = "绑卡同步回调")
-    public ModelAndView pageReturn(HttpServletRequest request, HttpServletResponse response,
-                                          @ModelAttribute BankCallBean bean) {
+    public ModelAndView pageReturn(HttpServletRequest request, @RequestBody BankCallBean bean) {
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("status", "success");
         resultMap.put("callBackAction", request.getParameter("callback").replace("*-*-*","#"));
@@ -177,7 +175,7 @@ public class ApiBindCardPageController extends BaseUserController {
             resultMap.put("statusDesc", "绑卡成功！");
         } else {
             resultMap.put("status", ErrorCodeConstant.STATUS_CE999999);
-            resultMap.put("statusDesc", "系统异常！");
+            resultMap.put("statusDesc", "绑卡失败！" + retCode);
         }
         logger.info("绑卡同步回调end");
         return callbackErrorView(resultMap);
@@ -193,7 +191,7 @@ public class ApiBindCardPageController extends BaseUserController {
     @PostMapping("/bindCardBgreturn")
     @ApiOperation(value = "绑卡异步回调", notes = "绑卡异步回调")
     public BankCallResult bgreturn(HttpServletRequest request, HttpServletResponse response,
-                                   @ModelAttribute BankCallBean bean) {
+                                   @RequestBody BankCallBean bean) {
         // 上送的异步地址里面有
         Map<String, String> params = new HashMap<String, String>();
         BankCallResult result = new BankCallResult();

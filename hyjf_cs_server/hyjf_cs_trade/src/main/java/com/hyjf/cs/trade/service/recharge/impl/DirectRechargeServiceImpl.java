@@ -14,12 +14,13 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.bean.*;
+import com.hyjf.cs.trade.bean.BaseDefine;
+import com.hyjf.cs.trade.bean.BaseResultBean;
+import com.hyjf.cs.trade.bean.UserDirectRechargeRequestBean;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.recharge.DirectRechargeService;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
-import com.hyjf.cs.trade.util.SignUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -147,7 +148,7 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
                 return map;
             }
             // 缴费授权
-            /*if (user.getPaymentAuthStatus() !=1) {
+            if (user.getPaymentAuthStatus() !=1) {
                 logger.info("用户未进行缴费授权,用户电子账户号:[" + userRechargeRequestBean.getAccountId() + "],用户ID:[" + userId + "].");
                 map.put("status", ErrorCodeConstant.STATUS_CE000011);
                 map.put("acqRes", userRechargeRequestBean.getAcqRes());
@@ -155,20 +156,17 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
                 map.put("statusDesc","用户未进行缴费授权");
                 map.put("callBackAction",userRechargeRequestBean.getRetUrl());
                 return map;
-            }*/
+            }
 
             // 拼装参数  调用江西银行
             // 同步调用路径
-            String retUrl = "http://CS-USER/hyjf-api/server/user/directRechargePage/directRechargePageReturn.do?acqRes="
+            String retUrl = "http://CS-TRADE/hyjf-api/server/user/directRechargePage/directRechargePageReturn?acqRes="
                     + userRechargeRequestBean.getAcqRes() + StringPool.AMPERSAND + "callback="
                     + userRechargeRequestBean.getRetUrl().replace("#", "*-*-*");
             // 异步调用路
-            String bgRetUrl = "http://CS-USER/hyjf-api/server/user/directRechargePage/directRechargePageBgreturn.do?acqRes="
+            String bgRetUrl = "http://CS-TRADE/hyjf-api/server/user/directRechargePage/directRechargePageBgreturn?acqRes="
                     + userRechargeRequestBean.getAcqRes() + "&phone="+userRechargeRequestBean.getMobile()+"&callback=" + userRechargeRequestBean.getBgRetUrl().replace("#", "*-*-*");
 
-            // 用户ID
-
-            BankCallBean bankCallBean = new BankCallBean();
             // 充值订单号
             String logOrderId = GetOrderIdUtils.getOrderId2(userId);
             // 充值订单日期
@@ -234,65 +232,31 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
     }
 
     @Override
-    public ModelAndView pageReturn(HttpServletRequest request, BankCallBean bean) {
-        ModelAndView modelAndView = new ModelAndView("/callback/callback_trusteepay");
-        TrusteePayResultBean repwdResult = new TrusteePayResultBean();
-        repwdResult.setCallBackAction(request.getParameter("callback").replace("*-*-*", "#"));
+    public Map<String,Object> pageReturn(HttpServletRequest request, BankCallBean bean) {
+        String url = request.getParameter("callback").replace("*-*-*", "#");
         String isSuccess = request.getParameter("isSuccess");
+        Map<String,Object> result =new HashMap<>();
+        result.put("callBackAction", url);
+        result.put("status", ErrorCodeConstant.SUCCESS);
+        result.put("acqRes",request.getParameter("acqRes"));
+        result.put("statusDesc", "充值成功");
         if (bean == null) {
             logger.info("调用江西银行页面充值接口,银行返回空");
-            modelAndView.addObject("statusDesc", "页面充值,调用银行接口失败！");
-            BaseResultBean resultBean = new BaseResultBean();
-            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
-            repwdResult.set("chkValue", resultBean.getChkValue());
-            repwdResult.set("status", resultBean.getStatus());
-            repwdResult.set("acqRes", request.getParameter("acqRes"));
-            modelAndView.addObject("callBackForm", repwdResult);
-            return modelAndView;
-        }
-        if (isSuccess != null && "1".equals(isSuccess)) {
-            logger.info("页面充值成功,跳转到成功链接用户ID:[" + bean.getLogUserId() + "]");
-            // 成功
-            BaseResultBean resultBean = new BaseResultBean();
-            modelAndView.addObject("statusDesc", "充值成功");
-            resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
-            repwdResult.set("chkValue", resultBean.getChkValue());
-            repwdResult.set("status", resultBean.getStatus());
-            repwdResult.set("acqRes", request.getParameter("acqRes"));
-            modelAndView.addObject("callBackForm", repwdResult);
-            logger.info("页面充值同步第三方返回参数："+JSONObject.toJSONString(repwdResult));
-            return modelAndView;
+            result.put("statusDesc", "页面充值,调用银行接口失败");
+            result.put("status",ErrorCodeConstant.STATUS_CE999999);
+            return result;
         }
         // 银行返回响应代码
         String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
-
         if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
             // 根据银行相应代码,查询错误信息
             String retMsg = amConfigClient.getBankRetMsg(retCode);
             logger.info("页面充值失败,银行返回响应代码:[" + retCode + "],retMsg:[" + retMsg + "]");
-
-            BaseResultBean resultBean = new BaseResultBean();
-            modelAndView.addObject("statusDesc", "充值失败,调用银行接口失败");
-            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
-            repwdResult.set("chkValue", resultBean.getChkValue());
-            repwdResult.set("status", resultBean.getStatus());
-            repwdResult.set("acqRes", request.getParameter("acqRes"));
-            modelAndView.addObject("callBackForm", repwdResult);
-            logger.info("页面充值同步第三方返回参数："+JSONObject.toJSONString(repwdResult));
-            return modelAndView;
-        }else{
-            logger.info("页面充值成功,用户ID:[" + bean.getLogUserId() + "]");
-            // 成功
-            BaseResultBean resultBean = new BaseResultBean();
-            modelAndView.addObject("statusDesc", "充值成功");
-            resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
-            repwdResult.set("chkValue", resultBean.getChkValue());
-            repwdResult.set("status", resultBean.getStatus());
-            repwdResult.set("acqRes", request.getParameter("acqRes"));
-            modelAndView.addObject("callBackForm", repwdResult);
-            logger.info("页面充值同步第三方返回参数："+JSONObject.toJSONString(repwdResult));
-            return modelAndView;
+            result.put("statusDesc", "页面充值,调用银行接口失败");
+            result.put("status",ErrorCodeConstant.STATUS_CE999999);
+            return result;
         }
+        return result;
     }
 
     @Override
