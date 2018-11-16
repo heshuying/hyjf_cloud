@@ -92,6 +92,7 @@ public class BankRechargeServiceImpl extends BaseServiceImpl implements BankRech
                 if (BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
                     // 调用银行接口返回成功
                     String result = StringUtils.isNotBlank(resultBean.getResult()) ? resultBean.getResult() : "";
+                    logger.info("=====银行充值异常batch修复请求银行接口返回:"+result);
                     if ("00".equals(result)) {
                         // 交易处理结果:00 成功
                         // 根据充值订单号重新获取
@@ -265,6 +266,7 @@ public class BankRechargeServiceImpl extends BaseServiceImpl implements BankRech
         // add by liubin 江西银行充值掉单异常处理修正 start
         status.add(3);
         // add by liubin 江西银行充值掉单异常处理修正 end
+        // 充值状态:0:初始,1:充值中,2:充值成功,3:充值失败
         cra.andStatusIn(status);// 充值状态为充值中和失败的
         cra.andIsBankEqualTo(1);// 充值平台:江西银行
         // 当前时间

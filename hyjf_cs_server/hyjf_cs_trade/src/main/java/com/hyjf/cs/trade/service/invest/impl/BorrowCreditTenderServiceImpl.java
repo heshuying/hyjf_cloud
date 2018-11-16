@@ -854,6 +854,9 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         throw  new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                     }
                     // 发送法大大协议
+                    logger.info("==========承接转让发送法大大协议:bidNid="+creditTender.getBidNid()+",assignNid="+creditTender.getAssignNid()+
+                            ",creditNid="+creditTender.getCreditNid()+",creditTenderNid="+creditTender.getCreditTenderNid());
+
                     this.sendPdfMQ(userId, creditTender.getBidNid(),creditTender.getAssignNid(), creditTender.getCreditNid(), creditTender.getCreditTenderNid());
                     // 发送承接完成短信
                     if (borrowCredit.getCreditCapitalAssigned().compareTo(borrowCredit.getCreditCapital()) == 0) {
