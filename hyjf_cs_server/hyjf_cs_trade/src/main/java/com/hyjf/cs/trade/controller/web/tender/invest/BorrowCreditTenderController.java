@@ -113,6 +113,12 @@ public class BorrowCreditTenderController extends BaseTradeController {
         try{
             Map<String,Object> resultMap =  borrowTenderService.borrowCreditCheck(tender);
             result.setData(resultMap);
+            //用户测评校验状态转换
+            if(resultMap!=null){
+                if(resultMap.get("riskTested") != null && resultMap.get("riskTested") != ""){
+                    result.setStatus((String) resultMap.get("riskTested"));
+                }
+            }
         }catch (CheckException e){
             throw e;
         }

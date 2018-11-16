@@ -122,6 +122,12 @@ public class HjhPlanController extends BaseTradeController {
             tenderInfo.setMessage((String) resultMap.get("message"));
             resultWebResult.setData(tenderInfo);
         }
+        //用户测评校验状态转换
+        if(resultMap!=null){
+            if(resultMap.get("riskTested") != null && resultMap.get("riskTested") != ""){
+                resultWebResult.setStatus((String) resultMap.get("riskTested"));
+            }
+        }
         return resultWebResult;
     }
 
