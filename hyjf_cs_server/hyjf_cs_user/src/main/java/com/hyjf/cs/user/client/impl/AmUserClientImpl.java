@@ -148,12 +148,10 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserVO fUserById(int userId) {
 		String url = userService + "/user/findMainById/" + userId;
-		logger.info("findUserById url is : {}", url);
 		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
 		if (response != null) {
 			if (Response.SUCCESS.equals(response.getRtn())) {
 				UserVO userVO =  response.getResult();
-				logger.info("findUserById userVO is :{}", userVO);
 				return userVO;
 			}
 			logger.info("response rtn is : {}", response.getRtn());
@@ -166,12 +164,10 @@ public class AmUserClientImpl implements AmUserClient {
 	@Override
 	public UserVO findUserById(int userId) {
 		String url = userService + "/user/findById/" + userId;
-		logger.info("findUserById url is : {}", url);
 		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
 		if (response != null) {
 			if (Response.SUCCESS.equals(response.getRtn())) {
 				UserVO userVO =  response.getResult();
-				logger.info("findUserById userVO is :{}", userVO);
 				return userVO;
 			}
 			logger.info("response rtn is : {}", response.getRtn());
