@@ -636,46 +636,53 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         // 检查参数是否为空
         if (payRequestBean.checkParmIsNull()) {
             getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000001);
-            payRequestBean.doNotify(payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000001, "请求参数异常"));
             logger.info("请求参数异常:" + JSONObject.toJSONString(payRequestBean, true) + "]");
-            map.put("modelAndView", modelAndView);
+            map.put("status", ErrorCodeConstant.STATUS_CE000001);
+            map.put("acqRes", payRequestBean.getAcqRes());
+            map.put("accountId", payRequestBean.getAccountId());
+            map.put("statusDesc","请求参数异常");
             return map;
         }
         // 验签
         if (!this.verifyRequestSign(payRequestBean, BaseDefine.METHOD_BORROW_AUTH_INVES)) {
             getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000002);
-            payRequestBean.doNotify(payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000002, "验签失败"));
             logger.info("请求参数异常" + JSONObject.toJSONString(payRequestBean, true) + "]");
-            map.put("modelAndView", modelAndView);
+            map.put("status", ErrorCodeConstant.STATUS_CE000002);
+            map.put("acqRes", payRequestBean.getAcqRes());
+            map.put("accountId", payRequestBean.getAccountId());
+            map.put("statusDesc","验签失败");
             return map;
         }
         // 根据电子账户号查询用户ID
         BankOpenAccountVO bankOpenAccount = amUserClient.selectByAccountId(payRequestBean.getAccountId());
         if (bankOpenAccount == null) {
             logger.info("没有根据电子银行卡找到用户" + payRequestBean.getAccountId() + "！");
-            Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000004, "没有根据电子银行卡找到用户");
-            payRequestBean.doNotify(params);
             getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000004);
-            map.put("modelAndView", modelAndView);
+            map.put("status", ErrorCodeConstant.STATUS_CE000004);
+            map.put("acqRes", payRequestBean.getAcqRes());
+            map.put("accountId", payRequestBean.getAccountId());
+            map.put("statusDesc","没有根据电子银行卡找到用户");
             return map;
         }
         // 检查用户是否存在
         UserVO user = amUserClient.findUserById(bankOpenAccount.getUserId());
         if (user == null) {
             logger.info("用户不存在汇盈金服账户！" + payRequestBean.getAccountId() + "!");
-            Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000007, "用户不存在汇盈金服账户！");
-            payRequestBean.doNotify(params);
             getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000007);
-            map.put("modelAndView", modelAndView);
+            map.put("status", ErrorCodeConstant.STATUS_CE000007);
+            map.put("acqRes", payRequestBean.getAcqRes());
+            map.put("accountId", payRequestBean.getAccountId());
+            map.put("statusDesc","用户不存在汇盈金服账户!");
             return map;
         }
         if (user.getBankOpenAccount().intValue() != 1) {
             // 未开户
             logger.info("用户未开户！" + payRequestBean.getAccountId() + "！");
-            Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000006, "用户未开户！");
-            payRequestBean.doNotify(params);
             getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000006);
-            map.put("modelAndView", modelAndView);
+            map.put("status", ErrorCodeConstant.STATUS_CE000006);
+            map.put("acqRes", payRequestBean.getAcqRes());
+            map.put("accountId", payRequestBean.getAccountId());
+            map.put("statusDesc","用户未开户!");
             return map;
         }
         // 检查是否设置交易密码
@@ -683,10 +690,11 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         if (passwordFlag != 1) {
             // 未设置交易密码
             logger.info("未设置交易密码！" + payRequestBean.getAccountId() + "！status" + user.getIsSetPassword());
-            Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_TP000002, "未设置交易密码！");
-            payRequestBean.doNotify(params);
             getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_TP000002);
-            map.put("modelAndView", modelAndView);
+            map.put("status", ErrorCodeConstant.STATUS_TP000002);
+            map.put("acqRes", payRequestBean.getAcqRes());
+            map.put("accountId", payRequestBean.getAccountId());
+            map.put("statusDesc","未设置交易密码!");
             return map;
         }
         // 根据订单号查询授权码
@@ -698,10 +706,11 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         }
         if (StringUtils.isBlank(smsSeq)) {
             logger.info("授权码为空！" + payRequestBean.getAccountId() + "！status" + user.getIsSetPassword());
-            Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000008, "未查询到短信授权码！");
-            payRequestBean.doNotify(params);
             getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000008);
-            map.put("modelAndView", modelAndView);
+            map.put("status", ErrorCodeConstant.STATUS_CE000008);
+            map.put("acqRes", payRequestBean.getAcqRes());
+            map.put("accountId", payRequestBean.getAccountId());
+            map.put("statusDesc","未查询到短信授权码!");
             return map;
         }
         logger.info("-------------------授权码为！" + smsSeq + "电子账户号" + payRequestBean.getAccountId() + "！--------------------status" + user.getIsSetPassword());
@@ -709,10 +718,11 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthByUserId(user.getUserId());
         if (hjhUserAuth != null && hjhUserAuth.getAutoInvesStatus() == 1) {
             logger.info("已经授权过！" + payRequestBean.getAccountId());
-            Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000009, "已授权,请勿重复授权！");
-            payRequestBean.doNotify(params);
             getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000009);
-            map.put("modelAndView", modelAndView);
+            map.put("status", ErrorCodeConstant.STATUS_CE000009);
+            map.put("acqRes", payRequestBean.getAcqRes());
+            map.put("accountId", payRequestBean.getAccountId());
+            map.put("statusDesc","已授权,请勿重复授权!");
             return map;
         }
         map.put("smsSeq", smsSeq);

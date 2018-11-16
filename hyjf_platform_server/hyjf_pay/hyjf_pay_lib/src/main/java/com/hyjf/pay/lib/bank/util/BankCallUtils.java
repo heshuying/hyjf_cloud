@@ -37,7 +37,7 @@ public class BankCallUtils implements Serializable {
 	private static final String SEND_JSP = "bank/bank_send.html";
 
 	/** 接口路径(页面) */
-	private static final String REQUEST_MAPPING_CALLAPIPAGE = "/callApiPage.json";
+	private static final String  REQUEST_MAPPING_CALLAPIPAGE = "/callApiPage.json";
 
 	/** 接口路径(后台) */
 	private static final String REQUEST_MAPPING_CALLAPIBG = "/callApiBg.json";

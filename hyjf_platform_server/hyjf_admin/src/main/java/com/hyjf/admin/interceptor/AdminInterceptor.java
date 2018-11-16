@@ -41,11 +41,7 @@ public class AdminInterceptor implements HandlerInterceptor {
 			throws Exception {
 		logger.info("admin接收到请求,请求接口为:" + request.getRequestURI());
 		try {
-			AdminSystemVO user=((AdminSystemVO) request.getSession().getAttribute("user"));
-			if(user==null) {
-				throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
-			}
-			String username = user.getUsername();
+			String username = ((AdminSystemVO) request.getSession().getAttribute("user")).getUsername();
 			String val = RedisUtils.get("admin@" + username);
 			if (val != null && !val.equals(request.getHeader("Cookies"))) {
 				request.getSession().removeAttribute("user");
@@ -53,16 +49,18 @@ public class AdminInterceptor implements HandlerInterceptor {
 				//return false;
 			} else {
 				if(val!=null) {
-					RedisUtils.set("admin@" + username, val, 1800);
+					RedisUtils.set("admin@" + username, val, 3600);
 				}
 
 			}
 
-		} catch (Exception e) {
-			response.setCharacterEncoding("UTF-8");
+//		} catch (NullPointerException e) {
+//			throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
+		}catch(Exception e) {
+			response.setContentType("application/json; charset=utf-8");  
 			JSONObject res = new JSONObject();
-			res.put("success", "99");
-			res.put("msg", "未查询到该接口");
+			res.put("success", "EUS000010");
+			res.put("msg", "登录失效，请重新登陆");
 			PrintWriter out = response.getWriter();
 			out.append(res.toString());
 			return false;

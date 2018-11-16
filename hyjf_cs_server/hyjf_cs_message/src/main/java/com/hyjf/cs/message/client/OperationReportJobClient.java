@@ -28,15 +28,7 @@ public interface OperationReportJobClient {
     List<OperationReportJobVO>  getTenderSexGroupByList(Date date);
 
 
-    /**
-     *投资人按照年龄分布 返回符合条件所有用户
-     *
-     * @param date 上个月的最后一天
-     * @param firstAge  年龄下限
-     * @param endAge	年龄上限
-     * @return
-     */
-    List<OperationReportJobVO>  getTenderAgeByRangeList(Date date,int firstAge,int endAge);
+
 
     /**
      * 投资人按照年龄分布
@@ -155,13 +147,7 @@ public interface OperationReportJobClient {
      */
     List<OperationReportJobVO> getBorrowPeriod(int intervalMonth);
 
-    /**
-     * 用户分析 - 性别分布
-     *
-     * @param intervalMonth 今年间隔月份
-     * @return
-     */
-    List<OperationReportJobVO> getSexDistribute( int intervalMonth);
+
     /**
      * 用户分析 - 性别分布拆分
      *
@@ -233,13 +219,5 @@ public interface OperationReportJobClient {
      */
     OperationReportJobVO getUserAgeAndArea(Integer userId);
 
-    /**
-     * @Author walter.tanyy
-     * @user walter.tanyy
-     * @Description  根据条件查询身份证地区
-     * @Date 2018/7/31 16:37
-     * @Param idCardCustomize
-     * @return
-     */
-    IdCardCustomize getIdCardCustomize(IdCardCustomize idCardCustomize);
+
 }

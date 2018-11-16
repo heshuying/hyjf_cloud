@@ -1,6 +1,8 @@
 spring:
   application:
-    name: eureka-server
+    name: eureka-server  
+  profiles:
+    active: dev
   boot:
     admin:
       client:
@@ -10,8 +12,10 @@ server:
 eureka:
   instance:
     hostname: localhost
+  environment: ${spring.profiles.active}
+  datacenter: Main
   client:
-    register-with-eureka: false
+    register-with-eureka: true
     fetch-registry: false
     serviceUrl:
       defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/

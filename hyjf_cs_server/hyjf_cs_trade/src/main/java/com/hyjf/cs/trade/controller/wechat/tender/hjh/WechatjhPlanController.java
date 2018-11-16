@@ -72,7 +72,7 @@ public class WechatjhPlanController extends BaseTradeController {
             RedisUtils.del(RedisConstants.HJH_TENDER_REPEAT + tender.getUser().getUserId());
         }
         // 神策数据统计 add by liuyang 20180726 start
-        logger.info("神策预置属性presetProps:[" + presetProps + "]");
+        logger.info("微信端智投服务,神策预置属性presetProps:[" + presetProps + "]");
         if (StringUtils.isNotBlank(presetProps)){
             try {
                 presetProps = URLDecoder.decode(presetProps,"UTF-8");
