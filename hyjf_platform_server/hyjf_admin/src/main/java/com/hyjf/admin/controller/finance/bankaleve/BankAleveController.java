@@ -72,7 +72,7 @@ public class BankAleveController {
         String status="000";
         String statusDesc = "未检索到相应的列表数据";
         Integer count = bankAleveService.queryBankAleveCount(bankAleveRequest);
-        if(count<1){
+        if(count==null || count<1){
             jsonObject.put("count",0);
             jsonObject.put("record",null);
             jsonObject.put("status",status);
@@ -140,7 +140,7 @@ public class BankAleveController {
 
         for (int i = 1; i < sheetCount; i++) {
             bankAleveRequest.setPageSize(defaultRowMaxCount);
-            bankAleveRequest.setCurrPage(1);
+            bankAleveRequest.setCurrPage(i+1);
             List<BankAleveVO> bankAleveList2 = bankAleveService.queryBankAleveList(bankAleveRequest);
             if (!CollectionUtils.isEmpty(bankAleveList2)) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";

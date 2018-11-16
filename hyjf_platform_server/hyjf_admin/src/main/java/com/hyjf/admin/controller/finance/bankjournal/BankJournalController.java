@@ -62,7 +62,7 @@ public class BankJournalController {
         Integer count = bankJournalService.queryBankEveCount(bankEveRequest);
         String status="000";
         String statusDesc = "未检索到相应的列表数据";
-        if(count<1){
+        if(count==null ||count<1){
             jsonObject.put("count",0);
             jsonObject.put("record",null);
             jsonObject.put("status",status);
