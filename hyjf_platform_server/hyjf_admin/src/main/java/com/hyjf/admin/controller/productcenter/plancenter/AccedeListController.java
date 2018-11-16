@@ -653,8 +653,32 @@ public class AccedeListController extends BaseController{
 			}
 		};
 
+		IValueFormatter expectAprAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				String value = (String) object;
+				if (StringUtils.isNotBlank(value)) {
+					return value + "%";
+				}
+				return value;
+			}
+		};
+
+		IValueFormatter actualAprAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				String value = (String) object;
+				if (StringUtils.isNotBlank(value)) {
+					return value + "%";
+				}
+				return value;
+			}
+		};
+
 		mapAdapter.put("userAttribute", userAttributeAdapter);
 		mapAdapter.put("attribute", attributeAdapter);
+		mapAdapter.put("expectApr", expectAprAdapter);
+		mapAdapter.put("actualApr", actualAprAdapter);
 		return mapAdapter;
 	}
     
