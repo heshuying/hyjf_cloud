@@ -148,7 +148,9 @@ public class ApiPassWordController extends BaseController {
         Map<String, String> params = new HashMap<String, String>();
         // 返回值修改 end
         bean.convert();
+        logger.info("设置交易密码异步回调，bean后:{}", JSONObject.toJSONString(bean, true));
         int userId = Integer.parseInt(bean.getLogUserId());
+        logger.info("userId："+userId);
         UserVO user = this.passWordService.getUsersById(userId);
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         // 成功或审核中
