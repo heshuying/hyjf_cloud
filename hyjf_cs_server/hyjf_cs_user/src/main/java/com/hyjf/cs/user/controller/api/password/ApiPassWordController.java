@@ -89,7 +89,11 @@ public class ApiPassWordController extends BaseController {
         logger.info("设置交易密码同步回调start");
         String url = request.getParameter("callback").replace("*-*-*", "#");
         bean.convert();
-        int userId = Integer.parseInt(request.getParameter("logUserId"));
+        String logUserId = bean.getLogUserId();
+        if(null==logUserId){
+            logUserId = request.getParameter("logUserId");
+        }
+        int userId = Integer.parseInt(logUserId);
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         // 调用查询电子账户密码是否设置
         BankCallBean selectbean = new BankCallBean();
@@ -224,7 +228,11 @@ public class ApiPassWordController extends BaseController {
         logger.info("bean后:{}", JSONObject.toJSONString(bean, true));
         String isSuccess = request.getParameter("isSuccess");
         String url = request.getParameter("callback").replace("*-*-*","#");
-        int userId = Integer.parseInt(request.getParameter("logUserId"));
+        String logUserId = bean.getLogUserId();
+        if(null==logUserId){
+            logUserId = request.getParameter("logUserId");
+        }
+        int userId = Integer.parseInt(logUserId);
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         Map<String,Object> result =new HashMap<>();
         result.put("accountId", bankOpenAccount.getAccount());
