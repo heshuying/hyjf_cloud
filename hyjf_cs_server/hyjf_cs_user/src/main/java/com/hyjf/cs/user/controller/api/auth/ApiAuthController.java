@@ -83,7 +83,8 @@ public class ApiAuthController extends BaseUserController {
                 + requestBean.getAuthType()+ "&callback="
                 + requestBean.getRetUrl().replace("#", "*-*-*");
         // 异步调用路
-        String bgRetUrl = systemConfig.getServerHost() + request.getContextPath() + REQUEST_MAPPING + RETURL_ASY_ACTION + "?authType="
+        String bgRetUrl = systemConfig.getServerHost()
+                + request.getContextPath() + REQUEST_MAPPING + RETURL_ASY_ACTION + "?authType="
                 + requestBean.getAuthType()+ "&callback="
                 + requestBean.getNotifyUrl().replace("#", "*-*-*");
 
