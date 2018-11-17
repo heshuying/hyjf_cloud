@@ -83,8 +83,7 @@ public class ApiAuthController extends BaseUserController {
                 + requestBean.getAuthType()+ "&callback="
                 + requestBean.getRetUrl().replace("#", "*-*-*");
         // 异步调用路
-        String bgRetUrl = systemConfig.getServerHost()
-                + request.getContextPath() + REQUEST_MAPPING + RETURL_ASY_ACTION + "?authType="
+        String bgRetUrl ="http://CS-USER" + REQUEST_MAPPING + RETURL_ASY_ACTION + "?authType="
                 + requestBean.getAuthType()+ "&callback="
                 + requestBean.getNotifyUrl().replace("#", "*-*-*");
 
@@ -147,7 +146,7 @@ public class ApiAuthController extends BaseUserController {
         String isSuccess = request.getParameter("isSuccess");
         String url = request.getParameter("callback").replace("*-*-*", "#");
         String authType=request.getParameter("authType");
-        logger.info("第三方端开户同步请求,isSuccess:{}", isSuccess);
+        logger.info("第三方端授权同步请求,isSuccess:{}", isSuccess);
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("status", "success");
         if (isSuccess == null || !"1".equals(isSuccess)) {
@@ -203,7 +202,7 @@ public class ApiAuthController extends BaseUserController {
 
         bean.convert();
         int userId = Integer.parseInt(bean.getLogUserId());
-        // 查询用户开户状态
+        // 查询用户
         UserVO user = this.authService.getUsersById(userId);
         String authType=request.getParameter("authType");
         if(authService.checkDefaultConfig(bean, authType)){
