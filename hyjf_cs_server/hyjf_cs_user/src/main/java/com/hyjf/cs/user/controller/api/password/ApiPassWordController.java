@@ -216,13 +216,13 @@ public class ApiPassWordController extends BaseController {
      */
     @ApiIgnore
     @RequestMapping("/resetPasswordReturn")
-    public ModelAndView resetPasswordReturn(HttpServletRequest request,@ModelAttribute BankCallBean bean) {
+    public ModelAndView resetPasswordReturn(HttpServletRequest request, BankCallBean bean) {
         logger.info("修改交易密码同步回调start");
         bean.convert();
         logger.info("bean后:{}", JSONObject.toJSONString(bean, true));
         String isSuccess = request.getParameter("isSuccess");
         String url = request.getParameter("callback").replace("*-*-*","#");
-        int userId = Integer.parseInt(request.getParameter("userId"));
+        int userId = Integer.parseInt(bean.getLogUserId());
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         Map<String,Object> result =new HashMap<>();
         result.put("accountId", bankOpenAccount.getAccount());
