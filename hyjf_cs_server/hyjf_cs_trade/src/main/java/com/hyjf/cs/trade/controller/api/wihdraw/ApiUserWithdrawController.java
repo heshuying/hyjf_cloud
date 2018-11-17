@@ -17,6 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -57,9 +58,9 @@ public class ApiUserWithdrawController extends BaseTradeController {
      * @param
      * @return
      */
-    @ApiOperation(value = "用户提现后处理",notes = "用户提现后处理")
+    @ApiIgnore
     @RequestMapping(value = "/return")
-    public ModelAndView cashReturn(HttpServletRequest request, @ModelAttribute BankCallBean bean) {
+    public ModelAndView cashReturn(HttpServletRequest request,  BankCallBean bean) {
         BaseController.logger.info("用户提现后同步处理请求参数:" + JSONObject.toJSONString(bean));
         Map<String,Object> result = userWithdrawService.cashReturn(request, bean);
         return callbackErrorViewForMap(result);

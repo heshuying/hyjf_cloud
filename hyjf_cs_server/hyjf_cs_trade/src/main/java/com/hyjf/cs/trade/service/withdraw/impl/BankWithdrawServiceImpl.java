@@ -1324,9 +1324,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             // 调用江西银行提现接口
             // 调用汇付接口(提现)
 
-            String bankRetUrl =  "http://CS-TRADE/hyjf-api/server/user/withdraw/return?callback=" + retUrl.replace("#", "*-*-*");
+            String bankRetUrl =  systemConfig.getServerHost()+"/hyjf-api/server/user/withdraw/return?callback=" + retUrl.replace("#", "*-*-*");
             // 支付工程路径
-            String bankBgRetUrl = "http://CS-TRADE/hyjf-api/server/user/withdraw/callback?callback=" + bgRetUrl.replace("#", "*-*-*");// 支付工程路径
+            String bankBgRetUrl = "http://CS-TRADE/hyjf-api/server/user/withdraw/callback?callback=" + bgRetUrl.replace("#", "*-*-*");
 
             // 路由代码
             String routeCode = "";
@@ -1372,8 +1372,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                 bean.setRouteCode("2");
                 bean.setCardBankCnaps(StringUtils.isEmpty(payAllianceCode) ? bankCard.getPayAllianceCode() : payAllianceCode);
             }
-            // TODO忘记密码URL
-            //bean.setForgotPwdUrl(CustomConstants.FORGET_PASSWORD_URL);
+            bean.setForgotPwdUrl(systemConfig.getForgetpassword());
             bean.setForgotPwdUrl(userWithdrawRequestBean.getForgotPwdUrl());
             bean.setRetUrl(bankRetUrl);// 商户前台台应答地址(必须)
             bean.setNotifyUrl(bankBgRetUrl); // 商户后台应答地址(必须)
@@ -1538,6 +1537,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             result.put("statusDesc", "银行处理中,请稍后查询交易明细");
             result.put("status", ErrorCodeConstant.STATUS_CE000005);
         }
+        result.put("",url);
         return result;
     }
 
