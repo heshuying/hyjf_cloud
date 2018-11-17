@@ -79,7 +79,7 @@ public class ApiAuthController extends BaseUserController {
         UserVO user = authService.getUsersById(bankOpenAccount.getUserId());//用户ID
         // 拼装参数 调用江西银行
         // 同步调用路径
-        String retUrl = systemConfig.getServerHost() + request.getContextPath() + REQUEST_MAPPING + RETURL_SYN_ACTION + "?isSuccess=1&authType="
+        String retUrl = systemConfig.getServerHost() + request.getContextPath() + REQUEST_MAPPING + RETURL_SYN_ACTION + "?isSuccess=&authType="
                 + requestBean.getAuthType()+ "&callback="
                 + requestBean.getRetUrl().replace("#", "*-*-*");
         // 异步调用路
@@ -143,7 +143,7 @@ public class ApiAuthController extends BaseUserController {
      */
     @ApiOperation(value = "第三方端多合一授权同步回调", notes = "多合一授权")
     @RequestMapping(value = "/return")
-    public ModelAndView returnPage(HttpServletRequest request,@RequestBody BankCallBean bean) {
+    public ModelAndView returnPage(HttpServletRequest request,BankCallBean bean) {
         String isSuccess = request.getParameter("isSuccess");
         String url = request.getParameter("callback").replace("*-*-*", "#");
         String authType=request.getParameter("authType");
@@ -181,7 +181,7 @@ public class ApiAuthController extends BaseUserController {
      */
     @ApiOperation(value = "页面开户异步处理", notes = "页面开户异步处理")
     @RequestMapping("/bgReturn")
-    public BankCallResult bgReturn(HttpServletRequest request,@RequestBody BankCallBean bean) {
+    public BankCallResult bgReturn(HttpServletRequest request, BankCallBean bean) {
         logger.info("多合一授权异步回调start");
         BankCallResult result = new BankCallResult();
         BaseResultBean resultBean = new BaseResultBean();
