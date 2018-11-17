@@ -374,15 +374,18 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         //拼装参数
         UserInfoVO usersInfo = getUserInfo(user.getUserId());
         // 同步调用路径
-        String retUrl = "http://CS-USER/hyjf-api/server/user/transpassword";
+        String retUrl = systemConfig.getServerHost()+"/hyjf-api/server/user/transpassword";
+        String successUrl = systemConfig.getServerHost()+"/hyjf-api/server/user/transpassword";
         // 异步调用路
         String bgRetUrl = "http://CS-USER/hyjf-api/server/user/transpassword";
         // 调用设置密码接口
         if(txCode.equals(BankCallConstant.TXCODE_PASSWORD_SET_PAGE)){
             retUrl += "/passwordReturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&callback="+transPasswordRequestBean.getRetUrl().replace("#", "*-*-*");
+            successUrl += "/passwordReturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&isSuccess=1&callback="+transPasswordRequestBean.getRetUrl().replace("#", "*-*-*");
             bgRetUrl += "/passwordBgreturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&callback="+transPasswordRequestBean.getBgRetUrl().replace("#", "*-*-*");
         }else {
             retUrl += "/resetPasswordReturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&callback="+transPasswordRequestBean.getRetUrl().replace("#", "*-*-*");
+            successUrl +="/resetPasswordReturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&isSuccess=1&callback="+transPasswordRequestBean.getRetUrl().replace("#", "*-*-*");
             bgRetUrl += "/resetPasswordBgreturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&callback="+transPasswordRequestBean.getBgRetUrl().replace("#", "*-*-*");
         }
         logger.info(retUrl+"..."+bgRetUrl);
@@ -401,6 +404,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         bean.setMobile(user.getMobile());
         // 页面同步返回 URL
         bean.setRetUrl(retUrl);
+        bean.setSuccessfulUrl(successUrl);
         // 页面异步返回URL(必须)
         bean.setNotifyUrl(bgRetUrl);
         // 操作者ID

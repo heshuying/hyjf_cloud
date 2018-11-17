@@ -84,7 +84,7 @@ public class ApiPassWordController extends BaseController {
      */
     @ApiOperation(value = "设置交易密码同步回调")
     @GetMapping("/passwordReturn")
-    public ModelAndView passwordReturn(HttpServletRequest request,@ModelAttribute BankCallBean bean) {
+    public ModelAndView passwordReturn(HttpServletRequest request, BankCallBean bean) {
         logger.info("设置交易密码同步回调start");
         String url = request.getParameter("callback").replace("*-*-*", "#");
         bean.convert();
@@ -215,7 +215,7 @@ public class ApiPassWordController extends BaseController {
      */
     @ApiOperation(value = "修改交易密码同步回调")
     @GetMapping("/resetPasswordReturn")
-    public ModelAndView resetPasswordReturn(HttpServletRequest request,@ModelAttribute BankCallBean bean) {
+    public ModelAndView resetPasswordReturn(HttpServletRequest request, BankCallBean bean) {
         logger.info("修改交易密码同步回调start");
         bean.convert();
         String url = request.getParameter("callback").replace("*-*-*","#");
