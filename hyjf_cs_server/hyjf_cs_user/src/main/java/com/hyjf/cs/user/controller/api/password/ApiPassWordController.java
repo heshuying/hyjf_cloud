@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -213,8 +214,8 @@ public class ApiPassWordController extends BaseController {
      * @param request
      * @return
      */
-    @ApiOperation(value = "修改交易密码同步回调")
-    @GetMapping("/resetPasswordReturn")
+    @ApiIgnore
+    @RequestMapping("/resetPasswordReturn")
     public ModelAndView resetPasswordReturn(HttpServletRequest request, BankCallBean bean) {
         logger.info("修改交易密码同步回调start");
         bean.convert();
