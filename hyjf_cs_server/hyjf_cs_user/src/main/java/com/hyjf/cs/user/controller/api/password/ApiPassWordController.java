@@ -222,7 +222,7 @@ public class ApiPassWordController extends BaseController {
         logger.info("bean后:{}", JSONObject.toJSONString(bean, true));
         String isSuccess = request.getParameter("isSuccess");
         String url = request.getParameter("callback").replace("*-*-*","#");
-        int userId = Integer.parseInt(request.getParameter("userId"));
+        int userId = Integer.parseInt(request.getParameter("random"));
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         Map<String,Object> result =new HashMap<>();
         result.put("accountId", bankOpenAccount.getAccount());

@@ -380,12 +380,12 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         String bgRetUrl = "http://CS-USER/hyjf-api/server/user/transpassword";
         // 调用设置密码接口
         if(txCode.equals(BankCallConstant.TXCODE_PASSWORD_SET_PAGE)){
-            retUrl += "/passwordReturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&userId="+user.getUserId()+"&callback="+transPasswordRequestBean.getRetUrl().replace("#", "*-*-*");
-            successUrl += "/passwordReturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&userId="+user.getUserId()+"&isSuccess=1&callback="+transPasswordRequestBean.getRetUrl().replace("#", "*-*-*");
+            retUrl += "/passwordReturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&random="+user.getUserId()+"&callback="+transPasswordRequestBean.getRetUrl().replace("#", "*-*-*");
+            successUrl += "/passwordReturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&isSuccess=1&callback="+transPasswordRequestBean.getRetUrl().replace("#", "*-*-*");
             bgRetUrl += "/passwordBgreturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&callback="+transPasswordRequestBean.getBgRetUrl().replace("#", "*-*-*");
         }else {
-            retUrl += "/resetPasswordReturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&userId="+user.getUserId()+"&callback="+transPasswordRequestBean.getRetUrl().replace("#", "*-*-*");
-            successUrl +="/resetPasswordReturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&userId="+user.getUserId()+"&isSuccess=1&callback="+transPasswordRequestBean.getRetUrl().replace("#", "*-*-*");
+            retUrl += "/resetPasswordReturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&random="+user.getUserId()+"&callback="+transPasswordRequestBean.getRetUrl().replace("#", "*-*-*");
+            successUrl +="/resetPasswordReturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&isSuccess=1&callback="+transPasswordRequestBean.getRetUrl().replace("#", "*-*-*");
             bgRetUrl += "/resetPasswordBgreturn?acqRes="+transPasswordRequestBean.getAcqRes()+"&callback="+transPasswordRequestBean.getBgRetUrl().replace("#", "*-*-*");
         }
         logger.info(retUrl+"..."+bgRetUrl);
