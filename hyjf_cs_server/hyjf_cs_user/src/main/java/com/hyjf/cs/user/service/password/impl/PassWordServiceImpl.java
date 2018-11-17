@@ -724,7 +724,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
             return result;
         }
         //验签  暂时去掉验签
-        if(!this.verifyRequestSign(transPasswordRequestBean, verifyValue)){
+     /*   if(!this.verifyRequestSign(transPasswordRequestBean, verifyValue)){
             result.put("accountId", account);
             result.put("acqRes",acqRes);
             // 设置交易密码
@@ -739,7 +739,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
                 CommonSoaUtils.noRetPostThree(bgRetUrl, params);
             }
             return result;
-        }
+        }*/
         //根据账号找出用户ID
         BankOpenAccountVO bankOpenAccount = amUserClient.selectByAccountId(account);
         if(bankOpenAccount == null){
