@@ -182,11 +182,13 @@ public class ApiAuthController extends BaseUserController {
     @RequestMapping("/bgReturn")
     public BankCallResult bgReturn(HttpServletRequest request, BankCallBean bean) {
         logger.info("多合一授权异步回调start");
+        logger.info(JSONObject.toJSONString(bean));
         BankCallResult result = new BankCallResult();
         BaseResultBean resultBean = new BaseResultBean();
         Map<String, String> params = new HashMap<String, String>();
         String message = "";
         String status = "";
+
         if (bean == null) {
             logger.info("调用江西银行多合一授权接口,银行异步返回空");
             params.put("status", BaseResultBean.STATUS_FAIL);
