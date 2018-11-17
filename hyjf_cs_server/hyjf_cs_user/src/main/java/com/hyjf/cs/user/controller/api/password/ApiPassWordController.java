@@ -89,7 +89,7 @@ public class ApiPassWordController extends BaseController {
         logger.info("设置交易密码同步回调start");
         String url = request.getParameter("callback").replace("*-*-*", "#");
         bean.convert();
-        int userId = Integer.parseInt(bean.getLogUserId());
+        int userId = Integer.parseInt(request.getParameter("userId"));
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         // 调用查询电子账户密码是否设置
         BankCallBean selectbean = new BankCallBean();
@@ -218,11 +218,11 @@ public class ApiPassWordController extends BaseController {
     @RequestMapping("/resetPasswordReturn")
     public ModelAndView resetPasswordReturn(HttpServletRequest request,@ModelAttribute BankCallBean bean) {
         logger.info("修改交易密码同步回调start");
-        logger.info("bean前:{}", JSONObject.toJSONString(bean, true));
         bean.convert();
         logger.info("bean后:{}", JSONObject.toJSONString(bean, true));
+        String isSuccess = request.getParameter("isSuccess");
         String url = request.getParameter("callback").replace("*-*-*","#");
-        int userId = Integer.parseInt(bean.getLogUserId());
+        int userId = Integer.parseInt(request.getParameter("userId"));
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         Map<String,Object> result =new HashMap<>();
         result.put("accountId", bankOpenAccount.getAccount());
@@ -231,7 +231,7 @@ public class ApiPassWordController extends BaseController {
         result.put("acqRes",request.getParameter("acqRes"));
         result.put("statusDesc", "交易密码设置成功");
         // 返回失败
-        if (bean.getRetCode()!=null&&!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
+        if (isSuccess == null || !"1".equals(isSuccess)) {
             result.put("statusDesc", "交易密码修改失败！");
             result.put("status",ErrorCodeConstant.STATUS_CE999999);
             return callbackErrorViewForMap(result);
