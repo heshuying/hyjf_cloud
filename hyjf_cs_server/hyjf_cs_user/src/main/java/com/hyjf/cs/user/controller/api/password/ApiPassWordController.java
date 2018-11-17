@@ -68,7 +68,7 @@ public class ApiPassWordController extends BaseController {
         }
         UserVO user = (UserVO) map.get("user");
         BankOpenAccountVO bankOpenAccount = (BankOpenAccountVO) map.get("bankOpenAccount");
-        BankCallBean bean = passWordService.apiSetPassword(transPasswordRequestBean,BankCallConstant.BANK_URL_PASSWORDRESETPAGE,BankCallConstant.TXCODE_PASSWORD_RESET_PAGE,user,bankOpenAccount);
+        BankCallBean bean = passWordService.apiSetPassword(transPasswordRequestBean,BankCallConstant.BANK_URL_PASSWORDRESETPAGE,BankCallConstant.TXCODE_PASSWORD_SET_PAGE,user,bankOpenAccount);
         try {
             modelAndView = BankCallUtils.callApi(bean);
         } catch (Exception e) {

@@ -392,7 +392,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         BankCallBean bean = new BankCallBean();
         // 接口版本号
         bean.setVersion(BankCallConstant.VERSION_10);
-        bean.setTxCode(txCode);
+        bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_RESET_PAGE);
         // 机构代码
         bean.setInstCode(systemConfig.getBankInstcode());
         bean.setBankCode(systemConfig.getBankCode());
