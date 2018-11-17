@@ -240,14 +240,14 @@
 
 	<select id="searchTenderCreditInvestList" resultMap="AppCreditTenderInvestMap" parameterType="Map">
 		SELECT
-		CONCAT(substring(hydu.username,1,1),'**') AS user_name,
+		CONCAT(substring(hydct.user_name,1,1),'**') AS user_name,
 		SUBSTRING(FORMAT(hydct.assign_capital,4),1,LENGTH(FORMAT(hydct.assign_capital,4))-2) AS account,
-		from_unixtime(
+		date_format(
 		hydct.create_time,
 		'%Y-%m-%d %H:%i:%s'
 		) AS invest_time
 		FROM ht_credit_tender hydct
-		LEFT JOIN ht_r_user hydu ON hydct.user_id = hydu.user_id
+		-- LEFT JOIN ht_r_user hydu ON hydct.user_id = hydu.user_id
 		<where>
 			hydct.credit_nid = #{creditNid,jdbcType=VARCHAR}
 		</where>

@@ -362,9 +362,9 @@ public class AppPassWordController extends BaseUserController {
                     ret.put("statusDesc", "密码不能为空");
                     return ret;
                 }
-                if (newPassword.length() < 6 || newPassword.length() > 16) {
+                if (newPassword.length() < 8 || newPassword.length() > 16) {
                     ret.put("status", "1");
-                    ret.put("statusDesc", "密码长度6-16位");
+                    ret.put("statusDesc", "密码长度8-16位");
                     return ret;
                 }
                 boolean hasNumber = false;
@@ -381,12 +381,12 @@ public class AppPassWordController extends BaseUserController {
                     return ret;
                 }
 
-                String regEx = "^[a-zA-Z0-9]+$";
+                String regEx = "^(?![0-9]+$)(?![a-zA-Z]+$)(?![\\`\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\+\\-\\=\\{\\}\\|\\[\\]\\\\\\;\\'\\:\\\"\\,\\.\\/\\<\\>\\?]+$)[0-9A-Za-z\\`\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\+\\-\\=\\{\\}\\|\\[\\]\\\\\\;\\'\\:\\\"\\,\\.\\/\\<\\>\\?]{8,16}$";
                 Pattern p = Pattern.compile(regEx);
                 Matcher m = p.matcher(newPassword);
                 if (!m.matches()) {
                     ret.put("status", "1");
-                    ret.put("statusDesc", "密码必须由数字和字母组成，如abc123");
+                    ret.put("statusDesc", "必须包含数字、字母、符号至少两种");
                     return ret;
                 }
                 String verificationType = CommonConstant.PARAM_TPL_ZHAOHUIMIMA;
