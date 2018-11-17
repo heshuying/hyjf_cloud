@@ -180,7 +180,7 @@ public class ApiAuthController extends BaseUserController {
      */
     @ApiOperation(value = "页面开户异步处理", notes = "页面开户异步处理")
     @RequestMapping("/bgReturn")
-    public BankCallResult bgReturn(HttpServletRequest request, BankCallBean bean) {
+    public BankCallResult bgReturn(HttpServletRequest request, @RequestBody BankCallBean bean) {
         logger.info("多合一授权异步回调start");
         logger.info(JSONObject.toJSONString(bean));
         BankCallResult result = new BankCallResult();
