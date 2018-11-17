@@ -216,7 +216,7 @@ public class ApiPassWordController extends BaseController {
      */
     @ApiIgnore
     @RequestMapping("/resetPasswordReturn")
-    public ModelAndView resetPasswordReturn(HttpServletRequest request, @RequestBody  BankCallBean bean) {
+    public ModelAndView resetPasswordReturn(HttpServletRequest request, @ModelAttribute  BankCallBean bean) {
         logger.info("修改交易密码同步回调start");
         bean.convert();
         logger.info("bean后:{}", JSONObject.toJSONString(bean, true));
