@@ -156,6 +156,18 @@ public class HjhDebtCreditVo extends BaseVO implements Serializable{
      * 预计开始退出时间
      */
     private Date endDate;
+    /**
+     * 项目期数（导出表格用）
+     */
+    private String projectApr;
+
+    public String getProjectApr() {
+        return projectApr;
+    }
+
+    public void setProjectApr(String projectApr) {
+        this.projectApr = projectApr;
+    }
 
     public Date getEndDate() {
         return endDate;

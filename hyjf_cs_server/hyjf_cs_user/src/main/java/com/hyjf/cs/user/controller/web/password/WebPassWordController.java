@@ -278,7 +278,7 @@ public class WebPassWordController extends BaseUserController{
         password1 = RSAJSPUtil.rsaToPassword(password1);
         password2 = RSAJSPUtil.rsaToPassword(password2);
         CheckUtil.check(StringUtils.isNotBlank(password2)&&password1.equals(password2),MsgEnum.ERR_PASSWORD_TWO_DIFFERENT_PASSWORD);
-        CheckUtil.check(password1.length() >= 6 && password1.length() <= 16,MsgEnum.ERR_PASSWORD_LENGTH);
+        CheckUtil.check(password1.length() >= 8 && password1.length() <= 16,MsgEnum.ERR_PASSWORD_LENGTH);
         // 改变验证码状态
         int checkStatus = this.passWordService.updateCheckMobileCode(mobile, code, CommonConstant.PARAM_TPL_ZHAOHUIMIMA, CustomConstants.CLIENT_PC, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
         // 再次验证验证码

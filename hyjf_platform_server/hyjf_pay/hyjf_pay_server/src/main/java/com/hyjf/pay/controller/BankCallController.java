@@ -71,7 +71,7 @@ public class BankCallController extends BaseController {
      */
     @PostMapping(value = "callApiPage.json")
     @ResponseBody
-    @HystrixCommand(commandKey="银行页面调用", fallbackMethod = "fallBackBankPage",commandProperties = {
+    @HystrixCommand(commandKey="银行页面调用-callPageApi", fallbackMethod = "fallBackBankPage",commandProperties = {
             //设置断路器生效
           @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),        
             //一个统计窗口内熔断触发的最小个数3/10s

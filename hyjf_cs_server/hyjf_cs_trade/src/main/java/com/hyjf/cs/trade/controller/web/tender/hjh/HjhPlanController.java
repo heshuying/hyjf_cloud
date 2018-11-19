@@ -114,34 +114,36 @@ public class HjhPlanController extends BaseTradeController {
         Map<String, Object> resultMap = hjhTenderService.checkPlan(tender);
         WebResult<TenderInfoResult> resultWebResult = new WebResult();
         //校验用户测评
-        //返回参数拼装
         if(resultMap != null){
+            logger.info("校验用户测评==============:" + resultMap + "========开始===");
             TenderInfoResult tenderInfo = new TenderInfoResult();
             tenderInfo.setStatus(false);
             tenderInfo.setEvalType((String) resultMap.get("evalType"));
             tenderInfo.setRevaluationMoney((String) resultMap.get("revaluationMoney"));
             tenderInfo.setRiskTested((String) resultMap.get("riskTested"));
             tenderInfo.setMessage((String) resultMap.get("message"));
-            resultWebResult.setData(tenderInfo);
-        }
-        //用户测评校验状态转换
-        if(resultMap!=null){
             if(resultMap.get("riskTested") != null && resultMap.get("riskTested") != ""){
                 String riskTested = (String) resultMap.get("riskTested");
                 if(CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL.equals(riskTested)){
                     //未测评需要重新评测
                     resultWebResult.setStatus(MsgEnum.STATUS_EV000008.getCode());
+                    //tenderInfo.setStatus(MsgEnum.STATUS_EV000008.getCode());
                 }else if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
                     //已过期需要重新评测
                     resultWebResult.setStatus(MsgEnum.STATUS_EV000004.getCode());
+                    //tenderInfo.setStatus(MsgEnum.STATUS_EV000004.getCode());
                 }else if(CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)){
                     //计划类判断用户类型为稳健型以上才可以投资
                     resultWebResult.setStatus(MsgEnum.STATUS_EV000007.getCode());
+                    //tenderInfo.setStatus(MsgEnum.STATUS_EV000007.getCode());
                 }else if(CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS.equals(riskTested)){
                     //金额对比判断（校验金额 大于 设置测评金额）
                     resultWebResult.setStatus(MsgEnum.STATUS_EV000005.getCode());
+                    //tenderInfo.setStatus(MsgEnum.STATUS_EV000005.getCode());
                 }
             }
+            resultWebResult.setData(tenderInfo);
+            logger.info("校验用户测评==============:" + resultWebResult + "========结束===");
         }
         return resultWebResult;
     }
