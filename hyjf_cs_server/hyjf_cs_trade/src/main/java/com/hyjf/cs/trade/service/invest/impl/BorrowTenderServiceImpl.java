@@ -8,7 +8,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
-import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
@@ -61,7 +60,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
@@ -117,7 +115,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @Date 2018/6/24 14:35
      */
     @Override
-    @HystrixCommand(commandKey = "散标投资(三端)-borrowTender",fallbackMethod = "fallBackTender",commandProperties = {
+    @HystrixCommand(commandKey = "散标投资(三端)-borrowTender",fallbackMethod = "fallBackTender",ignoreExceptions = CheckException.class,commandProperties = {
             //设置断路器生效
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s

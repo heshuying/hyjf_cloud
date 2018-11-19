@@ -24,6 +24,7 @@ import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.*;
@@ -105,7 +106,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
 
     @Override
-    @HystrixCommand(commandKey = "提现(三端)-getUserBankWithdrawView",fallbackMethod = "fallBackWithdraw",commandProperties = {
+    @HystrixCommand(commandKey = "提现(三端)-getUserBankWithdrawView",fallbackMethod = "fallBackWithdraw",ignoreExceptions = CheckException.class,commandProperties = {
             //设置断路器生效
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s

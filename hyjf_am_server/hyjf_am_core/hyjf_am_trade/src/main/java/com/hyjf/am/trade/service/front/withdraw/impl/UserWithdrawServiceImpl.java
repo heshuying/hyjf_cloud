@@ -14,9 +14,9 @@ import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetterUtil;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.pay.lib.bank.util.BankCallParamConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
 
@@ -178,7 +178,11 @@ public class UserWithdrawServiceImpl extends BaseServiceImpl implements UserWith
                             jsonObject.put("flag",true);
 
                             // 提现金额
-                            BigDecimal transAmt = bean.getBigDecimal(BankCallParamConstant.PARAM_TXAMOUNT);
+                            BigDecimal transAmt = BigDecimal.ZERO;
+                            String txAmont = bean.getTxAmount();
+                            if (Validator.isNotNull(txAmont) && NumberUtils.isNumber(txAmont)) {
+                                transAmt = new BigDecimal(txAmont);
+                            }
                             // 从数据库中查询提现手续费
                             String fee = accountWithdraw.getFee();
                             // 提现手续费
