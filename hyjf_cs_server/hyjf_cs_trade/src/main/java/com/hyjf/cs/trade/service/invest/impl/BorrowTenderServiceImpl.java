@@ -2406,7 +2406,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investProjectPeriod = borrow.getBorrowPeriod() + "月";
         }
         params.put("investProjectPeriod", investProjectPeriod);
-        params.put("userId", userId);
+        params.put("investFlag", checkAppUtmInvestFlag(userId));
         //压入消息队列
         try {
             appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
