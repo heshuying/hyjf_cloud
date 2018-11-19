@@ -1553,7 +1553,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             result.put("statusDesc", "银行处理中,请稍后查询交易明细");
             result.put("status", ErrorCodeConstant.STATUS_CE000005);
         }
-        result.put("",url);
+        result.put("callBackAction",url);
         return result;
     }
 
