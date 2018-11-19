@@ -6,8 +6,8 @@ package com.hyjf.admin.controller.finance.associatedrecords;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AssociatedRecordsService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -18,10 +18,6 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -39,6 +35,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_EXPORT;
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_VIEW;
+
 /**
  * @author: sunpeikai
  * @version: AssociatedRecodesController, v0.1 2018/7/5 11:25
@@ -50,6 +49,7 @@ public class AssociatedRecodesController extends BaseController {
 
     @Autowired
     private AssociatedRecordsService associatedRecordsService;
+    private static final String PERMISSIONS = "associatedrecords";
 
     /**
      * 查询关联记录列表
@@ -59,6 +59,7 @@ public class AssociatedRecodesController extends BaseController {
      */
     @ApiOperation(value = "查询关联记录列表",notes = "查询关联记录列表")
     @PostMapping(value = "/getassociatedrecordlist")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_VIEW)
     public AdminResult<ListResult<AssociatedRecordListVO>> getAssociatedRecordList(@RequestBody AssociatedRecordListRequest request){
         Integer count = associatedRecordsService.getAssociatedRecordsCount(request);
         count = (count == null)?0:count;
@@ -73,6 +74,7 @@ public class AssociatedRecodesController extends BaseController {
      */
     @ApiOperation(value = "导出关联记录列表",notes = "导出关联记录列表")
     @PostMapping(value = "/associatedrecordlistexport")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_EXPORT)
     public void exportAssociatedRecordListExcel(@RequestBody AssociatedRecordListRequest request, HttpServletRequest httpRequest,HttpServletResponse response) throws Exception {
 
         //sheet默认最大行数
