@@ -36,6 +36,7 @@ public class BaseTradeController extends BaseController {
         }
         return null;
     }
+
     public String getForgotPwdUrl(String platform, HttpServletRequest request,SystemConfig sysConfig) {
 
 

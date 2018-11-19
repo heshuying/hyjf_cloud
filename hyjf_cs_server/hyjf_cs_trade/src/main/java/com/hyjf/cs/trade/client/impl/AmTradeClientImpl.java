@@ -682,7 +682,6 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int updateCreditEndForStatus(BankCreditEndVO bankCreditEndVO, int status) {
-        logger.info("cs-trade:txCounts:{}", bankCreditEndVO.getTxCounts());
         String url = urlBase + "bankCreditEndController/updateBankCreditEndForStatus";
         UpdateBankCreditEndForStatusRequest request = new UpdateBankCreditEndForStatusRequest(bankCreditEndVO, status);
         IntegerResponse response = restTemplate.postForEntity(url, request, IntegerResponse.class).getBody();
@@ -1115,7 +1114,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     @Cached(name="webHomeProjectListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
-	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
+	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
     public List<WebProjectListCustomizeVO> searchProjectList(ProjectListRequest request) {
         ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/searchProjectList",request,ProjectListResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> searchProjectList --> response = {}",response);

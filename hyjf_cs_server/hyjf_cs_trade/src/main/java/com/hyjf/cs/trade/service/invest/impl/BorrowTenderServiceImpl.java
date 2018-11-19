@@ -8,7 +8,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
-import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
@@ -61,7 +60,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
@@ -117,7 +115,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @Date 2018/6/24 14:35
      */
     @Override
-    @HystrixCommand(commandKey = "散标投资(三端)-borrowTender",fallbackMethod = "fallBackTender",commandProperties = {
+    @HystrixCommand(commandKey = "散标投资(三端)-borrowTender",fallbackMethod = "fallBackTender",ignoreExceptions = CheckException.class,commandProperties = {
             //设置断路器生效
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s
@@ -647,7 +645,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         if(accountStr!=null&&!accountStr.equals("")){
             account = new BigDecimal(accountStr);
         }
-        if(logOrdId!=null && account!=null && !"".equals(account)){
+        if(logOrdId!=null && account!=null && !"".equals(account) && "1".equals(isPrincipal)){
             switch (borrowStyle) {
                 case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“：历史回报=投资金额*年化收益÷12*月数；
                     earnings = DuePrincipalAndInterestUtils.getMonthInterest(account, borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
@@ -682,54 +680,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             data.put("income",df.format(earnings));
             // 本金
             data.put("account",df.format(account));
-
-            // 查询投资来源
-            List<BorrowTenderVO> list = amTradeClient.getBorrowTenderListByNid(logOrdId);
-            if (!CollectionUtils.isEmpty(list)) {
-                BorrowTenderVO vo = list.get(0);
-                if (CustomConstants.WRB_CHANNEL_CODE.equals(vo.getTenderFrom())) {
-                    // 同步回调通知
-                    logger.info("风车理财投资回调,订单Id :{}", logOrdId);
-                    this.notifyToWrb(userId, logOrdId);
-                }
-            }
-
-            AppUtmRegVO appChannelStatisticsDetails = amMongoClient.getAppChannelStatisticsDetailByUserId(userId);
-            if (appChannelStatisticsDetails != null) {
-                logger.info("更新app渠道统计表, userId is: {}", userId);
-                Map<String, Object> params = new HashMap<String, Object>();
-                // 认购本金
-                params.put("accountDecimal", account);
-                // 投资时间
-                params.put("investTime", GetDate.getNowTime10());
-                // 项目类型
-                if (borrow.getProjectType() == 13) {
-                    params.put("projectType", "汇金理财");
-                } else {
-                    params.put("projectType", "汇直投");
-                }
-                // 首次投标项目期限
-                String investProjectPeriod = "";
-                if ("endday".equals(borrowStyle)) {
-                    investProjectPeriod = borrow.getBorrowPeriod() + "天";
-                } else {
-                    investProjectPeriod = borrow.getBorrowPeriod() + "月";
-                }
-                params.put("investProjectPeriod", investProjectPeriod);
-                //根据investFlag标志位来决定更新哪种投资
-                params.put("investFlag", checkAppUtmInvestFlag(userId));
-                // 用户id
-                params.put("userId", userId);
-                //压入消息队列
-                try {
-                    appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-                            MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
-                } catch (MQException e) {
-                    e.printStackTrace();
-                    logger.error("渠道统计用户累计投资推送消息队列失败！！！");
-                }
-            }
-
         }
         // 查询优惠券信息
         CouponUserVO couponUser = amTradeClient.getCouponUser(couponGrantId, userId);
@@ -1498,7 +1448,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     String riskTested = (String) result.get("riskTested");
                     if (CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL.equals(riskTested)) {
                         //未测评新评测
-                        throw new CheckException(MsgEnum.STATUS_EV000008);
+                        throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_RISK_ASSESSMENT);
                     } else if (CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)) {
                         //已过期需要重新评测
                         throw new CheckException(MsgEnum.STATUS_EV000004);
@@ -1537,7 +1487,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     String riskTested = (String) result.get("riskTested");
                     if (CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL.equals(riskTested)) {
                         //未测评新评测
-                        throw new CheckException(MsgEnum.STATUS_EV000008);
+                        throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_RISK_ASSESSMENT);
                     } else if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
                         //已过期需要重新评测
                         throw new CheckException(MsgEnum.STATUS_EV000004);
@@ -1564,7 +1514,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 String riskTested = (String) result.get("riskTested");
                 if (CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL.equals(riskTested)) {
                     //未测评新评测
-                    throw new CheckException(MsgEnum.STATUS_EV000008);
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_RISK_ASSESSMENT);
                 } else if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
                     //已过期需要重新评测
                     throw new CheckException(MsgEnum.STATUS_EV000004);
@@ -2330,6 +2280,17 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 e.printStackTrace();
             }
 
+            // 查询投资来源
+            List<BorrowTenderVO> list = amTradeClient.getBorrowTenderListByNid(bean.getOrderId());
+            if (!CollectionUtils.isEmpty(list)) {
+                BorrowTenderVO vo = list.get(0);
+                if (CustomConstants.WRB_CHANNEL_CODE.equals(vo.getTenderFrom())) {
+                    // 同步回调通知
+                    logger.info("风车理财投资回调,订单Id :{}", bean.getOrderId());
+                    this.notifyToWrb(user.getUserId(), bean.getOrderId());
+                }
+            }
+
             // 投资成功后,发送神策数据统计MQ
             // add by liuyang 神策数据统计 20180823 start
             try {
@@ -2443,12 +2404,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investProjectPeriod = borrow.getBorrowPeriod() + "月";
         }
         params.put("investProjectPeriod", investProjectPeriod);
+        params.put("investFlag", checkAppUtmInvestFlag(userId));
         //压入消息队列
         try {
-            appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.TENDER_CHANNEL_STATISTICS_DETAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                    MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
         } catch (MQException e) {
-            e.printStackTrace();
-            logger.error("渠道统计用户累计投资推送消息队列失败！！！");
+            logger.error("渠道统计用户累计投资推送消息队列失败！！！", e);
         }
 
         /*(6)更新  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 结束*/
