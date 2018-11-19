@@ -19,21 +19,16 @@ public class RedisConstants {
     // 汇计划分割线
     public static final String HJH_SLASH = "_";
 
-    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
-    // _tmp
-    public static final String HJH_SLASH_TMP = "_tmp";
-    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
-
     // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ key通用常量 ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ //
 
 
     /**
-     * 记录密码错误次数Redis前缀web端
+     * 记录密码错误次数Redis前缀web端(password_err_count_app:userName/mobile)
      */
     public static final String PASSWORD_ERR_COUNT_APP = "password_err_count_app:";
 
     /**
-     * 记录密码错误次数Redis前缀web端
+     * 记录密码错误次数Redis前缀web端(password_err_count_app:userName/mobile)
      */
     public static final String PASSWORD_ERR_COUNT_WEB = "password_err_count_web:";
 
@@ -74,7 +69,7 @@ public class RedisConstants {
     public static final String HJH_TENDER_REPEAT = "hjh_tender_repeat:";
 
     /**
-     * 汇计划可投余额前缀
+     * 汇计划可投余额前缀 (hjhbal:$planNid)
      */
     public static final String HJH_PLAN = "hjhbal:";
 
@@ -113,14 +108,21 @@ public class RedisConstants {
 	/** 还款请求任务名称 */
 	public static final String REPAY_REQUEST_TASK = "repayRequest:";
 
-    // 汇计划队列前缀
+    // 汇计划队列前缀 (queue:credit:$creditNid, queue:invest:$borrowNid, queue:invest:$borrowNid_tmp)
     public static final String HJH_PLAN_LIST = "queue:";
 
+    // 汇计划自动债转中的标志 redis key (debtswaping:$borrowNid)
+    public static final String HJH_DEBT_SWAPING = "debtswaping:";
 
-    // 汇计划标的队列标识 债转（债转标的）
+    // 汇计划标的队列标识 债转（债转标的） (queue:credit:$creditNid)
     public static final String HJH_BORROW_CREDIT = "credit:";
-    // 汇计划标的队列标识 投资（原始标的）
+    // 汇计划标的队列标识 投资（原始标的） (queue:invest:$borrowNid)
     public static final String HJH_BORROW_INVEST = "invest:";
+
+    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
+    // _tmp (queue:invest:$borrowNid_tmp)
+    public static final String HJH_SLASH_TMP = "_tmp";
+    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
 
     /**
      * 散标投资防重校验
@@ -143,12 +145,12 @@ public class RedisConstants {
     public static final String CACHE_PARAM_NAME = "hyjf_param_name:";
 
     /**
-     * 短信单手机控制
+     * 短信单手机控制(max_phone_count:mobile)
      */
     public static final String CACHE_MAX_PHONE_COUNT = "max_phone_count:";
 
     /**
-     * 单IP最大登录控制
+     * 单IP最大登录控制(max_ip_count:ip)
      */
     public static final String CACHE_MAX_IP_COUNT = "max_ip_count:";
 
@@ -167,7 +169,7 @@ public class RedisConstants {
      */
     public static final String BORROW_NID = "BORROW_NID:";
     /**
-     * wechat sign
+     * wechat sign(sign:sign)
      */
     public static final String SIGN = "sign:";
     /**
@@ -187,12 +189,12 @@ public class RedisConstants {
     
 
     /**
-     * 用户token令牌前缀
+     * 用户token令牌前缀(token:token)
      */
     public static final String USER_TOEKN_KEY = "token:";
 
     /**
-     * 用户userId令牌前缀
+     * 用户userId令牌前缀(user_id:userId)
      */
     public static final String USERID_KEY = "user_id:";
 
@@ -210,7 +212,7 @@ public class RedisConstants {
     public static final String SMS_CONFIG = "sms_config:";
 
     /**
-     * 记录密码错误次数Redis前缀
+     * 记录密码错误次数Redis前缀(password_err_count:userId)
      */
     public static final String PASSWORD_ERR_COUNT = "password_err_count:";
 
@@ -339,13 +341,13 @@ public class RedisConstants {
     public static final String PROTOCOL_PARAMS = "protocol_params:";
 
     /**
-     * 同步余额rediskey
+     * 同步余额rediskey(syn_balance:userId)
      */
     public static final String SYNBALANCE = "syn_balance:";
 
 
     /**
-     * 受托支付申请防并发key
+     * 受托支付申请防并发key(trustee_pay:logOrderId)
      */
     public static final String CONCURRENCE_TRUSTEEPAY = "trustee_pay:";
 
@@ -441,8 +443,6 @@ public class RedisConstants {
      */
     public static final String TEMPLATE_UPLOAD_URL = "template_upload_url:";
 
-    // 汇计划自动债转中的标志 redis key
-    public static final String HJH_DEBT_SWAPING = "debtswaping:";
     /**
      * 缴费授权
      */
