@@ -476,8 +476,7 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
 						}
 						// 参数是二级菜单
 					} else {
-						String s1 = adminRoleMenuPermissionsCustomizeMapper.checkLevel(perm);
-						firstClass.add(s1 + "_" + VIEW);
+						firstClass.add(s + "_" + VIEW);
 						List<String> permissionId = adminRoleMenuPermissionsCustomizeMapper.selectMenuPerssion(perm);
 						for (String pId : permissionId) {
 							firstClass.add(perm + "_" + pId);

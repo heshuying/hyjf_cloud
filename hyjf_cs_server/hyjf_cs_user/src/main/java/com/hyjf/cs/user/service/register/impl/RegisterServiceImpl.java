@@ -138,7 +138,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         String password = registerRequest.getPassword();
         //密码不能为空
         CheckUtil.check(StringUtils.isNotEmpty(password), MsgEnum.ERR_OBJECT_REQUIRED, "密码");
-        CheckUtil.check(password.length() >= 6 && password.length() <= 16, MsgEnum.ERR_PASSWORD_LENGTH);
+        CheckUtil.check(password.length() >= 8 && password.length() <= 16, MsgEnum.ERR_PASSWORD_LENGTH);
         boolean hasNumber = false;
         for (int i = 0; i < password.length(); i++) {
             if (Validator.isNumber(password.substring(i, i + 1))) {
@@ -147,7 +147,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             }
         }
         CheckUtil.check(hasNumber, MsgEnum.ERR_PASSWORD_NO_NUMBER);
-        String regEx = "^[a-zA-Z0-9]+$";
+        String regEx = "^(?![0-9]+$)(?![a-zA-Z]+$)(?![\\`\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\+\\-\\=\\{\\}\\|\\[\\]\\\\\\;\\'\\:\\\"\\,\\.\\/\\<\\>\\?]+$)[0-9A-Za-z\\`\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\+\\-\\=\\{\\}\\|\\[\\]\\\\\\;\\'\\:\\\"\\,\\.\\/\\<\\>\\?]{8,16}$";
         Pattern p = Pattern.compile(regEx);
         Matcher m = p.matcher(password);
         CheckUtil.check(m.matches(), MsgEnum.ERR_FMT_PASSWORD);

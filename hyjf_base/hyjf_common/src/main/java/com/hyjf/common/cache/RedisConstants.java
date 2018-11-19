@@ -10,10 +10,22 @@ package com.hyjf.common.cache;
  */
 public class RedisConstants {
 
+    // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ key通用常量 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ //
     /**
      * 投资防重校验过期时间
      */
     public static final Integer TENDER_OUT_TIME = 300;
+
+    // 汇计划分割线
+    public static final String HJH_SLASH = "_";
+
+    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
+    // _tmp
+    public static final String HJH_SLASH_TMP = "_tmp";
+    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
+
+    // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ key通用常量 ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ //
+
 
     /**
      * 记录密码错误次数Redis前缀web端
@@ -109,17 +121,6 @@ public class RedisConstants {
     public static final String HJH_BORROW_CREDIT = "credit:";
     // 汇计划标的队列标识 投资（原始标的）
     public static final String HJH_BORROW_INVEST = "invest:";
-
-    // 汇计划分割线
-    public static final String HJH_SLASH = "_";
-
-    // 汇计划自动债转中的标志 redis key
-    public static final String HJH_DEBT_SWAPING = "debtswaping:";
-
-    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
-    // _tmp
-    public static final String HJH_SLASH_TMP = "_tmp";
-    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
 
     /**
      * 散标投资防重校验
@@ -255,6 +256,20 @@ public class RedisConstants {
      * 定时发标key
      */
     public static final String ONTIME = "ontime:";
+    /*分隔符*/
+    public static final String UNDERLINE = "_";
+
+    /*分隔符*/
+    public static final String COLON = ":";
+
+    /** 定时发标时间key名 */
+    public static final String REDIS_KEY_ONTIME = "ontime";
+
+    /** 定时发标状态修改锁key名 */
+    public static final String REDIS_KEY_ONTIME_LOCK = "ontime_lock";
+
+    /** 定时发标状态修改状态key名 */
+    public static final String REDIS_KEY_ONTIME_STATUS = "ontime_status";
 
     /**
      * 用户画像评分
@@ -426,4 +441,6 @@ public class RedisConstants {
      */
     public static final String TEMPLATE_UPLOAD_URL = "template_upload_url:";
 
+    // 汇计划自动债转中的标志 redis key
+    public static final String HJH_DEBT_SWAPING = "debtswaping:";
 }

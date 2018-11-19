@@ -53,9 +53,9 @@ public class RepayController extends BaseController {
     //获取还款结果接口
     public static final String METHOD_REPAY_RESULT = "userRepayResult";
 
-    @PostMapping("/getrepayresult")
-    @ApiParam(required = true, name = "findDetailById", value = "第三方资产状态查询接口")
-    @ApiOperation(value = "第三方资产状态查询接口", httpMethod = "POST", notes = "第三方资产状态查询接口")
+    @PostMapping("/getrepayresult.do")
+    @ApiParam(required = true, name = "getrepayresult", value = "第三方还款批次处理")
+    @ApiOperation(value = "第三方还款批次处理", httpMethod = "POST", notes = "第三方还款批次处理")
     public BaseResultBean getrepayresult(@RequestBody @Valid RepayRequestBean repaybean){
         RepayResultBean resultBean = new RepayResultBean();
         try {

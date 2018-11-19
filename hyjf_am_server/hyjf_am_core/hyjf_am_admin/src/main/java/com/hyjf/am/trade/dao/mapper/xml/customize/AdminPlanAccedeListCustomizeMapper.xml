@@ -242,7 +242,7 @@
 					hdpa.create_time,
 					'%Y-%m-%d %H:%i'
 				) AS create_time, -->
-				hdpa.create_time AS create_time,
+		        date_format(hdpa.create_time, '%Y-%m-%d %H:%i:%s') AS create_time,
 				
 				hdpa.create_time AS add_time_long,
 				hdpa.invite_user_name referee_name, 
@@ -293,7 +293,7 @@
 				hdpa.actual_apr AS actualApr,
 			  	hdpa.invest_counts AS investCounts,
 			  	hdpa.match_dates AS matchDates,
-				hdpa.end_date,
+				date_format(hdpa.end_date, '%Y-%m-%d') AS end_date,
 				hdpa.acctual_payment_time
 			FROM
 				ht_hjh_accede hdpa

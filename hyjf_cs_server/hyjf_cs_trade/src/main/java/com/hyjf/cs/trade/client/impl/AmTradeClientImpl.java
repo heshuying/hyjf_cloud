@@ -2,6 +2,9 @@ package com.hyjf.cs.trade.client.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alicp.jetcache.anno.CacheRefresh;
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
 import com.hyjf.am.response.*;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.api.ApiAssetStatusCustomizeResponse;
@@ -66,6 +69,7 @@ import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.BatchCenterCustomize;
@@ -94,6 +98,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author xiasq
@@ -677,6 +682,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int updateCreditEndForStatus(BankCreditEndVO bankCreditEndVO, int status) {
+        logger.info("cs-trade:txCounts:{}", bankCreditEndVO.getTxCounts());
         String url = urlBase + "bankCreditEndController/updateBankCreditEndForStatus";
         UpdateBankCreditEndForStatusRequest request = new UpdateBankCreditEndForStatusRequest(bankCreditEndVO, status);
         IntegerResponse response = restTemplate.postForEntity(url, request, IntegerResponse.class).getBody();
@@ -1108,6 +1114,8 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
+    @Cached(name="webHomeProjectListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public List<WebProjectListCustomizeVO> searchProjectList(ProjectListRequest request) {
         ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/searchProjectList",request,ProjectListResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> searchProjectList --> response = {}",response);
@@ -1188,6 +1196,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/6/21 15:29
      */
     @Override
+	@Cached(name="webHomeHjhCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+	@CacheRefresh(refresh = 2, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
     public List<HjhPlanCustomizeVO> searchPlanList(ProjectListRequest request) {
         com.hyjf.am.response.trade.HjhPlanResponse response =  restTemplate.postForEntity(BASE_URL + "/web/searchPlanList",request, com.hyjf.am.response.trade.HjhPlanResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> searchPlanList --> response = {}",response);
@@ -1235,6 +1245,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/6/20 17:24
      */
     @Override
+	@Cached(name="appHomeProjectListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public List<AppProjectListCustomizeVO> searchAppProjectList(AppProjectListRequest request) {
         AppProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/searchAppProjectList",request,AppProjectListResponse.class).getBody();
         logger.info("WebProjectListClientImpl --> searchAppProjectList --> response = {}",response);
@@ -3818,8 +3830,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      * 查询移动端首页bannerlist
      * @author zhangyk
      * @date 2018/10/12 11:08
+     * 微信APP首页banner添加缓存--by libin
      */
     @Override
+	@Cached(name="app&wechatHomeBannerCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+	@CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
     public List<AppAdsCustomizeVO> getHomeBannerList(AdsRequest request) {
         AppAdsCustomizeResponse response = restTemplate.postForEntity("http://AM-MARKET/am-market/ads/searchHomeBanner",request,AppAdsCustomizeResponse.class).getBody();
         if (Response.isSuccess(response)){
@@ -4190,7 +4205,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public  List<BatchBorrowRecoverVo> getBatchBorrowRecoverList(BatchBorrowRecoverRequest request) {
         BatchBorrowRecoverReponse response = restTemplate.
-                postForEntity("http://AM-TRADE/am-trade/adminBatchBorrowRecover/getList", request, BatchBorrowRecoverReponse.class).
+                postForEntity("http://AM-TRADE/am-trade/apiBatchBorrowRecover/getList", request, BatchBorrowRecoverReponse.class).
                 getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
@@ -4209,7 +4224,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public Integer getCountBatchCenter(BatchBorrowRecoverRequest request) {
         IntegerResponse result = restTemplate.postForEntity(
-                "http://AM-TRADE/am-trade/adminBatchBorrowRecover/getListTotal/", request,
+                "http://AM-TRADE/am-trade/apiBatchBorrowRecover/getListTotal/", request,
                 IntegerResponse.class).getBody();
         if (result == null) {
             return 0;
@@ -5873,6 +5888,47 @@ public class AmTradeClientImpl implements AmTradeClient {
         ApplyAgreementInfoResponse response = restTemplate.getForEntity(url,ApplyAgreementInfoResponse.class).getBody();
         if (response != null) {
             return response.getResultList();
+        }
+        return null;
+    }
+
+
+    @Override
+    public List<PlanInvestCustomizeVO> selectInvestCreditList(Map<String, Object> param) {
+        String url = "http://AM-TRADE/am-trade/htj/selectInvestCreditList";
+        PlanInvestResponse response = restTemplate.postForEntity(url,param,PlanInvestResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<PlanInvestCustomizeVO> selectCreditCreditList(Map<String, Object> param) {
+        String url = "http://AM-TRADE/am-trade/htj/selectCreditCreditList";
+        PlanInvestResponse response = restTemplate.postForEntity(url,param,PlanInvestResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public List<PlanLockCustomizeVO> selectUserProjectListCapital(Map<String, Object> param) {
+        String url = "http://AM-TRADE/am-trade/htj/selectUserProjectListCapital";
+        PlanLockResponse response = restTemplate.postForEntity(url,param,PlanLockResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public String selectPlanInfoSum(String accedeOrderId) {
+        String url = "http://AM-TRADE/am-trade/htj/selectPlanInfoSum/"+ accedeOrderId;
+        StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultStr();
         }
         return null;
     }

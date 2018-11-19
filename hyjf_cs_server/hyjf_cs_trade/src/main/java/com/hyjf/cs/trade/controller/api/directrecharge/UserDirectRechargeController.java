@@ -64,7 +64,8 @@ public class UserDirectRechargeController extends BaseTradeController {
     @GetMapping(value = "/directRechargePageReturn")
     public ModelAndView pageReturn(HttpServletRequest request, BankCallBean bean) {
         logger.info("页面充值同步回调start,请求参数为：【" + JSONObject.toJSONString(bean, true) + "】");
-        return directRechargeService.pageReturn(request, bean);
+        Map<String,Object> result =  directRechargeService.pageReturn(request, bean);
+        return callbackErrorViewForMap(result);
     }
 
     /**

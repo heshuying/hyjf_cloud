@@ -11,7 +11,6 @@ import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.bean.BaseResultBean;
 import com.hyjf.cs.user.bean.ThirdPartyTransPasswordRequestBean;
-import com.hyjf.cs.user.bean.ThirdPartyTransPasswordResultBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.service.password.PassWordService;
@@ -28,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -68,7 +68,7 @@ public class ApiPassWordController extends BaseController {
         }
         UserVO user = (UserVO) map.get("user");
         BankOpenAccountVO bankOpenAccount = (BankOpenAccountVO) map.get("bankOpenAccount");
-        BankCallBean bean = passWordService.apiSetPassword(transPasswordRequestBean,BankCallConstant.BANK_URL_PASSWORDRESETPAGE,BankCallConstant.TXCODE_PASSWORD_RESET_PAGE,user,bankOpenAccount);
+        BankCallBean bean = passWordService.apiSetPassword(transPasswordRequestBean,BankCallConstant.BANK_URL_PASSWORDRESETPAGE,BankCallConstant.TXCODE_PASSWORD_SET_PAGE,user,bankOpenAccount);
         try {
             modelAndView = BankCallUtils.callApi(bean);
         } catch (Exception e) {
@@ -85,13 +85,15 @@ public class ApiPassWordController extends BaseController {
      */
     @ApiOperation(value = "设置交易密码同步回调")
     @GetMapping("/passwordReturn")
-    public ModelAndView passwordReturn(HttpServletRequest request,@ModelAttribute BankCallBean bean) {
+    public ModelAndView passwordReturn(HttpServletRequest request, BankCallBean bean) {
         logger.info("设置交易密码同步回调start");
-        ModelAndView modelAndView = new ModelAndView(CALL_BACK_TRANSPASSWORD_VIEW);
-        ThirdPartyTransPasswordResultBean repwdResult = new ThirdPartyTransPasswordResultBean();
-        repwdResult.setCallBackAction(request.getParameter("callback").replace("*-*-*","#"));
+        String url = request.getParameter("callback").replace("*-*-*", "#");
         bean.convert();
-        int userId = Integer.parseInt(bean.getLogUserId());
+        String logUserId = bean.getLogUserId();
+        if(null==logUserId){
+            logUserId = request.getParameter("logUserId");
+        }
+        int userId = Integer.parseInt(logUserId);
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         // 调用查询电子账户密码是否设置
         BankCallBean selectbean = new BankCallBean();
@@ -110,27 +112,25 @@ public class ApiPassWordController extends BaseController {
         BankCallBean retBean = null;
         // 调用接口
         retBean = BankCallUtils.callApiBg(selectbean);
-        repwdResult.set("accountId", bankOpenAccount.getAccount());
+        Map<String,Object> result =new HashMap<>();
+        result.put("accountId", bankOpenAccount.getAccount());
+        result.put("status", "success");
+        result.put("callBackAction", url);
         if ("1".equals(retBean.getPinFlag())) {
             // 是否设置密码中间状态
             passWordService.updateUserIsSetPassword(userId);
-            modelAndView.addObject("statusDesc", "交易密码设置成功！");
-            BaseResultBean resultBean = new BaseResultBean();
-            resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
-            repwdResult.set("chkValue", resultBean.getChkValue());
-            repwdResult.set("status", resultBean.getStatus());
+            result.put("status", ErrorCodeConstant.SUCCESS);
+            result.put("statusDesc", "交易密码设置成功");
         } else {
             // 设置交易密码
-            modelAndView.addObject("statusDesc", "交易密码设置失败,失败原因：" + passWordService.getBankRetMsg(bean.getRetCode()));
-            BaseResultBean resultBean = new BaseResultBean();
-            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
-            repwdResult.set("chkValue", resultBean.getChkValue());
-            repwdResult.set("status", resultBean.getStatus());
+            result.put("statusDesc", "交易密码设置失败！");
+            result.put("status",ErrorCodeConstant.STATUS_CE999999);
+            result.put("acqRes",request.getParameter("acqRes"));
+            return callbackErrorViewForMap(result);
         }
-        repwdResult.set("acqRes",request.getParameter("acqRes"));
-        modelAndView.addObject("callBackForm", repwdResult);
+        result.put("acqRes",request.getParameter("acqRes"));
         logger.info("设置交易密码同步回调end");
-        return modelAndView;
+        return callbackErrorViewForMap(result);
     }
 
     /**
@@ -152,7 +152,9 @@ public class ApiPassWordController extends BaseController {
         Map<String, String> params = new HashMap<String, String>();
         // 返回值修改 end
         bean.convert();
+        logger.info("设置交易密码异步回调，bean后:{}", JSONObject.toJSONString(bean, true));
         int userId = Integer.parseInt(bean.getLogUserId());
+        logger.info("userId："+userId);
         UserVO user = this.passWordService.getUsersById(userId);
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         // 成功或审核中
@@ -218,38 +220,34 @@ public class ApiPassWordController extends BaseController {
      * @param request
      * @return
      */
-    @ApiOperation(value = "修改交易密码同步回调")
-    @GetMapping("/resetPasswordReturn")
-    public ModelAndView resetPasswordReturn(HttpServletRequest request,@ModelAttribute BankCallBean bean) {
+    @ApiIgnore
+    @RequestMapping("/resetPasswordReturn")
+    public ModelAndView resetPasswordReturn(HttpServletRequest request, @ModelAttribute  BankCallBean bean) {
         logger.info("修改交易密码同步回调start");
-        ModelAndView modelAndView = new ModelAndView(CALL_BACK_TRANSPASSWORD_VIEW);
-        ThirdPartyTransPasswordResultBean repwdResult = new ThirdPartyTransPasswordResultBean();
         bean.convert();
-        repwdResult.setCallBackAction(request.getParameter("callback").replace("*-*-*","#"));
-        int userId = Integer.parseInt(bean.getLogUserId());
-        BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
-        repwdResult.set("accountId", bankOpenAccount.getAccount());
-        // 返回失败
-        if (bean.getRetCode()!=null&&!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
-            BaseResultBean resultBean = new BaseResultBean();
-            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
-            repwdResult.set("chkValue", resultBean.getChkValue());
-            repwdResult.set("status", resultBean.getStatus());
-            repwdResult.set("acqRes",request.getParameter("acqRes"));
-            modelAndView.addObject("statusDesc", "交易密码修改失败,失败原因：" + passWordService.getBankRetMsg(bean.getRetCode()));
-            modelAndView.addObject("callBackForm", repwdResult);
-            logger.info("修改交易密码同步回调end(密码修改失败)");
-            return modelAndView;
+        logger.info("bean后:{}", JSONObject.toJSONString(bean, true));
+        String isSuccess = request.getParameter("isSuccess");
+        String url = request.getParameter("callback").replace("*-*-*","#");
+        String logUserId = bean.getLogUserId();
+        if(null==logUserId){
+            logUserId = request.getParameter("logUserId");
         }
-        modelAndView.addObject("statusDesc", "修改交易密码成功");
-        BaseResultBean resultBean = new BaseResultBean();
-        resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
-        repwdResult.set("chkValue", resultBean.getChkValue());
-        repwdResult.set("status", resultBean.getStatus());
-        repwdResult.set("acqRes",request.getParameter("acqRes"));
-        modelAndView.addObject("callBackForm", repwdResult);
-        logger.info("修改交易密码同步回调end");
-        return modelAndView;
+        int userId = Integer.parseInt(logUserId);
+        BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
+        Map<String,Object> result =new HashMap<>();
+        result.put("accountId", bankOpenAccount.getAccount());
+        result.put("callBackAction", url);
+        result.put("status", ErrorCodeConstant.SUCCESS);
+        result.put("acqRes",request.getParameter("acqRes"));
+        result.put("statusDesc", "交易密码设置成功");
+        // 返回失败
+        if (isSuccess == null || !"1".equals(isSuccess)) {
+            result.put("statusDesc", "交易密码修改失败！");
+            result.put("status",ErrorCodeConstant.STATUS_CE999999);
+            return callbackErrorViewForMap(result);
+        }
+        logger.info("设置交易密码同步回调end");
+        return callbackErrorViewForMap(result);
     }
 
     /**
