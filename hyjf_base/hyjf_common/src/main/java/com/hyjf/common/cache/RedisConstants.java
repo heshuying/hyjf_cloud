@@ -463,4 +463,9 @@ public class RedisConstants {
      * 网贷之家token校验(+userName)
      */
     public final static String KEY_WDZJ_KEY="token_wdzj_";
+
+    /**
+     * 神策开户redis+用户ID
+     */
+    public final static String SENSORS_DATA_OPEN_ACCOUNT ="SENSORS_DATA_OPEN_ACCOUNT:";
 }
