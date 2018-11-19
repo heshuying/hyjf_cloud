@@ -160,7 +160,7 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
 
             // 拼装参数  调用江西银行
             // 同步调用路径
-            String retUrl = "http://CS-TRADE/hyjf-api/server/user/directRechargePage/directRechargePageReturn?acqRes="
+            String retUrl = systemConfig.getServerHost()+"/hyjf-api/server/user/directRechargePage/directRechargePageReturn?acqRes="
                     + userRechargeRequestBean.getAcqRes() + StringPool.AMPERSAND + "callback="
                     + userRechargeRequestBean.getRetUrl().replace("#", "*-*-*");
             // 异步调用路
@@ -234,7 +234,6 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
     @Override
     public Map<String,Object> pageReturn(HttpServletRequest request, BankCallBean bean) {
         String url = request.getParameter("callback").replace("*-*-*", "#");
-        String isSuccess = request.getParameter("isSuccess");
         Map<String,Object> result =new HashMap<>();
         result.put("callBackAction", url);
         result.put("status", ErrorCodeConstant.SUCCESS);

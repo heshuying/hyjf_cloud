@@ -803,9 +803,9 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		{
 
 			// 服务费授权
-			HjhUserAuthConfigVO paymenthCconfig = authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH);
-			HjhUserAuthConfigVO invesCconfig = authService.getAuthConfigFromCache(AuthService.KEY_AUTO_TENDER_AUTH);;
-			HjhUserAuthConfigVO creditCconfig = authService.getAuthConfigFromCache(AuthService.KEY_AUTO_CREDIT_AUTH);;
+			HjhUserAuthConfigVO paymenthCconfig = authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
+			HjhUserAuthConfigVO invesCconfig = authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH);;
+			HjhUserAuthConfigVO creditCconfig = authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH);;
 			// 设置服务费授权开关
 			result.setPaymentAuthOn(paymenthCconfig.getEnabledStatus() + "");
 			// 设置自动投资授权开关

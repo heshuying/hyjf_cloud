@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.service.auth.impl;
 
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.bean.AuthBean;
@@ -88,7 +89,7 @@ public class AuthServiceImpl extends BaseTradeServiceImpl implements AuthService
 			return true;
 		}
 		// 检查开关是否打开 没打开 不用校验
-		if (this.getAuthConfigFromCache(this.KEY_PAYMENT_AUTH).getEnabledStatus() - 1 != 0) {
+		if (this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus() - 1 != 0) {
 			return true;
 		}
 		HjhUserAuthVO auth = getHjhUserAuthByUserId(userId);
@@ -106,7 +107,7 @@ public class AuthServiceImpl extends BaseTradeServiceImpl implements AuthService
 			return true;
 		}
 		// 检查开关是否打开 没打开 不用校验
-		if (this.getAuthConfigFromCache(this.KEY_REPAYMENT_AUTH).getEnabledStatus() - 1 != 0) {
+		if (this.getAuthConfigFromCache(RedisConstants.KEY_REPAYMENT_AUTH).getEnabledStatus() - 1 != 0) {
 			return true;
 		}
 		HjhUserAuthVO auth = getHjhUserAuthByUserId(userId);
@@ -212,7 +213,7 @@ public class AuthServiceImpl extends BaseTradeServiceImpl implements AuthService
 			return true;
 		}
 		// 检查开关是否打开 没打开 不用校验
-		if (this.getAuthConfigFromCache(this.KEY_AUTO_TENDER_AUTH).getEnabledStatus() - 1 != 0) {
+		if (this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus() - 1 != 0) {
 			return true;
 		}
 		HjhUserAuthVO auth = getHjhUserAuthByUserId(userId);
@@ -229,7 +230,7 @@ public class AuthServiceImpl extends BaseTradeServiceImpl implements AuthService
 			return true;
 		}
 		// 检查开关是否打开 没打开 不用校验
-		if (this.getAuthConfigFromCache(this.KEY_AUTO_CREDIT_AUTH).getEnabledStatus() - 1 != 0) {
+		if (this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus() - 1 != 0) {
 			return true;
 		}
 		HjhUserAuthVO auth = getHjhUserAuthByUserId(userId);
@@ -255,7 +256,7 @@ public class AuthServiceImpl extends BaseTradeServiceImpl implements AuthService
 				case AuthBean.AUTH_TYPE_AUTO_BID:
 					if(StringUtils.isNotBlank(autoBidStatus)&&"1".equals(autoBidStatus)
 							&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-						HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_AUTO_TENDER_AUTH);
+						HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH);
 						if(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getAutoBidDeadline())){
 							return true;
 						}
@@ -274,7 +275,7 @@ public class AuthServiceImpl extends BaseTradeServiceImpl implements AuthService
 				case AuthBean.AUTH_TYPE_PAYMENT_AUTH:
 					if(StringUtils.isNotBlank(paymentAuth)&&"1".equals(paymentAuth)
 							&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-						HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_PAYMENT_AUTH);
+						HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
 						if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getPaymentDeadline())){
 							return true;
 						}
@@ -292,7 +293,7 @@ public class AuthServiceImpl extends BaseTradeServiceImpl implements AuthService
 				case AuthBean.AUTH_TYPE_REPAY_AUTH:
 					if(StringUtils.isNotBlank(repayAuth)&&"1".equals(repayAuth)
 							&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-						HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_REPAYMENT_AUTH);
+						HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_REPAYMENT_AUTH);
 						if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getRepayDeadline())){
 							return true;
 						}
@@ -310,7 +311,7 @@ public class AuthServiceImpl extends BaseTradeServiceImpl implements AuthService
 				case AuthBean.AUTH_TYPE_MERGE_AUTH:
 					if(StringUtils.isNotBlank(autoBidStatus)&&"1".equals(autoBidStatus)
 							&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),AuthBean.AUTH_TYPE_AUTO_BID)){
-						HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_AUTO_TENDER_AUTH);
+						HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH);
 						if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getAutoBidDeadline())){
 							return true;
 						}
@@ -326,7 +327,7 @@ public class AuthServiceImpl extends BaseTradeServiceImpl implements AuthService
 					}
 					if(StringUtils.isNotBlank(paymentAuth)&&"1".equals(paymentAuth)
 							&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),AuthBean.AUTH_TYPE_PAYMENT_AUTH)){
-						HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_PAYMENT_AUTH);
+						HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
 						if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getPaymentDeadline())){
 							return true;
 						}
@@ -353,7 +354,7 @@ public class AuthServiceImpl extends BaseTradeServiceImpl implements AuthService
 			String repayAuth = bean.getRepayAuth();
 			if(StringUtils.isNotBlank(autoBidStatus)&&"1".equals(autoBidStatus)
 					&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-				HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_AUTO_TENDER_AUTH);
+				HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH);
 				if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getAutoBidDeadline())){
 					return true;
 				}
@@ -369,7 +370,7 @@ public class AuthServiceImpl extends BaseTradeServiceImpl implements AuthService
 			}
 			if(StringUtils.isNotBlank(paymentAuth)&&"1".equals(paymentAuth)
 					&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-				HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_PAYMENT_AUTH);
+				HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
 				if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getPaymentDeadline())){
 					return true;
 				}
@@ -385,7 +386,7 @@ public class AuthServiceImpl extends BaseTradeServiceImpl implements AuthService
 			}
 			if(StringUtils.isNotBlank(repayAuth)&&"1".equals(repayAuth)
 					&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-				HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_REPAYMENT_AUTH);
+				HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_REPAYMENT_AUTH);
 				if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getRepayDeadline())){
 					return true;
 				}
@@ -413,8 +414,8 @@ public class AuthServiceImpl extends BaseTradeServiceImpl implements AuthService
 	 */
 	@Override
 	public Integer checkAuthStatus(Integer autoRepayStatus,Integer paymentAuthStatus){
-		HjhUserAuthConfigVO paymenthCconfig = getAuthConfigFromCache(KEY_PAYMENT_AUTH);
-		HjhUserAuthConfigVO repayCconfig = getAuthConfigFromCache(KEY_REPAYMENT_AUTH);
+		HjhUserAuthConfigVO paymenthCconfig = getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
+		HjhUserAuthConfigVO repayCconfig = getAuthConfigFromCache(RedisConstants.KEY_REPAYMENT_AUTH);
 		if (paymenthCconfig != null && repayCconfig != null && paymenthCconfig.getEnabledStatus() - 1 == 0
 				&& repayCconfig.getEnabledStatus() - 1 == 0) {
 			// 如果两个都开启了

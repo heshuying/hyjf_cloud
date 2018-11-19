@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.GetDate;
@@ -209,7 +210,8 @@ public class BorrowDataController extends BaseController {
      * @return
      */
     private boolean tokenCheck(String token, String userName){
-        String key = "token_wdzj_" + userName;
+//        String key = "token_wdzj_" + userName;
+        String key = RedisConstants.KEY_WDZJ_KEY + userName;
         if(!RedisUtils.exists(key)){
             return false;
         }else{

@@ -89,7 +89,10 @@ public class BorrowTenderController extends BaseTradeController {
         if(resultMap!=null){
             if(resultMap.get("riskTested") != null && resultMap.get("riskTested") != ""){
                 String riskTested = (String) resultMap.get("riskTested");
-                if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
+                if(CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL.equals(riskTested)){
+                    //未测评需要重新评测
+                    result.setStatus(MsgEnum.ERR_AMT_TENDER_NEED_RISK_ASSESSMENT.getCode());
+                }else if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
                     //已过期需要重新评测
                     result.setStatus(MsgEnum.STATUS_EV000004.getCode());
                 }else if(CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)){

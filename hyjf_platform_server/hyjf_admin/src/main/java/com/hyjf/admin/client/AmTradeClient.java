@@ -3223,5 +3223,12 @@ public interface AmTradeClient {
      * @date: 2018/7/10
      */
    Boolean deleteBorrowTmp(String borrowNid, String accedeOrderId);
+
+    /**
+     * 获取保证金信息
+     * @param borrowNid
+     * @return
+     */
+    AdminResult getBailInfo(String borrowNid);
 }
 

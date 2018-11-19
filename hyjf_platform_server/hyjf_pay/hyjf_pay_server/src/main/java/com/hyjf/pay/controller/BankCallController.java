@@ -71,7 +71,7 @@ public class BankCallController extends BaseController {
      */
     @PostMapping(value = "callApiPage.json")
     @ResponseBody
-    @HystrixCommand(commandKey="银行页面调用", fallbackMethod = "fallBackBankPage",commandProperties = {
+    @HystrixCommand(commandKey="银行页面调用-callPageApi", fallbackMethod = "fallBackBankPage",commandProperties = {
             //设置断路器生效
           @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),        
             //一个统计窗口内熔断触发的最小个数3/10s
@@ -376,6 +376,18 @@ public class BankCallController extends BaseController {
      * @return
      */
     @RequestMapping(value = "callPageBack")
+    @HystrixCommand(commandKey="银行异步返回-callPageBack",commandProperties = {
+            //设置断路器生效
+          @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),        
+            //一个统计窗口内熔断触发的最小个数3/10s
+          @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            //熔断5秒后去尝试请求
+          @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+          @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
+          // 超时时间
+          @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000")},threadPoolProperties = {
+          @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
     public void callPageBack(HttpServletRequest request, HttpServletResponse response, @ModelAttribute BankCallBean bean) {
         String bgData = request.getParameter("bgData");
         logger.info("接收异步返回的消息开始,订单号:【" + bean.getLogOrderId() + "】,用户ID:【" + bean.getLogUserId() + "】.");
@@ -539,7 +551,7 @@ public class BankCallController extends BaseController {
      */
     @ResponseBody
     @PostMapping(value = "callApiBg.json")
-    @HystrixCommand(fallbackMethod = "fallBackBankBgApi",commandProperties = {
+    @HystrixCommand(commandKey="银行接口调用-callApiBg", fallbackMethod = "fallBackBankBgApi",commandProperties = {
             //设置断路器生效
           @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),        
             //一个统计窗口内熔断触发的最小个数3/10s
@@ -666,6 +678,18 @@ public class BankCallController extends BaseController {
      * @return
      */
     @RequestMapping(value = "callApiReturn")
+    @HystrixCommand(commandKey="银行联机异步返回-callBack",commandProperties = {
+            //设置断路器生效
+          @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),        
+            //一个统计窗口内熔断触发的最小个数3/10s
+          @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            //熔断5秒后去尝试请求
+          @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+          @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
+          // 超时时间
+          @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000")},threadPoolProperties = {
+          @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
     public void callBack(HttpServletRequest request, HttpServletResponse response, @ModelAttribute BankCallBean bean) {
         String bgData = request.getParameter("bgData");
         String logOrderId = request.getParameter(BankCallConstant.PARAM_LOGORDERID);

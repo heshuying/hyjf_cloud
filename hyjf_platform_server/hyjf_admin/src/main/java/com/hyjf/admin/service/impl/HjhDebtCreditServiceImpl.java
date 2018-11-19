@@ -66,6 +66,7 @@ public class HjhDebtCreditServiceImpl extends BaseServiceImpl implements HjhDebt
              ) {
             vo.setRepayStatusName(repayMap.get(vo.getRepayStatus()));
             vo.setCreditStatusName(creditMap.get(vo.getCreditStatus()));
+            vo.setProjectApr(vo.getLiquidatesPeriod() + "/" + vo.getBorrowPeriod());
         }
     }
 
