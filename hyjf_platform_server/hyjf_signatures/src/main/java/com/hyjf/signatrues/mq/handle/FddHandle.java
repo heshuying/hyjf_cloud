@@ -1732,12 +1732,8 @@ public class FddHandle {
 			String upParentDir = tmfile.getParent();
 			logger.info("---------------脱敏图片上级目录：tenderAgreementID："+tenderAgreementID+"-----" + upParentDir);
 			//图片脱敏并存储
-			if (FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(transType)){
-
-				tmConduct(imageSavePath,imageFilePath,fileName,isCompanyUser,trueImageFilePath,jointPathList,pages,
-						Integer.valueOf(transType),tenderCompany,creditCompany);
-
-			}else if(Integer.valueOf(transType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
+			if (FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(transType)
+					||Integer.valueOf(transType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
 					Integer.valueOf(transType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET
 					|| Integer.valueOf(transType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET
 					|| Integer.valueOf(transType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET){
@@ -2040,22 +2036,7 @@ public class FddHandle {
 		return true;
 	}
 
-	public static void main(String[] args) {
 
-//		String signIcon = "/Applications/work/需求池/脱敏样式/cardno.png";
-//
-//		String source = "/Applications/work/aaa.png";
-//
-//		String output = "/Applications/work/jjfw/";
-//		Integer index_x = 100;
-//		Integer index_y = 100;
-//		ImageUtil.markImageByMoreIcon(signIcon, source, output, "tm", "png", null, index_x, index_y);
-//		FddHandle handle = new FddHandle();
-
-
-//		PDFToImage.pdf2img("/Users/yangchangwei/Downloads/jjfw(1).pdf", "/Users/yangchangwei/Downloads/jjfw", PDFToImage.IMG_TYPE_PNG);
-
-	}
 	/**
 	 * 脱敏处理
 	 * @param imageSavePath
