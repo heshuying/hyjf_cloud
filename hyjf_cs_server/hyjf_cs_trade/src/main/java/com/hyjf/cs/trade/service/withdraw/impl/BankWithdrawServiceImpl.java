@@ -1390,7 +1390,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             }
             bean.setForgotPwdUrl(systemConfig.getForgetpassword());
             bean.setForgotPwdUrl(userWithdrawRequestBean.getForgotPwdUrl());
-            bean.setRetUrl(bankRetUrl);// 商户前台台应答地址(必须)
+            bean.setRetUrl(bankRetUrl+"&logOrderId="+bean.getLogOrderId());// 商户前台台应答地址(必须)
             bean.setNotifyUrl(bankBgRetUrl); // 商户后台应答地址(必须)
             logger.info("提现同步回调URL:[" + bean.getRetUrl() + "],异步回调URL:[" + bean.getNotifyUrl() + "].");
             // 插值用参数
@@ -1531,7 +1531,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         logger.info("用户提现后,同步处理");
         Map<String,Object> result =new HashMap<>();
         bean.convert();
-        String logOrderId = bean.getLogOrderId() == null ? "" : bean.getLogOrderId();
+        String logOrderId = request.getParameter("logOrderId") == null ? "" : request.getParameter("logOrderId") ;
         // 提现订单号
         logger.info("提现订单号:[" + logOrderId + "].");
         String url = request.getParameter("callback").replace("*-*-*", "#");
@@ -1553,7 +1553,8 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             result.put("statusDesc", "银行处理中,请稍后查询交易明细");
             result.put("status", ErrorCodeConstant.STATUS_CE000005);
         }
-        result.put("",url);
+        logger.info("url:=="+url);
+        result.put("callBackAction",url);
         return result;
     }
 

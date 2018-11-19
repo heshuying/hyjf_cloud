@@ -339,7 +339,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
 
         TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement(assignNid);
         if (tenderAgreement != null && tenderAgreement.getStatus() == 2){
-            accedeListService.updateSaveSignInfo(tenderAgreement, borrowNid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrowVO.getInstCode());
+            accedeListService.updateSaveSignInfo(tenderAgreement, borrowNid, FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT, borrowVO.getInstCode());
         } else {
             FddGenerateContractBean bean = new FddGenerateContractBean();
             bean.setOrdid(assignNid);

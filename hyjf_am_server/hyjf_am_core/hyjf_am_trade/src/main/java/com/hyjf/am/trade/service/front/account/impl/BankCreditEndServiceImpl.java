@@ -204,12 +204,13 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
     }
 
     @Override
-    public int updateBankCreditEndForStatus(String batchNo, String txDate, int status) {
+    public int updateBankCreditEndForStatus(String batchNo, String txDate, Integer txCounts, int status) {
         BankCreditEndExample example = new BankCreditEndExample();
         example.createCriteria().andBatchNoEqualTo(batchNo);//批次号
         example.createCriteria().andTxDateEqualTo(txDate);//日期
 
         BankCreditEnd bankCreditEnd = new BankCreditEnd();
+        bankCreditEnd.setTxCounts(txCounts);// 添加结束债权交易总笔数 create by wgx 2018/11/16
         bankCreditEnd.setStatus(status);//批次状态
         bankCreditEnd.setUpdateTime(GetDate.getDate());
         return this.bankCreditEndMapper.updateByExampleSelective(bankCreditEnd, example);
