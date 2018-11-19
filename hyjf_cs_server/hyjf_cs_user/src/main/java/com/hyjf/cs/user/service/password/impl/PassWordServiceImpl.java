@@ -264,7 +264,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
                 break;
             }
         }
-        CheckUtil.check(hasNumber,MsgEnum.ERR_PASSWORD_NO_NUMBER);
+//        CheckUtil.check(hasNumber,MsgEnum.ERR_PASSWORD_NO_NUMBER);
         String regEx = "^(?![0-9]+$)(?![a-zA-Z]+$)(?![\\`\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\+\\-\\=\\{\\}\\|\\[\\]\\\\\\;\\'\\:\\\"\\,\\.\\/\\<\\>\\?]+$)[0-9A-Za-z\\`\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\+\\-\\=\\{\\}\\|\\[\\]\\\\\\;\\'\\:\\\"\\,\\.\\/\\<\\>\\?]{8,16}$";
         Pattern p = Pattern.compile(regEx);
         Matcher m = p.matcher(password);

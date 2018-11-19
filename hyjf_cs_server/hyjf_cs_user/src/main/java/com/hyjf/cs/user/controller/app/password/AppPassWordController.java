@@ -375,11 +375,11 @@ public class AppPassWordController extends BaseUserController {
                         break;
                     }
                 }
-                if (!hasNumber) {
-                    ret.put("status", "1");
-                    ret.put("statusDesc", "密码必须包含数字");
-                    return ret;
-                }
+//                if (!hasNumber) {
+//                    ret.put("status", "1");
+//                    ret.put("statusDesc", "密码必须包含数字");
+//                    return ret;
+//                }
 
                 String regEx = "^(?![0-9]+$)(?![a-zA-Z]+$)(?![\\`\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\+\\-\\=\\{\\}\\|\\[\\]\\\\\\;\\'\\:\\\"\\,\\.\\/\\<\\>\\?]+$)[0-9A-Za-z\\`\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\+\\-\\=\\{\\}\\|\\[\\]\\\\\\;\\'\\:\\\"\\,\\.\\/\\<\\>\\?]{8,16}$";
                 Pattern p = Pattern.compile(regEx);

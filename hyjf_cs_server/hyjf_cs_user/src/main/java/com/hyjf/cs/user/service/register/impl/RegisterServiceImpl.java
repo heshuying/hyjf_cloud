@@ -164,7 +164,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                 break;
             }
         }
-        CheckUtil.check(hasNumber, MsgEnum.ERR_PASSWORD_NO_NUMBER);
+//        CheckUtil.check(hasNumber, MsgEnum.ERR_PASSWORD_NO_NUMBER);
         String regEx = "^(?![0-9]+$)(?![a-zA-Z]+$)(?![\\`\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\+\\-\\=\\{\\}\\|\\[\\]\\\\\\;\\'\\:\\\"\\,\\.\\/\\<\\>\\?]+$)[0-9A-Za-z\\`\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\+\\-\\=\\{\\}\\|\\[\\]\\\\\\;\\'\\:\\\"\\,\\.\\/\\<\\>\\?]{8,16}$";
         Pattern p = Pattern.compile(regEx);
         Matcher m = p.matcher(password);
@@ -219,9 +219,9 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             ret.put(CustomConstants.APP_STATUS_DESC, "密码不能为空");
             return ret;
         }
-        if (password.length() < 6 || password.length() > 16) {
+        if (password.length() < 8 || password.length() > 16) {
             ret.put(CustomConstants.APP_STATUS, 1);
-            ret.put(CustomConstants.APP_STATUS_DESC, "密码长度6-16位");
+            ret.put(CustomConstants.APP_STATUS_DESC, "密码长度8-16位");
             return ret;
         }
         boolean hasNumber = false;
@@ -231,17 +231,17 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                 break;
             }
         }
-        if (!hasNumber) {
-            ret.put(CustomConstants.APP_STATUS, 1);
-            ret.put(CustomConstants.APP_STATUS_DESC, "密码必须包含数字");
-            return ret;
-        }
-        String regEx = "^[a-zA-Z0-9]+$";
+//        if (!hasNumber) {
+//            ret.put(CustomConstants.APP_STATUS, 1);
+//            ret.put(CustomConstants.APP_STATUS_DESC, "密码必须包含数字");
+//            return ret;
+//        }
+        String regEx = "^(?![0-9]+$)(?![a-zA-Z]+$)(?![\\`\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\+\\-\\=\\{\\}\\|\\[\\]\\\\\\;\\'\\:\\\"\\,\\.\\/\\<\\>\\?]+$)[0-9A-Za-z\\`\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\+\\-\\=\\{\\}\\|\\[\\]\\\\\\;\\'\\:\\\"\\,\\.\\/\\<\\>\\?]{8,16}$";
         Pattern p = Pattern.compile(regEx);
         Matcher m = p.matcher(password);
         if (!m.matches()) {
             ret.put(CustomConstants.APP_STATUS, 1);
-            ret.put(CustomConstants.APP_STATUS_DESC, "密码必须由数字和字母组成，如abc123");
+            ret.put(CustomConstants.APP_STATUS_DESC, "必须包含数字、字母、符号至少两种");
             return ret;
         }
         String verificationType = CommonConstant.PARAM_TPL_ZHUCE;
@@ -521,13 +521,13 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                     break;
                 }
             }
-            if (!hasNumber) {
-                vo.setEnum(ResultEnum.ERROR_014);
-                vo.setSuccessUrl("");
-                return vo;
-            }
+//            if (!hasNumber) {
+//                vo.setEnum(ResultEnum.ERROR_014);
+//                vo.setSuccessUrl("");
+//                return vo;
+//            }
 
-            String regEx = "^[a-zA-Z0-9]+$";
+            String regEx = "^(?![0-9]+$)(?![a-zA-Z]+$)(?![\\`\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\+\\-\\=\\{\\}\\|\\[\\]\\\\\\;\\'\\:\\\"\\,\\.\\/\\<\\>\\?]+$)[0-9A-Za-z\\`\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\+\\-\\=\\{\\}\\|\\[\\]\\\\\\;\\'\\:\\\"\\,\\.\\/\\<\\>\\?]{8,16}$";
             Pattern p = Pattern.compile(regEx);
             Matcher m = p.matcher(password);
             if (!m.matches()) {
