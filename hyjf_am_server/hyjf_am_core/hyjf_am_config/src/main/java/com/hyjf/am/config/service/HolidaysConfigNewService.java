@@ -40,4 +40,10 @@ public interface HolidaysConfigNewService {
      * @return
      */
     Date getFirstWorkdateAfterSomedate(Date somedate);
+
+    /**
+     * 判断当天是不是当月第一个工作日
+     * @return
+     */
+    int selectFirstWorkdayOnMonth(int currentYear, int currentMonth);
 }
