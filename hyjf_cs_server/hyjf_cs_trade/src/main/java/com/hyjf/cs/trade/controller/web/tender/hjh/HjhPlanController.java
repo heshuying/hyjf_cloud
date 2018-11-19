@@ -126,8 +126,8 @@ public class HjhPlanController extends BaseTradeController {
                 String riskTested = (String) resultMap.get("riskTested");
                 if(CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL.equals(riskTested)){
                     //未测评需要重新评测
-                    resultWebResult.setStatus(MsgEnum.STATUS_EV000008.getCode());
-                    //tenderInfo.setStatus(MsgEnum.STATUS_EV000008.getCode());
+                    resultWebResult.setStatus(MsgEnum.ERR_AMT_TENDER_NEED_RISK_ASSESSMENT.getCode());
+                    //tenderInfo.setStatus(MsgEnum.ERR_AMT_TENDER_NEED_RISK_ASSESSMENT.getCode());
                 }else if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
                     //已过期需要重新评测
                     resultWebResult.setStatus(MsgEnum.STATUS_EV000004.getCode());
