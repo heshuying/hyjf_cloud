@@ -63,8 +63,10 @@ public class ApplyAgreementController extends BaseController {
         // 查询列表传入分页
         if(request.getCurrPage()>0){
             Paginator paginator = new Paginator(request.getCurrPage(),total,request.getPageSize());
+            logger.info("-------------------垫付协议申请列表页paginator:", JSON.toJSONString(paginator));
             request.setLimitStart(paginator.getOffset());
             request.setLimitEnd(paginator.getLimit());
+            logger.info("-------------------垫付协议申请列表页request:", JSON.toJSONString(request));
         }
         if(total>0) {
             List<ApplyAgreementVO> list = applyAgreementService.selectApplyAgreement(request);
