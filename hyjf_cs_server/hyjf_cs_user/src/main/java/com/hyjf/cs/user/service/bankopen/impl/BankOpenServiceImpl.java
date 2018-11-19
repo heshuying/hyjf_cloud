@@ -272,9 +272,9 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             UserVO userVO = this.amUserClient.findUserById(userId);
             // add by liuyang 神策数据统计追加 20180927 start
             if ("10000000".equals(userVO.getInstCode())) {
-                if (!RedisUtils.exists("SENSORS_DATA_OPEN_ACCOUNT:" + userId)) {
+                if (!RedisUtils.exists(RedisConstants.SENSORS_DATA_OPEN_ACCOUNT + userId)) {
                     try {
-                        RedisUtils.sadd("SENSORS_DATA_OPEN_ACCOUNT:" + userId, String.valueOf(userId));
+                        RedisUtils.sadd(RedisConstants.SENSORS_DATA_OPEN_ACCOUNT + userId, String.valueOf(userId));
                         // 开户成功后,发送神策数据统计MQ
                         SensorsDataBean sensorsDataBean = new SensorsDataBean();
                         sensorsDataBean.setUserId(userId);
