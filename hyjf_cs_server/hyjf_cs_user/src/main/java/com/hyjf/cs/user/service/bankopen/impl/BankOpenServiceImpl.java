@@ -478,6 +478,12 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             logger.info("请求参数异常" + JSONObject.toJSONString(payRequestBean, true) + "]");
             return getErrorMV(payRequestBean, ErrorCodeConstant.STATUS_CE000002);
         }*/
+        if(!this.verifyRequestSign(requestBean, "/server/user/accountOpenEncryptPage/open.do")){
+            logger.info("验签失败[" + JSONObject.toJSONString(requestBean, true) + "]");
+            resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
+            resultMap.put("mess", "验签失败！");
+            return resultMap;
+        }
         // 判断真实姓名是否包含特殊字符
         if (!ValidatorCheckUtil.verfiyChinaFormat(requestBean.getTrueName())) {
             logger.info("真实姓名包含特殊字符[" + JSONObject.toJSONString(requestBean, true) + "]");
