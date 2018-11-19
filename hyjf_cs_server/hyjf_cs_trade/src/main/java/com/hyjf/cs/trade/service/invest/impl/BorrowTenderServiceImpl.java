@@ -2282,6 +2282,17 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 e.printStackTrace();
             }
 
+            // 查询投资来源
+            List<BorrowTenderVO> list = amTradeClient.getBorrowTenderListByNid(bean.getOrderId());
+            if (!CollectionUtils.isEmpty(list)) {
+                BorrowTenderVO vo = list.get(0);
+                if (CustomConstants.WRB_CHANNEL_CODE.equals(vo.getTenderFrom())) {
+                    // 同步回调通知
+                    logger.info("风车理财投资回调,订单Id :{}", bean.getOrderId());
+                    this.notifyToWrb(user.getUserId(), bean.getOrderId());
+                }
+            }
+
             // 投资成功后,发送神策数据统计MQ
             // add by liuyang 神策数据统计 20180823 start
             try {
@@ -2395,12 +2406,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investProjectPeriod = borrow.getBorrowPeriod() + "月";
         }
         params.put("investProjectPeriod", investProjectPeriod);
+        params.put("userId", userId);
         //压入消息队列
         try {
-            appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.TENDER_CHANNEL_STATISTICS_DETAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                    MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
         } catch (MQException e) {
-            e.printStackTrace();
-            logger.error("渠道统计用户累计投资推送消息队列失败！！！");
+            logger.error("渠道统计用户累计投资推送消息队列失败！！！", e);
         }
 
         /*(6)更新  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 结束*/
