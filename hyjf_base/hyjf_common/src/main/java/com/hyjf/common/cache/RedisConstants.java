@@ -443,9 +443,6 @@ public class RedisConstants {
      */
     public static final String TEMPLATE_UPLOAD_URL = "template_upload_url:";
 
-
-    // 汇计划自动债转中的标志 redis key
-    public static final String HJH_DEBT_SWAPING = "debtswaping:";
     /**
      * 缴费授权
      */
