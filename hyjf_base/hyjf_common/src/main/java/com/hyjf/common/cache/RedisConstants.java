@@ -23,12 +23,12 @@ public class RedisConstants {
 
 
     /**
-     * 记录密码错误次数Redis前缀web端
+     * 记录密码错误次数Redis前缀web端(password_err_count_app:userName/mobile)
      */
     public static final String PASSWORD_ERR_COUNT_APP = "password_err_count_app:";
 
     /**
-     * 记录密码错误次数Redis前缀web端
+     * 记录密码错误次数Redis前缀web端(password_err_count_app:userName/mobile)
      */
     public static final String PASSWORD_ERR_COUNT_WEB = "password_err_count_web:";
 
@@ -145,12 +145,12 @@ public class RedisConstants {
     public static final String CACHE_PARAM_NAME = "hyjf_param_name:";
 
     /**
-     * 短信单手机控制
+     * 短信单手机控制(max_phone_count:mobile)
      */
     public static final String CACHE_MAX_PHONE_COUNT = "max_phone_count:";
 
     /**
-     * 单IP最大登录控制
+     * 单IP最大登录控制(max_ip_count:ip)
      */
     public static final String CACHE_MAX_IP_COUNT = "max_ip_count:";
 
@@ -169,7 +169,7 @@ public class RedisConstants {
      */
     public static final String BORROW_NID = "BORROW_NID:";
     /**
-     * wechat sign
+     * wechat sign(sign:sign)
      */
     public static final String SIGN = "sign:";
     /**
@@ -189,12 +189,12 @@ public class RedisConstants {
     
 
     /**
-     * 用户token令牌前缀
+     * 用户token令牌前缀(token:token)
      */
     public static final String USER_TOEKN_KEY = "token:";
 
     /**
-     * 用户userId令牌前缀
+     * 用户userId令牌前缀(user_id:userId)
      */
     public static final String USERID_KEY = "user_id:";
 
@@ -212,7 +212,7 @@ public class RedisConstants {
     public static final String SMS_CONFIG = "sms_config:";
 
     /**
-     * 记录密码错误次数Redis前缀
+     * 记录密码错误次数Redis前缀(password_err_count:userId)
      */
     public static final String PASSWORD_ERR_COUNT = "password_err_count:";
 
@@ -341,13 +341,13 @@ public class RedisConstants {
     public static final String PROTOCOL_PARAMS = "protocol_params:";
 
     /**
-     * 同步余额rediskey
+     * 同步余额rediskey(syn_balance:userId)
      */
     public static final String SYNBALANCE = "syn_balance:";
 
 
     /**
-     * 受托支付申请防并发key
+     * 受托支付申请防并发key(trustee_pay:logOrderId)
      */
     public static final String CONCURRENCE_TRUSTEEPAY = "trustee_pay:";
 
