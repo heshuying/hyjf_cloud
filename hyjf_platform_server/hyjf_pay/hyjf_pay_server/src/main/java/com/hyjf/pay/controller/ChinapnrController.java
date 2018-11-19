@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.chinapnr.MerPriv;
 import com.hyjf.common.constants.CommonConstant;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -20,6 +21,8 @@ import com.hyjf.pay.service.ChinapnrService;
 import com.hyjf.pay.service.PnrApi;
 import com.hyjf.pay.service.impl.ChinaPnrApiImpl;
 import com.hyjf.pay.utils.ChinaPnrSignUtils;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,6 +74,18 @@ public class ChinapnrController extends BaseController {
      */
     @RequestMapping(value = "/callapi.json")
     @ResponseBody
+    @HystrixCommand(commandKey="汇付页面调用-callApi", fallbackMethod = "fallBackApi",ignoreExceptions = CheckException.class, commandProperties = {
+            //设置断路器生效
+          @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),        
+            //一个统计窗口内熔断触发的最小个数3/10s
+          @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            //熔断5秒后去尝试请求
+          @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+          @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
+          // 超时时间
+          @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000")},threadPoolProperties = {
+          @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
     public Map<String,Object> callApi(@RequestBody ChinapnrBean bean) throws Exception {
         String methodName = "callApi";
         logger.info(THIS_CLASS, methodName, "[调用接口开始]");
@@ -133,6 +148,10 @@ public class ChinapnrController extends BaseController {
             logger.info(THIS_CLASS, methodName, "[调用汇付接口结束, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         }
         return result;
+    }
+
+    public Map<String,Object> fallBackApi(ChinapnrBean bean) {
+    	return new HashMap<String,Object>();
     }
 
     /**
@@ -477,6 +496,18 @@ public class ChinapnrController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/callapibg")
+    @HystrixCommand(commandKey="汇付接口调用-callApiBg", fallbackMethod = "fallBackCallApiBg",ignoreExceptions = CheckException.class,commandProperties = {
+            //设置断路器生效
+          @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),        
+            //一个统计窗口内熔断触发的最小个数3/10s
+          @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            //熔断5秒后去尝试请求
+          @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+          @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
+          // 超时时间
+          @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000")},threadPoolProperties = {
+          @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
     public String callApiBg(@RequestBody ChinapnrBean bean)  {
         String methodName = "callApiBg";
         logger.info(THIS_CLASS, methodName, "[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
@@ -592,6 +623,11 @@ public class ChinapnrController extends BaseController {
             logger.info(THIS_CLASS, methodName, "[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         }
         return ret;
+    }
+    
+
+    public String fallBackCallApiBg(ChinapnrBean bean) {
+    	return "";
     }
 
     /**

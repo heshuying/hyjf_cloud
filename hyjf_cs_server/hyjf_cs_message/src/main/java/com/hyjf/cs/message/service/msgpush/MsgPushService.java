@@ -5,7 +5,7 @@ package com.hyjf.cs.message.service.msgpush;
 
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
-import com.hyjf.cs.message.bean.mc.MessagePush;
+import com.hyjf.cs.message.bean.mc.MessagePushMsg;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 
 import java.util.Date;
@@ -73,13 +73,13 @@ public interface MsgPushService {
 	 * @param endTime
 	 * @return
 	 */
-    List<MessagePush> getMsgStaticsListByTime(Integer startTime, Integer endTime);
+    List<MessagePushMsg> getMsgStaticsListByTime(Integer startTime, Integer endTime);
 
 	/**
 	 * 插入统计数据
 	 * @param messagePush
 	 */
-	void insertMessagePush(MessagePush messagePush);
+	void insertMessagePush(MessagePushMsg messagePush);
 
 	/**
 	 * 获取标签类型

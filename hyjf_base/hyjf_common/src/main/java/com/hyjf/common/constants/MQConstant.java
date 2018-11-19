@@ -43,6 +43,12 @@ public interface MQConstant {
 	 */
 	String APP_MESSAGE_GROUP = "APP_MESSAGE_GROUP";
 	String APP_MESSAGE_TOPIC = "APP_MESSAGE_TOPIC";
+
+	/**
+	 * 发送销售日报邮件 group topic
+	 */
+	String SELL_DAILY_GROUP = "SELL_DAILY_GROUP";
+	String SELL_DAILY_TOPIC = "SELL_DAILY_TOPIC";
 	/** ------------------------------ 消息中心 end ------------------------------ */
 
 

@@ -5,6 +5,8 @@ import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +23,7 @@ import java.io.*;
  */
 public class FavFTPUtil {
 
+    private static final Logger logger = LoggerFactory.getLogger(FavFTPUtil.class);
     /**
      * Description: 向FTP服务器上传文件
      *
@@ -91,6 +94,7 @@ public class FavFTPUtil {
             ftp.logout();
             result = true;
         } catch (IOException e) {
+            logger.error("上传文件失败，上传路径：" + filePath,e);
             e.printStackTrace();
         } finally {
             if (ftp.isConnected()) {

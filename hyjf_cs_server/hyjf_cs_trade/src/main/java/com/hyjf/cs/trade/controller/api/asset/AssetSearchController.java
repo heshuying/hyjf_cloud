@@ -10,6 +10,7 @@ import com.hyjf.cs.trade.bean.AssetStatusRequestBean;
 import com.hyjf.cs.trade.bean.AssetStatusResultBean;
 import com.hyjf.cs.trade.service.asset.AssetSearchService;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
+import com.hyjf.cs.trade.util.SignUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -54,12 +55,12 @@ public class AssetSearchController extends BaseController {
             return resultBean;
         }
 
-       /* if (!SignUtil.verifyRequestSign(bean, "/server/asset/status")) {
+       if (!SignUtil.verifyRequestSign(bean, "/server/asset/status")) {
             resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000002);
             logger.info("-------------------验签失败！--------------------");
             resultBean.setStatusDesc("验签失败！");
             return resultBean;
-        }*/
+        }
 
         logger.info(bean.getInstCode()+"  ----资产查询接口开始");
         //查询条件

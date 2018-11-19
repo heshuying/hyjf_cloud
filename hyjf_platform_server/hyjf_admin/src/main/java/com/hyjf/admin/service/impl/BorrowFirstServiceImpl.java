@@ -4,7 +4,6 @@
 package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.beans.response.BorrowBailInfoResponseBean;
 import com.hyjf.admin.beans.response.BorrowFireInfoResponseBean;
 import com.hyjf.admin.beans.response.BorrowFirstResponseBean;
 import com.hyjf.admin.beans.vo.AdminBorrowFirstCustomizeVO;
@@ -20,12 +19,9 @@ import com.hyjf.am.resquest.admin.BorrowFireRequest;
 import com.hyjf.am.resquest.admin.BorrowFirstRequest;
 import com.hyjf.am.vo.admin.BorrowFirstCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowConfigVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -34,7 +30,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -96,24 +91,7 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
         if (StringUtils.isBlank(borrowNid)) {
             return new AdminResult(BaseResult.FAIL, "标的编号为空！");
         } else {
-            BorrowAndInfoVO borrowVO = amTradeClient.selectBorrowByNid(borrowNid);
-            BorrowInfoVO borrowInfoVO = amTradeClient.selectBorrowInfoByNid(borrowNid);
-            if (borrowVO == null || borrowInfoVO == null) {
-                return new AdminResult(BaseResult.FAIL, "未查询到标的信息！");
-            }
-            BorrowBailInfoResponseBean borrowBailInfoResponseBean = new BorrowBailInfoResponseBean();
-            BeanUtils.copyProperties(borrowVO, borrowBailInfoResponseBean);
-            borrowBailInfoResponseBean.setName(borrowInfoVO.getName());
-            UserVO userVO = amUserClient.findUserById(borrowVO.getUserId());
-            if(userVO != null){
-                borrowBailInfoResponseBean.setUserName(userVO.getUsername());
-            }
-            BorrowConfigVO borrowConfigVO = amTradeClient.getBorrowConfig(CustomConstants.BORROW_BAIL_RATE);
-            // 计算公式：保证金金额=借款金额×3％
-            BigDecimal bailPercent = new BigDecimal(borrowConfigVO.getConfigValue());
-            double accountBail = (borrowVO.getAccount().multiply(bailPercent)).setScale(2, BigDecimal.ROUND_DOWN).doubleValue();
-            borrowBailInfoResponseBean.setAccountBail(accountBail);
-            return new AdminResult(borrowBailInfoResponseBean);
+            return amTradeClient.getBailInfo(borrowNid);
         }
     }
 

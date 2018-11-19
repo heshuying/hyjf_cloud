@@ -23,6 +23,7 @@ import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
@@ -231,11 +232,11 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         // 角色验证开关
         userValidation.put("isCheckUserRole", Boolean.parseBoolean(systemConfig.getRoleIsopen()));
         // 服务费授权开关
-        userValidation.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
+        userValidation.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
         // 自动投资授权开关
-        userValidation.put("invesAuthOn",authService.getAuthConfigFromCache(AuthService.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+        userValidation.put("invesAuthOn",authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
         // 自动债转授权开关
-        userValidation.put("creditAuthOn",authService.getAuthConfigFromCache(AuthService.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+        userValidation.put("creditAuthOn",authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
         userValidation.put("roleId", roleId);
 
         jsonObject.put("userValidation", userValidation);
@@ -1391,7 +1392,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             // 角色验证开关
             userValidation.put("isCheckUserRole", Boolean.parseBoolean(systemConfig.getRoleIsopen()));
             // 服务费授权开关
-            userValidation.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
+            userValidation.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
 
             try {
 
@@ -1877,9 +1878,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             // 缴费授权状态
             userLoginInfo.setPaymentAuthStatus(userVO.getPaymentAuthStatus());
             // 服务费授权开关
-            userLoginInfo.setPaymentAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
-            userLoginInfo.setInvesAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
-            userLoginInfo.setCreditAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+            userLoginInfo.setPaymentAuthOn(authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
+            userLoginInfo.setInvesAuthOn(authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+            userLoginInfo.setCreditAuthOn(authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
 
             // 是否校验用户角色
             userLoginInfo.setIsCheckUserRole(Boolean.parseBoolean(systemConfig.getRoleIsopen()));

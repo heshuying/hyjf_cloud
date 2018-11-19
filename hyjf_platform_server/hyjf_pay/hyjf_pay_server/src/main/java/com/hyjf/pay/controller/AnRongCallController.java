@@ -1,5 +1,6 @@
 package com.hyjf.pay.controller;
 
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.base.BaseController;
@@ -9,6 +10,9 @@ import com.hyjf.pay.lib.anrong.AnRongCallApi;
 import com.hyjf.pay.lib.anrong.bean.AnRongBean;
 import com.hyjf.pay.lib.anrong.util.AnRongParamConstant;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author sss
  * @version hyjf 1.0
  * @since hyjf 1.0 2017年10月10日
- * @see 下午3:12:36
+ * @see 12:36
  */
 @Controller
 @RequestMapping(value = AnRongCallDefine.CONTROLLOR_REQUEST_MAPPING)
@@ -46,6 +50,18 @@ public class AnRongCallController extends BaseController {
 	 */
     @PostMapping(value = "callApiBg.json")
     @ResponseBody
+    @HystrixCommand(commandKey="安融接口调用-callApiBg",fallbackMethod = "fallbackCallApiBg",ignoreExceptions = CheckException.class,commandProperties = {
+            //设置断路器生效
+          @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),        
+            //一个统计窗口内熔断触发的最小个数3/10s
+          @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            //熔断5秒后去尝试请求
+          @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+          @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
+          // 超时时间
+          @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000")},threadPoolProperties = {
+          @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
 	public String callApiBg(HttpServletRequest request, @RequestBody AnRongBean bean) throws Exception {
 
 		String methodName = "callApiBg";
@@ -100,5 +116,10 @@ public class AnRongCallController extends BaseController {
 			logger.info(AnRongCallDefine.CONTROLLOR_CLASS_NAME, methodName, "[调用接口结束, 消息类型:" +bean.getTxCode() +"]");
 		}
 		return ret;
+	}
+    
+
+	public String fallbackCallApiBg(HttpServletRequest request, @RequestBody AnRongBean bean) {
+		return "";
 	}
 }
