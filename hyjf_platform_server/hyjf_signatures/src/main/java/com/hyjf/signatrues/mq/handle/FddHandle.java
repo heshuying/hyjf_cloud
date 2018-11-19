@@ -1748,6 +1748,7 @@ public class FddHandle {
 			}
 			//拼接后的PDf路径
 			String tmpdfPath  = imageSavePath + "/" + fileName +"_tm.pdf";
+			logger.info("===============脱敏待拼接图片列表：" + jointPathList.toString());
 			//拼接脱敏图片
 			jointPDFimage(jointPathList,imageSavePath + "/pdfimage.png");
 			//重新拼接为PDF文件
