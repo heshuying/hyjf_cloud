@@ -150,14 +150,9 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         String bgRetUrl = "http://CS-USER/hyjf-web/user/password/passwordBgreturn";
         bean.setRetUrl(retUrl);
         bean.setNotifyUrl(bgRetUrl);
-        // 商户私有域，存放开户平台,用户userId
-       /* LogAcqResBean acqRes = new LogAcqResBean();
-        acqRes.setUserId(userId);
-        bean.setLogAcqResBean(acqRes);*/
         // 操作者ID
         bean.setLogUserId(String.valueOf(userId));
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDRESETPAGE);
-        bean.setLogOrderId(GetOrderIdUtils.getUsrId(userId));
         bean.setLogRemark("设置交易密码");
         Map<String,Object> map = new HashMap<>();
         try {
@@ -201,14 +196,9 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         String bgRetUrl = "http://CS-USER/hyjf-web/user/password/resetPasswordBgreturn";
         bean.setRetUrl(retUrl);
         bean.setNotifyUrl(bgRetUrl);
-        // 商户私有域，存放开户平台,用户userId
-        /*LogAcqResBean acqRes = new LogAcqResBean();
-        acqRes.setUserId(userId);
-        bean.setLogAcqResBean(acqRes);*/
         // 操作者ID
         bean.setLogUserId(String.valueOf(userId));
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE);
-        bean.setLogOrderId(GetOrderIdUtils.getUsrId(userId));
         Map<String,Object> map = new HashMap<>();
         try {
             map = BankCallUtils.callApiMap(bean);
@@ -549,7 +539,6 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         // 操作者ID
         bean.setLogUserId(String.valueOf(user.getUserId()));
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDRESETPAGE);
-        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(user.getUserId()));
         Map<String,Object> resultMap = new HashMap<>();
         try {
              resultMap = BankCallUtils.callApiMap(bean);
@@ -577,14 +566,9 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         }
         bean.setAccountId(String.valueOf(bankOpenAccount.getAccount()));
         bean.setMobile(user.getMobile());
-        // 商户私有域，存放开户平台,用户userId
-     /*   LogAcqResBean acqRes = new LogAcqResBean();
-        acqRes.setUserId(user.getUserId());
-        bean.setLogAcqResBean(acqRes);*/
         // 操作者ID
         bean.setLogUserId(String.valueOf(user.getUserId()));
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDRESETPAGE);
-        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(user.getUserId()));
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
         Map<String,Object> resultMap = new HashMap<>();
         try {
@@ -616,16 +600,9 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         //电子账号
         bean.setAccountId(String.valueOf(bankOpenAccount.getAccount()));
         bean.setMobile(user.getMobile());
-
-        // 商户私有域，存放开户平台,用户userId
-       /* LogAcqResBean acqRes = new LogAcqResBean();
-        acqRes.setUserId(user.getUserId());
-        bean.setLogAcqResBean(acqRes);*/
         // 操作者ID
         bean.setLogUserId(String.valueOf(user.getUserId()));
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDRESETPAGE);
-        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(user.getUserId()));
-     //   bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
         // 跳转到汇付天下画面
         Map<String,Object> resultMap = new HashMap<>();
         try {
@@ -671,14 +648,9 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         //电子账号
         bean.setAccountId(String.valueOf(bankOpenAccount.getAccount()));
         bean.setMobile(user.getMobile());
-        // 商户私有域，存放开户平台,用户userId
-       /* LogAcqResBean acqRes = new LogAcqResBean();
-        acqRes.setUserId(user.getUserId());
-        bean.setLogAcqResBean(acqRes);*/
         // 操作者ID
         bean.setLogUserId(String.valueOf(user.getUserId()));
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDRESETPAGE);
-        bean.setLogOrderId(GetOrderIdUtils.getOrderId2(user.getUserId()));
         bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
         // 跳转到汇付天下画面
         Map<String,Object> resultMap = new HashMap<>();
