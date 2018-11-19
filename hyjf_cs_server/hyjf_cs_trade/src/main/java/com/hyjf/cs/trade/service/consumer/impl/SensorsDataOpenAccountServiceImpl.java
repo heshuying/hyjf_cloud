@@ -9,6 +9,7 @@ import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.trade.client.AmUserClient;
@@ -119,8 +120,8 @@ public class SensorsDataOpenAccountServiceImpl extends BaseServiceImpl implement
         sa.track(String.valueOf(userId), true, "open_success", properties);
         sa.shutdown();
         // 如果redis里存在的话,将redis里的值删除
-        if (RedisUtils.exists("SENSORS_DATA_OPEN_ACCOUNT:" + userId)) {
-            RedisUtils.del("SENSORS_DATA_OPEN_ACCOUNT:" + userId);
+        if (RedisUtils.exists(RedisConstants.SENSORS_DATA_OPEN_ACCOUNT + userId)) {
+            RedisUtils.del(RedisConstants.SENSORS_DATA_OPEN_ACCOUNT + userId);
         }
     }
 }

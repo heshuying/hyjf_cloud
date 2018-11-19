@@ -149,7 +149,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         resultMap.put("bankCard", bankCard);
         BankOpenAccountVO bankOpenAccount = amUserClient.selectById(user.getUserId());
         AccountChinapnrVO chinapnr = amUserClient.getAccountChinapnr(user.getUserId());
-        resultMap.put("bankOpenAccount", bankOpenAccount);
+        resultMap.put("bankOpenAccount", bankOpenAccount == null ? new BankOpenAccountVO() : bankOpenAccount);
         resultMap.put("chinapnr", chinapnr);
 
         UserEvalationResultVO userEvalationResult = amUserClient.selectUserEvalationResultByUserId(user.getUserId());
