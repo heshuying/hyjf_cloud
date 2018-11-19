@@ -2,6 +2,7 @@ package com.hyjf.common.util;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang.math.NumberUtils;
@@ -30,11 +31,11 @@ public class CommonUtils {
 
 	private final static Logger logger = LoggerFactory.getLogger(CommonUtils.class);
 
-	public final static String KEY_PAYMENT_AUTH = "AUTHCONFIG:paymentAuth"; // 缴费授权
+/*	public final static String KEY_PAYMENT_AUTH = "AUTHCONFIG:paymentAuth"; // 缴费授权
 	public final static String KEY_REPAYMENT_AUTH = "AUTHCONFIG:repaymentAuth"; // 还款授权
 	public final static String KEY_AUTO_TENDER_AUTH = "AUTHCONFIG:autoTenderAuth"; // 自动投标
 	public final static String KEY_AUTO_CREDIT_AUTH = "AUTHCONFIG:autoCreditAuth"; // 自动债转
-	public final static String KEY_IS_CHECK_USER_ROLES = "CHECKE:ISCHECKUSERROLES"; // 是否校验用户角色
+	public final static String KEY_IS_CHECK_USER_ROLES = "CHECKE:ISCHECKUSERROLES"; // 是否校验用户角色*/
 
 	// 项目要求投资者风险测评类型描述
 	public final static String DESC_PROJECT_RISK_LEVEL_DESC = "您的风险等级为 #{0}# \n达到 #稳健型# 及以上才可以出借此项目";
@@ -395,8 +396,8 @@ public class CommonUtils {
 	 * @return
 	 */
     public static int checkAuthStatus(Integer autoRepayStatus,Integer paymentAuthStatus) {
-		HjhUserAuthConfigVO paymenthCconfig = getAuthConfigFromCache(KEY_PAYMENT_AUTH);
-		HjhUserAuthConfigVO repayCconfig = getAuthConfigFromCache(KEY_REPAYMENT_AUTH);
+		HjhUserAuthConfigVO paymenthCconfig = getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
+		HjhUserAuthConfigVO repayCconfig = getAuthConfigFromCache(RedisConstants.KEY_REPAYMENT_AUTH);
 		logger.info("paymenthCconfig is :{}", JSONObject.toJSON(paymenthCconfig));
 		logger.info("repayCconfig is :{}", JSONObject.toJSON(repayCconfig));
 		if (paymenthCconfig != null && repayCconfig != null && paymenthCconfig.getEnabledStatus() - 1 == 0
@@ -432,7 +433,7 @@ public class CommonUtils {
 	 * @return 0未授权   1已授权
 	 */
 	public static Integer checkPaymentAuthStatus(Integer authStatus){
-		HjhUserAuthConfigVO paymenthCconfig = getAuthConfigFromCache(KEY_PAYMENT_AUTH);
+		HjhUserAuthConfigVO paymenthCconfig = getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
 		// 服务费授权
 		if (paymenthCconfig != null && paymenthCconfig.getEnabledStatus() - 1 == 0) {
 			if (authStatus == null || authStatus - 1 != 0) {

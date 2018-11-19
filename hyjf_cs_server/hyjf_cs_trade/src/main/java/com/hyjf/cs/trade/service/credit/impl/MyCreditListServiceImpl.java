@@ -23,6 +23,7 @@ import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.enums.MsgEnum;
@@ -192,7 +193,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         // 缴费授权
         HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(userId);
         creditResultBean.setPaymentAuthStatus(hjhUserAuth==null?0:hjhUserAuth.getAutoPaymentStatus());
-        creditResultBean.setPaymentAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
+        creditResultBean.setPaymentAuthOn(authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
         creditResultBean.setIsCheckUserRole(systemConfig.getRoleIsopen());
         UserInfoVO userInfoVO = amUserClient.findUsersInfoById(userId);
         creditResultBean.setRoleId(userInfoVO==null?"0":userInfoVO.getRoleId()+"");
