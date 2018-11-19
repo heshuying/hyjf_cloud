@@ -362,7 +362,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		return bean;
 	}
 	@Override
-	@HystrixCommand(commandKey = "充值",fallbackMethod = "fallBackRecharge",commandProperties = {
+	@HystrixCommand(commandKey = "充值(三端)-rechargeService",fallbackMethod = "fallBackRecharge",commandProperties = {
 			//设置断路器生效
 			@HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
 			//一个统计窗口内熔断触发的最小个数3/10s

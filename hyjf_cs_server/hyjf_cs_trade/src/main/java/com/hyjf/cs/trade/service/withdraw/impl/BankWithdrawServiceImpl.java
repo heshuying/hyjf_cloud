@@ -104,7 +104,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
 
     @Override
-    @HystrixCommand(commandKey = "提现",fallbackMethod = "fallBackWithdraw",commandProperties = {
+    @HystrixCommand(commandKey = "提现(三端)-getUserBankWithdrawView",fallbackMethod = "fallBackWithdraw",commandProperties = {
             //设置断路器生效
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s

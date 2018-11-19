@@ -105,7 +105,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      * @return
      */
     @Override
-    @HystrixCommand(commandKey = "债转投资",fallbackMethod = "fallBackCredit",commandProperties = {
+    @HystrixCommand(commandKey = "债转投资(app/web)-borrowCreditTender",fallbackMethod = "fallBackCredit",commandProperties = {
             //设置断路器生效
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s
