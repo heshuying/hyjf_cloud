@@ -228,11 +228,6 @@ public class AutoTenderExceptionController  extends BaseController {
         if (!result) {
             return new Response(Response.FAIL, Response.FAIL_MSG);
         }
-        // ^^^^^^^^^^^^^^TODO
-        Thread.sleep(1000);
-        HjhDebtCredit credits = autoTenderService.selectCreditByNid(creditNid);
-        logger.info("^^^^^^^^^^^^^^updateCreditForAutoTender结束"+credits.getCreditAccountWait());
-        // ^^^^^^^^^^^^^^TODO
         return new Response();
     }
 
