@@ -52,35 +52,36 @@
 	</resultMap>
 	<select id="apiSearchBorrowRepaymentInfoList" resultMap="apiSearchBorrowRepaymentInfoListResultMap"
 			parameterType="com.hyjf.am.resquest.trade.ApiBorrowRepaymentInfoRequest">
-		SELECT
-		plan.asset_id As assetId,
-		br.borrow_nid AS borrowNid,
-		bpt.borrow_name AS projectTypeName,
-		b.borrow_Period AS borrowPeriod,
-		b.borrow_Apr AS borrowApr,
-		br.recover_fee AS recoverFee,
-		br.nid AS accedeOrderId,
-		b.account AS borrowAccount,
-		b.borrow_account_yes AS borrowAccountYes,
-		b.manage_fee_rate As manageFeeRate,
-		bs.name AS repayType,
-		t.invite_user_name AS recoverTrueName,
-		t.user_name AS recoverUserName,
-		t.account AS recoverTotal,
-		br.recover_capital AS recoverCapital,
-		br.recover_interest AS recoverInterest,
-		'' As serviceRate,
-		'' As serviceFee,
-		'' As recoverSumTotal
-		FROM
-		ht_borrow AS b
-		INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid=b.borrow_nid
-		INNER JOIN ht_borrow_recover AS br ON br.borrow_nid=b.borrow_nid
-		LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
-		LEFT join ht_borrow_tender AS t on br.tender_id=t.id
-		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(binfo.project_type AS CHAR)
-		LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
-		LEFT JOIN ht_hjh_plan_asset plan ON plan.borrow_nid = b.borrow_nid
+        SELECT
+        plan.asset_id As assetId,
+        br.borrow_nid AS borrowNid,
+        bpt.borrow_name AS projectTypeName,
+        b.borrow_Period AS borrowPeriod,
+        b.borrow_Apr AS borrowApr,
+        br.recover_fee AS recoverFee,
+        br.nid AS accedeOrderId,
+        b.account AS borrowAccount,
+        b.borrow_account_yes AS borrowAccountYes,
+        b.manage_fee_rate As manageFeeRate,
+        bs.name AS repayType,
+        ru.truename AS recoverTrueName,
+        t.user_name AS recoverUserName,
+        t.account AS recoverTotal,
+        br.recover_capital AS recoverCapital,
+        br.recover_interest AS recoverInterest,
+        '' As serviceRate,
+        '' As serviceFee,
+        '' As recoverSumTotal
+        FROM
+        ht_borrow AS b
+        INNER JOIN ht_borrow_info AS binfo ON binfo.borrow_nid=b.borrow_nid
+        INNER JOIN ht_borrow_recover AS br ON br.borrow_nid=b.borrow_nid
+        LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
+        LEFT join ht_borrow_tender AS t on br.tender_id=t.id
+        LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(binfo.project_type AS CHAR)
+        LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code
+        LEFT JOIN ht_hjh_plan_asset plan ON plan.borrow_nid = b.borrow_nid
+        LEFT JOIN ht_r_user ru ON t.user_name = ru.username
 		<include refid="Where_Clause_Api" />
 		ORDER BY
 		br.recover_time desc
