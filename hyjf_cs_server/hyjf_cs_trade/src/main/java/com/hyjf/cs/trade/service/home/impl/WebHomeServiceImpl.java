@@ -1,5 +1,8 @@
 package com.hyjf.cs.trade.service.home.impl;
 
+import com.alicp.jetcache.anno.CacheRefresh;
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.market.AppAdsCustomizeResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
@@ -40,6 +43,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class WebHomeServiceImpl implements WebHomeService {
@@ -152,33 +156,48 @@ public class WebHomeServiceImpl implements WebHomeService {
         Integer yearSum = GetDate.getYearFromDate(PUT_ONLINE_TIME);
         //上线年数
         result.setYearSum(yearSum);
+       
         // 公告
         ContentArticleRequest contentArticleRequest = new ContentArticleRequest();
         contentArticleRequest.setLimitStart(0);
         contentArticleRequest.setLimitEnd(1);
         contentArticleRequest.setNoticeType("2");//  公告类型
-        ContentArticleResponse response = baseClient.postExe(NOTICE_LIST_URL,contentArticleRequest,ContentArticleResponse.class);
+        
+        // mod by libin by jetcache start
+/*        ContentArticleResponse response = baseClient.postExe(NOTICE_LIST_URL,contentArticleRequest,ContentArticleResponse.class);
         List<ContentArticleVO> noticeList = response.getResultList();
         if(!CollectionUtils.isEmpty(noticeList)){
             result.setNoticeInfo(noticeList.get(0));
+        }*/
+        List<ContentArticleVO> noticeList = this.getNoticeList(contentArticleRequest);//加缓存
+        if(!CollectionUtils.isEmpty(noticeList)){
+            result.setNoticeInfo(noticeList.get(0));
         }
+        // mod by libin by jetcache end
+ 
         // banner
         AdsRequest adsRequest = new AdsRequest();
         adsRequest.setLimitStart(0);
         adsRequest.setLimitEnd(4);
         adsRequest.setTypeId(6);
         adsRequest.setIsIndex(0);
-
-        AppAdsCustomizeResponse res = baseClient.postExe(BANNER_LIST_URL,adsRequest,AppAdsCustomizeResponse.class);
+        
+        // mod by libin by jetcache start
+/*        AppAdsCustomizeResponse res = baseClient.postExe(BANNER_LIST_URL,adsRequest,AppAdsCustomizeResponse.class);
         List<AppAdsCustomizeVO> bannerList = res.getResultList();
         if ( !CollectionUtils.isEmpty(bannerList)){
             result.setBannerList(bannerList);
         }else {
             result.setBannerList(new ArrayList<>());
+        }*/
+        
+        List<AppAdsCustomizeVO> bannerList = this.getBannerList(adsRequest);//加缓存
+        if ( !CollectionUtils.isEmpty(bannerList)){
+            result.setBannerList(bannerList);
+        }else {
+            result.setBannerList(new ArrayList<>());
         }
-
-
-
+        // mod by libin by jetcache end
 
         //获取新手专区项目信息(仅查第一条)
         ProjectListRequest request = new ProjectListRequest();
@@ -186,7 +205,7 @@ public class WebHomeServiceImpl implements WebHomeService {
         request.setBorrowClass("NEW");
         request.setLimitStart(0);
         request.setLimitEnd(1);
-        List<WebProjectListCustomizeVO> newProjectList = amTradeClient.searchProjectList(request);
+        List<WebProjectListCustomizeVO> newProjectList = amTradeClient.searchProjectList(request);//加缓存
         result.setNewProjectList(CollectionUtils.isEmpty(newProjectList) ? new ArrayList<>() : newProjectList);
 
         //首页散标推荐
@@ -194,7 +213,7 @@ public class WebHomeServiceImpl implements WebHomeService {
         request.setBorrowClass("");
         request.setLimitStart(0);
         request.setLimitEnd(4);
-        List<WebProjectListCustomizeVO> projectList = amTradeClient.searchProjectList(request);
+        List<WebProjectListCustomizeVO> projectList = amTradeClient.searchProjectList(request);//加缓存
         result.setProjectList(CollectionUtils.isEmpty(projectList) ? new ArrayList<>() : projectList);
 
 
@@ -202,7 +221,7 @@ public class WebHomeServiceImpl implements WebHomeService {
         request.setLimitStart(0);
         request.setLimitEnd(4);
         request.setIsHome("1");
-        List<HjhPlanCustomizeVO> planList = amTradeClient.searchPlanList(request);
+        List<HjhPlanCustomizeVO> planList = amTradeClient.searchPlanList(request);//加缓存
         result.setHjhPlanList(CollectionUtils.isEmpty(planList) ? new ArrayList<>() :planList);
         ContentArticleRequest req = new ContentArticleRequest();
         req.setNoticeType(NOTICE_TYPE_COMPANY_DYNAMICS);
@@ -245,7 +264,32 @@ public class WebHomeServiceImpl implements WebHomeService {
         return webResult;
     }
 
-
+    /**
+     * @author libin
+     * 抽出查询bannner的方法
+     * @date 2018/9/5 11:38
+     */
+	@Cached(name="webHomeBannerCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+	@CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+    private List<AppAdsCustomizeVO> getBannerList(AdsRequest adsRequest){
+    	AppAdsCustomizeResponse res = baseClient.postExe(BANNER_LIST_URL,adsRequest,AppAdsCustomizeResponse.class);
+    	List<AppAdsCustomizeVO> bannerList = res.getResultList();
+    	return bannerList;
+    }
+	
+    /**
+     * @author libin
+     * 抽出查询noticeList的方法
+     * @date 2018/9/5 11:38
+     */
+	@Cached(name="webHomeNoticeCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+	@CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+	private List<ContentArticleVO> getNoticeList(ContentArticleRequest contentArticleRequest){
+        ContentArticleResponse response = baseClient.postExe(NOTICE_LIST_URL,contentArticleRequest,ContentArticleResponse.class);
+        List<ContentArticleVO> noticeList = response.getResultList();
+        return noticeList;
+	}
+	
     /**
      * 安卓下载
      * @author zhangyk
@@ -268,4 +312,5 @@ public class WebHomeServiceImpl implements WebHomeService {
             logger.error("安卓apk下载失败,{}",e);
         }
     }
+
 }
