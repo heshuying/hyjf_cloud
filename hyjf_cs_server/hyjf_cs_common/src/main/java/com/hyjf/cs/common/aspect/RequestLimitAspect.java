@@ -49,7 +49,7 @@ public class RequestLimitAspect {
         
         String key = RedisConstants.PRE_REQUEST_LIMIT.concat(userId).concat(":").concat(uri);
         
-        boolean setResult = RedisUtils.tranactionSet(key, ip, limit.seconds());
+        boolean setResult = RedisUtils.setnx(key, ip, limit.seconds());
         // 成功则是第一次，否则的话就是重复
         if (!setResult) {
         	logger.info("用户[" + userId + "]访问地址[" + uri + "]请求重复[" + limit.seconds() + "]");
