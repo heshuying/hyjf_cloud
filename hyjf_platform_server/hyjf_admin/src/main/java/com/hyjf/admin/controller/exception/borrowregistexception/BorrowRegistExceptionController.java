@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BorrowRegistExceptionService;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.vo.admin.BorrowRegistCustomizeVO;
@@ -23,6 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_MODIFY;
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_VIEW;
+
 /**
  * @author: sunpeikai
  * @version: BorrowRegistExceptionController, v0.1 2018/7/3 10:55
@@ -35,6 +39,8 @@ public class BorrowRegistExceptionController extends BaseController {
 
     @Autowired
     private BorrowRegistExceptionService borrowRegistExceptionService;
+    private static final String PERMISSIONS = "debtregistexception";
+
     /**
      * 查询银行标的备案异常list
      * @auth sunpeikai
@@ -43,6 +49,7 @@ public class BorrowRegistExceptionController extends BaseController {
      */
     @ApiOperation(value = "银行标的备案异常", notes = "银行标的备案异常list查询")
     @PostMapping(value = "/searchlist")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_VIEW)
     public AdminResult<ListResult<BorrowRegistCustomizeVO>> searchList(@RequestBody BorrowRegistListRequest request){
         Map<String,Object> map = new HashMap<>();
         // 数据总数
@@ -87,6 +94,7 @@ public class BorrowRegistExceptionController extends BaseController {
      */
     @ApiOperation(value = "银行标的备案异常", notes = "银行标的备案异常处理")
     @PostMapping(value = "/borrowregisthandleexception")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_MODIFY)
     public AdminResult borrowRegistHandleException(HttpServletRequest request, @RequestBody BorrowRegistListRequest borrowRegistListRequest){
         Integer userId = Integer.valueOf(getUser(request).getId());
         JSONObject jsonObject = new JSONObject();

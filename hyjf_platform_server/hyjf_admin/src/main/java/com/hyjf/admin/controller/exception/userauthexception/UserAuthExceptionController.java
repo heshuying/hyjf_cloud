@@ -6,6 +6,7 @@ package com.hyjf.admin.controller.exception.userauthexception;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.UserAuthExceptionService;
 import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.user.AdminUserAuthListResponse;
@@ -24,6 +25,8 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_VIEW;
+
 /**
  * @author: sunpeikai
  * @version: UserAuthExceptionController, v0.1 2018/7/2 10:04
@@ -38,6 +41,8 @@ public class UserAuthExceptionController extends BaseController {
 
     @Autowired
     private UserAuthExceptionService userAuthExceptionService;
+    private static final String PERMISSIONS = "exceptionuserauth";
+
     /**
      * 自动投资债转授权异常list查询
      * @auth sunpeikai
@@ -46,6 +51,7 @@ public class UserAuthExceptionController extends BaseController {
      */
     @ApiOperation(value = "自动投资债转授权异常", notes = "自动投资债转授权异常list查询")
     @PostMapping(value = "/user_auth_list")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_VIEW)
     public AdminResult<ListResult<AdminUserAuthListVO>> userAuthException(@RequestBody AdminUserAuthListRequest request){
         Integer recordTotal = 0;
         List<AdminUserAuthListVO> resultList = new ArrayList<>();

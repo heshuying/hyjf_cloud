@@ -633,7 +633,17 @@ public class UserPortraitController extends BaseController {
             @Override
             public String format(Object object) {
                 Integer attribute = (Integer) object;
-                return attribute != null ? attribute.toString() :  "";
+                String att = "";
+                if(attribute.equals(0)){
+                    att="无主单";
+                }else if(attribute.equals(1)){
+                    att="有主单";
+                }else if(attribute.equals(2)){
+                    att="线下员工";
+                }else if(attribute.equals(3)){
+                    att="线上员工";
+                }
+                return attribute != null ? att :  "";
             }
         };
         mapAdapter.put("attribute", attributeAdapter);

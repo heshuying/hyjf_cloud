@@ -926,31 +926,31 @@ public class MyCouponListServiceImpl implements MyCouponListService {
         String projectString = ",";
         //勾选汇直投，尊享汇，融通宝
         if (projectType.indexOf("1") != -1 && projectType.indexOf("4") != -1 && projectType.indexOf("7") != -1) {
-            projectString = projectString + "债权,";
+            projectString = projectString + "散标,";
         }
         //勾选汇直投  未勾选尊享汇，融通宝
         if (projectType.indexOf("1") != -1 && projectType.indexOf("4") == -1 && projectType.indexOf("7") == -1) {
-            projectString = projectString + "债权(尊享,优选除外),";
+            projectString = projectString + "散标,";
         }
         //勾选汇直投，融通宝  未勾选尊享汇
         if (projectType.indexOf("1") != -1 && projectType.indexOf("4") == -1 && projectType.indexOf("7") != -1) {
-            projectString = projectString + "债权(尊享除外),";
+            projectString = projectString + "散标,";
         }
         //勾选汇直投，选尊享汇 未勾选融通宝
         if (projectType.indexOf("1") != -1 && projectType.indexOf("4") != -1 && projectType.indexOf("7") == -1) {
-            projectString = projectString + "债权(优选除外),";
+            projectString = projectString + "散标,";
         }
         //勾选尊享汇，融通宝  未勾选直投
         if (projectType.indexOf("1") == -1 && projectType.indexOf("4") != -1 && projectType.indexOf("7") != -1) {
-            projectString = projectString + "债权(仅限尊享,优选),";
+            projectString = projectString + "散标,";
         }
         //勾选尊享汇  未勾选直投，融通宝
         if (projectType.indexOf("1") == -1 && projectType.indexOf("4") != -1 && projectType.indexOf("7") == -1) {
-            projectString = projectString + "债权(仅限尊享),";
+            projectString = projectString + "散标,";
         }
         //勾选尊享汇  未勾选直投，融通宝
         if (projectType.indexOf("1") == -1 && projectType.indexOf("4") == -1 && projectType.indexOf("7") != -1) {
-            projectString = projectString + "债权(仅限优选),";
+            projectString = projectString + "散标,";
         }
 
         if (projectType.indexOf("3") != -1) {

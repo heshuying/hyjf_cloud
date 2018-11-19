@@ -9,8 +9,8 @@ import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.CustomerTransferService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
@@ -30,10 +30,6 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -49,6 +45,8 @@ import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.*;
 
+import static com.hyjf.admin.common.util.ShiroConstants.*;
+
 /**
  * @author: sunpeikai
  * @version: CustomerTransferController, v0.1 2018/7/5 18:00
@@ -62,7 +60,7 @@ public class CustomerTransferController extends BaseController {
     private CustomerTransferService customerTransferService;
     @Autowired
     private AdminCommonService adminCommonService;
-
+    private static final String PERMISSIONS = "transferlist";
 
     /**
      * 用户转账-查询转账列表
@@ -72,6 +70,7 @@ public class CustomerTransferController extends BaseController {
      */
     @ApiOperation(value = "用户转账-查询转账列表",notes = "用户转账-查询转账列表")
     @PostMapping(value = "/transferlist")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_VIEW)
     public AdminResult<ListResult<UserTransferVO>> transferList(@RequestBody CustomerTransferListRequest request){
         Integer count = customerTransferService.getTransferCount(request);
         count = (count == null)?0:count;
@@ -104,6 +103,7 @@ public class CustomerTransferController extends BaseController {
      */
     @ApiOperation(value = "用户转账-导出转账列表",notes = "用户转账-导出转账列表")
     @PostMapping(value = "/transferlistexport")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_EXPORT)
     public void exportTransferList(HttpServletRequest httpRequest, HttpServletResponse response, @RequestBody CustomerTransferListRequest request) throws UnsupportedEncodingException {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
@@ -255,6 +255,7 @@ public class CustomerTransferController extends BaseController {
     })
     @ApiOperation(value = "查询余额",notes = "根据用户账号查询余额-发起转账")
     @PostMapping(value = "/searchbalance")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_ADD)
     public AdminResult<String> searchBalanceByUsername(@RequestBody Map map){
         String outUserName = map.get("outUserName").toString();
         logger.info("outUserName=[{}]",outUserName);
@@ -275,6 +276,7 @@ public class CustomerTransferController extends BaseController {
      */
     @ApiOperation(value = "发起转账-提交",notes = "发起转账-提交")
     @PostMapping(value = "/addtransfer")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_ADD)
     public AdminResult addTransfer(HttpServletRequest request, @RequestBody CustomerTransferRequest customerTransferRequest){
         //Integer userId = Integer.valueOf(getUser(request).getId());
         customerTransferService.checkCustomerTransferParam(customerTransferRequest);
@@ -301,6 +303,7 @@ public class CustomerTransferController extends BaseController {
     @ApiImplicitParam(name = "transferId", value = "转账记录id", required = true, dataType = "String")
     @ApiOperation(value = "用户转账-发送邮件",notes = "发送邮件")
     @PostMapping(value = "/transfersendmail")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_TRANSFER_SEND_EMAIL)
     public AdminResult transferSendMail(@RequestBody Map map){
         Integer transferId = (Integer) map.get("transferId");
         customerTransferService.transferSendMail(transferId);
