@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.controller.api.wdzj.token;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -56,7 +57,8 @@ public class GetTokenDataServer extends BaseTradeController {
             return result;
         }
 
-        String token = getTokenInRedis("token_wdzj_" + username);
+//        String token = getTokenInRedis("token_wdzj_" + username);
+        String token =  getTokenInRedis(RedisConstants.KEY_WDZJ_KEY + username);
         result = getSuccMsg("0", "成功", token);
         logger.info("网贷之家 getToken接口返回：" + result.toJSONString());
 

@@ -1,5 +1,27 @@
 package com.hyjf.pay.controller;
 
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.client.RestTemplate;
+import org.springframework.web.servlet.ModelAndView;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
@@ -20,22 +42,8 @@ import com.hyjf.pay.service.ChinapnrService;
 import com.hyjf.pay.service.PnrApi;
 import com.hyjf.pay.service.impl.ChinaPnrApiImpl;
 import com.hyjf.pay.utils.ChinaPnrSignUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.servlet.ModelAndView;
-
-import java.io.UnsupportedEncodingException;
-import java.lang.reflect.Method;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 
 @Controller
 @RequestMapping(value = "/chinapnr")
@@ -71,6 +79,18 @@ public class ChinapnrController extends BaseController {
      */
     @RequestMapping(value = "/callapi.json")
     @ResponseBody
+    @HystrixCommand(commandKey="汇付页面调用-callApi", fallbackMethod = "fallBackApi", commandProperties = {
+            //设置断路器生效
+          @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),        
+            //一个统计窗口内熔断触发的最小个数3/10s
+          @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            //熔断5秒后去尝试请求
+          @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+          @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
+          // 超时时间
+          @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000")},threadPoolProperties = {
+          @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
     public Map<String,Object> callApi(@RequestBody ChinapnrBean bean) throws Exception {
         String methodName = "callApi";
         logger.info(THIS_CLASS, methodName, "[调用接口开始]");
@@ -133,6 +153,10 @@ public class ChinapnrController extends BaseController {
             logger.info(THIS_CLASS, methodName, "[调用汇付接口结束, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         }
         return result;
+    }
+
+    public Map<String,Object> fallBackApi(ChinapnrBean bean) {
+    	return new HashMap<String,Object>();
     }
 
     /**
@@ -477,6 +501,18 @@ public class ChinapnrController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/callapibg")
+    @HystrixCommand(commandKey="汇付接口调用-callApiBg", fallbackMethod = "fallBackCallApiBg",commandProperties = {
+            //设置断路器生效
+          @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),        
+            //一个统计窗口内熔断触发的最小个数3/10s
+          @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            //熔断5秒后去尝试请求
+          @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+          @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
+          // 超时时间
+          @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000")},threadPoolProperties = {
+          @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
     public String callApiBg(@RequestBody ChinapnrBean bean)  {
         String methodName = "callApiBg";
         logger.info(THIS_CLASS, methodName, "[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
@@ -592,6 +628,11 @@ public class ChinapnrController extends BaseController {
             logger.info(THIS_CLASS, methodName, "[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         }
         return ret;
+    }
+    
+
+    public String fallBackCallApiBg(ChinapnrBean bean) {
+    	return "";
     }
 
     /**
