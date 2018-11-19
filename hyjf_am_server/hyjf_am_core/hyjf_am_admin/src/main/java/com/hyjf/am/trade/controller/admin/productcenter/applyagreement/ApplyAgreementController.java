@@ -60,18 +60,14 @@ public class ApplyAgreementController extends BaseController {
         logger.info("ApplyAgreementRequest:::::::[{}]", JSON.toJSONString(request));
         ApplyAgreementResponse reponse = new ApplyAgreementResponse();
         Integer total = getApplyAgreementCount(request).getCount();
+        // 查询列表传入分页
+        if(request.getCurrPage()>0){
+            Paginator paginator = new Paginator(request.getCurrPage(),total,request.getPageSize());
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
+        }
         if(total>0) {
-            //传分页
-            com.hyjf.am.resquest.admin.Paginator paginator;
-
-            if (request.getLimitStart() == 0) {
-                // 根据前台传入分页
-                paginator = new com.hyjf.am.resquest.admin.Paginator(request.getCurrPage(), total);
-            } else {
-                // 未传入分页信息,使用默认分页信息
-                paginator = new com.hyjf.am.resquest.admin.Paginator(request.getCurrPage(), total, request.getPageSize());
-            }
-            List<ApplyAgreementVO> list = applyAgreementService.selectApplyAgreement(request, paginator.getOffset(), paginator.getLimit());
+            List<ApplyAgreementVO> list = applyAgreementService.selectApplyAgreement(request);
             reponse.setCount(total);
             reponse.setResultList(list);
             reponse.setRtn(Response.SUCCESS);
