@@ -25,6 +25,7 @@ import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -198,11 +199,11 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         userValidation.put("paymentAuthStatus", isPaymentAuth);
         //角色认证是否打开
         userValidation.put("isCheckUserRole", Boolean.parseBoolean(systemConfig.getRoleIsopen()));
-        userValidation.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
+        userValidation.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
         //自动投资开关
-        userValidation.put("invesAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+        userValidation.put("invesAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
         //自动债转开关
-        userValidation.put("creditAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+        userValidation.put("creditAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
         userValidation.put("roleId", roleId);
 
 
@@ -740,9 +741,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                 result.setIsSetPassword(userVO.getIsSetPassword());
                 result.setIsCheckUserRole(Boolean.parseBoolean(systemConfig.getRoleIsopen()));
 
-                result.setPaymentAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
-                result.setInvesAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
-                result.setCreditAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+                result.setPaymentAuthOn(authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
+                result.setInvesAuthOn(authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+                result.setCreditAuthOn(authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
                 UserInfoVO usersInfo=amUserClient.findUsersInfoById(Integer.valueOf(userId));
                 result.setRoleId(usersInfo.getRoleId());
                 if (userVO.getIsEvaluationFlag() == 1 && null != userVO.getEvaluationExpiredTime()) {
@@ -1018,9 +1019,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 
             // 7.缴费授权状态
             userLoginInfo.setPaymentAuthStatus(userVO.getPaymentAuthStatus());
-            userLoginInfo.setPaymentAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
-            userLoginInfo.setInvesAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
-            userLoginInfo.setCreditAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+            userLoginInfo.setPaymentAuthOn(authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
+            userLoginInfo.setInvesAuthOn(authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+            userLoginInfo.setCreditAuthOn(authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
 
             // 5. 用户是否完成风险测评标识：0未测评 1已测评
             if (userVO.getIsEvaluationFlag() == 1 && null != userVO.getEvaluationExpiredTime()) {

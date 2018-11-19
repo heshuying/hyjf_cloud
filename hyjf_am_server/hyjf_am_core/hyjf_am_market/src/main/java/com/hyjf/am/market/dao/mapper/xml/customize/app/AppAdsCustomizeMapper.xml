@@ -24,8 +24,8 @@
 		<if test="platformType != null and platformType!= ''">
 			and ad.platform_type = #{platformType}
 		</if>
-		AND unix_timestamp(ad.start_time) <![CDATA[<=]]> unix_timestamp(NOW())
-		AND unix_timestamp(ad.end_time) <![CDATA[>=]]> unix_timestamp(NOW())
+		AND ad.start_time <![CDATA[<=]]> NOW()
+		AND ad.end_time <![CDATA[>=]]> NOW()
 		ORDER BY
 			ad.`order` ASC,ad.`create_time` desc 
 		<if test="limitStart >= 0">
