@@ -6,6 +6,7 @@ package com.hyjf.admin.controller.exception.bankcardexception;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BankCardExceptionService;
 import com.hyjf.am.resquest.admin.BankCardExceptionRequest;
 import com.hyjf.am.vo.admin.AdminBankCardExceptionCustomizeVO;
@@ -23,6 +24,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_MODIFY;
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_VIEW;
+
 /**
  * @author: sunpeikai
  * @version: BankCardExceptionController, v0.1 2018/8/14 9:56
@@ -34,11 +38,13 @@ public class BankCardExceptionController extends BaseController {
 
     @Autowired
     private BankCardExceptionService bankCardExceptionService;
+    private static final String PERMISSIONS = "bankcardexception";
 
     private List<BankConfigVO> bankConfigVOList = new ArrayList<>();
 
     @ApiOperation(value = "银行卡异常列表",notes = "银行卡异常列表")
     @PostMapping(value = "/searchAction")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_VIEW)
     public AdminResult<ListResult<AdminBankCardExceptionCustomizeVO>> searchAction(@RequestBody BankCardExceptionRequest request){
         // 数据总数
         Integer count = bankCardExceptionService.getBankCardExceptionCount(request);
@@ -85,6 +91,7 @@ public class BankCardExceptionController extends BaseController {
 
     @ApiOperation(value = "更新银行卡，参数就一个userId",notes = "更新银行卡，参数就一个userId")
     @PostMapping(value = "/updateBankCardExceptionAction")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_MODIFY)
     public AdminResult updateBankCardExceptionAction(@RequestBody BankCardExceptionRequest request){
         AdminResult adminResult = new AdminResult();
         // 验证
