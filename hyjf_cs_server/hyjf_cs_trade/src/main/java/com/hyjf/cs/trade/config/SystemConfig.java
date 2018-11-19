@@ -811,7 +811,7 @@ public class SystemConfig {
     }
 
     public String getServerHost() {
-        return "219.147.28.242:9280";
+        return this.serverHost;
     }
 
     public void setServerHost(String serverHost) {

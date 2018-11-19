@@ -8,6 +8,7 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.exception.BindCardExceptionService;
 import com.hyjf.am.resquest.admin.BindCardExceptionRequest;
 import com.hyjf.am.vo.admin.BindCardExceptionCustomizeVO;
@@ -22,6 +23,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_MODIFY;
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_VIEW;
+
 /**
  * @author: sunpeikai
  * @version: BindCardExceptionController, v0.1 2018/10/9 10:52
@@ -33,9 +37,12 @@ public class BindCardExceptionController extends BaseController {
 
     @Autowired
     private BindCardExceptionService bindCardExceptionService;
+    private static final String PERMISSIONS = "bindcardexception";
+
 
     @ApiOperation(value = "银行卡异常列表",notes = "银行卡异常列表")
     @PostMapping(value = "/searchAction")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_VIEW)
     public AdminResult<ListResult<BindCardExceptionCustomizeVO>> searchAction(@RequestBody BindCardExceptionRequest request){
         // 数据总数
         Integer count = bindCardExceptionService.getBindCardExceptionCount(request);
@@ -46,6 +53,7 @@ public class BindCardExceptionController extends BaseController {
 
     @ApiOperation(value = "银行卡更新",notes = "银行卡更新")
     @PostMapping(value = "/modifyAction")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_MODIFY)
     public AdminResult modifyAction(@RequestBody BindCardExceptionRequest request){
         Integer userId = request.getUserId();
         String accountId = request.getAccountId();

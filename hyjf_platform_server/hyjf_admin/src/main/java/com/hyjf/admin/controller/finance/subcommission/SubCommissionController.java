@@ -10,6 +10,7 @@ import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.SubCommissionService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
@@ -39,6 +40,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_ADD;
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_EXPORT;
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_VIEW;
+
 /**
  * @author: sunpeikai
  * @version: SubCommissionController, v0.1 2018/7/10 9:28
@@ -54,6 +59,8 @@ public class SubCommissionController extends BaseController {
     @Autowired
     private AdminCommonService adminCommonService;
 
+    private static final String PERMISSIONS = "subCommission";
+
     /**
      * 平台账户分佣
      * @auth sunpeikai
@@ -62,6 +69,7 @@ public class SubCommissionController extends BaseController {
      */
     @ApiOperation(value = "平台账户分佣列表查询",notes = "平台账户分佣列表查询")
     @PostMapping(value = "/subcommissionlist")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_VIEW)
     public AdminResult<ListResult<SubCommissionVO>> subCommissionList(@RequestBody SubCommissionRequest request){
         Integer count = subCommissionService.getSubCommissionCount(request);
         count = (count == null)?0:count;
@@ -91,6 +99,7 @@ public class SubCommissionController extends BaseController {
      */
     @ApiOperation(value = "平台账户分佣导出",notes = "平台账户分佣导出")
     @PostMapping(value = "/subcommissionlistexport")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_EXPORT)
     public void exportSubCommissionList(HttpServletRequest request, HttpServletResponse response,@RequestBody SubCommissionRequest subCommissionRequest) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
@@ -224,6 +233,7 @@ public class SubCommissionController extends BaseController {
      */
     @ApiOperation(value = "发起账户分佣所需的detail信息",notes = "发起账户分佣所需的detail信息")
     @PostMapping(value = "/searchdetails")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_ADD)
     public AdminResult searchDetails(HttpServletRequest request){
         Integer userId = Integer.valueOf(getUser(request).getId());
         JSONObject result = subCommissionService.searchDetails(userId);
@@ -238,6 +248,7 @@ public class SubCommissionController extends BaseController {
      */
     @ApiOperation(value = "发起账户分佣",notes = "发起账户分佣")
     @PostMapping(value = "/subcommission")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_ADD)
     public AdminResult subCommission(HttpServletRequest request,@RequestBody SubCommissionRequest subCommissionRequest){
         Integer loginUserId = Integer.valueOf(getUser(request).getId());
         JSONObject jsonObject = subCommissionService.subCommission(loginUserId,subCommissionRequest);

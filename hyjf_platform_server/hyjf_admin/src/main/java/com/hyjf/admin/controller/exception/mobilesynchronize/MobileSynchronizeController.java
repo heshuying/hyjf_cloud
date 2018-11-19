@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.exception.MobileSynchronizeService;
 import com.hyjf.am.resquest.admin.MobileSynchronizeRequest;
 import com.hyjf.am.vo.admin.MobileSynchronizeCustomizeVO;
@@ -24,6 +25,9 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_MODIFY;
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_VIEW;
+
 /**
  * @author: sunpeikai
  * @version: MobileSynchronizeController, v0.1 2018/8/13 11:41
@@ -35,9 +39,11 @@ public class MobileSynchronizeController extends BaseController {
 
     @Autowired
     private MobileSynchronizeService mobileSynchronizeService;
+    private static final String PERMISSIONS = "mobilesynchronize";
 
     @ApiOperation(value = "获取手机号同步列表",notes = "获取手机号同步列表")
     @PostMapping(value = "/searchAction")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_VIEW)
     public AdminResult<ListResult<MobileSynchronizeCustomizeVO>> searchAction(@RequestBody MobileSynchronizeRequest request){
         // 已开户用户数量
         int count = mobileSynchronizeService.countBankOpenAccountUser(request);
@@ -48,6 +54,7 @@ public class MobileSynchronizeController extends BaseController {
 
     @ApiOperation(value = "同步手机号",notes = "同步手机号")
     @PostMapping(value = "/modifyAction")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_MODIFY)
     public AdminResult modifyAction(HttpServletRequest request, @RequestBody MobileSynchronizeRequest mobileSynchronizeRequest){
         //检查必要参数
         CheckUtil.check(StringUtils.isNotBlank(mobileSynchronizeRequest.getUserId()), MsgEnum.ERR_OBJECT_REQUIRED,"用户id");

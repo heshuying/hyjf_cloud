@@ -208,7 +208,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                     }
 
                     // 校验受托人是否授权
-                    if(authService.checkPaymentAuthStatus(stzAccount.getUserId())){
+                    if(!authService.checkPaymentAuthStatus(stzAccount.getUserId())){
                         pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000011);
                         pushBean.setRetMsg("受托账户未进行服务费授权");
                         retassets.add(pushBean);// 返回提示
@@ -651,7 +651,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                     }
 
                     // 校验受托人是否授权
-                    if(authService.checkPaymentAuthStatus(stzAccount.getUserId())){
+                    if(!authService.checkPaymentAuthStatus(stzAccount.getUserId())){
                         pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000011);
                         pushBean.setRetMsg("受托账户未进行服务费授权");
                         retassets.add(pushBean);// 返回提示
