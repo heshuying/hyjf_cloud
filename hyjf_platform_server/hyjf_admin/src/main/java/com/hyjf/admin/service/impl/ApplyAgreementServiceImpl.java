@@ -115,10 +115,6 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
     public AdminResult getApplyAgreementList(ApplyAgreementRequest request){
         AdminResult result = new AdminResult();
         ApplyAgreementRequestBean bean = new ApplyAgreementRequestBean();
-        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
-        ApplyAgreementAmRequest req = CommonUtils.convertBean(request, ApplyAgreementAmRequest.class);
-        req.setLimitStart(page.getOffset());
-        req.setLimitEnd(page.getLimit());
         ApplyAgreementResponse response = baseClient.postExe(AGREEMENT_COUNT_URL, request, ApplyAgreementResponse.class);
         Integer count = response.getCount();
         if (count > 0) {
