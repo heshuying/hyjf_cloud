@@ -70,19 +70,15 @@ public class SignUtil {
         } else if("/server/repayment/repaymentInfoList".equals(methodName)){
             // 还款明细查询
             ApiBorrowRepaymentInfoRequestBean bean = (ApiBorrowRepaymentInfoRequestBean) paramBean;
-            sign = bean.getInstCode() + bean.getAccountId()+ bean.getTimestamp();
-        }else if("/server/repayment/repaymentInfoList".equals(methodName)){
-            // 还款明细查询
-            ApiBorrowRepaymentInfoRequestBean bean = (ApiBorrowRepaymentInfoRequestBean) paramBean;
-            sign = bean.getInstCode() + bean.getAccountId()+ bean.getTimestamp();
+            sign = bean.getInstCode() + bean.getAssetId()+ bean.getTimestamp();
         }else if("/server/invest/repayList".equals(methodName)){
-            // 获取回款记录/server/asset/status
+            // 获取回款记录
             ApiRepayListRequestBean bean = (ApiRepayListRequestBean) paramBean;
             sign = bean.getInstCode()+ bean.getTimestamp();
         }else if("/server/asset/status".equals(methodName)){
             // 资产状态查询
             AssetStatusRequestBean bean = (AssetStatusRequestBean) paramBean;
-            sign = bean.getInstCode()+ bean.getAccountId() + bean.getTimestamp();
+            sign = bean.getAssetId()+ bean.getTimestamp();
         }else if("/server/user/repay/getrepayresult".equals(methodName)){
             // 还款批次处理
             RepayRequestBean bean = (RepayRequestBean) paramBean;
