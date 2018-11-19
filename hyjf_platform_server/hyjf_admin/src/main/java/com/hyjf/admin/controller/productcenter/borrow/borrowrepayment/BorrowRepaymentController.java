@@ -227,6 +227,7 @@ public class BorrowRepaymentController extends BaseController {
         map.put("borrowName","借款标题");
         map.put("projectTypeName","项目类型");
         map.put("borrowPeriod","借款期限");
+
         map.put("borrowApr","年化收益");
         map.put("borrowAccount","借款金额");
         map.put("borrowAccountYes","借到金额");
@@ -357,7 +358,7 @@ public class BorrowRepaymentController extends BaseController {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("borrowNid","借款编号");
         map.put("instName","资产来源");
-        map.put("planNid","计划编号");
+        map.put("planNid","智投编号");
         map.put("userId","借款人ID");
         map.put("borrowUserName","借款人用户名");
         map.put("borrowName","借款标题");
