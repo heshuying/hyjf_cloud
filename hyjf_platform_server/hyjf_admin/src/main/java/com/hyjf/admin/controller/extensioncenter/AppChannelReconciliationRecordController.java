@@ -70,7 +70,9 @@ public class AppChannelReconciliationRecordController extends BaseController {
         if (request.getUtmPlat() == null) {
             List<String> utmList = new ArrayList<>();
             for (UtmVO vo : list) {
-                utmList.add(vo.getSourceId().toString());
+                if (Objects.equals(vo.getDelFlag(), 0)) {
+                    utmList.add(vo.getSourceId().toString());
+                }
             }
             String[] integers = new String[utmList.size()];
             String[] array = utmList.toArray(integers);
@@ -100,18 +102,21 @@ public class AppChannelReconciliationRecordController extends BaseController {
     public void exportAction(@RequestBody ChannelReconciliationRequest request, HttpServletResponse response) throws Exception {
 
         List<UtmVO> list = channelService.searchUtmList(1);
+
+        // 表格sheet名称
+        String sheetName = "PC渠道对账-散标";
+
         if (request.getUtmPlat() == null) {
             List<String> utmList = new ArrayList<>();
             for (UtmVO vo : list) {
-                utmList.add(vo.getSourceId().toString());
+                if (Objects.equals(vo.getDelFlag(), 0)) {
+                    utmList.add(vo.getSourceId().toString());
+                }
             }
             String[] integers = new String[utmList.size()];
             String[] array = utmList.toArray(integers);
             request.setUtmPlat(array);
         }
-
-        // 表格sheet名称
-        String sheetName = "PC渠道对账-散标";
 
         ChannelReconciliationResponse channelReconciliationResponse = channelService.searchAppAction(request);
         if(channelReconciliationResponse != null) {
@@ -219,15 +224,19 @@ public class AppChannelReconciliationRecordController extends BaseController {
         String sheetName = "PC渠道对账-智投服务";
 
         List<UtmVO> list = channelService.searchUtmList(1);
+
         if (request.getUtmPlat() == null) {
             List<String> utmList = new ArrayList<>();
             for (UtmVO vo : list) {
-                utmList.add(vo.getSourceId().toString());
+                if (Objects.equals(vo.getDelFlag(), 0)) {
+                    utmList.add(vo.getSourceId().toString());
+                }
             }
             String[] integers = new String[utmList.size()];
             String[] array = utmList.toArray(integers);
             request.setUtmPlat(array);
         }
+
         ChannelReconciliationResponse channelReconciliationResponse = channelService.searchAppHJHAction(request);
 
         if (channelReconciliationResponse != null) {
