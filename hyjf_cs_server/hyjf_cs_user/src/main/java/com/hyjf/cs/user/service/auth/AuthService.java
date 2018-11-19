@@ -12,11 +12,11 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.Map;
 
 public interface AuthService extends BaseUserService {
-    String KEY_PAYMENT_AUTH = "AUTHCONFIG:paymentAuth"; // 缴费授权
+/*    String KEY_PAYMENT_AUTH = "AUTHCONFIG:paymentAuth"; // 缴费授权
     String KEY_REPAYMENT_AUTH = "AUTHCONFIG:repaymentAuth"; // 还款授权
     String KEY_AUTO_TENDER_AUTH = "AUTHCONFIG:autoTenderAuth"; // 自动投标
     String KEY_AUTO_CREDIT_AUTH = "AUTHCONFIG:autoCreditAuth"; // 自动债转
-    String KEY_IS_CHECK_USER_ROLES = "CHECKE:ISCHECKUSERROLES"; // 是否校验用户角色
+    String KEY_IS_CHECK_USER_ROLES = "CHECKE:ISCHECKUSERROLES"; // 是否校验用户角色*/
     /**
      * 
      * 根据用户id查询用户签约授权信息

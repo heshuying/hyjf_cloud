@@ -510,8 +510,8 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		// 是否开启服务费授权 0未开启  1已开启
 		ret.put("paymentAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoPaymentStatus());
 		// 是否开启服务费授权 0未开启  1已开启
-		ret.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
-		logger.info("paymentAuthOn:"+authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
+		ret.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
+		logger.info("paymentAuthOn:"+authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
 		// 江西银行客户号
 		ret.put("accountId", user.getBankAccount());
 		//充值提示语

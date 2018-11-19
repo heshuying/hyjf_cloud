@@ -16,6 +16,7 @@ import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.invest.BorrowCreditTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,7 +71,7 @@ public class BorrowCreditTenderController extends BaseTradeController {
     @PostMapping("/bgReturn")
     @ResponseBody
     public BankCallResult borrowCreditTenderBgReturn(@RequestBody BankCallBean bean ,Integer platform) {
-        logger.info("web端债转投资异步处理start,userId:{},返回码:{}  平台 {} ", bean.getLogUserId(),bean.getRetCode(),platform);
+        logger.info("{}端债转投资异步处理start,userId:{},返回码:{}  userId:{} ",BankCallUtils.getClientName(platform+""), bean.getLogUserId(),bean.getRetCode(),bean.getLogUserId());
         bean.setLogClient(platform);
         BankCallResult result = borrowTenderService.borrowCreditTenderBgReturn(bean);
         return result;
