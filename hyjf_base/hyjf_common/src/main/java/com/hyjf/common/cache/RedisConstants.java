@@ -89,7 +89,7 @@ public class RedisConstants {
     public static final String TENDER_ORDERID = "tender_orderid:";
 
     /**
-     * 投资优惠券使用rediskey
+     * 投资优惠券使用rediskey(RedisConstants.COUPON_TENDER_KEY+couponGrantId, 300)  by sunss
      */
     public static final String COUPON_TENDER_KEY = "coupon_tender:";
 

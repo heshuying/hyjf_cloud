@@ -138,7 +138,7 @@ public class MspApplyController  {
 		if(!validatorApiResult(postResultJson)){
 		    // 失败返回
 			result.setRtn(FAIL);
-            result.setMessage( postResultJson.get(AnRongDefine.RESULT_JSON_KEY_MSP_MESS)+"<br/>"+postResultJson.get(AnRongDefine.RESULT_JSON_KEY_FQZ_MESS));
+            result.setMessage( postResultJson.get(AnRongDefine.RESULT_JSON_KEY_MSP_MESS)+"---------"+postResultJson.get(AnRongDefine.RESULT_JSON_KEY_FQZ_MESS));
             return result;
 		}
 		    
@@ -148,6 +148,7 @@ public class MspApplyController  {
 		
 		MspApply mspapply=new MspApply();
 		BeanUtils.copyProperties(form,mspapply);
+		mspapply.setCreateUser(form.getAdminId());
 		this.mspApplyService.insertRecord(mspapply);
 		result.setRtn(AdminResponse.SUCCESS);
 		return result;
@@ -174,6 +175,7 @@ public class MspApplyController  {
 		
 		MspApply mspapply=new MspApply();
 		BeanUtils.copyProperties(form,mspapply);
+		mspapply.setUpdateUser(form.getAdminId());
 		// 更新
 		this.mspApplyService.updateRecord(mspapply);
 		result.setRtn(Response.SUCCESS);
@@ -307,6 +309,7 @@ public class MspApplyController  {
         // 数据修改
 		MspApply mspapply=new MspApply();
 		BeanUtils.copyProperties(form,mspapply);
+		mspapply.setUpdateUser(form.getAdminId());
         this.mspApplyService.updateRecord(mspapply);
         result.setRtn(Response.SUCCESS);
         return result;
