@@ -44,6 +44,27 @@ public class HjhDebtCreditListRequest extends BasePage{
     @ApiModelProperty(value = "转让标签")
     private String labelName;
 
+    @ApiModelProperty(value = "预计开始退出时间——start")
+    private String endDateStart;
+    @ApiModelProperty(value = "预计开始退出时间--end")
+    private String endDateEnd;
+
+
+    public String getEndDateStart() {
+        return endDateStart;
+    }
+
+    public void setEndDateStart(String endDateStart) {
+        this.endDateStart = endDateStart;
+    }
+
+    public String getEndDateEnd() {
+        return endDateEnd;
+    }
+
+    public void setEndDateEnd(String endDateEnd) {
+        this.endDateEnd = endDateEnd;
+    }
 
     public String getActualAprStartSrch() {
         return actualAprStartSrch;

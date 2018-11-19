@@ -1498,7 +1498,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     String riskTested = (String) result.get("riskTested");
                     if (CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL.equals(riskTested)) {
                         //未测评新评测
-                        throw new CheckException(MsgEnum.STATUS_EV000008);
+                        throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_RISK_ASSESSMENT);
                     } else if (CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)) {
                         //已过期需要重新评测
                         throw new CheckException(MsgEnum.STATUS_EV000004);
@@ -1537,7 +1537,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     String riskTested = (String) result.get("riskTested");
                     if (CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL.equals(riskTested)) {
                         //未测评新评测
-                        throw new CheckException(MsgEnum.STATUS_EV000008);
+                        throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_RISK_ASSESSMENT);
                     } else if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
                         //已过期需要重新评测
                         throw new CheckException(MsgEnum.STATUS_EV000004);
@@ -1564,7 +1564,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 String riskTested = (String) result.get("riskTested");
                 if (CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL.equals(riskTested)) {
                     //未测评新评测
-                    throw new CheckException(MsgEnum.STATUS_EV000008);
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_RISK_ASSESSMENT);
                 } else if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
                     //已过期需要重新评测
                     throw new CheckException(MsgEnum.STATUS_EV000004);

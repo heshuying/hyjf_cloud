@@ -84,7 +84,7 @@ public class RedisConstants {
     public static final String TENDER_ORDERID = "tender_orderid:";
 
     /**
-     * 投资优惠券使用rediskey
+     * 投资优惠券使用rediskey(RedisConstants.COUPON_TENDER_KEY+couponGrantId, 300)  by sunss
      */
     public static final String COUPON_TENDER_KEY = "coupon_tender:";
 
@@ -444,4 +444,26 @@ public class RedisConstants {
     public static final String TEMPLATE_UPLOAD_URL = "template_upload_url:";
 
 
+    // 汇计划自动债转中的标志 redis key
+    public static final String HJH_DEBT_SWAPING = "debtswaping:";
+    /**
+     * 缴费授权
+     */
+    public final static String KEY_PAYMENT_AUTH = "AUTHCONFIG:paymentAuth";
+    /**
+     * 还款授权
+     */
+    public final static String KEY_REPAYMENT_AUTH = "AUTHCONFIG:repaymentAuth";
+    /**
+     * 自动投标
+     */
+    public final static String KEY_AUTO_TENDER_AUTH = "AUTHCONFIG:autoTenderAuth";
+    /**
+     * 自动债转
+     */
+    public final static String KEY_AUTO_CREDIT_AUTH = "AUTHCONFIG:autoCreditAuth";
+    /**
+     * 网贷之家token校验(+userName)
+     */
+    public final static String KEY_WDZJ_KEY="token_wdzj_";
 }

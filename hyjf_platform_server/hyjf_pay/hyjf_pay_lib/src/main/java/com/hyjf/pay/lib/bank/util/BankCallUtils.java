@@ -12,6 +12,7 @@ package com.hyjf.pay.lib.bank.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.spring.SpringUtils;
+import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.config.URLSystemConfig;
@@ -230,5 +231,24 @@ public class BankCallUtils implements Serializable {
 		}
 		return ret;
 	}
-	
+
+
+	public static String getClientName(String client){
+		if(client==null){
+			return "未知";
+		}
+		if ((ClientConstants.WEB_CLIENT+"").equals(client)) {
+			return "PC";
+		}
+		if ((ClientConstants.APP_CLIENT_IOS+"").equals(client)) {
+			return "IOS";
+		}
+		if ((ClientConstants.APP_CLIENT+"").equals(client)) {
+			return "安卓";
+		}
+		if ((ClientConstants.WECHAT_CLIENT+"").equals(client)) {
+			return "微信";
+		}
+		return "空";
+	}
 }

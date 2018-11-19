@@ -20,6 +20,7 @@ import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.invest.BorrowTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -90,7 +91,7 @@ public class BorrowTenderController extends BaseTradeController {
                 String riskTested = (String) resultMap.get("riskTested");
                 if(CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL.equals(riskTested)){
                     //未测评需要重新评测
-                    result.setStatus(MsgEnum.STATUS_EV000008.getCode());
+                    result.setStatus(MsgEnum.ERR_AMT_TENDER_NEED_RISK_ASSESSMENT.getCode());
                 }else if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
                     //已过期需要重新评测
                     result.setStatus(MsgEnum.STATUS_EV000004.getCode());
@@ -116,7 +117,7 @@ public class BorrowTenderController extends BaseTradeController {
     @PostMapping("/bgReturn")
     @ResponseBody
     public BankCallResult borrowTenderBgReturn(@RequestBody BankCallBean bean ,Integer platform, @RequestParam("couponGrantId") String couponGrantId) {
-        logger.info("web端散标投资异步处理start,userId:{}", bean.getLogUserId());
+        logger.info("{}端散标投资异步处理start,userId:{},优惠券:{}",BankCallUtils.getClientName(platform+""), bean.getLogUserId(),couponGrantId);
         BankCallResult result ;
         try{
             if (platform != null && platform.intValue() >= 0) {
