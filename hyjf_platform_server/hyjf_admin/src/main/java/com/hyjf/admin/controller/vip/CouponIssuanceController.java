@@ -162,27 +162,27 @@ public class CouponIssuanceController extends BaseController {
                         ",");
                 String selectedProjectDisplay = "";
                 if (configVO.getProjectType().indexOf("-1") != -1) {
-                    selectedProjectDisplay = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/汇计划项目";
+                    selectedProjectDisplay = "所有散标/新手/智投项目";
                 } else {
                     selectedProjectDisplayBuffer.append("所有");
                     for (String project : projectSed) {
                         if ("1".equals(project)) {
-                            selectedProjectDisplayBuffer.append("汇直投/");
+                            selectedProjectDisplayBuffer.append("散标/");
                         }
                         if ("2".equals(project)) {
-                            selectedProjectDisplayBuffer.append("汇消费/");
+                            selectedProjectDisplayBuffer.append("");
                         }
                         if ("3".equals(project)) {
-                            selectedProjectDisplayBuffer.append("新手汇/");
+                            selectedProjectDisplayBuffer.append("新手/");
                         }
                         if ("4".equals(project)) {
-                            selectedProjectDisplayBuffer.append("尊享汇/");
+                            selectedProjectDisplayBuffer.append("");
                         }
                         if ("5".equals(project)) {
-                            selectedProjectDisplayBuffer.append("汇添金/");
+                            selectedProjectDisplayBuffer.append("");
                         }
                         if ("6".equals(project)) {
-                            selectedProjectDisplayBuffer.append("汇计划/");
+                            selectedProjectDisplayBuffer.append("智投/");
                         }
 
                     }
@@ -343,27 +343,27 @@ public class CouponIssuanceController extends BaseController {
                     ",");
             String selectedProjectDisplay = "";
             if (configVO.getProjectType().indexOf("-1") != -1) {
-                selectedProjectDisplay = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/汇计划项目";
+                selectedProjectDisplay = "所有散标/新手/智投项目";
             } else {
                 selectedProjectDisplayBuffer.append("所有");
                 for (String project : projectSed) {
                     if ("1".equals(project)) {
-                        selectedProjectDisplayBuffer.append("汇直投/");
+                        selectedProjectDisplayBuffer.append("散标/");
                     }
                     if ("2".equals(project)) {
-                        selectedProjectDisplayBuffer.append("汇消费/");
+                        selectedProjectDisplayBuffer.append("");
                     }
                     if ("3".equals(project)) {
-                        selectedProjectDisplayBuffer.append("新手汇/");
+                        selectedProjectDisplayBuffer.append("新手/");
                     }
                     if ("4".equals(project)) {
-                        selectedProjectDisplayBuffer.append("尊享汇/");
+                        selectedProjectDisplayBuffer.append("");
                     }
                     if ("5".equals(project)) {
-                        selectedProjectDisplayBuffer.append("汇添金/");
+                        selectedProjectDisplayBuffer.append("");
                     }
                     if ("6".equals(project)) {
-                        selectedProjectDisplayBuffer.append("汇计划/");
+                        selectedProjectDisplayBuffer.append("智投/");
                     }
 
                 }
@@ -698,27 +698,27 @@ public class CouponIssuanceController extends BaseController {
                         ",");
                 String selectedProjectDisplay = "";
                 if (projectType.indexOf("-1") != -1) {
-                    selectedProjectDisplay = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/汇计划项目";
+                    selectedProjectDisplay = "所有散标/新手/智投项目";
                 } else {
                     selectedProjectDisplayBuffer.append("所有");
                     for (String project : projectSed) {
                         if ("1".equals(project)) {
-                            selectedProjectDisplayBuffer.append("汇直投/");
+                            selectedProjectDisplayBuffer.append("散标/");
                         }
                         if ("2".equals(project)) {
-                            selectedProjectDisplayBuffer.append("汇消费/");
+                            selectedProjectDisplayBuffer.append("");
                         }
                         if ("3".equals(project)) {
-                            selectedProjectDisplayBuffer.append("新手汇/");
+                            selectedProjectDisplayBuffer.append("新手/");
                         }
                         if ("4".equals(project)) {
-                            selectedProjectDisplayBuffer.append("尊享汇/");
+                            selectedProjectDisplayBuffer.append("");
                         }
                         if ("5".equals(project)) {
-                            selectedProjectDisplayBuffer.append("汇添金/");
+                            selectedProjectDisplayBuffer.append("");
                         }
                         if ("6".equals(project)) {
-                            selectedProjectDisplayBuffer.append("汇计划/");
+                            selectedProjectDisplayBuffer.append("智投/");
                         }
 
                     }

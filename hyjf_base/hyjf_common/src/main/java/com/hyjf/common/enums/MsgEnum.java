@@ -77,7 +77,7 @@ public enum MsgEnum implements MsgCode {
 	ERR_FMT_MOBILE("EFM000103", "手机号格式不正确"),
 	ERR_FMT_EMAIL("EFM000104", "邮箱格式不正确"),
 	ERR_FMT_IDCARDNO("EFM000105", "身份证号格式错误"),//孙帅帅新加-----已修改
-	ERR_FMT_PASSWORD("EFM000106", "密码必须由数字和字母组成，如abc123"),
+	ERR_FMT_PASSWORD("EFM000106", "必须包含数字、字母、符号至少两种"),
 	ERR_FMT_MONEY("EFM000107", "金额格式不正确"),
 	ERR_FMT_NICK("EFM000108","昵称2~16 位"),
 
@@ -209,7 +209,7 @@ public enum MsgEnum implements MsgCode {
 
 	//密码相关错误信息ERR_PASSWORD_
 	ERR_PASSWORD_ERROR_TOO_MANEY("EPW000001", "登录失败,当日密码错误已达上限，请明日再试！"),
-	ERR_PASSWORD_LENGTH("EPW000002", "密码长度6-16位"),
+	ERR_PASSWORD_LENGTH("EPW000002", "密码长度8-16位"),
 	ERR_PASSWORD_NO_NUMBER("EPW000003", "密码必须包含数字"),
 	ERR_PASSWORD_NEW_REQUIRED("EPW000004","新密码不能为空"),
 	ERR_PASSWORD_TWO_DIFFERENT_PASSWORD("EPW000005","两次密码不一致"),
@@ -334,7 +334,6 @@ public enum MsgEnum implements MsgCode {
 	STATUS_TP000002("TP000002","未设置过交易密码，请先设置交易密码"),
 	// ----------用户测评错误信息------------
 	STATUS_EV000001("EV000001","未找到对应测评结果"),
-	STATUS_EV000008("EV000008", "用户未测评"),
 	STATUS_EV000003("EV000003", "用户已测评"),
 	STATUS_EV000004("EV000004", "用户测评已过期"),
 	STATUS_EV000005("EV000005","测评限额超额"),

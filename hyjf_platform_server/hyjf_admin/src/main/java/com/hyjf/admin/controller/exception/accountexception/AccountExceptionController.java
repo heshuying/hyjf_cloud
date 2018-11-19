@@ -4,29 +4,22 @@
 package com.hyjf.admin.controller.exception.accountexception;
 
 import com.google.common.collect.Maps;
-import com.hyjf.admin.beans.DataCenterCouponBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AccountExceptionService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.AccountExceptionRequest;
 import com.hyjf.am.vo.admin.AccountExceptionVO;
-import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,13 +27,13 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_VIEW;
 
 /**
  * @author: sunpeikai
@@ -53,6 +46,7 @@ public class AccountExceptionController extends BaseController {
 
     @Autowired
     private AccountExceptionService accountExceptionService;
+	private static final String PERMISSIONS = "exceptionaccount";
 
     /**
      * 查询汇付对账异常list
@@ -62,6 +56,7 @@ public class AccountExceptionController extends BaseController {
      */
     @ApiOperation(value = "汇付对账列表", notes = "汇付对账列表")
     @PostMapping(value = "/accountexceptionlist")
+	@AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_VIEW)
     public AdminResult<ListResult<AccountExceptionVO>> accountExceptionList(@RequestBody AccountExceptionRequest request){
         // 数据总数
         Integer count = accountExceptionService.getAccountExceptionCount(request);

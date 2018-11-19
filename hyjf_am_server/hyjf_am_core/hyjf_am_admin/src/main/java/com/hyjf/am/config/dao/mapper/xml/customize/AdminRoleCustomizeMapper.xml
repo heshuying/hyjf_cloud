@@ -59,7 +59,6 @@
 			</if>
 		WHERE
 			menu.del_flag = '0'
-			AND menu.menu_hide = '0'
 		ORDER BY
 			menu.menu_puuid,
 			menu.menu_sort,
@@ -70,6 +69,6 @@
         select CONCAT(menu_uuid,'_',permission_uuid) from  ht_admin_role_menu_permissions where role_id= #{menuId,jdbcType=VARCHAR}
     </select>
     	    <delete id="deleteRole" parameterType="java.lang.String" >
-        delete from  ht_admin_role_menu_permissions where menu_uuid in (select menu_uuid from ht_admin_menu where del_flag=1 or menu_hide=1)  and role_id = #{roleId,jdbcType=VARCHAR}
+        delete from  ht_admin_role_menu_permissions where menu_uuid in (select menu_uuid from ht_admin_menu where del_flag=1 )  and role_id = #{roleId,jdbcType=VARCHAR}
     </delete>
 </mapper>

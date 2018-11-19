@@ -126,6 +126,7 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
 
                 // 最后一笔回款时间
                 Integer recoverTime = batchUserPortraitQueryCustomizeMapper.getLastRepayTime(userId);
+                log.info("用户 ：" + userId + "最后一笔回款时间：{}", recoverTime );
                 if (recoverTime != null && recoverTime != 0) {
                     batchUserPortraitQueryVO.setLastRepayTime(recoverTime);
                 }
@@ -195,7 +196,7 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
                     if (count3 > 0) {
                         rechargeCount++;
                     }
-                    if (count4 > 4) {
+                    if (count4 > 0) {
                         tenderCount++;
                     }
                 }

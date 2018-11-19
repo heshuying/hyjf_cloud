@@ -46,7 +46,7 @@ public class WrbRegiestController {
     @Autowired
     private LoginService loginService;
 
-    @PostMapping("/register.do")
+    @PostMapping("/register")
     public WrbRegisterResultBean userRegister(@RequestParam String param,
                                               @RequestParam(value = "sign", required = false) String sign, HttpServletRequest request) {
         log.info("风车理财注册, param is :{}, sign is :{}", param, sign);

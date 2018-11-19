@@ -61,7 +61,7 @@ public class ApiUserWithdrawController extends BaseTradeController {
     @ApiIgnore
     @RequestMapping(value = "/return")
     public ModelAndView cashReturn(HttpServletRequest request,  BankCallBean bean) {
-        BaseController.logger.info("用户提现后同步处理请求参数:" + JSONObject.toJSONString(bean));
+        logger.info("用户提现后同步处理请求参数:" + JSONObject.toJSONString(bean));
         Map<String,Object> result = userWithdrawService.cashReturn(request, bean);
         return callbackErrorViewForMap(result);
     }
@@ -72,11 +72,11 @@ public class ApiUserWithdrawController extends BaseTradeController {
      * @param
      * @return
      */
-    @ApiOperation(value = "用户提现异步回调处理",notes = "用户提现异步回调处理")
+    @ApiIgnore
     @ResponseBody
     @RequestMapping(value = "/callback")
     public BankCallResult withdrawBgReturn(HttpServletRequest request, @RequestBody BankCallBean bean) {
-        BaseController.logger.info("用户提现异步回调处理请求参数:" + JSONObject.toJSONString(bean));
+        logger.info("用户提现异步回调处理请求参数:" + JSONObject.toJSONString(bean));
         return userWithdrawService.withdrawBgReturn(request, bean);
     }
 

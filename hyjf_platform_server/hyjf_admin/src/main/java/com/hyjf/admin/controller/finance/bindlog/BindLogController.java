@@ -7,6 +7,7 @@ import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BindLogService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -35,6 +36,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_EXPORT;
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_VIEW;
+
 /**
  * @author: sunpeikai
  * @version: BindLogController, v0.1 2018/7/5 15:36
@@ -46,6 +50,7 @@ public class BindLogController extends BaseController {
 
     @Autowired
     private BindLogService bindLogService;
+    private static final String PERMISSIONS = "bindlog";
 
     /**
      * 查询绑定日志列表
@@ -55,6 +60,7 @@ public class BindLogController extends BaseController {
      */
     @ApiOperation(value = "查询绑定日志列表",notes = "查询绑定日志列表")
     @PostMapping(value = "/getbindloglist")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_VIEW)
     public AdminResult<ListResult<BindLogVO>> getBindLogList(@RequestBody BindLogListRequest request){
         Integer count = bindLogService.getBindLogCount(request);
         count = (count == null)?0:count;
@@ -70,6 +76,7 @@ public class BindLogController extends BaseController {
      */
     @ApiOperation(value = "导出绑定日志列表",notes = "根据筛选条件导出绑定日志list")
     @PostMapping(value = "/bindloglistexport")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_EXPORT)
     public void exportBindLogList(HttpServletRequest httpRequest, HttpServletResponse response, @RequestBody BindLogListRequest request) throws UnsupportedEncodingException {
 
 

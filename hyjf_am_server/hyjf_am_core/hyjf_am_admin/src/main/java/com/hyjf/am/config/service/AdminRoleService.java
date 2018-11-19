@@ -1,6 +1,7 @@
 package com.hyjf.am.config.service;
 
 import com.alibaba.fastjson.JSONArray;
+import com.hyjf.am.config.dao.model.auto.AdminAndRole;
 import com.hyjf.am.config.dao.model.auto.AdminRole;
 import com.hyjf.am.config.dao.model.auto.AdminRoleMenuPermissions;
 import com.hyjf.am.config.dao.model.customize.AdminRoleCustomize;
@@ -89,4 +90,5 @@ public interface AdminRoleService {
 	void setRolePermission(UserRoleRequest userRoleRequest) throws Exception;
 
 	List<String> getPermissionId(String menuId);
+	public AdminAndRole getRole(int adminId);
 }

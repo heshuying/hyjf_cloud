@@ -67,7 +67,7 @@ public class ApiAuthController extends BaseUserController {
         ModelAndView modelAndView = new ModelAndView();
         Map<String, String> paramMap = authService.checkApiParam(requestBean);
         paramMap.put("callBackAction",requestBean.getRetUrl());
-        if("0".equals(paramMap.get("status"))){
+        if(!"1".equals(paramMap.get("status"))){
             return callbackErrorView(paramMap);
         }
         // 根据电子账户号查询用户ID
@@ -76,7 +76,7 @@ public class ApiAuthController extends BaseUserController {
         UserVO user = authService.getUsersById(bankOpenAccount.getUserId());//用户ID
         // 拼装参数 调用江西银行
         // 同步调用路径
-        String retUrl = systemConfig.getServerHost() + request.getContextPath() + REQUEST_MAPPING + RETURL_SYN_ACTION + "?isSuccess=&authType="
+        String retUrl = systemConfig.getServerHost() + REQUEST_MAPPING + RETURL_SYN_ACTION + "?isSuccess=&authType="
                 + requestBean.getAuthType()+ "&callback="
                 + requestBean.getRetUrl().replace("#", "*-*-*");
         // 异步调用路
