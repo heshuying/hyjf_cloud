@@ -20,6 +20,7 @@ import com.hyjf.am.vo.admin.HjhUserAuthConfigCustomizeVO;
 import com.hyjf.am.vo.admin.HjhUserAuthConfigLogCustomizeVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.user.HjhUserAuthConfigVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -92,19 +93,19 @@ public class AuthConfigController extends BaseController {
             Integer id = form.getId();
             switch (id) {
                 case 1:
-                    ret = CommonUtils.getAuthConfigFromCache(CommonUtils.KEY_PAYMENT_AUTH);
+                    ret = CommonUtils.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
                     authConfig = this.convertAuthConfig(ret, id);
                     break;
                 case 2:
-                    ret = CommonUtils.getAuthConfigFromCache(CommonUtils.KEY_REPAYMENT_AUTH);
+                    ret = CommonUtils.getAuthConfigFromCache(RedisConstants.KEY_REPAYMENT_AUTH);
                     authConfig = this.convertAuthConfig(ret, id);
                     break;
                 case 3:
-                    ret = CommonUtils.getAuthConfigFromCache(CommonUtils.KEY_AUTO_TENDER_AUTH);
+                    ret = CommonUtils.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH);
                     authConfig = this.convertAuthConfig(ret, id);
                     break;
                 case 4:
-                    ret = CommonUtils.getAuthConfigFromCache(CommonUtils.KEY_AUTO_CREDIT_AUTH);
+                    ret = CommonUtils.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH);
                     authConfig = this.convertAuthConfig(ret, id);
                     break;
                 default:
@@ -136,16 +137,16 @@ public class AuthConfigController extends BaseController {
             Integer id=form.getId();
             switch (id) {
                 case 1:
-                    RedisUtils.setObj(CommonUtils.KEY_PAYMENT_AUTH, form);
+                    RedisUtils.setObj(RedisConstants.KEY_PAYMENT_AUTH, form);
                     break;
                 case 2:
-                    RedisUtils.setObj(CommonUtils.KEY_REPAYMENT_AUTH, form);
+                    RedisUtils.setObj(RedisConstants.KEY_REPAYMENT_AUTH, form);
                     break;
                 case 3:
-                    RedisUtils.setObj(CommonUtils.KEY_AUTO_TENDER_AUTH, form);
+                    RedisUtils.setObj(RedisConstants.KEY_AUTO_TENDER_AUTH, form);
                     break;
                 case 4:
-                    RedisUtils.setObj(CommonUtils.KEY_AUTO_CREDIT_AUTH, form);
+                    RedisUtils.setObj(RedisConstants.KEY_AUTO_CREDIT_AUTH, form);
                     break;
                 default:
                     break;

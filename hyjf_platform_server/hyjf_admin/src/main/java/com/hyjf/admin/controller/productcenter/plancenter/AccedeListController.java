@@ -561,6 +561,14 @@ public class AccedeListController extends BaseController{
 			if (StringUtils.isNotEmpty(record.getMatchDates())) {
 				record.setMatchDates(record.getMatchDates() + "天");
 			}
+
+			if(record.getRefereeUserId() == null || "0".equals(record.getRefereeUserId())){
+				record.setRefereeUserId("");
+			}
+
+			if(record.getInviteUserId() == null || "0".equals(record.getInviteUserId())){
+				record.setInviteUserId("");
+			}
 		}
 
 		return resultList;

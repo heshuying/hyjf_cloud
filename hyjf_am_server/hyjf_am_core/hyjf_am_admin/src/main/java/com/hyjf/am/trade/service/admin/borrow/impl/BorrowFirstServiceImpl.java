@@ -7,12 +7,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.admin.mq.base.MessageContent;
 import com.hyjf.am.admin.mq.producer.AutoPreAuditMessageProducer;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.BorrowBailInfoResponse;
 import com.hyjf.am.resquest.admin.BorrowFireRequest;
 import com.hyjf.am.resquest.admin.BorrowFirstRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BorrowFirstCustomize;
 import com.hyjf.am.trade.service.admin.borrow.BorrowFirstService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.admin.BorrowBailInfoResponseBeanVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -20,6 +22,7 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -260,5 +263,33 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
             //非定时发标 删redis
             RedisUtils.del(RedisConstants.ONTIME + borrow.getBorrowNid());
         }
+    }
+
+    /**
+     * 优化获取保证金信息
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public BorrowBailInfoResponse getBailInfo(String borrowNid) {
+        BorrowBailInfoResponse response = new BorrowBailInfoResponse();
+        Borrow borrow = getBorrow(borrowNid);
+        BorrowInfo borrowInfo = getBorrowInfoByNid(borrowNid);
+        if (borrow == null || borrowInfo == null) {
+            response.setRtn(Response.FAIL);
+            response.setMessage("未查询到标的信息！");
+        } else {
+            BorrowBailInfoResponseBeanVO borrowBailInfoResponseBean = new BorrowBailInfoResponseBeanVO();
+            BeanUtils.copyProperties(borrow, borrowBailInfoResponseBean);
+            borrowBailInfoResponseBean.setName(borrowInfo.getName());
+            borrowBailInfoResponseBean.setUserName(borrow.getBorrowUserName());
+
+            // 计算公式：保证金金额=借款金额×3％
+            BigDecimal bailPercent = new BigDecimal(getBorrowConfig(CustomConstants.BORROW_BAIL_RATE));
+            double accountBail = (borrow.getAccount().multiply(bailPercent)).setScale(2, BigDecimal.ROUND_DOWN).doubleValue();
+            borrowBailInfoResponseBean.setAccountBail(accountBail);
+            response.setResult(borrowBailInfoResponseBean);
+        }
+        return response;
     }
 }

@@ -117,7 +117,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @Date 2018/6/24 14:35
      */
     @Override
-    @HystrixCommand(commandKey = "散标投资",fallbackMethod = "fallBackTender",commandProperties = {
+    @HystrixCommand(commandKey = "散标投资(三端)-borrowTender",fallbackMethod = "fallBackTender",commandProperties = {
             //设置断路器生效
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s
@@ -1498,7 +1498,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     String riskTested = (String) result.get("riskTested");
                     if (CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL.equals(riskTested)) {
                         //未测评新评测
-                        throw new CheckException(MsgEnum.STATUS_EV000008);
+                        throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_RISK_ASSESSMENT);
                     } else if (CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)) {
                         //已过期需要重新评测
                         throw new CheckException(MsgEnum.STATUS_EV000004);
@@ -1537,7 +1537,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     String riskTested = (String) result.get("riskTested");
                     if (CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL.equals(riskTested)) {
                         //未测评新评测
-                        throw new CheckException(MsgEnum.STATUS_EV000008);
+                        throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_RISK_ASSESSMENT);
                     } else if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
                         //已过期需要重新评测
                         throw new CheckException(MsgEnum.STATUS_EV000004);
@@ -1564,7 +1564,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 String riskTested = (String) result.get("riskTested");
                 if (CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL.equals(riskTested)) {
                     //未测评新评测
-                    throw new CheckException(MsgEnum.STATUS_EV000008);
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_RISK_ASSESSMENT);
                 } else if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
                     //已过期需要重新评测
                     throw new CheckException(MsgEnum.STATUS_EV000004);

@@ -105,7 +105,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      * @return
      */
     @Override
-    @HystrixCommand(commandKey = "债转投资",fallbackMethod = "fallBackCredit",commandProperties = {
+    @HystrixCommand(commandKey = "债转投资(app/web)-borrowCreditTender",fallbackMethod = "fallBackCredit",commandProperties = {
             //设置断路器生效
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s
@@ -1312,11 +1312,6 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         return creditTenderLog;
     }
 
-    public static void main(String[] args) {
-        System.out.println("args = " + BeforeInterestAfterPrincipalUtils.getAssignInterestAdvance(new BigDecimal("1000"), new BigDecimal("10000"),
-                new BigDecimal("0.08"), new BigDecimal("66.66"),
-                new BigDecimal(27 + "")));
-    }
     /**
      * 获取调用银行的参数
      * @param request

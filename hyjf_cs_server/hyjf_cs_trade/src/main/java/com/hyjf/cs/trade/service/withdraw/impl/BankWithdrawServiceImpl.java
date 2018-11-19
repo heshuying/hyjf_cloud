@@ -19,6 +19,7 @@ import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.bank.LogAcqResBean;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -104,7 +105,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
 
     @Override
-    @HystrixCommand(commandKey = "提现",fallbackMethod = "fallBackWithdraw",commandProperties = {
+    @HystrixCommand(commandKey = "提现(三端)-getUserBankWithdrawView",fallbackMethod = "fallBackWithdraw",commandProperties = {
             //设置断路器生效
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s
@@ -429,7 +430,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         // 是否开启服务费授权 0未开启  1已开启
         ret.put("paymentAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoPaymentStatus());
         // 是否开启服务费授权 0未开启  1已开启
-        ret.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
+        ret.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
         ret.put("bankBalance", CustomConstants.DF_FOR_VIEW.format(bankBalance));
         result.setData(ret);
         return result;
