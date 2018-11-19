@@ -155,7 +155,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
      * @Date 2018/6/15 17:20
      */
     @Override
-    @HystrixCommand(commandKey = "开户(三端)-getOpenAccountMV",fallbackMethod = "fallBackBankOpen",commandProperties = {
+    @HystrixCommand(commandKey = "开户(三端)-getOpenAccountMV",fallbackMethod = "fallBackBankOpen",ignoreExceptions = CheckException.class,commandProperties = {
             //设置断路器生效
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s
@@ -272,9 +272,9 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             UserVO userVO = this.amUserClient.findUserById(userId);
             // add by liuyang 神策数据统计追加 20180927 start
             if ("10000000".equals(userVO.getInstCode())) {
-                if (!RedisUtils.exists("SENSORS_DATA_OPEN_ACCOUNT:" + userId)) {
+                if (!RedisUtils.exists(RedisConstants.SENSORS_DATA_OPEN_ACCOUNT + userId)) {
                     try {
-                        RedisUtils.sadd("SENSORS_DATA_OPEN_ACCOUNT:" + userId, String.valueOf(userId));
+                        RedisUtils.sadd(RedisConstants.SENSORS_DATA_OPEN_ACCOUNT + userId, String.valueOf(userId));
                         // 开户成功后,发送神策数据统计MQ
                         SensorsDataBean sensorsDataBean = new SensorsDataBean();
                         sensorsDataBean.setUserId(userId);
@@ -478,6 +478,12 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             logger.info("请求参数异常" + JSONObject.toJSONString(payRequestBean, true) + "]");
             return getErrorMV(payRequestBean, ErrorCodeConstant.STATUS_CE000002);
         }*/
+        if(!this.verifyRequestSign(requestBean, "/server/user/accountOpenEncryptPage/open.do")){
+            logger.info("验签失败[" + JSONObject.toJSONString(requestBean, true) + "]");
+            resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
+            resultMap.put("mess", "验签失败！");
+            return resultMap;
+        }
         // 判断真实姓名是否包含特殊字符
         if (!ValidatorCheckUtil.verfiyChinaFormat(requestBean.getTrueName())) {
             logger.info("真实姓名包含特殊字符[" + JSONObject.toJSONString(requestBean, true) + "]");

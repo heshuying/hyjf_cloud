@@ -10,7 +10,6 @@ import com.hyjf.am.response.user.WrbInvestSumResponse;
 import com.hyjf.am.resquest.api.WrbInvestRecordRequest;
 import com.hyjf.am.resquest.config.MsgPushTemplateRequest;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
-import com.hyjf.am.vo.trade.BorrowVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
@@ -55,7 +54,7 @@ public class WrbInfoController {
     @Autowired
     private WrbInfoServcie wrbInvestServcie;
 
-    @RequestMapping("/notice_info.do")
+    @RequestMapping("/notice_info")
     public WrbNoticeinfoResponse getNoticeinfoDetail(@RequestParam String param,
                                                      @RequestParam(value = "sign", required = false) String sign){
         logger.info("获取平台的公告信息, param is :{}, sign is :{}", param, sign);
@@ -118,7 +117,7 @@ public class WrbInfoController {
      * @param sign
      * @return
      */
-    @RequestMapping("/borrow_list.do")
+    @RequestMapping("/borrow_list")
     public WrbBorrowReturnBean getBorrowList(@RequestParam String param,
                                                @RequestParam(value = "sign", required = false) String sign) {
         logger.info("标的查询接口, param is :{}, sign is :{}", param, sign);
@@ -151,7 +150,7 @@ public class WrbInfoController {
      * @param param
      * @param sign
      */
-    @RequestMapping("/bid_invest_list.do")
+    @RequestMapping("/bid_invest_list")
     public WrbBorrowInvestResponse getBorrowInvest(@RequestParam String param,
                                                    @RequestParam(value = "sign", required = false) String sign) {
         logger.info("查询标的投资情况, param is :{}, sign is :{}", param, sign);
@@ -228,7 +227,7 @@ public class WrbInfoController {
      * 获取某天投资情况
      * @return
      */
-    @RequestMapping("/day_invest_list.do")
+    @RequestMapping("/day_invest_list")
     public WrbInvestResponse getInvestDetail(@RequestParam String param,
                                                    @RequestParam(value = "sign", required = false) String sign) {
 
@@ -313,7 +312,7 @@ public class WrbInfoController {
      * @return
      * @throws ParseException
      */
-    @RequestMapping("/ws_sum.do")
+    @RequestMapping("/ws_sum")
     public WrbInvestSumResponse getSum(@RequestParam String param,
                                        @RequestParam(value = "sign", required = false) String sign) {
         logger.info("获取某天汇总数据, param is :{}, sign is :{}", param, sign);
@@ -359,7 +358,7 @@ public class WrbInfoController {
      * @param sign
      * @return
      */
-    @RequestMapping("/acc_info.do")
+    @RequestMapping("/acc_info")
     public WrbAccountResponse getAccountInfo(@RequestParam String param,
                                              @RequestParam(value = "sign", required = false) String sign) {
         logger.info("查询账户信息, param is :{}, sign is :{}", param, sign);
@@ -408,7 +407,7 @@ public class WrbInfoController {
      * @param sign
      * @return
      */
-    @RequestMapping("/acc_invest.do")
+    @RequestMapping("/acc_invest")
     public WrbInvestRecordResponse getInvestRecord(@RequestParam String param,
                                                    @RequestParam(value = "sign", required = false) String sign) {
         logger.info("查询投资记录, param is :{}, sign is :{}", param, sign);
@@ -490,7 +489,7 @@ public class WrbInfoController {
      * @param sign
      * @return
      */
-    @RequestMapping("/acc_back_list.do")
+    @RequestMapping("/acc_back_list")
     public wrbInvestRecoverPlanResponse getRecoverPlan(@RequestParam String param,
                                                        @RequestParam(value = "sign", required = false) String sign) {
         logger.info("投资记录回款计划, param is :{}, sign is :{}", param, sign);

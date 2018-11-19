@@ -1,23 +1,9 @@
 package com.hyjf.pay.controller;
 
-import java.lang.reflect.Method;
-import java.util.TreeMap;
-import java.util.UUID;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.base.BaseController;
 import com.hyjf.pay.bean.DzqzCallDefine;
@@ -31,6 +17,15 @@ import com.hyjf.pay.mq.Producer;
 import com.hyjf.pay.service.DzqzPayLogService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Method;
+import java.util.TreeMap;
+import java.util.UUID;
 
 @RestController
 @RequestMapping(DzqzCallDefine.FDD_REQUEST_MAPPING)
@@ -58,7 +53,7 @@ public class DzqzCallController extends BaseController {
      * @throws Exception
      */
     @PostMapping(value = DzqzCallDefine.FDD_CALL_APIBG)
-    @HystrixCommand(commandKey="电子签章接口-DzqzCallApiBg", fallbackMethod = "fallBackCallApiBg",commandProperties = {
+    @HystrixCommand(commandKey="电子签章接口-DzqzCallApiBg", fallbackMethod = "fallBackCallApiBg",ignoreExceptions = CheckException.class,commandProperties = {
             //设置断路器生效
           @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),        
             //一个统计窗口内熔断触发的最小个数3/10s

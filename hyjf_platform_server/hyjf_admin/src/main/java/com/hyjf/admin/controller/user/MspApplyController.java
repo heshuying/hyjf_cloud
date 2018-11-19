@@ -129,7 +129,8 @@ public class MspApplyController extends BaseController {
 	public AdminResult insertAction(HttpServletRequest request,
 			@RequestBody MspApplytRequest mspApplytRequestBean) {
 		// 可以直接使用
-		mspApplytRequestBean.setAdminId(this.getUser(request).getTruename());
+		mspApplytRequestBean.setAdminId(this.getUser(request).getId());
+		mspApplytRequestBean.setAdmin(this.getUser(request).getTruename());
 		MspApplytResponse prs = mspApplyService.insertAction(mspApplytRequestBean);
 
 		if (prs == null) {
@@ -213,7 +214,7 @@ public class MspApplyController extends BaseController {
 		MspApplytRequest aprlr = new MspApplytRequest();
 		// 可以直接使用
 		BeanUtils.copyProperties(mspApplytRequestBean, aprlr);
-		mspApplytRequestBean.setAdminId(this.getUser(request).getTruename());
+		mspApplytRequestBean.setAdminId(this.getUser(request).getId());
 		MspApplytResponse prs = mspApplyService.validateBeforeAction(aprlr);
 
 		if (prs == null) {
@@ -404,7 +405,8 @@ public class MspApplyController extends BaseController {
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
 	public AdminResult<MspApplytResponseBean> applyInfo(HttpServletRequest request,
 			@RequestBody MspApplytRequest mspApplytRequestBean) {
-		mspApplytRequestBean.setAdminId(this.getUser(request).getTruename());
+		mspApplytRequestBean.setAdminId(this.getUser(request).getId());
+		mspApplytRequestBean.setAdmin(this.getUser(request).getTruename());
 		MspApplytResponse prs = mspApplyService.applyInfo(mspApplytRequestBean);
 
 		if (prs == null) {
@@ -428,6 +430,7 @@ public class MspApplyController extends BaseController {
 	public AdminResult shareUser(HttpServletRequest request,
 			@RequestBody MspApplytRequest mspApplytRequestBean) {
 		mspApplytRequestBean.setAdminId(this.getUser(request).getId());
+		mspApplytRequestBean.setAdmin(this.getUser(request).getTruename());
 		MspApplytResponse prs = mspApplyService.shareUser(mspApplytRequestBean);
 
 		if (prs == null) {
@@ -457,7 +460,7 @@ public class MspApplyController extends BaseController {
 		MspApplytRequest aprlr = new MspApplytRequest();
 		// 可以直接使用
 		BeanUtils.copyProperties(mspApplytRequestBean, aprlr);
-		mspApplytRequestBean.setAdminId(this.getUser(request).getTruename());
+		mspApplytRequestBean.setAdminId(this.getUser(request).getId());
 		MspApplytResponse prs = mspApplyService.download(aprlr);
 
 		if (prs == null) {
