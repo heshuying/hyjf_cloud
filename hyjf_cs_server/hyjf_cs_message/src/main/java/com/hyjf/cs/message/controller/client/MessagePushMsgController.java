@@ -10,7 +10,6 @@ import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.controller.BaseController;
-import com.hyjf.cs.message.bean.mc.MessagePush;
 import com.hyjf.cs.message.bean.mc.MessagePushMsg;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
@@ -66,7 +65,7 @@ public class MessagePushMsgController extends BaseController {
 		startTime =  GetDate.strYYYYMMDDHHMMSS2Timestamp2(GetDate.getDayStart(curDate));
 		endTime = GetDate.strYYYYMMDDHHMMSS2Timestamp2(GetDate.getDayEnd(curDate));
 		// 当天内的发送消息
-		List<MessagePush> msgList = msgPushService.getMsgStaticsListByTime(startTime, endTime);
+		List<MessagePushMsg> msgList = msgPushService.getMsgStaticsListByTime(startTime, endTime);
 		// 插入统计数据
 		for (int i = 0; i < msgList.size(); i++) {
 			this.msgPushService.insertMessagePush(msgList.get(i));
@@ -178,8 +177,7 @@ public class MessagePushMsgController extends BaseController {
 		MessagePushMsg messagePushMsg = new MessagePushMsg();
 		BeanUtils.copyProperties(request,messagePushMsg);
 		messagePushMsg.setLastupdateTime(GetDate.getNowTime10());
-		String msgTerminal[] = request.getMsgTerminal().split(",");
-		messagePushMsg.setMsgTerminal(msgTerminal);
+		messagePushMsg.setMsgTerminal(request.getMsgTerminal());
 		Integer count = messagePushMsgService.updateMessagePushMsg(messagePushMsg);
 		response.setCount(count);
 		return response;

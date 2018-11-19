@@ -1041,4 +1041,42 @@ public class RedisUtils {
         }
     }
 
+    /**
+     * 分布式锁(可以在并发中使用的不可重复设置锁，
+     * PS：前面那个分布式锁的还有BUG，千万不要用，因为 unwatch()是取消所有key的监视 )
+     * @param rediskey
+     * @param value
+     * @param seconds
+     * @return
+     */
+    public static boolean setnx(String rediskey,String value,int seconds) {
+
+        JedisPool pool = null;
+        Jedis jedis = null;
+        try {
+            pool = getPool();
+            jedis = pool.getResource();
+
+            //判断设置锁的值是否成功 1=成功，0=失败
+            if(jedis.setnx(rediskey,value) == 1){
+                jedis.expire(rediskey,seconds);
+                return true;
+            }else{
+                return false;
+            }
+
+        } catch (Exception e) {
+            if (value.equals(jedis.get(rediskey))) {
+                jedis.del(rediskey);
+            }
+            e.printStackTrace();
+            return false;
+        } finally {
+            // 释放redis对象
+            // 释放
+            // 返还到连接池
+            returnResource(pool, jedis);
+        }
+    }
+
 }

@@ -2305,9 +2305,10 @@ public class FddHandle {
 						boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
 								basePathImage, saveDir, fileName, ins);
 						if (!flag){
-							throw new RuntimeException("上传失败!fileName:" + fileName);
+							throw new RuntimeException("上传失败!无报错，fileName:" + fileName);
 						}
 					}catch (Exception e){
+
 						throw new RuntimeException("上传失败!fileName:" + fileName);
 					}
 				}
@@ -2318,9 +2319,11 @@ public class FddHandle {
 					boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
 							basePathImage, saveDir, fileName, ins);
 					if (!flag){
+						logger.info("==============上传文件失败，无报错，fileName" + fileName);
 						throw new RuntimeException("上传失败!fileName:" + fileName);
 					}
 				}catch (Exception e){
+					logger.error("===========上传文件异常！fileName:" + fileName,e);
 					throw new RuntimeException("上传失败!fileName:" + fileName);
 				}
 			}

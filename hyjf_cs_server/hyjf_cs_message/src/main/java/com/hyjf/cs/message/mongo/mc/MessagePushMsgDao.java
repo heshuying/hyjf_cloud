@@ -2,7 +2,7 @@ package com.hyjf.cs.message.mongo.mc;
 
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.cs.message.bean.mc.MessagePush;
+import com.hyjf.cs.message.bean.mc.MessagePushMsg;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -15,16 +15,16 @@ import java.util.List;
  * @version MessagePushMsgDao, v0.1 2018/5/4 10:49
  */
 @Repository
-public class MessagePushMsgDao extends BaseMongoDao<MessagePush> {
+public class MessagePushMsgDao extends BaseMongoDao<MessagePushMsg> {
 
-	public MessagePush findById(String id) {
+	public MessagePushMsg findById(String id) {
 		Query query = new Query();
 		Criteria criteria = Criteria.where("id").is(id);
 		query.addCriteria(criteria);
 		return mongoTemplate.findOne(query, getEntityClass());
 	}
 
-	public List<MessagePush> findAllMessage() {
+	public List<MessagePushMsg> findAllMessage() {
 		Query query = new Query();
 		Criteria criteria1 = Criteria.where("msgSendStatus").is(CustomConstants.MSG_PUSH_MSG_STATUS_0)
 				.and("msgSendType").is(CustomConstants.MSG_PUSH_SEND_TYPE_0);
@@ -42,7 +42,7 @@ public class MessagePushMsgDao extends BaseMongoDao<MessagePush> {
 	 * @param endTime
 	 * @return
 	 */
-	public List<MessagePush> getMsgStaticsListByTime(Integer startTime, Integer endTime) {
+	public List<MessagePushMsg> getMsgStaticsListByTime(Integer startTime, Integer endTime) {
 		Query query = new Query();
 		Criteria criteria = Criteria.where("msgSendStatus").is(CustomConstants.MSG_PUSH_MSG_STATUS_1);
 
@@ -59,8 +59,8 @@ public class MessagePushMsgDao extends BaseMongoDao<MessagePush> {
 	}
 
 	@Override
-	protected Class<MessagePush> getEntityClass() {
-		return MessagePush.class;
+	protected Class<MessagePushMsg> getEntityClass() {
+		return MessagePushMsg.class;
 	}
 
 }

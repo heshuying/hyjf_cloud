@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.PushMoneyResponse;
 import com.hyjf.am.resquest.admin.PushMoneyRequest;
@@ -73,4 +74,12 @@ public interface PushMoneyManageService {
       * @return
       */
      JSONObject pushMoney(HttpServletRequest request, Integer id,Integer loginUserId);
+
+     /**
+      * 获取部门信息
+      * @auth sunpeikai
+      * @param
+      * @return
+      */
+     JSONArray getCrmDepartmentList(String[] list);
 }
