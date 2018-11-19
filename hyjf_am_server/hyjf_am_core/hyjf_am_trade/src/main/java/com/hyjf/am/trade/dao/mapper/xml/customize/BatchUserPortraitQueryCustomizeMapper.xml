@@ -175,13 +175,13 @@ FROM
 	
 	<select id="getLastRepayTime" parameterType="java.lang.Integer" resultType="INTEGER">
 		SELECT MAX(recover_time) FROM (
-		SELECT MAX(a.recover_yestime) as recover_time FROM ht_borrow_recover a WHERE a.user_id = #{userId,jdbcType=INTEGER} and accede_order_id is null
+		SELECT MAX(a.recover_time) as recover_time FROM ht_borrow_recover a WHERE a.user_id = #{userId,jdbcType=INTEGER} and accede_order_id is null
 		UNION ALL
-		SELECT MAX(b.repay_actual_time) as recover_time FROM ht_hjh_repay b WHERE b.user_id = #{userId,jdbcType=INTEGER}
+		SELECT MAX(b.repay_should_time) as recover_time FROM ht_hjh_repay b WHERE b.user_id = #{userId,jdbcType=INTEGER}
 		UNION ALL
-		select MAX(c.assign_repay_yes_time) as recover_time FROM ht_credit_repay c where c.user_id = #{userId,jdbcType=INTEGER}
+		select MAX(c.assign_repay_end_time) as recover_time FROM ht_credit_repay c where c.user_id = #{userId,jdbcType=INTEGER}
 		UNION ALL
-		SELECT MAX(e.recover_yestime) as recover_time FROM ht_coupon_recover e
+		SELECT MAX(e.recover_time) as recover_time FROM ht_coupon_recover e
 		LEFT JOIN ht_coupon_tender d ON d.order_id = e.tender_id
 		WHERE d.create_user_id = #{userId,jdbcType=INTEGER}
 		) temp
