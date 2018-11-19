@@ -481,6 +481,10 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
         if (!authService.checkPaymentAuthStatus(userId)) {
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_PAYMENT_AUTH);
         }
+        if (!amTradeClient.isAllowChannelAttorn(userId)) {
+            logger.info("判断用户所处渠道不允许债转,可债转金额0....userId is:{}", userId);
+            throw new CheckException(MsgEnum.ERR_ALLOW_CHANNEL_ATTORN);
+        }
     }
 
     /**
