@@ -42,5 +42,7 @@ public class MessageConstant {
 	/** 给指定邮件地址发邮件 */
 	public static final String MAIL_SEND_FOR_MAILING_ADDRESS_MSG = "mail_send_for_mailing_address_msg";
 
+	/** 发送销售日报邮件 */
+	public static final String MAIL_SEND_FRO_SELL_DAILY = "mail_send_for_sell_daily";
 
 }

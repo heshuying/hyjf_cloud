@@ -42,4 +42,11 @@
 			and day_time  <![CDATA[<]]> DATE_ADD(STR_TO_DATE(CONCAT(#{year} ,LPAD(#{month},2,'0'),'01'),"%Y%m%d"),INTERVAL 1 MONTH)
 	</select>
 
+	<select id="selectFirstWorkdayOnMonth" resultType="java.lang.Integer">
+		select CAST(DATE_FORMAT(day_time,'%d')AS SIGNED INTEGER) AS first_day from ht_holidays_config_new
+		where day_time <![CDATA[>=]]> STR_TO_DATE(concat(#{year},  LPAD(#{month},2,'0'),'01'),"%Y%m%d")
+		and day_time  <![CDATA[<]]> DATE_ADD(STR_TO_DATE(CONCAT(#{year} ,LPAD(#{month},2,'0'),'01'),"%Y%m%d"),INTERVAL 1 MONTH)
+		and holiday_flag = 0
+		order by day_time asc limit 1
+	</select>
 </mapper>
