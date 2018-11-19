@@ -49,6 +49,7 @@ import com.hyjf.cs.trade.service.coupon.AppCouponService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -109,7 +110,18 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      * @Date 2018/6/19 9:47
      */
     @Override
-    @HystrixCommand
+    @HystrixCommand(commandKey = "加入计划(三端)-joinPlan",fallbackMethod = "fallBackJoinPlan",commandProperties = {
+            //设置断路器生效
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //一个统计窗口内熔断触发的最小个数3/10s
+            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            //熔断5秒后去尝试请求
+            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
+            // 超时时间
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000")},threadPoolProperties = {
+            @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
     public WebResult<Map<String, Object>> joinPlan(TenderRequest request) {
         UserVO loginUser = amUserClient.findUserById(request.getUserId());
         Integer userId = loginUser.getUserId();
@@ -160,6 +172,18 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
 
         // 开始投资------------------------------------------------------------------------------------------------------------------------------------------
         return tender(request, plan, account, cuc, tenderAccount);
+    }
+
+    /**
+     * 加入计划失败回调方法
+     * @param request
+     * @return
+     */
+    public WebResult<Map<String, Object>> fallBackJoinPlan(TenderRequest request){
+        WebResult<Map<String,Object>> result = new WebResult<>();
+        result.setStatus(AppResult.FAIL);
+        result.setStatusDesc("加入失败，请重试！");
+        return result;
     }
 
     /**

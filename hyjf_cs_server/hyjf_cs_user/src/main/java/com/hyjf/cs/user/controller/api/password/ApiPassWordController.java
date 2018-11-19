@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
@@ -67,7 +68,7 @@ public class ApiPassWordController extends BaseController {
         }
         UserVO user = (UserVO) map.get("user");
         BankOpenAccountVO bankOpenAccount = (BankOpenAccountVO) map.get("bankOpenAccount");
-        BankCallBean bean = passWordService.apiSetPassword(transPasswordRequestBean,BankCallConstant.BANK_URL_PASSWORDRESETPAGE,BankCallConstant.TXCODE_PASSWORD_RESET_PAGE,user,bankOpenAccount);
+        BankCallBean bean = passWordService.apiSetPassword(transPasswordRequestBean,BankCallConstant.BANK_URL_PASSWORDRESETPAGE,BankCallConstant.TXCODE_PASSWORD_SET_PAGE,user,bankOpenAccount);
         try {
             modelAndView = BankCallUtils.callApi(bean);
         } catch (Exception e) {
@@ -84,11 +85,15 @@ public class ApiPassWordController extends BaseController {
      */
     @ApiOperation(value = "设置交易密码同步回调")
     @GetMapping("/passwordReturn")
-    public ModelAndView passwordReturn(HttpServletRequest request,@ModelAttribute BankCallBean bean) {
+    public ModelAndView passwordReturn(HttpServletRequest request, BankCallBean bean) {
         logger.info("设置交易密码同步回调start");
         String url = request.getParameter("callback").replace("*-*-*", "#");
         bean.convert();
-        int userId = Integer.parseInt(bean.getLogUserId());
+        String logUserId = bean.getLogUserId();
+        if(null==logUserId){
+            logUserId = request.getParameter("logUserId");
+        }
+        int userId = Integer.parseInt(logUserId);
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         // 调用查询电子账户密码是否设置
         BankCallBean selectbean = new BankCallBean();
@@ -147,7 +152,9 @@ public class ApiPassWordController extends BaseController {
         Map<String, String> params = new HashMap<String, String>();
         // 返回值修改 end
         bean.convert();
+        logger.info("设置交易密码异步回调，bean后:{}", JSONObject.toJSONString(bean, true));
         int userId = Integer.parseInt(bean.getLogUserId());
+        logger.info("userId："+userId);
         UserVO user = this.passWordService.getUsersById(userId);
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         // 成功或审核中
@@ -213,13 +220,19 @@ public class ApiPassWordController extends BaseController {
      * @param request
      * @return
      */
-    @ApiOperation(value = "修改交易密码同步回调")
-    @GetMapping("/resetPasswordReturn")
-    public ModelAndView resetPasswordReturn(HttpServletRequest request,@ModelAttribute BankCallBean bean) {
+    @ApiIgnore
+    @RequestMapping("/resetPasswordReturn")
+    public ModelAndView resetPasswordReturn(HttpServletRequest request, @ModelAttribute  BankCallBean bean) {
         logger.info("修改交易密码同步回调start");
         bean.convert();
+        logger.info("bean后:{}", JSONObject.toJSONString(bean, true));
+        String isSuccess = request.getParameter("isSuccess");
         String url = request.getParameter("callback").replace("*-*-*","#");
-        int userId = Integer.parseInt(bean.getLogUserId());
+        String logUserId = bean.getLogUserId();
+        if(null==logUserId){
+            logUserId = request.getParameter("logUserId");
+        }
+        int userId = Integer.parseInt(logUserId);
         BankOpenAccountVO bankOpenAccount = passWordService.getBankOpenAccount(userId);
         Map<String,Object> result =new HashMap<>();
         result.put("accountId", bankOpenAccount.getAccount());
@@ -228,7 +241,7 @@ public class ApiPassWordController extends BaseController {
         result.put("acqRes",request.getParameter("acqRes"));
         result.put("statusDesc", "交易密码设置成功");
         // 返回失败
-        if (bean.getRetCode()!=null&&!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
+        if (isSuccess == null || !"1".equals(isSuccess)) {
             result.put("statusDesc", "交易密码修改失败！");
             result.put("status",ErrorCodeConstant.STATUS_CE999999);
             return callbackErrorViewForMap(result);

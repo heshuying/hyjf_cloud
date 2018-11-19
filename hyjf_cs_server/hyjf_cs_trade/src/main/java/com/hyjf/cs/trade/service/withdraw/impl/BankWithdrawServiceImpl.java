@@ -48,6 +48,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.*;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
@@ -103,7 +104,18 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
 
     @Override
-    @HystrixCommand
+    @HystrixCommand(commandKey = "提现(三端)-getUserBankWithdrawView",fallbackMethod = "fallBackWithdraw",commandProperties = {
+            //设置断路器生效
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //一个统计窗口内熔断触发的最小个数3/10s
+            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            //熔断5秒后去尝试请求
+            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
+            // 超时时间
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000")},threadPoolProperties = {
+            @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
     public BankCallBean getUserBankWithdrawView(UserVO user, String transAmt, String cardNo, String payAllianceCode, String platform, String channel, String ip, String retUrl, String bgRetUrl, String successfulUrl, String forgotPwdUrl) {
 
 
@@ -128,6 +140,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         return bean;
     }
 
+    public BankCallBean fallBackWithdraw(UserVO user, String transAmt, String cardNo, String payAllianceCode, String platform, String channel, String ip, String retUrl, String bgRetUrl, String successfulUrl, String forgotPwdUrl){
+        return null;
+    }
 
     @Override
     public Map<String, String> userBankWithdrawReturn(BankCallBean bean, String isSuccess, String wifee, String withdrawmoney) {
@@ -1324,9 +1339,9 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             // 调用江西银行提现接口
             // 调用汇付接口(提现)
 
-            String bankRetUrl =  "http://CS-TRADE/hyjf-api/server/user/withdraw/return?callback=" + retUrl.replace("#", "*-*-*");
+            String bankRetUrl =  systemConfig.getServerHost()+"/hyjf-api/server/user/withdraw/return?callback=" + retUrl.replace("#", "*-*-*");
             // 支付工程路径
-            String bankBgRetUrl = "http://CS-TRADE/hyjf-api/server/user/withdraw/callback?callback=" + bgRetUrl.replace("#", "*-*-*");// 支付工程路径
+            String bankBgRetUrl = "http://CS-TRADE/hyjf-api/server/user/withdraw/callback?callback=" + bgRetUrl.replace("#", "*-*-*");
 
             // 路由代码
             String routeCode = "";
@@ -1372,8 +1387,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                 bean.setRouteCode("2");
                 bean.setCardBankCnaps(StringUtils.isEmpty(payAllianceCode) ? bankCard.getPayAllianceCode() : payAllianceCode);
             }
-            // TODO忘记密码URL
-            //bean.setForgotPwdUrl(CustomConstants.FORGET_PASSWORD_URL);
+            bean.setForgotPwdUrl(systemConfig.getForgetpassword());
             bean.setForgotPwdUrl(userWithdrawRequestBean.getForgotPwdUrl());
             bean.setRetUrl(bankRetUrl);// 商户前台台应答地址(必须)
             bean.setNotifyUrl(bankBgRetUrl); // 商户后台应答地址(必须)
@@ -1538,6 +1552,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             result.put("statusDesc", "银行处理中,请稍后查询交易明细");
             result.put("status", ErrorCodeConstant.STATUS_CE000005);
         }
+        result.put("",url);
         return result;
     }
 
