@@ -77,7 +77,7 @@
 		INNER JOIN ht_borrow_recover AS br ON br.borrow_nid=b.borrow_nid
 		LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
 		LEFT join ht_borrow_tender AS t on br.tender_id=t.id
-		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
+		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = b.project_type
 		LEFT JOIN ht_users AS u1 ON br.borrow_userid = u1.user_id
 		LEFT JOIN ht_users AS u2 ON br.user_id = u2.user_id
 		LEFT JOIN ht_users_info ui ON u2.user_id = ui.user_id

@@ -26,10 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -48,7 +45,7 @@ public class ApiAuthController extends BaseUserController {
     /**
      * 外部服务接口:缴费授权 @RequestMapping
      */
-    public static final String REQUEST_MAPPING = "/server/user/mergeAuthPagePlus";
+    public static final String REQUEST_MAPPING = "/hyjf-api/server/user/mergeAuthPagePlus";
     /**
      * 同步回调
      */
@@ -70,7 +67,7 @@ public class ApiAuthController extends BaseUserController {
         ModelAndView modelAndView = new ModelAndView();
         Map<String, String> paramMap = authService.checkApiParam(requestBean);
         paramMap.put("callBackAction",requestBean.getRetUrl());
-        if("0".equals(paramMap.get("status"))){
+        if(!"1".equals(paramMap.get("status"))){
             return callbackErrorView(paramMap);
         }
         // 根据电子账户号查询用户ID
@@ -79,13 +76,11 @@ public class ApiAuthController extends BaseUserController {
         UserVO user = authService.getUsersById(bankOpenAccount.getUserId());//用户ID
         // 拼装参数 调用江西银行
         // 同步调用路径
-        String retUrl = systemConfig.getFrontHost() + request.getContextPath() + REQUEST_MAPPING + RETURL_SYN_ACTION + ".do?acqRes="
-                + requestBean.getAcqRes()  + "&isSuccess=1&authType="
+        String retUrl = systemConfig.getServerHost() + REQUEST_MAPPING + RETURL_SYN_ACTION + "?isSuccess=&authType="
                 + requestBean.getAuthType()+ "&callback="
                 + requestBean.getRetUrl().replace("#", "*-*-*");
         // 异步调用路
-        String bgRetUrl = systemConfig.getFrontHost() + request.getContextPath() + REQUEST_MAPPING + RETURL_ASY_ACTION + ".do?acqRes="
-                + requestBean.getAcqRes() + "&authType="
+        String bgRetUrl ="http://CS-USER" + REQUEST_MAPPING + RETURL_ASY_ACTION + "?authType="
                 + requestBean.getAuthType()+ "&callback="
                 + requestBean.getNotifyUrl().replace("#", "*-*-*");
 
@@ -143,12 +138,12 @@ public class ApiAuthController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "第三方端多合一授权同步回调", notes = "多合一授权")
-    @PostMapping(value = "/return")
-    public ModelAndView returnPage(HttpServletRequest request,@RequestBody BankCallBean bean) {
+    @RequestMapping(value = "/return")
+    public ModelAndView returnPage(HttpServletRequest request,BankCallBean bean) {
         String isSuccess = request.getParameter("isSuccess");
         String url = request.getParameter("callback").replace("*-*-*", "#");
         String authType=request.getParameter("authType");
-        logger.info("第三方端开户同步请求,isSuccess:{}", isSuccess);
+        logger.info("第三方端授权同步请求,isSuccess:{}", isSuccess);
         Map<String, String> resultMap = new HashMap<>();
         resultMap.put("status", "success");
         if (isSuccess == null || !"1".equals(isSuccess)) {
@@ -181,14 +176,16 @@ public class ApiAuthController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "页面开户异步处理", notes = "页面开户异步处理")
-    @PostMapping("/bgReturn")
-    public BankCallResult bgReturn(HttpServletRequest request,@RequestBody BankCallBean bean) {
+    @RequestMapping("/bgReturn")
+    @ResponseBody
+    public BankCallResult bgReturn(HttpServletRequest request, @RequestBody BankCallBean bean) {
         logger.info("多合一授权异步回调start");
         BankCallResult result = new BankCallResult();
         BaseResultBean resultBean = new BaseResultBean();
         Map<String, String> params = new HashMap<String, String>();
         String message = "";
         String status = "";
+
         if (bean == null) {
             logger.info("调用江西银行多合一授权接口,银行异步返回空");
             params.put("status", BaseResultBean.STATUS_FAIL);
@@ -204,7 +201,7 @@ public class ApiAuthController extends BaseUserController {
 
         bean.convert();
         int userId = Integer.parseInt(bean.getLogUserId());
-        // 查询用户开户状态
+        // 查询用户
         UserVO user = this.authService.getUsersById(userId);
         String authType=request.getParameter("authType");
         if(authService.checkDefaultConfig(bean, authType)){

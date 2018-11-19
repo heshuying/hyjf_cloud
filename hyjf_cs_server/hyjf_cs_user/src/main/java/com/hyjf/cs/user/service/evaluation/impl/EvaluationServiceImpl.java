@@ -218,14 +218,32 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
     public synchronized Map<String, Object> answerAnalysisAndCoupon(String userAnswer, Integer userId,String platform,String behaviorId) {
         Map<String, Object> returnMap = new HashMap<String, Object>();
         //发放优惠券 start
-        UserEvalationResultVO ueResult = this.selectUserEvalationResultByUserId(userId);
+        UserEvalationResultVO ueResultIs = this.selectUserEvalationResultByUserId(userId);
+        // 是否已经参加过测评（true：已测评过，false：测评）
+        boolean isAdvisor = ueResultIs != null ? true : false;
+        // 发放优惠券 start
+        if (!isAdvisor) {
+            // 发放优惠券
+            String result = this.sendCoupon(userId, platform);
+            if (StringUtils.isNotEmpty(result)) {
+                JSONObject resultObj = JSONObject.parseObject(result);
+                if (resultObj.getIntValue("status") == 0 && resultObj.getIntValue("couponCount") > 0) {
+                    String sendResult = "恭喜您获得"+resultObj.getIntValue("couponCount")+"张加息券，体验投资流程，获取高额收益，可在我的账户-优惠券中查看";
+                    int sendCount = resultObj.getIntValue("couponCount");
+                    returnMap.put("sendCount", sendCount);
+                    returnMap.put("sendResult", sendResult);
+                }
+            }
+        }
+        // 1_1,2_8
+        UserEvalationResultVO userEvalationResult = this.answerAnalysis(userAnswer, userId,behaviorId);
         returnMap.put("revaluationMoney", "");
         returnMap.put("evalType", "");
         //查询redis中的类型和返回增加金额上限
-        if(ueResult != null){
+        if(userEvalationResult != null){
             //从redis中获取测评类型和上限金额
             String revaluation_money = null;
-            String eval_type = ueResult.getEvalType();
+            String eval_type = userEvalationResult.getEvalType();
             switch (eval_type){
                 case "保守型":
                     revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE);
@@ -245,24 +263,6 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
             returnMap.put("revaluationMoney", StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money)));
             returnMap.put("evalType", eval_type);
         }
-        // 是否已经参加过测评（true：已测评过，false：测评）
-        boolean isAdvisor = ueResult != null ? true : false;
-        // 发放优惠券 start
-        if (!isAdvisor) {
-            // 发放优惠券
-            String result = this.sendCoupon(userId, platform);
-            if (StringUtils.isNotEmpty(result)) {
-                JSONObject resultObj = JSONObject.parseObject(result);
-                if (resultObj.getIntValue("status") == 0 && resultObj.getIntValue("couponCount") > 0) {
-                    String sendResult = "恭喜您获得"+resultObj.getIntValue("couponCount")+"张加息券，体验投资流程，获取高额收益，可在我的账户-优惠券中查看";
-                    int sendCount = resultObj.getIntValue("couponCount");
-                    returnMap.put("sendCount", sendCount);
-                    returnMap.put("sendResult", sendResult);
-                }
-            }
-        }
-        // 1_1,2_8
-        UserEvalationResultVO userEvalationResult = this.answerAnalysis(userAnswer, userId,behaviorId);
         userEvalationResult.setEvalType((String) returnMap.get("evalType"));
         userEvalationResult.setRevaluationMoney((String) returnMap.get("revaluationMoney"));
         returnMap.put("userEvalationResult", userEvalationResult);

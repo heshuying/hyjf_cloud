@@ -11,6 +11,7 @@ import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.coupon.CouponBeanVo;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
@@ -48,6 +49,7 @@ import com.hyjf.cs.trade.service.coupon.AppCouponService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -108,7 +110,18 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      * @Date 2018/6/19 9:47
      */
     @Override
-    @HystrixCommand
+    @HystrixCommand(commandKey = "加入计划(三端)-joinPlan",fallbackMethod = "fallBackJoinPlan",commandProperties = {
+            //设置断路器生效
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //一个统计窗口内熔断触发的最小个数3/10s
+            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            //熔断5秒后去尝试请求
+            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
+            // 超时时间
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000")},threadPoolProperties = {
+            @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
     public WebResult<Map<String, Object>> joinPlan(TenderRequest request) {
         UserVO loginUser = amUserClient.findUserById(request.getUserId());
         Integer userId = loginUser.getUserId();
@@ -159,6 +172,18 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
 
         // 开始投资------------------------------------------------------------------------------------------------------------------------------------------
         return tender(request, plan, account, cuc, tenderAccount);
+    }
+
+    /**
+     * 加入计划失败回调方法
+     * @param request
+     * @return
+     */
+    public WebResult<Map<String, Object>> fallBackJoinPlan(TenderRequest request){
+        WebResult<Map<String,Object>> result = new WebResult<>();
+        result.setStatus(AppResult.FAIL);
+        result.setStatusDesc("加入失败，请重试！");
+        return result;
     }
 
     /**
@@ -658,16 +683,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             if("0".equals(revaluation_money) || revaluation_money == null){
                 logger.info("=============从redis中获取测评类型和上限金额异常!(没有获取到对应类型的限额数据) eval_type="+eval_type);
             }else {
-                //测评到期日
-                Long lCreate = loginUser.getEvaluationExpiredTime().getTime();
-                //当前日期
-                Long lNow = System.currentTimeMillis();
-                if (lCreate <= lNow) {
-                    //已过期需要重新评测
-                    //返回错误码
-                    result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED);
-                    result.put("message","根据监管要求，投资前必须进行风险测评。");
-                }
                 //计划类判断用户类型为稳健型以上才可以投资
                 if(!CommonUtils.checkStandardInvestment(eval_type)){
                     result.put("evalType",eval_type);
@@ -688,6 +703,27 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             }
         }else{
             logger.info("=============该用户测评总结数据为空! userId="+userId);
+        }
+        //测评到期日
+        Long lCreate = loginUser.getEvaluationExpiredTime().getTime();
+        //当前日期
+        Long lNow = System.currentTimeMillis();
+        // 判断用户测评有效期
+        if (loginUser.getIsEvaluationFlag() == 0) {
+            result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL);
+            result.put("message","根据监管要求，投资前必须进行风险测评。");
+        } else {
+            if(loginUser.getIsEvaluationFlag()==1 && null != loginUser.getEvaluationExpiredTime()){
+                if (lCreate <= lNow) {
+                    //已过期需要重新评测
+                    //返回错误码
+                    result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED);
+                    result.put("message","根据监管要求，测评已过期，投资前必须进行风险测评。");
+                }
+            } else {
+                result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL);
+                result.put("message","根据监管要求，投资前必须进行风险测评。");
+            }
         }
         return result;
     }
@@ -828,6 +864,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             if(resultEval!=null){
                 if(resultEval.get("riskTested") != null && resultEval.get("riskTested") != ""){
                     result.setStatus((String) resultEval.get("riskTested"));
+                    result.setStatusDesc((String) resultEval.get("message"));
                 }
             }
             logger.info("体验金投资结束:userId{}" + userId);
@@ -910,6 +947,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             if(resultEval!=null){
                 if(resultEval.get("riskTested") != null && resultEval.get("riskTested") != ""){
                     result.setStatus((String) resultEval.get("riskTested"));
+                    result.setStatusDesc((String) resultEval.get("message"));
                 }
             }
             //放入用户测评返回值
@@ -1113,6 +1151,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         logger.info("插入汇计划加入明细表  planAccede: {} ", JSONObject.toJSONString(planAccede) );
         boolean trenderFlag = amTradeClient.insertHJHPlanAccede(planAccede);
         logger.info("投资明细表插入完毕,userId{},平台{},结果{}", userId, request.getPlatform(), trenderFlag);
+        // 优惠券投资开始
         if (trenderFlag) {
             //加入明细表插表成功的前提下，继续
             // 投资成功后,发送CRM绩效统计
@@ -1145,7 +1184,39 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 e.printStackTrace();
             }
         }
-        // 优惠券投资开始
+        AppUtmRegVO appChannelStatisticsDetails = amUserClient.getAppChannelStatisticsDetailByUserId(userId);
+        if (appChannelStatisticsDetails != null) {
+            logger.info("更新app渠道统计表, userId is: {}", userId);
+            Map<String, Object> params = new HashMap<String, Object>();
+            // 认购本金
+            params.put("accountDecimal", accountDecimal);
+            // 投资时间
+            params.put("investTime", GetDate.getNowTime10());
+            // 项目类型
+            params.put("projectType", "智投");
+            // 首次投标项目期限
+            String investProjectPeriod = "";
+            if ("endday".equals(borrowStyle)) {
+                investProjectPeriod = planPeriod + "天";
+            } else {
+                investProjectPeriod = planPeriod + "月";
+            }
+            params.put("investProjectPeriod", investProjectPeriod);
+            //根据investFlag标志位来决定更新哪种投资
+            params.put("investFlag", checkIsNewUserCanInvest2(userId));
+            // 用户id
+            params.put("userId", userId);
+            //压入消息队列
+            try {
+                appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                        MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            } catch (MQException e) {
+                e.printStackTrace();
+                logger.error("渠道统计用户累计投资推送消息队列失败！！！");
+            }
+        }
+
+
         Integer couponGrantId = request.getCouponGrantId();
         if (couponGrantId != null && couponGrantId.intValue() >0) {
             logger.info("开始优惠券投资,userId{},平台{},优惠券{}", userId, request.getPlatform(), couponGrantId);

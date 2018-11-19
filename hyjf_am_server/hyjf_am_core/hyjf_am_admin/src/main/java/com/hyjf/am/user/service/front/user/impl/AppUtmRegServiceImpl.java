@@ -62,7 +62,7 @@ public class AppUtmRegServiceImpl implements AppUtmRegService {
         AppUtmRegExample appUtmRegExample = new AppUtmRegExample();
         AppUtmRegExample.Criteria criteria = appUtmRegExample.createCriteria();
         if (StringUtils.isNotBlank(request.getUserNameSrch())) {
-            criteria.andSourceNameEqualTo(request.getUserNameSrch());
+            criteria.andUserNameEqualTo(request.getUserNameSrch());
         }
         if (request.getSourceIdSrch()!=null) {
             criteria.andSourceIdEqualTo(request.getSourceIdSrch());
@@ -75,7 +75,7 @@ public class AppUtmRegServiceImpl implements AppUtmRegService {
         AppUtmRegExample appUtmRegExample = new AppUtmRegExample();
         AppUtmRegExample.Criteria criteria = appUtmRegExample.createCriteria();
         if (StringUtils.isNotBlank(request.getUserNameSrch())) {
-            criteria.andSourceNameEqualTo(request.getUserNameSrch());
+            criteria.andUserNameEqualTo(request.getUserNameSrch());
         }
         if (request.getSourceIdSrch()!=null) {
             criteria.andSourceIdEqualTo(request.getSourceIdSrch());

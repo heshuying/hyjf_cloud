@@ -92,7 +92,7 @@
 		LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
 		-- LEFT JOIN ht_param_name pnai ON CAST(bt.invest_type AS CHAR) = pnai.name_cd AND pnai.name_class = 'INVEST_TYPE'
 		-- LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = b.inst_code
-		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(b.project_type AS CHAR)
+		LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = b.project_type
 		LEFT JOIN ht_borrow_recover re ON bt.id = re.tender_id
 		-- LEFT JOIN ht_bank_open_account ac ON bt.user_id = ac.user_id
 		-- LEFT JOIN ht_param_name pa_tender ON pa_tender.name_class = 'USER_PROPERTY' AND pa_tender.name_cd = bt.tender_user_attribute

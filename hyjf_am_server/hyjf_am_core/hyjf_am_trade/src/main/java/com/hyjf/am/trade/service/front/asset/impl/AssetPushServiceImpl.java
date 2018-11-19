@@ -38,7 +38,7 @@ public class AssetPushServiceImpl extends BaseServiceImpl implements AssetPushSe
     public List<BorrowProjectRepay> selectProjectRepay(String borrowcCd) {
         BorrowProjectTypeExample example = new BorrowProjectTypeExample();
         BorrowProjectTypeExample.Criteria crt = example.createCriteria();
-        crt.andBorrowCdEqualTo(borrowcCd);
+        crt.andBorrowCdEqualTo(Integer.valueOf(borrowcCd));
         crt.andStatusEqualTo(0);
         List<BorrowProjectType> list = this.borrowProjectTypeMapper.selectByExample(example);
         String brrowClass = null;
@@ -137,7 +137,7 @@ public class AssetPushServiceImpl extends BaseServiceImpl implements AssetPushSe
     }
 
     @Override
-    public List<BorrowProjectType> selectBorrowProjectByBorrowCd(String borrowCd) {
+    public List<BorrowProjectType> selectBorrowProjectByBorrowCd(Integer borrowCd) {
         BorrowProjectTypeExample example = new BorrowProjectTypeExample();
         BorrowProjectTypeExample.Criteria cra = example.createCriteria();
         cra.andStatusEqualTo(0);

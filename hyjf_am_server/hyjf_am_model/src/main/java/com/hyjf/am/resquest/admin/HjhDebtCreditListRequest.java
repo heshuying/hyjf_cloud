@@ -37,7 +37,58 @@ public class HjhDebtCreditListRequest extends BasePage{
     private String repayNextTimeStart;
     @ApiModelProperty(value = "当期应还款开始时间")
     private String repayNextTimeEnd;
+    @ApiModelProperty(value = "预期承接收益率下限")
+    private String actualAprStartSrch;
+    @ApiModelProperty(value = "预期承接收益率上限")
+    private String actualAprEndSrch;
+    @ApiModelProperty(value = "转让标签")
+    private String labelName;
 
+    @ApiModelProperty(value = "预计开始退出时间——start")
+    private String endDateStart;
+    @ApiModelProperty(value = "预计开始退出时间--end")
+    private String endDateEnd;
+
+
+    public String getEndDateStart() {
+        return endDateStart;
+    }
+
+    public void setEndDateStart(String endDateStart) {
+        this.endDateStart = endDateStart;
+    }
+
+    public String getEndDateEnd() {
+        return endDateEnd;
+    }
+
+    public void setEndDateEnd(String endDateEnd) {
+        this.endDateEnd = endDateEnd;
+    }
+
+    public String getActualAprStartSrch() {
+        return actualAprStartSrch;
+    }
+
+    public void setActualAprStartSrch(String actualAprStartSrch) {
+        this.actualAprStartSrch = actualAprStartSrch;
+    }
+
+    public String getActualAprEndSrch() {
+        return actualAprEndSrch;
+    }
+
+    public void setActualAprEndSrch(String actualAprEndSrch) {
+        this.actualAprEndSrch = actualAprEndSrch;
+    }
+
+    public String getLabelName() {
+        return labelName;
+    }
+
+    public void setLabelName(String labelName) {
+        this.labelName = labelName;
+    }
 
     public String getPlanNid() {
         return planNid;

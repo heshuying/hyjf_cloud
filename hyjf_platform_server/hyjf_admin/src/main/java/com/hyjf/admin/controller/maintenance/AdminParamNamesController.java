@@ -7,6 +7,7 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.maintenance.AdminParamNamesService;
 import com.hyjf.am.resquest.admin.AdminParamNameRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
@@ -22,6 +23,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_DELETE;
+
 /**
  * @author: sunpeikai
  * @version: AdminParamNamesController, v0.1 2018/9/6 11:01
@@ -33,6 +36,7 @@ public class AdminParamNamesController extends BaseController {
 
     @Autowired
     private AdminParamNamesService adminParamNamesService;
+    private static final String PERMISSIONS = "paramname";
 
     /**
      * 查询数据字典列表
@@ -92,6 +96,7 @@ public class AdminParamNamesController extends BaseController {
      */
     @ApiOperation(value = "删除数据字典",notes = "删除数据字典")
     @PostMapping(value = "/deleteparamname")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_DELETE)
     public AdminResult deleteParamName(@RequestBody ParamNameVO paramNameVO){
         boolean isSuccess = adminParamNamesService.deleteParamName(paramNameVO);
         if(isSuccess){

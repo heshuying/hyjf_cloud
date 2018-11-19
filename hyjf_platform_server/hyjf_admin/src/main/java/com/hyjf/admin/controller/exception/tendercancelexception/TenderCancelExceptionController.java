@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.TenderCancelExceptionService;
 import com.hyjf.am.resquest.admin.TenderCancelExceptionRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
@@ -25,6 +26,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSIONS_BIDCANCEL;
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_VIEW;
+
 /**
  * @author: sunpeikai
  * @version: TenderCancelException, v0.1 2018/7/11 9:43
@@ -36,7 +40,7 @@ public class TenderCancelExceptionController extends BaseController {
 
     @Autowired
     private TenderCancelExceptionService tenderCancelExceptionService;
-
+    private static final String PERMISSIONS = "bidcancelexception";
 
     /**
      * 查询银行投资撤销异常列表
@@ -46,6 +50,7 @@ public class TenderCancelExceptionController extends BaseController {
      */
     @ApiOperation(value = "查询银行投资撤销异常list", notes = "查询银行投资撤销异常list")
     @PostMapping(value = "/searchlist")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_VIEW)
     public AdminResult<ListResult<BorrowTenderTmpVO>> searchList(@RequestBody TenderCancelExceptionRequest request){
         // 数据总数
         Integer count = tenderCancelExceptionService.getTenderCancelExceptionCount(request);
@@ -85,6 +90,7 @@ public class TenderCancelExceptionController extends BaseController {
      */
     @ApiOperation(value = "投资撤销异常处理", notes = "投资撤销异常处理")
     @PostMapping(value = "/handletendercancelexception")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSIONS_BIDCANCEL)
     public AdminResult handleTenderCancelException(HttpServletRequest request, @RequestBody TenderCancelExceptionRequest tenderCancelExceptionRequest){
         Integer loginUserId = Integer.valueOf(getUser(request).getId());
         JSONObject jsonObject = new JSONObject();

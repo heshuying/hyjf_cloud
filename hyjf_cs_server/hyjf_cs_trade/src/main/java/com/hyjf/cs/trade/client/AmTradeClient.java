@@ -2428,4 +2428,12 @@ public interface AmTradeClient {
      **/
     List<ApplyAgreementInfoVO>  selectApplyAgreementInfoByContractId(String contractId);
 
+    List<PlanInvestCustomizeVO> selectInvestCreditList(Map<String,Object> param);
+
+    List<PlanInvestCustomizeVO> selectCreditCreditList(Map<String,Object> param);
+
+    List<PlanLockCustomizeVO> selectUserProjectListCapital(Map<String,Object > param);
+
+    String selectPlanInfoSum(String accedeOrderId);
+
 }

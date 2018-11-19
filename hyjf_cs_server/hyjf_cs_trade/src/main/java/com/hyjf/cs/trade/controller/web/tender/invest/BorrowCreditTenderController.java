@@ -5,8 +5,10 @@ package com.hyjf.cs.trade.controller.web.tender.invest;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
@@ -14,6 +16,7 @@ import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.invest.BorrowCreditTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
+import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -68,7 +71,7 @@ public class BorrowCreditTenderController extends BaseTradeController {
     @PostMapping("/bgReturn")
     @ResponseBody
     public BankCallResult borrowCreditTenderBgReturn(@RequestBody BankCallBean bean ,Integer platform) {
-        logger.info("web端债转投资异步处理start,userId:{},返回码:{}  平台 {} ", bean.getLogUserId(),bean.getRetCode(),platform);
+        logger.info("{}端债转投资异步处理start,userId:{},返回码:{}  userId:{} ",BankCallUtils.getClientName(platform+""), bean.getLogUserId(),bean.getRetCode(),bean.getLogUserId());
         bean.setLogClient(platform);
         BankCallResult result = borrowTenderService.borrowCreditTenderBgReturn(bean);
         return result;
@@ -113,6 +116,25 @@ public class BorrowCreditTenderController extends BaseTradeController {
         try{
             Map<String,Object> resultMap =  borrowTenderService.borrowCreditCheck(tender);
             result.setData(resultMap);
+            //用户测评校验状态转换
+            if(resultMap!=null){
+                if(resultMap.get("riskTested") != null && resultMap.get("riskTested") != ""){
+                    String riskTested = (String) resultMap.get("riskTested");
+                    if(CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL.equals(riskTested)){
+                        //未测评需要重新评测
+                        result.setStatus(MsgEnum.ERR_AMT_TENDER_NEED_RISK_ASSESSMENT.getCode());
+                    }else if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
+                        //已过期需要重新评测
+                        result.setStatus(MsgEnum.STATUS_EV000004.getCode());
+                    }else if(CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)){
+                        //计划类判断用户类型为稳健型以上才可以投资
+                        result.setStatus(MsgEnum.STATUS_EV000007.getCode());
+                    }else if(CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS.equals(riskTested)){
+                        //金额对比判断（校验金额 大于 设置测评金额）
+                        result.setStatus(MsgEnum.STATUS_EV000005.getCode());
+                    }
+                }
+            }
         }catch (CheckException e){
             throw e;
         }

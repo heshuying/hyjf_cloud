@@ -27,7 +27,7 @@ public class BorrowProjectTypeRequest  extends BasePage implements Serializable 
 
     private String borrowProjectType;
 
-    private String borrowCd;
+    private Integer borrowCd;
 
     private String borrowName;
 
@@ -83,12 +83,12 @@ public class BorrowProjectTypeRequest  extends BasePage implements Serializable 
         this.borrowProjectType = borrowProjectType == null ? null : borrowProjectType.trim();
     }
 
-    public String getBorrowCd() {
+    public Integer getBorrowCd() {
         return borrowCd;
     }
 
-    public void setBorrowCd(String borrowCd) {
-        this.borrowCd = borrowCd == null ? null : borrowCd.trim();
+    public void setBorrowCd(Integer borrowCd) {
+        this.borrowCd = borrowCd == null ? null : borrowCd;
     }
 
     public String getBorrowName() {

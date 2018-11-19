@@ -27,6 +27,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -76,11 +77,9 @@ public class ApiAutoPlusController extends BaseUserController {
     public ModelAndView userAuthInves(@RequestBody @Valid AutoPlusRequestBean payRequestBean) {
         ModelAndView modelAndView = new ModelAndView(PATH_TRUSTEE_PAY_ERROR);
         Map<String,Object> map  = autoPlusService.checkParam(payRequestBean,modelAndView,BankCallConstant.QUERY_TYPE_1);
-
-        if (null!=map.get("modelAndView")) {
-            ModelAndView result = (ModelAndView) map.get("modelAndView");
-            result.addObject("callBackAction",payRequestBean.getRetUrl());
-            return callbackErrorView(result);
+        if (null==map.get("user")) {
+            map.put("callBackAction",payRequestBean.getRetUrl());
+            return callbackErrorViewForMap(map);
         }else {
             String smsSeq = map.get("smsSeq").toString();
             UserVO user = (UserVO) map.get("user");
@@ -92,11 +91,12 @@ public class ApiAutoPlusController extends BaseUserController {
             } catch (Exception e) {
                 e.printStackTrace();
                 logger.info("调用银行接口失败:"+e.getMessage());
-                Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE999999,"系统异常！");
-                payRequestBean.doNotify(params);
-                ModelAndView result=autoPlusService.getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE999999);
-                result.addObject("callBackAction",payRequestBean.getRetUrl());
-                return callbackErrorView(result);
+                map.put("status", ErrorCodeConstant.STATUS_CE999999);
+                map.put("acqRes", payRequestBean.getAcqRes());
+                map.put("accountId", payRequestBean.getAccountId());
+                map.put("statusDesc","系统异常");
+                map.put("callBackAction",payRequestBean.getRetUrl());
+                return callbackErrorViewForMap(map);
             }
         }
         return modelAndView;
@@ -114,10 +114,9 @@ public class ApiAutoPlusController extends BaseUserController {
     public ModelAndView userAuthCredit(@RequestBody @Valid AutoPlusRequestBean payRequestBean) {
         ModelAndView modelAndView = new ModelAndView(PATH_TRUSTEE_PAY_ERROR);
         Map<String, Object> map = autoPlusService.checkParam(payRequestBean, modelAndView, BankCallConstant.QUERY_TYPE_2);
-        if (null!=map.get("modelAndView")) {
-            ModelAndView result = (ModelAndView) map.get("modelAndView");
-            result.addObject("callBackAction",payRequestBean.getRetUrl());
-            return callbackErrorView(result);
+        if (null==map.get("user")) {
+            map.put("callBackAction",payRequestBean.getRetUrl());
+            return callbackErrorViewForMap(map);
         }else {
             String smsSeq = map.get("smsSeq").toString();
             UserVO user = (UserVO) map.get("user");
@@ -129,11 +128,13 @@ public class ApiAutoPlusController extends BaseUserController {
             } catch (Exception e) {
                 e.printStackTrace();
                 logger.info("调用银行接口失败:"+e.getMessage());
-                Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE999999,"系统异常！");
-                payRequestBean.doNotify(params);
-                ModelAndView result = autoPlusService.getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE999999);
-                result.addObject("callBackAction",payRequestBean.getRetUrl());
-                return callbackErrorView(result);
+
+                map.put("status", ErrorCodeConstant.STATUS_CE999999);
+                map.put("acqRes", payRequestBean.getAcqRes());
+                map.put("accountId", payRequestBean.getAccountId());
+                map.put("statusDesc","系统异常");
+                map.put("callBackAction",payRequestBean.getRetUrl());
+                return callbackErrorViewForMap(map);
             }
         }
         return modelAndView;
@@ -150,15 +151,20 @@ public class ApiAutoPlusController extends BaseUserController {
     @ApiOperation(value = "自动投资授权同步回调",notes = "自动投资授权同步回调")
     @GetMapping(value = "/userAuthInvesReturn")
     public ModelAndView userAuthInvesReturn(HttpServletRequest request, BankCallBean bean) {
-        ModelAndView modelAndView = new ModelAndView("/callback/callback_trusteepay");
         String callback = request.getParameter("callback").replace("*-*-*", "#");
         String acqRes = request.getParameter("acqRes");
         AutoPlusRetBean repwdResult = autoPlusService.userAuthCreditReturn(bean, callback, acqRes, ClientConstants.QUERY_TYPE_1);
+        Map<String,Object> result =new HashMap<>();
+        result.put("callBackAction", callback);
+        result.put("status", ErrorCodeConstant.SUCCESS);
+        result.put("acqRes",acqRes);
+        result.put("statusDesc", "自动投资授权成功");
         if (repwdResult.get("flag").equals("1")){
-            modelAndView.addObject("statusDesc", "自动债转授权申请失败,失败原因：" + autoPlusService.getBankRetMsg(bean.getRetCode()));
+            result.put("statusDesc", "自动投资授权申请失败,失败原因：" + autoPlusService.getBankRetMsg(bean.getRetCode()));
+            result.put("status",ErrorCodeConstant.STATUS_CE999999);
+            return callbackErrorViewForMap(result);
         }
-        modelAndView.addObject("callBackForm", repwdResult);
-        return modelAndView;
+        return callbackErrorViewForMap(result);
     }
 
     /**
@@ -172,16 +178,20 @@ public class ApiAutoPlusController extends BaseUserController {
     @ApiOperation(value = "自动债转授权同步回调",notes = "自动债转授权同步回调")
     @GetMapping(value = "/userCreditAuthInvesReturn")
     public ModelAndView userCreditAuthInvesReturn(HttpServletRequest request,BankCallBean bean) {
-        ModelAndView modelAndView = new ModelAndView("/callback/callback_trusteepay");
         String callback = request.getParameter("callback").replace("*-*-*", "#");
         String acqRes = request.getParameter("acqRes");
         AutoPlusRetBean repwdResult = autoPlusService.userAuthCreditReturn(bean, callback, acqRes, ClientConstants.QUERY_TYPE_2);
+        Map<String,Object> result =new HashMap<>();
+        result.put("callBackAction", callback);
+        result.put("status", ErrorCodeConstant.SUCCESS);
+        result.put("acqRes",acqRes);
+        result.put("statusDesc", "自动债转授权成功");
         if (repwdResult.get("flag").equals("1")){
-            modelAndView.addObject("statusDesc", "自动债转授权申请失败,失败原因：" + autoPlusService.getBankRetMsg(bean.getRetCode()));
+            result.put("statusDesc", "自动债转授权申请失败,失败原因：" + autoPlusService.getBankRetMsg(bean.getRetCode()));
+            result.put("status",ErrorCodeConstant.STATUS_CE999999);
+            return callbackErrorViewForMap(result);
         }
-        modelAndView.addObject("callBackForm", repwdResult);
-        return modelAndView;
-
+        return callbackErrorViewForMap(result);
     }
 
     /**
@@ -193,7 +203,7 @@ public class ApiAutoPlusController extends BaseUserController {
     @ResponseBody
     @ApiOperation(value = "授权自动投资异步回调",notes = "授权自动投资异步回调")
     @PostMapping(value = "/userAuthInvesBgreturn")
-    public BankCallResult userAuthInvesBgreturn(HttpServletRequest request,@ModelAttribute BankCallBean bean) {
+    public BankCallResult userAuthInvesBgreturn(HttpServletRequest request,@RequestBody BankCallBean bean) {
         String callback = request.getParameter("callback").replace("*-*-*", "#");
         String acqRes = request.getParameter("acqRes");
         BankCallResult result = autoPlusService.userAuthInvesBgreturn(bean, callback, acqRes);
@@ -209,7 +219,7 @@ public class ApiAutoPlusController extends BaseUserController {
     @ResponseBody
     @ApiOperation(value = "授权自动债转异步回调",notes = "授权自动债转异步回调")
     @PostMapping(value = "/userCreditAuthInvesBgreturn")
-    public BankCallResult userCreditAuthInvesBgreturn(HttpServletRequest request,@ModelAttribute BankCallBean bean) {
+    public BankCallResult userCreditAuthInvesBgreturn(HttpServletRequest request,@RequestBody BankCallBean bean) {
         String callback = request.getParameter("callback").replace("*-*-*", "#");
         String acqRes = request.getParameter("acqRes");
         BankCallResult result = autoPlusService.userAuthInvesBgreturn(bean, callback, acqRes);

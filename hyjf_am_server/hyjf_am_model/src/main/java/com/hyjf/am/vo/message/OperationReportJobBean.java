@@ -34,9 +34,9 @@ public class OperationReportJobBean implements Serializable {
     //借贷笔数
     private int loanNum;
 
-    private int startMonth;
+    private String year;
     private int lastMonth;
-    private int endMonth;
+    private String month;
 
     private int intervalMonth;
 
@@ -279,22 +279,6 @@ public class OperationReportJobBean implements Serializable {
         this.calendar = calendar;
     }
 
-    public int getStartMonth() {
-        return startMonth;
-    }
-
-    public void setStartMonth(int startMonth) {
-        this.startMonth = startMonth;
-    }
-
-    public int getEndMonth() {
-        return endMonth;
-    }
-
-    public void setEndMonth(int endMonth) {
-        this.endMonth = endMonth;
-    }
-
     public int getIntervalMonth() {
         return intervalMonth;
     }
@@ -325,5 +309,21 @@ public class OperationReportJobBean implements Serializable {
 
     public void setListBorrowPeriod(List<OperationReportJobVO> listBorrowPeriod) {
         this.listBorrowPeriod = listBorrowPeriod;
+    }
+
+    public String getYear() {
+        return year;
+    }
+
+    public void setYear(String year) {
+        this.year = year;
+    }
+
+    public String getMonth() {
+        return month;
+    }
+
+    public void setMonth(String month) {
+        this.month = month;
     }
 }

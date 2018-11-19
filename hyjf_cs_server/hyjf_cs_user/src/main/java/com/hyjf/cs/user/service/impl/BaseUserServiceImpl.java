@@ -167,7 +167,11 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 		}else if (BaseDefine.METHOD_SERVER_SYNBALANCE.equals(methodName)) {
 			// 解卡(页面调用)合规
 			SynBalanceRequestBean bean = (SynBalanceRequestBean) paramBean;
-			sign = bean.getInstCode() + bean.getAccountId() + bean.getTimestamp();
+			sign =  bean.getAccountId() + bean.getTimestamp();
+		}else if (BaseDefine.METHOD_MERGE_AUTH_PAGE_PLUS.equals(methodName)) {
+			// 第三方服务接口多合一授权合规(合规)
+			ApiAuthRequesBean bean = (ApiAuthRequesBean) paramBean;
+			sign = bean.getInstCode() + bean.getAccountId()+bean.getAuthType()+bean.getRetUrl()+bean.getNotifyUrl() + bean.getTimestamp();
 		}
 
 		return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);

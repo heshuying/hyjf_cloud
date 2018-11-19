@@ -24,6 +24,7 @@ import com.hyjf.am.vo.trade.assetmanage.*;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
+import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
@@ -418,4 +419,9 @@ public interface AmTradeClient {
     boolean insertAccountDetails(SynBalanceBeanRequest synBalanceBeanRequest);
 
     List<UnderLineRechargeVO> selectUnderLineRechargeList(UnderLineRechargeRequest request);
+
+    /**
+     * 获取正确的额borrowVo对象
+     */
+    RightBorrowVO getRightBorrowByNid(String borrowId);
 }
