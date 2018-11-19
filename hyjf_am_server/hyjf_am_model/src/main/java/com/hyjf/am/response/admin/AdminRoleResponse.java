@@ -11,4 +11,16 @@ import com.hyjf.am.vo.admin.AdminRoleVO;
  * @version AdminAccountDetailDataRepairResponse, v0.1 2018/6/30 16:07
  */
 public class AdminRoleResponse extends AdminResponse<AdminRoleVO>{
+	private boolean isRole;
+
+	public boolean getIsRole() {
+		return isRole;
+	}
+
+	public void setIsRole(boolean isRole) {
+		this.isRole = isRole;
+	}
+
+
+	
 }
