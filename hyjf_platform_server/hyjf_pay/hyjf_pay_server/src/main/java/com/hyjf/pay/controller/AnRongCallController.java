@@ -1,5 +1,6 @@
 package com.hyjf.pay.controller;
 
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.base.BaseController;
@@ -29,7 +30,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author sss
  * @version hyjf 1.0
  * @since hyjf 1.0 2017年10月10日
- * @see 下午3:12:36
+ * @see 12:36
  */
 @Controller
 @RequestMapping(value = AnRongCallDefine.CONTROLLOR_REQUEST_MAPPING)
@@ -49,7 +50,7 @@ public class AnRongCallController extends BaseController {
 	 */
     @PostMapping(value = "callApiBg.json")
     @ResponseBody
-    @HystrixCommand(commandKey="安融接口调用-callApiBg",fallbackMethod = "fallbackCallApiBg",commandProperties = {
+    @HystrixCommand(commandKey="安融接口调用-callApiBg",fallbackMethod = "fallbackCallApiBg",ignoreExceptions = CheckException.class,commandProperties = {
             //设置断路器生效
           @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),        
             //一个统计窗口内熔断触发的最小个数3/10s

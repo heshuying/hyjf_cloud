@@ -142,11 +142,11 @@ public class AdminRoleController extends BaseController  {
 		@ApiOperation(value = "系统中心-插入或更新[角色菜单权限表]数据", notes = "用户管理-插入或更新[角色菜单权限表]数据")
 		@PostMapping(value = "/modifyPermissionAction")
 		@ResponseBody
-	    public AdminResult<AdminRoleResponse> modifyPermissionAction(HttpServletRequest request,@RequestBody UserRoleRequest bean) {
-		//	bean.setAdminId(Integer.valueOf(this.getUser(request).getId()));
+	    public AdminResult<Boolean> modifyPermissionAction(HttpServletRequest request,@RequestBody UserRoleRequest bean) {
+			bean.setUserId(Integer.valueOf(this.getUser(request).getId()));
 			AdminRoleResponse arr = this.adminRoleService.modifyPermissionAction( bean);
 			if(Response.isSuccess(arr)) {
-				return new AdminResult<>();
+				return new AdminResult<Boolean>(arr.getIsRole());
 			}
 			return new AdminResult<>(arr.getRtn(),arr.getMessage());
 

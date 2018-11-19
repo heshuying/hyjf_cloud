@@ -8,7 +8,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
-import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
@@ -56,12 +55,12 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
@@ -117,7 +116,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @Date 2018/6/24 14:35
      */
     @Override
-    @HystrixCommand(commandKey = "散标投资(三端)-borrowTender",fallbackMethod = "fallBackTender",commandProperties = {
+    @HystrixCommand(commandKey = "散标投资(三端)-borrowTender",fallbackMethod = "fallBackTender",ignoreExceptions = CheckException.class,commandProperties = {
             //设置断路器生效
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s
@@ -2282,6 +2281,17 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 e.printStackTrace();
             }
 
+            // 查询投资来源
+            List<BorrowTenderVO> list = amTradeClient.getBorrowTenderListByNid(bean.getOrderId());
+            if (!CollectionUtils.isEmpty(list)) {
+                BorrowTenderVO vo = list.get(0);
+                if (CustomConstants.WRB_CHANNEL_CODE.equals(vo.getTenderFrom())) {
+                    // 同步回调通知
+                    logger.info("风车理财投资回调,订单Id :{}", bean.getOrderId());
+                    this.notifyToWrb(user.getUserId(), bean.getOrderId());
+                }
+            }
+
             // 投资成功后,发送神策数据统计MQ
             // add by liuyang 神策数据统计 20180823 start
             try {
@@ -2395,12 +2405,13 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             investProjectPeriod = borrow.getBorrowPeriod() + "月";
         }
         params.put("investProjectPeriod", investProjectPeriod);
+        params.put("investFlag", checkAppUtmInvestFlag(userId));
         //压入消息队列
         try {
-            appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.TENDER_CHANNEL_STATISTICS_DETAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                    MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
         } catch (MQException e) {
-            e.printStackTrace();
-            logger.error("渠道统计用户累计投资推送消息队列失败！！！");
+            logger.error("渠道统计用户累计投资推送消息队列失败！！！", e);
         }
 
         /*(6)更新  渠道统计用户累计投资  和  huiyingdai_utm_reg的首投信息 结束*/

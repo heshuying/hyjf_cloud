@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.market.dao.mapper.customize.market.SellDailyCustomizeMapper">
+    <resultMap id="sumResultMap" type="com.hyjf.am.market.dao.model.auto.SellDaily">
+        <result column="date_str" property="dateStr" jdbcType="VARCHAR"/>
+        <result column="draw_order" property="drawOrder" jdbcType="INTEGER"/>
+        <result column="primary_division" property="primaryDivision" jdbcType="VARCHAR"/>
+        <result column="two_division" property="twoDivision" jdbcType="VARCHAR"/>
+        <result column="store_num" property="storeNum" jdbcType="INTEGER"/>
+        <result column="invest_total_month" property="investTotalMonth" jdbcType="DECIMAL"/>
+        <result column="repayment_total_month" property="repaymentTotalMonth" jdbcType="DECIMAL"/>
+        <result column="invest_total_previous_month" property="investTotalPreviousMonth" jdbcType="DECIMAL"/>
+        <result column="invest_ratio_growth" property="investRatioGrowth" jdbcType="VARCHAR"/>
+        <result column="withdraw_total_month" property="withdrawTotalMonth" jdbcType="DECIMAL"/>
+        <result column="withdraw_rate" property="withdrawRate" jdbcType="VARCHAR"/>
+        <result column="recharge_total_month" property="rechargeTotalMonth" jdbcType="DECIMAL"/>
+        <result column="invest_annual_total_month" property="investAnnualTotalMonth" jdbcType="DECIMAL"/>
+        <result column="invest_annual_total_previous_month" property="investAnnualTotalPreviousMonth"
+                jdbcType="DECIMAL"/>
+        <result column="invest_annular_ratio_growth" property="investAnnularRatioGrowth" jdbcType="VARCHAR"/>
+        <result column="invest_total_yesterday" property="investTotalYesterday" jdbcType="DECIMAL"/>
+        <result column="repayment_total_yesterday" property="repaymentTotalYesterday" jdbcType="DECIMAL"/>
+        <result column="invest_annual_total_yesterday" property="investAnnualTotalYesterday" jdbcType="DECIMAL"/>
+        <result column="withdraw_total_yesterday" property="withdrawTotalYesterday" jdbcType="DECIMAL"/>
+        <result column="recharge_total_yesterday" property="rechargeTotalYesterday" jdbcType="DECIMAL"/>
+        <result column="net_capital_inflow_yesterday" property="netCapitalInflowYesterday" jdbcType="DECIMAL"/>
+        <result column="non_repayment_today" property="nonRepaymentToday" jdbcType="DECIMAL"/>
+        <result column="register_total_yesterday" property="registerTotalYesterday" jdbcType="DECIMAL"/>
+        <result column="recharge_gt3000_user_num" property="rechargeGt3000UserNum" jdbcType="INTEGER"/>
+        <result column="invest_gt3000_user_num" property="investGt3000UserNum" jdbcType="INTEGER"/>
+        <result column="invest_gt3000_month_user_num" property="investGt3000MonthUserNum" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Sum_Column_List">
+        SUM(store_num) AS store_num,
+        SUM(invest_total_month) AS invest_total_month,
+        SUM(repayment_total_month) AS repayment_total_month,
+        SUM(invest_total_previous_month) AS invest_total_previous_month,
+
+        CASE WHEN SUM(invest_total_previous_month) = 0.00 THEN '/'
+        ELSE CONCAT(ROUND((SUM(invest_total_month)/SUM(invest_total_previous_month)-1)*100),'%') END
+        AS invest_ratio_growth,
+
+        SUM(withdraw_total_month) AS withdraw_total_month,
+
+        CASE WHEN SUM(repayment_total_month) = 0.00 THEN '/'
+        ELSE CONCAT(ROUND((SUM(withdraw_total_month)/SUM(repayment_total_month))*100),'%') END
+        AS withdraw_rate,
+
+        SUM(recharge_total_month) AS recharge_total_month,
+        SUM(invest_annual_total_month) AS invest_annual_total_month,
+        SUM(invest_annual_total_previous_month) AS invest_annual_total_previous_month,
+
+        CASE WHEN SUM(invest_annual_total_previous_month) = 0.00 THEN '/'
+        ELSE CONCAT(ROUND((SUM(invest_annual_total_month)/SUM(invest_annual_total_previous_month)-1)*100),'%') END
+        AS invest_annular_ratio_growth,
+
+        SUM(invest_total_yesterday) AS invest_total_yesterday,
+        SUM(repayment_total_yesterday) AS repayment_total_yesterday,
+        SUM(invest_annual_total_yesterday) AS invest_annual_total_yesterday,
+        SUM(withdraw_total_yesterday) AS withdraw_total_yesterday,
+        SUM(recharge_total_yesterday)  AS recharge_total_yesterday,
+        SUM(net_capital_inflow_yesterday)  AS net_capital_inflow_yesterday,
+        SUM(non_repayment_today)  AS non_repayment_today,
+        SUM(register_total_yesterday) AS register_total_yesterday,
+        SUM(recharge_gt3000_user_num) AS recharge_gt3000_user_num,
+        SUM(invest_gt3000_user_num) AS invest_gt3000_user_num,
+        SUM(invest_gt3000_month_user_num) AS invest_gt3000_month_user_num
+    </sql>
+
+    <!-- 查询运营中心合计 -->
+    <select id="selectOCSum" parameterType="java.lang.String" resultMap="sumResultMap">
+        SELECT
+        <include refid="Sum_Column_List"/>
+        FROM ht_sell_daily
+        WHERE primary_division = '运营中心'
+        AND two_division IN('网络运营部','无主单')
+        AND date_str = #{formatDateStr}
+    </select>
+
+    <!-- 查询一级分部合计 -->
+    <select id="selectPrimaryDivisionSum" resultMap="sumResultMap">
+        SELECT
+        <include refid="Sum_Column_List"/>
+        FROM ht_sell_daily
+        WHERE date_str = #{dateStr}
+        AND draw_order = #{drawOrder}
+        AND primary_division !='其中：'
+    </select>
+
+    <!-- 查询总合计 -->
+    <select id="selectAllSum" parameterType="java.lang.String" resultMap="sumResultMap">
+        SELECT
+        <include refid="Sum_Column_List"/>
+        FROM ht_sell_daily
+        WHERE date_str = #{dateStr}
+        AND primary_division !='其中：'
+    </select>
+
+
+
+
+
+
+
+
+
+
+
+
+
+</mapper>

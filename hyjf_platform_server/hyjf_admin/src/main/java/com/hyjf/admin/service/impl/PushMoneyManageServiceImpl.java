@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
@@ -7,6 +8,7 @@ import com.hyjf.admin.service.PushMoneyManageService;
 import com.hyjf.am.response.trade.PushMoneyResponse;
 import com.hyjf.am.resquest.admin.PushMoneyRequest;
 import com.hyjf.am.resquest.admin.TenderCommissionRequest;
+import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
@@ -32,8 +34,10 @@ import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author Zha Daojian
@@ -537,5 +541,61 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
             ret.put("statusDesc","提成已经发过啦");
         }
         return ret;
+    }
+
+    /**
+     * 获取部门信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @Override
+    public JSONArray getCrmDepartmentList(String[] list) {
+        List<OADepartmentCustomizeVO> departmentList = amUserClient.queryDepartmentInfo(null);
+
+        Map<String, String> map = new HashMap<String, String>();
+        if (departmentList != null && departmentList.size() > 0) {
+            for (OADepartmentCustomizeVO oaDepartment : departmentList) {
+                map.put(String.valueOf(oaDepartment.getId()), HtmlUtil.unescape(oaDepartment.getName()));
+            }
+        }
+        return treeDepartmentList(departmentList, map, list, "0", "");
+    }
+
+    /**
+     * 部门树形结构
+     *
+     * @param departmentTreeDBList
+     * @param map
+     * @param selectedNode
+     * @param topParentDepartmentCd
+     * @param topParentDepartmentName
+     * @return
+     */
+    private JSONArray treeDepartmentList(List<OADepartmentCustomizeVO> departmentTreeDBList, Map<String, String> map, String[] selectedNode, String topParentDepartmentCd,
+                                         String topParentDepartmentName) {
+        JSONArray ja = new JSONArray();
+        JSONObject joAttr = new JSONObject();
+        if (departmentTreeDBList != null && departmentTreeDBList.size() > 0) {
+            JSONObject jo = null;
+            for (OADepartmentCustomizeVO departmentTreeRecord : departmentTreeDBList) {
+                jo = new JSONObject();
+                jo.put("title", departmentTreeRecord.getName());
+                jo.put("key", UUID.randomUUID());
+                jo.put("value", departmentTreeRecord.getId().toString());
+                String departmentCd = String.valueOf(departmentTreeRecord.getId());
+                String departmentName = String.valueOf(departmentTreeRecord.getName());
+                String parentDepartmentCd = String.valueOf(departmentTreeRecord.getParentid());
+                if (topParentDepartmentCd.equals(parentDepartmentCd)) {
+                    JSONArray array = treeDepartmentList(departmentTreeDBList, map, selectedNode, departmentCd, departmentName);
+                    if(null!=array&&array.size()>0){
+                        jo.put("value", "P"+departmentTreeRecord.getId().toString());
+                    }
+                    jo.put("children", array);
+                    ja.add(jo);
+                }
+            }
+        }
+        return ja;
     }
 }

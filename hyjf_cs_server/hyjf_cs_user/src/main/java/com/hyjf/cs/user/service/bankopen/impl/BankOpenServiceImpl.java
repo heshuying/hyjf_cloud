@@ -155,7 +155,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
      * @Date 2018/6/15 17:20
      */
     @Override
-    @HystrixCommand(commandKey = "开户(三端)-getOpenAccountMV",fallbackMethod = "fallBackBankOpen",commandProperties = {
+    @HystrixCommand(commandKey = "开户(三端)-getOpenAccountMV",fallbackMethod = "fallBackBankOpen",ignoreExceptions = CheckException.class,commandProperties = {
             //设置断路器生效
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s

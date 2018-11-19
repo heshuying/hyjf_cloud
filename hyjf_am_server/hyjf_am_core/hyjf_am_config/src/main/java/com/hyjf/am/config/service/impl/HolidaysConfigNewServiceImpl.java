@@ -161,7 +161,13 @@ public class HolidaysConfigNewServiceImpl implements HolidaysConfigNewService {
 		return list.get(0).getDayTime();
 	}
 
-	private Map<String, Object> json2map(String str_json) {
+    @Override
+    public int selectFirstWorkdayOnMonth(int currentYear, int currentMonth) {
+		int firstWorkDay = holidaysConfigCustomizeMapper.selectFirstWorkdayOnMonth(currentYear, currentMonth);
+        return firstWorkDay;
+    }
+
+    private Map<String, Object> json2map(String str_json) {
 		Map<String, Object> res = new HashMap<>();
 		try {
 			Gson gson = new Gson();
