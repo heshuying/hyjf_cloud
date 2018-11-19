@@ -652,13 +652,13 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
     public OntimeCheckBean getBorrowOntime(String borrowNid) {
         CheckUtil.check(StringUtils.isNotBlank(borrowNid),MsgEnum.ERR_OBJECT_REQUIRED,"标的编号");
 
-        String SEPARATE = CustomConstants.COLON;
+        String SEPARATE = RedisConstants.COLON;
         // 标的状态key
-        String onTimeStatusKey = CustomConstants.REDIS_KEY_ONTIME_STATUS + SEPARATE + borrowNid;
+        String onTimeStatusKey = RedisConstants.REDIS_KEY_ONTIME_STATUS + SEPARATE + borrowNid;
         // 标的定时key
-        String onTimeKey = CustomConstants.REDIS_KEY_ONTIME + SEPARATE + borrowNid;
+        String onTimeKey = RedisConstants.REDIS_KEY_ONTIME + SEPARATE + borrowNid;
         // 标的定时独占锁key
-        String onTimeLockKey = CustomConstants.REDIS_KEY_ONTIME_LOCK + SEPARATE + borrowNid;
+        String onTimeLockKey = RedisConstants.REDIS_KEY_ONTIME_LOCK + SEPARATE + borrowNid;
         String status = RedisUtils.get(onTimeStatusKey);
         OntimeCheckBean ontimeCheckBean  = new OntimeCheckBean();
         if (StringUtils.isNotBlank(status) && "0".equals(status)){

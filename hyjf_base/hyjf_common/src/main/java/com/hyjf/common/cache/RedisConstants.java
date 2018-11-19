@@ -256,6 +256,20 @@ public class RedisConstants {
      * 定时发标key
      */
     public static final String ONTIME = "ontime:";
+    /*分隔符*/
+    public static final String UNDERLINE = "_";
+
+    /*分隔符*/
+    public static final String COLON = ":";
+
+    /** 定时发标时间key名 */
+    public static final String REDIS_KEY_ONTIME = "ontime";
+
+    /** 定时发标状态修改锁key名 */
+    public static final String REDIS_KEY_ONTIME_LOCK = "ontime_lock";
+
+    /** 定时发标状态修改状态key名 */
+    public static final String REDIS_KEY_ONTIME_STATUS = "ontime_status";
 
     /**
      * 用户画像评分
