@@ -110,7 +110,10 @@ public class WechatBorrowTenderController extends BaseTradeController {
             //用户测评校验状态转换
             if(result.getData()!=null){
                 if(result.getData().get("riskTested") != null && result.getData().get("riskTested") != ""){
-                    weChatResult.setStatus((String) result.getData().get("riskTested"));
+                    if(!CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(result.getData().get("riskTested"))){
+                        weChatResult.setStatus((String) result.getData().get("riskTested"));
+                        weChatResult.setStatusDesc((String) result.getData().get("message"));
+                    }
                 }
             }
             weChatResult.setData(result.getData());

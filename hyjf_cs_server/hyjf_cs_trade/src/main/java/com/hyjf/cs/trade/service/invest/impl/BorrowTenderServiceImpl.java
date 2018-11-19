@@ -5,7 +5,6 @@ package com.hyjf.cs.trade.service.invest.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.trade.BorrowTenderRequest;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
@@ -54,6 +53,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.apache.commons.collections.MapUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
@@ -117,7 +117,18 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @Date 2018/6/24 14:35
      */
     @Override
-    @HystrixCommand
+    @HystrixCommand(commandKey = "散标投资(三端)-borrowTender",fallbackMethod = "fallBackTender",commandProperties = {
+            //设置断路器生效
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //一个统计窗口内熔断触发的最小个数3/10s
+            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            //熔断5秒后去尝试请求
+            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
+            // 超时时间
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000")},threadPoolProperties = {
+            @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
     public WebResult<Map<String, Object>> borrowTender(TenderRequest request) {
         UserVO loginUser = amUserClient.findUserById(request.getUserId());
         Integer userId = loginUser.getUserId();
@@ -176,6 +187,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
         // 开始真正的投资逻辑
         return result;
+    }
+
+    public WebResult<Map<String, Object>> fallBackTender(TenderRequest request){
+        throw new CheckException(MsgEnum.STATUS_CE999999);
     }
 
     /**
@@ -1483,7 +1498,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     String riskTested = (String) result.get("riskTested");
                     if (CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL.equals(riskTested)) {
                         //未测评新评测
-                        throw new CheckException(MsgEnum.STATUS_EV000008);
+                        throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_RISK_ASSESSMENT);
                     } else if (CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)) {
                         //已过期需要重新评测
                         throw new CheckException(MsgEnum.STATUS_EV000004);
@@ -1522,7 +1537,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     String riskTested = (String) result.get("riskTested");
                     if (CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL.equals(riskTested)) {
                         //未测评新评测
-                        throw new CheckException(MsgEnum.STATUS_EV000008);
+                        throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_RISK_ASSESSMENT);
                     } else if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
                         //已过期需要重新评测
                         throw new CheckException(MsgEnum.STATUS_EV000004);
@@ -1549,7 +1564,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 String riskTested = (String) result.get("riskTested");
                 if (CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL.equals(riskTested)) {
                     //未测评新评测
-                    throw new CheckException(MsgEnum.STATUS_EV000008);
+                    throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_RISK_ASSESSMENT);
                 } else if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
                     //已过期需要重新评测
                     throw new CheckException(MsgEnum.STATUS_EV000004);

@@ -8,6 +8,7 @@ import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.PlatformTransferService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -35,6 +36,9 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_EXPORT;
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_VIEW;
+
 /**
  * @author: sunpeikai
  * @version: PlatformTransferController, v0.1 2018/7/9 10:13
@@ -46,6 +50,8 @@ public class PlatformTransferController extends BaseController {
 
     @Autowired
     private PlatformTransferService platformTransferService;
+    private static final String PERMISSIONS = "recharge";
+
     /**
      * 平台转账-查询转账列表
      * @auth sunpeikai
@@ -54,6 +60,7 @@ public class PlatformTransferController extends BaseController {
      */
     @ApiOperation(value = "平台转账-查询转账列表",notes = "平台转账-查询转账列表")
     @PostMapping(value = "/transferlist")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_VIEW)
     public AdminResult<ListResult<AccountRechargeVO>> transferList(@RequestBody PlatformTransferListRequest request){
         Integer count = platformTransferService.getPlatformTransferCount(request);
         count = (count == null)?0:count;
@@ -119,6 +126,7 @@ public class PlatformTransferController extends BaseController {
 
     @ApiOperation(value = "平台转账-导出excel",notes = "平台转账-导出excel")
     @PostMapping(value = "/platformtransferlist")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_EXPORT)
     public void exportPlatformTransferList(HttpServletRequest request, HttpServletResponse response,@RequestBody PlatformTransferListRequest platformTransferListRequest) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());

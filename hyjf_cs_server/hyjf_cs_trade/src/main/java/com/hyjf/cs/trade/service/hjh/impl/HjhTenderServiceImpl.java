@@ -49,6 +49,7 @@ import com.hyjf.cs.trade.service.coupon.AppCouponService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -109,7 +110,18 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      * @Date 2018/6/19 9:47
      */
     @Override
-    @HystrixCommand
+    @HystrixCommand(commandKey = "加入计划(三端)-joinPlan",fallbackMethod = "fallBackJoinPlan",commandProperties = {
+            //设置断路器生效
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //一个统计窗口内熔断触发的最小个数3/10s
+            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            //熔断5秒后去尝试请求
+            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
+            // 超时时间
+            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000")},threadPoolProperties = {
+            @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
     public WebResult<Map<String, Object>> joinPlan(TenderRequest request) {
         UserVO loginUser = amUserClient.findUserById(request.getUserId());
         Integer userId = loginUser.getUserId();
@@ -160,6 +172,18 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
 
         // 开始投资------------------------------------------------------------------------------------------------------------------------------------------
         return tender(request, plan, account, cuc, tenderAccount);
+    }
+
+    /**
+     * 加入计划失败回调方法
+     * @param request
+     * @return
+     */
+    public WebResult<Map<String, Object>> fallBackJoinPlan(TenderRequest request){
+        WebResult<Map<String,Object>> result = new WebResult<>();
+        result.setStatus(AppResult.FAIL);
+        result.setStatusDesc("加入失败，请重试！");
+        return result;
     }
 
     /**
@@ -659,27 +683,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             if("0".equals(revaluation_money) || revaluation_money == null){
                 logger.info("=============从redis中获取测评类型和上限金额异常!(没有获取到对应类型的限额数据) eval_type="+eval_type);
             }else {
-                //测评到期日
-                Long lCreate = loginUser.getEvaluationExpiredTime().getTime();
-                //当前日期
-                Long lNow = System.currentTimeMillis();
-                // 判断用户测评有效期
-                if (loginUser.getIsEvaluationFlag() == 0) {
-                    result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL);
-                    result.put("message","根据监管要求，投资前必须进行风险测评。");
-                } else {
-                    if(loginUser.getIsEvaluationFlag()==1 && null != loginUser.getEvaluationExpiredTime()){
-                        if (lCreate <= lNow) {
-                            //已过期需要重新评测
-                            //返回错误码
-                            result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED);
-                            result.put("message","根据监管要求，测评已过期，投资前必须进行风险测评。");
-                        }
-                    } else {
-                        result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL);
-                        result.put("message","根据监管要求，投资前必须进行风险测评。");
-                    }
-                }
                 //计划类判断用户类型为稳健型以上才可以投资
                 if(!CommonUtils.checkStandardInvestment(eval_type)){
                     result.put("evalType",eval_type);
@@ -700,6 +703,27 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             }
         }else{
             logger.info("=============该用户测评总结数据为空! userId="+userId);
+        }
+        //测评到期日
+        Long lCreate = loginUser.getEvaluationExpiredTime().getTime();
+        //当前日期
+        Long lNow = System.currentTimeMillis();
+        // 判断用户测评有效期
+        if (loginUser.getIsEvaluationFlag() == 0) {
+            result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL);
+            result.put("message","根据监管要求，投资前必须进行风险测评。");
+        } else {
+            if(loginUser.getIsEvaluationFlag()==1 && null != loginUser.getEvaluationExpiredTime()){
+                if (lCreate <= lNow) {
+                    //已过期需要重新评测
+                    //返回错误码
+                    result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED);
+                    result.put("message","根据监管要求，测评已过期，投资前必须进行风险测评。");
+                }
+            } else {
+                result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_ANSWER_FAIL);
+                result.put("message","根据监管要求，投资前必须进行风险测评。");
+            }
         }
         return result;
     }
@@ -840,6 +864,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             if(resultEval!=null){
                 if(resultEval.get("riskTested") != null && resultEval.get("riskTested") != ""){
                     result.setStatus((String) resultEval.get("riskTested"));
+                    result.setStatusDesc((String) resultEval.get("message"));
                 }
             }
             logger.info("体验金投资结束:userId{}" + userId);
@@ -922,6 +947,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             if(resultEval!=null){
                 if(resultEval.get("riskTested") != null && resultEval.get("riskTested") != ""){
                     result.setStatus((String) resultEval.get("riskTested"));
+                    result.setStatusDesc((String) resultEval.get("message"));
                 }
             }
             //放入用户测评返回值

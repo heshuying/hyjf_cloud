@@ -139,7 +139,7 @@
 		select
 			menu_uuid
 		from	ht_admin_menu
-		where menu_puuid=#{menuPuuid,jdbcType=VARCHAR}
+		where  del_flag = '0'  and menu_puuid=#{menuPuuid,jdbcType=VARCHAR}
 	</select>
 	<delete id="deleteMenubyRoleId" >
 		delete  from  ht_admin_role_menu_permissions where  	role_id=#{id,jdbcType=VARCHAR}

@@ -41,6 +41,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -361,7 +362,18 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		return bean;
 	}
 	@Override
-	@HystrixCommand(commandKey = "recharge")
+	@HystrixCommand(commandKey = "充值(三端)-rechargeService",fallbackMethod = "fallBackRecharge",commandProperties = {
+			//设置断路器生效
+			@HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+			//一个统计窗口内熔断触发的最小个数3/10s
+			@HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+			//熔断5秒后去尝试请求
+			@HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+			//失败率达到30百分比后熔断
+			@HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
+			// 超时时间
+			@HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000")},threadPoolProperties = {
+			@HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
 	public BankCallBean rechargeService(UserDirectRechargeBean directRechargeBean,int userId, String ipAddr, String mobile, String money) throws Exception {
 		WebViewUserVO user=this.getUserFromCache(userId);
 		// 信息校验
@@ -387,6 +399,10 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		directRechargeBean.setAccountId(account.getAccount());
 		BankCallBean bean = this.insertGetMV(directRechargeBean);
 		return bean;
+	}
+
+	public BankCallBean fallBackRecharge(UserDirectRechargeBean directRechargeBean,int userId, String ipAddr, String mobile, String money) throws Exception {
+		return new BankCallBean();
 	}
 
 	@Override
@@ -494,8 +510,8 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		// 是否开启服务费授权 0未开启  1已开启
 		ret.put("paymentAuthStatus", hjhUserAuth==null?"":hjhUserAuth.getAutoPaymentStatus());
 		// 是否开启服务费授权 0未开启  1已开启
-		ret.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
-		logger.info("paymentAuthOn:"+authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
+		ret.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
+		logger.info("paymentAuthOn:"+authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
 		// 江西银行客户号
 		ret.put("accountId", user.getBankAccount());
 		//充值提示语
