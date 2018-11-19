@@ -361,7 +361,7 @@ public class HjhCreditTenderController extends BaseController{
 		map.put("assignInterestAdvance", "垫付利息");
 		map.put("assignPay", "实际支付金额");
 		map.put("assignTime", "承接时间");
-		map.put("tenderType", "承接方式");
+		map.put("tenderType", "复投承接(是/否)");
 		map.put("borrowPeriod", "项目总期数");
 		map.put("assignPeriod", "承接时所在期数");
 
