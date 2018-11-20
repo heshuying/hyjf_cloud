@@ -14,6 +14,7 @@ import com.hyjf.am.trade.mq.producer.hjh.issuerecover.AutoPreAuditMessageProduce
 import com.hyjf.am.trade.service.task.issuerecover.AutoBailMessageService;
 import com.hyjf.am.trade.service.task.issuerecover.AutoRecordService;
 import com.hyjf.am.vo.trade.hjh.issuerecover.AutoIssuerecoverVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
@@ -101,7 +102,7 @@ public class AutoBailMessageConsumer extends Consumer {
                     logger.info(borrow.getBorrowNid()+" 开始自动审核保证金 "+ borrowInfo.getInstCode());
 
                     // redis 放重复检查
-                    String redisKey = "borrowbail:" + borrowInfo.getInstCode()+borrow.getBorrowNid();
+                    String redisKey = RedisConstants.BORROW_BAIL + borrowInfo.getInstCode()+borrow.getBorrowNid();
                     boolean result = RedisUtils.tranactionSet(redisKey, 300);
                     if(!result){
                         logger.info(borrowInfo.getInstCode()+" 正在自动审核保证金(redis) "+borrow.getBorrowNid());

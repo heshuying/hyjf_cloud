@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.mq.consumer;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.coupon.UserCouponBean;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.security.util.MD5;
@@ -76,7 +77,7 @@ public class CouponSendMessagConsumer extends Consumer {
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
 
-                String redisKey = "couponsend:" + userCouponBean.getUserId() + (userCouponBean.getCouponCode()==null?"":userCouponBean.getCouponCode()) + (userCouponBean.getSendFlg()==null?"":userCouponBean.getSendFlg()) + (userCouponBean.getActivityId()==null?"":userCouponBean.getActivityId());
+                String redisKey = RedisConstants.COUPON_SEND + userCouponBean.getUserId() + (userCouponBean.getCouponCode()==null?"":userCouponBean.getCouponCode()) + (userCouponBean.getSendFlg()==null?"":userCouponBean.getSendFlg()) + (userCouponBean.getActivityId()==null?"":userCouponBean.getActivityId());
                 boolean result = RedisUtils.tranactionSet(redisKey, 300);
                 if(!result){
                     logger.error("【优惠券发放】正在发放优惠券....");
