@@ -11,6 +11,7 @@ import com.hyjf.am.trade.mq.producer.hjh.issuerecover.AutoBailMessageProducer;
 import com.hyjf.am.trade.service.task.issuerecover.AutoIssueRecoverService;
 import com.hyjf.am.trade.service.task.issuerecover.AutoRecordService;
 import com.hyjf.am.vo.trade.hjh.issuerecover.AutoIssuerecoverVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
@@ -99,7 +100,7 @@ public class AutoRecordMessageConsumer extends Consumer {
                             logger.info(mqHjhPlanAsset.getAssetId()+" 开始自动备案 "+ mqHjhPlanAsset.getInstCode());
 
                             // redis 放重复检查
-                            String redisKey = "borrowrecord:" + mqHjhPlanAsset.getInstCode()+mqHjhPlanAsset.getAssetId();
+                            String redisKey = RedisConstants.BORROW_RECORD + mqHjhPlanAsset.getInstCode()+mqHjhPlanAsset.getAssetId();
                             boolean result = RedisUtils.tranactionSet(redisKey, 300);
                             if(!result){
                                 logger.info(mqHjhPlanAsset.getInstCode()+" 正在备案(redis) "+mqHjhPlanAsset.getAssetId());
@@ -157,7 +158,7 @@ public class AutoRecordMessageConsumer extends Consumer {
                         if (StringUtils.isNotBlank(autoIssuerecoverVO.getBorrowNid())) {
                             logger.info(autoIssuerecoverVO.getBorrowNid()+" 开始自动备案 "+ autoIssuerecoverVO.getInstCode());
                             // redis 放重复检查
-                            String redisKey = "borrowrecord:" + autoIssuerecoverVO.getInstCode()+autoIssuerecoverVO.getBorrowNid();
+                            String redisKey = RedisConstants.BORROW_RECORD + autoIssuerecoverVO.getInstCode()+autoIssuerecoverVO.getBorrowNid();
                             boolean result = RedisUtils.tranactionSet(redisKey, 300);
                             if(!result){
                                 logger.info(autoIssuerecoverVO.getInstCode()+" 正在备案(redis) "+autoIssuerecoverVO.getBorrowNid());

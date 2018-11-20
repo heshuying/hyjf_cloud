@@ -6,6 +6,7 @@ package com.hyjf.am.config.service.impl;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.config.dao.mapper.auto.RUserMapper;
 import com.hyjf.am.config.dao.model.auto.RUser;
+import com.hyjf.am.config.dao.model.auto.RUserExample;
 import com.hyjf.am.config.service.SyncRUserService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -134,6 +135,29 @@ public class SyncRUserServiceImpl implements SyncRUserService {
 
         }
 
+    }
+
+    /**
+     * 根据推荐人修改用户的类型
+     * @param jsonObj
+     * @author wgx
+     * @date 2018/11/20
+     */
+    @Override
+    public void updateUserInfoByReferrer(JSONObject jsonObj) {
+        String referrer = jsonObj.getString("referrer");
+        String attribute = jsonObj.getString("attribute");
+        if (StringUtils.isNotBlank(referrer) && StringUtils.isNotBlank(attribute)) {
+            int referrerInt = Integer.parseInt(referrer);
+            int attributeInt = Integer.parseInt(attribute);
+            RUserExample example = new RUserExample();
+            RUserExample.Criteria criteria = example.createCriteria();
+            criteria.andSpreadsUserIdEqualTo(referrerInt);
+            RUser rUser = new RUser();
+            rUser.setAttribute(attributeInt);
+            int upRet = rUserMapper.updateByExampleSelective(rUser, example);
+            logger.info("rid:{},am_config.ht_r_user更新ht_user_info{}", referrerInt, upRet > 0 ? "成功" : "失败");
+        }
     }
 
 }

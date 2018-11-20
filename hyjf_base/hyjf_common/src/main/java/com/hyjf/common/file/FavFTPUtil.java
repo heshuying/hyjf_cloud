@@ -37,7 +37,7 @@ public class FavFTPUtil {
      * @param input    输入流
      * @return 成功返回true，否则返回false
      */
-    public static boolean uploadFile(String host, int port, String username, String password, String basePath,
+    public static  boolean uploadFile(String host, int port, String username, String password, String basePath,
                                      String filePath, String filename, InputStream input) {
         boolean result = false;
         FTPClient ftp = new FTPClient();

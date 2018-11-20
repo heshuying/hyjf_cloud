@@ -92,13 +92,16 @@ public class MessagePushMessageController extends BaseController {
                         record.setMsgActionUrl("5");
                     }
                 }
+                if (record.getMsgCode() != null) {
+                    record.setTagCode(record.getMsgCode().substring(0,4));
+                }
                 // 如果是转发,则form的id应置为空
                 if (StringUtils.isNotEmpty(form.getUpdateOrReSend()) && form.getUpdateOrReSend().equals("2")) {
                     record.setId(null);
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("获取手动发送消息详情失败, {}", e);
         }
         List<MessagePushTagVO> templatePushTags = this.messagePushTagService.getTagList();
         response.setTemplatePushTags(templatePushTags);
@@ -244,7 +247,7 @@ public class MessagePushMessageController extends BaseController {
             templateRequest.setPreSendTime(null);
             templateRequest.setSendTime(GetDate.getMyTimeInMillis());
         }
-
+        templateRequest.setMsgDestinationType(CustomConstants.MSG_PUSH_DESTINATION_TYPE_1);
         response = messagePushMsgService.updateMessagePushMsg(templateRequest);
         return new AdminResult<>(response);
     }

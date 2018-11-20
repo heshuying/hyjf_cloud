@@ -213,12 +213,13 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                     List<WebUserInvestListCustomizeVO> tzList = myTenderSelectUserInvestList(form, 0, 100);
                     if (tzList != null && tzList.size() > 0) {
                         WebUserInvestListCustomizeVO userInvest = tzList.get(0);
-                        UserInfoVO creditUserInfo = amUserClient.findUsersInfoById(Integer.valueOf(form.getCreditUserId()));
+                        UserInfoVO creditUserInfo = amUserClient.findUsersInfoById(Integer.valueOf(userInvest.getUserId()));
                         if(userInfo!=null&&!((userInfo.getUserId()+"").equals(userInvest.getUserId()))){
-
-                            userInvest.setRealName(creditUserInfo.getTruename().substring(0,1)+"**");
+                            if (creditUserInfo != null){
+                                userInvest.setRealName(creditUserInfo.getTruename().substring(0,1)+"**");
+                                userInvest.setIdCard(creditUserInfo.getIdcard().substring(0,4)+"**************");
+                            }
                             userInvest.setUsername(userInvest.getUsername().substring(0,1)+"*****");
-                            userInvest.setIdCard(creditUserInfo.getIdcard().substring(0,4)+"**************");
                         }
                         contents.put("userInvest", userInvest);
                     }else {

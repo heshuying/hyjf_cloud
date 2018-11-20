@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.mq.consumer;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.CouponRepayBean;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.validator.Validator;
@@ -69,7 +70,7 @@ public class CouponRepayMessageConsumer extends Consumer {
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
 
-                String redisKey = "couponrepay:" + repayBean.getBorrowNid() + ":" + repayBean.getPeriodNow();
+                String redisKey = RedisConstants.COUPON_REPAY + repayBean.getBorrowNid() + ":" + repayBean.getPeriodNow();
                 boolean result = RedisUtils.tranactionSet(redisKey, 300);
                 if(!result){
                     logger.error("【优惠券还款】当前标的正在还款....");
