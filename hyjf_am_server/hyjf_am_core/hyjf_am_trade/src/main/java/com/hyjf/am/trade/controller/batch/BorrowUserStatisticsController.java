@@ -15,7 +15,7 @@ import java.math.BigDecimal;
  * @version BorrowUserStatisticsController, v0.1 2018/11/20 14:21
  */
 @RestController
-@RequestMapping("borrow_user_statistics")
+@RequestMapping("/am-trade/borrow_user_statistics")
 public class BorrowUserStatisticsController extends BaseController {
 
     @Autowired
