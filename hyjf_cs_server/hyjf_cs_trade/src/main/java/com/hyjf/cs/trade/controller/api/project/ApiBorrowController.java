@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Api(value = "api端-标的信息接口",tags = "api端-标的信息接口")
 @RestController
-@RequestMapping("/server/borrow")
+@RequestMapping("/hyjf-api/server/borrow")
 public class ApiBorrowController extends BaseTradeController {
 
 

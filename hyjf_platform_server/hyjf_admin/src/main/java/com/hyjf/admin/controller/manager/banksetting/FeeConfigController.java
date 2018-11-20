@@ -58,7 +58,7 @@ public class FeeConfigController extends BaseController {
     }
     @ApiOperation(value = "手续费配置详情页面", notes = "手续费配置详情页面")
     @PostMapping("/infoAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult  feeConfigInfo(@RequestBody FeeConfigRequestBean feeConfigRequestBean) {
         AdminFeeConfigResponse response = null;
         AdminFeeConfigRequest request = new AdminFeeConfigRequest();

@@ -200,11 +200,6 @@ public class RedisConstants {
     public static final String SMS_CONFIG = "sms_config:";
 
     /**
-     * 邮件配置key
-     */
-    public static final String SITE_SETTINGS = "site_settings:";
-
-    /**
      * 消息推送模版key
      */
     public static final String MESSAGE_PUSH_TEMPLATE = "message_push_template:";

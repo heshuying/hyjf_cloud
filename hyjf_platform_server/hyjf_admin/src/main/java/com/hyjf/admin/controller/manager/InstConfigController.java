@@ -52,7 +52,7 @@ public class InstConfigController extends BaseController {
 
     @ApiOperation(value = "机构配置详情页面", notes = "机构配置详情页面")
     @PostMapping("/infoAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<HjhInstConfigWrapVo>  instConfigInfo(@RequestBody AdminInstConfigListRequest adminRequest) {
         AdminInstConfigDetailResponse adminResponse= instConfigService.searchInstConfigInfo(adminRequest);
         if (adminResponse == null) {

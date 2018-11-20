@@ -75,7 +75,7 @@ public class AccountConfigController extends BaseController {
     }
     @ApiOperation(value = "账户平台设置详情页面", notes = "账户平台设置详情页面")
     @PostMapping("/infoAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<MerchantAccountVO>  accountConfigInfo(@RequestBody MerchantAccountRequestBean merchantAccountRequestBean) {
 //        AdminMerchantAccountRequest adminRequest = new AdminMerchantAccountRequest();
 //        //可以直接使用
@@ -147,7 +147,7 @@ public class AccountConfigController extends BaseController {
     }
     @ApiOperation(value = "账户平台设置 子账户检索", notes = "账户平台设置 子账户检索")
     @PostMapping("/checkAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+//    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<MerchantAccountVO>  checkAccountConfig(@RequestBody Map<String,Object> map) {
         String name =(String) map.get("name");
         String param =(String) map.get("param");
@@ -159,7 +159,7 @@ public class AccountConfigController extends BaseController {
             int count = merchantAccountService.countAccountListInfoBySubAccountName(ids, param);
             if (count > 0) {
                 prs.setStatus(BaseResult.FAIL);
-                prs.setStatusDesc("{label}子账户名称重复了！");
+                prs.setStatusDesc("子账户名称重复了！");
                 return prs;
             }
         }
@@ -169,7 +169,7 @@ public class AccountConfigController extends BaseController {
             int result = merchantAccountService.countAccountListInfoBySubAccountCode(ids, param);
             if (result > 0) {
                 prs.setStatus(BaseResult.FAIL);
-                prs.setStatusDesc("{label}子账户代号重复了！");
+                prs.setStatusDesc("子账户代号重复了！");
                 return prs;
             }
         }
@@ -185,19 +185,19 @@ public class AccountConfigController extends BaseController {
     private String validatorFieldCheck(MerchantAccountRequestBean form) {
         // 子账户名称
         if(StringUtils.isBlank(form.getSubAccountName())){
-            return "subAccountName 不能为空！";
+            return "子账户名称 不能为空！";
         }
         // 子账户类型
         if(StringUtils.isBlank(form.getSubAccountType())){
-            return "subAccountType 不能为空！";
+            return "子账户类型 不能为空！";
         }
         // 子账户代码
         if(StringUtils.isBlank(form.getSubAccountCode())){
-            return "subAccountCode 不能为空！";
+            return "子账户代码 不能为空！";
         }
         // 排序
         if(null == form.getSort()){
-            return "order 不能为空！";
+            return "排序 不能为空！";
         }
         return "";
     }
