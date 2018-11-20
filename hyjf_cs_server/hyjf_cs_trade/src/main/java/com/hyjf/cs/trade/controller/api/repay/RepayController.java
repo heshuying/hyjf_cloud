@@ -171,7 +171,7 @@ public class RepayController extends BaseController {
                     try {
                         ProjectBeanVO repayProject = repayService.getRepayProjectDetail(form);
                         List<ProjectRepayListBean> list = getRepayDetailList(repayProject.getUserRepayList());
-                        resultBean.setDetailList(list);
+                        resultBean.setRepaylList(list);
                         resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
                         resultBean.setStatusDesc("查询成功!");
                         return resultBean;
