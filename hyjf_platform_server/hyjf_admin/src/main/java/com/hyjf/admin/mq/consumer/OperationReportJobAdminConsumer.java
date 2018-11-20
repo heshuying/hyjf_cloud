@@ -72,7 +72,6 @@ public class OperationReportJobAdminConsumer extends Consumer {
                 logger.info("====OperationReportJobAdminConsumer consumeMessage=====" + JSONObject.toJSONString(bean));
                 int lastMonth = bean.getLastMonth();
                 Calendar cal = bean.getCalendar();
-                bean.setCalendar(cal);
                 List<OperationReportJobVO> cityGroup = amAdminClient.getTenderCityGroupByList(getLastDay(cal));
                 bean.setCityGroup(cityGroup);
                 List<OperationReportJobVO> sexGroup = amAdminClient.getTenderSexGroupByList(getLastDay(cal));

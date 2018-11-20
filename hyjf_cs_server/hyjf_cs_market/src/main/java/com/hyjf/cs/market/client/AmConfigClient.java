@@ -174,10 +174,9 @@ public interface AmConfigClient {
     /**
      * 判断某天是否是工作日
      *
-     * @param date
      * @return
      */
-    boolean queryWorkdateOnSomeday(Date date);
+    boolean queryWorkdateOnSomeday();
 
     /**
      * 判断当天是不是当月第一个工作日

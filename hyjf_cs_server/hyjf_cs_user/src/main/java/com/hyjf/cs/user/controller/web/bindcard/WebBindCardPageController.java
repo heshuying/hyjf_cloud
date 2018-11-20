@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.bank.LogAcqResBean;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserOperationLogConstant;
@@ -115,7 +116,7 @@ public class WebBindCardPageController extends BaseUserController{
 
         // 绑卡后处理
         try {
-            boolean checkTender = RedisUtils.tranactionSet("bindCard" + bean.getLogOrderId(), 600);
+            boolean checkTender = RedisUtils.tranactionSet(RedisConstants.CONCURRENCE_BIND_CARD + bean.getLogOrderId(), 600);
             if(checkTender){
                 // 保存银行卡信息
                 bindCardService.updateAfterBindCard(bean);
