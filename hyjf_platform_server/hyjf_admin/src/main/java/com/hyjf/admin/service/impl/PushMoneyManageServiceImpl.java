@@ -19,6 +19,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.http.HtmlUtil;
 import com.hyjf.common.util.*;
@@ -416,7 +417,7 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
             /** 验证员工在平台的身份属性是否和crm的一致 如果不一致则不发提成 begin */
 
             /** redis 锁 */
-            boolean reslut = RedisUtils.tranactionSet("PUSH_MONEY:" + id, 60);
+            boolean reslut = RedisUtils.tranactionSet(RedisConstants.PUSH_MONEY_ + id, 60);
             // 如果没有设置成功，说明有请求来设置过
             if(!reslut){
                 ret.put("status","error");
