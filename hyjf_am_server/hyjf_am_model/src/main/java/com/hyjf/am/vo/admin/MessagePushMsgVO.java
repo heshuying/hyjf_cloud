@@ -24,9 +24,8 @@ public class MessagePushMsgVO {
 
     private String msgContent;
 
-    //private String msgTerminal;
+    private String msgTerminal;
 
-    private String msgTerminal[];
 
     private Integer msgAction;
 
@@ -120,11 +119,11 @@ public class MessagePushMsgVO {
         this.msgContent = msgContent;
     }
 
-    public String[] getMsgTerminal() {
+    public String getMsgTerminal() {
         return msgTerminal;
     }
 
-    public void setMsgTerminal(String[] msgTerminal) {
+    public void setMsgTerminal(String msgTerminal) {
         this.msgTerminal = msgTerminal;
     }
 
