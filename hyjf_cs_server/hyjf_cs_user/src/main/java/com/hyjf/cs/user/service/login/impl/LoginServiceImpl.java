@@ -849,6 +849,10 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			// 还款授权URL
 			result.setRepayAuthUrl(systemConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_AUTHREPAY);
 		}
+		// add by pcc app3.1.1追加 20180823 start
+		// 我的计划列表退出中标签显示标识（临时使用，功能上线以后可以删除）
+		result.setExitLabelShowFlag(systemConfig.getExitLabelShowFlag());
+		// add by pcc app3.1.1追加 20180823 end
 		result.setInvitationCode(userId);
 		return result;
 	}
@@ -999,7 +1003,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	public Map<String, String> insertErrorPassword(String userName,String loginPassword,String channel) {
 		UserVO userVO = amUserClient.findUserByUserNameOrMobile(userName);
 		Map<String, String> r=new HashMap<>();
-//		CheckUtil.check(userVO!=null,MsgEnum.ERR_USER_NOT_EXISTS);
+		CheckUtil.check(userVO!=null,MsgEnum.ERR_USER_NOT_EXISTS);
 		if(userVO!=null){
 			//1.获取该用户密码错误次数
 			String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT_ALL + userVO.getUserId());

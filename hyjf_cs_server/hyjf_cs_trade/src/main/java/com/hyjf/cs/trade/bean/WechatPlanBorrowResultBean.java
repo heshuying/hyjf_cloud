@@ -31,14 +31,14 @@ public class WechatPlanBorrowResultBean implements Serializable {
         // 项目期限
 		private String borrowPeriod;
 		//真实姓名
-		private String tureName;
+		private String trueName;
 
-		public String getTureName() {
-			return tureName;
+		public String getTrueName() {
+			return trueName;
 		}
 
-		public void setTureName(String tureName) {
-			this.tureName = tureName;
+		public void setTrueName(String trueName) {
+			this.trueName = trueName;
 		}
 
 		public String getBorrowNid() {
