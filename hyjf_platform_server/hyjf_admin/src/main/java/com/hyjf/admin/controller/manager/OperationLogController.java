@@ -86,7 +86,7 @@ public class OperationLogController  extends BaseController {
 
     @ApiOperation(value = "查询配置中心操作日志配置详情", notes = "查询配置中心操作日志配置详情")
     @PostMapping("/infoAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult operationLogConfigInfoList(@RequestBody OperationLogRequestBean operationLogRequestBean) {
         AdminOperationLogResponse response = new AdminOperationLogResponse();
         AdminOperationLogRequest adminRequest= new AdminOperationLogRequest();
