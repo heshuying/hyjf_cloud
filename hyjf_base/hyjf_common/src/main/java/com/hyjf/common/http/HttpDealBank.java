@@ -1,8 +1,13 @@
 package com.hyjf.common.http;
 
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
-import com.hyjf.common.util.StringPool;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSession;
+
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -10,16 +15,18 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSession;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.hyjf.common.util.StringPool;
 
 /**
  * 在java中处理http请求.
@@ -98,6 +105,12 @@ public class HttpDealBank {
 					add(new FastJsonHttpMessageConverter());
 				}
 			});
+			
+			SimpleClientHttpRequestFactory requestFactory = new SimpleClientHttpRequestFactory();
+			requestFactory.setConnectTimeout(10000);// 设置建立连接超时时间
+			requestFactory.setReadTimeout(20000);// 设置等待返回超时时间
+			restTemplate.setRequestFactory(requestFactory);
+			
 			HttpHeaders headers = new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			headers.set("Accept-Charset", "UTF-8");

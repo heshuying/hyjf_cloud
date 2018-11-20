@@ -995,6 +995,9 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 couponInterest = couponService.getInterest(plan.getBorrowStyle(), couponUser.getCouponType(), plan.getExpectApr(), couponUser.getCouponQuota(), request.getAccount(), plan.getLockPeriod());
             }
             logger.info("优惠券收益为：{}",couponInterest);
+            if (couponUser.getCouponType() == 3) {
+                couponInterest = couponInterest.subtract(couponUser.getCouponQuota());
+            }
             // 优惠券类别
             result.put("couponType", couponUser.getCouponType());
             // 优惠券额度
