@@ -455,7 +455,7 @@ public class MspApplyController extends BaseController {
 	@PostMapping("/downloadFile")
 	@ApiOperation(value = "安融下載", notes = "安融下載")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-	public AdminResult<MspApplytResponseBean> download(HttpServletRequest request,
+	public AdminResult<MspApplytResponse> download(HttpServletRequest request,
 			@RequestBody MspApplytRequestBean mspApplytRequestBean) {
 		MspApplytRequest aprlr = new MspApplytRequest();
 		// 可以直接使用
@@ -470,9 +470,7 @@ public class MspApplyController extends BaseController {
 			return new AdminResult<>(FAIL, prs.getMessage());
 
 		}
-		MspApplytResponseBean marb=new MspApplytResponseBean();
-		BeanUtils.copyProperties(prs, marb);
-		return new AdminResult<>(marb);
+		return new AdminResult<>(prs);
 	
 	}
 	

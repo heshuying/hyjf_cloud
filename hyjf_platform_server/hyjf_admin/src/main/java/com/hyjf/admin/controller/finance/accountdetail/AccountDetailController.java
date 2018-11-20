@@ -191,8 +191,8 @@ public class AccountDetailController extends BaseController {
         map.put("bankFrost", "银行冻结金额");
         map.put("balance", "汇付可用余额");
         map.put("frost", "汇付冻结金额");
-        map.put("planBalance","汇添金可用余额");
-        map.put("planFrost","汇添金冻结金额");
+        map.put("planBalance","智投服务可用余额");
+        map.put("planFrost","智投服务冻结金额");
         map.put("tradeStatus", "交易状态");
         map.put("checkStatus", "对账状态");
         map.put("remark", "备注说明");
