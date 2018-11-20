@@ -20,18 +20,6 @@ public class RedisConstants {
     public static final String HJH_SLASH = "_";
 
     // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ key通用常量 ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ //
-
-
-    /**
-     * 记录密码错误次数Redis前缀web端(password_err_count_app:userName/mobile)
-     */
-    public static final String PASSWORD_ERR_COUNT_APP = "password_err_count_app:";
-
-    /**
-     * 记录密码错误次数Redis前缀web端(password_err_count_app:userName/mobile)
-     */
-    public static final String PASSWORD_ERR_COUNT_WEB = "password_err_count_web:";
-
     /**
      * 用户一秒内的登录次数(ip)
      */
@@ -369,12 +357,12 @@ public class RedisConstants {
     /**
      * 记录密码错误次数Redis前缀admin端
      */
-    public static final String PASSWORD_ERR_COUNT_ADMIN = "password_err_count_admin_";
+    public static final String PASSWORD_ERR_COUNT_ADMIN = "password_err_count_admin:";
 
     /**
      * 记录密码错误次数Redis前缀.web.app三端共享
      */
-    public static final String PASSWORD_ERR_COUNT_ALL = "password_err_count_all_";
+    public static final String PASSWORD_ERR_COUNT_ALL = "password_err_count_all:";
 
     /**
      * 日推标累计额度前缀
