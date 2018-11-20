@@ -200,11 +200,6 @@ public class RedisConstants {
     public static final String SMS_CONFIG = "sms_config:";
 
     /**
-     * 记录密码错误次数Redis前缀(password_err_count:userId)
-     */
-    public static final String PASSWORD_ERR_COUNT = "password_err_count:";
-
-    /**
      * 邮件配置key
      */
     public static final String SITE_SETTINGS = "site_settings:";
