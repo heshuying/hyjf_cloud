@@ -18,6 +18,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.*;
@@ -362,7 +363,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		return bean;
 	}
 	@Override
-	@HystrixCommand(commandKey = "充值(三端)-rechargeService",fallbackMethod = "fallBackRecharge",commandProperties = {
+	@HystrixCommand(commandKey = "充值(三端)-rechargeService",fallbackMethod = "fallBackRecharge",ignoreExceptions = CheckException.class,commandProperties = {
 			//设置断路器生效
 			@HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
 			//一个统计窗口内熔断触发的最小个数3/10s

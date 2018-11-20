@@ -1,91 +1,220 @@
-/*
- * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
- */
-package com.hyjf.cs.message.bean.ic;
+package com.hyjf.am.market.dao.model.auto;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
+import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
-
-/**
- * @author yaoyong
- * @version SellDaily, v0.1 2018/11/16 14:24
- */
-@Document(collection = "ht_sell_daily")
-public class SellDaily {
-
+public class SellDaily implements Serializable {
     /**
+     * 主键
      *
+     * @mbggenerated
      */
-    private static final long serialVersionUID = 1L;
-
-    private String id;
+    private Integer id;
 
     /**
-     * 统计时间,类型：yyyy.MM.dd
+     * 统计时间 yyyy.MM.dd
+     *
+     * @mbggenerated
      */
     private String dateStr;
 
-    private int drawOrder;
+    /**
+     * 绘制顺序
+     *
+     * @mbggenerated
+     */
+    private Integer drawOrder;
 
+    /**
+     * 一级部门
+     *
+     * @mbggenerated
+     */
     private String primaryDivision;
 
+    /**
+     * 二级部门
+     *
+     * @mbggenerated
+     */
     private String twoDivision;
 
-    private int storeNum;
+    /**
+     * 门店数量
+     *
+     * @mbggenerated
+     */
+    private Integer storeNum;
 
+    /**
+     * 本月累计规模业绩
+     *
+     * @mbggenerated
+     */
     private BigDecimal investTotalMonth;
 
+    /**
+     * 本月累计已还款
+     *
+     * @mbggenerated
+     */
     private BigDecimal repaymentTotalMonth;
 
+    /**
+     * 上月对应累计规模业绩
+     *
+     * @mbggenerated
+     */
     private BigDecimal investTotalPreviousMonth;
 
+    /**
+     * 环比增速（本月累计规模业绩/上月对应累计规模业绩 - 1）
+     *
+     * @mbggenerated
+     */
     private String investRatioGrowth;
 
+    /**
+     * 本月累计提现
+     *
+     * @mbggenerated
+     */
     private BigDecimal withdrawTotalMonth;
 
+    /**
+     * 提现占比（本月累计提现/本月累计已还款）
+     *
+     * @mbggenerated
+     */
     private String withdrawRate;
 
+    /**
+     * 本月累计充值
+     *
+     * @mbggenerated
+     */
     private BigDecimal rechargeTotalMonth;
 
+    /**
+     * 本月累计年化业绩
+     *
+     * @mbggenerated
+     */
     private BigDecimal investAnnualTotalMonth;
 
+    /**
+     * 上月累计年化业绩
+     *
+     * @mbggenerated
+     */
     private BigDecimal investAnnualTotalPreviousMonth;
 
+    /**
+     * 环比增速（本月累计年化业绩/上月累计年化业绩-1）
+     *
+     * @mbggenerated
+     */
     private String investAnnularRatioGrowth;
 
+    /**
+     * 昨日规模业绩
+     *
+     * @mbggenerated
+     */
     private BigDecimal investTotalYesterday;
 
+    /**
+     * 昨日还款
+     *
+     * @mbggenerated
+     */
     private BigDecimal repaymentTotalYesterday;
 
+    /**
+     * 昨日年化业绩
+     *
+     * @mbggenerated
+     */
     private BigDecimal investAnnualTotalYesterday;
 
+    /**
+     * 昨日提现
+     *
+     * @mbggenerated
+     */
     private BigDecimal withdrawTotalYesterday;
 
+    /**
+     * 昨日充值
+     *
+     * @mbggenerated
+     */
     private BigDecimal rechargeTotalYesterday;
 
+    /**
+     * 昨日净资金流（充值-提现）
+     *
+     * @mbggenerated
+     */
     private BigDecimal netCapitalInflowYesterday;
 
+    /**
+     * 当日待还
+     *
+     * @mbggenerated
+     */
     private BigDecimal nonRepaymentToday;
 
-    private int registerTotalYesterday;
+    /**
+     * 昨日注册数
+     *
+     * @mbggenerated
+     */
+    private Integer registerTotalYesterday;
 
-    private int rechargeGt3000UserNum;
+    /**
+     * 充值≥3000人数（昨日注册）
+     *
+     * @mbggenerated
+     */
+    private Integer rechargeGt3000UserNum;
 
-    private int investGt3000UserNum;
+    /**
+     * 投资≥3000人数（昨日注册）
+     *
+     * @mbggenerated
+     */
+    private Integer investGt3000UserNum;
 
-    private int investGt3000MonthUserNum;
+    /**
+     * 本月累计投资3000以上新客户数
+     *
+     * @mbggenerated
+     */
+    private Integer investGt3000MonthUserNum;
 
-    private int createTime;
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
+    private Date createTime;
 
-    private int updateTime;
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
+    private Date updateTime;
 
-    public String getId() {
+    private static final long serialVersionUID = 1L;
+
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -94,14 +223,14 @@ public class SellDaily {
     }
 
     public void setDateStr(String dateStr) {
-        this.dateStr = dateStr;
+        this.dateStr = dateStr == null ? null : dateStr.trim();
     }
 
-    public int getDrawOrder() {
+    public Integer getDrawOrder() {
         return drawOrder;
     }
 
-    public void setDrawOrder(int drawOrder) {
+    public void setDrawOrder(Integer drawOrder) {
         this.drawOrder = drawOrder;
     }
 
@@ -110,7 +239,7 @@ public class SellDaily {
     }
 
     public void setPrimaryDivision(String primaryDivision) {
-        this.primaryDivision = primaryDivision;
+        this.primaryDivision = primaryDivision == null ? null : primaryDivision.trim();
     }
 
     public String getTwoDivision() {
@@ -118,14 +247,14 @@ public class SellDaily {
     }
 
     public void setTwoDivision(String twoDivision) {
-        this.twoDivision = twoDivision;
+        this.twoDivision = twoDivision == null ? null : twoDivision.trim();
     }
 
-    public int getStoreNum() {
+    public Integer getStoreNum() {
         return storeNum;
     }
 
-    public void setStoreNum(int storeNum) {
+    public void setStoreNum(Integer storeNum) {
         this.storeNum = storeNum;
     }
 
@@ -158,7 +287,7 @@ public class SellDaily {
     }
 
     public void setInvestRatioGrowth(String investRatioGrowth) {
-        this.investRatioGrowth = investRatioGrowth;
+        this.investRatioGrowth = investRatioGrowth == null ? null : investRatioGrowth.trim();
     }
 
     public BigDecimal getWithdrawTotalMonth() {
@@ -174,7 +303,7 @@ public class SellDaily {
     }
 
     public void setWithdrawRate(String withdrawRate) {
-        this.withdrawRate = withdrawRate;
+        this.withdrawRate = withdrawRate == null ? null : withdrawRate.trim();
     }
 
     public BigDecimal getRechargeTotalMonth() {
@@ -206,7 +335,7 @@ public class SellDaily {
     }
 
     public void setInvestAnnularRatioGrowth(String investAnnularRatioGrowth) {
-        this.investAnnularRatioGrowth = investAnnularRatioGrowth;
+        this.investAnnularRatioGrowth = investAnnularRatioGrowth == null ? null : investAnnularRatioGrowth.trim();
     }
 
     public BigDecimal getInvestTotalYesterday() {
@@ -265,51 +394,51 @@ public class SellDaily {
         this.nonRepaymentToday = nonRepaymentToday;
     }
 
-    public int getRegisterTotalYesterday() {
+    public Integer getRegisterTotalYesterday() {
         return registerTotalYesterday;
     }
 
-    public void setRegisterTotalYesterday(int registerTotalYesterday) {
+    public void setRegisterTotalYesterday(Integer registerTotalYesterday) {
         this.registerTotalYesterday = registerTotalYesterday;
     }
 
-    public int getRechargeGt3000UserNum() {
+    public Integer getRechargeGt3000UserNum() {
         return rechargeGt3000UserNum;
     }
 
-    public void setRechargeGt3000UserNum(int rechargeGt3000UserNum) {
+    public void setRechargeGt3000UserNum(Integer rechargeGt3000UserNum) {
         this.rechargeGt3000UserNum = rechargeGt3000UserNum;
     }
 
-    public int getInvestGt3000UserNum() {
+    public Integer getInvestGt3000UserNum() {
         return investGt3000UserNum;
     }
 
-    public void setInvestGt3000UserNum(int investGt3000UserNum) {
+    public void setInvestGt3000UserNum(Integer investGt3000UserNum) {
         this.investGt3000UserNum = investGt3000UserNum;
     }
 
-    public int getInvestGt3000MonthUserNum() {
+    public Integer getInvestGt3000MonthUserNum() {
         return investGt3000MonthUserNum;
     }
 
-    public void setInvestGt3000MonthUserNum(int investGt3000MonthUserNum) {
+    public void setInvestGt3000MonthUserNum(Integer investGt3000MonthUserNum) {
         this.investGt3000MonthUserNum = investGt3000MonthUserNum;
     }
 
-    public int getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(int createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 
-    public int getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(int updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 }

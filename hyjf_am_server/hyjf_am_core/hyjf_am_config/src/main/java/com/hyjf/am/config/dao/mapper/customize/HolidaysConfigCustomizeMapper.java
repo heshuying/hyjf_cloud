@@ -38,4 +38,10 @@ public interface HolidaysConfigCustomizeMapper {
      * @param year
      */
     void deleteByYear(int year);
+
+    /**
+     * 判断当天是不是当月第一个工作日
+     * @return
+     */
+    int selectFirstWorkdayOnMonth(@Param("year") int year, @Param("month") int month);
 }

@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.finance.pushMoney;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.PushMoneyRequestBean;
@@ -39,9 +40,7 @@ import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.*;
 
-import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_CONFIRM;
-import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_EXPORT;
-import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_VIEW;
+import static com.hyjf.admin.common.util.ShiroConstants.*;
 
 /**
  * @author zdj
@@ -228,6 +227,42 @@ public class PushMoneyManageController extends BaseController {
         result.put("pushMoneyTotle",totle);
         return new AdminResult<>(result);
     }
+
+    /**
+     * 取得部门信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @ApiOperation(value = "直投提成列表取得部门信息", notes = "直投提成列表取得部门信息")
+    @PostMapping(value = "/getcrmdepartmentlist")
+    public JSONObject getCrmDepartmentListAction() {
+        JSONObject jsonObject = new JSONObject();
+        // 部门
+        String[] list = new String[] {};
+        JSONArray ja = pushMoneyManageService.getCrmDepartmentList(list);
+        if (ja != null) {
+            //在部门树中加入 0=部门（其他）,因为前端不能显示id=0,就在后台将0=其他转换为-10086=其他
+            JSONObject jo = new JSONObject();
+            jo.put("value", "-10086");
+            jo.put("title", "其他");
+            JSONArray array = new JSONArray();
+            jo.put("key", UUID.randomUUID());
+            jo.put("children", array);
+            ja.add(jo);
+
+            JSONObject ret= new JSONObject();
+            ret.put("data", ja);
+            ret.put("status", SUCCESS);
+            ret.put("statusDesc", "成功");
+            return ret;
+        } else {
+            jsonObject.put("error", "未查询到该记录！");
+            jsonObject.put("status", FAIL);
+        }
+        return jsonObject;
+    }
+
 
     /**
      * 直投提成列表导出

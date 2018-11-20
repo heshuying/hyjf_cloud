@@ -115,10 +115,6 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
     public AdminResult getApplyAgreementList(ApplyAgreementRequest request){
         AdminResult result = new AdminResult();
         ApplyAgreementRequestBean bean = new ApplyAgreementRequestBean();
-        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
-        ApplyAgreementAmRequest req = CommonUtils.convertBean(request, ApplyAgreementAmRequest.class);
-        req.setLimitStart(page.getOffset());
-        req.setLimitEnd(page.getLimit());
         ApplyAgreementResponse response = baseClient.postExe(AGREEMENT_COUNT_URL, request, ApplyAgreementResponse.class);
         Integer count = response.getCount();
         if (count > 0) {
@@ -1228,7 +1224,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         String repayPeriod = "DF-"+request.getRepayPeriod()+"-";
         request.setRepayPeriod(repayPeriod);
         List<TenderAgreementVO> tenderAgreementsAss= amTradeClient.selectLikeByExample(request);//债转协议
-
+        logger.info(this.getClass().getName(), "downloadAction", "下载文件签署。。。。request:"+JSONObject.toJSON(request));
+        logger.info(this.getClass().getName(), "downloadAction", "下载文件签署。。。。tenderAgreementsAss:"+JSONObject.toJSON(tenderAgreementsAss));
         //输出文件集合
         List<File> files = new ArrayList<File>();
         if (CollectionUtils.isNotEmpty(tenderAgreementsAss)){
@@ -1259,7 +1256,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             ZIPGenerator.generateZip(response, files, repayPeriod);
             return new AdminResult(BaseResult.SUCCESS, "下载成功");
         }else{
-            logger.info(this.getClass().getName(), "searchTenderToCreditDetail", "下载失败，请稍后重试。。。。");
+            logger.error(this.getClass().getName(), "searchTenderToCreditDetail", "下载失败，请稍后重试。。。。");
             return new AdminResult(BaseResult.FAIL, "下载失败，请稍后重试。。。。");
 
         }
@@ -1292,6 +1289,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         para.savePath = "/pdf_tem/pdf/" + tenderAgreement.getTenderNid();
         String imgUrl = tenderAgreement.getImgUrl();
         String pdfUrl = tenderAgreement.getPdfUrl();
+        logger.info(this.getClass().getName(), "createFaddPDFImgFile", "下载文件签署。。。。imgUrl:"+imgUrl);
+        logger.info(this.getClass().getName(), "createFaddPDFImgFile", "下载文件签署。。。。pdfUrl:"+pdfUrl);
         if(org.apache.commons.lang.StringUtils.isNotBlank(pdfUrl)){
             //获取文件目录
             int index = pdfUrl.lastIndexOf("/");
@@ -1300,6 +1299,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             String pdfName = pdfUrl.substring(index+1);
             para.downloadPath = basePathPdf + "/" + pdfPath;
             para.sftpKeyFile = pdfName;
+            logger.info(this.getClass().getName(), "createFaddPDFImgFile", "下载文件签署。。pdfUrl。。 para.downloadPath:"+ para.downloadPath);
+            logger.info(this.getClass().getName(), "createFaddPDFImgFile", "下载文件签署。。pdfUrl。。para.sftpKeyFile:"+para.sftpKeyFile);
         }else if(org.apache.commons.lang.StringUtils.isNotBlank(imgUrl)){
             int index = imgUrl.lastIndexOf("/");
             String imgPath = imgUrl.substring(0,index);
@@ -1307,7 +1308,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             String imgName = imgUrl.substring(index+1);
             para.downloadPath = "/" + basePathImage + "/" + imgPath;
             para.sftpKeyFile = imgName;
+            logger.info(this.getClass().getName(), "createFaddPDFImgFile", "下载文件签署。。imgUrl。。 para.downloadPath:"+ para.downloadPath);
+            logger.info(this.getClass().getName(), "createFaddPDFImgFile", "下载文件签署。。imgUrl。。para.sftpKeyFile:"+para.sftpKeyFile);
         }else{
+            logger.info(this.getClass().getName(), "createFaddPDFImgFile", "下载文件签署。。imgUrl。。para.sftpKeyFile:null");
             return null;
         }
         File file =  FavFTPUtil.downloadDirectory(para);

@@ -9,6 +9,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hyjf.common.exception.CheckException;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.helper.StringUtil;
@@ -71,7 +72,7 @@ public class BankCallController extends BaseController {
      */
     @PostMapping(value = "callApiPage.json")
     @ResponseBody
-    @HystrixCommand(commandKey="银行页面调用-callPageApi", fallbackMethod = "fallBackBankPage",commandProperties = {
+    @HystrixCommand(commandKey="银行页面调用-callPageApi", fallbackMethod = "fallBackBankPage",ignoreExceptions = CheckException.class,commandProperties = {
             //设置断路器生效
           @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),        
             //一个统计窗口内熔断触发的最小个数3/10s
@@ -472,16 +473,10 @@ public class BankCallController extends BaseController {
                     }
                     bean.setRetUrl(retUrl);
                     bean.setNotifyUrl(notifyUrl);
-                    if("batchRepay".equals(bean.getTxCode())){
-                        logger.info("【wgx检验】还款异步返回请求地址retUrl:{},notifyUrl:{}",retUrl, notifyUrl);
-                    }
                     // 如果检证数据状态为未发送
                     // 更新状态记录
                     int nowTime = GetDate.getNowTime10();
                     this.payLogService.updateChinapnrExclusiveLog(logOrderId, bean, nowTime);
-                    if("batchRepay".equals(bean.getTxCode())){
-                        logger.info("【wgx检验】还款异步返回请求地址notifyUrl:{},retNotifyUrl:{}",bean.getNotifyURL(), bean.getRetNotifyURL());
-                    }
                     // 验签成功时
                     if (result.isLogVerifyFlag()) {
                         try {
@@ -551,7 +546,7 @@ public class BankCallController extends BaseController {
      */
     @ResponseBody
     @PostMapping(value = "callApiBg.json")
-    @HystrixCommand(commandKey="银行接口调用-callApiBg", fallbackMethod = "fallBackBankBgApi",commandProperties = {
+    @HystrixCommand(commandKey="银行接口调用-callApiBg", fallbackMethod = "fallBackBankBgApi",ignoreExceptions = CheckException.class,commandProperties = {
             //设置断路器生效
           @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),        
             //一个统计窗口内熔断触发的最小个数3/10s

@@ -324,7 +324,7 @@ public class AuthServiceImpl extends BaseAdminServiceImpl implements com.hyjf.ad
                 updateHjhUserAuth.setId(hjhUserAuth.getId());
                 updateHjhUserAuth.setUpdateTime(nowTime);
                 updateHjhUserAuth.setUpdateUserId(userId);
-                request.setHjhUserAuth(hjhUserAuth);
+                request.setHjhUserAuth(updateHjhUserAuth);
             }
         }
         amUserClient.updateUserAuth(request);

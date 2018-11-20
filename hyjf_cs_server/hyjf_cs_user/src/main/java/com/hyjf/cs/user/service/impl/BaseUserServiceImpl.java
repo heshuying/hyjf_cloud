@@ -172,6 +172,11 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 			// 第三方服务接口多合一授权合规(合规)
 			ApiAuthRequesBean bean = (ApiAuthRequesBean) paramBean;
 			sign = bean.getInstCode() + bean.getAccountId()+bean.getAuthType()+bean.getRetUrl()+bean.getNotifyUrl() + bean.getTimestamp();
+		}else if (BaseDefine.METHOD_MERGE_OPEN_ACCOUNT.equals(methodName)) {
+			// 第三方服务接口多合一授权合规(合规)
+			ApiBankOpenRequestBean bean = (ApiBankOpenRequestBean) paramBean;
+			sign = bean.getInstCode() + bean.getMobile() + bean.getTrueName()
+					+ bean.getRetUrl() + bean.getBgRetUrl() + bean.getTimestamp();
 		}
 
 		return ApiSignUtil.verifyByRSA(instCode, paramBean.getChkValue(), sign);

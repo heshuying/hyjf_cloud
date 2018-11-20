@@ -1,7 +1,9 @@
 package com.hyjf.cs.market.client;
 
 import com.hyjf.am.resquest.market.ActivityListRequest;
+import com.hyjf.am.vo.admin.SellDailyDistributionVO;
 import com.hyjf.am.vo.market.ActivityListBeanVO;
+import com.hyjf.am.vo.market.SellDailyVO;
 
 import java.util.List;
 
@@ -30,4 +32,39 @@ public interface AmMarketClient {
      * @return List
      */
     List<ActivityListBeanVO> queryActivityList(ActivityListRequest activityListRequest);
+
+    /**
+     * 获取后台发送邮件配置
+     * @return
+     */
+    List<SellDailyDistributionVO> selectSellDailyDistribution();
+
+    /**
+     * 根据统计时间查询销售日报数据
+     * @param dateStr
+     * @return
+     */
+    List<SellDailyVO> selectSellDailyByDateStr(String dateStr);
+
+    /**
+     * 根据类型查询合计 type：1
+     * @param formatDateStr
+     * @return
+     */
+    SellDailyVO selectOCSum(String formatDateStr);
+
+    /**
+     * 根据类型查询合计 type:2
+     * @param formatDateStr
+     * @param drawOrder
+     * @return
+     */
+    SellDailyVO selectPrimaryDivisionSum(String formatDateStr, int drawOrder);
+
+    /**
+     * 根据类型查询合计 type:3
+     * @param formatDateStr
+     * @return
+     */
+    SellDailyVO selectAllSum(String formatDateStr);
 }

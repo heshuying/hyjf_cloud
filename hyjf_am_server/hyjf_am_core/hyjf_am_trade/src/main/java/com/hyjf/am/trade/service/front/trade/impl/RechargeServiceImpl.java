@@ -20,6 +20,7 @@ import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -303,7 +304,7 @@ public class RechargeServiceImpl extends BaseServiceImpl implements RechargeServ
 			// 如果没有充值记录
 			if (accountRecharge != null) {
 				// add by cwyang 增加redis防重校验 2017-08-02
-				boolean reslut = RedisUtils.tranactionSet("recharge_orderid" + orderId, 10);
+				boolean reslut = RedisUtils.tranactionSet(RedisConstants.RECHARGE_ORDERID + orderId, 10);
 				if (!reslut) {
 					jsonObject.put("error","0");
 					jsonObject.put("errorDesc","充值成功");
