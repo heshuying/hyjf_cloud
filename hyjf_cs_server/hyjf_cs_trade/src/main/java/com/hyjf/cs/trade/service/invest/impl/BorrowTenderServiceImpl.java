@@ -177,6 +177,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             map.put("logOrdId","");
             map.put("couponGrantId",request.getCouponGrantId());
             map.put("borrowNid",request.getBorrowNid());
+            map.put("isPrincipal","0");
             map.putAll(resultEval);
             result.setData(map);
             return result;
