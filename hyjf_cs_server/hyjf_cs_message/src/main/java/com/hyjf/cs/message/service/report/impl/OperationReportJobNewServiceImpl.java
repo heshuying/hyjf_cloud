@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -151,6 +152,7 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
     @Override
     public BorrowUserStatistic selectBorrowUserStatistic() {
         Query query = new Query();
+        query.with(new Sort(Sort.Direction.DESC, "_id"));
         List<BorrowUserStatistic> list = borrowUserStatisticMongDao.find(query);
         if(list == null || list.isEmpty()){
             return null;
