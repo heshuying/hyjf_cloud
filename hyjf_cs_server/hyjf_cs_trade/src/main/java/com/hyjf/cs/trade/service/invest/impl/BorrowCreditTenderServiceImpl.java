@@ -110,12 +110,12 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s
             @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+
+            @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE"),
             //熔断5秒后去尝试请求
             @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
             //失败率达到30百分比后熔断
-            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
-            // 超时时间
-            @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000")},threadPoolProperties = {
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")},threadPoolProperties = {
             @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
     public WebResult<Map<String, Object>> borrowCreditTender(TenderRequest request)  {
         UserVO loginUser = amUserClient.findUserById(Integer.valueOf(request.getUserId()));
