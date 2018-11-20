@@ -12,4 +12,6 @@ public interface SyncRUserService{
 
     void updateSpreadUser(JSONObject jsonObj);
 
+    void updateUserInfoByReferrer(JSONObject jsonObj);
+
 }

@@ -115,7 +115,7 @@ public class ActivityController {
                 response.setRtn(Response.FAIL);
             }
         }catch (Exception e) {
-            e.printStackTrace();
+            logger.error("添加活动失败, 原因 ：{}", e);
         }
         return response;
     }
@@ -137,7 +137,7 @@ public class ActivityController {
             }
         }catch (Exception e) {
             response.setRtn(Response.FAIL);
-            e.printStackTrace();
+            logger.error("更新活动失败, 原因 ：{}", e);
         }
         return response;
     }

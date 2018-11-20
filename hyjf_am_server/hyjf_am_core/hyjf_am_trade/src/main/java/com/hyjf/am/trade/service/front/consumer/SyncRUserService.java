@@ -13,4 +13,6 @@ import com.hyjf.am.trade.service.BaseService;
 
     void updateSpreadUser(JSONObject jsonObj);
 
+    void updateUserInfoByReferrer(JSONObject jsonObj);
+
 }

@@ -9,6 +9,7 @@ import com.hyjf.am.trade.mq.producer.hjh.issuerecover.AutoIssueRecoverProducer;
 import com.hyjf.am.trade.service.task.issuerecover.AutoIssueRecoverService;
 import com.hyjf.am.trade.service.task.issuerecover.AutoPreAuditMessageService;
 import com.hyjf.am.vo.trade.hjh.issuerecover.AutoIssuerecoverVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
@@ -96,7 +97,7 @@ public class AutoSendMessageConsumer extends Consumer {
                     }
 
                     // redis 放重复检查
-                    String redisKey = "borrowsend:" + mqHjhPlanAsset.getInstCode()+mqHjhPlanAsset.getAssetId();
+                    String redisKey = RedisConstants.BORROW_SEND + mqHjhPlanAsset.getInstCode()+mqHjhPlanAsset.getAssetId();
                     boolean result = RedisUtils.tranactionSet(redisKey, 300);
                     if(!result){
                         logger.info(mqHjhPlanAsset.getInstCode()+" 正在录标 (redis)"+mqHjhPlanAsset.getAssetId());
