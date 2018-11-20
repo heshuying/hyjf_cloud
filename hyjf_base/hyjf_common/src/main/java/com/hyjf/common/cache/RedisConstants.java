@@ -470,6 +470,16 @@ public class RedisConstants {
     public final static String SENSORS_DATA_OPEN_ACCOUNT ="SENSORS_DATA_OPEN_ACCOUNT:";
 
     /**
+     * 汇计划计算提成并发控制
+     */
+    public final static String HJHCOMMISION_COMPUTE = "hjhcommision_compute:";
+
+    /**
+     * 绑卡回调并发控制
+     */
+    public final static String CONCURRENCE_BIND_CARD = "bindCard:";
+
+    /**
      * 散标优惠券放款 couponloans + borrowNid
      */
     public final static String COUPON_LOANS ="couponloans:";
@@ -530,13 +540,5 @@ public class RedisConstants {
      */
     public static String COUPON_LOANS_HJH = "couponloanshjh:";
 
-    /**
-     * 计算提成 hjhcommision_compute + accedeOrderId
-     */
-    public static String HJH_COMMISION_COMPUTE = "hjhcommision_compute:";
 
-    /**
-     * 绑卡
-     */
-    public static String BIND_CARD = "bindCard";
 }

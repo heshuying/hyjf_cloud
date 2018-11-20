@@ -141,7 +141,7 @@ public class AppBindCardPageController extends BaseUserController {
 
         // 绑卡后处理
         try {
-            boolean checkTender = RedisUtils.tranactionSet(RedisConstants.BIND_CARD + bean.getLogOrderId(), 600);
+            boolean checkTender = RedisUtils.tranactionSet(RedisConstants.CONCURRENCE_BIND_CARD + bean.getLogOrderId(), 600);
             if(checkTender){
                 // 保存银行卡信息
                 bindCardService.updateAfterBindCard(bean);
