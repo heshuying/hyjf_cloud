@@ -611,7 +611,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                     borrow.setBorrowApr(entity.getBorrowApr());
                     borrow.setBorrowNid(entity.getBorrowNid());
                     borrow.setBorrowPeriod(entity.getBorrowPeriod());
-                    borrow.setTureName(entity.getTrueName());
+                    borrow.setTrueName(entity.getTrueName());
                     borrowList.add(borrow);
                 }
             }

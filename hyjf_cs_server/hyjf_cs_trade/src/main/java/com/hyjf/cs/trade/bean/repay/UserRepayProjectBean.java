@@ -62,7 +62,7 @@ public class UserRepayProjectBean extends BaseResultBean {
 	/**
 	 * 还款详情列表
 	 */
-	private List<ProjectRepayListBean> repaylList;
+	private List<ProjectRepayListBean> detailList;
 	/**
 	 * 构造方法
 	 */
@@ -70,12 +70,12 @@ public class UserRepayProjectBean extends BaseResultBean {
 		super();
 	}
 
-	public List<ProjectRepayListBean> getRepaylList() {
-		return repaylList;
+	public List<ProjectRepayListBean> getDetailList() {
+		return detailList;
 	}
 
-	public void setRepaylList(List<ProjectRepayListBean> repaylList) {
-		this.repaylList = repaylList;
+	public void setDetailList(List<ProjectRepayListBean> detailList) {
+		this.detailList = detailList;
 	}
 
 	public String getYesAccount() {
