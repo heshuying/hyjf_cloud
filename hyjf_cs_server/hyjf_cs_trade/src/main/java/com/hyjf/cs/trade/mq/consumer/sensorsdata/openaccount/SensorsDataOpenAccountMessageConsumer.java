@@ -5,6 +5,7 @@ package com.hyjf.cs.trade.mq.consumer.sensorsdata.openaccount;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.cs.trade.mq.base.Consumer;
@@ -84,7 +85,7 @@ public class SensorsDataOpenAccountMessageConsumer extends Consumer {
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
                 // 从redis里取看redis里是否存在
-                if (!RedisUtils.exists("SENSORS_DATA_OPEN_ACCOUNT:" + userId)) {
+                if (!RedisUtils.exists(RedisConstants.SENSORS_DATA_OPEN_ACCOUNT + userId)) {
                     // 如果不存在
                     logger.info("神策数据采集:用户ID在redis里不存在");
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;

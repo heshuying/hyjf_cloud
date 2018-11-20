@@ -2177,6 +2177,16 @@ public class GetDate extends PropertyEditorSupport {
 		return calendar.getTime();
 	}
 
+	/**
+	 * 获取指定格式当前字符串  (yyyy.MM.dd)
+	 * @author LiBin
+	 * @param time
+	 * @return
+	 */
+	public static String getFormatDateStr() {
+		return date2Str(new Date(), datesdf);
+	}
+
 	// add 汇计划三期 汇计划自动投资 liubin 20180515 end
 
 	public static void main(String[] args) {

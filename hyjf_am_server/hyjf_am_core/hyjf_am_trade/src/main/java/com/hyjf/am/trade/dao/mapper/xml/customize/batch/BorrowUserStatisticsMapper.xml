@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.batch.BorrowUserStatisticsMapper">
+
+    <select id="countBorrowUser" resultType="java.lang.Integer">
+        SELECT (
+			SELECT
+				IFNULL(COUNT(DISTINCT m.card_no), 0)
+			FROM
+				ht_borrow b
+			JOIN ht_borrow_maninfo m ON b.borrow_nid = m.borrow_nid
+			WHERE
+				b.`status` > 1
+			AND 5 >= b.`status`
+		) + (
+			SELECT
+				IFNULL(
+					COUNT(DISTINCT u.username),
+					0
+				)
+			FROM
+				ht_borrow b
+			JOIN ht_borrow_user u ON b.borrow_nid = u.borrow_nid
+			WHERE
+				b.`status` > 1
+			AND 5 >= b.`status`
+		)
+    </select>
+    
+    <select id="countCurrentBorrowUser" resultType="java.lang.Integer">
+        SELECT (
+			SELECT
+				IFNULL(COUNT(DISTINCT m.card_no), 0)
+			FROM
+				ht_borrow b
+			JOIN ht_borrow_maninfo m ON b.borrow_nid = m.borrow_nid
+			WHERE
+				b.`status` > 1
+			AND 5 > b.`status`
+		) + (
+			SELECT
+				IFNULL(
+					COUNT(DISTINCT u.username),
+					0
+				)
+			FROM
+				ht_borrow b
+			JOIN ht_borrow_user u ON b.borrow_nid = u.borrow_nid
+			WHERE
+				b.`status` > 1
+			AND 5 > b.`status`
+		)
+    </select>
+
+    <select id="countCurrentTenderUser" resultType="java.lang.Integer">
+        SELECT
+			IFNULL(COUNT(a.user_id),0)
+		FROM
+			ht_account a
+		WHERE
+			a.bank_wait_capital > 0
+		OR a.plan_account_wait > 0
+    </select>
+    
+    <select id="sumBorrowUserMoney" resultType="java.math.BigDecimal" parameterType="java.util.Date">
+        SELECT
+		SUM(A.recover_capital_wait)
+		FROM
+		( select br.id,br.recover_capital_wait
+		FROM  ht_borrow b
+		LEFT JOIN ht_borrow_recover br ON b.borrow_nid = br.borrow_nid
+		WHERE
+		br.recover_time >= UNIX_TIMESTAMP(#{date})
+		and br.id not in
+		(
+		select br.id
+		FROM  ht_borrow b
+		LEFT JOIN ht_borrow_recover br ON b.borrow_nid = br.borrow_nid
+		WHERE br.recover_time >= UNIX_TIMESTAMP(#{date})
+		AND br.recover_yestime <![CDATA[ <= ]]> UNIX_TIMESTAMP(#{date})
+		)
+
+		) A
+    </select>
+
+    <select id="sumBorrowUserMoneyTopOne" resultType="java.math.BigDecimal">
+        	SELECT
+			IFNULL(SUM(tt.waitSum), 0)
+		    FROM
+			(
+				SELECT
+					*
+				FROM
+					(
+						SELECT
+							SUM(b.repay_account_capital_wait) AS waitSum
+						FROM
+							huiyingdai_borrow b JOIN huiyingdai_borrow_users u ON b.borrow_nid = u.borrow_nid
+						WHERE
+							b.`status` = 4
+						GROUP BY
+							u.username
+		        UNION ALL
+		        SELECT
+							SUM(b.repay_account_capital_wait) AS waitSum
+						FROM
+							huiyingdai_borrow b JOIN huiyingdai_borrow_maninfo m ON b.borrow_nid = m.borrow_nid
+						WHERE
+							b.`status` = 4
+						GROUP BY
+							m.card_no
+					) t
+				ORDER BY
+					t.waitSum DESC
+				LIMIT 1
+			) tt
+    </select>
+
+    <select id="sumBorrowUserMoneyTopTen" resultType="java.math.BigDecimal">
+        SELECT
+			IFNULL(SUM(tt.waitSum), 0)
+		FROM
+			(
+				SELECT
+					*
+				FROM
+					(
+						SELECT
+							SUM(b.repay_account_capital_wait) AS waitSum
+						FROM
+							ht_borrow b JOIN ht_borrow_user u ON b.borrow_nid = u.borrow_nid
+						WHERE
+							b.`status` = 4
+						GROUP BY
+							u.username
+		        UNION ALL
+		        SELECT
+							SUM(b.repay_account_capital_wait) AS waitSum
+						FROM
+							ht_borrow b JOIN ht_borrow_maninfo m ON b.borrow_nid = m.borrow_nid
+						WHERE
+							b.`status` = 4
+						GROUP BY
+							m.card_no
+					) t
+				ORDER BY
+					t.waitSum DESC
+				LIMIT 10
+			) tt
+    </select>
+</mapper>

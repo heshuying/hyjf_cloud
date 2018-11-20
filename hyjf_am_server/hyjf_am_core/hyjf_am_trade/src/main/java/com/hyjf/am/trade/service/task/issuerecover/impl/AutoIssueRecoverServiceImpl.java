@@ -47,10 +47,6 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
     @Value("${hyjf.alerm.email}")
     private String emaillist2;
 
-    /**
-     * 邮件发送key
-     */
-    public static String LABEL_MAIL_KEY = "labelmailkey";
     public static JedisPool pool = RedisUtils.getPool();
 
     @Override
@@ -230,7 +226,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 
             /**汇计划三期邮件预警 BY LIBIN start*/
             // 如果redis不存在这个KEY(一天有效期)，那么可以发邮件
-            if(!RedisUtils.exists(LABEL_MAIL_KEY + hjhPlanAsset.getAssetId())){
+            if(!RedisUtils.exists(RedisConstants.LABEL_MAIL_KEY + hjhPlanAsset.getAssetId())){
                 StringBuffer msg = new StringBuffer();
                 msg.append("资产ID：").append(hjhPlanAsset.getAssetId()).append("<br/>");
                 msg.append("当前时间：").append(GetDate.formatTime()).append("<br/>");
@@ -247,7 +243,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
                 // 发送邮件
                 try {
                     mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC,UUID.randomUUID().toString(), JSON.toJSONBytes(mailMessage)));
-                    RedisUtils.set(LABEL_MAIL_KEY + hjhPlanAsset.getAssetId(), hjhPlanAsset.getAssetId(), 24 * 60 * 60);
+                    RedisUtils.set(RedisConstants.LABEL_MAIL_KEY + hjhPlanAsset.getAssetId(), hjhPlanAsset.getAssetId(), 24 * 60 * 60);
                 } catch (MQException e2) {
                     logger.error("发送邮件失败..", e2);
                 }

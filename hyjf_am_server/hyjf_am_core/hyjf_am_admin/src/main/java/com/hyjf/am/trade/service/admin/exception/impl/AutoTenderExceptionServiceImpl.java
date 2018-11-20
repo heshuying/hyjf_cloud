@@ -923,10 +923,6 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
 
         // 调用MQ,生成计划债权转让协议
         planCreditGenerateContractByMQ(bean.getOrderId());
-        // ^^^^^^^^^^^^^^
-        HjhDebtCredit credits = this.selectCreditByNid(creditNid);
-        logger.info("^^^^^^^^^^^^^^planCreditGenerateContractByMQ"+credits.getCreditAccountWait());
-        // ^^^^^^^^^^^^^^
         result = true;
         return result;
     }
@@ -1096,10 +1092,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                         }
                         // add 汇计划二期迭代 复投债转的状态追加 liubin 20180330 end
                         boolean debtCreditTenderFlag = this.hjhDebtCreditTenderMapper.insertSelective(debtCreditTender) > 0 ? true : false;
-                        logger.info("^^^^^^^^^^^^^^^^^^hjhDebtCreditTender插入开始！");
                         if (debtCreditTenderFlag) {
-                            logger.info("^^^^^^^^^^^^^^^^^^hjhDebtCreditTender插入成功！");
-                            logger.info("^^^^^^^^^^^^^^^^^^" + debtCredit.getCreditAccountWait() +"-"+debtCreditTender.getAssignAccount());
                             // 5.更新borrow_credit
                             debtCredit.setCreditAccountWait(debtCredit.getCreditAccountWait().subtract(debtCreditTender.getAssignAccount()));// 待承接总金额 认购本息（不包含垫付利息）
                             debtCredit.setCreditCapitalWait(debtCredit.getCreditCapitalWait().subtract(debtCreditTender.getAssignCapital()));//待承接本金

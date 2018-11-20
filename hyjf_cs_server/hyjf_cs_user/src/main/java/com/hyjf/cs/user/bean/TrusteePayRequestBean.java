@@ -4,22 +4,33 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
+import io.swagger.annotations.ApiModelProperty;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class TrusteePayRequestBean extends BaseBean {
-    private String channel; //交易渠道
-    private String accountId; //电子账户号
-    private String productId;// 标的编号
-    private String idType; // 借款人证件类型 01-身份证（18位）
-    private String idNo; // 借款人证件号码
-    private String receiptAccountId; // 收款人电子帐户
-    private String forgotPwdUrl; // 忘记交易密码链接
-    private String retUrl;//同步地址
-    private String notifyUrl; //异步地址
-    private String state; // 授权状态
+    @ApiModelProperty(value = "交易渠道")
+    private String channel;
+    @ApiModelProperty(value = "电子账户号")
+    private String accountId;
+    @ApiModelProperty(value = "标的编号")
+    private String productId;
+    @ApiModelProperty(value = "借款人证件类型 01-身份证（18位）")
+    private String idType;
+    @ApiModelProperty(value = "借款人证件号码")
+    private String idNo;
+    @ApiModelProperty(value = "收款人电子帐户")
+    private String receiptAccountId;
+    @ApiModelProperty(value = "忘记交易密码链接")
+    private String forgotPwdUrl;
+    @ApiModelProperty(value = "同步地址")
+    private String retUrl;
+    @ApiModelProperty(value = "异步地址")
+    private String notifyUrl;
+    @ApiModelProperty(value = "授权状态")
+    private String state;
 
     public String getChannel() {
         return channel;

@@ -12,7 +12,7 @@ import com.hyjf.common.http.HtmlUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.message.bean.mc.MessagePush;
+import com.hyjf.cs.message.bean.mc.MessagePushMsg;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.client.AmUserClient;
@@ -58,7 +58,7 @@ public class MsgPushHandle {
 	 */
 	public Integer sendMessages(String msgId) {
 
-		MessagePush message = messagePushMsgDao.findById(msgId);
+		MessagePushMsg message = messagePushMsgDao.findById(msgId);
 
 		List<MessagePushMsgHistory> histories = addMessageHistoryRecord(message);
 		for (MessagePushMsgHistory history : histories) {
@@ -214,7 +214,7 @@ public class MsgPushHandle {
 	 * @param message
 	 *            消息
 	 */
-	public List<MessagePushMsgHistory> addMessageHistoryRecord(MessagePush message) {
+	public List<MessagePushMsgHistory> addMessageHistoryRecord(MessagePushMsg message) {
 		List<MessagePushMsgHistory> histories = new ArrayList<MessagePushMsgHistory>();
 		if (message.getMsgDestinationType().intValue() == CustomConstants.MSG_PUSH_DESTINATION_TYPE_0) {
 			// 发给所有人
