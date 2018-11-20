@@ -245,7 +245,7 @@ public class MessagePushMessageController extends BaseController {
             templateRequest.setPreSendTime(null);
             templateRequest.setSendTime(GetDate.getMyTimeInMillis());
         }
-
+        templateRequest.setMsgDestinationType(CustomConstants.MSG_PUSH_DESTINATION_TYPE_1);
         response = messagePushMsgService.updateMessagePushMsg(templateRequest);
         return new AdminResult<>(response);
     }

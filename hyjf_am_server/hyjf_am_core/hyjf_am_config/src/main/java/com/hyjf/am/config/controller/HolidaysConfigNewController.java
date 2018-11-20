@@ -31,10 +31,10 @@ public class HolidaysConfigNewController extends BaseConfigController{
         return "success";
     }
 
-    @RequestMapping("/is_workdate/{date}")
-    public BooleanResponse queryIsWorkdate(@PathVariable Date date) {
+    @RequestMapping("/is_workdate")
+    public BooleanResponse queryIsWorkdate() {
         BooleanResponse response = new BooleanResponse();
-        boolean result = holidaysConfigNewService.isWorkdateOnSomeDay(date);
+        boolean result = holidaysConfigNewService.isWorkdateOnSomeDay(new Date());
         response.setResultBoolean(result);
         return response;
     }
