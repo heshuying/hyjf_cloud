@@ -1,5 +1,7 @@
 package com.hyjf.cs.market.client.impl;
 
+import com.hyjf.am.response.BigDecimalResponse;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.WrbTenderNotifyResponse;
 import com.hyjf.am.response.datacollect.TzjDayReportResponse;
@@ -95,32 +97,62 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 	@Override
 	public Integer countBorrowUser() {
-		return null;
+		IntegerResponse response = restTemplate.getForObject(
+				"http://AM-TRADE/am-trade/borrow_user_statistics/count_borrow_user", IntegerResponse.class);
+		if (response != null) {
+			return response.getResultInt();
+		}
+		return 0;
 	}
 
 	@Override
 	public Integer countCurrentBorrowUser() {
-		return null;
+        IntegerResponse response = restTemplate.getForObject(
+                "http://AM-TRADE/am-trade/borrow_user_statistics/count_current_borrow_user", IntegerResponse.class);
+        if (response != null) {
+            return response.getResultInt();
+        }
+        return 0;
 	}
 
 	@Override
 	public Integer countCurrentTenderUser() {
-		return null;
+        IntegerResponse response = restTemplate.getForObject(
+                "http://AM-TRADE/am-trade/borrow_user_statistics/count_current_tender_user", IntegerResponse.class);
+        if (response != null) {
+            return response.getResultInt();
+        }
+        return 0;
 	}
 
 	@Override
 	public BigDecimal sumBorrowUserMoney(Date lastDay) {
-		return null;
+        BigDecimalResponse response = restTemplate.getForObject(
+                "http://AM-TRADE/am-trade/borrow_user_statistics/sum_borrow_user_money", BigDecimalResponse.class);
+        if (response != null) {
+            return response.getResultDec();
+        }
+        return BigDecimal.ZERO;
 	}
 
 	@Override
 	public BigDecimal sumBorrowUserMoneyTopTen() {
-		return null;
+        BigDecimalResponse response = restTemplate.getForObject(
+                "http://AM-TRADE/am-trade/borrow_user_statistics/sum_borrow_user_money_top_ten", BigDecimalResponse.class);
+        if (response != null) {
+            return response.getResultDec();
+        }
+        return BigDecimal.ZERO;
 	}
 
 	@Override
 	public BigDecimal sumBorrowUserMoneyTopOne() {
-		return null;
+        BigDecimalResponse response = restTemplate.getForObject(
+                "http://AM-TRADE/am-trade/borrow_user_statistics/sum_borrow_user_money_top_one", BigDecimalResponse.class);
+        if (response != null) {
+            return response.getResultDec();
+        }
+        return BigDecimal.ZERO;
 	}
 
 	/**

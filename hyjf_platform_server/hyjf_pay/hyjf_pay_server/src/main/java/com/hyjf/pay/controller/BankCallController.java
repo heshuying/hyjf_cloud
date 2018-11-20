@@ -82,7 +82,7 @@ public class BankCallController extends BaseController {
             //失败率达到30百分比后熔断
           @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
           // 超时时间
-          @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000")},threadPoolProperties = {
+          @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "40000")},threadPoolProperties = {
           @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
     public Map<String,Object> callPageApi(@RequestBody BankCallBean bean) throws Exception {
 
@@ -387,7 +387,7 @@ public class BankCallController extends BaseController {
             //失败率达到30百分比后熔断
           @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
           // 超时时间
-          @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000")},threadPoolProperties = {
+          @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "40000")},threadPoolProperties = {
           @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
     public void callPageBack(HttpServletRequest request, HttpServletResponse response, @ModelAttribute BankCallBean bean) {
         String bgData = request.getParameter("bgData");
@@ -548,7 +548,7 @@ public class BankCallController extends BaseController {
     @PostMapping(value = "callApiBg.json")
     @HystrixCommand(commandKey="银行接口调用-callApiBg", fallbackMethod = "fallBackBankBgApi",ignoreExceptions = CheckException.class,commandProperties = {
             //设置断路器生效
-          @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),        
+          @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s
           @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
             //熔断5秒后去尝试请求
@@ -556,7 +556,7 @@ public class BankCallController extends BaseController {
             //失败率达到30百分比后熔断
           @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
           // 超时时间
-          @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000")},threadPoolProperties = {
+          @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "40000")},threadPoolProperties = {
           @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
     public String callApiBg( @RequestBody BankCallBean bean) {
         logger.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
@@ -683,7 +683,7 @@ public class BankCallController extends BaseController {
             //失败率达到30百分比后熔断
           @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
           // 超时时间
-          @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000")},threadPoolProperties = {
+          @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "40000")},threadPoolProperties = {
           @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
     public void callBack(HttpServletRequest request, HttpServletResponse response, @ModelAttribute BankCallBean bean) {
         String bgData = request.getParameter("bgData");

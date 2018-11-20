@@ -13,6 +13,7 @@ import com.hyjf.am.trade.service.admin.finance.BankAccountManageService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -90,7 +91,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
             customize.setUserId(adminBankAccountCheckCustomizeVO.getUserId());
             List<AdminBankAccountCheckCustomizeVO> bankOpenAccountList = this.adminBankAccountCheckCustomizeMapper.queryAllBankOpenAccount(customize);
             /** redis 锁 */
-            boolean reslut = RedisUtils.tranactionSet("synBalance:" + adminBankAccountCheckCustomizeVO.getUserId(), 30);
+            boolean reslut = RedisUtils.tranactionSet(RedisConstants.SYN_VALANCE + adminBankAccountCheckCustomizeVO.getUserId(), 30);
             // 如果没有设置成功，说明有请求来设置过
             if (!reslut) {
                 msg = "不能重复对账";

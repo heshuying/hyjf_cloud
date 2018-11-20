@@ -104,7 +104,7 @@ public class AutoPreAuditMessageConsumer extends Consumer {
 
 
                     // redis 放重复检查
-                    String redisKey = "borrowpreaudit:" + borrowInfo.getInstCode() + borrow.getBorrowNid();
+                    String redisKey = RedisConstants.BORROW_PRE_AUDIT + borrowInfo.getInstCode() + borrow.getBorrowNid();
                     boolean result = RedisUtils.tranactionSet(redisKey, 300);
                     if (!result) {
                         logger.info(borrowInfo.getInstCode() + " 正在初审(redis) " + borrow.getBorrowNid());
@@ -160,7 +160,7 @@ public class AutoPreAuditMessageConsumer extends Consumer {
                     }
 
                     // redis 放重复检查
-                    String redisKeys = "borrowpreaudit:" + hjhPlanAsset.getInstCode() + hjhPlanAsset.getAssetId();
+                    String redisKeys = RedisConstants.BORROW_PRE_AUDIT + hjhPlanAsset.getInstCode() + hjhPlanAsset.getAssetId();
                     boolean results = RedisUtils.tranactionSet(redisKeys, 300);
                     if (!results) {
                         logger.info(hjhPlanAsset.getInstCode() + " 正在初审(redis) " + hjhPlanAsset.getAssetId());

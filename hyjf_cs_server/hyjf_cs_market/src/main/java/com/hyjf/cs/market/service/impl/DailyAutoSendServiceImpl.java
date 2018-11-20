@@ -59,8 +59,8 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
     }
 
     @Override
-    public boolean isWorkdateOnSomeDay(Date date) {
-        return amConfigClient.queryWorkdateOnSomeday(date);
+    public boolean isWorkdateOnSomeDay() {
+        return amConfigClient.queryWorkdateOnSomeday();
     }
 
     @Override

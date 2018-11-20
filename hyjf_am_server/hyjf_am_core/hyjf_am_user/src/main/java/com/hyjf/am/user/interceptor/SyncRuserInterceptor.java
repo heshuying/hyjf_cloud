@@ -1,6 +1,7 @@
 package com.hyjf.am.user.interceptor;
 
 import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Maps;
 import com.hyjf.am.user.mq.base.MessageContent;
 import com.hyjf.am.user.mq.producer.AmUserProducer;
 import com.hyjf.common.constants.MQConstant;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
 
@@ -56,30 +58,61 @@ public class SyncRuserInterceptor implements Interceptor {
         Object result = invocation.proceed();
 
         try {
-            
             // 执行成功后发送消息同步，下面判断先ht_user_info 是有原因的
-            if(StringUtils.containsIgnoreCase(realSql, "insert into ht_user_info") || StringUtils.containsIgnoreCase(realSql, "update ht_user_info")) {
-                sendToMq(boundSql, methodName, "ht_user_info");
-                if(StringUtils.containsIgnoreCase(realSql, "update ht_user_info")){
-                    logger.info("【wgx检验】boundSql:{},parameterObject:{}", new String(JSON.toJSONBytes(boundSql.getParameterMappings())),new String(JSON.toJSONBytes(boundSql.getParameterObject())));
+            // crm客户入离职更新名下客户单独处理 update by wgx 2018/11/20
+            if (StringUtils.containsIgnoreCase(idMethod, "com.hyjf.am.user.dao.mapper.customize.UserLeaveCustomizeMapper.updateSpreadAttribute")) {
+                Map<String, Object> parameterMap = Maps.newHashMap();
+                parameterMap.put("attribute", "0");
+                parameterMap.put("referrer", ((Map)paramObj).get("referrer"));
+                sendToMq(parameterMap, methodName, "ht_user_info_referrer");
+            } else if (StringUtils.containsIgnoreCase(idMethod, "com.hyjf.am.user.dao.mapper.customize.UserEntryCustomizeMapper.updateSpreadAttribute")) {
+                Map<String, Object> parameterMap = Maps.newHashMap();
+                parameterMap.put("attribute", "1");
+                parameterMap.put("referrer", ((Map)paramObj).get("referrer"));
+                sendToMq(parameterMap, methodName, "ht_user_info_referrer");
+            } else if (StringUtils.containsIgnoreCase(realSql, "insert into ht_user_info")) {
+                sendToMq(paramObj, methodName, "ht_user_info");
+            } else if (StringUtils.containsIgnoreCase(realSql, "update ht_user_info")) {
+                // updateByExample单独处理 update by wgx 2018/11/20
+                if (paramObj instanceof Map) {
+                    Object record = ((Map) paramObj).get("record");
+                    if (record != null) {
+                        sendToMq(record, methodName, "ht_user_info");
+                    } else {
+                        logger.info("【am-user/{}/ht_user_info】record为null", methodName);
+                        sendToMq(paramObj, methodName, "ht_user_info");
+                    }
+                } else {
+                    sendToMq(paramObj, methodName, "ht_user_info");
                 }
                 // 注册一般，更新用户表基本不需要同步rUser
-            }else if(StringUtils.containsIgnoreCase(idMethod, "com.hyjf.am.user.dao.mapper.auto.UserMapper.insert")) {
-                sendToMq(boundSql, methodName, "ht_user");
+            } else if (StringUtils.containsIgnoreCase(idMethod, "com.hyjf.am.user.dao.mapper.auto.UserMapper.insert")) {
+                sendToMq(paramObj, methodName, "ht_user");
 
                 // 更新用户状态
-            }else if(StringUtils.containsIgnoreCase(idMethod, "com.hyjf.am.user.dao.mapper.auto.UserMapper.updateByPrimaryKey")) {
+            } else if (StringUtils.containsIgnoreCase(idMethod, "com.hyjf.am.user.dao.mapper.auto.UserMapper.updateByPrimaryKey")) {
 
-                sendToMq(boundSql, methodName, "up_ht_user");
+                sendToMq(paramObj, methodName, "up_ht_user");
 
-            }else if(StringUtils.containsIgnoreCase(realSql, "insert into ht_spreads_user") || StringUtils.containsIgnoreCase(realSql, "update ht_spreads_user")) {
-                sendToMq(boundSql, methodName, "ht_spreads_user");
-                
-            }else {
+            } else if (StringUtils.containsIgnoreCase(realSql, "insert into ht_spreads_user")) {
+                sendToMq(paramObj, methodName, "ht_spreads_user");
+            } else if (StringUtils.containsIgnoreCase(realSql, "update ht_spreads_user")) {
+                // updateByExample单独处理 update by wgx 2018/11/20
+                if (paramObj instanceof Map) {
+                    Object record = ((Map) paramObj).get("record");
+                    if (record != null) {
+                        sendToMq(record, methodName, "ht_spreads_user");
+                    } else {
+                        logger.info("【am-user/{}/ht_spreads_user】record为null", methodName);
+                        sendToMq(paramObj, methodName, "ht_spreads_user");
+                    }
+                } else {
+                    sendToMq(paramObj, methodName, "ht_spreads_user");
+                }
+            } else {
                 return result;
             }
-            
-            
+
         } catch (MQException e) {
             logger.error("发送用户信息同步失败....", e);
         }
@@ -88,10 +121,9 @@ public class SyncRuserInterceptor implements Interceptor {
 
     }
 
-    private void sendToMq(BoundSql boundSql, String methodName, String tagName) throws MQException {
-//        JSONObject jObj = JSONObject.parseObject(JSON.toJSONString(boundSql.getParameterObject()).toLowerCase());
-        amUserProducer.messageSend(new MessageContent(MQConstant.SYNC_RUSER_TOPIC, tagName, UUID.randomUUID().toString(), JSON.toJSONBytes(boundSql.getParameterObject())));
-        logger.info(methodName+" 发送用户信息同步 "+tagName);
+    private void sendToMq(Object parameterObject, String methodName, String tagName) throws MQException {
+        amUserProducer.messageSend(new MessageContent(MQConstant.SYNC_RUSER_TOPIC, tagName, UUID.randomUUID().toString(), JSON.toJSONBytes(parameterObject)));
+        logger.info("【{}】发送用户信息同步,同步信息：{}", methodName + "/" + tagName, JSON.toJSON(parameterObject).toString());
     }
 
     @Override

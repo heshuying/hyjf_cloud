@@ -48,8 +48,6 @@ import com.hyjf.cs.trade.service.consumer.CouponService;
 import com.hyjf.cs.trade.service.coupon.AppCouponService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -110,7 +108,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      * @Date 2018/6/19 9:47
      */
     @Override
-    @HystrixCommand(commandKey = "加入计划(三端)-joinPlan",fallbackMethod = "fallBackJoinPlan",ignoreExceptions = CheckException.class,commandProperties = {
+    /*@HystrixCommand(commandKey = "加入计划(三端)-joinPlan",fallbackMethod = "fallBackJoinPlan",ignoreExceptions = CheckException.class,commandProperties = {
             //设置断路器生效
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s
@@ -122,6 +120,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             //失败率达到30百分比后熔断
             @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")},threadPoolProperties = {
             @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
+            */
     public WebResult<Map<String, Object>> joinPlan(TenderRequest request) {
         UserVO loginUser = amUserClient.findUserById(request.getUserId());
         Integer userId = loginUser.getUserId();

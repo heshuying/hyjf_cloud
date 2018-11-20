@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.mq.consumer;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.CouponLoansBean;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.GetOrderIdUtils;
@@ -79,7 +80,7 @@ public class CouponLoansMessageConsumer extends Consumer {
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
 
-                String redisKey = "couponloans:" + loansBean.getBorrowNid();
+                String redisKey = RedisConstants.COUPON_LOANS + loansBean.getBorrowNid();
                 boolean result = RedisUtils.tranactionSet(redisKey, 300);
                 if(!result){
                     logger.error("【优惠券放款】当前标的正在放款....");

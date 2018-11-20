@@ -131,7 +131,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		amUserClient.updateLoginUser(userId, ip);
 		updateUserByUserId(userVO);
 		// 1. 登录成功将登陆密码错误次数的key删除
-		RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT + userId);
+		RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL + userId);
 		webViewUserVO = this.getWebViewUserByUserId(userVO.getUserId());
 		// 2. 缓存
 		webViewUserVO = setToken(webViewUserVO);
@@ -178,7 +178,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			webViewUserVO = loginOperationOnly(userVO,loginUserName,ip,channel);
 		} else {
 			// 密码错误，增加错误次数
-			RedisUtils.incr(RedisConstants.PASSWORD_ERR_COUNT + userVO.getUserId());
+			RedisUtils.incr(RedisConstants.PASSWORD_ERR_COUNT_ALL + userVO.getUserId());
 			CheckUtil.check(false, MsgEnum.ERR_USER_LOGIN);
 		}
 		return webViewUserVO;
@@ -849,6 +849,10 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			// 还款授权URL
 			result.setRepayAuthUrl(systemConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_AUTHREPAY);
 		}
+		// add by pcc app3.1.1追加 20180823 start
+		// 我的计划列表退出中标签显示标识（临时使用，功能上线以后可以删除）
+		result.setExitLabelShowFlag(systemConfig.getExitLabelShowFlag());
+		// add by pcc app3.1.1追加 20180823 end
 		result.setInvitationCode(userId);
 		return result;
 	}
@@ -999,7 +1003,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	public Map<String, String> insertErrorPassword(String userName,String loginPassword,String channel) {
 		UserVO userVO = amUserClient.findUserByUserNameOrMobile(userName);
 		Map<String, String> r=new HashMap<>();
-//		CheckUtil.check(userVO!=null,MsgEnum.ERR_USER_NOT_EXISTS);
+		CheckUtil.check(userVO!=null,MsgEnum.ERR_USER_NOT_EXISTS);
 		if(userVO!=null){
 			//1.获取该用户密码错误次数
 			String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT_ALL + userVO.getUserId());
@@ -1089,7 +1093,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		}
 
 		//1.获取该用户密码错误次数
-		String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT + userId);
+		String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT_ALL + userId);
 		//2.获取用户允许输入的最大错误次数
 		Integer maxLoginErrorNum=LockedConfigManager.getInstance().getWebConfig().getMaxLoginErrorNum();//获取Redis配置的额登录最大错误次数
 		//判断密码错误次数是否超限
@@ -1105,7 +1109,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			amUserClient.updateLoginUser(userId, ipAddr);
 			updateUserByUserId(u);
 			// 1. 登录成功将登陆密码错误次数的key删除
-			RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT + userId);
+			RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL + userId);
 			BankOpenAccountVO account = this.getBankOpenAccount(userId);
 			String accountId = null;
 			if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
@@ -1120,7 +1124,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			return r;
 		} else {
 			//增加密码错误次数
-			RedisUtils.incr(RedisConstants.PASSWORD_ERR_COUNT + userId);;//以用户userId为key
+			RedisUtils.incr(RedisConstants.PASSWORD_ERR_COUNT_ALL + userId);;//以用户userId为key
 			//1.获取该用户密码错误次数，2.判断是否错误超过错误次数
 			if((Integer.valueOf(passwordErrorNum)+1) < maxLoginErrorNum){
 				r.put("stt", "-3");

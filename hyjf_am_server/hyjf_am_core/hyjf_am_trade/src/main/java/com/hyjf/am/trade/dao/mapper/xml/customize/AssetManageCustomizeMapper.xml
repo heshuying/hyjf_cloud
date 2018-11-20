@@ -2067,6 +2067,82 @@
 		</if>
 	</select>
 
+	<select id="countAlreadyRepayListRecordTotal" resultType="java.lang.Integer" parameterType="Map">
+		SELECT
+		count(id) AS total
+		FROM
+		(
+		SELECT
+		hydbr.id
+		FROM
+		ht_borrow_recover hydbr
+		INNER JOIN ht_borrow hydb ON hydbr.borrow_nid = hydb.borrow_nid
+		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		WHERE
+		(
+		hydbpt.borrow_project_type = 'HZT'
+		OR hydbpt.borrow_project_type = 'HXF'
+		)
+		AND hydbr.user_id = #{userId}
+		AND hydbr.recover_status = 1
+		AND hydb.plan_nid IS NULL
+		UNION ALL
+		SELECT
+		hct.assign_id
+		FROM
+		ht_credit_tender hct
+		INNER JOIN ht_borrow hydb ON hydb.borrow_nid = hct.bid_nid
+		WHERE
+		hct.user_id = #{userId}
+		AND hct. STATUS = 1
+		UNION ALL
+		SELECT
+		hcr.id
+		FROM
+		ht_coupon_recover hcr
+		INNER JOIN ht_borrow_tender_cpn hbt ON hcr.tender_id = hbt.nid
+		INNER JOIN ht_borrow hydb ON hbt.borrow_nid = hydb.borrow_nid
+		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		LEFT JOIN ht_coupon_tender hct ON hct.order_id = hbt.nid
+		LEFT JOIN ht_coupon_user hcu ON hcu.id = hct.coupon_grant_id
+		LEFT JOIN ht_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code
+		WHERE
+		(
+		hydbpt.borrow_project_type = 'HZT'
+		OR hydbpt.borrow_project_type = 'HXF'
+		)
+		AND hbt.user_id = #{userId}
+		AND hcr.recover_status = 1
+		AND hcr.received_flg = 5
+		AND NOT EXISTS (
+		SELECT
+		hcr2.id
+		FROM
+		ht_coupon_recover hcr2
+		INNER JOIN ht_borrow_tender_cpn hbt2 ON hcr2.tender_id = hbt2.nid
+		WHERE
+		hbt2.borrow_nid = hydb.borrow_nid
+		AND hcr2.tender_id = hcr.tender_id
+		AND hcr2.received_flg <![CDATA[<>]]> 5
+		)
+		GROUP BY
+		hcr.tender_id
+		UNION ALL
+		SELECT
+		hiil.id
+		FROM
+		ht_borrow hydb
+		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		LEFT JOIN ht_increase_interest_invest hiii ON hiii.borrow_nid = hydb.borrow_nid
+		LEFT JOIN ht_increase_interest_loan hiil ON hiil.invest_order_id = hiii.order_id
+		WHERE
+		hiil.user_id = #{userId}
+		AND hiil.repay_status = 1
+		GROUP BY
+		hiil.invest_order_id
+		) AS tabeltemp
+	</select>
+
 	<!-- 获取用户转让记录列表 -->
 	<select id="searchAppCreditRecordList" resultType="com.hyjf.am.trade.dao.model.customize.AppTenderCreditRecordListCustomize" parameterType="com.hyjf.am.resquest.trade.AssetManageBeanRequest">
 		SELECT

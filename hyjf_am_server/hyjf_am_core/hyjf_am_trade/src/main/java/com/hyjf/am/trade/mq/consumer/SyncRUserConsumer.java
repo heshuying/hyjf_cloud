@@ -74,7 +74,7 @@ public class SyncRUserConsumer extends Consumer {
                 String jsonMsg = new String(msg.getBody());
                 JSONObject jsonObj = JSON.parseObject(jsonMsg);
 
-                logger.info(tagName+" Ruser: " + jsonMsg);
+                logger.info("【{}】Ruser:{}", tagName, jsonMsg);
 
                 if ("ht_user_info".equals(tagName)) {
 
@@ -92,9 +92,13 @@ public class SyncRUserConsumer extends Consumer {
                     
                     syncRUserService.updateSpreadUser(jsonObj);
 
+                }else if ("ht_user_info_referrer".equals(tagName)) {
+
+                    syncRUserService.updateUserInfoByReferrer(jsonObj);
+
                 }
 
-                logger.info(tagName+" Ruser同步OK ");
+                logger.info("【{}】Ruser同步OK",tagName);
                 
             } catch (Exception e1) {
                 logger.error(e1.getMessage());
