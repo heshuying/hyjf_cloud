@@ -3,6 +3,7 @@ package com.hyjf.cs.user.controller.wechat.bindcard;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.user.bean.BaseMapBean;
@@ -113,7 +114,7 @@ public class WeChatBindCardController extends BaseUserController {
     public ModelAndView bindCardReturn(HttpServletRequest request, HttpServletResponse response,
                                        @ModelAttribute BankCallBean bean) {
 
-        boolean checkTender = RedisUtils.tranactionSet("bindCard" + bean.getLogOrderId(), 600);
+        boolean checkTender = RedisUtils.tranactionSet(RedisConstants.CONCURRENCE_BIND_CARD + bean.getLogOrderId(), 600);
         ModelAndView modelAndView = new ModelAndView();
         String frontParams = request.getParameter("frontParams");
         String isSuccess = request.getParameter("isSuccess");
@@ -179,7 +180,7 @@ public class WeChatBindCardController extends BaseUserController {
 
         // 绑卡后处理
         try {
-            boolean checkTender = RedisUtils.tranactionSet("bindCard" + bean.getLogOrderId(), 600);
+            boolean checkTender = RedisUtils.tranactionSet(RedisConstants.CONCURRENCE_BIND_CARD + bean.getLogOrderId(), 600);
             if(checkTender){
                 // 保存银行卡信息
                 bindCardService.updateAfterBindCard(bean);

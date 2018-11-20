@@ -41,7 +41,7 @@ public class DailyAutoSendController extends BaseMarketController {
                     logger.info("工作日...");
                     // 每个工作日
                     // 判断当天是工作日
-                    if (dailyAutoSendService.isWorkdateOnSomeDay(new Date())) {
+                    if (dailyAutoSendService.isWorkdateOnSomeDay()) {
                         dailyAutoSendService.sendMail(sellDailyDistribution);
                     }
                     break;

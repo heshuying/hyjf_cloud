@@ -76,7 +76,7 @@ public class AdminAllocationEngineController {
 		HjhRegionResponse response = new HjhRegionResponse();
 		String planName = adminAllocationEngineService.selectPlanNameByPlanNid(request);
 		if(StringUtils.isEmpty(planName)){
-			response.setMessage("根据输入计划编号未查到相关计划名称");
+			response.setMessage("根据输入智投编号未查到相关智投名称");
 		} else{
 			response.setPlanName(planName);
 		}
@@ -101,15 +101,15 @@ public class AdminAllocationEngineController {
     	HjhRegionResponse response = new HjhRegionResponse();
 		//计划编号未入力
 		if (StringUtils.isEmpty(planNid) && planNid == "") {
-			response.setMessage("错误:" +"未传入计划编号");
+			response.setMessage("错误:" +"未传入智投编号");
 			return response;
 		}
 		int errorFlag = this.checkInputPlanNidSrch(planNid);
 		if (errorFlag == 1) {
-			response.setMessage("错误:" +"计划编号：" + planNid +"不存在于汇计划列表中");
+			response.setMessage("错误:" +"智投编号：" + planNid +"不存在于智投服务列表中");
 			return response;
 		} else if (errorFlag == 2) {
-			response.setMessage("错误:" +"计划编号：" + planNid + "已存在与计划专区表");
+			response.setMessage("错误:" +"智投编号：" + planNid + "已存在于智投专区表");
 			return response;
 		} else if (errorFlag == 0) {
 			response.setMessage("");

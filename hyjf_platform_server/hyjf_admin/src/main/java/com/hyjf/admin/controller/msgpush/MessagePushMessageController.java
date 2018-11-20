@@ -92,6 +92,9 @@ public class MessagePushMessageController extends BaseController {
                         record.setMsgActionUrl("5");
                     }
                 }
+                if (record.getMsgCode() != null) {
+                    record.setTagCode(record.getMsgCode().substring(0,4));
+                }
                 // 如果是转发,则form的id应置为空
                 if (StringUtils.isNotEmpty(form.getUpdateOrReSend()) && form.getUpdateOrReSend().equals("2")) {
                     record.setId(null);
@@ -133,8 +136,7 @@ public class MessagePushMessageController extends BaseController {
         templateRequest.setTagCode(messagePushTagVO.getTagCode());
         MessagePushMsgVO templateVO = new MessagePushMsgVO();
         BeanUtils.copyProperties(templateRequest, templateVO);
-        String msgTerminal[] = templateRequest.getMsgTerminal().split(",");
-        templateVO.setMsgTerminal(msgTerminal);
+        templateVO.setMsgTerminal(templateRequest.getMsgTerminal());
         if (templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
             templateVO.setMsgActionUrl("");
         }
@@ -245,7 +247,7 @@ public class MessagePushMessageController extends BaseController {
             templateRequest.setPreSendTime(null);
             templateRequest.setSendTime(GetDate.getMyTimeInMillis());
         }
-
+        templateRequest.setMsgDestinationType(CustomConstants.MSG_PUSH_DESTINATION_TYPE_1);
         response = messagePushMsgService.updateMessagePushMsg(templateRequest);
         return new AdminResult<>(response);
     }

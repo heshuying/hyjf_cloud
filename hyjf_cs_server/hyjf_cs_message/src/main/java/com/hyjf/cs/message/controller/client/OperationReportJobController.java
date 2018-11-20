@@ -57,7 +57,7 @@ public class OperationReportJobController extends BaseController {
 		OperationReportJobBean bean = new OperationReportJobBean();
 		Calendar cal = Calendar.getInstance();
 		bean.setCalendar(cal);
-		int lastMonth = getLastMonth(cal);
+		int lastMonth = getLastMonth();
 		bean.setLastMonth(lastMonth);
 		String year = String.valueOf(GetDate.getYear());
 		String month = GetDate.getMonth();
@@ -167,17 +167,5 @@ public class OperationReportJobController extends BaseController {
 		}
 		response.setResult(vo);
 		return response;
-	}
-	/**
-	 * 获得当前月份的上个月日期
-	 * @return
-	 */
-	public static int getLastMonth(Calendar calendar){
-		SimpleDateFormat sdf = new SimpleDateFormat("MM");
-		calendar.setTime(new Date());//设置当前日期
-		calendar.add(Calendar.MONTH, -1);//月份减一
-		//输出上个月的日期
-		int lastMonth = Integer.valueOf(sdf.format( calendar.getTime()));
-		return lastMonth;
 	}
 }

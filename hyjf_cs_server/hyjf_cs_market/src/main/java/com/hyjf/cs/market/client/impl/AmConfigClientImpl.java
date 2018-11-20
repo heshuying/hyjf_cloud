@@ -282,14 +282,13 @@ public class AmConfigClientImpl implements AmConfigClient {
 	/**
 	 * 判断某天是否是工作日
 	 *
-	 * @param date
 	 * @return
 	 */
 	@Override
-	public boolean queryWorkdateOnSomeday(Date date) {
-		BooleanResponse response = restTemplate.getForEntity(
-				"http://AM-CONFIG//am-config/holidays/is_workdate/" + date,
-				BooleanResponse.class).getBody();
+	public boolean queryWorkdateOnSomeday() {
+		BooleanResponse response = restTemplate.postForObject(
+				"http://AM-CONFIG//am-config/holidays/is_workdate", null,
+				BooleanResponse.class);
 		return response.getResultBoolean();
 	}
 
