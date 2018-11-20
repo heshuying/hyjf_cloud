@@ -74,7 +74,7 @@ public class SyncRUserConsumer extends Consumer {
                 String jsonMsg = new String(msg.getBody());
                 JSONObject jsonObj = JSON.parseObject(jsonMsg);
 
-                logger.info("【{}】Ruser:",tagName,jsonMsg);
+                logger.info("【{}】Ruser:{}", tagName, jsonMsg);
 
                 if ("ht_user_info".equals(tagName)) {
 
