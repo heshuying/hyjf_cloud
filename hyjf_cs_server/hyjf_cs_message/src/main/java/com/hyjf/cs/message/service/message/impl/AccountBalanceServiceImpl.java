@@ -50,14 +50,13 @@ public class AccountBalanceServiceImpl implements AccountBalanceService {
             }
 
             Query query = new BasicQuery(obj.toString());
-            if(flag){
-//                int skip = pageSize * (pageNum - 1);
-                query.limit(request.getLimitEnd()).skip(request.getLimitStart());
-            }
-
+//            if(flag){
+////                int skip = pageSize * (pageNum - 1);
+//                query.limit(request.getLimitEnd()).skip(request.getLimitStart());
+//            }
 
             List<HjhAccountBalance> list = hjhAccountBalanceDao.getHjhAccountBalance(query);
-            List<HjhAccountBalanceVO> appAccesStatisticsVO = transfromByMonth(list);
+            List<HjhAccountBalanceVO> appAccesStatisticsVO = transfromByMonth(list,flag,request);
 
             return appAccesStatisticsVO;
 
@@ -67,7 +66,8 @@ public class AccountBalanceServiceImpl implements AccountBalanceService {
         return null;
     }
 
-    public List<HjhAccountBalanceVO> transfromByMonth(List<HjhAccountBalance> list){
+    public List<HjhAccountBalanceVO> transfromByMonth(List<HjhAccountBalance> list,
+                                                      boolean flag,HjhAccountBalanceRequest request){
 
         Map<String,HjhAccountBalance> map = new HashMap<>();
         for(HjhAccountBalance vo: list){
@@ -102,6 +102,25 @@ public class AccountBalanceServiceImpl implements AccountBalanceService {
                 vo.setReinvestAccount(value.getReinvestAccount());
                 vo.setAddAccount(value.getAddAccount());
                 listvo.add(vo);
+            }
+        }
+
+        if(flag){
+            int current=request.getCurrPage(); //页码
+            int pageSize=request.getPageSize(); //每页显示的数量
+            int totalCount=listvo.size();
+            int pageCount = (totalCount / pageSize) + ((totalCount % pageSize > 0) ? 1 : 0);
+
+            if(current < 1){
+                current = 1;
+            }
+            int start=(current-1) * pageSize;
+            int end = Math.min(totalCount, current * pageSize);
+
+            if(pageCount >= current){
+                listvo=listvo.subList(start,end);
+            }else{
+                listvo = new ArrayList<>();
             }
         }
 
