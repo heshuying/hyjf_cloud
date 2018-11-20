@@ -7,6 +7,7 @@ import com.hyjf.am.vo.trade.HjhLockVo;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.http.HtmlUtil;
 import com.hyjf.common.util.CustomConstants;
@@ -82,7 +83,7 @@ public class CommisionComputeServiceImpl extends BaseServiceImpl implements Comm
         }
 
         // 并发控制
-        String redisKey = "hjhcommision_compute:" + hjhLockVo.getAccedeOrderId();
+        String redisKey = RedisConstants.HJHCOMMISION_COMPUTE + hjhLockVo.getAccedeOrderId();
         boolean redisResult = RedisUtils.tranactionSet(redisKey, 300);
         if(!redisResult){
             logger.info("汇计划提成当前记录正在进行计算，订单号：" + hjhLockVo.getAccedeOrderId());

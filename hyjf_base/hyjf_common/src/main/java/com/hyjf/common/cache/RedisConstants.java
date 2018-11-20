@@ -468,4 +468,14 @@ public class RedisConstants {
      * 神策开户redis+用户ID
      */
     public final static String SENSORS_DATA_OPEN_ACCOUNT ="SENSORS_DATA_OPEN_ACCOUNT:";
+
+    /**
+     * 汇计划计算提成并发控制
+     */
+    public final static String HJHCOMMISION_COMPUTE = "hjhcommision_compute:";
+
+    /**
+     * 绑卡回调并发控制
+     */
+    public final static String CONCURRENCE_BIND_CARD = "bindCard:";
 }
