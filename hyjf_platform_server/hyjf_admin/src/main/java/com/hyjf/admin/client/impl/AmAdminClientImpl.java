@@ -1670,7 +1670,7 @@ public class AmAdminClientImpl implements AmAdminClient {
      */
     @Override
     public AppPushManageResponse getPushManageList(AppPushManageRequestBean requestBean) {
-        AppPushManageResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/appPushManage/selectPushManageList/", requestBean, AppPushManageResponse.class).getBody();
+        AppPushManageResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-admin/appPushManage/selectPushManageList", requestBean, AppPushManageResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())){
             return response;
         }
