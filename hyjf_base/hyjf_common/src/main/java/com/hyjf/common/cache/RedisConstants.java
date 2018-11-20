@@ -478,4 +478,67 @@ public class RedisConstants {
      * 绑卡回调并发控制
      */
     public final static String CONCURRENCE_BIND_CARD = "bindCard:";
+
+    /**
+     * 散标优惠券放款 couponloans + borrowNid
+     */
+    public final static String COUPON_LOANS ="couponloans:";
+
+    /**
+     * 自动录标 borrowsend + instcode + assetId
+     */
+    public final static String BORROW_SEND ="borrowsend:";
+
+    /**
+     * 自动初审 borrowpreaudit + instcode + assetId/borrowNid
+     */
+    public final static String BORROW_PRE_AUDIT ="borrowpreaudit:";
+
+    /**
+     * 关联计划 borrowissue + creditNid/borrowNid
+     */
+    public final static String BORROW_ISSUE ="borrowissue:";
+
+    /**
+     * 邮件发送key
+     */
+    public static String LABEL_MAIL_KEY = "labelmailkey";
+
+    /**
+     * 自动备案 borrowrecord + instcode + assetId/borrowNid
+     */
+    public static String BORROW_RECORD = "borrowrecord:";
+
+    /**
+     * 自动审核保证金 borrowbail + instcode + borrowNid
+     */
+    public static String BORROW_BAIL = "borrowbail:";
+
+
+    /**
+     * synBalance + userId
+     */
+    public static String SYN_VALANCE = "synBalance:";
+
+    /**
+     * 优惠券还款 couponrepay + borrowNid + periodNow
+     */
+    public static String COUPON_REPAY = "couponrepay:";
+
+    /**
+     * 优惠券发放 couponsend + userid + couponCode + sendFlg +  activityId
+     */
+    public static String COUPON_SEND = "couponsend:";
+
+    /**
+     * 汇计划优惠券还款 couponrepayhjh + orderId
+     */
+    public static String COUPON_REPAY_HJH = "couponrepayhjh:";
+
+    /**
+     * 汇计划优惠券放款 couponloanshjh + orderId
+     */
+    public static String COUPON_LOANS_HJH = "couponloanshjh:";
+
+
 }

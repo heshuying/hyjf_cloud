@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.mq.consumer;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.CouponLoansBean;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.GetOrderIdUtils;
@@ -74,7 +75,7 @@ public class CouponLoansHjhMessageConsumer extends Consumer {
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
                 logger.info("-----------汇计划优惠券放款，OrderId:"+couponLoansBean.getOrderId() + ",OrderIdCoupon:"+couponLoansBean.getOrderIdCoupon());
-                String redisKey = "couponloanshjh:" + (Validator.isNull(couponLoansBean.getOrderId())? couponLoansBean.getOrderIdCoupon() : couponLoansBean.getOrderId());
+                String redisKey = RedisConstants.COUPON_LOANS_HJH + (Validator.isNull(couponLoansBean.getOrderId())? couponLoansBean.getOrderIdCoupon() : couponLoansBean.getOrderId());
                 boolean result = RedisUtils.tranactionSet(redisKey, 300);
                 if(!result){
                     logger.error("【汇计划优惠券放款】当前标的正在放款....");
