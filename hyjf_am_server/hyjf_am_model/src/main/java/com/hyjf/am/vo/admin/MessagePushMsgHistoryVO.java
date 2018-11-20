@@ -1,6 +1,7 @@
 package com.hyjf.am.vo.admin;
 
 import com.hyjf.common.util.GetDate;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * @author lisheng
@@ -87,14 +88,14 @@ public class MessagePushMsgHistoryVO {
     private String tagName;
 
     public String getSendTimeT() {
-        if(this.sendTime != null){
+        if(this.sendTime != null&& !StringUtils.equals(this.createTime,"null")){
             return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(this.sendTime);
         }
         return null;
     }
 
     public String getCreateTimeT() {
-        if(this.createTime != null){
+        if(this.createTime != null&& !StringUtils.equals(this.createTime,"null")){
             Integer createTimeTh = Integer.valueOf(this.createTime);
             return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(createTimeTh);
         }
@@ -102,7 +103,7 @@ public class MessagePushMsgHistoryVO {
     }
 
     public String getLastupdateTimeT() {
-        if(this.lastupdateTime != null){
+        if(this.lastupdateTime != null&&!StringUtils.equals(this.createTime,"null")){
             Integer lastupdateTimeTh = Integer.valueOf(this.lastupdateTime);
             return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(lastupdateTimeTh);
         }

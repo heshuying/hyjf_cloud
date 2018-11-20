@@ -368,13 +368,12 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 			@HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
 			//一个统计窗口内熔断触发的最小个数3/10s
 			@HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
-
+			@HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50"),
 			@HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE"),
 			//熔断5秒后去尝试请求
 			@HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
 			//失败率达到30百分比后熔断
-			@HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")},threadPoolProperties = {
-			@HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
+			@HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
 	public BankCallBean rechargeService(UserDirectRechargeBean directRechargeBean,int userId, String ipAddr, String mobile, String money) throws Exception {
 		WebViewUserVO user=this.getUserFromCache(userId);
 		// 信息校验
