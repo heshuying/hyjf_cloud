@@ -72,7 +72,7 @@ public class WebProtocolController extends BaseController {
      * @date 2018/11/15 17:09   
      */  
     @ApiOperation(value = "资产管理-智投-智投详情:投资服务协议" , notes = "资产管理-智投-智投详情:投资服务协议")
-    @GetMapping(value = "newHjhInvestPDF.do")
+    @GetMapping(value = "newHjhInvestPDF")
     public void newHjhInvestPDF(@ModelAttribute ProtocolRequest form, HttpServletRequest request, HttpServletResponse response){
         webProtocolService.newHjhInvestPDF(form,request,response);
     }

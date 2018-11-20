@@ -18,6 +18,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
@@ -124,7 +125,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		WebViewUserVO webViewUserVO = new WebViewUserVO();
 		// 是否禁用
 		if (userVO.getStatus() == 1) {
-			throw new ReturnMessageException(MsgEnum.ERR_USER_INVALID);
+			throw new CheckException(MsgEnum.ERR_USER_INVALID);
 		}
 		// 更新登录信息
 		amUserClient.updateLoginUser(userId, ip);

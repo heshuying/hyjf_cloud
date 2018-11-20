@@ -21,10 +21,9 @@ public interface DailyAutoSendService {
     List<SellDailyDistributionVO> listSellDailyDistribution();
     /**
      * 判断某天是否是工作日
-     * @param date
      * @return
      */
-    boolean isWorkdateOnSomeDay(Date date);
+    boolean isWorkdateOnSomeDay();
 
     /**
      * 判断当天是不是当月第一个工作日
