@@ -1735,7 +1735,6 @@
 		FROM
 		ht_borrow hydb
 		INNER JOIN ht_borrow_info hydbinfo ON hydb.borrow_nid = hydbinfo.borrow_nid
-		INNER JOIN ht_borrow_info hydbinfo ON hydb.borrow_nid = hydbinfo.borrow_nid
 		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
 		LEFT JOIN ht_increase_interest_invest hiii ON hiii.borrow_nid = hydb.borrow_nid
 		LEFT JOIN ht_increase_interest_loan hiil ON hiil.invest_order_id = hiii.order_id
