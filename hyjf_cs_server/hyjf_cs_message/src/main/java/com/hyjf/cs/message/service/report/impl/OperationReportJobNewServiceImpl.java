@@ -50,8 +50,6 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         // 插入统计日期
         Calendar cal = bean.getCalendar();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        // 要统计前一个月的数据，所以月份要减一
-        cal.add(Calendar.MONTH, -1);
         sdf = new SimpleDateFormat("yyyyMM");
 
         Query query = new Query();
@@ -218,7 +216,6 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         int date = Integer.parseInt(c);
         return date;
     }
-
 
     //保存月度运营报告
     @Override

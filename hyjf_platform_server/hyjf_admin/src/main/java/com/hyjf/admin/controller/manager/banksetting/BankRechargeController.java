@@ -73,7 +73,7 @@ public class BankRechargeController extends BaseController {
 
     @ApiOperation(value = "快捷充值限额详情页面", notes = "快捷充值限额详情页面")
     @PostMapping("/infoAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult  bankRechargeConfigInfo(@RequestBody AdminBankRechargeConfigRequest adminRequest) {
         AdminBankRechargeConfigResponse response=null;
         if(StringUtils.isNotBlank(adminRequest.getIds())){

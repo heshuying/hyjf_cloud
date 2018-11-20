@@ -180,6 +180,24 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     }
 
     @Override
+    public User updateUserByUsernameOrMobile(String condition) {
+        UserExample mobileExample = new UserExample();
+        mobileExample.createCriteria().andMobileEqualTo(condition);
+        List<User> usersList1 = userMapper.selectByExample(mobileExample);
+        if (!CollectionUtils.isEmpty(usersList1)) {
+            return usersList1.get(0);
+        }
+
+        UserExample usernameExample = new UserExample();
+        usernameExample.createCriteria().andUsernameEqualTo(condition);
+        List<User> usersList2 = userMapper.selectByExample(usernameExample);
+        if (!CollectionUtils.isEmpty(usersList2)) {
+            return usersList2.get(0);
+        }
+        return null;
+    }
+
+    @Override
     public User findUserByRecommendName(String reffer) {
         UserExample usersExample = new UserExample();
         UserExample.Criteria criteria = usersExample.createCriteria();

@@ -77,7 +77,7 @@ public class BorrowFlowController extends BaseController {
 
     @ApiOperation(value = "查询流程配置详情页面", notes = "查询流程配置详情页面")
     @PostMapping("/infoAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult selectBorrowFlowInfo(HttpServletRequest request, @RequestBody AdminBorrowFlowRequest adminRequest) {
         HjhAssetBorrowTypeVO record = new HjhAssetBorrowTypeVO();
         AdminBorrowFlowResponse resList= null;

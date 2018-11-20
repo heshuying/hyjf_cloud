@@ -52,7 +52,7 @@ public class SendTypeController extends BaseController {
 
     @ApiOperation(value = "查询发标/复审详情", notes = "查询发标/复审详情")
     @PostMapping("/infoAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult borrowSendInfo(@RequestBody BorrowSendTypeRequest adminRequest) {
         BorrowSendTypeResponse resList= new BorrowSendTypeResponse();
         if (StringUtils.isNotEmpty(adminRequest.getSendCd())) {
@@ -106,7 +106,7 @@ public class SendTypeController extends BaseController {
 
     @ApiOperation(value = "修改 发标/复审", notes = "修改 发标/复审")
     @PostMapping("/updateAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateBorrowSend( @RequestBody BorrowSendTypeRequest adminRequest) {
         BorrowSendTypeResponse response =new BorrowSendTypeResponse();
         // 表单校验(双表校验)
@@ -147,9 +147,9 @@ public class SendTypeController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "校验发标/复审", notes = "添加 发标/复审")
+    @ApiOperation(value = "校验发标/复审", notes = "校验发标/复审")
     @PostMapping("/checkAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
+//    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult checkAction( @RequestBody BorrowSendTypeRequest adminRequest) {
         AdminResult result= new AdminResult();
         BorrowSendTypeResponse response =new BorrowSendTypeResponse();
