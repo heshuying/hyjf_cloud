@@ -34,8 +34,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.File;
+import java.io.*;
 import java.math.BigDecimal;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -64,31 +67,42 @@ public class CreateAgreementController extends BaseTradeController {
      */
     @ApiOperation(value = "账户中心-资产管理-当前持有-- 投资协议(实际为散标居间协议)下载", notes = "账户中心-资产管理-当前持有-- 投资协议(实际为散标居间协议)下载")
     @GetMapping("/intermediaryAgreementPDF")
-    public JSONObject intermediaryAgreementPDF(HttpServletRequest request, HttpServletResponse response,UserInvestListBeanRequest form) {
-        JSONObject object=new JSONObject();
+    public void intermediaryAgreementPDF(HttpServletRequest request, HttpServletResponse response,UserInvestListBeanRequest form) throws MalformedURLException {
+
+        logger.info("web获取用户资产信息, nid is :{}", form.getNid());
         List<TenderAgreementVO> list=createAgreementService.getIntermediaryAgreementPDFUrl(form.getNid());
         if(list!=null&&list.size()>0){
             TenderAgreementVO agreementVO=list.get(0);
             if(agreementVO.getStatus()==3){
-                //本地pdf文件路径
-                object.put("pdfUrl",systemConfig.getBasePathurl()+systemConfig.getHyjfFtpBasepathPdf()+"/"+agreementVO.getPdfUrl());
-                //合同查看地址
-                object.put("viewpdfUrl",agreementVO.getViewpdfUrl());
-                //合同下载地址
-                object.put("downloadUrl",agreementVO.getDownloadUrl());
-                //脱敏图片存放地址
-                object.put("imgUrl",systemConfig.getBasePathurl()+systemConfig.getHyjfFtpBasepathImg()+"/"+agreementVO.getImgUrl());
-                object.put("status",BaseResult.SUCCESS);
-                object.put("statusDesc",BaseResult.SUCCESS_DESC);
+                // 下载网络文件
+                int bytesum = 0;
+                int byteread = 0;
+                URL url = new URL(systemConfig.getBasePathurl()+systemConfig.getHyjfFtpBasepathPdf()+"/"+agreementVO.getPdfUrl());
+                try {
+                    URLConnection conn = url.openConnection();
+                    InputStream inStream = conn.getInputStream();
+                    FileOutputStream fs = new FileOutputStream("c:/abc.gif");
+
+                    byte[] buffer = new byte[1204];
+                    int length;
+                    while ((byteread = inStream.read(buffer)) != -1) {
+                        bytesum += byteread;
+                        fs.write(buffer, 0, byteread);
+                    }
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                logger.info("下载成功");
             }else{
-                object.put("status",BaseResult.ERROR);
-                object.put("statusDesc","暂无可下载协议");
+                logger.info("暂无可下载协议");
             }
         }else {
-            object.put("status",BaseResult.ERROR);
-            object.put("statusDesc","暂无可下载协议");
+            logger.info("暂无可下载协议");
         }
-        return object;
+
+
     }
 
 
