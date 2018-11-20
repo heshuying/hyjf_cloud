@@ -73,7 +73,7 @@ public class AccountBalanceMonitoringController extends BaseController {
 
     @ApiOperation(value = "平台账户配置 余额监控 详情页面", notes = "平台账户配置 余额监控 详情页面")
     @PostMapping("/infoAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult merchantAccountInfo(@RequestBody AccountBalanceMonitoringRequestBean requestBean) {
         AdminAccountBalanceMonitoringRequest adminRequest = new AdminAccountBalanceMonitoringRequest();
         //可以直接使用
@@ -90,7 +90,7 @@ public class AccountBalanceMonitoringController extends BaseController {
 
     @ApiOperation(value = "平台账户配置 余额监控详情页面", notes = "平台账户配置 余额监控详情页面")
     @PostMapping("/updateAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateMerchantAccount(@RequestBody AccountBalanceMonitoringRequestBean requestBean) {
         AdminAccountBalanceMonitoringRequest adminRequest = new AdminAccountBalanceMonitoringRequest();
         BeanUtils.copyProperties(requestBean, adminRequest);

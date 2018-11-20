@@ -70,7 +70,7 @@ public class BankConfigController extends BaseController {
 
     @ApiOperation(value = "银行配置详情页面", notes = "银行配置详情页面")
     @PostMapping("/infoAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult  bankConfigInfo(@RequestBody BankConfigRequestBean bankConfigRequestBean) {
         AdminBankConfigResponse response= null ;
         String ids =bankConfigRequestBean.getIds();
@@ -189,7 +189,7 @@ public class BankConfigController extends BaseController {
 
     @ApiOperation(value = "银行配置去重校验", notes = "去重校验")
     @PostMapping("/validateBeforeAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+//    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult validateBeforeAction(@RequestBody BankConfigRequestBean bankConfigRequestBean) {
         AdminBankConfigRequest request = new AdminBankConfigRequest();
         BeanUtils.copyProperties(bankConfigRequestBean,request);
@@ -204,16 +204,16 @@ public class BankConfigController extends BaseController {
     private String validatorFieldCheck(AdminBankConfigRequest form) {
         // 字段校验(非空判断和长度判断)
         if(StringUtils.isBlank(form.getName())){
-            return "name 不能为空！";
+            return "名称 不能为空！";
         }
         if(StringUtils.isNotBlank(form.getName())&&form.getName().length() >50){
-            return "name 长度不能超过50！";
+            return "名称 长度不能超过50！";
         }
         if(StringUtils.isBlank(form.getCode())){
-            return "code 不能为空！";
+            return "简码 不能为空！";
         }
         if(StringUtils.isNotBlank(form.getCode())&&form.getCode().length() >10){
-            return "code 长度不能超过10！";
+            return "简码 长度不能超过10！";
         }
        return "";
 

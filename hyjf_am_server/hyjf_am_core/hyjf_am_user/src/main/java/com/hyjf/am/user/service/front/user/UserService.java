@@ -50,6 +50,8 @@ public interface UserService extends BaseService {
 	 */
 	User findUserByUsernameOrMobile(String condition);
 
+    User updateUserByUsernameOrMobile(String condition);
+
     /**
      * 查询推荐人是否存在
      * @param reffer

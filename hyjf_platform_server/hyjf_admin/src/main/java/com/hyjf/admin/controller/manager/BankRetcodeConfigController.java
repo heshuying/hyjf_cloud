@@ -73,7 +73,7 @@ public class BankRetcodeConfigController extends BaseController {
 
     @ApiOperation(value = "查询配置中心返回码配置详情页面", notes = "查询配置中心返回码配置详情页面")
     @PostMapping("/infoAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)//权限    todo
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)//权限
     public AdminResult bankRetcodeConfigInfo(@RequestBody BankRetcodeConfigRequestBean bankRetcodeConfigRequestBean) {
         BankReturnCodeConfigResponse response = null;
         AdminBankRetcodeConfigRequest adminRequest= new AdminBankRetcodeConfigRequest();

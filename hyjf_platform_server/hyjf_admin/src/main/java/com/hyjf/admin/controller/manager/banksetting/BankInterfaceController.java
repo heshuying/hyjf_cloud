@@ -51,7 +51,7 @@ public class BankInterfaceController extends BaseController {
 
     @ApiOperation(value = "查询配置中心接口切换详情页面", notes = "查询配置中心接口切换详情页面")
     @PostMapping("/infoAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult bankInterfaceInfo(@RequestBody BankInterfaceRequest adminRequest) {
         BankInterfaceResponse response=null;
         if(adminRequest.getId()!= null){
@@ -70,7 +70,7 @@ public class BankInterfaceController extends BaseController {
 
     @ApiOperation(value = "接口切换 禁用", notes = "接口切换 禁用")
     @PostMapping("/useAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateUseAction(@RequestBody  BankInterfaceRequest adminRequest, HttpServletRequest request)  {
         AdminSystemVO user = getUser(request);
         BankInterfaceVO bankInterface = new BankInterfaceVO();
