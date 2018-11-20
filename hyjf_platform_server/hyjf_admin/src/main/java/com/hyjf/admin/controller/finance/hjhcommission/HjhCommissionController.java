@@ -441,7 +441,7 @@ public class HjhCommissionController extends BaseController{
 		//sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 		// 表格sheet名称
-		String sheetName = "汇计划提成列表";
+		String sheetName = "智投服务提成列表";
 		// 文件名称
 		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
 		// 声明一个工作薄
@@ -508,8 +508,8 @@ public class HjhCommissionController extends BaseController{
 
 	private Map<String, String> buildMap() {
 		Map<String, String> map = Maps.newLinkedHashMap();
-		map.put("ordid", "加入订单号");
-		map.put("borrowNid", "计划编号");
+		map.put("ordid", "智投订单号");
+		map.put("borrowNid", "智投编号");
 		map.put("borrowStyleHjh", "还款方式");
 		map.put("lockPeriod", "服务回报期限");
 		map.put("expectApr", "参考年回报率");
