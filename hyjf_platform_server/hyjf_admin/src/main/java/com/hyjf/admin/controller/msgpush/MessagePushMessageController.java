@@ -133,8 +133,7 @@ public class MessagePushMessageController extends BaseController {
         templateRequest.setTagCode(messagePushTagVO.getTagCode());
         MessagePushMsgVO templateVO = new MessagePushMsgVO();
         BeanUtils.copyProperties(templateRequest, templateVO);
-        String msgTerminal[] = templateRequest.getMsgTerminal().split(",");
-        templateVO.setMsgTerminal(msgTerminal);
+        templateVO.setMsgTerminal(templateRequest.getMsgTerminal());
         if (templateRequest.getMsgAction() == CustomConstants.MSG_PUSH_TEMP_ACT_0) {
             templateVO.setMsgActionUrl("");
         }

@@ -60,7 +60,9 @@ public class SyncRuserInterceptor implements Interceptor {
             // 执行成功后发送消息同步，下面判断先ht_user_info 是有原因的
             if(StringUtils.containsIgnoreCase(realSql, "insert into ht_user_info") || StringUtils.containsIgnoreCase(realSql, "update ht_user_info")) {
                 sendToMq(boundSql, methodName, "ht_user_info");
-                
+                if(StringUtils.containsIgnoreCase(realSql, "update ht_user_info")){
+                    logger.info("【wgx检验】boundSql:{},parameterObject:{}", new String(JSON.toJSONBytes(boundSql.getParameterMappings())),new String(JSON.toJSONBytes(boundSql.getParameterObject())));
+                }
                 // 注册一般，更新用户表基本不需要同步rUser
             }else if(StringUtils.containsIgnoreCase(idMethod, "com.hyjf.am.user.dao.mapper.auto.UserMapper.insert")) {
                 sendToMq(boundSql, methodName, "ht_user");

@@ -60,21 +60,20 @@ public class ApplyAgreementController extends BaseController {
         logger.info("ApplyAgreementRequest:::::::[{}]", JSON.toJSONString(request));
         ApplyAgreementResponse reponse = new ApplyAgreementResponse();
         Integer total = getApplyAgreementCount(request).getCount();
-        Paginator paginator = new Paginator(request.getCurrPage(), total,request.getPageSize());
-        if(request.getPageSize() ==0){
-            paginator = new Paginator(request.getCurrPage(), total);
+        // 查询列表传入分页
+        if(request.getCurrPage()>0){
+            Paginator paginator = new Paginator(request.getCurrPage(),total,request.getPageSize());
+            logger.info("-------------------垫付协议申请列表页paginator:", JSON.toJSONString(paginator));
+            request.setLimitStart(paginator.getOffset());
+            request.setLimitEnd(paginator.getLimit());
+            logger.info("-------------------垫付协议申请列表页request:", JSON.toJSONString(request));
         }
-        int limitStart = paginator.getOffset();
-        int limitEnd = paginator.getLimit();
-
-        if(request.getLimitStart() != null && request.getLimitStart() == -1){
-            limitStart = -1;
-            limitEnd = -1;
+        if(total>0) {
+            List<ApplyAgreementVO> list = applyAgreementService.selectApplyAgreement(request);
+            reponse.setCount(total);
+            reponse.setResultList(list);
+            reponse.setRtn(Response.SUCCESS);
         }
-        List<ApplyAgreementVO> list =  applyAgreementService.selectApplyAgreement(request,limitStart,limitEnd);
-        reponse.setCount(total);
-        reponse.setResultList(list);
-        reponse.setRtn(Response.SUCCESS);
         return reponse;
     }
     @ApiOperation(value = "垫付协议申请列表页")

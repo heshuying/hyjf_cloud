@@ -17,6 +17,7 @@ import com.hyjf.cs.trade.bean.repay.UserRepayProjectBean;
 import com.hyjf.cs.trade.service.repay.BatchHjhBorrowRepayApiService;
 import com.hyjf.cs.trade.service.repay.RepayService;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
+import com.hyjf.cs.trade.util.SignUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -99,12 +100,12 @@ public class RepayController extends BaseController {
         if (StringUtils.isBlank(info.getAccountId()) || StringUtils.isBlank(info.getBorrowNid()) || StringUtils.isBlank(info.getInstCode())) {
             throw new RuntimeException("参数非法,BorrowNid或accountId或instcode不得为空!");
         }
-//        //验签
-//        if (SignUtil.verifyRequestSign(info, "userRepayResult")) {
-//            logger.info("-------------------验签失败！--------------------");
-//            throw new RuntimeException("验签失败!");
-//
-//        }
+        //验签
+        if (SignUtil.verifyRequestSign(info, "/server/user/repay/getrepayresult")) {
+            logger.info("-------------------验签失败！--------------------");
+            throw new RuntimeException("验签失败!");
+
+        }
         BankOpenAccountVO bankOpenAccount = repayService.getBankOpenAccount(info.getAccountId());
         if (bankOpenAccount == null) {
             logger.info("-------------------该用户没有在平台开户！--------------------");
