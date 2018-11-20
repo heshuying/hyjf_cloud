@@ -20,7 +20,6 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.DateUtils;
@@ -107,6 +106,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	 */
 	@Override
 	public WebViewUserVO login(String loginUserName, String loginPassword, String ip, String channel) {
+	    logger.info("登陆参数，用户名："+loginUserName+"；密码："+loginPassword);
 		if (checkMaxLength(loginUserName, 16) || checkMaxLength(loginPassword, 32)) {
 			CheckUtil.check(false, MsgEnum.ERR_USER_LOGIN);
 		}
@@ -131,7 +131,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		amUserClient.updateLoginUser(userId, ip);
 		updateUserByUserId(userVO);
 		// 1. 登录成功将登陆密码错误次数的key删除
-		RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT + userId);
+		RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL + userId);
 		webViewUserVO = this.getWebViewUserByUserId(userVO.getUserId());
 		// 2. 缓存
 		webViewUserVO = setToken(webViewUserVO);
@@ -161,6 +161,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	 */
 	private WebViewUserVO doLogin(String loginUserName, String loginPassword, String ip, String channel) {
 		UserVO userVO = amUserClient.updateByCondition(loginUserName);
+		logger.info("登陆获取loginUserName:"+loginUserName+";userVO:"+(userVO==null));
 		WebViewUserVO webViewUserVO = new WebViewUserVO();
 		CheckUtil.check(userVO != null, MsgEnum.ERR_USER_LOGIN);
 		String codeSalt = userVO.getSalt();
@@ -178,7 +179,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			webViewUserVO = loginOperationOnly(userVO,loginUserName,ip,channel);
 		} else {
 			// 密码错误，增加错误次数
-			RedisUtils.incr(RedisConstants.PASSWORD_ERR_COUNT + userVO.getUserId());
+			RedisUtils.incr(RedisConstants.PASSWORD_ERR_COUNT_ALL + userVO.getUserId());
 			CheckUtil.check(false, MsgEnum.ERR_USER_LOGIN);
 		}
 		return webViewUserVO;
@@ -1093,7 +1094,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		}
 
 		//1.获取该用户密码错误次数
-		String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT + userId);
+		String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT_ALL + userId);
 		//2.获取用户允许输入的最大错误次数
 		Integer maxLoginErrorNum=LockedConfigManager.getInstance().getWebConfig().getMaxLoginErrorNum();//获取Redis配置的额登录最大错误次数
 		//判断密码错误次数是否超限
@@ -1109,7 +1110,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			amUserClient.updateLoginUser(userId, ipAddr);
 			updateUserByUserId(u);
 			// 1. 登录成功将登陆密码错误次数的key删除
-			RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT + userId);
+			RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL + userId);
 			BankOpenAccountVO account = this.getBankOpenAccount(userId);
 			String accountId = null;
 			if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
@@ -1124,7 +1125,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			return r;
 		} else {
 			//增加密码错误次数
-			RedisUtils.incr(RedisConstants.PASSWORD_ERR_COUNT + userId);;//以用户userId为key
+			RedisUtils.incr(RedisConstants.PASSWORD_ERR_COUNT_ALL + userId);;//以用户userId为key
 			//1.获取该用户密码错误次数，2.判断是否错误超过错误次数
 			if((Integer.valueOf(passwordErrorNum)+1) < maxLoginErrorNum){
 				r.put("stt", "-3");

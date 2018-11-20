@@ -36,7 +36,6 @@ public class SiteSettingServiceImpl implements SiteSettingService {
 			List<SiteSetting> SiteSettingList = siteSettingMapper.selectByExample(example);
 			if (!CollectionUtils.isEmpty(SiteSettingList)) {
 				siteSetting = SiteSettingList.get(0);
-				RedisUtils.setObjEx(RedisConstants.SITE_SETTINGS, siteSetting, 24 * 60 * 60);
 				return siteSetting;
 			}
 		}
@@ -79,10 +78,7 @@ public class SiteSettingServiceImpl implements SiteSettingService {
 	public void update(SitesettingRequest request) {
 		SiteSetting siteSetting = new SiteSetting();
 		BeanUtils.copyProperties(request, siteSetting);
-		int result = siteSettingMapper.updateByPrimaryKeySelective(siteSetting);
-		if (result > 0) {
-			RedisUtils.setObjEx(RedisConstants.SITE_SETTINGS, siteSetting, 24 * 60 * 60);
-		}
+		siteSettingMapper.updateByPrimaryKeySelective(siteSetting);
 	}
 
 	/**

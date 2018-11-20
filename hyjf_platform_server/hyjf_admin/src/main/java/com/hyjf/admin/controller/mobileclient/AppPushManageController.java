@@ -48,13 +48,13 @@ public class AppPushManageController extends BaseController {
         // 初始化 返回List
         List<AppPushManageVO> returnList = new ArrayList<>();
 
-        if (pushManageResponse == null){
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
+//        if (pushManageResponse == null){
+//            return new AdminResult<>(FAIL, FAIL_DESC);
+//        }
 
-        if (!Response.isSuccess(pushManageResponse)){
-            return new AdminResult<>(FAIL, "获取列表失败!");
-        }
+//        if (!Response.isSuccess(pushManageResponse)){
+//            return new AdminResult<>(FAIL, "获取列表失败!");
+//        }
 
         if (CollectionUtils.isNotEmpty(pushManageResponse.getResultList())){
             returnList = CommonUtils.convertBeanList(pushManageResponse.getResultList(), AppPushManageVO.class);

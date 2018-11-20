@@ -115,6 +115,14 @@ public interface AssetManageCustomizeMapper {
 
     List<AppAlreadyRepayListCustomize> selectAppAlreadyRepayList(AssetManageBeanRequest request);
 
+    /**
+     * app端-我的散标-已回款，查询数量。从hyjf项目AppUserInvestCustomizeMapper.xml 迁移
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int countAlreadyRepayListRecordTotal(Map<String, Object> params);
+
     List<AppTenderCreditRecordListCustomize> searchAppCreditRecordList(AssetManageBeanRequest request);
 
     int selectTenderToCreditListCount(AssetManageBeanRequest request);

@@ -50,6 +50,12 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
     }
 
     @Override
+    public int countAlreadyRepayListRecordTotal(AssetManageBeanRequest request) {
+        Map<String, Object> params=createParame(request);
+        return assetManageCustomizeMapper.countAlreadyRepayListRecordTotal(params);
+    }
+
+    @Override
     public int selectRepaymentListTotal(AssetManageBeanRequest request) {
         Map<String, Object> params=createParame(request);
         return assetManageCustomizeMapper.selectRepaymentListTotal(params);

@@ -67,7 +67,7 @@ public class AdminVersionConfigController extends BaseController {
 
     @ApiOperation(value = "版本配置详情页面", notes = "版本配置详情页面")
     @PostMapping("/infoAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<AdminVersionResponse> versionConfigInfo(@RequestBody VersionRequestBean versionRequestBean) {
         AdminVersionRequest adminRequest= new AdminVersionRequest();
         AdminVersionResponse adminResponse= null;
@@ -170,28 +170,28 @@ public class AdminVersionConfigController extends BaseController {
     private String validatorFieldCheck(AdminVersionRequest form) {
         // 系统名称
         if(null == form.getType()){
-            return "type 不能为空！";
+            return "系统名称 不能为空！";
         }
         // 版本号
         if(null == form.getVersion()){
-            return "version 不能为空！";
+            return "版本号 不能为空！";
         }
         if(null != form.getVersion()&&  form.getVersion().length()>12){
             return "version长度不能超过12位！";
         }
         // 地址
         if(null == form.getUrl()){
-            return "url 不能为空！";
+            return "地址 不能为空！";
         }
         if(null != form.getUrl()&&  form.getUrl().length()>255){
-            return "url长度不能超过12位！";
+            return "地址长度不能超过12位！";
         }
         // 版本描述
         if(null == form.getContent()){
-            return "content 不能为空！";
+            return "版本描述 不能为空！";
         }
         if(null != form.getContent()&&  form.getContent().length()>500){
-            return "content长度不能超过12位！";
+            return "版本描述长度不能超过12位！";
         }
         if (StringUtils.isNotEmpty(form.getVersion())) {
             VersionVO version = this.adminVersionConfigService.getVersionByCode(form.getId(), form.getType(), form.getVersion());
