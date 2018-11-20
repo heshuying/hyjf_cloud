@@ -168,7 +168,7 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
      * @return
      */
     @Override
-    public List<ApplyAgreementVO> selectApplyAgreement(ApplyAgreementRequest request, int limitStart, int limitEnd) {
+    public List<ApplyAgreementVO> selectApplyAgreement(ApplyAgreementRequest request) {
         ApplyAgreementExample applyAgreementExample = new ApplyAgreementExample();
         ApplyAgreementExample.Criteria criteriaA = applyAgreementExample.createCriteria();
         if(StringUtils.isNotEmpty(request.getBorrowNid())){
@@ -181,6 +181,11 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
                 StringUtils.isNotEmpty(request.getTimeEnd())){
             criteriaA.andCreateTimeBetween(GetDate.str2Timestamp(request.getTimeStart()), GetDate.str2Timestamp(request.getTimeEnd()));
         }
+        if (request.getLimitStart()!=null && request.getLimitStart() != -1) {
+            applyAgreementExample.setLimitEnd(request.getLimitEnd());
+            applyAgreementExample.setLimitStart(request.getLimitStart());
+        }
+
         Integer count = this.applyAgreementMapper.countByExample(applyAgreementExample);
         List<ApplyAgreementVO> listVo = new ArrayList<ApplyAgreementVO>();
         if (count != null && count > 0) {

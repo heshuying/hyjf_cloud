@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.controller.front.repay;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.ApiBorrowRepaymentInfoResponse;
 import com.hyjf.am.resquest.trade.ApiBorrowRepaymentInfoRequest;
 import com.hyjf.am.trade.controller.BaseController;
@@ -38,8 +39,10 @@ public class ApiBorrowRepaymentInfoController extends BaseController {
     **/
     @PostMapping("/selectBorrowRepaymentInfoList")
     public ApiBorrowRepaymentInfoResponse selectAssetBorrowType(@RequestBody ApiBorrowRepaymentInfoRequest request) {
+        logger.info("------------------------第三方还款明细查询request:"+JSONObject.toJSON(request));
         ApiBorrowRepaymentInfoResponse response = new ApiBorrowRepaymentInfoResponse();
         List<ApiBorrowRepaymentInfoCustomize> list = borrowRepaymentInfoService.selectBorrowRepaymentInfoList(request);
+        logger.info("------------------------第三方还款明细查询list:"+JSONObject.toJSON(list));
         if (CollectionUtils.isNotEmpty(list)){
             response.setResultList(CommonUtils.convertBeanList(list,ApiBorrowRepaymentInfoCustomizeVO.class));
         }

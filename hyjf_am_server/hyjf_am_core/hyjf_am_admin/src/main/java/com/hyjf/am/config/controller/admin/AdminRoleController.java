@@ -327,6 +327,12 @@ public class AdminRoleController {
             	arr.setRtn(Response.FAIL);
             	arr.setMessage("角色权限修改时发生错误,请重新操作!");
             }
+            
+            if(adminRoleService.getRole(userRoleRequest.getUserId()).getRoleId()==userRoleRequest.getRoleId()) {
+            	arr.setIsRole(true);
+            }else {
+            	arr.setIsRole(false);
+            }
         // 操作成功
 //        if(cnt > -1) {
 //

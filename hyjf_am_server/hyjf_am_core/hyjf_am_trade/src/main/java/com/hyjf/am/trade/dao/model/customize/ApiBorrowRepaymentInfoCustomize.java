@@ -18,22 +18,38 @@ public class ApiBorrowRepaymentInfoCustomize  implements Serializable {
     private String instCode;
     // ========================参数=============================
     private String assetId;//资产编号
-    private String accedeOrderId;//投资订单号
     private String borrowNid;// 借款编号
-    private String planNid;//计划编号
+    private String projectTypeName;// 项目类型名称
+    private String borrowPeriod;// 借款期限
+    private String borrowApr;// 年化收益
+    private String recoverFee;// 管理费
+    private String accedeOrderId;//投资订单号
+    private String borrowAccount;// 借款金额
+    private String borrowAccountYes;// 借到金额
+    private String manageFeeRate; //管理费费率
+    private String repayType;// 还款方式
+    private String recoverTrueName;// 投资人姓名
+    private String recoverUserName;// 投资人用户名
+    private String recoverTotal;// 投资金额
+    private String recoverCapital;// 应还本金
+    private String recoverInterest;// 应还利息
+    private String serviceRate; //服务费率
+    private String serviceFee; //服务费
+    private String recoverSumTotal; //应还总额
+
+
+   /* private String planNid;//计划编号
     private String userId;// 借款人ID
     private String borrowUserName;// 借款人用户名
     private String borrowStyle;// 类型
     private String borrowName;// 借款标题
     private String projectType;// 项目类型id
-    private String projectTypeName;// 项目类型名称
-    private String borrowPeriod;// 借款期限
-    private String borrowApr;// 年化收益
-    private String borrowAccount;// 借款金额
-    private String borrowAccountYes;// 借到金额
-    private String repayType;// 还款方式
-    private String recoverTrueName;// 投资人姓名
-    private String recoverUserName;// 投资人用户名
+
+
+
+
+
+
     private String recoverUserAttribute;// 投资人用户属性（当前）
     private String recoverRegionName;// 投资人所属一级分部（当前）
     private String recoverBranchName;// 投资人所属二级分部（当前）
@@ -45,9 +61,7 @@ public class ApiBorrowRepaymentInfoCustomize  implements Serializable {
     private String referrerBranchName;//推荐人所属二级分部（当前）
     private String referrerDepartmentName; //推荐人所属团队（当前）
     private String recoverPeriod;// 投资期限
-    private String recoverTotal;// 投资金额
-    private String recoverCapital;// 应还本金
-    private String recoverInterest;// 应还利息
+
     private String recoverAccount;// 应还本息
     private String recoverFee;// 管理费
     private String recoverCapitalYes;// 已还本金
@@ -61,62 +75,11 @@ public class ApiBorrowRepaymentInfoCustomize  implements Serializable {
     private String repayActionTime; //实际还款时间
     private String repayOrdid; //还款订单号
     private String repayBatchNo; //还款批次号
-    private String instName; //机构名称
-    private String manageFeeRate; //管理费费率
-    private String serviceRate; //服务费率
-    private String serviceFee; //服务费
-    private String recoverSumTotal; //应还总额
+    private String instName; //机构名称*/
 
 
-    public String getServiceRate() {
-        return serviceRate;
-    }
-
-    public void setServiceRate(String serviceRate) {
-        this.serviceRate = serviceRate;
-    }
-
-    public String getServiceFee() {
-        return serviceFee;
-    }
-
-    public void setServiceFee(String serviceFee) {
-        this.serviceFee = serviceFee;
-    }
-
-    public String getRecoverSumTotal() {
-        return recoverSumTotal;
-    }
-
-    public void setRecoverSumTotal(String recoverSumTotal) {
-        this.recoverSumTotal = recoverSumTotal;
-    }
-
-    public String getAccedeOrderId() {
-        return accedeOrderId;
-    }
-
-    public void setAccedeOrderId(String accedeOrderId) {
-        this.accedeOrderId = accedeOrderId;
-    }
-
-    public String getRecoverTrueName() {
-        return recoverTrueName;
-    }
-
-    public void setRecoverTrueName(String recoverTrueName) {
-        this.recoverTrueName = recoverTrueName;
-    }
-
-
-
-
-    public String getAssetId() {
-        return assetId;
-    }
-
-    public void setAssetId(String assetId) {
-        this.assetId = assetId;
+    public static long getSerialVersionUID() {
+        return serialVersionUID;
     }
 
     public String getInstCode() {
@@ -127,13 +90,12 @@ public class ApiBorrowRepaymentInfoCustomize  implements Serializable {
         this.instCode = instCode;
     }
 
-
-    public String getManageFeeRate() {
-        return manageFeeRate;
+    public String getAssetId() {
+        return assetId;
     }
 
-    public void setManageFeeRate(String manageFeeRate) {
-        this.manageFeeRate = manageFeeRate;
+    public void setAssetId(String assetId) {
+        this.assetId = assetId;
     }
 
     public String getBorrowNid() {
@@ -142,38 +104,6 @@ public class ApiBorrowRepaymentInfoCustomize  implements Serializable {
 
     public void setBorrowNid(String borrowNid) {
         this.borrowNid = borrowNid;
-    }
-
-    public String getUserId() {
-        return userId;
-    }
-
-    public void setUserId(String userId) {
-        this.userId = userId;
-    }
-
-    public String getBorrowUserName() {
-        return borrowUserName;
-    }
-
-    public void setBorrowUserName(String borrowUserName) {
-        this.borrowUserName = borrowUserName;
-    }
-
-    public String getBorrowName() {
-        return borrowName;
-    }
-
-    public void setBorrowName(String borrowName) {
-        this.borrowName = borrowName;
-    }
-
-    public String getProjectType() {
-        return projectType;
-    }
-
-    public void setProjectType(String projectType) {
-        this.projectType = projectType;
     }
 
     public String getProjectTypeName() {
@@ -200,6 +130,22 @@ public class ApiBorrowRepaymentInfoCustomize  implements Serializable {
         this.borrowApr = borrowApr;
     }
 
+    public String getRecoverFee() {
+        return recoverFee;
+    }
+
+    public void setRecoverFee(String recoverFee) {
+        this.recoverFee = recoverFee;
+    }
+
+    public String getAccedeOrderId() {
+        return accedeOrderId;
+    }
+
+    public void setAccedeOrderId(String accedeOrderId) {
+        this.accedeOrderId = accedeOrderId;
+    }
+
     public String getBorrowAccount() {
         return borrowAccount;
     }
@@ -216,6 +162,14 @@ public class ApiBorrowRepaymentInfoCustomize  implements Serializable {
         this.borrowAccountYes = borrowAccountYes;
     }
 
+    public String getManageFeeRate() {
+        return manageFeeRate;
+    }
+
+    public void setManageFeeRate(String manageFeeRate) {
+        this.manageFeeRate = manageFeeRate;
+    }
+
     public String getRepayType() {
         return repayType;
     }
@@ -224,6 +178,13 @@ public class ApiBorrowRepaymentInfoCustomize  implements Serializable {
         this.repayType = repayType;
     }
 
+    public String getRecoverTrueName() {
+        return recoverTrueName;
+    }
+
+    public void setRecoverTrueName(String recoverTrueName) {
+        this.recoverTrueName = recoverTrueName;
+    }
 
     public String getRecoverUserName() {
         return recoverUserName;
@@ -231,14 +192,6 @@ public class ApiBorrowRepaymentInfoCustomize  implements Serializable {
 
     public void setRecoverUserName(String recoverUserName) {
         this.recoverUserName = recoverUserName;
-    }
-
-    public String getRecoverPeriod() {
-        return recoverPeriod;
-    }
-
-    public void setRecoverPeriod(String recoverPeriod) {
-        this.recoverPeriod = recoverPeriod;
     }
 
     public String getRecoverTotal() {
@@ -265,223 +218,27 @@ public class ApiBorrowRepaymentInfoCustomize  implements Serializable {
         this.recoverInterest = recoverInterest;
     }
 
-    public String getRecoverAccount() {
-        return recoverAccount;
+    public String getServiceRate() {
+        return serviceRate;
     }
 
-    public void setRecoverAccount(String recoverAccount) {
-        this.recoverAccount = recoverAccount;
+    public void setServiceRate(String serviceRate) {
+        this.serviceRate = serviceRate;
     }
 
-    public String getRecoverFee() {
-        return recoverFee;
+    public String getServiceFee() {
+        return serviceFee;
     }
 
-    public void setRecoverFee(String recoverFee) {
-        this.recoverFee = recoverFee;
+    public void setServiceFee(String serviceFee) {
+        this.serviceFee = serviceFee;
     }
 
-    public String getRecoverCapitalYes() {
-        return recoverCapitalYes;
+    public String getRecoverSumTotal() {
+        return recoverSumTotal;
     }
 
-    public void setRecoverCapitalYes(String recoverCapitalYes) {
-        this.recoverCapitalYes = recoverCapitalYes;
-    }
-
-    public String getRecoverInterestYes() {
-        return recoverInterestYes;
-    }
-
-    public void setRecoverInterestYes(String recoverInterestYes) {
-        this.recoverInterestYes = recoverInterestYes;
-    }
-
-    public String getRecoverAccountYes() {
-        return recoverAccountYes;
-    }
-
-    public void setRecoverAccountYes(String recoverAccountYes) {
-        this.recoverAccountYes = recoverAccountYes;
-    }
-
-    public String getRecoverCapitalWait() {
-        return recoverCapitalWait;
-    }
-
-    public void setRecoverCapitalWait(String recoverCapitalWait) {
-        this.recoverCapitalWait = recoverCapitalWait;
-    }
-
-    public String getRecoverInterestWait() {
-        return recoverInterestWait;
-    }
-
-    public void setRecoverInterestWait(String recoverInterestWait) {
-        this.recoverInterestWait = recoverInterestWait;
-    }
-
-    public String getRecoverAccountWait() {
-        return recoverAccountWait;
-    }
-
-    public void setRecoverAccountWait(String recoverAccountWait) {
-        this.recoverAccountWait = recoverAccountWait;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getRecoverLastTime() {
-        return recoverLastTime;
-    }
-
-    public void setRecoverLastTime(String recoverLastTime) {
-        this.recoverLastTime = recoverLastTime;
-    }
-
-    public String getBorrowStyle() {
-        return borrowStyle;
-    }
-
-    public void setBorrowStyle(String borrowStyle) {
-        this.borrowStyle = borrowStyle;
-    }
-
-    public String getRecoverUserAttribute() {
-        return recoverUserAttribute;
-    }
-
-    public void setRecoverUserAttribute(String recoverUserAttribute) {
-        this.recoverUserAttribute = recoverUserAttribute;
-    }
-
-    public String getRecoverRegionName() {
-        return recoverRegionName;
-    }
-
-    public void setRecoverRegionName(String recoverRegionName) {
-        this.recoverRegionName = recoverRegionName;
-    }
-
-    public String getRecoverBranchName() {
-        return recoverBranchName;
-    }
-
-    public void setRecoverBranchName(String recoverBranchName) {
-        this.recoverBranchName = recoverBranchName;
-    }
-
-    public String getRecoverDepartmentName() {
-        return recoverDepartmentName;
-    }
-
-    public void setRecoverDepartmentName(String recoverDepartmentName) {
-        this.recoverDepartmentName = recoverDepartmentName;
-    }
-
-    public String getReferrerName() {
-        return referrerName;
-    }
-
-    public void setReferrerName(String referrerName) {
-        this.referrerName = referrerName;
-    }
-
-    public String getReferrerUserId() {
-        return referrerUserId;
-    }
-
-    public void setReferrerUserId(String referrerUserId) {
-        this.referrerUserId = referrerUserId;
-    }
-
-    public String getReferrerTrueName() {
-        return referrerTrueName;
-    }
-
-    public void setReferrerTrueName(String referrerTrueName) {
-        this.referrerTrueName = referrerTrueName;
-    }
-
-    public String getReferrerRegionName() {
-        return referrerRegionName;
-    }
-
-    public void setReferrerRegionName(String referrerRegionName) {
-        this.referrerRegionName = referrerRegionName;
-    }
-
-    public String getReferrerBranchName() {
-        return referrerBranchName;
-    }
-
-    public void setReferrerBranchName(String referrerBranchName) {
-        this.referrerBranchName = referrerBranchName;
-    }
-
-    public String getReferrerDepartmentName() {
-        return referrerDepartmentName;
-    }
-
-    public void setReferrerDepartmentName(String referrerDepartmentName) {
-        this.referrerDepartmentName = referrerDepartmentName;
-    }
-
-    public String getRepayActionTime() {
-        return repayActionTime;
-    }
-
-    public void setRepayActionTime(String repayActionTime) {
-        this.repayActionTime = repayActionTime;
-    }
-
-    public String getRepayOrdid() {
-        return repayOrdid;
-    }
-
-    public void setRepayOrdid(String repayOrdid) {
-        this.repayOrdid = repayOrdid;
-    }
-
-    public String getRepayBatchNo() {
-        return repayBatchNo;
-    }
-
-    public void setRepayBatchNo(String repayBatchNo) {
-        this.repayBatchNo = repayBatchNo;
-    }
-
-
-
-    /**
-     * planNid
-     * @return the planNid
-     */
-
-    public String getPlanNid() {
-        return planNid;
-    }
-
-    /**
-     * @param planNid the planNid to set
-     */
-
-    public void setPlanNid(String planNid) {
-        this.planNid = planNid;
-    }
-
-
-    public String getInstName() {
-        return instName;
-    }
-
-    public void setInstName(String instName) {
-        this.instName = instName;
+    public void setRecoverSumTotal(String recoverSumTotal) {
+        this.recoverSumTotal = recoverSumTotal;
     }
 }

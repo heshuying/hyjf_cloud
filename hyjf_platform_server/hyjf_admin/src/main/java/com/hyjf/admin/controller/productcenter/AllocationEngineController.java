@@ -786,7 +786,7 @@ public class AllocationEngineController extends BaseController{
 			return jsonObject;
 		}
 		if(StringUtils.isEmpty(planNid)){
-			jsonObject.put("info", "该标签所属智投编号不存在，请查询智投服务专区");
+			jsonObject.put("info", "该标签所属智投编号不存在，请查询智投专区");
 			jsonObject.put("status", "99");
 			return jsonObject;
 		}

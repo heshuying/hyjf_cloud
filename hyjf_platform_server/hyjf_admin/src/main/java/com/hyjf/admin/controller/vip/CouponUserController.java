@@ -297,27 +297,27 @@ public class CouponUserController extends BaseController {
         //被选中项目类型
         String projectSed[] = StringUtils.split(configVO.getProjectType(), ",");
         if (configVO.getProjectType().indexOf("-1") != -1) {
-            projectString = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/汇计划项目";
+            projectString = "所有散标/新手/智投项目";
         } else {
             projectString = projectString + "所有";
             for (String project : projectSed) {
                 if ("1".equals(project)) {
-                    projectString = projectString + "汇直投/";
+                    projectString = projectString + "散标/";
                 }
                 if ("2".equals(project)) {
-                    projectString = projectString + "汇消费/";
+                    projectString = projectString + "";
                 }
                 if ("3".equals(project)) {
-                    projectString = projectString + "新手汇/";
+                    projectString = projectString + "新手/";
                 }
                 if ("4".equals(project)) {
-                    projectString = projectString + "尊享汇/";
+                    projectString = projectString + "";
                 }
                 if ("5".equals(project)) {
-                    projectString = projectString + "汇添金/";
+                    projectString = projectString + "";
                 }
                 if ("6".equals(project)) {
-                    projectString = projectString + "汇计划/";
+                    projectString = projectString + "智投/";
                 }
             }
             projectString = StringUtils.removeEnd(
@@ -367,27 +367,27 @@ public class CouponUserController extends BaseController {
         //被选中项目类型
         String projectSed[] = StringUtils.split(detail.getProjectType(), ",");
         if (detail.getProjectType().indexOf("-1") != -1) {
-            projectString = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/汇计划项目";
+            projectString = "所有散标/新手/智投项目";
         } else {
             projectString = projectString + "所有";
             for (String project : projectSed) {
                 if ("1".equals(project)) {
-                    projectString = projectString + "汇直投/";
+                    projectString = projectString + "散标/";
                 }
                 if ("2".equals(project)) {
-                    projectString = projectString + "汇消费/";
+                    projectString = projectString + "";
                 }
                 if ("3".equals(project)) {
-                    projectString = projectString + "新手汇/";
+                    projectString = projectString + "新手/";
                 }
                 if ("4".equals(project)) {
-                    projectString = projectString + "尊享汇/";
+                    projectString = projectString + "";
                 }
                 if ("5".equals(project)) {
-                    projectString = projectString + "汇添金/";
+                    projectString = projectString + "";
                 }
                 if ("6".equals(project)) {
-                    projectString = projectString + "汇计划/";
+                    projectString = projectString + "智投/";
                 }
             }
             projectString = StringUtils.removeEnd(
@@ -437,27 +437,27 @@ public class CouponUserController extends BaseController {
         //被选中项目类型
         String projectSed[] = StringUtils.split(detail.getProjectType(), ",");
         if (detail.getProjectType().indexOf("-1") != -1) {
-            projectString = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/汇计划项目";
+            projectString = "所有散标/新手/智投项目";
         } else {
             projectString = projectString + "所有";
             for (String project : projectSed) {
                 if ("1".equals(project)) {
-                    projectString = projectString + "汇直投/";
+                    projectString = projectString + "散标/";
                 }
                 if ("2".equals(project)) {
-                    projectString = projectString + "汇消费/";
+                    projectString = projectString + "";
                 }
                 if ("3".equals(project)) {
-                    projectString = projectString + "新手汇/";
+                    projectString = projectString + "新手/";
                 }
                 if ("4".equals(project)) {
-                    projectString = projectString + "尊享汇/";
+                    projectString = projectString + "";
                 }
                 if ("5".equals(project)) {
-                    projectString = projectString + "汇添金/";
+                    projectString = projectString + "";
                 }
                 if ("6".equals(project)) {
-                    projectString = projectString + "汇计划/";
+                    projectString = projectString + "智投/";
                 }
             }
             projectString = StringUtils.removeEnd(
@@ -518,27 +518,27 @@ public class CouponUserController extends BaseController {
             //被选中项目类型
             String projectSed[] = StringUtils.split(detail.getProjectType(), ",");
             if (detail.getProjectType().indexOf("-1") != -1) {
-                projectString = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/汇计划项目";
+                projectString = "所有散标/新手/智投项目";
             } else {
                 projectString = projectString + "所有";
                 for (String project : projectSed) {
                     if ("1".equals(project)) {
-                        projectString = projectString + "汇直投/";
+                        projectString = projectString + "散标/";
                     }
                     if ("2".equals(project)) {
-                        projectString = projectString + "汇消费/";
+                        projectString = projectString + "";
                     }
                     if ("3".equals(project)) {
-                        projectString = projectString + "新手汇/";
+                        projectString = projectString + "新手/";
                     }
                     if ("4".equals(project)) {
-                        projectString = projectString + "尊享汇/";
+                        projectString = projectString + "";
                     }
                     if ("5".equals(project)) {
-                        projectString = projectString + "汇添金/";
+                        projectString = projectString + "";
                     }
                     if ("6".equals(project)) {
-                        projectString = projectString + "汇计划/";
+                        projectString = projectString + "智投/";
                     }
                 }
                 projectString = StringUtils.removeEnd(
@@ -848,27 +848,27 @@ public class CouponUserController extends BaseController {
                 //被选中项目类型
                 String projectSed[] = StringUtils.split(projectType, ",");
                 if (projectType.indexOf("-1") != -1) {
-                    projectString = "所有汇直投/汇消费/新手汇/尊享汇/汇添金/汇计划项目";
+                    projectString = "所有散标/新手/智投项目";
                 } else {
                     projectString = projectString + "所有";
                     for (String project : projectSed) {
                         if ("1".equals(project)) {
-                            projectString = projectString + "汇直投/";
+                            projectString = projectString + "散标/";
                         }
                         if ("2".equals(project)) {
-                            projectString = projectString + "汇消费/";
+                            projectString = projectString + "";
                         }
                         if ("3".equals(project)) {
-                            projectString = projectString + "新手汇/";
+                            projectString = projectString + "新手/";
                         }
                         if ("4".equals(project)) {
-                            projectString = projectString + "尊享汇/";
+                            projectString = projectString + "";
                         }
                         if ("5".equals(project)) {
-                            projectString = projectString + "汇添金/";
+                            projectString = projectString + "";
                         }
                         if ("6".equals(project)) {
-                            projectString = projectString + "汇计划/";
+                            projectString = projectString + "智投/";
                         }
 
                     }

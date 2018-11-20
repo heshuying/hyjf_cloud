@@ -682,7 +682,6 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public int updateCreditEndForStatus(BankCreditEndVO bankCreditEndVO, int status) {
-        logger.info("cs-trade:txCounts:{}", bankCreditEndVO.getTxCounts());
         String url = urlBase + "bankCreditEndController/updateBankCreditEndForStatus";
         UpdateBankCreditEndForStatusRequest request = new UpdateBankCreditEndForStatusRequest(bankCreditEndVO, status);
         IntegerResponse response = restTemplate.postForEntity(url, request, IntegerResponse.class).getBody();

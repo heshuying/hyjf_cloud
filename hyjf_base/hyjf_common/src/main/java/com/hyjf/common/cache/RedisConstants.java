@@ -59,7 +59,7 @@ public class RedisConstants {
 //	public static final String CAPITAL_TOPLIMIT_ = "capital_toplimit:";
 
     /**
-     * 汇计划发标redis key
+     * 汇计划发标redis key(gen_hjh_borrow_nid:$borrowPreNid)
      */
     public static final String GEN_HJH_BORROW_NID = "gen_hjh_borrow_nid:";
 
@@ -125,7 +125,7 @@ public class RedisConstants {
     // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
 
     /**
-     * 散标投资防重校验
+     * 散标投资防重校验(borrow_tender_repeat:$userId)
      */
     public static final String BORROW_TENDER_REPEAT = "borrow_tender_repeat:";
 
@@ -140,7 +140,7 @@ public class RedisConstants {
     public static final String ZUUL_ROUTER_CONFIG_KEY = "zuul_roter_config_key:";
 
     /**
-     * PARAM表配置
+     * PARAM表配置(paramName.getNameClass())
      */
     public static final String CACHE_PARAM_NAME = "hyjf_param_name:";
 
@@ -165,7 +165,7 @@ public class RedisConstants {
     public static final String PRE_REQUEST_LIMIT = "req_limit:";
 
     /**
-     * borrowNid
+     * borrowNid(BORROW_NID:$borrowNid)
      */
     public static final String BORROW_NID = "BORROW_NID:";
     /**
@@ -173,7 +173,7 @@ public class RedisConstants {
      */
     public static final String SIGN = "sign:";
     /**
-     * admin单点登陆用户
+     * admin单点登陆用户(admin:$username)
      */
     public static final String ADMIN_REQUEST = "admin:";
     
@@ -292,7 +292,7 @@ public class RedisConstants {
 	 */
 	public static final String CLIENT = "CLIENT";
 
-    /** 某计划连续开放额度不同次数 */
+    /** 某计划连续开放额度不同次数 (cont_warn_of_hjh_account:$planNid)*/
     public static final String CONT_WARN_OF_HJH_ACCOUNT = "cont_warn_of_hjh_account:";
 
     /**
@@ -352,7 +352,7 @@ public class RedisConstants {
     public static final String CONCURRENCE_TRUSTEEPAY = "trustee_pay:";
 
     /**
-     * 担保机构批量还款防并发key
+     * 担保机构批量还款防并发key(batch_org_repay_userid:userId)
      */
     public static final String CONCURRENCE_BATCH_ORGREPAY_USERID = "batch_org_repay_userid:";
 
@@ -362,7 +362,7 @@ public class RedisConstants {
     public static final String UNDER_LINE_RECHARGE_TYPE = "under_line_recharge_type:";
 
     /**
-     * 还款申请防并发key
+     * 还款申请防并发key(repay_borrow_nid:$borrowNid)
      */
     public static final String CONCURRENCE_REPAY_REQUEST = "repay_borrow_nid:";
 
@@ -377,17 +377,17 @@ public class RedisConstants {
     public static final String PASSWORD_ERR_COUNT_ALL = "password_err_count_all_";
 
     /**
-     * 日推标累计额度前缀
+     * 日推标累计额度前缀(bail_day_mark_accumulate:$instCode)
      */
     public static final String DAY_MARK_ACCUMULATE = "bail_day_mark_accumulate:";
 
     /**
-     * 日发标已用
+     * 日发标已用(bail_day_used:$InstCode_yyyyMMdd)
      */
     public static final String DAY_USED = "bail_day_used:";
 
     /**
-     * 日推标上限额度前缀
+     * 日推标上限额度前缀(bail_day_mark_line:$instCode)
      */
     public static final String DAY_MARK_LINE = "bail_day_mark_line:";
 
@@ -463,4 +463,82 @@ public class RedisConstants {
      * 网贷之家token校验(+userName)
      */
     public final static String KEY_WDZJ_KEY="token_wdzj_";
+
+    /**
+     * 神策开户redis+用户ID
+     */
+    public final static String SENSORS_DATA_OPEN_ACCOUNT ="SENSORS_DATA_OPEN_ACCOUNT:";
+
+    /**
+     * 汇计划计算提成并发控制
+     */
+    public final static String HJHCOMMISION_COMPUTE = "hjhcommision_compute:";
+
+    /**
+     * 绑卡回调并发控制
+     */
+    public final static String CONCURRENCE_BIND_CARD = "bindCard:";
+
+    /**
+     * 散标优惠券放款 couponloans + borrowNid
+     */
+    public final static String COUPON_LOANS ="couponloans:";
+
+    /**
+     * 自动录标 borrowsend + instcode + assetId
+     */
+    public final static String BORROW_SEND ="borrowsend:";
+
+    /**
+     * 自动初审 borrowpreaudit + instcode + assetId/borrowNid
+     */
+    public final static String BORROW_PRE_AUDIT ="borrowpreaudit:";
+
+    /**
+     * 关联计划 borrowissue + creditNid/borrowNid
+     */
+    public final static String BORROW_ISSUE ="borrowissue:";
+
+    /**
+     * 邮件发送key
+     */
+    public static String LABEL_MAIL_KEY = "labelmailkey";
+
+    /**
+     * 自动备案 borrowrecord + instcode + assetId/borrowNid
+     */
+    public static String BORROW_RECORD = "borrowrecord:";
+
+    /**
+     * 自动审核保证金 borrowbail + instcode + borrowNid
+     */
+    public static String BORROW_BAIL = "borrowbail:";
+
+
+    /**
+     * synBalance + userId
+     */
+    public static String SYN_VALANCE = "synBalance:";
+
+    /**
+     * 优惠券还款 couponrepay + borrowNid + periodNow
+     */
+    public static String COUPON_REPAY = "couponrepay:";
+
+    /**
+     * 优惠券发放 couponsend + userid + couponCode + sendFlg +  activityId
+     */
+    public static String COUPON_SEND = "couponsend:";
+
+    /**
+     * 汇计划优惠券还款 couponrepayhjh + orderId
+     */
+    public static String COUPON_REPAY_HJH = "couponrepayhjh:";
+
+    /**
+     * 汇计划优惠券放款 couponloanshjh + orderId
+     */
+    public static String COUPON_LOANS_HJH = "couponloanshjh:";
+
+
 }

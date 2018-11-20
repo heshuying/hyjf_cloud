@@ -13,7 +13,7 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.cs.message.bean.mc.MessagePush;
+import com.hyjf.cs.message.bean.mc.MessagePushMsg;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 import com.hyjf.cs.message.bean.mc.MessagePushPlatStatics;
 import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
@@ -70,7 +70,7 @@ public class MsgPushServiceImpl implements MsgPushService {
 
 	@Override
 	public void pushMessage() {
-		List<MessagePush> list = messagePushMsgDao.findAllMessage();
+		List<MessagePushMsg> list = messagePushMsgDao.findAllMessage();
 		try {
 			if (list != null && list.size() > 0) {
 				for (int i = 0; i < list.size(); i++) {
@@ -122,12 +122,12 @@ public class MsgPushServiceImpl implements MsgPushService {
 	}
 
 	@Override
-	public List<MessagePush> getMsgStaticsListByTime(Integer startTime, Integer endTime) {
+	public List<MessagePushMsg> getMsgStaticsListByTime(Integer startTime, Integer endTime) {
 		return messagePushMsgDao.getMsgStaticsListByTime(startTime, endTime);
 	}
 
 	@Override
-	public void insertMessagePush(MessagePush msg) {
+	public void insertMessagePush(MessagePushMsg msg) {
 		MessagePushTemplateStatics msgSta = new MessagePushTemplateStatics();
 		msgSta.setMsgId(msg.getId());
 		msgSta.setMsgCode(msg.getMsgCode());

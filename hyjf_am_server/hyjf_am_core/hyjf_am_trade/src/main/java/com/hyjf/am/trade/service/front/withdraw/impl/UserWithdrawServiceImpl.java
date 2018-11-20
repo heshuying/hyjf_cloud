@@ -14,9 +14,9 @@ import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetterUtil;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.pay.lib.bank.util.BankCallParamConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
 
@@ -131,6 +131,7 @@ public class UserWithdrawServiceImpl extends BaseServiceImpl implements UserWith
      */
     @Override
     public String handlerAfterCash(ApiUserWithdrawRequest request) throws Exception {
+        logger.info("执行提现后处理,请求参数为：=======================【" + JSONObject.toJSONString(request, true) + "】");
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("status","");
         jsonObject.put("statusDesc","");
@@ -141,10 +142,7 @@ public class UserWithdrawServiceImpl extends BaseServiceImpl implements UserWith
         // 用户ID
         int userId = Integer.parseInt(params.get("userId"));
         // 查询账户信息
-        AccountExample accountExample = new AccountExample();
-        AccountExample.Criteria accountCriteria = accountExample.createCriteria();
-        accountCriteria.andUserIdEqualTo(userId);
-        Account account = this.accountMapper.selectByExample(accountExample).get(0);
+        Account account = new Account();
         // 根据用户ID查询用户银行卡信息
         String ordId = bean.getLogOrderId() == null ? "" : bean.getLogOrderId(); // 订单号
         Date nowTime = GetDate.getNowTime(); // 当前时间
@@ -180,7 +178,11 @@ public class UserWithdrawServiceImpl extends BaseServiceImpl implements UserWith
                             jsonObject.put("flag",true);
 
                             // 提现金额
-                            BigDecimal transAmt = bean.getBigDecimal(BankCallParamConstant.PARAM_TXAMOUNT);
+                            BigDecimal transAmt = BigDecimal.ZERO;
+                            String txAmont = bean.getTxAmount();
+                            if (Validator.isNotNull(txAmont) && NumberUtils.isNumber(txAmont)) {
+                                transAmt = new BigDecimal(txAmont);
+                            }
                             // 从数据库中查询提现手续费
                             String fee = accountWithdraw.getFee();
                             // 提现手续费
@@ -209,8 +211,6 @@ public class UserWithdrawServiceImpl extends BaseServiceImpl implements UserWith
                             if (!isAccountUpdateFlag) {
                                 throw new Exception("提现后,更新用户Account表失败!");
                             }
-                            // 重新获取用户信息
-                            account = this.getAccount(userId);
                             // 写入收支明细
                             AccountList accountList = new AccountList();
                             // 重新查询用户账户信息

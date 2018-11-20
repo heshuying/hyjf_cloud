@@ -3,6 +3,8 @@
  */
 package com.hyjf.am.vo.message;
 
+import org.springframework.core.io.InputStreamSource;
+
 import java.util.Arrays;
 import java.util.Map;
 
@@ -30,6 +32,8 @@ public class MailMessage extends HyjfMessage {
 
     private String serviceType;
 
+    private InputStreamSource inputStreamSource;
+
     public MailMessage() {
         super();
     }
@@ -43,6 +47,18 @@ public class MailMessage extends HyjfMessage {
         this.toMailArray = toMailArray;
         this.mailKbn = mailKbn;
         this.serviceType = serviceType;
+    }
+
+    public MailMessage(Integer userId, Map<String, String> replaceStrs, String subject, String body,
+                       String[] fileNames, String[] toMailArray, String mailKbn, String serviceType, InputStreamSource is) {
+        super(userId, replaceStrs);
+        this.subject = subject;
+        this.body = body;
+        this.fileNames = fileNames;
+        this.toMailArray = toMailArray;
+        this.mailKbn = mailKbn;
+        this.serviceType = serviceType;
+        this.inputStreamSource = is;
     }
 
     public String getSubject() {
@@ -91,6 +107,14 @@ public class MailMessage extends HyjfMessage {
 
     public void setServiceType(String serviceType) {
         this.serviceType = serviceType;
+    }
+
+    public InputStreamSource getInputStreamSource() {
+        return inputStreamSource;
+    }
+
+    public void setInputStreamSource(InputStreamSource inputStreamSource) {
+        this.inputStreamSource = inputStreamSource;
     }
 
     @Override

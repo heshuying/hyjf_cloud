@@ -196,7 +196,7 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
                     if (count3 > 0) {
                         rechargeCount++;
                     }
-                    if (count4 > 4) {
+                    if (count4 > 0) {
                         tenderCount++;
                     }
                 }

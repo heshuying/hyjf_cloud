@@ -14,6 +14,7 @@ import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -169,4 +170,17 @@ public interface AmConfigClient {
      * @return
      */
     ContentArticleResponse getCompanyDynamicsListPage(ContentArticleRequest request);
+
+    /**
+     * 判断某天是否是工作日
+     *
+     * @return
+     */
+    boolean queryWorkdateOnSomeday();
+
+    /**
+     * 判断当天是不是当月第一个工作日
+     * @return
+     */
+    boolean selectFirstWorkdayOnMonth();
 }

@@ -1748,6 +1748,7 @@ public class FddHandle {
 			}
 			//拼接后的PDf路径
 			String tmpdfPath  = imageSavePath + "/" + fileName +"_tm.pdf";
+			logger.info("===============脱敏待拼接图片列表：" + jointPathList.toString());
 			//拼接脱敏图片
 			jointPDFimage(jointPathList,imageSavePath + "/pdfimage.png");
 			//重新拼接为PDF文件
@@ -2305,9 +2306,10 @@ public class FddHandle {
 						boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
 								basePathImage, saveDir, fileName, ins);
 						if (!flag){
-							throw new RuntimeException("上传失败!fileName:" + fileName);
+							throw new RuntimeException("上传失败!无报错，fileName:" + fileName);
 						}
 					}catch (Exception e){
+
 						throw new RuntimeException("上传失败!fileName:" + fileName);
 					}
 				}
@@ -2315,12 +2317,16 @@ public class FddHandle {
 				String fileName = parentDir.getName();
 				logger.info("--------开始上传文件：" + fileName);
 				try(FileInputStream ins = new FileInputStream(parentDir)){
+					logger.info("--------开始上传文件，准备链接ftp服务器，host:：" + ftpIP + ",port:" + port);
+
 					boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
 							basePathImage, saveDir, fileName, ins);
 					if (!flag){
+						logger.info("==============上传文件失败，无报错，fileName" + fileName);
 						throw new RuntimeException("上传失败!fileName:" + fileName);
 					}
 				}catch (Exception e){
+					logger.error("===========上传文件异常！fileName:" + fileName,e);
 					throw new RuntimeException("上传失败!fileName:" + fileName);
 				}
 			}
