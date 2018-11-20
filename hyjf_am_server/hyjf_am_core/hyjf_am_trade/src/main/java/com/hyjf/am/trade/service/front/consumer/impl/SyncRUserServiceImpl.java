@@ -5,6 +5,7 @@ package com.hyjf.am.trade.service.front.consumer.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.model.auto.RUser;
+import com.hyjf.am.trade.dao.model.auto.RUserExample;
 import com.hyjf.am.trade.service.front.consumer.SyncRUserService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import org.apache.commons.lang3.StringUtils;
@@ -128,4 +129,26 @@ public class SyncRUserServiceImpl extends BaseServiceImpl implements SyncRUserSe
 
     }
 
+    /**
+     * 根据推荐人修改用户的类型
+     * @param jsonObj
+     * @author wgx
+     * @date 2018/11/20
+     */
+    @Override
+    public void updateUserInfoByReferrer(JSONObject jsonObj) {
+        String referrer = jsonObj.getString("referrer");
+        String attribute = jsonObj.getString("attribute");
+        if (StringUtils.isNotBlank(referrer) && StringUtils.isNotBlank(attribute)) {
+            int referrerInt = Integer.parseInt(referrer);
+            int attributeInt = Integer.parseInt(attribute);
+            RUserExample example = new RUserExample();
+            RUserExample.Criteria criteria = example.createCriteria();
+            criteria.andSpreadsUserIdEqualTo(referrerInt);
+            RUser rUser = new RUser();
+            rUser.setAttribute(attributeInt);
+            int upRet = rUserMapper.updateByExampleSelective(rUser, example);
+            logger.info("rid:{},am_trade.ht_r_user更新ht_user_info{}", referrerInt, upRet > 0 ? "成功" : "失败");
+        }
+    }
 }
