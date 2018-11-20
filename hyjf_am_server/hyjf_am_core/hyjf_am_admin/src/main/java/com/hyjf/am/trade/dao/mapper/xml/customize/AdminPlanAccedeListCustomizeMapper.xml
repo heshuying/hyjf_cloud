@@ -294,7 +294,8 @@
 			  	hdpa.invest_counts AS investCounts,
 			  	hdpa.match_dates AS matchDates,
 				date_format(hdpa.end_date, '%Y-%m-%d') AS end_date,
-				hdpa.acctual_payment_time
+				CASE WHEN hdpa.acctual_payment_time =0 OR hdpa.acctual_payment_time is null THEN ''
+				ELSE FROM_UNIXTIME(hdpa.commission_count_time,'%Y-%m-%d') END AS acctual_payment_time
 			FROM
 				ht_hjh_accede hdpa
 			LEFT JOIN ht_r_user ruser1 ON hdpa.invite_user_id = ruser1.user_id  

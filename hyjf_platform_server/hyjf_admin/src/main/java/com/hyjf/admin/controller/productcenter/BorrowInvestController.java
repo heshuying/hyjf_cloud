@@ -507,9 +507,37 @@ public class BorrowInvestController extends BaseController {
             }
         };
 
+        IValueFormatter tenderReferrerUserIdAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String value = (String) object;
+                if (StringUtils.isBlank(value)) {
+                    return "";
+                } else if ("0".equals(value)) {
+                    return "";
+                }
+                return value;
+            }
+        };
+
+        IValueFormatter referrerUserIdAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String value = (String) object;
+                if (StringUtils.isBlank(value)) {
+                    return "";
+                } else if ("0".equals(value)) {
+                    return "";
+                }
+                return value;
+            }
+        };
+
 
         mapAdapter.put("tenderUserAttributeNow", tenderUserAttributeNowAdapter);
         mapAdapter.put("contractStatus", contractStatusAdapter);
+        mapAdapter.put("referrerUserId", referrerUserIdAdapter);
+        mapAdapter.put("tenderReferrerUserId", tenderReferrerUserIdAdapter);
         return mapAdapter;
     }
 
