@@ -24,7 +24,7 @@ import java.util.List;
  */
 @Api(value = "App推送管理")
 @RestController
-@RequestMapping("/am-trade/appPushManage")
+@RequestMapping("/am-admin/appPushManage")
 public class AppPushManageController extends BaseController {
 
     @Autowired
