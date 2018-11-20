@@ -39,7 +39,8 @@ public class WechatRepayMentListCustomize implements Serializable {
     private String orderId;
     // 项目期限
     private String period;
-
+    //加息收益率
+    private String borrowExtraYield;
     public static long getSerialVersionUID() {
         return serialVersionUID;
     }
@@ -154,5 +155,13 @@ public class WechatRepayMentListCustomize implements Serializable {
 
     public void setPeriod(String period) {
         this.period = period;
+    }
+
+    public String getBorrowExtraYield() {
+        return borrowExtraYield;
+    }
+
+    public void setBorrowExtraYield(String borrowExtraYield) {
+        this.borrowExtraYield = borrowExtraYield;
     }
 }
