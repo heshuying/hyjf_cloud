@@ -110,7 +110,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      * @Date 2018/6/19 9:47
      */
     @Override
-    @HystrixCommand(commandKey = "加入计划(三端)-joinPlan",fallbackMethod = "fallBackJoinPlan",ignoreExceptions = CheckException.class,commandProperties = {
+    /*@HystrixCommand(commandKey = "加入计划(三端)-joinPlan",fallbackMethod = "fallBackJoinPlan",ignoreExceptions = CheckException.class,commandProperties = {
             //设置断路器生效
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s
@@ -121,7 +121,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
             // 超时时间
             @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000")},threadPoolProperties = {
-            @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
+            @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})*/
     public WebResult<Map<String, Object>> joinPlan(TenderRequest request) {
         UserVO loginUser = amUserClient.findUserById(request.getUserId());
         Integer userId = loginUser.getUserId();
