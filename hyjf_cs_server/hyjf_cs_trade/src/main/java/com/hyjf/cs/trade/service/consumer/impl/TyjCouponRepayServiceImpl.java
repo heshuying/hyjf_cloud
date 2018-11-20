@@ -178,6 +178,7 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
                 tradeType = CustomConstants.TRADE_COUPON_DJ;
             }
             accountWebList.setTradeType(tradeType); // 加息券回款
+            remark = "项目编号：" + borrowNid + "<br />" + remark;
             accountWebList.setRemark(remark); // 投资编号
             accountWebList.setCreateTime(nowTime);
             this.insertAccountWebList(accountWebList, borrowTenderCpn);
