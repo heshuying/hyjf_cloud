@@ -122,7 +122,7 @@ public class AppPassWordController extends BaseUserController {
                     logger.error("保存用户日志失败", e);
                 }
                 //如果修改密码成功或者重置密码就将登陆密码错误次数的key删除
-                RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_APP + userVO.getUsername());
+                RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL + userVO.getUserId());
                 ret.put("status", "0");
                 ret.put("statusDesc", "修改密码成功");
             } else {
@@ -401,7 +401,7 @@ public class AppPassWordController extends BaseUserController {
 
                 if (success) {
                     //如果修改密码成功或者重置密码就将登陆密码错误次数的key删除
-                    RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_APP+mobile);
+                    RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL+user.getUserId());
                     ret.put("status", "0");
                     ret.put("statusDesc", "找回密码成功");
                 } else {
