@@ -439,9 +439,14 @@
         htbi.borrow_safeguard_way,
         htbi.borrow_income_description,
         htbi.borrow_publisher,
-        htbi.borrow_extra_yield,
         <!-- add by nxl 添加产品加息标志位查询-->
         hydb.increase_interest_flag,
+        case when htbi.borrow_extra_yield=0 then
+        ''
+        else
+        htbi.borrow_extra_yield
+        end
+        borrow_extra_yield,
         htbi.contract_period,
         FROM_UNIXTIME(
         hydb.recover_last_time,

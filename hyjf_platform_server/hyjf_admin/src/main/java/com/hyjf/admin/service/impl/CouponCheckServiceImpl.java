@@ -127,7 +127,7 @@ public class CouponCheckServiceImpl implements CouponCheckService {
                 try {
                     errorMessage = UploadFileUtils.upload4Stream(fileRealName, logoRealPathDir, multipartFile.getInputStream(), 5000000L);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error("上传文件失败,失败原因：{}", e);
                 }
                 if (StringUtils.equals("上传文件成功！", errorMessage)) {
                     AdminCouponCheckRequest accr = new AdminCouponCheckRequest();
@@ -267,7 +267,6 @@ public class CouponCheckServiceImpl implements CouponCheckService {
             couponCount = this.sendConponAction(copuncodes, String.valueOf(user.getUserId()), activityId, couponSource, loginUserId);
         } catch (Exception e) {
             logger.error("用户："+userName + "发送优惠券失败！",e);
-            e.printStackTrace();
         }
         succouponCount = succouponCount + couponCount;
         logger.info(user.getUserId()+ " 发放优惠券：" + couponCount + " 张");

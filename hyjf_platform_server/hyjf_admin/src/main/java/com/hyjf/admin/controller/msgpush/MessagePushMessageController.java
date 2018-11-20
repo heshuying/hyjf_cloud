@@ -101,7 +101,7 @@ public class MessagePushMessageController extends BaseController {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("获取手动发送消息详情失败, {}", e);
         }
         List<MessagePushTagVO> templatePushTags = this.messagePushTagService.getTagList();
         response.setTemplatePushTags(templatePushTags);

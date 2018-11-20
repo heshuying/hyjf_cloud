@@ -656,7 +656,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         // 标的状态key
         String onTimeStatusKey = RedisConstants.REDIS_KEY_ONTIME_STATUS + SEPARATE + borrowNid;
         // 标的定时key
-        String onTimeKey = RedisConstants.REDIS_KEY_ONTIME + SEPARATE + borrowNid;
+        String onTimeKey = RedisConstants.ONTIME + borrowNid;
         // 标的定时独占锁key
         String onTimeLockKey = RedisConstants.REDIS_KEY_ONTIME_LOCK + SEPARATE + borrowNid;
         String status = RedisUtils.get(onTimeStatusKey);

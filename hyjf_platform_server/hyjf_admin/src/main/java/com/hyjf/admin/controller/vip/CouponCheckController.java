@@ -125,7 +125,7 @@ public class CouponCheckController extends BaseController {
                 try {
                     flag = couponCheckService.batchCheck(checkRequest.getId(), response, userId);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    logger.error("批量审核优惠券失败，失败原因：{}", e);
                 }
                 if (flag) {
                     checkRequest.setStatus(2);
