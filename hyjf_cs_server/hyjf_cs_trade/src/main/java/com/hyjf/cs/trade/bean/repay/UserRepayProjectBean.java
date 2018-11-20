@@ -69,7 +69,7 @@ public class UserRepayProjectBean extends BaseResultBean {
 	public UserRepayProjectBean() {
 		super();
 	}
-	
+
 	public List<ProjectRepayListBean> getDetailList() {
 		return detailList;
 	}
@@ -77,8 +77,6 @@ public class UserRepayProjectBean extends BaseResultBean {
 	public void setDetailList(List<ProjectRepayListBean> detailList) {
 		this.detailList = detailList;
 	}
-
-
 
 	public String getYesAccount() {
 		return yesAccount;
