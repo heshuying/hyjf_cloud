@@ -74,8 +74,7 @@ public class WebPassWordController extends BaseUserController{
            WebViewUserVO webUser = passWordService.getWebViewUserByUserId(userId);
            if (null != webUser) {
                webUser = passWordService.setToken(webUser);
-               RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_WEB+webUser.getMobile());
-               RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_WEB+webUser.getUsername());
+               RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL+webUser.getUserId());
            }
        }
         return response;
@@ -287,8 +286,7 @@ public class WebPassWordController extends BaseUserController{
         CheckUtil.check(null!=user,MsgEnum.STATUS_CE000006);
         int cnt = passWordService.updatePassword(user, password1);
         CheckUtil.check(cnt>0,MsgEnum.ERR_PASSWORD_MODIFY);
-        RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_WEB+mobile);
-        RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_WEB+user.getUsername());
+        RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL+user.getUserId());
         return result;
     }
 
