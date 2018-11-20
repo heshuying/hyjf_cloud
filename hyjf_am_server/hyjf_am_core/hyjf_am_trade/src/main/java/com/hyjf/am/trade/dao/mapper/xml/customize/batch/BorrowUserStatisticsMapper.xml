@@ -95,7 +95,7 @@
 						SELECT
 							SUM(b.repay_account_capital_wait) AS waitSum
 						FROM
-							huiyingdai_borrow b JOIN huiyingdai_borrow_users u ON b.borrow_nid = u.borrow_nid
+							ht_borrow b JOIN ht_borrow_user u ON b.borrow_nid = u.borrow_nid
 						WHERE
 							b.`status` = 4
 						GROUP BY
@@ -104,7 +104,7 @@
 		        SELECT
 							SUM(b.repay_account_capital_wait) AS waitSum
 						FROM
-							huiyingdai_borrow b JOIN huiyingdai_borrow_maninfo m ON b.borrow_nid = m.borrow_nid
+							ht_borrow b JOIN ht_borrow_maninfo m ON b.borrow_nid = m.borrow_nid
 						WHERE
 							b.`status` = 4
 						GROUP BY
