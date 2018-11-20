@@ -20,7 +20,19 @@ public interface AssetManageService  extends BaseService {
     List<CurrentHoldObligatoryRightListCustomize> selectCurrentHoldObligatoryRightList(AssetManageBeanRequest request);
 
     int selectCurrentHoldObligatoryRightListTotal(AssetManageBeanRequest request);
-
+    /**
+     * app端-我的散标-已回款，查询数量(现用)
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    int countAlreadyRepayListRecordTotal(AssetManageBeanRequest request);
+    /**
+     * app端-我的散标-已回款，查询数量(原用)
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
     int selectRepaymentListTotal(AssetManageBeanRequest request);
 
     /**

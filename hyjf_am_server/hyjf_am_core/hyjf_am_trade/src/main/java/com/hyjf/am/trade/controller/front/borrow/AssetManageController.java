@@ -97,8 +97,8 @@ public class AssetManageController extends BaseController {
     public AssetManageResponse selectRepaymentListTotal(@RequestBody AssetManageBeanRequest request){
         logger.info("请求参数:" +JSONObject.toJSON(request));
         AssetManageResponse response = new AssetManageResponse();
-        int repayMentCount = this.assetManageService.selectRepaymentListTotal(request);
-
+        //int repayMentCount = this.assetManageService.selectRepaymentListTotal(request);
+        int repayMentCount = this.assetManageService.countAlreadyRepayListRecordTotal(request);
         response.setRepayMentCount(repayMentCount);
         return response;
     }
