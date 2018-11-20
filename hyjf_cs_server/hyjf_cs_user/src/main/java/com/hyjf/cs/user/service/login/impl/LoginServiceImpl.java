@@ -20,7 +20,6 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.DateUtils;
@@ -107,6 +106,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	 */
 	@Override
 	public WebViewUserVO login(String loginUserName, String loginPassword, String ip, String channel) {
+	    logger.info("登陆参数，用户名："+loginUserName+"；密码："+loginPassword);
 		if (checkMaxLength(loginUserName, 16) || checkMaxLength(loginPassword, 32)) {
 			CheckUtil.check(false, MsgEnum.ERR_USER_LOGIN);
 		}
@@ -161,6 +161,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	 */
 	private WebViewUserVO doLogin(String loginUserName, String loginPassword, String ip, String channel) {
 		UserVO userVO = amUserClient.updateByCondition(loginUserName);
+		logger.info("登陆获取loginUserName:"+loginUserName+";userVO:"+(userVO==null));
 		WebViewUserVO webViewUserVO = new WebViewUserVO();
 		CheckUtil.check(userVO != null, MsgEnum.ERR_USER_LOGIN);
 		String codeSalt = userVO.getSalt();

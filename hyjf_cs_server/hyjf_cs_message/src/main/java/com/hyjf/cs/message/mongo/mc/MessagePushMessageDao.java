@@ -63,7 +63,7 @@ public class MessagePushMessageDao extends BaseMongoDao<MessagePushMsg> {
         int limitEnd = pageSize;
         query.addCriteria(criteria);
         query.skip(limitStart).limit(limitEnd);
-        query.with(new Sort(Sort.Direction.DESC, "lastUpdateTime"));
+        query.with(new Sort(Sort.Direction.DESC, "lastupdateTime"));
         return mongoTemplate.find(query, getEntityClass());
     }
 

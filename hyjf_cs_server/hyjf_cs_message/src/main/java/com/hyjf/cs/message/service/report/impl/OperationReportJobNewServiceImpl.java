@@ -45,6 +45,7 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
 
     @Override
     public Calendar insertOperationData(OperationReportJobBean bean) {
+        logger.info("OperationReportJobBean is: {}", JSONObject.toJSONString(bean));
         // 插入统计日期
         Calendar cal = bean.getCalendar();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
@@ -79,6 +80,8 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         oe.setWillPayMoney(bean.getWillPayMoney());
 
         BorrowUserStatistic borrowUserStatistic = this.selectBorrowUserStatistic();
+
+        logger.info("BorrowUserStatistic is: {}", JSONObject.toJSONString(borrowUserStatistic));
         if(borrowUserStatistic!=null) {
             // 累计借款人
             oe.setBorrowuserCountTotal(borrowUserStatistic.getBorrowuserCountTotal());
