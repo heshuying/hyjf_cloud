@@ -19,6 +19,11 @@ public class RedisConstants {
     // 汇计划分割线
     public static final String HJH_SLASH = "_";
 
+    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
+    // _tmp
+    public static final String HJH_SLASH_TMP = "_tmp";
+    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
+
     // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ key通用常量 ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ //
 
 
@@ -54,7 +59,7 @@ public class RedisConstants {
 
 
     /**
-     * 风险保证金前缀
+     * 风险保证金前缀 （capital_toplimit:InstCode）
      */
 //	public static final String CAPITAL_TOPLIMIT_ = "capital_toplimit:";
 
@@ -79,7 +84,7 @@ public class RedisConstants {
     public static final String HJH_LOCK_REPEAT = "hjh_lockisrepeat:";
 
     /**
-     * 散标投资异步防重校验
+     * 散标投资异步防重校验（tender_orderid:LogOrderId）
      */
     public static final String TENDER_ORDERID = "tender_orderid:";
 
@@ -89,7 +94,7 @@ public class RedisConstants {
     public static final String COUPON_TENDER_KEY = "coupon_tender:";
 
 
-    /** 直投类放款任务名称 */
+    /** 直投类放款任务名称 （zhitouLoan: + borrowApicron.getBorrowNid() + "_" + borrowApicron.getPeriodNow()）*/
 	public static final String ZHITOU_LOAN_TASK = "zhitouLoan:";
 	/**计划类实时放款 add by cwyang 2017-10-23*/
 	public static final String PLAN_REALTIME_LOAN_TASK = "planRealtimeLoan:";
@@ -101,11 +106,11 @@ public class RedisConstants {
 	/** 放款请求任务名称 */
 	public static final String LOAN_REQUEST_TASK = "loanRequest:";
 
-	/** 直投类还款任务名称 */
+	/** 直投类还款任务名称 （zhitouRepay:BorrowNid + "_" + PeriodNow）*/
 	public static final String ZHITOU_REPAY_TASK = "zhitouRepay:";
-	/** 计划类还款任务名称 */
+	/** 计划类还款任务名称 （planRepay:BorrowNid + "_" + PeriodNow）*/
 	public static final String PLAN_REPAY_TASK = "planRepay:";
-	/** 还款请求任务名称 */
+	/** 还款请求任务名称 （repayRequest:PeriodNow）*/
 	public static final String REPAY_REQUEST_TASK = "repayRequest:";
 
     // 汇计划队列前缀 (queue:credit:$creditNid, queue:invest:$borrowNid, queue:invest:$borrowNid_tmp)
@@ -118,11 +123,6 @@ public class RedisConstants {
     public static final String HJH_BORROW_CREDIT = "credit:";
     // 汇计划标的队列标识 投资（原始标的） (queue:invest:$borrowNid)
     public static final String HJH_BORROW_INVEST = "invest:";
-
-    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
-    // _tmp (queue:invest:$borrowNid_tmp)
-    public static final String HJH_SLASH_TMP = "_tmp";
-    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
 
     /**
      * 散标投资防重校验(borrow_tender_repeat:$userId)
@@ -189,12 +189,12 @@ public class RedisConstants {
     
 
     /**
-     * 用户token令牌前缀(token:token)
+     * 用户token令牌前缀（token:token）
      */
     public static final String USER_TOEKN_KEY = "token:";
 
     /**
-     * 用户userId令牌前缀(user_id:userId)
+     * 用户userId令牌前缀（user_id:userId）
      */
     public static final String USERID_KEY = "user_id:";
 
@@ -242,7 +242,7 @@ public class RedisConstants {
     public static final String SMS_MAIL_TEMPLATE = "sms_mail_template:";
 
     /**
-     * 运营报告定时任务key
+     * 运营报告定时任务key（statistics_operation_report_task:$boolean）
      */
     public static final String Statistics_Operation_Report = "statistics_operation_report_task";
 
@@ -316,12 +316,12 @@ public class RedisConstants {
     public static final String STATISTICAL_INVESTOR = "statistical_investor:";
 
     /**
-     * 上海大屏幕运营数据 : 统计投资
+     * 上海大屏幕运营数据 : 统计投资（statistical_investment:$String）
      */
     public static final String STATISTICAL_INVESTMENT = "statistical_investment:";
 
     /**
-     * 上海大屏幕运营数据 : 统计充值
+     * 上海大屏幕运营数据 : 统计充值（statistical_recharge:$String）
      */
     public static final String STATISTICAL_RECHARGE = "statistical_recharge:";
 
@@ -357,7 +357,7 @@ public class RedisConstants {
     public static final String CONCURRENCE_BATCH_ORGREPAY_USERID = "batch_org_repay_userid:";
 
     /**
-     * 线下充值类型
+     * 线下充值类型（under_line_recharge_type:codeListString）
      */
     public static final String UNDER_LINE_RECHARGE_TYPE = "under_line_recharge_type:";
 
@@ -439,7 +439,7 @@ public class RedisConstants {
 
 
     /**
-     * 上传合同模板暂存地址
+     * 上传合同模板暂存地址(template_upload_url:templetId)
      */
     public static final String TEMPLATE_UPLOAD_URL = "template_upload_url:";
 
