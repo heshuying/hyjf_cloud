@@ -85,10 +85,7 @@
 		SELECT
 			hbap.suc_amount,
 			hbap.batch_service_fee,
-			FROM_UNIXTIME(
-				hbap.update_time,
-				'%Y-%m-%d'
-			) AS suc_time,
+		    DATE_FORMAT(hbap.update_time,'%Y-%m-%d') AS suc_time,
 			hydb.borrow_nid,
 			o.name as borrow_name,
 			hydbpt.borrow_name AS project_type_name,
