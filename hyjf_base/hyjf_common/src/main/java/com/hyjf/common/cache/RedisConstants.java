@@ -264,9 +264,6 @@ public class RedisConstants {
     /*分隔符*/
     public static final String COLON = ":";
 
-    /** 定时发标时间key名 */
-    public static final String REDIS_KEY_ONTIME = "ontime";
-
     /** 定时发标状态修改锁key名 */
     public static final String REDIS_KEY_ONTIME_LOCK = "ontime_lock";
 
