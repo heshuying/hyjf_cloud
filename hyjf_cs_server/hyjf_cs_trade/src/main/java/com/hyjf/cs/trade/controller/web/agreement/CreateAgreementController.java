@@ -67,34 +67,39 @@ public class CreateAgreementController extends BaseTradeController {
      */
     @ApiOperation(value = "账户中心-资产管理-当前持有-- 投资协议(实际为散标居间协议)下载", notes = "账户中心-资产管理-当前持有-- 投资协议(实际为散标居间协议)下载")
     @GetMapping("/intermediaryAgreementPDF")
-    public void intermediaryAgreementPDF(HttpServletRequest request, HttpServletResponse response,UserInvestListBeanRequest form) throws MalformedURLException {
+    public HttpServletResponse intermediaryAgreementPDF(HttpServletRequest request, HttpServletResponse response,UserInvestListBeanRequest form)  {
 
         logger.info("web获取用户资产信息, nid is :{}", form.getNid());
         List<TenderAgreementVO> list=createAgreementService.getIntermediaryAgreementPDFUrl(form.getNid());
         if(list!=null&&list.size()>0){
             TenderAgreementVO agreementVO=list.get(0);
             if(agreementVO.getStatus()==3){
-                // 下载网络文件
-                int bytesum = 0;
-                int byteread = 0;
-                URL url = new URL(systemConfig.getBasePathurl()+systemConfig.getHyjfFtpBasepathPdf()+"/"+agreementVO.getPdfUrl());
                 try {
-                    URLConnection conn = url.openConnection();
-                    InputStream inStream = conn.getInputStream();
-                    FileOutputStream fs = new FileOutputStream("c:/abc.gif");
+                    // path是指欲下载的文件的路径。
+                    File file = new File(systemConfig.getBasePathurl()+systemConfig.getHyjfFtpBasepathPdf()+"/"+agreementVO.getPdfUrl());
+                    // 取得文件名。
+                    String filename = file.getName();
+                    // 取得文件的后缀名。
+                    String ext = filename.substring(filename.lastIndexOf(".") + 1).toUpperCase();
 
-                    byte[] buffer = new byte[1204];
-                    int length;
-                    while ((byteread = inStream.read(buffer)) != -1) {
-                        bytesum += byteread;
-                        fs.write(buffer, 0, byteread);
-                    }
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    // 以流的形式下载文件。
+                    InputStream fis = new BufferedInputStream(new FileInputStream(systemConfig.getBasePathurl()+systemConfig.getHyjfFtpBasepathPdf()+"/"+agreementVO.getPdfUrl()));
+                    byte[] buffer = new byte[fis.available()];
+                    fis.read(buffer);
+                    fis.close();
+                    // 清空response
+                    response.reset();
+                    // 设置response的Header
+                    response.addHeader("Content-Disposition", "attachment;filename=" + new String(filename.getBytes()));
+                    response.addHeader("Content-Length", "" + file.length());
+                    OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
+                    response.setContentType("application/octet-stream");
+                    toClient.write(buffer);
+                    toClient.flush();
+                    toClient.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
                 }
-                logger.info("下载成功");
             }else{
                 logger.info("暂无可下载协议");
             }
@@ -102,8 +107,7 @@ public class CreateAgreementController extends BaseTradeController {
             logger.info("暂无可下载协议");
         }
 
-
+        return response;
     }
-
 
 }
