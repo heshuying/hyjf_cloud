@@ -25,9 +25,9 @@ public class AppPushManageRequest extends BasePage implements Serializable {
 
     private Integer status;
 
-    private Date timeStart;
+    private String timeStart;
 
-    private Date timeEnd;
+    private String timeEnd;
 
     private Integer createUserId;
 
@@ -102,19 +102,19 @@ public class AppPushManageRequest extends BasePage implements Serializable {
         this.status = status;
     }
 
-    public Date getTimeStart() {
+    public String getTimeStart() {
         return timeStart;
     }
 
-    public void setTimeStart(Date timeStart) {
+    public void setTimeStart(String timeStart) {
         this.timeStart = timeStart;
     }
 
-    public Date getTimeEnd() {
+    public String getTimeEnd() {
         return timeEnd;
     }
 
-    public void setTimeEnd(Date timeEnd) {
+    public void setTimeEnd(String timeEnd) {
         this.timeEnd = timeEnd;
     }
 
