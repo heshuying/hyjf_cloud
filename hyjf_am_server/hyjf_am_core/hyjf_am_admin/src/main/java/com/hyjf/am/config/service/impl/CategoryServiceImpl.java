@@ -232,7 +232,9 @@ public class CategoryServiceImpl implements CategoryService {
         if (StringUtils.isNotEmpty(contentHelpBeanRequest.getPost_time_begin())) {
             conCriteria.andCreateTimeGreaterThanOrEqualTo(GetDate.str2Date(GetDate.getDayStart(contentHelpBeanRequest.getPost_time_begin()),GetDate.datetimeFormat));
         }
-
+        if(contentHelpBeanRequest.getZhiChiStatus()!=null){
+            conCriteria.andZhichiStatusEqualTo(contentHelpBeanRequest.getZhiChiStatus());
+        }
         if (StringUtils.isNotEmpty(contentHelpBeanRequest.getPost_time_end())) {
             conCriteria.andCreateTimeLessThanOrEqualTo(GetDate.str2Date(GetDate.getDayEnd(contentHelpBeanRequest.getPost_time_end()),GetDate.datetimeFormat));
         }
