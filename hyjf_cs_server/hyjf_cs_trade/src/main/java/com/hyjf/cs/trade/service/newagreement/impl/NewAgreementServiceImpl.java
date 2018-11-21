@@ -13,7 +13,7 @@ import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.cs.common.util.ProtocolEnum;
+import com.hyjf.common.enums.ProtocolEnum;
 import com.hyjf.cs.trade.bean.newagreement.NewAgreementResultBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
@@ -57,7 +57,6 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
 	
 	/**
 	 * 查询协议表by assignNid(实际上是tenderNID)
-	 * @param assignNid
 	 * @return
 	 */
 	@Override
@@ -201,6 +200,7 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
 	 * @param aliasName 别名
 	 * @return
 	 */
+	@Override
 	public NewAgreementResultBean setProtocolImg(String aliasName){
 		List<String> url = null;
 		String protocolId = null;
