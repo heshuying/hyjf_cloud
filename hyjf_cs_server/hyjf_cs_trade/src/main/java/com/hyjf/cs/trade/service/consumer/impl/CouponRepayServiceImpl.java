@@ -47,6 +47,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Auther: walter.limeng
@@ -226,6 +227,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
             if (accountCnt == 0) {
                 throw new RuntimeException("投资人资金记录(huiyingdai_account)更新失败！" + "[优惠券投资编号：" + couponTenderNid + "]");
             }
+            TimeUnit.SECONDS.sleep(1);//秒
             // 取得账户信息(投资人)
             account = this.borrowClient.getAccountByUserId(tenderUserId);
             if (account == null) {

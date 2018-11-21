@@ -151,9 +151,8 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
         List<TenderAgreement> tenderAgreements= this.tenderAgreementMapper.selectByExample(example);
         List<TenderAgreementVO> tenderAgreementvos = new ArrayList<>();
         if(tenderAgreements != null && tenderAgreements.size()>0){
-
-            TenderAgreementVO tenderAgreementVO =  new TenderAgreementVO();
             for (TenderAgreement tenderAgreement : tenderAgreements) {
+                TenderAgreementVO tenderAgreementVO =  new TenderAgreementVO();
                 BeanUtils.copyProperties(tenderAgreement,tenderAgreementVO);
                 tenderAgreementvos.add(tenderAgreementVO);
             }
