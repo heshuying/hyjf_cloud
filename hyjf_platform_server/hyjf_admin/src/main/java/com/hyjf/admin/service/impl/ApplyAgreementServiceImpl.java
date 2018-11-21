@@ -1334,13 +1334,13 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
      * @return
      */
     public void downloadAction(DownloadAgreementRequest requestBean,HttpServletResponse response) {
-        logger.info("--------------------下载文件签署downloadAction", "下载文件签署。。。。request:"+JSONObject.toJSON(requestBean));
+        logger.info("--------------------下载文件签署request:"+JSONObject.toJSON(requestBean));
         String status = requestBean.getStatus();//1:脱敏，0：原始
         String repayPeriod = "DF-"+requestBean.getRepayPeriod()+"-";
         requestBean.setRepayPeriod(repayPeriod);
         List<TenderAgreementVO> tenderAgreementsAss= amTradeClient.selectLikeByExample(requestBean);//债转协议
-        logger.info("--------------------下载文件签署downloadAction", "下载文件签署。。。。request:"+JSONObject.toJSON(requestBean));
-        logger.info("downloadAction", "下载文件签署。。。。tenderAgreementsAss:"+JSONObject.toJSON(tenderAgreementsAss));
+        logger.info("--------------------下载文件签署request:"+JSONObject.toJSON(requestBean));
+        logger.info("下载文件签署。。。。tenderAgreementsAss:"+JSONObject.toJSON(tenderAgreementsAss));
         //输出文件集合
         List<File> files = new ArrayList<File>();
         if (CollectionUtils.isNotEmpty(tenderAgreementsAss)){
@@ -1376,9 +1376,9 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         if(files!=null && files.size()>0){
             logger.info("--------------------下载文件签署，打压缩包files："+JSONObject.toJSON(files));
            ZIPGenerator.generateZip(response, files, repayPeriod);
-            logger.info(this.getClass().getName(), "searchTenderToCreditDetail", "下载成功");
+            logger.info("searchTenderToCreditDetail下载成功");
         }else{
-            logger.error(this.getClass().getName(), "searchTenderToCreditDetail", "下载失败，请稍后重试。。。。");
+            logger.error("searchTenderToCreditDetail下载失败，请稍后重试。。。。");
 
         }
     }
