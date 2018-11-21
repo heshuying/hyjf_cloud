@@ -677,6 +677,7 @@
 			WHERE borrow.`status` = 5
 			AND hiil.user_id= #{userId}
 			AND borrow.plan_nid IS NULL
+			GROUP BY hiil.invest_order_id
 		) t
 	</select>
 
@@ -757,6 +758,7 @@
                 ELSE
                 hiild.repay_status = 1
             END
+            GROUP BY hiil.invest_order_id
 		) t
 	</select>
 
