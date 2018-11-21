@@ -4,10 +4,7 @@
 package com.hyjf.am.trade.service.admin.finance.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.admin.mq.producer.AccountWebListProducer;
 import com.hyjf.am.resquest.admin.SubCommissionRequest;
-import com.hyjf.am.trade.dao.mapper.auto.SubCommissionListConfigMapper;
-import com.hyjf.am.trade.dao.mapper.auto.SubCommissionMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.admin.finance.SubCommissionService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
@@ -20,7 +17,6 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -35,15 +31,6 @@ import java.util.List;
  */
 @Service(value = "tradeSubCommissionServiceImpl")
 public class SubCommissionServiceImpl extends BaseServiceImpl implements SubCommissionService {
-
-    @Autowired
-    private SubCommissionListConfigMapper subCommissionListConfigMapper;
-
-    @Autowired
-    private SubCommissionMapper subCommissionMapper;
-
-    @Autowired
-    private AccountWebListProducer accountWebListProducer;
 
     /**
      * 查询发起账户分佣所需的detail信息
@@ -195,9 +182,8 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
         receiveUserAccount.setUserId(receiveUserId);
         receiveUserAccount.setBankTotal(new BigDecimal(txAmount));
         receiveUserAccount.setBankBalance(new BigDecimal(txAmount));
-        AccountExample accountExample = new AccountExample();
-        accountExample.createCriteria().andUserIdEqualTo(receiveUserId);
-        boolean isUpdateFlag = accountMapper.updateByExampleSelective(CommonUtils.convertBean(receiveUserAccount,Account.class),accountExample) > 0;
+        boolean isUpdateFlag = adminAccountCustomizeMapper.updateOfSubCommissionTransferIn(CommonUtils.convertBean(receiveUserAccount,Account.class))>0;
+        //= accountMapper.updateByExampleSelective(CommonUtils.convertBean(receiveUserAccount,Account.class),accountExample) > 0;
         if (!isUpdateFlag) {
             logger.info("更新转入用户的账户信息失败,用户ID:[" + receiveUserId + "].订单号:[" + orderId + "].");
             throw new RuntimeException("更新转入用户的账户信息失败,用户ID:[" + receiveUserId + "].订单号:[" + orderId + "].");

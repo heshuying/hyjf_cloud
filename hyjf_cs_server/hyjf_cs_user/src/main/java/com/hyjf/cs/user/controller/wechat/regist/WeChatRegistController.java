@@ -306,9 +306,9 @@ public class WeChatRegistController extends BaseUserController {
             return ret;
         }
 
-        if (password.length() < 6 || password.length() > 16) {
+        if (password.length() < 8 || password.length() > 16) {
             ret.put("status", "99");
-            ret.put("statusDesc", "密码长度6-16位!");
+            ret.put("statusDesc", "密码长度8-16位!");
             return ret;
         }
 
@@ -320,19 +320,19 @@ public class WeChatRegistController extends BaseUserController {
                 break;
             }
         }
-        if (!hasNumber) {
-            ret.put("status", "99");
-            ret.put("statusDesc", "密码必须包含数字!");
-            return ret;
-        }
+//        if (!hasNumber) {
+//            ret.put("status", "99");
+//            ret.put("statusDesc", "密码必须包含数字!");
+//            return ret;
+//        }
 
-        String regEx = "^[a-zA-Z0-9]+$";
+        String regEx = "^(?![0-9]+$)(?![a-zA-Z]+$)(?![\\`\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\+\\-\\=\\{\\}\\|\\[\\]\\\\\\;\\'\\:\\\"\\,\\.\\/\\<\\>\\?]+$)[0-9A-Za-z\\`\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\+\\-\\=\\{\\}\\|\\[\\]\\\\\\;\\'\\:\\\"\\,\\.\\/\\<\\>\\?]{8,16}$";
         Pattern p = Pattern.compile(regEx);
         Matcher m = p.matcher(password);
         if (!m.matches()) {
             //密码必须由数字和字母组成，如abc123
             ret.put("status", "99");
-            ret.put("statusDesc", "密码必须由数字和字母组成，如abc123!");
+            ret.put("statusDesc", "必须包含数字、字母、符号至少两种!");
             return ret;
         }
 

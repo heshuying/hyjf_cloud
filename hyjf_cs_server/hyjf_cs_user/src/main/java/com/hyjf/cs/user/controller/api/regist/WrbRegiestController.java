@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author lisheng
@@ -45,7 +46,7 @@ public class WrbRegiestController {
     @Autowired
     private LoginService loginService;
 
-    @PostMapping("/register.do")
+    @PostMapping("/register")
     public WrbRegisterResultBean userRegister(@RequestParam String param,
                                               @RequestParam(value = "sign", required = false) String sign, HttpServletRequest request) {
         log.info("风车理财注册, param is :{}, sign is :{}", param, sign);
@@ -168,6 +169,7 @@ public class WrbRegiestController {
                     resultBean.setRetmsg("注册失败");
                     return resultBean;
                 } else {
+                    TimeUnit.SECONDS.sleep(2);//秒
                     UserVO users = this.userRegisterService.checkUserByUserId(userId);
                     if (users == null) {
                         log.info("根据用户ID获取用户信息表失败,用户ID:{}", userId);
@@ -189,8 +191,7 @@ public class WrbRegiestController {
                     userRegisterService.updateUserInfoByUserInfo(userInfo);
                     //插入用户绑定表
                     userRegisterService.bindThirdUser(userId, Integer.valueOf(wrbRegisterRequestBean.getWrb_user_id()), Integer.valueOf(instCode));
-                    log.info("汇盈金福用户：{} 跟风车理财用户：{}已经绑定！", userId, userId);
-
+                    log.info("汇盈金服用户：{} 跟风车理财用户：{}已经绑定！", userId, userId);
                     String userName = users.getUsername();
                     // 用户注册成功
                     log.info("用户注册成功,手机号:{},用户ID:{},用户名:{}", mobile, userId, userName);

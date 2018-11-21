@@ -69,7 +69,7 @@ public interface ProtocolTemplateAdminService {
     Integer updateProtocolTemplate(AdminProtocolRequest request);
 
 
-    List<ProtocolTemplateVO>  getnewinfo();
+    List<ProtocolTemplateVO>  protocolGetnewinfo();
 
     /**
      * 修改 之前的版本的启用状态改成不启用

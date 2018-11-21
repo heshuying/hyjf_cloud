@@ -5,9 +5,11 @@ import com.hyjf.am.config.dao.mapper.auto.AdminMapper;
 import com.hyjf.am.config.dao.mapper.auto.AdminMenuMapper;
 import com.hyjf.am.config.dao.mapper.auto.AdminMenuPermssionsMapper;
 import com.hyjf.am.config.dao.mapper.auto.AdminPermissionsMapper;
+import com.hyjf.am.config.dao.mapper.auto.AdminRoleMenuPermissionsMapper;
 import com.hyjf.am.config.dao.mapper.customize.AdminCustomizeMapper;
 import com.hyjf.am.config.dao.mapper.customize.AdminSystemMapper;
 import com.hyjf.am.config.dao.model.auto.*;
+import com.hyjf.am.config.dao.model.auto.AdminRoleMenuPermissionsExample.Criteria;
 import com.hyjf.am.config.dao.model.customize.AdminCustomize;
 import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.dao.model.customize.Tree;
@@ -38,6 +40,8 @@ public class AdminMenuServiceImpl  implements AdminMenuService {
     AdminPermissionsMapper adminPermissionsMapper;
     @Autowired
     AdminSystemMapper adminSystemMapper;
+    @Autowired
+    AdminRoleMenuPermissionsMapper adminRoleMenuPermissionsMapper;
     /**
      * 获取菜单列表
      *
@@ -245,7 +249,14 @@ public class AdminMenuServiceImpl  implements AdminMenuService {
                 adminMenuPermissions.setMenuId(menuUuid);
                 adminMenuPermissions.setPermissionId(permissionId);
                 this.adminMenuPermssionsMapper.insertSelective(adminMenuPermissions);
+                
             }
+            List<String> list=Arrays.asList(permissions);
+            AdminRoleMenuPermissionsExample example=new AdminRoleMenuPermissionsExample();
+            Criteria critreria = example.createCriteria();
+            critreria.andMenuUuidEqualTo(menuUuid);
+            critreria.andPermissionUuidNotIn(list);
+			this.adminRoleMenuPermissionsMapper.deleteByExample(example);
         }
 
     }

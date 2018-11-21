@@ -11,6 +11,7 @@ import com.hyjf.common.util.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.user.bean.ApiUserPostBean;
+import com.hyjf.cs.user.bean.ApiWbrUserPostBean;
 import com.hyjf.cs.user.bean.BaseMapBean;
 import com.hyjf.cs.user.bean.LoginResultBean;
 import com.hyjf.cs.user.config.SystemConfig;
@@ -185,7 +186,7 @@ public class WrbUserBindController extends BaseUserController {
     @ResponseBody
     @RequestMapping(value = "bind", method = RequestMethod.POST, produces = "application/json; charset=utf-8")
     public JSONObject bind(HttpServletRequest request, HttpServletResponse response,
-                           @ModelAttribute("apiUserPostBean") ApiUserPostBean apiUserPostBean) throws Exception{
+                           @ModelAttribute ApiWbrUserPostBean apiUserPostBean) throws Exception{
         // 返回对象
         JSONObject jsonObj = new JSONObject();
         // 第三方用户ID
@@ -213,7 +214,7 @@ public class WrbUserBindController extends BaseUserController {
             return jsonObj;
         }
         // 用户手机号码验证
-        if(!StringUtils.isNotBlank(apiUserPostBean.getLoginUserName())){
+        if(!StringUtils.isNotBlank(apiUserPostBean.getLoginBean_loginUserName())){
             jsonObj = new JSONObject();
             jsonObj.put("status", BaseResultBeanFrontEnd.FAIL);
             jsonObj.put("statusCode", BaseResultBeanFrontEnd.FAIL);
@@ -223,7 +224,7 @@ public class WrbUserBindController extends BaseUserController {
 
 
         //根据登陆账户名取得用户ID和用户名
-        UserVO users = loginService.getUser(apiUserPostBean.getLoginUserName());
+        UserVO users = loginService.getUser(apiUserPostBean.getLoginBean_loginUserName());
         logger.info("users is :{}", users);
         // 未获取的验证在下面登陆时 验证
         if (users != null) {
@@ -267,7 +268,7 @@ public class WrbUserBindController extends BaseUserController {
             return jsonObj;
         }
         // 登陆
-        LoginResultBean baseResultBean = this.login(request, apiUserPostBean.getLoginUserName(),apiUserPostBean.getLoginPassword(),"2");
+        LoginResultBean baseResultBean = this.login(request, apiUserPostBean.getLoginBean_loginUserName(),apiUserPostBean.getLoginBean_loginPassword(),"2");
         if (!baseResultBean.getStatus().equals("000")) {
             // 登陆失败，返回失败信息
             jsonObj.put("status", baseResultBean.getStatus());

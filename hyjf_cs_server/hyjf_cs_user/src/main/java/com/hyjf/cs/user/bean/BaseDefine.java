@@ -266,9 +266,14 @@ public class BaseDefine {
     public static final String METHOD_SAVE_USER_EVALUATION_RESULTS = "/server/user/evaluation/saveUserEvaluationResults";
     // 第三方服务接口 缴费授权
     public static final String METHOD_PAYMENT_AUTH_PAGE = "/server/user/paymentAuthPage/page";
-
+    // 第三方服务接口多合一授权合规（合规）
+    public static final String METHOD_MERGE_AUTH_PAGE_PLUS = "/server/user/mergeAuthPagePlus/page";
     // 第三方服务接口用户提现记录查询接口
     public static final String METHOD_SERVER_GET_USER_WITHDRAW_RECORD = "/server/user/withdraw/getUserWithdrawRecord";
+    // 第三方开户
+    public static final String METHOD_MERGE_OPEN_ACCOUNT = "/server/user/accountOpenEncryptPage/open.do";
+
+
     /***********************第三方服务相关接口-END****************************/
     
     

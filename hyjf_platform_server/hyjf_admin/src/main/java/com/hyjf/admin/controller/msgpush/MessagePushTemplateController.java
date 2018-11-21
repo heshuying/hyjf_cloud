@@ -112,7 +112,7 @@ public class MessagePushTemplateController extends BaseController {
                     record.setTemplateActionUrl(form.getTemplateActionUrl2());
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("获取消息模板详情失败，失败原因：{}", e);
             }
         }
         List<MessagePushTagVO> templatePushTags = this.messagePushTagService.getTagList();

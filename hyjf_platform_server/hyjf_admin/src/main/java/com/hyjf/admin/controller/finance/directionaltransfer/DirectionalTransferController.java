@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.DirectionalTransferService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -32,6 +33,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_EXPORT;
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_VIEW;
+
 @Api(value = "资金中心-定向转账-定向转账",tags = "资金中心-定向转账-定向转账")
 @RestController
 @RequestMapping(value = "/hyjf-admin/finance/directionaltransfer")
@@ -39,6 +43,7 @@ public class DirectionalTransferController extends BaseController {
 
     @Autowired
     private DirectionalTransferService directionaltransferService;
+    private static final String PERMISSIONS = "directionaltransfer";
 
     /**
      * 定向转账列表
@@ -47,6 +52,7 @@ public class DirectionalTransferController extends BaseController {
      */
     @ApiOperation(value = "查询定向转账列表",notes = "查询定向转账列表")
     @PostMapping(value = "/getdirectionaltransferlist")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_VIEW)
     public AdminResult<ListResult<AccountDirectionalTransferVO>> getDirectionalTransferList(@RequestBody DirectionalTransferListRequest request) {
         Integer count = directionaltransferService.getDirectionalTransferCount(request);
         count = (count == null)?0:count;
@@ -63,6 +69,7 @@ public class DirectionalTransferController extends BaseController {
      */
     @ApiOperation(value = "导出定向转账列表",notes = "导出定向转账列表")
     @PostMapping(value = "/directionaltransferlistexport")
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_EXPORT)
     public void exportDirectionalTransferListExcel(@RequestBody DirectionalTransferListRequest request, HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
 
         //sheet默认最大行数

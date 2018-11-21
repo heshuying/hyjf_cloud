@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.repaybean.RepayBean;
 import com.hyjf.admin.beans.request.*;
+import com.hyjf.admin.beans.response.BorrowBailInfoResponseBean;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
@@ -6689,5 +6690,23 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response.getResultBoolean();
         }
         return false;
+    }
+
+    /**
+     * 获取保证金信息
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public AdminResult getBailInfo(String borrowNid) {
+        BorrowBailInfoResponse response = restTemplate
+                .getForEntity( "http://AM-ADMIN/am-trade/borrow_first/get_bail_info/" + borrowNid, BorrowBailInfoResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            BorrowBailInfoResponseBean responseBean = new BorrowBailInfoResponseBean();
+            BeanUtils.copyProperties(response.getResult(), responseBean);
+            return new AdminResult(responseBean);
+        } else {
+            return new AdminResult(BaseResult.FAIL, response.getMessage());
+        }
     }
 }

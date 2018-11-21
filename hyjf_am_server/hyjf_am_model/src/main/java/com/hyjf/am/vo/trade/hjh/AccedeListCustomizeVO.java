@@ -310,11 +310,11 @@ public class AccedeListCustomizeVO extends BaseVO implements Serializable{
 	/**
 	 * 实际退出时间
 	 */
-	private Integer acctualPaymentTime;
+	private String acctualPaymentTime;
 	/**
 	 * 预计开始退出时间
 	 */
-	private Date endDate;
+	private String endDate;
 
 	public String getPlanOrderId() {
 		return planOrderId;
@@ -876,19 +876,19 @@ public class AccedeListCustomizeVO extends BaseVO implements Serializable{
 		this.investScaleView = investScaleView;
 	}
 
-	public Integer getAcctualPaymentTime() {
+	public String getAcctualPaymentTime() {
 		return acctualPaymentTime;
 	}
 
-	public void setAcctualPaymentTime(Integer acctualPaymentTime) {
+	public void setAcctualPaymentTime(String acctualPaymentTime) {
 		this.acctualPaymentTime = acctualPaymentTime;
 	}
 
-	public Date getEndDate() {
+	public String getEndDate() {
 		return endDate;
 	}
 
-	public void setEndDate(Date endDate) {
+	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
 }

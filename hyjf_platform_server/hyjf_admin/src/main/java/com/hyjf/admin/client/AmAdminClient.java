@@ -57,6 +57,11 @@ public interface AmAdminClient {
      * @param date 上个月的最后一天
      */
     List<OperationReportJobVO> getTenderCityGroupByList(Date date);
+
+    /**
+     * 业绩总览
+     */
+    List<OperationReportJobVO> getPerformanceSum();
     /**
      * 按照性别统计投资人的分布
      * @param date 上个月的最后一天

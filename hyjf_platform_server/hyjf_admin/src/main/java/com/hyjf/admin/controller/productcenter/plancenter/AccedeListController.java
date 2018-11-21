@@ -561,6 +561,14 @@ public class AccedeListController extends BaseController{
 			if (StringUtils.isNotEmpty(record.getMatchDates())) {
 				record.setMatchDates(record.getMatchDates() + "天");
 			}
+
+			if(record.getRefereeUserId() == null || "0".equals(record.getRefereeUserId())){
+				record.setRefereeUserId("");
+			}
+
+			if(record.getInviteUserId() == null || "0".equals(record.getInviteUserId())){
+				record.setInviteUserId("");
+			}
 		}
 
 		return resultList;
@@ -653,8 +661,32 @@ public class AccedeListController extends BaseController{
 			}
 		};
 
+		IValueFormatter expectAprAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				String value = (String) object;
+				if (StringUtils.isNotBlank(value)) {
+					return value + "%";
+				}
+				return value;
+			}
+		};
+
+		IValueFormatter actualAprAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				String value = (String) object;
+				if (StringUtils.isNotBlank(value)) {
+					return value + "%";
+				}
+				return value;
+			}
+		};
+
 		mapAdapter.put("userAttribute", userAttributeAdapter);
 		mapAdapter.put("attribute", attributeAdapter);
+		mapAdapter.put("expectApr", expectAprAdapter);
+		mapAdapter.put("actualApr", actualAprAdapter);
 		return mapAdapter;
 	}
     

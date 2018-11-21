@@ -5,6 +5,7 @@ import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.user.UserAuthRequest;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
@@ -15,6 +16,7 @@ import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.ApiAuthRequesBean;
 import com.hyjf.cs.user.bean.AuthBean;
+import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.sensorsdate.auth.SensorsDataAuthProducer;
@@ -107,7 +109,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 	private void setAuthType(HjhUserAuthVO hjhUserAuth, BankCallBean bean, String authType) {
 		// 授权类型
 		String txcode = bean.getTxCode();
-		HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_AUTO_CREDIT_AUTH);
+		HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH);
 		if(BankCallConstant.TXCODE_TERMS_AUTH_QUERY.equals(txcode)){
 			//自动投标功能开通标志
 			String autoBidStatus = bean.getAutoBid();
@@ -131,23 +133,6 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 						hjhUserAuth.setAutoInvesStatus(Integer.parseInt(autoBidStatus));
 						hjhUserAuth.setAutoBidEndTime(bean.getAutoBidDeadline());
 						hjhUserAuth.setInvesMaxAmt(bean.getAutoBidMaxAmt());
-						// add by liuyang 神策数据统计修改 20180927 start
-						if ("10000000".equals(users.getInstCode())) {
-							try {
-								SensorsDataBean sensorsDataBean = new SensorsDataBean();
-								sensorsDataBean.setUserId(userId);
-								// 汇计划授权结果
-								sensorsDataBean.setEventCode("plan_auth_result");
-								sensorsDataBean.setOrderId(bean.getOrderId());
-								// 授权类型
-								sensorsDataBean.setAuthType(AuthBean.AUTH_TYPE_AUTO_BID);
-								this.sendSensorsDataMQ(sensorsDataBean);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-						// add by liuyang 神策数据统计修改 20180927 end
-
 					}
 					break;
 				case AuthBean.AUTH_TYPE_AUTO_CREDIT:
@@ -159,23 +144,6 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 						hjhUserAuth.setCreditMaxAmt(config.getPersonalMaxAmount()+"");
 						hjhUserAuth.setAutoCreditEndTime(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
 
-						// add by liuyang 神策数据统计修改 20180927 start
-						if ("10000000".equals(users.getInstCode())) {
-							try {
-								SensorsDataBean sensorsDataBean = new SensorsDataBean();
-								sensorsDataBean.setUserId(userId);
-								// 汇计划授权结果
-								sensorsDataBean.setEventCode("plan_auth_result");
-								sensorsDataBean.setOrderId(bean.getOrderId());
-								// 授权类型
-								sensorsDataBean.setAuthType(AuthBean.AUTH_TYPE_AUTO_CREDIT);
-								this.sendSensorsDataMQ(sensorsDataBean);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-						// add by liuyang 神策数据统计修改 20180927 end
-
 					}
 					break;
 				case AuthBean.AUTH_TYPE_PAYMENT_AUTH:
@@ -184,23 +152,6 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 						hjhUserAuth.setAutoPaymentEndTime(bean.getPaymentDeadline());
 						hjhUserAuth.setAutoPaymentTime(GetDate.getNowTime10());
 						hjhUserAuth.setPaymentMaxAmt(bean.getPaymentMaxAmt());
-
-						// add by liuyang 神策数据统计修改 20180927 start
-						if ("10000000".equals(users.getInstCode())) {
-							try {
-								SensorsDataBean sensorsDataBean = new SensorsDataBean();
-								sensorsDataBean.setUserId(userId);
-								// 事件类型:服务费授权结果
-								sensorsDataBean.setEventCode("fee_auth_result");
-								sensorsDataBean.setOrderId(bean.getOrderId());
-								// 授权类型
-								sensorsDataBean.setAuthType(AuthBean.AUTH_TYPE_PAYMENT_AUTH);
-								this.sendSensorsDataMQ(sensorsDataBean);
-							} catch (Exception e) {
-								e.printStackTrace();
-							}
-						}
-						// add by liuyang 神策数据统计修改 20180927 end
 					}
 					break;
 				case AuthBean.AUTH_TYPE_REPAY_AUTH:
@@ -235,23 +186,6 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 						hjhUserAuth.setAutoPaymentTime(GetDate.getNowTime10());
 						hjhUserAuth.setPaymentMaxAmt(bean.getPaymentMaxAmt());
 					}
-
-					// add by liuyang 神策数据统计修改 20180927 start
-					if ("10000000".equals(users.getInstCode())) {
-						try {
-							SensorsDataBean sensorsDataBean = new SensorsDataBean();
-							sensorsDataBean.setUserId(userId);
-							// 汇计划授权结果
-							sensorsDataBean.setEventCode("plan_auth_result");
-							sensorsDataBean.setOrderId(bean.getOrderId());
-							// 授权类型
-							sensorsDataBean.setAuthType(AuthBean.AUTH_TYPE_MERGE_AUTH);
-							this.sendSensorsDataMQ(sensorsDataBean);
-						} catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-					// add by liuyang 神策数据统计修改 20180927 end
 					break;
 				default:
 					break;
@@ -310,6 +244,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 								sensorsDataBean.setEventCode("plan_auth_result");
 								sensorsDataBean.setOrderId(bean.getOrderId());
 								// 授权类型
+								logger.info("发送神策数据统计MQ,自动投资授权,授权订单号:[" + bean.getOrderId() + "],用户ID:[" + userId + "].");
 								sensorsDataBean.setAuthType(AuthBean.AUTH_TYPE_AUTO_BID);
 								this.sendSensorsDataMQ(sensorsDataBean);
 							} catch (Exception e) {
@@ -331,6 +266,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 								sensorsDataBean.setEventCode("plan_auth_result");
 								sensorsDataBean.setOrderId(bean.getOrderId());
 								// 授权类型
+								logger.info("发送神策数据统计MQ,自动债转授权,授权订单号:[" + bean.getOrderId() + "],用户ID:[" + userId + "].");
 								sensorsDataBean.setAuthType(AuthBean.AUTH_TYPE_AUTO_CREDIT);
 								this.sendSensorsDataMQ(sensorsDataBean);
 							} catch (Exception e) {
@@ -338,7 +274,6 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 							}
 						}
 						// add by liuyang 神策数据统计修改 20180927 end
-
 					}
 					break;
 				case AuthBean.AUTH_TYPE_PAYMENT_AUTH:
@@ -352,6 +287,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 								sensorsDataBean.setEventCode("fee_auth_result");
 								sensorsDataBean.setOrderId(bean.getOrderId());
 								// 授权类型
+								logger.info("发送神策数据统计MQ,服务费授权,授权订单号:[" + bean.getOrderId() + "],用户ID:[" + userId + "].");
 								sensorsDataBean.setAuthType(AuthBean.AUTH_TYPE_PAYMENT_AUTH);
 								this.sendSensorsDataMQ(sensorsDataBean);
 							} catch (Exception e) {
@@ -374,6 +310,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 							sensorsDataBean.setOrderId(bean.getOrderId());
 							// 授权类型
 							sensorsDataBean.setAuthType(AuthBean.AUTH_TYPE_MERGE_AUTH);
+							logger.info("发送神策数据统计MQ,多合一授权,授权订单号:[" + bean.getOrderId() + "],用户ID:[" + userId + "].");
 							this.sendSensorsDataMQ(sensorsDataBean);
 						} catch (Exception e) {
 							e.printStackTrace();
@@ -445,7 +382,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 		HjhUserAuthConfigVO config=null;
 		switch (authBean.getAuthType()) {
 			case AuthBean.AUTH_TYPE_AUTO_BID:
-				config=this.getAuthConfigFromCache(this.KEY_AUTO_TENDER_AUTH);
+				config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH);
 				bean.setAutoBid(AuthBean.AUTH_START_OPEN);
 				if(authBean.getUserType()!=1){
 					bean.setAutoBidMaxAmt(config.getPersonalMaxAmount()+"");
@@ -456,7 +393,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 				bean.setLogRemark("自动投资授权");
 				break;
 			case AuthBean.AUTH_TYPE_AUTO_CREDIT:
-				config=this.getAuthConfigFromCache(this.KEY_AUTO_CREDIT_AUTH);
+				config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH);
 				bean.setAutoCredit(AuthBean.AUTH_START_OPEN);
 				if(authBean.getUserType()!=1){
 					bean.setAutoCreditMaxAmt(config.getPersonalMaxAmount()+"");
@@ -467,7 +404,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 				bean.setLogRemark("自动债转授权");
 				break;
 			case AuthBean.AUTH_TYPE_PAYMENT_AUTH:
-				config=this.getAuthConfigFromCache(this.KEY_PAYMENT_AUTH);
+				config=this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
 				bean.setPaymentAuth(AuthBean.AUTH_START_OPEN);
 				if(authBean.getUserType()!=1){
 					bean.setPaymentMaxAmt(config.getPersonalMaxAmount()+"");
@@ -478,7 +415,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 				bean.setLogRemark("服务费授权");
 				break;
 			case AuthBean.AUTH_TYPE_REPAY_AUTH:
-				config=this.getAuthConfigFromCache(this.KEY_REPAYMENT_AUTH);
+				config=this.getAuthConfigFromCache(RedisConstants.KEY_REPAYMENT_AUTH);
 				bean.setRepayAuth(AuthBean.AUTH_START_OPEN);
 				if(authBean.getUserType()!=1){
 					bean.setRepayMaxAmt(config.getPersonalMaxAmount()+"");
@@ -491,7 +428,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 			case AuthBean.AUTH_TYPE_MERGE_AUTH:
 
 				if(!this.checkIsAuth(authBean.getUserId(), AuthBean.AUTH_TYPE_AUTO_BID)){
-					config=this.getAuthConfigFromCache(this.KEY_AUTO_TENDER_AUTH);
+					config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH);
 					bean.setAutoBid(AuthBean.AUTH_START_OPEN);
 					if(authBean.getUserType()!=1){
 						bean.setAutoBidMaxAmt(config.getPersonalMaxAmount()+"");
@@ -503,7 +440,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 				}
 
 				if(!this.checkIsAuth(authBean.getUserId(), AuthBean.AUTH_TYPE_AUTO_CREDIT)){
-					config=this.getAuthConfigFromCache(this.KEY_AUTO_CREDIT_AUTH);
+					config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH);
 					bean.setAutoCredit(AuthBean.AUTH_START_OPEN);
 					if(authBean.getUserType()!=1){
 						bean.setAutoCreditMaxAmt(config.getPersonalMaxAmount()+"");
@@ -514,7 +451,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 					authBean.setAutoCreditStatus(true);
 				}
 				if(!this.checkIsAuth(authBean.getUserId(), AuthBean.AUTH_TYPE_PAYMENT_AUTH)){
-					config=this.getAuthConfigFromCache(this.KEY_PAYMENT_AUTH);
+					config=this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
 					bean.setPaymentAuth(AuthBean.AUTH_START_OPEN);
 					if(authBean.getUserType()!=1){
 						bean.setPaymentMaxAmt(config.getPersonalMaxAmount()+"");
@@ -641,7 +578,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 			return true;
 		}
 		// 检查开关是否打开 没打开 不用校验
-		if (this.getAuthConfigFromCache(this.KEY_PAYMENT_AUTH).getEnabledStatus() - 1 != 0) {
+		if (this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus() - 1 != 0) {
 			return true;
 		}
 		HjhUserAuthVO auth = getHjhUserAuthByUserId(userId);
@@ -659,7 +596,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 			return true;
 		}
 		// 检查开关是否打开 没打开 不用校验
-		if (this.getAuthConfigFromCache(this.KEY_REPAYMENT_AUTH).getEnabledStatus() - 1 != 0) {
+		if (this.getAuthConfigFromCache(RedisConstants.KEY_REPAYMENT_AUTH).getEnabledStatus() - 1 != 0) {
 			return true;
 		}
 		HjhUserAuthVO auth = getHjhUserAuthByUserId(userId);
@@ -774,7 +711,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 			return true;
 		}
 		// 检查开关是否打开 没打开 不用校验
-		if (this.getAuthConfigFromCache(this.KEY_AUTO_TENDER_AUTH).getEnabledStatus() - 1 != 0) {
+		if (this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus() - 1 != 0) {
 			return true;
 		}
 		HjhUserAuthVO auth = getHjhUserAuthByUserId(userId);
@@ -791,7 +728,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 			return true;
 		}
 		// 检查开关是否打开 没打开 不用校验
-		if (this.getAuthConfigFromCache(this.KEY_AUTO_CREDIT_AUTH).getEnabledStatus() - 1 != 0) {
+		if (this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus() - 1 != 0) {
 			return true;
 		}
 		HjhUserAuthVO auth = getHjhUserAuthByUserId(userId);
@@ -818,7 +755,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 					case AuthBean.AUTH_TYPE_AUTO_BID:
 						if(StringUtils.isNotBlank(autoBidStatus)&&"1".equals(autoBidStatus)
 								&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-							HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_AUTO_TENDER_AUTH);
+							HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH);
 							if(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getAutoBidDeadline())){
 								return true;
 							}
@@ -837,7 +774,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 					case AuthBean.AUTH_TYPE_PAYMENT_AUTH:
 						if(StringUtils.isNotBlank(paymentAuth)&&"1".equals(paymentAuth)
 								&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-							HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_PAYMENT_AUTH);
+							HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
 							if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getPaymentDeadline())){
 								return true;
 							}
@@ -855,7 +792,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 					case AuthBean.AUTH_TYPE_REPAY_AUTH:
 						if(StringUtils.isNotBlank(repayAuth)&&"1".equals(repayAuth)
 								&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-							HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_REPAYMENT_AUTH);
+							HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_REPAYMENT_AUTH);
 							if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getRepayDeadline())){
 								return true;
 							}
@@ -873,7 +810,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 					case AuthBean.AUTH_TYPE_MERGE_AUTH:
 						if(StringUtils.isNotBlank(autoBidStatus)&&"1".equals(autoBidStatus)
 								&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),AuthBean.AUTH_TYPE_AUTO_BID)){
-							HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_AUTO_TENDER_AUTH);
+							HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH);
 							if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getAutoBidDeadline())){
 								return true;
 							}
@@ -889,7 +826,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 						}
 						if(StringUtils.isNotBlank(paymentAuth)&&"1".equals(paymentAuth)
 								&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),AuthBean.AUTH_TYPE_PAYMENT_AUTH)){
-							HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_PAYMENT_AUTH);
+							HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
 							if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getPaymentDeadline())){
 								return true;
 							}
@@ -916,7 +853,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 				String repayAuth = bean.getRepayAuth();
 				if(StringUtils.isNotBlank(autoBidStatus)&&"1".equals(autoBidStatus)
 						&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-					HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_AUTO_TENDER_AUTH);
+					HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH);
 					if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getAutoBidDeadline())){
 						return true;
 					}
@@ -932,7 +869,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 				}
 				if(StringUtils.isNotBlank(paymentAuth)&&"1".equals(paymentAuth)
 						&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-					HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_PAYMENT_AUTH);
+					HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
 					if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getPaymentDeadline())){
 						return true;
 					}
@@ -948,7 +885,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 				}
 				if(StringUtils.isNotBlank(repayAuth)&&"1".equals(repayAuth)
 						&&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-					HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_REPAYMENT_AUTH);
+					HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_REPAYMENT_AUTH);
 					if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getRepayDeadline())){
 						return true;
 					}
@@ -1002,8 +939,8 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 	 */
 	@Override
 	public Integer checkAuthStatus(Integer autoRepayStatus,Integer paymentAuthStatus){
-		HjhUserAuthConfigVO paymenthCconfig = getAuthConfigFromCache(KEY_PAYMENT_AUTH);
-		HjhUserAuthConfigVO repayCconfig = getAuthConfigFromCache(KEY_REPAYMENT_AUTH);
+		HjhUserAuthConfigVO paymenthCconfig = getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
+		HjhUserAuthConfigVO repayCconfig = getAuthConfigFromCache(RedisConstants.KEY_REPAYMENT_AUTH);
 		if (paymenthCconfig != null && repayCconfig != null && paymenthCconfig.getEnabledStatus() - 1 == 0
 				&& repayCconfig.getEnabledStatus() - 1 == 0) {
 			// 如果两个都开启了
@@ -1087,7 +1024,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 			return resultMap;
 		}
 		// 验签
-        if (!this.verifyRequestSign(requestBean, "/server/user/mergeAuthPagePlus/page")) {
+        if (!this.verifyRequestSign(requestBean, BaseDefine.METHOD_MERGE_AUTH_PAGE_PLUS)) {
 			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
 			resultMap.put("status", ErrorCodeConstant.STATUS_CE000002);
 			resultMap.put("mess", "验签失败");
@@ -1177,7 +1114,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 		HjhUserAuthConfigVO config=null;
 		switch (authBean.getAuthType()) {
 			case AuthBean.AUTH_TYPE_AUTO_BID:
-				config=this.getAuthConfigFromCache(this.KEY_AUTO_TENDER_AUTH);
+				config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH);
 				bean.setAutoBid(AuthBean.AUTH_START_OPEN);
 				if(authBean.getUserType()!=1){
 					bean.setAutoBidMaxAmt(config.getPersonalMaxAmount()+"");
@@ -1188,7 +1125,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 				bean.setLogRemark("自动投资授权");
 				break;
 			case AuthBean.AUTH_TYPE_AUTO_CREDIT:
-				config=this.getAuthConfigFromCache(this.KEY_AUTO_CREDIT_AUTH);
+				config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH);
 				bean.setAutoCredit(AuthBean.AUTH_START_OPEN);
 				if(authBean.getUserType()!=1){
 					bean.setAutoCreditMaxAmt(config.getPersonalMaxAmount()+"");
@@ -1199,7 +1136,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 				bean.setLogRemark("自动债转授权");
 				break;
 			case AuthBean.AUTH_TYPE_PAYMENT_AUTH:
-				config=this.getAuthConfigFromCache(this.KEY_PAYMENT_AUTH);
+				config=this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
 				bean.setPaymentAuth(AuthBean.AUTH_START_OPEN);
 				if(authBean.getUserType()!=1){
 					bean.setPaymentMaxAmt(config.getPersonalMaxAmount()+"");
@@ -1210,7 +1147,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 				bean.setLogRemark("服务费授权");
 				break;
 			case AuthBean.AUTH_TYPE_REPAY_AUTH:
-				config=this.getAuthConfigFromCache(this.KEY_REPAYMENT_AUTH);
+				config=this.getAuthConfigFromCache(RedisConstants.KEY_REPAYMENT_AUTH);
 				bean.setRepayAuth(AuthBean.AUTH_START_OPEN);
 				if(authBean.getUserType()!=1){
 					bean.setRepayMaxAmt(config.getPersonalMaxAmount()+"");
@@ -1223,7 +1160,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 			case AuthBean.AUTH_TYPE_MERGE_AUTH:
 
 				if(!this.checkIsAuth(authBean.getUserId(), AuthBean.AUTH_TYPE_AUTO_BID)){
-					config=this.getAuthConfigFromCache(this.KEY_AUTO_TENDER_AUTH);
+					config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH);
 					bean.setAutoBid(AuthBean.AUTH_START_OPEN);
 					if(authBean.getUserType()!=1){
 						bean.setAutoBidMaxAmt(config.getPersonalMaxAmount()+"");
@@ -1235,7 +1172,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 				}
 
 				if(!this.checkIsAuth(authBean.getUserId(), AuthBean.AUTH_TYPE_AUTO_CREDIT)){
-					config=this.getAuthConfigFromCache(this.KEY_AUTO_CREDIT_AUTH);
+					config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH);
 					bean.setAutoCredit(AuthBean.AUTH_START_OPEN);
 					if(authBean.getUserType()!=1){
 						bean.setAutoCreditMaxAmt(config.getPersonalMaxAmount()+"");
@@ -1246,7 +1183,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 					authBean.setAutoCreditStatus(true);
 				}
 				if(!this.checkIsAuth(authBean.getUserId(), AuthBean.AUTH_TYPE_PAYMENT_AUTH)){
-					config=this.getAuthConfigFromCache(this.KEY_PAYMENT_AUTH);
+					config=this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
 					bean.setPaymentAuth(AuthBean.AUTH_START_OPEN);
 					if(authBean.getUserType()!=1){
 						bean.setPaymentMaxAmt(config.getPersonalMaxAmount()+"");
@@ -1263,7 +1200,11 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 		}
 
 		bean.setRetUrl(authBean.getRetUrl());
-		bean.setSuccessfulUrl(authBean.getSuccessUrl());
+		if(authBean.getRetUrl().indexOf("&isSuccess=")!=-1){
+			authBean.getRetUrl().replace("&isSuccess=", "&isSuccess=1");
+		}else{
+			bean.setSuccessfulUrl(authBean.getRetUrl()+"&isSuccess=1");
+		}
 		bean.setNotifyUrl(authBean.getNotifyUrl());
 		bean.setForgotPwdUrl(authBean.getForgotPwdUrl());
 

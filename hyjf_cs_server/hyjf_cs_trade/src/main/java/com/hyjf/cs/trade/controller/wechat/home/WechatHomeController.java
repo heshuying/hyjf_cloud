@@ -26,6 +26,7 @@ public class WechatHomeController {
     @Autowired
     private WechatProjectListService wechatProjectListService;
 
+    /** 微信首页三处添加缓存 bannner，新手标列表，散标和计划列表*/
     /**
      * 微信端首页统计数据
      *

@@ -122,7 +122,7 @@ public class AppPassWordController extends BaseUserController {
                     logger.error("保存用户日志失败", e);
                 }
                 //如果修改密码成功或者重置密码就将登陆密码错误次数的key删除
-                RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_APP + userVO.getUsername());
+                RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL + userVO.getUserId());
                 ret.put("status", "0");
                 ret.put("statusDesc", "修改密码成功");
             } else {
@@ -362,9 +362,9 @@ public class AppPassWordController extends BaseUserController {
                     ret.put("statusDesc", "密码不能为空");
                     return ret;
                 }
-                if (newPassword.length() < 6 || newPassword.length() > 16) {
+                if (newPassword.length() < 8 || newPassword.length() > 16) {
                     ret.put("status", "1");
-                    ret.put("statusDesc", "密码长度6-16位");
+                    ret.put("statusDesc", "密码长度8-16位");
                     return ret;
                 }
                 boolean hasNumber = false;
@@ -375,18 +375,18 @@ public class AppPassWordController extends BaseUserController {
                         break;
                     }
                 }
-                if (!hasNumber) {
-                    ret.put("status", "1");
-                    ret.put("statusDesc", "密码必须包含数字");
-                    return ret;
-                }
+//                if (!hasNumber) {
+//                    ret.put("status", "1");
+//                    ret.put("statusDesc", "密码必须包含数字");
+//                    return ret;
+//                }
 
-                String regEx = "^[a-zA-Z0-9]+$";
+                String regEx = "^(?![0-9]+$)(?![a-zA-Z]+$)(?![\\`\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\+\\-\\=\\{\\}\\|\\[\\]\\\\\\;\\'\\:\\\"\\,\\.\\/\\<\\>\\?]+$)[0-9A-Za-z\\`\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\+\\-\\=\\{\\}\\|\\[\\]\\\\\\;\\'\\:\\\"\\,\\.\\/\\<\\>\\?]{8,16}$";
                 Pattern p = Pattern.compile(regEx);
                 Matcher m = p.matcher(newPassword);
                 if (!m.matches()) {
                     ret.put("status", "1");
-                    ret.put("statusDesc", "密码必须由数字和字母组成，如abc123");
+                    ret.put("statusDesc", "必须包含数字、字母、符号至少两种");
                     return ret;
                 }
                 String verificationType = CommonConstant.PARAM_TPL_ZHAOHUIMIMA;
@@ -401,7 +401,7 @@ public class AppPassWordController extends BaseUserController {
 
                 if (success) {
                     //如果修改密码成功或者重置密码就将登陆密码错误次数的key删除
-                    RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_APP+mobile);
+                    RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL+user.getUserId());
                     ret.put("status", "0");
                     ret.put("statusDesc", "找回密码成功");
                 } else {

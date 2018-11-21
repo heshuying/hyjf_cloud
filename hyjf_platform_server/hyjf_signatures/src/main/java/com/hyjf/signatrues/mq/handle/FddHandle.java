@@ -747,8 +747,6 @@ public class FddHandle {
         request.setBidNid(borrowNid);
         request.setCreditNid(creditNid);
         request.setCreditTenderNid(creditTenderNid);
-        logger.info("查询ht_credit_tender表:传入参数assign_nid="+assignOrderId+"," +
-				"bid_nid="+borrowNid+",credit_nid="+creditNid+",credit_tender_nid="+creditTenderNid);
         List<CreditTenderVO> creditTenderList = this.amTradeClient.getCreditTenderList(request);
         if (creditTenderList != null && creditTenderList.size() > 0) {
 
@@ -918,6 +916,7 @@ public class FddHandle {
 
             boolean isSign = isCreatContract(assignOrderId);
             if (isSign){//单独走签署接口
+            	logger.info("==================债转法大大协议单独走签署接口"+ JSONObject.toJSONString(bean));
                 updateSignContract(bean);
             }else {
 				logger.info("==================债转法大大协议开始生成，订单号：" + assignOrderId + ",开始调用接口----");
@@ -1328,8 +1327,8 @@ public class FddHandle {
 				}
 			}
 
-			if (borrowCredit != null && borrowCredit.size() > 0) {
-				resultMap.put("borrowCredit", borrowCredit);
+			if (CollectionUtils.isNotEmpty(borrowCredit)) {
+				resultMap.put("borrowCredit", borrowCredit.get(0));
 			}
 
 
@@ -1733,12 +1732,8 @@ public class FddHandle {
 			String upParentDir = tmfile.getParent();
 			logger.info("---------------脱敏图片上级目录：tenderAgreementID："+tenderAgreementID+"-----" + upParentDir);
 			//图片脱敏并存储
-			if (FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(transType)){
-
-				tmConduct(imageSavePath,imageFilePath,fileName,isCompanyUser,trueImageFilePath,jointPathList,pages,
-						Integer.valueOf(transType),tenderCompany,creditCompany);
-
-			}else if(Integer.valueOf(transType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
+			if (FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(transType)
+					||Integer.valueOf(transType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
 					Integer.valueOf(transType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET
 					|| Integer.valueOf(transType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET
 					|| Integer.valueOf(transType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET){
@@ -1753,6 +1748,7 @@ public class FddHandle {
 			}
 			//拼接后的PDf路径
 			String tmpdfPath  = imageSavePath + "/" + fileName +"_tm.pdf";
+			logger.info("===============脱敏待拼接图片列表：" + jointPathList.toString());
 			//拼接脱敏图片
 			jointPDFimage(jointPathList,imageSavePath + "/pdfimage.png");
 			//重新拼接为PDF文件
@@ -2041,22 +2037,7 @@ public class FddHandle {
 		return true;
 	}
 
-	public static void main(String[] args) {
 
-//		String signIcon = "/Applications/work/需求池/脱敏样式/cardno.png";
-//
-//		String source = "/Applications/work/aaa.png";
-//
-//		String output = "/Applications/work/jjfw/";
-//		Integer index_x = 100;
-//		Integer index_y = 100;
-//		ImageUtil.markImageByMoreIcon(signIcon, source, output, "tm", "png", null, index_x, index_y);
-//		FddHandle handle = new FddHandle();
-
-
-//		PDFToImage.pdf2img("/Users/yangchangwei/Downloads/jjfw(1).pdf", "/Users/yangchangwei/Downloads/jjfw", PDFToImage.IMG_TYPE_PNG);
-
-	}
 	/**
 	 * 脱敏处理
 	 * @param imageSavePath
@@ -2325,9 +2306,10 @@ public class FddHandle {
 						boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
 								basePathImage, saveDir, fileName, ins);
 						if (!flag){
-							throw new RuntimeException("上传失败!fileName:" + fileName);
+							throw new RuntimeException("上传失败!无报错，fileName:" + fileName);
 						}
 					}catch (Exception e){
+
 						throw new RuntimeException("上传失败!fileName:" + fileName);
 					}
 				}
@@ -2335,12 +2317,16 @@ public class FddHandle {
 				String fileName = parentDir.getName();
 				logger.info("--------开始上传文件：" + fileName);
 				try(FileInputStream ins = new FileInputStream(parentDir)){
+					logger.info("--------开始上传文件，准备链接ftp服务器，host:：" + ftpIP + ",port:" + port);
+
 					boolean flag = FavFTPUtil.uploadFile(ftpIP, Integer.valueOf(port), username, password,
 							basePathImage, saveDir, fileName, ins);
 					if (!flag){
+						logger.info("==============上传文件失败，无报错，fileName" + fileName);
 						throw new RuntimeException("上传失败!fileName:" + fileName);
 					}
 				}catch (Exception e){
+					logger.error("===========上传文件异常！fileName:" + fileName,e);
 					throw new RuntimeException("上传失败!fileName:" + fileName);
 				}
 			}

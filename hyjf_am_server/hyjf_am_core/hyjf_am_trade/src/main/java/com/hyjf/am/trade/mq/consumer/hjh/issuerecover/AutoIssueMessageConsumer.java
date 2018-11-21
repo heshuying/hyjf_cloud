@@ -10,6 +10,7 @@ import com.hyjf.am.trade.service.task.issuerecover.AutoBailMessageService;
 import com.hyjf.am.trade.service.task.issuerecover.AutoIssueMessageService;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.am.vo.trade.hjh.issuerecover.AutoIssuerecoverVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -34,7 +35,6 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.UUID;
 
-import static com.hyjf.am.trade.service.task.issuerecover.impl.AutoIssueRecoverServiceImpl.LABEL_MAIL_KEY;
 
 /**
  * @Auther: walter.limeng
@@ -107,7 +107,7 @@ public class AutoIssueMessageConsumer extends Consumer {
 
 
                     // redis 放重复检查
-                    String redisKey = "borrowissue:" + autoIssuerecoverVO.getBorrowNid();
+                    String redisKey = RedisConstants.BORROW_ISSUE + autoIssuerecoverVO.getBorrowNid();
                     boolean result = RedisUtils.tranactionSet(redisKey, 300);
                     if(!result){
                         logger.info(autoIssuerecoverVO.getBorrowNid()+" 正在关联计划(redis)");
@@ -174,7 +174,7 @@ public class AutoIssueMessageConsumer extends Consumer {
                     logger.info(autoIssuerecoverVO.getCreditNid()+" 债转开始关联计划 ");
 
                     // redis 放重复检查
-                    String redisKey = "borrowissue:" + autoIssuerecoverVO.getCreditNid();
+                    String redisKey = RedisConstants.BORROW_ISSUE + autoIssuerecoverVO.getCreditNid();
                     boolean result = RedisUtils.tranactionSet(redisKey, 300);
                     if(!result){
                         logger.info(autoIssuerecoverVO.getCreditNid()+" 正在关联计划(redis) ");
@@ -205,7 +205,7 @@ public class AutoIssueMessageConsumer extends Consumer {
 
                         /**汇计划三期邮件预警 BY LIBIN start*/
                         // 如果redis不存在这个KEY(一天有效期)，那么可以发邮件
-                        if(!RedisUtils.exists(LABEL_MAIL_KEY + autoIssuerecoverVO.getCreditNid())){
+                        if(!RedisUtils.exists(RedisConstants.LABEL_MAIL_KEY + autoIssuerecoverVO.getCreditNid())){
                             StringBuffer emailmsg = new StringBuffer();
                             emailmsg.append("债转编号：").append(autoIssuerecoverVO.getCreditNid()).append("<br/>");
                             emailmsg.append("当前时间：").append(GetDate.formatTime()).append("<br/>");
@@ -222,7 +222,7 @@ public class AutoIssueMessageConsumer extends Consumer {
                                     MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
                             try {
                                 mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC,UUID.randomUUID().toString(), JSON.toJSONBytes(mailMessage)));
-                                RedisUtils.set(LABEL_MAIL_KEY + autoIssuerecoverVO.getCreditNid(), autoIssuerecoverVO.getCreditNid(), 24 * 60 * 60);
+                                RedisUtils.set(RedisConstants.LABEL_MAIL_KEY + autoIssuerecoverVO.getCreditNid(), autoIssuerecoverVO.getCreditNid(), 24 * 60 * 60);
                             } catch (MQException e2) {
                                 logger.error("发送邮件失败..", e2);
                             }

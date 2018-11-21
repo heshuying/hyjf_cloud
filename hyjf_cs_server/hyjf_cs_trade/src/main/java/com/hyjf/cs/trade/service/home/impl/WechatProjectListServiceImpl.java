@@ -1,6 +1,9 @@
 package com.hyjf.cs.trade.service.home.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alicp.jetcache.anno.CacheRefresh;
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.WechatProjectListResponse;
 import com.hyjf.am.resquest.market.AdsRequest;
@@ -22,6 +25,7 @@ import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -56,6 +60,7 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.MessageFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class WechatProjectListServiceImpl implements WechatProjectListService {
@@ -194,11 +199,11 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         userValidation.put("paymentAuthStatus", isPaymentAuth);
         //角色认证是否打开
         userValidation.put("isCheckUserRole", Boolean.parseBoolean(systemConfig.getRoleIsopen()));
-        userValidation.put("paymentAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
+        userValidation.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
         //自动投资开关
-        userValidation.put("invesAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+        userValidation.put("invesAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
         //自动债转开关
-        userValidation.put("creditAuthOn", authService.getAuthConfigFromCache(AuthService.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+        userValidation.put("creditAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
         userValidation.put("roleId", roleId);
 
 
@@ -606,7 +611,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                     borrow.setBorrowApr(entity.getBorrowApr());
                     borrow.setBorrowNid(entity.getBorrowNid());
                     borrow.setBorrowPeriod(entity.getBorrowPeriod());
-                    borrow.setTureName(entity.getTrueName());
+                    borrow.setTrueName(entity.getTrueName());
                     borrowList.add(borrow);
                 }
             }
@@ -736,9 +741,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                 result.setIsSetPassword(userVO.getIsSetPassword());
                 result.setIsCheckUserRole(Boolean.parseBoolean(systemConfig.getRoleIsopen()));
 
-                result.setPaymentAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
-                result.setInvesAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
-                result.setCreditAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+                result.setPaymentAuthOn(authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
+                result.setInvesAuthOn(authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+                result.setCreditAuthOn(authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
                 UserInfoVO usersInfo=amUserClient.findUsersInfoById(Integer.valueOf(userId));
                 result.setRoleId(usersInfo.getRoleId());
                 if (userVO.getIsEvaluationFlag() == 1 && null != userVO.getEvaluationExpiredTime()) {
@@ -833,7 +838,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                 HomePageDefine.WECHAT_REQUEST_MAPPING + HomePageDefine.WECHAT_HOME_INDEX_DATA_METHOD);
 
         // 添加顶部活动图片总数和顶部活动图片数组
-        this.createBannerPage(result);
+        this.createBannerPage(result);//加缓存
 
         return result;
     }
@@ -858,14 +863,14 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         WechatHomePageResult vo = new WechatHomePageResult();
         vo.setCurrentPage(currPage);
         vo.setPageSize(pageSize);
-        result = getProjectListAsyn(result, currPage, pageSize, showPlanFlag);
+        result = getProjectListAsyn(result, currPage, pageSize, showPlanFlag);//加缓存(新手标之外的散标和计划)
 
         if (currPage == 1) {
             String HOST = systemConfig.getWebHost();
             //判断用户是否登录
             if (userId == null || userId <= 0) {
                 //获取新手标
-                vo.setHomeXshProjectList(this.createProjectNewPage(userId, HOST));
+                vo.setHomeXshProjectList(this.createProjectNewPage(userId, HOST));//加缓存(新手标)
             } else {
                 //查询用户是否开户
                 UserVO userVO = amUserClient.findUserById(userId);
@@ -1014,9 +1019,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 
             // 7.缴费授权状态
             userLoginInfo.setPaymentAuthStatus(userVO.getPaymentAuthStatus());
-            userLoginInfo.setPaymentAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_PAYMENT_AUTH).getEnabledStatus());
-            userLoginInfo.setInvesAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
-            userLoginInfo.setCreditAuthOn(authService.getAuthConfigFromCache(AuthService.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+            userLoginInfo.setPaymentAuthOn(authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
+            userLoginInfo.setInvesAuthOn(authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+            userLoginInfo.setCreditAuthOn(authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
 
             // 5. 用户是否完成风险测评标识：0未测评 1已测评
             if (userVO.getIsEvaluationFlag() == 1 && null != userVO.getEvaluationExpiredTime()) {
@@ -1195,11 +1200,13 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 
 
     /**
-     * 分页获取首页数据
+     * 分页获取首页数据(新手标之外的散标还有计划)
      *
      * @param
      * @return
      */
+	@Cached(name="wechatProjectListAsynCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     private WechatHomePageResult getProjectListAsyn(WechatHomePageResult vo, int currentPage, int pageSize, String showPlanFlag) {
 
         List<WechatHomeProjectListVO> list = null;
@@ -1319,7 +1326,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         DecimalFormat df = CustomConstants.DF_FOR_VIEW;
         List<WechatHomeProjectListVO> list = new ArrayList<>();
         String host = HomePageDefine.WECHAT_DETAIL_REQUEST_MAPPING + HomePageDefine.WECHAT_DETAIL_METHOD;
-        List<AppProjectListCustomizeVO> projectList = searchProjectNewList(host);
+        List<AppProjectListCustomizeVO> projectList = searchProjectNewList(host);//加缓存
         if (projectList != null && !projectList.isEmpty() && projectList.size() != 0) {
             if (list.size() == 0 && projectList.size() != 0) {
                 AppProjectListCustomizeVO project = projectList.get(0);
@@ -1362,7 +1369,14 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         return list;
     }
 
-
+    /**
+     * 获取新手标数据
+     *
+     * @param
+     * @author
+     */
+	@Cached(name="wechatHomeProjectNewListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     private List<AppProjectListCustomizeVO> searchProjectNewList(String host) {
         List<AppProjectListCustomizeVO> projectList = new ArrayList<>();
 

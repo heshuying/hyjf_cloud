@@ -25,14 +25,19 @@
 			  AND b.user_id = #{userId} ) as t
 			  -->
     <select id="selectUtmPlatByUserId" parameterType="int" resultMap="BaseResultMap">
-		select t.id,
-			   t.attorn_flag
-		 from (SELECT a.id,a.attorn_flag
-		  	FROM ht_utm_plat a, ht_utm b, ht_utm_reg c
-			WHERE a.source_id = b.source_id
-			  AND b.utm_id = c.utm_id
-			  AND c.user_id = #{userId}
-			limit 1) t
+        select t.id,
+                       t.attorn_flag
+                 from (SELECT a.id,a.attorn_flag
+                    FROM ht_utm_plat a, ht_utm b, ht_utm_reg c
+                    WHERE a.source_id = b.source_id
+                      AND b.utm_id = c.utm_id
+                      AND c.user_id = #{userId}
+        union all
+                SELECT a.id,a.attorn_flag
+                    FROM ht_utm_plat a, ht_app_utm_reg b
+                    WHERE a.source_id = b.source_id
+                      AND b.user_id = #{userId}
+                    limit 1) t
 	</select>
 
     <select id="selectUsersInfo" resultType="int">

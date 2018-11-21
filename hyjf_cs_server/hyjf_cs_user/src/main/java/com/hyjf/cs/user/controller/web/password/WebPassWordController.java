@@ -74,8 +74,7 @@ public class WebPassWordController extends BaseUserController{
            WebViewUserVO webUser = passWordService.getWebViewUserByUserId(userId);
            if (null != webUser) {
                webUser = passWordService.setToken(webUser);
-               RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_WEB+webUser.getMobile());
-               RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_WEB+webUser.getUsername());
+               RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL+webUser.getUserId());
            }
        }
         return response;
@@ -278,7 +277,7 @@ public class WebPassWordController extends BaseUserController{
         password1 = RSAJSPUtil.rsaToPassword(password1);
         password2 = RSAJSPUtil.rsaToPassword(password2);
         CheckUtil.check(StringUtils.isNotBlank(password2)&&password1.equals(password2),MsgEnum.ERR_PASSWORD_TWO_DIFFERENT_PASSWORD);
-        CheckUtil.check(password1.length() >= 6 && password1.length() <= 16,MsgEnum.ERR_PASSWORD_LENGTH);
+        CheckUtil.check(password1.length() >= 8 && password1.length() <= 16,MsgEnum.ERR_PASSWORD_LENGTH);
         // 改变验证码状态
         int checkStatus = this.passWordService.updateCheckMobileCode(mobile, code, CommonConstant.PARAM_TPL_ZHAOHUIMIMA, CustomConstants.CLIENT_PC, CommonConstant.CKCODE_YIYAN, CommonConstant.CKCODE_USED,true);
         // 再次验证验证码
@@ -287,8 +286,7 @@ public class WebPassWordController extends BaseUserController{
         CheckUtil.check(null!=user,MsgEnum.STATUS_CE000006);
         int cnt = passWordService.updatePassword(user, password1);
         CheckUtil.check(cnt>0,MsgEnum.ERR_PASSWORD_MODIFY);
-        RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_WEB+mobile);
-        RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_WEB+user.getUsername());
+        RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL+user.getUserId());
         return result;
     }
 

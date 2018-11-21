@@ -1,6 +1,9 @@
 package com.hyjf.cs.trade.service.home.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alicp.jetcache.anno.CacheRefresh;
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.message.UserDeviceUniqueCodeResponse;
 import com.hyjf.am.resquest.market.AdsRequest;
@@ -43,6 +46,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * APP首页service
@@ -119,7 +123,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             info.put("adDesc", "立即注册");
             //新手标标志
             getNewProjectFlag = Boolean.TRUE;
-            this.createProjectNewPage(info, list, HOST);
+            this.createProjectNewPage(info, list, HOST);//加缓存
 
             //获取首页项目列表
             /*this.createProjectListPage(info, version, list, HOST);*/
@@ -242,7 +246,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         info.put("survivalDays",days);//安全运营天数
         //end
         //添加顶部活动图片总数和顶部活动图片数组
-        this.createBannerPage(info, platform, request, HOST);
+        this.createBannerPage(info, platform, request, HOST);//加缓存
         this.createBannerlittlePage(info,getNewProjectFlag);
         this.createPopImgPage(info, uniqueIdentifier);
         this.createForceUpdateInfo(info, platform, version, HOST);
@@ -431,6 +435,8 @@ public class AppHomeServiceImpl implements AppHomeService {
     /**
      * 首页汇计划推广计划列表 - 首页显示
      */
+	@Cached(name="appIndexHjhExtensionPlanListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public List<HjhPlanCustomizeVO> searchIndexHjhExtensionPlanList(Map<String, Object> params) {
         AppHomePageRequest request  = (AppHomePageRequest) ConvertUtils.convertMapToObject(params,AppHomePageRequest.class);
         List<HjhPlanCustomizeVO> hjhPlanList = this.amTradeClient.selectIndexHjhExtensionPlanList(request);

@@ -30,7 +30,7 @@ public interface ApplyAgreementService extends BaseService{
      *
      * @return
      */
-    List<ApplyAgreementVO> selectApplyAgreement(ApplyAgreementRequest request, int limitStart, int limitEnd);
+    List<ApplyAgreementVO> selectApplyAgreement(ApplyAgreementRequest request);
 
     /**
      * 列表

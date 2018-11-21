@@ -242,7 +242,7 @@
 					hdpa.create_time,
 					'%Y-%m-%d %H:%i'
 				) AS create_time, -->
-				hdpa.create_time AS create_time,
+		        date_format(hdpa.create_time, '%Y-%m-%d %H:%i:%s') AS create_time,
 				
 				hdpa.create_time AS add_time_long,
 				hdpa.invite_user_name referee_name, 
@@ -293,8 +293,9 @@
 				hdpa.actual_apr AS actualApr,
 			  	hdpa.invest_counts AS investCounts,
 			  	hdpa.match_dates AS matchDates,
-				hdpa.end_date,
-				hdpa.acctual_payment_time
+				date_format(hdpa.end_date, '%Y-%m-%d') AS end_date,
+				CASE WHEN hdpa.acctual_payment_time =0 OR hdpa.acctual_payment_time is null THEN ''
+				ELSE FROM_UNIXTIME(hdpa.commission_count_time,'%Y-%m-%d') END AS acctual_payment_time
 			FROM
 				ht_hjh_accede hdpa
 			LEFT JOIN ht_r_user ruser1 ON hdpa.invite_user_id = ruser1.user_id  
@@ -474,6 +475,20 @@
 				</if>
 				<if test="investCountsSrch != null and investCountsSrch != ''">
 					AND hdpa.invest_counts = #{investCountsSrch}
+				</if>
+				
+				<if test="endDateStartSrch != null and endDateStartSrch!=''">
+					and hdpa.end_date <![CDATA[>=]]> CONCAT(#{endDateStartSrch},' 00:00:00')
+				</if>
+				<if test="endDateEndSrch != null and endDateEndSrch!=''">
+					and hdpa.end_date <![CDATA[<=]]> CONCAT(#{endDateEndSrch},' 23:59:59')
+				</if>
+	
+				<if test="acctualPaymentTimeStartSrch != null and acctualPaymentTimeStartSrch !='' ">
+					AND FROM_UNIXTIME( hdpa.acctual_payment_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{acctualPaymentTimeStartSrch}
+				</if>
+				<if test="acctualPaymentTimeEndSrch != null and acctualPaymentTimeEndSrch !='' ">
+					AND FROM_UNIXTIME( hdpa.acctual_payment_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{acctualPaymentTimeEndSrch}
 				</if>
 			</where>
 	</select>

@@ -3,22 +3,20 @@ package com.hyjf.pay.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.base.BaseController;
 import com.hyjf.pay.bean.DzqzCallDefine;
 import com.hyjf.pay.config.SystemConfig;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import com.hyjf.pay.lib.fadada.call.DzqzCallApi;
 import com.hyjf.pay.lib.fadada.call.impl.DzqzCallApiImpl;
 import com.hyjf.pay.mq.FddProducer;
 import com.hyjf.pay.mq.MessageContent;
 import com.hyjf.pay.mq.Producer;
-import com.hyjf.pay.mq.MessageContent;
 import com.hyjf.pay.service.DzqzPayLogService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +53,7 @@ public class DzqzCallController extends BaseController {
      * @throws Exception
      */
     @PostMapping(value = DzqzCallDefine.FDD_CALL_APIBG)
-    @HystrixCommand(commandKey="DzqzCallApiBg", fallbackMethod = "fallBackCallApiBg",commandProperties = {
+    @HystrixCommand(commandKey="电子签章接口-DzqzCallApiBg", fallbackMethod = "fallBackCallApiBg",ignoreExceptions = CheckException.class,commandProperties = {
             //设置断路器生效
           @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),        
             //一个统计窗口内熔断触发的最小个数3/10s
@@ -65,11 +63,10 @@ public class DzqzCallController extends BaseController {
             //失败率达到30百分比后熔断
           @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
           // 超时时间
-          @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000")},threadPoolProperties = {
+          @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "40000")},threadPoolProperties = {
           @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
     public String callApiBg(@RequestBody DzqzCallBean bean) {
-        log.info("--------------开始调用pay工程-------------");
-        log.debug("-------fdd-------ca参数-----[{}]",JSON.toJSONString(bean));
+        log.info("-------fdd-------ca参数-----[{}]",JSON.toJSONString(bean));
         String ret = "";
         String orderId = "";
         try {

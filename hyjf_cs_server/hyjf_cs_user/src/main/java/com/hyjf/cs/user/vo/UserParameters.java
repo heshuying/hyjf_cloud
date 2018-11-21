@@ -152,6 +152,9 @@ public class UserParameters {
 	 * 缴费授权固定消息
 	 */
 	private String paymentAuthDesc = "部分交易过程中，会收取相应费用，请进行授权。\n例如：提现手续费，债转服务费等。";
+	// add by pcc app3.1.1追加 20180823 start
+	// 我的计划列表退出中标签显示标识（临时使用，功能上线以后可以删除）
+	private String exitLabelShowFlag;
 
 	// 用户ID
 	private String userId;
@@ -911,5 +914,13 @@ public class UserParameters {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	public String getExitLabelShowFlag() {
+		return exitLabelShowFlag;
+	}
+
+	public void setExitLabelShowFlag(String exitLabelShowFlag) {
+		this.exitLabelShowFlag = exitLabelShowFlag;
 	}
 }

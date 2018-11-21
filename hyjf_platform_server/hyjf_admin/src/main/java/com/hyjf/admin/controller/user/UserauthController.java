@@ -1,5 +1,6 @@
 package com.hyjf.admin.controller.user;
 
+import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.AuthBean;
 import com.hyjf.admin.common.result.AdminResult;
@@ -168,18 +169,23 @@ public class UserauthController extends BaseController {
 		// 返回结果
 		logger.info("授权查询开始，查询用户：{}", userId);
 		BankCallBean retBean = authService.getTermsAuthQuery(userId, BankCallConstant.CHANNEL_PC);
+		logger.info("getTermsAuthQuery return:" + JSON.toJSONString(retBean));
 		try {
 			if(authService.checkDefaultConfig(retBean,AuthBean.AUTH_TYPE_AUTO_BID)){
+				logger.info("checkDefaultConfig return");
 				return new AdminResult();
 			}
 
 			if (retBean != null && BankCallConstant.RESPCODE_SUCCESS.equals(retBean.get(BankCallConstant.PARAM_RETCODE))) {
 				authService.updateUserAuth(userId, retBean,AuthBean.AUTH_TYPE_AUTO_BID);
+				logger.info("授权状态更新成功");
 				return new AdminResult();
 			} else {
+				logger.info("请求银行接口失败，retcode：" + retBean.get(BankCallConstant.PARAM_RETCODE));
 				return new AdminResult<>(FAIL, "请求银行接口失败");
 			}
 		} catch (Exception e) {
+			logger.error("授权查询出错", e);
 			return new AdminResult<>(FAIL, "授权查询出错");
 		}
 	}

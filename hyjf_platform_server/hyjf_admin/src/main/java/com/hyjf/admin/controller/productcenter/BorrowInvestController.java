@@ -5,11 +5,13 @@ package com.hyjf.admin.controller.productcenter;
 
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.InvestorDebtBean;
-import com.hyjf.admin.beans.request.*;
+import com.hyjf.admin.beans.request.BorrowInvestDebtInfoRequest;
+import com.hyjf.admin.beans.request.BorrowInvestRequestBean;
+import com.hyjf.admin.beans.request.InvestorRequest;
+import com.hyjf.admin.beans.request.PdfSignRequest;
 import com.hyjf.admin.beans.response.BorrowInvestResponseBean;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -19,13 +21,9 @@ import com.hyjf.admin.service.BorrowRegistService;
 import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
-import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
-import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
-import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
-import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -33,10 +31,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,7 +38,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -427,7 +420,7 @@ public class BorrowInvestController extends BaseController {
     private Map<String, String> buildMap(String isOrganizationView) {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("borrowNid", "借款编号");
-        map.put("planNid", "计划编号");
+        map.put("planNid", "智投编号");
         map.put("userId", "借款人ID");
         map.put("username", "借款人用户名");
         map.put("borrowName", "借款标题");
@@ -460,7 +453,7 @@ public class BorrowInvestController extends BaseController {
         map.put("departmentLevel1Name", "一级分部（投资时）");
         map.put("departmentLevel2Name", "二级分部（投资时）");
         map.put("teamName", "团队（投资时）");
-        map.put("account", "投资金额");
+        map.put("account", "授权服务金额");
         map.put("operatingDeck", "操作平台");
         map.put("investType", "投资方式");
         map.put("createTime", "投资时间");
@@ -514,9 +507,37 @@ public class BorrowInvestController extends BaseController {
             }
         };
 
+        IValueFormatter tenderReferrerUserIdAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String value = (String) object;
+                if (StringUtils.isBlank(value)) {
+                    return "";
+                } else if ("0".equals(value)) {
+                    return "";
+                }
+                return value;
+            }
+        };
+
+        IValueFormatter referrerUserIdAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String value = (String) object;
+                if (StringUtils.isBlank(value)) {
+                    return "";
+                } else if ("0".equals(value)) {
+                    return "";
+                }
+                return value;
+            }
+        };
+
 
         mapAdapter.put("tenderUserAttributeNow", tenderUserAttributeNowAdapter);
         mapAdapter.put("contractStatus", contractStatusAdapter);
+        mapAdapter.put("referrerUserId", referrerUserIdAdapter);
+        mapAdapter.put("tenderReferrerUserId", tenderReferrerUserIdAdapter);
         return mapAdapter;
     }
 

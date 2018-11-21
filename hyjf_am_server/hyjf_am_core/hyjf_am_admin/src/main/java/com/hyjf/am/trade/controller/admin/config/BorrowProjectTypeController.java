@@ -158,7 +158,7 @@ public class BorrowProjectTypeController extends BaseController {
             this.borrowProjectTypeService.deleteProjectType(adminRequest.getBorrowCd());
             /*--------------------------add by LSY START-----------------------------------*/
             //删除asset表相应数据
-            this.borrowProjectTypeService.deleteAsset(Integer.parseInt(adminRequest.getBorrowCd()));
+            this.borrowProjectTypeService.deleteAsset(adminRequest.getBorrowCd());
             /*--------------------------add by LSY END-----------------------------------*/
             resp.setRtn(Response.SUCCESS);
             return resp;

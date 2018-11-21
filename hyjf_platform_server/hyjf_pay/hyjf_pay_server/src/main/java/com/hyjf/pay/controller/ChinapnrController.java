@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.chinapnr.MerPriv;
 import com.hyjf.common.constants.CommonConstant;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -20,6 +21,8 @@ import com.hyjf.pay.service.ChinapnrService;
 import com.hyjf.pay.service.PnrApi;
 import com.hyjf.pay.service.impl.ChinaPnrApiImpl;
 import com.hyjf.pay.utils.ChinaPnrSignUtils;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,10 +44,6 @@ import java.util.Map;
 @RequestMapping(value = "/chinapnr")
 public class ChinapnrController extends BaseController {
     Logger logger = LoggerFactory.getLogger(ChinapnrController.class);
-    /**
-     * THIS_CLASS
-     */
-    private static final String THIS_CLASS = ChinapnrController.class.getName();
 
     @Autowired
     ChinapnrService chinapnrService;
@@ -71,12 +70,24 @@ public class ChinapnrController extends BaseController {
      */
     @RequestMapping(value = "/callapi.json")
     @ResponseBody
+    @HystrixCommand(commandKey="汇付页面调用-callApi", fallbackMethod = "fallBackApi",ignoreExceptions = CheckException.class, commandProperties = {
+            //设置断路器生效
+          @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),        
+            //一个统计窗口内熔断触发的最小个数3/10s
+          @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            //熔断5秒后去尝试请求
+          @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+          @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
+          // 超时时间
+          @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "40000")},threadPoolProperties = {
+          @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
     public Map<String,Object> callApi(@RequestBody ChinapnrBean bean) throws Exception {
         String methodName = "callApi";
-        logger.info(THIS_CLASS, methodName, "[调用接口开始]");
+        logger.info("[调用接口开始]");
         Map<String,Object> result = new HashMap<>();
         if(null==bean){
-            logger.info(THIS_CLASS, methodName, "bean值为空");
+            logger.info("bean值为空");
             return null;
         }
         try {
@@ -127,12 +138,16 @@ public class ChinapnrController extends BaseController {
                 result.put("content", "保存发送日志失败！");
             }
         } catch (Exception e) {
-            logger.error(THIS_CLASS, methodName, e);
+            logger.error("汇付异常", e);
             throw e;
         } finally {
-            logger.info(THIS_CLASS, methodName, "[调用汇付接口结束, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
+            logger.info("[调用汇付接口结束, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         }
         return result;
+    }
+
+    public Map<String,Object> fallBackApi(ChinapnrBean bean) {
+    	return new HashMap<String,Object>();
     }
 
     /**
@@ -148,7 +163,7 @@ public class ChinapnrController extends BaseController {
         logger.info("[汇付交易完成后,回调开始]");
         // 参数转换成Map
         if(null==bean){
-            logger.info(THIS_CLASS, methodName, "bean不能为空");
+            logger.info("bean不能为空");
             modelAndView.setViewName(CommonConstant.JSP_CHINAPNR_RESULT);
             modelAndView.addObject("content", "bean值为空<br>");
             return modelAndView;
@@ -190,12 +205,12 @@ public class ChinapnrController extends BaseController {
             status = ChinaPnrConstant.STATUS_VERTIFY_NG;
             bean.set("chkValueStatus", status);
             remark = "验证签名失败";
-            logger.debug(THIS_CLASS, methodName, "验证签名失败");
+            logger.debug("验证签名失败");
         } else {
             status = ChinaPnrConstant.STATUS_VERTIFY_OK;
             bean.set("chkValueStatus", status);
             remark = "验证签名成功";
-            logger.debug(THIS_CLASS, methodName, "验证签名成功");
+            logger.debug("验证签名成功");
         }
 
         String uuid = null;
@@ -253,7 +268,7 @@ public class ChinapnrController extends BaseController {
         }
         modelAndView.addObject(CommonConstant.CHINAPNR_FORM, bean);
 
-        logger.info(THIS_CLASS, methodName, "[交易完成后,回调结束]");
+        logger.info("[交易完成后,回调结束]");
         return modelAndView;
     }
 
@@ -267,7 +282,7 @@ public class ChinapnrController extends BaseController {
     public String callBack(@ModelAttribute ChinapnrBean bean) {
         logger.info("汇付异步回调开始");
         String methodName = "callBack";
-        logger.info(THIS_CLASS, methodName, "[汇付接收异步返回的消息开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
+        logger.info("[汇付接收异步返回的消息开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         if(null==bean){
             logger.info("bean不能为空");
             return null;
@@ -309,13 +324,13 @@ public class ChinapnrController extends BaseController {
             status = ChinaPnrConstant.STATUS_VERTIFY_NG;
             bean.set("chkValueStatus", status);
             remark = "验证签名失败";
-            logger.debug(THIS_CLASS, methodName, "验证签名失败");
+            logger.debug("验证签名失败");
             System.out.println("callback验签失败");
         } else {
             status = ChinaPnrConstant.STATUS_VERTIFY_OK;
             bean.set("chkValueStatus", status);
             remark = "验证签名成功";
-            logger.debug(THIS_CLASS, methodName, "验证签名成功");
+            logger.debug("验证签名成功");
         }
         String uuid = null;
         if (bean.getMerPrivPo() != null) {
@@ -422,10 +437,10 @@ public class ChinapnrController extends BaseController {
         ModelAndView modelAndView = new ModelAndView();
         // TODO: 2018/7/12 暂时没有，不处理
         String methodName = "result";
-        logger.info(THIS_CLASS, methodName, "[交易完成后,回调开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
+        logger.info("[交易完成后,回调开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         // 参数转换成Map
         if(null==bean){
-            logger.info(THIS_CLASS, methodName, "bean为空");
+            logger.info("bean为空");
             modelAndView.addObject("content", "保存回调日志失败");
             return modelAndView;
         }
@@ -446,11 +461,11 @@ public class ChinapnrController extends BaseController {
         if (Validator.isNull(result) || !result.isVerifyFlag()) {
             status = ChinaPnrConstant.STATUS_VERTIFY_NG;
             bean.set("chkValueStatus", status);
-            logger.debug(THIS_CLASS, methodName, "验证签名失败");
+            logger.debug("验证签名失败");
         } else {
             status = ChinaPnrConstant.STATUS_VERTIFY_OK;
             bean.set("chkValueStatus", status);
-            logger.debug(THIS_CLASS, methodName, "验证签名成功");
+            logger.debug("验证签名成功");
         }
         // 回调URL
         String callBackUrl = "";
@@ -464,7 +479,7 @@ public class ChinapnrController extends BaseController {
         }
         modelAndView.addObject(CommonConstant.CHINAPNR_FORM, bean);
 
-        logger.info(THIS_CLASS, methodName, "[交易完成后,回调结束]");
+        logger.info("[交易完成后,回调结束]");
         return modelAndView;
     }
 
@@ -477,13 +492,25 @@ public class ChinapnrController extends BaseController {
      */
     @ResponseBody
     @RequestMapping(method = RequestMethod.POST, value = "/callapibg")
+    @HystrixCommand(commandKey="汇付接口调用-callApiBg", fallbackMethod = "fallBackCallApiBg",ignoreExceptions = CheckException.class,commandProperties = {
+            //设置断路器生效
+          @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),        
+            //一个统计窗口内熔断触发的最小个数3/10s
+          @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            //熔断5秒后去尝试请求
+          @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+          @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
+          // 超时时间
+          @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "40000")},threadPoolProperties = {
+          @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
     public String callApiBg(@RequestBody ChinapnrBean bean)  {
         String methodName = "callApiBg";
-        logger.info(THIS_CLASS, methodName, "[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
+        logger.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         String ret = "";
         String nowTime = GetDate.getServerDateTime(9, new Date());
         if(null==bean){
-            logger.info(THIS_CLASS, methodName, "bean值为空");
+            logger.info("bean值为空");
             return ret;
         }
         try {
@@ -587,11 +614,16 @@ public class ChinapnrController extends BaseController {
                 throw new RuntimeException("保存日志失败！");
             }
         } catch (Exception e) {
-            logger.error(THIS_CLASS, methodName, e);
+            logger.error("汇付",e);
         } finally {
-            logger.info(THIS_CLASS, methodName, "[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
+            logger.info("[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         }
         return ret;
+    }
+    
+
+    public String fallBackCallApiBg(ChinapnrBean bean) {
+    	return "";
     }
 
     /**
@@ -605,10 +637,10 @@ public class ChinapnrController extends BaseController {
     @RequestMapping(method = RequestMethod.POST, value = "/callapiajax")
     public String callApiAjax(@RequestBody ChinapnrBean bean) throws Exception {
         String methodName = "callApiAjax";
-        logger.info(THIS_CLASS, methodName, "[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
+        logger.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         String ret = "";
         if(bean == null){
-            logger.info(THIS_CLASS, methodName, "bean不能为空");
+            logger.info("bean不能为空");
             return ret;
         }
         try {
@@ -639,11 +671,11 @@ public class ChinapnrController extends BaseController {
                 }
             }
         } catch (JSONException e1) {
-            logger.debug(THIS_CLASS, methodName, "转换成JSON时失败");
+            logger.debug("转换成JSON时失败");
         } catch (Exception e) {
             logger.error(ChinapnrController.class.getName(), methodName, e);
         } finally {
-            logger.info(THIS_CLASS, methodName, "[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
+            logger.info("[调用接口结束, 消息类型:" + (bean == null ? "" : bean.getCmdId()) + "]");
         }
         return ret;
     }

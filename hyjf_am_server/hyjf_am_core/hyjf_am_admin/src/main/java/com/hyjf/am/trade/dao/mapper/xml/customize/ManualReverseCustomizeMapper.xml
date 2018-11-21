@@ -32,10 +32,10 @@
 				AND hmr.account_id = #{accountIdSrch}
 			</if>
 			<if test="txTimeStartSrch != null and txTimeStartSrch != ''">
-				AND hmr.tx_time <![CDATA[>=]]> DATE_FORMAT(#{txTimeStartSrch },'%Y-%m-%d %H:%I:%S')
+				AND hmr.tx_time <![CDATA[>=]]> DATE_FORMAT(#{txTimeStartSrch},'%Y-%m-%d %H:%i:%s')
 			</if>
 			<if test="txTimeEndSrch != null and txTimeEndSrch != ''">
-				AND hmr.tx_time <![CDATA[<=]]> DATE_FORMAT(#{txTimeEndSrch },'%Y-%m-%d %H:%I:%S')
+				AND hmr.tx_time <![CDATA[<=]]> DATE_FORMAT(CONCAT(#{txTimeEndSrch },' 23:59:59'),'%Y-%m-%d %H:%i:%s')
 			</if>
 		</where>
 	</sql>

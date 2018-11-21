@@ -11,9 +11,7 @@ import com.hyjf.signatrues.mq.base.Consumer;
 import com.hyjf.signatrues.mq.handle.FddHandle;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
-import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
-import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
-import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
+import org.apache.rocketmq.client.consumer.listener.*;
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -57,9 +55,9 @@ public class FddConsumer extends Consumer {
 		logger.info("====法大大 consumer=====");
 	}
 
-	public class MessageListener implements MessageListenerConcurrently {
+	public class MessageListener implements MessageListenerOrderly {
 		@Override
-		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
+		public ConsumeOrderlyStatus consumeMessage(List<MessageExt> msgs, ConsumeOrderlyContext context) {
 			logger.info("法大大 收到消息，开始处理....msgs is :{}", msgs);
 
 			for (MessageExt msg : msgs) {
@@ -75,13 +73,13 @@ public class FddConsumer extends Consumer {
 								FddGenerateContractBean.class);
 						if (bean==null) {
 							logger.info("传入参数不得为空！");
-							return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+							return ConsumeOrderlyStatus.SUCCESS;
 						}
 						orderId = bean.getOrdid();
 						transType = bean.getTransType();
 						if (Validator.isNull(orderId) && Validator.isNull(transType)) {
 							logger.info("传入参数不得为空！");
-							return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+							return ConsumeOrderlyStatus.SUCCESS;
 						}
 						if (FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == transType) {// 散标投资
 							fddHandle.tenderGenerateContract(bean);
@@ -99,7 +97,7 @@ public class FddConsumer extends Consumer {
 
 					} catch (Exception e) {
 						logger.info("=============生成法大大合同任务异常，订单号：" + orderId + ",错误信息：" + e.getMessage()	+ "=============");
-						return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+						return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
 					}
 					logger.info("--------------------------------------生成法大大合同任务结束，订单号：" + orderId + "=============");
 
@@ -111,19 +109,19 @@ public class FddConsumer extends Consumer {
 						DzqzCallBean bean = JSONObject.parseObject(msg.getBody(),DzqzCallBean.class);
 						if (Validator.isNull(bean)){
 							logger.info("传入参数不得为空！");
-							return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+							return ConsumeOrderlyStatus.SUCCESS;
 						}
 						ordid = bean.getContract_id();
 						if (Validator.isNull(ordid)){
 							logger.info("传入参数不得为空！");
-							return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+							return ConsumeOrderlyStatus.SUCCESS;
 						}
 
 						logger.info("-----------------开始处理法大大自动签章异步处理，订单号：" + ordid);
 						fddHandle.updateAutoSignData(bean);
 					}catch (Exception e1){
 						logger.info("--------------------------------------法大大自动签署异步处理任务异常，订单号：" + ordid + ",错误信息："+ e1.getMessage()+"=============");
-						return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+						return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
 					}
 					logger.info("--------------------------------------法大大自动签署异步处理任务结束，订单号：" + ordid + "=============");
 
@@ -134,37 +132,37 @@ public class FddConsumer extends Consumer {
 					try {
 						if (Validator.isNull(bean)){
 							logger.info("法大大下载脱敏处理参数为空");
-							return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+							return ConsumeOrderlyStatus.SUCCESS;
 						}
 						String agrementID = bean.getAgrementID();
 						if(StringUtils.isBlank(agrementID)){
 							logger.info("传入参数agrementID不得为空！");
-							return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+							return ConsumeOrderlyStatus.SUCCESS;
 						}
 						ordid = bean.getOrdid();
 						if (StringUtils.isBlank(ordid)){
 							logger.info("传入参数ordid不得为空！");
-							return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+							return ConsumeOrderlyStatus.SUCCESS;
 						}
 						String downloadUrl = bean.getDownloadUrl();
 						if(StringUtils.isBlank(downloadUrl)){
 							logger.info("传入参数downloadUrl不得为空！");
-							return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+							return ConsumeOrderlyStatus.SUCCESS;
 						}
 						String ftpPath = bean.getFtpPath();
 						if(StringUtils.isBlank(ftpPath)){
 							logger.info("传入参数ftpPath不得为空！");
-							return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+							return ConsumeOrderlyStatus.SUCCESS;
 						}
 						String savePath = bean.getSavePath();
 						if(StringUtils.isBlank(savePath)){
 							logger.info("传入参数savePath 不得为空！");
-							return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+							return ConsumeOrderlyStatus.SUCCESS;
 						}
 						String transType = bean.getTransType();
 						if(StringUtils.isBlank(transType)){
 							logger.info("传入参数transType 不得为空！");
-							return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+							return ConsumeOrderlyStatus.SUCCESS;
 						}
 						boolean tenderCompany = bean.isTenderCompany();
 						boolean creditCompany = bean.isCreditCompany();
@@ -173,14 +171,14 @@ public class FddConsumer extends Consumer {
 					}catch (Exception e1){
 						logger.info("--------------------------------------法大大下载脱敏处理任务异常，订单号：" + ordid + ",错误信息："+ e1.getMessage()+"=============");
 						e1.printStackTrace();
-						return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+						return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
 					}
 					logger.info("--------------------------------------法大大下载脱敏处理任务结束，订单号：" + ordid + "=============");
-					return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+					return ConsumeOrderlyStatus.SUCCESS;
 				}
 			}
 			// 如果没有return success ，consumer会重新消费该消息，直到return success
-			return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
+			return ConsumeOrderlyStatus.SUCCESS;
 		}
 	}
 }

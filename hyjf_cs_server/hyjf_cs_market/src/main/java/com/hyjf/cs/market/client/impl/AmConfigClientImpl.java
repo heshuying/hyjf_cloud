@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.market.client.impl;
 
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.*;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -276,6 +278,31 @@ public class AmConfigClientImpl implements AmConfigClient {
 		return response;
 
 	}
+
+	/**
+	 * 判断某天是否是工作日
+	 *
+	 * @return
+	 */
+	@Override
+	public boolean queryWorkdateOnSomeday() {
+		BooleanResponse response = restTemplate.postForObject(
+				"http://AM-CONFIG//am-config/holidays/is_workdate", null,
+				BooleanResponse.class);
+		return response.getResultBoolean();
+	}
+
+	/**
+	 * 判断当天是不是当月第一个工作日
+	 * @return
+	 */
+    @Override
+    public boolean selectFirstWorkdayOnMonth() {
+    	BooleanResponse response = restTemplate.postForObject(
+    			"http://AM-CONFIG/am-config/holidays/is_firstworkdate",null,
+				BooleanResponse.class);
+        return response.getResultBoolean();
+    }
 
 
 }

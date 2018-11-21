@@ -3,6 +3,7 @@ package com.hyjf.admin.service.impl;
 import com.hyjf.admin.beans.AuthBean;
 import com.hyjf.am.resquest.user.UserAuthRequest;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
@@ -21,11 +22,11 @@ import java.util.Date;
  */
 @Service
 public class AuthServiceImpl extends BaseAdminServiceImpl implements com.hyjf.admin.service.AuthService {
-    public final static String KEY_PAYMENT_AUTH = "AUTHCONFIG:paymentAuth"; // 缴费授权
+/*    public final static String KEY_PAYMENT_AUTH = "AUTHCONFIG:paymentAuth"; // 缴费授权
     public final static String KEY_REPAYMENT_AUTH = "AUTHCONFIG:repaymentAuth"; // 还款授权
     public final static String KEY_AUTO_TENDER_AUTH = "AUTHCONFIG:autoTenderAuth"; // 自动投标
     public final static String KEY_AUTO_CREDIT_AUTH = "AUTHCONFIG:autoCreditAuth"; // 自动债转
-    public final static String KEY_IS_CHECK_USER_ROLES = "CHECKE:ISCHECKUSERROLES"; // 是否校验用户角色
+    public final static String KEY_IS_CHECK_USER_ROLES = "CHECKE:ISCHECKUSERROLES"; // 是否校验用户角色*/
 
     @Override
     public BankCallBean getTermsAuthQuery(int userId, String channel) {
@@ -67,7 +68,7 @@ public class AuthServiceImpl extends BaseAdminServiceImpl implements com.hyjf.ad
                 case AuthBean.AUTH_TYPE_AUTO_BID:
                     if(StringUtils.isNotBlank(autoBidStatus)&&"1".equals(autoBidStatus)
                             &&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-                        HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_AUTO_TENDER_AUTH);
+                        HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH);
                         if(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getAutoBidDeadline())){
                             return true;
                         }
@@ -86,7 +87,7 @@ public class AuthServiceImpl extends BaseAdminServiceImpl implements com.hyjf.ad
                 case AuthBean.AUTH_TYPE_PAYMENT_AUTH:
                     if(StringUtils.isNotBlank(paymentAuth)&&"1".equals(paymentAuth)
                             &&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-                        HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_PAYMENT_AUTH);
+                        HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
                         if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getPaymentDeadline())){
                             return true;
                         }
@@ -104,7 +105,7 @@ public class AuthServiceImpl extends BaseAdminServiceImpl implements com.hyjf.ad
                 case AuthBean.AUTH_TYPE_REPAY_AUTH:
                     if(StringUtils.isNotBlank(repayAuth)&&"1".equals(repayAuth)
                             &&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-                        HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_REPAYMENT_AUTH);
+                        HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_REPAYMENT_AUTH);
                         if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getRepayDeadline())){
                             return true;
                         }
@@ -122,7 +123,7 @@ public class AuthServiceImpl extends BaseAdminServiceImpl implements com.hyjf.ad
                 case AuthBean.AUTH_TYPE_MERGE_AUTH:
                     if(StringUtils.isNotBlank(autoBidStatus)&&"1".equals(autoBidStatus)
                             &&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),AuthBean.AUTH_TYPE_AUTO_BID)){
-                        HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_AUTO_TENDER_AUTH);
+                        HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH);
                         if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getAutoBidDeadline())){
                             return true;
                         }
@@ -138,7 +139,7 @@ public class AuthServiceImpl extends BaseAdminServiceImpl implements com.hyjf.ad
                     }
                     if(StringUtils.isNotBlank(paymentAuth)&&"1".equals(paymentAuth)
                             &&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),AuthBean.AUTH_TYPE_PAYMENT_AUTH)){
-                        HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_PAYMENT_AUTH);
+                        HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
                         if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getPaymentDeadline())){
                             return true;
                         }
@@ -165,7 +166,7 @@ public class AuthServiceImpl extends BaseAdminServiceImpl implements com.hyjf.ad
             String repayAuth = bean.getRepayAuth();
             if(StringUtils.isNotBlank(autoBidStatus)&&"1".equals(autoBidStatus)
                     &&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-                HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_AUTO_TENDER_AUTH);
+                HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH);
                 if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getAutoBidDeadline())){
                     return true;
                 }
@@ -181,7 +182,7 @@ public class AuthServiceImpl extends BaseAdminServiceImpl implements com.hyjf.ad
             }
             if(StringUtils.isNotBlank(paymentAuth)&&"1".equals(paymentAuth)
                     &&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-                HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_PAYMENT_AUTH);
+                HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH);
                 if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getPaymentDeadline())){
                     return true;
                 }
@@ -197,7 +198,7 @@ public class AuthServiceImpl extends BaseAdminServiceImpl implements com.hyjf.ad
             }
             if(StringUtils.isNotBlank(repayAuth)&&"1".equals(repayAuth)
                     &&!this.checkIsAuth(Integer.parseInt(bean.getLogUserId()),authType)){
-                HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_REPAYMENT_AUTH);
+                HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_REPAYMENT_AUTH);
                 if(!GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")).equals(bean.getRepayDeadline())){
                     return true;
                 }
@@ -323,7 +324,7 @@ public class AuthServiceImpl extends BaseAdminServiceImpl implements com.hyjf.ad
                 updateHjhUserAuth.setId(hjhUserAuth.getId());
                 updateHjhUserAuth.setUpdateTime(nowTime);
                 updateHjhUserAuth.setUpdateUserId(userId);
-                request.setHjhUserAuth(hjhUserAuth);
+                request.setHjhUserAuth(updateHjhUserAuth);
             }
         }
         amUserClient.updateUserAuth(request);
@@ -339,7 +340,7 @@ public class AuthServiceImpl extends BaseAdminServiceImpl implements com.hyjf.ad
     private void setAuthType(HjhUserAuthVO hjhUserAuth, BankCallBean bean, String authType) {
         // 授权类型
         String txcode = bean.getTxCode();
-        HjhUserAuthConfigVO config=this.getAuthConfigFromCache(this.KEY_AUTO_CREDIT_AUTH);
+        HjhUserAuthConfigVO config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH);
         if(BankCallConstant.TXCODE_TERMS_AUTH_QUERY.equals(txcode)){
             //自动投标功能开通标志
             String autoBidStatus = bean.getAutoBid();

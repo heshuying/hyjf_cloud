@@ -111,6 +111,15 @@
             <if test="endTimeEnd != null and endTimeEnd != ''">
                 AND dc.end_time <![CDATA[<=]]>unix_timestamp(CONCAT(#{endTimeEnd},' 23:59:59'))
             </if>
+            <if test="actualAprStartSrch != null and actualAprStartSrch != ''">
+                AND dc.actual_apr >= #{actualAprStartSrch}
+            </if>
+            <if test="actualAprEndSrch != null and actualAprEndSrch != ''">
+                AND dc.actual_apr <![CDATA[ <= ]]> #{actualAprEndSrch}
+            </if>
+            <if test="labelName != null and labelName != ''">
+                AND dc.label_name  like concat('%',#{labelName},'%')
+            </if>
         </where>
     </sql>
 
@@ -122,6 +131,7 @@
         INNER JOIN ht_borrow b ON dc.borrow_nid = b.borrow_nid
         INNER JOIN ht_hjh_plan dp ON dp.plan_nid = dc.plan_nid
         LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
+        left join ht_hjh_accede hha on dc.plan_order_id = hha.accede_order_id
         <include refid="Where_Clause" />
     </select>
 

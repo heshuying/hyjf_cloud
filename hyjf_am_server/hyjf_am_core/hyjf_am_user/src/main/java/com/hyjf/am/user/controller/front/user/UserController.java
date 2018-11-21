@@ -213,9 +213,9 @@ public class UserController extends BaseController {
      */
     @RequestMapping("/updateByCondition/{condition}")
     public UserResponse updateByCondition(@PathVariable String condition) {
-        logger.info("findUserByCondition run...condition is :{}", condition);
+        logger.info("updateByCondition run...condition is :{}", condition);
         UserResponse response = new UserResponse();
-        User user = userService.findUserByUsernameOrMobile(condition);
+        User user = userService.updateUserByUsernameOrMobile(condition);
         if (user != null) {
             UserVO userVO = new UserVO();
             BeanUtils.copyProperties(user, userVO);
@@ -352,9 +352,9 @@ public class UserController extends BaseController {
             return ret;
         }
 
-        if (newPW.length() < 6 || newPW.length() > 16) {
+        if (newPW.length() < 8 || newPW.length() > 16) {
             ret.put("status", "1");
-            ret.put("statusDesc", "密码长度6-16位");
+            ret.put("statusDesc", "密码长度8-16位");
             return ret;
         }
 
@@ -366,17 +366,18 @@ public class UserController extends BaseController {
                 break;
             }
         }
-        if (!hasNumber) {
-            ret.put("status", "1");
-            ret.put("statusDesc", "密码必须包含数字");
-            return ret;
-        }
-        String regEx = "^[a-zA-Z0-9]+$";
+//        等保取消数字校验
+//        if (!hasNumber) {
+//            ret.put("status", "1");
+//            ret.put("statusDesc", "密码必须包含数字");
+//            return ret;
+//        }
+        String regEx = "^(?![0-9]+$)(?![a-zA-Z]+$)(?![\\`\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\+\\-\\=\\{\\}\\|\\[\\]\\\\\\;\\'\\:\\\"\\,\\.\\/\\<\\>\\?]+$)[0-9A-Za-z\\`\\~\\!\\@\\#\\$\\%\\^\\&\\*\\(\\)\\_\\+\\-\\=\\{\\}\\|\\[\\]\\\\\\;\\'\\:\\\"\\,\\.\\/\\<\\>\\?]{8,16}$";
         Pattern p = Pattern.compile(regEx);
         Matcher m = p.matcher(newPW);
         if (!m.matches()) {
             ret.put("status", "1");
-            ret.put("statusDesc", "密码必须由数字和字母组成，如abc123");
+            ret.put("statusDesc", "必须包含数字、字母、符号至少两种");
             return ret;
         }
 

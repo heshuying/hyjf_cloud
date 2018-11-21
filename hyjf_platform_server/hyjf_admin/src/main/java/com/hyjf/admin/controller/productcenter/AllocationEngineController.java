@@ -180,7 +180,7 @@ public class AllocationEngineController extends BaseController{
 	private void validatorFieldCheck(JSONObject jsonObject, AllocationEngineRuquest form) {
 		// 计划编号非空判断(状态是二选一不需要判断)
 		if(StringUtils.isEmpty(form.getPlanNidSrch())){
-			jsonObject.put("validatorMsg", "在专区中添加计划时请输入计划编号!");
+			jsonObject.put("validatorMsg", "在专区中添加智投服务时请输入智投编号!");
 		}
 	}
 	
@@ -338,7 +338,7 @@ public class AllocationEngineController extends BaseController{
 		//sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 		// 表格sheet名称
-		String sheetName = "计划专区";
+		String sheetName = "智投专区";
 		// 文件名称
 		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
 		// 声明一个工作薄
@@ -368,8 +368,8 @@ public class AllocationEngineController extends BaseController{
 
 	private Map<String, String> buildMap() {
 		Map<String, String> map = Maps.newLinkedHashMap();
-		map.put("planNid", "计划编号");
-		map.put("planName", "计划名称");
+		map.put("planNid", "智投编号");
+		map.put("planName", "智投名称");
 		map.put("configAddTime", "添加时间");
 		map.put("configStatus", "状态");
 
@@ -546,7 +546,7 @@ public class AllocationEngineController extends BaseController{
 		//sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 		// 表格sheet名称
-		String sheetName = "计划配置";
+		String sheetName = "智投配置";
 		// 文件名称
 		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
 		// 声明一个工作薄
@@ -681,7 +681,7 @@ public class AllocationEngineController extends BaseController{
 				jsonObject.put("result", SUCCESS);
 				jsonObject.put("msg", SUCCESS_DESC);
 			} else {
-				jsonObject.put("error", "修改计划引擎配置需传入PlanNidSrch和labelId");
+				jsonObject.put("error", "修改智投服务引擎配置需传入PlanNidSrch和labelId");
 			}
 			return jsonObject;
 		}
@@ -712,7 +712,7 @@ public class AllocationEngineController extends BaseController{
 			return jsonObject;
 		}
 		if(StringUtils.isEmpty(planNid)){
-			jsonObject.put("info", "未获取计划编号，请重新输入！");
+			jsonObject.put("info", "未获取智投编号，请重新输入！");
 			jsonObject.put("status", "99");
 			return jsonObject;
 		}
@@ -752,7 +752,7 @@ public class AllocationEngineController extends BaseController{
 			//先查询汇计划表获取该计划的还款方式
 			String planBorrowStyle = this.allocationEngineService.getPlanBorrowStyle(planNid);//planNid已经校验非空
 			if(StringUtils.isEmpty(planBorrowStyle)){
-				jsonObject.put("info", "该计划的还款方式为空，请查询计划列表");
+				jsonObject.put("info", "该智投服务的还款方式为空，请查询智投服务列表");
 				jsonObject.put("status", "99");
 				return jsonObject;
 			}
@@ -786,7 +786,7 @@ public class AllocationEngineController extends BaseController{
 			return jsonObject;
 		}
 		if(StringUtils.isEmpty(planNid)){
-			jsonObject.put("info", "该标签所属计划编号不存在，请查询计划专区");
+			jsonObject.put("info", "该标签所属智投编号不存在，请查询智投专区");
 			jsonObject.put("status", "99");
 			return jsonObject;
 		}
@@ -806,13 +806,13 @@ public class AllocationEngineController extends BaseController{
 					Integer planLabelSort = object.getLabelSort();
 					//如果 取自DB的LabelSort 等同于 画面传入的 labelSort,那说明重复，则不能插入
 					if(planLabelSort !=null && planLabelSort.equals(Integer.valueOf(labelSort))){
-						jsonObject.put("info", "该计划已有标签使用此排序,请重新输入排序");
+						jsonObject.put("info", "该智投服务已有标签使用此排序,请重新输入排序");
 						jsonObject.put("status", "99");
 						return jsonObject;
 					}
 				}
 			} else{
-				jsonObject.put("info", "修改此标签排序时查询引擎发现此计划编号不存在于引擎中！");
+				jsonObject.put("info", "修改此标签排序时查询引擎发现此智投编号不存在于引擎中！");
 				jsonObject.put("status", "99");
 				return jsonObject;
 			}
@@ -1111,12 +1111,12 @@ public class AllocationEngineController extends BaseController{
 		// (引擎)
 		HjhAllocationEngineVO hjhAllocationEngine = this.allocationEngineService.getPlanConfigRecordByParam(form);
 		if(hjhRegion.getConfigStatus() == 0 && hjhLabel.getLabelState()  == 1 && hjhAllocationEngine.getLabelStatus() == 0){
-			jsonObject.put("info", "计划已被停用需重新启用");
+			jsonObject.put("info", "智投服务已被停用需重新启用");
 			jsonObject.put("status", "0");
 			return jsonObject;
 		}
 		if(hjhRegion.getConfigStatus() == 0 && hjhLabel.getLabelState()  == 0 && hjhAllocationEngine.getLabelStatus() == 0){
-			jsonObject.put("info", "计划和标签都已被停用需重新启用");
+			jsonObject.put("info", "智投服务和标签都已被停用需重新启用");
 			jsonObject.put("status", "1");
 			return jsonObject;
 		}
@@ -1150,18 +1150,18 @@ public class AllocationEngineController extends BaseController{
 		/*String planNid = request.getParameter("param");*/
 		String planNid = viewRequest.getPlanNidSrch();
 		if (StringUtils.isEmpty(planNid)) {
-			jsonObject.put("error", "未传入计划编号！");
+			jsonObject.put("error", "未传入智投编号！");
 			return jsonObject;
 		}
 		int flag = this.isExistsPlanNumber(planNid);
 		if (flag == 1) {
-			jsonObject.put("error", "该计划编号不存在！");
+			jsonObject.put("error", "该智投编号不存在！");
 			return jsonObject;
 		} else if (flag == 2) {
-			jsonObject.put("error", "该计划已经被禁用！");
+			jsonObject.put("error", "该智投服务已经被禁用！");
 			return jsonObject;
 		} else if (flag == 3) {
-			jsonObject.put("error", "该计划不存在于计划专区，请在计划专区添加！");
+			jsonObject.put("error", "该智投服务不存在于智投服务专区，请在智投服务专区添加！");
 			return jsonObject;
 		} else{
 			jsonObject.put("success", SUCCESS);

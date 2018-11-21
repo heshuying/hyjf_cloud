@@ -280,7 +280,7 @@ public class AdminRoleController {
             adminRoleCustomize.setRoleId(roleId);
         }
         // 取得角色菜单权限表数据
-        JSONArray ja = this.adminRoleService.getAdminRoleMenu(adminRoleCustomize);
+        JSONArray ja = this.adminRoleService.deleteAndgetAdminRoleMenu(adminRoleCustomize);
         if (ja != null) {
             return ja.toString();
         }
@@ -326,6 +326,12 @@ public class AdminRoleController {
             	e.printStackTrace();
             	arr.setRtn(Response.FAIL);
             	arr.setMessage("角色权限修改时发生错误,请重新操作!");
+            }
+            
+            if(adminRoleService.getRole(userRoleRequest.getUserId()).getRoleId()==userRoleRequest.getRoleId()) {
+            	arr.setIsRole(true);
+            }else {
+            	arr.setIsRole(false);
             }
         // 操作成功
 //        if(cnt > -1) {

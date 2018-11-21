@@ -12,6 +12,7 @@ import com.hyjf.am.vo.datacollect.OperationReportEntityVO;
 import com.hyjf.am.vo.message.OperationReportJobBean;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.ic.BorrowUserStatistic;
 import com.hyjf.cs.message.bean.ic.OperationReport;
@@ -56,8 +57,13 @@ public class OperationReportJobController extends BaseController {
 		OperationReportJobBean bean = new OperationReportJobBean();
 		Calendar cal = Calendar.getInstance();
 		bean.setCalendar(cal);
-		int lastMonth = getLastMonth(cal);
+		int lastMonth = getLastMonth();
 		bean.setLastMonth(lastMonth);
+		String year = String.valueOf(GetDate.getYear());
+		String month = GetDate.getMonth();
+		bean.setYear(year);
+		bean.setMonth(month);
+		logger.info("生成报告year="+year+"生成报告month="+month);
 		try {
 			operationReportJobAdminProducer.messageSend(new MessageContent(MQConstant.OPERATIONREPORT_JOB_ADMIN_TOPIC,
 					System.currentTimeMillis() + "", JSONObject.toJSONBytes(bean)));
@@ -161,17 +167,5 @@ public class OperationReportJobController extends BaseController {
 		}
 		response.setResult(vo);
 		return response;
-	}
-	/**
-	 * 获得当前月份的上个月日期
-	 * @return
-	 */
-	public static int getLastMonth(Calendar calendar){
-		SimpleDateFormat sdf = new SimpleDateFormat("MM");
-		calendar.setTime(new Date());//设置当前日期
-		calendar.add(Calendar.MONTH, -1);//月份减一
-		//输出上个月的日期
-		int lastMonth = Integer.valueOf(sdf.format( calendar.getTime()));
-		return lastMonth;
 	}
 }

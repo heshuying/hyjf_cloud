@@ -2,10 +2,13 @@ package com.hyjf.am.config.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.config.dao.mapper.auto.AdminAndRoleMapper;
 import com.hyjf.am.config.dao.mapper.auto.AdminRoleMapper;
 import com.hyjf.am.config.dao.mapper.auto.AdminRoleMenuPermissionsMapper;
 import com.hyjf.am.config.dao.mapper.customize.AdminRoleCustomizeMapper;
 import com.hyjf.am.config.dao.mapper.customize.AdminRoleMenuPermissionsCustomizeMapper;
+import com.hyjf.am.config.dao.model.auto.AdminAndRole;
+import com.hyjf.am.config.dao.model.auto.AdminAndRoleExample;
 import com.hyjf.am.config.dao.model.auto.AdminRole;
 import com.hyjf.am.config.dao.model.auto.AdminRoleExample;
 import com.hyjf.am.config.dao.model.auto.AdminRoleMenuPermissions;
@@ -35,6 +38,8 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
 	AdminRoleMenuPermissionsMapper adminRoleMenuPermissionsMapper;
 	@Autowired
 	AdminRoleMenuPermissionsCustomizeMapper adminRoleMenuPermissionsCustomizeMapper;
+	@Autowired
+	AdminAndRoleMapper adminAndRoleMapper;
     private static final String TOP_MEN_UID = "0";
     /**
      * 查看权限
@@ -213,7 +218,7 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
      * 
      * @return
      */
-    public JSONArray getAdminRoleMenu(AdminRoleCustomize adminRoleCustomize) {
+    public JSONArray deleteAndgetAdminRoleMenu(AdminRoleCustomize adminRoleCustomize) {
     	adminRoleCustomizeMapper.deleteRole(adminRoleCustomize.getRoleId());
         List<AdminRoleCustomize> menuList = adminRoleCustomizeMapper.selectRoleMenuPermissions(adminRoleCustomize);
 
@@ -476,8 +481,7 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
 						}
 						// 参数是二级菜单
 					} else {
-						String s1 = adminRoleMenuPermissionsCustomizeMapper.checkLevel(perm);
-						firstClass.add(s1 + "_" + VIEW);
+						firstClass.add(s + "_" + VIEW);
 						List<String> permissionId = adminRoleMenuPermissionsCustomizeMapper.selectMenuPerssion(perm);
 						for (String pId : permissionId) {
 							firstClass.add(perm + "_" + pId);
@@ -532,4 +536,11 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
     public List<String > getPermissionId(String menuId) {
         return adminRoleCustomizeMapper.getPermissionId(menuId);
     }
+
+	@Override
+	public AdminAndRole getRole(int adminId) {
+		AdminAndRoleExample example=new AdminAndRoleExample();
+		example.or().andUserIdEqualTo(adminId);
+		return adminAndRoleMapper.selectByExample(example).get(0);
+	}
 }

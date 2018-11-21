@@ -1332,28 +1332,21 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     
     /**************************************银行存管 投资校验返回错误码****************************/
     /**未开户*/
-    public static final String BANK_TENDER_RETURN_OPENACCOUNT_FAIL = "708"; 
-
+    public static final String BANK_TENDER_RETURN_OPENACCOUNT_FAIL = "708";
     /**未设置交易密码*/
-    public static final String BANK_TENDER_RETURN_SETPWD_FAIL = "709"; 
-    
+    public static final String BANK_TENDER_RETURN_SETPWD_FAIL = "709";
     /**未测评*/
-    public static final String BANK_TENDER_RETURN_ANSWER_FAIL = "710"; 
-    
+    public static final String BANK_TENDER_RETURN_ANSWER_FAIL = "710";
     /**未获得自动授权*/
     public static final String BANK_TENDER_RETURN_AUTH_FAIL = "711";
-    
     /**未获得自动授权*/
     public static final String BANK_TENDER_RETURN_AUTH_CREDIT_FAIL = "712";
     /**未获得自动授权--dzs*/
     public static final String BANK_TENDER_RETURN_AUTH_ALL_FAIL = "713";
-
     /**测评过期*/
     public static final String BANK_TENDER_RETURN_ANSWER_EXPIRED = "714";
-
     /**测评限额超额*/
     public static final String BANK_TENDER_RETURN_LIMIT_EXCESS = "715";
-
     /**测评标的用户类型不匹配*/
     public static final String BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL = "716";
 
@@ -1503,5 +1496,8 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
 
     /** 首页项目列表  @RequestMapping值 */
     public static final String START_PAGE_ACTION = "/getStartPage";
+    
+    /** 首页列表缓存存活时间 秒 */
+    public static final int HOME_CACHE_LIVE_TIME = 12*60*60;
 
 }

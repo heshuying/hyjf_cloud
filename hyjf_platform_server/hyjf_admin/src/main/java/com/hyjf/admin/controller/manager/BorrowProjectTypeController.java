@@ -62,14 +62,14 @@ public class BorrowProjectTypeController extends BaseController {
 
     @ApiOperation(value = "查询项目类型详情", notes = "查询项目类型详情 ")
     @PostMapping("/infoAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public BorrowProjectTypeResponse subConfigSearch(HttpServletRequest request, @RequestBody BorrowProjectTypeRequest adminRequest) {
         BorrowProjectTypeResponse response = new BorrowProjectTypeResponse();
         BorrowProjectTypeVO record = new BorrowProjectTypeVO();
         List<BorrowProjectRepayVO> selectRepay = null;
         record.setBorrowCd(adminRequest.getBorrowCd());
         boolean isExists = false;
-        if (StringUtils.isNotEmpty(record.getBorrowCd())) {
+        if (record.getBorrowCd() == null) {
             // 根据主键判断该条数据在数据库中是否存在
             isExists = this.borrowProjectTypeService.isExistsRecord(record);
         }
@@ -112,7 +112,7 @@ public class BorrowProjectTypeController extends BaseController {
     public AdminResult insertSubConfig(HttpServletRequest request,  @RequestBody BorrowProjectTypeRequest adminRequest) {
         AdminResult result =new AdminResult();
         BorrowProjectTypeResponse response = new BorrowProjectTypeResponse();
-        if(StringUtils.isBlank(adminRequest.getBorrowCd())){
+        if(adminRequest.getBorrowCd() == null ){
             response.setRtn(Response.FAIL);
             response.setMessage("项目名称不能为空，请重试。");
             result.setData(response);
@@ -120,7 +120,7 @@ public class BorrowProjectTypeController extends BaseController {
             result.setStatusDesc(BaseResult.FAIL_DESC);
             return result;
         }
-        if(StringUtils.isNotBlank(adminRequest.getBorrowCd())){
+        if(adminRequest.getBorrowCd() == null ){
             int bo=Integer.valueOf(adminRequest.getBorrowCd());
             if(bo>127||bo<0){
                 response.setRtn(Response.FAIL);
@@ -191,7 +191,7 @@ public class BorrowProjectTypeController extends BaseController {
 
     @ApiOperation(value = "项目类型修改", notes = "项目类型修改")
     @PostMapping("/updateAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateAction(HttpServletRequest request,  @RequestBody BorrowProjectTypeRequest adminRequest) {
         AdminSystemVO user = getUser(request);
         adminRequest.setUpdateUserId(user.getId());
@@ -241,7 +241,7 @@ public class BorrowProjectTypeController extends BaseController {
             response.setResult(borrowProjectTypeVO);
             return new AdminResult<BorrowProjectTypeResponse>(response);
         }
-        if (StringUtils.isNotEmpty(adminRequest.getBorrowCd())) {
+        if (adminRequest.getBorrowCd() == null ) {
             response = this.borrowProjectTypeService.updateRecord(adminRequest);
         }
         if (response == null) {
@@ -282,8 +282,8 @@ public class BorrowProjectTypeController extends BaseController {
     @PostMapping("/checkAction")
 //    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult checkAction(@RequestBody BorrowProjectTypeRequest adminRequest) {
-        String borrowCd =adminRequest.getBorrowCd();
-        if(StringUtils.isBlank(borrowCd)){
+        Integer borrowCd =adminRequest.getBorrowCd();
+        if(borrowCd == null ){
             return new AdminResult<String>("项目名称不能为空，请重试。");
         }
         // 检查项目名称唯一性
@@ -306,7 +306,7 @@ public class BorrowProjectTypeController extends BaseController {
     private String validatorFieldCheck(ModelAndView modelAndView, BorrowProjectTypeRequest form) {
         String message="";
         // 项目类型
-        if(StringUtils.isBlank(form.getBorrowCd())){
+        if(form.getBorrowCd() == null ){
             message="项目类型不能为空,请重试。";
             return message;
         }

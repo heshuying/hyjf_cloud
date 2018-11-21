@@ -14,7 +14,6 @@ import com.hyjf.cs.trade.bean.assetpush.UserWithdrawRequestBean;
 import com.hyjf.cs.trade.service.BaseTradeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -183,7 +182,7 @@ public interface BankWithdrawService extends BaseTradeService {
      * @param request
      * @return
      */
-    ModelAndView withdraw(UserWithdrawRequestBean userWithdrawRequestBean, HttpServletRequest request);
+    Map<String,Object> withdraw(UserWithdrawRequestBean userWithdrawRequestBean, HttpServletRequest request);
 
     /**
      * 同步
@@ -191,7 +190,7 @@ public interface BankWithdrawService extends BaseTradeService {
      * @param bean
      * @return
      */
-    ModelAndView cashReturn(HttpServletRequest request, BankCallBean bean);
+    Map<String,Object> cashReturn(HttpServletRequest request, BankCallBean bean);
 
     BankCallResult withdrawBgReturn(HttpServletRequest request, BankCallBean bean);
 

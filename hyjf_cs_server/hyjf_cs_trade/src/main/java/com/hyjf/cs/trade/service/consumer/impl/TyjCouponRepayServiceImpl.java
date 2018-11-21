@@ -6,6 +6,9 @@ package com.hyjf.cs.trade.service.consumer.impl;
 import java.math.BigDecimal;
 import java.util.*;
 
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.exception.ServiceException;
+import com.hyjf.cs.trade.mq.producer.AccountWebListProducer;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -69,6 +72,8 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
     private CsMessageClient csMessageClient;
     @Autowired
     private SmsProducer smsProducer;
+    @Autowired
+    private AccountWebListProducer accountWebListProducer;
 
     @Value("${hyjf.bank.merrp.account}")
     private String BANK_MERRP_ACCOUNT;
@@ -173,12 +178,10 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
                 tradeType = CustomConstants.TRADE_COUPON_DJ;
             }
             accountWebList.setTradeType(tradeType); // 加息券回款
+            remark = "项目编号：" + borrowNid + "<br />" + remark;
             accountWebList.setRemark(remark); // 投资编号
             accountWebList.setCreateTime(nowTime);
-            int accountWebListCnt = insertAccountWebList(accountWebList);
-            if (accountWebListCnt == 0) {
-                throw new RuntimeException("网站收支记录(ht_account_web_list)更新失败！" + "[投资订单号：" + borrowTenderCpn.getNid() + "]");
-            }
+            this.insertAccountWebList(accountWebList, borrowTenderCpn);
         }
 
     }
@@ -253,11 +256,15 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
      * @param accountWebList
      * @return
      */
-    private int insertAccountWebList(AccountWebListVO accountWebList) {
+    private void insertAccountWebList(AccountWebListVO accountWebList, BorrowTenderCpnVO borrowTenderCpn) {
         // 设置部门信息
         setDepartments(accountWebList);
         // 插入
-        return this.csMessageClient.insertAccountWebList(accountWebList);
+        try {
+            accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+        } catch (MQException e) {
+            throw new RuntimeException("网站收支记录(ht_account_web_list)更新失败！" + "[投资订单号：" + borrowTenderCpn.getNid() + "]");
+        }
     }
 
     /**

@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.controller.admin.borrow;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.BorrowBailInfoResponse;
 import com.hyjf.am.response.admin.BorrowFirstCustomizeResponse;
 import com.hyjf.am.resquest.admin.BorrowFireRequest;
 import com.hyjf.am.resquest.admin.BorrowFirstRequest;
@@ -104,5 +105,15 @@ public class BorrowFirstController extends BaseController {
     @RequestMapping("/update_ontime_record")
     public Response updateOntimeRecord(@RequestBody @Valid BorrowFireRequest borrowFireRequest) {
         return borrowFirstService.updateOntimeRecord(borrowFireRequest);
+    }
+
+    /**
+     * 获取保证金信息
+     * @param borrowNid
+     * @return
+     */
+    @RequestMapping("/get_bail_info/{borrowNid}")
+    public BorrowBailInfoResponse getBailInfo(@PathVariable String borrowNid) {
+        return borrowFirstService.getBailInfo(borrowNid);
     }
 }

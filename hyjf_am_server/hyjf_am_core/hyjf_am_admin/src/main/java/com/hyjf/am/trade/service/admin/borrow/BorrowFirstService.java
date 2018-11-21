@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.service.admin.borrow;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.BorrowBailInfoResponse;
 import com.hyjf.am.resquest.admin.BorrowFireRequest;
 import com.hyjf.am.resquest.admin.BorrowFirstRequest;
 import com.hyjf.am.trade.dao.model.customize.BorrowFirstCustomize;
@@ -60,4 +61,11 @@ public interface BorrowFirstService {
      * @param borrowNid
      */
     void sendToMQAutoPreAudit(String borrowNid);
+
+    /**
+     * 获取保证金信息
+     * @param borrowNid
+     * @return
+     */
+    BorrowBailInfoResponse getBailInfo(String borrowNid);
 }

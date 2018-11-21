@@ -39,7 +39,7 @@ public class CouponRepayController extends BaseTradeController {
                 logger.info("体验金收益期限还款没有待还的数据...");
             }
         }catch (Exception e) {
-            e.printStackTrace();
+            logger.error("体验金按收益期限还款异常, 原因：{}", e);
         }
         logger.info("体验金收益期限还款 结束");
     }

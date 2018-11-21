@@ -85,6 +85,7 @@ public class AppHjhPlanController extends BaseTradeController {
                 sensorsDataBean.setOrderId(String.valueOf(result.getData().get("accedeOrderId")));
                 // 发送神策数据统计MQ
                 this.hjhTenderService.sendSensorsDataMQ(sensorsDataBean);
+
             } catch (Exception e) {
                 e.printStackTrace();
             }

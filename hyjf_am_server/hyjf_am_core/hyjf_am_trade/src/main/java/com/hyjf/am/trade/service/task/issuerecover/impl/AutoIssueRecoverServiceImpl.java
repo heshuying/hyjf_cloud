@@ -47,10 +47,6 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
     @Value("${hyjf.alerm.email}")
     private String emaillist2;
 
-    /**
-     * 邮件发送key
-     */
-    public static String LABEL_MAIL_KEY = "labelmailkey";
     public static JedisPool pool = RedisUtils.getPool();
 
     @Override
@@ -157,7 +153,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         // 获取管理费率，服务费率，自动发标费率
         // 项目类型(code):从hyjf_hjh_asset_borrowtype 取code 现金贷
         String projectCd = hjhAssetBorrowType.getBorrowCd()+"";
-        String borrowClass = this.getBorrowProjectClass(projectCd);
+        String borrowClass = this.getBorrowProjectClass(Integer.valueOf(projectCd));
         String queryBorrowStyle = null;
         // 费率配置表有点尴尬，还款方式只区分了天和月
         if ("endday".equals(hjhPlanAsset.getBorrowStyle())) {//天标
@@ -230,7 +226,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 
             /**汇计划三期邮件预警 BY LIBIN start*/
             // 如果redis不存在这个KEY(一天有效期)，那么可以发邮件
-            if(!RedisUtils.exists(LABEL_MAIL_KEY + hjhPlanAsset.getAssetId())){
+            if(!RedisUtils.exists(RedisConstants.LABEL_MAIL_KEY + hjhPlanAsset.getAssetId())){
                 StringBuffer msg = new StringBuffer();
                 msg.append("资产ID：").append(hjhPlanAsset.getAssetId()).append("<br/>");
                 msg.append("当前时间：").append(GetDate.formatTime()).append("<br/>");
@@ -247,7 +243,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
                 // 发送邮件
                 try {
                     mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC,UUID.randomUUID().toString(), JSON.toJSONBytes(mailMessage)));
-                    RedisUtils.set(LABEL_MAIL_KEY + hjhPlanAsset.getAssetId(), hjhPlanAsset.getAssetId(), 24 * 60 * 60);
+                    RedisUtils.set(RedisConstants.LABEL_MAIL_KEY + hjhPlanAsset.getAssetId(), hjhPlanAsset.getAssetId(), 24 * 60 * 60);
                 } catch (MQException e2) {
                     logger.error("发送邮件失败..", e2);
                 }
@@ -780,7 +776,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
             borrowInfo.setEntrustedUserName(hjhPlanAsset.getEntrustedUserName());
         }
         // 根据项目类型设置下列
-        BorrowProjectType borrowProjectType = getProjectType(hjhAssetBorrowType.getBorrowCd()+"");
+        BorrowProjectType borrowProjectType = getProjectType(hjhAssetBorrowType.getBorrowCd());
         if(borrowProjectType != null){
             borrowInfo.setBorrowIncreaseMoney(borrowProjectType.getIncreaseMoney()); //递增投资金额
             borrowInfo.setBorrowInterestCoupon(borrowProjectType.getInterestCoupon());
@@ -1119,7 +1115,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
      * @return
      * @author Administrator
      */
-    private String getBorrowProjectClass(String borrowCd) {
+    private String getBorrowProjectClass(Integer borrowCd) {
         BorrowProjectTypeExample example = new BorrowProjectTypeExample();
         BorrowProjectTypeExample.Criteria cra = example.createCriteria();
         cra.andStatusEqualTo(0);
@@ -1136,7 +1132,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
      * 获取平台项目编号信息
      * @param borrowCd
      */
-    private BorrowProjectType getProjectType(String borrowCd) {
+    private BorrowProjectType getProjectType(Integer borrowCd) {
         BorrowProjectType borrowProjectType = null;
         BorrowProjectTypeExample example = new BorrowProjectTypeExample();
         BorrowProjectTypeExample.Criteria cra = example.createCriteria();

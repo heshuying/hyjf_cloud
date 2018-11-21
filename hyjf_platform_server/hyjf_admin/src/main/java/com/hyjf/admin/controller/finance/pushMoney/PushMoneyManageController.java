@@ -3,12 +3,14 @@
  */
 package com.hyjf.admin.controller.finance.pushMoney;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.PushMoneyRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.PushMoneyManageService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -38,6 +40,8 @@ import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.*;
 
+import static com.hyjf.admin.common.util.ShiroConstants.*;
+
 /**
  * @author zdj
  * @version PushMoneyManageController, v0.1 2018/7/3 15:16
@@ -53,6 +57,9 @@ public class PushMoneyManageController extends BaseController {
 
     /** 权限 */
     public static final String PERMISSIONS = "pushmoneymanagelist";
+
+    //直投提成列表的权限
+    private static final String PUSHMONEYLIST_PERMISSIONS = "pushMoneyList";
 
     @ApiOperation(value = "直投提成管理", notes = "直投提成管理列表查询")
     @PostMapping(value = "/pushmoneylist")
@@ -206,6 +213,7 @@ public class PushMoneyManageController extends BaseController {
      */
     @ApiOperation(value = "直投提成列表", notes = "直投提成列表")
     @PostMapping(value = "/pushMoneyList")
+    @AuthorityAnnotation(key = PUSHMONEYLIST_PERMISSIONS,value = PERMISSION_VIEW)
     public AdminResult pushMoneyList(@RequestBody PushMoneyRequest request){
         //选择1直投类，而非2计划类数据
         request.setTenderType(1);
@@ -221,6 +229,42 @@ public class PushMoneyManageController extends BaseController {
     }
 
     /**
+     * 取得部门信息
+     * @auth sunpeikai
+     * @param
+     * @return
+     */
+    @ApiOperation(value = "直投提成列表取得部门信息", notes = "直投提成列表取得部门信息")
+    @PostMapping(value = "/getcrmdepartmentlist")
+    public JSONObject getCrmDepartmentListAction() {
+        JSONObject jsonObject = new JSONObject();
+        // 部门
+        String[] list = new String[] {};
+        JSONArray ja = pushMoneyManageService.getCrmDepartmentList(list);
+        if (ja != null) {
+            //在部门树中加入 0=部门（其他）,因为前端不能显示id=0,就在后台将0=其他转换为-10086=其他
+            JSONObject jo = new JSONObject();
+            jo.put("value", "-10086");
+            jo.put("title", "其他");
+            JSONArray array = new JSONArray();
+            jo.put("key", UUID.randomUUID());
+            jo.put("children", array);
+            ja.add(jo);
+
+            JSONObject ret= new JSONObject();
+            ret.put("data", ja);
+            ret.put("status", SUCCESS);
+            ret.put("statusDesc", "成功");
+            return ret;
+        } else {
+            jsonObject.put("error", "未查询到该记录！");
+            jsonObject.put("status", FAIL);
+        }
+        return jsonObject;
+    }
+
+
+    /**
      * 直投提成列表导出
      * @auth sunpeikai
      * @param
@@ -228,6 +272,7 @@ public class PushMoneyManageController extends BaseController {
      */
     @ApiOperation(value = "直投提成列表导出",notes = "直投提成列表导出")
     @PostMapping(value = "/exportPushMoneyDetailExcelAction")
+    @AuthorityAnnotation(key = PUSHMONEYLIST_PERMISSIONS,value = PERMISSION_EXPORT)
     public void exportPushMoneyDetailExcelAction(HttpServletRequest request, HttpServletResponse response,@RequestBody PushMoneyRequest requestBean) throws Exception {
 
         // 是否具有组织机构查看权限
@@ -331,6 +376,7 @@ public class PushMoneyManageController extends BaseController {
 
     @ApiOperation(value = "发提成",notes = "发提成")
     @PostMapping(value = "/confirmPushMoneyAction")
+    @AuthorityAnnotation(key = PUSHMONEYLIST_PERMISSIONS,value = PERMISSION_CONFIRM)
     public AdminResult confirmPushMoneyAction(HttpServletRequest request, @RequestBody PushMoneyRequest pushMoneyRequest){
         Integer userId = Integer.valueOf(getUser(request).getId());
         Integer id = pushMoneyRequest.getId();
