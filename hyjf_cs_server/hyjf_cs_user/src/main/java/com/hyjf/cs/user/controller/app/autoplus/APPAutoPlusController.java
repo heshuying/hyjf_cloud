@@ -284,12 +284,12 @@ public class APPAutoPlusController extends BaseUserController {
     @PostMapping("/searchFiledMess")
     @ApiImplicitParam(name = "param",value = "{logOrdId:String}",dataType = "Map")
     @ResponseBody
-    public AppResult<Object> searchFiledMess(@RequestBody Map<String,String> param) {
-        logger.info("调用银行失败原因start,logOrdId:{}", param);
+    public AppResult<Object> searchFiledMess(@RequestParam("logOrdId") String logOrdId) {
+        logger.info("调用银行失败原因start,logOrdId:{}",logOrdId);
         AppResult<Object> result = new AppResult<Object>();
         Map<String,String> map = new HashedMap();
         map.put("isSetPassword","0");
-        String retMsg = autoPlusService.getFailedMess(param.get("logOrdId"));
+        String retMsg = autoPlusService.getFailedMess(logOrdId);
         if(retMsg.equals("00000000")){
             map.put("isSetPassword","1");
         }else {
