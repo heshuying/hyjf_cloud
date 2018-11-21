@@ -632,6 +632,7 @@
 						GROUP BY hbc.tender_nid ) hbc ON hbr.nid = hbc.tender_nid
 			INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrowinfo.project_type
 			WHERE borrow.`status` = 5
+			AND hbr.recover_status = 1
 			AND IFNULL(hbc.credit_capital,hbt.account) > IFNULL(hbc.credit_capital_assigned,0)
 			AND hbr.user_id= #{userId}
 			AND borrow.plan_nid IS NULL
@@ -700,6 +701,7 @@
             ) hbc ON hbr.nid = hbc.tender_nid
             INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
             WHERE borrow.`status` = 5
+            AND hbr.recover_status = 1
             AND IFNULL(hbc.credit_capital,hbt.account) > IFNULL(hbc.credit_capital_assigned,0)
             AND hbr.user_id= #{userId}
             AND borrow.plan_nid IS NULL
@@ -842,6 +844,7 @@
 		LEFT JOIN ht_borrow_credit hbc ON hbr.nid = hbc.tender_nid
 		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrowinfo.project_type
 		WHERE borrow.`status` = 5
+		AND hbr.recover_status = 1
 		AND hbr.user_id= #{userId}
 		AND borrow.plan_nid IS NULL
 		GROUP BY hbr.nid
@@ -945,11 +948,35 @@
 		hiil.invest_order_id nid,
 		hiil.invest_account account,
 		hiil.repay_interest_yes recover_account_all,
-		hiil.repay_interest_yes recover_account_interest,
-		FROM_UNIXTIME( hiil.repay_action_time, '%Y-%m-%d' ) repay_orddate,
-		hiil.repay_action_time orderby_repay_orddate,
+		CASE
+		WHEN borrow.borrow_style = 'end'
+		OR borrow.borrow_style = 'endday' THEN
+		hiil.repay_interest_yes
+		ELSE
+		hiild.repay_interest_yes
+		END AS recover_account_interest ,
+		CASE
+		WHEN borrow.borrow_style = 'end'
+		OR borrow.borrow_style = 'endday' THEN
+		FROM_UNIXTIME(
+		hiil.repay_action_time ,
+		'%Y-%m-%d'
+		)
+		ELSE
+		FROM_UNIXTIME(
+		hiild.repay_action_time ,
+		'%Y-%m-%d'
+		)
+		END AS repay_orddate ,
+		CASE
+		WHEN borrow.borrow_style = 'end'
+		OR borrow.borrow_style = 'endday' THEN
+		hiil.repay_action_time
+		ELSE
+		hiild.repay_action_time
+		END AS orderby_repay_orddate ,
 		4 type,
-		'产品加息' AS DATA,
+		CONCAT('加息',FORMAT(hiil.borrow_extra_yield, 2),'%') AS DATA,
 		0 coupon_type,
 		'' groupaccount
 		FROM
@@ -976,6 +1003,8 @@
 		ELSE
 		hiild.repay_status = 1
 		END
+		GROUP BY
+		hiild.invest_order_id
 		) t
 		<if test="orderByFlag ==null||orderByFlag==''" >
 			ORDER BY t.orderby_repay_orddate desc,t.account

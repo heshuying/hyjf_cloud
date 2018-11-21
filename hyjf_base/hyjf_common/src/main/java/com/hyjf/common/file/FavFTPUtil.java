@@ -245,6 +245,7 @@ public class FavFTPUtil {
      * @return
      */
     public static File downloadDirectory(SFTPParameter para) {
+        logger.info("----------------------------开始下载FTP协议");
         File localFile = null;
         FTPClient ftp = new FTPClient();
         OutputStream is = null;
@@ -277,7 +278,6 @@ public class FavFTPUtil {
                         is.close();
                 }
             }
-            //ZIPGenerator.generateZip(response, files, fileName);
             ftp.logout();
         } catch (IOException e) {
             e.printStackTrace();
@@ -298,6 +298,7 @@ public class FavFTPUtil {
                 }
             }
         }
+        logger.info("----------------------------结束下载FTP协议localFile："+localFile);
         return localFile;
     }
 

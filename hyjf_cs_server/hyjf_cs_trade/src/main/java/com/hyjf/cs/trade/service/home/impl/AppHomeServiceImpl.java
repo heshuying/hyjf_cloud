@@ -251,6 +251,11 @@ public class AppHomeServiceImpl implements AppHomeService {
         this.createPopImgPage(info, uniqueIdentifier);
         this.createForceUpdateInfo(info, platform, version, HOST);
 
+        String serviceAgreementUrl = systemConfig.getAppServiceAgreementUrl();
+        String privacyPolicyUrl = systemConfig.getAppPrivacyPolicyUrl();
+        info.put("serviceAgreementUrl",HOST + "/public/agreement?name=fwxy");//服务协议
+        info.put("privacyPolicyUrl",HOST + "/public/agreement?name=yszc");//隐私政策
+
         info.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
         info.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_SUCCESS);
         info.put(CustomConstants.APP_REQUEST,

@@ -183,7 +183,7 @@ public class RepayCalendarServiceImpl extends BaseServiceImpl implements RepayCa
                 result.setBorrowUrl(systemConfig.getAppFrontHost() + "/user/plan" + "/" + customize.getOrderId() + "?type="
                         + customize.getType() + "&couponType=" + customize.getCouponType().concat("&investStatusDesc=还款中"));
                 // add 汇计划二期前端优化  计划的回款日历计划显示退出时间 20180509 start
-                result.setBorrowTheThirdDesc("退出时间");
+                result.setBorrowTheThirdDesc("开始退出");
                 // add 汇计划二期前端优化  计划的回款日历计划显示退出时间 20180509 end
             } else {
                 String borrowUrl = systemConfig.getAppFrontHost() +"/user/borrow" + "/" + customize.getBorrowNid()
