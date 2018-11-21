@@ -41,7 +41,7 @@ public interface ApplyAgreementService {
      * @author Zha Daojian
      * @date 2018/7/12 10:52
      */
-    AdminResult downloadAction(DownloadAgreementRequest requestBean, HttpServletResponse response);
+    void downloadAction(DownloadAgreementRequest requestBean, HttpServletResponse response);
 
 
 }

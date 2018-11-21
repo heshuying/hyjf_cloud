@@ -70,9 +70,8 @@ public class ApplyAgreementController  extends BaseController {
     }
     @ApiOperation(value = "下載垫付机构协议", notes = "下載垫付机构协议")
     @PostMapping("/downloadAction")
-    public AdminResult downloadAction(@RequestBody DownloadAgreementRequest requestBean,HttpServletResponse response){
+    public void downloadAction(@RequestBody DownloadAgreementRequest requestBean,HttpServletResponse response){
         logger.info("------------------------------下載垫付机构协议requestBean:"+JSONObject.toJSON(requestBean));
-        AdminResult result = applyAgreementService.downloadAction(requestBean,response);
-        return result;
+        applyAgreementService.downloadAction(requestBean,response);
     }
 }

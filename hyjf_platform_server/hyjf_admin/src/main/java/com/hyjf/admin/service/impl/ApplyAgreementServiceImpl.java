@@ -1333,7 +1333,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
      * @param response
      * @return
      */
-    public AdminResult downloadAction(DownloadAgreementRequest requestBean,HttpServletResponse response) {
+    public void downloadAction(DownloadAgreementRequest requestBean,HttpServletResponse response) {
         logger.info("--------------------下载文件签署downloadAction", "下载文件签署。。。。request:"+JSONObject.toJSON(requestBean));
         String status = requestBean.getStatus();//1:脱敏，0：原始
         String repayPeriod = "DF-"+requestBean.getRepayPeriod()+"-";
@@ -1366,15 +1366,14 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 }
             }
         }else {
-            return new AdminResult(BaseResult.FAIL, "下载失败，未找到相关协议");
+            logger.error(this.getClass().getName(), "searchTenderToCreditDetail", "下载失败，请稍后重试。。。。");
         }
 
         if(files!=null && files.size()>0){
-           // ZIPGenerator.generateZip(response, files, repayPeriod);
-            return new AdminResult(BaseResult.SUCCESS, "下载成功");
+           ZIPGenerator.generateZip(response, files, repayPeriod);
+            logger.info(this.getClass().getName(), "searchTenderToCreditDetail", "下载成功");
         }else{
             logger.error(this.getClass().getName(), "searchTenderToCreditDetail", "下载失败，请稍后重试。。。。");
-            return new AdminResult(BaseResult.FAIL, "下载失败，请稍后重试。。。。");
 
         }
     }
