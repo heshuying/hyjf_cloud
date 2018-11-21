@@ -322,7 +322,7 @@ public class HjhCreditTenderController extends BaseController{
 		//sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 		// 表格sheet名称
-		String sheetName = "资金计划";
+		String sheetName = "智投服务承接记录";
 		// 文件名称
 		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
 		// 声明一个工作薄
@@ -351,8 +351,8 @@ public class HjhCreditTenderController extends BaseController{
 	private Map<String, String> buildMap() {
 		Map<String, String> map = Maps.newLinkedHashMap();
 		map.put("assignUserName", "承接人");
-		map.put("assignPlanNid", "承接计划编号");
-		map.put("assignOrderId", "承接计划订单号");
+		map.put("assignPlanNid", "承接智投编号");
+		map.put("assignOrderId", "承接智投订单号");
 		map.put("creditUserName", "出让人");
 		map.put("creditNid", "债转编号");
 		map.put("borrowNid", "原项目编号");
@@ -362,8 +362,7 @@ public class HjhCreditTenderController extends BaseController{
 		map.put("assignPay", "实际支付金额");
 		map.put("assignTime", "承接时间");
 		map.put("tenderType", "复投承接(是/否)");
-		map.put("borrowPeriod", "项目总期数");
-		map.put("assignPeriod", "承接时所在期数");
+		map.put("borrowPeriod", "项目期数");
 
 		return map;
 	}
