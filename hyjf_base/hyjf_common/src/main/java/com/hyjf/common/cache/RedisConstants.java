@@ -426,4 +426,6 @@ public class RedisConstants {
      */
     public static final String TEMPLATE_UPLOAD_URL = "template_upload_url:";
 
+    public static final String MQ_TRANSACTION_PREFIX = "mq_tran:";
+
 }
