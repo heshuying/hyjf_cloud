@@ -1,5 +1,6 @@
 package com.hyjf.admin.controller.productcenter.borrow.applyagreement;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.controller.BaseController;
@@ -70,6 +71,7 @@ public class ApplyAgreementController  extends BaseController {
     @ApiOperation(value = "下載垫付机构协议", notes = "下載垫付机构协议")
     @PostMapping("/downloadAction")
     public AdminResult downloadAction(@RequestBody DownloadAgreementRequest requestBean,HttpServletResponse response){
+        logger.info("------------------------------下載垫付机构协议requestBean:"+JSONObject.toJSON(requestBean));
         AdminResult result = applyAgreementService.downloadAction(requestBean,response);
         return result;
     }
