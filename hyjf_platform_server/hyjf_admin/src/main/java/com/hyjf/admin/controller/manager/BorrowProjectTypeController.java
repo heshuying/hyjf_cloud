@@ -69,7 +69,7 @@ public class BorrowProjectTypeController extends BaseController {
         List<BorrowProjectRepayVO> selectRepay = null;
         record.setBorrowCd(adminRequest.getBorrowCd());
         boolean isExists = false;
-        if (record.getBorrowCd() == null) {
+        if (record.getBorrowCd() != null) {
             // 根据主键判断该条数据在数据库中是否存在
             isExists = this.borrowProjectTypeService.isExistsRecord(record);
         }
