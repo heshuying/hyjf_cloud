@@ -317,7 +317,7 @@ public class CouponTenderRequest extends Request implements Serializable {
     }
 
     public Integer getLimitEnd() {
-        return (getCurrPage())*(getPageSize());
+        return getPageSize();
     }
 
     public void setLimitEnd(Integer limitEnd) {
