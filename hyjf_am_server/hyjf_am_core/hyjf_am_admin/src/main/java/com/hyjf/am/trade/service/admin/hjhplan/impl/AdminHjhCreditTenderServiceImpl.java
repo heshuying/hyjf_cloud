@@ -162,6 +162,7 @@ public class AdminHjhCreditTenderServiceImpl implements  AdminHjhCreditTenderSer
 			Map<String, String> map = CacheUtil.getParamNameMap("PLAN_ASSIGN_TYPE");
 			 for(HjhCreditTenderCustomizeVO hjhCreditTenderCustomizeVO : list){
 				 hjhCreditTenderCustomizeVO.setAssignTypeName(map.getOrDefault(hjhCreditTenderCustomizeVO.getAssignTypeName(),null));
+				 hjhCreditTenderCustomizeVO.setAssignPeriod(hjhCreditTenderCustomizeVO.getAssignPeriod()+"/"+hjhCreditTenderCustomizeVO.getBorrowPeriod());
 			 }
 		}
 		return list;

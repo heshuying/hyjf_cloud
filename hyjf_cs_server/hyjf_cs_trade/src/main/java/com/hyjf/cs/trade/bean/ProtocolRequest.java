@@ -24,6 +24,27 @@ public class ProtocolRequest implements Serializable {
 
     private String accedeOrderId;
 
+    //资产编号
+    public String assetNumber;
+
+
+    /**
+     * 翻页机能用的隐藏变量
+     */
+    private int paginatorPage = 1;
+
+
+    public int getPaginatorPage() {
+        if (paginatorPage == 0) {
+            paginatorPage = 1;
+        }
+        return paginatorPage;
+    }
+
+    public void setPaginatorPage(int paginatorPage) {
+        this.paginatorPage = paginatorPage;
+    }
+
     public String getPlanNid() {
         return planNid;
     }
@@ -102,5 +123,13 @@ public class ProtocolRequest implements Serializable {
 
     public void setNid(String nid) {
         this.nid = nid;
+    }
+
+    public String getAssetNumber() {
+        return assetNumber;
+    }
+
+    public void setAssetNumber(String assetNumber) {
+        this.assetNumber = assetNumber;
     }
 }
