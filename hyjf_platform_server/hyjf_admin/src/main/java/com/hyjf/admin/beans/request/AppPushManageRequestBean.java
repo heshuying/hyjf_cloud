@@ -32,10 +32,10 @@ public class AppPushManageRequestBean extends BasePage {
     private Integer status;
 
     @ApiModelProperty(value = "开始时间")
-    private Date timeStart;
+    private String timeStart;
 
     @ApiModelProperty(value = "结束时间")
-    private Date timeEnd;
+    private String timeEnd;
 
     @ApiModelProperty(value = "缩略图")
     private String thumb;
@@ -99,19 +99,19 @@ public class AppPushManageRequestBean extends BasePage {
         this.status = status;
     }
 
-    public Date getTimeStart() {
+    public String getTimeStart() {
         return timeStart;
     }
 
-    public void setTimeStart(Date timeStart) {
+    public void setTimeStart(String timeStart) {
         this.timeStart = timeStart;
     }
 
-    public Date getTimeEnd() {
+    public String getTimeEnd() {
         return timeEnd;
     }
 
-    public void setTimeEnd(Date timeEnd) {
+    public void setTimeEnd(String timeEnd) {
         this.timeEnd = timeEnd;
     }
 
