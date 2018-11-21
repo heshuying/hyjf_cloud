@@ -632,6 +632,7 @@
 						GROUP BY hbc.tender_nid ) hbc ON hbr.nid = hbc.tender_nid
 			INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrowinfo.project_type
 			WHERE borrow.`status` = 5
+			AND hbr.recover_status = 1
 			AND IFNULL(hbc.credit_capital,hbt.account) > IFNULL(hbc.credit_capital_assigned,0)
 			AND hbr.user_id= #{userId}
 			AND borrow.plan_nid IS NULL
@@ -700,6 +701,7 @@
             ) hbc ON hbr.nid = hbc.tender_nid
             INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
             WHERE borrow.`status` = 5
+            AND hbr.recover_status = 1
             AND IFNULL(hbc.credit_capital,hbt.account) > IFNULL(hbc.credit_capital_assigned,0)
             AND hbr.user_id= #{userId}
             AND borrow.plan_nid IS NULL
@@ -842,6 +844,7 @@
 		LEFT JOIN ht_borrow_credit hbc ON hbr.nid = hbc.tender_nid
 		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrowinfo.project_type
 		WHERE borrow.`status` = 5
+		AND hbr.recover_status = 1
 		AND hbr.user_id= #{userId}
 		AND borrow.plan_nid IS NULL
 		GROUP BY hbr.nid
