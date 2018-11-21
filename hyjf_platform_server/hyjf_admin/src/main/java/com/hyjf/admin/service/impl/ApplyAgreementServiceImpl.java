@@ -428,23 +428,23 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         //当前期数
         int repay_period = borrowRecover.getRecoverPeriod();
         int recoverUserId= borrowRecover.getUserId();
-        List<CreditRepayVO> creditRepayListPlan = this.selectCreditRepay(nid,repay_period);
+        List<HjhDebtCreditRepayVO> creditRepayListPlan = this.selectHjhCreditRepay(nid,repay_period);
         if(creditRepayListPlan!=null && creditRepayListPlan.size()>0){//债转
             boolean creditRepayAll = (creditAmountp.compareTo(new BigDecimal("0.00"))==1) && (creditAmountp.compareTo(recoverCapitalp)==0);//是否是全部债转
             BigDecimal assignPay  = new BigDecimal("0.00");//所有债转已还利息总和（结算剩余部分用）
             //填充所有债转信息
-            for (CreditRepayVO creditRepay : creditRepayListPlan) {
+            for (HjhDebtCreditRepayVO hjhDebtCreditRepayVO : creditRepayListPlan) {
                 if(!creditRepayAll) {//部分债转
-                    assignPay = assignPay.add(creditRepay.getAssignRepayInterest());
+                    assignPay = assignPay.add(hjhDebtCreditRepayVO.getRepayInterest()).add(hjhDebtCreditRepayVO.getRepayAdvanceInterest()).add(hjhDebtCreditRepayVO.getRepayLateInterest()).add(hjhDebtCreditRepayVO.getRepayDelayInterest());
                 }
-                FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,creditRepay.getAssignNid()+"-"+repay_period,creditRepay.getCreditUserId(),6,2);
-                JSONObject paramter = getAllcreditParamter(creditRepay,bean,borrow);
+                FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,hjhDebtCreditRepayVO.getUniqueNid()+"-"+repay_period,hjhDebtCreditRepayVO.getCreditUserId(),6,2);
+                JSONObject paramter = getAllcreditParamterHjh(hjhDebtCreditRepayVO,bean,borrow);
                 bean.setParamter(paramter);
                 bean.setTeString(DF);
                 // 法大大生成合同
                 try {
                     // 获取用户投资协议记录
-                    TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+creditRepay.getAssignNid()+"-"+repay_period);
+                    TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+hjhDebtCreditRepayVO.getUniqueNid()+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
                         logger.info("-------------------------处理分期债转-汇计划，处理分期债转签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
@@ -1386,7 +1386,6 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
     /**
      * 下载法大大协议 __垫付
      *
-     * @param files
      * @param tenderAgreement
      * 返回 0:下载成功；1:下载失败；2:没有生成法大大合同记录
      */
