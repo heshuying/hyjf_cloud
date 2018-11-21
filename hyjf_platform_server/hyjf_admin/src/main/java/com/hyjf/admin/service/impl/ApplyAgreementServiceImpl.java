@@ -1348,13 +1348,18 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 if(tenderAgreementsAss!=null && tenderAgreementsAss.size()>0){
                     if("1".equals(status)){
                         logger.info("--------------------下载文件签署,脱敏");
-                        files = createFaddPDFImgFile(files,tenderAgreement);
+                        File file = createFaddPDFImgFile(tenderAgreement);
+                        logger.info("--------------------下载文件签署,脱敏file:"+file);
+                        if(file!=null){
+                            files.add(file);
+                        }
                     }else {
                         logger.info("--------------------下载文件签署，原始");
-                        if(org.apache.commons.lang.StringUtils.isNotBlank(tenderAgreement.getDownloadUrl())){
+                        if(StringUtils.isNotBlank(tenderAgreement.getDownloadUrl())){
                             File filePdf = null;
                             try {
                                 filePdf = FileUtil.getFile(tenderAgreement.getDownloadUrl(),tenderAgreement.getTenderNid()+".pdf");
+                                logger.info("--------------------下载文件签署，原始filePdf:"+filePdf);
                             } catch (IOException e) {
                                 filePdf = null;
                             }//债转协议
@@ -1385,7 +1390,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
      * @param tenderAgreement
      * 返回 0:下载成功；1:下载失败；2:没有生成法大大合同记录
      */
-    public List<File> createFaddPDFImgFile(List<File> files,TenderAgreementVO tenderAgreement) {
+    public File createFaddPDFImgFile(TenderAgreementVO tenderAgreement) {
         SFTPParameter para = new SFTPParameter() ;
 
         String ftpIP = systemConfig.getFtpIp();
@@ -1432,9 +1437,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             return null;
         }
         File file =  FavFTPUtil.downloadDirectory(para);
-        files.add(file);
-
-        return files;
+        return file;
     }
 
 }
