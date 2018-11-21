@@ -1370,6 +1370,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         }
 
         if(files!=null && files.size()>0){
+            logger.info("--------------------下载文件签署，打压缩包files："+JSONObject.toJSON(files));
            ZIPGenerator.generateZip(response, files, repayPeriod);
             logger.info(this.getClass().getName(), "searchTenderToCreditDetail", "下载成功");
         }else{
