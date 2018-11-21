@@ -18,6 +18,16 @@ public class SystemConfig {
     @Value("${hyjf.app.regist.agreement.url}")
     public String appRegistAgreementUrl;
     /**
+     *  app 3.1.1 服务协议
+     */
+    @Value("${hyjf.app.service.agreement.url}")
+    public String appServiceAgreementUrl;
+    /**
+     *  app 3.1.1 隐私政策
+     */
+    @Value("${hyjf.app.privacy.Policy.url}")
+    public String appPrivacyPolicyUrl;
+    /**
      *app 3.1.1 公告内容链接
      */
     @Value("${hyjf.app.push.manager.url}")
@@ -816,5 +826,13 @@ public class SystemConfig {
 
     public void setServerHost(String serverHost) {
         this.serverHost = serverHost;
+    }
+
+    public String getAppServiceAgreementUrl() {
+        return appServiceAgreementUrl;
+    }
+
+    public String getAppPrivacyPolicyUrl() {
+        return appPrivacyPolicyUrl;
     }
 }
