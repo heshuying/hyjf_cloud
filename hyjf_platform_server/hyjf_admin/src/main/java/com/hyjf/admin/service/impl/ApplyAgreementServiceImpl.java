@@ -1334,13 +1334,13 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
      * @return
      */
     public void downloadAction(DownloadAgreementRequest requestBean,HttpServletResponse response) {
-        logger.info("--------------------下载文件签署downloadAction", "下载文件签署。。。。request:"+JSONObject.toJSON(requestBean));
+        logger.info("--------------------下载文件签署request:"+JSONObject.toJSON(requestBean));
         String status = requestBean.getStatus();//1:脱敏，0：原始
         String repayPeriod = "DF-"+requestBean.getRepayPeriod()+"-";
         requestBean.setRepayPeriod(repayPeriod);
         List<TenderAgreementVO> tenderAgreementsAss= amTradeClient.selectLikeByExample(requestBean);//债转协议
-        logger.info("--------------------下载文件签署downloadAction", "下载文件签署。。。。request:"+JSONObject.toJSON(requestBean));
-        logger.info("downloadAction", "下载文件签署。。。。tenderAgreementsAss:"+JSONObject.toJSON(tenderAgreementsAss));
+        logger.info("--------------------下载文件签署request:"+JSONObject.toJSON(requestBean));
+        logger.info("下载文件签署。。。。tenderAgreementsAss:"+JSONObject.toJSON(tenderAgreementsAss));
         //输出文件集合
         List<File> files = new ArrayList<File>();
         if (CollectionUtils.isNotEmpty(tenderAgreementsAss)){
@@ -1376,9 +1376,9 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         if(files!=null && files.size()>0){
             logger.info("--------------------下载文件签署，打压缩包files："+JSONObject.toJSON(files));
            ZIPGenerator.generateZip(response, files, repayPeriod);
-            logger.info(this.getClass().getName(), "searchTenderToCreditDetail", "下载成功");
+            logger.info("searchTenderToCreditDetail下载成功");
         }else{
-            logger.error(this.getClass().getName(), "searchTenderToCreditDetail", "下载失败，请稍后重试。。。。");
+            logger.error("searchTenderToCreditDetail下载失败，请稍后重试。。。。");
 
         }
     }
@@ -1409,8 +1409,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         para.savePath = "/pdf_tem/pdf/" + tenderAgreement.getTenderNid();
         String imgUrl = tenderAgreement.getImgUrl();
         String pdfUrl = tenderAgreement.getPdfUrl();
-        logger.info(this.getClass().getName(), "createFaddPDFImgFile", "下载文件签署。。。。imgUrl:"+imgUrl);
-        logger.info(this.getClass().getName(), "createFaddPDFImgFile", "下载文件签署。。。。pdfUrl:"+pdfUrl);
+        logger.info("下载文件签署。。。。imgUrl:"+imgUrl);
+        logger.info("下载文件签署。。。。pdfUrl:"+pdfUrl);
         if(org.apache.commons.lang.StringUtils.isNotBlank(pdfUrl)){
             //获取文件目录
             int index = pdfUrl.lastIndexOf("/");
@@ -1419,8 +1419,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             String pdfName = pdfUrl.substring(index+1);
             para.downloadPath = basePathPdf + "/" + pdfPath;
             para.sftpKeyFile = pdfName;
-            logger.info(this.getClass().getName(), "createFaddPDFImgFile", "下载文件签署。。pdfUrl。。 para.downloadPath:"+ para.downloadPath);
-            logger.info(this.getClass().getName(), "createFaddPDFImgFile", "下载文件签署。。pdfUrl。。para.sftpKeyFile:"+para.sftpKeyFile);
+            logger.info("下载文件签署。。pdfUrl。。 para.downloadPath:"+ para.downloadPath);
+            logger.info("下载文件签署。。pdfUrl。。para.sftpKeyFile:"+para.sftpKeyFile);
         }else if(org.apache.commons.lang.StringUtils.isNotBlank(imgUrl)){
             int index = imgUrl.lastIndexOf("/");
             String imgPath = imgUrl.substring(0,index);
@@ -1428,10 +1428,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             String imgName = imgUrl.substring(index+1);
             para.downloadPath = "/" + basePathImage + "/" + imgPath;
             para.sftpKeyFile = imgName;
-            logger.info(this.getClass().getName(), "createFaddPDFImgFile", "下载文件签署。。imgUrl。。 para.downloadPath:"+ para.downloadPath);
-            logger.info(this.getClass().getName(), "createFaddPDFImgFile", "下载文件签署。。imgUrl。。para.sftpKeyFile:"+para.sftpKeyFile);
+            logger.info("下载文件签署。。imgUrl。。 para.downloadPath:"+ para.downloadPath);
+            logger.info("下载文件签署。。imgUrl。。para.sftpKeyFile:"+para.sftpKeyFile);
         }else{
-            logger.info(this.getClass().getName(), "createFaddPDFImgFile", "下载文件签署。。imgUrl。。para.sftpKeyFile:null");
+            logger.info( "下载文件签署。。imgUrl。。para.sftpKeyFile:null");
             return null;
         }
         File file =  FavFTPUtil.downloadDirectory(para);
