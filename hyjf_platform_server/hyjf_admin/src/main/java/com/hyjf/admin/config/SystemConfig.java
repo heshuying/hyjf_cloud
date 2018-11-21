@@ -37,8 +37,8 @@ public class SystemConfig {
     @Value("${hyjf.ftp.basepath.pdf}")
     private String hyjfFtpBasepathPdf;
 
-    @Value("${hyjf.web.host}")
-    public String webHost;
+/*    @Value("${hyjf.web.host}")
+    public String webHost;*/
 
     @Value("${hyjf.admin.host}")
     public String adminHost;
@@ -275,13 +275,13 @@ public class SystemConfig {
         this.merCustId = merCustId;
     }
 
-    public String getWebHost() {
+/*    public String getWebHost() {
         return webHost;
     }
 
     public void setWebHost(String webHost) {
         this.webHost = webHost;
-    }
+    }*/
 
 
 	public String getHYJF_MAKEPDF_TEMPPATH() {
