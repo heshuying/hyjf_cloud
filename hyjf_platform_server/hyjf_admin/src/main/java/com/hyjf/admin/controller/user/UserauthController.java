@@ -42,6 +42,7 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 /**
@@ -157,7 +158,17 @@ public class UserauthController extends BaseController {
 		return new AdminResult<ListResult<AdminUserAuthLogListVO>>(ListResult.build(list2, rqes.getRecordTotal()));
 		
 	}
-
+	@ApiOperation(value = "授权状态", notes = "授权下拉列表")
+	@ResponseBody
+	@PostMapping("/map")
+	public AdminResult<Map<String,Map<String, String>>> map(HttpServletRequest request, HttpServletResponse response,
+			@RequestBody AdminUserAuthLogListRequest form) {
+		Map<String,Map<String, String>> date=new HashMap<>();
+		date.put("client",  CacheUtil.getParamNameMap("CLIENT"));
+		date.put("invert", CacheUtil.getParamNameMap("AUTO_INVER_TYPE"));
+		return new AdminResult<Map<String,Map<String, String>>>(date);
+		
+	}
 	/**
 	 * 自动授权查询 - 调用江西银行接口查询
 	 *
