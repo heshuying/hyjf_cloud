@@ -10,6 +10,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowManinfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.calculate.*;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.ApiResult;
@@ -19,9 +20,11 @@ import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.service.projectlist.ApiProjectListService;
 import com.hyjf.cs.trade.service.svrcheck.CommonSvrChkService;
 import com.hyjf.cs.trade.util.ProjectConstant;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -113,6 +116,23 @@ public class ApiProjectListServiceImpl implements ApiProjectListService {
         //项目不存在
         CheckUtil.check(Validator.isNotNull(borrow), MsgEnum.STATUS_ZT000009);
 
+        borrow.setBorrowStatus(projectCustomeDetailVO.getStatus());
+        if (!"1".equals(projectCustomeDetailVO.getIncreaseInterestFlag())){
+            borrow.setIncreaseInterestFlag(0);
+            borrow.setBorrowExtraYield("");
+        }else{
+            borrow.setIncreaseInterestFlag(1);
+            borrow.setBorrowExtraYield(projectCustomeDetailVO.getBorrowExtraYield());
+        }
+        // 设置项目加息收益
+        BigDecimal borrowExtraYield = new BigDecimal(StringUtils.isBlank(borrow.getBorrowExtraYield()) ?"0":borrow.getBorrowExtraYield());
+        if(Validator.isIncrease(borrow.getIncreaseInterestFlag(),borrowExtraYield)){
+            String increaseInterest = this.getIncreaseInterest(borrow.getBorrowAccount(),
+                    borrow.getBorrowStyle(),Integer.parseInt(borrow.getBorrowPeriod()),borrowExtraYield);
+            borrow.setIncreaseInterest(increaseInterest);
+        }
+
+
         //授信额度如果为0 返回空
         if("0".equals(borrow.getUserCredit())){
             borrow.setUserCredit("");
@@ -184,8 +204,53 @@ public class ApiProjectListServiceImpl implements ApiProjectListService {
         //项目介绍
         intrTableData = JSONObject.toJSONString(ProjectConstant.packDetail(borrow, 3, borrowType, borrow.getBorrowLevel()));
         borrow.setIntrTableData(intrTableData);
+        CommonUtils.convertNullToEmptyString(borrow);
         result.setData(borrow);
         return result;
+    }
+
+    /**
+     *
+     * 计算加息预期收益
+     * @param
+     * @return
+     */
+    private String getIncreaseInterest(String money , String borrowStyle,Integer borrowPeriod,BigDecimal borrowApr) {
+        BigDecimal earnings = new BigDecimal("0");
+        String version = "2.1.0";
+        if (!org.apache.commons.lang.StringUtils.isBlank(money) && Double.parseDouble(money) >= 0) {
+            // 计算本金投资预期收益
+            switch (borrowStyle) {
+                case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“: 预期收益=投资金额*年化收益÷12*月数；
+                    earnings = DuePrincipalAndInterestUtils.getMonthInterest(new BigDecimal(money),
+                            borrowApr.divide(new BigDecimal("100")), borrowPeriod)
+                            .setScale(2, BigDecimal.ROUND_DOWN);
+                    break;
+                case CalculatesUtil.STYLE_ENDDAY:// 还款方式为”按天计息，到期还本还息“: 预期收益=投资金额*年化收益÷360*天数；
+                    earnings = DuePrincipalAndInterestUtils.getDayInterest(new BigDecimal(money),
+                            borrowApr.divide(new BigDecimal("100")), borrowPeriod)
+                            .setScale(2, BigDecimal.ROUND_DOWN);
+                    break;
+                case CalculatesUtil.STYLE_ENDMONTH:// 还款方式为”先息后本“: 预期收益=投资金额*年化收益÷12*月数；
+                    earnings = BeforeInterestAfterPrincipalUtils.getInterestCount(new BigDecimal(money),
+                            borrowApr.divide(new BigDecimal("100")), borrowPeriod, borrowPeriod)
+                            .setScale(2, BigDecimal.ROUND_DOWN);
+                    break;
+                case CalculatesUtil.STYLE_MONTH:// 还款方式为”等额本息“: 预期收益=投资金额*年化收益÷12*月数；
+                    earnings = AverageCapitalPlusInterestUtils.getInterestCount(new BigDecimal(money),
+                            borrowApr.divide(new BigDecimal("100")), borrowPeriod)
+                            .setScale(2, BigDecimal.ROUND_DOWN);
+                    break;
+                case CalculatesUtil.STYLE_PRINCIPAL:// 还款方式为”等额本金“: 预期收益=投资金额*年化收益÷12*月数；
+                    earnings = AverageCapitalUtils.getInterestCount(new BigDecimal(money),
+                            borrowApr.divide(new BigDecimal("100")), borrowPeriod)
+                            .setScale(2, BigDecimal.ROUND_DOWN);
+                    break;
+                default:
+                    break;
+            }
+        }
+        return CommonUtils.formatAmount(version, earnings);
     }
 }
 
