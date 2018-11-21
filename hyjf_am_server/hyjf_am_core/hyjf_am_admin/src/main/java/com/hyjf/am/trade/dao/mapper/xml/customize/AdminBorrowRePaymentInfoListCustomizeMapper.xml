@@ -38,7 +38,7 @@
 			</if>
 			<!-- 投资人 -->
 			<if test="recoverUserName != null and recoverUserName != ''">
-				AND brp.invite_user_name LIKE CONCAT( #{recoverUserName}, '%')
+				AND u2.username LIKE CONCAT( #{recoverUserName}, '%')
 			</if>
 			<!-- 还款状态 -->
 			<if test="status != null and status != ''">
