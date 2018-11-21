@@ -10,6 +10,8 @@ import com.hyjf.am.response.message.OperationReportEntityResponse;
 import com.hyjf.am.vo.datacollect.BorrowUserStatisticVO;
 import com.hyjf.am.vo.datacollect.OperationReportEntityVO;
 import com.hyjf.am.vo.message.OperationReportJobBean;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetDate;
@@ -54,6 +56,11 @@ public class OperationReportJobController extends BaseController {
 	public StringResponse countOperationReport() {
 		logger.info("开始发送运营报告的mq...");
 		StringResponse response = new StringResponse();
+		boolean flag = RedisUtils.tranactionSet(RedisConstants.Statistics_Operation_Report);
+		if(!flag){
+			logger.error("运营报告redis已经存在");
+			return new StringResponse("error");
+		}
 		OperationReportJobBean bean = new OperationReportJobBean();
 		Calendar cal = Calendar.getInstance();
 		bean.setCalendar(cal);
@@ -71,61 +78,6 @@ public class OperationReportJobController extends BaseController {
 			logger.error("运营报告的mq发送失败......", e);
 			return new StringResponse("error");
 		}
-
-	/*	Calendar cal = Calendar.getInstance();
-
-		try {
-			// 插入性别，性别 ，区域的统计信息
-			operationReportJobService.insertOperationGroupData(cal);
-		} catch (org.springframework.dao.DuplicateKeyException e) {
-			logger.info("重复插入，可忽略");
-		} catch (com.mongodb.DuplicateKeyException e) {
-			logger.info("重复插入，可忽略");
-		} catch (Exception e) {
-			logger.info("重复插入，可忽略");
-		}
-
-		// 插入投资类的信息
-		try {
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy年MM月dd日");
-			cal = Calendar.getInstance();
-			operationReportJobService.insertOperationData(cal);
-		} catch (org.springframework.dao.DuplicateKeyException e) {
-			logger.info("重复插入，可忽略");
-		} catch (com.mongodb.DuplicateKeyException e) {
-			logger.info("重复插入，可忽略");
-		} catch (Exception e) {
-			logger.info("重复插入，可忽略");
-		}
-
-
-		// 插入前台界面的运营报告(月，季，半年，全年)
-		try {
-			String year = String.valueOf(GetDate.getYear());
-			String month = GetDate.getMonth();
-
-			//输出上个月的日期
-			int lastMonth = getLastMonth();
-
-			//每个月月初的1号，自动统计出上一个月的数据，统计顺序依次是：
-			//1月，2月，第一季度，4月，5月，上半年，7月，8月，第三季度，10月，11月，年度报告
-			if(lastMonth == 12){
-				operationReportJobService.setYearReport(year,month);
-			} else if(lastMonth == 6 ){
-				operationReportJobService.setHalfYearReport(year,month);
-			}else if(lastMonth == 3 || lastMonth == 9 ){
-				operationReportJobService.setQuarterReport(year,month);
-			}else{
-				operationReportJobService.setMonthReport(year,month);
-			}
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		RedisUtils.del(RedisConstants.Statistics_Operation_Report);
-
-		logger.info("完成 插入统计数据到mongodb...");*/
 		return response;
 	}
 

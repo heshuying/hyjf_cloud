@@ -1,9 +1,10 @@
 package com.hyjf.am.trade.mq.transactionmq;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
+import java.io.Serializable;
+import java.util.concurrent.*;
+
+import javax.annotation.PostConstruct;
+
 import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.client.producer.LocalTransactionState;
 import org.apache.rocketmq.client.producer.TransactionListener;
@@ -16,9 +17,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.Assert;
 
-import javax.annotation.PostConstruct;
-import java.io.Serializable;
-import java.util.concurrent.*;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 
 /**
  * @author xiasq
@@ -162,7 +165,7 @@ public abstract class TransactionProducer {
 			LocalTransactionState localTransactionState = doExecuteLocalTransaction(message, obj);
 			// 本地事务执行结果存入redis，便于回查使用
 			String redisKey = getLocalTransactionResultKey(message.getTopic(), message.getTags(), message.getKeys());
-			RedisUtils.setObj(redisKey, localTransactionState);
+			RedisUtils.setObjEx(redisKey, localTransactionState, 60 * 60 * 24);
 			logger.info("execute local transaction end, result is: {}", localTransactionState);
 			return localTransactionState == null ? LocalTransactionState.UNKNOW : localTransactionState;
 		}
@@ -184,7 +187,7 @@ public abstract class TransactionProducer {
 		}
 
 		private String getLocalTransactionResultKey(String topic, String tags, String key) {
-			return topic + ":" + tags + ":" + key;
+			return RedisConstants.MQ_TRANSACTION_PREFIX + topic + "_" + tags + "_" + key;
 		}
 	}
 }

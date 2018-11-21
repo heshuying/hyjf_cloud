@@ -609,7 +609,7 @@ WHERE
          <!-- ADD BY zhangyk 增加初审时间 start -->
          <result column="verify_time" property="verifyTime" jdbcType="VARCHAR" />
          <!-- ADD BY zhangyk 增加初审时间 end -->
-		 <!-- ADD BY wangjun 微服务bug修复(线上同样问题) 增加复审人 start -->
+         <!-- ADD BY wangjun 微服务bug修复(线上同样问题) 增加复审人 start -->
 		 <result column="reverify_user_name" property="reverifyUserName" jdbcType="VARCHAR" />
 		 <!-- ADD BY wangjun 微服务bug修复(线上同样问题) 增加复审人 end -->
 		 </resultMap>
