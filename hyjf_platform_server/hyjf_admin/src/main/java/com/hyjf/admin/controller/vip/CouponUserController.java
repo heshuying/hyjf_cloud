@@ -180,10 +180,11 @@ public class CouponUserController extends BaseController {
             couponUserRequest.setDelFlag(CustomConstants.FALG_NOR);
             couponUserRequest.setUsedFlag(CustomConstants.USER_COUPON_STATUS_WAITING_PUBLISH);
             couponUserRequest.setReadFlag(CustomConstants.USER_COUPON_READ_FLAG_NO);
-            if (couponUserRequest.getActivityId() == null) {
+            if (couponUserBeanRequest.getActivityId() == null) {
                 couponUserRequest.setCouponSource(CustomConstants.USER_COUPON_SOURCE_MANUAL);
             } else {
                 couponUserRequest.setCouponSource(CustomConstants.USER_COUPON_SOURCE_ACTIVE);
+                couponUserRequest.setActivityId(couponUserBeanRequest.getActivityId());
             }
             couponUserRequest.setAttribute(userInfoVO.getAttribute());
             couponUserRequest.setChannel(channelName);
