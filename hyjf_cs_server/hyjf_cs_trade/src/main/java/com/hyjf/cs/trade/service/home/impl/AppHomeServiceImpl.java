@@ -253,8 +253,8 @@ public class AppHomeServiceImpl implements AppHomeService {
 
         String serviceAgreementUrl = systemConfig.getAppServiceAgreementUrl();
         String privacyPolicyUrl = systemConfig.getAppPrivacyPolicyUrl();
-        info.put("serviceAgreementUrl",HOST + "/public/agreement?name=fwxy");//服务协议
-        info.put("privacyPolicyUrl",HOST + "/public/agreement?name=yszc");//隐私政策
+        info.put("serviceAgreementUrl",HOST + serviceAgreementUrl);//服务协议
+        info.put("privacyPolicyUrl",HOST + privacyPolicyUrl);//隐私政策
 
         info.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
         info.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_SUCCESS);
