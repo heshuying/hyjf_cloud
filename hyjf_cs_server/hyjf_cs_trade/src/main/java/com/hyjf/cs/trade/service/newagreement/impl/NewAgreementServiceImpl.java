@@ -200,6 +200,7 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
 	 * @param aliasName 别名
 	 * @return
 	 */
+	@Override
 	public NewAgreementResultBean setProtocolImg(String aliasName){
 		List<String> url = null;
 		String protocolId = null;
