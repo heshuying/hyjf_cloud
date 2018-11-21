@@ -541,7 +541,7 @@ public class PdfGenerator {
 			Document doc = builder.parse(is);
 			NodeList r1 = doc.getElementsByTagName("FILE_MSG");
 			String pdfUrl = r1.item(0).getFirstChild().getNodeValue();
-			file = FileUtil.getFile(request, response, pdfUrl.substring(0, pdfUrl.length() - 1), fileName);
+			file = FileUtil.getFile(pdfUrl.substring(0, pdfUrl.length() - 1), fileName);
 		} catch (Exception e) {
 			e.printStackTrace();
 

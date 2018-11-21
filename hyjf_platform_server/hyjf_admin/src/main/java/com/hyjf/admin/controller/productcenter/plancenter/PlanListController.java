@@ -152,7 +152,7 @@ public class PlanListController extends BaseController{
 		JSONObject jsonObject = new JSONObject();
 		//添加时---获取还款方式  月/日 无需初始化 end/endday
 		//添加时---初始化 webhost 用来在详情画面上传图片
-		String webhost = UploadFileUtils.getDoPath(systemConfig.getWebHost()); //具体需要修改
+		String webhost = UploadFileUtils.getDoPath(systemConfig.getWebPdfHost()); //具体需要修改  主干是取：hyjf.web.host=http://test.hyjf.com:8080/hyjf-web
 		webhost = webhost.substring(0, webhost.length() - 1);
 		jsonObject.put("webhost", webhost);
 		//修改时---计划编号需要判空(注意 前台在添加时会有计划编号已存在的校验，若果已经存在则报错 画面不能操作(调用存在接口))

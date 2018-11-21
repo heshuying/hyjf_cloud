@@ -1,7 +1,5 @@
 package com.hyjf.cs.trade.controller.web.agreement;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.resquest.trade.UserInvestListBeanRequest;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
@@ -34,11 +32,8 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.*;
+import java.io.File;
 import java.math.BigDecimal;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -61,53 +56,55 @@ public class CreateAgreementController extends BaseTradeController {
 
     @Autowired
     SystemConfig systemConfig;
-    /**
-     * 账户中心-资产管理-当前持有-- 投资协议(实际为散标居间协议)下载
-     * @return
-     */
-    @ApiOperation(value = "账户中心-资产管理-当前持有-- 投资协议(实际为散标居间协议)下载", notes = "账户中心-资产管理-当前持有-- 投资协议(实际为散标居间协议)下载")
-    @GetMapping("/intermediaryAgreementPDF")
-    public HttpServletResponse intermediaryAgreementPDF(HttpServletRequest request, HttpServletResponse response,UserInvestListBeanRequest form)  {
 
-        logger.info("web获取用户资产信息, nid is :{}", form.getNid());
-        List<TenderAgreementVO> list=createAgreementService.getIntermediaryAgreementPDFUrl(form.getNid());
-        if(list!=null&&list.size()>0){
-            TenderAgreementVO agreementVO=list.get(0);
-            if(agreementVO.getStatus()==3){
-                try {
-                    // path是指欲下载的文件的路径。
-                    File file = new File(systemConfig.getBasePathurl()+systemConfig.getHyjfFtpBasepathPdf()+"/"+agreementVO.getPdfUrl());
-                    // 取得文件名。
-                    String filename = file.getName();
-                    // 取得文件的后缀名。
-                    String ext = filename.substring(filename.lastIndexOf(".") + 1).toUpperCase();
 
-                    // 以流的形式下载文件。
-                    InputStream fis = new BufferedInputStream(new FileInputStream(systemConfig.getBasePathurl()+systemConfig.getHyjfFtpBasepathPdf()+"/"+agreementVO.getPdfUrl()));
-                    byte[] buffer = new byte[fis.available()];
-                    fis.read(buffer);
-                    fis.close();
-                    // 清空response
-                    response.reset();
-                    // 设置response的Header
-                    response.addHeader("Content-Disposition", "attachment;filename=" + new String(filename.getBytes()));
-                    response.addHeader("Content-Length", "" + file.length());
-                    OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
-                    response.setContentType("application/octet-stream");
-                    toClient.write(buffer);
-                    toClient.flush();
-                    toClient.close();
-                } catch (IOException ex) {
-                    ex.printStackTrace();
-                }
-            }else{
-                logger.info("暂无可下载协议");
-            }
-        }else {
-            logger.info("暂无可下载协议");
-        }
-
-        return response;
+    private UserInvestListBeanRequest createUserInvestListBeanRequest(String random, String projectType, String nid, String borrowNid) {
+        UserInvestListBeanRequest form=new UserInvestListBeanRequest();
+        form.setRandom(random);
+        form.setProjectType(projectType);
+        form.setBorrowNid(borrowNid);
+        form.setNid(nid);
+        return form;
     }
 
+
+    public List<File> createFaddPDFImgFile(List<File> files,TenderAgreementVO tenderAgreement) {
+        SFTPParameter para = new SFTPParameter() ;
+        String ftpIP = systemConfig.getHyjfFtpIp();
+        String port = systemConfig.getHyjfFtpPort();
+        String basePathImage = systemConfig.getHyjfFtpBasepathImg();
+        String basePathPdf = systemConfig.getHyjfFtpBasepathPdf();
+        String password = systemConfig.getHyjfFtpPassword();
+        String username = systemConfig.getHyjfFtpUsername();
+        para.hostName = ftpIP;//ftp服务器地址
+        para.userName = username;//ftp服务器用户名
+        para.passWord = password;//ftp服务器密码
+        para.port = Integer.valueOf(port);//ftp服务器端口
+        para.fileName=tenderAgreement.getTenderNid();
+//        para.downloadPath =basePathImage;//ftp服务器文件目录creditUserId
+        para.savePath = "/pdf_tem/pdf/" + tenderAgreement.getTenderNid();
+        String imgUrl = tenderAgreement.getImgUrl();
+        String pdfUrl = tenderAgreement.getPdfUrl();
+        if(StringUtils.isNotBlank(pdfUrl)){
+            //获取文件目录
+            int index = pdfUrl.lastIndexOf("/");
+            String pdfPath = pdfUrl.substring(0,index);
+            //文件名称
+            String pdfName = pdfUrl.substring(index+1);
+            para.downloadPath = basePathPdf + "/" + pdfPath;
+            para.sftpKeyFile = pdfName;
+        }else if(StringUtils.isNotBlank(imgUrl)){
+            int index = imgUrl.lastIndexOf("/");
+            String imgPath = imgUrl.substring(0,index);
+            //文件名称
+            String imgName = imgUrl.substring(index+1);
+            para.downloadPath = "/" + basePathImage + "/" + imgPath;
+            para.sftpKeyFile = imgName;
+        }else{
+            return null;
+        }
+        File file =  FavFTPUtil.downloadDirectory(para);
+        files.add(file);
+        return files;
+    }
 }

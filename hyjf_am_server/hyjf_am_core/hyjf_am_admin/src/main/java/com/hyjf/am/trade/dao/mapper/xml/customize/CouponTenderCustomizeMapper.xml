@@ -977,10 +977,10 @@
             </if>
             <!-- 时间 -->
             <if test="timeStartSrch != null and timeStartSrch != ''">
-                AND hct.add_time <![CDATA[>=]]> #{timeStartSrch}
+                AND hct.create_time <![CDATA[>=]]> #{timeStartSrch}
             </if>
             <if test="timeEndSrch != null and timeEndSrch != ''">
-                AND hct.add_time <![CDATA[<=]]> #{timeEndSrch}
+                AND hct.create_time <![CDATA[<=]]> #{timeEndSrch}
             </if>
         </where>
     </sql>

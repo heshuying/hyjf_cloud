@@ -40,7 +40,7 @@ public class AdminInterceptor implements HandlerInterceptor {
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
 		logger.info("admin接收到请求,请求接口为:" + request.getRequestURI());
-		try {
+		/*try {
 			String username = ((AdminSystemVO) request.getSession().getAttribute("user")).getUsername();
 			String val = RedisUtils.get("admin@" + username);
 			if (val != null && !val.equals(request.getHeader("Cookies"))) {
@@ -85,7 +85,7 @@ public class AdminInterceptor implements HandlerInterceptor {
 			throw new ReturnMessageException(MsgEnum.ERR_USER_AUTHORITY);
 			//		return false;
 
-		}
+		}*/
 
 
 		return true;

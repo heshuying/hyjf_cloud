@@ -245,8 +245,10 @@ public class FavFTPUtil {
      * @return
      */
     public static File downloadDirectory(SFTPParameter para) {
+        logger.info("----------------------------开始下载FTP协议");
         File localFile = null;
         FTPClient ftp = new FTPClient();
+        OutputStream is = null;
         try {
             int reply;
             ftp.connect(para.hostName, para.port);
@@ -271,14 +273,11 @@ public class FavFTPUtil {
                     } else {
                         localFile.getParentFile().mkdirs();
                     }
-                    try (OutputStream is = new FileOutputStream(localFile)) {
-
+                        is= new FileOutputStream(localFile);
                         ftp.retrieveFile(ff.getName(), is);
                         is.close();
-                    }
                 }
             }
-            //ZIPGenerator.generateZip(response, files, fileName);
             ftp.logout();
         } catch (IOException e) {
             e.printStackTrace();
@@ -287,9 +286,19 @@ public class FavFTPUtil {
                 try {
                     ftp.disconnect();
                 } catch (IOException ioe) {
+                    logger.error("关闭输出流：" + ioe);
+                }
+            }
+            if (is != null) {
+                try {
+                    is.flush();
+                    is.close();
+                } catch (Exception e) {
+                    logger.error("关闭输出流：" + e);
                 }
             }
         }
+        logger.info("----------------------------结束下载FTP协议localFile："+localFile);
         return localFile;
     }
 

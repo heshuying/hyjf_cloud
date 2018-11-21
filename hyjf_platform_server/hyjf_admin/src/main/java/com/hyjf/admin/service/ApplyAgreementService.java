@@ -6,6 +6,7 @@ import com.hyjf.am.resquest.admin.BorrowRepayAgreementRequest;
 import com.hyjf.am.resquest.admin.DownloadAgreementRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
@@ -40,7 +41,7 @@ public interface ApplyAgreementService {
      * @author Zha Daojian
      * @date 2018/7/12 10:52
      */
-    AdminResult downloadAction(DownloadAgreementRequest request,HttpServletResponse response);
+    void downloadAction(DownloadAgreementRequest requestBean, HttpServletResponse response);
 
 
 }
