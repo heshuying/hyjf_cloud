@@ -1,5 +1,6 @@
 package com.hyjf.common.file;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
@@ -20,18 +21,28 @@ public class ZIPGenerator {
      */
     public static void generateZip(HttpServletResponse response, List<File> files, String fileName){
         response.setContentType("APPLICATION/OCTET-STREAM");  
-        response.setHeader("Content-Disposition","attachment; filename="+fileName+".zip");  
-        System.out.println("Download................");   
+        response.setHeader("Content-Disposition","attachment; filename="+fileName+".zip");
         ZipOutputStream zos;
+        ServletOutputStream out = null;
         try {
-            zos = new ZipOutputStream(response.getOutputStream());
+            out =  response.getOutputStream();
+            zos = new ZipOutputStream(out);
             zipFile(files, "", zos);     
             zos.flush();     
             zos.close();
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("---图片下载异常,无法下载---");
-        }     
+        }finally {
+            if (out != null) {
+                try {
+                    out.flush();
+                    out.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
     
     /**
