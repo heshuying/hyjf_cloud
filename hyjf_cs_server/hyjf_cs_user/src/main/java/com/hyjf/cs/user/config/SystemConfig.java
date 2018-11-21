@@ -32,7 +32,7 @@ public class SystemConfig {
     @Value("${release.coupon.accesskey}")
     public String couponAccesskey;
 
-    @Value("{hyjf.web.ui.bindemail}")
+    @Value("${hyjf.web.ui.bindemail}")
     public String webUIBindEmail;
 
     @Value("${hyjf.bank.instcode}")
