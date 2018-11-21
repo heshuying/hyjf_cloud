@@ -515,5 +515,8 @@ public class RedisConstants {
      */
     public static String COUPON_LOANS_HJH = "couponloanshjh:";
 
-
+    /**
+     * rocketmq 事务消息结果
+     */
+    public static final String MQ_TRANSACTION_PREFIX = "mq_tran:";
 }
