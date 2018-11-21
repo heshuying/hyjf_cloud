@@ -578,7 +578,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
     private String getWithdrawFee(Integer userId, String bankId, BigDecimal amount) {
         BankCardVO bankCard = this.amUserClient.getBankCardByCardNo(userId, bankId);
-        if (FEETMP == null) {
+        if (StringUtils.isBlank(FEETMP)) {
             FEETMP = "1";
         }
         if (bankCard != null) {

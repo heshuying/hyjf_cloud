@@ -412,8 +412,8 @@ public class CategoryController extends BaseConfigController {
         if(status != null){
             con.setStatus(Integer.parseInt(status));
         }
-        if(null != zhiChiStatus && "null".equals(zhiChiStatus)){
-            //con.setZhiChiStatus(zhiChiStatus);
+        if(null != zhiChiStatus && !"null".equals(zhiChiStatus)){
+            con.setZhichiStatus(Integer.valueOf(zhiChiStatus));
         }
         // 更新
         this.categoryService.updateHelpAction(con);
