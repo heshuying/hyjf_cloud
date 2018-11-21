@@ -52,16 +52,17 @@ public class AppPushManageController extends BaseController {
                     pushManageRequest.setLimitEnd(paginator.getLimit());
                 }
             }
-
-            // 获取所有的列表
-            List<AppPushManage> pushManageList = this.appPushManageService.getAllList(pushManageRequest);
-
-            if (!CollectionUtils.isEmpty(pushManageList)){
-                pushManageResponse.setResultList(CommonUtils.convertBeanList(pushManageList, AppPushManageVO.class));
-                pushManageResponse.setCount(count);
-                pushManageResponse.setRtn(Response.SUCCESS);
-            }
         }
+
+        // 获取所有的列表
+        List<AppPushManage> pushManageList = this.appPushManageService.getAllList(pushManageRequest);
+
+        if (!CollectionUtils.isEmpty(pushManageList)){
+            pushManageResponse.setResultList(CommonUtils.convertBeanList(pushManageList, AppPushManageVO.class));
+            pushManageResponse.setCount(count);
+            pushManageResponse.setRtn(Response.SUCCESS);
+        }
+
         return pushManageResponse;
     }
 
@@ -73,6 +74,26 @@ public class AppPushManageController extends BaseController {
     @RequestMapping(value = "/insertPushManage", method = RequestMethod.POST)
     public AppPushManageResponse insertPushManage(@RequestBody AppPushManageRequest pushManageRequest){
         AppPushManageResponse pushManageResponse = new AppPushManageResponse();
+
+        /**
+         * 当选择原生时强制设置跳转内容值为 0
+         * 选择H5时,赋为选择值+1
+         * 原生和H5 URL 时,推送内容和缩略图为空
+         * H5 自定义是url内容为空
+         */
+        if (pushManageRequest.getJumpType() == 0){
+            pushManageRequest.setJumpContent(0);
+            pushManageRequest.setContent("");
+            pushManageRequest.setThumb("");
+        }else {
+            if (pushManageRequest.getJumpContent() == 0){
+                pushManageRequest.setContent("");
+                pushManageRequest.setThumb("");
+            }else{
+                pushManageRequest.setJumpUrl("");
+            }
+            pushManageRequest.setJumpContent((pushManageRequest.getJumpContent()+1));
+        }
 
         int rtnCode = appPushManageService.insertPushManage(pushManageRequest);
         if (rtnCode > 0){
@@ -91,6 +112,24 @@ public class AppPushManageController extends BaseController {
      */
     @RequestMapping(value = "/updatePushManage", method = RequestMethod.POST)
     public boolean updatePushManage(@RequestBody AppPushManageRequest pushManageRequest){
+
+        //当选择原生时强制设置跳转内容值为 0
+        //选择H5时,赋为选择值+1
+        //原生和H5 URL 时,推送内容和缩略图为空
+        //H5 自定义是url内容为空
+        if (pushManageRequest.getJumpType() == 0){
+            pushManageRequest.setJumpContent(0);
+            pushManageRequest.setContent("");
+            pushManageRequest.setThumb("");
+        }else {
+            if (pushManageRequest.getJumpContent() == 0){
+                pushManageRequest.setContent("");
+                pushManageRequest.setThumb("");
+            }else{
+                pushManageRequest.setJumpUrl("");
+            }
+            pushManageRequest.setJumpContent((pushManageRequest.getJumpContent()+1));
+        }
 
         // 更新返回状态
         int updateCode = appPushManageService.updatePushManage(pushManageRequest);
