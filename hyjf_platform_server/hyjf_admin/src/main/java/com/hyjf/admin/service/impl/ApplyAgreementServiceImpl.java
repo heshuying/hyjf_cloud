@@ -1356,16 +1356,15 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     }else {
                         logger.info("--------------------下载文件签署，原始");
                         if(StringUtils.isNotBlank(tenderAgreement.getDownloadUrl())){
-                            File filePdf = null;
                             try {
-                                filePdf = FileUtil.getFile(tenderAgreement.getDownloadUrl(),tenderAgreement.getTenderNid()+".pdf");
+                                File filePdf = FileUtil.getFile(tenderAgreement.getDownloadUrl(),tenderAgreement.getTenderNid()+".pdf");
                                 logger.info("--------------------下载文件签署，原始filePdf:"+filePdf);
+                                if(filePdf!=null){
+                                    files.add(filePdf);
+                                }
                             } catch (IOException e) {
-                                filePdf = null;
+                                logger.info("--------------------下载文件签署，原始filePdf失败");
                             }//债转协议
-                            if(filePdf!=null){
-                                files.add(filePdf);
-                            }
                         }
                     }
                 }
