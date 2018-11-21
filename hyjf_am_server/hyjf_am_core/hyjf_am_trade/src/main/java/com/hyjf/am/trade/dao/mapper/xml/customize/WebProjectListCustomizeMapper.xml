@@ -179,7 +179,7 @@
         <!-- 定时发标时间戳 time -->
         <result column="time" property="time" jdbcType="VARCHAR" />
         <!-- 项目状态 status 10 定时发标 11投资中 12复审中 13 还款中 14 已还款 15 已流标 -->
-        <result column="status" property="status" jdbcType="VARCHAR" />
+        <result column="status" property="borrowStatus" jdbcType="VARCHAR" />
         <!-- 倍增金额  increaseMoney-->
         <result column="increase_money" property="increaseMoney" jdbcType="VARCHAR" />
         <!-- 加息券 interestCoupon -->
@@ -232,7 +232,7 @@
         <!-- add by nxl 20180727 产品加息标志位-->
         <result column="increase_interest_flag" property="increaseInterestFlag" jdbcType="VARCHAR" />
 
-        <result column="borrow_status" property="borrowStatus"></result>
+        <!--<result column="borrow_status" property="borrowStatus"></result>-->
         <!-- 放款时间  -->
         <result column="verify_over_time" property="reverifyTime" jdbcType="VARCHAR"></result>
     </resultMap>
@@ -320,7 +320,7 @@
         hydb.borrow_nid,
         hydbpt.borrow_project_type AS project_type,
         hydbpt.borrow_cd AS type,
-        hydb.status AS borrow_status,
+        --  hydb.status AS borrow_status,
         hydb.reverify_status AS project_status,
         hydbpt.borrow_name AS type_name,
         htbi.`name` AS borrow_name,
@@ -440,13 +440,8 @@
         htbi.borrow_income_description,
         htbi.borrow_publisher,
         <!-- add by nxl 添加产品加息标志位查询-->
-        hydb.increase_interest_flag,
-        case when htbi.borrow_extra_yield=0 then
-        ''
-        else
-        htbi.borrow_extra_yield
-        end
-        borrow_extra_yield,
+        htbi.increase_interest_flag,
+        htbi.borrow_extra_yield,
         htbi.contract_period,
         FROM_UNIXTIME(
         hydb.recover_last_time,
@@ -1683,7 +1678,8 @@
              hydbpt.borrow_class as borrow_type,
              CONCAT("/bank/web/borrow/getBorrowDetail.do?borrowNid=",hydb.borrow_nid) AS borrow_url,
              hydbi.increase_interest_flag increase_interest_flag,
-             hydbi.borrow_extra_yield borrow_extra_yield
+             CASE WHEN hydbi.increase_interest_flag = 0  THEN '' ELSE
+             hydbi.borrow_extra_yield END AS borrow_extra_yield
          FROM
          ht_borrow hydb
          INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type

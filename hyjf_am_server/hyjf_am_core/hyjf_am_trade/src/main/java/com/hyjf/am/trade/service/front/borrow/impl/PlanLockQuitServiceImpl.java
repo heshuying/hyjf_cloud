@@ -741,10 +741,8 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
             try {
                 //开始计算提成 add by cwyang 2018-5-24 汇计划3期由batch工程挪至此处处理
                 commisionCompute(hjhAccede,hjhLockVo);
-
             }catch (Exception e){
-                e.printStackTrace();
-                logger.info("=================提成发放失败,计划加入订单号:" + hjhAccede.getAccedeOrderId());
+                logger.error("=================提成发放失败,计划加入订单号:" + hjhAccede.getAccedeOrderId(), e);
             }
             try {
                 //生成并签署加入计划投资服务协议
@@ -754,7 +752,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
                 // 双十二活动删除
                 //actBalloonTender(hjhAccede);
             } catch (Exception e) {
-                logger.error("=================优惠券放款失败,投资订单号:" + hjhAccede.getAccedeOrderId());
+                logger.error("=================优惠券放款失败,投资订单号:" + hjhAccede.getAccedeOrderId(), e);
             }
         }
     }
