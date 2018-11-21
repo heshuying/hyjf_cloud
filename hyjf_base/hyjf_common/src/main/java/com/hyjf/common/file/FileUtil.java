@@ -416,7 +416,7 @@ public class FileUtil {
         }
         return true;
     }
-    
+
     /**
      * 通过HTTP方式获取文件
      *
@@ -425,7 +425,7 @@ public class FileUtil {
      * @return file
      * @throws IOException
      */
-    public static File getFile(HttpServletRequest request, HttpServletResponse response, String strUrl, String fileName) throws IOException {
+    public static File getFile(String strUrl, String fileName) throws IOException {
 
         File file = new File(fileName);
         URL url = new URL(strUrl);
@@ -442,8 +442,7 @@ public class FileUtil {
         // 设定请求的方法为"POST"，默认是GET
         conn.setRequestMethod("POST");
 		InputStream inputStream = null;
-		FileOutputStream fos = new FileOutputStream(file);
-		try {
+		try (FileOutputStream fos = new FileOutputStream(file)) {
 			//得到输入流
 			inputStream = conn.getInputStream();
 			//获取自己数组
@@ -455,9 +454,6 @@ public class FileUtil {
 		} finally {
 			if (inputStream != null) {
 				inputStream.close();
-			}
-			if (fos != null) {
-				fos.close();
 			}
 		}
 		return file;
