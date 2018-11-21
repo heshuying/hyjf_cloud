@@ -20,7 +20,10 @@ import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.response.admin.ApplyAgreementInfoResponse;
 import com.hyjf.am.response.trade.ApplyAgreementResponse;
 import com.hyjf.am.response.trade.BorrowRepayAgreementResponse;
-import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.admin.ApplyAgreementRequest;
+import com.hyjf.am.resquest.admin.BorrowRepayAgreementAmRequest;
+import com.hyjf.am.resquest.admin.BorrowRepayAgreementRequest;
+import com.hyjf.am.resquest.admin.DownloadAgreementRequest;
 import com.hyjf.am.vo.admin.BorrowRepayAgreementCustomizeVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.BorrowRecoverPlanVO;
@@ -1327,28 +1330,31 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
 
     /**
      * 下载文件签署
-     * @param request
+     * @param response
      * @return
      */
-    public AdminResult downloadAction(DownloadAgreementRequest request,HttpServletResponse response) {
-        String status = request.getStatus();//1:脱敏，0：原始
-        String repayPeriod = "DF-"+request.getRepayPeriod()+"-";
-        request.setRepayPeriod(repayPeriod);
-        List<TenderAgreementVO> tenderAgreementsAss= amTradeClient.selectLikeByExample(request);//债转协议
-        logger.info(this.getClass().getName(), "downloadAction", "下载文件签署。。。。request:"+JSONObject.toJSON(request));
-        logger.info(this.getClass().getName(), "downloadAction", "下载文件签署。。。。tenderAgreementsAss:"+JSONObject.toJSON(tenderAgreementsAss));
+    public void downloadAction(DownloadAgreementRequest requestBean,HttpServletResponse response) {
+        logger.info("--------------------下载文件签署downloadAction", "下载文件签署。。。。request:"+JSONObject.toJSON(requestBean));
+        String status = requestBean.getStatus();//1:脱敏，0：原始
+        String repayPeriod = "DF-"+requestBean.getRepayPeriod()+"-";
+        requestBean.setRepayPeriod(repayPeriod);
+        List<TenderAgreementVO> tenderAgreementsAss= amTradeClient.selectLikeByExample(requestBean);//债转协议
+        logger.info("--------------------下载文件签署downloadAction", "下载文件签署。。。。request:"+JSONObject.toJSON(requestBean));
+        logger.info("downloadAction", "下载文件签署。。。。tenderAgreementsAss:"+JSONObject.toJSON(tenderAgreementsAss));
         //输出文件集合
         List<File> files = new ArrayList<File>();
         if (CollectionUtils.isNotEmpty(tenderAgreementsAss)){
             for (TenderAgreementVO tenderAgreement : tenderAgreementsAss) {
                 if(tenderAgreementsAss!=null && tenderAgreementsAss.size()>0){
                     if("1".equals(status)){
+                        logger.info("--------------------下载文件签署,脱敏");
                         files = createFaddPDFImgFile(files,tenderAgreement);
                     }else {
+                        logger.info("--------------------下载文件签署，原始");
                         if(org.apache.commons.lang.StringUtils.isNotBlank(tenderAgreement.getDownloadUrl())){
                             File filePdf = null;
                             try {
-                                filePdf = FileUtil.getFile(null,null,tenderAgreement.getDownloadUrl(),tenderAgreement.getTenderNid()+".pdf");
+                                filePdf = FileUtil.getFile(tenderAgreement.getDownloadUrl(),tenderAgreement.getTenderNid()+".pdf");
                             } catch (IOException e) {
                                 filePdf = null;
                             }//债转协议
@@ -1360,15 +1366,14 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 }
             }
         }else {
-            return new AdminResult(BaseResult.FAIL, "下载失败，未找到相关协议");
+            logger.error(this.getClass().getName(), "searchTenderToCreditDetail", "下载失败，请稍后重试。。。。");
         }
 
         if(files!=null && files.size()>0){
-            ZIPGenerator.generateZip(response, files, repayPeriod);
-            return new AdminResult(BaseResult.SUCCESS, "下载成功");
+           ZIPGenerator.generateZip(response, files, repayPeriod);
+            logger.info(this.getClass().getName(), "searchTenderToCreditDetail", "下载成功");
         }else{
             logger.error(this.getClass().getName(), "searchTenderToCreditDetail", "下载失败，请稍后重试。。。。");
-            return new AdminResult(BaseResult.FAIL, "下载失败，请稍后重试。。。。");
 
         }
     }

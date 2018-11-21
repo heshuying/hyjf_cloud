@@ -1005,7 +1005,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
             tenderAgreement = tenderAgreementsNid.get(0);
             try {
                 if(org.apache.commons.lang.StringUtils.isNotBlank(tenderAgreement.getDownloadUrl())){
-                    File filePdf= FileUtil.getFile(request,response,tenderAgreement.getDownloadUrl(),nid+".pdf");//债转协议
+                    File filePdf= FileUtil.getFile(tenderAgreement.getDownloadUrl(),nid+".pdf");//债转协议
                     if(filePdf!=null){
                         files.add(filePdf);
                     }
