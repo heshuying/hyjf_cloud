@@ -331,8 +331,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+creditRepay.getAssignNid()+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
+                        logger.info("-------------------------垫付机构协议管理，处理分期债转，签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                     } else {
+                        logger.info("-------------------------垫付机构协议管理，处理分期债转，新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                     }
                 } catch (MQException e) {
@@ -357,8 +359,9 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
+                        logger.info("-------------------------垫付机构协议管理，处理分期债转，计算剩余部分签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
-                    } else {
+                    } else {logger.info("-------------------------垫付机构协议管理，处理分期债转，计算剩余部分新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                     }
                 } catch (MQException e) {
@@ -379,8 +382,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                 // 签署成功(status = 2)
                 if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
+                    logger.info("-------------------------垫付机构协议管理，处理分期债转，非债转签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                     accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                 } else {
+                    logger.info("-------------------------垫付机构协议管理，处理分期债转，非债转新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                     fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                 }
             } catch (MQException e) {
@@ -439,8 +444,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+creditRepay.getAssignNid()+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
+                        logger.info("-------------------------处理分期债转-汇计划，处理分期债转签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                     } else {
+                        logger.info("-------------------------处理分期债转-汇计划，处理分期债转新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                     }
                 } catch (MQException e) {
@@ -465,8 +472,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
+                        logger.info("-------------------------处理分期债转-汇计划，计算剩余部分签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                     } else {
+                        logger.info("-------------------------处理分期债转-汇计划，计算剩余部分新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                     }
                 } catch (MQException e) {
@@ -487,8 +496,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                 // 签署成功(status = 2)
                 if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
+                    logger.info("-------------------------处理分期债转-汇计划，非债转签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                     accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                 } else {
+                    logger.info("-------------------------处理分期债转-汇计划，非债转新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                     fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                 }
             } catch (MQException e) {
@@ -546,8 +557,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+creditRepay.getAssignNid()+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
+                        logger.info("-------------------------处理不分期债转，签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                     } else {
+                        logger.info("-------------------------处理不分期债转，新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                     }
                 } catch (MQException e) {
@@ -573,8 +586,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
+                        logger.info("-------------------------处理不分期债转，计算剩余部分签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                     } else {
+                        logger.info("-------------------------处理不分期债转，计算剩余部分新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                     }
                 } catch (MQException e) {
@@ -596,8 +611,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                 // 签署成功(status = 2)
                 if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
+                    logger.info("-------------------------处理不分期债转，非债转签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                     accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                 } else {
+                    logger.info("-------------------------处理不分期债转，非债转新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                     fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                 }
             } catch (MQException e) {
@@ -650,8 +667,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+hjhDebtCreditRepayVO.getUniqueNid()+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
+                        logger.info("-------------------------处理不分期债转-汇计划，签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                     } else {
+                        logger.info("-------------------------处理不分期债转-汇计划，新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                     }
                 } catch (MQException e) {
@@ -676,8 +695,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
+                        logger.info("-------------------------处理不分期债转-汇计划，计算剩余部分签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                     } else {
+                        logger.info("-------------------------处理不分期债转-汇计划，计算剩余部分新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                     }
                 } catch (MQException e) {
@@ -698,8 +719,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                 // 签署成功(status = 2)
                 if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
+                    logger.info("-------------------------处理不分期债转-汇计划，非债转签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                     accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                 } else {
+                    logger.info("-------------------------处理不分期债转-汇计划，非债转新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                     fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                 }
             } catch (MQException e) {
