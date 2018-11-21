@@ -519,4 +519,9 @@ public class RedisConstants {
      * rocketmq 事务消息结果
      */
     public static final String MQ_TRANSACTION_PREFIX = "mq_tran:";
+
+    /**
+     * 提现
+     */
+    public static final String WITHRAW = "widraw:";
 }

@@ -1685,7 +1685,7 @@ public class AmAdminClientImpl implements AmAdminClient {
      */
     @Override
     public AppPushManageResponse insterPushManage(AppPushManageRequestBean requestBean){
-        AppPushManageResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/appPushManage/insertPushManage/", requestBean, AppPushManageResponse.class).getBody();
+        AppPushManageResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-admin/appPushManage/insertPushManage/", requestBean, AppPushManageResponse.class).getBody();
         if (response != null){
             return response;
         }
@@ -1700,7 +1700,7 @@ public class AmAdminClientImpl implements AmAdminClient {
      */
     @Override
     public boolean updatePushManage(AppPushManageRequestBean requestBean) {
-        BooleanResponse booleanResponse = restTemplate.postForEntity("http://AM-ADMIN/am-trade/appPushManage/updatePushManage/", requestBean, BooleanResponse.class).getBody();
+        BooleanResponse booleanResponse = restTemplate.postForEntity("http://AM-ADMIN/am-admin/appPushManage/updatePushManage/", requestBean, BooleanResponse.class).getBody();
         return booleanResponse.getResultBoolean();
     }
 
@@ -1712,7 +1712,7 @@ public class AmAdminClientImpl implements AmAdminClient {
      */
     @Override
     public boolean deletePushManage(Integer id) {
-        BooleanResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/appPushManage/deletePushManage/" + id, BooleanResponse.class).getBody();
+        BooleanResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-admin/appPushManage/deletePushManage/" + id, BooleanResponse.class).getBody();
         return response.getResultBoolean();
     }
 
