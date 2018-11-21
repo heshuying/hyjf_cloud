@@ -60,12 +60,12 @@ public class AnRongCallController extends BaseController {
             //失败率达到30百分比后熔断
           @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
           // 超时时间
-          @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "20000")},threadPoolProperties = {
+          @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "40000")},threadPoolProperties = {
           @HystrixProperty(name="coreSize", value="200"), @HystrixProperty(name="maxQueueSize", value="50")})
 	public String callApiBg(HttpServletRequest request, @RequestBody AnRongBean bean) throws Exception {
 
 		String methodName = "callApiBg";
-		logger.info(AnRongCallDefine.CONTROLLOR_CLASS_NAME, methodName, "[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
+		logger.info("[调用接口开始, 消息类型:" + (bean == null ? "" : bean.getTxCode()) + "]");
 		String ret = "";
 		String logOrderId = bean.getLogOrderId();
 		try {
@@ -111,9 +111,9 @@ public class AnRongCallController extends BaseController {
 				ret = result;
 //			}
 		} catch (Exception e) {
-			logger.error(AnRongCallDefine.CONTROLLOR_CLASS_NAME, methodName, "订单号：" + logOrderId, e);
+			logger.error("订单号：" + logOrderId, e);
 		} finally {
-			logger.info(AnRongCallDefine.CONTROLLOR_CLASS_NAME, methodName, "[调用接口结束, 消息类型:" +bean.getTxCode() +"]");
+			logger.info("[调用接口结束, 消息类型:" +bean.getTxCode() +"]");
 		}
 		return ret;
 	}

@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
@@ -45,11 +46,10 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
 
     @Override
     public Calendar insertOperationData(OperationReportJobBean bean) {
+        logger.info("OperationReportJobBean is: {}", JSONObject.toJSONString(bean));
         // 插入统计日期
         Calendar cal = bean.getCalendar();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        // 要统计前一个月的数据，所以月份要减一
-        cal.add(Calendar.MONTH, -1);
         sdf = new SimpleDateFormat("yyyyMM");
 
         Query query = new Query();
@@ -79,6 +79,8 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         oe.setWillPayMoney(bean.getWillPayMoney());
 
         BorrowUserStatistic borrowUserStatistic = this.selectBorrowUserStatistic();
+
+        logger.info("BorrowUserStatistic is: {}", JSONObject.toJSONString(borrowUserStatistic));
         if(borrowUserStatistic!=null) {
             // 累计借款人
             oe.setBorrowuserCountTotal(borrowUserStatistic.getBorrowuserCountTotal());
@@ -148,6 +150,7 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
     @Override
     public BorrowUserStatistic selectBorrowUserStatistic() {
         Query query = new Query();
+        query.with(new Sort(Sort.Direction.DESC, "_id"));
         List<BorrowUserStatistic> list = borrowUserStatisticMongDao.find(query);
         if(list == null || list.isEmpty()){
             return null;
@@ -213,7 +216,6 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         int date = Integer.parseInt(c);
         return date;
     }
-
 
     //保存月度运营报告
     @Override

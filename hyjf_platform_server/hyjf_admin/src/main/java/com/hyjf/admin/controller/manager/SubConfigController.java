@@ -70,7 +70,7 @@ public class SubConfigController extends BaseController {
     }
     @ApiOperation(value = "分账名单配置页面", notes = "分账名单配置页面")
     @PostMapping("/infoAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<SubCommissionListConfigVo>  subConfigInfo( @RequestBody AdminSubConfigRequest adminRequest) {
         AdminSubConfigResponse result= subConfigService.selectSubConfigInfo(adminRequest);
         if (result == null) {
@@ -175,7 +175,7 @@ public class SubConfigController extends BaseController {
 
     @ApiOperation(value = "用户名信息", notes = "用户名信息")
     @PostMapping("/selectAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+//    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult  selectAction(HttpServletRequest request,@RequestBody AdminSubConfigRequest adminRequest) {
         Map<String, Object> userMapNullMap=new HashMap();
         UserInfoCustomizeResponse userMap=subConfigService.userMap(adminRequest);

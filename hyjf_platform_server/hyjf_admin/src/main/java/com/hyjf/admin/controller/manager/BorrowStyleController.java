@@ -55,7 +55,7 @@ public class BorrowStyleController extends BaseController {
     }
     @ApiOperation(value = "查询还款方式详情", notes = "查询还款方式详情")
     @PostMapping("/infoAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult  searchBorrowStyleInfo(@RequestBody BorrowStyleRequestBean borrowStyleRequestBean) {
         AdminBorrowStyleRequest request = new AdminBorrowStyleRequest();
         //可以直接使用
