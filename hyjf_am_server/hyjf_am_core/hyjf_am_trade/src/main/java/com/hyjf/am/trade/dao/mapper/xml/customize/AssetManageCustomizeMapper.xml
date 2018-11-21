@@ -976,6 +976,8 @@
 		ELSE
 		hiild.repay_status = 1
 		END
+		GROUP BY
+		hiild.invest_order_id
 		) t
 		<if test="orderByFlag ==null||orderByFlag==''" >
 			ORDER BY t.orderby_repay_orddate desc,t.account
