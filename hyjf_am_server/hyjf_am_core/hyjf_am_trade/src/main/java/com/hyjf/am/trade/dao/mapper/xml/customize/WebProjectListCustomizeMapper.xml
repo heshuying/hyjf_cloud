@@ -179,7 +179,7 @@
         <!-- 定时发标时间戳 time -->
         <result column="time" property="time" jdbcType="VARCHAR" />
         <!-- 项目状态 status 10 定时发标 11投资中 12复审中 13 还款中 14 已还款 15 已流标 -->
-        <result column="status" property="borrowStatus" jdbcType="VARCHAR" />
+        <result column="status" property="status" jdbcType="VARCHAR" />
         <!-- 倍增金额  increaseMoney-->
         <result column="increase_money" property="increaseMoney" jdbcType="VARCHAR" />
         <!-- 加息券 interestCoupon -->

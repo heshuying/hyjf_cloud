@@ -10,6 +10,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -42,8 +44,14 @@ public class AppPushManageServiceImpl implements AppPushManageService {
             criteria.andStatusEqualTo(pushManageRequest.getStatus());
         }
 
-        if (StringUtils.isNotBlank(pushManageRequest.getTimeStart().toString())){
-            criteria.andTimeStartBetween(pushManageRequest.getTimeStart(), pushManageRequest.getTimeEnd());
+        if (StringUtils.isNotBlank(pushManageRequest.getTimeStart())){
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                criteria.andTimeStartGreaterThanOrEqualTo(sdf.parse(pushManageRequest.getTimeStart()));
+                criteria.andTimeEndLessThanOrEqualTo(sdf.parse(pushManageRequest.getTimeEnd()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
         return appPushManageMapper.countByExample(example);
@@ -69,8 +77,14 @@ public class AppPushManageServiceImpl implements AppPushManageService {
             criteria.andStatusEqualTo(pushManageRequest.getStatus());
         }
 
-        if (StringUtils.isNotBlank(pushManageRequest.getTimeStart().toString())){
-            criteria.andTimeStartBetween(pushManageRequest.getTimeStart(), pushManageRequest.getTimeEnd());
+        if (StringUtils.isNotBlank(pushManageRequest.getTimeStart())){
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                criteria.andTimeStartGreaterThanOrEqualTo(sdf.parse(pushManageRequest.getTimeStart()));
+                criteria.andTimeEndLessThanOrEqualTo(sdf.parse(pushManageRequest.getTimeEnd()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
         return appPushManageMapper.selectByExample(example);
@@ -87,6 +101,15 @@ public class AppPushManageServiceImpl implements AppPushManageService {
         AppPushManage pushManage = new AppPushManage();
 
         BeanUtils.copyProperties(pushManageRequest, pushManage);
+        if (StringUtils.isNotBlank(pushManageRequest.getTimeStart()) && StringUtils.isNotBlank(pushManageRequest.getTimeEnd())){
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                pushManage.setTimeStart(sdf.parse(pushManageRequest.getTimeStart()));
+                pushManage.setTimeEnd(sdf.parse(pushManageRequest.getTimeEnd()));
+            }catch (ParseException e){
+                e.printStackTrace();
+            }
+        }
         return appPushManageMapper.insertSelective(pushManage);
     }
 
@@ -100,6 +123,15 @@ public class AppPushManageServiceImpl implements AppPushManageService {
         AppPushManage pushManage = new AppPushManage();
 
         BeanUtils.copyProperties(pushManageRequest, pushManage);
+        if (StringUtils.isNotBlank(pushManageRequest.getTimeStart()) && StringUtils.isNotBlank(pushManageRequest.getTimeEnd())){
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                pushManage.setTimeStart(sdf.parse(pushManageRequest.getTimeStart()));
+                pushManage.setTimeEnd(sdf.parse(pushManageRequest.getTimeEnd()));
+            }catch (ParseException e){
+                e.printStackTrace();
+            }
+        }
         return appPushManageMapper.updateByPrimaryKeySelective(pushManage);
     }
 
