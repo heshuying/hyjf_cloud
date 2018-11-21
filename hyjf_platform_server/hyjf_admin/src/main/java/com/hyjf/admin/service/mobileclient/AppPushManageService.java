@@ -36,4 +36,18 @@ public interface AppPushManageService {
      * @return
      */
     boolean deletePushManage(Integer id);
+
+    /**
+     * 根据ID获取单条记录内容
+     * @param id
+     * @return
+     */
+    AppPushManageResponse getAppPushManageInfoById(Integer id);
+
+    /**
+     * 根据ID 更新记录状态
+     * @param id
+     * @return
+     */
+    boolean updatePushManageStatusById(Integer id);
 }

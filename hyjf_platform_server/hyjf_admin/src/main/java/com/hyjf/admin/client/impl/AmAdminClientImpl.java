@@ -1717,6 +1717,33 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
 
     /**
+     * 根据ID获取单条记录详细新
+     * @param id
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public AppPushManageResponse getAppPushManageInfoById(Integer id) {
+        AppPushManageResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-admin/appPushManage/getAppPushManageInfoById/" + id, AppPushManageResponse.class).getBody();
+        if (response != null){
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 根据记录更新单条记录的状态
+     * @param id
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public boolean updatePushManageStatusById(Integer id) {
+        BooleanResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-admin/appPushManage/updatePushManageStatusById/" + id, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
+    }
+
+    /**
      * 节假日配置-列表查询
      * @param request
      * @return
