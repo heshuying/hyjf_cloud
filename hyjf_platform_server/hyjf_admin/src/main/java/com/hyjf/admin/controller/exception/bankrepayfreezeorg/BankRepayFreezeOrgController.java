@@ -134,7 +134,7 @@ public class BankRepayFreezeOrgController extends BaseController {
     @ResponseBody
     @PostMapping("/process")
     public AdminResult bankAccountCheckAction(HttpServletRequest request, @RequestBody BankRepayFreezeOrgProcessRequestBean form) {
-        logger.info("请求参数：" + form);
+        logger.info("请求参数：" + JSON.toJSONString(form));
         AdminResult result = new AdminResult();
         JSONObject ret = new JSONObject();
         String orderId = form.getOrderId();
