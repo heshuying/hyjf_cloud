@@ -1370,7 +1370,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         }
 
         if(files!=null && files.size()>0){
-            ZIPGenerator.generateZip(response, files, repayPeriod);
+           // ZIPGenerator.generateZip(response, files, repayPeriod);
             return new AdminResult(BaseResult.SUCCESS, "下载成功");
         }else{
             logger.error(this.getClass().getName(), "searchTenderToCreditDetail", "下载失败，请稍后重试。。。。");
