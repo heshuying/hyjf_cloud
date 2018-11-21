@@ -165,4 +165,15 @@ public class CouponTenderHjhServiceImpl implements CouponTenderHjhService {
         }
         return detail;
     }
+
+    @Override
+    public CouponTenderResponse getRecordExport(CouponTenderRequest couponTenderRequest) {
+        couponTenderRequest.setLimitStart(couponTenderRequest.getLimitStart());
+        couponTenderRequest.setLimitEnd(couponTenderRequest.getLimitEnd());
+        CouponTenderResponse couponTenderResponse = amTradeClient.getRecordListHjh(couponTenderRequest);
+        if(null != couponTenderResponse){
+            return couponTenderResponse;
+        }
+        return null;
+    }
 }
