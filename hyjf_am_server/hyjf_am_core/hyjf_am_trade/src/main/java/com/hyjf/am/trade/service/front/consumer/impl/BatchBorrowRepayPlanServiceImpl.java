@@ -102,9 +102,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 
     @Autowired
     private CalculateInvestInterestProducer calculateInvestInterestProducer;
-	
-	public static JedisPool pool = RedisUtils.getPool();
-	
+
 	@Override
 	public List<BorrowApicron> getBorrowApicronList(Integer apiType) {
 		BorrowApicronExample example = new BorrowApicronExample();
@@ -3872,8 +3870,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 	 * @param value
 	 */
 	private boolean redisAddstrack(String key,String value){
-
-		Jedis jedis = pool.getResource();
+		JedisPool poolNew = RedisUtils.getPool();
+		Jedis jedis = poolNew.getResource();
 		boolean result = false;
 		
 		try {
@@ -3901,8 +3899,10 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 					}
 				}
 			}
-		} finally {
-			jedis.close();
+		}catch (Exception e){
+			logger.info("抛出异常:[{}]",e);
+		}finally {
+			RedisUtils.returnResource(poolNew,jedis);
 		}
 		
 		return result;

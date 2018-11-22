@@ -146,13 +146,13 @@ public class ContentArticleController {
 
     /**
      * 查询文章条数
-     * @param params
+     * @param type
      * @return
      */
-    @RequestMapping("/countcontentarticlebytype")
-    public ContentArticleCustomizeResponse countContentArticleByType() {
+    @RequestMapping("/countcontentarticlebytype/{type}")
+    public ContentArticleCustomizeResponse countContentArticleByType(@PathVariable String type) {
         ContentArticleCustomizeResponse response = new ContentArticleCustomizeResponse();
-        Integer count = contentArticleService.countContentArticleByType();
+        Integer count = contentArticleService.countContentArticleByType(type);
         if (count != null) {
             response.setCount(count);
             return response;
@@ -297,7 +297,7 @@ public class ContentArticleController {
             params.put("limitStart", -1);
             params.put("limitEnd", -1);
             // 查询总数
-            Integer count = contentArticleService.countContentArticleByType();
+            Integer count = contentArticleService.countContentArticleByType(form.getType());
             if (count != null && count > 0) {
                 // 构造分页
                 if(form.getCurrentPage()<=0){

@@ -63,7 +63,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	 * 汇消费的项目类型编号
 	 */
 	public static int PROJECT_TYPE_HXF = 8;
-	public static JedisPool pool = RedisUtils.getPool();
 
 	/**
 	 * 根据主键判断权限维护中数据是否存在
@@ -109,121 +108,130 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	 */
 	@Override
 	public synchronized void insertRecord(BorrowCommonBean borrowBean,String adminUsername,int adminId) throws Exception {
-		Jedis jedis = pool.getResource();
-		// 项目类型
-		String projectType = borrowBean.getProjectType().toString();
-		String beforeFix = this.getBorrowProjectClass(projectType);
-		String borrowPreNid = borrowBean.getBorrowPreNid();
-		List<BorrowCommonNameAccountVO> borrowCommonNameAccountList = borrowBean.getBorrowCommonNameAccountList();
-		String isChaibiao = borrowBean.getIsChaibiao();
-		// 借款标题 & 借款金额
-		if (!"yes".equals(isChaibiao)) {
-			borrowCommonNameAccountList = new ArrayList<BorrowCommonNameAccountVO>();
-			BorrowCommonNameAccountVO borrowCommonNameAccount = new BorrowCommonNameAccountVO();
-			borrowCommonNameAccount.setNames(borrowBean.getName());
-			borrowCommonNameAccount.setAccounts(borrowBean.getAccount());
-			borrowCommonNameAccountList.add(borrowCommonNameAccount);
-		}
-		if (borrowCommonNameAccountList != null && borrowCommonNameAccountList.size() > 0) {
-			// 遍历相应的拆标数据
-			for (int i = 0; i < borrowCommonNameAccountList.size(); i++) {
-				BorrowCommonNameAccountVO borrowCommonNameAccount = borrowCommonNameAccountList.get(i);
-				String name = borrowCommonNameAccount.getNames();
-				String account = borrowCommonNameAccount.getAccounts();
-				if (StringUtils.isNotEmpty(name) && StringUtils.isNotEmpty(account)) {
-					// 操作redis
-					String borrowPreNidNew = "";
-					String borrowNid = "";
-					// 拿取实际的项目编号
-					// 如果是 现金贷  或者 汇分期  或者 汇融贷 的项目类型,
-					if(("15".equals(projectType)) || ("16".equals(projectType)) || ("19".equals(projectType))){
-						while ("OK".equals(jedis.watch("xjdBorrowPreNid"))) {
-							List<Object> result = null;
-							Transaction tx = jedis.multi();
-							borrowPreNidNew = RedisUtils.get("xjdBorrowPreNid");
-							if (StringUtils.isBlank(borrowPreNidNew)) {
-								tx.set("xjdBorrowPreNid", borrowPreNid);
-								borrowPreNidNew = borrowPreNid;
-								result = tx.exec();
-							} else if (borrowPreNidNew != null) {
-								if (Long.parseLong(borrowPreNid) > Long.parseLong(borrowPreNidNew)) {
-									borrowPreNidNew = (String.valueOf(borrowPreNid));
-								} else {
-									borrowPreNidNew = (String.valueOf(Long.valueOf(borrowPreNidNew) + 1));
-								}
-								tx.set("xjdBorrowPreNid", borrowPreNidNew);
-								result = tx.exec();
-							}
-							if (result == null || result.isEmpty()) {
-								jedis.unwatch();
-							} else {
-								String ret = (String) result.get(0);
-								if (ret != null && "OK".equals(ret)) {
-									if (i == 0) {
-										borrowPreNid = borrowPreNidNew;
+		JedisPool poolNew = RedisUtils.getPool();
+		Jedis jedis = poolNew.getResource();
+		try{
+			// 项目类型
+			String projectType = borrowBean.getProjectType().toString();
+			String beforeFix = this.getBorrowProjectClass(projectType);
+			String borrowPreNid = borrowBean.getBorrowPreNid();
+			List<BorrowCommonNameAccountVO> borrowCommonNameAccountList = borrowBean.getBorrowCommonNameAccountList();
+			String isChaibiao = borrowBean.getIsChaibiao();
+			// 借款标题 & 借款金额
+			if (!"yes".equals(isChaibiao)) {
+				borrowCommonNameAccountList = new ArrayList<BorrowCommonNameAccountVO>();
+				BorrowCommonNameAccountVO borrowCommonNameAccount = new BorrowCommonNameAccountVO();
+				borrowCommonNameAccount.setNames(borrowBean.getName());
+				borrowCommonNameAccount.setAccounts(borrowBean.getAccount());
+				borrowCommonNameAccountList.add(borrowCommonNameAccount);
+			}
+			if (borrowCommonNameAccountList != null && borrowCommonNameAccountList.size() > 0) {
+				// 遍历相应的拆标数据
+				for (int i = 0; i < borrowCommonNameAccountList.size(); i++) {
+					BorrowCommonNameAccountVO borrowCommonNameAccount = borrowCommonNameAccountList.get(i);
+					String name = borrowCommonNameAccount.getNames();
+					String account = borrowCommonNameAccount.getAccounts();
+					if (StringUtils.isNotEmpty(name) && StringUtils.isNotEmpty(account)) {
+						// 操作redis
+						String borrowPreNidNew = "";
+						String borrowNid = "";
+						// 拿取实际的项目编号
+						// 如果是 现金贷  或者 汇分期  或者 汇融贷 的项目类型,
+						if(("15".equals(projectType)) || ("16".equals(projectType)) || ("19".equals(projectType))){
+							while ("OK".equals(jedis.watch("xjdBorrowPreNid"))) {
+								List<Object> result = null;
+								Transaction tx = jedis.multi();
+								borrowPreNidNew = RedisUtils.get("xjdBorrowPreNid");
+								if (StringUtils.isBlank(borrowPreNidNew)) {
+									tx.set("xjdBorrowPreNid", borrowPreNid);
+									borrowPreNidNew = borrowPreNid;
+									result = tx.exec();
+								} else if (borrowPreNidNew != null) {
+									if (Long.parseLong(borrowPreNid) > Long.parseLong(borrowPreNidNew)) {
+										borrowPreNidNew = (String.valueOf(borrowPreNid));
+									} else {
+										borrowPreNidNew = (String.valueOf(Long.valueOf(borrowPreNidNew) + 1));
 									}
-									borrowNid = beforeFix + borrowPreNidNew;
-									break;
-								} else {
+									tx.set("xjdBorrowPreNid", borrowPreNidNew);
+									result = tx.exec();
+								}
+								if (result == null || result.isEmpty()) {
 									jedis.unwatch();
+								} else {
+									String ret = (String) result.get(0);
+									if (ret != null && "OK".equals(ret)) {
+										if (i == 0) {
+											borrowPreNid = borrowPreNidNew;
+										}
+										borrowNid = beforeFix + borrowPreNidNew;
+										break;
+									} else {
+										jedis.unwatch();
+									}
+								}
+							}
+						}else{
+							while ("OK".equals(jedis.watch("borrowPreNid"))) {
+								List<Object> result = null;
+								Transaction tx = jedis.multi();
+								borrowPreNidNew = RedisUtils.get("borrowPreNid");
+								if (StringUtils.isBlank(borrowPreNidNew)) {
+									tx.set("borrowPreNid", borrowPreNid);
+									borrowPreNidNew = borrowPreNid;
+									result = tx.exec();
+								} else if (borrowPreNidNew != null) {
+									if(Long.parseLong(borrowPreNid)>Long.parseLong(borrowPreNidNew)){
+										borrowPreNidNew = (String.valueOf(borrowPreNid));
+									}else{
+										borrowPreNidNew = (String.valueOf(Long.valueOf(borrowPreNidNew) + 1));
+									}
+									tx.set("borrowPreNid", borrowPreNidNew);
+									result = tx.exec();
+								}
+								if (result == null || result.isEmpty()) {
+									jedis.unwatch();
+								} else {
+									String ret = (String) result.get(0);
+									if (ret != null && "OK".equals(ret)) {
+										if (i == 0) {
+											borrowPreNid = borrowPreNidNew;
+										}
+										borrowNid = beforeFix + borrowPreNidNew;
+										break;
+									} else {
+										jedis.unwatch();
+									}
 								}
 							}
 						}
-					}else{
-						while ("OK".equals(jedis.watch("borrowPreNid"))) {
-							List<Object> result = null;
-							Transaction tx = jedis.multi();
-							borrowPreNidNew = RedisUtils.get("borrowPreNid");
-							if (StringUtils.isBlank(borrowPreNidNew)) {
-								tx.set("borrowPreNid", borrowPreNid);
-								borrowPreNidNew = borrowPreNid;
-								result = tx.exec();
-							} else if (borrowPreNidNew != null) {
-								if(Long.parseLong(borrowPreNid)>Long.parseLong(borrowPreNidNew)){
-									borrowPreNidNew = (String.valueOf(borrowPreNid));
-								}else{
-									borrowPreNidNew = (String.valueOf(Long.valueOf(borrowPreNidNew) + 1));
-								}
-								tx.set("borrowPreNid", borrowPreNidNew);
-								result = tx.exec();
-							}
-							if (result == null || result.isEmpty()) {
-								jedis.unwatch();
-							} else {
-								String ret = (String) result.get(0);
-								if (ret != null && "OK".equals(ret)) {
-									if (i == 0) {
-										borrowPreNid = borrowPreNidNew;
-									}
-									borrowNid = beforeFix + borrowPreNidNew;
-									break;
-								} else {
-									jedis.unwatch();
-								}
-							}
-						}
-					}
-					// 插入huiyingdai_borrow
-					BorrowWithBLOBs borrow = new BorrowWithBLOBs();
-					// 借款表插入
-					this.insertBorrowCommonData(borrowBean, borrow, borrowPreNid, borrowPreNidNew, borrowNid, name, account,adminUsername);
-					// 删写redis的定时发标时间
-					changeOntimeOfRedis(borrow);
-					//添加修改日志
-                    BorrowLog borrowLog = new BorrowLog();
-                    borrowLog.setBorrowNid(borrowNid);
+						// 插入huiyingdai_borrow
+						BorrowWithBLOBs borrow = new BorrowWithBLOBs();
+						// 借款表插入
+						this.insertBorrowCommonData(borrowBean, borrow, borrowPreNid, borrowPreNidNew, borrowNid, name, account,adminUsername);
+						// 删写redis的定时发标时间
+						changeOntimeOfRedis(borrow);
+						//添加修改日志
+						BorrowLog borrowLog = new BorrowLog();
+						borrowLog.setBorrowNid(borrowNid);
 //                    String statusNameString = getBorrowStatusName(borrowBean.getStatus());
 //                    borrowLog.setBorrowStatus(statusNameString);
-                    borrowLog.setBorrowStatusCd(StringUtil.isBlank(borrowBean.getStatus())?0:Integer.valueOf(borrowBean.getStatus()));
-                    borrowLog.setType(BORROW_LOG_ADD);
-                    borrowLog.setCreateTime(new Date());
-                    borrowLog.setCreateUserId(adminId);
-                    borrowLog.setCreateUserName(adminUsername);
+						borrowLog.setBorrowStatusCd(StringUtil.isBlank(borrowBean.getStatus())?0:Integer.valueOf(borrowBean.getStatus()));
+						borrowLog.setType(BORROW_LOG_ADD);
+						borrowLog.setCreateTime(new Date());
+						borrowLog.setCreateUserId(adminId);
+						borrowLog.setCreateUserName(adminUsername);
 
-                    borrowLogMapper.insert(borrowLog);
+						borrowLogMapper.insert(borrowLog);
+					}
 				}
 			}
+		}catch(Exception e){
+			logger.info("抛出异常:[{}]",e);
+		}finally {
+			//返还
+			RedisUtils.returnResource(poolNew,jedis);
 		}
+
 	}
 
 	/**

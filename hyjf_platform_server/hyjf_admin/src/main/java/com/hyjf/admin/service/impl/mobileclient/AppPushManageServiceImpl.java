@@ -56,4 +56,24 @@ public class AppPushManageServiceImpl  implements AppPushManageService {
     public boolean deletePushManage(Integer id) {
         return amAdminClient.deletePushManage(id);
     }
+
+    /**
+     * 根据ID 获取单条记录的内容
+     * @param id
+     * @return
+     */
+    @Override
+    public AppPushManageResponse getAppPushManageInfoById(Integer id) {
+        return amAdminClient.getAppPushManageInfoById(id);
+    }
+
+    /**
+     * 根据ID更新记录状态
+     * @param id
+     * @return
+     */
+    @Override
+    public boolean updatePushManageStatusById(Integer id) {
+        return amAdminClient.updatePushManageStatusById(id);
+    }
 }

@@ -3,7 +3,7 @@
  */
 package com.hyjf.am.user.dao.mapper.customize;
 
-import com.hyjf.am.user.dao.model.customize.AdminUserPayAuthCustomize;
+import com.hyjf.am.user.dao.model.customize.UserPayAuthCustomize;
 
 import java.util.List;
 import java.util.Map;
@@ -19,7 +19,7 @@ public interface UserPayAuthCustomizeMapper {
      * @param authUser
      * @return
      */
-    List<AdminUserPayAuthCustomize> selectUserPayAuthList(Map<String, Object> authUser);
+    List<UserPayAuthCustomize> selectUserPayAuthList(Map<String, Object> authUser);
     /**
      * 获取缴费授权的记录数目
      * @param userAuth
@@ -38,7 +38,7 @@ public interface UserPayAuthCustomizeMapper {
      * @param authUser
      * @return
      */
-    List<AdminUserPayAuthCustomize> selectUserRePayAuthList(Map<String, Object> authUser);
+    List<UserPayAuthCustomize> selectUserRePayAuthList(Map<String, Object> authUser);
 
 
 

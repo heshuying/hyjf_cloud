@@ -3,15 +3,13 @@
  */
 package com.hyjf.am.user.service.admin.membercentre.impl;
 
-import com.hyjf.am.trade.dao.mapper.auto.CreditTenderMapper;
-import com.hyjf.am.trade.dao.mapper.customize.UserRepayListCustomizeMapper;
 import com.hyjf.am.user.dao.mapper.auto.HjhUserAuthMapper;
 import com.hyjf.am.user.dao.mapper.customize.UserPayAuthCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.HjhUserAuth;
 import com.hyjf.am.user.dao.model.auto.HjhUserAuthExample;
 import com.hyjf.am.user.dao.model.auto.HjhUserAuthLog;
 import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.dao.model.customize.AdminUserPayAuthCustomize;
+import com.hyjf.am.user.dao.model.customize.UserPayAuthCustomize;
 import com.hyjf.am.user.service.admin.membercentre.UserPayAuthService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.util.GetDate;
@@ -43,7 +41,7 @@ public class UserPayAuthServiceImpl extends BaseServiceImpl implements UserPayAu
      * @return
      */
     @Override
-    public List<AdminUserPayAuthCustomize> selectUserPayAuthList(Map<String, Object> mapParam, int limitStart, int limitEnd) {
+    public List<UserPayAuthCustomize> selectUserPayAuthList(Map<String, Object> mapParam, int limitStart, int limitEnd) {
         // 封装查询条件
         if (limitStart == 0 || limitStart > 0) {
             mapParam.put("limitStart", limitStart);
@@ -51,7 +49,7 @@ public class UserPayAuthServiceImpl extends BaseServiceImpl implements UserPayAu
         if (limitEnd > 0) {
             mapParam.put("limitEnd", limitEnd);
         }
-        List<AdminUserPayAuthCustomize> adminUserPayAuthCustomizeList = userPayAuthCustomizeMapper.selectUserPayAuthList(mapParam);
+        List<UserPayAuthCustomize> adminUserPayAuthCustomizeList = userPayAuthCustomizeMapper.selectUserPayAuthList(mapParam);
         return adminUserPayAuthCustomizeList;
     }
 
@@ -128,7 +126,7 @@ public class UserPayAuthServiceImpl extends BaseServiceImpl implements UserPayAu
      * @return
      */
     @Override
-    public List<AdminUserPayAuthCustomize> selectUserRePayAuthList(Map<String, Object> mapParam, int limitStart, int limitEnd) {
+    public List<UserPayAuthCustomize> selectUserRePayAuthList(Map<String, Object> mapParam, int limitStart, int limitEnd) {
         // 封装查询条件
         if (limitStart == 0 || limitStart > 0) {
             mapParam.put("limitStart", limitStart);
@@ -136,7 +134,7 @@ public class UserPayAuthServiceImpl extends BaseServiceImpl implements UserPayAu
         if (limitEnd > 0) {
             mapParam.put("limitEnd", limitEnd);
         }
-        List<AdminUserPayAuthCustomize> adminUserPayAuthCustomizeList = userPayAuthCustomizeMapper.selectUserRePayAuthList(mapParam);
+        List<UserPayAuthCustomize> adminUserPayAuthCustomizeList = userPayAuthCustomizeMapper.selectUserRePayAuthList(mapParam);
         return adminUserPayAuthCustomizeList;
     }
 

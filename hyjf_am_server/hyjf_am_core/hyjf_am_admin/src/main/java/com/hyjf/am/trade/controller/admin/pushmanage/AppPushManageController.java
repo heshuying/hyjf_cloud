@@ -10,8 +10,11 @@ import com.hyjf.am.trade.dao.model.auto.AppPushManage;
 import com.hyjf.am.trade.service.admin.pushmanage.AppPushManageService;
 import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetDateUtils;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -77,7 +80,6 @@ public class AppPushManageController extends BaseController {
 
         /**
          * 当选择原生时强制设置跳转内容值为 0
-         * 选择H5时,赋为选择值+1
          * 原生和H5 URL 时,推送内容和缩略图为空
          * H5 自定义是url内容为空
          */
@@ -86,13 +88,12 @@ public class AppPushManageController extends BaseController {
             pushManageRequest.setContent("");
             pushManageRequest.setThumb("");
         }else {
-            if (pushManageRequest.getJumpContent() == 0){
+            if (pushManageRequest.getJumpContent() == 1){
                 pushManageRequest.setContent("");
                 pushManageRequest.setThumb("");
             }else{
                 pushManageRequest.setJumpUrl("");
             }
-            pushManageRequest.setJumpContent((pushManageRequest.getJumpContent()+1));
         }
 
         int rtnCode = appPushManageService.insertPushManage(pushManageRequest);
@@ -114,7 +115,6 @@ public class AppPushManageController extends BaseController {
     public boolean updatePushManage(@RequestBody AppPushManageRequest pushManageRequest){
 
         //当选择原生时强制设置跳转内容值为 0
-        //选择H5时,赋为选择值+1
         //原生和H5 URL 时,推送内容和缩略图为空
         //H5 自定义是url内容为空
         if (pushManageRequest.getJumpType() == 0){
@@ -122,13 +122,12 @@ public class AppPushManageController extends BaseController {
             pushManageRequest.setContent("");
             pushManageRequest.setThumb("");
         }else {
-            if (pushManageRequest.getJumpContent() == 0){
+            if (pushManageRequest.getJumpContent() == 1){
                 pushManageRequest.setContent("");
                 pushManageRequest.setThumb("");
             }else{
                 pushManageRequest.setJumpUrl("");
             }
-            pushManageRequest.setJumpContent((pushManageRequest.getJumpContent()+1));
         }
 
         // 更新返回状态
@@ -150,6 +149,58 @@ public class AppPushManageController extends BaseController {
         int deleteCode = appPushManageService.deletePushManage(id);
         if (deleteCode > 0){
             return true;
+        }
+        return false;
+    }
+
+    /**
+     * 根据ID 获取单条详细信息
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/getAppPushManageInfoById/{id}", method = RequestMethod.GET)
+    public AppPushManageResponse getAppPushManageInfoById(@PathVariable Integer id){
+        AppPushManageResponse pushManageResponse = new AppPushManageResponse();
+        AppPushManageVO pushManageVO = new AppPushManageVO();
+        AppPushManage pushManage = appPushManageService.getAppPushManageInfoById(id);
+
+        if (null != pushManage){
+            BeanUtils.copyProperties(pushManage, pushManageVO);
+            pushManageVO.setCreateTimeStr(GetDate.formatDate(pushManage.getCreateTime()));
+            pushManageVO.setTimeStartStr(GetDate.formatDate(pushManage.getTimeStart()));
+            pushManageVO.setTimeEndStr(GetDate.formatDate(pushManage.getTimeEnd()));
+            pushManageResponse.setResult(pushManageVO);
+            pushManageResponse.setRtn(AdminResponse.SUCCESS);
+        }else {
+            pushManageResponse.setRtn(AdminResponse.ERROR);
+        }
+        return pushManageResponse;
+    }
+
+    /**
+     * 根据ID 更新单条记录状态
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/updatePushManageStatusById/{id}", method = RequestMethod.GET)
+    public boolean updatePushManageStatusById(@PathVariable Integer id){
+        AppPushManageRequest pushManageRequest = new AppPushManageRequest();
+
+        AppPushManage pushManage = appPushManageService.getAppPushManageInfoById(id);
+
+        pushManageRequest.setId(id);
+
+        // 根据当前信息的状态,判断应该讲状态更新到的状态
+        if (pushManage.getStatus() == 1){
+            pushManageRequest.setStatus(0);
+        }else {
+            pushManageRequest.setStatus(1);
+        }
+
+        int updateCode = appPushManageService.updatePushManage(pushManageRequest);
+
+        if (updateCode > 0){
+            return  true;
         }
         return false;
     }

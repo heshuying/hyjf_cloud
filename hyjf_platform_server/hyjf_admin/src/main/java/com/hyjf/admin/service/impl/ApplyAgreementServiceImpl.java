@@ -346,11 +346,13 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 //this.rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));
                 agreements++;
             }
-            if(!creditRepayAll) {
+            BigDecimal assignCapital = recoverCapital.subtract(creditAmount);
+            assignPay = borrowRecover.getRecoverInterestYes().subtract(assignPay);
+            if((!assignCapital.equals(new BigDecimal("0.00"))) && (!assignPay.equals(new BigDecimal("0.00")))){
                 /***************计算剩余部分********/
                 //垫付协议申请-协议生成详情
                 FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"-"+repay_period,recoverUserId,5,2);
-                BigDecimal assignCapital = recoverCapital.subtract(creditAmount);
+                recoverCapital.subtract(creditAmount);
                 assignPay = borrowRecover.getRecoverInterestYes().subtract(assignPay);
                 borrowRecover.setRecoverCapital(assignCapital);//剩余部分已还本金
                 borrowRecover.setRecoverInterestYes(assignPay);//剩余部分已还利息
@@ -407,10 +409,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
      * @param borrowRecover
      */
     private int hjhConvertAndSendPlan(BorrowAndInfoVO borrow,BorrowInfoVO borrowInfo,BorrowRecoverVO borrowRecoverP, BorrowRecoverPlanVO borrowRecover){
-        logger.info("-------------------------处理分期债转-汇计划，处理分期债转borrow"+JSONObject.toJSON(borrow));
-        logger.info("-------------------------处理分期债转-汇计划，处理分期债转borrowInfo"+JSONObject.toJSON(borrowInfo));
-        logger.info("-------------------------处理分期债转-汇计划，处理分期债转borrowRecoverP"+JSONObject.toJSON(borrowRecoverP));
-        logger.info("-------------------------处理分期债转-汇计划，处理分期债转borrowRecover"+JSONObject.toJSON(borrowRecover));
+//        logger.info("-------------------------处理分期债转-汇计划，处理分期债转borrow"+JSONObject.toJSON(borrow));
+//        logger.info("-------------------------处理分期债转-汇计划，处理分期债转borrowInfo"+JSONObject.toJSON(borrowInfo));
+//        logger.info("-------------------------处理分期债转-汇计划，处理分期债转borrowRecoverP"+JSONObject.toJSON(borrowRecoverP));
+//        logger.info("-------------------------处理分期债转-汇计划，处理分期债转borrowRecover"+JSONObject.toJSON(borrowRecover));
         int agreements= 0;
         String borrow_nid = borrow.getBorrowNid();
         //承接人都是垫付机构
@@ -430,6 +432,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         int recoverUserId= borrowRecover.getUserId();
         List<HjhDebtCreditRepayVO> creditRepayListPlan = this.selectHjhCreditRepay(nid,repay_period);
         if(creditRepayListPlan!=null && creditRepayListPlan.size()>0){//债转
+
             boolean creditRepayAll = (creditAmountp.compareTo(new BigDecimal("0.00"))==1) && (creditAmountp.compareTo(recoverCapitalp)==0);//是否是全部债转
             BigDecimal assignPay  = new BigDecimal("0.00");//所有债转已还利息总和（结算剩余部分用）
             //填充所有债转信息
@@ -459,11 +462,13 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 //this.rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));
                 agreements++;
             }
-            if(!creditRepayAll) {
+            BigDecimal assignCapital = recoverCapital.subtract(creditAmount);
+            assignPay = borrowRecover.getRecoverInterestYes().subtract(assignPay);
+            if((!assignCapital.equals(new BigDecimal("0.00"))) && (!assignPay.equals(new BigDecimal("0.00")))){
                 /***************计算剩余部分********/
                 //垫付协议申请-协议生成详情
                 FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"-"+repay_period,recoverUserId,6,2);
-                BigDecimal assignCapital = recoverCapital.subtract(creditAmount);
+                recoverCapital.subtract(creditAmount);
                 assignPay = borrowRecover.getRecoverInterestYes().subtract(assignPay);
                 borrowRecover.setRecoverCapital(assignCapital);//剩余部分已还本金
                 borrowRecover.setRecoverInterestYes(assignPay);//剩余部分已还利息
@@ -572,11 +577,13 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 //this.rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));
                 agreements++;
             }
-            if(!creditRepayAll) {
+            BigDecimal assignCapital = recoverCapital.subtract(creditAmount);
+            assignPay = borrowRecover.getRecoverInterestYes().subtract(assignPay);
+            if((!assignCapital.equals(new BigDecimal("0.00"))) && (!assignPay.equals(new BigDecimal("0.00")))){
                 /***************计算剩余部分********/
                 //垫付协议申请-协议生成详情
                 FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"-"+repay_period,repayOrgUserId,5,2);
-                BigDecimal assignCapital = recoverCapital.subtract(creditAmount);
+                recoverCapital.subtract(creditAmount);
                 assignPay = borrowRecover.getRecoverInterestYes().subtract(assignPay);
                 borrowRecover.setRecoverCapital(assignCapital);//剩余部分已还本金
                 borrowRecover.setRecoverInterestYes(assignPay);//剩余部分已还利息
@@ -682,11 +689,13 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 //this.rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));
                 agreements++;
             }
-            if(!creditRepayAll) {
+            BigDecimal assignCapital = recoverCapital.subtract(creditAmount);
+            assignPay = borrowRecover.getRecoverInterestYes().subtract(assignPay);
+            if((!assignCapital.equals(new BigDecimal("0.00"))) && (!assignPay.equals(new BigDecimal("0.00")))){
                 /***************计算剩余部分********/
                 //垫付协议申请-协议生成详情
                 FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"-"+repay_period,repayOrgUserId,6,2);
-                BigDecimal assignCapital = recoverCapital.subtract(creditAmount);
+                recoverCapital.subtract(creditAmount);
                 assignPay = borrowRecover.getRecoverInterestYes().subtract(assignPay);
                 borrowRecover.setRecoverCapital(assignCapital);//剩余部分已还本金
                 borrowRecover.setRecoverInterestYes(assignPay);//剩余部分已还利息

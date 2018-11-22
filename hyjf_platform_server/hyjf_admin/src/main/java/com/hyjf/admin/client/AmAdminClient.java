@@ -984,6 +984,22 @@ public interface AmAdminClient {
     boolean deletePushManage(Integer id);
 
     /**
+     * 根据ID获取单条记录的详细信息
+     * @param id
+     * @return
+     * @Author: huanghui
+     */
+    AppPushManageResponse getAppPushManageInfoById(Integer id);
+
+    /**
+     * 根据ID 更新单条记录的状态
+     * @param id
+     * @return
+     * @Author : huanghui
+     */
+    boolean updatePushManageStatusById(Integer id);
+
+    /**
      * 查询千乐渠道散标数据
      * @return
      */

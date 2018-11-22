@@ -21,7 +21,7 @@ public class UserPayAuthRequestBean extends BasePage {
     @ApiModelProperty(value = "授权状态")
     public String authType;
     @ApiModelProperty(value = "电子账号")
-    public String bankCode;
+    public String bankid;
     @ApiModelProperty(value = "签约到期日开始")
     public String signTimeStart;
     @ApiModelProperty(value = "签约到期日结束")
@@ -59,14 +59,6 @@ public class UserPayAuthRequestBean extends BasePage {
         this.authType = authType;
     }
 
-    public String getBankCode() {
-        return bankCode;
-    }
-
-    public void setBankCode(String bankCode) {
-        this.bankCode = bankCode;
-    }
-
     public String getSignTimeStart() {
         return signTimeStart;
     }
@@ -81,5 +73,13 @@ public class UserPayAuthRequestBean extends BasePage {
 
     public void setSignTimeEnd(String signTimeEnd) {
         this.signTimeEnd = signTimeEnd;
+    }
+
+    public String getBankid() {
+        return bankid;
+    }
+
+    public void setBankid(String bankid) {
+        this.bankid = bankid;
     }
 }

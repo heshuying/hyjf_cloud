@@ -169,9 +169,9 @@ public class AmConfigClientImpl implements AmConfigClient {
 	 * @return
 	 */
 	@Override
-	public Integer countContentArticleByType() {
+	public Integer countContentArticleByType(String type) {
 		ContentArticleCustomizeResponse response = restTemplate.getForObject(
-				"http://AM-CONFIG/am-config/article/countcontentarticlebytype",
+				"http://AM-CONFIG/am-config/article/countcontentarticlebytype/" + type,
 				ContentArticleCustomizeResponse.class);
 		if (response != null) {
 			return response.getCount();
