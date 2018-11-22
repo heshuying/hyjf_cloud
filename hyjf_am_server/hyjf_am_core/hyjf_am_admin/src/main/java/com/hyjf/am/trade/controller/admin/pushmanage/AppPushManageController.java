@@ -172,6 +172,8 @@ public class AppPushManageController extends BaseController {
             BeanUtils.copyProperties(pushManage, pushManageVO);
             pushManageResponse.setResult(pushManageVO);
             pushManageResponse.setRtn(AdminResponse.SUCCESS);
+        }else {
+            pushManageResponse.setRtn(AdminResponse.ERROR);
         }
         return pushManageResponse;
     }
