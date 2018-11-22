@@ -10,8 +10,11 @@ import java.util.Date;
  */
 public class AppPushManageRequestBean extends BasePage {
 
-    @ApiModelProperty(value = "当前ID")
-    private Integer id;
+//    @ApiModelProperty(value = "当前ID")
+//    private Integer id;
+
+    @ApiModelProperty(value = "查询ID")
+    private String ids;
 
     @ApiModelProperty(value = "标题名称")
     private String title;
@@ -43,12 +46,20 @@ public class AppPushManageRequestBean extends BasePage {
     @ApiModelProperty(value = "内容")
     private String content;
 
-    public Integer getId() {
-        return id;
+//    public Integer getId() {
+//        return id;
+//    }
+//
+//    public void setId(Integer id) {
+//        this.id = id;
+//    }
+
+    public String getIds() {
+        return ids;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setIds(String ids) {
+        this.ids = ids;
     }
 
     public String getTitle() {

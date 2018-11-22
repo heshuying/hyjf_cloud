@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service.projectlist.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
@@ -1216,6 +1217,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                 if (tzList != null && tzList.size() > 0) {
                     WebUserInvestListCustomizeVO userInvest = tzList.get(0);
                     if(((userId+"").equals(userInvest.getUserId()))){
+                        logger.info("userInvest:"+JSONObject.toJSONString(userInvest));
                         userInvest.setRealName(userInvest.getRealName().substring(0,1)+"**");
                         userInvest.setUsername(userInvest.getUsername().substring(0,1)+"*****");
                         userInvest.setIdCard(userInvest.getIdCard().substring(0,4)+"**************");

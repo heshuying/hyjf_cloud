@@ -40,9 +40,10 @@ public class AppPushManageServiceImpl implements AppPushManageService {
         }
 
         // 状态不为空
-        if (pushManageRequest.getStatus().toString() != "" && pushManageRequest.getStatus() != null){
-            criteria.andStatusEqualTo(pushManageRequest.getStatus());
-        }
+//        if (pushManageRequest.getStatus().toString() != "" && pushManageRequest.getStatus() != null){
+//            criteria.andStatusEqualTo(pushManageRequest.getStatus());
+//        }
+
 
         if (StringUtils.isNotBlank(pushManageRequest.getTimeStart())){
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
@@ -73,7 +74,7 @@ public class AppPushManageServiceImpl implements AppPushManageService {
         }
 
         // 状态不为空
-        if (pushManageRequest.getStatus().toString() != "" && pushManageRequest.getStatus() != null){
+        if (pushManageRequest.getStatus() != null){
             criteria.andStatusEqualTo(pushManageRequest.getStatus());
         }
 
@@ -143,5 +144,15 @@ public class AppPushManageServiceImpl implements AppPushManageService {
     @Override
     public int deletePushManage(Integer id) {
         return appPushManageMapper.deleteByPrimaryKey(id);
+    }
+
+    /**
+     * 获取单条详细信息
+     * @param id
+     * @return
+     */
+    @Override
+    public AppPushManage getAppPushManageInfoById(Integer id) {
+        return appPushManageMapper.selectByPrimaryKey(id);
     }
 }

@@ -3,10 +3,7 @@ package com.hyjf.am.trade.controller.batch;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountWithdrawResponse;
-import com.hyjf.am.resquest.trade.BatchBorrowTenderCustomizeRequest;
-import com.hyjf.am.resquest.trade.BorrowCreditRequest;
-import com.hyjf.am.resquest.trade.BorrowTenderTmpRequest;
-import com.hyjf.am.resquest.trade.TenderCancelRequest;
+import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BatchBorrowTenderCustomize;
@@ -180,10 +177,10 @@ public class BankExceptionController extends BaseController {
      * @return
      */
     @PostMapping("/handlerAfterCash")
-    public Boolean handlerAfterCash(@RequestBody JSONObject params){
+    public Boolean handlerAfterCash(@RequestBody AfterCashParamRequest request){
         Boolean ret = true;
         try {
-            ret = bankWithdrawService.updateHandlerAfterCash(params);
+            ret = bankWithdrawService.updateHandlerAfterCash(request);
         }catch (Exception e){
             ret = false;
         }
