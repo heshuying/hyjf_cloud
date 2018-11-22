@@ -117,7 +117,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	 */
 	@Override
 	public synchronized void insertRecord(BorrowCommonBean borrowBean,String adminUsername,int adminId) throws Exception {
-		/*Jedis jedis = pool.getResource();加trycatch*/
 		// 项目类型
 		String projectType = borrowBean.getProjectType().toString();
 		String beforeFix = this.getBorrowProjectClass(projectType);
