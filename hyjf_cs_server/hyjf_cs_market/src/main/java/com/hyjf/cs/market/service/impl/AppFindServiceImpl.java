@@ -30,8 +30,8 @@ public class AppFindServiceImpl extends BaseMarketServiceImpl implements AppFind
      * @return
      */
     @Override
-    public Integer countContentArticleByType() {
-        return amConfigClient.countContentArticleByType();
+    public Integer countContentArticleByType(String type) {
+        return amConfigClient.countContentArticleByType(type);
     }
 
     /**

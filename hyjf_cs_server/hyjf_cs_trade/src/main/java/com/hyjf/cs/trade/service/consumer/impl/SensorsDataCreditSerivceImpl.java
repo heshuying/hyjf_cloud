@@ -171,7 +171,7 @@ public class SensorsDataCreditSerivceImpl extends BaseServiceImpl implements Sen
                 // 推荐人用户ID
                 Integer spreadsUserId = spreadsUsers.getSpreadsUserId();
                 // 推荐人用户名
-                UserVO spreadsUser = this.amUserClient.findUserById(userId);
+                UserVO spreadsUser = this.amUserClient.findUserById(spreadsUserId);
                 // 注册时邀请人
                 properties.put("inviter", spreadsUser == null ? "" : spreadsUser.getUsername());
             }

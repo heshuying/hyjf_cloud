@@ -378,10 +378,8 @@ public class AppBankWithdrawController extends BaseTradeController {
         }
 
         try {
-            /** 充值接口 */
+            /** 提现接口 */
             String withdrawUrl = super.getFrontHost(systemConfig,platform) +"/public/formsubmit?requestType=" +CommonConstant.APP_BANK_REQUEST_TYPE_WITHDRAW;
-            String uuid = getUUID();
-            RedisUtils.set(RedisConstants.WITHRAW+cardNo, uuid);
             ret.put("status", "0");
             ret.put("statusDesc", "成功");
             ret.put("request", requestStr);
@@ -399,17 +397,6 @@ public class AppBankWithdrawController extends BaseTradeController {
         }
         return ret;
     }
-    /**
-     * 生成UUID
-     * @return
-     */
-    public static String getUUID(){
-        UUID uuid=UUID.randomUUID();
-        String str = uuid.toString();
-        String uuidStr=str.replace("-", "");
-        return uuidStr;
-    }
-
 
     /**
      * 用户银行提现

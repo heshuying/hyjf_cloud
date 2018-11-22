@@ -6,9 +6,10 @@ import com.hyjf.admin.beans.request.LoanCoverUserRequestBean;
 import com.hyjf.admin.beans.vo.LoanCoverUserCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.LoanCoverService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -24,10 +25,6 @@ import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import com.hyjf.pay.lib.fadada.util.DzqzCallUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,6 +52,7 @@ public class LoanCoverController extends BaseController {
     private LoanCoverService loanCoverService;
     @Autowired
     SystemConfig systemConfig;
+    public static final String PERMISSIONS = "loancover";
 
     /**
      * 获取借款盖章用户列表
@@ -64,6 +62,7 @@ public class LoanCoverController extends BaseController {
     @ApiOperation(value = "获取借款盖章用户列表", notes = "获取借款盖章用户列表")
     @PostMapping(value = "/selectLoancoverList")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<LoanCoverUserCustomizeVO>> selectLoancoverList(@RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) {
         LoanCoverUserRequest loanCoverUserRequest = new LoanCoverUserRequest();
         BeanUtils.copyProperties(loanCoverUserRequestBean, loanCoverUserRequest);
@@ -89,6 +88,7 @@ public class LoanCoverController extends BaseController {
     @ApiOperation(value = "初始化修改借款盖章用户", notes = "初始化修改借款盖章用户")
     @PostMapping(value = "/updateLoancoverInit")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult<LoanCoverUserCustomizeVO> updateLoancoverInit(HttpServletRequest request, HttpServletResponse response, @RequestBody String id) {
         LoanCoverUserResponse loanCoverUserResponse = loanCoverService.getLoanCoverUserById(id);
         if (null != loanCoverUserResponse) {
@@ -110,6 +110,7 @@ public class LoanCoverController extends BaseController {
     @ApiOperation(value = "添加借款盖章用户", notes = "添加借款盖章用户")
     @PostMapping(value = "/insertLoancover")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult insertLoancover(HttpServletRequest request, HttpServletResponse response, @RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) {
         LoanCoverUserRequest loanCoverUserRequest = new LoanCoverUserRequest();
         BeanUtils.copyProperties(loanCoverUserRequestBean, loanCoverUserRequest);
@@ -153,6 +154,7 @@ public class LoanCoverController extends BaseController {
     @ApiOperation(value = "修改借款盖章用户", notes = "修改借款盖章用户")
     @PostMapping(value = "/updateLoancover")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateLoancover(HttpServletRequest request, HttpServletResponse response, @RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) {
         //获取登录用户Id
         AdminSystemVO adminSystemVO = this.getUser(request);
@@ -266,6 +268,7 @@ public class LoanCoverController extends BaseController {
      */
     @ApiOperation(value = "导出借款盖章用户", notes = "导出借款盖章用户")
     @PostMapping(value = "/exportLoancover")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportExcelAccount(HttpServletRequest request, HttpServletResponse response, @RequestBody LoanCoverUserRequestBean loanCoverUserRequestBean) throws Exception {
         // 封装查询条件
         LoanCoverUserRequest loanCoverUserRequest = new LoanCoverUserRequest();
@@ -386,6 +389,7 @@ public class LoanCoverController extends BaseController {
     @ApiOperation(value = "借款盖章用户认证", notes = "借款盖章用户认证")
     @PostMapping(value = "/shareUser")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult shareUser(HttpServletRequest request, HttpServletResponse response, @RequestBody String loanId) {
         LoanCoverUserResponse loanCoverUserResponse = loanCoverService.getLoanCoverUserById(loanId);
         if (null != loanCoverUserResponse) {

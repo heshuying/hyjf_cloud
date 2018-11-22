@@ -5,7 +5,7 @@ package com.hyjf.am.user.service.admin.membercentre;
 
 import com.hyjf.am.user.dao.model.auto.HjhUserAuth;
 import com.hyjf.am.user.dao.model.auto.HjhUserAuthLog;
-import com.hyjf.am.user.dao.model.customize.AdminUserPayAuthCustomize;
+import com.hyjf.am.user.dao.model.customize.UserPayAuthCustomize;
 import com.hyjf.am.user.service.BaseService;
 
 import java.util.List;
@@ -25,7 +25,7 @@ public interface UserPayAuthService extends BaseService {
      * @param limitEnd
      * @return
      */
-    List<AdminUserPayAuthCustomize> selectUserPayAuthList(Map<String, Object> mapParam, int limitStart, int limitEnd);
+    List<UserPayAuthCustomize> selectUserPayAuthList(Map<String, Object> mapParam, int limitStart, int limitEnd);
 
     /**
      * 根据条件查询用户管理总数
@@ -60,7 +60,7 @@ public interface UserPayAuthService extends BaseService {
      * @param mapParam 筛选条件
      * @return
      */
-    List<AdminUserPayAuthCustomize> selectUserRePayAuthList(Map<String, Object> mapParam, int limitStart, int limitEnd);
+    List<UserPayAuthCustomize> selectUserRePayAuthList(Map<String, Object> mapParam, int limitStart, int limitEnd);
     /**
      * 根据条件获取还款授权总数
      *

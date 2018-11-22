@@ -6,7 +6,6 @@ import com.hyjf.admin.beans.request.UserPortraitRequestBean;
 import com.hyjf.admin.beans.vo.UserPortraitCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -17,17 +16,10 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.UserPortraitResponse;
 import com.hyjf.am.resquest.user.UserPortraitRequest;
 import com.hyjf.am.vo.user.UserPortraitVO;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringPool;
+import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,11 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * @author nxl
@@ -73,6 +61,15 @@ public class UserPortraitController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<UserPortraitCustomizeVO>> selectUserPortraitList(HttpServletRequest request, @RequestBody UserPortraitRequestBean userPortraitRequestBean) {
         logger.info("---获取用户画像列表 by param---  " + JSONObject.toJSON(userPortraitRequestBean));
+        // 获取该角色 权限列表
+        List<String> perm = (List<String>) request.getSession().getAttribute("permission");
+        //判断权限
+        boolean isShow = false;
+        for (String string : perm) {
+            if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
+                isShow=true;
+            }
+        }
         UserPortraitRequest userPortraitRequest = new UserPortraitRequest();
         BeanUtils.copyProperties(userPortraitRequestBean, userPortraitRequest);
         logger.info("---userPortraitRequest ---  " + JSONObject.toJSON(userPortraitRequest));
@@ -86,6 +83,12 @@ public class UserPortraitController extends BaseController {
         List<UserPortraitCustomizeVO> userPortraitCustomizeVOList = new ArrayList<UserPortraitCustomizeVO>();
         List<UserPortraitVO> userPortraitVOList = responseUserPortrait.getResultList();
         if (null != userPortraitVOList && userPortraitVOList.size() > 0) {
+            if(!isShow){
+                //如果没有查看脱敏权限,显示加星
+                for (UserPortraitVO registRecordVO:userPortraitVOList){
+                    registRecordVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(registRecordVO.getMobile()));
+                }
+            }
             userPortraitCustomizeVOList = CommonUtils.convertBeanList(userPortraitVOList, UserPortraitCustomizeVO.class);
         }
         return new AdminResult<ListResult<UserPortraitCustomizeVO>>(ListResult.build(userPortraitCustomizeVOList, responseUserPortrait.getCount()));
@@ -101,6 +104,7 @@ public class UserPortraitController extends BaseController {
     @ApiOperation(value = "初始化用户画像修改页面", notes = "初始化用户画像修改页面")
     @PostMapping(value = "/initUserPortraitEdit")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult<UserPortraitCustomizeVO> initUserPortraitEdit(HttpServletRequest request, @RequestBody int userId) {
         UserPortraitVO userPortraitVO = userPortraitService.selectUsersPortraitByUserId(userId);
         UserPortraitCustomizeVO userPortraitCustomizeVO = new UserPortraitCustomizeVO();
@@ -119,6 +123,7 @@ public class UserPortraitController extends BaseController {
     @ApiOperation(value = "修改用户画像", notes = "修改用户画像")
     @PostMapping(value = "/updateUserPortrait")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateUserPortrait(@RequestBody UserPortraitRequestBean userPortraitRequestBean) {
         if (null==userPortraitRequestBean.getUserId()) {
             return new AdminResult<>(FAIL, "请输入用户id");
@@ -279,7 +284,17 @@ public class UserPortraitController extends BaseController {
      */
     @ApiOperation(value = "导出用户画像户", notes = "导出用户画像")
     @PostMapping(value = "/exportLoancover")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportActionLoa(HttpServletRequest request, HttpServletResponse response, @RequestBody UserPortraitRequestBean userPortraitRequestBean) throws Exception {
+        // 获取该角色 权限列表
+        List<String> perm = (List<String>) request.getSession().getAttribute("permission");
+        //判断权限
+        boolean isShow = false;
+        for (String string : perm) {
+            if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
+                isShow=true;
+            }
+        }
         // 需要输出的结果列表
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.DATE, -1);
@@ -311,6 +326,10 @@ public class UserPortraitController extends BaseController {
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        if(!isShow){
+            //如果没有查看脱敏权限,显示加星
+            mapValueAdapter = buildValueAdapterAccAdaptertAsterisked();
+        }
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
@@ -647,6 +666,227 @@ public class UserPortraitController extends BaseController {
             }
         };
         mapAdapter.put("attribute", attributeAdapter);
+        return mapAdapter;
+    }
+
+    private Map<String, IValueFormatter> buildValueAdapterAccAdaptertAsterisked() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter ageAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer age = (Integer) object;
+                return age != null ? age.toString() :  "";
+            }
+        };
+        mapAdapter.put("age", ageAdapter);
+        // 账户总资产（元）
+        IValueFormatter bankTotalAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal bankTotal = (BigDecimal) object;
+                return bankTotal != null ? bankTotal.toString() :  "";
+            }
+        };
+        mapAdapter.put("bankTotal", bankTotalAdapter);
+        // 账户可用金额（元）
+        IValueFormatter bankBalanceAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal bankBalance = (BigDecimal) object;
+                return bankBalance != null ? bankBalance.toString() :  "";
+            }
+        };
+        mapAdapter.put("bankBalance", bankBalanceAdapter);
+        // "账户待还金额（元）
+        IValueFormatter accountAwaitAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal accountAwait = (BigDecimal) object;
+                return accountAwait != null ? accountAwait.toString() :  "";
+            }
+        };
+        mapAdapter.put("accountAwait", accountAwaitAdapter);
+        // "账户冻结金额（元）",
+        IValueFormatter bankFrostAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal bankFrost = (BigDecimal) object;
+                return bankFrost != null ? bankFrost.toString() :  "";
+            }
+        };
+        mapAdapter.put("bankFrost", bankFrostAdapter);
+        // "资金存留比（%）"
+        IValueFormatter fundRetentionAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal fundRetention = (BigDecimal) object;
+                return fundRetention != null ? fundRetention.toString() :  "";
+            }
+        };
+        mapAdapter.put("fundRetention", fundRetentionAdapter);
+        // ""客均收益率（%）",
+        IValueFormatter yieldAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal yield = (BigDecimal) object;
+                return yield != null ? yield.toString() :  "";
+            }
+        };
+        mapAdapter.put("yield", yieldAdapter);
+        // 累计收益
+        IValueFormatter interestSumAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal interestSum = (BigDecimal) object;
+                return interestSum != null ? interestSum.toString() :  "";
+            }
+        };
+        mapAdapter.put("interestSum", interestSumAdapter);
+        // 累计年化投资金额
+        IValueFormatter investSumAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal investSum = (BigDecimal) object;
+                return investSum != null ? investSum.toString() :  "";
+            }
+        };
+        mapAdapter.put("investSum", investSumAdapter);
+        // 累计充值金额
+        IValueFormatter rechargeSumAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal rechargeSum = (BigDecimal) object;
+                return rechargeSum != null ? rechargeSum.toString() :  "";
+            }
+        };
+        mapAdapter.put("rechargeSum", rechargeSumAdapter);
+        // 累计提取金额
+        IValueFormatter withdrawSumAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                BigDecimal withdrawSum = (BigDecimal) object;
+                return withdrawSum != null ? withdrawSum.toString() :  "";
+            }
+        };
+        mapAdapter.put("withdrawSum", withdrawSumAdapter);
+        // 最后一次登录至今时长
+        IValueFormatter lastLoginTimeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer lastLoginTime = (Integer) object;
+                return lastLoginTime != null ? lastLoginTime.toString() :  "";
+            }
+        };
+        mapAdapter.put("lastLoginTime", lastLoginTimeAdapter);
+        // 最后一次充值至今时长
+        IValueFormatter lastRechargeTimeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer lastRechargeTime = (Integer) object;
+                return lastRechargeTime != null ? lastRechargeTime.toString() :  "";
+            }
+        };
+        mapAdapter.put("lastRechargeTime", lastRechargeTimeAdapter);
+        // 最后一次提现至今时长
+        IValueFormatter lastWithdrawTimeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer lastWithdrawTime = (Integer) object;
+                return lastWithdrawTime != null ? lastWithdrawTime.toString() :  "";
+            }
+        };
+        mapAdapter.put("lastWithdrawTime", lastWithdrawTimeAdapter);
+        // 同时投资平台数
+        IValueFormatter investPlatformAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer investPlatform = (Integer) object;
+                return investPlatform != null ? investPlatform.toString() :  "";
+            }
+        };
+        mapAdapter.put("investPlatform", investPlatformAdapter);
+        // 投龄
+        IValueFormatter investAgeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer investAge = (Integer) object;
+                return investAge != null ? investAge.toString() :  "";
+            }
+        };
+        mapAdapter.put("investAge", investAgeAdapter);
+        // 交易笔数
+        IValueFormatter tradeNumberAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer tradeNumber = (Integer) object;
+                return tradeNumber != null ? tradeNumber.toString() :  "";
+            }
+        };
+        mapAdapter.put("tradeNumber", tradeNumberAdapter);
+        // 邀约客户数
+        IValueFormatter inviteCustomerAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer inviteCustomer = (Integer) object;
+                return inviteCustomer != null ? inviteCustomer.toString() :  "";
+            }
+        };
+        mapAdapter.put("inviteCustomer", inviteCustomerAdapter);
+        //  "邀约注册客户数"
+        IValueFormatter inviteRegistAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer inviteRegist = (Integer) object;
+                return inviteRegist != null ? inviteRegist.toString() :  "";
+            }
+        };
+        mapAdapter.put("inviteRegist", inviteRegistAdapter);
+        //  "邀约充值客户数"
+        IValueFormatter inviteRechargeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer inviteRecharge = (Integer) object;
+                return inviteRecharge != null ? inviteRecharge.toString() :  "";
+            }
+        };
+        mapAdapter.put("inviteRecharge", inviteRechargeAdapter);
+        //  ""邀约投资客户数
+        IValueFormatter inviteTenderAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer inviteTender = (Integer) object;
+                return inviteTender != null ? inviteTender.toString() :  "";
+            }
+        };
+        mapAdapter.put("inviteTender", inviteTenderAdapter);
+        //  ""是否有主单"
+        IValueFormatter attributeAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                Integer attribute = (Integer) object;
+                String att = "";
+                if(attribute.equals(0)){
+                    att="无主单";
+                }else if(attribute.equals(1)){
+                    att="有主单";
+                }else if(attribute.equals(2)){
+                    att="线下员工";
+                }else if(attribute.equals(3)){
+                    att="线上员工";
+                }
+                return attribute != null ? att :  "";
+            }
+        };
+        mapAdapter.put("attribute", attributeAdapter);
+        //
+        IValueFormatter mobileAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String mobile = (String) object;
+                return AsteriskProcessUtil.getAsteriskedValue(mobile);
+            }
+        };
+        mapAdapter.put("mobile", mobileAdapter);
         return mapAdapter;
     }
 }

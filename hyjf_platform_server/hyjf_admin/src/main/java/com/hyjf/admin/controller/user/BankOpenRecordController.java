@@ -3,15 +3,15 @@
  */
 package com.hyjf.admin.controller.user;
 
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.AccountRecordRequestBean;
 import com.hyjf.admin.beans.response.UserManagerInitResponseBean;
 import com.hyjf.admin.beans.vo.BankOpenAccountRecordCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BankOpenRecordService;
 import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
@@ -24,10 +24,6 @@ import com.hyjf.am.vo.user.BankOpenAccountRecordVO;
 import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,10 +51,12 @@ public class BankOpenRecordController extends BaseController {
     private BankOpenRecordService bankOpenRecordService;
     @Autowired
     private UserCenterService userCenterService;
+    public static final String PERMISSIONS = "accountlist";
 
     @ApiOperation(value = "开户记录页面初始化", notes = "开户记录页面初始化")
     @PostMapping(value = "/bankOpenRecordInit")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<UserManagerInitResponseBean>  userManagerInit() {
         UserManagerInitResponseBean userManagerInitResponseBean =bankOpenRecordService.initUserManaget();
         return new AdminResult<UserManagerInitResponseBean>(userManagerInitResponseBean);
@@ -68,8 +66,18 @@ public class BankOpenRecordController extends BaseController {
     @ApiOperation(value = "汇付银行开户记录查询", notes = "汇付银行开户记录查询")
     @PostMapping(value = "/bankOpenRecordAccount")
     @ResponseBody
-    public AdminResult<ListResult<BankOpenAccountRecordCustomizeVO>> bankOpenRecordAccount(@RequestBody AccountRecordRequestBean accountRecordRequestBean){
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult<ListResult<BankOpenAccountRecordCustomizeVO>> bankOpenRecordAccount(HttpServletRequest request,@RequestBody AccountRecordRequestBean accountRecordRequestBean){
         AccountRecordRequest accountRecordRequest =  new AccountRecordRequest();
+        // 获取该角色 权限列表
+        List<String> perm = (List<String>) request.getSession().getAttribute("permission");
+        //判断权限
+        boolean isShow = false;
+        for (String string : perm) {
+            if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
+                isShow=true;
+            }
+        }
         BeanUtils.copyProperties(accountRecordRequestBean,accountRecordRequest);
         BankAccountRecordResponse bankOpenRecordServiceAccountRecordList =bankOpenRecordService.findAccountRecordList(accountRecordRequest);
         if(bankOpenRecordServiceAccountRecordList==null) {
@@ -81,6 +89,13 @@ public class BankOpenRecordController extends BaseController {
         List<BankOpenAccountRecordCustomizeVO> bankOpenAccountRecordCustomizeVOList = new ArrayList<BankOpenAccountRecordCustomizeVO>();
         List<BankOpenAccountRecordVO> bankOpenAccountRecordVOList = bankOpenRecordServiceAccountRecordList.getResultList();
         if(null!=bankOpenAccountRecordVOList&&bankOpenAccountRecordVOList.size()>0){
+            if(!isShow){
+                //如果没有查看脱敏权限,显示加星
+                for (BankOpenAccountRecordVO registRecordVO:bankOpenAccountRecordVOList){
+                    registRecordVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(registRecordVO.getMobile()));
+                    registRecordVO.setIdCard(AsteriskProcessUtil.getAsteriskedValue(registRecordVO.getIdCard()));
+                }
+            }
             bankOpenAccountRecordCustomizeVOList = CommonUtils.convertBeanList(bankOpenAccountRecordVOList,BankOpenAccountRecordCustomizeVO.class);
         }
         return new AdminResult<ListResult<BankOpenAccountRecordCustomizeVO>>(ListResult.build(bankOpenAccountRecordCustomizeVOList, bankOpenRecordServiceAccountRecordList.getCount())) ;
@@ -88,8 +103,17 @@ public class BankOpenRecordController extends BaseController {
     @ApiOperation(value = "江西银行开户记录查询", notes = "江西银行开户记录查询")
     @PostMapping(value = "/bankOpenRecordBankAccount")
     @ResponseBody
-    public AdminResult<ListResult<BankOpenAccountRecordCustomizeVO>> bankOpenRecordBankAccount(@RequestBody AccountRecordRequestBean accountRecordRequestBean){
-        JSONObject jsonObject = new JSONObject();
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult<ListResult<BankOpenAccountRecordCustomizeVO>> bankOpenRecordBankAccount(HttpServletRequest request,@RequestBody AccountRecordRequestBean accountRecordRequestBean){
+        // 获取该角色 权限列表
+        List<String> perm = (List<String>) request.getSession().getAttribute("permission");
+        //判断权限
+        boolean isShow = false;
+        for (String string : perm) {
+            if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
+                isShow=true;
+            }
+        }
         BankAccountRecordRequest registerRcordeRequest = new BankAccountRecordRequest();
         BeanUtils.copyProperties(accountRecordRequestBean,registerRcordeRequest);
         BankAccountRecordResponse bankOpenRecordServiceAccountRecordList=bankOpenRecordService.findBankAccountRecordList(registerRcordeRequest);
@@ -102,6 +126,13 @@ public class BankOpenRecordController extends BaseController {
         List<BankOpenAccountRecordCustomizeVO> bankOpenAccountRecordCustomizeVOList = new ArrayList<BankOpenAccountRecordCustomizeVO>();
         List<BankOpenAccountRecordVO> bankOpenAccountRecordVOList = bankOpenRecordServiceAccountRecordList.getResultList();
         if(null!=bankOpenAccountRecordVOList&&bankOpenAccountRecordVOList.size()>0){
+            if(!isShow){
+                //如果没有查看脱敏权限,显示加星
+                for (BankOpenAccountRecordVO registRecordVO:bankOpenAccountRecordVOList){
+                    registRecordVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(registRecordVO.getMobile()));
+                    registRecordVO.setIdCard(AsteriskProcessUtil.getAsteriskedValue(registRecordVO.getIdCard()));
+                }
+            }
             bankOpenAccountRecordCustomizeVOList = CommonUtils.convertBeanList(bankOpenAccountRecordVOList,BankOpenAccountRecordCustomizeVO.class);
         }
         return new AdminResult<ListResult<BankOpenAccountRecordCustomizeVO>>(ListResult.build(bankOpenAccountRecordCustomizeVOList, bankOpenRecordServiceAccountRecordList.getCount())) ;
@@ -204,7 +235,17 @@ public class BankOpenRecordController extends BaseController {
      */
     @ApiOperation(value = "汇付银行开户记录导出", notes = "汇付银行开户记录导出")
     @PostMapping(value = "/exportaccount")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportExcelAccount(HttpServletRequest request, HttpServletResponse response,@RequestBody AccountRecordRequestBean accountRecordRequestBean) throws Exception {
+        // 获取该角色 权限列表
+        List<String> perm = (List<String>) request.getSession().getAttribute("permission");
+        //判断权限
+        boolean isShow = false;
+        for (String string : perm) {
+            if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
+                isShow=true;
+            }
+        }
         // 封装查询条件
         AccountRecordRequest accountRecordRequest = new AccountRecordRequest();
         BeanUtils.copyProperties(accountRecordRequestBean,accountRecordRequest);
@@ -227,6 +268,10 @@ public class BankOpenRecordController extends BaseController {
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMapAcc();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapterAcc();
+        if(!isShow){
+            //如果没有查看脱敏权限,显示加星
+            mapValueAdapter = buildValueAdapterAccAdaptertAsterisked();
+        }
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
@@ -295,12 +340,50 @@ public class BankOpenRecordController extends BaseController {
                 return userCenterService.getAreaByIdCard(area);
             }
         };
+        mapAdapter.put("sex", sexAdapter);
+        mapAdapter.put("age", ageAdapter);
+        mapAdapter.put("area", areaAdapter);
+        //mapAdapter.put("idCard", idCardAdapter);
+        return mapAdapter;
+    }
+    private Map<String, IValueFormatter> buildValueAdapterAccAdaptertAsterisked() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter ageAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String age = (String) object;
+                return getAge(age);
+            }
+        };
+
+        IValueFormatter sexAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String sex = (String) object;
+                if ("1".equals(sex)) {
+                    sex = ("男");
+                } else if ("2".equals(sex)) {
+                    sex = ("女");
+                } else {
+                    sex = ("未知");
+                }
+                return sex;
+            }
+        };
+
+        IValueFormatter areaAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String area = (String) object;
+                return userCenterService.getAreaByIdCard(area);
+            }
+        };
 
         IValueFormatter idCardAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
                 String idCard = (String) object;
-                return AsteriskProcessUtil.getAsteriskedValue(idCard, 3,7);
+                return AsteriskProcessUtil.getAsteriskedValue(idCard);
             }
         };
 
@@ -398,7 +481,17 @@ public class BankOpenRecordController extends BaseController {
      */
     @ApiOperation(value = "江西银行开户记录导出", notes = "江西银行开户记录导出")
     @PostMapping(value = "/exportbankaccount")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportBankAccountExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody AccountRecordRequestBean bankAccountRecordRequestBeans) throws Exception {
+        // 获取该角色 权限列表
+        List<String> perm = (List<String>) request.getSession().getAttribute("permission");
+        //判断权限
+        boolean isShow = false;
+        for (String string : perm) {
+            if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
+                isShow=true;
+            }
+        }
         // 封装查询条件
         BankAccountRecordRequest registerRcordeRequest = new BankAccountRecordRequest();
         BeanUtils.copyProperties(bankAccountRecordRequestBeans,registerRcordeRequest);
@@ -421,6 +514,10 @@ public class BankOpenRecordController extends BaseController {
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMapBkAcc();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapterBkAcc();
+        if(!isShow){
+            //如果没有查看脱敏权限,显示加星
+            mapValueAdapter = buildValueAdapterBkAccAdaptertAsterisked();
+        }
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
@@ -456,6 +553,27 @@ public class BankOpenRecordController extends BaseController {
 
     private Map<String, IValueFormatter> buildValueAdapterBkAcc() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        return mapAdapter;
+    }
+    private Map<String, IValueFormatter> buildValueAdapterBkAccAdaptertAsterisked() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+
+        IValueFormatter idCardAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String idCard = (String) object;
+                return AsteriskProcessUtil.getAsteriskedValue(idCard);
+            }
+        };
+        IValueFormatter mobileAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String mobile = (String) object;
+                return AsteriskProcessUtil.getAsteriskedValue(mobile);
+            }
+        };
+        mapAdapter.put("mobile", mobileAdapter);
+        mapAdapter.put("idCard", idCardAdapter);
         return mapAdapter;
     }
 

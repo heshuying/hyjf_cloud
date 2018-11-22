@@ -148,7 +148,7 @@ public class RedisConstants {
     public static final String AUTO_ISSUE_REPEAT = "borrow_issue:";
 
     /**
-     * 单用户防止重复提交redis 前缀
+     * 单用户防止重复提交redis 前缀+$userid:$uri
      */
     public static final String PRE_REQUEST_LIMIT = "req_limit:";
 
@@ -166,12 +166,12 @@ public class RedisConstants {
     public static final String ADMIN_REQUEST = "admin:";
     
     /**
-     * 协议模板---协议前台展示名称的别名
+     * 协议模板---协议前台展示名称的别名+$aliasName
      */
     public static final String PROTOCOL_TEMPLATE_ALIAS = "protocol_template_alias:";
     
     /**
-     * 协议模板---协议文件存储Redis前缀
+     * 协议模板---协议文件存储Redis前缀+$protocolId
      */
     public static final String PROTOCOL_TEMPLATE_URL = "protocol_template_url:";
     
@@ -228,7 +228,7 @@ public class RedisConstants {
     public static final String CONTROLLOR_CLASS_NAME = "user_regist_define:";
 
     /**
-     * 充值防重校验
+     * 充值防重校验+$$orderId
      */
     public static final String RECHARGE_ORDERID = "recharge_orderid:";
 
@@ -301,7 +301,7 @@ public class RedisConstants {
     public static final String STATISTICAL_RECHARGE = "statistical_recharge:";
 
     /**
-     * 上海大屏幕运营数据 : 注册人统计
+     * 上海大屏幕运营数据 : 注册人统计(SH_OPERATIONAL_DATA+REGISTRANT_STATISTICS+1或2)
      */
     public static final String REGISTRANT_STATISTICS = "registrant_statistics:";
 
@@ -342,12 +342,12 @@ public class RedisConstants {
     public static final String CONCURRENCE_REPAY_REQUEST = "repay_borrow_nid:";
 
     /**
-     * 记录密码错误次数Redis前缀admin端
+     * 记录密码错误次数Redis前缀admin端（有的加的username有的加的userid)
      */
     public static final String PASSWORD_ERR_COUNT_ADMIN = "password_err_count_admin:";
 
     /**
-     * 记录密码错误次数Redis前缀.web.app三端共享
+     * 记录密码错误次数Redis前缀.web.app三端共享+$userId
      */
     public static final String PASSWORD_ERR_COUNT_ALL = "password_err_count_all:";
 
@@ -364,17 +364,17 @@ public class RedisConstants {
     /**
      * 日推标上限额度前缀(bail_day_mark_line:$instCode)
      */
-    public static final String DAY_MARK_LINE = "bail_day_mark_line:";
+//    public static final String DAY_MARK_LINE = "bail_day_mark_line:";
 
     /**
-     * 月发标已用
+     * 月发标已用+$instCode
      */
     public static final String MONTH_USED = "bail_month_used:";
 
     /**
-     * 月推标上限额度前缀
+     * 月推标上限额度前缀+$instCode
      */
-    public static final String MONTH_MARK_LINE = "bail_month_mark_line:";
+//    public static final String MONTH_MARK_LINE = "bail_month_mark_line:";
 
     /**
      * 登录失败配置项
@@ -383,7 +383,7 @@ public class RedisConstants {
 
 
     /**
-     * 测评到期时间和测评结果投资金额上限用
+     * 测评到期时间和测评结果投资金额上限用redis组
      */
     public static final String REVALUATION = "evaluation:";
 
@@ -519,9 +519,9 @@ public class RedisConstants {
      * rocketmq 事务消息结果
      */
     public static final String MQ_TRANSACTION_PREFIX = "mq_tran:";
-
     /**
-     * 提现
+     * admin单点登陆唯一Id
      */
-    public static final String WITHRAW = "widraw:";
+    public static final String ADMIN_UNIQUE_ID = "admin@:";
+
 }

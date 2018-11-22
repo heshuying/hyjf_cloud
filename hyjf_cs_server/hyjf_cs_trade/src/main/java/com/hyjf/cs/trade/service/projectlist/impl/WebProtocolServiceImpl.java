@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service.projectlist.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
 import com.hyjf.am.resquest.trade.HjhDebtCreditRequest;
@@ -1213,12 +1214,15 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                 params.put("userId", form.getUserId());
                 params.put("nid", form.getNid());
                 List<WebUserInvestListCustomizeVO> tzList = amTradeClient.selectUserInvestList(params);
+
                 if (tzList != null && tzList.size() > 0) {
                     WebUserInvestListCustomizeVO userInvest = tzList.get(0);
                     if(((userId+"").equals(userInvest.getUserId()))){
-                        userInvest.setRealName(userInvest.getRealName().substring(0,1)+"**");
+                        UserInfoVO userInfo=amUserClient.findUserInfoById(Integer.parseInt(userInvest.getUserId()));
+                        logger.info("userInvest:"+JSONObject.toJSONString(userInvest));
+                        userInvest.setRealName(userInfo.getTruename().substring(0,1)+"**");
                         userInvest.setUsername(userInvest.getUsername().substring(0,1)+"*****");
-                        userInvest.setIdCard(userInvest.getIdCard().substring(0,4)+"**************");
+                        userInvest.setIdCard(userInfo.getIdcard().substring(0,4)+"**************");
                     }
                     contents.put("userInvest", userInvest);
                 }

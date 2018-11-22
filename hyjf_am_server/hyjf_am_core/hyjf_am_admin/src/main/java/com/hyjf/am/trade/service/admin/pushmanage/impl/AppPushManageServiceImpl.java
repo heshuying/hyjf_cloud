@@ -40,15 +40,15 @@ public class AppPushManageServiceImpl implements AppPushManageService {
         }
 
         // 状态不为空
-        if (pushManageRequest.getStatus().toString() != "" && pushManageRequest.getStatus() != null){
+        if (pushManageRequest.getStatus() != null){
             criteria.andStatusEqualTo(pushManageRequest.getStatus());
         }
 
-        if (StringUtils.isNotBlank(pushManageRequest.getTimeStart())){
+        if (StringUtils.isNotBlank(pushManageRequest.getTimeStartDiy())){
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {
-                criteria.andTimeStartGreaterThanOrEqualTo(sdf.parse(pushManageRequest.getTimeStart()));
-                criteria.andTimeEndLessThanOrEqualTo(sdf.parse(pushManageRequest.getTimeEnd()));
+                criteria.andTimeStartGreaterThanOrEqualTo(sdf.parse(pushManageRequest.getTimeStartDiy()));
+                criteria.andTimeEndLessThanOrEqualTo(sdf.parse(pushManageRequest.getTimeEndDiy()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -73,15 +73,15 @@ public class AppPushManageServiceImpl implements AppPushManageService {
         }
 
         // 状态不为空
-        if (pushManageRequest.getStatus().toString() != "" && pushManageRequest.getStatus() != null){
+        if (pushManageRequest.getStatus() != null){
             criteria.andStatusEqualTo(pushManageRequest.getStatus());
         }
 
-        if (StringUtils.isNotBlank(pushManageRequest.getTimeStart())){
+        if (StringUtils.isNotBlank(pushManageRequest.getTimeStartDiy())){
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {
-                criteria.andTimeStartGreaterThanOrEqualTo(sdf.parse(pushManageRequest.getTimeStart()));
-                criteria.andTimeEndLessThanOrEqualTo(sdf.parse(pushManageRequest.getTimeEnd()));
+                criteria.andTimeStartGreaterThanOrEqualTo(sdf.parse(pushManageRequest.getTimeStartDiy()));
+                criteria.andTimeEndLessThanOrEqualTo(sdf.parse(pushManageRequest.getTimeEndDiy()));
             } catch (ParseException e) {
                 e.printStackTrace();
             }
@@ -101,11 +101,11 @@ public class AppPushManageServiceImpl implements AppPushManageService {
         AppPushManage pushManage = new AppPushManage();
 
         BeanUtils.copyProperties(pushManageRequest, pushManage);
-        if (StringUtils.isNotBlank(pushManageRequest.getTimeStart()) && StringUtils.isNotBlank(pushManageRequest.getTimeEnd())){
+        if (StringUtils.isNotBlank(pushManageRequest.getTimeStartDiy()) && StringUtils.isNotBlank(pushManageRequest.getTimeEndDiy())){
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {
-                pushManage.setTimeStart(sdf.parse(pushManageRequest.getTimeStart()));
-                pushManage.setTimeEnd(sdf.parse(pushManageRequest.getTimeEnd()));
+                pushManage.setTimeStart(sdf.parse(pushManageRequest.getTimeStartDiy()));
+                pushManage.setTimeEnd(sdf.parse(pushManageRequest.getTimeEndDiy()));
             }catch (ParseException e){
                 e.printStackTrace();
             }
@@ -123,11 +123,12 @@ public class AppPushManageServiceImpl implements AppPushManageService {
         AppPushManage pushManage = new AppPushManage();
 
         BeanUtils.copyProperties(pushManageRequest, pushManage);
-        if (StringUtils.isNotBlank(pushManageRequest.getTimeStart()) && StringUtils.isNotBlank(pushManageRequest.getTimeEnd())){
+        pushManage.setId(pushManageRequest.getIds());
+        if (StringUtils.isNotBlank(pushManageRequest.getTimeStartDiy()) && StringUtils.isNotBlank(pushManageRequest.getTimeEndDiy())){
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             try {
-                pushManage.setTimeStart(sdf.parse(pushManageRequest.getTimeStart()));
-                pushManage.setTimeEnd(sdf.parse(pushManageRequest.getTimeEnd()));
+                pushManage.setTimeStart(sdf.parse(pushManageRequest.getTimeStartDiy()));
+                pushManage.setTimeEnd(sdf.parse(pushManageRequest.getTimeEndDiy()));
             }catch (ParseException e){
                 e.printStackTrace();
             }
@@ -143,5 +144,15 @@ public class AppPushManageServiceImpl implements AppPushManageService {
     @Override
     public int deletePushManage(Integer id) {
         return appPushManageMapper.deleteByPrimaryKey(id);
+    }
+
+    /**
+     * 获取单条详细信息
+     * @param id
+     * @return
+     */
+    @Override
+    public AppPushManage getAppPushManageInfoById(Integer id) {
+        return appPushManageMapper.selectByPrimaryKey(id);
     }
 }
