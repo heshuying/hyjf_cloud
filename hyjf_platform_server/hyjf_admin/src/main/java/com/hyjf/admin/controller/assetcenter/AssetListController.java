@@ -374,34 +374,25 @@ public class AssetListController extends BaseController {
 			// 将画面请求request赋值给原子层 request
 			BeanUtils.copyProperties(viewRequest, form);
 	        //请求第一页5000条
-			form.setPageSize(defaultRowMaxCount);
-			form.setCurrPage(1);
+//			form.setPageSize(defaultRowMaxCount);
+//			form.setCurrPage(1);
 			// 获取查询的列表
 			AssetListCustomizeResponse res = assetListService.findAssetListWithoutPage(form);
-	        Integer totalCount = res.getCount();
+	        Integer totalCount = res.getResultList().size();
 
 	        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
 	        Map<String, String> beanPropertyColumnMap = buildMap();
 	        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
-	        String sheetNameTmp = sheetName + "_第1页";
-	        if (totalCount == 0) {
-	        	
-	            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-	        }else {
-	        	 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, res.getResultList());
-	        }
-	        for (int i = 1; i < sheetCount; i++) {
+	        String sheetNameTmp = "";
 
-	        	form.setPageSize(defaultRowMaxCount);
-	        	form.setCurrPage(i+1);
-				AssetListCustomizeResponse res2 = assetListService.findAssetListWithoutPage(form);
-	            if (res2 != null && res2.getResultList().size()> 0) {
-	                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-	                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  res2.getResultList());
-	            } else {
-	                break;
-	            }
+	        for (int i = 1; i < sheetCount; i++) {
+				int start=(i-1) * defaultRowMaxCount;
+				int end = Math.min(totalCount, i * defaultRowMaxCount);
+
+				sheetNameTmp = sheetName + "_第" + (i) + "页";
+				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  res.getResultList().subList(start, end));
 	        }
+	        
 	        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
 	    }
     private Map<String, String> buildMap() {
