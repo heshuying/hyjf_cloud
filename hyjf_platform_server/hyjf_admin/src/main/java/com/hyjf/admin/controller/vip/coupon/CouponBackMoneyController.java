@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 
@@ -162,6 +163,6 @@ public class CouponBackMoneyController extends BaseController {
 
         String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
-        couponBackMoneyService.exportAction(new String(fileName.getBytes("gbk"), "iso8859-1"),resultList,recoverInterest,investTotal,fileName,response,couponBackMoneyCustomize);
+        couponBackMoneyService.exportAction(URLEncoder.encode(fileName, CustomConstants.UTF8),resultList,recoverInterest,investTotal,fileName,response,couponBackMoneyCustomize);
     }
 }
