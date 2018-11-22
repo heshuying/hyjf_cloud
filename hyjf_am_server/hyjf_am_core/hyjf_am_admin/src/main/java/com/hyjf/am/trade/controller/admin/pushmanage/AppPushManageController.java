@@ -170,6 +170,9 @@ public class AppPushManageController extends BaseController {
 
         if (null != pushManage){
             BeanUtils.copyProperties(pushManage, pushManageVO);
+            pushManageVO.setCreateTimeStr(GetDate.formatDate(pushManage.getCreateTime()));
+            pushManageVO.setTimeStartStr(GetDate.formatDate(pushManage.getTimeStart()));
+            pushManageVO.setTimeEndStr(GetDate.formatDate(pushManage.getTimeEnd()));
             pushManageResponse.setResult(pushManageVO);
             pushManageResponse.setRtn(AdminResponse.SUCCESS);
         }else {

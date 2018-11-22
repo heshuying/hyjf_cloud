@@ -34,25 +34,23 @@ public class AppPushManageRequestBean extends BasePage {
     @ApiModelProperty(value = "0:禁用;1:启用.")
     private Integer status;
 
-    @ApiModelProperty(value = "开始时间")
-    private String timeStart;
+//    @ApiModelProperty(value = "开始时间")
+//    private String timeStart;
 
-    @ApiModelProperty(value = "结束时间")
-    private String timeEnd;
+//    @ApiModelProperty(value = "结束时间")
+//    private String timeEnd;
+
+    @ApiModelProperty(value = "开始时间 - 检索用")
+    private String timeStartDiy;
+
+    @ApiModelProperty(value = "结束时间 - 检索用")
+    private String timeEndDiy;
 
     @ApiModelProperty(value = "缩略图")
     private String thumb;
 
     @ApiModelProperty(value = "内容")
     private String content;
-
-//    public Integer getId() {
-//        return id;
-//    }
-//
-//    public void setId(Integer id) {
-//        this.id = id;
-//    }
 
     public String getIds() {
         return ids;
@@ -110,22 +108,6 @@ public class AppPushManageRequestBean extends BasePage {
         this.status = status;
     }
 
-    public String getTimeStart() {
-        return timeStart;
-    }
-
-    public void setTimeStart(String timeStart) {
-        this.timeStart = timeStart;
-    }
-
-    public String getTimeEnd() {
-        return timeEnd;
-    }
-
-    public void setTimeEnd(String timeEnd) {
-        this.timeEnd = timeEnd;
-    }
-
     public String getThumb() {
         return thumb;
     }
@@ -140,5 +122,21 @@ public class AppPushManageRequestBean extends BasePage {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getTimeStartDiy() {
+        return timeStartDiy;
+    }
+
+    public void setTimeStartDiy(String timeStartDiy) {
+        this.timeStartDiy = timeStartDiy;
+    }
+
+    public String getTimeEndDiy() {
+        return timeEndDiy;
+    }
+
+    public void setTimeEndDiy(String timeEndDiy) {
+        this.timeEndDiy = timeEndDiy;
     }
 }

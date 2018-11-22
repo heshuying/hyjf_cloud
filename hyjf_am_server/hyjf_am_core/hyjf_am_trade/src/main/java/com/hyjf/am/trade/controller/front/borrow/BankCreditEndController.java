@@ -17,6 +17,8 @@ import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -123,7 +125,7 @@ public class BankCreditEndController {
         BeanUtils.copyProperties(request.getBankCreditEndVO(), bankCreditEnd);
         return new IntegerResponse(this.bankCreditEndService.updateBankCreditEndForBatch(bankCreditEnd));
     }
-
+    private Logger logger = LoggerFactory.getLogger(BankCreditEndController.class);
     /**
      * 据批次号和日期，取得结束债权任务列表
      * @param batchNo
@@ -133,6 +135,7 @@ public class BankCreditEndController {
     @RequestMapping("/getBankCreditEndListByBatchnoTxdate/{batchNo}/{txDate}")
     public BankCreditEndResponse getBankCreditEndListByBatchnoTxdate(@PathVariable String batchNo, @PathVariable String txDate) {
         BankCreditEndResponse response = new BankCreditEndResponse();
+        logger.info("据批次号(batchNo:{})和日期(txDate:{})，取得结束债权任务列表。",batchNo,txDate);
         List<BankCreditEnd> list = this.bankCreditEndService.getBankCreditEndListByBatchnoTxdate(batchNo, txDate);
         if (!CollectionUtils.isEmpty(list)) {
             response.setResultList(CommonUtils.convertBeanList(list, BankCreditEndVO.class));
