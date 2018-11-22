@@ -215,7 +215,8 @@ public class MspApplyServiceImpl extends BaseServiceImpl implements MspApplyServ
 	}
 
 	@Override
-	public int countByExample(MspApply mspApply) {
+	public int countByExample(MspApply mspApply, int createStart,
+            int createEnd) {
 		MspApplyExample example = new MspApplyExample();
 
 		MspApplyExample.Criteria criteria = example.createCriteria();
@@ -229,7 +230,9 @@ public class MspApplyServiceImpl extends BaseServiceImpl implements MspApplyServ
 		if (StringUtils.isNotEmpty(mspApply.getIdentityCard())) {
 			criteria.andIdentityCardEqualTo(mspApply.getIdentityCard());
 		}
-
+		if (createStart != 0 || createEnd != 0) {
+			criteria.andCreateTimeBetween(createStart, createEnd);
+		}
 
 		return mspApplyMapper.countByExample(example);
 	}
