@@ -234,7 +234,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		// 商户后台应答地址(必须)
 		String notifyUrl = "http://CS-USER/hyjf-web/user/card/bgReturn?userId=" + user.getUserId()+"&urlstatus="+urlstatus+"&phone="+user.getMobile();
         // 忘记密码跳转链接
-        String forgotPwdUrl = systemConfig.getForgetpassword();
+        String forgotPwdUrl = systemConfig.getFrontHost()+systemConfig.getForgetpassword();
 
 		// 调用开户接口
 		BankCallBean bindCardBean = new BankCallBean();
@@ -329,7 +329,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		// 异步调用路
 		String bgRetUrl = "http://CS-USER/hyjf-app/bank/user/bindCardPage/notifyReturn?phone=" + userVO.getMobile();
 		// 拼装参数 调用江西银行
-		String forgetPassworedUrl = systemConfig.getForgetpassword();
+		String forgetPassworedUrl = systemConfig.getAppFrontHost()+systemConfig.getForgetpassword();
 
 		bindCardBean.setRetUrl(retUrl);
 		bindCardBean.setSuccessfulUrl(successUrl);
