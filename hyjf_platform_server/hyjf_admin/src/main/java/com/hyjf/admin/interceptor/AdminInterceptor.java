@@ -5,6 +5,7 @@ package com.hyjf.admin.interceptor;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
@@ -42,16 +43,14 @@ public class AdminInterceptor implements HandlerInterceptor {
 		logger.info("admin接收到请求,请求接口为:" + request.getRequestURI());
 		try {
 			String username = ((AdminSystemVO) request.getSession().getAttribute("user")).getUsername();
-			String val = RedisUtils.get("admin@" + username);
+			String val = RedisUtils.get(RedisConstants.ADMIN_UNIQUE_ID + username);
 			if (val != null && !val.equals(request.getHeader("Cookies"))) {
 				request.getSession().removeAttribute("user");
 				throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
-				//return false;
 			} else {
 				if(val!=null) {
-					RedisUtils.set("admin@" + username, val, 3600);
+					RedisUtils.set(RedisConstants.ADMIN_UNIQUE_ID + username, val, 3600);
 				}
-
 			}
 
 //		} catch (NullPointerException e) {
