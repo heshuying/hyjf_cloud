@@ -451,7 +451,8 @@
         re.create_time,
         '%Y-%m-%d %H:%i'
         ) verify_over_time,
-        htbi.borrow_level
+        htbi.borrow_level,
+        htbi.project_name
         FROM
         ht_borrow hydb
         left join ht_borrow_info htbi on hydb.borrow_nid =  htbi.borrow_nid
