@@ -13,6 +13,8 @@ public class AppPushManageRequest extends BasePage implements Serializable {
 
     private Integer id;
 
+    private Integer ids;
+
     private String title;
 
     private Integer jumpType;
@@ -56,6 +58,14 @@ public class AppPushManageRequest extends BasePage implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getIds() {
+        return ids;
+    }
+
+    public void setIds(Integer ids) {
+        this.ids = ids;
     }
 
     public String getTitle() {
@@ -192,5 +202,30 @@ public class AppPushManageRequest extends BasePage implements Serializable {
 
     public void setTimeEndDiy(String timeEndDiy) {
         this.timeEndDiy = timeEndDiy;
+    }
+
+    @Override
+    public String toString() {
+        return "AppPushManageRequest{" +
+                "id=" + id +
+                ", ids=" + ids +
+                ", title='" + title + '\'' +
+                ", jumpType=" + jumpType +
+                ", jumpContent=" + jumpContent +
+                ", jumpUrl='" + jumpUrl + '\'' +
+                ", orderId=" + orderId +
+                ", status=" + status +
+                ", timeStart='" + timeStart + '\'' +
+                ", timeEnd='" + timeEnd + '\'' +
+                ", timeStartDiy='" + timeStartDiy + '\'' +
+                ", timeEndDiy='" + timeEndDiy + '\'' +
+                ", createUserId=" + createUserId +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", thumb='" + thumb + '\'' +
+                ", content='" + content + '\'' +
+                ", limitStart=" + limitStart +
+                ", limitEnd=" + limitEnd +
+                '}';
     }
 }
