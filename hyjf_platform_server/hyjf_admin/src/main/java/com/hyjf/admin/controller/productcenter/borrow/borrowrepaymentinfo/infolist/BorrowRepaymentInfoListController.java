@@ -356,7 +356,7 @@ public class BorrowRepaymentInfoListController {
         IValueFormatter borrowPeriodAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
-                return object+"个月";
+                return object+"";
             }
         };
         IValueFormatter borrowAprAdapter = new IValueFormatter() {
