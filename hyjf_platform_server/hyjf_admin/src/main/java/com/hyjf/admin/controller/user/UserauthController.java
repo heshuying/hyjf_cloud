@@ -3,6 +3,7 @@ package com.hyjf.admin.controller.user;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.AuthBean;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -161,12 +162,9 @@ public class UserauthController extends BaseController {
 	@ApiOperation(value = "授权状态", notes = "授权下拉列表")
 	@ResponseBody
 	@PostMapping("/map")
-	public AdminResult<Map<String,Map<String, String>>> map(HttpServletRequest request, HttpServletResponse response,
-			@RequestBody AdminUserAuthLogListRequest form) {
-		Map<String,Map<String, String>> date=new HashMap<>();
-		date.put("client",  CacheUtil.getParamNameMap("CLIENT"));
-		date.put("invert", CacheUtil.getParamNameMap("AUTO_INVER_TYPE"));
-		return new AdminResult<Map<String,Map<String, String>>>(date);
+	public AdminResult<List<DropDownVO>> map() {
+
+		return new AdminResult<List<DropDownVO>>(com.hyjf.admin.utils.ConvertUtils.convertParamMapToDropDown(CacheUtil.getParamNameMap("AUTO_INVER_TYPE")));
 		
 	}
 	/**
