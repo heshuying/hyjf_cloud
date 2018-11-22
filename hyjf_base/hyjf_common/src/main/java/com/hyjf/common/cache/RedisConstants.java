@@ -520,8 +520,4 @@ public class RedisConstants {
      */
     public static final String MQ_TRANSACTION_PREFIX = "mq_tran:";
 
-    /**
-     * 提现
-     */
-    public static final String WITHRAW = "widraw:";
 }
