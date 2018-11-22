@@ -163,12 +163,8 @@ public class AppPushManageController extends BaseController {
 
         AppPushManageResponse pushManageResponse = appPushManageService.getAppPushManageInfoById(ids);
 
-//        if (null == pushManageResponse) {
-//            return new AdminResult<>(FAIL, FAIL_DESC);
-//        }
-
         if (!Response.isSuccess(pushManageResponse)) {
-            return new AdminResult<>(FAIL, pushManageResponse.getMessage());
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
         return new AdminResult<>(pushManageResponse.getResult());
     }
