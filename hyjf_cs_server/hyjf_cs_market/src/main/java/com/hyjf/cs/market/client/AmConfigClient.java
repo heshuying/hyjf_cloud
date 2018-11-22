@@ -107,7 +107,7 @@ public interface AmConfigClient {
      * 查询文章条数
      * @return
      */
-    Integer countContentArticleByType();
+    Integer countContentArticleByType(String type);
 
     /**
      * 查询文章列表

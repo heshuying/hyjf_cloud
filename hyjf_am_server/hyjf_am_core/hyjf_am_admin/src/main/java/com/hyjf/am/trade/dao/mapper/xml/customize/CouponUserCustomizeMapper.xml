@@ -451,6 +451,17 @@
 	<select id="selectDataCenterCouponJXList" resultMap="selectDataCenterCouponMap" parameterType="com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest">
 			
 			SELECT
+					IFNULL(
+					list.title,
+					CASE u.coupon_source
+					WHEN 1 THEN
+					'手动发放'
+					WHEN 3 THEN
+					'会员礼包'
+					ELSE
+					''
+					END
+					) title,
 					sum(
 						CASE
 						WHEN u.used_flag = 1 THEN
@@ -495,6 +506,7 @@
 				FROM
 					ht_coupon_user u
 				LEFT JOIN ht_coupon_config c ON u.coupon_code = c.coupon_code
+				LEFT JOIN hyjf_market.ht_activity_list list ON u.activity_id = list.id
 				LEFT JOIN ht_coupon_tender ct ON u.id = ct.coupon_grant_id
 				LEFT JOIN ht_coupon_recover cr ON ct.order_id = cr.tender_id AND cr.recover_period=1
 				LEFT JOIN ht_coupon_real_tender rts ON ct.order_id = rts.coupon_tender_id
@@ -511,6 +523,17 @@
 	<select id="selectDataCenterCouponDJList" resultMap="selectDataCenterCouponMap" parameterType="com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest">
 			
 				SELECT
+					IFNULL(
+					list.title,
+					CASE u.coupon_source
+					WHEN 1 THEN
+					'手动发放'
+					WHEN 3 THEN
+					'会员礼包'
+					ELSE
+					''
+					END
+					) title,
 					sum(
 						CASE
 						WHEN u.used_flag = 1 THEN
@@ -555,6 +578,7 @@
 				FROM
 					ht_coupon_user u
 				LEFT JOIN ht_coupon_config c ON u.coupon_code = c.coupon_code
+				LEFT JOIN hyjf_market.ht_activity_list list ON u.activity_id = list.id
 				LEFT JOIN ht_coupon_tender ct ON u.id = ct.coupon_grant_id
 				LEFT JOIN ht_coupon_recover cr ON ct.order_id = cr.tender_id AND cr.recover_period=1
 				LEFT JOIN ht_coupon_real_tender rts ON ct.order_id = rts.coupon_tender_id
