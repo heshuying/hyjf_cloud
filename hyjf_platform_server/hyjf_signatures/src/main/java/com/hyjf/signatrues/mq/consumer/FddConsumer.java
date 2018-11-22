@@ -97,7 +97,7 @@ public class FddConsumer extends Consumer {
 
 					} catch (Exception e) {
 						logger.info("=============生成法大大合同任务异常，订单号：" + orderId + ",错误信息：" + e.getMessage()	+ "=============");
-						return ConsumeOrderlyStatus.SUSPEND_CURRENT_QUEUE_A_MOMENT;
+						return ConsumeOrderlyStatus.SUCCESS;
 					}
 					logger.info("--------------------------------------生成法大大合同任务结束，订单号：" + orderId + "=============");
 
