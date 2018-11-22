@@ -45,4 +45,11 @@ public interface AppPushManageService {
      * @return
      */
     int deletePushManage(Integer id);
+
+    /**
+     * 根据ID获取单条记录详情
+     * @param id
+     * @return
+     */
+    AppPushManage getAppPushManageInfoById(Integer id);
 }

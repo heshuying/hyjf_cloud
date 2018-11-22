@@ -10,8 +10,11 @@ import java.util.Date;
  */
 public class AppPushManageRequestBean extends BasePage {
 
-    @ApiModelProperty(value = "当前ID")
-    private Integer id;
+//    @ApiModelProperty(value = "当前ID")
+//    private Integer id;
+
+    @ApiModelProperty(value = "查询ID")
+    private String ids;
 
     @ApiModelProperty(value = "标题名称")
     private String title;
@@ -32,10 +35,10 @@ public class AppPushManageRequestBean extends BasePage {
     private Integer status;
 
     @ApiModelProperty(value = "开始时间")
-    private Date timeStart;
+    private String timeStart;
 
     @ApiModelProperty(value = "结束时间")
-    private Date timeEnd;
+    private String timeEnd;
 
     @ApiModelProperty(value = "缩略图")
     private String thumb;
@@ -43,12 +46,20 @@ public class AppPushManageRequestBean extends BasePage {
     @ApiModelProperty(value = "内容")
     private String content;
 
-    public Integer getId() {
-        return id;
+//    public Integer getId() {
+//        return id;
+//    }
+//
+//    public void setId(Integer id) {
+//        this.id = id;
+//    }
+
+    public String getIds() {
+        return ids;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setIds(String ids) {
+        this.ids = ids;
     }
 
     public String getTitle() {
@@ -99,19 +110,19 @@ public class AppPushManageRequestBean extends BasePage {
         this.status = status;
     }
 
-    public Date getTimeStart() {
+    public String getTimeStart() {
         return timeStart;
     }
 
-    public void setTimeStart(Date timeStart) {
+    public void setTimeStart(String timeStart) {
         this.timeStart = timeStart;
     }
 
-    public Date getTimeEnd() {
+    public String getTimeEnd() {
         return timeEnd;
     }
 
-    public void setTimeEnd(Date timeEnd) {
+    public void setTimeEnd(String timeEnd) {
         this.timeEnd = timeEnd;
     }
 

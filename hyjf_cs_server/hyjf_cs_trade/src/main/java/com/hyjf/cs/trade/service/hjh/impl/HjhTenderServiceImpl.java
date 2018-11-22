@@ -735,25 +735,33 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     @Override
     public void recoverRedis(TenderRequest tender) {
         String redisKey = RedisConstants.HJH_PLAN + tender.getBorrowNid();
-        JedisPool pool = RedisUtils.getPool();
-        Jedis jedis = pool.getResource();
+        JedisPool poolNew = RedisUtils.getPool();
+        Jedis jedis = poolNew.getResource();
         BigDecimal accountBigDecimal = new BigDecimal(tender.getAccount());
         String balanceLast = RedisUtils.get(redisKey);
-        if (StringUtils.isNotBlank(balanceLast)) {
-            while ("OK".equals(jedis.watch(redisKey))) {
-                BigDecimal recoverAccount = accountBigDecimal.add(new BigDecimal(balanceLast));
-                Transaction tx = jedis.multi();
-                tx.set(redisKey, recoverAccount + "");
-                List<Object> result = tx.exec();
-                if (result == null || result.isEmpty()) {
-                    jedis.unwatch();
-                } else {
-                    logger.info("加入计划用户:" + tender.getUserId() + "***********from redis恢复redis："
-                            + tender.getAccount());
-                    break;
+        try{
+            if (StringUtils.isNotBlank(balanceLast)) {
+                while ("OK".equals(jedis.watch(redisKey))) {
+                    BigDecimal recoverAccount = accountBigDecimal.add(new BigDecimal(balanceLast));
+                    Transaction tx = jedis.multi();
+                    tx.set(redisKey, recoverAccount + "");
+                    List<Object> result = tx.exec();
+                    if (result == null || result.isEmpty()) {
+                        jedis.unwatch();
+                    } else {
+                        logger.info("加入计划用户:" + tender.getUserId() + "***********from redis恢复redis："
+                                + tender.getAccount());
+                        break;
+                    }
                 }
             }
+        }catch(Exception e){
+            logger.info("抛出异常:[{}]",e);
+        }finally {
+            //返还
+            RedisUtils.returnResource(poolNew,jedis);
         }
+
     }
 
     /**
@@ -872,8 +880,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         String redisKey = RedisConstants.HJH_PLAN + plan.getPlanNid();
         // 计划剩余金额
         String balance = RedisUtils.get(redisKey);
-        JedisPool pool = RedisUtils.getPool();
-        Jedis jedis = pool.getResource();
+        JedisPool poolNew = RedisUtils.getPool();
+        Jedis jedis = poolNew.getResource();
         // 操作redis----------------------------------------------
         if (StringUtils.isNotBlank(balance)) {
             MsgCode redisMsgCode = null;
@@ -920,7 +928,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                 }
             } finally {
-                RedisUtils.returnResource(pool, jedis);
+                RedisUtils.returnResource(poolNew, jedis);
             }
         } else {
             logger.info("您来晚了：userId:{},planNid{},金额{}元", userId, plan.getPlanNid(), balance);

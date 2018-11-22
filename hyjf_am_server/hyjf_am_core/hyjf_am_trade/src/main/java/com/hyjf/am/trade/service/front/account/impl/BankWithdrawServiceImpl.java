@@ -2,9 +2,11 @@ package com.hyjf.am.trade.service.front.account.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.result.CheckResult;
+import com.hyjf.am.resquest.trade.AfterCashParamRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.front.account.BankWithdrawService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.account.AccountWithdrawVO;
 import com.hyjf.am.vo.user.BankCardVO;
@@ -79,12 +81,12 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
      * @return
      */
     @Override
-    public Boolean updateHandlerAfterCash(JSONObject para) throws Exception{
+    public Boolean updateHandlerAfterCash(AfterCashParamRequest request) throws Exception{
 
-        BankCallBean bean= (BankCallBean) para.get("bankCallBean");
-        AccountWithdrawVO accountWithdraw = (AccountWithdrawVO) para.get("accountWithdrawVO");
-        BankCardVO bankCard= (BankCardVO) para.get("bankCardVO");
-        String fee = (String)para.get("withdrawFee");
+        BankCallBeanVO bean= request.getBankCallBeanVO();
+        AccountWithdrawVO accountWithdraw = request.getAccountWithdrawVO();
+        BankCardVO bankCard = request.getBankCardVO();
+        String fee = request.getWithdrawFee();
 
         String ordId = accountWithdraw.getNid();
         int userId = accountWithdraw.getUserId();
@@ -108,9 +110,8 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
             rtCheck = checkConcurrencyDB(accountWithdraw, userId, ordId);
             if (!rtCheck.isResultBool()) {
                 // 记录被其他进程处理，日志信息输出
-                logger.info(this.getClass().getName(), "handlerAfterCash",
-                        rtCheck.getResultMsg());
-                return false;
+                logger.info(this.getClass().getName(), "handlerAfterCash", rtCheck.getResultMsg());
+                throw new Exception(rtCheck.getResultMsg());
             }
 
             //4.DB更新操作
@@ -214,13 +215,13 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
 
                     boolean isUpdateFlag = this.accountWithdrawMapper.updateByExample(accountwithdraw, example) > 0 ? true : false;
                     if (!isUpdateFlag) {
-
                         throw new Exception("提现失败后,更新提现记录表失败" + "提现订单号:" + ordId + ",用户ID:" + userId);
                     }
+
                 }
             }
 
-            return false;
+            return true;
         }
 
     }
@@ -288,7 +289,7 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
      * @param accountWithdraw
      * @return
      */
-    private CheckResult checkCallRetAndHyjf(BankCallBean bean, AccountWithdrawVO accountWithdraw) {
+    private CheckResult checkCallRetAndHyjf(BankCallBeanVO bean, AccountWithdrawVO accountWithdraw) {
         CheckResult result = new CheckResult();
 
         Boolean resultBool = true;

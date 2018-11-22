@@ -251,7 +251,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         bean.setSmsCode(smsCode);
         bean.setLastSrvAuthCode(lastSrvAuthCode);
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE_PLUS);
-        bean.setForgotPwdUrl(systemConfig.getForgetpassword());
+        bean.setForgotPwdUrl(systemConfig.getFrontHost()+systemConfig.getForgetpassword());
         bean.setChannel(channel);
         bean.setLogRemark(remark);
         return bean;
@@ -505,7 +505,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         String success = systemConfig.getAppFrontHost() + "/user/setting/authorization/result/success?status=000&statusDesc=";
         // 异步调用路
         String bgRetUrl = "http://CS-USER/hyjf-app/bank/user/autoplus";
-        String forgetPassworedUrl = systemConfig.getForgetpassword() + "?sign=" + sign + "&token=" + token;
+        String forgetPassworedUrl = systemConfig.getAppFrontHost()+systemConfig.getAppForgetpassword() + "?sign=" + sign + "&token=" + token;
         retUrl += "&token=1&sign=" + sign;
         success += "&token=1&sign=" + sign;
         bean.setRetUrl(retUrl);
@@ -908,7 +908,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE_PLUS);
         bean.setOrderId(bean.getLogOrderId());
         bean.setAccountId(accountId);
-        bean.setForgotPwdUrl(systemConfig.getForgetpassword());
+        bean.setForgotPwdUrl(systemConfig.getFrontHost()+systemConfig.getForgetpassword());
         bean.setLastSrvAuthCode(lastSrvAuthCode);
         bean.setSmsCode(smsCode);
         bean.setLogRemark(remark);

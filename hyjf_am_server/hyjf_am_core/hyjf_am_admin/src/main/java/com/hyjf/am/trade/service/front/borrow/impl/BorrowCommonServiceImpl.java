@@ -68,7 +68,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	 * 汇消费的项目类型编号
 	 */
 	public static int PROJECT_TYPE_HXF = 8;
-	public static JedisPool pool = RedisUtils.getPool();
+	public static JedisPool poolNew = RedisUtils.getPool();
 
 	/**
 	 * 根据主键判断权限维护中数据是否存在
@@ -117,7 +117,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	 */
 	@Override
 	public synchronized void insertRecord(BorrowCommonBean borrowBean,String adminUsername,int adminId) throws Exception {
-		Jedis jedis = pool.getResource();
 		// 项目类型
 		String projectType = borrowBean.getProjectType().toString();
 		String beforeFix = this.getBorrowProjectClass(projectType);
@@ -178,6 +177,9 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //							}
 //						}
 //					}else{
+					
+					Jedis jedis = poolNew.getResource();
+					try {
 						while ("OK".equals(jedis.watch("borrowPreNid"))) {
 							List<Object> result = null;
 							Transaction tx = jedis.multi();
@@ -210,7 +212,13 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 								}
 							}
 						}
-					
+					} catch (Exception e) {
+						e.printStackTrace();
+					} finally {
+						jedis.close();
+					}
+						
+
 					// 插入huiyingdai_borrow
 					BorrowWithBLOBs borrow = new BorrowWithBLOBs();
 					// 借款表插入

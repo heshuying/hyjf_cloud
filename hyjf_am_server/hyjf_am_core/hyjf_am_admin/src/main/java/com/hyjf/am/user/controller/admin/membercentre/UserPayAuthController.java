@@ -15,7 +15,7 @@ import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhCreditTenderService;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.HjhUserAuth;
 import com.hyjf.am.user.dao.model.auto.HjhUserAuthLog;
-import com.hyjf.am.user.dao.model.customize.AdminUserPayAuthCustomize;
+import com.hyjf.am.user.dao.model.customize.UserPayAuthCustomize;
 import com.hyjf.am.user.service.admin.membercentre.UserPayAuthService;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserPayListAuthCustomizeVO;
@@ -76,7 +76,7 @@ public class UserPayAuthController extends BaseController {
         }
         response.setCount(usesrCount);
         if (usesrCount > 0) {
-            List<AdminUserPayAuthCustomize> adminUserPayAuthCustomizeList = userPayAuthService.selectUserPayAuthList(mapParam, limitStart, limitEnd);
+            List<UserPayAuthCustomize> adminUserPayAuthCustomizeList = userPayAuthService.selectUserPayAuthList(mapParam, limitStart, limitEnd);
             if (!CollectionUtils.isEmpty(adminUserPayAuthCustomizeList)) {
                 List<UserPayListAuthCustomizeVO> userVoList = CommonUtils.convertBeanList(adminUserPayAuthCustomizeList, UserPayListAuthCustomizeVO.class);
                 response.setResultList(userVoList);
@@ -99,7 +99,7 @@ public class UserPayAuthController extends BaseController {
         mapParam.put("authTimeEnd", userRequest.getAuthTimeEnd());
         mapParam.put("userName", userRequest.getUserName());
         mapParam.put("authType", userRequest.getAuthType());
-        mapParam.put("bankid", userRequest.getBankCode());
+        mapParam.put("bankid", userRequest.getBankid());
         mapParam.put("signTimeStart", userRequest.getSignTimeStart());
         mapParam.put("signTimeEnd", userRequest.getSignTimeEnd());
         /*mapParam.put("limitStart", userRequest.getSignTimeEnd());
@@ -185,7 +185,7 @@ public class UserPayAuthController extends BaseController {
         }
         response.setCount(usesrCount);
         if (usesrCount > 0) {
-            List<AdminUserPayAuthCustomize> adminUserPayAuthCustomizeList = userPayAuthService.selectUserRePayAuthList(mapParam, limitStart, limitEnd);
+            List<UserPayAuthCustomize> adminUserPayAuthCustomizeList = userPayAuthService.selectUserRePayAuthList(mapParam, limitStart, limitEnd);
             if (!CollectionUtils.isEmpty(adminUserPayAuthCustomizeList)) {
                 List<UserPayListAuthCustomizeVO> userVoList = CommonUtils.convertBeanList(adminUserPayAuthCustomizeList, UserPayListAuthCustomizeVO.class);
                 response.setResultList(userVoList);
