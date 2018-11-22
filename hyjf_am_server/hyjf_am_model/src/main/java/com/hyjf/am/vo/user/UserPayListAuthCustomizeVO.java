@@ -14,19 +14,13 @@ import java.io.Serializable;
  */
 public class UserPayListAuthCustomizeVO extends BaseVO implements Serializable {
     private int userid;
-    /**
-     * 用户名
-     */
+    /** 用户名 */
     private String userName;
-    /**
-     * 手机号
-     */
-    private String mobile;
+    /** 手机号 */
+    private  String mobile;
     // 电子账号
     private String bankid;
-    /**
-     * 授权状态
-     */
+    /** 授权状态 */
     private String authType;
     //	/** 操作平台 */
 //	private String operateEsb;
@@ -36,6 +30,8 @@ public class UserPayListAuthCustomizeVO extends BaseVO implements Serializable {
     private String signDate;
     //缴费授权单笔最大金额
     private String paymentMaxAmt;
+    //还款授权单笔最大金额
+    private String repayMaxAmt;
 
     public int getUserid() {
         return userid;
@@ -99,5 +95,13 @@ public class UserPayListAuthCustomizeVO extends BaseVO implements Serializable {
 
     public void setPaymentMaxAmt(String paymentMaxAmt) {
         this.paymentMaxAmt = paymentMaxAmt;
+    }
+
+    public String getRepayMaxAmt() {
+        return repayMaxAmt;
+    }
+
+    public void setRepayMaxAmt(String repayMaxAmt) {
+        this.repayMaxAmt = repayMaxAmt;
     }
 }

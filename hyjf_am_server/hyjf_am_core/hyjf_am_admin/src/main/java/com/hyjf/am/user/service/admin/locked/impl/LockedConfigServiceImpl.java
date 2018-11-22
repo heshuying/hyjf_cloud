@@ -206,19 +206,19 @@ public class LockedConfigServiceImpl implements LockedConfigService {
      * @return
      */
     public Set<String> getLoginErrorRedisKey(String redisKeyPrifix) {
-        JedisPool pool = null;
+        JedisPool poolNew = null;
         Jedis jedis = null;
         try {
-            pool = RedisUtils.getPool();
-            jedis = pool.getResource();
+        	poolNew = RedisUtils.getPool();
+            jedis = poolNew.getResource();
             return jedis.keys(redisKeyPrifix + "*");
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-            pool.returnBrokenResource(jedis);
+        	poolNew.returnBrokenResource(jedis);
             // 返还到连接池
-            RedisUtils.returnResource(pool, jedis);
+            RedisUtils.returnResource(poolNew, jedis);
         }
         throw new IllegalArgumentException("获取出错次数失败");
     }

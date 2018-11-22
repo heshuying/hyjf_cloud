@@ -318,12 +318,12 @@ public class BailConfigServiceImpl extends BaseServiceImpl implements BailConfig
         }
 
         // 表删除字段更新成功后删除redis值
-        if (re && RedisUtils.exists(RedisConstants.DAY_MARK_LINE + hjhBailConfig.getInstCode())) {
-            RedisUtils.del(RedisConstants.DAY_MARK_LINE + hjhBailConfig.getInstCode());
-        }
-        if (re && RedisUtils.exists(RedisConstants.MONTH_MARK_LINE + hjhBailConfig.getInstCode())) {
-            RedisUtils.del(RedisConstants.MONTH_MARK_LINE + hjhBailConfig.getInstCode());
-        }
+//        if (re && RedisUtils.exists(RedisConstants.DAY_MARK_LINE + hjhBailConfig.getInstCode())) {
+//            RedisUtils.del(RedisConstants.DAY_MARK_LINE + hjhBailConfig.getInstCode());
+//        }
+//        if (re && RedisUtils.exists(RedisConstants.MONTH_MARK_LINE + hjhBailConfig.getInstCode())) {
+//            RedisUtils.del(RedisConstants.MONTH_MARK_LINE + hjhBailConfig.getInstCode());
+//        }
         return re;
     }
 

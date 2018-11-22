@@ -335,7 +335,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
             result.setData(data);
             // 保存成功后,发送神策数据统计
             if (StringUtils.isNotEmpty(request.getPresetProps())){
-                logger.info("神策预置属性:["+request.getPresetProps()+"]");
+                logger.info("发起债转时,神策预置属性:[" + request.getPresetProps() + "]");
                 SensorsDataBean sensorsDataBean = new SensorsDataBean();
                 // 将json串转换成Bean
                 try {
@@ -802,6 +802,6 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
      * @param sensorsDataBean
      */
     private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
-        this.sensorsDataCreditProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_RECHARGE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
+        this.sensorsDataCreditProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_CREDIT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
     }
 }
