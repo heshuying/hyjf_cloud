@@ -14,10 +14,14 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -27,6 +31,7 @@ import java.util.Map;
  */
 @Service
 public class CouponBackMoneyServiceImpl implements CouponBackMoneyService {
+    private Logger logger = LoggerFactory.getLogger(CouponBackMoneyServiceImpl.class);
     @Autowired
     private AmTradeClient amTradeClient;
 
@@ -466,6 +471,10 @@ public class CouponBackMoneyServiceImpl implements CouponBackMoneyService {
         }
 
         // 导出
-        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+        try {
+            ExportExcel.writeExcelFile(response, workbook, titles, URLEncoder.encode(fileName, CustomConstants.UTF8));
+        } catch (UnsupportedEncodingException e) {
+            logger.error("优惠券回款导出失败！",e);
+        }
     }
 }
