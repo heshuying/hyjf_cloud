@@ -242,7 +242,6 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         } else {
             String orderId = GetOrderIdUtils.getOrderId2(users.getUserId());
             bean.setOrderId(orderId);
-            bean.setLogOrderId(orderId);
         }
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(successUrl);
@@ -545,7 +544,6 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         bean.setSmsCode(smsCode);
         // 操作者ID
         bean.setLogUserId(String.valueOf(users.getUserId()));
-        bean.setLogOrderId(orderId);
         bean.setLogRemark(remark);
         bean.setLogClient(0);
         return bean;
