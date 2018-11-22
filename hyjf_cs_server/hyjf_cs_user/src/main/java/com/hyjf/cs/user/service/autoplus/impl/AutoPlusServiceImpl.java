@@ -505,7 +505,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         String success = systemConfig.getAppFrontHost() + "/user/setting/authorization/result/success?status=000&statusDesc=";
         // 异步调用路
         String bgRetUrl = "http://CS-USER/hyjf-app/bank/user/autoplus";
-        String forgetPassworedUrl = systemConfig.getAppFrontHost()+systemConfig.getForgetpassword() + "?sign=" + sign + "&token=" + token;
+        String forgetPassworedUrl = systemConfig.getAppFrontHost()+systemConfig.getAppForgetpassword() + "?sign=" + sign + "&token=" + token;
         retUrl += "&token=1&sign=" + sign;
         success += "&token=1&sign=" + sign;
         bean.setRetUrl(retUrl);

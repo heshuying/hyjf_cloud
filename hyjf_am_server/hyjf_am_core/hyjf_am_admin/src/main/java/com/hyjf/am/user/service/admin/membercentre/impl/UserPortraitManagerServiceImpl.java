@@ -401,15 +401,17 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
                 }
             } catch (Exception e) {
                 e.printStackTrace();
-            }
+            } finally {
+				jedis.close();
+			}
         }
         return list;
     }
 
     private Jedis getJedis(String redisKey,UserPortraitScoreRequest request) {
 
-        JedisPool pool = RedisUtils.getPool();
-        Jedis jedis = pool.getResource();
+        JedisPool poolNew = RedisUtils.getPool();
+        Jedis jedis = poolNew.getResource();
         Boolean exists = jedis.exists(redisKey);
         if (!exists) {
             List<ParamName> list = CommonUtils.convertBeanList(request.getParamNameVOList(),ParamName.class);
