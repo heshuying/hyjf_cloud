@@ -37,7 +37,9 @@ public class UserPayAuthCustomizeVO extends BaseVO implements Serializable {
     //缴费授权单笔最大金额
     @ApiModelProperty(value = "缴费授权单笔最大金额")
     private String paymentMaxAmt;
-
+    //还款授权单笔最大金额
+    @ApiModelProperty(value = "还款授权单笔最大金额")
+    private String repayMaxAmt;
 
     public String getUserName() {
         return userName;
@@ -101,5 +103,13 @@ public class UserPayAuthCustomizeVO extends BaseVO implements Serializable {
 
     public void setPaymentMaxAmt(String paymentMaxAmt) {
         this.paymentMaxAmt = paymentMaxAmt;
+    }
+
+    public String getRepayMaxAmt() {
+        return repayMaxAmt;
+    }
+
+    public void setRepayMaxAmt(String repayMaxAmt) {
+        this.repayMaxAmt = repayMaxAmt;
     }
 }

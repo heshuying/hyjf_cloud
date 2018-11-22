@@ -342,6 +342,15 @@ public class WrbUserBindController extends BaseUserController {
         if (!CommonUtils.isMobile(userName)) {
             throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN);
         }
+        //判断用户输入的密码错误次数---开始
+        Map<String, String> errorInfo=loginService.insertErrorPassword(userName,password,BankCallConstant.CHANNEL_WEI);
+        if (!errorInfo.isEmpty()){
+            logger.error("weChat端登录失败...");
+            result.setStatus(ApiResult.FAIL);
+            result.setStatusDesc(errorInfo.get("info"));
+            return result;
+        }
+        //判断用户输入的密码错误次数---结束
         WebViewUserVO userVO = loginService.login(userName, password, com.hyjf.cs.user.util.GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI);
         if (userVO != null) {
             logger.info("weChat端登录成功, userId is :{}", userVO.getUserId());

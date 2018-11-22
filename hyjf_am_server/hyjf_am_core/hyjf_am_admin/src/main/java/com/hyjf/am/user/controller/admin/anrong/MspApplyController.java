@@ -90,7 +90,7 @@ public class MspApplyController  {
 			}
 			
 		}
-		int count = this.mspApplyService.countByExample(ma);
+		int count = this.mspApplyService.countByExample(ma,start,end);
 		mr.setRecordTotal(count);
 		if (count >0) {
 			Paginator paginator = new Paginator(form.getCurrPage(), count,form.getPageSize());

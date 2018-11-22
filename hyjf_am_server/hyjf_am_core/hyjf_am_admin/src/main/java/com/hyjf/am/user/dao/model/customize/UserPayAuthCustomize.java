@@ -25,6 +25,8 @@ public class UserPayAuthCustomize {
     private String signDate;
     //缴费授权单笔最大金额
     private String paymentMaxAmt;
+    //还款授权单笔最大金额
+    private String repayMaxAmt;
 
     public int getUserid() {
         return userid;
@@ -88,5 +90,13 @@ public class UserPayAuthCustomize {
 
     public void setPaymentMaxAmt(String paymentMaxAmt) {
         this.paymentMaxAmt = paymentMaxAmt;
+    }
+
+    public String getRepayMaxAmt() {
+        return repayMaxAmt;
+    }
+
+    public void setRepayMaxAmt(String repayMaxAmt) {
+        this.repayMaxAmt = repayMaxAmt;
     }
 }

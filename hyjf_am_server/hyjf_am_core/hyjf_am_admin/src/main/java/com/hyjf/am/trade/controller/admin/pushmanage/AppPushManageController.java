@@ -10,6 +10,8 @@ import com.hyjf.am.trade.dao.model.auto.AppPushManage;
 import com.hyjf.am.trade.service.admin.pushmanage.AppPushManageService;
 import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetDateUtils;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
@@ -59,7 +61,6 @@ public class AppPushManageController extends BaseController {
         List<AppPushManage> pushManageList = this.appPushManageService.getAllList(pushManageRequest);
 
         if (!CollectionUtils.isEmpty(pushManageList)){
-
             pushManageResponse.setResultList(CommonUtils.convertBeanList(pushManageList, AppPushManageVO.class));
             pushManageResponse.setCount(count);
             pushManageResponse.setRtn(Response.SUCCESS);
@@ -167,13 +168,13 @@ public class AppPushManageController extends BaseController {
         AppPushManageVO pushManageVO = new AppPushManageVO();
         AppPushManage pushManage = appPushManageService.getAppPushManageInfoById(id);
 
-        if (pushManage == null){
+        if (null != pushManage){
+            BeanUtils.copyProperties(pushManage, pushManageVO);
+            pushManageResponse.setResult(pushManageVO);
+            pushManageResponse.setRtn(AdminResponse.SUCCESS);
+        }else {
             pushManageResponse.setRtn(AdminResponse.ERROR);
-            return pushManageResponse;
         }
-        BeanUtils.copyProperties(pushManage, pushManageVO);
-        pushManageResponse.setResult(pushManageVO);
-        pushManageResponse.setRtn(AdminResponse.SUCCESS);
         return pushManageResponse;
     }
 

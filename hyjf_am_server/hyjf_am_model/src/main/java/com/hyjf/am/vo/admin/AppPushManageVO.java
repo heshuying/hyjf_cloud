@@ -27,9 +27,15 @@ public class AppPushManageVO extends BaseVO implements Serializable {
 
     private Date timeEnd;
 
+    private String timeStartStr;
+
+    private String timeEndStr;
+
     private Integer createUserId;
 
     private Date createTime;
+
+    private String createTimeStr;
 
     private Date updateTime;
 
@@ -147,5 +153,29 @@ public class AppPushManageVO extends BaseVO implements Serializable {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getTimeStartStr() {
+        return timeStartStr;
+    }
+
+    public void setTimeStartStr(String timeStartStr) {
+        this.timeStartStr = timeStartStr;
+    }
+
+    public String getTimeEndStr() {
+        return timeEndStr;
+    }
+
+    public void setTimeEndStr(String timeEndStr) {
+        this.timeEndStr = timeEndStr;
+    }
+
+    public String getCreateTimeStr() {
+        return createTimeStr;
+    }
+
+    public void setCreateTimeStr(String createTimeStr) {
+        this.createTimeStr = createTimeStr;
     }
 }
