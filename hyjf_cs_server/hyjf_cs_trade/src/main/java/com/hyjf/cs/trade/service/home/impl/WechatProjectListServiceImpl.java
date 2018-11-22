@@ -222,7 +222,11 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             borrowProjectInfoBean.setAccount(borrow.getBorrowAccount());
             borrowProjectInfoBean.setBorrowApr(borrow.getBorrowApr());
             borrowProjectInfoBean.setBorrowId(borrowNid);
-            borrowProjectInfoBean.setBorrowExtraYield(borrow.getBorrowExtraYield());
+            if (StringUtils.isNotBlank(borrow.getIncreaseInterestFlag()) && borrow.getIncreaseInterestFlag().equals("1")){
+                borrowProjectInfoBean.setBorrowExtraYield(borrow.getBorrowExtraYield());
+            }else{
+                borrowProjectInfoBean.setBorrowExtraYield("");
+            }
             borrowProjectInfoBean.setOnAccrual((borrow.getRecoverLastTime() == null ? "放款成功立即计息" : borrow.getRecoverLastTime()));
             //0：备案中 1：初审中 2：投资中 3：复审中 4：还款中 5：已还款 6：已流标 7：待授权
             borrowProjectInfoBean.setStatus(borrow.getBorrowStatus());
