@@ -10,8 +10,10 @@ import com.hyjf.am.response.trade.RepayPlanResponse;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.WechatMyProjectRequest;
 import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.auto.TenderAgreement;
 import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.trade.service.front.asset.AssetManageService;
+import com.hyjf.am.trade.service.front.config.TenderAgreementService;
 import com.hyjf.am.vo.app.AppTenderToCreditListCustomizeVO;
 import com.hyjf.am.vo.trade.TenderCreditDetailCustomizeVO;
 import com.hyjf.am.vo.trade.assetmanage.*;
@@ -32,6 +34,10 @@ import java.util.Map;
 public class AssetManageController extends BaseController {
     @Autowired
     private AssetManageService assetManageService;
+
+    @Autowired
+    private TenderAgreementService tenderAgreementService;
+
     /**
      * @Description 获取用户当前持有债权列表
      * @Author pangchengchao
@@ -44,6 +50,29 @@ public class AssetManageController extends BaseController {
         AssetManageResponse response = new AssetManageResponse();
         List<CurrentHoldObligatoryRightListCustomize> list = assetManageService.selectCurrentHoldObligatoryRightList(request);
         if(!CollectionUtils.isEmpty(list)){
+            for (CurrentHoldObligatoryRightListCustomize currentHoldObligatoryRightListCustomize : list) {
+                String nid = currentHoldObligatoryRightListCustomize.getNid();
+                //法大大居间服务协议（type=2时候，为债转协议）
+                List<TenderAgreement> tenderAgreementsNid= tenderAgreementService.selectTenderAgreementByNid(nid);//居间协议
+                if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
+                    TenderAgreement tenderAgreement = tenderAgreementsNid.get(0);
+                    Integer fddStatus = tenderAgreement.getStatus();
+                    //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
+                    //System.out.println("******************1法大大协议状态："+tenderAgreement.getStatus());
+                    if(fddStatus.equals(3)){
+                        currentHoldObligatoryRightListCustomize.setFddStatus(1);
+                    }else {
+                        //隐藏下载按钮
+                        //System.out.println("******************2法大大协议状态：0");
+                        currentHoldObligatoryRightListCustomize.setFddStatus(0);
+                    }
+                }else {
+                    //下载老版本协议
+                    //System.out.println("******************3法大大协议状态：2");
+                    currentHoldObligatoryRightListCustomize.setFddStatus(1);
+                }
+            }
+
             List<CurrentHoldObligatoryRightListCustomizeVO> voList = CommonUtils.convertBeanList(list, CurrentHoldObligatoryRightListCustomizeVO.class);
             response.setCurrentHoldObligatoryRightList(voList);
         }

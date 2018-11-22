@@ -85,4 +85,16 @@ public class AsteriskProcessUtil {
         desensitizationData = getAsterisked(startCnt) + originStr.substring(startCnt, startCnt+2);
         return desensitizationData;
     }
+
+    public static String getAsteriskedValue(String originValue){
+        String phoneNumAsterisked = "";
+        if(StringUtils.isEmpty(originValue)){
+            return "";
+        }
+        if(originValue.length() <= 7){
+            return originValue;
+        }
+        phoneNumAsterisked = originValue.substring(0, 3) + getAsterisked(originValue.length() - 7) + originValue.substring(originValue.length() - 4);
+        return phoneNumAsterisked;
+    }
 }

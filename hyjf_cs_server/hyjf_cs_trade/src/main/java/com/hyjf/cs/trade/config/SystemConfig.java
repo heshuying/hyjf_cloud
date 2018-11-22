@@ -60,6 +60,9 @@ public class SystemConfig {
     @Value("${hyjf.web.bank.forgetpassword}")
     public String forgetpassword;
 
+    @Value("${hyjf.app.bank.forgetpassword}")
+    public String appForgetpassword;
+
     @Value("${file.domain.url}")
     public String fileDomainUrl;
 
@@ -262,6 +265,14 @@ public class SystemConfig {
 
     @Value("${hyjf.wechat.invite.url}")
     private String wechatInviteUrl;
+
+    public String getAppForgetpassword() {
+        return appForgetpassword;
+    }
+
+    public void setAppForgetpassword(String appForgetpassword) {
+        this.appForgetpassword = appForgetpassword;
+    }
 
     public String getFddFileUpload() {
         return fddFileUpload;

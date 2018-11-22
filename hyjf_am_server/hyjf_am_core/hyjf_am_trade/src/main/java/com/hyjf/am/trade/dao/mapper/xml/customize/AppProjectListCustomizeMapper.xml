@@ -971,11 +971,11 @@
 				THEN FROM_UNIXTIME( hydb.ontime, '%m-%d %H:%i' )
 		ELSE ''
 		END AS on_time,
-		(hydb.borrow_interest_coupon or hydb.borrow_taste_money) as couponEnable,
-		case when hydb.borrow_extra_yield=0 then
+		(hydbi.borrow_interest_coupon or hydbi.borrow_taste_money) as couponEnable,
+		case when hydbi.borrow_extra_yield=0 then
 		''
 		else
-		 	CONCAT('',hydb.borrow_extra_yield, '%')
+		 	CONCAT('',hydbi.borrow_extra_yield, '%')
 		 end
 		borrow_extra_yield,
 		case 
@@ -988,8 +988,9 @@
 	</sql>
 	
 	<sql id="From_Clause">
-		ht_borrow_info hydb
-		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		ht_borrow hydb
+			LEFT JOIN ht_borrow_info hydbi ON hydb.borrow_nid = hydbi.borrow_nid
+			LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
 	</sql>
 	
 	<sql id="WhereList_Clause">
@@ -1017,7 +1018,7 @@
         	<include refid="From_Clause" />
         WHERE
         	<include refid="WhereList_Clause" />
-        	AND ( hydb.`status` = 2 AND hydb.verify_time + ( borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
+        	AND ( hydb.`status` = 2 AND hydb.verify_time + ( hydbi.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
 		ORDER BY
 			hydb.borrow_account_scale DESC,
 			hydb.verify_time DESC

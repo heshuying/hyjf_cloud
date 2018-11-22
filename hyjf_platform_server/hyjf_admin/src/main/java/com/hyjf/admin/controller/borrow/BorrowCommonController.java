@@ -2131,7 +2131,7 @@ public class BorrowCommonController extends BaseController {
 		 BorrowCustomizeResponse resultList = borrowCommonService.exportBorrowList(form);
 
 
-        Integer totalCount = resultList.getRecordTotal();
+        Integer totalCount = resultList.getBorrowCommonCustomizeList().size();
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         int minId = 0;

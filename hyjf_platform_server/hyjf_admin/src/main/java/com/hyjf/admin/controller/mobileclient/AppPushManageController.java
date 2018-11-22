@@ -287,12 +287,12 @@ public class AppPushManageController extends BaseController {
 //            return jsonObject;
 //        }
 
-        if (StringUtils.isBlank(requestBean.getTimeStart())){
+        if (StringUtils.isBlank(requestBean.getTimeStartDiy())){
             jsonObject.put("code", "起始时间不能为空!");
             return jsonObject;
         }
 
-        if (StringUtils.isBlank(requestBean.getTimeEnd())){
+        if (StringUtils.isBlank(requestBean.getTimeEndDiy())){
             jsonObject.put("code", "结束时间不能为空!");
             return jsonObject;
         }
