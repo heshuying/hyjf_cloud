@@ -162,6 +162,6 @@ public class CouponBackMoneyController extends BaseController {
 
         String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
-        couponBackMoneyService.exportAction(new String(fileName.getBytes("iso-8859-1"),"GBK"),resultList,recoverInterest,investTotal,fileName,response,couponBackMoneyCustomize);
+        couponBackMoneyService.exportAction(new String(fileName.getBytes("gbk"), "iso8859-1"),resultList,recoverInterest,investTotal,fileName,response,couponBackMoneyCustomize);
     }
 }
