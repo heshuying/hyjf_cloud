@@ -58,7 +58,7 @@ public class UserOperationLogConsumer extends Consumer {
 		@Override
 		public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
 			MessageExt msg = msgs.get(0);
-			UserOperationLogEntityVO userOperationLogEntity = JSONObject.parseObject(msg.getBody(), AppMsMessage.class);
+			UserOperationLogEntityVO userOperationLogEntity = JSONObject.parseObject(msg.getBody(), UserOperationLogEntityVO.class);
 			logger.info("UserOperationLogConsumer 收到请求，userOperationLogEntity is：{}", userOperationLogEntity);
 			if (null != userOperationLogEntity&& StringUtils.isNotBlank(userOperationLogEntity.getUserName())) {
 				userOperationLogEntity.setOperationTime(new Date());
