@@ -872,8 +872,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         String redisKey = RedisConstants.HJH_PLAN + plan.getPlanNid();
         // 计划剩余金额
         String balance = RedisUtils.get(redisKey);
-        JedisPool pool = RedisUtils.getPool();
-        Jedis jedis = pool.getResource();
+        JedisPool poolNew = RedisUtils.getPool();
+        Jedis jedis = poolNew.getResource();
         // 操作redis----------------------------------------------
         if (StringUtils.isNotBlank(balance)) {
             MsgCode redisMsgCode = null;
@@ -920,7 +920,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                 }
             } finally {
-                RedisUtils.returnResource(pool, jedis);
+                RedisUtils.returnResource(poolNew, jedis);
             }
         } else {
             logger.info("您来晚了：userId:{},planNid{},金额{}元", userId, plan.getPlanNid(), balance);
