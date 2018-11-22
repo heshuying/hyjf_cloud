@@ -143,7 +143,8 @@ public class AboutUsController extends BaseController {
 			resultMap.put("contentArticleList", recordList);
 			result.setData(resultMap);
             Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
-            int count = appFindService.countContentArticleByType();
+            String type = "2";
+            int count = appFindService.countContentArticleByType(type);
             page.setTotal(count);
             result.setPage(page);
 			return result;
