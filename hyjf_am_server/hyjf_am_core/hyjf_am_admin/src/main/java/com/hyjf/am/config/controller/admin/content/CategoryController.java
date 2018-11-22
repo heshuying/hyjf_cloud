@@ -312,6 +312,7 @@ public class CategoryController extends BaseConfigController {
                 if (ids.contains(help.getPcateId())) {
                     cc.setIsZhiChi("true");
                 }
+                cc.setZhiChiStatus(help.getZhichiStatus());
                 cc.setAdd_time(GetDate.date2Str(help.getCreateTime(), GetDate.datetimeFormat));
                 resultHelpList.add(cc);
             }
@@ -412,8 +413,8 @@ public class CategoryController extends BaseConfigController {
         if(status != null){
             con.setStatus(Integer.parseInt(status));
         }
-        if(null != zhiChiStatus && "null".equals(zhiChiStatus)){
-            //con.setZhiChiStatus(zhiChiStatus);
+        if(null != zhiChiStatus && !"null".equals(zhiChiStatus)){
+            con.setZhichiStatus(Integer.valueOf(zhiChiStatus));
         }
         // 更新
         this.categoryService.updateHelpAction(con);

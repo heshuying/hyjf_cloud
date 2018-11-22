@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.service.withdraw.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.result.CheckResult;
+import com.hyjf.am.resquest.trade.AfterCashParamRequest;
 import com.hyjf.am.resquest.trade.ApiUserWithdrawRequest;
 import com.hyjf.am.resquest.trade.BankWithdrawBeanRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
@@ -483,12 +484,12 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                 BigDecimal transAmt = new BigDecimal(bean.getTxAmount());
                 String withdrawFee = this.getWithdrawFee(userId,bankCard == null ? "" : String.valueOf(bankCard.getBankId()), transAmt);
                 //调用后平台操作
-                JSONObject params = new JSONObject();
-                params.put("bankCallBean",bean);
-                params.put("accountWithdrawVO",accountwithdraw);
-                params.put("bankCardVO",bankCard);
-                params.put("withdrawFee",withdrawFee);
-                boolean result=this.amTradeClient.handlerAfterCash(params);
+                AfterCashParamRequest request = new  AfterCashParamRequest();
+                request.setBankCallBeanVO(CommonUtils.convertBean(bean,BankCallBeanVO.class));
+                request.setAccountWithdrawVO(accountwithdraw);
+                request.setBankCardVO(bankCard);
+                request.setWithdrawFee(withdrawFee);
+                boolean result=this.amTradeClient.handlerAfterCash(request);
                 if (result){
                     logger.info("银行提现掉单修复成功!,账户:"+accountwithdraw.getAccountId());
 
@@ -578,7 +579,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
     private String getWithdrawFee(Integer userId, String bankId, BigDecimal amount) {
         BankCardVO bankCard = this.amUserClient.getBankCardByCardNo(userId, bankId);
-        if (FEETMP == null) {
+        if (StringUtils.isBlank(FEETMP)) {
             FEETMP = "1";
         }
         if (bankCard != null) {

@@ -314,6 +314,14 @@ public class ProtocolController extends BaseController{
         bean10.setCode("《投资服务协议》");
         bean10.setName("《投资服务协议》");
         selectList.add(bean10);
+        ProtocolSelectBean bean11 = new ProtocolSelectBean();
+        bean11.setCode("《服务协议》");
+        bean11.setName("《服务协议》");
+        selectList.add(bean11);
+        ProtocolSelectBean bean12 = new ProtocolSelectBean();
+        bean12.setCode("《隐私政策》");
+        bean12.setName("《隐私政策》");
+        selectList.add(bean12);
         return selectList;
     }
 

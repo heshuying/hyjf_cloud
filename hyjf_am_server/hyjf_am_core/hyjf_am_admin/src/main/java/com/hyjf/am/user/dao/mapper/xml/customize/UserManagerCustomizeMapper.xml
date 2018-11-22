@@ -224,7 +224,7 @@
         <result column="role" property="role" jdbcType="INTEGER" />
         <result column="user_type" property="userType" jdbcType="VARCHAR" />
         <result column="recommend_name" property="recommendName" jdbcType="VARCHAR" />
-        <result column="depart_name" property="departName" jdbcType="VARCHAR" />
+        <!--<result column="depart_name" property="departName" jdbcType="VARCHAR" />-->
         <result column="regist_pid_name" property="registPidName" jdbcType="VARCHAR" />
         <result column="regist_plat" property="registPlat" jdbcType="INTEGER" />
         <result column="open_account_plat" property="openAccountPlat" jdbcType="INTEGER" />
@@ -268,7 +268,7 @@
         hydu.user_type AS user_type,
         hydui.attribute AS user_property,
         hydurefer.username AS recommend_name,
-        hydd.`name` AS depart_name,
+--         hydd.`name` AS depart_name,
         hydup.source_name AS regist_pid_name,
         hydu.reg_esb AS regist_plat,
         hydu.account_esb AS open_account_plat,
@@ -313,8 +313,8 @@
         LEFT JOIN ht_utm_plat hydup1 ON hydup1.source_id = hydutm.source_id
         LEFT JOIN ht_spreads_user hydsu ON hydsu.user_id = hydu.user_id
         LEFT JOIN ht_user hydurefer ON hydurefer.user_id = hydsu.spreads_user_id
-        LEFT JOIN ht_r_oa_users oau ON oau.hyd_id = hydsu.spreads_user_id and oau.user_status IN ('E','Q1','Q11','Q2','Q21')
-        LEFT JOIN ht_r_oa_department hydd ON hydd.id = oau.departmentid
+--         LEFT JOIN ht_r_oa_users oau ON oau.hyd_id = hydsu.spreads_user_id and oau.user_status IN ('E','Q1','Q11','Q2','Q21')
+--         LEFT JOIN ht_r_oa_department hydd ON hydd.id = oau.departmentid
         WHERE
         hydu.user_id =#{userId,jdbcType=INTEGER}
     </select>

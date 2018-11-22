@@ -181,9 +181,9 @@ public class BailConfigController extends BaseController {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         // 日推标上限记录到redis
-        RedisUtils.set(RedisConstants.DAY_MARK_LINE + instCode, bailConfigAddRequest.getDayMarkLine().toString());
+//        RedisUtils.set(RedisConstants.DAY_MARK_LINE + instCode, bailConfigAddRequest.getDayMarkLine().toString());
         // 月推标上限记录到redis
-        RedisUtils.set(RedisConstants.MONTH_MARK_LINE + instCode, bailConfigAddRequest.getMonthMarkLine().toString());
+//        RedisUtils.set(RedisConstants.MONTH_MARK_LINE + instCode, bailConfigAddRequest.getMonthMarkLine().toString());
         // 日额度累计redis(日累计不存再的情况初始化)
         if (!RedisUtils.exists(RedisConstants.DAY_MARK_ACCUMULATE + instCode)) {
             RedisUtils.set(RedisConstants.DAY_MARK_ACCUMULATE + instCode, "0");
@@ -227,9 +227,9 @@ public class BailConfigController extends BaseController {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         // 日推标上限记录到redis
-        RedisUtils.set(RedisConstants.DAY_MARK_LINE + instCode, bailConfigAddRequest.getDayMarkLine().toString());
+//        RedisUtils.set(RedisConstants.DAY_MARK_LINE + instCode, bailConfigAddRequest.getDayMarkLine().toString());
         // 月推标上限记录到redis
-        RedisUtils.set(RedisConstants.MONTH_MARK_LINE + instCode, bailConfigAddRequest.getMonthMarkLine().toString());
+//        RedisUtils.set(RedisConstants.MONTH_MARK_LINE + instCode, bailConfigAddRequest.getMonthMarkLine().toString());
         return new AdminResult<>();
     }
 
