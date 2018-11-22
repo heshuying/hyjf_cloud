@@ -41,12 +41,28 @@ public class BorrowFullController extends BaseController {
     public static final String PERMISSIONS = "borrowfull";
 
     /**
-     * 借款复审初始化/获取列表共用接口
+     * 借款复审初始化
      *
      * @param borrowFullRequestBean
      * @return
      */
-    @ApiOperation(value = "借款复审初始化/获取列表共用接口", notes = "借款复审初始化/获取列表共用接口")
+    @ApiOperation(value = "借款复审初始化", notes = "借款复审初始化")
+    @PostMapping("/init")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult<BorrowFullResponseBean> init(@RequestBody BorrowFullRequestBean borrowFullRequestBean) {
+        BorrowFullRequest borrowFullRequest = new BorrowFullRequest();
+        BeanUtils.copyProperties(borrowFullRequestBean, borrowFullRequest);
+        BorrowFullResponseBean responseBean = borrowFullService.getBorrowFullList(borrowFullRequest);
+        return new AdminResult(responseBean);
+    }
+
+    /**
+     * 查询列表接口
+     *
+     * @param borrowFullRequestBean
+     * @return
+     */
+    @ApiOperation(value = "查询列表接口", notes = "查询列表接口")
     @PostMapping("/search")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
     public AdminResult<BorrowFullResponseBean> getBorrowFullList(@RequestBody BorrowFullRequestBean borrowFullRequestBean) {
