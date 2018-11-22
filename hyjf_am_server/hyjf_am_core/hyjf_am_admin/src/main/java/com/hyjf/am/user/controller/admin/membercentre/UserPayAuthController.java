@@ -99,7 +99,7 @@ public class UserPayAuthController extends BaseController {
         mapParam.put("authTimeEnd", userRequest.getAuthTimeEnd());
         mapParam.put("userName", userRequest.getUserName());
         mapParam.put("authType", userRequest.getAuthType());
-        mapParam.put("bankid", userRequest.getBankCode());
+        mapParam.put("bankid", userRequest.getBankid());
         mapParam.put("signTimeStart", userRequest.getSignTimeStart());
         mapParam.put("signTimeEnd", userRequest.getSignTimeEnd());
         /*mapParam.put("limitStart", userRequest.getSignTimeEnd());

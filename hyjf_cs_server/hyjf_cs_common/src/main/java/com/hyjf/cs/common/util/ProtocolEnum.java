@@ -18,7 +18,9 @@ public enum ProtocolEnum {
     TZFXQRS("《投资风险确认书》","tzfxqrs"),
     TZFWXY("《投资服务协议》","tzfwxy"),
     ZQZRXY("《债权转让协议》","zqzrxy"),
-    FXQRS("《风险确认书》","fxqrs");
+    FXQRS("《风险确认书》","fxqrs"),
+    FWXY("《服务协议》","fwxy"),
+    YSZC("《隐私政策》","yszc");
 
     private String displayName;//前台界面显示名称
     private String alias;//别名
