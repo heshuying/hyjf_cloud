@@ -868,32 +868,26 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         }
 
         // 设置产品加息 显示收益率
-        logger.info("产品加息：{}   {}    {} ",borrow.getIncreaseInterestFlag(),borrowInfo.getBorrowExtraYield(),Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield()));
         if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
             investInfo.setBorrowExtraYield(df.format(borrowInfo.getBorrowExtraYield()));
         }
 
         // 如果投资金额不为空
-        if ((!StringUtils.isBlank(money) && Long.parseLong(money) > 0) || (couponUser != null && (couponUser.getCouponType() == 3 || couponUser.getCouponType() == 1))) {
+        if ((!StringUtils.isBlank(money) && Long.parseLong(money) > 0) ||
+                (couponUser != null && (couponUser.getCouponType() == 3 ||
+                        couponUser.getCouponType() == 1))) {
 
             String borrowStyle = borrow.getBorrowStyle();
             // 收益率
             BigDecimal borrowApr = borrow.getBorrowApr();
-            //TODO:开始时这里是有的
-/*            if (borrow.getProjectType() == 13 && borrowInfo.getBorrowExtraYield() != null && borrowInfo.getBorrowExtraYield().compareTo(BigDecimal.ZERO) > 0) {
-                borrowApr = borrowApr.add(borrowInfo.getBorrowExtraYield());
-            }*/
             BigDecimal couponInterest = BigDecimal.ZERO;
             /** 叠加收益率开始*/
             if (couponUser != null) {
                 if (couponUser.getCouponType() == 1) {
                     couponInterest =couponService.getInterestDj(couponUser.getCouponQuota(), couponUser.getCouponProfitTime().intValue(), borrowApr);
                 } else {
-                    logger.info("-----borrowStyle：{}    CouponType:{}   borrowApr:{}   ouponQuota:{}  money:{}    orrowPeriod:{}",
-                            borrowStyle, couponUser.getCouponType(),borrowApr,couponUser.getCouponQuota(),money,borrow.getBorrowPeriod());
                     couponInterest = couponService.getInterest(borrowStyle, couponUser.getCouponType(), borrowApr, couponUser.getCouponQuota(), money, borrow.getBorrowPeriod());
                 }
-                logger.info("优惠券收益：：：{}",couponInterest);
                 couponUser.setCouponInterest(df.format(couponInterest));
                 // 加息券
                 if (couponUser.getCouponType() == 2) {
@@ -906,7 +900,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             /** 叠加收益率结束 */
             // 计算收益
             BigDecimal earnings = BorrowEarningsUtil.getBorrowEarnings(new BigDecimal(money),borrow.getBorrowPeriod(),borrow.getBorrowStyle(),borrow.getBorrowApr());
-
             investInfo.setEarnings(df.format(earnings));
             logger.info("本金收益  "+earnings.toString());
             if (couponUser != null && couponUser.getCouponType() == 3) {
@@ -921,13 +914,12 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 investInfo.setEarnings(df.format(earnings));
             }
             investInfo.setCouponUser(couponUser);
-            logger.info("本金+优惠券收益  "+investInfo.getEarnings().toString());
+            logger.info("本金+优惠券收益  "+investInfo.getEarnings());
             // 产品加息预期收益
             if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
                 if (couponUser != null && couponUser.getCouponType() == 3){
                     money = new BigDecimal(money).subtract(couponUser.getCouponQuota()).toString();
                 }
-                logger.info("开始计算加息收益   money:{}   BorrowExtraYield:{}",money ,borrowInfo.getBorrowExtraYield());
                 BigDecimal incEarnings = increaseCalculate(borrow.getBorrowPeriod(), borrow.getBorrowStyle(), money, borrowInfo.getBorrowExtraYield());
                 logger.info("开始计算加息收益   incEarnings:{}  ",incEarnings );
                 investInfo.setEarnings(df.format(incEarnings.add(earnings)));
@@ -1005,7 +997,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 return resultVo;
             }
         }
-        logger.info("investType:[{}]",investType);
         String money = tender.getMoney();
         {
             this.setProtocolsToResultVO(investInfo, investType);
