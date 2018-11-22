@@ -77,7 +77,7 @@ public class DayMarkLineTotalController extends BaseController {
                     // 前一天已用额度
                     String redisKeyDU = RedisConstants.DAY_USED + hjhBailConfig.getInstCode() + "_" + beforeDay;
                     // 日推标额度上限
-                    String redisKeyDML = RedisConstants.DAY_MARK_LINE + hjhBailConfig.getInstCode();
+//                    String redisKeyDML = RedisConstants.DAY_MARK_LINE + hjhBailConfig.getInstCode();
                     // 打开累计额度开关的
                     if (hjhBailConfig.getIsAccumulate() == 1) {
                         try {
@@ -88,9 +88,9 @@ public class DayMarkLineTotalController extends BaseController {
                             }
                             // 日额度上限(redis未记录的话取数据库的值)
                             BigDecimal redisValueDML = hjhBailConfig.getDayMarkLine();
-                            if (RedisUtils.exists(redisKeyDML)) {
-                                redisValueDML = new BigDecimal(RedisUtils.get(redisKeyDML));
-                            }
+//                            if (RedisUtils.exists(redisKeyDML)) {
+//                                redisValueDML = new BigDecimal(RedisUtils.get(redisKeyDML));
+//                            }
                             // 日使用额度(没有的话说明前一天没使用过)
 
                             BigDecimal redisValueDU = BigDecimal.ZERO;

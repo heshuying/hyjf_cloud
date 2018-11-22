@@ -389,7 +389,7 @@ public class RedisConstants {
     /**
      * 日推标上限额度前缀
      */
-    public static final String DAY_MARK_LINE = "bail_day_mark_line:";
+//    public static final String DAY_MARK_LINE = "bail_day_mark_line:";
 
     /**
      * 月发标已用+$instCode
@@ -399,7 +399,7 @@ public class RedisConstants {
     /**
      * 月推标上限额度前缀+$instCode
      */
-    public static final String MONTH_MARK_LINE = "bail_month_mark_line:";
+//    public static final String MONTH_MARK_LINE = "bail_month_mark_line:";
 
     /**
      * 登录失败配置项
