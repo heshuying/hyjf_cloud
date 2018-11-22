@@ -1,5 +1,6 @@
 package com.hyjf.admin.service.coupon;
 
+import com.hyjf.am.response.admin.CouponTenderResponse;
 import com.hyjf.am.resquest.admin.CouponTenderRequest;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.admin.coupon.CouponTenderCustomize;
@@ -55,4 +56,13 @@ public interface CouponTenderHjhService {
      * @return
      */
     CouponTenderDetailVo dealDetail(CouponTenderDetailVo detail,Map<String, String> map);
+
+    /**
+     * @Author walter.limeng
+     * @Description  汇计划使用导出
+     * @Date 11:28 2018/11/21
+     * @Param couponTenderRequest
+     * @return
+     */
+    CouponTenderResponse getRecordExport(CouponTenderRequest couponTenderRequest);
 }

@@ -15,7 +15,7 @@ public class UserPayAuthRequest extends BasePage {
     public String authTimeEnd;
     public String userName;
     public String authType;
-    public String bankCode;
+    public String bankid;
     public String signTimeStart;
     public String signTimeEnd;
     //默认为true ,获取全部数据，为false时，获取部分数据
@@ -53,14 +53,6 @@ public class UserPayAuthRequest extends BasePage {
         this.authType = authType;
     }
 
-    public String getBankCode() {
-        return bankCode;
-    }
-
-    public void setBankCode(String bankCode) {
-        this.bankCode = bankCode;
-    }
-
     public String getSignTimeStart() {
         return signTimeStart;
     }
@@ -83,5 +75,13 @@ public class UserPayAuthRequest extends BasePage {
 
     public void setLimitFlg(boolean limitFlg) {
         this.limitFlg = limitFlg;
+    }
+
+    public String getBankid() {
+        return bankid;
+    }
+
+    public void setBankid(String bankid) {
+        this.bankid = bankid;
     }
 }

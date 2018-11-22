@@ -1,6 +1,5 @@
 package com.hyjf.cs.trade.service.agreement;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.UserInvestListBeanRequest;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
@@ -17,6 +16,17 @@ import java.util.List;
  * @version CreateAgreementService, v0.1 2018/11/6 10:17
  */
 public interface CreateAgreementService extends BaseTradeService {
+    List<BorrowCustomizeVO> selectBorrowList(BorrowCommonCustomizeVO borrowCommonCustomize);
 
-    List<TenderAgreementVO> getIntermediaryAgreementPDFUrl(String nid);
+    List<TenderAgreementVO> selectTenderAgreementByNid(String nid);
+
+    List<WebUserInvestListCustomizeVO> selectUserInvestList(UserInvestListBeanRequest form);
+
+    ProjectCustomeDetailVO selectProjectDetail(String borrowNid);
+
+    List<DebtBorrowCustomizeVO> selectDebtBorrowList(DebtBorrowCommonCustomizeVO debtBorrowCommonCustomize);
+
+    int countProjectRepayPlanRecordTotal(ProjectRepayListBeanVO bean);
+
+    List<WebProjectRepayListCustomizeVO> selectProjectRepayPlanList(ProjectRepayListBeanVO bean);
 }

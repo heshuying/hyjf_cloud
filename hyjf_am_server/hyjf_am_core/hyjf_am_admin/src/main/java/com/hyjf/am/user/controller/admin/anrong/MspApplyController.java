@@ -138,7 +138,7 @@ public class MspApplyController  {
 		if(!validatorApiResult(postResultJson)){
 		    // 失败返回
 			result.setRtn(FAIL);
-            result.setMessage( postResultJson.get(AnRongDefine.RESULT_JSON_KEY_MSP_MESS)+"---------"+postResultJson.get(AnRongDefine.RESULT_JSON_KEY_FQZ_MESS));
+            result.setMessage( postResultJson.get(AnRongDefine.RESULT_JSON_KEY_MSP_MESS)+"-"+postResultJson.get(AnRongDefine.RESULT_JSON_KEY_FQZ_MESS));
             return result;
 		}
 		    

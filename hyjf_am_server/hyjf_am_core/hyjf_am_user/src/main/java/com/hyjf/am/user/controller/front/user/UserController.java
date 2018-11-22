@@ -213,9 +213,9 @@ public class UserController extends BaseController {
      */
     @RequestMapping("/updateByCondition/{condition}")
     public UserResponse updateByCondition(@PathVariable String condition) {
-        logger.info("findUserByCondition run...condition is :{}", condition);
+        logger.info("updateByCondition run...condition is :{}", condition);
         UserResponse response = new UserResponse();
-        User user = userService.findUserByUsernameOrMobile(condition);
+        User user = userService.updateUserByUsernameOrMobile(condition);
         if (user != null) {
             UserVO userVO = new UserVO();
             BeanUtils.copyProperties(user, userVO);

@@ -68,7 +68,7 @@ public class FinmanChargeNewController extends BaseController {
 
     @ApiOperation(value = "检索费率配置", notes = "检索费率配置")
     @PostMapping("/searchAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
     public AdminResult getFinmanChargeList(@RequestBody FinmanChargeNewRequest adminRequest) {
         FinmanChargeNewResponse response =new FinmanChargeNewResponse();
         // 汇直投项目列表
@@ -92,7 +92,7 @@ public class FinmanChargeNewController extends BaseController {
 
     @ApiOperation(value = "查询费率配置详情", notes = "查询费率配置详情 ")
     @PostMapping("/infoAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult finmanChargeInfo(@RequestBody FinmanChargeNewRequest adminRequest) {
         FinmanChargeNewResponse response = new FinmanChargeNewResponse();
         BorrowFinmanNewChargeVO vo= new BorrowFinmanNewChargeVO();
@@ -159,7 +159,7 @@ public class FinmanChargeNewController extends BaseController {
     }
     @ApiOperation(value = "修改费率配置", notes = "修改费率配置")
     @PostMapping("/updateAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateFinmanCharge(@RequestBody FinmanChargeNewRequest adminRequest,HttpServletRequest request){
         adminRequest.setCreateUserId(Integer.valueOf(this.getUser(request).getId()));
 //        adminRequest.setCreateUserId(3);
@@ -175,7 +175,7 @@ public class FinmanChargeNewController extends BaseController {
     }
     @ApiOperation(value = "删除费率配置", notes = "删除费率配置")
     @PostMapping("/deleteAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteFinmanCharge(@RequestBody FinmanChargeNewRequest adminRequest,HttpServletRequest request){
         adminRequest.setCreateUserId(Integer.valueOf(this.getUser(request).getId()));
 //        adminRequest.setCreateUserId(3);

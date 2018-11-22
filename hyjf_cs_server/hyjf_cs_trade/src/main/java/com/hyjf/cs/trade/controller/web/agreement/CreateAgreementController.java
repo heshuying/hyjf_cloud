@@ -1,7 +1,5 @@
 package com.hyjf.cs.trade.controller.web.agreement;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.resquest.trade.UserInvestListBeanRequest;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
@@ -58,38 +56,55 @@ public class CreateAgreementController extends BaseTradeController {
 
     @Autowired
     SystemConfig systemConfig;
-    /**
-     * 账户中心-资产管理-当前持有-- 投资协议(实际为散标居间协议)下载
-     * @return
-     */
-    @ApiOperation(value = "账户中心-资产管理-当前持有-- 投资协议(实际为散标居间协议)下载", notes = "账户中心-资产管理-当前持有-- 投资协议(实际为散标居间协议)下载")
-    @GetMapping("/intermediaryAgreementPDF")
-    public JSONObject intermediaryAgreementPDF(HttpServletRequest request, HttpServletResponse response,UserInvestListBeanRequest form) {
-        JSONObject object=new JSONObject();
-        List<TenderAgreementVO> list=createAgreementService.getIntermediaryAgreementPDFUrl(form.getNid());
-        if(list!=null&&list.size()>0){
-            TenderAgreementVO agreementVO=list.get(0);
-            if(agreementVO.getStatus()==3){
-                //本地pdf文件路径
-                object.put("pdfUrl",systemConfig.getBasePathurl()+systemConfig.getHyjfFtpBasepathPdf()+"/"+agreementVO.getPdfUrl());
-                //合同查看地址
-                object.put("viewpdfUrl",agreementVO.getViewpdfUrl());
-                //合同下载地址
-                object.put("downloadUrl",agreementVO.getDownloadUrl());
-                //脱敏图片存放地址
-                object.put("imgUrl",systemConfig.getBasePathurl()+systemConfig.getHyjfFtpBasepathImg()+"/"+agreementVO.getImgUrl());
-                object.put("status",BaseResult.SUCCESS);
-                object.put("statusDesc",BaseResult.SUCCESS_DESC);
-            }else{
-                object.put("status",BaseResult.ERROR);
-                object.put("statusDesc","暂无可下载协议");
-            }
-        }else {
-            object.put("status",BaseResult.ERROR);
-            object.put("statusDesc","暂无可下载协议");
-        }
-        return object;
+
+
+    private UserInvestListBeanRequest createUserInvestListBeanRequest(String random, String projectType, String nid, String borrowNid) {
+        UserInvestListBeanRequest form=new UserInvestListBeanRequest();
+        form.setRandom(random);
+        form.setProjectType(projectType);
+        form.setBorrowNid(borrowNid);
+        form.setNid(nid);
+        return form;
     }
 
 
+    public List<File> createFaddPDFImgFile(List<File> files,TenderAgreementVO tenderAgreement) {
+        SFTPParameter para = new SFTPParameter() ;
+        String ftpIP = systemConfig.getHyjfFtpIp();
+        String port = systemConfig.getHyjfFtpPort();
+        String basePathImage = systemConfig.getHyjfFtpBasepathImg();
+        String basePathPdf = systemConfig.getHyjfFtpBasepathPdf();
+        String password = systemConfig.getHyjfFtpPassword();
+        String username = systemConfig.getHyjfFtpUsername();
+        para.hostName = ftpIP;//ftp服务器地址
+        para.userName = username;//ftp服务器用户名
+        para.passWord = password;//ftp服务器密码
+        para.port = Integer.valueOf(port);//ftp服务器端口
+        para.fileName=tenderAgreement.getTenderNid();
+//        para.downloadPath =basePathImage;//ftp服务器文件目录creditUserId
+        para.savePath = "/pdf_tem/pdf/" + tenderAgreement.getTenderNid();
+        String imgUrl = tenderAgreement.getImgUrl();
+        String pdfUrl = tenderAgreement.getPdfUrl();
+        if(StringUtils.isNotBlank(pdfUrl)){
+            //获取文件目录
+            int index = pdfUrl.lastIndexOf("/");
+            String pdfPath = pdfUrl.substring(0,index);
+            //文件名称
+            String pdfName = pdfUrl.substring(index+1);
+            para.downloadPath = basePathPdf + "/" + pdfPath;
+            para.sftpKeyFile = pdfName;
+        }else if(StringUtils.isNotBlank(imgUrl)){
+            int index = imgUrl.lastIndexOf("/");
+            String imgPath = imgUrl.substring(0,index);
+            //文件名称
+            String imgName = imgUrl.substring(index+1);
+            para.downloadPath = "/" + basePathImage + "/" + imgPath;
+            para.sftpKeyFile = imgName;
+        }else{
+            return null;
+        }
+        File file =  FavFTPUtil.downloadDirectory(para);
+        files.add(file);
+        return files;
+    }
 }

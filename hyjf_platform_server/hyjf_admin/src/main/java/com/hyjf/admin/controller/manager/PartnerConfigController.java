@@ -53,7 +53,7 @@ public class PartnerConfigController extends BaseController {
 
     @ApiOperation(value = "合作机构配置详情页面", notes = "合作机构配置详情页面")
     @PostMapping("/infoAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<HjhInstConfigWrapVo>  instConfigInfo(@RequestBody AdminPartnerConfigListRequest adminRequest) {
         AdminPartnerConfigDetailResponse adminResponse= partnerConfigService.searchPartnerConfigInfo(adminRequest);
         if (adminResponse == null) {

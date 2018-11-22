@@ -32,7 +32,7 @@ public class SystemConfig {
     @Value("${release.coupon.accesskey}")
     public String couponAccesskey;
 
-    @Value("{hyjf.web.ui.bindemail}")
+    @Value("${hyjf.web.ui.bindemail}")
     public String webUIBindEmail;
 
     @Value("${hyjf.bank.instcode}")
@@ -130,6 +130,11 @@ public class SystemConfig {
 
     @Value("${hyjf.third.party.user.password}")
     private String apiPass;
+
+    // add by pcc app3.1.1追加 20180823 start
+    // 我的计划列表退出中标签显示标识（临时使用，功能上线以后可以删除）
+    @Value("${hyjf.app.exit.label.show.flag}")
+    private String exitLabelShowFlag;
 
     public String getApiPass() {
         return apiPass;
@@ -377,5 +382,13 @@ public class SystemConfig {
 
     public void setAppRechangeGuideUrl(String appRechangeGuideUrl) {
         this.appRechangeGuideUrl = appRechangeGuideUrl;
+    }
+
+    public String getExitLabelShowFlag() {
+        return exitLabelShowFlag;
+    }
+
+    public void setExitLabelShowFlag(String exitLabelShowFlag) {
+        this.exitLabelShowFlag = exitLabelShowFlag;
     }
 }

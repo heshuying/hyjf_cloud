@@ -62,14 +62,14 @@ public class BorrowProjectTypeController extends BaseController {
 
     @ApiOperation(value = "查询项目类型详情", notes = "查询项目类型详情 ")
     @PostMapping("/infoAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public BorrowProjectTypeResponse subConfigSearch(HttpServletRequest request, @RequestBody BorrowProjectTypeRequest adminRequest) {
         BorrowProjectTypeResponse response = new BorrowProjectTypeResponse();
         BorrowProjectTypeVO record = new BorrowProjectTypeVO();
         List<BorrowProjectRepayVO> selectRepay = null;
         record.setBorrowCd(adminRequest.getBorrowCd());
         boolean isExists = false;
-        if (record.getBorrowCd() == null) {
+        if (record.getBorrowCd() != null) {
             // 根据主键判断该条数据在数据库中是否存在
             isExists = this.borrowProjectTypeService.isExistsRecord(record);
         }
@@ -191,7 +191,7 @@ public class BorrowProjectTypeController extends BaseController {
 
     @ApiOperation(value = "项目类型修改", notes = "项目类型修改")
     @PostMapping("/updateAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateAction(HttpServletRequest request,  @RequestBody BorrowProjectTypeRequest adminRequest) {
         AdminSystemVO user = getUser(request);
         adminRequest.setUpdateUserId(user.getId());

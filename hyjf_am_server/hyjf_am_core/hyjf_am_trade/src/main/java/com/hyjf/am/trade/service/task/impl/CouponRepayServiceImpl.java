@@ -276,7 +276,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
                 accountCnt = this.adminAccountCustomizeMapper.updateOfRepayTender(account);
             }
             if (accountCnt == 0) {
-                throw new RuntimeException("投资人资金记录(huiyingdai_account)更新失败！" + "[优惠券投资编号：" + nid + "]");
+                throw new RuntimeException("投资人资金记录(ht_account)更新失败！" + "[优惠券投资编号：" + nid + "]");
             }
             // 取得账户信息(投资人)
             account = this.getAccountByUserId(tenderUserId);
@@ -353,7 +353,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
             accountList.setWeb(0); // PC
             int accountListCnt = insertAccountList(accountList);
             if (accountListCnt == 0) {
-                throw new RuntimeException("收支明细(huiyingdai_account_list)写入失败！" + "[优惠券投资编号：" + nid + "]");
+                throw new RuntimeException("收支明细(ht_account_list)写入失败！" + "[优惠券投资编号：" + nid + "]");
             }
         }
         // 更新投资表
@@ -373,7 +373,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         BeanUtils.copyProperties(borrowTenderCpnVO, borrowTenderCpn);
         int borrowTenderCnt = borrowTenderCpnMapper.updateByPrimaryKeySelective(borrowTenderCpn);
         if (borrowTenderCnt == 0) {
-            throw new RuntimeException("投资表(hyjf_borrow_tender_cpn)更新失败！" + "[优惠券投资编号：" + nid + "]");
+            throw new RuntimeException("投资表(ht_borrow_tender_cpn)更新失败！" + "[优惠券投资编号：" + nid + "]");
         }
         // 更新优惠券投资还款表
         // 转账订单编号

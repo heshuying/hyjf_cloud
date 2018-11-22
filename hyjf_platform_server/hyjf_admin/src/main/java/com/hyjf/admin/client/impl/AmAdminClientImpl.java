@@ -1670,7 +1670,7 @@ public class AmAdminClientImpl implements AmAdminClient {
      */
     @Override
     public AppPushManageResponse getPushManageList(AppPushManageRequestBean requestBean) {
-        AppPushManageResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/appPushManage/selectPushManageList/", requestBean, AppPushManageResponse.class).getBody();
+        AppPushManageResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-admin/appPushManage/selectPushManageList", requestBean, AppPushManageResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())){
             return response;
         }
@@ -1685,7 +1685,7 @@ public class AmAdminClientImpl implements AmAdminClient {
      */
     @Override
     public AppPushManageResponse insterPushManage(AppPushManageRequestBean requestBean){
-        AppPushManageResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/appPushManage/insertPushManage/", requestBean, AppPushManageResponse.class).getBody();
+        AppPushManageResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-admin/appPushManage/insertPushManage/", requestBean, AppPushManageResponse.class).getBody();
         if (response != null){
             return response;
         }
@@ -1700,7 +1700,7 @@ public class AmAdminClientImpl implements AmAdminClient {
      */
     @Override
     public boolean updatePushManage(AppPushManageRequestBean requestBean) {
-        BooleanResponse booleanResponse = restTemplate.postForEntity("http://AM-ADMIN/am-trade/appPushManage/updatePushManage/", requestBean, BooleanResponse.class).getBody();
+        BooleanResponse booleanResponse = restTemplate.postForEntity("http://AM-ADMIN/am-admin/appPushManage/updatePushManage/", requestBean, BooleanResponse.class).getBody();
         return booleanResponse.getResultBoolean();
     }
 
@@ -1712,7 +1712,34 @@ public class AmAdminClientImpl implements AmAdminClient {
      */
     @Override
     public boolean deletePushManage(Integer id) {
-        BooleanResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-trade/appPushManage/deletePushManage/" + id, BooleanResponse.class).getBody();
+        BooleanResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-admin/appPushManage/deletePushManage/" + id, BooleanResponse.class).getBody();
+        return response.getResultBoolean();
+    }
+
+    /**
+     * 根据ID获取单条记录详细新
+     * @param id
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public AppPushManageResponse getAppPushManageInfoById(Integer id) {
+        AppPushManageResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-admin/appPushManage/getAppPushManageInfoById/" + id, AppPushManageResponse.class).getBody();
+        if (response != null){
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 根据记录更新单条记录的状态
+     * @param id
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public boolean updatePushManageStatusById(Integer id) {
+        BooleanResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-admin/appPushManage/updatePushManageStatusById/" + id, BooleanResponse.class).getBody();
         return response.getResultBoolean();
     }
 

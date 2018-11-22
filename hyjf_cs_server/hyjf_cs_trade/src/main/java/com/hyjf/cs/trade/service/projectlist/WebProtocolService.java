@@ -40,4 +40,12 @@ public interface WebProtocolService{
      * @date 2018/11/15 17:23
      */
     void  newHjhInvestPDF(ProtocolRequest form, HttpServletRequest request, HttpServletResponse response);
+
+    /**
+     * 投资协议(实际为散标居间协议)下载
+     * @param form
+     * @param request
+     * @param response
+     */
+    void intermediaryAgreementPDF(ProtocolRequest form, HttpServletRequest request, HttpServletResponse response);
 }

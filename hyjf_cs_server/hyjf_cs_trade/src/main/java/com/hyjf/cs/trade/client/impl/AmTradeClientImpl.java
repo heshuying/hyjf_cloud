@@ -26,7 +26,9 @@ import com.hyjf.am.response.trade.coupon.HjhCouponLoansResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
-import com.hyjf.am.resquest.admin.*;
+import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
+import com.hyjf.am.resquest.admin.CouponRepayRequest;
+import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
 import com.hyjf.am.resquest.api.ApiRepayListRequest;
 import com.hyjf.am.resquest.api.AsseStatusRequest;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
@@ -36,8 +38,8 @@ import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
-import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.AppPushManageVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.api.ApiAssetStatusCustomizeVO;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
@@ -1617,9 +1619,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      * 调用后平台操作
      */
     @Override
-    public boolean handlerAfterCash(JSONObject params) {
+    public Boolean handlerAfterCash(AfterCashParamRequest request) {
         String url = "http://AM-TRADE/am-trade/bankException/handlerAfterCash";
-        return restTemplate.postForEntity(url,params,Boolean.class).getBody();
+        return restTemplate.postForEntity(url,request,Boolean.class).getBody();
     }
 
     /**
