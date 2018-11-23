@@ -31,7 +31,7 @@ public class ApiTrusteePayController extends BaseController {
      * @return
      */
     @ApiOperation(value = "借款人受托支付申请", notes = "借款人受托支付申请")
-    @RequestMapping(value = "/page.do")
+    @PostMapping(value = "/page.do")
     public ModelAndView trusteePay(HttpServletRequest request, @RequestBody TrusteePayRequestBean payRequestBean) {
         ModelAndView result = trusteePayService.trusteePayApply(request, payRequestBean);
         if (null != result && result.getModel().get("error") != null && "true".equals(result.getModel().get("error"))) {
@@ -47,7 +47,8 @@ public class ApiTrusteePayController extends BaseController {
      * @param bean
      * @return
      */
-    @RequestMapping("/trusteePayReturn")
+    @ApiOperation(value = "借款人受托支付申请同步回调",notes = "借款人受托支付申请同步回调")
+    @GetMapping("/trusteePayReturn")
     public ModelAndView trusteePayReturn(HttpServletRequest request, BankCallBean bean) {
         Map<String, String> map = trusteePayService.trusteePayReturn(request, bean);
         return callbackErrorView(map);
@@ -60,8 +61,9 @@ public class ApiTrusteePayController extends BaseController {
      * @param bean
      * @return
      */
+    @ApiOperation(value = "借款人受托支付申请异步回调",notes = "借款人受托支付申请异步回调")
     @ResponseBody
-    @RequestMapping("/trusteePayBgreturn")
+    @PostMapping("/trusteePayBgreturn")
     public BankCallResult trusteePayBgreturn(HttpServletRequest request, @RequestBody BankCallBean bean) {
         return trusteePayService.trusteePayBgreturn(request, bean);
     }
