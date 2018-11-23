@@ -61,8 +61,9 @@ hyjf_cloud 父工程，管理jar版本,模块管理，自动识别pom.xml
             127.0.0.1       wechat.xiasq.com
         目前是根据域名区分请求渠道，不添加host文件会无法访问  
        
-###swagger页面
+###swagger以及常用链接
 ``` 
+front:
 ADMIN页面：http://47.104.249.145:9093/swagger-ui.html
 CALLCENTER页面:http://47.104.203.75:9094/swagger-ui.html
 CS-MARKET页面：http://47.104.203.75:8083/swagger-ui.html
@@ -70,6 +71,22 @@ CS-MESSAGE页面:http://47.104.203.75:8084/swagger-ui.html
 CS-TRADE页面:http://47.104.203.75:8082/swagger-ui.html
 CS-USER页面:http://47.104.203.75:8081/swagger-ui.html
 BATCH页面：http://47.104.203.75:9091
+Eureka:http://47.104.130.77:1111/
+Spring boot admin:http://47.104.130.77:18080
+Hystrix:http://47.104.130.77:3333/hystrix/monitor?stream=http%3A%2F%2Flocalhost%3A3333%2Fturbine.stream
+
+beta:
+ADMIN页面：http://47.105.96.243:9093/swagger-ui.html
+CALLCENTER页面:http://47.104.173.164:9094/swagger-ui.html
+CS-MARKET页面：http://47.104.173.164:8083/swagger-ui.html
+CS-MESSAGE页面:http://47.104.173.164:8084/swagger-ui.html
+CS-TRADE页面:http://47.104.173.164:8082/swagger-ui.html
+CS-USER页面:http://47.104.173.164:8081/swagger-ui.html
+BATCH页面：http://47.104.173.164:9091
+Eureka:http://47.104.147.4:1111/
+Spring boot admin:http://47.104.147.4:18080
+Hystrix:http://47.104.147.4:3333/hystrix/monitor?stream=http%3A%2F%2Flocalhost%3A3333%2Fturbine.stream
+
 ```
 ###数据库相关
 ```
