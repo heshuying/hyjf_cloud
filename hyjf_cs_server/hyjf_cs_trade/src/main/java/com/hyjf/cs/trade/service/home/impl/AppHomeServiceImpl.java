@@ -528,6 +528,9 @@ public class AppHomeServiceImpl implements AppHomeService {
         // 产品加息
         project.setBorrowExtraYield(appHomePageCustomize.getBorrowExtraYield());
         project.setBorrowTheFirstDesc(appHomePageCustomize.getBorrowTheFirstDesc());
+        if("13".equals(project.getStatus()) || "12".equals(project.getStatus())){
+            project.setButtonText("查看详情");
+        }
         return project;
     }
 
