@@ -48,23 +48,22 @@ public class BorrowRepayToHjhQuitController extends BaseTradeController {
         if (accedeList != null) {
             for (int i = 0; i < accedeList.size(); i++) {
                 HjhAccedeVO accede = accedeList.get(i);
-                if("25381131096164555969".equals(accede.getAccedeOrderId())){
-                    if(isRepeat(accede.getAccedeOrderId())){
-                        // 发送计划锁定/退出MQ
-                        JSONObject params = new JSONObject();
-                        params.put("mqMsgId", GetCode.getRandomCode(10));
-                        params.put("accedeOrderId", accede.getAccedeOrderId());
-                        params.put("orderStatus", accede.getOrderStatus());
-                        params.put("creditCompleteFlag", accede.getCreditCompleteFlag());
-                        try {
-                            hjhQuitProducer.messageSend(new MessageContent(MQConstant.HJH_QUIT_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
-                        } catch (MQException e) {
-                            logger.error("汇计划计划进入锁定期/退出计划发送消息失败...", e);
-                        }
-                    }else {
-                        logger.info("-----------------汇计划计划进入锁定期/退出计划执行中，请勿重复执行，订单号："+ accede.getAccedeOrderId() +"--------------------------------");
+                if(isRepeat(accede.getAccedeOrderId())){
+                    // 发送计划锁定/退出MQ
+                    JSONObject params = new JSONObject();
+                    params.put("mqMsgId", GetCode.getRandomCode(10));
+                    params.put("accedeOrderId", accede.getAccedeOrderId());
+                    params.put("orderStatus", accede.getOrderStatus());
+                    params.put("creditCompleteFlag", accede.getCreditCompleteFlag());
+                    try {
+                        hjhQuitProducer.messageSend(new MessageContent(MQConstant.HJH_QUIT_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
+                    } catch (MQException e) {
+                        logger.error("汇计划计划进入锁定期/退出计划发送消息失败...", e);
                     }
+                }else {
+                    logger.info("-----------------汇计划计划进入锁定期/退出计划执行中，请勿重复执行，订单号："+ accede.getAccedeOrderId() +"--------------------------------");
                 }
+
             }
         }
         logger.info("【汇计划计划进入锁定期/退出计划开始】结束。。。");
