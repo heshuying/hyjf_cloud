@@ -786,6 +786,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 标的不存在
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
         }
+        BorrowProjectTypeVO borrowProjectType = this.getProjectType(String.valueOf(borrow.getProjectType()));
+        String nowType = "1";
+        if (borrowProjectType.getInvestUserType().equals(1)) {
+            nowType = "3";
+        }
         UserVO loginUser = null;
         if(tender.getUserId()!=null){
             loginUser = amUserClient.findUserById(Integer.valueOf(tender.getUserId()));
@@ -826,7 +831,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 if (moneyCoupon == 1) {
                     config += "1,";
                 }
-                Map<String, String> validateMap = couponService.validateCoupon(tender.getUserId(), tender.getAccount(), tender.getCouponGrantId(), tender.getPlatform(), borrow.getBorrowPeriod(), config);
+                Map<String, String> validateMap = couponService.validateCoupon(tender.getUserId(), tender.getAccount(), tender.getCouponGrantId(), tender.getPlatform(), borrow.getBorrowPeriod(), config,nowType);
                 if (!MapUtils.isEmpty(validateMap)) {
                     couponUser = null;
                 }
