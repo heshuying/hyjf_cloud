@@ -31,5 +31,18 @@
         </if>
         group by u.user_id
     </select>
+    
+    <select id="selectTwoDivisionByPrimaryDivision" resultType="java.lang.String">
+         SELECT
+          NAME
+        FROM
+          ht_r_oa_department
+        WHERE parentid IN
+          (SELECT
+            id
+          FROM
+            ht_r_oa_department
+          WHERE NAME = #{primaryDivision})
+    </select>
 
 </mapper>

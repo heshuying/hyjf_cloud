@@ -54,9 +54,10 @@ public class HjhCommisionComputeServiceImpl extends BaseTradeServiceImpl impleme
             map.put("projectType",2);
             map.put("userType","线上员工");
             Integer pushMoneyOnline = amTradeClient.getCommisionConfig(map);
-            map.put("userType","51老用户");
-            Integer pushMoney51 = amTradeClient.getCommisionConfig(map);
-            Integer commissionUserID = getCommissionUser(hjhAccedeVO, pushMoneyOnline, pushMoney51, inverestUserInfo);
+//            51老用户已停用
+//            map.put("userType","51老用户");
+//            Integer pushMoney51 = amTradeClient.getCommisionConfig(map);
+            Integer commissionUserID = getCommissionUser(hjhAccedeVO, pushMoneyOnline, null, inverestUserInfo);
             UserInfoVO commissioUserInfoVO = null;
             if(commissionUserID != null && commissionUserID > 0 ){
                 commissioUserInfoVO = amUserClient.selectUserInfoByUserId(commissionUserID);
@@ -89,9 +90,9 @@ public class HjhCommisionComputeServiceImpl extends BaseTradeServiceImpl impleme
             return record.getUserId();
         }else if(pushMoneyOnline == 1 && record.getInviteUserAttribute() != null && record.getInviteUserAttribute() == 3){
             return record.getInviteUserId();
-        }else if(pushMoney51 == 1 && userInfoInvite != null && userInfoInvite.getIs51() != null && userInfoInvite.getIs51() == 1 && userInfoInvite.getAttribute() <2){
+        }/*else if(pushMoney51 == 1 && userInfoInvite != null && userInfoInvite.getIs51() != null && userInfoInvite.getIs51() == 1 && userInfoInvite.getAttribute() <2){
             return record.getInviteUserId();
-        }
+        }*/
         return null;
     }
 }

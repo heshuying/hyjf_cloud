@@ -1,5 +1,12 @@
 package com.hyjf.cs.market.client.impl;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.response.market.SellDailyDistributionResponse;
 import com.hyjf.am.response.market.SellDailyResponse;
@@ -8,11 +15,6 @@ import com.hyjf.am.vo.admin.SellDailyDistributionVO;
 import com.hyjf.am.vo.market.ActivityListBeanVO;
 import com.hyjf.am.vo.market.SellDailyVO;
 import com.hyjf.cs.market.client.AmMarketClient;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
 
 /**
  * @Auther: walter.limeng
@@ -87,4 +89,27 @@ public class AmMarketClientImpl implements AmMarketClient {
                 SellDailyResponse.class);
         return response.getResult();
     }
+
+	@Override
+	public boolean hasGeneratorDataToday() {
+		BooleanResponse response = restTemplate
+				.getForObject("http://AM-MARKET/am-market/sell_daily/has_generator_data_today", BooleanResponse.class);
+		if (response != null) {
+			return response.getResultBoolean();
+		}
+		return false;
+	}
+
+    @Override
+    public void batchInsertSellDaily(List<SellDailyVO> list) {
+		restTemplate.postForObject("http://AM-MARKET/am-market/sell_daily/batch_insert_sell_daily", list,
+				null);
+    }
+
+    @Override
+    public void calculateRate() {
+        restTemplate.getForObject("http://AM-MARKET/am-market/sell_daily/calculate_rate",
+                null);
+    }
+
 }

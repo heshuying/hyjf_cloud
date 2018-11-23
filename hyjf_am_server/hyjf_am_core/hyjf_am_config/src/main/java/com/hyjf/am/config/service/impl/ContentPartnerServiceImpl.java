@@ -8,10 +8,12 @@ import com.hyjf.am.config.dao.model.auto.Link;
 import com.hyjf.am.config.dao.model.auto.LinkExample;
 import com.hyjf.am.config.service.ContentPartnerService;
 import com.hyjf.am.resquest.admin.ContentPartnerRequest;
+import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -32,11 +34,16 @@ public class ContentPartnerServiceImpl implements ContentPartnerService {
 			criteria.andWebnameEqualTo(request.getWebname());
 		}
 		if (request.getStartTime() != null && request.getEndTime() != null) {
-			criteria.andCreateTimeGreaterThanOrEqualTo(request.getStartTime());
-			criteria.andCreateTimeLessThanOrEqualTo(request.getEndTime());
+			criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.getDayStartOfSomeDay(request.getStartTime()));
+			criteria.andCreateTimeLessThanOrEqualTo(GetDate.getDayEndOfSomeDay(request.getEndTime()));
 		}
 		if (request.getStatus() != null) {
 			criteria.andStatusEqualTo(request.getStatus());
+		}
+		if (request.getPartnerType() != null) {
+			criteria.andStatusEqualTo(1);// 启用状态
+			criteria.andTypeEqualTo(2);// 合作伙伴
+			criteria.andPartnerTypeEqualTo(request.getPartnerType());
 		}
 		if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
 			int limitStart = (request.getCurrPage() - 1) * (request.getPageSize());
@@ -49,17 +56,17 @@ public class ContentPartnerServiceImpl implements ContentPartnerService {
 	}
 
 	@Override
-	public void insertAction(ContentPartnerRequest request) {
+	public int insertAction(ContentPartnerRequest request) {
 		Link link = new Link();
 		BeanUtils.copyProperties(request, link);
-		linkMapper.insert(link);
+		return linkMapper.insert(link);
 	}
 
 	@Override
-	public void updateAction(ContentPartnerRequest request) {
+	public int updateAction(ContentPartnerRequest request) {
 		Link link = new Link();
 		BeanUtils.copyProperties(request, link);
-		linkMapper.updateByPrimaryKey(link);
+		return linkMapper.updateByPrimaryKey(link);
 	}
 
 	@Override
@@ -70,18 +77,22 @@ public class ContentPartnerServiceImpl implements ContentPartnerService {
 	@Override
 	public List<Link> getbyPartnerType(Integer type) {
 		LinkExample example = new LinkExample();
-		LinkExample.Criteria criteria = example.createCriteria();
-		criteria.andStatusEqualTo( 1);// 启用状态
-		criteria.andTypeEqualTo(2);// 合作伙伴
-		if (type != null) {
-			criteria.andPartnerTypeEqualTo(type);
-		}
-		example.setOrderByClause("`partner_type` ASC,`order` Asc,`create_time` Desc");
+		example.createCriteria().andPartnerTypeEqualTo(type);
 		return linkMapper.selectByExample(example);
 	}
 
 	@Override
-	public void deleteById(Integer id) {
-		linkMapper.deleteByPrimaryKey(id);
+	public int deleteById(Integer id) {
+		return linkMapper.deleteByPrimaryKey(id);
+	}
+
+	@Override
+	public int selectCount(ContentPartnerRequest request) {
+		request.setCurrPage(0);
+		List<Link> list = searchAction(request);
+		if (!CollectionUtils.isEmpty(list)) {
+			return list.size();
+		}
+		return 0;
 	}
 }
