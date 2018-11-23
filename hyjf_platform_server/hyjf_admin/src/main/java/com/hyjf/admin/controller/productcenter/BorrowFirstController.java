@@ -49,16 +49,13 @@ public class BorrowFirstController extends BaseController {
     /**
      * 借款初审初始化
      *
-     * @param borrowFirstRequestBean
      * @return
      */
     @ApiOperation(value = "借款初审初始化", notes = "借款初审初始化")
     @PostMapping("/init")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<BorrowFirstResponseBean> init(@RequestBody BorrowFirstRequestBean borrowFirstRequestBean) {
-        BorrowFirstRequest borrowFirstRequest = new BorrowFirstRequest();
-        BeanUtils.copyProperties(borrowFirstRequestBean, borrowFirstRequest);
-        BorrowFirstResponseBean responseBean = borrowFirstService.getBorrowFirstList(borrowFirstRequest);
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
+    public AdminResult<BorrowFirstResponseBean> init() {
+        BorrowFirstResponseBean responseBean = new BorrowFirstResponseBean();
         // 资产来源
         List<DropDownVO> hjhInstConfigList = adminCommonService.selectHjhInstConfigList();
         responseBean.setHjhInstConfigList(hjhInstConfigList);
@@ -76,7 +73,7 @@ public class BorrowFirstController extends BaseController {
      */
     @ApiOperation(value = "获取借款初审列表", notes = "获取借款初审列表")
     @PostMapping("/search")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<BorrowFirstResponseBean> search(@RequestBody BorrowFirstRequestBean borrowFirstRequestBean) {
         BorrowFirstRequest borrowFirstRequest = new BorrowFirstRequest();
         BeanUtils.copyProperties(borrowFirstRequestBean, borrowFirstRequest);

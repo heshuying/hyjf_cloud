@@ -70,21 +70,13 @@ public class BorrowInvestController extends BaseController {
     /**
      * 投资明细初始化
      *
-     * @param borrowInvestRequestBean
      * @return
      */
     @ApiOperation(value = "投资明细初始化", notes = "投资明细初始化")
     @PostMapping("/init")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<BorrowInvestResponseBean> init(@RequestBody BorrowInvestRequestBean borrowInvestRequestBean) {
-        //查询类赋值
-        BorrowInvestRequest borrowInvestRequest = new BorrowInvestRequest();
-        BeanUtils.copyProperties(borrowInvestRequestBean, borrowInvestRequest);
-        //如果是投资明细页面进入 默认近10天数据
-        if(!"1".equals(borrowInvestRequestBean.getIsOptFlag())){
-            borrowInvestRequest.setTimeStartSrch(GetDate.date2Str(GetDate.getTodayBeforeOrAfter(-10), new SimpleDateFormat("yyyy-MM-dd")));
-        }
-        BorrowInvestResponseBean responseBean = borrowInvestService.getBorrowInvestList(borrowInvestRequest);
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
+    public AdminResult<BorrowInvestResponseBean> init() {
+        BorrowInvestResponseBean responseBean = new BorrowInvestResponseBean();
         //还款方式
         List<DropDownVO> borrowStyleList = adminCommonService.selectBorrowStyleList();
         responseBean.setBorrowStyleList(borrowStyleList);
@@ -111,11 +103,15 @@ public class BorrowInvestController extends BaseController {
      */
     @ApiOperation(value = "投资明细列表查询/运营记录-投资明细", notes = "投资明细列表查询/运营记录-投资明细")
     @PostMapping("/search")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<BorrowInvestResponseBean> getBorrowInvestList(@RequestBody BorrowInvestRequestBean borrowInvestRequestBean) {
         //查询类赋值
         BorrowInvestRequest borrowInvestRequest = new BorrowInvestRequest();
         BeanUtils.copyProperties(borrowInvestRequestBean, borrowInvestRequest);
+        //如果是投资明细页面进入 默认近10天数据
+        if(!"1".equals(borrowInvestRequestBean.getIsOptFlag())){
+            borrowInvestRequest.setTimeStartSrch(GetDate.date2Str(GetDate.getTodayBeforeOrAfter(-10), new SimpleDateFormat("yyyy-MM-dd")));
+        }
         BorrowInvestResponseBean responseBean = borrowInvestService.getBorrowInvestList(borrowInvestRequest);
         return new AdminResult(responseBean);
     }

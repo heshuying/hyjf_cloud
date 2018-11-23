@@ -151,6 +151,8 @@ public class BorrowController extends BaseController {
 			borrowVO.setCanTransactionIos(borrowInfo.getCanTransactionIos());
 			borrowVO.setCanTransactionPc(borrowInfo.getCanTransactionPc());
 			borrowVO.setCanTransactionWei(borrowInfo.getCanTransactionWei());
+			borrowVO.setTenderAccountMin(borrowInfo.getTenderAccountMin());
+			borrowVO.setTenderAccountMax(borrowInfo.getTenderAccountMax());
             logger.info("VerifyTime:"+borrow.getVerifyTime());
 		}
 		if (Validator.isNotNull(borrowInfo)){

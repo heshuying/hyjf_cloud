@@ -28,8 +28,9 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringUtil;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
+import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
+import org.apache.commons.lang3.math.NumberUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -312,7 +313,11 @@ public class RechargeServiceImpl extends BaseServiceImpl implements RechargeServ
 				}
 				// end
 				// 交易金额
-				BigDecimal txAmount = bean.getBigDecimal(BankCallConstant.PARAM_TXAMOUNT);
+				BigDecimal txAmount = BigDecimal.ZERO;
+				String txAmontString = bean.getTxAmount();
+				if (Validator.isNotNull(txAmontString) && NumberUtils.isNumber(txAmontString)) {
+					txAmount = new BigDecimal(txAmontString);
+				}
 				logger.info("银行返回参数===============txAmount:[{}]",txAmount);
 				// 判断充值记录状态
 				if (accountRecharge.getStatus() == RECHARGE_STATUS_SUCCESS) {
@@ -507,7 +512,11 @@ public class RechargeServiceImpl extends BaseServiceImpl implements RechargeServ
 			// 如果没有充值记录
 			if (accountRecharge != null) {
 				// 交易金额
-				BigDecimal txAmount = bean.getBigDecimal(BankCallConstant.PARAM_TXAMOUNT);
+				BigDecimal txAmount = BigDecimal.ZERO;
+				String txAmontString = bean.getTxAmount();
+				if (Validator.isNotNull(txAmontString) && NumberUtils.isNumber(txAmontString)) {
+					txAmount = new BigDecimal(txAmontString);
+				}
 				// 判断充值记录状态
 				if (accountRecharge.getStatus() == RECHARGE_STATUS_SUCCESS) {
 					// 如果已经是成功状态
