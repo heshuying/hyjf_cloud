@@ -342,6 +342,17 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
      * @return
      */
     @Override
+    @HystrixCommand(commandKey = "注册(api)-apiRegister",fallbackMethod = "fallBackApiRegister",ignoreExceptions = CheckException.class,commandProperties = {
+            //设置断路器生效
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //一个统计窗口内熔断触发的最小个数3/10s
+            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50"),
+            @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE"),
+            //熔断5秒后去尝试请求
+            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
     public UserVO apiRegister(UserRegisterRequestBean userRegisterRequestBean, RegisterRequest registerRequest, String ipAddr) {
         RegisterUserRequest registerUserRequest = new RegisterUserRequest();
         BeanUtils.copyProperties(registerRequest, registerUserRequest);
@@ -357,8 +368,43 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         UtmPlatVO utmPlat = this.amUserClient.selectUtmPlatByUtmId(registerRequest.getUtmId());
         CheckUtil.check(null != utmPlat, MsgEnum.STATUS_ZC000020);
         //密码
-
         registerUserRequest.setPassword(systemConfig.getApiPass());
+
+        //add by libin 用户注册时通过ip获得用户所在的省，市 start
+        logger.info("获取到的用户ip为：" + ipAddr);
+        String info = GetInfoByUserIp.getInfoByUserIp(ipAddr);
+        if(info == null || StringUtils.isEmpty(info)){
+            logger.error("通过httpRequest获取的ip解析后未获取到省市信息！");
+            registerUserRequest.setProvince("");
+            registerUserRequest.setCity("");
+        } else {
+            StringBuffer line = new StringBuffer(info);
+            int first_idx   = line.indexOf("|");
+            String country = line.substring(0, first_idx);//所属国家暂时不用先保留
+
+            line = new StringBuffer(line.substring(first_idx + 1) );
+            int second_idx   = line.indexOf("|");
+            String number = line.substring(0, second_idx);//所属数字暂时不用先保留
+
+            line = new StringBuffer(line.substring(second_idx + 1) );
+            int thrid_idx   = line.indexOf("|");
+            String province = line.substring(0, thrid_idx);//省
+            if(province != null && StringUtils.isNotEmpty(province)){
+                registerUserRequest.setProvince(province);
+            } else {
+                registerUserRequest.setProvince("");
+            }
+
+            line = new StringBuffer(line.substring(thrid_idx + 1) );
+            int fouth_idx   = line.indexOf("|");
+            String city = line.substring(0, fouth_idx);//市
+            if(city != null && StringUtils.isNotEmpty(city)){
+                registerUserRequest.setCity(city);
+            } else {
+                registerUserRequest.setCity("");
+            }
+        }
+        //add by libin 用户注册时通过ip获得用户所在的省，市 end
         // 2.注册
         UserVO userVO = amUserClient.register(registerUserRequest);
         CheckUtil.check(userVO != null, MsgEnum.ERR_USER_REGISTER);
@@ -366,6 +412,10 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         // 3. 注册成功用户保存账户表
         sendMqToSaveAccount(userVO.getUserId(), userVO.getUsername());
         return userVO;
+    }
+
+    public UserVO fallBackApiRegister(UserRegisterRequestBean userRegisterRequestBean, RegisterRequest registerRequest, String ipAddr) {
+        return null;
     }
 
     @Override

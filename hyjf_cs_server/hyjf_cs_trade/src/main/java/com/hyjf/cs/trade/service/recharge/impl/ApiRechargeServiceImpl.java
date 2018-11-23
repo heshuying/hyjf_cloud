@@ -26,6 +26,8 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -149,6 +151,17 @@ public class ApiRechargeServiceImpl extends BaseTradeServiceImpl implements ApiR
      * @return
      */
     @Override
+    @HystrixCommand(commandKey = "短信充值(api)-apiRechargeService",fallbackMethod = "fallBackApiRecharge",ignoreExceptions = CheckException.class,commandProperties = {
+            //设置断路器生效
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //一个统计窗口内熔断触发的最小个数3/10s
+            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50"),
+            @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE"),
+            //熔断5秒后去尝试请求
+            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
     public ApiUserRechargeResultBean recharge(HttpServletRequest request, ApiUserRechargeRequestBean requestBean) {
         logger.info("-----------短信充值-----------");
         ApiUserRechargeResultBean resultBean = new ApiUserRechargeResultBean();
@@ -337,6 +350,15 @@ public class ApiRechargeServiceImpl extends BaseTradeServiceImpl implements ApiR
             return resultBean;
         }
     }
+
+    public ApiUserRechargeResultBean fallBackApiRecharge(HttpServletRequest request, ApiUserRechargeRequestBean requestBean) {
+        // 充值失败
+        ApiUserRechargeResultBean resultBean = new ApiUserRechargeResultBean();
+        resultBean.setStatus(BaseResult.FAIL);
+        resultBean.setStatusDesc("充值失败");
+        return resultBean;
+    }
+
     /**
      * 更新银行预留手机号
      * @param userId
