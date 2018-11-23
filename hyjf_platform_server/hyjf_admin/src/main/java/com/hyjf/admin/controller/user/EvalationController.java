@@ -11,14 +11,18 @@ import com.hyjf.admin.beans.vo.UserEvalationQuestionCustomizeVO;
 import com.hyjf.admin.beans.vo.UserEvalationResultCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.EvalationService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.EvalationResultResponse;
 import com.hyjf.am.resquest.user.EvalationRequest;
+import com.hyjf.am.vo.user.EvalationResultVO;
 import com.hyjf.am.vo.user.UserEvalationQuestionVO;
 import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,6 +30,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,6 +44,7 @@ import java.util.List;
 public class EvalationController extends BaseController {
     @Autowired
     private EvalationService evalationService;
+    public static final String PERMISSIONS = "evaluationList";
 
     @ApiOperation(value = "用户测评初始化(下拉列表)", notes = "用户测评页面初始化")
     @PostMapping(value = "/usersInit")
@@ -51,7 +57,17 @@ public class EvalationController extends BaseController {
     @ApiOperation(value = "用户测评列表查询", notes = "用户测评列表查询")
     @PostMapping(value = "/evalationRecord")
     @ResponseBody
-    public AdminResult<ListResult<EvalationCustomizeVO>> getUserEvaluation( @RequestBody EvalationRequestBean evalationRequestBean){
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
+    public AdminResult<ListResult<EvalationCustomizeVO>> getUserEvaluation(HttpServletRequest request, @RequestBody EvalationRequestBean evalationRequestBean){
+        // 获取该角色 权限列表
+        List<String> perm = (List<String>) request.getSession().getAttribute("permission");
+        //判断权限
+        boolean isShow = false;
+        for (String string : perm) {
+            if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
+                isShow=true;
+            }
+        }
         EvalationRequest evalationRequest = new EvalationRequest();
         BeanUtils.copyProperties(evalationRequestBean,evalationRequest);
         EvalationResultResponse evalationResponse = evalationService.selectUserEvalationResultList(evalationRequest);
@@ -63,6 +79,12 @@ public class EvalationController extends BaseController {
         }
         List<EvalationCustomizeVO> evalationCustomizeVOList = new ArrayList<EvalationCustomizeVO>();
         if(null!=evalationResponse.getResultList()&&evalationResponse.getResultList().size()>0){
+            if(!isShow){
+                //如果没有查看脱敏权限,显示加星
+                for (EvalationResultVO registRecordVO:evalationResponse.getResultList()){
+                    registRecordVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(registRecordVO.getMobile()));
+                }
+            }
             evalationCustomizeVOList = CommonUtils.convertBeanList(evalationResponse.getResultList(),EvalationCustomizeVO.class);
         }
         return new AdminResult<ListResult<EvalationCustomizeVO>>(ListResult.build(evalationCustomizeVOList, evalationResponse.getCount())) ;

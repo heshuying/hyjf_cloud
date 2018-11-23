@@ -1338,17 +1338,20 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         bean.setOrgOrderId(creditTenderLog.getCreditTenderNid());
         bean.setOrgTxAmount(DF_COM_VIEW.format(creditTenderLog.getTenderMoney()));
         bean.setProductId(creditTenderLog.getBidNid());
-        // 忘记密码的跳转URL
-        bean.setForgotPwdUrl(systemConfig.getForgetpassword());
+
 
         String retUrl = "";
         String successUrl = "";
         if((ClientConstants.APP_CLIENT_IOS+"").equals(request.getPlatform())|| (ClientConstants.APP_CLIENT+"").equals(request.getPlatform())){
+            // 忘记密码的跳转URL
+            bean.setForgotPwdUrl(systemConfig.getAppFrontHost()+systemConfig.getAppForgetpassword());
             //错误页
             retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/"+request.getCreditNid()+"/result/failed?logOrdId="+bean.getLogOrderId()+"&sign="+request.getSign()+"&token="+request.getSign();
             //成功页
             successUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/"+request.getCreditNid()+"/result/success?logOrdId="+bean.getLogOrderId()+"&sign="+request.getSign()+"&token="+request.getSign();
         }else{
+            // 忘记密码的跳转URL
+            bean.setForgotPwdUrl(systemConfig.getFrontHost()+systemConfig.getForgetpassword());
             //错误页
             retUrl = super.getFrontHost(systemConfig,request.getPlatform()) + "/transfer/transferInvestError?logOrdId="+bean.getLogOrderId();
             //成功页

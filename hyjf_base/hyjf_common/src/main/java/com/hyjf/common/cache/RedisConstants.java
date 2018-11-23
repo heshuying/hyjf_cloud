@@ -519,5 +519,9 @@ public class RedisConstants {
      * rocketmq 事务消息结果
      */
     public static final String MQ_TRANSACTION_PREFIX = "mq_tran:";
+    /**
+     * admin单点登陆唯一Id
+     */
+    public static final String ADMIN_UNIQUE_ID = "admin@:";
 
 }

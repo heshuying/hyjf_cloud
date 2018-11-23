@@ -309,16 +309,17 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
 
     /**
      * 优惠券投资校验
-     *
      * @param userId
      * @param accountStr
      * @param couponGrantId
      * @param platform
      * @param period
+     * @param config
+     * @param nowType  -1    所有散标/新手/智投项目   1  散标    3  新手   6  智投
      * @return
      */
     @Override
-    public Map<String, String> validateCoupon(Integer userId, String accountStr, Integer couponGrantId, String platform, Integer period, String config) {
+    public Map<String, String> validateCoupon(Integer userId, String accountStr, Integer couponGrantId, String platform, Integer period, String config,String nowType) {
         logger.info("开始调用优惠券投资校验  {}   {}   {}   {}",couponGrantId ,userId ,period,config);
         Map<String, String> result = new HashedMap();
         result.put("status", "0");
@@ -366,7 +367,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             return result;
         }
         // 项目类型
-        if (configVO.getProjectType().indexOf("6") == -1) {
+        if (configVO.getProjectType().indexOf("-1") == -1&&configVO.getProjectType().indexOf(nowType) == -1) {
             result.put("statusDesc", "对不起，您选择的优惠券不能用于当前类别标的！");
             return result;
         }
@@ -440,7 +441,6 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             result.put("statusDesc", "当前优惠券无法使用，优惠券已过期！");
             return result;
         }
-        logger.info("configVO.getAddFlag()::: {}",configVO.getAddFlag());
         // 优惠券不能和本金公用
         if (configVO.getAddFlag()!=null&&configVO.getAddFlag() == 1 && !"0".equals(accountStr)) {
             result.put("statusDesc", "当前优惠券不能与本金共用！");
@@ -457,7 +457,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
      * @param bean
      */
     @Override
-    public void borrowTenderCouponUse(String couponGrantId, BorrowAndInfoVO borrow, BankCallBean bean, BorrowInfoVO borrowInfoVO) {
+    public void borrowTenderCouponUse(String couponGrantId, BorrowAndInfoVO borrow, BankCallBean bean, BorrowInfoVO borrowInfoVO,String nowType) {
         boolean isUsed = RedisUtils.tranactionSet(RedisConstants.COUPON_TENDER_KEY+couponGrantId, 300);
         if (!isUsed) {
             logger.error("当前优惠券正在使用....");
@@ -483,7 +483,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         if (moneyCoupon == 1) {
             config += "1,";
         }
-        Map<String, String> validateMap = this.validateCoupon(userId, account, Integer.parseInt(couponGrantId), platform + "", borrow.getBorrowPeriod(), config);
+        Map<String, String> validateMap = this.validateCoupon(userId, account, Integer.parseInt(couponGrantId), platform + "", borrow.getBorrowPeriod(), config,nowType);
         logger.info("优惠券投资校验完毕  结果：{}" , validateMap);
         if (MapUtils.isEmpty(validateMap)) {
             CouponTenderUsedVO couponTender = new CouponTenderUsedVO();

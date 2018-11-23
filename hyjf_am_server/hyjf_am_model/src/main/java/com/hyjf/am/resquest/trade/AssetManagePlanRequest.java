@@ -1,10 +1,11 @@
 package com.hyjf.am.resquest.trade;
 
+import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
-public class AssetManagePlanRequest implements Serializable {
+public class AssetManagePlanRequest extends BasePage implements Serializable {
 
     @ApiModelProperty(value = "加入订单号")
     private String accedeOrderId;

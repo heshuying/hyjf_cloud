@@ -25,6 +25,7 @@ import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.DateUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.bean.SynBalanceRequestBean;
@@ -166,23 +167,23 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		CheckUtil.check(userVO != null, MsgEnum.ERR_USER_LOGIN);
 		String codeSalt = userVO.getSalt();
 		logger.info("salt:"+codeSalt);
-		//等保取消密码校验，调用前已经校验了密码   --------kdl
-//		String passwordDb = userVO.getPassword();
-//		// 页面传来的密码
-//		String password = "";
-//		if (channel.equals(BankCallConstant.CHANNEL_PC)) {
-//			password = MD5Utils.MD5(loginPassword + codeSalt);
-//		}else {
-//			password = MD5Utils.MD5(MD5Utils.MD5(loginPassword) + codeSalt);
-//		}
-//		logger.info("passwordDB:[{}],password:[{}],相等:[{}]",passwordDb,password,password.equals(passwordDb));
-//		if (password.equals(passwordDb)) {
+		String passwordDb = userVO.getPassword();
+		// 页面传来的密码
+		String password = "";
+		if (channel.equals(BankCallConstant.CHANNEL_PC)) {
+			password = MD5Utils.MD5(loginPassword + codeSalt);
+		}else {
+			password = MD5Utils.MD5(MD5Utils.MD5(loginPassword) + codeSalt);
+		}
+		logger.info("passwordDB:[{}],password:[{}],相等:[{}]",passwordDb,password,password.equals(passwordDb));
+		if (password.equals(passwordDb)) {
 		webViewUserVO = loginOperationOnly(userVO,loginUserName,ip,channel);
-//		} else {
-//			// 密码错误，增加错误次数
+		} else {
+            //调用前已经插入了Redis值   --------kdl
+			// 密码错误，增加错误次数
 //			RedisUtils.incr(RedisConstants.PASSWORD_ERR_COUNT_ALL + userVO.getUserId());
-//			CheckUtil.check(false, MsgEnum.ERR_USER_LOGIN);
-//		}
+			CheckUtil.check(false, MsgEnum.ERR_USER_LOGIN);
+		}
 		return webViewUserVO;
 	}
 

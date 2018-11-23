@@ -110,6 +110,7 @@ public class WebLoginController extends BaseUserController {
             userOperationLogEntity.setOperationTime(new Date());
             userOperationLogEntity.setUserName(userVO.getUsername());
             userOperationLogEntity.setUserRole(userVO.getRoleId());
+            logger.info("userOperationLogEntity发送数据==="+JSONObject.toJSONString(userOperationLogEntity));
             try {
                 userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
             } catch (MQException e) {
