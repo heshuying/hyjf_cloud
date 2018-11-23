@@ -107,14 +107,14 @@
     </select>
 
     <resultMap id="sumBatchCenterMap" type="com.hyjf.am.vo.admin.BatchBorrowRecoverVo">
-        <result column="borrow_account" property="sumBorrowAccount" /> <!-- 借款金额  -->
-        <result column="batch_amount" property="sumBatchAmount" /> <!-- 应还/应放款金额  -->
-        <result column="batch_service_fee" property="sumBatchServiceFee" /> <!-- 应收服务费  -->
-        <result column="batch_counts" property="sumBatchCounts" /> <!-- 总笔数  -->
-        <result column="suc_amount" property="sumSucAmount" /> <!-- 成功金额  -->
-        <result column="suc_counts" property="sumSucCounts" /> <!-- 成功笔数 -->
-        <result column="fail_amount" property="sumFailAmount" /> <!-- 失败金额 -->
-        <result column="fail_counts" property="sumFailCounts" /> <!-- 失败笔数 -->
+        <result column="borrow_account" property="borrowAccount" /> <!-- 借款金额  -->
+        <result column="batch_amount" property="batchAmount" /> <!-- 应还/应放款金额  -->
+        <result column="batch_service_fee" property="batchServiceFee" /> <!-- 应收服务费  -->
+        <result column="batch_counts" property="batchCounts" /> <!-- 总笔数  -->
+        <result column="suc_amount" property="sucAmount" /> <!-- 成功金额  -->
+        <result column="suc_counts" property="sucCounts" /> <!-- 成功笔数 -->
+        <result column="fail_amount" property="failAmount" /> <!-- 失败金额 -->
+        <result column="fail_counts" property="failCounts" /> <!-- 失败笔数 -->
     </resultMap>
 
     <select id="sumBatchCenter" resultMap="sumBatchCenterMap" parameterType="com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest">
