@@ -104,7 +104,7 @@ public class AdminUtmReadPermissionsController extends BaseController {
 
 	}
 	@ApiOperation(value = "渠道帐号管理", notes = "添加渠道帐号管理")
-	@RequestMapping("/insert")
+	@PostMapping("/insert")
 	public AdminResult add(@RequestBody AdminUtmReadPermissionsRequest requestBean) {
 		AdminUtmReadPermissionsResponse response = adminUtmReadPermissionsService.insertAction(requestBean);
 		if (response == null) {
@@ -117,7 +117,7 @@ public class AdminUtmReadPermissionsController extends BaseController {
 	}
 
 	@ApiOperation(value = "渠道帐号管理", notes = "修改渠道帐号管理")
-	@RequestMapping("/update")
+	@PostMapping("/update")
 	public AdminResult update(@RequestBody AdminUtmReadPermissionsRequest requestBean) {
 		AdminUtmReadPermissionsResponse response = adminUtmReadPermissionsService.updateAction(requestBean);
 		if (response == null) {
@@ -130,7 +130,7 @@ public class AdminUtmReadPermissionsController extends BaseController {
 	}
 
 	@ApiOperation(value = "渠道帐号管理", notes = "删除渠道帐号管理")
-	@RequestMapping("/delete/{id}")
+	@GetMapping("/delete/{id}")
 	public AdminResult delete(@PathVariable Integer id) {
 		AdminUtmReadPermissionsResponse response = adminUtmReadPermissionsService.deleteById(id);
 		if (response == null) {
