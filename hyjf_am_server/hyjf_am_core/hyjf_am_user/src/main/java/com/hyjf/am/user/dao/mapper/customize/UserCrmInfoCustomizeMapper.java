@@ -3,10 +3,13 @@
  */
 package com.hyjf.am.user.dao.mapper.customize;
 
-import com.hyjf.am.user.dao.model.customize.UserCrmInfoCustomize;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
+import com.hyjf.am.user.dao.model.customize.UserCrmInfoCustomize;
+import com.hyjf.am.vo.market.SellDailyVO;
 
 /**
  * @Description 用户CRM信息查询
@@ -15,4 +18,11 @@ import java.util.List;
 public interface UserCrmInfoCustomizeMapper {
 
     List<UserCrmInfoCustomize> findUserCrmInfoByUserId(@Param("userId")Integer userId);
+
+    /**
+     *根据一级部门查询二级部门
+     * @param primaryDivision
+     * @return
+     */
+    List<String> selectTwoDivisionByPrimaryDivision(String primaryDivision);
 }

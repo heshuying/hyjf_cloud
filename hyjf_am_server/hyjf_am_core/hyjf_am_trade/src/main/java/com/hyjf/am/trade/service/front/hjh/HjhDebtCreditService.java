@@ -75,6 +75,13 @@ public interface HjhDebtCreditService {
     List<UserHjhInvistListCustomize> getUserHjhInvestList(Map<String,Object> params);
 
     /**
+     * 查询汇计划的投资记录数目
+     * @author zhangyk
+     * @date 2018/11/22 16:08
+     */
+    int getUserHjhInvestCount(Map<String,Object> params);
+
+    /**
      * 根据borrowNid和creditStatus查询债转列表
      * @author zhangyk
      * @date 2018/8/8 9:54

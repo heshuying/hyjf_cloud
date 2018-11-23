@@ -46,8 +46,22 @@ public class BaseController{
 	public static final String CURR="currPage";
 	public static final String PAGE="pageSize";
 	public static final String TRCORD="recordTotal";
-	
-	
+
+	//判断是否有某一个权限
+	public boolean havePermission(HttpServletRequest request,String permission){
+		// 获取该角色 权限列表
+		List<String> permissions = (List<String>) request.getSession().getAttribute("permission");
+		//判断权限
+		boolean isShow = false;
+		for (String permissionStr : permissions) {
+			if (permissionStr.equals(permission)) {
+				isShow=true;
+				break;
+			}
+		}
+		return isShow;
+	}
+
 	//取得session中用户信息
 	public AdminSystemVO getUser(HttpServletRequest request) {
 		AdminSystemVO ar=null;
