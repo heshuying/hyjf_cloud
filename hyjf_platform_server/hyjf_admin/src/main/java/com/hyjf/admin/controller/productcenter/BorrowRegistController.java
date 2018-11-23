@@ -49,16 +49,13 @@ public class BorrowRegistController extends BaseController {
     /**
      * 标的备案初始化
      *
-     * @param borrowRegistRequestBean
      * @return
      */
     @ApiOperation(value = "标的备案初始化", notes = "标的备案初始化")
     @PostMapping("/init")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<BorrowRegistResponseBean> init(@RequestBody BorrowRegistRequestBean borrowRegistRequestBean) {
-        BorrowRegistListRequest borrowRegistListRequest = new BorrowRegistListRequest();
-        BeanUtils.copyProperties(borrowRegistRequestBean, borrowRegistListRequest);
-        BorrowRegistResponseBean responseBean = borrowRegistService.getRegistList(borrowRegistListRequest);
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
+    public AdminResult<BorrowRegistResponseBean> init() {
+        BorrowRegistResponseBean responseBean = new BorrowRegistResponseBean();
         //项目类型
         List<BorrowProjectTypeVO> borrowProjectTypeList = borrowRegistService.selectBorrowProjectList();
         responseBean.setBorrowProjectTypeList(ConvertUtils.convertListToDropDown(borrowProjectTypeList,"borrowCd","borrowName"));
@@ -80,7 +77,7 @@ public class BorrowRegistController extends BaseController {
      */
     @ApiOperation(value = "获取标的备案列表", notes = "获取标的备案列表")
     @PostMapping("/search")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<BorrowRegistResponseBean> search(@RequestBody BorrowRegistRequestBean borrowRegistRequestBean) {
         BorrowRegistListRequest borrowRegistListRequest = new BorrowRegistListRequest();
         BeanUtils.copyProperties(borrowRegistRequestBean, borrowRegistListRequest);
