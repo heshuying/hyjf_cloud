@@ -263,18 +263,8 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
         result.put("status", ErrorCodeConstant.SUCCESS);
         result.put("acqRes",request.getParameter("acqRes"));
         result.put("statusDesc", "充值成功");
-        if (bean == null) {
+        if (bean == null||(!request.getParameter("isSuccess").equals("1"))) {
             logger.info("调用江西银行页面充值接口,银行返回空");
-            result.put("statusDesc", "页面充值,调用银行接口失败");
-            result.put("status",ErrorCodeConstant.STATUS_CE999999);
-            return result;
-        }
-        // 银行返回响应代码
-        String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
-        if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
-            // 根据银行相应代码,查询错误信息
-            String retMsg = amConfigClient.getBankRetMsg(retCode);
-            logger.info("页面充值失败,银行返回响应代码:[" + retCode + "],retMsg:[" + retMsg + "]");
             result.put("statusDesc", "页面充值,调用银行接口失败");
             result.put("status",ErrorCodeConstant.STATUS_CE999999);
             return result;
