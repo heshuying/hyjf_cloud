@@ -184,6 +184,13 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 		/*原Borrow borrow = this.getBorrowByNid(borrowNid);*/
 		BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
 		
+		//测试
+		if(borrow == null){
+			logger.info("根据borrowNid查询borrow和info结果为null"+borrowNid);
+		} else {
+			logger.info("根据borrowNid查询borrow和info结果   不   为null"+borrow.toString());
+		}
+		
 		// 判断借款信息是否存在
 		if (borrow == null || borrow.getId() == null) {
 			return jsonMessage("借款项目不存在", "1");
@@ -224,6 +231,14 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 			if (!newUser) {
 				return jsonMessage("该项目只能新手投资", "1");
 			}
+		}
+
+		
+		//测试log
+		if(borrow.getCanTransactionPc() == null){
+			logger.info("borrow.getCanTransactionPc()是null");
+		} else {
+			logger.info("platform的值是：" + platform + "borrow.getCanTransactionPc()的值：" + borrow.getCanTransactionPc());
 		}
 
 		// 项目投资客户端

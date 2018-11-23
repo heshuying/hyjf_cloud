@@ -36,7 +36,7 @@ public interface CouponService {
      * @param period
      * @return
      */
-    Map<String, String> validateCoupon(Integer userId, String accountStr, Integer couponGrantId, String platform, Integer period,String config);
+    Map<String, String> validateCoupon(Integer userId, String accountStr, Integer couponGrantId, String platform, Integer period,String config,String nowType);
 
     /**
      * 散标投资优惠券使用
@@ -44,7 +44,7 @@ public interface CouponService {
      * @param borrow
      * @param bean
      */
-    void borrowTenderCouponUse(String couponGrantId, BorrowAndInfoVO borrow, BankCallBean bean, BorrowInfoVO borrowInfoVO);
+    void borrowTenderCouponUse(String couponGrantId, BorrowAndInfoVO borrow, BankCallBean bean, BorrowInfoVO borrowInfoVO,String nowType);
 
     /**
      * 计算预期收益

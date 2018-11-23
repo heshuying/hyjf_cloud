@@ -374,7 +374,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         if(homeHjhPageCustomizes != null && homeHjhPageCustomizes.size() > 0){
             appHomePageCustomize = homeHjhPageCustomizes.get(0);
         }
-        appHomePageCustomize.setTitle("推荐产品");
+        appHomePageCustomize.setTitle("推荐服务");
         CommonUtils.convertNullToEmptyString(appHomePageCustomize);
         AppHomePageRecommendProject recommendProject = convertToAppHomePageRecommendProject(appHomePageCustomize);
         info.put("recommendProject", recommendProject);
