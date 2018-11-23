@@ -16,11 +16,11 @@
 				AND hydb.project_type <![CDATA[<>]]> '4'
 				<if test="projectType == 'HZT'">
 					AND CASE
-					WHEN  ( hydb.`status` = 1 AND hydb.verify_status = 3)
+					WHEN  ( hb.status = 1 AND hb.verify_status = 3)
 						THEN
-							hydb.ontime + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) 
+							hb.ontime + ( hb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) 
 						ELSE
-							hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) 
+							hb.verify_time + ( hb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) 
 					END
 				</if>
 			  AND hydb.project_type <![CDATA[<>]]> '11'
@@ -33,91 +33,91 @@
 			<if test="(type == null or type == '') and projectType=='CFH' ">
 				AND hydb.project_type NOT IN (4,8)
 				AND CASE
-				WHEN ( hydb.`status` = 1 AND ( hydb.verify_status = 3 ) AND ( EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE bb.borrow_nid = hydb.borrow_nid ) ) )
+				WHEN ( hb.status = 1 AND ( hb.verify_status = 3 ) AND ( EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE bb.borrow_nid = hydb.borrow_nid ) ) )
 					THEN
-						hydb.ontime + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) 
+						hb.ontime + ( hb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) 
 					ELSE
-						hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) 
+						hb.verify_time + ( hb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) 
 				END 
 			</if>
 			<!-- 包含汇直投、尊享汇、融通宝 -->
 			<if test="(type == null or type == '') and projectType=='ZQ' ">
 				AND hydb.project_type NOT IN (4,8)
 				AND CASE
-				WHEN ( hydb.`status` = 1 AND ( hydb.verify_status = 3 ) AND ( EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE bb.borrow_nid = hydb.borrow_nid ) ) )
+				WHEN ( hb.status = 1 AND ( hb.verify_status = 3 ) AND ( EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE bb.borrow_nid = hydb.borrow_nid ) ) )
 					THEN
-						hydb.ontime + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) 
+						hb.ontime + ( hb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) 
 					ELSE
-						hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) 
+						hb.verify_time + ( hb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) 
 				END 
 			</if>
 			<if test="status == null or status == ''">
 				AND 
 		        ( 
-		           ( hydb.`status` = 1 AND hydb.verify_status = 3 )
-					OR ( hydb.`status` = 2 AND hydb.verify_time + ( borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
-					OR ( hydb.`status` = 3 )
-					OR ( hydb.`status` = 4 )
+		           ( hb.status = 1 AND hb.verify_status = 3 )
+					OR ( hb.status = 2 AND hb.verify_time + ( hb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
+					OR ( hb.status = 3 )
+					OR ( hb.status = 4 )
 		        )
 			</if>
 			<choose>
 				<!-- 获取待发布 -->
 				<when test="status == '10'">
-					AND ( hydb.`status` = 1 AND hydb.verify_status = 3 )
+					AND ( hb.status = 1 AND hb.verify_status = 3 )
 				</when>
 				<!-- 获取 投资中 -->
 				<when test="status == '11'">
-					AND ( hydb.`status` = 2 AND hydb.verify_time + ( borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
+					AND ( hb.status = 2 AND hb.verify_time + ( hb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
 				</when>
 				<!-- 获取 投标结束 -->
 				<when test="status == '12'">
-					AND (hydb.`status` = 3)
+					AND (hb.status = 3)
 				</when>
 				<!-- 获取 还款中 3天内-->
 				<when test="status == '13'">
-					AND (hydb.`status` = 4 AND borrow_success_time <![CDATA[>=]]> UNIX_TIMESTAMP( NOW() )-(60*60*24*3))
+					AND (hb.status = 4 AND borrow_success_time <![CDATA[>=]]> UNIX_TIMESTAMP( NOW() )-(60*60*24*3))
 				</when>
 				<!-- 新手汇 定时发标 -->
 				<when test="status == '14'">
-				AND ( hydb.`status` = 1 AND hydb.project_type = 4 AND hydb.verify_status = 3 )
+				AND ( hb.status = 1 AND hydb.project_type = 4 AND hb.verify_status = 3 )
 				</when>
 				<!-- 新手汇 投资中 -->
 				<when test="status == '15'">
-				AND ( hydb.`status` = 2 AND hydb.project_type = 4 AND hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
+				AND ( hb.status = 2 AND hydb.project_type = 4 AND hb.verify_time + ( hb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
 				</when>
 				<!-- 新手汇 复审 -->
 				<when test="status == '16'">
-					AND ( hydb.`status` = 3 AND hydb.project_type = 4  )
+					AND ( hb.status = 3 AND hydb.project_type = 4  )
 				</when>
 				<!-- 新手汇 还款 -->
 				<when test="status == '17'">
-					AND ( hydb.`status` = 4 AND hydb.project_type = 4  )
+					AND ( hb.status = 4 AND hydb.project_type = 4  )
 				</when>
 			</choose>
 			<if test="termStart != null and termStart != ''">
 				AND CASE
-				WHEN hydb.borrow_style = 'endday' THEN
-				hydb.borrow_period/30 <![CDATA[>=]]>#{termStart,jdbcType=INTEGER}
-				ELSE hydb.borrow_period <![CDATA[>=]]>#{termStart,jdbcType=INTEGER}
+				WHEN hb.borrow_style = 'endday' THEN
+				hb.borrow_period/30 <![CDATA[>=]]>#{termStart,jdbcType=INTEGER}
+				ELSE hb.borrow_period <![CDATA[>=]]>#{termStart,jdbcType=INTEGER}
 				END
 			</if>
 			<if test="termEnd != null and termEnd != ''">
 				AND
 				CASE
-				  WHEN hydb.borrow_style = 'endday' THEN hydb.borrow_period / 30 <![CDATA[<=]]> #{termEnd,jdbcType=INTEGER}
-				  ELSE hydb.borrow_period <![CDATA[<=]]> #{termEnd,jdbcType=INTEGER}
+				  WHEN hb.borrow_style = 'endday' THEN hb.borrow_period / 30 <![CDATA[<=]]> #{termEnd,jdbcType=INTEGER}
+				  ELSE hb.borrow_period <![CDATA[<=]]> #{termEnd,jdbcType=INTEGER}
 				END
 			</if>
 			<if test="interestStart != null and interestStart != ''">
-				AND hydb.borrow_apr <![CDATA[>=]]>#{interestStart,jdbcType=INTEGER}
+				AND hb.borrow_apr <![CDATA[>=]]>#{interestStart,jdbcType=INTEGER}
 			</if>
 			<if test="interestEnd != null and interestEnd != ''">
-				AND hydb.borrow_apr <![CDATA[<=]]>#{interestEnd,jdbcType=INTEGER}
+				AND hb.borrow_apr <![CDATA[<=]]>#{interestEnd,jdbcType=INTEGER}
 			</if>
 			<if test="projectCd != null and projectCd != ''">
 				AND hydbpt.borrow_cd = #{projectCd,jdbcType=INTEGER}
 			</if>
-			AND hydb.is_show <![CDATA[<>]]> 1
+			AND hb.is_show <![CDATA[<>]]> 1
 
 			<if test="publishInstCode != null and publishInstCode != ''">
 				AND (hydb.publish_inst_code = #{publishInstCode,jdbcType=VARCHAR} OR hydb.publish_inst_code ='0')
@@ -172,69 +172,69 @@
 		
 			hydb.borrow_nid AS borrow_name,
 			
-			hydb.borrow_apr,
-			CASE WHEN hydb.borrow_style = 'endday' 
-				THEN CONCAT(hydb.borrow_period, '天') 
-				ELSE CONCAT(hydb.borrow_period, '个月') 
+			hb.borrow_apr,
+			CASE WHEN hb.borrow_style = 'endday' 
+				THEN CONCAT(hb.borrow_period, '天') 
+				ELSE CONCAT(hb.borrow_period, '个月') 
 				END borrow_period,
-			hydb.borrow_period borrow_period_int,
-			CASE WHEN hydb.borrow_style = 'endday' THEN '天' ELSE '个月' END borrow_period_type,
+			hb.borrow_period borrow_period_int,
+			CASE WHEN hb.borrow_style = 'endday' THEN '天' ELSE '个月' END borrow_period_type,
 			CASE
-			WHEN hydb.account >= 10000 THEN
+			WHEN hb.account >= 10000 THEN
 					CASE
-			WHEN hydb.account % 10000 = 0 THEN
+			WHEN hb.account % 10000 = 0 THEN
 				CONCAT(
-					FORMAT((hydb.account / 10000), 0),
+					FORMAT((hb.account / 10000), 0),
 					'万'
 				)
-			WHEN hydb.account % 10000 <![CDATA[<>]]> 0
-			AND hydb.account % 1000 = 0 THEN
+			WHEN hb.account % 10000 <![CDATA[<>]]> 0
+			AND hb.account % 1000 = 0 THEN
 				CONCAT(
-					FORMAT(hydb.account / 10000, 1),
+					FORMAT(hb.account / 10000, 1),
 					'万'
 				)
-			WHEN hydb.account % 10000 <![CDATA[<>]]> 0
-			AND hydb.account % 1000 <![CDATA[<>]]> 0
-			AND hydb.account % 100 = 0 THEN
+			WHEN hb.account % 10000 <![CDATA[<>]]> 0
+			AND hb.account % 1000 <![CDATA[<>]]> 0
+			AND hb.account % 100 = 0 THEN
 				CONCAT(
-					FORMAT(hydb.account / 10000, 2),
+					FORMAT(hb.account / 10000, 2),
 					'万'
 				)
-			WHEN hydb.account % 10000 <![CDATA[<>]]> 0
-			AND hydb.account % 1000 <![CDATA[<>]]> 0
-			AND hydb.account % 100 <![CDATA[<>]]> 0
-			AND hydb.account % 10 = 0 THEN
+			WHEN hb.account % 10000 <![CDATA[<>]]> 0
+			AND hb.account % 1000 <![CDATA[<>]]> 0
+			AND hb.account % 100 <![CDATA[<>]]> 0
+			AND hb.account % 10 = 0 THEN
 				CONCAT(
-					FORMAT(hydb.account / 10000, 3),
+					FORMAT(hb.account / 10000, 3),
 					'万'
 				)
 			ELSE
 				CONCAT(
-					FORMAT(hydb.account/ 10000, 4),
+					FORMAT(hb.account/ 10000, 4),
 					'万'
 				)
 			END
 			ELSE
 				CONCAT(
-					FORMAT(hydb.account, 0),
+					FORMAT(hb.account, 0),
 					'元'
 				)
 			END AS borrow_total,
-			hydb.borrow_account_scale AS borrow_schedule,
+			hb.borrow_account_scale AS borrow_schedule,
 			CASE
-				WHEN hydb.`status` = 1 AND hydb.verify_status = 3 THEN '10'
-				WHEN hydb.`status` = 2 AND ( hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) ) THEN '11'
-				WHEN hydb.`status` = 3 THEN '12'
-        		WHEN hydb.`status` = 4 THEN '13'
-        		<!-- WHEN hydb.`status` = 3 AND hydb.repay_full_status = 1 THEN '14'
-				WHEN hydb.`status` = 2 THEN '15' -->
+				WHEN hb.status = 1 AND hb.verify_status = 3 THEN '10'
+				WHEN hb.status = 2 AND ( hb.verify_time + ( hb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) ) THEN '11'
+				WHEN hb.status = 3 THEN '12'
+        		WHEN hb.status = 4 THEN '13'
+        		<!-- WHEN hb.status = 3 AND hydb.repay_full_status = 1 THEN '14'
+				WHEN hb.status = 2 THEN '15' -->
 			ELSE
 			  ''
 			END AS tstatus,
 			CONCAT(#{host},'?borrowNid=',hydb.borrow_nid) AS borrow_url,		
 			CASE
-				WHEN hydb.`status` = 1 AND hydb.verify_status =3
-					THEN FROM_UNIXTIME( hydb.ontime, '%m-%d %H:%i' )
+				WHEN hb.status = 1 AND hb.verify_status =3
+					THEN FROM_UNIXTIME( hb.ontime, '%m-%d %H:%i' )
 			ELSE ''
 			END AS on_time,
 			(hydb.borrow_interest_coupon or hydb.borrow_taste_money) as couponEnable,
@@ -250,7 +250,7 @@
 			when hydb.project_type = 13 then 'HJLC'
 			else 'HZT'
 			end project_type_code,
-			IFNULL(hydb.borrow_account_wait,0) borrow_account_wait,
+			IFNULL(hb.borrow_account_wait,0) borrow_account_wait,
 			hydb.increase_interest_flag increase_interest_flag,
 			hydb.borrow_extra_yield borrow_extra_yield_old
 		FROM
@@ -258,29 +258,29 @@
 		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
 		<include refid="Where_Clause" />
 		ORDER BY
-			hydb.`status` ASC,
+			hb.status ASC,
 			<if test="planform != null and planform =='wx'" >
-			hydb.borrow_account_scale DESC,
+			hb.borrow_account_scale DESC,
 			</if>
 			CASE
-				WHEN hydb.`status` = '1' AND hydb.verify_status = 3 AND hydb.ontime IS NOT NULL AND LENGTH(trim(hydb.ontime)) <![CDATA[>]]> 1
+				WHEN hb.status = '1' AND hb.verify_status = 3 AND hb.ontime IS NOT NULL AND LENGTH(trim(hb.ontime)) <![CDATA[>]]> 1
 				THEN
-					hydb.ontime
+					hb.ontime
 			END ASC,
 			CASE
-				WHEN hydb.`status` = '2'
-				THEN hydb.borrow_account_scale 
+				WHEN hb.status = '2'
+				THEN hb.borrow_account_scale 
 			END DESC,
 			CASE
-			WHEN hydb.`status` = '2' and hydb.borrow_account_scale=0
+			WHEN hb.status = '2' and hb.borrow_account_scale=0
 			THEN hydb.addtime
 			END DESC,
 			CASE
-				WHEN hydb.`status` = '3'
+				WHEN hb.status = '3'
                 THEN hydb.addtime
 			END DESC,
 			CASE
-				WHEN hydb.`status` = '4'
+				WHEN hb.status = '4'
                 THEN hydb.addtime
 			END DESC
 		<if test="limitStart != null and limitEnd !=null" >
@@ -423,8 +423,8 @@
 			hydbpt.borrow_class AS project_type,
 			hydbpt.borrow_cd AS type,
 			hydbpt.borrow_name AS type_name,
-			hydb.`name` AS borrow_name,
-			hydbs.`name` AS repay_style,
+			hydb.name AS borrow_name,
+			hydbs.name AS repay_style,
 			hydb.project_name as project_name,
 			hydb.borrow_contents,
 			hydb.borrow_measures_mea,
@@ -436,10 +436,10 @@
 			hydb.second_payment,
 			hydb.cost_introdution,
 			hydb.fiance_condition,
-			hydb.borrow_style,
+			hb.borrow_style,
 			
 			
-			SUBSTRING(FORMAT(hydb.account,4),1,LENGTH(FORMAT(hydb.account,4))-2) AS account,
+			SUBSTRING(FORMAT(hb.account,4),1,LENGTH(FORMAT(hb.account,4))-2) AS account,
 			hydb.company_or_personal AS com_or_per,
 			CASE
 		WHEN hydb.company_or_personal = 2 THEN
@@ -461,51 +461,51 @@
 					u.borrow_nid = hydb.borrow_nid
 			)
 		END AS user_credit,
-		hydb.account AS borrow_account,
-		 hydb.borrow_apr,
+		hb.account AS borrow_account,
+		 hb.borrow_apr,
 		 CASE
-		WHEN hydb.borrow_style = 'endday' THEN
-			CONCAT(hydb.borrow_period, '')
+		WHEN hb.borrow_style = 'endday' THEN
+			CONCAT(hb.borrow_period, '')
 		ELSE
 			CONCAT(
-				hydb.borrow_period,
+				hb.borrow_period,
 				''
 			)
 		END AS borrow_period,
-		CASE WHEN hydb.borrow_style = 'endday' THEN '天' ELSE '个月' END AS borrow_period_type,
-		SUBSTRING(FORMAT(hydb.borrow_account_wait,4),1,LENGTH(FORMAT(hydb.borrow_account_wait,4))-2) AS invest_account,
-		hydb.borrow_account_scale AS borrow_schedule,
-		 FROM_UNIXTIME(hydb.verify_time,'%Y-%m-%d %H:%i' ) AS send_time,
-		 FROM_UNIXTIME(hydb.borrow_full_time,'%Y-%m-%d %H:%i' ) AS full_time,
+		CASE WHEN hb.borrow_style = 'endday' THEN '天' ELSE '个月' END AS borrow_period_type,
+		SUBSTRING(FORMAT(hb.borrow_account_wait,4),1,LENGTH(FORMAT(hb.borrow_account_wait,4))-2) AS invest_account,
+		hb.borrow_account_scale AS borrow_schedule,
+		 FROM_UNIXTIME(hb.verify_time,'%Y-%m-%d %H:%i' ) AS send_time,
+		 FROM_UNIXTIME(hb.borrow_full_time,'%Y-%m-%d %H:%i' ) AS full_time,
 		CASE 
-			WHEN hydb.`status` = 1 AND hydb.verify_status = 3
-				THEN FROM_UNIXTIME( hydb.ontime, '%Y-%m-%d %H:%i:%s' )
+			WHEN hb.status = 1 AND hb.verify_status = 3
+				THEN FROM_UNIXTIME( hb.ontime, '%Y-%m-%d %H:%i:%s' )
 		ELSE FROM_UNIXTIME(
-					hydb.verify_time,
+					hb.verify_time,
 					'%Y-%m-%d %H:%i'
 					)
 		END AS on_time,
 		CASE
-				WHEN hydb.`status` = 1 AND hydb.verify_status = 3 THEN '10'
-				WHEN hydb.`status` = 2 AND hydb.borrow_full_status = 0
+				WHEN hb.status = 1 AND hb.verify_status = 3 THEN '10'
+				WHEN hb.status = 2 AND hydb.borrow_full_status = 0
 				AND (
-					hydb.verify_time + (
-						hydb.borrow_valid_time * 24 * 60 * 60
+					hb.verify_time + (
+						hb.borrow_valid_time * 24 * 60 * 60
 					) > UNIX_TIMESTAMP(NOW())
 				) THEN
 					'11'
-				WHEN hydb.`status` = 3
+				WHEN hb.status = 3
 				 THEN
 					'12'
-				WHEN hydb.`status` = 4 THEN
+				WHEN hb.status = 4 THEN
 					'13'
-				WHEN hydb.`status` = 5 THEN
+				WHEN hb.status = 5 THEN
 					'14'
-				<!-- WHEN hydb.`status` = 2 THEN
+				<!-- WHEN hb.status = 2 THEN
 					'15' -->
 				ELSE
 					''
-				END AS `status`,
+				END AS status,
 		hydb.borrow_increase_money increase_money,
 		hydb.borrow_interest_coupon interest_coupon,
 		hydb.borrow_taste_money taste_money,
@@ -523,7 +523,7 @@
 		end
 		borrow_extra_yield,
 		hydb.contract_period,
-		truncate(hydb.account/10000,2) AS borrow_account_wan,
+		truncate(hb.account/10000,2) AS borrow_account_wan,
  		truncate(hydb.tender_account_min/10000,2) tender_account_min_wan,
 		FROM_UNIXTIME(
 		hydb.recover_last_time,
@@ -540,7 +540,7 @@
 			ht_borrow hydb
 		INNER JOIN ht_borrow_info borrowInfo ON borrowInfo.borrow_nid = hydb.borrow_nid
 		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
-		LEFT JOIN ht_borrow_style hydbs ON hydbs.nid = hydb.borrow_style
+		LEFT JOIN ht_borrow_style hydbs ON hydbs.nid = hb.borrow_style
 		LEFT JOIN ht_borrow_repay re ON re.borrow_nid = hydb.borrow_nid
 		WHERE
 			(
@@ -550,29 +550,29 @@
 		AND  (
 			(
 				(
-					hydb.`status` = 1
-					AND hydb.verify_status = 3
+					hb.status = 1
+					AND hb.verify_status = 3
 				)
 			)
 			OR (
-				hydb.`status` = 2
+				hb.status = 2
 				AND hydb.borrow_full_status = 0
 				AND (
-					hydb.verify_time + (
-						hydb.borrow_valid_time * 24 * 60 * 60
+					hb.verify_time + (
+						hb.borrow_valid_time * 24 * 60 * 60
 					) > UNIX_TIMESTAMP(NOW())
 				)
 			)
 			OR (
-				hydb.`status` = 3
+				hb.status = 3
 			)
 			OR (
-				hydb.`status` = 4
+				hb.status = 4
 			)
 			OR (
-				hydb.`status` = 5
+				hb.status = 5
 			)
-			<!-- OR (hydb.`status` = 2) -->
+			<!-- OR (hb.status = 2) -->
 		)
 		AND hydb.borrow_nid =#{borrowNid,jdbcType=VARCHAR}
 	</select>
@@ -716,7 +716,7 @@
 			hydbu.is_supply_contract
 		FROM
 			ht_borrow hydb
-		LEFT JOIN ht_borrow_users hydbu ON hydb.borrow_nid = hydbu.`borrow_nid`
+		LEFT JOIN ht_borrow_users hydbu ON hydb.borrow_nid = hydbu.borrow_nid
 		WHERE
 			hydb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 		AND hydb.company_or_personal = 1
@@ -778,7 +778,7 @@
 	</resultMap>
 	<select id="selectMortgageList" resultMap="MortgageMap" parameterType="String">
 		SELECT
-			pn.`name` AS property_type,
+			pn.name AS property_type,
 			bh.houses_area AS gross_area,
 			bh.houses_toprice AS guaranty_value,
 			bh.houses_cnt,
@@ -821,7 +821,7 @@
 			CONCAT(
 				substring(hydcl.person_name, 1, 1),
 				'**'
-			) AS `name`,
+			) AS name,
 			CONCAT(
 				substring(hydcl.ident, 1, 6),
 				'******',
@@ -860,8 +860,8 @@
 		SELECT
 			CONCAT(substring(hydbt.user_name,1,1),'**') AS user_name,
 			SUBSTRING(FORMAT(hydbt.account,4),1,LENGTH(FORMAT(hydbt.account,4))-2) AS account,
-			hydbt.`client` AS client,
-			hydbt.`client` AS client_name,
+			hydbt.client AS client,
+			hydbt.client AS client_name,
 		    date_format(hydbt.create_time, '%Y-%m-%d %H:%i:%s') AS invest_time
 			FROM ht_borrow_tender hydbt
 			-- LEFT JOIN ht_r_user hydu ON hydbt.user_id = hydu.user_id
@@ -906,76 +906,76 @@
 		hydbpt.borrow_class AS borrow_type,
 		hydbpt.borrow_name AS borrow_desc,
 		hydb.borrow_nid,
-	
+
 		hydb.borrow_nid AS borrow_name,
-		
-		hydb.borrow_apr,
-		CASE WHEN hydb.borrow_style = 'endday' THEN CONCAT(hydb.borrow_period, '天') ELSE CONCAT(hydb.borrow_period, '个月') END borrow_period,
-		hydb.borrow_period borrow_period_int,
-		CASE WHEN hydb.borrow_style = 'endday' THEN '天' ELSE '个月' END borrow_period_type,
+
+		hb.borrow_apr,
+		CASE WHEN hb.borrow_style = 'endday' THEN CONCAT(hb.borrow_period, '天') ELSE CONCAT(hb.borrow_period, '个月') END borrow_period,
+		hb.borrow_period borrow_period_int,
+		CASE WHEN hb.borrow_style = 'endday' THEN '天' ELSE '个月' END borrow_period_type,
 		CASE
-		WHEN hydb.account >= 10000 THEN
+		WHEN hb.account >= 10000 THEN
 				CASE
-		WHEN hydb.account % 10000 = 0 THEN
+		WHEN hb.account % 10000 = 0 THEN
 			CONCAT(
-				FORMAT((hydb.account / 10000), 0),
+				FORMAT((hb.account / 10000), 0),
 				'万'
 			)
-		WHEN hydb.account % 10000 <![CDATA[<>]]> 0
-		AND hydb.account % 1000 = 0 THEN
+		WHEN hb.account % 10000 <![CDATA[<>]]> 0
+		AND hb.account % 1000 = 0 THEN
 			CONCAT(
-				FORMAT(hydb.account / 10000, 1),
+				FORMAT(hb.account / 10000, 1),
 				'万'
 			)
-		WHEN hydb.account % 10000 <![CDATA[<>]]> 0
-		AND hydb.account % 1000 <![CDATA[<>]]> 0
-		AND hydb.account % 100 = 0 THEN
+		WHEN hb.account % 10000 <![CDATA[<>]]> 0
+		AND hb.account % 1000 <![CDATA[<>]]> 0
+		AND hb.account % 100 = 0 THEN
 			CONCAT(
-				FORMAT(hydb.account / 10000, 2),
+				FORMAT(hb.account / 10000, 2),
 				'万'
 			)
-		WHEN hydb.account % 10000 <![CDATA[<>]]> 0
-		AND hydb.account % 1000 <![CDATA[<>]]> 0
-		AND hydb.account % 100 <![CDATA[<>]]> 0
-		AND hydb.account % 10 = 0 THEN
+		WHEN hb.account % 10000 <![CDATA[<>]]> 0
+		AND hb.account % 1000 <![CDATA[<>]]> 0
+		AND hb.account % 100 <![CDATA[<>]]> 0
+		AND hb.account % 10 = 0 THEN
 			CONCAT(
-				FORMAT(hydb.account / 10000, 3),
+				FORMAT(hb.account / 10000, 3),
 				'万'
 			)
 		ELSE
 			CONCAT(
-				FORMAT(hydb.account/ 10000, 4),
+				FORMAT(hb.account/ 10000, 4),
 				'万'
 			)
 		END
 		ELSE
 			CONCAT(
-				FORMAT(hydb.account, 0),
+				FORMAT(hb.account, 0),
 				'元'
 			)
 		END AS borrow_total,
-		hydb.borrow_account_scale AS borrow_schedule,
+		hb.borrow_account_scale AS borrow_schedule,
 		CASE
-			WHEN hydb.`status` = 1 AND hydb.verify_status = 3 THEN '10'
-			WHEN hydb.`status` = 2 AND ( hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) ) THEN '11'
-			WHEN hydb.`status` = 3 THEN '12'
-       		WHEN hydb.`status` = 4 THEN '13'
-       		<!-- WHEN hydb.`status` = 3 AND hydb.repay_full_status = 1 THEN '14'
-			WHEN hydb.`status` = 2 THEN '15' -->
+			WHEN hb.status = 1 AND hb.verify_status = 3 THEN '10'
+			WHEN hb.status = 2 AND ( hb.verify_time + ( hb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) ) THEN '11'
+			WHEN hb.status = 3 THEN '12'
+       		WHEN hb.status = 4 THEN '13'
+       		<!-- WHEN hb.status = 3 AND hydb.repay_full_status = 1 THEN '14'
+			WHEN hb.status = 2 THEN '15' -->
 		ELSE
 		  ''
 		END AS tstatus,
 		CONCAT(#{host},'?borrowNid=',hydb.borrow_nid) AS borrow_url,		
 		CASE
-			WHEN hydb.`status` = 1 AND hydb.verify_status =3
-				THEN FROM_UNIXTIME( hydb.ontime, '%m-%d %H:%i' )
+			WHEN hb.status = 1 AND hb.verify_status =3
+				THEN FROM_UNIXTIME( hb.ontime, '%m-%d %H:%i' )
 		ELSE ''
 		END AS on_time,
-		(hydbi.borrow_interest_coupon or hydbi.borrow_taste_money) as couponEnable,
-		case when hydbi.borrow_extra_yield=0 then
+		(hydb.borrow_interest_coupon or hydb.borrow_taste_money) as couponEnable,
+		case when hydb.borrow_extra_yield=0 then
 		''
 		else
-		 	CONCAT('',hydbi.borrow_extra_yield, '%')
+		 	CONCAT('',hydb.borrow_extra_yield, '%')
 		 end
 		borrow_extra_yield,
 		case 
@@ -984,13 +984,13 @@
 		when hydb.project_type = 13 then 'HJLC'
 		else 'HZT'
 		end project_type_code,
-		IFNULL(hydb.borrow_account_wait,0) borrow_account_wait
+		IFNULL(hb.borrow_account_wait,0) borrow_account_wait
 	</sql>
 	
 	<sql id="From_Clause">
-		ht_borrow hydb
-			LEFT JOIN ht_borrow_info hydbi ON hydb.borrow_nid = hydbi.borrow_nid
-			LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
+		ht_borrow hb
+		inner join ht_borrow_info hydb on hb.borrow_nid = hydb.borrow_nid
+		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
 	</sql>
 	
 	<sql id="WhereList_Clause">
@@ -1001,7 +1001,7 @@
 		<if test="version != null and version != '' and '1.4.2' > version ">
 		AND hydb.project_type <![CDATA[<>]]> '13'
 		</if>
-		AND hydb.is_show <![CDATA[<>]]> 1
+		AND hb.is_show <![CDATA[<>]]> 1
 
 		<!-- 定向标过滤 -->
 		<if test="publishInstCode != null and publishInstCode != ''">
@@ -1018,10 +1018,10 @@
         	<include refid="From_Clause" />
         WHERE
         	<include refid="WhereList_Clause" />
-        	AND ( hydb.`status` = 2 AND hydb.verify_time + ( hydbi.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
+        	AND ( hb.status = 2 AND hb.verify_time + ( hb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
 		ORDER BY
-			hydb.borrow_account_scale DESC,
-			hydb.verify_time DESC
+			hb.borrow_account_scale DESC,
+			hb.verify_time DESC
 	    LIMIT 0 , 5
 	    )
 		UNION ALL
@@ -1032,12 +1032,12 @@
 		<include refid="From_Clause" />
 		WHERE
 		<include refid="WhereList_Clause" />
-		AND ( hydb.`status` = 1 AND hydb.verify_status = 3 )
+		AND ( hb.status = 1 AND hb.verify_status = 3 )
 		ORDER BY
 		CASE
-		WHEN hydb.`status` = '1' AND hydb.verify_status = 3 AND hydb.ontime IS NOT NULL AND LENGTH(trim(hydb.ontime)) <![CDATA[>]]> 1
+		WHEN hb.status = '1' AND hb.verify_status = 3 AND hb.ontime IS NOT NULL AND LENGTH(trim(hb.ontime)) <![CDATA[>]]> 1
 		THEN
-		hydb.ontime
+		hb.ontime
 		END ASC
 		LIMIT 0 , 5
 		)
@@ -1049,9 +1049,9 @@
         	<include refid="From_Clause" />
         WHERE
         	<include refid="WhereList_Clause" />
-        	AND ( hydb.`status` = 3)
+        	AND ( hb.status = 3)
         ORDER BY
-			hydb.borrow_full_time DESC
+			hb.borrow_full_time DESC
 	    LIMIT 0 , 5
 	    ) LIMIT 0 , 5
 	</select>
@@ -1065,7 +1065,7 @@
         	<include refid="From_Clause" />
         WHERE
         	<include refid="WhereList_Clause" />
-        	AND (hydb.`status` = 4 AND borrow_success_time <![CDATA[>=]]> UNIX_TIMESTAMP( NOW() )-(60*60*24*3))
+        	AND (hb.status = 4 AND borrow_success_time <![CDATA[>=]]> UNIX_TIMESTAMP( NOW() )-(60*60*24*3))
 		ORDER BY
 			borrow_success_time DESC
 	    LIMIT 0 , 5
