@@ -524,4 +524,11 @@ public interface MQConstant {
 
 
 	/** ------------------------------ 神策数据统计 end ------------------------------ */
+
+	/**
+	 * 销售日报
+	 */
+	String SELL_DAILY_GROUP = "SELL_DAILY_GROUP";
+	String SELL_DAILY_TOPIC = "SELL_DAILY_TOPIC";
+    String SELL_DAILY_SELECT_TAG = "SELL_DAILY_SELECT_TAG";
 }

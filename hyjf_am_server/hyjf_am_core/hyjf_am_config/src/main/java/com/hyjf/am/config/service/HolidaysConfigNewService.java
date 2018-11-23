@@ -3,9 +3,9 @@
  */
 package com.hyjf.am.config.service;
 
-import com.hyjf.common.exception.ReturnMessageException;
-
 import java.util.Date;
+
+import com.hyjf.common.exception.ReturnMessageException;
 
 /**
  * @author yaoy
@@ -46,4 +46,6 @@ public interface HolidaysConfigNewService {
      * @return
      */
     int selectFirstWorkdayOnMonth(int currentYear, int currentMonth);
+
+    Date getFirstWorkdateBeforeSomeDate(Date date);
 }
