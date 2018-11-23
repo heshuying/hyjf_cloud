@@ -143,7 +143,7 @@ public class HjhLabelController extends BaseController{
 	 */
 	@ApiOperation(value = "标签配置列表", notes = "标签配置列表查询")
 	@PostMapping(value = "/search")
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<ListResult<AdminHjhLabelCustomizeVO>> selectLabelConfigList(HttpServletRequest request, @RequestBody HjhLabelViewRequest viewRequest) {
 		// 初始化原子层请求实体
 		HjhLabelRequest form = new HjhLabelRequest();
