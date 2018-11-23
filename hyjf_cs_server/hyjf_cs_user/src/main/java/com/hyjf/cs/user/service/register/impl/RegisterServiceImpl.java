@@ -263,7 +263,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
      * @throws ReturnMessageException
      */
     @Override
-    @HystrixCommand(commandKey="用户注册-register", fallbackMethod = "fallBackRegister",ignoreExceptions = CheckException.class,commandProperties = {
+    @HystrixCommand(commandKey="用户注册(三端)-register", fallbackMethod = "fallBackRegister",ignoreExceptions = CheckException.class,commandProperties = {
             //设置断路器生效
           @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
 
@@ -330,7 +330,8 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
      * @return
      */
     private WebViewUserVO fallBackRegister(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, String ip) {
-    	return null;
+        logger.info("==================已进入 用户注册(三端) fallBackRegister 方法================");
+        return null;
     }
 
     /**
@@ -415,6 +416,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
     }
 
     public UserVO fallBackApiRegister(UserRegisterRequestBean userRegisterRequestBean, RegisterRequest registerRequest, String ipAddr) {
+        logger.info("==================已进入 用户注册(api) fallBackApiRegister 方法================");
         return null;
     }
 

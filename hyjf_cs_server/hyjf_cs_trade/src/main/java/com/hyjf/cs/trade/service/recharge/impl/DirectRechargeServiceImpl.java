@@ -246,6 +246,7 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
     }
 
     public Map<String,Object> fallBackApiRecharge(UserDirectRechargeRequestBean userRechargeRequestBean, HttpServletRequest request) {
+        logger.info("==================已进入 页面充值(api) fallBackApiRecharge 方法================");
         Map<String,Object> map = new HashMap<>();
         map.put("status", BaseResultBean.STATUS_FAIL);
         map.put("acqRes", userRechargeRequestBean.getAcqRes());

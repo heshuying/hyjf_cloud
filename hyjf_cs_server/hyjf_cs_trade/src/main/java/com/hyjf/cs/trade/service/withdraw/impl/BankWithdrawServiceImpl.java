@@ -143,6 +143,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
     }
 
     public BankCallBean fallBackWithdraw(UserVO user, String transAmt, String cardNo, String payAllianceCode, String platform, String channel, String ip, String retUrl, String bgRetUrl, String successfulUrl, String forgotPwdUrl){
+        logger.info("==================已进入 提现(三端) fallBackWithdraw 方法================");
         return null;
     }
 
@@ -1443,6 +1444,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
     }
 
     public  Map<String,Object> fallBackApiWithdraw(UserWithdrawRequestBean userWithdrawRequestBean, HttpServletRequest request) {
+        logger.info("==================已进入 提现(api) fallBackApiWithdraw 方法================");
         return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"请求参数异常");
     }
 
