@@ -414,57 +414,7 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
             info.put("userHjhInvistDetail", hjhInvistDetailVO);
             info.put("type", type);
 
-            // 3持有项目列表
-            String url = "http://AM-TRADE/am-trade/hjhDebtCredit/getUserHjhInvestList";
-            if (type != null && "1".equals(type)) {
-                // 锁定中
-                HjhUserInvestListResponse response = baseClient.postExe(url,params,HjhUserInvestListResponse.class);
-                List<UserHjhInvistListCustomizeVO> userHjhInvistBorrowList = response.getResultList();
-                List<UserHjhInvistListCustomizeVO> tmpList = new ArrayList<UserHjhInvistListCustomizeVO>();
-                if (userHjhInvistBorrowList != null) {
-                    // add by cwyang 2018-3-27 计划持有项目显示协议下载按钮
-                    for (int i = 0; i < userHjhInvistBorrowList.size(); i++) {
-                        UserHjhInvistListCustomizeVO userHjhInvistListCustomize = userHjhInvistBorrowList.get(i);
-                        String nid = userHjhInvistListCustomize.getNid();
-                        List<TenderAgreementVO> tenderAgreements= amTradeClient.selectTenderAgreementByNid(nid);
-                        if(CollectionUtils.isNotEmpty(tenderAgreements)){
-                            TenderAgreementVO tenderAgreement = tenderAgreements.get(0);
-                            Integer fddStatus = tenderAgreement.getStatus();
-                            //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
-                            //System.out.println("******************1法大大协议状态："+tenderAgreement.getStatus());
-                            if(fddStatus.equals(3)){
-                                userHjhInvistListCustomize.setFddStatus(1);
-                            }else {
-                                //隐藏下载按钮
-                                //System.out.println("******************2法大大协议状态：0");
-                                userHjhInvistListCustomize.setFddStatus(0);
-                            }
-                        }else {
-                            //下载老版本协议
-                            //System.out.println("******************3法大大协议状态：2");
-                            userHjhInvistListCustomize.setFddStatus(1);
-                        }
-                    }
-                    tmpList.addAll(userHjhInvistBorrowList);
-                }
-                info.put("investList", tmpList);
-                // modelAndView.setViewName(AssetManageDefine.TO_MY_HJH_PLAN_INFO_DETAIL_PAGE_PATH);
-
-            } else if (type != null && "2".equals(type)) {
-                // 已退出
-                //modelAndView.setViewName(AssetManageDefine.TO_MY_HJH_PLAN_INFO_DETAIL_PAGE_PATH);
-                HjhUserInvestListResponse response = baseClient.postExe(url,params,HjhUserInvestListResponse.class);
-                List<UserHjhInvistListCustomizeVO> debtInvestList = response.getResultList();
-                List<UserHjhInvistListCustomizeVO> tmpList = new ArrayList<UserHjhInvistListCustomizeVO>();
-                if (debtInvestList != null) {
-                    tmpList.addAll(debtInvestList);
-                }
-                info.put("investList", tmpList);
-            } else {
-                // 申购中
-                //modelAndView.setViewName(AssetManageDefine.TO_MY_HJH_PLAN_INFO_DETAIL_PAGE_PATH);
-            }
-
+            // 3持有项目列表 已经由别的方法替代， 此处不再提供investList
         }else{
             throw new CheckException("加入信息不存在,请确认后重试");
         }
