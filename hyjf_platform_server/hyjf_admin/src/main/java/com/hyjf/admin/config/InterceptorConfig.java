@@ -24,7 +24,8 @@ public class InterceptorConfig implements WebMvcConfigurer {
 		//不拦截的请求
 		addIn.excludePathPatterns(
 				"/hyjf-admin/login/login",
-				"/hyjf-admin/login/getPicture"
+				"/hyjf-admin/login/getPicture",
+				"/hyjf-admin/qianle/*"
 		).excludePathPatterns("/swagger-resources/**", "/webjars/**", "/v2/**", "/swagger-ui.html/**");
 	}
 }

@@ -30,6 +30,7 @@ public interface PropertiesConstants {
 
     /** 邮件发送服务器 */
     String MAIL_HOST = "mail.host";
+    String MAIL_SMTP_HOST = "mail.smtp.host";
     String MAIL_SMTP_SOCKETFACTORY_CLASS = "mail.smtp.socketFactory.class";
     String MAIL_SMTP_SOCKETFACTORY_CLASS_VALUE = "javax.net.ssl.SSLSocketFactory";
     String MAIL_SMTP_SOCKETFACTORY_FALLBACK = "mail.smtp.socketFactory.fallback";
