@@ -2,6 +2,7 @@ package com.hyjf.cs.user.controller.api.bankopen;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.cs.user.bean.ApiBankOpenRequestBean;
 import com.hyjf.cs.user.bean.BaseResultBean;
@@ -15,6 +16,8 @@ import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -79,6 +82,17 @@ public class ApiBankOpenController extends BaseUserController {
         return modelAndView;
     }
 
+    @HystrixCommand(commandKey = "开户(api)-getCallbankMV",fallbackMethod = "fallBackApiBankOpen",ignoreExceptions = CheckException.class,commandProperties = {
+            //设置断路器生效
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //一个统计窗口内熔断触发的最小个数3/10s
+            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50"),
+            @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE"),
+            //熔断5秒后去尝试请求
+            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
     public BankCallBean getCallbankMV(OpenAccountPageBean openBean) {
         // 根据身份证号码获取性别
         String idType = BankCallConstant.ID_TYPE_IDCARD;
@@ -110,6 +124,9 @@ public class ApiBankOpenController extends BaseUserController {
         return openAccoutBean;
     }
 
+    public BankCallBean fallBackApiBankOpen(OpenAccountPageBean openBean) {
+        return  new BankCallBean();
+    }
 
     private OpenAccountPageBean getOpenAccountPageBean(ApiBankOpenRequestBean requestBean) {
         OpenAccountPageBean bean = new OpenAccountPageBean();

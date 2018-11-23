@@ -12,6 +12,7 @@ import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.BaseDefine;
@@ -27,6 +28,8 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,6 +59,17 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
     private static final int RECHARGE_STATUS_SUCCESS = 2;
 
     @Override
+    @HystrixCommand(commandKey = "页面充值(api)-recharge",fallbackMethod = "fallBackApiRecharge",ignoreExceptions = CheckException.class,commandProperties = {
+            //设置断路器生效
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //一个统计窗口内熔断触发的最小个数3/10s
+            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50"),
+            @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE"),
+            //熔断5秒后去尝试请求
+            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
     public Map<String,Object> recharge(UserDirectRechargeRequestBean userRechargeRequestBean, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
         Map<String,Object> map = new HashMap<>();
@@ -229,6 +243,16 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
             map.put("callBackAction",userRechargeRequestBean.getRetUrl());
             return map;
         }
+    }
+
+    public Map<String,Object> fallBackApiRecharge(UserDirectRechargeRequestBean userRechargeRequestBean, HttpServletRequest request) {
+        Map<String,Object> map = new HashMap<>();
+        map.put("status", BaseResultBean.STATUS_FAIL);
+        map.put("acqRes", userRechargeRequestBean.getAcqRes());
+        map.put("accountId", userRechargeRequestBean.getAccountId());
+        map.put("statusDesc","充值失败");
+        map.put("callBackAction",userRechargeRequestBean.getRetUrl());
+        return map;
     }
 
     @Override
