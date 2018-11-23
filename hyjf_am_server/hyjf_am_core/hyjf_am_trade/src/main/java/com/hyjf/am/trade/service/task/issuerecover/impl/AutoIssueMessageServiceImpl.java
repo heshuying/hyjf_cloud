@@ -31,7 +31,6 @@ import java.util.List;
 @Service
 public class AutoIssueMessageServiceImpl implements AutoIssueMessageService {
     private static final Logger logger = LoggerFactory.getLogger(AutoIssueMessageServiceImpl.class);
-    public static JedisPool pool = RedisUtils.getPool();
     @Resource
     private HjhPlanAssetMapper hjhPlanAssetMapper;
     @Resource
@@ -479,37 +478,42 @@ public class AutoIssueMessageServiceImpl implements AutoIssueMessageService {
      * @param value
      */
     private boolean redisSubstrack(String key,String value){
-
-        Jedis jedis = pool.getResource();
+        JedisPool poolNew = RedisUtils.getPool();
+        Jedis jedis = poolNew.getResource();
         boolean result = false;
+        try{
+            while ("OK".equals(jedis.watch(key))) {
+                List<Object> results = null;
 
-        while ("OK".equals(jedis.watch(key))) {
-            List<Object> results = null;
+                String balance = jedis.get(key);
+                BigDecimal bal = new BigDecimal(balance);
+                BigDecimal val = new BigDecimal(value);
 
-            String balance = jedis.get(key);
-            BigDecimal bal = new BigDecimal(balance);
-            BigDecimal val = new BigDecimal(value);
+                if(val.compareTo(bal)>0){
+                    return false;
+                }
 
-            if(val.compareTo(bal)>0){
-                return false;
-            }
-
-            Transaction tx = jedis.multi();
-            String valbeset = bal.subtract(val).toString();
-            tx.set(key, valbeset);
-            results = tx.exec();
-            if (results == null || results.isEmpty()) {
-                jedis.unwatch();
-            } else {
-                String ret = (String) results.get(0);
-                if (ret != null && "OK".equals(ret)) {
-                    // 成功后
-                    result = true;
-                    break;
-                } else {
+                Transaction tx = jedis.multi();
+                String valbeset = bal.subtract(val).toString();
+                tx.set(key, valbeset);
+                results = tx.exec();
+                if (results == null || results.isEmpty()) {
                     jedis.unwatch();
+                } else {
+                    String ret = (String) results.get(0);
+                    if (ret != null && "OK".equals(ret)) {
+                        // 成功后
+                        result = true;
+                        break;
+                    } else {
+                        jedis.unwatch();
+                    }
                 }
             }
+        }catch(Exception e){
+            logger.info("抛出异常:[{}]",e);
+        }finally {
+            RedisUtils.returnResource(poolNew,jedis);
         }
 
         return result;
@@ -521,34 +525,40 @@ public class AutoIssueMessageServiceImpl implements AutoIssueMessageService {
      * @param value
      */
     private void redisAdd(String key,String value){
+        JedisPool poolNew = RedisUtils.getPool();
+        Jedis jedis = poolNew.getResource();
 
-        Jedis jedis = pool.getResource();
+        try{
+            while ("OK".equals(jedis.watch(key))) {
+                List<Object> results = null;
 
-        while ("OK".equals(jedis.watch(key))) {
-            List<Object> results = null;
+                String balance = jedis.get(key);
+                BigDecimal bal = new BigDecimal(0);
+                if (balance != null) {
+                    bal =  new BigDecimal(balance);
+                }
+                BigDecimal val =  new BigDecimal(value);
 
-            String balance = jedis.get(key);
-            BigDecimal bal = new BigDecimal(0);
-            if (balance != null) {
-                bal =  new BigDecimal(balance);
-            }
-            BigDecimal val =  new BigDecimal(value);
-
-            Transaction tx = jedis.multi();
-            String valbeset = bal.add(val).toString();
-            tx.set(key, valbeset);
-            results = tx.exec();
-            if (results == null || results.isEmpty()) {
-                jedis.unwatch();
-            } else {
-                String ret = (String) results.get(0);
-                if (ret != null && "OK".equals(ret)) {
-                    // 成功后
-                    break;
-                } else {
+                Transaction tx = jedis.multi();
+                String valbeset = bal.add(val).toString();
+                tx.set(key, valbeset);
+                results = tx.exec();
+                if (results == null || results.isEmpty()) {
                     jedis.unwatch();
+                } else {
+                    String ret = (String) results.get(0);
+                    if (ret != null && "OK".equals(ret)) {
+                        // 成功后
+                        break;
+                    } else {
+                        jedis.unwatch();
+                    }
                 }
             }
+        }catch (Exception e){
+            logger.error("连接Redis异常！",e);
+        }finally {
+            RedisUtils.returnResource(poolNew,jedis);
         }
     }
 }

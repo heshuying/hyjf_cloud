@@ -20,8 +20,8 @@ public class ZIPGenerator {
      */
     public static void generateZip(HttpServletResponse response, List<File> files, String fileName){
         response.setContentType("APPLICATION/OCTET-STREAM");  
-        response.setHeader("Content-Disposition","attachment; filename="+fileName+".zip");  
-        System.out.println("Download................");   
+        response.setHeader("Content-Disposition","attachment; filename="+fileName+".zip");
+        System.out.println("Download................");
         ZipOutputStream zos;
         try {
             zos = new ZipOutputStream(response.getOutputStream());
@@ -31,7 +31,7 @@ public class ZIPGenerator {
         } catch (IOException e) {
             e.printStackTrace();
             System.out.println("---图片下载异常,无法下载---");
-        }     
+        }
     }
     
     /**

@@ -3,6 +3,7 @@ package com.hyjf.admin.controller.user;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.AuthBean;
+import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -42,6 +43,7 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 /**
@@ -157,7 +159,14 @@ public class UserauthController extends BaseController {
 		return new AdminResult<ListResult<AdminUserAuthLogListVO>>(ListResult.build(list2, rqes.getRecordTotal()));
 		
 	}
+	@ApiOperation(value = "授权状态", notes = "授权下拉列表")
+	@ResponseBody
+	@PostMapping("/map")
+	public AdminResult<List<DropDownVO>> map() {
 
+		return new AdminResult<List<DropDownVO>>(com.hyjf.admin.utils.ConvertUtils.convertParamMapToDropDown(CacheUtil.getParamNameMap("AUTO_INVER_TYPE")));
+		
+	}
 	/**
 	 * 自动授权查询 - 调用江西银行接口查询
 	 *

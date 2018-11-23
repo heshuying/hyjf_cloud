@@ -55,7 +55,7 @@ public class HjhPlanController extends BaseTradeController {
         String ip = CustomUtil.getIpAddr(request);
         // 神策数据统计 add by liuyang 20180726 start
         // 神策数据统计事件的预置属性
-        String presetProps = request.getParameter("presetProps");
+        String presetProps = tender.getPresetProps();
         // 神策数据统计 add by liuyang 20180726 end
         tender.setIp(ip);
         tender.setUserId(userId);

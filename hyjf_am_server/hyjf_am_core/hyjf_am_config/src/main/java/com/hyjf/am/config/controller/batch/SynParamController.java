@@ -53,7 +53,7 @@ public class SynParamController extends BaseConfigController {
     
 
 
-	public static JedisPool pool = RedisUtils.getPool();
+	public static JedisPool poolNew = RedisUtils.getPool();
 	
 	private static String appkeytempPath = "D:\\tmpp\\apprediskey.txt";
 
@@ -156,7 +156,7 @@ public class SynParamController extends BaseConfigController {
 	 */
 	private void scanALlKey(){
 
-		Jedis jedis = pool.getResource();
+		Jedis jedis = poolNew.getResource();
 		File appfilePath= new File(appkeytempPath);
 		
 		// 写入文件
@@ -216,7 +216,7 @@ public class SynParamController extends BaseConfigController {
 	 */
 	private void expireAppKey(){
 
-		Jedis jedis = pool.getResource();
+		Jedis jedis = poolNew.getResource();
 		File appfilePath= new File(appkeytempPath);
 		int apptotal = 0;
 		
@@ -235,8 +235,9 @@ public class SynParamController extends BaseConfigController {
 			logger.info("processed keys "+apptotal);
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			jedis.close();
 		}
-		
 	}
     
 }

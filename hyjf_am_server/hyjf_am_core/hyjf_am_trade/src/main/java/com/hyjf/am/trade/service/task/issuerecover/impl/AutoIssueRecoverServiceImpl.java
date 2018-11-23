@@ -47,8 +47,6 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
     @Value("${hyjf.alerm.email}")
     private String emaillist2;
 
-    public static JedisPool pool = RedisUtils.getPool();
-
     @Override
     public List<HjhPlanAsset> selectAssetList(List statusList) {
         HjhPlanAssetExample example = new HjhPlanAssetExample();
@@ -529,37 +527,45 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         // 操作redis
         // 拿取实际的项目编号
         String borrowPreNidNew = "";
-        Jedis jedis = pool.getResource();
+        JedisPool poolNew = RedisUtils.getPool();
+        Jedis jedis = poolNew.getResource();
 
         String borrowPreNid = getBorrowPreNid();//初始标的号码 -->根据年月放当月最初值
-        while ("OK".equals(jedis.watch(RedisConstants.GEN_HJH_BORROW_NID))) {
-            List<Object> results = null;
-            Transaction tx = jedis.multi();
-            borrowPreNidNew = RedisUtils.get(RedisConstants.GEN_HJH_BORROW_NID);
-            if (StringUtils.isBlank(borrowPreNidNew)) {
-                tx.set(RedisConstants.GEN_HJH_BORROW_NID, borrowPreNid);
-                borrowPreNidNew = borrowPreNid;
-                results = tx.exec();
-            } else if (borrowPreNidNew != null) {
-                if(Long.parseLong(borrowPreNid)>Long.parseLong(borrowPreNidNew)){
-                    borrowPreNidNew = (String.valueOf(borrowPreNid));
-                }else{
-                    borrowPreNidNew = (String.valueOf(Long.valueOf(borrowPreNidNew) + 1));
+        try{
+            while ("OK".equals(jedis.watch(RedisConstants.GEN_HJH_BORROW_NID))) {
+                List<Object> results = null;
+                Transaction tx = jedis.multi();
+                borrowPreNidNew = RedisUtils.get(RedisConstants.GEN_HJH_BORROW_NID);
+                if (StringUtils.isBlank(borrowPreNidNew)) {
+                    tx.set(RedisConstants.GEN_HJH_BORROW_NID, borrowPreNid);
+                    borrowPreNidNew = borrowPreNid;
+                    results = tx.exec();
+                } else if (borrowPreNidNew != null) {
+                    if(Long.parseLong(borrowPreNid)>Long.parseLong(borrowPreNidNew)){
+                        borrowPreNidNew = (String.valueOf(borrowPreNid));
+                    }else{
+                        borrowPreNidNew = (String.valueOf(Long.valueOf(borrowPreNidNew) + 1));
+                    }
+                    tx.set(RedisConstants.GEN_HJH_BORROW_NID, borrowPreNidNew);
+                    results = tx.exec();
                 }
-                tx.set(RedisConstants.GEN_HJH_BORROW_NID, borrowPreNidNew);
-                results = tx.exec();
-            }
-            if (results == null || results.isEmpty()) {
-                jedis.unwatch();
-            } else {
-                String ret = (String) results.get(0);
-                if (ret != null && "OK".equals(ret)) {
-                    borrowPreNid = borrowPreNidNew;
-                    break;
-                } else {
+                if (results == null || results.isEmpty()) {
                     jedis.unwatch();
+                } else {
+                    String ret = (String) results.get(0);
+                    if (ret != null && "OK".equals(ret)) {
+                        borrowPreNid = borrowPreNidNew;
+                        break;
+                    } else {
+                        jedis.unwatch();
+                    }
                 }
             }
+        }catch(Exception e){
+            logger.info("抛出异常:[{}]",e);
+        }finally {
+            //返还
+            RedisUtils.returnResource(poolNew,jedis);
         }
 
         return borrowPreNidNew;

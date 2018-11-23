@@ -61,8 +61,6 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 
 	private static final Logger logger = LoggerFactory.getLogger(BankInvestAllExceptionServiceImpl.class);
 
-	public static JedisPool pool = RedisUtils.getPool();
-
 	@Autowired
 	private SmsProducer smsProducer;
 
@@ -1270,30 +1268,38 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 	}
 	
 	private boolean redisRecover(int userId, String borrowNid, String account) {
-		JedisPool pool = RedisUtils.getPool();
-		Jedis jedis = pool.getResource();
+		JedisPool poolNew = RedisUtils.getPool();
+		Jedis jedis = poolNew.getResource();
 		BigDecimal accountBigDecimal = new BigDecimal(account);
-		while ("OK".equals(jedis.watch(borrowNid))) {
-			String balanceLast = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
-			if (StringUtils.isNotBlank(balanceLast)) {
-				System.out.println("PC用户:" + userId + "***redis剩余金额：" + balanceLast);
-				BigDecimal recoverAccount = accountBigDecimal.add(new BigDecimal(balanceLast));
-				Transaction transaction = jedis.multi();
-				transaction.set(borrowNid, recoverAccount.toString());
-				List<Object> result = transaction.exec();
-				if (result == null || result.isEmpty()) {
-					jedis.unwatch();
-				} else {
-					String ret = (String) result.get(0);
-					if (ret != null && "OK".equals(ret)) {
-						System.out.println("用户:" + userId + "*******from redis恢复redis：" + account);
-						return true;
-					} else {
+		try{
+			while ("OK".equals(jedis.watch(borrowNid))) {
+				String balanceLast = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
+				if (StringUtils.isNotBlank(balanceLast)) {
+					System.out.println("PC用户:" + userId + "***redis剩余金额：" + balanceLast);
+					BigDecimal recoverAccount = accountBigDecimal.add(new BigDecimal(balanceLast));
+					Transaction transaction = jedis.multi();
+					transaction.set(borrowNid, recoverAccount.toString());
+					List<Object> result = transaction.exec();
+					if (result == null || result.isEmpty()) {
 						jedis.unwatch();
+					} else {
+						String ret = (String) result.get(0);
+						if (ret != null && "OK".equals(ret)) {
+							System.out.println("用户:" + userId + "*******from redis恢复redis：" + account);
+							return true;
+						} else {
+							jedis.unwatch();
+						}
 					}
 				}
 			}
+		}catch(Exception e){
+			logger.info("抛出异常:[{}]",e);
+		}finally {
+			//返还
+			RedisUtils.returnResource(poolNew,jedis);
 		}
+
 		return false;
 	}
 
@@ -1306,56 +1312,66 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 	 * @return
 	 */
 	private JSONObject redisTender(Integer userId, String borrowNid, String txAmount) {
-		Jedis jedis = pool.getResource();
+		JedisPool poolNew = RedisUtils.getPool();
+		Jedis jedis = poolNew.getResource();
+
 		String status = BankCallConstant.STATUS_FAIL; // 发送状态
 		JSONObject info = new JSONObject();
 		BigDecimal accountDecimal = new BigDecimal(txAmount);// 冻结前验证
-		String accountRedisWait = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
-		if (StringUtils.isNotBlank(accountRedisWait)) {
-			// 操作redis
-			while ("OK".equals(jedis.watch(borrowNid))) {
-				accountRedisWait = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
-				if (StringUtils.isNotBlank(accountRedisWait)) {
-					System.out.println("PC用户:" + userId + "***冻结前可投金额：" + accountRedisWait);
-					if (new BigDecimal(accountRedisWait).compareTo(BigDecimal.ZERO) == 0) {
-						info.put("message", "您来晚了，下次再来抢吧！");
-						info.put("status", status);
-						break;
-					} else {
-						if (new BigDecimal(accountRedisWait).compareTo(accountDecimal) < 0) {
-							info.put("message", "可投剩余金额为" + accountRedisWait + "元！");
+
+		try{
+			String accountRedisWait = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
+			if (StringUtils.isNotBlank(accountRedisWait)) {
+				// 操作redis
+				while ("OK".equals(jedis.watch(borrowNid))) {
+					accountRedisWait = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
+					if (StringUtils.isNotBlank(accountRedisWait)) {
+						System.out.println("PC用户:" + userId + "***冻结前可投金额：" + accountRedisWait);
+						if (new BigDecimal(accountRedisWait).compareTo(BigDecimal.ZERO) == 0) {
+							info.put("message", "您来晚了，下次再来抢吧！");
 							info.put("status", status);
 							break;
 						} else {
-							Transaction transaction = jedis.multi();
-							BigDecimal lastAccount = new BigDecimal(accountRedisWait).subtract(accountDecimal);
-							transaction.set(borrowNid, lastAccount.toString());
-							List<Object> result = transaction.exec();
-							if (result == null || result.isEmpty()) {
-								jedis.unwatch();
+							if (new BigDecimal(accountRedisWait).compareTo(accountDecimal) < 0) {
+								info.put("message", "可投剩余金额为" + accountRedisWait + "元！");
+								info.put("status", status);
+								break;
 							} else {
-								String ret = (String) result.get(0);
-								if (ret != null && "OK".equals(ret)) {
-									status = BankCallConstant.STATUS_SUCCESS;
-									info.put("message", "redis操作成功！");
-									info.put("status", status);
-									System.out.println("PC用户:" + userId + "***冻结前减redis：" + accountDecimal);
-									break;
-								} else {
+								Transaction transaction = jedis.multi();
+								BigDecimal lastAccount = new BigDecimal(accountRedisWait).subtract(accountDecimal);
+								transaction.set(borrowNid, lastAccount.toString());
+								List<Object> result = transaction.exec();
+								if (result == null || result.isEmpty()) {
 									jedis.unwatch();
+								} else {
+									String ret = (String) result.get(0);
+									if (ret != null && "OK".equals(ret)) {
+										status = BankCallConstant.STATUS_SUCCESS;
+										info.put("message", "redis操作成功！");
+										info.put("status", status);
+										System.out.println("PC用户:" + userId + "***冻结前减redis：" + accountDecimal);
+										break;
+									} else {
+										jedis.unwatch();
+									}
 								}
 							}
 						}
+					} else {
+						info.put("message", "您来晚了，下次再来抢吧！");
+						info.put("status", status);
+						break;
 					}
-				} else {
-					info.put("message", "您来晚了，下次再来抢吧！");
-					info.put("status", status);
-					break;
 				}
+			} else {
+				info.put("message", "您来晚了，下次再来抢吧！");
+				info.put("status", status);
 			}
-		} else {
-			info.put("message", "您来晚了，下次再来抢吧！");
-			info.put("status", status);
+		}catch(Exception e){
+			logger.info("抛出异常:[{}]",e);
+		}finally {
+			//返还
+			RedisUtils.returnResource(poolNew,jedis);
 		}
 		return info;
 	}

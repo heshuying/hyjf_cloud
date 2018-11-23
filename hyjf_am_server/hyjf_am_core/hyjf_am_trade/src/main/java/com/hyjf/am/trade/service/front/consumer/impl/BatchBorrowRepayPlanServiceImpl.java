@@ -102,9 +102,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 
     @Autowired
     private CalculateInvestInterestProducer calculateInvestInterestProducer;
-	
-	public static JedisPool pool = RedisUtils.getPool();
-	
+
 	@Override
 	public List<BorrowApicron> getBorrowApicronList(Integer apiType) {
 		BorrowApicronExample example = new BorrowApicronExample();
@@ -3387,16 +3385,22 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 						throw new Exception("插入还款人还款款交易明細accountList表失败，项目编号:" + borrowNid + "]");
 					}
 				}
-				// 更新Borrow
-				newBorrow.setRepayFullStatus(repayStatus);
-				newBorrow.setRepayStatus(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
-				newBorrow.setStatus(status);
-				BorrowExample borrowExample = new BorrowExample();
-				borrowExample.createCriteria().andIdEqualTo(borrowId);
-				boolean borrowFlag = this.borrowMapper.updateByExampleSelective(newBorrow, borrowExample) > 0 ? true : false;
-				if (!borrowFlag) {
-					throw new Exception("不分期还款成功后，更新相应的borrow表失败," + "项目编号:" + borrowNid + ",还款期数：" + periodNow);
+				
+				// 非一次性还款和一次性还款最后一期才更新
+				if(0 == isAllrepay || (1 == isAllrepay && periodNext == 0)){
+					// 更新Borrow
+					newBorrow.setRepayFullStatus(repayStatus);
+					newBorrow.setRepayStatus(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
+					newBorrow.setStatus(status);
+					BorrowExample borrowExample = new BorrowExample();
+					borrowExample.createCriteria().andIdEqualTo(borrowId);
+					boolean borrowFlag = this.borrowMapper.updateByExampleSelective(newBorrow, borrowExample) > 0 ? true : false;
+					if (!borrowFlag) {
+						throw new Exception("不分期还款成功后，更新相应的borrow表失败," + "项目编号:" + borrowNid + ",还款期数：" + periodNow);
+					}
+					
 				}
+				
 				BorrowApicronExample apicronExample = new BorrowApicronExample();
 				apicronExample.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
 				apicron.setStatus(CustomConstants.BANK_BATCH_STATUS_SUCCESS);
@@ -3866,8 +3870,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 	 * @param value
 	 */
 	private boolean redisAddstrack(String key,String value){
-
-		Jedis jedis = pool.getResource();
+		JedisPool poolNew = RedisUtils.getPool();
+		Jedis jedis = poolNew.getResource();
 		boolean result = false;
 		
 		try {
@@ -3895,8 +3899,10 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 					}
 				}
 			}
-		} finally {
-			jedis.close();
+		}catch (Exception e){
+			logger.info("抛出异常:[{}]",e);
+		}finally {
+			RedisUtils.returnResource(poolNew,jedis);
 		}
 		
 		return result;

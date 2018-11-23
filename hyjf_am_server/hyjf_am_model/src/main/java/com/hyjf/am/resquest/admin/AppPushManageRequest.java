@@ -13,6 +13,8 @@ public class AppPushManageRequest extends BasePage implements Serializable {
 
     private Integer id;
 
+    private Integer ids;
+
     private String title;
 
     private Integer jumpType;
@@ -25,9 +27,13 @@ public class AppPushManageRequest extends BasePage implements Serializable {
 
     private Integer status;
 
-    private Date timeStart;
+    private String timeStart;
 
-    private Date timeEnd;
+    private String timeEnd;
+
+    private String timeStartDiy;
+
+    private String timeEndDiy;
 
     private Integer createUserId;
 
@@ -52,6 +58,14 @@ public class AppPushManageRequest extends BasePage implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getIds() {
+        return ids;
+    }
+
+    public void setIds(Integer ids) {
+        this.ids = ids;
     }
 
     public String getTitle() {
@@ -102,19 +116,19 @@ public class AppPushManageRequest extends BasePage implements Serializable {
         this.status = status;
     }
 
-    public Date getTimeStart() {
+    public String getTimeStart() {
         return timeStart;
     }
 
-    public void setTimeStart(Date timeStart) {
+    public void setTimeStart(String timeStart) {
         this.timeStart = timeStart;
     }
 
-    public Date getTimeEnd() {
+    public String getTimeEnd() {
         return timeEnd;
     }
 
-    public void setTimeEnd(Date timeEnd) {
+    public void setTimeEnd(String timeEnd) {
         this.timeEnd = timeEnd;
     }
 
@@ -172,5 +186,46 @@ public class AppPushManageRequest extends BasePage implements Serializable {
 
     public void setLimitEnd(int limitEnd) {
         this.limitEnd = limitEnd;
+    }
+
+    public String getTimeStartDiy() {
+        return timeStartDiy;
+    }
+
+    public void setTimeStartDiy(String timeStartDiy) {
+        this.timeStartDiy = timeStartDiy;
+    }
+
+    public String getTimeEndDiy() {
+        return timeEndDiy;
+    }
+
+    public void setTimeEndDiy(String timeEndDiy) {
+        this.timeEndDiy = timeEndDiy;
+    }
+
+    @Override
+    public String toString() {
+        return "AppPushManageRequest{" +
+                "id=" + id +
+                ", ids=" + ids +
+                ", title='" + title + '\'' +
+                ", jumpType=" + jumpType +
+                ", jumpContent=" + jumpContent +
+                ", jumpUrl='" + jumpUrl + '\'' +
+                ", orderId=" + orderId +
+                ", status=" + status +
+                ", timeStart='" + timeStart + '\'' +
+                ", timeEnd='" + timeEnd + '\'' +
+                ", timeStartDiy='" + timeStartDiy + '\'' +
+                ", timeEndDiy='" + timeEndDiy + '\'' +
+                ", createUserId=" + createUserId +
+                ", createTime=" + createTime +
+                ", updateTime=" + updateTime +
+                ", thumb='" + thumb + '\'' +
+                ", content='" + content + '\'' +
+                ", limitStart=" + limitStart +
+                ", limitEnd=" + limitEnd +
+                '}';
     }
 }

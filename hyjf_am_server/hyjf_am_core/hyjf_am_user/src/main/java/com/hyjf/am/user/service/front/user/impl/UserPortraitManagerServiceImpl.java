@@ -20,8 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -122,7 +120,18 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
             userPortrait.put("limitEnd", limitEnd);
         }
 
-        Jedis jedis = getJedis(redisKey,request);
+        //redis设置key，value
+        Boolean exists = RedisUtils.exists(redisKey);
+        if (!exists) {
+            List<ParamName> paramNameList = CommonUtils.convertBeanList(request.getParamNameVOList(),ParamName.class);
+            Map<String, String> map = new HashMap<>();
+            for (ParamName paramName : paramNameList) {
+                String key = paramName.getNameClass() + paramName.getNameCd();
+                String value = paramName.getName();
+                map.put(key, value);
+            }
+            RedisUtils.hmset(redisKey, map);
+        }
 
         List<UserPortrait> usersPortraits = userPortraitManagerMapper.selectUserPortraitList(userPortrait);
         if (!CollectionUtils.isEmpty(usersPortraits)) {
@@ -137,7 +146,7 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
                     }
                     if (usersPortrait.getSex() != null && usersPortrait.getAge() != null) {
                         sex = usersPortrait.getSex().equals("男") ? "MAN" : "WOMAN";
-                        String sexAge = jedis.hget(redisKey, sex + age);
+                        String sexAge = RedisUtils.hget(redisKey, sex + age);
                         customize.setSexAge(sexAge);
                     } else {
                         customize.setSexAge("0");
@@ -174,14 +183,14 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
                     nameClass = "TRADE_NUMBER";
                     if (usersPortrait.getTradeNumber() != null && usersPortrait.getTradeNumber() >= 5) {
                         nameCd = "5+";
-                        tradeNumber = jedis.hget(redisKey, nameClass + nameCd);
+                        tradeNumber = RedisUtils.hget(redisKey, nameClass + nameCd);
                         customize.setTradeNumber(Integer.parseInt(tradeNumber));
                     } else {
                         nameCd = String.valueOf(usersPortrait.getTradeNumber());
                         if (usersPortrait.getTradeNumber() == null) {
                             nameCd = "0";
                         }
-                        tradeNumber = jedis.hget(redisKey, nameClass + nameCd);
+                        tradeNumber = RedisUtils.hget(redisKey, nameClass + nameCd);
                         customize.setTradeNumber(Integer.parseInt(tradeNumber));
                     }
 
@@ -265,10 +274,10 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
                     nameClass = "INVITE_RECHARGE";
                     if (rechargeCount >= 12) {
                         nameCd = "12+";
-                        inviteActive = jedis.hget(redisKey, nameClass + nameCd);
+                        inviteActive = RedisUtils.hget(redisKey, nameClass + nameCd);
                         customize.setInviteActive(inviteActive);
                     } else {
-                        inviteActive = jedis.hget(redisKey, nameClass + String.valueOf(rechargeCount));
+                        inviteActive = RedisUtils.hget(redisKey, nameClass + String.valueOf(rechargeCount));
                         customize.setInviteActive(inviteActive);
                     }
 
@@ -335,7 +344,7 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
                     } else {
                         fundRetentionPeriod = "75-100";
                     }
-                    String statusTab = jedis.hget(redisKey, loginPeriod + fundRetentionPeriod);
+                    String statusTab = RedisUtils.hget(redisKey, loginPeriod + fundRetentionPeriod);
                     customize.setStatusTab(statusTab);
 
                     //身份标签
@@ -392,25 +401,6 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
         }
         return list;
     }
-
-    private Jedis getJedis(String redisKey,UserPortraitScoreRequest request) {
-
-        JedisPool pool = RedisUtils.getPool();
-        Jedis jedis = pool.getResource();
-        Boolean exists = jedis.exists(redisKey);
-        if (!exists) {
-            List<ParamName> list = CommonUtils.convertBeanList(request.getParamNameVOList(),ParamName.class);
-            Map<String, String> map = new HashMap<>();
-            for (ParamName paramName : list) {
-                String key = paramName.getNameClass() + paramName.getNameCd();
-                String value = paramName.getName();
-                map.put(key, value);
-            }
-            jedis.hmset(redisKey, map);
-        }
-        return jedis;
-    }
-
 
     /**
      * 计算平均值

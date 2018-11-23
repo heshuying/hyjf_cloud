@@ -10,6 +10,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 /**
@@ -38,12 +40,18 @@ public class AppPushManageServiceImpl implements AppPushManageService {
         }
 
         // 状态不为空
-        if (pushManageRequest.getStatus().toString() != "" && pushManageRequest.getStatus() != null){
+        if (pushManageRequest.getStatus() != null){
             criteria.andStatusEqualTo(pushManageRequest.getStatus());
         }
 
-        if (StringUtils.isNotBlank(pushManageRequest.getTimeStart().toString())){
-            criteria.andTimeStartBetween(pushManageRequest.getTimeStart(), pushManageRequest.getTimeEnd());
+        if (StringUtils.isNotBlank(pushManageRequest.getTimeStartDiy())){
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                criteria.andTimeStartGreaterThanOrEqualTo(sdf.parse(pushManageRequest.getTimeStartDiy()));
+                criteria.andTimeEndLessThanOrEqualTo(sdf.parse(pushManageRequest.getTimeEndDiy()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
         return appPushManageMapper.countByExample(example);
@@ -65,12 +73,18 @@ public class AppPushManageServiceImpl implements AppPushManageService {
         }
 
         // 状态不为空
-        if (pushManageRequest.getStatus().toString() != "" && pushManageRequest.getStatus() != null){
+        if (pushManageRequest.getStatus() != null){
             criteria.andStatusEqualTo(pushManageRequest.getStatus());
         }
 
-        if (StringUtils.isNotBlank(pushManageRequest.getTimeStart().toString())){
-            criteria.andTimeStartBetween(pushManageRequest.getTimeStart(), pushManageRequest.getTimeEnd());
+        if (StringUtils.isNotBlank(pushManageRequest.getTimeStartDiy())){
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                criteria.andTimeStartGreaterThanOrEqualTo(sdf.parse(pushManageRequest.getTimeStartDiy()));
+                criteria.andTimeEndLessThanOrEqualTo(sdf.parse(pushManageRequest.getTimeEndDiy()));
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
 
         return appPushManageMapper.selectByExample(example);
@@ -87,6 +101,15 @@ public class AppPushManageServiceImpl implements AppPushManageService {
         AppPushManage pushManage = new AppPushManage();
 
         BeanUtils.copyProperties(pushManageRequest, pushManage);
+        if (StringUtils.isNotBlank(pushManageRequest.getTimeStartDiy()) && StringUtils.isNotBlank(pushManageRequest.getTimeEndDiy())){
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                pushManage.setTimeStart(sdf.parse(pushManageRequest.getTimeStartDiy()));
+                pushManage.setTimeEnd(sdf.parse(pushManageRequest.getTimeEndDiy()));
+            }catch (ParseException e){
+                e.printStackTrace();
+            }
+        }
         return appPushManageMapper.insertSelective(pushManage);
     }
 
@@ -100,6 +123,16 @@ public class AppPushManageServiceImpl implements AppPushManageService {
         AppPushManage pushManage = new AppPushManage();
 
         BeanUtils.copyProperties(pushManageRequest, pushManage);
+        pushManage.setId(pushManageRequest.getIds());
+        if (StringUtils.isNotBlank(pushManageRequest.getTimeStartDiy()) && StringUtils.isNotBlank(pushManageRequest.getTimeEndDiy())){
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            try {
+                pushManage.setTimeStart(sdf.parse(pushManageRequest.getTimeStartDiy()));
+                pushManage.setTimeEnd(sdf.parse(pushManageRequest.getTimeEndDiy()));
+            }catch (ParseException e){
+                e.printStackTrace();
+            }
+        }
         return appPushManageMapper.updateByPrimaryKeySelective(pushManage);
     }
 
@@ -111,5 +144,15 @@ public class AppPushManageServiceImpl implements AppPushManageService {
     @Override
     public int deletePushManage(Integer id) {
         return appPushManageMapper.deleteByPrimaryKey(id);
+    }
+
+    /**
+     * 获取单条详细信息
+     * @param id
+     * @return
+     */
+    @Override
+    public AppPushManage getAppPushManageInfoById(Integer id) {
+        return appPushManageMapper.selectByPrimaryKey(id);
     }
 }

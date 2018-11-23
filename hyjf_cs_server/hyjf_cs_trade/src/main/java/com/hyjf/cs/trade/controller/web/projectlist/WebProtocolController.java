@@ -76,4 +76,17 @@ public class WebProtocolController extends BaseController {
     public void newHjhInvestPDF(@ModelAttribute ProtocolRequest form, HttpServletRequest request, HttpServletResponse response){
         webProtocolService.newHjhInvestPDF(form,request,response);
     }
+
+    /**
+     * pcc
+     * 账户中心-资产管理-当前持有-- 投资协议(实际为散标居间协议)下载
+     * @param form
+     * @param request
+     * @param response
+     */
+    @ApiOperation(value = "账户中心-资产管理-当前持有-- 投资协议(实际为散标居间协议)下载", httpMethod = "GET", notes = "账户中心-资产管理-当前持有-- 投资协议(实际为散标居间协议)下载")
+    @GetMapping(value = "intermediaryAgreementPDF")
+    public void intermediaryAgreementPDF(@ModelAttribute ProtocolRequest form, HttpServletRequest request, HttpServletResponse response){
+        webProtocolService.intermediaryAgreementPDF(form,request,response);
+    }
 }

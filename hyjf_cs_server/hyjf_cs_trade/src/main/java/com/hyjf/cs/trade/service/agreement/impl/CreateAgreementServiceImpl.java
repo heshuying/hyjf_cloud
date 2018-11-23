@@ -1,7 +1,5 @@
 package com.hyjf.cs.trade.service.agreement.impl;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.resquest.trade.UserInvestListBeanRequest;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
@@ -24,8 +22,54 @@ import java.util.Map;
 @Service
 public class CreateAgreementServiceImpl extends BaseTradeServiceImpl implements CreateAgreementService {
     @Override
-    public List<TenderAgreementVO> getIntermediaryAgreementPDFUrl(String nid) {
+    public List<BorrowCustomizeVO> selectBorrowList(BorrowCommonCustomizeVO borrowCommonCustomize) {
+        return amTradeClient.searchBorrowCustomizeList(borrowCommonCustomize);
+    }
 
-        return amTradeClient.selectTenderAgreementByNid(nid);
+    @Override
+    public List<TenderAgreementVO> selectTenderAgreementByNid(String nid) {
+        return this.amTradeClient.selectTenderAgreementByNid(nid);
+    }
+
+    @Override
+    public List<WebUserInvestListCustomizeVO> selectUserInvestList(UserInvestListBeanRequest form) {
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("borrowNid", form.getBorrowNid());
+        params.put("userId", form.getUserId());
+        params.put("nid", form.getNid());
+
+        return amTradeClient.selectUserInvestList(params);
+    }
+
+    @Override
+    public ProjectCustomeDetailVO selectProjectDetail(String borrowNid) {
+        return amTradeClient.selectProjectDetail(borrowNid);
+    }
+
+    @Override
+    public List<DebtBorrowCustomizeVO> selectDebtBorrowList(DebtBorrowCommonCustomizeVO debtBorrowCommonCustomize) {
+        Map<String,Object> param = new HashMap<>();
+        String borrowNid = debtBorrowCommonCustomize.getBorrowNid();
+        param.put("borrowNidSrch",borrowNid);
+        return amTradeClient.searchDebtBorrowList4Protocol(param);
+    }
+
+    @Override
+    public int countProjectRepayPlanRecordTotal(ProjectRepayListBeanVO bean) {
+        Map<String,Object> paraBean = new HashMap<>();
+        paraBean.put("userId", bean.getUserId());
+        paraBean.put("borrowNid", bean.getBorrowNid());
+        paraBean.put("nid", bean.getNid());
+        int recordTotal = amTradeClient.countProjectRepayPlanRecordTotal(paraBean);
+        return recordTotal;
+    }
+
+    @Override
+    public List<WebProjectRepayListCustomizeVO> selectProjectRepayPlanList(ProjectRepayListBeanVO bean) {
+        Map<String,Object> paraBean = new HashMap<>();
+        paraBean.put("userId", bean.getUserId());
+        paraBean.put("borrowNid", bean.getBorrowNid());
+        paraBean.put("nid", bean.getNid());
+        return  amTradeClient.selectProjectRepayPlanList(paraBean);
     }
 }

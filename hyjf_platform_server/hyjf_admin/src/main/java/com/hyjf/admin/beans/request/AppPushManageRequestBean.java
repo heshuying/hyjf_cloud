@@ -10,8 +10,11 @@ import java.util.Date;
  */
 public class AppPushManageRequestBean extends BasePage {
 
-    @ApiModelProperty(value = "当前ID")
-    private Integer id;
+//    @ApiModelProperty(value = "当前ID")
+//    private Integer id;
+
+    @ApiModelProperty(value = "查询ID")
+    private String ids;
 
     @ApiModelProperty(value = "标题名称")
     private String title;
@@ -31,11 +34,17 @@ public class AppPushManageRequestBean extends BasePage {
     @ApiModelProperty(value = "0:禁用;1:启用.")
     private Integer status;
 
-    @ApiModelProperty(value = "开始时间")
-    private Date timeStart;
+//    @ApiModelProperty(value = "开始时间")
+//    private String timeStart;
 
-    @ApiModelProperty(value = "结束时间")
-    private Date timeEnd;
+//    @ApiModelProperty(value = "结束时间")
+//    private String timeEnd;
+
+    @ApiModelProperty(value = "开始时间 - 检索用")
+    private String timeStartDiy;
+
+    @ApiModelProperty(value = "结束时间 - 检索用")
+    private String timeEndDiy;
 
     @ApiModelProperty(value = "缩略图")
     private String thumb;
@@ -43,12 +52,12 @@ public class AppPushManageRequestBean extends BasePage {
     @ApiModelProperty(value = "内容")
     private String content;
 
-    public Integer getId() {
-        return id;
+    public String getIds() {
+        return ids;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
+    public void setIds(String ids) {
+        this.ids = ids;
     }
 
     public String getTitle() {
@@ -99,22 +108,6 @@ public class AppPushManageRequestBean extends BasePage {
         this.status = status;
     }
 
-    public Date getTimeStart() {
-        return timeStart;
-    }
-
-    public void setTimeStart(Date timeStart) {
-        this.timeStart = timeStart;
-    }
-
-    public Date getTimeEnd() {
-        return timeEnd;
-    }
-
-    public void setTimeEnd(Date timeEnd) {
-        this.timeEnd = timeEnd;
-    }
-
     public String getThumb() {
         return thumb;
     }
@@ -129,5 +122,21 @@ public class AppPushManageRequestBean extends BasePage {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getTimeStartDiy() {
+        return timeStartDiy;
+    }
+
+    public void setTimeStartDiy(String timeStartDiy) {
+        this.timeStartDiy = timeStartDiy;
+    }
+
+    public String getTimeEndDiy() {
+        return timeEndDiy;
+    }
+
+    public void setTimeEndDiy(String timeEndDiy) {
+        this.timeEndDiy = timeEndDiy;
     }
 }

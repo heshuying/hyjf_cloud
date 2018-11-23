@@ -390,7 +390,7 @@ public class FileUtil {
         conn.setRequestProperty("Accept-Charset", "UTF-8");
         // 设定请求的方法为"POST"，默认是GET
         conn.setRequestMethod("POST");
-        DataInputStream input =null; 
+        DataInputStream input =null;
         ServletOutputStream output = null;
         byte[] buffer = new byte[1024];
         int count = 0;
@@ -416,7 +416,7 @@ public class FileUtil {
         }
         return true;
     }
-    
+
     /**
      * 通过HTTP方式获取文件
      *
@@ -425,8 +425,8 @@ public class FileUtil {
      * @return file
      * @throws IOException
      */
-    public static File getFile(HttpServletRequest request, HttpServletResponse response, String strUrl, String fileName) throws IOException {
-        
+    public static File getFile(String strUrl, String fileName) throws IOException {
+
         File file = new File(fileName);
         URL url = new URL(strUrl);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();

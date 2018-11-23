@@ -440,13 +440,8 @@
         htbi.borrow_income_description,
         htbi.borrow_publisher,
         <!-- add by nxl 添加产品加息标志位查询-->
-        hydb.increase_interest_flag,
-        case when htbi.borrow_extra_yield=0 then
-        ''
-        else
-        htbi.borrow_extra_yield
-        end
-        borrow_extra_yield,
+        htbi.increase_interest_flag,
+        htbi.borrow_extra_yield,
         htbi.contract_period,
         FROM_UNIXTIME(
         hydb.recover_last_time,
@@ -456,7 +451,8 @@
         re.create_time,
         '%Y-%m-%d %H:%i'
         ) verify_over_time,
-        htbi.borrow_level
+        htbi.borrow_level,
+        htbi.project_name
         FROM
         ht_borrow hydb
         left join ht_borrow_info htbi on hydb.borrow_nid =  htbi.borrow_nid
@@ -1682,8 +1678,9 @@
              hydb.status borrow_status,
              hydbpt.borrow_class as borrow_type,
              CONCAT("/bank/web/borrow/getBorrowDetail.do?borrowNid=",hydb.borrow_nid) AS borrow_url,
-              -- hydb.increase_interest_flag increase_interest_flag,
-             hydbi.borrow_extra_yield borrow_extra_yield
+             hydbi.increase_interest_flag increase_interest_flag,
+             CASE WHEN hydbi.increase_interest_flag = 0  THEN '' ELSE
+             hydbi.borrow_extra_yield END AS borrow_extra_yield
          FROM
          ht_borrow hydb
          INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type

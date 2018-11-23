@@ -151,9 +151,8 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
         List<TenderAgreement> tenderAgreements= this.tenderAgreementMapper.selectByExample(example);
         List<TenderAgreementVO> tenderAgreementvos = new ArrayList<>();
         if(tenderAgreements != null && tenderAgreements.size()>0){
-
-            TenderAgreementVO tenderAgreementVO =  new TenderAgreementVO();
             for (TenderAgreement tenderAgreement : tenderAgreements) {
+                TenderAgreementVO tenderAgreementVO =  new TenderAgreementVO();
                 BeanUtils.copyProperties(tenderAgreement,tenderAgreementVO);
                 tenderAgreementvos.add(tenderAgreementVO);
             }
@@ -270,21 +269,18 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
     /**
      * 获取用户投资协议分期
      *
-     * @param borrowNid
+     * @param nid
      * @return
      */
     @Override
-    public List<HjhDebtCreditRepay> selectHjhDebtCreditRepayList(String borrowNid, int period) {
+    public List<HjhDebtCreditRepay> selectHjhDebtCreditRepayList(String nid, int period) {
         HjhDebtCreditRepayExample example = new HjhDebtCreditRepayExample();
         HjhDebtCreditRepayExample.Criteria crt = example.createCriteria();
-        crt.andBorrowNidEqualTo(borrowNid);
+        crt.andInvestOrderIdEqualTo(nid);
         crt.andRepayPeriodEqualTo(period);
-        crt.andRepayStatusEqualTo(1);
         crt.andDelFlagEqualTo(0);
-        crt.andRepayAccountGreaterThan(BigDecimal.ZERO);
-        example.setOrderByClause("id ASC");
-        List<HjhDebtCreditRepay> creditRepayList = this.hjhDebtCreditRepayMapper.selectByExample(example);
-        return creditRepayList;
+        List<HjhDebtCreditRepay> hjhDebtCreditRepays = this.hjhDebtCreditRepayMapper.selectByExample(example);
+        return hjhDebtCreditRepays;
     }
 
     /**

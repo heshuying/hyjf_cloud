@@ -69,7 +69,7 @@ public class BorrowProjectTypeController extends BaseController {
         List<BorrowProjectRepayVO> selectRepay = null;
         record.setBorrowCd(adminRequest.getBorrowCd());
         boolean isExists = false;
-        if (record.getBorrowCd() == null) {
+        if (record.getBorrowCd() != null) {
             // 根据主键判断该条数据在数据库中是否存在
             isExists = this.borrowProjectTypeService.isExistsRecord(record);
         }
@@ -120,7 +120,7 @@ public class BorrowProjectTypeController extends BaseController {
             result.setStatusDesc(BaseResult.FAIL_DESC);
             return result;
         }
-        if(adminRequest.getBorrowCd() == null ){
+        if(adminRequest.getBorrowCd() != null ){
             int bo=Integer.valueOf(adminRequest.getBorrowCd());
             if(bo>127||bo<0){
                 response.setRtn(Response.FAIL);
@@ -241,7 +241,7 @@ public class BorrowProjectTypeController extends BaseController {
             response.setResult(borrowProjectTypeVO);
             return new AdminResult<BorrowProjectTypeResponse>(response);
         }
-        if (adminRequest.getBorrowCd() == null ) {
+        if (adminRequest.getBorrowCd() != null ) {
             response = this.borrowProjectTypeService.updateRecord(adminRequest);
         }
         if (response == null) {
