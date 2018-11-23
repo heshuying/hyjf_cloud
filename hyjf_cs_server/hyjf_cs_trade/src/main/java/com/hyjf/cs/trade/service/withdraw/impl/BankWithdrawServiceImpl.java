@@ -1077,6 +1077,17 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      * @return
      */
     @Override
+    @HystrixCommand(commandKey = "提现(api)-withdraw",fallbackMethod = "fallBackApiWithdraw",ignoreExceptions = CheckException.class,commandProperties = {
+            //设置断路器生效
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //一个统计窗口内熔断触发的最小个数3/10s
+            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50"),
+            @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE"),
+            //熔断5秒后去尝试请求
+            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
     public  Map<String,Object> withdraw(UserWithdrawRequestBean userWithdrawRequestBean, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
         Map<String,Object> map = new HashMap<>();
@@ -1429,6 +1440,10 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         }
         map.put("modelAndView",modelAndView);
         return map;
+    }
+
+    public  Map<String,Object> fallBackApiWithdraw(UserWithdrawRequestBean userWithdrawRequestBean, HttpServletRequest request) {
+        return syncParamForMap(userWithdrawRequestBean,ErrorCodeConstant.STATUS_CE000001,"请求参数异常");
     }
 
     /**

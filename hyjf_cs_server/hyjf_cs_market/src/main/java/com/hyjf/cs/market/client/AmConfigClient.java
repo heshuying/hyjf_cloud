@@ -3,6 +3,10 @@
  */
 package com.hyjf.cs.market.client;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.config.WechatContentArticleResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
@@ -13,10 +17,6 @@ import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author fuqiang
@@ -183,4 +183,24 @@ public interface AmConfigClient {
      * @return
      */
     boolean selectFirstWorkdayOnMonth();
+
+    /**
+     * 判断某天是否是工作日
+     * @return
+     */
+    boolean isWorkdateOnSomeDay();
+
+    /**
+     * 取昨日开始时间
+     * @param date
+     * @return
+     */
+    Date getFirstWorkdateBeforeSomeDate(Date date);
+
+    /**
+     * 取从某天开始推后的第一个工作日开始时间
+     * @param torrowDate
+     * @return
+     */
+    Date getFirstWorkdateAfterSomeDate(Date torrowDate);
 }

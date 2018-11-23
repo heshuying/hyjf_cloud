@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.service.assetmanage.impl;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.trade.HjhUserInvestListResponse;
 import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
 import com.hyjf.am.resquest.trade.AssetManagePlanRequest;
@@ -13,6 +14,7 @@ import com.hyjf.am.vo.trade.assetmanage.RepayMentPlanListCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.UserHjhInvistListCustomizeVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.service.BaseClient;
@@ -470,6 +472,93 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
         return result;
     }
 
+
+    @Override
+    public WebResult getOrderInvestList(AssetManagePlanRequest request, Integer userId) {
+        WebResult result = new WebResult();
+        Map<String,Object> info = new HashMap<>();
+        if (null == userId){
+            throw new CheckException("用户信息失效，请重新登录");
+        }
+
+        String accedeOrderId = request.getAccedeOrderId();
+        // 页面固定传值0是投资中 1是锁定中 2是已回款
+        String type = request.getType();
+        CheckUtil.check(StringUtils.isNotBlank(accedeOrderId),MsgEnum.ERR_OBJECT_REQUIRED,"加入订单号");
+
+        // 1基本信息
+        Map<String, Object> params = new HashMap<String, Object>();
+        params.put("accedeOrderId", accedeOrderId);
+        params.put("userId", userId);
+        String ListUrl = "http://AM-TRADE/am-trade/hjhDebtCredit/getUserHjhInvestList";
+        String countUrl = "http://AM-TRADE/am-trade/hjhDebtCredit/getUserHjhInvestCount";
+        IntegerResponse countResponse = baseClient.postExe(countUrl,params,IntegerResponse.class);
+        int projecTotal = countResponse.getResultInt();
+        List<UserHjhInvistListCustomizeVO> tmpList = new ArrayList<>();
+        Page page = Page.initPage(request.getCurrPage(),request.getPageSize());
+        if (projecTotal > 0){
+            page.setTotal(projecTotal);
+            params.put("limitStart",page.getOffset());
+            params.put("limitEnd",page.getLimit());
+            HjhUserInvestListResponse response = baseClient.postExe(ListUrl,params,HjhUserInvestListResponse.class);
+            tmpList = response.getResultList();
+            if(tmpList!=null && tmpList.size()>0){
+                for (UserHjhInvistListCustomizeVO userHjhInvistListCustomize : tmpList) {
+                    String nid = userHjhInvistListCustomize.getNid();//居间
+                    String investOrderId = userHjhInvistListCustomize.getInvestOrderId();//债转
+                    //法大大居间服务协议（type=2时候，为债转协议）
+                    List<TenderAgreementVO> tenderAgreementsNid= amTradeClient.selectTenderAgreementByNid(nid);//居间协议
+                    List<TenderAgreementVO> tenderAgreementsOrderId= amTradeClient.selectTenderAgreementByNid(investOrderId);//债转协议
+                   // List<TenderAgreement> tenderAgreementsOrderId= fddGenerateContractService.selectByExample(investOrderId);//债转协议
+                    if("0".equals(userHjhInvistListCustomize.getType())){//居间协议
+                        if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
+                            TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
+                            Integer fddStatus = tenderAgreement.getStatus();
+                            //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
+                            //System.out.println("******************1法大大协议状态："+tenderAgreement.getStatus());
+                            if(fddStatus.equals(3)){
+                                userHjhInvistListCustomize.setFddStatus(1);
+                            }else {
+                                //隐藏下载按钮
+                                //System.out.println("******************2法大大协议状态：0");
+                                userHjhInvistListCustomize.setFddStatus(0);
+                            }
+                        }else {
+                            //下载老版本协议
+                            //System.out.println("******************3法大大协议状态：2");
+                            userHjhInvistListCustomize.setFddStatus(1);
+                        }
+                    }else{//债转协议
+                        if(tenderAgreementsOrderId!=null && tenderAgreementsOrderId.size()>0){
+                            TenderAgreementVO tenderAgreement = tenderAgreementsOrderId.get(0);
+                            Integer fddStatus = tenderAgreement.getStatus();
+                            //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
+                            //System.out.println("******************1法大大协议状态："+tenderAgreement.getStatus());
+                            if(fddStatus.equals(3)){
+                                userHjhInvistListCustomize.setFddStatus(1);
+                            }else {
+                                //隐藏下载按钮
+                                //System.out.println("******************2法大大协议状态：0");
+                                userHjhInvistListCustomize.setFddStatus(0);
+                            }
+                        }else {
+                            //下载老版本协议
+                            //System.out.println("******************3法大大协议状态：2");
+                            userHjhInvistListCustomize.setFddStatus(1);
+                        }
+                    }
+
+                }
+            }
+        }
+        info.put("projectList",tmpList);
+        //info.put("page",page);
+        int nowTime = GetDate.getNowTime10();
+        info.put("nowTime",nowTime);
+        result.setPage(page);
+        result.setData(info);
+        return result;
+    }
 
     @Override
     public WebResult getHtjDetail(AssetManagePlanRequest request, Integer userId) {

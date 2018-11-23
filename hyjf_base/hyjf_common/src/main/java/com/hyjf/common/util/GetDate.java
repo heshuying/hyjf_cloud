@@ -1307,7 +1307,7 @@ public class GetDate extends PropertyEditorSupport {
 	/**
 	 * yyyyMMddHHMMSS字符串转换时间戳
 	 *
-	 * @param str
+	 * @param dateParam
 	 * @return
 	 */
 	public static Integer strYYYYMMDDTimestamp(String dateParam) {
@@ -1325,7 +1325,7 @@ public class GetDate extends PropertyEditorSupport {
 	/**
 	 * yyyy-MM-dd HH:mm:ss字符串转换时间戳
 	 *
-	 * @param str
+	 * @param dateParam
 	 * @return
 	 */
 	public static Integer strYYYYMMDDHHMMSS2Timestamp(String dateParam) {
@@ -1341,7 +1341,7 @@ public class GetDate extends PropertyEditorSupport {
 	/**
 	 * yyyy-MM-dd HH:mm:ss字符串转换时间戳
 	 *
-	 * @param str
+	 * @param dateParam
 	 * @return
 	 */
 	public static Integer strYYYYMMDDHHMMSS2Timestamp2(String dateParam) {
@@ -1357,7 +1357,7 @@ public class GetDate extends PropertyEditorSupport {
 	/**
 	 * yyyy-MM-dd字符串转换时间戳
 	 *
-	 * @param str
+	 * @param dateParam
 	 * @return
 	 */
 	public static Integer strYYYYMMDD2Timestamp2(String dateParam) {
@@ -1372,7 +1372,7 @@ public class GetDate extends PropertyEditorSupport {
 	/**
 	 * yyyyMMddHHMMSS字符串转换时间戳
 	 *
-	 * @param str
+	 * @param dateParam
 	 * @return
 	 */
 	public static Integer strYYYYMMDD3Timestamp3(String dateParam) {
@@ -1412,7 +1412,7 @@ public class GetDate extends PropertyEditorSupport {
 	/**
 	 * yyyy-MM-dd HH:mm:ss字符串转换时间戳
 	 *
-	 * @param str
+	 * @param dateParam
 	 * @return
 	 */
 	public static Integer dateString2Timestamp(String dateParam) {
@@ -2058,8 +2058,6 @@ public class GetDate extends PropertyEditorSupport {
 	/**
 	 * 返回yyyymmdd的int值
 	 *
-	 * @param seconds 秒数
-	 *
 	 * @return 指定毫秒数表示的日期
 	 */
 	public static int getIntYYMMDD(Date repayEndDate) {
@@ -2179,12 +2177,23 @@ public class GetDate extends PropertyEditorSupport {
 
 	/**
 	 * 获取指定格式当前字符串  (yyyy.MM.dd)
-	 * @author LiBin
-	 * @param time
 	 * @return
 	 */
 	public static String getFormatDateStr() {
 		return date2Str(new Date(), datesdf);
+	}
+
+	/**
+	 * 昨日结束时间
+	 *
+	 * @param currentDate
+	 * @return
+	 */
+	public static Date getYesterdayEndTime(Date currentDate) {
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(currentDate);
+		calendar.add(Calendar.DAY_OF_MONTH, -1);
+		return getSomeDayEnd(calendar.getTime());
 	}
 
 	// add 汇计划三期 汇计划自动投资 liubin 20180515 end

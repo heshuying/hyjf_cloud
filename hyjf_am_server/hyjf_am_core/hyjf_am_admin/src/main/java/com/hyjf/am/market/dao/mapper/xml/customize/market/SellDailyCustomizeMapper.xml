@@ -1,0 +1,812 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.market.dao.mapper.customize.market.SellDailyCustomizeMapper">
+
+    <resultMap id="sumResultMap" type="com.hyjf.am.vo.market.SellDailyVO">
+        <result column="date_str" property="dateStr" jdbcType="VARCHAR"/>
+        <result column="draw_order" property="drawOrder" jdbcType="INTEGER"/>
+        <result column="primary_division" property="primaryDivision" jdbcType="VARCHAR"/>
+        <result column="two_division" property="twoDivision" jdbcType="VARCHAR"/>
+        <result column="store_num" property="storeNum" jdbcType="INTEGER"/>
+        <result column="invest_total_month" property="investTotalMonth" jdbcType="DECIMAL"/>
+        <result column="repayment_total_month" property="repaymentTotalMonth" jdbcType="DECIMAL"/>
+        <result column="invest_total_previous_month" property="investTotalPreviousMonth" jdbcType="DECIMAL"/>
+        <result column="invest_ratio_growth" property="investRatioGrowth" jdbcType="VARCHAR"/>
+        <result column="withdraw_total_month" property="withdrawTotalMonth" jdbcType="DECIMAL"/>
+        <result column="withdraw_rate" property="withdrawRate" jdbcType="VARCHAR"/>
+        <result column="recharge_total_month" property="rechargeTotalMonth" jdbcType="DECIMAL"/>
+        <result column="invest_annual_total_month" property="investAnnualTotalMonth" jdbcType="DECIMAL"/>
+        <result column="invest_annual_total_previous_month" property="investAnnualTotalPreviousMonth"
+                jdbcType="DECIMAL"/>
+        <result column="invest_annular_ratio_growth" property="investAnnularRatioGrowth" jdbcType="VARCHAR"/>
+        <result column="invest_total_yesterday" property="investTotalYesterday" jdbcType="DECIMAL"/>
+        <result column="repayment_total_yesterday" property="repaymentTotalYesterday" jdbcType="DECIMAL"/>
+        <result column="invest_annual_total_yesterday" property="investAnnualTotalYesterday" jdbcType="DECIMAL"/>
+        <result column="withdraw_total_yesterday" property="withdrawTotalYesterday" jdbcType="DECIMAL"/>
+        <result column="recharge_total_yesterday" property="rechargeTotalYesterday" jdbcType="DECIMAL"/>
+        <result column="net_capital_inflow_yesterday" property="netCapitalInflowYesterday" jdbcType="DECIMAL"/>
+        <result column="non_repayment_today" property="nonRepaymentToday" jdbcType="DECIMAL"/>
+        <result column="register_total_yesterday" property="registerTotalYesterday" jdbcType="DECIMAL"/>
+        <result column="recharge_gt3000_user_num" property="rechargeGt3000UserNum" jdbcType="INTEGER"/>
+        <result column="invest_gt3000_user_num" property="investGt3000UserNum" jdbcType="INTEGER"/>
+        <result column="invest_gt3000_month_user_num" property="investGt3000MonthUserNum" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <sql id="Sum_Column_List">
+        SUM(store_num) AS store_num,
+        SUM(invest_total_month) AS invest_total_month,
+        SUM(repayment_total_month) AS repayment_total_month,
+        SUM(invest_total_previous_month) AS invest_total_previous_month,
+
+		CASE WHEN SUM(invest_total_previous_month) = 0.00 THEN '/'
+        ELSE CONCAT(ROUND((SUM(invest_total_month)/SUM(invest_total_previous_month)-1)*100),'%') END
+		AS invest_ratio_growth,
+
+        SUM(withdraw_total_month) AS withdraw_total_month,
+
+        CASE WHEN SUM(repayment_total_month) = 0.00 THEN '/'
+        ELSE CONCAT(ROUND((SUM(withdraw_total_month)/SUM(repayment_total_month)-1)*100),'%') END
+		AS withdraw_rate,
+
+        SUM(recharge_total_month) AS recharge_total_month,
+        SUM(invest_annual_total_month) AS invest_annual_total_month,
+        SUM(invest_annual_total_previous_month) AS invest_annual_total_previous_month,
+
+        CASE WHEN SUM(invest_annual_total_previous_month) = 0.00 THEN '/'
+        ELSE CONCAT(ROUND((SUM(invest_annual_total_month)/SUM(invest_annual_total_previous_month)-1)*100),'%') END
+		AS invest_annular_ratio_growth,
+
+        SUM(invest_total_yesterday) AS invest_total_yesterday,
+        SUM(repayment_total_yesterday) AS repayment_total_yesterday,
+        SUM(invest_annual_total_yesterday) AS invest_annual_total_yesterday,
+        SUM(withdraw_total_yesterday) AS withdraw_total_yesterday,
+        SUM(recharge_total_yesterday)  AS recharge_total_yesterday,
+        SUM(net_capital_inflow_yesterday)  AS net_capital_inflow_yesterday,
+        SUM(non_repayment_today)  AS non_repayment_today,
+        SUM(register_total_yesterday) AS register_total_yesterday,
+        SUM(recharge_gt3000_user_num) AS recharge_gt3000_user_num,
+        SUM(invest_gt3000_user_num) AS invest_gt3000_user_num,
+        SUM(invest_gt3000_month_user_num) AS invest_gt3000_month_user_num
+    </sql>
+
+    <sql id="countTotalInvestSql">
+        SELECT bt.account AS account,
+        CASE b.borrow_style WHEN "endday" THEN CONCAT(b.borrow_period, "天") ELSE CONCAT(b.borrow_period, "个月") END AS borrow_period,
+        CASE ui.attribute WHEN 0 THEN   d1. NAME WHEN 1 THEN   d1. NAME WHEN 2 THEN   dd1. NAME WHEN 3 THEN   dd1. NAME END AS primary_division,
+        CASE ui.attribute WHEN 0 THEN   d2. NAME WHEN 1 THEN   d2. NAME WHEN 2 THEN   dd2. NAME WHEN 3 THEN   dd2. NAME END AS two_division,
+        CASE ui.attribute WHEN 0 THEN   d3. NAME WHEN 1 THEN   d3. NAME WHEN 2 THEN   dd3. NAME WHEN 3 THEN   dd3. NAME END AS three_division,
+        CASE bt.client WHEN 0 THEN 'PC' WHEN 1 THEN '微信' WHEN 2 THEN 'app' WHEN 3 THEN 'app' WHEN 4 THEN '其他' END client
+        FROM  hyjf_trade.ht_borrow_tender bt
+        LEFT JOIN (SELECT borrow_nid,borrow_style,borrow_period FROM huiyingdai_borrow) AS b ON bt.borrow_nid = b.borrow_nid
+        LEFT JOIN hyjf_user.ht_user_info ui ON bt.user_id = ui.user_id
+        LEFT JOIN hyjf_user.ht_spreads_user su ON bt.user_id = su.user_id
+        LEFT JOIN hyjf_user.ht_user uu ON uu.user_id = su.spreads_userid
+        LEFT JOIN hyjf_user.ht_user_info uui ON uui.user_id = su.spreads_userid
+        LEFT JOIN hyjf_user.oa_users ou ON ou.hyd_id = su.spreads_userid AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_user.oa_department d3 ON ou.departmentid = d3.id
+        LEFT JOIN hyjf_user.oa_department d2 ON d3.parentid = d2.id
+        LEFT JOIN hyjf_user.oa_department d1 ON d2.parentid = d1.id
+        LEFT JOIN hyjf_user.oa_users ouu ON ouu.hyd_id = bt.user_id AND ouu.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_user.oa_department dd3 ON ouu.departmentid = dd3.id
+        LEFT JOIN hyjf_user.oa_department dd2 ON dd3.parentid = dd2.id
+        LEFT JOIN hyjf_user.oa_department dd1 ON dd2.parentid = dd1.id
+        WHERE bt.create_time <![CDATA[>=]]> #{startTime}
+        AND bt.create_time <![CDATA[<=]]> #{endTime}
+        AND bt.accede_order_id IS NULL
+        AND ui.role_id = 1
+
+        UNION ALL
+
+        SELECT
+        a.accede_account AS account,
+        CASE b.is_month WHEN 0 THEN   CONCAT(b.lock_period, "天") ELSE   CONCAT(b.lock_period, "个月") END AS borrow_period,
+        CASE ui.attribute WHEN 0 THEN   d1. NAME WHEN 1 THEN   d1. NAME WHEN 2 THEN   dd1. NAME WHEN 3 THEN   dd1. NAME END AS primary_division,
+        CASE ui.attribute WHEN 0 THEN   d2. NAME WHEN 1 THEN  d2. NAME  WHEN 2 THEN   dd2. NAME WHEN 3 THEN   dd2. NAME END AS two_division,
+        CASE ui.attribute WHEN 0 THEN   d3. NAME WHEN 1 THEN   d3. NAME WHEN 2 THEN   dd3. NAME WHEN 3 THEN   dd3. NAME END AS three_division,
+        CASE a.client  WHEN 0 THEN 'PC' WHEN 1 THEN '微信' WHEN 2 THEN 'app' WHEN 3 THEN 'app' WHEN 4 THEN '其他' END AS client
+        FROM  hyjf_trade.ht_hjh_accedde a
+        LEFT JOIN hyjf_trade.ht_hjh_plan AS b ON a.plan_nid=b.plan_nid
+        LEFT JOIN hyjf_user.ht_user_info ui ON a.user_id = ui.user_id
+        LEFT JOIN hyjf_user.ht_spreads_user su ON a.user_id = su.user_id
+        LEFT JOIN hyjf_user.ht_user uu ON uu.user_id = su.spreads_userid
+        LEFT JOIN hyjf_user.ht_user_info uui ON uui.user_id = su.spreads_userid
+        LEFT JOIN hyjf_user.oa_users ou ON ou.hyd_id = su.spreads_userid AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_user.oa_department d3 ON ou.departmentid = d3.id
+        LEFT JOIN hyjf_user.oa_department d2 ON d3.parentid = d2.id
+        LEFT JOIN hyjf_user.oa_department d1 ON d2.parentid = d1.id
+        LEFT JOIN hyjf_user.oa_users ouu ON ouu.hyd_id = a.user_id AND ouu.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_user.oa_department dd3 ON ouu.departmentid = dd3.id
+        LEFT JOIN hyjf_user.oa_department dd2 ON dd3.parentid = dd2.id
+        LEFT JOIN hyjf_user.oa_department dd1 ON dd2.parentid = dd1.id
+        WHERE a.create_time <![CDATA[>=]]> #{startTime}
+        AND a.create_time  <![CDATA[<=]]> #{endTime}
+        AND ui.role_id = 1
+    </sql>
+
+    <sql id="countTotalRepaySql">
+        #汇直投已还#
+        SELECT
+        br.recover_account_yes AS repay_amount,
+        CASE ui.attribute WHEN 0 THEN d1.NAME WHEN 1 THEN d1.NAME WHEN 2 THEN dd1.NAME WHEN 3 THEN dd1.NAME END AS primary_division,
+        CASE ui.attribute WHEN 0 THEN d2.NAME WHEN 1 THEN d2.NAME WHEN 2 THEN dd2.NAME WHEN 3 THEN dd2.NAME END AS two_division,
+        CASE ui.attribute WHEN 0 THEN d3.NAME WHEN 1 THEN d3.NAME WHEN 2 THEN dd3.NAME WHEN 3 THEN dd3.NAME END AS three_division
+        FROM
+        hyjf_trade.ht_borrow_recover br
+        LEFT JOIN hyjf_user.ht_user_info ui ON br.user_id = ui.user_id
+        LEFT JOIN hyjf_user.ht_spreads_user su ON br.user_id = su.user_id
+        LEFT JOIN hyjf_user.ht_user uu ON su.spreads_userid = uu.user_id
+        LEFT JOIN hyjf_user.ht_user_info uui ON su.spreads_userid = uui.user_id
+        LEFT JOIN hyjf_user.oa_users ou ON ou.hyd_id = su.spreads_userid AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_user.oa_department d3 ON ou.departmentid = d3.id
+        LEFT JOIN hyjf_user.oa_department d2 ON d3.parentid = d2.id
+        LEFT JOIN hyjf_user.oa_department d1 ON d2.parentid = d1.id
+        LEFT JOIN hyjf_user.oa_users ouu ON ouu.hyd_id = br.user_id AND ouu.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_user.oa_department dd3 ON ouu.departmentid = dd3.id
+        LEFT JOIN hyjf_user.oa_department dd2 ON dd3.parentid = dd2.id
+        LEFT JOIN hyjf_user.oa_department dd1 ON dd2.parentid = dd1.id
+        WHERE ui.role_id = 1
+        AND br.accede_order_id IS NULL
+        AND br.recover_yestime <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
+        AND br.recover_yestime <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
+        AND br.recover_status = 1
+
+        UNION ALL
+        #汇计划已还#
+        SELECT
+        br.repay_total AS repay_amount,
+        CASE ui.attribute WHEN 0 THEN d1.NAME WHEN 1 THEN d1.NAME WHEN 2 THEN dd1.NAME WHEN 3 THEN dd1.NAME END AS primary_division,
+        CASE ui.attribute WHEN 0 THEN d2.NAME WHEN 1 THEN d2.NAME WHEN 2 THEN dd2.NAME WHEN 3 THEN dd2.NAME END AS two_division,
+        CASE ui.attribute WHEN 0 THEN d3.NAME WHEN 1 THEN d3.NAME WHEN 2 THEN dd3.NAME WHEN 3 THEN dd3.NAME END AS three_division
+        FROM
+        hyjf_trade.ht_hjh_repaybr
+        LEFT JOIN hyjf_user.ht_user_info ui ON br.user_id = ui.user_id
+        LEFT JOIN hyjf_user.ht_spreads_user su ON br.user_id = su.user_id
+        LEFT JOIN hyjf_user.ht_user uu ON su.spreads_userid = uu.user_id
+        LEFT JOIN hyjf_user.ht_user_info uui ON su.spreads_userid = uui.user_id
+        LEFT JOIN hyjf_user.oa_users ou ON ou.hyd_id = su.spreads_userid AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_user.oa_department d3 ON ou.departmentid = d3.id
+        LEFT JOIN hyjf_user.oa_department d2 ON d3.parentid = d2.id
+        LEFT JOIN hyjf_user.oa_department d1 ON d2.parentid = d1.id
+        LEFT JOIN hyjf_user.oa_users ouu ON ouu.hyd_id = br.user_id AND ouu.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_user.oa_department dd3 ON ouu.departmentid = dd3.id
+        LEFT JOIN hyjf_user.oa_department dd2 ON dd3.parentid = dd2.id
+        LEFT JOIN hyjf_user.oa_department dd1 ON dd2.parentid = dd1.id
+        WHERE ui.role_id = 1
+        AND br.repay_actual_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
+        AND br.repay_actual_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
+        AND br.repay_status = 2
+    </sql>
+
+    <sql id="countTotalWithdrawSql">
+        SELECT w.total AS withdraw_amount,
+        CASE ui.attribute WHEN 0 THEN d1.name WHEN 1 THEN d1.name WHEN 2 THEN dd1.name WHEN 3 THEN dd1.name END AS  primary_division,
+        CASE ui.attribute WHEN 0 THEN d2.name WHEN 1 THEN d2.name WHEN 2 THEN dd2.name WHEN 3 THEN dd2.name END AS  two_division,
+        CASE ui.attribute WHEN 0 THEN d3.name WHEN 1 THEN d3.name WHEN 2 THEN dd3.name WHEN 3 THEN dd3.name END AS  three_division
+        FROM hyjf_trade.ht_account_withdraw w
+        LEFT JOIN hyjf_user.ht_user_info ui ON w.user_id=ui.user_id
+        LEFT JOIN hyjf_user.ht_spreads_user su ON w.user_id=su.user_id
+        LEFT JOIN hyjf_user.ht_user uu ON su.spreads_userid=uu.user_id
+        LEFT JOIN hyjf_user.ht_user_info uui ON su.spreads_userid=uui.user_id
+        LEFT JOIN hyjf_user.oa_users ou ON ou.hyd_id = su.spreads_userid AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN hyjf_user.oa_department d3 ON ou.departmentid= d3.id
+        LEFT JOIN hyjf_user.oa_department d2 ON d3.parentid = d2.id
+        LEFT JOIN hyjf_user.oa_department d1 ON d2.parentid = d1.id
+        LEFT JOIN hyjf_user.oa_users ouu ON ouu.hyd_id = w.user_id AND ouu.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN hyjf_user.oa_department dd3 ON ouu.departmentid= dd3.id
+        LEFT JOIN hyjf_user.oa_department dd2 ON dd3.parentid = dd2.id
+        LEFT JOIN hyjf_user.oa_department dd1 ON dd2.parentid = dd1.id
+        WHERE  ui.role_id=1
+        AND w.status=2
+        AND w.create_time <![CDATA[>=]]> #{startTime}
+        AND w.create_time <![CDATA[<=]]> #{endTime}
+
+    </sql>
+
+    <sql id="countTotalRechargeSql">
+        SELECT r.money AS recharge_amount,
+        CASE ui.attribute WHEN 0 THEN d1.name WHEN 1 THEN d1.name WHEN 2 THEN dd1.name WHEN 3 THEN dd1.name END AS  primary_division,
+        CASE ui.attribute WHEN 0 THEN d2.name WHEN 1 THEN d2.name WHEN 2 THEN dd2.name WHEN 3 THEN dd2.name END AS  two_division,
+        CASE ui.attribute WHEN 0 THEN d3.name WHEN 1 THEN d3.name WHEN 2 THEN dd3.name WHEN 3 THEN dd3.name END AS  three_division
+        FROM hyjf_trade.ht_account_recharge r
+        LEFT JOIN hyjf_user.ht_user_info ui ON r.user_id=ui.user_id
+        LEFT JOIN hyjf_user.ht_spreads_user su ON r.user_id = su.user_id
+        LEFT JOIN hyjf_user.ht_user uu ON uu.user_id=su.spreads_userid
+        LEFT JOIN hyjf_user.ht_user_info uui ON uui.user_id = su.spreads_userid
+        LEFT JOIN hyjf_user.oa_users ou ON ou.hyd_id = su.spreads_userid AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN hyjf_user.oa_department d3 ON ou.departmentid= d3.id
+        LEFT JOIN hyjf_user.oa_department d2 ON d3.parentid = d2.id
+        LEFT JOIN hyjf_user.oa_department d1 ON d2.parentid = d1.id
+        LEFT JOIN hyjf_user.oa_users ouu ON ouu.hyd_id = r.user_id AND ouu.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN hyjf_user.oa_department dd3 ON ouu.departmentid= dd3.id
+        LEFT JOIN hyjf_user.oa_department dd2 ON dd3.parentid = dd2.id
+        LEFT JOIN hyjf_user.oa_department dd1 ON dd2.parentid = dd1.id
+        WHERE ui.role_id=1
+        AND r.status=2
+        AND r.create_time <![CDATA[>=]]> #{startTime}
+        AND r.create_time <![CDATA[<=]]> #{endTime}
+    </sql>
+
+    <sql id="countTotalNoneRepaySql">
+      #汇直投待还#
+        SELECT
+        br.recover_account AS none_repay,
+        CASE ui.attribute WHEN 0 THEN d1.NAME WHEN 1 THEN d1.NAME WHEN 2 THEN dd1.NAME WHEN 3 THEN dd1.NAME END AS primary_division,
+        CASE ui.attribute WHEN 0 THEN d2.NAME WHEN 1 THEN d2.NAME WHEN 2 THEN dd2.NAME WHEN 3 THEN dd2.NAME END AS two_division,
+        CASE ui.attribute WHEN 0 THEN d3.NAME WHEN 1 THEN d3.NAME WHEN 2 THEN dd3.NAME WHEN 3 THEN dd3.NAME END AS three_division
+        FROM
+        hyjf_trade.ht_borrow_recover br
+        LEFT JOIN hyjf_user.ht_user u ON br.user_id = u.user_id
+        LEFT JOIN hyjf_user.ht_user_info ui ON br.user_id = ui.user_id
+        LEFT JOIN hyjf_user.ht_spreads_user su ON br.user_id = su.user_id
+        LEFT JOIN hyjf_user.ht_user uu ON su.spreads_userid = uu.user_id
+        LEFT JOIN hyjf_user.oa_users ou ON ou.hyd_id = su.spreads_userid AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_user.oa_department d3 ON ou.departmentid = d3.id
+        LEFT JOIN hyjf_user.oa_department d2 ON d3.parentid = d2.id
+        LEFT JOIN hyjf_user.oa_department d1 ON d2.parentid = d1.id
+        LEFT JOIN hyjf_user.oa_users ouu ON ouu.hyd_id = br.user_id AND ouu.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_user.oa_department dd3 ON ouu.departmentid = dd3.id
+        LEFT JOIN hyjf_user.oa_department dd2 ON dd3.parentid = dd2.id
+        LEFT JOIN hyjf_user.oa_department dd1 ON dd2.parentid = dd1.id
+        WHERE ui.role_id = 1
+        AND br.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
+        AND br.recover_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
+        AND br.recover_status = 0
+        AND br.accede_order_id IS NULL
+
+        UNION ALL
+        #汇计划待还#
+        SELECT
+        br.repay_wait AS none_repay,
+        CASE ui.attribute WHEN 0 THEN d1.NAME WHEN 1 THEN d1.NAME WHEN 2 THEN dd1.NAME WHEN 3 THEN dd1.NAME END AS primary_division,
+        CASE ui.attribute WHEN 0 THEN d2.NAME WHEN 1 THEN d2.NAME WHEN 2 THEN dd2.NAME WHEN 3 THEN dd2.NAME END AS two_division,
+        CASE ui.attribute WHEN 0 THEN d3.NAME WHEN 1 THEN d3.NAME WHEN 2 THEN dd3.NAME WHEN 3 THEN dd3.NAME END AS three_division
+        FROM
+        hyjf_trade.ht_hjh_repaybr
+        LEFT JOIN hyjf_user.ht_user u ON br.user_id = u.user_id
+        LEFT JOIN hyjf_user.ht_user_info ui ON br.user_id = ui.user_id
+        LEFT JOIN hyjf_user.ht_spreads_user su ON br.user_id = su.user_id
+        LEFT JOIN hyjf_user.ht_user uu ON su.spreads_userid = uu.user_id
+        LEFT JOIN hyjf_user.oa_users ou ON ou.hyd_id = su.spreads_userid AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_user.oa_department d3 ON ou.departmentid = d3.id
+        LEFT JOIN hyjf_user.oa_department d2 ON d3.parentid = d2.id
+        LEFT JOIN hyjf_user.oa_department d1 ON d2.parentid = d1.id
+        LEFT JOIN hyjf_user.oa_users ouu ON ouu.hyd_id = br.user_id AND ouu.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
+        LEFT JOIN hyjf_user.oa_department dd3 ON ouu.departmentid = dd3.id
+        LEFT JOIN hyjf_user.oa_department dd2 ON dd3.parentid = dd2.id
+        LEFT JOIN hyjf_user.oa_department dd1 ON dd2.parentid = dd1.id
+        WHERE ui.role_id = 1
+        AND br.repay_should_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
+        AND br.repay_should_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
+        AND br.repay_status IN (0,1)
+    </sql>
+
+    <!-- 查询运营中心合计 -->
+    <select id="selectOCSum" parameterType="java.lang.String" resultMap="sumResultMap">
+        SELECT
+        <include refid="Sum_Column_List"/>
+        FROM ht_sell_daily
+        WHERE primary_division = '运营中心'
+        AND two_division IN('网络运营部','无主单')
+        AND date_str = #{dateStr}
+    </select>
+
+    <!-- 查询总合计 -->
+    <select id="selectAllSum" parameterType="java.lang.String" resultMap="sumResultMap">
+        SELECT
+        <include refid="Sum_Column_List"/>
+        FROM ht_sell_daily
+        WHERE date_str = #{dateStr}
+        AND primary_division !='其中：'
+    </select>
+
+    <!-- 查询一级分部合计 -->
+    <select id="selectPrimaryDivisionSum" resultMap="sumResultMap">
+        SELECT
+        <include refid="Sum_Column_List"/>
+        FROM ht_sell_daily
+        WHERE date_str = #{dateStr}
+        AND draw_order = #{drawOrder}
+        AND primary_division !='其中：'
+    </select>
+
+    <!-- 查询当日待还 -->
+    <select id="countNoneRepayToday" resultMap="sumResultMap">
+        SELECT ROUND(SUM(none_repay)/10000) AS non_repayment_today,
+        primary_division AS primary_division,
+        two_division AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countTotalNoneRepaySql"/>
+        ) AS t
+        <if test="type==2">
+            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+        </if>
+        GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 查询本月份规模业绩 -->
+    <select id="countTotalInvestOnMonth" resultMap="sumResultMap">
+        SELECT ROUND(SUM(account)/10000) AS invest_total_month,
+        primary_division AS primary_division,
+        two_division AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countTotalInvestSql"/>
+        ) AS t
+        <if test="type==2">
+            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+        </if>
+        <if test="type==3">
+            WHERE t.client = 'app'
+        </if>
+        GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 查询上月份规模业绩 -->
+    <select id="countTotalInvestOnPreviousMonth" resultMap="sumResultMap">
+        SELECT ROUND(SUM(account)/10000) AS invest_total_previous_month,
+        primary_division AS primary_division,
+        two_division AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countTotalInvestSql"/>
+        ) AS t
+        <if test="type==2">
+            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+        </if>
+        <if test="type==3">
+            WHERE t.client = 'app'
+        </if>
+        GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 查询昨日规模业绩 -->
+    <select id="countTotalTenderYesterday" resultMap="sumResultMap">
+        SELECT ROUND(SUM(account)/10000) AS invest_total_yesterday,
+        primary_division AS primary_division,
+        two_division AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countTotalInvestSql"/>
+        ) AS t
+        <if test="type==2">
+            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+        </if>
+        <if test="type==3">
+            WHERE t.client = 'app'
+        </if>
+        GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 查询本月累计已还款 -->
+    <select id="countTotalRepayOnMonth" resultMap="sumResultMap">
+        SELECT ROUND(SUM(repay_amount)/10000) AS repayment_total_month,
+        primary_division AS primary_division,
+        two_division AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countTotalRepaySql"/>
+        ) AS t
+        <if test="type==2">
+            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+        </if>
+        GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 查询昨日已还款 -->
+    <select id="countTotalRepayYesterday" resultMap="sumResultMap">
+        SELECT ROUND(SUM(repay_amount)/10000) AS repayment_total_yesterday,
+        primary_division AS primary_division,
+        two_division AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countTotalRepaySql"/>
+        ) AS t
+        <if test="type==2">
+            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+        </if>
+        GROUP BY t.primary_division, t.two_division
+    </select>
+
+
+    <!-- 查询本月累计提现 -->
+    <select id="countTotalWithdrawOnMonth" resultMap="sumResultMap">
+        SELECT ROUND(SUM(withdraw_amount)/10000) AS withdraw_total_month,
+        primary_division AS primary_division,
+        two_division AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countTotalWithdrawSql"/>
+        ) AS t
+        <if test="type==2">
+            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+        </if>
+        GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 查询昨日提现 -->
+    <select id="countTotalWithdrawYesterday" resultMap="sumResultMap">
+        SELECT ROUND(SUM(withdraw_amount)/10000) AS withdraw_total_yesterday,
+        primary_division AS primary_division,
+        two_division AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countTotalWithdrawSql"/>
+        ) AS t
+        <if test="type==2">
+            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+        </if>
+        GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 查询本月累计充值 -->
+    <select id="countTotalRechargeOnMonth" resultMap="sumResultMap">
+        SELECT ROUND(SUM(recharge_amount)/10000) AS recharge_total_month,
+        primary_division AS primary_division,
+        two_division AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countTotalRechargeSql"/>
+        ) AS t
+        <if test="type==2">
+            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+        </if>
+        GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 查询昨日充值 -->
+    <select id="countTotalRechargeYesterday" resultMap="sumResultMap">
+        SELECT ROUND(SUM(recharge_amount)/10000) AS recharge_total_yesterday,
+        primary_division AS primary_division,
+        two_division AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countTotalRechargeSql"/>
+        ) AS t
+        <if test="type==2">
+            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+        </if>
+        GROUP BY t.primary_division, t.two_division
+    </select>
+
+
+    <!-- 查询本月累计年化业绩 -->
+    <select id="countTotalAnnualInvestOnMonth" resultMap="sumResultMap">
+        SELECT ROUND(SUM(amount)/10000) AS invest_annual_total_month,
+        primary_division AS primary_division,
+        two_division AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        SELECT  m.account*(CASE m.borrow_period
+        WHEN '15天' THEN 0.1 WHEN '30天' THEN 0.13  WHEN '1个月' THEN 0.13 WHEN '2个月' THEN 0.25 WHEN '3个月' THEN 0.3
+        WHEN '4个月' THEN 0.35 WHEN '5个月' THEN 0.4 WHEN '6个月' THEN 0.55 WHEN '7个月' THEN 0.9 WHEN '8个月' THEN 1
+        WHEN '9个月' THEN 1 WHEN '10个月' THEN 1 WHEN '11个月' THEN 1.1 WHEN '12个月' THEN 1.1 WHEN '24个月' THEN 2.2 ELSE 0 END ) AS amount,
+        m.primary_division,m.two_division,m.three_division,m.client
+
+        FROM (
+        <include refid="countTotalInvestSql"/>
+        ) AS m
+        ) AS t
+        <if test="type==2">
+            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+        </if>
+        <if test="type==3">
+            WHERE t.client = 'app'
+        </if>
+        GROUP BY t.primary_division, t.two_division
+    </select>
+
+
+    <!-- 查询上月累计年化业绩 -->
+    <select id="countTotalAnnualInvestOnPreviousMonth" resultMap="sumResultMap">
+        SELECT ROUND(SUM(amount)/10000) AS invest_annual_total_previous_month,
+        primary_division AS primary_division,
+        two_division AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        SELECT  m.account*(CASE m.borrow_period
+        WHEN '15天' THEN 0.1 WHEN '30天' THEN 0.13  WHEN '1个月' THEN 0.13 WHEN '2个月' THEN 0.25 WHEN '3个月' THEN 0.3
+        WHEN '4个月' THEN 0.35 WHEN '5个月' THEN 0.4 WHEN '6个月' THEN 0.55 WHEN '7个月' THEN 0.9 WHEN '8个月' THEN 1
+        WHEN '9个月' THEN 1 WHEN '10个月' THEN 1 WHEN '11个月' THEN 1.1 WHEN '12个月' THEN 1.1 WHEN '24个月' THEN 2.2 ELSE 0 END ) AS amount,
+        m.primary_division,m.two_division,m.three_division,m.client
+
+        FROM (
+        <include refid="countTotalInvestSql"/>
+        ) AS m
+        ) AS t
+        <if test="type==2">
+            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+        </if>
+        <if test="type==3">
+            WHERE t.client = 'app'
+        </if>
+        GROUP BY t.primary_division, t.two_division
+    </select>
+
+
+
+    <!-- 查询昨日年化业绩 -->
+    <select id="countTotalAnnualInvestYesterday" resultMap="sumResultMap">
+        SELECT ROUND(SUM(amount)/10000) AS invest_annual_total_yesterday,
+        primary_division AS primary_division,
+        two_division AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        SELECT  m.account*(CASE m.borrow_period
+        WHEN '15天' THEN 0.1 WHEN '30天' THEN 0.13  WHEN '1个月' THEN 0.13 WHEN '2个月' THEN 0.25 WHEN '3个月' THEN 0.3
+        WHEN '4个月' THEN 0.35 WHEN '5个月' THEN 0.4 WHEN '6个月' THEN 0.55 WHEN '7个月' THEN 0.9 WHEN '8个月' THEN 1
+        WHEN '9个月' THEN 1 WHEN '10个月' THEN 1 WHEN '11个月' THEN 1.1 WHEN '12个月' THEN 1.1 WHEN '24个月' THEN 2.2 ELSE 0 END ) AS amount,
+        m.primary_division,m.two_division,m.three_division,m.client
+
+        FROM (
+        <include refid="countTotalInvestSql"/>
+        ) AS m
+        ) AS t
+        <if test="type==2">
+            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+        </if>
+        <if test="type==3">
+            WHERE t.client = 'app'
+        </if>
+        GROUP BY t.primary_division, t.two_division
+    </select>
+
+
+
+    <!-- 计算第四、六、十列速率,第十六列净资金流 -->
+    <update id="calculateRate">
+      UPDATE hyjf_market.ht_sell_daily SET
+        invest_ratio_growth =
+        (CASE WHEN invest_total_previous_month=0.00 THEN '/' ELSE CONCAT(ROUND((invest_total_month/invest_total_previous_month-1)*100),'%') END),
+
+        withdraw_rate =
+        (CASE WHEN repayment_total_month=0.00 THEN '/' ELSE CONCAT(ROUND((withdraw_total_month/repayment_total_month)*100),'%') END),
+
+        invest_annular_ratio_growth =
+        (CASE WHEN invest_annual_total_previous_month=0.00 THEN '/' ELSE CONCAT(ROUND((invest_annual_total_month/invest_annual_total_previous_month-1)*100),'%') END),
+
+        net_capital_inflow_yesterday=recharge_total_yesterday-withdraw_total_yesterday
+    </update>
+
+    <select id="selectTwoDivisionByPrimaryDivision" resultType="java.lang.String">
+        SELECT
+          NAME
+        FROM
+          hyjf_user.oa_department
+        WHERE parentid IN
+          (SELECT
+            id
+          FROM
+            hyjf_user.oa_department
+          WHERE NAME = #{primaryDivision})
+    </select>
+
+    <sql id="countRegisterTotalYesterday">
+        SELECT
+        u.user_id, SUM(r.money) AS total_recharge_amount,
+        CASE ui.attribute WHEN 0 THEN d1.name WHEN 1 THEN d1.name WHEN 2 THEN dd1.name WHEN 3 THEN dd1.name END AS  primary_division,
+        CASE ui.attribute WHEN 0 THEN d2.name WHEN 1 THEN d2.name WHEN 2 THEN dd2.name WHEN 3 THEN dd2.name END AS  two_division,
+        CASE ui.attribute WHEN 0 THEN d3.name WHEN 1 THEN d3.name WHEN 2 THEN dd3.name WHEN 3 THEN dd3.name END AS  three_division,
+        CASE u.reg_esb  WHEN 0 THEN 'PC' WHEN 1 THEN '微信' WHEN 2 THEN 'app' WHEN 3 THEN 'app' WHEN 4 THEN '其他' END AS client
+        FROM hyjf_user.ht_user u
+        LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id=ui.user_id
+        LEFT JOIN hyjf_trade.ht_account_recharge r ON u.user_id=r.user_id AND r.status=2
+        LEFT JOIN hyjf_user.ht_spreads_user su ON u.user_id=su.user_id
+        LEFT JOIN hyjf_user.ht_user_info uui ON su.spreads_userid=uui.user_id
+        LEFT JOIN hyjf_user.oa_users ou ON ou.hyd_id = su.spreads_userid AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN hyjf_user.oa_department d3 ON ou.departmentid= d3.id
+        LEFT JOIN hyjf_user.oa_department d2 ON d3.parentid = d2.id
+        LEFT JOIN hyjf_user.oa_department d1 ON d2.parentid = d1.id
+        LEFT JOIN hyjf_user.oa_users ouu ON ouu.hyd_id = u.user_id AND ouu.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN hyjf_user.oa_department dd3 ON ouu.departmentid= dd3.id
+        LEFT JOIN hyjf_user.oa_department dd2 ON dd3.parentid = dd2.id
+        LEFT JOIN hyjf_user.oa_department dd1 ON dd2.parentid = dd1.id
+        WHERE ui.role_id=1
+        AND u.reg_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
+        AND u.reg_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
+          GROUP BY u.user_id
+    </sql>
+
+    <!-- 昨日注册用户人数 -->
+    <select id="countRegisterTotalYesterday" resultMap="sumResultMap">
+        SELECT count(1) AS register_total_yesterday,
+        primary_division AS primary_division,
+        two_division AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countRegisterTotalYesterday"/>
+        ) AS t
+        <if test="type==2">
+            WHERE t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+        </if>
+        <if test="type==3">
+            WHERE t.client = 'app'
+        </if>
+        GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 昨日注册用户充值≥3000人数 -->
+    <select id="countRechargeGt3000UserNum" resultMap="sumResultMap">
+        SELECT count(1) AS recharge_gt3000_user_num,
+        primary_division AS primary_division,
+        two_division AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countRegisterTotalYesterday"/>
+        ) AS t
+        WHERE t.total_recharge_amount >=3000
+        <if test="type==2">
+            AND t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+        </if>
+        <if test="type==3">
+            AND t.client = 'app'
+        </if>
+        GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <sql id="countInvestGt3000User">
+        SELECT z.* ,y.total_invest_amount FROM (SELECT
+        u.user_id,  ROUND(SUM(r.money)/10000) AS total_recharge_amount,
+        CASE ui.attribute WHEN 0 THEN d1.name WHEN 1 THEN d1.name WHEN 2 THEN dd1.name WHEN 3 THEN dd1.name END AS  primary_division,
+        CASE ui.attribute WHEN 0 THEN d2.name WHEN 1 THEN d2.name WHEN 2 THEN dd2.name WHEN 3 THEN dd2.name END AS  two_division,
+        CASE ui.attribute WHEN 0 THEN d3.name WHEN 1 THEN d3.name WHEN 2 THEN dd3.name WHEN 3 THEN dd3.name END AS  three_division,
+        CASE u.reg_esb  WHEN 0 THEN 'PC' WHEN 1 THEN '微信' WHEN 2 THEN 'app' WHEN 3 THEN 'app' WHEN 4 THEN '其他' END AS client
+        FROM hyjf_user.ht_user u
+        LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id=ui.user_id
+        LEFT JOIN hyjf_trade.ht_account_recharge r ON u.user_id=r.user_id AND r.status=2
+        LEFT JOIN hyjf_user.ht_spreads_user su ON u.user_id=su.user_id
+        LEFT JOIN hyjf_user.ht_user_info uui ON su.spreads_userid=uui.user_id
+        LEFT JOIN hyjf_user.oa_users ou ON ou.hyd_id = su.spreads_userid AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN hyjf_user.oa_department d3 ON ou.departmentid= d3.id
+        LEFT JOIN hyjf_user.oa_department d2 ON d3.parentid = d2.id
+        LEFT JOIN hyjf_user.oa_department d1 ON d2.parentid = d1.id
+        LEFT JOIN hyjf_user.oa_users ouu ON ouu.hyd_id = u.user_id AND ouu.user_status IN ('E','Q1','Q11','Q2','Q21')
+        LEFT JOIN hyjf_user.oa_department dd3 ON ouu.departmentid= dd3.id
+        LEFT JOIN hyjf_user.oa_department dd2 ON dd3.parentid = dd2.id
+        LEFT JOIN hyjf_user.oa_department dd1 ON dd2.parentid = dd1.id
+        WHERE ui.role_id=1
+        AND u.reg_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
+        AND u.reg_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
+         GROUP BY u.user_id) z
+        LEFT JOIN (SELECT u.user_id, SUM(t.account) AS total_invest_amount FROM hyjf_user.ht_user u
+        LEFT JOIN hyjf_user.ht_user_info ui ON u.user_id=ui.user_id
+        LEFT JOIN hyjf_trade.ht_borrow_tender t ON u.user_id=t.user_id
+        WHERE ui.role_id=1
+        AND u.reg_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{startTime})
+        AND u.reg_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{endTime})
+          GROUP BY u.user_id) y ON z.user_id=y.user_id
+    </sql>
+
+    <!-- 昨日注册用户投资≥3000人数 -->
+    <select id="countInvestGt3000UserNum" resultMap="sumResultMap">
+        SELECT count(1) AS invest_gt3000_user_num,
+        primary_division AS primary_division,
+        two_division AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countInvestGt3000User"/>
+        ) AS t
+        WHERE t.total_invest_amount >=3000
+        <if test="type==2">
+            AND t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+        </if>
+        <if test="type==3">
+            AND t.client = 'app'
+        </if>
+        GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <!-- 本月累计投资3000以上新客户数 -->
+    <select id="countInvestGt3000MonthUserNum" resultMap="sumResultMap">
+        SELECT count(1) AS invest_gt3000_month_user_num,
+        primary_division AS primary_division,
+        two_division AS two_division,
+        DATE_FORMAT(NOW(),'%Y.%m.%d') AS date_str
+        FROM (
+        <include refid="countInvestGt3000User"/>
+        ) AS t
+        WHERE t.total_invest_amount >=3000
+        <if test="type==2">
+            AND t.three_division ='网络运营部' and t.two_division in ('上海运营中心','青岛运营中心')
+        </if>
+        <if test="type==3">
+            AND t.client = 'app'
+        </if>
+        GROUP BY t.primary_division, t.two_division
+    </select>
+
+    <insert id="batchInsert" parameterType="java.util.List">
+        INSERT INTO ht_sell_daily(date_str,draw_order,primary_division,two_division,store_num,invest_total_month,repayment_total_month,invest_total_previous_month,invest_ratio_growth,
+        withdraw_total_month,withdraw_rate,recharge_total_month,invest_annual_total_month,invest_annual_total_previous_month,invest_annular_ratio_growth,invest_total_yesterday,repayment_total_yesterday,
+        invest_annual_total_yesterday,withdraw_total_yesterday,recharge_total_yesterday,net_capital_inflow_yesterday,non_repayment_today,register_total_yesterday,recharge_gt3000_user_num,
+        invest_gt3000_user_num,invest_gt3000_month_user_num)
+        <foreach collection="list" item="item" index="index" open="" close="" separator="union all">
+            SELECT #{item.dateStr},#{item.drawOrder},#{item.primaryDivision},#{item.twoDivision},#{item.storeNum},
+            #{item.investTotalMonth},#{item.repaymentTotalMonth},#{item.investTotalPreviousMonth},#{item.investRatioGrowth},#{item.withdrawTotalMonth},
+            #{item.withdrawRate},#{item.rechargeTotalMonth},#{item.investAnnualTotalMonth},#{item.investAnnualTotalPreviousMonth},#{item.investAnnularRatioGrowth},
+            #{item.investTotalYesterday},#{item.repaymentTotalYesterday},#{item.investAnnualTotalYesterday},#{item.withdrawTotalYesterday},#{item.rechargeTotalYesterday},
+            #{item.netCapitalInflowYesterday},#{item.nonRepaymentToday},#{item.registerTotalYesterday},#{item.rechargeGt3000UserNum},#{item.investGt3000UserNum},
+            #{item.investGt3000MonthUserNum} as a FROM DUAL
+        </foreach>
+    </insert>
+
+    <update id="batchUpdate" parameterType="java.util.List">
+
+
+        <foreach collection="list" item="record" index="index" separator=";">
+            UPDATE ht_sell_daily
+
+            <set >
+                update_time=CURRENT_TIMESTAMP,
+                <if test="record.investTotalMonth != null and record.investTotalMonth>0 " >
+                    invest_total_month = #{record.investTotalMonth,jdbcType=DECIMAL},
+                </if>
+                <if test="record.repaymentTotalMonth != null and record.repaymentTotalMonth>0" >
+                    repayment_total_month = #{record.repaymentTotalMonth,jdbcType=DECIMAL},
+                </if>
+                <if test="record.investTotalPreviousMonth != null and record.investTotalPreviousMonth>0" >
+                    invest_total_previous_month = #{record.investTotalPreviousMonth,jdbcType=DECIMAL},
+                </if>
+                <if test="record.investRatioGrowth != null and record.investRatioGrowth>0" >
+                    invest_ratio_growth = #{record.investRatioGrowth,jdbcType=VARCHAR},
+                </if>
+                <if test="record.withdrawTotalMonth != null and record.withdrawTotalMonth>0" >
+                    withdraw_total_month = #{record.withdrawTotalMonth,jdbcType=DECIMAL},
+                </if>
+                <if test="record.withdrawRate != null and record.withdrawRate>0" >
+                    withdraw_rate = #{record.withdrawRate,jdbcType=VARCHAR},
+                </if>
+                <if test="record.rechargeTotalMonth != null and record.rechargeTotalMonth>0" >
+                    recharge_total_month = #{record.rechargeTotalMonth,jdbcType=DECIMAL},
+                </if>
+                <if test="record.investAnnualTotalMonth != null and record.investAnnualTotalMonth>0" >
+                    invest_annual_total_month = #{record.investAnnualTotalMonth,jdbcType=DECIMAL},
+                </if>
+                <if test="record.investAnnualTotalPreviousMonth != null and record.investAnnualTotalPreviousMonth>0" >
+                    invest_annual_total_previous_month = #{record.investAnnualTotalPreviousMonth,jdbcType=DECIMAL},
+                </if>
+                <if test="record.investAnnularRatioGrowth != null and record.investAnnularRatioGrowth>0" >
+                    invest_annular_ratio_growth = #{record.investAnnularRatioGrowth,jdbcType=VARCHAR},
+                </if>
+                <if test="record.investTotalYesterday != null and record.investTotalYesterday>0" >
+                    invest_total_yesterday = #{record.investTotalYesterday,jdbcType=DECIMAL},
+                </if>
+                <if test="record.repaymentTotalYesterday != null and record.repaymentTotalYesterday>0" >
+                    repayment_total_yesterday = #{record.repaymentTotalYesterday,jdbcType=DECIMAL},
+                </if>
+                <if test="record.investAnnualTotalYesterday != null and record.investAnnualTotalYesterday>0" >
+                    invest_annual_total_yesterday = #{record.investAnnualTotalYesterday,jdbcType=DECIMAL},
+                </if>
+                <if test="record.withdrawTotalYesterday != null and record.withdrawTotalYesterday>0" >
+                    withdraw_total_yesterday = #{record.withdrawTotalYesterday,jdbcType=DECIMAL},
+                </if>
+                <if test="record.rechargeTotalYesterday != null and record.rechargeTotalYesterday>0" >
+                    recharge_total_yesterday = #{record.rechargeTotalYesterday,jdbcType=DECIMAL},
+                </if>
+                <if test="record.netCapitalInflowYesterday != null and record.netCapitalInflowYesterday>0" >
+                    net_capital_inflow_yesterday = #{record.netCapitalInflowYesterday,jdbcType=DECIMAL},
+                </if>
+                <if test="record.nonRepaymentToday != null and record.nonRepaymentToday>0" >
+                    non_repayment_today = #{record.nonRepaymentToday,jdbcType=DECIMAL},
+                </if>
+                <if test="record.registerTotalYesterday != null and record.registerTotalYesterday>0" >
+                    register_total_yesterday = #{record.registerTotalYesterday,jdbcType=INTEGER},
+                </if>
+                <if test="record.rechargeGt3000UserNum != null and record.rechargeGt3000UserNum>0" >
+                    recharge_gt3000_user_num = #{record.rechargeGt3000UserNum,jdbcType=INTEGER},
+                </if>
+                <if test="record.investGt3000UserNum != null and record.investGt3000UserNum>0" >
+                    invest_gt3000_user_num = #{record.investGt3000UserNum,jdbcType=INTEGER},
+                </if>
+                <if test="record.investGt3000MonthUserNum != null and record.investGt3000MonthUserNum>0" >
+                    invest_gt3000_month_user_num = #{record.investGt3000MonthUserNum,jdbcType=INTEGER},
+                </if>
+            </set>
+
+            WHERE date_str = #{record.dateStr}
+            AND primary_division = #{record.primaryDivision}
+            AND two_division = #{record.twoDivision}
+        </foreach>
+
+    </update>
+</mapper>

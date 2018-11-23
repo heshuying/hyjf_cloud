@@ -995,7 +995,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 			resultMap.put("mess", "同步地址不能为空");
 			return resultMap;
 		}
-		if (Validator.isNull(requestBean.getBgRetUrl())) {
+		if (Validator.isNull(requestBean.getNotifyUrl())) {
 			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
 			resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
 			resultMap.put("mess", "异步地址不能为空");

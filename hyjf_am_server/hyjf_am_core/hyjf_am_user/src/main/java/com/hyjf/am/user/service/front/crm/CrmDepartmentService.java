@@ -1,5 +1,7 @@
 package com.hyjf.am.user.service.front.crm;
 
+import java.util.List;
+
 import com.hyjf.am.user.dao.model.auto.ROaDepartment;
 import com.hyjf.am.user.dao.model.auto.ROaDepartmentExample;
 
@@ -38,4 +40,11 @@ public interface CrmDepartmentService {
      * @param example
      */
     void updateByExample(ROaDepartment department , ROaDepartmentExample example);
+
+    /**
+     * 根据一级部门查询二级部门
+     * @param primaryDivision
+     * @return
+     */
+    List<String> selectTwoDivisionByPrimaryDivision(String primaryDivision);
 }
