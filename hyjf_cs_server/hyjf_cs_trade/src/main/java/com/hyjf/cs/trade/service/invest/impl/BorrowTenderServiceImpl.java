@@ -190,6 +190,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     }
 
     public WebResult<Map<String, Object>> fallBackTender(TenderRequest request){
+        logger.info("==================已进入 散标投资(三端) fallBackTender 方法================");
         throw new CheckException(MsgEnum.STATUS_CE999999);
     }
 

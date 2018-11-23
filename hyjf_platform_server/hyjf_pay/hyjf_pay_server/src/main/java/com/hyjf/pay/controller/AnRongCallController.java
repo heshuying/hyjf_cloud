@@ -120,6 +120,7 @@ public class AnRongCallController extends BaseController {
     
 
 	public String fallbackCallApiBg(HttpServletRequest request, @RequestBody AnRongBean bean) {
+		logger.info("==================已进入 安融接口调用 fallbackCallApiBg 方法================");
 		return "";
 	}
 }

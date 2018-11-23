@@ -40,7 +40,7 @@ import java.util.*;
  */
 @Api(tags = "web端-千乐数据查询统计")
 @RestController
-@RequestMapping("/hyjf-web/qianle")
+@RequestMapping("/hyjf-admin/qianle")
 public class DataSearchController {
     @Autowired
     DataSearchService dataSearchService;

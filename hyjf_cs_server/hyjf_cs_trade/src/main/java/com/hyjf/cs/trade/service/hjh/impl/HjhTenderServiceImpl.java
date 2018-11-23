@@ -179,6 +179,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      * @return
      */
     public WebResult<Map<String, Object>> fallBackJoinPlan(TenderRequest request){
+        logger.info("==================已进入 加入计划(三端) fallBackJoinPlan 方法================");
         WebResult<Map<String,Object>> result = new WebResult<>();
         result.setStatus(AppResult.FAIL);
         result.setStatusDesc("加入失败，请重试！");

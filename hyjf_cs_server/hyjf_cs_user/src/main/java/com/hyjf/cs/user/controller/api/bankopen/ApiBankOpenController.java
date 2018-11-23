@@ -37,7 +37,7 @@ import java.util.Map;
 /**
  * @author sunss
  */
-@Api(value = "第三方用户开户",tags = "api端-用户开户")
+@Api(value = "第三方用户开户", tags = "api端-用户开户")
 @Controller
 @RequestMapping("/hyjf-api/server/user/accountOpenEncryptPage")
 public class ApiBankOpenController extends BaseUserController {
@@ -51,12 +51,23 @@ public class ApiBankOpenController extends BaseUserController {
 
     @ApiOperation(value = "用户开户", notes = "用户开户")
     @PostMapping(value = "/open.do", produces = "application/json; charset=utf-8")
-    public ModelAndView openBankAccount(@RequestBody @Valid ApiBankOpenRequestBean requestBean , HttpServletRequest request) {
+    @HystrixCommand(commandKey = "开户(api)-openBankAccount", fallbackMethod = "fallBackApiBankOpen", ignoreExceptions = CheckException.class, commandProperties = {
+            //设置断路器生效
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //一个统计窗口内熔断触发的最小个数3/10s
+            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50"),
+            @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE"),
+            //熔断5秒后去尝试请求
+            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
+    public ModelAndView openBankAccount(@RequestBody @Valid ApiBankOpenRequestBean requestBean) {
         logger.info("第三方请求页面开户, ApiBankOpenRequestBean is :{}", JSONObject.toJSONString(requestBean));
         ModelAndView modelAndView = new ModelAndView();
         Map<String, String> paramMap = bankOpenService.checkApiParam(requestBean);
-        paramMap.put("callBackAction",requestBean.getRetUrl());
-        if("0".equals(paramMap.get("status"))){
+        paramMap.put("callBackAction", requestBean.getRetUrl());
+        if ("0".equals(paramMap.get("status"))) {
             return callbackErrorView(paramMap);
         }
         UserVO user = this.bankOpenService.getUsersByMobile(requestBean.getMobile());
@@ -82,22 +93,11 @@ public class ApiBankOpenController extends BaseUserController {
         return modelAndView;
     }
 
-    @HystrixCommand(commandKey = "开户(api)-getCallbankMV",fallbackMethod = "fallBackApiBankOpen",ignoreExceptions = CheckException.class,commandProperties = {
-            //设置断路器生效
-            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
-            //一个统计窗口内熔断触发的最小个数3/10s
-            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
-            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50"),
-            @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE"),
-            //熔断5秒后去尝试请求
-            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
-            //失败率达到30百分比后熔断
-            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
     public BankCallBean getCallbankMV(OpenAccountPageBean openBean) {
         // 根据身份证号码获取性别
         String idType = BankCallConstant.ID_TYPE_IDCARD;
         // 调用开户接口
-        BankCallBean openAccoutBean =  new BankCallBean(openBean.getUserId(),BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE,Integer.parseInt(openBean.getPlatform()),BankCallConstant.BANK_URL_ACCOUNT_OPEN_ENCRYPT_PAGE);
+        BankCallBean openAccoutBean = new BankCallBean(openBean.getUserId(), BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE, Integer.parseInt(openBean.getPlatform()), BankCallConstant.BANK_URL_ACCOUNT_OPEN_ENCRYPT_PAGE);
         openAccoutBean.setIdentity(openBean.getIdentity());
         /**1：出借角色2：借款角色3：代偿角色*/
         openAccoutBean.setChannel(openBean.getChannel());
@@ -106,9 +106,9 @@ public class ApiBankOpenController extends BaseUserController {
         openAccoutBean.setGender(openBean.getGender());
         openAccoutBean.setMobile(openBean.getMobile());
         // 代偿角色的账户类型为  00100-担保账户  其他的是 00000-普通账户
-        if(openBean.getIdentity().equals("3")){
+        if (openBean.getIdentity().equals("3")) {
             openAccoutBean.setAcctUse(BankCallConstant.ACCOUNT_USE_GUARANTEE);
-        }else{
+        } else {
             openAccoutBean.setAcctUse(BankCallConstant.ACCOUNT_USE_COMMON);
         }
 
@@ -117,29 +117,34 @@ public class ApiBankOpenController extends BaseUserController {
         openAccoutBean.setRetUrl(openBean.getRetUrl());
         openAccoutBean.setSuccessfulUrl(openBean.getSuccessfulUrl());
         openAccoutBean.setNotifyUrl(openBean.getNotifyUrl());
-        openAccoutBean.setCoinstName(openBean.getCoinstName()==null?"汇盈金服":openBean.getCoinstName());
+        openAccoutBean.setCoinstName(openBean.getCoinstName() == null ? "汇盈金服" : openBean.getCoinstName());
         openAccoutBean.setLogRemark("开户+设密码页面");
         openAccoutBean.setLogIp(openBean.getIp());
         openBean.setOrderId(openAccoutBean.getLogOrderId());
         return openAccoutBean;
     }
 
-    public BankCallBean fallBackApiBankOpen(OpenAccountPageBean openBean) {
-        return  new BankCallBean();
+
+    public ModelAndView fallBackApiBankOpen(@RequestBody @Valid ApiBankOpenRequestBean requestBean) {
+        logger.info("==================已进入 开户(api) fallBackApiBankOpen 方法================");
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("status", ErrorCodeConstant.STATUS_CE999999);
+        paramMap.put("statusDesc", "开户失败");
+        return callbackErrorView(paramMap);
     }
 
     private OpenAccountPageBean getOpenAccountPageBean(ApiBankOpenRequestBean requestBean) {
         OpenAccountPageBean bean = new OpenAccountPageBean();
-        BeanUtils.copyProperties(requestBean,bean);
-        String retUrl = systemConfig.getServerHost()+"/hyjf-api/server/user/accountOpenEncryptPage";
-        String successUrl = systemConfig.getServerHost()+"/hyjf-api/server/user/accountOpenEncryptPage";
+        BeanUtils.copyProperties(requestBean, bean);
+        String retUrl = systemConfig.getServerHost() + "/hyjf-api/server/user/accountOpenEncryptPage";
+        String successUrl = systemConfig.getServerHost() + "/hyjf-api/server/user/accountOpenEncryptPage";
         // 异步调用路
         String bgRetUrl = "http://CS-USER/hyjf-api/server/user/accountOpenEncryptPage";
         // 调用设置密码接口
-        retUrl += "/return?acqRes="+requestBean.getAcqRes()+"&callback="+requestBean.getRetUrl().replace("#", "*-*-*");
-        successUrl += "/return?acqRes="+requestBean.getAcqRes()+"&isSuccess=1&callback="+requestBean.getRetUrl().replace("#", "*-*-*");
-        bgRetUrl += "/bgReturn?acqRes="+requestBean.getAcqRes()+"&phone=" + requestBean.getMobile()+"&openclient="+requestBean.getPlatform()+"&roleId="+requestBean.getIdentity()+
-        "&callback="+requestBean.getBgRetUrl().replace("#", "*-*-*");
+        retUrl += "/return?acqRes=" + requestBean.getAcqRes() + "&callback=" + requestBean.getRetUrl().replace("#", "*-*-*");
+        successUrl += "/return?acqRes=" + requestBean.getAcqRes() + "&isSuccess=1&callback=" + requestBean.getRetUrl().replace("#", "*-*-*");
+        bgRetUrl += "/bgReturn?acqRes=" + requestBean.getAcqRes() + "&phone=" + requestBean.getMobile() + "&openclient=" + requestBean.getPlatform() + "&roleId=" + requestBean.getIdentity() +
+                "&callback=" + requestBean.getBgRetUrl().replace("#", "*-*-*");
         bean.setRetUrl(retUrl);
         bean.setNotifyUrl(bgRetUrl);
         bean.setSuccessfulUrl(successUrl);
@@ -200,10 +205,10 @@ public class ApiBankOpenController extends BaseUserController {
         params.put("phone", mobile);
         params.put("acqRes", request.getParameter("acqRes"));
         BaseResultBean resultBean = new BaseResultBean();
-        try{
+        try {
             result = bankOpenService.openAccountBgReturn(bean);
-        }catch (Exception e){
-            logger.error("出错了",e);
+        } catch (Exception e) {
+            logger.error("出错了", e);
             params.put("status", ErrorCodeConstant.STATUS_CE999999);
             resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
             params.put("statusDesc", "开户失败,调用银行接口失败");

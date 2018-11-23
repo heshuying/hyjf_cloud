@@ -163,6 +163,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     }
 
     public WebResult<Map<String, Object>> fallBackCredit(TenderRequest request){
+        logger.info("==================已进入 债转投资(app/web) fallBackCredit 方法================");
         throw new CheckException(MsgEnum.STATUS_CE999999);
     }
 

@@ -1771,7 +1771,7 @@ public class BorrowCommonController extends BaseController {
 		} else if (hssfCell.getCellType() == Cell.CELL_TYPE_NUMERIC) {
 			// 返回数值类型的值
 			String s=String.valueOf(hssfCell.getNumericCellValue());
-			return s.substring(0,s.indexOf("."));
+			return s.replace(".0","");
 		} else if (hssfCell.getCellType() == Cell.CELL_TYPE_FORMULA) {
 			// 单元格为公式类型时
 			if (hssfCell.getCachedFormulaResultType() == Cell.CELL_TYPE_NUMERIC) {

@@ -147,6 +147,7 @@ public class ChinapnrController extends BaseController {
     }
 
     public Map<String,Object> fallBackApi(ChinapnrBean bean) {
+        logger.info("==================已进入 汇付页面调用 fallBackApi 方法================");
     	return new HashMap<String,Object>();
     }
 

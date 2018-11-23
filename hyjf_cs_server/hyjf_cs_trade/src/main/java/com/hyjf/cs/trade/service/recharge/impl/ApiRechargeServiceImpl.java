@@ -352,6 +352,7 @@ public class ApiRechargeServiceImpl extends BaseTradeServiceImpl implements ApiR
     }
 
     public ApiUserRechargeResultBean fallBackApiRecharge(HttpServletRequest request, ApiUserRechargeRequestBean requestBean) {
+        logger.info("==================已进入 短信充值(api) fallBackApiRecharge 方法================");
         // 充值失败
         ApiUserRechargeResultBean resultBean = new ApiUserRechargeResultBean();
         resultBean.setStatus(BaseResult.FAIL);

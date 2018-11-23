@@ -18,6 +18,7 @@ import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
@@ -33,6 +34,8 @@ import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.borrow.ApiAssetPushService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,6 +84,17 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
     }
 
     @Override
+    @HystrixCommand(commandKey = "个人资产推送(api)-assetPush", fallbackMethod = "fallBackAssetPush", ignoreExceptions = CheckException.class, commandProperties = {
+            //设置断路器生效
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //一个统计窗口内熔断触发的最小个数3/10s
+            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50"),
+            @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE"),
+            //熔断5秒后去尝试请求
+            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
     public PushResultBean assetPush(PushRequestBean pushRequestBean) {
 
         PushResultBean resultBean = new PushResultBean();
@@ -409,8 +423,12 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         return resultBean;
     }
 
+    public PushResultBean fallBackAssetPush(PushRequestBean pushRequestBean) {
+        logger.info("==================已进入 个人资产推送(api) fallBackAssetPush 方法================");
+       return new PushResultBean();
+    }
 
-    @Override
+        @Override
     public HjhLabelVO getLabelId(BorrowAndInfoVO borrowVO, HjhPlanAssetVO hjhPlanAssetVO) {
 
         HjhLabelVO resultLabel = null;
