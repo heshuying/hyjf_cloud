@@ -8,7 +8,7 @@
         t1.nid,
         t1.user_id userId,
         CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/365)*0.07,2) ELSE FORMAT((t1.account * t4.borrow_period/12)*0.07,2) END money,
-        FROM_UNIXTIME(t2.reg_time,'%Y-%m-%d %H:%i') reg_time,t2.username username,t3.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'散标' type,t1.borrow_nid AS plannid,i.name,t1.account,
+        t2.reg_time reg_time,t2.username username,t3.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'散标' type,t1.borrow_nid AS plannid,i.name,t1.account,
         CASE WHEN t4.borrow_style = 'endday' THEN CONCAT(t4.borrow_period, '天') ELSE CONCAT(t4.borrow_period, '个月') END borrow_period,
         CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/365),2) ELSE FORMAT((t1.account * t4.borrow_period/12),2) END yearAccount,
         t5.truename reffername,INSERT(t6.mobile, 4, 4, '****') reffermobile,t1.create_time addtimes
@@ -44,7 +44,7 @@
         t1.accede_order_id AS nid,
         t1.user_id userId,
         CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12)*0.07,2) ELSE FORMAT((t1.accede_account * t4.lock_period/365)*0.07,2) END money,
-        FROM_UNIXTIME(t2.reg_time,'%Y-%m-%d %H:%i') reg_time,t2.username username,t3.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'服务' type,t1.plan_nid AS plannid,t4.plan_name as name,t1.accede_account account,
+        t2.reg_time reg_time,t2.username username,t3.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'服务' type,t1.plan_nid AS plannid,t4.plan_name as name,t1.accede_account account,
         CASE WHEN t4.is_month = 1 THEN CONCAT(t4.lock_period, '个月') ELSE CONCAT(t4.lock_period, '天') END borrow_period,
         CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12),2) ELSE FORMAT((t1.accede_account * t4.lock_period/365),2) END yearAccount,
         t5.truename reffername,INSERT(t6.mobile, 4, 4, '****') reffermobile,t1.create_time addtimes
@@ -149,7 +149,7 @@
         t1.accede_order_id AS nid,
         t1.user_id userId,
         CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12)*0.07,2) ELSE FORMAT((t1.accede_account * t4.lock_period/365)*0.07,2) END money,
-        FROM_UNIXTIME(t2.reg_time,'%Y-%m-%d %H:%i') reg_time,t2.username username,t3.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'服务' type,t1.plan_nid AS plannid,t4.plan_name as name,t1.accede_account account,
+        t2.reg_time reg_time,t2.username username,t3.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'服务' type,t1.plan_nid AS plannid,t4.plan_name as name,t1.accede_account account,
         CASE WHEN t4.is_month = 1 THEN CONCAT(t4.lock_period, '个月') ELSE CONCAT(t4.lock_period, '天') END borrow_period,
         CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12),2) ELSE FORMAT((t1.accede_account * t4.lock_period/365),2) END yearAccount,
         t5.truename reffername,INSERT(t6.mobile, 4, 4, '****') reffermobile,t1.create_time addtimes
@@ -224,7 +224,7 @@
         t1.nid,
         t1.user_id userId,
         CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/365)*0.07,2) ELSE FORMAT((t1.account * t4.borrow_period/12)*0.07,2) END money,
-        FROM_UNIXTIME(t2.reg_time,'%Y-%m-%d %H:%i') reg_time,t2.username username,t3.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'散标' type,t1.borrow_nid AS plannid,i.name,t1.account,
+        t2.reg_time reg_time,t2.username username,t3.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'散标' type,t1.borrow_nid AS plannid,i.name,t1.account,
         CASE WHEN t4.borrow_style = 'endday' THEN CONCAT(t4.borrow_period, '天') ELSE CONCAT(t4.borrow_period, '个月') END borrow_period,
         CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/365),2) ELSE FORMAT((t1.account * t4.borrow_period/12),2) END yearAccount,
         t5.truename reffername,INSERT(t6.mobile, 4, 4, '****') reffermobile,t1.create_time addtimes
