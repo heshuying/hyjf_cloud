@@ -141,7 +141,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 		ContentPartnerRequest request = new ContentPartnerRequest();
 		request.setPartnerType(partnerType);
 		LinkResponse response = restTemplate.postForObject(
-				"http://AM-ADMIN/am-config/content/contentpartner/searchaction", request,
+				"http://AM-CONFIG/am-config/content/contentpartner/searchaction", request,
 				LinkResponse.class);
 		if (response != null) {
 			return response.getResultList();
