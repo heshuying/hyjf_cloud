@@ -552,6 +552,7 @@ public class CouponUserController extends BaseController {
             response.setCouponUser(couponUserVO);
             response.setRtn(Response.FAIL);
             response.setMessage(message);
+            return new AdminResult(FAIL,message);
         } else {
             AdminSystemVO user = getUser(request);
             String loginUserId = user.getId();
