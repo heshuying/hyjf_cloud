@@ -1,12 +1,12 @@
 package com.hyjf.cs.market.client;
 
-import com.hyjf.am.vo.admin.UtmVO;
-import com.hyjf.am.vo.datacollect.TzjDayReportVO;
-
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+
+import com.hyjf.am.vo.admin.UtmVO;
+import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 
 /**
  * @author xiasq
@@ -167,5 +167,12 @@ public interface AmUserClient {
     List<Integer> getUsersInfoList();
 
     List<Integer> getUsersList(String source);
+
+    /**
+     * 根据一级部门查询二级部门
+     * @param nmzxDivisionName
+     * @return
+     */
+    List<String> selectTwoDivisionByPrimaryDivision(String nmzxDivisionName);
 
 }

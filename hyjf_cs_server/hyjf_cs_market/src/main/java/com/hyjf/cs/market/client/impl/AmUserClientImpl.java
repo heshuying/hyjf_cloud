@@ -1,7 +1,19 @@
 package com.hyjf.cs.market.client.impl;
 
+import java.math.BigDecimal;
+import java.util.*;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.datacollect.TzjDayReportResponse;
 import com.hyjf.am.response.user.SmsCodeResponse;
@@ -11,16 +23,6 @@ import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.market.client.AmUserClient;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-
-import java.math.BigDecimal;
-import java.util.*;
 
 /**
  * @author xiasq
@@ -315,4 +317,16 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	@Override
+	public List<String> selectTwoDivisionByPrimaryDivision(String nmzxDivisionName) {
+		StringResponse response = restTemplate.getForObject(
+				"http://AM-USER/am-user/sell_daily/select_two_division_by_primary_division/" + nmzxDivisionName,
+				StringResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
 }

@@ -3,9 +3,10 @@
  */
 package com.hyjf.am.market.service;
 
-import com.hyjf.am.market.dao.model.auto.SellDaily;
-
 import java.util.List;
+
+import com.hyjf.am.market.dao.model.auto.SellDaily;
+import com.hyjf.am.vo.market.SellDailyVO;
 
 /**
  * @author yaoyong
@@ -40,4 +41,21 @@ public interface SellDailyService {
      * @return
      */
     SellDaily selectAllSum(String dateStr);
+
+    /**
+     * 当前日期是否已经生成销售日报
+     * @return
+     */
+    boolean hasGeneratorDataToday();
+
+    /**
+     * 批量插入
+     * @param voList
+     */
+    void batchInsertSellDaily(List<SellDailyVO> voList);
+
+    /**
+     * 计算第四、六、十列速率,第十六列净资金流
+     */
+    void calculateRate();
 }
