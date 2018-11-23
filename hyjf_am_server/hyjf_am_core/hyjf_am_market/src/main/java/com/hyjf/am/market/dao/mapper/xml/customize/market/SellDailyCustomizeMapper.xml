@@ -2,10 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.market.dao.mapper.customize.market.SellDailyCustomizeMapper">
     <resultMap id="sumResultMap" type="com.hyjf.am.market.dao.model.auto.SellDaily">
-        <result column="date_str" property="dateStr" jdbcType="VARCHAR"/>
-        <result column="draw_order" property="drawOrder" jdbcType="INTEGER"/>
-        <result column="primary_division" property="primaryDivision" jdbcType="VARCHAR"/>
-        <result column="two_division" property="twoDivision" jdbcType="VARCHAR"/>
+        <!--<result column="date_str" property="dateStr" jdbcType="VARCHAR"/>-->
+        <!--<result column="draw_order" property="drawOrder" jdbcType="INTEGER"/>-->
+        <!--<result column="primary_division" property="primaryDivision" jdbcType="VARCHAR"/>-->
+        <!--<result column="two_division" property="twoDivision" jdbcType="VARCHAR"/>-->
         <result column="store_num" property="storeNum" jdbcType="INTEGER"/>
         <result column="invest_total_month" property="investTotalMonth" jdbcType="DECIMAL"/>
         <result column="repayment_total_month" property="repaymentTotalMonth" jdbcType="DECIMAL"/>
@@ -79,7 +79,7 @@
     </select>
 
     <!-- 查询一级分部合计 -->
-    <select id="selectPrimaryDivisionSum" resultMap="sumResultMap">
+    <select id="selectPrimaryDivisionSum" parameterType="java.util.Map" resultMap="sumResultMap">
         SELECT
         <include refid="Sum_Column_List"/>
         FROM ht_sell_daily

@@ -24,7 +24,7 @@ public class SellDailyVO extends BaseVO {
      */
     private String dateStr;
 
-    private int drawOrder;
+    private Integer drawOrder;
 
     private String primaryDivision;
 
@@ -94,11 +94,11 @@ public class SellDailyVO extends BaseVO {
         this.dateStr = dateStr;
     }
 
-    public int getDrawOrder() {
+    public Integer getDrawOrder() {
         return drawOrder;
     }
 
-    public void setDrawOrder(int drawOrder) {
+    public void setDrawOrder(Integer drawOrder) {
         this.drawOrder = drawOrder;
     }
 
