@@ -29,7 +29,7 @@ public class RedisUtils {
 
     private static ThreadLocal<JedisPool> poolThreadLocal = new ThreadLocal<JedisPool>();
 
-    public static final int signExpireTime = 86400;
+    public static final int signExpireTime = 24*60*60;
 
     /**
      * 构建redis连接池
