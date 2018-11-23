@@ -10,8 +10,9 @@ import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.beans.vo.RegistRecordCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.RegistRecordService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -23,10 +24,6 @@ import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +32,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -52,6 +48,7 @@ import java.util.Map;
 public class RegistRecordController extends BaseController {
     @Autowired
     private RegistRecordService registRecordService;
+    public static final String PERMISSIONS = "registlist";
 
     @ApiOperation(value = "注册记录页面初始化", notes = "注册记录页面初始化")
     @PostMapping(value = "/userRegistInit")
@@ -69,7 +66,17 @@ public class RegistRecordController extends BaseController {
     @ApiOperation(value = "注册记录列表查询", notes = "注册记录列表查询")
     @PostMapping(value = "/registRecordList")
     @ResponseBody
-    public AdminResult<ListResult<RegistRecordCustomizeVO>> selectRegistRecordList(@RequestBody RegistRcordRequestBean registRcordRequestBean) {
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult<ListResult<RegistRecordCustomizeVO>> selectRegistRecordList(HttpServletRequest request, @RequestBody RegistRcordRequestBean registRcordRequestBean) {
+        // 获取该角色 权限列表
+        List<String> perm = (List<String>) request.getSession().getAttribute("permission");
+        //判断权限
+        boolean isShow = false;
+        for (String string : perm) {
+            if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
+                isShow=true;
+            }
+        }
         RegistRcordRequest registerRcordeRequest = new RegistRcordRequest();
         BeanUtils.copyProperties(registRcordRequestBean,registerRcordeRequest);
         RegistRecordResponse registRecordResponse = registRecordService.findRegistRecordList(registerRcordeRequest);
@@ -81,6 +88,12 @@ public class RegistRecordController extends BaseController {
         }
         List<RegistRecordCustomizeVO> registRecordCustomizeVO = new ArrayList<RegistRecordCustomizeVO>();
         if(null!=registRecordResponse.getResultList()&&registRecordResponse.getResultList().size()>0){
+            if(!isShow){
+                //如果没有查看脱敏权限,显示加星
+                for (RegistRecordVO registRecordVO:registRecordResponse.getResultList()){
+                    registRecordVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(registRecordVO.getMobile()));
+                }
+            }
             registRecordCustomizeVO = CommonUtils.convertBeanList(registRecordResponse.getResultList(),RegistRecordCustomizeVO.class);
         }
         return new AdminResult<ListResult<RegistRecordCustomizeVO>>(ListResult.build(registRecordCustomizeVO, registRecordResponse.getCount())) ;
@@ -175,9 +188,19 @@ public class RegistRecordController extends BaseController {
      */
     @ApiOperation(value = "注册记录列表导出", notes = "注册记录列表导出")
     @PostMapping(value = "/exportregist")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportExcelGist(HttpServletResponse response, HttpServletRequest request, @RequestBody RegistRcordRequestBean registRcordRequestBean) throws Exception {
         // 封装查询条件
         RegistRcordRequest registerRcordeRequest = new RegistRcordRequest();
+        // 获取该角色 权限列表
+        List<String> perm = (List<String>) request.getSession().getAttribute("permission");
+        //判断权限
+        boolean isShow = false;
+        for (String string : perm) {
+            if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
+                isShow=true;
+            }
+        }
         BeanUtils.copyProperties(registRcordRequestBean,registerRcordeRequest);
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
@@ -197,7 +220,10 @@ public class RegistRecordController extends BaseController {
         Integer totalCount = registRecordResponse.getCount();
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
-        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        Map<String, IValueFormatter> mapValueAdapter =  buildValueAdapter();
+        if(!isShow){
+            mapValueAdapter = buildValueAdaptertAsterisked();
+        }
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
@@ -232,11 +258,15 @@ public class RegistRecordController extends BaseController {
 
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        return mapAdapter;
+    }
+    private Map<String, IValueFormatter> buildValueAdaptertAsterisked() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
         IValueFormatter mobileAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
                 String mobile = (String) object;
-                return AsteriskProcessUtil.getAsteriskedValue(mobile,3,7);
+                return AsteriskProcessUtil.getAsteriskedValue(mobile);
             }
         };
 

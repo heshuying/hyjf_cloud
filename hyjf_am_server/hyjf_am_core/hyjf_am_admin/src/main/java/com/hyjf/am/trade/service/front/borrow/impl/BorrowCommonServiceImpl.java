@@ -2672,7 +2672,12 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			borrowBean.setVerifyStatus("2");
 		}
 		//资产属性
-		borrowBean.setAssetAttributes(this.getValue(String.valueOf(borrowWithBLOBs.getAssetAttributes())));
+		if(borrowWithBLOBs.getAssetAttributes()==null) {
+			borrowBean.setAssetAttributes("");
+		}else {
+			borrowBean.setAssetAttributes(borrowWithBLOBs.getAssetAttributes().toString());
+		}
+		
 		// 担保方式
 		// 担保机构
 		borrowBean.setBorrowMeasuresInstit(this.getValue(borrowWithBLOBs.getBorrowMeasuresInstit()));
