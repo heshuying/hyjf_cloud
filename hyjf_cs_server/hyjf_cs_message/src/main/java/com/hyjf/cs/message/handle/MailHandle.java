@@ -19,10 +19,11 @@ import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Component;
 
-import javax.mail.Session;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
-import java.io.File;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.mail.*;
+import javax.mail.internet.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -374,5 +375,131 @@ public class MailHandle {
         Session session = Session.getDefaultInstance(prop, auth);
         senderImpl.setSession(session);
         senderImpl.send(mailMessage);
+    }
+
+    /**
+     * 由于阿里云25邮箱端口封禁，使用465端口发送邮件(用Javax实现)
+     * @param toMailArray
+     * @param subject
+     * @param content
+     * @param fileNames
+     * @param is
+     * @throws Exception
+     */
+    public void sendAttachmentsMailOnPort465(String[] toMailArray, String subject, String content, final String[] fileNames,final InputStreamSource is)
+            throws Exception {
+        // 1. 初始化配置
+        init();
+
+        // 2. 建立连接
+        Session session = Session.getDefaultInstance(buildMailProperties(), new Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(setting.getSmtpUsername(), setting.getSmtpPassword());
+            }
+        });
+
+        // 3. 向multipart对象中添加邮件的各个部分内容，包括文本内容和附件
+        Multipart multipart = new MimeMultipart();
+
+        // 添加邮件正文
+        BodyPart contentPart = new MimeBodyPart();
+        try {
+            contentPart.setContent(content, "text/html;charset=UTF-8");
+            multipart.addBodyPart(contentPart);
+            //File[] attachments = buildAttachments(fileNames);
+            // 添加附件的内容
+            if (fileNames != null) {
+                BodyPart attachmentBodyPart = null;
+                for(String attachment: fileNames){
+                    attachmentBodyPart = new MimeBodyPart();
+                    DataSource dataSource = createDataSource(is, "text/html; charset=UTF-8", attachment);
+                    attachmentBodyPart.setDataHandler(new DataHandler(dataSource));
+                    //MimeUtility.encodeWord可以避免文件名乱码
+                    attachmentBodyPart.setFileName(MimeUtility.encodeWord(attachment));
+                    multipart.addBodyPart(attachmentBodyPart);
+                }
+            }
+        } catch (MessagingException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+
+
+        // 4. 创建邮件对象, 发送
+        Message msg = new MimeMessage(session);
+        try {
+            // 设置邮件标题
+            msg.setSubject(subject);
+            // 将multipart对象放到message中
+            msg.setContent(multipart);
+            // 设置发件人
+            msg.setFrom(new InternetAddress(setting.getSmtpReply(),setting.getSiteName()));
+            // 设置收件人
+            msg.setRecipients(Message.RecipientType.TO, buildRcvAddress(toMailArray));
+            // 邮件发送
+            Transport.send(msg);
+        } catch (MessagingException e) {
+            logger.error("邮件发送失败....", e);
+        }
+    }
+
+    protected static DataSource createDataSource(final InputStreamSource inputStreamSource, final String contentType, final String name) {
+        return new DataSource() {
+            @Override
+            public InputStream getInputStream() throws IOException {
+                return inputStreamSource.getInputStream();
+            }
+            @Override
+            public OutputStream getOutputStream() {
+                throw new UnsupportedOperationException("Read-only javax.activation.DataSource");
+            }
+            @Override
+            public String getContentType() {
+                return contentType;
+            }
+            @Override
+            public String getName() {
+                return name;
+            }
+        };
+    }
+
+    /**
+     * 构建邮件属性
+     * @return
+     */
+    private static Properties buildMailProperties() {
+        Properties props = new Properties();
+        // 是否需要身份验证
+        String smtpAuth = setting.getSmtpVerify() == 1 ? "true" : "false";
+        // 发送服务器需要身份验证
+        props.setProperty(CustomConstants.MAIL_SMTP_AUTH, smtpAuth);
+        // 设置邮件服务器主机名
+        props.setProperty(CustomConstants.MAIL_SMTP_HOST, setting.getSmtpServer());
+        // 发送邮件协议名称
+        //props.setProperty("mail.transport.protocol", "SMTP");
+        props.setProperty(CustomConstants.MAIL_SMTP_SOCKETFACTORY_CLASS,
+                CustomConstants.MAIL_SMTP_SOCKETFACTORY_CLASS_VALUE);
+        props.setProperty(CustomConstants.MAIL_SMTP_SOCKETFACTORY_FALLBACK,
+                CustomConstants.MAIL_SMTP_SOCKETFACTORY_FALLBACK_VALUE);
+        props.setProperty(CustomConstants.MAIL_SMTP_PORT, CustomConstants.MAIL_SMTP_SOCKETFACTORY_PORT_VALUE);
+        props.setProperty(CustomConstants.MAIL_SMTP_SOCKETFACTORY_PORT, CustomConstants.MAIL_SMTP_SOCKETFACTORY_PORT_VALUE);
+        return props;
+    }
+
+    /**
+     * 构建收信人地址
+     * @param toMailArray
+     * @return
+     * @throws AddressException
+     */
+    private static InternetAddress[] buildRcvAddress(String[] toMailArray) throws AddressException {
+        InternetAddress[] addrs = new InternetAddress[toMailArray.length];
+        for (int i = 0; i < toMailArray.length; i++) {
+            addrs[i] = new InternetAddress(toMailArray[i]);
+        }
+        return addrs;
     }
 }
