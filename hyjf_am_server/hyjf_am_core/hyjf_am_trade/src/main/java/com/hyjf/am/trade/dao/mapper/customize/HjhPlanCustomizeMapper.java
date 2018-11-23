@@ -148,6 +148,13 @@ public interface HjhPlanCustomizeMapper {
     List<UserHjhInvistListCustomize> getUserHjhInvestList(Map<String,Object> params);
 
     /**
+     * 查询用户的汇计划加入记录COUNT
+     * @author zhangyk
+     * @date 2018/11/22 16:09
+     */
+    int getUserHjhInvestCount(Map<String,Object> params);
+
+    /**
      * 汇计划数据统计查询
      * @return
      */

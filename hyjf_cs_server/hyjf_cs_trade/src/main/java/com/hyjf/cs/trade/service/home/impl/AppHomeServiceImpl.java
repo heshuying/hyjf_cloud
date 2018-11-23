@@ -374,7 +374,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         if(homeHjhPageCustomizes != null && homeHjhPageCustomizes.size() > 0){
             appHomePageCustomize = homeHjhPageCustomizes.get(0);
         }
-        appHomePageCustomize.setTitle("推荐产品");
+        appHomePageCustomize.setTitle("推荐服务");
         CommonUtils.convertNullToEmptyString(appHomePageCustomize);
         AppHomePageRecommendProject recommendProject = convertToAppHomePageRecommendProject(appHomePageCustomize);
         info.put("recommendProject", recommendProject);
@@ -685,7 +685,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             /*else if("立即加入".equals(listCustomize.getStatusName())){  //1.启用  2.关闭
                 homePageCustomize.setStatus("20");
                 homePageCustomize.setStatusName("立即加入");
-            }*/else if(listCustomize.getStatusName().equals("授权服务")){  //1.启用  2.关闭
+            }*/else if("授权服务".equals(listCustomize.getStatusName())){  //1.启用  2.关闭
                 homePageCustomize.setStatus("20");
                 homePageCustomize.setStatusName("授权服务");
             }

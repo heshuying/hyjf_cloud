@@ -176,6 +176,10 @@ public class HjhDebtCreditServiceImpl implements HjhDebtCreditService {
         return hjhPlanCustomizeMapper.getUserHjhInvestList(params);
     }
 
+    @Override
+    public int getUserHjhInvestCount(Map<String, Object> params) {
+        return hjhPlanCustomizeMapper.getUserHjhInvestCount(params);
+    }
 
     /**
      * 根据borrowNid和creditStatus查询债转列表

@@ -147,6 +147,10 @@ public class BorrowController extends BaseController {
 			borrowVO = CommonUtils.convertBean(borrow,BorrowAndInfoVO.class);
             borrowVO.setVerifyTimeInteger(borrow.getVerifyTime());
 			borrowVO.setReverifyTimeInt(borrow.getReverifyTime());
+			borrowVO.setCanTransactionAndroid(borrowInfo.getCanTransactionAndroid());
+			borrowVO.setCanTransactionIos(borrowInfo.getCanTransactionIos());
+			borrowVO.setCanTransactionPc(borrowInfo.getCanTransactionPc());
+			borrowVO.setCanTransactionWei(borrowInfo.getCanTransactionWei());
             logger.info("VerifyTime:"+borrow.getVerifyTime());
 		}
 		if (Validator.isNotNull(borrowInfo)){

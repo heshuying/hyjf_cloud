@@ -3,6 +3,20 @@
  */
 package com.hyjf.cs.user.controller.web.safe;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.vo.user.UserVO;
@@ -18,21 +32,10 @@ import com.hyjf.cs.user.result.ContractSetResultBean;
 import com.hyjf.cs.user.service.safe.SafeService;
 import com.hyjf.cs.user.vo.BindEmailVO;
 import com.hyjf.cs.user.vo.UserNoticeSetVO;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -133,13 +136,15 @@ public class WebSafeController extends BaseUserController {
     @ApiOperation(value = "发送激活邮件", notes = "发送激活邮件")
     @ApiImplicitParam(name = "paraMap", value = "{email:string}", dataType = "Map")
     @PostMapping(value = "/sendEmailActive", produces = "application/json; charset=utf-8")
-    public WebResult<Object> sendEmailActive(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String, String> paraMap, HttpServletRequest request) {
+    public WebResult<Object> sendEmailActive(@RequestHeader(value = "userId") Integer userId,
+                                             @RequestHeader(value = "token") String token ,
+                                             @RequestBody Map<String, String> paraMap, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
 
         safeService.checkForEmailSend(paraMap.get("email"), userId);
 
         try {
-            safeService.sendEmailActive(userId, paraMap.get("email"));
+            safeService.sendEmailActive(userId, token, paraMap.get("email"));
         } catch (MQException e) {
             logger.error("发送激活邮件失败", e);
             result.setStatus(ApiResult.FAIL);

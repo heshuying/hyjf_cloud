@@ -1,11 +1,11 @@
 package com.hyjf.cs.market.client;
 
+import java.util.List;
+
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.admin.SellDailyDistributionVO;
 import com.hyjf.am.vo.market.ActivityListBeanVO;
 import com.hyjf.am.vo.market.SellDailyVO;
-
-import java.util.List;
 
 /**
  * @Auther: walter.limeng
@@ -67,4 +67,21 @@ public interface AmMarketClient {
      * @return
      */
     SellDailyVO selectAllSum(String formatDateStr);
+
+    /**
+     * 当前日期是否已经生成销售日报
+     * @return
+     */
+    boolean hasGeneratorDataToday();
+
+    /**
+     * 批量插入
+     * @param list
+     */
+    void batchInsertSellDaily(List<SellDailyVO> list);
+
+    /**
+     * 计算第四、六、十列速率,第十六列净资金流
+     */
+    void calculateRate();
 }

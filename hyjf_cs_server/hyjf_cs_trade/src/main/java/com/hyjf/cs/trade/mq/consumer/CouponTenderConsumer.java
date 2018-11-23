@@ -6,6 +6,7 @@ package com.hyjf.cs.trade.mq.consumer;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
@@ -92,7 +93,12 @@ public class CouponTenderConsumer extends Consumer {
                 bean.setLogUserName(userName);
                 BorrowAndInfoVO borrow = borrowClient.selectBorrowByNid(borrowNid);
                 BorrowInfoVO borrowInfoVO = borrowClient.getBorrowInfoByNid(borrowNid);
-                couponService.borrowTenderCouponUse(couponGrantId, borrow, bean,borrowInfoVO);
+                BorrowProjectTypeVO borrowProjectType = this.getProjectType(String.valueOf(borrow.getProjectType()));
+                String nowType = "1";
+                if (borrowProjectType.getInvestUserType().equals(1)) {
+                    nowType = "3";
+                }
+                couponService.borrowTenderCouponUse(couponGrantId, borrow, bean,borrowInfoVO,nowType);
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             } catch (Exception e) {
                 e.printStackTrace();
@@ -103,6 +109,14 @@ public class CouponTenderConsumer extends Consumer {
                     RedisUtils.del(RedisConstants.COUPON_TENDER_KEY+couponGrantId);
                 }
             }
+        }
+        private BorrowProjectTypeVO getProjectType(String projectType) {
+            BorrowProjectTypeVO borrowProjectType = null;
+            List<BorrowProjectTypeVO> projectTypes = borrowClient.selectBorrowProjectByBorrowCd(projectType);
+            if (projectTypes != null && projectTypes.size() == 1) {
+                borrowProjectType = projectTypes.get(0);
+            }
+            return borrowProjectType;
         }
     }
 }
