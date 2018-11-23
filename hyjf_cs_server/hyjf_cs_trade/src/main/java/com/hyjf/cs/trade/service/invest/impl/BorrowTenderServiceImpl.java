@@ -1722,6 +1722,24 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             }
         }
         vo.setBorrowAccountWait(borrow.getBorrowAccountWait().intValue()+"");
+        // add by liuyang 神策数据统计 20180820 start
+        // 获取标的还款方式
+        BorrowStyleVO projectBorrowStyle = this.amTradeClient.getBorrowStyle(borrow.getBorrowStyle());
+        if (projectBorrowStyle != null) {
+            vo.setBorrowStyleName(StringUtils.isBlank(projectBorrowStyle.getName()) ? "" : projectBorrowStyle.getName());
+        } else {
+            vo.setBorrowStyleName("");
+        }
+        // 项目名称
+        vo.setProjectName(borrow.getProjectName());
+        // 借款期限
+        vo.setBorrowPeriod(borrow.getBorrowPeriod());
+        if ("endday".equals(borrow.getBorrowStyle())) {
+            vo.setDurationUnit("天");
+        } else {
+            vo.setDurationUnit("月");
+        }
+        // add by liuyang 神策数据统计 20180820 end
         return vo;
     }
 
