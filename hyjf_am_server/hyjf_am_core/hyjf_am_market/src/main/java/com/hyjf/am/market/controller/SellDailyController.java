@@ -3,19 +3,22 @@
  */
 package com.hyjf.am.market.controller;
 
-import com.hyjf.am.market.dao.model.auto.SellDaily;
-import com.hyjf.am.market.service.SellDailyService;
-import com.hyjf.am.response.market.SellDailyResponse;
-import com.hyjf.am.vo.market.SellDailyVO;
-import com.hyjf.common.util.CommonUtils;
+import java.util.List;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
+import com.hyjf.am.market.dao.model.auto.SellDaily;
+import com.hyjf.am.market.service.SellDailyService;
+import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.market.SellDailyResponse;
+import com.hyjf.am.vo.market.SellDailyVO;
+import com.hyjf.common.util.CommonUtils;
 
 /**
  * @author yaoyong
@@ -72,5 +75,27 @@ public class SellDailyController {
             response.setResult(sellDailyVO);
         }
         return response;
+    }
+
+    /**
+     * 当前日期是否已经生成销售日报
+     * @return
+     */
+	@RequestMapping("/has_generator_data_today")
+	public BooleanResponse hasGeneratorDataToday() {
+		return new BooleanResponse(sellDailyService.hasGeneratorDataToday());
+	}
+
+    /**
+     * 批量插入
+     */
+    @RequestMapping("/batch_insert_sell_daily")
+    public void batchInsertSellDaily(@RequestBody List<SellDailyVO> voList) {
+        sellDailyService.batchInsertSellDaily(voList);
+    }
+
+    @RequestMapping("/calculate_rate")
+    public void calculateRate() {
+        sellDailyService.calculateRate();
     }
 }

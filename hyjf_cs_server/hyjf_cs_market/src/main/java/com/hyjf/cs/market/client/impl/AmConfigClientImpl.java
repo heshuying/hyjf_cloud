@@ -3,12 +3,21 @@
  */
 package com.hyjf.cs.market.client.impl;
 
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
+import com.hyjf.am.response.trade.HolidaysConfigResponse;
 import com.hyjf.am.resquest.admin.ContentPartnerRequest;
 import com.hyjf.am.resquest.admin.EventsRequest;
 import com.hyjf.am.resquest.config.WechatContentArticleRequest;
@@ -18,12 +27,6 @@ import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.cs.market.client.AmConfigClient;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @author fuqiang
@@ -278,6 +281,39 @@ public class AmConfigClientImpl implements AmConfigClient {
 
 	}
 
+	@Override
+	public boolean isWorkdateOnSomeDay() {
+		BooleanResponse response = restTemplate.getForObject(
+				"http://AM-CONFIG/am-config/holidays/is_workdate",
+				BooleanResponse.class);
+		if (response != null) {
+			return response.getResultBoolean();
+		}
+		return false;
+	}
+
+	@Override
+	public Date getFirstWorkdateBeforeSomeDate(Date date) {
+		HolidaysConfigResponse response = restTemplate.postForObject(
+				"http://AM-CONFIG/am-config/holidays/get_first_workdate_before_some_date", date,
+				HolidaysConfigResponse.class);
+		if (response != null) {
+			return response.getSomedate();
+		}
+		return null;
+	}
+
+	@Override
+	public Date getFirstWorkdateAfterSomeDate(Date torrowDate) {
+		HolidaysConfigResponse response = restTemplate.postForObject(
+				"http://AM-CONFIG/am-config/holidaysConfig/getFirstWorkdateAfterSomeDate", torrowDate,
+				HolidaysConfigResponse.class);
+		if (response != null) {
+			return response.getSomedate();
+		}
+		return null;
+	}
+
 	/**
 	 * 判断某天是否是工作日
 	 *
@@ -302,6 +338,4 @@ public class AmConfigClientImpl implements AmConfigClient {
 				BooleanResponse.class);
         return response.getResultBoolean();
     }
-
-
 }

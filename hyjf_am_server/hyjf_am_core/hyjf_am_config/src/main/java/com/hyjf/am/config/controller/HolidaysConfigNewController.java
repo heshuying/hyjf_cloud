@@ -1,15 +1,17 @@
 package com.hyjf.am.config.controller;
 
-import com.hyjf.am.config.service.HolidaysConfigNewService;
-import com.hyjf.am.response.BooleanResponse;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
 import java.time.LocalDate;
 import java.util.Calendar;
 import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.hyjf.am.config.service.HolidaysConfigNewService;
+import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.trade.HolidaysConfigResponse;
 
 /**
  * @author xiasq
@@ -52,5 +54,15 @@ public class HolidaysConfigNewController extends BaseConfigController{
              response.setResultBoolean(false);
          }
          return response;
+    }
+
+    @RequestMapping("/get_first_workdate_before_some_date")
+    public HolidaysConfigResponse getFirstWorkdateBeforeSomeDate(@RequestBody Date date) {
+        HolidaysConfigResponse response = new HolidaysConfigResponse();
+        Date result = holidaysConfigNewService.getFirstWorkdateBeforeSomeDate(date);
+        if (result != null) {
+            response.setSomedate(result);
+        }
+        return response;
     }
 }

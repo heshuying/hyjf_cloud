@@ -3,18 +3,9 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import com.google.common.reflect.TypeToken;
-import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
-import com.hyjf.am.config.dao.mapper.auto.HolidaysConfigMapper;
-import com.hyjf.am.config.dao.mapper.auto.HolidaysConfigNewMapper;
-import com.hyjf.am.config.dao.mapper.customize.HolidaysConfigCustomizeMapper;
-import com.hyjf.am.config.dao.model.auto.HolidaysConfigNew;
-import com.hyjf.am.config.dao.model.auto.HolidaysConfigExample;
-import com.hyjf.am.config.dao.model.auto.HolidaysConfigNewExample;
-import com.hyjf.am.config.service.HolidaysConfigNewService;
-import com.hyjf.common.exception.ReturnMessageException;
-import com.hyjf.common.http.HttpDeal;
+import java.text.SimpleDateFormat;
+import java.util.*;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +14,16 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.hyjf.am.config.dao.mapper.auto.HolidaysConfigNewMapper;
+import com.hyjf.am.config.dao.mapper.customize.HolidaysConfigCustomizeMapper;
+import com.hyjf.am.config.dao.model.auto.HolidaysConfigNew;
+import com.hyjf.am.config.dao.model.auto.HolidaysConfigNewExample;
+import com.hyjf.am.config.service.HolidaysConfigNewService;
+import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.http.HttpDeal;
 
 /**
  * @author yaoy
@@ -167,7 +166,21 @@ public class HolidaysConfigNewServiceImpl implements HolidaysConfigNewService {
         return firstWorkDay;
     }
 
-    private Map<String, Object> json2map(String str_json) {
+	@Override
+	public Date getFirstWorkdateBeforeSomeDate(Date date) {
+		HolidaysConfigNewExample example = new HolidaysConfigNewExample();
+		HolidaysConfigNewExample.Criteria criteria = example.createCriteria();
+		criteria.andDayTimeLessThan(date);
+		criteria.andHolidayFlagEqualTo(0);
+		example.setOrderByClause("day_time desc");
+		List<HolidaysConfigNew> list = holidaysConfigNewMapper.selectByExample(example);
+		if (CollectionUtils.isEmpty(list)) {
+			throw new RuntimeException("日历配置错误...");
+		}
+		return list.get(0).getDayTime();
+	}
+
+	private Map<String, Object> json2map(String str_json) {
 		Map<String, Object> res = new HashMap<>();
 		try {
 			Gson gson = new Gson();

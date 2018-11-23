@@ -3,6 +3,12 @@
  */
 package com.hyjf.cs.user.service.safe;
 
+import java.io.IOException;
+import java.util.Map;
+
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.vo.user.UserVO;
@@ -10,11 +16,6 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.user.result.ContractSetResultBean;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.cs.user.vo.BindEmailVO;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-
-import java.io.IOException;
-import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -48,11 +49,12 @@ public interface SafeService  extends BaseUserService {
     /**
      * 绑定邮箱发送激活邮件
      * @param userId
+     * @param token
      * @param email
      * @return
      * @throws MQException
      */
-    boolean sendEmailActive(Integer userId, String email) throws MQException;
+    boolean sendEmailActive(Integer userId, String token, String email) throws MQException;
 
     /**
      * 发送激活邮件条件校验
@@ -64,7 +66,7 @@ public interface SafeService  extends BaseUserService {
     /**
      * 校验绑卡参数
      * @param bindEmailVO
-     * @param user
+     * @param userId
      */
     void checkForEmailBind(BindEmailVO bindEmailVO, int userId);
 
@@ -134,7 +136,10 @@ public interface SafeService  extends BaseUserService {
 
     /**
      * app端上传头像
-     * @param token
+     * @param userId
+     * @param iconImg
+     * @return
+     * @throws Exception
      */
     String updateAvatar(Integer userId ,MultipartFile iconImg) throws Exception;
 }
