@@ -22,7 +22,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -169,9 +168,9 @@ public class AmConfigClientImpl implements AmConfigClient {
 	 * @return
 	 */
 	@Override
-	public Integer countContentArticleByType() {
+	public Integer countContentArticleByType(String type) {
 		ContentArticleCustomizeResponse response = restTemplate.getForObject(
-				"http://AM-CONFIG/am-config/article/countcontentarticlebytype",
+				"http://AM-CONFIG/am-config/article/countcontentarticlebytype/" + type,
 				ContentArticleCustomizeResponse.class);
 		if (response != null) {
 			return response.getCount();
@@ -253,7 +252,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 	 */
 	@Override
 	public IntegerResponse addSubmission(SubmissionsVO submissionsVO){
-		IntegerResponse response = restTemplate.postForObject("http://AM-ADMIN/am-config/submission/addSubmission",submissionsVO ,IntegerResponse.class);
+		IntegerResponse response = restTemplate.postForObject("http://AM-CONFIG/am-config/submission/addSubmission",submissionsVO ,IntegerResponse.class);
 		return response;
 	}
 

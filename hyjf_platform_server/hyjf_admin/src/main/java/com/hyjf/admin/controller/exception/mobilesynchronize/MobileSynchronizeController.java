@@ -6,12 +6,14 @@ package com.hyjf.admin.controller.exception.mobilesynchronize;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.exception.MobileSynchronizeService;
 import com.hyjf.am.resquest.admin.MobileSynchronizeRequest;
 import com.hyjf.am.vo.admin.MobileSynchronizeCustomizeVO;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.validator.CheckUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -44,11 +46,17 @@ public class MobileSynchronizeController extends BaseController {
     @ApiOperation(value = "获取手机号同步列表",notes = "获取手机号同步列表")
     @PostMapping(value = "/searchAction")
     @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_VIEW)
-    public AdminResult<ListResult<MobileSynchronizeCustomizeVO>> searchAction(@RequestBody MobileSynchronizeRequest request){
+    public AdminResult<ListResult<MobileSynchronizeCustomizeVO>> searchAction(@RequestBody MobileSynchronizeRequest synchronizeRequest,HttpServletRequest request){
         // 已开户用户数量
-        int count = mobileSynchronizeService.countBankOpenAccountUser(request);
+        int count = mobileSynchronizeService.countBankOpenAccountUser(synchronizeRequest);
         // 异常列表list
-        List<MobileSynchronizeCustomizeVO> mobileSynchronizeCustomizeVOList = mobileSynchronizeService.selectBankOpenAccountUserList(request);
+        List<MobileSynchronizeCustomizeVO> mobileSynchronizeCustomizeVOList = mobileSynchronizeService.selectBankOpenAccountUserList(synchronizeRequest);
+        boolean isShow = this.havePermission(request,PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW);
+        if(!isShow){
+            for(MobileSynchronizeCustomizeVO mobileSynchronizeCustomizeVO:mobileSynchronizeCustomizeVOList){
+                mobileSynchronizeCustomizeVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(mobileSynchronizeCustomizeVO.getMobile()));
+            }
+        }
         return new AdminResult<>(ListResult.build(mobileSynchronizeCustomizeVOList,count));
     }
 

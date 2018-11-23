@@ -6,27 +6,20 @@ package com.hyjf.admin.controller.datacenter;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.DataCenterCouponBean;
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
-import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.DataCenterCouponService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.DataCenterCouponResponse;
-import com.hyjf.am.vo.admin.PlatformCountCustomizeVO;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -34,7 +27,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -185,18 +177,15 @@ public class CouponDJController extends BaseController {
 	        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
 	        Map<String, String> beanPropertyColumnMap = buildMap();
 	        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
-	        String sheetNameTmp = sheetName + "_第1页";
-	        if (totalCount == 0) {
-	        	
-	            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-	        }else {
-	        	 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList.subList(0, defaultRowMaxCount));
-	        }
+	        String sheetNameTmp = "";
+
 	        for (int i = 1; i < sheetCount; i++) {
-	
-	                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-	                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList.subList(defaultRowMaxCount*i, defaultRowMaxCount*(i+1)));
-	            } 
+				int start=(i-1) * defaultRowMaxCount;
+				int end = Math.min(totalCount, i * defaultRowMaxCount);
+
+				sheetNameTmp = sheetName + "_第" + (i) + "页";
+				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList.subList(start, end));
+	        }
 	        
 	        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
 	    }

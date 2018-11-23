@@ -1117,4 +1117,77 @@ ORDER BY
 		</if>
 	</select>
 
+	<select id="getUserHjhInvestCount" resultType="int">
+		select count(*)
+
+		from (
+				(
+				SELECT
+				hhdc.id AS nid,
+				hhdc.borrow_nid borrow_nid,
+
+				hhdc.credit_nid credit_nid,
+				hhdc.invest_order_id invest_order_id,
+				hhdc.assign_order_id assign_order_id,
+
+				hhdc.assign_capital account,
+				hhdc.assign_plan_order_id accede_order_id,
+				CASE
+				WHEN hb.borrow_style = 'endday' THEN
+					CONCAT(hb.borrow_period, '天')
+				ELSE
+					CONCAT(hb.borrow_period, '个月')
+				END AS borrow_period,
+				FROM_UNIXTIME( hhdc.create_time, '%Y-%m-%d' ) addtime,
+				CASE
+				WHEN hhdc.assign_repay_yes_time = 0 THEN
+					FROM_UNIXTIME( hhdc.assign_repay_next_time, '%Y-%m-%d' )
+				ELSE
+					FROM_UNIXTIME( hhdc.assign_repay_yes_time, '%Y-%m-%d' )
+				END recover_time,
+				1 type
+				FROM ht_hjh_debt_credit_tender hhdc
+				LEFT JOIN ht_borrow hb ON hhdc.borrow_nid = hb.borrow_nid
+				WHERE hhdc.assign_plan_order_id = #{accedeOrderId}
+				)
+
+				UNION ALL
+
+				(
+				SELECT
+					hbt.nid nid,
+					hbt.borrow_nid borrow_nid,
+
+					0 AS credit_nid,
+					0 AS invest_order_id,
+					0 AS assign_order_id,
+
+					hbt.account account,
+					hbt.accede_order_id accede_order_id,
+					CASE
+					WHEN hb.borrow_style = 'endday' THEN
+						CONCAT(hb.borrow_period, '天')
+					ELSE
+						CONCAT(hb.borrow_period, '个月')
+					END AS borrow_period,
+					DATE_FORMAT( hbt.create_time, '%Y-%m-%d' ) addtime,
+					CASE
+					WHEN hbr.recover_status = 1 THEN
+						FROM_UNIXTIME( hbr.recover_yestime, '%Y-%m-%d' )
+					ELSE
+						FROM_UNIXTIME( hbr.recover_time, '%Y-%m-%d' )
+					END recover_time,
+					0 type
+				FROM
+					ht_borrow_tender hbt
+				LEFT JOIN ht_borrow hb ON hbt.borrow_nid = hb.borrow_nid
+				LEFT JOIN ht_borrow_recover hbr ON hbt.nid = hbr.nid
+				WHERE
+				hb.`status` in (3,4,5)
+				AND
+				hbt.accede_order_id = #{accedeOrderId}
+				)
+		) AS a
+	</select>
+
 </mapper>

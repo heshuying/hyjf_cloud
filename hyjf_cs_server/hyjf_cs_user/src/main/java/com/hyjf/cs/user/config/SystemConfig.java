@@ -88,6 +88,9 @@ public class SystemConfig {
     @Value("${hyjf.web.bank.forgetpassword}")
     public String forgetpassword;
 
+    @Value("${hyjf.app.bank.forgetpassword}")
+    public String appForgetpassword;
+
     @Value("${hyjf.activity.888.id}")
     public Integer activity888Id;
 
@@ -135,6 +138,14 @@ public class SystemConfig {
     // 我的计划列表退出中标签显示标识（临时使用，功能上线以后可以删除）
     @Value("${hyjf.app.exit.label.show.flag}")
     private String exitLabelShowFlag;
+
+    public String getAppForgetpassword() {
+        return appForgetpassword;
+    }
+
+    public void setAppForgetpassword(String appForgetpassword) {
+        this.appForgetpassword = appForgetpassword;
+    }
 
     public String getApiPass() {
         return apiPass;

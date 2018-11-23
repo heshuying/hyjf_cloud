@@ -1389,7 +1389,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                 bean.setRouteCode("2");
                 bean.setCardBankCnaps(StringUtils.isEmpty(payAllianceCode) ? bankCard.getPayAllianceCode() : payAllianceCode);
             }
-            bean.setForgotPwdUrl(systemConfig.getForgetpassword());
+            bean.setForgotPwdUrl(systemConfig.getFrontHost()+systemConfig.getForgetpassword());
             bean.setForgotPwdUrl(userWithdrawRequestBean.getForgotPwdUrl());
             bean.setRetUrl(bankRetUrl+"&logOrderId="+bean.getLogOrderId());// 商户前台台应答地址(必须)
             bean.setNotifyUrl(bankBgRetUrl); // 商户后台应答地址(必须)

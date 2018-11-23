@@ -393,7 +393,7 @@ public class PcChannelReconciliationController extends BaseController {
 
 
     @ApiOperation(value = "导出计划列表", notes = "导出计划列表")
-    @RequestMapping("/export_hjh")
+    @PostMapping("/export_hjh")
     public void exportHjhAction(@RequestBody ChannelReconciliationRequest request, HttpServletRequest httpRequest, HttpServletResponse response) throws Exception {
 
         List<UtmVO> list = channelService.searchUtmList(0);

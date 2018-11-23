@@ -10,6 +10,8 @@ import com.hyjf.am.trade.dao.model.auto.AppPushManage;
 import com.hyjf.am.trade.service.admin.pushmanage.AppPushManageService;
 import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetDateUtils;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
@@ -59,7 +61,6 @@ public class AppPushManageController extends BaseController {
         List<AppPushManage> pushManageList = this.appPushManageService.getAllList(pushManageRequest);
 
         if (!CollectionUtils.isEmpty(pushManageList)){
-
             pushManageResponse.setResultList(CommonUtils.convertBeanList(pushManageList, AppPushManageVO.class));
             pushManageResponse.setCount(count);
             pushManageResponse.setRtn(Response.SUCCESS);
@@ -79,7 +80,6 @@ public class AppPushManageController extends BaseController {
 
         /**
          * 当选择原生时强制设置跳转内容值为 0
-         * 选择H5时,赋为选择值+1
          * 原生和H5 URL 时,推送内容和缩略图为空
          * H5 自定义是url内容为空
          */
@@ -88,13 +88,12 @@ public class AppPushManageController extends BaseController {
             pushManageRequest.setContent("");
             pushManageRequest.setThumb("");
         }else {
-            if (pushManageRequest.getJumpContent() == 0){
+            if (pushManageRequest.getJumpContent() == 1){
                 pushManageRequest.setContent("");
                 pushManageRequest.setThumb("");
             }else{
                 pushManageRequest.setJumpUrl("");
             }
-            pushManageRequest.setJumpContent((pushManageRequest.getJumpContent()+1));
         }
 
         int rtnCode = appPushManageService.insertPushManage(pushManageRequest);
@@ -116,7 +115,6 @@ public class AppPushManageController extends BaseController {
     public boolean updatePushManage(@RequestBody AppPushManageRequest pushManageRequest){
 
         //当选择原生时强制设置跳转内容值为 0
-        //选择H5时,赋为选择值+1
         //原生和H5 URL 时,推送内容和缩略图为空
         //H5 自定义是url内容为空
         if (pushManageRequest.getJumpType() == 0){
@@ -124,13 +122,12 @@ public class AppPushManageController extends BaseController {
             pushManageRequest.setContent("");
             pushManageRequest.setThumb("");
         }else {
-            if (pushManageRequest.getJumpContent() == 0){
+            if (pushManageRequest.getJumpContent() == 1){
                 pushManageRequest.setContent("");
                 pushManageRequest.setThumb("");
             }else{
                 pushManageRequest.setJumpUrl("");
             }
-            pushManageRequest.setJumpContent((pushManageRequest.getJumpContent()+1));
         }
 
         // 更新返回状态
@@ -167,13 +164,16 @@ public class AppPushManageController extends BaseController {
         AppPushManageVO pushManageVO = new AppPushManageVO();
         AppPushManage pushManage = appPushManageService.getAppPushManageInfoById(id);
 
-        if (pushManage == null){
+        if (null != pushManage){
+            BeanUtils.copyProperties(pushManage, pushManageVO);
+            pushManageVO.setCreateTimeStr(GetDate.formatDate(pushManage.getCreateTime()));
+            pushManageVO.setTimeStartStr(GetDate.formatDate(pushManage.getTimeStart()));
+            pushManageVO.setTimeEndStr(GetDate.formatDate(pushManage.getTimeEnd()));
+            pushManageResponse.setResult(pushManageVO);
+            pushManageResponse.setRtn(AdminResponse.SUCCESS);
+        }else {
             pushManageResponse.setRtn(AdminResponse.ERROR);
-            return pushManageResponse;
         }
-        BeanUtils.copyProperties(pushManage, pushManageVO);
-        pushManageResponse.setResult(pushManageVO);
-        pushManageResponse.setRtn(AdminResponse.SUCCESS);
         return pushManageResponse;
     }
 

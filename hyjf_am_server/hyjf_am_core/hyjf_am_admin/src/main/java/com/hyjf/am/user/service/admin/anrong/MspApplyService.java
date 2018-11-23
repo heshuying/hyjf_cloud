@@ -104,7 +104,8 @@ public interface MspApplyService extends BaseService{
 	public List<MspAbnormalcreditdetail> getAbnormalCreditDetail(String applyId);
 	public List<MspAbnormalcredit> getAbnormalCredit(String applyId);
 	
-	 public int countByExample(MspApply record);
+	 public int countByExample(MspApply record, int createStart,
+             int createEnd);
 
 	void insertResult(JSONObject resultJson, String appid);
 }

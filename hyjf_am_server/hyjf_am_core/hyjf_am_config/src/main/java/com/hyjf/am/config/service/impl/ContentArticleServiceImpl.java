@@ -332,8 +332,10 @@ public class ContentArticleServiceImpl implements ContentArticleService {
      * @return
      */
     @Override
-    public Integer countContentArticleByType() {
-        return contentArticleMapper.countByExample(new ContentArticleExample());
+    public Integer countContentArticleByType(String type) {
+        ContentArticleExample example = new ContentArticleExample();
+        example.createCriteria().andTypeEqualTo(type).andStatusEqualTo(1);
+        return contentArticleMapper.countByExample(example);
     }
 
     /**

@@ -242,7 +242,6 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         } else {
             String orderId = GetOrderIdUtils.getOrderId2(users.getUserId());
             bean.setOrderId(orderId);
-            bean.setLogOrderId(orderId);
         }
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(successUrl);
@@ -505,7 +504,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         String success = systemConfig.getAppFrontHost() + "/user/setting/authorization/result/success?status=000&statusDesc=";
         // 异步调用路
         String bgRetUrl = "http://CS-USER/hyjf-app/bank/user/autoplus";
-        String forgetPassworedUrl = systemConfig.getAppFrontHost()+systemConfig.getForgetpassword() + "?sign=" + sign + "&token=" + token;
+        String forgetPassworedUrl = systemConfig.getAppFrontHost()+systemConfig.getAppForgetpassword() + "?sign=" + sign + "&token=" + token;
         retUrl += "&token=1&sign=" + sign;
         success += "&token=1&sign=" + sign;
         bean.setRetUrl(retUrl);
@@ -545,7 +544,6 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         bean.setSmsCode(smsCode);
         // 操作者ID
         bean.setLogUserId(String.valueOf(users.getUserId()));
-        bean.setLogOrderId(orderId);
         bean.setLogRemark(remark);
         bean.setLogClient(0);
         return bean;

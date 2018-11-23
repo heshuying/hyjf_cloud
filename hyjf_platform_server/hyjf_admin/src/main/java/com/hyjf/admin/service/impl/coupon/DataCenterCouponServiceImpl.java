@@ -43,22 +43,12 @@ public class DataCenterCouponServiceImpl implements DataCenterCouponService {
     @Override
     public List<DataCenterCouponCustomizeVO> getRecordListJX(DataCenterCouponCustomizeVO dataCenterCouponCustomize) {
         List<DataCenterCouponCustomizeVO> list = client.getRecordListJX(dataCenterCouponCustomize);
-        for (DataCenterCouponCustomizeVO vo : list) {
-            Integer activityId = vo.getActivityId();
-            String title = client.getActivityTitle(activityId);
-            vo.setTitle(title);
-        }
         return list;
     }
 
     @Override
     public List<DataCenterCouponCustomizeVO> getRecordListDJ(DataCenterCouponCustomizeVO dataCenterCouponCustomize) {
         List<DataCenterCouponCustomizeVO> list = client.getRecordListDJ(dataCenterCouponCustomize);
-        for (DataCenterCouponCustomizeVO vo : list) {
-            Integer activityId = vo.getActivityId();
-            String title = client.getActivityTitle(activityId);
-            vo.setTitle(title);
-        }
         return list;
     }
 }

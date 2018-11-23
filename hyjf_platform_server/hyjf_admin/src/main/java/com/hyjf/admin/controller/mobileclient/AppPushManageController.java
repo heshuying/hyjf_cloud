@@ -13,6 +13,7 @@ import com.hyjf.am.resquest.admin.AppPushManageRequest;
 import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
@@ -32,6 +33,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * App 推送管理
@@ -72,9 +75,13 @@ public class AppPushManageController extends BaseController {
 //        if (!Response.isSuccess(pushManageResponse)){
 //            return new AdminResult<>(FAIL, "获取列表失败!");
 //        }
-
         if (CollectionUtils.isNotEmpty(pushManageResponse.getResultList())){
             returnList = CommonUtils.convertBeanList(pushManageResponse.getResultList(), AppPushManageVO.class);
+            for (AppPushManageVO re : returnList) {
+                re.setTimeStartStr(GetDate.formatDate(re.getTimeStart()));
+                re.setTimeEndStr(GetDate.formatDate(re.getTimeEnd()));
+                re.setCreateTimeStr(GetDate.getDateTimeMyTimeInMillis(re.getCreateTime()));
+            }
             return new AdminResult<ListResult<AppPushManageVO>>(ListResult.build(returnList, pushManageResponse.getCount()));
         }else {
             return new AdminResult<ListResult<AppPushManageVO>>(ListResult.build(returnList, 0));
@@ -148,16 +155,16 @@ public class AppPushManageController extends BaseController {
         if (StringUtils.isEmpty(requestBean.getIds())){
             return new AdminResult<>(FAIL, "ID必须不为空!");
         }
+        if (!this.isNumeric(requestBean.getIds())){
+            return new AdminResult(FAIL, "ID必须为数字");
+        }
 
         Integer ids = Integer.valueOf(requestBean.getIds());
 
         AppPushManageResponse pushManageResponse = appPushManageService.getAppPushManageInfoById(ids);
 
-        if (pushManageResponse == null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
         if (!Response.isSuccess(pushManageResponse)) {
-            return new AdminResult<>(FAIL, pushManageResponse.getMessage());
+            return new AdminResult<>(FAIL, FAIL_DESC);
         }
         return new AdminResult<>(pushManageResponse.getResult());
     }
@@ -280,16 +287,31 @@ public class AppPushManageController extends BaseController {
 //            return jsonObject;
 //        }
 
-        if (StringUtils.isBlank(requestBean.getTimeStart().toString())){
+        if (StringUtils.isBlank(requestBean.getTimeStartDiy())){
             jsonObject.put("code", "起始时间不能为空!");
             return jsonObject;
         }
 
-        if (StringUtils.isBlank(requestBean.getTimeEnd().toString())){
+        if (StringUtils.isBlank(requestBean.getTimeEndDiy())){
             jsonObject.put("code", "结束时间不能为空!");
             return jsonObject;
         }
 
         return jsonObject;
+    }
+
+    /**
+     * 利用正则表达式判断字符串是否是数字
+     * @param str
+     * @return
+     */
+    private boolean isNumeric(String str){
+        String reEx = "[0-9]*";
+        Pattern pattern = Pattern.compile(reEx);
+        Matcher isNum = pattern.matcher(str);
+        if( !isNum.matches() ){
+            return false;
+        }
+        return true;
     }
 }

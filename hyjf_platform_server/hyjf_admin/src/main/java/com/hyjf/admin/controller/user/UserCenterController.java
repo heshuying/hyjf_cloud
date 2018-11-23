@@ -15,7 +15,6 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
-import com.hyjf.admin.service.SmsCountService;
 import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -62,8 +61,6 @@ public class UserCenterController extends BaseController {
     private UserCenterService userCenterService;
     @Autowired
     private SystemConfig systemConfig;
-    @Autowired
-    private SmsCountService smsCountService;
 
     @ApiOperation(value = "会员管理页面初始化(下拉列表)", notes = "会员管理页面初始化")
     @PostMapping(value = "/usersInit")
@@ -79,7 +76,17 @@ public class UserCenterController extends BaseController {
     @ApiOperation(value = "会员管理列表查询", notes = "会员管理列表查询")
     @PostMapping(value = "/userslist")
     @ResponseBody
-    public AdminResult<ListResult<UserManagerCustomizeVO>> getUserslist(@RequestBody UserManagerRequestBean userManagerRequestBean) {
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult<ListResult<UserManagerCustomizeVO>> getUserslist(@RequestBody UserManagerRequestBean userManagerRequestBean,HttpServletRequest request) {
+        // 获取该角色 权限列表
+        List<String> perm = (List<String>) request.getSession().getAttribute("permission");
+        //判断权限
+        boolean isShow = false;
+        for (String string : perm) {
+            if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
+                isShow=true;
+            }
+        }
         UserManagerRequest managerRequest = new UserManagerRequest();
         BeanUtils.copyProperties(userManagerRequestBean,managerRequest);
         UserManagerResponse userManagerResponse = userCenterService.selectUserMemberList(managerRequest);
@@ -89,6 +96,12 @@ public class UserCenterController extends BaseController {
         List<UserManagerVO> listUserManagetVO = userManagerResponse.getResultList();
         List<UserManagerCustomizeVO> userManagerCustomizeList = new ArrayList<UserManagerCustomizeVO>();
         if(null!=listUserManagetVO&&listUserManagetVO.size()>0){
+            if(!isShow){
+                //如果没有查看脱敏权限,显示加星
+                for(UserManagerVO userManagerVO:listUserManagetVO){
+                    userManagerVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(userManagerVO.getMobile()));
+                }
+            }
             userManagerCustomizeList = CommonUtils.convertBeanList(listUserManagetVO, UserManagerCustomizeVO.class);
         }
         if (!Response.isSuccess(userManagerResponse)) {
@@ -101,12 +114,27 @@ public class UserCenterController extends BaseController {
     @ApiOperation(value = "会员详情", notes = "会员详情")
     @PostMapping(value = "/getUserdetail")
     @ResponseBody
-    public  AdminResult<UserDetailInfoResponseBean>  getUserdetail(@RequestBody String userId) {
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    public  AdminResult<UserDetailInfoResponseBean>  getUserdetail(HttpServletRequest request,@RequestBody String userId) {
+        // 获取该角色 权限列表
+        List<String> perm = (List<String>) request.getSession().getAttribute("permission");
+        //判断权限
+        boolean isShow = false;
+        for (String string : perm) {
+            if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
+                isShow=true;
+            }
+        }
         SimpleDateFormat smp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         UserDetailInfoResponseBean userDetailInfoResponseBean = new UserDetailInfoResponseBean();
         UserManagerDetailVO userManagerDetailVO = userCenterService.selectUserDetail(userId);
         UserManagerDetailCustomizeVO userManagerDetailCustomizeVO = new UserManagerDetailCustomizeVO();
         if(null!=userManagerDetailVO){
+            if(!isShow){
+                //如果没有查看脱敏权限,显示加星
+                userManagerDetailVO.setIdCard(AsteriskProcessUtil.getAsteriskedValue(userManagerDetailVO.getIdCard()));
+                userManagerDetailVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(userManagerDetailVO.getMobile()));
+            }
             BeanUtils.copyProperties(userManagerDetailVO, userManagerDetailCustomizeVO);
         }
         userDetailInfoResponseBean.setUserManagerDetailVO(userManagerDetailCustomizeVO);
@@ -171,6 +199,7 @@ public class UserCenterController extends BaseController {
     @ApiOperation(value = "获取用户编辑初始信息", notes = "获取用户编辑初始信息")
     @PostMapping(value = "/initUserUpdate")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFYRE)
     public AdminResult<InitUserUpdResponseBean> initUserUpdate(@RequestBody String userId) {
 
         InitUserUpdResponseBean initUserUpdResponseBean = new InitUserUpdResponseBean();
@@ -200,6 +229,7 @@ public class UserCenterController extends BaseController {
     @ApiOperation(value = "修改更新用户信息", notes = "修改更新用户信息")
     @PostMapping(value = "/updateUser")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updataUserInfo(HttpServletRequest request, @RequestBody UserManagerUpdateRequestBean requestBean) {
         UserManagerUpdateRequest userRequest = new UserManagerUpdateRequest();
         BeanUtils.copyProperties(requestBean, userRequest);
@@ -219,6 +249,7 @@ public class UserCenterController extends BaseController {
     @ApiOperation(value = "获取推荐人信息", notes = "获取推荐人信息")
     @PostMapping(value = "/initModifyre")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFYRE)
     public AdminResult<InitModifyreResponseBean> initModifyre(@RequestBody String userId) {
         InitModifyreResponseBean initModifyreResponseBean = new InitModifyreResponseBean();
         //推荐人信息
@@ -248,6 +279,7 @@ public class UserCenterController extends BaseController {
     @ApiOperation(value = "修改用户推荐人", notes = "修改用户推荐人")
     @PostMapping(value = "/updateModifyre")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFYRE)
     public AdminResult updateRe(HttpServletRequest request, @RequestBody AdminUserRecommendRequestBean requestBean) {
         AdminUserRecommendRequest adminUserRecommendRequest = new AdminUserRecommendRequest();
         BeanUtils.copyProperties(requestBean, adminUserRecommendRequest);
@@ -273,6 +305,7 @@ public class UserCenterController extends BaseController {
     @ApiOperation(value = "获取用户身份证信息", notes = "获取用户身份证信息")
     @PostMapping(value = "/searchIdCard")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFYIDCARD)
     public  AdminResult<InitModifyreResponseBean> searchIdCard(@RequestBody String userId) {
         InitModifyreResponseBean initModifyreResponseBean = new InitModifyreResponseBean();
         //根据用户id查询用户详情信息
@@ -308,6 +341,7 @@ public class UserCenterController extends BaseController {
     @ApiOperation(value = "修改用户身份证", notes = "修改用户身份证")
     @PostMapping(value = "/modifyIdCard")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFYIDCARD)
     public AdminResult modifyIdCard(HttpServletRequest request, @RequestBody AdminUserRecommendRequestBean requestBean) {
         AdminUserRecommendRequest adminUserRecommendRequest = new AdminUserRecommendRequest();
         BeanUtils.copyProperties(requestBean, adminUserRecommendRequest);
@@ -336,6 +370,7 @@ public class UserCenterController extends BaseController {
     @PostMapping(value = "/checkReAction")
     @ResponseBody
     @ApiOperation(value = "校验推荐人", notes = "校验推荐人")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult checkReAction(@RequestParam(value = "userId") String userId,HttpServletRequest request,@RequestParam(value = "userName") String userName) {
         //校验推荐人
         if (Validator.isNotNull(userId)) {
@@ -362,6 +397,7 @@ public class UserCenterController extends BaseController {
     @PostMapping(value = "/checkAction")
     @ResponseBody
     @ApiOperation(value = "校验手机号", notes = "校验手机号")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult checkAction(@RequestParam(value = "userId") String userId,@RequestParam(value = "mobile") String mobile) {
         // 检查手机号码唯一性
         if(StringUtils.isNotBlank(userId)){
@@ -494,11 +530,20 @@ public class UserCenterController extends BaseController {
      */
     @ApiOperation(value = "导出会员管理列表", notes = "导出会员管理列表")
     @PostMapping(value = "/exportusers")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportToExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody UserManagerRequestBean userManagerRequestBean) throws Exception {
 
         // 用户是否具有组织机构查看权限
         String isOrganizationView = userManagerRequestBean.getIsOrganizationView();
-
+        // 获取该角色 权限列表
+        List<String> perm = (List<String>) request.getSession().getAttribute("permission");
+        //判断权限
+        boolean isShow = false;
+        for (String string : perm) {
+            if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
+                isShow=true;
+            }
+        }
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
@@ -523,6 +568,9 @@ public class UserCenterController extends BaseController {
         int minId = 0;
         Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        if(!isShow){
+            mapValueAdapter = buildValueAdaptertAsterisked();
+        }
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
 
@@ -575,7 +623,7 @@ public class UserCenterController extends BaseController {
 
         return map;
     }
-    private Map<String, IValueFormatter> buildValueAdapter() {
+    private Map<String, IValueFormatter> buildValueAdaptertAsterisked() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
         IValueFormatter sexAdapter = new IValueFormatter() {
             @Override
@@ -593,7 +641,7 @@ public class UserCenterController extends BaseController {
             @Override
             public String format(Object object) {
                 String idcard = (String) object;
-                return AsteriskProcessUtil.getAsteriskedValue(idcard,7);
+                return AsteriskProcessUtil.getAsteriskedValue(idcard);
             }
         };
         IValueFormatter bankOpenAccounAdapter = new IValueFormatter() {
@@ -610,8 +658,57 @@ public class UserCenterController extends BaseController {
                 return "1".equals(openAccount)?"已开户":"未开户";
             }
         };
+        IValueFormatter mobileAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String mobile = (String) object;
+                return AsteriskProcessUtil.getAsteriskedValue(mobile);
+            }
+        };
         mapAdapter.put("sex", sexAdapter);
+        mapAdapter.put("mobile", mobileAdapter);
         mapAdapter.put("idcard", idcardAdapter);
+        mapAdapter.put("bankOpenAccount", bankOpenAccounAdapter);
+        mapAdapter.put("openAccount", openAccounAdapter);
+        return mapAdapter;
+    }
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter sexAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String sex = (String) object;
+                if("1".equals(sex)) {
+                    return "男";
+                }else {
+                    return "女";
+                }
+
+            }
+        };
+       /* IValueFormatter idcardAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String idcard = (String) object;
+                return AsteriskProcessUtil.getAsteriskedValue(idcard,7);
+            }
+        };*/
+        IValueFormatter bankOpenAccounAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String bankOpenAccount = (String) object;
+                return "1".equals(bankOpenAccount)?"已开户":"未开户";
+            }
+        };
+        IValueFormatter openAccounAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                String openAccount = (String) object;
+                return "1".equals(openAccount)?"已开户":"未开户";
+            }
+        };
+        mapAdapter.put("sex", sexAdapter);
+       // mapAdapter.put("idcard", idcardAdapter);
         mapAdapter.put("bankOpenAccount", bankOpenAccounAdapter);
         mapAdapter.put("openAccount", openAccounAdapter);
         return mapAdapter;
@@ -635,6 +732,7 @@ public class UserCenterController extends BaseController {
     @PostMapping(value = "/initCompanyInfo")
     @ResponseBody
     @ApiOperation(value = "初始化企业用户信息", notes = "初始化企业用户信息")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_NSERT_CONPANYINFO)
     public  AdminResult<InitCompanyInfoResponseBean> initCompanyInfo(@RequestBody String userId) {
         InitCompanyInfoResponseBean initCompanyInfoResponseBean = new InitCompanyInfoResponseBean();
         if (StringUtils.isNotBlank(userId)) {

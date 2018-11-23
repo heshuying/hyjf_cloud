@@ -2117,30 +2117,38 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @return
      */
     private boolean redisRecover(String borrowNid, Integer userId, String account) {
-        JedisPool pool = RedisUtils.getPool();
-        Jedis jedis = pool.getResource();
+        JedisPool poolNew = RedisUtils.getPool();
+        Jedis jedis = poolNew.getResource();
         BigDecimal accountBigDecimal = new BigDecimal(account);
-        while ("OK".equals(jedis.watch(RedisConstants.BORROW_NID+borrowNid))) {
-            String balanceLast = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
-            if (StringUtils.isNotBlank(balanceLast)) {
-                logger.info("PC用户:" + userId + "***redis剩余金额：" + balanceLast);
-                BigDecimal recoverAccount = accountBigDecimal.add(new BigDecimal(balanceLast));
-                Transaction transaction = jedis.multi();
-                transaction.set(RedisConstants.BORROW_NID+borrowNid, recoverAccount.toString());
-                List<Object> result = transaction.exec();
-                if (result == null || result.isEmpty()) {
-                    jedis.unwatch();
-                } else {
-                    String ret = (String) result.get(0);
-                    if (ret != null && ret.equals("OK")) {
-                        logger.info("用户:" + userId + "*******from redis恢复redis：" + account);
-                        return true;
-                    } else {
+        try{
+            while ("OK".equals(jedis.watch(RedisConstants.BORROW_NID+borrowNid))) {
+                String balanceLast = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
+                if (StringUtils.isNotBlank(balanceLast)) {
+                    logger.info("PC用户:" + userId + "***redis剩余金额：" + balanceLast);
+                    BigDecimal recoverAccount = accountBigDecimal.add(new BigDecimal(balanceLast));
+                    Transaction transaction = jedis.multi();
+                    transaction.set(RedisConstants.BORROW_NID+borrowNid, recoverAccount.toString());
+                    List<Object> result = transaction.exec();
+                    if (result == null || result.isEmpty()) {
                         jedis.unwatch();
+                    } else {
+                        String ret = (String) result.get(0);
+                        if (ret != null && ret.equals("OK")) {
+                            logger.info("用户:" + userId + "*******from redis恢复redis：" + account);
+                            return true;
+                        } else {
+                            jedis.unwatch();
+                        }
                     }
                 }
             }
+        }catch(Exception e){
+            logger.info("抛出异常:[{}]",e);
+        }finally {
+            //返还
+            RedisUtils.returnResource(poolNew,jedis);
         }
+
         return false;
     }
 
@@ -2321,8 +2329,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         String accountRedisWait = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
         if (StringUtils.isNotBlank(accountRedisWait)) {
             // 操作redis
-            JedisPool pool = RedisUtils.getPool();
-            Jedis jedis = pool.getResource();
+            JedisPool poolNew = RedisUtils.getPool();
+            Jedis jedis = poolNew.getResource();
             MsgCode redisMsgCode = null;
             try {
                 while ("OK".equals(jedis.watch(RedisConstants.BORROW_NID+borrowNid))) {
@@ -2368,7 +2376,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
                 }
             } finally {
-                RedisUtils.returnResource(pool, jedis);
+                RedisUtils.returnResource(poolNew, jedis);
             }
 
         } else {

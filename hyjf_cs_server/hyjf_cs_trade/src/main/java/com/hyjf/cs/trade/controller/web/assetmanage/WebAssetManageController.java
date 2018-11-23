@@ -227,6 +227,18 @@ public class WebAssetManageController extends BaseTradeController {
         return result;
     }
 
+    /**
+     *  原接口：com.hyjf.web.user.assetmanage.AssetManageControllersearchBorrowList()
+     * @author zhangyk
+     * @date 2018/11/22 16:58
+     */
+    @ApiOperation(value = "计划订单详情持有项目列表", notes = "计划订单详情持有项目列表")
+    @PostMapping(value = "getOrderInvestList",produces = "application/json;charset=utf-8")
+    public WebResult<Object> getOrderInvestList(@RequestHeader(value = "userId" ,required = true) Integer userId , @RequestBody AssetManagePlanRequest request){
+        WebResult result = assetManageService.getOrderInvestList(request,userId);
+        return result;
+    }
+
 
     @ApiOperation(value = "汇添金详情", notes = "汇添金详情")
     @PostMapping(value = "getHtjDetail", produces = "application/json;charset=utf-8")

@@ -41,8 +41,6 @@ import java.util.*;
 @Service
 public class RepayManageServiceImpl extends BaseServiceImpl implements RepayManageService {
 
-    public static JedisPool pool = RedisUtils.getPool();
-
     @Autowired
     private BorrowLoanRepayProducer borrowLoanRepayProducer;
 
@@ -4934,35 +4932,41 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
      * @param value
      */
     private void redisSub(String key, String value) {
+        JedisPool poolNew = RedisUtils.getPool();
+        Jedis jedis = poolNew.getResource();
+        try{
+            while ("OK".equals(jedis.watch(key))) {
+                List<Object> results = null;
 
-        Jedis jedis = pool.getResource();
+                String balance = jedis.get(key);
+                BigDecimal bal = new BigDecimal(0);
+                if (balance != null) {
+                    bal = new BigDecimal(balance);
+                }
+                BigDecimal val = new BigDecimal(value);
 
-        while ("OK".equals(jedis.watch(key))) {
-            List<Object> results = null;
-
-            String balance = jedis.get(key);
-            BigDecimal bal = new BigDecimal(0);
-            if (balance != null) {
-                bal = new BigDecimal(balance);
-            }
-            BigDecimal val = new BigDecimal(value);
-
-            Transaction tx = jedis.multi();
-            String valbeset = bal.subtract(val).toString();
-            tx.set(key, valbeset);
-            results = tx.exec();
-            if (results == null || results.isEmpty()) {
-                jedis.unwatch();
-            } else {
-                String ret = (String) results.get(0);
-                if (ret != null && ret.equals("OK")) {
-                    // 成功后
-                    break;
-                } else {
+                Transaction tx = jedis.multi();
+                String valbeset = bal.subtract(val).toString();
+                tx.set(key, valbeset);
+                results = tx.exec();
+                if (results == null || results.isEmpty()) {
                     jedis.unwatch();
+                } else {
+                    String ret = (String) results.get(0);
+                    if (ret != null && ret.equals("OK")) {
+                        // 成功后
+                        break;
+                    } else {
+                        jedis.unwatch();
+                    }
                 }
             }
+        }catch(Exception e){
+            logger.info("抛出异常:[{}]",e);
+        }finally {
+            RedisUtils.returnResource(poolNew,jedis);
         }
+
     }
 
     /**

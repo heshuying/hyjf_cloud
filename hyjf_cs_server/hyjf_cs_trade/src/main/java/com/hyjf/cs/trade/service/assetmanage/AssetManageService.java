@@ -76,6 +76,13 @@ public interface AssetManageService extends BaseTradeService {
     WebResult getMyHjhPlanInfoDetail(AssetManagePlanRequest request, Integer userId);
 
     /**
+     * 计划订单详情持有项目列表
+     * @author zhangyk
+     * @date 2018/11/22 14:42
+     */
+    WebResult getOrderInvestList(AssetManagePlanRequest request, Integer userId);
+
+    /**
      * 获取汇添金详情信息
      * @author zhangyk
      * @date 2018/8/18 16:06

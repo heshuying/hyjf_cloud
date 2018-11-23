@@ -329,7 +329,7 @@ public class BindCardServiceImpl extends BaseUserServiceImpl implements BindCard
 		// 异步调用路
 		String bgRetUrl = "http://CS-USER/hyjf-app/bank/user/bindCardPage/notifyReturn?phone=" + userVO.getMobile();
 		// 拼装参数 调用江西银行
-		String forgetPassworedUrl = systemConfig.getAppFrontHost()+systemConfig.getForgetpassword();
+		String forgetPassworedUrl = systemConfig.getAppFrontHost()+systemConfig.getAppForgetpassword();
 
 		bindCardBean.setRetUrl(retUrl);
 		bindCardBean.setSuccessfulUrl(successUrl);

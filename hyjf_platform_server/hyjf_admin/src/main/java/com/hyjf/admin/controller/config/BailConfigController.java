@@ -521,30 +521,18 @@ public class BailConfigController extends BaseController {
         Integer totalCount = recordList.size();
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
-        int minId = 0;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
-        String sheetNameTmp = sheetName + "_第1页";
-        List<BailConfigInfoCustomizeVO>  rList = new ArrayList<BailConfigInfoCustomizeVO>();
-        for (int i = 0; i < recordList.size(); i++) {
-        	BailConfigInfoCustomizeVO record = this.bailConfigService.updateSelectBailConfigById(recordList.get(i).getId());
-        	rList.add(record);
-        }
+        String sheetNameTmp = "";
 
-//        if (totalCount == 0) {
-//        	
-//            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-//        }else {
-//        	 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList);
-//        }
-        for (int i = 0; i < sheetCount; i++) {
-            if (rList != null && rList.size()> 0) {
-                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, rList.subList(defaultRowMaxCount*i, defaultRowMaxCount*(i+1)));
-            } else {
-                break;
-            }
+        for (int i = 1; i < sheetCount; i++) {
+			int start=(i-1) * defaultRowMaxCount;
+			int end = Math.min(totalCount, i * defaultRowMaxCount);
+
+			sheetNameTmp = sheetName + "_第" + (i) + "页";
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  recordList.subList(start, end));
         }
+        
         DataSet2ExcelSXSSFHelper.write2Response(requestt, response, fileName, workbook);
     }
 
