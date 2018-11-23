@@ -49,7 +49,7 @@ public  class ConvertUtils {
             for(int i = 0 ; i < fs.length; i++){
                 Field f = fs[i];
                 f.setAccessible(true); //设置些属性是可以访问的
-                mapParam.put(f.getName(),f.get(bean));
+                mapParam.put(f.getName(),f.get(bean)==null?"":f.get(bean));
             }
         }catch (Exception e){
             e.printStackTrace();
