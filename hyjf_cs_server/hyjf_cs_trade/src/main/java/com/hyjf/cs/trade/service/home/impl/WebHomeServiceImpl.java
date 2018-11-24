@@ -31,6 +31,7 @@ import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.home.WebHomeService;
 import com.hyjf.cs.trade.util.HomePageDefine;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -225,7 +226,40 @@ public class WebHomeServiceImpl implements WebHomeService {
         result.setHjhPlanList(CollectionUtils.isEmpty(planList) ? new ArrayList<>() :planList);
         ContentArticleRequest req = new ContentArticleRequest();
         req.setNoticeType(NOTICE_TYPE_COMPANY_DYNAMICS);
+        // 避免页面上出现未转换的HTML特殊字符 add by huanghui start
+        // 直接取前四条数据
         req.setLimitStart(0);
+        req.setLimitEnd(3);
+        List<ContentArticleVO> companyDynamicsList = amConfigClient.searchContentArticleList(req);
+        if(companyDynamicsList != null && companyDynamicsList.size() > 0){
+            int thisIndex = 0;
+            List<ContentArticleVO> companyDynamicsListSon = new ArrayList<>();
+            for (ContentArticleVO companyDynamics : companyDynamicsList) {
+                ++thisIndex;
+                if (companyDynamics.getContent().contains("../../../..")) {
+                    companyDynamics.setContent(companyDynamics.getContent().replaceAll("../../../..", systemConfig.getWebHost()));
+                } else if (companyDynamics.getContent().contains("src=\"/")) {
+                    companyDynamics.setContent(companyDynamics.getContent().replaceAll("src=\"/","src=\"" + systemConfig.getWebHost())+ "//");
+                }
+
+                if (thisIndex > 1){
+                    companyDynamicsListSon.add(companyDynamics);
+                }else {
+                    //去除html标签 <div 等标签
+                    companyDynamics.setContent(HtmlUtil.getTextFromHtml(companyDynamics.getContent()));
+                    // 避免页面上出现未转换的HTML特殊字符
+                    companyDynamics.setContent(StringEscapeUtils.unescapeHtml4(companyDynamics.getContent()));
+                }
+            }
+
+            result.setCompanyArticle(companyDynamicsList.get(0));
+            result.setCompanyDynamicsList(companyDynamicsListSon);
+        } else {
+            result.setCompanyArticle(new ContentArticleVO());
+            result.setCompanyDynamicsList(new ArrayList<>());
+        }
+        // add by huanghui end
+        /**req.setLimitStart(0);
         req.setLimitEnd(1);
         List<ContentArticleVO> list1 = amConfigClient.searchContentArticleList(req);
         if (!CollectionUtils.isEmpty(list1)){
@@ -258,6 +292,7 @@ public class WebHomeServiceImpl implements WebHomeService {
             list2 = new ArrayList<>();
         }
         result.setCompanyDynamicsList(list2);
+        */
         result.setNowTime(String.valueOf(System.currentTimeMillis()/1000));
          /*首页原来接口 有推广session部分,此处暂时不做处理，如果需要再加*/
         webResult.setData(result);
