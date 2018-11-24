@@ -457,10 +457,11 @@ public class BankAccountManageController extends BaseController {
         map.put("userDepartmentName","三级分部(当前)");
         map.put("referrerName","推荐人用户名(当前)");
         map.put("referrerTrueName","推荐人姓名(当前)");
-        map.put("referrerRegionName","推荐人所属一级分部(当前)");
-        map.put("referrerBranchName","推荐人所属二级分部(当前)");
-        map.put("referrerDepartmentName","推荐人所属三级分部(当前)");
-
+        if (StringUtils.isNotBlank(isOrganizationView)) {
+            map.put("referrerRegionName", "推荐人所属一级分部(当前)");
+            map.put("referrerBranchName", "推荐人所属二级分部(当前)");
+            map.put("referrerDepartmentName", "推荐人所属三级分部(当前)");
+        }
         return map;
     }
 
