@@ -215,6 +215,11 @@ public class PushMoneyManageController extends BaseController {
     @PostMapping(value = "/pushMoneyList")
     @AuthorityAnnotation(key = PUSHMONEYLIST_PERMISSIONS,value = PERMISSION_VIEW)
     public AdminResult pushMoneyList(@RequestBody PushMoneyRequest request){
+        if(request.getCombotreeListSrch() != null && request.getCombotreeListSrch().length>0){
+            // 查询部门处理
+            String [] strDepts = pushMoneyManageService.getDeptId(request.getCombotreeListSrch());
+            request.setCombotreeListSrch(strDepts);
+        }
         //选择1直投类，而非2计划类数据
         request.setTenderType(1);
         Map<String,Object> result = new HashMap<>();

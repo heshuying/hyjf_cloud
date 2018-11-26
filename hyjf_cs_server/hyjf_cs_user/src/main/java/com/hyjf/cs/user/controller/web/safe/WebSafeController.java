@@ -145,9 +145,26 @@ public class WebSafeController extends BaseUserController {
                                              @RequestHeader(value = "token") String token ,
                                              @RequestBody Map<String, String> paraMap, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
-
+        String isUpdate = request.getParameter("isUpdate");
         safeService.checkForEmailSend(paraMap.get("email"), userId);
-
+        WebViewUserVO webUser = safeService.getWebViewUserByUserId(userId);
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        if(org.apache.commons.lang.StringUtils.isNotEmpty(isUpdate)&&"isUpdate".equals(isUpdate)){
+            userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE9);
+        }else {
+            userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE8);
+        }
+        userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+        userOperationLogEntity.setPlatform(0);
+        userOperationLogEntity.setRemark("");
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(webUser.getUsername());
+        userOperationLogEntity.setUserRole(webUser.getRoleId());
+        try {
+            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
+        }
         try {
             safeService.sendEmailActive(userId, token, paraMap.get("email"));
         } catch (MQException e) {
@@ -172,7 +189,6 @@ public class WebSafeController extends BaseUserController {
         bindEmailVO.setKey(request.getParameter("key"));
         bindEmailVO.setValue(request.getParameter("value"));
         bindEmailVO.setEmail(request.getParameter("email"));
-        bindEmailVO.setIsUpdate(request.getParameter("isUpdate"));
 
         logger.info("用戶绑定邮箱, bindEmailVO :{}", JSONObject.toJSONString(bindEmailVO));
         WebResult<Object> result = new WebResult<Object>();
@@ -183,23 +199,6 @@ public class WebSafeController extends BaseUserController {
             safeService.updateEmail(Integer.parseInt(bindEmailVO.getKey()), bindEmailVO.getEmail());
             WebViewUserVO webUser = safeService.getWebViewUserByUserId(Integer.parseInt(bindEmailVO.getKey()));
             if (null != webUser) {
-                UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
-                if(org.apache.commons.lang.StringUtils.isNotEmpty(bindEmailVO.getIsUpdate())&&"isUpdate".equals(bindEmailVO.getIsUpdate())){
-                    userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE9);
-                }else {
-                    userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE8);
-                }
-                userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
-                userOperationLogEntity.setPlatform(0);
-                userOperationLogEntity.setRemark("");
-                userOperationLogEntity.setOperationTime(new Date());
-                userOperationLogEntity.setUserName(webUser.getUsername());
-                userOperationLogEntity.setUserRole(webUser.getRoleId());
-                try {
-                    userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
-                } catch (MQException e) {
-                    logger.error("保存用户日志失败", e);
-                }
                 webUser = safeService.updateUserToCache(webUser);
                 result.setData(webUser);
             }

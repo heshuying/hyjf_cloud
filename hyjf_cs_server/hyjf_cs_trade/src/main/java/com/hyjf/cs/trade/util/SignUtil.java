@@ -74,7 +74,7 @@ public class SignUtil {
         }else if("/server/invest/repayList".equals(methodName)){
             // 获取回款记录
             ApiRepayListRequestBean bean = (ApiRepayListRequestBean) paramBean;
-            sign = bean.getInstCode()+ bean.getTimestamp();
+            sign = bean.getInstCode()+bean.getStartTime()+bean.getEndTime()+ bean.getTimestamp();
         }else if("/server/asset/status".equals(methodName)){
             // 资产状态查询
             AssetStatusRequestBean bean = (AssetStatusRequestBean) paramBean;
