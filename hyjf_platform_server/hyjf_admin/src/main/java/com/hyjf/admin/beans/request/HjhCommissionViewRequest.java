@@ -21,6 +21,8 @@ public class HjhCommissionViewRequest extends HjhCommissionVO implements Seriali
 	 */
 	private static final long serialVersionUID = 1L;
 	
+    public int limit;
+
 	@ApiModelProperty(value = "ids")
 	private Integer ids;
 	
@@ -111,5 +113,13 @@ public class HjhCommissionViewRequest extends HjhCommissionVO implements Seriali
 
 	public void setCommission(BigDecimal commission) {
 		this.commission = commission;
+	}
+
+	public int getLimit() {
+		return limit;
+	}
+
+	public void setLimit(int limit) {
+		this.limit = limit;
 	}
 }
