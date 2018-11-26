@@ -111,20 +111,20 @@ public interface BaseUserService extends BaseService{
 	CorpOpenAccountRecordVO getCorpOpenAccountRecord(Integer userId);
 
 	/**
-	 * @Description 根据token查询user
-	 * @Author sunss
-	 * @Version v0.1
-	 * @Date 2018/6/12 10:34
-	 */
-	WebViewUserVO getUserFromCache(int userId);
-
-	/**
 	 * 设置token
 	 * @param
 	 * @param webViewUserVO
 	 * @return
 	 */
 	WebViewUserVO setToken(WebViewUserVO webViewUserVO);
+
+	/**
+	 * @Description 根据token查询user
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/12 10:34
+	 */
+	WebViewUserVO getUserFromCache(int userId);
 
 	/**
 	 * 获取UserInfo
