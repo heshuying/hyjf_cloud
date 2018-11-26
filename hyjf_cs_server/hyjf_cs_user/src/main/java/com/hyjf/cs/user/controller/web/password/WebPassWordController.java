@@ -164,6 +164,7 @@ public class WebPassWordController extends BaseUserController{
         WebResult<Object> result = new WebResult<Object>();
         UserVO user = this.passWordService.getUsersById(userId);
         CheckUtil.check(null!=user,MsgEnum.ERR_USER_NOT_LOGIN);
+        logger.info("重置交易密码日志记录");
         UserInfoVO userInfoVO =  passWordService.getUserInfo(userId);
         UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
         userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE6);
@@ -395,6 +396,7 @@ public class WebPassWordController extends BaseUserController{
             ret.put("pubmodules", RSAJSPUtil.getPunlicKeys());
             ret.put("userId",userId);
             result.setData(ret);
+            logger.info("登录密码日志记录");
             WebViewUserVO user = passWordService.getUserFromCache(userId);
             UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
             userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE7);
