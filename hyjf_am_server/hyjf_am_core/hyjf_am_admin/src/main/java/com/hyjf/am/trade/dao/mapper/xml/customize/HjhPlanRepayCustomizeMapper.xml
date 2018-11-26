@@ -175,7 +175,7 @@
         hha.invest_service_apr AS investServiceApr,
         CONCAT(FORMAT(hha.lqd_progress * 100,0),'%') AS lqdProgress,
         DATE_ADD(FROM_UNIXTIME(hhr.repay_should_time, '%Y-%m-%d'),INTERVAL 3 DAY) AS lastQuitTime,
-        IFNULL(hha.create_time,0) AS joinTime,
+        IFNULL(DATE_FORMAT(hha.create_time,  '%Y-%m-%d'),0) AS joinTime,
         IFNULL(hha.count_interest_time,0) AS orderLockTime,
         hhp.plan_name AS planName
         FROM

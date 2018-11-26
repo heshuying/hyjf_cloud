@@ -312,8 +312,8 @@ public class PlanRepayController extends BaseController {
         IValueFormatter lockPeriodAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
-                String value = (String) object;
-                return StringUtils.isBlank(value) ?"":value+"个月";
+                Integer value = (Integer) object;
+                return value+"个月";
             }
         };
 
@@ -373,17 +373,17 @@ public class PlanRepayController extends BaseController {
             }
         };
 
-        IValueFormatter joinTimeAdapter = new IValueFormatter() {
-            @Override
-            public String format(Object object) {
-                Integer value = (Integer) object;
-                if(value == 0){
-                    return "0";
-                }else {
-                    return GetDate.timestamptoStrYYYYMMDDHHMMSS(value);
-                }
-            }
-        };
+//        IValueFormatter joinTimeAdapter = new IValueFormatter() {
+//            @Override
+//            public String format(Object object) {
+//                String value = (String) object;
+//                if(StringUtils.isBlank(value)){
+//                    return "0";
+//                }else {
+//                    return GetDate.timestamptoStrYYYYMMDDHHMMSS(value);
+//                }
+//            }
+//        };
 
         IValueFormatter orderLockTimeAdapter = new IValueFormatter() {
             @Override
@@ -401,7 +401,7 @@ public class PlanRepayController extends BaseController {
         mapAdapter.put("expectApr", expectAprAdapter);
         mapAdapter.put("borrowStyle", borrowStyleAdapter);
         mapAdapter.put("orderStatus", orderStatusAdapter);
-        mapAdapter.put("joinTime", joinTimeAdapter);
+//        mapAdapter.put("joinTime", joinTimeAdapter);
         mapAdapter.put("orderLockTime", orderLockTimeAdapter);
         return mapAdapter;
     }
