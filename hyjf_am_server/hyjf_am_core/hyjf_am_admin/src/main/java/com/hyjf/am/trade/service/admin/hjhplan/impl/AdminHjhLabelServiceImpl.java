@@ -178,21 +178,59 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 		if(StringUtils.isNotEmpty(request.getLabelName())){
 			HjhLabel.setLabelName(request.getLabelName());
 		}
-		HjhLabel.setLabelTermStart(request.getLabelTermStart());
-		HjhLabel.setLabelTermEnd(request.getLabelTermEnd());
+		
+		
+		if(request.getLabelTermStart()!= null){
+			HjhLabel.setLabelTermStart(request.getLabelTermStart());
+		} else {
+			HjhLabel.setLabelTermStart(null);
+		}
+		if(request.getLabelTermEnd()!= null){
+			HjhLabel.setLabelTermEnd(request.getLabelTermEnd());
+		} else {
+			HjhLabel.setLabelTermEnd(null);
+		}
+	
+		
 		if(StringUtils.isNotEmpty(request.getLabelTermType())){
 			HjhLabel.setLabelTermType(request.getLabelTermType());
 		}
-		HjhLabel.setLabelAprStart(request.getLabelAprStart());
-		HjhLabel.setLabelAprEnd(request.getLabelAprEnd());
+		
+
+		if(request.getLabelAprStart()!= null){
+			HjhLabel.setLabelAprStart(request.getLabelAprStart());
+		} else {
+			HjhLabel.setLabelAprStart(null);
+		}
+		
+		if(request.getLabelAprEnd()!=null){
+			HjhLabel.setLabelAprEnd(request.getLabelAprEnd());	
+		} else {
+			HjhLabel.setLabelAprEnd(null);
+		}
+		
+
 		if(StringUtils.isNotEmpty(request.getBorrowStyle())){
 			HjhLabel.setBorrowStyle(request.getBorrowStyle());
 		}
 		if(StringUtils.isNotEmpty(request.getBorrowStyleName())){
 			HjhLabel.setBorrowStyleName(request.getBorrowStyleName());
 		}
-		HjhLabel.setLabelPaymentAccountStart(request.getLabelPaymentAccountStart());
-		HjhLabel.setLabelPaymentAccountEnd(request.getLabelPaymentAccountEnd());
+		
+		
+		
+		if(request.getLabelPaymentAccountStart()!= null){
+			HjhLabel.setLabelPaymentAccountStart(request.getLabelPaymentAccountStart());
+		} else {
+			HjhLabel.setLabelPaymentAccountStart(null);
+		}
+		if(request.getLabelPaymentAccountEnd()!= null){
+			HjhLabel.setLabelPaymentAccountEnd(request.getLabelPaymentAccountEnd());
+		} else {
+			HjhLabel.setLabelPaymentAccountEnd(null);
+		}
+		
+
 		if(StringUtils.isNotEmpty(request.getInstCode())){
 			HjhLabel.setInstCode(request.getInstCode());
 		}
@@ -214,8 +252,19 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 		
 		HjhLabel.setPushTimeStart(request.getPushTimeStart());
 		HjhLabel.setPushTimeEnd(request.getPushTimeEnd());
-		HjhLabel.setRemainingDaysStart(request.getRemainingDaysStart());
-		HjhLabel.setRemainingDaysEnd(request.getRemainingDaysEnd());
+		
+		
+		if(request.getRemainingDaysStart()!= null){
+			HjhLabel.setRemainingDaysStart(request.getRemainingDaysStart());
+		}else{
+			HjhLabel.setRemainingDaysStart(null);
+		}
+		if(request.getRemainingDaysEnd()!= null){
+			HjhLabel.setRemainingDaysEnd(request.getRemainingDaysEnd());
+		} else {
+			HjhLabel.setRemainingDaysEnd(null);
+		}
+		
 		HjhLabel.setLabelState(request.getLabelState());
 		HjhLabel.setCreateUserId(request.getCreateUserId());
 		HjhLabel.setCreateTime(new Date());
@@ -231,10 +280,107 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 		hjhLabel.setUpdateUserId(request.getUpdateUserId());
 		hjhLabel.setId(request.getId());
 		
-        if(StringUtils.isEmpty(hjhLabel.getBorrowStyle())){
-        	hjhLabel.setBorrowStyleName("");
-        }
-        if(hjhLabel.getAssetType()==null){
+		
+		if(StringUtils.isNotEmpty(request.getLabelName())){
+			hjhLabel.setLabelName(request.getLabelName());
+		}
+		
+		if(request.getLabelTermStart()!= null){
+			hjhLabel.setLabelTermStart(request.getLabelTermStart());
+		} else {
+			hjhLabel.setLabelTermStart(null);
+		}
+		if(request.getLabelTermEnd()!= null){
+			hjhLabel.setLabelTermEnd(request.getLabelTermEnd());
+		} else {
+			hjhLabel.setLabelTermEnd(null);
+		}
+		
+		
+		if(StringUtils.isNotEmpty(request.getLabelTermType())){
+			hjhLabel.setLabelTermType(request.getLabelTermType());
+		}
+		
+		if(request.getLabelAprStart()!= null){
+			hjhLabel.setLabelAprStart(request.getLabelAprStart());
+		} else {
+			hjhLabel.setLabelAprStart(null);
+		}
+		
+		if(request.getLabelAprEnd()!=null){
+			hjhLabel.setLabelAprEnd(request.getLabelAprEnd());	
+		} else {
+			hjhLabel.setLabelAprEnd(null);
+		}
+		
+		if(request.getLabelPaymentAccountStart()!= null){
+			hjhLabel.setLabelPaymentAccountStart(request.getLabelPaymentAccountStart());
+		} else {
+			hjhLabel.setLabelPaymentAccountStart(null);
+		}
+		if(request.getLabelPaymentAccountEnd()!= null){
+			hjhLabel.setLabelPaymentAccountEnd(request.getLabelPaymentAccountEnd());
+		} else {
+			hjhLabel.setLabelPaymentAccountEnd(null);
+		}
+		
+		if(StringUtils.isNotEmpty(request.getBorrowStyle())){
+			hjhLabel.setBorrowStyle(request.getBorrowStyle());
+		}
+		if(StringUtils.isNotEmpty(request.getBorrowStyleName())){
+			hjhLabel.setBorrowStyleName(request.getBorrowStyleName());
+		}
+		
+		if(request.getLabelPaymentAccountStart()!= null){
+			hjhLabel.setLabelPaymentAccountStart(request.getLabelPaymentAccountStart());
+		} else {
+			hjhLabel.setLabelPaymentAccountStart(null);
+		}
+		if(request.getLabelPaymentAccountEnd()!= null){
+			hjhLabel.setLabelPaymentAccountEnd(request.getLabelPaymentAccountEnd());
+		} else {
+			hjhLabel.setLabelPaymentAccountEnd(null);
+		}
+		if(StringUtils.isNotEmpty(request.getInstCode())){
+			hjhLabel.setInstCode(request.getInstCode());
+		}
+		if(StringUtils.isNotEmpty(request.getInstName())){
+			hjhLabel.setInstName(request.getInstName());
+		}
+		hjhLabel.setAssetType(request.getAssetType());
+		if(StringUtils.isNotEmpty(request.getAssetTypeName())){
+			hjhLabel.setAssetTypeName(request.getAssetTypeName());
+		}
+		hjhLabel.setProjectType(request.getProjectType());
+		
+		if(StringUtils.isNotEmpty(request.getProjectTypeName())){
+			hjhLabel.setProjectTypeName(request.getProjectTypeName());
+		}
+		
+
+		hjhLabel.setIsCredit(request.getIsCredit());
+		hjhLabel.setIsLate(request.getIsLate());
+		hjhLabel.setCreditSumMax(request.getCreditSumMax());
+		
+		hjhLabel.setPushTimeStart(request.getPushTimeStart());
+		hjhLabel.setPushTimeEnd(request.getPushTimeEnd());
+		
+		
+		if(request.getRemainingDaysStart()!= null){
+			hjhLabel.setRemainingDaysStart(request.getRemainingDaysStart());
+		}else{
+			hjhLabel.setRemainingDaysStart(null);
+		}
+		if(request.getRemainingDaysEnd()!= null){
+			hjhLabel.setRemainingDaysEnd(request.getRemainingDaysEnd());
+		} else {
+			hjhLabel.setRemainingDaysEnd(null);
+		}
+		
+		hjhLabel.setLabelState(request.getLabelState());
+		hjhLabel.setUpdateUserId(request.getCreateUserId());
+		hjhLabel.setUpdateTime(new Date());
+/*        if(hjhLabel.getAssetType()==null){
         	hjhLabel.setAssetTypeName("");
         }
         if(hjhLabel.getProjectType()==null){
@@ -242,12 +388,18 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
         }
         if(StringUtils.isEmpty(hjhLabel.getInstCode())){
         	hjhLabel.setInstName("");
-        }
-		BeanUtils.copyProperties(request, hjhLabel);
-		HjhLabelExample example = new HjhLabelExample();
+        }uo 
+		BeanUtils.copyProperties(request, hjhLabel);*/
+/*		HjhLabelExample example = new HjhLabelExample();
 		HjhLabelExample.Criteria crt = example.createCriteria();
 		crt.andIdEqualTo(hjhLabel.getId());
-		int flg = hjhLabelMapper.updateByExampleSelective(hjhLabel, example);
+		int flg = hjhLabelMapper.updateByExampleSelective(hjhLabel, example);*/
+		
+	    HjhLabelExample example = new HjhLabelExample();
+	    HjhLabelExample.Criteria crt = example.createCriteria();
+	    crt.andIdEqualTo(hjhLabel.getId());
+	    int flg = hjhLabelMapper.updateByExample(hjhLabel, example);
+	    
 		return flg;
 	}
 
