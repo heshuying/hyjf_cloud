@@ -1613,7 +1613,6 @@ public class AmTradeClientImpl implements AmTradeClient {
         BorrowResponse response = restTemplate.getForEntity(
                 "http://AM-ADMIN/am-trade/borrow/getBorrow/" + borrowNid, BorrowResponse.class).getBody();
         if (response != null) {
-            logger.info("-------------------------垫付机构协议管理， 根据标的编号查询详细信息BorrowAndInfoVO："+ JSONObject.toJSON(response.getResult()));
             return response.getResult();
         }
         return null;
