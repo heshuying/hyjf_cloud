@@ -104,7 +104,7 @@ public class HjhRepayCustomize implements Serializable {
     /*
      * 清算服务费（元）
      */
-    private String lqdServiceFee;
+    private BigDecimal lqdServiceFee;
     /*
      * 清算服务费率
      */
@@ -129,7 +129,7 @@ public class HjhRepayCustomize implements Serializable {
     /*
      * 汇计划加入时间
      */
-    private Integer joinTime;
+    private String joinTime;
     /*
      * 订单锁定时间 = 加入计划的计息时间
      */
@@ -475,11 +475,11 @@ public class HjhRepayCustomize implements Serializable {
         this.expectApr = expectApr;
     }
 
-    public String getLqdServiceFee() {
+    public BigDecimal getLqdServiceFee() {
         return lqdServiceFee;
     }
 
-    public void setLqdServiceFee(String lqdServiceFee) {
+    public void setLqdServiceFee(BigDecimal lqdServiceFee) {
         this.lqdServiceFee = lqdServiceFee;
     }
 
@@ -523,11 +523,11 @@ public class HjhRepayCustomize implements Serializable {
         this.lastQuitTime = lastQuitTime;
     }
 
-    public Integer getJoinTime() {
+    public String getJoinTime() {
         return joinTime;
     }
 
-    public void setJoinTime(Integer joinTime) {
+    public void setJoinTime(String joinTime) {
         this.joinTime = joinTime;
     }
 

@@ -43,6 +43,8 @@ public class CouponRecoverCustomize implements Serializable{
     private String recoverStatus;
     // 转账时间
     private String transferTime;
+    // 转账时间
+    private String transferTimeString;
     // 更新时间
     private int updateTime;
 

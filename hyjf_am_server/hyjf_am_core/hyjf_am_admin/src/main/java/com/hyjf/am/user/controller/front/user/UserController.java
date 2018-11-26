@@ -797,15 +797,6 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 查询千乐渠道的用户id
-     * @return
-     */
-    @GetMapping("/getQianleUser")
-    public List<Integer> getQianleUser() {
-        return userService.getQianleUser();
-    }
-
-    /**
      * 插入ht_hjh_user_auth表
      * @param hjhUserAuthRequest
      */

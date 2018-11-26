@@ -184,13 +184,21 @@ public class AmTradeClientImpl implements AmTradeClient {
 		return restTemplate.postForEntity("http://AM-TRADE/am-trade/qianle/queryList", dataSearchRequest, DataSearchCustomizeResponse.class).getBody();
 
 	}
-
+	/**
+	 * 查询千乐散标数据
+	 * @param dataSearchRequest
+	 * @return
+	 */
 	@Override
 	public Map<String,Object> querySanMoney(DataSearchRequest dataSearchRequest) {
 		DataSearchCustomizeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/qianle/querySanMoney", dataSearchRequest, DataSearchCustomizeResponse.class).getBody();
 		return response.getMoney();
 	}
-
+	/**
+	 * 查询千乐计划数据
+	 * @param dataSearchRequest
+	 * @return
+	 */
 	@Override
 	public Map<String,Object> queryPlanMoney(DataSearchRequest dataSearchRequest) {
 		DataSearchCustomizeResponse response =restTemplate.postForEntity("http://AM-TRADE/am-trade/qianle/queryPlanMoney", dataSearchRequest, DataSearchCustomizeResponse.class).getBody();
