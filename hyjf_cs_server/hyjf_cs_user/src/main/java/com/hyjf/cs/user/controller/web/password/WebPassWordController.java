@@ -99,10 +99,24 @@ public class WebPassWordController extends BaseUserController{
      */
     @ApiOperation(value = "设置交易密码", notes = "设置交易密码")
     @PostMapping(value = "/transaction", produces = "application/json; charset=utf-8")
-    public  WebResult<Object> setTransaction(@RequestHeader(value = "userId") int userId) {
+    public  WebResult<Object> setTransaction(@RequestHeader(value = "userId") int userId,HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
         UserVO user = this.passWordService.getUsersById(userId);
         CheckUtil.check(null!=user,MsgEnum.ERR_USER_NOT_LOGIN);
+        UserInfoVO userInfoVO =  passWordService.getUserInfo(userId);
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE6);
+        userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+        userOperationLogEntity.setPlatform(0);
+        userOperationLogEntity.setRemark("");
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(user.getUsername());
+        userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
+        try {
+            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
+        }
         Map<String,Object> map = passWordService.setPassword(user);
         result.setData(map);
         return result;
@@ -146,10 +160,24 @@ public class WebPassWordController extends BaseUserController{
      */
     @ApiOperation(value = "重置交易密码", notes = "重置交易密码")
     @PostMapping(value = "/resetTeaderPassword", produces = "application/json; charset=utf-8")
-    public WebResult<Object>  resetPassword(@RequestHeader(value = "userId") int userId) {
+    public WebResult<Object>  resetPassword(@RequestHeader(value = "userId") int userId,HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
         UserVO user = this.passWordService.getUsersById(userId);
         CheckUtil.check(null!=user,MsgEnum.ERR_USER_NOT_LOGIN);
+        UserInfoVO userInfoVO =  passWordService.getUserInfo(userId);
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE6);
+        userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+        userOperationLogEntity.setPlatform(0);
+        userOperationLogEntity.setRemark("");
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(user.getUsername());
+        userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
+        try {
+            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
+        }
         Map<String,Object> map = passWordService.resetPassword(user);
         result.setData(map);
         return result;
