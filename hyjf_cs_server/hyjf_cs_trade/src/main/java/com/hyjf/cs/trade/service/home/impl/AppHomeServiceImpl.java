@@ -374,7 +374,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         if(homeHjhPageCustomizes != null && homeHjhPageCustomizes.size() > 0){
             appHomePageCustomize = homeHjhPageCustomizes.get(0);
         }
-        appHomePageCustomize.setTitle("推荐服务");
+//        appHomePageCustomize.setTitle("推荐服务");
         CommonUtils.convertNullToEmptyString(appHomePageCustomize);
         AppHomePageRecommendProject recommendProject = convertToAppHomePageRecommendProject(appHomePageCustomize);
         info.put("recommendProject", recommendProject);
@@ -676,6 +676,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             homePageCustomize.setBorrowApr(listCustomize.getBorrowApr() + "%");
             homePageCustomize.setBorrowPeriod(listCustomize.getBorrowPeriod());
             String status = listCustomize.getStatus();
+            homePageCustomize.setTitle("推荐服务");
             if ("稍后开启".equals(listCustomize.getStatusName())){    //1.启用  2.关闭
                 // 20.立即加入  21.稍后开启
                 homePageCustomize.setStatus("21");
