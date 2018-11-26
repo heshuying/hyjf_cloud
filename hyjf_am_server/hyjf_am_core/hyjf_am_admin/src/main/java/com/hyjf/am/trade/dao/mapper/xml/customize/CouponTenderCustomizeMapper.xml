@@ -88,7 +88,7 @@
     <resultMap id="selectCouponRecoverMap" type="com.hyjf.am.trade.dao.model.customize.CouponRecoverCustomize">
         <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
         <result column="recover_period" property="recoverPeriod" jdbcType="VARCHAR" />
-        <result column="transfer_time" property="transferTimeString" jdbcType="VARCHAR" />
+        <result column="transfer_time_string" property="transferTimeString" jdbcType="VARCHAR" />
         <result column="recover_interest" property="recoverInterest" jdbcType="VARCHAR" />
         <result column="recover_yestime" property="recoverYestime" jdbcType="VARCHAR" />
         <result column="recover_yestimeString" property="recoverYestimeString" jdbcType="VARCHAR" />
@@ -491,7 +491,7 @@
         FROM_UNIXTIME(
         hcr.transfer_time,
         '%Y-%m-%d %H:%i'
-        ) transfer_time,
+        ) transfer_time_string,
         hcr.recover_account recover_interest,
         hcr.recover_yestime recover_yestime,
         FROM_UNIXTIME(
@@ -898,7 +898,7 @@
         FROM_UNIXTIME(
         hcr.transfer_time,
         '%Y-%m-%d %H:%i'
-        ) transfer_time,
+        ) transfer_time_string,
         hcr.recover_account recover_interest,
         hcr.recover_yestime recover_yestime,
         FROM_UNIXTIME(
