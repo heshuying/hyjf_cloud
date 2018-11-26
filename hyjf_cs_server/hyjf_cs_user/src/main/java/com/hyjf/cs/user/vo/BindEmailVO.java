@@ -9,6 +9,7 @@ public class BindEmailVO {
 	private String key;
 	private String value;
 	private String email;
+	private String isUpdate;
 	
 	public String getKey() {
 		return key;
@@ -28,8 +29,14 @@ public class BindEmailVO {
 	public void setEmail(String email) {
 		this.email = email;
 	}
-	
-	
+
+	public String getIsUpdate() {
+		return isUpdate;
+	}
+
+	public void setIsUpdate(String isUpdate) {
+		this.isUpdate = isUpdate;
+	}
 }
 
 	

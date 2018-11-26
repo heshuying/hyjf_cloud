@@ -412,6 +412,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 AppProjectListCustomizeVO customize = projectList.get(0);
                 customize.setTag("优质资产");
                 customize.setBorrowDesc("项目剩余" + customize.getBorrowAccountWait());
+                customize.setStatusName("立即投资");
                 list.add(customize);
                 return  list;
             }else{
@@ -423,7 +424,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         for (AppProjectListCustomizeVO appInfo :
                 projectListCustomizes) {
             appInfo.setTag("稳健回报");
-            appInfo.setBorrowDesc("开放额度" + appInfo.getAvailableInvestAccount());
+            appInfo.setBorrowDesc("开放额度" + appInfo.getAvailableInvestAccountNew());
         }
         return projectListCustomizes;
     }
@@ -612,6 +613,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 appProjectListCustomize.setPlanPeriod(entity.getPlanPeriod());
                 appProjectListCustomize.setBorrowPeriod(entity.getPlanPeriod());
                 appProjectListCustomize.setAvailableInvestAccount(entity.getAvailableInvestAccount());
+                appProjectListCustomize.setAvailableInvestAccountNew(entity.getAvailableInvestAccountNew());
                 appProjectListCustomize.setStatusName(entity.getStatusName());
                 appProjectListCustomize.setBorrowNid(entity.getPlanNid());
                 String couponEnable = entity.getCouponEnable();

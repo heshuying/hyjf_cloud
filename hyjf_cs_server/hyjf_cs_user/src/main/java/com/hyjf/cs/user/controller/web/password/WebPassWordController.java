@@ -4,15 +4,21 @@
 package com.hyjf.cs.user.controller.web.password;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.util.MD5Utils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
@@ -20,6 +26,8 @@ import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.PasswordRequest;
@@ -36,7 +44,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author wangc
@@ -53,6 +64,8 @@ public class WebPassWordController extends BaseUserController{
 
     @Autowired
     SystemConfig systemConfig;
+    @Autowired
+    UserOperationLogProducer userOperationLogProducer;
 
     @ApiOperation(value = "修改登陆密码", notes = "修改登陆密码")
     @PostMapping(value = "/login-password", produces = "application/json; charset=utf-8")
@@ -86,10 +99,24 @@ public class WebPassWordController extends BaseUserController{
      */
     @ApiOperation(value = "设置交易密码", notes = "设置交易密码")
     @PostMapping(value = "/transaction", produces = "application/json; charset=utf-8")
-    public  WebResult<Object> setTransaction(@RequestHeader(value = "userId") int userId) {
+    public  WebResult<Object> setTransaction(@RequestHeader(value = "userId") int userId,HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
         UserVO user = this.passWordService.getUsersById(userId);
         CheckUtil.check(null!=user,MsgEnum.ERR_USER_NOT_LOGIN);
+        UserInfoVO userInfoVO =  passWordService.getUserInfo(userId);
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE6);
+        userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+        userOperationLogEntity.setPlatform(0);
+        userOperationLogEntity.setRemark("");
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(user.getUsername());
+        userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
+        try {
+            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
+        }
         Map<String,Object> map = passWordService.setPassword(user);
         result.setData(map);
         return result;
@@ -133,10 +160,25 @@ public class WebPassWordController extends BaseUserController{
      */
     @ApiOperation(value = "重置交易密码", notes = "重置交易密码")
     @PostMapping(value = "/resetTeaderPassword", produces = "application/json; charset=utf-8")
-    public WebResult<Object>  resetPassword(@RequestHeader(value = "userId") int userId) {
+    public WebResult<Object>  resetPassword(@RequestHeader(value = "userId") int userId,HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
         UserVO user = this.passWordService.getUsersById(userId);
         CheckUtil.check(null!=user,MsgEnum.ERR_USER_NOT_LOGIN);
+        logger.info("重置交易密码日志记录");
+        UserInfoVO userInfoVO =  passWordService.getUserInfo(userId);
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE6);
+        userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+        userOperationLogEntity.setPlatform(0);
+        userOperationLogEntity.setRemark("");
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(user.getUsername());
+        userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
+        try {
+            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
+        }
         Map<String,Object> map = passWordService.resetPassword(user);
         result.setData(map);
         return result;
@@ -345,7 +387,7 @@ public class WebPassWordController extends BaseUserController{
      */
     @ApiOperation(value = "修改 登录密码 页面初始化",notes = "修改 登录密码 页面初始化")
     @PostMapping(value = "/modifyCode")
-    public WebResult modifyCode(@RequestHeader(value = "token") String token,@RequestHeader(value = "userId") Integer userId) {
+    public WebResult modifyCode(@RequestHeader(value = "token") String token, @RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
         WebResult result = new WebResult();
         JSONObject ret = new JSONObject();
         try {
@@ -354,6 +396,21 @@ public class WebPassWordController extends BaseUserController{
             ret.put("pubmodules", RSAJSPUtil.getPunlicKeys());
             ret.put("userId",userId);
             result.setData(ret);
+            logger.info("登录密码日志记录");
+            WebViewUserVO user = passWordService.getUserFromCache(userId);
+            UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+            userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE7);
+            userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+            userOperationLogEntity.setPlatform(0);
+            userOperationLogEntity.setRemark("");
+            userOperationLogEntity.setOperationTime(new Date());
+            userOperationLogEntity.setUserName(user.getUsername());
+            userOperationLogEntity.setUserRole(user.getRoleId());
+            try {
+                userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+            } catch (MQException e) {
+                logger.error("保存用户日志失败", e);
+            }
         } catch (Exception e) {
             logger.error("修改密码时，生成密码加密密钥错误",e);
         }
