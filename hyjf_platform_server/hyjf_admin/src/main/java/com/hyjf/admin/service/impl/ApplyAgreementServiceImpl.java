@@ -213,6 +213,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 logger.info("-------------------------垫付机构协议管理， 生成垫付债转协议期数："+ repay_period);
                 // 获取标的信息
                 BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrow_nid);
+                logger.info("-------------------------垫付机构协议管理， 生成垫付债转协议BorrowAndInfoVO："+ JSONObject.toJSON(borrow));
                 BorrowInfoVO borrowInfo = amTradeClient.selectBorrowInfoByNid(borrow_nid);
                 if (borrow == null || borrowInfo == null) {
                     logger.error("-------------------------垫付机构协议管理， 标的不存在borrow_nid："+borrow_nid);
