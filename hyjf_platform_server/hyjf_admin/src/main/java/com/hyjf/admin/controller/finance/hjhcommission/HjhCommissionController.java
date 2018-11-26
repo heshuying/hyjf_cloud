@@ -575,7 +575,7 @@ public class HjhCommissionController extends BaseController{
 				} else if ("3".equals(attribute)) {
 					attributeStr = "线上员工";
 				}
-				return attribute;
+				return attributeStr;
 			}
 		};
 
