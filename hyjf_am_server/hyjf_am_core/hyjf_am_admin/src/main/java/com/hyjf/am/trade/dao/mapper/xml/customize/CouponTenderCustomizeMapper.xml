@@ -90,6 +90,7 @@
         <result column="transfer_time" property="transferTime" jdbcType="INTEGER" />
         <result column="recover_interest" property="recoverInterest" jdbcType="VARCHAR" />
         <result column="recover_yestime" property="recoverYestime" jdbcType="VARCHAR" />
+        <result column="recover_yestimeString" property="recoverYestimeString" jdbcType="VARCHAR" />
         <result column="recover_time" property="recoverTime" jdbcType="INTEGER" />
         <result column="recover_time_string" property="recoverTimeString" jdbcType="VARCHAR" />
         <result column="exp_time" property="expTime" jdbcType="INTEGER" />
@@ -491,10 +492,11 @@
         '%Y-%m-%d %H:%i'
         ) transfer_time,
         hcr.recover_account recover_interest,
+        hcr.recover_yestime recover_yestime,
         FROM_UNIXTIME(
         hcr.recover_yestime,
         '%Y-%m-%d %H:%i'
-        ) recover_yestime,
+        ) recover_yestimeString,
         hcr.recover_time recover_time,
         FROM_UNIXTIME(
         hcr.recover_time,
@@ -888,10 +890,11 @@
         '%Y-%m-%d %H:%i'
         ) transfer_time,
         hcr.recover_account recover_interest,
+        hcr.recover_yestime recover_yestime,
         FROM_UNIXTIME(
         hcr.recover_yestime,
         '%Y-%m-%d %H:%i'
-        ) recover_yestime,
+        ) recover_yestimeString,
         hcr.recover_time recover_time,
         FROM_UNIXTIME(
         hcr.recover_time,

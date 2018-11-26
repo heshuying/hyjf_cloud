@@ -130,7 +130,7 @@ public class BorrowRepaymentInfoController extends BaseController {
                 "投资人所属一级分部（当前）", "投资人所属二级分部（当前）", "投资人所属团队（当前）", "推荐人用户名（当前）",
                 "推荐人姓名（当前）", "推荐人所属一级分部（当前）", "推荐人所属二级分部（当前）", "推荐人所属团队（当前）", "投资金额",
                 "应还本金","应还利息", "应还本息", "还款服务费", "已还本金", "已还利息", "已还本息", "未还本金", "未还利息", "未还本息",
-                "还款状态", "最后还款日","实际还款时间"};
+                "还款状态", "最后还款日","实际还款时间", "还款冻结订单号"};
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
         // 生成一个表格
@@ -331,6 +331,11 @@ public class BorrowRepaymentInfoController extends BaseController {
                     }else if (celLength == 36) {
                         cell.setCellValue(record.getRepayActionTime());
                     }
+                    // 还款冻结订单号
+                    else if (celLength == 37){
+                        cell.setCellValue(StringUtils.isBlank(record.getFreezeOrderId())?"":record.getFreezeOrderId());
+//                        cell.setCellValue(StringUtils.isBlank(record.getFreezeOrderId())?"":record.getFreezeOrderId());
+                    }
 
                 }
             }
@@ -467,6 +472,7 @@ public class BorrowRepaymentInfoController extends BaseController {
         map.put("status","还款状态");
         map.put("recoverLastTime","最后还款日");
         map.put("repayActionTime","实际还款时间");
+        map.put("freezeOrderId","还款冻结订单号");
         return map;
     }
     private Map<String, IValueFormatter> buildValueAdapter() {

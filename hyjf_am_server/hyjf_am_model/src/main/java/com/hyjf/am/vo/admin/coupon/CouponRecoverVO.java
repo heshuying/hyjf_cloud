@@ -39,6 +39,8 @@ public class CouponRecoverVO extends BaseVO implements Serializable {
 
     private Integer recoverYestime;
 
+    private String recoverYestimeString;
+
     private Integer mainRecoverYestime;
 
     private BigDecimal recoverInterest;
@@ -434,5 +436,13 @@ public class CouponRecoverVO extends BaseVO implements Serializable {
 
     public void setRecoverTimeString(String recoverTimeString) {
         this.recoverTimeString = recoverTimeString;
+    }
+
+    public String getRecoverYestimeString() {
+        return recoverYestimeString;
+    }
+
+    public void setRecoverYestimeString(String recoverYestimeString) {
+        this.recoverYestimeString = recoverYestimeString;
     }
 }

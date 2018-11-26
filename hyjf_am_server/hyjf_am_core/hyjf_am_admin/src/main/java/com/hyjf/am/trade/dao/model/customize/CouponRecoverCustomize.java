@@ -21,6 +21,8 @@ public class CouponRecoverCustomize implements Serializable{
     private String recoverPeriod;
     //已经还款时间
     private String recoverYestime;
+    //已经还款时间
+    private String recoverYestimeString;
     //应还利息
     private String recoverInterest;
     //应还本息

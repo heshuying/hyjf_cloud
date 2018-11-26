@@ -412,6 +412,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 AppProjectListCustomizeVO customize = projectList.get(0);
                 customize.setTag("优质资产");
                 customize.setBorrowDesc("项目剩余" + customize.getBorrowAccountWait());
+                customize.setStatusName("立即投资");
                 list.add(customize);
                 return  list;
             }else{
