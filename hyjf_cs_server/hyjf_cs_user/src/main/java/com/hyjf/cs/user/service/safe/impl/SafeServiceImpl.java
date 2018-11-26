@@ -301,14 +301,9 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
      * @param
      */
     @Override
-    public void checkForEmailBind(BindEmailVO bindEmailVO, int userId) {
+    public void checkForEmailBind(BindEmailVO bindEmailVO) {
         // 邮箱为空校验
         if (StringUtils.isBlank(bindEmailVO.getEmail()) || StringUtils.isBlank(bindEmailVO.getValue()) || StringUtils.isBlank(bindEmailVO.getKey())) {
-            throw new ReturnMessageException(MsgEnum.ERR_PARAM);
-        }
-
-        // 校验激活是否用户本人
-        if (!bindEmailVO.getKey().equals(String.valueOf(userId))) {
             throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
 
