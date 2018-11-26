@@ -68,7 +68,7 @@ public interface SafeService  extends BaseUserService {
      * @param bindEmailVO
      * @param userId
      */
-    void checkForEmailBind(BindEmailVO bindEmailVO, int userId);
+    void checkForEmailBind(BindEmailVO bindEmailVO);
 
     /**
      * 修改邮箱
