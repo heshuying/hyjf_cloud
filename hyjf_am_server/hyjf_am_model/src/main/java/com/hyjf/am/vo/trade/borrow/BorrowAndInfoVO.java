@@ -1111,7 +1111,7 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
     }
 
     public void setRepayLastTime(String repayLastTime) {
-        this.repayLastTime = repayLastTime == null ? null : repayLastTime.trim();
+        this.repayLastTime = repayLastTime;
     }
 
     public String getRepayEachTime() {
