@@ -441,7 +441,7 @@ public class CouponBackMoneyServiceImpl implements CouponBackMoneyService {
                         cell.setCellValue(pInfo.getTransferId());
                     }
                     else if (celLength == 9) {
-                        cell.setCellValue(pInfo.getReceivedFlg());
+                        cell.setCellValue(pInfo.getReceivedFlgString());
                     }
                     else if (celLength == 10) {
                         cell.setCellValue(pInfo.getRecoverTime());
