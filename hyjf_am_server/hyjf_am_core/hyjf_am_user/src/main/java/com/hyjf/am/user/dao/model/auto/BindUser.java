@@ -23,7 +23,7 @@ public class BindUser implements Serializable {
      *
      * @mbggenerated
      */
-    private Integer bindUniqueId;
+    private String bindUniqueId;
 
     /**
      * 绑定用户第三方平台编号 汇晶社：2000000011
@@ -85,12 +85,12 @@ public class BindUser implements Serializable {
         this.userId = userId;
     }
 
-    public Integer getBindUniqueId() {
+    public String getBindUniqueId() {
         return bindUniqueId;
     }
 
-    public void setBindUniqueId(Integer bindUniqueId) {
-        this.bindUniqueId = bindUniqueId;
+    public void setBindUniqueId(String bindUniqueId) {
+        this.bindUniqueId = bindUniqueId == null ? null : bindUniqueId.trim();
     }
 
     public Integer getBindPlatformId() {

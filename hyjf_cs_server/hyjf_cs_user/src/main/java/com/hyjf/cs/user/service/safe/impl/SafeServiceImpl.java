@@ -317,9 +317,9 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         if (new Date().after(log.getEmailActiveUrlDeadtime())) {
             throw new ReturnMessageException(MsgEnum.ERR_EMAIL_ACTIVE_OVERDUE);
         }
-
+        String validValue = MD5Utils.MD5(MD5Utils.MD5(log.getEmailActiveCode()));
         // 激活校验
-        if (!bindEmailVO.getKey().equals(String.valueOf(log.getUserId())) || !bindEmailVO.getEmail().equals(log.getUserEmail()) || !bindEmailVO.getValue().equals(log.getEmailActiveCode())) {
+        if (!bindEmailVO.getKey().equals(String.valueOf(log.getUserId())) || !bindEmailVO.getEmail().equals(log.getUserEmail()) || !bindEmailVO.getValue().equals(validValue)) {
             throw new ReturnMessageException(MsgEnum.ERR_EMAIL_ACTIVE);
         }
     }
