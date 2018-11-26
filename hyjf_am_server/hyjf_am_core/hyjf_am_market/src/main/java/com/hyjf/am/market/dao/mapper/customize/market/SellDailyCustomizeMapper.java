@@ -3,6 +3,9 @@
  */
 package com.hyjf.am.market.dao.mapper.customize.market;
 
+import java.util.List;
+import java.util.Map;
+
 import com.hyjf.am.market.dao.model.auto.SellDaily;
 
 /**
@@ -19,11 +22,10 @@ public interface SellDailyCustomizeMapper {
 
     /**
      * 根据类型查询合计  type:2
-     * @param dateStr
-     * @param drawOrder
+     * @param map
      * @return
      */
-    SellDaily selectPrimaryDivisionSum(String dateStr, int drawOrder);
+    SellDaily selectPrimaryDivisionSum(Map<String, Object> map);
 
     /**
      * 根据类型查询合计  type:3
@@ -31,4 +33,15 @@ public interface SellDailyCustomizeMapper {
      * @return
      */
     SellDaily selectAllSum(String dateStr);
+
+    /**
+     * 批量插入
+     * @param currentMonthTotalTenderList
+     */
+    void batchInsertSellDaily(List<SellDaily> currentMonthTotalTenderList);
+
+    /**
+     * 计算第四、六、十列速率,第十六列净资金流
+     */
+    void calculateRate();
 }

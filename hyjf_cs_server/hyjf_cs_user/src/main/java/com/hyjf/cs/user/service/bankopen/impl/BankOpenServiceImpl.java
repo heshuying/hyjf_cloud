@@ -223,6 +223,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
      * @return
      */
     public Map<String,Object> fallBackBankOpen(OpenAccountPageBean openBean, String sign){
+        logger.info("==================已进入 开户（三端）fallBackBankOpen 方法================");
         return null;
     }
 

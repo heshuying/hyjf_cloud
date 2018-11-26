@@ -104,7 +104,7 @@ public class SmsCodeServiceImpl extends BaseTradeServiceImpl implements SmsCodeS
         String ipCount = RedisUtils.get(RedisConstants.CACHE_MAX_IP_COUNT+ip);
         if (StringUtils.isBlank(ipCount) || !Validator.isNumber(ipCount)) {
             ipCount = "0";
-            RedisUtils.set(RedisConstants.CACHE_MAX_IP_COUNT+ip, "0");
+            RedisUtils.set(RedisConstants.CACHE_MAX_IP_COUNT+ip, "0", 24 * 60 * 60);
         }
         logger.info(mobile + "------ip---" + ip + "----------MaxIpCount-----------" + ipCount);
         SmsConfigVO smsConfig = amConfigClient.findSmsConfig();
@@ -243,7 +243,7 @@ public class SmsCodeServiceImpl extends BaseTradeServiceImpl implements SmsCodeS
         String ipCount = RedisUtils.get(RedisConstants.CACHE_MAX_IP_COUNT+ip);
         if (StringUtils.isBlank(ipCount) || !Validator.isNumber(ipCount)) {
             ipCount = "0";
-            RedisUtils.set(RedisConstants.CACHE_MAX_IP_COUNT+ip, "0");
+            RedisUtils.set(RedisConstants.CACHE_MAX_IP_COUNT+ip, "0", 24 * 60 * 60);
         }
         logger.info(mobile + "------ip---" + ip + "----------MaxIpCount-----------" + ipCount);
         SmsConfigVO smsConfig = amConfigClient.findSmsConfig();

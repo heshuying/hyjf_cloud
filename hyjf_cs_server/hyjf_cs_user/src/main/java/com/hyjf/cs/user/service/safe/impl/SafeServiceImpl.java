@@ -3,6 +3,21 @@
  */
 package com.hyjf.cs.user.service.safe.impl;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BindEmailLogRequest;
@@ -30,21 +45,8 @@ import com.hyjf.cs.user.result.ContractSetResultBean;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.safe.SafeService;
 import com.hyjf.cs.user.vo.BindEmailVO;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import sun.misc.BASE64Decoder;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.*;
-import java.util.Map.Entry;
+import sun.misc.BASE64Decoder;
 
 
 /**
@@ -236,7 +238,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
      * @throws MQException
      */
     @Override
-    public boolean sendEmailActive(Integer userId, String email) throws MQException {
+    public boolean sendEmailActive(Integer userId, String token, String email) throws MQException {
         UserVO user = amUserClient.findUserById(userId);
         UserInfoVO userInfoVO = amUserClient.findUserInfoById(userId);
         String activeCode = GetCode.getRandomCode(6);
@@ -253,7 +255,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
 
         // 发送激活邮件
         activeCode = MD5Utils.MD5(MD5Utils.MD5(activeCode));
-        String url = systemConfig.webUIBindEmail + "?key=" + user.getUserId() + "&value=" + activeCode + "&email=" + email;
+        String url = systemConfig.webUIBindEmail + "?key=" + user.getUserId() + "&value=" + activeCode + "&email=" + email + "&token=" + token;
         Map<String, String> replaceMap = new HashMap<String, String>();
         replaceMap.put("url_name", url);
         if (StringUtils.isNotBlank(userInfoVO.getNickname())) {

@@ -2,10 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.market.dao.mapper.customize.market.SellDailyCustomizeMapper">
     <resultMap id="sumResultMap" type="com.hyjf.am.market.dao.model.auto.SellDaily">
-        <result column="date_str" property="dateStr" jdbcType="VARCHAR"/>
-        <result column="draw_order" property="drawOrder" jdbcType="INTEGER"/>
-        <result column="primary_division" property="primaryDivision" jdbcType="VARCHAR"/>
-        <result column="two_division" property="twoDivision" jdbcType="VARCHAR"/>
+        <!--<result column="date_str" property="dateStr" jdbcType="VARCHAR"/>-->
+        <!--<result column="draw_order" property="drawOrder" jdbcType="INTEGER"/>-->
+        <!--<result column="primary_division" property="primaryDivision" jdbcType="VARCHAR"/>-->
+        <!--<result column="two_division" property="twoDivision" jdbcType="VARCHAR"/>-->
         <result column="store_num" property="storeNum" jdbcType="INTEGER"/>
         <result column="invest_total_month" property="investTotalMonth" jdbcType="DECIMAL"/>
         <result column="repayment_total_month" property="repaymentTotalMonth" jdbcType="DECIMAL"/>
@@ -79,7 +79,7 @@
     </select>
 
     <!-- 查询一级分部合计 -->
-    <select id="selectPrimaryDivisionSum" resultMap="sumResultMap">
+    <select id="selectPrimaryDivisionSum" parameterType="java.util.Map" resultMap="sumResultMap">
         SELECT
         <include refid="Sum_Column_List"/>
         FROM ht_sell_daily
@@ -98,10 +98,36 @@
     </select>
 
 
+    <insert id="batchInsertSellDaily" parameterType="java.util.List">
+        INSERT INTO ht_sell_daily(date_str,draw_order,primary_division,two_division,store_num,invest_total_month,repayment_total_month,invest_total_previous_month,invest_ratio_growth,
+        withdraw_total_month,withdraw_rate,recharge_total_month,invest_annual_total_month,invest_annual_total_previous_month,invest_annular_ratio_growth,invest_total_yesterday,repayment_total_yesterday,
+        invest_annual_total_yesterday,withdraw_total_yesterday,recharge_total_yesterday,net_capital_inflow_yesterday,non_repayment_today,register_total_yesterday,recharge_gt3000_user_num,
+        invest_gt3000_user_num,invest_gt3000_month_user_num)
+        <foreach collection="list" item="item" index="index" open="" close="" separator="union all">
+            SELECT #{item.dateStr},#{item.drawOrder},#{item.primaryDivision},#{item.twoDivision},#{item.storeNum},
+            #{item.investTotalMonth},#{item.repaymentTotalMonth},#{item.investTotalPreviousMonth},#{item.investRatioGrowth},#{item.withdrawTotalMonth},
+            #{item.withdrawRate},#{item.rechargeTotalMonth},#{item.investAnnualTotalMonth},#{item.investAnnualTotalPreviousMonth},#{item.investAnnularRatioGrowth},
+            #{item.investTotalYesterday},#{item.repaymentTotalYesterday},#{item.investAnnualTotalYesterday},#{item.withdrawTotalYesterday},#{item.rechargeTotalYesterday},
+            #{item.netCapitalInflowYesterday},#{item.nonRepaymentToday},#{item.registerTotalYesterday},#{item.rechargeGt3000UserNum},#{item.investGt3000UserNum},
+            #{item.investGt3000MonthUserNum} as a FROM DUAL
+        </foreach>
+    </insert>
 
 
+    <!-- 计算第四、六、十列速率,第十六列净资金流 -->
+    <update id="calculateRate">
+      UPDATE ht_sell_daily SET
+        invest_ratio_growth =
+        (CASE WHEN invest_total_previous_month=0.00 THEN '/' ELSE CONCAT(ROUND((invest_total_month/invest_total_previous_month-1)*100),'%') END),
 
+        withdraw_rate =
+        (CASE WHEN repayment_total_month=0.00 THEN '/' ELSE CONCAT(ROUND((withdraw_total_month/repayment_total_month)*100),'%') END),
 
+        invest_annular_ratio_growth =
+        (CASE WHEN invest_annual_total_previous_month=0.00 THEN '/' ELSE CONCAT(ROUND((invest_annual_total_month/invest_annual_total_previous_month-1)*100),'%') END),
+
+        net_capital_inflow_yesterday=recharge_total_yesterday-withdraw_total_yesterday
+    </update>
 
 
 

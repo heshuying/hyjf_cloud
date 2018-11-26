@@ -1,10 +1,16 @@
 package com.hyjf.am.user.service.front.crm.impl;
 
+import java.util.List;
+
+import javax.annotation.Resource;
+
+import org.springframework.stereotype.Service;
+
+import com.hyjf.am.user.dao.mapper.customize.UserCrmInfoCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.ROaDepartment;
 import com.hyjf.am.user.dao.model.auto.ROaDepartmentExample;
 import com.hyjf.am.user.service.front.crm.CrmDepartmentService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
-import org.springframework.stereotype.Service;
 
 /**
  * @Description crm oa Department 表同步
@@ -13,6 +19,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class CrmDepartmentServiceImpl extends BaseServiceImpl implements CrmDepartmentService {
+    @Resource
+    private UserCrmInfoCustomizeMapper userCrmInfoCustomizeMapper;
 
     /**
      * 修改
@@ -55,5 +63,10 @@ public class CrmDepartmentServiceImpl extends BaseServiceImpl implements CrmDepa
     @Override
     public void updateByExample(ROaDepartment department, ROaDepartmentExample example) {
         rOaDepartmentMapper.updateByExample(department, example);
+    }
+
+    @Override
+    public List<String> selectTwoDivisionByPrimaryDivision(String primaryDivision) {
+        return userCrmInfoCustomizeMapper.selectTwoDivisionByPrimaryDivision(primaryDivision);
     }
 }

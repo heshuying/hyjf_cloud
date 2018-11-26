@@ -55,6 +55,11 @@ public class BorrowRepaymentInfoCustomizeVO {
     private String repayBatchNo; //还款批次号
     private String instName; //机构名称
 
+    /**
+     * 还款冻结订单号
+     */
+    private String freezeOrderId;
+
     public String getAssetId() {
         return assetId;
     }
@@ -437,5 +442,13 @@ public class BorrowRepaymentInfoCustomizeVO {
 
     public void setInstName(String instName) {
         this.instName = instName;
+    }
+
+    public String getFreezeOrderId() {
+        return freezeOrderId;
+    }
+
+    public void setFreezeOrderId(String freezeOrderId) {
+        this.freezeOrderId = freezeOrderId;
     }
 }

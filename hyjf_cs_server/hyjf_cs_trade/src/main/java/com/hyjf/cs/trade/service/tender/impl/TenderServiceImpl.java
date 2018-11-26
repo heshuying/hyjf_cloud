@@ -184,6 +184,13 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 		/*原Borrow borrow = this.getBorrowByNid(borrowNid);*/
 		BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
 		
+		//测试
+		if(borrow == null){
+			logger.info("根据borrowNid查询borrow和info结果为null"+borrowNid);
+		} else {
+			logger.info("根据borrowNid查询borrow和info结果   不   为null"+borrow.toString());
+		}
+		
 		// 判断借款信息是否存在
 		if (borrow == null || borrow.getId() == null) {
 			return jsonMessage("借款项目不存在", "1");
@@ -224,6 +231,14 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 			if (!newUser) {
 				return jsonMessage("该项目只能新手投资", "1");
 			}
+		}
+
+		
+		//测试log
+		if(borrow.getCanTransactionPc() == null){
+			logger.info("borrow.getCanTransactionPc()是null");
+		} else {
+			logger.info("platform的值是：" + platform + "borrow.getCanTransactionPc()的值：" + borrow.getCanTransactionPc());
 		}
 
 		// 项目投资客户端
@@ -327,6 +342,13 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 			}
 			// 剩余可投金额
 			Integer min = borrow.getTenderAccountMin();
+			
+			if(min == null){
+				logger.info("borrow.getTenderAccountMin()是null");
+			} else {
+				logger.info("剩余可投金额" + min);
+			}
+			
 			// 当剩余可投金额小于最低起投金额，不做最低起投金额的限制
 			if (min != null && min != 0 && new BigDecimal(balance).compareTo(new BigDecimal(min)) == -1) {
 				if (accountBigDecimal.compareTo(new BigDecimal(balance)) == 1) {
@@ -347,6 +369,13 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 					}
 				} else {
 					Integer max = borrow.getTenderAccountMax();
+					
+					if(max == null){
+						logger.info("borrow.getTenderAccountMax()是null");
+					} else {
+						logger.info("最大可投金额" + max);
+					}
+
 					if (max != null && max != 0 && accountBigDecimal.compareTo(new BigDecimal(max)) == 1) {
 						return jsonMessage("项目最大投资额为" + max + "元", "1");
 					}

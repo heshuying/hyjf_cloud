@@ -37,6 +37,10 @@ public class ApiBorrowRepaymentInfoCustomize  implements Serializable {
     private String serviceFee; //服务费
     private String recoverSumTotal; //应还总额
 
+    /**
+     * 还款冻结订单号
+     */
+    private String freezeOrderId;
 
    /* private String planNid;//计划编号
     private String userId;// 借款人ID
@@ -240,5 +244,13 @@ public class ApiBorrowRepaymentInfoCustomize  implements Serializable {
 
     public void setRecoverSumTotal(String recoverSumTotal) {
         this.recoverSumTotal = recoverSumTotal;
+    }
+
+    public String getFreezeOrderId() {
+        return freezeOrderId;
+    }
+
+    public void setFreezeOrderId(String freezeOrderId) {
+        this.freezeOrderId = freezeOrderId;
     }
 }
