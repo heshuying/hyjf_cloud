@@ -14,7 +14,9 @@ import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
 import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmMarketClient;
@@ -155,10 +157,13 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
         } catch (Exception e) {
             userAccountInfo.setEvaluated("0");
         }
-
+        // 设置服务费授权
         if (users.getPaymentAuthStatus() != null) {
             userAccountInfo.setPaymentAuthStatus(users.getPaymentAuthStatus());
         }
+
+        // 设置服务费授权开关 0未开启  1已开启
+        userAccountInfo.setPaymentAuthOn(CommonUtils.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
 
         if (users.getUserId() != null) {
             List<BankCardVO> bankCardList = this.amUserClient.getBankOpenAccountById(users.getUserId());
