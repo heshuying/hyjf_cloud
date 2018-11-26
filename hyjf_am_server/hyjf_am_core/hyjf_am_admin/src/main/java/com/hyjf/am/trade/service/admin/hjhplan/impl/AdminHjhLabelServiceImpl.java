@@ -380,6 +380,9 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 		hjhLabel.setLabelState(request.getLabelState());
 		hjhLabel.setUpdateUserId(request.getCreateUserId());
 		hjhLabel.setUpdateTime(new Date());
+		
+		hjhLabel.setDelFlag(0);
+		
 /*        if(hjhLabel.getAssetType()==null){
         	hjhLabel.setAssetTypeName("");
         }
