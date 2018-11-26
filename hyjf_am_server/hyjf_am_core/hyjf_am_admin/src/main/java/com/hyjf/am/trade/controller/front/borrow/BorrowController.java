@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.borrow;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.trade.*;
@@ -120,17 +121,17 @@ public class BorrowController extends BaseController {
 	public BorrowResponse getBorrow(@PathVariable String borrowNid) {
 		BorrowResponse response = new BorrowResponse();
 		Borrow borrow = borrowService.getBorrow(borrowNid);
-		logger.info("---------------------1getBorrow:"+borrow);
+		logger.info("---------------------1getBorrow:"+JSONObject.toJSON(borrow));
 		BorrowInfo borrowInfo = borrowService.getBorrowInfoByNid(borrowNid);
 		BorrowAndInfoVO borrowVO = new BorrowAndInfoVO();
 		if (Validator.isNotNull(borrow)){
 			borrowVO=CommonUtils.convertBean(borrow,BorrowAndInfoVO.class);
-			logger.info("---------------------2getBorrow:"+borrow);
+			logger.info("---------------------2getBorrow:"+JSONObject.toJSON(borrow));
 		}
 		if (Validator.isNotNull(borrowInfo)){
 			borrowVO.setInstCode(borrowInfo.getInstCode());
 		}
-		logger.info("---------------------3getBorrow:"+borrow);
+		logger.info("---------------------3getBorrow:"+JSONObject.toJSON(borrow));
 		response.setResult(borrowVO);
 		return response;
 	}

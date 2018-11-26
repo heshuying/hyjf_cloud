@@ -35,6 +35,8 @@ public class CouponBackMoneyCustomize extends BaseVO implements Serializable {
     private String transferId;
     //状态
     private String receivedFlg;
+    //状态
+    private String receivedFlgString;
     //应回款日期
     private String recoverTime;
     //真实投资金额
@@ -382,5 +384,13 @@ public class CouponBackMoneyCustomize extends BaseVO implements Serializable {
 
     public void setOrderId(String orderId) {
         this.orderId = orderId;
+    }
+
+    public String getReceivedFlgString() {
+        return receivedFlgString;
+    }
+
+    public void setReceivedFlgString(String receivedFlgString) {
+        this.receivedFlgString = receivedFlgString;
     }
 }

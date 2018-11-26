@@ -200,10 +200,10 @@ public class CouponTenderHjhController extends BaseController {
         map.put("couponCode", "优惠券类型编号");
         map.put("couponTypeStr", "优惠券类型");
         map.put("couponQuota", "面值");
-        map.put("couponFrom", "来源");
+        map.put("couponSource", "来源");
         map.put("couponContent", "内容");
-        map.put("borrowNid", "项目编号");
-        map.put("account", "投资金额");
+        map.put("borrowNid", "智投编号");
+        map.put("account", "授权服务金额");
         map.put("borrowPeriod", "项目期限");
         map.put("borrowApr", "年化收益");
         map.put("operatingDeck", "操作平台");
