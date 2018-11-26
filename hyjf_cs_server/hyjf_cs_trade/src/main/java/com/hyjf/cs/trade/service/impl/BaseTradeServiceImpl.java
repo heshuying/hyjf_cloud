@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.service.impl;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -68,7 +69,10 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
     public UserVO getUserByUserId(Integer userId){
         return amUserClient.findUserById(userId);
     }
-
+    @Override
+    public HjhPlanVO getPlanByNid(String borrowNid){
+        return  amTradeClient.getPlanByNid(borrowNid);
+    }
     /**
      * 获取用户在银行的开户信息
      * @param userId
