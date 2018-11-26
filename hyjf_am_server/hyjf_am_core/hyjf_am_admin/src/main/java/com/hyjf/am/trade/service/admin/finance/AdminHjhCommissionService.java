@@ -65,4 +65,11 @@ public interface AdminHjhCommissionService {
      * @return
      */
 	Integer updateTenderCommissionRecord(CommissionComboRequest request);
+	
+    /**
+     * 根据筛选条件查询list
+     * @param request 筛选条件
+     * @return
+     */
+	List<HjhCommissionCustomizeVO> selectHjhCommissionListWithOutPage(HjhCommissionRequest request);
 }

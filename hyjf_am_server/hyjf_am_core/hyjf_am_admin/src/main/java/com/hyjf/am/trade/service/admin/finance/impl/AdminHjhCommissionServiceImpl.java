@@ -514,4 +514,19 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 		}
 		return null;
 	}
+
+	@Override
+	public List<HjhCommissionCustomizeVO> selectHjhCommissionListWithOutPage(HjhCommissionRequest request) {
+		// 部门
+		if (Validator.isNotNull(request.getCombotreeSrch())) {
+			if (request.getCombotreeSrch().contains(StringPool.COMMA)) {
+				String[] list = request.getCombotreeSrch().split(StringPool.COMMA);
+				request.setCombotreeListSrch(list);
+			} else {
+				request.setCombotreeListSrch(new String[] { request.getCombotreeSrch() });
+			}
+		}
+		List<HjhCommissionCustomizeVO> hjhCommissionList = this.adminHjhCommissionMapper.queryPushMoneyDetail(request);
+		return hjhCommissionList;
+	}
 }
