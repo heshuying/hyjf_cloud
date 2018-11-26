@@ -1,15 +1,23 @@
 package com.hyjf.cs.user.controller.app.bankopen;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -24,7 +32,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author sunss
@@ -37,7 +47,8 @@ public class AppBankOpenController extends BaseUserController {
 
     @Autowired
     private BankOpenService bankOpenService;
-
+    @Autowired
+    UserOperationLogProducer userOperationLogProducer;
 
     /**
      * 获取开户信息
@@ -81,8 +92,23 @@ public class AppBankOpenController extends BaseUserController {
         }
         // 获取登录信息
         UserVO user = bankOpenService.getUsersById(userId);
+        UserInfoVO userInfoVO = bankOpenService.getUserInfo(userId);
         // 检查参数
         bankOpenService.checkRequestParam(user, bankOpenVO);
+
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE3);
+        userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+        userOperationLogEntity.setPlatform(Integer.valueOf(bankOpenVO.getPlatform()));
+        userOperationLogEntity.setRemark("");
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(user.getUsername());
+        userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
+        try {
+            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
+        }
         // 拼装参数 调用江西银行
         // 同步调用路径
         OpenAccountPageBean openBean = new OpenAccountPageBean();
