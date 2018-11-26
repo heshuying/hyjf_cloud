@@ -1,18 +1,22 @@
-package com.hyjf.admin.service.impl.qianle;
+package com.hyjf.cs.market.service.impl.qianle;
 
-import com.hyjf.admin.client.AmAdminClient;
-import com.hyjf.admin.client.AmUserClient;
-import com.hyjf.admin.service.qianle.DataSearchService;
 import com.hyjf.am.response.config.SmsConfigResponse;
 import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
 import com.hyjf.am.resquest.admin.SmsConfigRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.cs.market.client.AmConfigClient;
+import com.hyjf.cs.market.client.AmTradeClient;
+import com.hyjf.cs.market.client.AmUserClient;
+import com.hyjf.cs.market.service.qianle.DataSearchService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * @author lisheng
@@ -21,14 +25,15 @@ import org.springframework.stereotype.Service;
 @Service
 public class DataSearchServiceImpl implements DataSearchService {
 
-    @Autowired
-    AmAdminClient adminClient;
 
     @Autowired
     AmUserClient amUserClient;
+    @Autowired
+    AmConfigClient amConfigClient;
+    @Autowired
+    AmTradeClient amTradeClient;
     @Value("${qianle.mobile}")
     private String  configMobile;
-
 
     /**
      * 查詢千乐列表数据
@@ -38,13 +43,18 @@ public class DataSearchServiceImpl implements DataSearchService {
     @Override
     public DataSearchCustomizeResponse findDataList(DataSearchRequest dataSearchRequest) {
         DataSearchCustomizeResponse dataSearchCustomizeResponse = new DataSearchCustomizeResponse();
+        List<Integer> qianleUser = amUserClient.getQianleUser();
+        if (CollectionUtils.isEmpty(qianleUser)) {
+            return dataSearchCustomizeResponse;
+        }
+        dataSearchRequest.setUserIds(qianleUser);
         String type = dataSearchRequest.getType();
         if (StringUtils.equals(type,"1")) {
-            dataSearchCustomizeResponse= adminClient.queryQianleList(dataSearchRequest);
+            dataSearchCustomizeResponse= amTradeClient.queryQianleList(dataSearchRequest);
         }else  if (StringUtils.equals(type,"2")) {
-            dataSearchCustomizeResponse = adminClient.queryPlanList(dataSearchRequest);
+            dataSearchCustomizeResponse = amTradeClient.queryPlanList(dataSearchRequest);
         }else  if (StringUtils.equals(type,"3")) {
-             dataSearchCustomizeResponse = adminClient.querySanList(dataSearchRequest);
+             dataSearchCustomizeResponse = amTradeClient.querySanList(dataSearchRequest);
         }
         return dataSearchCustomizeResponse;
     }
@@ -72,18 +82,18 @@ public class DataSearchServiceImpl implements DataSearchService {
     @Override
     public SmsConfigResponse initSmsConfig() {
         SmsConfigRequest request = new SmsConfigRequest();
-        return adminClient.initSmsConfig(request);
+        return amConfigClient.initSmsConfig(request);
     }
 
     @Override
     public void saveSmsCode(String checkCode, String mobile, String platform) {
-        adminClient.saveSmsCode(mobile, checkCode, CustomConstants.PARAM_TPL_ZHAOHUIMIMA, CommonConstant.CKCODE_NEW, CustomConstants.CLIENT_WECHAT);
+        amUserClient.saveSmsCode(mobile, checkCode, CustomConstants.PARAM_TPL_ZHAOHUIMIMA, CommonConstant.CKCODE_NEW, CustomConstants.CLIENT_WECHAT);
 
     }
 
     @Override
     public int checkMobileCode(String phone, String code) {
-        return adminClient.onlyCheckMobileCode(phone,code);
+        return amUserClient.onlyCheckMobileCode(phone,code);
     }
 
 

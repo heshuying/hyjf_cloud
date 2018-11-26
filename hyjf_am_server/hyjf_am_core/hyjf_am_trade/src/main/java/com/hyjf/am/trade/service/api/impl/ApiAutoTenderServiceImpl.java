@@ -6,6 +6,7 @@ package com.hyjf.am.trade.service.api.impl;
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowTenderTmpinfoMapper;
+import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmp;
 import com.hyjf.am.trade.dao.model.auto.BorrowTenderTmpinfo;
 import com.hyjf.am.trade.service.api.autotender.ApiAutoTenderService;
@@ -33,10 +34,12 @@ public class ApiAutoTenderServiceImpl extends BaseServiceImpl implements ApiAuto
 	@Override
 	public Integer updateTenderLog(AutoTenderComboRequest autoTenderComboRequest) {
 		Integer flg;
+		Integer userId = autoTenderComboRequest.getUserId();
+		Borrow borrow = getBorrow(autoTenderComboRequest.getBorrowNid());
 		// 1，更新 BorrowTenderTmp 表
 		BorrowTenderTmp temp = new BorrowTenderTmp();
 		// 注意注掉的部分微服务已不再用
-		temp.setUserId(autoTenderComboRequest.getUserId());
+		temp.setUserId(userId);
 		temp.setBorrowNid(autoTenderComboRequest.getBorrowNid());
 		temp.setNid(autoTenderComboRequest.getGenerateOrderId());
 		temp.setAccount(new BigDecimal(autoTenderComboRequest.getAccount()));
@@ -59,6 +62,12 @@ public class ApiAutoTenderServiceImpl extends BaseServiceImpl implements ApiAuto
 		temp.setPeriodStatus(0);
 		temp.setWeb(0);*/
 		temp.setIsBankTender(1);
+		
+		temp.setStatus(0);
+		temp.setBorrowUserId(borrow.getUserId());
+		temp.setBorrowUserName(borrow.getBorrowUserName());
+		temp.setInviteUserId(0);
+		
 		temp.setCreateTime(new Date());
 		/*temp.setTenderUserName(userName);*/
         String couponGrantId = autoTenderComboRequest.getCouponGrantId();

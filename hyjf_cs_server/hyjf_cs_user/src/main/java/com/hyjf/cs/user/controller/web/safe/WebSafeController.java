@@ -166,16 +166,16 @@ public class WebSafeController extends BaseUserController {
      * @date: 2018/6/20
      */
     @ApiOperation(value = "绑定邮箱", notes = "绑定邮箱")
-    @PostMapping(value = "/bindEmail", produces = "application/json; charset=utf-8")
-    public WebResult<Object> bindEmail(@RequestHeader(value = "userId") int userId, @RequestBody BindEmailVO bindEmailVO,HttpServletRequest request) {
+    @RequestMapping(value = "/bindEmail", produces = "application/json; charset=utf-8")
+    public WebResult<Object> bindEmail(@RequestBody BindEmailVO bindEmailVO,HttpServletRequest request) {
         logger.info("用戶绑定邮箱, bindEmailVO :{}", JSONObject.toJSONString(bindEmailVO));
         WebResult<Object> result = new WebResult<Object>();
 
-        safeService.checkForEmailBind(bindEmailVO, userId);
+        safeService.checkForEmailBind(bindEmailVO);
 
         try {
-            safeService.updateEmail(userId, bindEmailVO.getEmail());
-            WebViewUserVO webUser = safeService.getWebViewUserByUserId(userId);
+            safeService.updateEmail(Integer.parseInt(bindEmailVO.getKey()), bindEmailVO.getEmail());
+            WebViewUserVO webUser = safeService.getWebViewUserByUserId(Integer.parseInt(bindEmailVO.getKey()));
             if (null != webUser) {
                 UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
                 if(org.apache.commons.lang.StringUtils.isNotEmpty(bindEmailVO.getIsUpdate())&&"isUpdate".equals(bindEmailVO.getIsUpdate())){

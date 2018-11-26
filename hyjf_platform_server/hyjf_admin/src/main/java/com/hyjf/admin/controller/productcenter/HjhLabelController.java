@@ -381,30 +381,42 @@ public class HjhLabelController extends BaseController{
         	if (StringUtils.isNotEmpty(viewRequest.getLabelName())){
         		request.setLabelName(viewRequest.getLabelName());
         	} 
+        	
         	//标的期限最小
-        	if (StringUtils.isNotEmpty(viewRequest.getLabelTermStart())) {
+        	if (viewRequest.getLabelTermStart()!= null) {
         		request.setLabelTermStart(Integer.valueOf(viewRequest.getLabelTermStart()));
+        	} else {
+        		request.setLabelTermStart(null);
         	}
         	//标的期限最大
-        	if (StringUtils.isNotEmpty(viewRequest.getLabelTermEnd())) {
+        	if (viewRequest.getLabelTermEnd()!= null) {
         		request.setLabelTermEnd(Integer.valueOf(viewRequest.getLabelTermEnd()));
+        	} else {
+        		request.setLabelTermEnd(null);
         	}
+        	
         	// 日/月
         	if (StringUtils.isNotEmpty(viewRequest.getLabelTermType())) {
         		request.setLabelTermType(viewRequest.getLabelTermType());
         	}
+        	
+        	
+        	
         	// 标的实际利率最小
-        	if (StringUtils.isNotEmpty(viewRequest.getLabelAprStart())) {
+        	if (viewRequest.getLabelAprStart()!= null) {
         		request.setLabelAprStart(new BigDecimal(viewRequest.getLabelAprStart()));
         	} else {
-        		request.setLabelAprStart(BigDecimal.ZERO);
+        		request.setLabelAprStart(null);
         	}
         	// 标的实际利率最大
-        	if (StringUtils.isNotEmpty(viewRequest.getLabelAprEnd())) {
+        	if (viewRequest.getLabelAprEnd()!= null) {
         		request.setLabelAprEnd(new BigDecimal(viewRequest.getLabelAprEnd()));
         	} else {
-        		request.setLabelAprEnd(BigDecimal.ZERO);
+        		request.setLabelAprEnd(null);
         	}
+        	
+        	
+        	
         	// 还款方式
         	if (StringUtils.isNotEmpty(viewRequest.getBorrowStyle())) {
         		request.setBorrowStyle(viewRequest.getBorrowStyle());
@@ -413,18 +425,23 @@ public class HjhLabelController extends BaseController{
         	if (StringUtils.isNotEmpty(viewRequest.getBorrowStyleName())) {
         		request.setBorrowStyleName(viewRequest.getBorrowStyleName());
         	}
+        	
+        	
         	// 标的实际支付金额最小
-        	if (StringUtils.isNotEmpty(viewRequest.getLabelPaymentAccountStart())) {
+        	if (viewRequest.getLabelPaymentAccountStart()!= null) {
         		request.setLabelPaymentAccountStart(new BigDecimal(viewRequest.getLabelPaymentAccountStart()));
         	} else {
-        		request.setLabelPaymentAccountStart(BigDecimal.ZERO);
+        		request.setLabelPaymentAccountStart(null);
         	}
         	// 标的实际支付金额最大
-        	if (StringUtils.isNotEmpty(viewRequest.getLabelPaymentAccountEnd())) {
+        	if (viewRequest.getLabelPaymentAccountEnd()!= null) {
         		request.setLabelPaymentAccountEnd(new BigDecimal(viewRequest.getLabelPaymentAccountEnd()));
         	} else {
-        		request.setLabelPaymentAccountEnd(BigDecimal.ZERO);
+        		request.setLabelPaymentAccountEnd(null);
         	}
+        	
+        	
+        	
         	// 资产来源Code
         	if (StringUtils.isNotEmpty(viewRequest.getInstCode())) {
         		request.setInstCode(viewRequest.getInstCode());
@@ -472,14 +489,24 @@ public class HjhLabelController extends BaseController{
             } catch (ParseException e) {
                 jsonObject.put("errorMsg", "标签的结束推送时间节点必须大于开始的推送时间节点!");
             }
+            
+            
+            
             // 剩余最小天数
-           	if (StringUtils.isNotEmpty(viewRequest.getRemainingDaysStart())) {
+           	if (viewRequest.getRemainingDaysStart()!= null) {
         		request.setRemainingDaysStart(Integer.valueOf(viewRequest.getRemainingDaysStart()));
+        	} else {
+        		request.setRemainingDaysStart(null);
         	}
             // 剩余最大天数
-           	if (StringUtils.isNotEmpty(viewRequest.getRemainingDaysEnd())) {
+           	if (viewRequest.getRemainingDaysEnd()!= null) {
         		request.setRemainingDaysEnd(Integer.valueOf(viewRequest.getRemainingDaysEnd()));
+        	} else {
+        		request.setRemainingDaysEnd(null);
         	}
+           	
+           	
+           	
            	// 标签状态
            	if (StringUtils.isNotEmpty(viewRequest.getLabelState())) {
         		request.setLabelState(Integer.valueOf(viewRequest.getLabelState()));

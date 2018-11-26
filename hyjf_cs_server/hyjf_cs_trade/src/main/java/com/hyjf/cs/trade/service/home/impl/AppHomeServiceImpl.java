@@ -675,11 +675,6 @@ public class AppHomeServiceImpl implements AppHomeService {
             homePageCustomize.setBorrowUrl(HOST + HomePageDefine.PLAN + listCustomize.getBorrowNid());
             homePageCustomize.setBorrowApr(listCustomize.getBorrowApr() + "%");
             homePageCustomize.setBorrowPeriod(listCustomize.getBorrowPeriod());
-            String borrowExtraYield = listCustomize.getBorrowExtraYield();
-            if(StringUtils.isNotBlank(borrowExtraYield)){
-                borrowExtraYield = borrowExtraYield.substring(1,borrowExtraYield.length());
-            }
-            homePageCustomize.setBorrowExtraYield(borrowExtraYield);
             String status = listCustomize.getStatus();
             if ("稍后开启".equals(listCustomize.getStatusName())){    //1.启用  2.关闭
                 // 20.立即加入  21.稍后开启
@@ -693,6 +688,24 @@ public class AppHomeServiceImpl implements AppHomeService {
             }*/else if("授权服务".equals(listCustomize.getStatusName())){  //1.启用  2.关闭
                 homePageCustomize.setStatus("20");
                 homePageCustomize.setStatusName("授权服务");
+            }else if("立即投资".equals(listCustomize.getStatusName())){
+                //add by nxl 智投服务->添加推荐服务标题
+                homePageCustomize.setTitle("推荐产品");
+                homePageCustomize.setStatus(listCustomize.getStatus());
+                homePageCustomize.setStatusName("立即投资");
+                homePageCustomize.setBorrowTheSecondDesc("项目期限");
+                // add by nxl 智投服务 推荐产品显示历史年回报率
+                homePageCustomize.setBorrowTheFirstDesc("历史年回报率");
+                homePageCustomize.setBorrowUrl(HOST + HomePageDefine.BORROW + listCustomize.getBorrowNid());
+                String borrowExtraYield = listCustomize.getBorrowExtraYield();
+                if(StringUtils.isNotBlank(borrowExtraYield)){
+                    borrowExtraYield = borrowExtraYield.substring(1,borrowExtraYield.length());
+                }
+                homePageCustomize.setBorrowExtraYield(borrowExtraYield);
+            }else {
+                homePageCustomize.setStatus("21");
+                homePageCustomize.setStatusName("稍后开启");
+                homePageCustomize.setStatusNameDesc("");
             }
             homePageCustomize.setOnTime(listCustomize.getOnTime());
             homePageCustomize.setBorrowSchedule(listCustomize.getBorrowSchedule());

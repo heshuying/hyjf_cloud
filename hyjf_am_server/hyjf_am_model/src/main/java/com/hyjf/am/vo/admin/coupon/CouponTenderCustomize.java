@@ -41,8 +41,14 @@ public class CouponTenderCustomize extends BaseVO {
     private Integer id;
     //优惠券类型
     private String couponType;
+    private String receivedFlg;
+    private BigDecimal recoverAccountInterestWait;
+    //预期收益
+    private BigDecimal recoverAccountAll;
     //使用时间
     private String couponFrom;
+    //使用时间
+    private String couponSource;
     //使用时间
     private String couponContent;
 
@@ -196,5 +202,37 @@ public class CouponTenderCustomize extends BaseVO {
 
     public void setCouponContent(String couponContent) {
         this.couponContent = couponContent;
+    }
+
+    public String getCouponSource() {
+        return couponSource;
+    }
+
+    public void setCouponSource(String couponSource) {
+        this.couponSource = couponSource;
+    }
+
+    public String getReceivedFlg() {
+        return receivedFlg;
+    }
+
+    public void setReceivedFlg(String receivedFlg) {
+        this.receivedFlg = receivedFlg;
+    }
+
+    public BigDecimal getRecoverAccountInterestWait() {
+        return recoverAccountInterestWait;
+    }
+
+    public void setRecoverAccountInterestWait(BigDecimal recoverAccountInterestWait) {
+        this.recoverAccountInterestWait = recoverAccountInterestWait;
+    }
+
+    public BigDecimal getRecoverAccountAll() {
+        return recoverAccountAll;
+    }
+
+    public void setRecoverAccountAll(BigDecimal recoverAccountAll) {
+        this.recoverAccountAll = recoverAccountAll;
     }
 }

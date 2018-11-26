@@ -11,6 +11,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ServiceException;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -259,6 +260,10 @@ public interface UserService extends BaseService {
 	 */
 	Integer updateStatusByUserId(Integer userId, String smsOpenStatus, String emailOpenStatus);
 
+	/**
+	 * 查询千乐渠道用户
+	 * @return
+	 */
 	List<Integer> getQianleUser();
 	/**
 	 * 更新ht_hjh_user_auth_log
@@ -291,4 +296,6 @@ public interface UserService extends BaseService {
 	 * @return
 	 */
 	UserDepartmentInfoCustomizeVO queryUserDepartmentInfoByUserId(Integer userId);
+
+
 }
