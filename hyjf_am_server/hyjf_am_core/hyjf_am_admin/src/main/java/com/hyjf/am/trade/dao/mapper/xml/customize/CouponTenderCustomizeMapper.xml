@@ -21,6 +21,7 @@
         <result column="order_date" property="orderDate" jdbcType="VARCHAR" />
         <result column="coupon_from" property="couponFrom" jdbcType="VARCHAR" />
         <result column="coupon_content" property="couponContent" jdbcType="VARCHAR" />
+        <result column="coupon_source" property="couponSource" jdbcType="VARCHAR" />
         <result column="recover_account_interest_wait" property="recoverAccountInterestWait" />
         <result column="recover_account_all" property="recoverAccountAll" />
         <result column="attribute" property="attribute" jdbcType="VARCHAR" />
@@ -84,12 +85,13 @@
         <result column="user_content" property="userContent" />
     </resultMap>
 
-    <resultMap id="selectCouponRecoverMap" type="com.hyjf.am.trade.dao.model.customize.CouponRecoverCustomize">
+    <resultMap id="selectCouponRecoverMap" type="com.hyjf.am.vo.admin.coupon.CouponRecoverVO">
         <result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
         <result column="recover_period" property="recoverPeriod" jdbcType="VARCHAR" />
-        <result column="transfer_time" property="transferTime" jdbcType="INTEGER" />
+        <result column="transfer_time_string" property="transferTimeString" jdbcType="VARCHAR" />
         <result column="recover_interest" property="recoverInterest" jdbcType="VARCHAR" />
         <result column="recover_yestime" property="recoverYestime" jdbcType="VARCHAR" />
+        <result column="recover_yestimeString" property="recoverYestimeString" jdbcType="VARCHAR" />
         <result column="recover_time" property="recoverTime" jdbcType="INTEGER" />
         <result column="recover_time_string" property="recoverTimeString" jdbcType="VARCHAR" />
         <result column="exp_time" property="expTime" jdbcType="INTEGER" />
@@ -489,12 +491,13 @@
         FROM_UNIXTIME(
         hcr.transfer_time,
         '%Y-%m-%d %H:%i'
-        ) transfer_time,
+        ) transfer_time_string,
         hcr.recover_account recover_interest,
+        hcr.recover_yestime recover_yestime,
         FROM_UNIXTIME(
         hcr.recover_yestime,
         '%Y-%m-%d %H:%i'
-        ) recover_yestime,
+        ) recover_yestimeString,
         hcr.recover_time recover_time,
         FROM_UNIXTIME(
         hcr.recover_time,
@@ -621,8 +624,17 @@
         ELSE
         CONCAT(hcc.coupon_quota, '%')
         END AS coupon_quota,
-
-
+        CASE
+        WHEN hcu.coupon_source = 1 THEN
+        '手动发放'
+        WHEN hcu.coupon_source = 2 THEN
+        '活动发放'
+        WHEN hcu.coupon_source = 3 THEN
+        'vip礼包'
+        ELSE
+        ''
+        END coupon_source,
+        hcc.content coupon_content,
         hbt.borrow_nid borrow_nid,
         hha.accede_account account,
         -- pa.`name` AS operating_deck,
@@ -886,12 +898,13 @@
         FROM_UNIXTIME(
         hcr.transfer_time,
         '%Y-%m-%d %H:%i'
-        ) transfer_time,
+        ) transfer_time_string,
         hcr.recover_account recover_interest,
+        hcr.recover_yestime recover_yestime,
         FROM_UNIXTIME(
         hcr.recover_yestime,
         '%Y-%m-%d %H:%i'
-        ) recover_yestime,
+        ) recover_yestimeString,
         hcr.recover_time recover_time,
         FROM_UNIXTIME(
         hcr.recover_time,
@@ -988,6 +1001,7 @@
     <resultMap id="selectCouponBackMoneyMap" type="com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize">
         <result column="id" property="id" jdbcType="INTEGER" />
         <result column="coupon_user_code" property="couponUserCode" jdbcType="VARCHAR" />
+        <result column="coupon_code" property="couponCode" jdbcType="VARCHAR" />
         <result column="nid" property="nid" jdbcType="VARCHAR" />
         <result column="username" property="username" jdbcType="VARCHAR" />
         <result column="coupon_code" property="couponCode" jdbcType="VARCHAR" />
@@ -996,6 +1010,7 @@
         <result column="recover_interest" property="recoverInterest" jdbcType="VARCHAR" />
         <result column="transfer_id" property="transferId" jdbcType="VARCHAR" />
         <result column="received_flg" property="receivedFlg" jdbcType="VARCHAR" />
+        <result column="received_flg_string" property="receivedFlgString" jdbcType="VARCHAR" />
         <result column="recover_time" property="recoverTime" jdbcType="VARCHAR" />
         <result column="recover_capital" property="recoverCapital" jdbcType="VARCHAR" />
         <result column="add_time" property="addTime" jdbcType="VARCHAR" />
@@ -1031,6 +1046,34 @@
     <select id="getRecordListHztDJ" resultMap="selectCouponBackMoneyMap" parameterType="com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize">
         SELECT
         hcu.id id,
+        hcc.coupon_code coupon_code,
+        CASE
+        WHEN hcr.received_flg = 1 THEN
+        '未回款'
+        WHEN hcr.received_flg = 2 THEN
+        '未领取'
+        WHEN hcr.received_flg = 3 THEN
+        '转账中'
+        WHEN hcr.received_flg = 4 THEN
+        '转账失败'
+        WHEN hcr.received_flg = 5 THEN
+        '已领取'
+        WHEN hcr.received_flg = 6 THEN
+        '已过期'
+        ELSE
+        ''
+        END received_flg_string,
+        CASE
+        WHEN hcu.coupon_source = 1 THEN
+        '手动发放'
+        WHEN hcu.coupon_source = 2 THEN
+        '活动发放'
+        WHEN hcu.coupon_source = 3 THEN
+        'vip礼包'
+        ELSE
+        ''
+        END coupon_source,
+        hcc.content coupon_content,
         hcu.coupon_user_code coupon_user_code,
         hbt.nid nid,
         hu.username username,
@@ -1082,6 +1125,9 @@
         LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
         LEFT JOIN ht_borrow_tender hbten ON hcrt.real_tender_id=hbten.nid
         <include refid="selectCouponBackMoneyList_Where_Clause" />
+        <if test="limitStart >= 0" >
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
     </select>
 
     <select id="queryHztRecoverInterestTotle" resultType="java.lang.String" parameterType="com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize">
@@ -1097,6 +1143,9 @@
         LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
         LEFT JOIN ht_borrow_tender hbten ON hcrt.real_tender_id=hbten.nid
         <include refid="selectCouponBackMoneyList_Where_Clause" />
+        <if test="limitStart >= 0" >
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
     </select>
 
     <select id="countRecordHztTY" resultType="java.lang.Integer" parameterType="com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize">
@@ -1116,6 +1165,34 @@
     <select id="getRecordListHztTY" resultMap="selectCouponBackMoneyMap" parameterType="com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize">
         SELECT
         hcu.id id,
+        hcc.coupon_code coupon_code,
+        CASE
+        WHEN hcr.received_flg = 1 THEN
+        '未回款'
+        WHEN hcr.received_flg = 2 THEN
+        '未领取'
+        WHEN hcr.received_flg = 3 THEN
+        '转账中'
+        WHEN hcr.received_flg = 4 THEN
+        '转账失败'
+        WHEN hcr.received_flg = 5 THEN
+        '已领取'
+        WHEN hcr.received_flg = 6 THEN
+        '已过期'
+        ELSE
+        ''
+        END received_flg_string,
+        CASE
+        WHEN hcu.coupon_source = 1 THEN
+        '手动发放'
+        WHEN hcu.coupon_source = 2 THEN
+        '活动发放'
+        WHEN hcu.coupon_source = 3 THEN
+        'vip礼包'
+        ELSE
+        ''
+        END coupon_source,
+        hcc.content coupon_content,
         hbt.nid nid,
         hu.username username,
         IFNULL(hbten.account,'0.00') recover_capital,
@@ -1172,6 +1249,34 @@
     <select id="getRecordListHztJX" resultMap="selectCouponBackMoneyMap" parameterType="com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize">
         SELECT
         hcu.id id,
+        hcc.coupon_code coupon_code,
+        CASE
+        WHEN hcr.received_flg = 1 THEN
+        '未回款'
+        WHEN hcr.received_flg = 2 THEN
+        '未领取'
+        WHEN hcr.received_flg = 3 THEN
+        '转账中'
+        WHEN hcr.received_flg = 4 THEN
+        '转账失败'
+        WHEN hcr.received_flg = 5 THEN
+        '已领取'
+        WHEN hcr.received_flg = 6 THEN
+        '已过期'
+        ELSE
+        ''
+        END received_flg_string,
+        CASE
+        WHEN hcu.coupon_source = 1 THEN
+        '手动发放'
+        WHEN hcu.coupon_source = 2 THEN
+        '活动发放'
+        WHEN hcu.coupon_source = 3 THEN
+        'vip礼包'
+        ELSE
+        ''
+        END coupon_source,
+        hcc.content coupon_content,
         hcu.coupon_user_code coupon_user_code,
         hbt.nid nid,
         hu.username username,
@@ -1316,6 +1421,34 @@
     <select id="getRecordListHjhDJ" resultMap="selectCouponBackMoneyMap" parameterType="com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize">
         SELECT
         hcu.id id,
+        hcc.coupon_code coupon_code,
+        CASE
+        WHEN hcr.received_flg = 1 THEN
+        '未回款'
+        WHEN hcr.received_flg = 2 THEN
+        '未领取'
+        WHEN hcr.received_flg = 3 THEN
+        '转账中'
+        WHEN hcr.received_flg = 4 THEN
+        '转账失败'
+        WHEN hcr.received_flg = 5 THEN
+        '已领取'
+        WHEN hcr.received_flg = 6 THEN
+        '已过期'
+        ELSE
+        ''
+        END received_flg_string,
+        CASE
+        WHEN hcu.coupon_source = 1 THEN
+        '手动发放'
+        WHEN hcu.coupon_source = 2 THEN
+        '活动发放'
+        WHEN hcu.coupon_source = 3 THEN
+        'vip礼包'
+        ELSE
+        ''
+        END coupon_source,
+        hcc.content coupon_content,
         hcu.coupon_user_code coupon_user_code,
         hbt.nid nid,
         hu.username username,
@@ -1368,6 +1501,9 @@
         LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
         LEFT JOIN ht_borrow_tender hbten ON hcrt.real_tender_id=hbten.nid
         <include refid="selectCouponBackMoneyHjhList_Where_Clause" />
+        <if test="limitStart >= 0" >
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
     </select>
 
     <select id="queryHjhRecoverInterestTotle" resultType="java.lang.String" parameterType="com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize">
@@ -1385,6 +1521,9 @@
         LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
         LEFT JOIN ht_hjh_accede hha ON hcrt.real_tender_id=hha.accede_order_id
         <include refid="selectCouponBackMoneyHjhList_Where_Clause" />
+        <if test="limitStart >= 0" >
+            LIMIT #{limitStart} , #{limitEnd}
+        </if>
     </select>
 
     <select id="countRecordHjhTY" resultType="java.lang.Integer" parameterType="com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize">
@@ -1403,6 +1542,34 @@
     <select id="getRecordListHjhTY" resultMap="selectCouponBackMoneyMap" parameterType="com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize">
         SELECT
         hcu.id id,
+        hcc.coupon_code coupon_code,
+        CASE
+        WHEN hcr.received_flg = 1 THEN
+        '未回款'
+        WHEN hcr.received_flg = 2 THEN
+        '未领取'
+        WHEN hcr.received_flg = 3 THEN
+        '转账中'
+        WHEN hcr.received_flg = 4 THEN
+        '转账失败'
+        WHEN hcr.received_flg = 5 THEN
+        '已领取'
+        WHEN hcr.received_flg = 6 THEN
+        '已过期'
+        ELSE
+        ''
+        END received_flg_string,
+        CASE
+        WHEN hcu.coupon_source = 1 THEN
+        '手动发放'
+        WHEN hcu.coupon_source = 2 THEN
+        '活动发放'
+        WHEN hcu.coupon_source = 3 THEN
+        'vip礼包'
+        ELSE
+        ''
+        END coupon_source,
+        hcc.content coupon_content,
         hbt.nid nid,
         hu.username username,
         IFNULL(hha.accede_account,'0.00') recover_capital,
@@ -1459,6 +1626,34 @@
     <select id="getRecordListHjhJX" resultMap="selectCouponBackMoneyMap" parameterType="com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize">
         SELECT
         hcu.id id,
+        hcc.coupon_code coupon_code,
+        CASE
+        WHEN hcr.received_flg = 1 THEN
+        '未回款'
+        WHEN hcr.received_flg = 2 THEN
+        '未领取'
+        WHEN hcr.received_flg = 3 THEN
+        '转账中'
+        WHEN hcr.received_flg = 4 THEN
+        '转账失败'
+        WHEN hcr.received_flg = 5 THEN
+        '已领取'
+        WHEN hcr.received_flg = 6 THEN
+        '已过期'
+        ELSE
+        ''
+        END received_flg_string,
+        CASE
+        WHEN hcu.coupon_source = 1 THEN
+        '手动发放'
+        WHEN hcu.coupon_source = 2 THEN
+        '活动发放'
+        WHEN hcu.coupon_source = 3 THEN
+        'vip礼包'
+        ELSE
+        ''
+        END coupon_source,
+        hcc.content coupon_content,
         hcu.coupon_user_code coupon_user_code,
         hbt.nid nid,
         hu.username username,

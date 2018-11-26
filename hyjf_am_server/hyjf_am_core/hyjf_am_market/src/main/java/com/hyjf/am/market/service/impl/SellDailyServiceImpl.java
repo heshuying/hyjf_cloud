@@ -4,7 +4,9 @@
 package com.hyjf.am.market.service.impl;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -75,7 +77,10 @@ public class SellDailyServiceImpl implements SellDailyService {
 
     @Override
     public SellDaily selectPrimaryDivisionSum(String dateStr, int drawOrder) {
-        return sellDailyCustomizeMapper.selectPrimaryDivisionSum(dateStr, drawOrder);
+        Map<String, Object> map = new HashMap<>();
+        map.put("dateStr", dateStr);
+        map.put("drawOrder", drawOrder);
+        return sellDailyCustomizeMapper.selectPrimaryDivisionSum(map);
     }
 
     @Override

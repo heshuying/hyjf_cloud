@@ -108,10 +108,10 @@ public class BorrowInvestController extends BaseController {
         //查询类赋值
         BorrowInvestRequest borrowInvestRequest = new BorrowInvestRequest();
         BeanUtils.copyProperties(borrowInvestRequestBean, borrowInvestRequest);
-        //如果是投资明细页面进入 默认近10天数据
-        if(!"1".equals(borrowInvestRequestBean.getIsOptFlag())){
-            borrowInvestRequest.setTimeStartSrch(GetDate.date2Str(GetDate.getTodayBeforeOrAfter(-10), new SimpleDateFormat("yyyy-MM-dd")));
-        }
+//        //如果是投资明细页面进入 默认近10天数据
+//        if(!"1".equals(borrowInvestRequestBean.getIsOptFlag())){
+//            borrowInvestRequest.setTimeStartSrch(GetDate.date2Str(GetDate.getTodayBeforeOrAfter(-10), new SimpleDateFormat("yyyy-MM-dd")));
+//        }
         BorrowInvestResponseBean responseBean = borrowInvestService.getBorrowInvestList(borrowInvestRequest);
         return new AdminResult(responseBean);
     }
@@ -446,9 +446,11 @@ public class BorrowInvestController extends BaseController {
         map.put("inviteUserAttribute", "推荐人用户属性（投资时）");
         map.put("tenderReferrerUsername", "推荐人（投资时）");
         map.put("tenderReferrerUserId", "推荐人ID（投资时）");
-        map.put("departmentLevel1Name", "一级分部（投资时）");
-        map.put("departmentLevel2Name", "二级分部（投资时）");
-        map.put("teamName", "团队（投资时）");
+        if (StringUtils.isNotBlank(isOrganizationView)) {
+            map.put("departmentLevel1Name", "一级分部（投资时）");
+            map.put("departmentLevel2Name", "二级分部（投资时）");
+            map.put("teamName", "团队（投资时）");
+        }
         map.put("account", "授权服务金额");
         map.put("operatingDeck", "操作平台");
         map.put("investType", "投资方式");

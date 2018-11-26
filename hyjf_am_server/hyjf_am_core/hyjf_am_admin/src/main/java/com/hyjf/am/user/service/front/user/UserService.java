@@ -246,7 +246,6 @@ public interface UserService extends BaseService {
 	 */
 	Integer updateStatusByUserId(Integer userId, String smsOpenStatus, String emailOpenStatus);
 
-	List<Integer> getQianleUser();
 	/**
 	 * 更新ht_hjh_user_auth_log
 	 * @param hjhUserAuthLog

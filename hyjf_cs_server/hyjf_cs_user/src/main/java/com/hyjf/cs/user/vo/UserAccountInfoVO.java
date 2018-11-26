@@ -30,7 +30,8 @@ public class UserAccountInfoVO implements Serializable {
     private String evaluated;
     // 是否服务费授权
     private Integer paymentAuthStatus;
-
+    //服务费授权开关
+    private Integer paymentAuthOn;
 
     //头像图片URL
     private String iconUrl;
@@ -139,5 +140,13 @@ public class UserAccountInfoVO implements Serializable {
 
     public void setIsBindCard(boolean isBindCard) {
         this.isBindCard = isBindCard;
+    }
+
+    public void setPaymentAuthOn(Integer paymentAuthOn) {
+        this.paymentAuthOn = paymentAuthOn;
+    }
+
+    public Integer getPaymentAuthOn() {
+        return paymentAuthOn;
     }
 }

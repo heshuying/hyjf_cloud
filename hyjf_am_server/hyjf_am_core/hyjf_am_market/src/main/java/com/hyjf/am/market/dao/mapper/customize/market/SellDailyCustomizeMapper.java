@@ -4,6 +4,7 @@
 package com.hyjf.am.market.dao.mapper.customize.market;
 
 import java.util.List;
+import java.util.Map;
 
 import com.hyjf.am.market.dao.model.auto.SellDaily;
 
@@ -21,11 +22,10 @@ public interface SellDailyCustomizeMapper {
 
     /**
      * 根据类型查询合计  type:2
-     * @param dateStr
-     * @param drawOrder
+     * @param map
      * @return
      */
-    SellDaily selectPrimaryDivisionSum(String dateStr, int drawOrder);
+    SellDaily selectPrimaryDivisionSum(Map<String, Object> map);
 
     /**
      * 根据类型查询合计  type:3

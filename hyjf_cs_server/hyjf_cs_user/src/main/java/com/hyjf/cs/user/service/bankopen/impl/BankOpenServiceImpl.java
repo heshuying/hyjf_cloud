@@ -129,6 +129,10 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
         if (StringUtils.isEmpty(bankOpenVO.getMobile())) {
             throw new CheckException(MsgEnum.STATUS_ZC000001);
         }
+        // app必须要有平台
+        if (StringUtils.isEmpty(bankOpenVO.getPlatform())) {
+            throw new CheckException(MsgEnum.STATUS_ZC000006);
+        }
         // 姓名
         if (StringUtils.isEmpty(bankOpenVO.getTrueName())) {
             throw new CheckException(MsgEnum.STATUS_ZC000007);

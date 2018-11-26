@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.mapper.auto.HjhUserAuthMapper;
-import com.hyjf.am.user.dao.mapper.customize.QianleUserCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
@@ -41,8 +40,6 @@ import java.util.*;
 public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 
-	@Autowired
-	QianleUserCustomizeMapper qianleUserCustomizeMapper;
 	@Autowired
 	HjhUserAuthMapper hjhUserAuthMapper;
 
@@ -1292,14 +1289,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		return usersMapper.updateByPrimaryKeySelective(user);
 	}
 
-	/**
-	 * 查询千乐渠道的用户
-	 * @return
-	 */
-    @Override
-    public List<Integer> getQianleUser() {
-		return qianleUserCustomizeMapper.queryQianleUser();
-    }
+
 
 	/**
 	 * 更新ht_hjh_user_auth_log

@@ -3,13 +3,17 @@
  */
 package com.hyjf.cs.user.controller.web.safe;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.UserOperationLogConstant;
+import com.hyjf.common.util.GetCilentIP;
+import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +56,8 @@ public class WebSafeController extends BaseUserController {
 
     @Autowired
     private SafeService safeService;
-
+    @Autowired
+    UserOperationLogProducer userOperationLogProducer;
 
     /**
      * 账户设置查询
@@ -162,7 +167,7 @@ public class WebSafeController extends BaseUserController {
      */
     @ApiOperation(value = "绑定邮箱", notes = "绑定邮箱")
     @PostMapping(value = "/bindEmail", produces = "application/json; charset=utf-8")
-    public WebResult<Object> bindEmail(@RequestHeader(value = "userId") int userId, @RequestBody BindEmailVO bindEmailVO) {
+    public WebResult<Object> bindEmail(@RequestHeader(value = "userId") int userId, @RequestBody BindEmailVO bindEmailVO,HttpServletRequest request) {
         logger.info("用戶绑定邮箱, bindEmailVO :{}", JSONObject.toJSONString(bindEmailVO));
         WebResult<Object> result = new WebResult<Object>();
 
@@ -172,6 +177,23 @@ public class WebSafeController extends BaseUserController {
             safeService.updateEmail(userId, bindEmailVO.getEmail());
             WebViewUserVO webUser = safeService.getWebViewUserByUserId(userId);
             if (null != webUser) {
+                UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+                if(org.apache.commons.lang.StringUtils.isNotEmpty(bindEmailVO.getIsUpdate())&&"isUpdate".equals(bindEmailVO.getIsUpdate())){
+                    userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE9);
+                }else {
+                    userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE8);
+                }
+                userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+                userOperationLogEntity.setPlatform(0);
+                userOperationLogEntity.setRemark("");
+                userOperationLogEntity.setOperationTime(new Date());
+                userOperationLogEntity.setUserName(webUser.getUsername());
+                userOperationLogEntity.setUserRole(webUser.getRoleId());
+                try {
+                    userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+                } catch (MQException e) {
+                    logger.error("保存用户日志失败", e);
+                }
                 webUser = safeService.updateUserToCache(webUser);
                 result.setData(webUser);
             }

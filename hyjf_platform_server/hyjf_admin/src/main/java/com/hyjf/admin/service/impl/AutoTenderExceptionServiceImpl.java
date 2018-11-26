@@ -324,7 +324,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                 }else if ("CA101141".equals(queryRetCode)){
                     // 更改加入明细状态和投资临时表状态
                     logger.info(hjhPlanBorrowTmp.getRespCode()+" 查询银行记录成功，但是投资失败:" + userId);
-                    updateTenderByParam(hjhAccede.getId(),orderStatus);
+                    updateTenderByParam(orderStatus,hjhAccede.getId());
 
                     // 只有不是接口成功表失败的情况才会退回队列
                     // 此处 if判断为汇计划三期优化改动
