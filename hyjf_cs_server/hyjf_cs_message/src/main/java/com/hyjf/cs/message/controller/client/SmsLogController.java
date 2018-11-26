@@ -85,7 +85,7 @@ public class SmsLogController extends BaseController {
 			/*voList.stream().forEach(e -> e.setPostString(
 					e.getEndtime() == null ? null : GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(e.getEndtime())));*/
 			for (SmsOntimeVO vo : voList) {
-				if (StringUtils.isNotBlank(vo.getMobile())) {
+				if (StringUtils.isBlank(vo.getMobile())) {
 					String member = "";
 					String money = "";
 					String add_time_end = "";
