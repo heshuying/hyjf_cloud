@@ -117,14 +117,14 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
     @Override
     public List<PushMoneyCustomize> searchPushMoneyList(PushMoneyRequest request) {
         // 部门
-        if (Validator.isNotNull(request.getCombotreeSrch())) {
+/*        if (Validator.isNotNull(request.getCombotreeSrch())) {
             if (request.getCombotreeSrch().contains(StringPool.COMMA)) {
                 String[] list = request.getCombotreeSrch().split(StringPool.COMMA);
                 request.setCombotreeListSrch(list);
             } else {
                 request.setCombotreeListSrch(new String[] { request.getCombotreeSrch() });
             }
-        }
+        }*/
         return pushMoneyCustomizeMapper.queryPushMoneyDetail(request);
     }
 

@@ -82,4 +82,12 @@ public interface PushMoneyManageService {
       * @return
       */
      JSONArray getCrmDepartmentList(String[] list);
+
+     /**
+      * 部门查询条件
+      * @auth sunpeikai
+      * @param
+      * @return
+      */
+     String[] getDeptId(String[] combotreeListSrch);
 }

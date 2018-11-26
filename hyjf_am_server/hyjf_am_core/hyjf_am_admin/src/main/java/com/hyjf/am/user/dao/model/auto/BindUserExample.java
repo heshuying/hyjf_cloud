@@ -255,52 +255,62 @@ public class BindUserExample {
             return (Criteria) this;
         }
 
-        public Criteria andBindUniqueIdEqualTo(Integer value) {
+        public Criteria andBindUniqueIdEqualTo(String value) {
             addCriterion("bind_unique_id =", value, "bindUniqueId");
             return (Criteria) this;
         }
 
-        public Criteria andBindUniqueIdNotEqualTo(Integer value) {
+        public Criteria andBindUniqueIdNotEqualTo(String value) {
             addCriterion("bind_unique_id <>", value, "bindUniqueId");
             return (Criteria) this;
         }
 
-        public Criteria andBindUniqueIdGreaterThan(Integer value) {
+        public Criteria andBindUniqueIdGreaterThan(String value) {
             addCriterion("bind_unique_id >", value, "bindUniqueId");
             return (Criteria) this;
         }
 
-        public Criteria andBindUniqueIdGreaterThanOrEqualTo(Integer value) {
+        public Criteria andBindUniqueIdGreaterThanOrEqualTo(String value) {
             addCriterion("bind_unique_id >=", value, "bindUniqueId");
             return (Criteria) this;
         }
 
-        public Criteria andBindUniqueIdLessThan(Integer value) {
+        public Criteria andBindUniqueIdLessThan(String value) {
             addCriterion("bind_unique_id <", value, "bindUniqueId");
             return (Criteria) this;
         }
 
-        public Criteria andBindUniqueIdLessThanOrEqualTo(Integer value) {
+        public Criteria andBindUniqueIdLessThanOrEqualTo(String value) {
             addCriterion("bind_unique_id <=", value, "bindUniqueId");
             return (Criteria) this;
         }
 
-        public Criteria andBindUniqueIdIn(List<Integer> values) {
+        public Criteria andBindUniqueIdLike(String value) {
+            addCriterion("bind_unique_id like", value, "bindUniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBindUniqueIdNotLike(String value) {
+            addCriterion("bind_unique_id not like", value, "bindUniqueId");
+            return (Criteria) this;
+        }
+
+        public Criteria andBindUniqueIdIn(List<String> values) {
             addCriterion("bind_unique_id in", values, "bindUniqueId");
             return (Criteria) this;
         }
 
-        public Criteria andBindUniqueIdNotIn(List<Integer> values) {
+        public Criteria andBindUniqueIdNotIn(List<String> values) {
             addCriterion("bind_unique_id not in", values, "bindUniqueId");
             return (Criteria) this;
         }
 
-        public Criteria andBindUniqueIdBetween(Integer value1, Integer value2) {
+        public Criteria andBindUniqueIdBetween(String value1, String value2) {
             addCriterion("bind_unique_id between", value1, value2, "bindUniqueId");
             return (Criteria) this;
         }
 
-        public Criteria andBindUniqueIdNotBetween(Integer value1, Integer value2) {
+        public Criteria andBindUniqueIdNotBetween(String value1, String value2) {
             addCriterion("bind_unique_id not between", value1, value2, "bindUniqueId");
             return (Criteria) this;
         }
