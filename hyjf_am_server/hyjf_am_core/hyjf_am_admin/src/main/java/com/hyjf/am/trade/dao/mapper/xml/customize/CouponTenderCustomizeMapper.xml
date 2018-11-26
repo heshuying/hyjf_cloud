@@ -1193,6 +1193,7 @@
         ''
         END coupon_source,
         hcc.content coupon_content,
+        CONCAT('第',hcr.recover_period, '期') recover_period,
         hbt.nid nid,
         hu.username username,
         IFNULL(hbten.account,'0.00') recover_capital,
