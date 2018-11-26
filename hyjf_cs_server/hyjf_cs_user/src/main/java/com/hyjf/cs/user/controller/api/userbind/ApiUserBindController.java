@@ -85,8 +85,8 @@ public class ApiUserBindController extends BaseUserController {
 	 * @return
 	 */
 	@ApiOperation(value = "页面授权绑定api-跳转登陆授权页面",notes = "页面授权绑定api-跳转登陆授权页面")
-	@GetMapping(value = "/bindApi")
-	public ModelAndView bindApi(HttpServletRequest request, HttpServletResponse response, ApiUserPostBean apiUserPostBean){
+	@RequestMapping(value = "/bindApi")
+	public ModelAndView bindApi(HttpServletRequest request, HttpServletResponse response,@RequestBody ApiUserPostBean apiUserPostBean){
 		// 设置接口结果页的信息（返回Url）
 		this.initCheckUtil(apiUserPostBean);
 		//TODO:用户登录授权页面
