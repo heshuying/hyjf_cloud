@@ -68,6 +68,8 @@ public class AppProjectListCustomizeVO extends BaseVO {
 	private String planPeriod;
 	// 计划可投金额
 	private String availableInvestAccount;
+	//非格式化的计划可投金额
+	private String availableInvestAccountNew;
 	// 计划状态名称
 	private String statusName;
 	//add by xiashuqing 20171108 end 首页汇计划展示
@@ -104,6 +106,14 @@ public class AppProjectListCustomizeVO extends BaseVO {
 
 	public AppProjectListCustomizeVO() {
 		super();
+	}
+
+	public String getAvailableInvestAccountNew() {
+		return availableInvestAccountNew;
+	}
+
+	public void setAvailableInvestAccountNew(String availableInvestAccountNew) {
+		this.availableInvestAccountNew = availableInvestAccountNew;
 	}
 
 	public String getBorrowNid() {
