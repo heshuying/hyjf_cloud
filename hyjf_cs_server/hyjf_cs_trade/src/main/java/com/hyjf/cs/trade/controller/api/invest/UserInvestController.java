@@ -41,9 +41,10 @@ public class UserInvestController extends BaseTradeController {
     @Autowired
     private CommonSvrChkService commonSvrChkService;
     @PostMapping("/repayList.do")
-    @ApiParam(required = true, name = "repaymentInfoList", value = " 第三方查询投资信息,获取回款记录")
+    @ApiParam(required = true, name = "repaymentInfoList", value = "第三方查询投资信息,获取回款记录")
     @ApiOperation(value = " 第三方查询投资信息,获取回款记录", httpMethod = "POST", notes = " 第三方查询投资信息,获取回款记录")
     public ResultApiBean repayList(@RequestBody ApiRepayListRequestBean bean) {
+        logger.info("----------------------第三方查询投资信息,获取回款记录ApiRepayListRequestBean："+JSONObject.toJSON(bean));
         // 验证
         CheckUtil.check(Validator.isNotNull(bean.getInstCode()), MsgEnum.STATUS_CE000001);
         CheckUtil.check(Validator.isNotNull(bean.getStartTime()), MsgEnum.STATUS_CE000001);

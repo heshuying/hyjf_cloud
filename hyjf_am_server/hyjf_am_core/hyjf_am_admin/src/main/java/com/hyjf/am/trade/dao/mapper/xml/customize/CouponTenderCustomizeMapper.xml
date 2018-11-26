@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper
         namespace="com.hyjf.am.trade.dao.mapper.customize.CouponTenderCustomizeMapper">
-    <resultMap id="selectCouponTenderMap" type="com.hyjf.am.resquest.admin.CouponTenderRequest">
+    <resultMap id="selectCouponTenderMap" type="com.hyjf.am.vo.admin.coupon.CouponTenderCustomize">
         <result column="id" property="id" jdbcType="INTEGER" />
         <result column="coupon_user_code" property="couponUserCode" jdbcType="VARCHAR" />
         <result column="order_id" property="orderId" jdbcType="VARCHAR" />
@@ -1193,6 +1193,7 @@
         ''
         END coupon_source,
         hcc.content coupon_content,
+        CONCAT('第',hcr.recover_period, '期') recover_period,
         hbt.nid nid,
         hu.username username,
         IFNULL(hbten.account,'0.00') recover_capital,

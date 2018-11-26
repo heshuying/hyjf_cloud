@@ -121,17 +121,14 @@ public class BorrowController extends BaseController {
 	public BorrowResponse getBorrow(@PathVariable String borrowNid) {
 		BorrowResponse response = new BorrowResponse();
 		Borrow borrow = borrowService.getBorrow(borrowNid);
-		logger.info("---------------------1getBorrow:"+JSONObject.toJSON(borrow));
 		BorrowInfo borrowInfo = borrowService.getBorrowInfoByNid(borrowNid);
 		BorrowAndInfoVO borrowVO = new BorrowAndInfoVO();
 		if (Validator.isNotNull(borrow)){
 			borrowVO=CommonUtils.convertBean(borrow,BorrowAndInfoVO.class);
-			logger.info("---------------------2getBorrow:"+JSONObject.toJSON(borrow));
 		}
 		if (Validator.isNotNull(borrowInfo)){
 			borrowVO.setInstCode(borrowInfo.getInstCode());
 		}
-		logger.info("---------------------3getBorrow:"+JSONObject.toJSON(borrow));
 		response.setResult(borrowVO);
 		return response;
 	}
