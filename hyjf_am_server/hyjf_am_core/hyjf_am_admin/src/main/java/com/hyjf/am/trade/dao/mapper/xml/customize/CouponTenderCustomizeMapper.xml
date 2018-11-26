@@ -1353,10 +1353,10 @@
             </if>
             <!-- 时间 -->
             <if test="timeStartSrch != null and timeStartSrch != ''">
-                AND hcr.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{timeStartSrch})
+                AND hcr.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(CONCAT(#{timeStartSrch},' 00:00:00'))
             </if>
             <if test="timeEndSrch != null and timeEndSrch != ''">
-                AND hcr.recover_time <![CDATA[<=]]> UNIX_TIMESTAMP(#{timeEndSrch})
+                AND hcr.recover_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{timeEndSrch},' 23:59:59'))
             </if>
         </where>
     </sql>
@@ -1397,10 +1397,10 @@
             </if>
             <!-- 时间 -->
             <if test="timeStartSrch != null and timeStartSrch != ''">
-                AND FROM_UNIXTIME( hcr.recover_time, '%Y-%m-%d' ) <![CDATA[>=]]> #{timeStartSrch}
+                AND hcr.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(CONCAT(#{timeStartSrch},' 00:00:00'))
             </if>
             <if test="timeEndSrch != null and timeEndSrch != ''">
-                AND FROM_UNIXTIME( hcr.recover_time, '%Y-%m-%d' ) <![CDATA[<=]]> #{timeEndSrch}
+                AND hcr.recover_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{timeEndSrch},' 23:59:59'))
             </if>
         </where>
     </sql>
@@ -1729,10 +1729,10 @@
             </if>
             <!-- 时间 -->
             <if test="timeStartSrch != null and timeStartSrch != ''">
-                AND hcr.recover_time <![CDATA[>=]]> #{timeStartSrch}
+                AND hcr.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(CONCAT(#{timeStartSrch},' 00:00:00'))
             </if>
             <if test="timeEndSrch != null and timeEndSrch != ''">
-                AND hcr.recover_time <![CDATA[<=]]> #{timeEndSrch}
+                AND hcr.recover_time <![CDATA[<=]]> UNIX_TIMESTAMP(CONCAT(#{timeEndSrch},' 23:59:59'))
             </if>
         </where>
     </sql>
