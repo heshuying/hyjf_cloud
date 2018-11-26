@@ -3,14 +3,6 @@
  */
 package com.hyjf.cs.market.client.impl;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
@@ -20,6 +12,7 @@ import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.response.trade.HolidaysConfigResponse;
 import com.hyjf.am.resquest.admin.ContentPartnerRequest;
 import com.hyjf.am.resquest.admin.EventsRequest;
+import com.hyjf.am.resquest.admin.SmsConfigRequest;
 import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.BasePage;
@@ -27,6 +20,13 @@ import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.cs.market.client.AmConfigClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author fuqiang
@@ -338,4 +338,16 @@ public class AmConfigClientImpl implements AmConfigClient {
 				BooleanResponse.class);
         return response.getResultBoolean();
     }
+
+	/**
+	 * 查询短信加固数据
+	 *
+	 * @param request
+	 * @return
+	 * @author xiehuili
+	 */
+	@Override
+	public SmsConfigResponse initSmsConfig(SmsConfigRequest request) {
+		return restTemplate.postForEntity("http://AM-CONFIG/am-config/smsConfig/initSmsConfig", request, SmsConfigResponse.class).getBody();
+	}
 }

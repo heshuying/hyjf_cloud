@@ -1,12 +1,13 @@
-package com.hyjf.am.trade.service.front.qianle.impl;
+package com.hyjf.am.trade.service.qianle.impl;
 
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.trade.dao.mapper.customize.QianleDataSearchCustomizeMapper;
-import com.hyjf.am.trade.service.front.qianle.QianleDataSearchService;
+import com.hyjf.am.trade.service.qianle.QianleDataSearchService;
 import com.hyjf.am.vo.trade.DataSearchCustomizeVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -115,7 +116,9 @@ public class QianleDataSearchServiceImpl implements QianleDataSearchService {
      */
     HashMap<String, Object> toDataMap(DataSearchRequest dataSearchRequest,Integer offset,Integer limit){
         HashMap<String, Object> hashMap = new HashMap<>();
-
+        if (!CollectionUtils.isEmpty(dataSearchRequest.getUserIds())) {
+            hashMap.put("userList", dataSearchRequest.getUserIds());
+        }
         if (StringUtils.isNotBlank(dataSearchRequest.getAddTimeStart())) {
             hashMap.put("addTimeStart",dataSearchRequest.getAddTimeStart());
         }

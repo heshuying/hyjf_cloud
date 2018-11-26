@@ -3,20 +3,22 @@
  */
 package com.hyjf.cs.market.client;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
 import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.config.SmsConfigResponse;
 import com.hyjf.am.response.config.WechatContentArticleResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
+import com.hyjf.am.resquest.admin.SmsConfigRequest;
 import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
+
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author fuqiang
@@ -203,4 +205,14 @@ public interface AmConfigClient {
      * @return
      */
     Date getFirstWorkdateAfterSomeDate(Date torrowDate);
+
+
+    /**
+     * 查询短信加固数据
+     *
+     * @param request
+     * @return
+     * @author xiehuili
+     */
+    SmsConfigResponse initSmsConfig(SmsConfigRequest request);
 }

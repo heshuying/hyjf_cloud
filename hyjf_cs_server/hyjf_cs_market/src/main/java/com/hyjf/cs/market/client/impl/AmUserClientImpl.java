@@ -1,16 +1,5 @@
 package com.hyjf.cs.market.client.impl;
 
-import java.math.BigDecimal;
-import java.util.*;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestTemplate;
-
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.StringResponse;
@@ -23,6 +12,16 @@ import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.market.client.AmUserClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * @author xiasq
@@ -255,7 +254,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
     public List<Integer> getQianleUser() {
-		return restTemplate.getForObject("http://AM-ADMIN/am-user/user/getQianleUser", List.class);
+		return restTemplate.getForObject("http://AM-USER/am-user/user/getQianleUser", List.class);
     }
 
 

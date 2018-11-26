@@ -1,64 +1,60 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.QianleDataSearchCustomizeMapper">
-
-
-    <select id="queryList" resultType="com.hyjf.am.vo.trade.DataSearchCustomizeVO" parameterType="java.util.Map">
+<select id="queryList" resultType="com.hyjf.am.vo.trade.DataSearchCustomizeVO" parameterType="java.util.Map">
         SELECT
         t1.nid,
         t1.user_id userId,
         CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/365)*0.07,2) ELSE FORMAT((t1.account * t4.borrow_period/12)*0.07,2) END money,
-        t2.reg_time reg_time,t2.username username,t3.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'散标' type,t1.borrow_nid AS plannid,i.name,t1.account,
+        t2.create_time reg_time,t2.username username,t2.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'散标' type,t1.borrow_nid AS plannid,i.name,t1.account,
         CASE WHEN t4.borrow_style = 'endday' THEN CONCAT(t4.borrow_period, '天') ELSE CONCAT(t4.borrow_period, '个月') END borrow_period,
         CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/365),2) ELSE FORMAT((t1.account * t4.borrow_period/12),2) END yearAccount,
-        t5.truename reffername,INSERT(t6.mobile, 4, 4, '****') reffermobile,t1.create_time addtimes
+        t7.truename reffername,INSERT(t7.mobile, 4, 4, '****') reffermobile,t1.create_time addtimes
         FROM ht_borrow_tender t1
-        LEFT JOIN hyjf_user.ht_user t2 ON t1.user_id = t2.user_id
-        LEFT JOIN hyjf_user.ht_user_info t3 ON t2.user_id = t3.user_id
+        LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
         LEFT JOIN ht_borrow t4 ON t1.borrow_nid = t4.borrow_nid
         LEFT JOIN ht_borrow_info i on i.borrow_nid=t4.borrow_nid
-        LEFT JOIN hyjf_user.ht_spreads_user t7 ON t7.user_id=t2.user_id
-        LEFT JOIN hyjf_user.ht_user t6 ON t6.user_id = t7.spreads_user_id
-        LEFT JOIN hyjf_user.ht_user_info t5 ON t7.spreads_user_id = t5.user_id
-        LEFT JOIN hyjf_user.ht_utm_reg r on t2.user_id=r.user_id
-        LEFT JOIN hyjf_user.ht_utm  u on u.utm_id=r.utm_id
-        WHERE
-        u.utm_source like '千乐%' and t1.accede_order_id is null
-        <if test="regTimeStart != null and regTimeEnd != null">
+        LEFT JOIN ht_r_user t7 ON t7.user_id=t2.spreads_user_id
+        where
+        t1.accede_order_id is null and
+        t1.user_id in
+        <foreach collection="userList" item="listItem" open="(" close=")" separator="," >
+            #{listItem}
+        </foreach>
+       <if test="regTimeStart != null and regTimeEnd != null">
             and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
         </if>
         <if test="addTimeStart != null and addTimeEnd != null">
             AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
         <if test="truename != null and truename !='' ">
-            AND   t3.truename=#{truename}
+            AND   t2.truename=#{truename}
         </if>
         <if test="username != null and username !='' ">
             AND t2.username=#{username}
         </if>
         <if test="reffername != null and reffername !='' ">
-            AND t5.truename=#{reffername}
+            AND t7.truename=#{reffername}
         </if>
         union
         SELECT
         t1.accede_order_id AS nid,
         t1.user_id userId,
         CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12)*0.07,2) ELSE FORMAT((t1.accede_account * t4.lock_period/365)*0.07,2) END money,
-        t2.reg_time reg_time,t2.username username,t3.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'服务' type,t1.plan_nid AS plannid,t4.plan_name as name,t1.accede_account account,
+        t2.create_time reg_time,t2.username username,t2.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'服务' type,t1.plan_nid AS plannid,t4.plan_name as name,t1.accede_account account,
         CASE WHEN t4.is_month = 1 THEN CONCAT(t4.lock_period, '个月') ELSE CONCAT(t4.lock_period, '天') END borrow_period,
         CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12),2) ELSE FORMAT((t1.accede_account * t4.lock_period/365),2) END yearAccount,
-        t5.truename reffername,INSERT(t6.mobile, 4, 4, '****') reffermobile,t1.create_time addtimes
+        t7.truename reffername,INSERT(t7.mobile, 4, 4, '****') reffermobile,t1.create_time addtimes
         FROM ht_hjh_accede t1
-        LEFT JOIN hyjf_user.ht_user t2 ON t1.user_id = t2.user_id
-        LEFT JOIN hyjf_user.ht_user_info t3 ON t2.user_id = t3.user_id
+        LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
         LEFT JOIN ht_hjh_plan t4 ON t1.plan_nid = t4.plan_nid
-        LEFT JOIN hyjf_user.ht_spreads_user t7 ON t7.user_id=t2.user_id
-        LEFT JOIN hyjf_user.ht_user t6 ON t6.user_id = t7.spreads_user_id
-        LEFT JOIN hyjf_user.ht_user_info t5 ON t7.spreads_user_id = t5.user_id
-        LEFT JOIN hyjf_user.ht_utm_reg r on t2.user_id=r.user_id
-        LEFT JOIN hyjf_user.ht_utm  u on u.utm_id=r.utm_id
-        WHERE
-        u.utm_source like '千乐%'
+        LEFT JOIN ht_r_user t7 ON t7.user_id=t2.spreads_user_id
+        where
+        t1.user_id in
+        <foreach collection="userList" item="listItem" open="(" close=")" separator="," >
+            #{listItem}
+        </foreach>
         <if test="regTimeStart != null and regTimeEnd != null">
             and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
         </if>
@@ -66,13 +62,13 @@
             AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
         <if test="truename != null and truename !='' ">
-            AND   t3.truename=#{truename}
+            AND   t2.truename=#{truename}
         </if>
         <if test="username != null and username !='' ">
             AND t2.username=#{username}
         </if>
         <if test="reffername != null and reffername !='' ">
-            AND t5.truename=#{reffername}
+            AND t7.truename=#{reffername}
         </if>
         order by addtimes DESC
         <if test="limitStart != null and limitEnd!=null and limitStart >= 0" >
@@ -85,17 +81,16 @@
         SELECT
         t1.user_id userId
         FROM ht_borrow_tender t1
-        LEFT JOIN hyjf_user.ht_user t2 ON t1.user_id = t2.user_id
-        LEFT JOIN hyjf_user.ht_user_info t3 ON t2.user_id = t3.user_id
+        LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
         LEFT JOIN ht_borrow t4 ON t1.borrow_nid = t4.borrow_nid
         LEFT JOIN ht_borrow_info i on i.borrow_nid=t4.borrow_nid
-        LEFT JOIN hyjf_user.ht_spreads_user t7 ON t7.user_id=t2.user_id
-        LEFT JOIN hyjf_user.ht_user t6 ON t6.user_id = t7.spreads_user_id
-        LEFT JOIN hyjf_user.ht_user_info t5 ON t7.spreads_user_id = t5.user_id
-        LEFT JOIN hyjf_user.ht_utm_reg r on t2.user_id=r.user_id
-        LEFT JOIN hyjf_user.ht_utm  u on u.utm_id=r.utm_id
-        WHERE
-        u.utm_source like '千乐%' and t1.accede_order_id is null
+        LEFT JOIN ht_r_user t7 ON t7.user_id=t2.spreads_user_id
+        where
+        t1.accede_order_id is null and
+        t1.user_id in
+        <foreach collection="userList" item="listItem" open="(" close=")" separator="," >
+            #{listItem}
+        </foreach>
 
         <if test="regTimeStart != null and regTimeEnd != null">
             and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
@@ -104,28 +99,26 @@
             AND t1.create_time &gt;= #{addTimeStart} AND t1.create_time &lt;= #{addTimeEnd}
         </if>
         <if test="truename != null and truename !='' ">
-            AND   t3.truename=#{truename}
+            AND   t2.truename=#{truename}
         </if>
         <if test="username != null and username !='' ">
             AND t2.username=#{username}
         </if>
         <if test="reffername != null and reffername !='' ">
-            AND t5.truename=#{reffername}
+            AND t7.truename=#{reffername}
         </if>
         union all
         SELECT
         t1.user_id userId
         FROM ht_hjh_accede t1
-        LEFT JOIN hyjf_user.ht_user t2 ON t1.user_id = t2.user_id
-        LEFT JOIN hyjf_user.ht_user_info t3 ON t2.user_id = t3.user_id
+        LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
         LEFT JOIN ht_hjh_plan t4 ON t1.plan_nid = t4.plan_nid
-        LEFT JOIN hyjf_user.ht_spreads_user t7 ON t7.user_id=t2.user_id
-        LEFT JOIN hyjf_user.ht_user t6 ON t6.user_id = t7.spreads_user_id
-        LEFT JOIN hyjf_user.ht_user_info t5 ON t7.spreads_user_id = t5.user_id
-        LEFT JOIN hyjf_user.ht_utm_reg r on t2.user_id=r.user_id
-        LEFT JOIN hyjf_user.ht_utm  u on u.utm_id=r.utm_id
-        WHERE
-        u.utm_source like '千乐%'
+        LEFT JOIN ht_r_user t7 ON t7.user_id=t2.spreads_user_id
+        where
+        t1.user_id in
+        <foreach collection="userList" item="listItem" open="(" close=")" separator="," >
+            #{listItem}
+        </foreach>
         <if test="regTimeStart != null and regTimeEnd != null">
             and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
         </if>
@@ -133,13 +126,13 @@
             AND t1.create_time &gt;= #{addTimeStart} AND t1.create_time &lt;= #{addTimeEnd}
         </if>
         <if test="truename != null and truename !='' ">
-            AND   t3.truename=#{truename}
+            AND   t2.truename=#{truename}
         </if>
         <if test="username != null and username !='' ">
             AND t2.username=#{username}
         </if>
         <if test="reffername != null and reffername !='' ">
-            AND t5.truename=#{reffername}
+            AND t7.truename=#{reffername}
         </if>
         )a
     </select>
@@ -149,35 +142,30 @@
         t1.accede_order_id AS nid,
         t1.user_id userId,
         CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12)*0.07,2) ELSE FORMAT((t1.accede_account * t4.lock_period/365)*0.07,2) END money,
-        t2.reg_time reg_time,t2.username username,t3.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'服务' type,t1.plan_nid AS plannid,t4.plan_name as name,t1.accede_account account,
+        t2.create_time reg_time,t2.username username,t2.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'服务' type,t1.plan_nid AS plannid,t4.plan_name as name,t1.accede_account account,
         CASE WHEN t4.is_month = 1 THEN CONCAT(t4.lock_period, '个月') ELSE CONCAT(t4.lock_period, '天') END borrow_period,
         CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12),2) ELSE FORMAT((t1.accede_account * t4.lock_period/365),2) END yearAccount,
-        t5.truename reffername,INSERT(t6.mobile, 4, 4, '****') reffermobile,t1.create_time addtimes
+        t7.truename reffername,INSERT(t7.mobile, 4, 4, '****') reffermobile,t1.create_time addtimes
         FROM ht_hjh_accede t1
-        LEFT JOIN hyjf_user.ht_user t2 ON t1.user_id = t2.user_id
-        LEFT JOIN hyjf_user.ht_user_info t3 ON t2.user_id = t3.user_id
+        LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
         LEFT JOIN ht_hjh_plan t4 ON t1.plan_nid = t4.plan_nid
-        LEFT JOIN hyjf_user.ht_spreads_user t7 ON t7.user_id=t2.user_id
-        LEFT JOIN hyjf_user.ht_user t6 ON t6.user_id = t7.spreads_user_id
-        LEFT JOIN hyjf_user.ht_user_info t5 ON t7.spreads_user_id = t5.user_id
-        LEFT JOIN hyjf_user.ht_utm_reg r on t2.user_id=r.user_id
-        LEFT JOIN hyjf_user.ht_utm  u on u.utm_id=r.utm_id
-        WHERE
-        u.utm_source like '千乐%'
-        <if test="regTimeStart != null and regTimeEnd != null">
-            and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
-        </if>
+        LEFT JOIN ht_r_user t7 ON t7.user_id=t2.spreads_user_id
+        where
+        t1.user_id in
+        <foreach collection="userList" item="listItem" open="(" close=")" separator="," >
+            #{listItem}
+        </foreach>
         <if test="addTimeStart != null and addTimeEnd != null">
             AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
         <if test="truename != null and truename !='' ">
-            AND   t3.truename=#{truename}
+            AND   t2.truename=#{truename}
         </if>
         <if test="username != null and username !='' ">
             AND t2.username=#{username}
         </if>
         <if test="reffername != null and reffername !='' ">
-            AND t5.truename=#{reffername}
+            AND t7.truename=#{reffername}
         </if>
         order by t1.create_time DESC
         <if test="limitStart != null and limitEnd!=null and limitStart >= 0" >
@@ -188,18 +176,22 @@
 
     <select id="queryPlanCount" resultType="java.lang.Integer" parameterType="java.util.Map">
         SELECT
-        count(t1.user_id)
+        t1.accede_order_id AS nid,
+        t1.user_id userId,
+        CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12)*0.07,2) ELSE FORMAT((t1.accede_account * t4.lock_period/365)*0.07,2) END money,
+        t2.create_time reg_time,t2.username username,t2.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'服务' type,t1.plan_nid AS plannid,t4.plan_name as name,t1.accede_account account,
+        CASE WHEN t4.is_month = 1 THEN CONCAT(t4.lock_period, '个月') ELSE CONCAT(t4.lock_period, '天') END borrow_period,
+        CASE WHEN t4.is_month = 1 THEN FORMAT((t1.accede_account * t4.lock_period/12),2) ELSE FORMAT((t1.accede_account * t4.lock_period/365),2) END yearAccount,
+        t7.truename reffername,INSERT(t7.mobile, 4, 4, '****') reffermobile,t1.create_time addtimes
         FROM ht_hjh_accede t1
-        LEFT JOIN hyjf_user.ht_user t2 ON t1.user_id = t2.user_id
-        LEFT JOIN hyjf_user.ht_user_info t3 ON t2.user_id = t3.user_id
+        LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
         LEFT JOIN ht_hjh_plan t4 ON t1.plan_nid = t4.plan_nid
-        LEFT JOIN hyjf_user.ht_spreads_user t7 ON t7.user_id=t2.user_id
-        LEFT JOIN hyjf_user.ht_user t6 ON t6.user_id = t7.spreads_user_id
-        LEFT JOIN hyjf_user.ht_user_info t5 ON t7.spreads_user_id = t5.user_id
-        LEFT JOIN hyjf_user.ht_utm_reg r on t2.user_id=r.user_id
-        LEFT JOIN hyjf_user.ht_utm  u on u.utm_id=r.utm_id
-        WHERE
-        u.utm_source like '千乐%'
+        LEFT JOIN ht_r_user t7 ON t7.user_id=t2.spreads_user_id
+        where
+        t1.user_id in
+        <foreach collection="userList" item="listItem" open="(" close=")" separator="," >
+            #{listItem}
+        </foreach>
         <if test="regTimeStart != null and regTimeEnd != null">
             and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
         </if>
@@ -207,13 +199,13 @@
             AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
         <if test="truename != null and truename !='' ">
-            AND   t3.truename=#{truename}
+            AND   t2.truename=#{truename}
         </if>
         <if test="username != null and username !='' ">
             AND t2.username=#{username}
         </if>
         <if test="reffername != null and reffername !='' ">
-            AND t5.truename=#{reffername}
+            AND t7.truename=#{reffername}
         </if>
         order by t1.create_time DESC
     </select>
@@ -224,22 +216,21 @@
         t1.nid,
         t1.user_id userId,
         CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/365)*0.07,2) ELSE FORMAT((t1.account * t4.borrow_period/12)*0.07,2) END money,
-        t2.reg_time reg_time,t2.username username,t3.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'散标' type,t1.borrow_nid AS plannid,i.name,t1.account,
+        t2.create_time reg_time,t2.username username,t2.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'散标' type,t1.borrow_nid AS plannid,i.name,t1.account,
         CASE WHEN t4.borrow_style = 'endday' THEN CONCAT(t4.borrow_period, '天') ELSE CONCAT(t4.borrow_period, '个月') END borrow_period,
         CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/365),2) ELSE FORMAT((t1.account * t4.borrow_period/12),2) END yearAccount,
-        t5.truename reffername,INSERT(t6.mobile, 4, 4, '****') reffermobile,t1.create_time addtimes
+        t7.truename reffername,INSERT(t7.mobile, 4, 4, '****') reffermobile,t1.create_time addtimes
         FROM ht_borrow_tender t1
-        LEFT JOIN hyjf_user.ht_user t2 ON t1.user_id = t2.user_id
-        LEFT JOIN hyjf_user.ht_user_info t3 ON t2.user_id = t3.user_id
+        LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
         LEFT JOIN ht_borrow t4 ON t1.borrow_nid = t4.borrow_nid
         LEFT JOIN ht_borrow_info i on i.borrow_nid=t4.borrow_nid
-        LEFT JOIN hyjf_user.ht_spreads_user t7 ON t7.user_id=t2.user_id
-        LEFT JOIN hyjf_user.ht_user t6 ON t6.user_id = t7.spreads_user_id
-        LEFT JOIN hyjf_user.ht_user_info t5 ON t7.spreads_user_id = t5.user_id
-        LEFT JOIN hyjf_user.ht_utm_reg r on t2.user_id=r.user_id
-        LEFT JOIN hyjf_user.ht_utm  u on u.utm_id=r.utm_id
-        WHERE
-        u.utm_source like '千乐%' and t1.accede_order_id is null
+        LEFT JOIN ht_r_user t7 ON t7.user_id=t2.spreads_user_id
+        where
+        t1.accede_order_id is null and
+        t1.user_id in
+        <foreach collection="userList" item="listItem" open="(" close=")" separator="," >
+            #{listItem}
+        </foreach>
         <if test="regTimeStart != null and regTimeEnd != null">
             and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
         </if>
@@ -247,13 +238,13 @@
             AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
         <if test="truename != null and truename !='' ">
-            AND   t3.truename=#{truename}
+            AND   t2.truename=#{truename}
         </if>
         <if test="username != null and username !='' ">
             AND t2.username=#{username}
         </if>
         <if test="reffername != null and reffername !='' ">
-            AND t5.truename=#{reffername}
+            AND t7.truename=#{reffername}
         </if>
         order by t1.create_time DESC
         <if test="limitStart != null and limitEnd!=null and limitStart >= 0" >
@@ -264,19 +255,24 @@
 
     <select id="querySanCount" resultType="java.lang.Integer" parameterType="java.util.Map">
         SELECT
-        count(t1.user_id)
+        t1.nid,
+        t1.user_id userId,
+        CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/365)*0.07,2) ELSE FORMAT((t1.account * t4.borrow_period/12)*0.07,2) END money,
+        t2.create_time reg_time,t2.username username,t2.truename truename,INSERT(t2.mobile, 4, 4, '****') mobile,'散标' type,t1.borrow_nid AS plannid,i.name,t1.account,
+        CASE WHEN t4.borrow_style = 'endday' THEN CONCAT(t4.borrow_period, '天') ELSE CONCAT(t4.borrow_period, '个月') END borrow_period,
+        CASE WHEN t4.borrow_style = 'endday' THEN FORMAT((t1.account * t4.borrow_period/365),2) ELSE FORMAT((t1.account * t4.borrow_period/12),2) END yearAccount,
+        t7.truename reffername,INSERT(t7.mobile, 4, 4, '****') reffermobile,t1.create_time addtimes
         FROM ht_borrow_tender t1
-        LEFT JOIN hyjf_user.ht_user t2 ON t1.user_id = t2.user_id
-        LEFT JOIN hyjf_user.ht_user_info t3 ON t2.user_id = t3.user_id
+        LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
         LEFT JOIN ht_borrow t4 ON t1.borrow_nid = t4.borrow_nid
         LEFT JOIN ht_borrow_info i on i.borrow_nid=t4.borrow_nid
-        LEFT JOIN hyjf_user.ht_spreads_user t7 ON t7.user_id=t2.user_id
-        LEFT JOIN hyjf_user.ht_user t6 ON t6.user_id = t7.spreads_user_id
-        LEFT JOIN hyjf_user.ht_user_info t5 ON t7.spreads_user_id = t5.user_id
-        LEFT JOIN hyjf_user.ht_utm_reg r on t2.user_id=r.user_id
-        LEFT JOIN hyjf_user.ht_utm  u on u.utm_id=r.utm_id
-        WHERE
-        u.utm_source like '千乐%' and t1.accede_order_id is null
+        LEFT JOIN ht_r_user t7 ON t7.user_id=t2.spreads_user_id
+        where
+        t1.accede_order_id is null and
+        t1.user_id in
+        <foreach collection="userList" item="listItem" open="(" close=")" separator="," >
+            #{listItem}
+        </foreach>
         <if test="regTimeStart != null and regTimeEnd != null">
             and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
         </if>
@@ -284,13 +280,13 @@
             AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
         <if test="truename != null and truename !='' ">
-            AND   t3.truename=#{truename}
+            AND   t2.truename=#{truename}
         </if>
         <if test="username != null and username !='' ">
             AND t2.username=#{username}
         </if>
         <if test="reffername != null and reffername !='' ">
-            AND t5.truename=#{reffername}
+            AND t7.truename=#{reffername}
         </if>
     </select>
 
@@ -336,19 +332,17 @@
         2
         )
         END commission
-
-        FROM
-        ht_borrow_tender t1
-        LEFT JOIN hyjf_user.ht_user t2 ON t1.user_id = t2.user_id
-        LEFT JOIN hyjf_user.ht_user_info t3 ON t2.user_id = t3.user_id
+        FROM ht_borrow_tender t1
+        LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
         LEFT JOIN ht_borrow t4 ON t1.borrow_nid = t4.borrow_nid
-        LEFT JOIN hyjf_user.ht_spreads_user t7 ON t7.user_id=t2.user_id
-        LEFT JOIN hyjf_user.ht_user_info t5 ON t7.spreads_user_id = t5.user_id
-        LEFT JOIN hyjf_user.ht_utm_reg r ON t2.user_id = r.user_id
-        LEFT JOIN hyjf_user.ht_utm u ON u.utm_id = r.utm_id
-        WHERE
-        u.utm_source LIKE '千乐%'
-        AND t1.accede_order_id IS NULL
+        LEFT JOIN ht_borrow_info i on i.borrow_nid=t4.borrow_nid
+        LEFT JOIN ht_r_user t7 ON t7.user_id=t2.spreads_user_id
+        where
+        t1.accede_order_id is null and
+        t1.user_id in
+        <foreach collection="userList" item="listItem" open="(" close=")" separator="," >
+            #{listItem}
+        </foreach>
         <if test="regTimeStart != null and regTimeEnd != null">
             and t2.create_time &gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
         </if>
@@ -356,13 +350,13 @@
             AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
         <if test="truename != null and truename !='' ">
-            AND   t3.truename=#{truename}
+            AND   t2.truename=#{truename}
         </if>
         <if test="username != null and username !='' ">
             AND t2.username=#{username}
         </if>
         <if test="reffername != null and reffername !='' ">
-            AND t5.truename=#{reffername}
+            AND t7.truename=#{reffername}
         </if>
         ) t
     </select>
@@ -409,17 +403,15 @@
         2
         )
         END yearAccount
-        FROM
-        ht_hjh_accede t1
-        LEFT JOIN hyjf_user.ht_user t2 ON t1.user_id = t2.user_id
-        LEFT JOIN hyjf_user.ht_user_info t3 ON t2.user_id = t3.user_id
+        FROM ht_hjh_accede t1
+        LEFT JOIN ht_r_user t2 ON t1.user_id = t2.user_id
         LEFT JOIN ht_hjh_plan t4 ON t1.plan_nid = t4.plan_nid
-        LEFT JOIN hyjf_user.ht_spreads_user t7 ON t7.user_id=t2.user_id
-        LEFT JOIN hyjf_user.ht_user_info t5 ON t7.spreads_user_id = t5.user_id
-        LEFT JOIN hyjf_user.ht_utm_reg r ON t2.user_id = r.user_id
-        LEFT JOIN hyjf_user.ht_utm u ON u.utm_id = r.utm_id
-        WHERE
-        u.utm_source LIKE '千乐%'
+        LEFT JOIN ht_r_user t7 ON t7.user_id=t2.spreads_user_id
+        where
+        t1.user_id in
+        <foreach collection="userList" item="listItem" open="(" close=")" separator="," >
+            #{listItem}
+        </foreach>
         <if test="regTimeStart != null and regTimeEnd != null">
             and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
         </if>
@@ -427,13 +419,13 @@
             AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
         <if test="truename != null and truename !='' ">
-            AND   t3.truename=#{truename}
+            AND   t2.truename=#{truename}
         </if>
         <if test="username != null and username !='' ">
             AND t2.username=#{username}
         </if>
         <if test="reffername != null and reffername !='' ">
-            AND t5.truename=#{reffername}
+            AND t7.truename=#{reffername}
         </if>
         ) t
     </select>

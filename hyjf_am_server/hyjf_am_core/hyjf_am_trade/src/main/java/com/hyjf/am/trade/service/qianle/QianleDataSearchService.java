@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.service.front.qianle;
+package com.hyjf.am.trade.service.qianle;
 
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.vo.trade.DataSearchCustomizeVO;
