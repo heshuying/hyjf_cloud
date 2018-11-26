@@ -862,6 +862,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             //转让价款
             paramter.put("assignPay",  borrowRecover.getRecoverCapital().add(borrowRecover.getRecoverInterestYes())+"");//已承接垫付利息recover_interest
             // 债转期限
+            logger.info("---------------------非转让债转参数集合-分期:recoverTime:"+recoverTime);
+            logger.info("---------------------非转让债转参数集合-分期:getRecoverYestime:"+borrowRecover.getRecoverYestime());
             paramter.put("creditTerm", DateUtils.differentDaysByString(recoverTime,borrowRecover.getRecoverYestime()+"")+"天");
 
         }else{
@@ -991,6 +993,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             //转让价款
             paramter.put("assignPay", borrowRecover.getRecoverInterestYes()+"");//已承接垫付利息recover_interest
             // 债转期限
+            logger.info("--------------------非转让债转参数集合-不分期:recoverTime:"+recoverTime);
+            logger.info("--------------------非转让债转参数集合-不分期:getRecoverYestime:"+borrowRecover.getRecoverYestime());
             paramter.put("creditTerm", DateUtils.differentDaysByString(recoverTime,borrowRecover.getRecoverYestime()+"")+"天");
         }
         String recoverYestime = borrowRecover.getRecoverYestime()+"";
@@ -1116,6 +1120,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             //转让价款
             paramter.put("assignPay",  hjhDebtCreditRepay.getRepayCapital().add(hjhDebtCreditRepay.getRepayInterest()).add(hjhDebtCreditRepay.getRepayAdvanceInterest()).add(hjhDebtCreditRepay.getRepayLateInterest()).add(hjhDebtCreditRepay.getRepayDelayInterest())+"");//已承接垫付利息recover_interest
             // 债转期限
+            logger.info("---------------------汇计划-转让债转参数集合-不分期等额本息时:recoverTime:"+recoverTime);
+            logger.info("---------------------汇计划-转让债转参数集合-不分期等额本息时:getAssignRepayYesTime:"+hjhDebtCreditRepay.getAssignRepayYesTime());
             paramter.put("creditTerm", DateUtils.differentDaysByString(recoverTime,hjhDebtCreditRepay.getAssignRepayYesTime()+"")+"天");
 
         }else{
@@ -1255,6 +1261,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             //转让价款
             paramter.put("assignPay",  creditRepay.getAssignRepayCapital().add(creditRepay.getAssignRepayInterest())+"");//已承接垫付利息recover_interest
             // 债转期限
+            logger.info("---------------------转让债转参数集合等额本息时:recoverTime:"+recoverTime);
+            logger.info("---------------------转让债转参数集合等额本息时:getAssignRepayYesTime:"+creditRepay.getAssignRepayYesTime());
             paramter.put("creditTerm", DateUtils.differentDaysByString(recoverTime,creditRepay.getAssignRepayYesTime()+"天"));
 
         }else{
