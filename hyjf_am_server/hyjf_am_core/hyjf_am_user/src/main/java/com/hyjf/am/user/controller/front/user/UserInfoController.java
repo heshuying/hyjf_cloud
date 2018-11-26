@@ -196,4 +196,5 @@ public class UserInfoController extends BaseController {
 		return msgPushCommon;
 	}
 
+
 }

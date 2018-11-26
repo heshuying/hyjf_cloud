@@ -27,8 +27,10 @@ public class DataSearchCustomizeVO implements Serializable {
     private String money="0";
     private String  reffername="无";
     private String reffermobile="无";
+
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date addtimes;
+
     private Integer userId;
 
     private String nid;

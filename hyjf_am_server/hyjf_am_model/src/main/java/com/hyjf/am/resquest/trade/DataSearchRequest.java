@@ -10,7 +10,7 @@ import java.util.List;
  * @version DataSearchRequest, v0.1 2018/8/21 11:02
  */
 
-public class DataSearchRequest implements Serializable {
+public class  DataSearchRequest implements Serializable {
     @ApiModelProperty(value = "投资时间：开始")
     private String addTimeStart;
     @ApiModelProperty(value = "投资时间：结束")
