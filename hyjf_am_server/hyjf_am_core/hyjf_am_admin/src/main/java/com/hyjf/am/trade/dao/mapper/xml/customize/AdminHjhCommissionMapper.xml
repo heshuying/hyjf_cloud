@@ -91,7 +91,9 @@
 			u.username,
 			u2.username AS username_tender,
 			u.attribute,
-			u2.attribute AS attribute_tender
+			u2.attribute AS attribute_tender,
+			u.truename
+			
 		FROM ht_tender_commission tc
 		LEFT JOIN ht_borrow_tender t ON tc.tender_id= t.id
 		LEFT JOIN ht_r_user u ON u.user_id= tc.user_id

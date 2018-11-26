@@ -14,6 +14,8 @@ import com.hyjf.am.vo.admin.OADepartmentCustomizeVO;
 import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.trade.hjh.HjhCommissionCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.GetDate;
+
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
@@ -51,26 +53,48 @@ public class AdminHjhCommissionController {
 	public HjhCommissionResponse selectHjhCommissionList(@RequestBody @Valid HjhCommissionRequest request){
 		HjhCommissionResponse response = new HjhCommissionResponse();
 		Integer count = adminHjhCommissionService.countTotal(request);
-		// 查询列表传入分页
-		Paginator paginator;
-		if(request.getLimit() == 0){
-			// 前台传分页
-			paginator = new Paginator(request.getCurrPage(), count);
+		if(request.getExportFlag() == 1){
+	        if(count > 0){
+				List<HjhCommissionCustomizeVO> list = adminHjhCommissionService.selectHjhCommissionListWithOutPage(request);
+	            if (!CollectionUtils.isEmpty(list)) {
+	            	for(HjhCommissionCustomizeVO vo:list){
+	            		if(vo.getSendTimeView()!=null){
+	            			vo.setSendTimeView(GetDate.timestamptoStrYYYYMMDDHHMMSS(vo.getSendTimeView()));
+	            		}
+	            	}
+	                response.setResultList(list);
+	                //代表成功
+	                response.setRtn(Response.SUCCESS);
+	            }else{
+					response.setResultList(null);
+				}
+	        }
+			response.setCount(count);
+
 		} else {
-			// 前台未传分页那默认 10
-			paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
-		}
-        if(count > 0){
-			List<HjhCommissionCustomizeVO> list = adminHjhCommissionService.selectHjhCommissionList(request,paginator.getOffset(), paginator.getLimit());
-            if (!CollectionUtils.isEmpty(list)) {
-                response.setResultList(list);
-                //代表成功
-                response.setRtn(Response.SUCCESS);
-            }else{
-				response.setResultList(null);
+			// 查询列表传入分页
+			Paginator paginator;
+			if(request.getLimit() == 0){
+				// 前台传分页
+				paginator = new Paginator(request.getCurrPage(), count);
+			} else {
+				// 前台未传分页那默认 10
+				paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
 			}
-        }
-		response.setCount(count);
+	        if(count > 0){
+				List<HjhCommissionCustomizeVO> list = adminHjhCommissionService.selectHjhCommissionList(request,paginator.getOffset(), paginator.getLimit());
+	            if (!CollectionUtils.isEmpty(list)) {
+	                response.setResultList(list);
+	                //代表成功
+	                response.setRtn(Response.SUCCESS);
+	            }else{
+					response.setResultList(null);
+				}
+	        }
+			response.setCount(count);
+		}
+
+		
         return response;
 	}
 	
