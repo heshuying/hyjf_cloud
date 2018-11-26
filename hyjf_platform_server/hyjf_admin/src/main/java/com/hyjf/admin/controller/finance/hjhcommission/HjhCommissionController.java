@@ -451,6 +451,10 @@ public class HjhCommissionController extends BaseController{
 		//请求第一页5000条
 		form.setPageSize(defaultRowMaxCount);
 		form.setCurrPage(1);
+		
+		// 导出查询的逻辑是不使用分页
+		form.setExportFlag(1);
+		
 		// 需要输出的结果列表
 		// 列表查询
 		HjhCommissionResponse res = hjhCommissionService.selectHjhCommissionList(form);
