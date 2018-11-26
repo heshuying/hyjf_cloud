@@ -166,7 +166,7 @@ public class WebSafeController extends BaseUserController {
      * @date: 2018/6/20
      */
     @ApiOperation(value = "绑定邮箱", notes = "绑定邮箱")
-    @PostMapping(value = "/bindEmail", produces = "application/json; charset=utf-8")
+    @RequestMapping(value = "/bindEmail", produces = "application/json; charset=utf-8")
     public WebResult<Object> bindEmail(@RequestBody BindEmailVO bindEmailVO,HttpServletRequest request) {
         logger.info("用戶绑定邮箱, bindEmailVO :{}", JSONObject.toJSONString(bindEmailVO));
         WebResult<Object> result = new WebResult<Object>();
