@@ -163,9 +163,9 @@ public class PlanCapitalController extends BaseController {
     private Map<String, String> buildMap() {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("date", "日期");
-        map.put("planNid", "计划编号");
-        map.put("planName", "计划名称");
-        map.put("lockPeriodView", "锁定期");
+        map.put("planNid", "智投编号");
+        map.put("planName", "智投名称");
+        map.put("lockPeriodView", "服务回报期限");
         map.put("reinvestAccount", "复投总额（元）");
         map.put("creditAccount", "债转总额（元）");
 
