@@ -4,6 +4,7 @@ import com.google.common.collect.Maps;
 import java.io.File;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -2163,13 +2164,13 @@ public class BorrowCommonController extends BaseController {
 	        map.put("borrowNid", "借款编号");
 	        map.put("planNid", "智投编号");
 	        map.put("userId", "借款人ID");
-	        map.put("username", "借款人用户名");
+	        map.put("username", "用户名");
 	        map.put("applicant", "项目申请人");
 	        map.put("projectName", "项目标题");
 	        map.put("borrowProjectTypeName", "项目类型");
 	        map.put("instName", "资产来源");
 	        map.put("account", "借款金额");
-	        map.put("borrowApr", "借款期限");
+	        map.put("borrowApr", "年化利率");
 	        map.put("borrowStyle", "还款方式");
 	        map.put("borrowServiceScale", "融资服务费率");
 	        map.put("borrowManagerScale", "账户管理费率");
@@ -2212,7 +2213,7 @@ public class BorrowCommonController extends BaseController {
 	            @Override
 	            public String format(Object object) {
 	                String entrustedFlg = (String) object;
-	                if("0".equals(entrustedFlg)) {
+	                if("1".equals(entrustedFlg)) {
 	                	return "是";
 	                }else {
 	                	return "否";
@@ -2231,9 +2232,45 @@ public class BorrowCommonController extends BaseController {
 	                }
 	            }
 	        };
+	        IValueFormatter addtimeAdapter = new IValueFormatter() {
+	            @Override
+	            public String format(Object object) {
+	            	Date addtime = (Date) object;
+	            	 SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	            	 return formatter.format(addtime);
 
+	            }
+	        };
+	        IValueFormatter statusAdapter = new IValueFormatter() {
+	            @Override
+	            public String format(Object object) {
+	            	Integer status = (Integer) object;
+	                if(status==0) {
+	                	return "备案中";
+	                }else if(status==1) {
+	                	return "初审中";
+	                }else if(status==2) {
+	                	return "投资中";
+	                }else if(status==3) {
+	                	return "复审中";
+	                }else if(status==4) {
+	                	return "还款中";
+	                }else if(status==5) {
+	                	return "已还款";
+	                }else if(status==6) {
+	                	return "流标";
+	                }else if(status==7) {
+	                	return "受托";
+	                }else {
+	                	return "";
+	                }
+	            }
+	        };
+// 0备案中,1初审中,2投资中,3复审中(满标),4还款中,5已还款,6流标,7受托 
 	        mapAdapter.put("entrustedFlg", entrustedFlgAdapter);
 	        mapAdapter.put("borrowExtraYield", borrowExtraYieldAdapter);
+	        mapAdapter.put("status", statusAdapter);
+	        mapAdapter.put("addtime", addtimeAdapter);
 	        return mapAdapter;
 	    }
 }

@@ -1127,7 +1127,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         //检索条件
         BindUserExample example = new BindUserExample();
         BindUserExample.Criteria cra = example.createCriteria();
-        cra.andBindUniqueIdEqualTo(bindUniqueId);
+        cra.andBindUniqueIdEqualTo(String.valueOf(bindUniqueId));
         cra.andBindPlatformIdEqualTo(bindPlatformId);
         //检索
         List<BindUser> list = bindUserMapper.selectByExample(example);
@@ -1142,7 +1142,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
 	public Boolean bindThirdUser(Integer userId, int bindUniqueId, Integer bindPlatformId) {
 		BindUser bindUsers = new BindUser();
 		bindUsers.setUserId(userId);
-		bindUsers.setBindUniqueId(bindUniqueId);
+		bindUsers.setBindUniqueId(String.valueOf(bindUniqueId));
 		bindUsers.setBindPlatformId(bindPlatformId);
 		bindUsers.setCreateTime(new Date());
 		return bindUserMapper.insertSelective(bindUsers) > 0 ? true : false;

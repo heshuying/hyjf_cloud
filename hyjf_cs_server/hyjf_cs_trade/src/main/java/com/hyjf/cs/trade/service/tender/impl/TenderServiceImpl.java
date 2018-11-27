@@ -606,8 +606,11 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 	        // 4.当前面的redis操作成功后，才能操作user和trade的各种表(原来是user，trade合在一起，微服务后拆分)
 			result = this.borrowTender(borrow, bean);
 	        logger.info("用户:{},投资成功，金额：{}，优惠券开始调用ID：{}" ,userId, txAmount,couponGrantId);
+	        
+	        logger.info("修改各种表！" +result.toJSONString());
+	        
 	        // 如果用了优惠券
-	        if (StringUtils.isNotEmpty(couponGrantId)) {
+/*	        if (StringUtils.isNotEmpty(couponGrantId)) {
 	            // 开始使用优惠券
 	            Map<String, String> params = new HashMap<String, String>();
 	            params.put("mqMsgId", GetCode.getRandomCode(10));
@@ -627,11 +630,14 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 	            params.put("userId", userId+"");
 	            try {
 	                couponTenderProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_TENDER_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+	            
+	                logger.info("couponTenderProducer.messageSend  消息已经发送：汇直投-优惠券使用   HZT_COUPON_TENDER_TOPIC");
+	            
 	            } catch (MQException e) {
 	                logger.error("使用优惠券异常,userId:{},ordId:{},couponGrantId:{},borrowNid:{}",userId,bean.getLogOrderId(),couponGrantId,borrowNid);
 	                e.printStackTrace();
 	            }
-	        }
+	        }*/
 		}
 		return result;
 	}
@@ -816,6 +822,10 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
         if (StringUtils.isNotBlank(bean.getAuthCode())) {
             tenderBg.setAuthCode(bean.getAuthCode());
         }
+        
+        
+        logger.info("tenderBg所包含的属性：" + tenderBg.toString());
+        
         /*投资授权码 投资结果授权码 start*/
         /*3.borrowtender表数据准备好，更新trade库所有相关的表*/
         boolean insertFlag = amTradeClient.borrowTender(tenderBg);
