@@ -168,6 +168,18 @@ public class HjhDebtCreditController extends BaseController {
         return response;
     }
 
+    /**
+     * 获取hjh投资列表信息count
+     * @return
+     */
+    @PostMapping("/getUserHjhInvestCount")
+    public IntegerResponse getUserHjhInvestCount(@RequestBody Map<String,Object> params){
+        IntegerResponse response = new IntegerResponse();
+        int count = hjhDebtCreditService.getUserHjhInvestCount(params);
+        response.setResultInt(count);
+        return response;
+    }
+
     @PostMapping("/selectHjhDebtCreditListByBorrowNidAndStatus")
     public HjhDebtCreditResponse selectHjhDebtCreditListByBorrowNidAndStatus(@RequestBody DebtCreditRequest request){
         HjhDebtCreditResponse response = new HjhDebtCreditResponse();

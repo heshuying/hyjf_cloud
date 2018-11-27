@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class SmsConfigController extends BaseController {
 
     //权限名称
-    private static final String PERMISSIONS = "instconfig";
+    private static final String PERMISSIONS = "messageConfig";
     @Autowired
     private SmsConfigService smsConfigService;
 

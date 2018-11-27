@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.service;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.trade.bean.BaseBean;
@@ -20,6 +21,14 @@ public interface BaseTradeService extends BaseService{
     WebViewUserVO getUserFromCache(int userId);
 
     UserVO getUserByUserId(Integer userId);
+
+
+    /**
+     * 根据标的编号，查询汇计划信息
+     * @author liubin
+     * @return
+     */
+    HjhPlanVO getPlanByNid(String borrowNid) ;
 
     /**
      * 获取银行开户信息

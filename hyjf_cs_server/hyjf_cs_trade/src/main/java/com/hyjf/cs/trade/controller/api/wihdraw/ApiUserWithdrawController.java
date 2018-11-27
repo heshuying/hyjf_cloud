@@ -88,7 +88,7 @@ public class ApiUserWithdrawController extends BaseTradeController {
      */
     @ApiOperation(value = "获取用户提现记录",notes = "获取用户提现记录")
     @ResponseBody
-    @RequestMapping(value = "/getUserWithdrawRecord")
+    @PostMapping(value = "/getUserWithdrawRecord")
     public BaseResultBean getUserWithdrawRecord(@RequestBody UserWithdrawRequestBean userWithdrawRequestBean){
         BaseController.logger.info("获取用户提现记录请求参数:" + JSONObject.toJSONString(userWithdrawRequestBean));
         return userWithdrawService.getUserWithdrawRecord(userWithdrawRequestBean);

@@ -93,7 +93,7 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
             //MailUtil.sendAttachmentsMailOnPort465(toEmail, subject, content, new String[]{fileName}, is);
             logger.info("发送销售日报成功>>>>>>>>>>>>>>>>>>>>>");
         } catch (Exception e) {
-            logger.error("发送销售日报失败>>>>>>>>>>>>>>>>>>>>>", e);
+            logger.error("发送销售日报失败>>>>>>>>>>>>>>>>>>>>> 失败原因：{}", e);
         }
     }
 

@@ -1,8 +1,8 @@
-package com.hyjf.am.trade.controller.admin.qianle;
+package com.hyjf.am.trade.controller.front.qianle;
 
 import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
-import com.hyjf.am.trade.service.front.qianle.QianleDataSearchService;
+import com.hyjf.am.trade.service.qianle.QianleDataSearchService;
 import com.hyjf.am.vo.trade.DataSearchCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +21,7 @@ import java.util.Map;
  * @version QianleDataSearchController, v0.1 2018/8/24 9:36
  */
 @RestController
-@RequestMapping("am-admin/qianle")
+@RequestMapping("am-trade/qianle")
 public class QianleDataSearchController {
     @Autowired
     QianleDataSearchService qianleDataSearchService;

@@ -9,8 +9,10 @@ import com.hyjf.am.response.admin.JxBankConfigResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
+import com.hyjf.am.response.trade.HolidaysConfigResponse;
 import com.hyjf.am.resquest.admin.ContentPartnerRequest;
 import com.hyjf.am.resquest.admin.EventsRequest;
+import com.hyjf.am.resquest.admin.SmsConfigRequest;
 import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.BasePage;
@@ -139,7 +141,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 		ContentPartnerRequest request = new ContentPartnerRequest();
 		request.setPartnerType(partnerType);
 		LinkResponse response = restTemplate.postForObject(
-				"http://AM-ADMIN/am-config/content/contentpartner/searchaction", request,
+				"http://AM-CONFIG/am-config/content/contentpartner/searchaction", request,
 				LinkResponse.class);
 		if (response != null) {
 			return response.getResultList();
@@ -253,7 +255,7 @@ public class AmConfigClientImpl implements AmConfigClient {
 	 */
 	@Override
 	public IntegerResponse addSubmission(SubmissionsVO submissionsVO){
-		IntegerResponse response = restTemplate.postForObject("http://AM-ADMIN/am-config/submission/addSubmission",submissionsVO ,IntegerResponse.class);
+		IntegerResponse response = restTemplate.postForObject("http://AM-CONFIG/am-config/submission/addSubmission",submissionsVO ,IntegerResponse.class);
 		return response;
 	}
 
@@ -277,6 +279,39 @@ public class AmConfigClientImpl implements AmConfigClient {
 		ContentArticleResponse response = restTemplate.postForEntity("http://AM-CONFIG/am-config/article/getCompanyDynamicsListPage",request,ContentArticleResponse.class).getBody();
 		return response;
 
+	}
+
+	@Override
+	public boolean isWorkdateOnSomeDay() {
+		BooleanResponse response = restTemplate.getForObject(
+				"http://AM-CONFIG/am-config/holidays/is_workdate",
+				BooleanResponse.class);
+		if (response != null) {
+			return response.getResultBoolean();
+		}
+		return false;
+	}
+
+	@Override
+	public Date getFirstWorkdateBeforeSomeDate(Date date) {
+		HolidaysConfigResponse response = restTemplate.postForObject(
+				"http://AM-CONFIG/am-config/holidays/get_first_workdate_before_some_date", date,
+				HolidaysConfigResponse.class);
+		if (response != null) {
+			return response.getSomedate();
+		}
+		return null;
+	}
+
+	@Override
+	public Date getFirstWorkdateAfterSomeDate(Date torrowDate) {
+		HolidaysConfigResponse response = restTemplate.postForObject(
+				"http://AM-CONFIG/am-config/holidaysConfig/getFirstWorkdateAfterSomeDate", torrowDate,
+				HolidaysConfigResponse.class);
+		if (response != null) {
+			return response.getSomedate();
+		}
+		return null;
 	}
 
 	/**
@@ -304,5 +339,15 @@ public class AmConfigClientImpl implements AmConfigClient {
         return response.getResultBoolean();
     }
 
-
+	/**
+	 * 查询短信加固数据
+	 *
+	 * @param request
+	 * @return
+	 * @author xiehuili
+	 */
+	@Override
+	public SmsConfigResponse initSmsConfig(SmsConfigRequest request) {
+		return restTemplate.postForEntity("http://AM-CONFIG/am-config/smsConfig/initSmsConfig", request, SmsConfigResponse.class).getBody();
+	}
 }

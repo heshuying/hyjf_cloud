@@ -10,6 +10,7 @@ import com.hyjf.am.bean.crmtender.CrmInvestMsgBean;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.coupon.CouponBeanVo;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -24,6 +25,7 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MsgCode;
+import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
@@ -38,10 +40,7 @@ import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.AmTradeProducer;
-import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
-import com.hyjf.cs.trade.mq.producer.CalculateInvestInterestProducer;
-import com.hyjf.cs.trade.mq.producer.HjhCouponTenderProducer;
+import com.hyjf.cs.trade.mq.producer.*;
 import com.hyjf.cs.trade.mq.producer.sensorsdate.hjh.SensorsDataHjhInvestProducer;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.consumer.CouponService;
@@ -102,6 +101,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     private HjhTenderService hjhTenderService;
     @Autowired
     private SensorsDataHjhInvestProducer sensorsDataHjhInvestProducer;
+    @Autowired
+    private UserOperationLogProducer userOperationLogProducer;
     /**
      * @param request
      * @Description 检查加入计划的参数
@@ -158,6 +159,27 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         UserVO user = amUserClient.findUserById(userId);
         // 检查用户状态  角色  授权状态等  是否允许投资
         checkUser(user, userInfo);
+        //保存用户操作日志
+        String lockPeriod = plan.getLockPeriod().toString();
+        String dayOrMonth ="";
+        if (plan.getIsMonth().intValue()!=0) {//月标
+            dayOrMonth = lockPeriod + "个月智投";
+        } else {
+            dayOrMonth = lockPeriod + "天智投";
+        }
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE4);
+        userOperationLogEntity.setIp(request.getIp());
+        userOperationLogEntity.setPlatform(Integer.valueOf(request.getPlatform()));
+        userOperationLogEntity.setRemark(dayOrMonth);
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(user.getUsername());
+        userOperationLogEntity.setUserRole(String.valueOf(userInfo.getRoleId()));
+        try {
+            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
+        }
         // 检查江西银行账户
         BankOpenAccountVO account = amUserClient.selectBankAccountById(userId);
         if (account == null || user.getBankOpenAccount() == 0 || StringUtils.isEmpty(account.getAccount())) {
@@ -179,6 +201,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      * @return
      */
     public WebResult<Map<String, Object>> fallBackJoinPlan(TenderRequest request){
+        logger.info("==================已进入 加入计划(三端) fallBackJoinPlan 方法================");
         WebResult<Map<String,Object>> result = new WebResult<>();
         result.setStatus(AppResult.FAIL);
         result.setStatusDesc("加入失败，请重试！");

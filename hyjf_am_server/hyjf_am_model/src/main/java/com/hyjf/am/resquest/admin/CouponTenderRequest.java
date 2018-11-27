@@ -52,8 +52,11 @@ public class CouponTenderRequest extends Request implements Serializable {
     //使用时间
     private String couponFrom;
 
-    //使用时间
+    //优惠券内容
     private String couponContent;
+
+    //发放方式 1：手动发放，2：活动发放，3：vip礼包
+    private String couponSource;
     //
     private Integer couponGrantId;
 

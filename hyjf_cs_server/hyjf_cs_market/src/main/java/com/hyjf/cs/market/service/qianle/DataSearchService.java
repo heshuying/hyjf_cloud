@@ -1,4 +1,4 @@
-package com.hyjf.admin.service.qianle;
+package com.hyjf.cs.market.service.qianle;
 
 import com.hyjf.am.response.config.SmsConfigResponse;
 import com.hyjf.am.response.trade.DataSearchCustomizeResponse;

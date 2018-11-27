@@ -1,6 +1,9 @@
 package com.hyjf.am.vo.trade;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author lisheng
@@ -8,7 +11,9 @@ import java.io.Serializable;
  */
 
 public class DataSearchCustomizeVO implements Serializable {
-    private String reg_time;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    private Date reg_time;
+
     private String username;
     private String truename;
     private String mobile;
@@ -22,18 +27,14 @@ public class DataSearchCustomizeVO implements Serializable {
     private String money="0";
     private String  reffername="无";
     private String reffermobile="无";
-    private String addtimes;
+
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    private Date addtimes;
+
     private Integer userId;
 
     private String nid;
 
-    public String getReg_time() {
-        return reg_time;
-    }
-
-    public void setReg_time(String reg_time) {
-        this.reg_time = reg_time;
-    }
 
     public String getUsername() {
         return username;
@@ -139,13 +140,6 @@ public class DataSearchCustomizeVO implements Serializable {
         this.reffermobile = reffermobile;
     }
 
-    public String getAddtimes() {
-        return addtimes;
-    }
-
-    public void setAddtimes(String addtimes) {
-        this.addtimes = addtimes;
-    }
 
     public Integer getUserId() {
         return userId;
@@ -161,5 +155,21 @@ public class DataSearchCustomizeVO implements Serializable {
 
     public void setNid(String nid) {
         this.nid = nid;
+    }
+
+    public Date getReg_time() {
+        return reg_time;
+    }
+
+    public void setReg_time(Date reg_time) {
+        this.reg_time = reg_time;
+    }
+
+    public Date getAddtimes() {
+        return addtimes;
+    }
+
+    public void setAddtimes(Date addtimes) {
+        this.addtimes = addtimes;
     }
 }

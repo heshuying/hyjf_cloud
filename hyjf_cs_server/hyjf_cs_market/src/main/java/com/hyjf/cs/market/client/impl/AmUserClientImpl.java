@@ -2,6 +2,7 @@ package com.hyjf.cs.market.client.impl;
 
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.datacollect.TzjDayReportResponse;
 import com.hyjf.am.response.user.SmsCodeResponse;
@@ -253,7 +254,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
     public List<Integer> getQianleUser() {
-		return restTemplate.getForObject("http://AM-ADMIN/am-user/user/getQianleUser", List.class);
+		return restTemplate.getForObject("http://AM-USER/am-user/user/getQianleUser", List.class);
     }
 
 
@@ -315,4 +316,16 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	@Override
+	public List<String> selectTwoDivisionByPrimaryDivision(String nmzxDivisionName) {
+		StringResponse response = restTemplate.getForObject(
+				"http://AM-USER/am-user/sell_daily/select_two_division_by_primary_division/" + nmzxDivisionName,
+				StringResponse.class);
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
+
 }

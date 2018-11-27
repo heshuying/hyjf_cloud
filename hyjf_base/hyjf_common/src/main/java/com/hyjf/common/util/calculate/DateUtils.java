@@ -13,6 +13,8 @@ package com.hyjf.common.util.calculate;
 
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -25,7 +27,7 @@ import java.util.GregorianCalendar;
  */
 
 public class DateUtils {
-
+	protected static Logger logger = LoggerFactory.getLogger(DateUtils.class);
     
     /**
      * 获取当前时间前一天
@@ -599,6 +601,7 @@ public class DateUtils {
 			c = GetDate.getNowTime10()-Long.valueOf(timeStar);
 		}
 		long d = c/60/60/24;//天
+		logger.info("---------------------------转让期限:"+d);
 		return d;
 	}
 	public static String unitFormat(int i) {
@@ -610,4 +613,7 @@ public class DateUtils {
 		return retStr;
 	}
 
+	public static void main(String[] args) {
+		System.out.println(differentDaysByString("1552442106","1555120506"));
+	}
 }

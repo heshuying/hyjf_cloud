@@ -4,9 +4,11 @@
 package com.hyjf.cs.market.client;
 
 import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.config.SmsConfigResponse;
 import com.hyjf.am.response.config.WechatContentArticleResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
+import com.hyjf.am.resquest.admin.SmsConfigRequest;
 import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.BasePage;
@@ -183,4 +185,34 @@ public interface AmConfigClient {
      * @return
      */
     boolean selectFirstWorkdayOnMonth();
+
+    /**
+     * 判断某天是否是工作日
+     * @return
+     */
+    boolean isWorkdateOnSomeDay();
+
+    /**
+     * 取昨日开始时间
+     * @param date
+     * @return
+     */
+    Date getFirstWorkdateBeforeSomeDate(Date date);
+
+    /**
+     * 取从某天开始推后的第一个工作日开始时间
+     * @param torrowDate
+     * @return
+     */
+    Date getFirstWorkdateAfterSomeDate(Date torrowDate);
+
+
+    /**
+     * 查询短信加固数据
+     *
+     * @param request
+     * @return
+     * @author xiehuili
+     */
+    SmsConfigResponse initSmsConfig(SmsConfigRequest request);
 }

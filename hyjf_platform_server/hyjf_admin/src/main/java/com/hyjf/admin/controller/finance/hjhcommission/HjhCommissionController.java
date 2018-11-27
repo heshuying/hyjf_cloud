@@ -453,7 +453,7 @@ public class HjhCommissionController extends BaseController{
 		form.setCurrPage(1);
 		// 需要输出的结果列表
 		// 列表查询
-		HjhCommissionResponse res = hjhCommissionService.selectHjhCommissionList(form);
+		HjhCommissionResponse res = hjhCommissionService.selectHjhCommissionListWithOutPage(form);
 		Integer totalCount = res.getCount();
 		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
 		Map<String, String> beanPropertyColumnMap = buildMap();
@@ -575,7 +575,7 @@ public class HjhCommissionController extends BaseController{
 				} else if ("3".equals(attribute)) {
 					attributeStr = "线上员工";
 				}
-				return attribute;
+				return attributeStr;
 			}
 		};
 

@@ -8,6 +8,7 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
@@ -79,7 +80,7 @@ public class WebBankOpenController extends BaseUserController {
         UserInfoVO userInfoVO = this.bankOpenService.getUserInfo(userId);
 
         UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
-        userOperationLogEntity.setOperationType(3);
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE3);
         userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
         userOperationLogEntity.setPlatform(0);
         userOperationLogEntity.setRemark("");

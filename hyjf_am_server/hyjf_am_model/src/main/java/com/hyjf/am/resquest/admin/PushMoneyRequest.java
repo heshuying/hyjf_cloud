@@ -54,9 +54,6 @@ public class PushMoneyRequest extends PushMoneyVO implements Serializable {
 	private String referernameSearch;
 
 	@ApiModelProperty(value = "部门(检索用)")
-	private String combotreeSrch;
-
-	@ApiModelProperty(value = "部门(检索用)")
 	private String[] combotreeListSrch;
 
 	@ApiModelProperty(value = "电子账号(检索用)")
@@ -269,14 +266,6 @@ public class PushMoneyRequest extends PushMoneyVO implements Serializable {
 
 	public void setReferernameSearch(String referernameSearch) {
 		this.referernameSearch = referernameSearch;
-	}
-
-	public String getCombotreeSrch() {
-		return combotreeSrch;
-	}
-
-	public void setCombotreeSrch(String combotreeSrch) {
-		this.combotreeSrch = combotreeSrch;
 	}
 
 	public String[] getCombotreeListSrch() {

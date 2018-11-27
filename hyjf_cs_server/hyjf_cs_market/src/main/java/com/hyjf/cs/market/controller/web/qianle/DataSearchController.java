@@ -1,13 +1,7 @@
-package com.hyjf.admin.controller.qianle;
+package com.hyjf.cs.market.controller.web.qianle;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.beans.DataSearchBean;
-import com.hyjf.admin.common.result.WebResult;
-import com.hyjf.admin.mq.SmsProducer;
-import com.hyjf.admin.mq.base.MessageContent;
-import com.hyjf.admin.service.qianle.DataSearchService;
-import com.hyjf.admin.utils.Page;
 import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.vo.config.SmsConfigVO;
@@ -17,6 +11,12 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.*;
+import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.common.util.Page;
+import com.hyjf.cs.market.bean.DataSearchBean;
+import com.hyjf.cs.market.mq.base.MessageContent;
+import com.hyjf.cs.market.mq.producer.SmsProducer;
+import com.hyjf.cs.market.service.qianle.DataSearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -56,7 +56,7 @@ public class DataSearchController {
      */
     @ApiOperation(value = "千乐数据查询", notes = "千乐数据查询")
     @PostMapping("/querylist")
-    public  WebResult<Map<String, Object>> getQianleSanList(@RequestBody DataSearchBean request){
+    public WebResult<Map<String, Object>> getQianleSanList(@RequestBody DataSearchBean request){
         DataSearchRequest dataSearchRequest = CommonUtils.convertBean(request, DataSearchRequest.class);
         DataSearchCustomizeResponse response = dataSearchService.findDataList(dataSearchRequest);
         HashMap<String, Object> result = new HashMap<>();

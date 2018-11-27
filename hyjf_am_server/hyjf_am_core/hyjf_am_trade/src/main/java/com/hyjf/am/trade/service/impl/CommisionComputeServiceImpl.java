@@ -91,7 +91,7 @@ public class CommisionComputeServiceImpl extends BaseServiceImpl implements Comm
         }
 
         PushMoney pushMoneyOnline = getCommisionConfig(2, "线上员工");
-        PushMoney pushMoney51 = getCommisionConfig(2, "51老用户");
+//        PushMoney pushMoney51 = getCommisionConfig(2, "51老用户");
 
         // 计算提成用户id
         UserInfoVO userInfoCommision = hjhLockVo.getCommissioUserInfoVO();
@@ -107,11 +107,11 @@ public class CommisionComputeServiceImpl extends BaseServiceImpl implements Comm
             return;
         }
 
-        if(userInfoCommision.getAttribute() != 3 && userInfoCommision.getIs51() ==1 && pushMoney51.getRewardSend() == 0){
-            logger.info("汇计划提成：查询出的用户信息的用户类型不符合条件！");
-            statusUpdate(record, 1);
-            return;
-        }
+//        if(userInfoCommision.getAttribute() != 3 && userInfoCommision.getIs51() ==1 && pushMoney51.getRewardSend() == 0){
+//            logger.info("汇计划提成：查询出的用户信息的用户类型不符合条件！");
+//            statusUpdate(record, 1);
+//            return;
+//        }
         BankOpenAccountVO bankOpenAccountInfo = hjhLockVo.getBankOpenAccountVO();
         // 判断提成人是否开户  (提成人未开户的不计算提成)
         if (bankOpenAccountInfo == null || Validator.isNull(bankOpenAccountInfo.getAccount())) {
@@ -139,10 +139,10 @@ public class CommisionComputeServiceImpl extends BaseServiceImpl implements Comm
         if(userInfoCommision.getAttribute() == 3){
             rateDay = new BigDecimal(pushMoneyOnline.getDayTender());
             rateMonth = new BigDecimal(pushMoneyOnline.getMonthTender());
-        }else{
+        }/*else{
             rateDay = new BigDecimal(pushMoney51.getDayTender());
             rateMonth = new BigDecimal(pushMoney51.getMonthTender());
-        }
+        }*/
 
         commission = compute(record, userInfoCommision, plan, rateDay, rateMonth, accountTender);
 

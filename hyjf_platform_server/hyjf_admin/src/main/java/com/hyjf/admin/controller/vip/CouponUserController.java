@@ -487,7 +487,7 @@ public class CouponUserController extends BaseController {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
         String message = this.validatorFieldCheckAudit(couponUserBeanRequest, record);
-        if (message == null) {
+        if (message != null) {
             Integer couponUserId = couponUserBeanRequest.getId();
             Map<String, Object> paramMap = new HashMap<>();
             paramMap.put("couponUserId", couponUserId);
@@ -550,6 +550,9 @@ public class CouponUserController extends BaseController {
             CouponUserVO couponUserVO = couponUserService.selectCouponUserById(couponUserId);
             response.setDetail(detail);
             response.setCouponUser(couponUserVO);
+            response.setRtn(Response.FAIL);
+            response.setMessage(message);
+            return new AdminResult(FAIL,message);
         } else {
             AdminSystemVO user = getUser(request);
             String loginUserId = user.getId();
@@ -895,7 +898,7 @@ public class CouponUserController extends BaseController {
      */
     private String validatorFieldCheckAudit(CouponUserBeanRequest request, CouponUserVO record) {
         String message = null;
-        if (GetDate.strYYYYMMDDHHMMSS2Timestamp2(request.getUpdateTime()) != (int) record.getUpdateTime()) {
+        if (Integer.parseInt(request.getUpdateTime()) != record.getUpdateTime()) {
             return message = "排他check" + SYN_OPERATION;
         }
         if (!Coupon_AUDIT_PWD.equals(MD5.toMD5Code(request.getCouponAuditPwd()))) {

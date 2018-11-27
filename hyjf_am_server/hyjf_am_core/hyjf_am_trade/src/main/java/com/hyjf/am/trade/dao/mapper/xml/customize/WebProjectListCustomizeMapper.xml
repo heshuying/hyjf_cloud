@@ -1025,6 +1025,14 @@
                 <when test="status == '15'">
                     AND ( hydb.`status` = 2 AND hydb.project_type = 4 AND hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
                 </when>
+                <!-- 新手汇 复审 -->
+                <when test="status == '16'">
+                    AND ( hydb.`status` = 3 AND hydb.project_type = 4  )
+                </when>
+                <!-- 新手汇 还款 -->
+                <when test="status == '17'">
+                    AND ( hydb.`status` = 4 AND hydb.project_type = 4  )
+                </when>
             </choose>
             <if test="termStart != null and termStart != ''">
                 AND CASE

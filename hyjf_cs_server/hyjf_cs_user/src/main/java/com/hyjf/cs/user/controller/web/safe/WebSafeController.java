@@ -3,6 +3,24 @@
  */
 package com.hyjf.cs.user.controller.web.safe;
 
+import java.util.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.UserOperationLogConstant;
+import com.hyjf.common.util.GetCilentIP;
+import com.hyjf.cs.user.mq.base.MessageContent;
+import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.vo.user.UserVO;
@@ -18,21 +36,10 @@ import com.hyjf.cs.user.result.ContractSetResultBean;
 import com.hyjf.cs.user.service.safe.SafeService;
 import com.hyjf.cs.user.vo.BindEmailVO;
 import com.hyjf.cs.user.vo.UserNoticeSetVO;
+
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -49,7 +56,8 @@ public class WebSafeController extends BaseUserController {
 
     @Autowired
     private SafeService safeService;
-
+    @Autowired
+    UserOperationLogProducer userOperationLogProducer;
 
     /**
      * 账户设置查询
@@ -133,13 +141,32 @@ public class WebSafeController extends BaseUserController {
     @ApiOperation(value = "发送激活邮件", notes = "发送激活邮件")
     @ApiImplicitParam(name = "paraMap", value = "{email:string}", dataType = "Map")
     @PostMapping(value = "/sendEmailActive", produces = "application/json; charset=utf-8")
-    public WebResult<Object> sendEmailActive(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String, String> paraMap, HttpServletRequest request) {
+    public WebResult<Object> sendEmailActive(@RequestHeader(value = "userId") Integer userId,
+                                             @RequestHeader(value = "token") String token ,
+                                             @RequestBody Map<String, String> paraMap, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
-
+        String isUpdate = request.getParameter("isUpdate");
         safeService.checkForEmailSend(paraMap.get("email"), userId);
-
+        WebViewUserVO webUser = safeService.getWebViewUserByUserId(userId);
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        if(org.apache.commons.lang.StringUtils.isNotEmpty(isUpdate)&&"isUpdate".equals(isUpdate)){
+            userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE9);
+        }else {
+            userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE8);
+        }
+        userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+        userOperationLogEntity.setPlatform(0);
+        userOperationLogEntity.setRemark("");
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(webUser.getUsername());
+        userOperationLogEntity.setUserRole(webUser.getRoleId());
         try {
-            safeService.sendEmailActive(userId, paraMap.get("email"));
+            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
+        }
+        try {
+            safeService.sendEmailActive(userId, token, paraMap.get("email"));
         } catch (MQException e) {
             logger.error("发送激活邮件失败", e);
             result.setStatus(ApiResult.FAIL);
@@ -156,16 +183,21 @@ public class WebSafeController extends BaseUserController {
      * @date: 2018/6/20
      */
     @ApiOperation(value = "绑定邮箱", notes = "绑定邮箱")
-    @PostMapping(value = "/bindEmail", produces = "application/json; charset=utf-8")
-    public WebResult<Object> bindEmail(@RequestHeader(value = "userId") int userId, @RequestBody BindEmailVO bindEmailVO) {
+    @RequestMapping(value = "/bindEmail")
+    public WebResult<Object> bindEmail(HttpServletRequest request) {
+        BindEmailVO bindEmailVO = new BindEmailVO();
+        bindEmailVO.setKey(request.getParameter("key"));
+        bindEmailVO.setValue(request.getParameter("value"));
+        bindEmailVO.setEmail(request.getParameter("email"));
+
         logger.info("用戶绑定邮箱, bindEmailVO :{}", JSONObject.toJSONString(bindEmailVO));
         WebResult<Object> result = new WebResult<Object>();
 
-        safeService.checkForEmailBind(bindEmailVO, userId);
+        safeService.checkForEmailBind(bindEmailVO);
 
         try {
-            safeService.updateEmail(userId, bindEmailVO.getEmail());
-            WebViewUserVO webUser = safeService.getWebViewUserByUserId(userId);
+            safeService.updateEmail(Integer.parseInt(bindEmailVO.getKey()), bindEmailVO.getEmail());
+            WebViewUserVO webUser = safeService.getWebViewUserByUserId(Integer.parseInt(bindEmailVO.getKey()));
             if (null != webUser) {
                 webUser = safeService.updateUserToCache(webUser);
                 result.setData(webUser);

@@ -4,10 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.user.BankCardVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserOperationLogConstant;
@@ -96,6 +93,21 @@ public class AppUnBindCardPageController extends BaseUserController{
             ret.put("status", "1");
             ret.put("statusDesc", "用户未登录！");
             return ret;
+        }
+        UserVO user = unBindCardService.getUsersById(userId);
+        UserInfoVO userInfoVO = unBindCardService.getUserInfo(userId);
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE11);
+        userOperationLogEntity.setIp(com.hyjf.common.util.GetCilentIP.getIpAddr(request));
+        userOperationLogEntity.setPlatform(Integer.valueOf(platform));
+        userOperationLogEntity.setRemark("");
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(user.getUsername());
+        userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
+        try {
+            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
         }
         // 取得用户的客户号
         BankOpenAccountVO accountChinapnrTender = unBindCardService.getBankOpenAccount(userId);

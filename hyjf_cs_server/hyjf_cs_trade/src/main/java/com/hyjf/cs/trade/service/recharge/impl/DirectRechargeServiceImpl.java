@@ -12,6 +12,7 @@ import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.BaseDefine;
@@ -27,6 +28,8 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,6 +59,17 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
     private static final int RECHARGE_STATUS_SUCCESS = 2;
 
     @Override
+    @HystrixCommand(commandKey = "页面充值(api)-recharge",fallbackMethod = "fallBackApiRecharge",ignoreExceptions = CheckException.class,commandProperties = {
+            //设置断路器生效
+            @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
+            //一个统计窗口内熔断触发的最小个数3/10s
+            @HystrixProperty(name = "circuitBreaker.requestVolumeThreshold", value = "3"),
+            @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50"),
+            @HystrixProperty(name = "execution.isolation.strategy", value = "SEMAPHORE"),
+            //熔断5秒后去尝试请求
+            @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
+            //失败率达到30百分比后熔断
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
     public Map<String,Object> recharge(UserDirectRechargeRequestBean userRechargeRequestBean, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
         Map<String,Object> map = new HashMap<>();
@@ -231,6 +245,17 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
         }
     }
 
+    public Map<String,Object> fallBackApiRecharge(UserDirectRechargeRequestBean userRechargeRequestBean, HttpServletRequest request) {
+        logger.info("==================已进入 页面充值(api) fallBackApiRecharge 方法================");
+        Map<String,Object> map = new HashMap<>();
+        map.put("status", BaseResultBean.STATUS_FAIL);
+        map.put("acqRes", userRechargeRequestBean.getAcqRes());
+        map.put("accountId", userRechargeRequestBean.getAccountId());
+        map.put("statusDesc","充值失败");
+        map.put("callBackAction",userRechargeRequestBean.getRetUrl());
+        return map;
+    }
+
     @Override
     public Map<String,Object> pageReturn(HttpServletRequest request, BankCallBean bean) {
         String url = request.getParameter("callback").replace("*-*-*", "#");
@@ -239,18 +264,8 @@ public class DirectRechargeServiceImpl extends BaseTradeServiceImpl implements D
         result.put("status", ErrorCodeConstant.SUCCESS);
         result.put("acqRes",request.getParameter("acqRes"));
         result.put("statusDesc", "充值成功");
-        if (bean == null) {
+        if (bean == null||(!request.getParameter("isSuccess").equals("1"))) {
             logger.info("调用江西银行页面充值接口,银行返回空");
-            result.put("statusDesc", "页面充值,调用银行接口失败");
-            result.put("status",ErrorCodeConstant.STATUS_CE999999);
-            return result;
-        }
-        // 银行返回响应代码
-        String retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
-        if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
-            // 根据银行相应代码,查询错误信息
-            String retMsg = amConfigClient.getBankRetMsg(retCode);
-            logger.info("页面充值失败,银行返回响应代码:[" + retCode + "],retMsg:[" + retMsg + "]");
             result.put("statusDesc", "页面充值,调用银行接口失败");
             result.put("status",ErrorCodeConstant.STATUS_CE999999);
             return result;

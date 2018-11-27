@@ -374,7 +374,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         if(homeHjhPageCustomizes != null && homeHjhPageCustomizes.size() > 0){
             appHomePageCustomize = homeHjhPageCustomizes.get(0);
         }
-        appHomePageCustomize.setTitle("推荐产品");
+//        appHomePageCustomize.setTitle("推荐服务");
         CommonUtils.convertNullToEmptyString(appHomePageCustomize);
         AppHomePageRecommendProject recommendProject = convertToAppHomePageRecommendProject(appHomePageCustomize);
         info.put("recommendProject", recommendProject);
@@ -412,6 +412,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 AppProjectListCustomizeVO customize = projectList.get(0);
                 customize.setTag("优质资产");
                 customize.setBorrowDesc("项目剩余" + customize.getBorrowAccountWait());
+                customize.setStatusName("立即投资");
                 list.add(customize);
                 return  list;
             }else{
@@ -423,7 +424,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         for (AppProjectListCustomizeVO appInfo :
                 projectListCustomizes) {
             appInfo.setTag("稳健回报");
-            appInfo.setBorrowDesc("开放额度" + appInfo.getAvailableInvestAccount());
+            appInfo.setBorrowDesc("开放额度" + appInfo.getAvailableInvestAccountNew());
         }
         return projectListCustomizes;
     }
@@ -528,6 +529,9 @@ public class AppHomeServiceImpl implements AppHomeService {
         // 产品加息
         project.setBorrowExtraYield(appHomePageCustomize.getBorrowExtraYield());
         project.setBorrowTheFirstDesc(appHomePageCustomize.getBorrowTheFirstDesc());
+        if("13".equals(project.getStatus()) || "12".equals(project.getStatus())){
+            project.setButtonText("查看详情");
+        }
         return project;
     }
 
@@ -609,6 +613,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 appProjectListCustomize.setPlanPeriod(entity.getPlanPeriod());
                 appProjectListCustomize.setBorrowPeriod(entity.getPlanPeriod());
                 appProjectListCustomize.setAvailableInvestAccount(entity.getAvailableInvestAccount());
+                appProjectListCustomize.setAvailableInvestAccountNew(entity.getAvailableInvestAccountNew());
                 appProjectListCustomize.setStatusName(entity.getStatusName());
                 appProjectListCustomize.setBorrowNid(entity.getPlanNid());
                 String couponEnable = entity.getCouponEnable();
@@ -670,12 +675,8 @@ public class AppHomeServiceImpl implements AppHomeService {
             homePageCustomize.setBorrowUrl(HOST + HomePageDefine.PLAN + listCustomize.getBorrowNid());
             homePageCustomize.setBorrowApr(listCustomize.getBorrowApr() + "%");
             homePageCustomize.setBorrowPeriod(listCustomize.getBorrowPeriod());
-            String borrowExtraYield = listCustomize.getBorrowExtraYield();
-            if(StringUtils.isNotBlank(borrowExtraYield)){
-                borrowExtraYield = borrowExtraYield.substring(1,borrowExtraYield.length());
-            }
-            homePageCustomize.setBorrowExtraYield(borrowExtraYield);
             String status = listCustomize.getStatus();
+            homePageCustomize.setTitle("推荐服务");
             if ("稍后开启".equals(listCustomize.getStatusName())){    //1.启用  2.关闭
                 // 20.立即加入  21.稍后开启
                 homePageCustomize.setStatus("21");
@@ -685,9 +686,27 @@ public class AppHomeServiceImpl implements AppHomeService {
             /*else if("立即加入".equals(listCustomize.getStatusName())){  //1.启用  2.关闭
                 homePageCustomize.setStatus("20");
                 homePageCustomize.setStatusName("立即加入");
-            }*/else if(listCustomize.getStatusName().equals("授权服务")){  //1.启用  2.关闭
+            }*/else if("授权服务".equals(listCustomize.getStatusName())){  //1.启用  2.关闭
                 homePageCustomize.setStatus("20");
                 homePageCustomize.setStatusName("授权服务");
+            }else if("立即投资".equals(listCustomize.getStatusName())){
+                //add by nxl 智投服务->添加推荐服务标题
+                homePageCustomize.setTitle("推荐产品");
+                homePageCustomize.setStatus(listCustomize.getStatus());
+                homePageCustomize.setStatusName("立即投资");
+                homePageCustomize.setBorrowTheSecondDesc("项目期限");
+                // add by nxl 智投服务 推荐产品显示历史年回报率
+                homePageCustomize.setBorrowTheFirstDesc("历史年回报率");
+                homePageCustomize.setBorrowUrl(HOST + HomePageDefine.BORROW + listCustomize.getBorrowNid());
+                String borrowExtraYield = listCustomize.getBorrowExtraYield();
+                if(StringUtils.isNotBlank(borrowExtraYield)){
+                    borrowExtraYield = borrowExtraYield.substring(1,borrowExtraYield.length());
+                }
+                homePageCustomize.setBorrowExtraYield(borrowExtraYield);
+            }else {
+                homePageCustomize.setStatus("21");
+                homePageCustomize.setStatusName("稍后开启");
+                homePageCustomize.setStatusNameDesc("");
             }
             homePageCustomize.setOnTime(listCustomize.getOnTime());
             homePageCustomize.setBorrowSchedule(listCustomize.getBorrowSchedule());

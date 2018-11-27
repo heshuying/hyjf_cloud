@@ -441,7 +441,7 @@ public class CouponBackMoneyServiceImpl implements CouponBackMoneyService {
                         cell.setCellValue(pInfo.getTransferId());
                     }
                     else if (celLength == 9) {
-                        cell.setCellValue(pInfo.getReceivedFlg());
+                        cell.setCellValue(pInfo.getReceivedFlgString());
                     }
                     else if (celLength == 10) {
                         cell.setCellValue(pInfo.getRecoverTime());
@@ -465,9 +465,9 @@ public class CouponBackMoneyServiceImpl implements CouponBackMoneyService {
             Cell cell1 = row.createCell(0);
             cell1.setCellValue("合计");
             Cell cell2 = row.createCell(7);
-            cell2.setCellValue(recoverInterest);
-            Cell cell3 = row.createCell(11);
-            cell3.setCellValue("￥"+investTotal);
+            cell2.setCellValue(investTotal);
+            Cell cell3 = row.createCell(12);
+            cell3.setCellValue("￥"+recoverInterest);
         }
 
         // 导出

@@ -1,7 +1,6 @@
 package com.hyjf.admin.config;
 
-import java.time.Duration;
-
+import com.hyjf.common.config.RedisConfig;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -10,14 +9,18 @@ import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.session.data.redis.config.ConfigureRedisAction;
 import org.springframework.session.data.redis.config.annotation.web.http.EnableRedisHttpSession;
 
-import com.hyjf.common.config.RedisConfig;
+import java.time.Duration;
 
 @EnableRedisHttpSession(cleanupCron = "0 */1 * * * ?", maxInactiveIntervalInSeconds = 1800)
 public class SessionConfig {
-	
-	
+
+    @Bean
+    public ConfigureRedisAction configureRedisAction() {
+        return ConfigureRedisAction.NO_OP;
+    }
 
 	@Bean
 	public JedisConnectionFactory connectionFactory(@Autowired RedisConfig redisConfig) {

@@ -26,14 +26,14 @@ public interface ContentPartnerService {
 	 *
 	 * @param request
 	 */
-	void insertAction(ContentPartnerRequest request);
+	int insertAction(ContentPartnerRequest request);
 
 	/**
 	 * 修改公司管理-合作伙伴
 	 *
 	 * @param request
 	 */
-	void updateAction(ContentPartnerRequest request);
+	int updateAction(ContentPartnerRequest request);
 
 	/**
 	 * 根据id查询公司管理-合作伙伴
@@ -56,5 +56,7 @@ public interface ContentPartnerService {
 	 *
 	 * @param id
 	 */
-	void deleteById(Integer id);
+	int deleteById(Integer id);
+
+	int selectCount(ContentPartnerRequest request);
 }

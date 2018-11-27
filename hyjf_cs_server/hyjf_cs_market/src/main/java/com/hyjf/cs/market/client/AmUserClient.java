@@ -168,4 +168,12 @@ public interface AmUserClient {
 
     List<Integer> getUsersList(String source);
 
+    /**
+     * 根据一级部门查询二级部门
+     * @param nmzxDivisionName
+     * @return
+     */
+    List<String> selectTwoDivisionByPrimaryDivision(String nmzxDivisionName);
+
+
 }

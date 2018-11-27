@@ -209,8 +209,6 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 int agreements = 0;
                 String borrow_nid = paemStrings[0];//借款编号
                 int repay_period = Integer.valueOf(paemStrings[1]);//期数
-                logger.info("-------------------------垫付机构协议管理， 生成垫付债转协议借款编号："+ borrow_nid);
-                logger.info("-------------------------垫付机构协议管理， 生成垫付债转协议期数："+ repay_period);
                 // 获取标的信息
                 BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrow_nid);
                 BorrowInfoVO borrowInfo = amTradeClient.selectBorrowInfoByNid(borrow_nid);
@@ -242,7 +240,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                      * 3：已债转金额(creditAmountp)为0--非承接债转
                      */
                     if(isMonth) {//分期
-                        logger.info("-------------------------垫付机构协议管理， 处理分期:"+borrowRecoverP.getNid());
+                        //logger.info("-------------------------垫付机构协议管理， 处理分期:"+borrowRecoverP.getNid());
                         List<BorrowRecoverPlanVO> borrowRecoverList = amTradeClient.selectBorrowRecoverPlanList(borrowRecoverP.getNid(),repay_period);
                         if (borrowRecoverList == null || borrowRecoverList.size()==0) {
                             logger.error("-------------------------垫付机构协议管理， 标的放款记录列表获取失败borrowRecoverP.getNid():"+borrowRecoverP.getNid());
@@ -259,7 +257,6 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                             }
                         }
                     }else{//不分期
-                        logger.info("-------------------------垫付机构协议管理， 处理不分期:"+borrowRecoverP.getNid());
                         if(isNotPlan) {//直投
                             agreements = convertAndSend(borrow, borrowInfo, borrowRecoverP);
                             agreementsSUM = agreementsSUM+agreements;
@@ -278,7 +275,6 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 applyAgreement.setStatus(1);
                 applyAgreement.setCreateTime(new Date());
                 applyAgreement.setDelFlag(0);
-                logger.info("-------------------------垫付机构协议管理，更新applyAgreement:"+JSONObject.toJSON(applyAgreement));
                 amTradeClient.saveApplyAgreement(applyAgreement);
 
             }
@@ -294,10 +290,6 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
      * @param borrowRecover
      */
     private int convertAndSendPlan(BorrowAndInfoVO borrow,BorrowInfoVO borrowInfo,BorrowRecoverVO borrowRecoverP, BorrowRecoverPlanVO borrowRecover){
-        logger.info("-------------------------垫付机构协议管理，处理分期债转borrow"+JSONObject.toJSON(borrow));
-        logger.info("-------------------------垫付机构协议管理，处理分期债转borrowInfo"+JSONObject.toJSON(borrowInfo));
-        logger.info("-------------------------垫付机构协议管理，处理分期债转borrowRecoverP"+JSONObject.toJSON(borrowRecoverP));
-        logger.info("-------------------------垫付机构协议管理，处理分期债转borrowRecover"+JSONObject.toJSON(borrowRecover));
         int agreements = 0;
         String borrow_nid = borrow.getBorrowNid();
         //承接人都是垫付机构
@@ -334,10 +326,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+creditRepay.getAssignNid()+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
-                        logger.info("-------------------------垫付机构协议管理，处理分期债转，签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                     } else {
-                        logger.info("-------------------------垫付机构协议管理，处理分期债转，新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                     }
                 } catch (MQException e) {
@@ -364,9 +354,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
-                        logger.info("-------------------------垫付机构协议管理，处理分期债转，计算剩余部分签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
-                    } else {logger.info("-------------------------垫付机构协议管理，处理分期债转，计算剩余部分新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                     }
                 } catch (MQException e) {
@@ -387,10 +375,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                 // 签署成功(status = 2)
                 if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
-                    logger.info("-------------------------垫付机构协议管理，处理分期债转，非债转签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                     accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                 } else {
-                    logger.info("-------------------------垫付机构协议管理，处理分期债转，非债转新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                     fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                 }
             } catch (MQException e) {
@@ -409,10 +395,6 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
      * @param borrowRecover
      */
     private int hjhConvertAndSendPlan(BorrowAndInfoVO borrow,BorrowInfoVO borrowInfo,BorrowRecoverVO borrowRecoverP, BorrowRecoverPlanVO borrowRecover){
-//        logger.info("-------------------------处理分期债转-汇计划，处理分期债转borrow"+JSONObject.toJSON(borrow));
-//        logger.info("-------------------------处理分期债转-汇计划，处理分期债转borrowInfo"+JSONObject.toJSON(borrowInfo));
-//        logger.info("-------------------------处理分期债转-汇计划，处理分期债转borrowRecoverP"+JSONObject.toJSON(borrowRecoverP));
-//        logger.info("-------------------------处理分期债转-汇计划，处理分期债转borrowRecover"+JSONObject.toJSON(borrowRecover));
         int agreements= 0;
         String borrow_nid = borrow.getBorrowNid();
         //承接人都是垫付机构
@@ -450,10 +432,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+hjhDebtCreditRepayVO.getUniqueNid()+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
-                        logger.info("-------------------------处理分期债转-汇计划，处理分期债转签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                     } else {
-                        logger.info("-------------------------处理分期债转-汇计划，处理分期债转新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                     }
                 } catch (MQException e) {
@@ -480,10 +460,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
-                        logger.info("-------------------------处理分期债转-汇计划，计算剩余部分签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                     } else {
-                        logger.info("-------------------------处理分期债转-汇计划，计算剩余部分新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                     }
                 } catch (MQException e) {
@@ -504,10 +482,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                 // 签署成功(status = 2)
                 if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
-                    logger.info("-------------------------处理分期债转-汇计划，非债转签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                     accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                 } else {
-                    logger.info("-------------------------处理分期债转-汇计划，非债转新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                     fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                 }
             } catch (MQException e) {
@@ -526,9 +502,6 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
      * @param borrowRecover
      */
     private int convertAndSend(BorrowAndInfoVO borrow,BorrowInfoVO borrowInfo,BorrowRecoverVO borrowRecover){
-        logger.info("-------------------------处理不分期债转，处理分期债转borrow"+JSONObject.toJSON(borrow));
-        logger.info("-------------------------处理不分期债转，处理分期债转borrowInfo"+JSONObject.toJSON(borrowInfo));
-        logger.info("-------------------------处理不分期债转，处理分期债转borrowRecover"+JSONObject.toJSON(borrowRecover));
         int agreements = 0;
         String borrow_nid = borrow.getBorrowNid();
         //承接人都是垫付机构
@@ -542,11 +515,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         //债转投标单号
         String nid = borrowRecover.getNid();
         List<CreditRepayVO> creditRepayList = this.selectCreditRepay(nid,repay_period);
-        logger.info("-------------------------处理不分期债转，填充所有债转信息creditRepayList："+JSONObject.toJSON(creditRepayList));
-        logger.info("-------------------------处理不分期债转，已承接债转本金creditAmount："+creditAmount);
         if(creditRepayList!=null && creditRepayList.size()>0){//债转
             boolean creditRepayAll = (creditAmount.compareTo(new BigDecimal("0.00"))==1) && (creditAmount.compareTo(recoverCapital)==0);//是否是全部债转
-            logger.info("-------------------------处理不分期债转，已承接债转本金creditRepayAll："+creditRepayAll);
             BigDecimal assignPay  = new BigDecimal("0.00");//所有债转已还利息总和（结算剩余部分用）
             //填充所有债转信息
             for (CreditRepayVO creditRepay : creditRepayList) {
@@ -557,18 +527,14 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 JSONObject paramter = getAllcreditParamter(creditRepay,bean,borrow);
                 bean.setParamter(paramter);
                 bean.setTeString(DF);
-                logger.info("-------------------------处理不分期债转，填充所有债转信息paramter："+JSONObject.toJSON(paramter));
-                logger.info("-------------------------处理不分期债转，填充所有债转信息bean："+JSONObject.toJSON(bean));
                 // 法大大生成合同
                 try {
                     // 获取用户投资协议记录
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+creditRepay.getAssignNid()+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
-                        logger.info("-------------------------处理不分期债转，签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                     } else {
-                        logger.info("-------------------------处理不分期债转，新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                     }
                 } catch (MQException e) {
@@ -589,17 +555,14 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 borrowRecover.setRecoverInterestYes(assignPay);//剩余部分已还利息
                 JSONObject paramter = getNocreditParamter(borrowRecover,bean,borrow);
                 bean.setParamter(paramter); bean.setTeString(DF);
-                logger.info("-------------------------处理不分期债转，填充计算剩余部分paramter："+JSONObject.toJSON(paramter));
                 // 法大大生成合同
                 try {
                     // 获取用户投资协议记录
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
-                        logger.info("-------------------------处理不分期债转，计算剩余部分签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                     } else {
-                        logger.info("-------------------------处理不分期债转，计算剩余部分新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                     }
                 } catch (MQException e) {
@@ -614,17 +577,14 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             FddGenerateContractBean bean = getFddGenerateContractBean(borrow_nid,repay_period,repayOrgUserId,nid+"-"+repay_period,repayOrgUserId,5,2);
             JSONObject paramter = getNocreditParamter(borrowRecover,bean,borrow);
             bean.setParamter(paramter); bean.setTeString(DF);
-            logger.info("-------------------------处理不分期债转，填充非债转paramter："+JSONObject.toJSON(paramter));
             // 法大大生成合同
             try {
                 // 获取用户投资协议记录
                 TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                 // 签署成功(status = 2)
                 if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
-                    logger.info("-------------------------处理不分期债转，非债转签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                     accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                 } else {
-                    logger.info("-------------------------处理不分期债转，非债转新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                     fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                 }
             } catch (MQException e) {
@@ -643,9 +603,6 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
      * @param borrowRecover
      */
     private int hjhConvertAndSend(BorrowAndInfoVO borrow,BorrowInfoVO borrowInfo,BorrowRecoverVO borrowRecover){
-        logger.info("-------------------------处理不分期债转-汇计划，处理分期债转borrow"+JSONObject.toJSON(borrow));
-        logger.info("-------------------------处理不分期债转-汇计划，处理分期债转borrowInfo"+JSONObject.toJSON(borrowInfo));
-        logger.info("-------------------------处理不分期债转-汇计划，处理分期债转borrowRecover"+JSONObject.toJSON(borrowRecover));
         int agreements = 0;
         String borrow_nid = borrow.getBorrowNid();
         //承接人都是垫付机构
@@ -677,10 +634,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+hjhDebtCreditRepayVO.getUniqueNid()+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
-                        logger.info("-------------------------处理不分期债转-汇计划，签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                     } else {
-                        logger.info("-------------------------处理不分期债转-汇计划，新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                     }
                 } catch (MQException e) {
@@ -707,10 +662,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
-                        logger.info("-------------------------处理不分期债转-汇计划，计算剩余部分签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                     } else {
-                        logger.info("-------------------------处理不分期债转-汇计划，计算剩余部分新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                         fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                     }
                 } catch (MQException e) {
@@ -731,10 +684,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                 // 签署成功(status = 2)
                 if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
-                    logger.info("-------------------------处理不分期债转-汇计划，非债转签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
+                    //logger.info("-------------------------处理不分期债转-汇计划，非债转签署成功tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                     accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                 } else {
-                    logger.info("-------------------------处理不分期债转-汇计划，非债转新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
+                    //logger.info("-------------------------处理不分期债转-汇计划，非债转新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
                     fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
                 }
             } catch (MQException e) {
@@ -782,9 +735,9 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         applyAgreementInfo.setUserId(repayOrgUserId);//投资人(出让人)
         applyAgreementInfo.setCreditUserId(creditUserId+"");//承接人-垫付机构
         applyAgreementInfo.setStatus(transType);
-        logger.info("--------------------填充所有债转信息getFddGenerateContractBean:applyAgreementInfo:"+JSONObject.toJSON(applyAgreementInfo));
+        //logger.info("--------------------填充所有债转信息getFddGenerateContractBean:applyAgreementInfo:"+JSONObject.toJSON(applyAgreementInfo));
         ApplyAgreementInfoResponse response = amTradeClient.saveApplyAgreementInfo(applyAgreementInfo);
-        logger.info("--------------------填充所有债转信息getFddGenerateContractBean:ApplyAgreementInfoResponse:"+JSONObject.toJSON(response));
+        //logger.info("--------------------填充所有债转信息getFddGenerateContractBean:ApplyAgreementInfoResponse:"+JSONObject.toJSON(response));
         bean.setBorrowNid(borrow_nid);//标的编号
         bean.setRepayPeriod(repay_period);//期数
         bean.setTransType(transType);//交易类型
@@ -862,6 +815,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             //转让价款
             paramter.put("assignPay",  borrowRecover.getRecoverCapital().add(borrowRecover.getRecoverInterestYes())+"");//已承接垫付利息recover_interest
             // 债转期限
+            //logger.info("---------------------非转让债转参数集合-分期:recoverTime:"+recoverTime);
+            //logger.info("---------------------非转让债转参数集合-分期:getRecoverYestime:"+borrowRecover.getRecoverYestime());
             paramter.put("creditTerm", DateUtils.differentDaysByString(recoverTime,borrowRecover.getRecoverYestime()+"")+"天");
 
         }else{
@@ -991,6 +946,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             //转让价款
             paramter.put("assignPay", borrowRecover.getRecoverInterestYes()+"");//已承接垫付利息recover_interest
             // 债转期限
+            //logger.info("--------------------非转让债转参数集合-不分期:recoverTime:"+recoverTime);
+            //logger.info("--------------------非转让债转参数集合-不分期:getRecoverYestime:"+borrowRecover.getRecoverYestime());
             paramter.put("creditTerm", DateUtils.differentDaysByString(recoverTime,borrowRecover.getRecoverYestime()+"")+"天");
         }
         String recoverYestime = borrowRecover.getRecoverYestime()+"";
@@ -1076,8 +1033,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
         String  recoverTime = "0";//还款时间
         if(isPlan){//分期repay_last_time-huiyingdai_borrow
+            //logger.info("---------------------汇计划-转让债转参数集合-不分期等额本息时:分期repay_last_time-huiyingdai_borrow:"+recoverTime);
             recoverTime = borrow.getRepayLastTime();
-        }else{//不分期
+        }else{//
+            //logger.info("---------------------汇计划-转让债转参数集合-不分期等额本息时:不分期:"+recoverTime);
             recoverTime =hjhDebtCreditRepay.getAssignRepayEndTime()+"";
         }
         if(CustomConstants.BORROW_STYLE_END.equals(borrowStyle)
@@ -1116,6 +1075,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             //转让价款
             paramter.put("assignPay",  hjhDebtCreditRepay.getRepayCapital().add(hjhDebtCreditRepay.getRepayInterest()).add(hjhDebtCreditRepay.getRepayAdvanceInterest()).add(hjhDebtCreditRepay.getRepayLateInterest()).add(hjhDebtCreditRepay.getRepayDelayInterest())+"");//已承接垫付利息recover_interest
             // 债转期限
+            //logger.info("---------------------汇计划-转让债转参数集合-不分期等额本息时:recoverTime:"+recoverTime);
+            //logger.info("---------------------汇计划-转让债转参数集合-不分期等额本息时:getAssignRepayYesTime:"+hjhDebtCreditRepay.getAssignRepayYesTime());
             paramter.put("creditTerm", DateUtils.differentDaysByString(recoverTime,hjhDebtCreditRepay.getAssignRepayYesTime()+"")+"天");
 
         }else{
@@ -1255,6 +1216,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             //转让价款
             paramter.put("assignPay",  creditRepay.getAssignRepayCapital().add(creditRepay.getAssignRepayInterest())+"");//已承接垫付利息recover_interest
             // 债转期限
+            //logger.info("---------------------转让债转参数集合等额本息时:recoverTime:"+recoverTime);
+            //logger.info("---------------------转让债转参数集合等额本息时:getAssignRepayYesTime:"+creditRepay.getAssignRepayYesTime());
             paramter.put("creditTerm", DateUtils.differentDaysByString(recoverTime,creditRepay.getAssignRepayYesTime()+"天"));
 
         }else{
@@ -1317,7 +1280,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         bean.setAssignOrderId(creditRepay.getAssignNid());
         bean.setCreditNid(creditRepay.getCreditNid());//债转编号
         bean.setCreditTenderNid(creditRepay.getCreditTenderNid());//原始投资订单号
-        logger.info("-------------------------处理不分期债转，填充所有债转信息bean2："+JSONObject.toJSON(bean));
+        //logger.info("-------------------------处理不分期债转，填充所有债转信息bean2："+JSONObject.toJSON(bean));
         return paramter;
     }
 
@@ -1343,36 +1306,36 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
      * @return
      */
     public void downloadAction(DownloadAgreementRequest requestBean,HttpServletResponse response) {
-        logger.info("--------------------下载文件签署request:"+JSONObject.toJSON(requestBean));
+        //logger.info("--------------------下载文件签署request:"+JSONObject.toJSON(requestBean));
         String status = requestBean.getStatus();//1:脱敏，0：原始
         String repayPeriod = "DF-"+requestBean.getRepayPeriod()+"-";
         requestBean.setRepayPeriod(repayPeriod);
         List<TenderAgreementVO> tenderAgreementsAss= amTradeClient.selectLikeByExample(requestBean);//债转协议
-        logger.info("--------------------下载文件签署request:"+JSONObject.toJSON(requestBean));
-        logger.info("下载文件签署。。。。tenderAgreementsAss:"+JSONObject.toJSON(tenderAgreementsAss));
+        //logger.info("--------------------下载文件签署request:"+JSONObject.toJSON(requestBean));
+        //logger.info("下载文件签署。。。。tenderAgreementsAss:"+JSONObject.toJSON(tenderAgreementsAss));
         //输出文件集合
         List<File> files = new ArrayList<File>();
         if (CollectionUtils.isNotEmpty(tenderAgreementsAss)){
             for (TenderAgreementVO tenderAgreement : tenderAgreementsAss) {
                 if(tenderAgreementsAss!=null && tenderAgreementsAss.size()>0){
                     if("1".equals(status)){
-                        logger.info("--------------------下载文件签署,脱敏");
+                        //logger.info("--------------------下载文件签署,脱敏");
                         File file = createFaddPDFImgFile(tenderAgreement);
-                        logger.info("--------------------下载文件签署,脱敏file:"+file);
+                        //logger.info("--------------------下载文件签署,脱敏file:"+file);
                         if(file!=null){
                             files.add(file);
                         }
                     }else {
-                        logger.info("--------------------下载文件签署，原始");
+                        //logger.info("--------------------下载文件签署，原始");
                         if(StringUtils.isNotBlank(tenderAgreement.getDownloadUrl())){
                             try {
                                 File filePdf = FileUtil.getFile(tenderAgreement.getDownloadUrl(),tenderAgreement.getTenderNid()+".pdf");
-                                logger.info("--------------------下载文件签署，原始filePdf:"+filePdf);
+                                //logger.info("--------------------下载文件签署，原始filePdf:"+filePdf);
                                 if(filePdf!=null){
                                     files.add(filePdf);
                                 }
                             } catch (IOException e) {
-                                logger.info("--------------------下载文件签署，原始filePdf失败");
+                                //logger.info("--------------------下载文件签署，原始filePdf失败");
                             }//债转协议
                         }
                     }
@@ -1383,9 +1346,9 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         }
 
         if(files!=null && files.size()>0){
-            logger.info("--------------------下载文件签署，打压缩包files："+JSONObject.toJSON(files));
+            //logger.info("--------------------下载文件签署，打压缩包files："+JSONObject.toJSON(files));
            ZIPGenerator.generateZip(response, files, repayPeriod);
-            logger.info("searchTenderToCreditDetail下载成功");
+            //logger.info("searchTenderToCreditDetail下载成功");
         }else{
             logger.error("searchTenderToCreditDetail下载失败，请稍后重试。。。。");
 
@@ -1418,8 +1381,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         para.savePath = "/pdf_tem/pdf/" + tenderAgreement.getTenderNid();
         String imgUrl = tenderAgreement.getImgUrl();
         String pdfUrl = tenderAgreement.getPdfUrl();
-        logger.info("下载文件签署。。。。imgUrl:"+imgUrl);
-        logger.info("下载文件签署。。。。pdfUrl:"+pdfUrl);
+        //logger.info("下载文件签署。。。。imgUrl:"+imgUrl);
+        //logger.info("下载文件签署。。。。pdfUrl:"+pdfUrl);
         if(org.apache.commons.lang.StringUtils.isNotBlank(pdfUrl)){
             //获取文件目录
             int index = pdfUrl.lastIndexOf("/");
@@ -1428,8 +1391,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             String pdfName = pdfUrl.substring(index+1);
             para.downloadPath = basePathPdf + "/" + pdfPath;
             para.sftpKeyFile = pdfName;
-            logger.info("下载文件签署。。pdfUrl。。 para.downloadPath:"+ para.downloadPath);
-            logger.info("下载文件签署。。pdfUrl。。para.sftpKeyFile:"+para.sftpKeyFile);
+            //logger.info("下载文件签署。。pdfUrl。。 para.downloadPath:"+ para.downloadPath);
+            //logger.info("下载文件签署。。pdfUrl。。para.sftpKeyFile:"+para.sftpKeyFile);
         }else if(org.apache.commons.lang.StringUtils.isNotBlank(imgUrl)){
             int index = imgUrl.lastIndexOf("/");
             String imgPath = imgUrl.substring(0,index);
@@ -1437,10 +1400,10 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             String imgName = imgUrl.substring(index+1);
             para.downloadPath = "/" + basePathImage + "/" + imgPath;
             para.sftpKeyFile = imgName;
-            logger.info("下载文件签署。。imgUrl。。 para.downloadPath:"+ para.downloadPath);
-            logger.info("下载文件签署。。imgUrl。。para.sftpKeyFile:"+para.sftpKeyFile);
+            //logger.info("下载文件签署。。imgUrl。。 para.downloadPath:"+ para.downloadPath);
+            //logger.info("下载文件签署。。imgUrl。。para.sftpKeyFile:"+para.sftpKeyFile);
         }else{
-            logger.info( "下载文件签署。。imgUrl。。para.sftpKeyFile:null");
+            //logger.info( "下载文件签署。。imgUrl。。para.sftpKeyFile:null");
             return null;
         }
         File file =  FavFTPUtil.downloadDirectory(para);

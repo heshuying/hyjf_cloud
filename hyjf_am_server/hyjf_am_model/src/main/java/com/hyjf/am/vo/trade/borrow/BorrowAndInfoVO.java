@@ -172,9 +172,9 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
 
     private Integer repayMonthAccount;
 
-    private String repayLastTime;
+    private Integer repayLastTime;
 
-    private String repayEachTime;
+    private Integer repayEachTime;
 
     private Integer repayNextTime;
 
@@ -479,6 +479,12 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
     private Date createTime;
 
     private Integer increaseInterestFlag;
+
+    private Integer isInstallment;
+
+    private Integer isMonth;
+
+    private String addIp;
 
     private static final long serialVersionUID = 1L;
 
@@ -1106,20 +1112,20 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
         this.repayMonthAccount = repayMonthAccount;
     }
 
-    public String getRepayLastTime() {
+    public Integer getRepayLastTime() {
         return repayLastTime;
     }
 
-    public void setRepayLastTime(String repayLastTime) {
-        this.repayLastTime = repayLastTime == null ? null : repayLastTime.trim();
+    public void setRepayLastTime(Integer repayLastTime) {
+        this.repayLastTime = repayLastTime;
     }
 
-    public String getRepayEachTime() {
+    public Integer getRepayEachTime() {
         return repayEachTime;
     }
 
-    public void setRepayEachTime(String repayEachTime) {
-        this.repayEachTime = repayEachTime == null ? null : repayEachTime.trim();
+    public void setRepayEachTime(Integer repayEachTime) {
+        this.repayEachTime = repayEachTime;
     }
 
     public Integer getRepayNextTime() {
@@ -2344,5 +2350,29 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
 
     public void setReverifyTimeInt(Integer reverifyTimeInt) {
         this.reverifyTimeInt = reverifyTimeInt;
+    }
+
+    public Integer getIsInstallment() {
+        return isInstallment;
+    }
+
+    public void setIsInstallment(Integer isInstallment) {
+        this.isInstallment = isInstallment;
+    }
+
+    public Integer getIsMonth() {
+        return isMonth;
+    }
+
+    public void setIsMonth(Integer isMonth) {
+        this.isMonth = isMonth;
+    }
+
+    public String getAddIp() {
+        return addIp;
+    }
+
+    public void setAddIp(String addIp) {
+        this.addIp = addIp;
     }
 }

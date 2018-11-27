@@ -184,6 +184,13 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 		/*原Borrow borrow = this.getBorrowByNid(borrowNid);*/
 		BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
 		
+		//测试
+		if(borrow == null){
+			logger.info("根据borrowNid查询borrow和info结果为null"+borrowNid);
+		} else {
+			logger.info("根据borrowNid查询borrow和info结果   不   为null"+borrow.toString());
+		}
+		
 		// 判断借款信息是否存在
 		if (borrow == null || borrow.getId() == null) {
 			return jsonMessage("借款项目不存在", "1");
@@ -224,6 +231,14 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 			if (!newUser) {
 				return jsonMessage("该项目只能新手投资", "1");
 			}
+		}
+
+		
+		//测试log
+		if(borrow.getCanTransactionPc() == null){
+			logger.info("borrow.getCanTransactionPc()是null");
+		} else {
+			logger.info("platform的值是：" + platform + "borrow.getCanTransactionPc()的值：" + borrow.getCanTransactionPc());
 		}
 
 		// 项目投资客户端
@@ -327,6 +342,13 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 			}
 			// 剩余可投金额
 			Integer min = borrow.getTenderAccountMin();
+			
+			if(min == null){
+				logger.info("borrow.getTenderAccountMin()是null");
+			} else {
+				logger.info("剩余可投金额" + min);
+			}
+			
 			// 当剩余可投金额小于最低起投金额，不做最低起投金额的限制
 			if (min != null && min != 0 && new BigDecimal(balance).compareTo(new BigDecimal(min)) == -1) {
 				if (accountBigDecimal.compareTo(new BigDecimal(balance)) == 1) {
@@ -347,6 +369,13 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 					}
 				} else {
 					Integer max = borrow.getTenderAccountMax();
+					
+					if(max == null){
+						logger.info("borrow.getTenderAccountMax()是null");
+					} else {
+						logger.info("最大可投金额" + max);
+					}
+
 					if (max != null && max != 0 && accountBigDecimal.compareTo(new BigDecimal(max)) == 1) {
 						return jsonMessage("项目最大投资额为" + max + "元", "1");
 					}
@@ -577,8 +606,11 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 	        // 4.当前面的redis操作成功后，才能操作user和trade的各种表(原来是user，trade合在一起，微服务后拆分)
 			result = this.borrowTender(borrow, bean);
 	        logger.info("用户:{},投资成功，金额：{}，优惠券开始调用ID：{}" ,userId, txAmount,couponGrantId);
+	        
+	        logger.info("修改各种表！" +result.toJSONString());
+	        
 	        // 如果用了优惠券
-	        if (StringUtils.isNotEmpty(couponGrantId)) {
+/*	        if (StringUtils.isNotEmpty(couponGrantId)) {
 	            // 开始使用优惠券
 	            Map<String, String> params = new HashMap<String, String>();
 	            params.put("mqMsgId", GetCode.getRandomCode(10));
@@ -598,11 +630,14 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 	            params.put("userId", userId+"");
 	            try {
 	                couponTenderProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_TENDER_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+	            
+	                logger.info("couponTenderProducer.messageSend  消息已经发送：汇直投-优惠券使用   HZT_COUPON_TENDER_TOPIC");
+	            
 	            } catch (MQException e) {
 	                logger.error("使用优惠券异常,userId:{},ordId:{},couponGrantId:{},borrowNid:{}",userId,bean.getLogOrderId(),couponGrantId,borrowNid);
 	                e.printStackTrace();
 	            }
-	        }
+	        }*/
 		}
 		return result;
 	}
@@ -787,6 +822,10 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
         if (StringUtils.isNotBlank(bean.getAuthCode())) {
             tenderBg.setAuthCode(bean.getAuthCode());
         }
+        
+        
+        logger.info("tenderBg所包含的属性：" + tenderBg.toString());
+        
         /*投资授权码 投资结果授权码 start*/
         /*3.borrowtender表数据准备好，更新trade库所有相关的表*/
         boolean insertFlag = amTradeClient.borrowTender(tenderBg);

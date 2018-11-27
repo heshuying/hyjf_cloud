@@ -7,17 +7,30 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.ClientConstants;
+import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
+import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.annotation.RequestLimit;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.mq.base.MessageContent;
+import com.hyjf.cs.trade.mq.producer.UserOperationLogProducer;
+import com.hyjf.cs.trade.service.consumer.NifaContractEssenceMessageService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -29,7 +42,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * @Description wechat端-加入计划
@@ -44,6 +59,10 @@ public class WechatjhPlanController extends BaseTradeController {
 
     @Autowired
     private HjhTenderService hjhTenderService;
+    @Autowired
+    private NifaContractEssenceMessageService nifaContractEssenceMessageService;
+    @Autowired
+    private UserOperationLogProducer userOperationLogProducer;
 
     @ApiOperation(value = "加入计划", notes = "加入计划")
     @PostMapping(value = "/joinPlan", produces = "application/json; charset=utf-8")
@@ -61,6 +80,29 @@ public class WechatjhPlanController extends BaseTradeController {
         WeChatResult weChatResult = new WeChatResult();
         try {
             result = hjhTenderService.joinPlan(tender);
+            HjhPlanVO plan =  hjhTenderService.getPlanByNid(tender.getBorrowNid());
+            String lockPeriod = plan.getLockPeriod().toString();
+            String dayOrMonth="";
+            if (plan.getIsMonth().intValue()!=0) {
+                dayOrMonth = lockPeriod + "个月智投";
+            } else {
+                dayOrMonth = lockPeriod + "天智投";
+            }
+            UserVO userVO = hjhTenderService.getUsers(userId);
+            UserInfoVO usersInfo = hjhTenderService.getUsersInfoByUserId(userId);
+            UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+            userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE4);
+            userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));
+            userOperationLogEntity.setPlatform(1);
+            userOperationLogEntity.setRemark(dayOrMonth);
+            userOperationLogEntity.setOperationTime(new Date());
+            userOperationLogEntity.setUserName(userVO.getUsername());
+            userOperationLogEntity.setUserRole(String.valueOf(usersInfo.getRoleId()));
+            try {
+                userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+            } catch (MQException e) {
+                logger.error("保存用户日志失败", e);
+            }
             //用户测评校验状态转换
             if(result.getStatus()!=null && result.getStatus()!="" && !"1".equals(result.getStatus())){
                 weChatResult.setStatus(result.getStatus());

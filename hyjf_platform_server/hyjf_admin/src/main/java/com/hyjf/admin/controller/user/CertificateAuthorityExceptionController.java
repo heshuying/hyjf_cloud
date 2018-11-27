@@ -54,6 +54,7 @@ import java.util.Map;
 public class CertificateAuthorityExceptionController extends BaseController {
 
 	private static final String PERMISSIONS = "CAException";
+	private static final String PERMISSIONS2 = "calist";
 	
     @Autowired
     private CertificateAuthorityExceptionService certificateAuthorityExceptionService;
@@ -67,7 +68,7 @@ public class CertificateAuthorityExceptionController extends BaseController {
      */
     @PostMapping("/search")
 	@ApiOperation(value = "CA认证记录列表", notes = "CA认证记录列表")
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<CertificateAuthorityVO>> init(@RequestBody CertificateAuthorityExceptionRequest certificateAuthorityExceptionBean) {
 
 
@@ -113,7 +114,7 @@ public class CertificateAuthorityExceptionController extends BaseController {
      */
     @PostMapping("/modifyAction")
  	@ApiOperation(value = "CA认证更新", notes = "CA认证更新")
- 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+ 	@AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult modifyAction(@RequestBody CertificateAuthorityExceptionBean certificateAuthorityExceptionBean) {
 
        // 发送CA认证MQ
@@ -139,7 +140,7 @@ public class CertificateAuthorityExceptionController extends BaseController {
      */
     @PostMapping("/exportAction")
     @ApiOperation(value = "CA导出列表", notes = "CA导出列表")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+    @AuthorityAnnotation(key = PERMISSIONS2, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportBankAccountExcel(@RequestBody CertificateAuthorityExceptionRequest certificateAuthorityExceptionBean, HttpServletRequest request, HttpServletResponse response)throws Exception {
         // 封装查询条件
         CertificateAuthorityExceptionRequest certificateBean = new CertificateAuthorityExceptionRequest();

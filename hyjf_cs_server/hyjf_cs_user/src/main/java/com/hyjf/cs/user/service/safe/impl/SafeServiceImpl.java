@@ -3,6 +3,21 @@
  */
 package com.hyjf.cs.user.service.safe.impl;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BindEmailLogRequest;
@@ -30,21 +45,8 @@ import com.hyjf.cs.user.result.ContractSetResultBean;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.safe.SafeService;
 import com.hyjf.cs.user.vo.BindEmailVO;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-import sun.misc.BASE64Decoder;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.*;
-import java.util.Map.Entry;
+import sun.misc.BASE64Decoder;
 
 
 /**
@@ -236,7 +238,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
      * @throws MQException
      */
     @Override
-    public boolean sendEmailActive(Integer userId, String email) throws MQException {
+    public boolean sendEmailActive(Integer userId, String token, String email) throws MQException {
         UserVO user = amUserClient.findUserById(userId);
         UserInfoVO userInfoVO = amUserClient.findUserInfoById(userId);
         String activeCode = GetCode.getRandomCode(6);
@@ -299,14 +301,9 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
      * @param
      */
     @Override
-    public void checkForEmailBind(BindEmailVO bindEmailVO, int userId) {
+    public void checkForEmailBind(BindEmailVO bindEmailVO) {
         // 邮箱为空校验
         if (StringUtils.isBlank(bindEmailVO.getEmail()) || StringUtils.isBlank(bindEmailVO.getValue()) || StringUtils.isBlank(bindEmailVO.getKey())) {
-            throw new ReturnMessageException(MsgEnum.ERR_PARAM);
-        }
-
-        // 校验激活是否用户本人
-        if (!bindEmailVO.getKey().equals(String.valueOf(userId))) {
             throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
 
@@ -320,9 +317,9 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         if (new Date().after(log.getEmailActiveUrlDeadtime())) {
             throw new ReturnMessageException(MsgEnum.ERR_EMAIL_ACTIVE_OVERDUE);
         }
-
+        String validValue = MD5Utils.MD5(MD5Utils.MD5(log.getEmailActiveCode()));
         // 激活校验
-        if (!bindEmailVO.getKey().equals(String.valueOf(log.getUserId())) || !bindEmailVO.getEmail().equals(log.getUserEmail()) || !bindEmailVO.getValue().equals(log.getEmailActiveCode())) {
+        if (!bindEmailVO.getKey().equals(String.valueOf(log.getUserId())) || !bindEmailVO.getEmail().equals(log.getUserEmail()) || !bindEmailVO.getValue().equals(validValue)) {
             throw new ReturnMessageException(MsgEnum.ERR_EMAIL_ACTIVE);
         }
     }
