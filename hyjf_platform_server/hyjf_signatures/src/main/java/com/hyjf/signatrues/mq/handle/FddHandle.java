@@ -837,10 +837,10 @@ public class FddHandle {
             }
 
             if (borrow.getReverifyTime() != null) {
-                borrow.setReverifyTime(GetDate.getDateMyTimeInMillis(Integer.parseInt(borrow.getReverifyTime())));
+				borrow.setReverifyTimeStr(GetDate.getDateMyTimeInMillis(borrow.getReverifyTime()));
             }
             if (borrow.getRepayLastTime() != null) {
-                borrow.setRepayLastTime(GetDate.getDateMyTimeInMillis(Integer.parseInt(borrow.getRepayLastTime())));
+				borrow.setRepayLastTimeStr(GetDate.getDateMyTimeInMillis(borrow.getRepayLastTime()));
             }
 
             /** 标的基本数据 */
@@ -1312,10 +1312,10 @@ public class FddHandle {
 
 			if (borrow != null) {
 				if (borrow.getReverifyTime() != null) {
-					borrow.setReverifyTime(GetDate.getDateMyTimeInMillis(Integer.parseInt(borrow.getReverifyTime())));
+					borrow.setReverifyTime(borrow.getReverifyTime());
 				}
 				if (borrow.getRepayLastTime() != null) {
-					borrow.setRepayLastTime(GetDate.getDateMyTimeInMillis(Integer.parseInt(borrow.getRepayLastTime())));
+					borrow.setRepayLastTime(borrow.getRepayLastTime());
 				}
 				resultMap.put("borrow", borrow);
 				// 获取借款人信息
