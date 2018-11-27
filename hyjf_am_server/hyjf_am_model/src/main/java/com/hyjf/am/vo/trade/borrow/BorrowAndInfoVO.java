@@ -480,6 +480,12 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
 
     private Integer increaseInterestFlag;
 
+    private Integer isInstallment;
+
+    private Integer isMonth;
+
+    private String addIp;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -2344,5 +2350,29 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
 
     public void setReverifyTimeInt(Integer reverifyTimeInt) {
         this.reverifyTimeInt = reverifyTimeInt;
+    }
+
+    public Integer getIsInstallment() {
+        return isInstallment;
+    }
+
+    public void setIsInstallment(Integer isInstallment) {
+        this.isInstallment = isInstallment;
+    }
+
+    public Integer getIsMonth() {
+        return isMonth;
+    }
+
+    public void setIsMonth(Integer isMonth) {
+        this.isMonth = isMonth;
+    }
+
+    public String getAddIp() {
+        return addIp;
+    }
+
+    public void setAddIp(String addIp) {
+        this.addIp = addIp;
     }
 }
