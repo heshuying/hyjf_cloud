@@ -58,4 +58,12 @@ public interface HjhCommissionService {
 	 * @return
 	 */
 	Integer updateTenderCommissionRecord(TenderCommissionVO commission, BankCallBean resultBean, ChinapnrBean chinapnrBean);
+	
+	/**
+	 * 汇计划提成列表查询
+	 *
+	 * @param instCodeSrch
+	 * @return List<HjhAssetTypeVO>
+	 */
+	HjhCommissionResponse selectHjhCommissionListWithOutPage(HjhCommissionRequest form);
 }

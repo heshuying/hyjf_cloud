@@ -168,4 +168,10 @@ public class HjhCommissionServiceImpl implements HjhCommissionService{
 		ret = amTradeClient.updateTenderCommissionRecord(request);
 		return ret;
 	}
+
+	@Override
+	public HjhCommissionResponse selectHjhCommissionListWithOutPage(HjhCommissionRequest form) {
+		HjhCommissionResponse response = amTradeClient.selectHjhCommissionListWithOutPage(form);
+		return response;
+	}
 }
