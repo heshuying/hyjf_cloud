@@ -149,7 +149,7 @@ public class HjhCommissionRequest extends BasePage implements Serializable{
     private Integer tenderType;
     
     /**
-     * 投资类别 1：是，2：否
+     * 导出类别 1：是，2：否
      */
     private Integer exportFlag;
     

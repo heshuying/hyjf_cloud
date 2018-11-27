@@ -8,6 +8,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
@@ -19,6 +20,7 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MsgCode;
+import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
@@ -35,10 +37,7 @@ import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.CsMessageClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
-import com.hyjf.cs.trade.mq.producer.CalculateInvestInterestProducer;
-import com.hyjf.cs.trade.mq.producer.CouponTenderProducer;
-import com.hyjf.cs.trade.mq.producer.WrbCallBackProducer;
+import com.hyjf.cs.trade.mq.producer.*;
 import com.hyjf.cs.trade.mq.producer.sensorsdate.hzt.SensorsDataHztInvestProducer;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.consumer.CouponService;
@@ -109,6 +108,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     private WrbCallBackProducer wrbCallBackProducer;
     @Autowired
     private CsMessageClient amMongoClient;
+    @Autowired
+    private UserOperationLogProducer userOperationLogProducer;
     /**
      * @param request
      * @Description 散标投资
@@ -157,6 +158,31 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         BorrowInfoVO borrowInfoVO = amTradeClient.getBorrowInfoByNid(request.getBorrowNid());
         if (borrow == null) {
             throw new CheckException(MsgEnum.FIND_BORROW_ERROR);
+        }
+        //保存用户操作日志
+        boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_MONTH.equals(borrow.getBorrowStyle())
+                || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrow.getBorrowStyle())|| CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle());
+
+        String dayOrMonth ="";
+        if(isMonth){//月标
+            dayOrMonth = borrow.getBorrowPeriod() + "个月散标";
+        }else{
+            dayOrMonth = borrow.getBorrowPeriod() + "天散标";
+        }
+        UserVO userVO = borrowTenderService.getUserByUserId(userId);
+        UserInfoVO userInfoVO = borrowTenderService.getUsersInfoByUserId(userId);
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE4);
+        userOperationLogEntity.setIp(request.getIp());
+        userOperationLogEntity.setPlatform(Integer.valueOf(request.getPlatform()));
+        userOperationLogEntity.setRemark(dayOrMonth);
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(userVO.getUsername());
+        userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
+        try {
+            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
         }
         BankOpenAccountVO account = amUserClient.selectBankAccountById(userId);
         logger.info("散标投资校验开始userId:{},planNid:{},ip:{},平台{},优惠券:{}", userId, request.getBorrowNid(), request.getIp(), request.getPlatform(), request.getCouponGrantId());

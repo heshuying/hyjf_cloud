@@ -172,9 +172,9 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
 
     private Integer repayMonthAccount;
 
-    private String repayLastTime;
+    private Integer repayLastTime;
 
-    private String repayEachTime;
+    private Integer repayEachTime;
 
     private Integer repayNextTime;
 
@@ -303,10 +303,6 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
     private String reverifyUserid;
 
     private String reverifyUserName;
-
-    private String reverifyTime;
-
-    private Integer reverifyTimeInt;
 
     private String reverifyRemark;
 
@@ -485,6 +481,12 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
     private Integer isMonth;
 
     private String addIp;
+
+    private Integer reverifyTime;
+
+    private String reverifyTimeStr;
+
+    private String repayLastTimeStr;
 
     private static final long serialVersionUID = 1L;
 
@@ -1112,20 +1114,20 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
         this.repayMonthAccount = repayMonthAccount;
     }
 
-    public String getRepayLastTime() {
+    public Integer getRepayLastTime() {
         return repayLastTime;
     }
 
-    public void setRepayLastTime(String repayLastTime) {
+    public void setRepayLastTime(Integer repayLastTime) {
         this.repayLastTime = repayLastTime;
     }
 
-    public String getRepayEachTime() {
+    public Integer getRepayEachTime() {
         return repayEachTime;
     }
 
-    public void setRepayEachTime(String repayEachTime) {
-        this.repayEachTime = repayEachTime == null ? null : repayEachTime.trim();
+    public void setRepayEachTime(Integer repayEachTime) {
+        this.repayEachTime = repayEachTime;
     }
 
     public Integer getRepayNextTime() {
@@ -1632,12 +1634,8 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
         this.reverifyUserName = reverifyUserName == null ? null : reverifyUserName.trim();
     }
 
-    public String getReverifyTime() {
+    public Integer getReverifyTime() {
         return reverifyTime;
-    }
-
-    public void setReverifyTime(String reverifyTime) {
-        this.reverifyTime = reverifyTime == null ? null : reverifyTime.trim();
     }
 
     public String getReverifyRemark() {
@@ -2344,14 +2342,6 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
         this.verifyTimeInteger = verifyTimeInteger;
     }
 
-    public Integer getReverifyTimeInt() {
-        return reverifyTimeInt;
-    }
-
-    public void setReverifyTimeInt(Integer reverifyTimeInt) {
-        this.reverifyTimeInt = reverifyTimeInt;
-    }
-
     public Integer getIsInstallment() {
         return isInstallment;
     }
@@ -2374,5 +2364,25 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
 
     public void setAddIp(String addIp) {
         this.addIp = addIp;
+    }
+
+    public void setReverifyTime(Integer reverifyTime) {
+        this.reverifyTime = reverifyTime;
+    }
+
+    public void setReverifyTimeStr(String reverifyTimeStr) {
+        this.reverifyTimeStr = reverifyTimeStr;
+    }
+
+    public String getReverifyTimeStr() {
+        return reverifyTimeStr;
+    }
+
+    public void setRepayLastTimeStr(String repayLastTimeStr) {
+        this.repayLastTimeStr = repayLastTimeStr;
+    }
+
+    public String getRepayLastTimeStr() {
+        return repayLastTimeStr;
     }
 }

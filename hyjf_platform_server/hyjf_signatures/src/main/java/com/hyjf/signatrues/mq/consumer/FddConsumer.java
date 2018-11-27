@@ -54,7 +54,8 @@ public class FddConsumer extends Consumer {
 		defaultMQPushConsumer.start();
 		logger.info("====法大大 consumer=====");
 	}
-
+	//MessageListenerConcurrently 并行消费 效率高 消费不追求时间顺序
+	//MessageListenerOrderly 串行消费 效率不高    消费追求时间顺序
 	public class MessageListener implements MessageListenerOrderly {
 		@Override
 		public ConsumeOrderlyStatus consumeMessage(List<MessageExt> msgs, ConsumeOrderlyContext context) {

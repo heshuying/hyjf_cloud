@@ -785,10 +785,10 @@ public class NewAgreementController extends BaseTradeController{
 			resultMap.put("assignPay", df.format(creditTender.getAssignPrice()));
 			if (borrow != null) {
 				if (borrow.getReverifyTime() != null) {
-					borrow.setReverifyTime(GetDate.getDateMyTimeInMillis(Integer.parseInt(borrow.getReverifyTime())));
+                    borrow.setReverifyTimeStr(GetDate.getDateMyTimeInMillis(borrow.getReverifyTime()));
 				}
 				if (borrow.getRepayLastTime() != null) {
-					borrow.setRepayLastTime(GetDate.getDateMyTimeInMillis(Integer.parseInt(borrow.getRepayLastTime())));
+                    borrow.setRepayLastTimeStr(GetDate.getDateMyTimeInMillis(borrow.getRepayLastTime()));
 				}
 				resultMap.put("borrowNid", borrow.getBorrowNid());
 				resultMap.put("borrowAccount", df.format(borrow.getAccount()));
