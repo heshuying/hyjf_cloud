@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.finance.pushMoney;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
@@ -215,9 +216,12 @@ public class PushMoneyManageController extends BaseController {
     @PostMapping(value = "/pushMoneyList")
     @AuthorityAnnotation(key = PUSHMONEYLIST_PERMISSIONS,value = PERMISSION_VIEW)
     public AdminResult pushMoneyList(@RequestBody PushMoneyRequest request){
+        logger.info("enter pushMoneyList controller for admin");
         if(request.getCombotreeListSrch() != null && request.getCombotreeListSrch().length>0){
+            logger.info("combotreeListSrch:::::::::::::::::::::::::::::【{}】", JSON.toJSONString(request.getCombotreeListSrch()));
             // 查询部门处理
             String [] strDepts = pushMoneyManageService.getDeptId(request.getCombotreeListSrch());
+            logger.info("strDepts:::::::::::::::::::::::::::::【{}】", JSON.toJSONString(strDepts));
             request.setCombotreeListSrch(strDepts);
         }
         //选择1直投类，而非2计划类数据
