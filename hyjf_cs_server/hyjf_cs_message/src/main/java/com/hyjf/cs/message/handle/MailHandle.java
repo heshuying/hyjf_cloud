@@ -443,6 +443,7 @@ public class MailHandle {
             msg.setRecipients(Message.RecipientType.TO, buildRcvAddress(toMailArray));
             // 邮件发送
             Transport.send(msg);
+            logger.info("发送邮件成功------");
         } catch (MessagingException e) {
             logger.error("邮件发送失败....", e);
         }
