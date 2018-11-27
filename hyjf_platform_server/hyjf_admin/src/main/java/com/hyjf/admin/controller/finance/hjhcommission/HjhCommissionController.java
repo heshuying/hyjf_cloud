@@ -451,13 +451,9 @@ public class HjhCommissionController extends BaseController{
 		//请求第一页5000条
 		form.setPageSize(defaultRowMaxCount);
 		form.setCurrPage(1);
-		
-		// 导出查询的逻辑是不使用分页
-		form.setExportFlag(1);
-		
 		// 需要输出的结果列表
 		// 列表查询
-		HjhCommissionResponse res = hjhCommissionService.selectHjhCommissionList(form);
+		HjhCommissionResponse res = hjhCommissionService.selectHjhCommissionListWithOutPage(form);
 		Integer totalCount = res.getCount();
 		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
 		Map<String, String> beanPropertyColumnMap = buildMap();
