@@ -1725,6 +1725,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         IntegerResponse result =  restTemplate
                 .postForEntity("http://AM-TRADE/am-trade/borrow/borrowTender", tenderBg, IntegerResponse.class).getBody();
         if (Response.isSuccess(result)) {
+        	logger.info("result.getResultInt()：" + result.getResultInt());
             return result.getResultInt()== 0 ? false : true;
         }
         return false;
