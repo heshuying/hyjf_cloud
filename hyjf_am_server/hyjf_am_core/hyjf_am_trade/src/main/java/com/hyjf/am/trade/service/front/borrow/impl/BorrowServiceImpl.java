@@ -354,7 +354,11 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         borrowTender.setRemark("现金投资");
         borrowTender.setBorrowUserId(borrow.getUserId());
         borrowTender.setBorrowUserName(borrow.getBorrowUserName());
+        
+        // 主干是 tender_user_name 迁移到微服务后是 username
         borrowTender.setUserName(tenderBg.getUserName());
+        
+        
         logger.info("开始插入borrowTender表...");
         borrowTenderMapper.insertSelective(borrowTender);
         logger.info("插入borrowTender表结束...");
