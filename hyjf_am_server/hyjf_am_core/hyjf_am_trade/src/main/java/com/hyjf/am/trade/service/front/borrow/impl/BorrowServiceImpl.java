@@ -339,7 +339,11 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         borrowTender.setInviteDepartmentId(tenderBg.getInviteDepartmentId());
         borrowTender.setInviteDepartmentName(tenderBg.getInviteDepartmentName());
         borrowTender.setInviteUserId(tenderBg.getInviteUserId());
+        
+        logger.info("看看推荐人存在不存在？：" + tenderBg.getInviteUserName());
         borrowTender.setInviteUserName(tenderBg.getInviteUserName());
+        
+        
         borrowTender.setInviteUserAttribute(tenderBg.getInviteUserAttribute());
         borrowTender.setTenderUserAttribute(tenderBg.getTenderUserAttribute());
         borrowTender.setInvestType(0);
@@ -437,6 +441,11 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         borrowParam.put("borrowAccountYes", tenderBg.getAccountDecimal());
         borrowParam.put("borrowService", tenderBg.getPerService());
         borrowParam.put("borrowId", borrow.getId());
+        
+        
+        logger.info("看看智投编号存在不存在？：" + borrow.getPlanNid());
+        
+        
         logger.info("开始更新borrow表 标的号{} borrowAccountYes {}  ",borrow.getBorrowNid(),tenderBg.getAccountDecimal());
         boolean updateBorrowAccountFlag = borrowCustomizeMapper.updateOfBorrow(borrowParam) > 0 ? true : false;
         // 更新borrow表

@@ -822,6 +822,10 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
         if (StringUtils.isNotBlank(bean.getAuthCode())) {
             tenderBg.setAuthCode(bean.getAuthCode());
         }
+        
+        
+        logger.info("tenderBg所包含的属性：" + tenderBg.toString());
+        
         /*投资授权码 投资结果授权码 start*/
         /*3.borrowtender表数据准备好，更新trade库所有相关的表*/
         boolean insertFlag = amTradeClient.borrowTender(tenderBg);
