@@ -148,6 +148,11 @@ public class HjhCommissionRequest extends BasePage implements Serializable{
      */
     private Integer tenderType;
     
+    /**
+     * 导出类别 1：是，2：否
+     */
+    private Integer exportFlag;
+    
 	public String getBorrowStyle() {
         return borrowStyle;
     }
@@ -591,5 +596,13 @@ public class HjhCommissionRequest extends BasePage implements Serializable{
 
 	public void setLimit(int limit) {
 		this.limit = limit;
+	}
+
+	public Integer getExportFlag() {
+		return exportFlag;
+	}
+
+	public void setExportFlag(Integer exportFlag) {
+		this.exportFlag = exportFlag;
 	}
 }

@@ -255,7 +255,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
 
         // 发送激活邮件
         activeCode = MD5Utils.MD5(MD5Utils.MD5(activeCode));
-        String url = systemConfig.webUIBindEmail + "?key=" + user.getUserId() + "&value=" + activeCode + "&email=" + email + "&token=" + token;
+        String url = systemConfig.webUIBindEmail + "?key=" + user.getUserId() + "&value=" + activeCode + "&email=" + email;
         Map<String, String> replaceMap = new HashMap<String, String>();
         replaceMap.put("url_name", url);
         if (StringUtils.isNotBlank(userInfoVO.getNickname())) {
@@ -301,14 +301,9 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
      * @param
      */
     @Override
-    public void checkForEmailBind(BindEmailVO bindEmailVO, int userId) {
+    public void checkForEmailBind(BindEmailVO bindEmailVO) {
         // 邮箱为空校验
         if (StringUtils.isBlank(bindEmailVO.getEmail()) || StringUtils.isBlank(bindEmailVO.getValue()) || StringUtils.isBlank(bindEmailVO.getKey())) {
-            throw new ReturnMessageException(MsgEnum.ERR_PARAM);
-        }
-
-        // 校验激活是否用户本人
-        if (!bindEmailVO.getKey().equals(String.valueOf(userId))) {
             throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
 
@@ -322,9 +317,9 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         if (new Date().after(log.getEmailActiveUrlDeadtime())) {
             throw new ReturnMessageException(MsgEnum.ERR_EMAIL_ACTIVE_OVERDUE);
         }
-
+        String validValue = MD5Utils.MD5(MD5Utils.MD5(log.getEmailActiveCode()));
         // 激活校验
-        if (!bindEmailVO.getKey().equals(String.valueOf(log.getUserId())) || !bindEmailVO.getEmail().equals(log.getUserEmail()) || !bindEmailVO.getValue().equals(log.getEmailActiveCode())) {
+        if (!bindEmailVO.getKey().equals(String.valueOf(log.getUserId())) || !bindEmailVO.getEmail().equals(log.getUserEmail()) || !bindEmailVO.getValue().equals(validValue)) {
             throw new ReturnMessageException(MsgEnum.ERR_EMAIL_ACTIVE);
         }
     }

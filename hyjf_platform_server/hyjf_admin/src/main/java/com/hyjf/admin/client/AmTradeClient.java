@@ -3230,5 +3230,14 @@ public interface AmTradeClient {
      * @return
      */
     AdminResult getBailInfo(String borrowNid);
+    
+    /**
+     * 汇计划提成列表查询
+     *
+     * @param
+     * @param form
+     * @return HjhCommissionResponse
+     */
+    HjhCommissionResponse selectHjhCommissionListWithOutPage(HjhCommissionRequest form);
 }
 

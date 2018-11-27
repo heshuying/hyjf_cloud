@@ -116,6 +116,10 @@ public class AutoTenderServer extends BaseTradeController{
 			return resultBean;
 		}
 		
+		
+		logger.info("1.到此说明投资校验成功！！");
+		
+		
 		// 根据借款Id检索标的信息
 		/*原BorrowWithBLOBs borrow = this.tenderService.getBorrowByNid(borrowNid);*/
 		BorrowAndInfoVO borrow = this.tenderService.getBorrowByNid(borrowNid);
@@ -154,6 +158,10 @@ public class AutoTenderServer extends BaseTradeController{
 				resultBean.setStatusDesc("投资失败,系统错误");
 				return resultBean;
 			}
+			
+			logger.info("2.到此说明tenderService.updateTenderLog成功   .... borrowTenderTmpMapper和 borrowTenderTmpInfo更新成功！！");
+			
+			
 			logger.info("投资调用接口前---------"+autoTenderRequestBean.getAccountId()+ " borrowNid: "+autoTenderRequestBean.getBorrowNid()+" ordId: "+orderId);
 			BankCallBean bean = new BankCallBean();
 			// 获取共同参数
@@ -221,11 +229,19 @@ public class AutoTenderServer extends BaseTradeController{
 				return resultBean;
 			}
 		}
+		
+
+		if(BankCallConstant.RESPCODE_SUCCESS.equals(registResult.getRetCode())){
+			logger.info("3.到此说明调用银行成功！！");
+		}
+		
+		
 		registResult.convert();
 		String message ="";
 		try {
 			// 进行投资, tendertmp锁住
 			JSONObject tenderResult = this.tenderService.userAutoTender(borrow, registResult,couponGrantId);
+
 			// 投资成功
 			if (tenderResult.getString("status").equals("1")) {
 				logger.info("用户:" + userId + "  投资成功：" + account);

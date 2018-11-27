@@ -352,7 +352,7 @@ public class HjhCreditTenderController extends BaseController{
 		Map<String, String> map = Maps.newLinkedHashMap();
 		map.put("assignUserName", "承接人");
 		map.put("assignPlanNid", "承接智投编号");
-		map.put("assignOrderId", "承接智投订单号");
+		map.put("assignPlanOrderId", "承接智投订单号");
 		map.put("creditUserName", "出让人");
 		map.put("creditNid", "债转编号");
 		map.put("borrowNid", "原项目编号");
@@ -361,6 +361,8 @@ public class HjhCreditTenderController extends BaseController{
 		map.put("assignInterestAdvance", "垫付利息");
 		map.put("assignPay", "实际支付金额");
 		map.put("assignTime", "承接时间");
+		map.put("assignServiceApr","债转服务费率");
+		map.put("assignServiceFee","债转服务费(元)");
 		map.put("tenderType", "复投承接(是/否)");
 		map.put("borrowPeriod", "项目期数");
 

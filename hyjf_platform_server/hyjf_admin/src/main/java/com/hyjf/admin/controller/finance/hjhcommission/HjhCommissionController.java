@@ -102,7 +102,7 @@ public class HjhCommissionController extends BaseController{
 	@ApiOperation(value = "汇计划提成列表查询", notes = "汇计划提成列表查询")
 	@PostMapping(value = "/search")
 	@ResponseBody
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<ListResult<HjhCommissionCustomizeVO>> init(HttpServletRequest request, @RequestBody @Valid HjhCommissionViewRequest viewRequest) {
 		// 初始化原子层请求实体
 		HjhCommissionRequest form = new HjhCommissionRequest();
@@ -138,7 +138,7 @@ public class HjhCommissionController extends BaseController{
 	@ApiOperation(value = "汇计划提成列表 加入金额/提成金额 累计", notes = "汇计划提成列表 加入金额/提成金额 累计")
 	@PostMapping(value = "/sum")
 	@ResponseBody
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public JSONObject getSumTotal(HttpServletRequest request, @RequestBody @Valid HjhCommissionViewRequest viewRequest) {
 		JSONObject jsonObject = new JSONObject();
 		// 初始化原子层请求实体
@@ -453,7 +453,7 @@ public class HjhCommissionController extends BaseController{
 		form.setCurrPage(1);
 		// 需要输出的结果列表
 		// 列表查询
-		HjhCommissionResponse res = hjhCommissionService.selectHjhCommissionList(form);
+		HjhCommissionResponse res = hjhCommissionService.selectHjhCommissionListWithOutPage(form);
 		Integer totalCount = res.getCount();
 		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
 		Map<String, String> beanPropertyColumnMap = buildMap();

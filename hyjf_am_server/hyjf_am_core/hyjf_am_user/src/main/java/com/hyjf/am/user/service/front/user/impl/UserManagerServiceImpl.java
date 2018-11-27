@@ -1093,7 +1093,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         //检索条件
         BindUserExample example = new BindUserExample();
         BindUserExample.Criteria cra = example.createCriteria();
-        cra.andBindUniqueIdEqualTo(bindUniqueId);
+        cra.andBindUniqueIdEqualTo(String.valueOf(bindUniqueId));
         cra.andBindPlatformIdEqualTo(bindPlatformId);
         //检索
         List<BindUser> list = bindUserMapper.selectByExample(example);
@@ -1115,7 +1115,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
 
         BindUserExample example = new BindUserExample();
         BindUserExample.Criteria cra = example.createCriteria();
-        cra.andBindUniqueIdEqualTo(bindUniqueId).andBindPlatformIdEqualTo(bind_platform_id);
+        cra.andBindUniqueIdEqualTo(String.valueOf(bindUniqueId)).andBindPlatformIdEqualTo(bind_platform_id);
         List<BindUser> bindUsers = bindUserMapper.selectByExample(example);
         if (org.springframework.util.CollectionUtils.isEmpty(bindUsers))
             return null;
@@ -1126,7 +1126,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
 	public Boolean bindThirdUser(Integer userId, Integer bindUniqueId, Integer bindPlatformId) {
 		BindUser bindUsers = new BindUser();
 		bindUsers.setUserId(userId);
-		bindUsers.setBindUniqueId(bindUniqueId);
+		bindUsers.setBindUniqueId(String.valueOf(bindUniqueId));
 		bindUsers.setBindPlatformId(bindPlatformId);
 		bindUsers.setCreateTime(new Date());
 		return bindUserMapper.insertSelective(bindUsers) > 0 ? true : false;
