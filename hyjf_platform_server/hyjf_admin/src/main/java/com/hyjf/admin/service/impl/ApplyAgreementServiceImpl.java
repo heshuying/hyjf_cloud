@@ -1052,7 +1052,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         }else if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle)) {//先息后本时
             /**还某一期（非最后一期）转让本金是0，转让价款是该期利息金额。剩余转让期间是债权的剩余期限（应还时间-还款时间）。
              还最后一期转让本金是借款本金，转让价款是借款本金+最后一期利息金额。剩余转让期间为0*/
-            if(hjhDebtCreditRepay.getRepayPeriod()!=borrow.getBorrowPeriod()){//非最后一期
+            if(!hjhDebtCreditRepay.getRepayPeriod().equals(borrow.getBorrowPeriod())){//非最后一期
                 // 转让债权本金
                 paramter.put("assignCapital", 0+"");//已承接债转本金
                 //转让价款
