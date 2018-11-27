@@ -773,7 +773,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
         String  recoverTime = "0";//还款时间
         if(isPlan){//分期repay_last_time-huiyingdai_borrow
-            recoverTime = borrow.getRepayLastTime();
+            recoverTime = borrow.getRepayLastTime()+"";
         }else{//不分期
             recoverTime = borrowRecover.getRecoverTime()+"";//（需要确认数据迁移之后类型）
         }
@@ -898,7 +898,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
         String  recoverTime = "0";//还款时间
         if(isPlan){//分期repay_last_time-huiyingdai_borrow
-            recoverTime = borrow.getRepayLastTime();
+            recoverTime = borrow.getRepayLastTime()+"";
         }else{//不分期
             recoverTime = borrowRecover.getRecoverTime()+"";
         }
@@ -1034,7 +1034,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         String  recoverTime = "0";//还款时间
         if(isPlan){//分期repay_last_time-huiyingdai_borrow
             //logger.info("---------------------汇计划-转让债转参数集合-不分期等额本息时:分期repay_last_time-huiyingdai_borrow:"+recoverTime);
-            recoverTime = borrow.getRepayLastTime();
+            recoverTime = borrow.getRepayLastTime()+"";
         }else{//
             //logger.info("---------------------汇计划-转让债转参数集合-不分期等额本息时:不分期:"+recoverTime);
             recoverTime =hjhDebtCreditRepay.getAssignRepayEndTime()+"";
