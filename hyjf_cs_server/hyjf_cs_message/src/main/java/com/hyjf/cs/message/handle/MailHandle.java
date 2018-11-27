@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -386,7 +387,7 @@ public class MailHandle {
      * @param is
      * @throws Exception
      */
-    public void sendAttachmentsMailOnPort465(String[] toMailArray, String subject, String content, final String[] fileNames,final InputStreamSource is)
+    public void sendAttachmentsMailOnPort465(String[] toMailArray, String subject, String content, final String[] fileNames,final byte[] is)
             throws Exception {
         // 1. 初始化配置
         init();
@@ -402,6 +403,8 @@ public class MailHandle {
         // 3. 向multipart对象中添加邮件的各个部分内容，包括文本内容和附件
         Multipart multipart = new MimeMultipart();
 
+        InputStreamSource iss = new ByteArrayResource(is);
+
         // 添加邮件正文
         BodyPart contentPart = new MimeBodyPart();
         try {
@@ -413,7 +416,7 @@ public class MailHandle {
                 BodyPart attachmentBodyPart = null;
                 for(String attachment: fileNames){
                     attachmentBodyPart = new MimeBodyPart();
-                    DataSource dataSource = createDataSource(is, "text/html; charset=UTF-8", attachment);
+                    DataSource dataSource = createDataSource(iss, "text/html; charset=UTF-8", attachment);
                     attachmentBodyPart.setDataHandler(new DataHandler(dataSource));
                     //MimeUtility.encodeWord可以避免文件名乱码
                     attachmentBodyPart.setFileName(MimeUtility.encodeWord(attachment));

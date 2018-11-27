@@ -78,10 +78,10 @@ public class MailConsumer extends Consumer {
                         String content = "";
                         String[] fileNames = mailMessage.getFileNames();
 //                        String fileName = Arrays.asList(fileNames).get(0);
-                        logger.info("销售日报发送邮件消费者接受参数 : {}", mailMessage.getToMailArray(), mailMessage.getSubject(), fileNames, mailMessage.getInputStreamSource());
+                        logger.info("销售日报发送邮件消费者接受参数 : {}", mailMessage.getToMailArray(), mailMessage.getSubject(), fileNames, mailMessage.getIs());
                         try {
                             mailHandle.sendAttachmentsMailOnPort465(mailMessage.getToMailArray(), mailMessage.getSubject(),
-                                    content, fileNames, mailMessage.getInputStreamSource());
+                                    content, fileNames, mailMessage.getIs());
                         } catch (Exception e) {
                             throw new MailSendException("发送销售邮件失败");
                         }
