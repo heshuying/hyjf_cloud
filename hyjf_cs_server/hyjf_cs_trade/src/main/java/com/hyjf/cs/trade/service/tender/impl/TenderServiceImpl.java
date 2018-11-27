@@ -840,7 +840,9 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
             updateUtm(Integer.parseInt(bean.getLogUserId()), tenderBg.getAccountDecimal(), GetDate.getNowTime10(), borrow);
             logger.info("user库更新完毕！");
             
-
+			msg.put("message", "投资成功！");
+			msg.put("status", 1);
+			
             // 原属于trade更表的的 网站累计投资追加 投资、收益统计表 不在原子层做，转到组合层发MQ
             JSONObject params = new JSONObject();
             params.put("tenderSum", accountDecimal);
@@ -855,7 +857,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
                 // 满标发短信在原子层
             } catch (MQException e) {
                 e.printStackTrace();
-            }
+            }  
         }
         return msg;
     }

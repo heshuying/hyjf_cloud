@@ -1,5 +1,6 @@
 package com.hyjf.cs.market.controller.batch;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -18,7 +19,8 @@ import springfox.documentation.annotations.ApiIgnore;
 @RequestMapping("/cs-market/daily_generator_data")
 public class DailyGeneratorDataController extends BaseMarketController {
 
-	DailyGeneratorDataService dailyGeneratorDataService;
+	@Autowired
+	private DailyGeneratorDataService dailyGeneratorDataService;
 
 	@RequestMapping("/data")
 	public StringResponse dailyGenerator() {
