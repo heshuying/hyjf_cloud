@@ -304,8 +304,6 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
 
     private String reverifyUserName;
 
-    private Integer reverifyTimeInt;
-
     private String reverifyRemark;
 
     private Integer reverifyStatus;
@@ -2342,14 +2340,6 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
 
     public void setVerifyTimeInteger(Integer verifyTimeInteger) {
         this.verifyTimeInteger = verifyTimeInteger;
-    }
-
-    public Integer getReverifyTimeInt() {
-        return reverifyTimeInt;
-    }
-
-    public void setReverifyTimeInt(Integer reverifyTimeInt) {
-        this.reverifyTimeInt = reverifyTimeInt;
     }
 
     public Integer getIsInstallment() {
