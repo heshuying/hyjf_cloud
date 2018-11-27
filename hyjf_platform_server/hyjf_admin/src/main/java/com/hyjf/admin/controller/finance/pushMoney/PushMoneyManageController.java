@@ -217,7 +217,7 @@ public class PushMoneyManageController extends BaseController {
     @AuthorityAnnotation(key = PUSHMONEYLIST_PERMISSIONS,value = PERMISSION_VIEW)
     public AdminResult pushMoneyList(@RequestBody PushMoneyRequest request){
         logger.info("enter pushMoneyList controller for admin");
-        if(request.getCombotreeListSrch() != null && request.getCombotreeListSrch().length>0){
+        if(null != request.getCombotreeListSrch() && request.getCombotreeListSrch().length>0){
             logger.info("combotreeListSrch:::::::::::::::::::::::::::::【{}】", JSON.toJSONString(request.getCombotreeListSrch()));
             // 查询部门处理
             String [] strDepts = pushMoneyManageService.getDeptId(request.getCombotreeListSrch());
