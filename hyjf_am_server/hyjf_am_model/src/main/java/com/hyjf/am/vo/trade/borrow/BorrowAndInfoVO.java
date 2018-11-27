@@ -172,9 +172,9 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
 
     private Integer repayMonthAccount;
 
-    private String repayLastTime;
+    private Integer repayLastTime;
 
-    private String repayEachTime;
+    private Integer repayEachTime;
 
     private Integer repayNextTime;
 
@@ -1112,20 +1112,20 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
         this.repayMonthAccount = repayMonthAccount;
     }
 
-    public String getRepayLastTime() {
+    public Integer getRepayLastTime() {
         return repayLastTime;
     }
 
-    public void setRepayLastTime(String repayLastTime) {
+    public void setRepayLastTime(Integer repayLastTime) {
         this.repayLastTime = repayLastTime;
     }
 
-    public String getRepayEachTime() {
+    public Integer getRepayEachTime() {
         return repayEachTime;
     }
 
-    public void setRepayEachTime(String repayEachTime) {
-        this.repayEachTime = repayEachTime == null ? null : repayEachTime.trim();
+    public void setRepayEachTime(Integer repayEachTime) {
+        this.repayEachTime = repayEachTime;
     }
 
     public Integer getRepayNextTime() {
