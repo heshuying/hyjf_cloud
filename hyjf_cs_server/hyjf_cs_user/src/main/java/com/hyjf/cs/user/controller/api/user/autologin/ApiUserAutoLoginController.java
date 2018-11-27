@@ -12,6 +12,7 @@ import com.hyjf.common.security.util.RSA_Hjs;
 import com.hyjf.common.security.util.SignUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -103,15 +104,15 @@ public class ApiUserAutoLoginController extends BaseUserController {
         JSONObject result = new JSONObject();
         String retUrl = "";
         // 验证
-        //this.checkNmcfPostBean(request);
+        this.checkNmcfPostBean(request);
         // 验签
-        //String sign = request.getInstCode() + request.getUserId() + (request.getBorrowNid()==null?"":request.getBorrowNid()) + request.getTimestamp() + request.getInstCode();
-        //CheckUtil.check(ApiSignUtil.verifyByRSA(request.getInstCode(), request.getChkValue(), sign), MsgEnum.ERR_SIGN);
+        String sign = request.getInstCode() + request.getUserId() + (request.getBorrowNid()==null?"":request.getBorrowNid()) + request.getTimestamp() + request.getInstCode();
+        CheckUtil.check(ApiSignUtil.verifyByRSA(request.getInstCode(), request.getChkValue(), sign), MsgEnum.ERR_SIGN);
         // userId 解密
-        //int nmUserId = this.userIdDecrypt(request);
+        int nmUserId = this.userIdDecrypt(request);
         // 查询userid
-        //Integer userId = loginService.getUserIdByBind(nmUserId, Integer.valueOf(request.getInstCode()));
-        Integer userId = Integer.valueOf(request.getUserId());
+        Integer userId = loginService.getUserIdByBind(nmUserId, Integer.valueOf(request.getInstCode()));
+        //Integer userId = Integer.valueOf(request.getUserId());
         // userid不存在,跳转登录页面
         if(userId == null) {
             retUrl = "登录页面";
