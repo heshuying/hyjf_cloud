@@ -810,7 +810,14 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         }
 
         // 获取累计投资金额
-        TotalInvestAndInterestResponse res2 = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL, TotalInvestAndInterestResponse.class);
+        //TotalInvestAndInterestResponse res2 = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL, TotalInvestAndInterestResponse.class);
+        TotalInvestAndInterestResponse res2 = this.getTotalInvestAndInterestResponse();
+        // modify by libin 加缓存
+        if(res2 == null){
+        	logger.error("获取累计投资金额为空！");
+        }
+        // modify by libin 加缓存
+        
         TotalInvestAndInterestVO totalInvestAndInterestVO = res2.getResult();
         BigDecimal totalInvestAmount = null;
         if (totalInvestAndInterestVO != null && totalInvestAndInterestVO.getTotalInvestAmount() != null) {
@@ -1421,6 +1428,16 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         }
         return projectList;
     }
-
-
+	
+    /**
+     * @author libin
+     * 抽出查询统计信息的方法
+     * @date 2018/9/5 11:38
+     */
+	@Cached(name="wechatTotalInvestAndInterestCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+	@CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.MINUTES)
+    private TotalInvestAndInterestResponse getTotalInvestAndInterestResponse(){
+		TotalInvestAndInterestResponse res2 = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL, TotalInvestAndInterestResponse.class);
+    	return res2;
+    }
 }

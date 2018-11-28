@@ -215,7 +215,7 @@ public class CommonConstant {
     /**
      * 数据源控制优先级别(值越小优先级越高)，读方法切面
      */
-    public static final String[] DATASOURCE_QUERY_PREFIX = {"select","query","count","search","get","find","check"};
+    public static final String[] DATASOURCE_QUERY_PREFIX = {"select","query","count","search","get","find","check","export"};
     public static final int DATASOURCE_AOP_DS = 1;
     public static final int DATASOURCE_AOP_TRANSACTION = 2;
 

@@ -197,17 +197,17 @@ public class DataSearchController {
      */
     @ApiOperation(value = "千乐数据导出", notes = "千乐数据导出")
     @GetMapping("/exportdata")
-    public  void exportAction( DataSearchBean request,HttpServletResponse response){
+    public void exportAction( DataSearchBean request,HttpServletResponse response){
         DataSearchRequest dataSearchRequest = CommonUtils.convertBean(request, DataSearchRequest.class);
-        DataSearchCustomizeResponse result = dataSearchService.findDataList(dataSearchRequest);
+        DataSearchCustomizeResponse result = dataSearchService.findExportDataList(dataSearchRequest);
         // 表格sheet名称
         String sheetName = "数据导出";
         List<DataSearchCustomizeVO> resultList = result.getResultList();
         String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         String[] titles = new String[]
-                { "序号", "注册时间", "用户名", "姓名", "手机号", "投资类型",
-                        "项目/计划编号", "投资金额", "投资期限","年化金额"
-                        ,"佣金7%","推荐人姓名","投资时间"
+                { "序号", "注册时间", "用户名", "姓名", "手机号","推荐人姓名", "投资类型",
+                        "项目/智投编号",  "投资金额", "投资期限","年化金额"
+                        ,"佣金7%","投资时间"
                 };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
@@ -235,13 +235,15 @@ public class DataSearchController {
                 for (int celLength = 0; celLength < titles.length; celLength++) {
                     DataSearchCustomizeVO record = resultList.get(i);
                     Cell cell = row.createCell(celLength);
+                    logger.info(record.getReg_time()+"");
+                    logger.info(record.getAddtimes()+"");
 
                     // 序号
                     if (celLength == 0) {
                         cell.setCellValue(i + 1);
                     }
                     else if (celLength == 1) {
-                        cell.setCellValue(record.getAddtimes());//注册日期
+                        cell.setCellValue(record.getRegTimeT());//注册日期
                     }
                     else if (celLength == 2) {
                         cell.setCellValue(record.getUsername());//用户名
@@ -253,26 +255,25 @@ public class DataSearchController {
                         cell.setCellValue(record.getMobile());//手机号
                     }
                     else if (celLength == 5) {
-                        cell.setCellValue(record.getType());//投资类型
+                        cell.setCellValue(record.getReffername());//推荐人姓名
                     }
                     else if (celLength == 6) {
+                        cell.setCellValue(record.getType());//投资类型
+                    }
+                    else if (celLength == 7) {
                         cell.setCellValue(record.getPlannid());//项目/计划编号
                     }
-
-
-                    else if (celLength == 7) {
+                    else if (celLength == 8) {
                         cell.setCellValue(record.getAccount());//投资金额
                     }
-                    else if (celLength == 8) {
+                    else if (celLength == 9) {
                         cell.setCellValue(record.getBorrow_period());//投资期限
-                    }else if (celLength == 9) {
-                        cell.setCellValue(record.getYearAccount());//年化金额
                     }else if (celLength == 10) {
-                        cell.setCellValue(record.getMoney());//佣金7%
+                        cell.setCellValue(record.getYearAccount());//年化金额
                     }else if (celLength == 11) {
-                        cell.setCellValue(record.getReffername());//推荐人姓名
+                        cell.setCellValue(record.getMoney());//佣金7%
                     }else if (celLength == 12) {
-                        cell.setCellValue(record.getAddtimes());//投资日期
+                        cell.setCellValue(record.getAddtimesT());//投资日期
                     }
                 }
             }
