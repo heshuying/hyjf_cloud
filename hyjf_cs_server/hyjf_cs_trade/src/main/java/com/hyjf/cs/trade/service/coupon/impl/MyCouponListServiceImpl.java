@@ -188,7 +188,7 @@ public class MyCouponListServiceImpl extends BaseTradeServiceImpl implements com
         resultMap.put("couponCount", String.valueOf(couponCount));
         resultMap.put("rewardRecordsSum", String.valueOf(rewardTotal));
         resultMap.put("userId", userId);
-        resultMap.put("inviteLink", systemConfig.frontHost + "/register?from=" + userId);
+        resultMap.put("inviteLink", systemConfig.frontHost + "/landingPage/init.do?refferUserId=" + userId);
         return resultMap;
     }
 

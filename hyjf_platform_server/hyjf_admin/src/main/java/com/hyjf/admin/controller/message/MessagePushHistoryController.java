@@ -1,7 +1,9 @@
 package com.hyjf.admin.controller.message;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.MessagePushHistoryService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MessagePushHistoryResponse;
@@ -32,10 +34,11 @@ public class MessagePushHistoryController extends BaseController {
     MessagePushHistoryService messagePushHistoryService;
     @Value("${file.domain.url}")
     private String url;
+    private static final String PERMISSIONS = "msgpushhistory";
 
     @ApiOperation(value = "发送历史列表查询", notes = "发送历史列表查询")
     @PostMapping(value = "/init")
-    @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public JSONObject init(@RequestBody  MessagePushHistoryRequest form) {
             JSONObject jsonObject = new JSONObject();
             MessagePushHistoryResponse prs = messagePushHistoryService.getRecordList(form);

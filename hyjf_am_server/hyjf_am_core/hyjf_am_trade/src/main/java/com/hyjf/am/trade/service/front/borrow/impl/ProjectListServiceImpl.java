@@ -521,4 +521,20 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         }
         return null;
     }
+
+    /**
+     * app首页通过ID获取有效公告
+     * @author cwyang
+     * @param id
+     * @return
+     */
+    @Override
+    public AppPushManageVO getAnnouncementsByID(String id) {
+        AppPushManage appPushManage = this.appPushManageMapper.selectByPrimaryKey(Integer.valueOf(id));
+        if(appPushManage != null){
+            AppPushManageVO appPushManageVO = CommonUtils.convertBean(appPushManage, AppPushManageVO.class);
+            return appPushManageVO;
+        }
+        return null;
+    }
 }

@@ -115,12 +115,11 @@ public class SmsLogController extends BaseController {
 					if (vo.getReTimeEnd() != null && !vo.getReTimeEnd().equals("")) {
 						re_time_end = vo.getReTimeEnd();
 					}
-
-					vo.setPostString(
-							vo.getEndtime() == null ? null : GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(vo.getEndtime()));
 					vo.setMobile("筛选会员:" + member + ",累计投资金额：" + money + ",用户投资日期段：" + add_time_begin + "-"
 							+ add_time_end + ",用户注册日期段：" + re_time_begin + "-" + re_time_end);
 				}
+				vo.setPostString(
+						vo.getEndtime() == null ? null : GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(vo.getEndtime()));
 			}
 
 			response.setResultList(voList);

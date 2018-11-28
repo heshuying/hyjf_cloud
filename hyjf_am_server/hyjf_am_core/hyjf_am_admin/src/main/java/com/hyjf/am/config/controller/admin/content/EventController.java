@@ -11,7 +11,6 @@ import com.hyjf.am.response.config.EventResponse;
 import com.hyjf.am.resquest.admin.EventsRequest;
 import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.common.util.CommonUtils;
-import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -121,28 +120,5 @@ public class EventController extends BaseConfigController {
 		eventResponse.setResultList(eventsVO);
 		return eventResponse;
 	}
-
-	/**
-	 * 根据纪事ID 获取纪事内容
-	 * @param id
-	 * @return
-	 * @Author : huanghui
-	 */
-	@ApiOperation(value = "根据ID获取公司纪事详情", notes = "信息披露 - 公司历程")
-	@RequestMapping(value = "/getEventDetail/{id}", method = RequestMethod.GET)
-	public EventResponse getEventDetail(@PathVariable Integer id) {
-		EventResponse response = new EventResponse();
-		Event event = eventService.getRecord(id);
-
-		// 数据 存在
-        if (event != null) {
-            EventVO eventVO = new EventVO();
-            BeanUtils.copyProperties(event, eventVO);
-            //设置返回结果
-            response.setResult(eventVO);
-        }
-        return response;
-	}
-
 
 }

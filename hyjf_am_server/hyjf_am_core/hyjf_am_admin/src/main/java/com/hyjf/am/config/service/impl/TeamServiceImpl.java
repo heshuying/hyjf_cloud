@@ -60,6 +60,7 @@ public class TeamServiceImpl implements TeamService {
 			example.setLimitStart(limitStart);
 			example.setLimitEnd(limitEnd);
 		}
+		example.setOrderByClause("create_time Desc");
 		return teamMapper.selectByExample(example);
 	}
 

@@ -1,5 +1,6 @@
 package com.hyjf.cs.market.client.impl;
 
+import com.hyjf.am.response.AppPushManageResponse;
 import com.hyjf.am.response.BigDecimalResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
@@ -9,6 +10,7 @@ import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
+import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import com.hyjf.am.vo.trade.TenderCityCountVO;
 import com.hyjf.am.vo.trade.TenderSexCountVO;
@@ -21,7 +23,6 @@ import org.springframework.web.client.RestTemplate;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -184,26 +185,13 @@ public class AmTradeClientImpl implements AmTradeClient {
 		return restTemplate.postForEntity("http://AM-TRADE/am-trade/qianle/queryList", dataSearchRequest, DataSearchCustomizeResponse.class).getBody();
 
 	}
-	/**
-	 * 查询千乐散标数据
-	 * @param dataSearchRequest
-	 * @return
-	 */
-	@Override
-	public Map<String,Object> querySanMoney(DataSearchRequest dataSearchRequest) {
-		DataSearchCustomizeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/qianle/querySanMoney", dataSearchRequest, DataSearchCustomizeResponse.class).getBody();
-		return response.getMoney();
+
+    @Override
+    public DataSearchCustomizeResponse findExportDataList(DataSearchRequest dataSearchRequest) {
+		return restTemplate.postForEntity("http://AM-TRADE/am-trade/qianle/findExportDataList", dataSearchRequest, DataSearchCustomizeResponse.class).getBody();
 	}
-	/**
-	 * 查询千乐计划数据
-	 * @param dataSearchRequest
-	 * @return
-	 */
-	@Override
-	public Map<String,Object> queryPlanMoney(DataSearchRequest dataSearchRequest) {
-		DataSearchCustomizeResponse response =restTemplate.postForEntity("http://AM-TRADE/am-trade/qianle/queryPlanMoney", dataSearchRequest, DataSearchCustomizeResponse.class).getBody();
-		return response.getMoney();
-	}
+
+
 
 	/**
 	 *  汇直投投资总额
@@ -292,6 +280,21 @@ public class AmTradeClientImpl implements AmTradeClient {
 				request,WrbTenderNotifyResponse.class);
 		if (response != null) {
 			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 获取APP首页公告内容
+	 * @param contentArticleId
+	 * @return
+	 */
+	@Override
+	public AppPushManageVO getAnnouncementsByID(Integer contentArticleId) {
+		String url = "http://AM-TRADE/am-trade/projectlist/apphomepage/getAnnouncementsByID/" + contentArticleId;
+		AppPushManageResponse response = restTemplate.getForEntity(url, AppPushManageResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResult();
 		}
 		return null;
 	}

@@ -11,6 +11,7 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.user.client.AmUserClient;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.service.common.CornerService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,6 +36,9 @@ public class CornerController extends BaseController {
 
     @Autowired
     AmUserClient amUserClient;
+
+    @Autowired
+    SystemConfig systemConfig;
     /**
      * 获取版本号
      * @param request
@@ -118,7 +122,7 @@ public class CornerController extends BaseController {
                 //当前版本号不等于最新版本号
                 map.put("newVersion",version.getVersion());
                 map.put("action",String.valueOf(version.getIsUpdate()));
-                map.put("url", version.getUrl());
+                map.put("url", systemConfig.getAppFrontHost()+version.getUrl());
                 map.put("content", version.getContent());
             }
         } else {
@@ -126,7 +130,7 @@ public class CornerController extends BaseController {
                 //强制更新和最新版本中间版本
                 map.put("newVersion",version.getVersion());
                 map.put("action",String.valueOf(version.getIsUpdate()));
-                map.put("url", version.getUrl());
+                map.put("url", systemConfig.getAppFrontHost()+version.getUrl());
                 map.put("content", version.getContent());
             } else {
                 if(versionStr.equals(version.getVersion())){
@@ -138,7 +142,7 @@ public class CornerController extends BaseController {
                     //强制更新和最新版本中间版本
                     map.put("newVersion",version.getVersion());
                     map.put("action",String.valueOf(forceVersion.getIsUpdate()));
-                    map.put("url", version.getUrl());
+                    map.put("url", systemConfig.getAppFrontHost()+version.getUrl());
                     map.put("content", version.getContent());
                 }
             }
