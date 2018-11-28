@@ -147,7 +147,7 @@
 		t.type,
 		t.balance,
 		t.payment,
-		t.statusName statusName,
+		t.statusName AS statusName,
 		t.message,
 		t.client,
 		date_format(
@@ -207,7 +207,7 @@
 		r.balance ,r.payment,
 		CASE r.`type` WHEN 0 THEN '线下充值' WHEN 1 THEN '线上充值' END AS type,
 		CASE
-		r.`status` WHEN 1 THEN '转账中' WHEN 2
+		r.`status` WHEN 0 THEN '初始' WHEN 1 THEN '处理中' WHEN 2
 		THEN '成功' ELSE '失败' END as
 		statusName ,
 		-- 			FROM_UNIXTIME(r.create_time,'%Y-%m-%d %H:%i:%S') as create_time,

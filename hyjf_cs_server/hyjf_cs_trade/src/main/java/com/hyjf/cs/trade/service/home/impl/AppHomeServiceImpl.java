@@ -699,9 +699,9 @@ public class AppHomeServiceImpl implements AppHomeService {
                 homePageCustomize.setBorrowTheFirstDesc("历史年回报率");
                 homePageCustomize.setBorrowUrl(HOST + HomePageDefine.BORROW + listCustomize.getBorrowNid());
                 String borrowExtraYield = listCustomize.getBorrowExtraYield();
-                if(StringUtils.isNotBlank(borrowExtraYield)){
-                    borrowExtraYield = borrowExtraYield.substring(1,borrowExtraYield.length());
-                }
+                //if(StringUtils.isNotBlank(borrowExtraYield)){
+                    //borrowExtraYield = borrowExtraYield.substring(1,borrowExtraYield.length());
+                //}
                 homePageCustomize.setBorrowExtraYield(borrowExtraYield);
             }else {
                 homePageCustomize.setStatus("21");
