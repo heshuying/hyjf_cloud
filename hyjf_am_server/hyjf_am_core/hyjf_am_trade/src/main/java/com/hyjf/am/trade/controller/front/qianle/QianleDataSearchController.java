@@ -98,6 +98,26 @@ public class QianleDataSearchController {
         }
         return response;
     }
+    /**
+     * 查询全部列表
+     * @param dataSearchRequest
+     * @return
+     */
+    @RequestMapping(value = "findExportDataList")
+    public DataSearchCustomizeResponse findExportDataList(@RequestBody DataSearchRequest dataSearchRequest){
+        DataSearchCustomizeResponse response = new DataSearchCustomizeResponse();
+        List<DataSearchCustomizeVO> dataSearchCustomizes = null;
+        String type = dataSearchRequest.getType();
+        if (StringUtils.equals(type,"1")) {
+            dataSearchCustomizes = qianleDataSearchService.queryList(dataSearchRequest, null, null);
+        }else  if (StringUtils.equals(type,"2")) {
+            dataSearchCustomizes=qianleDataSearchService.queryPlanList(dataSearchRequest, null,null);
+        }else  if (StringUtils.equals(type,"3")) {
+             dataSearchCustomizes = qianleDataSearchService.querySanList(dataSearchRequest,null,null);
+        }
+        response.setResultList(dataSearchCustomizes);
+        return response;
+    }
 
     /**
      * 查询散标金额

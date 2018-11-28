@@ -178,8 +178,6 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 		if(StringUtils.isNotEmpty(request.getLabelName())){
 			HjhLabel.setLabelName(request.getLabelName());
 		}
-		
-		
 		if(request.getLabelTermStart()!= null){
 			HjhLabel.setLabelTermStart(request.getLabelTermStart());
 		} else {
@@ -190,35 +188,25 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 		} else {
 			HjhLabel.setLabelTermEnd(null);
 		}
-	
-		
 		if(StringUtils.isNotEmpty(request.getLabelTermType())){
 			HjhLabel.setLabelTermType(request.getLabelTermType());
 		}
-		
-
 		if(request.getLabelAprStart()!= null){
 			HjhLabel.setLabelAprStart(request.getLabelAprStart());
 		} else {
 			HjhLabel.setLabelAprStart(null);
 		}
-		
 		if(request.getLabelAprEnd()!=null){
 			HjhLabel.setLabelAprEnd(request.getLabelAprEnd());	
 		} else {
 			HjhLabel.setLabelAprEnd(null);
 		}
-		
-
 		if(StringUtils.isNotEmpty(request.getBorrowStyle())){
 			HjhLabel.setBorrowStyle(request.getBorrowStyle());
 		}
 		if(StringUtils.isNotEmpty(request.getBorrowStyleName())){
 			HjhLabel.setBorrowStyleName(request.getBorrowStyleName());
 		}
-		
-		
-		
 		if(request.getLabelPaymentAccountStart()!= null){
 			HjhLabel.setLabelPaymentAccountStart(request.getLabelPaymentAccountStart());
 		} else {
@@ -229,8 +217,6 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 		} else {
 			HjhLabel.setLabelPaymentAccountEnd(null);
 		}
-		
-
 		if(StringUtils.isNotEmpty(request.getInstCode())){
 			HjhLabel.setInstCode(request.getInstCode());
 		}
@@ -253,7 +239,6 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 		HjhLabel.setPushTimeStart(request.getPushTimeStart());
 		HjhLabel.setPushTimeEnd(request.getPushTimeEnd());
 		
-		
 		if(request.getRemainingDaysStart()!= null){
 			HjhLabel.setRemainingDaysStart(request.getRemainingDaysStart());
 		}else{
@@ -264,7 +249,6 @@ public class AdminHjhLabelServiceImpl extends BaseServiceImpl implements AdminHj
 		} else {
 			HjhLabel.setRemainingDaysEnd(null);
 		}
-		
 		HjhLabel.setLabelState(request.getLabelState());
 		HjhLabel.setCreateUserId(request.getCreateUserId());
 		HjhLabel.setCreateTime(new Date());

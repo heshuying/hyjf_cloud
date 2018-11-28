@@ -28,6 +28,14 @@ public class DataSearchBean implements Serializable {
     private String mobile;
     @ApiModelProperty(value = "验证码")
     private String code;
+
+    @ApiModelProperty(value = "姓名")
+    private String truename;
+    @ApiModelProperty(value = "用户名")
+    private String username;
+    @ApiModelProperty(value = "推荐人姓名")
+    private String reffername;
+
     public String getAddTimeStart() {
         return addTimeStart;
     }
@@ -99,5 +107,29 @@ public class DataSearchBean implements Serializable {
 
     public void setCode(String code) {
         this.code = code;
+    }
+
+    public String getTruename() {
+        return truename;
+    }
+
+    public void setTruename(String truename) {
+        this.truename = truename;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getReffername() {
+        return reffername;
+    }
+
+    public void setReffername(String reffername) {
+        this.reffername = reffername;
     }
 }

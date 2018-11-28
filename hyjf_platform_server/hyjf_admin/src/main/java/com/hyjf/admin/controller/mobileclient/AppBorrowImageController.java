@@ -3,7 +3,9 @@ package com.hyjf.admin.controller.mobileclient;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.mobileclient.AppBorrowImageService;
 import com.hyjf.admin.utils.FileUpLoadUtil;
 import com.hyjf.am.response.Response;
@@ -38,8 +40,12 @@ public class AppBorrowImageController extends BaseController {
     @Autowired
     private FileUpLoadUtil fileUpLoadUtil;
 
+    //权限名称
+    private static final String PERMISSIONS = "borrow_image";
+
     @ApiOperation(value = "产品图片:列表查询", notes = "产品图片:列表查询")
     @PostMapping(value = "/search")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<AppBorrowImageVO>> search(@RequestBody AppBorrowImageRequest request) {
         AppBorrowImageResponse recordList = appBorrowImageService.getRecordList(request);
         if (!Response.isSuccess(recordList)) {
@@ -51,6 +57,7 @@ public class AppBorrowImageController extends BaseController {
 
     @ApiOperation(value = "产品图片:获取详细画面", notes = "产品图片:获取详细画面")
     @PostMapping(value = "/searchinfo")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult<AppBorrowImageVO> searchinfo(@RequestBody AppBorrowImageRequest request) {
         AppBorrowImageResponse record = appBorrowImageService.getRecord(request);
         if (!Response.isSuccess(record)) {
@@ -63,6 +70,7 @@ public class AppBorrowImageController extends BaseController {
 
     @ApiOperation(value = "产品图片添加维护信息", notes = "产品图片:添加维护信息")
     @PostMapping(value = "/insertinfo")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult<AppBorrowImageVO> insertinfo(@RequestBody AppBorrowImageRequest request) {
 
         AppBorrowImageResponse response = appBorrowImageService.insertRecord(request);
@@ -75,6 +83,7 @@ public class AppBorrowImageController extends BaseController {
 
     @ApiOperation(value = "产品图片:修改维护信息", notes = "产品图片:修改维护信息")
     @PostMapping(value = "/updateinfo")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<AppBorrowImageVO> updateinfo(@RequestBody AppBorrowImageRequest request) {
         AppBorrowImageResponse response = appBorrowImageService.updateRecord(request);
         if (!Response.isSuccess(response)) {
@@ -86,6 +95,7 @@ public class AppBorrowImageController extends BaseController {
 
     @ApiOperation(value = "产品图片:刪除信息", notes = "产品图片:刪除信息")
     @PostMapping(value = "/deleteinfo")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult<AppBorrowImageVO> deleteinfo(@RequestBody AppBorrowImageRequest request) {
 
         AppBorrowImageResponse response = appBorrowImageService.deleteRecord(request);
@@ -106,6 +116,7 @@ public class AppBorrowImageController extends BaseController {
      */
     @ApiOperation(value = "产品图片:资料上传", notes = "产品图片:资料上传")
     @PostMapping(value = "/uploadFile")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public JSONObject uploadFile(HttpServletRequest request) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("statusDesc", SUCCESS_DESC);
