@@ -137,7 +137,7 @@ public class MongoConfig extends AbstractMongoConfiguration {
         builder.connectTimeout(connectTimeout);
         builder.maxWaitTime(maxWaitTime);
         builder.socketTimeout(socketTimeout);
-        builder.readPreference(ReadPreference.primaryPreferred());
+        builder.readPreference(ReadPreference.secondaryPreferred());
         return builder.build();
     }
 
