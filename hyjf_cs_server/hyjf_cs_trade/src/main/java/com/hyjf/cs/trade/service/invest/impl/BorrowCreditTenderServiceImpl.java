@@ -9,6 +9,7 @@ import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.response.config.DebtConfigResponse;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.config.DebtConfigVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
@@ -20,6 +21,7 @@ import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
@@ -92,6 +94,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     private HjhTenderService hjhTenderService;
     @Autowired
     private SensorsDataCreditProducer sensorsDataCreditProducer;
+    @Autowired
+    private UserOperationLogProducer userOperationLogProducer;
 
     private static String regex = "^[-+]?(([0-9]+)(([0-9]+))?|(([0-9]+))?)$";
     private static DecimalFormat DF_COM_VIEW = new DecimalFormat("######0.00");
@@ -130,11 +134,36 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             throw new CheckException(MsgEnum.ERROR_CREDIT_NOT_EXIST);
         }
         logger.info("债转投资校验开始   userId:{},credNid:{},ip:{},平台{}", userId, request.getCreditNid(), request.getIp(), request.getPlatform());
+        String hborrowNid = borrowCredit.getBidNid();
+        BorrowAndInfoVO borrow = amTradeClient.getBorrowByNid(hborrowNid);
         UserVO user = amUserClient.findUserById(userId);
         UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
         BankOpenAccountVO bankOpenAccount = amUserClient.selectBankAccountById(userId);
         // 检查用户状态  角色  授权状态等  是否允许投资
         this.checkUser(user,userInfo,bankOpenAccount,borrowCredit);
+        //保存用户操作日志
+        boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_MONTH.equals(borrow.getBorrowStyle())
+                || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrow.getBorrowStyle())|| CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle());
+
+        String dayOrMonth ="";
+        if(isMonth){//月标
+            dayOrMonth = borrow.getBorrowPeriod() + "个月债转";
+        }else{
+            dayOrMonth = borrow.getBorrowPeriod() + "天债转";
+        }
+        UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
+        userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE4);
+        userOperationLogEntity.setIp(request.getIp());
+        userOperationLogEntity.setPlatform(Integer.valueOf(request.getPlatform()));
+        userOperationLogEntity.setRemark(dayOrMonth);
+        userOperationLogEntity.setOperationTime(new Date());
+        userOperationLogEntity.setUserName(user.getUsername());
+        userOperationLogEntity.setUserRole(String.valueOf(userInfo.getRoleId()));
+        try {
+            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+        } catch (MQException e) {
+            logger.error("保存用户日志失败", e);
+        }
         // 查询用户账户表-投资账户
         AccountVO tenderAccount = amTradeClient.getAccount(userId);
         // 前端Web页面投资可债转输入投资金额后收益提示 用户未登录 (包含查询条件)

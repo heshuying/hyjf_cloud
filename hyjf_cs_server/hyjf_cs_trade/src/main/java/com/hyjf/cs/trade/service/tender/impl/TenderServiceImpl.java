@@ -736,6 +736,17 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
         tenderBg.setClient(bean.getLogClient());
         Integer attribute = null;
         
+        UserVO userVO = amUserClient.findUserById(Integer.parseInt(bean.getLogUserId()));
+        if(userVO != null){
+        	if(userVO.getUsername()!= null){
+        		tenderBg.setUserName(userVO.getUsername());
+        		logger.info("通过bean.getLogUserId()可以查到用户名！" + userVO.getUsername());
+        	}  else {
+        		tenderBg.setUserName("");
+        		logger.info("通过bean.getLogUserId()未能查到用户名！" + bean.getLogUserId());
+        	}
+        }
+        
         /*查询涉及到用户推荐人以及部分的信息，根据用户属性不同予以区分插入 start*/
         if (userInfo != null) {
             // 获取投资用户的用户属性
@@ -822,6 +833,10 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
         if (StringUtils.isNotBlank(bean.getAuthCode())) {
             tenderBg.setAuthCode(bean.getAuthCode());
         }
+        
+        
+        logger.info("tenderBg所包含的属性：" + tenderBg.toString());
+        
         /*投资授权码 投资结果授权码 start*/
         /*3.borrowtender表数据准备好，更新trade库所有相关的表*/
         boolean insertFlag = amTradeClient.borrowTender(tenderBg);
@@ -836,7 +851,9 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
             updateUtm(Integer.parseInt(bean.getLogUserId()), tenderBg.getAccountDecimal(), GetDate.getNowTime10(), borrow);
             logger.info("user库更新完毕！");
             
-
+			msg.put("message", "投资成功！");
+			msg.put("status", 1);
+			
             // 原属于trade更表的的 网站累计投资追加 投资、收益统计表 不在原子层做，转到组合层发MQ
             JSONObject params = new JSONObject();
             params.put("tenderSum", accountDecimal);
@@ -851,7 +868,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
                 // 满标发短信在原子层
             } catch (MQException e) {
                 e.printStackTrace();
-            }
+            }  
         }
         return msg;
     }

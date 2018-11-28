@@ -3,7 +3,9 @@ package com.hyjf.admin.controller.mobileclient;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.beans.request.AppBannerRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.admin.service.mobileclient.AppBannerService;
 import com.hyjf.admin.utils.FileUpLoadUtil;
@@ -44,8 +46,13 @@ public class AppBannerController extends BaseController {
     @Autowired
     private FileUpLoadUtil fileUpLoadUtil;
 
+    //权限名称
+    private static final String PERMISSIONS = "appbanner";
+
+
     @ApiOperation(value = "广告管理页面载入", notes = "广告管理页面载入")
     @PostMapping(value = "/init")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<AppBannerResponse> init(@RequestBody  AppBannerRequestBean appBannerRequestBean) {
         AppBannerRequest aprlr = new AppBannerRequest();
         BeanUtils.copyProperties(appBannerRequestBean, aprlr);
@@ -63,6 +70,7 @@ public class AppBannerController extends BaseController {
 
     @ApiOperation(value = "广告管理修改转跳", notes = "广告管理修改转跳")
     @PostMapping(value = "/infoAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult<AppBannerResponse> infoAction(@RequestBody  AdsVO adsVO) {
         AppBannerResponse response = new AppBannerResponse();
         AppBannerResponse prs = appBannerService.getRecordById(adsVO);
@@ -77,6 +85,7 @@ public class AppBannerController extends BaseController {
 
     @ApiOperation(value = "广告管理添加", notes = "广告管理添加")
     @PostMapping(value = "/add")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult<AdsWithBLOBsVO> add(@RequestBody AdsVO adsVO) {
         AppBannerResponse appBannerResponse = appBannerService.insertRecord(adsVO);
         if (Response.isSuccess(appBannerResponse)) {
@@ -89,6 +98,7 @@ public class AppBannerController extends BaseController {
 
     @ApiOperation(value = "广告管理修改", notes = "广告管理修改")
     @PostMapping(value = "/update")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<AdsWithBLOBsVO> update(@RequestBody AdsVO adsVO) {
         AppBannerResponse appBannerResponse = appBannerService.updateRecord(adsVO);
         if (Response.isSuccess(appBannerResponse)) {
@@ -101,6 +111,7 @@ public class AppBannerController extends BaseController {
 
     @ApiOperation(value = "修改状态", notes = "修改状态")
     @PostMapping(value = "/updateStatus")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<AdsWithBLOBsVO> updateStatus(@RequestBody AdsVO adsVO) {
         AppBannerResponse appBannerResponse = appBannerService.updateStatus(adsVO);
         if (Response.isSuccess(appBannerResponse)) {
@@ -114,6 +125,7 @@ public class AppBannerController extends BaseController {
 
     @ApiOperation(value = "删除", notes = "删除")
     @PostMapping(value = "/delete")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult<AdsWithBLOBsVO> deleteBanner(@RequestBody AdsVO adsVO) {
         AppBannerResponse appBannerResponse = appBannerService.deleteAppBanner(adsVO);
         if (Response.isSuccess(appBannerResponse)) {
@@ -126,6 +138,7 @@ public class AppBannerController extends BaseController {
 
     @ApiOperation(value = "上传", notes = "上传")
     @PostMapping(value = "/upLoadFile")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         LinkedList<BorrowCommonImage> borrowCommonImages = fileUpLoadUtil.upLoad(request);

@@ -1,5 +1,6 @@
 package com.hyjf.cs.market.client.impl;
 
+import com.hyjf.am.response.AppPushManageResponse;
 import com.hyjf.am.response.BigDecimalResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
@@ -10,10 +11,12 @@ import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
+import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.trade.TenderCityCountVO;
 import com.hyjf.am.vo.trade.TenderSexCountVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 import com.hyjf.common.annotation.Cilent;
+import com.hyjf.common.util.ConvertUtils;
 import com.hyjf.cs.market.client.AmTradeClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.client.RestTemplate;
@@ -292,6 +295,21 @@ public class AmTradeClientImpl implements AmTradeClient {
 				request,WrbTenderNotifyResponse.class);
 		if (response != null) {
 			return response.getResultList();
+		}
+		return null;
+	}
+
+	/**
+	 * 获取APP首页公告内容
+	 * @param contentArticleId
+	 * @return
+	 */
+	@Override
+	public AppPushManageVO getAnnouncementsByID(Integer contentArticleId) {
+		String url = "http://AM-TRADE/am-trade/projectlist/apphomepage/getAnnouncementsByID/" + contentArticleId;
+		AppPushManageResponse response = restTemplate.getForEntity(url, AppPushManageResponse.class).getBody();
+		if (Response.isSuccess(response)) {
+			return response.getResult();
 		}
 		return null;
 	}

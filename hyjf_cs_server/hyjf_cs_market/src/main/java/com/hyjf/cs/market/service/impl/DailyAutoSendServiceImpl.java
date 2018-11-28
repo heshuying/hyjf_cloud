@@ -71,7 +71,6 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
     @Override
     public void sendMail(SellDailyDistributionVO sellDailyDistribution) {
         String[] toEmail = sellDailyDistribution.getEmail().split(";");
-//        String email = sellDailyDistribution.getEmail();
         if (toEmail.length < 0) {
             return;
         }
@@ -79,7 +78,7 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
         String fileName = "销售日报-" + dateStr + ".xlsx";
         String[] fileNames = {fileName};
         // 将excel作为附件
-        InputStreamSource is = this.drawExcel(dateStr);
+        byte[] is = this.drawExcel(dateStr);
 
         logger.info("开始发送销售日报邮件>>>>>>>>>>>>>>>>>>>>>toEmail:" + JSONObject.toJSONString(toEmail) + "");
         // 邮件内容
@@ -87,13 +86,10 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
         MailMessage mailMessage = new MailMessage(null, null, subject, null, fileNames, toEmail, null, MessageConstant.MAIL_SEND_FRO_SELL_DAILY, is);
         try {
             // 包含附件
-//            MailUtil.sendAttachmentsMailOnPort25(toEmail, subject, content, fileName, is);
-
             mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(mailMessage)));
-            //MailUtil.sendAttachmentsMailOnPort465(toEmail, subject, content, new String[]{fileName}, is);
             logger.info("发送销售日报成功>>>>>>>>>>>>>>>>>>>>>");
         } catch (Exception e) {
-            logger.error("发送销售日报失败>>>>>>>>>>>>>>>>>>>>>", e);
+            logger.error("发送销售日报失败>>>>>>>>>>>>>>>>>>>>> 失败原因：{}", e);
         }
     }
 
@@ -103,7 +99,7 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
      * @param dateStr
      * @return
      */
-    private InputStreamSource drawExcel(String dateStr) {
+    private byte[] drawExcel(String dateStr) {
         // 表格sheet名称
         String sheetName = "销售数据日报表";
         String[] titles = new String[]{"序号", "一级分部", "二级分部", "门店数量", "本月累计规模业绩", "本月累计已还款", "上月对应累计规模业绩", "环比增速",
@@ -190,15 +186,16 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
         }
 
         InputStreamSource is = null;
+        ByteArrayOutputStream os =null;
         try {
-            ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
+            os = new ByteArrayOutputStream(1024);
             workbook.write(os);
             is = new ByteArrayResource(os.toByteArray());
             os.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return is;
+        return os.toByteArray();
     }
 
     /**

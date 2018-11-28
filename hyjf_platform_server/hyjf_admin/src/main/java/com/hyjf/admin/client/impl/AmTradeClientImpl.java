@@ -6709,4 +6709,16 @@ public class AmTradeClientImpl implements AmTradeClient {
             return new AdminResult(BaseResult.FAIL, response.getMessage());
         }
     }
+
+	@Override
+	public HjhCommissionResponse selectHjhCommissionListWithOutPage(HjhCommissionRequest form) {
+        HjhCommissionResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-trade/hjhCommission/selectHjhCommissionListWithOutPage", form,
+                        HjhCommissionResponse.class)
+                .getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+		return null;
+	}
 }

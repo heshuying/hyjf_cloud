@@ -22,7 +22,7 @@ public abstract class UploadFileUtils {
 	// 定义可以上传文件的后缀数组,默认"*"，代表所有
 	public static String[] filePostfixs = { "*" };
 	public static String[] typeImages = { "gif", "jpeg", "png", "jpg", "tif", "bmp" };
-	public static String[] typeOthers = { "html", "htm", "doc", "xls", "txt", "zip", "rar", "pdf", "cll" };
+	public static String[] typeOthers = { "html", "htm", "doc", "xls","xlsx", "txt", "zip", "rar", "pdf", "cll" };
 
 	// 一次读取多少字节
 	public static int bufferSize = 1024 * 8;

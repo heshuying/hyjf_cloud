@@ -32,7 +32,7 @@ public class MailMessage extends HyjfMessage {
 
     private String serviceType;
 
-    private InputStreamSource inputStreamSource;
+    private byte[] is;
 
     public MailMessage() {
         super();
@@ -50,7 +50,7 @@ public class MailMessage extends HyjfMessage {
     }
 
     public MailMessage(Integer userId, Map<String, String> replaceStrs, String subject, String body,
-                       String[] fileNames, String[] toMailArray, String mailKbn, String serviceType, InputStreamSource is) {
+                       String[] fileNames, String[] toMailArray, String mailKbn, String serviceType, byte[] is) {
         super(userId, replaceStrs);
         this.subject = subject;
         this.body = body;
@@ -58,7 +58,7 @@ public class MailMessage extends HyjfMessage {
         this.toMailArray = toMailArray;
         this.mailKbn = mailKbn;
         this.serviceType = serviceType;
-        this.inputStreamSource = is;
+        this.is = is;
     }
 
     public String getSubject() {
@@ -109,13 +109,14 @@ public class MailMessage extends HyjfMessage {
         this.serviceType = serviceType;
     }
 
-    public InputStreamSource getInputStreamSource() {
-        return inputStreamSource;
+    public byte[] getIs() {
+        return is;
     }
 
-    public void setInputStreamSource(InputStreamSource inputStreamSource) {
-        this.inputStreamSource = inputStreamSource;
+    public void setIs(byte[] is) {
+        this.is = is;
     }
+
 
     @Override
     public String toString() {
@@ -126,7 +127,7 @@ public class MailMessage extends HyjfMessage {
                 ", toMailArray=" + Arrays.toString(toMailArray) +
                 ", mailKbn='" + mailKbn + '\'' +
                 ", serviceType='" + serviceType + '\'' +
+                ", is=" + is +
                 '}';
     }
-
 }

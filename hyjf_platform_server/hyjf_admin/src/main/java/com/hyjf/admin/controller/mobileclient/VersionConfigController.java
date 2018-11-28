@@ -1,7 +1,9 @@
 package com.hyjf.admin.controller.mobileclient;
 
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.mobileclient.VersionConfigService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.VersionConfigBeanResponse;
@@ -30,6 +32,8 @@ public class VersionConfigController extends BaseController {
 
     @Autowired
     VersionConfigService versionConfigService;
+    //权限名称
+    private static final String PERMISSIONS = "versionconfig";
 
     /**
      * 查询列表
@@ -38,6 +42,7 @@ public class VersionConfigController extends BaseController {
      */
     @ApiOperation(value = "版本管理:列表查询", notes = "版本管理:列表查询")
     @PostMapping(value = "/search")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public VersionConfigBeanResponse search(@RequestBody VersionConfigBeanRequest request) {
         VersionConfigBeanResponse recordList = versionConfigService.getRecordList(request);
         return recordList;
@@ -50,6 +55,7 @@ public class VersionConfigController extends BaseController {
      */
     @ApiOperation(value = "版本管理:详情查询", notes = "版本管理:详情查询")
     @PostMapping(value = "/searchinfo")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult<VersionVO> searchinfo(@RequestBody VersionConfigBeanRequest request) {
         VersionConfigBeanResponse recordList = versionConfigService.getRecord(request);
         if (!Response.isSuccess(recordList)) {
@@ -60,6 +66,7 @@ public class VersionConfigController extends BaseController {
 
     @ApiOperation(value = "版本管理:添加信息", notes = "版本管理:添加信息")
     @PostMapping(value = "/insertinfo")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult<VersionVO> insertinfo(@RequestBody VersionConfigBeanRequest request) {
         VersionConfigBeanResponse response = versionConfigService.insertRecord(request);
         if (!Response.isSuccess(response)) {
@@ -73,6 +80,7 @@ public class VersionConfigController extends BaseController {
 
     @ApiOperation(value = "版本管理:修改信息", notes = "版本管理:修改信息")
     @PostMapping(value = "/updateinfo")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<VersionVO> updateinfo(@RequestBody VersionConfigBeanRequest request) {
         VersionConfigBeanResponse response = versionConfigService.updateRecord(request);
         if (!Response.isSuccess(response)) {
@@ -85,6 +93,7 @@ public class VersionConfigController extends BaseController {
 
     @ApiOperation(value = "版本管理:刪除信息", notes = "版本管理:刪除信息")
     @PostMapping(value = "/deleteinfo")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult<VersionVO> deleteinfo(@RequestBody VersionConfigBeanRequest request) {
         VersionConfigBeanResponse response = versionConfigService.deleteRecord(request);
         if (!Response.isSuccess(response)) {
