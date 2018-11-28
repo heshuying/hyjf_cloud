@@ -101,7 +101,7 @@
         b.borrow_period
         END AS borrow_period,
         assign_period,
-        ct.create_time AS assign_time
+        DATE_FORMAT(ct.create_time, '%Y-%m-%d %H:%i:%s') AS assign_time
         FROM
         ht_hjh_debt_credit_tender ct
         INNER JOIN ht_hjh_debt_credit bc ON bc.borrow_nid = ct.borrow_nid	AND bc.credit_nid = ct.credit_nid
