@@ -47,8 +47,6 @@ public class CouponTenderHztServiceImpl implements CouponTenderHztService {
 
     @Override
     public List<CouponTenderCustomize> getRecordList(CouponTenderRequest couponTenderRequest) {
-        couponTenderRequest.setLimitStart(couponTenderRequest.getLimitStart());
-        couponTenderRequest.setLimitEnd(couponTenderRequest.getLimitEnd());
         CouponTenderResponse couponTenderResponse = amTradeClient.getRecordListHzt(couponTenderRequest);
         if(null != couponTenderResponse){
             return couponTenderResponse.getResultList();
@@ -58,8 +56,6 @@ public class CouponTenderHztServiceImpl implements CouponTenderHztService {
 
     @Override
     public CouponTenderResponse getRecordExport(CouponTenderRequest couponTenderRequest) {
-        couponTenderRequest.setLimitStart(couponTenderRequest.getLimitStart());
-        couponTenderRequest.setLimitEnd(couponTenderRequest.getLimitEnd());
         CouponTenderResponse couponTenderResponse = amTradeClient.getRecordListHzt(couponTenderRequest);
         if(null != couponTenderResponse){
             return couponTenderResponse;
