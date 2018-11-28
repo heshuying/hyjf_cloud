@@ -120,16 +120,16 @@ public class QianleDataSearchServiceImpl implements QianleDataSearchService {
             hashMap.put("userList", dataSearchRequest.getUserIds());
         }
         if (StringUtils.isNotBlank(dataSearchRequest.getAddTimeStart())) {
-            hashMap.put("addTimeStart",dataSearchRequest.getAddTimeStart());
+            hashMap.put("addTimeStart",dataSearchRequest.getAddTimeStart()+" 00:00:00");
         }
         if (StringUtils.isNotBlank(dataSearchRequest.getAddTimeEnd())) {
-            hashMap.put("addTimeEnd",dataSearchRequest.getAddTimeEnd());
+            hashMap.put("addTimeEnd",dataSearchRequest.getAddTimeEnd()+" 23:59:59");
         }
         if (StringUtils.isNotBlank(dataSearchRequest.getRegTimeStart())) {
-            hashMap.put("regTimeStart",dataSearchRequest.getRegTimeStart());
+            hashMap.put("regTimeStart",dataSearchRequest.getRegTimeStart()+" 00:00:00");
         }
         if (StringUtils.isNotBlank(dataSearchRequest.getRegTimeEnd())) {
-            hashMap.put("regTimeEnd",dataSearchRequest.getRegTimeEnd());
+            hashMap.put("regTimeEnd",dataSearchRequest.getRegTimeEnd()+" 23:59:59");
         }
         if (StringUtils.isNotBlank(dataSearchRequest.getTruename())) {
             hashMap.put("truename", dataSearchRequest.getTruename());
@@ -146,4 +146,6 @@ public class QianleDataSearchServiceImpl implements QianleDataSearchService {
         }
         return hashMap;
     }
+
+
 }

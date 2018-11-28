@@ -35,11 +35,7 @@ public class DataSearchServiceImpl implements DataSearchService {
     @Value("${qianle.mobile}")
     private String  configMobile;
 
-    /**
-     * 查詢千乐列表数据
-     * @param dataSearchRequest
-     * @return
-     */
+
     @Override
     public DataSearchCustomizeResponse findDataList(DataSearchRequest dataSearchRequest) {
         DataSearchCustomizeResponse dataSearchCustomizeResponse = new DataSearchCustomizeResponse();
@@ -60,6 +56,17 @@ public class DataSearchServiceImpl implements DataSearchService {
     }
 
 
+    @Override
+    public DataSearchCustomizeResponse findExportDataList(DataSearchRequest dataSearchRequest) {
+        DataSearchCustomizeResponse dataSearchCustomizeResponse = new DataSearchCustomizeResponse();
+        List<Integer> qianleUser = amUserClient.getQianleUser();
+        if (CollectionUtils.isEmpty(qianleUser)) {
+            return dataSearchCustomizeResponse;
+        }
+        dataSearchRequest.setUserIds(qianleUser);
+        dataSearchCustomizeResponse= amTradeClient.findExportDataList(dataSearchRequest);
+        return dataSearchCustomizeResponse;
+    }
     /**
      * 验证手机号
      * @param mobile
