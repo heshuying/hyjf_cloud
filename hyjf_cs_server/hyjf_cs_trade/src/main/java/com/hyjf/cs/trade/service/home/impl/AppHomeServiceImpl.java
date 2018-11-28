@@ -189,7 +189,14 @@ public class AppHomeServiceImpl implements AppHomeService {
 //            this.createProjectNewPage(info, list, HOST);
 //        }
         //获取累计投资金额
-        TotalInvestAndInterestResponse res = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
+        //TotalInvestAndInterestResponse res = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
+        TotalInvestAndInterestResponse res = this.getTotalInvestAndInterestResponse();
+        // modify by libin 加缓存
+        if(res == null){
+        	logger.error("获取累计投资金额为空");
+        }
+        // modify by libin 加缓存
+        
         TotalInvestAndInterestVO totalInvestAndInterestVO = res.getResult();
         if (null != totalInvestAndInterestVO){
             BigDecimal totalInvestAmount = totalInvestAndInterestVO.getTotalInvestAmount();
@@ -1181,4 +1188,17 @@ public class AppHomeServiceImpl implements AppHomeService {
             info.put("adClickPicUrl", "");
         }
     }
+    
+    /**
+     * @author libin
+     * 抽出查询统计信息的方法
+     * @date 2018/9/5 11:38
+     */
+	@Cached(name="appTotalInvestAndInterestCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+	@CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 30, timeUnit = TimeUnit.MINUTES)
+    private TotalInvestAndInterestResponse getTotalInvestAndInterestResponse(){
+		TotalInvestAndInterestResponse res = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);//加缓存
+    	return res;
+    }
+    
 }
