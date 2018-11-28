@@ -7,6 +7,7 @@ import com.hyjf.admin.beans.BaseRequest;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author libin
@@ -140,6 +141,16 @@ public class HjhLabelViewRequest extends BaseRequest implements Serializable{
     
     @ApiModelProperty(value = "标签修改时，0：标签名称未改；1标签名称修改")
     private int flag;
+    
+    private Integer createUserId;
+
+    private Integer updateUserId;
+
+    private Integer delFlag;
+
+    private Date createTime;
+
+    private Date updateTime;
     
 	public String getIds() {
 		return ids;
@@ -441,5 +452,35 @@ public class HjhLabelViewRequest extends BaseRequest implements Serializable{
 	}
 	public void setFlag(int flag) {
 		this.flag = flag;
+	}
+	public Integer getCreateUserId() {
+		return createUserId;
+	}
+	public void setCreateUserId(Integer createUserId) {
+		this.createUserId = createUserId;
+	}
+	public Integer getUpdateUserId() {
+		return updateUserId;
+	}
+	public void setUpdateUserId(Integer updateUserId) {
+		this.updateUserId = updateUserId;
+	}
+	public Integer getDelFlag() {
+		return delFlag;
+	}
+	public void setDelFlag(Integer delFlag) {
+		this.delFlag = delFlag;
+	}
+	public Date getCreateTime() {
+		return createTime;
+	}
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+	public Date getUpdateTime() {
+		return updateTime;
+	}
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
 	}
 }

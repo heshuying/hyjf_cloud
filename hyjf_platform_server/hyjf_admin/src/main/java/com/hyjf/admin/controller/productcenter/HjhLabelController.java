@@ -283,7 +283,7 @@ public class HjhLabelController extends BaseController{
 			return jsonObject;
 		} 
 		// 如果无错误消息，准备插表--将viewRequest 的 参数 拼装 到 HjhLabelInfoRequest 插表
-		hjhLabelInfoRequest.setCreateUserId(Integer.valueOf(this.getUser(request).getId()));
+		viewRequest.setCreateUserId(Integer.valueOf(this.getUser(request).getId()));
 		hjhLabelInfoRequest = setInfoParam(jsonObject,viewRequest);
 		int flg = this.labelService.insertHjhLabelRecord(hjhLabelInfoRequest);
 		if(flg > 0 ){
@@ -381,7 +381,6 @@ public class HjhLabelController extends BaseController{
         	if (StringUtils.isNotEmpty(viewRequest.getLabelName())){
         		request.setLabelName(viewRequest.getLabelName());
         	} 
-        	
         	//标的期限最小
         	if (viewRequest.getLabelTermStart()!= null) {
         		request.setLabelTermStart(Integer.valueOf(viewRequest.getLabelTermStart()));
@@ -394,14 +393,10 @@ public class HjhLabelController extends BaseController{
         	} else {
         		request.setLabelTermEnd(null);
         	}
-        	
         	// 日/月
         	if (StringUtils.isNotEmpty(viewRequest.getLabelTermType())) {
         		request.setLabelTermType(viewRequest.getLabelTermType());
         	}
-        	
-        	
-        	
         	// 标的实际利率最小
         	if (viewRequest.getLabelAprStart()!= null) {
         		request.setLabelAprStart(new BigDecimal(viewRequest.getLabelAprStart()));
@@ -414,9 +409,6 @@ public class HjhLabelController extends BaseController{
         	} else {
         		request.setLabelAprEnd(null);
         	}
-        	
-        	
-        	
         	// 还款方式
         	if (StringUtils.isNotEmpty(viewRequest.getBorrowStyle())) {
         		request.setBorrowStyle(viewRequest.getBorrowStyle());
@@ -425,8 +417,6 @@ public class HjhLabelController extends BaseController{
         	if (StringUtils.isNotEmpty(viewRequest.getBorrowStyleName())) {
         		request.setBorrowStyleName(viewRequest.getBorrowStyleName());
         	}
-        	
-        	
         	// 标的实际支付金额最小
         	if (viewRequest.getLabelPaymentAccountStart()!= null) {
         		request.setLabelPaymentAccountStart(new BigDecimal(viewRequest.getLabelPaymentAccountStart()));
@@ -439,9 +429,6 @@ public class HjhLabelController extends BaseController{
         	} else {
         		request.setLabelPaymentAccountEnd(null);
         	}
-        	
-        	
-        	
         	// 资产来源Code
         	if (StringUtils.isNotEmpty(viewRequest.getInstCode())) {
         		request.setInstCode(viewRequest.getInstCode());
@@ -489,9 +476,6 @@ public class HjhLabelController extends BaseController{
             } catch (ParseException e) {
                 jsonObject.put("errorMsg", "标签的结束推送时间节点必须大于开始的推送时间节点!");
             }
-            
-            
-            
             // 剩余最小天数
            	if (viewRequest.getRemainingDaysStart()!= null) {
         		request.setRemainingDaysStart(Integer.valueOf(viewRequest.getRemainingDaysStart()));
@@ -504,13 +488,13 @@ public class HjhLabelController extends BaseController{
         	} else {
         		request.setRemainingDaysEnd(null);
         	}
-           	
-           	
-           	
            	// 标签状态
            	if (StringUtils.isNotEmpty(viewRequest.getLabelState())) {
         		request.setLabelState(Integer.valueOf(viewRequest.getLabelState()));
         	}
+           	if(viewRequest.getCreateUserId()!= null){
+           		request.setCreateUserId(viewRequest.getCreateUserId());
+           	}	
 		}
 		return request;
 	}

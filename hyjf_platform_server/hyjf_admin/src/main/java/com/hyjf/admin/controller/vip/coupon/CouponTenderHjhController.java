@@ -154,7 +154,7 @@ public class CouponTenderHjhController extends BaseController {
                     couponTenderCustomize.setCouponQuota("￥"+couponTenderCustomize.getCouponQuota());
                 }
                 if("2".equals(couponTenderCustomize.getCouponType())){
-                    couponTenderCustomize.setCouponQuota(couponTenderCustomize.getCouponQuota()+"%");
+                    couponTenderCustomize.setCouponQuota(couponTenderCustomize.getCouponQuota());
                 }
                 if("3".equals(couponTenderCustomize.getCouponType())){
                     couponTenderCustomize.setCouponQuota("￥"+couponTenderCustomize.getCouponQuota());

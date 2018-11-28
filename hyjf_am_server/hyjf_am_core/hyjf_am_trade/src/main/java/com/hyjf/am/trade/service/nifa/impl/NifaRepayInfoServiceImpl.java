@@ -69,6 +69,10 @@ public class NifaRepayInfoServiceImpl extends BaseServiceImpl implements NifaRep
         nifaRepayInfo.setPaymentNum(repayPeriod);
         // 还款日期
         try {
+            if (null == borrowRepay.getRepayActionTime()){
+                logger.error(thisMessName + "还款日为空、请确认还款是否成功，borrowNid:" + borrowRepay.getBorrowNid());
+                return false;
+            }
             nifaRepayInfo.setPaymentDate(GetDate.getDateMyTimeInMillis(borrowRepay.getRepayActionTime()));
         } catch (NumberFormatException e) {
             logger.error(thisMessName + "还款日格式化失败，borrowNid:" + borrowRepay.getBorrowNid());
@@ -304,6 +308,10 @@ public class NifaRepayInfoServiceImpl extends BaseServiceImpl implements NifaRep
                 // 回款期数
                 nifaReceivedPayments.setReturnNum(repayPeriod);
                 // 回款日期
+                if (StringUtils.isBlank(borrowRecoverPlan.getRecoverYestime())){
+                    logger.error(thisMessName + "放款日期为空、请确认放款是否成功，borrowNid:" + borrowRepay.getBorrowNid());
+                    return false;
+                }
                 if (Validator.isNumber(borrowRecoverPlan.getRecoverYestime())) {
                     try {
                         nifaReceivedPayments.setReturnDate(GetDate.getDateMyTimeInMillis(Integer.parseInt(borrowRecoverPlan.getRecoverYestime())));
@@ -459,6 +467,10 @@ public class NifaRepayInfoServiceImpl extends BaseServiceImpl implements NifaRep
                 nifaReceivedPayments.setReturnNum(repayPeriod);
                 // 回款日期
                 try {
+                    if (null == borrowRepay.getRepayActionTime()){
+                        logger.error(thisMessName + "还款日为空、请确认还款是否成功，borrowNid:" + borrowNid + " repayPeriod:" + repayPeriod);
+                        return false;
+                    }
                     nifaReceivedPayments.setReturnDate(GetDate.getDateMyTimeInMillis(borrowRepay.getRepayActionTime()));
                 } catch (NumberFormatException e) {
                     logger.error(thisMessName + "还款日格式化失败，borrowNid:" + borrowNid + " repayPeriod:" + repayPeriod);

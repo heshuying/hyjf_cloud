@@ -7,7 +7,9 @@ import com.hyjf.am.response.config.WechatContentArticleResponse;
 import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleCustomizeVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
+import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.cs.market.client.AmConfigClient;
+import com.hyjf.cs.market.client.AmTradeClient;
 import com.hyjf.cs.market.service.AppFindService;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +26,9 @@ import java.util.Map;
 public class AppFindServiceImpl extends BaseMarketServiceImpl implements AppFindService {
     @Autowired
     private AmConfigClient amConfigClient;
+
+    @Autowired
+    private AmTradeClient amTradeClient;
 
     /**
      * 查询文章条数
@@ -53,6 +58,17 @@ public class AppFindServiceImpl extends BaseMarketServiceImpl implements AppFind
     @Override
     public ContentArticleCustomizeVO getContentArticleFlip(Map<String, Object> params, String offset) {
         return amConfigClient.getContentArticleFlip(params, offset);
+    }
+
+    /**
+     * 获取首页公告内容
+     * @param contentArticleId
+     * @return
+     */
+    @Override
+    public AppPushManageVO getAppPushManagerContentByID(Integer contentArticleId) {
+        AppPushManageVO manageInfo = amTradeClient.getAnnouncementsByID(contentArticleId);
+        return manageInfo;
     }
 
     @Override

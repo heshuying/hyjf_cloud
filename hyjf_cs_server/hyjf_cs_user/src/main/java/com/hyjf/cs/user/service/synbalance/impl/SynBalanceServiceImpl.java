@@ -212,7 +212,12 @@ public class SynBalanceServiceImpl extends BaseUserServiceImpl implements SynBal
         AccountVO accountUser = getAccount(user.getUserId());
         BigDecimal accountBalance = accountUser.getBankBalance();
         //客户号
-        if(systemConfig.isHyjfEnvTest()){
+        /**
+         *  臨時注釋  zyk
+         * @author zhangyk
+         * @date 2018/11/28 10:10
+         */
+        /*if(systemConfig.isHyjfEnvTest()){
             resultBean.setOriginalBankTotal(accountUser.getBankTotal().toString());
             resultBean.setOriginalBankBalance(accountUser.getBankBalance().toString());
             resultBean.setBankBalance(df.format(accountUser.getBankBalance()));
@@ -220,7 +225,7 @@ public class SynBalanceServiceImpl extends BaseUserServiceImpl implements SynBal
             resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
             resultBean.setStatusDesc("成功");
             return resultBean;
-        }
+        }*/
 
         //查询时间段 (只查当天)
         //上线需放开

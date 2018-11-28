@@ -1548,6 +1548,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 userInterest = borrowRecover.getRecoverInterest();
                 // 计算用户延期利息
                 userDelayInterest = UnnormalRepayUtils.delayRepayInterest(userCapital, borrow.getBorrowApr(), delayDays);
+                if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle) && delayDays > 0) {// 先息后本
+                    BigDecimal userDelayInterest1 = UnnormalRepayUtils.delayRepayInterest(borrow.getRepayAccountCapital(), borrow.getBorrowApr(), delayDays);
+                    logger.info("一次性还款先息后本原计算延期利息本金：{},新计算延期利息本金：{}", userCapital, borrow.getRepayAccountCapital());
+                    logger.info("一次性还款先息后本原延期利息：{},新延期利息：{}", userDelayInterest, userDelayInterest1);
+                }
                 // 用户管理费
                 userManageFee = borrowRecover.getRecoverFee();
                 repayRecoverBean.setRecoverCapitalOld(userCapital);
@@ -1587,6 +1592,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     }
                                     // 计算用户延期利息
                                     assignDelayInterest = UnnormalRepayUtils.delayRepayInterest(assignCapital, borrow.getBorrowApr(), delayDays);
+                                    if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle) && delayDays > 0) {// 先息后本
+                                        BigDecimal userDelayInterest1 = UnnormalRepayUtils.delayRepayInterest(borrow.getRepayAccountCapital(), borrow.getBorrowApr(), delayDays);
+                                        logger.info("直投债转一次性还款先息后本原计算延期利息本金：{},新计算延期利息本金：{}", userCapital, borrow.getRepayAccountCapital());
+                                        logger.info("直投债转一次性还款先息后本原延期利息：{},新延期利息：{}", userDelayInterest, userDelayInterest1);
+                                    }
                                 }
                                 BeanUtils.copyProperties(creditRepay, creditRepayBean);
                                 creditRepayBean.setAssignTotal(assignAccount.add(assignDelayInterest).add(assignManageFee));
@@ -1654,6 +1664,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     }
                                     // 计算用户延期利息
                                     assignDelayInterest = UnnormalRepayUtils.delayRepayInterest(assignCapital, borrow.getBorrowApr(), delayDays);
+                                    if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle) && delayDays > 0) {// 先息后本
+                                        BigDecimal userDelayInterest1 = UnnormalRepayUtils.delayRepayInterest(borrow.getRepayAccountCapital(), borrow.getBorrowApr(), delayDays);
+                                        logger.info("计划债转一次性还款先息后本原计算延期利息本金：{},新计算延期利息本金：{}", userCapital, borrow.getRepayAccountCapital());
+                                        logger.info("计划债转一次性还款先息后本原延期利息：{},新延期利息：{}", userDelayInterest, userDelayInterest1);
+                                    }
                                 }
                                 BeanUtils.copyProperties(creditRepay, creditRepayBean);
                                 creditRepayBean.setAssignTotal(assignAccount.add(assignDelayInterest).add(assignManageFee));
@@ -2499,6 +2514,10 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             //BigDecimal planRate = new BigDecimal(borrow.getLateInterestRate());
                             userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(userAccount, lateDays, borrow.getLateInterestRate());
                         }
+                        if (lateDays > 0) {
+                            logger.info("投资订单号:{},逾期天数{}", recoverPlanNid, lateDays);
+                            logger.info("实际获得的本息和:{},逾期利息{}", userAccount, userOverdueInterest);
+                        }
                         // 计算用户延期利息
                         userDelayInterest = UnnormalRepayUtils.overdueRepayDelayInterest(userCapital, borrow.getBorrowApr(), delayDays);
                         // 获取应还款管理费
@@ -2813,6 +2832,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             userInterest = borrowRecoverPlan.getRecoverInterest();
                             // 计算用户延期利息
                             userDelayInterest = UnnormalRepayUtils.delayRepayInterest(userCapital, borrow.getBorrowApr(), delayDays);
+                            if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle) && delayDays > 0) {// 先息后本
+                                BigDecimal userDelayInterest1 = UnnormalRepayUtils.delayRepayInterest(borrow.getRepayAccountCapital(), borrow.getBorrowApr(), delayDays);
+                                logger.info("先息后本原计算延期利息本金：{},新计算延期利息本金：{}", userCapital, borrow.getRepayAccountCapital());
+                                logger.info("先息后本原延期利息：{},新延期利息：{}", userDelayInterest, userDelayInterest1);
+                            }
                             // 获取应还款管理费
                             userManageFee = borrowRecoverPlan.getRecoverFee();
 
@@ -2875,6 +2899,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                                 }
                                                 // 计算用户延期利息
                                                 assignDelayInterest = UnnormalRepayUtils.delayRepayInterest(assignCapital, borrow.getBorrowApr(), delayDays);
+                                                if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle) && delayDays > 0) {// 先息后本
+                                                    BigDecimal userDelayInterest1 = UnnormalRepayUtils.delayRepayInterest(borrow.getRepayAccountCapital(), borrow.getBorrowApr(), delayDays);
+                                                    logger.info("直投债转先息后本原计算延期利息本金：{},新计算延期利息本金：{}", userCapital, borrow.getRepayAccountCapital());
+                                                    logger.info("直投债转先息后本原延期利息：{},新延期利息：{}", userDelayInterest, userDelayInterest1);
+                                                }
                                             }
                                             BeanUtils.copyProperties(creditRepay, creditRepayBean);
                                             creditRepayBean.setAssignTotal(assignAccount.add(assignDelayInterest).add(assignManageFee));
@@ -2964,6 +2993,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                                 }
                                                 // 计算用户延期利息
                                                 assignDelayInterest = UnnormalRepayUtils.delayRepayInterest(assignCapital, borrow.getBorrowApr(), delayDays);
+                                                if (CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle) && delayDays > 0) {// 先息后本
+                                                    BigDecimal userDelayInterest1 = UnnormalRepayUtils.delayRepayInterest(borrow.getRepayAccountCapital(), borrow.getBorrowApr(), delayDays);
+                                                    logger.info("计划债转先息后本原计算延期利息本金：{},新计算延期利息本金：{}", userCapital, borrow.getRepayAccountCapital());
+                                                    logger.info("计划债转先息后本原延期利息：{},新延期利息：{}", userDelayInterest, userDelayInterest1);
+                                                }
                                             }
                                             BeanUtils.copyProperties(creditRepay, creditRepayBean);
                                             creditRepayBean.setAssignTotal(assignAccount.add(assignDelayInterest).add(assignManageFee));

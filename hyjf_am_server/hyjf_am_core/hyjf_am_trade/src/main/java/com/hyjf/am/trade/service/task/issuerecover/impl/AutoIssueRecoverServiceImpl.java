@@ -1163,7 +1163,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         String instCode = hjhPlanAsset.getInstCode();
         HjhBailConfig bailConfig = this.getBailConfig(instCode);
         if(bailConfig == null){
-            logger.error("没有添加保证金配置");
+            logger.error("自动录标校验保证金：没有添加保证金配置，instCode：" + instCode + ",assetId:" + hjhPlanAsset.getAssetId());
             return -1;
         }
 
@@ -1172,7 +1172,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 
         // 可用发标额度余额校验
         if (BigDecimal.ZERO.compareTo(availableBalance) >= 0) {
-            logger.info("资产编号："+hjhPlanAsset.getAssetId()+" 可用发标额度余额小于等于零 " + availableBalance);
+            logger.info("自动录标校验保证金：资产编号："+hjhPlanAsset.getAssetId()+" 可用发标额度余额小于等于零 " + availableBalance);
             // 可用发标额度余额小于等于0不能发标
             return 1;
         }
@@ -1186,18 +1186,18 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         // 今日已用额度
         String dayUsedKey = RedisConstants.DAY_USED + instCode + "_" + GetDate.getDate("yyyyMMdd");
         BigDecimal dayUsed = getValueInRedis(dayUsedKey);
-        logger.info("dayUsedKey: " + dayUsedKey + " day userd in redis: " + dayUsed);
+        logger.info("自动录标校验保证金：dayUsedKey: " + dayUsedKey + " day userd in redis: " + dayUsed);
         // 累积可用额度
         String accumulateKey = RedisConstants.DAY_MARK_ACCUMULATE + instCode;
         BigDecimal accumulate = getValueInRedis(accumulateKey);
-        logger.info("accumulateKey: " + accumulateKey + " accumulate in redis: " + accumulate);
+        logger.info("自动录标校验保证金：accumulateKey: " + accumulateKey + " accumulate in redis: " + accumulate);
         dayAvailable = dayAvailable.add(bailConfig.getDayMarkLine()).subtract(dayUsed);
         if(bailConfig.getIsAccumulate() == 1){
             dayAvailable = dayAvailable.add(accumulate);
-            logger.info("已开启日累计额度，当前可用额度：" + dayAvailable);
+            logger.info("自动录标校验保证金：已开启日累计额度，当前可用额度：" + dayAvailable);
         }
         if(dayAvailable.compareTo(assetAcount) < 0){
-            logger.info("日推标可用额度不足，资产编号：" + instCode + " 当前可用额度：{}，推送额度:{}", dayAvailable, assetAcount);
+            logger.info("自动录标校验保证金：日推标可用额度不足，资产编号：" + instCode + " 当前可用额度：{}，推送额度:{}", dayAvailable, assetAcount);
             return 23;
         }
 
@@ -1205,17 +1205,17 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         BigDecimal monthAvailable = BigDecimal.ZERO;
         String monthKey = RedisConstants.MONTH_USED + instCode + "_" + GetDate.getDate("yyyyMM");
         BigDecimal monthUsed = getValueInRedis(monthKey);
-        logger.info("monthKey: " + monthKey + " month userd in redis: " + monthUsed);
+        logger.info("自动录标校验保证金：monthKey: " + monthKey + " month userd in redis: " + monthUsed);
         monthAvailable = monthAvailable.add(bailConfig.getMonthMarkLine()).subtract(monthUsed);
         if(monthAvailable.compareTo(assetAcount) < 0){
-            logger.info("月推标可用额度不足，资产编号：" + instCode + " 当前可用额度：{}，推送额度:{}", monthAvailable, assetAcount);
+            logger.info("自动录标校验保证金：月推标可用额度不足，资产编号：" + instCode + " 当前可用额度：{}，推送额度:{}", monthAvailable, assetAcount);
             return 24;
         }
 
         // 授信额度校验
         HjhBailConfigInfo configInfo = getConfigInfo(hjhPlanAsset.getBorrowStyle(), hjhPlanAsset.getInstCode());
         if(configInfo == null){
-            logger.info("HjhBailConfigInfo不存在，机构编号：{}, 还款方式：{}", hjhPlanAsset.getInstCode(), hjhPlanAsset.getBorrowStyle());
+            logger.info("自动录标校验保证金：HjhBailConfigInfo不存在，机构编号：{}, 还款方式：{}", hjhPlanAsset.getInstCode(), hjhPlanAsset.getBorrowStyle());
             return -1;
         }
 
@@ -1239,7 +1239,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         }
         // 新增授信校验或在贷余额校验都没有配置
         if(configInfo.getIsNewCredit() != 1 && configInfo.getIsLoanCredit() != 1){
-            logger.error("因还款方式未配置保证金授信方式，推标失败");
+            logger.error("自动录标校验保证金：因还款方式未配置保证金授信方式，推标失败。instCode:" + instCode);
             return -1;
         }
 

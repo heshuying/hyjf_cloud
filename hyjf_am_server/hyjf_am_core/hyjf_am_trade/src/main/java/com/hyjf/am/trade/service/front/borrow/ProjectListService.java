@@ -249,4 +249,10 @@ public interface ProjectListService {
      */
     List<AppPushManageVO> getAnnouncements();
 
+    /**
+     * 根据ID获取APP首页内容
+     * @param id
+     * @return
+     */
+    AppPushManageVO getAnnouncementsByID(String id);
 }
