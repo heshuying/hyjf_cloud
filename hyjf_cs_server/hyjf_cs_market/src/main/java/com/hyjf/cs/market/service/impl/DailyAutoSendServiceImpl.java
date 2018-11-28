@@ -71,7 +71,6 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
     @Override
     public void sendMail(SellDailyDistributionVO sellDailyDistribution) {
         String[] toEmail = sellDailyDistribution.getEmail().split(";");
-//        String email = sellDailyDistribution.getEmail();
         if (toEmail.length < 0) {
             return;
         }
@@ -79,7 +78,6 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
         String fileName = "销售日报-" + dateStr + ".xlsx";
         String[] fileNames = {fileName};
         // 将excel作为附件
-//        InputStreamSource is = this.drawExcel(dateStr);
         byte[] is = this.drawExcel(dateStr);
 
         logger.info("开始发送销售日报邮件>>>>>>>>>>>>>>>>>>>>>toEmail:" + JSONObject.toJSONString(toEmail) + "");
@@ -88,10 +86,7 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
         MailMessage mailMessage = new MailMessage(null, null, subject, null, fileNames, toEmail, null, MessageConstant.MAIL_SEND_FRO_SELL_DAILY, is);
         try {
             // 包含附件
-//            MailUtil.sendAttachmentsMailOnPort25(toEmail, subject, content, fileName, is);
-
             mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(mailMessage)));
-            //MailUtil.sendAttachmentsMailOnPort465(toEmail, subject, content, new String[]{fileName}, is);
             logger.info("发送销售日报成功>>>>>>>>>>>>>>>>>>>>>");
         } catch (Exception e) {
             logger.error("发送销售日报失败>>>>>>>>>>>>>>>>>>>>> 失败原因：{}", e);

@@ -3,7 +3,9 @@ package com.hyjf.admin.controller.mobileclient;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.mobileclient.SubmissionsService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -45,6 +47,8 @@ public class SubmissionsController extends BaseController {
 
     @Autowired
     SubmissionsService  submissionsService;
+    //权限名称
+    private static final String PERMISSIONS = "submissions";
 
     /**
      * 查询列表
@@ -53,6 +57,7 @@ public class SubmissionsController extends BaseController {
      */
     @ApiOperation(value = "意见反馈列表查询", notes = "意见反馈列表查询")
     @PostMapping("/getRecordList")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<SubmissionsCustomizeVO>> findAppBannerData(@RequestBody SubmissionsRequest form) {
         Map<String, String> userStatus = CacheUtil.getParamNameMap("CLIENT");
         if (StringUtils.isNotBlank(form.getUserName())) {
@@ -83,6 +88,7 @@ public class SubmissionsController extends BaseController {
      */
     @ApiOperation(value = "查询列表下拉框加载", notes = "查询列表下拉框加载")
     @GetMapping("/recordlistselect")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult recordListSelect() {
         AdminResult adminResult = new AdminResult();
         Map<String, String> userStatus = CacheUtil.getParamNameMap("CLIENT");
@@ -92,6 +98,7 @@ public class SubmissionsController extends BaseController {
 
     @ApiOperation(value = "意见反馈:获取详细画面", notes = "意见反馈:获取详细画面")
     @PostMapping(value = "/searchinfo")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult<SubmissionsVO> searchinfo(@RequestBody SubmissionsRequest request) {
         return new AdminResult<SubmissionsVO>(submissionsService.getRecord(request));
     }
@@ -104,6 +111,7 @@ public class SubmissionsController extends BaseController {
      */
     @ApiOperation(value = "意见反馈更新保存", notes = "意见反馈更新保存")
     @PostMapping("/updateSubmissionsAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<ListResult<SubmissionsCustomizeVO>> updateSubmissions(@RequestBody SubmissionsRequest form) {
         SubmissionsResponse response = submissionsService.updateSubmissionStatus(form);
         return new AdminResult<ListResult<SubmissionsCustomizeVO>>(ListResult.build(response.getResultList(), response.getRecordTotal()));
@@ -120,6 +128,7 @@ public class SubmissionsController extends BaseController {
      */
     @ApiOperation(value = "意见反馈导出", notes = "意见反馈导出")
     @PostMapping("/exportListAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportListAction(HttpServletRequest request, @RequestBody SubmissionsRequest form,
                                  HttpServletResponse response) throws Exception {
 

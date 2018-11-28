@@ -147,9 +147,14 @@ public class WebHomeServiceImpl implements WebHomeService {
         }
 
         // 标的信息 和 统计信息
-
-        //TotalInvestAndInterestResponse res2 = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
-        TotalInvestAndInterestResponse res2 = new TotalInvestAndInterestResponse();
+        // modify by libin 缓存
+        //TotalInvestAndInterestResponse res2 = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);//加缓存
+        TotalInvestAndInterestResponse res2 = this.getTotalInvestAndInterestResponse();//加缓存
+        if(res2 == null){
+        	logger.error("统计信息查询为空");
+        }
+        // modify by libin 缓存
+        
         TotalInvestAndInterestVO totalInvestAndInterestVO = res2.getResult();
         BigDecimal interestSum = (totalInvestAndInterestVO == null ||totalInvestAndInterestVO.getTotalInterestAmount() == null) ? new BigDecimal(0) : totalInvestAndInterestVO.getTotalInterestAmount();
         result.setInterestSum(interestSum.divide(new BigDecimal("100000000")).setScale(0,BigDecimal.ROUND_DOWN).toString());
@@ -346,6 +351,18 @@ public class WebHomeServiceImpl implements WebHomeService {
         } catch (IOException e) {
             logger.error("安卓apk下载失败,{}",e);
         }
+    }
+    
+    /**
+     * @author libin
+     * 抽出查询统计信息的方法
+     * @date 2018/9/5 11:38
+     */
+	@Cached(name="webTotalInvestAndInterestCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+	@CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 30, timeUnit = TimeUnit.MINUTES)
+    private TotalInvestAndInterestResponse getTotalInvestAndInterestResponse(){
+		TotalInvestAndInterestResponse res2 = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);//加缓存
+    	return res2;
     }
 
 }
