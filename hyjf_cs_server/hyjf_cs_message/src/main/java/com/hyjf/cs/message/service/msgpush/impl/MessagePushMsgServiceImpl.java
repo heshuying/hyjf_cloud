@@ -70,8 +70,8 @@ public class MessagePushMsgServiceImpl implements MessagePushMsgService {
         if (request.getMsgCode() != null) {
             criteria.and("msgCode").is(request.getMsgCode());
         }
-        if (request.getCreateUserName() != null) {
-            criteria.and("createUserName").is(request.getCreateUserName());
+        if (request.getLastupdateUserName() != null) {
+            criteria.and("lastupdateUserName").is(request.getLastupdateUserName());
         }
         if (request.getMsgTerminal() != null) {
             String msgTerminal = request.getMsgTerminal();
