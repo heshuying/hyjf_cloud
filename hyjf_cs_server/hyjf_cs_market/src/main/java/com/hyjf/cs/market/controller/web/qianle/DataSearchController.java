@@ -58,47 +58,49 @@ public class DataSearchController {
     @PostMapping("/querylist")
     public WebResult<Map<String, Object>> getQianleSanList(@RequestBody DataSearchBean request){
         DataSearchRequest dataSearchRequest = CommonUtils.convertBean(request, DataSearchRequest.class);
-        DataSearchCustomizeResponse response = dataSearchService.findDataList(dataSearchRequest);
-        HashMap<String, Object> result = new HashMap<>();
-        if (!CollectionUtils.isEmpty(response.getResultList())) {
-            result.put("data", response.getResultList());
-            result.put("money",response.getMoney());
-        }else{
-            result.put("data", new String [0]);
-            result.put("money",new String [0]);
+        try {
+            DataSearchCustomizeResponse response = dataSearchService.findDataList(dataSearchRequest);
+            HashMap<String, Object> result = new HashMap<>();
+            if (!CollectionUtils.isEmpty(response.getResultList())) {
+                result.put("data", response.getResultList());
+                result.put("money", response.getMoney());
+            } else {
+                result.put("data", new String[0]);
+                result.put("money", new String[0]);
+            }
+            WebResult webResult = new WebResult(result);
+            Page page = new Page();
+            page.setTotal(response.getCount());
+            page.setCurrPage(request.getCurrPage());
+            page.setPageSize(request.getPageSize());
+            webResult.setPage(page);
+             return webResult;
+        } catch (Exception e) {
+             return new WebResult(WebResult.ERROR, "数据查询失败");
         }
-        WebResult webResult = new WebResult(result);
-        Page page = new Page();
-        page.setTotal(response.getCount());
-        page.setCurrPage(request.getCurrPage());
-        page.setPageSize(request.getPageSize());
-        webResult.setPage(page);
-        return webResult;
     }
-    @ApiOperation(value = "退出登录", notes = "退出登录")
-    @PostMapping("/cancle")
-    public WebResult cancle(){
-        WebResult webResult = new WebResult();
-        return webResult;
-    }
+
 
     @ApiOperation(value = "登录", notes = "登录")
     @PostMapping("/login")
-    public WebResult login(@RequestBody DataSearchBean request){
+    public WebResult login(@RequestBody DataSearchBean request) {
         String code = request.getCode();
         String mobile = request.getMobile();
         WebResult webResult = new WebResult();
-        if(!dataSearchService.checkMobile(mobile)){
-            return new WebResult("111", "手机号校验失败");
+        if (!dataSearchService.checkMobile(mobile)) {
+            return new WebResult(WebResult.ERROR, "手机号校验失败");
         }
-        int result = dataSearchService.checkMobileCode(mobile, code);
-        if(result>0){
-            return webResult;
-        }else{
-            webResult=new WebResult("111", "登录失败");
-            return webResult;
+        try {
+            int result = dataSearchService.checkMobileCode(mobile, code);
+            if (result > 0) {
+                return webResult;
+            } else {
+                webResult = new WebResult(WebResult.ERROR, "登录失败");
+                return webResult;
+            }
+        } catch (Exception e) {
+            return new WebResult(WebResult.ERROR, "登录失败");
         }
-
     }
 
     @ApiOperation(value = "获取验证码", notes = "获取验证码")
@@ -108,7 +110,7 @@ public class DataSearchController {
         WebResult webResult = new WebResult();
         JSONObject jo = new JSONObject();
         if (!dataSearchService.checkMobile(mobile)) {
-            webResult = new WebResult("111", "手机号验证失败");
+            webResult = new WebResult(WebResult.ERROR, "手机号验证失败");
             return webResult;
         }
         SmsConfigVO smsConfig = dataSearchService.initSmsConfig().getResult();
@@ -123,7 +125,7 @@ public class DataSearchController {
 
                 RedisUtils.set(ip + ":MaxIpCount", (Integer.valueOf(ipCount) + 1) + "", 24 * 60 * 60);
             }
-            webResult = new WebResult("111", "IP访问次数超限");
+            webResult = new WebResult(WebResult.ERROR, "IP访问次数超限");
             return webResult;
         }
         // 判断最大发送数max_phone_count
@@ -136,13 +138,13 @@ public class DataSearchController {
             if (Integer.valueOf(count) == smsConfig.getMaxPhoneCount()) {
                 RedisUtils.set(mobile + ":MaxPhoneCount", (Integer.valueOf(count) + 1) + "", 24 * 60 * 60);
             }
-            webResult = new WebResult("111", "手机发送次数超限");
+            webResult = new WebResult(WebResult.ERROR, "手机发送次数超限");
             return webResult;
         }
         // 判断发送间隔时间
         String intervalTime = RedisUtils.get(mobile + ":IntervalTime");
         if (StringUtils.isNotBlank(intervalTime)) {
-            webResult = new WebResult("111", "发送时间间隔太短");
+            webResult = new WebResult(WebResult.ERROR, "发送时间间隔太短");
             return webResult;
         }
         boolean result = false;
@@ -186,7 +188,7 @@ public class DataSearchController {
         if (time != null) {
             maxValidTime = time + "";
         }
-        webResult = new WebResult("000", "短信发送成功");
+        webResult = new WebResult(WebResult.SUCCESS, "短信发送成功");
         return webResult;
     }
 
