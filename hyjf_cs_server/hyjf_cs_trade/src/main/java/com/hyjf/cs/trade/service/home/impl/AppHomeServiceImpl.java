@@ -1195,7 +1195,7 @@ public class AppHomeServiceImpl implements AppHomeService {
      * @date 2018/9/5 11:38
      */
 	@Cached(name="appTotalInvestAndInterestCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
-	@CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 30, timeUnit = TimeUnit.MINUTES)
+	@CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.MINUTES)
     private TotalInvestAndInterestResponse getTotalInvestAndInterestResponse(){
 		TotalInvestAndInterestResponse res = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);//加缓存
     	return res;
