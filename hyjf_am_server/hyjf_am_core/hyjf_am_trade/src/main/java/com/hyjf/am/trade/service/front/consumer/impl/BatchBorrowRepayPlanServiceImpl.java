@@ -1768,6 +1768,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			lateDays = borrowRecover.getLateDays();
 			// 逾期利息
 			lateInterest = borrowRecover.getLateInterest();
+			logger.info("逾期还款利息(borrowRecover.getLateInterest())：{}，还款订单号：{}", lateInterest, repayOrderId);;
 			// 延期天数
 			delayDays = borrowRecover.getDelayDays();
 			// 延期利息
@@ -1952,11 +1953,15 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		borrowRecover.setRepayChargeInterest(borrowRecover.getRepayChargeInterest().add(chargeInterest));
 		borrowRecover.setRepayDelayInterest(borrowRecover.getRepayDelayInterest().add(delayInterest));
 		borrowRecover.setRepayLateInterest(borrowRecover.getRepayLateInterest().add(lateInterest));
+		if (lateInterest.compareTo(BigDecimal.ZERO) == 1) {
+			logger.info("原逾期还款利息：{},增加：{}", borrowRecover.getRepayLateInterest(), lateInterest);
+		}
 		borrowRecover.setRecoverFeeYes(borrowRecover.getRecoverFeeYes().add(manageFee));
 		borrowRecover.setWeb(2); // 写入网站收支
+		logger.info("更新放款明细类：{}",JSON.toJSONString(borrowRecover));
 		boolean borrowRecoverFlag = this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecover) > 0 ? true : false;
 		if (!borrowRecoverFlag) {
-			throw new Exception("还款明细(huiyingdai_borrow_recover)更新失败！" + "[投资订单号：" + tenderOrderId + "]");
+			throw new Exception("放款明细(huiyingdai_borrow_recover)更新失败！" + "[投资订单号：" + tenderOrderId + "]");
 		}
 		if (borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
 			// 查询相应的债权转让
@@ -2636,7 +2641,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		BigDecimal delayInterest = creditRepay.getRepayDelayInterest();
 		// 逾期利息
 		BigDecimal lateInterest = creditRepay.getRepayLateInterest();
-
+		logger.info("逾期还款利息(creditRepay.getRepayLateInterest())：{}，还款订单号：{}", lateInterest, repayOrderId);
 		// 还款本息(实际)
 		BigDecimal repayAccount = assignAccount.add(lateInterest).add(delayInterest).add(chargeInterest);
 		// 还款本金(实际)
@@ -2937,6 +2942,9 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		borrowRecover.setRepayDelayInterest(borrowRecover.getRepayDelayInterest().add(delayInterest));
 		// 已还款逾期还款利息
 		borrowRecover.setRepayLateInterest(borrowRecover.getRepayLateInterest().add(lateInterest));
+		if (lateInterest.compareTo(BigDecimal.ZERO) == 1) {
+			logger.info("原逾期还款利息：{},增加：{}", borrowRecover.getRepayLateInterest(), lateInterest);
+		}
 		// 已还款管理费
 		borrowRecover.setRecoverFeeYes(borrowRecover.getRecoverFeeYes().add(manageFee));
 		// 更新还款表

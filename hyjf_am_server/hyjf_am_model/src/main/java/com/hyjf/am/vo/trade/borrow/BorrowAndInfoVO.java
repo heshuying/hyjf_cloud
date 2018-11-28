@@ -304,10 +304,6 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
 
     private String reverifyUserName;
 
-    private String reverifyTime;
-
-    private Integer reverifyTimeInt;
-
     private String reverifyRemark;
 
     private Integer reverifyStatus;
@@ -485,6 +481,12 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
     private Integer isMonth;
 
     private String addIp;
+
+    private Integer reverifyTime;
+
+    private String reverifyTimeStr;
+
+    private String repayLastTimeStr;
 
     private static final long serialVersionUID = 1L;
 
@@ -1632,12 +1634,8 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
         this.reverifyUserName = reverifyUserName == null ? null : reverifyUserName.trim();
     }
 
-    public String getReverifyTime() {
+    public Integer getReverifyTime() {
         return reverifyTime;
-    }
-
-    public void setReverifyTime(String reverifyTime) {
-        this.reverifyTime = reverifyTime == null ? null : reverifyTime.trim();
     }
 
     public String getReverifyRemark() {
@@ -2344,14 +2342,6 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
         this.verifyTimeInteger = verifyTimeInteger;
     }
 
-    public Integer getReverifyTimeInt() {
-        return reverifyTimeInt;
-    }
-
-    public void setReverifyTimeInt(Integer reverifyTimeInt) {
-        this.reverifyTimeInt = reverifyTimeInt;
-    }
-
     public Integer getIsInstallment() {
         return isInstallment;
     }
@@ -2374,5 +2364,25 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
 
     public void setAddIp(String addIp) {
         this.addIp = addIp;
+    }
+
+    public void setReverifyTime(Integer reverifyTime) {
+        this.reverifyTime = reverifyTime;
+    }
+
+    public void setReverifyTimeStr(String reverifyTimeStr) {
+        this.reverifyTimeStr = reverifyTimeStr;
+    }
+
+    public String getReverifyTimeStr() {
+        return reverifyTimeStr;
+    }
+
+    public void setRepayLastTimeStr(String repayLastTimeStr) {
+        this.repayLastTimeStr = repayLastTimeStr;
+    }
+
+    public String getRepayLastTimeStr() {
+        return repayLastTimeStr;
     }
 }

@@ -4,6 +4,7 @@ import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
+import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.trade.TenderCityCountVO;
 import com.hyjf.am.vo.trade.TenderSexCountVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
@@ -129,4 +130,11 @@ public interface AmTradeClient {
 
 	List<WrbTenderNotifyCustomizeVO> getCreditTenderByClient(AppChannelStatisticsRequest request);
 
+	/**
+	 * 根据ID获取APP首页公告内容
+	 * @author yangchangwei
+	 * @param contentArticleId
+	 * @return
+	 */
+	AppPushManageVO getAnnouncementsByID(Integer contentArticleId);
 }

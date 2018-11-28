@@ -12,13 +12,16 @@
         <result column="regionName" property="regionName" /> <!-- 大区 -->
         <result column="branchName" property="branchName" /> <!-- 分公司  -->
         <result column="departmentName" property="departmentName" /> <!-- 部门  -->
+        <result column="departmentId" property="departmentId" /> <!-- 部门ID  -->
+        <result column="regionId" property="regionId" /> <!-- 大区ID -->
+        <result column="branchId" property="branchId" /> <!-- 分公司ID  -->
         <result column="referrer" property="referrer" /> <!-- 推荐人 -->
         <result column="attribute" property="attribute" /> <!-- 属性-->
     </resultMap>
 
     <select id="findUserCrmInfoByUserId" parameterType="int" resultMap="UserCrmInfoMapResult">
         SELECT u.user_id, u.username, ui.truename,u.mobile,ui.attribute,
-        od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName
+        od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName,od3.id as regionId,od2.id as branchId,od.id as departmentId
         FROM ht_user u
         LEFT JOIN ht_user_info ui ON u.user_id= ui.user_id
         LEFT JOIN ht_r_oa_users ou ON u.user_id= ou.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')

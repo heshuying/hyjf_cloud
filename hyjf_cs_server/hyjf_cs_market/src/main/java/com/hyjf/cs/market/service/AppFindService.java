@@ -7,6 +7,7 @@ import com.hyjf.am.response.config.WechatContentArticleResponse;
 import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleCustomizeVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
+import com.hyjf.am.vo.admin.AppPushManageVO;
 
 import java.util.List;
 import java.util.Map;
@@ -61,4 +62,11 @@ public interface AppFindService extends BaseMarketService {
      * @return
      */
     ContentArticleCustomizeVO getContentArticleFlip(Map<String, Object> params, String offset);
+
+    /**
+     * 获取APP首页公告内容
+     * @param contentArticleId
+     * @return
+     */
+    AppPushManageVO getAppPushManagerContentByID(Integer contentArticleId);
 }

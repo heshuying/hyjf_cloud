@@ -6,6 +6,7 @@ package com.hyjf.cs.market.controller.app.find;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.config.ContentArticleCustomizeVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
+import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.market.bean.AppContentArticleBean;
 import com.hyjf.cs.market.controller.BaseMarketController;
@@ -156,17 +157,30 @@ public class AppFindController extends BaseMarketController {
         ret.put("statusDesc", "成功");
         ret.put("topTitle", getTopTitle(type));
         try {
-            ContentArticleVO contentArticle = appFindService.getContentArticleById(contentArticleId);
-            if(contentArticle!=null){
-                JSONObject details = new JSONObject();
-                details.put("title",contentArticle.getTitle());
-                details.put("content",contentArticle.getContent());
-                details.put("date",new SimpleDateFormat("yyyy-MM-dd").format(contentArticle.getCreateTime()));
-                ret.put("details", details);
+            if(type != null && 4 == type){//3.0.9 新增推送公告详情
+                AppPushManageVO manageInfo = appFindService.getAppPushManagerContentByID(contentArticleId);
+                if(manageInfo != null){
+                    ret.put("topTitle", manageInfo.getTitle());
+                    JSONObject details = new JSONObject();
+                    details.put("title",manageInfo.getTitle());
+                    details.put("content",manageInfo.getContent());
+                    details.put("date",new SimpleDateFormat("yyyy-MM-dd").format(manageInfo.getCreateTime()));
+                    ret.put("details", details);
+                }
             }else{
-                ret.put("status", 99);
-                ret.put("statusDesc", "失败");
+                ContentArticleVO contentArticle = appFindService.getContentArticleById(contentArticleId);
+                if(contentArticle!=null){
+                    JSONObject details = new JSONObject();
+                    details.put("title",contentArticle.getTitle());
+                    details.put("content",contentArticle.getContent());
+                    details.put("date",new SimpleDateFormat("yyyy-MM-dd").format(contentArticle.getCreateTime()));
+                    ret.put("details", details);
+                }else{
+                    ret.put("status", 99);
+                    ret.put("statusDesc", "失败");
+                }
             }
+
         } catch (Exception e) {
             ret.put("status", 99);
             ret.put("statusDesc", "失败");

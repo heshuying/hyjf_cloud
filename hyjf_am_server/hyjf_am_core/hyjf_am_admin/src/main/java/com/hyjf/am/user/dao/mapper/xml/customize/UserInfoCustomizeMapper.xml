@@ -10,6 +10,9 @@
 		<result column="regionName" property="regionName" /> <!-- 大区 -->
 		<result column="branchName" property="branchName" /> <!-- 分公司  -->
 		<result column="departmentName" property="departmentName" /> <!-- 部门  -->
+		<result column="departmentId" property="departmentId" /> <!-- 部门ID  -->
+        <result column="regionId" property="regionId" /> <!-- 大区ID -->
+        <result column="branchId" property="branchId" /> <!-- 分公司ID  -->
 		<result column="referrer" property="referrer" /> <!-- 推荐人 -->
 		<result column="attribute" property="attribute" /> <!-- 属性-->
 	</resultMap>
@@ -47,7 +50,7 @@
 	<!-- 根据员工username 查询员工信息  -->
 	<select id="queryUserInfoByEmployeeName" resultMap="UserInfoMapResult" parameterType="java.lang.String">
 		SELECT u.user_id, u.username, ui.truename,ui.attribute,
-		od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName
+		od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName,od3.id as regionId,od2.id as branchId,od.id as departmentId
 		FROM ht_user u
 		LEFT JOIN ht_user_info ui ON u.user_id= ui.user_id
 		INNER JOIN ht_r_oa_users ou ON u.user_id= ou.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
@@ -63,7 +66,7 @@
 	<!-- 根据非员工客户username 查询客户信息  -->
 	<select id="queryUserInfoByName" resultMap="UserInfoMapResult" parameterType="java.lang.String">
 		SELECT u.user_id, u.username, ui.truename,ui.attribute,
-		od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName
+		od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName,od3.id as regionId,od2.id as branchId,od.id as departmentId
 		FROM ht_user u
 		LEFT JOIN ht_user_info ui ON u.user_id= ui.user_id
 		LEFT JOIN ht_spreads_user su ON u.user_id= su.user_id
@@ -81,7 +84,7 @@
 	<!-- 根据员工user_id 查询员工信息  -->
 	<select id="queryUserInfoByUserId" resultMap="UserInfoMapResult" parameterType="java.lang.String">
 		SELECT u.user_id, u.username, ui.truename,u.mobile,ui.attribute,
-		od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName
+		od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName,od3.id as regionId,od2.id as branchId,od.id as departmentId
 		FROM ht_user u
 		LEFT JOIN ht_user_info ui ON u.user_id= ui.user_id
 		LEFT JOIN ht_r_oa_users ou ON u.user_id= ou.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')
@@ -98,7 +101,7 @@
 	<!-- 根据员username 查询员工信息  -->
 	<select id="queryUserDepartmentInfoByUserName" resultMap="UserInfoMapResult" parameterType="java.lang.String">
 		SELECT u.user_id, u.username, ui.truename,u.mobile,ui.attribute,
-		od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName
+		od3.`name` as regionName, od2.`name` as branchName, od.`name` as departmentName,od3.id as regionId,od2.id as branchId,od.id as departmentId
 		FROM ht_users u
 		LEFT JOIN ht_user_info ui ON u.user_id= ui.user_id
 		LEFT JOIN ht_crm.oa_users ou ON u.user_id= ou.hyd_id AND ou.user_status IN ('E', 'Q1', 'Q11', 'Q2', 'Q21')

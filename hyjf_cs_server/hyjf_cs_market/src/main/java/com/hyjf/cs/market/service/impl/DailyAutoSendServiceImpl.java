@@ -79,7 +79,8 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
         String fileName = "销售日报-" + dateStr + ".xlsx";
         String[] fileNames = {fileName};
         // 将excel作为附件
-        InputStreamSource is = this.drawExcel(dateStr);
+//        InputStreamSource is = this.drawExcel(dateStr);
+        byte[] is = this.drawExcel(dateStr);
 
         logger.info("开始发送销售日报邮件>>>>>>>>>>>>>>>>>>>>>toEmail:" + JSONObject.toJSONString(toEmail) + "");
         // 邮件内容
@@ -103,7 +104,7 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
      * @param dateStr
      * @return
      */
-    private InputStreamSource drawExcel(String dateStr) {
+    private byte[] drawExcel(String dateStr) {
         // 表格sheet名称
         String sheetName = "销售数据日报表";
         String[] titles = new String[]{"序号", "一级分部", "二级分部", "门店数量", "本月累计规模业绩", "本月累计已还款", "上月对应累计规模业绩", "环比增速",
@@ -190,15 +191,16 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
         }
 
         InputStreamSource is = null;
+        ByteArrayOutputStream os =null;
         try {
-            ByteArrayOutputStream os = new ByteArrayOutputStream(1024);
+            os = new ByteArrayOutputStream(1024);
             workbook.write(os);
             is = new ByteArrayResource(os.toByteArray());
             os.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return is;
+        return os.toByteArray();
     }
 
     /**

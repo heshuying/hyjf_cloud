@@ -102,7 +102,7 @@ public class HjhCommissionController extends BaseController{
 	@ApiOperation(value = "汇计划提成列表查询", notes = "汇计划提成列表查询")
 	@PostMapping(value = "/search")
 	@ResponseBody
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<ListResult<HjhCommissionCustomizeVO>> init(HttpServletRequest request, @RequestBody @Valid HjhCommissionViewRequest viewRequest) {
 		// 初始化原子层请求实体
 		HjhCommissionRequest form = new HjhCommissionRequest();
@@ -138,7 +138,7 @@ public class HjhCommissionController extends BaseController{
 	@ApiOperation(value = "汇计划提成列表 加入金额/提成金额 累计", notes = "汇计划提成列表 加入金额/提成金额 累计")
 	@PostMapping(value = "/sum")
 	@ResponseBody
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public JSONObject getSumTotal(HttpServletRequest request, @RequestBody @Valid HjhCommissionViewRequest viewRequest) {
 		JSONObject jsonObject = new JSONObject();
 		// 初始化原子层请求实体
@@ -443,7 +443,7 @@ public class HjhCommissionController extends BaseController{
 		// 表格sheet名称
 		String sheetName = "智投服务提成列表";
 		// 文件名称
-		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
 		// 声明一个工作薄
 		SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
 		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();

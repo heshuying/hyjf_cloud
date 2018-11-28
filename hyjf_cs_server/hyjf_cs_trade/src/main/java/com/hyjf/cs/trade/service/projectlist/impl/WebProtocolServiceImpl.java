@@ -728,10 +728,10 @@ public class WebProtocolServiceImpl implements WebProtocolService {
             resultMap.put("creditTender", creditTender);
             if (borrow != null) {
                 if (borrow.getReverifyTime() != null) {
-                    borrow.setReverifyTime(GetDate.getDateMyTimeInMillis(Integer.parseInt(borrow.getReverifyTime())));
+                    borrow.setReverifyTimeStr(GetDate.getDateMyTimeInMillis(borrow.getReverifyTime()));
                 }
                 if (borrow.getRepayLastTime() != null) {
-                    borrow.setRepayLastTime(GetDate.getDateMyTimeInMillis(Integer.parseInt(borrow.getRepayLastTime())));
+                    borrow.setRepayLastTimeStr(GetDate.getDateMyTimeInMillis(borrow.getRepayLastTime()));
                 }
                 resultMap.put("borrow", borrow);
                 // 获取借款人信息
@@ -924,10 +924,10 @@ public class WebProtocolServiceImpl implements WebProtocolService {
 
             if (borrow != null) {
                 if (borrow.getReverifyTime() != null) {
-                    borrow.setReverifyTime(GetDate.getDateMyTimeInMillis(Integer.parseInt(borrow.getReverifyTime())));
+                    borrow.setReverifyTime(borrow.getReverifyTime());
                 }
                 if (borrow.getRepayLastTime() != null) {
-                    borrow.setRepayLastTime(GetDate.getDateMyTimeInMillis(Integer.parseInt(borrow.getRepayLastTime())));
+                    borrow.setRepayLastTime(borrow.getRepayLastTime());
                 }
                 resultMap.put("borrow", borrow);
                 // 获取借款人信息
