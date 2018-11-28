@@ -615,7 +615,7 @@
 		    ht_borrow b
 			INNER JOIN ht_borrow_info binfo ON b.borrow_nid = binfo.borrow_nid
 			LEFT JOIN ht_borrow_style bs ON bs.nid = b.borrow_style
-			LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = CAST(binfo.project_type AS CHAR)
+			LEFT JOIN ht_borrow_project_type bpt ON bpt.borrow_cd = binfo.project_type
 		WHERE
 			b.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 	</select>
