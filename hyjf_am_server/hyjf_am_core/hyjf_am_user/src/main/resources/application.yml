@@ -1,7 +1,7 @@
 eureka:
   client:
     serviceUrl:
-      defaultZone: ${EUREKA.CLIENT.SERVICEURL}
+      defaultZone: http://microserver1:1111/eureka,http://microserver2:1111/eureka
   instance:
     preferIpAddress: true
 

@@ -3,15 +3,17 @@ spring:
     name: AM-USER
   cloud:
     config:
-      uri: http://micoserver:2222/
-      name: am-user
+      discovery:
+        enabled: true
+        serviceId: CONFIG-SERVER
+      failFast: true
   boot:
     admin:
       client:
-        url: ${boot.admin.clientUrl}
+        url: http://MONITOR-SERVER
 # zipkin 监控端点
   zipkin:
-    base-url: http://micoserver:9411
+    base-url: http://ZIPKIN
   sleuth:
     sampler:
     percentage: 0.1
