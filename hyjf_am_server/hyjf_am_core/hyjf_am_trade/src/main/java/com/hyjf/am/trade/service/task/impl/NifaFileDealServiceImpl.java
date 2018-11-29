@@ -143,6 +143,8 @@ public class NifaFileDealServiceImpl extends BaseServiceImpl implements NifaFile
                     FddTemplet fddTemplet = this.selectFddTemplet(nifaContractTemplate.get(0).getTempletNid());
                     if (null != fddTemplet) {
                         httpUrl = fddTemplet.getFileUrl();
+                        // redis设值
+                        RedisUtils.set(key,httpUrl);
                     } else{
                         logger.error("【互金上传文件】:合同模板下载地址为获取到！模板编号：" + nifaContractTemplate.get(0).getTempletNid());
                     }
