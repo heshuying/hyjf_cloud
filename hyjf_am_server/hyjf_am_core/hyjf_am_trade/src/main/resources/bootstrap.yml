@@ -9,6 +9,7 @@ spring:
     name: AM-TRADE
   cloud:
     config:
+      name: AM-TRADE
       discovery:
         enabled: true
         serviceId: CONFIG-SERVER
