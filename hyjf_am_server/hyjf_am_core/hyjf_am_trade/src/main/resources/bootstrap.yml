@@ -10,6 +10,7 @@ spring:
   cloud:
     config:
       name: AM-TRADE
+      profile: {spring.profiles.active}
       discovery:
         enabled: true
         serviceId: CONFIG-SERVER
