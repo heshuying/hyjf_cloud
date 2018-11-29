@@ -4,6 +4,7 @@
 package com.hyjf.admin.controller.exception.autotenderexception;
 
 import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.AutoTenderExceptionRequestBean;
 import com.hyjf.admin.beans.request.BorrowInvestRequestBean;
 import com.hyjf.admin.beans.request.TenderExceptionSolveRequestBean;
@@ -18,11 +19,15 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AutoTenderExceptionService;
 import com.hyjf.admin.service.BorrowInvestService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AutoTenderExceptionResponse;
+import com.hyjf.am.resquest.admin.AssetExceptionRequest;
 import com.hyjf.am.resquest.admin.AutoTenderExceptionRequest;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.vo.admin.AdminPlanAccedeListCustomizeVO;
+import com.hyjf.am.vo.admin.AssetExceptionCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -34,6 +39,7 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +50,7 @@ import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author nixiaoling
@@ -121,8 +128,7 @@ public class AutoTenderExceptionController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "汇计划投资异常记录列表导出", notes = "汇计划投资异常录列表导出")
-    @PostMapping(value = "/exportregist")
+
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody AutoTenderExceptionRequestBean autoTenderExceptionRequestBean) throws Exception {
         AutoTenderExceptionRequest autoTenderExceptionRequest = new AutoTenderExceptionRequest();
         BeanUtils.copyProperties(autoTenderExceptionRequestBean, autoTenderExceptionRequest);
@@ -272,5 +278,112 @@ public class AutoTenderExceptionController extends BaseController {
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
     }
+    @ApiOperation(value = "汇计划投资异常记录列表导出", notes = "汇计划投资异常录列表导出")
+    @PostMapping(value = "/exportregist")
+	 public void exportToExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody AutoTenderExceptionRequestBean autoTenderExceptionRequestBean) throws Exception {
+	        //sheet默认最大行数
+	        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+	        // 表格sheet名称
+	        String sheetName = "加入明细";
+	        // 文件名称
+	        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
+	        // 声明一个工作薄
+	        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+	        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+	        AutoTenderExceptionRequest autoTenderExceptionRequest = new AutoTenderExceptionRequest();
+	        BeanUtils.copyProperties(autoTenderExceptionRequestBean, autoTenderExceptionRequest);
+	        autoTenderExceptionRequest.setLimitFlg(true);
+	        AutoTenderExceptionResponse autoTenderExceptionResponse = autoTenderExceptionService.selectAccedeRecordList(autoTenderExceptionRequest);
+	        List<AdminPlanAccedeListCustomizeVO> resultList  = new ArrayList<AdminPlanAccedeListCustomizeVO>();
+	        if(null!=autoTenderExceptionResponse){
+	            resultList = autoTenderExceptionResponse.getResultList();
+	        }
+	        
+	        Integer totalCount = resultList.size();
 
+	        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+	        Map<String, String> beanPropertyColumnMap = buildMap();
+	        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+	        String sheetNameTmp = sheetName + "_第1页";
+	        if (totalCount == 0) {
+	        	
+	            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+	        }else {
+	            // 当前下载数据超过一页上限
+	            if(defaultRowMaxCount < resultList.size()) {
+                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList.subList(0, defaultRowMaxCount));
+                 for (int i = 1; i < sheetCount; i++) {
+                     sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                     helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList.subList(defaultRowMaxCount * i, defaultRowMaxCount * (i + 1)));
+                 }
+             } else {
+                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList.subList(0, resultList.size()));
+             }
+         }
+	        
+	        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+	    }
+	    private Map<String, String> buildMap() {
+	        Map<String, String> map = Maps.newLinkedHashMap();
+	        map.put("planOrderId", "智投订单号");
+	        map.put("debtPlanNid", "智投编号");
+	        map.put("debtLockPeriodExcel", "服务回报期限");
+	        map.put("userName", "用户名");
+	        map.put("accedeAccount", "授权服务金额");
+	        map.put("alreadyInvest", "已投资金额(元)");
+	        map.put("waitTotal", "待还总额(元)");
+	        map.put("waitCaptical", "待还本金(元)");
+	        map.put("waitInterest", "待还利息(元)");
+	        map.put("platform", "操作平台");
+	        map.put("orderStatus", "订单状态");
+	        map.put("countInterestTime", "开始计息时间");
+	        map.put("createTime", "授权服务时间");
+	        return map;
+	    }
+	    private Map<String, IValueFormatter> buildValueAdapter() {
+	        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+	        IValueFormatter platformAdapter = new IValueFormatter() {
+	            @Override
+	            public String format(Object object) {
+	            	String platform = (String) object;
+	                   if ("0".equals(platform)) {
+                           return "PC";
+                       } else if ("1".equals(platform)) {
+                    	   return"微官网";
+                       } else if ("2".equals(platform)) {
+                    	   return"android";
+                       } else if ("3".equals(platform)) {
+                    	   return"ios";
+                       }else {
+                    	   return "";
+                       }
+	             
+	            }
+	        };
+	        IValueFormatter orderStatusAdapter = new IValueFormatter() {
+	            @Override
+	            public String format(Object object) {
+	            	String orderStatus = (String) object;
+                    if (0 == Integer.parseInt(orderStatus)) {
+                        return"自动投标中";
+                    } else if (2 == Integer.parseInt(orderStatus)) {
+                        return"自动投标成功";
+                    } else if (3 == Integer.parseInt(orderStatus)) {
+                        return"锁定中";
+                    } else if (5 == Integer.parseInt(orderStatus)) {
+                        return"退出中";
+                    } else if (7 == Integer.parseInt(orderStatus)) {
+                        return"已退出";
+                    } else if (99 == Integer.parseInt(orderStatus)) {
+                        return"自动投资异常";
+                    } else{
+                        return orderStatus;
+                    }
+	             
+	            }
+	        };
+	        mapAdapter.put("platform", platformAdapter);
+	        mapAdapter.put("orderStatus", orderStatusAdapter);
+	        return mapAdapter;
+	    }
 }
