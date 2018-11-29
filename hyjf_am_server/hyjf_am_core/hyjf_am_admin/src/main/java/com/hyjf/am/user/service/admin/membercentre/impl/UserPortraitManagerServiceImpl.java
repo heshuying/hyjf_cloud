@@ -208,7 +208,7 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
                         customize.setCustomerSource(20);
                     }
                     if (usersPortrait.getAttribute() != null && usersPortrait.getAttribute() == 1) {
-                        customize.setCustomerSource(20);
+                        customize.setCustomerSource(100);
                     }
 
                     //投资进程评分
