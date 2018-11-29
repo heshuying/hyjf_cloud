@@ -1,17 +1,18 @@
 spring:
   application:
     name: MONITOR-SERVER
-  cloud: 
+  cloud:
    config:
-      uri: http://micoserver:2222/
-      name: monitor-server
+      discovery:
+        enabled: true
+        serviceId: CONFIG-SERVER
+      failFast: true
   profiles:
     active: dev
   security:
     user:
       name: "hyjf"
       password: "hyjf1234"
-
 
 server:
   port: 18080
@@ -24,7 +25,10 @@ eureka:
       #These two are needed so that the server can access the protected client endpoints
       user.name: "hyjf"
       user.password: "hyjf1234"
-
+  client:
+    registryFetchIntervalSeconds: 5
+    serviceUrl:
+       defaultZone: http://microserver1:1111/eureka,http://microserver2:1111/eureka
 management:
   endpoints:
     web:

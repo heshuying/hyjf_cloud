@@ -139,6 +139,7 @@ public class AdminPlanAccedeListCustomizeVO {
 	 * 返回错误信息
 	 */
 	private String respDesc;
+	private String debtLockPeriodExcel;
 	
 	/**
 	 * 推荐人部门信息
@@ -807,4 +808,17 @@ public class AdminPlanAccedeListCustomizeVO {
 	public void setSumFairValue(String sumFairValue) {
 		this.sumFairValue = sumFairValue;
 	}
+	public String getDebtLockPeriodExcel() {
+		String dateUnit="";
+        if (isMonth==0){
+            dateUnit="天";
+        }else if(isMonth==1){
+            dateUnit="个月";
+        }
+		return debtLockPeriod+dateUnit;
+	}
+	public void setDebtLockPeriodExcel(String debtLockPeriodExcel) {
+		this.debtLockPeriodExcel = debtLockPeriodExcel;
+	}
+	
 }

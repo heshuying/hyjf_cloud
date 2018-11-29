@@ -1,8 +1,10 @@
 package com.hyjf.am.vo.trade;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.hyjf.common.util.GetDate;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -11,9 +13,6 @@ import java.util.Date;
  */
 
 public class DataSearchCustomizeVO implements Serializable {
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
-    private Date reg_time;
-
     private String username;
     private String truename;
     private String mobile;
@@ -27,14 +26,36 @@ public class DataSearchCustomizeVO implements Serializable {
     private String money="0";
     private String  reffername="无";
     private String reffermobile="无";
-
+    private Integer userId;
+    private String nid;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    private Date reg_time;
     @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
     private Date addtimes;
+    private String regTimeT;
+    private String addtimesT;
 
-    private Integer userId;
+    public String getRegTimeT() {
+        if (reg_time != null) {
+            regTimeT = GetDate.date2Str(reg_time, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        }
+        return regTimeT;
+    }
 
-    private String nid;
+    public void setRegTimeT(String regTimeT) {
+        this.regTimeT = regTimeT;
+    }
 
+    public String getAddtimesT() {
+        if (addtimes != null) {
+            addtimesT = GetDate.date2Str(addtimes, new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
+        }
+        return addtimesT;
+    }
+
+    public void setAddtimesT(String addtimesT) {
+        this.addtimesT = addtimesT;
+    }
 
     public String getUsername() {
         return username;

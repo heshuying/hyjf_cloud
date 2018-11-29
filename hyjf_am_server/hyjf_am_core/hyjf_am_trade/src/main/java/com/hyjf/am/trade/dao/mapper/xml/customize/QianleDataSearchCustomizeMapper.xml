@@ -22,11 +22,17 @@
         <foreach collection="userList" item="listItem" open="(" close=")" separator="," >
             #{listItem}
         </foreach>
-       <if test="regTimeStart != null and regTimeEnd != null">
-            and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
+       <if test="regTimeStart != null ">
+            and t2.create_time&gt;= #{regTimeStart}
         </if>
-        <if test="addTimeStart != null and addTimeEnd != null">
-            AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
+        <if test="regTimeEnd != null">
+            and   t2.create_time &lt;= #{regTimeEnd}
+        </if>
+        <if test="addTimeStart != null ">
+            AND t1.create_time &gt;=  #{addTimeStart}
+        </if>
+        <if test="addTimeEnd != null">
+             AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
         <if test="truename != null and truename !='' ">
             AND   t2.truename=#{truename}
@@ -55,11 +61,17 @@
         <foreach collection="userList" item="listItem" open="(" close=")" separator="," >
             #{listItem}
         </foreach>
-        <if test="regTimeStart != null and regTimeEnd != null">
-            and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
+        <if test="regTimeStart != null ">
+            and t2.create_time&gt;= #{regTimeStart}
         </if>
-        <if test="addTimeStart != null and addTimeEnd != null">
-            AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
+        <if test="regTimeEnd != null">
+            and   t2.create_time &lt;= #{regTimeEnd}
+        </if>
+        <if test="addTimeStart != null ">
+            AND t1.create_time &gt;=  #{addTimeStart}
+        </if>
+        <if test="addTimeEnd != null">
+            AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
         <if test="truename != null and truename !='' ">
             AND   t2.truename=#{truename}
@@ -92,11 +104,17 @@
             #{listItem}
         </foreach>
 
-        <if test="regTimeStart != null and regTimeEnd != null">
-            and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
+        <if test="regTimeStart != null ">
+            and t2.create_time&gt;= #{regTimeStart}
         </if>
-        <if test="addTimeStart != null and addTimeEnd != null">
-            AND t1.create_time &gt;= #{addTimeStart} AND t1.create_time &lt;= #{addTimeEnd}
+        <if test="regTimeEnd != null">
+            and   t2.create_time &lt;= #{regTimeEnd}
+        </if>
+        <if test="addTimeStart != null ">
+            AND t1.create_time &gt;=  #{addTimeStart}
+        </if>
+        <if test="addTimeEnd != null">
+            AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
         <if test="truename != null and truename !='' ">
             AND   t2.truename=#{truename}
@@ -119,11 +137,17 @@
         <foreach collection="userList" item="listItem" open="(" close=")" separator="," >
             #{listItem}
         </foreach>
-        <if test="regTimeStart != null and regTimeEnd != null">
-            and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
+        <if test="regTimeStart != null ">
+            and t2.create_time&gt;= #{regTimeStart}
         </if>
-        <if test="addTimeStart != null and addTimeEnd != null">
-            AND t1.create_time &gt;= #{addTimeStart} AND t1.create_time &lt;= #{addTimeEnd}
+        <if test="regTimeEnd != null">
+            and   t2.create_time &lt;= #{regTimeEnd}
+        </if>
+        <if test="addTimeStart != null ">
+            AND t1.create_time &gt;=  #{addTimeStart}
+        </if>
+        <if test="addTimeEnd != null">
+            AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
         <if test="truename != null and truename !='' ">
             AND   t2.truename=#{truename}
@@ -155,8 +179,17 @@
         <foreach collection="userList" item="listItem" open="(" close=")" separator="," >
             #{listItem}
         </foreach>
-        <if test="addTimeStart != null and addTimeEnd != null">
-            AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
+        <if test="regTimeStart != null ">
+            and t2.create_time&gt;= #{regTimeStart}
+        </if>
+        <if test="regTimeEnd != null">
+            and   t2.create_time &lt;= #{regTimeEnd}
+        </if>
+        <if test="addTimeStart != null ">
+            AND t1.create_time &gt;=  #{addTimeStart}
+        </if>
+        <if test="addTimeEnd != null">
+            AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
         <if test="truename != null and truename !='' ">
             AND   t2.truename=#{truename}
@@ -186,11 +219,17 @@
         <foreach collection="userList" item="listItem" open="(" close=")" separator="," >
             #{listItem}
         </foreach>
-        <if test="regTimeStart != null and regTimeEnd != null">
-            and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
+        <if test="regTimeStart != null ">
+            and t2.create_time&gt;= #{regTimeStart}
         </if>
-        <if test="addTimeStart != null and addTimeEnd != null">
-            AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
+        <if test="regTimeEnd != null">
+            and   t2.create_time &lt;= #{regTimeEnd}
+        </if>
+        <if test="addTimeStart != null ">
+            AND t1.create_time &gt;=  #{addTimeStart}
+        </if>
+        <if test="addTimeEnd != null">
+            AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
         <if test="truename != null and truename !='' ">
             AND   t2.truename=#{truename}
@@ -225,11 +264,17 @@
         <foreach collection="userList" item="listItem" open="(" close=")" separator="," >
             #{listItem}
         </foreach>
-        <if test="regTimeStart != null and regTimeEnd != null">
-            and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
+        <if test="regTimeStart != null ">
+            and t2.create_time&gt;= #{regTimeStart}
         </if>
-        <if test="addTimeStart != null and addTimeEnd != null">
-            AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
+        <if test="regTimeEnd != null">
+            and   t2.create_time &lt;= #{regTimeEnd}
+        </if>
+        <if test="addTimeStart != null ">
+            AND t1.create_time &gt;=  #{addTimeStart}
+        </if>
+        <if test="addTimeEnd != null">
+            AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
         <if test="truename != null and truename !='' ">
             AND   t2.truename=#{truename}
@@ -261,11 +306,17 @@
         <foreach collection="userList" item="listItem" open="(" close=")" separator="," >
             #{listItem}
         </foreach>
-        <if test="regTimeStart != null and regTimeEnd != null">
-            and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
+        <if test="regTimeStart != null ">
+            and t2.create_time&gt;= #{regTimeStart}
         </if>
-        <if test="addTimeStart != null and addTimeEnd != null">
-            AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
+        <if test="regTimeEnd != null">
+            and   t2.create_time &lt;= #{regTimeEnd}
+        </if>
+        <if test="addTimeStart != null ">
+            AND t1.create_time &gt;=  #{addTimeStart}
+        </if>
+        <if test="addTimeEnd != null">
+            AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
         <if test="truename != null and truename !='' ">
             AND   t2.truename=#{truename}
@@ -331,11 +382,17 @@
         <foreach collection="userList" item="listItem" open="(" close=")" separator="," >
             #{listItem}
         </foreach>
-        <if test="regTimeStart != null and regTimeEnd != null">
-            and t2.create_time &gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
+        <if test="regTimeStart != null ">
+            and t2.create_time&gt;= #{regTimeStart}
         </if>
-        <if test="addTimeStart != null and addTimeEnd != null">
-            AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
+        <if test="regTimeEnd != null">
+            and   t2.create_time &lt;= #{regTimeEnd}
+        </if>
+        <if test="addTimeStart != null ">
+            AND t1.create_time &gt;=  #{addTimeStart}
+        </if>
+        <if test="addTimeEnd != null">
+            AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
         <if test="truename != null and truename !='' ">
             AND   t2.truename=#{truename}
@@ -400,11 +457,17 @@
         <foreach collection="userList" item="listItem" open="(" close=")" separator="," >
             #{listItem}
         </foreach>
-        <if test="regTimeStart != null and regTimeEnd != null">
-            and t2.create_time&gt;= #{regTimeStart} and t2.create_time &lt;= #{regTimeEnd}
+        <if test="regTimeStart != null ">
+            and t2.create_time&gt;= #{regTimeStart}
         </if>
-        <if test="addTimeStart != null and addTimeEnd != null">
-            AND t1.create_time &gt;=  #{addTimeStart} AND t1.create_time  &lt;=  #{addTimeEnd}
+        <if test="regTimeEnd != null">
+            and   t2.create_time &lt;= #{regTimeEnd}
+        </if>
+        <if test="addTimeStart != null ">
+            AND t1.create_time &gt;=  #{addTimeStart}
+        </if>
+        <if test="addTimeEnd != null">
+            AND t1.create_time  &lt;=  #{addTimeEnd}
         </if>
         <if test="truename != null and truename !='' ">
             AND   t2.truename=#{truename}

@@ -10,8 +10,19 @@ import com.hyjf.am.resquest.trade.DataSearchRequest;
  */
 
 public interface DataSearchService {
+    /**
+     * 查询千乐数据
+     * @param dataSearchRequest
+     * @return
+     */
     DataSearchCustomizeResponse findDataList(DataSearchRequest dataSearchRequest);
 
+    /**
+     * 查询千乐导出数据
+     * @param dataSearchRequest
+     * @return
+     */
+    DataSearchCustomizeResponse findExportDataList(DataSearchRequest dataSearchRequest);
     /**
      * 验证手机号
      * @param mobile

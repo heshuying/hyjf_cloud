@@ -170,18 +170,23 @@ public class AboutUsController extends BaseController {
 
 		// ID不 能为空
 		if (id <= 0 || id == null){
-			result.setStatus(WebResult.ERROR);
-			result.setStatusDesc(WebResult.ERROR_DESC);
+			result.setStatus("404");
+			result.setStatusDesc("未找到数据");
 			return result;
 		}
 
 		try {
 			EventVO eventVO = this.aboutUsService.getEventDetailById(id);
+			if(eventVO == null){
+				result.setStatus("404");
+				result.setStatusDesc("未找到数据");
+				return result;
+			}
 			resultMap.put("eventNotice", eventVO);
 			result.setData(resultMap);
 		}catch (Exception e){
-			result.setStatus(WebResult.ERROR);
-			result.setStatusDesc(WebResult.ERROR_DESC);
+			result.setStatus("404");
+			result.setStatusDesc("未找到数据");
 		}
 		return result;
 	}
@@ -194,13 +199,19 @@ public class AboutUsController extends BaseController {
 		Map<String, Object> resultMap = new HashMap<>();
 		try {
 			ContentArticleVO contentArticleVO = aboutUsService.getNoticeInfo(id);
-			resultMap.put("companyNotice", contentArticleVO);
-			result.setData(resultMap);
+
+			if(contentArticleVO == null){
+				result.setStatus("404");
+				result.setStatusDesc("未找到数据");
+			}else{
+				resultMap.put("companyNotice", contentArticleVO);
+				result.setData(resultMap);
+			}
 			return result;
 		} catch (Exception e) {
 			logger.error("web端获取网站公告列表失败...", e);
-			result.setStatus(WebResult.ERROR);
-			result.setStatusDesc(WebResult.ERROR_DESC);
+			result.setStatus("404");
+			result.setStatusDesc("未找到数据");
 			return result;
 		}
 	}
@@ -387,6 +398,10 @@ public class AboutUsController extends BaseController {
 			}
 		}
 		webResult = new WebResult(mediaReport);
+		if(mediaReport == null){
+			webResult.setStatus("404");
+			webResult.setStatusDesc("未找到数据");
+		}
 		return webResult;
 	}
 
@@ -407,7 +422,12 @@ public class AboutUsController extends BaseController {
 				mediaReport.setContent(mediaReport.getContent().replaceAll("src=\"/", "src=\"" + webUrl) + "//");
 			}
 		}
+
 		webResult = new WebResult(mediaReport);
+		if(mediaReport == null){
+			webResult.setStatus("404");
+			webResult.setStatusDesc("未找到数据");
+		}
 		return webResult;
 	}
 

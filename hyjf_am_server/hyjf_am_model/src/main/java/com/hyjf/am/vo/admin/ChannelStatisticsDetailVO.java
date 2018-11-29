@@ -72,8 +72,17 @@ public class ChannelStatisticsDetailVO extends BaseVO implements Serializable {
      * 首次投资标的的项目期限
      */
     private String investProjectPeriod;
+    private String cumulativeInvestExcel;
+    
+    public String getCumulativeInvestExcel() {
+		return cumulativeInvest.add(htjInvest).add(hzrInvest).toString();
+	}
 
-    /**
+	public void setCumulativeInvestExcel(String cumulativeInvestExcel) {
+		this.cumulativeInvestExcel = cumulativeInvestExcel;
+	}
+
+	/**
      * 检索条件 limitStart
      */
     private int limitStart = -1;

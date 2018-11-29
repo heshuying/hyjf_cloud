@@ -2245,7 +2245,9 @@ public class BorrowCommonController extends BaseController {
 	            @Override
 	            public String format(Object object) {
 	            	Integer status = (Integer) object;
-	                if(status==0) {
+	            	if(status==null){
+	            		return "";
+	            	}else if(status==0) {
 	                	return "备案中";
 	                }else if(status==1) {
 	                	return "初审中";

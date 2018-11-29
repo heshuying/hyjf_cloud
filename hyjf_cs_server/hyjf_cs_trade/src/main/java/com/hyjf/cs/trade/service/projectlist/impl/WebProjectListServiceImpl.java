@@ -3,6 +3,9 @@ package com.hyjf.cs.trade.service.projectlist.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.alicp.jetcache.anno.CacheRefresh;
+import com.alicp.jetcache.anno.CacheType;
+import com.alicp.jetcache.anno.Cached;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.*;
@@ -59,6 +62,7 @@ import org.springframework.util.CollectionUtils;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 /**
  * web端项目列表Service实现类
@@ -1173,6 +1177,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
      * @date 2018/6/19 16:33
      */
     @Override
+	@Cached(name="webPlanZoneTotalInvestAndInterestCacheOnly-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+	@CacheRefresh(refresh = 30, stopRefreshAfterLastAccess = 30, timeUnit = TimeUnit.MINUTES)
     public WebResult searchPlanData(ProjectListRequest request) {
         TotalInvestAndInterestResponse response = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL, TotalInvestAndInterestResponse.class);
         TotalInvestAndInterestVO totalInvestAndInterestVO = response.getResult();

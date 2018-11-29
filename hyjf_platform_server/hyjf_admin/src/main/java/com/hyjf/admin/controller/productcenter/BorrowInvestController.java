@@ -599,6 +599,19 @@ public class BorrowInvestController extends BaseController {
     }
 
     /**
+     * 重发协议
+     *
+     * @param investorRequest
+     * @return
+     */
+    @ApiOperation(value = "重发协议", notes = "重发协议")
+    @PostMapping("/resend_agreement")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT_AGREEMENT)
+    public AdminResult resendAgreement(@RequestBody InvestorRequest investorRequest) {
+        return borrowInvestService.resendAgreement(investorRequest);
+    }
+
+    /**
      * 运营记录-投资明细
      *
      * @param requestBean
