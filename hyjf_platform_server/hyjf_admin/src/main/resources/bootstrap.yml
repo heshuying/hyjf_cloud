@@ -3,15 +3,17 @@ spring:
     name: ADMIN
   cloud:
     config:
-      uri: http://micoserver:2222/
-      name: admin
+      discovery:
+        enabled: true
+        serviceId: CONFIG-SERVER
+      failFast: true
   boot:
     admin:
       client:
-        url: ${boot.admin.clientUrl}
+        url: http://MONITOR-SERVER
 # zipkin 监控端点
   zipkin: 
-    base-url: http://micoserver:9411
+    base-url: http://ZIPKIN
   sleuth:
     sampler:
     percentage: 0.1
@@ -22,7 +24,7 @@ spring:
 eureka:
   client:
     serviceUrl:
-      defaultZone: ${EUREKA.CLIENT.SERVICEURL}
+      defaultZone: http://microserver1:1111/eureka,http://microserver2:1111/eureka
   instance:
     preferIpAddress: true
 
