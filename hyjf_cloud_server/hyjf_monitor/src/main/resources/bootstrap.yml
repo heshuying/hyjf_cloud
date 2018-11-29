@@ -6,7 +6,7 @@ spring:
       discovery:
         enabled: true
         serviceId: CONFIG-SERVER
-   failFast: true
+      failFast: true
   profiles:
     active: dev
   security:
