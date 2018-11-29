@@ -414,7 +414,8 @@ public class AssetListController extends BaseController {
         map.put("account", "借款金额（元）");
         map.put("borrowPeriod", "借款期限");
         map.put("borrowStyleName", "还款方式");
-        map.put("status", "审核状态");
+        map.put("verifyStatus", "审核状态");
+        map.put("status", "项目状态");
         map.put("labelName", "标的标签");
         map.put("recieveTime", "推送时间");
         return map;
