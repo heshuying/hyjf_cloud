@@ -427,7 +427,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
     @Override
     public AdminResult sendAgreement(InvestorRequest investorRequest) {
         //发送协议字段校验
-        String checkResult = this.checkSendAgreement(investorRequest);
+        String checkResult = this.checkSendAgreement(investorRequest, 0);
         if (!OK.equals(checkResult)) {
             return new AdminResult(BaseResult.FAIL, checkResult);
         }
@@ -435,7 +435,37 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
         String nid = investorRequest.getNid();
         String borrowNid = investorRequest.getBorrowNid();
         String email = investorRequest.getEmail();
+        //发送协议，异常时有返回信息
         String msg = this.resendMessageAction(userId, nid, borrowNid, email);
+
+        if (msg == null) {
+            return new AdminResult();
+        } else if (!"系统异常".equals(msg)) {
+            return new AdminResult(BaseResult.FAIL, msg);
+        } else {
+            return new AdminResult(BaseResult.FAIL, "异常纪录，请刷新后重试");
+        }
+    }
+
+    /**
+     * 重发协议
+     *
+     * @param investorRequest
+     * @return
+     */
+    @Override
+    public AdminResult resendAgreement(InvestorRequest investorRequest) {
+        //发送协议字段校验
+        String checkResult = this.checkSendAgreement(investorRequest, 1);
+        if (!OK.equals(checkResult)) {
+            return new AdminResult(BaseResult.FAIL, checkResult);
+        }
+
+        String userId = investorRequest.getUserId();
+        String nid = investorRequest.getNid();
+        String borrowNid = investorRequest.getBorrowNid();
+        //发送协议，异常时有返回信息
+        String msg = this.resendMessageAction(userId, nid, borrowNid, null);
 
         if (msg == null) {
             return new AdminResult();
@@ -617,8 +647,8 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                     }
                 }
             } else {
-                logger.error("标的信息异常（0条或者大于1条信息）,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。");
-                return "标的信息异常（0条或者大于1条信息）,下载汇盈金服互联网金融服务平台居间服务协议PDF失败。";
+                logger.error("投资明细发送协议失败，投资订单号：" + nid);
+                return "投资明细发送协议失败";
             }
         } catch (Exception e) {
             logger.error("发送协议失败:", e);
@@ -626,13 +656,22 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
         return "系统异常";
     }
 
-    private String checkSendAgreement(InvestorRequest investorRequest) {
-        //校验邮箱地址
-        if (StringUtils.isBlank(investorRequest.getEmail())) {
-            return "邮箱地址为空！";
-        }
-        if (!Validator.isEmailAddress(investorRequest.getEmail())) {
-            return "邮箱格式不正确！";
+    /**
+     *
+     * @param investorRequest
+     * @param resendFlag 是否重发标识 0否 1是
+     * @return
+     */
+    private String checkSendAgreement(InvestorRequest investorRequest, int resendFlag) {
+        //非重发的情况，校验邮箱
+        if(0 == resendFlag){
+            //校验邮箱地址
+            if (StringUtils.isBlank(investorRequest.getEmail())) {
+                return "邮箱地址为空！";
+            }
+            if (!Validator.isEmailAddress(investorRequest.getEmail())) {
+                return "邮箱格式不正确！";
+            }
         }
         //校验投资订单号与标的编号
         if (StringUtils.isBlank(investorRequest.getNid()) || StringUtils.isBlank(investorRequest.getBorrowNid())) {
