@@ -107,7 +107,7 @@
 		    a.id = #{id, jdbcType=VARCHAR}
 		    AND a.state = '0'
 		    AND a.del_flag = '0'
-		    ORDER BY m.menu_ctrl
+		    ORDER BY m.menu_ctrl collate utf8_bin
 	</select>
 
 	<resultMap id="UserInfoResultMap" type="com.hyjf.am.config.dao.model.customize.AdminSystem">
