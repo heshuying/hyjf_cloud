@@ -24,7 +24,7 @@
         LEFT JOIN ht_borrow_recover re ON bt.id = re.tender_id
         LEFT JOIN ht_account ac ON bt.user_id = ac.user_id
         WHERE 1=1
-        <if test="instCode != null and instCode !=null" >
+        <if test="instCode != null and instCode !=''" >
             AND info.inst_code = #{instCode}
         </if>
         <if test="startTime != null and startTime != ''">
