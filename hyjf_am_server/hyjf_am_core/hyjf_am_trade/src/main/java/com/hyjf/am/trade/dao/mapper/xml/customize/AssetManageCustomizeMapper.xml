@@ -129,7 +129,7 @@
 		INNER JOIN ht_borrow_info borrowInfo ON borrowInfo.borrow_nid = hiii.borrow_nid
 		INNER JOIN (select * from ht_increase_interest_loan where user_id=#{userId}
 		) hiil ON hiil.invest_order_id=hiii.order_id
-		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrowInfo.project_type
+		INNER JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = borrow.project_type
 		LEFT JOIN ht_borrow_credit hbc ON hiii.borrow_nid=hbc.tender_nid
 		WHERE borrow.`status` = 4
 		AND hiii.user_id=#{userId}
