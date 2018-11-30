@@ -114,7 +114,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Override
     public Integer updateAction(CategoryVO categoryVO) {
-        return categoryMapper.updateByPrimaryKey(CommonUtils.convertBean(categoryVO,Category.class));
+        return categoryMapper.updateByPrimaryKeySelective(CommonUtils.convertBean(categoryVO,Category.class));
     }
 
     @Override
