@@ -176,6 +176,9 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
         Map<String,Object> params = new HashMap<>();
         params.put("limitStart",request.getLimitStart());
         params.put("limitEnd",request.getLimitEnd());
+        if (StringUtils.isNotBlank(request.getIsHome())){
+            params.put("isHome",request.getIsHome());
+        }
         return webProjectListCustomizeMapper.countWebPlanList(params);
     }
 

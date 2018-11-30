@@ -1178,7 +1178,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
      */
     @Override
 	@Cached(name="webPlanZoneTotalInvestAndInterestCacheOnly-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
-	@CacheRefresh(refresh = 30, stopRefreshAfterLastAccess = 30, timeUnit = TimeUnit.MINUTES)
+	@CacheRefresh(refresh = 10, stopRefreshAfterLastAccess = 10, timeUnit = TimeUnit.MINUTES)
     public WebResult searchPlanData(ProjectListRequest request) {
         TotalInvestAndInterestResponse response = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL, TotalInvestAndInterestResponse.class);
         TotalInvestAndInterestVO totalInvestAndInterestVO = response.getResult();
@@ -1206,8 +1206,9 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
     @Override
     public WebResult searchPlanList(ProjectListRequest request) {
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
-        request.setLimitStart(page.getOffset());
-        request.setLimitEnd(page.getLimit());
+        request.setLimitStart(0);
+        request.setLimitEnd(4);
+        request.setIsHome("1");
         Integer count = amTradeClient.countPlanList(request);
         WebResult webResult = new WebResult();
         webResult.setData(new ArrayList<>());
