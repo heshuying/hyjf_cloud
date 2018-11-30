@@ -125,12 +125,12 @@ public class ContentArticleServiceImpl implements ContentArticleService {
             request.setStatus(3);
         }
 
-        if (StringUtils.isNotEmpty(request.getStartCreate())) {
-            request.setStartCreateTime(GetDate.str2Timestamp(request.getStartCreate()));
-        }
-        if (StringUtils.isNotEmpty(request.getEndCreate())) {
-            request.setEndCreateTime(GetDate.str2Timestamp(request.getEndCreate()));
-        }
+//        if (StringUtils.isNotEmpty(request.getStartCreate())) {
+//            request.setStartCreateTime(GetDate.str2Timestamp(request.getStartCreate()));
+//        }
+//        if (StringUtils.isNotEmpty(request.getEndCreate())) {
+//            request.setEndCreateTime(GetDate.str2Timestamp(request.getEndCreate()));
+//        }
 
         //查询全部
         request.setLimitStart(-1);
