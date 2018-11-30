@@ -39,7 +39,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -108,10 +107,6 @@ public class BorrowInvestController extends BaseController {
         //查询类赋值
         BorrowInvestRequest borrowInvestRequest = new BorrowInvestRequest();
         BeanUtils.copyProperties(borrowInvestRequestBean, borrowInvestRequest);
-//        //如果是投资明细页面进入 默认近10天数据
-//        if(!"1".equals(borrowInvestRequestBean.getIsOptFlag())){
-//            borrowInvestRequest.setTimeStartSrch(GetDate.date2Str(GetDate.getTodayBeforeOrAfter(-10), new SimpleDateFormat("yyyy-MM-dd")));
-//        }
         BorrowInvestResponseBean responseBean = borrowInvestService.getBorrowInvestList(borrowInvestRequest);
         return new AdminResult(responseBean);
     }
@@ -624,10 +619,6 @@ public class BorrowInvestController extends BaseController {
         //查询类赋值
         BorrowInvestRequest borrowInvestRequest = new BorrowInvestRequest();
         BeanUtils.copyProperties(requestBean, borrowInvestRequest);
-        // 如果是从原始标的跳转过来，不默认时间，否则默认最近10天
-        if (!"1".equals(requestBean.getIsOptFlag())) {
-            borrowInvestRequest.setTimeStartSrch(GetDate.date2Str(GetDate.getTodayBeforeOrAfter(-10), new SimpleDateFormat("yyyy-MM-dd")));
-        }
         BorrowInvestResponseBean responseBean = borrowInvestService.getBorrowInvestList(borrowInvestRequest);
         return new AdminResult(responseBean);
     }
