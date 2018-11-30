@@ -200,7 +200,7 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     public static final int WITHDRAW_STATUS_FAIL = 3;
 
     // EXCEL扩展名
-    public static final String EXCEL_EXT = ".xls";
+    public static final String EXCEL_EXT = ".xlsx";
 
     public static final String FUNCTION_ID = "fid";
 
