@@ -24,10 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -55,13 +52,17 @@ public class IncreaseInterestRepayDetailController extends BaseController {
 	public AdminResult<ListResult<AdminIncreaseInterestRepayCustomizeVO>> search(@RequestBody IncreaseInterestRepayDetailRequest request){
 		IncreaseInterestRepayDetailResponse response = new IncreaseInterestRepayDetailResponse();
 		response = increaseInterestRepayDetaiService.searchPage(request);
+        AdminIncreaseInterestRepayCustomizeVO vo = new AdminIncreaseInterestRepayCustomizeVO();
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
-		}
+		}else{
+		    vo.setSumRepayCapital(response.getSumRepayCapital());
+		    vo.setSumRepayInterest(response.getSumRepayInterest());
+        }
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
-		return new AdminResult<ListResult<AdminIncreaseInterestRepayCustomizeVO>>(ListResult.build(response.getResultList(), response.getTotal() == null ? 0 : response.getTotal())) ;
+		return new AdminResult<ListResult<AdminIncreaseInterestRepayCustomizeVO>>(ListResult.build2(response.getResultList(), response.getTotal() == null ? 0 : response.getTotal(),vo)) ;
 	}
 
 	/**
