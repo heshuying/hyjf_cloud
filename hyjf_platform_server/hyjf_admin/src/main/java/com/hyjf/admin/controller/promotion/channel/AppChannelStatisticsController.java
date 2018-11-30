@@ -109,7 +109,7 @@ public class AppChannelStatisticsController extends BaseController {
         // 表格sheet名称
         String sheetName = "app渠道统计";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 渠道
         String[] utmIds = new String[]{};
         if (Validator.isNotNull(statisticsRequest.getUtmIds())) {

@@ -22,9 +22,6 @@ import java.util.List;
 public class AccountBalanceServiceImpl implements AccountBalanceService {
 
     @Autowired
-    private AmTradeClient client;
-
-    @Autowired
     private CsMessageClient csMessageClient;
 
     /**
@@ -36,7 +33,8 @@ public class AccountBalanceServiceImpl implements AccountBalanceService {
     public HjhInfoAccountBalanceResponse getSearchListByMonth(HjhAccountBalanceRequest request){
         HjhInfoAccountBalanceResponse response = new HjhInfoAccountBalanceResponse();
 
-        Integer count = getHjhAccountBalanceMonthCount(request);
+        HjhInfoAccountBalanceResponse countSum = getHjhAccountBalanceMonthCount(request);
+        int count = countSum.getCount();
         response.setCount(count);
         if (count > 0) {
             //分页参数
@@ -45,9 +43,9 @@ public class AccountBalanceServiceImpl implements AccountBalanceService {
             request.setLimitStart(page.getOffset());
             request.setLimitEnd(page.getLimit());
 
-            List<HjhAccountBalanceVO> voList = csMessageClient.getHjhAccountBalanceMonthCount(request).getRecordList();
+            List<HjhAccountBalanceVO> voList = csMessageClient.getHjhAccountBalanceMonth(request).getRecordList();
             response.setResultList(voList);
-            response.setSum(csMessageClient.getHjhAccountBalanceMonthCount(request).getSum());
+            response.setSum(countSum.getSum());
         }
         return response;
     }
@@ -61,7 +59,8 @@ public class AccountBalanceServiceImpl implements AccountBalanceService {
     public HjhInfoAccountBalanceResponse getSearchListByDay(HjhAccountBalanceRequest request) {
         HjhInfoAccountBalanceResponse response = new HjhInfoAccountBalanceResponse();
 
-        Integer count = csMessageClient.getHjhAccountBalanceDayCount(request).getCount();
+        HjhInfoAccountBalanceResponse countSum = csMessageClient.getHjhAccountBalanceDayCount(request);
+        Integer count = countSum.getCount();
         response.setCount(count);
         if (count > 0) {
             //分页参数
@@ -70,9 +69,9 @@ public class AccountBalanceServiceImpl implements AccountBalanceService {
             request.setLimitStart(page.getOffset());
             request.setLimitEnd(page.getLimit());
 
-            List<HjhAccountBalanceVO> voList = csMessageClient.getHjhAccountBalanceDayCount(request).getRecordList();
+            List<HjhAccountBalanceVO> voList = csMessageClient.getHjhAccountBalanceDay(request).getRecordList();
             response.setResultList(voList);
-            response.setSum(csMessageClient.getHjhAccountBalanceDayCount(request).getSum());
+            response.setSum(countSum.getSum());
         }
         return response;
     }
@@ -83,7 +82,7 @@ public class AccountBalanceServiceImpl implements AccountBalanceService {
      * @return public Integer getHjhAccountBalancecount(HjhAccountBalanceCustomize
      *         entity) {
      */
-    public Integer getHjhAccountBalanceMonthCount(HjhAccountBalanceRequest request) {
+    public HjhInfoAccountBalanceResponse getHjhAccountBalanceMonthCount(HjhAccountBalanceRequest request) {
 
         if (StringUtils.isNotEmpty(request.getAddTimeStart())
                 && StringUtils.isNotEmpty(request.getAddTimeEnd())) {
@@ -96,56 +95,10 @@ public class AccountBalanceServiceImpl implements AccountBalanceService {
             String mo = "-31";
             String mowei= addTimeEnd+mo;
             request.setAddTimeEnd(mowei);
-            try {
-                int count = csMessageClient.getHjhAccountBalanceMonthCount(request).getCount();
-                return count;
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
 
         }
-        // 排序
-        Integer count = csMessageClient
-                .getHjhAccountBalanceMonthCount(request).getCount();
+        HjhInfoAccountBalanceResponse count = csMessageClient.getHjhAccountBalanceMonthCount(request);
         return count;
     }
 
-    @Override
-    public List<HjhAccountBalanceVO> getHjhAccountBalanceList(HjhAccountBalanceRequest request) {
-        if (request.getAddTimeStart() != null
-                && request.getAddTimeEnd() != null) {
-            Date date;
-            try {
-                return client.getHjhAccountBalanceListByDay(request);
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        return client.getHjhAccountBalanceListByDay(request);
-    }
-
-    /**
-     *
-     * 按月查询List集合数据
-     *
-     *
-     */
-    @Override
-    public List<HjhAccountBalanceVO> getHjhAccountBalanceMonthList(
-            HjhAccountBalanceRequest hjhAccountBalanceCustomize) {
-        if (StringUtils.isNotEmpty(hjhAccountBalanceCustomize.getAddTimeStart()) && StringUtils.isNotEmpty(hjhAccountBalanceCustomize.getAddTimeEnd())) {
-            try {
-                List<HjhAccountBalanceVO> hjhAccountBalanceList = client
-                        .getHjhAccountBalanceMonthList(hjhAccountBalanceCustomize);
-                return hjhAccountBalanceList;
-            } catch (Exception e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        List<HjhAccountBalanceVO> list = client
-                .getHjhAccountBalanceMonthList(hjhAccountBalanceCustomize);
-        return list;
-    }
 }

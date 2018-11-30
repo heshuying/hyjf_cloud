@@ -162,7 +162,7 @@ public class PreregistController extends BaseController {
 		// 表格sheet名称
 		String sheetName = "预注册用户";
 		// 文件名称
-		String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+		String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		// 需要输出的结果列表
 
 		 List<AdminPreRegistListVO> recordList = preregistService.getRecordList(aprlr).getResultList();
