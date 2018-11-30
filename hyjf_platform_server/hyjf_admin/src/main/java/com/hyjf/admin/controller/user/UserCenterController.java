@@ -427,7 +427,7 @@ public class UserCenterController extends BaseController {
         // 表格sheet名称
         String sheetName = "会员列表";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         String[] titles = new String[] { "序号", "分公司", "分部", "团队", "用户来源", "用户名", "姓名", "性别", "年龄",
                 "生日","身份证号", "户籍所在地", "手机号码",  "用户角色", "用户属性", "推荐人", "用户状态","银行开户状态",

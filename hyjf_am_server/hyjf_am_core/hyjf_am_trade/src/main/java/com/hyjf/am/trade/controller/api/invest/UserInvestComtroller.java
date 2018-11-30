@@ -28,10 +28,11 @@ public class UserInvestComtroller  extends BaseController {
     @Autowired
     private UserInvestService userInvestService;
     @RequestMapping(value = "/searchRepayList")
-    public ApiRepayListResponse searchhRepayList(@RequestBody @Valid ApiRepayListRequest request){
+    public ApiRepayListResponse searchRepayList(@RequestBody @Valid ApiRepayListRequest request){
         logger.info("request:" +JSONObject.toJSON(request));
         ApiRepayListResponse response = new ApiRepayListResponse();
         String returnCode = Response.FAIL;
+        request.setInstCode("");
         List<ApiRepayListCustomizeVO> manageList = userInvestService.searchRepayList(request);
         if (manageList!=null && manageList.size() > 0) {
             if (!CollectionUtils.isEmpty(manageList)) {

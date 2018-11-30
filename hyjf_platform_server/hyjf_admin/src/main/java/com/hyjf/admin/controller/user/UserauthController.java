@@ -216,7 +216,7 @@ public class UserauthController extends BaseController {
         // 表格sheet名称
         String sheetName = "授权状态";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         // 需要输出的结果列表
 
@@ -379,7 +379,7 @@ public class UserauthController extends BaseController {
         // 表格sheet名称
         String sheetName = "授权记录";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		Map<String, String> client = CacheUtil.getParamNameMap("CLIENT");
 		Map<String, String> invert = CacheUtil.getParamNameMap("AUTO_INVER_TYPE");
         form.setCurrPage(-1);
