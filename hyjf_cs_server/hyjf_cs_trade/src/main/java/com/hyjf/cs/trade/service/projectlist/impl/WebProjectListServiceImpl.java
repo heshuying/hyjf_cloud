@@ -1206,8 +1206,9 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
     @Override
     public WebResult searchPlanList(ProjectListRequest request) {
         Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
-        request.setLimitStart(page.getOffset());
-        request.setLimitEnd(page.getLimit());
+        request.setLimitStart(0);
+        request.setLimitEnd(4);
+        request.setIsHome("1");
         Integer count = amTradeClient.countPlanList(request);
         WebResult webResult = new WebResult();
         webResult.setData(new ArrayList<>());
