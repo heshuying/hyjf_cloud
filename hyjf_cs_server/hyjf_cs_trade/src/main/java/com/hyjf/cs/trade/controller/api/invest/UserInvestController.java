@@ -51,7 +51,7 @@ public class UserInvestController extends BaseTradeController {
         CheckUtil.check(Validator.isNotNull(bean.getEndTime()), MsgEnum.STATUS_CE000001);
 
         logger.info("api端-获取回款记录接口bean:{}", JSONObject.toJSONString(bean));
-       // commonSvrChkService.checkLimit(bean.getLimitStart(), bean.getLimitEnd());
+        commonSvrChkService.checkLimit(bean.getLimitStart(), bean.getLimitEnd());
 
         // 验签
         CheckUtil.check(SignUtil.verifyRequestSign(bean, "/server/invest/repayList"), MsgEnum.ERR_SIGN);
