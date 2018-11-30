@@ -1,3 +1,10 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://microserver1:1111/eureka,http://microserver2:1111/eureka
+  instance:
+    preferIpAddress: true
+
 spring:
   application:
     name: am-user
