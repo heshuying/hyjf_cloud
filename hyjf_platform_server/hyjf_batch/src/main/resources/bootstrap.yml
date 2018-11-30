@@ -6,7 +6,7 @@ eureka:
     preferIpAddress: true
 spring:
   application:
-    name: BATCH
+    name: batch
   cloud:
     config:
       discovery:

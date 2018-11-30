@@ -6,11 +6,9 @@ eureka:
     preferIpAddress: true
 spring:
   application:
-    name: AM-TRADE
+    name: am-trade
   cloud:
     config:
-      name: AM-TRADE
-      profile: {spring.profiles.active}
       discovery:
         enabled: true
         serviceId: CONFIG-SERVER

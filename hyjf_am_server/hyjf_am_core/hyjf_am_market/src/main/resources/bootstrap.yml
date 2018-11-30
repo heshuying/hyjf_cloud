@@ -7,7 +7,7 @@ eureka:
 
 spring:
   application:
-    name: AM-MARKET
+    name: am-market
   cloud:
     config:
       discovery:

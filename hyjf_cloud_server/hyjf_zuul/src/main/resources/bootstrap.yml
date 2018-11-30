@@ -4,7 +4,7 @@ eureka:
       defaultZone: http://microserver1:1111/eureka,http://microserver2:1111/eureka
 spring:
  application:
-   name: ZUUL
+   name: zuul
  cloud:
    config:
       discovery:

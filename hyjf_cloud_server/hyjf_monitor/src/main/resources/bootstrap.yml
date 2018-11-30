@@ -1,6 +1,6 @@
 spring:
   application:
-    name: MONITOR-SERVER
+    name: monitor-server
   cloud:
    config:
       discovery:

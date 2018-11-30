@@ -1,6 +1,6 @@
 spring:
   application:
-    name: ADMIN
+    name: admin
   cloud:
     config:
       discovery:

@@ -6,7 +6,7 @@ eureka:
     preferIpAddress: true
 spring:
  application:
-  name: AM-CONFIG
+  name: am-config
  cloud:
   config:
       discovery:

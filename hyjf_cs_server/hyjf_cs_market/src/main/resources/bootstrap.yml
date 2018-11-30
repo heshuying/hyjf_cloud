@@ -6,7 +6,7 @@ eureka:
     preferIpAddress: true
 spring:
   application:
-    name: CS-MARKET
+    name: cs-market
   cloud:
     config:
       discovery:
