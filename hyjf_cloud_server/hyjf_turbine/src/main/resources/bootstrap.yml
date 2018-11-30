@@ -1,20 +1,22 @@
 spring:
   application:
-    name: TURBINE
+    name: turbine
   cloud:
-    config:
-      uri: http://micoserver:2222/
-      name: turbine
+   config:
+      discovery:
+        enabled: true
+        serviceId: CONFIG-SERVER
+      failFast: true
   boot:
     admin:
       client:
-        url: http://micoserver:18080
+        url: http://MONITOR-SERVER
   profiles:
     active: dev
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://micoserver:1111/eureka/
+      defaultZone: http://microserver1:1111/eureka,http://microserver2:1111/eureka
   instance:
     preferIpAddress: true
 

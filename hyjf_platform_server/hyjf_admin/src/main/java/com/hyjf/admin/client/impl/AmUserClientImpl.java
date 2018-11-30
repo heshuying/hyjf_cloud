@@ -1591,10 +1591,10 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public UserVO getUser(String utmReferrer, String userId) {
-		UtmResponse response = restTemplate
-				.getForEntity("http://AM-ADMIN/am-user/user/getuser/"+utmReferrer+"/"+userId, UtmResponse.class).getBody();
+		UserResponse response = restTemplate
+				.getForEntity("http://AM-ADMIN/am-user/user/getuser/"+utmReferrer+"/"+userId, UserResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-			return (UserVO)response.getResult();
+			return response.getResult();
 		}
 		return null;
 	}

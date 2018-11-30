@@ -65,7 +65,7 @@ public class ContentLinksServiceImpl implements ContentLinksService {
                 e.printStackTrace();
             }
         }
-        example.setOrderByClause("`partner_type` ASC,`order` Asc,`create_time` Desc");
+        example.setOrderByClause("`create_time` Desc,`partner_type` ASC,`order` Asc");
         return linkMapper.selectByExample(example);
     }
 

@@ -108,17 +108,17 @@ public class HjhQuitConsumer extends Consumer  {
                 //根据状态判断是计划锁定还是退出
                 if (orderStatus == 2) {
                     //锁定计划
-                    logger.debug("--------------计划订单号：" + accedeOrderId + "，开始进入锁定期！------");
+                    logger.info("--------------计划订单号：" + accedeOrderId + "，开始进入锁定期！------");
                     updateForLock(accedeOrderId);
                 } else if (orderStatus == 5 && creditCompleteFlag == 1) {
                     //退出计划 计划退出中并且清算标示完成
-                    logger.debug("--------------计划订单号：" + accedeOrderId + "，开始退出计划！------");
+                    logger.info("--------------计划订单号：" + accedeOrderId + "，开始退出计划！------");
                     amTradeClient.updateForQuit(accedeOrderId);
                 }
 
                 RedisUtils.srem(RedisConstants.HJH_LOCK_REPEAT, accedeOrderId);
                 RedisUtils.del(redisKey);
-                logger.debug("----------------------------计划退出结束--------------------------------");
+                logger.info("--------------计划订单号：" + accedeOrderId + "，锁定/退出结束------");
 
                 return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
             } catch (Exception e){

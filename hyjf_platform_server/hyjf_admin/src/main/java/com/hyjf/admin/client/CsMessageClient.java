@@ -322,4 +322,8 @@ public interface CsMessageClient {
     HjhInfoAccountBalanceResponse  getHjhAccountBalanceMonthCount(HjhAccountBalanceRequest request);
 
     HjhInfoAccountBalanceResponse  getHjhAccountBalanceDayCount(HjhAccountBalanceRequest request);
+
+    HjhInfoAccountBalanceResponse  getHjhAccountBalanceMonth(HjhAccountBalanceRequest request);
+
+    HjhInfoAccountBalanceResponse  getHjhAccountBalanceDay(HjhAccountBalanceRequest request);
 }

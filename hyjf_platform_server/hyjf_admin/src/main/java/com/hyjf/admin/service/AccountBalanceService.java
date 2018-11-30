@@ -16,8 +16,4 @@ public interface AccountBalanceService {
 
     HjhInfoAccountBalanceResponse getSearchListByDay(HjhAccountBalanceRequest request);
 
-    List<HjhAccountBalanceVO> getHjhAccountBalanceList(HjhAccountBalanceRequest request);
-
-    List<HjhAccountBalanceVO> getHjhAccountBalanceMonthList(HjhAccountBalanceRequest request);
-
 }

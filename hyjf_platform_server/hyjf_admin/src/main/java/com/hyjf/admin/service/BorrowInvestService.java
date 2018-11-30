@@ -64,4 +64,12 @@ public interface BorrowInvestService {
      * @return
      */
     AdminResult sendAgreement(InvestorRequest investorRequest);
+
+    /**
+     * 重发协议
+     *
+     * @param investorRequest
+     * @return
+     */
+    AdminResult resendAgreement(InvestorRequest investorRequest);
 }

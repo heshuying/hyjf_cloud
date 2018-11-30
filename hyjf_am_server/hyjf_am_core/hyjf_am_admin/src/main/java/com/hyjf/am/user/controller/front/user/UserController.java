@@ -712,8 +712,8 @@ public class UserController extends BaseController {
      * @return
      */
     @RequestMapping("/getuser/{utmReferrer}/{userId}")
-    public UtmResponse getUser(@PathVariable String utmReferrer,@PathVariable String userId) {
-        UtmResponse response = new UtmResponse();
+    public UserResponse getUser(@PathVariable String utmReferrer,@PathVariable String userId) {
+        UserResponse response = new UserResponse();
         UserVO userVO = userService.getUser(utmReferrer,userId);
         response.setResult(userVO);
         return response;

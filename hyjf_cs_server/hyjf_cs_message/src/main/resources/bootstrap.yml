@@ -1,17 +1,25 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://microserver1:1111/eureka,http://microserver2:1111/eureka
+  instance:
+    preferIpAddress: true
 spring:
   application:
-    name: CS-MESSAGE
+    name: cs-message
   cloud:
     config:
-      uri: http://micoserver:2222/
-      name: cs-message
+      discovery:
+        enabled: true
+        serviceId: CONFIG-SERVER
+      failFast: true
   boot:
     admin:
       client:
-        url: http://micoserver:18080
+        url: http://MONITOR-SERVER
 # zipkin 监控端点
   zipkin: 
-    base-url: http://micoserver:9411
+    base-url: http://ZIPKIN
   sleuth:
     sampler:
     percentage: 0.1

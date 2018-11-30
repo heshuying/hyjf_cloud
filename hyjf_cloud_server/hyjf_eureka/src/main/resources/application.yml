@@ -6,12 +6,12 @@ spring:
   boot:
     admin:
       client:
-        url: http://micoserver:18080
+        url: http://MONITOR-SERVER
 server:
   port: 1111
 eureka:
   instance:
-    hostname: localhost
+    hostname: microserver1
   environment: ${spring.profiles.active}
   datacenter: Main
   client:
