@@ -228,7 +228,7 @@ public class AssetExceptionController extends BaseController {
         // 文件名称转码
         String fileName = null;
         try {
-            fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+            fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
             logger.error("转码错误....", e);
