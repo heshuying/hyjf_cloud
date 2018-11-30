@@ -30,11 +30,6 @@ public class HjhInfoAccountBalanceController {
         //总条数
         List<HjhAccountBalanceVO> count = accountBalanceService.getHjhAccountBalanceVOByMonth(request,false);
 
-        //分页数
-        List<HjhAccountBalanceVO> list = accountBalanceService.getHjhAccountBalanceVOByMonth(request,true);
-        response.setRecordList(list);
-        response.setCount(count.size());
-
         HjhAccountBalanceVO vo = null;
         for(HjhAccountBalanceVO balanceVO : count){
 
@@ -57,15 +52,21 @@ public class HjhInfoAccountBalanceController {
         return response;
     }
 
+    @RequestMapping("/getHjhAccountBalanceMonth")
+    public HjhInfoAccountBalanceResponse getHjhAccountBalanceMonth(@RequestBody HjhAccountBalanceRequest request){
+        HjhInfoAccountBalanceResponse response = new HjhInfoAccountBalanceResponse();
+
+        //分页数
+        List<HjhAccountBalanceVO> list = accountBalanceService.getHjhAccountBalanceVOByMonth(request,true);
+        response.setRecordList(list);
+        return response;
+    }
+
     @RequestMapping("/getHjhAccountBalanceDayCount")
     public HjhInfoAccountBalanceResponse getHjhAccountBalanceDayCount(@RequestBody HjhAccountBalanceRequest request){
         HjhInfoAccountBalanceResponse response = new HjhInfoAccountBalanceResponse();
         //总条数
         List<HjhAccountBalanceVO> count = accountBalanceService.getHjhAccountBalanceVOByDay(request,false);
-
-        //分页数
-        List<HjhAccountBalanceVO> list = accountBalanceService.getHjhAccountBalanceVOByDay(request,true);
-        response.setRecordList(list);
         response.setCount(count.size());
 
         HjhAccountBalanceVO vo = null;
@@ -85,6 +86,16 @@ public class HjhInfoAccountBalanceController {
             }
         }
         response.setSum(vo);
+        return response;
+    }
+
+    @RequestMapping("/getHjhAccountBalanceDay")
+    public HjhInfoAccountBalanceResponse getHjhAccountBalanceDay(@RequestBody HjhAccountBalanceRequest request){
+        HjhInfoAccountBalanceResponse response = new HjhInfoAccountBalanceResponse();
+        //分页数
+        List<HjhAccountBalanceVO> list = accountBalanceService.getHjhAccountBalanceVOByDay(request,true);
+        response.setRecordList(list);
+
         return response;
     }
 }
