@@ -71,7 +71,7 @@ public class AllocationEngineController extends BaseController{
 	@Autowired
 	private HjhLabelService labelService;
 	// 查看权限
-	public static final String PERMISSIONS = "allocation";
+	public static final String PERMISSIONS = "allocationengine";
     /**
      * 画面初始化
      *
