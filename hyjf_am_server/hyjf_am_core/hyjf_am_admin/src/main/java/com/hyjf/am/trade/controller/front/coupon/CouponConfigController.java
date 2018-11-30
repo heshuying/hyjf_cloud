@@ -114,7 +114,7 @@ public class CouponConfigController extends BaseController {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("保存优惠券发行信息失败", e);
             ccr.setRtn(Response.FAIL);
             ccr.setMessage(Response.FAIL_MSG);
         }

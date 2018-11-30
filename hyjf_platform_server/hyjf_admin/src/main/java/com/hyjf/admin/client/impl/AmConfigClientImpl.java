@@ -3,6 +3,7 @@ package com.hyjf.admin.client.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.client.AmConfigClient;
+import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
@@ -16,9 +17,7 @@ import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.*;
-import com.hyjf.am.vo.admin.CategoryVO;
-import com.hyjf.am.vo.admin.ContentHelpVO;
-import com.hyjf.am.vo.admin.HjhUserAuthConfigLogCustomizeVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.VersionVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
@@ -2366,6 +2365,22 @@ public class AmConfigClientImpl implements AmConfigClient {
         }
         return null;
 	}
+
+    /**
+     * 根据用户名查询后台操作用户
+     * @param auditUser
+     * @return
+     */
+    @Override
+    public Integer getAdminByUsername(String auditUser) {
+        String url = "http://AM-ADMIN/am-config/admin/getAdminByUsername/" + auditUser;
+        AdminResponse response = restTemplate.getForObject(url, AdminResponse.class);
+        if (response != null) {
+            Map<String, Object> map = (Map<String, Object>) response.getResult();
+            return Integer.parseInt(map.get("id").toString());
+        }
+        return null;
+    }
 
     /**
      * 修改授权配置
