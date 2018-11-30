@@ -296,7 +296,11 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
 //                            rechargeSum = rechargeSum.add(accountRecharge.getBalance());
 //                        }
 //                    }
-                    customize.setFundRetentionPercent(usersPortrait.getFundRetention());
+                    if (usersPortrait.getFundRetention() != null) {
+                        customize.setFundRetentionPercent(usersPortrait.getFundRetention());
+                    }else {
+                        customize.setFundRetentionPercent(new BigDecimal(0));
+                    }
 
                     //大客户判定
                     ArrayList<Double> arrayList = new ArrayList<>();
