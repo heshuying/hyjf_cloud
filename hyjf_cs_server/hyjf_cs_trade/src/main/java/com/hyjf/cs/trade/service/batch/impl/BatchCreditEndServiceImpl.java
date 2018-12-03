@@ -149,6 +149,15 @@ public class BatchCreditEndServiceImpl extends BaseTradeServiceImpl implements B
         String subPacks = null;
         List<BatchCreditEndSubVO> jsonList= new ArrayList<BatchCreditEndSubVO>();
         List<BankCreditEndVO> list = this.selectList(bankCreditEnd);
+        if (list == null || list.size() == 0) {
+            logger.info("未获取到批次号为{}、交易日期为{}的债权信息，1秒后重新获取！", bankCreditEnd.getBatchNo(), bankCreditEnd.getTxDate());
+            try {
+                Thread.sleep(1000);
+                list = this.selectList(bankCreditEnd);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
         if (list != null) {
             for (BankCreditEndVO fromBean : list) {
                 BatchCreditEndSubVO jsonBean = new BatchCreditEndSubVO();
