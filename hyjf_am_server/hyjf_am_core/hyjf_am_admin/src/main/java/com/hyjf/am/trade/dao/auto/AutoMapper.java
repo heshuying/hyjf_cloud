@@ -379,7 +379,7 @@ public class AutoMapper {
 
     @Resource
     protected PoundageLedgerMapper poundageLedgerMapper;
-    
+
     @Resource
     protected ProductMapper productMapper;
 
