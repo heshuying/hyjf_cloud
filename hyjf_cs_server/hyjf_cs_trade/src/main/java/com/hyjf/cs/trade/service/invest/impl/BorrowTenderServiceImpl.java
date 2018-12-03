@@ -1757,8 +1757,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         } else {
             vo.setBorrowStyleName("");
         }
+        BorrowInfoVO borrowInfoVO = this.getBorrowInfoByNid(borrow.getBorrowNid());
         // 项目名称
-        vo.setProjectName(borrow.getProjectName());
+        vo.setProjectName(borrowInfoVO.getProjectName());
         // 借款期限
         vo.setBorrowPeriod(borrow.getBorrowPeriod());
         if ("endday".equals(borrow.getBorrowStyle())) {
