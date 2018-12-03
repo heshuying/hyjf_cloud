@@ -95,6 +95,8 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
             example.setLimitEnd(requestBean.getLimitEnd());
         }
 
+        example.setOrderByClause("tx_date desc");
+
         return bankCreditEndMapper.selectByExample(example);
     }
 

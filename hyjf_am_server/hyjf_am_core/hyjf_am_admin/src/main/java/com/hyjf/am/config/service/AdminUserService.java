@@ -1,5 +1,6 @@
 package com.hyjf.am.config.service;
 
+import com.hyjf.am.config.dao.model.auto.Admin;
 import com.hyjf.am.config.dao.model.auto.AdminRole;
 import com.hyjf.am.config.dao.model.customize.AdminCustomize;
 import com.hyjf.am.resquest.config.AdminRequest;
@@ -90,4 +91,11 @@ public interface AdminUserService  {
 	 * @return
 	 */
 	public List<AdminRole> getAdminRoleList();
+
+	/**
+	 * 根据用户名查询后台用户
+	 * @param auditUser
+	 * @return
+	 */
+    Admin getAdminByName(String auditUser);
 }

@@ -25,6 +25,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -297,4 +298,15 @@ public class AdminUserServiceImpl implements AdminUserService {
 		example.setOrderByClause(" sort ");
 		return adminRoleMapper.selectByExample(example);
 	}
+
+    @Override
+    public Admin getAdminByName(String auditUser) {
+		AdminExample example = new AdminExample();
+		example.createCriteria().andUsernameEqualTo(auditUser);
+		List<Admin> admins = adminMapper.selectByExample(example);
+		if (!CollectionUtils.isEmpty(admins)) {
+			return admins.get(0);
+		}
+		return null;
+    }
 }

@@ -383,9 +383,6 @@ public class AutoMapper {
     protected PoundageLedgerMapper poundageLedgerMapper;
 
     @Resource
-    protected ProducerTransactionMessageMapper producerTransactionMessageMapper;
-
-    @Resource
     protected ProductMapper productMapper;
 
     @Resource
