@@ -198,6 +198,8 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
     public HjhUserAuthVO getUserAuthState(HjhUserAuthVO auth) {
         if(auth==null){
             auth = new HjhUserAuthVO();
+            auth.setAutoInvesStatus(0);
+            auth.setAutoCreditStatus(0);
         }
         // 缴费授权
         int paymentAuth = valdateAuthState(auth.getAutoPaymentStatus(), auth.getAutoPaymentEndTime());
