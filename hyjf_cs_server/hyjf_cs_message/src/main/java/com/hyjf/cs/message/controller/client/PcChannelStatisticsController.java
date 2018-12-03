@@ -10,8 +10,11 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.ic.PcChannelStatistics;
 import com.hyjf.cs.message.service.channel.ChannelStatisticsService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +26,7 @@ import java.util.List;
  * @author fq
  * @version PcChannelStatisticsController, v0.1 2018/9/26 14:42
  */
+@Api(tags = "app端-PC渠道统计")
 @RestController
 @RequestMapping("/cs-message/pc_channel_statistics")
 public class PcChannelStatisticsController extends BaseController {
@@ -34,7 +38,8 @@ public class PcChannelStatisticsController extends BaseController {
      * @param request
      * @return
      */
-    @RequestMapping("/search")
+    @ApiOperation(value = "查询PC渠道统计", notes = "查询PC渠道统计")
+    @PostMapping("/search")
     public PcChannelStatisticsResponse search(@RequestBody PcChannelStatisticsRequest request) {
         PcChannelStatisticsResponse response = new PcChannelStatisticsResponse();
         List<PcChannelStatistics> list = channelStatisticsService.searchPcChannelStatisticsList(request);

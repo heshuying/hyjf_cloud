@@ -1,6 +1,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.market.AdsVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.List;
@@ -12,25 +13,25 @@ public class LandingPageBean  implements Serializable {
      */
     private static final long serialVersionUID = 3769325211420232606L;
 
-    /** 着陆页banner1 */
-    private List<AdsVO> landingPageBanner1;
 
-    /** 着陆页banner2 */
-    private List<AdsVO> LandingPageBanner2;
-    
-    public String utm_id;//链接唯一id
-
-    public String utm_source;//推广渠道
-
-    public String utm_medium;//推广方式
-
-    public String utm_campaign;//推广计划
-
-    public String utm_content;//推广单元
-
-    public String utm_term;//关键词
-
-    public String from_id;//推荐人id
+	@ApiModelProperty(value = "着陆页banner1")
+	private List<AdsVO> landingPageBanner1;
+	@ApiModelProperty(value = "着陆页banner2")
+	private List<AdsVO> LandingPageBanner2;
+	@ApiModelProperty(value = "链接唯一id")
+    public String utm_id;
+	@ApiModelProperty(value = "推广渠道")
+    public String utm_source;
+	@ApiModelProperty(value = "推广方式")
+    public String utm_medium;
+	@ApiModelProperty(value = "推广计划")
+    public String utm_campaign;
+	@ApiModelProperty(value = "推广单元")
+    public String utm_content;
+	@ApiModelProperty(value = "关键词")
+    public String utm_term;
+	@ApiModelProperty(value = "推荐人id")
+    public String from_id;
 
 	public String getUtm_id() {
 		return utm_id;
