@@ -1,12 +1,15 @@
 package com.hyjf.cs.user.bean;
 
 
+import io.swagger.annotations.ApiModelProperty;
+
 public class ThirdPartyTransPasswordRequestBean extends BaseBean {
 	/**
 	 * 优惠券详情服务
 	 */
 	private String host;
-	
+
+	@ApiModelProperty(value = "账号")
 	private String bankAccount;
 
 
