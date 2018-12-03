@@ -3,6 +3,7 @@ package com.hyjf.cs.user.bean;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,8 +13,10 @@ import java.util.Map;
  */
 public class AutoStateQueryRequest extends BaseBean{
 
-
+    @ApiModelProperty(value = "交易渠道")
     private String channel; //交易渠道
+
+    @ApiModelProperty(value = "电子账户号")
     private String accountId; //电子账户号
 
     @Override

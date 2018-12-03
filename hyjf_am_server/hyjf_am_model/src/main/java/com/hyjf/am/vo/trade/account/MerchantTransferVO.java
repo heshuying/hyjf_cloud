@@ -1,6 +1,7 @@
 package com.hyjf.am.vo.trade.account;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -8,27 +9,28 @@ import java.util.Date;
 
 public class MerchantTransferVO extends BasePage implements Serializable {
     private Integer id;
-
+    @ApiModelProperty(value = "订单号")
     private String orderId;
 
+    @ApiModelProperty(value = "转出账号id")
     private Integer outAccountId;
-
+    @ApiModelProperty(value = "转出账号code")
     private String outAccountCode;
-
+    @ApiModelProperty(value = "转出账号name")
     private String outAccountName;
-
+    @ApiModelProperty(value = "转入账号id")
     private Integer inAccountId;
-
+    @ApiModelProperty(value = "转入账号code")
     private String inAccountCode;
-
+    @ApiModelProperty(value = "转入账号name")
     private String inAccountName;
-
+    @ApiModelProperty(value = "转账金额")
     private BigDecimal transferAmount;
-
+    @ApiModelProperty(value = "转账时间")
     private Date transferTime;
 
     private Integer status;
-
+    @ApiModelProperty(value = "转账类型")
     private Integer transferType;
 
     private String remark;
@@ -48,6 +50,7 @@ public class MerchantTransferVO extends BasePage implements Serializable {
     private Date updateTime;
 
     //导出增加字段（转账类型）
+    @ApiModelProperty(value = "转账类型")
     private Integer transferStyle;
 
     public Integer getTransferStyle() {
