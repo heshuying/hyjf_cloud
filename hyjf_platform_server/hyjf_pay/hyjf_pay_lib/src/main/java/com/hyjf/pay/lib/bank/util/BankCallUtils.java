@@ -146,11 +146,12 @@ public class BankCallUtils implements Serializable {
 			if (StringUtils.isNotBlank(bean.getLogBankDetailUrl())) {
 				allParams.put("logBankDetailUrl", bean.getLogBankDetailUrl());
 			}
-			// 调用汇付接口
+			// 调用银行接口
 //			String result = HttpDeal.post(payurl + REQUEST_MAPPING_CALLAPIPAGE, allParams);
 			String url = payurl + REQUEST_MAPPING_CALLAPIPAGE;
 			String result = restTemplate
 					.postForEntity(url, allParams, String.class).getBody();
+			logger.info("调用银行接口结果： {}", result);
 			// 将返回字符串转换成Map
 			if (Validator.isNotNull(result)) {
 				@SuppressWarnings("unchecked")
