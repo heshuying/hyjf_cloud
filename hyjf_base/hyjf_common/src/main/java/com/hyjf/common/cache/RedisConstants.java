@@ -477,7 +477,7 @@ public class RedisConstants {
     /**
      * 邮件发送key
      */
-    public static String LABEL_MAIL_KEY = "labelmailkey";
+    public static String LABEL_MAIL_KEY = "labelmailkey:";
 
     /**
      * 自动备案 borrowrecord + instcode + assetId/borrowNid
