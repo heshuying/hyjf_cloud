@@ -82,27 +82,27 @@ public class OperationReportRequest extends BasePage implements Serializable{
 	private String operationReportId;
 	@ApiModelProperty(value = "是否发布")
 	private Integer isRelease;
-	//运营报告
+	@ApiModelProperty(value = "运营报告")
 	private OperationReportVO operationReport;
-	//运营报告活动
+	@ApiModelProperty(value = "运营报告活动")
 	private OperationReportActivityVO operationReportActivity;
-	//运营报告十大投资
+	@ApiModelProperty(value = "运营报告十大投资")
 	private TenthOperationReportVO tenthOperationReport;
-	//运营报告用户分析
+	@ApiModelProperty(value = "运营报告用户分析")
 	private UserOperationReportVO userOperationReport;
-	//月度运营报告
+	@ApiModelProperty(value = "月度运营报告")
 	private MonthlyOperationReportVO monthlyOperationReport;
-	//季度运营报告
+	@ApiModelProperty(value = "季度运营报告")
 	private QuarterOperationReportVO quarterOperationReport;
-	//半年度运营报告
+	@ApiModelProperty(value = "半年度运营报告")
 	private HalfYearOperationReportVO halfYearOperationReport;
-	//年度运营报告
+	@ApiModelProperty(value = "年度运营报告")
 	private YearOperationReportVO yearOperationReport;
-	//精彩活动
+	@ApiModelProperty(value = "精彩活动")
 	private List<OperationReportActivityVO> wonderfulActivities;
-	//足迹
+	@ApiModelProperty(value = "足迹")
 	private List<OperationReportActivityVO> footprints;
-	//体验优化
+	@ApiModelProperty(value = "体验优化")
 	private List<OperationReportActivityVO> goodExperiences;
 	public String getOperationReportId() {
 		return operationReportId;

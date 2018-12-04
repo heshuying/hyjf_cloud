@@ -30,13 +30,18 @@ public class AppBorrowImageRequest extends BasePage implements Serializable {
     private String versionMax;
     @ApiModelProperty(value = "跳转标示")
     private String jumpName;
-
+    @ApiModelProperty(value = "图片名字")
     private String borrowImageRealname;
     private String isEdit;
+    @ApiModelProperty(value = "图片代码")
     private String borrowImage;
+    @ApiModelProperty(value = "页面路径")
     private String pageUrl;
+    @ApiModelProperty(value = "页面类型")
     private String pageType;
+    @ApiModelProperty(value = "文本")
     private String notes;
+    @ApiModelProperty(value = "版本")
     private String version;
 
 
