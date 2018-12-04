@@ -2721,4 +2721,24 @@ public class AmUserClientImpl implements AmUserClient {
 			return  0;
 		}
     }
+
+	@Override
+	public Integer getSmsCountForExport(SmsCountRequest request) {
+		SmsCountCustomizeResponse response =
+				restTemplate.postForEntity("http://AM-ADMIN/am-user/sms_count/getsmscountforexport", request, SmsCountCustomizeResponse.class).getBody();
+		if(Response.isSuccess(response)){
+			return response.getCount();
+		}
+		return 0;
+	}
+
+	@Override
+	public List<SmsCountCustomizeVO> getSmsListForExport(SmsCountRequest request) {
+		SmsCountCustomizeResponse response =
+				restTemplate.postForEntity("http://AM-ADMIN/am-user/sms_count/getsmslistforexport", request, SmsCountCustomizeResponse.class).getBody();
+		if(Response.isSuccess(response)){
+			return response.getResultList();
+		}
+		return null;
+	}
 }
