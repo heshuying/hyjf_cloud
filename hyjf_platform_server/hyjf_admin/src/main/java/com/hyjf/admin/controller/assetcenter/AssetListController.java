@@ -45,7 +45,7 @@ import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.*;
 /**
- * @author yinhui
+ * @author libin
  * @version AssetListController, v0.1 2018/6/27 15:16
  */
 @Api(value = "资产中心-资产列表",tags = "资产中心-资产列表")
