@@ -1,6 +1,7 @@
 package com.hyjf.am.vo.admin.coupon;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -11,76 +12,105 @@ public class CouponBackMoneyCustomize extends BaseVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
-    //用户优惠券id
+    @ApiModelProperty(value = "用户优惠券id")
     private Integer id;
-    //优惠券用户编号
+
+    @ApiModelProperty(value = "优惠券用户编号")
     private String couponUserCode;
     /**
      * 检索条件 订单id
      */
+    @ApiModelProperty(value = "订单id")
     private String orderId;
-    //订单号
+
+    @ApiModelProperty(value = "订单号")
     private String nid;
-    //用户名
+
+    @ApiModelProperty(value = "用户名")
     private String username;
-    //优惠券编号
+
+    @ApiModelProperty(value = "优惠券编号")
     private String couponCode;
     //项目编号
+    @ApiModelProperty(value = "项目编号")
     private String borrowNid;
     //回款期数
+    @ApiModelProperty(value = "回款期数")
     private String recoverPeriod;
     //体验金收益（元）
+    @ApiModelProperty(value = "体验金收益（元）")
     private String recoverInterest;
     //转账订单号
+    @ApiModelProperty(value = "转账订单号")
     private String transferId;
     //状态
+    @ApiModelProperty(value = "状态")
     private String receivedFlg;
     //状态
+    @ApiModelProperty(value = "状态")
     private String receivedFlgString;
     //应回款日期
+    @ApiModelProperty(value = "应回款日期")
     private String recoverTime;
     //真实投资金额
+    @ApiModelProperty(value = "真实投资金额")
     private String recoverCapital;
     //优惠券使用时间
+    @ApiModelProperty(value = "优惠券使用时间")
     private String addTime;
     //优惠券来源
+    @ApiModelProperty(value = "优惠券来源")
     private String couponSource;
     //内容
+    @ApiModelProperty(value = "内容")
     private String couponContent;
 
     //项目年化收益
+    @ApiModelProperty(value = "项目年化收益")
     private String borrowApr;
     //优惠券面值
+    @ApiModelProperty(value = "优惠券面值")
     private String couponQuota;
     //体验金收益期限
+    @ApiModelProperty(value = "体验金收益期限")
     private String couponProfitTime;
     //姓名
+    @ApiModelProperty(value = "姓名")
     private String truename;
     //手机号
+    @ApiModelProperty(value = "手机号")
     private String mobile;
     //客户号
+    @ApiModelProperty(value = "客户号")
     private String chinapnrUsrcustid;
     //项目名称
+    @ApiModelProperty(value = "项目名称")
     private String borrowName;
     //项目期限
+    @ApiModelProperty(value = "项目期限")
     private String borrowPeriod;
     //放款时间
+    @ApiModelProperty(value = "放款时间")
     private String hcrAddTime;
     //实际回款时间
+    @ApiModelProperty(value = "实际回款时间")
     private String recoverYestime;
     /**
      * 检索条件 时间开始
      */
+    @ApiModelProperty(value = "检索条件 时间开始")
     private String timeStartSrch;
 
     /**
      * 检索条件 时间结束
      */
+    @ApiModelProperty(value = "检索条件 时间结束")
     private String timeEndSrch;
 
     /**
      * 检索条件 时间结束
      */
+    @ApiModelProperty(value = "优惠券类型")
     private String couponType;
     /**
      * 检索条件 limitStart
