@@ -3,21 +3,6 @@
  */
 package com.hyjf.cs.user.service.safe.impl;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.*;
-import java.util.Map.Entry;
-
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BindEmailLogRequest;
@@ -45,8 +30,21 @@ import com.hyjf.cs.user.result.ContractSetResultBean;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.safe.SafeService;
 import com.hyjf.cs.user.vo.BindEmailVO;
-
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import sun.misc.BASE64Decoder;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.*;
+import java.util.Map.Entry;
 
 
 /**
@@ -186,7 +184,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         }else {
             resultMap.put("iconUrl", "");
         }
-        resultMap.put("inviteLink", systemConfig.getFrontHost() + "/user/regist?from=" + user.getUserId());
+        resultMap.put("inviteLink", systemConfig.getFrontHost() + "/landingPage/init.do?refferUserId=" + user.getUserId());
         return resultMap;
     }
 
@@ -198,6 +196,11 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
      * @return
      */
     public HjhUserAuthVO getUserAuthState(HjhUserAuthVO auth) {
+        if(auth==null){
+            auth = new HjhUserAuthVO();
+            auth.setAutoInvesStatus(0);
+            auth.setAutoCreditStatus(0);
+        }
         // 缴费授权
         int paymentAuth = valdateAuthState(auth.getAutoPaymentStatus(), auth.getAutoPaymentEndTime());
         auth.setAutoPaymentStatus(paymentAuth);

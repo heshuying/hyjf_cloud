@@ -95,7 +95,7 @@
 		FROM
 			ht_admin a
 			INNER JOIN ht_admin_and_role anr ON a.id = anr.user_id
-			INNER JOIN ht_admin_role ar ON anr.role_id = ar.id and ar.status = '1'
+			INNER JOIN ht_admin_role ar ON anr.role_id = ar.id and ar.status = '0'
 			AND ar.del_flag = '0'
 			INNER JOIN ht_admin_role_menu_permissions mp ON anr.role_id = mp.role_id
 			AND mp.del_flag = '0'
@@ -107,7 +107,7 @@
 		    a.id = #{id, jdbcType=VARCHAR}
 		    AND a.state = '0'
 		    AND a.del_flag = '0'
-		    ORDER BY m.menu_ctrl
+		    ORDER BY m.menu_ctrl collate utf8_bin
 	</select>
 
 	<resultMap id="UserInfoResultMap" type="com.hyjf.am.config.dao.model.customize.AdminSystem">

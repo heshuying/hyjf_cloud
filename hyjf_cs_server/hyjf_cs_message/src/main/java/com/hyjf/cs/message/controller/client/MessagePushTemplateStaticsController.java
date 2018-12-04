@@ -10,9 +10,12 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
 import com.hyjf.cs.message.service.message.MessagePushTemplateStaticsService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,6 +26,7 @@ import java.util.List;
  * @author fq
  * @version MessagePushTemplateStaticsController, v0.1 2018/8/14 14:49
  */
+@Api(tags = "app端-查询模板消息统计报表")
 @RestController
 @RequestMapping("/cs-message/messagepush_template_statics")
 public class MessagePushTemplateStaticsController extends BaseController {
@@ -35,7 +39,8 @@ public class MessagePushTemplateStaticsController extends BaseController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/select_template_statics")
+	@ApiOperation(value = "查询模板消息统计报表", notes = "查询模板消息统计报表")
+	@PostMapping("/select_template_statics")
 	public MessagePushTemplateStaticsResponse selectTemplateStatics(
 			@RequestBody MessagePushTemplateStaticsRequest request) {
 		MessagePushTemplateStaticsResponse response = new MessagePushTemplateStaticsResponse();

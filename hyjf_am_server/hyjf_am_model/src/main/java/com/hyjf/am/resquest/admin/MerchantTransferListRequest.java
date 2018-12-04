@@ -13,6 +13,7 @@ package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.trade.account.MerchantTransferVO;
 import com.hyjf.common.paginator.Paginator;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.List;
@@ -26,10 +27,13 @@ public class MerchantTransferListRequest extends MerchantTransferVO implements S
 	/** serialVersionUID */
 	private static final long serialVersionUID = 7768418442884796575L;
 	/** 转账时间开始值 */
+	@ApiModelProperty(value = "转账时间开始值")
 	private String transferTimeStart;
 	/** 转账时间结束值 */
+	@ApiModelProperty(value = "转账时间结束值")
 	private String transferTimeEnd;
 	/** 转账列表*/
+	@ApiModelProperty(value = "转账列表")
 	private List<MerchantTransferVO> recordList;
 
 	/**

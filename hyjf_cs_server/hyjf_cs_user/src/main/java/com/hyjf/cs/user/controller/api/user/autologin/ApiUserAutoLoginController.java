@@ -12,7 +12,6 @@ import com.hyjf.common.security.util.RSA_Hjs;
 import com.hyjf.common.security.util.SignUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -103,22 +102,25 @@ public class ApiUserAutoLoginController extends BaseUserController {
     public ResultApiBean<JSONObject> nmcfThirdLogin(HttpServletRequest httpServletRequest, @RequestBody NmcfLoginRequestBean request){
         JSONObject result = new JSONObject();
         String retUrl = "";
+        String borrowNid = "";
         // 验证
-        this.checkNmcfPostBean(request);
+        //this.checkNmcfPostBean(request);
         // 验签
-        String sign = request.getInstCode() + request.getUserId() + (request.getBorrowNid()==null?"":request.getBorrowNid()) + request.getTimestamp() + request.getInstCode();
-        CheckUtil.check(ApiSignUtil.verifyByRSA(request.getInstCode(), request.getChkValue(), sign), MsgEnum.ERR_SIGN);
+        //String sign = request.getInstCode() + request.getUserId() + (request.getBorrowNid()==null?"":request.getBorrowNid()) + request.getTimestamp() + request.getInstCode();
+        //CheckUtil.check(ApiSignUtil.verifyByRSA(request.getInstCode(), request.getChkValue(), sign), MsgEnum.ERR_SIGN);
         // userId 解密
-        int nmUserId = this.userIdDecrypt(request);
+        //int nmUserId = this.userIdDecrypt(request);
         // 查询userid
-        Integer userId = loginService.getUserIdByBind(nmUserId, Integer.valueOf(request.getInstCode()));
-        //Integer userId = Integer.valueOf(request.getUserId());
+        //Integer userId = loginService.getUserIdByBind(nmUserId, Integer.valueOf(request.getInstCode()));
+        Integer userId = Integer.valueOf(request.getUserId());
         // userid不存在,跳转登录页面
         if(userId == null) {
-            retUrl = "登录页面";
+            retUrl = "login";
+            result.put("retUrl",retUrl);
+            return new ResultApiBean<>(result);
             //return new ModelAndView("redirect:" + systemConfig.getServerHost() + "/hyjf-web/user/login/init.do");
         }
-        //TODO:登录以后，前端页面还是未登录状态
+
         // 登陆
         UserVO userVO = loginService.getUsersById(userId);
         logger.info("userId:[{}],userName:[{}],password:[{}]",userId,userVO.getUsername(),userVO.getPassword());
@@ -136,17 +138,20 @@ public class ApiUserAutoLoginController extends BaseUserController {
             // 如果纳觅没传url,有borrowNid,跳标的详情,无borowNid,跳个人中心
             if (request.getBorrowNid() == null || "".equals(request.getBorrowNid())) {
                 logger.info("pandect");
-                retUrl = "https://frontweb1.hyjf.com/user/pandect?token=" + token;
+                retUrl = "pandect";
                 //return new ModelAndView("redirect:https://frontweb1.hyjf.com/user/pandect?token=" + token);
             } else {
                 // 跳转到前端的标的详情
                 logger.info("borrowDetail");
-                retUrl = "https://frontweb1.hyjf.com/borrow/borrowDetail?borrowNid=" + request.getBorrowNid() + "&token=" + token;
+                //retUrl = "https://frontweb1.hyjf.com/borrow/borrowDetail?borrowNid=" + request.getBorrowNid() + "&token=" + token;
+                retUrl = "borrowDetail";
+                borrowNid = request.getBorrowNid();
                 //return new ModelAndView("redirect:https://frontweb1.hyjf.com/borrow/borrowDetail?borrowNid=" + request.getBorrowNid() + "&token=" + token);
             }
         }
 
         result.put("retUrl",retUrl);
+        result.put("borrowNid",borrowNid);
         result.put("data",webViewUserVO);
         return new ResultApiBean<>(result);
     }

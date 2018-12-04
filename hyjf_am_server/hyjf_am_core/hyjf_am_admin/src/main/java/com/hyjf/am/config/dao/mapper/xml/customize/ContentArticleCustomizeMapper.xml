@@ -28,11 +28,11 @@
 			<if test="type != null and type != ''">
 				AND type = #{type}
 			</if>
-			<if test="startCreateTime != null and startCreateTime != ''">
-				AND create_time <![CDATA[>=]]> #{startCreateTime}
+			<if test="startCreate != null and startCreate != ''">
+				AND create_time <![CDATA[>=]]> #{startCreate}
 			</if>
-			<if test="endCreateTime != null and endCreateTime != ''">
-				AND create_time <![CDATA[<=]]> #{endCreateTime}
+			<if test="endCreate != null and endCreate != ''">
+				AND create_time <![CDATA[<=]]> #{endCreate}
 			</if>
 
 		</where>

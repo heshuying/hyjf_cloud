@@ -2121,7 +2121,7 @@ public class BorrowCommonController extends BaseController {
         // 表格sheet名称
         String sheetName = "借款列表";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
@@ -2245,7 +2245,9 @@ public class BorrowCommonController extends BaseController {
 	            @Override
 	            public String format(Object object) {
 	            	Integer status = (Integer) object;
-	                if(status==0) {
+	            	if(status==null){
+	            		return "";
+	            	}else if(status==0) {
 	                	return "备案中";
 	                }else if(status==1) {
 	                	return "初审中";

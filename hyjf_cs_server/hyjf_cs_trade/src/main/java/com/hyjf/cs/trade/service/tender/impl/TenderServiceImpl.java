@@ -736,6 +736,17 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
         tenderBg.setClient(bean.getLogClient());
         Integer attribute = null;
         
+        UserVO userVO = amUserClient.findUserById(Integer.parseInt(bean.getLogUserId()));
+        if(userVO != null){
+        	if(userVO.getUsername()!= null){
+        		tenderBg.setUserName(userVO.getUsername());
+        		logger.info("通过bean.getLogUserId()可以查到用户名！" + userVO.getUsername());
+        	}  else {
+        		tenderBg.setUserName("");
+        		logger.info("通过bean.getLogUserId()未能查到用户名！" + bean.getLogUserId());
+        	}
+        }
+        
         /*查询涉及到用户推荐人以及部分的信息，根据用户属性不同予以区分插入 start*/
         if (userInfo != null) {
             // 获取投资用户的用户属性

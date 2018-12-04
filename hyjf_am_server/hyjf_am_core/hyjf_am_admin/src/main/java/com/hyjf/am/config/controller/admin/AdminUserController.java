@@ -1,13 +1,16 @@
 package com.hyjf.am.config.controller.admin;
 
+import com.hyjf.am.config.dao.model.auto.Admin;
 import com.hyjf.am.config.dao.model.customize.AdminCustomize;
 import com.hyjf.am.config.service.AdminUserService;
+import com.hyjf.am.response.AdminResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.AdminUserResponse;
 import com.hyjf.am.resquest.config.AdminRequest;
 import com.hyjf.am.user.service.admin.adminuser.DepartmentService;
 import com.hyjf.am.vo.admin.AdminCustomizeVO;
 import com.hyjf.am.vo.admin.AdminRoleVO;
+import com.hyjf.am.vo.admin.AdminVO;
 import com.hyjf.am.vo.admin.ROaDepartmentVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
@@ -15,10 +18,7 @@ import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -322,5 +322,18 @@ public class AdminUserController {
 			}
 		}
 		return ar;
+	}
+
+
+	@RequestMapping("/getAdminByUsername/{auditUser}")
+	public AdminResponse getAdminByUsername(@PathVariable String auditUser) {
+		AdminResponse response = new AdminResponse();
+		Admin admin = adminService.getAdminByName(auditUser);
+		if (admin != null) {
+			AdminVO adminVO = new AdminVO();
+			BeanUtils.copyProperties(admin, adminVO);
+			response.setResult(adminVO);
+		}
+		return response;
 	}
 }

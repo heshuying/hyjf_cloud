@@ -49,7 +49,7 @@ public class ContentEnvironmentServiceImpl implements ContentEnvironmentService 
 			example.setLimitStart(limitStart);
 			example.setLimitEnd(limitEnd);
 		}
-		example.setOrderByClause("update_time");
+		example.setOrderByClause("create_time Desc");
 		return environmentMapper.selectByExample(example);
 	}
 

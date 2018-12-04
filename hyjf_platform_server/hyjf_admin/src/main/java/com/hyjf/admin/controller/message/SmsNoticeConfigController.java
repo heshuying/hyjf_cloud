@@ -50,7 +50,7 @@ public class SmsNoticeConfigController extends BaseController {
     }
     @ApiOperation(value = "查询通知配置详情", notes = "查询通知配置详情")
     @PostMapping("/infoAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult  smsNoticeConfigInfo(@RequestBody SmsNoticeConfigRequest adminRequest) {
         SmsNoticeConfigResponse result= smsNoticeConfigService.smsNoticeConfigInfo(adminRequest);
         if (result == null) {

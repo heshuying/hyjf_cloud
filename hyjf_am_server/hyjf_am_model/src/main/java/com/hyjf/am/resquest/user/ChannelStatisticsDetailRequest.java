@@ -4,6 +4,7 @@
 package com.hyjf.am.resquest.user;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -17,14 +18,17 @@ public class ChannelStatisticsDetailRequest extends BasePage implements Serializ
 	/**
 	 * 渠道查询
 	 */
+	@ApiModelProperty(value = "渠道")
 	private String sourceIdSrch;
 	/**
 	 * 用户查询
 	 */
+	@ApiModelProperty(value = "用户名")
 	private String userNameSrch;
 	/**
 	 * 关键词查询
 	 */
+	@ApiModelProperty(value = "关键字")
 	private String keySrch;
 	/**
 	 * 用户Id

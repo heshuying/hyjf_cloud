@@ -29,6 +29,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import javax.imageio.ImageIO;
@@ -54,7 +55,13 @@ public class LoginController extends BaseController {
 	private LoginService loginService;
 
 	private static final String key="key";
-	
+
+	@Value("${file.domain.url}")
+	private String FILEDOMAINURL;
+
+	@Value("${hyjf.web.pdf.host}")
+	private String WEBURL;
+
     /**
      * @Author: dongzeshan
      * @Desc :admin登陆验证密码
@@ -89,6 +96,8 @@ public class LoginController extends BaseController {
 		Map<String,Object> result =new HashMap<String, Object>();;
 		result.put("uuid", uuid);
 		result.put("user", prs.getResult());
+		result.put("webUrl", WEBURL);
+		result.put("fileUrl", FILEDOMAINURL);
 		return new AdminResult<Map<String,Object>>(result);
 	}
     /**

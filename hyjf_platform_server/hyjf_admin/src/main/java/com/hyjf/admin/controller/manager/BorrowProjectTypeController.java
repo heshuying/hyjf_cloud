@@ -63,7 +63,7 @@ public class BorrowProjectTypeController extends BaseController {
     @ApiOperation(value = "查询项目类型详情", notes = "查询项目类型详情 ")
     @PostMapping("/infoAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
-    public BorrowProjectTypeResponse subConfigSearch(HttpServletRequest request, @RequestBody BorrowProjectTypeRequest adminRequest) {
+    public AdminResult subConfigSearch(HttpServletRequest request, @RequestBody BorrowProjectTypeRequest adminRequest) {
         BorrowProjectTypeResponse response = new BorrowProjectTypeResponse();
         BorrowProjectTypeVO record = new BorrowProjectTypeVO();
         List<BorrowProjectRepayVO> selectRepay = null;
@@ -103,7 +103,7 @@ public class BorrowProjectTypeController extends BaseController {
         List<ParamNameVO> projectTypeList =  this.borrowProjectTypeService.getParamNameList(CustomConstants.BORROW_PROJTCT);
         record.setProjectTypeList(projectTypeList);
         response.setResult(record);
-        return response ;
+        return new AdminResult<BorrowProjectTypeResponse>(response) ;
     }
 
     @ApiOperation(value = "项目类型添加", notes = "项目类型添加")
@@ -296,7 +296,23 @@ public class BorrowProjectTypeController extends BaseController {
         // 没有错误时,返回y
         return new AdminResult<String>("y");
     }
-
+    @ApiOperation(value = "查询项目类型下拉框", notes = "查询项目类型下拉框 ")
+    @PostMapping("/infoInit")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult subConfigSelect(HttpServletRequest request, @RequestBody BorrowProjectTypeRequest adminRequest) {
+        BorrowProjectTypeResponse response = new BorrowProjectTypeResponse();
+        BorrowProjectTypeVO record = new BorrowProjectTypeVO();
+        // 回显checkbox标签
+        List<BorrowStyleVO> selectStyles = this.borrowProjectTypeService.selectStyles();
+        record.setRepayStyles(selectStyles);
+        // 用户角色
+        List<ParamNameVO> investUsers = this.borrowProjectTypeService.getParamNameList("INVEST_USER");
+        record.setInvestUsers(investUsers);
+        List<ParamNameVO> projectTypeList =  this.borrowProjectTypeService.getParamNameList(CustomConstants.BORROW_PROJTCT);
+        record.setProjectTypeList(projectTypeList);
+        response.setResult(record);
+        return new AdminResult<BorrowProjectTypeResponse>(response) ;
+    }
     /**
      * 画面校验
      *

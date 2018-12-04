@@ -14,7 +14,6 @@ import com.hyjf.am.response.trade.CouponConfigResponse;
 import com.hyjf.am.response.trade.CouponUserResponse;
 import com.hyjf.am.resquest.admin.CouponConfigRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
-import com.hyjf.am.vo.user.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -171,10 +170,7 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 
     @Override
     public Integer getUserId(String auditUser) {
-        UserVO userVO = amUserClient.getUserByUserName(auditUser);
-        if (userVO != null) {
-            return userVO.getUserId();
-        }
-        return null;
+        Integer id = amConfigClient.getAdminByUsername(auditUser);
+        return id;
     }
 }

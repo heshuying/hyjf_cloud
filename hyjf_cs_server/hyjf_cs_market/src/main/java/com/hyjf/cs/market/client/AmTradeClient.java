@@ -3,8 +3,8 @@ package com.hyjf.cs.market.client;
 import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
-import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import com.hyjf.am.vo.admin.AppPushManageVO;
+import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import com.hyjf.am.vo.trade.TenderCityCountVO;
 import com.hyjf.am.vo.trade.TenderSexCountVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
@@ -12,7 +12,6 @@ import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 /**
@@ -107,14 +106,22 @@ public interface AmTradeClient {
 	 * @return
 	 */
 	DataSearchCustomizeResponse querySanList(DataSearchRequest dataSearchRequest);
-
+	/**
+	 * 查询千乐渠道计划数据
+	 * @return
+	 */
 	DataSearchCustomizeResponse queryPlanList(DataSearchRequest dataSearchRequest);
-
+	/**
+	 * 查询千乐渠道所有数据
+	 * @return
+	 */
 	DataSearchCustomizeResponse queryQianleList(DataSearchRequest dataSearchRequest);
+	/**
+	 * 查询千乐渠道导出数据
+	 * @return
+	 */
+	DataSearchCustomizeResponse findExportDataList(DataSearchRequest dataSearchRequest);
 
-	Map<String,Object> querySanMoney(DataSearchRequest dataSearchRequest);
-
-	Map<String,Object> queryPlanMoney(DataSearchRequest dataSearchRequest);
 
 	List<WrbTenderNotifyCustomizeVO> getBorrowTenderByAddtime(AppChannelStatisticsRequest request);
 

@@ -1054,7 +1054,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             // 可用优惠券张数
             Integer couponAvailableCount;
             logger.info("entry 散标  borrowNid:[{}]",tender.getBorrowNid());
-            BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(tender.getBorrowNid());
+            RightBorrowVO borrow = amTradeClient.getRightBorrowByNid(tender.getBorrowNid());
             if (null == borrow) {
                 // 标的不存在
                 throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
@@ -1150,8 +1150,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
 
             BigDecimal borrowAccountWait = borrow.getBorrowAccountWait();
             // 去最小值 最大可投和 项目可投
-            if (borrow.getTenderAccountMax() != null && borrowAccountWait != null && (borrow.getProjectType() == 4 || borrow.getProjectType() == 11)) {
-                BigDecimal TenderAccountMax = new BigDecimal(borrow.getTenderAccountMax());
+            if (borrowInfo.getTenderAccountMax() != null && borrowAccountWait != null && (borrow.getProjectType() == 4 || borrow.getProjectType() == 11)) {
+                BigDecimal TenderAccountMax = new BigDecimal(borrowInfo.getTenderAccountMax());
                 if (TenderAccountMax.compareTo(borrowAccountWait) == -1) {
                     investInfo.setBorrowAccountWait(CommonUtils.formatAmount(null, TenderAccountMax));
                 } else {
@@ -1324,8 +1324,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             } else {
                 investInfo.setBorrowStyleName("");
             }
+
             // 项目名称
-            investInfo.setProjectName(borrow.getProjectName());
+            investInfo.setProjectName(borrowInfo.getProjectName());
             // 借款期限
             investInfo.setBorrowPeriod(borrow.getBorrowPeriod());
             if ("endday".equals(borrow.getBorrowStyle())) {
@@ -1630,7 +1631,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             }
         }
 
-        BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(tender.getBorrowNid());
+        RightBorrowVO borrow = amTradeClient.getRightBorrowByNid(tender.getBorrowNid());
         if (null == borrow) {
             // 标的不存在
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
@@ -1757,8 +1758,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         } else {
             vo.setBorrowStyleName("");
         }
+        BorrowInfoVO borrowInfoVO = this.getBorrowInfoByNid(borrow.getBorrowNid());
         // 项目名称
-        vo.setProjectName(borrow.getProjectName());
+        vo.setProjectName(borrowInfoVO.getProjectName());
         // 借款期限
         vo.setBorrowPeriod(borrow.getBorrowPeriod());
         if ("endday".equals(borrow.getBorrowStyle())) {
@@ -1874,7 +1876,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @param borrow
      * @return
      */
-    private BigDecimal calculateCouponTenderInterest(CouponUserVO couponConfig, String money, BorrowAndInfoVO borrow) {
+    private BigDecimal calculateCouponTenderInterest(CouponUserVO couponConfig, String money, RightBorrowVO borrow) {
         //计算优惠券历史回报
         BigDecimal couponInterest = BigDecimal.ZERO;
         BigDecimal borrowApr = borrow.getBorrowApr();

@@ -24,10 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -55,13 +52,17 @@ public class IncreaseInterestRepayDetailController extends BaseController {
 	public AdminResult<ListResult<AdminIncreaseInterestRepayCustomizeVO>> search(@RequestBody IncreaseInterestRepayDetailRequest request){
 		IncreaseInterestRepayDetailResponse response = new IncreaseInterestRepayDetailResponse();
 		response = increaseInterestRepayDetaiService.searchPage(request);
+        AdminIncreaseInterestRepayCustomizeVO vo = new AdminIncreaseInterestRepayCustomizeVO();
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);
-		}
+		}else{
+		    vo.setSumRepayCapital(response.getSumRepayCapital());
+		    vo.setSumRepayInterest(response.getSumRepayInterest());
+        }
 		if (!Response.isSuccess(response)) {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
-		return new AdminResult<ListResult<AdminIncreaseInterestRepayCustomizeVO>>(ListResult.build(response.getResultList(), response.getTotal() == null ? 0 : response.getTotal())) ;
+		return new AdminResult<ListResult<AdminIncreaseInterestRepayCustomizeVO>>(ListResult.build2(response.getResultList(), response.getTotal() == null ? 0 : response.getTotal(),vo)) ;
 	}
 
 	/**
@@ -77,7 +78,7 @@ public class IncreaseInterestRepayDetailController extends BaseController {
 		// 表格sheet名称
 		String sheetName = "加息还款明细";
 		// 文件名称
-		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		// 声明一个工作薄
 		SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
 		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();

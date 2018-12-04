@@ -3,7 +3,9 @@ package com.hyjf.admin.controller.message;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.MessagePushHistoryService;
 import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.admin.utils.FileUpLoadUtil;
@@ -48,10 +50,11 @@ public class MessagePushNoticesController extends BaseController {
     MessagePushHistoryService messagePushHistoryService;
     @Value("${file.domain.url}")
     private String url;
+    private static final String PERMISSIONS = "msgpushnotices";
 
     @ApiOperation(value = "通知发送列表查询", notes = "通知发送列表查询")
     @PostMapping(value = "/init")
-    @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public JSONObject init(@RequestBody MessagePushNoticesRequest messagePushNoticesRequest) {
         JSONObject jsonObject = new JSONObject();
             MessagePushNoticesResponse prs = messagePushNoticesService.getRecordList(messagePushNoticesRequest);
@@ -77,7 +80,7 @@ public class MessagePushNoticesController extends BaseController {
 
     @ApiOperation(value = "发送列表添加", notes = "发送列表添加")
     @PostMapping(value = "/add")
-    @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult<MessagePushMsgVO> add(@RequestBody MessagePushNoticesRequest form, HttpServletRequest request) {
             AdminSystemVO user = getUser(request);
             if (user != null) {
@@ -95,7 +98,7 @@ public class MessagePushNoticesController extends BaseController {
 
     @ApiOperation(value = "发送列表删除", notes = "发送列表删除")
     @PostMapping(value = "/delete")
-    @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult<MessagePushMsgVO> delete(@RequestBody MessagePushNoticesRequest form) {
             MessagePushNoticesResponse messagePushNoticesResponse = messagePushNoticesService.deleteRecord(form);
             if (Response.isSuccess(messagePushNoticesResponse)) {
@@ -107,7 +110,7 @@ public class MessagePushNoticesController extends BaseController {
 
     @ApiOperation(value = "发送列表修改", notes = "发送列表修改")
     @PostMapping(value = "/update")
-    @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<MessagePushMsgVO> update(@RequestBody MessagePushNoticesRequest form,HttpServletRequest request) {
             AdminSystemVO user = getUser(request);
             if (user != null) {
@@ -130,7 +133,7 @@ public class MessagePushNoticesController extends BaseController {
      */
     @ApiOperation(value = "画面迁移", notes = "画面迁移")
     @PostMapping(value = "/infoAction")
-    @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_RESEND)
     public JSONObject info(@RequestBody MessagePushNoticesRequest form) {
         JSONObject jsonObject = new JSONObject();
             if (StringUtils.isNotEmpty(form.getIds())) {
@@ -189,7 +192,7 @@ public class MessagePushNoticesController extends BaseController {
      */
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @PostMapping(value = "/uploadFile")
-    @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
             LinkedList<BorrowCommonImage> borrowCommonImages = fileUpLoadUtil.upLoad(request);

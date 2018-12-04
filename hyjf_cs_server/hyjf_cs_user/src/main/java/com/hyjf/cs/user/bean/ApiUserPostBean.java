@@ -12,42 +12,55 @@
 package com.hyjf.cs.user.bean;
 
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * @author liubin
  */
 
 public class ApiUserPostBean {
-	/** 加密的汇晶社用户ID */
-	private String bindUniqueIdScy;
 
-	/** 返回Url */
+    /** 加密的汇晶社用户ID */
+    @ApiModelProperty(value = "第三方用户ID（加密）")
+    private String bindUniqueIdScy;
+    /** 返回Url */
+    @ApiModelProperty(value = "返回Url")
     private String retUrl;
 
 	/** 平台id */
+    @ApiModelProperty(value = "第三方机构编号")
     private Integer pid;
 
     /** 手机号码*/
+    @ApiModelProperty(value = "手机号码")
     private String mobile;
 
     /** 身份证号码*/
+    @ApiModelProperty(value = "身份证号")
     private String idCard;
 
     /** 姓名*/
+    @ApiModelProperty(value = "姓名")
     private String name;
 
 	//来源
+    @ApiModelProperty(value = "来源")
 	private String from;
 	//风车理财用户ID
+    @ApiModelProperty(value = "风车理财用户ID")
 	private String wrb_user_id;
 	//风车理财用户名
+    @ApiModelProperty(value = "风车理财用户名")
 	private String wrb_user_name;
 	//邮箱
 	private String email;
 	//身份证号码
+    @ApiModelProperty(value = "风车理财身份证号码")
 	private String id_no;
 	//真实姓名
 	private String true_name;
 	//目标url
+    @ApiModelProperty(value = "风车理财目标url")
 	private String target_url;
     /**
      * 验签
@@ -56,6 +69,7 @@ public class ApiUserPostBean {
     /**
      * 当前时间戳（10位）
      */
+    @ApiModelProperty(value = "当前时间戳（10位）")
     private Long timestamp;
 	public String getFrom() {
 		return from;
@@ -173,14 +187,17 @@ public class ApiUserPostBean {
         this.retUrl = retUrl;
     }
 
+    @ApiModelProperty(value = "登录用户名")
 	private String loginUserName;
-
+    @ApiModelProperty(value = "密码")
 	private String loginPassword;
 
 	/** 同意协议 */
+    @ApiModelProperty(value = "同意协议")
 	private boolean readAgreement;
 
 	// 神策预置属性
+    @ApiModelProperty(value = "神策预置属性")
 	private String presetProps;
 
 	public boolean getReadAgreement() {
