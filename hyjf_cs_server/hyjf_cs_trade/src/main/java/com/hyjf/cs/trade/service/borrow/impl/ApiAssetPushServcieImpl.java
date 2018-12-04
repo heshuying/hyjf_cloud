@@ -900,9 +900,9 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                 //检查是否存在重复资产
                 List<HjhPlanAssetVO> duplicateAssetId = amTradeClient.checkDuplicateAssetId(pushBean.getAssetId());
                 if (!CollectionUtils.isEmpty(duplicateAssetId)){
-                    logger.error("【assetId】重复，请更换");
+                    logger.info(this.getClass().getName(), "企业推送资产时，[assetId]重复，请更换");
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000001);
-                    pushBean.setRetMsg("【assetId】重复，请更换！");
+                    pushBean.setRetMsg("资产已入库");
                     retassets.add(pushBean);// 返回提示
                     continue;
                 }
@@ -917,10 +917,15 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                     logger.info(pushRequestBean.getInstCode()+" mq已发送");
                 }
             }catch (Exception e) {
-                e.printStackTrace();
-                pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000004);
-                if (pushBean.getRetMsg() == null || pushBean.getRetMsg().equals("")){
-                    pushBean.setRetMsg("系统异常,资产未进库");
+                logger.info(this.getClass().getName(), "企业推送资产时，[assetId]重复，请更换");
+                if (e instanceof DuplicateKeyException) {
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000008);
+                    pushBean.setRetMsg("资产已入库");
+                } else {
+                    pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000004);
+                    if (StringUtils.isBlank(pushBean.getRetMsg())){
+                        pushBean.setRetMsg("系统异常,资产未进库");
+                    }
                 }
             }
             retassets.add(pushBean);// 返回推送提示

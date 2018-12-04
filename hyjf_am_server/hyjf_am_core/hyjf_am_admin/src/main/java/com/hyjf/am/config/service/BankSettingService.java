@@ -49,4 +49,10 @@ public interface BankSettingService {
      * @return
      */
     void deleteFeeConfig(Integer id);
+
+    /**
+     * 得到江西银行功能所有数据条数
+     * @return
+     */
+    Integer getTotalCount();
 }
