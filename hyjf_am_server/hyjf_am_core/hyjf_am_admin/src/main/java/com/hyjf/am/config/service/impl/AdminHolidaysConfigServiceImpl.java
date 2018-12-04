@@ -95,6 +95,15 @@ public class AdminHolidaysConfigServiceImpl implements AdminHolidaysConfigServic
     }
 
     /**
+     * 节假日配置-分页获得所有数据条数
+     * @return
+     */
+    @Override
+    public Integer getTotalCount() {
+        return holidaysConfigMapper.countByExample(new HolidaysConfigExample());
+    }
+
+    /**
      * 节假日配置-请求时间格式化
      *
      * @param dateString

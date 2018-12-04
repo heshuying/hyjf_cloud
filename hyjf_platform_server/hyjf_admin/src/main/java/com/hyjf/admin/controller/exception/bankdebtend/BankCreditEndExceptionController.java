@@ -3,7 +3,9 @@ package com.hyjf.admin.controller.exception.bankdebtend;
 import com.alibaba.fastjson.JSON;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.exception.BankCreditEndService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.am.resquest.trade.BankCreditEndListRequest;
@@ -32,6 +34,8 @@ public class BankCreditEndExceptionController extends BaseController {
     @Autowired
     BankCreditEndService bankCreditEndService;
 
+    /** 权限 */
+    public static final String PERMISSIONS = "bankdebtend";
     /**
      * 结束债权列表
      * @param requestBean
@@ -39,6 +43,7 @@ public class BankCreditEndExceptionController extends BaseController {
      */
     @ApiOperation(value = "结束债权列表", notes = "结束债权列表")
     @PostMapping("/list")
+    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<BankCreditEndVO>> getList(@RequestBody BankCreditEndListRequest requestBean){
         Integer count = bankCreditEndService.getCreditEndCount(requestBean);
         Page page = Page.initPage(requestBean.getCurrPage(), requestBean.getPageSize());
@@ -58,6 +63,7 @@ public class BankCreditEndExceptionController extends BaseController {
      */
     @ApiOperation(value = "结束债权(新)同步", notes = "结束债权(新)同步")
     @PostMapping("/update_frombank")
+    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateFromBank(@RequestBody BankCreditEndUpdateRequest requestBean){
         logger.info("结束债权(新)同步, requestBean: " + JSON.toJSONString(requestBean));
         //请求参数校验
@@ -89,6 +95,7 @@ public class BankCreditEndExceptionController extends BaseController {
      */
     @ApiOperation(value = "结束债权(新)更新为初始状态", notes = "结束债权(新)更新为初始状态")
     @PostMapping("/update_forinitial")
+    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateForInitial(@RequestBody BankCreditEndUpdateRequest requestBean){
         logger.info("结束债权(新)更新为初始状态，requestBean：" + JSON.toJSONString(requestBean));
         //请求参数校验
