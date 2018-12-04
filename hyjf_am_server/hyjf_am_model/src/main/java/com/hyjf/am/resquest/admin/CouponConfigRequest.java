@@ -16,61 +16,85 @@ import java.util.Date;
 public class CouponConfigRequest extends BasePage {
     private String id;
 
+    @ApiModelProperty(value = "优惠券编号")
     private String couponCode;
 
     @ApiModelProperty(value = "优惠券名称")
     private String couponName;
 
+    @ApiModelProperty(value = "优惠券额度")
     private BigDecimal couponQuota;
 
+    @ApiModelProperty(value = "发行数量")
     private Integer couponQuantity;
 
+    @ApiModelProperty(value = "收益期限")
     private Short couponProfitTime;
 
+    @ApiModelProperty(value = "优惠券有效期类别")
     private Integer expirationType;
 
+    @ApiModelProperty(value = "优惠券有效期截止日")
     private String expirationDate;
 
+    @ApiModelProperty(value = "优惠券有效期时长")
     private Integer expirationLength;
 
+    @ApiModelProperty(value = "固定期限时长")
     private Short expirationLengthDay;
 
+    @ApiModelProperty(value = "是否与本金共用")
     private Integer addFlag;
 
+    @ApiModelProperty(value = "优惠券使用平台")
     private String couponSystem;
 
     @ApiModelProperty(value = "优惠券类型")
     private Integer couponType;
 
+    @ApiModelProperty(value = "优惠券的使用项目类别")
     private String projectType;
 
+    @ApiModelProperty(value = "项目期限类别")
     private Integer projectExpirationType;
 
+    @ApiModelProperty(value = "项目期限时长")
     private Integer projectExpirationLength;
 
+    @ApiModelProperty(value = "项目期限最短时长")
     private Integer projectExpirationLengthMin;
 
+    @ApiModelProperty(value = "项目期限最长时长")
     private Integer projectExpirationLengthMax;
 
+    @ApiModelProperty(value = "投资金额类别")
     private Integer tenderQuotaType;
 
+    @ApiModelProperty(value = "投资金额")
     private Integer tenderQuota;
 
+    @ApiModelProperty(value = "投资金额最小额度")
     private Integer tenderQuotaMin;
 
+    @ApiModelProperty(value = "投资金额最大额度")
     private Integer tenderQuotaMax;
 
+    @ApiModelProperty(value = "优惠券描述")
     private String content;
 
     @ApiModelProperty(value = "优惠券状态")
     private Integer status;
 
+    @ApiModelProperty(value = "审核内容")
     private String auditContent;
 
+    @ApiModelProperty(value = "审核人")
     private String auditUser;
 
+    @ApiModelProperty(value = "审核时间")
     private Integer auditTime;
 
+    @ApiModelProperty(value = "收益还款时间配置")
     private Integer repayTimeConfig;
 
     private Integer delFlag;
