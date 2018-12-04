@@ -238,8 +238,6 @@
 		<!--</if>-->
 		WHERE
 		1=1
-		<!-- mod by nxl 修改充值管理, 排除状态=4的数据-->
-		AND r.`status` <![CDATA[<>]]> 4
 		<include refid="where-all-page-condition" />
 		ORDER BY r.id DESC
 		<if test="limitStart >= 0">
