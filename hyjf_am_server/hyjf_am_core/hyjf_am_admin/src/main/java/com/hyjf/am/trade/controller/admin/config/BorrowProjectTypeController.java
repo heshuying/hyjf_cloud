@@ -43,14 +43,13 @@ public class BorrowProjectTypeController extends BaseController {
         logger.info("项目类型列表..." + JSONObject.toJSON(adminRequest));
         List<ParamNameVO> paramNameVOS = adminRequest.getParamNameVO();
         BorrowProjectTypeResponse  result=new BorrowProjectTypeResponse();
-        List<BorrowProjectTypeVO> list = borrowProjectTypeService.selectProjectTypeList(new BorrowProjectTypeVO());
-        if(!CollectionUtils.isEmpty(list)){
-            int count =list.size();
-            Paginator paginator = new Paginator(adminRequest.getCurrPage(),list.size(),adminRequest.getPageSize() == 0?10:adminRequest.getPageSize());
+         int count = borrowProjectTypeService.selectProjectTypeCount(new BorrowProjectTypeVO());
+        if(count >0){
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(),count,adminRequest.getPageSize() == 0?10:adminRequest.getPageSize());
             BorrowProjectTypeVO borrowProjectTypeVO =new BorrowProjectTypeVO();
             borrowProjectTypeVO.setLimitStart(paginator.getOffset());
             borrowProjectTypeVO.setLimitEnd(paginator.getLimit());
-            list = borrowProjectTypeService.selectProjectTypeList(borrowProjectTypeVO);
+            List<BorrowProjectTypeVO>  list = borrowProjectTypeService.selectProjectTypeList(borrowProjectTypeVO);
             result.setResultList(list);
             result.setRecordTotal(count);
         }

@@ -54,7 +54,7 @@ public class BorrowRepaymentInfoListController {
     @Autowired
     private BorrowRepaymentInfoListService borrowRepaymentInfoListService;
     /** 查看权限 */
-    public static final String PERMISSIONS = "borrowrepayment";
+    public static final String PERMISSIONS = "borrowrepaymentlist";
 
     @Autowired
     SystemConfig systemConfig;

@@ -4,6 +4,7 @@
 package com.hyjf.am.resquest.config;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -17,32 +18,46 @@ public class MsgPushTemplateRequest extends BasePage implements Serializable {
 
     private Integer id;
 
+    @ApiModelProperty(value = "标签id")
     private Integer tagId;
 
+    @ApiModelProperty(value = "标签编号")
     private String tagCode;
 
+    @ApiModelProperty(value = "标签名称")
     private String tagName;
 
+    @ApiModelProperty(value = "消息模板编号")
     private String templateCode;
 
+    @ApiModelProperty(value = "消息模板标题")
     private String templateTitle;
 
+    @ApiModelProperty(value = "模板图片url")
     private String templateImageUrl;
 
+    @ApiModelProperty(value = "消息模板内容")
     private String templateContent;
 
+    @ApiModelProperty(value = "推送终端")
     private String templateTerminal;
 
+    @ApiModelProperty(value = "后续动作")
     private Integer templateAction;
 
+    @ApiModelProperty(value = "后续动作url")
     private String templateActionUrl;
 
+    @ApiModelProperty(value = "后续动作url1")
     private String templateActionUrl1;
 
+    @ApiModelProperty(value = "后续动作url2")
     private String templateActionUrl2;
 
+    @ApiModelProperty(value = "后续动作url3")
     private String templateActionUrl3;
 
+    @ApiModelProperty(value = "状态")
     private Integer status;
 
     private String createUserName;

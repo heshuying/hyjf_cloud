@@ -30,9 +30,10 @@ public class ActivityListRequest extends BasePage{
     @ApiModelProperty(value = "活动创建结束时间")
     private String endCreate;
 
-    // 平台（Android或iOS）
+    @ApiModelProperty(value = "平台")
     private String platform;
 
+    @ApiModelProperty(value = "标签编号")
     private String imgPc;
 
     private String imgApp;
@@ -45,16 +46,21 @@ public class ActivityListRequest extends BasePage{
 
     private String activityWeiUrl;
 
+    @ApiModelProperty(value = "主图")
     private String img;
 
+    @ApiModelProperty(value = "二维码")
     private String qr;
 
     private String status;
 
+    @ApiModelProperty(value = "前台地址")
     private String urlForeground;
 
+    @ApiModelProperty(value = "后台管理地址")
     private String urlBackground;
 
+    @ApiModelProperty(value = "描述")
     private String description;
 
     private String createTime;
