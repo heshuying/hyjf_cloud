@@ -89,33 +89,27 @@ public class WithdrawController extends BaseController {
 	@ApiOperation(value = "提现确认", notes = "提现确认")
 	@PostMapping("/withdrawConfirm")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_CONFIRM)
-	public String confirmWithdrawAction(HttpServletRequest request,@RequestBody WithdrawBeanAPIRequest form) {
+	public AdminResult confirmWithdrawAction(HttpServletRequest request,@RequestBody WithdrawBeanAPIRequest form) {
 		JSONObject ret = new JSONObject();
 		Integer userId = form.getUserId();
 		String nid = form.getNid();
 		Integer status = form.getStatus();// 0 失败； 1成功
 
 		if (Validator.isNull(userId) || Validator.isNull(nid) || Validator.isNull(status)) {
-			ret.put("status", "error");
-			ret.put("result", "确认发生错误,请重新操作!");
-			logger.error("withdrawConfirm", new Exception("参数不正确[userId=" + userId + "]"));
-			return ret.toString();
+			logger.error("withdrawConfirm", new Exception("参数不正确[userId=" + userId + ",nid="+nid+",status="+status+"]"));
+			return new AdminResult<>(FAIL, "确认发生错误,请重新操作!");
 		}
 		// 取出账户信息
 		AccountVO account = this.withdrawService.getAccountByUserId(userId);
 		if (Validator.isNull(account)) {
-			ret.put("status", "error");
-			ret.put("result", "确认发生错误,请重新操作!");
 			logger.error("withdrawConfirm", new Exception("[userId=" + userId + "]下账户异常！"));
-			return ret.toString();
+			return new AdminResult<>(FAIL, "确认发生错误,请重新操作!");
 		}
 		// 获取充值信息
 		AccountWithdrawVO accountwithdraw = this.withdrawService.queryAccountwithdrawByNid(nid, userId);
 		if (Validator.isNull(accountwithdraw)) {
-			ret.put("status", "error");
-			ret.put("result", "确认发生错误,请重新操作!");
 			logger.error("withdrawConfirm", new Exception("[nid=" + nid + "]不存在！"));
-			return ret.toString();
+			return new AdminResult<>(FAIL,"确认发生错误,请重新操作!");
 		}
 		// 设置IP地址
 		String ip = CustomUtil.getIpAddr(request);
@@ -145,14 +139,10 @@ public class WithdrawController extends BaseController {
 		}
 		// 提现确认成功
 		if (isAccountUpdate) {
-			ret.put("status", "success");
-			ret.put("result", "提现确认操作成功!");
+			return new AdminResult<>(SUCCESS,"提现确认操作成功!");
 		} else {
-			ret.put("status", "error");
-			ret.put("result", "提现确认发生错误,请重新操作!");
+			return new AdminResult<>(FAIL,"提现确认发生错误,请重新操作!");
 		}
-
-		return ret.toString();
 	}
 
 	/**

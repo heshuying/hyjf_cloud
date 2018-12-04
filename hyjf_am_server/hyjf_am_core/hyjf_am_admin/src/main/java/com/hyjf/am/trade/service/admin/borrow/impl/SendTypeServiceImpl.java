@@ -21,6 +21,18 @@ public class SendTypeServiceImpl implements SendTypeService {
     @Autowired
     private BorrowSendTypeMapper borrowSendTypeMapper;
     /*
+      * 分页查询配置中心发标复标条数
+      * */
+    @Override
+    public int selectSendTypeCount(BorrowSendType borrowSendType, int limitStart, int limitEnd){
+        BorrowSendTypeExample example = new BorrowSendTypeExample();
+        if (limitStart != -1) {
+            example.setLimitStart(limitStart);
+            example.setLimitEnd(limitEnd);
+        }
+        return borrowSendTypeMapper.countByExample(example);
+    }
+    /*
    * 分页查询配置中心发标复标
    * */
     @Override

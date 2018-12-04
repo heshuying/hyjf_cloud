@@ -96,6 +96,9 @@ public class WebRechargeController extends BaseTradeController{
 		directRechargeBean.setPlatform(CommonConstant.CLIENT_PC);
 		directRechargeBean.setForgotPwdUrl(super.getForgotPwdUrl(CommonConstant.CLIENT_PC,request,systemConfig));
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,bankRechargeVO.getMobile(),bankRechargeVO.getMoney());
+		if (null == bean) {
+			throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
+		}
 		try {
 			Map<String,Object> data =  BankCallUtils.callApiMap(bean);
 			result.setData(data);

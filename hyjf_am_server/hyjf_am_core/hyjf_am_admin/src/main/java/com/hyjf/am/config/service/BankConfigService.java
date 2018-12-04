@@ -38,6 +38,10 @@ public interface BankConfigService {
     /**
      * 分页查询银行配置
      */
+    public int selectBankConfigCount(BankConfigVO banksConfigVO, int page, int size);
+    /**
+     * 分页查询银行配置
+     */
     List<BankConfig> selectBankConfigListByPage(BankConfigVO banksConfigVO, int page, int size);
     /**
      * 根据bankName查询银行配置
