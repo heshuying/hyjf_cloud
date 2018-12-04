@@ -3,7 +3,9 @@ package com.hyjf.admin.controller.vip.coupon;
 import com.hyjf.admin.beans.response.CouponBackMoneyContResponse;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.coupon.CouponBackMoneyService;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponTenderVo;
@@ -37,10 +39,23 @@ public class CouponBackMoneyController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(CouponBackMoneyController.class);
     @Autowired
     private CouponBackMoneyService couponBackMoneyService;
+    /** 汇计划体验金查看权限 */
+    public static final String HJHPERMISSIONSTY = "HJHBACKMONEYTY";
+    /** 汇计划加息券查看权限 */
+    public static final String HJHPERMISSIONSJX = "HJHBACKMONEYJX";
+    /** 汇计划代金券查看权限 */
+    public static final String HJHPERMISSIONSDJ = "HJHBACKMONEYDJ";
+    /** 汇直投体验金查看权限 */
+    public static final String HZTPERMISSIONSTY = "HZTBACKMONEYTY";
+    /** 汇直投加息券查看权限 */
+    public static final String HZTPERMISSIONSJX = "HZTBACKMONEYJX";
+    /** 汇直投代金券查看权限 */
+    public static final String HZTPERMISSIONSDJ = "HZTBACKMONEYDJ";
 
 
     @ApiOperation(value = "汇直投-代金券-回款使用列表", notes = "汇直投-代金券-回款使用列表")
     @PostMapping("/backmoneydj/hzt/init")
+    @AuthorityAnnotation(key = HZTPERMISSIONSDJ, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult coupontDjListInit( @RequestBody CouponBackMoneyCustomize couponBackMoneyCustomize) {
 
         CouponBackMoneyContResponse response = new CouponBackMoneyContResponse();
@@ -51,6 +66,7 @@ public class CouponBackMoneyController extends BaseController {
 
     @ApiOperation(value = "汇直投-加息券-回款使用列表", notes = "汇直投-加息券-回款使用列表")
     @PostMapping("/backmoneyjx/hzt/init")
+    @AuthorityAnnotation(key = HZTPERMISSIONSTY, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<CouponTenderVo>> couponJxListInit( @RequestBody CouponBackMoneyCustomize couponBackMoneyCustomize) {
 
         CouponBackMoneyContResponse responsehzt = new CouponBackMoneyContResponse();
@@ -62,6 +78,7 @@ public class CouponBackMoneyController extends BaseController {
 
     @ApiOperation(value = "汇直投-体验金-回款使用列表", notes = "汇直投-体验金-回款使用列表")
     @PostMapping("/backmoneyty/hzt/init")
+    @AuthorityAnnotation(key = HZTPERMISSIONSJX, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<CouponTenderVo>> couponTyListInit( @RequestBody CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponBackMoneyContResponse response = new CouponBackMoneyContResponse();
 
@@ -71,6 +88,7 @@ public class CouponBackMoneyController extends BaseController {
 
     @ApiOperation(value = "汇计划-体验金-回款使用列表", notes = "汇计划-体验金-回款使用列表")
     @PostMapping("/backmoneyty/hjh/init")
+    @AuthorityAnnotation(key = HJHPERMISSIONSTY, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<CouponTenderVo>> couponHjhTyListInit( @RequestBody CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponBackMoneyContResponse response = new CouponBackMoneyContResponse();
 
@@ -80,6 +98,7 @@ public class CouponBackMoneyController extends BaseController {
 
     @ApiOperation(value = "汇计划-代金券-回款使用列表", notes = "汇计划-代金券-回款使用列表")
     @PostMapping("/backmoneydj/hjh/init")
+    @AuthorityAnnotation(key = HJHPERMISSIONSDJ, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<CouponTenderVo>> coupontHjhDjListInit( @RequestBody CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponBackMoneyContResponse response = new CouponBackMoneyContResponse();
 
@@ -89,6 +108,7 @@ public class CouponBackMoneyController extends BaseController {
 
     @ApiOperation(value = "汇计划-加息券-回款使用列表", notes = "汇计划-加息券-回款使用列表")
     @PostMapping("/backmoneyjx/hjh/init")
+    @AuthorityAnnotation(key = HJHPERMISSIONSJX, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<CouponTenderVo>> couponHjhJxListInit(@RequestBody CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponBackMoneyContResponse response = new CouponBackMoneyContResponse();
 

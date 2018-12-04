@@ -2,7 +2,9 @@ package com.hyjf.admin.controller.exception.manualreverse;
 
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.exception.ManualReverseExceptionService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.am.resquest.admin.ManualReverseAddRequest;
@@ -27,6 +29,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/hyjf-admin/exception/manualreverse")
 public class ManualReverseExceptionController extends BaseController {
+    public static final String PERMISSIONS = "manualreverse";
+
     @Autowired
     ManualReverseExceptionService manualReverseExceptionService;
 
@@ -37,6 +41,7 @@ public class ManualReverseExceptionController extends BaseController {
      */
     @ApiOperation(value = "手动冲正列表", notes = "手动冲正列表")
     @PostMapping("/list")
+    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<ManualReverseCustomizeVO>> getList(@RequestBody ManualReverseCustomizeRequest requestBean){
         Integer count = manualReverseExceptionService.getManualReverseCount(requestBean);
         Page page = Page.initPage(requestBean.getCurrPage(), requestBean.getPageSize());
@@ -56,6 +61,7 @@ public class ManualReverseExceptionController extends BaseController {
      */
     @ApiOperation(value = "手动冲正更新", notes = "手动冲正更新")
     @PostMapping("/update_manualreverse")
+    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_ADD)
     public AdminResult manualReverse(HttpServletRequest request, @RequestBody ManualReverseAddRequest requestBean){
         AdminSystemVO adminSystemVO = this.getUser(request);
         requestBean.setLoginUserId(adminSystemVO.getId());

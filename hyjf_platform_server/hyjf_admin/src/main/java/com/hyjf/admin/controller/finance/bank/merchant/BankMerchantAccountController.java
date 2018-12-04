@@ -122,6 +122,7 @@ public class BankMerchantAccountController extends BaseController {
      * @return
      */
     @ApiOperation(value = "设置交易密码")
+    @ApiImplicitParam(name = "param", value = "{accountCode:string}", dataType = "Map")
     @PostMapping(value = "/setPassword")
     public AdminResult setPassword(@RequestBody Map<String,String> param) {
         AdminResult result = bankMerchantAccountService.setPassword(param.get("accountCode"));
@@ -156,6 +157,7 @@ public class BankMerchantAccountController extends BaseController {
      * @return
      */
     @ApiOperation(value = "重置交易密码")
+    @ApiImplicitParam(name = "param", value = "{accountCode:string}", dataType = "Map")
     @PostMapping(value = "/resetPassword")
     public AdminResult resetPassword(@RequestBody Map<String,String> param) {
         AdminResult result = bankMerchantAccountService.resetPassword(param.get("accountCode"));
@@ -611,6 +613,7 @@ public class BankMerchantAccountController extends BaseController {
      */
     @ApiOperation(value = "用户同步余额")
     @ResponseBody
+    @ApiImplicitParam(name = "param", value = "{accountCode:string}", dataType = "Map")
     @PostMapping(value = "/synbalance", produces = "application/json; charset=utf-8")
     public JSONObject synbalance(HttpServletRequest request,@RequestBody Map<String,String> param) {
         JSONObject ret = new JSONObject();
@@ -706,13 +709,6 @@ public class BankMerchantAccountController extends BaseController {
         String merrpAccount = systemConfig.getBANK_MERRP_ACCOUNT();
         int loginUserId = Integer.parseInt(getUser(request).getId());
         BigDecimal bankBalance = bankMerchantAccountService.getBankBalance(loginUserId, merrpAccount);
-        // 画面验证
-        // TODO: 2018/8/8 zhangqingqing
-       /*this.validatorFieldCheck(modelAndView, form, bankBalance);
-        if (ValidatorFieldCheckUtil.hasValidateError(modelAndView)) {
-            modelAndView.addObject(BankMerchantAccountDefine.RED_POCKET_SEND_FORM, form);
-            return modelAndView;
-        }*/
         // IP地址
         String ip = CustomUtil.getIpAddr(request);
         String orderId = GetOrderIdUtils.getOrderId2(Integer.valueOf(getUser(request).getId()));

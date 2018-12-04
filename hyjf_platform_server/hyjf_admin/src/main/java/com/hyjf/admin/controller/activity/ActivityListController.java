@@ -70,6 +70,7 @@ public class ActivityListController extends BaseController {
 
     @ApiOperation(value = "活动详情", notes = "活动详情")
     @PostMapping("/infoAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public AdminResult getInfoList(@RequestBody ActivityListRequest request) {
         ActivityListResponse response = new ActivityListResponse();
         List<ParamNameVO> clients = activityListService.getParamNameList("CLIENT");
@@ -197,6 +198,7 @@ public class ActivityListController extends BaseController {
 
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @PostMapping("/uploadFile")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {

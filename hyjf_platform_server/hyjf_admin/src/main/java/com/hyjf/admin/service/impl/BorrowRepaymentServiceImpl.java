@@ -235,4 +235,10 @@ public class BorrowRepaymentServiceImpl implements BorrowRepaymentService {
         }
         return true;
     }
+    @Override
+    public Integer countBorrowRepayment(BorrowRepaymentRequest request) {
+
+		return   this.amTradeClient.countBorrowRepayment(request);
+    }
+  
 }

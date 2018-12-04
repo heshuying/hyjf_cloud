@@ -59,6 +59,10 @@ public class VipManageController extends BaseController {
 
     /** 查看权限 */
     public static final String PERMISSIONS = "vipmanage";
+    /** vip详情权限 */
+    public static final String PERMISSIONS_DETAIL = "vipdatail";
+    /** vip升级权限 */
+    public static final String PERMISSIONS_UPGRADE = "vipupgrade";
 
     @Autowired
     private VipManageService vipManageService;
@@ -114,7 +118,7 @@ public class VipManageController extends BaseController {
 
     @ApiOperation(value = "VIP详情页面", notes = "VIP详情页面")
     @RequestMapping (value = "/vipdetailInit",method = RequestMethod.POST)
-    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
+    @AuthorityAnnotation(key = PERMISSIONS_DETAIL,value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult vipDetailInit() {
         VipDetailListRequest vdr = new VipDetailListRequest();
         VipDetailListResponse vdl = vipManageService.searchDetailList(vdr);
@@ -137,7 +141,7 @@ public class VipManageController extends BaseController {
 
     @ApiOperation(value = "VIP升级详情页面", notes = "VIP升级详情页面")
     @RequestMapping(value = "/vipupgradeInit",method = RequestMethod.POST)
-    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
+    @AuthorityAnnotation(key = PERMISSIONS_UPGRADE, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult vipUpdateGradeInit() {
         VipUpdateGradeListRequest vgl = new VipUpdateGradeListRequest();
         VipUpdateGradeListResponse vgr = vipManageService.searchUpdateGradeList(vgl);
@@ -265,6 +269,7 @@ public class VipManageController extends BaseController {
      */
     @ApiOperation(value = "导出",notes = "导出")
     @RequestMapping(value = "/exportVips",method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportExcelVips( VipManageRequest vipManageRequest, HttpServletRequest request,
                              HttpServletResponse response) throws Exception {
         //sheet默认最大行数

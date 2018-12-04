@@ -4,6 +4,7 @@
 package com.hyjf.admin.controller;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.common.enums.MsgEnum;
@@ -133,5 +134,18 @@ public class BaseController{
 	public String  getPageSize(Map<String, ?> map) {
 
 		return String.valueOf(map.get(PAGE)) ;
+	}
+	//PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)
+	public boolean permission(HttpServletRequest request,String PERMISSIONS,String shiroConstants) {
+        // 获取该角色 权限列表
+        List<String> perm = (List<String>) request.getSession().getAttribute("permission");
+        //判断权限
+        boolean isShow = false;
+        for (String string : perm) {
+            if (string.equals(PERMISSIONS + ":" + shiroConstants)) {
+                isShow=true;
+            }
+        }
+        return isShow;
 	}
 }

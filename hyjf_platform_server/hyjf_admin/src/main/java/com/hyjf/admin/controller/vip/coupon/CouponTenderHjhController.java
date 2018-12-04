@@ -4,7 +4,9 @@ import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.coupon.CouponTenderHjhService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
@@ -44,9 +46,12 @@ public class CouponTenderHjhController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(CouponTenderHjhController.class);
     @Autowired
     private CouponTenderHjhService couponTenderHjhService;
+    //权限名称
+    private static final String PERMISSIONS = "COUPONTENDERHJH";
 
     @ApiOperation(value = "页面初始化", notes = "汇计划使用列表")
     @PostMapping("/init")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<CouponTenderVo>> couponListInit(HttpServletRequest request, HttpServletResponse response, @RequestBody CouponTenderRequest couponTenderRequest) {
         CouponTenderVo couponTenderHztVo = new CouponTenderVo();
         ListResult<CouponTenderVo> lrs = new ListResult<CouponTenderVo>();
@@ -112,6 +117,7 @@ public class CouponTenderHjhController extends BaseController {
      */
     @ApiOperation(value = "优惠券使用-汇计划列表", notes = "优惠券使用-汇计划列表")
     @PostMapping("/exportAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportActionByDay(HttpServletRequest request, HttpServletResponse response, @RequestBody CouponTenderRequest couponTenderRequest) throws Exception {
         // 封装查询条件
         //设置默认查询时间
