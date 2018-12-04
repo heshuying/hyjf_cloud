@@ -1,6 +1,7 @@
 package com.hyjf.am.vo.market;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
@@ -9,63 +10,58 @@ import java.util.Date;
  * @version AdsVO, v0.1 2018/5/14 16:13
  */
 public class AdsVO extends BaseVO {
-    private String timeStart;
-    private String timeEnd;
-
+    @ApiModelProperty(value = "id集合")
     private String ids;
+    @ApiModelProperty(value = "id")
     private Integer id;
-
+    @ApiModelProperty(value = "广告名")
     private String name;
-
+    @ApiModelProperty(value = "广告类型")
     private Integer typeId;
-
+    @ApiModelProperty(value = "路径")
     private String url;
-
+    @ApiModelProperty(value = "调用代码")
     private String code;
-
     private String content;
-
+    @ApiModelProperty(value = " 图片路径 ")
     private String image;
-
+    @ApiModelProperty(value = "DEFAULT '0'")
     private Integer order;
-
+    @ApiModelProperty(value = "DEFAULT '0'")
     private Integer hits;
-
+    @ApiModelProperty(value = "状态  0  或  1")
     private Integer status;
-
+    @ApiModelProperty(value = "分享url")
     private String shareUrl;
-
+    @ApiModelProperty(value = "分享图片url")
     private String shareImage;
-
+    @ApiModelProperty(value = "是否在首页特色banner位置显示，0为不显示，1显示")
     private Integer isIndex;
+    @ApiModelProperty(value = "是否已结束(只针对活动banner有效0:否,1:是)")
+    private Integer isEnd;
+    @ApiModelProperty(value = "分享标题")
+    private String shareTitle;
+    @ApiModelProperty(value = "活动列表图")
+    private String activitiImage;
+    @ApiModelProperty(value = "活动描述")
+    private String activitiDesc;
+    @ApiModelProperty(value = "分享内容")
+    private String shareContent;
+    @ApiModelProperty(value = "客户端类型 0为pc广告  1为手机广告")
+    private Integer clientType;
+    @ApiModelProperty(value = "是否限制新手 1：限制 2：不限制")
+    private Integer newUserShow;
+    @ApiModelProperty(value = "拆分状态 1：android广告管理 2：ios广告管理 3: 微信广告管理")
+    private Integer platformType;
 
     private String startTime;
-
     private String endTime;
-
-    private Integer isEnd;
-
-    private String shareTitle;
-
-    private String activitiImage;
-
-    private String activitiDesc;
-
-    private String shareContent;
-
-    private Integer clientType;
-
-    private Integer newUserShow;
-
     private Integer createUserId;
-
     private Integer updateUserId;
-
     private Date createTime;
-
     private Date updateTime;
-
-    private Integer platformType;
+    private String timeStart;
+    private String timeEnd;
 
     public String getIds() {
         return ids;
