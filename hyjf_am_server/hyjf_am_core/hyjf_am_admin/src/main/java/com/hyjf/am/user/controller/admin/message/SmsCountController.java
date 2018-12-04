@@ -64,6 +64,35 @@ public class SmsCountController extends BaseController {
     }
 
     /**
+     * 查询导出总条数
+     * @param request
+     * @return
+     */
+    @RequestMapping("getsmscountforexport")
+    public SmsCountCustomizeResponse getCountForExport (@RequestBody SmsCountRequest request){
+        // 查询列表条数
+        SmsCountCustomizeResponse response = new SmsCountCustomizeResponse();
+        response.setCount(smsCountService.selectCount(request));
+        return response;
+    }
+
+    /**
+     * 查询导出列表
+     * @param request
+     * @return
+     */
+    @RequestMapping("getsmslistforexport")
+    public SmsCountCustomizeResponse getListForExport (@RequestBody SmsCountRequest request){
+        SmsCountCustomizeResponse response = new SmsCountCustomizeResponse();
+        List<SmsCountCustomize> list = smsCountService.querySmsCountLlist(request);
+        if (!CollectionUtils.isEmpty(list)) {
+            List<SmsCountCustomizeVO> voList = CommonUtils.convertBeanList(list, SmsCountCustomizeVO.class);
+            response.setResultList(voList);
+        }
+        return response;
+    }
+
+    /**
      * 查询询短信总条数+总费用
      * @param request
      * @return

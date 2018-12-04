@@ -57,7 +57,7 @@ public class AppBorrowImageController extends BaseController {
 
     @ApiOperation(value = "产品图片:获取详细画面", notes = "产品图片:获取详细画面")
     @PostMapping(value = "/searchinfo")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD,ShiroConstants.PERMISSION_MODIFY})
     public AdminResult<AppBorrowImageVO> searchinfo(@RequestBody AppBorrowImageRequest request) {
         AppBorrowImageResponse record = appBorrowImageService.getRecord(request);
         if (!Response.isSuccess(record)) {
@@ -116,7 +116,6 @@ public class AppBorrowImageController extends BaseController {
      */
     @ApiOperation(value = "产品图片:资料上传", notes = "产品图片:资料上传")
     @PostMapping(value = "/uploadFile")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public JSONObject uploadFile(HttpServletRequest request) {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("statusDesc", SUCCESS_DESC);

@@ -13,10 +13,8 @@ import com.hyjf.am.resquest.config.AdminSystemRequest;
 import com.hyjf.am.user.service.admin.locked.LockedUserService;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.TreeVO;
-import com.hyjf.common.security.util.MD5;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -61,7 +59,7 @@ public class AdminSystemController extends BaseConfigController {
 		AdminSystemResponse asr = new AdminSystemResponse();
 		AdminSystem adminSystem = new AdminSystem();
 		adminSystem.setUsername(adminSystemR.getUsername());
-		adminSystem.setPassword(MD5.toMD5Code(adminSystemR.getPassword()));
+		adminSystem.setPassword(adminSystemR.getPassword());
 		AdminSystem adminSystemr = adminSystemService.getUserInfo(adminSystem);
 		if (adminSystemr != null) {
 			AdminSystemVO asv = new AdminSystemVO();
@@ -162,7 +160,7 @@ public class AdminSystemController extends BaseConfigController {
     	if(adminSystemR.getId()!=null&&adminSystemR.getId().equals("1")) {
     		AdminSystem adminSystem = new AdminSystem();
     		adminSystem.setUsername(adminSystemR.getUsername());
-    		adminSystem.setPassword(MD5.toMD5Code(adminSystemR.getOldPassword()));
+    		adminSystem.setPassword(adminSystemR.getOldPassword());
     		AdminSystem adminSystemr = adminSystemService.getUserInfo(adminSystem);
                 if (adminSystemr == null) {
                 	response.setRtn(Response.FAIL);
@@ -180,7 +178,7 @@ public class AdminSystemController extends BaseConfigController {
             } else {
         		AdminSystem adminSystem = new AdminSystem();
         		adminSystem.setUsername(adminSystemR.getUsername());
-        		adminSystem.setPassword(MD5.toMD5Code(adminSystemR.getOldPassword()));
+        		adminSystem.setPassword(adminSystemR.getOldPassword());
         		AdminSystem adminSystemr = adminSystemService.getUserInfo(adminSystem);
                     if (adminSystemr == null) {
                     	response.setRtn(Response.FAIL);
