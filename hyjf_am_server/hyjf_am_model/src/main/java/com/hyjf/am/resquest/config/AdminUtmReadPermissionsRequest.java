@@ -1,6 +1,7 @@
 package com.hyjf.am.resquest.config;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -16,14 +17,17 @@ public class AdminUtmReadPermissionsRequest extends BasePage implements Serializ
     /**
      * 用户名查询
      */
+    @ApiModelProperty(value = "用户名查询")
     private String adminUserNameSrch;
     /**
      * 关键字查询
      */
+    @ApiModelProperty(value = "关键字查询")
     private String keyCodeSrch;
     /**
      * 真实姓名查询
      */
+    @ApiModelProperty(value = "姓名查询")
     private String adminTrueNameSrch;
 
     /*
@@ -71,8 +75,9 @@ public class AdminUtmReadPermissionsRequest extends BasePage implements Serializ
     /*
      * 查询开始时间
      */
+    @ApiModelProperty(value = "添加开始时间查询")
     private String timeStartSrch;
-
+    @ApiModelProperty(value = "添加结束时间查询")
     private String timeEndSrch;
     /*
      * 查询结束时间
