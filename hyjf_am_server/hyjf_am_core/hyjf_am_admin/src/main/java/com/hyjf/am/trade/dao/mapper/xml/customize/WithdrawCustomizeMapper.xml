@@ -84,7 +84,7 @@
 		SELECT
 			count(a.id) as cnt
 		FROM
-		(select * from ht_account_withdraw where status!=4) a
+        ht_account_withdraw a
 		LEFT JOIN ht_r_user u ON a.user_id = u.user_id
 		<include refid="Withdraw_Where_Clause" />
 	</select>
@@ -130,7 +130,7 @@
 			a.reason AS reason,
 			a.withdraw_type AS withdrawType
 		FROM
-			 (select * from ht_account_withdraw where status !=4)a
+          ht_account_withdraw a
 		LEFT JOIN ht_r_user u ON a.user_id = u.user_id
 		LEFT JOIN ht_r_user spu ON spu.user_id = u.spreads_user_id
 		LEFT JOIN ht_r_oa_users `ou` ON `ou`.hyd_id = u.user_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
