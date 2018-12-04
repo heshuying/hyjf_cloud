@@ -1,6 +1,8 @@
 package com.hyjf.admin.controller.content;
 
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.content.CategoryService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CategoryResponse;
@@ -31,9 +33,12 @@ public class CategoryController extends BaseController {
 
 	@Autowired
 	private CategoryService categoryService;
+    //权限名称
+    private static final String PERMISSIONS = "help";
 
 	@ApiOperation(value = "内容中心-帮助中心", notes = "帮助中心-条件列表查询")
 	@RequestMapping(value = "/init", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public CategoryResponse searchAction(@RequestBody CategoryBeanRequest categoryBeanRequest) {
 		logger.info("查询内容中心-帮助中心-条件列表查询开始......");
 		CategoryResponse response = categoryService.getCategoryPage(categoryBeanRequest);
@@ -42,6 +47,7 @@ public class CategoryController extends BaseController {
 
 	@ApiOperation(value = "内容中心-帮助中心-二级菜单联动", notes = "帮助中心-二级菜单联动")
 	@RequestMapping(value = "/changesubtypeaction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public CategoryResponse changeSubTypeAction(@RequestBody CategoryBeanRequest categoryBeanRequest) {
 		logger.info("查询内容中心-帮助中心-二级菜单联动......");
 		categoryBeanRequest.setIsShow(true);
@@ -51,6 +57,7 @@ public class CategoryController extends BaseController {
 
 	@ApiOperation(value = "内容中心-帮助中心-二级菜单联动2,只显示可用的二级菜单", notes = "帮助中心-二级菜单联动2,只显示可用的二级菜单")
 	@RequestMapping(value = "/changesubtypeaction2", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public CategoryResponse changeSubTypeAction2(@RequestBody CategoryBeanRequest categoryBeanRequest) {
 		logger.info("查询内容中心-帮助中心-二级菜单联动2,只显示可用的二级菜单......");
 		categoryBeanRequest.setIsShow(false);
@@ -60,6 +67,7 @@ public class CategoryController extends BaseController {
 
 	@ApiOperation(value = "内容中心-帮助中心-跳转到添加分类的页面", notes = "帮助中心-跳转到添加分类的页面")
 	@RequestMapping(value = "/infotypeaction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public CategoryResponse infoTypeAction(@RequestBody CategoryBeanRequest categoryBeanRequest) {
 		logger.info("查询内容中心-帮助中心-跳转到添加分类的页面......");
 		CategoryResponse response = new CategoryResponse();
@@ -83,6 +91,7 @@ public class CategoryController extends BaseController {
 
 	@ApiOperation(value = "内容中心-帮助中心-添加分类", notes = "帮助中心-添加分类")
 	@RequestMapping(value = "/addaction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
 	public CategoryResponse addCate(@RequestBody CategoryBeanRequest categoryBeanRequest) {
 		logger.info("查询内容中心-帮助中心-添加分类......");
 		CategoryResponse response = new CategoryResponse();
@@ -96,6 +105,7 @@ public class CategoryController extends BaseController {
 
 	@ApiOperation(value = "内容中心-帮助中心-修改分类", notes = "帮助中心-修改分类")
 	@RequestMapping(value = "/updateaction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public CategoryResponse updateAction(@RequestBody CategoryBeanRequest categoryBeanRequest) {
 		logger.info("查询内容中心-帮助中心-修改分类......");
 		CategoryResponse response = new CategoryResponse();
@@ -114,6 +124,7 @@ public class CategoryController extends BaseController {
 
 	@ApiOperation(value = "内容中心-帮助中心-关闭模板", notes = "帮助中心-关闭模板")
 	@RequestMapping(value = "/closeaction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public CategoryResponse closeAction(@RequestBody CategoryBeanRequest categoryBeanRequest) {
 		logger.info("查询内容中心-帮助中心-关闭模板......");
 		CategoryResponse response = new CategoryResponse();
@@ -135,6 +146,7 @@ public class CategoryController extends BaseController {
 
 	@ApiOperation(value = "内容中心-帮助中心-启用模板", notes = "帮助中心-启用模板")
 	@RequestMapping(value = "/openaction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public CategoryResponse openAction(@RequestBody CategoryBeanRequest categoryBeanRequest) {
 		logger.info("查询内容中心-帮助中心-启用模板......");
 		CategoryResponse response = new CategoryResponse();
@@ -156,6 +168,7 @@ public class CategoryController extends BaseController {
 
 	@ApiOperation(value = "内容中心-帮助中心-删除前的验证", notes = "帮助中心-删除前的验证")
 	@RequestMapping(value = "/beforedelinfoaction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public CategoryResponse beforeDelInfoAction(@RequestBody CategoryBeanRequest categoryBeanRequest) {
 		logger.info("查询内容中心-帮助中心-删除前的验证......");
 		CategoryResponse response = new CategoryResponse();
@@ -191,6 +204,7 @@ public class CategoryController extends BaseController {
 
 	@ApiOperation(value = "内容中心-帮助中心-删除分类", notes = "帮助中心-删除分类")
 	@RequestMapping(value = "/delaction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public CategoryResponse delAction(@RequestBody CategoryBeanRequest categoryBeanRequest) {
 		logger.info("查询内容中心-帮助中心-删除分类......");
 		CategoryResponse response = new CategoryResponse();
@@ -238,6 +252,7 @@ public class CategoryController extends BaseController {
 
 	@ApiOperation(value = "内容中心-帮助中心-问题列表", notes = "帮助中心-问题列表查询")
 	@RequestMapping(value = "/helpinit", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public CategoryResponse helpInit(@RequestBody ContentHelpBeanRequest contentHelpBeanRequest) {
 		logger.info("查询内容中心-帮助中心-问题列表查询开始......");
 		CategoryResponse response = categoryService.getHelpPage(contentHelpBeanRequest);
@@ -246,6 +261,7 @@ public class CategoryController extends BaseController {
 
 	@ApiOperation(value = "内容中心-帮助中心-列表页跳转详情页(含有id更新，不含有id添加)", notes = "帮助中心-问题列表页跳转详情页(含有id更新，不含有id添加)")
 	@RequestMapping(value = "/helpinfoaction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public CategoryResponse helpInfo(@RequestBody ContentHelpBeanRequest contentHelpBeanRequest) {
 		logger.info("查询内容中心-帮助中心-列表页跳转详情页(含有id更新，不含有id添加)查询开始......");
 		CategoryResponse response = categoryService.getHelpInfo(contentHelpBeanRequest);
@@ -254,6 +270,7 @@ public class CategoryController extends BaseController {
 
 	@ApiOperation(value = "内容中心-帮助中心-添加问题", notes = "帮助中心-添加问题")
 	@RequestMapping(value = "/helpaddaction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
 	public CategoryResponse addHelp(@RequestBody ContentHelpBeanRequest contentHelpBeanRequest) {
 		logger.info("查询内容中心-帮助中心-添加问题开始......");
 		CategoryResponse response = categoryService.insertHelpInfo(contentHelpBeanRequest);
@@ -262,6 +279,7 @@ public class CategoryController extends BaseController {
 
 	@ApiOperation(value = "内容中心-帮助中心-修改问题", notes = "帮助中心-修改问题")
 	@RequestMapping(value = "/helpupdateaction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public CategoryResponse updateHelpAction(@RequestBody ContentHelpBeanRequest contentHelpBeanRequest) {
 		logger.info("查询内容中心-帮助中心-修改问题开始......");
 		CategoryResponse response = categoryService.updateHelpAction(contentHelpBeanRequest);
@@ -270,6 +288,7 @@ public class CategoryController extends BaseController {
 
 	@ApiOperation(value = "内容中心-帮助中心-关闭问题", notes = "帮助中心-关闭问题")
 	@RequestMapping(value = "/closehelpaction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public CategoryResponse closeHelpAction(@RequestBody ContentHelpBeanRequest contentHelpBeanRequest) {
 		logger.info("查询内容中心-帮助中心-关闭问题开始......");
 		CategoryResponse response = new CategoryResponse();
@@ -286,6 +305,7 @@ public class CategoryController extends BaseController {
 
 	@ApiOperation(value = "内容中心-帮助中心-开启问题", notes = "帮助中心-开启问题")
 	@RequestMapping(value = "/openhelpaction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public CategoryResponse openHelpAction(@RequestBody ContentHelpBeanRequest contentHelpBeanRequest) {
 		logger.info("查询内容中心-帮助中心-开启问题开始......");
 		CategoryResponse response = new CategoryResponse();
@@ -302,6 +322,7 @@ public class CategoryController extends BaseController {
 
 	@ApiOperation(value = "内容中心-帮助中心-删除问题", notes = "帮助中心-删除问题")
 	@RequestMapping(value = "/delhelpaction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public CategoryResponse delHelpAction(@RequestBody ContentHelpBeanRequest contentHelpBeanRequest) {
 		logger.info("查询内容中心-帮助中心-删除问题开始......");
 		CategoryResponse response = new CategoryResponse();
@@ -317,6 +338,7 @@ public class CategoryController extends BaseController {
 
     @ApiOperation(value = "内容中心-帮助中心-移除常见列表", notes = "帮助中心-移除常见列表")
     @RequestMapping(value = "/oftenMoveAction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public CategoryResponse moveAction(@RequestBody ContentHelpBeanRequest contentHelpBeanRequest) {
         logger.info("查询内容中心-帮助中心-移除问题开始......");
         CategoryResponse response = new CategoryResponse();
@@ -333,6 +355,7 @@ public class CategoryController extends BaseController {
 
 	@ApiOperation(value = "内容中心-帮助中心-移除智齿客服问题", notes = "帮助中心-移除智齿客服问题")
 	@RequestMapping(value = "/zhiChiMoveAction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public CategoryResponse zhiChiMoveAction(@RequestBody ContentHelpBeanRequest contentHelpBeanRequest) {
 		logger.info("查询内容中心-帮助中心-移除智齿客服......");
 		CategoryResponse response = new CategoryResponse();
@@ -349,6 +372,7 @@ public class CategoryController extends BaseController {
 
 	@ApiOperation(value = "内容中心-帮助中心-智齿客服问题列表页面初始化", notes = "智齿客服问题列表页面初始化")
 	@RequestMapping(value = "/zhichiinit", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public CategoryResponse zhiChiInit(@RequestBody ContentHelpBeanRequest contentHelpBeanRequest) {
 		logger.info("查询内容中心-帮助中心-启用智齿常见问题开始......");
 		CategoryResponse response = categoryService.getZhiChiInit(contentHelpBeanRequest);
@@ -371,6 +395,7 @@ public class CategoryController extends BaseController {
 
 	@ApiOperation(value = "内容中心-帮助中心-开启常见问题", notes = "帮助中心-开启常见问题")
 	@RequestMapping(value = "/moveoftenaction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public CategoryResponse moveOftenAction(@RequestBody ContentHelpBeanRequest contentHelpBeanRequest) {
 		logger.info("查询内容中心-帮助中心-开启常见问题开始......");
 		CategoryResponse response = new CategoryResponse();
@@ -387,6 +412,7 @@ public class CategoryController extends BaseController {
 
 	@ApiOperation(value = "内容中心-帮助中心-问题列表", notes = "帮助中心-问题列表查询")
 	@RequestMapping(value = "/ofteninit", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public CategoryResponse oftenInit(@RequestBody ContentHelpBeanRequest contentHelpBeanRequest) {
 		logger.info("查询内容中心-帮助中心-问题列表查询开始......");
 		CategoryResponse response = categoryService.getOftenInitPage(contentHelpBeanRequest);
