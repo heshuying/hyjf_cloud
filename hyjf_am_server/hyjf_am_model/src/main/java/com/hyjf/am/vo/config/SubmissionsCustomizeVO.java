@@ -2,6 +2,7 @@ package com.hyjf.am.vo.config;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hyjf.common.util.GetDate;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
@@ -11,42 +12,48 @@ import java.util.Date;
  */
 
 public class SubmissionsCustomizeVO  {
-
+    @ApiModelProperty(value = "图片地址")
     private String img;
-
+    @ApiModelProperty(value = "客服回复")
     private String reply;
 
-
+    @ApiModelProperty(value = "反馈id")
     private String submissionsId;
 
     /**
      * 用户名
      */
+    @ApiModelProperty(value = "用户名")
     private String userName;
 
     /**
      * 系统类别
      */
+    @ApiModelProperty(value = "系统类别")
     private String sysType;
 
     /**
      * 系统版本号
      */
+    @ApiModelProperty(value = "系统版本号")
     private String sysVersion;
 
     /**
      * 平台版本号
      */
+    @ApiModelProperty(value = "平台版本号")
     private String platformVersion;
 
     /**
      * 手机型号
      */
+    @ApiModelProperty(value = "手机型号")
     private String phoneType;
 
     /**
      * 回复内容
      */
+    @ApiModelProperty(value = "回复内容")
     private String content;
 
     /**
@@ -58,13 +65,16 @@ public class SubmissionsCustomizeVO  {
     /**
      * 处理状态
      */
+    @ApiModelProperty(value = "处理状态")
     private String subState;
 
     /**
      * 用戶id
      */
+    @ApiModelProperty(value = "用戶id")
     private Integer userId;
 
+    @ApiModelProperty(value = "状态 0未审 1已审核")
     private String status;
 
     private String createTime;

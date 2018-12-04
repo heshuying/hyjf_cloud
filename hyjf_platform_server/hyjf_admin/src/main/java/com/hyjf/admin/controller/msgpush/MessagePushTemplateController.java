@@ -46,8 +46,6 @@ public class MessagePushTemplateController extends BaseController {
     private MessagePushTemplateService messagePushTemplateService;
     @Autowired
     private MessagePushTagService messagePushTagService;
-    @Autowired
-    private MessagePushNoticesService messagePushNoticesService;
 
     @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @RequestMapping(value = "/init", method = RequestMethod.POST)

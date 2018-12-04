@@ -19,186 +19,100 @@ public class AppChannelStatisticsRequest extends BasePage implements Serializabl
 
     private static final long serialVersionUID = 1L;
 
-    /**
-     * 渠道ID
-     */
     @ApiModelProperty(value = "渠道ID")
     private String sourceId;
-    /**
-     * 渠道
-     */
+
     @ApiModelProperty(value = "渠道")
     private String channelName;
 
-    /**
-     * 访问数
-     */
     @ApiModelProperty(value = "访问数")
     private String visitCount;
 
-    /**
-     * 注册数
-     */
     @ApiModelProperty(value = "注册数")
     private String registerCount;
-    /**
-     * 无主单注册数
-     */
+
     @ApiModelProperty(value = "无主单注册数")
     private String registerAttrCount;
 
-    /**
-     * 开户数
-     */
     @ApiModelProperty(value = "开户数")
     private String openAccountCount;
 
-    /**
-     * 投资人数
-     */
     @ApiModelProperty(value = "投资人数")
     private String investNumber;
 
-    /**
-     * 累计充值
-     */
     @ApiModelProperty(value = "累计充值")
     private String cumulativeCharge;
 
-    /**
-     * 累计投资
-     */
     @ApiModelProperty(value = "累计投资")
     private String cumulativeInvest;
 
-    /**
-     * 汇直投投资金额
-     */
     @ApiModelProperty(value = "汇直投投资金额")
     private String hztInvestSum;
 
-    /**
-     * 汇消费投资金额
-     */
     @ApiModelProperty(value = "汇消费投资金额")
     private String hxfInvestSum;
 
-    /**
-     * 汇天利投资金额
-     */
     @ApiModelProperty(value = "汇天利投资金额")
     private String htlInvestSum;
 
-    /**
-     * 汇添金投资金额
-     */
     @ApiModelProperty(value = "汇添金投资金额")
     private String htjInvestSum;
 
-    /**
-     * 汇金理财投资金额
-     */
     @ApiModelProperty(value = "汇金理财投资金额")
     private String rtbInvestSum;
 
-    /**
-     * 汇转让投资金额
-     */
     @ApiModelProperty(value = "汇转让投资金额")
     private String hzrInvestSum;
-    /**
-     * 开户数（ios）
-     */
-    @ApiModelProperty(value = "开户数（ios）")
+
+    @ApiModelProperty(value = "开户数ios")
     private String accountNumberIos;
-    /**
-     * 开户数（pc）
-     */
-    @ApiModelProperty(value = "开户数（pc）")
+
+    @ApiModelProperty(value = "开户数pc")
     private String accountNumberPc;
-    /**
-     * 开户数（wechat）
-     */
-    @ApiModelProperty(value = "开户数（wechat）")
+
+    @ApiModelProperty(value = "开户数wechat")
     private String accountNumberWechat;
 
-    /**
-     * 开户数（android）
-     */
-    @ApiModelProperty(value = "开户数（android）")
+    @ApiModelProperty(value = "开户数Android")
     private String accountNumberAndroid;
 
-    /**
-     * 投资人数（android）
-     */
-    @ApiModelProperty(value = "投资人数（android）")
+    @ApiModelProperty(value = "投资人数Android")
     private String tenderNumberAndroid;
-    /**
-     * 投资人数（pc）
-     */
-    @ApiModelProperty(value = "投资人数（pc）")
+
+    @ApiModelProperty(value = "投资人数pc")
     private String tenderNumberPc;
 
-    /**
-     * 投资ren数（wechat）
-     */
-    @ApiModelProperty(value = "投资ren数（wechat）")
+    @ApiModelProperty(value = "投资人数wechat")
     private String tenderNumberWechat;
 
-    /**
-     * 投资人数（ios）
-     */
-    @ApiModelProperty(value = "投资人数（ios）")
+    @ApiModelProperty(value = "投资人数ios")
     private String tenderNumberIos;
 
-    /**
-     * 累计充值（无主单）
-     */
-    @ApiModelProperty(value = "累计充值（无主单）")
+    @ApiModelProperty(value = "累计充值(无主单)")
     private String cumulativeAttrCharge;
 
-    /**
-     * 开户数（无主单）
-     */
-    @ApiModelProperty(value = "开户数（无主单）")
+    @ApiModelProperty(value = "开户数(无主单)")
     private String openAccountAttrCount;
-    /**
-     * 投资人数（无主单）
-     */
-    @ApiModelProperty(value = "投资人数（无主单）")
+
+    @ApiModelProperty(value = "投资人数(无主单)")
     private String investAttrNumber;
-    /**
-     * 累计投资（无主单）
-     */
-    @ApiModelProperty(value = "累计投资（无主单）")
+
+    @ApiModelProperty(value = "累计投资(无主单)")
     private String cumulativeAttrInvest;
-    /**
-     * 检索条件 渠道类别
-     */
-    @ApiModelProperty(value = "检索条件 渠道类别")
+
+    @ApiModelProperty(value = "渠道类别")
     private String utmIds;
 
-    /**
-     * 渠道
-     */
     @ApiModelProperty(value = "渠道")
     private String[] utmIdsSrch;
 
-    /**
-     * 检索条件 时间开始
-     */
-    @ApiModelProperty(value = "检索条件 时间开始")
+    @ApiModelProperty(value = "时间开始")
     private String timeStartSrch;
 
-    /**
-     * 检索条件 时间结束
-     */
-    @ApiModelProperty(value = "检索条件 时间结束")
+    @ApiModelProperty(value = "时间结束")
     private String timeEndSrch;
-    /**
-     * 检索条件 sourceId
-     */
-    @ApiModelProperty(value = "检索条件 sourceId")
+
+    @ApiModelProperty(value = "渠道ID")
     private String sourceIdSrch;
 
     public String getSourceId() {

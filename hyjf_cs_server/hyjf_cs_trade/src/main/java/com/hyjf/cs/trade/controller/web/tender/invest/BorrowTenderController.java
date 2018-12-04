@@ -22,6 +22,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,7 @@ public class BorrowTenderController extends BaseTradeController {
     @ApiOperation(value = "散标投资", notes = "web端散标投资")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
     @RequestLimit(seconds=3)
+    @ApiImplicitParam(name = "tender",value = "{mobile:String}",dataType = "Map")
     public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId", required = false) Integer userId,
                                                       @RequestBody @Valid TenderRequest tender, HttpServletRequest request) {
         logger.info("web端请求投资接口");
