@@ -8,7 +8,9 @@ import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.KeyCountService;
 import com.hyjf.admin.service.promotion.channel.ChannelService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
@@ -56,8 +58,12 @@ public class KeyCountController extends BaseController {
 	private KeyCountService keyCountService;
 	@Resource
 	private ChannelService channelService;
+	/** 查看权限 */
+	public static final String PERMISSIONS = "keycount";
+
 	@ApiOperation(value = "关键词设计", notes = "关键词设计列表")
 	@PostMapping("/searchaction")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
 	public AdminResult searchAction(@RequestBody KeyCountRequest request) {
 		logger.info("关键词设计查询开始......");
 		KeyCountResponse response = keyCountService.searchAction(request);
@@ -151,6 +157,7 @@ public class KeyCountController extends BaseController {
 	}
 	@ApiOperation(value = "数据导出--关键词设计", notes = "带条件导出EXCEL")
 	@PostMapping(value = "/exportAction")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
 	public void exportAction(HttpServletResponse response, @RequestBody KeyCountRequest form,
 			HttpServletRequest request) throws Exception {
 		// 表格sheet名称
