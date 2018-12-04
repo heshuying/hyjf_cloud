@@ -39,7 +39,7 @@ public class CouponBackMoneyController extends BaseController {
     private CouponBackMoneyService couponBackMoneyService;
 
 
-    @ApiOperation(value = "页面初始化", notes = "汇直投-代金券-回款使用列表")
+    @ApiOperation(value = "汇直投-代金券-回款使用列表", notes = "汇直投-代金券-回款使用列表")
     @PostMapping("/backmoneydj/hzt/init")
     public AdminResult coupontDjListInit( @RequestBody CouponBackMoneyCustomize couponBackMoneyCustomize) {
 
@@ -49,7 +49,7 @@ public class CouponBackMoneyController extends BaseController {
         return new AdminResult(response);
     }
 
-    @ApiOperation(value = "页面初始化", notes = "汇直投-加息券-回款使用列表")
+    @ApiOperation(value = "汇直投-加息券-回款使用列表", notes = "汇直投-加息券-回款使用列表")
     @PostMapping("/backmoneyjx/hzt/init")
     public AdminResult<ListResult<CouponTenderVo>> couponJxListInit( @RequestBody CouponBackMoneyCustomize couponBackMoneyCustomize) {
 
@@ -60,7 +60,7 @@ public class CouponBackMoneyController extends BaseController {
         return new AdminResult(responsehzt);
     }
 
-    @ApiOperation(value = "页面初始化", notes = "汇直投-体验金-回款使用列表")
+    @ApiOperation(value = "汇直投-体验金-回款使用列表", notes = "汇直投-体验金-回款使用列表")
     @PostMapping("/backmoneyty/hzt/init")
     public AdminResult<ListResult<CouponTenderVo>> couponTyListInit( @RequestBody CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponBackMoneyContResponse response = new CouponBackMoneyContResponse();
@@ -69,7 +69,7 @@ public class CouponBackMoneyController extends BaseController {
         return new AdminResult(response);
     }
 
-    @ApiOperation(value = "页面初始化", notes = "汇计划-体验金-回款使用列表")
+    @ApiOperation(value = "汇计划-体验金-回款使用列表", notes = "汇计划-体验金-回款使用列表")
     @PostMapping("/backmoneyty/hjh/init")
     public AdminResult<ListResult<CouponTenderVo>> couponHjhTyListInit( @RequestBody CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponBackMoneyContResponse response = new CouponBackMoneyContResponse();
@@ -78,7 +78,7 @@ public class CouponBackMoneyController extends BaseController {
         return new AdminResult(response);
     }
 
-    @ApiOperation(value = "页面初始化", notes = "汇计划-代金券-回款使用列表")
+    @ApiOperation(value = "汇计划-代金券-回款使用列表", notes = "汇计划-代金券-回款使用列表")
     @PostMapping("/backmoneydj/hjh/init")
     public AdminResult<ListResult<CouponTenderVo>> coupontHjhDjListInit( @RequestBody CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponBackMoneyContResponse response = new CouponBackMoneyContResponse();
@@ -87,7 +87,7 @@ public class CouponBackMoneyController extends BaseController {
         return new AdminResult(response);
     }
 
-    @ApiOperation(value = "页面初始化", notes = "汇计划-加息券-回款使用列表")
+    @ApiOperation(value = "汇计划-加息券-回款使用列表", notes = "汇计划-加息券-回款使用列表")
     @PostMapping("/backmoneyjx/hjh/init")
     public AdminResult<ListResult<CouponTenderVo>> couponHjhJxListInit(@RequestBody CouponBackMoneyCustomize couponBackMoneyCustomize) {
         CouponBackMoneyContResponse response = new CouponBackMoneyContResponse();

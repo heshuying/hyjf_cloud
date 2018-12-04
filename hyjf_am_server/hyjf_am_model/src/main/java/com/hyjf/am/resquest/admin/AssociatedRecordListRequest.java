@@ -4,6 +4,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -19,6 +20,7 @@ public class AssociatedRecordListRequest extends BasePage implements Serializabl
     private String turnOutMobile;
 
     // 关联状态(检索用)
+    @ApiModelProperty(value = "关联状态(检索用)")
     private String statusSearch;
 
     private String shiftToUsername;
@@ -26,9 +28,11 @@ public class AssociatedRecordListRequest extends BasePage implements Serializabl
     private String shiftToMobile;
 
     // 开始时间(检索用)
+    @ApiModelProperty(value = "开始时间(检索用)")
     private String startDate;
 
     // 结束时间(检索用)
+    @ApiModelProperty(value = "结束时间(检索用)")
     private String endDate;
 
     private static final long serialVersionUID = 1L;
