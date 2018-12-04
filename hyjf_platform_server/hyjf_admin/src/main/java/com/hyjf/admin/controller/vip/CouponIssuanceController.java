@@ -92,7 +92,7 @@ public class CouponIssuanceController extends BaseController {
 
     @ApiOperation(value = "详情页面", notes = "详情页面")
     @RequestMapping(value = "/infoAction", method = RequestMethod.POST)
-    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult updateCouponConfig(@RequestBody CouponConfigRequest request) {
         CouponConfigResponse response = new CouponConfigResponse();
         CouponConfigVO configVO = new CouponConfigVO();
