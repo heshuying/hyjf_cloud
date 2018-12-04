@@ -2,23 +2,27 @@ package com.hyjf.am.resquest.trade;
 
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.Date;
 
 public class AssetManageBeanRequest extends BasePage {
     // 用户id
+    @ApiModelProperty(value = "用户id")
     public Integer userId;
     // 投资开始值
+    @ApiModelProperty(value = "投资开始值")
     public String startDate;
     // 投资结束值
+    @ApiModelProperty(value = "投资结束值")
     public String endDate;
     //排序字段标识
+    @ApiModelProperty(value = "排序字段标识")
     private String orderByFlag;
     //排序类型
+    @ApiModelProperty(value = "排序类型")
     private String sortBy;
-
     private Integer limitStart;
-
     private Integer limitEnd;
 
     private String host;
@@ -28,9 +32,9 @@ public class AssetManageBeanRequest extends BasePage {
     private String borrowNid;
     private String tenderNid;
     private Integer nowTime;
-
+    @ApiModelProperty(value = "类别")
     private String type;
-
+    @ApiModelProperty(value = "标签")
     private String currentTab;
 
     private String status;
