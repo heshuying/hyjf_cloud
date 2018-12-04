@@ -58,6 +58,7 @@ public class StzfWhiteConfigController extends BaseController {
 
 	@ApiOperation(value = "受托支付白名单初始详情",notes = "受托支付白名单初始详情")
 	@PostMapping("/infoAction")
+	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_INFO, ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
 	public AdminResult infoAction(@RequestBody STZHWhiteListRequestBean requestBean) {
 		STZHWhiteListResponse response = new STZHWhiteListResponse();
 		if (requestBean.getId() != null) {
@@ -98,7 +99,7 @@ public class StzfWhiteConfigController extends BaseController {
 
 	@ApiOperation(value = "修改受托支付白名单", notes = "修改受托支付白名单")
 	@PostMapping("/updateAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult updateAction(HttpServletRequest request, @RequestBody STZHWhiteListRequestBean requestBean) {
 		AdminSystemVO adminUser = getUser(request);
 		requestBean.setCreateuser(adminUser.getId());

@@ -7,7 +7,9 @@ import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.HjhPlanCapitalRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AdminUtmReadPermissionsService;
 import com.hyjf.admin.service.promotion.AppChannelStatisticsService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
@@ -61,8 +63,12 @@ public class AppChannelStatisticsController extends BaseController {
     @Autowired
     private AdminUtmReadPermissionsService adminUtmReadPermissionsService;
 
+    /** 权限关键字 */
+    public static final String PERMISSIONS = "appchannelstatistics";
+
     @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @RequestMapping(value = "/channelStatistics", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult init(HttpServletRequest request, @RequestBody AppChannelStatisticsRequest statisticsRequest) {
         AdminResult result = new AdminResult();
         //获取后天用户登录id
@@ -263,6 +269,7 @@ public class AppChannelStatisticsController extends BaseController {
 
     @ApiOperation(value = "导出", notes = "导出")
     @RequestMapping(value = "/export", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void export(HttpServletResponse response, HttpServletRequest request, @RequestBody AppChannelStatisticsRequest statisticsRequest) throws UnsupportedEncodingException {
         //获取后天用户登录id
         AdminSystemVO adminSystemVO = getUser(request);
