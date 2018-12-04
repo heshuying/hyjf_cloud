@@ -15,5 +15,5 @@ import java.lang.annotation.*;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface AuthorityAnnotation {
 	 String key();
-	 String value();
+	 String[] value();
 }

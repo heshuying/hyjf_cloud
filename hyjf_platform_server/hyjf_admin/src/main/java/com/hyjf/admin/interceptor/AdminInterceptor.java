@@ -74,14 +74,25 @@ public class AdminInterceptor implements HandlerInterceptor {
 			}
 			// 获取该角色 权限列表
 			List<String> perm = (List<String>) request.getSession().getAttribute("permission");
-			for (String string : perm) {
-				if (string.equals(authorityAnnotation.key() + ":" + authorityAnnotation.value())) {
-					return true;
-				}
+			if(perm.isEmpty()){
+				return false;
 			}
 
-			logger.info("权限的key为:" + authorityAnnotation.key() + "权限的val:" + authorityAnnotation.value());
-			throw new ReturnMessageException(MsgEnum.ERR_USER_AUTHORITY);
+			for(String value : authorityAnnotation.value()){
+
+				if(!perm.contains(authorityAnnotation.key() + ":" + value)){
+					return false;
+				}
+			}
+			return true;
+//			for (String string : perm) {
+//				if (string.equals(authorityAnnotation.key() + ":" + authorityAnnotation.value())) {
+//					return true;
+//				}
+//			}
+
+//			logger.info("权限的key为:" + authorityAnnotation.key() + "权限的val:" + authorityAnnotation.value());
+//			throw new ReturnMessageException(MsgEnum.ERR_USER_AUTHORITY);
 			//		return false;
 
 		}
