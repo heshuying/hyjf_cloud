@@ -296,7 +296,11 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
 //                            rechargeSum = rechargeSum.add(accountRecharge.getBalance());
 //                        }
 //                    }
-                    customize.setFundRetentionPercent(usersPortrait.getFundRetention());
+                    if (usersPortrait.getFundRetention() != null) {
+                        customize.setFundRetentionPercent(usersPortrait.getFundRetention());
+                    }else {
+                        customize.setFundRetentionPercent(new BigDecimal(0));
+                    }
 
                     //大客户判定
                     ArrayList<Double> arrayList = new ArrayList<>();
@@ -339,11 +343,11 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
                     }
 
                     String fundRetentionPeriod;
-                    if (usersPortrait.getFundRetention().compareTo(new BigDecimal(0)) >= 0 && usersPortrait.getFundRetention().compareTo(new BigDecimal(25)) < 0) {
+                    if (customize.getFundRetentionPercent().compareTo(new BigDecimal(0)) >= 0 && customize.getFundRetentionPercent().compareTo(new BigDecimal(25)) < 0) {
                         fundRetentionPeriod = "0-25";
-                    } else if (usersPortrait.getFundRetention().compareTo(new BigDecimal(25)) >= 0 && usersPortrait.getFundRetention().compareTo(new BigDecimal(50)) < 0) {
+                    } else if (customize.getFundRetentionPercent().compareTo(new BigDecimal(25)) >= 0 && customize.getFundRetentionPercent().compareTo(new BigDecimal(50)) < 0) {
                         fundRetentionPeriod = "25-50";
-                    } else if (usersPortrait.getFundRetention().compareTo(new BigDecimal(50)) >= 0 && usersPortrait.getFundRetention().compareTo(new BigDecimal(75)) < 0) {
+                    } else if (customize.getFundRetentionPercent().compareTo(new BigDecimal(50)) >= 0 && customize.getFundRetentionPercent().compareTo(new BigDecimal(75)) < 0) {
                         fundRetentionPeriod = "50-75";
                     } else {
                         fundRetentionPeriod = "75-100";

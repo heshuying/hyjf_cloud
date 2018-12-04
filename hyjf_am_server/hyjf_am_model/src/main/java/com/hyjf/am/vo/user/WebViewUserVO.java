@@ -137,6 +137,16 @@ public class WebViewUserVO extends BaseVO implements Serializable {
 
     private UsersContactVO usersContact;
 
+    private Integer couponSendCount = 0;
+
+    public Integer getCouponSendCount() {
+        return couponSendCount;
+    }
+
+    public void setCouponSendCount(Integer couponSendCount) {
+        this.couponSendCount = couponSendCount;
+    }
+
     public String getIconUrl() {
         return iconUrl;
     }

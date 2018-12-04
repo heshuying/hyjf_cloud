@@ -512,9 +512,23 @@ public class CsMessageClientImpl implements CsMessageClient {
     }
 
     @Override
+    public HjhInfoAccountBalanceResponse  getHjhAccountBalanceMonth(HjhAccountBalanceRequest request) {
+        HjhInfoAccountBalanceResponse response  = restTemplate
+                .postForEntity("http://CS-MESSAGE/cs-message/manager/statis/getHjhAccountBalanceMonth", request, HjhInfoAccountBalanceResponse.class).getBody();
+        return response;
+    }
+
+    @Override
     public HjhInfoAccountBalanceResponse  getHjhAccountBalanceDayCount(HjhAccountBalanceRequest request) {
         HjhInfoAccountBalanceResponse response  = restTemplate
                 .postForEntity("http://CS-MESSAGE/cs-message/manager/statis/getHjhAccountBalanceDayCount", request, HjhInfoAccountBalanceResponse.class).getBody();
+        return response;
+    }
+
+    @Override
+    public HjhInfoAccountBalanceResponse  getHjhAccountBalanceDay(HjhAccountBalanceRequest request) {
+        HjhInfoAccountBalanceResponse response  = restTemplate
+                .postForEntity("http://CS-MESSAGE/cs-message/manager/statis/getHjhAccountBalanceDay", request, HjhInfoAccountBalanceResponse.class).getBody();
         return response;
     }
 }

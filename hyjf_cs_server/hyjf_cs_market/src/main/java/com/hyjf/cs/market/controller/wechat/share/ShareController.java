@@ -2,6 +2,8 @@ package com.hyjf.cs.market.controller.wechat.share;
 
 import com.hyjf.cs.market.bean.ShareResultBean;
 import com.hyjf.cs.market.util.WxConfigUtil;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
  * @author xiasq
  * @version ShareController, v0.1 2018/9/26 11:21
  */
+@Api(tags = "wechat端-微信分享")
 @RestController
 @RequestMapping("/hyjf-wechat/wx/share")
 public class ShareController {
@@ -25,6 +28,7 @@ public class ShareController {
     @Value("${hyjf.wechat.app.secret}")
     private String WECHAT_APP_SECRET;
 
+    @ApiOperation(value = "微信分享", notes = "微信分享")
     @RequestMapping(value = "/doShare", method = RequestMethod.POST)
     public ShareResultBean doShare(@RequestHeader(required = false) Integer userId,
                                    @RequestBody String url) {

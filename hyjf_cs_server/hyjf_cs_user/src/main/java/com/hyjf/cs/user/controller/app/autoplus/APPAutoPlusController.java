@@ -28,6 +28,7 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -126,8 +127,8 @@ public class APPAutoPlusController extends BaseUserController {
     @ApiOperation(value = "自动债转授权url获取", notes = "自动债转授权url获取")
     @PostMapping("/getUserAuthCreditUrl")
     @ResponseBody
-    public AutoPlusResultBean getUserAuthCreditUrl(@RequestHeader(value = "userId") Integer userId, @RequestParam String srvAuthCode,
-                                                   @RequestParam String code) {
+    public AutoPlusResultBean getUserAuthCreditUrl(@RequestHeader(value = "userId")Integer userId, @RequestParam  @ApiParam("前导业务码") String srvAuthCode,
+                                                   @RequestParam @ApiParam("验证码") String code) {
         String returnRequest = "/bank/user/autoplus/getUserAuthCreditUrl";
         AutoPlusResultBean result = new AutoPlusResultBean(returnRequest);
         if (StringUtils.isBlank(code) || StringUtils.isBlank(srvAuthCode)) {
@@ -284,7 +285,7 @@ public class APPAutoPlusController extends BaseUserController {
     @PostMapping("/searchFiledMess")
     @ApiImplicitParam(name = "param",value = "{logOrdId:String}",dataType = "Map")
     @ResponseBody
-    public AppResult<Object> searchFiledMess(@RequestParam("logOrdId") String logOrdId) {
+    public AppResult<Object> searchFiledMess(@RequestParam("logOrdId")@ApiParam("订单号") String logOrdId) {
         logger.info("调用银行失败原因start,logOrdId:{}",logOrdId);
         AppResult<Object> result = new AppResult<Object>();
         Map<String,String> map = new HashedMap();

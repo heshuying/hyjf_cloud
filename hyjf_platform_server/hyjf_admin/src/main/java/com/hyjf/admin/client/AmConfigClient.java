@@ -12,9 +12,7 @@ import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.*;
-import com.hyjf.am.vo.admin.CategoryVO;
-import com.hyjf.am.vo.admin.ContentHelpVO;
-import com.hyjf.am.vo.admin.HjhUserAuthConfigLogCustomizeVO;
+import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.VersionVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
@@ -1525,4 +1523,6 @@ public interface AmConfigClient {
 	List<String> getPermissionId(String string);
 
 	AdminSystemResponse updatePasswordAction(AdminSystemRequest map);
+
+	Integer getAdminByUsername(String auditUser);
 }

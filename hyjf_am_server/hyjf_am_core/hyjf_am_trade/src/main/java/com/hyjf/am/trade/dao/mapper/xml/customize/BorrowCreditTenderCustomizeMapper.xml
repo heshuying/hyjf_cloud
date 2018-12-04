@@ -40,7 +40,7 @@
 		ELSE
 		''
 		END AS assignRepayNextTime,
-		hct.create_time AS addTime
+		DATE_FORMAT(hct.create_time,'%Y-%c-%d %h:%i:%s') AS addTime
 		FROM ht_credit_tender hct
 		<include refid="WHERE_COLUMN"/>
 		ORDER BY

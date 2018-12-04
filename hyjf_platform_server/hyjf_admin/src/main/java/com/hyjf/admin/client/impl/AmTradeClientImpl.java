@@ -6514,7 +6514,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         if(response != null){
             retMap.put(AmTradeClient.IncreaseProperty.VO,response.getResultList());
             retMap.put(AmTradeClient.IncreaseProperty.STR,response.getSumRepayCapital());
-            retMap.put(AmTradeClient.IncreaseProperty.STR,response.getSumRepayInterest());
+            retMap.put(AmTradeClient.IncreaseProperty.STR1,response.getSumRepayInterest());
             return retMap;
         }
         return null;

@@ -457,6 +457,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             logger.info("注册送188元新手红包:"+activityId);
             if (!checkActivityIfAvailable(activityId)) {
                 sendCoupon(userVO);
+                webViewUserVO.setCouponSendCount(8);
             }
         } catch (Exception e) {
             logger.error("注册发放888红包失败...", e);

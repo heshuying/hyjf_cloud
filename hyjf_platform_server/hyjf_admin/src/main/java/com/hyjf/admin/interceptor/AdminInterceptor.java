@@ -56,7 +56,7 @@ public class AdminInterceptor implements HandlerInterceptor {
 //		} catch (NullPointerException e) {
 //			throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN_EXPIRE);
 		}catch(Exception e) {
-			response.setContentType("application/json; charset=utf-8");  
+			response.setContentType("application/json; charset=utf-8");
 			JSONObject res = new JSONObject();
 			res.put("status", "EUS000010");
 			res.put("statusDesc", "登录失效，请重新登陆");

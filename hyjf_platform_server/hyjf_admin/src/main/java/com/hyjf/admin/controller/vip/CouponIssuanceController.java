@@ -425,7 +425,7 @@ public class CouponIssuanceController extends BaseController {
         //表格sheet名称
         String sheetName = "优惠券发行列表";
         // 文件名称
-        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xls";
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         String[] titles = new String[]{"序号", "优惠券名称", "优惠券编号", "优惠券类型", "优惠券面值",
                 "发行数量", "已发放数量", "有效期", "使用范围-操作平台", "使用范围-项目类型",
                 "使用范围-投资金额", "使用范围-项目期限", "状态", "发行时间"};
