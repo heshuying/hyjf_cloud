@@ -87,6 +87,7 @@ public class BankCallController extends BaseController {
             bean.convert();
             String txCode = bean.getTxCode();
             if (Validator.isNull(txCode)) {
+                logger.warn("消息类型不能为空, bean is : {}", bean);
                 throw new RuntimeException("消息类型不能为空");
             }
             // 操作时间

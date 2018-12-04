@@ -1,6 +1,7 @@
 package com.hyjf.am.vo.admin;
 
 import com.hyjf.common.util.GetDate;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author lisheng
@@ -11,35 +12,44 @@ public class MessagePushMsgVO {
     private static final long serialVersionUID = 1L;
 
     private String id;
-
+    @ApiModelProperty(value = "消息标签,外键,消息标签表的id")
     private Integer tagId;
-
+    @ApiModelProperty(value = "消息标签编码,消息标签表的编码")
     private String tagCode;
-
+    @ApiModelProperty(value = "消息编码")
     private String msgCode;
-
+    @ApiModelProperty(value = "消息标题")
     private String msgTitle;
-
+    @ApiModelProperty(value = "图片url")
     private String msgImageUrl;
-
+    @ApiModelProperty(value = "消息内容")
     private String msgContent;
-
+    @ApiModelProperty(value = "消息内容")
     private String msgTerminal;
-
-
+    @ApiModelProperty(value = "后续动作,0打开APP,1打开H5页面,2指定原生页面")
     private Integer msgAction;
-
+    @ApiModelProperty(value = "后续动作url,后续动作为0时此字段无效,1时为填写的url,2时为原生页面的url")
     private String msgActionUrl;
-
+    @ApiModelProperty(value = "推送用户类型,0为所有人,1为单个或多个用户")
     private Integer msgDestinationType;
-
+    @ApiModelProperty(value = "发送状态,0待发送,1已发送(发送成功与否上hyjf_message_push_msg_history中查详情")
     private Integer msgSendStatus;
-
+    @ApiModelProperty(value = "发送时间类型,0为立即发送,1为定时发送")
     private Integer msgSendType;
-
+    @ApiModelProperty(value = "预发送时间(只针对定时发送)")
     private Integer preSendTime;
-
+    @ApiModelProperty(value = "实际发送时间")
     private Integer sendTime;
+    @ApiModelProperty(value = "推送用户,推送用户类型为0时无效")
+    private String msgDestination;
+    @ApiModelProperty(value = "预发送时间（格式化后）")
+    private String msgPreSendTime;
+    @ApiModelProperty(value = "实际发送时间（格式化后）")
+    private String msgSendTime;
+    @ApiModelProperty(value = "创建时间（格式化后）")
+    private String msgCreateTime;
+
+    private String updateTime;
 
     private Integer createTime;
 
@@ -52,16 +62,6 @@ public class MessagePushMsgVO {
     private Integer lastupdateUserId;
 
     private String lastupdateUserName;
-
-    private String msgDestination;
-
-    private String msgPreSendTime;
-
-    private String msgSendTime;
-
-    private String msgCreateTime;
-
-    private String updateTime;
 
     public String getId() {
         return id;

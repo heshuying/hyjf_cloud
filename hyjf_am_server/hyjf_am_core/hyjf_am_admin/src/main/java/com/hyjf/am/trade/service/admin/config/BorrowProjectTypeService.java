@@ -18,7 +18,12 @@ public interface BorrowProjectTypeService {
 
 
     public BorrowProjectType getProjectTypeByBorrowNid(String borrowNid) ;
-
+    /**
+     * 分页查询分项目类型
+     * @param borrowProjectTypeVO
+     * @return
+     */
+    public Integer  selectProjectTypeCount(BorrowProjectTypeVO borrowProjectTypeVO);
     /*
     * 分页查询分项目类型
     * */

@@ -5,6 +5,7 @@ package com.hyjf.am.resquest.message;
 
 import com.hyjf.am.vo.BasePage;
 import com.hyjf.am.vo.admin.MessagePushMsgVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.List;
@@ -15,53 +16,60 @@ import java.util.List;
  */
 public class MessagePushMsgRequest extends BasePage implements Serializable {
 
-    /**
-     * 时间查询
-     */
+    @ApiModelProperty(value = "开始时间查询")
     private String startDateSrch;
-    /**
-     * 时间查询
-     */
+
+    @ApiModelProperty(value = "结束时间查询")
     private String endDateSrch;
 
-    /**
-     * 更新或是转发,0为更新1为转发
-     */
+    @ApiModelProperty(value = "更新或转发")
     private String updateOrReSend;
 
-    /**
-     * 发送时间
-     */
+    @ApiModelProperty(value = "预发送时间查询")
     private String messagesPreSendTimeStr;
 
     private String id;
 
+    @ApiModelProperty(value = "标签id")
     private Integer tagId;
 
+    @ApiModelProperty(value = "标签编号")
     private String tagCode;
 
+    @ApiModelProperty(value = "消息编号")
     private String msgCode;
 
+    @ApiModelProperty(value = "消息标题")
     private String msgTitle;
 
+    @ApiModelProperty(value = "图片url")
     private String msgImageUrl;
 
+    @ApiModelProperty(value = "消息内容")
     private String msgContent;
 
+    @ApiModelProperty(value = "推送终端")
     private String msgTerminal;
 
+    @ApiModelProperty(value = "后续动作")
     private Integer msgAction;
 
+    @ApiModelProperty(value = "后续动作url")
     private String msgActionUrl;
 
+    @ApiModelProperty(value = "推送用户类型")
     private Integer msgDestinationType;
 
+    @ApiModelProperty(value = "发送状态")
     private Integer msgSendStatus;
 
+    @ApiModelProperty(value = "发送时间类型")
     private Integer msgSendType;
 
+    @ApiModelProperty(value = "预发送时间")
     private Integer preSendTime;
 
+    @ApiModelProperty(value = "发送时间")
     private Integer sendTime;
 
     private Integer createTime;
@@ -76,6 +84,7 @@ public class MessagePushMsgRequest extends BasePage implements Serializable {
 
     private String lastupdateUserName;
 
+    @ApiModelProperty(value = "推送用户")
     private String msgDestination;
 
     private String msgActionUrl1;

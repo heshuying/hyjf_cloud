@@ -203,7 +203,25 @@ public class BankConfigServiceImpl implements BankConfigService {
 		example.setOrderByClause(" sort ASC ");
 		return this.paramNameMapper.selectByExample(example);
 	}
-
+	/**
+	 * 分页查询银行配置条数
+	 */
+	@Override
+	public int selectBankConfigCount(BankConfigVO banksConfigVO, int limitStart, int limitEnd){
+		BankConfigExample example = new BankConfigExample();
+		BankConfigExample.Criteria criteria =example.createCriteria();
+		if (banksConfigVO.getName()!= null ) {
+			criteria.andNameEqualTo(banksConfigVO.getName());
+		}
+		if(banksConfigVO.getCode() != null){
+			criteria.andCodeEqualTo(banksConfigVO.getCode());
+		}
+		if (limitStart != -1) {
+			example.setLimitStart(limitStart);
+			example.setLimitEnd(limitEnd);
+		}
+		return bankConfigMapper.countByExample(example);
+	}
 	/**
 	 * 分页查询银行配置
 	 */

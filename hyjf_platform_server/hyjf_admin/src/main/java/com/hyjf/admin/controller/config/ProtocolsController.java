@@ -10,8 +10,10 @@ import com.hyjf.admin.beans.request.ProtocolsRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.ProtocolService;
 import com.hyjf.admin.service.ProtocolsService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
@@ -61,11 +63,14 @@ public class ProtocolsController extends BaseController {
 	@Autowired
 	private ProtocolsService protocolsService;
 
+	public static final String PERMISSIONS = "protocols";
+
 	@Autowired
 	private SystemConfig systemConfig;
 
 	@ApiOperation(value = "展示协议管理列表", notes = "展示协议管理列表")
 	@PostMapping("/init")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<ListResult<FddTempletCustomizeVO>> selectFddTempletList(
 			@RequestBody ProtocolsRequestBean request) {
 		FddTempletCustomizeResponse response = protocolsService.selectFddTempletList(request);
@@ -80,6 +85,7 @@ public class ProtocolsController extends BaseController {
 
 	@ApiOperation(value = "添加协议管理", notes = "添加协议管理")
 	@PostMapping("/insert")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
 	public AdminResult insert(@RequestBody ProtocolsRequestBean requestBean, HttpServletRequest request) {
 		AdminSystemVO user = getUser(request);
 		requestBean.setCreateUserId(Integer.valueOf(user.getId()));
@@ -96,6 +102,7 @@ public class ProtocolsController extends BaseController {
 
 	@ApiOperation(value = "修改协议管理", notes = "修改协议管理")
 	@PostMapping("/update")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
 	public AdminResult update(@RequestBody ProtocolsRequestBean requestBean, HttpServletRequest request) {
 		AdminSystemVO user = getUser(request);
 		requestBean.setCreateUserId(Integer.valueOf(user.getId()));
@@ -112,6 +119,7 @@ public class ProtocolsController extends BaseController {
 
 	@ApiOperation(value = "画面迁移(含有id更新，不含有id添加)", notes = "画面迁移(含有id更新，不含有id添加)")
 	@PostMapping("/infoAction")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult info(@RequestBody ProtocolsRequestBean requestBean) {
 		logger.info(ProtocolsController.class.toString(), "infoAction");
 		FddTempletCustomizeResponse response = new FddTempletCustomizeResponse();
@@ -360,6 +368,7 @@ public class ProtocolsController extends BaseController {
 	 */
 	@ApiOperation(value = "导出excel", notes = "导出excel")
 	@PostMapping("/exportaction")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
 	 public void exportToExcel(@ModelAttribute ProtocolsRequestBean form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	        //sheet默认最大行数
 	        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
