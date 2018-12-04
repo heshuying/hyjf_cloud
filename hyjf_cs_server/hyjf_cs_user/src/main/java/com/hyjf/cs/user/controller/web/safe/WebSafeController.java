@@ -183,7 +183,7 @@ public class WebSafeController extends BaseUserController {
      * @date: 2018/6/20
      */
     @ApiOperation(value = "绑定邮箱", notes = "绑定邮箱")
-    @RequestMapping(value = "/bindEmail")
+    @GetMapping(value = "/bindEmail")
     public WebResult<Object> bindEmail(HttpServletRequest request) {
         BindEmailVO bindEmailVO = new BindEmailVO();
         bindEmailVO.setKey(request.getParameter("key"));

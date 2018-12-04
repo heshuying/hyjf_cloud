@@ -14,13 +14,16 @@ import io.swagger.annotations.ApiModelProperty;
 public class AdminCouponCheckRequest extends BasePage {
     private String id;
 
+    @ApiModelProperty(value = "文件名")
     private String fileName;
 
+    @ApiModelProperty(value = "文件路径")
     private String filePath;
 
     @ApiModelProperty(value = "发放状态")
     private Integer status;
 
+    @ApiModelProperty(value = "备注")
     private String remark;
 
     private Integer deFlag;

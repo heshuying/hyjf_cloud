@@ -58,7 +58,7 @@ public class WebBindCardPageController extends BaseUserController{
      * 绑卡接口
      */
     @ApiOperation(value = "绑卡接口页面", notes = "绑卡接口页面")
-    @ApiImplicitParam(name = "paraMap",value = "{urlstatus:string}", dataType = "Map")
+    @ApiImplicitParam(name = "paraMap",value = "{urlstatus:该参数已废弃}", dataType = "Map")
     @PostMapping(value = "/bindCardPage", produces = "application/json; charset=utf-8")
     public WebResult<Object> bindCardPage(@RequestHeader(value = "userId") int userId, @RequestBody Map<String,String> param, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<>();
@@ -110,8 +110,6 @@ public class WebBindCardPageController extends BaseUserController{
         logger.info("页面绑卡异步回调start");
         bean.setMobile(phone);
         bean.convert();
-//        bean.setAccountId("6212461890000003344");
-//        bean.setLogUserId("5683");
         int userId = Integer.parseInt(bean.getLogUserId());
 
         // 绑卡后处理

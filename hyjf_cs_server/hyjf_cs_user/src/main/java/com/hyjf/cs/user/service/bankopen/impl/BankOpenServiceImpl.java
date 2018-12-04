@@ -211,9 +211,8 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             Map<String,Object> map = BankCallUtils.callApiMap(openAccoutBean);
             return map;
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new CheckException(MsgEnum.ERR_BANK_CALL);
         }
-        return null;
     }
 
     /**
@@ -596,9 +595,8 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
                 Map<String, Object> map = BankCallUtils.callApiMap(openAccoutBean);
                 return map;
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new CheckException(MsgEnum.ERR_BANK_CALL);
             }
-            return null;
         }
     }
 
@@ -647,9 +645,8 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
                 Map<String, Object> map = BankCallUtils.callApiMap(openAccoutBean);
                 return map;
             } catch (Exception e) {
-                e.printStackTrace();
+                throw new CheckException(MsgEnum.ERR_BANK_CALL);
             }
-            return null;
         }
     }
 
