@@ -1125,9 +1125,6 @@
         LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
         LEFT JOIN ht_borrow_tender hbten ON hcrt.real_tender_id=hbten.nid
         <include refid="selectCouponBackMoneyList_Where_Clause" />
-        <if test="limitStart >= 0" >
-            LIMIT #{limitStart} , #{limitEnd}
-        </if>
     </select>
 
     <select id="queryHztRecoverInterestTotle" resultType="java.lang.String" parameterType="com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize">
@@ -1143,9 +1140,6 @@
         LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
         LEFT JOIN ht_borrow_tender hbten ON hcrt.real_tender_id=hbten.nid
         <include refid="selectCouponBackMoneyList_Where_Clause" />
-        <if test="limitStart >= 0" >
-            LIMIT #{limitStart} , #{limitEnd}
-        </if>
     </select>
 
     <select id="countRecordHztTY" resultType="java.lang.Integer" parameterType="com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize">
@@ -1502,9 +1496,6 @@
         LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
         LEFT JOIN ht_borrow_tender hbten ON hcrt.real_tender_id=hbten.nid
         <include refid="selectCouponBackMoneyHjhList_Where_Clause" />
-        <if test="limitStart >= 0" >
-            LIMIT #{limitStart} , #{limitEnd}
-        </if>
     </select>
 
     <select id="queryHjhRecoverInterestTotle" resultType="java.lang.String" parameterType="com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize">
@@ -1522,9 +1513,6 @@
         LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
         LEFT JOIN ht_hjh_accede hha ON hcrt.real_tender_id=hha.accede_order_id
         <include refid="selectCouponBackMoneyHjhList_Where_Clause" />
-        <if test="limitStart >= 0" >
-            LIMIT #{limitStart} , #{limitEnd}
-        </if>
     </select>
 
     <select id="countRecordHjhTY" resultType="java.lang.Integer" parameterType="com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize">

@@ -18,7 +18,6 @@
 			COUNT(1)
 		FROM
 			ht_borrow b
-		INNER JOIN ht_borrow_bail bail ON b.borrow_nid = bail.borrow_nid
 		WHERE
 			b.`status`= 1
 		AND b.verify_status = 1
@@ -38,7 +37,6 @@
 			b.borrow_account_wait
 		FROM
 			ht_borrow b
-		INNER JOIN ht_borrow_bail bail ON b.borrow_nid = bail.borrow_nid
 		LEFT JOIN ht_borrow_info i on i.id = b.id
 		WHERE
 			b.`status` = 1
@@ -60,7 +58,6 @@
 			b.borrow_account_wait
 		FROM
 			ht_borrow b
-		INNER JOIN ht_borrow_bail bail ON b.borrow_nid = bail.borrow_nid
 		LEFT JOIN ht_borrow_info i on i.id = b.id
 		WHERE
 			b.`status` = 1

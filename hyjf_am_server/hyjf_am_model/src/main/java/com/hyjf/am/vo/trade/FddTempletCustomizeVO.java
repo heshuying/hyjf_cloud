@@ -16,6 +16,7 @@ import java.util.Date;
 public class FddTempletCustomizeVO extends BaseVO {
 	private Integer id;
 
+	@ApiModelProperty(value = "模板id")
 	private String templetId;
 
 	private Integer protocolType;

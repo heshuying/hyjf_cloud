@@ -5,6 +5,7 @@ package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.List;
@@ -16,26 +17,37 @@ import java.util.List;
 public class STZHWhiteListRequestBean extends BaseRequest implements Serializable {
 	private Integer id;
 
+	@ApiModelProperty(value = "机构/个人ID")
 	private Integer userId;
 
+	@ApiModelProperty(value = "机构/个人用户名")
 	private String userName;
 
+	@ApiModelProperty(value = "电子账号")
 	private String accountid;
 
+	@ApiModelProperty(value = "手机号")
 	private String mobile;
 
+	@ApiModelProperty(value = "姓名")
 	private String customerName;
 
+	@ApiModelProperty(value = "受托支付收款人ID")
 	private Integer stUserId;
 
+	@ApiModelProperty(value = "受托支付收款人用户名")
 	private String stUserName;
 
+	@ApiModelProperty(value = "收款人电子账号")
 	private String stAccountid;
 
+	@ApiModelProperty(value = "收款人手机号")
 	private String stMobile;
 
+	@ApiModelProperty(value = "收款人名称")
 	private String stCustomerName;
 
+	@ApiModelProperty(value = "状态")
 	private Integer state;
 
 	private String createtime;
@@ -48,14 +60,19 @@ public class STZHWhiteListRequestBean extends BaseRequest implements Serializabl
 
 	private Integer delFlag;
 
+	@ApiModelProperty(value = "审批人")
 	private String approvalName;
 
+	@ApiModelProperty(value = "审批时间")
 	private String approvalTime;
 
+	@ApiModelProperty(value = "备注")
 	private String remark;
 
+	@ApiModelProperty(value = "机构编号")
 	private String instcode;
 
+	@ApiModelProperty(value = "机构名称")
 	private String instname;
 
 	private String stateName;

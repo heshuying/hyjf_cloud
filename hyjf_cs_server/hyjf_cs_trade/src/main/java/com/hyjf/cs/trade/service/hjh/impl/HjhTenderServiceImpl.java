@@ -765,6 +765,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         try{
             if (StringUtils.isNotBlank(balanceLast)) {
                 while ("OK".equals(jedis.watch(redisKey))) {
+                    balanceLast = RedisUtils.get(redisKey);
                     BigDecimal recoverAccount = accountBigDecimal.add(new BigDecimal(balanceLast));
                     Transaction tx = jedis.multi();
                     tx.set(redisKey, recoverAccount + "");
@@ -910,6 +911,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             MsgCode redisMsgCode = null;
             try {
                 while ("OK".equals(jedis.watch(redisKey))) {
+                    balance = RedisUtils.get(redisKey);
                     if (StringUtils.isNotBlank(balance)) {
                         logger.info("加入计划冻结前可用金额为:{},userId:{},planNid:{},平台:{}", decimalAccount, userId, plan.getPlanNid(), request.getPlatform());
                         logger.info("加计划未减前可用开放额度redis:{},userId:{},planNid:{},平台:{}", balance, userId, plan.getPlanNid(), request.getPlatform());
