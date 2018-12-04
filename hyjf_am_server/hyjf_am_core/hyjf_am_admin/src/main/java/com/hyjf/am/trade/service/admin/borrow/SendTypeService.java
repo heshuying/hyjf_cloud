@@ -9,7 +9,10 @@ import java.util.List;
  * @author by xiehuili on 2018/8/1.
  */
 public interface SendTypeService {
-
+    /*
+       * 分页查询配置中心发标复标条数
+       * */
+    public int selectSendTypeCount(BorrowSendType borrowSendType, int limitStart, int limitEnd);
     /*
     * 分页查询配置中心发标复标
     * */

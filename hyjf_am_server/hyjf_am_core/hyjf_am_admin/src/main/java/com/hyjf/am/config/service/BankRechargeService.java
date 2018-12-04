@@ -17,6 +17,14 @@ public interface BankRechargeService {
      * @param limitEnd
      * @return
      */
+    public int selectBankRechargeCount(AdminBankRechargeConfigRequest adminRequest);
+    /**
+     * 查询查询快捷充值列表
+     * @param adminRequest
+     * @param limitStart
+     * @param limitEnd
+     * @return
+     */
     List<BankRechargeConfig> selectBankRechargeByPage(AdminBankRechargeConfigRequest adminRequest, int limitStart, int limitEnd);
 
     /**

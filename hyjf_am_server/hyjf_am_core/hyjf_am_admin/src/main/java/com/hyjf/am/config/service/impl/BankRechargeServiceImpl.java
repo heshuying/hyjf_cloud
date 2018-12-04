@@ -31,6 +31,21 @@ public class BankRechargeServiceImpl implements BankRechargeService {
      * @return
      */
     @Override
+    public int selectBankRechargeCount(AdminBankRechargeConfigRequest adminRequest){
+        BankRechargeConfigExample example = new BankRechargeConfigExample();
+        // 条件查询
+        example.setOrderByClause("create_time");
+        return bankRechargeLimitConfigMapper.countByExample(example);
+    }
+
+    /**
+     * 查询查询快捷充值列表
+     * @param adminRequest
+     * @param limitStart
+     * @param limitEnd
+     * @return
+     */
+    @Override
     public List<BankRechargeConfig> selectBankRechargeByPage(AdminBankRechargeConfigRequest adminRequest, int limitStart, int limitEnd){
         BankRechargeConfigExample example = new BankRechargeConfigExample();
         if (limitStart != -1) {

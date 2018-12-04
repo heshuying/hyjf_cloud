@@ -14,6 +14,8 @@ import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.hyjf.admin.common.util.ShiroConstants;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -55,9 +57,12 @@ public class ChannelStatisticsDetailController extends BaseController {
 
 	@Resource
 	private ChannelStatisticsDetailService channelStatisticsDetailService;
+	// 查看权限
+	public static final String PERMISSIONS = "channeldetail";
 
 	@ApiOperation(value = "PC统计明细", notes = "PC统计明细列表")
 	@PostMapping("/searchaction")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
 	public AdminResult searchAction(@RequestBody ChannelStatisticsDetailRequest channelStatisticsDetailRequest,
 			HttpServletRequest request) {
 		logger.info("PC统计明细查询开始......");
@@ -221,8 +226,7 @@ public class ChannelStatisticsDetailController extends BaseController {
 	 */
 	@ApiOperation(value = "数据导出--PC统计明细", notes = "带条件导出EXCEL")
 	@PostMapping(value = "/exportAction")
-	// @AuthorityAnnotation(key = PERMISSIONS, value =
-	// ShiroConstants.PERMISSION_EXPORT)
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
 	public void exportAction(HttpServletResponse response, @RequestBody ChannelStatisticsDetailRequest form,
 			HttpServletRequest request) throws Exception {
 		// 表格sheet名称
