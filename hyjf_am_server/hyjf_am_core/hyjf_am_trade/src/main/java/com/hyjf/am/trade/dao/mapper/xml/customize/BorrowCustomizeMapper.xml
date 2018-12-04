@@ -1073,8 +1073,8 @@ WHERE
 			CONCAT(b.borrow_apr, '%') borrow_apr,
 			FROM_UNIXTIME( b.reverify_time, '%Y-%m-%d %H:%i:%s' ) AS reverify_time,
 			CASE
-			WHEN ( ( b.`status` = 0 AND ( NOT EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) OR ( b.`status` = 0 AND b.verify_status = 0 AND ( EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) ) THEN '初审中'
-			WHEN ( ( b.`status` = 0 AND ( b.verify_status = 1 OR b.verify_status = 3 ) AND ( EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) ) THEN '待发布'
+			WHEN ( ( b.`status` = 0 ) OR ( b.`status` = 0 AND b.verify_status = 0 ) ) THEN '初审中'
+			WHEN ( ( b.`status` = 0 AND ( b.verify_status = 1 OR b.verify_status = 3 )) ) THEN '待发布'
 			WHEN ( b.`status` = 1 AND b.borrow_status = 1 AND b.borrow_account_yes <![CDATA[<]]> b.account AND b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) ) THEN '投资中'
 			WHEN ( b.`status` = 1 AND b.reverify_time = '0' AND ( ( b.reverify_status = 0 AND b.borrow_account_yes <![CDATA[>=]]> b.account ) OR ( b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[<]]> UNIX_TIMESTAMP(NOW()) ) ) ) THEN '复审中'
 			WHEN ( b.`status` = 3 AND b.repay_full_status = 0 ) THEN '还款中'
@@ -1110,14 +1110,14 @@ WHERE
 		<if test="statusSrch == '0'.toString()">
 			AND
 			(
-			( b.`status` = 0 AND ( NOT EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) )
+			( b.`status` = 0 )
 			OR
-			( b.`status` = 0 AND b.verify_status = 0 AND ( EXISTS ( SELECT 1 FROM _borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) )
+			( b.`status` = 0 AND b.verify_status = 0 )
 			)
 		</if>
 		<!-- 待发布 -->
 		<if test="statusSrch == '10'.toString()">
-			AND ( ( b.`status` = 0 AND ( b.verify_status = 1 OR b.verify_status = 3 ) AND ( EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) )
+			AND ( ( b.`status` = 0 AND ( b.verify_status = 1 OR b.verify_status = 3 ) ) )
 		</if>
 		<!-- 投资中 -->
 		<if test="statusSrch == '12'.toString()">
@@ -1233,8 +1233,8 @@ WHERE
 		CONCAT(b.borrow_apr, '%') borrow_apr,
 		FROM_UNIXTIME( b.reverify_time, '%Y-%m-%d %H:%i:%s' ) AS reverify_time,
 		CASE
-		WHEN ( ( b.`status` = 0 AND ( NOT EXISTS ( SELECT 1 FROM ht_debt_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) OR ( b.`status` = 0 AND b.verify_status = 0 AND ( EXISTS ( SELECT 1 FROM ht_debt_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) ) THEN '初审中'
-		WHEN ( ( b.`status` = 0 AND ( b.verify_status = 1 OR b.verify_status = 3 ) AND ( EXISTS ( SELECT 1 FROM ht_debt_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) ) THEN '待发布'
+		WHEN ( ( b.`status` = 0 ) OR ( b.`status` = 0 AND b.verify_status = 0 ) ) THEN '初审中'
+		WHEN ( ( b.`status` = 0 AND ( b.verify_status = 1 OR b.verify_status = 3 )  ) ) THEN '待发布'
 		WHEN ( b.`status` = 1 AND b.borrow_status = 1 AND b.borrow_account_yes <![CDATA[<]]> b.account AND b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) ) THEN '投资中'
 		WHEN ( b.`status` = 1 AND b.reverify_time = '0' AND ( ( b.reverify_status = 0 AND b.borrow_account_yes <![CDATA[>=]]> b.account ) OR ( b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[<]]> UNIX_TIMESTAMP(NOW()) ) ) ) THEN '复审中'
 		WHEN ( b.`status` = 3 AND b.repay_full_status = 0 ) THEN '还款中'
@@ -1536,8 +1536,8 @@ WHERE
 		CONCAT(b.borrow_apr, '%') borrow_apr,
 		FROM_UNIXTIME( b.reverify_time, '%Y-%m-%d %H:%i:%s' ) AS reverify_time,
 		CASE
-		WHEN ( ( b.`status` = 0 AND ( NOT EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) OR ( b.`status` = 0 AND b.verify_status = 0 AND ( EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) ) THEN '初审中'
-		WHEN ( ( b.`status` = 0 AND ( b.verify_status = 1 OR b.verify_status = 3 ) AND ( EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) ) THEN '待发布'
+		WHEN ( ( b.`status` = 0 ) OR ( b.`status` = 0 AND b.verify_status = 0 ) ) THEN '初审中'
+		WHEN ( ( b.`status` = 0 AND ( b.verify_status = 1 OR b.verify_status = 3 ) ) ) THEN '待发布'
 		WHEN ( b.`status` = 1 AND b.borrow_status = 1 AND b.borrow_account_yes <![CDATA[<]]> b.account AND b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) ) THEN '投资中'
 		WHEN ( b.`status` = 1 AND b.reverify_time = '0' AND ( ( b.reverify_status = 0 AND b.borrow_account_yes <![CDATA[>=]]> b.account ) OR ( b.verify_time + ( b.borrow_valid_time * 24 * 60 *60 ) <![CDATA[<]]> UNIX_TIMESTAMP(NOW()) ) ) ) THEN '复审中'
 		WHEN ( b.`status` = 3 AND b.repay_full_status = 0 ) THEN '还款中'
@@ -1573,14 +1573,14 @@ WHERE
 		<if test="statusSrch == '0'.toString()">
 			AND
 			(
-			( b.`status` = 0 AND ( NOT EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) )
+			( b.`status` = 0 )
 			OR
-			( b.`status` = 0 AND b.verify_status = 0 AND ( EXISTS ( SELECT 1 FROM _borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) )
+			( b.`status` = 0 AND b.verify_status = 0  )
 			)
 		</if>
 		<!-- 待发布 -->
 		<if test="statusSrch == '10'.toString()">
-			AND ( ( b.`status` = 0 AND ( b.verify_status = 1 OR b.verify_status = 3 ) AND ( EXISTS ( SELECT 1 FROM ht_borrow_bail bb WHERE b.borrow_nid = bb.borrow_nid ) ) ) )
+			AND ( ( b.`status` = 0 AND ( b.verify_status = 1 OR b.verify_status = 3 ) ) )
 		</if>
 		<!-- 投资中 -->
 		<if test="statusSrch == '12'.toString()">

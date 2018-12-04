@@ -4,6 +4,7 @@
 package com.hyjf.am.resquest.config;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -16,18 +17,25 @@ public class MessagePushTagRequest extends BasePage implements Serializable {
 
     private Integer id;
 
+    @ApiModelProperty(value = "标签名称")
     private String tagName;
 
+    @ApiModelProperty(value = "标签编码")
     private String tagCode;
 
+    @ApiModelProperty(value = "简介")
     private String introduction;
 
+    @ApiModelProperty(value = "图标")
     private String iconUrl;
 
+    @ApiModelProperty(value = "是否登录查看")
     private Integer isLogin;
 
+    @ApiModelProperty(value = "状态")
     private Integer status;
 
+    @ApiModelProperty(value = "排序")
     private Integer sortId;
 
     private Integer createUserId;
