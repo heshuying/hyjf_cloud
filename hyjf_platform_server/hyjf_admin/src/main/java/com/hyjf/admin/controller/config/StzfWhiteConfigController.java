@@ -6,7 +6,9 @@ package com.hyjf.admin.controller.config;
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.StzfWhiteConfigService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.STZHWhiteListResponse;
@@ -36,8 +38,12 @@ public class StzfWhiteConfigController extends BaseController {
 	@Autowired
 	private StzfWhiteConfigService stzfWhiteConfigService;
 
+	/** 权限关键字 */
+	public static final String PERMISSIONS = "stzfconfig";
+
 	@ApiOperation(value = "受托支付白名单列表显示", notes = "受托支付白名单列表显示")
 	@PostMapping("/selectSTZHWhiteList")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<ListResult<STZHWhiteListVO>> selectSTZHWhiteList(
 			@RequestBody STZHWhiteListRequestBean requestBean) {
 		STZHWhiteListResponse response = stzfWhiteConfigService.selectSTZHWhiteList(requestBean);
@@ -67,6 +73,7 @@ public class StzfWhiteConfigController extends BaseController {
 
 	@ApiOperation(value = "添加受托支付白名单", notes = "添加受托支付白名单")
 	@PostMapping("/insertAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
 	public AdminResult add(HttpServletRequest request, @RequestBody STZHWhiteListRequestBean requestBean) {
 		AdminSystemVO adminUser = getUser(request);
 		requestBean.setCreateuser(adminUser.getId());
@@ -91,6 +98,7 @@ public class StzfWhiteConfigController extends BaseController {
 
 	@ApiOperation(value = "修改受托支付白名单", notes = "修改受托支付白名单")
 	@PostMapping("/updateAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
 	public AdminResult updateAction(HttpServletRequest request, @RequestBody STZHWhiteListRequestBean requestBean) {
 		AdminSystemVO adminUser = getUser(request);
 		requestBean.setCreateuser(adminUser.getId());

@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -157,6 +158,7 @@ public class ApiBankOpenController extends BaseUserController {
      * @param request
      * @return
      */
+    @ApiIgnore
     @ApiOperation(value = "第三方端用户同步回调", notes = "用户开户")
     @RequestMapping(value = "/return")
     public ModelAndView returnPage(HttpServletRequest request) {
@@ -187,6 +189,7 @@ public class ApiBankOpenController extends BaseUserController {
      * @param bean
      * @return
      */
+    @ApiIgnore
     @ApiOperation(value = "页面开户异步处理", notes = "页面开户异步处理")
     @PostMapping("/bgReturn")
     @ResponseBody

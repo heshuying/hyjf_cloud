@@ -16,7 +16,11 @@ public interface InstConfigService {
     * */
     public Integer getInstConfigCount();
     /*
-   * 查询保证金记录总数
+   * 查询保证金记录查询总数
+   * */
+    public int instConfigInitCont();
+    /*
+   * 查询保证金记录
    * */
     public List<HjhInstConfig> instConfigInitByPage(int limitStart, int limitEnd);
     /*

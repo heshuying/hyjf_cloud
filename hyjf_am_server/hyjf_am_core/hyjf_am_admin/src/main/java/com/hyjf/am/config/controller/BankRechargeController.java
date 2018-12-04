@@ -27,7 +27,6 @@ import java.util.List;
 public class BankRechargeController  extends BaseConfigController{
     @Autowired
     private BankRechargeService bankRechargeService;
-
     /**
      *查询快捷充值列表
      * @return
@@ -37,12 +36,11 @@ public class BankRechargeController  extends BaseConfigController{
         logger.info("查询快捷充值列表..." + JSONObject.toJSON(adminRequest));
         AdminBankRechargeConfigResponse  response =new AdminBankRechargeConfigResponse();
         //查询查询快捷充值列表
-        List<BankRechargeConfig> recordList =bankRechargeService.selectBankRechargeByPage(adminRequest,-1, -1);
-        if (!CollectionUtils.isEmpty(recordList)) {
-            int count =recordList.size();
-            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordList.size(),adminRequest.getPageSize()==0? 10:adminRequest.getPageSize());
+         int count =bankRechargeService.selectBankRechargeCount(adminRequest);
+        if (count >0) {
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), count,adminRequest.getPageSize()==0? 10:adminRequest.getPageSize());
             //查询记录
-            recordList =bankRechargeService.selectBankRechargeByPage(adminRequest,paginator.getOffset(), paginator.getLimit());
+            List<BankRechargeConfig> recordList =bankRechargeService.selectBankRechargeByPage(adminRequest,paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
                 List<BankRechargeLimitConfigVO> bankRechargeLimitConfigVO = CommonUtils.convertBeanList(recordList, BankRechargeLimitConfigVO.class);
                 response.setResultList(bankRechargeLimitConfigVO);

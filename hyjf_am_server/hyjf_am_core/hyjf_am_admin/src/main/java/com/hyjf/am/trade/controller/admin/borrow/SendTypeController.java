@@ -40,12 +40,12 @@ public class SendTypeController {
         logger.info("发标复标列表..." + JSONObject.toJSON(adminRequest));
         BorrowSendTypeResponse  result=new BorrowSendTypeResponse();
         //查询发标复标条数
-        List<BorrowSendType> recordList = this.sendTypeService.selectSendTypeListByPage(new BorrowSendType(), -1, -1);
-        if (!CollectionUtils.isEmpty(recordList)) {
-            result.setCount(recordList.size());
-            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordList.size(),adminRequest.getPageSize()==0?10:adminRequest.getPageSize());
+        int count = this.sendTypeService.selectSendTypeCount(new BorrowSendType(), -1, -1);
+        if (count>0) {
+            result.setCount(count);
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), count,adminRequest.getPageSize()==0?10:adminRequest.getPageSize());
             //查询记录
-            recordList = this.sendTypeService.selectSendTypeListByPage(new BorrowSendType(),paginator.getOffset(), paginator.getLimit());
+            List<BorrowSendType> recordList = this.sendTypeService.selectSendTypeListByPage(new BorrowSendType(),paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(recordList)){
                 List<BorrowSendTypeVO> configList = CommonUtils.convertBeanList(recordList, BorrowSendTypeVO.class);
                 result.setResultList(configList);

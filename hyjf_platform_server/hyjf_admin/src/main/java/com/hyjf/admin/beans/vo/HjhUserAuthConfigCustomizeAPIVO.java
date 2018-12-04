@@ -6,35 +6,35 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class HjhUserAuthConfigCustomizeAPIVO implements Serializable {
-
+    @ApiModelProperty(value = "主键")
     private Integer id;
-
+    @ApiModelProperty(value = "授权类型 1缴费授权 2还款授权 3自动投标 4自动债转")
     private Integer authType;
-
+    @ApiModelProperty(value = "个人最高金额(元)")
     private Integer personalMaxAmount;
-
+    @ApiModelProperty(value = "企业最高金额(元)")
     private Integer enterpriseMaxAmount;
-
+    @ApiModelProperty(value = "授权期限(年)")
     private Integer authPeriod;
-
+    @ApiModelProperty(value = "启用状态 0未启用 1启用")
     private Integer enabledStatus;
-
+    @ApiModelProperty(value = "备注")
     private String remark;
-
+    @ApiModelProperty(value = "创建人IP")
     private String ip;
-
+    @ApiModelProperty(value = "创建人userId")
     private Integer createUserId;
-
+    @ApiModelProperty(value = "创建时间")
     private Date createTime;
-
+    @ApiModelProperty(value = "创建时间字符串")
     private String createTimeStr;
-
+    @ApiModelProperty(value = "修改人userId")
     private Integer updateUserId;
-
+    @ApiModelProperty(value = "修改人名称")
     private String updateUserStr;
-
+    @ApiModelProperty(value = "修改时间")
     private Date updateTime;
-
+    @ApiModelProperty(value = "修改时间字符串")
     private String updateTimeStr;
 
     private static final long serialVersionUID = 1L;

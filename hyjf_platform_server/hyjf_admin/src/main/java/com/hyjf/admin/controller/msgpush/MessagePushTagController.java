@@ -43,8 +43,6 @@ public class MessagePushTagController extends BaseController {
     private String FILEUPLOADTEMPPATH;
     @Autowired
     private MessagePushTagService messagePushTagService;
-    @Autowired
-    private MessagePushNoticesService messagePushNoticesService;
 
     @ApiOperation(value = "初始化页面", notes = "标签管理初始化页面")
     @RequestMapping(value = "/init", method = RequestMethod.POST)

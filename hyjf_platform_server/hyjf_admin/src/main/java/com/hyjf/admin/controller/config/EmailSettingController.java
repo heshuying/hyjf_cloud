@@ -27,8 +27,9 @@ import org.springframework.web.bind.annotation.*;
 public class EmailSettingController extends BaseController {
 	@Autowired
 	private SiteSettingService siteSettingService;
-	/** 权限关键字 */
+
 	public static final String PERMISSIONS = "emailsetting";
+
 	@ApiOperation(value = "邮件设置初始化", notes = "邮件设置初始化")
 	@GetMapping("/init")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
@@ -45,7 +46,7 @@ public class EmailSettingController extends BaseController {
 
 	@ApiOperation(value = "修改邮件设置", notes = "修改邮件设置")
 	@PostMapping("/update")
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
 	public AdminResult update(@RequestBody SiteSettingRequestBean requestBean) {
 		SiteSettingsResponse response = siteSettingService.updateAction(requestBean);
 		if (response == null) {
