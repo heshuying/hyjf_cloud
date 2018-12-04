@@ -7,6 +7,8 @@ import java.io.Serializable;
 public class ContentArticleRequest  implements Serializable {
 
     private static final long serialVersionUID = 1L;
+
+    @ApiModelProperty(value = "文章分类")
     private String noticeType;
     /**
      * 当前页码
@@ -18,7 +20,10 @@ public class ContentArticleRequest  implements Serializable {
      */
     @ApiModelProperty(value = "当前页条数")
     private Integer pageSize;
+
+    @ApiModelProperty(value = "查询开始条数")
     private Integer limitStart;
+    @ApiModelProperty(value = "查询几条")
     private Integer limitEnd;
 
     public String getNoticeType() {

@@ -4,6 +4,7 @@
 package com.hyjf.admin.beans.request;
 
 import com.hyjf.admin.beans.BaseRequest;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * @author fuqiang
@@ -11,8 +12,10 @@ import com.hyjf.admin.beans.BaseRequest;
  */
 public class PlatformCountRequestBean extends BaseRequest {
     /** 开始时间 */
+    @ApiModelProperty(value = "开始时间")
     private String timeStartSrch;
     /** 结束时间 */
+    @ApiModelProperty(value = "开始时间")
     private String timeEndSrch;
 
     public String getTimeStartSrch() {
