@@ -1,6 +1,7 @@
 package com.hyjf.am.resquest.user;
 
 import com.hyjf.am.vo.BasePage;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -57,11 +58,13 @@ public class KeyCountRequest extends BasePage implements Serializable {
     /**
      * 检索条件 渠道
      */
+    @ApiModelProperty(value = "检索条件渠道")
     private String sourceIdSrch;
 
     /**
      * 检索条件 关键词
      */
+    @ApiModelProperty(value = "检索条件关键词")
     private String keyWordSrch;
 
     /**

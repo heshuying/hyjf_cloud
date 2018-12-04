@@ -22,17 +22,17 @@ public class HjhUserAuthConfigLogCustomizeAPIVO implements Serializable {
     private Integer enabledStatus;
     @ApiModelProperty(value = "备注")
     private String remark;
-
+    @ApiModelProperty(value = "创建人IP")
     private String ip;
-
+    @ApiModelProperty(value = "创建人MAC地址")
     private String mac;
-
+    @ApiModelProperty(value = "创建人userId")
     private Integer createUser;
-
+    @ApiModelProperty(value = "创建人名称")
     private String createUserStr;
-
+    @ApiModelProperty(value = "创建时间")
     private Date createTime;
-
+    @ApiModelProperty(value = "创建时间字符串")
     private String createTimeStr;
 
     public String getCreateUserStr() {

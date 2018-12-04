@@ -186,7 +186,7 @@ public class AppLoginController extends BaseUserController {
      */
     @ApiOperation(value = "登出", notes = "登出")
     @PostMapping(value = "/loginOutAction")
-    public JSONObject loginOutAction(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "version") String version,@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,@RequestHeader(value = "key") String key,HttpServletRequest request, HttpServletResponse response) {
+    public JSONObject loginOutAction(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "version") String version,@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,@RequestHeader(value = "key") String key,HttpServletRequest request) {
         JSONObject ret = new JSONObject();
         ret.put("request", "/appUser/loginOutAction");
         // 网络状态

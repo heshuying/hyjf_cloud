@@ -411,7 +411,7 @@ public class OperationReportController extends BaseController {
      * @throws Exception
      */
     @ApiOperation(value = "资料上传", notes = "资料上传")
-    @RequestMapping("/uploadFile")
+    @PostMapping("/uploadFile")
     public AdminResult uploadFile(HttpServletRequest request) throws Exception {
         AdminResult adminResult = new AdminResult();
         LinkedList<BorrowCommonImage> borrowCommonImages = fileUpLoadUtil.upLoad(request);
