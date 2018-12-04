@@ -41,7 +41,8 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
     private static final int WITHDRAW_STATUS_SUCCESS = 2;
     // 提现状态:失败
     private static final int WITHDRAW_STATUS_FAIL = 3;
-
+    // 提现状态:终止
+    private static final int WITHDRAW_STATUS_FAIL_FINAL = 4;
     /**
      * 检索处理中的充值订单
      * add by jijun 20180615
