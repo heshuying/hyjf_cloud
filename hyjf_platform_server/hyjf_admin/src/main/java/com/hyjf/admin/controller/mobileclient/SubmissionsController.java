@@ -98,7 +98,7 @@ public class SubmissionsController extends BaseController {
 
     @ApiOperation(value = "意见反馈:获取详细画面", notes = "意见反馈:获取详细画面")
     @PostMapping(value = "/searchinfo")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<SubmissionsVO> searchinfo(@RequestBody SubmissionsRequest request) {
         return new AdminResult<SubmissionsVO>(submissionsService.getRecord(request));
     }

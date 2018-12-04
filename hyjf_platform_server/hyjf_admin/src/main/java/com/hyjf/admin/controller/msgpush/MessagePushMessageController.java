@@ -6,7 +6,9 @@ package com.hyjf.admin.controller.msgpush;
 
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.MessagePushMsgService;
 import com.hyjf.admin.service.MessagePushTagService;
 import com.hyjf.admin.service.MessagePushTemplateService;
@@ -49,8 +51,12 @@ public class MessagePushMessageController extends BaseController {
     @Autowired
     private MessagePushTemplateService messagePushTemplateService;
 
+    /** 权限关键字 */
+    public static final String PERMISSIONS = "msgpushmessages";
+
     @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @RequestMapping(value = "/init", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<MessagePushMsgResponse> init(@RequestBody MessagePushMsgRequest request) {
         MessagePushMsgResponse response = messagePushMsgService.selectMessagePushMsg(request);
         if (response == null) {
@@ -68,6 +74,7 @@ public class MessagePushMessageController extends BaseController {
 
     @ApiOperation(value = "详情页信息", notes = "详情页信息")
     @RequestMapping(value = "/infoAction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY, ShiroConstants.PERMISSION_RESEND})
     public AdminResult<MessagePushMsgResponse> infoAction(@RequestBody MessagePushMsgRequest form) {
         MessagePushMsgResponse response = new MessagePushMsgResponse();
         try {
@@ -112,6 +119,7 @@ public class MessagePushMessageController extends BaseController {
 
     @ApiOperation(value = "添加手动发送短信", notes = "添加手动发送短信")
     @RequestMapping(value = "/insertAction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult<MessagePushMsgResponse> insertAction(HttpServletRequest request, @RequestBody MessagePushMsgRequest templateRequest) {
         MessagePushMsgResponse response = new MessagePushMsgResponse();
         AdminSystemVO user = getUser(request);
@@ -193,6 +201,7 @@ public class MessagePushMessageController extends BaseController {
 
     @ApiOperation(value = "修改手动发放消息", notes = "修改手动发放消息")
     @RequestMapping(value = "/updateAction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateAction(HttpServletRequest request, @RequestBody MessagePushMsgRequest templateRequest) {
         MessagePushMsgResponse response = new MessagePushMsgResponse();
         // 调用校验
@@ -255,6 +264,7 @@ public class MessagePushMessageController extends BaseController {
 
     @ApiOperation(value = "删除手动发送消息", notes = "删除手动发送消息")
     @RequestMapping(value = "/deleteAction/{ids}", method = RequestMethod.GET)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteAction(@PathVariable String ids) {
         if (StringUtils.isBlank(ids)) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -278,6 +288,7 @@ public class MessagePushMessageController extends BaseController {
 
     @ApiOperation(value = "检查是否是url", notes = "检查是否是url")
     @RequestMapping(value = "/checkUrlAction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public AdminResult checkUrlAction(HttpServletRequest request) {
         MessagePushMsgResponse response = new MessagePushMsgResponse();
         // 检查着名称唯一性
@@ -292,6 +303,7 @@ public class MessagePushMessageController extends BaseController {
 
     @ApiOperation(value = "检查是否是电话号码", notes = "检查是否是电话号码")
     @RequestMapping(value = "/checkMobile", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public AdminResult checkMobile(@RequestParam String msgDestination) {
         MessagePushMsgResponse response = new MessagePushMsgResponse();
         // 检查是否是电话号码
@@ -311,6 +323,7 @@ public class MessagePushMessageController extends BaseController {
 
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {

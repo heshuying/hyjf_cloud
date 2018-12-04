@@ -79,7 +79,9 @@ public class WechatRechargeController extends BaseTradeController{
 		directRechargeBean.setPlatform(CommonConstant.CLIENT_WECHAT);
         directRechargeBean.setForgotPwdUrl(super.getForgotPwdUrl(CommonConstant.CLIENT_WECHAT,request,systemConfig));
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,mobile,money);
-
+		if (null == bean) {
+			throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
+		}
 		Map<String,Object> map = new HashMap<>();
 		try {
 			map = BankCallUtils.callApiMap(bean);

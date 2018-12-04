@@ -403,7 +403,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 
 	public BankCallBean fallBackRecharge(UserDirectRechargeBean directRechargeBean,int userId, String ipAddr, String mobile, String money) throws Exception {
 		logger.info("==================已进入 充值(三端) fallBackRecharge 方法================");
-		return new BankCallBean();
+		return null;
 	}
 
 	@Override

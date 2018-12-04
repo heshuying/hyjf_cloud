@@ -39,8 +39,10 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BorrowCommonService;
 import com.hyjf.admin.service.CustomerTransferService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
@@ -107,7 +109,8 @@ import java.util.*;
 @RestController
 @RequestMapping("/hyjf-admin/borrow/borrowcommon")
 public class BorrowCommonController extends BaseController {
-
+	/** 查看权限 */
+	public static final String PERMISSIONS = "borrow";
 	@Autowired
 	private BorrowCommonService borrowCommonService;
 	@Autowired
@@ -1796,6 +1799,7 @@ public class BorrowCommonController extends BaseController {
      */
 	@ApiOperation(value = "查询借款列表")
 	@PostMapping("/selectBorrowStyleList")
+	 @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<BorrowCustomizeResponse>  init(@RequestBody @Valid BorrowBeanRequest form) {
 		BorrowCustomizeResponse bcr=borrowCommonService.init(form);
 
@@ -1834,6 +1838,7 @@ public class BorrowCommonController extends BaseController {
      */
 	@ApiOperation(value = "查询借款列表")
 	@PostMapping("/optAction")
+	 @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<BorrowCustomizeResponse>  optAction(@RequestBody @Valid BorrowBeanRequest form) {
 		BorrowCustomizeResponse bcr=borrowCommonService.init(form);
 		if(bcr==null) {
@@ -2115,6 +2120,7 @@ public class BorrowCommonController extends BaseController {
 	 */
 	@ApiOperation(value = "导出功能")
 	@PostMapping("/exportOptAction")
+	 @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportToExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid BorrowBeanRequest form) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
