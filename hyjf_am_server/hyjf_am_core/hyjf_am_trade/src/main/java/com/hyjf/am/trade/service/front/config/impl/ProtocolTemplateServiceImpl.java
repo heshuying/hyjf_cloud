@@ -51,7 +51,7 @@ public class ProtocolTemplateServiceImpl implements ProtocolTemplateService{
 		List<ProtocolTemplateVO> volist = null;
         ProtocolTemplateExample examplev = new ProtocolTemplateExample();
         ProtocolTemplateExample.Criteria criteria = examplev.createCriteria();
-        criteria.andDisplayNameEqualTo(displayName);
+        criteria.andProtocolTypeEqualTo(displayName);
         criteria.andStatusEqualTo(1);
         List<ProtocolTemplate> list = protocolTemplateMapper.selectByExample(examplev);
         if(!CollectionUtils.isEmpty(list)){

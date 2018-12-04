@@ -102,7 +102,7 @@ public class HomePageController extends BaseMarketController {
      */
     @ResponseBody
     @ApiOperation(value = "获取JumpCommend", httpMethod = "GET", notes = "获取JumpCommend")
-    @RequestMapping(value = "/getJumpCommend")
+    @GetMapping(value = "/getJumpCommend")
     public BaseResultBeanFrontEnd getJumpCommend() {
         logger.info(HomePageController.class.toString(), "startLog -- /hyjf-app/homepage/getJumpCommend");
         BaseResultBeanFrontEnd baseResultBeanFrontEnd=new BaseResultBeanFrontEnd();
