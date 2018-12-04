@@ -156,7 +156,9 @@ public class AppRechargeController extends BaseTradeController{
 		directRechargeBean.setPlatform(platform);
 		directRechargeBean.setForgotPwdUrl(super.getForgotPwdUrl(platform,request,systemConfig));
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,mobile,money);
-
+		if (null == bean) {
+			throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
+		}
 		try {
 			Map<String,Object> data =  BankCallUtils.callApiMap(bean);
 			result.setData(data);
