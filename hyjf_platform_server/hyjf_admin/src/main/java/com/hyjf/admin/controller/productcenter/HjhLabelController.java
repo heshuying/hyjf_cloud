@@ -606,11 +606,20 @@ public class HjhLabelController extends BaseController{
 					infoRequest.setLabelName(resultVO.getLabelName());
 					infoRequest.setId(Integer.valueOf(viewRequest.getLabelId()));
 					
+					infoRequest.setLabelTermType(resultVO.getLabelTermType());
+					infoRequest.setIsCredit(resultVO.getIsCredit());
+					infoRequest.setIsLate(resultVO.getIsLate());
+					
 				} else {
 					infoRequest.setLabelState(1);
 					// LabelName 用来检索
 					infoRequest.setLabelName(resultVO.getLabelName());
 					infoRequest.setId(Integer.valueOf(viewRequest.getLabelId()));
+					
+					infoRequest.setLabelTermType(resultVO.getLabelTermType());
+					infoRequest.setIsCredit(resultVO.getIsCredit());
+					infoRequest.setIsLate(resultVO.getIsLate());
+					
 				}
 				int flg = this.labelService.updateHjhLabelRecord(infoRequest);
 				if(flg > 0){
