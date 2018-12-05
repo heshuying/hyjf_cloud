@@ -4,6 +4,7 @@
 package com.hyjf.am.config.service;
 
 import com.hyjf.am.config.dao.model.auto.LandingPage;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.config.LandingPageResponse;
 import com.hyjf.am.resquest.admin.LandingPageRequest;
 
@@ -33,6 +34,9 @@ public interface LandingPageService {
 	 * @param request
 	 */
 	void updateAction(LandingPageRequest request);
+
+	IntegerResponse countByPageName(LandingPageRequest requestBean);
+
 
 	/**
 	 * 根据id查询着路页管理
