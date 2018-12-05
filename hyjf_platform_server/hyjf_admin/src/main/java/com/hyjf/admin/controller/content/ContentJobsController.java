@@ -5,7 +5,9 @@ package com.hyjf.admin.controller.content;
 
 import com.hyjf.admin.beans.request.ContentJobRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.ContentJobService;
 import com.hyjf.am.bean.commonimage.BorrowCommonImage;
 import com.hyjf.am.response.Response;
@@ -41,11 +43,15 @@ public class ContentJobsController extends BaseController {
 	@Value("${file.upload.temp.path}")
 	private String temppath;
 
+	/** 权限关键字 */
+	public static final String PERMISSIONS = "contentjobs";
+
 	@Autowired
 	private ContentJobService contentPartnerService;
 
 	@ApiOperation(value = "公司管理-招贤纳士列表查询", notes = "公司管理-招贤纳士列表查询")
 	@PostMapping("/searchaction")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult searchAction(@RequestBody ContentJobRequestBean requestBean) {
 		JobResponse response = contentPartnerService.searchAction(requestBean);
 		if (response == null) {
@@ -59,6 +65,7 @@ public class ContentJobsController extends BaseController {
 
 	@ApiOperation(value = "添加公司管理-招贤纳士", notes = "添加公司管理-招贤纳士")
 	@PostMapping("/insert")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
 	public AdminResult add(@RequestBody ContentJobRequestBean requestBean) {
 		int num = contentPartnerService.insertAction(requestBean);
 		if (num <= 0) {
@@ -69,6 +76,7 @@ public class ContentJobsController extends BaseController {
 
 	@ApiOperation(value = "修改公司管理-招贤纳士", notes = "修改公司管理-招贤纳士")
 	@PostMapping("/update")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult update(@RequestBody ContentJobRequestBean requestBean) {
 		int num = contentPartnerService.updateAction(requestBean);
 		if (num <= 0) {
@@ -89,6 +97,7 @@ public class ContentJobsController extends BaseController {
 
 	@ApiOperation(value = "删除公司管理-招贤纳士", notes = "删除公司管理-招贤纳士")
 	@GetMapping("/delete/{id}")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
 	public AdminResult delete(@PathVariable Integer id) {
 		int num = contentPartnerService.deleteById(id);
 		if (num <= 0) {
@@ -99,6 +108,7 @@ public class ContentJobsController extends BaseController {
 
 	@ApiOperation(value = "公司管理-招贤纳士初始化", notes = "公司管理-招贤纳士初始化")
 	@PostMapping("/select_by_id")
+	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_INFO, ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
 	public AdminResult selectById(@RequestBody ContentJobRequestBean requestBean) {
 		JobsVo vo = contentPartnerService.selectById(requestBean);
 		return new AdminResult(vo);
@@ -113,6 +123,7 @@ public class ContentJobsController extends BaseController {
 	 */
 	@ApiOperation(value = "资料上传", notes = "资料上传")
 	@PostMapping("/uploadFile")
+	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
 	public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
 		String fileDomainUrl = UploadFileUtils.getDoPath(url);

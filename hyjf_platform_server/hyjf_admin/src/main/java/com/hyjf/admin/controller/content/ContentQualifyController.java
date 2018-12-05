@@ -5,7 +5,9 @@ package com.hyjf.admin.controller.content;
 
 import com.hyjf.admin.beans.request.ContentQualifyRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.ContentQualifyService;
 import com.hyjf.am.bean.commonimage.BorrowCommonImage;
 import com.hyjf.am.response.Response;
@@ -41,11 +43,15 @@ public class ContentQualifyController extends BaseController {
 	@Value("${file.upload.temp.path}")
 	private String temppath;
 
+	/** 权限关键字 */
+	public static final String PERMISSIONS = "contentqualify";
+
 	@Autowired
 	private ContentQualifyService contentQualifyService;
 
 	@ApiOperation(value = "公司管理-资质荣誉条件列表查询", notes = "公司管理-资质荣誉条件列表查询")
 	@PostMapping("/search_action")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult searchAction(@RequestBody ContentQualifyRequestBean requestBean) {
 		ContentQualifyResponse response = contentQualifyService.searchAction(requestBean);
 		if (response == null) {
@@ -59,6 +65,7 @@ public class ContentQualifyController extends BaseController {
 
 	@ApiOperation(value = "添加公司管理-资质荣誉", notes = "添加公司管理-资质荣誉")
 	@PostMapping("/insert")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
 	public AdminResult add(@RequestBody ContentQualifyRequestBean requestBean) {
 		int num = contentQualifyService.insertAction(requestBean);
 		if (num <= 0) {
@@ -69,6 +76,7 @@ public class ContentQualifyController extends BaseController {
 
 	@ApiOperation(value = "资质荣誉-根据id查询", notes = "资质荣誉-根据id查询")
 	@PostMapping("/select_by_id")
+	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_INFO, ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
 	public AdminResult selectById(@RequestBody ContentQualifyRequestBean requestBean) {
 		ContentQualifyVO vo  = contentQualifyService.selectById(requestBean);
 		return new AdminResult(vo);
@@ -76,6 +84,7 @@ public class ContentQualifyController extends BaseController {
 
 	@ApiOperation(value = "修改公司管理-资质荣誉", notes = "修改公司管理-资质荣誉")
 	@PostMapping("/update")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult update(@RequestBody ContentQualifyRequestBean requestBean) {
 		int num = contentQualifyService.updateAction(requestBean);
 		if (num <= 0) {
@@ -86,6 +95,7 @@ public class ContentQualifyController extends BaseController {
 
 	@ApiOperation(value = "修改公司管理-资质荣誉状态", notes = "修改公司管理-资质荣誉状态")
 	@PostMapping("/updatestatus")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult updatestatus(@RequestBody ContentQualifyRequestBean requestBean) {
 		int num = contentQualifyService.updateStatus(requestBean);
 		if (num <= 0) {
@@ -96,6 +106,7 @@ public class ContentQualifyController extends BaseController {
 
 	@ApiOperation(value = "删除公司管理-资质荣誉状态", notes = "删除公司管理-资质荣誉状态")
 	@GetMapping("/delete/{id}")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
 	public AdminResult delete(@PathVariable Integer id) {
 		int num = contentQualifyService.deleteById(id);
 		if (num <= 0) {
@@ -113,6 +124,7 @@ public class ContentQualifyController extends BaseController {
 	 */
 	@ApiOperation(value = "资料上传", notes = "资料上传")
 	@PostMapping("/uploadFile")
+	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
 	public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
 		String fileDomainUrl = UploadFileUtils.getDoPath(url);

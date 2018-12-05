@@ -1,6 +1,8 @@
 package com.hyjf.admin.controller.promotion.appReconcliation;
 
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.promotion.AppChannelReconciliationService;
 import com.hyjf.am.response.admin.promotion.AppChannelReconciliationResponse;
 import com.hyjf.am.resquest.admin.AppChannelReconciliationRequest;
@@ -29,8 +31,12 @@ public class AppChannelReconciliationController extends BaseController {
     @Autowired
     private AppChannelReconciliationService appChannelReconciliationService;
 
+    /** 查看权限 */
+    public static final String PERMISSIONS = "appchannelrecon";
+
     @ApiOperation(value = "app渠道对账-画面初始化", notes = "app渠道对账-画面初始化")
     @PostMapping("/init")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AppChannelReconciliationResponse init(HttpServletRequest request, @RequestBody AppChannelReconciliationRequest form){
         AppChannelReconciliationResponse response = new AppChannelReconciliationResponse();
         // 获取登录用户的userId
