@@ -795,7 +795,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			}
 		}
 		// 产品加息 add by liuyang 20180730 end
-		this.borrowMapper.insertSelective(borrow);
+		boolean isBorrowInsertFlag = this.borrowMapper.insertSelective(borrow) >0 ? true:false;
+		if (isBorrowInsertFlag) {
+			logger.info("borrow表插入数据成功,标的编号:[" + borrowNid + "].");
+		}
 		borrowinfo.setEntrustedFlg(Integer.valueOf(borrowBean.getEntrustedFlg()));
 		if("1".equals(borrowBean.getEntrustedFlg())){
 			borrowinfo.setEntrustedUserName(borrowBean.getEntrustedUsername().trim());
@@ -806,7 +809,11 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		}
 		borrowinfo.setTrusteePayTime(0);
 
-		this.borrowInfoMapper.insertSelective(borrowinfo);
+		boolean isBorrowInfoInsertFlag = this.borrowInfoMapper.insertSelective(borrowinfo) > 0 ? true : false;
+
+		if (isBorrowInfoInsertFlag) {
+			logger.info("borrow_info表插入数据成功,标的编号:[" + borrowNid + "].");
+		}
 		// 个人信息(信批新增字段)
 		this.insertBorrowManinfo(borrowNid, borrowBean, borrow);
 		// 公司信息(信批新增字段)
