@@ -11,6 +11,7 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.ContentLandingPageService;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.LandingPageResponse;
 import com.hyjf.am.vo.config.LandingPageVo;
@@ -21,6 +22,8 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author tanyy
@@ -113,5 +116,14 @@ public class ContentLandingPageController extends BaseController {
 			return new AdminResult<>(FAIL, response.getMessage());
 		}
 		return new AdminResult<>();
+	}
+	@ApiOperation(value = "检查着落页名称唯一", notes = "检查着落页名称唯一")
+	@PostMapping("/checkAction")
+	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD,ShiroConstants.PERMISSION_MODIFY})
+	public AdminResult checkAction(@RequestBody ContentLandingPageRequestBean requestBean) {
+		AdminResult adminResult = new AdminResult();
+		IntegerResponse count = contentLandingPageService.countByPageName(requestBean);
+		adminResult.setTotalCount(count.getResultInt());
+		return adminResult;
 	}
 }

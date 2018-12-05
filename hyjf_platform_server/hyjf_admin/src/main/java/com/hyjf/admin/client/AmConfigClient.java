@@ -689,7 +689,7 @@ public interface AmConfigClient {
 	 */
 	LandingPageResponse deleteLandingPageById(Integer id);
 
-
+	IntegerResponse countByPageName(ContentLandingPageRequestBean requestBean);
 
 	/**
 	 * 根据条件查询公司管理-合作伙伴
