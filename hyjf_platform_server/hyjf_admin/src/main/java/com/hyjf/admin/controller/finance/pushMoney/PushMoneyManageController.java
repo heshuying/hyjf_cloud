@@ -58,7 +58,7 @@ public class PushMoneyManageController extends BaseController {
     private PushMoneyManageService pushMoneyManageService;
 
     /** 直投提成列表权限 */
-    public static final String PERMISSIONSLIST = "pushmoneymanagelist";
+    public static final String PERMISSIONSLIST = "pushMoneyList";
 
     /** 直投提成管理权限 */
     public static final String PERMISSIONS = "pushMoneyManage";
