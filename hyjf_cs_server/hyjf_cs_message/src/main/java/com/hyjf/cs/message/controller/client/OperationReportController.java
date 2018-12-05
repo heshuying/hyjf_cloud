@@ -17,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +65,7 @@ public class OperationReportController extends BaseController {
 					}
 					List<OperationReportVO> recordList = this.operationReportService
 							.getRecordListByMonth(map);
+					recordList = page(recordList,request);
 					response.setResultList(recordList);
 				}
 			} else if (typeInt == 13 || typeInt == 14) { //季度
@@ -82,6 +84,7 @@ public class OperationReportController extends BaseController {
 					}
 					List<OperationReportVO> recordList = this.operationReportService
 							.getRecordListByQuarter(map);
+					recordList = page(recordList,request);
 					response.setResultList(recordList);
 				}
 			} else if (typeInt == 15) { //半年
@@ -95,6 +98,7 @@ public class OperationReportController extends BaseController {
 					}
 					List<OperationReportVO> recordList = this.operationReportService
 							.getRecordListByHalfYear(map);
+					recordList = page(recordList,request);
 					response.setResultList(recordList);
 				}
 			} else if (typeInt == 16) {  //全年
@@ -108,6 +112,7 @@ public class OperationReportController extends BaseController {
 					}
 					List<OperationReportVO> recordList = this.operationReportService
 							.getRecordListByYear(map);
+					recordList = page(recordList,request);
 					response.setResultList(recordList);
 				}
 			}
@@ -477,5 +482,23 @@ public class OperationReportController extends BaseController {
 		}
 		return response;
 	}
+	private List<OperationReportVO> page(List<OperationReportVO> recordList,OperationReportRequest request){
+			int current=request.getCurrPage(); //页码
+			int pageSize=request.getPageSize(); //每页显示的数量
+			int totalCount=recordList.size();
+			int pageCount = (totalCount / pageSize) + ((totalCount % pageSize > 0) ? 1 : 0);
 
+			if(current < 1){
+				current = 1;
+			}
+			int start=(current-1) * pageSize;
+			int end = Math.min(totalCount, current * pageSize);
+
+			if(pageCount >= current){
+				recordList=recordList.subList(start,end);
+			}else{
+				recordList = new ArrayList<>();
+			}
+			return recordList;
+	}
 }
