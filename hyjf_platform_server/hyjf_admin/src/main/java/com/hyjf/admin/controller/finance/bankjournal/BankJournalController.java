@@ -6,7 +6,9 @@ package com.hyjf.admin.controller.finance.bankjournal;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BankJournalService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -52,9 +54,13 @@ public class BankJournalController {
     @Autowired
     private BankJournalService bankJournalService;
 
+    /** 权限 */
+    public static final String PERMISSIONS = "bankjournal";
+
     @ApiOperation(value = "银行交易明细", notes = "银行交易明细列表查询")
     @PostMapping(value = "/bankevelist")
     @ResponseBody
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public JSONObject getBankeveList(@RequestBody BankEveRequest bankEveRequest){
         JSONObject jsonObject = new JSONObject();
 
@@ -95,6 +101,7 @@ public class BankJournalController {
      */
     @ApiOperation(value = "银行交易明细导出", notes = "银行交易明细导出")
     @PostMapping(value = "/exportbankeeve")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportBankeeveList(HttpServletRequest request , HttpServletResponse response, @RequestBody BankEveRequest bankEveRequest) throws UnsupportedEncodingException {
 
 

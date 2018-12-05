@@ -28,7 +28,7 @@ public interface AdminAccedeListService {
 	 * 加入明细列表
 	 * @return
 	 */
-	List<AccedeListCustomizeVO> selectAccedeListList(AccedeListRequest request,int limitStart, int limitEnd);
+	List<AccedeListCustomizeVO> selectAccedeList(AccedeListRequest request,int limitStart, int limitEnd);
 	
     /**
 	 * 加入明细列表不分页

@@ -8,6 +8,8 @@ import com.hyjf.am.response.admin.SmsCountCustomizeResponse;
 import com.hyjf.am.resquest.user.SmsCountRequest;
 import com.hyjf.am.vo.admin.SmsCountCustomizeVO;
 
+import java.util.List;
+
 /**
  * @author fq
  * @version SmsCountService, v0.1 2018/8/17 14:01
@@ -33,4 +35,18 @@ public interface SmsCountService {
      * @return
      */
     JSONArray getCrmDepartmentList(String[] list);
+
+    /**
+     * 查询导出总条数
+     * @param request
+     * @return
+     */
+    Integer getSmsCountForExport(SmsCountRequest request);
+
+    /**
+     * 查询导出列表
+     * @param request
+     * @return
+     */
+    List<SmsCountCustomizeVO> getSmsListForExport(SmsCountRequest request);
 }

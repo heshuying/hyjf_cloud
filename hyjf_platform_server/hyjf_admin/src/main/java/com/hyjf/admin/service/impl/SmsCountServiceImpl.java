@@ -52,6 +52,16 @@ public class SmsCountServiceImpl implements SmsCountService {
         return treeDepartmentList(departmentList, map, list, "0", "");
     }
 
+    @Override
+    public Integer getSmsCountForExport(SmsCountRequest request) {
+        return amUserClient.getSmsCountForExport(request);
+    }
+
+    @Override
+    public List<SmsCountCustomizeVO> getSmsListForExport(SmsCountRequest request) {
+        return amUserClient.getSmsListForExport(request);
+    }
+
     /**
      * 部门树形结构
      *

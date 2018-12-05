@@ -3,7 +3,9 @@ package com.hyjf.admin.controller.exception.bankrepayfreeze;
 import com.hyjf.admin.beans.request.BankRepayFreezeRequest;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.exception.BankRepayFreezeService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
@@ -24,6 +26,9 @@ import java.util.List;
 @RestController
 @RequestMapping("/hyjf-admin/exception/repayfreeze_cancel")
 public class BankRepayFreezeExceptionController extends BaseController {
+
+    public static final String PERMISSIONS = "bankrepayFreeze";
+
     @Autowired
     BankRepayFreezeService bankRepayFreezeService;
 
@@ -34,6 +39,7 @@ public class BankRepayFreezeExceptionController extends BaseController {
      */
     @ApiOperation(value = "冻结异常列表", notes = "冻结异常列表")
     @PostMapping("/list")
+    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<BankRepayFreezeLogVO>> getList(@RequestBody BankRepayFreezeRequest requestBean){
         Integer count = bankRepayFreezeService.getFreezeLogCount();
         Page page = Page.initPage(requestBean.getCurrPage(), requestBean.getPageSize());
@@ -51,6 +57,7 @@ public class BankRepayFreezeExceptionController extends BaseController {
      */
     @ApiOperation(value = "冻结撤销", notes = "冻结撤销")
     @GetMapping("/cancel/{orderId}")
+    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult repayFreezeCancel(@PathVariable String orderId){
         logger.info("还款冻结撤销开始，orderId：" + orderId);
         if(StringUtils.isBlank(orderId)){

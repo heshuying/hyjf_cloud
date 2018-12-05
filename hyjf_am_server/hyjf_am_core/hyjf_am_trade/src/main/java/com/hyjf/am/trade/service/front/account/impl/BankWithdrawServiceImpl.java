@@ -14,6 +14,7 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,8 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
     private static final int WITHDRAW_STATUS_SUCCESS = 2;
     // 提现状态:失败
     private static final int WITHDRAW_STATUS_FAIL = 3;
-
+    // 提现状态:终止
+    private static final int WITHDRAW_STATUS_BANK_FAIL = 4;
     /**
      * 检索处理中的充值订单
      * add by jijun 20180615
@@ -81,7 +83,7 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
      * @return
      */
     @Override
-    public Boolean updateHandlerAfterCash(AfterCashParamRequest request) throws Exception{
+    public void updateHandlerAfterCash(AfterCashParamRequest request) throws Exception{
 
         BankCallBeanVO bean= request.getBankCallBeanVO();
         AccountWithdrawVO accountWithdraw = request.getAccountWithdrawVO();
@@ -95,102 +97,125 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
 
         // TODO
         Date nowDate = new Date();
-        if (("00000000".equals(bean.getRetCode()) || "CE999028".equals(bean.getRetCode()))
-                && "00".equals(bean.getResult()) && !("1".equals(bean.getOrFlag()))) {
-            CheckResult rtCheck = checkCallRetAndHyjf(bean,accountWithdraw);
-            if (!rtCheck.isResultBool()) {
-                // 验证失败，异常信息抛出
-                throw new Exception(rtCheck.getResultMsg());
-            }
-            // 用户ID
+        if (BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode()) || "CE999028".equals(bean.getRetCode())) {
+            if("00".equals(bean.getResult()) && !"1".equals(bean.getOrFlag())){
+                CheckResult rtCheck = checkCallRetAndHyjf(bean,accountWithdraw);
+                if (!rtCheck.isResultBool()) {
+                    // 验证失败，异常信息抛出
+                    throw new Exception(rtCheck.getResultMsg());
+                }
 
-            // 提现订单号
+                //3.DB防并发处理
+                rtCheck = checkConcurrencyDB(accountWithdraw, userId, ordId);
+                if (!rtCheck.isResultBool()) {
+                    // 记录被其他进程处理，日志信息输出
+                    logger.info(this.getClass().getName(), "handlerAfterCash", rtCheck.getResultMsg());
+                    throw new Exception(rtCheck.getResultMsg());
+                }
 
-            //3.DB防并发处理
-            rtCheck = checkConcurrencyDB(accountWithdraw, userId, ordId);
-            if (!rtCheck.isResultBool()) {
-                // 记录被其他进程处理，日志信息输出
-                logger.info(this.getClass().getName(), "handlerAfterCash", rtCheck.getResultMsg());
-                throw new Exception(rtCheck.getResultMsg());
-            }
+                //4.DB更新操作
+                // 提现金额
+                BigDecimal transAmt = new BigDecimal(bean.getTxAmount());
+                // 提现手续费
+                BigDecimal feeAmt = new BigDecimal(fee);
+                // 总的交易金额
+                BigDecimal total = transAmt.add(feeAmt);
+                // 更新订单信息
+                accountWithdraw.setFee((CustomUtil.formatAmount(feeAmt.toString()))); // 更新手续费
+                accountWithdraw.setCredited(transAmt); // 更新到账金额
+                accountWithdraw.setTotal(total); // 更新到总额
+                accountWithdraw.setStatus(WITHDRAW_STATUS_SUCCESS);// 4:成功
 
-            //4.DB更新操作
-            // 提现金额
-            BigDecimal transAmt = new BigDecimal(bean.getTxAmount());
-            // 提现手续费
-            BigDecimal feeAmt = new BigDecimal(fee);
-            // 总的交易金额
-            BigDecimal total = transAmt.add(feeAmt);
-            // 更新订单信息
-            accountWithdraw.setFee((CustomUtil.formatAmount(feeAmt.toString()))); // 更新手续费
-            accountWithdraw.setCredited(transAmt); // 更新到账金额
-            accountWithdraw.setTotal(total); // 更新到总额
-            accountWithdraw.setStatus(WITHDRAW_STATUS_SUCCESS);// 4:成功
+                accountWithdraw.setUpdateTime(nowDate);
+                accountWithdraw.setAccount(bean.getAccountId());
+                accountWithdraw.setReason("");
 
-            accountWithdraw.setUpdateTime(nowDate);
-            accountWithdraw.setAccount(bean.getAccountId());
-            accountWithdraw.setReason("");
+                boolean isAccountwithdrawFlag = this.accountWithdrawMapper.updateByPrimaryKeySelective(CommonUtils.convertBean(accountWithdraw,AccountWithdraw.class)) > 0 ? true : false;
+                if (!isAccountwithdrawFlag) {
+                    throw new Exception("提现后,更新用户提现记录表失败!" + "提现订单号:" + ordId + ",用户ID:" + userId);
+                }
+                Account newAccount = new Account();
+                // 更新账户信息
+                newAccount.setUserId(userId);// 用户Id
+                newAccount.setBankTotal(total); // 累加到账户总资产
+                newAccount.setBankBalance(total); // 累加可用余额
+                newAccount.setBankBalanceCash(total);// 江西银行可用余额
+                boolean isAccountUpdateFlag = this.adminAccountCustomizeMapper.updateBankWithdrawSuccess(newAccount) > 0 ? true : false;
+                if (!isAccountUpdateFlag) {
+                    throw new Exception("提现后,更新用户Account表失败!" + "提现订单号:" + ordId + ",用户ID:" + userId);
+                }
+                // 重新获取用户信息
+                Account account = this.getAccount(userId);
+                // 写入收支明细
+                AccountList accountList = new AccountList();
+                accountList.setNid(ordId);
+                accountList.setUserId(userId);
+                accountList.setAmount(total);
+                accountList.setType(2);
+                accountList.setTrade("cash_success");
+                accountList.setTradeCode("balance");
+                accountList.setTotal(account.getTotal());
+                accountList.setBalance(account.getBalance());
+                accountList.setFrost(account.getFrost());
+                accountList.setAwait(account.getAwait());
+                accountList.setRepay(account.getRepay());
+                accountList.setBankTotal(account.getBankTotal()); // 银行总资产
+                accountList.setBankBalance(account.getBankBalance()); // 银行可用余额
+                accountList.setBankFrost(account.getBankFrost());// 银行冻结金额
+                accountList.setBankWaitCapital(account.getBankWaitCapital());// 银行待还本金
+                accountList.setBankWaitInterest(account.getBankWaitInterest());// 银行待还利息
+                accountList.setBankAwaitCapital(account.getBankAwaitCapital());// 银行待收本金
+                accountList.setBankAwaitInterest(account.getBankAwaitInterest());// 银行待收利息
+                accountList.setBankAwait(account.getBankAwait());// 银行待收总额
+                accountList.setBankInterestSum(account.getBankInterestSum()); // 银行累计收益
+                accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计投资
+                accountList.setBankWaitRepay(account.getBankWaitRepay());// 银行待还金额
+                accountList.setPlanBalance(account.getPlanBalance());//汇计划账户可用余额
+                accountList.setPlanFrost(account.getPlanFrost());
+                accountList.setSeqNo(bean.getSeqNo());
+                accountList.setTxDate(Integer.parseInt(bean.getTxDate()));
+                accountList.setTxTime(Integer.parseInt(bean.getTxTime()));
+                accountList.setBankSeqNo(bean.getTxDate() + bean.getTxTime() + bean.getSeqNo());
+                accountList.setAccountId(bean.getAccountId());
+                accountList.setRemark(accountWithdraw.getRemark());
+                accountList.setCreateTime(GetDate.getDate(nowTime));
+                accountList.setOperator(String.valueOf(userId));
+                accountList.setIp(accountWithdraw.getAddIp());
+                accountList.setIsBank(1);
+                accountList.setWeb(0);
+                accountList.setCheckStatus(0);// 对账状态0：未对账 1：已对账
+                accountList.setTradeStatus(1);// 0失败1成功2失败
+                boolean isAccountListFlag = this.accountListMapper.insertSelective(accountList) > 0 ? true : false;
+                if (!isAccountListFlag) {
+                    throw new Exception("提现成功后,插入交易明细表失败~!" + "提现订单号:" + ordId + ",用户ID:" + userId);
+                }
+            }else {
+                // 提现失败,更新处理中订单状态为失败
+                AccountWithdrawExample example = new AccountWithdrawExample();
+                AccountWithdrawExample.Criteria cra = example.createCriteria();
+                cra.andNidEqualTo(ordId);
+                List<AccountWithdraw> list = this.accountWithdrawMapper.selectByExample(example);
+                if (list != null && list.size() > 0) {
+                    AccountWithdraw accountwithdraw = list.get(0);
+                    if (WITHDRAW_STATUS_DEFAULT == accountWithdraw.getStatus()
+                            || WITHDRAW_STATUS_WAIT == accountWithdraw.getStatus()) {
+                        accountwithdraw.setStatus(WITHDRAW_STATUS_FAIL);// 提现失败
+                        accountwithdraw.setUpdateTime(GetDate.getDate(nowTime));// 更新时间
+                        accountwithdraw.setReason(bean.getRetMsg());// 失败原因
 
-            boolean isAccountwithdrawFlag = this.accountWithdrawMapper.updateByPrimaryKeySelective(CommonUtils.convertBean(accountWithdraw,AccountWithdraw.class)) > 0 ? true : false;
-            if (!isAccountwithdrawFlag) {
-                throw new Exception("提现后,更新用户提现记录表失败!" + "提现订单号:" + ordId + ",用户ID:" + userId);
-            }
-            Account newAccount = new Account();
-            // 更新账户信息
-            newAccount.setUserId(userId);// 用户Id
-            newAccount.setBankTotal(total); // 累加到账户总资产
-            newAccount.setBankBalance(total); // 累加可用余额
-            newAccount.setBankBalanceCash(total);// 江西银行可用余额
-            boolean isAccountUpdateFlag = this.adminAccountCustomizeMapper.updateBankWithdrawSuccess(newAccount) > 0 ? true : false;
-            if (!isAccountUpdateFlag) {
-                throw new Exception("提现后,更新用户Account表失败!" + "提现订单号:" + ordId + ",用户ID:" + userId);
-            }
-            // 重新获取用户信息
-            Account account = this.getAccount(userId);
-            // 写入收支明细
-            AccountList accountList = new AccountList();
-            accountList.setNid(ordId);
-            accountList.setUserId(userId);
-            accountList.setAmount(total);
-            accountList.setType(2);
-            accountList.setTrade("cash_success");
-            accountList.setTradeCode("balance");
-            accountList.setTotal(account.getTotal());
-            accountList.setBalance(account.getBalance());
-            accountList.setFrost(account.getFrost());
-            accountList.setAwait(account.getAwait());
-            accountList.setRepay(account.getRepay());
-            accountList.setBankTotal(account.getBankTotal()); // 银行总资产
-            accountList.setBankBalance(account.getBankBalance()); // 银行可用余额
-            accountList.setBankFrost(account.getBankFrost());// 银行冻结金额
-            accountList.setBankWaitCapital(account.getBankWaitCapital());// 银行待还本金
-            accountList.setBankWaitInterest(account.getBankWaitInterest());// 银行待还利息
-            accountList.setBankAwaitCapital(account.getBankAwaitCapital());// 银行待收本金
-            accountList.setBankAwaitInterest(account.getBankAwaitInterest());// 银行待收利息
-            accountList.setBankAwait(account.getBankAwait());// 银行待收总额
-            accountList.setBankInterestSum(account.getBankInterestSum()); // 银行累计收益
-            accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计投资
-            accountList.setBankWaitRepay(account.getBankWaitRepay());// 银行待还金额
-            accountList.setPlanBalance(account.getPlanBalance());//汇计划账户可用余额
-            accountList.setPlanFrost(account.getPlanFrost());
-            accountList.setSeqNo(bean.getSeqNo());
-            accountList.setTxDate(Integer.parseInt(bean.getTxDate()));
-            accountList.setTxTime(Integer.parseInt(bean.getTxTime()));
-            accountList.setBankSeqNo(bean.getTxDate() + bean.getTxTime() + bean.getSeqNo());
-            accountList.setAccountId(bean.getAccountId());
-            accountList.setRemark(accountWithdraw.getRemark());
-            accountList.setCreateTime(GetDate.getDate(nowTime));
-            accountList.setOperator(String.valueOf(userId));
-            accountList.setIp(accountWithdraw.getAddIp());
-            accountList.setIsBank(1);
-            accountList.setWeb(0);
-            accountList.setCheckStatus(0);// 对账状态0：未对账 1：已对账
-            accountList.setTradeStatus(1);// 0失败1成功2失败
-            boolean isAccountListFlag = this.accountListMapper.insertSelective(accountList) > 0 ? true : false;
-            if (!isAccountListFlag) {
-                throw new Exception("提现成功后,插入交易明细表失败~!" + "提现订单号:" + ordId + ",用户ID:" + userId);
-            }else{
-                return true;
+                        //冲正撤销标志为1：已冲正/撤销时
+                        //临时按照失败处理
+                        if ("1".equals(bean.getOrFlag())) {
+                            accountwithdraw.setReason("提现订单："+ bean.getOrFlag() + "：已冲正/撤销");
+                        }
+
+                        boolean isUpdateFlag = this.accountWithdrawMapper.updateByExample(accountwithdraw, example) > 0 ? true : false;
+                        if (!isUpdateFlag) {
+                            throw new Exception("提现失败后,更新提现记录表失败" + "提现订单号:" + ordId + ",用户ID:" + userId);
+                        }
+
+                    }
+                }
             }
         }else{
 
@@ -203,14 +228,14 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
                 AccountWithdraw accountwithdraw = list.get(0);
                 if (WITHDRAW_STATUS_DEFAULT == accountWithdraw.getStatus()
                         || WITHDRAW_STATUS_WAIT == accountWithdraw.getStatus()) {
-                    accountwithdraw.setStatus(WITHDRAW_STATUS_FAIL);// 提现失败
+                    accountwithdraw.setStatus(WITHDRAW_STATUS_BANK_FAIL);// 提现失败
                     accountwithdraw.setUpdateTime(GetDate.getDate(nowTime));// 更新时间
                     accountwithdraw.setReason(bean.getRetMsg());// 失败原因
 
                     //冲正撤销标志为1：已冲正/撤销时
                     //临时按照失败处理
                     if ("1".equals(bean.getOrFlag())) {
-                        accountwithdraw.setReason("提现订单："+ bean.getOrFlag() + "：已冲正/撤销");
+                        accountwithdraw.setReason("提现订单："+ bean.getOrFlag() + "：已终止");
                     }
 
                     boolean isUpdateFlag = this.accountWithdrawMapper.updateByExample(accountwithdraw, example) > 0 ? true : false;
@@ -219,9 +244,8 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
                     }
 
                 }
-            }
 
-            return true;
+            }
         }
 
     }

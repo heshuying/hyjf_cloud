@@ -224,7 +224,17 @@ public class AdminAccedeListCustomizeVO extends BaseVO implements Serializable{
 	
 	@ApiModelProperty(value = "计算用已投资金额")
 	private BigDecimal jalreadyInvest;
-	
+
+	@ApiModelProperty(value = "自动投标进度")
+	private String investScaleView;
+
+	@ApiModelProperty(value = "实际退出时间")
+	private String acctualPaymentTime;
+
+	@ApiModelProperty(value = "预计开始退出时间")
+	private String endDate;
+
+
 	public String getPlanOrderId() {
 		return planOrderId;
 	}
@@ -775,5 +785,29 @@ public class AdminAccedeListCustomizeVO extends BaseVO implements Serializable{
 
 	public void setJalreadyInvest(BigDecimal jalreadyInvest) {
 		this.jalreadyInvest = jalreadyInvest;
+	}
+
+	public String getInvestScaleView() {
+		return investScaleView;
+	}
+
+	public void setInvestScaleView(String investScaleView) {
+		this.investScaleView = investScaleView;
+	}
+
+	public String getAcctualPaymentTime() {
+		return acctualPaymentTime;
+	}
+
+	public void setAcctualPaymentTime(String acctualPaymentTime) {
+		this.acctualPaymentTime = acctualPaymentTime;
+	}
+
+	public String getEndDate() {
+		return endDate;
+	}
+
+	public void setEndDate(String endDate) {
+		this.endDate = endDate;
 	}
 }
