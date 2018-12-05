@@ -178,7 +178,7 @@ public class HolidaysConfigController extends BaseController {
     @ApiOperation(value = "节假日配置-保存之前的非空验证", notes = "节假日配置-保存之前的去重验证")
     @PostMapping("/validateBeforeAction")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult validate(@RequestBody HolidaysConfigRequestBean requestBean) {
+    public AdminResult validateBeforeAction(@RequestBody HolidaysConfigRequestBean requestBean) {
         logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/manager/holidaysconfig/validateBeforeAction");
 
         AdminHolidaysConfigRequest request = new AdminHolidaysConfigRequest();

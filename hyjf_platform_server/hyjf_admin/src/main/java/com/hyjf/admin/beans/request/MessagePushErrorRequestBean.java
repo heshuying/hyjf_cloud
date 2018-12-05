@@ -512,4 +512,53 @@ public class MessagePushErrorRequestBean extends BasePage implements Serializabl
     public void setEndDateSrch(String endDateSrch) {
         this.endDateSrch = endDateSrch;
     }
+
+    @Override
+    public String toString() {
+        return "MessagePushErrorRequestBean{" +
+                "msgTitleSrch='" + msgTitleSrch + '\'' +
+                ", tagIdSrch='" + tagIdSrch + '\'' +
+                ", msgCodeSrch='" + msgCodeSrch + '\'' +
+                ", startDateSrch='" + startDateSrch + '\'' +
+                ", endDateSrch='" + endDateSrch + '\'' +
+                ", ids='" + ids + '\'' +
+                ", paginatorPage=" + paginatorPage +
+                ", paginator=" + paginator +
+                ", id=" + id +
+                ", tagId=" + tagId +
+                ", tagCode='" + tagCode + '\'' +
+                ", msgCode='" + msgCode + '\'' +
+                ", msgTitle='" + msgTitle + '\'' +
+                ", msgImageUrl='" + msgImageUrl + '\'' +
+                ", msgContent='" + msgContent + '\'' +
+                ", msgTerminal='" + msgTerminal + '\'' +
+                ", msgAction=" + msgAction +
+                ", msgActionUrl='" + msgActionUrl + '\'' +
+                ", msgDestinationType=" + msgDestinationType +
+                ", msgDestination='" + msgDestination + '\'' +
+                ", msgUserId=" + msgUserId +
+                ", msgSendStatus=" + msgSendStatus +
+                ", msgReadCountAndroid=" + msgReadCountAndroid +
+                ", msgReadCountIos=" + msgReadCountIos +
+                ", msgFirstreadPlat=" + msgFirstreadPlat +
+                ", msgJpushId='" + msgJpushId + '\'' +
+                ", msgJpushProId='" + msgJpushProId + '\'' +
+                ", msgJpushZybId='" + msgJpushZybId + '\'' +
+                ", msgJpushZzbId='" + msgJpushZzbId + '\'' +
+                ", msgJpushYxbId='" + msgJpushYxbId + '\'' +
+                ", msgJpushZnbId='" + msgJpushZnbId + '\'' +
+                ", msgJpushTestId='" + msgJpushTestId + '\'' +
+                ", msgRemark='" + msgRemark + '\'' +
+                ", sendTime=" + sendTime +
+                ", msgDestinationCountIos=" + msgDestinationCountIos +
+                ", msgDestinationCountAndroid=" + msgDestinationCountAndroid +
+                ", createTime=" + createTime +
+                ", createUserId=" + createUserId +
+                ", createUserName='" + createUserName + '\'' +
+                ", lastupdateTime=" + lastupdateTime +
+                ", lastupdateUserId=" + lastupdateUserId +
+                ", lastupdateUserName='" + lastupdateUserName + '\'' +
+                ", msgJpushZyb2Id='" + msgJpushZyb2Id + '\'' +
+                '}';
+    }
 }
