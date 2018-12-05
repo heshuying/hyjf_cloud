@@ -39,8 +39,8 @@ public class RepayCalendarController extends BaseTradeController {
                                        @RequestParam(value = "pageSize", defaultValue = "10") String pageSize,
                                        @RequestHeader(value = "userId") Integer userId
                                        ) {
-        logger.info(RepayCalendarController.class.toString(), "startLog -- /hyjf-app/user/repayCalendar/getRepayCalendar");
-        logger.info("getRepayCalendar start, year is :{}, month is :{}", year, month);
+        logger.info(this.getClass().getName(), "app端-app日历 日历查询 start", "getRepayCalendar start, year is :{}, month is :{}", year, month,
+                "/hyjf-app/user/repayCalendar/getRepayCalendar");
         JSONObject info = new JSONObject();
         info.put(CustomConstants.APP_STATUS, CustomConstants.APP_STATUS_SUCCESS);
         info.put(CustomConstants.APP_STATUS_DESC, CustomConstants.APP_STATUS_DESC_SUCCESS);
@@ -61,7 +61,7 @@ public class RepayCalendarController extends BaseTradeController {
         this.createRepayCalendar(info, params, year, month);
 
         info.put(CustomConstants.APP_REQUEST, "/hyjf-app/user/repayCalendar/getRepayCalendar");
-        logger.info(RepayCalendarController.class.toString(), "endLog -- /hyjf-app/user/repayCalendar/getRepayCalendar");
+        logger.info(this.getClass().getName(), "app端-app日历 日历查询 end", "/hyjf-app/user/repayCalendar/getRepayCalendar");
         return info;
     }
 

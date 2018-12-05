@@ -56,8 +56,7 @@ public class BankSettingController {
             // 数据查询
             recordList = this.bankSettingService.getRecordList(bc, -1, -1);
         } catch (Exception e) {
-            logger.info("Admin江西银行数据查询异常！requestParam:{}", bc.toString());
-            e.printStackTrace();
+            logger.info("Admin江西银行数据查询异常！requestParam:{}", bc.toString(), e);
             response.setRtn(Response.FAIL);
             response.setMessage("Admin江西银行数据查询异常！具体原因详见日志");
             return response;
@@ -77,8 +76,7 @@ public class BankSettingController {
                 // 数据查询
                 recordList = this.bankSettingService.getRecordList(bc, paginator.getOffset(), paginator.getLimit());
             } catch (Exception e) {
-                logger.info("Admin江西银行数据查询异常！requestParam:{}", bc.toString());
-                e.printStackTrace();
+                logger.info("Admin江西银行数据查询异常！requestParam:{}", bc.toString(), e);
                 response.setRtn(Response.FAIL);
                 response.setMessage("Admin江西银行数据查询异常！具体原因详见日志");
                 return response;
@@ -111,8 +109,7 @@ public class BankSettingController {
             // 数据查询
             jxBankConfigList = bankSettingService.bankSettingInfo(adminRequest);
         } catch (Exception e) {
-            logger.info("Admin江西银行数据查询异常！requestParam:{}", adminRequest.toString());
-            e.printStackTrace();
+            logger.info("Admin江西银行数据查询异常！requestParam:{}", adminRequest.toString(), e);
             response.setRtn(Response.FAIL);
             response.setMessage("Admin江西银行数据查询异常！具体原因详见日志");
             return response;
@@ -140,8 +137,7 @@ public class BankSettingController {
             // 数据查询
             recordList = this.bankSettingService.getRecordList(bc, -1, -1);
         } catch (Exception e) {
-            logger.info("Admin江西银行数据查询异常！requestParam:{}", adminRequest.toString());
-            e.printStackTrace();
+            logger.info("Admin江西银行数据查询异常！requestParam:{}", adminRequest.toString(), e);
             response.setRtn(Response.FAIL);
             response.setMessage("Admin江西银行数据查询异常！具体原因详见日志");
             return response;
@@ -170,8 +166,7 @@ public class BankSettingController {
             // 数据添加
             result = this.bankSettingService.insertBankSetting(adminRequest);
         } catch (Exception e) {
-            logger.info("Admin江西银行数据添加异常！requestParam:{}", adminRequest.toString());
-            e.printStackTrace();
+            logger.info("Admin江西银行数据添加异常！requestParam:{}", adminRequest.toString(), e);
             response.setRtn(Response.FAIL);
             response.setMessage("Admin江西银行数据添加异常！具体原因详见日志");
             return response;
@@ -198,8 +193,7 @@ public class BankSettingController {
             // 数据修改
             result = this.bankSettingService.updateBankSetting(adminRequest);
         } catch (Exception e) {
-            logger.info("Admin江西银行数据修改异常！requestParam:{}", adminRequest.toString());
-            e.printStackTrace();
+            logger.info("Admin江西银行数据修改异常！requestParam:{}", adminRequest.toString(), e);
             response.setRtn(Response.FAIL);
             response.setMessage("Admin江西银行数据修改异常！具体原因详见日志");
             return response;
@@ -229,8 +223,7 @@ public class BankSettingController {
             // 数据删除
             bankSettingService.deleteFeeConfig(adminRequest.getId());
         } catch (Exception e) {
-            logger.info("Admin江西银行数据删除异常！requestParam:{}", adminRequest.toString());
-            e.printStackTrace();
+            logger.info("Admin江西银行数据删除异常！requestParam:{}", adminRequest.toString(), e);
             response.setRtn(Response.FAIL);
             response.setMessage("Admin江西银行数据删除异常！具体原因详见日志");
             return response;
