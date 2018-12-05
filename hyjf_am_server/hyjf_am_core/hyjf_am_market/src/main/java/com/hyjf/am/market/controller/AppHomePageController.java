@@ -8,6 +8,8 @@ import com.hyjf.am.market.service.AppHomePageService;
 import com.hyjf.am.response.market.AppAdsCustomizeResponse;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -25,6 +27,7 @@ import java.util.Map;
 @RestController
 @RequestMapping("/am-market/homepage")
 public class AppHomePageController {
+    private static final Logger logger = LoggerFactory.getLogger(AppHomePageController.class);
 
     @Autowired
     private AppHomePageService appHomePageService;
@@ -35,6 +38,7 @@ public class AppHomePageController {
      */
     @PostMapping("/getStartPage")
     public AppAdsCustomizeResponse searchBannerList(@RequestBody Map<String, Object> ads) {
+        logger.info(this.getClass().getName(), "获取起始页广告信息 start", "/am-market/homepage/getStartPage");
         AppAdsCustomizeResponse response = new AppAdsCustomizeResponse();
         List<AppAdsCustomize> list = appHomePageService.searchBannerList(ads);
         if (!CollectionUtils.isEmpty(list)) {
@@ -42,6 +46,7 @@ public class AppHomePageController {
             response.setResultList(voList);
             return response;
         }
+        logger.info(this.getClass().getName(), "获取起始页广告信息 end", "/am-market/homepage/getStartPage");
         return response;
     }
 }

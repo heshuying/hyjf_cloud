@@ -45,6 +45,7 @@ public class ApiAssetPushController extends BaseTradeController {
     @ApiParam(required = true, name = "pushRequestBean", value = "个人资产信息")
     @ApiOperation(value = "个人资产推送", httpMethod = "POST", notes = "个人资产推送")
     public PushResultBean push(@RequestBody PushRequestBean pushRequestBean) {
+        logger.info(this.getClass().getName(), "api端-资产推送接口 个人资产推送 start", pushRequestBean.toString(), "/hyjf-api/server/assetpush/push.do");
 
         PushResultBean resultBean = new PushResultBean();
         resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000001);
@@ -75,7 +76,7 @@ public class ApiAssetPushController extends BaseTradeController {
 
         resultBean = pushService.assetPush(pushRequestBean);
 
-        logger.info(pushRequestBean.getInstCode() + " 结束推送资产");
+        logger.info(this.getClass().getName(), "api端-资产推送接口 个人资产推送 end", pushRequestBean.toString(), "/hyjf-api/server/assetpush/push.do");
 
         return resultBean;
     }
@@ -84,7 +85,7 @@ public class ApiAssetPushController extends BaseTradeController {
     @ApiParam(required = true, name = "pushRequestBean", value = "企业资产信息")
     @ApiOperation(value = "企业资产推送", httpMethod = "POST", notes = "企业资产推送")
     public PushResultBean pushcompany(@RequestBody PushRequestBean pushRequestBean) {
-
+        logger.info(this.getClass().getName(), "api端-资产推送接口 企业资产推送 start", pushRequestBean.toString(), "/hyjf-api/server/assetpush/pushcompany.do");
         PushResultBean resultBean = new PushResultBean();
         resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000001);
         resultBean.setStatusDesc("请求参数非法");
@@ -115,8 +116,7 @@ public class ApiAssetPushController extends BaseTradeController {
 
         resultBean = pushService.companyAssetPush(pushRequestBean);
 
-        logger.info(pushRequestBean.getInstCode() + " 结束推送资产");
-
+        logger.info(this.getClass().getName(), "api端-资产推送接口 企业资产推送 end", "/hyjf-api/server/assetpush/pushcompany.do");
         return resultBean;
     }
 
