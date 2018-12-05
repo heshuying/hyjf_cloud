@@ -50,6 +50,7 @@ public class WebBankWithdrawController extends BaseTradeController {
     private AuthService authService;
     @Autowired
     SystemConfig systemConfig;
+
     /**
      * @Description 跳转到提现页面
      * @Author pangchengchao
@@ -59,10 +60,10 @@ public class WebBankWithdrawController extends BaseTradeController {
     @ApiOperation(value = "获取用户银行提现", notes = "用户提现")
     @PostMapping("/toWithdraw")
     public WebResult<Object> toWithdraw(@RequestHeader(value = "userId") int userId) {
-        WebViewUserVO user=bankWithdrawService.getUserFromCache(userId);
-        CheckUtil.check(null!=user,MsgEnum.ERR_OBJECT_GET,"用户信息");
-        CheckUtil.check(user.isBankOpenAccount(),MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
-        WebResult<Object> objectWebResult=bankWithdrawService.toWithdraw(user);
+        WebViewUserVO user = bankWithdrawService.getUserFromCache(userId);
+        CheckUtil.check(null != user, MsgEnum.ERR_OBJECT_GET, "用户信息");
+        CheckUtil.check(user.isBankOpenAccount(), MsgEnum.ERR_BANK_ACCOUNT_NOT_OPEN);
+        WebResult<Object> objectWebResult = bankWithdrawService.toWithdraw(user);
 
         return objectWebResult;
     }
@@ -70,35 +71,39 @@ public class WebBankWithdrawController extends BaseTradeController {
 
     /**
      * 用户银行提现
+     *
      * @Description
      * @Author pangchengchao
      * @Version v0.1
-     * @Date  用户提现调用银行页面
+     * @Date 用户提现调用银行页面
      */
     @ApiOperation(value = "用户银行提现", notes = "用户提现")
     @PostMapping("/userBankWithdraw")
-    @RequestLimit(seconds=3)
-    public WebResult<Object>  userBankWithdraw(@RequestHeader(value = "userId") int userId,
-                                               @RequestBody @Valid BankWithdrawVO bankWithdrawVO , HttpServletRequest request) {
+    @RequestLimit(seconds = 3)
+
+    public WebResult<Object> userBankWithdraw(@RequestHeader(value = "userId") int userId,
+                                              @RequestBody @Valid BankWithdrawVO bankWithdrawVO, HttpServletRequest request) {
         logger.info("web端提现接口, userId is :{}", JSONObject.toJSONString(userId));
         WebResult<Object> result = new WebResult<Object>();
-        WebViewUserVO user=bankWithdrawService.getUserFromCache(userId);
-        UserVO userVO=bankWithdrawService.getUserByUserId(user.getUserId());
+        WebViewUserVO user = bankWithdrawService.getUserFromCache(userId);
+        UserVO userVO = bankWithdrawService.getUserByUserId(user.getUserId());
         logger.info("user is :{}", JSONObject.toJSONString(user));
         if (!this.authService.checkPaymentAuthStatus(userId)) {
             throw new ReturnMessageException(MsgEnum.ERR_AUTH_USER_PAYMENT);
         }
         String ipAddr = CustomUtil.getIpAddr(request);
         logger.info("ipAddr is :{}", ipAddr);
-        String retUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT))+"/user/withdrawError";
-        String bgRetUrl ="http://CS-TRADE/hyjf-web/withdraw/userBankWithdrawBgreturn";
-        String successfulUrl = super.getFrontHost(systemConfig,String.valueOf(ClientConstants.WEB_CLIENT))+"/user/withdrawSuccess";
-        String forgotPwdUrl=super.getForgotPwdUrl(CommonConstant.CLIENT_PC,request,systemConfig);
-        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,bankWithdrawVO.getWithdrawmoney(),
-                bankWithdrawVO.getWidCard(),bankWithdrawVO.getPayAllianceCode(),CommonConstant.CLIENT_PC,BankCallConstant.CHANNEL_PC,ipAddr, retUrl, bgRetUrl, successfulUrl,forgotPwdUrl);
-
+        String retUrl = super.getFrontHost(systemConfig, String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/withdrawError";
+        String bgRetUrl = "http://CS-TRADE/hyjf-web/withdraw/userBankWithdrawBgreturn";
+        String successfulUrl = super.getFrontHost(systemConfig, String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/withdrawSuccess";
+        String forgotPwdUrl = super.getForgotPwdUrl(CommonConstant.CLIENT_PC, request, systemConfig);
+        BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO, bankWithdrawVO.getWithdrawmoney(),
+                bankWithdrawVO.getWidCard(), bankWithdrawVO.getPayAllianceCode(), CommonConstant.CLIENT_PC, BankCallConstant.CHANNEL_PC, ipAddr, retUrl, bgRetUrl, successfulUrl, forgotPwdUrl);
+        if (null == bean) {
+            throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
+        }
         try {
-            Map<String,Object> data =  BankCallUtils.callApiMap(bean);
+            Map<String, Object> data = BankCallUtils.callApiMap(bean);
             result.setData(data);
         } catch (Exception e) {
             logger.info("web端提现失败");
@@ -110,6 +115,7 @@ public class WebBankWithdrawController extends BaseTradeController {
 
     /**
      * 用户银行提现异步回调
+     *
      * @Description
      * @Author pangchengchao
      * @Version v0.1
@@ -118,7 +124,7 @@ public class WebBankWithdrawController extends BaseTradeController {
     @ApiIgnore
     @PostMapping("/userBankWithdrawBgreturn")
     @ResponseBody
-    public String userBankWithdrawBgreturn(HttpServletRequest request,@RequestBody BankCallBean bean) {
+    public String userBankWithdrawBgreturn(HttpServletRequest request, @RequestBody BankCallBean bean) {
         logger.info("[web用户银行提现异步回调开始]");
         logger.info("web端提现银行返回参数, bean is :{}", JSONObject.toJSONString(bean));
         BankCallResult result = new BankCallResult();
@@ -130,7 +136,7 @@ public class WebBankWithdrawController extends BaseTradeController {
         params.put("ip", CustomUtil.getIpAddr(request));
         // 执行提现后处理
         this.bankWithdrawService.handlerAfterCash(bean, params);
-        logger.info( "成功");
+        logger.info("成功");
         result.setStatus(true);
         logger.info("[web用户银行提现异步回调结束]");
         return JSONObject.toJSONString(result, true);

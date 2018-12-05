@@ -1,7 +1,9 @@
 package com.hyjf.admin.controller.promotion;
 
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.promotion.UtmService;
 import com.hyjf.am.response.admin.promotion.UtmResultResponse;
 import com.hyjf.am.vo.user.UtmPlatVO;
@@ -32,12 +34,15 @@ import java.util.Map;
 @RequestMapping("/hyjf-admin/promotion/utm")
 public class UtmController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(UtmController.class);
+    /** 查看权限 */
+    public static final String PERMISSIONS = "utm";
 
     @Autowired
     private UtmService utmService;
 
     @ApiOperation(value = "页面初始化", notes = "渠道列表")
     @PostMapping("/init")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public UtmResultResponse utmListInit(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, Object> map) {
         UtmResultResponse utmResultResponse = new UtmResultResponse();
         utmResultResponse = utmService.getByPageList(map,Integer.parseInt(getCurrPage(map)),Integer.parseInt(getPageSize(map)));
@@ -46,6 +51,7 @@ public class UtmController extends BaseController {
 
     @ApiOperation(value = "画面迁移(含有id更新，不含有id添加)", notes = "画面迁移(含有id更新，不含有id添加)")
     @PostMapping("/infoaction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD,ShiroConstants.PERMISSION_MODIFY})
     public UtmResultResponse info(HttpServletRequest request, HttpServletResponse response, @RequestBody UtmPlatVO utmPlatVO){
         UtmResultResponse adminResult = new UtmResultResponse();
         if (StringUtils.isNotEmpty(utmPlatVO.getId()+"")) {
@@ -57,6 +63,7 @@ public class UtmController extends BaseController {
 
     @ApiOperation(value = "添加或修改信息", notes = "添加或修改信息")
     @PostMapping("/insertorupdateaction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD,ShiroConstants.PERMISSION_MODIFY})
     public UtmResultResponse insertAction(HttpServletRequest request, HttpServletResponse response, @RequestBody UtmPlatVO utmPlatVO){
         UtmResultResponse adminResult = new UtmResultResponse();
         //根据utmId判断，如存在，则为修改，如不存在，则为新增
@@ -72,6 +79,7 @@ public class UtmController extends BaseController {
 
     @ApiOperation(value = "删除信息", notes = "删除信息")
     @PostMapping("/deleteaction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public UtmResultResponse deleteAction(HttpServletRequest request, HttpServletResponse response, @RequestBody UtmPlatVO utmPlatVO){
         UtmResultResponse adminResult = new UtmResultResponse();
         //根据utmId判断，如存在，则为修改，如不存在，则为新增

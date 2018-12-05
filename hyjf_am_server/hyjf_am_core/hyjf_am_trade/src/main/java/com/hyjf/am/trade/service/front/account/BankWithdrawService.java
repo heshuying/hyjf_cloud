@@ -16,5 +16,5 @@ import java.util.List;
 
 	int updateBankWithdraw(AccountVO accountVO);
 
-    Boolean updateHandlerAfterCash(AfterCashParamRequest para) throws Exception;
+    void updateHandlerAfterCash(AfterCashParamRequest para) throws Exception;
 }

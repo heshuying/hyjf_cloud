@@ -122,7 +122,7 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
             criteria.andOrderIdEqualTo(requestBean.getOrderIdSrch());
         }
         if(StringUtils.isNotBlank(requestBean.getStatusSrch())){
-            criteria.andStateEqualTo(requestBean.getStatusSrch());
+            criteria.andStatusEqualTo(Integer.parseInt(requestBean.getStatusSrch()));
         }
 
         return bankCreditEndMapper.countByExample(example);

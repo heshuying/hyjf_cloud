@@ -8,7 +8,9 @@ import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.WhereaboutsPageService;
 import com.hyjf.admin.utils.FileUpLoadUtil;
 import com.hyjf.am.response.Response;
@@ -35,9 +37,12 @@ import java.util.List;
 public class WhereaboutsPageController extends BaseController {
 	@Autowired
 	private WhereaboutsPageService whereaboutsPageService;
+	/** 查看权限 */
+	public static final String PERMISSIONS = "WHEREABOUTSPAGE";
 
 	@ApiOperation(value = "移动端着陆页管理", notes = "移动端着陆页管理列表查询")
 	@PostMapping("/searchaction")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
 	public AdminResult<ListResult<WhereaboutsPageVo>> searchAction(@RequestBody WhereaboutsPageRequestBean requestBean) {
 		WhereaboutsPageResponse response = whereaboutsPageService.searchAction(requestBean);
 		if (response == null) {
@@ -51,6 +56,7 @@ public class WhereaboutsPageController extends BaseController {
 
 	@ApiOperation(value = "移动端着陆页管理", notes = "添加移动端着陆页管理")
 	@PostMapping("/insert")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
 	public AdminResult add(@RequestBody WhereaboutsPageRequestBean requestBean) {
 		WhereaboutsPageResponse response = whereaboutsPageService.insertAction(requestBean);
 		if (response == null) {
@@ -64,6 +70,7 @@ public class WhereaboutsPageController extends BaseController {
 
 	@ApiOperation(value = "移动端着陆页管理", notes = "修改移动端着陆页管理")
 	@PostMapping("/update")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult update(@RequestBody WhereaboutsPageRequestBean requestBean) {
 		WhereaboutsPageResponse response = whereaboutsPageService.updateAction(requestBean);
 		if (response == null) {
@@ -76,6 +83,7 @@ public class WhereaboutsPageController extends BaseController {
 	}
 	@ApiOperation(value = "移动端着陆页管理", notes = "修改移动端着陆页管理状态")
 	@PostMapping("/updatestatus")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult updateStatus(@RequestBody WhereaboutsPageRequestBean requestBean) {
 		WhereaboutsPageResponse response = whereaboutsPageService.updateStatus(requestBean);
 		if (response == null) {
@@ -88,6 +96,7 @@ public class WhereaboutsPageController extends BaseController {
 	}
 	@ApiOperation(value = "移动端着陆页管理", notes = "删除着路页管理")
 	@GetMapping("/delete/{id}")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
 	public AdminResult delete(@PathVariable Integer id) {
 		WhereaboutsPageResponse response = whereaboutsPageService.deleteById(id);
 		if (response == null) {

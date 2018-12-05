@@ -17,7 +17,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -51,12 +50,12 @@ public class PartnerConfigController {
         AdminPartnerConfigDetailResponse  response =new AdminPartnerConfigDetailResponse();
         List<HjhInstConfigWrapVo> resList = new ArrayList<>();
         //查询合作机构配置条数
-        List<HjhInstConfig> recordList = this.partnerConfigService.instConfigInitByPage(-1,-1);
-        if (!CollectionUtils.isEmpty(recordList)) {
-            response.setRecordTotal(recordList.size());
-            Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordList.size(),adminRequest.getPageSize() == 0? 10 :adminRequest.getPageSize());
+         int count = this.partnerConfigService.instConfigInitCount();
+        if (count>0) {
+            response.setRecordTotal(count);
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(), count,adminRequest.getPageSize() == 0? 10 :adminRequest.getPageSize());
             //查询记录
-            recordList =partnerConfigService.instConfigInitByPage(paginator.getOffset(), paginator.getLimit());
+            List<HjhInstConfig> recordList =partnerConfigService.instConfigInitByPage(paginator.getOffset(), paginator.getLimit());
             for(HjhInstConfig instConfigVO:recordList){
                 HjhInstConfigWrapVo recordWrap = new HjhInstConfigWrapVo();
                 BeanUtils.copyProperties(instConfigVO, recordWrap);

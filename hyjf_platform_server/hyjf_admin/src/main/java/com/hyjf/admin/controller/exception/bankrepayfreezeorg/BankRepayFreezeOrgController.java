@@ -10,7 +10,9 @@ import com.hyjf.admin.beans.response.BankRepayFreezeOrgCheckResponseBean;
 import com.hyjf.admin.beans.vo.DropDownVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.exception.BankRepayFreezeOrgService;
 import com.hyjf.admin.utils.Page;
@@ -45,6 +47,9 @@ import java.util.Map;
 @RestController
 @RequestMapping("/hyjf-admin/exception/bankRepayFreezeOrg")
 public class BankRepayFreezeOrgController extends BaseController {
+
+    public static final String PERMISSIONS = "bankrepayFreezeOrg";
+
     @Autowired
     private AdminCommonService adminCommonService;
     @Autowired
@@ -64,6 +69,7 @@ public class BankRepayFreezeOrgController extends BaseController {
 
     @ApiOperation(value = "担保机构还款冻结异常列表", notes = "担保机构还款冻结异常列表")
     @PostMapping(value = "/list")
+    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<BankRepayFreezeOrgCustomizeVO>> list(@RequestBody RepayFreezeOrgRequestBean requestBean) {
         RepayFreezeOrgRequest repayFreezeOrgRequest = new RepayFreezeOrgRequest();
         BeanUtils.copyProperties(requestBean,repayFreezeOrgRequest);
@@ -84,6 +90,7 @@ public class BankRepayFreezeOrgController extends BaseController {
     @ApiOperation(value = "冻结异常情况查询", notes = "冻结异常情况查询")
     @ResponseBody
     @PostMapping(value = "/check")
+    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<BankRepayFreezeOrgCheckResponseBean> checkRepayFreezeOrgAction(HttpServletRequest request, @RequestBody BankRepayFreezeOrgCheckRequestBean form) {
         AdminResult result = new AdminResult();
         BankRepayFreezeOrgCheckResponseBean responseBean = new BankRepayFreezeOrgCheckResponseBean();
@@ -133,6 +140,7 @@ public class BankRepayFreezeOrgController extends BaseController {
     @ApiOperation(value = "冻结异常情况处理", notes = "冻结异常情况处理")
     @ResponseBody
     @PostMapping("/process")
+    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult bankAccountCheckAction(HttpServletRequest request, @RequestBody BankRepayFreezeOrgProcessRequestBean form) {
         logger.info("请求参数：" + JSON.toJSONString(form));
         AdminResult result = new AdminResult();

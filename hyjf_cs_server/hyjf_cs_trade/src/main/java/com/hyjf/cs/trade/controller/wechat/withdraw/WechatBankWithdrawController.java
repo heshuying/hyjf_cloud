@@ -203,6 +203,9 @@ public class WechatBankWithdrawController extends BaseTradeController {
         String successfulUrl = super.getFrontHost(systemConfig,CommonConstant.CLIENT_WECHAT)+"/user/withdraw/result/handing";
         String forgotPwdUrl=super.getForgotPwdUrl(CommonConstant.CLIENT_WECHAT,request,systemConfig);
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,CommonConstant.CLIENT_WECHAT,BankCallConstant.CHANNEL_WEI,ipAddr, retUrl, bgRetUrl, successfulUrl, forgotPwdUrl);
+        if (null == bean) {
+            throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
+        }
         Map<String,Object> map = new HashMap<>();
         try {
             map = BankCallUtils.callApiMap(bean);

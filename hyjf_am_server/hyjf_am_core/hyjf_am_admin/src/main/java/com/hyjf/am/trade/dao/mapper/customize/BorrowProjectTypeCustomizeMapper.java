@@ -14,6 +14,12 @@ public interface BorrowProjectTypeCustomizeMapper {
      * @param borrowProjectType
      * @return
      */
+    public Integer  selectProjectTypeCount(BorrowProjectTypeVO borrowProjectType);
+    /**
+     * 分页查询分项目类型
+     * @param borrowProjectType
+     * @return
+     */
     public List<BorrowProjectTypeVO>  selectProjectTypeList(BorrowProjectTypeVO borrowProjectType);
     /**
      * 根据borrowCd查询

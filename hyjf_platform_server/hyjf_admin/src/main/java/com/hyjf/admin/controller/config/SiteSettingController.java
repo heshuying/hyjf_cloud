@@ -5,7 +5,9 @@ package com.hyjf.admin.controller.config;
 
 import com.hyjf.admin.beans.request.SiteSettingRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.SiteSettingService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.SiteSettingsResponse;
@@ -26,8 +28,12 @@ public class SiteSettingController extends BaseController {
 	@Autowired
 	private SiteSettingService siteSettingService;
 
+	/** 权限关键字 */
+	public static final String PERMISSIONS = "sitesetting";
+
 	@ApiOperation(value = "网站设置初始化", notes = "网站设置初始化")
 	@GetMapping("/init")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<SiteSettingsVO> init() {
 		SiteSettingsResponse response = siteSettingService.selectSiteSetting();
 		if (response == null) {
@@ -41,6 +47,7 @@ public class SiteSettingController extends BaseController {
 
 	@ApiOperation(value = "修改网站设置", notes = "修改网站设置")
 	@PostMapping("/update")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult update(@RequestBody SiteSettingRequestBean requestBean) {
 		SiteSettingsResponse response = siteSettingService.updateAction(requestBean);
 		if (response == null) {

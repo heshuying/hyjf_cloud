@@ -7,7 +7,9 @@ import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.request.PushMoneyRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.PushMoneyService;
 import com.hyjf.admin.utils.ValidatorFieldCheckUtil;
 import com.hyjf.am.response.Response;
@@ -40,8 +42,11 @@ public class PushMoneyController extends BaseController {
 	@Autowired
 	private PushMoneyService pushMoneyService;
 
+	public static final String PERMISSIONS = "pushmoney";
+
 	@ApiOperation(value = "获取提成配置列表", notes = "获取提成配置列表")
 	@PostMapping("/init")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<ListResult<PushMoneyVO>> getRecordList(@RequestBody PushMoneyRequest requestBean) {
 		PushMoneyResponse response = pushMoneyService.getRecordList(requestBean);
 		if (response == null) {
@@ -55,6 +60,7 @@ public class PushMoneyController extends BaseController {
 
 	@ApiOperation(value = "画面迁移(含有id更新，不含有id添加)", notes = "画面迁移(含有id更新，不含有id添加)")
 	@PostMapping("/info")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<PushMoneyResponse> getInfoAction(@RequestBody PushMoneyRequest requestBean) {
         PushMoneyResponse response = new PushMoneyResponse();
 		if (requestBean.getId() != null) {
@@ -71,6 +77,7 @@ public class PushMoneyController extends BaseController {
 
 	@ApiOperation(value = "添加提成配置", notes = "添加提成配置")
 	@PostMapping("/insert")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
 	public AdminResult add(@RequestBody PushMoneyRequestBean requestBean) {
 		PushMoneyResponse response = pushMoneyService.insertPushMoney(requestBean);
 		if (response == null) {
@@ -84,6 +91,7 @@ public class PushMoneyController extends BaseController {
 
 	@ApiOperation(value = "修改提成配置", notes = "修改提成配置")
 	@PostMapping("/update")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
 	public AdminResult update(@RequestBody PushMoneyRequestBean requestBean) {
         ModelAndView modelAndView = new ModelAndView();
 	    // 调用校验
@@ -103,6 +111,7 @@ public class PushMoneyController extends BaseController {
 
     @ApiOperation(value = "删除配置信息", notes = "删除配置信息")
     @PostMapping("/delete")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult<ListResult<PushMoneyVO>> deleteRecord(@RequestBody PushMoneyRequest requestBean) {
         PushMoneyResponse response = new PushMoneyResponse();
         if (StringUtils.isNotBlank(requestBean.getIds())) {
