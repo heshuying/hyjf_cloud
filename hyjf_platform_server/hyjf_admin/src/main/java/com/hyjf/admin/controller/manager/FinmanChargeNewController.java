@@ -92,7 +92,7 @@ public class FinmanChargeNewController extends BaseController {
 
     @ApiOperation(value = "查询费率配置详情", notes = "查询费率配置详情 ")
     @PostMapping("/infoAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult finmanChargeInfo(@RequestBody FinmanChargeNewRequest adminRequest) {
         FinmanChargeNewResponse response = new FinmanChargeNewResponse();
         BorrowFinmanNewChargeVO vo= new BorrowFinmanNewChargeVO();

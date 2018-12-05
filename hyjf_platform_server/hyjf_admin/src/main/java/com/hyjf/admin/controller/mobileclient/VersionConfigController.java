@@ -55,7 +55,7 @@ public class VersionConfigController extends BaseController {
      */
     @ApiOperation(value = "版本管理:详情查询", notes = "版本管理:详情查询")
     @PostMapping(value = "/searchinfo")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD,ShiroConstants.PERMISSION_MODIFY})
     public AdminResult<VersionVO> searchinfo(@RequestBody VersionConfigBeanRequest request) {
         VersionConfigBeanResponse recordList = versionConfigService.getRecord(request);
         if (!Response.isSuccess(recordList)) {

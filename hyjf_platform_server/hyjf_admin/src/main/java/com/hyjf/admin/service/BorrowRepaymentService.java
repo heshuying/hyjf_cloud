@@ -35,4 +35,6 @@ public interface BorrowRepaymentService {
     BorrowRepaymentPlanBean searchBorrowRepaymentPlan(BorrowRepaymentRequest copyForm);
 
     List<BorrowRepaymentPlanCustomizeVO> selectBorrowRepaymentPlanList(BorrowRepaymentRequest copyForm);
+
+	Integer countBorrowRepayment(BorrowRepaymentRequest request);
 }
