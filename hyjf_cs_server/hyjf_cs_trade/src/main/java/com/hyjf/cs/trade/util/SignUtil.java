@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.util;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.bean.api.AutoTenderRequestBean;
@@ -19,6 +20,28 @@ import java.util.Objects;
  */
 public class SignUtil {
 
+    /**
+     * AEMS验证外部请求签名
+     * @author Zha Daojian
+     * @date 2018/12/5 10:20
+     * @param paramBean, methodName
+     * @return boolean
+     **/
+    public static boolean AEMSVerifyRequestSign(BaseBean paramBean, String methodName) {
+        String sign = org.apache.commons.lang.StringUtils.EMPTY;
+        // 机构编号必须参数
+        String instCode = paramBean.getInstCode();
+        if (org.apache.commons.lang.StringUtils.isEmpty(instCode)) {
+            return false;
+        }
+        if (("/server/asset/status").equals(methodName)) {
+            //aems资产查询接口
+            AemsAssetStatusRequestBean bean = (AemsAssetStatusRequestBean) paramBean;
+            sign = bean.getAssetId() + bean.getInstCode() + bean.getTimestamp();
+        }
+        // TODO AEMS验签修改
+        return ApiSignUtil.verifyByRSA("AEMS", paramBean.getChkValue(), sign);
+    }
     /**
      * 验证外部请求签名
      *
