@@ -122,8 +122,14 @@ public class ContentLandingPageController extends BaseController {
 	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD,ShiroConstants.PERMISSION_MODIFY})
 	public AdminResult checkAction(@RequestBody ContentLandingPageRequestBean requestBean) {
 		AdminResult adminResult = new AdminResult();
-		IntegerResponse count = contentLandingPageService.countByPageName(requestBean);
-		adminResult.setTotalCount(count.getResultInt());
+		IntegerResponse response = contentLandingPageService.countByPageName(requestBean);
+		JSONObject jsonObject = new JSONObject();
+		jsonObject.put("result","success");
+		if(response.getResultInt()>0){
+			jsonObject.put("result","error");
+			jsonObject.put("statusDesc","着落页名称已经存在,请重新输入。");
+		}
+		adminResult.setData(jsonObject);
 		return adminResult;
 	}
 }
