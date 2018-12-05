@@ -5844,8 +5844,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
+    @Cached(name="appHomeAnnouncementsCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 10, stopRefreshAfterLastAccess = 10, timeUnit = TimeUnit.MINUTES)
     public List<AppPushManageVO> getAnnouncements() {
-
         String url = "http://AM-TRADE/am-trade/projectlist/apphomepage/getAnnouncements";
         AppPushManageResponse response = restTemplate.getForEntity(url, AppPushManageResponse.class).getBody();
         if (Response.isSuccess(response)) {

@@ -761,8 +761,8 @@ public class AppHomeServiceImpl implements AppHomeService {
             }
 
            // PlanDetailCustomizeVO planDetailCustomizeVO = amTradeClient.getPlanDetailByPlanNid(listCustomize.getBorrowNid());
-            BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(listCustomize.getBorrowNid());
-            String statusNameDesc = borrow != null ? String.valueOf(borrow.getBorrowAccountWait()) : "0.00";
+            //BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(listCustomize.getBorrowNid());
+            String statusNameDesc = String.valueOf(listCustomize.getBorrowAccountWait());
             homePageCustomize.setStatusNameDesc("剩余" + DF_FOR_VIEW.format(new BigDecimal(statusNameDesc)));
             homePageCustomize.setBorrowUrl(HOST + HomePageDefine.BORROW + listCustomize.getBorrowNid());
             homePageCustomize.setBorrowApr(listCustomize.getBorrowApr() + "%");
