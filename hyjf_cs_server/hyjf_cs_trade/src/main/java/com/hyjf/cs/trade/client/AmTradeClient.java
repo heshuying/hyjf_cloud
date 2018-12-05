@@ -2453,6 +2453,10 @@ public interface AmTradeClient {
 
     List<WechatHomeProjectListVO> getWechatHomeRepaymentsProjectList();
 
+    int getWebCreditListCount(CreditListRequest request);
+
+    List<CreditListVO> getWebCreditList(CreditListRequest request);
+
 
 }
 
