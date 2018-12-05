@@ -2,6 +2,7 @@ package com.hyjf.cs.trade.bean.assetpush;
 
 import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.cs.trade.bean.BaseBean;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.List;
 
@@ -9,12 +10,14 @@ import java.util.List;
  * 资产推送请求参数
  */
 public class PushRequestBean extends BaseBean {
-	
 
+	@ApiModelProperty(value = "资产类别")
     private Integer assetType;
-	
+
+	@ApiModelProperty(value = "资产推送信息")
 	private List<PushBean> reqData;
-	
+
+	@ApiModelProperty(value = "商铺信息")
 	private List<InfoBean> riskInfo;
 
 	public List<PushBean> getReqData() {

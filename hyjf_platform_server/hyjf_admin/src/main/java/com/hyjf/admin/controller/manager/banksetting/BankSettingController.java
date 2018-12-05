@@ -66,16 +66,15 @@ public class BankSettingController extends BaseController {
     public AdminResult initBankSettingList(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
         logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/list");
 
+        AdminBankSettingResponse response = null;
         AdminBankSettingRequest request = new AdminBankSettingRequest();
-        AdminBankSettingResponse response = new AdminBankSettingResponse();
-                BeanUtils.copyProperties(bankSettingRequestBean, request);
+        BeanUtils.copyProperties(bankSettingRequestBean, request);
 
         try {
             // 数据查询
             response = this.bankSettingService.selectBankSettingList(request);
         } catch (Exception e) {
-            logger.info("Admin江西银行数据查询异常！requestParam:{}", request.toString());
-            e.printStackTrace();
+            logger.info("Admin江西银行数据查询异常！requestParam:{}", request.toString(), e);
             return new AdminResult<>(FAIL, "Admin江西银行数据查询异常！具体原因详见日志");
         }
 
@@ -90,13 +89,13 @@ public class BankSettingController extends BaseController {
     @ApiOperation(value = "画面迁移(含有id更新，不含有id添加)", httpMethod = "POST", notes = "画面迁移(含有id更新，不含有id添加)")
     @ApiParam(required = true, name = "bankSettingRequestBean", value = "根据id查询详情")
     @PostMapping("/info")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_INFO, ShiroConstants.PERMISSION_ADD})
     public AdminResult bankSettingInfo(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
         logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/info");
 
+        AdminBankSettingResponse response = null;
         AdminBankSettingRequest request = new AdminBankSettingRequest();
-        AdminBankSettingResponse response = new AdminBankSettingResponse();
-                BeanUtils.copyProperties(bankSettingRequestBean, request);
+        BeanUtils.copyProperties(bankSettingRequestBean, request);
         if (request.getId() == null) {
             return new AdminResult<>(FAIL, "id字段为必传！");
         }
@@ -105,8 +104,7 @@ public class BankSettingController extends BaseController {
             // 数据查询
             response = this.bankSettingService.getRecord(request);
         } catch (Exception e) {
-            logger.info("Admin江西银行数据查询异常！requestParam:{}", request.toString());
-            e.printStackTrace();
+            logger.info("Admin江西银行数据查询异常！requestParam:{}", request.toString(), e);
             return new AdminResult<>(FAIL, "Admin江西银行数据查询异常！具体原因详见日志");
         }
 
@@ -149,8 +147,7 @@ public class BankSettingController extends BaseController {
             // 数据查询
             banks = bankSettingService.getRecordList(bank, -1, -1);
         } catch (Exception e) {
-            logger.info("Admin江西银行数据查询异常！requestParam:{}", bank.toString());
-            e.printStackTrace();
+            logger.info("Admin江西银行数据查询异常！requestParam:{}", bank.toString(), e);
             return new AdminResult<>(FAIL, "Admin江西银行数据查询异常！具体原因详见日志");
         }
 
@@ -159,8 +156,7 @@ public class BankSettingController extends BaseController {
                 // 数据插入
                 response = this.bankSettingService.insertRecord(request);
             } catch (Exception e) {
-                logger.info("Admin江西银行数据插入异常！requestParam:{}", request.toString());
-                e.printStackTrace();
+                logger.info("Admin江西银行数据插入异常！requestParam:{}", request.toString(), e);
                 return new AdminResult<>(FAIL, "Admin江西银行数据插入异常！具体原因详见日志");
             }
         }
@@ -187,9 +183,9 @@ public class BankSettingController extends BaseController {
             return new AdminResult<>(FAIL, "请求参数bankName不能为空！");
         }
 
+        AdminBankSettingResponse response = null;
         ModelAndView model = new ModelAndView();
         AdminBankSettingRequest request = new AdminBankSettingRequest();
-        AdminBankSettingResponse response = new AdminBankSettingResponse();
         BeanUtils.copyProperties(bankSettingRequestBean,request);
 
         // 调用校验
@@ -205,8 +201,7 @@ public class BankSettingController extends BaseController {
             // 数据修改
             response = this.bankSettingService.updateRecord(request);
         } catch (Exception e) {
-            logger.info("Admin江西银行数据修改异常！requestParam:{}", request.toString());
-            e.printStackTrace();
+            logger.info("Admin江西银行数据修改异常！requestParam:{}", request.toString(), e);
             return new AdminResult<>(FAIL, "Admin江西银行数据修改异常！具体原因详见日志");
         }
 
@@ -225,8 +220,8 @@ public class BankSettingController extends BaseController {
     public AdminResult deleteBankSetting(@RequestBody BankSettingRequestBean bankSettingRequestBean) {
         logger.info(BankSettingController.class.toString(), "startLog -- /hyjf-admin/config/banksetting/delete");
 
+        AdminBankSettingResponse response = null;
         AdminBankSettingRequest request = new AdminBankSettingRequest();
-        AdminBankSettingResponse response = new AdminBankSettingResponse();
         BeanUtils.copyProperties(bankSettingRequestBean ,request);
         if(request.getId() == null){
             return new AdminResult<>(FAIL, "id字段为必传！");
@@ -236,8 +231,7 @@ public class BankSettingController extends BaseController {
             // 数据删除
             response = this.bankSettingService.deleteRecord(request);
         } catch (Exception e) {
-            logger.info("Admin江西银行数据删除异常！requestParam:{}", request.toString());
-            e.printStackTrace();
+            logger.info("Admin江西银行数据删除异常！requestParam:{}", request.toString(), e);
             return new AdminResult<>(FAIL, "Admin江西银行数据删除异常！具体原因详见日志");
         }
 
@@ -264,8 +258,7 @@ public class BankSettingController extends BaseController {
             // 数据查询
             list = bankSettingService.getRecordList(jxBankConfig, -1, -1);
         } catch (Exception e) {
-            logger.info("Admin江西银行数据查询异常！requestParam:{}", jxBankConfig.toString());
-            e.printStackTrace();
+            logger.info("Admin江西银行数据查询异常！requestParam:{}", jxBankConfig.toString(), e);
             return new AdminResult<>(FAIL, "Admin江西银行数据查询异常！具体原因详见日志");
         }
 

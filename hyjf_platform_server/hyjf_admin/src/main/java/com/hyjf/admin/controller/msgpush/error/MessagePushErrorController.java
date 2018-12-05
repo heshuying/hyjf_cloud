@@ -5,7 +5,10 @@ package com.hyjf.admin.controller.msgpush.error;
 
 import com.hyjf.admin.beans.request.MessagePushErrorRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.controller.manager.banksetting.BankSettingController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.MessagePushErrorService;
 import com.hyjf.admin.service.MessagePushHistoryService;
 import com.hyjf.am.response.admin.MessagePushErrorResponse;
@@ -19,6 +22,8 @@ import com.hyjf.common.paginator.Paginator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -35,8 +40,13 @@ import java.util.List;
 @RequestMapping("/hyjf-admin/msgpush/error")
 public class MessagePushErrorController extends BaseController {
 
+    private static final Logger logger = LoggerFactory.getLogger(BankSettingController.class);
+
     @Value("file.domain.url")
     private String FILE_DOMAIN_URL;
+
+    //权限名称
+    public static final String PERMISSIONS = "msgpusherror";
 
     @Autowired
     private MessagePushErrorService messagePushErrorService;
@@ -47,7 +57,9 @@ public class MessagePushErrorController extends BaseController {
     @PostMapping("/getListByConditions")
     @ApiParam(required = false, name = "requestBean", value = "查询条件")
     @ApiOperation(value = "(条件)查询 APP消息推送 异常处理 列表", httpMethod = "POST", notes = "(条件)查询 APP消息推送 异常处理 列表")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_VIEW, ShiroConstants.PERMISSION_SEARCH})
     public AdminResult getListByConditions(@RequestBody MessagePushErrorRequestBean requestBean) {
+        logger.info(this.getClass().getName(), "(条件)查询 APP消息推送 异常处理 列表 start", requestBean.toString(), "/hyjf-admin/msgpush/error/getListByConditions");
         MessagePushErrorRequest request = new MessagePushErrorRequest();
         MessagePushErrorResponse response = new MessagePushErrorResponse();
         try {
@@ -71,15 +83,19 @@ public class MessagePushErrorController extends BaseController {
             //返回状态
             response.setCount(count);
         }catch (Exception e){
-            e.printStackTrace();
+            logger.info(this.getClass().getName(), "(条件)查询 APP消息推送 异常处理 列表 异常!", "/hyjf-admin/msgpush/error/getListByConditions",
+                    e);
             return new AdminResult(FAIL, FAIL_DESC);
         }
+        logger.info(this.getClass().getName(), "(条件)查询 APP消息推送 异常处理 列表 end", "/hyjf-admin/msgpush/error/getListByConditions");
         return new AdminResult(response);
     }
 
     @PutMapping("/update")
     @ApiOperation(value = "重发 APP消息推送 异常处理", httpMethod = "PUT", notes = "重发 APP消息推送 异常处理")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult update(@RequestBody AdminAccountDetailDataRepairVO requestParam) {
+        logger.info(this.getClass().getName(), "(条件)查询 APP消息推送 异常处理 列表 start", requestParam.toString(), "/hyjf-admin/msgpush/error/getListByConditions");
         MessagePushErrorResponse response = new MessagePushErrorResponse();
         try {
             // 重发此消息
@@ -87,8 +103,11 @@ public class MessagePushErrorController extends BaseController {
             //推送极光消息（暂不开启）
             this.messagePushErrorService.sendMessage(msg);
         }catch (Exception e){
+            logger.info(this.getClass().getName(), "(条件)查询 APP消息推送 异常处理 列表 异常!", "/hyjf-admin/msgpush/error/getListByConditions",
+                    e);
             return new AdminResult(FAIL, FAIL_DESC);
         }
+        logger.info(this.getClass().getName(), "(条件)查询 APP消息推送 异常处理 列表 end", "/hyjf-admin/msgpush/error/getListByConditions");
         return new AdminResult(response);
     }
 }
