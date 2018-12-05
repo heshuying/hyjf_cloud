@@ -1,5 +1,7 @@
 package com.hyjf.cs.trade.bean.assetpush;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 public class PushBean implements Serializable {
@@ -7,41 +9,57 @@ public class PushBean implements Serializable {
 	private static final long serialVersionUID = -9133593440657771846L;
 
 	// 下面是必须参数
+	@ApiModelProperty(value = "资产编号")
     private String assetId;
 
 //    private String instCode;
 //
 //    private Integer assetType;
 
+	@ApiModelProperty(value = "用户真实姓名")
     private String truename;
 
+	@ApiModelProperty(value = "用户身份证号")
     private String idcard;
 
+	@ApiModelProperty(value = "电子账号")
     private Long account;
 
+	@ApiModelProperty(value = "借款期限")
     private Integer borrowPeriod;
 
+	@ApiModelProperty(value = "借款类型")
     private String borrowStyle;
     
     // 返回参数
+	@ApiModelProperty(value = "返回码")
     private String retCode;
-    
+
+	@ApiModelProperty(value = "返回提示信息")
     private String retMsg;
     
     
     // 可选参数
+	@ApiModelProperty(value = "性别")
     private Integer sex;
 
+	@ApiModelProperty(value = "年龄")
     private Integer age;
 
+	@ApiModelProperty(value = "结婚时的年龄")
     private Integer marriage;
-    
+
+	@ApiModelProperty(value = "不传默认天标")
     private Integer isMonth = 0;// 不传默认天标
 
     // 受托支付标志
+	@ApiModelProperty(value = "受托支付标志")
     private Integer entrustedFlg;
+
+	@ApiModelProperty(value = "受托支付电子账号")
     private String entrustedAccountId;
 
+	@ApiModelProperty(value = "工作城市")
     private String workCity;
 
     private String position;
@@ -66,102 +84,131 @@ public class PushBean implements Serializable {
     /**
      * (个人)年收入:10万以内；10万以上
      */
+	@ApiModelProperty(value = "(个人)年收入:10万以内；10万以上")
     private String annualIncome;
     /**
      * (个人)征信报告逾期情况:暂未提供；无；已处理
      */
+	@ApiModelProperty(value = "(个人)征信报告逾期情况:暂未提供；无；已处理")
     private String overdueReport;
     /**
      * (个人)重大负债状况:无;有
      */
+	@ApiModelProperty(value = "(个人)重大负债状况:无;有")
     private String debtSituation;
     /**
      * (个人)其他平台借款情况:无;有
      */
+	@ApiModelProperty(value = "(个人)其他平台借款情况:无;有")
     private String otherBorrowed;
     /**
      * (个人)借款资金运用情况：不正常,正常
      */
+	@ApiModelProperty(value = "(个人)借款资金运用情况：不正常,正常")
     private String isFunds;
     /**
      * (个人)借款方经营状况及财务状况：不正常,正常
      */
+	@ApiModelProperty(value = "(个人)借款方经营状况及财务状况：不正常,正常")
     private String isManaged;
     /**
      * (个人)借款方还款能力变化情况：不正常,正常
      */
+	@ApiModelProperty(value = "(个人)借款方还款能力变化情况：不正常,正常")
     private String isAbility;
     /**
      * (个人)借款人逾期情况：暂无,有
      */
+	@ApiModelProperty(value = "(个人)借款人逾期情况：暂无,有")
     private String isOverdue;
     /**
      * (个人)借款人涉诉情况：暂无,有
      */
+	@ApiModelProperty(value = "(个人)借款人涉诉情况：暂无,有")
     private String isComplaint;
     /**
      * (个人)借款人受行政处罚情况：暂无,有
      */
+	@ApiModelProperty(value = "(个人)借款人受行政处罚情况：暂无,有")
     private String isPunished;
     /** * 信批需求新增字段(选传)目前只支持个人 end */
 	/**
 	 * 企业资产推送新增字段
 	 */
 	//借款类型
+	@ApiModelProperty(value = "企业资产推送新增字段")
 	private String borrowType;
 
 	//推送时间
+	@ApiModelProperty(value = "推送时间")
 	private Integer recievetime;
 
 	//借款人用户名
+	@ApiModelProperty(value = "借款人用户名")
 	private String userName;
 
 	//借款企业名称
+	@ApiModelProperty(value = "借款企业名称")
 	private String borrowCompanyName;
 
 	//财务状况
+	@ApiModelProperty(value = "财务状况")
 	private String financialSituation;
 
 	//法人
+	@ApiModelProperty(value = "法人")
 	private String legalPerson;
 
 	//注册地区
+	@ApiModelProperty(value = "注册地区")
 	private String registrationArea;
 
 	//注册时间
+	@ApiModelProperty(value = "注册时间")
 	private String registrationDate;
 
 	//主营业务
+	@ApiModelProperty(value = "主营业务")
 	private String mainBusiness;
 
 	//统一社会信用代码
+	@ApiModelProperty(value = "统一社会信用代码")
 	private String unifiedSocialCreditCode;
 
 	//注册资本
+	@ApiModelProperty(value = "注册资本")
 	private String registeredCapital;
 
 	//所属行业
+	@ApiModelProperty(value = "所属行业")
 	private String industryInvolved;
 
 	//在平台逾期次数
+	@ApiModelProperty(value = "在平台逾期次数")
 	private String overdueTimes;
 
 	//在平台逾期金额
+	@ApiModelProperty(value = "在平台逾期金额")
 	private String overdueAmount;
 
 	//涉诉情况
+	@ApiModelProperty(value = "涉诉情况")
 	private String litigation;
 
 	/**
 	 * add by nxl 20180710 (企业)企业注册地
 	 */
+	@ApiModelProperty(value = "企业注册地")
 	private String registrationAddress;
 
 	/**
 	 * add by nxl 20180710 (企业)企业组织机构代码
 	 */
+	@ApiModelProperty(value = "企业组织机构代码")
 	private String corporateCode;
+
 	// 借款人地址
+	@ApiModelProperty(value = "借款人地址")
 	private String address;
 
 	public String getCorporateCode() {
