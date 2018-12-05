@@ -30,6 +30,15 @@ public class PartnerConfigServiceImpl extends BaseServiceImpl implements Partner
         return hjhInstConfigMapper.selectByExample(example).size();
     }
     /*
+   * 查询保证金记录条数查询
+   * */
+    @Override
+    public int instConfigInitCount(){
+        HjhInstConfigExample example = new HjhInstConfigExample();
+        example.createCriteria().andDelFlagEqualTo(0);
+        return hjhInstConfigMapper.countByExample(example);
+    }
+    /*
     * 查询保证金记录查询
     * */
     @Override

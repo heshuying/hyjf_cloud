@@ -8,7 +8,6 @@ import com.hyjf.common.paginator.Paginator;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @author yaoyong
@@ -20,13 +19,12 @@ public class UserOperationLogRequest extends UserOperationLogEntityVO implements
     private int limit;
     //检索条件
     /**
-     * 操作时间开始
+     *
      */
+    @ApiModelProperty(value = "操作时间开始")
     private String operationTimeStart;
 
-    /**
-     * 操作时间结束
-     */
+    @ApiModelProperty(value = "操作时间结束")
     private String operationTimeEnd;
     /**
      * 当前页码

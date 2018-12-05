@@ -6,8 +6,10 @@ import com.hyjf.admin.beans.request.HjhPlanCapitalRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.OperationReportService;
 import com.hyjf.admin.utils.FileUpLoadUtil;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
@@ -58,9 +60,14 @@ public class OperationReportController extends BaseController {
     private SystemConfig  systemConfig;
     @Autowired
     private FileUpLoadUtil fileUpLoadUtil;
+    /**
+     * 权限关键字
+     */
+    public static final String PERMISSIONS = "operationreport";
 
     @ApiOperation(value = "列表初始化", notes = "运营报告列表查询")
     @PostMapping("/list")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
     public AdminResult<ListResult<OperationReportVO>> list(@RequestBody OperationReportRequest request) {
         OperationReportResponse response = operationReportService.getRecordList(request);
         if (response == null) {
@@ -74,6 +81,7 @@ public class OperationReportController extends BaseController {
 
     @ApiOperation(value = "进入季度报告页面", notes = "进入季度报告页面")
     @GetMapping("/initQuarter/{operationReportType}/{year}")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<OperationReportResponse> initQuarter(@PathVariable Integer operationReportType, @PathVariable String year){
         OperationReportResponse response = new OperationReportResponse();
         OperationReportVO operationReport = new OperationReportVO();
@@ -96,6 +104,7 @@ public class OperationReportController extends BaseController {
 
     @ApiOperation(value = "月度报告新增和公用修改頁面", notes = "月度报告新增和公用修改頁面")
     @GetMapping("/initupdatepage/{id}")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<OperationReportResponse> initUpdatePage(@PathVariable String id){
         OperationReportResponse response = new OperationReportResponse();
         if (StringUtils.isNotEmpty(id)) {
@@ -105,6 +114,7 @@ public class OperationReportController extends BaseController {
     }
     @ApiOperation(value = "进入上半年度报告页面", notes = "进入上半年度报告页面")
     @GetMapping("/inithalfyear/{year}")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<OperationReportResponse> initHalfYear(@PathVariable String year){
         OperationReportResponse response = new OperationReportResponse();
         OperationReportVO operationReport = new OperationReportVO();
@@ -119,6 +129,7 @@ public class OperationReportController extends BaseController {
     }
     @ApiOperation(value = "进入年度报告页面", notes = "进入年度报告页面")
     @GetMapping("/inityear/{year}")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<OperationReportResponse> initYear(@PathVariable String year){
         OperationReportResponse response = new OperationReportResponse();
         OperationReportVO operationReport = new OperationReportVO();
@@ -133,12 +144,14 @@ public class OperationReportController extends BaseController {
     }
     @ApiOperation(value = "删除信息", notes = "删除信息")
     @GetMapping("/delete/{id}")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult<OperationReportResponse> delete(@PathVariable String id){
         OperationReportResponse response = operationReportService.delete(id);
         return new AdminResult<>(response);
     }
     @ApiOperation(value = "发布接口有变化", notes = "发布参数请放在operationReport对象里")
     @PostMapping("/publish")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult<OperationReportResponse> publish(@RequestBody OperationReportRequest request){
         OperationReportResponse response = operationReportService.publish(request);
         return new AdminResult<>(response);
@@ -304,6 +317,7 @@ public class OperationReportController extends BaseController {
      */
     @ApiOperation(value = "数据导出--运营报告", notes = "带条件导出EXCEL")
     @PostMapping(value = "/exportAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportAction(HttpServletRequest request, HttpServletResponse response, @RequestBody OperationReportRequest form) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
@@ -411,7 +425,7 @@ public class OperationReportController extends BaseController {
      * @throws Exception
      */
     @ApiOperation(value = "资料上传", notes = "资料上传")
-    @RequestMapping("/uploadFile")
+    @PostMapping("/uploadFile")
     public AdminResult uploadFile(HttpServletRequest request) throws Exception {
         AdminResult adminResult = new AdminResult();
         LinkedList<BorrowCommonImage> borrowCommonImages = fileUpLoadUtil.upLoad(request);

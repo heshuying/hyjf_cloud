@@ -57,7 +57,7 @@ public class BorrowRepaymentInfoController extends BaseController {
     @Autowired
     private BorrowRepaymentInfoService borrowRepaymentInfoService;
     /** 查看权限 */
-    public static final String PERMISSIONS = "borrowrepayment";
+    public static final String PERMISSIONS = "borrowRepayMentInfo";
     /**
      * 画面初始化
      *

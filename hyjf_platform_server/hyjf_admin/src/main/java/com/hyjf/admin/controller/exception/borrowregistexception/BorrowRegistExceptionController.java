@@ -24,7 +24,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_MODIFY;
+import static com.hyjf.admin.common.util.ShiroConstants.PERMISSIONS_DEBTREGISTEXCEP;
 import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_VIEW;
 
 /**
@@ -94,7 +94,7 @@ public class BorrowRegistExceptionController extends BaseController {
      */
     @ApiOperation(value = "银行标的备案异常", notes = "银行标的备案异常处理")
     @PostMapping(value = "/borrowregisthandleexception")
-    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_MODIFY)
+    @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSIONS_DEBTREGISTEXCEP)
     public AdminResult borrowRegistHandleException(HttpServletRequest request, @RequestBody BorrowRegistListRequest borrowRegistListRequest){
         Integer userId = Integer.valueOf(getUser(request).getId());
         JSONObject jsonObject = new JSONObject();

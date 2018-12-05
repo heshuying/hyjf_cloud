@@ -17,13 +17,13 @@ import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -57,7 +57,7 @@ public class ApiAutoPlusController extends BaseUserController {
      */
     @ResponseBody
     @PostMapping(value = "/sendcode.do", produces = "application/json; charset=utf-8")
-    @ApiOperation(value = "前导发送短信验证码",notes = "前导发送短信验证码")
+    @ApiIgnore(value = "前导发送短信验证码")
     public ApiAutoPlusResultBean sendCode(@RequestBody AutoPlusRequestBean autoPlusRequestBean) {
         logger.info("api端授权申请发送短信验证码第三方请求参数：" + JSONObject.toJSONString(autoPlusRequestBean));
         ApiAutoPlusResultBean result = autoPlusService.sendCode(autoPlusRequestBean);
@@ -71,7 +71,7 @@ public class ApiAutoPlusController extends BaseUserController {
      * @Date: 16:44 2018/5/30
      * @Return:
      */
-    @ApiOperation(value = "自动投资授权", notes = "自动投资授权")
+    @ApiIgnore(value = "自动投资授权")
     @PostMapping(value = "/userAuthInves")
     @ResponseBody
     public ModelAndView userAuthInves(@RequestBody @Valid AutoPlusRequestBean payRequestBean) {
@@ -109,7 +109,7 @@ public class ApiAutoPlusController extends BaseUserController {
      * @Date: 16:45 2018/5/30
      * @Return:
      */
-    @ApiOperation(value = "用户自动债转授权", notes = "用户自动债转授权")
+    @ApiIgnore(value = "用户自动债转授权")
     @PostMapping(value = "/userCreditAuthInves.do", produces = "application/json; charset=utf-8")
     public ModelAndView userAuthCredit(@RequestBody @Valid AutoPlusRequestBean payRequestBean) {
         ModelAndView modelAndView = new ModelAndView(PATH_TRUSTEE_PAY_ERROR);
@@ -148,7 +148,7 @@ public class ApiAutoPlusController extends BaseUserController {
      * @Date: 10:11 2018/5/31
      * @Return:
      */
-    @ApiOperation(value = "自动投资授权同步回调",notes = "自动投资授权同步回调")
+    @ApiIgnore(value = "自动投资授权同步回调")
     @GetMapping(value = "/userAuthInvesReturn")
     public ModelAndView userAuthInvesReturn(HttpServletRequest request, BankCallBean bean) {
         String callback = request.getParameter("callback").replace("*-*-*", "#");
@@ -175,7 +175,7 @@ public class ApiAutoPlusController extends BaseUserController {
      * @Date: 10:11 2018/5/31
      * @Return:
      */
-    @ApiOperation(value = "自动债转授权同步回调",notes = "自动债转授权同步回调")
+    @ApiIgnore(value = "自动债转授权同步回调")
     @GetMapping(value = "/userCreditAuthInvesReturn")
     public ModelAndView userCreditAuthInvesReturn(HttpServletRequest request,BankCallBean bean) {
         String callback = request.getParameter("callback").replace("*-*-*", "#");
@@ -201,7 +201,7 @@ public class ApiAutoPlusController extends BaseUserController {
      * @return
      */
     @ResponseBody
-    @ApiOperation(value = "授权自动投资异步回调",notes = "授权自动投资异步回调")
+    @ApiIgnore(value = "授权自动投资异步回调")
     @PostMapping(value = "/userAuthInvesBgreturn")
     public BankCallResult userAuthInvesBgreturn(HttpServletRequest request,@RequestBody BankCallBean bean) {
         String callback = request.getParameter("callback").replace("*-*-*", "#");
@@ -217,7 +217,7 @@ public class ApiAutoPlusController extends BaseUserController {
      * @return
      */
     @ResponseBody
-    @ApiOperation(value = "授权自动债转异步回调",notes = "授权自动债转异步回调")
+    @ApiIgnore(value = "授权自动债转异步回调")
     @PostMapping(value = "/userCreditAuthInvesBgreturn")
     public BankCallResult userCreditAuthInvesBgreturn(HttpServletRequest request,@RequestBody BankCallBean bean) {
         String callback = request.getParameter("callback").replace("*-*-*", "#");

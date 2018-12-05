@@ -26,6 +26,16 @@ public class InstConfigServiceImpl extends BaseServiceImpl implements InstConfig
         HjhInstConfigExample example = new HjhInstConfigExample();
         return hjhInstConfigMapper.selectByExample(example).size();
     }
+
+    /*
+    * 查询保证金记录查询
+    * */
+    @Override
+    public int instConfigInitCont(){
+        HjhInstConfigExample example = new HjhInstConfigExample();
+        example.createCriteria().andDelFlagEqualTo(0);
+        return hjhInstConfigMapper.countByExample(example);
+    }
     /*
     * 查询保证金记录查询
     * */

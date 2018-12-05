@@ -314,40 +314,37 @@ public class SmsCountController extends BaseController {
         smsCountCustomize.setPageSize(defaultRowMaxCount);
         smsCountCustomize.setCurrPage(1);
         smsCountCustomize.setLimitStart(-1);
-        List<SmsCountCustomizeVO> listSms = smsCountService.querySmsCountList(smsCountCustomize).getResultList();
-        Integer totalCount = listSms.size();
+        Integer totalCount = smsCountService.getSmsCountForExport(smsCountCustomize);
+
         //短信总条数+总费用
         Integer smsNumber = 0;
         BigDecimal smsMoney = BigDecimal.ZERO;
-        if (!CollectionUtils.isEmpty(listSms)) {
-            for (SmsCountCustomizeVO vo : listSms) {
-                smsNumber += vo.getSmsNumber();
-                smsMoney = smsMoney.add(new BigDecimal(configMoney).multiply(new BigDecimal(vo.getSmsNumber())));
-            }
-        }
-        //总条数
-        String[] sumSmsCount = new String[]{"总条数", "", String.valueOf(smsNumber), decimalFormat.format(smsMoney), ""};
+
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
-
+            String[] sumSmsCount = new String[]{"总条数", "", String.valueOf(smsNumber), decimalFormat.format(smsMoney), ""};
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList(),sumSmsCount);
-        }else {
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, listSms,sumSmsCount);
         }
-        for (int i = 1; i < sheetCount; i++) {
+        for (int i = 1; i <= sheetCount; i++) {
+            //每页的总条数重置
+            smsNumber = 0;
+            smsMoney = BigDecimal.ZERO;
             smsCountCustomize.setPageSize(defaultRowMaxCount);
-            smsCountCustomize.setCurrPage(i+1);
+            smsCountCustomize.setCurrPage(i);
             smsCountCustomize.setLimitStart(-1);
-            List<SmsCountCustomizeVO> listSms2 = smsCountService.querySmsCountList(smsCountCustomize).getResultList();
-            if (listSms2 != null && listSms2.size()> 0) {
-                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-                if(i==sheetCount-1){
-                    helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  listSms2,sumSmsCount);
+            List<SmsCountCustomizeVO> listSms = smsCountService.querySmsCountList(smsCountCustomize).getResultList();
+            if (listSms != null && listSms.size()> 0) {
+                for (SmsCountCustomizeVO vo : listSms) {
+                    smsNumber += vo.getSmsNumber();
+                    smsMoney = smsMoney.add(new BigDecimal(configMoney).multiply(new BigDecimal(vo.getSmsNumber())));
                 }
-                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  listSms2);
+                //每页最后一行
+                String[] sumSmsCount = new String[]{"总条数", "", String.valueOf(smsNumber), decimalFormat.format(smsMoney), ""};
+                sheetNameTmp = sheetName + "_第" + i + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  listSms, sumSmsCount);
             } else {
                 break;
             }

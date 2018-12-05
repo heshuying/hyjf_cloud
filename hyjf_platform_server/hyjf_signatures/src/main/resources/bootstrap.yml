@@ -25,7 +25,7 @@ spring:
     percentage: 0.1
     
   profiles:
-    active: beta
+    active: dev
 
 server:
   port: 9095

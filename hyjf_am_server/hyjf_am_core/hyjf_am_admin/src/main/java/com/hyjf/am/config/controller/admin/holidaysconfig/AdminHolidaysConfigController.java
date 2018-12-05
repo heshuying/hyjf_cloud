@@ -53,10 +53,10 @@ public class AdminHolidaysConfigController {
         AdminHolidaysConfigResponse response = new AdminHolidaysConfigResponse();
         try {
             // 节假日配置-列表查询
-            List<HolidaysConfig> recordList = this.adminHolidaysConfig.getRecordList(new HolidaysConfig(), -1, -1);
-            if (CollectionUtils.isNotEmpty(recordList)) {
-                Paginator paginator = new Paginator(request.getCurrPage(), recordList.size(), request.getPageSize() == 0 ? 10 : request.getPageSize());
-                recordList = this.adminHolidaysConfig.getRecordList(new HolidaysConfig(), paginator.getOffset(),
+            Integer totalCount = this.adminHolidaysConfig.getTotalCount();
+            if (totalCount != null) {
+                Paginator paginator = new Paginator(request.getCurrPage(), totalCount, request.getPageSize() == 0 ? 10 : request.getPageSize());
+                List<HolidaysConfig> recordList = this.adminHolidaysConfig.getRecordList(new HolidaysConfig(), paginator.getOffset(),
                         paginator.getLimit());
                 if(CollectionUtils.isNotEmpty(recordList)){
                     List<HolidaysConfigVO> recordListVO = CommonUtils.convertBeanList(recordList, HolidaysConfigVO.class);

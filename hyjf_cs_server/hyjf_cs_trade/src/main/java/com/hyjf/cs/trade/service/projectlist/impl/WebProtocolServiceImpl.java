@@ -348,7 +348,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
             if(StringUtils.isNotEmpty(borrowVO.getPlanNid())){
                 TenderAgreementVO tenderAgreement = new TenderAgreementVO();
                 List<TenderAgreementVO> tenderAgreementsNid= amTradeClient.selectTenderAgreementByNid(assignNid);//居间协议
-                if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
+                //if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
 
 
                     //计划中的标的---法大大
@@ -380,11 +380,10 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                             break;
                         }
                     }
-                }else{
-
+              /*  }else{
                     //计划中的标的
                     while (true) {
-                        List<HjhDebtCreditTenderVO> hjhCreditTenderList = amTradeClient.selectHjhCreditTenderListByAssignOrderId(nid);//hyjf_hjh_debt_credit_tender
+                        List<HjhDebtCreditTenderVO> hjhCreditTenderList = amTradeClient.selectHjhCreditTenderListByAssignOrderId(assignNid);//hyjf_hjh_debt_credit_tender
                         if(hjhCreditTenderList!=null && hjhCreditTenderList.size()>0){
                             HjhDebtCreditTenderVO hjhCreditTender = hjhCreditTenderList.get(0);
                             System.out.println("调用下载计划债转协议的方法 ---------------------:"+assignNid);
@@ -433,7 +432,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                             break;
                         }
                     }
-                }
+                }*/
             }
         }
         if(files!=null && files.size()>0){

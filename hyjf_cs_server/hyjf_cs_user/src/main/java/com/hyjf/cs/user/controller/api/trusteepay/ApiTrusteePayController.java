@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+import springfox.documentation.annotations.ApiIgnore;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
@@ -47,7 +48,7 @@ public class ApiTrusteePayController extends BaseController {
      * @param bean
      * @return
      */
-    @ApiOperation(value = "借款人受托支付申请同步回调",notes = "借款人受托支付申请同步回调")
+    @ApiIgnore
     @GetMapping("/trusteePayReturn")
     public ModelAndView trusteePayReturn(HttpServletRequest request, BankCallBean bean) {
         Map<String, String> map = trusteePayService.trusteePayReturn(request, bean);
@@ -61,7 +62,7 @@ public class ApiTrusteePayController extends BaseController {
      * @param bean
      * @return
      */
-    @ApiOperation(value = "借款人受托支付申请异步回调",notes = "借款人受托支付申请异步回调")
+    @ApiIgnore
     @ResponseBody
     @PostMapping("/trusteePayBgreturn")
     public BankCallResult trusteePayBgreturn(HttpServletRequest request, @RequestBody BankCallBean bean) {
