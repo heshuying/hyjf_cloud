@@ -36,7 +36,7 @@ import javax.validation.Valid;
  **/
 @Api(value = "api端-Aems资产状态查询接口",tags = "api端-Aems资产状态查询接口")
 @RestController
-@RequestMapping("/hyjf-api/server/asset")
+@RequestMapping("/hyjf-api/aems/asset")
 public class AemsAssetSearchController extends BaseController {
 
     Logger _log = LoggerFactory.getLogger(AemsAssetSearchController.class);
