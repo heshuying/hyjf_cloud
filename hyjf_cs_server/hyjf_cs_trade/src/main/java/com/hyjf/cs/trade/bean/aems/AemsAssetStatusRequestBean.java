@@ -1,5 +1,6 @@
-package com.hyjf.cs.trade.bean;
+package com.hyjf.cs.trade.bean.aems;
 
+import com.hyjf.cs.trade.bean.BaseBean;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;

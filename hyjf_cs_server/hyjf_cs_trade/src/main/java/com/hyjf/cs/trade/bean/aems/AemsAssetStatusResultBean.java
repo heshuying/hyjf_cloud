@@ -1,5 +1,6 @@
-package com.hyjf.cs.trade.bean;
+package com.hyjf.cs.trade.bean.aems;
 
+import com.hyjf.cs.trade.bean.BaseResultBean;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
@@ -7,7 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @version AssetStatusResultBean, v0.1 2018/8/27 13:38
  * @Author: Zha Daojian
  */
-public class AemsAssetStatusResultBean extends BaseResultBean{
+public class AemsAssetStatusResultBean extends BaseResultBean {
 
     private static final long serialVersionUID = 1L;
 
