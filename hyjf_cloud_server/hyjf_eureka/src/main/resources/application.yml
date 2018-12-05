@@ -10,15 +10,13 @@ spring:
 server:
   port: 1111
 eureka:
-  instance:
-    hostname: microserver1
   environment: ${spring.profiles.active}
   datacenter: Main
   client:
     register-with-eureka: true
     fetch-registry: false
     serviceUrl:
-      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+      defaultZone: http://microserver1:1111/eureka,http://microserver2:1111/eureka
 
 
 management:
