@@ -93,7 +93,7 @@ public interface BorrowCommonService extends BaseService {
 	 * @param borrowBean
 	 * @param borrow
 	 */
-	public void insertBorrowCommonData(BorrowCommonBean borrowBean, BorrowWithBLOBs borrow, String borrowPreNid, String newBorrowPreNid, String borrowNid, String name, String account,String adminUsername)
+	public void insertBorrowCommonData(BorrowCommonBean borrowBean, BorrowWithBLOBs borrow, String borrowPreNid, String newBorrowPreNid, String borrowNid, String account,String adminUsername)
 			throws Exception;
 
 	/**

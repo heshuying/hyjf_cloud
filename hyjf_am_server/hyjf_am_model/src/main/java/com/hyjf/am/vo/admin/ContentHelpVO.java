@@ -18,6 +18,7 @@ public class ContentHelpVO implements Serializable {
 
     private Integer order;
 
+    //状态  0启用 1开启  2常见问题
     private Integer status;
 
     private Integer zhiChiStatus;

@@ -247,7 +247,7 @@ public class BailConfigServiceImpl extends BaseServiceImpl implements BailConfig
         hjhBailConfigLog.setInstCode(bailConfigAddRequest.getInstCode());
         // 更新日志表
         // 保证金金额修改
-        if (!bailConfig.getBailTatol().equals(bailConfigAddRequest.getBailTatol())) {
+        if (bailConfig.getBailTatol().compareTo(bailConfigAddRequest.getBailTatol()) != 0) {
             hjhBailConfigLog.setModifyColumn("保证金金额");
             hjhBailConfigLog.setAfterValue(bailConfigAddRequest.getBailTatol().toString());
             hjhBailConfigLog.setBeforeValue(bailConfig.getBailTatol().toString());
@@ -261,28 +261,28 @@ public class BailConfigServiceImpl extends BaseServiceImpl implements BailConfig
             hjhBailConfigLogMapper.insertSelective(hjhBailConfigLog);
         }
         // 日推标额度
-        if (!bailConfig.getDayMarkLine().equals(bailConfigAddRequest.getDayMarkLine())) {
+        if (bailConfig.getDayMarkLine().compareTo(bailConfigAddRequest.getDayMarkLine()) != 0) {
             hjhBailConfigLog.setModifyColumn("日推标额度");
             hjhBailConfigLog.setAfterValue(bailConfigAddRequest.getDayMarkLine().toString());
             hjhBailConfigLog.setBeforeValue(bailConfig.getDayMarkLine().toString());
             hjhBailConfigLogMapper.insertSelective(hjhBailConfigLog);
         }
         // 月推标额度
-        if (!bailConfig.getMonthMarkLine().equals(bailConfigAddRequest.getMonthMarkLine())) {
+        if (bailConfig.getMonthMarkLine().compareTo(bailConfigAddRequest.getMonthMarkLine()) != 0) {
             hjhBailConfigLog.setModifyColumn("月推标额度");
             hjhBailConfigLog.setAfterValue(bailConfigAddRequest.getMonthMarkLine().toString());
             hjhBailConfigLog.setBeforeValue(bailConfig.getMonthMarkLine().toString());
             hjhBailConfigLogMapper.insertSelective(hjhBailConfigLog);
         }
         // 新增授信额度
-        if (!bailConfig.getNewCreditLine().equals(bailConfigAddRequest.getNewCreditLine())) {
+        if (bailConfig.getNewCreditLine().compareTo(bailConfigAddRequest.getNewCreditLine()) != 0) {
             hjhBailConfigLog.setModifyColumn("新增授信额度");
             hjhBailConfigLog.setAfterValue(bailConfigAddRequest.getNewCreditLine().toString());
             hjhBailConfigLog.setBeforeValue(bailConfig.getNewCreditLine().toString());
             hjhBailConfigLogMapper.insertSelective(hjhBailConfigLog);
         }
         // 在贷余额授信额度
-        if (!bailConfig.getLoanCreditLine().equals(bailConfigAddRequest.getLoanCreditLine())) {
+        if (bailConfig.getLoanCreditLine().compareTo(bailConfigAddRequest.getLoanCreditLine()) != 0) {
             hjhBailConfigLog.setModifyColumn("在贷余额授信额度");
             hjhBailConfigLog.setAfterValue(bailConfigAddRequest.getLoanCreditLine().toString());
             hjhBailConfigLog.setBeforeValue(bailConfig.getLoanCreditLine().toString());
