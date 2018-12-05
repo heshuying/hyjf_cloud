@@ -7,6 +7,7 @@ import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.LandingPage;
 import com.hyjf.am.config.service.LandingPageService;
 import com.hyjf.am.response.AdminResponse;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.config.LandingPageResponse;
 import com.hyjf.am.resquest.admin.LandingPageRequest;
 import com.hyjf.am.vo.config.LandingPageVo;
@@ -67,7 +68,17 @@ public class ContentLandingPageController extends BaseConfigController {
 		response.setRtn(AdminResponse.SUCCESS);
 		return response;
 	}
-
+	/**
+	 * 查询唯一
+	 *
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/countByPageName")
+	public IntegerResponse countByPageName(@RequestBody LandingPageRequest request) {
+		IntegerResponse response = landingPageService.countByPageName(request);
+		return response;
+	}
 	/**
 	 * 根据id查询着路页管理
 	 *
