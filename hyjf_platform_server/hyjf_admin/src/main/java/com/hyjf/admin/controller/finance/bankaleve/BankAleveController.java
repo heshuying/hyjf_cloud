@@ -104,6 +104,7 @@ public class BankAleveController {
      */
     @ApiOperation(value = "银行账务明细", notes = "银行账务明细导出")
     @PostMapping(value = "/exportbankaleve")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportBankaleveList(HttpServletRequest request, HttpServletResponse response, @RequestBody BankAleveRequest bankAleveRequest) throws UnsupportedEncodingException {
 
         //sheet默认最大行数
