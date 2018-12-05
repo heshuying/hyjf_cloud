@@ -4,6 +4,7 @@
 package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.request.ContentLandingPageRequestBean;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.config.LandingPageResponse;
 
 /**
@@ -49,4 +50,11 @@ public interface ContentLandingPageService {
 	 * @return
 	 */
 	LandingPageResponse getRecord(Integer id);
+	/**
+	 * 检查着陆页名称唯一
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	IntegerResponse countByPageName(ContentLandingPageRequestBean requestBean);
 }

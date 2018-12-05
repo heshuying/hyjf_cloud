@@ -6,7 +6,9 @@ package com.hyjf.admin.controller.message;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.SmsTemplateService;
 import com.hyjf.am.response.config.SmsTemplateResponse;
 import com.hyjf.am.resquest.config.SmsTemplateRequest;
@@ -32,6 +34,9 @@ public class SmsTemplateController extends BaseController {
 
 	Logger logger = LoggerFactory.getLogger(getClass());
 
+	/** 权限关键字 */
+	public static final String PERMISSIONS = "template";
+
 	@Autowired
 	private SmsTemplateService smsTemplateService;
 
@@ -42,6 +47,7 @@ public class SmsTemplateController extends BaseController {
 	 */
 	@ApiOperation(value = "查询所有短信模版", notes = "查询所有短信模版")
 	@GetMapping("/smsTemplateList")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<ListResult<SmsTemplateVO>> smsTemplateList() {
 		List<SmsTemplateVO> voList = smsTemplateService.findAll();
 		if (CollectionUtils.isEmpty(voList)) {
@@ -58,6 +64,7 @@ public class SmsTemplateController extends BaseController {
 	 */
 	@ApiOperation(value = "根据条件查询所有短信模版", notes = "根据条件查询所有短信模版")
 	@PostMapping("/findSmsTemplate")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
 	public AdminResult<ListResult<SmsTemplateVO>> findSmsTemplate(@RequestBody SmsTemplateRequest request) {
 		SmsTemplateResponse response = smsTemplateService.findSmsTemplate(request);
 		if (response == null) {
@@ -74,6 +81,7 @@ public class SmsTemplateController extends BaseController {
 	 */
 	@ApiOperation(value = "新增短信模版", notes = "新增短信模版")
 	@PostMapping("/insertTemplate")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
 	public JSONObject insertSmsTemplate(@RequestBody SmsTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		try {
@@ -103,6 +111,7 @@ public class SmsTemplateController extends BaseController {
 	 */
 	@ApiOperation(value = "短信模板详情", notes = "短信模板详情")
 	@PostMapping("/infoAction")
+	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_INFO, ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
 	public AdminResult infoAction(@RequestBody SmsTemplateRequest request) {
 		SmsTemplateVO vo = smsTemplateService.selectSmsTemByTplCode(request);
 		return new AdminResult(vo);
@@ -116,6 +125,7 @@ public class SmsTemplateController extends BaseController {
 	 */
 	@ApiOperation(value = "修改短信模版", notes = "修改短信模版")
 	@PostMapping("/updateSmsTemplate")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public JSONObject updateSmsTemplate(@RequestBody SmsTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		try {
@@ -139,6 +149,7 @@ public class SmsTemplateController extends BaseController {
 
 	@ApiOperation(value = "开关闭短信模板", notes = "开关闭短信模板")
 	@PostMapping("/updateStatus")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public JSONObject updateStatus(@RequestBody SmsTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		try {

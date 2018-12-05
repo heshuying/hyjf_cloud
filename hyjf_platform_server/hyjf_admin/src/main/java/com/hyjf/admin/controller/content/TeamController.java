@@ -5,7 +5,9 @@ package com.hyjf.admin.controller.content;
 
 import com.hyjf.admin.beans.request.TeamRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.TeamService;
 import com.hyjf.am.bean.commonimage.BorrowCommonImage;
 import com.hyjf.am.response.Response;
@@ -41,11 +43,15 @@ public class TeamController extends BaseController {
 	@Value("${file.upload.temp.path}")
 	private String temppath;
 
+	/** 权限关键字 */
+	public static final String PERMISSIONS = "contentteam";
+
 	@Autowired
 	private TeamService teamService;
 
 	@ApiOperation(value = "公司管理-团队介绍条件列表查询", notes = "公司管理-团队介绍条件列表查询")
 	@PostMapping("/searchaction")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult searchAction(@RequestBody TeamRequestBean requestBean) {
 		TeamResponse response = teamService.searchAction(requestBean);
 		if (response == null) {
@@ -59,6 +65,7 @@ public class TeamController extends BaseController {
 
 	@ApiOperation(value = "添加公司管理-团队介绍", notes = "添加公司管理-团队介绍")
 	@PostMapping("/insert")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
 	public AdminResult add(@RequestBody TeamRequestBean requestBean) {
 		int num = teamService.insertAction(requestBean);
 		if (num <= 0) {
@@ -69,6 +76,7 @@ public class TeamController extends BaseController {
 
 	@ApiOperation(value = "修改公司管理-团队介绍", notes = "修改公司管理-团队介绍")
 	@PostMapping("/update")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult update(@RequestBody TeamRequestBean requestBean) {
 		int num = teamService.updateAction(requestBean);
 		if (num <= 0) {
@@ -79,6 +87,7 @@ public class TeamController extends BaseController {
 
 	@ApiOperation(value = "修改公司管理-资质荣誉状态", notes = "修改公司管理-资质荣誉状态")
 	@PostMapping("/updatestatus")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult updatestatus(@RequestBody TeamRequestBean requestBean) {
 		int num = teamService.updateStatus(requestBean);
 		if (num <= 0) {
@@ -89,6 +98,7 @@ public class TeamController extends BaseController {
 
 	@ApiOperation(value = "删除公司管理-团队介绍", notes = "删除公司管理-团队介绍")
 	@GetMapping("/delete/{id}")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
 	public AdminResult delete(@PathVariable Integer id) {
 		int num = teamService.deleteById(id);
 		if (num <= 0) {
@@ -99,6 +109,7 @@ public class TeamController extends BaseController {
 
 	@ApiOperation(value = "公司管理-团队介绍初始化", notes = "公司管理-团队介绍初始化")
 	@PostMapping("/select_by_id")
+	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_INFO, ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
 	public AdminResult selectById(@RequestBody TeamRequestBean requestBean) {
 		TeamVO vo = teamService.selectById(requestBean);
 		return new AdminResult(vo);
@@ -113,6 +124,7 @@ public class TeamController extends BaseController {
 	 */
 	@ApiOperation(value = "资料上传", notes = "资料上传")
 	@PostMapping("/uploadFile")
+	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
 	public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
 		String fileDomainUrl = UploadFileUtils.getDoPath(url);
