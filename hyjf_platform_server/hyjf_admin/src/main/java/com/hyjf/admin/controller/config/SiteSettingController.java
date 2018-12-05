@@ -47,7 +47,7 @@ public class SiteSettingController extends BaseController {
 
 	@ApiOperation(value = "修改网站设置", notes = "修改网站设置")
 	@PostMapping("/update")
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult update(@RequestBody SiteSettingRequestBean requestBean) {
 		SiteSettingsResponse response = siteSettingService.updateAction(requestBean);
 		if (response == null) {

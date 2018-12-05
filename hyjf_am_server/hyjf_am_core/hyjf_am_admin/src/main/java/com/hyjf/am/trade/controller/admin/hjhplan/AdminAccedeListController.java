@@ -54,7 +54,7 @@ public class AdminAccedeListController {
 			// 前台未传分页那默认 10
 			paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
 		}
-		List<AccedeListCustomizeVO> list = adminAccedeListService.selectAccedeListList(request,paginator.getOffset(), paginator.getLimit());
+		List<AccedeListCustomizeVO> list = adminAccedeListService.selectAccedeList(request,paginator.getOffset(), paginator.getLimit());
 		// 原param表查询拼装
 		if(!CollectionUtils.isEmpty(list)){
 			Map<String, String> map1 = CacheUtil.getParamNameMap("USER_PROPERTY");

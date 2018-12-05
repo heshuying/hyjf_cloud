@@ -92,7 +92,7 @@ public class CouponIssuanceController extends BaseController {
 
     @ApiOperation(value = "详情页面", notes = "详情页面")
     @RequestMapping(value = "/infoAction", method = RequestMethod.POST)
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult updateCouponConfig(@RequestBody CouponConfigRequest request) {
         CouponConfigResponse response = new CouponConfigResponse();
         CouponConfigVO configVO = new CouponConfigVO();
@@ -211,7 +211,7 @@ public class CouponIssuanceController extends BaseController {
 
     @ApiOperation(value = "保存修改信息", notes = "保存修改信息")
     @PostMapping("/saveAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult saveCouponConfig(@RequestBody CouponConfigRequest request) {
         if (request.getAuditUser() != null) {
             Integer userId = couponConfigService.getUserId(request.getAuditUser());
@@ -404,7 +404,7 @@ public class CouponIssuanceController extends BaseController {
 
     @ApiOperation(value = "检查编号唯一性", notes = "检查编号唯一性")
     @PostMapping("/checkAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public AdminResult checkAction(@RequestBody CouponConfigRequest request) {
         Integer couponQuantity = request.getCouponQuantity();
         // 优惠券编号
@@ -568,6 +568,7 @@ public class CouponIssuanceController extends BaseController {
      */
     @ApiOperation(value = "导出", notes = "导出")
     @RequestMapping(value = "/export", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportActionCc(HttpServletRequest request, HttpServletResponse response, @RequestBody CouponConfigRequest couponConfigRequest) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());

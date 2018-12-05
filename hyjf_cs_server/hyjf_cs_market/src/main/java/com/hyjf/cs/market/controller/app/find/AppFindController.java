@@ -43,7 +43,7 @@ public class AppFindController extends BaseMarketController {
     @ApiParam(required = true, name = "form", value = "查询条件")
     @ResponseBody
     public JSONObject getContentArticleListByType(@ModelAttribute AppContentArticleBean form) {
-        logger.info(AppFindController.class.toString(), "startLog -- /hyjf-app/find/contentArticle/getContentArticleListByType");
+        logger.info(this.getClass().getName(), "app端-app发现页 知识列表 start", form.toString(), "/hyjf-app/find/contentArticle/getContentArticleListByType");
         JSONObject ret = new JSONObject();
         ret.put("status", "0");
         ret.put("statusDesc", "请求成功");
@@ -90,12 +90,12 @@ public class AppFindController extends BaseMarketController {
             ret.put("statusDesc", "系统异常请稍后再试");
             ret.put("messageCount", "0");
             ret.put("messageList", new ArrayList<ContentArticleCustomizeVO>());
-            logger.info(AppFindController.class.toString(), "endLog -- /hyjf-app/find/contentArticle/getContentArticleListByType");
+            logger.info(this.getClass().getName(), "app端-app发现页 知识列表 异常", "/hyjf-app/find/contentArticle/getContentArticleListByType",
+                    e);
             return ret;
         }
-        logger.info(AppFindController.class.toString(), "endLog -- /hyjf-app/find/contentArticle/getContentArticleListByType");
+        logger.info(this.getClass().getName(), "app端-app发现页 知识列表 end", "/hyjf-app/find/contentArticle/getContentArticleListByType");
         return ret;
-
     }
 
     @ApiOperation(value = "上下翻页", notes = "上下翻页")
@@ -103,7 +103,7 @@ public class AppFindController extends BaseMarketController {
     @ApiParam(required = true, name = "form", value = "查询条件")
     @ResponseBody
     public JSONObject getContentArticleFlip(@ModelAttribute AppContentArticleBean form) {
-        logger.info(AppFindController.class.toString(), "startLog -- /hyjf-app/find/contentArticle/getContentArticleFlip");
+        logger.info(this.getClass().getName(), "app端-app发现页 上下翻页 start", form.toString(), "/hyjf-app/find/contentArticle/getContentArticleFlip");
         JSONObject ret = new JSONObject();
         ret.put("status", "0");
         ret.put("statusDesc", "请求成功");
@@ -142,9 +142,10 @@ public class AppFindController extends BaseMarketController {
             ret.put("statusDesc", "系统异常请稍后再试");
             ret.put("messageCount", "0");
             ret.put("messageList", new ArrayList<ContentArticleCustomizeVO>());
+            logger.info(this.getClass().getName(), "app端-app发现页 上下翻页 异常", "/hyjf-app/find/contentArticle/getContentArticleFlip");
             return ret;
         }
-        logger.info(AppFindController.class.toString(), "endLog -- /hyjf-app/find/contentArticle/getContentArticleFlip");
+        logger.info(this.getClass().getName(), "app端-app发现页 上下翻页 end", "/hyjf-app/find/contentArticle/getContentArticleFlip");
         return ret;
     }
 
@@ -152,6 +153,8 @@ public class AppFindController extends BaseMarketController {
     @GetMapping("/contentArticle/{type}/{contentArticleId}")
     public JSONObject contentArticle (@PathVariable Integer type,
                                       @PathVariable Integer contentArticleId) {
+        logger.info(this.getClass().getName(), "app端-app发现页 根据文章编号查询对应文章 start", "type：{}"+ type + ",contentArticleId：{}"+ contentArticleId ,
+                "/hyjf-app/find/contentArticle/{type}/{contentArticleId}");
         JSONObject ret = new JSONObject();
         ret.put("status", "000");
         ret.put("statusDesc", "成功");
@@ -184,7 +187,9 @@ public class AppFindController extends BaseMarketController {
         } catch (Exception e) {
             ret.put("status", 99);
             ret.put("statusDesc", "失败");
+            logger.info(this.getClass().getName(), "app端-app发现页 根据文章编号查询对应文章 异常", "/hyjf-app/find/contentArticle/{type}/{contentArticleId}");
         }
+        logger.info(this.getClass().getName(), "app端-app发现页 根据文章编号查询对应文章 end", "/hyjf-app/find/contentArticle/{type}/{contentArticleId}");
         return ret;
     }
 

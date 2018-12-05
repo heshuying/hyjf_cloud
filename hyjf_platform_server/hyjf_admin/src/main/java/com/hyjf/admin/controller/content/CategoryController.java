@@ -67,7 +67,7 @@ public class CategoryController extends BaseController {
 
 	@ApiOperation(value = "内容中心-帮助中心-跳转到添加分类的页面", notes = "帮助中心-跳转到添加分类的页面")
 	@RequestMapping(value = "/infotypeaction", method = RequestMethod.POST)
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_MODIFY,ShiroConstants.PERMISSION_VIEW,ShiroConstants.PERMISSION_ADD})
 	public CategoryResponse infoTypeAction(@RequestBody CategoryBeanRequest categoryBeanRequest) {
 		logger.info("查询内容中心-帮助中心-跳转到添加分类的页面......");
 		CategoryResponse response = new CategoryResponse();
@@ -81,6 +81,7 @@ public class CategoryController extends BaseController {
 
 	@ApiOperation(value = "内容中心-帮助中心-跳转到添加子分类的页面", notes = "帮助中心-跳转到添加子分类的页面")
 	@RequestMapping(value = "/infosubtypeaction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_MODIFY,ShiroConstants.PERMISSION_VIEW,ShiroConstants.PERMISSION_ADD})
 	public CategoryResponse infoSubTypeAction(@RequestBody CategoryBeanRequest categoryBeanRequest) {
 		logger.info("查询内容中心-帮助中心-跳转到添加子分类的页面......");
 		CategoryResponse response = new CategoryResponse();

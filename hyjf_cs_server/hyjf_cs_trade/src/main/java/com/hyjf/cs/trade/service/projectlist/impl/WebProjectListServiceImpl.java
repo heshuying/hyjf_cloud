@@ -872,15 +872,16 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         request.setTermSort("DESC");
         request.setCapitalSort("DESC");
         request.setInProgressSort("DESC");
-        CreditListResponse res = baseClient.postExe("http://AM-TRADE/am-trade/projectlist/web/countCreditList", request, CreditListResponse.class);
+        //CreditListResponse res = baseClient.postExe("http://AM-TRADE/am-trade/projectlist/web/countCreditList", request, CreditListResponse.class);
+        int count  =amTradeClient.getWebCreditListCount(request); //("http://AM-TRADE/am-trade/projectlist/web/countCreditList", request, CreditListResponse.class);
         WebResult webResult = new WebResult();
-        int count = res.getCount();
+        //int count = res.getCount();
         page.setTotal(count);
         webResult.setData(new ArrayList<>());
         if (count > 0) {
             List<CreditListVO> result = new ArrayList<>();
-            CreditListResponse dataResponse = baseClient.postExe("http://AM-TRADE/am-trade/projectlist/web/searchWebCreditList", request, CreditListResponse.class);
-            result = dataResponse.getResultList();
+            //CreditListResponse dataResponse = baseClient.postExe("http://AM-TRADE/am-trade/projectlist/web/searchWebCreditList", request, CreditListResponse.class);
+            result = amTradeClient.getWebCreditList(request);
             webResult.setData(result);
         }
         webResult.setPage(page);

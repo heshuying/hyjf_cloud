@@ -22,10 +22,10 @@ spring:
     base-url: http://ZIPKIN
   sleuth:
     sampler:
-    percentage: 0.1
+    percentage: 1
     
   profiles:
-    active: beta
+    active: dev
 
 server:
   port: 9095

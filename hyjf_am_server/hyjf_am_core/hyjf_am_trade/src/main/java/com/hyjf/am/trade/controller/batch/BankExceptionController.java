@@ -180,7 +180,7 @@ public class BankExceptionController extends BaseController {
     public Boolean handlerAfterCash(@RequestBody AfterCashParamRequest request){
         Boolean ret = true;
         try {
-            ret = bankWithdrawService.updateHandlerAfterCash(request);
+            bankWithdrawService.updateHandlerAfterCash(request);
         }catch (Exception e){
             ret = false;
         }

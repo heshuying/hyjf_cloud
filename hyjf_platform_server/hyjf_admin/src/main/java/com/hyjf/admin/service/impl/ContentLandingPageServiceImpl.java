@@ -6,6 +6,7 @@ package com.hyjf.admin.service.impl;
 import com.hyjf.admin.beans.request.ContentLandingPageRequestBean;
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.service.ContentLandingPageService;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.config.LandingPageResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,6 +44,11 @@ public class ContentLandingPageServiceImpl implements ContentLandingPageService 
 	@Override
 	public LandingPageResponse getRecord(Integer id){
 		return amConfigClient.getLandingPageRecord(id);
+	}
+	@Override
+	public IntegerResponse countByPageName(ContentLandingPageRequestBean requestBean){
+		return amConfigClient.countByPageName(requestBean);
+
 	}
 
 }

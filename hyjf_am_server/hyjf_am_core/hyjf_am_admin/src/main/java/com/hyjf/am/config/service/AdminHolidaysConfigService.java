@@ -44,4 +44,10 @@ public interface AdminHolidaysConfigService {
      * @return
      */
     int updateHolidays(@Valid AdminHolidaysConfigRequest request);
+
+    /**
+     * 节假日配置-分页获得所有数据条数
+     * @return
+     */
+    Integer getTotalCount();
 }

@@ -5,7 +5,9 @@ package com.hyjf.admin.controller.msgpush;
 
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.admin.service.MessagePushTagService;
 import com.hyjf.admin.utils.FileUpLoadUtil;
@@ -44,8 +46,12 @@ public class MessagePushTagController extends BaseController {
     @Autowired
     private MessagePushTagService messagePushTagService;
 
+    /** 权限关键字 */
+    public static final String PERMISSIONS = "msgpushtag";
+
     @ApiOperation(value = "初始化页面", notes = "标签管理初始化页面")
     @RequestMapping(value = "/init", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<MessagePushTagResponse> init(@RequestBody MessagePushTagRequest request) {
         MessagePushTagResponse response = messagePushTagService.searchList(request);
         String nameClass = "MSG_PUSH_STATUS";
@@ -78,6 +84,7 @@ public class MessagePushTagController extends BaseController {
 
     @ApiOperation(value = "添加信息", notes = "添加信息")
     @RequestMapping(value = "insertAction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public AdminResult insertAction(HttpServletRequest request, @RequestBody MessagePushTagRequest tagRequest) {
         AdminSystemVO user = getUser(request);
         String userName = user.getUsername();
@@ -99,6 +106,7 @@ public class MessagePushTagController extends BaseController {
 
     @ApiOperation(value = "修改信息", notes = "修改信息")
     @RequestMapping(value = "/updateAction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateAction(HttpServletRequest request, @RequestBody MessagePushTagRequest tagRequest) {
         AdminSystemVO user = getUser(request);
         String userName = user.getUsername();
@@ -120,6 +128,7 @@ public class MessagePushTagController extends BaseController {
 
     @ApiOperation(value = "删除信息", notes = "删除信息")
     @RequestMapping(value = "/deleteAction", method = RequestMethod.GET)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteAction(Integer id) {
         MessagePushTagResponse response = messagePushTagService.deleteAction(id);
         if (response == null) {
@@ -133,6 +142,7 @@ public class MessagePushTagController extends BaseController {
 
     @ApiOperation(value = "修改状态", notes = "修改状态")
     @RequestMapping(value = "/statusAction", method = RequestMethod.GET)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateStatus(@RequestParam Integer id) {
         MessagePushTagResponse response = messagePushTagService.getRecord(id);
         MessagePushTagVO record = response.getResult();
@@ -157,6 +167,7 @@ public class MessagePushTagController extends BaseController {
 
     @ApiOperation(value = "检查名称唯一性", notes = "检查名称唯一")
     @RequestMapping(value = "/checkAction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public AdminResult checkAction(@RequestBody MessagePushTagRequest request) {
         Integer id = null;
         if (request.getId() != null) {
@@ -183,6 +194,7 @@ public class MessagePushTagController extends BaseController {
 
     @ApiOperation(value = "文件上传", notes = "文件上传")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {

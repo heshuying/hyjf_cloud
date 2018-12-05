@@ -343,6 +343,10 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
         example.createCriteria().andIdEqualTo(borrow.getId());
         updateBorrow.setRegistStatus(registStatus);
         updateBorrow.setStatus(status);
+        // add by liuyang 合规自查 20181119 start
+        // 跳过已交保证金状态
+        updateBorrow.setVerifyStatus(1);
+        // add by liuyang 合规自查 20181119 end
         updateBorrow.setRegistUserId(Integer.parseInt(currUserId));
         updateBorrow.setRegistUserName(currUserName);
         updateBorrow.setRegistTime(nowDate);
@@ -367,6 +371,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
         example.createCriteria().andIdEqualTo(borrow.getId());
         updateBorrow.setRegistStatus(registStatus);
         updateBorrow.setStatus(status);
+        updateBorrow.setVerifyStatus(1);
         updateBorrow.setRegistUserId(Integer.parseInt(currUserId));
         updateBorrow.setRegistUserName(currUserName);
         updateBorrow.setRegistTime(nowDate);

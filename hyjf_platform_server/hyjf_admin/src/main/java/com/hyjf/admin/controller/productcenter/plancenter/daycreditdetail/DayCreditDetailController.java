@@ -11,20 +11,24 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.DayCreditDetailResponse;
 import com.hyjf.am.resquest.admin.DayCreditDetailRequest;
 import com.hyjf.am.vo.trade.hjh.DayCreditDetailVO;
-import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 产品中心 --> 汇计划 --> 资金计划 -> 转让详情
@@ -145,5 +149,103 @@ public class DayCreditDetailController extends BaseController {
         }else {
             return new AdminResult<ListResult<DayCreditDetailVO>>(ListResult.build(returnList, 0));
         }
+    }
+
+    /**
+     * 资金计划转让记录 - 按日转让导出
+     * @param request
+     * @param response
+     * @param planCreditBean
+     * @throws Exception
+     */
+    @ApiOperation(value = "资金计划 - 转让详情导出", notes = "资金计划转让详情列表导出")
+    @PostMapping(value = "/exportExcel")
+    public void exportAction(HttpServletRequest request, HttpServletResponse response, DayCreditDetailRequestBean planCreditBean) throws Exception {
+
+        // 表格sheet名称
+        String sheetName = "智投服务按日转让记录";
+
+        DayCreditDetailRequest copyRequest = new DayCreditDetailRequest();
+        BeanUtils.copyProperties(planCreditBean, copyRequest);
+
+        //初始化返回List
+        List<DayCreditDetailVO> resultList = new ArrayList<>();
+
+        DayCreditDetailResponse responseList = this.dayCreditDetailService.hjhDayCreditDetailList(copyRequest);
+        if (CollectionUtils.isNotEmpty(responseList.getResultList())){
+            resultList = CommonUtils.convertBeanList(responseList.getResultList(), DayCreditDetailVO.class);
+        }
+        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+
+        String[] titles = new String[] { "序号", "出让人智投编号", "出让人智投订单号", "清算后智投编号", "出让人", "债转编号", "原项目编号", "还款方式", "债权本金（元）", "债权价值（元）", "已转让本金（元）", "垫付利息（元）", "转让状态", "项目期数", "实际清算时间", "债转结束时间"};
+        // 声明一个工作薄
+        HSSFWorkbook workbook = new HSSFWorkbook();
+
+        // 生成一个表格
+        HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+
+        if (resultList != null && resultList.size() > 0) {
+
+            int sheetCount = 1;
+            int rowNum = 0;
+
+            for (int i = 0; i < resultList.size(); i++) {
+                rowNum++;
+                if (i != 0 && i % 60000 == 0) {
+                    sheetCount++;
+                    sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
+                    rowNum = 1;
+                }
+
+                // 新建一行
+                Row row = sheet.createRow(rowNum);
+                // 循环数据
+                for (int celLength = 0; celLength < titles.length; celLength++) {
+                    DayCreditDetailVO data = resultList.get(i);
+
+                    // 创建相应的单元格
+                    Cell cell = row.createCell(celLength);
+
+                    // 序号
+                    if (celLength == 0) {
+                        cell.setCellValue(i + 1);
+                    } else if (celLength == 1) {// 出让人计划编号
+                        cell.setCellValue(data.getPlanNid());
+                    } else if (celLength == 2) {// 出让人计划订单号
+                        cell.setCellValue(data.getPlanOrderId());
+                    } else if (celLength == 3) {// 清算后计划编号
+                        cell.setCellValue(data.getPlanNidNew());
+                    } else if (celLength == 4) {// 出让人
+                        cell.setCellValue(data.getUserName());
+                    } else if (celLength == 5) {// 债转编号
+                        cell.setCellValue(data.getCreditNid());
+                    } else if (celLength == 6) {// 原项目编号
+                        cell.setCellValue(data.getBorrowNid());
+                    } else if (celLength == 7) {// 还款方式
+                        cell.setCellValue(data.getRepayStyleName());
+                    } else if (celLength == 8) {// 债权本金（元）
+                        cell.setCellValue(data.getCreditCapital());
+                    } else if (celLength == 9) {// 债权价值（元）
+                        cell.setCellValue(data.getLiquidationFairValue());
+                    } else if (celLength == 10) {// 已转让本金（元）
+                        cell.setCellValue(data.getAssignCapital());
+                    } else if (celLength == 11) {// 垫付利息（元）
+                        cell.setCellValue(data.getAssignAdvanceInterest());
+                    } else if (celLength == 12) {// 转让状态
+                        cell.setCellValue(data.getCreditStatusName());
+                    } else if (celLength == 13) {// 项目总期数
+                        cell.setCellValue(data.getLiquidatesPeriod()+"/"+data.getBorrowPeriod());
+                    } /*else if (celLength == 14) {// 清算时所在期数
+						cell.setCellValue(data.getLiquidatesPeriod());
+					}*/ else if (celLength == 14) {// 实际清算时间
+                        cell.setCellValue(data.getLiquidatesTime());
+                    } else if (celLength == 15) {// 债转结束时间
+                        cell.setCellValue(data.getEndTime());
+                    }
+                }
+            }
+        }
+        // 导出
+        ExportExcel.writeExcelFile(response, workbook, titles, fileName);
     }
 }

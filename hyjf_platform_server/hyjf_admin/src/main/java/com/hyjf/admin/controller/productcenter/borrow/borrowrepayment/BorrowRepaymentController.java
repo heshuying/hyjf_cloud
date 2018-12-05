@@ -320,12 +320,15 @@ public class BorrowRepaymentController extends BaseController {
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
         //请求第一页5000条
-        copyForm.setPageSize(defaultRowMaxCount);
-        copyForm.setCurrPage(1);
+//        copyForm.setPageSize(defaultRowMaxCount);
+//        copyForm.setCurrPage(1);
+        copyForm.setLimitStart(0);
+        copyForm.setLimitEnd(defaultRowMaxCount-1);
         // 查询
         List<BorrowRepaymentCustomizeVO> resultList = this.borrowRepaymentService.selectBorrowRepaymentList(copyForm);
 
-        Integer totalCount = resultList.size();
+        
+        Integer totalCount = this.borrowRepaymentService.countBorrowRepayment(copyForm);
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = exportBuildMap();
@@ -338,9 +341,10 @@ public class BorrowRepaymentController extends BaseController {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
         }
         for (int i = 1; i < sheetCount; i++) {
-
-            copyForm.setPageSize(defaultRowMaxCount);
-            copyForm.setCurrPage(i+1);
+            copyForm.setLimitStart((defaultRowMaxCount*i));
+            copyForm.setLimitEnd(defaultRowMaxCount*(i+1)-1);
+//            copyForm.setPageSize(defaultRowMaxCount);
+//            copyForm.setCurrPage(i+1);
             // 查询
             List<BorrowRepaymentCustomizeVO> resultList2 = this.borrowRepaymentService.selectBorrowRepaymentList(copyForm);
             if (resultList2 != null && resultList2.size()> 0) {
