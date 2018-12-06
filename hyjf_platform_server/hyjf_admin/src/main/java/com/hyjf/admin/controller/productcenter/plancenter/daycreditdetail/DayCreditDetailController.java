@@ -28,6 +28,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.net.URLEncoder;
 import java.util.*;
 
 /**
@@ -175,7 +176,7 @@ public class DayCreditDetailController extends BaseController {
         if (CollectionUtils.isNotEmpty(responseList.getResultList())){
             resultList = CommonUtils.convertBeanList(responseList.getResultList(), DayCreditDetailVO.class);
         }
-        String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        String fileName = URLEncoder.encode(sheetName,CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
         String[] titles = new String[] { "序号", "出让人智投编号", "出让人智投订单号", "清算后智投编号", "出让人", "债转编号", "原项目编号", "还款方式", "债权本金（元）", "债权价值（元）", "已转让本金（元）", "垫付利息（元）", "转让状态", "项目期数", "实际清算时间", "债转结束时间"};
         // 声明一个工作薄
