@@ -6,7 +6,9 @@ package com.hyjf.admin.controller.content;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.ContentAdsService;
 import com.hyjf.admin.service.ContentArticleService;
 import com.hyjf.am.response.Response;
@@ -43,8 +45,12 @@ public class ContentArticleController extends BaseController {
     @Autowired
     private ContentAdsService contentAdsService;
 
+    /** 权限 */
+    public static final String PERMISSIONS = "contentarticle";
+
     @ApiOperation(value = "文章管理-条件列表查询", notes = "文章管理-条件列表查询")
     @RequestMapping(value = "/searchaction",method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_VIEW , ShiroConstants.PERMISSION_SEARCH})
     public AdminResult<ListResult<ContentArticleVO>> searchAction(@RequestBody ContentArticleRequest requestBean) {
         logger.info("查询内容中心-文章管理-条件列表查询开始......");
         ContentArticleResponse response = contentArticleService.searchAction(requestBean);
@@ -59,6 +65,7 @@ public class ContentArticleController extends BaseController {
 
     @ApiOperation(value = "文章管理-添加", notes = "文章管理-添加")
     @RequestMapping(value ="/insert",method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD )
     public AdminResult add(@RequestBody ContentArticleRequest requestBean) {
         ContentArticleResponse response = contentArticleService.inserAction(requestBean);
         if (response == null) {
@@ -72,6 +79,7 @@ public class ContentArticleController extends BaseController {
 
     @ApiOperation(value = "文章管理-修改根据id查找所需要数据", notes = "文章管理-修改根据id查找所需要数据")
     @RequestMapping(value ="/infoaction",method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH )
     public AdminResult infoAction(@RequestBody ContentArticleRequest requestBean) {
 
         if (StringUtils.isEmpty(requestBean.getIds())) {
@@ -91,6 +99,7 @@ public class ContentArticleController extends BaseController {
 
     @ApiOperation(value = "文章管理-修改", notes = "文章管理-修改")
     @RequestMapping(value ="/update",method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY )
     public AdminResult update(@RequestBody ContentArticleRequest requestBean) {
         ContentArticleResponse response = contentArticleService.updateAction(requestBean);
         if (response == null) {
@@ -104,6 +113,7 @@ public class ContentArticleController extends BaseController {
 
     @ApiOperation(value = "文章管理-删除", notes = "文章管理-删除")
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE )
     public AdminResult delete(@PathVariable Integer id) {
         ContentArticleResponse response = contentArticleService.deleteById(id);
         if (response == null) {
@@ -126,6 +136,7 @@ public class ContentArticleController extends BaseController {
 
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD , ShiroConstants.PERMISSION_MODIFY} )
     public  AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {

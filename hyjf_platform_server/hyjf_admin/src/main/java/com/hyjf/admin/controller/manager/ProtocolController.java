@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.ProtocolService;
 import com.hyjf.am.response.admin.AdminProtocolResponse;
 import com.hyjf.am.resquest.admin.AdminProtocolRequest;
@@ -38,6 +40,9 @@ public class ProtocolController extends BaseController{
     @Autowired
     private ProtocolService protocolService;
 
+    /** 权限 */
+    public static final String PERMISSIONS = "protocolView";
+
     /**
      * 分页显示
      * @param request
@@ -45,6 +50,7 @@ public class ProtocolController extends BaseController{
      */
     @ApiOperation(value = "分页显示", notes = "分页显示")
     @PostMapping("/search")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_VIEW , ShiroConstants.PERMISSION_SEARCH})
     public AdminResult<ListResult<ProtocolTemplateCommonVO>> search(@RequestBody AdminProtocolRequest request){
         AdminProtocolResponse response = new AdminProtocolResponse();
         response = protocolService.searchPage(request);
@@ -62,6 +68,7 @@ public class ProtocolController extends BaseController{
      */
     @ApiOperation(value = "根据id查询显示修改界面", notes = "根据id查询显示修改界面")
     @PostMapping("/infoInfoAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH )
     public AdminResult<ProtocolTemplateCommonVO> infoInfoAction(@RequestBody  AdminProtocolRequest request){
         AdminProtocolResponse response = null;
         response = protocolService.getProtocolTemplateById(request);
@@ -79,6 +86,7 @@ public class ProtocolController extends BaseController{
      */
     @ApiOperation(value = "添加协议模板", notes = "添加协议模板")
     @PostMapping("/insertAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD )
     public AdminResult insertAction(@RequestBody AdminProtocolRequest request, HttpServletRequest httpServletRequest){
         AdminProtocolResponse response = new AdminProtocolResponse();
         AdminSystemVO user = getUser(httpServletRequest);
@@ -117,6 +125,7 @@ public class ProtocolController extends BaseController{
      */
     @ApiOperation(value = "修改协议模板", notes = "修改协议模板")
     @PostMapping("/updateAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY )
     public AdminResult updateAction(@RequestBody AdminProtocolRequest request, HttpServletRequest httpServletRequest){
         AdminProtocolResponse response = new AdminProtocolResponse();
         HashMap<String, Object> map = new HashMap<String, Object>();
@@ -152,6 +161,7 @@ public class ProtocolController extends BaseController{
      */
     @ApiOperation(value = "修改已经存在的协议模板", notes = "修改已经存在的协议模板")
     @PostMapping("/updateExistProtocol")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY )
     public AdminResult updateExistProtocol(@RequestBody AdminProtocolVersionRequest request, HttpServletRequest httpServletRequest){
         AdminProtocolResponse response = new AdminProtocolResponse();
         HashMap<String, Object> map = new HashMap<String, Object>();
@@ -187,6 +197,7 @@ public class ProtocolController extends BaseController{
      */
     @ApiOperation(value = "删除协议模板", notes = "删除协议模板")
     @RequestMapping(value="/deleteAction",method = RequestMethod.DELETE)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE )
     public AdminResult deleteAction(@RequestBody  AdminProtocolRequest request, HttpServletRequest httpServletRequest){
         HashMap<String, Object> map = new HashMap<String, Object>();
         AdminSystemVO user = getUser(httpServletRequest);
