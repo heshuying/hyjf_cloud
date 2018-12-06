@@ -69,8 +69,8 @@ public class HjhPlanCapitalDao extends BaseMongoDao<HjhPlanCapital> {
 
             // 日期区间查询
             if (StringUtils.isNotBlank(request.getDateFromSrch()) && StringUtils.isNotBlank(request.getDateToSrch())){
-                criteria = criteria.and("date").gte(GetDateUtils.parseDateTime(request.getDateFromSrch() + " 00:00:00")).
-                        lte(GetDateUtils.parseDateTime(request.getDateToSrch() + " 23:59:59"));
+                criteria = criteria.and("date").gte(GetDate.stringToDate(request.getDateFromSrch() + " 00:00:00")).
+                        lte(GetDate.stringToDate(request.getDateToSrch() + " 23:59:59"));
             }
 
             // 计划编号查询

@@ -72,7 +72,7 @@ public class ApiFallbackProvider implements FallbackProvider {
 
             @Override
             public InputStream getBody() throws IOException {
-                String bodyText = String.format("{\"status\": 999,\"statusDesc\": \"Service unavailable:%s\"}", message);
+                String bodyText = String.format("{\"status\": 99,\"statusDesc\": \"Service unavailable:%s\"}", message);
                 return new ByteArrayInputStream(bodyText.getBytes());
             }
 
