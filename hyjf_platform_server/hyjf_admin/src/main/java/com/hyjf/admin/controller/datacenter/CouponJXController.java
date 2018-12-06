@@ -162,7 +162,7 @@ public class CouponJXController extends BaseController {
 	        //sheet默认最大行数
 	        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 			// 表格sheet名称
-			String sheetName = "代金券列表";
+			String sheetName = "加息券列表";
 	        // 文件名称
 	        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 	        // 声明一个工作薄
