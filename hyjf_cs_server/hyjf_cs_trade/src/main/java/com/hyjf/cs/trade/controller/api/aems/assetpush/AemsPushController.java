@@ -3,38 +3,11 @@
  */
 package com.hyjf.cs.trade.controller.api.aems.assetpush;
 
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.IdCard15To18;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.bean.aems.AemsPushBean;
-import com.hyjf.cs.trade.bean.aems.AemsPushRequestBean;
-import com.hyjf.cs.trade.bean.aems.AemsPushResultBean;
-import com.hyjf.cs.trade.bean.assetpush.PushBean;
-import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
-import com.hyjf.cs.trade.bean.assetpush.PushResultBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.aems.assetpush.AemsPushService;
-import com.hyjf.cs.trade.service.aems.assetriskinfo.AemsRiskInfoService;
-import com.hyjf.cs.trade.service.borrow.ApiAssetPushService;
-import com.hyjf.cs.trade.util.ErrorCodeConstant;
-import com.hyjf.cs.trade.util.SignUtil;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DuplicateKeyException;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * 资产推送接口

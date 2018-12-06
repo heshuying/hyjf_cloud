@@ -2,7 +2,7 @@ package com.hyjf.cs.trade.service.aems.assetriskinfo;
 
 
 import com.hyjf.cs.common.service.BaseService;
-import com.hyjf.cs.trade.bean.aems.AemsInfoBean;
+import com.hyjf.cs.trade.bean.AemsInfoBean;
 
 import java.util.List;
 

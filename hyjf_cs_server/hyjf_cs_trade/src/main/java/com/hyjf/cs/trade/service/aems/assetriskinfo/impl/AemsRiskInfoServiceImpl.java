@@ -2,7 +2,7 @@ package com.hyjf.cs.trade.service.aems.assetriskinfo.impl;
 
 import com.hyjf.am.vo.trade.hjh.HjhPlanAssetVO;
 import com.hyjf.cs.common.service.BaseServiceImpl;
-import com.hyjf.cs.trade.bean.aems.AemsInfoBean;
+import com.hyjf.cs.trade.bean.AemsInfoBean;
 import com.hyjf.cs.trade.service.aems.assetriskinfo.AemsRiskInfoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

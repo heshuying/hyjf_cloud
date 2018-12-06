@@ -1,6 +1,4 @@
-package com.hyjf.cs.trade.bean.aems;
-
-import com.hyjf.cs.trade.bean.BaseBean;
+package com.hyjf.cs.trade.bean;
 
 import java.util.List;
 

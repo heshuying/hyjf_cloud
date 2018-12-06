@@ -1,4 +1,4 @@
-package com.hyjf.cs.trade.bean.aems;
+package com.hyjf.cs.trade.bean;
 
 import com.hyjf.cs.trade.bean.BaseBean;
 import io.swagger.annotations.ApiModelProperty;

@@ -1,4 +1,4 @@
-package com.hyjf.cs.trade.bean.aems;
+package com.hyjf.cs.trade.bean;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.validator.Validator;

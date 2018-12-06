@@ -5,8 +5,8 @@ package com.hyjf.cs.trade.util;
 
 import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.trade.bean.*;
-import com.hyjf.cs.trade.bean.aems.AemsAssetStatusRequestBean;
-import com.hyjf.cs.trade.bean.aems.AemsAuthStatusQueryRequestBean;
+import com.hyjf.cs.trade.bean.AemsAssetStatusRequestBean;
+import com.hyjf.cs.trade.bean.AemsAuthStatusQueryRequestBean;
 import com.hyjf.cs.trade.bean.api.AutoTenderRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.SynBalanceRequestBean;
