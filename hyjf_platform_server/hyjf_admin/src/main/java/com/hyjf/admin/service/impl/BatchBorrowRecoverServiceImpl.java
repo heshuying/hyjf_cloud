@@ -48,6 +48,16 @@ public class BatchBorrowRecoverServiceImpl  extends BaseServiceImpl implements B
     private SystemConfig systemConfig = new SystemConfig();
 
     /**
+     * 批次中心-批次放款导出记录总数
+     * @param request
+     * @return
+     */
+    @Override
+    public int getBatchBorrowRecoverCount(BatchBorrowRecoverRequest request) {
+        return amAdminClient.getBatchBorrowRecoverCount(request);
+    }
+
+    /**
      * 获取批次放款的显示列表
      * @param request
      * @return

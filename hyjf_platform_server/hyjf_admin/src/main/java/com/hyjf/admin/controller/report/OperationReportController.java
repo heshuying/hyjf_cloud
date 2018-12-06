@@ -166,18 +166,21 @@ public class OperationReportController extends BaseController {
     }
     @ApiOperation(value = "月度运营报告新增修改", notes = "月度运营报告新增修改")
     @PostMapping("/insertorupdatemonth")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_MODIFY,ShiroConstants.PERMISSION_ADD})
     public AdminResult<OperationReportResponse> insertOrUpdateMonthAction(@RequestBody OperationReportRequest request){
         OperationReportResponse response = operationReportService.insertOrUpdateMonthAction(request);
         return new AdminResult<>(response);
     }
     @ApiOperation(value = "季度运营报告新增修改", notes = "季度运营报告新增修改")
     @PostMapping("/insertorupdatequarter")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_MODIFY,ShiroConstants.PERMISSION_ADD})
     public AdminResult<OperationReportResponse> insertOrUpdateQuarterAction(@RequestBody OperationReportRequest request){
         OperationReportResponse response = operationReportService.insertOrUpdateQuarterAction(request);
         return new AdminResult<>(response);
     }
     @ApiOperation(value = "上半年度运营报告新增修改", notes = "上半年度运营报告新增修改")
     @PostMapping("/insertorupdatehalfyear")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_MODIFY,ShiroConstants.PERMISSION_ADD})
     public AdminResult<OperationReportResponse> insertOrUpdateHalfYearAction(@RequestBody OperationReportRequest request){
         OperationReportResponse response = operationReportService.insertOrUpdateHalfYearAction(request);
         return new AdminResult<>(response);
@@ -185,6 +188,7 @@ public class OperationReportController extends BaseController {
 
     @ApiOperation(value = "年度运营报告新增修改", notes = "年度运营报告新增修改")
     @PostMapping("/insertorupdateyear")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_MODIFY,ShiroConstants.PERMISSION_ADD})
     public AdminResult<OperationReportResponse> insertOrUpdateYearAction(@RequestBody OperationReportRequest request){
         OperationReportResponse response = operationReportService.insertOrUpdateYearAction(request);
         return new AdminResult<>(response);
@@ -192,6 +196,7 @@ public class OperationReportController extends BaseController {
 
     @ApiOperation(value = "月度新增修改页面预览", notes = "月度新增修改页面预览")
     @PostMapping("/monthpreview")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_MODIFY,ShiroConstants.PERMISSION_ADD})
     public AdminResult<OperationReportResponse> monthPreview(@RequestBody OperationReportRequest request){
         OperationReportResponse response = operationReportService.monthPreview(request);
         //服务器配置路径跳转预览需要用到
@@ -200,6 +205,7 @@ public class OperationReportController extends BaseController {
 
     @ApiOperation(value = "年度新增修改页面预览", notes = "年度新增修改页面预览")
     @PostMapping("/yearpreview")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_MODIFY,ShiroConstants.PERMISSION_ADD})
     public AdminResult<OperationReportResponse> yearPreview(@RequestBody OperationReportRequest request){
         OperationReportResponse response = operationReportService.yearPreview(request);
         //服务器配置路径跳转预览需要用到
@@ -208,6 +214,7 @@ public class OperationReportController extends BaseController {
 
     @ApiOperation(value = "季度新增修改页面预览", notes = "季度新增修改页面预览")
     @PostMapping("/quarterpreview")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_MODIFY,ShiroConstants.PERMISSION_ADD})
     public AdminResult<OperationReportResponse> quarterPreview(@RequestBody OperationReportRequest request){
         OperationReportResponse response = operationReportService.quarterPreview(request);
         //服务器配置路径跳转预览需要用到
@@ -215,6 +222,7 @@ public class OperationReportController extends BaseController {
     }
     @ApiOperation(value = "半年度新增修改页面预览", notes = "半年度新增修改页面预览")
     @PostMapping("/halfpreview")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_MODIFY,ShiroConstants.PERMISSION_ADD})
     public AdminResult<OperationReportResponse> halfPreview(@RequestBody OperationReportRequest request){
         OperationReportResponse response = operationReportService.halfPreview(request);
         //服务器配置路径跳转预览需要用到

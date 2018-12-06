@@ -189,4 +189,27 @@ public class AppContentArticleBean extends AppBaseBean implements Serializable {
     public void setType(String type) {
         this.type = type;
     }
+
+    @Override
+    public String toString() {
+        return "AppContentArticleBean{" +
+                "messageId=" + messageId +
+                ", page=" + page +
+                ", size=" + size +
+                ", offset='" + offset + '\'' +
+                ", id=" + id +
+                ", type='" + type + '\'' +
+                ", title='" + title + '\'' +
+                ", status=" + status +
+                ", author='" + author + '\'' +
+                ", createBy=" + createBy +
+                ", createTime=" + createTime +
+                ", updateBy=" + updateBy +
+                ", updateTime=" + updateTime +
+                ", imgurl='" + imgurl + '\'' +
+                ", summary='" + summary + '\'' +
+                ", click=" + click +
+                ", content='" + content + '\'' +
+                '}';
+    }
 }

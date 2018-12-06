@@ -6,7 +6,9 @@ package com.hyjf.admin.controller.message;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.MailTemplateService;
 import com.hyjf.am.bean.commonimage.BorrowCommonImage;
 import com.hyjf.am.response.config.SmsMailTemplateResponse;
@@ -46,6 +48,9 @@ public class MailTemplateController extends BaseController {
 	@Value("${file.upload.temp.path}")
 	private String temppath;
 
+	/** 权限关键字 */
+	public static final String PERMISSIONS = "mailtemplate";
+
 	Logger logger = LoggerFactory.getLogger(getClass());
 
 	@Autowired
@@ -58,6 +63,7 @@ public class MailTemplateController extends BaseController {
 	 */
 	@ApiOperation(value = "查询所有邮件配置模板", notes = "查询所有邮件配置模板")
 	@GetMapping("/find_all")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<ListResult<SmsMailTemplateVO>> findAll() {
 		List<SmsMailTemplateVO> voList = mailTemplateService.findAll();
 		if (CollectionUtils.isEmpty(voList)) {
@@ -80,6 +86,7 @@ public class MailTemplateController extends BaseController {
 
 	@ApiOperation(value = "模板详情", notes = "模板详情")
 	@PostMapping("/infoAction")
+	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_INFO, ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
 	public AdminResult infoAction(@RequestBody MailTemplateRequest request) {
 		SmsMailTemplateVO vo = mailTemplateService.infoAction(request);
 		return new AdminResult(vo);
@@ -93,6 +100,7 @@ public class MailTemplateController extends BaseController {
 	 */
 	@ApiOperation(value = "新增邮件模板", notes = "新增邮件模板")
 	@PostMapping("/insert_mail_template")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
 	public JSONObject insertMailTemplate(@RequestBody MailTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		try {
@@ -122,6 +130,7 @@ public class MailTemplateController extends BaseController {
 	 */
 	@ApiOperation(value = "修改邮件模板", notes = "修改邮件模板")
 	@PostMapping("/update_mailTemplate")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public JSONObject updateMailTemplate(@RequestBody MailTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		try {
@@ -145,6 +154,7 @@ public class MailTemplateController extends BaseController {
 
 	@ApiOperation(value = "开关闭模板", notes = "开关闭模板")
 	@PostMapping("/open_action")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public JSONObject openAction(@RequestBody MailTemplateRequest request) {
 		JSONObject jsonObject = new JSONObject();
 		try {
@@ -175,6 +185,7 @@ public class MailTemplateController extends BaseController {
 	 */
 	@ApiOperation(value = "资料上传", notes = "资料上传")
 	@PostMapping("/uploadFile")
+	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
 	public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
 		String fileDomainUrl = UploadFileUtils.getDoPath(url);
