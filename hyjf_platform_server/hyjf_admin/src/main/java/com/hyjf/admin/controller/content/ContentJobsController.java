@@ -87,6 +87,7 @@ public class ContentJobsController extends BaseController {
 
 	@ApiOperation(value = "修改公司管理-招贤纳士", notes = "修改公司管理-招贤纳士")
 	@PostMapping("/updatestatus")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult updatestatus(@RequestBody ContentJobRequestBean requestBean) {
 		int num = contentPartnerService.updateStatus(requestBean);
 		if (num <= 0) {
