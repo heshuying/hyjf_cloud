@@ -56,80 +56,6 @@ public class CouponDJController extends BaseController {
 	}
 
 
-//	public void exportDJAction(HttpServletRequest request, HttpServletResponse response, DataCenterCouponBean form) throws Exception {
-//		// 表格sheet名称
-//		String sheetName = "代金券列表";
-//		DataCenterCouponCustomizeVO dataCenterCouponCustomize =createDataCenterCouponCustomize(form);
-//		List<DataCenterCouponCustomizeVO> resultList  = this.couponService.getRecordListJX(dataCenterCouponCustomize);
-//		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-//		String[] titles = new String[] {"序号", "来源", "已发放数量","已使用数量","已失效数量","使用率","失效率","总收益","已发放收益" ,"待发放收益" ,"累计真实投资金额" };
-//		// 声明一个工作薄
-//		HSSFWorkbook workbook = new HSSFWorkbook();
-//
-//		// 生成一个表格
-//		HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-//
-//		if (resultList != null && resultList.size() > 0) {
-//
-//			int sheetCount = 1;
-//			int rowNum = 0;
-//
-//			for (int i = 0; i < resultList.size(); i++) {
-//				rowNum++;
-//				if (i != 0 && i % 60000 == 0) {
-//					sheetCount++;
-//					sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-//					rowNum = 1;
-//				}
-//				// 新建一行
-//				Row row = sheet.createRow(rowNum);
-//				// 循环数据
-//				for (int celLength = 0; celLength < titles.length; celLength++) {
-//					DataCenterCouponCustomizeVO pInfo = resultList.get(i);
-//					// 创建相应的单元格
-//					Cell cell = row.createCell(celLength);
-//					// 序号
-//					if (celLength == 0) {
-//						cell.setCellValue(i + 1);
-//					}
-//					else if (celLength == 1) {
-//						cell.setCellValue(pInfo.getTitle());
-//					}
-//					else if (celLength == 2) {
-//						cell.setCellValue(pInfo.getGrantNum());
-//					}
-//					else if (celLength == 3) {
-//						cell.setCellValue(pInfo.getUsedNum());
-//					}
-//					else if (celLength == 4) {
-//						cell.setCellValue(pInfo.getExpireNum());
-//					}
-//					else if (celLength == 5) {
-//						cell.setCellValue(pInfo.getUtilizationRate());
-//					}
-//					else if (celLength == 6) {
-//						cell.setCellValue(pInfo.getFailureRate());
-//					}
-//					else if (celLength == 7) {
-//						cell.setCellValue(pInfo.getRecoverInterest());
-//					}
-//					else if (celLength == 8) {
-//						cell.setCellValue(pInfo.getRecivedMoney());
-//					}
-//					else if (celLength == 9) {
-//						cell.setCellValue(pInfo.getNorecivedMoney());
-//					}
-//					else if (celLength == 10) {
-//						cell.setCellValue(pInfo.getRealTenderMoney());
-//					}
-//				}
-//			}
-//		}
-//		// 导出
-//		ExportExcel.writeExcelFile(response, workbook, titles, fileName);
-//
-//	}
-
 	private DataCenterCouponCustomizeVO createDataCenterCouponCustomize(DataCenterCouponBean form) {
 		DataCenterCouponCustomizeVO dataCenterCouponCustomize = new DataCenterCouponCustomizeVO();
 
@@ -160,7 +86,7 @@ public class CouponDJController extends BaseController {
 	@GetMapping("/export_dj_action")
 	 public void exportToExcel(HttpServletRequest request, HttpServletResponse response, DataCenterCouponBean form) throws Exception {
 	        //sheet默认最大行数
-	        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+			int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 			// 表格sheet名称
 			String sheetName = "代金券列表";
 	        // 文件名称
@@ -170,7 +96,7 @@ public class CouponDJController extends BaseController {
 	        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
 			DataCenterCouponCustomizeVO dataCenterCouponCustomize =createDataCenterCouponCustomize(form);
-			List<DataCenterCouponCustomizeVO> resultList  = this.couponService.getRecordListJX(dataCenterCouponCustomize);
+			List<DataCenterCouponCustomizeVO> resultList  = this.couponService.getRecordListDJ(dataCenterCouponCustomize);
 	        
 	        Integer totalCount = resultList.size();
 
@@ -178,7 +104,6 @@ public class CouponDJController extends BaseController {
 	        Map<String, String> beanPropertyColumnMap = buildMap();
 	        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
 	        String sheetNameTmp = "";
-
 	        for (int i = 1; i <= sheetCount; i++) {
 				int start=(i-1) * defaultRowMaxCount;
 				int end = Math.min(totalCount, i * defaultRowMaxCount);
@@ -190,24 +115,21 @@ public class CouponDJController extends BaseController {
 	        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
 	    }
 
-	    private Map<String, String> buildMap() {
-	        Map<String, String> map = Maps.newLinkedHashMap();
-	        map.put("sourceName", "平台");
-	        map.put("accessNumber", "访问数");
-	        map.put("registNumber", "注册数");
-	        map.put("accountNumber", "开户数");
-	        map.put("tenderNumber", "投资人数");
-	        map.put("rechargePrice", "累计充值");
-	        map.put("tenderPrice", "累计投资");
-	        map.put("hztTenderPrice", "汇直投投资金额");
-	        map.put("hxfTenderPrice", "汇消费投资金额");
-	        map.put("htlTenderPrice", "汇天利投资金额");
-	        map.put("htjTenderPrice", "汇添金投资金额");
-	        map.put("hjhTenderPrice", "汇计划投资金额");
-	        map.put("hzrTenderPrice", "汇转让投资金额");
-	    
-	        return map;
-	    }
+		private Map<String, String> buildMap() {
+			Map<String, String> map = Maps.newLinkedHashMap();
+			map.put("title", "来源");
+			map.put("grantNum", "已发放数量");
+			map.put("usedNum", "已使用数量");
+			map.put("expireNum", "已失效数量");
+			map.put("utilizationRate", "使用率");
+			map.put("failureRate", "失效率");
+			map.put("recoverInterest", "总收益");
+			map.put("recivedMoney", "已发放收益");
+			map.put("norecivedMoney", "待发放收益");
+			map.put("realTenderMoney", "累计真实投资金额");
+
+			return map;
+		}
 	    private Map<String, IValueFormatter> buildValueAdapter() {
 	        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
 	        return mapAdapter;
