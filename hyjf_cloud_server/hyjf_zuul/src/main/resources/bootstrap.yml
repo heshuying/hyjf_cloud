@@ -16,7 +16,7 @@ spring:
       client:
         url: http://MONITOR-SERVER
 # zipkin 监控端点
- zipkin: 
+ zipkin:
   base-url: http://ZIPKIN
  sleuth:
   sampler:
@@ -35,3 +35,11 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
+stores:
+  ribbon:
+    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.WeightedResponseTimeRule
+
+zuul:
+  retryable: true
+ribbon:
+  MaxAutoRetries: 1
