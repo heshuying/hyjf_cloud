@@ -1083,8 +1083,9 @@ public class AmAdminClientImpl implements AmAdminClient {
 
     @Override
     public List<DataCenterCouponCustomizeVO> getRecordListDJ(DataCenterCouponCustomizeVO dataCenterCouponCustomize) {
+        DadaCenterCouponCustomizeRequest request = new DadaCenterCouponCustomizeRequest();
         DataCenterCouponCustomizeResponse response = restTemplate.postForObject(
-                "http://AM-ADMIN/am-admin/datacenter/coupon/get_record_list_dj", dataCenterCouponCustomize,
+                "http://AM-ADMIN/am-admin/datacenter/coupon/get_record_list_dj", request,
                 DataCenterCouponCustomizeResponse.class);
         if (response != null) {
             return response.getResultList();
