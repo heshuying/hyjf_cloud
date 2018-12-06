@@ -110,8 +110,8 @@ public class PlanCapitalController extends BaseController {
     @ApiOperation(value = "资金计划列表", notes = "资金计划列表导出")
     @PostMapping(value = "/exportExcel")
     public void exportExcel(@ModelAttribute HjhPlanCapitalRequestBean requestBean, HttpServletRequest request, HttpServletResponse response) throws Exception {
-        HjhPlanCapitalRequest requestVO = new HjhPlanCapitalRequest();
-        BeanUtils.copyProperties(requestBean, requestVO);
+        HjhPlanCapitalRequest hjhPlanCapitalRequest = new HjhPlanCapitalRequest();
+        BeanUtils.copyProperties(requestBean, hjhPlanCapitalRequest);
 
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
@@ -123,11 +123,11 @@ public class PlanCapitalController extends BaseController {
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
         //请求第一页5000条
-        requestVO.setPageSize(defaultRowMaxCount);
-        requestVO.setCurrPage(1);
+        hjhPlanCapitalRequest.setPageSize(defaultRowMaxCount);
+        hjhPlanCapitalRequest.setCurrPage(1);
         // 需要输出的结果列表
         List<HjhPlanCapitalVO> resultList = null;
-        HjhPlanCapitalResponse resultResponse = planCapitalService.getPlanCapitalList(requestVO);
+        HjhPlanCapitalResponse resultResponse = planCapitalService.getPlanCapitalList(hjhPlanCapitalRequest);
         if (resultResponse.getCount() > 0){
             resultList = CommonUtils.convertBeanList(resultResponse.getResultList(), HjhPlanCapitalVO.class);
         }
@@ -147,9 +147,9 @@ public class PlanCapitalController extends BaseController {
         }
         for (int i = 1; i < sheetCount; i++) {
 
-            requestVO.setPageSize(defaultRowMaxCount);
-            requestVO.setCurrPage(i + 1);
-            HjhPlanCapitalResponse resultResponse2 = planCapitalService.getPlanCapitalList(requestVO);
+            hjhPlanCapitalRequest.setPageSize(defaultRowMaxCount);
+            hjhPlanCapitalRequest.setCurrPage(i + 1);
+            HjhPlanCapitalResponse resultResponse2 = planCapitalService.getPlanCapitalList(hjhPlanCapitalRequest);
             if (resultResponse2 != null && resultResponse2.getResultList().size()> 0) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultResponse2.getResultList());

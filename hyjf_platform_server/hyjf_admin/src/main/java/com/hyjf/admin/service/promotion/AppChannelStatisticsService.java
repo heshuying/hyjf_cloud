@@ -4,7 +4,12 @@
 package com.hyjf.admin.service.promotion;
 
 import com.hyjf.am.response.app.AppChannelStatisticsResponse;
-import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest; /**
+import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
+import com.hyjf.am.vo.datacollect.AppChannelStatisticsVO;
+
+import java.util.List;
+
+/**
  * @author yaoyong
  * @version AppChannelStatisticsService, v0.1 2018/9/21 9:38
  */
@@ -22,4 +27,12 @@ public interface AppChannelStatisticsService {
      * @return
      */
     AppChannelStatisticsResponse exportList(AppChannelStatisticsRequest statisticsRequest);
+
+    /**
+     * list 分页
+     * @param request
+     * @param result
+     * @return
+     */
+    List<AppChannelStatisticsVO> paging(AppChannelStatisticsRequest request, List<AppChannelStatisticsVO> result);
 }

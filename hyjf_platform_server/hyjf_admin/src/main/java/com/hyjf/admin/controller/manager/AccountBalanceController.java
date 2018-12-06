@@ -2,7 +2,9 @@ package com.hyjf.admin.controller.manager;
 
 import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AccountBalanceService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -39,8 +41,12 @@ public class AccountBalanceController extends BaseController {
     @Autowired
     private AccountBalanceService accountBalanceService;
 
+    /** 权限 */
+    public static final String PERMISSIONS = "hjhstatis";
+
     @ApiOperation(value = "数据中心-汇计划统计", notes = "数据中心-汇计划统计 查询")
     @PostMapping("/search")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_VIEW , ShiroConstants.PERMISSION_SEARCH})
     public AdminResult search(@RequestBody HjhAccountBalanceRequest request) {
         String time = request.getTime();
         HjhInfoAccountBalanceResponse response = null;
@@ -73,6 +79,7 @@ public class AccountBalanceController extends BaseController {
      */
     @ApiOperation(value = "数据中心-汇计划统计", notes = "数据中心-汇计划统计 导出日交易量")
     @PostMapping("/exportActionByDay")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT )
     public void exportActionByDay(@RequestBody HjhAccountBalanceRequest form,HttpServletRequest request,HttpServletResponse response) throws Exception {
 
         //sheet默认最大行数
@@ -155,6 +162,7 @@ public class AccountBalanceController extends BaseController {
      */
     @ApiOperation(value = "数据中心-汇计划统计", notes = "数据中心-汇计划统计 导出月交易量")
     @PostMapping("/exportActionMonth")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT )
     public void exportActionMonth(@RequestBody HjhAccountBalanceRequest form,HttpServletRequest request,HttpServletResponse response) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());

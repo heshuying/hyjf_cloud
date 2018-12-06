@@ -699,6 +699,21 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
 
     /**
+     * 批次中心-批次放款导出记录总数
+     * @param request
+     * @return
+     */
+    @Override
+    public int getBatchBorrowRecoverCount(BatchBorrowRecoverRequest request) {
+        IntegerResponse response =
+                restTemplate.postForEntity("http://AM-ADMIN/am-admin/adminBatchBorrowRecover/getListCount", request, IntegerResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    /**
      * 查询批次中心-批次放款列表
      * yangchangwei
      * @param request

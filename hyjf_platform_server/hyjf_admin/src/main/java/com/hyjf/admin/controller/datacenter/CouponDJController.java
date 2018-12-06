@@ -8,7 +8,9 @@ import com.hyjf.admin.beans.DataCenterCouponBean;
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.DataCenterCouponService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -42,8 +44,12 @@ public class CouponDJController extends BaseController {
 	@Autowired
 	private DataCenterCouponService couponService;
 
+	/** 权限 */
+	public static final String PERMISSIONS = "DATACENTERCOUPON";
+
 	@ApiOperation(value = "数据中心-代金券", notes = "数据中心-代金券列表查询")
     @PostMapping("/get_coupon_list")
+	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_VIEW , ShiroConstants.PERMISSION_SEARCH})
 	public AdminResult<ListResult<DataCenterCouponCustomizeVO>> getCouponList(@RequestBody DadaCenterCouponRequestBean requestBean) {
 		DataCenterCouponResponse response = couponService.searchAction(requestBean, "DJ");
 		if (response == null) {
@@ -84,6 +90,7 @@ public class CouponDJController extends BaseController {
 	}
     @ApiOperation(value = "导出代金券列表", notes = "导出代金券列表")
 	@GetMapping("/export_dj_action")
+	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_EXPORT })
 	 public void exportToExcel(HttpServletRequest request, HttpServletResponse response, DataCenterCouponBean form) throws Exception {
 	        //sheet默认最大行数
 			int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());

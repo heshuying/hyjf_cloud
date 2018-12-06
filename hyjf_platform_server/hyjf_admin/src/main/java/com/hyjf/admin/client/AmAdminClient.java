@@ -389,6 +389,13 @@ public interface AmAdminClient {
      */
     Integer updatePoundage(PoundageCustomizeVO poundageCustomizeVO);
 
+    /**
+     * 批次中心-批次放款导出记录总数
+     * @param request
+     * @return
+     */
+    int getBatchBorrowRecoverCount(BatchBorrowRecoverRequest request);
+
 
     /**
      * 查询批次中心-批次放款列表

@@ -77,7 +77,7 @@ public class HjhRepayController {
         //实际退出时间
         if (StringUtils.isNotEmpty(request.getActulRepayTimeStart())){
             params.put("actulRepayTimeStart", request.getActulRepayTimeStart() + " 00:00:00");
-            params.put("actulRepayTimeEnd", request.getActulRepayTimeEnd() + "23:59:59");
+            params.put("actulRepayTimeEnd", request.getActulRepayTimeEnd() + " 23:59:59");
         }
 
         // 汇计划三期新增 推荐人查询

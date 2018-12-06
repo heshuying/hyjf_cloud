@@ -60,7 +60,7 @@ public class AmConfigClientImpl implements AmConfigClient {
     @Override
 	public List<EventVO> getEventsList() {
 		EventResponse response = restTemplate.postForObject(
-				"http://AM-ADMIN/am-config/content/contentevent/searchaction", new EventsRequest(), EventResponse.class);
+				"http://AM-CONFIG/am-config/content/contentevent/searchaction", new EventsRequest(), EventResponse.class);
 		if (response != null) {
 			return response.getResultList();
 		}

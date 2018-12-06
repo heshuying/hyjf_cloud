@@ -102,7 +102,7 @@ public class AppLoginController extends BaseUserController {
             return ret;
         }
         // 业务逻辑
-        try {
+       // try {
             // 解密
             username = DES.decodeValue(key, username);
             password = DES.decodeValue(key, password);
@@ -169,11 +169,11 @@ public class AppLoginController extends BaseUserController {
                 ret.put("status", "1");
                 ret.put("statusDesc", "app端登录失败");
             }
-        }catch (Exception e){
-            logger.error("app端登录失败...");
-            ret.put("status", "1");
-            ret.put("statusDesc", e.getMessage());
-        }
+//        }catch (Exception e){
+//            logger.error("app端登录失败...");
+//            ret.put("status", "1");
+//            ret.put("statusDesc", e.getMessage());
+//        }
         return ret;
     }
 
@@ -290,7 +290,7 @@ public class AppLoginController extends BaseUserController {
         }
 
         // 业务逻辑
-        try {
+       // try {
             Integer userId = SecretUtil.getUserId(sign);
             // 取得用户ID
             if (userId != null) {
@@ -306,11 +306,11 @@ public class AppLoginController extends BaseUserController {
                 ret.put("statusDesc", "用户信息不存在");
             }
 
-        } catch (Exception e) {
-            logger.error("异常信息打印："+e);
-            ret.put("status", "1");
-            ret.put("statusDesc", "获取用户相关数据发生错误");
-        }
+//        } catch (Exception e) {
+//            logger.error("异常信息打印："+e);
+//            ret.put("status", "1");
+//            ret.put("statusDesc", "获取用户相关数据发生错误");
+//        }
         return ret;
     }
 

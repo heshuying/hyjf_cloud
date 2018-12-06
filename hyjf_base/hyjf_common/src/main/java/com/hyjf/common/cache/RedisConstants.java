@@ -16,9 +16,6 @@ public class RedisConstants {
      */
     public static final Integer TENDER_OUT_TIME = 300;
 
-    // 汇计划分割线
-    public static final String HJH_SLASH = "_";
-
     // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
     // _tmp
     public static final String HJH_SLASH_TMP = "_tmp";
