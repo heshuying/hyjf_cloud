@@ -177,7 +177,7 @@ public class PlatformCountController extends BaseController {
      */
     @ApiOperation(value = "导出excel", notes = "导出excel")
     @PostMapping("/exportAction")
-    public void exportToExcel(HttpServletRequest request, HttpServletResponse response, PlatformCountRequestBean form) throws Exception {
+    public void exportToExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody  PlatformCountRequestBean form) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
