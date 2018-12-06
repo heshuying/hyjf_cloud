@@ -6,7 +6,9 @@ package com.hyjf.admin.controller.extensioncenter;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.AutoTenderExceptionRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.promotion.ChannelReconciliationService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -55,8 +57,12 @@ public class AppChannelReconciliationRecordController extends BaseController {
     @Autowired
     private ChannelReconciliationService channelService;
 
+    /** 查看权限 */
+    public static final String PERMISSIONS = "appchannelrecon";
+
     @ApiOperation(value = "散标列表查询", notes = "散标列表查询")
     @PostMapping("/search")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult searchAction(@RequestBody ChannelReconciliationRequest request) {
         List<UtmVO> list = channelService.searchUtmList(1);
         if (request.getUtmPlat() == null) {
@@ -76,6 +82,7 @@ public class AppChannelReconciliationRecordController extends BaseController {
 
     @ApiOperation(value = "计划列表查询", notes = "计划列表查询")
     @PostMapping("/search_hjh")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult searchHJHAction(@RequestBody ChannelReconciliationRequest request) {
         List<UtmVO> list = channelService.searchUtmList(1);
         if (request.getUtmPlat() == null) {
@@ -217,6 +224,7 @@ public class AppChannelReconciliationRecordController extends BaseController {
      */
     @ApiOperation(value = "导出散标列表", notes = "导出散标列表")
     @PostMapping("/export")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
 	 public void exportToExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody ChannelReconciliationRequest channelReconciliationRequest) throws Exception {
         List<UtmVO> list = channelService.searchUtmList(1);
 
@@ -423,6 +431,7 @@ public class AppChannelReconciliationRecordController extends BaseController {
      */
     @ApiOperation(value = "导出计划列表", notes = "导出计划列表")
     @PostMapping("/export_hjh")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
 	 public void exportHjhAction(HttpServletRequest request, HttpServletResponse response, @RequestBody ChannelReconciliationRequest channelReconciliationRequest) throws Exception {
         // 表格sheet名称
         String sheetName = "PC渠道对账-智投服务";
