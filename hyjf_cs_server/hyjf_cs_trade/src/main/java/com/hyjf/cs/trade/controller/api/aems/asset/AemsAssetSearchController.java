@@ -8,7 +8,7 @@ import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.trade.bean.aems.AemsAssetStatusRequestBean;
 import com.hyjf.cs.trade.bean.aems.AemsAssetStatusResultBean;
 import com.hyjf.cs.trade.service.aems.asset.AemsAssetSearchService;
-import com.hyjf.cs.trade.service.aems.util.AemsErrorCodeConstant;
+import com.hyjf.common.constants.AemsErrorCodeConstant;
 import com.hyjf.cs.trade.util.SignUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;

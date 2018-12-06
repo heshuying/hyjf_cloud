@@ -1,10 +1,10 @@
-package com.hyjf.cs.trade.service.aems.util;
+package com.hyjf.common.constants;
 
 import com.hyjf.common.util.MessageConstants;
 import com.hyjf.common.util.PropertiesConstants;
 
 /**
- * 汇盈金服第三方接口返回码常量
+ * Aems第三方接口返回码常量
  */
 public class AemsErrorCodeConstant implements MessageConstants, PropertiesConstants {
     // 成功

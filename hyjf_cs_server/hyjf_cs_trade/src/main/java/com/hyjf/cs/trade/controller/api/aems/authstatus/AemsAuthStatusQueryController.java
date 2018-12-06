@@ -7,7 +7,7 @@ import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.trade.bean.aems.AemsAuthStatusQueryRequestBean;
 import com.hyjf.cs.trade.bean.aems.AemsAuthStatusQueryResultBean;
 import com.hyjf.cs.trade.service.aems.authstatus.AemsAuthStatusQueryService;
-import com.hyjf.cs.trade.service.aems.util.AemsErrorCodeConstant;
+import com.hyjf.common.constants.AemsErrorCodeConstant;
 import com.hyjf.cs.trade.util.SignUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
