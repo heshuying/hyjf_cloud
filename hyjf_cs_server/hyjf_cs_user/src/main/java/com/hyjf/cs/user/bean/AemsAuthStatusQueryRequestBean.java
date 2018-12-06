@@ -1,10 +1,8 @@
-package com.hyjf.cs.trade.bean;
+package com.hyjf.cs.user.bean;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.trade.bean.BaseBean;
-import com.hyjf.cs.trade.bean.BaseResultBean;
 import com.hyjf.common.constants.AemsErrorCodeConstant;
+import com.hyjf.common.validator.Validator;
 
 import java.util.HashMap;
 import java.util.Map;

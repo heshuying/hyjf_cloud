@@ -1,8 +1,5 @@
 package com.hyjf.cs.trade.bean;
 
-import com.hyjf.cs.trade.bean.BaseResultBean;
-
-
 /**
  * Ames资产推送接口返回参数
  * @author Zha Daojian

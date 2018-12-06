@@ -5,8 +5,6 @@ package com.hyjf.cs.trade.util;
 
 import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.trade.bean.*;
-import com.hyjf.cs.trade.bean.AemsAssetStatusRequestBean;
-import com.hyjf.cs.trade.bean.AemsAuthStatusQueryRequestBean;
 import com.hyjf.cs.trade.bean.api.AutoTenderRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.SynBalanceRequestBean;
@@ -39,10 +37,6 @@ public class SignUtil {
             //aems资产查询接口
             AemsAssetStatusRequestBean bean = (AemsAssetStatusRequestBean) paramBean;
             sign = bean.getAssetId() + bean.getInstCode() + bean.getTimestamp();
-        }else if (("/aems/authState/status").equals(methodName)) {
-            //aems授权状态查询
-            AemsAuthStatusQueryRequestBean bean = (AemsAuthStatusQueryRequestBean) paramBean;
-            sign = bean.getInstCode() + bean.getAccountId() + bean.getTimestamp();
         }
         // TODO AEMS验签修改
         return ApiSignUtil.verifyByRSA("AEMS", paramBean.getChkValue(), sign);

@@ -1,14 +1,14 @@
-package com.hyjf.cs.trade.service.aems.authstatus;
+package com.hyjf.cs.user.service.aems.authstatus;
 
 import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.cs.trade.service.BaseTradeService;
+import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
 /**
  * @version AemsAuthStatusQueryService, v0.1 2018/12/6 10:22
  * @Author: Zha Daojian
  */
-public interface AemsAuthStatusQueryService extends BaseTradeService {
+public interface AemsAuthStatusQueryService extends BaseUserService {
 
     /**
      *

@@ -1,6 +1,5 @@
-package com.hyjf.cs.trade.bean;
+package com.hyjf.cs.user.bean;
 
-import com.hyjf.cs.trade.bean.BaseResultBean;
 import io.swagger.annotations.ApiModelProperty;
 
 /**

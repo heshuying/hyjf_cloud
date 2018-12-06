@@ -1,14 +1,13 @@
-package com.hyjf.cs.trade.controller.api.aems.authstatus;
+package com.hyjf.cs.user.controller.api.aems.authstatus;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.cs.common.controller.BaseController;
-import com.hyjf.cs.trade.bean.AemsAuthStatusQueryRequestBean;
-import com.hyjf.cs.trade.bean.AemsAuthStatusQueryResultBean;
-import com.hyjf.cs.trade.service.aems.authstatus.AemsAuthStatusQueryService;
 import com.hyjf.common.constants.AemsErrorCodeConstant;
-import com.hyjf.cs.trade.util.SignUtil;
+import com.hyjf.cs.common.controller.BaseController;
+import com.hyjf.cs.user.bean.AemsAuthStatusQueryRequestBean;
+import com.hyjf.cs.user.bean.AemsAuthStatusQueryResultBean;
+import com.hyjf.cs.user.service.aems.authstatus.AemsAuthStatusQueryService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
@@ -68,7 +67,7 @@ public class AemsAuthStatusQueryController extends BaseController {
         }
 
         // 验签  accountId
-        if (!SignUtil.AEMSVerifyRequestSign(autoStateQuery, "/aems/authState/status")) {
+        if (!autoPlusService.aemsVerifyRequestSign(autoStateQuery, "/aems/authState/status")) {
             logger.info("----验签失败----");
             resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_CE000002);
             resultBean.setStatusDesc("验签失败！");
@@ -84,7 +83,7 @@ public class AemsAuthStatusQueryController extends BaseController {
             return resultBean;
         }
         Integer userId = bankOpenAccount.getUserId();
-        UserVO user = this.autoPlusService.getUserByUserId(userId);
+        UserVO user = this.autoPlusService.getUsersById(userId);
         if (user == null) {
             logger.info("查询用户失败:[" + userId + "].");
             resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_CE000007);

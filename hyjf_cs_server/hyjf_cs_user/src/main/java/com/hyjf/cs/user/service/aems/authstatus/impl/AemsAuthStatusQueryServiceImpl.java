@@ -1,20 +1,16 @@
-package com.hyjf.cs.trade.service.aems.authstatus.impl;
+package com.hyjf.cs.user.service.aems.authstatus.impl;
 
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.cs.trade.client.AmTradeClient;
-import com.hyjf.cs.trade.client.AmUserClient;
-import com.hyjf.cs.trade.config.SystemConfig;
-import com.hyjf.cs.trade.service.BaseTradeService;
-import com.hyjf.cs.trade.service.aems.authstatus.AemsAuthStatusQueryService;
-import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
+import com.hyjf.cs.user.client.AmUserClient;
+import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.service.aems.authstatus.AemsAuthStatusQueryService;
+import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 /**
  * @version AemsAuthStatusQueryServiceImpl, v0.1 2018/12/6 10:23
@@ -22,14 +18,11 @@ import java.util.List;
  */
 
 @Service
-public class AemsAuthStatusQueryServiceImpl extends BaseTradeServiceImpl implements AemsAuthStatusQueryService {
+public class AemsAuthStatusQueryServiceImpl extends BaseUserServiceImpl implements AemsAuthStatusQueryService {
 
 
     @Autowired
     private SystemConfig systemConfig;
-
-    @Autowired
-    private AmTradeClient amTradeClient;
 
     @Autowired
     private AmUserClient amUserClient;
@@ -63,7 +56,7 @@ public class AemsAuthStatusQueryServiceImpl extends BaseTradeServiceImpl impleme
         selectbean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
         selectbean.setTxCode(BankCallConstant.TXCODE_TERMS_AUTH_QUERY);
         selectbean.setInstCode(systemConfig.getBankInstcode());// 机构代码
-        selectbean.setBankCode(systemConfig.getBankBankcode());// 银行代码
+        selectbean.setBankCode(systemConfig.getBankCode());// 银行代码
         selectbean.setTxDate(GetOrderIdUtils.getTxDate());
         selectbean.setTxTime(GetOrderIdUtils.getTxTime());
         selectbean.setSeqNo(GetOrderIdUtils.getSeqNo(6));
@@ -86,7 +79,7 @@ public class AemsAuthStatusQueryServiceImpl extends BaseTradeServiceImpl impleme
      */
     @Override
     public BankOpenAccountVO getBankOpenAccount(Integer userId) {
-        BankOpenAccountVO bankOpenAccountVO = amTradeClient.getBankOpenAccount(userId);
+        BankOpenAccountVO bankOpenAccountVO = amUserClient.selectBankAccountById(userId);
         if (bankOpenAccountVO != null) {
             return bankOpenAccountVO;
         }
