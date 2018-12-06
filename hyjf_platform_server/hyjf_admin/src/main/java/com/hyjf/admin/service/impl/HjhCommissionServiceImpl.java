@@ -174,4 +174,14 @@ public class HjhCommissionServiceImpl implements HjhCommissionService{
 		HjhCommissionResponse response = amTradeClient.selectHjhCommissionListWithOutPage(form);
 		return response;
 	}
+
+	/**
+	 * 资金中心-汇计划提成导出记录总数
+	 * @param request
+	 * @return
+	 */
+	@Override
+	public int getHjhCommissionCountForExport(HjhCommissionRequest request) {
+		return amTradeClient.getHjhCommissionCountForExport(request);
+	}
 }

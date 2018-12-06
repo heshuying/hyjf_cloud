@@ -448,57 +448,36 @@ public class HjhCommissionController extends BaseController{
 		SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
 		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 		//form.setLimitFlg(true);
-		//请求第一页5000条
-		form.setPageSize(defaultRowMaxCount);
-		form.setCurrPage(1);
-		// 需要输出的结果列表
-		// 列表查询
-		HjhCommissionResponse res = hjhCommissionService.selectHjhCommissionListWithOutPage(form);
-		Integer totalCount = res.getCount();
+		//查询导出列表总数
+		Integer totalCount = hjhCommissionService.getHjhCommissionCountForExport(form);
 		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
 		Map<String, String> beanPropertyColumnMap = buildMap();
 		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
 		String sheetNameTmp = sheetName + "_第1页";
 		if (totalCount == 0) {
 			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-		}else{
-			for(HjhCommissionCustomizeVO hjhCommissionCustomizeVO : res.getResultList()){
-				//锁定期
-				String str = "";
-				if (hjhCommissionCustomizeVO.getLockPeriod()==null) {
-					hjhCommissionCustomizeVO.setLockPeriod(str);
-				}else {
-					if ("1".equals(hjhCommissionCustomizeVO.getIsMonth())) {
-						str = "个月";
-					}else if("0".equals(hjhCommissionCustomizeVO.getIsMonth())) {
-						str = "天";
-					}
-					hjhCommissionCustomizeVO.setLockPeriod(hjhCommissionCustomizeVO.getLockPeriod() + str);
-				}
-			}
-			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, res.getResultList());
 		}
-		for (int i = 1; i < sheetCount; i++) {
+		for (int i = 1; i <= sheetCount; i++) {
 			form.setPageSize(defaultRowMaxCount);
-			form.setCurrPage(i+1);
-			HjhCommissionResponse res2 = hjhCommissionService.selectHjhCommissionList(form);
-			for(HjhCommissionCustomizeVO hjhCommissionCustomizeVO : res2.getResultList()){
-				//锁定期
-				String str = "";
-				if (hjhCommissionCustomizeVO.getLockPeriod()==null) {
-					hjhCommissionCustomizeVO.setLockPeriod(str);
-				}else {
-					if ("1".equals(hjhCommissionCustomizeVO.getIsMonth())) {
-						str = "个月";
-					}else if("0".equals(hjhCommissionCustomizeVO.getIsMonth())) {
-						str = "天";
+			form.setCurrPage(i);
+			HjhCommissionResponse listResponse = hjhCommissionService.selectHjhCommissionList(form);
+			if (listResponse != null && listResponse.getResultList().size()> 0) {
+				for(HjhCommissionCustomizeVO hjhCommissionCustomizeVO : listResponse.getResultList()){
+					//锁定期
+					String str = "";
+					if (hjhCommissionCustomizeVO.getLockPeriod()==null) {
+						hjhCommissionCustomizeVO.setLockPeriod(str);
+					}else {
+						if ("1".equals(hjhCommissionCustomizeVO.getIsMonth())) {
+							str = "个月";
+						}else if("0".equals(hjhCommissionCustomizeVO.getIsMonth())) {
+							str = "天";
+						}
+						hjhCommissionCustomizeVO.setLockPeriod(hjhCommissionCustomizeVO.getLockPeriod() + str);
 					}
-					hjhCommissionCustomizeVO.setLockPeriod(hjhCommissionCustomizeVO.getLockPeriod() + str);
 				}
-			}
-			if (res2 != null && res2.getResultList().size()> 0) {
-				sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  res2.getResultList());
+				sheetNameTmp = sheetName + "_第" + i + "页";
+				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  listResponse.getResultList());
 			} else {
 				break;
 			}
