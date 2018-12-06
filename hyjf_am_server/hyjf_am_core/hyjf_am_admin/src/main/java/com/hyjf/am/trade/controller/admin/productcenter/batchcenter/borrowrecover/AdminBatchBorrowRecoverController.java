@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.controller.admin.productcenter.batchcenter.borrowrecover;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BatchBorrowRecoverReponse;
 import com.hyjf.am.response.trade.BorrowApicronResponse;
@@ -31,6 +32,12 @@ public class AdminBatchBorrowRecoverController extends BaseController {
 
     @Autowired
     private BatchCenterBorrowRecoverService batchBorrowRecoverService;
+
+    @PostMapping("/getListCount")
+    public IntegerResponse getListCount(@RequestBody BatchBorrowRecoverRequest request) {
+        Integer count = batchBorrowRecoverService.getListTotal(request);
+        return new IntegerResponse(count);
+    }
 
     /**
      *
