@@ -1,9 +1,11 @@
 package com.hyjf.cs.trade.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
+import com.hyjf.am.response.trade.WechatProjectListResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.api.ApiRepayListRequest;
@@ -2433,4 +2435,28 @@ public interface AmTradeClient {
 
     String selectPlanInfoSum(String accedeOrderId);
 
+   /**
+    * 微信首页标的列表
+    * @author zhangyk
+    */
+   List<WechatHomeProjectListVO> getWechatProjectList(Map<String, Object> projectMap);
+
+    /**
+     * @author libin
+     * 抽出查询统计信息的方法
+     * @date 2018/9/5 11:38
+     */
+    TotalInvestAndInterestResponse getTotalInvestAndInterestResponse();
+
+
+    List<WechatHomeProjectListVO> getWechatHomePlanLater();
+
+    List<WechatHomeProjectListVO> getWechatHomeRepaymentsProjectList();
+
+    int getWebCreditListCount(CreditListRequest request);
+
+    List<CreditListVO> getWebCreditList(CreditListRequest request);
+
+
 }
+

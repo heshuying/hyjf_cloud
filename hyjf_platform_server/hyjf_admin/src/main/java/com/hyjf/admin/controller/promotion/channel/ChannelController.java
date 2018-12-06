@@ -75,6 +75,7 @@ public class ChannelController extends BaseController {
 
     @ApiOperation(value = "画面迁移(含有id更新，不含有id添加)", notes = "画面迁移(含有id更新，不含有id添加)")
     @PostMapping("/infoaction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public UtmResultResponse info(HttpServletRequest request, HttpServletResponse response, @RequestBody ChannelCustomizeVO channelCustomizeVO){
         UtmResultResponse adminResult = new UtmResultResponse();
         if (StringUtils.isNotEmpty(channelCustomizeVO.getUtmId())) {
@@ -101,6 +102,7 @@ public class ChannelController extends BaseController {
 
     @ApiOperation(value = "添加或修改信息", notes = "添加或修改信息")
     @PostMapping("/insertorupdateaction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public UtmResultResponse insertAction(HttpServletRequest request, HttpServletResponse response, @RequestBody ChannelCustomizeVO channelCustomizeVO){
         UtmResultResponse adminResult = new UtmResultResponse();
         //根据utmId判断，如存在，则为修改，如不存在，则为新增

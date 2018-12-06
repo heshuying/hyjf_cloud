@@ -5,7 +5,9 @@ package com.hyjf.admin.controller.content;
 
 import com.hyjf.admin.beans.request.ContentEnvironmentRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.ContentEnvironmentService;
 import com.hyjf.am.bean.commonimage.BorrowCommonImage;
 import com.hyjf.am.response.Response;
@@ -43,11 +45,15 @@ public class ContentEnvironmentController extends BaseController {
 	@Value("${file.upload.temp.path}")
 	private String temppath;
 
+	/** 权限关键字 */
+	public static final String PERMISSIONS = "contentenvironment";
+
 	@Autowired
 	private ContentEnvironmentService contentEnvironmentService;
 
 	@ApiOperation(value = "公司管理-办公环境列表查询", notes = "公司管理-办公环境列表查询")
 	@PostMapping("/searchaction")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult searchAction(
 			@RequestBody ContentEnvironmentRequestBean requestBean) {
 		ContentEnvironmentResponse response = contentEnvironmentService.searchAction(requestBean);
@@ -62,6 +68,7 @@ public class ContentEnvironmentController extends BaseController {
 
 	@ApiOperation(value = "公司管理-办公环境初始化", notes = "公司管理-办公环境初始化")
 	@PostMapping("/select_by_id")
+	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_INFO, ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
 	public AdminResult selectById(@RequestBody ContentEnvironmentRequestBean requestBean) {
 		ContentEnvironmentVO vo = contentEnvironmentService.selectById(requestBean);
 		return new AdminResult(vo);
@@ -69,6 +76,7 @@ public class ContentEnvironmentController extends BaseController {
 
 	@ApiOperation(value = "公司管理-办公环境", notes = "公司管理-办公环境")
 	@PostMapping("/insert")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
 	public AdminResult add(@RequestBody ContentEnvironmentRequestBean requestBean) {
 		int num = contentEnvironmentService.insertAction(requestBean);
 		if (num <= 0) {
@@ -79,6 +87,7 @@ public class ContentEnvironmentController extends BaseController {
 
 	@ApiOperation(value = "修改公司管理-办公环境", notes = "修改公司管理-办公环境")
 	@PostMapping("/update")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult update(@RequestBody ContentEnvironmentRequestBean requestBean) {
 		int num = contentEnvironmentService.updateAction(requestBean);
 		if (num <= 0) {
@@ -89,6 +98,7 @@ public class ContentEnvironmentController extends BaseController {
 
 	@ApiOperation(value = "修改公司管理-办公环境状态", notes = "修改公司管理-办公环境状态")
 	@PostMapping("/updatestatus")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult updatestatus(@RequestBody ContentEnvironmentRequestBean requestBean) {
 		int num = contentEnvironmentService.updateStatus(requestBean);
 		if (num <= 0) {
@@ -99,6 +109,7 @@ public class ContentEnvironmentController extends BaseController {
 
 	@ApiOperation(value = "删除公司管理-办公环境", notes = "删除公司管理-办公环境")
 	@GetMapping("/delete/{id}")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
 	public AdminResult updatestatus(@PathVariable Integer id) {
 		int num = contentEnvironmentService.deleteById(id);
 		if (num <= 0) {
@@ -116,6 +127,7 @@ public class ContentEnvironmentController extends BaseController {
 	 */
 	@ApiOperation(value = "资料上传", notes = "资料上传")
 	@PostMapping("/uploadFile")
+	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
 	public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
 		String fileDomainUrl = UploadFileUtils.getDoPath(url);
