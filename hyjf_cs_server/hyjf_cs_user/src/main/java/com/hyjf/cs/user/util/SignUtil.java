@@ -20,7 +20,7 @@ public class SignUtil {
      * @param paramBean, methodName
      * @return boolean
      **/
-    public static boolean aemsVerifyRequestSign(BaseBean paramBean, String methodName) {
+    public static boolean AEMSVerifyRequestSign(BaseBean paramBean, String methodName) {
         String sign = org.apache.commons.lang.StringUtils.EMPTY;
         // 机构编号必须参数
         String instCode = paramBean.getInstCode();
