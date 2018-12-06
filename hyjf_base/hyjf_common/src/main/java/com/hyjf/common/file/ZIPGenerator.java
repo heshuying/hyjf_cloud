@@ -1,5 +1,8 @@
 package com.hyjf.common.file;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
@@ -9,6 +12,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 public class ZIPGenerator {
+    private static Logger logger = LoggerFactory.getLogger(ZIPGenerator.class);
     
     /**
      * 生成并下载ZIP文件
@@ -29,8 +33,7 @@ public class ZIPGenerator {
             zos.flush();     
             zos.close();
         } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("---图片下载异常,无法下载---");
+            logger.error("生成zip文件失败:", e);
         }
     }
     
@@ -53,9 +56,7 @@ public class ZIPGenerator {
             zos.flush();     
             zos.close();
         } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("---图片下载异常,无法下载---");
-            e.printStackTrace();
+            logger.error("生成zip文件失败:", e);
         }     
     }
     
