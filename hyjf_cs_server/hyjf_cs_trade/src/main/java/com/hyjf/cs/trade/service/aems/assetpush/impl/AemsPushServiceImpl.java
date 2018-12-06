@@ -1,18 +1,9 @@
 package com.hyjf.cs.trade.service.aems.assetpush.impl;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.base.service.BaseServiceImpl;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.RabbitMQConstants;
-import com.hyjf.mybatis.model.auto.*;
-import org.springframework.amqp.rabbit.core.RabbitTemplate;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.hyjf.cs.common.service.BaseServiceImpl;
+import com.hyjf.cs.trade.service.aems.assetpush.AemsPushService;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 /**
  * 资产推送 jijun 20180914
@@ -21,22 +12,22 @@ import java.util.Map;
 public class AemsPushServiceImpl extends BaseServiceImpl implements AemsPushService {
 
 
-    @Autowired
+   /* @Autowired
     @Qualifier("myAmqpTemplate")
     private RabbitTemplate rabbitTemplate;
 
-    /**
+    *//**
      * 插入资产表
-     */
+     *//*
     @Override
     public int insertAssert(HjhPlanAsset record, Map<String, String> params) {
 
         return this.hjhPlanAssetMapper.insertSelective(record);
     }
 
-    /**
+    *//**
      *获取开户的数据
-     */
+     *//*
     @Override
     public BankOpenAccount selectBankAccountById(int userId) {
         BankOpenAccountExample example = new BankOpenAccountExample();
@@ -48,9 +39,9 @@ public class AemsPushServiceImpl extends BaseServiceImpl implements AemsPushServ
         }else return null;
     }
 
-    /**
+    *//**
      *获取用户信息
-     */
+     *//*
     @Override
     public UsersInfo selectUserInfoByNameAndCard(String trueName, String idCrad) {
         UsersInfoExample example = new UsersInfoExample();
@@ -65,9 +56,9 @@ public class AemsPushServiceImpl extends BaseServiceImpl implements AemsPushServ
         }
     }
 
-    /**
+    *//**
      *获取用户的数据
-     */
+     *//*
     @Override
     public Users selectUsersById(int userId) {
         UsersExample example = new UsersExample();
@@ -81,9 +72,9 @@ public class AemsPushServiceImpl extends BaseServiceImpl implements AemsPushServ
         }
     }
 
-    /**
+    *//**
      *获取机构信息
-     */
+     *//*
     @Override
     public HjhAssetBorrowType selectAssetBorrowType(String instCode, int assetType) {
         HjhAssetBorrowTypeExample example = new HjhAssetBorrowTypeExample();
@@ -99,11 +90,11 @@ public class AemsPushServiceImpl extends BaseServiceImpl implements AemsPushServ
     }
 
 
-    /**
+    *//**
      * 根据项目类型去还款方式
      * @param borrowcCd
      * @return
-     */
+     *//*
     public List<BorrowProjectRepay> selectProjectRepay(String borrowcCd){
         BorrowProjectTypeExample example = new BorrowProjectTypeExample();
         BorrowProjectTypeExample.Criteria crt = example.createCriteria();
@@ -127,9 +118,9 @@ public class AemsPushServiceImpl extends BaseServiceImpl implements AemsPushServ
         }
     }
 
-    /**
+    *//**
      *获取受托支付电子账户列表
-     */
+     *//*
     @Override
     public STZHWhiteList selectStzfWhiteList(String instCode, String stAccountid) {
         STZHWhiteListExample example = new STZHWhiteListExample();
@@ -146,9 +137,9 @@ public class AemsPushServiceImpl extends BaseServiceImpl implements AemsPushServ
         }
     }
 
-    /**
+    *//**
      * 推送消息到MQ
-     */
+     *//*
     @Override
     public void sendToMQ(HjhPlanAsset hjhPlanAsset){
 
@@ -162,9 +153,9 @@ public class AemsPushServiceImpl extends BaseServiceImpl implements AemsPushServ
 
     }
 
-    /**
+    *//**
      * 通过用户名获得用户的详细信息
-     */
+     *//*
     @Override
     public Users selectUserInfoByUsername(String userName){
         UsersExample example = new UsersExample();
@@ -179,9 +170,9 @@ public class AemsPushServiceImpl extends BaseServiceImpl implements AemsPushServ
         }
     }
 
-    /**
+    *//**
      *通过机构编号获得机构信息
-     */
+     *//*
     @Override
     public CorpOpenAccountRecord selectUserBusiNameByUsername(String userName) {
         CorpOpenAccountRecordExample example = new CorpOpenAccountRecordExample();
@@ -195,11 +186,11 @@ public class AemsPushServiceImpl extends BaseServiceImpl implements AemsPushServ
         }
     }
 
-    /**
+    *//**
      * 通过用户id获得用户真实姓名和身份证号
      * @param userId
      * @return
-     */
+     *//*
     @Override
     public UsersInfo selectUserInfoByUserId(Integer userId) {
         UsersInfoExample example = new UsersInfoExample();
@@ -213,11 +204,11 @@ public class AemsPushServiceImpl extends BaseServiceImpl implements AemsPushServ
         }
     }
 
-    /**
+    *//**
      * 检查是否存在重复资产
      * @param assetId
      * @return
-     */
+     *//*
     @Override
     public HjhPlanAsset checkDuplicateAssetId(String assetId) {
         HjhPlanAssetExample example = new HjhPlanAssetExample();
@@ -231,11 +222,11 @@ public class AemsPushServiceImpl extends BaseServiceImpl implements AemsPushServ
         }
     }
 
-    /**
+    *//**
      * 获取保证金配置
      * @param instCode
      * @return
-     */
+     *//*
     @Override
     public HjhBailConfig getBailConfig(String instCode){
         HjhBailConfigExample example = new HjhBailConfigExample();
@@ -249,16 +240,16 @@ public class AemsPushServiceImpl extends BaseServiceImpl implements AemsPushServ
         return null;
     }
 
-    /**
+    *//**
      * 根据id获取资产count
      * @param assetId
      * @return
-     */
+     *//*
     @Override
     public int selectAssertCountByAssetId(String assetId) {
         HjhPlanAssetExample example = new HjhPlanAssetExample();
         HjhPlanAssetExample.Criteria crt = example.createCriteria();
         crt.andAssetIdEqualTo(assetId);
         return hjhPlanAssetMapper.countByExample(example);
-    }
+    }*/
 }
