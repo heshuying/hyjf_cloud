@@ -2,8 +2,6 @@ package com.hyjf.zuul;
 
 import com.hyjf.zuul.filter.AccessFilter;
 import com.hyjf.zuul.filter.XSSFilter;
-import com.netflix.loadbalancer.IRule;
-import com.netflix.loadbalancer.WeightedResponseTimeRule;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
@@ -29,10 +27,10 @@ public class ZuulApplication {
         SpringApplication.run(ZuulApplication.class, args);
     }
 
-    @Bean
-    public IRule ribbonRule() {
-        return new WeightedResponseTimeRule();//这里配置策略，和配置文件对应
-    }
+//    @Bean
+//    public IRule ribbonRule() {
+//        return new WeightedResponseTimeRule();//这里配置策略，和配置文件对应
+//    }
     @Bean
     public AccessFilter accessFilter() {
         return new AccessFilter();
