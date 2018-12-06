@@ -63,14 +63,6 @@ public interface BaseUserService extends BaseService{
 	boolean verifyRequestSign(BaseBean paramBean, String methodName);
 
 	/**
-	 * 验证Aems请求签名
-	 * @param paramBean
-	 * @param methodName
-	 * @return
-	 */
-	boolean aemsVerifyRequestSign(BaseBean paramBean, String methodName);
-
-	/**
 	 * 获取用户在银行的开户信息
 	 * @param userId
 	 * @return

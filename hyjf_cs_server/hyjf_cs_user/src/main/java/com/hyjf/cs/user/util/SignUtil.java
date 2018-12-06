@@ -4,10 +4,7 @@
 package com.hyjf.cs.user.util;
 
 import com.hyjf.cs.common.util.ApiSignUtil;
-import com.hyjf.cs.user.bean.BaseBean;
-import com.hyjf.cs.user.bean.BaseDefine;
-import com.hyjf.cs.user.bean.PaymentAuthPageRequestBean;
-import com.hyjf.cs.user.bean.TrusteePayRequestBean;
+import com.hyjf.cs.user.bean.*;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -15,6 +12,33 @@ import org.apache.commons.lang3.StringUtils;
  * @version SignUtil, v0.1 2018/6/11 14:06
  */
 public class SignUtil {
+
+    /**
+     * AEMS验证外部请求签名
+     * @author Zha Daojian
+     * @date 2018/12/5 10:20
+     * @param paramBean, methodName
+     * @return boolean
+     **/
+    public static boolean aemsVerifyRequestSign(BaseBean paramBean, String methodName) {
+        String sign = org.apache.commons.lang.StringUtils.EMPTY;
+        // 机构编号必须参数
+        String instCode = paramBean.getInstCode();
+        if (org.apache.commons.lang.StringUtils.isEmpty(instCode)) {
+            return false;
+        }
+        if (("/aems/authState/status").equals(methodName)) {
+            //aems授权状态查询
+            AemsAuthStatusQueryRequestBean bean = (AemsAuthStatusQueryRequestBean) paramBean;
+            sign = bean.getInstCode() + bean.getAccountId() + bean.getTimestamp();
+        }else if (("/aems/bindcardpage/bind").equals(methodName)){
+            //aems用户页面绑卡
+            AemsBindCardPageRequestBean bean = (AemsBindCardPageRequestBean) paramBean;
+            sign = bean.getInstCode() + bean.getAccountId() + bean.getTimestamp();
+        }
+        // TODO AEMS验签修改
+        return ApiSignUtil.verifyByRSA("AEMS", paramBean.getChkValue(), sign);
+    }
 
     /**
      * 验证外部请求签名

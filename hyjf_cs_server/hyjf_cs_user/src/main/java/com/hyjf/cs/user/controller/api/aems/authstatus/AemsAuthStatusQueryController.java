@@ -8,6 +8,7 @@ import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.user.bean.AemsAuthStatusQueryRequestBean;
 import com.hyjf.cs.user.bean.AemsAuthStatusQueryResultBean;
 import com.hyjf.cs.user.service.aems.authstatus.AemsAuthStatusQueryService;
+import com.hyjf.cs.user.util.SignUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
@@ -67,7 +68,7 @@ public class AemsAuthStatusQueryController extends BaseController {
         }
 
         // 验签  accountId
-        if (!autoPlusService.aemsVerifyRequestSign(autoStateQuery, "/aems/authState/status")) {
+        if (!SignUtil.aemsVerifyRequestSign(autoStateQuery, "/aems/authState/status")) {
             logger.info("----验签失败----");
             resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_CE000002);
             resultBean.setStatusDesc("验签失败！");

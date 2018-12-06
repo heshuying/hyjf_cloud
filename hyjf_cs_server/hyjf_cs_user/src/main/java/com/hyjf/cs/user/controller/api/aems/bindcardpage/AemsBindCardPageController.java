@@ -12,6 +12,7 @@ import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.service.aems.bindcardpage.AemsBindCardPageService;
+import com.hyjf.cs.user.util.SignUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -77,7 +78,7 @@ public class AemsBindCardPageController extends BaseController {
         }
 
         //验签
-        if(!bindCardService.aemsVerifyRequestSign(bankCardRequestBean, "/aems/bindcardpage/bind")){
+        if(!SignUtil.aemsVerifyRequestSign(bankCardRequestBean, "/aems/bindcardpage/bind")){
             logger.info("-------------------验签失败！--------------------");
 
             paramMap.put("status", ErrorCodeConstant.STATUS_CE000002);
