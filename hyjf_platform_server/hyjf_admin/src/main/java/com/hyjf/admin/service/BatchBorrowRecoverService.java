@@ -17,6 +17,13 @@ import java.util.List;
  */
 public interface BatchBorrowRecoverService extends BaseService{
     /**
+     * 批次中心-批次放款导出记录总数
+     * @param request
+     * @return
+     */
+    int getBatchBorrowRecoverCount(BatchBorrowRecoverRequest request);
+
+    /**
      * 获取批次中心列表
      * @param request
      * @return

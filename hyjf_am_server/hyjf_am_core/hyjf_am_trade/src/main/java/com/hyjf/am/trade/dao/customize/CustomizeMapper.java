@@ -2,6 +2,7 @@ package com.hyjf.am.trade.dao.customize;
 
 import com.hyjf.am.trade.dao.auto.AutoMapper;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowRecoverPlanMapper;
+import com.hyjf.am.trade.dao.mapper.auto.HjhAssetRiskInfoMapper;
 import com.hyjf.am.trade.dao.mapper.customize.*;
 import com.hyjf.am.trade.dao.mapper.customize.batch.BatchAccountCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.nifa.*;
@@ -223,4 +224,7 @@ public class CustomizeMapper extends AutoMapper {
 	protected HjhBailConfigCustomizeMapper hjhBailConfigCustomizeMapper;
 	@Autowired
 	protected HjhPlanRepayCustomizeMapper hjhPlanRepayCustomizeMapper;
+
+	@Autowired
+	protected HjhAssetRiskInfoMapper hjhAssetRiskInfoMapper;
 }

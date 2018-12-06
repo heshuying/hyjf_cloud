@@ -811,7 +811,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 
         // 获取累计投资金额
         //TotalInvestAndInterestResponse res2 = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL, TotalInvestAndInterestResponse.class);
-        TotalInvestAndInterestResponse res2 = this.getTotalInvestAndInterestResponse();
+        TotalInvestAndInterestResponse res2 = amTradeClient.getTotalInvestAndInterestResponse();
         // modify by libin 加缓存
         if(res2 == null){
         	logger.error("获取累计投资金额为空！");
@@ -1234,8 +1234,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         if (showPlanFlag != null) {
             projectMap.put("showPlanFlag", showPlanFlag);
         }
-        WechatProjectListResponse response = baseClient.postExe(HomePageDefine.WECHAT_HOME_PROJECT_LIST_URL, projectMap, WechatProjectListResponse.class);
-        list = response.getResultList();
+        //WechatProjectListResponse response = baseClient.postExe(HomePageDefine.WECHAT_HOME_PROJECT_LIST_URL, projectMap, WechatProjectListResponse.class);
+        list = amTradeClient.getWechatProjectList(projectMap);
+        //list = response.getResultList();
         if (!CollectionUtils.isEmpty(list)) {
             if (list.size() == (pageSize + 1)) {
                 list.remove(list.size() - 1);
@@ -1253,8 +1254,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 
         if (StringUtils.isBlank(showPlanFlag)) {
             if (currentPage == 1) {
-                WechatProjectListResponse res = baseClient.getExe(HomePageDefine.WECHAT_HOME_PLAN_LATER_URL, WechatProjectListResponse.class);
-                List<WechatHomeProjectListVO> hjhList = res.getResultList();
+                //WechatProjectListResponse res = baseClient.getExe(HomePageDefine.WECHAT_HOME_PLAN_LATER_URL, WechatProjectListResponse.class);
+                List<WechatHomeProjectListVO> hjhList = amTradeClient.getWechatHomePlanLater();
+                //List<WechatHomeProjectListVO> hjhList = res.getResultList();
                 if (list.size() == 0) {
                     //补两条
                     hjhList.addAll(list);
@@ -1270,8 +1272,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             }
         }
         if (vo.getEndPage() == 1) {
-            WechatProjectListResponse res = baseClient.getExe(HomePageDefine.WECHAT_HOME_REPAYMENT_URL, WechatProjectListResponse.class);
-            List<WechatHomeProjectListVO> hjhList = res.getResultList();
+           // WechatProjectListResponse res = baseClient.getExe(HomePageDefine.WECHAT_HOME_REPAYMENT_URL, WechatProjectListResponse.class);
+            List<WechatHomeProjectListVO> hjhList = amTradeClient.getWechatHomeRepaymentsProjectList();
+            //List<WechatHomeProjectListVO> hjhList = res.getResultList();
             if (list.size() > 0 && "HJH".equals(list.get(list.size() - 1).getBorrowType())) {
                 list.addAll(hjhList);
                 //补两条
@@ -1317,7 +1320,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 
 
             }
-            wechatHomeProjectListCustomize.setAccountWait(df.format(new BigDecimal(wechatHomeProjectListCustomize.getAccountWait())));
+            wechatHomeProjectListCustomize.setAccountWait(df.format(new BigDecimal(StringUtils.isBlank(wechatHomeProjectListCustomize.getAccountWait()) ? "0.00" :wechatHomeProjectListCustomize.getAccountWait().replaceAll(",",""))));
         }
 
         // 字段为null时，转为""
@@ -1386,9 +1389,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
      * @param
      * @author
      */
-	@Cached(name="wechatHomeProjectNewListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
-	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
-    private List<AppProjectListCustomizeVO> searchProjectNewList(String host) {
+	/*@Cached(name="wechatHomeProjectNewListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)*/
+    public List<AppProjectListCustomizeVO> searchProjectNewList(String host) {
         List<AppProjectListCustomizeVO> projectList = new ArrayList<>();
 
         // 取得新手汇项目（定时发标）
@@ -1429,15 +1432,18 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         return projectList;
     }
 	
-    /**
-     * @author libin
-     * 抽出查询统计信息的方法
-     * @date 2018/9/5 11:38
-     */
-	@Cached(name="wechatTotalInvestAndInterestCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
-	@CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.MINUTES)
-    private TotalInvestAndInterestResponse getTotalInvestAndInterestResponse(){
-		TotalInvestAndInterestResponse res2 = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL, TotalInvestAndInterestResponse.class);
-    	return res2;
-    }
+//    /**
+//     * @author libin
+//     * 抽出查询统计信息的方法
+//     * @date 2018/9/5 11:38
+//     */
+//	@Cached(name="wechatTotalInvestAndInterestCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+//	@CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.MINUTES)
+//    public TotalInvestAndInterestResponse getTotalInvestAndInterestResponse(){
+//		TotalInvestAndInterestResponse res2 = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL, TotalInvestAndInterestResponse.class);
+//    	return res2;
+//    }
+
+
+
 }

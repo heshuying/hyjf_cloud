@@ -6,14 +6,16 @@ package com.hyjf.am.config.controller;
 import com.hyjf.am.config.dao.model.auto.Event;
 import com.hyjf.am.config.service.EventService;
 import com.hyjf.am.response.config.EventResponse;
+import com.hyjf.am.resquest.admin.EventsRequest;
 import com.hyjf.am.vo.config.EventVO;
+import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @author yinhui
@@ -21,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/am-config/content/contentevent")
-public class EventConfigController {
+public class EventConfigController extends BaseConfigController {
 
     @Autowired
     private EventService eventService;
@@ -45,6 +47,27 @@ public class EventConfigController {
             //设置返回结果
             response.setResult(eventVO);
         }
+        return response;
+    }
+
+    /**
+     * 根据条件查询公司管理-公司纪事
+     *
+     * @param request
+     * @return
+     */
+    @RequestMapping("/searchaction")
+    public EventResponse searchAction(@RequestBody EventsRequest request) {
+        logger.info("查询公司管理-公司纪事开始......");
+        EventResponse response = new EventResponse();
+        List<Event> list = eventService.searchAction(request);
+        if (!CollectionUtils.isEmpty(list)) {
+            List<EventVO> voList = CommonUtils.convertBeanList(list, EventVO.class);
+            response.setResultList(voList);
+        }
+        // 查询符合条件的条数
+        int count = eventService.selectCount(request);
+        response.setCount(count);
         return response;
     }
 

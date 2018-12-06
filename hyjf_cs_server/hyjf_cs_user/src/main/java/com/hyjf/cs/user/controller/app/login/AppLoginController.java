@@ -102,7 +102,7 @@ public class AppLoginController extends BaseUserController {
             return ret;
         }
         // 业务逻辑
-        try {
+       // try {
             // 解密
             username = DES.decodeValue(key, username);
             password = DES.decodeValue(key, password);
@@ -169,11 +169,11 @@ public class AppLoginController extends BaseUserController {
                 ret.put("status", "1");
                 ret.put("statusDesc", "app端登录失败");
             }
-        }catch (Exception e){
-            logger.error("app端登录失败...");
-            ret.put("status", "1");
-            ret.put("statusDesc", e.getMessage());
-        }
+//        }catch (Exception e){
+//            logger.error("app端登录失败...");
+//            ret.put("status", "1");
+//            ret.put("statusDesc", e.getMessage());
+//        }
         return ret;
     }
 

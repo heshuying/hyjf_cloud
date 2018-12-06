@@ -10,9 +10,11 @@ import com.hyjf.am.config.dao.model.auto.EventExample;
 import com.hyjf.am.config.dao.model.customize.ContentEventsCustomize;
 import com.hyjf.am.config.service.EventService;
 import com.hyjf.am.resquest.admin.EventsRequest;
+import com.hyjf.common.util.GetDate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -32,8 +34,8 @@ public class EventServiceImpl implements EventService {
 		EventExample example = new EventExample();
 		EventExample.Criteria criteria = example.createCriteria();
 		if (request.getStartTime() != null && request.getEndTime() != null) {
-			criteria.andCreateTimeGreaterThanOrEqualTo(request.getStartTime());
-			criteria.andCreateTimeLessThanOrEqualTo(request.getEndTime());
+			criteria.andEventTimeGreaterThanOrEqualTo(GetDate.dateToString2(request.getStartTime()));
+			criteria.andEventTimeLessThanOrEqualTo(GetDate.dateToString2(request.getEndTime()));
 		}
 		if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
 			int limitStart = (request.getCurrPage() - 1) * (request.getPageSize());
@@ -41,7 +43,7 @@ public class EventServiceImpl implements EventService {
 			example.setLimitStart(limitStart);
 			example.setLimitEnd(limitEnd);
 		}
-		example.setOrderByClause("act_time DESC, create_time DESC");
+		example.setOrderByClause("event_time DESC, create_time DESC");
 		return eventMapper.selectByExample(example);
 	}
 
@@ -79,6 +81,15 @@ public class EventServiceImpl implements EventService {
 
     }
 
+	@Override
+	public int selectCount(EventsRequest request) {
+		request.setCurrPage(0);
+		List<Event> list = searchAction(request);
+		if (!CollectionUtils.isEmpty(list)) {
+			return list.size();
+		}
+		return 0;
+	}
 
 
 }
