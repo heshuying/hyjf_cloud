@@ -203,6 +203,7 @@ public class UserPayAuthController extends BaseController {
             userPayAuthRequest.setCurrPage(i);
             UserPayAuthResponse resultResponse2 = userPayAuthService.selectUserMemberList(userPayAuthRequest);
             if (resultResponse2 != null && resultResponse2.getResultList().size()> 0) {
+                logger.info("测试导出，页数：{}, 条数：{}", i, resultResponse2.getResultList().size());//todo
                 sheetNameTmp = sheetName + "_第" + (i) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultResponse2.getResultList());
             } else {
