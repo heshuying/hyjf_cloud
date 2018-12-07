@@ -3103,6 +3103,13 @@ public interface AmTradeClient {
      */
     boolean updateAccountNumberByUserId(Integer userId, String accountId);
 
+    /**
+     * 查询导出总数
+     * @param copyForm
+     * @return
+     */
+    Integer countBorrowRepaymentInfoExport(BorrowRepaymentInfoRequset copyForm);
+
     /** 加息接口开始*/
     /** 枚举类型 */
     enum IncreaseProperty {VO,STR,STR1}

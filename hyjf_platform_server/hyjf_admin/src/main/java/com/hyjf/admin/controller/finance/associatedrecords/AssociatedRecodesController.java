@@ -91,8 +91,8 @@ public class AssociatedRecodesController extends BaseController {
         String sheetNameTmp = sheetName + "_第1页";
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
-        request.setCurrPage(1);
-        request.setPageSize(defaultRowMaxCount);
+//        request.setCurrPage(1);
+//        request.setPageSize(defaultRowMaxCount);
 
         Integer count = associatedRecordsService.getAssociatedRecordsCount(request);
         // 检索列表
@@ -108,6 +108,7 @@ public class AssociatedRecodesController extends BaseController {
 
         for (int i = 1; i < sheetCount; i++) {
             request.setCurrPage(i+1);
+            request.setPageSize(defaultRowMaxCount);
             List<AssociatedRecordListVO> associatedRecordListVOS2 = associatedRecordsService.getAssociatedRecordList(request);
             if (!CollectionUtils.isEmpty(associatedRecordListVOS2)) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";

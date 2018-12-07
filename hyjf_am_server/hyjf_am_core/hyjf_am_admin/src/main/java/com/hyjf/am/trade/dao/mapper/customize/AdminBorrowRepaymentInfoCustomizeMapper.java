@@ -17,4 +17,6 @@ public interface AdminBorrowRepaymentInfoCustomizeMapper {
     AdminBorrowRepaymentInfoCustomize sumBorrowRepaymentInfo(BorrowRepaymentInfoRequset request);
 
     List<AdminBorrowRepaymentInfoCustomize> selectBorrowRepaymentInfoList(BorrowRepaymentInfoRequset request);
+
+    Integer countBorrowRepaymentInfoExport(BorrowRepaymentInfoRequset request);
 }
