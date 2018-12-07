@@ -1200,14 +1200,24 @@ public class AmAdminClientImpl implements AmAdminClient {
                 "http://AM-ADMIN/am-user/promotion/utm/select_app_channel_reconciliation_record", request,
                 ChannelReconciliationResponse.class);
     }
-
+    @Override
+    public ChannelReconciliationResponse selectAppChannelReconciliationCount(ChannelReconciliationRequest request) {
+        return restTemplate.postForObject(
+                "http://AM-ADMIN/am-user/promotion/utm/select_app_channel_reconciliation_count", request,
+                ChannelReconciliationResponse.class);
+    }
     @Override
     public ChannelReconciliationResponse selectAppChannelReconciliationRecordHjh(ChannelReconciliationRequest request) {
         return restTemplate.postForObject(
                 "http://AM-ADMIN/am-user/promotion/utm/select_app_channel_reconciliation_record_hjh", request,
                 ChannelReconciliationResponse.class);
     }
-
+    @Override
+    public ChannelReconciliationResponse selectAppChannelReconciliationRecordHjhCount(ChannelReconciliationRequest request) {
+        return restTemplate.postForObject(
+                "http://AM-ADMIN/am-user/promotion/utm/select_app_channel_reconciliation_record_hjh_count", request,
+                ChannelReconciliationResponse.class);
+    }
     @Override
     public SubmissionsVO getSubmissionsRecord(SubmissionsRequest request) {
         return restTemplate.postForObject("http://AM-ADMIN/am-config/submission/getSubmissionsRecord", request,

@@ -632,6 +632,19 @@ public interface AmAdminClient {
     ChannelReconciliationResponse selectAppChannelReconciliationRecordHjh(ChannelReconciliationRequest request);
 
     /**
+     * APP统计明细计划列表查询
+     * @param request
+     * @return
+     */
+    ChannelReconciliationResponse selectAppChannelReconciliationRecordHjhCount(ChannelReconciliationRequest request);
+
+    /**
+     * APP统计明细计划列表数量查询
+     * @param request
+     * @return
+     */
+    ChannelReconciliationResponse selectAppChannelReconciliationCount(ChannelReconciliationRequest request);
+    /**
      * 获取app渠道列表
      * @return
      */
@@ -1100,4 +1113,6 @@ public interface AmAdminClient {
      * @return
      */
     AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request);
+
+
 }
