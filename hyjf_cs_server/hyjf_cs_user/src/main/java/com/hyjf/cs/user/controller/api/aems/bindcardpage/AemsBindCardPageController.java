@@ -1,14 +1,15 @@
 package com.hyjf.cs.user.controller.api.aems.bindcardpage;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.controller.BaseController;
-import com.hyjf.cs.user.bean.*;
+import com.hyjf.cs.user.bean.AemsBindCardPageRequestBean;
+import com.hyjf.cs.user.bean.BaseResultBean;
+import com.hyjf.cs.user.bean.BindCardPageBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.service.aems.bindcardpage.AemsBindCardPageService;
@@ -20,15 +21,16 @@ import com.hyjf.soa.apiweb.CommonSoaUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -36,7 +38,7 @@ import java.util.Map;
  * @Author: Zha Daojian
  */
 
-@Api(value = "api端-Aems用户页绑卡页面调用",tags = "api端-Aems户页绑卡页面调用")
+@Api(value = "api端-AEMS用户页绑卡页面调用",tags = "api端-AEMS户页绑卡页面调用")
 @RestController
 @RequestMapping("/hyjf-api/aems/bindcardpage")
 public class AemsBindCardPageController extends BaseController {
@@ -57,7 +59,7 @@ public class AemsBindCardPageController extends BaseController {
      */
     @PostMapping("/bind.do")
     @ApiParam(required = true, name = "findDetailById", value = "Aems用户页面绑卡")
-    @ApiOperation(value = "Aems用户页面绑卡", httpMethod = "POST", notes = "Aems用户页面绑卡")
+    @ApiOperation(value = "AEMS用户页面绑卡", httpMethod = "POST", notes = "AEMS用户页面绑卡")
     public ModelAndView userBindCardPlus(@RequestBody AemsBindCardPageRequestBean bankCardRequestBean, HttpServletRequest request, HttpServletResponse response) {
         logger.info("请求页面绑卡接口参数" + JSONObject.toJSONString(bankCardRequestBean, true) + "]");
         ModelAndView modelAndView = new ModelAndView();
@@ -78,7 +80,7 @@ public class AemsBindCardPageController extends BaseController {
         }
 
         //验签
-        if(!SignUtil.aemsVerifyRequestSign(bankCardRequestBean, "/aems/bindcardpage/bind")){
+        if(!SignUtil.AEMSVerifyRequestSign(bankCardRequestBean, "/aems/bindcardpage/bind")){
             logger.info("-------------------验签失败！--------------------");
 
             paramMap.put("status", ErrorCodeConstant.STATUS_CE000002);

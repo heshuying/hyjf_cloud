@@ -40,7 +40,7 @@ public class AemsAssetSearchController extends BaseController {
 
     @PostMapping("/status.do")
     @ApiParam(required = true, name = "findDetailById", value = "Aems第三方资产状态查询接口")
-    @ApiOperation(value = "Aems第三方资产状态查询接口", httpMethod = "POST", notes = "Aems第三方资产状态查询接口")
+    @ApiOperation(value = "AEMS第三方资产状态查询接口", httpMethod = "POST", notes = "AEMS第三方资产状态查询接口")
     public AemsAssetStatusResultBean findDetailById(@RequestBody @Valid AemsAssetStatusRequestBean bean) {
         logger.info(bean.getAssetId()+"资产状态查询接口开始-----------------------------");
         logger.info("Aems第三方请求参数："+JSONObject.toJSONString(bean));

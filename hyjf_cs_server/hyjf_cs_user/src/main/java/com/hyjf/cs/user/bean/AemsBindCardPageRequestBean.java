@@ -2,19 +2,20 @@ package com.hyjf.cs.user.bean;
 
 import com.hyjf.common.validator.Validator;
 import com.hyjf.soa.apiweb.CommonSoaUtils;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class AemsBindCardPageRequestBean extends BaseBean{
-
-    /** 同步地址 */
+    
+    @ApiModelProperty(value = "同步地址")
     private String retUrl;
 
-    /** 忘记密码地址 */
+    @ApiModelProperty(value = "忘记密码地址")
     private String forgotPwdUrl;
 
-    /** 异步地址 */
+    @ApiModelProperty(value = "异步地址")
     private String notifyUrl;
 
     public String getRetUrl() {

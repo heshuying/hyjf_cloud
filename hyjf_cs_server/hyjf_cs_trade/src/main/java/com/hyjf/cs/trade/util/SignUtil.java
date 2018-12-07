@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.util;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.bean.api.AutoTenderRequestBean;
@@ -37,6 +38,11 @@ public class SignUtil {
             //aems资产查询接口
             AemsAssetStatusRequestBean bean = (AemsAssetStatusRequestBean) paramBean;
             sign = bean.getAssetId() + bean.getInstCode() + bean.getTimestamp();
+        }else if (("/aems/authState/recharge").equals(methodName)) {
+            //aems充值页面
+            UserDirectRechargeRequestBean bean = (UserDirectRechargeRequestBean) paramBean;
+            sign = bean.getInstCode() + bean.getAccountId() + bean.getMobile() + bean.getIdNo() + bean.getCardNo()
+                    + bean.getTxAmount() + bean.getName() + bean.getRetUrl() + bean.getBgRetUrl() + bean.getTimestamp();
         }
         // TODO AEMS验签修改
         return ApiSignUtil.verifyByRSA("AEMS", paramBean.getChkValue(), sign);

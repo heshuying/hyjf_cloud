@@ -20,7 +20,7 @@ public class SignUtil {
      * @param paramBean, methodName
      * @return boolean
      **/
-    public static boolean aemsVerifyRequestSign(BaseBean paramBean, String methodName) {
+    public static boolean AEMSVerifyRequestSign(BaseBean paramBean, String methodName) {
         String sign = org.apache.commons.lang.StringUtils.EMPTY;
         // 机构编号必须参数
         String instCode = paramBean.getInstCode();
@@ -35,6 +35,18 @@ public class SignUtil {
             //aems用户页面绑卡
             AemsBindCardPageRequestBean bean = (AemsBindCardPageRequestBean) paramBean;
             sign = bean.getInstCode() + bean.getAccountId() + bean.getTimestamp();
+        }else if (("/aems/evaluation/saveUserEvaluationResults").equals(methodName)) {
+            //aems用户风险测评
+            AemsEvaluationRequestBean bean = (AemsEvaluationRequestBean) paramBean;
+            sign = bean.getInstCode() + bean.getTimestamp();
+        }else if (("/aems/company/syncCompanyInfo").equals(methodName)) {
+            //aems获取集团组织架构信息
+            AemsOrganizationStructureBean bean = (AemsOrganizationStructureBean) paramBean;
+            sign = bean.getInstCode() + bean.getTimestamp();
+        }else if (("/aems/syncUserInfo").equals(methodName)) {
+            //aems用户信息查询
+            AemsSyncUserInfoRequest bean = (AemsSyncUserInfoRequest) paramBean;
+            sign = bean.getInstCode() + bean.getTimestamp();
         }
         // TODO AEMS验签修改
         return ApiSignUtil.verifyByRSA("AEMS", paramBean.getChkValue(), sign);

@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  * @Author: Zha Daojian
  */
 
-@Api(value = "api端-Aems授权状态查询接口",tags = "api端-Aems授权状态查询接口")
+@Api(value = "api端-AEMS授权状态查询接口",tags = "api端-AEMS授权状态查询接口")
 @RestController
 @RequestMapping("/hyjf-api/aems/authState")
 public class AemsAuthStatusQueryController extends BaseController {
@@ -48,7 +48,7 @@ public class AemsAuthStatusQueryController extends BaseController {
      */
     @PostMapping("/status.do")
     @ApiParam(required = true, name = "findDetailById", value = "Aems授权状态查询接口")
-    @ApiOperation(value = "Aems授权状态查询接口", httpMethod = "POST", notes = "Aems授权状态查询接口")
+    @ApiOperation(value = "AEMS授权状态查询接口", httpMethod = "POST", notes = "AEMS授权状态查询接口")
     public AemsAuthStatusQueryResultBean sendCode(@RequestBody AemsAuthStatusQueryRequestBean autoStateQuery, HttpServletRequest request, HttpServletResponse response) {
 
         logger.info("授权状态查询第三方请求参数：" + JSONObject.toJSONString(autoStateQuery));
@@ -68,7 +68,7 @@ public class AemsAuthStatusQueryController extends BaseController {
         }
 
         // 验签  accountId
-        if (!SignUtil.aemsVerifyRequestSign(autoStateQuery, "/aems/authState/status")) {
+        if (!SignUtil.AEMSVerifyRequestSign(autoStateQuery, "/aems/authState/status")) {
             logger.info("----验签失败----");
             resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_CE000002);
             resultBean.setStatusDesc("验签失败！");
