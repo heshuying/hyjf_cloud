@@ -129,4 +129,6 @@ public interface BorrowCommonService {
 	 */
 	public BorrowCustomizeResponse exportBorrowList(BorrowBeanRequest borrowCommonCustomize);
 	public UserVO getUserByUserName(String userName);
+
+	List<BorrowCommonCustomizeVO> paging(BorrowBeanRequest request, List<BorrowCommonCustomizeVO> result);
 }

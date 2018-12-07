@@ -1,9 +1,10 @@
 package com.hyjf.admin.service.promotion;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
+import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
+
+import java.util.List;
 
 /**
  * @author lisheng
@@ -31,4 +32,12 @@ public interface AppChannelStatisticsDetailService {
      * @return
      */
     com.hyjf.am.response.admin.AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request);
+
+    /**
+     * list 分页
+     * @param request
+     * @param result
+     * @return
+     */
+    List<AppUtmRegVO> paging(AppChannelStatisticsDetailRequest request, List<AppUtmRegVO> result);
 }

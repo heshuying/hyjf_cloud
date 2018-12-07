@@ -1,41 +1,6 @@
 package com.hyjf.admin.controller.borrow;
 
 import com.google.common.collect.Maps;
-import java.io.File;
-import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-
-import com.hyjf.common.util.CommonUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.DataFormat;
-import org.apache.poi.ss.usermodel.Row;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartHttpServletRequest;
-
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
@@ -66,6 +31,7 @@ import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.ReturnMessageException;
 import com.hyjf.common.file.UploadFileUtils;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -96,6 +62,7 @@ import javax.validation.Valid;
 import java.io.File;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -2131,33 +2098,29 @@ public class BorrowCommonController extends BaseController {
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
-        //请求第一页5000条
-        form.setPageSize(defaultRowMaxCount);
-        form.setCurrPage(1);
+//        //请求第一页5000条
+//        form.setPageSize(defaultRowMaxCount);
+//        form.setCurrPage(1);
 
-		 BorrowCustomizeResponse resultList = borrowCommonService.exportBorrowList(form);
-
-
-        Integer totalCount = resultList.getBorrowCommonCustomizeList().size();
+		BorrowCustomizeResponse resultList = borrowCommonService.exportBorrowList(form);
+		List<BorrowCommonCustomizeVO> list = resultList.getBorrowCommonCustomizeList();
+        Integer totalCount = list.size();
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
-
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-        }else {
-        	 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,resultList.getBorrowCommonCustomizeList());
         }
-        for (int i = 1; i < sheetCount; i++) {
+        for (int i = 1; i <= sheetCount; i++) {
 
         	form.setPageSize(defaultRowMaxCount);
-        	form.setCurrPage(i+1);
-   		 BorrowCustomizeResponse resultList2 = borrowCommonService.exportBorrowList(form);
-            if (resultList2 != null && resultList2.getResultList().size()> 0) {
-                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList2.getBorrowCommonCustomizeList());
+        	form.setCurrPage(i);
+			List<BorrowCommonCustomizeVO> resultList2 = borrowCommonService.paging(form,list);
+            if (resultList2 != null && resultList2.size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList2);
             } else {
                 break;
             }
@@ -2249,7 +2212,7 @@ public class BorrowCommonController extends BaseController {
 	        IValueFormatter statusAdapter = new IValueFormatter() {
 	            @Override
 	            public String format(Object object) {
-	            	Integer status = (Integer) object;
+	            	Integer status = Integer.valueOf(String.valueOf(object));
 	            	if(status==null){
 	            		return "";
 	            	}else if(status==0) {
