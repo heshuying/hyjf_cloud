@@ -190,7 +190,7 @@ public class KeyCountController extends BaseController {
             form.setCurrPage(i+1);
             // 封装查询条件
             KeyCountResponse keyCountResponse2 = keyCountService.searchAction(form);
-            List<KeyCountVO> recordList2 = keyCountResponse.getResultList();
+            List<KeyCountVO> recordList2 = keyCountResponse2.getResultList();
             if (recordList2 != null && recordList2.size()> 0) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  recordList2);
