@@ -344,7 +344,8 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
 
     @Override
     public int selectBorrowCreditRepayCount(BorrowCreditRepayRequest request) {
-        BorrowCreditRepayResponse borrowCreditRepayResponse = baseClient.postExe(REPAY_INFO_COUNT_URL, request, BorrowCreditRepayResponse.class);
+        BorrowCreditRepayAmRequest req = CommonUtils.convertBean(request, BorrowCreditRepayAmRequest.class);
+        BorrowCreditRepayResponse borrowCreditRepayResponse = baseClient.postExe(REPAY_INFO_COUNT_URL, req, BorrowCreditRepayResponse.class);
         if (borrowCreditRepayResponse != null) {
             return borrowCreditRepayResponse.getCount();
         }
