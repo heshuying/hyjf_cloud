@@ -193,30 +193,14 @@ public class PlatformCountController extends BaseController {
         List<PlatformCountCustomizeVO> recordList = platformCountService.searchAction(form);
         
         Integer totalCount = recordList.size();
-
-        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
-        int minId = 0;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
-        	
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }else {
         	 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList);
         }
-//        for (int i = 1; i < sheetCount; i++) {
-//
-//            managerRequest.setPageSize(defaultRowMaxCount);
-//            managerRequest.setCurrPage(i+1);
-//            UserManagerResponse userManagerResponse2 = userCenterService.selectUserMemberList(managerRequest);
-//            if (userManagerResponse2 != null && userManagerResponse2.getResultList().size()> 0) {
-//                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-//                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  userManagerResponse2.getResultList());
-//            } else {
-//                break;
-//            }
-//        }
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
 

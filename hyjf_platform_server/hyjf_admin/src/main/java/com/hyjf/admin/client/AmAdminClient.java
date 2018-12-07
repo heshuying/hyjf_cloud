@@ -28,6 +28,7 @@ import com.hyjf.am.resquest.config.AppBorrowImageRequest;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
+import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
@@ -574,6 +575,19 @@ public interface AmAdminClient {
 
 	List<DataCenterCouponCustomizeVO> getRecordListDJ(DataCenterCouponCustomizeVO dataCenterCouponCustomize);
 
+    /**
+     * 获取加息券列表个数
+     * @param
+     * @return
+     */
+    int getCountDJ();
+
+    /**
+     * 获取加息券列表个数
+     * @param
+     * @return
+     */
+    int getCountJX();
 
 	List<DataCenterCouponCustomizeVO> getRecordListJX(DataCenterCouponCustomizeVO dataCenterCouponCustomize);
 

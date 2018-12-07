@@ -172,15 +172,14 @@ public class UserPayAuthController extends BaseController {
     @ApiOperation(value = "缴费授权列表导出", notes = "缴费授权列表导出")
     @PostMapping(value = "/exportpayauth")
     public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody UserPayAuthRequestBean userPayAuthRequestBean) throws Exception {
-        //sheet默认最大行数
-        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
-        defaultRowMaxCount = 8; // todo
+
         //取数据
         UserPayAuthRequest userPayAuthRequest = new UserPayAuthRequest();
         BeanUtils.copyProperties(userPayAuthRequestBean, userPayAuthRequest);
         userPayAuthRequest.setLimitFlg(true);
-
         int totalCount = userPayAuthService.selectUserMemberCount(userPayAuthRequest);
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
         String sheetName = "缴费授权";
         // 文件名称
