@@ -175,9 +175,6 @@ public class UserPayAuthController extends BaseController {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         defaultRowMaxCount = 8; // todo
-        //请求第一页5000条
-        userPayAuthRequestBean.setPageSize(defaultRowMaxCount);
-        userPayAuthRequestBean.setCurrPage(1);
         //取数据
         UserPayAuthRequest userPayAuthRequest = new UserPayAuthRequest();
         BeanUtils.copyProperties(userPayAuthRequestBean, userPayAuthRequest);
@@ -203,7 +200,7 @@ public class UserPayAuthController extends BaseController {
         for (int i = 1; i < sheetCount; i++) {
             //请求第一页5000条
             userPayAuthRequest.setPageSize(defaultRowMaxCount);
-            userPayAuthRequest.setCurrPage(i+1);
+            userPayAuthRequest.setCurrPage(i);
             UserPayAuthResponse resultResponse2 = userPayAuthService.selectUserMemberList(userPayAuthRequest);
             if (resultResponse2 != null && resultResponse2.getResultList().size()> 0) {
                 sheetNameTmp = sheetName + "_第" + (i) + "页";
