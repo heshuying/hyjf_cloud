@@ -26,14 +26,21 @@ public class ZIPGenerator {
         response.setContentType("APPLICATION/OCTET-STREAM");  
         response.setHeader("Content-Disposition","attachment; filename="+fileName+".zip");
         System.out.println("Download................");
-        ZipOutputStream zos;
+        ZipOutputStream zos = null;
         try {
             zos = new ZipOutputStream(response.getOutputStream());
             zipFile(files, "", zos);     
             zos.flush();     
-            zos.close();
         } catch (IOException e) {
             logger.error("生成zip文件失败:", e);
+        }finally {
+            if (zos != null){
+                try {
+                    zos.close();
+                } catch (IOException e) {
+                    logger.error("zos流关闭失败", e);
+                }
+            }
         }
     }
     
@@ -49,15 +56,22 @@ public class ZIPGenerator {
         response.setContentType("APPLICATION/OCTET-STREAM");  
         response.setHeader("Content-Disposition","attachment; filename="+fileName+".zip");  
         System.out.println("Download................");   
-        ZipOutputStream zos;
+        ZipOutputStream zos = null;
         try {
             zos = new ZipOutputStream(response.getOutputStream());
             zipFileAndDel(files, "", zos);     
             zos.flush();     
-            zos.close();
         } catch (IOException e) {
             logger.error("生成zip文件失败:", e);
-        }     
+        }finally {
+            if (zos != null){
+                try {
+                    zos.close();
+                } catch (IOException e) {
+                    logger.error("zos流关闭失败", e);
+                }
+            }
+        }
     }
     
     /**

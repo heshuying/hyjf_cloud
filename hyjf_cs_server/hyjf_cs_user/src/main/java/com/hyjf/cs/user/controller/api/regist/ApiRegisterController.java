@@ -4,6 +4,7 @@
 package com.hyjf.cs.user.controller.api.regist;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.cs.user.bean.UserRegisterRequestBean;
@@ -67,7 +68,10 @@ public class ApiRegisterController extends BaseUserController {
             result.setStatusDesc("手机号已在平台注册");
             result.setIsOpenAccount(String.valueOf(user.getBankOpenAccount()));
             if (user.getBankOpenAccount() != null && user.getBankOpenAccount() == 1) {
-                result.setAccount(registService.getAccountId(user.getUserId()));
+                BankOpenAccountVO bankOpenAccount = registService.getBankOpenAccount(user.getUserId());
+                if(null!=bankOpenAccount){
+                    result.setAccount(bankOpenAccount.getAccount());
+                }
             }
             if (user.getIsSetPassword() != null) {
                 result.setIsSetPassword(String.valueOf(user.getIsSetPassword()));

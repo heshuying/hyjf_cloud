@@ -298,7 +298,7 @@ public interface AmUserClient {
 
 	CorpOpenAccountRecordVO getCorpOpenAccountRecord(int userId);
 
-    List<BankCardVO> getBankOpenAccountById(Integer userId);
+    List<BankCardVO> getTiedCardForBank(Integer userId);
 
     /**
      * @Description 查询开户失败原因

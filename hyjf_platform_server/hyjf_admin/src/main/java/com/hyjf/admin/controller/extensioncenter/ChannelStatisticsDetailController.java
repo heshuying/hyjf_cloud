@@ -3,19 +3,25 @@
  */
 package com.hyjf.admin.controller.extensioncenter;
 
-import java.math.BigDecimal;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
+import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
+import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.admin.service.ChannelStatisticsDetailService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
+import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
+import com.hyjf.am.vo.admin.ChannelStatisticsDetailVO;
+import com.hyjf.am.vo.config.AdminSystemVO;
+import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.StringPool;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -27,24 +33,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Maps;
-import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.util.ExportExcel;
-import com.hyjf.admin.controller.BaseController;
-import com.hyjf.admin.service.ChannelStatisticsDetailService;
-import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
-import com.hyjf.admin.utils.exportutils.IValueFormatter;
-import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
-import com.hyjf.am.vo.admin.ChannelStatisticsDetailVO;
-import com.hyjf.am.vo.config.AdminSystemVO;
-import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringPool;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author tanyy
@@ -244,7 +241,7 @@ public class ChannelStatisticsDetailController extends BaseController {
 		SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
 		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-		Integer totalCount = recordList.size();
+		Integer totalCount = Integer.parseInt(json.get("count") == null ? "0" : json.get("count").toString());
 
 		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount
 				: totalCount / defaultRowMaxCount + 1;
@@ -252,23 +249,25 @@ public class ChannelStatisticsDetailController extends BaseController {
 		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
 		String sheetNameTmp = sheetName + "_第1页";
 		if (totalCount == 0) {
-
 			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
 		} else {
-			// 当前下载数据超过一页上限
-			if (defaultRowMaxCount < recordList.size()) {
-				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,
-						recordList.subList(0, defaultRowMaxCount));
-				for (int i = 1; i < sheetCount; i++) {
-					sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-					helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,
-							recordList.subList(defaultRowMaxCount * i, defaultRowMaxCount * (i + 1)));
-				}
-			} else {
-				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,
-						recordList.subList(0, recordList.size()));
-			}
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList);
 		}
+
+        for (int i = 1; i < sheetCount; i++) {
+            //请求第一页5000条
+            form.setPageSize(defaultRowMaxCount);
+            form.setCurrPage(i+1);
+            // 封装查询条件
+            JSONObject json2 = channelStatisticsDetailService.searchAction(form);
+            List<ChannelStatisticsDetailVO> recordList2 = (List<ChannelStatisticsDetailVO>) json2.get("recordList");
+            if (recordList2 != null && recordList2.size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  recordList2);
+            } else {
+                break;
+            }
+        }
 
 		DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
 	}

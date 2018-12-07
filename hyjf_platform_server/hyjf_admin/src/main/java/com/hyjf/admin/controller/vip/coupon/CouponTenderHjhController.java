@@ -142,7 +142,7 @@ public class CouponTenderHjhController extends BaseController {
         couponTenderRequest.setCurrPage(1);
         // 需要输出的结果列表
         CouponTenderResponse recordList = this.couponTenderHjhService.getRecordExport(couponTenderRequest);
-        Integer totalCount = recordList.getResultList().size();
+        Integer totalCount = this.couponTenderHjhService.countRecord(couponTenderRequest);
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
@@ -166,7 +166,11 @@ public class CouponTenderHjhController extends BaseController {
                     couponTenderCustomize.setCouponQuota("￥"+couponTenderCustomize.getCouponQuota());
                 }
             }
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.getResultList(),sumSmsCount);
+            if(sheetCount != 1){
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.getResultList());
+            }else{
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.getResultList(),sumSmsCount);
+            }
         }
         for (int i = 1; i < sheetCount; i++) {
             couponTenderRequest.setPageSize(defaultRowMaxCount);
@@ -208,7 +212,7 @@ public class CouponTenderHjhController extends BaseController {
         map.put("borrowNid", "智投编号");
         map.put("account", "授权服务金额");
         map.put("borrowPeriod", "项目期限");
-        map.put("borrowApr", "年化收益");
+        map.put("borrowApr", "出借利率");
         map.put("operatingDeck", "操作平台");
         map.put("orderDate", "使用时间");
         return map;

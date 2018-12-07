@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.controller.admin.borrow;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.AdminBorrowRepaymentInfoResponse;
 import com.hyjf.am.resquest.admin.BorrowRepaymentInfoRequset;
 import com.hyjf.am.trade.controller.BaseController;
@@ -10,6 +11,7 @@ import com.hyjf.am.vo.admin.BorrowRepaymentInfoCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -74,6 +76,17 @@ public class AdminBorrowRepaymentInfoController extends BaseController {
         if(!CollectionUtils.isEmpty(list)){
             List<BorrowRepaymentInfoCustomizeVO> voList = CommonUtils.convertBeanList(list, BorrowRepaymentInfoCustomizeVO.class);
             response.setResultList(voList);
+        }
+        return response;
+    }
+
+    @RequestMapping(value = "countExport")
+    public IntegerResponse countExport(@RequestBody @Valid BorrowRepaymentInfoRequset request) {
+        logger.info("请求参数:" +JSONObject.toJSON(request));
+        IntegerResponse response = new IntegerResponse();
+        Integer count = adminBorrowRepaymentInfoService.countBorrowRepaymentInfoExport(request);
+        if (count != null) {
+            response.setResultInt(count);
         }
         return response;
     }

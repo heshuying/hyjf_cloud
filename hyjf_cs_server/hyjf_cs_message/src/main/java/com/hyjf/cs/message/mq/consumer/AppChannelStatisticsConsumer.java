@@ -55,7 +55,7 @@ public class AppChannelStatisticsConsumer extends Consumer {
     public class MessageListener implements MessageListenerConcurrently {
         @Override
         public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
-            logger.info("AppChannelStatisticsConsumer 收到消息，开始处理....msgs is :{}", msgs);
+            logger.info("AppChannelStatisticsConsumer 收到消息，开始处理....msgId is :{}", msgs.get(0).getMsgId());
 
 
             for (MessageExt msg : msgs) {
