@@ -138,9 +138,9 @@ public class AdminBorrowCreditTenderController extends BaseController {
             cell.setCellValue(titles[celLength]);
         }
         for (int i = 0; i < recordList.size(); i++) {
+            Row columnValueRow = sheet.createRow(i + 1);
             // 循环数据
             for (int celLength = 0; celLength < titles.length; celLength++) {
-                Row columnValueRow = sheet.createRow(celLength + 1);
                 BorrowCreditTenderVO borrowCommonCustomize = recordList.get(i);
 
                 // 创建相应的单元格
@@ -335,7 +335,7 @@ public class AdminBorrowCreditTenderController extends BaseController {
                     }
                 }else {
                     if (celLength == 0) {
-                        cell.setCellValue(rowNum + 1);
+                        cell.setCellValue(rowNum++ + 1);
                     }
                     // 订单号
                     else if (celLength == 1) {
