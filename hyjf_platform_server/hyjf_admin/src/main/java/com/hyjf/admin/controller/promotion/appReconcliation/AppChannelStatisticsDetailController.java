@@ -205,16 +205,28 @@ public class AppChannelStatisticsDetailController extends BaseController {
 
 
         Integer totalCount = resultList.size();
-
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
-        if (totalCount == 0) {
 
+        if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-        }else {
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
         }
+
+        for (int i = 1; i <= sheetCount; i++) {
+            //请求第一页5000条
+            form.setPageSize(defaultRowMaxCount);
+            form.setCurrPage(i);
+            List<AppUtmRegVO> resultResponse2 = appChannelStatisticsDetailService.paging(form,resultList);
+            if (resultResponse2 != null && resultResponse2.size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultResponse2);
+            } else {
+                break;
+            }
+        }
+
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
 

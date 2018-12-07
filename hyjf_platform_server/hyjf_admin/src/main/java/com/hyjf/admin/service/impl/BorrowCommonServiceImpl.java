@@ -11,6 +11,7 @@ import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.response.config.LinkResponse;
 import com.hyjf.am.resquest.admin.BorrowBeanRequest;
 import com.hyjf.am.resquest.admin.BorrowCommonRequest;
+import com.hyjf.am.vo.datacollect.AppChannelStatisticsVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -18,6 +19,7 @@ import com.hyjf.am.vo.user.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 /**
  * @author GOGTZ-Z
@@ -130,6 +132,34 @@ public class BorrowCommonServiceImpl implements BorrowCommonService{
 	@Override
 	public UserVO getUserByUserName(String userName) {
 		return amUserClient.getUserByUserName(userName);
+	}
+
+	/**
+	 * list 分页
+	 * @param request
+	 * @param result
+	 * @return
+	 */
+	@Override
+	public List<BorrowCommonCustomizeVO> paging(BorrowBeanRequest request, List<BorrowCommonCustomizeVO> result){
+		int current=request.getCurrPage(); //页码
+		int pageSize=request.getPageSize(); //每页显示的数量
+		int totalCount=result.size();
+		int pageCount = (totalCount / pageSize) + ((totalCount % pageSize > 0) ? 1 : 0);
+
+		if(current < 1){
+			current = 1;
+		}
+		int start=(current-1) * pageSize;
+		int end = Math.min(totalCount, current * pageSize);
+
+		if(pageCount >= current){
+			result=result.subList(start,end);
+		}else{
+			result = new ArrayList<>();
+		}
+
+		return result;
 	}
 
 }

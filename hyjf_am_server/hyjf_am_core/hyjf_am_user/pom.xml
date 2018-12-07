@@ -133,7 +133,7 @@
                     <include>**/*.xml</include>
                     <include>**/*.yml</include>
                 </includes>
-                <filtering>false</filtering>
+                <filtering>true</filtering>
             </resource>
         </resources>
     </build>

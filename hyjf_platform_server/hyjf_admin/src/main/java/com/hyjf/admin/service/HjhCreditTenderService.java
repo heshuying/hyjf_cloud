@@ -57,4 +57,12 @@ public interface HjhCreditTenderService {
 	 * @return
 	 */
 	HjhCreditTenderSumVO getCalcSumByParam(HjhCreditTenderRequest form);
+
+	/**
+	 * list 分页
+	 * @param request
+	 * @param result
+	 * @return
+	 */
+	List<HjhCreditTenderCustomizeVO> paging(HjhCreditTenderRequest request, List<HjhCreditTenderCustomizeVO> result);
 }
