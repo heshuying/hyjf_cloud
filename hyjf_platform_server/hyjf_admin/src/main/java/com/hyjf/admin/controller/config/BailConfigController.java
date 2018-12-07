@@ -529,7 +529,7 @@ public class BailConfigController extends BaseController {
         for (int i = 1; i <= sheetCount; i++) {
         	request.setCurrPage(i);
 			sheetNameTmp = sheetName + "_第" + (i) + "页";
-			logger.info(JSONObject.toJSONString(bailConfigService.selectRecordList(request)));
+			logger.info("export_account_detail_excel==="+JSONObject.toJSONString(bailConfigService.selectRecordList(request)));
 			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, this.bailConfigService.selectRecordList(request));
         }
         DataSet2ExcelSXSSFHelper.write2Response(requestt, response, fileName, workbook);
