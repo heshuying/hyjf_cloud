@@ -7,6 +7,7 @@ import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.service.DataCenterCouponService;
 import com.hyjf.am.response.admin.DataCenterCouponResponse;
+import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,5 +51,15 @@ public class DataCenterCouponServiceImpl implements DataCenterCouponService {
     public List<DataCenterCouponCustomizeVO> getRecordListDJ(DataCenterCouponCustomizeVO dataCenterCouponCustomize) {
         List<DataCenterCouponCustomizeVO> list = client.getRecordListDJ(dataCenterCouponCustomize);
         return list;
+    }
+
+    @Override
+    public int getCountDJ(){
+        return client.getCountDJ();
+    }
+
+    @Override
+    public  int getCountJX(){
+        return client.getCountJX();
     }
 }

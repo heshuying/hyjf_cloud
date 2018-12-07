@@ -17,6 +17,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,6 +65,7 @@ public class OperationReportController extends BaseController {
 					}
 					List<OperationReportVO> recordList = this.operationReportService
 							.getRecordListByMonth(map);
+					recordList = page(recordList,request);
 					response.setResultList(recordList);
 				}
 			} else if (typeInt == 13 || typeInt == 14) { //季度
@@ -82,6 +84,7 @@ public class OperationReportController extends BaseController {
 					}
 					List<OperationReportVO> recordList = this.operationReportService
 							.getRecordListByQuarter(map);
+					recordList = page(recordList,request);
 					response.setResultList(recordList);
 				}
 			} else if (typeInt == 15) { //半年
@@ -95,6 +98,7 @@ public class OperationReportController extends BaseController {
 					}
 					List<OperationReportVO> recordList = this.operationReportService
 							.getRecordListByHalfYear(map);
+					recordList = page(recordList,request);
 					response.setResultList(recordList);
 				}
 			} else if (typeInt == 16) {  //全年
@@ -108,6 +112,7 @@ public class OperationReportController extends BaseController {
 					}
 					List<OperationReportVO> recordList = this.operationReportService
 							.getRecordListByYear(map);
+					recordList = page(recordList,request);
 					response.setResultList(recordList);
 				}
 			}
@@ -130,6 +135,53 @@ public class OperationReportController extends BaseController {
 		return response;
 	}
 
+	@ApiOperation(value = "运营报告配置", notes = "运营报告配置数量查询")
+	@PostMapping("/count")
+	public OperationReportResponse count(@RequestBody OperationReportRequest request) {
+		OperationReportResponse response = new OperationReportResponse();
+		Map<String, Object> map = new HashMap<String, Object>();
+		Integer count = 0;
+		map.put("typeSearch", request.getTypeSearch());
+		if (StringUtils.isNotEmpty(request.getStartCreate())) {
+			map.put("timeStar", request.getStartCreate() + " 00:00:00");
+		}
+		if (StringUtils.isNotEmpty(request.getEndCreate())) {
+			map.put("timeEnd", request.getEndCreate() + " 23:59:59");
+		}
+		//根据类型切换查询逻辑
+		if (StringUtils.isNotEmpty(request.getTypeSearch())) {
+			String type = request.getTypeSearch();
+			//1到12月份为month类型
+			int typeInt = Integer.valueOf(type).intValue();
+			if (typeInt <= 12) {
+				map.put("monthType", typeInt);
+				count = operationReportService.countRecordByMonth(map);
+				response.setCount(count);
+				//季度
+			} else if (typeInt == 13 || typeInt == 14) {
+				if (typeInt == 13) {
+					map.put("quarterType", 1);
+				} else if (typeInt == 14) {
+					map.put("quarterType", 3);
+				}
+				count = operationReportService.countRecordByQuarter(map);
+				response.setCount(count);
+				//半年
+			} else if (typeInt == 15) {
+				count = operationReportService.countRecordByHalfYear(map);
+				response.setCount(count);
+				//全年
+			} else if (typeInt == 16) {
+				count = operationReportService.countRecordByYear(map);
+				response.setCount(count);
+			}
+		} else {
+			//查询所有数据
+			count = operationReportService.countRecord(map);
+			response.setCount(count);
+		}
+		return response;
+	}
 
 	/**
 	 *
@@ -477,5 +529,23 @@ public class OperationReportController extends BaseController {
 		}
 		return response;
 	}
+	private List<OperationReportVO> page(List<OperationReportVO> recordList,OperationReportRequest request){
+			int current=request.getCurrPage(); //页码
+			int pageSize=request.getPageSize(); //每页显示的数量
+			int totalCount=recordList.size();
+			int pageCount = (totalCount / pageSize) + ((totalCount % pageSize > 0) ? 1 : 0);
 
+			if(current < 1){
+				current = 1;
+			}
+			int start=(current-1) * pageSize;
+			int end = Math.min(totalCount, current * pageSize);
+
+			if(pageCount >= current){
+				recordList=recordList.subList(start,end);
+			}else{
+				recordList = new ArrayList<>();
+			}
+			return recordList;
+	}
 }

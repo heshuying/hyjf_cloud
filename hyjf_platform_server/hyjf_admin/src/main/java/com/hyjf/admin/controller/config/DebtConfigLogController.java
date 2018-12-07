@@ -1,9 +1,12 @@
 package com.hyjf.admin.controller.config;
 
+import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.DebtConfigService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.config.DebtConfigLogResponse;
 import com.hyjf.am.resquest.admin.DebtConfigRequest;
 import com.hyjf.am.vo.config.DebtConfigLogVO;
@@ -17,15 +20,20 @@ import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -69,68 +77,97 @@ public class DebtConfigLogController extends BaseController {
 	@ApiOperation(value = "数据导出--债转日志配置查询", notes = "导出EXCEL")
 	@GetMapping(value = "/debtconfiglogExport")
 	//@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-	public void exportAction(HttpServletResponse response) throws Exception {
+	public void exportAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		DebtConfigRequest form = new DebtConfigRequest();
+		//sheet默认最大行数
+		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 		// 表格sheet名称
 		String sheetName = "汇转让配置记录";
 		// 文件名称
 		String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-		// 查询
-		DebtConfigRequest form = new DebtConfigRequest();
-		form.setLimitStart(-1);
-		form.setLimitEnd(-1);
-		List<DebtConfigLogVO> resultList = debtConfigService.getDebtConfigLogList(form);
-		String[] titles =
-				new String[] { "序号", "转让服务费率", "折让率下限", "折让率上限", "债转开关", "修改人", "修改时间", "IP地址"};
 		// 声明一个工作薄
-		HSSFWorkbook workbook = new HSSFWorkbook();
+		SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-		// 生成一个表格
-		HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
+//		List<DebtConfigLogVO> resultList = debtConfigService.getDebtConfigLogList(form);
+//		Integer totalCount = resultList.size();
+        Integer totalCount = debtConfigService.countDebtConfigLogTotal();
 
-		if (resultList != null && resultList.size() > 0) {
-			int sheetCount = 1;
-			int rowNum = 0;
-			for (int i = 0; i < resultList.size(); i++) {
-				rowNum++;
-				if (i != 0 && i % 60000 == 0) {
-					sheetCount++;
-					sheet =
-							com.hyjf.common.util.ExportExcel
-									.createHSSFWorkbookTitle(workbook, titles, (sheetName + "_第" + sheetCount + "页"));
-					rowNum = 1;
-				}
-				// 新建一行
-				Row row = sheet.createRow(rowNum);
+		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+		Map<String, String> beanPropertyColumnMap = buildMap();
+		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
 
-				// 循环数据
-				for (int celLength = 0; celLength < titles.length; celLength++) {
-					DebtConfigLogVO log = resultList.get(i);
-					// 创建相应的单元格
-					Cell cell = row.createCell(celLength);
-					if (celLength == 0) {// 序号
-						cell.setCellValue(i + 1);
-					} else if (celLength == 1) {
-						cell.setCellValue(String.valueOf(log.getAttornRate()));
-					} else if (celLength == 2) {
-						cell.setCellValue(String.valueOf(log.getConcessionRateDown()));
-					} else if (celLength == 3) {
-						cell.setCellValue(String.valueOf(log.getConcessionRateUp()));
-					} else if (celLength == 4) {
-						cell.setCellValue(log.getToggle()==1?"开":"关");
-					} else if (celLength == 5) {
-						cell.setCellValue(log.getUpdateUsername());
-					} else if (celLength == 6) {
-						SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-						cell.setCellValue(df.format(log.getUpdateTime()));
-					} else if (celLength == 7) {
-						cell.setCellValue(log.getIpAddress());
-					}
-				}
+		if (totalCount == 0) {
+			String sheetNameTmp = sheetName + "_第1页";
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+		}for (int i = 1; i <= sheetCount; i++) {
+			form.setPageSize(defaultRowMaxCount);
+			form.setCurrPage(i);
+			List<DebtConfigLogVO> record = debtConfigService.getDebtConfigLogList(form);
+			if (record != null && record.size()> 0) {
+				String sheetNameTmp = sheetName + "_第" + i + "页";
+				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  record);
+			} else {
+				break;
 			}
 		}
-		// 导出
-		ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+		DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+	}
 
+	private Map<String, String> buildMap() {
+		Map<String, String> map = Maps.newLinkedHashMap();
+		map.put("attornRate", "转让服务费率");
+		map.put("concessionRateDown", "折让率下限");
+		map.put("concessionRateUp", "折让率上限");
+		map.put("toggle", "债转开关");
+		map.put("updateUsername", "修改人");
+		map.put("updateTime", "修改时间");
+		map.put("ipAddress", "IP地址");
+		return map;
+	}
+
+	private Map<String, IValueFormatter> buildValueAdapter() {
+		Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+		IValueFormatter strAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				String str = (String) object;
+				return StringUtils.isEmpty(str) ? "" : String.valueOf(str);
+			}
+		};
+		IValueFormatter bigDecimalToStrAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				BigDecimal bigDecimal = (BigDecimal) object;
+				return bigDecimal.toString();
+			}
+		};
+		IValueFormatter toggleAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				Integer toggle = (Integer) object;
+				if (toggle == 1) {
+					return "开";
+				} else {
+					return "关";
+				}
+			}
+		};
+		IValueFormatter timeAdapter = new IValueFormatter() {
+			@Override
+			public String format(Object object) {
+				Date updateTime = (Date) object;
+				return updateTime == null ? "" : GetDate.getDateTimeMyTimeInMillis(updateTime);
+			}
+		};
+		mapAdapter.put("attornRate", bigDecimalToStrAdapter);
+		mapAdapter.put("concessionRateDown", bigDecimalToStrAdapter);
+		mapAdapter.put("concessionRateUp", bigDecimalToStrAdapter);
+		mapAdapter.put("toggle", toggleAdapter);
+		mapAdapter.put("updateUsername", strAdapter);
+		mapAdapter.put("updateTime", timeAdapter);
+		mapAdapter.put("ipAddress", strAdapter);
+		return mapAdapter;
 	}
 
 }

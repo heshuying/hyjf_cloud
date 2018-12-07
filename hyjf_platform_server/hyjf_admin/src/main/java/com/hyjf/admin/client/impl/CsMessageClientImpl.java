@@ -154,6 +154,11 @@ public class CsMessageClientImpl implements CsMessageClient {
     }
 
     @Override
+    public OperationReportResponse getRecordCount(OperationReportRequest request) {
+        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/count", request, OperationReportResponse.class).getBody();
+        return response;
+    }
+    @Override
     public OperationReportResponse listByRelease(OperationReportRequest request) {
         OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/listbyrelease", request, OperationReportResponse.class).getBody();
         return response;

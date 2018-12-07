@@ -108,8 +108,8 @@ public class BorrowRecoverController extends BaseController {
         copyForm.setPageSize(defaultRowMaxCount);
         copyForm.setCurrPage(1);
         // 查询
-        List<BorrowRecoverCustomizeVO> resultList = this.borrowRecoverService.exportBorrowRecoverList(copyForm);
-        Integer totalCount = resultList.size();
+ 
+        Integer totalCount = this.borrowRecoverService.countBorrowRecover(copyForm);
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
@@ -117,18 +117,16 @@ public class BorrowRecoverController extends BaseController {
         if (totalCount == 0) {
 
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-        }else {
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
         }
         for (int i = 1; i < sheetCount; i++) {
 
             copyForm.setPageSize(defaultRowMaxCount);
-            copyForm.setCurrPage(i+1);
+            copyForm.setCurrPage(i);
             // 查询
-            List<BorrowRecoverCustomizeVO> resultList2 = this.borrowRecoverService.exportBorrowRecoverList(copyForm);
-            if (resultList2 != null && resultList2.size()> 0) {
-                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultList2);
+            List<BorrowRecoverCustomizeVO> resultList = this.borrowRecoverService.exportBorrowRecoverList(copyForm);
+            if (resultList != null && resultList.size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i ) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultList);
             } else {
                 break;
             }

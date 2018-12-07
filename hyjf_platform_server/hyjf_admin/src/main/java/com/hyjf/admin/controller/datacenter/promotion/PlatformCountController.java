@@ -5,15 +5,17 @@ package com.hyjf.admin.controller.datacenter.promotion;
 
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
+import com.hyjf.admin.beans.request.UserManagerRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
-import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
-import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.PlatformCountService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
+import com.hyjf.am.response.user.UserManagerResponse;
+import com.hyjf.am.resquest.user.UserManagerRequest;
 import com.hyjf.am.vo.admin.PlatformCountCustomizeVO;
+import com.hyjf.common.util.AsteriskProcessUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -24,6 +26,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -49,11 +52,9 @@ import java.util.Map;
 public class PlatformCountController extends BaseController {
     @Autowired
     private PlatformCountService platformCountService;
-    public static final String PERMISSIONS = "platformcount";
 
     @ApiOperation(value = "数据中心-平台统计列表查询", notes = "数据中心-平台统计列表查询")
     @PostMapping("/searchaction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<List<PlatformCountCustomizeVO>> searchAction(@RequestBody PlatformCountRequestBean requestBean) {
         List<PlatformCountCustomizeVO> response = platformCountService.searchAction(requestBean);
         if (CollectionUtils.isEmpty(response)) {
@@ -62,82 +63,6 @@ public class PlatformCountController extends BaseController {
         return new AdminResult<>(response);
     }
 
-
-    /**
-     * 导出功能
-     * @param request
-     * @param response
-     * @param form
-     * @throws Exception
-     */
-    @ApiOperation(value = "导出excel", notes = "导出excel")
-    @PostMapping("/exportAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-    public void exportToExcel(HttpServletRequest request, HttpServletResponse response, PlatformCountRequestBean form) throws Exception {
-        //sheet默认最大行数
-        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
-        // 表格sheet名称
-        String sheetName = "平台统计";
-        // 文件名称
-        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-        // 声明一个工作薄
-        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
-        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
-
-        PlatformCountCustomizeVO platformCountCustomize = new PlatformCountCustomizeVO();
-
-        List<PlatformCountCustomizeVO> recordList = platformCountService.searchAction(form);
-        
-        Integer totalCount = recordList.size();
-
-        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
-        int minId = 0;
-        Map<String, String> beanPropertyColumnMap = buildMap();
-        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
-        String sheetNameTmp = sheetName + "_第1页";
-        if (totalCount == 0) {
-        	
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-        }else {
-        	 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList);
-        }
-//        for (int i = 1; i < sheetCount; i++) {
-//
-//            managerRequest.setPageSize(defaultRowMaxCount);
-//            managerRequest.setCurrPage(i+1);
-//            UserManagerResponse userManagerResponse2 = userCenterService.selectUserMemberList(managerRequest);
-//            if (userManagerResponse2 != null && userManagerResponse2.getResultList().size()> 0) {
-//                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-//                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  userManagerResponse2.getResultList());
-//            } else {
-//                break;
-//            }
-//        }
-        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
-    }
-
-    private Map<String, String> buildMap() {
-        Map<String, String> map = Maps.newLinkedHashMap();
-        map.put("sourceName", "平台");
-        map.put("accessNumber", "访问数");
-        map.put("registNumber", "注册数");
-        map.put("accountNumber", "开户数");
-        map.put("tenderNumber", "投资人数");
-        map.put("rechargePrice", "累计充值");
-        map.put("tenderPrice", "累计投资");
-        map.put("hztTenderPrice", "汇直投投资金额");
-        map.put("hxfTenderPrice", "汇消费投资金额");
-        map.put("htlTenderPrice", "汇天利投资金额");
-        map.put("htjTenderPrice", "汇添金投资金额");
-        map.put("hjhTenderPrice", "智投服务投资金额");
-        map.put("hzrTenderPrice", "汇转让投资金额");
-    
-        return map;
-    }
-    private Map<String, IValueFormatter> buildValueAdapter() {
-        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
-        return mapAdapter;
-    }
 
     public void exportAction(HttpServletRequest request, HttpServletResponse response, PlatformCountRequestBean form) throws Exception {
         // 表格sheet名称
@@ -242,5 +167,63 @@ public class PlatformCountController extends BaseController {
         // 导出
         ExportExcel.writeExcelFile(response, workbook, titles, fileName);
 
+    }
+    /**
+     * 导出功能
+     * @param request
+     * @param response
+     * @param form
+     * @throws Exception
+     */
+    @ApiOperation(value = "导出excel", notes = "导出excel")
+    @PostMapping("/exportAction")
+    public void exportToExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody  PlatformCountRequestBean form) throws Exception {
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 表格sheet名称
+        String sheetName = "平台统计";
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+
+        PlatformCountCustomizeVO platformCountCustomize = new PlatformCountCustomizeVO();
+
+        List<PlatformCountCustomizeVO> recordList = platformCountService.searchAction(form);
+        
+        Integer totalCount = recordList.size();
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        String sheetNameTmp = sheetName + "_第1页";
+        if (totalCount == 0) {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }else {
+        	 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList);
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
+
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("sourceName", "平台");
+        map.put("accessNumber", "访问数");
+        map.put("registNumber", "注册数");
+        map.put("accountNumber", "开户数");
+        map.put("tenderNumber", "投资人数");
+        map.put("rechargePrice", "累计充值");
+        map.put("tenderPrice", "累计投资");
+        map.put("hztTenderPrice", "汇直投投资金额");
+        map.put("hxfTenderPrice", "汇消费投资金额");
+        map.put("htlTenderPrice", "汇天利投资金额");
+        map.put("htjTenderPrice", "汇添金投资金额");
+        map.put("hjhTenderPrice", "智投服务投资金额");
+        map.put("hzrTenderPrice", "汇转让投资金额");
+    
+        return map;
+    }
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        return mapAdapter;
     }
 }

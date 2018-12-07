@@ -33,4 +33,11 @@ public interface BorrowRepaymentInfoService {
      * @Date 查询导出列表数据
      */
     List<BorrowRepaymentInfoCustomizeVO> selectBorrowRepaymentList(BorrowRepaymentInfoRequset copyForm);
+
+    /**
+     * 根据条件查询导出列表总数
+     * @param copyForm
+     * @return
+     */
+    Integer countBorrowRepaymentInfo(BorrowRepaymentInfoRequset copyForm);
 }

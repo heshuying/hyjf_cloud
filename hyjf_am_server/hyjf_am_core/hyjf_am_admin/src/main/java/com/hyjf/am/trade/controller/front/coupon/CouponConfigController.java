@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.coupon;
 
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CouponConfigCustomizeResponse;
 import com.hyjf.am.response.trade.CouponConfigExportCustomizeResponse;
@@ -225,6 +226,18 @@ public class CouponConfigController extends BaseController {
     }
 
     /**
+     * VIP中心-优惠券发行 查询导出列表总数
+     * @param request
+     * @return
+     */
+    @RequestMapping("/getCountForExport")
+    public IntegerResponse getCountForExport(@RequestBody CouponConfigRequest request){
+        Map<String, Object> mapParam = paramSet(request);
+        int recordTotal = couponConfigService.countRecord(mapParam);
+        return new IntegerResponse(recordTotal);
+    }
+
+    /**
      * 查询导出列表
      * @param request
      * @return
@@ -234,18 +247,19 @@ public class CouponConfigController extends BaseController {
         CouponConfigExportCustomizeResponse response = new CouponConfigExportCustomizeResponse();
         CouponConfigCustomize configCustomize = new CouponConfigCustomize();
         BeanUtils.copyProperties(request,configCustomize);
+        //分页参数配置
+        Paginator paginator = new Paginator(request.getCurrPage(), request.getExportCount(), request.getPageSize());
+        configCustomize.setLimitStart(paginator.getOffset());
+        configCustomize.setLimitEnd(paginator.getLimit());
         if (request.getTimeStartSrch() != null) {
             configCustomize.setTimeStartSrch(request.getTimeStartSrch() + " 00:00:00");
         }
         if (request.getTimeEndSrch() != null) {
             configCustomize.setTimeEndSrch(request.getTimeEndSrch() + " 23:59:59");
         }
-        List<CouponConfigExportCustomize> configExportCustomizes = couponConfigService.exoportRecordList(configCustomize);
+        List<CouponConfigExportCustomize> configExportCustomizes = couponConfigService.getExportRecordList(configCustomize);
         if (!CollectionUtils.isEmpty(configExportCustomizes)) {
-            Map<String, Object> mapParam = paramSet(request);
-            int recordTotal = couponConfigService.countRecord(mapParam);
             List<CouponConfigExportCustomizeVO> configExportCustomizeVOS = CommonUtils.convertBeanList(configExportCustomizes,CouponConfigExportCustomizeVO.class);
-            response.setCount(recordTotal);
             response.setResultList(configExportCustomizeVOS);
         }
         return response;

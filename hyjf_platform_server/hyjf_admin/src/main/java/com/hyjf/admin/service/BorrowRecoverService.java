@@ -33,4 +33,5 @@ public interface BorrowRecoverService {
      * @Date 放款明细导出列表 
      */
     List<BorrowRecoverCustomizeVO> exportBorrowRecoverList(BorrowRecoverRequest form);
+	Integer countBorrowRecover(BorrowRecoverRequest request);
 }

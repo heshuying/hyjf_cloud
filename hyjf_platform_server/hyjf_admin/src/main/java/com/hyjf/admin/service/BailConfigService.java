@@ -4,6 +4,7 @@
 package com.hyjf.admin.service;
 
 import com.hyjf.admin.common.service.BaseService;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.resquest.admin.BailConfigAddRequest;
 import com.hyjf.am.resquest.admin.BailConfigRequest;
 import com.hyjf.am.vo.admin.BailConfigCustomizeVO;
@@ -33,6 +34,8 @@ public interface BailConfigService extends BaseService {
      * @return
      */
     List<BailConfigCustomizeVO> selectRecordList(BailConfigRequest request);
+    IntegerResponse countBailConfigRecordList(BailConfigRequest request);
+
 
     /**
      * 更新当前机构可用的还款方式并返回最新保证金详情

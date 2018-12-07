@@ -38,8 +38,10 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Date;
@@ -73,8 +75,8 @@ public class WechatjhPlanController extends BaseTradeController {
         tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WECHAT_CLIENT));
         // 神策数据统计 add by liuyang 20180726 start
-        // 神策数据统计事件的预置属性
-        String presetProps = request.getParameter("presetProps");
+        // 从payload里面获取预置属性
+        String presetProps = getStringFromStream(request);
         // 神策数据统计 add by liuyang 20180726 end
         WebResult result = new WebResult();
         WeChatResult weChatResult = new WeChatResult();
@@ -150,5 +152,31 @@ public class WechatjhPlanController extends BaseTradeController {
         WeChatResult result = new WeChatResult();
         result.setObject(resultBean);
         return  result;
+    }
+
+    /**
+     * 从payload里面取神策预置属性,为解决从request里面取乱码的问题
+     *
+     * @param req
+     * @return
+     */
+    private String getStringFromStream(HttpServletRequest req) {
+        ServletInputStream is;
+        try {
+            is = req.getInputStream();
+            int nRead = 1;
+            int nTotalRead = 0;
+            byte[] bytes = new byte[10240];
+            while (nRead > 0) {
+                nRead = is.read(bytes, nTotalRead, bytes.length - nTotalRead);
+                if (nRead > 0)
+                    nTotalRead = nTotalRead + nRead;
+            }
+            String str = new String(bytes, 0, nTotalRead, "utf-8");
+            return str;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 }

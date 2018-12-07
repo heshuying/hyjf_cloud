@@ -204,4 +204,16 @@ public class UserPayAuthController extends BaseController {
         int intUpd = userPayAuthService.updateCancelRePayAuth(hjhUserAuth);
         return new IntegerResponse(intUpd);
     }
+
+    /**
+     * 查询满足条件的服务费授权的条数
+     * @param userPayAuthRequest
+     * @return
+     */
+    @RequestMapping("/selectUserMemberCount")
+    public IntegerResponse selectUserMemberCount(@RequestBody UserPayAuthRequest userPayAuthRequest) {
+        Map<String, Object> mapParam = paramSet(userPayAuthRequest);
+        int usesrCount = userPayAuthService.countRecordTotalRePay(mapParam);
+        return new IntegerResponse(usesrCount);
+    }
 }

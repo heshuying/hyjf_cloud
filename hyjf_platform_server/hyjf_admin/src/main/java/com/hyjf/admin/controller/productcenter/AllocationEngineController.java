@@ -216,7 +216,7 @@ public class AllocationEngineController extends BaseController{
 	@ApiOperation(value = "计划专区停用/启用状态修改", notes = "计划专区停用/启用状态修改")
 	@PostMapping(value = "/status")
 	@ResponseBody
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	// 注意 ：此 id 并非画面序号，而是画面上未显示的 计划专区表主键
 	/*@ApiImplicitParam(name = "id", value = "计划专区表主键", required = true, dataType = "String")*/
 	public AdminResult<String> statusChange(HttpServletRequest request, @RequestBody AllocationEngineViewRequest  viewRequest) { // 注意 ：这里的传值可以改为 form 形式
