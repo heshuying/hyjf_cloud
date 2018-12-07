@@ -17,14 +17,6 @@ public interface BorrowCreditService {
     AdminResult getBorrowCreditList(BorrowCreditRequest request);
 
     /**
-     * 汇转让导出
-     * @author zhangyk
-     * @date 2018/7/10 14:09
-     */
-    void  exportBorrowCreditList(BorrowCreditRequest request, HttpServletResponse response) throws UnsupportedEncodingException;
-
-
-    /**
      * 汇转让明细
      * @author zhangyk
      * @date 2018/7/10 16:15
@@ -44,4 +36,11 @@ public interface BorrowCreditService {
      * @date 2018/8/28 13:47
      */
     AdminResult getCreditStatusList();
+
+    /**
+     * 查询会转让数据条数
+     * @param request
+     * @return
+     */
+    int selectBorrowCreditCount(BorrowCreditRequest request);
 }

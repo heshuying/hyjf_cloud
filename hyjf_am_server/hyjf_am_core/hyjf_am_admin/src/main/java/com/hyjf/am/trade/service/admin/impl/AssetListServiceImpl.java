@@ -134,7 +134,14 @@ public class AssetListServiceImpl extends BaseServiceImpl implements AssetListSe
 
 
 	@Override
-	public List<AssetListCustomizeVO> findAssetListWithoutPage(Map<String, Object> mapParam) {
+	public List<AssetListCustomizeVO> findAssetListWithoutPage(Map<String, Object> mapParam, int limitStart, int limitEnd) {
+		// 封装查询条件
+		if (limitStart == 0 || limitStart > 0) {
+			mapParam.put("limitStart", limitStart);
+		}
+		if (limitEnd > 0) {
+			mapParam.put("limitEnd", limitEnd);
+		}
 		List<AssetListCustomizeVO> list = assetListServiceCustomizeMapper.queryAssetList(mapParam);
 		if(!CollectionUtils.isEmpty(list)){
 	        Map<String, String> assetStatusMap = CacheUtil.getParamNameMap("ASSET_STATUS");

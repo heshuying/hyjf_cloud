@@ -1466,7 +1466,7 @@ public interface AmTradeClient {
      * @Version v0.1
      * @Date
      */
-    List<BorrowRepaymentPlanCustomizeVO> exportRepayClkActBorrowRepaymentInfoList(BorrowRepaymentPlanRequest request);
+    AdminBorrowRepaymentResponse exportRepayClkActBorrowRepaymentInfoList(BorrowRepaymentPlanRequest request);
     /**
      * @Description 获取admin查询延期数据
      * @Author pangchengchao
