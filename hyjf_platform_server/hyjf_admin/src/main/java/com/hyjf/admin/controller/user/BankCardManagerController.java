@@ -282,7 +282,7 @@ public class BankCardManagerController extends BaseController {
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
-        requestBank.setLimitFlg(true);
+        requestBank.setLimitFlg(false);
         //请求第一页5000条
         requestBank.setPageSize(defaultRowMaxCount);
         requestBank.setCurrPage(1);
@@ -431,7 +431,7 @@ public class BankCardManagerController extends BaseController {
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
-        requestBank.setLimitFlg(true);
+        requestBank.setLimitFlg(false);
         //请求第一页5000条
         requestBank.setPageSize(defaultRowMaxCount);
         requestBank.setCurrPage(1);
@@ -598,7 +598,7 @@ public class BankCardManagerController extends BaseController {
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
-        bankCardLogRequest.setLimitFlg(true);
+        bankCardLogRequest.setLimitFlg(false);
         //请求第一页5000条
         bankCardLogRequest.setPageSize(defaultRowMaxCount);
         bankCardLogRequest.setCurrPage(1);

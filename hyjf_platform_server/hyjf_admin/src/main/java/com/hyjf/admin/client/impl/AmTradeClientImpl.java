@@ -2979,11 +2979,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @Date
      */
     @Override
-    public List<BorrowRepaymentPlanCustomizeVO> exportRepayClkActBorrowRepaymentInfoList(BorrowRepaymentPlanRequest request) {
+    public AdminBorrowRepaymentResponse exportRepayClkActBorrowRepaymentInfoList(BorrowRepaymentPlanRequest request) {
         String url = "http://AM-ADMIN/am-trade/adminBorrowRepayment/exportRepayClkActBorrowRepaymentInfoList";
         AdminBorrowRepaymentResponse response = restTemplate.postForEntity(url, request, AdminBorrowRepaymentResponse.class).getBody();
         if (response != null) {
-            return response.getBorrowRepaymentPlanList();
+            return response;
         }
         return null;
     }

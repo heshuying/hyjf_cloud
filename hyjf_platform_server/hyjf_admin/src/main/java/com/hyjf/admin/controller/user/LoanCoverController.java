@@ -282,7 +282,7 @@ public class LoanCoverController extends BaseController {
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
-        loanCoverUserRequest.setLimitFlg(true);
+        loanCoverUserRequest.setLimitFlg(false);
         //请求第一页5000条
         loanCoverUserRequest.setPageSize(defaultRowMaxCount);
         loanCoverUserRequest.setCurrPage(1);

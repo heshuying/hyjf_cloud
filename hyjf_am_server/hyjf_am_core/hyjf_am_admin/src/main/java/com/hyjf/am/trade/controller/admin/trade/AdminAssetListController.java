@@ -141,7 +141,12 @@ public class AdminAssetListController extends BaseController {
 	public AssetListCustomizeResponse findAssetListWithoutPage(@RequestBody @Valid AssetListRequest request){
 		AssetListCustomizeResponse response = new AssetListCustomizeResponse();
 		Map<String, Object> mapParam = paramSet(request);
-		List<AssetListCustomizeVO> assetList = assetListService.findAssetListWithoutPage(mapParam);
+		int count=assetListService.getBZJBZCount(mapParam);
+		Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
+		int limitStart = paginator.getOffset();
+		int limitEnd = paginator.getLimit();
+		List<AssetListCustomizeVO> assetList = assetListService.findAssetListWithoutPage(mapParam,limitStart,limitEnd);
+		response.setCount(count);
         if(assetList.size() > 0){
             if (!CollectionUtils.isEmpty(assetList)) {
                 response.setResultList(assetList);
