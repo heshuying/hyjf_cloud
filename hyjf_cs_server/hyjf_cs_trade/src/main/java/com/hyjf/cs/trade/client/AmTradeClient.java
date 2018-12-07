@@ -28,6 +28,7 @@ import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
@@ -1338,7 +1339,7 @@ public interface AmTradeClient {
 
     /**
      *
-     * @param params
+     * @param
      * @return
      */
     Boolean handlerAfterCash(AfterCashParamRequest request);
@@ -2456,6 +2457,10 @@ public interface AmTradeClient {
     int getWebCreditListCount(CreditListRequest request);
 
     List<CreditListVO> getWebCreditList(CreditListRequest request);
+
+    List<ContentArticleVO> getNoticeList(ContentArticleRequest contentArticleRequest);
+
+    List<AppAdsCustomizeVO> getWebHomeBannerList(AdsRequest request);
 
 
 }
