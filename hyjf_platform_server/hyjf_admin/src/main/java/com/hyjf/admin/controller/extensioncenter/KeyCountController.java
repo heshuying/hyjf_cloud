@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.controller.extensioncenter;
 
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
@@ -17,9 +16,7 @@ import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.KeyCountResponse;
-import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.resquest.user.KeyCountRequest;
-import com.hyjf.am.vo.admin.ChannelStatisticsDetailVO;
 import com.hyjf.am.vo.user.KeyCountVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import com.hyjf.common.util.CustomConstants;
@@ -174,7 +171,7 @@ public class KeyCountController extends BaseController {
 		SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
 		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-		Integer totalCount = recordList.size();
+		Integer totalCount = keyCountResponse.getCount();
 
 		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount
 				: totalCount / defaultRowMaxCount + 1;

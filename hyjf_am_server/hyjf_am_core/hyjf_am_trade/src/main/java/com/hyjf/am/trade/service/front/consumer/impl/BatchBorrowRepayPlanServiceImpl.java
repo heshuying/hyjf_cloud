@@ -1102,6 +1102,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 									}
 								} catch (Exception e) {
 									logger.error("计划还款中发生系统", e);
+                                    creditRepayAllFlag = false;
 									continue;
 								}
 							}

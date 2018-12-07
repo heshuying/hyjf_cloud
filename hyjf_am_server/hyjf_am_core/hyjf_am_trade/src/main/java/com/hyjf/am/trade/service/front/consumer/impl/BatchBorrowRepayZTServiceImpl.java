@@ -897,6 +897,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 									}
 								} catch (Exception e) {
 									logger.error("还款中发生系统", e);
+									creditRepayAllFlag = false;
 									continue;
 								}
 							}
