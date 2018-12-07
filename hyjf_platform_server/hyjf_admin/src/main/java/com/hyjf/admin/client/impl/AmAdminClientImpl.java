@@ -40,6 +40,7 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -456,6 +457,13 @@ public class AmAdminClientImpl implements AmAdminClient {
         }
         return null;
     }
+    @Override
+    public IntegerResponse countBailConfigRecordList(BailConfigRequest request) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/select_bail_config_count";
+        IntegerResponse response = restTemplate.postForEntity(url,request,IntegerResponse.class).getBody();
+        return response;
+    }
+
 
     /**
      * 更新当前机构可用的还款方式并返回最新保证金详情
@@ -1099,6 +1107,8 @@ public class AmAdminClientImpl implements AmAdminClient {
     @Override
     public List<DataCenterCouponCustomizeVO> getRecordListDJ(DataCenterCouponCustomizeVO dataCenterCouponCustomize) {
         DadaCenterCouponCustomizeRequest request = new DadaCenterCouponCustomizeRequest();
+        request.setLimitStart(dataCenterCouponCustomize.getLimitStart());
+        request.setLimitEnd(dataCenterCouponCustomize.getLimitEnd());
         DataCenterCouponCustomizeResponse response = restTemplate.postForObject(
                 "http://AM-ADMIN/am-admin/datacenter/coupon/get_record_list_dj", request,
                 DataCenterCouponCustomizeResponse.class);
@@ -1107,10 +1117,27 @@ public class AmAdminClientImpl implements AmAdminClient {
         }
         return null;
     }
-
+    @Override
+    public int getCountDJ() {
+        DadaCenterCouponCustomizeRequest request = new DadaCenterCouponCustomizeRequest();
+        DataCenterCouponCustomizeResponse response = restTemplate.postForObject(
+                "http://AM-ADMIN/am-admin/datacenter/coupon/get_count_list_dj", request,
+                DataCenterCouponCustomizeResponse.class);
+        return response.getCount();
+    }
+    @Override
+    public int getCountJX() {
+        DadaCenterCouponCustomizeRequest request = new DadaCenterCouponCustomizeRequest();
+        DataCenterCouponCustomizeResponse response = restTemplate.postForObject(
+                "http://AM-ADMIN/am-admin/datacenter/coupon/get_count_list_jx", request,
+                DataCenterCouponCustomizeResponse.class);
+        return response.getCount();
+    }
     @Override
     public List<DataCenterCouponCustomizeVO> getRecordListJX(DataCenterCouponCustomizeVO dataCenterCouponCustomize) {
         DadaCenterCouponCustomizeRequest request = new DadaCenterCouponCustomizeRequest();
+        request.setLimitStart(dataCenterCouponCustomize.getLimitStart());
+        request.setLimitEnd(dataCenterCouponCustomize.getLimitEnd());
         DataCenterCouponCustomizeResponse response = restTemplate.postForObject(
                 "http://AM-ADMIN/am-admin/datacenter/coupon/get_record_list_jx", request,
                 DataCenterCouponCustomizeResponse.class);
@@ -1180,14 +1207,24 @@ public class AmAdminClientImpl implements AmAdminClient {
                 "http://AM-ADMIN/am-user/promotion/utm/select_app_channel_reconciliation_record", request,
                 ChannelReconciliationResponse.class);
     }
-
+    @Override
+    public ChannelReconciliationResponse selectAppChannelReconciliationCount(ChannelReconciliationRequest request) {
+        return restTemplate.postForObject(
+                "http://AM-ADMIN/am-user/promotion/utm/select_app_channel_reconciliation_count", request,
+                ChannelReconciliationResponse.class);
+    }
     @Override
     public ChannelReconciliationResponse selectAppChannelReconciliationRecordHjh(ChannelReconciliationRequest request) {
         return restTemplate.postForObject(
                 "http://AM-ADMIN/am-user/promotion/utm/select_app_channel_reconciliation_record_hjh", request,
                 ChannelReconciliationResponse.class);
     }
-
+    @Override
+    public ChannelReconciliationResponse selectAppChannelReconciliationRecordHjhCount(ChannelReconciliationRequest request) {
+        return restTemplate.postForObject(
+                "http://AM-ADMIN/am-user/promotion/utm/select_app_channel_reconciliation_record_hjh_count", request,
+                ChannelReconciliationResponse.class);
+    }
     @Override
     public SubmissionsVO getSubmissionsRecord(SubmissionsRequest request) {
         return restTemplate.postForObject("http://AM-ADMIN/am-config/submission/getSubmissionsRecord", request,
