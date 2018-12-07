@@ -86,8 +86,8 @@ public class AccountBalanceController extends BaseController {
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 
         //请求第一页5000条
-        form.setPageSize(defaultRowMaxCount);
-        form.setCurrPage(1);
+        //form.setPageSize(defaultRowMaxCount);
+        //form.setCurrPage(1);
         HjhInfoAccountBalanceResponse resultResponse = accountBalanceService.getSearchListByDay(form);
         // 表格sheet名称
         String sheetName = "每日交易量";
@@ -96,16 +96,11 @@ public class AccountBalanceController extends BaseController {
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
-        Integer totalCount = resultResponse.getResultList().size();
+        Integer totalCount = resultResponse.getCount();
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
-        String sheetNameTmp = sheetName + "_第1页";
-        if (totalCount == 0) {
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-        }else {
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,resultResponse.getResultList());
-        }
+        String sheetNameTmp = "";
         for (int i = 1; i < sheetCount; i++) {
             //请求第一页5000条
             form.setPageSize(defaultRowMaxCount);
@@ -167,8 +162,8 @@ public class AccountBalanceController extends BaseController {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         //请求第一页5000条
-        form.setPageSize(defaultRowMaxCount);
-        form.setCurrPage(1);
+       // form.setPageSize(defaultRowMaxCount);
+      //  form.setCurrPage(1);
         HjhInfoAccountBalanceResponse resultResponse = accountBalanceService.getSearchListByMonth(form);
         // 表格sheet名称
         String sheetName = "每月交易量";
@@ -177,16 +172,11 @@ public class AccountBalanceController extends BaseController {
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
-        Integer totalCount = resultResponse.getResultList().size();
+        Integer totalCount = resultResponse.getCount();
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = monthBuildMap();
         Map<String, IValueFormatter> mapValueAdapter = monthBuildValueAdapter();
-        String sheetNameTmp = sheetName + "_第1页";
-        if (totalCount == 0) {
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-        }else {
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,resultResponse.getResultList());
-        }
+        String sheetNameTmp = "";
         for (int i = 1; i < sheetCount; i++) {
             //请求第一页5000条
             form.setPageSize(defaultRowMaxCount);
