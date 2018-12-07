@@ -29,6 +29,15 @@ public class OperationReportServiceImpl implements OperationReportService {
 	public OperationReportResponse getRecordList(OperationReportRequest request) {
 		return csMessageClient.getRecordList(request);
 	}
+
+	@Override
+	public Integer getRecordCount(OperationReportRequest request) {
+		OperationReportResponse recordCount = csMessageClient.getRecordCount(request);
+		if (recordCount!= null) {
+			return recordCount.getCount();
+		}
+		return 0;
+	}
 	@Override
 	public OperationReportResponse listByRelease(OperationReportRequest request){
 		return csMessageClient.listByRelease(request);

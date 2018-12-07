@@ -103,10 +103,10 @@ public class CouponDJController extends BaseController {
 	        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
 			DataCenterCouponCustomizeVO dataCenterCouponCustomize =createDataCenterCouponCustomize(form);
-			List<DataCenterCouponCustomizeVO> resultList  = this.couponService.getRecordListDJ(dataCenterCouponCustomize);
+			//List<DataCenterCouponCustomizeVO> resultList  = this.couponService.getRecordListDJ(dataCenterCouponCustomize);
 	        
-	        Integer totalCount = resultList.size();
-
+	       // Integer totalCount = resultList.size();
+			Integer totalCount = couponService.getCountDJ();
 	        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
 	        Map<String, String> beanPropertyColumnMap = buildMap();
 	        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
@@ -114,14 +114,15 @@ public class CouponDJController extends BaseController {
 	        for (int i = 1; i <= sheetCount; i++) {
 				int start=(i-1) * defaultRowMaxCount;
 				int end = Math.min(totalCount, i * defaultRowMaxCount);
-
+				dataCenterCouponCustomize.setLimitStart(start);
+				dataCenterCouponCustomize.setLimitEnd(end);
+				List<DataCenterCouponCustomizeVO> resultList  = this.couponService.getRecordListDJ(dataCenterCouponCustomize);
 				sheetNameTmp = sheetName + "_第" + (i) + "页";
-				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList.subList(start, end));
+				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
 	        }
 	        
 	        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
 	    }
-
 		private Map<String, String> buildMap() {
 			Map<String, String> map = Maps.newLinkedHashMap();
 			map.put("title", "来源");

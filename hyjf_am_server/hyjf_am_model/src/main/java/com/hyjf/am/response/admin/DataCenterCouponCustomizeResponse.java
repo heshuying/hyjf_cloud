@@ -11,4 +11,13 @@ import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
  * @version DataCenterCouponCustomizeResponse, v0.1 2018/8/6 15:46
  */
 public class DataCenterCouponCustomizeResponse extends Response<DataCenterCouponCustomizeVO> {
+    int count;
+
+    public int getCount() {
+        return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
+    }
 }

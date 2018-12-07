@@ -139,7 +139,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         Map<String, String> result = CacheUtil.getParamNameMap("USER_RELATION");
         resultMap.put("userRelation", result);
         // 根据用户Id查询用户银行卡号 add by tyy 2018-6-27
-        List<BankCardVO> bankCards = this.amUserClient.getBankOpenAccountById(user.getUserId());
+        List<BankCardVO> bankCards = this.amUserClient.getTiedCardForBank(user.getUserId());
         BankCardVO bankCard = new BankCardVO();
         if (bankCards != null && !bankCards.isEmpty()) {
             bankCard = bankCards.get(0);

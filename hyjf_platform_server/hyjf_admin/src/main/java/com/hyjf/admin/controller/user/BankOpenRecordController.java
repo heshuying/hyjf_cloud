@@ -258,7 +258,7 @@ public class BankOpenRecordController extends BaseController {
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
-        accountRecordRequest.setLimitFlg(true);
+        accountRecordRequest.setLimitFlg(false);
         //请求第一页5000条
         accountRecordRequest.setPageSize(defaultRowMaxCount);
         accountRecordRequest.setCurrPage(1);

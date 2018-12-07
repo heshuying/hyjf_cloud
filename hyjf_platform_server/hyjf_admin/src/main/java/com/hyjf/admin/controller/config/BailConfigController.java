@@ -514,11 +514,10 @@ public class BailConfigController extends BaseController {
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
         //请求第一页5000条
-//        request.setPageSize(defaultRowMaxCount);
-//        request.setCurrPage(1);
-        List<BailConfigCustomizeVO> recordList = this.bailConfigService.selectRecordList(request);
+        request.setPageSize(defaultRowMaxCount);
         
-        Integer totalCount = recordList.size();
+
+        Integer totalCount = bailConfigService.selectBailConfigCount(request);
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
@@ -526,11 +525,9 @@ public class BailConfigController extends BaseController {
         String sheetNameTmp = "";
 
         for (int i = 1; i < sheetCount; i++) {
-			int start=(i-1) * defaultRowMaxCount;
-			int end = Math.min(totalCount, i * defaultRowMaxCount);
-
+        	request.setCurrPage(sheetCount);
 			sheetNameTmp = sheetName + "_第" + (i) + "页";
-			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  recordList.subList(start, end));
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, this.bailConfigService.selectRecordList(request));
         }
         
         DataSet2ExcelSXSSFHelper.write2Response(requestt, response, fileName, workbook);

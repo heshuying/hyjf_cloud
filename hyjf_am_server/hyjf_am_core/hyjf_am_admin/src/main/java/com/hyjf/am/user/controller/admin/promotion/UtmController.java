@@ -326,6 +326,19 @@ public class UtmController extends BaseController {
     }
 
     /**
+     * 查询app统计明细散标数量
+     * @return
+     */
+    @RequestMapping("/select_app_channel_reconciliation_count")
+    public ChannelReconciliationResponse selectAppChannelReconciliationCount(@RequestBody ChannelReconciliationRequest request) {
+        ChannelReconciliationResponse response = new ChannelReconciliationResponse();
+        // 查询符合条件的数量
+        int count = utmService.selectAppChannelReconciliationCount(request);
+        response.setCount(count);
+        return response;
+    }
+
+    /**
      * 查询app统计明细计划
      * @return
      */
@@ -343,6 +356,18 @@ public class UtmController extends BaseController {
         return response;
     }
 
+    /**
+     * 查询app统计明细计划
+     * @return
+     */
+    @RequestMapping("/select_app_channel_reconciliation_record_hjh_count")
+    public ChannelReconciliationResponse selectAppChannelReconciliationRecordHjhCount(@RequestBody ChannelReconciliationRequest request) {
+        ChannelReconciliationResponse response = new ChannelReconciliationResponse();
+        // 查询符合条件的数量
+        int count = utmService.selectAppChannelReconciliationHjhCount(request);
+        response.setCount(count);
+        return response;
+    }
     /**
      * 新增操作
      * @param request

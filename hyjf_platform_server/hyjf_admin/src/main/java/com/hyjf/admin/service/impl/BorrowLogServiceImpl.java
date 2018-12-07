@@ -55,4 +55,8 @@ public class BorrowLogServiceImpl implements BorrowLogService {
         List<BorrowLogCustomizeVO> recordList = this.amTradeClient.exportBorrowLogList(request);
         return recordList;
     }
+    @Override
+    public Integer countBorrowLog(BorrowLogRequset request) {
+        return this.amTradeClient.countBorrowLog(request);
+    }
 }

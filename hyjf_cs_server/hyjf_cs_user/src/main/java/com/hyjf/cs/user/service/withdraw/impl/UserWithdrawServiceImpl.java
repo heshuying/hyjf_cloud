@@ -101,7 +101,7 @@ public class UserWithdrawServiceImpl extends BaseUserServiceImpl implements User
      */
     @Override
     public List<BankCardVO> getBankCardByUserId(Integer userId) {
-        return amUserClient.getBankOpenAccountById(userId);
+        return amUserClient.getTiedCardForBank(userId);
     }
 
     /**

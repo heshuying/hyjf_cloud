@@ -119,7 +119,7 @@ public class AdminBorrowRepaymentController extends BaseController {
     public AdminBorrowRepaymentResponse exportRepayClkActBorrowRepaymentInfoList(@RequestBody @Valid BorrowRepaymentPlanRequest request){
         logger.info("请求参数:" +JSONObject.toJSON(request));
         AdminBorrowRepaymentResponse response = new AdminBorrowRepaymentResponse();
-
+        response.setTotal( adminBorrowRepaymentService.exportRepayClkActBorrowRepaymentInfoListCount(request));
         List<AdminBorrowRepaymentPlanCustomize> list = adminBorrowRepaymentService.exportRepayClkActBorrowRepaymentInfoList(request);
         if(!CollectionUtils.isEmpty(list)){
             List<BorrowRepaymentPlanCustomizeVO> voList = CommonUtils.convertBeanList(list, BorrowRepaymentPlanCustomizeVO.class);

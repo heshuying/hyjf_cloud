@@ -114,7 +114,7 @@ public class EventController extends BaseController {
 
 	@ApiOperation(value = "公司管理-公司记事初始化", notes = "公司管理-公司记事初始化")
 	@PostMapping("/select_by_id")
-	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_INFO, ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
+	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
 	public AdminResult selectById(@RequestBody EventRequestBean requestBean) {
 		EventVO vo = eventService.selectById(requestBean);
 		return new AdminResult(vo);

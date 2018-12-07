@@ -13,7 +13,6 @@ import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.jwt.JwtHelper;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.util.MD5;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.service.BaseServiceImpl;
@@ -579,7 +578,7 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 
 	@Override
 	public List<BankCardVO> getBankOpenAccountById(UserVO userVO) {
-		return  amUserClient.getBankOpenAccountById(userVO.getUserId());
+		return  amUserClient.getTiedCardForBank(userVO.getUserId());
 	}
 
 	@Override
