@@ -178,7 +178,30 @@
         ELSE
         CONCAT(hcc.coupon_quota, '%')
         END AS coupon_quota,
-
+        CASE
+        WHEN hcu.coupon_source = 1 THEN
+        '手动发放'
+        WHEN hcu.coupon_source = 2 THEN
+        '活动发放'
+        WHEN hcu.coupon_source = 3 THEN
+        '会员礼包'
+        ELSE
+        ''
+        END AS coupon_from,
+        CASE
+        WHEN hcu.coupon_source = 1 THEN
+        hcu.content
+        WHEN hcu.coupon_source = 2 THEN
+        hal.title
+        WHEN hcu.coupon_source = 3 THEN
+        IF (
+        vi.vip_level = 1,
+        "欢迎礼包",
+        "升级礼包"
+        )
+        ELSE
+        ''
+        END AS coupon_content,
 
         hbt.borrow_nid borrow_nid,
         hbt1.account account,
@@ -212,6 +235,9 @@
         LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
         LEFT JOIN ht_borrow_tender hbt1 ON hcrt.real_tender_id=hbt1.nid
         INNER JOIN ht_coupon_recover hcr ON hcr.tender_id = hbt.nid
+        LEFT JOIN hyjf_user.ht_vip_auth va ON hcu.coupon_code = va.coupon_code
+        LEFT JOIN hyjf_user.ht_vip_info vi ON va.vip_id = vi.id
+        LEFT JOIN hyjf_market.ht_activity_list hal ON hcu.activity_id = hal.id
         <include refid="selectCouponTenderList_Where_Clause" />
         GROUP BY hct.order_id
         ORDER BY hct.id DESC
@@ -630,11 +656,21 @@
         WHEN hcu.coupon_source = 2 THEN
         '活动发放'
         WHEN hcu.coupon_source = 3 THEN
-        'vip礼包'
+        '会员礼包'
         ELSE
         ''
         END coupon_source,
-        hcc.content coupon_content,
+        CASE
+        WHEN hcu.coupon_source = 1 THEN
+        hcu.content
+        WHEN hcu.coupon_source = 2 THEN
+        hal.title
+        WHEN hcu.coupon_source = 3 THEN
+        IF (
+        vi.vip_level = 1,
+        "欢迎礼包",
+        "升级礼包"
+        )  ELSE '' END as coupon_content,
         hbt.borrow_nid borrow_nid,
         hha.accede_account account,
         -- pa.`name` AS operating_deck,
@@ -674,6 +710,9 @@
         LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
         LEFT JOIN ht_hjh_accede hha ON hcrt.real_tender_id=hha.accede_order_id
         INNER JOIN ht_coupon_recover hcr ON hcr.tender_id = hbt.nid
+        LEFT JOIN hyjf_user.ht_vip_auth va ON hcu.coupon_code = va.coupon_code
+        LEFT JOIN hyjf_user.ht_vip_info vi ON va.vip_id = vi.id
+        LEFT JOIN hyjf_market.ht_activity_list hal ON hcu.activity_id = hal.id
         -- INNER JOIN ht_param_name pa1 ON pa1.name_class = 'COUPON_RECIVE_STATUS'
         -- AND pa1.name_cd = hcr.received_flg
         <include refid="selectCouponTenderHjhList_Where_Clause" />

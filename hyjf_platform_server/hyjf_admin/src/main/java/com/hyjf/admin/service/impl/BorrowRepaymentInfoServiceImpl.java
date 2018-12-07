@@ -107,6 +107,14 @@ public class BorrowRepaymentInfoServiceImpl implements BorrowRepaymentInfoServic
      */
     @Override
     public List<BorrowRepaymentInfoCustomizeVO> selectBorrowRepaymentList(BorrowRepaymentInfoRequset copyForm) {
+        Page page = Page.initPage(copyForm.getCurrPage(), copyForm.getPageSize());
+        copyForm.setLimitStart(page.getOffset());
+        copyForm.setLimitEnd(page.getLimit());
         return this.amTradeClient.selectBorrowRepaymentInfoList(copyForm);
+    }
+
+    @Override
+    public Integer countBorrowRepaymentInfo(BorrowRepaymentInfoRequset copyForm) {
+        return amTradeClient.countBorrowRepaymentInfoExport(copyForm);
     }
 }

@@ -172,15 +172,14 @@ public class UserPayAuthController extends BaseController {
     @ApiOperation(value = "缴费授权列表导出", notes = "缴费授权列表导出")
     @PostMapping(value = "/exportpayauth")
     public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody UserPayAuthRequestBean userPayAuthRequestBean) throws Exception {
-        //sheet默认最大行数
-        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
-        defaultRowMaxCount = 8; // todo
+
         //取数据
         UserPayAuthRequest userPayAuthRequest = new UserPayAuthRequest();
         BeanUtils.copyProperties(userPayAuthRequestBean, userPayAuthRequest);
         userPayAuthRequest.setLimitFlg(true);
-
-        UserPayAuthResponse userManagerResponse = userPayAuthService.selectUserMemberList(userPayAuthRequest);
+        int totalCount = userPayAuthService.selectUserMemberCount(userPayAuthRequest);
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
         String sheetName = "缴费授权";
         // 文件名称
@@ -189,7 +188,6 @@ public class UserPayAuthController extends BaseController {
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
-        Integer totalCount = userManagerResponse.getResultList().size();
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
@@ -197,13 +195,13 @@ public class UserPayAuthController extends BaseController {
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }
-        for (int i = 1; i < sheetCount; i++) {
+        for (int i = 1; i <= sheetCount; i++) {
             //请求第一页5000条
             userPayAuthRequest.setPageSize(defaultRowMaxCount);
             userPayAuthRequest.setCurrPage(i);
+            userPayAuthRequest.setLimitFlg(false);
             UserPayAuthResponse resultResponse2 = userPayAuthService.selectUserMemberList(userPayAuthRequest);
             if (resultResponse2 != null && resultResponse2.getResultList().size()> 0) {
-                logger.info("测试导出，页数：{}, 条数：{}", i, resultResponse2.getResultList().size());//todo
                 sheetNameTmp = sheetName + "_第" + (i) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultResponse2.getResultList());
             } else {
@@ -211,66 +209,6 @@ public class UserPayAuthController extends BaseController {
             }
         }
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
-/*        // 声明一个工作薄
-        HSSFWorkbook workbook = new HSSFWorkbook();
-        //取数据
-        UserPayAuthRequest userPayAuthRequest = new UserPayAuthRequest();
-        BeanUtils.copyProperties(userPayAuthRequestBean, userPayAuthRequest);
-        userPayAuthRequest.setLimitFlg(true);
-
-        UserPayAuthResponse userManagerResponse = userPayAuthService.selectUserMemberList(userPayAuthRequest);
-        if (null != userManagerResponse) {
-            // 需要输出的结果列表
-            List<UserPayListAuthCustomizeVO> recordList = userManagerResponse.getResultList();
-            // 生成一个表格
-            HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
-            if (recordList != null && recordList.size() > 0) {
-                int sheetCount = 1;
-                int rowNum = 0;
-                for (int i = 0; i < recordList.size(); i++) {
-                    rowNum++;
-                    if (i != 0 && i % 60000 == 0) {
-                        sheetCount++;
-                        sheet = com.hyjf.common.util.ExportExcel.createHSSFWorkbookTitle(workbook, titles,
-                                (sheetName + "_第" + sheetCount + "页"));
-                        rowNum = 1;
-                    }
-                    // 新建一行
-                    Row row = sheet.createRow(rowNum);
-                    // 循环数据
-                    for (int celLength = 0; celLength < titles.length; celLength++) {
-                        UserPayListAuthCustomizeVO user = recordList.get(i);
-                        // 创建相应的单元格
-                        Cell cell = row.createCell(celLength);
-                        if (celLength == 0) {// 序号
-                            cell.setCellValue(i + 1);
-                        } else if (celLength == 1) {// 用户名
-                            cell.setCellValue(user.getUserName());
-                        } else if (celLength == 2) {// 当前手机号
-                            cell.setCellValue(user.getMobile());
-                        } else if (celLength == 3) {// 授权金额
-                            cell.setCellValue("250000");
-                        } else if (celLength == 4) {// 签约到期日
-                            cell.setCellValue(user.getSignEndDate());
-                        } else if (celLength == 5) {// 授权状态
-                            if (Integer.valueOf(user.getAuthType()) == 1) {
-                                cell.setCellValue("已授权");
-                            } else if (Integer.valueOf(user.getAuthType()) == 0) {
-                                cell.setCellValue("未授权");
-                            } else if (Integer.valueOf(user.getAuthType()) == 2) {
-                                cell.setCellValue("已解约");
-                            }
-                        } else if (celLength == 6) {// 银行电子账户
-                            cell.setCellValue(user.getBankid());
-                        } else if (celLength == 7) {// 授权时间
-                            cell.setCellValue(user.getSignDate());
-                        }
-                    }
-                }
-            }
-        }
-        // 导出
-            ExportExcel.writeExcelFile(response, workbook, titles, fileName);*/
     }
 
     private Map<String, IValueFormatter> buildValueAdapter() {

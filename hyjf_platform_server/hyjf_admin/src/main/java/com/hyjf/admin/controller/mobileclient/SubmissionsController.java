@@ -152,8 +152,8 @@ public class SubmissionsController extends BaseController {
                 form.setUserId(userId);
             }
         }
-        SubmissionsResponse submissionList = submissionsService.getExportSubmissionList(form);
-        List<SubmissionsCustomizeVO> submissionsList = submissionList.getResultList();
+        SubmissionsResponse submissionsResponse = submissionsService.getExportSubmissionList(form);
+        List<SubmissionsCustomizeVO> submissionsList = submissionsResponse.getResultList();
         for (SubmissionsCustomizeVO submissionsCustomizeVO : submissionsList) {
             String type = userStatus.get(submissionsCustomizeVO.getSysType()) + "-" + submissionsCustomizeVO.getSysVersion();
             submissionsCustomizeVO.setSysType(type);
@@ -162,7 +162,7 @@ public class SubmissionsController extends BaseController {
             String userName = users.getResult() != null ? users.getResult().getUsername() : "";
             submissionsCustomizeVO.setUserName(userName);
         }
-        Integer totalCount = submissionsList.size();
+        Integer totalCount = submissionsResponse.getRecordTotal();
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();

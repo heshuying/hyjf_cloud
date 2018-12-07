@@ -33,4 +33,9 @@ public class AdminBorrowRepaymentInfoServiceImpl extends BaseServiceImpl impleme
     public List<AdminBorrowRepaymentInfoCustomize> selectBorrowRepaymentInfoList(BorrowRepaymentInfoRequset request) {
         return this.borrowRepaymentInfoCustomizeMapper.selectBorrowRepaymentInfoList(request);
     }
+
+    @Override
+    public Integer countBorrowRepaymentInfoExport(BorrowRepaymentInfoRequset request) {
+        return this.borrowRepaymentInfoCustomizeMapper.countBorrowRepaymentInfoExport(request);
+    }
 }
