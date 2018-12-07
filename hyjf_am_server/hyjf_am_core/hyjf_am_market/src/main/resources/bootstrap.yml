@@ -43,11 +43,3 @@ management:
 logging:
   file: am-market.log
   file.max-size: 100MB
-
-info:
-  projectName: @project.name@
-  description: @project.description@
-  version: @project.version@
-  encoding: @project.build.sourceEncoding@
-  java:
-    version: @java.version@

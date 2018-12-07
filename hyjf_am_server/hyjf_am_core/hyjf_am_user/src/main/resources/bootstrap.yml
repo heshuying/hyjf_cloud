@@ -39,11 +39,3 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
-
-info:
-  projectName: @project.name@
-  description: @project.description@
-  version: @project.version@
-  encoding: @project.build.sourceEncoding@
-  java:
-    version: @java.version@
