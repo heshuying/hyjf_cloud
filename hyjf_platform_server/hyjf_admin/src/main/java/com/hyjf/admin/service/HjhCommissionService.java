@@ -66,4 +66,11 @@ public interface HjhCommissionService {
 	 * @return List<HjhAssetTypeVO>
 	 */
 	HjhCommissionResponse selectHjhCommissionListWithOutPage(HjhCommissionRequest form);
+
+	/**
+	 * 资金中心-汇计划提成导出记录总数
+	 * @param request
+	 * @return
+	 */
+	int getHjhCommissionCountForExport(HjhCommissionRequest request);
 }

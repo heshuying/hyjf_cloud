@@ -1344,4 +1344,11 @@ public interface AmUserClient {
      * @return
      */
     List<SmsCountCustomizeVO> getSmsListForExport(SmsCountRequest request);
+
+    /**
+     * 查询满足条件的服务费授权的条数
+     * @param userPayAuthRequest
+     * @return
+     */
+    int selectUserMemberCount(UserPayAuthRequest userPayAuthRequest);
 }

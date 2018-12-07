@@ -223,4 +223,9 @@ public class UserPayAuthServiceImpl extends BaseServiceImpl implements UserPayAu
     public int updateCancelRePayAuth(int userId){
         return amUserClient.updateCancelRePayAuth(userId);
     }
+
+    @Override
+    public int selectUserMemberCount(UserPayAuthRequest userPayAuthRequest) {
+        return amUserClient.selectUserMemberCount(userPayAuthRequest);
+    }
 }

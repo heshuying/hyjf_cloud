@@ -3068,6 +3068,13 @@ public interface AmTradeClient {
     Map<String, Object> validatorFieldCheckClient(AdminProtocolRequest adminProtocolRequest);
 
     /**
+     * VIP中心-优惠券发行 查询导出列表总数
+     * @param request
+     * @return
+     */
+    int getCouponConfigCountForExport(CouponConfigRequest request);
+
+    /**
      * 查询优惠券发行导出列表
      * @param request
      * @return
@@ -3102,6 +3109,13 @@ public interface AmTradeClient {
      * @return
      */
     boolean updateAccountNumberByUserId(Integer userId, String accountId);
+
+    /**
+     * 查询导出总数
+     * @param copyForm
+     * @return
+     */
+    Integer countBorrowRepaymentInfoExport(BorrowRepaymentInfoRequset copyForm);
 
     /** 加息接口开始*/
     /** 枚举类型 */
@@ -3239,5 +3253,12 @@ public interface AmTradeClient {
      * @return HjhCommissionResponse
      */
     HjhCommissionResponse selectHjhCommissionListWithOutPage(HjhCommissionRequest form);
+
+    /**
+     * 资金中心-汇计划提成导出记录总数
+     * @param request
+     * @return
+     */
+    int getHjhCommissionCountForExport(HjhCommissionRequest request);
 }
 

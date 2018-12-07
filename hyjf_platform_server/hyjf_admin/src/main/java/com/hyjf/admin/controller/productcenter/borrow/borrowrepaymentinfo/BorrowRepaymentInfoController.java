@@ -21,6 +21,7 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.auth.In;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -397,33 +398,29 @@ public class BorrowRepaymentInfoController extends BaseController {
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
-        //请求第一页5000条
-        copyForm.setPageSize(defaultRowMaxCount);
-        copyForm.setCurrPage(1);
+
         // 查询
-        List<BorrowRepaymentInfoCustomizeVO> resultList = this.borrowRepaymentInfoService.selectBorrowRepaymentList(copyForm);
-        Integer totalCount = resultList.size();
+//        List<BorrowRepaymentInfoCustomizeVO> resultList = this.borrowRepaymentInfoService.selectBorrowRepaymentList(copyForm);
+//        Integer totalCount = resultList.size();
+        Integer totalCount = borrowRepaymentInfoService.countBorrowRepaymentInfo(copyForm);
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
-
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }else {
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
-        }
-        for (int i = 1; i < sheetCount; i++) {
-
-            copyForm.setPageSize(defaultRowMaxCount);
-            copyForm.setCurrPage(i+1);
-            List<BorrowRepaymentInfoCustomizeVO> resultList2 = this.borrowRepaymentInfoService.selectBorrowRepaymentList(copyForm);
-            if (resultList2 != null && resultList2.size()> 0) {
-                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultList2);
-            } else {
-                break;
+            for (int i = 1; i <= sheetCount; i++) {
+                copyForm.setPageSize(defaultRowMaxCount);
+                copyForm.setCurrPage(i);
+                List<BorrowRepaymentInfoCustomizeVO> resultList2 = this.borrowRepaymentInfoService.selectBorrowRepaymentList(copyForm);
+                if (resultList2 != null && resultList2.size() > 0) {
+                    sheetNameTmp = sheetName + "_第" + (i) + "页";
+                    helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList2);
+                } else {
+                    break;
+                }
             }
         }
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);

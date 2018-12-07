@@ -83,8 +83,8 @@ public class IncreaseInterestRepayController extends BaseController {
 		SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
 		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-		form.setCurrPage(1);
-		form.setPageSize(defaultRowMaxCount);
+//		form.setCurrPage(1);
+//		form.setPageSize(defaultRowMaxCount);
 		IncreaseInterestRepayResponse repayResponse = increaseInterestRepayService.searchPage(form);
 		Integer totalCount = repayResponse.getTotal() == null ? 0 : repayResponse.getTotal();
 

@@ -4,6 +4,7 @@
 package com.hyjf.am.trade.controller.admin.finance;
 
 import com.alibaba.druid.util.StringUtils;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.HjhCommissionResponse;
 import com.hyjf.am.response.admin.OADepartmentResponse;
@@ -168,6 +169,17 @@ public class AdminHjhCommissionController {
 			logger.error(THIS_CLASS, "/updateTenderCommissionRecord", e);
         }
 		return flg;
+	}
+
+	/**
+	 * 查询导出记录总数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/getHjhCommissionCountForExport")
+	public IntegerResponse getHjhCommissionCountForExport(@RequestBody @Valid HjhCommissionRequest request){
+		Integer count = adminHjhCommissionService.countTotal(request);
+		return new IntegerResponse(count);
 	}
 	
 	/**
