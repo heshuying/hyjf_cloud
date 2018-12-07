@@ -524,8 +524,8 @@ public class BailConfigController extends BaseController {
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = "";
 
-        for (int i = 1; i < sheetCount; i++) {
-        	request.setCurrPage(sheetCount);
+        for (int i = 1; i <= sheetCount; i++) {
+        	request.setCurrPage(i);
 			sheetNameTmp = sheetName + "_第" + (i) + "页";
 			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, this.bailConfigService.selectRecordList(request));
         }
