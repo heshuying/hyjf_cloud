@@ -205,6 +205,9 @@
 		from ht_coupon_config c
 		<include refid="Where_Clause" />
 		ORDER BY c.status,c.create_time DESC
+		<if test="limitStart >= 0" >
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
 
 	</select>
 	

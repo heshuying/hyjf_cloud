@@ -3068,6 +3068,13 @@ public interface AmTradeClient {
     Map<String, Object> validatorFieldCheckClient(AdminProtocolRequest adminProtocolRequest);
 
     /**
+     * VIP中心-优惠券发行 查询导出列表总数
+     * @param request
+     * @return
+     */
+    int getCouponConfigCountForExport(CouponConfigRequest request);
+
+    /**
      * 查询优惠券发行导出列表
      * @param request
      * @return
@@ -3239,5 +3246,12 @@ public interface AmTradeClient {
      * @return HjhCommissionResponse
      */
     HjhCommissionResponse selectHjhCommissionListWithOutPage(HjhCommissionRequest form);
+
+    /**
+     * 资金中心-汇计划提成导出记录总数
+     * @param request
+     * @return
+     */
+    int getHjhCommissionCountForExport(HjhCommissionRequest request);
 }
 

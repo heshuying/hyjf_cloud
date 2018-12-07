@@ -35,6 +35,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -297,16 +298,20 @@ public class AppChannelStatisticsController extends BaseController {
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
-        String sheetNameTmp = "";
+        String sheetNameTmp = sheetName + "_第1页";
+
+        if(totalCount == 0){
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  new ArrayList());
+        }
 
         for (int i = 1; i <= sheetCount; i++) {
             //请求第一页5000条
             statisticsRequest.setPageSize(defaultRowMaxCount);
             statisticsRequest.setCurrPage(i);
-            AppChannelStatisticsResponse statisticsResponse2 = appChannelStatisticsService.exportList(statisticsRequest);
-            if (statisticsResponse2 != null && statisticsResponse2.getResultList().size()> 0) {
+            List<AppChannelStatisticsVO> statisticsResponse2 = appChannelStatisticsService.paging(statisticsRequest,resultList);
+            if (statisticsResponse2 != null && statisticsResponse2.size()> 0) {
                 sheetNameTmp = sheetName + "_第" + (i ) + "页";
-                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  statisticsResponse2.getResultList());
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  statisticsResponse2);
             } else {
                 break;
             }

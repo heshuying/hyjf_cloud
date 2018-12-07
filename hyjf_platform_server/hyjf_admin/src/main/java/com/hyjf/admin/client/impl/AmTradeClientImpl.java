@@ -6329,6 +6329,20 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * VIP中心-优惠券发行 查询导出列表总数
+     * @param request
+     * @return
+     */
+    @Override
+    public int getCouponConfigCountForExport(CouponConfigRequest request) {
+        IntegerResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/couponConfig/getCountForExport", request, IntegerResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    /**
      * 查询优惠券发行导出列表
      * @param request
      * @return
@@ -6721,4 +6735,19 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
 		return null;
 	}
+
+    /**
+     * 资金中心-汇计划提成导出记录总数
+     * @param request
+     * @return
+     */
+    @Override
+    public int getHjhCommissionCountForExport(HjhCommissionRequest request) {
+        IntegerResponse response =
+                restTemplate.postForEntity("http://AM-ADMIN/am-trade/hjhCommission/getHjhCommissionCountForExport", request, IntegerResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
+    }
 }
