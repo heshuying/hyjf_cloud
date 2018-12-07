@@ -3,16 +3,19 @@
  */
 package com.hyjf.admin.controller.user;
 
+import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.AuthBean;
 import com.hyjf.admin.beans.request.UserPayAuthRequestBean;
 import com.hyjf.admin.beans.vo.UserPayAuthCustomizeVO;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.AuthService;
 import com.hyjf.admin.service.UserPayAuthService;
 import com.hyjf.admin.service.UserauthService;
+import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
+import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.HjhUserAuthResponse;
 import com.hyjf.am.response.user.UserPayAuthResponse;
@@ -28,10 +31,7 @@ import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -39,9 +39,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author nxl
@@ -57,6 +55,8 @@ public class UserPayAuthController extends BaseController {
     private AuthService authService;
     @Autowired
     private UserauthService userauthService;
+    @Autowired
+    public SystemConfig systemConfig;
 
 
     /**
@@ -172,12 +172,48 @@ public class UserPayAuthController extends BaseController {
     @ApiOperation(value = "缴费授权列表导出", notes = "缴费授权列表导出")
     @PostMapping(value = "/exportpayauth")
     public void exportExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody UserPayAuthRequestBean userPayAuthRequestBean) throws Exception {
+        //sheet默认最大行数
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        defaultRowMaxCount = 8; // todo
+        //请求第一页5000条
+        userPayAuthRequestBean.setPageSize(defaultRowMaxCount);
+        userPayAuthRequestBean.setCurrPage(1);
+        //取数据
+        UserPayAuthRequest userPayAuthRequest = new UserPayAuthRequest();
+        BeanUtils.copyProperties(userPayAuthRequestBean, userPayAuthRequest);
+        userPayAuthRequest.setLimitFlg(true);
+
+        UserPayAuthResponse userManagerResponse = userPayAuthService.selectUserMemberList(userPayAuthRequest);
         // 表格sheet名称
         String sheetName = "缴费授权";
         // 文件名称
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-        String[] titles = new String[]{"序号", "用户名", "当前手机号", "授权金额", "签约到期日", "授权状态", "银行电子账户", "授权时间"};
+//        String[] titles = new String[]{"序号", "用户名", "当前手机号", "授权金额", "签约到期日", "授权状态", "银行电子账户", "授权时间"};
         // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        Integer totalCount = userManagerResponse.getResultList().size();
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMap();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+        String sheetNameTmp = sheetName + "_第1页";
+        if (totalCount == 0) {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }
+        for (int i = 1; i < sheetCount; i++) {
+            //请求第一页5000条
+            userPayAuthRequest.setPageSize(defaultRowMaxCount);
+            userPayAuthRequest.setCurrPage(i+1);
+            UserPayAuthResponse resultResponse2 = userPayAuthService.selectUserMemberList(userPayAuthRequest);
+            if (resultResponse2 != null && resultResponse2.getResultList().size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultResponse2.getResultList());
+            } else {
+                break;
+            }
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+/*        // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
         //取数据
         UserPayAuthRequest userPayAuthRequest = new UserPayAuthRequest();
@@ -236,6 +272,58 @@ public class UserPayAuthController extends BaseController {
             }
         }
         // 导出
-            ExportExcel.writeExcelFile(response, workbook, titles, fileName);
+            ExportExcel.writeExcelFile(response, workbook, titles, fileName);*/
+    }
+
+    private Map<String, IValueFormatter> buildValueAdapter() {
+        Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
+        IValueFormatter stringFormatAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                return Objects.equals(object, null)? "":object.toString();
+            }
+        };
+
+        IValueFormatter authTypeFormatAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                if (Integer.valueOf(object.toString()) == 1) {
+                    return "已授权";
+                } else if (Integer.valueOf(object.toString()) == 0) {
+                    return "未授权";
+                } else if (Integer.valueOf(object.toString()) == 2) {
+                    return "已解约";
+                }
+                return "";
+            }
+        };
+
+        IValueFormatter paymentFormatAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                return "250000";
+            }
+        };
+
+        mapAdapter.put("userName", stringFormatAdapter);
+        mapAdapter.put("mobile", stringFormatAdapter);
+        mapAdapter.put("paymentMaxAmt", paymentFormatAdapter);
+        mapAdapter.put("signEndDate", stringFormatAdapter);
+        mapAdapter.put("authType", authTypeFormatAdapter);
+        mapAdapter.put("bankid", stringFormatAdapter);
+        mapAdapter.put("signDate", stringFormatAdapter);
+        return mapAdapter;
+    }
+
+    private Map<String, String> buildMap() {
+        Map<String, String> map = Maps.newLinkedHashMap();
+        map.put("userName","用户名");
+        map.put("mobile","当前手机号");
+        map.put("paymentMaxAmt","授权金额");
+        map.put("signEndDate","签约到期日");
+        map.put("authType","授权状态");
+        map.put("bankid","银行电子账户");
+        map.put("signDate","授权时间");
+        return map;
     }
 }
