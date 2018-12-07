@@ -137,11 +137,11 @@ public class AdminBorrowCreditTenderController extends BaseController {
             Cell cell = row.createCell(celLength);
             cell.setCellValue(titles[celLength]);
         }
-        for (BorrowCreditTenderVO vo : recordList) {
+        for (int i = 0; i < recordList.size(); i++) {
             // 循环数据
             for (int celLength = 0; celLength < titles.length; celLength++) {
                 Row columnValueRow = sheet.createRow(celLength + 1);
-                BorrowCreditTenderVO borrowCommonCustomize = vo;
+                BorrowCreditTenderVO borrowCommonCustomize = recordList.get(i);
 
                 // 创建相应的单元格
                 Cell cell = columnValueRow.createCell(celLength);
