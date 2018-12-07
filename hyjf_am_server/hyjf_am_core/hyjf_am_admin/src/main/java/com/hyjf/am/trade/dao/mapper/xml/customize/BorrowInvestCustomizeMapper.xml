@@ -320,6 +320,9 @@
 	    <include refid="Where_Clause" />
 		ORDER BY
 		    bt.create_time DESC, bt.id DESC
+		<if test="limitStart >= 0" >
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
 	</select>
 
 	<select id="sumBorrowInvest" resultType="java.lang.String" parameterType="com.hyjf.am.resquest.admin.BorrowInvestRequest">

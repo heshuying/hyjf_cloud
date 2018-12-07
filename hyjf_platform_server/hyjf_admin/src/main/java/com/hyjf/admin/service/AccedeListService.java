@@ -19,6 +19,11 @@ import java.util.List;
  * @version AccedeListService.java, v0.1 2018年7月7日 下午3:04:29
  */
 public interface AccedeListService {
+
+	int getAccedeListByParamCount(AccedeListRequest form);
+
+	List<AccedeListCustomizeVO> getAccedeListByParamList(AccedeListRequest form);
+
 	/**
      * 获取加入计划列表
      * @return
@@ -98,4 +103,12 @@ public interface AccedeListService {
 	 * @param instCode
 	 */
 	UserHjhInvistDetailVO selectUserHjhInvistDetail(AccedeListRequest request);
+
+	/**
+	 * list分页
+	 * @param request
+	 * @param result
+	 * @return
+	 */
+	List<AccedeListCustomizeVO> paging(AccedeListRequest request, List<AccedeListCustomizeVO> result);
 }
