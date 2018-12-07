@@ -131,8 +131,13 @@ public class AdminBorrowCreditTenderController extends BaseController {
         // 生成一个表格
         SXSSFSheet sheet = workbook.createSheet(sheetNameTmp);
         int rowNum = 0;
+        Row row = sheet.createRow(0);
+        for (int celLength = 0; celLength < titles.length; celLength++) {
+            // 创建相应的单元格
+            Cell cell = row.createCell(celLength);
+            cell.setCellValue(titles[celLength]);
+        }
         for (BorrowCreditTenderVO vo : recordList) {
-            Row row = sheet.createRow(0);
             rowNum++;
             // 循环数据
             for (int celLength = 0; celLength < titles.length; celLength++) {
