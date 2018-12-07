@@ -8,9 +8,12 @@ import com.hyjf.am.user.dao.mapper.auto.LockedUserInfoMapper;
 import com.hyjf.am.user.dao.mapper.customize.QianleUserCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.dao.model.customize.UserDepartmentInfoCustomize;
+import com.hyjf.am.user.mq.base.MessageContent;
+import com.hyjf.am.user.mq.producer.SmsProducer;
 import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
+import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.user.SpreadsUserVO;
 import com.hyjf.am.vo.user.UserDepartmentInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -18,6 +21,8 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.constants.UserConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.*;
@@ -49,6 +54,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     @Autowired
     protected LockedUserInfoMapper lockedUserInfoMapper;
 
+    @Autowired
+    private SmsProducer smsProducer;
     /**
      * 注册
      *
@@ -347,7 +354,33 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         user.setUserType(0);
         user.setIsSetPassword(0);
         String codeSalt = GetCode.getRandomCode(6);
-        user.setPassword(MD5Utils.MD5(MD5Utils.MD5(password) + codeSalt));
+        //处理纳觅财富注册用户数据密码随机生成6位字母数字组合并发送短信通知用户
+        if (instCode.equals("11000002") || instCode.equals("11000003")) {
+            final String passwords = StringRandomUtil.getStringRandom(6);
+            // 登陆密码
+            user.setPassword(MD5Utils.MD5(MD5Utils.MD5(passwords) + codeSalt));
+            final Integer userId = user.getUserId();
+            final String mobiles = mobile;
+            Thread thread = new Thread(){
+                public void run(){
+                    logger.info("线程启动，开始发短信");
+                    Map<String, String> param = new HashMap<String, String>();
+                    param.put("val_password", passwords);
+                    SmsMessage smsMessage = new SmsMessage(userId, param, mobiles, null, MessageConstant.SMS_SEND_FOR_MOBILE, null,
+                            CustomConstants.THIRD_PARTY_REGIEST_PASSWORD, CustomConstants.CHANNEL_TYPE_NORMAL);
+                    // 发送
+                    try {
+                        smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                    } catch (MQException e) {
+                        logger.error("短信发送失败...", e);
+                    }
+                }
+            };
+            thread.start();
+            logger.info("账号："+mobile+"，密码："+passwords);
+        }else {
+            user.setPassword(MD5Utils.MD5(MD5Utils.MD5(password) + codeSalt));
+        }
         user.setRegIp(loginIp);
         user.setRegTime(new Date());
         user.setStatus(0);
