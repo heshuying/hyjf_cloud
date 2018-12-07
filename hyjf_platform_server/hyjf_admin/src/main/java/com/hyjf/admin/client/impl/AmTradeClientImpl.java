@@ -6403,6 +6403,16 @@ public class AmTradeClientImpl implements AmTradeClient {
         return false;
     }
 
+    @Override
+    public Integer countBorrowRepaymentInfoExport(BorrowRepaymentInfoRequset copyForm) {
+        String url = "http://AM-ADMIN/am-trade/adminBorrowRepaymentInfo/countExport";
+        IntegerResponse response = restTemplate.postForObject(url, copyForm, IntegerResponse.class);
+        if (response != null) {
+            return response.getResultInt();
+        }
+        return null;
+    }
+
     /**
      * 产品中心-加息投资明细（总计）
      * @param request
