@@ -180,7 +180,7 @@ public class UserPayAuthController extends BaseController {
         BeanUtils.copyProperties(userPayAuthRequestBean, userPayAuthRequest);
         userPayAuthRequest.setLimitFlg(true);
 
-        UserPayAuthResponse userManagerResponse = userPayAuthService.selectUserMemberList(userPayAuthRequest);
+        int totalCount = userPayAuthService.selectUserMemberCount(userPayAuthRequest);
         // 表格sheet名称
         String sheetName = "缴费授权";
         // 文件名称
@@ -189,7 +189,6 @@ public class UserPayAuthController extends BaseController {
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
-        Integer totalCount = userManagerResponse.getResultList().size();
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
