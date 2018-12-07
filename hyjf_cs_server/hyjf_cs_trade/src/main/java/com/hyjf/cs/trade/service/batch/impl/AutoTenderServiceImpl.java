@@ -135,7 +135,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         int groupCount = 1;
         // 标的队列名称
         // 原始标的队列
-        String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_INVEST + RedisConstants.HJH_SLASH + hjhAccede.getPlanNid();
+        String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_INVEST + hjhAccede.getPlanNid();
         // ★临时队列有标的时，先推回主队列（恢复前次分散投资）★
         RedisUtils.lpoprpush(queueName + RedisConstants.HJH_SLASH_TMP, queueName);
         // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
@@ -205,7 +205,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             logger.info("[" + accedeOrderId + "]" + "连续相同次数" + serialFaileCount + "次");
             // 取债转标的（优先） (连续5次不能投债转标时,取原始标的)
             if (serialFaileCount < CustomConstants.HJH_ASSIGN_SERIAL_FAILE_COUNT) {
-                queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_CREDIT + RedisConstants.HJH_SLASH + hjhAccede.getPlanNid();
+                queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_CREDIT + hjhAccede.getPlanNid();
                 borrowStr = getBorrowFromQueue(queueName);
                 borrowFlag = RedisConstants.HJH_BORROW_CREDIT;
             } else {
@@ -214,7 +214,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
             // 取原始标的(无债转标的时)
             if (borrowStr == null) {
-                queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_INVEST + RedisConstants.HJH_SLASH + hjhAccede.getPlanNid();
+                queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_INVEST + hjhAccede.getPlanNid();
                 // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
                 // ****分散投资主规则****
                 // 初始分散投资时

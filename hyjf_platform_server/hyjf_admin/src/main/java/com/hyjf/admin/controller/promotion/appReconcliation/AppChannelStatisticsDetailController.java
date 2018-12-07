@@ -1,7 +1,9 @@
 package com.hyjf.admin.controller.promotion.appReconcliation;
 
 import com.google.common.collect.Maps;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.promotion.AppChannelReconciliationService;
 import com.hyjf.admin.service.promotion.AppChannelStatisticsDetailService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
@@ -42,9 +44,12 @@ public class AppChannelStatisticsDetailController extends BaseController {
     AppChannelStatisticsDetailService appChannelStatisticsDetailService;
     @Autowired
     private AppChannelReconciliationService appChannelReconciliationService;
+    /** 查看权限 */
+    public static final String PERMISSIONS = "appchanneldetail";
 
     @ApiOperation(value = "app渠道统计明细-画面初始化", notes = "app渠道统计明细-画面初始化")
     @PostMapping("/init")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AppUtmRegResponse init(@RequestBody AppChannelStatisticsDetailRequest appChannelStatisticsDetailRequest, HttpServletRequest request){
         AdminSystemVO user = getUser(request);
         Integer userId = Integer.valueOf(user.getId());
@@ -184,6 +189,7 @@ public class AppChannelStatisticsDetailController extends BaseController {
      */
     @ApiOperation(value = "app渠道统计明细-导出", notes = "app渠道统计明细-导出")
     @GetMapping("/exportAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportAction(HttpServletRequest request, HttpServletResponse response, AppChannelStatisticsDetailRequest form) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());

@@ -177,7 +177,7 @@ public class PlatformCountController extends BaseController {
      */
     @ApiOperation(value = "导出excel", notes = "导出excel")
     @PostMapping("/exportAction")
-    public void exportToExcel(HttpServletRequest request, HttpServletResponse response, PlatformCountRequestBean form) throws Exception {
+    public void exportToExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody  PlatformCountRequestBean form) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
@@ -193,30 +193,14 @@ public class PlatformCountController extends BaseController {
         List<PlatformCountCustomizeVO> recordList = platformCountService.searchAction(form);
         
         Integer totalCount = recordList.size();
-
-        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
-        int minId = 0;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
-        	
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }else {
         	 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList);
         }
-//        for (int i = 1; i < sheetCount; i++) {
-//
-//            managerRequest.setPageSize(defaultRowMaxCount);
-//            managerRequest.setCurrPage(i+1);
-//            UserManagerResponse userManagerResponse2 = userCenterService.selectUserMemberList(managerRequest);
-//            if (userManagerResponse2 != null && userManagerResponse2.getResultList().size()> 0) {
-//                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-//                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  userManagerResponse2.getResultList());
-//            } else {
-//                break;
-//            }
-//        }
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
 

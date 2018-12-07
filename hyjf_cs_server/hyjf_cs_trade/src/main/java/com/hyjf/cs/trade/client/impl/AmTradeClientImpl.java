@@ -16,6 +16,7 @@ import com.hyjf.am.response.config.AppReapyCalendarResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.market.AppAdsCustomizeResponse;
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.response.trade.HjhPlanDetailResponse;
 import com.hyjf.am.response.trade.HjhPlanResponse;
 import com.hyjf.am.response.trade.account.*;
@@ -50,6 +51,7 @@ import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
@@ -5408,6 +5410,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/10/9 15:53
      */
     @Override
+    @Cached(name="webHomeProjectTypeListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public List<BorrowProjectTypeVO> getProjectTypeList() {
         String url = "http://AM-TRADE/am-trade/config/projecttype/getProjectType";
         BorrowProjectTypeResponse response = restTemplate.getForEntity(url,BorrowProjectTypeResponse.class).getBody();
@@ -6003,6 +6007,38 @@ public class AmTradeClientImpl implements AmTradeClient {
         CreditListResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/projectlist/web/searchWebCreditList", request, CreditListResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 抽出查询noticeList的方法
+     * @date 2018/9/5 11:38
+     */
+    @Cached(name="webHomeNoticeCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+    @Override
+    public List<ContentArticleVO> getNoticeList(ContentArticleRequest contentArticleRequest) {
+        String url = "http://AM-CONFIG/am-config/article/noticeList";
+        ContentArticleResponse response = restTemplate.postForEntity(url,contentArticleRequest,ContentArticleResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 抽出查询bannner的方法
+     * @date 2018/9/5 11:38
+     */
+    @Cached(name="webHomeBannerCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+    @Override
+    public List<AppAdsCustomizeVO> getWebHomeBannerList(AdsRequest request) {
+        String url = "http://AM-MARKET/am-market/ads/getBannerList";
+        AppAdsCustomizeResponse res = restTemplate.postForEntity(url,request,AppAdsCustomizeResponse.class).getBody();
+        if (Response.isSuccess(res)){
+            return res.getResultList();
         }
         return null;
     }

@@ -268,7 +268,7 @@ public class AutoIssueMessageServiceImpl implements AutoIssueMessageService {
         redisBorrow.setBorrowNid(borrow.getBorrowNid());
         redisBorrow.setBorrowAccountWait(borrow.getAccount());
 
-        RedisUtils.leftpush(RedisConstants.HJH_PLAN_LIST+RedisConstants.HJH_BORROW_INVEST+RedisConstants.HJH_SLASH+planNid, JSON.toJSONString(redisBorrow));//redis相应计划
+        RedisUtils.leftpush(RedisConstants.HJH_PLAN_LIST+RedisConstants.HJH_BORROW_INVEST+planNid, JSON.toJSONString(redisBorrow));//redis相应计划
 
 
         logger.info(borrow.getBorrowNid()+" 计划编号："+planNid+" 关联计划成功");
@@ -464,7 +464,7 @@ public class AutoIssueMessageServiceImpl implements AutoIssueMessageService {
         redisBorrow.setBorrowNid(credit.getCreditNid());
         redisBorrow.setBorrowAccountWait(credit.getLiquidationFairValue());
 
-        RedisUtils.leftpush(RedisConstants.HJH_PLAN_LIST+RedisConstants.HJH_BORROW_CREDIT+RedisConstants.HJH_SLASH+planNid, JSON.toJSONString(redisBorrow));//redis相应计划
+        RedisUtils.leftpush(RedisConstants.HJH_PLAN_LIST+RedisConstants.HJH_BORROW_CREDIT+planNid, JSON.toJSONString(redisBorrow));//redis相应计划
 
 
         logger.info(credit.getCreditNid()+" 计划编号："+planNid+" 关联计划成功");

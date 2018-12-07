@@ -166,7 +166,7 @@ public class MyProfileServiceImpl extends BaseUserServiceImpl implements MyProfi
         userAccountInfo.setPaymentAuthOn(CommonUtils.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
 
         if (users.getUserId() != null) {
-            List<BankCardVO> bankCardList = this.amUserClient.getBankOpenAccountById(users.getUserId());
+            List<BankCardVO> bankCardList = this.amUserClient.getTiedCardForBank(users.getUserId());
 
             if (CollectionUtils.isNotEmpty(bankCardList) && bankCardList.size() > 0) {
                 userAccountInfo.setIsBindCard(true);

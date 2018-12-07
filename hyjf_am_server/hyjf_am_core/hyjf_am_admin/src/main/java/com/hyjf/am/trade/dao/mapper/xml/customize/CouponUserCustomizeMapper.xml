@@ -518,7 +518,8 @@
 			   u.coupon_source,u.activity_id
 		<if test="limitStart !=null and limitStart >= 0" >
 	      LIMIT #{limitStart} , #{limitEnd}
-	    </if>	</select>
+	    </if>
+	</select>
 	
 	<select id="selectDataCenterCouponDJList" resultMap="selectDataCenterCouponMap" parameterType="com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest">
 			
@@ -590,6 +591,35 @@
 			   u.coupon_source,u.activity_id
 		<if test="limitStart !=null and limitStart >= 0" >
 	      LIMIT #{limitStart} , #{limitEnd}
-	    </if>	</select>
-	
+	    </if>
+	</select>
+	<select id="countJX" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest">
+		SELECT  COUNT(1)FROM (
+			SELECT
+			u.*
+			FROM
+			ht_coupon_user u
+			LEFT JOIN ht_coupon_config c ON u.coupon_code = c.coupon_code
+			WHERE
+			c.coupon_type = 2
+			AND u.del_flag = 0
+			GROUP BY
+			u.coupon_source,u.activity_id
+		) t
+	</select>
+
+	<select id="countDJ" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest">
+	SELECT  COUNT(1)FROM (
+			SELECT
+			u.*
+			FROM
+			ht_coupon_user u
+			LEFT JOIN ht_coupon_config c ON u.coupon_code = c.coupon_code
+			WHERE
+			c.coupon_type = 3
+			AND u.del_flag = 0
+			GROUP BY
+			u.coupon_source,u.activity_id
+		)
+	</select>
 </mapper>
