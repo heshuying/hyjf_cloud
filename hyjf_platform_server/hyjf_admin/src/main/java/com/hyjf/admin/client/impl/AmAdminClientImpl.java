@@ -457,6 +457,13 @@ public class AmAdminClientImpl implements AmAdminClient {
         }
         return null;
     }
+    @Override
+    public IntegerResponse countBailConfigRecordList(BailConfigRequest request) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/select_bail_config_count";
+        IntegerResponse response = restTemplate.postForEntity(url,request,IntegerResponse.class).getBody();
+        return response;
+    }
+
 
     /**
      * 更新当前机构可用的还款方式并返回最新保证金详情
