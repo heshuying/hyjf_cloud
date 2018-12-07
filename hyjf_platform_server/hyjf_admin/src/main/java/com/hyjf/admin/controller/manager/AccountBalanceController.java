@@ -104,9 +104,9 @@ public class AccountBalanceController extends BaseController {
         for (int i = 1; i < sheetCount; i++) {
             //请求第一页5000条
             form.setPageSize(defaultRowMaxCount);
-            form.setCurrPage(i+1);
+            form.setCurrPage(i);
             HjhInfoAccountBalanceResponse resultResponse2 = accountBalanceService.getSearchListByDay(form);
-            if (resultResponse2 != null && resultResponse2.getResultList().size()> 0) {
+            if (resultResponse2.getRecordList() != null && resultResponse2.getResultList().size()> 0) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultResponse2.getResultList());
             } else {
@@ -127,13 +127,13 @@ public class AccountBalanceController extends BaseController {
     }
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
-        IValueFormatter dateAdapter = new IValueFormatter() {
+       /* IValueFormatter dateAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
                 String format = new SimpleDateFormat("yyyy-MM-dd ").format((Date)object);
                 return StringUtils.isEmpty(format) ? StringUtils.EMPTY : format;
             }
-        };
+        };*/
 
         IValueFormatter valueFormatAdapter = new IValueFormatter() {
             @Override
@@ -142,7 +142,7 @@ public class AccountBalanceController extends BaseController {
             }
         };
 
-        mapAdapter.put("rptDate", dateAdapter);
+       // mapAdapter.put("rptDate", dateAdapter);
         mapAdapter.put("investAccount", valueFormatAdapter);
         mapAdapter.put("creditAccount", valueFormatAdapter);
         mapAdapter.put("reinvestAccount", valueFormatAdapter);
