@@ -249,23 +249,25 @@ public class ChannelStatisticsDetailController extends BaseController {
 		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
 		String sheetNameTmp = sheetName + "_第1页";
 		if (totalCount == 0) {
-
 			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
 		} else {
-			// 当前下载数据超过一页上限
-			if (defaultRowMaxCount < recordList.size()) {
-				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,
-						recordList.subList(0, defaultRowMaxCount));
-				for (int i = 1; i < sheetCount; i++) {
-					sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-					helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,
-							recordList.subList(defaultRowMaxCount * i, defaultRowMaxCount * (i + 1)));
-				}
-			} else {
-				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,
-						recordList.subList(0, recordList.size()));
-			}
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList);
 		}
+
+        for (int i = 1; i < sheetCount; i++) {
+            //请求第一页5000条
+            form.setPageSize(defaultRowMaxCount);
+            form.setCurrPage(i+1);
+            // 封装查询条件
+            JSONObject json2 = channelStatisticsDetailService.searchAction(form);
+            List<ChannelStatisticsDetailVO> recordList2 = (List<ChannelStatisticsDetailVO>) json2.get("recordList");
+            if (recordList2 != null && recordList2.size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  recordList2);
+            } else {
+                break;
+            }
+        }
 
 		DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
 	}
