@@ -106,6 +106,8 @@ public class CouponConfigRequest extends BasePage {
     private Date createTime;
 
     private Date updateTime;
+
+    private int exportCount;
     /**
      * 检索条件 时间开始
      */
@@ -419,5 +421,13 @@ public class CouponConfigRequest extends BasePage {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public int getExportCount() {
+        return exportCount;
+    }
+
+    public void setExportCount(int exportCount) {
+        this.exportCount = exportCount;
     }
 }
