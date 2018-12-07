@@ -457,6 +457,13 @@ public class AmAdminClientImpl implements AmAdminClient {
         }
         return null;
     }
+    @Override
+    public IntegerResponse countBailConfigRecordList(BailConfigRequest request) {
+        String url = "http://AM-ADMIN/am-trade/bail_config/select_bail_config_count";
+        IntegerResponse response = restTemplate.postForEntity(url,request,IntegerResponse.class).getBody();
+        return response;
+    }
+
 
     /**
      * 更新当前机构可用的还款方式并返回最新保证金详情
@@ -1200,14 +1207,24 @@ public class AmAdminClientImpl implements AmAdminClient {
                 "http://AM-ADMIN/am-user/promotion/utm/select_app_channel_reconciliation_record", request,
                 ChannelReconciliationResponse.class);
     }
-
+    @Override
+    public ChannelReconciliationResponse selectAppChannelReconciliationCount(ChannelReconciliationRequest request) {
+        return restTemplate.postForObject(
+                "http://AM-ADMIN/am-user/promotion/utm/select_app_channel_reconciliation_count", request,
+                ChannelReconciliationResponse.class);
+    }
     @Override
     public ChannelReconciliationResponse selectAppChannelReconciliationRecordHjh(ChannelReconciliationRequest request) {
         return restTemplate.postForObject(
                 "http://AM-ADMIN/am-user/promotion/utm/select_app_channel_reconciliation_record_hjh", request,
                 ChannelReconciliationResponse.class);
     }
-
+    @Override
+    public ChannelReconciliationResponse selectAppChannelReconciliationRecordHjhCount(ChannelReconciliationRequest request) {
+        return restTemplate.postForObject(
+                "http://AM-ADMIN/am-user/promotion/utm/select_app_channel_reconciliation_record_hjh_count", request,
+                ChannelReconciliationResponse.class);
+    }
     @Override
     public SubmissionsVO getSubmissionsRecord(SubmissionsRequest request) {
         return restTemplate.postForObject("http://AM-ADMIN/am-config/submission/getSubmissionsRecord", request,
