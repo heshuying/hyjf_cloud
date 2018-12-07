@@ -77,8 +77,8 @@ public class DebtConfigLogController extends BaseController {
 	@ApiOperation(value = "数据导出--债转日志配置查询", notes = "导出EXCEL")
 	@GetMapping(value = "/debtconfiglogExport")
 	//@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-	public void exportAction(HttpServletRequest request, HttpServletResponse response, DebtConfigRequest form) throws Exception {
-
+	public void exportAction(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		DebtConfigRequest form = new DebtConfigRequest();
 		//sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 		// 表格sheet名称
@@ -89,10 +89,9 @@ public class DebtConfigLogController extends BaseController {
 		SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
 		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-		form.setCurrPage(1);
-		form.setPageSize(defaultRowMaxCount);
-		List<DebtConfigLogVO> resultList = debtConfigService.getDebtConfigLogList(form);
-		Integer totalCount = resultList.size();
+//		List<DebtConfigLogVO> resultList = debtConfigService.getDebtConfigLogList(form);
+//		Integer totalCount = resultList.size();
+        Integer totalCount = debtConfigService.countDebtConfigLogTotal();
 
 		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
 		Map<String, String> beanPropertyColumnMap = buildMap();
