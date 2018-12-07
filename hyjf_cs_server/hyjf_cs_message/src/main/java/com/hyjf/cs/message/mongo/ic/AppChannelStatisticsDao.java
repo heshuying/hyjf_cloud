@@ -62,6 +62,30 @@ public class AppChannelStatisticsDao extends BaseMongoDao<AppChannelStatistics> 
         );
         AggregationResults<AppChannelStatistics> ar = mongoTemplate.aggregate(aggregation, getEntityClass(), AppChannelStatistics.class);
         List<AppChannelStatistics> result = ar.getMappedResults();
+
+        result = paging(request,result);
+
+        return result;
+    }
+
+    public List<AppChannelStatistics> paging(AppChannelStatisticsRequest request,List<AppChannelStatistics> result){
+        int current=request.getCurrPage(); //页码
+        int pageSize=request.getPageSize(); //每页显示的数量
+        int totalCount=result.size();
+        int pageCount = (totalCount / pageSize) + ((totalCount % pageSize > 0) ? 1 : 0);
+
+        if(current < 1){
+            current = 1;
+        }
+        int start=(current-1) * pageSize;
+        int end = Math.min(totalCount, current * pageSize);
+
+        if(pageCount >= current){
+            result=result.subList(start,end);
+        }else{
+            result = new ArrayList<>();
+        }
+
         return result;
     }
 

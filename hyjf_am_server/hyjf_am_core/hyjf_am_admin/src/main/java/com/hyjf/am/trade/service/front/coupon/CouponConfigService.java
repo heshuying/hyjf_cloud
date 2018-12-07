@@ -211,5 +211,5 @@ public interface CouponConfigService {
      * @param configCustomize
      * @return
      */
-    List<CouponConfigExportCustomize> exoportRecordList(CouponConfigCustomize configCustomize);
+    List<CouponConfigExportCustomize> getExportRecordList(CouponConfigCustomize configCustomize);
 }

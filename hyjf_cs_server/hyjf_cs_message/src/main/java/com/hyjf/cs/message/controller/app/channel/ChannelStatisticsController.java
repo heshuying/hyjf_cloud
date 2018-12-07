@@ -42,12 +42,17 @@ public class ChannelStatisticsController extends BaseController {
     @PostMapping("/channelstatistics")
     public AppChannelStatisticsResponse searchList(@RequestBody AppChannelStatisticsRequest request) {
         AppChannelStatisticsResponse response = new AppChannelStatisticsResponse();
-        List<AppChannelStatistics> list = channelStatisticsService.findChannelStatistics(request);
-        if (!CollectionUtils.isEmpty(list)) {
-            List<AppChannelStatisticsVO> voList = CommonUtils.convertBeanList(list,AppChannelStatisticsVO.class);
-            response.setResultList(voList);
-        }
+
         int count = channelStatisticsService.queryChannelStatisticsCount(request);
+        if(count > 0){
+
+            List<AppChannelStatistics> list = channelStatisticsService.findChannelStatistics(request);
+            if (!CollectionUtils.isEmpty(list)) {
+                List<AppChannelStatisticsVO> voList = CommonUtils.convertBeanList(list,AppChannelStatisticsVO.class);
+                response.setResultList(voList);
+            }
+        }
+
         response.setCount(count);
         return response;
     }

@@ -105,6 +105,7 @@ public class ChannelStatisticsServiceImpl implements ChannelStatisticsService {
         );
         AggregationResults<AppChannelStatistics> ar = appChannelStatisticsDao.exportList(aggregation);
         List<AppChannelStatistics> result = ar.getMappedResults();
+//        result = appChannelStatisticsDao.paging(request,result);
         return result;
     }
 

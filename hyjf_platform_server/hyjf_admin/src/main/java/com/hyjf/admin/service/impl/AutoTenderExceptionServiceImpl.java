@@ -308,7 +308,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                         updateTenderByParam(orderStatus,hjhAccede.getId());
                         // 只有不是接口成功表失败的情况才会退回队列
                         // 投资成功后减掉redis 钱
-                        String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_INVEST + RedisConstants.HJH_SLASH + hjhAccede.getPlanNid();
+                        String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_INVEST + hjhAccede.getPlanNid();
                         RedisBorrow redisBorrow = new RedisBorrow();
                         redisBorrow.setBorrowAccountWait(borrow.getBorrowAccountWait().subtract(hjhPlanBorrowTmp.getAccount()));
                         redisBorrow.setBorrowNid(borrow.getBorrowNid());
@@ -330,7 +330,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                     // 此处 if判断为汇计划三期优化改动
                     if(!BankCallConstant.RESPCODE_SUCCESS.equals(hjhPlanBorrowTmp.getRespCode())) {
                         // 投资成功后减掉redis 钱
-                        String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_INVEST + RedisConstants.HJH_SLASH + hjhAccede.getPlanNid();
+                        String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_INVEST + hjhAccede.getPlanNid();
                         RedisBorrow redisBorrow = new RedisBorrow();
                         redisBorrow.setBorrowAccountWait(borrow.getBorrowAccountWait());
                         redisBorrow.setBorrowNid(borrow.getBorrowNid());
@@ -407,7 +407,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                         }
                         // 只有不是接口成功表失败的情况才会退回队列
                         // 投资成功后减掉redis 钱
-                        String queueName =RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_CREDIT + RedisConstants.HJH_SLASH  + hjhAccede.getPlanNid();
+                        String queueName =RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_CREDIT + hjhAccede.getPlanNid();
                         RedisBorrow redisBorrow = new RedisBorrow();
                         BigDecimal await = credit.getLiquidationFairValue().subtract(credit.getCreditPrice());
                         redisBorrow.setBorrowAccountWait(await);
@@ -448,7 +448,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                     // 只有不是接口成功表失败的情况才会退回队列
                     if(!BankCallConstant.RESPCODE_SUCCESS.equals(hjhPlanBorrowTmp.getRespCode())){
                         // 投资成功后减掉redis 钱
-                        String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_CREDIT + RedisConstants.HJH_SLASH + hjhAccede.getPlanNid();
+                        String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_CREDIT + hjhAccede.getPlanNid();
                         RedisBorrow redisBorrow = new RedisBorrow();
                         BigDecimal await = credit.getLiquidationFairValue().subtract(credit.getCreditPrice());
                         redisBorrow.setBorrowAccountWait(await);
