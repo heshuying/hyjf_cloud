@@ -530,7 +530,7 @@ public class BailConfigController extends BaseController {
 		//	int start=(i-1) * defaultRowMaxCount;
 		//	int end = Math.min(totalCount, i * defaultRowMaxCount);
             request.setPageSize(defaultRowMaxCount);
-            request.setCurrPage(i+1);
+            request.setCurrPage(i);
             List<BailConfigCustomizeVO> recordList = this.bailConfigService.selectRecordList(request);
 			sheetNameTmp = sheetName + "_第" + (i) + "页";
 			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  recordList);
