@@ -11,6 +11,7 @@ import com.hyjf.am.trade.service.front.borrow.BorrowCreditTenderService;
 import com.hyjf.am.vo.admin.BorrowCreditRepaySumVO;
 import com.hyjf.am.vo.admin.BorrowCreditTenderVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCreditRepayInfoVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -53,7 +54,9 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
     public Integer getCreditRepayInfoListCount(BorrowCreditRepayAmRequest request) {
         CreditRepayExample creditRepayExample = new CreditRepayExample();
         CreditRepayExample.Criteria creditRepayCra = creditRepayExample.createCriteria();
-        creditRepayCra.andAssignNidEqualTo(request.getAssignNid());
+        if (StringUtils.isNotBlank(request.getAssignNid())) {
+            creditRepayCra.andAssignNidEqualTo(request.getAssignNid());
+        }
         Integer count = creditRepayMapper.countByExample(creditRepayExample);
         return count;
     }

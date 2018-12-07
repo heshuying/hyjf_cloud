@@ -31,10 +31,7 @@ import com.hyjf.am.resquest.admin.PlanListRequest;
 import com.hyjf.am.vo.fdd.FddGenerateContractBeanVO;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
-import com.hyjf.am.vo.trade.hjh.AccedeListCustomizeVO;
-import com.hyjf.am.vo.trade.hjh.HjhAccedeSumVO;
-import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
-import com.hyjf.am.vo.trade.hjh.UserHjhInvistDetailVO;
+import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.FddGenerateContractConstant;
@@ -42,6 +39,7 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.file.FileUtil;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -482,10 +480,9 @@ public class AccedeListController extends BaseController{
 		// 将画面请求request赋值给原子层 request
 		BeanUtils.copyProperties(viewRequest, form);
 		// 不带分页的查询
-		List<AccedeListCustomizeVO> resultList = this.accedeListService.getAccedeListByParamWithoutPage(form);
-		this.dataClean(resultList);
+		Integer totalCount = this.accedeListService.getAccedeListByParamCount(form);
 
-		Integer totalCount = resultList.size();
+		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
 
 		Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
 		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
@@ -493,9 +490,26 @@ public class AccedeListController extends BaseController{
 		if (totalCount == 0) {
 
 			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-		}else {
-			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
 		}
+
+		// 查询列表传入分页
+		Paginator paginator;
+		for (int i = 1; i <= sheetCount; i++) {
+			//请求第一页5000条
+			paginator = new Paginator(i, totalCount,defaultRowMaxCount);
+			form.setLimitStart(paginator.getOffset());
+			form.setLimitEnd(paginator.getLimit());
+
+			List<AccedeListCustomizeVO> resultResponse2 = accedeListService.getAccedeListByParamList(form);
+			this.dataClean(resultResponse2);
+			if (resultResponse2 != null && resultResponse2.size()> 0) {
+				sheetNameTmp = sheetName + "_第" + (i) + "页";
+				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultResponse2);
+			} else {
+				break;
+			}
+		}
+
 		DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
 	}
 

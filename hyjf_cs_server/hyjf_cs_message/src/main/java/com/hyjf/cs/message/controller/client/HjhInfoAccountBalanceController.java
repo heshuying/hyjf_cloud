@@ -29,10 +29,10 @@ public class HjhInfoAccountBalanceController {
         HjhInfoAccountBalanceResponse response = new HjhInfoAccountBalanceResponse();
         //总条数
         List<HjhAccountBalanceVO> count = accountBalanceService.getHjhAccountBalanceVOByMonth(request,false);
-
+        int  totalCount = 0;
         HjhAccountBalanceVO vo = null;
         for(HjhAccountBalanceVO balanceVO : count){
-
+            totalCount++;
             if(vo == null){
                 vo = new HjhAccountBalanceVO();
                 vo.setInvestAccount(balanceVO.getInvestAccount());
@@ -49,6 +49,7 @@ public class HjhInfoAccountBalanceController {
 
         }
         response.setSum(vo);
+        response.setCount(totalCount);
         return response;
     }
 
@@ -67,10 +68,10 @@ public class HjhInfoAccountBalanceController {
         HjhInfoAccountBalanceResponse response = new HjhInfoAccountBalanceResponse();
         //总条数
         List<HjhAccountBalanceVO> count = accountBalanceService.getHjhAccountBalanceVOByDay(request,false);
-        response.setCount(count.size());
-
+        int  totalCount = 0;
         HjhAccountBalanceVO vo = null;
         for(HjhAccountBalanceVO balanceVO : count){
+            totalCount++;
             if(vo == null){
                 vo = new HjhAccountBalanceVO();
                 vo.setInvestAccount(balanceVO.getInvestAccount());
@@ -86,6 +87,7 @@ public class HjhInfoAccountBalanceController {
             }
         }
         response.setSum(vo);
+        response.setCount(totalCount);
         return response;
     }
 

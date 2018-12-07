@@ -39,3 +39,9 @@ management:
     health:
       show-details: ALWAYS
 
+info:
+  name: cs_user
+  version: '@project.version@'
+  encoding: '@project.build.sourceEncoding@'
+  java:
+    version: '@java.version@'

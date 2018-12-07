@@ -17,6 +17,9 @@ import java.util.List;
  * @version BorrowInvestService, v0.1 2018/7/10 9:17
  */
 public interface BorrowInvestService {
+
+    Integer countBorrowInvest(BorrowInvestRequest borrowInvestRequest);
+
     /**
      * 投资明细列表
      *
