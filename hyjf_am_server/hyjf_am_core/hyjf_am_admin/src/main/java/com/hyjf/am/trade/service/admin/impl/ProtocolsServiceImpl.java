@@ -36,6 +36,11 @@ public class ProtocolsServiceImpl implements ProtocolsService {
     private static final String TEMPLET_ID_REFIX = "HYHT";
 
 	@Override
+	public int getFddTempletCount() {
+		return fddTempletCustomizeMapper.countFddTemplet();
+	}
+
+	@Override
 	public List<FddTempletCustomize> selectFddTempletList(ProtocolsRequest request,boolean flag) {
 		FddTempletCustomize fddTemplet = new FddTempletCustomize();
 		if (request.getLimitStart() != -1 && flag == true) {
