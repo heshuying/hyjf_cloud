@@ -182,7 +182,7 @@ public class UserRePayAuthController extends BaseController {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
-        String sheetName = "缴费授权";
+        String sheetName = "还款授权";
         // 文件名称
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 //        String[] titles = new String[]{"序号", "用户名", "当前手机号", "授权金额", "签约到期日", "授权状态", "银行电子账户", "授权时间"};
