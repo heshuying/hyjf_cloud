@@ -363,7 +363,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
 
     @Override
     public AdminCreditTenderResponse getCreditTenderResponse(BorrowCreditTenderRequest request) {
-        return baseClient.postExe(TENDER_COUNT_URL, request, AdminCreditTenderResponse.class);
+        return baseClient.postExe(TENDER_LIST_URL, request, AdminCreditTenderResponse.class);
     }
 
     /**
