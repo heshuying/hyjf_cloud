@@ -736,6 +736,7 @@ public interface AmAdminClient {
      * @return
      */
     List<BailConfigCustomizeVO> selectBailConfigRecordList(BailConfigRequest request);
+    IntegerResponse countBailConfigRecordList(BailConfigRequest request);
 
     /**
      * 获取锁定账户列表

@@ -76,7 +76,7 @@ public class ContentQualifyController extends BaseController {
 
 	@ApiOperation(value = "资质荣誉-根据id查询", notes = "资质荣誉-根据id查询")
 	@PostMapping("/select_by_id")
-	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_INFO, ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
+	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
 	public AdminResult selectById(@RequestBody ContentQualifyRequestBean requestBean) {
 		ContentQualifyVO vo  = contentQualifyService.selectById(requestBean);
 		return new AdminResult(vo);
