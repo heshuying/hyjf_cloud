@@ -24,6 +24,7 @@ import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.vo.admin.BorrowInvestCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
+import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -371,12 +372,16 @@ public class BorrowInvestController extends BaseController {
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportList(HttpServletRequest request, HttpServletResponse response, @RequestBody BorrowInvestRequestBean borrowInvestRequestBean) throws Exception {
 
-        // 用户是否具有组织机构查看权限
-        String isOrganizationView = borrowInvestRequestBean.getIsOrganizationView();
-
         //查询类赋值
         BorrowInvestRequest borrowInvestRequest = new BorrowInvestRequest();
         BeanUtils.copyProperties(borrowInvestRequestBean, borrowInvestRequest);
+
+        if (StringUtils.isBlank(borrowInvestRequest.getTimeEndSrch()) || StringUtils.isBlank(borrowInvestRequest.getTimeStartSrch())) {
+            return ;
+        }
+
+        // 用户是否具有组织机构查看权限
+        String isOrganizationView = borrowInvestRequestBean.getIsOrganizationView();
 
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
@@ -387,13 +392,9 @@ public class BorrowInvestController extends BaseController {
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
-        // mod by liuyang 20181102 需求迁移 投资明细导出追加时间判断 对应svn 版本号:53180 start
-        List<BorrowInvestCustomizeVO> resultList = new ArrayList<BorrowInvestCustomizeVO>();
-        if (StringUtils.isNotBlank(borrowInvestRequest.getTimeEndSrch()) || StringUtils.isNotBlank(borrowInvestRequest.getTimeStartSrch())) {
-            resultList = this.borrowInvestService.getExportBorrowInvestList(borrowInvestRequest);
-        }
-        // mod by liuyang 20181102 需求迁移 投资明细导出追加时间判断 对应svn 版本号:53180 end
-        Integer totalCount = resultList.size();
+        Integer totalCount = this.borrowInvestService.countBorrowInvest(borrowInvestRequest);
+
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
 
         Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
@@ -401,8 +402,23 @@ public class BorrowInvestController extends BaseController {
         if (totalCount == 0) {
 
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-        }else {
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
+        }
+
+        // 查询列表传入分页
+        Paginator paginator;
+        for (int i = 1; i <= sheetCount; i++) {
+            //请求第一页5000条
+            paginator = new Paginator(i, totalCount,defaultRowMaxCount);
+            borrowInvestRequest.setLimitStart(paginator.getOffset());
+            borrowInvestRequest.setLimitEnd(paginator.getLimit());
+
+            List<BorrowInvestCustomizeVO> resultResponse2 = borrowInvestService.getExportBorrowInvestList(borrowInvestRequest);
+            if (resultResponse2 != null && resultResponse2.size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultResponse2);
+            } else {
+                break;
+            }
         }
 
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);

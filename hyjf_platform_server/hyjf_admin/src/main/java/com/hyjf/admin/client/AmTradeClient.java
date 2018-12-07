@@ -30,7 +30,6 @@ import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.config.ParamNameVO;
-import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.account.AccountListVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
@@ -1178,6 +1177,11 @@ public interface AmTradeClient {
     /*计划列表 end*/
 
     /*加入明细 start*/
+
+    AccedeListResponse getAccedeListByParamCount(AccedeListRequest form);
+
+    AccedeListResponse getAccedeListByParamList(AccedeListRequest form);
+
     /**
      * 检索加入明细列表
      *
@@ -1466,7 +1470,7 @@ public interface AmTradeClient {
      * @Version v0.1
      * @Date
      */
-    List<BorrowRepaymentPlanCustomizeVO> exportRepayClkActBorrowRepaymentInfoList(BorrowRepaymentPlanRequest request);
+    AdminBorrowRepaymentResponse exportRepayClkActBorrowRepaymentInfoList(BorrowRepaymentPlanRequest request);
     /**
      * @Description 获取admin查询延期数据
      * @Author pangchengchao

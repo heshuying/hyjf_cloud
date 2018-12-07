@@ -15,7 +15,6 @@ import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
-import com.hyjf.am.response.admin.HjhInfoAccountBalanceResponse;
 import com.hyjf.am.response.user.UserManagerResponse;
 import com.hyjf.am.resquest.admin.BailConfigAddRequest;
 import com.hyjf.am.resquest.admin.BailConfigRequest;
@@ -515,25 +514,20 @@ public class BailConfigController extends BaseController {
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
         //请求第一页5000条
-//        request.setPageSize(defaultRowMaxCount);
-//        request.setCurrPage(1);
-       // List<BailConfigCustomizeVO> recordList = this.bailConfigService.selectRecordList(request);
+        request.setPageSize(defaultRowMaxCount);
         
-        Integer totalCount = bailConfigService.countBailConfigRecordList(request).getResultInt();
+
+        Integer totalCount = bailConfigService.selectBailConfigCount(request);
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = "";
 
-        for (int i = 1; i < sheetCount; i++) {
-		//	int start=(i-1) * defaultRowMaxCount;
-		//	int end = Math.min(totalCount, i * defaultRowMaxCount);
-            request.setPageSize(defaultRowMaxCount);
-            request.setCurrPage(i+1);
-            List<BailConfigCustomizeVO> recordList = this.bailConfigService.selectRecordList(request);
+        for (int i = 1; i <= sheetCount; i++) {
+        	request.setCurrPage(i);
 			sheetNameTmp = sheetName + "_第" + (i) + "页";
-			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  recordList);
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, this.bailConfigService.selectRecordList(request));
         }
         
         DataSet2ExcelSXSSFHelper.write2Response(requestt, response, fileName, workbook);

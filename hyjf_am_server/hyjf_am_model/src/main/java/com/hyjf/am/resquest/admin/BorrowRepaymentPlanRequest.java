@@ -30,8 +30,33 @@ public class BorrowRepaymentPlanRequest extends BasePage {
      * 机构名称代号 检索条件
      */
     private String instCodeSrch;
+    /**
+     * 检索条件 limitStart
+     */
+    private int limitStart = -1;
+    /**
+     * 检索条件 limitEnd
+     */
+    private int limitEnd = -1;
+    
 
-    public String getRepayLastTimeStartSrch() {
+    public int getLimitStart() {
+		return limitStart;
+	}
+
+	public void setLimitStart(int limitStart) {
+		this.limitStart = limitStart;
+	}
+
+	public int getLimitEnd() {
+		return limitEnd;
+	}
+
+	public void setLimitEnd(int limitEnd) {
+		this.limitEnd = limitEnd;
+	}
+
+	public String getRepayLastTimeStartSrch() {
         return repayLastTimeStartSrch;
     }
 

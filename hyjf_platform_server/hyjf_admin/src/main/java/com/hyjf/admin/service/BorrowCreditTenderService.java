@@ -5,6 +5,7 @@ import com.hyjf.admin.beans.request.BorrowCreditTenderInfoRequest;
 import com.hyjf.admin.beans.request.BorrowCreditTenderPDFSignReq;
 import com.hyjf.admin.beans.request.BorrowCreditTenderRequest;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.am.response.admin.AdminCreditTenderResponse;
 import com.hyjf.am.vo.config.AdminSystemVO;
 
 import javax.servlet.http.HttpServletResponse;
@@ -20,14 +21,6 @@ public interface BorrowCreditTenderService {
     AdminResult getBorrowCreditRepayList(BorrowCreditRepayRequest request);
 
     /**
-     * 还款信息列表导出
-     * @author zhangyk
-     * @date 2018/7/11 20:41
-     */
-    void exportBorrowCreditRepayList(BorrowCreditRepayRequest request, HttpServletResponse response) throws UnsupportedEncodingException;
-
-
-    /**
      * 还款信息明细
      * @author zhangyk
      * @date 2018/7/12 10:52
@@ -41,14 +34,6 @@ public interface BorrowCreditTenderService {
      * @date 2018/7/12 19:04
      */
     AdminResult getCreditTenderList(BorrowCreditTenderRequest request);
-
-    /**
-     * 承接信息列表导出
-     * @author zhangyk
-     * @date 2018/7/13 10:49
-     */
-    void exportCreditTenderList(BorrowCreditTenderRequest request, HttpServletResponse response) throws UnsupportedEncodingException;
-
 
     /**
      * 查看债权人债权信息
@@ -72,5 +57,24 @@ public interface BorrowCreditTenderService {
      */
     AdminResult pdfPreview(BorrowCreditTenderPDFSignReq req);
 
+    /**
+     * 查询还款信息条数
+     * @param request
+     * @return
+     */
+    int selectBorrowCreditRepayCount(BorrowCreditRepayRequest request);
 
+    /**
+     * 查询承接信息条数
+     * @param request
+     * @return
+     */
+    int selectBorrowCreditTenderCount(BorrowCreditTenderRequest request);
+
+    /**
+     * 获取承接数据
+     * @param request
+     * @return
+     */
+    AdminCreditTenderResponse getCreditTenderResponse(BorrowCreditTenderRequest request);
 }

@@ -107,6 +107,17 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
     private static final String VAL_SEX = "val_sex";
 
     /**
+     * 查询总条数
+     * @param borrowInvestRequest
+     * @return
+     */
+    @Override
+    public Integer countBorrowInvest(BorrowInvestRequest borrowInvestRequest){
+        Integer count = amTradeClient.countBorrowInvest(borrowInvestRequest);
+        return count;
+    }
+
+    /**
      * 投资明细列表
      *
      * @param borrowInvestRequest
