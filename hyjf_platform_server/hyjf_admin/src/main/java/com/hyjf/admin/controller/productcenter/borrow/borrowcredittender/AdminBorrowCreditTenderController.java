@@ -76,6 +76,7 @@ public class AdminBorrowCreditTenderController extends BaseController {
         int totalCount = borrowCreditTenderService.selectBorrowCreditTenderCount(request);
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        defaultRowMaxCount = 3;//todo 测试导出
         String sheetName = "汇转让-承接信息";
         // 文件名称
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;

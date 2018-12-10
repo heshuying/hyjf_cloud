@@ -181,6 +181,7 @@ public class UserRePayAuthController extends BaseController {
         int totalCount = userPayAuthService.selectUserMemberCount(userPayAuthRequest);
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        defaultRowMaxCount = 3;//todo 测试导出
         // 表格sheet名称
         String sheetName = "还款授权";
         // 文件名称

@@ -69,6 +69,7 @@ public class AdminBorrowCreditPaymentController {
         int totalCount = borrowCreditTenderService.selectBorrowCreditRepayCount(request);
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        defaultRowMaxCount = 3;//todo 测试导出
         String sheetName = "汇转让-还款信息";
         // 文件名称
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
