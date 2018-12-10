@@ -84,7 +84,20 @@ public class DataCenterCouponController extends BaseController {
         }
         return response;
     }
-
+    @RequestMapping("/get_count_list_dj")
+    public DataCenterCouponCustomizeResponse getCountDJ(@RequestBody DadaCenterCouponCustomizeRequest request) {
+        DataCenterCouponCustomizeResponse response = new DataCenterCouponCustomizeResponse();
+        int countDJ = couponService.getCountDJ(request);
+        response.setCount(countDJ);
+        return response;
+    }
+    @RequestMapping("/get_count_list_jx")
+    public DataCenterCouponCustomizeResponse getCountJX(@RequestBody DadaCenterCouponCustomizeRequest request) {
+        DataCenterCouponCustomizeResponse response = new DataCenterCouponCustomizeResponse();
+        int countJX = couponService.getCountJX(request);
+        response.setCount(countJX);
+        return response;
+    }
     /**
      * 获取加息券列表
      * @param request

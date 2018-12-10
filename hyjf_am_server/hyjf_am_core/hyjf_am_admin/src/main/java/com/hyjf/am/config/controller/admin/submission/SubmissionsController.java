@@ -67,9 +67,15 @@ public class SubmissionsController {
     @PostMapping("/getExportRecordList")
     public SubmissionsResponse exportSubmissionsList(@RequestBody SubmissionsRequest form) {
         SubmissionsResponse response = new SubmissionsResponse();
-        List<SubmissionsCustomizeVO> recordList = submissionsService.queryRecordList(form,-1, -1);
-        List<SubmissionsCustomizeVO> list = CommonUtils.convertBeanList(recordList, SubmissionsCustomizeVO.class);
-        response.setResultList(list);
+        //查询总数
+        int count = submissionsService.queryTotal(form);
+        if(count > 0){
+            Paginator paginator = new Paginator(form.getCurrPage(), count,form.getPageSize());
+            List<SubmissionsCustomizeVO> recordList = submissionsService.queryRecordList(form, paginator.getOffset(), paginator.getLimit());
+            List<SubmissionsCustomizeVO> list = CommonUtils.convertBeanList(recordList, SubmissionsCustomizeVO.class);
+            response.setResultList(list);
+            response.setRecordTotal(count);
+        }
         return response;
     }
     /**

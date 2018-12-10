@@ -86,7 +86,7 @@ public class HjhCreditTenderController extends BaseController{
 	 * @param request
 	 * @return 汇计划承接记录列表   已测试
 	 */
-	@ApiOperation(value = "汇计划承接记录列表", notes = "汇计划承接记录列表初始化")
+	@ApiOperation(value = "汇计划承接记录列表初始化", notes = "汇计划承接记录列表初始化")
 	@PostMapping(value = "/init")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
@@ -115,7 +115,7 @@ public class HjhCreditTenderController extends BaseController{
      * @param request
      * @return 汇计划承接记录列表查询       
      */
-    @ApiOperation(value = "汇计划承接记录列表", notes = "汇计划承接记录列表查询")
+    @ApiOperation(value = "汇计划承接记录列表查询", notes = "汇计划承接记录列表查询")
     @PostMapping(value = "/search")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
@@ -314,7 +314,7 @@ public class HjhCreditTenderController extends BaseController{
 	 * @param request
 	 * @return 汇计划承接记录列表查询        已测试
 	 */
-	@ApiOperation(value = "汇计划承接记录列表", notes = "汇计划承接记录列表导出")
+	@ApiOperation(value = "汇计划承接记录列表导出", notes = "汇计划承接记录列表导出")
 	@PostMapping(value = "/export")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
@@ -333,18 +333,29 @@ public class HjhCreditTenderController extends BaseController{
 		BeanUtils.copyProperties(viewRequest, form);
 		List<HjhCreditTenderCustomizeVO> resultList = this.hjhCreditTenderService.getHjhCreditTenderListByParamWithOutPage(form);
 
-
 		Integer totalCount = resultList.size();
-
+		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
 		Map<String, String> beanPropertyColumnMap = buildMap();
 		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
 		String sheetNameTmp = sheetName + "_第1页";
-		if (totalCount == 0) {
 
+		if (totalCount == 0) {
 			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-		}else {
-			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
 		}
+
+		for (int i = 1; i <= sheetCount; i++) {
+			//请求第一页5000条
+			form.setPageSize(defaultRowMaxCount);
+			form.setCurrPage(i);
+			List<HjhCreditTenderCustomizeVO> resultResponse2 = hjhCreditTenderService.paging(form,resultList);
+			if (resultResponse2 != null && resultResponse2.size()> 0) {
+				sheetNameTmp = sheetName + "_第" + (i) + "页";
+				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultResponse2);
+			} else {
+				break;
+			}
+		}
+
 		DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
 	}
 
@@ -379,7 +390,7 @@ public class HjhCreditTenderController extends BaseController{
 	 * @param request
 	 * @return
 	 */
-    @ApiOperation(value = "汇计划承接记录列表", notes = "PDF脱敏图片预览")
+    @ApiOperation(value = "PDF脱敏图片预览", notes = "PDF脱敏图片预览")
     @PostMapping(value = "/pdfpreview")
     @ResponseBody
     public JSONObject pdfPreviewAction(HttpServletRequest request,@RequestBody @Valid AdminHjhCreditTenderRequest viewRequest) {
@@ -418,7 +429,7 @@ public class HjhCreditTenderController extends BaseController{
 	 * @param request
 	 * @return
 	 */
-	@ApiOperation(value = "汇计划承接记录列表", notes = "PDF文件签署")
+	@ApiOperation(value = "PDF文件签署", notes = "PDF文件签署")
     @PostMapping(value = "/pdfsign")
     @ResponseBody
     public JSONObject pdfSignAction(HttpServletRequest request, HttpServletResponse response, @RequestBody @Valid AdminHjhCreditTenderRequest viewRequest) throws MQException {

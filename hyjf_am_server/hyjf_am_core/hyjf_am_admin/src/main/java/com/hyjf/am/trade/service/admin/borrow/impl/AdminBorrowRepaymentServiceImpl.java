@@ -413,7 +413,10 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
     public List<AdminBorrowRepaymentPlanCustomize> exportRepayClkActBorrowRepaymentInfoList(BorrowRepaymentPlanRequest request) {
         return this.borrowRepaymentCustomizeMapper.exportRepayClkActBorrowRepaymentInfoList(request);
     }
-
+    @Override
+    public int exportRepayClkActBorrowRepaymentInfoListCount(BorrowRepaymentPlanRequest request) {
+        return this.borrowRepaymentCustomizeMapper.exportRepayClkActBorrowRepaymentInfoListCount(request);
+    }
     @Override
     public AdminRepayDelayCustomize selectBorrowInfo(String borrowNid) throws ParseException{
         AdminRepayDelayCustomize repayDelayCustomize = new AdminRepayDelayCustomize();

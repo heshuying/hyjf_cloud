@@ -40,6 +40,7 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -90,26 +91,6 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
         }
         result.setData(bean);
         return result;
-    }
-
-
-    /**
-     * 数据导出
-     *
-     * @author zhangyk
-     * @date 2018/7/10 14:09
-     */
-    @Override
-    public void exportBorrowCreditList(BorrowCreditRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
-        BorrowCreditAmRequest req = CommonUtils.convertBean(request, BorrowCreditAmRequest.class);
-
-        String sheetName = "债权转让列表";
-        String[] titles = new String[]{"债转编号", "项目编号", "用户名", "债权本金", "转让本金", "折让率", "转让价格", "已转让金额", "发布时间",
-                "还款时间", "转让状态", "发起平台"};
-        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
-                + CustomConstants.EXCEL_EXT;
-        List<BorrowCreditVO> list = amTradeClient.getBorrowCreditList(req);
-        exportExcel(sheetName, fileName, titles, list, response);
     }
 
     @Override
@@ -295,5 +276,13 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
         List<DropDownVO> list =  ConvertUtils.convertParamMapToDropDown(creditStatusMap);
         result.setData(list);
         return result;
+    }
+
+    @Override
+    public int selectBorrowCreditCount(BorrowCreditRequest request) {
+        BorrowCreditAmRequest amRequest = new BorrowCreditAmRequest();
+        BeanUtils.copyProperties(request, amRequest);
+        Integer borrowCreditCount = amTradeClient.getBorrowCreditCount(amRequest);
+        return borrowCreditCount == null ? 0 : borrowCreditCount;
     }
 }

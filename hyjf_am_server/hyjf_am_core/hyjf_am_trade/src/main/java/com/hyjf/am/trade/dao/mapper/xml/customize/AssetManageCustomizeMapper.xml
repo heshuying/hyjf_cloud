@@ -509,7 +509,7 @@
 
 		) t
 		<if test="orderByFlag ==null||orderByFlag==''" >
-			ORDER BY t.orderby_addtime desc,t.capital
+			ORDER BY t.orderby_addtime desc,t.type,t.capital
 		</if>
 		<if test="orderByFlag == 1" >
 			<if test="sortBy == 'DESC'" >
@@ -1009,7 +1009,7 @@
 		hiild.invest_order_id
 		) t
 		<if test="orderByFlag ==null||orderByFlag==''" >
-			ORDER BY t.orderby_repay_orddate desc,t.account
+			ORDER BY t.orderby_repay_orddate desc,t.type,t.account
 		</if>
 		<if test="orderByFlag == 1" >
 			<if test="sortBy == 'DESC'" >

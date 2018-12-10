@@ -5,6 +5,7 @@ package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.am.response.admin.DataCenterCouponResponse;
+import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.vo.admin.coupon.DataCenterCouponCustomizeVO;
 
 import java.util.List;
@@ -35,4 +36,18 @@ public interface DataCenterCouponService {
      * @return
      */
     List<DataCenterCouponCustomizeVO> getRecordListDJ(DataCenterCouponCustomizeVO dataCenterCouponCustomize);
+
+    /**
+     * 获取加息券列表个数
+     * @param
+     * @return
+     */
+    int getCountDJ();
+
+    /**
+     * 获取加息券列表个数
+     * @param
+     * @return
+     */
+    int getCountJX();
 }

@@ -26,7 +26,6 @@ import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -54,9 +53,9 @@ public class ProtocolsController extends BaseController {
 	@RequestMapping("/selectfddtempletlist")
 	public FddTempletCustomizeResponse selectFddTempletList(@RequestBody ProtocolsRequest request) {
 		FddTempletCustomizeResponse response = new FddTempletCustomizeResponse();
-		List<FddTempletCustomize> list = protocolsService.selectFddTempletList(request,false);
-		response.setCount(list.size());
-		if (!CollectionUtils.isEmpty(list)) {
+		int count = protocolsService.getFddTempletCount();
+		response.setCount(count);
+		if (count > 0) {
 			List<FddTempletCustomize> list2 = protocolsService.selectFddTempletList(request,true);
 			List<FddTempletCustomizeVO> voList = CommonUtils.convertBeanList(list2, FddTempletCustomizeVO.class);
 			response.setResultList(voList);

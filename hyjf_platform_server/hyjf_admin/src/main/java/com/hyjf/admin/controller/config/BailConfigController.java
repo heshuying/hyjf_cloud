@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.config;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.BailConfigRequestBean;
 import com.hyjf.admin.beans.request.UserManagerRequestBean;
@@ -26,6 +27,7 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.*;
+import io.netty.handler.codec.json.JsonObjectDecoder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -514,44 +516,39 @@ public class BailConfigController extends BaseController {
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
         //请求第一页5000条
-//        request.setPageSize(defaultRowMaxCount);
-//        request.setCurrPage(1);
-        List<BailConfigCustomizeVO> recordList = this.bailConfigService.selectRecordList(request);
+        request.setPageSize(defaultRowMaxCount);
         
-        Integer totalCount = recordList.size();
+
+        Integer totalCount = bailConfigService.selectBailConfigCount(request);
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = "";
 
-        for (int i = 1; i < sheetCount; i++) {
-			int start=(i-1) * defaultRowMaxCount;
-			int end = Math.min(totalCount, i * defaultRowMaxCount);
-
+        for (int i = 1; i <= sheetCount; i++) {
+        	request.setCurrPage(i);
 			sheetNameTmp = sheetName + "_第" + (i) + "页";
-			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  recordList.subList(start, end));
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, this.bailConfigService.selectRecordList(request));
         }
-        
         DataSet2ExcelSXSSFHelper.write2Response(requestt, response, fileName, workbook);
     }
 
     private Map<String, String> buildMap() {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("instName", "资产来源");
+        map.put("bailTatol", "保证金金额");
+        map.put("bailRate", "保证金比例");
+        map.put("newCreditLine", "新增授信额度");
+        map.put("loanCreditLine", "在贷授信额度");
         map.put("dayMarkLine", "日推标额度");
         map.put("monthMarkLine", "月推标额度");
-        map.put("isAccumulate", "未用额度是否累计");
-        map.put("userName", "授信周期");
-        map.put("bailRate", "保证金比例");
-        map.put("bailTatol", "保证金金额");
-        map.put("newCreditLine", "新增授信额度");
-        map.put("loanCreditLine", "在贷余额额度");
-        map.put("monthLLL", "还款授信方式:等额本息");
-        map.put("endLLL", "还款授信方式:按月计息,到期还本还息");
-        map.put("endmonthLLL", "还款授信方式:先息后本");
-        map.put("enddayLLL", "还款授信方式:按天计息，到期还本息");
-        map.put("principalLLL", "还款授信方式:等额本金");
+        map.put("pushMarkLine", "发标额度上限");
+        map.put("loanMarkLine", "发标已发额度");
+        map.put("remainMarkLine", "发标额度余额");
+        map.put("repayedCapital", "已还本金");
+        map.put("cycLoanTotal", "周期内发标已发额度");
+        map.put("loanBalance", "在贷余额");
         return map;
     }
     private Map<String, IValueFormatter> buildValueAdapter() {
@@ -565,17 +562,17 @@ public class BailConfigController extends BaseController {
                 }else {
                 	return "是";
                 }
-             
+
             }
         };
         IValueFormatter bailRateAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
-                String bailRate = (String) object;
+                Integer bailRate = (Integer) object;
                 return bailRate+"%";
             }
         };
-     
+
         mapAdapter.put("isAccumulateAdapter", isAccumulateAdapter);
         mapAdapter.put("bailRate", bailRateAdapter);
         return mapAdapter;

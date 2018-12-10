@@ -111,7 +111,7 @@ public class CertificateAuthorityExceptionController extends BaseController {
     private CertificateAuthorityResponse createNoExceptionPage(CertificateAuthorityExceptionRequest form, CertificateAuthorityResponse cfar) {
         Integer counts = this.certificateAuthorityExceptionService.countCANOExceptionList(form);
         if (counts > 0) {
-            Paginator paginator = new Paginator(form.getCurrPage(), counts, form.getPageSize());
+            Paginator paginator = new Paginator(form.getCurrPage(),counts,form.getPageSize());
             List<CertificateAuthority> recordList = this.certificateAuthorityExceptionService.getCANOExceptionList(form, paginator.getOffset(), paginator.getLimit());
             cfar.setResultList(CommonUtils.convertBeanList(recordList, CertificateAuthorityVO.class));
         }

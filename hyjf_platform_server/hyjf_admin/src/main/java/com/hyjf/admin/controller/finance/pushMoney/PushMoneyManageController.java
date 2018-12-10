@@ -159,6 +159,7 @@ public class PushMoneyManageController extends BaseController {
     public void exportPushMoney(HttpServletRequest request, HttpServletResponse response,@RequestBody PushMoneyRequest requestBean) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+
         // 表格sheet名称
         String sheetName = "推广提成列表";
         // 文件名称
@@ -167,8 +168,8 @@ public class PushMoneyManageController extends BaseController {
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-        requestBean.setCurrPage(1);
-        requestBean.setPageSize(defaultRowMaxCount);
+//        requestBean.setCurrPage(1);
+////        requestBean.setPageSize(defaultRowMaxCount);
         Integer totalCount = pushMoneyManageService.findPushMoneyList(requestBean).getCount();
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
@@ -303,8 +304,8 @@ public class PushMoneyManageController extends BaseController {
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-        requestBean.setCurrPage(1);
-        requestBean.setPageSize(defaultRowMaxCount);
+//        requestBean.setCurrPage(1);
+//        requestBean.setPageSize(defaultRowMaxCount);
         Integer totalCount = pushMoneyManageService.getPushMoneyListCount(requestBean);
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;

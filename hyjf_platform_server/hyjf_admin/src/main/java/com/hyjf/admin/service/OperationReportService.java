@@ -14,6 +14,12 @@ public interface OperationReportService {
      * @return
      */
      OperationReportResponse getRecordList(OperationReportRequest request);
+    /**
+     * 获取全部数量
+     *
+     * @return
+     */
+    Integer getRecordCount(OperationReportRequest request);
 
     /**
      * 获取已发布列表--web端和app

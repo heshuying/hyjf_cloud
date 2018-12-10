@@ -158,6 +158,16 @@ public class CouponConfigServiceImpl implements CouponConfigService {
     }
 
     /**
+     * VIP中心-优惠券发行 查询导出列表总数
+     * @param request
+     * @return
+     */
+    @Override
+    public int getCountForExport(CouponConfigRequest request){
+        return amTradeClient.getCouponConfigCountForExport(request);
+    }
+
+    /**
      * 查询导出列表
      * @param request
      * @return

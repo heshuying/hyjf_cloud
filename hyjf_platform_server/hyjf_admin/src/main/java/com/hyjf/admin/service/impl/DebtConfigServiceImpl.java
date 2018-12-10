@@ -2,6 +2,7 @@ package com.hyjf.admin.service.impl;
 
 import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.service.DebtConfigService;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.am.response.config.DebtConfigResponse;
 import com.hyjf.am.resquest.admin.DebtConfigRequest;
 import com.hyjf.am.vo.config.DebtConfigLogVO;
@@ -48,6 +49,9 @@ public class DebtConfigServiceImpl implements DebtConfigService {
     }
     @Override
     public List<DebtConfigLogVO> getDebtConfigLogList(DebtConfigRequest req){
+        Page page = Page.initPage(req.getCurrPage(), req.getPageSize());
+        req.setLimitStart(page.getOffset());
+        req.setLimitEnd(page.getLimit());
         return amConfigClient.getDebtConfigLogList(req);
 
     }
