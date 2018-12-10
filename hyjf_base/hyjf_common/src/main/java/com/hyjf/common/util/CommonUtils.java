@@ -37,7 +37,7 @@ public class CommonUtils {
 	public final static String KEY_AUTO_CREDIT_AUTH = "AUTHCONFIG:autoCreditAuth"; // 自动债转
 	public final static String KEY_IS_CHECK_USER_ROLES = "CHECKE:ISCHECKUSERROLES"; // 是否校验用户角色*/
 
-	// 项目要求投资者风险测评类型描述
+	// 项目要求出借者风险测评类型描述
 	public final static String DESC_PROJECT_RISK_LEVEL_DESC = "您的风险等级为 #{0}# \n达到 #稳健型# 及以上才可以出借此项目";
 
 	/**
@@ -445,10 +445,10 @@ public class CommonUtils {
 	}
 
 	/**
-	 * 获取标的投资等级和用户等级进行校验(只适用于计划)
+	 * 获取标的出借等级和用户等级进行校验(只适用于计划)
 	 * @author wenxin
 	 * @param UserLevel 用户等级
-	 * @return true能投资 false 不能投资
+	 * @return true能出借 false 不能出借
 	 */
 	public static Boolean checkStandardInvestment(String UserLevel){
 		boolean bolStr = false;

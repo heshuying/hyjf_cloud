@@ -117,7 +117,7 @@ public class CallCenterTradeController extends BaseController {
     }
 
     /**
-     * 查询投资明细(直投产品)
+     * 查询出借明细(直投产品)
      * @author libin
      * @param request
      * @return
@@ -220,7 +220,7 @@ public class CallCenterTradeController extends BaseController {
     }
     
     /**
-     * 查询投资明细(汇添金)
+     * 查询出借明细(汇添金)
      * @author libin
      * @param request
      * @return

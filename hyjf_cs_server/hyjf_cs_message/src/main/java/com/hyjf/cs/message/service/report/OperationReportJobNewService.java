@@ -20,7 +20,7 @@ public interface OperationReportJobNewService {
     public void insertOperationGroupData(OperationReportJobBean bean);
 
     /**
-     * 插入投资类的信息
+     * 插入出借类的信息
      * @param bean
      */
     public Calendar insertOperationData(OperationReportJobBean bean) ;

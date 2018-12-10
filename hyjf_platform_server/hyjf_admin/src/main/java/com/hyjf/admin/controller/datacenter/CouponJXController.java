@@ -68,7 +68,7 @@ public class CouponJXController extends BaseController {
 //		DataCenterCouponCustomizeVO dataCenterCouponCustomize =createDataCenterCouponCustomize(form);
 //		List<DataCenterCouponCustomizeVO> resultList  = this.couponService.getRecordListJX(dataCenterCouponCustomize);
 //		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-//		String[] titles = new String[] {"序号", "来源", "已发放数量","已使用数量","已失效数量","使用率","失效率","总收益","已发放收益" ,"待发放收益" ,"累计真实投资金额" };
+//		String[] titles = new String[] {"序号", "来源", "已发放数量","已使用数量","已失效数量","使用率","失效率","总收益","已发放收益" ,"待发放收益" ,"累计真实出借金额" };
 //		// 声明一个工作薄
 //		HSSFWorkbook workbook = new HSSFWorkbook();
 //
@@ -208,7 +208,7 @@ public class CouponJXController extends BaseController {
 	        map.put("recoverInterest", "总收益");
 	        map.put("recivedMoney", "已发放收益");
 	        map.put("norecivedMoney", "待发放收益");
-	        map.put("realTenderMoney", "累计真实投资金额");
+	        map.put("realTenderMoney", "累计真实出借金额");
 	    
 	        return map;
 	    }

@@ -30,7 +30,7 @@ public class AppRepayListCustomizeVO extends BaseVO implements Serializable {
 	private String borrowNid;
 	// 回款项目名称
 	private String borrowName;
-	// 回款投资金额
+	// 回款出借金额
 	private String account;
 	// 订单编号
 	private String orderId;
@@ -40,7 +40,7 @@ public class AppRepayListCustomizeVO extends BaseVO implements Serializable {
 	private String repayTime;
 	// 回款状态
 	private String status;
-	// 投资合同url
+	// 出借合同url
 	private String contactUrl = "";
 	// 项目转让状态 0 未转让 1部分转让 2完全转让
 	private String transStatus;
@@ -48,7 +48,7 @@ public class AppRepayListCustomizeVO extends BaseVO implements Serializable {
 	private String transAccount;
 	// 项目详情url
 	private String borrowUrl = "";
-	// 优惠券投资时的优惠券类型，费优惠券投资则为空字符串
+	// 优惠券出借时的优惠券类型，费优惠券出借则为空字符串
 	private String label;
 	// 融通宝加息类型为3 普通标1 优惠券2
 	private String investType;

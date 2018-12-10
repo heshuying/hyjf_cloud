@@ -11,12 +11,12 @@ import io.swagger.annotations.ApiModelProperty;
 import java.util.List;
 
 /**
- * 投资明细共用返回bean
+ * 出借明细共用返回bean
  * @author wangjun
  * @version BorrowInvestResponseBean, v0.1 2018/7/10 17:15
  */
 public class BorrowInvestResponseBean {
-    @ApiModelProperty(value = "投资明细列表")
+    @ApiModelProperty(value = "出借明细列表")
     private List<AdminBorrowInvestCustomizeVO> recordList;
 
     @ApiModelProperty(value = "列表统计")
@@ -31,7 +31,7 @@ public class BorrowInvestResponseBean {
     @ApiModelProperty(value = "还款方式")
     private List<DropDownVO> borrowStyleList;
 
-    @ApiModelProperty(value = "投资方式")
+    @ApiModelProperty(value = "出借方式")
     private List<DropDownVO> investTypeList;
 
     @ApiModelProperty(value = "资产来源下拉框")
@@ -40,7 +40,7 @@ public class BorrowInvestResponseBean {
     @ApiModelProperty(value = "产品类型下拉框")
     private List<DropDownVO> borrowProjectTypeList;
 
-    @ApiModelProperty(value = "投资人债券明细")
+    @ApiModelProperty(value = "出借人债券明细")
     List<InvestorDebtBean> detailList;
 
     @ApiModelProperty(value = "PDF脱敏图片(PDF脱敏图片预览接口)")

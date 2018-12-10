@@ -56,13 +56,13 @@ public class WeeklyResponse  extends BaseResult{
     String dateString;
     //总收益
     String zongshouyi;
-    //投资百分比
+    //出借百分比
     Integer baifenbi;
     //总天数
     Integer zongtianshu;
     //账户总金额
     String zongjine;
-    //本周投资额
+    //本周出借额
     String touzie;
     //本周累计笔数
     Integer bishu;
@@ -72,7 +72,7 @@ public class WeeklyResponse  extends BaseResult{
     String shouyi;
     //本人是否有优惠券 0:无 1:有
     Integer youhuiquan;
-    //本周投资额
+    //本周出借额
     String benzhoutouzie;
     //本周收益
     String benzhoushouyi;
@@ -80,7 +80,7 @@ public class WeeklyResponse  extends BaseResult{
     Integer chengjiaoshu;
     //还款概况
     List<String> huankuangaikuang;
-    //投资概况
+    //出借概况
     List<String> touzigaikuang;
     //活动列表
     List<ActivityListVO> huodong;

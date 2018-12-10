@@ -167,12 +167,12 @@ public class AppChannelReconciliationRecordController extends BaseController {
 	        map.put("userName", "用户名");
 	        map.put("utmName", "渠道");
 	        map.put("registTime", "注册时间");
-	        map.put("orderCode", "投资订单");
+	        map.put("orderCode", "出借订单");
 	        map.put("borrowNid", "借款编号");
 	        map.put("borrowPeriod", "标的期限");
-	        map.put("investAmount", "投资金额");
+	        map.put("investAmount", "出借金额");
 	        map.put("firstFlag", "是否首投");
-	        map.put("investTime", "投资时间");
+	        map.put("investTime", "出借时间");
 
 	        return map;
 	    }
@@ -260,7 +260,7 @@ public class AppChannelReconciliationRecordController extends BaseController {
 		        
 		        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
 		    }
-    //{ "序号", "用户名", "渠道","注册时间", "智投订单号", "智投编号", "服务回报期限", "授权服务金额","是否首投", "投资时间" };
+    //{ "序号", "用户名", "渠道","注册时间", "智投订单号", "智投编号", "服务回报期限", "授权服务金额","是否首投", "出借时间" };
 		    private Map<String, String> buildMap2() {
 		        Map<String, String> map = Maps.newLinkedHashMap();
 		        map.put("userName", "用户名");
@@ -271,7 +271,7 @@ public class AppChannelReconciliationRecordController extends BaseController {
 		        map.put("borrowPeriod", "服务回报期限");
 		        map.put("investAmount", "授权服务金额");
 		        map.put("firstFlag", "是否首投");
-		        map.put("investTime", "投资时间");
+		        map.put("investTime", "出借时间");
 		        return map;
 		    }
 		    private Map<String, IValueFormatter> buildValueAdapter2() {

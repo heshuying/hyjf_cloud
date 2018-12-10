@@ -79,7 +79,7 @@
 		AND hydu.reg_time <![CDATA[<=]]> UNIX_TIMESTAMP(
 			DATE_ADD(NOW(), INTERVAL - 6 MONTH)
 		)
-		<!-- #有投资是在还款中 此处跨库关联 -->
+		<!-- #有出借是在还款中 此处跨库关联 -->
 		AND EXISTS (
 		SELECT
 		  	tender.user_id
@@ -134,7 +134,7 @@
 		  	ht_user  hydu ON tender.user_id = hydu.user_id
 	    WHERE  borrow.`status` = 4
 		) 
-		<!-- #累计投资金额≥5000 -->
+		<!-- #累计出借金额≥5000 -->
 		AND (
 			SELECT
 				SUM(t.account)

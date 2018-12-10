@@ -150,7 +150,7 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
                 int totalDays = GetDate.daysBetween(createTime, recoverTime);
                 // 获取未还款前用户能够获取的本息和
                 BigDecimal userAccount = borrowRecover.getRecoverAccount();
-                // 获取用户投资项目分期后的投资本金
+                // 获取用户出借项目分期后的出借本金
                 BigDecimal userCapital = borrowRecover.getRecoverCapital();
                 // 计算用户实际获得的本息和
                 BigDecimal userAccountFact = new BigDecimal(0);
@@ -158,13 +158,13 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
                 BigDecimal userChargeInterest = new BigDecimal(0);
                 // 提前还款不应该大于本次计息时间
                 if (totalDays < interestDay) {
-                    // 计算投资用户实际获得的本息和
+                    // 计算出借用户实际获得的本息和
                     userAccountFact = UnnormalRepayUtils.aheadRepayPrincipalInterest(userAccount, userCapital,
                             borrowApr, totalDays);
                     // 用户提前还款减少的利息
                     userChargeInterest = UnnormalRepayUtils.aheadRepayChargeInterest(userCapital, borrowApr, totalDays);
                 } else {
-                    // 计算投资用户实际获得的本息和
+                    // 计算出借用户实际获得的本息和
                     userAccountFact = UnnormalRepayUtils.aheadRepayPrincipalInterest(userAccount, userCapital,
                             borrowApr, interestDay);
                     // 用户提前还款减少的利息
@@ -344,7 +344,7 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
                 int totalDays = GetDate.daysBetween(repayTimeStart, recoverTime);
                 // 获取未还款前用户能够获取的本息和
                 BigDecimal userAccount = borrowRecoverPlan.getRecoverAccount();
-                // 获取用户投资项目分期后的投资本金
+                // 获取用户出借项目分期后的出借本金
                 BigDecimal userCapital = borrowRecoverPlan.getRecoverCapital();
                 // 用户获得的利息
                 // 计算用户实际获得的本息和
@@ -358,14 +358,14 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
                 boolean isStyle = CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrow.getBorrowStyle());
                 // 提前还款不应该大于本次计息时间
                 if (totalDays < advanceDays) {
-                    // 计算投资用户实际获得的本息和
+                    // 计算出借用户实际获得的本息和
                     userAccountFact = UnnormalRepayUtils.aheadRepayPrincipalInterest(userAccount, userCapital,
                             borrowApr, totalDays);
 
                     userChargeInterest = UnnormalRepayUtils.aheadRepayChargeInterest(userCapital, borrowApr, totalDays);
 
                 } else {
-                    // 计算投资用户实际获得的本息和
+                    // 计算出借用户实际获得的本息和
                     userAccountFact = UnnormalRepayUtils.aheadRepayPrincipalInterest(userAccount, userCapital,
                             borrowApr, advanceDays);
 
@@ -548,7 +548,7 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
             for (int i = 0; i < borrowRecoverPlans.size(); i++) {
                 // 获取未还款前用户能够获取的本息和
                 BigDecimal userAccount = borrowRecoverPlans.get(i).getRecoverAccount();
-                // 获取用户投资项目分期后的投资本金
+                // 获取用户出借项目分期后的出借本金
                 BigDecimal userCapital = borrowRecoverPlans.get(i).getRecoverCapital();
                 // 计算用户实际获得的本息和
                 BigDecimal userAccountFact = UnnormalRepayUtils.delayRepayPrincipalInterest(userAccount, userCapital,
@@ -597,7 +597,7 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
             for (int i = 0; i < borrowRecoverPlans.size(); i++) {
                 // 获取未还款前用户能够获取的本息和
                 BigDecimal userAccount = borrowRecoverPlans.get(i).getRecoverAccount();
-                // 获取用户投资项目分期后的投资本金
+                // 获取用户出借项目分期后的出借本金
                 BigDecimal userCapital = borrowRecoverPlans.get(i).getRecoverCapital();
                 // 计算用户实际获得的本息和
                 BigDecimal userAccountFact = UnnormalRepayUtils.overdueRepayPrincipalInterest(userAccount, userCapital,
@@ -629,7 +629,7 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
     }
 
     /**
-     * 查询投资用户分期的详情
+     * 查询出借用户分期的详情
      *
      * @param borrowNid
      * @param period
@@ -663,7 +663,7 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
             for (int i = 0; i < borrowRecovers.size(); i++) {
                 // 获取未还款前用户能够获取的本息和
                 BigDecimal userAccount = borrowRecovers.get(i).getRecoverAccount();
-                // 获取用户投资项目分期后的投资本金
+                // 获取用户出借项目分期后的出借本金
                 BigDecimal userCapital = borrowRecovers.get(i).getRecoverCapital();
                 // 计算用户实际获得的本息和
                 BigDecimal userAccountFact = UnnormalRepayUtils.delayRepayPrincipalInterest(userAccount, userCapital,
@@ -709,7 +709,7 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
             for (int i = 0; i < borrowRecovers.size(); i++) {
                 // 获取未还款前用户能够获取的本息和
                 BigDecimal userAccount = borrowRecovers.get(i).getRecoverAccount();
-                // 获取用户投资项目分期后的投资本金
+                // 获取用户出借项目分期后的出借本金
                 BigDecimal userCapital = borrowRecovers.get(i).getRecoverCapital();
                 // 计算用户实际获得的本息和
                 BigDecimal userAccountFact = UnnormalRepayUtils.overdueRepayPrincipalInterest(userAccount, userCapital,

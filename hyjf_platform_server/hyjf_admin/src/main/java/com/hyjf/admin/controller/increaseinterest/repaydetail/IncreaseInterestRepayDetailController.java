@@ -113,7 +113,7 @@ public class IncreaseInterestRepayDetailController extends BaseController {
 	private Map<String, String> buildMap() {
 		Map<String, String> map = Maps.newLinkedHashMap();
 		map.put("borrowNid", "借款编号");
-		map.put("investUserName", "投资人");
+		map.put("investUserName", "出借人");
 		map.put("borrowPeriodByStyle", "借款期限");
 		map.put("repayStyleName", "还款方式");
 		map.put("borrowApr", "年化收益率");

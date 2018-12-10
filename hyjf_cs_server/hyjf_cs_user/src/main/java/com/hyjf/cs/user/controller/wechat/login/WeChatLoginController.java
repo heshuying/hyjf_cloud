@@ -136,7 +136,7 @@ public class WeChatLoginController extends BaseUserController {
                 logger.error("保存用户日志失败", e);
             }
             if (StringUtils.isNotBlank(env)) {
-                //登录成功之后风车理财的特殊标记，供后续投资使用
+                //登录成功之后风车理财的特殊标记，供后续出借使用
                 RedisUtils.del("loginFrom" + userVO.getUserId());
                 RedisUtils.set("loginFrom" + userVO.getUserId(), env, 1800);
             }

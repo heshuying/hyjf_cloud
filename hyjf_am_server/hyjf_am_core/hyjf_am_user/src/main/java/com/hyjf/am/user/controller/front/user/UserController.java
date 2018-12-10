@@ -696,7 +696,7 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 更新渠道用户首次投资信息
+     * 更新渠道用户首次出借信息
      *
      * @param bean
      * @return
@@ -963,7 +963,7 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 更新用户首次投资信息
+     * 更新用户首次出借信息
      * @param params
      * @return
      */
@@ -973,7 +973,7 @@ public class UserController extends BaseController {
         try {
             userService.updateFirstUtmReg(params);
         }catch (Exception e){
-            logger.error("更新用户首次投资信息失败  参数为：{}",JSONObject.toJSONString(params));
+            logger.error("更新用户首次出借信息失败  参数为：{}",JSONObject.toJSONString(params));
         }
         return response;
     }

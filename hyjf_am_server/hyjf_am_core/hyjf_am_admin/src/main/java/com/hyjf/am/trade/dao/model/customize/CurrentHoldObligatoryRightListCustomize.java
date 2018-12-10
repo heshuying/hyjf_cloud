@@ -27,9 +27,9 @@ public class CurrentHoldObligatoryRightListCustomize implements Serializable {
 	private String borrowApr;
 	/**用户id*/
 	private String tenUserId;
-	/**投资订单号*/
+	/**出借订单号*/
 	private String nid;
-	/**投资时间*/
+	/**出借时间*/
 	private String addtime;
 	/**预计还款时间*/
 	private String investDate;
@@ -43,12 +43,12 @@ public class CurrentHoldObligatoryRightListCustomize implements Serializable {
 	private String couponType;
 	/**待收总额*/
 	private String totalWait;
-	/** 债权承接下载投资协议使用   start*/
+	/** 债权承接下载出借协议使用   start*/
 	/**债转标号*/
     private String creditNid;
     /**债转投标单号*/
     private String creditTenderNid;
-    /** 债权承接下载投资协议使用   end*/
+    /** 债权承接下载出借协议使用   end*/
     
 	/**出让人userid*/
 	private String creditUserId;
@@ -100,7 +100,7 @@ public class CurrentHoldObligatoryRightListCustomize implements Serializable {
         this.addtime = addtime;
     }
     public String getInvestDate() {
-        if("投资中".equals(this.data)){
+        if("出借中".equals(this.data)){
             return "--";
         }else{
             return investDate;

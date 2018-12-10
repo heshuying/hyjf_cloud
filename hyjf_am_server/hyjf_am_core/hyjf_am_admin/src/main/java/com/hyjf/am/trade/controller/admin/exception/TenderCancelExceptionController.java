@@ -29,31 +29,31 @@ import java.util.List;
  */
 @RestController(value = "tradeTenderCancelExceptionController")
 @RequestMapping("/am-trade/tendercancelexception")
-@Api(value = "异常中心-银行投资撤销异常",tags = "异常中心-银行投资撤销异常")
+@Api(value = "异常中心-银行出借撤销异常",tags = "异常中心-银行出借撤销异常")
 public class TenderCancelExceptionController extends BaseController {
 
     @Autowired
     private TenderCancelExceptionService tenderCancelExceptionService;
 
     /**
-     * 根据筛选条件查询银行投资撤销异常的数据count
+     * 根据筛选条件查询银行出借撤销异常的数据count
      * @auth sunpeikai
      * @param request 筛选条件
      * @return
      */
-    @ApiOperation(value = "根据筛选条件查询银行投资撤销异常的数据count", notes = "根据筛选条件查询银行投资撤销异常的数据count")
+    @ApiOperation(value = "根据筛选条件查询银行出借撤销异常的数据count", notes = "根据筛选条件查询银行出借撤销异常的数据count")
     @PostMapping(value = "/gettendercancelexceptioncount")
     public Integer getTenderCancelExceptionCount(@RequestBody TenderCancelExceptionRequest request){
         return tenderCancelExceptionService.getTenderCancelExceptionCount(request);
     }
 
     /**
-     * 查询银行投资撤销异常列表
+     * 查询银行出借撤销异常列表
      * @auth sunpeikai
      * @param request 筛选条件
      * @return
      */
-    @ApiOperation(value = "根据筛选条件查询银行投资撤销异常list", notes = "根据筛选条件查询银行投资撤销异常list")
+    @ApiOperation(value = "根据筛选条件查询银行出借撤销异常list", notes = "根据筛选条件查询银行出借撤销异常list")
     @PostMapping(value = "/searchtendercancelexceptionlist")
     public BorrowTenderTmpResponse searchTenderCancelExceptionList(@RequestBody TenderCancelExceptionRequest request){
         BorrowTenderTmpResponse response = new BorrowTenderTmpResponse();

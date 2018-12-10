@@ -34,7 +34,7 @@ public class HjhCommissionRequest extends BasePage implements Serializable{
 
     // 查询用
     private String borrowNameSearch; // 项目标题
-    private String usernameSearch; // 投资人
+    private String usernameSearch; // 出借人
     private String clientTypeSearch; // 客户端类型
     private String referernameSearch; // 提成人
     private String is51Search; // 0:否，1:是， 9：all
@@ -95,7 +95,7 @@ public class HjhCommissionRequest extends BasePage implements Serializable{
      */
     private String referername;
     /**
-     * 投资人用户名
+     * 出借人用户名
      */
     private String username;
     /**
@@ -126,7 +126,7 @@ public class HjhCommissionRequest extends BasePage implements Serializable{
      */
     private String attributeTender;
     /**
-     * 投资时间
+     * 出借时间
      */
     private String tenderTimeView;
     /**
@@ -144,7 +144,7 @@ public class HjhCommissionRequest extends BasePage implements Serializable{
     private String isMonth;
     
     /**
-     * 投资类别 1：直投类，2：汇计划
+     * 出借类别 1：直投类，2：汇计划
      */
     private Integer tenderType;
     

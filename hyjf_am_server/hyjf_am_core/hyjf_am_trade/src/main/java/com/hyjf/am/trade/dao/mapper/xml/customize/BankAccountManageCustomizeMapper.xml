@@ -110,7 +110,7 @@
         ui2.truename AS referrer_true_name,
         u.mobile,
         CASE  ui.role_id
-        WHEN 1 THEN '投资人'
+        WHEN 1 THEN '出借人'
         WHEN 2 THEN '借款人'
         END AS roleid ,
         ui.attribute AS user_attribute,

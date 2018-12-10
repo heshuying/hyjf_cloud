@@ -33,7 +33,7 @@ public class ApplyAgreementInfo implements Serializable {
     private String contractId;
 
     /**
-     * 投资人
+     * 出借人
      *
      * @mbggenerated
      */
@@ -47,7 +47,7 @@ public class ApplyAgreementInfo implements Serializable {
     private String creditUserId;
 
     /**
-     * 交易类型,5:垫付债转投资,6:汇计划垫付债转投资 
+     * 交易类型,5:垫付债转出借,6:汇计划垫付债转出借
      *
      * @mbggenerated
      */

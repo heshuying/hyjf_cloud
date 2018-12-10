@@ -68,7 +68,7 @@ public class WrbInfoServiceImpl implements WrbInfoService {
             params.put("borrowNid", borrowNid);
         }else{
             params.put("projectType", "HZT");
-            params.put("status", 2);// 获取 投资中
+            params.put("status", 2);// 获取 出借中
         }
         List<WrbBorrowListCustomize> customizeList = wrbQueryCustomizeMapper.searchBorrowListByNid(params);
         for (WrbBorrowListCustomize wrbBorrowListCustomize : customizeList) {

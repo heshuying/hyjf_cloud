@@ -135,7 +135,7 @@ public class BatchAutoReviewHjhServiceImpl implements BatchAutoReviewHjhService 
             // 满标审核状态
             int borrowFullStatus = borrow.getBorrowFullStatus();
             if (borrowFullStatus == 1) {
-                // 如果标的投资记录存在没有授权码的记录，则不进行放款
+                // 如果标的出借记录存在没有授权码的记录，则不进行放款
                 int countErrorTender = this.countBorrowTenderError(borrowNid);
                 if (countErrorTender == 0) {
                     // 判断满标时间
@@ -206,7 +206,7 @@ public class BatchAutoReviewHjhServiceImpl implements BatchAutoReviewHjhService 
     }
 
     /**
-     * 校验投资数据的合法性
+     * 校验出借数据的合法性
      * @param borrowNid
      * @return
      */

@@ -139,7 +139,7 @@ public class AutoIssueMessageConsumer extends Consumer {
                             return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                         }
                         if(asset.getStatus().intValue()!= 7){
-                            logger.info(asset.getBorrowNid()+" 该标的对应资产不是投资中状态 "+borrow.getLabelId());
+                            logger.info(asset.getBorrowNid()+" 该标的对应资产不是出借中状态 "+borrow.getLabelId());
                             return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                         }
                     }

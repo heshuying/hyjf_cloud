@@ -14,7 +14,7 @@ import java.util.List;
  */
 public interface BatchUserPortraitQueryService {
     /**
-     * 查询用户画像所需要的投资相关参数
+     * 查询用户画像所需要的出借相关参数
      * */
     List<BatchUserPortraitQueryVO> selectInfoForUserPortrait(BatchUserPortraitRequest batchUserPortraitRequest);
 }

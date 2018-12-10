@@ -21,7 +21,7 @@ public class HjhAccedeSumVO extends BaseVO implements Serializable{
 	@ApiModelProperty(value = "加入金额合计")
 	private String sumAccedeAccount;
 
-	@ApiModelProperty(value = "已投资金额合计")
+	@ApiModelProperty(value = "已出借金额合计")
 	private String sumAlreadyInvest;
 
 	@ApiModelProperty(value = "待(收)还总额合计")

@@ -148,7 +148,7 @@ public class ShiroConstants {
 	/** redis写入权限  */
 	public static final String PERMISSION_WRITE_REDIS = "WRITE_REDIS";
 
-	/** 修复用户投资数据 */
+	/** 修复用户出借数据 */
 	public static final String PERMISSION_REPAIR_TENDER = "REPAIR_TENDER";
 
 	/** 债转发送邮件 */
@@ -193,10 +193,10 @@ public class ShiroConstants {
 	/** 红包账户发放 */
 	public static final String PERMISSIONS_REDPOCKETSEND = "REDPOCKETSEND";
 	
-	/** 投资撤销*/
+	/** 出借撤销*/
 	public static final String PERMISSIONS_BIDCANCEL = "BIDCANCEL";
 	
-	/** 投资人债权明细查询权限 */
+	/** 出借人债权明细查询权限 */
 	public static final String PERMISSION_DEBTCHECK = "DEBTCHECK";
 
 	/** PDF签署权限 */
@@ -205,7 +205,7 @@ public class ShiroConstants {
 	/** PDF脱敏图片预览权限 */
 	public static final String PERMISSION_PDF_PREVIEW = "PDFPREVIEW";
 
-	/** 投资人投标申请查询权限 */
+	/** 出借人投标申请查询权限 */
 	public static final String PERMISSION_QUERY_INVEST_DEBT_VIEW = "QUERY_INVEST_DEBT";
 
 

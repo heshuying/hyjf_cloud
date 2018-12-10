@@ -58,7 +58,7 @@ public interface AutoTenderExceptionService {
      */
     boolean updateTender(Map<String,Object> mapParam);
     /**
-     * 银行自动投资成功后，更新投资数据
+     * 银行自动投标成功后，更新出借数据
      *
      * @param borrowNid
      * @param accedeOrderId
@@ -79,7 +79,7 @@ public interface AutoTenderExceptionService {
      */
     HjhCreditCalcResultVO saveCreditTenderLogNoSave(HjhDebtCreditVO credit, HjhAccedeVO debtPlanAccede, String creditOrderId, String creditOrderDate, BigDecimal account, Boolean isLast);
     /**
-     * 银行自动投资成功后，更新投资数据
+     * 银行自动投标成功后，更新出借数据
      *
      * @param creditNid
      * @param accedeOrderId
@@ -93,7 +93,7 @@ public interface AutoTenderExceptionService {
     boolean updateCreditForAutoTender(String creditNid, String accedeOrderId, String planNid, BankCallBean bean,
                                              String tenderUsrcustid, String sellerUsrcustid, HjhCreditCalcResultVO resultVO);
     /**
-     * 删除 自动投资临时表
+     * 删除 自动出借临时表
      *
      * @param borrowNid
      * @param accedeOrderId

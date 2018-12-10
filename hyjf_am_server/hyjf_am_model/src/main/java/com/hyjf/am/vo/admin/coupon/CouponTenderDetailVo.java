@@ -42,7 +42,7 @@ public class CouponTenderDetailVo implements Serializable {
     private String couponSystem;
     //适用项目类型
     private String projectType;
-    //适用投资金额
+    //适用出借金额
     private String tenderQuota;
     //适用项目期限
     private String projectExpirationType;
@@ -57,11 +57,11 @@ public class CouponTenderDetailVo implements Serializable {
 
     //操作人
     private String grantWay;
-    //投资订单号
+    //出借订单号
     private String nid;
-    //投资状态
+    //出借状态
     private String borrowTenderStatus;
-    //投资金额
+    //出借金额
     private String account;
     //获得时间
     private String addTime;
@@ -129,7 +129,7 @@ public class CouponTenderDetailVo implements Serializable {
     private String orderId;
 
     /**
-     * 投资类型
+     * 出借类型
      */
     private String tenderType;
 

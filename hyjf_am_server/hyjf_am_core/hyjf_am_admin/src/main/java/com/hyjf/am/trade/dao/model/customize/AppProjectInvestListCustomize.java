@@ -28,11 +28,11 @@ public class AppProjectInvestListCustomize  implements Serializable {
 	 */
 	private String userName;
 	/**
-	 *投资金额
+	 *出借金额
 	 */
 	private String account;
 	/**
-	 *投资时间
+	 *出借时间
 	 */
 	private String investTime;
 	/**

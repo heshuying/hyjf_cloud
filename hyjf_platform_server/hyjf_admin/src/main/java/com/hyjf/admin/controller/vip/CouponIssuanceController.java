@@ -420,7 +420,7 @@ public class CouponIssuanceController extends BaseController {
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         String[] titles = new String[]{"序号", "优惠券名称", "优惠券编号", "优惠券类型", "优惠券面值",
                 "发行数量", "已发放数量", "有效期", "使用范围-操作平台", "使用范围-项目类型",
-                "使用范围-投资金额", "使用范围-项目期限", "状态", "发行时间"};
+                "使用范围-出借金额", "使用范围-项目期限", "状态", "发行时间"};
         //操作平台
         List<ParamNameVO> clients = this.couponCheckService.getParamNameList("CLIENT");
         // 声明一个工作薄
@@ -618,7 +618,7 @@ public class CouponIssuanceController extends BaseController {
         map.put("expirationDate", "有效期");
         map.put("couponSystem", "使用范围-操作平台");
         map.put("projectType", "使用范围-项目类型");
-        map.put("tenderQuota", "使用范围-投资金额");
+        map.put("tenderQuota", "使用范围-出借金额");
         map.put("projectExpirationType", "使用范围-项目期限");
         map.put("status", "状态");
         map.put("addTime", "发行时间");

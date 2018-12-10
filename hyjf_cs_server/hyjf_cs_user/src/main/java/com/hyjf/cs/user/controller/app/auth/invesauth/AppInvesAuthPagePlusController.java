@@ -38,7 +38,7 @@ import java.util.Map;
  * @Version v0.1
  * @Date
  */
-@Api(tags = {"app端-自动投资授权（新）"})
+@Api(tags = {"app端-自动出借授权（新）"})
 @CrossOrigin(origins = "*")
 @RestController
 @RequestMapping("/hyjf-app/bank/user/auth/invesauthpageplus")
@@ -53,12 +53,12 @@ public class AppInvesAuthPagePlusController extends BaseUserController {
     SystemConfig systemConfig;
 
     /**
-     * 用户自动投资授权
+     * 用户自动出借授权
      * @param userId
      * @param authorizedVO
      * @return
      */
-    @ApiOperation(value = "用户自动投资授权", notes = "用户自动投资授权")
+    @ApiOperation(value = "用户自动出借授权", notes = "用户自动出借授权")
     @PostMapping(value = "/page", produces = "application/json; charset=utf-8")
     @ResponseBody
     public  WebResult<Object> page(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
@@ -138,16 +138,16 @@ public class AppInvesAuthPagePlusController extends BaseUserController {
     }
 
     /**
-     * 用户自动投资授权异步回调
+     * 用户自动出借授权异步回调
      * @param bean
      * @return
      */
-    @ApiOperation(value = "用户自动投资授权异步回调", notes = "用户自动投资授权异步回调")
+    @ApiOperation(value = "用户自动出借授权异步回调", notes = "用户自动出借授权异步回调")
     @PostMapping(value = "/invesAuthBgreturn")
     @ResponseBody
     public String invesAuthBgreturn(@RequestBody BankCallBean bean) {
         BankCallResult result = new BankCallResult();
-        logger.info("[用户自动投资授权回调开始]");
+        logger.info("[用户自动出借授权回调开始]");
         bean.convert();
         Integer userId = Integer.parseInt(bean.getLogUserId()); // 用户ID
         // 查询用户开户状态
@@ -155,8 +155,8 @@ public class AppInvesAuthPagePlusController extends BaseUserController {
         if(authService.checkDefaultConfig(bean, AuthBean.AUTH_TYPE_AUTO_BID)){
 
             authService.updateUserAuthLog(bean.getLogOrderId(),"QuotaError");
-            logger.info("[用户自动投资授权完成后,回调结束]");
-            result.setMessage("自动投资授权成功");
+            logger.info("[用户自动出借授权完成后,回调结束]");
+            result.setMessage("自动出借授权成功");
             result.setStatus(true);
             return JSONObject.toJSONString(result, true);
         }
@@ -175,8 +175,8 @@ public class AppInvesAuthPagePlusController extends BaseUserController {
         }else{
             authService.updateUserAuthLog(bean.getLogOrderId(),authService.getBankRetMsg(bean.getRetCode()));
         }
-        logger.info("[用户自动投资授权完成后,回调结束]");
-        result.setMessage("自动投资授权成功");
+        logger.info("[用户自动出借授权完成后,回调结束]");
+        result.setMessage("自动出借授权成功");
         result.setStatus(true);
         return JSONObject.toJSONString(result, true);
     }

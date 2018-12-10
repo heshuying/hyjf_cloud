@@ -120,7 +120,7 @@ public class WechatBankWithdrawController extends BaseTradeController {
         String userRoId = userInfoVO.getRoleId()+"";
         //用户的可用金额
         BigDecimal bankBalance = account.getBankBalance();
-        //查询用户投资记录
+        //查询用户出借记录
         int borrowTender = bankWithdrawService.getBorrowTender(userId);
         if(StringUtils.equals("1",userRoId)){
             if(borrowTender<=0){

@@ -50,7 +50,7 @@ public class HjhPlanBorrowTmp implements Serializable {
     private BigDecimal accedeAccount;
 
     /**
-     * 已投资金额
+     * 已出借金额
      *
      * @mbggenerated
      */
@@ -127,7 +127,7 @@ public class HjhPlanBorrowTmp implements Serializable {
     private Integer sellUserId;
 
     /**
-     * 债转原投资订单号
+     * 债转原出借订单号
      *
      * @mbggenerated
      */
@@ -141,7 +141,7 @@ public class HjhPlanBorrowTmp implements Serializable {
     private Integer status;
 
     /**
-     * 是否标的的最后一笔投资/承接(0:非最后一笔；1:最后一笔)
+     * 是否标的的最后一笔出借/承接(0:非最后一笔；1:最后一笔)
      *
      * @mbggenerated
      */

@@ -23,14 +23,14 @@ public class ApiBorrowRepaymentInfoCustomize  implements Serializable {
     private String borrowPeriod;// 借款期限
     private String borrowApr;// 年化收益
     private String recoverFee;// 管理费
-    private String accedeOrderId;//投资订单号
+    private String accedeOrderId;//出借订单号
     private String borrowAccount;// 借款金额
     private String borrowAccountYes;// 借到金额
     private String manageFeeRate; //管理费费率
     private String repayType;// 还款方式
-    private String recoverTrueName;// 投资人姓名
-    private String recoverUserName;// 投资人用户名
-    private String recoverTotal;// 投资金额
+    private String recoverTrueName;// 出借人姓名
+    private String recoverUserName;// 出借人用户名
+    private String recoverTotal;// 出借金额
     private String recoverCapital;// 应还本金
     private String recoverInterest;// 应还利息
     private String serviceRate; //服务费率
@@ -54,17 +54,17 @@ public class ApiBorrowRepaymentInfoCustomize  implements Serializable {
 
 
 
-    private String recoverUserAttribute;// 投资人用户属性（当前）
-    private String recoverRegionName;// 投资人所属一级分部（当前）
-    private String recoverBranchName;// 投资人所属二级分部（当前）
-    private String recoverDepartmentName;// 投资人所属团队（当前）
+    private String recoverUserAttribute;// 出借人用户属性（当前）
+    private String recoverRegionName;// 出借人所属一级分部（当前）
+    private String recoverBranchName;// 出借人所属二级分部（当前）
+    private String recoverDepartmentName;// 出借人所属团队（当前）
     private String referrerName;// 推荐人（当前）
     private String referrerUserId;// 推荐人ID（当前）
     private String referrerTrueName;// 推荐人姓名（当前）
     private String referrerRegionName;// 推荐人所属一级分部（当前）
     private String referrerBranchName;//推荐人所属二级分部（当前）
     private String referrerDepartmentName; //推荐人所属团队（当前）
-    private String recoverPeriod;// 投资期限
+    private String recoverPeriod;// 出借期限
 
     private String recoverAccount;// 应还本息
     private String recoverFee;// 管理费

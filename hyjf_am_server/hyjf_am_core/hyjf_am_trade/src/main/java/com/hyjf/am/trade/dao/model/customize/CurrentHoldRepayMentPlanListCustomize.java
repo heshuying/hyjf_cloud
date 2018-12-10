@@ -20,7 +20,7 @@ public class CurrentHoldRepayMentPlanListCustomize implements Serializable {
      */
     private String borrowNid;
     /**
-     * 投资编号
+     * 出借编号
      */
     private String nid;
     /**

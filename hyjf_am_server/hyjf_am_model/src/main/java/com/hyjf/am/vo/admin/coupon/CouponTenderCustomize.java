@@ -5,7 +5,7 @@ import com.hyjf.am.vo.BaseVO;
 import java.math.BigDecimal;
 
 public class CouponTenderCustomize extends BaseVO {
-    //投资订单号
+    //出借订单号
     private String orderId;
     //用户名
     private String username;
@@ -21,7 +21,7 @@ public class CouponTenderCustomize extends BaseVO {
     private String couponQuota;
     //项目编号
     private String borrowNid;
-    //投资金额
+    //出借金额
     private BigDecimal account;
     //借款期限
     private String borrowPeriod;
@@ -31,7 +31,7 @@ public class CouponTenderCustomize extends BaseVO {
      * 还款状态（分期标的所有分期都已还款才统计为已还款）
      */
     private String receivedFlgAll;
-    //投资平台
+    //出借平台
     private String operatingDeck;
     //使用时间
     private String orderDate;

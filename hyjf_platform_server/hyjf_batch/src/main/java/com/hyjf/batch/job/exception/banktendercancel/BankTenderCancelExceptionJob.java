@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * 投资撤销异常处理定时任务
+ * 出借撤销异常处理定时任务
  * @author jijun
  * @since 20180625
  */

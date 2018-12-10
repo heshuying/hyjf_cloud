@@ -26,7 +26,7 @@ import java.util.List;
 /**
  * @author: sunpeikai
  * @version: BatchUserPortraitQueryServiceImpl, v0.1 2018/6/28 11:14
- * 查询用户画像所需要的投资相关参数
+ * 查询用户画像所需要的出借相关参数
  */
 @Service
 public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implements BatchUserPortraitQueryService {
@@ -38,7 +38,7 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
     @Autowired
     private AccountWithdrawMapper accountWithdrawMapper;
     /**
-     * 查询用户画像所需要的投资相关参数
+     * 查询用户画像所需要的出借相关参数
      * @param batchUserPortraitRequest 需要查询的userId的list
      * @return 结构与UserPortrait相同的封装对象list
      * */
@@ -58,12 +58,12 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
                     interestSum = new BigDecimal(0.00);
                 }
 
-                //散标累计年化投资金额
+                //散标累计年化出借金额
                 BigDecimal investSum = batchUserPortraitQueryCustomizeMapper.getInvestSum(userId);
                 if (investSum == null) {
                     investSum = new BigDecimal(0.00);
                 }
-                //计划累计年化投资金额
+                //计划累计年化出借金额
                 BigDecimal planSum = batchUserPortraitQueryCustomizeMapper.getPlanSum(userId);
                 if (planSum == null) {
                     planSum = new BigDecimal("0.00");
@@ -84,7 +84,7 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
                 //交易笔数
                 int tradeNumber = batchUserPortraitQueryCustomizeMapper.getTradeNumber(userId);
 
-                //投资进程
+                //出借进程
                 int tenderRecord = borrowCustomizeMapper.countInvest(userId);
                 AccountRechargeExample accountRechargeExample = new AccountRechargeExample();
                 AccountRechargeExample.Criteria criteria1 = accountRechargeExample.createCriteria();
@@ -92,7 +92,7 @@ public class BatchUserPortraitQueryServiceImpl extends BaseServiceImpl implement
                 int count = accountRechargeMapper.countByExample(accountRechargeExample);
 
                 if (tenderRecord > 0) {
-                    batchUserPortraitQueryVO.setInvestProcess("投资");
+                    batchUserPortraitQueryVO.setInvestProcess("出借");
                 } else if (count > 0) {
                     batchUserPortraitQueryVO.setInvestProcess("充值");
                 } else {

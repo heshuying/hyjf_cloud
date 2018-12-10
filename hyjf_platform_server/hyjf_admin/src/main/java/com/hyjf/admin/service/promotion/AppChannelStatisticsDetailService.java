@@ -19,7 +19,7 @@ public interface AppChannelStatisticsDetailService {
     List<UtmPlatVO> getAppUtm();
 
     /**
-     * 分页查询所有渠道投资信息
+     * 分页查询所有渠道出借信息
      * @param request
      * @return
      */

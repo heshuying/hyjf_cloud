@@ -9,7 +9,7 @@ import java.util.Set; /**
  */
 public interface TzjService {
     /**
-     * 查询投之家当日投资数据：每日充值人数、投资人数 、投资金额、首投金额、首投人数、复投人数
+     * 查询投之家当日出借数据：每日充值人数、出借人数 、出借金额、首投金额、首投人数、复投人数
      * @param tzjUserIds 投之家所有注册用户
      * @param startTime
      * @param endTime

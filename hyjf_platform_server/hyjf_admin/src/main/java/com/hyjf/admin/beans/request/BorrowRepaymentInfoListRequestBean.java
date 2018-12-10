@@ -12,7 +12,7 @@ import java.io.Serializable;
 public class BorrowRepaymentInfoListRequestBean extends BaseRequest implements Serializable {
     @ApiModelProperty(value = "是否分期")
     private String isMonth;
-    @ApiModelProperty(value = "投资nid,还款订单号")
+    @ApiModelProperty(value = "出借nid,还款订单号")
     private String nid;
     @ApiModelProperty(value = "借款编号")
     private String borrowNid;
@@ -20,7 +20,7 @@ public class BorrowRepaymentInfoListRequestBean extends BaseRequest implements S
     private String accedeOrderId;
     @ApiModelProperty(value = "还款期次")
     private String recoverPeriod;
-    @ApiModelProperty(value = "投资人用户名")
+    @ApiModelProperty(value = "出借人用户名")
     private String recoverUserName;
     @ApiModelProperty(value = "还款状态")
     private String status;

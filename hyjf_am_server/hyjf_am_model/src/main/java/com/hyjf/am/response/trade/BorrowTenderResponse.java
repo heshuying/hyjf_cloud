@@ -6,21 +6,21 @@ import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import java.math.BigDecimal;
 
 public class BorrowTenderResponse extends Response<BorrowTenderVO> {
-    /** 投资笔数 */
+    /** 出借笔数 */
     private Integer tenderCount;
     /** 汇直投金额 */
     private BigDecimal hztTenderPrice;
     /** 汇消费金额 */
     private BigDecimal hxfTenderPrice;
-    /** 汇金理财投资金额 */
+    /** 汇金理财出借金额 */
     private BigDecimal rtbTenderPrice;
-    /** app渠道用户Android投资数 */
+    /** app渠道用户Android出借数 */
     private Integer tenderNumberAndroid;
-    /** app渠道用户ios投资数 */
+    /** app渠道用户ios出借数 */
     private Integer tenderNumberIos;
-    /** app渠道用户pc投资数 */
+    /** app渠道用户pc出借数 */
     private Integer tenderNumberPc;
-    /** app渠道用户wechat投资数 */
+    /** app渠道用户wechat出借数 */
     private Integer tenderNumberWechat;
 
     public Integer getTenderCount() {

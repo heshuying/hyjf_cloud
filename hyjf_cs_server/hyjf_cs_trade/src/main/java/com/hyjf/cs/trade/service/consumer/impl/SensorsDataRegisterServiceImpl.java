@@ -160,7 +160,7 @@ public class SensorsDataRegisterServiceImpl extends BaseServiceImpl implements S
 
         // 用户角色
         if (userInfoVO.getRoleId() == 1) {
-            profiles.put("roleType", "投资人");
+            profiles.put("roleType", "出借人");
         } else if (userInfoVO.getRoleId() == 2) {
             profiles.put("roleType", "借款人");
         } else {

@@ -4,7 +4,7 @@
 	namespace="com.hyjf.am.trade.dao.mapper.customize.AdminBorrowRepaymentInfoListCustomizeMapper">
 	<sql id="Where_Clause">
 		<where>
-			<!-- 投资nid -->
+			<!-- 出借nid -->
 			<if test="nid != null and nid != ''">
 				AND brp.nid = #{nid}
 			</if>
@@ -36,7 +36,7 @@
 			<if test="recoverPeriod != null and recoverPeriod != ''">
 				AND brp.recover_period = #{recoverPeriod}
 			</if>
-			<!-- 投资人 -->
+			<!-- 出借人 -->
 			<if test="recoverUserName != null and recoverUserName != ''">
 				AND u2.username LIKE CONCAT( #{recoverUserName}, '%')
 			</if>

@@ -77,11 +77,11 @@ public class SensorsDataHztInvestMessageConsumer extends Consumer {
                 // 订单号
                 String orderId = sensorsDataBean.getOrderId();
                 if (StringUtils.isBlank(orderId)) {
-                    logger.error("神策数据采集:汇直投相关,获取投资订单号为空");
+                    logger.error("神策数据采集:汇直投相关,获取出借订单号为空");
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
 
-                logger.info("神策数据采集:汇直投相关,投资订单号:[" + orderId + "].");
+                logger.info("神策数据采集:汇直投相关,出借订单号:[" + orderId + "].");
                 // 发送神策数据
                 sensorsDataHztInvestService.sendSensorsData(sensorsDataBean);
             } catch (Exception e) {

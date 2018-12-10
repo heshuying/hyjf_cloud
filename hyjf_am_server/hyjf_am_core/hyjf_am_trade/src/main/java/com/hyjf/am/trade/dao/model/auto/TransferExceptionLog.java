@@ -15,7 +15,7 @@ public class TransferExceptionLog implements Serializable {
     private String orderId;
 
     /**
-     * 投资编号
+     * 出借编号
      *
      * @mbggenerated
      */

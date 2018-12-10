@@ -76,7 +76,7 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
     }
 
     /**
-     * 根据投资订单号查询已承接金额
+     * 根据出借订单号查询已承接金额
      *
      * @param tenderNid
      * @return
@@ -167,7 +167,7 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
     }
 
     /**
-     * 查询固定时间间隔的用户投资列表
+     * 查询固定时间间隔的用户出借列表
      * @param repairStartDate
      * @param repairEndDate
      * @return
@@ -195,7 +195,7 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
     }
 
     /**
-     * 更新标的投资详情表
+     * 更新标的出借详情表
      * @param borrowTender
      * @return
      */

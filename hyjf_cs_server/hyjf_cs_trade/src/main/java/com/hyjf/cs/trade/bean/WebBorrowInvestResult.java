@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * 投资记录返回值类型
+ * 出借记录返回值类型
  * @author zhangyk
  * @date 2018/8/9 17:08
  */

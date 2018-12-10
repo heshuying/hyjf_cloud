@@ -76,7 +76,7 @@ public class CouponUserServiceImpl implements CouponUserService {
         int sevenBeginDate = GetDate.strYYYYMMDD2Timestamp2(GetDate.getDataString(GetDate.date_sdf, 7));
         int sevenEndDate = GetDate.strYYYYMMDD2Timestamp2(GetDate.getDataString(GetDate.date_sdf, 8));
 
-        // 取得体验金投资（无真实投资）的还款列表
+        // 取得体验金出借（无真实出借）的还款列表
         CouponUserExample example = new CouponUserExample();
         CouponUserExample.Criteria criteria = example.createCriteria();
         criteria.andDelFlagEqualTo(0);

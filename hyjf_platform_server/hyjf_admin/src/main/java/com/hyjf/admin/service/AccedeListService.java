@@ -91,7 +91,7 @@ public interface AccedeListService {
 	void updateSaveSignInfo(TenderAgreementVO tenderAgreement,String borrowNid, Integer transType, String instCode);
 	
 	/**
-	 * 查询用户投资详情
+	 * 查询用户出借详情
 	 * @param tenderAgreement
 	 * @param borrowNid
 	 * @param transType

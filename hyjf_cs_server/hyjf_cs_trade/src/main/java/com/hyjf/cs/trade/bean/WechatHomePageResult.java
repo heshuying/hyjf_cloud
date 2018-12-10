@@ -20,7 +20,7 @@ public class WechatHomePageResult extends BaseResultBean {
 
     private static final long serialVersionUID = 1L;
 
-    private String warning;// 警告语(市场有风险投资需谨慎)
+    private String warning;// 警告语(市场有风险出借需谨慎)
 
     private String totalAssets;// 资产总额
 
@@ -28,7 +28,7 @@ public class WechatHomePageResult extends BaseResultBean {
 
     private String accumulatedEarnings;// 累计收益
 
-    private String totalInvestmentAmount;// 平台累计投资总额
+    private String totalInvestmentAmount;// 平台累计出借总额
 
     private String moduleTotal;// 对应下方的列表
 
@@ -63,7 +63,7 @@ public class WechatHomePageResult extends BaseResultBean {
 
     private Integer paymentAuthOn;//缴费是否打开,true认证,false不认证
 
-    private Integer invesAuthOn;//自动投资开关是否打开,true认证,false不认证
+    private Integer invesAuthOn;//自动出借开关是否打开,true认证,false不认证
     private Integer creditAuthOn;//自动债转开关是否打开,true认证,false不认证
 
     private Integer roleId;//角色id

@@ -54,7 +54,7 @@ public class CrmInvestMessageConsumer extends Consumer {
 
     private static final Logger logger = LoggerFactory.getLogger(CrmInvestMessageConsumer.class);
 
-    private static final String CONSUMER_NAME = "<<CRM投资信息同步>>:";
+    private static final String CONSUMER_NAME = "<<CRM出借信息同步>>:";
 
     private static final String CONSUMER_QUIT = "消费退出";
 
@@ -110,13 +110,13 @@ public class CrmInvestMessageConsumer extends Consumer {
                     logger.info("=====" + CONSUMER_NAME + "json解析为空," + CONSUMER_QUIT + "=====");
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
-                // 投资或加入订单号
+                // 出借或加入订单号
                 String orderId = crmInvestMsgBean.getOrderId();
                 if (StringUtils.isEmpty(orderId)) {
-                    logger.info("=====" + CONSUMER_NAME + "投资或加入订单号为空," + CONSUMER_QUIT + "=====");
+                    logger.info("=====" + CONSUMER_NAME + "出借或加入订单号为空," + CONSUMER_QUIT + "=====");
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
-                // 投资类型
+                // 出借类型
                 Integer investType = crmInvestMsgBean.getInvestType();
                 String result = "";
                 try {
@@ -163,37 +163,37 @@ public class CrmInvestMessageConsumer extends Consumer {
     private JSONObject buildData(String orderId, Integer investType) {
         JSONObject ret = new JSONObject();
         Map<String, Object> map = Maps.newHashMap();
-        // 根据数据类型判断投资类型。直投类
+        // 根据数据类型判断出借类型。直投类
         if (investType == 0) {
             BorrowTenderVO bt = amTradeClient.selectBorrowTenderByOrderId(orderId);
             if (bt == null) {
-                logger.error("根据订单号查询投资记录不存在,投资订单号:[" + orderId + "]");
+                logger.error("根据订单号查询出借记录不存在,出借订单号:[" + orderId + "]");
                 return null;
             }
-            // 获取投资人用户信息
+            // 获取出借人用户信息
             UserInfoVO userInfo = amUserClient.findUsersInfoById(bt.getUserId());
             if (userInfo == null) {
-                logger.error("根据投资人ID查询投资人信息失败,投资人用户ID:[" + bt.getUserId() + "].");
+                logger.error("根据出借人ID查询出借人信息失败,出借人用户ID:[" + bt.getUserId() + "].");
                 return null;
             }
             RightBorrowVO borrowVO = amTradeClient.getRightBorrowByNid(bt.getBorrowNid());
             if (borrowVO == null) {
-                logger.error("根据投资标的编号查询标的信息失败,投资标的编号:[" + bt.getBorrowNid() + "].");
+                logger.error("根据出借标的编号查询标的信息失败,出借标的编号:[" + bt.getBorrowNid() + "].");
                 return null;
             }
             BorrowInfoVO borrowInfo = amTradeClient.getBorrowInfoByNid(bt.getBorrowNid());
             if (borrowInfo == null){
-                logger.error("根据投资标的编号查询标的详情信息失败,投资标的编号:["+ bt.getBorrowNid()+"].");
+                logger.error("根据出借标的编号查询标的详情信息失败,出借标的编号:["+ bt.getBorrowNid()+"].");
                 return null;
             }
             String borrowStyle = borrowVO.getBorrowStyle();
-            // 投资人身份证号
+            // 出借人身份证号
             map.put("idNum", userInfo.getIdcard());
             map.put("status", 1);
             map.put("borrowType", borrowInfo.getName());
             // 标的编号
             map.put("borrowNid", bt.getBorrowNid());
-            // 投资订单号
+            // 出借订单号
             map.put("investmentNid", bt.getNid());
             map.put("unit", CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle) ? 1 : 2);
             map.put("term", borrowVO.getBorrowPeriod());
@@ -203,7 +203,7 @@ public class CrmInvestMessageConsumer extends Consumer {
             map.put("productNo", 1001);
             map.put("referrerDepartmentId", bt.getInviteDepartmentId());
         }
-        // 计划类投资
+        // 计划类出借
         else if (investType == 1) {
             HjhAccedeVO hj = amTradeClient.getHjhAccede(orderId);
             if (hj == null){
@@ -212,7 +212,7 @@ public class CrmInvestMessageConsumer extends Consumer {
             }
             UserInfoVO userInfo = amUserClient.findUsersInfoById(hj.getUserId());
             if (userInfo == null) {
-                logger.error("根据投资人ID查询投资人信息失败,投资人用户ID:[" + hj.getUserId() + "].");
+                logger.error("根据出借人ID查询出借人信息失败,出借人用户ID:[" + hj.getUserId() + "].");
                 return null;
             }
             HjhPlanVO hjhPlanVO = amTradeClient.getHjhPlan(hj.getPlanNid());

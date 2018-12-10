@@ -94,7 +94,7 @@ public class RegistrantChangeStatisticsController extends BaseController {
         Date allEndTimeDate = null;
         Integer allRegNum = this.registrantChangeStatisticsService.queryRegistrantChangeStatisticsCount(allStartTimeDate, allEndTimeDate);
 
-        //今日新增充值人数, 今日新增投资人数
+        //今日新增充值人数, 今日新增出借人数
         Map<String, Object> regNumMap = new HashedMap();
         regNumMap.put(TODAY_REG, todayRegNum == null ? 0 : todayRegNum);
         regNumMap.put(MONTH_REG, monthRegNum == null ? 0 : monthRegNum);
@@ -104,7 +104,7 @@ public class RegistrantChangeStatisticsController extends BaseController {
         jsonObject.put("populationChange", regNumMap);
 
         //写入Redis
-        //需和今日新增充值和投资人合并
+        //需和今日新增充值和出借人合并
         RedisUtils.set(RedisConstants.SH_OPERATIONAL_DATA + RedisConstants.REGISTRANT_STATISTICS + "2", jsonObject.toString(), 7200);
     }
 }

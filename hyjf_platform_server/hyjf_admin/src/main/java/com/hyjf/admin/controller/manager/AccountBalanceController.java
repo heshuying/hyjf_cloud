@@ -126,7 +126,7 @@ public class AccountBalanceController extends BaseController {
         map.put("rptDate","日期");
         map.put("investAccount","原始资产交易额(元)");
         map.put("creditAccount","债转资产交易额(元)");
-        map.put("reinvestAccount","复投资金额(元)");
+        map.put("reinvestAccount","复出借金额(元)");
         map.put("addAccount","新加入资金额(元)");
         return map;
     }
@@ -231,7 +231,7 @@ public class AccountBalanceController extends BaseController {
         map.put("dataFormt","日期");
         map.put("investAccount","原始资产交易额(元)");
         map.put("creditAccount","债转资产交易额(元)");
-        map.put("reinvestAccount","复投资金额(元)");
+        map.put("reinvestAccount","复出借金额(元)");
         map.put("addAccount","新加入资金额(元)");
         return map;
     }

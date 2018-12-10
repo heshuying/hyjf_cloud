@@ -12,7 +12,7 @@ import java.util.List;
 
 public class wrbInvestRecoverPlanResponse extends WrbResponse {
 
-    /** 投资记录流水号 */
+    /** 出借记录流水号 */
     private String invest_record_id;
 
     /** 回款记录 */

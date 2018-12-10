@@ -36,7 +36,7 @@ public class CouponExpiredServiceImpl implements CouponExpiredService {
         int nowTime = GetDate.getNowTime10();
         //yyyy-MM-dd 的时间戳
         int nowDate = GetDate.strYYYYMMDD2Timestamp2(GetDate.getDataString(GetDate.date_sdf));
-        // 取得体验金投资（无真实投资）的还款列表
+        // 取得体验金出借（无真实出借）的还款列表
         CouponUserExample example = new CouponUserExample();
         CouponUserExample.Criteria criteria = example.createCriteria();
         criteria.andDelFlagEqualTo(0);

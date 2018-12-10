@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.TenderCreditCustomizeMapper">
 
-	<!-- 获取可转让的投资返回MAP -->
+	<!-- 获取可转让的出借返回MAP -->
 	<resultMap id="selectBorrowRecoverListMap" type="com.hyjf.am.trade.dao.model.customize.TenderCreditCustomize">
 		<!-- 借款标题 -->
 		<result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
@@ -16,11 +16,11 @@
 		<result column="borrow_account" property="borrowAccount" jdbcType="VARCHAR" />
 		<!-- 还款方式 -->
 		<result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
-		<!-- 投资时间 -->
+		<!-- 出借时间 -->
 		<result column="tender_time" property="tenderTime" jdbcType="VARCHAR" />
-		<!-- 投资订单号 -->
+		<!-- 出借订单号 -->
 		<result column="tender_nid" property="tenderNid" jdbcType="VARCHAR" />
-		<!-- 投资本金 -->
+		<!-- 出借本金 -->
 		<result column="invest_account" property="investAccount" jdbcType="VARCHAR" />
 		<!-- 债转本金 -->
 		<result column="credit_account" property="creditAccount" jdbcType="VARCHAR" />
@@ -40,7 +40,7 @@
 		<result column="borrow_style_name" property="borrowStyleName" jdbcType="VARCHAR" />
 		
 	</resultMap>
-	<!-- 获取可转让的投资查询条件 -->
+	<!-- 获取可转让的出借查询条件 -->
 	<sql id="TenderToCredit_Where_Clause">
 		<where>
 			<if test="borrowNid != null and borrowNid != ''">
@@ -89,7 +89,7 @@
 			)<![CDATA[<>]]>1
 		</where>
 	</sql>
-	<!-- 获取可转让的投资列表 -->
+	<!-- 获取可转让的出借列表 -->
 	<select id="selectTenderToCreditList" resultMap="selectBorrowRecoverListMap" parameterType="java.util.Map">
 	  SELECT * FROM 
 		(SELECT
@@ -152,7 +152,7 @@
 	      LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 	    </if>
 	</select>
-	<!-- 获取可转让的投资列表总数 -->
+	<!-- 获取可转让的出借列表总数 -->
 	<select id="countTenderToCredit" resultType="java.lang.Integer" parameterType="java.util.Map">
 		SELECT
 			 COUNT(hbr.nid) AS total
@@ -207,7 +207,7 @@
 
 	</select>
 	
-	<!-- 获取投资人当天债转的条数 -->
+	<!-- 获取出借人当天债转的条数 -->
 	<select id="tenderAbleToCredit" resultType="java.lang.Integer" parameterType="java.util.Map">
 		SELECT
 			COUNT(hbc.credit_id)
@@ -344,7 +344,7 @@
 	   case when credit_capital>credit_capital_assigned and truncate(credit_capital_assigned/credit_capital*100,2)=100.00 then 99 else truncate(credit_capital_assigned/credit_capital*100,2) end   AS credit_inProgress
 	</sql>
 	
-	<!-- 点击购买后对债转进行投资详情 -->
+	<!-- 点击购买后对债转进行出借详情 -->
 	<select id="selectWebCreditTenderDetail" resultType="com.hyjf.am.trade.dao.model.customize.TenderToCreditDetailCustomize" parameterType="java.util.Map">
 		SELECT	hb.project_type type,
 			hbi.company_or_personal AS comOrPer,
@@ -433,7 +433,7 @@
 		<result column="client" property="client" jdbcType="VARCHAR" />
 	</resultMap>
 	
-	<!-- 点击购买后对债转进行投资详情(汇计划) -->
+	<!-- 点击购买后对债转进行出借详情(汇计划) -->
 	<select id="selectHJHWebCreditTenderDetail" resultType="com.hyjf.am.trade.dao.model.customize.TenderToCreditDetailCustomize" parameterType="java.util.Map">
 	SELECT	
 		hb.project_type type,

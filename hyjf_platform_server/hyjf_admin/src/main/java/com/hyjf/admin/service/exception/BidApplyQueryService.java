@@ -14,7 +14,7 @@ import com.hyjf.admin.service.BaseAdminService;
 public interface BidApplyQueryService extends BaseAdminService{
 	
 	/**
-	 * 投资人投标申请查询
+	 * 出借人投标申请查询
 	 * @param form
 	 * @return
 	 * @author libin

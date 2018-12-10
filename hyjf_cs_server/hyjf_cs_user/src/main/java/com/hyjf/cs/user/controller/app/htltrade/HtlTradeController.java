@@ -101,7 +101,7 @@ public class HtlTradeController extends BaseController {
 				htlTradeRequest.setUserId(userId);
 				htlTradeRequest.setLimitStart(pageSize * (page - 1));
 				htlTradeRequest.setLimitEnd(pageSize);
-				//投资状态 0表示成功状态
+				//出借状态 0表示成功状态
 				htlTradeRequest.setStatus(0);
 				tenderSize = htlTradeService.countHtlIntoRecord(htlTradeRequest);
 				count+=tenderSize;

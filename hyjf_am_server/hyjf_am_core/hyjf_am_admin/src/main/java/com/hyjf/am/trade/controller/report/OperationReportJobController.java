@@ -29,7 +29,7 @@ public class OperationReportJobController extends BaseController {
    private OperationReportJobService operationReportJobService;
     /**
      *
-     * @Description  按照省份统计投资人的分布
+     * @Description  按照省份统计出借人的分布
      * @Date 18:33 2018/7/18
      * @Param 上个月的最后一天
      * @return
@@ -44,7 +44,7 @@ public class OperationReportJobController extends BaseController {
 
     /**
      *
-     * @Description  按照性别统计投资人的分布
+     * @Description  按照性别统计出借人的分布
      *
      * @Param 上个月的最后一天
      * @return
@@ -59,7 +59,7 @@ public class OperationReportJobController extends BaseController {
 
     /**
      *
-     * @Description  投资人按照年龄分布
+     * @Description  出借人按照年龄分布
      *
      * @Param 上个月的最后一天
      * @return
@@ -119,7 +119,7 @@ public class OperationReportJobController extends BaseController {
     }
 
     /**
-     * 人均投资金额
+     * 人均出借金额
      *
      *
      */
@@ -132,7 +132,7 @@ public class OperationReportJobController extends BaseController {
     }
 
     /**
-     * 统计投资人总数
+     * 统计出借人总数
      *
      *
      */
@@ -290,7 +290,7 @@ public class OperationReportJobController extends BaseController {
         return response;
     }
     /**
-     * 十大投资人
+     * 十大出借人
      *
      * @param request 今年间隔月份
      */
@@ -302,7 +302,7 @@ public class OperationReportJobController extends BaseController {
         return response;
     }
     /**
-     * 超活跃，投资笔数最多
+     * 超活跃，出借笔数最多
      *
      * @param request 今年间隔月份
      */

@@ -22,7 +22,7 @@ public class BorrowRecover implements Serializable {
     private Integer userId;
 
     /**
-     * 投资人用户名
+     * 出借人用户名
      *
      * @mbggenerated
      */
@@ -36,14 +36,14 @@ public class BorrowRecover implements Serializable {
     private String borrowNid;
 
     /**
-     * 投资订单号(对应borrow_tender表的nid)
+     * 出借订单号(对应borrow_tender表的nid)
      *
      * @mbggenerated
      */
     private String nid;
 
     /**
-     * 投资人投标成功的授权号
+     * 出借人投标成功的授权号
      *
      * @mbggenerated
      */
@@ -64,7 +64,7 @@ public class BorrowRecover implements Serializable {
     private String borrowUserName;
 
     /**
-     * 投资ID(对应borrow_tender表里的ID字段)
+     * 出借ID(对应borrow_tender表里的ID字段)
      *
      * @mbggenerated
      */
@@ -414,7 +414,7 @@ public class BorrowRecover implements Serializable {
     private String inviteDepartmentName;
 
     /**
-     * 投资人用户属性
+     * 出借人用户属性
      *
      * @mbggenerated
      */

@@ -1121,7 +1121,7 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
     @Override
     public PlatformCountCustomizeResponse searchAction(PlatformCountRequestBean requestBean) {
-        // 获取投资信息
+        // 获取出借信息
         PlatformCountCustomizeResponse response = restTemplate.postForObject(
                 "http://AM-ADMIN/am-admin/platform_count/search_action", requestBean,
                 PlatformCountCustomizeResponse.class);
@@ -1132,7 +1132,7 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
     @Override
     public PlatformUserCountCustomizeResponse searchRegistAcount(PlatformCountRequestBean requestBean) {
-        // 获取投资信息
+        // 获取出借信息
         PlatformUserCountCustomizeResponse response = restTemplate.postForObject(
                 "http://AM-ADMIN/am-user/platform_count/get_info", requestBean,
                 PlatformUserCountCustomizeResponse.class);

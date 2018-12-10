@@ -8,7 +8,7 @@ import java.util.Map;
 
 public interface BatchHjhAccedeCustomizeMapper {
 	/**
-	 * 取得汇计划自动投资的计划订单列表
+	 * 取得汇计划自动出借的计划订单列表
 	 * @param paramMap
 	 * @return
 	 */

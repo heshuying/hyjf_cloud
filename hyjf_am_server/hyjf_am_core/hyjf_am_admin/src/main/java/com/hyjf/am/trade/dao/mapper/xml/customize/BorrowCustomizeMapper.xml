@@ -582,7 +582,7 @@ WHERE
 		  <!-- 期限类型 -->
 		  <result column="borrow_period_type" property="borrowPeriodType"
 		   jdbcType="VARCHAR" />
-		  <!-- 项目最小投资金额 万 -->
+		  <!-- 项目最小出借金额 万 -->
 		  <result column="tender_account_min_wan" property="tenderAccountMinWan"
 		   jdbcType="VARCHAR" />
 		  <!-- 倍增金额 increaseMoney -->
@@ -724,7 +724,7 @@ WHERE
 		 </select>
 
 
-     <!--清算日前一天查询处于投资中或者复审中的原始标的，进行预警-->
+     <!--清算日前一天查询处于出借中或者复审中的原始标的，进行预警-->
 	<select id="selectUnDealBorrowBeforeLiquidate" resultMap="selectBorrowListMap" >
 		<!--  散标和计划标的 -->
 		SELECT b.borrow_nid, b.`status`

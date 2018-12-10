@@ -53,7 +53,7 @@ import java.util.List;
 public interface AmAdminClient {
 
     /**
-     * 按照省份统计投资人的分布
+     * 按照省份统计出借人的分布
      * @param date 上个月的最后一天
      */
     List<OperationReportJobVO> getTenderCityGroupByList(Date date);
@@ -63,7 +63,7 @@ public interface AmAdminClient {
      */
     List<OperationReportJobVO> getPerformanceSum();
     /**
-     * 按照性别统计投资人的分布
+     * 按照性别统计出借人的分布
      * @param date 上个月的最后一天
      */
     List<OperationReportJobVO>  getTenderSexGroupByList(Date date);
@@ -120,7 +120,7 @@ public interface AmAdminClient {
      */
     List<OperationReportJobVO> getOneInterestsMost(int intervalMonth);
     /**
-     * 超活跃，投资笔数最多
+     * 超活跃，出借笔数最多
      *
      * @param intervalMonth 今年间隔月份
      * @return
@@ -134,7 +134,7 @@ public interface AmAdminClient {
      */
     List<OperationReportJobVO> getBorrowPeriod(int intervalMonth);
     /**
-     * 十大投资人
+     * 十大出借人
      *
      * @param intervalMonth 今年间隔月份
      * @return
@@ -159,12 +159,12 @@ public interface AmAdminClient {
     int getTradeCountByMonth(Date beginDate,Date endDate);
 
     /**
-     * 获取截至日期的投资金额
+     * 获取截至日期的出借金额
      */
     double getInvestLastDate(Date date);
 
     /**
-     * 统计投资人总数，截至日期为上个月的最后一天
+     * 统计出借人总数，截至日期为上个月的最后一天
      * @param date 上个月的最后一天
      * @return
      */
@@ -185,7 +185,7 @@ public interface AmAdminClient {
      */
     BigDecimal getAccountByMonth(Date beginDate, Date endDate);
     /**
-     *投资人按照年龄分布 返回符合条件所有用户
+     *出借人按照年龄分布 返回符合条件所有用户
      *
      * @param date 上个月的最后一天
      * @return
@@ -239,7 +239,7 @@ public interface AmAdminClient {
     Integer getOpenAccountNumber(Integer sourceId, String type);
 
     /**
-     * 投资人数
+     * 出借人数
      * @param sourceId
      * @param type 类型: pc,app
      * @return
@@ -255,7 +255,7 @@ public interface AmAdminClient {
     BigDecimal getCumulativeRecharge(Integer sourceId, String type);
 
     /**
-     * 汇直投投资金额
+     * 汇直投出借金额
      * @param sourceId
      * @param type 类型: pc,app
      * @return
@@ -263,7 +263,7 @@ public interface AmAdminClient {
     BigDecimal getHztTenderPrice(Integer sourceId, String type);
 
     /**
-     * 汇消费投资金额
+     * 汇消费出借金额
      * @param sourceId
      * @param type 类型: pc,app
      * @return
@@ -271,7 +271,7 @@ public interface AmAdminClient {
     BigDecimal getHxfTenderPrice(Integer sourceId, String type);
 
     /**
-     * 汇天利投资金额
+     * 汇天利出借金额
      * @param sourceId
      * @param type 类型: pc,app
      * @return
@@ -279,7 +279,7 @@ public interface AmAdminClient {
     BigDecimal getHtlTenderPrice(Integer sourceId, String type);
 
     /**
-     * 汇添金投资金额
+     * 汇添金出借金额
      * @param sourceId
      * @param type 类型: pc,app
      * @return
@@ -287,7 +287,7 @@ public interface AmAdminClient {
     BigDecimal getHtjTenderPrice(Integer sourceId, String type);
 
     /**
-     * 汇金理财投资金额
+     * 汇金理财出借金额
      * @param sourceId
      * @param type 类型: pc,app
      * @return
@@ -295,7 +295,7 @@ public interface AmAdminClient {
     BigDecimal getRtbTenderPrice(Integer sourceId, String type);
 
     /**
-     * 汇转让投资金额
+     * 汇转让出借金额
      * @param sourceId
      * @param type 类型: pc,app
      * @return

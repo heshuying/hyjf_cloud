@@ -89,14 +89,14 @@ public interface IncreaseinterestLoansService extends BaseService {
 	public int updateBorrowTender(IncreaseInterestInvest borrowTender);
 
 	/**
-	 * 发送短信(投资成功)
+	 * 发送短信(投标成功)
 	 *
 	 * @param userId
 	 */
 	public void sendSms(List<Map<String, String>> msgList);
 
 	/**
-	 * 发送邮件(投资成功)
+	 * 发送邮件(投标成功)
 	 *
 	 * @param userId
 	 */

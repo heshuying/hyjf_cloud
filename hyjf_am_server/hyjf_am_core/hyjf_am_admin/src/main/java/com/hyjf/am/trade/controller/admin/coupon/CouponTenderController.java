@@ -46,7 +46,7 @@ public class CouponTenderController {
         return couponTenderResponse;
     }
     /**
-     * 根据条件获取投资总金额
+     * 根据条件获取出借总金额
      * @param request CouponTenderHztRequest
      * @return
      */
@@ -115,7 +115,7 @@ public class CouponTenderController {
         return couponTenderResponse;
     }
     /**
-     * 根据条件获取投资总金额
+     * 根据条件获取出借总金额
      * @param request CouponTenderHztRequest
      * @return CouponTenderResponse
      */

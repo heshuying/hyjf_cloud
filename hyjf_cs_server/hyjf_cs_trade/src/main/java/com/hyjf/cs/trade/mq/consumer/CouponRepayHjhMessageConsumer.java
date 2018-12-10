@@ -87,7 +87,7 @@ public class CouponRepayHjhMessageConsumer extends Consumer {
                         Thread.sleep(500);
                     }catch(Exception e){
                         // 本次优惠券还款失败
-                        logger.error("【汇计划优惠券还款】汇计划优惠券还款失败，优惠券投资编号："+ct.getOrderId() + " borrowNid" + ct.getBorrowNid() , e);
+                        logger.error("【汇计划优惠券还款】汇计划优惠券还款失败，优惠券出借编号："+ct.getOrderId() + " borrowNid" + ct.getBorrowNid() , e);
                         return ConsumeConcurrentlyStatus.RECONSUME_LATER;
                     }
                 }

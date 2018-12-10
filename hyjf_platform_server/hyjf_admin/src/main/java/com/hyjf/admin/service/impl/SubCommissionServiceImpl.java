@@ -182,7 +182,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
             AccountWebListVO accountWebList = new AccountWebListVO();
             // 订单号
             accountWebList.setOrdid(orderId);
-            // 投资编号
+            // 出借编号
             accountWebList.setBorrowNid("");
             accountWebList.setUserId(receiveUserId);
             // 管理费
@@ -252,7 +252,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
                     throw new RuntimeException("发送MQ(ht_account_web_list)失败！" + "[订单号：" + orderId + "]");
                 }
             } else {
-                throw new RuntimeException("网站收支记录(ht_account_web_list)已存在!" + "[投资订单号：" + orderId + "]");
+                throw new RuntimeException("网站收支记录(ht_account_web_list)已存在!" + "[出借订单号：" + orderId + "]");
             }
 
             request.setCallBankSuccess(true);

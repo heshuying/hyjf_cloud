@@ -206,7 +206,7 @@ public class BorrowRepayRequestConsumer extends Consumer{
 	        		delRedisKey(borrowApicron);
 	    		}
 	        }
-			logger.info(borrowNid+"----------------------------本金投资还款请求结束--------------------------------");
+			logger.info(borrowNid+"----------------------------本金出借还款请求结束--------------------------------");
 			// 如果没有return success ，consumer会重新消费该消息，直到return success
 			return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
 		}

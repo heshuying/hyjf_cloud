@@ -83,7 +83,7 @@ public class ChannelReconciliationServiceImpl implements ChannelReconciliationSe
         } else {
             return new ChannelReconciliationResponse();
         }
-        // 投资信息
+        // 出借信息
         ChannelReconciliationResponse response = amAdminClient.selectAppChannelReconciliationRecord(request);
         if (response != null) {
             List<ChannelReconciliationVO> resultList = response.getResultList();
@@ -133,7 +133,7 @@ public class ChannelReconciliationServiceImpl implements ChannelReconciliationSe
         } else {
             return new ChannelReconciliationResponse();
         }
-        // 投资信息
+        // 出借信息
         ChannelReconciliationResponse response = amAdminClient.selectAppChannelReconciliationRecordHjh(request);
         if (response != null) {
             List<ChannelReconciliationVO> resultList = response.getResultList();

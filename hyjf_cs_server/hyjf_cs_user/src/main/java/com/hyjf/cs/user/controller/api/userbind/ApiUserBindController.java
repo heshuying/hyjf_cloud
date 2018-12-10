@@ -79,7 +79,7 @@ public class ApiUserBindController extends BaseUserController {
 
 
 	/**
-	 * 页面授权绑定 - 汇盈金服开放平台接口_投资端_v1.3.2
+	 * 页面授权绑定 - 汇盈金服开放平台接口_出借端_v1.3.2
 	 * @auth sunpeikai
 	 * @param
 	 * @return

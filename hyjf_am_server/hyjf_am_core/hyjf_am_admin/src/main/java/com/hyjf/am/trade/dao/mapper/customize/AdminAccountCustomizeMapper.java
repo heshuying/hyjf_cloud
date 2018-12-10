@@ -46,7 +46,7 @@ public interface AdminAccountCustomizeMapper {
 	 */
 	int updateOfLoansTenderHjh(Account account);
 	/**
-	 * 计划投资用户金额变化
+	 * 计划出借用户金额变化
 	 */
 	int updateOfPlanLoansTender(Account account);
 	/**
@@ -100,7 +100,7 @@ public interface AdminAccountCustomizeMapper {
 	int updateOfPlanCreditSeller(Account creditSellerAccount);
 
 	/**
-	 * 更新相应的汇添金计划专属标的投资的用户的账户信息
+	 * 更新相应的汇添金计划专属标的出借的用户的账户信息
 	 * 
 	 * @param creditSellerAccount
 	 * @return
@@ -294,7 +294,7 @@ public interface AdminAccountCustomizeMapper {
 	int updateBankRechargeSuccess(Account newAccount);
 
 	/**
-	 * 债转投资后,更新出让人账户信息
+	 * 债转出借后,更新出让人账户信息
 	 * 
 	 * @param accountTender
 	 * @return
@@ -302,7 +302,7 @@ public interface AdminAccountCustomizeMapper {
 	int updateCreditSellerSuccess(Account accountTender);
 
 	/**
-	 * 债转投资后,更新投资人账户信息
+	 * 债转出借后,更新出借人账户信息
 	 * 
 	 * @param newAccountCrediter
 	 * @return
@@ -310,21 +310,21 @@ public interface AdminAccountCustomizeMapper {
 	int updateCreditAssignSuccess(Account newAccountCrediter);
 
 	/**
-	 * 债权迁移后,更新加息投资的投资人账户的累计收益等
+	 * 债权迁移后,更新加息出借的出借人账户的累计收益等
 	 * @param newAccount
 	 * @return
 	 */
 	int updateTenderUserAccount(Account newAccount);
 	
 	/**
-	 * 债权迁移后,更新投资人的累计投资
+	 * 债权迁移后,更新出借人的累计出借
 	 * @param newAccount
 	 * @return
 	 */
 	int updateUserAccountInvestSum(Account newAccount);
 	
 	/**
-	 * 债权迁移后,更新投资人的累计收益
+	 * 债权迁移后,更新出借人的累计收益
 	 * @param newAccount
 	 * @return
 	 */
@@ -351,7 +351,7 @@ public interface AdminAccountCustomizeMapper {
 	int updateIncreaseInterestSubtract(Account newAccount);
 
 	/**
-	 * 自动投资计算
+	 * 自动出借计算
 	 * @param newAccount
 	 * @return
 	 */
@@ -363,7 +363,7 @@ public interface AdminAccountCustomizeMapper {
 	 */
 	int updateOfPlanRepayAccount(Account account);
 	/**
-	 * 汇计划还款投资人金额变化
+	 * 汇计划还款出借人金额变化
 	 * @param tenderAccount
 	 * @return
 	 */

@@ -164,7 +164,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 	}
 
     /**
-     * 投资之前插入tmp表
+     * 出借之前插入tmp表
      *
      * @param tenderRequest
      * @return
@@ -200,13 +200,13 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         if (couponGrantId==null) {
             couponGrantId = 0;
         }
-        // 为投资完全掉单优惠券投资时修复做记录
+        // 为出借完全掉单优惠券出借时修复做记录
         temp.setCouponGrantId(couponGrantId);
         logger.info("开始插入temp表");
         boolean tenderTmpFlag = borrowTenderTmpMapper.insertSelective(temp) > 0 ? true : false;
         if (!tenderTmpFlag) {
-            logger.error("插入borrowTenderTmp表失败，投资订单号：" + tenderRequest.getOrderId());
-            throw new RuntimeException("插入borrowTenderTmp表失败，投资订单号：" + tenderRequest.getOrderId());
+            logger.error("插入borrowTenderTmp表失败，出借订单号：" + tenderRequest.getOrderId());
+            throw new RuntimeException("插入borrowTenderTmp表失败，出借订单号：" + tenderRequest.getOrderId());
         }
         BorrowTenderTmpinfo info = new BorrowTenderTmpinfo();
         info.setOrdid(tenderRequest.getOrderId());
@@ -222,8 +222,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         info.setTmpArray(array);
         Boolean tenderTmpInfoFlag = borrowTenderTmpinfoMapper.insertSelective(info) > 0 ? true : false;
         if (!tenderTmpInfoFlag) {
-            logger.error("插入borrowTenderTmpInfo表失败，投资订单号：" + tenderRequest.getOrderId());
-            throw new RuntimeException("插入borrowTenderTmpInfo表失败，投资订单号：" + tenderRequest.getOrderId());
+            logger.error("插入borrowTenderTmpInfo表失败，出借订单号：" + tenderRequest.getOrderId());
+            throw new RuntimeException("插入borrowTenderTmpInfo表失败，出借订单号：" + tenderRequest.getOrderId());
         }
         return 1;
     }
@@ -244,7 +244,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     }
 
     /**
-     * 投资异步修改表
+     * 出借异步修改表
      *
      * @param tenderBg
      */
@@ -311,22 +311,22 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         borrowTender.setInviteUserName(tenderBg.getInviteUserName());
         borrowTender.setInviteUserAttribute(tenderBg.getAttribute());
         borrowTender.setInvestType(0);
-        // 单笔投资的融资服务费
+        // 单笔出借的融资服务费
         borrowTender.setLoanFee(tenderBg.getPerService());
-        //投资授权码
+        //出借授权码
         borrowTender.setAuthCode(tenderBg.getAuthCode());
-        borrowTender.setRemark("现金投资");
+        borrowTender.setRemark("现金出借");
         borrowTenderMapper.insertSelective(borrowTender);
 
         // 更新用户账户余额表
         Account accountBean = new Account();
         accountBean.setUserId(userId);
-        // 投资人冻结金额增加
+        // 出借人冻结金额增加
         accountBean.setBankFrost(tenderBg.getAccountDecimal());
-        // 投资人可用余额扣减
+        // 出借人可用余额扣减
         accountBean.setBankBalance(tenderBg.getAccountDecimal());
         // 江西银行账户余额
-        // 此账户余额投资后应该扣减掉相应投资金额,sql已改
+        // 此账户余额出借后应该扣减掉相应出借金额,sql已改
         accountBean.setBankBalanceCash(tenderBg.getAccountDecimal());
         // 江西银行账户冻结金额
         accountBean.setBankFrostCash(tenderBg.getAccountDecimal());
@@ -370,7 +370,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         accountList.setRemark(tenderBg.getBorrowNid());
         accountList.setRepay(new BigDecimal(0));
         accountList.setTotal(account.getTotal());
-        accountList.setTrade("tender");// 投资
+        accountList.setTrade("tender");// 出借
         accountList.setTradeCode("frost");// 投标冻结后为frost
         accountList.setType(3);// 收支类型1收入2支出3冻结
         accountList.setUserId(userId);
@@ -392,7 +392,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             throw new RuntimeException("borrow表更新失败");
         }
 
-        // 投资、收益统计表  改为组合层调用
+        // 出借、收益统计表  改为组合层调用
        /* List<CalculateInvestInterest> calculates = this.calculateInvestInterestMapper.selectByExample(new CalculateInvestInterestExample());
         if (calculates != null && calculates.size() > 0) {
             CalculateInvestInterest calculateNew = new CalculateInvestInterest();
@@ -402,7 +402,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             this.webCalculateInvestInterestCustomizeMapper.updateCalculateInvestByPrimaryKey(calculateNew);
         }*/
 
-        // 计算此时的剩余可投资金额
+        // 计算此时的剩余可出借金额
         BigDecimal accountWait = this.getBorrow(tenderBg.getBorrowNid()).getBorrowAccountWait();
         String borrowNid = tenderBg.getBorrowNid();
         // 满标处理
@@ -448,7 +448,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     }
 
     /**
-     * 散标投资异步返回结果
+     * 散标出借异步返回结果
      *
      * @param tenderRetMsg
      */
@@ -469,7 +469,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     }
 
     /**
-     * 获取散标投资异步返回结果
+     * 获取散标出借异步返回结果
      *
      * @param userId
      * @param logOrdId
@@ -489,7 +489,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             BorrowTenderTmp borrowTenderTmp = list.get(0);
             result = borrowTenderTmp.getRetMsg();
         }
-        logger.info("散标投资获取失败结果：result：{} list.size():{}", result, (list == null ? 0 : list.size()));
+        logger.info("散标出借获取失败结果：result：{} list.size():{}", result, (list == null ? 0 : list.size()));
         return result;
     }
 
@@ -551,7 +551,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
 
     /**
-     * 查询计划还款日前一天，处于投资中和复审中的原始标的，发送邮件预警
+     * 查询计划还款日前一天，处于出借中和复审中的原始标的，发送邮件预警
      * @author zhangyk
      * @date 2018/8/20 16:26
      */

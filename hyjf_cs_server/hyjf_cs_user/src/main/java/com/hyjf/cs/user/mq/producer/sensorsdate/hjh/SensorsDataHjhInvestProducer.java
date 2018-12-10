@@ -11,7 +11,7 @@ import com.hyjf.cs.user.mq.base.ProducerFieldsWrapper;
 import org.springframework.stereotype.Component;
 
 /**
- * 神策数据统计:汇计划投资相关
+ * 神策数据统计:汇计划出借相关
  *
  * @author liuyang
  * @version SensorsDataHjhInvestProducer, v0.1 2018/10/25 9:59

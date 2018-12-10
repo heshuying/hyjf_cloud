@@ -82,7 +82,7 @@ public class PcChannelStatisticsAdminConsumer extends Consumer {
                     if (openaccountnumber == null) {
                         openaccountnumber = 0;
                     }
-                    // 投资人数
+                    // 出借人数
                     Integer tenderNumber = amAdminClient.getTenderNumber(sourceId, "pc");
                     if (tenderNumber == null) {
                         tenderNumber = 0;
@@ -92,32 +92,32 @@ public class PcChannelStatisticsAdminConsumer extends Consumer {
                     if (cumulativeRecharge == null) {
                         cumulativeRecharge = BigDecimal.ZERO;
                     }
-                    // 汇直投投资金额
+                    // 汇直投出借金额
                     BigDecimal hztTenderPrice = amAdminClient.getHztTenderPrice(sourceId, "pc");
                     if (hztTenderPrice == null) {
                         hztTenderPrice = BigDecimal.ZERO;
                     }
-                    // 汇消费投资金额
+                    // 汇消费出借金额
                     BigDecimal hxfTenderPrice = amAdminClient.getHxfTenderPrice(sourceId, "pc");
                     if (hxfTenderPrice == null) {
                         hxfTenderPrice = BigDecimal.ZERO;
                     }
-                    // 汇天利投资金额
+                    // 汇天利出借金额
                     BigDecimal htlTenderPrice = amAdminClient.getHtlTenderPrice(sourceId, "pc");
                     if (htlTenderPrice == null) {
                         htlTenderPrice = BigDecimal.ZERO;
                     }
-                    // 汇添金投资金额
+                    // 汇添金出借金额
                     BigDecimal htjTenderPrice = amAdminClient.getHtjTenderPrice(sourceId, "pc");
                     if (htjTenderPrice == null) {
                         htjTenderPrice = BigDecimal.ZERO;
                     }
-                    // 汇金理财投资金额
+                    // 汇金理财出借金额
                     BigDecimal rtbTenderPrice = amAdminClient.getRtbTenderPrice(sourceId, "pc");
                     if (rtbTenderPrice == null) {
                         rtbTenderPrice = BigDecimal.ZERO;
                     }
-                    // 汇转让投资金额//
+                    // 汇转让出借金额//
                     BigDecimal hzrTenderPrice = amAdminClient.getHzrTenderPrice(sourceId, "pc");
                     if (hzrTenderPrice == null) {
                         hzrTenderPrice = BigDecimal.ZERO;

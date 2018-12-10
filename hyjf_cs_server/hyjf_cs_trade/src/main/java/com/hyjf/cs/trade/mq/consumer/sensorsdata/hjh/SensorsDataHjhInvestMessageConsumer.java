@@ -103,7 +103,7 @@ public class SensorsDataHjhInvestMessageConsumer extends Consumer {
                     return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                 }
 
-                logger.info("神策数据采集:汇计划相关,投资订单号:[" + orderId + "].");
+                logger.info("神策数据采集:汇计划相关,出借订单号:[" + orderId + "].");
                 // 发送神策数据
                 sensorsDataHjhInvestService.sendSensorsData(sensorsDataBean);
             } catch (Exception e) {

@@ -162,7 +162,7 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                     // 初审状态
                     borrow.setVerifyStatus(Integer.valueOf(borrowFireRequest.getVerifyStatus()));
                 }
-                // 发标方式为"立即发标 4"时，项目状态变为 投资中
+                // 发标方式为"立即发标 4"时，项目状态变为 出借中
                 else if (Integer.valueOf(borrowFireRequest.getVerifyStatus()) == 4) {
                     // 是否可以进行借款
                     borrow.setBorrowStatus(1);
@@ -186,7 +186,7 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                         // 三方资产更新资产表状态
                         HjhPlanAsset hjhPlanAssetnew = this.selectHjhPlanAssetByBorrowNid(borrowNid);
                         if(hjhPlanAssetnew != null){
-                            //7 投资中
+                            //7 出借中
                             hjhPlanAssetnew.setStatus(7);
                             //获取当前时间
                             hjhPlanAssetnew.setUpdateTime(GetDate.getNowTime());

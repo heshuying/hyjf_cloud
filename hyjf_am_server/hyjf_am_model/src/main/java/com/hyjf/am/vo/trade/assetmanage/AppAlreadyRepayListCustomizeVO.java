@@ -14,31 +14,31 @@ public class AppAlreadyRepayListCustomizeVO extends BaseVO implements Serializab
      * 序列化id
      */
     private static final long serialVersionUID = 3309762895449949778L;
-    // 投资中项目id
+    // 出借中项目id
     private String borrowNid;
-    // 投资中项目名称
+    // 出借中项目名称
     private String borrowName;
     // 项目年华收益
     private String borrowApr;
-    // 投资中待收本金
+    // 出借中待收本金
     private String account;
-    // 投资中待收收益
+    // 出借中待收收益
     private String interest;
-    // 投资合同url
+    // 出借合同url
     private String borrowUrl = "";
     // 项目进度
     private String borrowSchedule;
-    // 优惠券投资时的优惠券类型，费优惠券投资则为空字符串
+    // 优惠券出借时的优惠券类型，费优惠券出借则为空字符串
     private String couponType;
     private String label;
-    // 投资类型 1直投 2优惠券 3加息
+    // 出借类型 1直投 2优惠券 3加息
     private String investType;
     // RTB
     private String projectType;
     // 回款时间
     private String recoverTime;
 
-    // 投资订单号
+    // 出借订单号
     private String orderId;
     // 项目期限
     private String period;

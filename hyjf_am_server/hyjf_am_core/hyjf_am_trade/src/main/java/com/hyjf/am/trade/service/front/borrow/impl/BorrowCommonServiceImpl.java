@@ -522,7 +522,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		}
 		// 投标次数
 		borrow.setTenderTimes(0);
-		// 最后投资时间
+		// 最后出借时间
 	//	borrow.setTenderLastTime("");
 	//	borrow.setRepayAdvanceStatus(0);// 插入时不用的字段
 	//	borrow.setRepayAdvanceTime("");// 插入时不用的字段
@@ -595,7 +595,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //		borrow.setGroupId(0);// 插入时不用的字段
 //
 //		borrow.setAwardStatus(0); // 插入时不用的字段 是否奖励
-//		borrow.setAwardFalse(0); // 插入时不用的字段 投资失败是否也奖励
+//		borrow.setAwardFalse(0); // 插入时不用的字段 出借失败是否也奖励
 //		// 插入时不用的字段 奖励金额
 //		borrow.setAwardAccount(BigDecimal.ZERO);
 //		// 插入时不用的字段 按比例奖励
@@ -703,28 +703,28 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				borrow.setBorrowManagerScaleEnd(jsonObject.getString("borrowManagerScaleEnd"));
 			}
 		}
-		// 可投资平台_PC
+		// 可出借平台_PC
 		if (StringUtils.isEmpty(borrowBean.getCanTransactionPc())) {
 			borrow.setCanTransactionPc("0");
 		} else {
 			borrow.setCanTransactionPc(borrowBean.getCanTransactionPc());
 		}
 
-		// 可投资平台_微网站
+		// 可出借平台_微网站
 		if (StringUtils.isEmpty(borrowBean.getCanTransactionWei())) {
 			borrow.setCanTransactionWei("0");
 		} else {
 			borrow.setCanTransactionWei(borrowBean.getCanTransactionWei());
 		}
 
-		// 可投资平台_IOS
+		// 可出借平台_IOS
 		if (StringUtils.isEmpty(borrowBean.getCanTransactionIos())) {
 			borrow.setCanTransactionIos("0");
 		} else {
 			borrow.setCanTransactionIos(borrowBean.getCanTransactionIos());
 		}
 
-		// 可投资平台_Android
+		// 可出借平台_Android
 		if (StringUtils.isEmpty(borrowBean.getCanTransactionAndroid())) {
 			borrow.setCanTransactionAndroid("0");
 		} else {
@@ -1240,7 +1240,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					borrow.setStatus(1);// 状态
 					borrow.setVerifyStatus(Integer.valueOf(borrowBean.getVerifyStatus()));// 初审状态
 				}
-				// 发标方式为”立即发标4“时，项目状态变为”投资中
+				// 发标方式为”立即发标4“时，项目状态变为”出借中
 				else if (Integer.valueOf(borrowBean.getVerifyStatus()) == 4) {
 					// 借款到期时间
 					borrow.setBorrowEndTime(String.valueOf(time + borrow.getBorrowValidTime() * 86400));
@@ -1308,28 +1308,28 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		}
 
 		if (borrowMainNid.equals(borrowNid)) {
-			// 可投资平台_PC
+			// 可出借平台_PC
 			if (StringUtils.isEmpty(borrowBean.getCanTransactionPc())) {
 				borrow.setCanTransactionPc("0");
 			} else {
 				borrow.setCanTransactionPc(borrowBean.getCanTransactionPc());
 			}
 
-			// 可投资平台_微网站
+			// 可出借平台_微网站
 			if (StringUtils.isEmpty(borrowBean.getCanTransactionWei())) {
 				borrow.setCanTransactionWei("0");
 			} else {
 				borrow.setCanTransactionWei(borrowBean.getCanTransactionWei());
 			}
 
-			// 可投资平台_IOS
+			// 可出借平台_IOS
 			if (StringUtils.isEmpty(borrowBean.getCanTransactionIos())) {
 				borrow.setCanTransactionIos("0");
 			} else {
 				borrow.setCanTransactionIos(borrowBean.getCanTransactionIos());
 			}
 
-			// 可投资平台_Android
+			// 可出借平台_Android
 			if (StringUtils.isEmpty(borrowBean.getCanTransactionAndroid())) {
 				borrow.setCanTransactionAndroid("0");
 			} else {
@@ -2730,13 +2730,13 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		borrowBean.setBorrowManagerScale(this.getValue(borrowWithBLOBs.getManageFeeRate()));
 		// 账户管理费率(上限)
 		borrowBean.setBorrowManagerScaleEnd(this.getValue(borrowWithBLOBs.getBorrowManagerScaleEnd()));
-		// 可投资平台_PC
+		// 可出借平台_PC
 		borrowBean.setCanTransactionPc(this.getValue(borrowWithBLOBs.getCanTransactionPc()));
-		// 可投资平台_微网站
+		// 可出借平台_微网站
 		borrowBean.setCanTransactionWei(this.getValue(borrowWithBLOBs.getCanTransactionWei()));
-		// 可投资平台_IOS
+		// 可出借平台_IOS
 		borrowBean.setCanTransactionIos(this.getValue(borrowWithBLOBs.getCanTransactionIos()));
-		// 可投资平台_Android
+		// 可出借平台_Android
 		borrowBean.setCanTransactionAndroid(this.getValue(borrowWithBLOBs.getCanTransactionAndroid()));
 		// 运营标签
 		borrowBean.setOperationLabel(this.getValue(borrowWithBLOBs.getOperationLabel()));
@@ -3419,7 +3419,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //				return 3;
 //			}
 
-//			// 1 ：投资人 2：借款人
+//			// 1 ：出借人 2：借款人
 //			UsersInfoExample usersInfoExample = new UsersInfoExample();
 //			UsersInfoExample.Criteria usersInfoCra = usersInfoExample.createCriteria();
 //			usersInfoCra.andUserIdEqualTo(users.getUserId());

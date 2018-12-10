@@ -28,10 +28,10 @@ public class CommonSoaUtils {
 
 	private static final String BANK_SYNBALANCE = "/server/synbalance/synbalance.do";
 
-	// 优惠券投资接口
+	// 优惠券出借接口
 	private static final String COUPON_INVEST = "/invest/couponTender.json";
 
-	// 优惠券投资接口
+	// 优惠券出借接口
 	private static final String  SYNBALANCE= "/hyjf-api/server/synbalance/synbalance.do";
 
 	/** 权限 CONTROLLOR @RequestMapping值 */
@@ -81,7 +81,7 @@ public class CommonSoaUtils {
     }
 
 	/**
-	 * 投资校验优惠券
+	 * 出借校验优惠券
 	 */
 	public static JSONObject CheckCoupon(String userId, String borrowNid, String money, String platform,
 			String couponGrantId) {
@@ -90,7 +90,7 @@ public class CommonSoaUtils {
 		params.put("userId", userId);
 		// 项目编号
 		params.put("borrowNid", borrowNid);
-		// 投资金额
+		// 出借金额
 		params.put("money", money);
 		// 平台标识
 		params.put("platform", platform);
@@ -104,7 +104,7 @@ public class CommonSoaUtils {
 		String sign = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + userId + borrowNid + money + platform
 				+ couponGrantId + timestamp + SOA_INTERFACE_KEY));
 		params.put("chkValue", sign);
-		logger.info("优惠券投资校验调用:" + requestUrl);
+		logger.info("优惠券出借校验调用:" + requestUrl);
 		// 0:成功，1：失败
 		String result = HttpClientUtils.post(requestUrl, params);
 		JSONObject status = JSONObject.parseObject(result);
@@ -115,7 +115,7 @@ public class CommonSoaUtils {
 	
 
 	/**
-     * 优惠券投资(PC+APP)
+     * 优惠券出借(PC+APP)
      */
     public static JSONObject CouponInvestForPC(String userId, String borrowNid, String money, String platform,
             String couponGrantId, String ordId, String ip, String couponOldTime) {
@@ -124,7 +124,7 @@ public class CommonSoaUtils {
         params.put("userId", userId);
         // 项目编号
         params.put("borrowNid", borrowNid);
-        // 投资金额
+        // 出借金额
         params.put("money", money);
         // 平台标识
         params.put("platform", platform);
@@ -139,12 +139,12 @@ public class CommonSoaUtils {
         String timestamp = GetDate.getNowTime10() + "";
         // 时间戳
         params.put("timestamp", timestamp);
-        // 优惠券投资url
+        // 优惠券出借url
         String requestUrl = HYJF_API_WEB_URL + CommonSoaUtils.COUPON_INVEST;
         String sign = StringUtils.lowerCase(MD5.toMD5Code(SOA_INTERFACE_KEY + userId + borrowNid + money + platform
                 + couponGrantId + ip + ordId + couponOldTime + timestamp + SOA_INTERFACE_KEY));
         params.put("chkValue", sign);
-        logger.info("优惠券投资调用:" + requestUrl);
+        logger.info("优惠券出借调用:" + requestUrl);
 
         String result = HttpClientUtils.post(requestUrl, params);
         JSONObject status = JSONObject.parseObject(result);
@@ -229,7 +229,7 @@ public class CommonSoaUtils {
 		params.put("timestamp", timestamp);
 		params.put("accountId", account);
 		params.put("instCode", instCode);
-		// 优惠券投资url
+		// 优惠券出借url
 		String requestUrl = webHost + CommonSoaUtils.SYNBALANCE;
 		String sign = StringUtils.lowerCase(MD5.toMD5Code(aopAccesskey + account + instCode + timestamp + aopAccesskey));
 		params.put("chkValue", sign);

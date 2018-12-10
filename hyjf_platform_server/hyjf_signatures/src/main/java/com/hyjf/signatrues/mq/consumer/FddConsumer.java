@@ -82,15 +82,15 @@ public class FddConsumer extends Consumer {
 							logger.info("传入参数不得为空！");
 							return ConsumeOrderlyStatus.SUCCESS;
 						}
-						if (FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == transType) {// 散标投资
+						if (FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == transType) {// 散标出借
 							fddHandle.tenderGenerateContract(bean);
 						} else if (FddGenerateContractConstant.PROTOCOL_TYPE_PLAN == transType) {// 计划加入
 							fddHandle.planJoinGenerateContract(bean);
-						} else if (FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT == transType) {// 债转投资
+						} else if (FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT == transType) {// 债转出借
 							fddHandle.creditGenerateContract(bean);
 						} else if (FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET == transType) {// 计划债转
 							fddHandle.planCreditGenerateContract(bean);
-						}else if(FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET == transType){//垫付债转投资
+						}else if(FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET == transType){//垫付债转出借
 							fddHandle.creditGenerateContractApply(bean);
 						}else if(FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET == transType ){//计划垫付债转
 							fddHandle.planCreditGenerateContractApply(bean);

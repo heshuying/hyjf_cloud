@@ -31,17 +31,17 @@ public class BankCreditEndVO extends BaseVO implements Serializable {
     private Integer userId;
     @ApiModelProperty(value = "融资人用户名")
     private String username;
-    @ApiModelProperty(value = "投资人用户ID")
+    @ApiModelProperty(value = "出借人用户ID")
     private Integer tenderUserId;
-    @ApiModelProperty(value = "投资人用户名")
+    @ApiModelProperty(value = "出借人用户名")
     private String tenderUsername;
     @ApiModelProperty(value = "融资人电子账号")
     private String accountId;
-    @ApiModelProperty(value = "投资人电子账号")
+    @ApiModelProperty(value = "出借人电子账号")
     private String tenderAccountId;
     @ApiModelProperty(value = "订单号")
     private String orderId;
-    @ApiModelProperty(value = "原始投资订单号")
+    @ApiModelProperty(value = "原始出借订单号")
     private String orgOrderId;
     @ApiModelProperty(value = "标的号")
     private String borrowNid;

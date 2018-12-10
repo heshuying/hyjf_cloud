@@ -31,7 +31,7 @@ public class AppChannelReconciliationCustomizeVO implements Serializable {
      */
     private String utmName;
     /*
-     * 投资订单
+     * 出借订单
      */
     private String orderCode;
     /*
@@ -43,12 +43,12 @@ public class AppChannelReconciliationCustomizeVO implements Serializable {
      */
     private String borrowPeriod;
     /*
-     * 投资金额
+     * 出借金额
      */
     private String investAmount;
 
     /*
-     * 投资时间
+     * 出借时间
      */
     private Integer investTime;
 

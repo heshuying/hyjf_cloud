@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 /**
- * 查询 投资人按照地域分布
+ * 查询 出借人按照地域分布
  * @author：yinhui
  * @Date: 2018/9/1  13:29
  */
@@ -29,7 +29,7 @@ public class TenderCityCountController extends BaseController {
     private TenderCityCountService tenderCityCountService;
 
     /**
-     * 按照省份统计投资人的分布
+     * 按照省份统计出借人的分布
      * @return
      */
     @PostMapping("/gettendercitygroupby")
@@ -44,7 +44,7 @@ public class TenderCityCountController extends BaseController {
     }
 
     /**
-     *  按照性别统计投资人的分布
+     *  按照性别统计出借人的分布
      * @return
      */
     @PostMapping("/gettendersexgroupby")
@@ -59,7 +59,7 @@ public class TenderCityCountController extends BaseController {
     }
 
     /**
-     *  按照性别统计投资人的分布
+     *  按照性别统计出借人的分布
      * @return
      */
     @PostMapping("/gettenderagebyrange")
@@ -96,7 +96,7 @@ public class TenderCityCountController extends BaseController {
     }
 
     /**
-     *  按照性别统计投资人的分布
+     *  按照性别统计出借人的分布
      * @return
      */
     @PostMapping("/getLoanNum")
@@ -109,7 +109,7 @@ public class TenderCityCountController extends BaseController {
     }
 
     /**
-     *  获取截至日期的投资金额
+     *  获取截至日期的出借金额
      * @return
      */
     @PostMapping("/getInvestLastDate")
@@ -122,7 +122,7 @@ public class TenderCityCountController extends BaseController {
     }
 
     /**
-     *  统计投资人总数，截至日期为上个月的最后一天
+     *  统计出借人总数，截至日期为上个月的最后一天
      * @return
      */
     @PostMapping("/getTenderCount")

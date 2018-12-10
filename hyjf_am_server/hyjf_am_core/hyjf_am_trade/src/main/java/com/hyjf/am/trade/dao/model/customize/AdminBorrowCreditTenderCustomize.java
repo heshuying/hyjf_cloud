@@ -20,7 +20,7 @@ public class AdminBorrowCreditTenderCustomize  {
     private String creditTenderNid;
     /* 认购单号 */
     private String assignNid;
-    /* 投资本金 */
+    /* 出借本金 */
     private String assignCapital;
     /* 债转利息 */
     private String assignInterest;

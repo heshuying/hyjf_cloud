@@ -9,7 +9,7 @@ import java.math.BigDecimal;
 
 public class WrbDaySumCustomize {
     /**
-     * 投资人数
+     * 出借人数
      */
     private Integer lend_count;
 
@@ -19,7 +19,7 @@ public class WrbDaySumCustomize {
     private Integer borrow_count;
 
     /**
-     * 投资总额
+     * 出借总额
      */
     private BigDecimal invest_all_money;
 

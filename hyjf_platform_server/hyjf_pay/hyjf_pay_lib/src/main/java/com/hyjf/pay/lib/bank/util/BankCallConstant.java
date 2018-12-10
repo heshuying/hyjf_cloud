@@ -149,9 +149,9 @@ public class BankCallConstant extends BankCallStatusConstant implements Serializ
 	/**2每月不确定日期支付*/
 	public static final String DEBT_INTTYPE_UNCERTAINDATE = "2";
 	
-	/**投资是否冻结 0不冻结*/
+	/**出借是否冻结 0不冻结*/
 	public static final String DEBT_FRZFLAG_UNFREEZE = "0";
-	/**投资是否冻结 1冻结 */
+	/**出借是否冻结 1冻结 */
 	public static final String DEBT_FRZFLAG_FREEZE = "1";
 	
 	/**批次交易种类 0所有交易*/
@@ -163,9 +163,9 @@ public class BankCallConstant extends BankCallStatusConstant implements Serializ
 	/**批次交易种类9合法性校验失败交易 */
 	public static final String DEBT_BATCH_TYPE_VERIFYFAIL = "9";
 	
-	/**投资人债权明细 0-所有债权*/
+	/**出借人债权明细 0-所有债权*/
 	public static final String ALL_INVESTOR_DEBT = "0";
-	/**投资人债权明细 1-有效债权（投标成功，且本息尚未返还完成） */
+	/**出借人债权明细 1-有效债权（投标成功，且本息尚未返还完成） */
 	public static final String EFFECTIVE_INVESTOR_DEBT = "1";
 	/** 受托人电子帐号 */
 	public static final String PARAM_RECEIPTACCOUNTID = "receiptAccountId";

@@ -184,7 +184,7 @@ public class AccedeListServiceImpl implements AccedeListService{
 	}
 
 	/**
-	 * 查询用户投资详情
+	 * 查询用户出借详情
 	 * @param request
 	 */
 	@Override

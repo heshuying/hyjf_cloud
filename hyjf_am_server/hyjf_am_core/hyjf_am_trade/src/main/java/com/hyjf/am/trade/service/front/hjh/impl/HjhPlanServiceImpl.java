@@ -108,7 +108,7 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
         TenderRequest request = accedeVO.getRequest();
         HjhAccede planAccede = new HjhAccede();
         BeanUtils.copyProperties(accedeVO, planAccede);
-        // 插入投资记录
+        // 插入出借记录
         int planAccedeFlag = hjhAccedeMapper.insertSelective(planAccede);
         if(planAccedeFlag==1){
             // 插入资金明细表
@@ -118,7 +118,7 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
     }
 
     /**
-     * 获取汇计划投资详情
+     * 获取汇计划出借详情
      * @param params
      * @return
      */
@@ -296,7 +296,7 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
      * @param accedeAccount
      */
     private void insertHJHPlanAccoutList(TenderRequest request, Account accedeAccount) {
-        BigDecimal accountDecimal = new BigDecimal(request.getAccount());//用户投资金额
+        BigDecimal accountDecimal = new BigDecimal(request.getAccount());//用户出借金额
         AccountVO tenderAccount = request.getTenderAccount();
         // 冻结金额(查询当前用户)
         BigDecimal frost = tenderAccount.getBankFrost();
@@ -317,7 +317,7 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
         account.setPlanBalance(accountDecimal);//注意：先set值，加法运算放在SQL中防并发
         account.setBankBalance(accountDecimal);//注意：先set值，减法运算放在SQL中防并发
 
-        //new added APP 更新用户的累积投资金额
+        //new added APP 更新用户的累积出借金额
         account.setBankInvestSum(accountDecimal);//注意：先set值，加法运算放在SQL中防并发
         // 计划待收利息
         account.setPlanAccountWait(accountDecimal.add(request.getEarnings()));
@@ -336,7 +336,7 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
         accountList.setUserId(request.getUser().getUserId());
         accountList.setAmount(accountDecimal);//插入用户加入金额
         accountList.setType(2);// 收支类型1收入2支出3冻结
-        accountList.setTrade("hjh_invest");// 汇计划投资
+        accountList.setTrade("hjh_invest");// 汇计划出借
         accountList.setTradeCode("balance");
         accountList.setIp(request.getIp());
         accountList.setOperator(request.getUser().getUserId() + "");
@@ -365,7 +365,7 @@ public class HjhPlanServiceImpl extends BaseServiceImpl implements HjhPlanServic
             logger.error("更新计划表失败   {} ",JSONObject.toJSONString(planUpdate));
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_INVESTMENT);
         }
-        /*(5)更新  平台累积投资   开始*/
+        /*(5)更新  平台累积出借   开始*/
        /* List<CalculateInvestInterest> calculates = this.calculateInvestInterestMapper.selectByExample(new CalculateInvestInterestExample());
         if (calculates != null && calculates.size() > 0) {
             CalculateInvestInterest calculateNew = new CalculateInvestInterest();

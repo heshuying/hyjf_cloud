@@ -88,10 +88,10 @@ public class AdminBorrowFullCustomizeVO extends BaseVO implements Serializable {
     @ApiModelProperty(value = "服务费合计")
     private String sumServiceScale;
 
-    @ApiModelProperty(value = "投资人")
+    @ApiModelProperty(value = "出借人")
     private String investor;
 
-    @ApiModelProperty(value = "投资金额（元）")
+    @ApiModelProperty(value = "出借金额（元）")
     private String investmentAmount;
 
     @ApiModelProperty(value = "应放款金额")

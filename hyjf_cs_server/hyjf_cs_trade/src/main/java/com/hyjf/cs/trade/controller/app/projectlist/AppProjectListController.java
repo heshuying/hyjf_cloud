@@ -41,12 +41,12 @@ public class AppProjectListController extends BaseTradeController {
     private SystemConfig systemConfig;
 
     /**
-     * app端获取散标投资列表
+     * app端获取散标出借列表
      * 原接口：com.hyjf.app.project.projectController.searchProjectList()
      * @param request
      * @return
      */
-    @ApiOperation(value = "散标列表", notes = "投资散标列表")
+    @ApiOperation(value = "散标列表", notes = "出借散标列表")
     @PostMapping(value ="/projectlist/borrowProjectList", produces = "application/json; charset=utf-8")
     public Object homeBorrowProjectList(@ModelAttribute @Valid ProjectListRequest request) {
         // controller 不做业务处理
@@ -55,7 +55,7 @@ public class AppProjectListController extends BaseTradeController {
     }
 
     /**
-     * app端获取散标投资详情
+     * app端获取散标出借详情
      * 原接口：com.hyjf.app.project.BorrowProjectController.searchProjectDetail()
      * @param
      * @return
@@ -70,11 +70,11 @@ public class AppProjectListController extends BaseTradeController {
     }
 
     /**
-     * app端获取散标投资记录
+     * app端获取散标出借记录
      * add by jijun 20180726
      * 原接口:com.hyjf.app.project.BorrowProjectController.searchProjectInvestList()
      */
-    @ApiOperation(value = "散标投资记录", notes = "散标投资记录")
+    @ApiOperation(value = "散标出借记录", notes = "散标出借记录")
     @GetMapping(value = "/borrow/{borrowId}/investRecord", produces = "application/json; charset=utf-8")
     public JSONObject searchProjectInvestList(@PathVariable("borrowId") String borrowNid, HttpServletRequest request, HttpServletResponse response) {
         JSONObject info = new JSONObject();

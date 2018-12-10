@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @version BorrowRepaymentPlanCustomizeVO, v0.1 2018/7/5 10:32
  */
 public class BorrowRepaymentPlanCustomizeVO extends BaseVO implements Serializable {
-    private String nid;// 投资nid
+    private String nid;// 出借nid
     private String borrowNid;// 借款编号
     private String userId;// 借款人ID
     private String borrowUserName;// 借款人用户名

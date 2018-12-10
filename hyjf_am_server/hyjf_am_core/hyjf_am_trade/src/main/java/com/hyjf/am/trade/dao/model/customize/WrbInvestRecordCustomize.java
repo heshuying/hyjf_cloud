@@ -9,10 +9,10 @@ import java.math.BigDecimal;
 
 public class WrbInvestRecordCustomize {
 
-    /** 投资时间 */
+    /** 出借时间 */
     private String invest_time = "";
 
-    /** 投资金额 */
+    /** 出借金额 */
     private BigDecimal invest_money = BigDecimal.ZERO;
 
     /** 已回款本金 */
@@ -24,10 +24,10 @@ public class WrbInvestRecordCustomize {
     /** 预期收益 */
     private BigDecimal all_interest = BigDecimal.ZERO;
 
-    /**投资奖励 */
+    /**出借奖励 */
     private BigDecimal invest_reward = BigDecimal.ZERO;
 
-    /** 投资记录id */
+    /** 出借记录id */
     private String invest_record_id = "";
 
     /** 项目标题 */
@@ -48,13 +48,13 @@ public class WrbInvestRecordCustomize {
     /** 项目期限描述 4个月 */
     private String project_timelimit_desc = "";
 
-    /** 投资状态 -2:流标 -1:投资中（未满标）0:收益中 1:已回款完毕 2:已逾期 3:提前回款 */
+    /** 出借状态 -2:流标 -1:出借中（未满标）0:收益中 1:已回款完毕 2:已逾期 3:提前回款 */
     private Integer invest_status = null;
 
     /** 是否自动投标 0:默认值（不是自动投标）1：自动投标 */
     private Integer is_auto_bid = 0;
 
-    /** 投资来源 用户投资行为发生处0:未知,1:PC ,2:APP ,3:H5 */
+    /** 出借来源 用户出借行为发生处0:未知,1:PC ,2:APP ,3:H5 */
     private Integer suorce;
 
     /** 每月回款日 例如15就是15日 */

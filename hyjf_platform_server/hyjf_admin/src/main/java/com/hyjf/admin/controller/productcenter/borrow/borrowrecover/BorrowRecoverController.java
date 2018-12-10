@@ -150,27 +150,27 @@ public class BorrowRecoverController extends BaseController {
         map.put("borrowPeriod","借款期限");
         map.put("borrowApr","年化收益");
         map.put("borrowStyleName","还款方式");
-        map.put("orderNum","投资订单号");
+        map.put("orderNum","出借订单号");
         map.put("loanOrdid","放款订单号");
         map.put("instCode","合作机构编号");
-        map.put("tenderUsername","投资人用户名");
-        map.put("tenderUserId","投资人ID");
-        map.put("createTime","投资时间");
-        map.put("account","投资金额");
+        map.put("tenderUsername","出借人用户名");
+        map.put("tenderUserId","出借人ID");
+        map.put("createTime","出借时间");
+        map.put("account","出借金额");
         map.put("accountYes","应放款金额");
         map.put("loanFee","放款服务费");
         map.put("recoverPrice","实际放款金额");
         map.put("servicePrice","实收服务费");
         map.put("isRecover","放款状态");
         map.put("timeRecover","放款时间");
-        map.put("tenderUserAttribute","投资人用户属性（投资时）");
-        map.put("inviteUserAttribute","推荐人用户属性（投资时）");
-        map.put("tenderReferrerUsername","推荐人（投资时）");
-        map.put("tenderReferrerUserId","推荐人ID（投资时）");
+        map.put("tenderUserAttribute","出借人用户属性（出借时）");
+        map.put("inviteUserAttribute","推荐人用户属性（出借时）");
+        map.put("tenderReferrerUsername","推荐人（出借时）");
+        map.put("tenderReferrerUserId","推荐人ID（出借时）");
         if (StringUtils.isNotBlank(isOrganizationView)) {
-            map.put("departmentLevel1Name", "一级分部（投资时）");
-            map.put("departmentLevel2Name", "二级分部（投资时）");
-            map.put("teamName", "团队（投资时）");
+            map.put("departmentLevel1Name", "一级分部（出借时）");
+            map.put("departmentLevel2Name", "二级分部（出借时）");
+            map.put("teamName", "团队（出借时）");
         }
         return map;
     }

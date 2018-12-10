@@ -90,9 +90,9 @@ public class CouponLoansMessageConsumer extends Consumer {
                 List<BorrowTenderCpnVO> listTenderCpn = couponLoansService.getBorrowTenderCpnList(loansBean.getBorrowNid());
 
                 if(listTenderCpn == null || listTenderCpn.isEmpty()){
-                    logger.info("----------散标优惠券放款没有投资详情，borrowNid：" + loansBean.getBorrowNid());
+                    logger.info("----------散标优惠券放款没有出借详情，borrowNid：" + loansBean.getBorrowNid());
                 }
-                /** 循环优惠券投资详情列表 */
+                /** 循环优惠券出借详情列表 */
                 for (BorrowTenderCpnVO borrowTenderCpn : listTenderCpn) {
                     try {
                         if (Validator.isNull(borrowTenderCpn.getLoanOrdid())) {

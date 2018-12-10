@@ -89,7 +89,7 @@ public class CouponLoansHjhMessageConsumer extends Consumer {
                     listTenderCpn = couponLoansService.getBorrowTenderCpnHjhCouponOnlyList(couponLoansBean.getOrderIdCoupon());
                 }
                 logger.info("-----------汇计划优惠券放款，listTenderCpn:"+listTenderCpn);
-                /** 循环优惠券投资详情列表 */
+                /** 循环优惠券出借详情列表 */
                 for (BorrowTenderCpnVO borrowTenderCpn : listTenderCpn) {
                     try {
                         if (Validator.isNull(borrowTenderCpn.getLoanOrdid())) {

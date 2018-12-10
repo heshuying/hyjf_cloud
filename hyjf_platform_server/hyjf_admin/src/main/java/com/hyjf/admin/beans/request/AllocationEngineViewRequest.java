@@ -91,10 +91,10 @@ public class AllocationEngineViewRequest extends BaseRequest implements Serializ
 	@ApiModelProperty(value = "年化收益率优先级")
 	private String actulPaySortPriority;
 	
-	@ApiModelProperty(value = "投资进度排序 0：从小到大 1：从大到小")
+	@ApiModelProperty(value = "出借进度排序 0：从小到大 1：从大到小")
 	private String investProgressSort;
 	
-	@ApiModelProperty(value = "投资进度排序 0：从小到大 1：从大到小")
+	@ApiModelProperty(value = "出借进度排序 0：从小到大 1：从大到小")
 	private String investProgressSortPriority;
 	
 	@ApiModelProperty(value = "添加或修改 0：添加 1：修改")

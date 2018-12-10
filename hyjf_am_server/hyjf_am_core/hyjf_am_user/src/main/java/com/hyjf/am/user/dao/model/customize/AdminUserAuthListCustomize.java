@@ -53,7 +53,7 @@ public class AdminUserAuthListCustomize {
 	 */
 	private String autoCreateTime;
 	/**
-	 * 自动投资授权过期时间
+	 * 自动出借授权过期时间
 	 */
 	private String autoInvesEndTime;
 	/**

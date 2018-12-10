@@ -93,7 +93,7 @@ public class AdminAccedeListServiceImpl implements AdminAccedeListService{
 		if (StringUtils.isNotEmpty(form.getMatchDatesSrch())) {
 			param.put("matchDatesSrch", form.getMatchDatesSrch());
 		}
-		// 投资笔数查询传入
+		// 出借笔数查询传入
 		if (StringUtils.isNotEmpty(form.getInvestCountsSrch())) {
 			param.put("investCountsSrch", form.getInvestCountsSrch());
 		}
@@ -156,7 +156,7 @@ public class AdminAccedeListServiceImpl implements AdminAccedeListService{
 		if (StringUtils.isNotEmpty(form.getMatchDatesSrch())) {
 			param.put("matchDatesSrch", form.getMatchDatesSrch());
 		}
-		// 投资笔数查询传入
+		// 出借笔数查询传入
 		if (StringUtils.isNotEmpty(form.getInvestCountsSrch())) {
 			param.put("investCountsSrch", form.getInvestCountsSrch());
 		}
@@ -236,7 +236,7 @@ public class AdminAccedeListServiceImpl implements AdminAccedeListService{
 		if (StringUtils.isNotEmpty(request.getMatchDatesSrch())) {
 			param.put("matchDatesSrch", request.getMatchDatesSrch());
 		}
-		// 投资笔数查询传入
+		// 出借笔数查询传入
 		if (StringUtils.isNotEmpty(request.getInvestCountsSrch())) {
 			param.put("investCountsSrch", request.getInvestCountsSrch());
 		}
@@ -318,7 +318,7 @@ public class AdminAccedeListServiceImpl implements AdminAccedeListService{
 		if (StringUtils.isNotEmpty(request.getMatchDatesSrch())) {
 			param.put("matchDatesSrch", request.getMatchDatesSrch());
 		}
-		// 投资笔数查询传入
+		// 出借笔数查询传入
 		if (StringUtils.isNotEmpty(request.getInvestCountsSrch())) {
 			param.put("investCountsSrch", request.getInvestCountsSrch());
 		}
@@ -347,7 +347,7 @@ public class AdminAccedeListServiceImpl implements AdminAccedeListService{
 	}
 
     /**
-	 * 查询用户投资详情
+	 * 查询用户出借详情
 	 * @return
 	 */
 	@Override
@@ -356,7 +356,7 @@ public class AdminAccedeListServiceImpl implements AdminAccedeListService{
 		return vo;
 	}
 	/**
-	 * 判断用户是否有持有中的计划。如果有，则不能解除投资授权和债转授权
+	 * 判断用户是否有持有中的计划。如果有，则不能解除出借授权和债转授权
 	 * @param userId
 	 * @return
 	 */

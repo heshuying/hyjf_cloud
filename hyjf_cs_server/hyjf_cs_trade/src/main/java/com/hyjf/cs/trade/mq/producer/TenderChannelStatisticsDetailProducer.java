@@ -11,7 +11,7 @@ import com.hyjf.cs.trade.mq.base.ProducerFieldsWrapper;
 import org.springframework.stereotype.Component;
 
 /**
- * @Description 投资更新渠道统计等信息
+ * @Description 出借更新渠道统计等信息
  * @Author sunss
  * @Date 2018/9/5 9:41
  */

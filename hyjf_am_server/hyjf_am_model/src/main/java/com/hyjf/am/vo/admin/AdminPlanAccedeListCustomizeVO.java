@@ -60,7 +60,7 @@ public class AdminPlanAccedeListCustomizeVO {
 	 */
 	private String accedeAccount;
 	/**
-	 * 已投资金额
+	 * 已出借金额
 	 */
 	private String alreadyInvest;
 	/**
@@ -104,11 +104,11 @@ public class AdminPlanAccedeListCustomizeVO {
 	 */
 	private String expectApr;
 	/**
-	 * 投资状态
+	 * 出借状态
 	 */
 	private String debtPlanStatus;
 	/**
-	 * 投资类型
+	 * 出借类型
 	 */
 	private String tenderType;
 	/**
@@ -155,7 +155,7 @@ public class AdminPlanAccedeListCustomizeVO {
 	private String inviteUserBranchname1;
 	private String inviteUserDepartmentname1;
 	/**
-	 * 投资人当前信息
+	 * 出借人当前信息
 	 */
 	private String inviteUserRegionname2;
 	private String inviteUserBranchname2;
@@ -181,7 +181,7 @@ public class AdminPlanAccedeListCustomizeVO {
 	private String sumAccedeAccount;
 	
 	/**
-	 * 已投资金额
+	 * 已出借金额
 	 */
 	private String sumAlreadyInvest;
 	
@@ -288,7 +288,7 @@ public class AdminPlanAccedeListCustomizeVO {
 	private String actualApr;
 	
 	/**
-	 * 投资笔数
+	 * 出借笔数
 	 */
 	private String investCounts;
 	
@@ -303,7 +303,7 @@ public class AdminPlanAccedeListCustomizeVO {
 	private BigDecimal jAccedeAccount;
 	
 	/**
-	 * 计算用已投资金额
+	 * 计算用已出借金额
 	 */
 	private BigDecimal jalreadyInvest;
 	

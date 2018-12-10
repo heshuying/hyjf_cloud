@@ -14,13 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 /**
  * @author: sunpeikai
  * @version: UserAuthExceptionServiceImpl, v0.1 2018/7/2 10:34
- * 自动投资债转授权异常
+ * 自动出借债转授权异常
  */
 @Service
 public class UserAuthExceptionServiceImpl extends BaseAdminServiceImpl implements UserAuthExceptionService {
 
     /**
-     * 查询自动投资债转授权异常列表
+     * 查询自动出借债转授权异常列表
      * @auth sunpeikai
      * @param request 筛选条件
      * @return
@@ -34,7 +34,7 @@ public class UserAuthExceptionServiceImpl extends BaseAdminServiceImpl implement
      * 同步用户授权状态
      * @auth sunpeikai
      * @param userId 用户id
-     * @param type 1自动投资授权  2债转授权
+     * @param type 1自动出借授权  2债转授权
      * @return
      */
     @Override

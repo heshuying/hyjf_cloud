@@ -224,8 +224,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                         || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
                 String planNid = borrow.getPlanNid();//为空时，为直投，否则为计划
                 /**
-                 * huiyingdai_borrow_recover(标的放款记录（投资人） 总表)
-                 * huiyingdai_borrow_recover_plan(标的放款记录分期（投资人）)-borrow_nid,repay_period
+                 * huiyingdai_borrow_recover(标的放款记录（出借人） 总表)
+                 * huiyingdai_borrow_recover_plan(标的放款记录分期（出借人）)-borrow_nid,repay_period
                  */
                 List<BorrowRecoverVO> borrowRecoverPlist = amTradeClient.selectBorrowRecoverList(borrow_nid);
                 if (borrowRecoverPlist == null || borrowRecoverPlist.size()==0) {
@@ -322,7 +322,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 bean.setTeString(DF);
                 // 法大大生成合同
                 try {
-                    // 获取用户投资协议记录
+                    // 获取用户出借协议记录
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+creditRepay.getAssignNid()+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
@@ -350,7 +350,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 bean.setParamter(paramter); bean.setTeString(DF);
                 // 法大大生成合同
                 try {
-                    // 获取用户投资协议记录
+                    // 获取用户出借协议记录
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
@@ -371,7 +371,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             bean.setParamter(paramter); bean.setTeString(DF);
             // 法大大生成合同
             try {
-                // 获取用户投资协议记录
+                // 获取用户出借协议记录
                 TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                 // 签署成功(status = 2)
                 if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
@@ -428,7 +428,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 bean.setTeString(DF);
                 // 法大大生成合同
                 try {
-                    // 获取用户投资协议记录
+                    // 获取用户出借协议记录
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+hjhDebtCreditRepayVO.getUniqueNid()+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
@@ -456,7 +456,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 bean.setParamter(paramter); bean.setTeString(DF);
                 // 法大大生成合同
                 try {
-                    // 获取用户投资协议记录
+                    // 获取用户出借协议记录
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
@@ -478,7 +478,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             bean.setParamter(paramter); bean.setTeString(DF);
             // 法大大生成合同
             try {
-                // 获取用户投资协议记录
+                // 获取用户出借协议记录
                 TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                 // 签署成功(status = 2)
                 if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
@@ -529,7 +529,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 bean.setTeString(DF);
                 // 法大大生成合同
                 try {
-                    // 获取用户投资协议记录
+                    // 获取用户出借协议记录
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+creditRepay.getAssignNid()+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
@@ -557,7 +557,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 bean.setParamter(paramter); bean.setTeString(DF);
                 // 法大大生成合同
                 try {
-                    // 获取用户投资协议记录
+                    // 获取用户出借协议记录
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
@@ -579,7 +579,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             bean.setParamter(paramter); bean.setTeString(DF);
             // 法大大生成合同
             try {
-                // 获取用户投资协议记录
+                // 获取用户出借协议记录
                 TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                 // 签署成功(status = 2)
                 if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
@@ -630,7 +630,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 bean.setTeString(DF);
                 // 法大大生成合同
                 try {
-                    // 获取用户投资协议记录
+                    // 获取用户出借协议记录
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+hjhDebtCreditRepayVO.getUniqueNid()+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
@@ -658,7 +658,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 bean.setParamter(paramter); bean.setTeString(DF);
                 // 法大大生成合同
                 try {
-                    // 获取用户投资协议记录
+                    // 获取用户出借协议记录
                     TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
@@ -680,7 +680,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
             bean.setParamter(paramter); bean.setTeString(DF);
             // 法大大生成合同
             try {
-                // 获取用户投资协议记录
+                // 获取用户出借协议记录
                 TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement("DF-"+repay_period+"-"+nid+"-"+repay_period);
                 // 签署成功(status = 2)
                 if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
@@ -732,7 +732,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         applyAgreementInfo.setBorrowNid(borrow_nid);//借款编号
         applyAgreementInfo.setRepayPeriod(repay_period);//期数
         applyAgreementInfo.setContractId("DF-"+repay_period+"-"+contractId);//合同编号
-        applyAgreementInfo.setUserId(repayOrgUserId);//投资人(出让人)
+        applyAgreementInfo.setUserId(repayOrgUserId);//出借人(出让人)
         applyAgreementInfo.setCreditUserId(creditUserId+"");//承接人-垫付机构
         applyAgreementInfo.setStatus(transType);
         //logger.info("--------------------填充所有债转信息getFddGenerateContractBean:applyAgreementInfo:"+JSONObject.toJSON(applyAgreementInfo));
@@ -741,8 +741,8 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         bean.setBorrowNid(borrow_nid);//标的编号
         bean.setRepayPeriod(repay_period);//期数
         bean.setTransType(transType);//交易类型
-        bean.setTenderType(tenderType);//投资类型 0：原始 1：债转 2 :计划
-        bean.setTenderUserId(repayOrgUserId);//投资人-承接人（垫付机构）
+        bean.setTenderType(tenderType);//出借类型 0：原始 1：债转 2 :计划
+        bean.setTenderUserId(repayOrgUserId);//出借人-承接人（垫付机构）
         bean.setCreditUserID(creditUserId);//出讓人
         return bean;
     }
@@ -837,7 +837,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         // 标的编号
         paramter.put("borrowNid", borrow.getBorrowNid());
         //编号
-        paramter.put("NID", borrowRecover.getNid());//原始标的投资订单号
+        paramter.put("NID", borrowRecover.getNid());//原始标的出借订单号
         //借款本金总额
         paramter.put("borrowAccount", borrow.getAccount().toString());
         // 借款利率
@@ -971,7 +971,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         // 标的编号
         paramter.put("borrowNid", borrow.getBorrowNid());
         //编号
-        paramter.put("NID", borrowRecover.getNid());//原始标的投资订单号
+        paramter.put("NID", borrowRecover.getNid());//原始标的出借订单号
         //借款本金总额
         paramter.put("borrowAccount", borrow.getAccount().toString());
         // 借款利率
@@ -1104,7 +1104,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         // 标的编号
         paramter.put("borrowNid", borrow.getBorrowNid());
         //编号
-        paramter.put("NID", hjhDebtCreditRepay.getUniqueNid());//原始标的投资订单号
+        paramter.put("NID", hjhDebtCreditRepay.getUniqueNid());//原始标的出借订单号
         //借款本金总额
         paramter.put("borrowAccount", borrow.getAccount().toString());
         // 借款利率
@@ -1279,7 +1279,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
         bean.setOrdid(creditRepay.getAssignNid());//承接订单号
         bean.setAssignOrderId(creditRepay.getAssignNid());
         bean.setCreditNid(creditRepay.getCreditNid());//债转编号
-        bean.setCreditTenderNid(creditRepay.getCreditTenderNid());//原始投资订单号
+        bean.setCreditTenderNid(creditRepay.getCreditTenderNid());//原始出借订单号
         //logger.info("-------------------------处理不分期债转，填充所有债转信息bean2："+JSONObject.toJSON(bean));
         return paramter;
     }

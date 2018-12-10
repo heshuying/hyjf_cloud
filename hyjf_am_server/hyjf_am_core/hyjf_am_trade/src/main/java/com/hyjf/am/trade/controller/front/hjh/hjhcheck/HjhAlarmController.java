@@ -216,7 +216,7 @@ public class HjhAlarmController extends BaseController {
 
 
     /**
-     * 订单投资异常短信预警
+     * 订单出借异常短信预警
      * @author zhangyk
      * @date 2018/8/15 16:23
      */
@@ -226,12 +226,12 @@ public class HjhAlarmController extends BaseController {
         if (accedeList != null && accedeList.size() > 0) {
             try {
                 // 发送邮件通知
-                String title = "计划订单投资异常消息通知";
+                String title = "计划订单出借异常消息通知";
                 StringBuffer msg = new StringBuffer();
-                msg.append("计划订单投资异常，请至网站后台“异常投资-汇计化自动投资异常”查看并及时处理，谢谢");
+                msg.append("计划订单出借异常，请至网站后台“异常出借-汇计化自动出借异常”查看并及时处理，谢谢");
 
                 Boolean env_test = systemConfig.isEnvTest();
-                logger.info("计划订单投资异常 evn_test is test ? " + env_test);
+                logger.info("计划订单出借异常 evn_test is test ? " + env_test);
                 String emailList= "";
                 if (env_test){
                     emailList = systemConfig.getHyjfAlertEmailTest();
@@ -250,17 +250,17 @@ public class HjhAlarmController extends BaseController {
                 smsProcesser.gather(smsMessage);*/
                 logger.info("短信发送成功");
             }catch (Exception e){
-                logger.error("订单投资异常预警发送异常 ");
+                logger.error("订单出借异常预警发送异常 ");
                 return  false;
             }
         }else {
-            logger.info("计划订单投资异常size为空, 不发送预警");
+            logger.info("计划订单出借异常size为空, 不发送预警");
         }
         return true;
     }
 
     /**
-     * 清算日前一天，扫描处于复审中或者投资中的原始标的进行预警
+     * 清算日前一天，扫描处于复审中或者出借中的原始标的进行预警
      * @author zhangyk
      * @date 2018/8/20 15:53
      */
@@ -280,7 +280,7 @@ public class HjhAlarmController extends BaseController {
                 String title = "原始标的风险状态消息通知";
                 StringBuffer msg = new StringBuffer();
                 StringBuffer targetId = new StringBuffer();
-                msg.append("明天即将进入清算日，部分原始标的仍然处于投资或复审中，请相关人员至后台查看并及时处理，谢谢 \n");
+                msg.append("明天即将进入清算日，部分原始标的仍然处于出借或复审中，请相关人员至后台查看并及时处理，谢谢 \n");
                 for (BorrowCustomizeVO borrow : list){
                     targetId.append(" " +borrow.getBorrowNid());
                 }
@@ -290,7 +290,7 @@ public class HjhAlarmController extends BaseController {
                         MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
                 mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(message)));
             }catch (Exception e){
-                logger.error("扫描处于复审中或者投资中的原始标的进行预警发送异常 ");
+                logger.error("扫描处于复审中或者出借中的原始标的进行预警发送异常 ");
                 return  false;
             }
         }else{

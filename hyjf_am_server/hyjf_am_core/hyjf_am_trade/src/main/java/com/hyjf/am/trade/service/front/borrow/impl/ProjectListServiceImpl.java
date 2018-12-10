@@ -214,7 +214,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
     // ----------------------------------------app start --------------------------------------------------
 
     /**
-     * app端获取散标投资count
+     * app端获取散标出借count
      * @author zhangyk
      * @date 2018/6/20 16:13
      */
@@ -238,7 +238,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
     }
 
     /**
-     * app端获取散标投资数据list
+     * app端获取散标出借数据list
      * @author zhangyk
      * @date 2018/6/20 16:11
      */
@@ -333,7 +333,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
     }
 
     /**
-     * app端散标投资记录数
+     * app端散标出借记录数
      * @param params
      * @return
      */
@@ -344,7 +344,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
     }
 
     /**
-     * 散标投资记录
+     * 散标出借记录
      * @param params
      * @return
      */

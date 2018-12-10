@@ -76,12 +76,12 @@ public class WebAutoPlusController extends BaseUserController {
     }
 
     /**
-     * 用户授权自动投资
+     * 用户授权自动出借
      * @param userId
      * @param authorizedVO
      * @return
      */
-    @ApiOperation(value = "用户授权自动投资", notes = "用户授权自动投资")
+    @ApiOperation(value = "用户授权自动出借", notes = "用户授权自动出借")
     @PostMapping(value = "/userAuthInves" , produces = "application/json; charset=utf-8")
     public  WebResult<Object> userAuthInves(@RequestHeader(value = "userId") Integer userId, @RequestBody AuthorizedVO authorizedVO) {
         WebResult<Object> result = new WebResult<Object>();
@@ -136,11 +136,11 @@ public class WebAutoPlusController extends BaseUserController {
     }
 
     /**
-     * 用户授权自动投资异步回调
+     * 用户授权自动出借异步回调
      * @param bean
      * @return
      */
-    @ApiOperation(value = "用户授权自动投资异步回调", notes = "用户授权自动投资异步回调")
+    @ApiOperation(value = "用户授权自动出借异步回调", notes = "用户授权自动出借异步回调")
     @PostMapping(value = "/invesbgreturn")
     public String userInvesAuthBgreturn(@RequestBody BankCallBean bean) {
         String result = autoPlusService.userBgreturn(bean, BankCallConstant.QUERY_TYPE_1);

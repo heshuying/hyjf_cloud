@@ -39,7 +39,7 @@ public interface BorrowCreditService {
     BorrowCreditDetailVO getBorrowCreditDetail(String creditNid);
 
     /**
-     * 获取投资债转信息
+     * 获取出借债转信息
      * @param request1
      * @return
      */
@@ -90,14 +90,14 @@ public interface BorrowCreditService {
 
 
     /**
-     * 根据userId和tenderNid获取投资债转信息
+     * 根据userId和tenderNid获取出借债转信息
      * @author zhangyk
      * @date 2018/8/30 10:58
      */
     List<BorrowCredit> getBorrowCreditList(String userId, String tenderNid);
 
     /**
-     * 根据userId和tenderNid获取投资债转信息
+     * 根据userId和tenderNid获取出借债转信息
      * @author zhangyk
      * @date 2018/8/30 10:58
      */

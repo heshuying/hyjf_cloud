@@ -29,13 +29,13 @@ public class BorrowProjectTypeVO extends BaseVO implements Serializable {
     private String borrowName;
     @ApiModelProperty(value = "项目编号")
     private String borrowClass;
-    @ApiModelProperty(value = "投资用户类型0:51老用户 1:新用户 2: 全部")
+    @ApiModelProperty(value = "出借用户类型0:51老用户 1:新用户 2: 全部")
     private Integer investUserType;
     @ApiModelProperty(value = "状态")
     private Integer status;
-    @ApiModelProperty(value = "投资起始值")
+    @ApiModelProperty(value = "出借起始值")
     private String investStart;
-    @ApiModelProperty(value = "投资最大值")
+    @ApiModelProperty(value = "出借最大值")
     private String investEnd;
     @ApiModelProperty(value = "备注")
     private String remark;

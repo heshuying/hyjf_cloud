@@ -77,7 +77,7 @@ public class WrbCallBackConsumer extends Consumer {
             // 2.验证请求参数
             Integer userId = requestJson.getInteger("userId");
             String nid = requestJson.getString("nid");
-            // 回调类型， 1-投资回调 2-回款回调
+            // 回调类型， 1-出借回调 2-回款回调
             Integer returnType = requestJson.getInteger("returnType");
             // 回款时间
             String backTime = requestJson.getString("backTime");
@@ -117,10 +117,10 @@ public class WrbCallBackConsumer extends Consumer {
 
                 WrbTenderNotifyCustomizeVO customize = wrbCallBackService.searchBorrowTenderByNid(nid, userId);
                 if (customize == null) {
-                    logger.error("请求参数错误，找不到投资数据....");
+                    logger.error("请求参数错误，找不到出借数据....");
                     throw new RuntimeException();
                 }
-                // returnType ：1-投资回调 ， 2-回款回调
+                // returnType ：1-出借回调 ， 2-回款回调
                 if (returnType.intValue() == 1) {
                     allParams.put("invest_time", customize.getAddtime());
                     allParams.put("invest_sno", nid);

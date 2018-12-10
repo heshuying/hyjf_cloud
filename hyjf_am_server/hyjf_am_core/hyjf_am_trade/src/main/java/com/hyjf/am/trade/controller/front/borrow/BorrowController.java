@@ -293,7 +293,7 @@ public class BorrowController extends BaseController {
 	}
 
 	/**
-	 * 投资之前插入tmp表
+	 * 出借之前插入tmp表
 	 * @param tenderRequest
 	 * @return
 	 */
@@ -312,29 +312,29 @@ public class BorrowController extends BaseController {
 	}
 
 	/**
-	 * 散标投资操作数据库表
+	 * 散标出借操作数据库表
 	 * @param tenderBg
 	 * @return
 	 */
 	@PostMapping("/borrowTender")
 	public IntegerResponse borrowTender(@RequestBody TenderBgVO tenderBg) {
-		logger.info("原子层  散标投资 开始操作数据库表");
+		logger.info("原子层  散标出借 开始操作数据库表");
 		IntegerResponse result = new IntegerResponse();
 		try{
 			borrowService.updateTenderAfter(tenderBg);
 			result.setResultInt(1);
-			logger.info("原子层  散标投资 操作数据库表成功");
+			logger.info("原子层  散标出借 操作数据库表成功");
 			return result;
 		}catch (Exception e){
-			logger.error("散标投资   原子层操作失败  ",e);
+			logger.error("散标出借   原子层操作失败  ",e);
 			result.setResultInt(0);
-			logger.info("原子层  散标投资 操作数据库表失败");
+			logger.info("原子层  散标出借 操作数据库表失败");
 			return result;
 		}
 	}
 
 	/**
-	 * 散标投资异步返回结果
+	 * 散标出借异步返回结果
 	 * @param tenderRetMsg
 	 * @return
 	 */
@@ -349,7 +349,7 @@ public class BorrowController extends BaseController {
 	}
 
 	/**
-	 * 获取散标投资异步结果
+	 * 获取散标出借异步结果
 	 * @param borrowNid
 	 * @return
 	 */
@@ -363,7 +363,7 @@ public class BorrowController extends BaseController {
 
 
     /**
-     * 根据用户id获取用户总投资笔数
+     * 根据用户id获取用户总出借笔数
      * @author zhangyk
      * @date 2018/7/5 18:00
      */

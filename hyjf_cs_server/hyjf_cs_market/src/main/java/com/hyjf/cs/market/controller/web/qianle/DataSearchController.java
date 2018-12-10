@@ -207,9 +207,9 @@ public class DataSearchController {
         List<DataSearchCustomizeVO> resultList = result.getResultList();
         String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         String[] titles = new String[]
-                { "序号", "注册时间", "用户名", "姓名", "手机号","推荐人姓名", "投资类型",
-                        "项目/智投编号",  "投资金额", "投资期限","年化金额"
-                        ,"佣金7%","投资时间"
+                { "序号", "注册时间", "用户名", "姓名", "手机号","推荐人姓名", "出借类型",
+                        "项目/智投编号",  "出借金额", "出借期限","年化金额"
+                        ,"佣金7%","出借时间"
                 };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
@@ -260,22 +260,22 @@ public class DataSearchController {
                         cell.setCellValue(record.getReffername());//推荐人姓名
                     }
                     else if (celLength == 6) {
-                        cell.setCellValue(record.getType());//投资类型
+                        cell.setCellValue(record.getType());//出借类型
                     }
                     else if (celLength == 7) {
                         cell.setCellValue(record.getPlannid());//项目/计划编号
                     }
                     else if (celLength == 8) {
-                        cell.setCellValue(record.getAccount());//投资金额
+                        cell.setCellValue(record.getAccount());//出借金额
                     }
                     else if (celLength == 9) {
-                        cell.setCellValue(record.getBorrow_period());//投资期限
+                        cell.setCellValue(record.getBorrow_period());//出借期限
                     }else if (celLength == 10) {
                         cell.setCellValue(record.getYearAccount());//年化金额
                     }else if (celLength == 11) {
                         cell.setCellValue(record.getMoney());//佣金7%
                     }else if (celLength == 12) {
-                        cell.setCellValue(record.getAddtimesT());//投资日期
+                        cell.setCellValue(record.getAddtimesT());//出借日期
                     }
                 }
             }

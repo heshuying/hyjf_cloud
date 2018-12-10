@@ -141,7 +141,7 @@ public class WechatjhPlanController extends BaseTradeController {
         return weChatResult;
     }
 
-    @ApiOperation(value = "获取计划投资信息", notes = "获取计划投资信息")
+    @ApiOperation(value = "获取计划出借信息", notes = "获取计划出借信息")
     @GetMapping(value = "/getInvestInfo", produces = "application/json; charset=utf-8")
     public WeChatResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "userId") Integer userId,TenderRequest tender) {
         tender.setUserId(userId);

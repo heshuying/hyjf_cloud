@@ -153,7 +153,7 @@ public interface AssetManageCustomizeMapper {
     Integer selectNearlyRepaymentTime(Map<String, Object> params);
 
     /**
-     * 获取当前持有现金投资不分期还款计划列表
+     * 获取当前持有现金出借不分期还款计划列表
      *
      * @param params
      * @return
@@ -161,7 +161,7 @@ public interface AssetManageCustomizeMapper {
     List<CurrentHoldRepayMentPlanListCustomize> realInvestmentRepaymentPlanNoStagesList(Map<String, Object> params);
 
     /**
-     * 获取当前持有现金投资不分期还款计划详情
+     * 获取当前持有现金出借不分期还款计划详情
      *
      * @param params
      * @return
@@ -169,7 +169,7 @@ public interface AssetManageCustomizeMapper {
     CurrentHoldRepayMentPlanDetailsCustomize realInvestmentRepaymentPlanNoStagesDetails(Map<String, Object> params);
 
     /**
-     * 获取当前持有现金投资分期还款计划列表
+     * 获取当前持有现金出借分期还款计划列表
      *
      * @param params
      * @return
@@ -177,7 +177,7 @@ public interface AssetManageCustomizeMapper {
     List<CurrentHoldRepayMentPlanListCustomize> realInvestmentRepaymentPlanStagesList(Map<String, Object> params);
 
     /**
-     * 获取当前持有现金投资分期还款计划详情
+     * 获取当前持有现金出借分期还款计划详情
      *
      * @param params
      * @return

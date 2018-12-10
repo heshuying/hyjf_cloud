@@ -37,7 +37,7 @@ public class TenderCancelExceptionServiceImpl extends BaseServiceImpl implements
     private FreezeHistoryMapper freezeHistoryMapper;
 
     /**
-     * 根据筛选条件查询银行投资撤销异常的数据count
+     * 根据筛选条件查询银行出借撤销异常的数据count
      * @auth sunpeikai
      * @param request 筛选条件
      * @return
@@ -49,7 +49,7 @@ public class TenderCancelExceptionServiceImpl extends BaseServiceImpl implements
     }
 
     /**
-     * 查询银行投资撤销异常列表
+     * 查询银行出借撤销异常列表
      * @auth sunpeikai
      * @param request 筛选条件
      * @return

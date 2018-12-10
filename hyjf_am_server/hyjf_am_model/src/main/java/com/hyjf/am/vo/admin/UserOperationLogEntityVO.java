@@ -24,7 +24,7 @@ public class UserOperationLogEntityVO extends BaseVO implements Serializable {
     /**
      *
      */
-    @ApiModelProperty(value = "用户角色 : 1.投资人 2.借款人 3.担保机构")
+    @ApiModelProperty(value = "用户角色 : 1.出借人 2.借款人 3.担保机构")
     private String userRole;
     @ApiModelProperty(value = "用户名")
     private String userName;

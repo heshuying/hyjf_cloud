@@ -71,7 +71,7 @@ public class Link implements Serializable {
     private String cooperationTime;
 
     /**
-     * 新网站投资显示logo
+     * 新网站出借显示logo
      *
      * @mbggenerated
      */

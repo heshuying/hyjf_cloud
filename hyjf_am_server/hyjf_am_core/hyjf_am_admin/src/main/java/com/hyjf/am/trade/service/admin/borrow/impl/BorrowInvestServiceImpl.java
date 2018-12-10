@@ -30,7 +30,7 @@ import java.util.Map;
 public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowInvestService {
 
     /**
-     * 投资明细记录 总数COUNT
+     * 出借明细记录 总数COUNT
      *
      * @param borrowInvestRequest
      * @return
@@ -41,7 +41,7 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
     }
 
     /**
-     * 投资明细列表
+     * 出借明细列表
      *
      * @param borrowInvestRequest
      * @return
@@ -63,7 +63,7 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
     }
 
     /**
-     * 投资明细列表合计
+     * 出借明细列表合计
      *
      * @param borrowInvestRequest
      * @return
@@ -74,7 +74,7 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
     }
 
     /**
-     * 导出投资明细列表
+     * 导出出借明细列表
      *
      * @param borrowInvestRequest
      * @return
@@ -97,7 +97,7 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
     }
 
     /**
-     * 获取用户投资协议
+     * 获取用户出借协议
      *
      * @param nid
      * @return
@@ -115,7 +115,7 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
     }
 
     /**
-     * 获取用户投资协议
+     * 获取用户出借协议
      *
      * @param userId
      * @param borrowNid
@@ -148,7 +148,7 @@ public class BorrowInvestServiceImpl extends BaseServiceImpl implements BorrowIn
     }
 
     /**
-     * 标的投资信息
+     * 标的出借信息
      *
      * @param borrowInvestRequest
      * @return

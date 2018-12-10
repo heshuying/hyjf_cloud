@@ -71,7 +71,7 @@ public class CreditRepay implements Serializable {
     private String assignNid;
 
     /**
-     * 投资人投标成功的授权号
+     * 出借人投标成功的授权号
      *
      * @mbggenerated
      */

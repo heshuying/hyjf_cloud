@@ -170,7 +170,7 @@ public class AccountRechargeController extends BaseController {
         userRoleMap.put("key", " ");
         userRoleMap.put("value", "全部");
         userRoleMap2.put("key", 1);
-        userRoleMap2.put("value", "投资人");
+        userRoleMap2.put("value", "出借人");
         userRoleMap3.put("key", 2);
         userRoleMap3.put("value", "借款人");
         userRoleMap4.put("key", 3);

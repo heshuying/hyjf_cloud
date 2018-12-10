@@ -966,7 +966,7 @@ public class RedisUtils {
         }
         return result;
     }
-    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
+    // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 start
     /**
      * Redis中From队列中的成员移动到To队列中（队头→队尾）
      * @param queueNameFrom
@@ -992,7 +992,7 @@ public class RedisUtils {
         }
         return moveCount;
     }
-    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
+    // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 end
 
     /**
      * 并发情况下, 对key值进行加减

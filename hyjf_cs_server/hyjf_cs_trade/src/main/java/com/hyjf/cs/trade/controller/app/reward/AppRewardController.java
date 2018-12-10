@@ -153,7 +153,7 @@ public class AppRewardController {
             for (MyRewardRecordCustomizeVO user : list) {
                 JSONObject detailsJson = new JSONObject();
                 detailsJson.put("friendName", user.getUsername());
-                detailsJson.put("source", "好友投资");
+                detailsJson.put("source", "好友出借");
                 detailsJson.put("content", user.getPushMoney() + "元现金");
 
                 jsonArray.add(detailsJson);

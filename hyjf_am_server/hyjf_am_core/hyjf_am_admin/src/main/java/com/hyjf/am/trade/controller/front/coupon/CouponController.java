@@ -59,7 +59,7 @@ public class CouponController extends BaseController {
         return response;
     }
 
-    @ApiOperation(value = " 优惠券投资")
+    @ApiOperation(value = " 优惠券出借")
     @GetMapping("/updateCouponTender")
     public Integer updateCouponTender(CouponTenderVO couponTender) {
         try{
@@ -70,7 +70,7 @@ public class CouponController extends BaseController {
         }
     }
 
-    @ApiOperation(value = "获取优惠券投资信息")
+    @ApiOperation(value = "获取优惠券出借信息")
     @GetMapping("/getCouponTenderByTender/{userId}/{borrowNid}/{logOrdId}/{couponGrantId}")
     public BorrowTenderCpnResponse getCouponTenderByTender(Integer userId, String borrowNid, String logOrdId, Integer couponGrantId) {
         BorrowTenderCpnResponse response = new BorrowTenderCpnResponse();
@@ -94,7 +94,7 @@ public class CouponController extends BaseController {
         return response;
     }
 
-    @ApiOperation(value = "获取优惠券投资信息")
+    @ApiOperation(value = "获取优惠券出借信息")
     @GetMapping("/getCouponTenderInfoByNid/{nid}")
     public BorrowTenderCpnResponse getCouponTenderInfoByNid(@PathVariable String nid){
         BorrowTenderCpnResponse response=new BorrowTenderCpnResponse();
@@ -105,7 +105,7 @@ public class CouponController extends BaseController {
         return response;
     }
 
-    @ApiOperation(value = "获取汇计划投资列表（优惠券）")
+    @ApiOperation(value = "获取汇计划出借列表（优惠券）")
     @GetMapping("/getborrowtendercpnhjhlist/{orderId}")
     public CouponResponse getBorrowTenderCpnHjhList(@PathVariable String orderId){
         CouponResponse response=new CouponResponse();
@@ -114,7 +114,7 @@ public class CouponController extends BaseController {
         return response;
     }
 
-    @ApiOperation(value = "优惠券单独投资时用")
+    @ApiOperation(value = "优惠券单独出借时用")
     @GetMapping("/getborrowtendercpnhjhcoupononlylist/{couponOrderId}")
     public CouponResponse getBorrowTenderCpnHjhCouponOnlyList(@PathVariable String couponOrderId){
         CouponResponse response=new CouponResponse();
@@ -169,7 +169,7 @@ public class CouponController extends BaseController {
         return response;
     }
 
-    @ApiOperation(value = "获取我的优惠券投资记录")
+    @ApiOperation(value = "获取我的优惠券出借记录")
     @GetMapping("/getAppMyPlanCouponInfo")
     public AppCouponResponse getAppMyPlanCouponInfo(@RequestBody Map<String,Object> params){
         AppCouponResponse response = new AppCouponResponse();

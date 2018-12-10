@@ -171,7 +171,7 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
                     "标的爆标,请进行处理![用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
         }
 
-        // 如果标的投资记录存在没有授权码的记录，则不进行放款
+        // 如果标的出借记录存在没有授权码的记录，则不进行放款
         int countErrorTender = this.countBorrowTenderError(borrowNid);
         if (countErrorTender == 0) {
             BorrowApicronExample example = new BorrowApicronExample();
@@ -287,7 +287,7 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
     }
 
     /**
-     * 校验投资数据的合法性
+     * 校验出借数据的合法性
      *
      * @param borrowNid
      * @return
@@ -303,13 +303,13 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
     }
 
     /**
-     * 校验投资数据是否爆标
+     * 校验出借数据是否爆标
      *
      * @param borrowNid
      * @return true:爆标/异常  false:正常
      */
     private boolean checkBorrowTenderOverFlow(String borrowNid, String accountId) {
-        //校验投资金额是否超标
+        //校验出借金额是否超标
         BorrowTenderExample btexample = new BorrowTenderExample();
         btexample.createCriteria().andBorrowNidEqualTo(borrowNid);
         List<BorrowTender> btList = this.borrowTenderMapper.selectByExample(btexample);
@@ -319,7 +319,7 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
                 sumTender = sumTender.add(btList.get(i).getAccount());
             }
         }
-        logger.info("=========标的" + borrowNid + "投资总额:" + sumTender);
+        logger.info("=========标的" + borrowNid + "出借总额:" + sumTender);
 
         BorrowExample borrowExample = new BorrowExample();
         borrowExample.createCriteria().andBorrowNidEqualTo(borrowNid);
@@ -327,22 +327,22 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
         BigDecimal borrowAccount = borrowList.get(0).getAccount();
         logger.info("=========标的" + borrowNid + "总额:" + borrowAccount);
         if (sumTender.compareTo(borrowAccount) > 0) {
-            logger.error("=====标的" + borrowNid + "===投资总额超过标的总额!========");
+            logger.error("=====标的" + borrowNid + "===出借总额超过标的总额!========");
             return true;
         }
-        //校验投资掉单造成的爆标
+        //校验出借掉单造成的爆标
         BorrowTenderTmpExample example = new BorrowTenderTmpExample();
         example.createCriteria().andIsBankTenderEqualTo(1).andBorrowNidEqualTo(borrowNid);
         List<BorrowTenderTmp> borrowtmpList = borrowTenderTmpMapper.selectByExample(example);
         int index = 0;
-        //复审时存在全部掉单的投资数据,可能导致爆标的出现
+        //复审时存在全部掉单的出借数据,可能导致爆标的出现
         if (borrowtmpList != null && borrowtmpList.size() > 0) {
             for (int i = 0; i < borrowtmpList.size(); i++) {
                 BorrowTenderTmp info = borrowtmpList.get(i);
                 BankCallBean callBean = this.queryBorrowTenderList(accountId, info.getNid(), info.getUserId() + "");
                 if (callBean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(callBean.getRetCode())
                         && org.apache.commons.lang3.StringUtils.isNoneBlank(callBean.getAuthCode())) {
-                    logger.error("==========存在全部掉单的投资数据,可能导致爆标,投资订单号:" + info.getNid());
+                    logger.error("==========存在全部掉单的出借数据,可能导致爆标,出借订单号:" + info.getNid());
                     tenderCancel(info, accountId);
                     index++;
                 }
@@ -382,7 +382,7 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
     }
 
     /**
-     * 投资撤销
+     * 出借撤销
      *
      * @param info
      * @param accountID
@@ -392,27 +392,27 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
         BankCallBean callBean = bidCancel(info.getUserId(), accountID, info.getBorrowNid(), nid, info.getAccount().toString());
         if (Validator.isNotNull(callBean)) {
             String retCode = org.apache.commons.lang3.StringUtils.isNotBlank(callBean.getRetCode()) ? callBean.getRetCode() : "";
-            //投资正常撤销或投资订单不存在则删除冗余数据
+            //出借正常撤销或出借订单不存在则删除冗余数据
             if (retCode.equals(BankCallConstant.RESPCODE_SUCCESS) || retCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_EXIST1)
                     || retCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_EXIST2) || retCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_RIGHT)) {
                 try {
                     boolean flag = updateBidCancelRecord(info);
                     if (flag) {
-                        logger.info("===============投资掉单数据已撤销,原投资订单号:" + nid);
+                        logger.info("===============出借掉单数据已撤销,原出借订单号:" + nid);
                     }
                 } catch (Exception e) {
-                    throw new RuntimeException("投资撤销数据处理异常!原订单号:" + nid + "异常原因:" + e.getMessage());
+                    throw new RuntimeException("出借撤销数据处理异常!原订单号:" + nid + "异常原因:" + e.getMessage());
                 }
             } else {
-                throw new RuntimeException("投资撤销接口返回错误!原订单号:" + nid + ",返回码:" + retCode);
+                throw new RuntimeException("出借撤销接口返回错误!原订单号:" + nid + ",返回码:" + retCode);
             }
         } else {
-            throw new RuntimeException("投资撤销接口异常!");
+            throw new RuntimeException("出借撤销接口异常!");
         }
     }
 
     /**
-     * 投资撤销历史数据处理
+     * 出借撤销历史数据处理
      *
      * @param tenderTmp
      * @return
@@ -422,22 +422,22 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
         Integer userId = tenderTmp.getUserId();
         boolean tenderTmpFlag = this.borrowTenderTmpMapper.deleteByPrimaryKey(tenderTmp.getId()) > 0 ? true : false;
         if (!tenderTmpFlag) {
-            throw new Exception("删除投资日志表失败，投资订单号：" + tenderTmp.getNid());
+            throw new Exception("删除出借日志表失败，出借订单号：" + tenderTmp.getNid());
         }
         FreezeHistory freezeHistory = new FreezeHistory();
         freezeHistory.setTrxId(tenderTmp.getNid());
-        freezeHistory.setNotes("自动任务银行投资撤销");
+        freezeHistory.setNotes("自动任务银行出借撤销");
         freezeHistory.setFreezeUser(this.getUserNameByUserId(userId));
         freezeHistory.setFreezeTime(GetDate.getNowTime10());
         boolean freezeHisLog = freezeHistoryMapper.insert(freezeHistory) > 0 ? true : false;
         if (!freezeHisLog) {
-            throw new Exception("插入投资删除日志表失败，投资订单号：" + tenderTmp.getNid());
+            throw new Exception("插入出借删除日志表失败，出借订单号：" + tenderTmp.getNid());
         }
         return true;
     }
 
     /**
-     * 银行投资撤销
+     * 银行出借撤销
      *
      * @param userId
      * @param accountId
@@ -447,7 +447,7 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
      * @return
      */
     public BankCallBean bidCancel(Integer userId, String accountId, String productId, String orgOrderId, String txAmount) {
-        // 标的投资撤销
+        // 标的出借撤销
         BankCallBean bean = new BankCallBean();
         // 部分共同参数删除
 

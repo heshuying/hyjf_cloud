@@ -37,7 +37,7 @@ import java.util.Map;
  * @date 2018/08/30 17:00
  */
 
-@Api(value = "产品中心-加息投资明细",tags ="产品中心-加息投资明细")
+@Api(value = "产品中心-加息出借明细",tags ="产品中心-加息出借明细")
 @RestController
 @RequestMapping("/hyjf-admin/borrow/increaseinterest/investdetail")
 public class IncreaseInterestInvestDetailController extends BaseController {
@@ -50,7 +50,7 @@ public class IncreaseInterestInvestDetailController extends BaseController {
 	 * @param request
 	 * @return
 	 */
-	@ApiOperation(value = "产品中心-加息投资明细", notes = "产品中心-加息投资明细")
+	@ApiOperation(value = "产品中心-加息出借明细", notes = "产品中心-加息出借明细")
 	@PostMapping("/search")
 	public AdminResult<List2Result<IncreaseInterestInvestVO,String>> search(@RequestBody IncreaseInterestInvestDetailRequest request){
 		IncreaseInterestInvestDetailResponse response = new IncreaseInterestInvestDetailResponse();
@@ -69,13 +69,13 @@ public class IncreaseInterestInvestDetailController extends BaseController {
 	 *
 	 * @param form
 	 */
-	@ApiOperation(value = "产品中心-加息投资明细", notes = "产品中心-加息投资明细 导出投资明细")
+	@ApiOperation(value = "产品中心-加息出借明细", notes = "产品中心-加息出借明细 导出出借明细")
 	@PostMapping("/export")
 	public void exportAction(HttpServletRequest request, HttpServletResponse response,@RequestBody IncreaseInterestInvestDetailRequest form) throws Exception {
 		//sheet默认最大行数
 		int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 		// 表格sheet名称
-		String sheetName = "加息投资明细";
+		String sheetName = "加息出借明细";
 		// 文件名称
 		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		// 声明一个工作薄
@@ -111,18 +111,18 @@ public class IncreaseInterestInvestDetailController extends BaseController {
 
 	private Map<String, String> buildMap() {
 		Map<String, String> map = Maps.newLinkedHashMap();
-		map.put("investUserName", "投资人");
+		map.put("investUserName", "出借人");
 		map.put("inviteUserName", "推荐人");
 		map.put("borrowNid", "借款编号");
 		map.put("borrowApr", "年化收益率");
 		map.put("borrowExtraYield", "加息收益率");
 		map.put("borrowPeriodByStyle", "项目期限");
 		map.put("borrowStyleName", "还款方式");
-		map.put("orderId", "投资订单号");
+		map.put("orderId", "出借订单号");
 		map.put("account", "授权服务金额");
 		map.put("repayInterest", "加息收益");
 		map.put("client", "操作平台");
-		map.put("createTime", "投资时间");
+		map.put("createTime", "出借时间");
 		map.put("repayTime", "回款时间");
 		return map;
 	}

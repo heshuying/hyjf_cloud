@@ -8,7 +8,7 @@ import com.hyjf.cs.trade.mq.base.ProducerFieldsWrapper;
 import org.springframework.stereotype.Component;
 
 /**
- * @Description 计划类优惠券投资
+ * @Description 计划类优惠券出借
  * @Author sunss
  * @Date 2018/7/11 14:22
  */

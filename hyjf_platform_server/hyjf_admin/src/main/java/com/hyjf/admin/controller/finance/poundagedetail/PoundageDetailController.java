@@ -148,8 +148,8 @@ public class PoundageDetailController extends BaseController {
         map.put("borrowNid", "项目编号");
         map.put("borrowType", "项目类型");
         map.put("createTime", "放款/还款时间");
-        map.put("usernname", "投资人");
-        map.put("investorCompany", "投资人分公司");
+        map.put("usernname", "出借人");
+        map.put("investorCompany", "出借人分公司");
         map.put("type", "分账类型");
         map.put("source", "分账来源");
         map.put("serviceRatio", "服务费分账比例");
@@ -275,9 +275,9 @@ public class PoundageDetailController extends BaseController {
         return ratio.toString();
     }
 
-    private static final int TYPE_INVEST = 1;//"分账类型 1:按投资人分账";
+    private static final int TYPE_INVEST = 1;//"分账类型 1:按出借人分账";
     private static final int TYPE_LOAN = 2;//"分账类型 2:按借款人分账";
-    private static final String TYPE_INVEST_STR = "按投资人分账";
+    private static final String TYPE_INVEST_STR = "按出借人分账";
     private static final String TYPE_LOAN_STR = "按借款人分账";
 
     private static final String SOURCE_ALL = "0";//"分账来源  0:全部";

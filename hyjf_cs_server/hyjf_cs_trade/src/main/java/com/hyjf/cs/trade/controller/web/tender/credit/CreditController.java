@@ -39,7 +39,7 @@ import java.util.UUID;
  * @Author sss
  * @Date 2018/6/29 13:59
  */
-@Api(tags = "web端-债转投资")
+@Api(tags = "web端-债转出借")
 @RestController
 @RequestMapping("/hyjf-web/credit")
 public class CreditController {
@@ -77,7 +77,7 @@ public class CreditController {
         return result;
     }
 
-    @ApiOperation(value = "用户中心查询投资可债转详情", notes = "点击列表的转让按钮")
+    @ApiOperation(value = "用户中心查询出借可债转详情", notes = "点击列表的转让按钮")
     @PostMapping(value = "/tenderToCreditDetail", produces = "application/json; charset=utf-8")
     public WebResult tenderToCreditDetail(@RequestBody CreditDetailsRequestBean request,
                                     @RequestHeader(value = "userId",required = false) Integer userId){
@@ -85,7 +85,7 @@ public class CreditController {
         return result;
     }
 
-    @ApiOperation(value = "用户中心验证投资人当天是否可以债转 每天三次", notes = "用户中心验证投资人当天是否可以债转")
+    @ApiOperation(value = "用户中心验证出借人当天是否可以债转 每天三次", notes = "用户中心验证出借人当天是否可以债转")
     @PostMapping(value = "/tenderAbleToCredit", produces = "application/json; charset=utf-8")
     public WebResult tenderAbleToCredit(@RequestBody CreditDetailsRequestBean request,
                                           @RequestHeader(value = "userId",required = false) Integer userId){

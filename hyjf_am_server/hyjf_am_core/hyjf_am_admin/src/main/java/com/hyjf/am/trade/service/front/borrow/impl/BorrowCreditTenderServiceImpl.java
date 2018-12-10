@@ -116,7 +116,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
 
 
     /**
-     * admin： 用户投资记录数
+     * admin： 用户出借记录数
      * @author zhangyk
      * @date 2018/8/28 19:07
      */

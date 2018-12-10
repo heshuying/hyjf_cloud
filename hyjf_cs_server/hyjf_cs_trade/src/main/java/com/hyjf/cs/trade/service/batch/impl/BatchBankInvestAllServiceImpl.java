@@ -76,7 +76,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 		if (CollectionUtils.isNotEmpty(borrowTenderTmpList)){
 			for (int i = 0; i < borrowTenderTmpList.size(); i++) {
 				String orderid = borrowTenderTmpList.get(i).getNid();
-				logger.info("开始处理投资订单号为:[" + orderid + "]");
+				logger.info("开始处理出借订单号为:[" + orderid + "]");
 				Integer userId = borrowTenderTmpList.get(i).getUserId();
 				UserVO user = this.amUserClient.findUserById(userId);
 				UserInfoVO userInfo=this.amUserClient.findUsersInfoById(userId);
@@ -133,11 +133,11 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 				
 				boolean ret = this.amTradeClient.updateTenderStart(request);
 				if (!ret){
-					logger.info("=============投资全部掉单异常处理失败! 失败订单: " + orderid);
+					logger.info("=============出借全部掉单异常处理失败! 失败订单: " + orderid);
 					//更新失败不继续执行
 					continue;
 				}else {
-					//更新渠道统计用户累计投资
+					//更新渠道统计用户累计出借
 					if (Validator.isNotNull(request.getLogUser())
 							&& Validator.isNotNull(request.getBorrowInfo())
 							&& request.getBorrowInfo().getProjectType()!=8){
@@ -147,7 +147,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 						if (Validator.isNotNull(appUtmRegVO)){
 							Map<String, Object> params = new HashMap<String, Object>();
 							params.put("accountDecimal", new BigDecimal(bean.getTxAmount()));
-							// 投资时间
+							// 出借时间
 							params.put("investTime", request.getNowTime());
 							// 项目类型
 							if (request.getBorrowInfo().getProjectType() == 13) {
@@ -163,7 +163,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 								investProjectPeriod = request.getBorrow().getBorrowPeriod() + "个月";
 							}
 							params.put("investProjectPeriod", investProjectPeriod);
-							//根据investFlag标志位来决定更新哪种投资
+							//根据investFlag标志位来决定更新哪种出借
 							params.put("investFlag",request.getLogUser().getInvestflag() == 1 ? false:true);
 							//压入消息队列
 							try {
@@ -171,7 +171,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 										MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
 							} catch (MQException e) {
 								e.printStackTrace();
-								logger.error("渠道统计用户累计投资推送消息队列失败！！！");
+								logger.error("渠道统计用户累计出借推送消息队列失败！！！");
 							}
 							logger.info("用户:" + userId + "***********************************预更新渠道统计表AppChannelStatisticsDetail，订单号：" + bean.getOrderId());
 						}else{
@@ -181,7 +181,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 								Map<String, Object> params = new HashMap<String, Object>();
 								params.put("id", utmRegVO.getId());
 								params.put("accountDecimal", new BigDecimal(bean.getTxAmount()));
-								// 投资时间
+								// 出借时间
 								params.put("investTime", request.getNowTime());
 								// 项目类型
 								if (request.getBorrowInfo().getProjectType() == 13) {
@@ -254,7 +254,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 		bean.setLogUserId(userId);
 		bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
 		bean.setLogOrderId(GetOrderIdUtils.getOrderId2(Integer.parseInt(userId)));
-		bean.setLogRemark("投资人投标申请查询");
+		bean.setLogRemark("出借人投标申请查询");
 		// 调用接口
 		return BankCallUtils.callApiBg(bean);
 	}

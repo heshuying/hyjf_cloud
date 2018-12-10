@@ -117,9 +117,9 @@ public class AssetExceptionServiceImpl extends BaseServiceImpl implements AssetE
         if (null == borrow) {
             return "借款编号不存在！";
         }
-        // 投资或投资之后状态的标的无法添加
+        // 出借或出借之后状态的标的无法添加
         if (borrow.getStatus() != 0 && borrow.getStatus() != 1) {
-            return "已进入投资或投资之后状态的标的无法添加。";
+            return "已进入出借或出借之后状态的标的无法添加。";
         }
         // 判断是否已经添加到异常表中
         BorrowDeleteExample example = new BorrowDeleteExample();

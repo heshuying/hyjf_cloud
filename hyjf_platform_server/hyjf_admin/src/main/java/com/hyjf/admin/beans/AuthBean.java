@@ -44,7 +44,7 @@ public class AuthBean extends BaseBean {
     //用户类型 0普通用户 1企业用户
     private Integer userType;
     
-    //自动投资授权标识
+    //自动出借授权标识
     private  boolean autoBidStatus=false;
     //自动债转授权标识
     private  boolean autoCreditStatus=false;

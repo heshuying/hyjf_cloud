@@ -8,7 +8,7 @@ import com.hyjf.cs.trade.mq.base.ProducerFieldsWrapper;
 import org.springframework.stereotype.Component;
 
 /**
- * @Description 网站累计投资追加    修改mongodb运营数据
+ * @Description 网站累计出借追加    修改mongodb运营数据
  * @Author sunss
  * @Date 2018/7/7 14:38
  */

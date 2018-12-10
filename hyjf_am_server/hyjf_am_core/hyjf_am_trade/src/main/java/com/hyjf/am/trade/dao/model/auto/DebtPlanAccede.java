@@ -69,7 +69,7 @@ public class DebtPlanAccede implements Serializable {
     private BigDecimal accedeBalance;
 
     /**
-     * 计划订单冻结金额（专指投资汇添金专属标的冻结）
+     * 计划订单冻结金额（专指出借汇添金专属标的冻结）
      *
      * @mbggenerated
      */
@@ -125,21 +125,21 @@ public class DebtPlanAccede implements Serializable {
     private Integer underTakeTimes;
 
     /**
-     * 最大投资金额（参考值）
+     * 最大出借金额（参考值）
      *
      * @mbggenerated
      */
     private BigDecimal investMax;
 
     /**
-     * 最小投资金额（参考值）
+     * 最小出借金额（参考值）
      *
      * @mbggenerated
      */
     private BigDecimal investMin;
 
     /**
-     * 遍历次数（已经尝试自动投资次数）
+     * 遍历次数（已经尝试自动出借次数）
      *
      * @mbggenerated
      */
@@ -256,7 +256,7 @@ public class DebtPlanAccede implements Serializable {
     private Integer calculationStatus;
 
     /**
-     * 此笔加入是否已经完成 0投资中 1投资完成 2还款中 3还款完成
+     * 此笔加入是否已经完成 0出借中 1出借完成 2还款中 3还款完成
      *
      * @mbggenerated
      */

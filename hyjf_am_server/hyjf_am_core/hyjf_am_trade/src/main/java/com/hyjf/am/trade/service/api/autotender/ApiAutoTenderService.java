@@ -18,9 +18,9 @@ public interface ApiAutoTenderService {
 	 * @param userId
 	 *            用户id
 	 * @param account
-	 *            投资金额
+	 *            出借金额
 	 * @param ip
-	 *            投资人ip
+	 *            出借人ip
 	 * @param couponGrantId 
 	 * @param tenderUserName 
 	 * @return 操作是否成功

@@ -11,7 +11,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
- * 计算自动投资的匹配期(每日)
+ * 计算自动出借的匹配期(每日)
  * @author liubin
  * @version TenderMatchDaysJob, v0.1 2018/8/23 10:35
  */

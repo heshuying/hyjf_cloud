@@ -73,7 +73,7 @@ public class WrbInfoController extends BaseController {
     }
 
     /**
-     * 获取某天投资情况汇总
+     * 获取某天出借情况汇总
      * @return
      */
     @RequestMapping("/ws_sum/{date}")
@@ -127,9 +127,9 @@ public class WrbInfoController extends BaseController {
     }
 
     /**
-     * 投资记录查询
+     * 出借记录查询
      * @param request
-     * @return 投资记录
+     * @return 出借记录
      * @throws Exception
      */
     @RequestMapping("/getInvestRecord")
@@ -159,7 +159,7 @@ public class WrbInfoController extends BaseController {
     }
 
     /**
-     * 获取投资记录回款计划
+     * 获取出借记录回款计划
      * @return
      */
     @RequestMapping("/getRecoverPlan/{userId}/{investRecordId}/{borrowNid}")
@@ -219,14 +219,14 @@ public class WrbInfoController extends BaseController {
     }
 
     /**
-     * 获取某天投资数据
+     * 获取某天出借数据
      * @param request
      * @return
      */
     @RequestMapping("/borrow_tender")
     public BorrowTenderResponse getBorrowTenderList(@RequestBody WrbInvestRequest request) {
         BorrowTenderResponse response = new BorrowTenderResponse();
-        // 获取某天投资数据
+        // 获取某天出借数据
         List<BorrowTender> list = wrbInfoService.getBorrowTenderList(request);
         if (!CollectionUtils.isEmpty(list)) {
             List<BorrowTenderVO> voList = CommonUtils.convertBeanList(list, BorrowTenderVO.class);
@@ -236,13 +236,13 @@ public class WrbInfoController extends BaseController {
     }
 
     /**
-     * 查询标的投资情况
+     * 查询标的出借情况
      * @return
      */
     @RequestMapping("/wrb_borrow_tender")
     public WrbBorrowTenderCustomizeResponse getBorrowTenderByBorrowNid(@RequestBody WrbInvestRequest request) {
         WrbBorrowTenderCustomizeResponse response = new WrbBorrowTenderCustomizeResponse();
-        // 查询标的投资情况
+        // 查询标的出借情况
         List<WrbBorrowTenderCustomize> list = wrbInfoService.getBorrowTenderByBorrowNid(request);
         if (!CollectionUtils.isEmpty(list)) {
             List<WrbBorrowTenderCustomizeVO> voList = CommonUtils.convertBeanList(list, WrbBorrowTenderCustomizeVO.class);
@@ -252,13 +252,13 @@ public class WrbInfoController extends BaseController {
     }
 
     /**
-     * 根据标的号和日期查询投资情况
+     * 根据标的号和日期查询出借情况
      * @return
      */
     @RequestMapping("/search_borrow_tender_sum")
     public WrbBorrowTenderSumCustomizeResponse getBorrowTenderByBorrowNidAndTime(@RequestBody WrbInvestRequest request) {
         WrbBorrowTenderSumCustomizeResponse response = new WrbBorrowTenderSumCustomizeResponse();
-        // 查询标的投资情况
+        // 查询标的出借情况
         WrbBorrowTenderSumCustomize customize = wrbInfoService.getBorrowTenderByBorrowNidAndTime(request);
         if (customize != null) {
             WrbBorrowTenderSumCustomizeVO vo = new WrbBorrowTenderSumCustomizeVO();

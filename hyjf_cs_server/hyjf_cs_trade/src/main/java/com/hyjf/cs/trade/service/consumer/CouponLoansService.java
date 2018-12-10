@@ -13,7 +13,7 @@ import java.util.Map;
 public interface CouponLoansService {
     /**
      * @Author walter.limeng
-     * @Description  获取汇计划投资列表（优惠券）
+     * @Description  获取汇计划出借列表（优惠券）
      * @Date 10:37 2018/7/17
      * @Param orderId 订单ID
      * @return 
@@ -22,7 +22,7 @@ public interface CouponLoansService {
 
     /**
      * @Author walter.limeng
-     * @Description  优惠券单独投资时用
+     * @Description  优惠券单独出借时用
      * @Date 10:47 2018/7/17
      * @Param orderIdCoupon
      * @return 
@@ -59,7 +59,7 @@ public interface CouponLoansService {
 
     /**
      * @Author walter.limeng
-     * @Description  App消息推送（优惠券投资成功）
+     * @Description  App消息推送（优惠券投标成功）
      * @Date 15:15 2018/7/17
      * @Param msgList
      * @return 

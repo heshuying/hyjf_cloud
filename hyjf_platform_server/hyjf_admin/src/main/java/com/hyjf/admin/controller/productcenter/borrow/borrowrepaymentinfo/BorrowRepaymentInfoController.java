@@ -127,9 +127,9 @@ public class BorrowRepaymentInfoController extends BaseController {
         List<BorrowRepaymentInfoCustomizeVO> resultList = this.borrowRepaymentInfoService.selectBorrowRepaymentList(copyForm);
         // 列头
         String[] titles = new String[] { "借款编号", "资产来源", "智投编号", "借款人ID", "借款人用户名", "借款标题", "项目类型",
-                "借款期限", "年化收益", "借款金额", "借到金额", "还款方式", "投资人用户名", "投资人ID", "投资人用户属性（当前）",
-                "投资人所属一级分部（当前）", "投资人所属二级分部（当前）", "投资人所属团队（当前）", "推荐人用户名（当前）",
-                "推荐人姓名（当前）", "推荐人所属一级分部（当前）", "推荐人所属二级分部（当前）", "推荐人所属团队（当前）", "投资金额",
+                "借款期限", "年化收益", "借款金额", "借到金额", "还款方式", "出借人用户名", "出借人ID", "出借人用户属性（当前）",
+                "出借人所属一级分部（当前）", "出借人所属二级分部（当前）", "出借人所属团队（当前）", "推荐人用户名（当前）",
+                "推荐人姓名（当前）", "推荐人所属一级分部（当前）", "推荐人所属二级分部（当前）", "推荐人所属团队（当前）", "出借金额",
                 "应还本金","应还利息", "应还本息", "还款服务费", "已还本金", "已还利息", "已还本息", "未还本金", "未还利息", "未还本息",
                 "还款状态", "最后还款日","实际还款时间", "还款冻结订单号"};
         // 声明一个工作薄
@@ -213,15 +213,15 @@ public class BorrowRepaymentInfoController extends BaseController {
                     else if (celLength == 11) {
                         cell.setCellValue(record.getRepayType());
                     }
-                    // 投资人用户名
+                    // 出借人用户名
                     else if (celLength == 12) {
                         cell.setCellValue(record.getRecoverUserName());
                     }
-                    // 投资人ID
+                    // 出借人ID
                     else if (celLength == 13) {
                         cell.setCellValue(record.getRecoverUserId());
                     }
-                    // 投资人用户属性（当前）
+                    // 出借人用户属性（当前）
                     else if (celLength == 14) {
                         if ("0".equals(record.getRecoverUserAttribute())) {
                             cell.setCellValue("无主单");
@@ -233,15 +233,15 @@ public class BorrowRepaymentInfoController extends BaseController {
                             cell.setCellValue("线上员工");
                         }
                     }
-                    // 投资人所属一级分部（当前）
+                    // 出借人所属一级分部（当前）
                     else if (celLength == 15) {
                         cell.setCellValue(record.getRecoverRegionName());
                     }
-                    // 投资人所属二级分部（当前）
+                    // 出借人所属二级分部（当前）
                     else if (celLength == 16) {
                         cell.setCellValue(record.getRecoverBranchName());
                     }
-                    // 投资人所属团队（当前）
+                    // 出借人所属团队（当前）
                     else if (celLength == 17) {
                         cell.setCellValue(record.getRecoverDepartmentName());
                     }
@@ -265,7 +265,7 @@ public class BorrowRepaymentInfoController extends BaseController {
                     else if (celLength == 22) {
                         cell.setCellValue(record.getReferrerDepartmentName());
                     }
-                    // 投资金额
+                    // 出借金额
                     else if (celLength == 23) {
                         cell.setCellValue(
                                 "".equals(record.getRecoverTotal()) ? 0 : Double.valueOf(record.getRecoverTotal()));
@@ -440,13 +440,13 @@ public class BorrowRepaymentInfoController extends BaseController {
         map.put("borrowAccount","借款金额");
         map.put("borrowAccountYes","借到金额");
         map.put("repayType","还款方式");
-        map.put("recoverUserName","投资人用户名");
-        map.put("recoverUserId","投资人ID");
-        map.put("recoverUserAttribute","投资人用户属性（当前）");
+        map.put("recoverUserName","出借人用户名");
+        map.put("recoverUserId","出借人ID");
+        map.put("recoverUserAttribute","出借人用户属性（当前）");
         if (StringUtils.isNotBlank(isOrganizationView)) {
-            map.put("recoverRegionName", "投资人所属一级分部（当前）");
-            map.put("recoverBranchName", "投资人所属二级分部（当前）");
-            map.put("recoverDepartmentName", "投资人所属团队（当前）");
+            map.put("recoverRegionName", "出借人所属一级分部（当前）");
+            map.put("recoverBranchName", "出借人所属二级分部（当前）");
+            map.put("recoverDepartmentName", "出借人所属团队（当前）");
         }
         map.put("referrerName","推荐人用户名（当前）");
         map.put("referrerTrueName","推荐人姓名（当前）");
@@ -455,7 +455,7 @@ public class BorrowRepaymentInfoController extends BaseController {
             map.put("referrerBranchName", "推荐人所属二级分部（当前）");
             map.put("referrerDepartmentName", "推荐人所属团队（当前）");
         }
-        map.put("recoverTotal","投资金额");
+        map.put("recoverTotal","出借金额");
         map.put("recoverCapital","应还本金");
         map.put("recoverInterest","应还利息");
         map.put("recoverAccount","应还本息");

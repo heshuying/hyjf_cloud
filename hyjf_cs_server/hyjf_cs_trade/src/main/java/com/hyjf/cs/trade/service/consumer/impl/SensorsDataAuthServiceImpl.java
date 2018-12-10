@@ -87,7 +87,7 @@ public class SensorsDataAuthServiceImpl extends BaseServiceImpl implements Senso
         if (!"paymentAuth".equals(authType)) {
             properties.put("auth_name", "智投授权");
             if ("autoBid".equals(authType)) {
-                logger.info("自动投资授权:[" + authType + "],授权用户ID:[" + userId + "].");
+                logger.info("自动出借授权:[" + authType + "],授权用户ID:[" + userId + "].");
                 if (hjhUserAuth.getAutoBidTime() != null) {
                     properties.put("auth_time", GetDate.getDateTimeMyTime(hjhUserAuth.getAutoBidTime()));
                 }

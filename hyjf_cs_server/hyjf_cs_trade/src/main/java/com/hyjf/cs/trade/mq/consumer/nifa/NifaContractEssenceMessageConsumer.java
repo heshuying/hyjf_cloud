@@ -121,7 +121,7 @@ public class NifaContractEssenceMessageConsumer extends Consumer {
                 BorrowAndInfoVO borrow = nifaContractEssenceMessageService.selectBorrowByBorrowNid(borrowNid);
                 BorrowInfoVO borrowInfo = nifaContractEssenceMessageService.selectBorrowInfoByBorrowNid(borrowNid);
 
-                // 根据放款编号获取该标的的投资信息
+                // 根据放款编号获取该标的的出借信息
                 List<BorrowTenderVO> borrowTenderList = nifaContractEssenceMessageService.selectTenderListByBorrowNid(borrowNid);
                 if (null != borrowTenderList && borrowTenderList.size() > 0) {
                     for (BorrowTenderVO borrowTender : borrowTenderList) {
@@ -149,7 +149,7 @@ public class NifaContractEssenceMessageConsumer extends Consumer {
                         // 根据合同编号获取合同模版约定条款
                         NifaContractTemplateVO nifaContractTemplate = nifaContractEssenceMessageService.selectNifaContractTemplateByTemplateNid(fddTemplet.getTempletId());
                         if (null == nifaContractTemplate) {
-                            logger.error(thisMessName + "未获取到投资订单相关合同模板信息，借款编号:" + borrowNid + "订单号：" + nid);
+                            logger.error(thisMessName + "未获取到出借订单相关合同模板信息，借款编号:" + borrowNid + "订单号：" + nid);
                             continue;
                         }
 
@@ -288,7 +288,7 @@ public class NifaContractEssenceMessageConsumer extends Consumer {
                         if (isMonth) {
                             // 还款期数
                             nifaContractEssence.setRepayNum(borrow.getBorrowPeriod());
-                            // 获取用户投资订单还款详情
+                            // 获取用户出借订单还款详情
                             List<BorrowRecoverPlanVO> borrowRecoverPlanList = nifaContractEssenceMessageService.selectBorrowRecoverPlanList(nid);
                             if (null == borrowRecoverPlanList) {
                                 logger.error(thisMessName + "未获取到借款人分期回款信息，订单号：" + borrowTender.getNid() + "借款编号：" + borrow.getBorrowNid() + "借款人id：" + userId);
@@ -372,7 +372,7 @@ public class NifaContractEssenceMessageConsumer extends Consumer {
                         }
                     }
                 } else {
-                    logger.error(thisMessName + "未查询到投资信息,借款编号:" + borrowNid);
+                    logger.error(thisMessName + "未查询到出借信息,借款编号:" + borrowNid);
                 }
             } catch (Exception e) {
                 logger.info(thisMessName + "生成合同要素处理失败,借款编号:" + borrowNid);

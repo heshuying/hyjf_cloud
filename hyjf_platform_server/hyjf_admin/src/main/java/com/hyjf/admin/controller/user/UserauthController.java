@@ -82,16 +82,16 @@ public class UserauthController extends BaseController {
 
 
 	/**
-	 * 自动投资解约
+	 * 自动出借解约
 	 *
 	 * @param
 	 */
-	@ApiOperation(value = "授权状态", notes = "自动投资解约")
+	@ApiOperation(value = "授权状态", notes = "自动出借解约")
 	@PostMapping(value = "/userinvescancel")
 	@ResponseBody
 	public AdminResult cancelInvestAuth(HttpServletRequest request, HttpServletResponse response,
 			@RequestBody Integer userId) {
-		logger.info("自动投资解约开始，用户：{}", userId);
+		logger.info("自动出借解约开始，用户：{}", userId);
 		if ("00".equals(userauthService.canCancelAuth(userId).getRtn())) {
 
 			return new AdminResult<>("99",  "当前用户存在持有中计划，不能解约！");

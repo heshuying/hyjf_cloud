@@ -61,7 +61,7 @@ public class UserConsumer extends Consumer {
                 }
 				userService.updateUserById(user);
 			} catch (Exception e) {
-				logger.error("更新user投资标志失败....", e);
+				logger.error("更新user出借标志失败....", e);
 			}
 			// 如果没有return success ，consumer会重新消费该消息，直到return success
 			return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;

@@ -244,7 +244,7 @@ public class SellDailyConsumer extends Consumer {
                     }
 
                     // 2. 处理drawOrder=2特殊分部的数据
-                    // 运营中心无主单 - 月累计投资
+                    // 运营中心无主单 - 月累计出借
                     BigDecimal noneRefferTotalTmp = BigDecimal.ZERO;
                     BigDecimal hzTotalTmp = BigDecimal.ZERO;
                     for (SellDailyVO entity : list) {
@@ -267,9 +267,9 @@ public class SellDailyConsumer extends Consumer {
                             sellDailyService.constructionSellDaily("", ""));
                     list.add(noneRefferRecord);
 
-                    // 2.3 app推广计算app渠道投资， 只显示 本月累计规模业绩 上月对应累计规模业绩 环比增速 本月累计年化业绩 上月累计年化业绩 环比增速
+                    // 2.3 app推广计算app渠道出借， 只显示 本月累计规模业绩 上月对应累计规模业绩 环比增速 本月累计年化业绩 上月累计年化业绩 环比增速
                     // 昨日规模业绩
-                    // 昨日年化业绩 昨日注册数 其中充值≥3000人数 其中投资≥3000人数 本月累计投资3000以上新客户数
+                    // 昨日年化业绩 昨日注册数 其中充值≥3000人数 其中出借≥3000人数 本月累计出借3000以上新客户数
                     if (Arrays.asList(1, 3, 8, 9, 11, 13).contains(column)) {
                         list.add(sellDailyService.constructionSellDaily(appSellDaily, "其中：", "APP推广", 2, 0));
                     }

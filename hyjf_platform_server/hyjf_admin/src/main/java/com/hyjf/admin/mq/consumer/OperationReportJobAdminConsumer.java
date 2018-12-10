@@ -84,13 +84,13 @@ public class OperationReportJobAdminConsumer extends Consumer {
                 bean.setTradeCountMonth(amAdminClient.getTradeCountByMonth(getFirstDay(cal), getLastDay(cal)));
                 //借贷笔数
                 bean.setLoanNum(amAdminClient.getLoanNum(getLastDay(cal)));
-                //人均投资金额
+                //人均出借金额
                 double bb = amAdminClient.getInvestLastDate(getLastDay(cal));
                 int aa = amAdminClient.getTenderCount(getLastDay(cal));
                 bean.setPerInvest((int) Math.ceil(bb / aa));
                 //平均满标时间
                 bean.setFullBillTimeCurrentMonth(amAdminClient.getFullBillAverageTime(getLastDay(cal)));
-                //投资人总数
+                //出借人总数
                 bean.setTenderCount(aa);
                 //代偿金额
                 bean.setWillPayMoney(amAdminClient.getRepayTotal(getLastDay(cal)));
@@ -111,11 +111,11 @@ public class OperationReportJobAdminConsumer extends Consumer {
                     bean.setListAgeDistribute(amAdminClient.getAgeDistribute(12));
                     //金额分布
                     bean.setListMoneyDistribute(amAdminClient.getMoneyDistribute(12));
-                    //计算 十大投资人投资金额
+                    //计算 十大出借人出借金额
                     bean.setListTenMostMoney(amAdminClient.getTenMostMoney(12));
                     //大赢家，收益最高
                     bean.setListOneInterestsMost(amAdminClient.getOneInterestsMost(12));
-                    //超活跃，投资笔数最多
+                    //超活跃，出借笔数最多
                     bean.setListtOneInvestMost(amAdminClient.getOneInvestMost(12));
                     bean.setListBorrowPeriod(amAdminClient.getBorrowPeriod(12));
                 } else if (lastMonth == 6) {
@@ -131,11 +131,11 @@ public class OperationReportJobAdminConsumer extends Consumer {
                     bean.setListAgeDistribute(amAdminClient.getAgeDistribute(6));
                     //金额分布
                     bean.setListMoneyDistribute(amAdminClient.getMoneyDistribute(6));
-                    //计算 十大投资人投资金额
+                    //计算 十大出借人出借金额
                     bean.setListTenMostMoney(amAdminClient.getTenMostMoney(6));
                     //大赢家，收益最高
                     bean.setListOneInterestsMost(amAdminClient.getOneInterestsMost(6));
-                    //超活跃，投资笔数最多
+                    //超活跃，出借笔数最多
                     bean.setListtOneInvestMost(amAdminClient.getOneInvestMost(6));
 
                     bean.setListBorrowPeriod(amAdminClient.getBorrowPeriod(6));
@@ -154,11 +154,11 @@ public class OperationReportJobAdminConsumer extends Consumer {
                     bean.setListAgeDistribute(amAdminClient.getAgeDistribute(3));
                     //金额分布
                     bean.setListMoneyDistribute(amAdminClient.getMoneyDistribute(3));
-                    //计算 十大投资人投资金额
+                    //计算 十大出借人出借金额
                     bean.setListTenMostMoney(amAdminClient.getTenMostMoney(3));
                     //大赢家，收益最高
                     bean.setListOneInterestsMost(amAdminClient.getOneInterestsMost(3));
-                    //超活跃，投资笔数最多
+                    //超活跃，出借笔数最多
                     bean.setListtOneInvestMost(amAdminClient.getOneInvestMost(3));
                 } else {
                     bean.setListMonthDealMoney(amAdminClient.getMonthDealMoney(0, 1));
@@ -174,11 +174,11 @@ public class OperationReportJobAdminConsumer extends Consumer {
                     bean.setListAgeDistribute(amAdminClient.getAgeDistribute(1));
                     //金额分布
                     bean.setListMoneyDistribute(amAdminClient.getMoneyDistribute(1));
-                    //计算 十大投资人投资金额
+                    //计算 十大出借人出借金额
                     bean.setListTenMostMoney(amAdminClient.getTenMostMoney(1));
                     //大赢家，收益最高
                     bean.setListOneInterestsMost(amAdminClient.getOneInterestsMost(1));
-                    //超活跃，投资笔数最多
+                    //超活跃，出借笔数最多
                     bean.setListtOneInvestMost(amAdminClient.getOneInvestMost(1));
                 }
 

@@ -341,11 +341,11 @@ public class PushMoneyManageController extends BaseController {
         map.put("username", "提成人");
         map.put("accountId", "电子账号");
         map.put("attribute", "用户属性");
-        map.put("usernameTender", "投资人");
+        map.put("usernameTender", "出借人");
         map.put("accountTender", "授权服务金额");
         map.put("commission", "提成金额");
         map.put("statusName", "状态");
-        map.put("tenderTimeView", "投资时间");
+        map.put("tenderTimeView", "出借时间");
         map.put("sendTimeView", "发放时间");
         return map;
     }

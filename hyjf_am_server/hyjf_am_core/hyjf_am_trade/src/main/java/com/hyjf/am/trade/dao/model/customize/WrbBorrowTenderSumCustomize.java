@@ -13,11 +13,11 @@ public class WrbBorrowTenderSumCustomize {
     // 借款人id
     private String borrowId;
 
-    // 首笔投资时间
+    // 首笔出借时间
     private String firstInvestTime;
-    // 末笔投资时间
+    // 末笔出借时间
     private String lastInvestTime;
-    // 标的投资人数
+    // 标的出借人数
     private String allInvestors;
     // 标的已投金额
     private BigDecimal investAllMoney;

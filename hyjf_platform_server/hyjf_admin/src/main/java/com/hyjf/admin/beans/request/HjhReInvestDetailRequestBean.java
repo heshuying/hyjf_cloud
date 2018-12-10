@@ -25,7 +25,7 @@ public class HjhReInvestDetailRequestBean {
     @ApiModelProperty(value = "借款期限")
     private String lockPeriodSrch;
 
-    @ApiModelProperty(value = "投资方式")
+    @ApiModelProperty(value = "出借方式")
     private String investTypeSrch;
 
     @ApiModelProperty(value = "还款方式")

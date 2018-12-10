@@ -31,13 +31,13 @@ public class BorrowInvestRequestBean extends BaseRequest implements Serializable
     @ApiModelProperty(value = "操作平台")
     private String clientSrch;
 
-    @ApiModelProperty(value = "投资时间(开始)")
+    @ApiModelProperty(value = "出借时间(开始)")
     private String timeStartSrch;
 
-    @ApiModelProperty(value = "投资时间(结束)")
+    @ApiModelProperty(value = "出借时间(结束)")
     private String timeEndSrch;
 
-    @ApiModelProperty(value = "投资类别")
+    @ApiModelProperty(value = "出借类别")
     private String investType;
 
     @ApiModelProperty(value = "计划编号")
@@ -46,7 +46,7 @@ public class BorrowInvestRequestBean extends BaseRequest implements Serializable
     @ApiModelProperty(value = "汇计划加入订单号")
     private String accedeOrderIdSrch;
 
-    @ApiModelProperty(value = "是否复投投资  1；是   0：否")
+    @ApiModelProperty(value = "是否复投投标  1；是   0：否")
     private String tenderType;
 
     @ApiModelProperty(value = "复审通过时间(开始)")
@@ -61,7 +61,7 @@ public class BorrowInvestRequestBean extends BaseRequest implements Serializable
     @ApiModelProperty(value = "产品类型")
     private String productType;
 
-    @ApiModelProperty(value = "是否从其他页面跳转到投资明细（1：是）(汇计划三期)")
+    @ApiModelProperty(value = "是否从其他页面跳转到出借明细（1：是）(汇计划三期)")
     private String isOptFlag;
 
     @ApiModelProperty(value = "是否具有组织架构查看权限")

@@ -26,7 +26,7 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.validator.Validator;
 
 /**
- * @Description 投资更新首投信息等
+ * @Description 出借更新首投信息等
  * @Author sunss
  * @Date 2018/9/5 9:45
  */
@@ -72,14 +72,14 @@ public class TenderChannelStatisticsDetailConsumer extends Consumer {
                     if (Validator.isNotNull(entity)) {
                         Integer investFlag = userService.selectTenderCount(userId);
                         if (investFlag >1) {
-                            // 累计投资
+                            // 累计出借
                             BigDecimal accountDecimal = entity.getBigDecimal("accountDecimal")==null?BigDecimal.ZERO:entity.getBigDecimal("accountDecimal");
                             BigDecimal cumulativeInvest = appUtmReg.getCumulativeInvest()==null?BigDecimal.ZERO:appUtmReg.getCumulativeInvest();
                             appUtmReg.setCumulativeInvest(cumulativeInvest.add(accountDecimal));
                             appUtmRegService.update(appUtmReg);
                         } else if (investFlag == 1) {
-                            logger.info("开始更新首次投资信息....userId:"+userId);
-                            // 首次投资
+                            logger.info("开始更新首次出借信息....userId:"+userId);
+                            // 首次出借
                             try{
                                 BigDecimal accountDecimal = entity.getBigDecimal("accountDecimal")==null?BigDecimal.ZERO:entity.getBigDecimal("accountDecimal");
                                 String projectType = entity.getString("projectType");
@@ -102,7 +102,7 @@ public class TenderChannelStatisticsDetailConsumer extends Consumer {
                     UtmReg utmReg = userService.findUtmRegByUserId(userId);
                     if (utmReg != null) {
                         boolean isTender = checkIsNewUserCanInvest(userId);
-                        // 更新渠道统计用户累计投资
+                        // 更新渠道统计用户累计出借
                         if (isTender) {
                             // 更新huiyingdai_utm_reg的首投信息
                             try {

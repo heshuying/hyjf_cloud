@@ -52,8 +52,8 @@ public class CouponBackMoneyCustomize extends BaseVO implements Serializable {
     //应回款日期
     @ApiModelProperty(value = "应回款日期")
     private String recoverTime;
-    //真实投资金额
-    @ApiModelProperty(value = "真实投资金额")
+    //真实出借金额
+    @ApiModelProperty(value = "真实出借金额")
     private String recoverCapital;
     //优惠券使用时间
     @ApiModelProperty(value = "优惠券使用时间")

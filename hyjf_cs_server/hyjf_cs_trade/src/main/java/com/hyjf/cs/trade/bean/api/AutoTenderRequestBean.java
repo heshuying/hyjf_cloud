@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 /**
  * @author libin
- * 自动投资请求参数
+ * 自动出借请求参数
  * @version AutoTenderRequestBean.java, v0.1 2018年8月24日 上午10:48:25
  */
 public class AutoTenderRequestBean extends BaseBean implements Serializable{

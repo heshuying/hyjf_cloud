@@ -621,7 +621,7 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 更新渠道用户首次投资信息
+     * 更新渠道用户首次出借信息
      *
      * @param bean
      * @return

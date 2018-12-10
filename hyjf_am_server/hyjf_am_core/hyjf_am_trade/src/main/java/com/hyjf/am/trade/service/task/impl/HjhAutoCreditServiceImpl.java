@@ -156,7 +156,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
             int duringDays = 0;
             // 循环有效债权信息
             for (HjhDebtDetail hjhDebtDetail : debtDetails) {
-                logger.info("清算计划编号:[" + hjhDebtDetail.getPlanNid() + "],计划加入订单号:" + hjhDebtDetail.getPlanOrderId() + "],投资订单号或承接订单号:[" + hjhDebtDetail.getOrderId() + "].");
+                logger.info("清算计划编号:[" + hjhDebtDetail.getPlanNid() + "],计划加入订单号:" + hjhDebtDetail.getPlanOrderId() + "],出借订单号或承接订单号:[" + hjhDebtDetail.getOrderId() + "].");
                 // 债权原标编号
                 String borrowNid = hjhDebtDetail.getBorrowNid();
                 // 根据标的号查询项目详情
@@ -207,7 +207,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
                 HjhDebtCredit hjhDebtCreditYes = this.selectHjhDebtCreditYes(hjhDebtDetail.getBorrowNid(), hjhDebtDetail.getOrderId());
                 if (hjhDebtCreditYes != null) {
                     // 如果债权已被转让出去,就不进行转让,跳出此次循环
-                    logger.info("债权已被清算出,债权投资订单号:[" + hjhDebtDetail.getOrderId() + "],项目编号:[" + hjhDebtDetail.getBorrowNid() + "].");
+                    logger.info("债权已被清算出,债权出借订单号:[" + hjhDebtDetail.getOrderId() + "],项目编号:[" + hjhDebtDetail.getBorrowNid() + "].");
                     continue;
                 }
                 // 查询完全承接的债权
@@ -216,7 +216,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
                 if (creditCompleteFlag == 2 && assignComplete != null) {
                     // 如果债权已被转让出去,就不进行转让,跳出此次循环
                     // 一笔加入订单 既有完全承接 又有正在还款的还款的债权,此时 不清算
-                    logger.info("债权已被清算出,债权投资订单号:[" + hjhDebtDetail.getInvestOrderId() + "],项目编号:[" + hjhDebtDetail.getBorrowNid() + "].");
+                    logger.info("债权已被清算出,债权出借订单号:[" + hjhDebtDetail.getInvestOrderId() + "],项目编号:[" + hjhDebtDetail.getBorrowNid() + "].");
                     continue;
                 }
                 if (StringUtils.isNotEmpty(hjhDebtDetail.getCreditNid())) {
@@ -228,7 +228,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
                         this.hjhDebtCreditMapper.updateByPrimaryKey(hjhDebtCredit);
                     }
                 }
-                // 根据原始投资订单号查询
+                // 根据原始出借订单号查询
                 BorrowRecover borrowRecover = this.getBrorrowRecoverByInvestOrderId(hjhDebtDetail.getInvestOrderId());
                 if (borrowRecover != null) {
                     borrowRecover.setCreditStatus(1);
@@ -283,7 +283,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
                     if (hjhDebtDetailCur != null) {
                         // 出让人
                         hjhDebtCredit.setSellOrderId(hjhDebtDetailCur.getOrderId());
-                        // 投资订单号
+                        // 出借订单号
                         hjhDebtCredit.setInvestOrderId(hjhDebtDetailCur.getInvestOrderId());
                         // 剩余未还本金
                         BigDecimal capital = hjhDebtDetailCur.getRepayCapitalWait();
@@ -397,7 +397,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
                         hjhDebtCredit.setIsLateCredit(1);
                         // 出让人
                         hjhDebtCredit.setSellOrderId(hjhDebtDetail.getOrderId());
-                        // 投资订单号
+                        // 出借订单号
                         hjhDebtCredit.setInvestOrderId(hjhDebtDetail.getInvestOrderId());
                         // 剩余未还本金
                         BigDecimal capital = hjhDebtDetail.getRepayCapitalWait();
@@ -517,7 +517,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
                         Integer loanTime = hjhDebtDetailCur.getLoanTime();
                         // 出让人
                         hjhDebtCredit.setSellOrderId(hjhDebtDetailCur.getOrderId());
-                        // 投资订单号
+                        // 出借订单号
                         hjhDebtCredit.setInvestOrderId(hjhDebtDetailCur.getInvestOrderId());
 
                         // 说明之前的分期还款正常完成
@@ -743,7 +743,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
                             Integer loanTime = lastTermDebtDetail.getLoanTime();
                             // 出让人
                             hjhDebtCredit.setSellOrderId(lastTermDebtDetail.getOrderId());
-                            // 投资订单号
+                            // 出借订单号
                             hjhDebtCredit.setInvestOrderId(lastTermDebtDetail.getInvestOrderId());
                             // 说明之前的分期还款正常完成
                             hjhDebtCredit.setActualApr(lastTermDebtDetail.getBorrowApr());
@@ -996,14 +996,14 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
             this.updateAccedeCreditCompleteFlag(accedeOrderId,1);
         }
 
-        // 根据加入订单号查询投资的标的
+        // 根据加入订单号查询出借的标的
         List<BorrowTender> borrowTenderList =  this.selectBorrowTenderList(accedeOrderId);
 
         if (borrowTenderList != null && borrowTenderList.size() > 0) {
-            // 循环已投资的投资记录
+            // 循环已出借的出借记录
             for (int i = 0; i < borrowTenderList.size(); i++) {
                 BorrowTender borrowTender = borrowTenderList.get(i);
-                // 判断投资的标的是否未放款
+                // 判断出借的标的是否未放款
                 Borrow tenderBorrow = this.getBorrow(borrowTender.getBorrowNid());
                 if (tenderBorrow == null) {
                     throw new RuntimeException("根据标的编号查询标的信息失败,标的编号:[" + borrowTender.getBorrowNid() + "].");
@@ -1014,7 +1014,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
                 }
                 // 标的状态
                 Integer loanStatus = tenderBorrow.getStatus();
-                // 如果标的状态<4 说明这笔投资的标的未放款完成
+                // 如果标的状态<4 说明这笔出借的标的未放款完成
                 if (loanStatus < 4) {
                     // 更新加入订单的清算标志位为2,需要再次清算
                     this.updateAccedeCreditCompleteFlag(accedeOrderId, 2);
@@ -1080,7 +1080,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
     }
 
     /**
-     * 根据投资订单号,标的编号查询是否债权已被出让
+     * 根据出借订单号,标的编号查询是否债权已被出让
      *
      * @param borrowNid
      * @param investOrderId
@@ -1141,7 +1141,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
     }
 
     /**
-     * 根据原始投资订单号查询放款信息
+     * 根据原始出借订单号查询放款信息
      *
      * @param investOrderId
      * @return
@@ -1314,7 +1314,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
     }
 
     /**
-     * 根据投资订单号查询投资的原始标的
+     * 根据出借订单号查询出借的原始标的
      * @param accedeOrderId
      * @return
      */

@@ -207,11 +207,11 @@ public class PlanListController extends BaseController{
 		form.setDebtMinInvestment(this.getValue(String.valueOf(vo.getMinInvestment())));
 		// 最高加入金额
 		form.setDebtMaxInvestment(this.getValue(String.valueOf(vo.getMaxInvestment())));
-		// 投资增量
+		// 出借增量
 		form.setDebtInvestmentIncrement(this.getValue(String.valueOf(vo.getInvestmentIncrement())));
 		// 可用券配置
 		form.setCouponConfig(this.getValue(String.valueOf(vo.getCouponConfig())));
-		// 投资状态
+		// 出借状态
 		form.setDebtPlanStatus(this.getValue(String.valueOf(vo.getPlanInvestStatus())));
 		// 显示状态
 		form.setPlanDisplayStatusSrch(this.getValue(String.valueOf(vo.getPlanDisplayStatus())));
@@ -227,7 +227,7 @@ public class PlanListController extends BaseController{
 		form.setNormalQuestion(this.getValue(String.valueOf(vo.getNormalQuestions())));
 		// 添加时间
 		form.setAddTime(this.getValue(String.valueOf(vo.getAddTime())));
-		// 最小投资笔数
+		// 最小出借笔数
 		form.setMinInvestCounts(this.getValue(String.valueOf(vo.getMinInvestCounts())));
 	}
 	
@@ -457,16 +457,16 @@ public class PlanListController extends BaseController{
 		// 原 最低加入金额
 		AdminValidatorFieldCheckUtil.validateDecimal(jsonObject, "debtMinInvestment", form.getDebtMinInvestment(), 10, true);
 		/*this.validateDecimal(jsonObject,"最低加入金额",form.getDebtMinInvestment(), 10);*/
-		// 原 投资增量
+		// 原 出借增量
 		AdminValidatorFieldCheckUtil.validateDecimal(jsonObject, "debtInvestmentIncrement", form.getDebtInvestmentIncrement(), 10, true);
-		/*this.validateDecimal(jsonObject,"投资增量",form.getDebtInvestmentIncrement(), 10);*/
+		/*this.validateDecimal(jsonObject,"出借增量",form.getDebtInvestmentIncrement(), 10);*/
 		// 可用券配置
 		if(StringUtils.isEmpty(form.getCouponConfig())){
 			jsonObject.put("errorMsg", "请输入可用券配置！");
 		}
-		// 投资状态
+		// 出借状态
 		if(StringUtils.isEmpty(form.getDebtPlanStatus())){
-			jsonObject.put("errorMsg", "请输入投资状态！");
+			jsonObject.put("errorMsg", "请输入出借状态！");
 		}
 		// 计划介绍
 		if(StringUtils.isEmpty(form.getPlanConcept())){
@@ -491,7 +491,7 @@ public class PlanListController extends BaseController{
 		// 表格sheet名称
 		String sheetName = "计划列表";
 		String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-		String[] titles = new String[] { "序号","计划编号","计划名称", "还款方式","锁定期", "预期年化收益率","最低加入金额（元）","最高加入金额（元）","投资增量（元）", "最小投资笔数", "开放额度（元）", "累计加入金额（元）","待还总额（元）","计划状态","添加时间" };
+		String[] titles = new String[] { "序号","计划编号","计划名称", "还款方式","锁定期", "预期年化收益率","最低加入金额（元）","最高加入金额（元）","出借增量（元）", "最小出借笔数", "开放额度（元）", "累计加入金额（元）","待还总额（元）","计划状态","添加时间" };
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		// 生成一个表格
@@ -571,7 +571,7 @@ public class PlanListController extends BaseController{
 							cell.setCellValue("0.00");
 						}
 					}
-					// 投资增量（元）
+					// 出借增量（元）
 					else if (celLength == 8) {
 						if(hjhPlan.getInvestmentIncrement() != null){
 							cell.setCellValue(hjhPlan.getInvestmentIncrement().toString());
@@ -579,7 +579,7 @@ public class PlanListController extends BaseController{
 							cell.setCellValue("0.00");
 						}
 					}
-					// 最小投资笔数
+					// 最小出借笔数
 					else if (celLength == 9) {
 						if(hjhPlan.getMinInvestCounts() != null){
 							cell.setCellValue(hjhPlan.getMinInvestCounts().toString());
@@ -683,8 +683,8 @@ public class PlanListController extends BaseController{
 		map.put("expectApr", "参考年回报率");
 		map.put("minInvestment", "最低授权服务金额（元）");
 		map.put("maxInvestment", "最高授权服务金额（元）");
-		map.put("investmentIncrement", "投资增量（元）");
-		map.put("minInvestCounts", "最小投资笔数");
+		map.put("investmentIncrement", "出借增量（元）");
+		map.put("minInvestCounts", "最小出借笔数");
 		map.put("availableInvestAccount", "开放额度（元）");
 		map.put("joinTotal", "累计授权服务金额（元）");
 		map.put("repayWaitAll", "待还总额（元）");

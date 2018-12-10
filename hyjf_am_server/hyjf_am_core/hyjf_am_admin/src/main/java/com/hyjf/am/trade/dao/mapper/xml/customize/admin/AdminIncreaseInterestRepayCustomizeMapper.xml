@@ -104,11 +104,11 @@
 		<if test="borrowNidSrch != null and borrowNidSrch != ''">
 			AND hiild.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
 		</if>
-		<!-- 投资人 -->
+		<!-- 出借人 -->
 		<if test="userNameSrch != null and userNameSrch != ''">
 			AND hiild.user_name LIKE CONCAT( #{userNameSrch},'%')
 		</if>
-		<!-- 投资Id -->
+		<!-- 出借Id -->
 		<if test="investIdSrch != null and investIdSrch != ''">
 			AND hiild.invest_id = #{investIdSrch}
 		</if>
@@ -177,11 +177,11 @@
 		<if test="repayStatusSrch != null and repayStatusSrch != ''">
 			AND hiild.repay_status = #{repayStatusSrch}
 		</if>
-		<!-- 投资人 -->
+		<!-- 出借人 -->
 		<if test="userNameSrch != null and userNameSrch != ''">
 			AND hiild.user_name LIKE CONCAT( #{userNameSrch},'%')
 		</if>
-		<!-- 投资Id -->
+		<!-- 出借Id -->
 		<if test="investIdSrch != null and investIdSrch != ''">
 			AND hiild.invest_id = #{investIdSrch}
 		</if>
@@ -224,11 +224,11 @@
 		<if test="borrowNidSrch != null and borrowNidSrch != ''">
 			AND hiild.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
 		</if>
-		<!-- 投资人 -->
+		<!-- 出借人 -->
 		<if test="userNameSrch != null and userNameSrch != ''">
 			AND hiild.user_name LIKE CONCAT( #{userNameSrch},'%')
 		</if>
-		<!-- 投资Id -->
+		<!-- 出借Id -->
 		<if test="investIdSrch != null and investIdSrch != ''">
 			AND hiild.invest_id = #{investIdSrch}
 		</if>

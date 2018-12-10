@@ -37,7 +37,7 @@ public class CalculateInvestInterestServiceImpl implements CalculateInvestIntere
 
     @Override
     public void insertDataInfo() throws MQException {
-        //七天投资数据
+        //七天出借数据
         Map<String, Object> map7 = dataCustomizeMapper.selectDataInfo("7");
         //融资期限分布
         Map<String, Object> mapPeriod = dataCustomizeMapper.selectPeriodInfo();
@@ -51,7 +51,7 @@ public class CalculateInvestInterestServiceImpl implements CalculateInvestIntere
         calculateNew.setBorrowThreeSix(Integer.parseInt(mapPeriod.get("threesex") + ""));
         calculateNew.setBorrowSixTwelve(Integer.parseInt(mapPeriod.get("sextw") + ""));
         calculateNew.setBorrowTwelveUp(Integer.parseInt(mapPeriod.get("tw") + ""));
-        //投资金额分布
+        //出借金额分布
         Map<String, Object> mapTenderMoney = dataCustomizeMapper.selectTendMoneyInfo();
         calculateNew.setInvestOneDown(Integer.parseInt(mapTenderMoney.get("zeroone") + ""));
         calculateNew.setInvestOneFive(Integer.parseInt(mapTenderMoney.get("onefive") + ""));

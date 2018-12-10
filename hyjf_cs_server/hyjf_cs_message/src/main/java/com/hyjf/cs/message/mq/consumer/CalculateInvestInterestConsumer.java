@@ -34,7 +34,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @Description 网站累计投资追加 、  修改mongodb运营数据
+ * @Description 网站累计出借追加 、  修改mongodb运营数据
  * @Author sunss
  * @Date 2018/7/7 15:16
  */
@@ -73,7 +73,7 @@ public class CalculateInvestInterestConsumer extends Consumer {
             for (MessageExt msg : msgs) {
                 JSONObject data = JSONObject.parseObject(msg.getBody(), JSONObject.class);
 
-                // 网站累计投资累加
+                // 网站累计出借累加
                 if (MQConstant.STATISTICS_CALCULATE_INVEST_SUM_TAG.equals(msg.getTags())) {
                     BigDecimal tenderSum = (BigDecimal) data.get("tenderSum");
                     Integer nowTime = (Integer) data.get("nowTime");
@@ -114,7 +114,7 @@ public class CalculateInvestInterestConsumer extends Consumer {
                             logger.error("传入参数错误！type为空！");
                             return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                         }
-                        // 投资增加交易总额
+                        // 出借增加交易总额
                         if (type.equals(1)) {
                             TotalInvestAndInterestEntity entity = totalInvestAndInterestMongoDao.findOne(new Query());
                             // 第一次插入

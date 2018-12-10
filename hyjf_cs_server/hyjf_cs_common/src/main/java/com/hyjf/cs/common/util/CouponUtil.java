@@ -16,7 +16,7 @@ public class CouponUtil {
     public static final int NUM_TWO = 2;
 
     /**
-     * 投资夺宝
+     * 出借夺宝
      */
     public static final int NUM_THREE = 3;
 

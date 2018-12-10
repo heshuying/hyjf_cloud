@@ -12,7 +12,7 @@ spring:
       client:
         url: http://MONITOR-SERVER
   profiles:
-    active: dev
+    active: beta
 eureka:
   client:
     serviceUrl:

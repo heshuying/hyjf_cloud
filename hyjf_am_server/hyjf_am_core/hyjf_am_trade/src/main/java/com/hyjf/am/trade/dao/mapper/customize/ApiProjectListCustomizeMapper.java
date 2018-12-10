@@ -18,7 +18,7 @@ import java.util.Map;
 
 public interface ApiProjectListCustomizeMapper {
     /**
-	 * 获取投资详细信息
+	 * 获取出借详细信息
 	 * @param {instCode：机构编号（必填）,startTime:开始时间（必填），endTime:结束时间（必填），account：电子账号（选填），borrowNid：标的编号}
 	 * @return
 	 */

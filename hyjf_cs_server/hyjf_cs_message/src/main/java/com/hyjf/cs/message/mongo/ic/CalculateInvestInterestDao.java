@@ -21,7 +21,7 @@ public class CalculateInvestInterestDao extends BaseMongoDao<CalculateInvestInte
     }
 
     /**
-     * 获取累计投资金额
+     * 获取累计出借金额
      *
      * @return
      */

@@ -87,10 +87,10 @@ public class CouponRepayMessageConsumer extends Consumer {
                         Thread.sleep(500);
                     }catch(CannotAcquireLockException e){
                         failTimes++;
-                        logger.error("【优惠券还款】发生锁等待超时异常，当前锁等待超时次数：" + failTimes + " 优惠券投资编号:" +ct.getOrderId() + " borrowNid:" + ct.getBorrowNid() , e);
+                        logger.error("【优惠券还款】发生锁等待超时异常，当前锁等待超时次数：" + failTimes + " 优惠券出借编号:" +ct.getOrderId() + " borrowNid:" + ct.getBorrowNid() , e);
                     }catch(Exception e){
                         // 本次优惠券还款失败
-                        logger.error("【优惠券还款】直投类优惠券还款失败，优惠券投资编号："+ct.getOrderId() + " borrowNid:" + ct.getBorrowNid(), e);
+                        logger.error("【优惠券还款】直投类优惠券还款失败，优惠券出借编号："+ct.getOrderId() + " borrowNid:" + ct.getBorrowNid(), e);
                         return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
                     }
                 }

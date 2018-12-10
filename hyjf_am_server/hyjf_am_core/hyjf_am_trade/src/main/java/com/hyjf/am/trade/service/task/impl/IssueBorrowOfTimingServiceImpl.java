@@ -194,11 +194,11 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 
 
 		// DB验证
-		// 有投资金额发生异常
+		// 有出借金额发生异常
 		BigDecimal zero = new BigDecimal("0");
 		BigDecimal borrowAccountYes = borrow.getBorrowAccountYes();
 		if (!(borrowAccountYes == null || borrowAccountYes.compareTo(zero) == 0)) {
-			logger.error(borrowNid + " 定时发标异常：标的已有投资人投资");
+			logger.error(borrowNid + " 定时发标异常：标的已有出借人出借");
 			return false;
 		}
 
@@ -211,7 +211,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		borrow.setStatus(2);
 		// 初审时间
 		borrow.setVerifyTime(nowTime);
-		// 可投资金额
+		// 可出借金额
 		borrow.setBorrowAccountWait(borrow.getAccount());
 		boolean flag = this.borrowMapper.updateByPrimaryKeySelective(borrow) > 0 ? true : false;
 		if (flag) {
@@ -265,11 +265,11 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 
 		//董泽杉要求加redis  add by yagnchangwei 2018-10-15
 		RedisUtils.set(RedisConstants.BORROW_NID+borrow.getBorrowNid(), borrow.getAccount().toString());
-		// 有投资金额发生异常
+		// 有出借金额发生异常
 		BigDecimal zero = new BigDecimal("0");
 		BigDecimal borrowAccountYes = borrow.getBorrowAccountYes();
 		if (!(borrowAccountYes == null || borrowAccountYes.compareTo(zero) == 0)) {
-			logger.error(borrowNid + " 定时发标异常：标的已有投资人投资");
+			logger.error(borrowNid + " 定时发标异常：标的已有出借人出借");
 			return false;
 		}
 
@@ -284,7 +284,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		borrow.setVerifyTime(nowTime);
 		// 0未交保证金 1已交保证金 2暂不发布 3定时发标 4立即发标（立即发标状态的标的才能进汇计划）
 		borrow.setVerifyStatus(4);
-		// 剩余可投资金额
+		// 剩余可出借金额
 		borrow.setBorrowAccountWait(borrow.getAccount());
 		boolean result = this.borrowMapper.updateByPrimaryKeySelective(borrow) > 0 ? true : false;
 		if(result){
@@ -311,7 +311,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 
 		HjhPlanAsset hjhPlanAssetnew = list.get(0);
 		// 受托支付，更新为待授权
-		// 7 投资中
+		// 7 出借中
 		hjhPlanAssetnew.setStatus(7);
 		// 获取当前时间
 		hjhPlanAssetnew.setUpdateUserId(1);
@@ -412,7 +412,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		borrow.setVerifyUserid("auto");
 		// 初审用户
 		borrow.setVerifyUserName("auto");
-		// 可投资金额
+		// 可出借金额
 		borrow.setBorrowAccountWait(borrow.getAccount());
 		boolean flag = this.borrowMapper.updateByPrimaryKeySelective(borrow) > 0 ? true : false;
 		if (flag) {

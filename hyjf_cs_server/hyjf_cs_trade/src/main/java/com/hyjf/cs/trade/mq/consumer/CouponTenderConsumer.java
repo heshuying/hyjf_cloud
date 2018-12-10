@@ -59,19 +59,19 @@ public class CouponTenderConsumer extends Consumer {
         defaultMQPushConsumer.registerMessageListener(new MessageListener());
         // Consumer对象在使用之前必须要调用start初始化，初始化一次即可
         defaultMQPushConsumer.start();
-        logger.info("====散标优惠券投资 start=====");
+        logger.info("====散标优惠券出借 start=====");
     }
 
     public class MessageListener implements MessageListenerConcurrently {
 
         @Override
         public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> list, ConsumeConcurrentlyContext context) {
-            logger.info("散标优惠券投资 收到消息，开始处理....");
+            logger.info("散标优惠券出借 收到消息，开始处理....");
             MessageExt paramBean = list.get(0);
             Map<String, Object> map = new HashMap<>();
             String msgBody = new String(paramBean.getBody());
             map = JSONObject.parseObject(msgBody, Map.class);
-            logger.info("散标优惠券投资请求参数：{}",JSONObject.toJSONString(map));
+            logger.info("散标优惠券出借请求参数：{}",JSONObject.toJSONString(map));
             String couponGrantId = (String) map.get("couponGrantId");
             try {
                 String borrowNid = (String) map.get("borrowNid");

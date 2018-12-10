@@ -39,7 +39,7 @@ public class DataCenterCouponCustomizeVO extends BaseVO {
     private String waitReciveMoney;
     //已过期收益
     private String expireReciveMoney;
-    //累计真实投资金额
+    //累计真实出借金额
     private String realTenderMoney;
     //活动id
     private Integer activityId;

@@ -235,9 +235,9 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
 
         // 第十九列: 查询其中充值≥3000人数
         this.insertSomeColumn(yesterdayStartTime, yesterdayEndTime, 19);
-        // 第二十列: 查询投资≥3000人数
+        // 第二十列: 查询出借≥3000人数
         this.insertSomeColumn(yesterdayStartTime, yesterdayEndTime, 20);
-        // 第二十一列: 查询本月累计投资3000以上新客户数
+        // 第二十一列: 查询本月累计出借3000以上新客户数
         this.insertSomeColumn(totalMonthStartTime, yesterdayEndTime, 21);
     }
 

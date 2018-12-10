@@ -155,7 +155,7 @@ public class ApplyAgreementController extends BaseController {
     }
 
     /**
-     * 获取用户投资协议列表，垫付协议用
+     * 获取用户出借协议列表，垫付协议用
      *
      * @param borrowNid
      * @return
@@ -172,7 +172,7 @@ public class ApplyAgreementController extends BaseController {
         return response;
     }
     /**
-     * 获取用户投资协议列表-分期，垫付协议用
+     * 获取用户出借协议列表-分期，垫付协议用
      *
      * @param nid
      * @param repayPeriod

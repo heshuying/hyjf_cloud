@@ -32,7 +32,7 @@
         userinfo.role_id,
         CASE userinfo.role_id
         WHEN '1' THEN
-        '投资人'
+        '出借人'
         WHEN '2' THEN
         '借款人'
         WHEN ' 3 ' THEN
@@ -45,7 +45,7 @@
         WHEN '1' THEN
         '企业用户'
         END AS userType,
-        <!-- 当用户角色为借款人时，才调取其用户的合作机构编号；投资人则不调取且不显示该字段 start-->
+        <!-- 当用户角色为借款人时，才调取其用户的合作机构编号；出借人则不调取且不显示该字段 start-->
         CASE userinfo.role_id
         WHEN '2' THEN
         users.inst_code

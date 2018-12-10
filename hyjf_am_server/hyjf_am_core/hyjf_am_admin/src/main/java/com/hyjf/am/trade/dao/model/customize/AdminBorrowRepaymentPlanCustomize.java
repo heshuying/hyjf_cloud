@@ -5,7 +5,7 @@ package com.hyjf.am.trade.dao.model.customize;
  * @version AdminBorrowRepaymentPlanCustomize, v0.1 2018/7/5 11:42
  */
 public class AdminBorrowRepaymentPlanCustomize {
-    private String nid;// 投资nid
+    private String nid;// 出借nid
     private String borrowNid;// 借款编号
     private String userId;// 借款人ID
     private String borrowUserName;// 借款人用户名

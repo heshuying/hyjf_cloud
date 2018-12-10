@@ -10,7 +10,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
- * 订单投资异常短信预警
+ * 订单出借异常短信预警
  * @author zhangyk
  * @date 2018/8/15 16:22
  */

@@ -90,7 +90,7 @@ public class DebtFreezeLog implements Serializable {
     private Integer status;
 
     /**
-     * 冻结类型 0投资冻结 
+     * 冻结类型 0出借冻结
      *
      * @mbggenerated
      */

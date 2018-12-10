@@ -31,7 +31,7 @@ public interface WrbQueryCustomizeMapper {
 
 
     /**
-     * 获取某天投资情况汇总
+     * 获取某天出借情况汇总
      * @param timeStart
      * @param timeEnd
      * @return
@@ -39,7 +39,7 @@ public interface WrbQueryCustomizeMapper {
     WrbDaySumCustomize getDaySum(@Param("timeStart")Date timeStart, @Param("timeEnd") Date timeEnd);
 
     /**
-     * 获取投资记录
+     * 获取出借记录
      * @param params
      * @return
      */
@@ -61,7 +61,7 @@ public interface WrbQueryCustomizeMapper {
 
 
     /**
-     * 查询标的投资情况
+     * 查询标的出借情况
      * @param borrowNid
      * @param date
      * @return
@@ -69,7 +69,7 @@ public interface WrbQueryCustomizeMapper {
     List<WrbBorrowTenderCustomize> selectWrbBorrowTender(@Param("borrowNid") String borrowNid, @Param("investTime")Date date);
 
     /**
-     * 根据标的号和日期查询投资情况
+     * 根据标的号和日期查询出借情况
      * @param borrowNid
      * @param date
      * @return
