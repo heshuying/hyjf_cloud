@@ -110,7 +110,7 @@ public class AccountBalanceController extends BaseController {
             form.setPageSize(defaultRowMaxCount);
             form.setCurrPage(i);
             HjhInfoAccountBalanceResponse resultResponse2 = accountBalanceService.getSearchListByDay(form);
-            if (resultResponse2.getRecordList() != null && resultResponse2.getResultList().size()> 0) {
+            if (resultResponse2.getResultList() != null && resultResponse2.getResultList().size()> 0) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultResponse2.getResultList());
             } else {
@@ -189,7 +189,7 @@ public class AccountBalanceController extends BaseController {
             form.setPageSize(defaultRowMaxCount);
             form.setCurrPage(i);
             HjhInfoAccountBalanceResponse resultResponse2 = accountBalanceService.getSearchListByMonth(form);
-            if (resultResponse2.getRecordList() != null && resultResponse2.getResultList().size()> 0) {
+            if (resultResponse2.getResultList() != null && resultResponse2.getResultList().size()> 0) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultResponse2.getResultList());
             } else {
