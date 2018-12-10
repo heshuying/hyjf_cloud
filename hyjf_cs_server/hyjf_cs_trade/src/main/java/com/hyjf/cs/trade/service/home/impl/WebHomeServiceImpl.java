@@ -177,7 +177,13 @@ public class WebHomeServiceImpl implements WebHomeService {
         }*/
         List<ContentArticleVO> noticeList = amTradeClient.getNoticeList(contentArticleRequest);//加缓存
         if(!CollectionUtils.isEmpty(noticeList)){
-            result.setNoticeInfo(noticeList.get(0));
+            ContentArticleVO noticeInfo = noticeList.get(0);
+            // 精简首页不要的返回参数，减少网络消耗 begin add by zyk 2018年12月10日11:36:07
+            noticeInfo.setImgurl("");
+            noticeInfo.setSummary("");
+            noticeInfo.setContent("");
+            // 精简首页不要的返回参数，减少网络消耗 end add by zyk 2018年12月10日11:36:07
+            result.setNoticeInfo(noticeInfo);
         }
         // mod by libin by jetcache end
  
@@ -257,8 +263,21 @@ public class WebHomeServiceImpl implements WebHomeService {
                 }
             }
 
-            result.setCompanyArticle(companyDynamicsList.get(0));
+            // 精简首页不要的返回参数，减少网络消耗 begin add by zyk 2018年12月10日11:42:37
+            ContentArticleVO companArticle =  companyDynamicsList.get(0);
+            companArticle.setImgurl("");
+            companArticle.setSummary("");
+            companArticle.setAuthor("");
+            if (!CollectionUtils.isEmpty(companyDynamicsListSon)){
+                for (ContentArticleVO contentArticleVO : companyDynamicsListSon){
+                    contentArticleVO.setImgurl("");
+                    contentArticleVO.setSummary("");
+                    contentArticleVO.setContent("");
+                }
+            }
+            result.setCompanyArticle(companArticle);
             result.setCompanyDynamicsList(companyDynamicsListSon);
+            // 精简首页不需要的返回参数，减少网络消耗 end add by zyk 2018年12月10日11:42:41
         } else {
             result.setCompanyArticle(new ContentArticleVO());
             result.setCompanyDynamicsList(new ArrayList<>());
