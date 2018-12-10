@@ -101,7 +101,11 @@ public class AccountBalanceController extends BaseController {
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = "";
-        for (int i = 1; i < sheetCount; i++) {
+        if(totalCount==0){
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }
+
+        for (int i = 1; i <= sheetCount; i++) {
             //请求第一页5000条
             form.setPageSize(defaultRowMaxCount);
             form.setCurrPage(i);
@@ -177,10 +181,13 @@ public class AccountBalanceController extends BaseController {
         Map<String, String> beanPropertyColumnMap = monthBuildMap();
         Map<String, IValueFormatter> mapValueAdapter = monthBuildValueAdapter();
         String sheetNameTmp = "";
-        for (int i = 1; i < sheetCount; i++) {
+        if(totalCount==0){
+            helper.export(workbook, sheetName + "_第" + (1) + "页", beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }
+        for (int i = 1; i <= sheetCount; i++) {
             //请求第一页5000条
             form.setPageSize(defaultRowMaxCount);
-            form.setCurrPage(i+1);
+            form.setCurrPage(i);
             HjhInfoAccountBalanceResponse resultResponse2 = accountBalanceService.getSearchListByMonth(form);
             if (resultResponse2.getRecordList() != null && resultResponse2.getResultList().size()> 0) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
