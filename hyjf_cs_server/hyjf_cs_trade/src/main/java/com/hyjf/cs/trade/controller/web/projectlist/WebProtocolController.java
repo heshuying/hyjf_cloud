@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * web协议
@@ -88,5 +89,11 @@ public class WebProtocolController extends BaseController {
     @GetMapping(value = "intermediaryAgreementPDF")
     public void intermediaryAgreementPDF(@ModelAttribute ProtocolRequest form, HttpServletRequest request, HttpServletResponse response){
         webProtocolService.intermediaryAgreementPDF(form,request,response);
+    }
+
+    //todo wangjun 管道破裂测试
+    @GetMapping(value = "test")
+    public void test(HttpServletRequest request, HttpServletResponse response) throws Exception{
+        throw new IOException("测试");
     }
 }
