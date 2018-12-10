@@ -78,9 +78,9 @@ public class AccountBalanceController extends BaseController {
      * @param form
      */
     @ApiOperation(value = "数据中心-汇计划统计", notes = "数据中心-汇计划统计 导出日交易量")
-    @PostMapping("/exportActionByDay")
+    @GetMapping("/exportActionByDay")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT )
-    public void exportActionByDay(@RequestBody HjhAccountBalanceRequest form,HttpServletRequest request,HttpServletResponse response) throws Exception {
+    public void exportActionByDay( HjhAccountBalanceRequest form,HttpServletRequest request,HttpServletResponse response) throws Exception {
 
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
@@ -131,13 +131,13 @@ public class AccountBalanceController extends BaseController {
     }
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
-       /* IValueFormatter dateAdapter = new IValueFormatter() {
+        IValueFormatter dateAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
                 String format = new SimpleDateFormat("yyyy-MM-dd ").format((Date)object);
                 return StringUtils.isEmpty(format) ? StringUtils.EMPTY : format;
             }
-        };*/
+        };
 
         IValueFormatter valueFormatAdapter = new IValueFormatter() {
             @Override
@@ -146,7 +146,7 @@ public class AccountBalanceController extends BaseController {
             }
         };
 
-       // mapAdapter.put("rptDate", dateAdapter);
+        mapAdapter.put("rptDate", dateAdapter);
         mapAdapter.put("investAccount", valueFormatAdapter);
         mapAdapter.put("creditAccount", valueFormatAdapter);
         mapAdapter.put("reinvestAccount", valueFormatAdapter);
@@ -201,12 +201,12 @@ public class AccountBalanceController extends BaseController {
 
     private Map<String, IValueFormatter> monthBuildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
-/*        IValueFormatter dateAdapter = new IValueFormatter() {
+        IValueFormatter dateAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
                 return null==object||"".equals(object) ? StringUtils.EMPTY : object.toString();
             }
-        };*/
+        };
 
         IValueFormatter valueFormatAdapter = new IValueFormatter() {
             @Override
@@ -215,7 +215,7 @@ public class AccountBalanceController extends BaseController {
             }
         };
 
-        //mapAdapter.put("dataFormt", dateAdapter);
+        mapAdapter.put("dataFormt", dateAdapter);
         mapAdapter.put("investAccount", valueFormatAdapter);
         mapAdapter.put("creditAccount", valueFormatAdapter);
         mapAdapter.put("reinvestAccount", valueFormatAdapter);
