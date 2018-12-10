@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -108,7 +109,9 @@ public class CouponJXController extends BaseController {
 	        Map<String, String> beanPropertyColumnMap = buildMap();
 	        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
 	        String sheetNameTmp = "";
-
+			if(totalCount==0){
+				helper.export(workbook, sheetName + "_第" + (1) + "页", beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+			}
 	        for (int i = 1; i <= sheetCount; i++) {
 				int start=(i-1) * defaultRowMaxCount;
 				int end = Math.min(totalCount, i * defaultRowMaxCount);
