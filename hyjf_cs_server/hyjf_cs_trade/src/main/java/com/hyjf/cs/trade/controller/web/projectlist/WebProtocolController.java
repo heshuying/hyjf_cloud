@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * web协议
@@ -67,11 +66,11 @@ public class WebProtocolController extends BaseController {
     }
 
 
-    /**  
+    /**
      *  导出PDF文件 （汇盈金服互联网金融服务平台汇计划投资服务协议）
      * @author zhangyk
-     * @date 2018/11/15 17:09   
-     */  
+     * @date 2018/11/15 17:09
+     */
     @ApiOperation(value = "资产管理-智投-智投详情:投资服务协议" , notes = "资产管理-智投-智投详情:投资服务协议")
     @GetMapping(value = "newHjhInvestPDF")
     public void newHjhInvestPDF(@ModelAttribute ProtocolRequest form, HttpServletRequest request, HttpServletResponse response){
@@ -89,11 +88,5 @@ public class WebProtocolController extends BaseController {
     @GetMapping(value = "intermediaryAgreementPDF")
     public void intermediaryAgreementPDF(@ModelAttribute ProtocolRequest form, HttpServletRequest request, HttpServletResponse response){
         webProtocolService.intermediaryAgreementPDF(form,request,response);
-    }
-
-    //todo wangjun 管道破裂测试
-    @GetMapping(value = "test")
-    public void test(HttpServletRequest request, HttpServletResponse response) throws Exception{
-        throw new IOException("测试");
     }
 }
