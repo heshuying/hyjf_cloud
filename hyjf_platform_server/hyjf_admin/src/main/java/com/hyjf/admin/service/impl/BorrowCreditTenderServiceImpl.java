@@ -363,6 +363,10 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
 
     @Override
     public AdminCreditTenderResponse getCreditTenderResponse(BorrowCreditTenderRequest request) {
+        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
+        BorrowCreditRepayAmRequest req = CommonUtils.convertBean(request, BorrowCreditRepayAmRequest.class);
+        req.setLimitStart(page.getOffset());
+        req.setLimitEnd(page.getLimit());
         return baseClient.postExe(TENDER_LIST_URL, request, AdminCreditTenderResponse.class);
     }
 
