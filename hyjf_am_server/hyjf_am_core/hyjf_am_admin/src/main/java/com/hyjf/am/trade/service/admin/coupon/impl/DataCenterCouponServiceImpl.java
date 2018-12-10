@@ -53,4 +53,14 @@ public class DataCenterCouponServiceImpl extends BaseServiceImpl implements Data
     public List<DataCenterCouponCustomize> getRecordListJX(DadaCenterCouponCustomizeRequest request) {
         return couponUserCustomizeMapper.selectDataCenterCouponJXList(request);
     }
+
+    @Override
+    public int getCountDJ(DadaCenterCouponCustomizeRequest request){
+        return couponUserCustomizeMapper.countDJ(request);
+    }
+
+    @Override
+    public int getCountJX(DadaCenterCouponCustomizeRequest request) {
+        return couponUserCustomizeMapper.countJX(request);
+    }
 }

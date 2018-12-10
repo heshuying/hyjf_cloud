@@ -14,6 +14,11 @@ import java.util.List;
  */
 public interface ProtocolsService {
 	/**
+	 * 获取协议总数
+	 * @return
+	 */
+	int getFddTempletCount();
+	/**
 	 * 获取协议列表
 	 *
 	 * @param request

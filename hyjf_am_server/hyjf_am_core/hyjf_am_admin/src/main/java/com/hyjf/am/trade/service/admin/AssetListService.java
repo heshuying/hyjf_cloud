@@ -15,7 +15,7 @@ import java.util.Map;
 public interface AssetListService {
 	List<AssetListCustomizeVO> findAssetList(Map<String, Object> mapParam,int limitStart, int limitEnd);
 	
-	List<AssetListCustomizeVO> findAssetListWithoutPage(Map<String, Object> mapParam);
+	List<AssetListCustomizeVO> findAssetListWithoutPage(Map<String, Object> mapParam, int limitStart, int limitEnd);
 	
 	AssetDetailCustomizeVO findDetailById(Map<String, Object> mapParam);
 

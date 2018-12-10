@@ -29,11 +29,24 @@ public interface DataCenterCouponService extends BaseService {
      */
     List<DataCenterCouponCustomize> getRecordListDJ(DadaCenterCouponCustomizeRequest request);
 
+
+    /**
+     * 获取加息券列表个数
+     * @param request
+     * @return
+     */
+    int getCountDJ(DadaCenterCouponCustomizeRequest request);
+
     /**
      * 获取加息券列表
      * @param request
      * @return
      */
     List<DataCenterCouponCustomize> getRecordListJX(DadaCenterCouponCustomizeRequest request);
-
+    /**
+     * 获取加息券列表个数
+     * @param request
+     * @return
+     */
+    int getCountJX(DadaCenterCouponCustomizeRequest request);
 }

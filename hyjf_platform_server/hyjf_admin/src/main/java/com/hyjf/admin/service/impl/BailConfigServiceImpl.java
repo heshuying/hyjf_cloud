@@ -6,6 +6,7 @@ package com.hyjf.admin.service.impl;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.BailConfigService;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.resquest.admin.BailConfigAddRequest;
 import com.hyjf.am.resquest.admin.BailConfigRequest;
 import com.hyjf.am.vo.admin.BailConfigCustomizeVO;
@@ -47,7 +48,10 @@ public class BailConfigServiceImpl extends BaseServiceImpl implements BailConfig
     public List<BailConfigCustomizeVO> selectRecordList(BailConfigRequest request) {
         return amAdminClient.selectBailConfigRecordList(request);
     }
-
+    @Override
+    public IntegerResponse countBailConfigRecordList(BailConfigRequest request){
+        return amAdminClient.countBailConfigRecordList(request);
+    }
     /**
      * 更新当前机构可用的还款方式并返回最新保证金详情
      *

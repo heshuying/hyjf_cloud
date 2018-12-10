@@ -107,6 +107,40 @@ public class ChannelReconciliationServiceImpl implements ChannelReconciliationSe
     }
 
     @Override
+    public Integer searchAppActionCount(ChannelReconciliationRequest request) {
+        // app渠道信息
+        AppChannelStatisticsDetailRequest request1 = new AppChannelStatisticsDetailRequest();
+        if (request.getUtmPlat() != null && request.getUtmPlat().length == 1) {
+            request1.setSourceIdSrch(Integer.valueOf(request.getUtmPlat()[0]));
+        }
+        AppUtmRegResponse appResponse = amAdminClient.exportStatisticsList(request1);
+        if (appResponse != null) {
+            List<AppUtmRegVO> appResultList = appResponse.getResultList();
+            if (!CollectionUtils.isEmpty(appResultList)) {
+                List<Integer> userIdList = new ArrayList<>();
+                List<String> list = Arrays.asList(request.getUtmPlat());
+                for (AppUtmRegVO appVo: appResultList) {
+                    Integer sourceId = appVo.getSourceId();
+                    if (list.contains(sourceId.toString())) {
+                        Integer userId = appVo.getUserId();
+                        userIdList.add(userId);
+                    }
+                }
+                request.setUserIdList(userIdList);
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+        // 投资信息
+        ChannelReconciliationResponse response = amAdminClient.selectAppChannelReconciliationCount(request);
+        if (response != null) {
+            return response.getCount();
+        }
+        return 0;
+    }
+    @Override
     public ChannelReconciliationResponse searchAppHJHAction(ChannelReconciliationRequest request) {
         // app渠道信息
         AppChannelStatisticsDetailRequest request1 = new AppChannelStatisticsDetailRequest();
@@ -154,5 +188,40 @@ public class ChannelReconciliationServiceImpl implements ChannelReconciliationSe
             }
         }
         return response;
+    }
+
+    @Override
+    public Integer searchAppHJHCount(ChannelReconciliationRequest request) {
+        // app渠道信息
+        AppChannelStatisticsDetailRequest request1 = new AppChannelStatisticsDetailRequest();
+        if (request.getUtmPlat() != null && request.getUtmPlat().length == 1) {
+            request1.setSourceIdSrch(Integer.valueOf(request.getUtmPlat()[0]));
+        }
+        AppUtmRegResponse appResponse = amAdminClient.exportStatisticsList(request1);
+        if (appResponse != null) {
+            List<AppUtmRegVO> appResultList = appResponse.getResultList();
+            if (!CollectionUtils.isEmpty(appResultList)) {
+                List<Integer> userIdList = new ArrayList<>();
+                List<String> list = Arrays.asList(request.getUtmPlat());
+                for (AppUtmRegVO appVo: appResultList) {
+                    Integer sourceId = appVo.getSourceId();
+                    if (list.contains(sourceId.toString())) {
+                        Integer userId = appVo.getUserId();
+                        userIdList.add(userId);
+                    }
+                }
+                request.setUserIdList(userIdList);
+            } else {
+                return 0;
+            }
+        } else {
+            return 0;
+        }
+        // 投资信息
+        ChannelReconciliationResponse response = amAdminClient.selectAppChannelReconciliationRecordHjhCount(request);
+        if (response != null) {
+            response.getCount();
+        }
+        return 0;
     }
 }

@@ -135,6 +135,53 @@ public class OperationReportController extends BaseController {
 		return response;
 	}
 
+	@ApiOperation(value = "运营报告配置", notes = "运营报告配置数量查询")
+	@PostMapping("/count")
+	public OperationReportResponse count(@RequestBody OperationReportRequest request) {
+		OperationReportResponse response = new OperationReportResponse();
+		Map<String, Object> map = new HashMap<String, Object>();
+		Integer count = 0;
+		map.put("typeSearch", request.getTypeSearch());
+		if (StringUtils.isNotEmpty(request.getStartCreate())) {
+			map.put("timeStar", request.getStartCreate() + " 00:00:00");
+		}
+		if (StringUtils.isNotEmpty(request.getEndCreate())) {
+			map.put("timeEnd", request.getEndCreate() + " 23:59:59");
+		}
+		//根据类型切换查询逻辑
+		if (StringUtils.isNotEmpty(request.getTypeSearch())) {
+			String type = request.getTypeSearch();
+			//1到12月份为month类型
+			int typeInt = Integer.valueOf(type).intValue();
+			if (typeInt <= 12) {
+				map.put("monthType", typeInt);
+				count = operationReportService.countRecordByMonth(map);
+				response.setCount(count);
+				//季度
+			} else if (typeInt == 13 || typeInt == 14) {
+				if (typeInt == 13) {
+					map.put("quarterType", 1);
+				} else if (typeInt == 14) {
+					map.put("quarterType", 3);
+				}
+				count = operationReportService.countRecordByQuarter(map);
+				response.setCount(count);
+				//半年
+			} else if (typeInt == 15) {
+				count = operationReportService.countRecordByHalfYear(map);
+				response.setCount(count);
+				//全年
+			} else if (typeInt == 16) {
+				count = operationReportService.countRecordByYear(map);
+				response.setCount(count);
+			}
+		} else {
+			//查询所有数据
+			count = operationReportService.countRecord(map);
+			response.setCount(count);
+		}
+		return response;
+	}
 
 	/**
 	 *
