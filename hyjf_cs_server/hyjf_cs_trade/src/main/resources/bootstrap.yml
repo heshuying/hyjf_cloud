@@ -38,3 +38,9 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
+info:
+  name: cs_trade
+  version: '@project.version@'
+  encoding: '@project.build.sourceEncoding@'
+  java:
+    version: '@java.version@'

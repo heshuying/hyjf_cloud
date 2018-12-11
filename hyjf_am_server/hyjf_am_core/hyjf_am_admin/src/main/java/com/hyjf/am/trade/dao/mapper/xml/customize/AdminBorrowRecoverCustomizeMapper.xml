@@ -202,6 +202,9 @@
 		<include refid="Where_Clause" />
 		ORDER BY
 		bt.create_time DESC, br.id DESC
+		<if test="limitStart >= 0" >
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
 	</select>
 
 	<resultMap id="selectBorrowRecoverListMap" type="com.hyjf.am.trade.dao.model.customize.AdminBorrowRecoverCustomize">

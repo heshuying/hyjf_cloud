@@ -2514,6 +2514,37 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     /*加入明细 start AM-ADMIN*/
     /**
+     * 查询总条数
+     *
+     * @param form
+     * @return
+     */
+    @Override
+    public AccedeListResponse getAccedeListByParamCount(AccedeListRequest form) {
+        AccedeListResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-trade/accedeList/getAccedeListByParamCount", form, AccedeListResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 分页查询数据
+     * @param form
+     * @return
+     */
+    @Override
+    public AccedeListResponse getAccedeListByParamList(AccedeListRequest form) {
+        AccedeListResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-trade/accedeList/getAccedeListByParamList", form, AccedeListResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
      * 检索加入明细列表
      *
      * @param form
@@ -2979,11 +3010,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @Date
      */
     @Override
-    public List<BorrowRepaymentPlanCustomizeVO> exportRepayClkActBorrowRepaymentInfoList(BorrowRepaymentPlanRequest request) {
+    public AdminBorrowRepaymentResponse exportRepayClkActBorrowRepaymentInfoList(BorrowRepaymentPlanRequest request) {
         String url = "http://AM-ADMIN/am-trade/adminBorrowRepayment/exportRepayClkActBorrowRepaymentInfoList";
         AdminBorrowRepaymentResponse response = restTemplate.postForEntity(url, request, AdminBorrowRepaymentResponse.class).getBody();
         if (response != null) {
-            return response.getBorrowRepaymentPlanList();
+            return response;
         }
         return null;
     }
@@ -3687,9 +3718,12 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @Author : huanghui
      */
     @Override
-    public boolean updateAccountAfterRecharge(AccountRechargeRequest request) {
-        BooleanResponse booleanResponse = restTemplate.postForEntity("http://AM-ADMIN/am-trade/rechargemanagement/updateAccountAfterRecharge", request, BooleanResponse.class).getBody();
-        return booleanResponse.getResultBoolean();
+    public AccountRechargeCustomizeResponse updateAccountAfterRecharge(AccountRechargeRequest request) {
+        AccountRechargeCustomizeResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/rechargemanagement/updateAccountAfterRecharge", request, AccountRechargeCustomizeResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
     }
 
     /**
@@ -6003,6 +6037,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     * @param contractId
     * @return ApplyAgreementInfoVO
     **/
+    @Override
     public ApplyAgreementInfoVO selectApplyAgreementInfoByContractId(String contractId) {
         String url = "http://AM-ADMIN/am-trade/applyAgreement/selectApplyAgreementInfoByContractId/"+contractId;
         ApplyAgreementInfoResponse response = restTemplate.getForEntity(url,ApplyAgreementInfoResponse.class).getBody();

@@ -81,6 +81,12 @@ public interface CsMessageClient {
      * @return
      */
     public OperationReportResponse getRecordList(OperationReportRequest request);
+    /**
+     * 获取全部数量
+     *
+     * @return
+     */
+    OperationReportResponse getRecordCount(OperationReportRequest request);
 
     public OperationReportResponse listByRelease(OperationReportRequest request);
     /**根据id查询运营报告

@@ -38,8 +38,10 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.Date;
@@ -73,8 +75,8 @@ public class WechatjhPlanController extends BaseTradeController {
         tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WECHAT_CLIENT));
         // 神策数据统计 add by liuyang 20180726 start
-        // 神策数据统计事件的预置属性
-        String presetProps = request.getParameter("presetProps");
+        // 从payload里面获取预置属性
+        String presetProps = tender.getPresetProps();
         // 神策数据统计 add by liuyang 20180726 end
         WebResult result = new WebResult();
         WeChatResult weChatResult = new WeChatResult();
@@ -151,4 +153,5 @@ public class WechatjhPlanController extends BaseTradeController {
         result.setObject(resultBean);
         return  result;
     }
+
 }

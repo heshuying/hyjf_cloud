@@ -304,8 +304,8 @@ public class PushMoneyManageController extends BaseController {
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-        requestBean.setCurrPage(1);
-        requestBean.setPageSize(defaultRowMaxCount);
+//        requestBean.setCurrPage(1);
+//        requestBean.setPageSize(defaultRowMaxCount);
         Integer totalCount = pushMoneyManageService.getPushMoneyListCount(requestBean);
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
@@ -341,8 +341,8 @@ public class PushMoneyManageController extends BaseController {
         map.put("username", "提成人");
         map.put("accountId", "电子账号");
         map.put("attribute", "用户属性");
-        map.put("usernameTender", "投资人");
-        map.put("accountTender", "授权服务金额");
+        map.put("usernameTender", "出借人");
+        map.put("accountTender", "出借金额");
         map.put("commission", "提成金额");
         map.put("statusName", "状态");
         map.put("tenderTimeView", "投资时间");

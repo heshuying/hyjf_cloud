@@ -35,6 +35,12 @@
 			<artifactId>spring-boot-admin-starter-client</artifactId>
 		</dependency>
 
+
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+		</dependency>
+
 	</dependencies>
 
 	<build>

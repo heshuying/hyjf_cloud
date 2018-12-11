@@ -328,15 +328,10 @@ public class AccountRechargeController extends BaseController {
             return jsonObject;
         }
 
-        boolean isAccountUpdate = this.rechargeService.updateAccountAfterRecharge(copyRequest);
+        AccountRechargeCustomizeResponse isAccountUpdate = this.rechargeService.updateAccountAfterRecharge(copyRequest);
 
-        if (isAccountUpdate){
-            jsonObject.put("status", BaseResult.SUCCESS);
-            jsonObject.put("statusDesc", BaseResult.SUCCESS_DESC);
-        }else {
-            jsonObject.put("status", Response.FAIL);
-            jsonObject.put("statusDesc", Response.FAIL_MSG);
-        }
+        jsonObject.put("status", isAccountUpdate.getRtn());
+        jsonObject.put("statusDesc", isAccountUpdate.getMessage());
         return jsonObject;
     }
 
@@ -464,6 +459,22 @@ public class AccountRechargeController extends BaseController {
                 }
             }
         };
+        IValueFormatter statusAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                // 充值类型
+                String status = (String) object;
+                if ("1".equals(status)) {
+                    return "充值中";
+                } else if ("2".equals(status)) {
+                    return "充值成功";
+                } else if ("3".equals(status)) {
+                    return "充值失败";
+                } else {
+                    return status;
+                }
+            }
+        };
         IValueFormatter moneyAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
@@ -484,6 +495,7 @@ public class AccountRechargeController extends BaseController {
         mapAdapter.put("fee", feeAdapter);
         mapAdapter.put("fianfuFee", feeAdapter);
         mapAdapter.put("balance", moneyAdapter);
+        mapAdapter.put("status", statusAdapter);
         return mapAdapter;
     }
 

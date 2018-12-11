@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -91,7 +92,7 @@ public class CouponDJController extends BaseController {
     @ApiOperation(value = "导出代金券列表", notes = "导出代金券列表")
 	@GetMapping("/export_dj_action")
 	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_EXPORT })
-	 public void exportToExcel(HttpServletRequest request, HttpServletResponse response, DataCenterCouponBean form) throws Exception {
+	 public void exportToExcel(HttpServletRequest request, HttpServletResponse response) throws Exception {
 	        //sheet默认最大行数
 			int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
 			// 表格sheet名称
@@ -102,26 +103,30 @@ public class CouponDJController extends BaseController {
 	        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
 	        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-			DataCenterCouponCustomizeVO dataCenterCouponCustomize =createDataCenterCouponCustomize(form);
-			List<DataCenterCouponCustomizeVO> resultList  = this.couponService.getRecordListDJ(dataCenterCouponCustomize);
+			DataCenterCouponCustomizeVO dataCenterCouponCustomize = new DataCenterCouponCustomizeVO();
+			//List<DataCenterCouponCustomizeVO> resultList  = this.couponService.getRecordListDJ(dataCenterCouponCustomize);
 	        
-	        Integer totalCount = resultList.size();
-
+	       // Integer totalCount = resultList.size();
+			Integer totalCount = couponService.getCountDJ();
 	        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
 	        Map<String, String> beanPropertyColumnMap = buildMap();
 	        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
 	        String sheetNameTmp = "";
+			if(totalCount==0){
+				helper.export(workbook, sheetName + "_第" + (1) + "页", beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+			}
 	        for (int i = 1; i <= sheetCount; i++) {
 				int start=(i-1) * defaultRowMaxCount;
 				int end = Math.min(totalCount, i * defaultRowMaxCount);
-
+				dataCenterCouponCustomize.setLimitStart(start);
+				dataCenterCouponCustomize.setLimitEnd(end);
+				List<DataCenterCouponCustomizeVO> resultList  = this.couponService.getRecordListDJ(dataCenterCouponCustomize);
 				sheetNameTmp = sheetName + "_第" + (i) + "页";
-				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList.subList(start, end));
+				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
 	        }
 	        
 	        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
 	    }
-
 		private Map<String, String> buildMap() {
 			Map<String, String> map = Maps.newLinkedHashMap();
 			map.put("title", "来源");

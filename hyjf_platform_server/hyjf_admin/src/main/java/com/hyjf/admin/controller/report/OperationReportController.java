@@ -249,8 +249,7 @@ public class OperationReportController extends BaseController {
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
-        OperationReportResponse operationReportResponse = operationReportService.getRecordList(form);
-        Integer totalCount = operationReportResponse.getCount();
+        Integer totalCount = operationReportService.getRecordCount(form);
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();

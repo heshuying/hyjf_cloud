@@ -16,6 +16,12 @@
         <result column="update_user_name" property="updateUserName" jdbcType="VARCHAR" />
 
     </resultMap>
+    <select id="countFddTemplet" resultType="java.lang.Integer">
+        select
+          count(*)
+        from
+          ht_fdd_templet
+    </select>
 	 <select id="selectFddTempletList" resultMap="selectFddTempletListMap" parameterType="com.hyjf.am.trade.dao.model.customize.FddTempletCustomize">
         SELECT
         id,

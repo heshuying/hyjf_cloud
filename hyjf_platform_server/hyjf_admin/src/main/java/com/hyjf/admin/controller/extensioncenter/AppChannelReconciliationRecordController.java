@@ -14,7 +14,6 @@ import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.resquest.admin.ChannelReconciliationRequest;
 import com.hyjf.am.vo.admin.UtmVO;
-import com.hyjf.am.vo.admin.promotion.channel.ChannelReconciliationVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
@@ -22,10 +21,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -102,66 +98,56 @@ public class AppChannelReconciliationRecordController extends BaseController {
      * @param request
      * @param response
      */
-    @ApiOperation(value = "导出散标列表", notes = "导出散标列表")
-    @PostMapping("/export")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-	 public void exportToExcel(HttpServletRequest request, HttpServletResponse response, @RequestBody ChannelReconciliationRequest channelReconciliationRequest) throws Exception {
-        List<UtmVO> list = channelService.searchUtmList(1);
-
-        // 表格sheet名称
-        String sheetName = "PC渠道对账-散标";
-
-        if (channelReconciliationRequest.getUtmPlat() == null) {
-            List<String> utmList = new ArrayList<>();
-            for (UtmVO vo : list) {
-                if (Objects.equals(vo.getDelFlag(), 0)) {
-                    utmList.add(vo.getSourceId().toString());
+        @ApiOperation(value = "导出散标列表", notes = "导出散标列表")
+        @PostMapping("/export")
+        @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
+        public void exportToExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody  ChannelReconciliationRequest channelReconciliationRequest) throws Exception {
+            List<UtmVO> list = channelService.searchUtmList(1);
+            // 表格sheet名称
+            String sheetName = "PC渠道对账-散标";
+            if (channelReconciliationRequest.getUtmPlat() == null) {
+                List<String> utmList = new ArrayList<>();
+                for (UtmVO vo : list) {
+                    if (Objects.equals(vo.getDelFlag(), 0)) {
+                        utmList.add(vo.getSourceId().toString());
+                    }
+                }
+                String[] integers = new String[utmList.size()];
+                String[] array = utmList.toArray(integers);
+                channelReconciliationRequest.setUtmPlat(array);
+            }
+            //sheet默认最大行数
+            int defaultRowMaxCount = 2;
+            // 文件名称
+            String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
+            // 声明一个工作薄
+            SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+            DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+            //查询总条数
+            Integer totalCount   = channelService.searchAppActionCount(channelReconciliationRequest);
+            int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+            Map<String, String> beanPropertyColumnMap = buildMap();
+            Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
+            String sheetNameTmp = sheetName + "_第1页";
+            if (totalCount == 0) {
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+            } else {
+                for (int i = 1; i <= sheetCount; i++) {
+                    //请求第一页5000条
+                    channelReconciliationRequest.setPageSize(defaultRowMaxCount);
+                    channelReconciliationRequest.setCurrPage(i);
+                    ChannelReconciliationResponse channelReconciliationResponse = channelService.searchAppAction(channelReconciliationRequest);
+                    if (channelReconciliationResponse != null && channelReconciliationResponse.getResultList().size()> 0) {
+                        sheetNameTmp = sheetName + "_第" + (i ) + "页";
+                        helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,channelReconciliationResponse.getResultList());
+                    } else {
+                        break;
+                    }
                 }
             }
-            String[] integers = new String[utmList.size()];
-            String[] array = utmList.toArray(integers);
-            channelReconciliationRequest.setUtmPlat(array);
+            DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
         }
 
-        ChannelReconciliationResponse channelReconciliationResponse = channelService.searchAppAction(channelReconciliationRequest);
-        List<ChannelReconciliationVO> recordList=null;
-        if(channelReconciliationResponse != null) {
-           recordList = channelReconciliationResponse.getResultList();
-        }else {
-        	recordList=new ArrayList<ChannelReconciliationVO>();
-        }
-	        //sheet默认最大行数
-	        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
-
-	        // 文件名称
-	        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
-	        // 声明一个工作薄
-	        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
-	        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
-	        
-	        Integer totalCount = recordList.size();
-
-	        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
-	        Map<String, String> beanPropertyColumnMap = buildMap();
-	        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
-	        String sheetNameTmp = sheetName + "_第1页";
-	        if (totalCount == 0) {
-	            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-	        }else {
-	            // 当前下载数据超过一页上限
-	          if(defaultRowMaxCount < recordList.size()) {
-              helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.subList(0, defaultRowMaxCount));
-              for (int i = 1; i < sheetCount; i++) {
-                  sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-                  helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.subList(defaultRowMaxCount * i, defaultRowMaxCount * (i + 1)));
-              }
-          } else {
-              helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.subList(0, recordList.size()));
-          }
-      }
-	        
-	        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
-	    }
 	    private Map<String, String> buildMap() {
 	        Map<String, String> map = Maps.newLinkedHashMap();
 	        map.put("userName", "用户名");
@@ -205,7 +191,7 @@ public class AppChannelReconciliationRecordController extends BaseController {
     @ApiOperation(value = "导出计划列表", notes = "导出计划列表")
     @PostMapping("/export_hjh")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-	 public void exportHjhAction(HttpServletRequest request, HttpServletResponse response, @RequestBody ChannelReconciliationRequest channelReconciliationRequest) throws Exception {
+    public void exportHjhAction(HttpServletRequest request, HttpServletResponse response,@RequestBody  ChannelReconciliationRequest channelReconciliationRequest) throws Exception {
         // 表格sheet名称
         String sheetName = "PC渠道对账-智投服务";
         List<UtmVO> list = channelService.searchUtmList(1);
@@ -221,45 +207,36 @@ public class AppChannelReconciliationRecordController extends BaseController {
             String[] array = utmList.toArray(integers);
             channelReconciliationRequest.setUtmPlat(array);
         }
-        ChannelReconciliationResponse channelReconciliationResponse = channelService.searchAppHJHAction(channelReconciliationRequest);
-            List<ChannelReconciliationVO> recordList =null;
-	        if(channelReconciliationResponse != null) {
-	           recordList = channelReconciliationResponse.getResultList();
-	        }else {
-	        	recordList=new ArrayList<ChannelReconciliationVO>();
-	        }
-		        //sheet默认最大行数
-		        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
-
-		        // 文件名称
-		        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
-		        // 声明一个工作薄
-		        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
-		        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
-		        
-		        Integer totalCount = recordList.size();
-
-		        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
-		        Map<String, String> beanPropertyColumnMap = buildMap2();
-		        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter2();
-		        String sheetNameTmp = sheetName + "_第1页";
-		        if (totalCount == 0) {
-		            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-		        }else {
-		            // 当前下载数据超过一页上限
-		            if(defaultRowMaxCount < recordList.size()) {
-	              helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.subList(0, defaultRowMaxCount));
-	              for (int i = 1; i < sheetCount; i++) {
-	                  sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-	                  helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.subList(defaultRowMaxCount * i, defaultRowMaxCount * (i + 1)));
-	              }
-	          } else {
-	              helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.subList(0, recordList.size()));
-	          }
-	      }
-		        
-		        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
-		    }
+        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+        // 文件名称
+        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + ".xlsx";
+        // 声明一个工作薄
+        SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
+        DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        //查询总条数
+        Integer totalCount = channelService.searchAppHJHCount(channelReconciliationRequest);
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
+        Map<String, String> beanPropertyColumnMap = buildMap2();
+        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter2();
+        String sheetNameTmp = sheetName + "_第1页";
+        if (totalCount == 0) {
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        } else {
+            for (int i = 1; i <= sheetCount; i++) {
+                //请求第一页5000条
+                channelReconciliationRequest.setPageSize(defaultRowMaxCount);
+                channelReconciliationRequest.setCurrPage(i);
+                ChannelReconciliationResponse channelReconciliationResponse = channelService.searchAppHJHAction(channelReconciliationRequest);
+                if (channelReconciliationResponse != null && channelReconciliationResponse.getResultList().size() > 0) {
+                    sheetNameTmp = sheetName + "_第" + (i) + "页";
+                    helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, channelReconciliationResponse.getResultList());
+                } else {
+                    break;
+                }
+            }
+        }
+        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
+    }
     //{ "序号", "用户名", "渠道","注册时间", "智投订单号", "智投编号", "服务回报期限", "授权服务金额","是否首投", "投资时间" };
 		    private Map<String, String> buildMap2() {
 		        Map<String, String> map = Maps.newLinkedHashMap();
