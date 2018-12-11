@@ -1,6 +1,8 @@
 package com.hyjf.am.trade.service.admin.finance;
 
 import com.hyjf.am.resquest.admin.AccountRechargeRequest;
+import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
 import com.hyjf.am.trade.dao.model.customize.RechargeManagementCustomize;
 
 import java.util.List;
@@ -43,7 +45,7 @@ public interface RechargeManagementService {
      * @return
      * @Author : huanghui
      */
-    boolean updateAccountAfterRecharge(Integer userId, String nid);
+    boolean updateAccountAfterRecharge(Integer userId, String nid) throws Exception;
 
     /**
      * 充值失败后,更新用户订单状态
@@ -53,4 +55,18 @@ public interface RechargeManagementService {
      * @Author : huanghui
      */
     boolean updateAccountAfterRechargeFail(Integer userId, String nid);
+
+    /**
+     * 用户信息
+     * @param userId
+     * @return
+     */
+    Account getAccountByUserId(Integer userId);
+
+    /**
+     * 根据订单号nid获取充值信息
+     * @param nid
+     * @return
+     */
+    AccountRecharge getAccountRechargeByNid(String nid);
 }

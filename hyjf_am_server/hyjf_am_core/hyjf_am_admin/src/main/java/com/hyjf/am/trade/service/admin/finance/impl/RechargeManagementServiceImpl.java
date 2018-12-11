@@ -6,10 +6,7 @@ import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountRechargeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.AccountRechargeCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.AdminAccountCustomizeMapper;
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.AccountExample;
-import com.hyjf.am.trade.dao.model.auto.AccountList;
-import com.hyjf.am.trade.dao.model.auto.AccountRechargeExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.RechargeManagementCustomize;
 import com.hyjf.am.trade.service.admin.finance.RechargeManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +38,13 @@ public class RechargeManagementServiceImpl implements RechargeManagementService 
 
     @Autowired
     private AccountListMapper accountListMapper;
+
+    // 充值状态:充值中
+    private static final int RECHARGE_STATUS_WAIT = 1;
+    // 充值状态:成功
+    private static final int RECHARGE_STATUS_SUCCESS = 2;
+    // 充值状态:失败
+    private static final int RECHARGE_STATUS_FAIL = 3;
 
     /**
      * 充值列表总条数
@@ -79,13 +83,13 @@ public class RechargeManagementServiceImpl implements RechargeManagementService 
 
         criteria.andUserIdEqualTo(userId);
         criteria.andNidEqualTo(nid);
-        criteria.andStatusEqualTo(3);
-        List<com.hyjf.am.trade.dao.model.auto.AccountRecharge> rechargeList = accountRechargeMapper.selectByExample(accountRechargeExample);
+        criteria.andStatusEqualTo(RECHARGE_STATUS_FAIL);
+        List<AccountRecharge> rechargeList = accountRechargeMapper.selectByExample(accountRechargeExample);
 
         if (rechargeList != null && rechargeList.size() ==1){
-            com.hyjf.am.trade.dao.model.auto.AccountRecharge recharge = rechargeList.get(0);
+            AccountRecharge recharge = rechargeList.get(0);
             // 将充值状态改为充值中
-            recharge.setStatus(1);
+            recharge.setStatus(RECHARGE_STATUS_WAIT);
             boolean isUpdateFlag = accountRechargeMapper.updateByPrimaryKeySelective(recharge) > 0 ? true : false;
             if (!isUpdateFlag){
                 return false;
@@ -103,31 +107,22 @@ public class RechargeManagementServiceImpl implements RechargeManagementService 
      * @Author : huanghui
      */
     @Override
-    public boolean updateAccountAfterRecharge(Integer userId, String nid) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public boolean updateAccountAfterRecharge(Integer userId, String nid) throws Exception {
 
-        Date dNow = new Date();
-
-        String nowDate = dateFormat.format(dNow);
-        Date today = null;
-        try {
-            today = dateFormat.parse(nowDate);
-        }catch (ParseException e){
-            e.printStackTrace();
-        }
 
         // 根据用户ID查询用户账户信息
         Account account = this.getAccountByUserId(userId);
         // 根据充值订单号查询用户充值信息
-        com.hyjf.am.trade.dao.model.auto.AccountRecharge accountRecharge = this.getAccountRecharge(nid, userId);
+        AccountRecharge accountRecharge = this.getAccountRecharge(nid, userId);
 
         if (accountRecharge != null) {
             // 更新提现记录状态:更新为充值成功
-            accountRecharge.setStatus(2);
+            accountRecharge.setStatus(RECHARGE_STATUS_SUCCESS);
             boolean isRechargeFlag = this.accountRechargeMapper.updateByPrimaryKeySelective(accountRecharge) > 0 ? true : false;
-//            if (!isRechargeFlag) {
-//                throw new Exception("后台确认充值:更新用户充值记录失败~~~~! 用户ID:" + userId);
-//            }
+            if (!isRechargeFlag) {
+                throw new Exception("后台确认充值:更新用户充值记录失败~~~~! 用户ID:" + userId);
+            }
+
             // 更新用户账户信息
             Account newAccount = new Account();
             newAccount.setUserId(account.getUserId());
@@ -135,9 +130,10 @@ public class RechargeManagementServiceImpl implements RechargeManagementService 
             newAccount.setBankBalance(accountRecharge.getBalance()); // 累加可用余额
             newAccount.setBankBalanceCash(accountRecharge.getBalance());// 银行账户可用户
             boolean isAccountUpdateFlag = this.adminAccountCustomizeMapper.updateBankRechargeSuccess(newAccount) > 0 ? true : false;
-//            if (!isAccountUpdateFlag) {
-//                throw new Exception("后台确认充值:更新用户账户信息失败~~~~! 用户ID:" + userId);
-//            }
+            if (!isAccountUpdateFlag) {
+                throw new Exception("后台确认充值:更新用户账户信息失败~~~~! 用户ID:" + userId);
+            }
+
             // 插入交易明细
             // 重新获取用户账户信息
             account = this.getAccountByUserId(userId);
@@ -186,9 +182,9 @@ public class RechargeManagementServiceImpl implements RechargeManagementService 
             accountList.setTradeStatus(1);// 成功状态
             // 插入交易明细
             boolean isAccountListUpdateFlag = this.accountListMapper.insertSelective(accountList) > 0 ? true : false;
-//            if (!isAccountListUpdateFlag) {
-//                throw new Exception("手动处理充值掉单,插入用户交易明细失败~~,用户ID:" + userId);
-//            }
+            if (!isAccountListUpdateFlag) {
+                throw new Exception("手动处理充值掉单,插入用户交易明细失败~~,用户ID:" + userId);
+            }
             return isAccountListUpdateFlag;
         }
         return false;
@@ -206,10 +202,10 @@ public class RechargeManagementServiceImpl implements RechargeManagementService 
         boolean isUpdateRechargeFalse = false;
 
         // 根据订单号,用户ID查询用户充值订单
-        com.hyjf.am.trade.dao.model.auto.AccountRecharge accountRecharge = this.getAccountRecharge(nid, userId);
+        AccountRecharge accountRecharge = this.getAccountRecharge(nid, userId);
         if (accountRecharge != null){
-            if (accountRecharge.getStatus() == 1){
-                accountRecharge.setStatus(3);
+            if (accountRecharge.getStatus() == RECHARGE_STATUS_WAIT){
+                accountRecharge.setStatus(RECHARGE_STATUS_FAIL);
                 isUpdateRechargeFalse = this.accountRechargeMapper.updateByPrimaryKeySelective(accountRecharge) > 0 ? true : false;
             }
         }
@@ -223,12 +219,12 @@ public class RechargeManagementServiceImpl implements RechargeManagementService 
      * @return
      * @Author : huanghui
      */
-    private com.hyjf.am.trade.dao.model.auto.AccountRecharge getAccountRecharge(String nid, Integer userId) {
+    private AccountRecharge getAccountRecharge(String nid, Integer userId) {
         AccountRechargeExample example = new AccountRechargeExample();
         AccountRechargeExample.Criteria cra = example.createCriteria();
         cra.andNidEqualTo(nid);
         cra.andUserIdEqualTo(userId);
-        cra.andStatusEqualTo(1);
+        cra.andStatusEqualTo(RECHARGE_STATUS_WAIT);
         List<com.hyjf.am.trade.dao.model.auto.AccountRecharge> rechargeList = this.accountRechargeMapper.selectByExample(example);
         if (rechargeList != null && rechargeList.size() > 0) {
             return rechargeList.get(0);
@@ -236,13 +232,34 @@ public class RechargeManagementServiceImpl implements RechargeManagementService 
         return null;
     }
 
-    private Account getAccountByUserId(Integer userId) {
+    @Override
+    public Account getAccountByUserId(Integer userId) {
         AccountExample example = new AccountExample();
         AccountExample.Criteria cra = example.createCriteria();
         cra.andUserIdEqualTo(userId);
         List<Account> accountList = this.accountMapper.selectByExample(example);
         if (accountList != null && accountList.size() > 0) {
             return accountList.get(0);
+        }
+        return null;
+    }
+
+    /**
+     * 根据订单号nid获取充值信息
+     *
+     * @param nid
+     * @return
+     */
+    @Override
+    public AccountRecharge getAccountRechargeByNid(String nid) {
+
+        AccountRechargeExample accountRechargeExample = new AccountRechargeExample();
+        AccountRechargeExample.Criteria aCriteria = accountRechargeExample.createCriteria();
+        aCriteria.andNidEqualTo(nid);
+        aCriteria.andStatusEqualTo(RECHARGE_STATUS_WAIT);
+        List<AccountRecharge> accountRecharges = this.accountRechargeMapper.selectByExample(accountRechargeExample);
+        if (accountRecharges != null && accountRecharges.size() == 1) {
+            return accountRecharges.get(0);
         }
         return null;
     }
