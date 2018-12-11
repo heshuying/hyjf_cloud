@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @author yaoyong
@@ -29,7 +30,9 @@ public class CalculateInvestInterestController extends BaseController {
     public StringResponse calculate() {
         logger.info("平台数据统计定时任务......");
         try {
-            calculateInvestInterestService.insertDataInfo();
+            //融资期限分布
+            Map<String, Object> mapPeriod = calculateInvestInterestService.selectPeriodInfo();
+            calculateInvestInterestService.insertDataInfo(mapPeriod);
             Date date = new Date();
             SimpleDateFormat sdf = new SimpleDateFormat("dd");
             String strdate = sdf.format(date);
