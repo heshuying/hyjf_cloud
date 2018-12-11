@@ -36,11 +36,9 @@ public class CalculateInvestInterestServiceImpl implements CalculateInvestIntere
     private CalculateInvestInterestProducer calculateInvestInterestProducer;
 
     @Override
-    public void insertDataInfo() throws MQException {
+    public void insertDataInfo(Map<String, Object> mapPeriod) throws MQException {
         //七天投资数据
         Map<String, Object> map7 = dataCustomizeMapper.selectDataInfo("7");
-        //融资期限分布
-        Map<String, Object> mapPeriod = dataCustomizeMapper.selectPeriodInfo();
         //保证金统计
         WebHomePageStatisticsCustomize homeStatistics = webHomePageCustomizeMapper.countTotalStatistics();
         CalculateInvestInterestVO calculateNew = new CalculateInvestInterestVO();
@@ -67,5 +65,10 @@ public class CalculateInvestInterestServiceImpl implements CalculateInvestIntere
     @Override
     public void insertAYearTenderInfo() {
         dataCustomizeMapper.insertHyjfTenderMonthInfo();
+    }
+
+    @Override
+    public Map<String, Object> selectPeriodInfo() {
+        return dataCustomizeMapper.selectPeriodInfo();
     }
 }
