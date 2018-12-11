@@ -1,5 +1,7 @@
 package com.hyjf.cs.trade.bean;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.util.List;
 
 /**
@@ -7,17 +9,14 @@ import java.util.List;
  */
 public class AemsPushRequestBean extends BaseBean {
 
-	/**
-	 * 结构产品类型
-	 */
+
+	@ApiModelProperty(value = "结构产品类型")
     private Integer assetType;
-	/**
-	 * 资产列表请求明细
-	 */
+
+	@ApiModelProperty(value = "资产列表请求明细")
 	private List<AemsPushBean> reqData;
-	/**
-	 * 商铺信息
-	 */
+
+	@ApiModelProperty(value = "商铺信息")
 	private List<AemsInfoBean> riskInfo;
 
 	public List<AemsPushBean> getReqData() {

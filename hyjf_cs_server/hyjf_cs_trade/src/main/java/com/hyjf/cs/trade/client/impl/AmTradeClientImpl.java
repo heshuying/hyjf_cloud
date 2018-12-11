@@ -311,6 +311,21 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * AMES借款人受托支付申请异步回调更新数据
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public boolean updateAemsTrusteePaySuccess(String borrowNid){
+        String url = "http://AM-TRADE/am-trade/trustee/update/" + borrowNid;
+        BooleanResponse response = restTemplate.getForEntity(url, BooleanResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultBoolean();
+        }
+        return false;
+    }
+
+    /**
      * 根据用户id查询受托支付白名单
      *
      * @param userId
@@ -4920,6 +4935,15 @@ public class AmTradeClientImpl implements AmTradeClient {
                 String.class).getBody();
         if (result != null) {
         return result;
+        }
+        return null;
+    }
+
+    public List<BorrowAndInfoVO> getborrowByProductId (Map<String, Object> params){
+        BorrowResponse response =  restTemplate.postForEntity(
+                "http://AM-TRADE/am-trade/borrow/getborrowByProductId/",params, BorrowResponse.class).getBody();
+        if (response != null) {
+            return response.getResultList();
         }
         return null;
     }

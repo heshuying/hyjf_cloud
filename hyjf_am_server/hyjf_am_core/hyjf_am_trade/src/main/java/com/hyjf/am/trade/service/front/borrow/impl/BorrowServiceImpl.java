@@ -779,6 +779,15 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     }
 
     @Override
+    public List<BorrowAndInfoVO> getborrowByProductId(Map<String, Object> params){
+        List<BorrowAndInfoVO> borrows = this.hjhPlanCustomizeMapper.getPlanBorrowList(params);
+        if (borrows != null && borrows.size() > 0) {
+            return borrows;
+        }
+        return null;
+    }
+
+    @Override
     public List<WebUserRepayProjectListCustomizeVO> selectOrgRepayProjectList(Map<String, Object> params){
         return webUserRepayListCustomizeMapper.selectOrgRepayProjectList(params);
     }
