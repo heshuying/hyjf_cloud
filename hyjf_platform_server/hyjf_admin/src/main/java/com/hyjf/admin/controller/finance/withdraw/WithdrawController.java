@@ -260,7 +260,7 @@ public class WithdrawController extends BaseController {
 			@Override
 			public String format(Object object) {
 				String str = (String) object;
-				return StringUtils.isNotBlank(str) ? "" : String.valueOf(str);
+				return StringUtils.isNotBlank(str) ? String.valueOf(str) : "";
 			}
 		};
 		IValueFormatter userAttributeAdapter = new IValueFormatter() {
