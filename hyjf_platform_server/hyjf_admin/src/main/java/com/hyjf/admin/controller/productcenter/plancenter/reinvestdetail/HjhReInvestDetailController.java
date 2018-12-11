@@ -168,11 +168,11 @@ public class HjhReInvestDetailController extends BaseController {
     public void exportAction(HttpServletRequest request, HttpServletResponse response, HjhReInvestDetailRequestBean requestBean) throws Exception {
 
         if (StringUtils.isEmpty(requestBean.getDate())){
-            logger.info("复投原始标的列表导出日期为空无法导出!");
+            logger.error("复投原始标的列表导出日期为空无法导出!");
         }
 
         if (StringUtils.isEmpty(requestBean.getPlanNid())){
-            logger.info("复投原始标的列表导出智投编号为空无法导出!");
+            logger.error("复投原始标的列表导出智投编号为空无法导出!");
         }
 
         //sheet默认最大行数

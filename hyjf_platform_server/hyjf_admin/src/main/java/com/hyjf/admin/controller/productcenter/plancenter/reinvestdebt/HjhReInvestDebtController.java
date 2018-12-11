@@ -162,11 +162,11 @@ public class HjhReInvestDebtController extends BaseController {
     @PostMapping(value = "/exportAction")
     public void exportAction(HttpServletRequest request, HttpServletResponse response, HjhReInvestDebtRequest requestBean) throws Exception {
         if (StringUtils.isEmpty(requestBean.getDate())){
-            logger.info("复投承接债权导出日期为空无法导出!");
+            logger.error("复投承接债权导出日期为空无法导出!");
         }
 
         if (StringUtils.isEmpty(requestBean.getPlanNid())){
-            logger.info("复投承接债权导出智投编号为空无法导出!");
+            logger.error("复投承接债权导出智投编号为空无法导出!");
         }
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
