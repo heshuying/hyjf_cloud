@@ -109,4 +109,9 @@ public class TestProducerController {
 		
 		return "OK";
 	}
+
+	@RequestMapping("/send")
+	public void send() {
+		rocketMQTemplate.syncSend("BROADCAST_TEST_TOPIC", "Hello, World!11111111");
+	}
 }
