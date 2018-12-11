@@ -330,7 +330,7 @@ public class WebHomeServiceImpl implements WebHomeService {
      */
     @Override
     public void androidDownload(HttpServletResponse response) {
-        String url = "http://app.hyjf.com/data/download/com.huiyingdai.apptest_wangye.apk";
+        String url = "";
         VersionVO versionVO = amConfigClient.getLastestVersion();
         if( versionVO != null && StringUtils.isNotBlank(versionVO.getUrl())){
             url = versionVO.getUrl().trim();

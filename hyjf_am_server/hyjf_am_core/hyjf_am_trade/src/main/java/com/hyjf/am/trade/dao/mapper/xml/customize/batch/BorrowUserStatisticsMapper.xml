@@ -84,68 +84,32 @@
     </select>
 
     <select id="sumBorrowUserMoneyTopOne" resultType="java.math.BigDecimal">
-        	SELECT
-			IFNULL(SUM(tt.waitSum), 0)
-		    FROM
-			(
-				SELECT
-					*
-				FROM
-					(
-						SELECT
-							SUM(b.repay_account_capital_wait) AS waitSum
-						FROM
-							ht_borrow b JOIN ht_borrow_user u ON b.borrow_nid = u.borrow_nid
-						WHERE
-							b.`status` = 4
-						GROUP BY
-							u.username
-		        UNION ALL
-		        SELECT
-							SUM(b.repay_account_capital_wait) AS waitSum
-						FROM
-							ht_borrow b JOIN ht_borrow_maninfo m ON b.borrow_nid = m.borrow_nid
-						WHERE
-							b.`status` = 4
-						GROUP BY
-							m.card_no
-					) t
-				ORDER BY
-					t.waitSum DESC
-				LIMIT 1
-			) tt
+        	select sum(waitsum)
+				from (SELECT  SUM(b.repay_account_capital_wait) AS waitsum
+							FROM  ht_borrow b
+							inner JOIN   (select borrow_nid,u.username from ht_borrow_user u
+										union all
+										select borrow_nid,card_no from ht_borrow_maninfo m
+										) u  ON b.borrow_nid = u.borrow_nid
+							WHERE    b.`status` = 4
+							GROUP BY  u.username
+						ORDER BY  SUM(b.repay_account_capital_wait) DESC
+       			 LIMIT 1
+		) a
     </select>
 
     <select id="sumBorrowUserMoneyTopTen" resultType="java.math.BigDecimal">
-        SELECT
-			IFNULL(SUM(tt.waitSum), 0)
-		FROM
-			(
-				SELECT
-					*
-				FROM
-					(
-						SELECT
-							SUM(b.repay_account_capital_wait) AS waitSum
-						FROM
-							ht_borrow b JOIN ht_borrow_user u ON b.borrow_nid = u.borrow_nid
-						WHERE
-							b.`status` = 4
-						GROUP BY
-							u.username
-		        UNION ALL
-		        SELECT
-							SUM(b.repay_account_capital_wait) AS waitSum
-						FROM
-							ht_borrow b JOIN ht_borrow_maninfo m ON b.borrow_nid = m.borrow_nid
-						WHERE
-							b.`status` = 4
-						GROUP BY
-							m.card_no
-					) t
-				ORDER BY
-					t.waitSum DESC
-				LIMIT 10
-			) tt
+        select sum(waitsum)
+			from (SELECT  SUM(b.repay_account_capital_wait) AS waitsum
+						FROM  ht_borrow b
+						inner JOIN   (select borrow_nid,u.username from ht_borrow_user u
+									union all
+									select borrow_nid,card_no from ht_borrow_maninfo m
+									) u  ON b.borrow_nid = u.borrow_nid
+						WHERE    b.`status` = 4
+						GROUP BY  u.username
+					ORDER BY  SUM(b.repay_account_capital_wait) DESC
+					LIMIT 10
+		  ) a
     </select>
 </mapper>
