@@ -24,7 +24,7 @@ public class SignUtil {
         String sign = org.apache.commons.lang.StringUtils.EMPTY;
         // 机构编号必须参数
         String instCode = paramBean.getInstCode();
-        if (org.apache.commons.lang.StringUtils.isEmpty(instCode)) {
+        if (StringUtils.isEmpty(instCode)) {
             return false;
         }
         if (("/aems/authState/status").equals(methodName)) {
@@ -47,6 +47,10 @@ public class SignUtil {
             //aems用户信息查询
             AemsSyncUserInfoRequest bean = (AemsSyncUserInfoRequest) paramBean;
             sign = bean.getInstCode() + bean.getTimestamp();
+        }else if (("/aems/transpassword/setPassword").equals(methodName)) {
+            //aems设置&重置交易密码
+            AemsTransPasswordRequestBean bean = (AemsTransPasswordRequestBean) paramBean;
+            sign = bean.getChannel() + bean.getAccountId() + bean.getInstCode() + bean.getTimestamp();
         }
         // TODO AEMS验签修改
         return ApiSignUtil.verifyByRSA("AEMS", paramBean.getChkValue(), sign);
