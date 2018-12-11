@@ -200,14 +200,26 @@
 				<artifactId>jetcache-starter-redis</artifactId>
 				<version>${jetcache.version}</version>
 			</dependency>
-			
-            <!-- https://gitee.com/lionsoul/ip2region -->
+
+			<!-- https://gitee.com/lionsoul/ip2region -->
 			<dependency>
 				<groupId>org.lionsoul</groupId>
 				<artifactId>ip2region</artifactId>
 				<version>${ip2region.version}</version>
 			</dependency>
 			
+			<dependency>
+				<groupId>org.apache.rocketmq</groupId>
+				<artifactId>rocketmq-spring-boot-starter</artifactId>
+				<version>2.0.0</version>
+			</dependency>
+			
+			<dependency>
+				<groupId>org.apache.rocketmq</groupId>
+				<artifactId>spring-boot-starter-rocketmq</artifactId>
+				<version>1.0.0-SNAPSHOT</version>
+			</dependency>
+
 		</dependencies>
 	</dependencyManagement>
 

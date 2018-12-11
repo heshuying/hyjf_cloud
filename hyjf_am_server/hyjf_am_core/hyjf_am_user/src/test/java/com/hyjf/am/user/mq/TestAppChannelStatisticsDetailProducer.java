@@ -11,8 +11,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.user.AmUserApplication;
+import com.hyjf.am.user.mq.base.CommonProducer;
 import com.hyjf.am.user.mq.base.MessageContent;
-import com.hyjf.am.user.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
@@ -27,7 +27,7 @@ import com.hyjf.common.exception.MQException;
 public class TestAppChannelStatisticsDetailProducer {
 
 	@Autowired
-	AppChannelStatisticsDetailProducer producer;
+	CommonProducer producer;
 
 	@Test
 	public void testSave() throws MQException {

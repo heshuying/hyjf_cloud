@@ -3,14 +3,25 @@
  */
 package com.hyjf.am.user.service.front.ca.impl;
 
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.user.config.SystemConfig;
 import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
 import com.hyjf.am.user.dao.model.auto.CorpOpenAccountRecord;
 import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.mq.base.CommonProducer;
 import com.hyjf.am.user.mq.base.MessageContent;
-import com.hyjf.am.user.mq.producer.FddCertificateProducer;
 import com.hyjf.am.user.service.front.ca.FddCertificateService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.user.FddCertificateAuthorityVO;
@@ -20,16 +31,6 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import com.hyjf.pay.lib.fadada.util.DzqzCallUtil;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
 
 /**
  * @author zhangqingqing
@@ -40,7 +41,7 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
     private static final Logger logger = LoggerFactory.getLogger(FddCertificateServiceImpl.class);
 
     @Autowired
-    FddCertificateProducer fddProducer;
+    private CommonProducer commonProducer;
 
     @Autowired
     SystemConfig systemConfig;
@@ -60,7 +61,7 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
             for (User user : usersList) {
                 FddCertificateAuthorityVO fddCertificateAuthorityVO = new FddCertificateAuthorityVO();
                 fddCertificateAuthorityVO.setUserId( user.getUserId());
-                fddProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(fddCertificateAuthorityVO)));
+                commonProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(fddCertificateAuthorityVO)));
             }
             // 处理结束时间
             String endTime = GetDate.dateToString(new Date());

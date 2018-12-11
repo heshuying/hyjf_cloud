@@ -1,27 +1,28 @@
 package com.hyjf.am.user.service.front.ca.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.hyjf.am.resquest.user.CertificateAuthorityExceptionRequest;
-import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
-import com.hyjf.am.user.dao.model.auto.CertificateAuthorityExample;
-import com.hyjf.am.user.mq.base.MessageContent;
-import com.hyjf.am.user.mq.producer.FddCertificateProducer;
-import com.hyjf.am.user.service.front.ca.CertificateAuthorityExceptionService;
-import com.hyjf.am.user.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.user.FddCertificateAuthorityVO;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.GetDate;
+import java.text.ParseException;
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.resquest.user.CertificateAuthorityExceptionRequest;
+import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
+import com.hyjf.am.user.dao.model.auto.CertificateAuthorityExample;
+import com.hyjf.am.user.mq.base.CommonProducer;
+import com.hyjf.am.user.mq.base.MessageContent;
+import com.hyjf.am.user.service.front.ca.CertificateAuthorityExceptionService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.user.FddCertificateAuthorityVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.GetDate;
 
 /**
  * CA认证异常Service实现类
@@ -32,8 +33,8 @@ import java.util.UUID;
 public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl implements CertificateAuthorityExceptionService {
 	  private static final Logger logger = LoggerFactory.getLogger(CertificateAuthorityExceptionServiceImpl.class);
 
-    @Autowired
-    FddCertificateProducer fddProducer;
+	  @Autowired
+	  private CommonProducer commonProducer;
 
     /**
      * 检索CA异常件数
@@ -164,7 +165,7 @@ public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl im
 
 		FddCertificateAuthorityVO fddCertificateAuthorityVO = new FddCertificateAuthorityVO();
 		fddCertificateAuthorityVO.setUserId(userId);
-		fddProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC,
+		commonProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC,
 				UUID.randomUUID().toString(), JSON.toJSONBytes(fddCertificateAuthorityVO)));
 
 		// 处理结束时间

@@ -3,15 +3,12 @@
  */
 package com.hyjf.am.user.mq.consumer;
 
-import com.alibaba.fastjson.JSONObject;
-import com.google.common.collect.Maps;
-import com.hyjf.am.user.dao.model.auto.*;
-import com.hyjf.am.user.mq.base.Consumer;
-import com.hyjf.am.user.service.front.ca.FddCertificateService;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.RSAHelper;
-import com.hyjf.common.util.RSAKeyUtil;
+import java.io.File;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
+
 import org.apache.http.HttpStatus;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
@@ -19,33 +16,39 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
-import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
-import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
-import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
-import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
+import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
+import org.apache.rocketmq.spring.core.RocketMQListener;
+import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.collect.Maps;
+import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
+import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
+import com.hyjf.am.user.dao.model.auto.SpreadsUser;
+import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.service.front.ca.FddCertificateService;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.RSAHelper;
+import com.hyjf.common.util.RSAKeyUtil;
 
 /**
  * @author zhangqingqing
  * @version CrmBankOpenMessageConsumer, v0.1 2018/6/28 14:27
  */
-@Component
-public class CrmBankOpenMessageConsumer extends Consumer{
+@Service
+@RocketMQMessageListener(topic = MQConstant.CRM_ROUTINGKEY_BANCKOPEN_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.CRM_ROUTINGKEY_BANCKOPEN_GROUP)
+public class CrmBankOpenMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
     private static final Logger logger = LoggerFactory.getLogger(CrmBankOpenMessageConsumer.class);
 
     @Autowired
@@ -62,55 +65,46 @@ public class CrmBankOpenMessageConsumer extends Consumer{
 
     @Autowired
     FddCertificateService fddCertificateService;
+    
     @Override
-    public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
-        defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
-        defaultMQPushConsumer.setConsumerGroup(MQConstant.CRM_ROUTINGKEY_BANCKOPEN_GROUP);
-        // 订阅指定MyTopic下tags等于MyTag
-        defaultMQPushConsumer.subscribe(MQConstant.CRM_ROUTINGKEY_BANCKOPEN_TOPIC, "*");
+	public void onMessage(MessageExt  message) {
+        logger.info("CrmBankOpenMessageConsumer 收到消息，开始处理....");
+        MessageExt msg = message;
+        // --> 消息转换
+        logger.info("【crm开户同步】接收到的消息：" + msg);
+        String msgBody = new String(msg.getBody());
+        Map<String,Integer> msgMap = JSONObject.parseObject(msgBody, Map.class);
+        logger.info("【crm开户同步】接收到的用户ID：" + msgMap.get("userId"));
+        CloseableHttpResponse result = null;
+        logger.info(msgMap.get("userId")+"");
+        try {
+            Integer userId = Integer.parseInt(String.valueOf(msgMap.get("userId")).trim());
+            logger.info("crmInsertUrl================:"+crmInsertUrl+"；buildData(userId) is null："+(buildData(userId)==null));
+           // result = restTemplate.postForEntity(crmInsertUrl, buildData(userId).toJSONString(),CloseableHttpResponse.class).getBody();
+            result = postJson(crmInsertUrl, buildData(userId).toJSONString());
+        } catch (Exception e) {
+            logger.error("【crm开户同步】异常，重新投递", e);
+            return ;
+        }
+        if (result.getStatusLine().getStatusCode() != HttpStatus.SC_OK ) {
+            logger.error("【crm开户同步】网络异常，重新投递");
+            return ;
+        } else {
+            logger.info("【crm开户同步】投递成功");
+        }
+    
+    }
+
+	@Override
+    public void prepareStart(DefaultMQPushConsumer defaultMQPushConsumer) {
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
         // 如果非第一次启动，那么按照上次消费的位置继续消费
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         // 设置为集群消费(区别于广播消费)
         defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
-        defaultMQPushConsumer.registerMessageListener(new CrmBankOpenMessageConsumer.MessageListener());
-        // Consumer对象在使用之前必须要调用start初始化，初始化一次即可<br>
-        defaultMQPushConsumer.start();
         logger.info("====CrmBankOpenMessageConsumer consumer=====");
     }
-
-    public class MessageListener implements MessageListenerConcurrently {
-        @Override
-        public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
-            logger.info("CrmBankOpenMessageConsumer 收到消息，开始处理....");
-            for (MessageExt msg : msgs) {
-                // --> 消息转换
-                logger.info("【crm开户同步】接收到的消息：" + msg);
-                String msgBody = new String(msg.getBody());
-                Map<String,Integer> msgMap = JSONObject.parseObject(msgBody, Map.class);
-                logger.info("【crm开户同步】接收到的用户ID：" + msgMap.get("userId"));
-                CloseableHttpResponse result = null;
-                logger.info(msgMap.get("userId")+"");
-                try {
-                    Integer userId = Integer.parseInt(String.valueOf(msgMap.get("userId")).trim());
-                    logger.info("crmInsertUrl================:"+crmInsertUrl+"；buildData(userId) is null："+(buildData(userId)==null));
-                   // result = restTemplate.postForEntity(crmInsertUrl, buildData(userId).toJSONString(),CloseableHttpResponse.class).getBody();
-                    result = postJson(crmInsertUrl, buildData(userId).toJSONString());
-                } catch (Exception e) {
-                    logger.error("【crm开户同步】异常，重新投递", e);
-                    return ConsumeConcurrentlyStatus.RECONSUME_LATER;
-                }
-                if (result.getStatusLine().getStatusCode() != HttpStatus.SC_OK ) {
-                    logger.error("【crm开户同步】网络异常，重新投递");
-                    return ConsumeConcurrentlyStatus.RECONSUME_LATER;
-                } else {
-                    logger.info("【crm开户同步】投递成功");
-                }
-            }
-            // 如果没有return success ，consumer会重新消费该消息，直到return success
-            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-        }
-    }
+	
     private JSONObject buildData(Integer userId) {
         JSONObject ret = new JSONObject();
         Map<String, Object> map = Maps.newHashMap();

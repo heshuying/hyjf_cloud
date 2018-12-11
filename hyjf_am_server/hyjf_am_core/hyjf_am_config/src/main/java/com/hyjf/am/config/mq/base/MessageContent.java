@@ -1,8 +1,8 @@
  package com.hyjf.am.config.mq.base;
 
- import com.hyjf.common.constants.MQConstant;
-
  import java.io.Serializable;
+
+import com.hyjf.common.constants.MQConstant;
 
 /**
  * 队列消息
@@ -14,16 +14,16 @@ public class MessageContent implements Serializable {
      public final String topic;
      public final String tag;
      public final String keys;
-     public final byte[] body;
+     public final Object body;
 
-     public MessageContent(String topic, String tag, String keys, byte[] body) {
+     public MessageContent(String topic, String tag, String keys, Object body) {
          this.topic = topic;
          this.tag = tag;
          this.keys = keys;
          this.body = body;
      }
 
-     public MessageContent(String topic, String keys, byte[] body) {
+     public MessageContent(String topic, String keys, Object body) {
          this(topic, MQConstant.HYJF_DEFAULT_TAG, keys, body);
      }
  

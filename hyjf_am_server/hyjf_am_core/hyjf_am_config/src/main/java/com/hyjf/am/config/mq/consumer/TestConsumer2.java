@@ -10,7 +10,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.hyjf.am.config.mq.base.Consumer;
-import com.hyjf.common.constants.MQConstant;
 
 /**
  * 
@@ -19,9 +18,9 @@ import com.hyjf.common.constants.MQConstant;
  */
 //@Component
 @Service
-@RocketMQMessageListener(topic = MQConstant.TEST_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.AM_USER_GENERAL_GROUP)
-public class TestConsumer extends Consumer {
-	private static final Logger logger = LoggerFactory.getLogger(TestConsumer.class);
+@RocketMQMessageListener(topic = "TEST_TOPIC2", selectorExpression = "*", consumerGroup = "TESTC1")
+public class TestConsumer2 extends Consumer {
+	private static final Logger logger = LoggerFactory.getLogger(TestConsumer2.class);
 
 
 	@Override
@@ -31,6 +30,9 @@ public class TestConsumer extends Consumer {
 		MessageExt msg = message;
 		logger.info(msg.getTags()+" TestConsumer "+ new String(msg.getBody()));
 		
+		if(1==1) {
+			throw new RuntimeException("dsdf");
+		}
 		
 //		return ConsumeOrderlyStatus.SUCCESS;
 	}
@@ -42,9 +44,9 @@ public class TestConsumer extends Consumer {
 		// 设置为集群消费(区别于广播消费)
 		consumer.setMessageModel(MessageModel.CLUSTERING);
 //		consumer.registerMessageListener(new MessageListener());
-//		consumer.getcon
+		
 		//设置并发数为1
-		consumer.setConsumeThreadMin(3);
-		consumer.setConsumeThreadMax(30);
+		consumer.setConsumeThreadMin(1);
+		consumer.setConsumeThreadMax(1);
     }
 }
