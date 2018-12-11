@@ -1,7 +1,7 @@
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://microserver1:1111/eureka,http://microserver2:1111/eureka
+      defaultZone: @eureka.serviceUrl.default@
   instance:
     preferIpAddress: true
 spring:
@@ -16,7 +16,9 @@ spring:
  boot:
     admin:
       client:
-        url: http://MONITOR-SERVER
+        url: @spring.boot.admin.url@
+        username: @spring.boot.admin.username@
+        password: @spring.boot.admin.password@
 # zipkin 监控端点
  zipkin: 
     base-url: http://ZIPKIN
@@ -38,9 +40,6 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
-  security:
-# 仅限于 开发环境可对security进行关闭。
-    enabled: false
   metrics:
     export:
       prometheus:

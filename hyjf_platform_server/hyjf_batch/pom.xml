@@ -109,12 +109,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-			<!--	<configuration>
-					<excludes>
-						<exclude>**/application.yml</exclude>
-						<exclude>**/bootstrap.yml</exclude>
-					</excludes>
-				</configuration>-->
 			</plugin>
 
 			<plugin>
@@ -150,7 +144,7 @@
 				<includes>
 					<include>**/**</include>
 				</includes>
-				<filtering>false</filtering>
+				<filtering>true</filtering>
 			</resource>
 		</resources>
 	</build>

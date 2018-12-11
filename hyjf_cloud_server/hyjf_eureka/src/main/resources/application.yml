@@ -6,7 +6,9 @@ spring:
   boot:
     admin:
       client:
-        url: http://MONITOR-SERVER
+        url: '@spring.boot.admin.url@'
+        username: '@spring.boot.admin.username@'
+        password: '@spring.boot.admin.password@'
 server:
   port: 1111
 eureka:
@@ -16,7 +18,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: false
     serviceUrl:
-      defaultZone: http://microserver1:1111/eureka,http://microserver2:1111/eureka
+      defaultZone: '@eureka.serviceUrl.default@'
 
 
 management:

@@ -1,7 +1,7 @@
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://microserver1:1111/eureka,http://microserver2:1111/eureka
+      defaultZone: @eureka.serviceUrl.default@
 spring:
  application:
    name: zuul
@@ -17,7 +17,9 @@ spring:
  boot:
     admin:
       client:
-        url: http://MONITOR-SERVER
+        url: @spring.boot.admin.url@
+        username: @spring.boot.admin.username@
+        password: @spring.boot.admin.password@
 # zipkin 监控端点
  zipkin:
   base-url: http://ZIPKIN
