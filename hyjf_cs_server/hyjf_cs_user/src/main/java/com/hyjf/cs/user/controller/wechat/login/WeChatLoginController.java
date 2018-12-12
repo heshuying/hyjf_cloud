@@ -85,13 +85,15 @@ public class WeChatLoginController extends BaseUserController {
         if (!"1".equals(env) && !"2".equals(env)) {
             throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
+        logger.info("密码解密===================:"+(System.currentTimeMillis()-start));
+        long startt = System.currentTimeMillis();
         //密码解密
         password = RSAJSPUtil.rsaToPassword(password);
         // weChat 只支持手机号登录
         if (!CommonUtils.isMobile(userName)) {
             throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN);
         }
-        logger.info("密码解密===================:"+(System.currentTimeMillis()-start));
+        logger.info("密码解密===================:"+(System.currentTimeMillis()-startt));
 
         //判断用户输入的密码错误次数---开始
         Map<String, String> errorInfo=loginService.insertErrorPassword(userName,password,BankCallConstant.CHANNEL_WEI);
