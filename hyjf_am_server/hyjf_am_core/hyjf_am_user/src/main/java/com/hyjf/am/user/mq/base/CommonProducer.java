@@ -15,33 +15,28 @@ import org.springframework.stereotype.Component;
 import com.hyjf.common.exception.MQException;
 
 /**
- * 
  * 通用发消息
- * @author dxj
  *
+ * @author dxj
  */
 @Component
 public class CommonProducer {
-	private static final Logger logger = LoggerFactory.getLogger(CommonProducer.class);
+    private static final Logger logger = LoggerFactory.getLogger(CommonProducer.class);
 
-	@Autowired
-	private RocketMQTemplate rocketMQTemplate;
+    @Autowired
+    private RocketMQTemplate rocketMQTemplate;
 
-	public boolean messageSend(MessageContent messageContent) throws MQException {
-		try {
-			Message message = new Message(messageContent.topic, messageContent.tag, messageContent.keys,
-					messageContent.body);
-			SendResult sendResult = rocketMQTemplate.getProducer().send(message);
-			if (sendResult != null && sendResult.getSendStatus() == SendStatus.SEND_OK) {
-				return true;
-			} else {
-				return false;
-			}
-		} catch (MQClientException | RemotingException | MQBrokerException e ) {
-			throw new MQException("mq send error", e);
-		} catch (InterruptedException e){
-//			Thread.currentThread().interrupt();
-			throw new MQException("mq InterruptedException send error", e);
-		}
-	}
+    public boolean messageSend(MessageContent messageContent) throws MQException {
+        try {
+            SendResult sendResult = rocketMQTemplate.syncSend(messageContent.topic + ":" + messageContent.tag, messageContent.body);
+
+            if (sendResult != null && sendResult.getSendStatus() == SendStatus.SEND_OK) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            throw new MQException("mq send error", e);
+        }
+    }
 }
