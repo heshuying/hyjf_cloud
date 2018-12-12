@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.user.service.ames.register.impl;
+package com.hyjf.cs.user.service.aems.register.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.user.RegisterUserRequest;
@@ -18,13 +18,11 @@ import com.hyjf.common.util.StringRandomUtil;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.AemsUserRegisterRequestBean;
-import com.hyjf.cs.user.bean.BaseDefine;
-import com.hyjf.cs.user.bean.UserRegisterRequestBean;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.AccountProducer;
-import com.hyjf.cs.user.service.ames.register.AemsUserRegisterService;
+import com.hyjf.cs.user.service.aems.register.AemsUserRegisterService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.util.GetInfoByUserIp;
 import com.hyjf.cs.user.util.SignUtil;

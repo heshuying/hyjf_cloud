@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.user.service.ames.register;
+package com.hyjf.cs.user.service.aems.register;
 
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.user.bean.AemsUserRegisterRequestBean;

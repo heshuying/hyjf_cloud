@@ -5,30 +5,21 @@ package com.hyjf.cs.user.controller.api.aems.register;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.UtmPlatVO;
-import com.hyjf.common.constants.AemsErrorCodeConstant;
 import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.AemsUserRegisterRequestBean;
 import com.hyjf.cs.user.bean.AemsUserRegisterResultBean;
-import com.hyjf.cs.user.bean.UserRegisterResultBean;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.service.ames.register.AemsUserRegisterService;
+import com.hyjf.cs.user.service.aems.register.AemsUserRegisterService;
 import com.hyjf.cs.user.util.GetCilentIP;
-import com.hyjf.cs.user.util.SignUtil;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiModelProperty;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +27,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.List;
 
 /**
  * AEMSY用户

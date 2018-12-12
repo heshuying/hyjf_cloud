@@ -1032,8 +1032,8 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             resultMap.put("mess", "渠道号不能为空");
             return resultMap;
         }
-        // 验签 TODO
-        if(!SignUtil.AEMSVerifyRequestSign(requestBean, "/server/user/accountOpenEncryptPage/open.do")){
+        // 验签
+        if(!SignUtil.AEMSVerifyRequestSign(requestBean, "/aems/encryptpage/open.do")){
             logger.info("验签失败[" + JSONObject.toJSONString(requestBean, true) + "]");
             resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
             resultMap.put("mess", "验签失败！");
