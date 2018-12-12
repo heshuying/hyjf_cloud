@@ -46,12 +46,8 @@ public class EurekaApplication {
 		for (Application application : list) {
 			sb.append("appName:").append(application.getName()).append("[");
 			List<InstanceInfo> instanceInfos = application.getInstances();
-			// logger.info("instanceInfos: {}",
-			// JSONObject.toJSONString(instanceInfos));
 			for (InstanceInfo instanceInfo : instanceInfos) {
 				sb.append(instanceInfo.getInstanceId()).append(",");
-				// logger.info("instanceInfo: {}",
-				// JSONObject.toJSONString(instanceInfo));
 			}
 
 			sb.append(",");
@@ -59,21 +55,4 @@ public class EurekaApplication {
 		sb.append("]");
 		return sb.toString();
 	}
-
-	// @RequestMapping("/application/{appName}")
-	// public String getApp(@PathVariable String appName) {
-	// EurekaServerContext serverContext =
-	// EurekaServerContextHolder.getInstance().getServerContext();
-	// PeerAwareInstanceRegistry registry = serverContext.getRegistry();
-	// ResponseCache responseCache = registry.getResponseCache();
-	//
-	//
-	// Key cacheKey = new Key(Key.EntityType.Application,
-	// ResponseCacheImpl.ALL_APPS_DELTA,
-	// Key.KeyType.JSON, CurrentRequestVersion.get(),
-	// EurekaAccept.full, null
-	// );
-	//
-	// return responseCache.get(cacheKey);
-	// }
 }

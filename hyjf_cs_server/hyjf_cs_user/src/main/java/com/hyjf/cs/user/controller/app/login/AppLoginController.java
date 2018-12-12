@@ -140,7 +140,7 @@ public class AppLoginController extends BaseUserController {
                 userOperationLogEntity.setUserName(webViewUserVO.getUsername());
                 userOperationLogEntity.setUserRole(webViewUserVO.getRoleId());
                 try {
-                    userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+                    userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(userOperationLogEntity)));
                 } catch (MQException e) {
                     logger.error("保存用户日志失败", e);
                 }
@@ -224,7 +224,7 @@ public class AppLoginController extends BaseUserController {
                 userOperationLogEntity.setUserName(userVO.getUsername());
                 userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
                 try {
-                    userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+                    userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(userOperationLogEntity)));
                 } catch (MQException e) {
                     logger.error("保存用户日志失败", e);
                 }

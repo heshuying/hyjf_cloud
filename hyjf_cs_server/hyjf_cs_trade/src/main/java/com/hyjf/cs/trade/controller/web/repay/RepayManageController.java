@@ -1059,9 +1059,10 @@ public class RepayManageController extends BaseTradeController {
                         //还款后变更数据
                         boolean updateResult = this.repayManageService.updateForRepayRequest(repay, callBackBean, isAllRepay);
                         if (updateResult) {
+                            repayManageService.deleteOrgFreezeTempLogs(orderId, borrowNid);
                             // 如果有正在出让的债权,先去把出让状态停止
                             this.repayManageService.updateBorrowCreditStautus(borrowNid);
-                            repayManageService.deleteOrgFreezeTempLogs(orderId, borrowNid);
+
                             logger.info("【代偿冻结异步回调】垫付机构:" + userId + "还款申请成功,标的号:{},订单号:{}", borrowNid, orderId);
                         } else {
                             logger.error("【代偿冻结异步回调】垫付机构:" + userId + "还款更新数据失败,标的号:{},订单号:{}", borrowNid, orderId);

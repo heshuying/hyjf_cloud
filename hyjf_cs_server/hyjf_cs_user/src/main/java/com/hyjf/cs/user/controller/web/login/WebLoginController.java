@@ -3,12 +3,13 @@
  */
 package com.hyjf.cs.user.controller.web.login;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.TypeReference;
+import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
-import com.alibaba.fastjson.TypeReference;
-import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -16,7 +17,6 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.StringUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
@@ -38,7 +38,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
-import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -81,7 +80,9 @@ public class WebLoginController extends BaseUserController {
             return result;
         }
         //判断用户输入的密码错误次数---结束
+        long start1 = System.currentTimeMillis();
         WebViewUserVO userVO = loginService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_PC);
+        logger.info("web登录操作===================:"+(System.currentTimeMillis()-start1));
         if (userVO != null) {
             logger.info("web端登录成功 userId is :{}", userVO.getUserId());
             // add by liuyang 神策数据统计追加 20181029 start
@@ -112,7 +113,7 @@ public class WebLoginController extends BaseUserController {
             userOperationLogEntity.setUserRole(userVO.getRoleId());
             logger.info("userOperationLogEntity发送数据==="+JSONObject.toJSONString(userOperationLogEntity));
             try {
-                userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+                userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(userOperationLogEntity)));
             } catch (MQException e) {
                 logger.error("保存用户日志失败" , e);
             }
@@ -151,7 +152,7 @@ public class WebLoginController extends BaseUserController {
             userOperationLogEntity.setUserName(userVO.getUsername());
             userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
             try {
-                userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+                userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(userOperationLogEntity)));
             } catch (MQException e) {
                 logger.error("保存用户日志失败" , e);
             }

@@ -241,7 +241,7 @@ public class HJHServiceFeeUtils {
 		}else {
 			// 待收本金=投资金额（实际支付）/出让债权价值*出让人当期待收本金
 			assignCapital = assignPay.multiply(currentPeriodCapital).divide(liquidationValue, 16, BigDecimal.ROUND_DOWN);
-			// 如果计算误差问题，承接的本金>待成承接的本金处理（异常还是赋值??） TODO
+			// 如果计算误差问题，承接的本金>待成承接的本金处理（异常还是赋值??）
 			if (assignCapital.compareTo(currentPeriodCreditCapitalWait) >= 0) {
 				assignCapital = currentPeriodCreditCapitalWait;
 			}
