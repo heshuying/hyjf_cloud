@@ -1,10 +1,13 @@
-package com.hyjf.cs.user.controller.api.bankopen;
+/*
+ * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
+ */
+package com.hyjf.cs.user.controller.api.aems.encryptpage;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
-import com.hyjf.cs.user.bean.ApiBankOpenRequestBean;
+import com.hyjf.cs.user.bean.AemsBankOpenEncryptPageRequestBean;
 import com.hyjf.cs.user.bean.BaseResultBean;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.config.SystemConfig;
@@ -21,11 +24,8 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -35,13 +35,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author sunss
+ * AEMS系统:用户开户
+ *
+ * @author liuyang
+ * @version AemsBankOpenEncryptPageController, v0.1 2018/12/10 10:57
  */
-@Api(value = "第三方用户开户", tags = "api端-用户开户")
-@Controller
-@RequestMapping("/hyjf-api/server/user/accountOpenEncryptPage")
-public class ApiBankOpenController extends BaseUserController {
-    private static final Logger logger = LoggerFactory.getLogger(ApiBankOpenController.class);
+@Api(value = "AEMS系统:用户开户", tags = "AEMS系统:用户开户")
+@RestController
+@RequestMapping("/hyjf-api/aems/encryptpage")
+public class AemsBankOpenEncryptPageController extends BaseUserController {
 
     @Autowired
     private BankOpenService bankOpenService;
@@ -49,9 +51,9 @@ public class ApiBankOpenController extends BaseUserController {
     @Autowired
     SystemConfig systemConfig;
 
-    @ApiOperation(value = "用户开户", notes = "用户开户")
+    @ApiOperation(value = "AEMS系统:用户开户", notes = "AEMS系统:用户开户")
     @PostMapping(value = "/open.do", produces = "application/json; charset=utf-8")
-    @HystrixCommand(commandKey = "开户(api)-openBankAccount", fallbackMethod = "fallBackApiBankOpen", ignoreExceptions = CheckException.class, commandProperties = {
+    @HystrixCommand(commandKey = "AEMS系统:用户开户", fallbackMethod = "fallBackApiBankOpen", ignoreExceptions = CheckException.class, commandProperties = {
             //设置断路器生效
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s
@@ -62,19 +64,20 @@ public class ApiBankOpenController extends BaseUserController {
             @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
             //失败率达到30百分比后熔断
             @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
-    public ModelAndView openBankAccount(@RequestBody @Valid ApiBankOpenRequestBean requestBean) {
-        logger.info("第三方请求页面开户, ApiBankOpenRequestBean is :{}", JSONObject.toJSONString(requestBean));
+    public ModelAndView openBankAccount(@RequestBody @Valid AemsBankOpenEncryptPageRequestBean requestBean) {
+        logger.info("AEMS系统请求页面开户, AemsBankOpenEncryptPageRequestBean is :{}", JSONObject.toJSONString(requestBean));
         ModelAndView modelAndView = new ModelAndView();
-        Map<String, String> paramMap = bankOpenService.checkApiParam(requestBean);
+        Map<String, String> paramMap = bankOpenService.checkAemsOpenBankAccountParam(requestBean);
+
         paramMap.put("callBackAction", requestBean.getRetUrl());
         if ("0".equals(paramMap.get("status"))) {
             return callbackErrorView(paramMap);
         }
+
         UserVO user = this.bankOpenService.getUsersByMobile(requestBean.getMobile());
         OpenAccountPageBean openAccountPageBean = getOpenAccountPageBean(requestBean);
         openAccountPageBean.setUserId(user.getUserId());
         openAccountPageBean.setClientHeader(ClientConstants.CLIENT_HEADER_API);
-
         try {
             BankCallBean bean = getCallbankMV(openAccountPageBean);
             modelAndView = BankCallUtils.callApi(bean);
@@ -83,7 +86,7 @@ public class ApiBankOpenController extends BaseUserController {
         }
         //保存开户日志  银行卡号不必传了
         int uflag = this.bankOpenService.updateUserAccountLog(user.getUserId(), user.getUsername(), requestBean.getMobile(),
-                openAccountPageBean.getOrderId(), requestBean.getPlatform(), requestBean.getTrueName(), requestBean.getIdNo(), "", "");
+                openAccountPageBean.getOrderId(), requestBean.getPlatform(), requestBean.getTrueName(),"", "", "");
         if (uflag == 0) {
             logger.info("保存开户日志失败,手机号:[" + requestBean.getMobile() + "],用户ID:[" + user.getUserId() + "]");
             paramMap.put("status", ErrorCodeConstant.STATUS_CE999999);
@@ -94,12 +97,12 @@ public class ApiBankOpenController extends BaseUserController {
         return modelAndView;
     }
 
+
     public BankCallBean getCallbankMV(OpenAccountPageBean openBean) {
         // 根据身份证号码获取性别
         String idType = BankCallConstant.ID_TYPE_IDCARD;
         // 调用开户接口
-        BankCallBean openAccoutBean = new BankCallBean(openBean.getUserId(), BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE,
-                Integer.parseInt(openBean.getPlatform()), BankCallConstant.BANK_URL_ACCOUNT_OPEN_ENCRYPT_PAGE);
+        BankCallBean openAccoutBean = new BankCallBean(openBean.getUserId(), BankCallConstant.TXCODE_ACCOUNT_OPEN_ENCRYPT_PAGE, Integer.parseInt(openBean.getPlatform()), BankCallConstant.BANK_URL_ACCOUNT_OPEN_ENCRYPT_PAGE);
         openAccoutBean.setIdentity(openBean.getIdentity());
         /**1：出借角色2：借款角色3：代偿角色*/
         openAccoutBean.setChannel(openBean.getChannel());
@@ -126,31 +129,36 @@ public class ApiBankOpenController extends BaseUserController {
         return openAccoutBean;
     }
 
-
-    public ModelAndView fallBackApiBankOpen(@RequestBody @Valid ApiBankOpenRequestBean requestBean) {
-        logger.info("==================已进入 开户(api) fallBackApiBankOpen 方法================");
-        Map<String, String> paramMap = new HashMap<>();
-        paramMap.put("status", ErrorCodeConstant.STATUS_CE999999);
-        paramMap.put("statusDesc", "开户失败");
-        return callbackErrorView(paramMap);
-    }
-
-    private OpenAccountPageBean getOpenAccountPageBean(ApiBankOpenRequestBean requestBean) {
+    /**
+     * 构建银行请求参数
+     *
+     * @param requestBean
+     * @return
+     */
+    private OpenAccountPageBean getOpenAccountPageBean(AemsBankOpenEncryptPageRequestBean requestBean) {
         OpenAccountPageBean bean = new OpenAccountPageBean();
         BeanUtils.copyProperties(requestBean, bean);
-        String retUrl = systemConfig.getServerHost() + "/hyjf-api/server/user/accountOpenEncryptPage";
-        String successUrl = systemConfig.getServerHost() + "/hyjf-api/server/user/accountOpenEncryptPage";
+        String retUrl = systemConfig.getServerHost() + "/hyjf-api/aems/encryptpage";
+        String successUrl = systemConfig.getServerHost() + "/hyjf-api/aems/encryptpage";
         // 异步调用路
-        String bgRetUrl = "http://CS-USER/hyjf-api/server/user/accountOpenEncryptPage";
+        String bgRetUrl = "http://CS-USER/hyjf-api/aems/encryptpage";
         // 调用设置密码接口
-        retUrl += "/return?acqRes=" + requestBean.getAcqRes() + "&callback=" + requestBean.getRetUrl().replace("#", "*-*-*");
-        successUrl += "/return?acqRes=" + requestBean.getAcqRes() + "&isSuccess=1&callback=" + requestBean.getRetUrl().replace("#", "*-*-*");
-        bgRetUrl += "/bgReturn?acqRes=" + requestBean.getAcqRes() + "&phone=" + requestBean.getMobile() + "&openclient=" + requestBean.getPlatform() + "&roleId=" + requestBean.getIdentity() +
+        retUrl += "/openaccountReturn?acqRes=" + requestBean.getAcqRes() + "&callback=" + requestBean.getRetUrl().replace("#", "*-*-*");
+        successUrl += "/openaccountReturn?acqRes=" + requestBean.getAcqRes() + "&isSuccess=1&callback=" + requestBean.getRetUrl().replace("#", "*-*-*");
+        bgRetUrl += "/openaccountBgreturn?acqRes=" + requestBean.getAcqRes() + "&phone=" + requestBean.getMobile() + "&openclient=" + requestBean.getPlatform() + "&roleId=" + requestBean.getIdentity() +
                 "&callback=" + requestBean.getBgRetUrl().replace("#", "*-*-*");
         bean.setRetUrl(retUrl);
         bean.setNotifyUrl(bgRetUrl);
         bean.setSuccessfulUrl(successUrl);
         return bean;
+    }
+
+    public ModelAndView fallBackApiBankOpen(@RequestBody @Valid AemsBankOpenEncryptPageRequestBean requestBean) {
+        logger.info("==================已进入 开户(api) fallBackApiBankOpen 方法================");
+        Map<String, String> paramMap = new HashMap<>();
+        paramMap.put("status", ErrorCodeConstant.STATUS_CE999999);
+        paramMap.put("statusDesc", "开户失败");
+        return callbackErrorView(paramMap);
     }
 
     /**
@@ -159,8 +167,8 @@ public class ApiBankOpenController extends BaseUserController {
      * @param request
      * @return
      */
-    @ApiOperation(value = "第三方端用户同步回调", notes = "用户开户")
-    @RequestMapping(value = "/return")
+    @ApiOperation(value = "AEMS系统:用户开户同步回调", notes = "用户开户")
+    @RequestMapping(value = "/openaccountReturn")
     public ModelAndView returnPage(HttpServletRequest request) {
         String isSuccess = request.getParameter("isSuccess");
         String url = request.getParameter("callback").replace("*-*-*", "#");
@@ -190,7 +198,7 @@ public class ApiBankOpenController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "页面开户异步处理", notes = "页面开户异步处理")
-    @PostMapping("/bgReturn")
+    @PostMapping("/openaccountBgreturn")
     @ResponseBody
     public BankCallResult openAccountBgReturn(HttpServletRequest request,
                                               @RequestBody BankCallBean bean,
@@ -240,5 +248,4 @@ public class ApiBankOpenController extends BaseUserController {
         CommonSoaUtils.noRetPostThree(request.getParameter("callback").replace("*-*-*", "#"), params);
         return result;
     }
-
 }
