@@ -101,6 +101,8 @@ public interface AmTradeClient {
 
     Integer updateTrusteePaySuccess(String borrowNid);
 
+    boolean updateAemsTrusteePaySuccess(String borrowNid);
+
     STZHWhiteListVO getStzhWhiteListVO(Integer userId, Integer stzUserId);
 
     /**
@@ -2118,6 +2120,8 @@ public interface AmTradeClient {
 	List<WebUserRepayProjectListCustomizeVO> selectUserRepayProjectList(Map<String, Object> params);
 
 	String getborrowIdByProductId(Map<String, Object> params);
+
+    List<BorrowAndInfoVO> getborrowByProductId(Map<String, Object> params);
 
     Integer countBatchCenter(BatchCenterCustomize batchCenterCustomize);
 

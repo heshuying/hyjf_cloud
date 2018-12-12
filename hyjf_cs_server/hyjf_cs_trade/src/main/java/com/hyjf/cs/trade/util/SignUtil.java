@@ -43,6 +43,15 @@ public class SignUtil {
             UserDirectRechargeRequestBean bean = (UserDirectRechargeRequestBean) paramBean;
             sign = bean.getInstCode() + bean.getAccountId() + bean.getMobile() + bean.getIdNo() + bean.getCardNo()
                     + bean.getTxAmount() + bean.getName() + bean.getRetUrl() + bean.getBgRetUrl() + bean.getTimestamp();
+        } else if (("/aems/trusteePay/pay").equals(methodName)) {
+            //aems借款人受托支付申请
+            AemsTrusteePayRequestBean bean = (AemsTrusteePayRequestBean) paramBean;
+            sign = bean.getChannel() + bean.getAccountId() + bean.getProductId() + bean.getIdType() + bean.getIdNo()
+                    + bean.getReceiptAccountId() + bean.getForgotPwdUrl() + bean.getRetUrl() + bean.getNotifyUrl() + bean.getTimestamp();
+        } else if (("/aems/trusteePay/trusteePayQuery").equals(methodName)) {
+            //aems借款人受托支付申请查询
+            AemsTrusteePayRequestBean bean = (AemsTrusteePayRequestBean) paramBean;
+            sign = bean.getChannel() + bean.getAccountId() + bean.getProductId() + bean.getTimestamp();
         }
         // TODO AEMS验签修改
         return ApiSignUtil.verifyByRSA("AEMS", paramBean.getChkValue(), sign);
