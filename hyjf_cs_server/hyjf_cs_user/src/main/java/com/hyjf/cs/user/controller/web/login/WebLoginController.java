@@ -80,7 +80,9 @@ public class WebLoginController extends BaseUserController {
             return result;
         }
         //判断用户输入的密码错误次数---结束
+        long start1 = System.currentTimeMillis();
         WebViewUserVO userVO = loginService.login(loginUserName, loginPassword, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_PC);
+        logger.info("web登录操作===================:"+(System.currentTimeMillis()-start1));
         if (userVO != null) {
             logger.info("web端登录成功 userId is :{}", userVO.getUserId());
             // add by liuyang 神策数据统计追加 20181029 start
