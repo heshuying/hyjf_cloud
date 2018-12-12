@@ -68,13 +68,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- spring boot admin start -->
-		<dependency>
-			<groupId>de.codecentric</groupId>
-			<artifactId>spring-boot-admin-starter-client</artifactId>
-		</dependency>
-		<!-- spring boot admin end -->
-
 		<dependency>
 			<groupId>com.hyjf</groupId>
 			<artifactId>hyjf_common</artifactId>

@@ -35,7 +35,6 @@
 
 		<spring.cloud.version>Finchley.SR1</spring.cloud.version>
 		<spring.cloud.sleuth.version>2.0.1.RELEASE</spring.cloud.sleuth.version>
-		<spring.boot.admin.vesion>2.0.2</spring.boot.admin.vesion>
 		<spring.mybatis.vesion>1.3.2</spring.mybatis.vesion>
 		<springfox.swagger.version>2.9.2</springfox.swagger.version>
 
@@ -59,9 +58,6 @@
 		<ip2region.version>1.7</ip2region.version>
 
 		<eureka.serviceUrl.default>http://microserver1:1111/eureka,http://microserver2:1111/eureka</eureka.serviceUrl.default>
-		<spring.boot.admin.url>http://monitor:18080</spring.boot.admin.url>
-		<spring.boot.admin.username>hyjf</spring.boot.admin.username>
-		<spring.boot.admin.password>hyjf1234</spring.boot.admin.password>
 	</properties>
 
 	<dependencyManagement>
@@ -81,12 +77,6 @@
 				<version>${spring.cloud.sleuth.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
-			</dependency>
-
-			<dependency>
-				<groupId>de.codecentric</groupId>
-				<artifactId>spring-boot-admin-starter-client</artifactId>
-				<version>${spring.boot.admin.vesion}</version>
 			</dependency>
 
 			<!-- sping mybatis -->
