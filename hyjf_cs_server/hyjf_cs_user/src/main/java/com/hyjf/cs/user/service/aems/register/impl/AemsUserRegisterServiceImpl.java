@@ -130,7 +130,7 @@ public class AemsUserRegisterServiceImpl extends BaseUserServiceImpl implements 
         CheckUtil.check(instConfig != null, MsgEnum.STATUS_ZC000004);
         registerUserRequest.setInstType(instConfig.getInstType());
         // 验签 TODO 用户注册验签追加
-        CheckUtil.check(SignUtil.AEMSVerifyRequestSign(aemsUserRegisterRequestBean,""), MsgEnum.STATUS_CE000002);
+        CheckUtil.check(SignUtil.AEMSVerifyRequestSign(aemsUserRegisterRequestBean,"/aems/register/register.do"), MsgEnum.STATUS_CE000002);
         // 根据渠道号检索推广渠道是否存在
         UtmPlatVO utmPlat = this.amUserClient.selectUtmPlatByUtmId(registerRequest.getUtmId());
         CheckUtil.check(null != utmPlat, MsgEnum.STATUS_ZC000020);
