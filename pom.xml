@@ -59,9 +59,6 @@
 		<ip2region.version>1.7</ip2region.version>
 
 		<eureka.serviceUrl.default>http://microserver1:1111/eureka,http://microserver2:1111/eureka</eureka.serviceUrl.default>
-		<spring.boot.admin.url>http://monitor:18080</spring.boot.admin.url>
-		<spring.boot.admin.username>hyjf</spring.boot.admin.username>
-		<spring.boot.admin.password>hyjf1234</spring.boot.admin.password>
 	</properties>
 
 	<dependencyManagement>
