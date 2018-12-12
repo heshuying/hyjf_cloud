@@ -3,12 +3,7 @@ spring:
     name: eureka-server  
   profiles:
     active: dev
-  boot:
-    admin:
-      client:
-        url: '@spring.boot.admin.url@'
-        username: '@spring.boot.admin.username@'
-        password: '@spring.boot.admin.password@'
+
 server:
   port: 1111
 eureka:

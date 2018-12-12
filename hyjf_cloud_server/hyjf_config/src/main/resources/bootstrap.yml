@@ -1,12 +1,7 @@
 spring:
   application:
     name: config-server
-  boot:
-    admin:
-      client:
-        url: '@spring.boot.admin.url@'
-        username: '@spring.boot.admin.username@'
-        password: '@spring.boot.admin.password@'
+
 #  profiles:
 #    active: native
   cloud:
