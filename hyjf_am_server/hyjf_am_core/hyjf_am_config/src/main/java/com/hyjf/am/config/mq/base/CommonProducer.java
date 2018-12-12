@@ -25,9 +25,6 @@ public class CommonProducer {
 
 	public boolean messageSend(MessageContent messageContent) throws MQException {
 		try {
-			
-//			SendResult sendResult = rocketMQTemplate.getProducer().send(message);
-//			rocketMQTemplate.convertAndSend();
 			SendResult sendResult = rocketMQTemplate.syncSend(messageContent.topic+":"+messageContent.tag, messageContent.body);
 			
 			if (sendResult != null && sendResult.getSendStatus() == SendStatus.SEND_OK) {
@@ -36,6 +33,7 @@ public class CommonProducer {
 				return false;
 			}
 		} catch (Exception e) {
+			logger.error("通用发消息异常", e);
 			throw new MQException("mq send error", e);
 		}
 	}

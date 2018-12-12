@@ -18,7 +18,7 @@ import com.hyjf.am.config.mq.base.MessageContent;
 import com.hyjf.common.exception.MQException;
 
 /**
- * 
+ * 未来会删除，测试用
  * @author dxj
  * @date 2018/07/06
  */
