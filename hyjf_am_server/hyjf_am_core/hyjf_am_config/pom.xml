@@ -42,13 +42,6 @@
 
 		<!-- spring cloud starter end -->
 
-		<!-- spring boot admin start -->
-		<dependency>
-			<groupId>de.codecentric</groupId>
-			<artifactId>spring-boot-admin-starter-client</artifactId>
-		</dependency>
-		<!-- spring boot admin end -->
-
 		<!-- db start -->
 		<dependency>
 			<groupId>com.alibaba</groupId>

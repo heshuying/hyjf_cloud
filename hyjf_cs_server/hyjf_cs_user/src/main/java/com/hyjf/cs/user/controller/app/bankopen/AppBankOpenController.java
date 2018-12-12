@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.controller.app.bankopen;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -105,7 +106,7 @@ public class AppBankOpenController extends BaseUserController {
         userOperationLogEntity.setUserName(user.getUsername());
         userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
         try {
-            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(userOperationLogEntity)));
         } catch (MQException e) {
             logger.error("保存用户日志失败", e);
         }

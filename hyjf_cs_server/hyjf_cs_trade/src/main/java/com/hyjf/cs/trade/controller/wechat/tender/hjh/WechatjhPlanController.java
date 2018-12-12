@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.controller.wechat.tender.hjh;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
@@ -101,7 +102,7 @@ public class WechatjhPlanController extends BaseTradeController {
             userOperationLogEntity.setUserName(userVO.getUsername());
             userOperationLogEntity.setUserRole(String.valueOf(usersInfo.getRoleId()));
             try {
-                userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+                userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(userOperationLogEntity)));
             } catch (MQException e) {
                 logger.error("保存用户日志失败", e);
             }

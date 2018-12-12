@@ -7,10 +7,7 @@ spring:
         enabled: true
         serviceId: CONFIG-SERVER
       failFast: true
-  boot:
-    admin:
-      client:
-        url: http://MONITOR-SERVER
+
 # zipkin 监控端点
   zipkin: 
     base-url: http://ZIPKIN
@@ -24,7 +21,7 @@ spring:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://microserver1:1111/eureka,http://microserver2:1111/eureka
+      defaultZone: @eureka.serviceUrl.default@
   instance:
     preferIpAddress: true
 
@@ -40,9 +37,9 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
-#info:
-#  name: admin
-#  version: '@project.version@'
-#  encoding: '@project.build.sourceEncoding@'
-#  java:
-#    version: '@java.version@'
+info:
+  name: admin
+  version: '@project.version@'
+  encoding: '@project.build.sourceEncoding@'
+  java:
+    version: '@java.version@'

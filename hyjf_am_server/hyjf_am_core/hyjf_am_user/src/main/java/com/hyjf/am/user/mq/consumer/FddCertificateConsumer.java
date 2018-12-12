@@ -60,6 +60,7 @@ public class FddCertificateConsumer implements RocketMQListener<MessageExt>, Roc
                 return ;
             }
         } catch (Exception e) {
+        	logger.error("消费出错", e);
             return ;
         }
 

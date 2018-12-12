@@ -5,11 +5,11 @@ import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
+import org.apache.rocketmq.spring.core.RocketMQListener;
+import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
-
-import com.hyjf.am.config.mq.base.Consumer;
 
 /**
  * 
@@ -19,7 +19,7 @@ import com.hyjf.am.config.mq.base.Consumer;
 //@Component
 @Service
 @RocketMQMessageListener(topic = "TEST_TOPIC2", selectorExpression = "*", consumerGroup = "TESTC1")
-public class TestConsumer2 extends Consumer {
+public class TestConsumer2 implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 	private static final Logger logger = LoggerFactory.getLogger(TestConsumer2.class);
 
 

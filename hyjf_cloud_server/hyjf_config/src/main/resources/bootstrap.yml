@@ -1,29 +1,26 @@
 spring:
   application:
     name: config-server
-  boot:
-    admin:
-      client:
-        url: http://MONITOR-SERVER
-  profiles:
-    active: native
+
+#  profiles:
+#    active: native
   cloud:
     config:
       server:
-        native:
-          searchLocations: D:/hyjf/git/20181203/micro-deploy/src/main/resources
-#        git:
-#          uri: http://gitlab.hyjf.com:6080/microserver/micro-deploy.git
-#          searchPaths: src/main/resources
-#          username: deployment
-#          password: deploy2018
-#  profiles:
-#    active: dev
+#        native:
+#          searchLocations: D:/hyjf/git/1030/micro-deploy/src/main/resources
+        git:
+          uri: http://gitlab.hyjf.com:6080/microserver/micro-deploy.git
+          searchPaths: src/main/resources
+          username: deployment
+          password: deploy2018
+  profiles:
+    active: dev
 
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://microserver1:1111/eureka/,http://microserver2:1111/eureka/
+      defaultZone: '@eureka.serviceUrl.default@'
   instance:
     preferIpAddress: true
 
