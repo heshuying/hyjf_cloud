@@ -78,8 +78,6 @@ public class WeChatLoginController extends BaseUserController {
         LoginResultBean result = new LoginResultBean();
         // 从payload里面获取预置属性
         String presetProps = getStringFromStream(request);
-        StringBuffer url = request.getRequestURL();
-        String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).toString();
         CheckUtil.check(null != userName && null != password, MsgEnum.STATUS_CE000001);
         // 现只支持两个参数  1微信  2风车理财
         if (!"1".equals(env) && !"2".equals(env)) {
