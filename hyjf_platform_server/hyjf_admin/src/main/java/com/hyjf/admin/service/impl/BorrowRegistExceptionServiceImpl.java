@@ -222,6 +222,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                                 }else if (debtDetails.size() == 1) {
                                     logger.debug("debtDetails.size == 1");
                                     JSONObject debtDetail = debtDetails.getJSONObject(0);
+                                    // TODO:这里state是2
                                     String state = debtDetail.getString(BankCallConstant.PARAM_STATE);
                                     if ("9".equals(state)) {
                                         logger.debug("@@7@@");
