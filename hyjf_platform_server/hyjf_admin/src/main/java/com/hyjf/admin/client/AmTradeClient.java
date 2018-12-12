@@ -1840,7 +1840,7 @@ public interface AmTradeClient {
      * @return
      * @Author : huanghui
      */
-    boolean updateAccountAfterRecharge(AccountRechargeRequest request);
+    AccountRechargeCustomizeResponse updateAccountAfterRecharge(AccountRechargeRequest request);
 
     /**
      * 子账户类型 查询

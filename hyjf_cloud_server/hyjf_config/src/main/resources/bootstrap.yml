@@ -1,10 +1,7 @@
 spring:
   application:
     name: config-server
-  boot:
-    admin:
-      client:
-        url: http://MONITOR-SERVER
+
 #  profiles:
 #    active: native
   cloud:
@@ -23,7 +20,7 @@ spring:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://microserver1:1111/eureka/,http://microserver2:1111/eureka/
+      defaultZone: '@eureka.serviceUrl.default@'
   instance:
     preferIpAddress: true
 

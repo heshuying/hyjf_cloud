@@ -48,7 +48,7 @@ public class AccountRechargeServiceImpl extends BaseServiceImpl implements Accou
     }
 
     @Override
-    public boolean updateAccountAfterRecharge(AccountRechargeRequest request) {
+    public AccountRechargeCustomizeResponse updateAccountAfterRecharge(AccountRechargeRequest request) {
         return amTradeClient.updateAccountAfterRecharge(request);
     }
 

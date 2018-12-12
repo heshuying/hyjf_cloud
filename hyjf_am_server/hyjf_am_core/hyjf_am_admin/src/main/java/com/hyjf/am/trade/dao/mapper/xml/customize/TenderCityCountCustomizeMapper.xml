@@ -257,26 +257,11 @@
 
 	<!--代偿金额 -->
 	<select id="getRepayTotal"  parameterType="java.util.Date" resultType="java.math.BigDecimal">
-
-		SELECT
-		SUM(A.recover_capital_wait)
-		FROM
-		( select br.id,br.recover_capital_wait
-		FROM  ht_borrow b
-		LEFT JOIN ht_borrow_recover br ON b.borrow_nid = br.borrow_nid
-		WHERE
-		br.recover_time >= UNIX_TIMESTAMP(#{date})
-		and br.id not in
-		(
-		select br.id
-		FROM  ht_borrow b
-		LEFT JOIN ht_borrow_recover br ON b.borrow_nid = br.borrow_nid
-		WHERE br.recover_time >= UNIX_TIMESTAMP(#{date})
-		AND br.recover_yestime &lt;=  UNIX_TIMESTAMP(#{date})
-		)
-
-		) A
-
+		 select SUM(br.recover_capital_wait)
+			FROM  ht_borrow b
+		 LEFT JOIN ht_borrow_recover br ON b.borrow_nid = br.borrow_nid
+		 WHERE br.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{date})
+		 and (br.recover_yestime is null or br.recover_yestime <![CDATA[>]]>UNIX_TIMESTAMP(#{date}) )
 	</select>
 
 </mapper>

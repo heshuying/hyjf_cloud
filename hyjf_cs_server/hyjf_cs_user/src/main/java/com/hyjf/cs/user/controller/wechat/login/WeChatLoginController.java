@@ -5,11 +5,10 @@ package com.hyjf.cs.user.controller.wechat.login;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
@@ -42,10 +41,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
-import java.io.IOException;
 
 /**
  * @author zhangqingqing
@@ -75,6 +74,7 @@ public class WeChatLoginController extends BaseUserController {
     @PostMapping(value = "/doLogin.do")
     public BaseResultBean login(HttpServletRequest request, @RequestParam String userName, @RequestParam String password,
                                 @RequestParam(value = "env", defaultValue = "") String env) {
+        long start = System.currentTimeMillis();
         LoginResultBean result = new LoginResultBean();
         // 从payload里面获取预置属性
         String presetProps = getStringFromStream(request);
@@ -91,6 +91,8 @@ public class WeChatLoginController extends BaseUserController {
         if (!CommonUtils.isMobile(userName)) {
             throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN);
         }
+        logger.info("密码解密===================:"+(System.currentTimeMillis()-start));
+
         //判断用户输入的密码错误次数---开始
         Map<String, String> errorInfo=loginService.insertErrorPassword(userName,password,BankCallConstant.CHANNEL_WEI);
         if (!errorInfo.isEmpty()){
@@ -99,8 +101,12 @@ public class WeChatLoginController extends BaseUserController {
             result.setStatusDesc(errorInfo.get("info"));
             return result;
         }
+        logger.info("判断用户输入的密码错误次数===================:"+(System.currentTimeMillis()-start));
         //判断用户输入的密码错误次数---结束
+        long start1 = System.currentTimeMillis();
         WebViewUserVO userVO = loginService.login(userName, password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI);
+        logger.info("登录操作===================:"+(System.currentTimeMillis()-start1));
+        long start2 = System.currentTimeMillis();
         if (userVO != null) {
             logger.info("weChat端登录成功, userId is :{}", userVO.getUserId());
             // add by liuyang 神策数据统计追加 登录成功后 将用户ID返回前端 20180717 start
@@ -150,6 +156,8 @@ public class WeChatLoginController extends BaseUserController {
             result.setStatus(ApiResult.FAIL);
             result.setStatusDesc(MsgEnum.ERR_USER_LOGIN.getMsg());
         }
+        logger.info("神策===================:"+(System.currentTimeMillis()-start2));
+        logger.info("总时间===================:"+(System.currentTimeMillis()-start));
         return result;
     }
 

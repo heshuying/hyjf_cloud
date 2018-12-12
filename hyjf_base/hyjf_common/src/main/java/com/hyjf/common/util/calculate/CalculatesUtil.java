@@ -150,8 +150,6 @@ public class CalculatesUtil {
         BigDecimal monthlyInterestEnd = null;
         // 汇消费时
         if (PROJECT_TYPE_HXF.equals(projectType)) {
-        	//TODO
-        	
             monthlyInterestStart = AverageCapitalPlusInterestUtils.getPerMonthPrincipalInterest(account, monthRate, borrowPeriod);
             monthlyInterestEnd = AverageCapitalPlusInterestUtils.getPerMonthPrincipalInterest(account, monthRateEnd, borrowPeriod);
         }

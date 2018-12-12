@@ -23,6 +23,8 @@ import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +46,7 @@ import java.util.Map;
 @RequestMapping(value = "/hyjf-admin/hjhReInvestDetail")
 public class HjhReInvestDetailController extends BaseController {
 
+    private static Logger logger = LoggerFactory.getLogger(HjhReInvestDetailController.class);
     @Autowired
     private HjhReInvestDetailService hjhReInvestDetailService;
 
@@ -163,6 +166,15 @@ public class HjhReInvestDetailController extends BaseController {
     @ApiOperation(value = "复投原始标的列表导出", notes = "复投详情列表导出")
     @PostMapping(value = "/exportAction")
     public void exportAction(HttpServletRequest request, HttpServletResponse response, HjhReInvestDetailRequestBean requestBean) throws Exception {
+
+        if (StringUtils.isEmpty(requestBean.getDate())){
+            logger.error("复投原始标的列表导出日期为空无法导出!");
+        }
+
+        if (StringUtils.isEmpty(requestBean.getPlanNid())){
+            logger.error("复投原始标的列表导出智投编号为空无法导出!");
+        }
+
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
