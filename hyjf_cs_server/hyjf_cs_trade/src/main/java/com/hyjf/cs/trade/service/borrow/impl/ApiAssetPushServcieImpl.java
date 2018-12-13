@@ -103,6 +103,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         HjhAssetBorrowTypeVO assetBorrow = amTradeClient.selectAssetBorrowType(pushRequestBean.getInstCode(), pushRequestBean.getAssetType());
         if (assetBorrow == null) {
             logger.info(pushRequestBean.getInstCode() + "  " + pushRequestBean.getAssetType() + " ------机构编号不存在");
+            resultBean.setStatusDesc("机构编号不存在");
             return resultBean;
         }
 
@@ -419,7 +420,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
 
         // 设置返回结果
         resultBean.setData(retassets);
-
+        resultBean.setStatusDesc(retassets.get(0).getRetMsg());
         return resultBean;
     }
 
