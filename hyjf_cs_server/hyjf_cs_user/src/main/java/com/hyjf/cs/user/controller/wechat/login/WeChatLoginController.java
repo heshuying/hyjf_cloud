@@ -83,6 +83,7 @@ public class WeChatLoginController extends BaseUserController {
         if (!"1".equals(env) && !"2".equals(env)) {
             throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
+        logger.info("从payload里面获取预置属性===================:"+(System.currentTimeMillis()-start));
         long startt = System.currentTimeMillis();
         //密码解密
         password = RSAJSPUtil.rsaToPassword(password);
