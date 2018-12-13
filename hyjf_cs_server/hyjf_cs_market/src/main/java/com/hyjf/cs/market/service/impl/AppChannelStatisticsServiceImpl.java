@@ -122,7 +122,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 						openAccountAttrCount, investAttrNumber, cumulativeAttrInvest,cumulativeInvest);
 				try {
 					producer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_TOPIC,
-							System.currentTimeMillis() + "", JSONObject.toJSONBytes(statisticsVO)));
+							System.currentTimeMillis() + "", statisticsVO));
 				} catch (MQException e) {
 					logger.error("APP渠道统计数据定时任务出错......", e);
 				}

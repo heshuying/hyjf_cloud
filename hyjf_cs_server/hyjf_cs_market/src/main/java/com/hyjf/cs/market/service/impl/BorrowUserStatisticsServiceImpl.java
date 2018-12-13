@@ -64,7 +64,7 @@ public class BorrowUserStatisticsServiceImpl extends BaseMarketServiceImpl imple
 			record.setAddTime(GetDate.getNowTime10());
 			try {
 				commonProducer.messageSend(new MessageContent(MQConstant.BORROW_USER_STATISTICS_TOPIC,
-						System.currentTimeMillis() + "", JSONObject.toJSONBytes(record)));
+						System.currentTimeMillis() + "", record));
 			} catch (MQException e) {
 				logger.error("更新借款用户运营数据失败......", e);
 			}
@@ -73,7 +73,7 @@ public class BorrowUserStatisticsServiceImpl extends BaseMarketServiceImpl imple
 			record.setUpdateTime(GetDate.getNowTime10());
 			try {
 				commonProducer.messageSend(new MessageContent(MQConstant.BORROW_USER_STATISTICS_TOPIC,
-						System.currentTimeMillis() + "", JSONObject.toJSONBytes(record)));
+						System.currentTimeMillis() + "", record));
 			} catch (MQException e) {
 				logger.error("更新借款用户运营数据失败......", e);
 			}

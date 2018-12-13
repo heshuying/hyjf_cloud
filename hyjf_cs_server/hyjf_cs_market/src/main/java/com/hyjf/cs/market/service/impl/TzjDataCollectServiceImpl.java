@@ -1,6 +1,5 @@
 package com.hyjf.cs.market.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
@@ -78,7 +77,7 @@ public class TzjDataCollectServiceImpl implements TzjDataCollectService {
 		// 4.mq通知
 		try {
 			commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_TZJ_TOPIC,
-					System.currentTimeMillis() + "", JSON.toJSONBytes(tzjDayReportVO)));
+					System.currentTimeMillis() + "", tzjDayReportVO));
 		} catch (MQException e) {
 			logger.error("投之家日报表发送mq失败...", e);
 		}
