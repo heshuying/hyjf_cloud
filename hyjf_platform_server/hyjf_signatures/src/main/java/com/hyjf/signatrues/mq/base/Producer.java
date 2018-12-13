@@ -1,5 +1,6 @@
 package com.hyjf.signatrues.mq.base;
 
+import com.alibaba.fastjson.JSON;
 import com.hyjf.common.exception.MQException;
 import org.apache.rocketmq.client.exception.MQBrokerException;
 import org.apache.rocketmq.client.exception.MQClientException;
@@ -55,7 +56,7 @@ public abstract class Producer {
 	protected boolean messageSend(MessageContent messageContent) throws MQException {
 		try {
 			Message message = new Message(messageContent.topic, messageContent.tag, messageContent.keys,
-					messageContent.body);
+					JSON.toJSONBytes(messageContent.body));
 			return send(message);
 		} catch (MQClientException | RemotingException | MQBrokerException e) {
 			throw new MQException("mq send error", e);
@@ -73,7 +74,7 @@ public abstract class Producer {
 	protected boolean messageSendDelay(MessageContent messageContent,int delayLevel) throws MQException {
 		try {
 			Message message = new Message(messageContent.topic, messageContent.tag, messageContent.keys,
-					messageContent.body);
+					JSON.toJSONBytes(messageContent.body));
 			if (delayLevel > 0){
 				message.setDelayTimeLevel(delayLevel);
 			}

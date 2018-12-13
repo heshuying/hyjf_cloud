@@ -28,9 +28,8 @@ import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.FddCertificateProducer;
-import com.hyjf.cs.user.mq.producer.sensorsdate.openaccount.SensorsDataOpenAccountProducer;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.vo.BankOpenVO;
@@ -74,10 +73,8 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
     private AmConfigClient amConfigClient;
 
     @Autowired
-    private FddCertificateProducer fddCertificateProducer;
+    private CommonProducer commonProducer;
 
-    @Autowired
-    private SensorsDataOpenAccountProducer sensorsDataOpenAccountProducer;
 
     @Override
     public boolean checkIdNo(String idNo) {
@@ -311,7 +308,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
             params.put("userId", String.valueOf(userId));
             params.put("accountId", bean.getAccountId());
             logger.info("开户异步处理，发送MQ，userId:[{}],mqMgId:[{}]",userId,params.get("mqMsgId"));
-            fddCertificateProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(params)));
+            commonProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(), params));
         } catch (MQException e) {
             logger.error("用户开户后，发送【法大大CA认证】MQ消息失败！userId:[{}]",userId);
         }
@@ -327,7 +324,7 @@ public class BankOpenServiceImpl extends BaseUserServiceImpl implements BankOpen
      * @param sensorsDataBean
      */
     private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
-        this.sensorsDataOpenAccountProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_OPEN_ACCOUNT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
+        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_OPEN_ACCOUNT_TOPIC, UUID.randomUUID().toString(), sensorsDataBean), 2);
     }
 
 

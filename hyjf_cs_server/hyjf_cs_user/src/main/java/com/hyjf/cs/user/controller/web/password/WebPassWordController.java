@@ -27,8 +27,8 @@ import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.PasswordRequest;
@@ -66,7 +66,7 @@ public class WebPassWordController extends BaseUserController{
     @Autowired
     SystemConfig systemConfig;
     @Autowired
-    UserOperationLogProducer userOperationLogProducer;
+    private CommonProducer commonProducer;
 
     @ApiOperation(value = "修改登陆密码", notes = "修改登陆密码")
     @PostMapping(value = "/login-password", produces = "application/json; charset=utf-8")
@@ -114,7 +114,7 @@ public class WebPassWordController extends BaseUserController{
         userOperationLogEntity.setUserName(user.getUsername());
         userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
         try {
-            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(userOperationLogEntity)));
+            commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
         } catch (MQException e) {
             logger.error("保存用户日志失败", e);
         }
@@ -176,7 +176,7 @@ public class WebPassWordController extends BaseUserController{
         userOperationLogEntity.setUserName(user.getUsername());
         userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
         try {
-            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(userOperationLogEntity)));
+            commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
         } catch (MQException e) {
             logger.error("保存用户日志失败", e);
         }
@@ -408,7 +408,7 @@ public class WebPassWordController extends BaseUserController{
             userOperationLogEntity.setUserName(user.getUsername());
             userOperationLogEntity.setUserRole(user.getRoleId());
             try {
-                userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(userOperationLogEntity)));
+                commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
             } catch (MQException e) {
                 logger.error("保存用户日志失败", e);
             }

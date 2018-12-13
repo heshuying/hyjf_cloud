@@ -18,7 +18,6 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.controller.web.login.WebLoginController;
-import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.cs.user.service.login.LoginService;
@@ -63,8 +62,6 @@ public class WrbUserBindController extends BaseUserController {
 	private UserRegisterService userRegisterService;
 	@Autowired
 	BindCardService bindCardService;
-    @Autowired
-    private UserOperationLogProducer userOperationLogProducer;
 
 	@Value("${hyjf.front.wei.host}")
 	public String wechatHost;

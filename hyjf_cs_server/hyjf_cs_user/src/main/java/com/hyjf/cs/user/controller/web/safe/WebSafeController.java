@@ -13,8 +13,8 @@ import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.util.GetCilentIP;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,7 +58,7 @@ public class WebSafeController extends BaseUserController {
     @Autowired
     private SafeService safeService;
     @Autowired
-    UserOperationLogProducer userOperationLogProducer;
+    private CommonProducer commonProducer;
 
     /**
      * 账户设置查询
@@ -162,7 +162,7 @@ public class WebSafeController extends BaseUserController {
         userOperationLogEntity.setUserName(webUser.getUsername());
         userOperationLogEntity.setUserRole(webUser.getRoleId());
         try {
-            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(userOperationLogEntity)));
+            commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(),  userOperationLogEntity));
         } catch (MQException e) {
             logger.error("保存用户日志失败", e);
         }

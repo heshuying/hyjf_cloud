@@ -32,8 +32,8 @@ import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.constants.ResultEnum;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.SmsProducer;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.cs.user.vo.SendSmsVO;
@@ -74,7 +74,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
     private AmDataCollectClient amDataCollectClient;
 
     @Autowired
-    private SmsProducer smsProducer;
+    private CommonProducer commonProducer;
 
     @Autowired
     private SystemConfig systemConfig;
@@ -421,7 +421,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         // 发送短信验证码
         SmsMessage smsMessage = new SmsMessage(null, param, sendSmsVO.getMobile(), null, MessageConstant.SMS_SEND_FOR_MOBILE, null, CustomConstants.PARAM_TPL_ZHAOHUIMIMA, CustomConstants.CHANNEL_TYPE_NORMAL);
         // 发送
-        smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
+        commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
             // 累加手机次数
             String currentMaxPhoneCount = RedisUtils.get(RedisConstants.CACHE_MAX_PHONE_COUNT + sendSmsVO.getMobile());
             if (StringUtils.isBlank(currentMaxPhoneCount)) {
