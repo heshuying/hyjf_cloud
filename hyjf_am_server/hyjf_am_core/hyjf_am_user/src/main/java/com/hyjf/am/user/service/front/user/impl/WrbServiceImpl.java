@@ -151,7 +151,7 @@ public class WrbServiceImpl implements WrbService {
                     param.put("val_password", password);
                     SmsMessage smsMessage = new SmsMessage(userId, param, mobiles, null, SMSSENDFORMOBILE, null, CustomConstants.THIRD_PARTY_REGIEST_PASSWORD, CustomConstants.CHANNEL_TYPE_NORMAL);
                     try {
-                    	commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                    	commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
                     } catch (MQException e) {
                         e.printStackTrace();
                     }
@@ -333,7 +333,7 @@ public class WrbServiceImpl implements WrbService {
         log.info("注册插入account：{}", JSON.toJSONString(account));
         try {
             log.info("发送mq开始");
-            commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(account)));
+            commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(), account));
             log.info("发送mq结束");
         } catch (MQException e) {
             log.error("注册成功推送account——mq失败.... user_id is :{}", userId);

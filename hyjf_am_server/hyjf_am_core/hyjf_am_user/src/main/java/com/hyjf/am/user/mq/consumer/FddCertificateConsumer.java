@@ -85,7 +85,7 @@ public class FddCertificateConsumer implements RocketMQListener<MessageExt>, Roc
             map.put("userId", String.valueOf(userId).trim());
             if(!"mobileModify".equals(fddCertificateAuthorityVO.getCertFrom())){
                 //crm投资推送
-            	commonProducer.messageSend(new MessageContent(MQConstant.CRM_ROUTINGKEY_BANCKOPEN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(map)));
+            	commonProducer.messageSend(new MessageContent(MQConstant.CRM_ROUTINGKEY_BANCKOPEN_TOPIC, UUID.randomUUID().toString(), map));
                 logger.info("开户发送MQ时间【{}】",new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date()));
             }
 

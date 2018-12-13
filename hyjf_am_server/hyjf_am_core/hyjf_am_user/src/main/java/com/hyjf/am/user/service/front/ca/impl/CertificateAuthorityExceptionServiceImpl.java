@@ -166,7 +166,7 @@ public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl im
 		FddCertificateAuthorityVO fddCertificateAuthorityVO = new FddCertificateAuthorityVO();
 		fddCertificateAuthorityVO.setUserId(userId);
 		commonProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC,
-				UUID.randomUUID().toString(), JSON.toJSONBytes(fddCertificateAuthorityVO)));
+				UUID.randomUUID().toString(), fddCertificateAuthorityVO));
 
 		// 处理结束时间
 		String endTime = GetDate.dateToString(new Date());

@@ -127,7 +127,7 @@ public class SyncRuserInterceptor implements Interceptor {
     }
 
     private void sendToMq(Object parameterObject, String methodName, String tagName) throws MQException {
-    	commonProducer.messageSend(new MessageContent(MQConstant.SYNC_RUSER_TOPIC, tagName, UUID.randomUUID().toString(), JSON.toJSONBytes(parameterObject)));
+    	commonProducer.messageSend(new MessageContent(MQConstant.SYNC_RUSER_TOPIC, tagName, UUID.randomUUID().toString(), parameterObject));
         logger.info("【{}】发送用户信息同步,同步信息：{}", methodName + "/" + tagName, JSON.toJSON(parameterObject).toString());
     }
 

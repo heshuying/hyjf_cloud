@@ -205,7 +205,7 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
          */
         try {
         	commonProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-                    MQConstant.APP_CHANNEL_STATISTICS_DETAIL_UPDATE_TAG,UUID.randomUUID().toString(),JSON.toJSONBytes(userId)));
+                    MQConstant.APP_CHANNEL_STATISTICS_DETAIL_UPDATE_TAG,UUID.randomUUID().toString(), userId));
         } catch (MQException e) {
             logger.error("开户统计app渠道失败....", e);
         }

@@ -61,7 +61,7 @@ public class FddCertificateServiceImpl extends BaseServiceImpl implements FddCer
             for (User user : usersList) {
                 FddCertificateAuthorityVO fddCertificateAuthorityVO = new FddCertificateAuthorityVO();
                 fddCertificateAuthorityVO.setUserId( user.getUserId());
-                commonProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(fddCertificateAuthorityVO)));
+                commonProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(), fddCertificateAuthorityVO));
             }
             // 处理结束时间
             String endTime = GetDate.dateToString(new Date());

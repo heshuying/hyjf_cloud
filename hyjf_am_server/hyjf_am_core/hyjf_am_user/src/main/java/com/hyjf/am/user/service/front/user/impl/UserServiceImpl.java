@@ -427,7 +427,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
                             CustomConstants.THIRD_PARTY_REGIEST_PASSWORD, CustomConstants.CHANNEL_TYPE_NORMAL);
                     // 发送
                     try {
-                        smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                        smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
                     } catch (MQException e) {
                         logger.error("短信发送失败...", e);
                     }
