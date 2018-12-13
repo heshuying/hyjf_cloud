@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.service.impl;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
@@ -191,6 +192,18 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
             throw e;
         }
     }
+
+    /**
+     * 根据标的编号查询标的信息
+     *
+     * @param borrowNid
+     * @return
+     */
+    @Override
+    public RightBorrowVO selectBorrowByBorrowNid(String borrowNid) {
+        return this.amTradeClient.getRightBorrowByNid(borrowNid);
+    }
+
     /**
      * 获取account信息
      * @auther: hesy
