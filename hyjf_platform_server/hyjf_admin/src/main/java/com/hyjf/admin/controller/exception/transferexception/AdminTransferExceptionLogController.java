@@ -1,6 +1,5 @@
 package com.hyjf.admin.controller.exception.transferexception;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AdminTransferExceptionLogAPIRequest;
 import com.hyjf.admin.beans.vo.AdminTransferExceptionLogAPIVO;
@@ -10,7 +9,7 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
-import com.hyjf.admin.mq.SmsProducer;
+import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.AdminTransferExceptionLogService;
 import com.hyjf.am.response.Response;
@@ -69,7 +68,7 @@ public class AdminTransferExceptionLogController extends BaseController {
      * 短信mq生产端
      */
     @Autowired
-    private SmsProducer smsProducer;
+    private CommonProducer commonProducer;
     /**
      * 引入配置文件
      */
@@ -279,8 +278,8 @@ public class AdminTransferExceptionLogController extends BaseController {
                     SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(USERID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null,
                             CustomConstants.PARAM_TPL_COUPON_PROFIT, CustomConstants.CHANNEL_TYPE_NORMAL);
                     try {
-                        smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
-                                JSON.toJSONBytes(smsMessage)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
+                                smsMessage));
                     } catch (MQException e) {
                         e.printStackTrace();
                     }

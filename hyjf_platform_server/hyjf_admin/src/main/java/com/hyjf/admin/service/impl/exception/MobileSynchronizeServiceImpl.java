@@ -4,7 +4,6 @@
 package com.hyjf.admin.service.impl.exception;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.mq.FDDUserInfoChangeProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.exception.MobileSynchronizeService;
 import com.hyjf.admin.service.impl.BaseAdminServiceImpl;

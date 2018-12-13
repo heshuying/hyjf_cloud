@@ -6,13 +6,10 @@ package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.mq.FddProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.HjhCreditTenderService;
 import com.hyjf.am.response.admin.HjhCreditTenderResponse;
-import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.resquest.admin.HjhCreditTenderRequest;
-import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.fdd.FddDessenesitizationBeanVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO;

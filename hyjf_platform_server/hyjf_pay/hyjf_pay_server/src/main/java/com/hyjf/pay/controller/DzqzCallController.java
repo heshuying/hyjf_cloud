@@ -134,7 +134,7 @@ public class DzqzCallController extends BaseController {
             if (!"3000".equals(result_code)){//未签署成功
                 log.info("--------------合同签署异步返回签署失败-----------交易号：" + orderId + "--交易描述：" + bean.getResult_desc());
             }else{
-                commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_AUTO_SIGN_TAG, UUID.randomUUID().toString(),JSON.toJSONBytes(bean)));
+                commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_AUTO_SIGN_TAG, UUID.randomUUID().toString(),bean));
             }
         } catch (Exception e) {
             e.printStackTrace();
