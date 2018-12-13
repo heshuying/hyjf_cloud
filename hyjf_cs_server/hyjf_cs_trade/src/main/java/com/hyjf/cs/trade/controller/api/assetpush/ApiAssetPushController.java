@@ -49,11 +49,10 @@ public class ApiAssetPushController extends BaseTradeController {
         logger.info(this.getClass().getName(), "api端-资产推送接口 个人资产推送 start", pushRequestBean.toString(), "/hyjf-api/server/assetpush/push.do");
 
         JSONObject result = new JSONObject();
-
         // 验证请求参数
         List<PushBean> reqData = pushRequestBean.getReqData();
-        if (Validator.isNull(reqData) || Validator.isNull(pushRequestBean.getInstCode())
-                || Validator.isNull(pushRequestBean.getAssetType()) || Validator.isNull(pushRequestBean.getChkValue())) {
+        if (Validator.isNull(reqData) || Validator.isNull(pushRequestBean.getInstCode()) ||
+                Validator.isNull(pushRequestBean.getAssetType()) || Validator.isNull(pushRequestBean.getChkValue())) {
             logger.info("------请求参数非法-------" + pushRequestBean);
             result.put("status", ErrorCodeConstant.STATUS_CE000001);
             result.put("statusDesc", "请求参数非法");
@@ -61,7 +60,7 @@ public class ApiAssetPushController extends BaseTradeController {
         }
 
         // 验签
-        if (!SignUtil.verifyRequestSign(pushRequestBean, "/pushcompany")) {
+        if (!SignUtil.verifyRequestSign(pushRequestBean, "/push")) {
             logger.info("------------------验签失败！---------------------");
             result.put("status", ErrorCodeConstant.STATUS_CE000002);
             result.put("statusDesc", "验签失败！");

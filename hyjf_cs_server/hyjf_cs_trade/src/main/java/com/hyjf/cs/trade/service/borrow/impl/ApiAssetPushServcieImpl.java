@@ -98,7 +98,6 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
     public PushResultBean assetPush(PushRequestBean pushRequestBean) {
 
         PushResultBean resultBean = new PushResultBean();
-
         // 查看机构表是否存在
         HjhAssetBorrowTypeVO assetBorrow = amTradeClient.selectAssetBorrowType(pushRequestBean.getInstCode(), pushRequestBean.getAssetType());
         if (assetBorrow == null) {
@@ -126,28 +125,20 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
 
         // 检查请求资产总参数
         List<PushBean> assets = pushRequestBean.getReqData();
-        try {
-            if (assets == null || assets.size() == 0) {
-                return resultBean;
-            }
-            if (assets.size() > 1000) {
-                resultBean.setStatusDesc("请求参数过长");
-                logger.error("------请求参数过长-------");
-                return resultBean;
-            }
-
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
+        if (CollectionUtils.isEmpty(assets)) {
+            resultBean.setStatusDesc("推送资产不能为空");
             return resultBean;
         }
-
+        if (assets.size() > 1000) {
+            resultBean.setStatusDesc("请求参数过长");
+            logger.error("------请求参数过长-------");
+            return resultBean;
+        }
         // 返回结果
         List<PushBean> retassets = new ArrayList<>();
 
         for (PushBean pushBean : assets) {
-
             try {
-
                 String truename = pushBean.getTruename();
                 String idcard = pushBean.getIdcard();
 
@@ -155,8 +146,8 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                 retassets.add(pushBean);
 
                 // 金额不是100以及100的整数倍时将通过接口拒绝接收资产
-                if (pushBean.getAccount() == null || (pushBean.getAccount() % 10) != 0 || pushBean.getBorrowPeriod() == null
-                        || StringUtils.isBlank(truename) || StringUtils.isBlank(idcard) || StringUtils.isBlank(pushBean.getBorrowStyle())) {
+                if (pushBean.getAccount() == null || (pushBean.getAccount() % 10) != 0 || pushBean.getBorrowPeriod() == null ||
+                        StringUtils.isBlank(truename) || StringUtils.isBlank(idcard) || StringUtils.isBlank(pushBean.getBorrowStyle())) {
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000007);
                     pushBean.setRetMsg("资产信息不正确");
                     continue;
@@ -195,7 +186,6 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                     pushBean.setRetMsg("没有用户信息");
                     continue;
                 }
-
                 //校验还款方式
                 if (!checkIsMonthStyle(pushBean.getBorrowStyle(), pushBean.getIsMonth()) || !checkBorrowStyle(projectRepays, pushBean.getBorrowStyle())) {
                     logger.info(pushRequestBean.getInstCode() + " 还款方式不正确 " + projectRepays);
@@ -203,7 +193,6 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                     pushBean.setRetMsg("不支持这种还款方式");
                     continue;
                 }
-
                 // 受托支付
                 STZHWhiteListVO stzAccount = null;
                 if (pushBean.getEntrustedFlg() != null && pushBean.getEntrustedFlg().intValue() == 1) {
@@ -215,13 +204,11 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                     }
                     //查询用户受托支付电子账户是否授权
                     stzAccount = amTradeClient.selectStzfWhiteList(pushRequestBean.getInstCode(), pushBean.getEntrustedAccountId());
-
                     if (stzAccount == null) {
                         pushBean.setRetCode("ZT000012");
                         pushBean.setRetMsg("受托支付电子账户未授权");
                         continue;
                     }
-
                     // 校验受托人是否授权
                     if(!authService.checkPaymentAuthStatus(stzAccount.getUserId())){
                         pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000011);
@@ -229,8 +216,8 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                         retassets.add(pushBean);// 返回提示
                         continue;
                     }
-
                 }
+
                 Integer paymentAuth = users.getPaymentAuthStatus();
                 HjhUserAuthVO hjhUserAuth = this.amUserClient.getHjhUserAuthByUserId(users.getUserId());
                 Integer repayAuth = hjhUserAuth == null ? 0 : hjhUserAuth.getAutoRepayStatus();
@@ -263,7 +250,6 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                     pushBean.setRetMsg("年收入为空");
                     continue;
                 }
-
                 if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getMonthlyIncome())){
                     pushBean.setRetCode("ZT000014");
                     pushBean.setRetMsg("月收入为空");
@@ -333,10 +319,8 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                 record.setSex(sexInt);
                 // 年纪，如果没传，用身份证的，从user表获取
                 record.setAge(IdCard15To18.getAgeById(idcard));
-
                 record.setInstCode(pushRequestBean.getInstCode());
                 record.setAssetType(pushRequestBean.getAssetType());
-
                 record.setUserId(userInfo.getUserId());
                 record.setUserName(bankOpenAccount.getUserName());
                 record.setAccountId(bankOpenAccount.getAccount());
@@ -352,6 +336,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                 record.setRecieveTime(nowTime);
                 record.setCreateTime(nowTime);
                 record.setUpdateTime(nowTime);
+
                 // 默认系统用户
                 record.setCreateUserId(1);
                 record.setUpdateUserId(1);
@@ -370,7 +355,6 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                 record.setLitigation("无或已处理");
                 record.setOverdueTimes("0");
                 record.setOverdueAmount("0");
-
                 record.setUseage("个人资金周转");
                 record.setFirstPayment("个人收入");
                 record.setSecondPayment("第三方保障");
@@ -387,8 +371,6 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                 }
 
             } catch (Exception e) {
-                // ZT000008
-                logger.error(e.getMessage(), e);
                 if (e instanceof DuplicateKeyException) {
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000008);
                     pushBean.setRetMsg("资产已入库");
@@ -415,21 +397,19 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         }
         logger.info("----------------商家信息导入完成-----------------------");
 
-        resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
-        resultBean.setStatusDesc("请求成功");
 
-        // 设置返回结果
+        // 资产推送失败时返回 提示信息
         resultBean.setData(retassets);
         resultBean.setStatusDesc(retassets.get(0).getRetMsg());
+        // 当无失败信息时，说明校验通过，资产推送成功
+        if(StringUtils.isBlank(resultBean.getStatusDesc())){
+            resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
+            resultBean.setStatusDesc("资产推送成功");
+        }
         return resultBean;
     }
 
-    public PushResultBean fallBackAssetPush(PushRequestBean pushRequestBean) {
-        logger.info("==================已进入 个人资产推送(api) fallBackAssetPush 方法================");
-       return new PushResultBean();
-    }
-
-        @Override
+    @Override
     public HjhLabelVO getLabelId(BorrowAndInfoVO borrowVO, HjhPlanAssetVO hjhPlanAssetVO) {
 
         HjhLabelVO resultLabel = null;
@@ -628,6 +608,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         List<PushBean> retassets = new ArrayList<>();
         //定义判断标识
         boolean flag = false;
+
         for (PushBean pushBean : reqData) {
             //每个资产推送前先标识为资产推送失败
             flag = false;
@@ -656,16 +637,13 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                         retassets.add(pushBean);// 返回提示
                         continue;
                     }
-
                     stzAccount = amTradeClient.selectStzfWhiteList(pushRequestBean.getInstCode(), pushBean.getEntrustedAccountId());
-
                     if(stzAccount == null){
                         pushBean.setRetCode("ZT000012");
                         pushBean.setRetMsg("受托支付电子账户未授权");
                         retassets.add(pushBean);// 返回提示
                         continue;
                     }
-
                     // 校验受托人是否授权
                     if(!authService.checkPaymentAuthStatus(stzAccount.getUserId())){
                         pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000011);
@@ -711,6 +689,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                 if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getIsPunished())){
                     pushBean.setIsPunished("暂无");
                 }
+
                 // add by nxl 20180710互金系统,新添加企业注册地址,企业注册编码Start
                 if (StringUtils.isBlank(pushBean.getRegistrationAddress()) || pushBean.getRegistrationAddress().length() > 99) {
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000013);
@@ -755,6 +734,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                 record.setUseage("个人资金周转");
                 record.setFirstPayment("个人收入");
                 record.setSecondPayment("第三方保障");
+
                 //企业推送-必传字段非空校验
                 if(checkCompanyPushInfo(pushBean)){
                     //通过用户名获得用户的详细信息
@@ -833,6 +813,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                         retassets.add(pushBean);// 返回提示
                         continue;
                     }
+
 					/*--- 包装推送资产信息 start ---*/
                     record.setAccountId(bankOpenAccount.getAccount());
                     record.setTruename(userInfos.getTruename());
@@ -886,7 +867,8 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                     record.setLitigation(pushBean.getLitigation());
                     record.setUserId(users.getUserId());
                     record.setMobile(users.getMobile());
-					/*---  end ---*/
+					/*--- 包装推送资产信息 end ---*/
+
                 }else{
                     logger.info(pushRequestBean.getInstCode()+"必传字段未传");
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_CE000001);
@@ -894,6 +876,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                     retassets.add(pushBean);// 返回提示
                     continue;
                 }
+
                 logger.info(pushRequestBean.getInstCode()+" 审核完成，开始推送资产 ");
                 //检查是否存在重复资产
                 List<HjhPlanAssetVO> duplicateAssetId = amTradeClient.checkDuplicateAssetId(pushBean.getAssetId());
@@ -904,6 +887,8 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                     retassets.add(pushBean);// 返回提示
                     continue;
                 }
+
+                //推送资产
                 int result = amTradeClient.insertAssert(record);
                 if (result == 1) {
                     pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000008);
@@ -914,6 +899,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                     this.sendToMQ(record);
                     logger.info(pushRequestBean.getInstCode()+" mq已发送");
                 }
+
             }catch (Exception e) {
                 logger.info(this.getClass().getName(), "企业推送资产时，[assetId]重复，请更换");
                 if (e instanceof DuplicateKeyException) {
@@ -945,7 +931,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
 
         if (flag){
             resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
-            resultBean.setStatusDesc(retassets.get(0).getRetMsg());
+            resultBean.setStatusDesc("资产推送成功");
             resultBean.setData(retassets);// 设置返回结果
         }else {
             resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
