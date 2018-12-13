@@ -3,8 +3,6 @@
  */
 package com.hyjf.cs.trade.controller.web.tender.credit;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.resquest.trade.MyCreditListRequest;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
@@ -20,8 +18,8 @@ import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.CreditDetailsRequestBean;
 import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.trade.service.consumer.NifaContractEssenceMessageService;
 import com.hyjf.cs.trade.service.credit.MyCreditListService;
 import io.swagger.annotations.Api;
@@ -51,7 +49,7 @@ public class CreditController {
     @Autowired
     NifaContractEssenceMessageService nifaContractEssenceMessageService;
     @Autowired
-    UserOperationLogProducer userOperationLogProducer;
+    private CommonProducer commonProducer;
     /**
      * 首页 > 账户中心 > 资产管理 > 我要转让列表
      * @param
@@ -131,7 +129,7 @@ public class CreditController {
         userOperationLogEntity.setUserName(userVO.getUsername());
         userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
         try {
-            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(userOperationLogEntity)));
+            commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
         } catch (MQException e) {
             logger.error("保存用户日志失败", e);
         }

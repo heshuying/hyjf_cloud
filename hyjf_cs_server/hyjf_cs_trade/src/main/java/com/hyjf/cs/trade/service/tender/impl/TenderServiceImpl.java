@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.trade.service.tender.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
@@ -18,18 +17,18 @@ import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.*;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.CustomUtil;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.calculate.FinancingServiceChargeUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.CsMessageClient;
 import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
-import com.hyjf.cs.trade.mq.producer.CalculateInvestInterestProducer;
-import com.hyjf.cs.trade.mq.producer.CouponTenderProducer;
-import com.hyjf.cs.trade.mq.producer.UtmRegProducer;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.tender.TenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -65,13 +64,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
     @Autowired
     private CsMessageClient amMongoClient;
     @Autowired
-    private UtmRegProducer utmRegProducer;
-    @Autowired
-    private CalculateInvestInterestProducer calculateInvestInterestProducer;
-    @Autowired
-    private AppChannelStatisticsDetailProducer appChannelStatisticsProducer;
-    @Autowired
-    private CouponTenderProducer couponTenderProducer;
+    private CommonProducer commonProducer;
     
 	@Override
 	public JSONObject checkAutoTenderParam(String borrowNid, String account, String bizAccount, String platform,
@@ -864,7 +857,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
             try {
                 // 网站累计投资追加
                 // 投资修改mongodb运营数据
-                calculateInvestInterestProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), params));
                 // 满标发短信在原子层
             } catch (MQException e) {
                 e.printStackTrace();
@@ -907,8 +900,8 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
                 params.put("investFlag", checkIsNewUserCanInvest(userId));
                 //压入消息队列
                 try {
-                    appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-                            MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                            MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), params));
                 } catch (MQException e) {
                     e.printStackTrace();
                     logger.error("渠道统计用户累计投资推送消息队列失败！！！");
@@ -937,7 +930,7 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
                     // 更新渠道统计用户累计投资
                     try {
                         if(this.checkIsNewUserCanInvest(userId)){
-                            utmRegProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                            commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), params));
                         }
                     } catch (MQException e) {
                         e.printStackTrace();

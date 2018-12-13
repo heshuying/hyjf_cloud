@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.trade.service.batch.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -11,8 +10,8 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.batch.RedPacketSmsNoticeBatchService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import org.apache.commons.lang3.StringUtils;
@@ -36,7 +35,7 @@ public class RedPacketSmsNoticeBatchServiceImpl extends BaseTradeServiceImpl imp
     private static Logger logger = LoggerFactory.getLogger(RedPacketSmsNoticeBatchServiceImpl.class);
 
     @Autowired
-    SmsProducer smsProducer;
+    CommonProducer commonProducer;
 
     /** 交易渠道 */
     @Value("${hyjf.bank.merrp.account}")
@@ -78,8 +77,8 @@ public class RedPacketSmsNoticeBatchServiceImpl extends BaseTradeServiceImpl imp
             SmsMessage smsMessage = new SmsMessage(null, messageStrMap, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_RED_PACKET,
                     CustomConstants.CHANNEL_TYPE_NORMAL);
             try {
-                smsProducer.messageSend(
-                        new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
+                commonProducer.messageSend(
+                        new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),smsMessage));
             } catch (MQException e) {
                 logger.error("短信发送失败...", e);
             }

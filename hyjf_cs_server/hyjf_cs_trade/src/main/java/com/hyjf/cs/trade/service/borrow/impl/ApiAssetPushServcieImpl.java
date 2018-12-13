@@ -28,8 +28,8 @@ import com.hyjf.cs.trade.bean.assetpush.PushBean;
 import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.PushResultBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.AutoSendProducer;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.borrow.ApiAssetPushService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
@@ -66,7 +66,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
     private AmTradeClient autoSendClient;
 
     @Autowired
-    private AutoSendProducer autoSendProducer;
+    private CommonProducer commonProducer;
     @Autowired
     private AuthService authService;
     @Override
@@ -77,7 +77,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         params.put("instCode", hjhPlanAsset.getInstCode());
         try {
             //modify by liushouyi 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-            autoSendProducer.messageSendDelay(new MessageContent(MQConstant.HJH_AUTO_ISSUERECOVER_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)),2);
+            commonProducer.messageSendDelay(new MessageContent(MQConstant.HJH_AUTO_ISSUERECOVER_TOPIC, UUID.randomUUID().toString(), params),2);
         } catch (MQException e) {
             logger.error("自动录标发送消息失败...", e);
         }
@@ -573,7 +573,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         params.put("assetId", hjhPlanAssetVO.getAssetId());
         params.put("instCode", hjhPlanAssetVO.getInstCode());
         try {
-            autoSendProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
+            commonProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(),params));
         } catch (MQException e) {
             e.printStackTrace();
             logger.error("自动备案送消息失败...", e);

@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.trade.service.credit.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.hyjf.am.response.Response;
@@ -47,9 +46,8 @@ import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.CsMessageClient;
 import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.SmsProducer;
-import com.hyjf.cs.trade.mq.producer.sensorsdate.credit.SensorsDataCreditProducer;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.credit.MyCreditListService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
@@ -85,13 +83,13 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
     private static float creditDiscountEnd = 2.0f;
     private static DecimalFormat DF_COM_VIEW = new DecimalFormat("######0.00");
     @Autowired
+    private CommonProducer commonProducer;
+    @Autowired
     private AmUserClient amUserClient;
     @Autowired
     private CsMessageClient amMongoClient;
     @Autowired
     private AmTradeClient amTradeClient;
-    @Autowired
-    private SmsProducer smsProducer;
     @Autowired
     private SystemConfig systemConfig;
     @Autowired
@@ -102,8 +100,6 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
     @Autowired
     private AuthService authService;
 
-    @Autowired
-    private SensorsDataCreditProducer sensorsDataCreditProducer;
     /**
      * 我要债转列表页 获取参数
      *
@@ -802,6 +798,6 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
      * @param sensorsDataBean
      */
     private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
-        this.sensorsDataCreditProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_CREDIT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
+        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_CREDIT_TOPIC, UUID.randomUUID().toString(), sensorsDataBean), 2);
     }
 }

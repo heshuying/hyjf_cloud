@@ -1,6 +1,5 @@
 package com.hyjf.cs.trade.service.recharge.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
@@ -30,10 +29,8 @@ import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
-import com.hyjf.cs.trade.mq.producer.SmsProducer;
-import com.hyjf.cs.trade.mq.producer.sensorsdate.recharge.SensorsDataRechargeProducer;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.recharge.RechargeService;
@@ -63,7 +60,8 @@ import java.util.*;
 @Service
 public class RechargeServiceImpl extends BaseTradeServiceImpl implements RechargeService  {
 	Logger  logger = LoggerFactory.getLogger(RechargeServiceImpl.class);
-
+	@Autowired
+	private CommonProducer commonProducer;
 
 	@Autowired
 	AmTradeClient bindCardClient;
@@ -74,12 +72,6 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	@Autowired
 	AmUserClient amUserClient;
 
-
-	@Autowired
-	AppMessageProducer appMessageProducer;
-
-	@Autowired
-	SmsProducer smsProducer;
 	@Autowired
 	AmConfigClient amConfigClient;
 	@Autowired
@@ -91,9 +83,6 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	private static final int RECHARGE_STATUS_FAIL = 3;
 	// 充值状态:成功
 	private static final int RECHARGE_STATUS_SUCCESS = 2;
-
-	@Autowired
-	private SensorsDataRechargeProducer sensorsDataRechargeProducer;
 
 	@Override
 	public AccountVO getAccount(Integer userId) {
@@ -202,10 +191,10 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 										CustomConstants.CHANNEL_TYPE_NORMAL);
 								AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null,
 										MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_CHONGZHI_SUCCESS);
-								smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
-										UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
-								appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
-										UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
+								commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
+										UUID.randomUUID().toString(), smsMessage));
+								commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
+										UUID.randomUUID().toString(), appMsMessage));
 							}else{
 								// 替换参数
 								Map<String, String> replaceMap = new HashMap<String, String>();
@@ -216,8 +205,8 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 								replaceMap.put("val_sex", info.getSex() == 2 ? "女士" : "先生");
 								AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null,
 										MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_CHONGZHI_SUCCESS);
-								appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
-										UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
+								commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
+										UUID.randomUUID().toString(), appMsMessage));
 							}
 
 							// 神策数据统计 add by liuyang 20180725 start
@@ -587,7 +576,7 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 	 * @param sensorsDataBean
 	 */
 	private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
-		this.sensorsDataRechargeProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_RECHARGE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
+		this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_RECHARGE_TOPIC, UUID.randomUUID().toString(), sensorsDataBean), 2);
 	}
 
 
