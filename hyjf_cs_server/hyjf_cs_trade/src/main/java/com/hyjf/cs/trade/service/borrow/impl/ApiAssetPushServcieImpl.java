@@ -599,11 +599,16 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
 
         // 检查请求资产总参数
         List<PushBean>  reqData = pushRequestBean.getReqData();
+        if (CollectionUtils.isEmpty(reqData)) {
+            resultBean.setStatusDesc("推送资产不能为空");
+            return resultBean;
+        }
         if (reqData.size() > 1000) {
             resultBean.setStatusDesc("请求参数过长");
             logger.error("------请求参数过长-------");
             return resultBean;
         }
+
         // 返回结果
         List<PushBean> retassets = new ArrayList<>();
         //定义判断标识
