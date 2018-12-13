@@ -1,11 +1,7 @@
 package com.hyjf.am.config.service.impl;
 
 import com.alibaba.fastjson.JSONArray;
-import com.hyjf.am.config.dao.mapper.auto.AdminMapper;
-import com.hyjf.am.config.dao.mapper.auto.AdminMenuMapper;
-import com.hyjf.am.config.dao.mapper.auto.AdminMenuPermssionsMapper;
-import com.hyjf.am.config.dao.mapper.auto.AdminPermissionsMapper;
-import com.hyjf.am.config.dao.mapper.auto.AdminRoleMenuPermissionsMapper;
+import com.hyjf.am.config.dao.mapper.auto.*;
 import com.hyjf.am.config.dao.mapper.customize.AdminCustomizeMapper;
 import com.hyjf.am.config.dao.mapper.customize.AdminSystemMapper;
 import com.hyjf.am.config.dao.model.auto.*;

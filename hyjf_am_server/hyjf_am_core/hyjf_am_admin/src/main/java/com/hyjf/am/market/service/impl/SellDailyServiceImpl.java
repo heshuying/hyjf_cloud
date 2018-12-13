@@ -1,17 +1,15 @@
 package com.hyjf.am.market.service.impl;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.springframework.stereotype.Service;
-
 import com.hyjf.am.market.dao.mapper.customize.market.SellDailyCustomizeMapper;
 import com.hyjf.am.market.service.SellDailyService;
 import com.hyjf.am.vo.market.SellDailyVO;
 import com.hyjf.common.util.GetDate;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author fuqiang

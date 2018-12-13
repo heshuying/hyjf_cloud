@@ -3,18 +3,16 @@
  */
 package com.hyjf.am.trade.service.admin.exception.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
-import com.hyjf.am.admin.mq.producer.AccountWebListProducer;
-import com.hyjf.am.admin.mq.producer.FddProducer;
 import com.hyjf.am.trade.dao.mapper.auto.HjhAccedeMapper;
 import com.hyjf.am.trade.dao.mapper.auto.HjhPlanBorrowTmpMapper;
 import com.hyjf.am.trade.dao.mapper.customize.AdminAutoTenderExceptionMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.AdminPlanAccedeListCustomize;
-import com.hyjf.am.user.dao.model.customize.EmployeeCustomize;
 import com.hyjf.am.trade.service.admin.exception.AutoTenderExceptionService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.user.dao.model.customize.EmployeeCustomize;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.fdd.FddGenerateContractBeanVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
@@ -54,10 +52,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
     @Autowired
     private HjhPlanBorrowTmpMapper hjhPlanBorrowTmpMapper;
     @Autowired
-    private FddProducer fddProducer;
-
-    @Autowired
-    private AccountWebListProducer accountWebListProducer;
+    private CommonProducer commonProducer;
     /**
      * 出让标识
      */
@@ -1852,7 +1847,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                                                     // 插入
                                                     boolean accountWebListFlag = false;
                                                     try {
-                                                        accountWebListFlag = accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+                                                        accountWebListFlag = commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
                                                     } catch (MQException e) {
                                                         e.printStackTrace();
                                                         throw new RuntimeException("网站收支插入（mongo）发生异常，用户userId" + userId + ",承接订单号：" + debtCreditTender.getAssignOrderId());
@@ -1965,8 +1960,8 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
             bean.setTenderType(3);
             bean.setAssignNid(assignNid);
             bean.setOrdid(assignNid);
-            fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,
-                    MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
+            commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,
+                    MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
         } catch (Exception e) {
             logger.info("-----------------生成计划债权转让协议失败，assignNid:" + assignNid + ",异常信息：" + e.getMessage());
             throw new RuntimeException(e);

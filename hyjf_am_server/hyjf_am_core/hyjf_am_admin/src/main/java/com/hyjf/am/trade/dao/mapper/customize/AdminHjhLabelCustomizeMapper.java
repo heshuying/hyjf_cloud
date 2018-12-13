@@ -3,9 +3,7 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import com.hyjf.am.trade.dao.model.auto.HjhLabel;
 import com.hyjf.am.trade.dao.model.customize.AdminHjhLabelCustomize;
-import com.hyjf.am.trade.dao.model.customize.AdminHjhLabelCustomizeExample;
 import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
 
 import java.util.List;

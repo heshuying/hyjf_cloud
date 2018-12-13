@@ -3,12 +3,11 @@
  */
 package com.hyjf.am.trade.service.task.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.mapper.customize.DataCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.WebHomePageCustomizeMapper;
 import com.hyjf.am.trade.dao.model.customize.WebHomePageStatisticsCustomize;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.CalculateInvestInterestProducer;
 import com.hyjf.am.trade.service.task.CalculateInvestInterestService;
 import com.hyjf.am.vo.trade.CalculateInvestInterestVO;
 import com.hyjf.common.constants.MQConstant;
@@ -33,7 +32,7 @@ public class CalculateInvestInterestServiceImpl implements CalculateInvestIntere
     @Resource
     private WebHomePageCustomizeMapper webHomePageCustomizeMapper;
     @Resource
-    private CalculateInvestInterestProducer calculateInvestInterestProducer;
+    private CommonProducer commonProducer;
 
     @Override
     public void insertDataInfo(Map<String, Object> mapPeriod) throws MQException {
@@ -59,7 +58,7 @@ public class CalculateInvestInterestServiceImpl implements CalculateInvestIntere
         calculateNew.setUpdateTime(new Date());
         //保证金
         calculateNew.setBailMoney(new BigDecimal(homeStatistics.getBailTotal().replaceAll(",", "")));
-        calculateInvestInterestProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, MQConstant.STATISTICS_CALCULATE_INTEREST_UPDATE_TAG, UUID.randomUUID().toString(), JSONObject.toJSONBytes(calculateNew)));
+        commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, MQConstant.STATISTICS_CALCULATE_INTEREST_UPDATE_TAG, UUID.randomUUID().toString(), calculateNew));
     }
 
     @Override

@@ -3,7 +3,6 @@ package com.hyjf.am.user.service.admin.membercentre.impl;
 import com.hyjf.am.resquest.user.UserAuthRequest;
 import com.hyjf.am.user.dao.model.auto.HjhUserAuth;
 import com.hyjf.am.user.dao.model.auto.HjhUserAuthLog;
-import com.hyjf.am.user.dao.model.auto.HjhUserAuthLogExample;
 import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.user.service.admin.membercentre.UserAuthService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
@@ -25,7 +24,7 @@ public class UserAuthServiceImpl extends BaseServiceImpl implements UserAuthServ
         if(request.getUser()!=null){
             User user=new User();
             BeanUtils.copyProperties(request.getUser(),user);
-            usersMapper.updateByPrimaryKeySelective(user);
+            userMapper.updateByPrimaryKeySelective(user);
         }
         //更新用户授权
         HjhUserAuth hjhUserAuth=new HjhUserAuth();

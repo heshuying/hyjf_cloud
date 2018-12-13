@@ -84,7 +84,7 @@ public class PreRegistServiceImpl extends BaseServiceImpl implements PreRegistSe
                     UserExample example = new UserExample();
                     UserExample.Criteria cra = example.createCriteria();
                     cra.andUsernameEqualTo(form.getReferrer());
-                    usersList = usersMapper.selectByExample(example);
+                    usersList = userMapper.selectByExample(example);
                     if(usersList!=null && usersList.size()>0){
                         form.setReferrer(String.valueOf(usersList.get(0).getUserId()));
                     }else{

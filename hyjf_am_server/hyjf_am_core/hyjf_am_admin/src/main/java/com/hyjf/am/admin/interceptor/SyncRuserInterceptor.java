@@ -1,8 +1,8 @@
 package com.hyjf.am.admin.interceptor;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
-import com.hyjf.am.admin.mq.producer.AmUserProducer;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import org.apache.commons.lang.StringUtils;
@@ -35,7 +35,7 @@ public class SyncRuserInterceptor implements Interceptor {
     private Logger logger = LoggerFactory.getLogger(getClass());
     
     @Autowired
-    private AmUserProducer amUserProducer;
+    private CommonProducer commonProducer;
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
@@ -111,7 +111,7 @@ public class SyncRuserInterceptor implements Interceptor {
     }
 
     private void sendToMq(Object parameterObject, String methodName, String tagName) throws MQException {
-        amUserProducer.messageSend(new MessageContent(MQConstant.SYNC_RUSER_TOPIC, tagName, UUID.randomUUID().toString(), JSON.toJSONBytes(parameterObject)));
+        commonProducer.messageSend(new MessageContent(MQConstant.SYNC_RUSER_TOPIC, tagName, UUID.randomUUID().toString(), parameterObject));
         logger.info("【{}】发送用户信息同步,同步信息：{}", methodName + "/" + tagName, JSON.toJSON(parameterObject).toString());
     }
 

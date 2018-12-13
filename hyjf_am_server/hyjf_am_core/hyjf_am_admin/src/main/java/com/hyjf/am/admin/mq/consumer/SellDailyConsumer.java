@@ -13,13 +13,12 @@ import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
-import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.math.BigDecimal;
@@ -27,8 +26,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-@Service
-@RocketMQMessageListener(topic = MQConstant.SELL_DAILY_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.SELL_DAILY_GROUP)
+@Component
 public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 	private static final Logger logger = LoggerFactory.getLogger(SellDailyConsumer.class);
 
@@ -58,9 +56,9 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 	private static final List DTHJ_IGNORE_TWODIVISION_LIST = Arrays.asList("樟树分部", "东莞分部", "西安分部");
 
     @Override
-    public void onMessage(MessageExt message) {
-        if (MQConstant.SELL_DAILY_SELECT_TAG.equals(message.getTags())) {
-            JSONObject data = JSONObject.parseObject(message.getBody(), JSONObject.class);
+    public void onMessage(MessageExt messageExt) {
+        if (MQConstant.SELL_DAILY_SELECT_TAG.equals(messageExt.getTags())) {
+            JSONObject data = JSONObject.parseObject(messageExt.getBody(), JSONObject.class);
             Date startTime = data.getDate("startTime");
             Date endTime = data.getDate("endTime");
             String column = data.getString("column");
@@ -265,20 +263,19 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
             long timeEnd = System.currentTimeMillis();
             logger.info("批量更新结束， column: " + column + ", 耗时: " + (timeEnd - timeTmp) + "ms");
 
-
+            // 如果没有return success ，consumer会重新消费该消息，直到return success
+            return;
         }
+        return;// ConsumeConcurrentlyStatus.RECONSUME_LATER;
     }
-
 
     @Override
     public void prepareStart(DefaultMQPushConsumer defaultMQPushConsumer) {
+        // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
         // 如果非第一次启动，那么按照上次消费的位置继续消费
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         // 设置为集群消费(区别于广播消费)
         defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
-        logger.info("====SellDailyConsumer consumer=====");
+        logger.info("====销售日报 消费端开始执行=====");
     }
-
-
-
 }

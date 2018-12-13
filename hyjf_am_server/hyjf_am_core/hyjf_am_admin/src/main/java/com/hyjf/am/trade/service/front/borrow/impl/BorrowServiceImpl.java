@@ -4,8 +4,8 @@
 package com.hyjf.am.trade.service.front.borrow.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
-import com.hyjf.am.admin.mq.producer.SmsProducer;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.resquest.user.BorrowFinmanNewChargeRequest;
@@ -46,7 +46,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
 
     @Autowired
-    private SmsProducer smsProducer;
+    private CommonProducer commonProducer;
     @Autowired
     private AccountCustomizeMapper accountCustomizeMapper;
     @Autowired
@@ -435,8 +435,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             // 发送短信验证码
             SmsMessage smsMessage = new SmsMessage(null, replaceMap, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_XMMB, CustomConstants.CHANNEL_TYPE_NORMAL);
             try{
-                smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
-                        UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
+                        UUID.randomUUID().toString(), smsMessage));
             }catch (Exception e){
 
             }

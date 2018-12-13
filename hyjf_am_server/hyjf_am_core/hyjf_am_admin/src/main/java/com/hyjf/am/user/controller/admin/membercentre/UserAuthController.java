@@ -7,7 +7,10 @@ import com.hyjf.am.resquest.user.UserAuthRequest;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.service.admin.membercentre.UserAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 

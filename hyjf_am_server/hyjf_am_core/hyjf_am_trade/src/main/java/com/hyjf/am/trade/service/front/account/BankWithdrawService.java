@@ -1,6 +1,5 @@
 package com.hyjf.am.trade.service.front.account;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.AfterCashParamRequest;
 import com.hyjf.am.trade.dao.model.auto.AccountWithdraw;
 import com.hyjf.am.vo.trade.account.AccountVO;

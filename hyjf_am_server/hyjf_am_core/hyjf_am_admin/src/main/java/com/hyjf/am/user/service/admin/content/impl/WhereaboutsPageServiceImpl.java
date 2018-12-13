@@ -168,7 +168,7 @@ public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements Where
 		if(whereaboutsPageConfig.getReferrer()!=null&&!"".equals(whereaboutsPageConfig.getReferrer())){
 			UserExample example=new UserExample();
 			example.createCriteria().andUserIdEqualTo(whereaboutsPageConfig.getReferrer());
-			List<User> list=usersMapper.selectByExample(example);
+			List<User> list=userMapper.selectByExample(example);
 			if(list!=null&&list.size()!=0){
 				form.setReferrerName(list.get(0).getUsername());
 			}
@@ -276,7 +276,7 @@ public class WhereaboutsPageServiceImpl extends BaseServiceImpl implements Where
 		}
 		UserExample example=new UserExample();
 		example.createCriteria().andUsernameEqualTo(referrer);
-		List<User> list=usersMapper.selectByExample(example);
+		List<User> list=userMapper.selectByExample(example);
 		if(list!=null&&list.size()>0){
 			ret.put("success", "y");
 			response.setResult(ret);

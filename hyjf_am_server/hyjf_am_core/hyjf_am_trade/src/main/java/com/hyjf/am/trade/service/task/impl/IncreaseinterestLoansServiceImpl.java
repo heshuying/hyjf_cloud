@@ -3,50 +3,12 @@
  */
 package com.hyjf.am.trade.service.task.impl;
 
-import java.io.File;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
-import org.springframework.aop.framework.AopContext;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.config.SystemConfig;
-import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.dao.model.auto.AccountBorrow;
-import com.hyjf.am.trade.dao.model.auto.AccountBorrowExample;
-import com.hyjf.am.trade.dao.model.auto.AccountExample;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
-import com.hyjf.am.trade.dao.model.auto.BorrowApicronExample;
-import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
-import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
-import com.hyjf.am.trade.dao.model.auto.BorrowStyle;
-import com.hyjf.am.trade.dao.model.auto.BorrowStyleExample;
-import com.hyjf.am.trade.dao.model.auto.CouponRecover;
-import com.hyjf.am.trade.dao.model.auto.CouponRecoverExample;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvest;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvestExample;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestLoan;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestLoanDetail;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepay;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepayDetail;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepayDetailExample;
-import com.hyjf.am.trade.dao.model.auto.IncreaseInterestRepayExample;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserInvestListCustomize;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.AppMessageProducer;
-import com.hyjf.am.trade.mq.producer.MailProducer;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.IncreaseinterestLoansService;
 import com.hyjf.am.trade.utils.PdfGenerator;
@@ -68,6 +30,20 @@ import com.hyjf.common.util.calculate.CalculatesUtil;
 import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.util.calculate.InterestInfo;
 import com.hyjf.common.validator.Validator;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.math.NumberUtils;
+import org.springframework.aop.framework.AopContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.io.File;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * 产品加息放款
@@ -127,13 +103,7 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 	private static final Integer STATUS_ERROR = 9;
     
 	@Autowired
-	private MailProducer mailProducer;
-    
-	@Autowired
-	private SmsProducer smsProducer;
-
-	@Autowired
-	private AppMessageProducer appMessageProducer;
+	private CommonProducer commonProducer;
 	
 	@Autowired
 	private SystemConfig systemConfig;
@@ -605,7 +575,7 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 	/**
 	 * 更新放款状态
 	 *
-	 * @param accountList
+	 * @param borrowTender
 	 * @return
 	 */
 	public int updateBorrowTender(IncreaseInterestInvest borrowTender) {
@@ -615,7 +585,7 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 	/**
 	 * 写入还款明细
 	 *
-	 * @param accountList
+	 * @param borrowRecover
 	 * @return
 	 */
 	private int insertBorrowRecover(IncreaseInterestLoan borrowRecover) {
@@ -699,7 +669,7 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 							CustomConstants.CHANNEL_TYPE_NORMAL);
 
 					try {
-						smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, msg.get(VAL_USERID), JSON.toJSONBytes(smsMessage)));
+						commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, msg.get(VAL_USERID), smsMessage));
 					} catch (MQException e2) {
 						logger.error("发送短信失败..", e2);
 					}
@@ -818,7 +788,7 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 //							mailMessageProcesser.gather(message);
 							
 							try {
-								mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, userId, JSON.toJSONBytes(message)));
+								commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, userId, message));
 							} catch (Exception e2) {
 								logger.error("发送邮件失败..", e2);
 							}
@@ -892,8 +862,8 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 //						appMsProcesser.gather(smsMessage);
 
 						try {
-							appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, msg.get(VAL_USERID),
-									JSON.toJSONBytes(smsMessage)));
+							commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, msg.get(VAL_USERID),
+									smsMessage));
 						} catch (MQException e) {
 							logger.error("发送app消息失败..", e);
 						}
@@ -1036,7 +1006,7 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 							MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
 					
 					try {
-						mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, apicron.getBorrowNid(), JSON.toJSONBytes(message)));
+						commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, apicron.getBorrowNid(), message));
 					} catch (Exception e2) {
 						logger.error("发送邮件失败..", e2);
 					}

@@ -6,8 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.*;
 import com.hyjf.am.trade.service.CommisionComputeService;
 import com.hyjf.am.trade.service.front.consumer.BatchBorrowRepayPlanService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
@@ -71,37 +71,13 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 	private static final String VAL_AMOUNT = "val_amount";
     
 	@Autowired
-	private MailProducer mailProducer;
-    
-	@Autowired
-	private SmsProducer smsProducer;
-    
-	@Autowired
-	private FddProducer fddProducer;
-
-	@Autowired
-	private AppMessageProducer appMessageProducer;
+	private CommonProducer commonProducer;
 
     @Autowired
     SystemConfig systemConfig;
 	
 	@Autowired
 	CommisionComputeService commisionComputeService;
-	
-	@Autowired
-	private AccountWebListProducer accountWebListProducer;
-	
-	@Autowired
-	private CouponRepayHjhMessageProducer couponRepayHjhMessageProducer;
-	
-	@Autowired
-	private CouponRepayMessageProducer couponRepayMessageProducer;
-	
-	@Autowired
-	private CouponLoansHjhMessageProducer couponLoansHjhMessageProducer;
-
-    @Autowired
-    private CalculateInvestInterestProducer calculateInvestInterestProducer;
 
 	@Override
 	public List<BorrowApicron> getBorrowApicronList(Integer apiType) {
@@ -2180,7 +2156,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			//网站首支明细队列
 			try {
 				logger.info("发送收支明细---" + repayUserId + "---------" + manageFee);
-                accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+				commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
             } catch (MQException e) {
                 logger.error("计划还款中发生系统", e);
             }
@@ -2257,7 +2233,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 
 		try {
 			logger.info("发送优惠券还款队列---" + hjhAccede.getAccedeOrderId());
-			couponRepayHjhMessageProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+			commonProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), params));
         } catch (MQException e) {
             logger.error("计划还款中发生系统", e);
         }
@@ -2290,8 +2266,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			// 推送消息队列
 			AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_REPAY_SUCCESS);
 			try {
-				appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
-						JSON.toJSONBytes(smsMessage)));
+				commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
+						smsMessage));
 			} catch (MQException e) {
 				logger.error("发送app消息失败..", e);
 			}
@@ -2326,7 +2302,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_REPAY_HJH_SUCCESS,
 				CustomConstants.CHANNEL_TYPE_NORMAL);
 		try {
-			smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, String.valueOf(userId), JSON.toJSONBytes(smsMessage)));
+			commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, String.valueOf(userId), smsMessage));
 		} catch (MQException e2) {
 			logger.error("发送邮件失败..", e2);
 		}
@@ -2497,10 +2473,10 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		JSONObject params1 = new JSONObject();
 		params1.put("interestSum", accountInterest);
 		try {
-			calculateInvestInterestProducer
+			commonProducer
 					.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC,
 							MQConstant.STATISTICS_CALCULATE_INTEREST_SUM_TAG, UUID.randomUUID().toString(),
-							JSON.toJSONBytes(params1)));
+							params1));
 		} catch (MQException e) {
 			logger.error("退出计划累加统计数", e);
 		}
@@ -2511,7 +2487,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		params.put("type", 2);// 计划收益
 		params.put("recoverInterestAmount", accountInterest);
         try {
-            calculateInvestInterestProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+			commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), params));
         }catch (MQException e){
             logger.error("发送运营数据更新MQ失败,计划还款订单:" + hjhAccede.getAccedeOrderId());
         }
@@ -3108,7 +3084,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			//网站首支明细队列
 			try {
 				logger.info("发送credit收支明细---" + repayUserId + "---------" + manageFee);
-                accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+				commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
             } catch (MQException e) {
                 logger.error("计划还款中发生系统", e);
             }
@@ -3480,7 +3456,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
                 // 核对参数
         		try {
         			logger.info("发送优惠券还款队列---" + borrowNid);
-        			couponRepayMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+					commonProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), params));
                 } catch (MQException e) {
                     logger.error("计划还款中发生系统", e);
                 }
@@ -3702,7 +3678,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
                 //核对参数
         		try {
         			logger.info("发送优惠券还款队列---" + borrowNid);
-        			couponRepayMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+					commonProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), params));
                 } catch (MQException e) {
                     logger.error("计划还款中发生系统", e);
                 }
@@ -3954,7 +3930,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
                 new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null,
                 		CustomConstants.PARAM_TPL_HUANKUAN_SUCCESS, CustomConstants.CHANNEL_TYPE_NORMAL);
         try {
-            smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+			commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
         } catch (MQException e2) {
             logger.error("发送短信失败..", e2);
         }
@@ -4454,8 +4430,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			
 			//协议确认队列
 //			rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));
-			
-			fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
+
+			commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
 			
 		}catch (Exception e){
 			logger.error("计划还款中发生系统", e);
@@ -4492,8 +4468,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			//发送app消息队列，需要根据userid取真实用户
 			AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_LOCK_SUCCESS);
 			try {
-				appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
-						JSON.toJSONBytes(smsMessage)));
+				commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
+						smsMessage));
 			} catch (MQException e) {
 				logger.error("发送app消息失败..", e);
 			}
@@ -4590,7 +4566,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
         //TODO: 优惠券还款 ,为什么会跟放款有关系
 		try {
 			logger.info("发送计划优惠券放款---" + hjhAccede.getAccedeOrderId());
-			couponLoansHjhMessageProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_LOAN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+			commonProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_LOAN_TOPIC, UUID.randomUUID().toString(), params));
         } catch (MQException e) {
             logger.error("计划还款中发生系统", e);
         }
@@ -4667,8 +4643,8 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			//发送app消息队列，需要根据userid取真实用户
 			AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_TOUZI_SUCCESS);
 			try {
-				appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
-						JSON.toJSONBytes(smsMessage)));
+				commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
+						smsMessage));
 			} catch (MQException e) {
 				logger.error("发送app消息失败..", e);
 			}
@@ -4705,7 +4681,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_TOUZI_HJH_SUCCESS,
 				CustomConstants.CHANNEL_TYPE_NORMAL);
 		try {
-			smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, String.valueOf(userId), JSON.toJSONBytes(smsMessage)));
+			commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, String.valueOf(userId), smsMessage));
 		} catch (MQException e2) {
 			logger.error("发送短信失败..", e2);
 		}

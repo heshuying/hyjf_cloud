@@ -7,7 +7,6 @@ import com.hyjf.am.config.dao.model.auto.HjhUserAuthConfig;
 import com.hyjf.am.config.dao.model.customize.HjhUserAuthConfigCustomize;
 import com.hyjf.am.config.dao.model.customize.HjhUserAuthConfigLogCustomize;
 import com.hyjf.am.vo.admin.HjhUserAuthConfigLogCustomizeVO;
-import com.hyjf.am.vo.user.HjhUserAuthConfigVO;
 
 import java.util.List;
 

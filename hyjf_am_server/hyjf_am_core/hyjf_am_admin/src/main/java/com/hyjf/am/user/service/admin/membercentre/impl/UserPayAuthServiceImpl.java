@@ -18,6 +18,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -98,7 +99,7 @@ public class UserPayAuthServiceImpl extends BaseServiceImpl implements UserPayAu
 
         boolean isUpd =hjhUserAuthMapper.updateByPrimaryKeySelective(hjhUserAuth)>0?true:false;
         // 更新user表状态为授权成功
-        boolean instFlg =usersMapper.updateByPrimaryKeySelective(user)>0?true:false;
+        boolean instFlg =userMapper.updateByPrimaryKeySelective(user)>0?true:false;
         if(isUpd&&instFlg){
             return true;
         }else{

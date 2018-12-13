@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.trade.service.front.account.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.user.EmployeeCustomizeResponse;
 import com.hyjf.am.resquest.trade.BorrowCreditRequest;
@@ -13,10 +12,8 @@ import com.hyjf.am.trade.dao.mapper.customize.BorrowCreditTenderCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.TenderCreditCustomize;
 import com.hyjf.am.trade.dao.model.customize.TenderToCreditDetailCustomize;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
-import com.hyjf.am.trade.mq.producer.AppMessageProducer;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.front.account.BankCreditTenderService;
 import com.hyjf.am.trade.service.front.borrow.BorrowRecoverService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
@@ -66,11 +63,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 	private static final Logger logger = LoggerFactory.getLogger(BankCreditTenderServiceImpl.class);
 
 	@Autowired
-	private SmsProducer smsProducer;
-	@Autowired
-	private AccountWebListProducer accountWebListProducer;
-	@Autowired
-	private AppMessageProducer appMsProcesser;
+	private CommonProducer commonProducer;
 	@Autowired
     private BorrowCreditTenderCustomizeMapper creditTenderCustomizeMapper;
 
@@ -270,14 +263,12 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 			// 发送短信验证码
 			SmsMessage smsMessage = new SmsMessage(null, param, webUser.getMobile(), null, MessageConstant.SMS_SEND_FOR_MOBILE, null, CustomConstants.PARAM_TPL_ZZQBZRCG,
 					CustomConstants.CHANNEL_TYPE_NORMAL);
-			smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+			commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
 			
 			AppMsMessage appMsMessage = new AppMsMessage(null, param, webUser.getMobile(), MessageConstant.APP_MS_SEND_FOR_MOBILE, CustomConstants.JYTZ_TPL_ZHUANRANGJIESHU);
-			smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
+			commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), appMsMessage));
 		}
 	}
-
-
 
 	/**
 	 * 债转汇付交易成功后回调处理
@@ -612,11 +603,9 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 					accountWebList.setCreateTime(nowTime);
 					accountWebList.setOperator(null);
 					accountWebList.setFlag(1);
-					
-					accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
-					
-				}
 
+					commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
+				}
 				// 6.更新Borrow_recover
 				if (borrowRecoverList != null && borrowRecoverList.size() == 1) {
 					BorrowRecover borrowRecover = borrowRecoverList.get(0);
@@ -835,7 +824,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 			param.put("val_balance", creditTender.getAssignPay() + "");
 			param.put("val_profit", creditTender.getAssignInterest() + "");
 			param.put("val_amount", creditTender.getAssignAccount() + "");
-			appMsProcesser.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(param)));
+			commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), param));
 		}
 	}
 

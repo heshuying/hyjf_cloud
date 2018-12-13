@@ -1267,7 +1267,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 	 */
 	@Override
 	public Integer updateStatusByUserId(Integer userId, String smsOpenStatus, String emailOpenStatus) {
-		User user = usersMapper.selectByPrimaryKey(userId);
+		User user = userMapper.selectByPrimaryKey(userId);
 		if (user != null) {
 			if("0".equals(emailOpenStatus)){
 				user.setIsSmtp(1);
@@ -1286,7 +1286,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 				user.setRecieveSms(0);
 			}
 		}
-		return usersMapper.updateByPrimaryKeySelective(user);
+		return userMapper.updateByPrimaryKeySelective(user);
 	}
 
 

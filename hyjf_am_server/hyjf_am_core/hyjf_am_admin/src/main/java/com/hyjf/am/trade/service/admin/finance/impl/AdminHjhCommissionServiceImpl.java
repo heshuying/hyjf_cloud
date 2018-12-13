@@ -3,11 +3,8 @@
  */
 package com.hyjf.am.trade.service.admin.finance.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
-import com.hyjf.am.admin.mq.producer.AccountWebListProducer;
-import com.hyjf.am.admin.mq.producer.AppMessageProducer;
-import com.hyjf.am.admin.mq.producer.SmsProducer;
 import com.hyjf.am.resquest.admin.CommissionComboRequest;
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
@@ -53,11 +50,8 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
     // 根据用户ID和模版号给某用户发短信
     public static final String SMSSENDFORUSER = "smsSendForUser";
 	@Autowired
-	private AccountWebListProducer accountWebListProducer;
-	@Autowired
-	private SmsProducer smsProducer;
-	@Autowired
-	private AppMessageProducer appMessageProducer;
+	private CommonProducer commonProducer;
+
 	@Override
 	public Integer countTotal(HjhCommissionRequest request) {
 		// 部门
@@ -295,7 +289,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 		/*原ret += insertAccountWebList(accountWebList);*/
 		try {
 			logger.info("发送收支明细---" + request.getAccount() + "---------" + accountList.getAmount());
-            accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+			commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
         } catch (MQException e) {
             e.printStackTrace();
         }
@@ -361,7 +355,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 		SmsMessage smsMessage = new SmsMessage(userId, msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_SDTGTC,
 				CustomConstants.CHANNEL_TYPE_NORMAL); 
 		try {
-			smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, String.valueOf(userId), JSON.toJSONBytes(smsMessage)));
+			commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, String.valueOf(userId), smsMessage));
 		} catch (MQException e2) {
 			logger.error("发送短信失败..", e2);
 		}
@@ -403,8 +397,8 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
         param.put("val_amount", commission.getCommission().toString());
 		AppMsMessage appsmsMessage = new AppMsMessage(userId, param, null,MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_SDTGTC);
 		try {
-			appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
-					JSON.toJSONBytes(appsmsMessage)));
+			commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
+					appsmsMessage));
 		} catch (MQException e) {
 			logger.error("发送app消息失败..", e);
 		}
@@ -459,7 +453,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 	 * 取得提成利率
 	 *
 	 * @param borrowNid
-	 * @param userId
+	 * @param attribute
 	 */
 	private BigDecimal getScales(String borrowNid, Integer attribute) {
 		BigDecimal rate = BigDecimal.ZERO;

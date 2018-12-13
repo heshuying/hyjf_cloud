@@ -3,13 +3,12 @@
  */
 package com.hyjf.am.trade.service.front.consumer.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.*;
 import com.hyjf.am.trade.service.front.consumer.BatchBorrowRepayZTService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
@@ -49,30 +48,11 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	private static final String TYPE_WAIT_YES = "wait_yes";
     
 	@Autowired
-	private MailProducer mailProducer;
-    
-	@Autowired
-	private SmsProducer smsProducer;
-
-	@Autowired
-	private AppMessageProducer appMessageProducer;
+	private CommonProducer commonProducer;
 
     @Autowired
     SystemConfig systemConfig;
-	
-	@Autowired
-	private AccountWebListProducer accountWebListProducer;
-	
-	@Autowired
-	private CouponRepayMessageProducer couponRepayMessageProducer;
-	
-	@Autowired
-	private WrbCallBackProducer wrbCallBackProducer;
 
-    @Autowired
-    private CalculateInvestInterestProducer calculateInvestInterestProducer;
-    
-    
 	@Override
 	public Map requestRepay(BorrowApicron apicron) {
 
@@ -1463,7 +1443,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			//网站首支明细队列
 			try {
 				logger.info("发送收支明细---" + repayUserId + "---------" + manageFee);
-                accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+				commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
             } catch (MQException e) {
                 logger.error("还款中发生系统", e);
             }
@@ -2069,7 +2049,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
                 //核对参数
         		try {
         			logger.info("发送优惠券还款队列---" + borrowNid);
-        			couponRepayMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+					commonProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), params));
                 } catch (MQException e) {
                     logger.error("还款中发生系统", e);
                 }
@@ -2317,7 +2297,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
                 //核对参数
         		try {
         			logger.info("发送优惠券还款队列---" + borrowNid);
-        			couponRepayMessageProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+					commonProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), params));
                 } catch (MQException e) {
                     logger.error("还款中发生系统", e);
                 }
@@ -2382,7 +2362,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 //		rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_COUPON, RabbitMQConstants.ROUTINGKEY_OPERATION_DATA,
 //				JSONObject.toJSONString(repayParams));
         try {
-            calculateInvestInterestProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(repayParams)));
+			commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), repayParams));
         }catch (MQException e){
             logger.error("发送运营数据更新MQ失败,还款标的:" + borrowNid);
         }
@@ -2867,7 +2847,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			//网站首支明细队列
 			try {
 				logger.info("发送收支明细---" + repayUserId + "---------" + manageFee);
-                accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+				commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
             } catch (MQException e) {
                 logger.error("还款中发生系统", e);
             }
@@ -2905,7 +2885,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			try {
 //				rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_WRB_CALLBACK_NOTIFY, JSONObject.toJSONString(params));
 				logger.info("发送风车理财---" + borrowTender.getNid() + "---------" + repayAccount.toString());
-				wrbCallBackProducer.messageSend(new MessageContent(MQConstant.WRB_QUEUE_CALLBACK_NOTIFY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+				commonProducer.messageSend(new MessageContent(MQConstant.WRB_QUEUE_CALLBACK_NOTIFY_TOPIC, UUID.randomUUID().toString(), params));
 			} catch (Exception e) {
 				logger.error("风车理财还款通知入列失败...", e);
 			}
@@ -3117,7 +3097,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			SmsMessage smsMessage = new SmsMessage(Integer.valueOf(userId), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_SHOUDAOHUANKUAN,
 					CustomConstants.CHANNEL_TYPE_NORMAL);
 			try {
-				smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, String.valueOf(userId), JSON.toJSONBytes(smsMessage)));
+				commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, String.valueOf(userId), smsMessage));
 			} catch (MQException e2) {
 				logger.error("发送短信失败..", e2);
 			}
@@ -3140,8 +3120,8 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get("userId")), msg, null,
 					MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_SHOUDAOHUANKUAN);
 			try {
-				appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
-						JSON.toJSONBytes(smsMessage)));
+				commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
+						smsMessage));
 			} catch (MQException e) {
 				logger.error("发送app消息失败..", e);
 			}
@@ -3196,7 +3176,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
                 		CustomConstants.PARAM_TPL_HUANKUAN_SUCCESS, CustomConstants.CHANNEL_TYPE_NORMAL);
 		
 		try {
-			smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+			commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
 		} catch (MQException e2) {
 			logger.error("发送邮件失败..", e2);
 		}

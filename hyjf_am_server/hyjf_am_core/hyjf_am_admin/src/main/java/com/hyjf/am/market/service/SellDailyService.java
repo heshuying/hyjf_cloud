@@ -1,10 +1,10 @@
 package com.hyjf.am.market.service;
 
+import com.hyjf.am.vo.market.SellDailyVO;
+
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
-
-import com.hyjf.am.vo.market.SellDailyVO;
 
 /**
  * @author fuqiang

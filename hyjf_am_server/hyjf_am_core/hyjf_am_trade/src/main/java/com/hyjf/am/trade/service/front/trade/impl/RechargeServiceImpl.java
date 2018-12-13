@@ -9,9 +9,8 @@ import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountRechargeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.AdminAccountCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.AppMessageProducer;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.front.trade.RechargeService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
@@ -53,13 +52,12 @@ public class RechargeServiceImpl extends BaseServiceImpl implements RechargeServ
 
 	@Autowired
 	protected AccountMapper accountMapper;
-	@Autowired
-	protected  AccountListMapper accountListMapper;
-	@Autowired
-	private SmsProducer smsProducer;
 
 	@Autowired
-	private AppMessageProducer appMessageProducer;
+	protected  AccountListMapper accountListMapper;
+
+	@Autowired
+	private CommonProducer commonProducer;
 
 	// 充值状态:充值中
 	private static final int RECHARGE_STATUS_WAIT = 1;
@@ -70,7 +68,6 @@ public class RechargeServiceImpl extends BaseServiceImpl implements RechargeServ
 
 	@Autowired
 	private AdminAccountCustomizeMapper adminAccountCustomizeMapper;
-
 
 	@Override
     public int selectByOrdId(String ordId){
@@ -630,8 +627,8 @@ public class RechargeServiceImpl extends BaseServiceImpl implements RechargeServ
 								SmsMessage smsMessage = new SmsMessage(userId, replaceMap, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_CHONGZHI_SUCCESS,
 										CustomConstants.CHANNEL_TYPE_NORMAL);
 								AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_CHONGZHI_SUCCESS);
-								smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
-								appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(appMsMessage)));
+								commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
+								commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), appMsMessage));
 
 							}
 							// 上市活动充值-暂时不迁

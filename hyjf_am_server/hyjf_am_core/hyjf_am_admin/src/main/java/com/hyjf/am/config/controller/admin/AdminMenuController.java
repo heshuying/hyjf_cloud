@@ -5,7 +5,6 @@ import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.dao.model.customize.Tree;
 import com.hyjf.am.config.service.AdminMenuService;
-import com.hyjf.am.config.service.AdminRoleService;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.response.config.TreeResponse;
 import com.hyjf.am.resquest.config.AdminMenuRequest;
@@ -14,7 +13,6 @@ import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.TreeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
-
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
