@@ -59,6 +59,10 @@ public class SignUtil {
             // AEMS 用户注册
             AemsUserRegisterRequestBean bean = (AemsUserRegisterRequestBean) paramBean;
             sign = bean.getMobile() + bean.getInstCode() + bean.getTimestamp();
+        }else if ("/aems/mergeauth/mergeAuth/mergeAuth".equals(methodName)){
+            // AEMS多合一授权
+            AemsMergeAuthPagePlusRequestBean bean = (AemsMergeAuthPagePlusRequestBean) paramBean;
+            sign = bean.getInstCode() + bean.getAccountId() + bean.getAuthType() + bean.getRetUrl() + bean.getNotifyUrl() + bean.getTimestamp();
         }
         // TODO AEMS验签修改
         return ApiSignUtil.verifyByRSA("AEMS", paramBean.getChkValue(), sign);
