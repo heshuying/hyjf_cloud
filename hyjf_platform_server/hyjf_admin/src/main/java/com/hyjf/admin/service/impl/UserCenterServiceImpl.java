@@ -11,6 +11,7 @@ import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
+import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.UserCenterService;
 import com.hyjf.am.response.Response;
@@ -56,7 +57,7 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
     @Autowired
     private AmConfigClient amConfigClient;
     @Autowired
-    private FddProducer fddProducer;
+    private CommonProducer commonProducer;
     /**卡号不存在*/
     public static final String RESPCODE_CORPRATION_QUERY_EXIST = "CA000054";
 
@@ -453,7 +454,7 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
         params.put("mqMsgId", GetCode.getRandomCode(10));
         params.put("userId", String.valueOf(form.getUserId()));
         try {
-            fddProducer.messageSend(new MessageContent(MQConstant.FDD_USERINFO_CHANGE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(params)));
+            commonProducer.messageSend(new MessageContent(MQConstant.FDD_USERINFO_CHANGE_TOPIC, UUID.randomUUID().toString(),params));
         } catch (MQException e) {
             e.printStackTrace();
             logger.error("修改手机号后 发送更新客户信息MQ失败...", e);
@@ -466,7 +467,7 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
         params.put("mqMsgId", GetCode.getRandomCode(10));
         params.put("userId", String.valueOf(form.getUserId()));
         try {
-            fddProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(params)));
+            commonProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(),params));
         } catch (MQException e) {
             e.printStackTrace();
             logger.error(" 修改身份证号后 发送更新客户信息MQ失败...", e);

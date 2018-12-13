@@ -6,6 +6,7 @@ package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.admin.client.AmTradeClient;
+import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.HjhCreditTenderService;
 import com.hyjf.am.response.admin.HjhCreditTenderResponse;
@@ -38,7 +39,7 @@ public class HjhCreditTenderServiceImpl implements HjhCreditTenderService{
     private AmTradeClient amTradeClient;
     
 	@Autowired
-	private FddProducer fddProducer;
+	private CommonProducer commonProducer;
 	private static final Logger _log = LoggerFactory.getLogger(HjhCreditTenderServiceImpl.class);
 	/**
 	 * 获取详细列表
@@ -91,7 +92,7 @@ public class HjhCreditTenderServiceImpl implements HjhCreditTenderService{
 		bean.setOrdid(tenderAgreement.getTenderNid());
 		/*rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_DOWNDESSENESITIZATION_CONTRACT, JSONObject.toJSONString(bean));*/
         try {
-			fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG, UUID.randomUUID().toString(),JSON.toJSONBytes(bean)));
+			commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG, UUID.randomUUID().toString(),bean));
 		} catch (MQException e) {
 			e.printStackTrace();
 			_log.error("法大大发送下载脱敏消息失败...", e);	
