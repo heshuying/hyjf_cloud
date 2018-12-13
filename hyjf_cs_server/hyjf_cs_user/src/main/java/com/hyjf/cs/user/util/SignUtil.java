@@ -35,6 +35,10 @@ public class SignUtil {
             //aems用户页面绑卡
             AemsBindCardPageRequestBean bean = (AemsBindCardPageRequestBean) paramBean;
             sign = bean.getInstCode() + bean.getAccountId() + bean.getTimestamp();
+        }else if ("/aems/unbindCardPage/deleteCardPage".equals(methodName)) {
+            //aems解卡(页面调用)合规
+            UnbindCardPageRequestBean bean = (UnbindCardPageRequestBean) paramBean;
+            sign = bean.getInstCode()+ bean.getAccountId() + bean.getMobile() + bean.getCardNo()+bean.getTimestamp();
         }else if (("/aems/evaluation/saveUserEvaluationResults").equals(methodName)) {
             //aems用户风险测评
             AemsEvaluationRequestBean bean = (AemsEvaluationRequestBean) paramBean;
