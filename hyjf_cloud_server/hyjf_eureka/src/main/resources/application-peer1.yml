@@ -11,7 +11,7 @@ eureka:
   datacenter: Main
   client:
     register-with-eureka: true
-    fetch-registry: true
+    fetch-registry: false
     serviceUrl:
       defaultZone: http://microserver2:1111/eureka
 
