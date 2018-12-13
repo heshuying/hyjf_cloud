@@ -39,7 +39,6 @@ public class TradeOperationLogServiceImpl implements TradeOperationLogService {
      */
     @Override
     public List<HjhAssetTypeVO> getHjhAssetType(){
-        // TODO Auto-generated method stub
         HjhAssetTypeExample hjhAssetTypeExample =new HjhAssetTypeExample();
         List<HjhAssetType> hjhAssetTypes=hjhAssetTypeMapper.selectByExample(hjhAssetTypeExample);
         List<HjhAssetTypeVO> list= CommonUtils.convertBeanList(hjhAssetTypes,HjhAssetTypeVO.class);

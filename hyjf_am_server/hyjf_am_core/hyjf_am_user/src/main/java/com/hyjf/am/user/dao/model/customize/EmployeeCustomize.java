@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class EmployeeCustomize implements Serializable {
 
 	/**
-	 * serialVersionUID:TODO  变量 
+	 * serialVersionUID:  变量
 	 */
 		
 	private static final long serialVersionUID = -6196389515034236590L;

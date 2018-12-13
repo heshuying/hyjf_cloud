@@ -269,7 +269,6 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
      */
     private void tenderCancel(BorrowTenderTmp info, String accountID) {
         String nid = info.getNid();
-        // TODO Auto-generated method stub
         BankCallBean callBean = bidCancel(info.getUserId(), accountID, info.getBorrowNid(), nid, info.getAccount().toString());
         if (Validator.isNotNull(callBean)) {
             String retCode = StringUtils.isNotBlank(callBean.getRetCode()) ? callBean.getRetCode() : "";
@@ -282,7 +281,6 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
                         logger.info("===============投资掉单数据已撤销,原投资订单号:" + nid);
                     }
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
                     throw new RuntimeException("投资撤销数据处理异常!原订单号:" + nid + "异常原因:" + e.getMessage());
                 }
             }else{

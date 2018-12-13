@@ -112,7 +112,6 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 	private JSONObject checkParam(String borrowNid, String account, Integer userIdInt, String platform, String couponGrantId,
 								  BorrowTenderTmpRequest request) {
 
-		// TODO
 		CouponConfigCustomizeV2 cuc = null;
 		// -1:有可用的优惠券，但是投资时不选择优惠券 空或null：用户没有可用优惠券
 		UserInfoVO usersInfo=request.getUserInfo();
