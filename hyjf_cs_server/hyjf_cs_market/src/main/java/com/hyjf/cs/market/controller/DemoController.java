@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 public class DemoController {
 
     @RequestMapping("/success/{flag}")
-    @HystrixCommand(fallbackMethod = "fail")
+    @HystrixCommand(groupKey = "测试goupKey" ,
+            commandKey = "测试commandKey",
+            fallbackMethod = "fail")
     public String success(@PathVariable String flag){
         if("0".equals(flag)){
             throw new RuntimeException("flag is ...");
@@ -22,7 +24,7 @@ public class DemoController {
         return "success";
     }
 
-    public String fail(){
-        return "fail";
+    public String fail(String flag){
+        return "fail:" + flag;
     }
 }
