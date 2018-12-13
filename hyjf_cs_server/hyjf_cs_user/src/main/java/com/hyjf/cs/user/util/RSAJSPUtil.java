@@ -165,16 +165,24 @@ public class RSAJSPUtil {
 		}
 	}
 
+	private static volatile Cipher decryptCipher;
+
 	public static byte[] decrypt(PrivateKey pk, byte[] raw) throws Exception {
+
+		synchronized (RSAJSPUtil.class){
+			if(decryptCipher == null){
+				decryptCipher = Cipher.getInstance("RSA", new org.bouncycastle.jce.provider.BouncyCastleProvider());
+			}
+		}
+
 		try {
-			Cipher cipher = Cipher.getInstance("RSA", new org.bouncycastle.jce.provider.BouncyCastleProvider());
-			cipher.init(Cipher.DECRYPT_MODE, pk);
-			int blockSize = cipher.getBlockSize();
+			decryptCipher.init(Cipher.DECRYPT_MODE, pk);
+			int blockSize = decryptCipher.getBlockSize();
 			ByteArrayOutputStream bout = new ByteArrayOutputStream(64);
 			int j = 0;
 
 			while (raw.length - j * blockSize > 0) {
-				bout.write(cipher.doFinal(raw, j * blockSize, blockSize));
+				bout.write(decryptCipher.doFinal(raw, j * blockSize, blockSize));
 				j++;
 			}
 			return bout.toByteArray();
