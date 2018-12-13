@@ -10,7 +10,6 @@ import com.hyjf.admin.client.BaseClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.config.SystemConfig;
-import com.hyjf.admin.mq.FddProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.AccedeListService;
 import com.hyjf.admin.service.ApplyAgreementService;

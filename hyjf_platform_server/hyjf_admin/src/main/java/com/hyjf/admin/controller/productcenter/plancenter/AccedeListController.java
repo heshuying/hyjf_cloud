@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.controller.productcenter.plancenter;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.AccedeListViewRequest;
@@ -14,12 +13,9 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
-import com.hyjf.admin.mq.FddProducer;
-import com.hyjf.admin.mq.MailProducer;
+import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.AccedeListService;
-import com.hyjf.admin.service.AdminCommonService;
-import com.hyjf.admin.service.BorrowInvestService;
 import com.hyjf.admin.service.PlanListService;
 import com.hyjf.admin.utils.PdfGenerator;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
@@ -79,18 +75,13 @@ public class AccedeListController extends BaseController{
 	private AccedeListService accedeListService;
 	@Autowired 
 	private PlanListService planListService;
-    @Autowired  
-    BorrowInvestService borrowInvestService;
-    @Autowired
-    AdminCommonService adminCommonService;
+
 	@Autowired
-	private FddProducer fddProducer;
-	@Autowired
-	private MailProducer mailProducer;
+	private CommonProducer commonProducer;
+
 	@Autowired
 	private SystemConfig systemConfig;
-/*	@Autowired
-	private PdfGenerator pdfGenerator;*/
+
 	
     /** 权限 */
 	public static final String PERMISSIONS = "accedelist";
@@ -917,7 +908,7 @@ public class AccedeListController extends BaseController{
 				MailMessage mailMessage = new MailMessage(Integer.valueOf(userid), msg, "智投服务协议", null, new String[] { filePath + "/" + fileName }, emails, CustomConstants.EMAITPL_EMAIL_LOCK_REPAY,
 						MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
 				// 发送邮件
-				mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(mailMessage)));
+				commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),mailMessage));
 				// 邮件发送成功后修改DB发邮件的状态
 				request.setAccedeOrderIdSrch(planOrderId);
 				request.setDebtPlanNidSrch(debtPlanNid);
@@ -1004,7 +995,7 @@ public class AccedeListController extends BaseController{
 //					MailMessage message = new MailMessage(Integer.valueOf(userid), msg, "汇盈金服互联网金融服务平台汇计划投资服务协议",null, new String[] { filePath + fileName }, emails, CustomConstants.HJD_JOIN_AGREEMENT, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
 					MailMessage message = new MailMessage(Integer.valueOf(userid), msg, "汇盈金服互联网金融服务平台智投服务协议",null, new String[] { filePath + fileName }, emails, CustomConstants.HJD_JOIN_AGREEMENT, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
 					// 发送邮件
-					mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(message)));
+					commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),message));
 					// 邮件发送成功后修改DB发邮件的状态
 					// 邮件发送成功后修改DB发邮件的状态
 					request.setAccedeOrderIdSrch(planOrderId);
@@ -1171,7 +1162,7 @@ public class AccedeListController extends BaseController{
 			// 法大大生成合同接口
 			/*this.rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));*/
             _log.info("==========汇计划-计划订单PDF签署发送法大大MQ(生成合同)=========");
-            fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
+			commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
 		}
 		ret.put("statusDesc", "操作成功,签署MQ已发送");
 		ret.put("status", SUCCESS);

@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.InvestorDebtBean;
@@ -16,8 +15,7 @@ import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.config.SystemConfig;
-import com.hyjf.admin.mq.FddProducer;
-import com.hyjf.admin.mq.MailProducer;
+import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.AccedeListService;
 import com.hyjf.admin.service.BorrowInvestService;
@@ -88,13 +86,10 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
     AccedeListService accedeListService;
 
     @Autowired
-    FddProducer fddProducer;
-
-    @Autowired
     SystemConfig systemConfig;
 
     @Autowired
-    private MailProducer mailProducer;
+    private CommonProducer commonProducer;
 
     @Value("${hyjf.ftp.url}")
     private String FTP_URL;
@@ -420,7 +415,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
             bean.setTenderType(0);
             // 法大大生成合同
             try {
-                fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
+                commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
             } catch (MQException e) {
                 logger.error("法大大合同生成MQ发送失败！");
                 return new AdminResult(BaseResult.FAIL, "法大大合同生成MQ发送失败");
@@ -651,7 +646,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                             new String[]{filePath + fileName}, emails, CustomConstants.EMAILPARAM_TPL_LOANS,
                             MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
                     //发送邮件MQ
-                    mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(message)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), message));
                     int updateResult = amTradeClient.updateBorrowRecover(borrowInvestRequest);
                     if (updateResult > 0) {
                         return null;

@@ -3,9 +3,8 @@
  */
 package com.hyjf.admin.mq.consumer;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmAdminClient;
-import com.hyjf.admin.mq.PcChannelStatisticsProducer;
+import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.Consumer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.am.vo.admin.UtmVO;
@@ -40,7 +39,7 @@ public class PcChannelStatisticsAdminConsumer extends Consumer {
     @Autowired
     private AmAdminClient amAdminClient;
     @Autowired
-    private PcChannelStatisticsProducer producer;
+    private CommonProducer commonProducer;
 
     @Override
     public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
@@ -129,8 +128,8 @@ public class PcChannelStatisticsAdminConsumer extends Consumer {
                             .add(htjTenderPrice).add(rtbTenderPrice).add(hzrTenderPrice));
                     try {
                         //  对应INSERT
-                        producer.messageSend(new MessageContent(MQConstant.PC_CHANNEL_STATISTICS_TOPIC,
-                                System.currentTimeMillis() + "", JSONObject.toJSONBytes(statisticsVO)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.PC_CHANNEL_STATISTICS_TOPIC,
+                                System.currentTimeMillis() + "", statisticsVO));
                     } catch (MQException e) {
                         logger.error("PC渠道统计数据定时任务出错......", e);
                     }

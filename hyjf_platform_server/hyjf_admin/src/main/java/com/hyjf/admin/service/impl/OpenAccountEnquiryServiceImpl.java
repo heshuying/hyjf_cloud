@@ -3,6 +3,7 @@ package com.hyjf.admin.service.impl;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import com.hyjf.admin.mq.base.CommonProducer;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,7 +11,6 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.OpenAccountEnquiryDefineResultBean;
@@ -20,8 +20,6 @@ import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.config.SystemConfig;
-import com.hyjf.admin.mq.FddCertificateProducer;
-import com.hyjf.admin.mq.SmsProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.OpenAccountEnquiryService;
 import com.hyjf.am.resquest.user.BankCardRequest;
@@ -64,12 +62,8 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
     AmTradeClient amTradeClient;
     @Autowired
     private AmConfigClient amConfigClient;
-
     @Autowired
-    private SmsProducer smsProducer;
-
-    @Autowired
-    private FddCertificateProducer fddCertificateProducer;
+    private CommonProducer commonProducer;
 
     /**
      * 用户按照手机号和身份证号查询开户掉单
@@ -351,7 +345,7 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         params.put("userId", String.valueOf(userId));
         try {
             logger.info("开户异步处理，发送MQ，userId:[{}],mqMgId:[{}]",userId,params.get("mqMsgId"));
-            fddCertificateProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(params)));
+            commonProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC, UUID.randomUUID().toString(),params));
         } catch (Exception e) {
             logger.error("开户掉单处理成功之后 发送法大大CA认证MQ消息失败！userId:[{}]",userId);
         }

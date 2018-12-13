@@ -5,18 +5,13 @@ package com.hyjf.admin.mq.consumer;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmAdminClient;
-import com.hyjf.admin.mq.OperationReportJobProducer;
-import com.hyjf.admin.mq.PcChannelStatisticsProducer;
+import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.Consumer;
 import com.hyjf.admin.mq.base.MessageContent;
-import com.hyjf.am.response.StringResponse;
-import com.hyjf.am.vo.admin.UtmVO;
-import com.hyjf.am.vo.datacollect.PcChannelStatisticsVO;
 import com.hyjf.am.vo.message.OperationReportJobBean;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
 import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
@@ -30,7 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -45,7 +39,7 @@ public class OperationReportJobAdminConsumer extends Consumer {
     @Autowired
     private AmAdminClient amAdminClient;
     @Autowired
-    private OperationReportJobProducer producer;
+    private CommonProducer commonProducer;
 
     @Override
     public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
@@ -186,8 +180,8 @@ public class OperationReportJobAdminConsumer extends Consumer {
                 try {
                     //成功
                     bean.setStatus("success");
-                    producer.messageSend(new MessageContent(MQConstant.OPERATIONREPORT_JOB_TOPIC,
-                            System.currentTimeMillis() + "", JSONObject.toJSONBytes(bean)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.OPERATIONREPORT_JOB_TOPIC,
+                            System.currentTimeMillis() + "", bean));
                 } catch (MQException e) {
                     logger.error("运营报告的mq发送失败......", e);
                 }

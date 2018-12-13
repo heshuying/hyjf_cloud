@@ -576,7 +576,7 @@ public class FddHandle {
                 bean.setCreditCompany(isCreditCompany);
                 try {
 					logger.info("------------------------------------调用法大大发送下载脱敏消息:"+update);
-					commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG,UUID.randomUUID().toString(),JSON.toJSONBytes(bean)));
+					commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG,UUID.randomUUID().toString(),bean));
 				} catch (MQException e) {
 					e.printStackTrace();
 					logger.error("法大大发送下载脱敏消息失败...", e);	

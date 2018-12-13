@@ -10,7 +10,6 @@ import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
-import com.hyjf.admin.mq.MailProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.CustomerTransferService;
