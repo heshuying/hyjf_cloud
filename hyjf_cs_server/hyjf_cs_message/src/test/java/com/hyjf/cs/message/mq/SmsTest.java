@@ -7,8 +7,8 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.message.CsMessageApplication;
+import com.hyjf.cs.message.mq.base.CommonProducer;
 import com.hyjf.cs.message.mq.base.MessageContent;
-import com.hyjf.cs.message.mq.producer.SmsProducer;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,8 @@ import java.util.UUID;
 @SpringBootTest(classes = CsMessageApplication.class)
 public class SmsTest {
 
-    @Autowired SmsProducer smsProducer;
+    @Autowired
+    CommonProducer smsProducer;
 
     @Test
     public void sendSms() throws MQException {

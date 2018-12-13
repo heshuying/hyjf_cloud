@@ -24,8 +24,8 @@ import com.hyjf.cs.message.mongo.mc.MessagePushMsgDao;
 import com.hyjf.cs.message.mongo.mc.MessagePushMsgHistoryDao;
 import com.hyjf.cs.message.mongo.mc.MessagePushPlatStaticsDao;
 import com.hyjf.cs.message.mongo.mc.MessagePushTemplateStaticsDao;
+import com.hyjf.cs.message.mq.base.CommonProducer;
 import com.hyjf.cs.message.mq.base.MessageContent;
-import com.hyjf.cs.message.mq.producer.AppMessageProducer;
 import com.hyjf.cs.message.service.msgpush.MsgPushService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -57,7 +57,7 @@ public class MsgPushServiceImpl implements MsgPushService {
 	private MessagePushTemplateStaticsDao msgStaticsDao;
 
 	@Autowired
-	private AppMessageProducer appMessageProducer;
+	private CommonProducer appMessageProducer;
 
 	@Autowired
 	private AmConfigClient amConfigClient;

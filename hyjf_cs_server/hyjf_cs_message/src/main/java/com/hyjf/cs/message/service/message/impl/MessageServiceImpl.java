@@ -14,8 +14,8 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.message.bean.mc.SmsOntime;
 import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.mongo.mc.SmsOntimeMongoDao;
+import com.hyjf.cs.message.mq.base.CommonProducer;
 import com.hyjf.cs.message.mq.base.MessageContent;
-import com.hyjf.cs.message.mq.producer.SmsProducer;
 import com.hyjf.cs.message.service.message.MessageService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -49,7 +49,7 @@ public class MessageServiceImpl implements MessageService {
 	private AmConfigClient amConfigClient;
 
 	@Autowired
-	private SmsProducer smsProducer;
+	private CommonProducer smsProducer;
 
 	@Override
 	public List<SmsOntime> getOntimeList(Integer statusWait) {
