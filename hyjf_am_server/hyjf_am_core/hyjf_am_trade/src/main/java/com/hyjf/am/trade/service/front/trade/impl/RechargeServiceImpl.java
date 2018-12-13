@@ -315,7 +315,7 @@ public class RechargeServiceImpl extends BaseServiceImpl implements RechargeServ
 				// 交易金额
 				BigDecimal txAmount = BigDecimal.ZERO;
 				String txAmontString = bean.getTxAmount();
-				if (Validator.isNotNull(txAmontString) && NumberUtils.isNumber(txAmontString)) {
+				if (Validator.isNotNull(txAmontString) && NumberUtils.isCreatable(txAmontString)) {
 					txAmount = new BigDecimal(txAmontString);
 				}
 				logger.info("银行返回参数===============txAmount:[{}]",txAmount);
@@ -514,7 +514,7 @@ public class RechargeServiceImpl extends BaseServiceImpl implements RechargeServ
 				// 交易金额
 				BigDecimal txAmount = BigDecimal.ZERO;
 				String txAmontString = bean.getTxAmount();
-				if (Validator.isNotNull(txAmontString) && NumberUtils.isNumber(txAmontString)) {
+				if (Validator.isNotNull(txAmontString) && NumberUtils.isCreatable(txAmontString)) {
 					txAmount = new BigDecimal(txAmontString);
 				}
 				// 判断充值记录状态

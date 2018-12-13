@@ -89,7 +89,6 @@ public class ApiUserBindController extends BaseUserController {
 	public ModelAndView bindApi(HttpServletRequest request, HttpServletResponse response,@RequestBody ApiUserPostBean apiUserPostBean){
 		// 设置接口结果页的信息（返回Url）
 		this.initCheckUtil(apiUserPostBean);
-		//TODO:用户登录授权页面
 		ModelAndView modelAndView = new ModelAndView("wrb/wrb_result");
         BaseMapBean baseMapBean=new BaseMapBean();
         // 验证

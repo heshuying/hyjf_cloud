@@ -493,7 +493,7 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
     }
 
     public BigDecimal stringToBigDecimal(String value) {
-        if (Validator.isNotNull(value) && NumberUtils.isNumber(value)) {
+        if (Validator.isNotNull(value) && NumberUtils.isCreatable(value)) {
             return new BigDecimal(value);
         }else {
             return BigDecimal.ZERO;

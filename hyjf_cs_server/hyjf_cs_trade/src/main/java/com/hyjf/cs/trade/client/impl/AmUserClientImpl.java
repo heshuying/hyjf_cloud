@@ -698,7 +698,6 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public int updateBankCardPayAllianceCode(BankCardVO updateBankCard) {
-		// TODO  待实现
 		int result = restTemplate
 				.postForEntity("http://AM-USER/am-user/card/updateBankCardPayAllianceCode", updateBankCard, Integer.class).getBody();
 		return result;

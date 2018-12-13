@@ -115,35 +115,6 @@ public class MongoSeachController extends BaseController {
         return response;
     }
 
-   /* *//**
-     * 绝对错误的写法,list是使内存瞬间飙升  todo ....
-     * @param accountWebList
-     * @return
-     *//*
-    @RequestMapping(value = "/queryAccountWebList")
-    public AccountWebListResponse queryAccountWebList(@RequestBody AccountWebListVO accountWebList) {
-        AccountWebListResponse response = new AccountWebListResponse();
-        List<AccountWebList> recordList = accountWebListDao.queryAccountWebList(accountWebList);
-        int recordTotal = recordList.size();
-        if (null != recordList) {
-            if (recordTotal > 0) {
-                Paginator paginator = new Paginator(accountWebList.getCurrPage(), recordTotal,accountWebList.getPageSize());
-                int end = 0;
-                if(recordTotal<paginator.getOffset()*paginator.getLimit()+paginator.getLimit()){
-                    end=recordTotal;
-                }else {
-                    end = paginator.getOffset()*paginator.getLimit()+paginator.getLimit();
-                }
-                List<AccountWebList> recordList2 = recordList.subList(paginator.getOffset(), end);
-                List<AccountWebListVO> voList = CommonUtils.convertBeanList(recordList2, AccountWebListVO.class);
-                response.setResultList(voList);
-            }
-        }
-        response.setRecordTotal(recordTotal);
-        response.setRtn(Response.SUCCESS);
-        return response;
-    }*/
-
     @RequestMapping(value = "/selectBorrowInvestAccount")
     public String selectBorrowInvestAccount(@RequestBody AccountWebListVO accountWebList){
         double total = accountWebListDao.selectBorrowInvestAccount(accountWebList);
