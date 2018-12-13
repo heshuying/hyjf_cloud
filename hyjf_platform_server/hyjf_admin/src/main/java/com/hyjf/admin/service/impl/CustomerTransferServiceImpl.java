@@ -10,6 +10,7 @@ import com.hyjf.admin.client.AmConfigClient;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
+import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.AdminCommonService;
 import com.hyjf.admin.service.CustomerTransferService;
@@ -57,7 +58,7 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
     private AmConfigClient amConfigClient;
 
     @Autowired
-    MailProducer mailProducer;
+    CommonProducer commonProducer;
 
     @Autowired
     private AdminCommonService adminCommonService;
@@ -221,7 +222,7 @@ public class CustomerTransferServiceImpl extends BaseServiceImpl implements Cust
         MailMessage mailMessage = new MailMessage(null, replaceMap, "用户转账",null,null, email, CustomConstants.PARAM_TPL_TRANSFER, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
         // 发送
         try {
-            mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(mailMessage)));
+            commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), mailMessage));
         } catch (MQException e) {
             e.printStackTrace();
         }

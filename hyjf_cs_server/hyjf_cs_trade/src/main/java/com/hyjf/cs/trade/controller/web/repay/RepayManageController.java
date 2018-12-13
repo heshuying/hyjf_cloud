@@ -693,7 +693,7 @@ public class RepayManageController extends BaseTradeController {
                         //SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, SMSSENDFORUSER, null, CustomConstants.JYTZ_PLAN_REPAYPART_SUCCESS,
                         //        CustomConstants.CHANNEL_TYPE_NORMAL);
                         //smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
-                        //        UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                        //        UUID.randomUUID().toString(), smsMessage));
                     }
                 }
             } catch (MQException e) {
