@@ -208,7 +208,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                 if (pushBean.getEntrustedFlg() != null && pushBean.getEntrustedFlg().intValue() == 1) {
                     // 校验
                     if (StringUtils.isBlank(pushBean.getEntrustedAccountId())) {
-                        pushBean.setRetCode("ZT000011");
+                        pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000011);
                         pushBean.setRetMsg("受托支付电子账户为空");
                         continue;
                     }
@@ -594,6 +594,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         HjhAssetBorrowTypeVO assetBorrow = amTradeClient.selectAssetBorrowType(pushRequestBean.getInstCode(),pushRequestBean.getAssetType());
         if (assetBorrow == null) {
             logger.info(pushRequestBean.getInstCode() + "  "+ pushRequestBean.getAssetType() + " ------机构编号不存在");
+            resultBean.setStatus(ErrorCodeConstant.STATUS_CE000001);
             resultBean.setStatusDesc("机构编号不存在！");
             return resultBean;
         }
@@ -617,22 +618,18 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
 
         // 检查请求资产总参数
         List<PushBean>  reqData = pushRequestBean.getReqData();
-        try {
-            if (reqData.size() > 1000) {
-                resultBean.setStatusDesc("请求参数过长");
-                logger.error("------请求参数过长-------");
-                return resultBean;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            logger.error(e.getMessage());
+        if (reqData.size() > 1000) {
+            resultBean.setStatusDesc("请求参数过长");
+            logger.error("------请求参数过长-------");
             return resultBean;
         }
         // 返回结果
-        List<PushBean> retassets = new ArrayList<PushBean>();
+        List<PushBean> retassets = new ArrayList<>();
         //定义判断标识
         boolean flag = false;
         for (PushBean pushBean : reqData) {
+            //每个资产推送前先标识为资产推送失败
+            flag = false;
             try {
 				/*if (pushBean.getAccount() > MAX_ASSET_MONEY) {
 					pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000006);
@@ -653,7 +650,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
                 if(pushBean.getEntrustedFlg() != null && pushBean.getEntrustedFlg().intValue() == 1){
                     // 校验
                     if(org.apache.commons.lang.StringUtils.isBlank(pushBean.getEntrustedAccountId())){
-                        pushBean.setRetCode("ZT000011");
+                        pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000011);
                         pushBean.setRetMsg("受托支付电子账户为空");
                         retassets.add(pushBean);// 返回提示
                         continue;
@@ -947,11 +944,11 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
 
         if (flag){
             resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
-            resultBean.setStatusDesc("请求成功");
+            resultBean.setStatusDesc(retassets.get(0).getRetMsg());
             resultBean.setData(retassets);// 设置返回结果
         }else {
             resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE999999);
-            resultBean.setStatusDesc("请求异常，具体原因请查看retMsg字段返回结果~");
+            resultBean.setStatusDesc(retassets.get(0).getRetMsg());
             resultBean.setData(retassets);// 设置返回结果
         }
 

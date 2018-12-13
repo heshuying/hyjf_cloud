@@ -5,6 +5,7 @@ package com.hyjf.cs.trade.controller.api.assetpush;
 
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.trade.bean.assetpush.PushBean;
 import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.PushResultBean;
@@ -84,7 +85,7 @@ public class ApiAssetPushController extends BaseTradeController {
     @PostMapping("/pushcompany.do")
     @ApiParam(required = true, name = "pushRequestBean", value = "企业资产信息")
     @ApiOperation(value = "企业资产推送", httpMethod = "POST", notes = "企业资产推送")
-    public PushResultBean pushcompany(@RequestBody PushRequestBean pushRequestBean) {
+    public  ApiResult<PushResultBean> pushcompany(@RequestBody PushRequestBean pushRequestBean) {
         logger.info(this.getClass().getName(), "api端-资产推送接口 企业资产推送 start", pushRequestBean.toString(), "/hyjf-api/server/assetpush/pushcompany.do");
         PushResultBean resultBean = new PushResultBean();
         resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000001);
@@ -95,29 +96,42 @@ public class ApiAssetPushController extends BaseTradeController {
         if (Validator.isNull(reqData) || Validator.isNull(pushRequestBean.getInstCode())
                 || Validator.isNull(pushRequestBean.getAssetType()) || Validator.isNull(pushRequestBean.getChkValue())) {
             logger.info("------请求参数非法-------" + pushRequestBean);
-            return resultBean;
+            ApiResult result = new ApiResult<>(resultBean, resultBean.getChkValue());
+            result.setStatus(resultBean.getStatus());
+            result.setStatusDesc(resultBean.getStatusDesc());
+            return result;
         }
 
         // 验签
         if (!SignUtil.verifyRequestSign(pushRequestBean, "/pushcompany")) {
+            logger.info("------------------验签失败！---------------------");
             resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000002);
-            logger.info("-------------------验签失败！--------------------");
             resultBean.setStatusDesc("验签失败！");
-            return resultBean;
+            ApiResult result = new ApiResult<>(resultBean, resultBean.getChkValue());
+            result.setStatus(resultBean.getStatus());
+            result.setStatusDesc(resultBean.getStatusDesc());
+            return result;
         }
 
         logger.info(pushRequestBean.getInstCode() + " 开始推送资产 ");
 
         if(CustomConstants.INST_CODE_HYJF.equals(pushRequestBean.getInstCode())){
             logger.info(pushRequestBean.getInstCode() + "  "+ pushRequestBean.getAssetType() + " ------不能推送本平台资产");
+            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_ZT000010);
             resultBean.setStatusDesc("不能推送本平台资产！");
-            return resultBean;
+            ApiResult result = new ApiResult<>(resultBean, resultBean.getChkValue());
+            result.setStatus(resultBean.getStatus());
+            result.setStatusDesc(resultBean.getStatusDesc());
+            return result;
         }
 
         resultBean = pushService.companyAssetPush(pushRequestBean);
 
         logger.info(this.getClass().getName(), "api端-资产推送接口 企业资产推送 end", "/hyjf-api/server/assetpush/pushcompany.do");
-        return resultBean;
+        ApiResult result = new ApiResult<>(resultBean, resultBean.getChkValue());
+        result.setStatus(resultBean.getStatus());
+        result.setStatusDesc(resultBean.getStatusDesc());
+        return result;
     }
 
 }
