@@ -542,7 +542,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 
 		if(!AuthBean.AUTH_TYPE_MERGE_AUTH.equals(txcode)){
 			// 0是未授权
-			if (status - 0 == 0 || Integer.parseInt(endTime) - Integer.parseInt(nowTime) < 0) {
+			if (status == 0 || Integer.parseInt(endTime) - Integer.parseInt(nowTime) < 0) {
 				return false;
 			}
 		}else{
@@ -552,19 +552,19 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 			endTime = nowTime+1;
 			status = hjhUserAuth.getAutoCreditStatus();
 			// 0是未授权
-			if (status - 0 == 0 || Integer.parseInt(endTime) - Integer.parseInt(nowTime) < 0) {
+			if (status == 0 || Integer.parseInt(endTime) - Integer.parseInt(nowTime) < 0) {
 				creditflag=true;
 			}
 			endTime = hjhUserAuth.getAutoBidEndTime()==null?"0":hjhUserAuth.getAutoBidEndTime();
 			status = hjhUserAuth.getAutoInvesStatus();
 			// 0是未授权
-			if (status - 0 == 0 || Integer.parseInt(endTime) - Integer.parseInt(nowTime) < 0) {
+			if (status == 0 || Integer.parseInt(endTime) - Integer.parseInt(nowTime) < 0) {
 				invesflag=true;
 			}
 			endTime = hjhUserAuth.getAutoPaymentEndTime()==null?"0":hjhUserAuth.getAutoPaymentEndTime();
 			status = hjhUserAuth.getAutoPaymentStatus();
 			// 0是未授权
-			if (status - 0 == 0 || Integer.parseInt(endTime) - Integer.parseInt(nowTime) < 0) {
+			if (status == 0 || Integer.parseInt(endTime) - Integer.parseInt(nowTime) < 0) {
 				paymentflag=true;
 			}
 			if(paymentflag||invesflag||creditflag){
@@ -1247,26 +1247,26 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 		if (Validator.isNull(requestBean.getRetUrl())) {
 			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
 			resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
-			resultMap.put("mess", "同步地址不能为空");
+			resultMap.put("statusDesc", "同步地址不能为空");
 			return resultMap;
 		}
 		if (Validator.isNull(requestBean.getNotifyUrl())) {
 			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
 			resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
-			resultMap.put("mess", "异步地址不能为空");
+			resultMap.put("statusDesc", "异步地址不能为空");
 			return resultMap;
 		}
 		// 渠道
 		if (Validator.isNull(requestBean.getChannel())) {
 			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
 			resultMap.put("status", ErrorCodeConstant.STATUS_CE000001);
-			resultMap.put("mess", "渠道号不能为空");
+			resultMap.put("statusDesc", "渠道号不能为空");
 			return resultMap;
 		}
 		if (Validator.isNull(requestBean.getAuthType())) {
 			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
 			resultMap.put("status", ErrorCodeConstant.STATUS_SQ000001);
-			resultMap.put("mess", "授权类型不能为空");
+			resultMap.put("statusDesc", "授权类型不能为空");
 			return resultMap;
 		}
 		if (!Arrays.asList(AuthBean.AUTH_TYPE_AUTO_CREDIT,
@@ -1275,14 +1275,14 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 				AuthBean.AUTH_TYPE_REPAY_AUTH).contains(requestBean.getAuthType())) {
 			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
 			resultMap.put("status", ErrorCodeConstant.STATUS_SQ000002);
-			resultMap.put("mess", "授权类型不是指定类型");
+			resultMap.put("statusDesc", "授权类型不是指定类型");
 			return resultMap;
 		}
 		// 验签
 		if (!SignUtil.AEMSVerifyRequestSign(requestBean,"/aems/mergeauth/mergeAuth/mergeAuth")) {
 			logger.info("请求参数异常[" + JSONObject.toJSONString(requestBean, true) + "]");
 			resultMap.put("status", ErrorCodeConstant.STATUS_CE000002);
-			resultMap.put("mess", "验签失败");
+			resultMap.put("statusDesc", "验签失败");
 			return resultMap;
 		}
 
@@ -1292,7 +1292,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 		if(bankOpenAccount == null){
 			logger.info("没有根据电子银行卡找到用户[" + JSONObject.toJSONString(requestBean, true) + "]");
 			resultMap.put("status", ErrorCodeConstant.STATUS_CE000004);
-			resultMap.put("mess", "没有根据电子银行卡找到用户");
+			resultMap.put("statusDesc", "没有根据电子银行卡找到用户");
 			return resultMap;
 		}
 
@@ -1302,7 +1302,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 		if (user == null) {
 			logger.info("用户不存在汇盈金服账户[" + JSONObject.toJSONString(requestBean, true) + "]");
 			resultMap.put("status", ErrorCodeConstant.STATUS_CE000007);
-			resultMap.put("mess", "用户不存在汇盈金服账户");
+			resultMap.put("statusDesc", "用户不存在汇盈金服账户");
 			return resultMap;
 		}
 
@@ -1310,7 +1310,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 		if (user.getBankOpenAccount().intValue() != 1) {// 未开户
 			logger.info("用户未开户！[" + JSONObject.toJSONString(requestBean, true) + "]");
 			resultMap.put("status", ErrorCodeConstant.STATUS_CE000006);
-			resultMap.put("mess", "用户未开户！");
+			resultMap.put("statusDesc", "用户未开户！");
 			return resultMap;
 		}
 
@@ -1319,7 +1319,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 		if (passwordFlag != 1) {// 未设置交易密码
 			logger.info("未设置交易密码！[" + JSONObject.toJSONString(requestBean, true) + "]");
 			resultMap.put("status", ErrorCodeConstant.STATUS_TP000002);
-			resultMap.put("mess", "未设置交易密码！");
+			resultMap.put("statusDesc", "未设置交易密码！");
 			return resultMap;
 		}
 
@@ -1328,7 +1328,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 		if(isAuth){
 			logger.info("已授权,请勿重复授权！[" + JSONObject.toJSONString(requestBean, true) + "]");
 			resultMap.put("status", ErrorCodeConstant.STATUS_CE000009);
-			resultMap.put("mess", "已授权,请勿重复授权！");
+			resultMap.put("statusDesc", "已授权,请勿重复授权！");
 			return resultMap;
 		}
 		resultMap.put("status", "1");
