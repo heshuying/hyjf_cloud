@@ -14,8 +14,8 @@ import com.hyjf.common.util.*;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.market.bean.DataSearchBean;
+import com.hyjf.cs.market.mq.base.CommonProducer;
 import com.hyjf.cs.market.mq.base.MessageContent;
-import com.hyjf.cs.market.mq.producer.SmsProducer;
 import com.hyjf.cs.market.service.qianle.DataSearchService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -47,7 +47,7 @@ public class DataSearchController {
     public static final String SMSSENDFORMOBILE = "smsSendForMobile";
 
     @Autowired
-    SmsProducer smsProducer;
+    CommonProducer commonProducer;
     private Logger logger = LoggerFactory.getLogger(DataSearchController.class);
 
     /**
@@ -155,7 +155,7 @@ public class DataSearchController {
         // 发送短信验证码
         SmsMessage smsMessage = new SmsMessage(null, param, mobile, null, SMSSENDFORMOBILE, null, CustomConstants.PARAM_TPL_ZHUCE, CustomConstants.CHANNEL_TYPE_NORMAL);
         try {
-            result = smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+            result = commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
         } catch (MQException e) {
             e.printStackTrace();
         }

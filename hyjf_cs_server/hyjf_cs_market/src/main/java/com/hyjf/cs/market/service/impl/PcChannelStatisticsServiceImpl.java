@@ -8,8 +8,8 @@ import com.hyjf.am.vo.datacollect.PcChannelStatisticsVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.market.client.AmUserClient;
+import com.hyjf.cs.market.mq.base.CommonProducer;
 import com.hyjf.cs.market.mq.base.MessageContent;
-import com.hyjf.cs.market.mq.producer.PcChannelStatisticsAdminProducer;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
 import com.hyjf.cs.market.service.PcChannelStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ public class PcChannelStatisticsServiceImpl extends BaseMarketServiceImpl implem
 	@Autowired
 	private AmUserClient amUserClient;
 	@Autowired
-	private PcChannelStatisticsAdminProducer producer;
+	private CommonProducer producer;
 
 	@Override
 	public void insertStatistics() {

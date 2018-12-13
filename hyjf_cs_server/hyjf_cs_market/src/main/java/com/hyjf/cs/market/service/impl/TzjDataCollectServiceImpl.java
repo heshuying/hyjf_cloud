@@ -7,8 +7,8 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.market.client.AmTradeClient;
 import com.hyjf.cs.market.client.AmUserClient;
+import com.hyjf.cs.market.mq.base.CommonProducer;
 import com.hyjf.cs.market.mq.base.MessageContent;
-import com.hyjf.cs.market.mq.producer.StatisticsTzjProducer;
 import com.hyjf.cs.market.service.TzjDataCollectService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +34,7 @@ public class TzjDataCollectServiceImpl implements TzjDataCollectService {
 	@Autowired
 	AmTradeClient amTradeClient;
 	@Autowired
-	StatisticsTzjProducer statisticsTzjProducer;
+	CommonProducer commonProducer;
 
 	@Override
 	public void queryTzjDayReport() {
@@ -77,7 +77,7 @@ public class TzjDataCollectServiceImpl implements TzjDataCollectService {
 
 		// 4.mq通知
 		try {
-			statisticsTzjProducer.messageSend(new MessageContent(MQConstant.STATISTICS_TZJ_TOPIC,
+			commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_TZJ_TOPIC,
 					System.currentTimeMillis() + "", JSON.toJSONBytes(tzjDayReportVO)));
 		} catch (MQException e) {
 			logger.error("投之家日报表发送mq失败...", e);
