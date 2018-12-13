@@ -11,9 +11,8 @@ import com.hyjf.pay.config.SystemConfig;
 import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import com.hyjf.pay.lib.fadada.call.DzqzCallApi;
 import com.hyjf.pay.lib.fadada.call.impl.DzqzCallApiImpl;
-import com.hyjf.pay.mq.FddProducer;
+import com.hyjf.pay.mq.CommonProducer;
 import com.hyjf.pay.mq.MessageContent;
-import com.hyjf.pay.mq.Producer;
 import com.hyjf.pay.service.DzqzPayLogService;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
@@ -35,10 +34,7 @@ public class DzqzCallController extends BaseController {
     private DzqzPayLogService logService;
 
     @Autowired
-    private FddProducer fddProducer;
-
-    @Autowired
-    private Producer producer;
+    private CommonProducer commonProducer;
 
     @Autowired
     SystemConfig systemConfig;
@@ -138,7 +134,7 @@ public class DzqzCallController extends BaseController {
             if (!"3000".equals(result_code)){//未签署成功
                 log.info("--------------合同签署异步返回签署失败-----------交易号：" + orderId + "--交易描述：" + bean.getResult_desc());
             }else{
-                fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_AUTO_SIGN_TAG, UUID.randomUUID().toString(),JSON.toJSONBytes(bean)));
+                commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_AUTO_SIGN_TAG, UUID.randomUUID().toString(),JSON.toJSONBytes(bean)));
             }
         } catch (Exception e) {
             e.printStackTrace();
