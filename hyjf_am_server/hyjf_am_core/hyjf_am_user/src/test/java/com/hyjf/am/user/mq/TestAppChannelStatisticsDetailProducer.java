@@ -41,7 +41,7 @@ public class TestAppChannelStatisticsDetailProducer {
 		detail.setCumulativeInvest(BigDecimal.ZERO);
 		// 发送
 		producer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-				MQConstant.APP_CHANNEL_STATISTICS_DETAIL_SAVE_TAG, JSON.toJSONBytes(detail)));
+				MQConstant.APP_CHANNEL_STATISTICS_DETAIL_SAVE_TAG, detail));
 
 	}
 
@@ -52,6 +52,6 @@ public class TestAppChannelStatisticsDetailProducer {
 
 		// 发送
         producer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-                MQConstant.APP_CHANNEL_STATISTICS_DETAIL_UPDATE_TAG, JSON.toJSONBytes(userId)));
+                MQConstant.APP_CHANNEL_STATISTICS_DETAIL_UPDATE_TAG, userId));
 	}
 }

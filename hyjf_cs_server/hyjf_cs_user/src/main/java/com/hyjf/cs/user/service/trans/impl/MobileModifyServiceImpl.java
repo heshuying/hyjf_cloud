@@ -17,8 +17,8 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmUserClient;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.FddCertificateProducer;
 import com.hyjf.cs.user.result.MobileModifyResultBean;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.trans.MobileModifyService;
@@ -48,7 +48,7 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
     @Autowired
     AmConfigClient amConfigClient;
     @Autowired
-    FddCertificateProducer fddProducer;
+    CommonProducer commonProducer;
     
     /**
      * 更换手机号条件校验
@@ -140,8 +140,8 @@ public class MobileModifyServiceImpl extends BaseUserServiceImpl implements Mobi
         FddCertificateAuthorityVO fddCertificateAuthorityVO = new FddCertificateAuthorityVO();
         fddCertificateAuthorityVO.setUserId(userId);
         fddCertificateAuthorityVO.setCertFrom("mobileModify");
-        fddProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC,
-                UUID.randomUUID().toString(), JSON.toJSONBytes(fddCertificateAuthorityVO)));
+        commonProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC,
+                UUID.randomUUID().toString(), fddCertificateAuthorityVO));
 
         // 处理结束时间
         String endTime = GetDate.dateToString(new Date());

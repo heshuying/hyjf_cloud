@@ -27,9 +27,8 @@ import com.hyjf.cs.user.bean.RegistLandingPageCommitRequestBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.CouponProducer;
-import com.hyjf.cs.user.mq.producer.SmsProducer;
 import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.result.UserRegistResult;
 import com.hyjf.cs.user.service.login.LoginService;
@@ -77,10 +76,7 @@ public class WeChatRegistController extends BaseUserController {
     private SystemConfig systemConfig;
 
     @Autowired
-    private SmsProducer smsProducer;
-
-    @Autowired
-    private CouponProducer couponProducer;
+    private CommonProducer commonProducer;
 
     @Autowired
     LoginService loginService;
@@ -555,7 +551,7 @@ public class WeChatRegistController extends BaseUserController {
             // 发送
             SmsMessage smsMessage = new SmsMessage(userVO.getUserId(), null, userVO.getMobile(), null, MessageConstant.SMS_SEND_FOR_MOBILE, null, CustomConstants.PARAM_TPL_TZJ_188HB,
                     CustomConstants.CHANNEL_TYPE_NORMAL);
-            smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+            commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
 
         }catch (MQException e){
             e.printStackTrace();
@@ -580,8 +576,8 @@ public class WeChatRegistController extends BaseUserController {
         params.put("sign", signValue);
 
         try {
-            couponProducer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC,
-                    UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            commonProducer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC,
+                    UUID.randomUUID().toString(), params));
         } catch (MQException e) {
             e.printStackTrace();
             logger.error("注册888红包发放失败");

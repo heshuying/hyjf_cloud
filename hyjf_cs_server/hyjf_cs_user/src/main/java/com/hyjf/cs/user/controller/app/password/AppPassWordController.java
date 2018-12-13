@@ -25,8 +25,8 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.service.password.PassWordService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -64,7 +64,7 @@ public class AppPassWordController extends BaseUserController {
     @Autowired
     SystemConfig systemConfig;
     @Autowired
-    UserOperationLogProducer userOperationLogProducer;
+    private CommonProducer commonProducer;
 
     private static final Logger logger = LoggerFactory.getLogger(AppPassWordController.class);
 
@@ -118,7 +118,7 @@ public class AppPassWordController extends BaseUserController {
                 userOperationLogEntity.setUserName(userVO.getUsername());
                 userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
                 try {
-                    userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(userOperationLogEntity)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
                 } catch (MQException e) {
                     logger.error("保存用户日志失败", e);
                 }
@@ -167,7 +167,7 @@ public class AppPassWordController extends BaseUserController {
         userOperationLogEntity.setUserName(user.getUsername());
         userOperationLogEntity.setUserRole(String.valueOf(usersInfo.getRoleId()));
         try {
-            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(userOperationLogEntity)));
+            commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(),  userOperationLogEntity));
         } catch (MQException e) {
             logger.error("保存用户日志失败", e);
         }
@@ -252,7 +252,7 @@ public class AppPassWordController extends BaseUserController {
         userOperationLogEntity.setUserName(user.getUsername());
         userOperationLogEntity.setUserRole(String.valueOf(usersInfo.getRoleId()));
         try {
-            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(userOperationLogEntity)));
+            commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
         } catch (MQException e) {
             logger.error("保存用户日志失败", e);
         }

@@ -15,7 +15,7 @@ import com.hyjf.cs.user.bean.PaymentAuthPageBean;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.mq.producer.SmsProducer;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.paymentauthpage.PaymentAuthPageService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -45,7 +45,7 @@ public class PaymentAuthPageServiceImpl extends BaseUserServiceImpl implements P
     private AmConfigClient amConfigClient;
 
     @Autowired
-    private SmsProducer smsProducer;
+    private CommonProducer commonProducer;
 
     @Autowired
     private SystemConfig systemConfig;

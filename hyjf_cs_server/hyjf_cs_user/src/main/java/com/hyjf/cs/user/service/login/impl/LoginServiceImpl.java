@@ -37,8 +37,8 @@ import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.config.locked.LockedConfigManager;
 import com.hyjf.cs.user.constants.VipImageUrlEnum;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.sensorsdate.login.SensorsDataLoginProducer;
 import com.hyjf.cs.user.service.auth.AuthService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.login.LoginService;
@@ -96,7 +96,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	private AuthService authService;
 
 	@Autowired
-	private SensorsDataLoginProducer sensorsDataLoginProducer;
+	private CommonProducer commonProducer;
 	/**
 	 * 登录
 	 *
@@ -1149,6 +1149,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	 */
 	@Override
 	public void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
-		this.sensorsDataLoginProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_LOGIN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
+		this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_LOGIN_TOPIC, UUID.randomUUID().toString(), sensorsDataBean), 2);
 	}
 }

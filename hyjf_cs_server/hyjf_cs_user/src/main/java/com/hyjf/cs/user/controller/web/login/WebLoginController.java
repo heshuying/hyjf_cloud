@@ -20,8 +20,8 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.LoginRequestVO;
@@ -54,7 +54,7 @@ public class WebLoginController extends BaseUserController {
     @Autowired
     private LoginService loginService;
     @Autowired
-    private UserOperationLogProducer userOperationLogProducer;
+    private CommonProducer commonProducer;
 
     /**
      * 登录
@@ -113,7 +113,7 @@ public class WebLoginController extends BaseUserController {
             userOperationLogEntity.setUserRole(userVO.getRoleId());
             logger.info("userOperationLogEntity发送数据==="+JSONObject.toJSONString(userOperationLogEntity));
             try {
-                userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(userOperationLogEntity)));
+                commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
             } catch (MQException e) {
                 logger.error("保存用户日志失败" , e);
             }
@@ -152,7 +152,7 @@ public class WebLoginController extends BaseUserController {
             userOperationLogEntity.setUserName(userVO.getUsername());
             userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
             try {
-                userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(userOperationLogEntity)));
+                commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
             } catch (MQException e) {
                 logger.error("保存用户日志失败" , e);
             }

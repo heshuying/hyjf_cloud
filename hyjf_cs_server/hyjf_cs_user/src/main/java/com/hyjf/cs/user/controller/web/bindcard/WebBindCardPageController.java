@@ -15,8 +15,8 @@ import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.cs.user.vo.BindCardVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -54,7 +54,7 @@ public class WebBindCardPageController extends BaseUserController{
     @Autowired
     BindCardService bindCardService;
     @Autowired
-    UserOperationLogProducer userOperationLogProducer;
+    CommonProducer commonProducer;
     /**
      * 绑卡接口
      */
@@ -79,7 +79,7 @@ public class WebBindCardPageController extends BaseUserController{
         userOperationLogEntity.setUserName(user.getUsername());
         userOperationLogEntity.setUserRole(user.getRoleId());
         try {
-            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(userOperationLogEntity)));
+            commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
         } catch (MQException e) {
             logger.error("保存用户日志失败", e);
         }
@@ -150,7 +150,7 @@ public class WebBindCardPageController extends BaseUserController{
         userOperationLogEntity.setUserName(user.getUsername());
         userOperationLogEntity.setUserRole(user.getRoleId());
         try {
-            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(userOperationLogEntity)));
+            commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
         } catch (MQException e) {
             logger.error("保存用户日志失败", e);
         }
