@@ -7,6 +7,7 @@ server:
 eureka:
   instance:
     hostname: microserver2
+    #preferIpAddress: true
   environment: ${spring.profiles.active}
   datacenter: Main
   client:
