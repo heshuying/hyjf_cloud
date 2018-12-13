@@ -10,8 +10,8 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.market.client.AmTradeClient;
 import com.hyjf.cs.market.client.CsMessageClient;
+import com.hyjf.cs.market.mq.base.CommonProducer;
 import com.hyjf.cs.market.mq.base.MessageContent;
-import com.hyjf.cs.market.mq.producer.BorrowUserStatisticsProducer;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
 import com.hyjf.cs.market.service.BorrowUserStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ public class BorrowUserStatisticsServiceImpl extends BaseMarketServiceImpl imple
 	@Autowired
 	private CsMessageClient csMessageClient;
 	@Autowired
-	private BorrowUserStatisticsProducer statisticsProducer;
+	private CommonProducer commonProducer;
 
 	@Override
 	public void insertStatistics() {
@@ -63,7 +63,7 @@ public class BorrowUserStatisticsServiceImpl extends BaseMarketServiceImpl imple
 			// 第一次插入
 			record.setAddTime(GetDate.getNowTime10());
 			try {
-				statisticsProducer.messageSend(new MessageContent(MQConstant.BORROW_USER_STATISTICS_TOPIC,
+				commonProducer.messageSend(new MessageContent(MQConstant.BORROW_USER_STATISTICS_TOPIC,
 						System.currentTimeMillis() + "", JSONObject.toJSONBytes(record)));
 			} catch (MQException e) {
 				logger.error("更新借款用户运营数据失败......", e);
@@ -72,7 +72,7 @@ public class BorrowUserStatisticsServiceImpl extends BaseMarketServiceImpl imple
 			record.setId(statisticVO.getId());
 			record.setUpdateTime(GetDate.getNowTime10());
 			try {
-				statisticsProducer.messageSend(new MessageContent(MQConstant.BORROW_USER_STATISTICS_TOPIC,
+				commonProducer.messageSend(new MessageContent(MQConstant.BORROW_USER_STATISTICS_TOPIC,
 						System.currentTimeMillis() + "", JSONObject.toJSONBytes(record)));
 			} catch (MQException e) {
 				logger.error("更新借款用户运营数据失败......", e);

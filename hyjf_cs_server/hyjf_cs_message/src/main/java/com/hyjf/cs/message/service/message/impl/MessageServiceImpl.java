@@ -14,8 +14,8 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.message.bean.mc.SmsOntime;
 import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.mongo.mc.SmsOntimeMongoDao;
+import com.hyjf.cs.message.mq.base.CommonProducer;
 import com.hyjf.cs.message.mq.base.MessageContent;
-import com.hyjf.cs.message.mq.producer.SmsProducer;
 import com.hyjf.cs.message.service.message.MessageService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -49,7 +49,7 @@ public class MessageServiceImpl implements MessageService {
 	private AmConfigClient amConfigClient;
 
 	@Autowired
-	private SmsProducer smsProducer;
+	private CommonProducer smsProducer;
 
 	@Override
 	public List<SmsOntime> getOntimeList(Integer statusWait) {
@@ -115,7 +115,7 @@ public class MessageServiceImpl implements MessageService {
 						SmsMessage smsMessage = new SmsMessage(null, null, phones, send_message,
 								MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType);
 						smsProducer.messageSend(
-								new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
+								new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),smsMessage));
 					} catch (Exception e) {
 						logger.error("发送短信失败......", e);
 						errorCnt++;
@@ -137,7 +137,7 @@ public class MessageServiceImpl implements MessageService {
 					SmsMessage smsMessage = new SmsMessage(null, null, mbl, send_message,
 							MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType);
 					smsProducer.messageSend(
-							new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
+							new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),smsMessage));
 				}
 			} catch (Exception e) {
 				sbError.append(e.getMessage()).append("<br/>");

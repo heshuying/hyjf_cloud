@@ -16,8 +16,8 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.market.client.AmTradeClient;
 import com.hyjf.cs.market.client.AmUserClient;
 import com.hyjf.cs.market.client.CsMessageClient;
+import com.hyjf.cs.market.mq.base.CommonProducer;
 import com.hyjf.cs.market.mq.base.MessageContent;
-import com.hyjf.cs.market.mq.producer.AppChannelStatisticsProducer;
 import com.hyjf.cs.market.service.AppChannelStatisticsService;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 	private CsMessageClient csMessageClient;
 
 	@Autowired
-	private AppChannelStatisticsProducer producer;
+	private CommonProducer producer;
 
 	@Override
 	public void insertStatistics() {

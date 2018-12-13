@@ -18,8 +18,9 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.ic.BorrowUserStatistic;
 import com.hyjf.cs.message.bean.ic.OperationReport;
+import com.hyjf.cs.message.mq.base.CommonProducer;
 import com.hyjf.cs.message.mq.base.MessageContent;
-import com.hyjf.cs.message.mq.producer.OperationReportJobAdminProducer;
+
 import com.hyjf.cs.message.service.report.OperationReportJobNewService;
 import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import io.swagger.annotations.ApiOperation;
@@ -49,7 +50,7 @@ public class OperationReportJobController extends BaseController {
 	@Autowired
 	private PlatDataStatisticsService platDataStatisticsService;
 	@Autowired
-	OperationReportJobAdminProducer operationReportJobAdminProducer;
+	CommonProducer operationReportJobAdminProducer;
 
 	@ApiOperation(value = "统计报表-根据当前时间要获取到上个月的数据", notes = "根据当前时间要获取到上个月的数据")
 	@RequestMapping("/countOperationReport")
@@ -73,7 +74,7 @@ public class OperationReportJobController extends BaseController {
 		logger.info("生成报告year="+year+"生成报告month="+month);
 		try {
 			operationReportJobAdminProducer.messageSend(new MessageContent(MQConstant.OPERATIONREPORT_JOB_ADMIN_TOPIC,
-					System.currentTimeMillis() + "", JSONObject.toJSONBytes(bean)));
+					System.currentTimeMillis() + "", bean));
 		} catch (MQException e) {
 			logger.error("运营报告的mq发送失败......", e);
 			return new StringResponse("error");

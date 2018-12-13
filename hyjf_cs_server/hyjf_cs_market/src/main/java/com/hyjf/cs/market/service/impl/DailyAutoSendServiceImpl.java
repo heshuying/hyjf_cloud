@@ -12,8 +12,8 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.market.client.AmConfigClient;
 import com.hyjf.cs.market.client.AmMarketClient;
+import com.hyjf.cs.market.mq.base.CommonProducer;
 import com.hyjf.cs.market.mq.base.MessageContent;
-import com.hyjf.cs.market.mq.producer.MailProducer;
 import com.hyjf.cs.market.service.DailyAutoSendService;
 
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -51,7 +51,7 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
     @Autowired
     private AmConfigClient amConfigClient;
     @Autowired
-    private MailProducer mailProducer;
+    private CommonProducer commonProducer;
 
     @Override
     public List<SellDailyDistributionVO> listSellDailyDistribution() {
@@ -86,7 +86,7 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
         MailMessage mailMessage = new MailMessage(null, null, subject, null, fileNames, toEmail, null, MessageConstant.MAIL_SEND_FRO_SELL_DAILY, is);
         try {
             // 包含附件
-            mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(mailMessage)));
+            commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(mailMessage)));
             logger.info("发送销售日报成功>>>>>>>>>>>>>>>>>>>>>");
         } catch (Exception e) {
             logger.error("发送销售日报失败>>>>>>>>>>>>>>>>>>>>> 失败原因：{}", e);

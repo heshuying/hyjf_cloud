@@ -3,7 +3,8 @@ package com.hyjf.cs.message.test;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.CsMessageApplication;
-import com.hyjf.cs.message.mq.producer.MailProducer;
+import com.hyjf.cs.message.mq.base.CommonProducer;
+
 import com.hyjf.cs.message.service.HjhPlanCapitalService;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -23,7 +24,7 @@ import java.util.Date;
 public class MqTest {
 
     @Autowired
-    private MailProducer mailProducer;
+    private CommonProducer mailProducer;
     @Autowired
     private HjhPlanCapitalService hjhPlanCapitalService;
 
