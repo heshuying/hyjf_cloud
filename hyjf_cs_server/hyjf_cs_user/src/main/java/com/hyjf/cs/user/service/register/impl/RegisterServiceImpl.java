@@ -32,6 +32,7 @@ import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ResultEnum;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.mq.producer.AccountProducer;
 import com.hyjf.cs.user.mq.producer.AppChannelStatisticsDetailProducer;
@@ -85,6 +86,9 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
 
     @Autowired
     private SensorsDataRegisterProducer sensorsDataRegisterProducer;
+
+    @Autowired
+    private CommonProducer commonProducer;
 
     /**
      * api注册参数校验
@@ -744,7 +748,8 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         account.setPlanRepayInterest(BigDecimal.ZERO);
         logger.info("注册插入account：{}", JSON.toJSONString(account));
         try {
-            accountProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(account)));
+            //accountProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(account)));
+            commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(), account));
         } catch (MQException e) {
             logger.error("注册成功推送account——mq失败.... user_id is :{}", userId);
             throw new RuntimeException("注册成功推送account——mq失败...");
