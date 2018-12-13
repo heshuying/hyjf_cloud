@@ -102,7 +102,7 @@ public class AdminPlanAccedeListCustomize implements Serializable {
 	 */
 	private String debtPlanName;
 	/**
-	 * 预期年化收益
+	 * 预期出借利率
 	 */
 	private String expectApr;
 	/**
@@ -284,7 +284,7 @@ public class AdminPlanAccedeListCustomize implements Serializable {
 	private String fairValue;
 	
 	/**
-	 * 实际年化收益率
+	 * 实际出借利率
 	 */
 	private String actualApr;
 	

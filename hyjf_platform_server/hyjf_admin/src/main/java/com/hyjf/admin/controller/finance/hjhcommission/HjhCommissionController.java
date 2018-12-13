@@ -265,7 +265,7 @@ public class HjhCommissionController extends BaseController{
 		}
 		// 列头
         String[] titles =
-                new String[] { "序号", "加入订单号", "计划编号", "还款方式", "锁定期", "预期年化收益率", "提成人", "提成人真实姓名", "提成人用户属性(出借时)", "出借人用户名",
+                new String[] { "序号", "加入订单号", "计划编号", "还款方式", "锁定期", "预期出借利率率", "提成人", "提成人真实姓名", "提成人用户属性(出借时)", "出借人用户名",
                 		"出借人用户属性(出借时)",
                 		"加入金额", "提成金额",
                         "提成发放状态", "提成发放时间" ,"计划订单加入时间","计划订单锁定时间"};
@@ -336,7 +336,7 @@ public class HjhCommissionController extends BaseController{
 	                		}
 	                		cell.setCellValue(bean.getLockPeriod() + str);}
                     }
-                  //预期年化收益率
+                  //预期出借利率率
                     else if (celLength == 5) {
                     	cell.setCellValue( bean.getExpectApr().toString()+" %");
                     }

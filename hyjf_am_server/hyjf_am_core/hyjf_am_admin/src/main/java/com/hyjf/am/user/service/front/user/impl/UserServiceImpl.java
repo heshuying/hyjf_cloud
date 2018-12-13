@@ -330,7 +330,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		userInfo.setUserId(userId);
 		// 默认出借人角色
 		if (instType!=null&&instType == 0) {
-			//用户角色1出借人2借款人3垫付机构
+			//用户角色1出借人2借款人3担保机构
 			userInfo.setRoleId(2);
 			//借款人类型 1：内部机构 2：外部机构
 			userInfo.setBorrowerType(2);
@@ -793,7 +793,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 
 	@Override
 	public List<User> selectUserByUsername(String repayOrgName) {
-		// 根据垫付机构用户名检索垫付机构用户ID
+		// 根据担保机构用户名检索担保机构用户ID
 		UserExample usersExample = new UserExample();
 		UserExample.Criteria userCri = usersExample.createCriteria();
 		userCri.andUsernameEqualTo(repayOrgName);

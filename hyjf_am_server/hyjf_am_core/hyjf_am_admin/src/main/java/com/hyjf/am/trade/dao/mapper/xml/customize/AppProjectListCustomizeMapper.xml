@@ -334,7 +334,7 @@
 		<result column="user_credit" property="userCredit" jdbcType="VARCHAR" />
 		<!--  项目区分 comOrPer 项目是个人项目还是企业项目 1企业 2个人  -->
 		<result column="com_or_per" property="comOrPer" jdbcType="VARCHAR" />
-		<!-- 项目年化收益 -->
+		<!-- 项目出借利率 -->
 		<result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
 		<!-- 项目期限 borrowPeriod -->
 		<result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />

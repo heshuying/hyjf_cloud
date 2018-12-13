@@ -30,7 +30,7 @@ public class TenderCreditCustomize implements Serializable {
 	 */
 	private String borrowName;
 	/**
-	 * 借款编号
+	 * 项目编号
 	 */
 	private String borrowNid;
 	/**
@@ -38,7 +38,7 @@ public class TenderCreditCustomize implements Serializable {
 	 */
 	private String borrowType;
 	/**
-	 * 年化收益
+	 * 出借利率
 	 */
 	private String borrowApr;
 	/**

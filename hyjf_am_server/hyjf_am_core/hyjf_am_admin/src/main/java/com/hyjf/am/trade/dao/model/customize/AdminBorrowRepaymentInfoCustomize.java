@@ -13,17 +13,17 @@ public class AdminBorrowRepaymentInfoCustomize extends BaseVO implements Seriali
     private String assetId;//资产编号
     private String accedeOrderId;//出借订单号
     private String nid;// 出借nid
-    private String borrowNid;// 借款编号
+    private String borrowNid;// 项目编号
     private String planNid;//计划编号
     private String userId;// 借款人ID
     private String borrowUserName;// 借款人用户名
-    private String repayOrgName;// 垫付机构用户名
+    private String repayOrgName;// 担保机构用户名
     private String borrowStyle;// 类型
     private String borrowName;// 借款标题
     private String projectType;// 项目类型id
     private String projectTypeName;// 项目类型名称
     private String borrowPeriod;// 借款期限
-    private String borrowApr;// 年化收益
+    private String borrowApr;// 出借利率
     private String borrowAccount;// 借款金额
     private String borrowAccountYes;// 借到金额
     private String repayType;// 还款方式

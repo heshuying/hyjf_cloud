@@ -78,7 +78,7 @@ public class BorrowCommonBean implements Serializable {
 	private Paginator paginator;
 
 	/**
-	 * 检索条件 借款编号
+	 * 检索条件 项目编号
 	 */
 	private String borrowNidSrch;
 
@@ -152,17 +152,17 @@ public class BorrowCommonBean implements Serializable {
 	 */
 	private String username;
 	/**
-	 * 垫付机构用户名
+	 * 担保机构用户名
 	 */
 	private String repayOrgName;
 
 	/**
-	 * 垫付机构用户ID
+	 * 担保机构用户ID
 	 */
 	private Integer repayOrgUserId;
 
 	/**
-	 * 是否需要垫付机构还款Flag
+	 * 是否需要担保机构还款Flag
 	 */
 	private boolean isRepayOrgFlag;
 
@@ -261,11 +261,11 @@ public class BorrowCommonBean implements Serializable {
 	 */
 	private String borrowContents;
 	/**
-	 * 融资服务费
+	 * 放款服务费
 	 */
 	private String borrowServiceScale;
 	/**
-	 * 账户管理费率
+	 * 还款服务费率
 	 */
 	private String borrowManagerScale;
 
@@ -275,7 +275,7 @@ public class BorrowCommonBean implements Serializable {
 	private String borrowReturnScale;
 
 	/**
-	 * 账户管理费率（下限制）
+	 * 还款服务费率（下限制）
 	 */
 	private String borrowManagerScaleEnd;
 	/**

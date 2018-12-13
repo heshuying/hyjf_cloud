@@ -25,7 +25,7 @@ public class AppUserInvestListCustomize {
     // 出借期限
     public String investPeriod;
 
-    // 年化收益率
+    // 出借利率
     public String interest;
 
     // 出借开始日期

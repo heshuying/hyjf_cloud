@@ -17,7 +17,7 @@ public class CallCenterHztRepaymentDetailCustomize implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	// ========================参数=============================
-	private String borrowNid;// 借款编号
+	private String borrowNid;// 项目编号
 	private String borrowName;// 借款标题
 	private String nid;// 出借nid
 	private String repayOrdid; //还款订单号

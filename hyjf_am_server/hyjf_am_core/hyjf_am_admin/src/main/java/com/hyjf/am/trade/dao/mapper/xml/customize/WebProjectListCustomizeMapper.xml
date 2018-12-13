@@ -144,7 +144,7 @@
         <result column="borrow_account" property="borrowAccount" jdbcType="VARCHAR" />
         <!-- 项目总额 account 万元-->
         <result column="borrow_account_wan" property="borrowAccountWan" jdbcType="VARCHAR" />
-        <!-- 项目年化收益 -->
+        <!-- 项目出借利率 -->
         <result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
         <!-- 项目期限 borrowPeriod -->
         <result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />

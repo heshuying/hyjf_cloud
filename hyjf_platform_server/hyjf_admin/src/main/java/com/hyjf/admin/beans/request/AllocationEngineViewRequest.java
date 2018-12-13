@@ -79,7 +79,7 @@ public class AllocationEngineViewRequest extends BaseRequest implements Serializ
 	@ApiModelProperty(value = "债转时间排序优先级")
 	private String transferTimeSortPriority;
 	
-	@ApiModelProperty(value = "年化收益率排序 0：从低到高 1：从高到低")
+	@ApiModelProperty(value = "出借利率排序 0：从低到高 1：从高到低")
 	private String aprSort;
 	
 	@ApiModelProperty(value = "aprSortPriority")
@@ -88,7 +88,7 @@ public class AllocationEngineViewRequest extends BaseRequest implements Serializ
 	@ApiModelProperty(value = "标的实际支付金额排序 0：从小到大 1：从大到小")
 	private String actulPaySort;
 	
-	@ApiModelProperty(value = "年化收益率优先级")
+	@ApiModelProperty(value = "出借利率优先级")
 	private String actulPaySortPriority;
 	
 	@ApiModelProperty(value = "出借进度排序 0：从小到大 1：从大到小")

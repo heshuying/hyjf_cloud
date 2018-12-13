@@ -353,7 +353,7 @@ WHERE
 	<!-- 查询出到期但是未满标的标的,给其发短信 -->
 	<resultMap id="searchNotFullBorrowMsgMap"
 		type="com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO">
-		<!-- 序号借款编号 -->
+		<!-- 序号项目编号 -->
 		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
 		<result column="timeStartSrch" property="timeStartSrch"
 			jdbcType="VARCHAR" />
@@ -591,7 +591,7 @@ WHERE
 		  <!-- 复审用户名 -->
 		  <result column="create_user_name" property="createUserName"
 		   jdbcType="VARCHAR" />
-		  <!-- 垫付机构用户名 -->
+		  <!-- 担保机构用户名 -->
 		  <result column="repay_org_name" property="repayOrgUserName"
 		   jdbcType="VARCHAR" />
 		  <!-- 计划编号 -->
@@ -750,7 +750,7 @@ WHERE
 	</select>
 	<!-- 导出 -->
 	<resultMap id="exportBorrowListMap" type="com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO">
-		<!-- 序号借款编号  --> 
+		<!-- 序号项目编号  -->
 		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
 		<!-- 借款人ID  --> 
 		<result column="user_id" property="userId" jdbcType="VARCHAR" />
@@ -768,13 +768,13 @@ WHERE
 		<result column="account" property="account" jdbcType="VARCHAR" />
 		<!-- 借款期限 --> 
 		<result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
-		<!-- 年化收益 --> 
+		<!-- 出借利率 -->
 		<result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
 		<!-- 还款方式 --> 
 		<result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
-		<!-- 融资服务费率 --> 
+		<!-- 放款服务费率 -->
 		<result column="borrow_service_scale" property="borrowServiceScale" jdbcType="VARCHAR" />
-		<!-- 账户管理费率 --> 
+		<!-- 还款服务费率 -->
 		<result column="borrow_manager_scale" property="borrowManagerScale" jdbcType="VARCHAR" />
 		<!-- 合作机构 --> 
 		<result column="borrow_measures_instit" property="borrowMeasuresInstit" jdbcType="VARCHAR" />
@@ -812,7 +812,7 @@ WHERE
 		<result column="regist_time" property="registTime" jdbcType="VARCHAR" />
 		<!-- 复审用户名-->	
 		<result column="reverify_user_name" property="reverifyUserName" jdbcType="VARCHAR" />
-		<!--  垫付机构用户名-->	
+		<!--  担保机构用户名-->
 		<result column="repay_org_name" property="repayOrgUserName" jdbcType="VARCHAR" />
 		<!--  计划编号 -->	
 		<result column="plan_nid" property="planNid" jdbcType="VARCHAR" />

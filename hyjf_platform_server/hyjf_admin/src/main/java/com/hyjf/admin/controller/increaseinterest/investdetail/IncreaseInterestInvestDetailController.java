@@ -113,13 +113,13 @@ public class IncreaseInterestInvestDetailController extends BaseController {
 		Map<String, String> map = Maps.newLinkedHashMap();
 		map.put("investUserName", "出借人");
 		map.put("inviteUserName", "推荐人");
-		map.put("borrowNid", "借款编号");
-		map.put("borrowApr", "年化收益率");
+		map.put("borrowNid", "项目编号");
+		map.put("borrowApr", "出借利率");
 		map.put("borrowExtraYield", "加息收益率");
 		map.put("borrowPeriodByStyle", "项目期限");
 		map.put("borrowStyleName", "还款方式");
 		map.put("orderId", "出借订单号");
-		map.put("account", "授权服务金额");
+		map.put("account", "出借金额");
 		map.put("repayInterest", "加息收益");
 		map.put("client", "操作平台");
 		map.put("createTime", "出借时间");

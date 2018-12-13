@@ -126,8 +126,8 @@ public class BorrowRepaymentInfoController extends BaseController {
         // 查询
         List<BorrowRepaymentInfoCustomizeVO> resultList = this.borrowRepaymentInfoService.selectBorrowRepaymentList(copyForm);
         // 列头
-        String[] titles = new String[] { "借款编号", "资产来源", "智投编号", "借款人ID", "借款人用户名", "借款标题", "项目类型",
-                "借款期限", "年化收益", "借款金额", "借到金额", "还款方式", "出借人用户名", "出借人ID", "出借人用户属性（当前）",
+        String[] titles = new String[] { "项目编号", "资产来源", "智投编号", "借款人ID", "借款人用户名", "借款标题", "项目类型",
+                "借款期限", "出借利率", "借款金额", "借到金额", "还款方式", "出借人用户名", "出借人ID", "出借人用户属性（当前）",
                 "出借人所属一级分部（当前）", "出借人所属二级分部（当前）", "出借人所属团队（当前）", "推荐人用户名（当前）",
                 "推荐人姓名（当前）", "推荐人所属一级分部（当前）", "推荐人所属二级分部（当前）", "推荐人所属团队（当前）", "出借金额",
                 "应还本金","应还利息", "应还本息", "还款服务费", "已还本金", "已还利息", "已还本息", "未还本金", "未还利息", "未还本息",
@@ -157,7 +157,7 @@ public class BorrowRepaymentInfoController extends BaseController {
 
                     // 创建相应的单元格
                     Cell cell = row.createCell(celLength);
-                    // 借款编号计划编号
+                    // 项目编号计划编号
                     if (celLength == 0) {
                         cell.setCellValue(record.getBorrowNid());
                     }
@@ -195,7 +195,7 @@ public class BorrowRepaymentInfoController extends BaseController {
                             cell.setCellValue(record.getBorrowPeriod() + "个月");
                         }
                     }
-                    // 年化收益
+                    // 出借利率
                     else if (celLength == 8) {
                         cell.setCellValue(record.getBorrowApr() + "%");
                     }
@@ -428,15 +428,15 @@ public class BorrowRepaymentInfoController extends BaseController {
 
     private Map<String, String> buildMap(String isOrganizationView) {
         Map<String, String> map = Maps.newLinkedHashMap();
-        map.put("borrowNid","借款编号");
+        map.put("borrowNid","项目编号");
         map.put("instName","资产来源");
         map.put("planNid","智投编号");
         map.put("userId","借款人ID");
         map.put("borrowUserName","借款人用户名");
         map.put("borrowName","借款标题");
         map.put("projectTypeName","项目类型");
-        map.put("borrowPeriod","借款期限");
-        map.put("borrowApr","年化收益");
+        map.put("borrowPeriod","项目期限");
+        map.put("borrowApr","出借利率");
         map.put("borrowAccount","借款金额");
         map.put("borrowAccountYes","借到金额");
         map.put("repayType","还款方式");
@@ -456,19 +456,19 @@ public class BorrowRepaymentInfoController extends BaseController {
             map.put("referrerDepartmentName", "推荐人所属团队（当前）");
         }
         map.put("recoverTotal","出借金额");
-        map.put("recoverCapital","应还本金");
-        map.put("recoverInterest","应还利息");
-        map.put("recoverAccount","应还本息");
+        map.put("recoverCapital","应回本金");
+        map.put("recoverInterest","应回利息");
+        map.put("recoverAccount","应回本息");
         map.put("recoverFee","还款服务费");
-        map.put("recoverCapitalYes","已还本金");
-        map.put("recoverInterestYes","已还利息");
-        map.put("recoverAccountYes","已还本息");
-        map.put("recoverCapitalWait","未还本金");
-        map.put("recoverInterestWait","未还利息");
-        map.put("recoverAccountWait","未还本息");
-        map.put("status","还款状态");
-        map.put("recoverLastTime","最后还款日");
-        map.put("repayActionTime","实际还款时间");
+        map.put("recoverCapitalYes","已回本金");
+        map.put("recoverInterestYes","已回利息");
+        map.put("recoverAccountYes","已回本息");
+        map.put("recoverCapitalWait","余待回本金");
+        map.put("recoverInterestWait","剩余待回利息");
+        map.put("recoverAccountWait","剩余待回本息");
+        map.put("status","回款状态");
+        map.put("recoverLastTime","到期日");
+        map.put("repayActionTime","实际回款时间");
         map.put("freezeOrderId","还款冻结订单号");
         return map;
     }

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.BatchCouponTimeoutCustomizeMapper">
 	<resultMap id="couponResult" type="com.hyjf.am.trade.dao.model.customize.BatchCouponTimeoutCommonCustomize">
-		<!-- 序号借款编号  --> 
+		<!-- 序号项目编号  -->
 		<result column="user_id" property="userId"/>
 		<result column="coupon_quota" property="couponQuota"/>
 	</resultMap>

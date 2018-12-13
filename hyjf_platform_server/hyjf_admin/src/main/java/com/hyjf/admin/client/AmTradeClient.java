@@ -211,7 +211,7 @@ public interface AmTradeClient {
     /**
      * 根据borrowNid查询出来异常标
      * @auth sunpeikai
-     * @param borrowNid 借款编号
+     * @param borrowNid 项目编号
      * @return
      */
     BorrowAndInfoVO searchBorrowByBorrowNid(String borrowNid);
@@ -850,7 +850,7 @@ public interface AmTradeClient {
     TenderAgreementVO selectTenderAgreement(String nid);
 
     /**
-     * 获取用户出借协议-垫付机构
+     * 获取用户出借协议-担保机构
      *
      * @param request
      * @return
@@ -1736,7 +1736,7 @@ public interface AmTradeClient {
     boolean isExistsBorrowPreNidRecord(String borrowPreNid);
 
     /**
-     * 获取融资服务费率 & 账户管理费率
+     * 获取放款服务费率 & 还款服务费率
      *
      * @param borrowCommonRequest
      * @return

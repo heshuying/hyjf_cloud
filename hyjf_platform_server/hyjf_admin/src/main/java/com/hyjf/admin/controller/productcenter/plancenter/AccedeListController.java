@@ -204,8 +204,8 @@ public class AccedeListController extends BaseController{
 		@SuppressWarnings("deprecation")
 		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 		*//*String[] titles = new String[] { "序号","加入订单号", "计划编号","锁定期", "预定利率","用户名","出借人id","出借人用户属性（当前)", "分公司(当前)", "部门(当前)", "团队(当前)","推荐人（当前）","推荐人ID（当前）","推荐人姓名（当前）", "推荐人用户属性（当前）", "分公司(当前)", "部门(当前)", "团队(当前)", "出借人用户属性（出借时）","推荐人(出借时)", "推荐人ID（出借时）", "推荐人姓名（出借时）", "推荐人用户属性(出借时)", "分公司(出借时)", "部门(出借时)", "团队(出借时)", "加入金额", "已出借金额(元)","待还总额(元) ","待还本金(元) ","待还利息(元) ","操作平台","订单状态",  "计息时间", "加入时间" };*//*
-		String[] titles = new String[] { "序号","计划订单号", "计划编号",  "计划名称","锁定期", "预期年化收益率","用户名（出借人）","出借人id","出借人用户属性（当前)", "分公司(当前)", "部门(当前)", "团队(当前)","推荐人（当前）","推荐人ID（当前）","推荐人姓名（当前）", "推荐人用户属性（当前）", "分公司(当前)", "部门(当前)", "团队(当前)", "出借人用户属性（出借时）","推荐人(出借时)", "推荐人ID（出借时）", "推荐人姓名（出借时）", "推荐人用户属性(出借时)", "分公司(出借时)", "部门(出借时)", "团队(出借时)", "加入金额", 
-				"自动投标进度","可用余额(元) ", "冻结金额(元) ","公允价值(元) ","实际年化收益率","操作平台","订单状态","匹配期", "锁定时间", "加入时间" };
+		String[] titles = new String[] { "序号","计划订单号", "计划编号",  "计划名称","锁定期", "预期出借利率率","用户名（出借人）","出借人id","出借人用户属性（当前)", "分公司(当前)", "部门(当前)", "团队(当前)","推荐人（当前）","推荐人ID（当前）","推荐人姓名（当前）", "推荐人用户属性（当前）", "分公司(当前)", "部门(当前)", "团队(当前)", "出借人用户属性（出借时）","推荐人(出借时)", "推荐人ID（出借时）", "推荐人姓名（出借时）", "推荐人用户属性(出借时)", "分公司(出借时)", "部门(出借时)", "团队(出借时)", "加入金额",
+				"自动投标进度","可用余额(元) ", "冻结金额(元) ","公允价值(元) ","实际出借利率率","操作平台","订单状态","匹配期", "锁定时间", "加入时间" };
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		// 生成一个表格
@@ -255,7 +255,7 @@ public class AccedeListController extends BaseController{
 					else if (celLength == 4) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getDebtLockPeriod()) ? StringUtils.EMPTY : planAccedeDetail.getDebtLockPeriod());
 					}
-					// 预期年化收益率
+					// 预期出借利率率
 					else if (celLength == 5) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getExpectApr()) ? StringUtils.EMPTY : planAccedeDetail.getExpectApr() + "%");
 					}
@@ -399,7 +399,7 @@ public class AccedeListController extends BaseController{
 							cell.setCellValue("0.0");
 						}
 					}
-					// 实际年化收益率
+					// 实际出借利率率
 					else if (celLength == 32) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getActualApr()) ? StringUtils.EMPTY : planAccedeDetail.getActualApr() + "%");
 					}
@@ -613,7 +613,7 @@ public class AccedeListController extends BaseController{
 		map.put("availableInvestAccount", "可用余额(元) ");
 		map.put("frostAccount", "冻结金额(元) ");
 		map.put("fairValue", "公允价值(元) ");
-		map.put("actualApr", "实际年化收益率");
+		map.put("actualApr", "实际出借利率");
 		map.put("platform", "操作平台");
 		map.put("orderStatus", "订单状态");
 		map.put("matchDates", "匹配期");

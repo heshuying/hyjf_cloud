@@ -138,17 +138,17 @@ public class BorrowRecoverController extends BaseController {
 
     private Map<String, String> buildMap(String isOrganizationView) {
         Map<String, String> map = Maps.newLinkedHashMap();
-        map.put("borrowNid","借款编号");
+        map.put("borrowNid","项目编号");
         map.put("instName","资产来源");
         map.put("planNid","智投编号");
         map.put("userId","借款人ID");
         map.put("username","借款人用户名");
         map.put("entrustedFlg","是否受托支付");
         map.put("entrustedUserName","受托支付用户名");
-        map.put("borrowName","借款标题");
+//        map.put("borrowName","借款标题");
         map.put("borrowProjectTypeName","项目类型");
         map.put("borrowPeriod","借款期限");
-        map.put("borrowApr","年化收益");
+        map.put("borrowApr","出借利率");
         map.put("borrowStyleName","还款方式");
         map.put("orderNum","出借订单号");
         map.put("loanOrdid","放款订单号");

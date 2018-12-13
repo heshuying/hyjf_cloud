@@ -42,7 +42,7 @@ public class AppProjectDetailCustomize implements Serializable {
 	private String repayStyle;
 	/* 授信额度 borrowAccount */
 	private String borrowAccount;
-	/* 项目年化收益 borrowApr */
+	/* 项目出借利率 borrowApr */
 	private String borrowApr;
 	/* 项目期限 borrowPeriod */
 	private String borrowPeriod;

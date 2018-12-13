@@ -4,7 +4,7 @@
 
 	<sql id="Where_Clause">
 		<where>
-			<!-- 借款编号 -->
+			<!-- 项目编号 -->
 			<if test="borrowNidSrch != null and borrowNidSrch != ''">
 				AND bt.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
 			</if>
@@ -167,7 +167,7 @@
 	</select>
 	
 	<resultMap id="exportBorrowInvestListMap" type="com.hyjf.am.trade.dao.model.customize.BorrowInvestCustomize">
-		<!-- 借款编号 -->
+		<!-- 项目编号 -->
 		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
 		<!-- 借款人ID -->
 		<result column="user_id" property="userId" jdbcType="VARCHAR" />
@@ -179,7 +179,7 @@
 		<result column="borrow_project_type_name" property="borrowProjectTypeName" jdbcType="VARCHAR" />
 		<!-- 借款期限 -->
 		<result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
-		<!-- 年化收益 -->
+		<!-- 出借利率 -->
 		<result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
 		<!-- 还款方式 -->
 		<result column="borrow_style_name" property="borrowStyleName" jdbcType="VARCHAR" />
@@ -376,7 +376,7 @@
 		<result column="increase_money" property="increaseMoney" jdbcType="VARCHAR" />
 		<!-- 复审用户名-->
 		<result column="create_user_name" property="createUserName" jdbcType="VARCHAR" />
-		<!--  垫付机构用户名-->
+		<!--  担保机构用户名-->
 		<result column="repay_org_name" property="repayOrgUserName" jdbcType="VARCHAR" />
 		<!--  计划编号 -->
 		<result column="plan_nid" property="planNid" jdbcType="VARCHAR" />

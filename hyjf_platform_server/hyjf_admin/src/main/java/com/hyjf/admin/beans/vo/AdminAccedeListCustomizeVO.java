@@ -86,7 +86,7 @@ public class AdminAccedeListCustomizeVO extends BaseVO implements Serializable{
 	@ApiModelProperty(value = "计划名称")
 	private String debtPlanName;
 
-	@ApiModelProperty(value = "预期年化收益")
+	@ApiModelProperty(value = "预期出借利率")
 	private String expectApr;
 
 	@ApiModelProperty(value = "出借状态")
@@ -210,7 +210,7 @@ public class AdminAccedeListCustomizeVO extends BaseVO implements Serializable{
 	@ApiModelProperty(value = "公允价值")
 	private String fairValue;
 	
-	@ApiModelProperty(value = "实际年化收益率")
+	@ApiModelProperty(value = "实际出借利率")
 	private String actualApr;
 	
 	@ApiModelProperty(value = "出借笔数")

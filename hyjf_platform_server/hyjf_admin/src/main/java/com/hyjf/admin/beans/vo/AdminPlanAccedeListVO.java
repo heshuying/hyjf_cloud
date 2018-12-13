@@ -124,9 +124,9 @@ public class AdminPlanAccedeListVO {
 	@ApiModelProperty(value = "计划名称")
 	private String debtPlanName;
 	/**
-	 * 预期年化收益
+	 * 预期出借利率
 	 */
-	@ApiModelProperty(value = "预期年化收益")
+	@ApiModelProperty(value = "预期出借利率")
 	private String expectApr;
 	/**
 	 * 出借状态
@@ -315,7 +315,7 @@ public class AdminPlanAccedeListVO {
 	private String fairValue;
 	
 	/**
-	 * 实际年化收益率
+	 * 实际出借利率
 	 */
 	private String actualApr;
 	

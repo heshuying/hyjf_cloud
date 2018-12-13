@@ -168,7 +168,7 @@ public class AppChannelReconciliationRecordController extends BaseController {
 	        map.put("utmName", "渠道");
 	        map.put("registTime", "注册时间");
 	        map.put("orderCode", "出借订单");
-	        map.put("borrowNid", "借款编号");
+	        map.put("borrowNid", "项目编号");
 	        map.put("borrowPeriod", "标的期限");
 	        map.put("investAmount", "出借金额");
 	        map.put("firstFlag", "是否首投");

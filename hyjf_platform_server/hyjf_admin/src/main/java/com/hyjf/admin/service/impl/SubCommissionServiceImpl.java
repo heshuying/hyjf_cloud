@@ -191,7 +191,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
             accountWebList.setType(CustomConstants.TYPE_OUT);
             // 管理费
             accountWebList.setTrade("fee_share_out");
-            // 账户管理费
+            // 还款服务费
             accountWebList.setTradeType("手续费分佣");
             // 备注
             accountWebList.setRemark(request.getRemark());

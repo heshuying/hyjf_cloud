@@ -19,7 +19,7 @@ public class HjhReInvestDetailRequestBean {
     @ApiModelProperty(value = "用户名")
     private String userNameSrch;
 
-    @ApiModelProperty(value = "借款编号")
+    @ApiModelProperty(value = "项目编号")
     private String borrowNidSrch;
 
     @ApiModelProperty(value = "借款期限")

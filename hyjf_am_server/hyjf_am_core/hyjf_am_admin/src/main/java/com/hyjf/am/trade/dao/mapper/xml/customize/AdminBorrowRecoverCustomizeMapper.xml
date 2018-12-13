@@ -18,7 +18,7 @@
 	<sql id="Where_Clause">
 		<where>
 			(b.`status` = 4 OR b.`status` = 5 OR (b.`status`= 3 AND b.reverify_status <![CDATA[<>]]> 0))
-			<!-- 借款编号 -->
+			<!-- 项目编号 -->
 			<if test="borrowNidSrch != null and borrowNidSrch != ''">
 				AND bt.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
 			</if>
@@ -83,7 +83,7 @@
 
 
 	<resultMap id="exportBorrowRecoverListMap" type="com.hyjf.am.trade.dao.model.customize.AdminBorrowRecoverCustomize">
-		<!-- 借款编号 -->
+		<!-- 项目编号 -->
 		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
 		<!-- add by LSY START -->
 		<!-- 资产来源 -->
@@ -99,7 +99,7 @@
 		<result column="borrow_project_type_name" property="borrowProjectTypeName" jdbcType="VARCHAR" />
 		<!-- 借款期限 -->
 		<result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
-		<!-- 年化收益 -->
+		<!-- 出借利率 -->
 		<result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
 		<!-- 还款方式 -->
 		<result column="borrow_style_name" property="borrowStyleName" jdbcType="VARCHAR" />
@@ -207,7 +207,7 @@
 	<resultMap id="selectBorrowRecoverListMap" type="com.hyjf.am.trade.dao.model.customize.AdminBorrowRecoverCustomize">
 		<!-- 借款标题 -->
 		<result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
-		<!-- 借款编号 -->
+		<!-- 项目编号 -->
 		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
 		<!-- add by LSY START -->
 		<!-- 资产来源 -->

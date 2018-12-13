@@ -24,7 +24,7 @@ public class BorrowListCustomize implements Serializable {
      */
     private Integer userId;
     /**
-     * 垫付机构用户名
+     * 担保机构用户名
      */
     private String repayOrgUserName;
     /**
@@ -150,7 +150,7 @@ public class BorrowListCustomize implements Serializable {
      */
     private String revokeFlag;
     /**
-     * 垫付机构名称
+     * 担保机构名称
      */
     private String repay_org_name;
     /**

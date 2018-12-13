@@ -133,7 +133,7 @@ public class BorrowInvestController extends BaseController {
 
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
-        String[] titles = new String[]{"序号", "借款编号", "计划编号", "借款人ID", "借款人用户名", "借款标题", "项目类型", "借款期限", "年化利率", "还款方式", "出借订单号", "冻结订单号", "出借人用户名", "出借人ID", "出借人用户属性（当前）", "出借人所属一级分部（当前）", "出借人所属二级分部（当前）", "出借人所属团队（当前）", "推荐人（当前）", "推荐人ID（当前）", "推荐人姓名（当前）", "推荐人所属一级分部（当前）", "推荐人所属二级分部（当前）", "推荐人所属团队（当前）",
+        String[] titles = new String[]{"序号", "项目编号", "计划编号", "借款人ID", "借款人用户名", "借款标题", "项目类型", "借款期限", "年化利率", "还款方式", "出借订单号", "冻结订单号", "出借人用户名", "出借人ID", "出借人用户属性（当前）", "出借人所属一级分部（当前）", "出借人所属二级分部（当前）", "出借人所属团队（当前）", "推荐人（当前）", "推荐人ID（当前）", "推荐人姓名（当前）", "推荐人所属一级分部（当前）", "推荐人所属二级分部（当前）", "推荐人所属团队（当前）",
                 "出借人用户属性（出借时）", "推荐人用户属性（出借时）", "推荐人（出借时）", "推荐人ID（出借时）", "一级分部（出借时）", "二级分部（出借时）", "团队（出借时）", "出借金额", "操作平台", "出借方式", "出借时间", "合同编号", "合同状态", "合同名称", "模版编号", "合同生成时间", "合同签署时间", "复投投标(是/否)"};
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
@@ -167,7 +167,7 @@ public class BorrowInvestController extends BaseController {
                     if (celLength == 0) {
                         cell.setCellValue(i + 1);
                     }
-                    // 借款编号
+                    // 项目编号
                     else if (celLength == 1) {
                         cell.setCellValue(record.getBorrowNid());
                     }
@@ -195,7 +195,7 @@ public class BorrowInvestController extends BaseController {
                     else if (celLength == 7) {
                         cell.setCellValue(record.getBorrowPeriod());
                     }
-                    // 年化收益
+                    // 出借利率
                     else if (celLength == 8) {
                         cell.setCellValue(record.getBorrowApr());
                     }
@@ -410,14 +410,14 @@ public class BorrowInvestController extends BaseController {
 
     private Map<String, String> buildMap(String isOrganizationView) {
         Map<String, String> map = Maps.newLinkedHashMap();
-        map.put("borrowNid", "借款编号");
+        map.put("borrowNid", "项目编号");
         map.put("planNid", "智投编号");
         map.put("userId", "借款人ID");
         map.put("username", "借款人用户名");
-        map.put("borrowName", "借款标题");
+//        map.put("borrowName", "借款标题");
         map.put("borrowProjectTypeName", "项目类型");
-        map.put("borrowPeriod", "借款期限");
-        map.put("borrowApr", "年化利率");
+        map.put("borrowPeriod", "项目期限");
+        map.put("borrowApr", "出借利率");
         map.put("borrowStyleName", "还款方式");
         map.put("tenderOrderNum", "出借订单号");
         map.put("freezeOrderNum", "冻结订单号");
@@ -446,9 +446,9 @@ public class BorrowInvestController extends BaseController {
             map.put("departmentLevel2Name", "二级分部（出借时）");
             map.put("teamName", "团队（出借时）");
         }
-        map.put("account", "授权服务金额");
+        map.put("account", "出借金额");
         map.put("operatingDeck", "操作平台");
-        map.put("investType", "出借方式");
+        map.put("investType", "投标方式");
         map.put("createTime", "出借时间");
         map.put("contractNumber", "合同编号");
         map.put("contractStatus", "合同状态");
@@ -456,7 +456,7 @@ public class BorrowInvestController extends BaseController {
         map.put("templetId", "模版编号");
         map.put("contractCreateTime", "合同生成时间");
         map.put("contractSignTime", "合同签署时间");
-        map.put("tenderType", "复投投标(是/否)");
+        map.put("tenderType", "循环出借");
 
         return map;
     }

@@ -46,7 +46,7 @@ public interface BatchUserPortraitQueryCustomizeMapper {
     BigDecimal getInvestSum(Integer userId);
 
     /**
-     * 获取计划标年化收益
+     * 获取计划标出借利率
      * @param userId
      * @return
      */

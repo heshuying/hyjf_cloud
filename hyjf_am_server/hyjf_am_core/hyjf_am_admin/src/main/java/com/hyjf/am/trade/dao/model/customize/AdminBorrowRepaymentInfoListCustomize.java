@@ -7,18 +7,18 @@ package com.hyjf.am.trade.dao.model.customize;
 public class AdminBorrowRepaymentInfoListCustomize {
     // ========================参数=============================
     private String nid;// 出借nid,还款订单号
-    private String borrowNid;// 借款编号
+    private String borrowNid;// 项目编号
     private String userId;// 借款人ID
     private String borrowUserName;// 借款人用户名
     private String borrowName;// 借款标题
     private String projectType;// 项目类型id
     private String projectTypeName;// 项目类型名称
     private String borrowPeriod;// 借款期限
-    private String borrowApr;// 年化收益
+    private String borrowApr;// 出借利率
     private String borrowAccount;// 借款金额
     private String borrowAccountYes;// 借到金额
     private String repayType;// 还款方式
-    private String recoverPeriod;// 还款期次
+    private String recoverPeriod;// 还款期数
     private String recoverUserId;// 出借人ID
     private String recoverUserName;// 出借人用户名
     private String recoverTotal;// 出借金额

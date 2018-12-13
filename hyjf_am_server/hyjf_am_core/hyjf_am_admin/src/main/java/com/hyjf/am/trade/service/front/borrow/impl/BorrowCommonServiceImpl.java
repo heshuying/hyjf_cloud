@@ -306,11 +306,11 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		borrow.setApplicant(borrowBean.getApplicant());
 		borrow.setCreateUserName(adminUsername);
 		borrow.setRemark(borrowBean.getRemark());
-		// 垫付机构用户名
+		// 担保机构用户名
 		String repayOrgName =borrowBean.getRepayOrgName();
-		// 垫付机构用户名不为空的情况
+		// 担保机构用户名不为空的情况
 		if (StringUtils.isNotEmpty(repayOrgName)) {
-			// 根据垫付机构用户名检索垫付机构用户ID
+			// 根据担保机构用户名检索担保机构用户ID
 			RUserExample usersExample = new RUserExample();
 			RUserExample.Criteria userCri = usersExample.createCriteria();
 			userCri.andUsernameEqualTo(repayOrgName);
@@ -318,12 +318,12 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			List<RUser> ulist = this.rUserMapper.selectByExample(usersExample);
 			// 如果用户名不存在，返回错误信息。
 			if (ulist == null || ulist.size() == 0) {
-				throw new Exception("获取垫付机构失败,垫付机构名称:" + repayOrgName);
+				throw new Exception("获取担保机构失败,担保机构名称:" + repayOrgName);
 			}
 			Integer userId = ulist.get(0).getUserId();
 			borrow.setRepayOrgUserId(userId);
 			borrow.setIsRepayOrgFlag(1);
-			// 垫付机构用户名
+			// 担保机构用户名
 			borrow.setRepayOrgName(repayOrgName);
 		} else {
 			borrow.setRepayOrgUserId(0);
@@ -332,7 +332,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		borrow.setBorrowIncreaseMoney(borrowBean.getBorrowIncreaseMoney());
 		borrow.setBorrowInterestCoupon(borrowBean.getBorrowInterestCoupon());
 		borrow.setBorrowTasteMoney(borrowBean.getBorrowTasteMoney());
-		// 借款编号
+		// 项目编号
 		borrowBean.setBorrowNid(borrowNid);
 		// 借款标题
 		borrow.setName(borrowBean.getProjectName());
@@ -402,7 +402,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		borrow.setBorrowStatus(0);
 		// 满表审核状态
 		borrow.setBorrowFullStatus(0);
-		// 借款编号
+		// 项目编号
 		borrow.setBorrowNid(borrowNid);
 		// 借款预编码
 		borrow.setBorrowPreNid(borrowPreNid);
@@ -690,24 +690,24 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		}
 
 		if (PROJECT_TYPE_HXF!=borrowBean.getProjectType()) {
-			// 融资服务费
+			// 放款服务费
 			String borrowServiceScale = this.getBorrowServiceScale(borrowBean.getProjectType(), borrowBean.getBorrowStyle(),borrowBean.getInstCode(), Integer.valueOf(borrowBean.getBorrowPeriod()));
 			borrow.setServiceFeeRate(borrowServiceScale);
-            // 账户管理费率
+            // 还款服务费率
             borrow.setManageFeeRate(this.getBorrowManagerScale(borrowBean.getProjectType(), borrowBean.getBorrowStyle(), borrowBean.getInstCode(), Integer.parseInt(borrowBean.getBorrowPeriod())));
             // 收益差率
             borrow.setDifferentialRate(this.getBorrowReturnScale(borrowBean.getProjectType(), borrowBean.getBorrowStyle(), borrowBean.getInstCode(), Integer.parseInt(borrowBean.getBorrowPeriod())));
         } else if (PROJECT_TYPE_HXF==borrowBean.getProjectType()) {
-			// 融资服务费
+			// 放款服务费
 			borrow.setServiceFeeRate("0.00");
 			JSONObject jsonObject = new JSONObject();
 			jsonObject = this.getBorrowManagerScale(borrowBean.getProjectType(), borrowBean.getBorrowStyle(), Integer.valueOf(borrowBean.getBorrowPeriod()), jsonObject);
 			if (StringUtils.isNotEmpty(jsonObject.getString("borrowManagerScale"))) {
-				// 账户管理费率(上限)
+				// 还款服务费率(上限)
 				borrow.setManageFeeRate(jsonObject.getString("borrowManagerScale"));
 			}
 			if (StringUtils.isNotEmpty(jsonObject.getString("borrowManagerScaleEnd"))) {
-				// 账户管理费率(下限)
+				// 还款服务费率(下限)
 				borrow.setBorrowManagerScaleEnd(jsonObject.getString("borrowManagerScaleEnd"));
 			}
 		}
@@ -931,7 +931,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		// 插入时间
 		int systemNowDateLong = GetDate.getNowTime10();
 		Date systemNowDate = GetDate.getDate(systemNowDateLong);
-		// 借款编号
+		// 项目编号
 		String borrowNid = borrow.getBorrowNid();
 		borrow.setRemark(borrowBean.getRemark());
 		int status = borrow.getStatus();
@@ -975,11 +975,11 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			borrow.setApplicant(borrowBean.getApplicant());
 			//项目标题
 			borrow.setProjectName(borrowBean.getProjectName());
-			// 垫付机构用户名
+			// 担保机构用户名
 			// borrow.setRepayOrgName(borrowBean.getRepayOrgName());
-			// 垫付机构用户名不为空的情况
+			// 担保机构用户名不为空的情况
 			if (StringUtils.isNotEmpty(borrowBean.getRepayOrgName())) {
-				// 根据垫付机构用户名检索垫付机构用户ID
+				// 根据担保机构用户名检索担保机构用户ID
 //				UsersExample usersExample = new UsersExample();
 //				UsersExample.Criteria userCri = usersExample.createCriteria();
 //				userCri.andUsernameEqualTo(borrowBean.getRepayOrgName());
@@ -987,12 +987,12 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				 RUser ulist = this.getRUser(borrowBean.getRepayOrgName());
 				// 如果用户名不存在，返回错误信息。
 				if (ulist == null ) {
-					throw new Exception("获取垫付机构失败,垫付机构名称:" + borrowBean.getRepayOrgName());
+					throw new Exception("获取担保机构失败,担保机构名称:" + borrowBean.getRepayOrgName());
 				}
 				Integer userId = ulist.getUserId();
 				borrow.setRepayOrgUserId(userId);
 				borrow.setIsRepayOrgFlag(1);
-				// 垫付机构用户名
+				// 担保机构用户名
 				borrow.setRepayOrgName(borrowBean.getRepayOrgName());
 			}
 		}
@@ -1381,24 +1381,24 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 
 		if (status == 0 && borrowMainNid.equals(borrowNid)) {
 			if (PROJECT_TYPE_HXF!=borrowBean.getProjectType()) {
-                // 融资服务费
+                // 放款服务费
                 String borrowServiceScale = this.getBorrowServiceScale(borrowBean.getProjectType(), borrowBean.getBorrowStyle(), borrowBean.getInstCode(), Integer.valueOf(borrowBean.getBorrowPeriod()));
                 borrow.setServiceFeeRate(borrowServiceScale);
-                // 账户管理费率
+                // 还款服务费率
                 borrow.setManageFeeRate(this.getBorrowManagerScale(borrowBean.getProjectType(), borrowBean.getBorrowStyle(), borrowBean.getInstCode(), Integer.parseInt(borrowBean.getBorrowPeriod())));
                 // 收益差率
                 borrow.setDifferentialRate(this.getBorrowReturnScale(borrowBean.getProjectType(), borrowBean.getBorrowStyle(), borrowBean.getInstCode(), Integer.parseInt(borrowBean.getBorrowPeriod())));
             } else if (PROJECT_TYPE_HXF==borrowBean.getProjectType()) {
-				// 融资服务费
+				// 放款服务费
 				borrow.setServiceFeeRate("0.00");
 				JSONObject jsonObject = new JSONObject();
 				jsonObject = this.getBorrowManagerScale(borrowBean.getProjectType(), borrowBean.getBorrowStyle(), Integer.valueOf(borrowBean.getBorrowPeriod()), jsonObject);
 				if (StringUtils.isNotEmpty(jsonObject.getString("borrowManagerScale"))) {
-					// 账户管理费率(上限)
+					// 还款服务费率(上限)
 					borrow.setManageFeeRate(jsonObject.getString("borrowManagerScale"));
 				}
 				if (StringUtils.isNotEmpty(jsonObject.getString("borrowManagerScaleEnd"))) {
-					// 账户管理费率(下限)
+					// 还款服务费率(下限)
 					borrow.setBorrowManagerScaleEnd(jsonObject.getString("borrowManagerScaleEnd"));
 				}
 			}
@@ -2658,7 +2658,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		}
 		// 项目申请人
 		borrowBean.setApplicant(borrowWithBLOBs.getApplicant());
-		// 垫付机构用户名
+		// 担保机构用户名
 		borrowBean.setRepayOrgName(borrowWithBLOBs.getRepayOrgName());
 		// 年利率
 		borrowBean.setBorrowApr(this.getValue(String.valueOf(borrowWithBLOBs.getBorrowApr())));
@@ -2762,11 +2762,11 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			borrowBean.setBorrowValidTime(this.getValue(String.valueOf(borrowWithBLOBs.getBorrowValidTime())));
 		}
 		borrowBean.setBankRegistDays(borrowWithBLOBs.getBankRegistDays().toString());
-		// 融资服务费
+		// 放款服务费
 		borrowBean.setBorrowServiceScale(this.getValue(borrowWithBLOBs.getServiceFeeRate()));
-		// 账户管理费率
+		// 还款服务费率
 		borrowBean.setBorrowManagerScale(this.getValue(borrowWithBLOBs.getManageFeeRate()));
-		// 账户管理费率(上限)
+		// 还款服务费率(上限)
 		borrowBean.setBorrowManagerScaleEnd(this.getValue(borrowWithBLOBs.getBorrowManagerScaleEnd()));
 		// 可出借平台_PC
 		borrowBean.setCanTransactionPc(this.getValue(borrowWithBLOBs.getCanTransactionPc()));
@@ -3627,7 +3627,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //	}
 
 	/**
-	 * 垫付机构是否存在
+	 * 担保机构是否存在
 	 * @param request
 	 * @return
 	 */
@@ -3635,7 +3635,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //	public String isRepayOrgUser(HttpServletRequest request) {
 //		JSONObject ret = new JSONObject();
 //		String message = ValidatorFieldCheckUtil.getErrorMessage("required", "");
-//		message = message.replace("{label}", "垫付机构用户名");
+//		message = message.replace("{label}", "担保机构用户名");
 //		String param = request.getParameter("param");// ajaxurl中定义的参数名，固定。
 //		if (StringUtils.isEmpty(param)) {
 //			ret.put(AdminDefine.JSON_VALID_INFO_KEY, message);
@@ -3649,18 +3649,18 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //		List<Users> ulist = this.usersMapper.selectByExample(example);
 //		// 如果用户名不存在，返回错误信息。
 //		if (ulist == null || ulist.size() == 0) {
-//			ret.put(AdminDefine.JSON_VALID_INFO_KEY, "请填写用户角色为垫付机构的已开户用户！");
+//			ret.put(AdminDefine.JSON_VALID_INFO_KEY, "请填写用户角色为担保机构的已开户用户！");
 //			return ret.toString();
 //		}
 //		Integer userId = ulist.get(0).getUserId();
 //		UsersInfoExample uexample = new UsersInfoExample();
 //		UsersInfoExample.Criteria ucri = uexample.createCriteria();
 //		ucri.andUserIdEqualTo(userId);
-//		ucri.andRoleIdEqualTo(3); // 垫付机构
+//		ucri.andRoleIdEqualTo(3); // 担保机构
 //		List<UsersInfo> userinfos = this.usersInfoMapper.selectByExample(uexample);
 //		// 如果用户名不存在，返回错误信息。
 //		if (userinfos == null || userinfos.size() == 0) {
-//			ret.put(AdminDefine.JSON_VALID_INFO_KEY, "请填写用户角色为垫付机构的已开户用户！！");
+//			ret.put(AdminDefine.JSON_VALID_INFO_KEY, "请填写用户角色为担保机构的已开户用户！！");
 //			return ret.toString();
 //		}
 //		ret.put(AdminDefine.JSON_VALID_STATUS_KEY, AdminDefine.JSON_VALID_STATUS_OK);
@@ -3752,7 +3752,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	}
 
     /**
-     * 获取融资服务费率
+     * 获取放款服务费率
      * @param projectType
      * @param borrowStyle
      * @param instCode
@@ -3793,7 +3793,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 
 
 	/**
-	 * 获取账户管理费
+	 * 获取还款服务费
 	 * @param projectType
 	 * @param borrowStyle
 	 * @param instCode
@@ -3836,7 +3836,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	}
 
 	/**
-	 * 账户管理费率(最低，最高)
+	 * 还款服务费率(最低，最高)
 	 * @param projectType
 	 * @param borrowStyle
 	 * @param borrowPeriod
@@ -4065,7 +4065,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //		if (borrowAprDec.compareTo(BigDecimal.ZERO) <= 0) {
 //			ValidatorFieldCheckUtil.validateSpecialError(mav, "borrowApr", "borrowapr.not.zero");
 //		}
-//		// 年化收益
+//		// 出借利率
 //		ValidatorFieldCheckUtil.validateSignlessNumLength(mav, "borrowApr", borrowBean.getBorrowApr(), 2, 2, true);
 //
 //		// 借款期限
@@ -4274,7 +4274,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //
 //		if (CustomConstants.HZT.equals(HztOrHxf)) {
 //
-//			// 融资服务费(放款时收)
+//			// 放款服务费(放款时收)
 //			if (borrowPeriodFlag && borrowStyleFlag) {
 //				String borrowStyle = borrowBean.getBorrowStyle();
 //				List<BorrowStyle> borrowStyleList = this.borrowStyleList(borrowStyle);
@@ -4288,7 +4288,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //				}
 //			}
 //
-//			// 账户管理费率
+//			// 还款服务费率
 //			if (borrowStyleFlag) {
 //				String borrowStyle = borrowBean.getBorrowStyle();
 //				List<BorrowStyle> borrowStyleList = this.borrowStyleList(borrowStyle);
@@ -4302,7 +4302,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //				}
 //			}
 //		} else if (CustomConstants.HXF.equals(HztOrHxf)) {
-//			// 账户管理费率
+//			// 还款服务费率
 //			if (borrowStyleFlag) {
 //				String borrowStyle = borrowBean.getBorrowStyle();
 //				List<BorrowStyle> borrowStyleList = this.borrowStyleList(borrowStyle);
@@ -4378,7 +4378,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	}
 
 	/**
-	 * 获取融资服务费率 & 账户管理费率 & 收益差率
+	 * 获取放款服务费率 & 还款服务费率 & 收益差率
 	 * 
 	 * @param borrowCommonRequest
 	 * @return
@@ -4391,10 +4391,10 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		String instCode=borrowCommonRequest.getInstCode();
 		String borrowPeriod=borrowCommonRequest.getBorrowPeriod();
 		BorrowCommonVO bean=new BorrowCommonVO();
-        // 获取融资服务费率
+        // 获取放款服务费率
         String borrowServiceScale = this.getBorrowServiceScale(projectType, borrowStyle, instCode, Integer.valueOf(borrowPeriod));
         bean.setBorrowServiceScale(StringUtils.isEmpty(borrowServiceScale) ? "--" : borrowServiceScale);
-        // 账户管理费率
+        // 还款服务费率
         String borrowManagerScale = this.getBorrowManagerScale(projectType, borrowStyle, instCode, Integer.valueOf(borrowPeriod));
         bean.setBorrowManagerScale(StringUtils.isEmpty(borrowManagerScale) ? "--" : borrowManagerScale);
 
@@ -4837,7 +4837,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //							resultMap.put("username", this.getValue(hssfRow.getCell(1)));
 //						}else if(rowNum == 1){//项目申请人
 //							resultMap.put("applicant", this.getValue(hssfRow.getCell(1)));
-//						}else if(rowNum == 2){//垫付机构用户名
+//						}else if(rowNum == 2){//担保机构用户名
 //							resultMap.put("repayOrgName", this.getValue(hssfRow.getCell(1)));
 //						}else if(rowNum == 3){//项目标题
 //							resultMap.put("projectName", this.getValue(hssfRow.getCell(1)));
@@ -4845,7 +4845,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //							resultMap.put("jkName", this.getValue(hssfRow.getCell(1)));
 //						}else if(rowNum == 5){//借款金额
 //							resultMap.put("account", this.getValue(hssfRow.getCell(1)));
-//						}else if(rowNum == 6){//年化收益
+//						}else if(rowNum == 6){//出借利率
 //							resultMap.put("borrowApr", this.getValue(hssfRow.getCell(1)));
 //						}else if(rowNum == 7){//融资用途
 //							resultMap.put("financePurpose", this.getValue(hssfRow.getCell(1)));
@@ -5107,9 +5107,9 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //					}else if (celLength == 1) {
 //						cell.setCellValue("");
 //					}
-//				}else if(rowNum == 2){//垫付机构用户名
+//				}else if(rowNum == 2){//担保机构用户名
 //					if (celLength == 0) {
-//						cell.setCellValue("垫付机构用户名");
+//						cell.setCellValue("担保机构用户名");
 //					}else if (celLength == 1) {
 //						cell.setCellValue("");
 //					}
@@ -5131,9 +5131,9 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //					}else if (celLength == 1) {
 //						cell.setCellValue("");
 //					}
-//				}else if(rowNum == 6){//年化收益
+//				}else if(rowNum == 6){//出借利率
 //					if (celLength == 0) {
-//						cell.setCellValue("年化收益");
+//						cell.setCellValue("出借利率");
 //					}else if (celLength == 1) {
 //						cell.setCellValue("");
 //					}
@@ -6271,7 +6271,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		return null;
 	}
 	   /**
-     * 根据借款编号获取该机构的审核配置
+     * 根据项目编号获取该机构的审核配置
      *
      * @param borrowNid
      * @return

@@ -1665,7 +1665,7 @@ public class AmAdminClientImpl implements AmAdminClient {
     }
 
     /**
-     * 根据条件查询垫付机构冻结日志
+     * 根据条件查询担保机构冻结日志
      */
     @Override
     public List<BankRepayOrgFreezeLogVO> getBankRepayOrgFreezeLogList(String orderId) {

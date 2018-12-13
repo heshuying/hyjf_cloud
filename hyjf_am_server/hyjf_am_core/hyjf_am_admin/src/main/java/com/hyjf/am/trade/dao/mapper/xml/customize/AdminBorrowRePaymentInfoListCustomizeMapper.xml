@@ -9,7 +9,7 @@
 				AND brp.nid = #{nid}
 			</if>
 			<if test='actfrom != null and actfrom == "0"'>
-				<!-- 借款编号 -->
+				<!-- 项目编号 -->
 				<if test="borrowNid != null and borrowNid != ''">
 					AND brp.borrow_nid =#{borrowNid}
 				</if>
@@ -19,7 +19,7 @@
 				</if>
 			</if>
 			<if test='actfrom == null or actfrom != "0"'>
-				<!-- 借款编号 -->
+				<!-- 项目编号 -->
 				<if test="borrowNid != null and borrowNid != ''">
 					AND brp.borrow_nid LIKE CONCAT( #{borrowNid}, '%')
 				</if>

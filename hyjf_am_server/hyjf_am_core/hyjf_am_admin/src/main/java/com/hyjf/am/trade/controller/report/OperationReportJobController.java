@@ -200,7 +200,7 @@ public class OperationReportJobController extends BaseController {
     }
 
     /**
-     * 今年这个时候到手收益 和 去年这个时候到手收益 和  预期收益率
+     * 今年这个时候到手收益 和 去年这个时候到手收益 和  出借利率
      *
      * @return
      */

@@ -461,7 +461,7 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 根据垫付机构用户名检索垫付机构用户
+     * 根据担保机构用户名检索担保机构用户
      *
      * @param repayOrgName
      * @return

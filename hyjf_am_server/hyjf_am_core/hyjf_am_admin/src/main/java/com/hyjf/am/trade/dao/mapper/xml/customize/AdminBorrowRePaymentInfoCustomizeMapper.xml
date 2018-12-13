@@ -20,7 +20,7 @@
 			<if test="nid != null and nid != ''">
 				AND br.nid = #{nid}
 			</if>
-			<!-- 借款编号 -->
+			<!-- 项目编号 -->
 			<if test="borrowNid != null and borrowNid != ''">
 				<if test="serchFlag == 0">
 					AND b.borrow_nid LIKE CONCAT( #{borrowNid}, '%')

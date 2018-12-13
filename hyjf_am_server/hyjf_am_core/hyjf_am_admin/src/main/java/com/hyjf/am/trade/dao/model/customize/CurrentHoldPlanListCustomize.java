@@ -15,7 +15,7 @@ public class CurrentHoldPlanListCustomize implements Serializable {
 	private String debtPlanNid;
 	/**计划订单号*/
 	private String accedeOrderId;
-	/**预计年化收益率*/
+	/**预计出借利率*/
 	private String expectApr;
 	/**计划期限*/
 	private String debtLockPeriod;

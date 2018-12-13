@@ -516,7 +516,7 @@ public class BorrowCommonController extends BaseController {
 //	}
 
 //	/**TODO放在用户里
-//	 * 垫付机构用户名是否存在
+//	 * 担保机构用户名是否存在
 //	 *
 //	 * @param request
 //	 * @return
@@ -571,12 +571,12 @@ public class BorrowCommonController extends BaseController {
 	}
 
 	/**
-	 * 获取融资服务费率 & 账户管理费率
+	 * 获取放款服务费率 & 还款服务费率
 	 *
 	 * @param borrowCommonRequest
 	 * @return
 	 */
-	@ApiOperation(value = "获取融资服务费率 & 账户管理费率")
+	@ApiOperation(value = "获取放款服务费率 & 还款服务费率")
 	@RequestMapping("/getBorrowServiceScale")
 	public BorrowCommonVO getBorrowServiceScale(@RequestBody @Valid BorrowCommonRequest borrowCommonRequest) {
 		BorrowCommonVO scale = this.borrowCommonService.getBorrowServiceScale(borrowCommonRequest);

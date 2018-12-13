@@ -87,7 +87,7 @@ public interface BorrowCommonService {
 	public boolean isExistsBorrowPreNidRecord(String borrowPreNid);
 
 	/**
-	 * 获取融资服务费率 & 账户管理费率
+	 * 获取放款服务费率 & 还款服务费率
 	 *
 	 * @param request
 	 * @return

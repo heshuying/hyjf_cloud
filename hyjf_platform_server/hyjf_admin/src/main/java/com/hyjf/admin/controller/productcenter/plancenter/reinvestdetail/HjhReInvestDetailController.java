@@ -233,7 +233,7 @@ public class HjhReInvestDetailController extends BaseController {
         map.put("userName", "用户名");
         map.put("inviteUserName", "推荐人");
         map.put("userAttribute", "用户属性");
-        map.put("borrowNid", "借款编号");
+        map.put("borrowNid", "项目编号");
         map.put("expectApr", "年化利率");
         map.put("borrowPeriodView", "借款期限");
         map.put("accedeAccount", "出借金额（元）");

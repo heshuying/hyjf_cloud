@@ -176,7 +176,7 @@
 	<resultMap id="selectTenderToCreditListMap" type="com.hyjf.am.trade.dao.model.customize.AppTenderToCreditListCustomize">
 		<!-- 项目编号-->
 		<result column="borrow_nid" property="bidNid" jdbcType="VARCHAR" />
-		<!-- 预期年化收益率 -->
+		<!-- 预期出借利率 -->
 		<result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
 		<!-- 项目期限-->
 		<result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />

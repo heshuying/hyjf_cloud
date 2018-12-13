@@ -371,7 +371,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
         }
         borrowTender.setClient(client);
         borrowTender.setInvestType(2); //出借类型 0手动投标 1预约投标 2自动投标
-        // 单笔出借的融资服务费
+        // 单笔出借的放款服务费
         borrowTender.setLoanFee(perService);
         //出借授权码
         if (StringUtils.isNotBlank(authCode)) {

@@ -12,9 +12,9 @@ import java.io.Serializable;
 public class BorrowRecoverRequestBean extends BaseRequest implements Serializable {
 
     /**
-     * 借款编号 检索条件
+     * 项目编号 检索条件
      */
-    @ApiModelProperty(value = "借款编号")
+    @ApiModelProperty(value = "项目编号")
     private String borrowNidSrch;
     /**
      * 借款名称 检索条件

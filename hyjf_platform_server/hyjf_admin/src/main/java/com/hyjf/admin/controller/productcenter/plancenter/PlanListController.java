@@ -201,7 +201,7 @@ public class PlanListController extends BaseController{
 		form.setLockPeriod(this.getValue(String.valueOf(vo.getLockPeriod())));
 		// 锁定期天、月
 		form.setIsMonth(this.getValue(String.valueOf(vo.getIsMonth())));
-		// 预期年化收益率
+		// 预期出借利率
 		form.setExpectApr(this.getValue(String.valueOf(vo.getExpectApr())));
 		// 最低加入金额
 		form.setDebtMinInvestment(this.getValue(String.valueOf(vo.getMinInvestment())));
@@ -452,7 +452,7 @@ public class PlanListController extends BaseController{
 		if(StringUtils.isEmpty(form.getBorrowStyle())){
 			jsonObject.put("errorMsg", "请输入还款方式！");
 		}
-		// 预期年化收益
+		// 预期出借利率
 		AdminValidatorFieldCheckUtil.validateSignlessNumLength(jsonObject, "expectApr", form.getExpectApr(), 2, 2, true);
 		// 原 最低加入金额
 		AdminValidatorFieldCheckUtil.validateDecimal(jsonObject, "debtMinInvestment", form.getDebtMinInvestment(), 10, true);
@@ -491,7 +491,7 @@ public class PlanListController extends BaseController{
 		// 表格sheet名称
 		String sheetName = "计划列表";
 		String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-		String[] titles = new String[] { "序号","计划编号","计划名称", "还款方式","锁定期", "预期年化收益率","最低加入金额（元）","最高加入金额（元）","出借增量（元）", "最小出借笔数", "开放额度（元）", "累计加入金额（元）","待还总额（元）","计划状态","添加时间" };
+		String[] titles = new String[] { "序号","计划编号","计划名称", "还款方式","锁定期", "预期出借利率率","最低加入金额（元）","最高加入金额（元）","出借增量（元）", "最小出借笔数", "开放额度（元）", "累计加入金额（元）","待还总额（元）","计划状态","添加时间" };
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		// 生成一个表格
@@ -550,7 +550,7 @@ public class PlanListController extends BaseController{
 							cell.setCellValue(hjhPlan.getLockPeriod()+ "个月");
 						}
 					}
-					// 预期年化收益率
+					// 预期出借利率率
 					else if (celLength == 5) {
 						cell.setCellValue( hjhPlan.getExpectApr() + "%");
 					}

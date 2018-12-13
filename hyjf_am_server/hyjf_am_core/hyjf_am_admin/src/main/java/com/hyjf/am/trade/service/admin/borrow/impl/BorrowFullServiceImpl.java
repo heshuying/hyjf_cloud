@@ -168,7 +168,7 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
         logger.info("校验结果: " + result);
         if (result) {
             return new Response(Response.FAIL,
-                    "标的爆标,请进行处理![用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
+                    "标的爆标,请进行处理![用户ID：" + borrowUserId + "]," + "[项目编号：" + borrowNid + "]");
         }
 
         // 如果标的出借记录存在没有授权码的记录，则不进行放款
@@ -208,7 +208,7 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
                     borrowApicron.setUserId(borrow.getUserId());
                     // 用户名
                     borrowApicron.setUserName(borrowUserName);
-                    // 借款编号
+                    // 项目编号
                     borrowApicron.setBorrowNid(borrow.getBorrowNid());
                     borrowApicron.setBorrowAccount(borrow.getAccount());
                     if (!isMonth) {

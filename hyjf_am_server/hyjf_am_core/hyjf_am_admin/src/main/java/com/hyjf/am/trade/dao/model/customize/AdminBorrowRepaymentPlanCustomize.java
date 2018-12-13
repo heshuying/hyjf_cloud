@@ -6,18 +6,18 @@ package com.hyjf.am.trade.dao.model.customize;
  */
 public class AdminBorrowRepaymentPlanCustomize {
     private String nid;// 出借nid
-    private String borrowNid;// 借款编号
+    private String borrowNid;// 项目编号
     private String userId;// 借款人ID
     private String borrowUserName;// 借款人用户名
     private String borrowName;// 借款标题
     private String projectType;// 项目类型id
     private String projectTypeName;// 项目类型名称
     private String borrowPeriod;// 借款期限
-    private String borrowApr;// 年化收益
+    private String borrowApr;// 出借利率
     private String borrowAccount;// 借款金额
     private String borrowAccountYes;// 借到金额
     private String repayType;// 还款方式
-    private String repayPeriod;// 还款期次
+    private String repayPeriod;// 还款期数
     private String repayCapital;// 应还本金
     private String repayInterest;// 应还利息
     private String repayAccount;// 应还本息
@@ -38,6 +38,8 @@ public class AdminBorrowRepaymentPlanCustomize {
     private String accedeOrderId;//汇计划加入订单号
     private String isMonth;//是否分期
     private String instName; //机构名称
+    private String repayAccountCapitalWait;// 未还本金
+    private String repayAccountInterestWait;// 未还利息
 
     public String getNid() {
         return nid;
@@ -301,5 +303,21 @@ public class AdminBorrowRepaymentPlanCustomize {
 
     public void setInstName(String instName) {
         this.instName = instName;
+    }
+
+    public String getRepayAccountCapitalWait() {
+        return repayAccountCapitalWait;
+    }
+
+    public void setRepayAccountCapitalWait(String repayAccountCapitalWait) {
+        this.repayAccountCapitalWait = repayAccountCapitalWait;
+    }
+
+    public String getRepayAccountInterestWait() {
+        return repayAccountInterestWait;
+    }
+
+    public void setRepayAccountInterestWait(String repayAccountInterestWait) {
+        this.repayAccountInterestWait = repayAccountInterestWait;
     }
 }

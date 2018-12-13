@@ -4,7 +4,7 @@
 
 	<sql id="Where_Clause">
 		<where>
-			<!-- 借款编号 -->
+			<!-- 项目编号 -->
 			<if test="borrowNidSrch != null and borrowNidSrch != ''">
 				AND b.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
 			</if>
@@ -100,7 +100,7 @@
 		LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
 		where
 		1=1
-		<!-- 借款编号 -->
+		<!-- 项目编号 -->
 		<if test="borrowNidSrch != null and borrowNidSrch != ''">
 			AND hiild.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
 		</if>
@@ -169,7 +169,7 @@
 		LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
 		WHERE
 		1=1
-		<!-- 借款编号 -->
+		<!-- 项目编号 -->
 		<if test="borrowNidSrch != null and borrowNidSrch != ''">
 			AND hiild.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
 		</if>
@@ -220,7 +220,7 @@
 		LEFT JOIN ht_borrow_style AS bs on b.borrow_style=bs.nid
 		WHERE
 		1=1
-		<!-- 借款编号 -->
+		<!-- 项目编号 -->
 		<if test="borrowNidSrch != null and borrowNidSrch != ''">
 			AND hiild.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
 		</if>

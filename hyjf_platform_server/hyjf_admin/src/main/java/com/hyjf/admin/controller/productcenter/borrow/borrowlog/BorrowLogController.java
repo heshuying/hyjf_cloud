@@ -123,7 +123,7 @@ public class BorrowLogController extends BaseController {
 
     private Map<String, String> buildMap() {
         Map<String, String> map = Maps.newLinkedHashMap();
-        map.put("borrowNid","借款编号");
+        map.put("borrowNid","项目编号");
         map.put("borrowStatus","项目状态");
         map.put("type","修改类型");
         map.put("createUserName","操作人");

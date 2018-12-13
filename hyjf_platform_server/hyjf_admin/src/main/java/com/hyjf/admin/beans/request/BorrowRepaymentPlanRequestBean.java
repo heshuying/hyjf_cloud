@@ -31,7 +31,7 @@ public class BorrowRepaymentPlanRequestBean extends BaseRequest implements Seria
      */
     private String instCodeSrch;
 
-    private String borrowNid;// 借款编号
+    private String borrowNid;// 项目编号
     private String borrowName;// 借款标题
     private String statusSrch;// 还款状态
 

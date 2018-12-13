@@ -22,7 +22,7 @@ public class AdminBorrowInvestCustomizeVO extends BaseVO implements Serializable
     @ApiModelProperty(value = "推荐人")
     private String referrerName;
 
-    @ApiModelProperty(value = "借款编号")
+    @ApiModelProperty(value = "项目编号")
     private String borrowNid;
 
     @ApiModelProperty(value = "计划编号")

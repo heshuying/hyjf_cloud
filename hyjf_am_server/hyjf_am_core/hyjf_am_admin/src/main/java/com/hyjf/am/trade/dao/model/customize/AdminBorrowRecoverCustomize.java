@@ -14,7 +14,7 @@ public class AdminBorrowRecoverCustomize {
      */
     private String instName;
     /**
-     * 借款编号
+     * 项目编号
      */
     private String borrowNid;
     /**
@@ -94,7 +94,7 @@ public class AdminBorrowRecoverCustomize {
     private String borrowPeriod;
 
     /**
-     * 年化收益
+     * 出借利率
      */
     private String borrowApr;
 

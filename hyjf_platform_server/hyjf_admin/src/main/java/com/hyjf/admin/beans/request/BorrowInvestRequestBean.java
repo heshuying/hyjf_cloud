@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @version BorrowInvestRequestBean, v0.1 2018/7/10 17:05
  */
 public class BorrowInvestRequestBean extends BaseRequest implements Serializable {
-    @ApiModelProperty(value = "借款编号(所有接口需要传borrowNid时都在这个字段赋值)")
+    @ApiModelProperty(value = "项目编号(所有接口需要传borrowNid时都在这个字段赋值)")
     private String borrowNidSrch;
 
     @ApiModelProperty(value = "借款期限")

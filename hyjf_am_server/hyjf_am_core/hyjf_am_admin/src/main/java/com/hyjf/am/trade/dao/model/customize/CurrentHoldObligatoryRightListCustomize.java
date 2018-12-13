@@ -23,7 +23,7 @@ public class CurrentHoldObligatoryRightListCustomize implements Serializable {
     private String borrowClass;
     /**项目类别*/
     private String projectType;
-	/**项目年化收益率*/
+	/**项目出借利率*/
 	private String borrowApr;
 	/**用户id*/
 	private String tenUserId;

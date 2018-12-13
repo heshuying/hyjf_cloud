@@ -392,7 +392,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     /**
      * 根据borrowNid查询出来异常标
      *
-     * @param borrowNid 借款编号
+     * @param borrowNid 项目编号
      * @return
      * @auth sunpeikai
      */

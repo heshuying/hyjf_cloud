@@ -27,7 +27,7 @@ public class UserHjhInvistDetailCustomize implements Serializable {
     private String planName;
     // 计划出借订单号
     private String accedeOrderId;
-    // 计划年化收益率
+    // 计划出借利率
     private String planApr;
     // 计划锁定期
     private String planPeriod;

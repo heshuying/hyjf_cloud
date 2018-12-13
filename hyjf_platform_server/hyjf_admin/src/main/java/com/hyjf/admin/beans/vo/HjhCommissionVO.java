@@ -91,7 +91,7 @@ public class HjhCommissionVO extends BaseRequest implements Serializable{
 	@ApiModelProperty(value = "还款方式-汇计划")
     private String borrowStyleHjh;
 	
-	@ApiModelProperty(value = "预期年化收益率")
+	@ApiModelProperty(value = "预期出借利率")
     private BigDecimal expectApr;
 	
 	@ApiModelProperty(value = "计划订单锁定时间 开始")

@@ -21,7 +21,7 @@ public class BorrowInvestCustomize {
      */
     private String referrerName;
     /**
-     * 借款编号
+     * 项目编号
      */
     private String borrowNid;
     /**

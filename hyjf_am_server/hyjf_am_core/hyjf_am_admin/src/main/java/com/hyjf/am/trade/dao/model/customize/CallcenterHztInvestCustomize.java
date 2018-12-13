@@ -11,7 +11,7 @@ public class CallcenterHztInvestCustomize implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	/**
-	 * 借款编号 检索条件
+	 * 项目编号 检索条件
 	 */
 	private String borrowNidSrch;
 	/**
@@ -59,7 +59,7 @@ public class CallcenterHztInvestCustomize implements Serializable {
 	 */
 	private String referrerName;
 	/**
-	 * 借款编号
+	 * 项目编号
 	 */
 	private String borrowNid;
 	/**

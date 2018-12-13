@@ -189,7 +189,7 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
         CouponRecoverCustomize currentRecover = null;
         currentRecover = this.getCurrentCouponRecover(recover.getTenderId(),Integer.parseInt(periodNow));
         if (currentRecover == null) {
-            throw new Exception("优惠券还款数据不存在。[借款编号：" + borrowTender.getBorrowNid() + "]，" + "[优惠券出借编号：" + recover.getTenderId() + "]");
+            throw new Exception("优惠券还款数据不存在。[项目编号：" + borrowTender.getBorrowNid() + "]，" + "[优惠券出借编号：" + recover.getTenderId() + "]");
         }
 
         // 应还利息

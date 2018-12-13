@@ -27,11 +27,11 @@ public class TenderToCreditDetailCustomize implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 借款编号
+	 * 项目编号
 	 */
 	private String borrowNid;
 	/**
-	 * 年化收益
+	 * 出借利率
 	 */
 	private String borrowApr;
 	/**

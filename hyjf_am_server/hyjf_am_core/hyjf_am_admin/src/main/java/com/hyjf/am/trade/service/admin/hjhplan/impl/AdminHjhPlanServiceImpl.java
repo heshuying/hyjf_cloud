@@ -349,7 +349,7 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 					// 锁定期天、月
 					plan.setIsMonth(Integer.parseInt(form.getIsMonth()));
 				}
-				// 预期年化收益率
+				// 预期出借利率
 				plan.setExpectApr(StringUtils.isEmpty(form.getExpectApr()) ? BigDecimal.ZERO : new BigDecimal(form.getExpectApr()));
 				// 最低出借金额
 				plan.setMinInvestment(new BigDecimal(form.getDebtMinInvestment()));
@@ -441,7 +441,7 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 			// 锁定期天、月
 			plan.setIsMonth(Integer.parseInt(form.getIsMonth()));
 		}
-		// 预期年化收益率
+		// 预期出借利率
 		plan.setExpectApr(new BigDecimal(form.getExpectApr()));
 		// 最低出借金额
 		plan.setMinInvestment(new BigDecimal(form.getDebtMinInvestment()));

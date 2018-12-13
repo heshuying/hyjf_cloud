@@ -108,7 +108,7 @@ public class PcChannelReconciliationController extends BaseController {
 
             String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
-            String[] titles = new String[] { "序号", "用户名", "渠道","注册时间","出借订单", "借款编号", "标的期限", "授权服务金额","是否首投", "出借时间" };
+            String[] titles = new String[] { "序号", "用户名", "渠道","注册时间","出借订单", "项目编号", "标的期限", "授权服务金额","是否首投", "出借时间" };
             // 声明一个工作薄
             HSSFWorkbook workbook = new HSSFWorkbook();
 
@@ -157,7 +157,7 @@ public class PcChannelReconciliationController extends BaseController {
                         else if (celLength == 4) {
                             cell.setCellValue(record.getOrderCode()==null?"":record.getOrderCode());
                         }
-                        // 借款编号
+                        // 项目编号
                         else if (celLength == 5) {
                             cell.setCellValue(record.getBorrowNid()==null?"":record.getBorrowNid());
                         }
@@ -257,7 +257,7 @@ public class PcChannelReconciliationController extends BaseController {
         map.put("utmName", "渠道");
         map.put("registTime", "注册时间");
         map.put("orderCode", "出借订单");
-        map.put("borrowNid", "借款编号");
+        map.put("borrowNid", "项目编号");
         map.put("borrowPeriod", "标的期限");
         map.put("investAmount", "授权服务金额");
         map.put("firstFlag", "是否首投");
@@ -359,7 +359,7 @@ public class PcChannelReconciliationController extends BaseController {
                         else if (celLength == 4) {
                             cell.setCellValue(record.getOrderCode()==null?"":record.getOrderCode());
                         }
-                        // 借款编号
+                        // 项目编号
                         else if (celLength == 5) {
                             cell.setCellValue(record.getBorrowNid()==null?"":record.getBorrowNid());
                         }

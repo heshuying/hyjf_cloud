@@ -281,7 +281,7 @@
         t.`month`
     </select>
 
-    <!-- 	今年这个时候到手收益 和 去年这个时候到手收益 和  预期收益率 -->
+    <!-- 	今年这个时候到手收益 和 去年这个时候到手收益 和  出借利率 -->
     <select id="getRevenueAndYield" resultMap="performanceMap">
         SELECT
         '本次到手收益'  AS title,
@@ -432,7 +432,7 @@
         ) as sumAccount
         UNION ALL
         SELECT
-        '平均预期收益率'  AS title,
+        '平均出借利率'  AS title,
         sum(borrow_apr) / count(*) as  sumAccount
         FROM
         ht_borrow

@@ -297,7 +297,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                         info.setOrderId(loanDetail.getString(BankCallConstant.PARAM_ORDERID));
                         //交易金额
                         info.setTxAmount(loanDetail.getBigDecimal(BankCallConstant.PARAM_TXAMOUNT));
-                        //预期年化收益率
+                        //预期出借利率
                         info.setYield(loanDetail.getBigDecimal(BankCallConstant.PARAM_YIELD));
                         //预期收益
                         info.setForIncome(loanDetail.getBigDecimal(BankCallConstant.PARAM_FORINCOME));
@@ -570,10 +570,10 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
                         borrowPeriodString = m.replaceAll("").trim();
                         Integer borrowPeriod = Integer.valueOf(borrowPeriodString);
                         if (org.apache.commons.lang3.StringUtils.equals("endday", borrowStyle)) {
-                            // 还款方式为”按天计息，到期还本还息“：预期收益=出借金额*年化收益÷365*锁定期；
+                            // 还款方式为”按天计息，到期还本还息“：预期收益=出借金额*出借利率÷365*锁定期；
                             earnings = DuePrincipalAndInterestUtils.getDayInterest(account, borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2, BigDecimal.ROUND_DOWN);
                         } else {
-                            // 还款方式为”按月计息，到期还本还息“：预期收益=出借金额*年化收益÷12*月数；
+                            // 还款方式为”按月计息，到期还本还息“：预期收益=出借金额*出借利率÷12*月数；
                             earnings = DuePrincipalAndInterestUtils.getMonthInterest(account, borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2, BigDecimal.ROUND_DOWN);
                         }
                         contents.put("earnings", earnings);

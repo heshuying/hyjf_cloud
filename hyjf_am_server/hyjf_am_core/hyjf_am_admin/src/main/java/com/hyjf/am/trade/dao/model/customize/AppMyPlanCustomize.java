@@ -32,7 +32,7 @@ public class AppMyPlanCustomize implements Serializable {
     private String receivedInterest;
     /** 计划应还时间 */
     private String recoverTime;
-    /** 预计年化收益率 */
+    /** 预计出借利率 */
     private String expectApr;
     /** 状态名称 */
     private String statusName;

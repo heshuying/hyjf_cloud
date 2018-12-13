@@ -102,7 +102,7 @@ public class IncreaseInterestRepayDetailServiceImpl extends BaseServiceImpl impl
     @Override
     public AdminIncreaseInterestRepayCustomizeVO sumBorrowRepaymentInfo(IncreaseInterestRepayDetailRequest form) {
         Map<String, Object> param = new HashMap<String, Object>();
-        // 借款编号
+        // 项目编号
         if (StringUtils.isNotEmpty(form.getBorrowNidSrch())) {
             param.put("borrowNidSrch", form.getBorrowNidSrch());
         }

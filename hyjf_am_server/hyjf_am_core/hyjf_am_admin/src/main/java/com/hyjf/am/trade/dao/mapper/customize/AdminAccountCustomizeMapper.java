@@ -230,7 +230,7 @@ public interface AdminAccountCustomizeMapper {
 	int updateOfRepayBorrowFreeze(Account repayAccount);
 
 	/***
-	 * 垫付机构还款更新垫付机构账户金额
+	 * 担保机构还款更新担保机构账户金额
 	 * 
 	 * @param newRepayUserAccount
 	 * @return
@@ -238,7 +238,7 @@ public interface AdminAccountCustomizeMapper {
 	int updateOfRepayOrgUser(Account newRepayUserAccount);
 
 	/**
-	 * 垫付机构还款 操作借款人账户
+	 * 担保机构还款 操作借款人账户
 	 * 
 	 * @param borrowUserAccount
 	 * @return

@@ -179,7 +179,7 @@
 		<result column="jalreadyInvest" property="jalreadyInvest"  />
 		<!--公允价值-->
 		<result column="fairValue" property="fairValue"  />
-		<!--实际年化收益率-->
+		<!--实际出借利率-->
 		<result column="actualApr" property="actualApr"  />
 		<!--出借笔数-->
 		<result column="investCounts" property="investCounts"  />

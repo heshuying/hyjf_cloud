@@ -9,7 +9,7 @@ public class HjhReInvestDetailCustomize {
     private String accedeOrderIdSrch;
     //用户名（检索）
     private String userNameSrch;
-    //借款编号（检索）
+    //项目编号（检索）
     private String borrowNidSrch;
     //借款期限(锁定期)（检索）
     private String lockPeriodSrch;
@@ -26,7 +26,7 @@ public class HjhReInvestDetailCustomize {
     private String inviteUserName;
     //用户属性
     private String userAttribute;
-    //借款编号
+    //项目编号
     private String borrowNid;
     //年化利率
     private String expectApr;

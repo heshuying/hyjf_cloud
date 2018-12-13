@@ -408,7 +408,7 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
     }
 
     /**
-     * 根据借款编号查询资产信息
+     * 根据项目编号查询资产信息
      *
      * @param borrowNid
      * @return

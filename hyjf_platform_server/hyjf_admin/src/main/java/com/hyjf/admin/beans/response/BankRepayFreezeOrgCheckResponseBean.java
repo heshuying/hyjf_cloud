@@ -13,7 +13,7 @@ public class BankRepayFreezeOrgCheckResponseBean {
     private String state;
     @ApiModelProperty(value = "银行返回码")
     private String retCode;
-    @ApiModelProperty(value = "借款编号")
+    @ApiModelProperty(value = "项目编号")
     private String borrowNid;
     @ApiModelProperty(value = "冻结订单号")
     private String orderId;

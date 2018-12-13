@@ -40,7 +40,7 @@ public class InvestorDebtBean implements Serializable {
     @ApiModelProperty(value = "交易金额")
     private BigDecimal txAmount;
 
-    @ApiModelProperty(value = "预期年化收益率")
+    @ApiModelProperty(value = "预期出借利率")
     private BigDecimal yield;
 
     @ApiModelProperty(value = "预期收益")

@@ -13,7 +13,7 @@ public class RepayDetailBean extends BorrowRepayPlanVO implements Serializable {
 	 */
 	private static final long serialVersionUID = 4073070104153180850L;
 	/**
-	 * 垫付机构ID
+	 * 担保机构ID
 	 */
 	public Integer repayUserId;
 	

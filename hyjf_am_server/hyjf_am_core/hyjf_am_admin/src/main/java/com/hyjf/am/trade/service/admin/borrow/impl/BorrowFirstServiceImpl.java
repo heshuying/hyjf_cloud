@@ -95,7 +95,7 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
         List<Borrow> borrowList = this.borrowMapper.selectByExample(example);
         if (borrowList != null && borrowList.size() == 1) {
             Borrow borrow = borrowList.get(0);
-            // 该借款编号没有交过保证金
+            // 该项目编号没有交过保证金
             BorrowBailExample exampleBail = new BorrowBailExample();
             BorrowBailExample.Criteria craBail = exampleBail.createCriteria();
             craBail.andBorrowNidEqualTo(borrow.getBorrowNid());
@@ -108,7 +108,7 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                 if (StringUtils.isNotBlank(currUserId)) {
                     borrowBail.setOperaterUid(Integer.valueOf(currUserId));
                 }
-                // 借款编号
+                // 项目编号
                 borrowBail.setBorrowNid(borrow.getBorrowNid());
                 // 保证金数值  计算公式：保证金金额=借款金额×3％
                 BigDecimal bailPercent = new BigDecimal(this.getBorrowConfig(CustomConstants.BORROW_BAIL_RATE));
@@ -227,12 +227,12 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
     public void sendToMQAutoPreAudit(String borrowNid) {
         BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
         if (null == borrowInfo) {
-            logger.error("未能获取到借款详情、无法发送MQ自动初审！借款编号：" + borrowNid);
+            logger.error("未能获取到借款详情、无法发送MQ自动初审！项目编号：" + borrowNid);
             return;
         }
         HjhAssetBorrowtype hjhAssetBorrowType = this.selectAssetBorrowType(borrowInfo.getInstCode(), borrowInfo.getAssetType());
         if (null == hjhAssetBorrowType || null == hjhAssetBorrowType.getAutoBail()) {
-            logger.error("未能获取到流程配置、无法发送MQ自动初审！借款编号：" + borrowNid);
+            logger.error("未能获取到流程配置、无法发送MQ自动初审！项目编号：" + borrowNid);
             return;
         }
         // 判断是否设定自动初审

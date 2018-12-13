@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @version AdminBorrowFirstCustomizeVO, v0.1 2018/7/23 11:11
  */
 public class AdminBorrowFirstCustomizeVO extends BaseVO implements Serializable {
-    @ApiModelProperty(value = "借款编号")
+    @ApiModelProperty(value = "项目编号")
     private String borrowNid;
 
     @ApiModelProperty(value = "借款标题")

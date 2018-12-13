@@ -46,7 +46,7 @@ public class BankRepayFreezeOrgServiceImpl extends BaseAdminServiceImpl implemen
     }
 
     /**
-     * 查询垫付机构冻结列表
+     * 查询担保机构冻结列表
      */
     @Override
     public BankRepayOrgFreezeLogVO getBankRepayOrgFreezeLogList(String orderId) {
@@ -61,7 +61,7 @@ public class BankRepayFreezeOrgServiceImpl extends BaseAdminServiceImpl implemen
     }
 
     /**
-     * 删除垫付机构临时日志,外部调用
+     * 删除担保机构临时日志,外部调用
      */
     @Override
     public Integer deleteOrgFreezeTempLogs(String orderId) {

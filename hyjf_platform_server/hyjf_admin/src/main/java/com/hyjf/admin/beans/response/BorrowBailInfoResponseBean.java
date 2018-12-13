@@ -15,7 +15,7 @@ public class BorrowBailInfoResponseBean {
     @ApiModelProperty(value = "用户姓名")
     private String userName;
 
-    @ApiModelProperty(value = "借款编号")
+    @ApiModelProperty(value = "项目编号")
     private String borrowNid;
 
     @ApiModelProperty(value = "借款标题")
