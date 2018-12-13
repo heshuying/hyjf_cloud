@@ -115,7 +115,7 @@ public class MessageServiceImpl implements MessageService {
 						SmsMessage smsMessage = new SmsMessage(null, null, phones, send_message,
 								MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType);
 						smsProducer.messageSend(
-								new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
+								new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),smsMessage));
 					} catch (Exception e) {
 						logger.error("发送短信失败......", e);
 						errorCnt++;
@@ -137,7 +137,7 @@ public class MessageServiceImpl implements MessageService {
 					SmsMessage smsMessage = new SmsMessage(null, null, mbl, send_message,
 							MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType);
 					smsProducer.messageSend(
-							new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
+							new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),smsMessage));
 				}
 			} catch (Exception e) {
 				sbError.append(e.getMessage()).append("<br/>");

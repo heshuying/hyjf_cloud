@@ -74,7 +74,7 @@ public class OperationReportJobController extends BaseController {
 		logger.info("生成报告year="+year+"生成报告month="+month);
 		try {
 			operationReportJobAdminProducer.messageSend(new MessageContent(MQConstant.OPERATIONREPORT_JOB_ADMIN_TOPIC,
-					System.currentTimeMillis() + "", JSONObject.toJSONBytes(bean)));
+					System.currentTimeMillis() + "", bean));
 		} catch (MQException e) {
 			logger.error("运营报告的mq发送失败......", e);
 			return new StringResponse("error");

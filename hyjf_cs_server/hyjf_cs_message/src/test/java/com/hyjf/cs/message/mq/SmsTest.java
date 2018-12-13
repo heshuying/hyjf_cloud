@@ -39,6 +39,6 @@ public class SmsTest {
                 "TPL_ZHUCE", CustomConstants.CHANNEL_TYPE_NORMAL);
 
         // 发送
-        smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
+        smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),smsMessage));
     }
 }
