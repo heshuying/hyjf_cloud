@@ -730,7 +730,6 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         account.setPlanRepayInterest(BigDecimal.ZERO);
         logger.info("注册插入account：{}", JSON.toJSONString(account));
         try {
-            //accountProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(account)));
             commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(), account));
         } catch (MQException e) {
             logger.error("注册成功推送account——mq失败.... user_id is :{}", userId);
@@ -763,7 +762,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                 CustomConstants.CHANNEL_TYPE_NORMAL);
         try {
             commonProducer.messageSend(
-                    new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                    new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
         } catch (MQException e) {
             logger.error("短信发送失败...", e);
         }
