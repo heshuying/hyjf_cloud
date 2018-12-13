@@ -697,7 +697,7 @@ public class ValidatorFieldCheckUtil {
 		}
 
 		if (retValue && !StringUtils.isEmpty(value)) {
-			if (!GenericValidator.isLong(value) || !NumberUtils.isNumber(value)) {
+			if (!GenericValidator.isLong(value) || !NumberUtils.isCreatable(value)) {
 				CustomErrors.add(mav, itemname, NUM, getErrorMessage(NUM));
 				retValue = false;
 			}
@@ -727,7 +727,7 @@ public class ValidatorFieldCheckUtil {
 		}
 
 		if (retValue && !StringUtils.isEmpty(value)) {
-			if (!GenericValidator.isLong(value) || !NumberUtils.isNumber(value)) {
+			if (!GenericValidator.isLong(value) || !NumberUtils.isCreatable(value)) {
 				CustomErrors.add(info, itemname, key, getErrorMessage(NUM));
 				retValue = false;
 			}
@@ -773,7 +773,7 @@ public class ValidatorFieldCheckUtil {
 		boolean retValue = validateMaxLength(mav, itemname, value, maxLength, required);
 
 		if (retValue && !StringUtils.isEmpty(value)) {
-			if (!GenericValidator.isLong(value) || !NumberUtils.isNumber(value)) {
+			if (!GenericValidator.isLong(value) || !NumberUtils.isCreatable(value)) {
 				CustomErrors.add(mav, itemname, NUM, getErrorMessage(NUM));
 				retValue = false;
 			}
@@ -796,7 +796,7 @@ public class ValidatorFieldCheckUtil {
 		boolean retValue = validateMaxLength(mav, itemname, value, maxLength, required);
 
 		if (retValue && !StringUtils.isEmpty(value)) {
-			if (!GenericValidator.isInt(value) || !NumberUtils.isNumber(value) || Integer.valueOf(value) < 0) {
+			if (!GenericValidator.isInt(value) || !NumberUtils.isCreatable(value) || Integer.valueOf(value) < 0) {
 				CustomErrors.add(mav, itemname, SIGNLESSNUM, getErrorMessage(SIGNLESSNUM, maxLength));
 				retValue = false;
 			}
