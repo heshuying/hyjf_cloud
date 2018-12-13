@@ -592,7 +592,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                 FeeConfigVO feeConfig = listFeeConfig.get(0);
                 BigDecimal takout = BigDecimal.ZERO;
                 BigDecimal percent = BigDecimal.ZERO;
-                if (Validator.isNotNull(feeConfig.getNormalTakeout()) && NumberUtils.isNumber(feeConfig.getNormalTakeout())) {
+                if (Validator.isNotNull(feeConfig.getNormalTakeout()) && NumberUtils.isCreatable(feeConfig.getNormalTakeout())) {
                     takout = new BigDecimal(feeConfig.getNormalTakeout());
                 }
                 return takout.add(percent).toString();

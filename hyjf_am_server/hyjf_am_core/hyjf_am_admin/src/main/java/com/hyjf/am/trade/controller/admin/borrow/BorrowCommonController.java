@@ -80,7 +80,7 @@ public class BorrowCommonController extends BaseController {
         // 还款方式
   //      List<BorrowProjectRepay> borrowStyleList = this.borrowCommonService.borrowProjectRepayList();
         bcr.setBorrowStyleList(CommonUtils.convertBeanList(this.borrowCommonService.borrowProjectRepayList(),BorrowProjectRepayVO.class));
-//        //TODO 房屋类型 放在admin层取
+//        //房屋类型 放在admin层取
 //        modelAndView.addObject("housesTypeList", this.borrowCommonService.getParamNameList(CustomConstants.HOUSES_TYPE));
 //
 //        // 公司规模
@@ -92,7 +92,7 @@ public class BorrowCommonController extends BaseController {
         // 资产机构
 //        modelAndView.addObject("instList", this.borrowCommonService.getInstList());
         bcr.setInstList(CommonUtils.convertBeanList(this.borrowCommonService.getInstList(),HjhInstConfigVO.class));
-        //TODO 合作机构 放在admin层数
+        //合作机构 放在admin层数
        // modelAndView.addObject("links", this.borrowCommonService.getLinks());
         //货币种类
 //        List<ParamName> list = this.couponBackMoneyHztService.getParamNameList(CustomConstants.CURRENCY_STATUS);
@@ -194,7 +194,7 @@ public class BorrowCommonController extends BaseController {
         bcr.setBorrowProjectType(CommonUtils.convertBeanList(this.borrowCommonService.borrowProjectTypeList(CustomConstants.HZT),BorrowProjectTypeVO.class));
         // 还款方式
         bcr.setBorrowStyleList(CommonUtils.convertBeanList(this.borrowCommonService.borrowProjectRepayList(),BorrowProjectRepayVO.class));
-		// TODO 货币种类 配置表
+		// 货币种类 配置表
 		// List<ParamName> list =
 		// this.borrowCommonService.getParamNameList(CustomConstants.CURRENCY_STATUS);
 		//TODO 暂时屏蔽 画面验证(信批需求新增字段无需校验)
@@ -470,7 +470,7 @@ public class BorrowCommonController extends BaseController {
 		return this.borrowCommonService.isExistsUser(userId);
 	}
 
-//	/**TODO 放在配置
+//	/**放在配置
 //	 * 项目申请人是否存在
 //	 *
 //	 * @param request

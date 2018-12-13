@@ -853,7 +853,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 	public void sendSms(List<Map<String, String>> msgList) {
 		if (msgList != null && msgList.size() > 0) {
 			for (Map<String, String> msg : msgList) {
-				if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isNumber(msg.get(VAL_USERID)) && Validator.isNotNull(msg.get(VAL_AMOUNT))) {
+				if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isCreatable(msg.get(VAL_USERID)) && Validator.isNotNull(msg.get(VAL_AMOUNT))) {
 //					Users users = getUsersByUserId(Integer.valueOf(msg.get(VAL_USERID)));
 //					if (users == null || Validator.isNull(users.getMobile()) || (users.getRecieveSms() != null && users.getRecieveSms() == 1)) {
 //						return;

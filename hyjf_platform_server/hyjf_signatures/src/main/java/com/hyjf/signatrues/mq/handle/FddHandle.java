@@ -1809,7 +1809,7 @@ public class FddHandle {
 			Map<String, String> msg = new HashMap<String, String>();
 			msg.put(VAL_USERID, String.valueOf(userId));
 			// 向每个投资人发送邮件
-			if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isNumber(msg.get(VAL_USERID))) {
+			if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isCreatable(msg.get(VAL_USERID))) {
 				UserVO users=this.amUserClient.findUserById(userId);
 				if (users == null || Validator.isNull(users.getEmail()) || users.getIsSmtp()==1) {
 					logger.info("=============cwyang eamil is users == null===========");
@@ -1884,7 +1884,7 @@ public class FddHandle {
 		msg.put(VAL_USERID, String.valueOf(userId));
 		try {
 			// 向每个投资人发送邮件
-			if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isNumber(msg.get(VAL_USERID))) {
+			if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isCreatable(msg.get(VAL_USERID))) {
 				UserVO users = this.amUserClient.findUserById(userId);
 				if (users == null || Validator.isNull(users.getEmail())) {
 					return;

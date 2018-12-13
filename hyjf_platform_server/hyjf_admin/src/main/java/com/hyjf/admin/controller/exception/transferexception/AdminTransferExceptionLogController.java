@@ -271,7 +271,7 @@ public class AdminTransferExceptionLogController extends BaseController {
 
         if (CollectionUtils.isNotEmpty(msgList)) {
             for (Map<String, String> msg : msgList) {
-                if (Validator.isNotNull(msg.get(USERID)) && NumberUtils.isNumber(msg.get(USERID)) && Validator.isNotNull(msg.get(VAL_AMOUNT))) {
+                if (Validator.isNotNull(msg.get(USERID)) && NumberUtils.isCreatable(msg.get(USERID)) && Validator.isNotNull(msg.get(VAL_AMOUNT))) {
                     UserVO users = transferLogService.getUserByUserId(Integer.valueOf(msg.get(USERID)));
                     if (users == null || Validator.isNull(users.getMobile()) || (users.getRecieveSms() != null && users.getRecieveSms() == 1)) {
                         return;

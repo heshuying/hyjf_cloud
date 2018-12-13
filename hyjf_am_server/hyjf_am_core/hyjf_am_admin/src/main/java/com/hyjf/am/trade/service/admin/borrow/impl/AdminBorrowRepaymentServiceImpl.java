@@ -354,7 +354,7 @@ public class AdminBorrowRepaymentServiceImpl extends BaseServiceImpl implements 
                 //利息
                 BigDecimal userInterest = borrowRecoverPlan.getRecoverInterest();
                 // 提前还款不应该大于本次计息时间
-                //TODO 判断是否为先息后本
+                //判断是否为先息后本
                 boolean isStyle = CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrow.getBorrowStyle());
                 // 提前还款不应该大于本次计息时间
                 if (totalDays < advanceDays) {
