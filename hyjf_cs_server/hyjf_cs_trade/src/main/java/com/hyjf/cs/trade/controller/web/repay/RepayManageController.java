@@ -33,9 +33,8 @@ import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.BorrowLoanRepayProducer;
-import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.repay.RepayManageService;
 import com.hyjf.cs.trade.vo.BatchRepayPageRequestVO;
@@ -89,11 +88,9 @@ public class RepayManageController extends BaseTradeController {
     public static final String SMSSENDFORUSER = "smsSendForUser";
 
     @Autowired
-    SmsProducer smsProducer;
+    private CommonProducer commonProducer;
     @Autowired
     RepayManageService repayManageService;
-    @Autowired
-    BorrowLoanRepayProducer borrowLoanRepayProducer;
     @Autowired
     AmUserClient amUserClient;
     @Autowired
@@ -690,8 +687,8 @@ public class RepayManageController extends BaseTradeController {
                     if (allRepaySize == successRepaySize) {//全部成功
                         SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, SMSSENDFORUSER, null, CustomConstants.JYTZ_PLAN_REPAYALL_SUCCESS,
                                 CustomConstants.CHANNEL_TYPE_NORMAL);
-                        smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
-                                UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
+                                UUID.randomUUID().toString(), smsMessage));
                     }else{// 改批次代偿，失败不发短信 2018-9-13 wgx
                         //SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, SMSSENDFORUSER, null, CustomConstants.JYTZ_PLAN_REPAYPART_SUCCESS,
                         //        CustomConstants.CHANNEL_TYPE_NORMAL);
@@ -866,13 +863,13 @@ public class RepayManageController extends BaseTradeController {
                     // 还款任务
                     if (StringUtils.isBlank(apicron.getPlanNid())) {
                         // 直投类还款
-                        borrowLoanRepayProducer.messageSend(new MessageContent(MQConstant.BORROW_REPAY_ZT_RESULT_TOPIC,
-                                apicron.getBorrowNid(), JSON.toJSONBytes(apicron)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.BORROW_REPAY_ZT_RESULT_TOPIC,
+                                apicron.getBorrowNid(), apicron));
                         logger.info("【还款业务处理结果异步通知】发送散标还款结果处理消息:还款项目编号:[{}]", apicron.getBorrowNid());
                     } else {
                         // 计划类还款
-                        borrowLoanRepayProducer.messageSend(new MessageContent(MQConstant.BORROW_REPAY_PLAN_RESULT_TOPIC,
-                                apicron.getBorrowNid(), JSON.toJSONBytes(apicron)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.BORROW_REPAY_PLAN_RESULT_TOPIC,
+                                apicron.getBorrowNid(), apicron));
                         logger.info("【还款业务处理结果异步通知】发送计划还款结果处理消息:还款项目编号:[{}],计划编号:{}",
                                 apicron.getBorrowNid(), apicron.getPlanNid());
                     }

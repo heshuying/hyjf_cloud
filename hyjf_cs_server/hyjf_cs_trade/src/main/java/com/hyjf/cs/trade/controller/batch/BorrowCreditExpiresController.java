@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.trade.controller.batch;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
@@ -14,9 +13,8 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
-import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.batch.BorrowCreditService;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
@@ -45,9 +43,7 @@ public class BorrowCreditExpiresController extends BaseTradeController {
     @Autowired
     private BorrowCreditService borrowCreditService;
     @Autowired
-    private AppMessageProducer appMessageProducer;
-    @Autowired
-    private SmsProducer smsProducer;
+    private CommonProducer commonProducer;
 
     /**
      * 债转有效定时任务处理
@@ -108,7 +104,7 @@ public class BorrowCreditExpiresController extends BaseTradeController {
                         new SmsMessage(borrowCreditVO.getCreditUserId(), param, null, null, MessageConstant.SMS_SEND_FOR_USER, null,
                                 CustomConstants.PARAM_TPL_ZZBFZRCG, CustomConstants.CHANNEL_TYPE_NORMAL);
                 try {
-                    smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
                 } catch (MQException e) {
                     logger.error("债转部分转让发送短信失败：userId:" + borrowCreditVO.getCreditUserId() + ",trueName:" + userInfo.getTruename(), e);
                 }
@@ -120,14 +116,14 @@ public class BorrowCreditExpiresController extends BaseTradeController {
                         new SmsMessage(borrowCreditVO.getCreditUserId(), param, null, null, MessageConstant.SMS_SEND_FOR_USER, null,
                                 CustomConstants.PARAM_TPL_ZZDQ, CustomConstants.CHANNEL_TYPE_NORMAL);
                 try {
-                    smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
                 } catch (MQException e) {
                     logger.error("债转0转让发送短信失败：userId:" + borrowCreditVO.getCreditUserId() + ",trueName:" + userInfo.getTruename(), e);
                 }
             }
             AppMsMessage appMsMessage = new AppMsMessage(borrowCreditVO.getCreditUserId(), param, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_ZHUANRANGJIESHU);
             try {
-                appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
+                commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), appMsMessage));
             } catch (MQException e) {
                 logger.error("债转转让结束发送消息失败：userId:" + borrowCreditVO.getCreditUserId() + ",trueName:" + userInfo.getTruename(), e);
             }

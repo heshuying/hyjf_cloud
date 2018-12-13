@@ -1,6 +1,5 @@
 package com.hyjf.cs.trade.service.consumer.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.CouponRepayRequest;
 import com.hyjf.am.vo.admin.BankMerchantAccountVO;
@@ -27,11 +26,8 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.AccountWebListProducer;
-import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
-import com.hyjf.cs.trade.mq.producer.CouponRepayProducer;
-import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.consumer.CouponRepayService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -57,22 +53,15 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class CouponRepayServiceImpl implements CouponRepayService {
     private static final Logger logger = LoggerFactory.getLogger(CouponRepayServiceImpl.class);
-
+    @Autowired
+    private CommonProducer commonProducer;
 
     @Resource
     private AmUserClient amUserClient;
     @Autowired
     private SystemConfig systemConfig;
     @Autowired
-    private SmsProducer smsProducer;
-    @Autowired
-    private AppMessageProducer appMessageProducer;
-    @Autowired
     private AmTradeClient borrowClient;
-    @Autowired
-    private CouponRepayProducer couponRepayProducer;
-    @Autowired
-    private AccountWebListProducer accountWebListProducer;
 
     /**
      * 用户ID
@@ -819,8 +808,8 @@ public class CouponRepayServiceImpl implements CouponRepayService {
      */
     private int insertAccountWebList(AccountWebListVO accountWebList) {
         try {
-            accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC,
-                    UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+            commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC,
+                    UUID.randomUUID().toString(), accountWebList));
             return 1;
         } catch (MQException e) {
             logger.error("更新网站收支明细失败！");
@@ -916,8 +905,8 @@ public class CouponRepayServiceImpl implements CouponRepayService {
                     AppMsMessage appMsMessage = new AppMsMessage(users.getUserId(), msg, null, MessageConstant.APP_MS_SEND_FOR_USER,
                             CustomConstants.JYTZ_COUPON_PROFIT);
                     try {
-                        appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(users.getUserId()),
-                                JSON.toJSONBytes(appMsMessage)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(users.getUserId()),
+                                appMsMessage));
                     } catch (MQException e) {
                         logger.error("发送app消息失败..", e);
                     }
@@ -944,7 +933,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
                     new SmsMessage(null, replaceStrs, null, null,
                             MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_COUPON_JIA_YUE, CustomConstants.CHANNEL_TYPE_NORMAL);
             try {
-                smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, null, JSON.toJSONBytes(smsMessage)));
+                commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, null, smsMessage));
             } catch (MQException e2) {
                 logger.error("发送邮件失败..", e2);
             }
@@ -971,7 +960,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
                     SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(USERID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null,
                             CustomConstants.PARAM_TPL_COUPON_PROFIT, CustomConstants.CHANNEL_TYPE_NORMAL);
                     try {
-                        smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, msg.get(USERID), JSON.toJSONBytes(smsMessage)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, msg.get(USERID), smsMessage));
                         logger.info("优惠券还款，短信发送MQ成功！");
                     } catch (MQException e2) {
                         logger.error("发送短信失败..", e2);
@@ -1114,7 +1103,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
     @Override
     public void couponOnlyRepay(String nids) {
         try {
-            couponRepayProducer.messageSend(new MessageContent(MQConstant.TYJ_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(nids)));
+            commonProducer.messageSend(new MessageContent(MQConstant.TYJ_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), nids));
         } catch (MQException e) {
             e.printStackTrace();
             logger.info("体验金按收益期限还款消息队列 失败");

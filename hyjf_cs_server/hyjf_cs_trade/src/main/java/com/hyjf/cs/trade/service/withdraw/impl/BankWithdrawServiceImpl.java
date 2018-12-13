@@ -37,10 +37,8 @@ import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
-import com.hyjf.cs.trade.mq.producer.SmsProducer;
-import com.hyjf.cs.trade.mq.producer.sensorsdate.withdraw.SensorsDataWithdrawProducer;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.withdraw.BankWithdrawService;
@@ -94,13 +92,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
     SystemConfig systemConfig;
 
     @Autowired
-    AppMessageProducer appMessageProducer;
-
-    @Autowired
-    SmsProducer smsProducer;
-
-    @Autowired
-    private SensorsDataWithdrawProducer sensorsDataWithdrawProducer;
+    CommonProducer commonProducer;
 
     @Value("${hyjf.bank.fee}")
     private String FEETMP;
@@ -260,10 +252,10 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                                 SmsMessage smsMessage = new SmsMessage(userId, replaceMap, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_TIXIAN_SUCCESS,
                                         CustomConstants.CHANNEL_TYPE_NORMAL);
                                 AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_TIXIAN_SUCCESS);
-                                smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
-                                        UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
-                                appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
-                                        UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
+                                commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
+                                        UUID.randomUUID().toString(), smsMessage));
+                                commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
+                                        UUID.randomUUID().toString(), appMsMessage));
 
                             } else {
                                 // 替换参数
@@ -274,8 +266,8 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
                                 replaceMap.put("val_name", info.getTruename().substring(0, 1));
                                 replaceMap.put("val_sex", info.getSex() == 2 ? "女士" : "先生");
                                 AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_TIXIAN_SUCCESS);
-                                appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
-                                        UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
+                                commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
+                                        UUID.randomUUID().toString(), appMsMessage));
                             }
                             // TODO 活动统计 需要的时候放开
                             /*CommonSoaUtils.listedTwoWithdraw(userId, total);*/
@@ -1767,7 +1759,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
      * @param sensorsDataBean
      */
     private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
-        this.sensorsDataWithdrawProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_WITHDRAW_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
+        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_WITHDRAW_TOPIC, UUID.randomUUID().toString(), sensorsDataBean), 2);
     }
 
 }

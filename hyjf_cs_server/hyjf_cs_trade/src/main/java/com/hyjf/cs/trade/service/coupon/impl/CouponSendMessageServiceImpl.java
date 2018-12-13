@@ -1,6 +1,5 @@
 package com.hyjf.cs.trade.service.coupon.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.CouponUserSearchRequest;
 import com.hyjf.am.resquest.trade.InvitePrizeConfVO;
@@ -21,12 +20,13 @@ import com.hyjf.cs.trade.client.AmMarketClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
 import com.hyjf.cs.trade.service.coupon.CouponSendMessageService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -42,13 +42,13 @@ import static com.hyjf.common.util.PropertiesConstants.MGM10_ACTIVITY_ID;
 @Service
 public class CouponSendMessageServiceImpl implements CouponSendMessageService {
     private static final Logger logger = LoggerFactory.getLogger(CouponSendMessageServiceImpl.class);
+    @Autowired
+    private CommonProducer commonProducer;
     @Resource
     private AmUserClient amUserClient;
     @Resource
     private AmTradeClient couponConfigClient;
 
-    @Resource
-    private AppMessageProducer appMessageProducer;
     @Resource
     private AmMarketClient invitePrizeConfigClient;
     @Resource
@@ -188,8 +188,8 @@ public class CouponSendMessageServiceImpl implements CouponSendMessageService {
                         new AppMsMessage(Integer.parseInt(userId), param, null, MessageConstant.APP_MS_SEND_FOR_USER,
                                 CustomConstants.JYTZ_COUPON_SUCCESS);
                 MessageContent messageContent = new MessageContent(MQConstant.GRANT_COUPON_TOPIC,
-                        UUID.randomUUID().toString(), JSON.toJSONBytes(param));
-                appMessageProducer.messageSend(messageContent);
+                        UUID.randomUUID().toString(), param);
+                commonProducer.messageSend(messageContent);
                 logger.info("--------------发放优惠券push消息推送结束------------------");
             }
         } catch (Exception e) {
