@@ -932,8 +932,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                             if (result1 == null || result1.isEmpty()) {
                                 jedis.unwatch();
                                 logger.info("计划可用开放额度redis扣除失败：userId:{},planNid{},金额{}元", userId, plan.getPlanNid(), balance);
-                                redisMsgCode = MsgEnum.ERR_AMT_TENDER_INVESTMENT;
-                                throw new CheckException(redisMsgCode);
+                                //redisMsgCode = MsgEnum.ERR_AMT_TENDER_INVESTMENT;
+                                //throw new CheckException(redisMsgCode);
                             } else {
                                 logger.info("加计划redis操作成功userId:{},平台:{},planNid{},计划扣除后可用开放额度redis:{}", userId, request.getPlatform(), plan.getPlanNid(), lastAccount);
                                 // 写队列
