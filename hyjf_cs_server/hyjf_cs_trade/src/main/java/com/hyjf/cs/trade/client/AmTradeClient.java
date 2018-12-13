@@ -2437,4 +2437,27 @@ public interface AmTradeClient {
 
     String selectPlanInfoSum(String accedeOrderId);
 
+    /**
+     * 根据机构编号,查询还款计划数量
+     *
+     * @param param
+     * @return
+     */
+    Integer selectBorrowRepayPlanCountsByInstCode(Map<String, Object> param);
+
+    /**
+     * 根据机构编号查询还款计划
+     *
+     * @param param
+     * @return
+     */
+    List<AemsBorrowRepayPlanCustomizeVO> selectBorrowRepayPlanList(Map<String, Object> param);
+
+    /**
+     * 根据标的编号查询资产推送表
+     *
+     * @param borrowNid
+     * @return
+     */
+    HjhPlanAssetVO selectHjhPlanAssetByBorrowNid(String borrowNid);
 }

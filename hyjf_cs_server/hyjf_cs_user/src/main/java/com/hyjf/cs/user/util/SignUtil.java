@@ -59,6 +59,10 @@ public class SignUtil {
             // AEMS 用户开户
             AemsBankOpenEncryptPageRequestBean bean = (AemsBankOpenEncryptPageRequestBean) paramBean;
             sign = bean.getInstCode() + bean.getMobile() + bean.getTrueName() + bean.getRetUrl() + bean.getBgRetUrl() + bean.getTimestamp();
+        }else if ("/aems/register/register.do".equals(methodName)){
+            // AEMS 用户注册
+            AemsUserRegisterRequestBean bean = (AemsUserRegisterRequestBean) paramBean;
+            sign = bean.getMobile() + bean.getInstCode() + bean.getTimestamp();
         }
         // TODO AEMS验签修改
         return ApiSignUtil.verifyByRSA("AEMS", paramBean.getChkValue(), sign);
