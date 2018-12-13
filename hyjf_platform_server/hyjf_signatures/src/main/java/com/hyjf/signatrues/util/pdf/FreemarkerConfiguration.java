@@ -18,13 +18,13 @@ public class FreemarkerConfiguration {
 	 */
 
 	public static Configuration getConfiguation() {
-		config = new Configuration();
+		config = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
 		config.setClassForTemplateLoading(FreemarkerConfiguration.class, "/"); // ftl模板的根路径
 		return config;
 	}
 
 	public static Configuration getServletContextConfiguation(HttpServletRequest request) {
-		config = new Configuration();
+		config = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
 		config.setServletContextForTemplateLoading(request.getSession().getServletContext(), "/WEB-INF/"); // ftl模板的根路径
 		return config;
 	}
@@ -36,7 +36,7 @@ public class FreemarkerConfiguration {
 	 */
 
 	public static Configuration getDirectoryConfiguation(String filePath) {
-		config = new Configuration();
+		config = new Configuration(Configuration.DEFAULT_INCOMPATIBLE_IMPROVEMENTS);
 		try {
 			config.setDirectoryForTemplateLoading(new File(filePath));
 			config.setEncoding(Locale.CHINA, "UTF-8");

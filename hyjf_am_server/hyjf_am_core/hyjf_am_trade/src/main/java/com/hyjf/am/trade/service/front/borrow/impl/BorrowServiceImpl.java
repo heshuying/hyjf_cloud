@@ -1970,7 +1970,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     }
 
     /***
-     *TODO 计算用户分期还款本期应还金额
+     *计算用户分期还款本期应还金额
      *
      * @param repay
      * @param borrowNid
@@ -3423,7 +3423,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     }
 
     /**
-     * TODO  计算单期的用户的还款信息
+     *  计算单期的用户的还款信息
      *
      * @param repay
      * @param borrow

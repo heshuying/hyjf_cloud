@@ -184,7 +184,7 @@ public class SendTypeController extends BaseController {
         // 发标时间
         if(StringUtils.isBlank(form.getAfterTime())||(StringUtils.isNotBlank(form.getAfterTime())&&form.getAfterTime().length()>4)){
             String value=form.getAfterTime();
-            if(!GenericValidator.isInt(value) || !NumberUtils.isNumber(value) || Integer.valueOf(value) < 0){
+            if(!GenericValidator.isInt(value) || !NumberUtils.isCreatable(value) || Integer.valueOf(value) < 0){
                 return "发标时间不能为空且长度小于4位的正整数,请重新输入。";
             }
             return "发标时间不能为空且长度不能超过4,请重新输入。";

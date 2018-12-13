@@ -865,7 +865,7 @@ public class AccedeListController extends BaseController{
 		try {
 			// 参考FddDownPDFandDessensitizationMessageHandle.sendPlanMail
 			// 向每个投资人发送邮件
-			if (Validator.isNotNull(userid) && NumberUtils.isNumber(userid)) {
+			if (Validator.isNotNull(userid) && NumberUtils.isCreatable(userid)) {
 				UserVO users = this.accedeListService.getUserByUserId(Integer.valueOf(userid));
 				if (users == null) {
 					return "用户不存在";
@@ -946,7 +946,7 @@ public class AccedeListController extends BaseController{
 		try {
 			PdfGenerator pdfGenerator = new PdfGenerator();
 			// 向每个投资人发送邮件
-			if (Validator.isNotNull(userid) && NumberUtils.isNumber(userid)) {
+			if (Validator.isNotNull(userid) && NumberUtils.isCreatable(userid)) {
 				UserVO users = this.accedeListService.getUserByUserId(Integer.valueOf(userid));
 				if (users == null) {
 					return "用户不存在";

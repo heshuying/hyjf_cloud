@@ -19,11 +19,10 @@ public class HtmlGenerator {
      */  
     public static String generate(String ftlPath,String ftlName, Map<String,Object> variables) throws Exception{  
         Configuration config = FreemarkerConfiguration.getDirectoryConfiguation(ftlPath);
-        Template tp = config.getTemplate(ftlName);   
+        Template tp = config.getTemplate(ftlName, "UTF-8");
         StringWriter stringWriter = new StringWriter();     
         BufferedWriter writer = new BufferedWriter(stringWriter);     
-        tp.setEncoding("UTF-8");     
-        tp.process(variables, writer);     
+        tp.process(variables, writer);
         String htmlStr = stringWriter.toString();   
         writer.flush();     
         writer.close();   

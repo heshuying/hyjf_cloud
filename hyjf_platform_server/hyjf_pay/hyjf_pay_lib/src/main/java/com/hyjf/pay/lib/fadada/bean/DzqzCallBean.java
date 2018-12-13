@@ -510,7 +510,7 @@ public class DzqzCallBean extends DzqzCallApiBean implements Serializable {
     }
 
 	public void setCommonItem() {
-        // todo 在pay-server中处理
+        // 在pay-server中处理
 //		this.app_id = fddSystemConfig.getFddAppId();
 //		this.secret = fddSystemConfig.getFddAppSeret();
 //		this.v = fddSystemConfig.getFddVersion();

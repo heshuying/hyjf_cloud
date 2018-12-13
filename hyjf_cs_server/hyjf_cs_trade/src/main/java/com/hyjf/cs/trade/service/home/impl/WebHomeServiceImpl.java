@@ -1,11 +1,22 @@
 package com.hyjf.cs.trade.service.home.impl;
 
-import com.alicp.jetcache.anno.CacheRefresh;
-import com.alicp.jetcache.anno.CacheType;
-import com.alicp.jetcache.anno.Cached;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
-import com.hyjf.am.response.market.AppAdsCustomizeResponse;
-import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
@@ -22,29 +33,12 @@ import com.hyjf.common.http.HtmlUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.bean.HomeDataResultBean;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.home.WebHomeService;
-import com.hyjf.cs.trade.util.HomePageDefine;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class WebHomeServiceImpl implements WebHomeService {
@@ -69,9 +63,6 @@ public class WebHomeServiceImpl implements WebHomeService {
 
     @Autowired
     private SystemConfig systemConfig;
-
-    @Autowired
-    private BaseClient baseClient;
 
     @Autowired
     private AmTradeClient amTradeClient;

@@ -103,7 +103,6 @@ public class CalculateInvestInterestConsumer extends Consumer {
                     calculateInvestInterestDao.update(query, update);
                 }
 
-                // 更新t_total_invest_and_interest- 运营数据用，考虑和上面的表合并（）  todo xiasq
                 else {
                     if (data.containsKey("money")) {
                         BigDecimal money = new BigDecimal(data.get("money").toString());
