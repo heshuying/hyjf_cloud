@@ -1,7 +1,6 @@
 package com.hyjf.cs.trade.controller.api.aems.trusteePay;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.trade.BorrowVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;

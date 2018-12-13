@@ -54,6 +54,13 @@ public class AemsUserDirectRechargeServiceImpl extends BaseTradeServiceImpl impl
     // 充值状态:成功
     private static final int RECHARGE_STATUS_SUCCESS = 2;
 
+    /***
+     * Aems页面充值
+    * @author Zha Daojian
+    * @date 2018/12/12 14:32
+    * @param userRechargeRequestBean, request
+    * @return java.util.Map<java.lang.String,java.lang.Object>
+    **/
     @Override
     @HystrixCommand(commandKey = "页面充值(api)-recharge",fallbackMethod = "fallBackApiRecharge",ignoreExceptions = CheckException.class,commandProperties = {
             //设置断路器生效
@@ -66,6 +73,7 @@ public class AemsUserDirectRechargeServiceImpl extends BaseTradeServiceImpl impl
             @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
             //失败率达到30百分比后熔断
             @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
+
     public Map<String,Object> recharge(AemsUserDirectRechargeRequestBean userRechargeRequestBean, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
         Map<String,Object> map = new HashMap<>();
@@ -241,17 +249,13 @@ public class AemsUserDirectRechargeServiceImpl extends BaseTradeServiceImpl impl
         }
     }
 
-    public Map<String,Object> fallBackApiRecharge(UserDirectRechargeRequestBean userRechargeRequestBean, HttpServletRequest request) {
-        logger.info("==================已进入 页面充值(api) fallBackApiRecharge 方法================");
-        Map<String,Object> map = new HashMap<>();
-        map.put("status", BaseResultBean.STATUS_FAIL);
-        map.put("acqRes", userRechargeRequestBean.getAcqRes());
-        map.put("accountId", userRechargeRequestBean.getAccountId());
-        map.put("statusDesc","充值失败");
-        map.put("callBackAction",userRechargeRequestBean.getRetUrl());
-        return map;
-    }
-
+    /***
+     *Aems页面充值同步回调
+     * @author Zha Daojian
+     * @date 2018/12/12 14:30
+     * @param request, bean
+     * @return java.util.Map<java.lang.String,java.lang.Object>
+     **/
     @Override
     public Map<String,Object> pageReturn(HttpServletRequest request, BankCallBean bean) {
         String url = request.getParameter("callback").replace("*-*-*", "#");
@@ -269,6 +273,12 @@ public class AemsUserDirectRechargeServiceImpl extends BaseTradeServiceImpl impl
         return result;
     }
 
+    /**
+     * Aems页面充值异步回调
+     * @param request, bean
+     * @param bean
+     * @return
+     */
     @Override
     public BankCallResult bgreturn(HttpServletRequest request, BankCallBean bean) {
         BankCallResult result = new BankCallResult();
