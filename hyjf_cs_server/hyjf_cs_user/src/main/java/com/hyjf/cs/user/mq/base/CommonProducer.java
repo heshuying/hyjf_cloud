@@ -1,13 +1,16 @@
 package com.hyjf.cs.user.mq.base;
 
 import com.hyjf.common.exception.MQException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.producer.SendResult;
 import org.apache.rocketmq.client.producer.SendStatus;
+import org.apache.rocketmq.common.message.MessageConst;
 import org.apache.rocketmq.spring.core.RocketMQTemplate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.messaging.support.GenericMessage;
+import org.springframework.messaging.Message;
+import org.springframework.messaging.support.MessageBuilder;
 import org.springframework.stereotype.Component;
 
 /**
@@ -31,8 +34,13 @@ public class CommonProducer {
      */
     public boolean messageSend(MessageContent messageContent) throws MQException {
         try {
-            SendResult sendResult = rocketMQTemplate.syncSend(messageContent.topic + ":" + messageContent.tag, messageContent.body);
-
+            SendResult sendResult = null;
+            if(StringUtils.isNotEmpty(messageContent.keys)) {
+                Message<?> message = MessageBuilder.withPayload(messageContent.body).setHeader(MessageConst.PROPERTY_KEYS, messageContent.keys).build();
+                sendResult = rocketMQTemplate.syncSend(messageContent.topic + ":" + messageContent.tag, message);
+            }else {
+                sendResult = rocketMQTemplate.syncSend(messageContent.topic + ":" + messageContent.tag, messageContent.body);
+            }
             if (sendResult != null && sendResult.getSendStatus() == SendStatus.SEND_OK) {
                 return true;
             } else {
@@ -54,8 +62,8 @@ public class CommonProducer {
      */
     public boolean messageSendDelay(MessageContent messageContent, int delayLevel) throws MQException {
         try {
-            GenericMessage genericMessage = new GenericMessage(messageContent.body);
-            SendResult sendResult = rocketMQTemplate.syncSend(messageContent.topic + ":" + messageContent.tag, genericMessage, rocketMQTemplate.getProducer().getSendMsgTimeout(), delayLevel);
+            Message<?> message = MessageBuilder.withPayload(messageContent.body).setHeader(MessageConst.PROPERTY_KEYS, messageContent.keys).build();
+            SendResult sendResult = rocketMQTemplate.syncSend(messageContent.topic + ":" + messageContent.tag, message, rocketMQTemplate.getProducer().getSendMsgTimeout(), delayLevel);
 
             if (sendResult != null && sendResult.getSendStatus() == SendStatus.SEND_OK) {
                 return true;
