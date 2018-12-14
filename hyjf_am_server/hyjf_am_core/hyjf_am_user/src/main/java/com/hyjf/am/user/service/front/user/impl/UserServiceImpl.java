@@ -1503,4 +1503,15 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		}
 		return null;
 	}
+
+    @Override
+    public User updateUserByUserId(Integer userId) {
+        UserExample usersExample = new UserExample();
+        usersExample.createCriteria().andUserIdEqualTo(userId);
+        List<User> usersList = userMapper.selectByExample(usersExample);
+        if (!CollectionUtils.isEmpty(usersList)) {
+            return usersList.get(0);
+        }
+        return null;
+    }
 }

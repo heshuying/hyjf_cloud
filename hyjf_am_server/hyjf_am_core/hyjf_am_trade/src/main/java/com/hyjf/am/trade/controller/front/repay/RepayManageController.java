@@ -3,6 +3,7 @@ package com.hyjf.am.trade.controller.front.repay;
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.*;
 import com.hyjf.am.response.trade.RepayListResponse;
+import com.hyjf.am.response.user.WebUserTransferBorrowInfoCustomizeResponse;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.trade.bean.repay.ProjectBean;
 import com.hyjf.am.trade.bean.repay.RepayBean;
@@ -10,9 +11,11 @@ import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
+import com.hyjf.am.trade.dao.model.customize.WebUserTransferBorrowInfoCustomize;
 import com.hyjf.am.trade.service.front.repay.RepayManageService;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.user.WebUserTransferBorrowInfoCustomizeVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.lang3.StringUtils;
@@ -328,5 +331,22 @@ public class RepayManageController extends BaseController {
         ProjectBean projectBean = repayManageService.getOrgBatchRepayData(requestBean.getUserId(), requestBean.getStartDate(), requestBean.getEndDate());
         responseBean.setResultStr(JSON.toJSONString(projectBean));
         return responseBean;
+    }
+
+    /**
+     *
+     * @return
+     */
+    @GetMapping(value = "/get_user_transfer_borrow_info/{borrowNid}")
+    public WebUserTransferBorrowInfoCustomizeResponse getUserTransferBorrowInfo(@PathVariable String borrowNid){
+        WebUserTransferBorrowInfoCustomizeResponse response = new WebUserTransferBorrowInfoCustomizeResponse();
+        WebUserTransferBorrowInfoCustomize borrowInfoCustomize = repayManageService.getUserTransferBorrowInfo(borrowNid);
+
+        if (borrowInfoCustomize != null){
+            WebUserTransferBorrowInfoCustomizeVO userTransferBorrowInfoCustomizeVO = new WebUserTransferBorrowInfoCustomizeVO();
+            BeanUtils.copyProperties(borrowInfoCustomize,userTransferBorrowInfoCustomizeVO);
+            response.setResult(userTransferBorrowInfoCustomizeVO);
+        }
+        return response;
     }
 }

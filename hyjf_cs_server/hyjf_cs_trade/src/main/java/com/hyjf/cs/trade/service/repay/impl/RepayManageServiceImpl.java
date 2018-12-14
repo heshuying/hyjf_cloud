@@ -16,10 +16,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.FddGenerateContractConstant;
@@ -1025,4 +1022,19 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         return Collections.emptyMap();
     }
 
+    /**
+     * 获取标的信息
+     * @param borrowNid
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public WebUserTransferBorrowInfoCustomizeVO getUserTransferBorrowInfo(String borrowNid) {
+        return amTradeClient.getUserTransferBorrowInfo(borrowNid);
+    }
+
+    @Override
+    public List<TenderAgreementVO> selectTenderAgreementByNid(String borrowNid) {
+        return amTradeClient.selectTenderAgreementByNid(borrowNid);
+    }
 }
