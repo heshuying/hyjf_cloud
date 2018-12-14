@@ -9,6 +9,7 @@ import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.DataSearchCustomizeVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.*;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -44,7 +45,7 @@ import java.util.*;
 public class DataSearchController {
     @Autowired
     DataSearchService dataSearchService;
-    public static final String SMSSENDFORMOBILE = "smsSendForMobile";
+    public static final String SMSSENDFORMOBILE = MessageConstant.SMS_SEND_FOR_MOBILE;
 
     @Autowired
     CommonProducer commonProducer;
