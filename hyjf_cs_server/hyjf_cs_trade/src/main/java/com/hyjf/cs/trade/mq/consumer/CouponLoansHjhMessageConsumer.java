@@ -115,7 +115,7 @@ public class CouponLoansHjhMessageConsumer implements RocketMQListener<MessageEx
 
             return;
         } catch (Exception e) {
-            logger.info("汇计划优惠券放款失败",e);
+            logger.error("汇计划优惠券放款失败",e);
             return;
         }
     }

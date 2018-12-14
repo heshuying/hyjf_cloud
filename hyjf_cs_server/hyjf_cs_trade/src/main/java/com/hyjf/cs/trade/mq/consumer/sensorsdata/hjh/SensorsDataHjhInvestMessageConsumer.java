@@ -92,7 +92,7 @@ public class SensorsDataHjhInvestMessageConsumer implements RocketMQListener<Mes
             // 发送神策数据
             sensorsDataHjhInvestService.sendSensorsData(sensorsDataBean);
         } catch (Exception e) {
-            logger.info("神策数据统计:汇计划相关统计异常:" + e.getMessage());
+            logger.error("神策数据统计:汇计划相关统计异常:" + e.getMessage());
             return;
         }
         return;

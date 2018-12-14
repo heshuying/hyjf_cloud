@@ -95,7 +95,7 @@ public class CouponRepayMessageConsumer implements RocketMQListener<MessageExt>,
             logger.info("----------------------------直投类优惠券还款结束--------------------------------");
             return;
         } catch (Exception e) {
-            logger.info("直投类优惠券还款失败");
+            logger.error("直投类优惠券还款失败");
             return;
         }
     }

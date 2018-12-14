@@ -91,8 +91,7 @@ public class NifaRepayInfoMessageConsumer implements RocketMQListener<MessageExt
                 logger.error(thisMessName + "出借人回款记录生成失败！！borrowNid:" + borrowNid + " repayPeriod:" + repayPeriod);
             }
         } catch (Exception e) {
-            logger.info(thisMessName + "处理失败.....,借款编号:" + borrowNid);
-            e.printStackTrace();
+            logger.error(thisMessName + "处理失败.....,借款编号:" + borrowNid, e);
         } finally {
             logger.info(thisMessName + "处理结束,借款编号:" + borrowNid);
             return;

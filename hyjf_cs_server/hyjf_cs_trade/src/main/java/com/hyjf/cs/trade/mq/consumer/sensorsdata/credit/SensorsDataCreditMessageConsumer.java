@@ -94,7 +94,7 @@ public class SensorsDataCreditMessageConsumer implements RocketMQListener<Messag
             // 发送神策数据
             sensorsDataCreditSerivce.sendSensorsData(sensorsDataBean);
         } catch (Exception e) {
-            logger.info("神策数据统计:债转相关:" + e.getMessage());
+            logger.error("神策数据统计:债转相关:" + e.getMessage());
             return;
         }
         return;

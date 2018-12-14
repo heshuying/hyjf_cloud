@@ -78,7 +78,7 @@ public class SensorsDataAuthMessageConsumer implements RocketMQListener<MessageE
             // 发送神策数据
             sensorsDataAuthService.sendSensorsData(sensorsDataBean);
         } catch (Exception e) {
-            logger.info("神策数据统计:授权相关统计异常:" + e.getMessage());
+            logger.error("神策数据统计:授权相关统计异常:" + e.getMessage());
             return;
         }
         return;

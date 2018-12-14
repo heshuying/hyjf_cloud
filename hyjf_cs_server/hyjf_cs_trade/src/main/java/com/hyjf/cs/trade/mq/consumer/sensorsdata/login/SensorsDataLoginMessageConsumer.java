@@ -86,7 +86,7 @@ public class SensorsDataLoginMessageConsumer implements RocketMQListener<Message
             // 发送神策数据
             sensorsDataLoginService.sendSensorsData(sensorsDataBean);
         } catch (Exception e) {
-            logger.info("神策数据统计:用户登陆相关统计异常:" + e.getMessage());
+            logger.error("神策数据统计:用户登陆相关统计异常:" + e.getMessage());
             return;
         }
         return;

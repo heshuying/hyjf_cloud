@@ -84,7 +84,7 @@ public class CouponRepayHjhMessageConsumer implements RocketMQListener<MessageEx
             logger.info("----------------------------汇计划优惠券还款结束--------------------------------");
             return;
         } catch (Exception e) {
-            logger.info("汇计划优惠券放款失败");
+            logger.error("汇计划优惠券放款失败");
             return;
         }
     }

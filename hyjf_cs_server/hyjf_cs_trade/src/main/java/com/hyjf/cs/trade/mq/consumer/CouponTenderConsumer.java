@@ -90,8 +90,7 @@ public class CouponTenderConsumer implements RocketMQListener<MessageExt>, Rocke
             couponService.borrowTenderCouponUse(couponGrantId, borrow, bean,borrowInfoVO,nowType);
             return;
         } catch (Exception e) {
-            e.printStackTrace();
-            logger.info("操作失败了:"+JSONObject.toJSONString(e));
+            logger.error("操作失败了:", e);
             return;
         }finally {
             if(couponGrantId!=null){
