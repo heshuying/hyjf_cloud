@@ -29,6 +29,8 @@ import org.springframework.stereotype.Service;
 public class BorrowUserStatiscsConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
     private static final Logger logger = LoggerFactory.getLogger(AppMessageConsumer.class);
 
+    private static int MAX_RECONSUME_TIME = 3;
+
     @Autowired
     private BorrowUserStatisticMongDao borrowUserStatisticMongDao;
     @Override
@@ -46,6 +48,8 @@ public class BorrowUserStatiscsConsumer implements RocketMQListener<MessageExt>,
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         // 设置为集群消费(区别于广播消费)
         defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
+        //设置最大重试次数
+        defaultMQPushConsumer.setMaxReconsumeTimes(MAX_RECONSUME_TIME);
         logger.info("====FddCertificateConsumer consumer=====");
     }
 

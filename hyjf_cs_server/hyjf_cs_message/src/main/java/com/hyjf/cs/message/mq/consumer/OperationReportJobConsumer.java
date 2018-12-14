@@ -33,6 +33,9 @@ import java.util.Date;
 @RocketMQMessageListener(topic = MQConstant.OPERATIONREPORT_JOB_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.OPERATIONREPORT_JOB_GROUP)
 public class OperationReportJobConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
     Logger logger = LoggerFactory.getLogger(getClass());
+
+    private static int MAX_RECONSUME_TIME = 3;
+
     @Autowired
     private OperationReportJobNewService operationReportJobNewService;
 
@@ -98,6 +101,8 @@ public class OperationReportJobConsumer implements RocketMQListener<MessageExt>,
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         // 设置为集群消费(区别于广播消费)
         defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
+        //设置最大重试次数
+        defaultMQPushConsumer.setMaxReconsumeTimes(MAX_RECONSUME_TIME);
         logger.info("====OperationReportJobConsumer consumer=====");
     }
 

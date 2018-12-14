@@ -31,6 +31,8 @@ import org.springframework.stereotype.Service;
 public class AccountWebListConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 	private static final Logger logger = LoggerFactory.getLogger(AccountWebListConsumer.class);
 
+	private static int MAX_RECONSUME_TIME = 3;
+
 	@Autowired
 	private AccountWebListDao accountWebListDao;
 	@Autowired
@@ -76,6 +78,8 @@ public class AccountWebListConsumer implements RocketMQListener<MessageExt>, Roc
 		defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
 		// 设置为集群消费(区别于广播消费)
 		defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
+		//设置最大重试次数
+		defaultMQPushConsumer.setMaxReconsumeTimes(MAX_RECONSUME_TIME);
 		logger.info("====AccountWebListConsumer consumer=====");
 	}
 

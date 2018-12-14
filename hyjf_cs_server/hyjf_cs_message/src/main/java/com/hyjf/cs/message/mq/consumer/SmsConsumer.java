@@ -28,6 +28,8 @@ import org.springframework.stereotype.Service;
 public class SmsConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
     private static final Logger logger = LoggerFactory.getLogger(SmsConsumer.class);
 
+    private static int MAX_RECONSUME_TIME = 3;
+
     @Autowired
     private SmsHandle smsHandle;
 
@@ -72,6 +74,8 @@ public class SmsConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
         // 设置为集群消费(区别于广播消费)
         // MQ默认集群消费
         defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
+        //设置最大重试次数
+        defaultMQPushConsumer.setMaxReconsumeTimes(MAX_RECONSUME_TIME);
         logger.info("====sms consumer=====");
     }
 }
