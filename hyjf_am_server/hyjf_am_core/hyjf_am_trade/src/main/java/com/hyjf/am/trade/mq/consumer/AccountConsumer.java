@@ -34,19 +34,21 @@ public class AccountConsumer implements RocketMQListener<MessageExt>, RocketMQPu
     public void onMessage(MessageExt messageExt) {
         logger.info("AccountConsumer 收到消息，开始处理....");
         MessageExt msg = messageExt;
-        AccountVO accountVO = JSONObject.parseObject(msg.getBody(), AccountVO.class);
-
-        if (accountVO != null) {
-            logger.info("注册保存账户表...userId is :", accountVO.getUserId());
-            Account account = new Account();
-            BeanUtils.copyProperties(accountVO, account);
-            accountService.insert(account);
-        } else {
-            logger.error("消费失败，未获取账户信息...");
-            return;// ConsumeConcurrentlyStatus.RECONSUME_LATER;
+        try{
+            AccountVO accountVO = JSONObject.parseObject(msg.getBody(), AccountVO.class);
+            if (accountVO != null) {
+                logger.info("注册保存账户表...userId is :", accountVO.getUserId());
+                Account account = new Account();
+                BeanUtils.copyProperties(accountVO, account);
+                accountService.insert(account);
+            } else {
+                logger.error("消费失败，未获取账户信息...");
+                return;// ConsumeConcurrentlyStatus.RECONSUME_LATER;
+            }
+        }catch (Exception e){
+            logger.error("【注册保存账户表】消费异常!", e);
+            return;
         }
-        // 如果没有return success ，consumer会重新消费该消息，直到return success
-        return;
     }
 
     @Override

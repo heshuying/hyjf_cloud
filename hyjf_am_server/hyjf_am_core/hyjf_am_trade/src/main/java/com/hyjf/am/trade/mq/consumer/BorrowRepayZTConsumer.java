@@ -57,129 +57,131 @@ public class BorrowRepayZTConsumer implements RocketMQListener<MessageExt>, Rock
 	public void onMessage(MessageExt messageExt) {
 		logger.info("直投类还款请求 收到消息，开始处理....");
 		BorrowApicron borrowApicron;
-
-		try {
-			MessageExt msg = messageExt;
-			borrowApicron = JSONObject.parseObject(msg.getBody(), BorrowApicron.class);
-			if(borrowApicron == null || borrowApicron.getId() == null || StringUtils.isBlank(borrowApicron.getBorrowNid())
-					|| borrowApicron.getTxDate() == null || StringUtils.isBlank(borrowApicron.getBatchNo()) ){
-				logger.info("直投还款请求 收到消息，解析为空");
+		try{
+			try {
+				MessageExt msg = messageExt;
+				borrowApicron = JSONObject.parseObject(msg.getBody(), BorrowApicron.class);
+				if(borrowApicron == null || borrowApicron.getId() == null || StringUtils.isBlank(borrowApicron.getBorrowNid())
+						|| borrowApicron.getTxDate() == null || StringUtils.isBlank(borrowApicron.getBatchNo()) ){
+					logger.info("直投还款请求 收到消息，解析为空");
+					return;
+				}
+			} catch (Exception e1) {
+				logger.error(e1.getMessage());
 				return;
 			}
-		} catch (Exception e1) {
-			logger.error(e1.getMessage());
-			return;
-		}
-
-		String borrowNid = borrowApicron.getBorrowNid();// 借款编号
-		int borrowUserId = borrowApicron.getUserId();// 借款人userId
-		logger.info("标的编号："+borrowNid+"，直投类开始还款！");
-		// 生成任务key 校验并发请求
-		String redisKey = RedisConstants.ZHITOU_REPAY_TASK + ":" + borrowApicron.getBorrowNid() + "_" + borrowApicron.getPeriodNow();
-		boolean result = RedisUtils.tranactionSet(redisKey, 300);
-		if(!result){
-			logger.error("直投类还款请求中....");
-			return;
-		}
-		try{
-			// 查询防止重复
-			borrowApicron = batchBorrowRepayZTService.selApiCronByPrimaryKey(borrowApicron.getId());
-			// 如果已经发生过相应的还款请求，则查询相应的状态
-			if (borrowApicron.getStatus() == 6) {
-				throw new Exception(borrowNid+" 还款已经成功，状态有误");
+			String borrowNid = borrowApicron.getBorrowNid();// 借款编号
+			int borrowUserId = borrowApicron.getUserId();// 借款人userId
+			logger.info("标的编号："+borrowNid+"，直投类开始还款！");
+			// 生成任务key 校验并发请求
+			String redisKey = RedisConstants.ZHITOU_REPAY_TASK + ":" + borrowApicron.getBorrowNid() + "_" + borrowApicron.getPeriodNow();
+			boolean result = RedisUtils.tranactionSet(redisKey, 300);
+			if(!result){
+				logger.error("直投类还款请求中....");
+				return;
 			}
-			String bankSeqNo = borrowApicron.getBankSeqNo();// 还款序列号
-			// 查询批次还款状态
-			BankCallBean batchResult = batchBorrowRepayZTService.batchQuery(borrowApicron);
-			if (batchResult == null) {
-				throw new Exception("调用接口查询还款状态失败！[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
-			}
-			logger.info("标的编号："+borrowNid+"，批次查询成功！");
-			// 批次还款返回码
-			String retCode = StringUtils.isNotBlank(batchResult.getRetCode()) ? batchResult.getRetCode() : "";
-			if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
-				String retMsg = batchResult.getRetMsg();
-				throw new Exception("还款状态查询失败！银行返回信息：" + retMsg + ",[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
-			}
-			// 批次还款状态
-			String batchState = batchResult.getBatchState();
-			if (StringUtils.isBlank(batchState)) {
-				throw new Exception("还款状态查询失败！[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
-			}
-			logger.info("标的编号："+borrowNid+"，批次查询状态："+batchState);
-			// 如果是批次处理失败
-			if (batchState.equals(BankCallConstant.BATCHSTATE_TYPE_FAIL)) {
-				// 失败原因
-				String failMsg = batchResult.getFailMsg();
-				logger.info("标的编号："+borrowNid+"，批次处理失败: "+failMsg);
-				if (StringUtils.isNotBlank(failMsg)) {
-					borrowApicron.setData(failMsg);
-					borrowApicron.setFailTimes(borrowApicron.getFailTimes() + 1);
-					// 更新任务API状态
-					boolean apicronResultFlag = batchBorrowRepayZTService.updateBorrowApicron(borrowApicron, CustomConstants.BANK_BATCH_STATUS_FAIL);
-					if (!apicronResultFlag) {
-						throw new Exception("更新状态为（还款请求失败）失败。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
+			try{
+				// 查询防止重复
+				borrowApicron = batchBorrowRepayZTService.selApiCronByPrimaryKey(borrowApicron.getId());
+				// 如果已经发生过相应的还款请求，则查询相应的状态
+				if (borrowApicron.getStatus() == 6) {
+					throw new Exception(borrowNid+" 还款已经成功，状态有误");
+				}
+				String bankSeqNo = borrowApicron.getBankSeqNo();// 还款序列号
+				// 查询批次还款状态
+				BankCallBean batchResult = batchBorrowRepayZTService.batchQuery(borrowApicron);
+				if (batchResult == null) {
+					throw new Exception("调用接口查询还款状态失败！[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
+				}
+				logger.info("标的编号："+borrowNid+"，批次查询成功！");
+				// 批次还款返回码
+				String retCode = StringUtils.isNotBlank(batchResult.getRetCode()) ? batchResult.getRetCode() : "";
+				if (!BankCallConstant.RESPCODE_SUCCESS.equals(retCode)) {
+					String retMsg = batchResult.getRetMsg();
+					throw new Exception("还款状态查询失败！银行返回信息：" + retMsg + ",[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
+				}
+				// 批次还款状态
+				String batchState = batchResult.getBatchState();
+				if (StringUtils.isBlank(batchState)) {
+					throw new Exception("还款状态查询失败！[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
+				}
+				logger.info("标的编号："+borrowNid+"，批次查询状态："+batchState);
+				// 如果是批次处理失败
+				if (batchState.equals(BankCallConstant.BATCHSTATE_TYPE_FAIL)) {
+					// 失败原因
+					String failMsg = batchResult.getFailMsg();
+					logger.info("标的编号："+borrowNid+"，批次处理失败: "+failMsg);
+					if (StringUtils.isNotBlank(failMsg)) {
+						borrowApicron.setData(failMsg);
+						borrowApicron.setFailTimes(borrowApicron.getFailTimes() + 1);
+						// 更新任务API状态
+						boolean apicronResultFlag = batchBorrowRepayZTService.updateBorrowApicron(borrowApicron, CustomConstants.BANK_BATCH_STATUS_FAIL);
+						if (!apicronResultFlag) {
+							throw new Exception("更新状态为（还款请求失败）失败。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
+						}
+					} else {
+						// 查询批次交易明细，进行后续操作
+						boolean batchDetailFlag = batchBorrowRepayZTService.reapyBatchDetailsUpdate(borrowApicron);
+						// 进行后续失败的还款的还款请求
+						if (!batchDetailFlag) {
+							throw new Exception("还款失败后，查询还款明细失败。[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
+						}
 					}
-				} else {
+				}
+				// 如果是批次处理成功
+				else if (batchState.equals(BankCallConstant.BATCHSTATE_TYPE_SUCCESS)) {
+					logger.info("标的编号："+borrowNid+"，批次处理状态查询成功，开始明细数据更新");
 					// 查询批次交易明细，进行后续操作
 					boolean batchDetailFlag = batchBorrowRepayZTService.reapyBatchDetailsUpdate(borrowApicron);
-					// 进行后续失败的还款的还款请求
+					logger.info("标的编号："+borrowNid+"，查询批次交易明细，进行后续操作，操作结果："+batchDetailFlag);
 					if (!batchDetailFlag) {
-						throw new Exception("还款失败后，查询还款明细失败。[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
+						throw new Exception("还款成功后，查询还款明细失败。[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
 					}
+					try {
+						JSONObject param = new JSONObject();
+						param.put("borrowNid", borrowApicron.getBorrowNid());
+						param.put("repayPeriod", borrowApicron.getPeriodNow());
+						commonProducer.messageSendDelay(new MessageContent(MQConstant.NIFA_REPAY_INFO_TOPIC,UUID.randomUUID().toString(),param),2);
+					} catch (Exception e) {
+						logger.error("发送mq到生成互金还款相关信息失败,放款标的:" + borrowApicron.getBorrowNid());
+					}
+					logger.info("标的编号："+borrowNid+"，还款成功！");
 				}
-			}
-			// 如果是批次处理成功
-			else if (batchState.equals(BankCallConstant.BATCHSTATE_TYPE_SUCCESS)) {
-				logger.info("标的编号："+borrowNid+"，批次处理状态查询成功，开始明细数据更新");
-				// 查询批次交易明细，进行后续操作
-				boolean batchDetailFlag = batchBorrowRepayZTService.reapyBatchDetailsUpdate(borrowApicron);
-				logger.info("标的编号："+borrowNid+"，查询批次交易明细，进行后续操作，操作结果："+batchDetailFlag);
-				if (!batchDetailFlag) {
-					throw new Exception("还款成功后，查询还款明细失败。[银行唯一订单号：" + bankSeqNo + "]," + "[借款编号：" + borrowNid + "]");
+			}catch(Exception e){
+				StringBuffer sbError = new StringBuffer();// 错误信息
+				sbError.append(e.getMessage()).append("<br/>");
+				String online = "生产环境";// 取得是否线上
+				String toMail[] = systemConfig.getLoadRepayMailAddrs();
+				if (systemConfig.isEnvTest()) {
+					online = "测试环境";
 				}
+				// 发送错误邮件
+				StringBuffer msg = new StringBuffer();
+				msg.append("借款标号：").append(borrowApicron.getBorrowNid()).append("<br/>");
+				msg.append("还款时间：").append(GetDate.formatTime()).append("<br/>");
+				msg.append("错误信息：").append(e.getMessage()).append("<br/>");
+				msg.append("详细错误信息：<br/>").append(sbError.toString());
+
 				try {
-					JSONObject param = new JSONObject();
-					param.put("borrowNid", borrowApicron.getBorrowNid());
-					param.put("repayPeriod", borrowApicron.getPeriodNow());
-					commonProducer.messageSendDelay(new MessageContent(MQConstant.NIFA_REPAY_INFO_TOPIC,UUID.randomUUID().toString(),param),2);
-				} catch (Exception e) {
-					logger.error("发送mq到生成互金还款相关信息失败,放款标的:" + borrowApicron.getBorrowNid());
+					if(toMail == null) {
+						throw new Exception("错误收件人没有配置。" + "[借款编号：" + borrowNid + "]");
+					}
+					MailMessage mailMessage = new MailMessage(null, null, "[" + online + "] " + borrowApicron.getBorrowNid(), msg.toString(), null, toMail, null,
+							MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
+					commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, borrowApicron.getBorrowNid(), mailMessage));
+				} catch (Exception e2) {
+					logger.error("发送邮件失败..", e2);
 				}
-				logger.info("标的编号："+borrowNid+"，还款成功！");
+				// 消息队列指令不消费
+				return;
 			}
-
-		}catch(Exception e){
-			StringBuffer sbError = new StringBuffer();// 错误信息
-			sbError.append(e.getMessage()).append("<br/>");
-			String online = "生产环境";// 取得是否线上
-			String toMail[] = systemConfig.getLoadRepayMailAddrs();
-			if (systemConfig.isEnvTest()) {
-				online = "测试环境";
-			}
-			// 发送错误邮件
-			StringBuffer msg = new StringBuffer();
-			msg.append("借款标号：").append(borrowApicron.getBorrowNid()).append("<br/>");
-			msg.append("还款时间：").append(GetDate.formatTime()).append("<br/>");
-			msg.append("错误信息：").append(e.getMessage()).append("<br/>");
-			msg.append("详细错误信息：<br/>").append(sbError.toString());
-
-			try {
-				if(toMail == null) {
-					throw new Exception("错误收件人没有配置。" + "[借款编号：" + borrowNid + "]");
-				}
-				MailMessage mailMessage = new MailMessage(null, null, "[" + online + "] " + borrowApicron.getBorrowNid(), msg.toString(), null, toMail, null,
-						MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
-				commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, borrowApicron.getBorrowNid(), mailMessage));
-			} catch (Exception e2) {
-				logger.error("发送邮件失败..", e2);
-			}
-			// 消息队列指令不消费
+			RedisUtils.del(redisKey);
+			logger.info("----------------------------直投还款结束--------------------------------");
+			// 如果没有return success ，consumer会重新消费该消息，直到return success
+		} catch (Exception e) {
+			logger.error("【直投还款】消费异常!", e);
 			return;
 		}
-		RedisUtils.del(redisKey);
-		logger.info("----------------------------直投还款结束--------------------------------");
-		// 如果没有return success ，consumer会重新消费该消息，直到return success
 		return;
 	}
 

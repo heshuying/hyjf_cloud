@@ -47,39 +47,44 @@ public class WrbCallBackConsumer implements RocketMQListener<MessageExt>, Rocket
             logger.error("风车理财回调通知接收到的消息为null");
             return;
         }
-        // --> 消息转换
-        String msgBody = new String(msg.getBody());
-        logger.info("【风车理财回调通知】接收到的消息：" + msgBody);
+        try{
+            // --> 消息转换
+            String msgBody = new String(msg.getBody());
+            logger.info("【风车理财回调通知】接收到的消息：" + msgBody);
 
-        JSONObject requestJson = JSONObject.parseObject(msgBody);
-        // 2.验证请求参数
-        Integer userId = requestJson.getInteger("userId");
-        String nid = requestJson.getString("nid");
-        // 回调类型， 1-投资回调 2-回款回调
-        Integer returnType = requestJson.getInteger("returnType");
-        // 回款时间
-        String backTime = requestJson.getString("backTime");
-        // 回款金额
-        String backMoney = requestJson.getString("backMoney");
-        if (Validator.isNull(userId) || Validator.isNull(nid) || Validator.isNull(returnType)) {
-            logger.error("风车理财回调通知参数不全.....");
-            return;
-        }
-        if (returnType.intValue() == 2) {
-            if (Validator.isNull(backTime) || Validator.isNull(backMoney)) {
-                logger.error("风车理财回款通知参数不全.....");
+            JSONObject requestJson = JSONObject.parseObject(msgBody);
+            // 2.验证请求参数
+            Integer userId = requestJson.getInteger("userId");
+            String nid = requestJson.getString("nid");
+            // 回调类型， 1-投资回调 2-回款回调
+            Integer returnType = requestJson.getInteger("returnType");
+            // 回款时间
+            String backTime = requestJson.getString("backTime");
+            // 回款金额
+            String backMoney = requestJson.getString("backMoney");
+            if (Validator.isNull(userId) || Validator.isNull(nid) || Validator.isNull(returnType)) {
+                logger.error("风车理财回调通知参数不全.....");
                 return;
             }
-        }
-        // 3.业务逻辑
-        try {
-            this.doHandle(userId, nid, returnType, backTime, backMoney);
+            if (returnType.intValue() == 2) {
+                if (Validator.isNull(backTime) || Validator.isNull(backMoney)) {
+                    logger.error("风车理财回款通知参数不全.....");
+                    return;
+                }
+            }
+            // 3.业务逻辑
+            try {
+                this.doHandle(userId, nid, returnType, backTime, backMoney);
+            } catch (Exception e) {
+                logger.error("风车理财回调失败...", e);
+                return; //ConsumeConcurrentlyStatus.RECONSUME_LATER;
+            }
+            logger.info("风车理财回调通知处理完成...");
+            logger.info("********************风车理财回调通知结束*************************");
         } catch (Exception e) {
-            logger.error("风车理财回调失败...", e);
-            return; //ConsumeConcurrentlyStatus.RECONSUME_LATER;
+            logger.error("【风车理财回调通知】消费异常!", e);
+            return;
         }
-        logger.info("风车理财回调通知处理完成...");
-        logger.info("********************风车理财回调通知结束*************************");
         return;
     }
 
