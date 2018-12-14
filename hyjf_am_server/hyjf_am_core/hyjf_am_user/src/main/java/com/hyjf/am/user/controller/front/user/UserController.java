@@ -44,6 +44,7 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/am-user/user")
+@SuppressWarnings("unchecked")
 public class UserController extends BaseController {
     @Autowired
     private UserService userService;

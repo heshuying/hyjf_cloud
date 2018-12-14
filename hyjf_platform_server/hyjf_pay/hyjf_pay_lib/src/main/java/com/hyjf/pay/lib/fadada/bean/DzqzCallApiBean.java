@@ -13,6 +13,7 @@ import java.lang.reflect.Method;
 import java.math.BigDecimal;
 import java.util.Map;
 
+@SuppressWarnings("unchecked")
 public class DzqzCallApiBean implements Serializable{
 
     Logger log = LoggerFactory.getLogger(this.getClass());

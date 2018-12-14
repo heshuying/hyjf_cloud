@@ -216,7 +216,7 @@ public class LockedConfigServiceImpl implements LockedConfigService {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-        	poolNew.returnBrokenResource(jedis);
+        	poolNew.close();
             // 返还到连接池
             RedisUtils.returnResource(poolNew, jedis);
         }

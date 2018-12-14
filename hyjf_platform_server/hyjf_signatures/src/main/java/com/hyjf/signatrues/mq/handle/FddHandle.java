@@ -57,6 +57,7 @@ import java.util.*;
  * @date 20180627
  */
 @Component
+@SuppressWarnings("unchecked")
 public class FddHandle {
 
 	private static final Logger logger = LoggerFactory.getLogger(FddHandle.class);

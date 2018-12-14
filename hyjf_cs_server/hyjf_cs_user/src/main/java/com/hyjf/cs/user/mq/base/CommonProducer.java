@@ -16,6 +16,7 @@ import org.springframework.stereotype.Component;
  * @author dxj
  */
 @Component
+@SuppressWarnings("unchecked")
 public class CommonProducer {
     private static final Logger logger = LoggerFactory.getLogger(CommonProducer.class);
 

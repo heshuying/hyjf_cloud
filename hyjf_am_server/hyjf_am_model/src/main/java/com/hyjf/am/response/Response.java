@@ -7,6 +7,7 @@ import java.util.List;
  * @author xiasq
  * @version Response, v0.1 2018/1/21 22:18
  */
+@SuppressWarnings("unchecked")
 public class Response<T> {
 	public static final String SUCCESS = "0";
 	public static final String SUCCESS_MSG = "成功";

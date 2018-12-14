@@ -137,7 +137,7 @@ public class BankCallPnrApiBean implements Serializable {
 	 */
 	public BigDecimal getBigDecimal(String key) {
 		String val = paramMap.get(key);
-		if (Validator.isNotNull(val) && NumberUtils.isNumber(val)) {
+		if (Validator.isNotNull(val) && NumberUtils.isCreatable(val)) {
 			return new BigDecimal(val);
 		}
 		return BigDecimal.ZERO;

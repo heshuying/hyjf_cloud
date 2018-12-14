@@ -44,6 +44,7 @@ import static org.slf4j.LoggerFactory.getLogger;
  */
 
 @Service
+@SuppressWarnings("unchecked")
 public class AmUserClientImpl implements AmUserClient {
 	private static Logger logger = getLogger(AmUserClient.class);
 

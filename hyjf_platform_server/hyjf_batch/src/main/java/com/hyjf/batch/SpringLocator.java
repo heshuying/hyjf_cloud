@@ -12,6 +12,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
+@SuppressWarnings("unchecked")
 public class SpringLocator implements ApplicationContextAware {
 
 	private static ApplicationContext applicationContext;

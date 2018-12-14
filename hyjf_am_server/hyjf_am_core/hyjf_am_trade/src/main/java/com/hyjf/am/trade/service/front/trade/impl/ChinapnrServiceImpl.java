@@ -100,7 +100,7 @@ public class ChinapnrServiceImpl extends BaseServiceImpl implements ChinapnrServ
         // 用户ID
         int userId = chinaPnrWithdrawRequest.getUserId();
         // 当前时间
-        Date nowTime = GetDate.getNowTime2();
+        Date nowTime = GetDate.getNowTime();
         // 订单号
         String ordId = bean.getOrdId() == null ? bean.get(ChinaPnrConstant.PARAM_ORDID) : bean.getOrdId();
         AccountWithdrawExample accountWithdrawExample = new AccountWithdrawExample();

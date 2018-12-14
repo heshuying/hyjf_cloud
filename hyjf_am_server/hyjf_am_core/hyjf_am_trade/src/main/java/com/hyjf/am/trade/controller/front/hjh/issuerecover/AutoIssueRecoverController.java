@@ -26,6 +26,7 @@ import java.util.UUID;
  */
 @RestController
 @RequestMapping("/am-trade/hjhautoissuerecover")
+@SuppressWarnings("unchecked")
 public class AutoIssueRecoverController extends BaseController{
 
     @Autowired

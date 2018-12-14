@@ -70,6 +70,7 @@ import java.util.concurrent.TimeUnit;
  * @version WebProjectListServiceImpl, v0.1 2018/6/13 10:21
  */
 @Service
+@SuppressWarnings("unchecked")
 public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements WebProjectListService {
 
     private static Logger logger = LoggerFactory.getLogger(WebProjectListServiceImpl.class);
