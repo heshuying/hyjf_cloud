@@ -54,7 +54,7 @@ public class TestProducerController {
 			mqTopic = "TEST_TOPIC";
 		}
 		
-		MessageContent messageContent = new MessageContent(mqTopic,UUID.randomUUID().toString(),9999999);
+		MessageContent messageContent = new MessageContent(mqTopic,UUID.randomUUID().toString(),"123213",9999999);
 		
 		try {
 			return commonProducer.messageSend(messageContent);
