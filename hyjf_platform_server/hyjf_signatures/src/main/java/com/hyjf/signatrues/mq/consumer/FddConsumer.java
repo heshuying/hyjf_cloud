@@ -36,7 +36,7 @@ public class FddConsumer extends Consumer {
 
 	@Autowired
 	private FddHandle fddHandle;
-
+	private static int  MAX_RECONSUME_TIME=3;
 	@Override
 	public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
 		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
@@ -50,6 +50,9 @@ public class FddConsumer extends Consumer {
 		// MQ默认集群消费
 		defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
 		defaultMQPushConsumer.registerMessageListener(new MessageListener());
+		//设置最大重试次数
+		defaultMQPushConsumer.setMaxReconsumeTimes(MAX_RECONSUME_TIME);
+
 		// Consumer对象在使用之前必须要调用start初始化，初始化一次即可<br>
 		defaultMQPushConsumer.start();
 		logger.info("====法大大 consumer=====");

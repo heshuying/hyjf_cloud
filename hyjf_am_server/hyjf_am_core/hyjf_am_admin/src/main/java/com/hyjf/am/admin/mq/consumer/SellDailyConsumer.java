@@ -34,7 +34,7 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
 
 	@Autowired
 	private SellDailyService sellDailyService;
-
+    private static int  MAX_RECONSUME_TIME=3;
 	private static final String NMZX_DIVISION_NAME = "纳觅咨询";
 	private static final String QGR_DIVISION_NAME = "裕峰瑞";
 	private static final String DTHJ_DIVISION_NAME = "大唐汇金";
@@ -278,6 +278,9 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         // 设置为集群消费(区别于广播消费)
         defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
+        //设置最大重试次数
+            defaultMQPushConsumer.setMaxReconsumeTimes(MAX_RECONSUME_TIME);
+
         logger.info("====销售日报 消费端开始执行=====");
     }
 }

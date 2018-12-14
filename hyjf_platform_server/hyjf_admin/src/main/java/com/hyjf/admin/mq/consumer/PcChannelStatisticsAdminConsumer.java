@@ -46,6 +46,7 @@ public class PcChannelStatisticsAdminConsumer implements RocketMQListener<Messag
     @Autowired
     private CommonProducer commonProducer;
 
+    private static int  MAX_RECONSUME_TIME=3;
     @Override
     public void onMessage(MessageExt  message) {
         // 查询所有pc渠道
@@ -129,6 +130,9 @@ public class PcChannelStatisticsAdminConsumer implements RocketMQListener<Messag
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         // 设置为集群消费(区别于广播消费)
         defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
+        //设置最大重试次数
+        defaultMQPushConsumer.setMaxReconsumeTimes(MAX_RECONSUME_TIME);
+
         logger.info("====PcChannelStatisticsAdminConsumer consumer=====");
     }
 
