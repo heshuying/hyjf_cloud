@@ -61,7 +61,7 @@ public class AemsUserInvestController extends BaseTradeController {
         logger.info("api端-获取回款记录接口bean:{}", JSONObject.toJSONString(bean));
 
         // 验签
-        CheckUtil.check(SignUtil.AEMSVerifyRequestSign(bean, "/server/invest/repayList"), MsgEnum.ERR_SIGN);
+        CheckUtil.check(SignUtil.AEMSVerifyRequestSign(bean, "/aems/invest/repayList"), MsgEnum.ERR_SIGN);
 
         ApiRepayListRequest request = new ApiRepayListRequest();
         BeanUtils.copyProperties(bean, request);

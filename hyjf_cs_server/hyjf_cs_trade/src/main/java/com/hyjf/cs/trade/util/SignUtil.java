@@ -6,6 +6,7 @@ package com.hyjf.cs.trade.util;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.trade.bean.*;
+import com.hyjf.cs.trade.bean.api.ApiInvestListReqBean;
 import com.hyjf.cs.trade.bean.api.AutoTenderRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.PushRequestBean;
 import com.hyjf.cs.trade.bean.assetpush.SynBalanceRequestBean;
@@ -38,7 +39,7 @@ public class SignUtil {
             //aems资产查询接口
             AemsAssetStatusRequestBean bean = (AemsAssetStatusRequestBean) paramBean;
             sign = bean.getAssetId() + bean.getInstCode() + bean.getTimestamp();
-        }else if (("/aems/authState/recharge").equals(methodName)) {
+        } else if (("/aems/authState/recharge").equals(methodName)) {
             //aems充值页面
             UserDirectRechargeRequestBean bean = (UserDirectRechargeRequestBean) paramBean;
             sign = bean.getInstCode() + bean.getAccountId() + bean.getMobile() + bean.getIdNo() + bean.getCardNo()
@@ -52,6 +53,18 @@ public class SignUtil {
             //aems借款人受托支付申请查询
             AemsTrusteePayRequestBean bean = (AemsTrusteePayRequestBean) paramBean;
             sign = bean.getChannel() + bean.getAccountId() + bean.getProductId() + bean.getTimestamp();
+        } else if (("/aems/tender/tender").equals(methodName)) {
+            // AEMS投资
+            AutoTenderRequestBean bean = (AutoTenderRequestBean) paramBean;
+            sign = bean.getInstCode() + bean.getAccountId() + bean.getBorrowNid() + bean.getTimestamp();
+        } else if (("/aems/invest/investList").equals(methodName)) {
+            // aems投资记录
+            ApiInvestListReqBean bean = (ApiInvestListReqBean) paramBean;
+            sign =  bean.getInstCode() + bean.getStartTime() + bean.getEndTime() + bean.getTimestamp();
+        } else if (("/aems/invest/repayList").equals(methodName)) {
+            //aems 获取回款记录
+            AemsRepayListRequestBean bean = (AemsRepayListRequestBean) paramBean;
+            sign = bean.getInstCode() + bean.getStartTime() + bean.getEndTime() + bean.getTimestamp();
         }
         // TODO AEMS验签修改
         return ApiSignUtil.verifyByRSA("AEMS", paramBean.getChkValue(), sign);
@@ -111,7 +124,7 @@ public class SignUtil {
         }else if("/server/invest/repayList".equals(methodName)){
             // 获取回款记录
             ApiRepayListRequestBean bean = (ApiRepayListRequestBean) paramBean;
-            sign = bean.getInstCode()+bean.getStartTime()+bean.getEndTime()+ bean.getTimestamp();
+            sign = bean.getInstCode()+bean.getStartTime()+ bean.getEndTime()+ bean.getTimestamp();
         }else if("/server/asset/status".equals(methodName)){
             // 资产状态查询
             AssetStatusRequestBean bean = (AssetStatusRequestBean) paramBean;

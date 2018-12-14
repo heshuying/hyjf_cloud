@@ -13,11 +13,11 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.trade.bean.api.ApiInvestListReqBean;
-import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.service.aems.invest.AemsBorrowListService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.svrcheck.CommonSvrChkService;
 import com.hyjf.cs.trade.util.ProjectConstant;
+import com.hyjf.cs.trade.util.SignUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -70,7 +70,7 @@ public class AemsBorrowListServiceImpl extends BaseTradeServiceImpl implements A
         logger.info("bean:{}", JSONObject.toJSONString(bean));
 
         // 验签（测试暂时关闭验签）
-        CheckUtil.check(ProjectConstant.verifyRequestSign(bean, ProjectConstant.API_METHOD_INVEST_LIST), MsgEnum.ERR_SIGN);
+        CheckUtil.check(SignUtil.AEMSVerifyRequestSign(bean,"/aems/invest/investList"), MsgEnum.ERR_SIGN);
 
         List<InvestListCustomizeVO> list = searchInvestListNew(bean);
         result.setData(list);
