@@ -41,57 +41,63 @@ public class AppUtmRegConsumer implements RocketMQListener<MessageExt>, RocketMQ
 
 		MessageExt msg = message;
 
-		// 开户更新
-		if (MQConstant.APP_CHANNEL_STATISTICS_DETAIL_UPDATE_TAG.equals(msg.getTags())) {
-			Integer userId = JSONObject.parseObject(msg.getBody(), Integer.class);
-			if (userId == null) {
-				logger.error("参数错误，userId is null...");
-				return ;
-			}
-			// 更新AppChannelStatisticsDetailDao开户时间
-			AppUtmReg entity = appUtmRegService.findByUserId(userId);
-			if (entity != null) {
-				entity.setOpenAccountTime(new Date());
-				appUtmRegService.update(entity);
-			}
-		} else if (MQConstant.APP_CHANNEL_STATISTICS_DETAIL_SAVE_TAG.equals(msg.getTags())) {
-			logger.info("app渠道统计保存消息....");
-			AppUtmReg entity = JSONObject.parseObject(msg.getBody(),
-					AppUtmReg.class);
-			if (entity != null) {
-                logger.info("entity: {}", JSONObject.toJSONString(entity));
-				appUtmRegService.insert(entity);
-			}
-		} else if (MQConstant.APP_CHANNEL_STATISTICS_DETAIL_CREDIT_TAG.equals(msg.getTags())
-				|| MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG.equals(msg.getTags())) {
-			JSONObject entity = JSONObject.parseObject(msg.getBody(), JSONObject.class);
-			logger.info("entity: {}", entity.toJSONString());
-			if (Validator.isNotNull(entity)) {
-				boolean investFlag = entity.getBooleanValue("investFlag");
-				// 不是首投
-				if (!investFlag) {
-					Integer userId = entity.getInteger("userId");
-					AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
-					BigDecimal accountDecimal = entity.getBigDecimal("accountDecimal")==null?BigDecimal.ZERO:entity.getBigDecimal("accountDecimal");
-                    BigDecimal invest = appUtmReg.getCumulativeInvest() == null? BigDecimal.ZERO: appUtmReg.getCumulativeInvest();
-                    appUtmReg.setCumulativeInvest(invest.add(accountDecimal));
-                    appUtmRegService.update(appUtmReg);
-				} else {
-				    // 首投
-                    Integer userId = entity.getInteger("userId");
-                    AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
-					BigDecimal accountDecimal = entity.getBigDecimal("accountDecimal")==null?BigDecimal.ZERO:entity.getBigDecimal("accountDecimal");
-					String projectType = entity.getString("projectType");
-					Integer investTime = entity.getInteger("investTime");
-					String investProjectPeriod = entity.getString("investProjectPeriod");
-                    appUtmReg.setCumulativeInvest(accountDecimal);
-                    appUtmReg.setInvestAmount(accountDecimal);
-                    appUtmReg.setInvestProjectType(projectType);
-                    appUtmReg.setFirstInvestTime(investTime);
-                    appUtmReg.setInvestProjectPeriod(investProjectPeriod);
-                    appUtmRegService.update(appUtmReg);
+		try {
+
+			// 开户更新
+			if (MQConstant.APP_CHANNEL_STATISTICS_DETAIL_UPDATE_TAG.equals(msg.getTags())) {
+				Integer userId = JSONObject.parseObject(msg.getBody(), Integer.class);
+				if (userId == null) {
+					logger.error("参数错误，userId is null...");
+					return ;
+				}
+				// 更新AppChannelStatisticsDetailDao开户时间
+				AppUtmReg entity = appUtmRegService.findByUserId(userId);
+				if (entity != null) {
+					entity.setOpenAccountTime(new Date());
+					appUtmRegService.update(entity);
+				}
+			} else if (MQConstant.APP_CHANNEL_STATISTICS_DETAIL_SAVE_TAG.equals(msg.getTags())) {
+				logger.info("app渠道统计保存消息....");
+				AppUtmReg entity = JSONObject.parseObject(msg.getBody(),
+						AppUtmReg.class);
+				if (entity != null) {
+	                logger.info("entity: {}", JSONObject.toJSONString(entity));
+					appUtmRegService.insert(entity);
+				}
+			} else if (MQConstant.APP_CHANNEL_STATISTICS_DETAIL_CREDIT_TAG.equals(msg.getTags())
+					|| MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG.equals(msg.getTags())) {
+				JSONObject entity = JSONObject.parseObject(msg.getBody(), JSONObject.class);
+				logger.info("entity: {}", entity.toJSONString());
+				if (Validator.isNotNull(entity)) {
+					boolean investFlag = entity.getBooleanValue("investFlag");
+					// 不是首投
+					if (!investFlag) {
+						Integer userId = entity.getInteger("userId");
+						AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
+						BigDecimal accountDecimal = entity.getBigDecimal("accountDecimal")==null?BigDecimal.ZERO:entity.getBigDecimal("accountDecimal");
+	                    BigDecimal invest = appUtmReg.getCumulativeInvest() == null? BigDecimal.ZERO: appUtmReg.getCumulativeInvest();
+	                    appUtmReg.setCumulativeInvest(invest.add(accountDecimal));
+	                    appUtmRegService.update(appUtmReg);
+					} else {
+					    // 首投
+	                    Integer userId = entity.getInteger("userId");
+	                    AppUtmReg appUtmReg = appUtmRegService.findByUserId(userId);
+						BigDecimal accountDecimal = entity.getBigDecimal("accountDecimal")==null?BigDecimal.ZERO:entity.getBigDecimal("accountDecimal");
+						String projectType = entity.getString("projectType");
+						Integer investTime = entity.getInteger("investTime");
+						String investProjectPeriod = entity.getString("investProjectPeriod");
+	                    appUtmReg.setCumulativeInvest(accountDecimal);
+	                    appUtmReg.setInvestAmount(accountDecimal);
+	                    appUtmReg.setInvestProjectType(projectType);
+	                    appUtmReg.setFirstInvestTime(investTime);
+	                    appUtmReg.setInvestProjectPeriod(investProjectPeriod);
+	                    appUtmRegService.update(appUtmReg);
+					}
 				}
 			}
+			
+		} catch (Exception e) {
+			logger.error("消费处理异常",e);
 		}
 	
 	
@@ -108,6 +114,7 @@ public class AppUtmRegConsumer implements RocketMQListener<MessageExt>, RocketMQ
 		defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
 		// 设置为集群消费(区别于广播消费)
 		defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
+		defaultMQPushConsumer.setMaxReconsumeTimes(3);
 //		defaultMQPushConsumer.registerMessageListener(new MessageListener());
 		logger.info("====AppChannelStatisticsDetail consumer=====");
 	}

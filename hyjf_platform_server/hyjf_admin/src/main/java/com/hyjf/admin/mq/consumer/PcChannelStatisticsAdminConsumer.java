@@ -3,20 +3,12 @@
  */
 package com.hyjf.admin.mq.consumer;
 
-import com.hyjf.admin.client.AmAdminClient;
-import com.hyjf.admin.mq.base.CommonProducer;
-import com.hyjf.admin.mq.base.Consumer;
-import com.hyjf.admin.mq.base.MessageContent;
-import com.hyjf.am.vo.admin.UtmVO;
-import com.hyjf.am.vo.datacollect.PcChannelStatisticsVO;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
-import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
-import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
-import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
-import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
@@ -26,12 +18,15 @@ import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.List;
+import com.hyjf.admin.client.AmAdminClient;
+import com.hyjf.admin.mq.base.CommonProducer;
+import com.hyjf.admin.mq.base.MessageContent;
+import com.hyjf.am.vo.admin.UtmVO;
+import com.hyjf.am.vo.datacollect.PcChannelStatisticsVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 
 /**
  * @author fuqiang
