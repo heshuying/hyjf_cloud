@@ -1,6 +1,5 @@
 package com.hyjf.am.trade.service.front.trade.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.HandleAccountRechargeRequest;
 import com.hyjf.am.resquest.user.BankRequest;

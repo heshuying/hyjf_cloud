@@ -8,18 +8,20 @@ import com.hyjf.am.trade.dao.model.auto.AleveErrorLog;
 import com.hyjf.am.trade.dao.model.auto.EveLog;
 import com.hyjf.am.trade.service.task.AleveLogFileService;
 import com.hyjf.am.trade.utils.TransUtil;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.calculate.DateUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
+import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.io.File;
@@ -30,7 +32,8 @@ import java.util.List;
  * @author wangjun
  * @version EveFileConsumer, v0.1 2018/6/25 17:52
  */
-@Component
+@Service
+@RocketMQMessageListener(topic = MQConstant.EVE_FILE_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.EVE_FILE_GROUP)
 public class EveFileConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
     private static final Logger logger = LoggerFactory.getLogger(EveFileConsumer.class);
 

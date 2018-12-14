@@ -25,12 +25,13 @@ import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
+import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Map;
 
@@ -40,8 +41,8 @@ import java.util.Map;
  * @author dxj
  * @version BorrowRepayRequestConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */
-@Component
-//@Profile("test")
+@Service
+@RocketMQMessageListener(topic = MQConstant.BORROW_REPAY_REQUEST_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.BORROW_REPAY_REQUEST_GROUP)
 public class BorrowRepayRequestConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     private static final Logger logger = LoggerFactory.getLogger(BorrowRepayRequestConsumer.class);

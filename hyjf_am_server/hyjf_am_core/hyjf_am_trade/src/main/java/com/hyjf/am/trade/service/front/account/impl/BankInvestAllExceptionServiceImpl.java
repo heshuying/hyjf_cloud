@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.trade.service.front.account.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.BorrowTenderTmpRequest;
 import com.hyjf.am.trade.config.SystemConfig;

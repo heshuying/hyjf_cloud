@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.trade.service.front.trade.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.CommonProducer;

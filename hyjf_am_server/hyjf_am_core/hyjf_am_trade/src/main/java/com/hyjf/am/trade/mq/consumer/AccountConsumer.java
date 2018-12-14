@@ -4,24 +4,27 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.service.front.account.AccountService;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.common.constants.MQConstant;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
+import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 /**
  * @author xiasq
  * @version AccountConsumer, v0.1 2018/4/12 14:58
  */
 
-@Component
+@Service
+@RocketMQMessageListener(topic = MQConstant.ACCOUNT_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.ACCOUNT_GROUP)
 public class AccountConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
     private static final Logger logger = LoggerFactory.getLogger(AccountConsumer.class);
     @Autowired

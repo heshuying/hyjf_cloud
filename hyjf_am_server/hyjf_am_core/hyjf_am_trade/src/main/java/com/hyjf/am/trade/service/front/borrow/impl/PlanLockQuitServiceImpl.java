@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.trade.service.front.borrow.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.trade.dao.model.auto.*;

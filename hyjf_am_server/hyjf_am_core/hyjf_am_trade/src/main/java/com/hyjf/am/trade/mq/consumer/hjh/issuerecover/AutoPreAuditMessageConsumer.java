@@ -20,11 +20,12 @@ import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
+import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.UUID;
@@ -35,7 +36,8 @@ import java.util.UUID;
  * 自动初审
  * @Description: autoPreAuditMessageConsumer
  */
-@Component
+@Service
+@RocketMQMessageListener(topic = MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.ROCKETMQ_BORROW_PREAUDIT_GROUP)
 public class AutoPreAuditMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
     private static final Logger logger = LoggerFactory.getLogger(AutoPreAuditMessageConsumer.class);
 

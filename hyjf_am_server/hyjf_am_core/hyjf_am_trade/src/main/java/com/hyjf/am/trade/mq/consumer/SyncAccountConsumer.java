@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.service.front.account.AccountService;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.RSAHelper;
 import com.hyjf.common.util.RSAKeyUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -18,13 +19,14 @@ import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
+import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
@@ -40,7 +42,8 @@ import java.util.TreeMap;
  * @author zhangyk
  * @date 2018/8/3 11:21
  */
-@Component
+@Service
+@RocketMQMessageListener(topic = MQConstant.SYNC_ACCOUNT_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.SYNC_ACCOUNT_GROUP)
 public class SyncAccountConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     private static final Logger logger = LoggerFactory.getLogger(SyncAccountConsumer.class);
