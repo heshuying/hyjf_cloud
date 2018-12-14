@@ -27,6 +27,9 @@ import org.springframework.stereotype.Service;
 @RocketMQMessageListener(topic = MQConstant.APP_CHANNEL_STATISTICS_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.APP_CHANNEL_STATISTICS_GROUP)
 public class AppChannelStatisticsConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
     private static final Logger logger = LoggerFactory.getLogger(AppChannelStatisticsConsumer.class);
+
+    private static int MAX_RECONSUME_TIME = 3;
+
     @Autowired
     private AppChannelStatisticsDao appChannelStatisticsDao;
 
@@ -45,6 +48,8 @@ public class AppChannelStatisticsConsumer implements RocketMQListener<MessageExt
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         // 设置为集群消费(区别于广播消费)
         defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
+        //设置最大重试次数
+        defaultMQPushConsumer.setMaxReconsumeTimes(MAX_RECONSUME_TIME);
         logger.info("====FddCertificateConsumer consumer=====");
     }
 
