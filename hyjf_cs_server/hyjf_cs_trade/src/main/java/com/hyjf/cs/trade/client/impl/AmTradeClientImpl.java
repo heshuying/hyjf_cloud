@@ -6042,4 +6042,20 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    /**
+     *
+     * @param borrowNid
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public WebUserTransferBorrowInfoCustomizeVO getUserTransferBorrowInfo(String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/repay/get_user_transfer_borrow_info/"+ borrowNid;
+        WebUserTransferBorrowInfoCustomizeResponse response = restTemplate.getForEntity(url, WebUserTransferBorrowInfoCustomizeResponse.class).getBody();
+        if (response != null && Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
 }

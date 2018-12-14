@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -30,7 +31,7 @@ import java.util.List;
  */
 @Api(value = "api端 - 第三方交易明细查询",tags = "api端 - 第三方交易明细查询")
 @Controller
-@RequestMapping(value = "/hyjf-api/server/tradelist")
+@RequestMapping(value = "/hyjf-api/server/tradelist/")
 public class TransactionDetailsController extends BaseController {
 
     @Autowired
@@ -39,7 +40,7 @@ public class TransactionDetailsController extends BaseController {
     private CommonSvrChkService commonSvrChkService;
 
     @ApiOperation(value = "第三方同步余额", notes = "同步余额")
-    @PostMapping(value = "/tradelist.do", produces = "application/json; charset=utf-8")
+    @PostMapping(value = "tradelist.do", produces = "application/json; charset=utf-8")
     public ResultApiBean srchTradeList(@RequestBody TransactionDetailsResultBean resultBean){
 
         TransactionDetailsResultBean transactionDetailsResultBean = new TransactionDetailsResultBean();
@@ -79,9 +80,11 @@ public class TransactionDetailsController extends BaseController {
             CheckUtil.check(isGetTradeTypeSearch(resultBean.getTradeTypeSearch().trim()), MsgEnum.ERR_OBJECT_UNMATCH, "交易类型ID");
         }
         // 验证
-        CheckUtil.check(SignUtil.verifyRequestSign(resultBean, "/tradelist"),MsgEnum.ERR_SIGN);
+//        CheckUtil.check(SignUtil.verifyRequestSign(resultBean, "/tradelist"),MsgEnum.ERR_SIGN);
+        List<ApiTransactionDetailsCustomizeVO> result = new ArrayList<>();
+        result = transactionDetailsService.searchTradeList(resultBean);
         // 返回查询结果
-        return new ResultApiBean<List<ApiTransactionDetailsCustomizeVO>>(transactionDetailsService.searchTradeList(resultBean));
+        return new ResultApiBean<List<ApiTransactionDetailsCustomizeVO>>(result);
     }
 
     /**

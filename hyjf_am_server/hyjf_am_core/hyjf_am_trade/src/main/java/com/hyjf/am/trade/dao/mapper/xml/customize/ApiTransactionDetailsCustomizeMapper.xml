@@ -86,7 +86,7 @@
     <select id="queryApiAccountDetails" resultMap="AccountDetailMapResult" parameterType="com.hyjf.am.trade.dao.mapper.customize.ApiTransactionDetailsCustomizeMapper">
         SELECT
         u.username,
-        u2.username AS 'referrer_name',
+        u.username AS 'referrer_name',
         l.nid,
         CASE l.type
         WHEN 1 THEN

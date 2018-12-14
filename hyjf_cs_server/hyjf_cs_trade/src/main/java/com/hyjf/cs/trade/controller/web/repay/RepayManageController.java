@@ -7,15 +7,13 @@ import com.hyjf.am.resquest.trade.RepayRequest;
 import com.hyjf.am.resquest.trade.RepayRequestDetailRequest;
 import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.HjhUserAuthVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
@@ -241,6 +239,66 @@ public class RepayManageController extends BaseTradeController {
         return result;
     }
 
+    /**
+     * 用户代还标的,债转详情.
+     * @param userId
+     * @param borrowNid
+     * @return
+     * @Author : huanghui
+     */
+    @ApiOperation(value = "用户待还标的-债转详情", notes = "用户待还标的-债转详情")
+    @PostMapping(value = "/user_repay_detail")
+    public WebResult<Map<String,Object>>  userRepayDetail(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "borrowNid") String borrowNid){
+        WebResult<Map<String,Object>> result = new WebResult<>();
+        Map<String,Object> resultMap = new HashMap<>();
+
+        // 根据用户ID 查询用户信息
+        WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
+        /** 当前用户已登录并且标的NID不为空 */
+        String verificationFlag = null;
+        if (userVO != null && StringUtils.isNotBlank(borrowNid)){
+            WebUserTransferBorrowInfoCustomizeVO borrowInfo = this.repayManageService.getUserTransferBorrowInfo(borrowNid);
+            // 单纯的作为验证标识.
+
+            if (borrowInfo.getPlanNid() != null){
+                verificationFlag = borrowInfo.getPlanNid();
+            }else {
+                verificationFlag = null;
+            }
+
+            //居间协议
+            Integer fddStatus = 0;
+            List<TenderAgreementVO> tenderAgreementsNid =  this.repayManageService.selectTenderAgreementByNid(borrowNid);
+            if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
+                TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
+                fddStatus = tenderAgreement.getStatus();
+                //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
+                if(fddStatus.equals(3)){
+                    fddStatus = 1;
+                }else {
+                    //隐藏下载按钮
+                    fddStatus = 0;
+                }
+            }else {
+                //下载老版本协议
+                fddStatus = 1;
+            }
+
+            // 计算到账金额
+            if (borrowInfo.getSucSmount() != null){
+                BigDecimal oldYesAccount = borrowInfo.getSucSmount();
+                borrowInfo.setSucSmount(oldYesAccount.subtract(borrowInfo.getServiceFee()));
+            }else {
+                borrowInfo.setSucSmount(new BigDecimal(0));
+            }
+
+            resultMap.put("verificationFlag", verificationFlag);
+            resultMap.put("borrowInfo", borrowInfo);
+            resultMap.put("fddStatus", fddStatus);
+            result.setData(resultMap);
+        }
+        return result;
+    }
     /**
      * 垫付机构待还款列表
      * @auther: hesy

@@ -54,7 +54,9 @@ public interface BaseUserService extends BaseService{
 	 */
 	int updateCheckMobileCode(String mobile, String code, String validCodeType, String clientPc, Integer ckcodeYiyan, Integer ckcodeYiyan1,boolean isUpdate);
 
-	/**
+    UserVO updateUsersById(Integer userId);
+
+    /**
 	 * 验证外部请求签名
 	 * @param paramBean
 	 * @param methodName

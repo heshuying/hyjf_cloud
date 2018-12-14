@@ -2462,6 +2462,11 @@ public interface AmTradeClient {
 
     List<AppAdsCustomizeVO> getWebHomeBannerList(AdsRequest request);
 
-
+    /**
+     * 获取用户待还标的的债转详情
+     * @param borrowNid
+     * @return
+     */
+    WebUserTransferBorrowInfoCustomizeVO getUserTransferBorrowInfo(String borrowNid);
 }
 

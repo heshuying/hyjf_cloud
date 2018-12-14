@@ -11,7 +11,6 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.exception.ServiceException;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -298,4 +297,10 @@ public interface UserService extends BaseService {
 	UserDepartmentInfoCustomizeVO queryUserDepartmentInfoByUserId(Integer userId);
 
 
+	/**
+	 * 主库查询user
+	 * @param userId
+	 * @return
+	 */
+    User updateUserByUserId(Integer userId);
 }

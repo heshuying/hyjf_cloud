@@ -97,6 +97,19 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	}
 
 	/**
+	 * @param userId
+	 * @Description 根据userid查询用户（查询主库）
+	 * @Author sunss
+	 * @Version v0.1
+	 * @Date 2018/6/12 10:37
+	 */
+	@Override
+	public UserVO updateUsersById(Integer userId) {
+		UserVO userVO = amUserClient.updateUsersById(userId);
+		return userVO;
+	}
+
+	/**
 	 * 验证外部请求签名
 	 *
 	 * @param paramBean
@@ -481,7 +494,8 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 
 	@Override
 	public WebViewUserVO getWebViewUserByUserId(Integer userId) {
-		UserVO user = this.getUsersById(userId);
+		//主从延迟查询主库
+		UserVO user = this.updateUsersById(userId);
 		WebViewUserVO result = new WebViewUserVO();
 		result.setUserId(user.getUserId());
 		result.setUsername(user.getUsername());
