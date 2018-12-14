@@ -5,6 +5,8 @@ package com.hyjf.cs.trade.service.aems.invest;
 
 import com.hyjf.am.resquest.api.ApiRepayListRequest;
 import com.hyjf.am.vo.api.ApiRepayListCustomizeVO;
+import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.trade.bean.api.ApiInvestListReqBean;
 import com.hyjf.cs.trade.service.BaseTradeService;
 
 import java.util.List;
@@ -17,5 +19,19 @@ import java.util.List;
  */
 public interface AemsBorrowListService extends BaseTradeService {
 
+    /**
+     * 获取回款记录
+     *
+     * @param request
+     * @return
+     */
     List<ApiRepayListCustomizeVO> searchRepayList(ApiRepayListRequest request);
+
+    /**
+     * 获取投资记录
+     *
+     * @param bean
+     * @return
+     */
+    ApiResult getInvestList(ApiInvestListReqBean bean);
 }
