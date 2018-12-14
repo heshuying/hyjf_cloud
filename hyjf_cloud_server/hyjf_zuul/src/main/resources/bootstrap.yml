@@ -2,6 +2,8 @@ eureka:
   client:
     serviceUrl:
       defaultZone: @eureka.serviceUrl.default@
+  instance:
+    preferIpAddress: true
 spring:
  application:
    name: zuul
