@@ -9,8 +9,10 @@ import com.hyjf.am.vo.api.ApiRepayListCustomizeVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.trade.bean.AemsRepayListRequestBean;
 import com.hyjf.cs.trade.bean.ResultApiBean;
+import com.hyjf.cs.trade.bean.api.ApiInvestListReqBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.aems.invest.AemsBorrowListService;
 import com.hyjf.cs.trade.service.svrcheck.CommonSvrChkService;
@@ -59,12 +61,21 @@ public class AemsUserInvestController extends BaseTradeController {
         logger.info("api端-获取回款记录接口bean:{}", JSONObject.toJSONString(bean));
 
         // 验签
-        CheckUtil.check(SignUtil.verifyRequestSign(bean, "/server/invest/repayList"), MsgEnum.ERR_SIGN);
+        CheckUtil.check(SignUtil.AEMSVerifyRequestSign(bean, "/aems/invest/repayList"), MsgEnum.ERR_SIGN);
 
         ApiRepayListRequest request = new ApiRepayListRequest();
         BeanUtils.copyProperties(bean, request);
 
         // 返回查询结果
         return new ResultApiBean<List<ApiRepayListCustomizeVO>>(userInvestService.searchRepayList(request));
+    }
+
+    @ApiOperation(value = "查询投资信息的列表", notes = "查询投资信息的列表")
+    @PostMapping("/investList.do")
+    public ApiResult investList(@RequestBody ApiInvestListReqBean bean) {
+        ApiResult result = new ApiResult();
+        // 返回查询结果
+        result = userInvestService.getInvestList(bean);
+        return result;
     }
 }
