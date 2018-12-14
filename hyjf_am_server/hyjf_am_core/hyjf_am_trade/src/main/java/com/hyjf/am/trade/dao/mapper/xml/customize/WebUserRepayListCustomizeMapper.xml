@@ -296,4 +296,74 @@
 			</if>
 		</where>
 	</sql>
+	<resultMap id="BorrowInfoMap" type="com.hyjf.am.trade.dao.model.customize.WebUserTransferBorrowInfoCustomize">
+		<result column="borrow_nid" property="borrowNid"/>
+		<result column="plan_nid" property="planNid"/>
+		<result column="borrow_period" property="borrowPeriod"/>
+		<result column="account" property="account"/>
+		<result column="suc_amount" property="sucSmount"/>
+		<result column="borrow_apr" property="borrowApr"/>
+		<result column="send_time" property="sendTime"/>
+		<result column="full_time" property="borrowFullTime"/>
+		<result column="borrow_style" property="borrowStyle"/>
+		<result column="recover_last_time" property="recoverLastTime"/>
+		<result column="project_type" property="projectType"/>
+		<result column="borrow_status" property="borrowStatus"/>
+		<result column="batch_service_fee" property="serviceFee"/>
+		<!--<result column="borrow_extra_yield" property="borrowExtraYield"/>-->
+	</resultMap>
+
+	<select id="getBorrowInfo" resultMap="BorrowInfoMap" parameterType="Map">
+		select
+		hydb.borrow_nid,
+		hba.batch_service_fee,
+		hydb.plan_nid,
+		hydb.borrow_period,
+		hydb.account,
+		hba.suc_amount,
+		hydb.borrow_apr,
+		hydb.borrow_apr,
+		CASE
+		WHEN hydb.`status` = 1 AND hydb.verify_status = 3
+		THEN FROM_UNIXTIME( hydb.ontime, '%Y-%m-%d %H:%i' )
+		ELSE
+		FROM_UNIXTIME(
+		hydb.verify_time,
+		'%Y-%m-%d %H:%i'
+		)
+		END AS send_time,
+		FROM_UNIXTIME(
+		hydb.borrow_full_time,
+		'%Y-%m-%d %H:%i'
+		) AS full_time,
+		hydbs.name as borrow_style,
+		FROM_UNIXTIME(hydb.recover_last_time, '%Y-%m-%d %H:%i') AS recover_last_time,
+		hydb.project_type,
+-- 		hydb.borrow_extra_yield,
+		CASE
+		WHEN hydb.`status` = 1 AND hydb.verify_status = 3 THEN '10'
+		WHEN hydb.`status` = 2 AND hydb.borrow_full_status = 0
+		AND (
+		hydb.verify_time + (
+		hydb.borrow_valid_time * 24 * 60 * 60
+		) > UNIX_TIMESTAMP(NOW())
+		) THEN
+		'11'
+		WHEN hydb.`status` = 3
+		THEN
+		'12'
+		WHEN hydb.`status` = 4 THEN
+		'13'
+		WHEN hydb.`status` = 5 THEN
+		'14'
+		ELSE
+		''
+		END AS borrow_status
+		from ht_borrow hydb
+		LEFT JOIN ht_borrow_style hydbs ON hydb.borrow_style = hydbs.nid
+		LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = hydb.borrow_nid AND hba.api_type = 0 AND hba.`status` = 6
+		<where>
+			hydb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
+		</where>
+	</select>
 </mapper>

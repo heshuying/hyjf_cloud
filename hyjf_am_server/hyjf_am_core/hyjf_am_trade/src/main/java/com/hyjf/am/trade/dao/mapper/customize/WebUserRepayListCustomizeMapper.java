@@ -11,6 +11,7 @@
 
 package com.hyjf.am.trade.dao.mapper.customize;
 
+import com.hyjf.am.trade.dao.model.customize.WebUserTransferBorrowInfoCustomize;
 import com.hyjf.am.vo.trade.repay.WebUserRepayProjectListCustomizeVO;
 
 import java.util.List;
@@ -21,4 +22,12 @@ public interface WebUserRepayListCustomizeMapper {
 	List<WebUserRepayProjectListCustomizeVO> selectUserRepayProjectList(Map<String, Object> params);
 	/**  查询垫付机构借款列表   */
 	List<WebUserRepayProjectListCustomizeVO> selectOrgRepayProjectList(Map<String, Object> params);
+
+	/**
+	 *
+	 * @param borrowNid
+	 * @return
+	 * @Author : huanghui
+	 */
+	WebUserTransferBorrowInfoCustomize getBorrowInfo(String borrowNid);
 }

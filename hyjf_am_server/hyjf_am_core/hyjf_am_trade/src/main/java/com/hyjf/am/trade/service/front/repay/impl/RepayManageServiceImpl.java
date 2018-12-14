@@ -5,6 +5,7 @@ import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.trade.bean.repay.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.EmployeeCustomize;
+import com.hyjf.am.trade.dao.model.customize.WebUserTransferBorrowInfoCustomize;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.mq.producer.BorrowLoanRepayProducer;
 import com.hyjf.am.trade.service.front.repay.RepayManageService;
@@ -5266,5 +5267,16 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             this.calculateRepayPlan(repay, borrow, period);
         }
         return repay;
+    }
+
+    /**
+     *
+     * @param borrowNid
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public WebUserTransferBorrowInfoCustomize getUserTransferBorrowInfo(String borrowNid) {
+        return webUserRepayListCustomizeMapper.getBorrowInfo(borrowNid);
     }
 }
