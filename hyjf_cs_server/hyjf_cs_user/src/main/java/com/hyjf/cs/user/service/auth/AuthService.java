@@ -3,12 +3,14 @@ package com.hyjf.cs.user.service.auth;
 import com.hyjf.am.vo.user.HjhUserAuthConfigVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.user.bean.AemsMergeAuthPagePlusRequestBean;
 import com.hyjf.cs.user.bean.ApiAuthRequesBean;
 import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.validation.Valid;
 import java.util.Map;
 
 public interface AuthService extends BaseUserService {
@@ -130,4 +132,11 @@ public interface AuthService extends BaseUserService {
     Map<String,String> checkApiParam(ApiAuthRequesBean requestBean);
 
     ModelAndView getApiCallbankMV(AuthBean authBean);
+
+    /**
+     * AEMS系统多合一授权参数校验
+     * @param requestBean
+     * @return
+     */
+    Map<String,String> checkAemsParam(@Valid AemsMergeAuthPagePlusRequestBean requestBean);
 }
