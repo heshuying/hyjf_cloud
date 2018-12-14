@@ -496,7 +496,7 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
             borrowInvestRequest.setBorrowNid(borrowNid);
             borrowInvestRequest.setNid(nid);
             // 向投资人发送邮件
-            if (Validator.isNotNull(userId) && NumberUtils.isNumber(userId)) {
+            if (Validator.isNotNull(userId) && NumberUtils.isCreatable(userId)) {
                 //查询用户
                 UserVO user = amUserClient.findUserById(Integer.valueOf(userId));
                 if (user == null) {

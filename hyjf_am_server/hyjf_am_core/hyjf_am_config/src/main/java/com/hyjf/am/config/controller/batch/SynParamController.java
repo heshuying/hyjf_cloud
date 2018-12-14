@@ -184,14 +184,10 @@ public class SynParamController extends BaseConfigController {
 			List<String> appkeys = new ArrayList<String>();
 			
 			for (String key : keys) {
-//				logger.info(key); 32+4+3
 				total = total+1;
 				if (StringUtils.startsWith(key, "web")) {
 					apptotal = apptotal+1;
 					appkeys.add(key);
-					
-//					//TODO:delte
-//					System.out.println(key+"    "+cursor);
 				}
 			}
 			

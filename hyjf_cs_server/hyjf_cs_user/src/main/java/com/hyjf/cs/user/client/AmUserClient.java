@@ -573,4 +573,11 @@ public interface AmUserClient {
 	UserVO fUserById(int userId);
 
 	UserInfoVO fUserInfoById(int userId);
+
+	/**
+	 * 主从延迟问题，查询主库
+	 * @param userId
+	 * @return
+	 */
+    UserVO updateUsersById(Integer userId);
 }

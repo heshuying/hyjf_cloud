@@ -10,7 +10,7 @@ import java.io.Serializable;
 public class UserInfoCustomize implements Serializable {
 
     /**
-     * serialVersionUID:TODO 变量
+     * serialVersionUID: 变量
      */
 
     private static final long serialVersionUID = 4090228100052120725L;

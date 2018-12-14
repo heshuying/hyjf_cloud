@@ -180,7 +180,7 @@ public class UserWithdrawServiceImpl extends BaseServiceImpl implements UserWith
                             // 提现金额
                             BigDecimal transAmt = BigDecimal.ZERO;
                             String txAmont = bean.getTxAmount();
-                            if (Validator.isNotNull(txAmont) && NumberUtils.isNumber(txAmont)) {
+                            if (Validator.isNotNull(txAmont) && NumberUtils.isCreatable(txAmont)) {
                                 transAmt = new BigDecimal(txAmont);
                             }
                             // 从数据库中查询提现手续费

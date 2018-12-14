@@ -101,7 +101,6 @@ public class ApiAutoTenderServiceImpl extends BaseServiceImpl implements ApiAuto
 			try {
 				throw new Exception("插入borrowTenderTmpInfo表失败，投资订单号：" + autoTenderComboRequest.getGenerateOrderId());
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return 0;

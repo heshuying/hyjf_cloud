@@ -6,7 +6,7 @@ turbine:
     # turbine聚集数据的粒度
     clusterConfig: default
   clusterNameExpression: new String("default")
-  combine-host: true
+  combine-host-port: true
   instanceUrlSuffix:
     # turbine连接hystrix-dashboard的url
     default: actuator/hystrix.stream

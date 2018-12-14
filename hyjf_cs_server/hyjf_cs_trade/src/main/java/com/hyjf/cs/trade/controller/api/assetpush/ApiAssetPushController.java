@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.controller.api.assetpush;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.assetpush.PushBean;
@@ -44,80 +45,87 @@ public class ApiAssetPushController extends BaseTradeController {
     @PostMapping("/push.do")
     @ApiParam(required = true, name = "pushRequestBean", value = "个人资产信息")
     @ApiOperation(value = "个人资产推送", httpMethod = "POST", notes = "个人资产推送")
-    public PushResultBean push(@RequestBody PushRequestBean pushRequestBean) {
+    public JSONObject push(@RequestBody PushRequestBean pushRequestBean) {
         logger.info(this.getClass().getName(), "api端-资产推送接口 个人资产推送 start", pushRequestBean.toString(), "/hyjf-api/server/assetpush/push.do");
 
-        PushResultBean resultBean = new PushResultBean();
-        resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000001);
-        resultBean.setStatusDesc("请求参数非法");
-
+        JSONObject result = new JSONObject();
         // 验证请求参数
         List<PushBean> reqData = pushRequestBean.getReqData();
-        if (Validator.isNull(reqData) || Validator.isNull(pushRequestBean.getInstCode())
-                || Validator.isNull(pushRequestBean.getAssetType()) || Validator.isNull(pushRequestBean.getChkValue())) {
+        if (Validator.isNull(reqData) || Validator.isNull(pushRequestBean.getInstCode()) ||
+                Validator.isNull(pushRequestBean.getAssetType()) || Validator.isNull(pushRequestBean.getChkValue())) {
             logger.info("------请求参数非法-------" + pushRequestBean);
-            return resultBean;
+            result.put("status", ErrorCodeConstant.STATUS_CE000001);
+            result.put("statusDesc", "请求参数非法");
+            return result;
         }
 
         // 验签
         if (!SignUtil.verifyRequestSign(pushRequestBean, "/push")) {
-            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000002);
-            logger.info("-------------------验签失败！--------------------");
-            resultBean.setStatusDesc("验签失败！");
-            return resultBean;
+            logger.info("------------------验签失败！---------------------");
+            result.put("status", ErrorCodeConstant.STATUS_CE000002);
+            result.put("statusDesc", "验签失败！");
+            return result;
         }
 
         logger.info(pushRequestBean.getInstCode() + " 开始推送资产 ");
 
         if (CustomConstants.INST_CODE_HYJF.equals(pushRequestBean.getInstCode())) {
             logger.info(pushRequestBean.getInstCode() + "  " + pushRequestBean.getAssetType() + " ------平台不能推送资产");
-            return resultBean;
+            result.put("status", ErrorCodeConstant.STATUS_ZT000010);
+            result.put("statusDesc", "不能推送本平台资产！");
+            return result;
         }
 
-        resultBean = pushService.assetPush(pushRequestBean);
+        PushResultBean resultBean = pushService.assetPush(pushRequestBean);
 
         logger.info(this.getClass().getName(), "api端-资产推送接口 个人资产推送 end", pushRequestBean.toString(), "/hyjf-api/server/assetpush/push.do");
-
-        return resultBean;
+        result.put("status", resultBean.getStatus());
+        result.put("statusDesc", resultBean.getStatusDesc());
+        result.put("data", resultBean);
+        return result;
     }
 
     @PostMapping("/pushcompany.do")
     @ApiParam(required = true, name = "pushRequestBean", value = "企业资产信息")
     @ApiOperation(value = "企业资产推送", httpMethod = "POST", notes = "企业资产推送")
-    public PushResultBean pushcompany(@RequestBody PushRequestBean pushRequestBean) {
+    public JSONObject pushcompany(@RequestBody PushRequestBean pushRequestBean) {
         logger.info(this.getClass().getName(), "api端-资产推送接口 企业资产推送 start", pushRequestBean.toString(), "/hyjf-api/server/assetpush/pushcompany.do");
-        PushResultBean resultBean = new PushResultBean();
-        resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000001);
-        resultBean.setStatusDesc("请求参数非法");
+        JSONObject result = new JSONObject();
 
         // 验证请求参数
         List<PushBean> reqData = pushRequestBean.getReqData();
         if (Validator.isNull(reqData) || Validator.isNull(pushRequestBean.getInstCode())
                 || Validator.isNull(pushRequestBean.getAssetType()) || Validator.isNull(pushRequestBean.getChkValue())) {
             logger.info("------请求参数非法-------" + pushRequestBean);
-            return resultBean;
+            result.put("status", ErrorCodeConstant.STATUS_CE000001);
+            result.put("statusDesc", "请求参数非法");
+            return result;
         }
 
         // 验签
         if (!SignUtil.verifyRequestSign(pushRequestBean, "/pushcompany")) {
-            resultBean.setStatusForResponse(ErrorCodeConstant.STATUS_CE000002);
-            logger.info("-------------------验签失败！--------------------");
-            resultBean.setStatusDesc("验签失败！");
-            return resultBean;
+            logger.info("------------------验签失败！---------------------");
+            result.put("status", ErrorCodeConstant.STATUS_CE000002);
+            result.put("statusDesc", "验签失败！");
+            return result;
         }
 
         logger.info(pushRequestBean.getInstCode() + " 开始推送资产 ");
 
         if(CustomConstants.INST_CODE_HYJF.equals(pushRequestBean.getInstCode())){
             logger.info(pushRequestBean.getInstCode() + "  "+ pushRequestBean.getAssetType() + " ------不能推送本平台资产");
-            resultBean.setStatusDesc("不能推送本平台资产！");
-            return resultBean;
+            result.put("status", ErrorCodeConstant.STATUS_ZT000010);
+            result.put("statusDesc", "不能推送本平台资产！");
+            return result;
         }
 
-        resultBean = pushService.companyAssetPush(pushRequestBean);
+        PushResultBean resultBean = pushService.companyAssetPush(pushRequestBean);
 
         logger.info(this.getClass().getName(), "api端-资产推送接口 企业资产推送 end", "/hyjf-api/server/assetpush/pushcompany.do");
-        return resultBean;
+        result.put("status", resultBean.getStatus());
+        result.put("statusDesc", resultBean.getStatusDesc());
+        result.put("data", resultBean);
+        return result;
     }
 
 }

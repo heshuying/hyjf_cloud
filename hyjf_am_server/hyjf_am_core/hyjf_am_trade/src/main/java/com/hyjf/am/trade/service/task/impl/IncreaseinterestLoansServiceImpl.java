@@ -720,7 +720,7 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 			for (Map<String, String> msg : msgList) {
 				try {
 					// 向每个投资人发送邮件
-					if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isNumber(msg.get(VAL_USERID))) {
+					if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isCreatable(msg.get(VAL_USERID))) {
 						String userId = msg.get(VAL_USERID);
 						String orderId = msg.get(VAL_ORDER_ID);
 //						Users users = getUsersByUserId(Integer.valueOf(userId));
@@ -836,7 +836,7 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 							} else {
 								// 更新BorrowRecover邮件发送状态
 								String borrowRecoverId = msg.get(PARAM_BORROWRECOVERID);
-								if (Validator.isNotNull(borrowRecoverId) && NumberUtils.isNumber(borrowRecoverId)) {
+								if (Validator.isNotNull(borrowRecoverId) && NumberUtils.isCreatable(borrowRecoverId)) {
 									BorrowRecover borrowRecover = new BorrowRecover();
 									borrowRecover.setId(Integer.valueOf(borrowRecoverId));
 									borrowRecover.setSendmail(1);
