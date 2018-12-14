@@ -110,7 +110,7 @@ public class SynParamController extends BaseConfigController {
             int p1 = painte.incrementAndGet();
             maps.put("hehe", "sdf"+ p1);
             maps.put("uu", "僵死sdf"+ p1);
-            MessageContent message = new MessageContent(MQConstant.TEST_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(maps));
+            MessageContent message = new MessageContent(MQConstant.TEST_TOPIC, UUID.randomUUID().toString(),maps);
             
 //            try {
 //                testProducer.messageSend(message);
