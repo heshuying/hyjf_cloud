@@ -409,6 +409,11 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         return resultBean;
     }
 
+    public PushResultBean fallBackAssetPush(PushRequestBean pushRequestBean) {
+        logger.info("==================已进入 个人资产推送(api) fallBackAssetPush 方法================");
+        return new PushResultBean();
+    }
+
     @Override
     public HjhLabelVO getLabelId(BorrowAndInfoVO borrowVO, HjhPlanAssetVO hjhPlanAssetVO) {
 
