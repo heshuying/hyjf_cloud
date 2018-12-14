@@ -58,109 +58,113 @@ public class BorrowLoanRealTimeConsumer implements RocketMQListener<MessageExt>,
     public void onMessage(MessageExt messageExt) {
         logger.info("直投放款请求 收到消息，开始处理....");
         BorrowApicron borrowApicron;
-
-        try {
-            MessageExt msgD = messageExt;
-            borrowApicron = JSONObject.parseObject(msgD.getBody(), BorrowApicron.class);
-            if (borrowApicron == null || borrowApicron.getId() == null || borrowApicron.getBorrowNid() == null
-                    || StringUtils.isNotEmpty(borrowApicron.getPlanNid())) {
-                logger.info(" 直投放款异常消息：" + msgD.getMsgId());
+        try{
+            try {
+                MessageExt msgD = messageExt;
+                borrowApicron = JSONObject.parseObject(msgD.getBody(), BorrowApicron.class);
+                if (borrowApicron == null || borrowApicron.getId() == null || borrowApicron.getBorrowNid() == null
+                        || StringUtils.isNotEmpty(borrowApicron.getPlanNid())) {
+                    logger.info(" 直投放款异常消息：" + msgD.getMsgId());
+                    return;
+                }
+            } catch (Exception e1) {
+                logger.error(e1.getMessage());
                 return;
             }
-        } catch (Exception e1) {
-            logger.error(e1.getMessage());
-            return;
-        }
-        String borrowNid = borrowApicron.getBorrowNid();// 借款编号
-        // int borrowUserId = borrowApicron.getUserId();// 借款人userId
-        Integer failTimes = borrowApicron.getFailCounts();
-        // 生成任务key 校验并发请求
-        String redisKey = RedisConstants.ZHITOU_LOAN_TASK + ":" + borrowApicron.getBorrowNid() + "_" + borrowApicron.getPeriodNow();
+            String borrowNid = borrowApicron.getBorrowNid();// 借款编号
+            // int borrowUserId = borrowApicron.getUserId();// 借款人userId
+            Integer failTimes = borrowApicron.getFailCounts();
+            // 生成任务key 校验并发请求
+            String redisKey = RedisConstants.ZHITOU_LOAN_TASK + ":" + borrowApicron.getBorrowNid() + "_" + borrowApicron.getPeriodNow();
 
-        try {
-            logger.info("标的编号：" + borrowNid + "，开始实时放款！");
-            boolean result = RedisUtils.tranactionSet(redisKey, 300);
-            if (!result) {
-                logger.error("直投类放款请求中....");
-                return;
-            }
-            borrowApicron = realTimeBorrowLoanService.selApiCronByPrimaryKey(borrowApicron.getId());
-            // 如果放款状态为请求中
-            if (borrowApicron.getStatus().equals(CustomConstants.BANK_BATCH_STATUS_SENDING)) {
-                // 发送放款
-                BankCallBean requestLoanBean = realTimeBorrowLoanService.requestLoans(borrowApicron);
-                if (requestLoanBean == null) {
-                    borrowApicron.setFailTimes(borrowApicron.getFailTimes() + 1);
-                    // 放款失败处理
-                    boolean batchDetailFlag = realTimeBorrowLoanService.loanBatchUpdateDetails(borrowApicron, requestLoanBean);
-                    if (!batchDetailFlag) {
-                        throw new Exception("放款成功后，变更放款数据失败。" + "[借款编号：" + borrowNid + "]");
+            try {
+                logger.info("标的编号：" + borrowNid + "，开始实时放款！");
+                boolean result = RedisUtils.tranactionSet(redisKey, 300);
+                if (!result) {
+                    logger.error("直投类放款请求中....");
+                    return;
+                }
+                borrowApicron = realTimeBorrowLoanService.selApiCronByPrimaryKey(borrowApicron.getId());
+                // 如果放款状态为请求中
+                if (borrowApicron.getStatus().equals(CustomConstants.BANK_BATCH_STATUS_SENDING)) {
+                    // 发送放款
+                    BankCallBean requestLoanBean = realTimeBorrowLoanService.requestLoans(borrowApicron);
+                    if (requestLoanBean == null) {
+                        borrowApicron.setFailTimes(borrowApicron.getFailTimes() + 1);
+                        // 放款失败处理
+                        boolean batchDetailFlag = realTimeBorrowLoanService.loanBatchUpdateDetails(borrowApicron, requestLoanBean);
+                        if (!batchDetailFlag) {
+                            throw new Exception("放款成功后，变更放款数据失败。" + "[借款编号：" + borrowNid + "]");
+                        }
+                        // 不需要以下代码了
+    //						boolean apicronResultFlag = realTimeBorrowLoanService.updateBorrowApicron(borrowApicron,CustomConstants.BANK_BATCH_STATUS_FAIL);
+    //						if (apicronResultFlag) {
+    //							throw new Exception(
+    //									"更新状态为（放款请求失败）失败。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
+    //						} else {
+    //							throw new Exception("放款失败,[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
+    //						}
+                    } else {// 放款成功
+                        // 进行后续操作
+                        boolean batchDetailFlag = realTimeBorrowLoanService.loanBatchUpdateDetails(borrowApicron, requestLoanBean);
+                        if (!batchDetailFlag) {
+                            throw new Exception("放款成功后，变更放款数据失败。" + "[借款编号：" + borrowNid + "]");
+                        }
+                        // 放款成功,更新mongo运营数据
+                        logger.info("放款成功更新运营数据...");
+                        sendMQ(borrowApicron);
                     }
-                    // 不需要以下代码了
-//						boolean apicronResultFlag = realTimeBorrowLoanService.updateBorrowApicron(borrowApicron,CustomConstants.BANK_BATCH_STATUS_FAIL);
-//						if (apicronResultFlag) {
-//							throw new Exception(
-//									"更新状态为（放款请求失败）失败。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
-//						} else {
-//							throw new Exception("放款失败,[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
-//						}
-                } else {// 放款成功
-                    // 进行后续操作
+                    //
+                } else if (borrowApicron.getStatus().equals(CustomConstants.BANK_BATCH_STATUS_SENDED)) {
+                    // 发送放款
+                    BankCallBean requestLoanBean = new BankCallBean();
                     boolean batchDetailFlag = realTimeBorrowLoanService.loanBatchUpdateDetails(borrowApicron, requestLoanBean);
                     if (!batchDetailFlag) {
                         throw new Exception("放款成功后，变更放款数据失败。" + "[借款编号：" + borrowNid + "]");
                     }
                     // 放款成功,更新mongo运营数据
-                    logger.info("放款成功更新运营数据...");
+                    logger.info("再次更新放款 运营数据...");
                     sendMQ(borrowApicron);
+                } else {
+                    logger.error("标的编号：" + borrowNid + "，不是放款状态 " + borrowApicron.getStatus());
                 }
-                //
-            } else if (borrowApicron.getStatus().equals(CustomConstants.BANK_BATCH_STATUS_SENDED)) {
-                // 发送放款
-                BankCallBean requestLoanBean = new BankCallBean();
-                boolean batchDetailFlag = realTimeBorrowLoanService.loanBatchUpdateDetails(borrowApicron, requestLoanBean);
-                if (!batchDetailFlag) {
-                    throw new Exception("放款成功后，变更放款数据失败。" + "[借款编号：" + borrowNid + "]");
-                }
-                // 放款成功,更新mongo运营数据
-                logger.info("再次更新放款 运营数据...");
-                sendMQ(borrowApicron);
-            } else {
-                logger.error("标的编号：" + borrowNid + "，不是放款状态 " + borrowApicron.getStatus());
-            }
 
+            } catch (Exception e) {
+                logger.error("散标放款系统异常", e);
+                StringBuffer sbError = new StringBuffer();// 错误信息
+                sbError.append(e.getMessage()).append("<br/>");
+                String online = "生产环境";// 取得是否线上
+                String toMail[] = systemConfig.getLoadRepayMailAddrs();
+                if (systemConfig.isEnvTest()) {
+                    online = "测试环境";
+                }
+                // 发送错误邮件
+                StringBuffer msg = new StringBuffer();
+                msg.append("借款标号：").append(borrowNid).append("<br/>");
+                msg.append("放款时间：").append(GetDate.formatTime()).append("<br/>");
+                msg.append("执行次数：").append("第" + failTimes + "次").append("<br/>");
+                msg.append("错误信息：").append(e.getMessage()).append("<br/>");
+                msg.append("详细错误信息：<br/>").append(sbError.toString());
+
+                try {
+                    if (toMail == null) {
+                        throw new Exception("错误收件人没有配置。" + "[借款编号：" + borrowNid + "]");
+                    }
+                    MailMessage mailmessage = new MailMessage(null, null,
+                            "[" + online + "] " + borrowNid + " 第" + failTimes + "次放款失败", msg.toString(), null, toMail,
+                            null, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
+                    commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, borrowNid, mailmessage));
+                } catch (Exception e2) {
+                    logger.error("发送邮件失败..", e2);
+                }
+            }
+            logger.info("----------------------放款任务结束，项目编号：" + borrowNid + "=============");
+            RedisUtils.del(redisKey);
+            logger.info("----------------------------直投放款结束--------------------------------");
         } catch (Exception e) {
-            logger.error("散标放款系统异常", e);
-            StringBuffer sbError = new StringBuffer();// 错误信息
-            sbError.append(e.getMessage()).append("<br/>");
-            String online = "生产环境";// 取得是否线上
-            String toMail[] = systemConfig.getLoadRepayMailAddrs();
-            if (systemConfig.isEnvTest()) {
-                online = "测试环境";
-            }
-            // 发送错误邮件
-            StringBuffer msg = new StringBuffer();
-            msg.append("借款标号：").append(borrowNid).append("<br/>");
-            msg.append("放款时间：").append(GetDate.formatTime()).append("<br/>");
-            msg.append("执行次数：").append("第" + failTimes + "次").append("<br/>");
-            msg.append("错误信息：").append(e.getMessage()).append("<br/>");
-            msg.append("详细错误信息：<br/>").append(sbError.toString());
-
-            try {
-                if (toMail == null) {
-                    throw new Exception("错误收件人没有配置。" + "[借款编号：" + borrowNid + "]");
-                }
-                MailMessage mailmessage = new MailMessage(null, null,
-                        "[" + online + "] " + borrowNid + " 第" + failTimes + "次放款失败", msg.toString(), null, toMail,
-                        null, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
-                commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, borrowNid, mailmessage));
-            } catch (Exception e2) {
-                logger.error("发送邮件失败..", e2);
-            }
+            logger.error("【直投放款】消费异常!", e);
+            return;
         }
-        logger.info("----------------------放款任务结束，项目编号：" + borrowNid + "=============");
-        RedisUtils.del(redisKey);
-        logger.info("----------------------------直投放款结束--------------------------------");
         return;
     }
 

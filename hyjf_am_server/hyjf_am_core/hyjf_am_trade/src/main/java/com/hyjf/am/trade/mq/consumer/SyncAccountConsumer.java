@@ -92,7 +92,6 @@ public class SyncAccountConsumer implements RocketMQListener<MessageExt>, Rocket
                 // 请求没有返回200 则稍后重新消费
                 return;// ConsumeConcurrentlyStatus.RECONSUME_LATER;
             }
-
         } catch (Exception e1) {
             logger.error("=====" + CONSUMER_NAME + "同步账户额度到crm异常=====");
             logger.error(e1.getMessage());

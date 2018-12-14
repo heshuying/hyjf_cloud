@@ -48,57 +48,61 @@ public class EveFileConsumer implements RocketMQListener<MessageExt>, RocketMQPu
             logger.error("【导入流水明细(Ele)】接收到的消息为null");
             return;
         }
+        try{
+            // --> 消息转换
+            String msgBody = new String(msg.getBody());
+            logger.info("【导入流水明细(eve)】接收到的消息：" + msgBody);
 
-        // --> 消息转换
-        String msgBody = new String(msg.getBody());
-        logger.info("【导入流水明细(eve)】接收到的消息：" + msgBody);
-
-        JSONObject json = JSONObject.parseObject(msgBody);
-        String savePath = json.getString("savePath");
-        String beforeDate = DateUtils.getBeforeDateOfDay();//获取前一天时间返回时间类型 yyyyMMdd
-        String filePatheve = json.getString("filePathEve");
-        if(StringUtils.isBlank(savePath)){
-            logger.error("【导入流水明细(eve)】接收到的savePath为null");
-            return;
-        }
-        if(StringUtils.isBlank(filePatheve)){
-            logger.error("【导入流水明细(eve)】接收到的filePatheve为null");
-            return;
-        }
-        File dir = new File(savePath);
-        File fin;
-        try {
-            logger.info(dir.getCanonicalPath() + File.separator +filePatheve+beforeDate);
-            fin = new File(dir.getCanonicalPath() + File.separator +filePatheve+beforeDate);
-            List<EveLog> eveLogs = new ArrayList<>();
-            List<AleveErrorLog> aleveErrorLogs = new ArrayList<>();
-
-            //读取文件
-            TransUtil.readFileEve(fin,eveLogs,aleveErrorLogs);
-
-            //插入数据
-            if(!CollectionUtils.isEmpty(eveLogs)){
-                try {
-                    aleveLogFileService.insertEveLogByList(eveLogs);
-                    logger.info("EveLog已插入 " + eveLogs.size() + " 条记录");
-                } catch (Exception e){
-                    logger.error("EveLog插入失败", e);
-                }
+            JSONObject json = JSONObject.parseObject(msgBody);
+            String savePath = json.getString("savePath");
+            String beforeDate = DateUtils.getBeforeDateOfDay();//获取前一天时间返回时间类型 yyyyMMdd
+            String filePatheve = json.getString("filePathEve");
+            if(StringUtils.isBlank(savePath)){
+                logger.error("【导入流水明细(eve)】接收到的savePath为null");
+                return;
             }
-            if(!CollectionUtils.isEmpty(aleveErrorLogs)){
-                try {
-                    aleveLogFileService.insertAleveErrorLogByList(aleveErrorLogs);
-                    logger.info("AleveErrorLog已插入 " + aleveErrorLogs.size() + " 条记录");
-                } catch (Exception e){
-                    logger.error("AleveErrorLog插入失败", e);
-                }
+            if(StringUtils.isBlank(filePatheve)){
+                logger.error("【导入流水明细(eve)】接收到的filePatheve为null");
+                return;
             }
+            File dir = new File(savePath);
+            File fin;
+            try {
+                logger.info(dir.getCanonicalPath() + File.separator +filePatheve+beforeDate);
+                fin = new File(dir.getCanonicalPath() + File.separator +filePatheve+beforeDate);
+                List<EveLog> eveLogs = new ArrayList<>();
+                List<AleveErrorLog> aleveErrorLogs = new ArrayList<>();
 
+                //读取文件
+                TransUtil.readFileEve(fin,eveLogs,aleveErrorLogs);
+
+                //插入数据
+                if(!CollectionUtils.isEmpty(eveLogs)){
+                    try {
+                        aleveLogFileService.insertEveLogByList(eveLogs);
+                        logger.info("EveLog已插入 " + eveLogs.size() + " 条记录");
+                    } catch (Exception e){
+                        logger.error("EveLog插入失败", e);
+                    }
+                }
+                if(!CollectionUtils.isEmpty(aleveErrorLogs)){
+                    try {
+                        aleveLogFileService.insertAleveErrorLogByList(aleveErrorLogs);
+                        logger.info("AleveErrorLog已插入 " + aleveErrorLogs.size() + " 条记录");
+                    } catch (Exception e){
+                        logger.error("AleveErrorLog插入失败", e);
+                    }
+                }
+
+            } catch (Exception e) {
+                logger.error("EveLog插入失败", e);
+                return; //ConsumeConcurrentlyStatus.RECONSUME_LATER;
+            }
+            logger.info("********************导入流水明细Eve结束*************************");
         } catch (Exception e) {
-            logger.error("EveLog插入失败", e);
-            return; //ConsumeConcurrentlyStatus.RECONSUME_LATER;
+            logger.error("【导入流水明细(eve)】消费异常!", e);
+            return;
         }
-        logger.info("********************导入流水明细Eve结束*************************");
         return;
     }
 

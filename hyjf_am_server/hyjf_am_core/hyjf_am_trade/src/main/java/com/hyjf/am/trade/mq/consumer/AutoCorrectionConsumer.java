@@ -43,37 +43,42 @@ public class AutoCorrectionConsumer implements RocketMQListener<MessageExt>, Roc
             logger.error("【自动冲正】接收到的消息为null");
             return;// ConsumeConcurrentlyStatus.RECONSUME_LATER;
         }
-        // --> 消息转换
-        String msgBody = new String(msg.getBody());
-        logger.info("【自动冲正】接收到的消息：" + msgBody);
-
-        JSONObject json = JSONObject.parseObject(msgBody);
-        String status = json.getString("status");
-        //验证请求参数
-        if (Validator.isNull(status) || !"1".equals(status)) {
-            logger.error("【自动冲正】接收到的消息不正确");
-            return;
-        }
         try {
-            //aleve表中获取冲正数据：调账交易类型为7616、7820且含有冲正标识
-            List<String> tranStyle = new ArrayList<String>();
-            //活期收益 银联通道提现 单边账调账
-            tranStyle.add("7616");
-            //靠档计息 人行通道提现 单边账调账
-            tranStyle.add("7820");
-            List<AleveLogCustomize> aleveLogCustomizes = aleveLogFileService.selectAleveReverseList(tranStyle);
-            //无利息数据、打印log并返回
-            if (null == aleveLogCustomizes || aleveLogCustomizes.size() == 0) {
-                logger.info("【自动冲正】未查询到冲正信息");
+            // --> 消息转换
+            String msgBody = new String(msg.getBody());
+            logger.info("【自动冲正】接收到的消息：" + msgBody);
+
+            JSONObject json = JSONObject.parseObject(msgBody);
+            String status = json.getString("status");
+            //验证请求参数
+            if (Validator.isNull(status) || !"1".equals(status)) {
+                logger.error("【自动冲正】接收到的消息不正确");
                 return;
             }
-            //自动冲正
-            aleveLogFileService.updateAutoCorretion(aleveLogCustomizes);
+            try {
+                //aleve表中获取冲正数据：调账交易类型为7616、7820且含有冲正标识
+                List<String> tranStyle = new ArrayList<String>();
+                //活期收益 银联通道提现 单边账调账
+                tranStyle.add("7616");
+                //靠档计息 人行通道提现 单边账调账
+                tranStyle.add("7820");
+                List<AleveLogCustomize> aleveLogCustomizes = aleveLogFileService.selectAleveReverseList(tranStyle);
+                //无利息数据、打印log并返回
+                if (null == aleveLogCustomizes || aleveLogCustomizes.size() == 0) {
+                    logger.info("【自动冲正】未查询到冲正信息");
+                    return;
+                }
+                //自动冲正
+                aleveLogFileService.updateAutoCorretion(aleveLogCustomizes);
 
+            } catch (Exception e) {
+                //异常时重发
+                logger.error("【自动冲正异常】处理失败！", e);
+                return;// ConsumeConcurrentlyStatus.RECONSUME_LATER;
+            }
         } catch (Exception e) {
-            //异常时重发
-            logger.error("【自动冲正异常】处理失败！", e);
-            return;// ConsumeConcurrentlyStatus.RECONSUME_LATER;
+            logger.error("【自动冲正】消费异常!", e);
+            return;
         }
         return;
     }

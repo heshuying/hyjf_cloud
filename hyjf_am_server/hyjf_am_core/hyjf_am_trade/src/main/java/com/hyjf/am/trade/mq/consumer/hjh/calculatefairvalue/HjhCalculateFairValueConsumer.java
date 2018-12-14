@@ -67,7 +67,7 @@ public class HjhCalculateFairValueConsumer implements RocketMQListener<MessageEx
             // 如果没有return success ，consumer会重新消费该消息，直到return success
             return;
         } catch (Exception e) {
-            e.printStackTrace();
+            logger.error("汇计划计算计划加入订单公允价值消费异常!", e);
             return;
         }
     }

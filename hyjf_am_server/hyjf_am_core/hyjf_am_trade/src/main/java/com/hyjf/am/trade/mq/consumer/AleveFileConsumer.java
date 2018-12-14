@@ -51,69 +51,73 @@ public class AleveFileConsumer implements RocketMQListener<MessageExt>, RocketMQ
     public void onMessage(MessageExt messageExt) {
         // --> 消息检查
         MessageExt msg = messageExt;
-        if(msg == null || msg.getBody() == null){
+        if (msg == null || msg.getBody() == null) {
             logger.error("【导入流水明细(Aleve)】接收到的消息为null");
             return;
         }
-
-        // --> 消息转换
-        String msgBody = new String(msg.getBody());
-        logger.info("【导入流水明细(Aleve)】接收到的消息：" + msgBody);
-
-        String beforeDate = DateUtils.getBeforeDateOfDay();//获取前一天时间返回时间类型 yyyyMMdd
-        JSONObject json = JSONObject.parseObject(msgBody);
-        String savePath = json.getString("savePath");
-        if(StringUtils.isBlank(savePath)){
-            logger.error("【导入流水明细(Aleve)】接收到的savePath为null");
-            return;
-        }
-        String filePathAleve = json.getString("filePathAleve");
-        if(StringUtils.isBlank(filePathAleve)){
-            logger.error("【导入流水明细(Aleve)】接收到的filePathAleve为null");
-            return;
-        }
-        File dir = new File(savePath);
-        File fin;
         try {
-            logger.info(dir.getCanonicalPath() + File.separator +filePathAleve+beforeDate);
-            fin = new File(dir.getCanonicalPath() + File.separator +filePathAleve+beforeDate);
+            // --> 消息转换
+            String msgBody = new String(msg.getBody());
+            logger.info("【导入流水明细(Aleve)】接收到的消息：" + msgBody);
 
-            List<AleveLog> aleveLogs = new ArrayList<>();
-            List<AleveErrorLog> aleveErrorLogs = new ArrayList<>();
-
-            //读取文件
-            TransUtil.readFileAleve(fin,aleveLogs,aleveErrorLogs);
-
-            //插入数据
-            if(!CollectionUtils.isEmpty(aleveLogs)){
-                try {
-                    aleveLogFileService.insertAleveLogByList(aleveLogs);
-                    logger.info("AleveLog已插入 " + aleveLogs.size() + " 条记录");
-                } catch (Exception e){
-                    logger.error("AleveLog插入失败", e);
-                }
+            String beforeDate = DateUtils.getBeforeDateOfDay();//获取前一天时间返回时间类型 yyyyMMdd
+            JSONObject json = JSONObject.parseObject(msgBody);
+            String savePath = json.getString("savePath");
+            if (StringUtils.isBlank(savePath)) {
+                logger.error("【导入流水明细(Aleve)】接收到的savePath为null");
+                return;
             }
-            if(!CollectionUtils.isEmpty(aleveErrorLogs)){
-                try {
-                    aleveLogFileService.insertAleveErrorLogByList(aleveErrorLogs);
-                    logger.info("AleveErrorLog已插入 " + aleveErrorLogs.size() + " 条记录");
-                } catch (Exception e){
-                    logger.error("AleveErrorLog插入失败", e);
-                }
+            String filePathAleve = json.getString("filePathAleve");
+            if (StringUtils.isBlank(filePathAleve)) {
+                logger.error("【导入流水明细(Aleve)】接收到的filePathAleve为null");
+                return;
             }
+            File dir = new File(savePath);
+            File fin;
+            try {
+                logger.info(dir.getCanonicalPath() + File.separator + filePathAleve + beforeDate);
+                fin = new File(dir.getCanonicalPath() + File.separator + filePathAleve + beforeDate);
+
+                List<AleveLog> aleveLogs = new ArrayList<>();
+                List<AleveErrorLog> aleveErrorLogs = new ArrayList<>();
+
+                //读取文件
+                TransUtil.readFileAleve(fin, aleveLogs, aleveErrorLogs);
+
+                //插入数据
+                if (!CollectionUtils.isEmpty(aleveLogs)) {
+                    try {
+                        aleveLogFileService.insertAleveLogByList(aleveLogs);
+                        logger.info("AleveLog已插入 " + aleveLogs.size() + " 条记录");
+                    } catch (Exception e) {
+                        logger.error("AleveLog插入失败", e);
+                    }
+                }
+                if (!CollectionUtils.isEmpty(aleveErrorLogs)) {
+                    try {
+                        aleveLogFileService.insertAleveErrorLogByList(aleveErrorLogs);
+                        logger.info("AleveErrorLog已插入 " + aleveErrorLogs.size() + " 条记录");
+                    } catch (Exception e) {
+                        logger.error("AleveErrorLog插入失败", e);
+                    }
+                }
+            } catch (Exception e) {
+                logger.error("AleveLog插入失败", e);
+                return;// ConsumeConcurrentlyStatus.RECONSUME_LATER;
+            }
+            JSONObject params = new JSONObject();
+            params.put("status", "1");
+            try {
+                commonProducer.messageSend(new MessageContent(MQConstant.AUTO_CORRECTION_TOPIC, UUID.randomUUID().toString(), params));
+            } catch (MQException e) {
+                logger.error("发送【自动冲正】MQ失败...");
+            }
+            logger.info("********************导入流水明细Aleve结束*************************");
+            return;
         } catch (Exception e) {
-            logger.error("AleveLog插入失败", e);
-            return;// ConsumeConcurrentlyStatus.RECONSUME_LATER;
+            logger.error("【导入流水明细(Aleve)】消费异常!", e);
+            return;
         }
-        JSONObject params = new JSONObject();
-        params.put("status", "1");
-        try {
-            commonProducer.messageSend(new MessageContent(MQConstant.AUTO_CORRECTION_TOPIC, UUID.randomUUID().toString(), params));
-        } catch (MQException e) {
-            logger.error("发送【自动冲正】MQ失败...");
-        }
-        logger.info("********************导入流水明细Aleve结束*************************");
-        return;
     }
 
     @Override
