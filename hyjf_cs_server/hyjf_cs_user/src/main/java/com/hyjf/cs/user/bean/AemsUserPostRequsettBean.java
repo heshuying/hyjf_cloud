@@ -10,7 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @param
  * @return
  **/
-public class AemsUserBindRequsettBean extends BaseBean {
+public class AemsUserPostRequsettBean extends BaseBean {
 
     @ApiModelProperty(value = "加密的AEMS用户ID")
     private String bindUniqueIdScy;

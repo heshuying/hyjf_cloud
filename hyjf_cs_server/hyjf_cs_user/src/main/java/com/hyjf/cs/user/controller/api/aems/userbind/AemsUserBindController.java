@@ -15,16 +15,17 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.ApiSignUtil;
 import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.constants.ErrorCodeConstant;
 import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.controller.web.login.WebLoginController;
 import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.cs.user.service.login.LoginService;
+import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.util.SignUtil;
 import com.hyjf.cs.user.vo.LoginRequestVO;
+import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -50,7 +51,7 @@ import java.util.Map;
  **/
 @Api(value = "api端-Aems页面授权绑定",tags = "api端-Aems页面授权绑定")
 @Controller
-@RequestMapping("/hyjf-api/api/user")
+@RequestMapping("/hyjf-api/aems")
 public class AemsUserBindController extends BaseUserController {
 	@Autowired
 	SystemConfig systemConfig;
@@ -78,14 +79,15 @@ public class AemsUserBindController extends BaseUserController {
 
 
 	/**
-	 * 页面授权绑定 - 汇盈金服开放平台接口_投资端_v1.3.2
-	 * @auth sunpeikai
-	 * @param
-	 * @return
-	 */
+	 * Aems页面授权绑定 - 汇盈金服开放平台接口_投资端_v1.3.2
+	 * @author Zha Daojian
+	 * @date 2018/12/14 11:07
+	 * @param request, response, userPostBean
+	 * @return org.springframework.web.servlet.ModelAndView
+	 **/
 	@ApiOperation(value = "页面授权绑定api-跳转登陆授权页面",notes = "页面授权绑定api-跳转登陆授权页面")
-	@PostMapping(value = "/bindApi")
-	public ModelAndView bindApi(HttpServletRequest request, HttpServletResponse response,@RequestBody AemsUserBindRequsettBean userPostBean){
+	@PostMapping(value = "/bindAems")
+	public ModelAndView bindApi(HttpServletRequest request, HttpServletResponse response,@RequestBody AemsUserPostRequsettBean userPostBean){
 		// 设置接口结果页的信息（返回Url）
 		this.initCheckUtil(userPostBean);
 		//TODO:用户登录授权页面
@@ -110,10 +112,9 @@ public class AemsUserBindController extends BaseUserController {
             baseMapBean.set(CustomConstants.APP_STATUS_DESC, "用户授权！");
             baseMapBean.setCallBackAction(webHost+JUMP_BIND_HTML);
         }else{
-            // 登陆
-            WebViewUserVO webUser = loginService.getWebViewUserByUserId(userId);
-            loginService.setToken(webUser);
-            //WebUtils.sessionLogin(request, response, webUser);
+			// 登陆
+			UserVO userVO = loginService.getUsersById(userId);
+			loginService.loginOperationOnly(userVO,userVO.getUsername(),GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_APP);
 
             //重复绑定
             CheckUtil.check(false,MsgEnum.ERR_BIND_REPEAT);
@@ -272,13 +273,12 @@ public class AemsUserBindController extends BaseUserController {
 	}
 	/**
 	 * 错误页跳转用，初期化结果页数据（错误信息除外）
-	 * @param
-	 * @param
-	 * @param
-	 * @return
-	 * @author liubin
-	 */
-	protected void initCheckUtil(AemsUserBindRequsettBean userPostBean) {
+	 * @author Zha Daojian
+	 * @date 2018/12/14 11:06checkPostBeanOfWeb
+	 * @param userPostBean
+	 * @return void
+	 **/
+	protected void initCheckUtil(AemsUserPostRequsettBean userPostBean) {
 		// 结果页FormBean赋值
 		ApiResultPageBean apiResultPageBean = new ApiResultPageBean();
 		apiResultPageBean.setRetUrl(userPostBean.getRetUrl());
@@ -290,7 +290,7 @@ public class AemsUserBindController extends BaseUserController {
 	 * 传入信息验证,AEMS自动登录、绑定
 	 * @param bean
 	 */
-	public void checkPostBeanOfWeb(AemsUserBindRequsettBean bean) {
+	public void checkPostBeanOfWeb(AemsUserPostRequsettBean bean) {
 		//传入信息验证
 		CheckUtil.check(Validator.isNotNull(bean.getBindUniqueIdScy()),MsgEnum.ERR_OBJECT_REQUIRED, "bindUniqueIdScy");
 		CheckUtil.check(Validator.isNotNull(bean.getChkValue()),MsgEnum.ERR_OBJECT_REQUIRED, "chkValue");
@@ -303,8 +303,8 @@ public class AemsUserBindController extends BaseUserController {
 	 * 验签
 	 * @param bean
 	 */
-	public void checkSign(AemsUserBindRequsettBean bean) {
-		CheckUtil.check(SignUtil.AEMSVerifyRequestSign(bean, "/aems/unbindCardPage/deleteCardPage"),MsgEnum.ERR_SIGN);
+	public void checkSign(AemsUserPostRequsettBean bean) {
+		CheckUtil.check(SignUtil.AEMSVerifyRequestSign(bean, "/aems//bindAems"),MsgEnum.ERR_SIGN);
 	}
 	/**
 	 * 解密

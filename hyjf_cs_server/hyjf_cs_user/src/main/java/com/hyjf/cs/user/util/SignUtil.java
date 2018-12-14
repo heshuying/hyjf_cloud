@@ -37,7 +37,7 @@ public class SignUtil {
             sign = bean.getInstCode() + bean.getAccountId() + bean.getTimestamp();
         }else if ("/aems/unbindCardPage/deleteCardPage".equals(methodName)) {
             //aems解卡(页面调用)合规
-            UnbindCardPageRequestBean bean = (UnbindCardPageRequestBean) paramBean;
+            AemsUnbindCardPageRequestBean bean = (AemsUnbindCardPageRequestBean) paramBean;
             sign = bean.getInstCode()+ bean.getAccountId() + bean.getMobile() + bean.getCardNo()+bean.getTimestamp();
         }else if (("/aems/evaluation/saveUserEvaluationResults").equals(methodName)) {
             //aems用户风险测评
@@ -67,7 +67,16 @@ public class SignUtil {
             // AEMS多合一授权
             AemsMergeAuthPagePlusRequestBean bean = (AemsMergeAuthPagePlusRequestBean) paramBean;
             sign = bean.getInstCode() + bean.getAccountId() + bean.getAuthType() + bean.getRetUrl() + bean.getNotifyUrl() + bean.getTimestamp();
+        }else if ("/aems/bindAems".equals(methodName)){
+            // Aems页面授权
+            AemsUserPostRequsettBean bean = (AemsUserPostRequsettBean) paramBean;
+            sign = bean.getChkValue()+  bean.getBindUniqueIdScy()+ bean.getPid()+ bean.getRetUrl()+ bean.getTimestamp();
+        }else if ("/api/aems/thirdLogin".equals(methodName)){
+            // Aems用戶自动登录
+            AemsUserPostRequsettBean bean = (AemsUserPostRequsettBean) paramBean;
+            sign = bean.getChkValue()+ bean.getBindUniqueIdScy()+ bean.getPid()+ bean.getRetUrl()+ bean.getTimestamp();
         }
+
         // TODO AEMS验签修改
         return ApiSignUtil.verifyByRSA("AEMS", paramBean.getChkValue(), sign);
     }
