@@ -195,6 +195,23 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	@Override
+	public UserVO updateUsersById(Integer userId) {
+		String url = userService + "/user/updateById/" + userId;
+		UserResponse response = restTemplate.getForEntity(url, UserResponse.class).getBody();
+		if (response != null) {
+			if (Response.SUCCESS.equals(response.getRtn())) {
+				UserVO userVO =  response.getResult();
+				return userVO;
+			}
+			logger.info("response rtn is : {}", response.getRtn());
+		} else {
+			logger.info("response is null....");
+		}
+		return null;
+	}
+
 	/**
 	 * 保存验证码
 	 * @param mobile
