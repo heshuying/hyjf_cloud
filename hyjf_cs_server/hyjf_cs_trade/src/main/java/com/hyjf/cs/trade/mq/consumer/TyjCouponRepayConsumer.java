@@ -50,10 +50,8 @@ public class TyjCouponRepayConsumer implements RocketMQListener<MessageExt>, Roc
 
 	@Override
 	public void onMessage(MessageExt messageExt) {
-		logger.info("体验金按收益期限还款收到消息， 开始处理, messageExt is : {}", messageExt);
-
-		String nids = JSONObject.parseObject(messageExt.getBody(), String.class);
-		logger.info("nids: {}", nids);
+		String nids = new String(messageExt.getBody());
+		logger.info("体验金按收益期限还款收到消息， 开始处理, nids is : {}", nids);
 		try {
 			List<String> recoverNidList = splitString(nids);
 
