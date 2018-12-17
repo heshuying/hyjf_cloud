@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.resquest.trade.*;
+import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
 import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
@@ -1036,5 +1037,10 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     @Override
     public List<TenderAgreementVO> selectTenderAgreementByNid(String borrowNid) {
         return amTradeClient.selectTenderAgreementByNid(borrowNid);
+    }
+
+    @Override
+    public WebUserRepayTransferCustomizeVO selectUserRepayTransferDetailList(WebUserRepayTransferRequest repayTransferRequest) {
+        return amTradeClient.getUserRepayDetailAjax(repayTransferRequest);
     }
 }

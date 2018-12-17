@@ -2,9 +2,11 @@ package com.hyjf.am.trade.service.front.repay.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.trade.RepayListRequest;
+import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.trade.bean.repay.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.EmployeeCustomize;
+import com.hyjf.am.trade.dao.model.customize.WebUserRepayTransferCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserTransferBorrowInfoCustomize;
 import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
@@ -5278,5 +5280,91 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     @Override
     public WebUserTransferBorrowInfoCustomize getUserTransferBorrowInfo(String borrowNid) {
         return webUserRepayListCustomizeMapper.getBorrowInfo(borrowNid);
+    }
+
+    @Override
+    public int selectUserRepayTransferDetailListTotal(String borrowNid, String verificationFlag) {
+        if (StringUtils.isNotEmpty(verificationFlag)){
+            return webUserRepayListCustomizeMapper.selectUserRepayTransferListTotalByHjhCreditTender(borrowNid);
+        }else {
+            return webUserRepayListCustomizeMapper.selectUserRepayTransferListTotalByCreditTender(borrowNid);
+        }
+    }
+
+    /**
+     * 用户待还详情
+     * @param borrowNid
+     * @param verificationFlag 计划标的和非计划标的判断的Flag
+     * @return
+     */
+    @Override
+    public List<WebUserRepayTransferCustomize> selectUserRepayTransferDetailList(WebUserRepayTransferRequest repayTransferRequest) {
+
+        Integer limitStart = repayTransferRequest.getLimitStart();
+        Integer limitEnd = repayTransferRequest.getLimitEnd();
+        /**
+         * verificationFlag 为空时,为计划类的标的 查询 hyjf_hjh_debt_credit_tender 表
+         * verificationFlag 不为空时, 为非计划的标的,查询 huiyingdai_credit_tender 表
+         */
+        List<WebUserRepayTransferCustomize> list = null;
+        Map<String, Object> params = new HashMap<String, Object>();
+        if (StringUtils.isNotEmpty(repayTransferRequest.getVerificationFlag())){
+            params.put("borrowNid", repayTransferRequest.getBorrowNid());
+            if (limitStart == 0 || limitStart > 0) {
+                params.put("limitStart", limitStart);
+            }
+            if (limitEnd > 0) {
+                params.put("limitEnd", limitEnd);
+            }
+            list = webUserRepayListCustomizeMapper.selectUserRepayTransferListByHjhCreditTender(params);
+        }else {
+            params.put("borrowNid", repayTransferRequest.getBorrowNid());
+            if (limitStart == 0 || limitStart > 0) {
+                params.put("limitStart", limitStart);
+            }
+            if (limitEnd > 0) {
+                params.put("limitEnd", limitEnd);
+            }
+            list = webUserRepayListCustomizeMapper.selectUserRepayTransferListByCreditTender(params);
+        }
+
+        return list;
+    }
+
+    /**
+     *
+     * 以hyjf开头:
+     *      hyjf123456 的加密第5-8位
+     *      hyjf13125253333 的加密第8-11位
+     * 其他 :
+     *      a**
+     *          或
+     *      张**
+     * @param userName
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public String usernameEncryption(String userName){
+        if (StringUtils.isNotBlank(userName)){
+            /**
+             * 2,不为汉字时,截取前四位判断是否以hyjf开头.
+             * 3,以hyjf开头判断字符串长度,确定需要加密的位置.
+             */
+            String firstString = userName.substring(0, 1);
+
+            String str = "****";
+            if (userName.startsWith("hyjf")){
+                StringBuilder stringBuilder = new StringBuilder(userName);
+                if (userName.length() >= 15){
+                    return stringBuilder.replace(7, 11, str).toString();
+                }else {
+                    return stringBuilder.replace(4, 8, str).toString();
+                }
+            }else {
+                return firstString + "**";
+            }
+        }
+        return null;
     }
 }

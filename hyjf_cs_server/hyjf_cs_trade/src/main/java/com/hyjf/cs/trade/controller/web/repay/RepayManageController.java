@@ -2,9 +2,11 @@ package com.hyjf.cs.trade.controller.web.repay;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.trade.RepayRequest;
 import com.hyjf.am.resquest.trade.RepayRequestDetailRequest;
+import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
@@ -54,6 +56,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.File;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.*;
 
@@ -299,6 +302,26 @@ public class RepayManageController extends BaseTradeController {
         }
         return result;
     }
+
+    /**
+     *
+     * @param repayTransferRequest
+     * @return
+     */
+    @ApiOperation(value = "用户待还标的-债转列表", notes = "用户待还标的-债转列表")
+    @PostMapping(value = "/userRepayDetailAjax", produces = "application/json; charset=utf-8")
+    public  WebResult<WebUserRepayTransferCustomizeVO> userRepayDetailAjax(@RequestBody WebUserRepayTransferRequest repayTransferRequest){
+        WebResult<WebUserRepayTransferCustomizeVO> result = new WebResult<>();
+//        WebUserRepayTransferCustomizeVO voList = null;
+        WebUserRepayTransferCustomizeVO repayTransferCustomizeVO =  this.repayManageService.selectUserRepayTransferDetailList(repayTransferRequest);
+        if (repayTransferCustomizeVO != null){
+            result.setData(repayTransferCustomizeVO);
+        }
+        result.setStatus(BaseResult.SUCCESS);
+        result.setStatusDesc(BaseResult.SUCCESS_DESC);
+        return result;
+    }
+
     /**
      * 垫付机构待还款列表
      * @auther: hesy
