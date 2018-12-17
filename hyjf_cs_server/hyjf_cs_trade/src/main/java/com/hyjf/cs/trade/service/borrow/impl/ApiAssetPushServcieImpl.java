@@ -620,8 +620,6 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         boolean flag = false;
 
         for (PushBean pushBean : reqData) {
-            //每个资产推送前先标识为资产推送失败
-            flag = false;
             try {
 				/*if (pushBean.getAccount() > MAX_ASSET_MONEY) {
 					pushBean.setRetCode(ErrorCodeConstant.STATUS_ZT000006);
