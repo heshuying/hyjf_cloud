@@ -74,6 +74,7 @@ public class WebSafeController extends BaseUserController {
             response.setStatus(ApiResult.FAIL);
             response.setStatusDesc("账户设置查询失败");
         }
+        logger.info("账户设置查询 is {}"+result);
         response.setData(result);
         return response;
     }
