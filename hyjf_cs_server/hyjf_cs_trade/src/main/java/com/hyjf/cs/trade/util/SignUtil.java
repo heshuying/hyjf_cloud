@@ -65,6 +65,18 @@ public class SignUtil {
             //aems 获取回款记录
             AemsRepayListRequestBean bean = (AemsRepayListRequestBean) paramBean;
             sign = bean.getInstCode() + bean.getStartTime() + bean.getEndTime() + bean.getTimestamp();
+        }else if (("/aems/tradelist/tradelist").equals(methodName)) {
+            //aems交易明细查询验签
+            AemsTransactionDetailsResultBean bean = (AemsTransactionDetailsResultBean) paramBean;
+            sign = bean.getInstCode() + bean.getTimestamp() + bean.getPhone() + bean.getAccountId();//暂定四个参数
+        }else if (("/aems/borrowList/borrowList").equals(methodName)) {
+            //aems标的列表查询
+            AemsBorrowListRequestBean bean = (AemsBorrowListRequestBean) paramBean;
+            sign = bean.getInstCode() + bean.getBorrowStatus() + bean.getTimestamp();
+        } else if (("/aems/borrowDetail/getBorrowDetail").equals(methodName)) {
+            //aems标的详情查询
+            AemsBorrowDetailRequestBean bean = (AemsBorrowDetailRequestBean) paramBean;
+            sign = bean.getInstCode() + bean.getBorrowNid() + bean.getTimestamp();
         }
         // TODO AEMS验签修改
         return ApiSignUtil.verifyByRSA("AEMS", paramBean.getChkValue(), sign);

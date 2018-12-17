@@ -75,6 +75,10 @@ public class SignUtil {
             // Aems用戶自动登录
             AemsUserPostRequsettBean bean = (AemsUserPostRequsettBean) paramBean;
             sign = bean.getChkValue()+ bean.getBindUniqueIdScy()+ bean.getPid()+ bean.getRetUrl()+ bean.getTimestamp();
+        }else if ("/aems/synbalance/synbalance".equals(methodName)){
+            // Aems用户余额查询
+            AemsSynBalanceRequestBean bean = (AemsSynBalanceRequestBean) paramBean;
+            sign = bean.getAccountId() + bean.getTimestamp();
         }
 
         // TODO AEMS验签修改
