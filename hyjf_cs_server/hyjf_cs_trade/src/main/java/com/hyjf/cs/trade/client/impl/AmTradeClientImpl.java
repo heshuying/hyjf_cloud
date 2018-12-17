@@ -6067,11 +6067,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @Author : huanghui
      */
     @Override
-    public WebUserRepayTransferCustomizeVO getUserRepayDetailAjax(WebUserRepayTransferRequest repayTransferRequest) {
+    public List<WebUserRepayTransferCustomizeVO> getUserRepayDetailAjax(WebUserRepayTransferRequest repayTransferRequest) {
         WebUserRepayTransferCustomizeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/repay/userRepayDetailAjax/", repayTransferRequest, WebUserRepayTransferCustomizeResponse.class).getBody();
 
         if (response != null && Response.isSuccess(response)){
-            return response.getResult();
+            return response.getResultList();
         }
         return null;
     }

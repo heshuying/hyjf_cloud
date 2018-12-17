@@ -234,5 +234,5 @@ public interface RepayManageService extends BaseTradeService {
      * @return
      * @Author : huanghui
      */
-    WebUserRepayTransferCustomizeVO selectUserRepayTransferDetailList(WebUserRepayTransferRequest repayTransferRequest);
+    List<WebUserRepayTransferCustomizeVO> selectUserRepayTransferDetailList(WebUserRepayTransferRequest repayTransferRequest);
 }

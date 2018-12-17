@@ -1040,7 +1040,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     }
 
     @Override
-    public WebUserRepayTransferCustomizeVO selectUserRepayTransferDetailList(WebUserRepayTransferRequest repayTransferRequest) {
+    public List<WebUserRepayTransferCustomizeVO> selectUserRepayTransferDetailList(WebUserRepayTransferRequest repayTransferRequest) {
         return amTradeClient.getUserRepayDetailAjax(repayTransferRequest);
     }
 }

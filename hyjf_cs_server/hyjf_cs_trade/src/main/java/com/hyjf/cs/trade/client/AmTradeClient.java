@@ -2471,6 +2471,6 @@ public interface AmTradeClient {
      */
     WebUserTransferBorrowInfoCustomizeVO getUserTransferBorrowInfo(String borrowNid);
 
-    WebUserRepayTransferCustomizeVO getUserRepayDetailAjax(WebUserRepayTransferRequest repayTransferRequest);
+    List<WebUserRepayTransferCustomizeVO> getUserRepayDetailAjax(WebUserRepayTransferRequest repayTransferRequest);
 }
 
