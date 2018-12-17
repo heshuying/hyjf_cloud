@@ -132,7 +132,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         resultMap.put("isSetPassword", user.getIsSetPassword());
         resultMap.put("lastTime", userLogin.getLastTime());
         UsersContactVO usersContactVO = amUserClient.selectUserContact(user.getUserId());
-        resultMap.put("usersContract", usersContactVO);
+        resultMap.put("usersContract", usersContactVO==null?"":usersContactVO);
         logger.info("usersContract：is {}",usersContactVO);
         // 紧急联系人类型 
         Map<String, String> result = CacheUtil.getParamNameMap("USER_RELATION");
