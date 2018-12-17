@@ -467,7 +467,9 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			boolean repayFlag = this.debtRepays(apicron, borrow, borrowInfo, resultBeans);
 			if (repayFlag) {
 				try {
+					logger.info("【计划还款】更新标的状态前apicron:{}", JSON.toJSONString(apicron));
 					boolean borrowFlag = ((BatchBorrowRepayPlanService)AopContext.currentProxy()).updateBorrowStatus(apicron, borrow, borrowInfo);
+					logger.info("【计划还款】更新标的状态后apicron:{}", JSON.toJSONString(apicron));
 					if (borrowFlag) {
 						return true;
 					}
@@ -3178,6 +3180,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		// 标的是否可用担保机构还款
 		int isRepayOrgFlag = Validator.isNull(borrowInfo.getIsRepayOrgFlag()) ? 0 : borrowInfo.getIsRepayOrgFlag();
 		apicron = this.borrowApicronMapper.selectByPrimaryKey(apicron.getId());
+		logger.info("【计划还款】apicron:{}", JSON.toJSONString(apicron));
 		int repayUserId = apicron.getUserId();
 		int periodNow = apicron.getPeriodNow();
 		int repayCount = apicron.getTxCounts();// 放款总笔数
