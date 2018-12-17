@@ -59,51 +59,61 @@ public class BaseBean {
      * 访问渠道
      * 000001渠道 app 000002渠道 pc  000003渠道 wechat
      */
+    @ApiModelProperty(value = "访问渠道")
     private String channel="000002";
 
     /**
      * 平台
      * 0：PC  1：微官网  2：Android  3：iOS  4：其他
      */
+    @ApiModelProperty(value = "平台")
     private String platform;
 
     /**
      * 当前时间戳（10位）
      */
+    @ApiModelProperty(value = "当前时间戳")
     private Long timestamp;
     
     /**
      * 第三方同步回调接口
      */
+    @ApiModelProperty(value = "第三方同步回调接口")
     private String retUrl;
     
     /**
      * 第三方异步回调接口
      */
+    @ApiModelProperty(value = "第三方异步回调接口")
     private String bgRetUrl;
     /**
      * 保留域
      */
+    @ApiModelProperty(value = "保留域")
     private String acqRes;//
     
     /**
      * 第三方接口机构编号
      */
+    @ApiModelProperty(value = "第三方接口机构编号")
     private String instCode;
     
 	/**
 	 * 检索开始行(必传默认0)
 	 */
+    @ApiModelProperty(value = "检索开始行")
 	private Integer limitStart = PAGE_STRAT;
 	
 	/**
 	 * 检索步长(必传默认100)
 	 */
+    @ApiModelProperty(value = "检索步长")
 	private Integer limitEnd = PAGE_MAXSIZE;
 
     /**
      * 忘记密码Url
      */
+    @ApiModelProperty(value = "忘记密码Url")
     private String  forgotPwdUrl;
 
     public String getRandomString() {

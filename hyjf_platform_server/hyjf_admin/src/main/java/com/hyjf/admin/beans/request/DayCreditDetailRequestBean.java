@@ -48,6 +48,22 @@ public class DayCreditDetailRequestBean {
     @ApiModelProperty(value = "转让人标的Nid")
     private String planNid;
 
+    @ApiModelProperty(value = "清算后计划编号")
+    private String planNidNew;
+
+    @ApiModelProperty(value = "出让人计划订单号")
+    private String planOrderId;
+
+    @ApiModelProperty(value = "出让人用户名")
+    private String userName;
+
+
+    @ApiModelProperty(value = "债转编号")
+    private String creditNid;
+
+    @ApiModelProperty(value = "项目编号-原项目编号")
+    private String borrowNid;
+
     public String getCreditStatus() {
         return creditStatus;
     }
@@ -134,5 +150,45 @@ public class DayCreditDetailRequestBean {
 
     public void setPlanNid(String planNid) {
         this.planNid = planNid;
+    }
+
+    public String getPlanNidNew() {
+        return planNidNew;
+    }
+
+    public void setPlanNidNew(String planNidNew) {
+        this.planNidNew = planNidNew;
+    }
+
+    public String getPlanOrderId() {
+        return planOrderId;
+    }
+
+    public void setPlanOrderId(String planOrderId) {
+        this.planOrderId = planOrderId;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public String getCreditNid() {
+        return creditNid;
+    }
+
+    public void setCreditNid(String creditNid) {
+        this.creditNid = creditNid;
+    }
+
+    public String getBorrowNid() {
+        return borrowNid;
+    }
+
+    public void setBorrowNid(String borrowNid) {
+        this.borrowNid = borrowNid;
     }
 }

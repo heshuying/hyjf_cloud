@@ -13,8 +13,10 @@ import com.hyjf.am.response.app.AppProjectInvestListCustomizeResponse;
 import com.hyjf.am.response.app.AppProjectListResponse;
 import com.hyjf.am.response.app.AppTenderCreditInvestListCustomizeResponse;
 import com.hyjf.am.response.config.AppReapyCalendarResponse;
+import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.market.AppAdsCustomizeResponse;
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.response.trade.HjhPlanDetailResponse;
 import com.hyjf.am.response.trade.HjhPlanResponse;
 import com.hyjf.am.response.trade.account.*;
@@ -49,6 +51,7 @@ import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
@@ -81,6 +84,7 @@ import com.hyjf.cs.trade.bean.TransactionDetailsResultBean;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.util.HomePageDefine;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -1131,7 +1135,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     @Cached(name="webHomeProjectListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
-	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public List<WebProjectListCustomizeVO> searchProjectList(ProjectListRequest request) {
         ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/searchProjectList",request,ProjectListResponse.class).getBody();
         if (Response.isSuccess(response)){
@@ -1141,6 +1145,8 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
+    @Cached(name="webHomeProjectListCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public Integer countProjectList(ProjectListRequest request) {
         ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/countProjectList",request,ProjectListResponse.class).getBody();
         if (Response.isSuccess(response)){
@@ -1191,6 +1197,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/6/21 15:28
      */
     @Override
+    @Cached(name="webPlanListCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 2, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
     public Integer countPlanList(ProjectListRequest request) {
         ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/countPlanList",request,ProjectListResponse.class).getBody();
         if (Response.isSuccess(response)){
@@ -1205,7 +1213,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/6/21 15:29
      */
     @Override
-	@Cached(name="webHomeHjhCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+	@Cached(name="webPlanListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
 	@CacheRefresh(refresh = 2, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
     public List<HjhPlanCustomizeVO> searchPlanList(ProjectListRequest request) {
         com.hyjf.am.response.trade.HjhPlanResponse response =  restTemplate.postForEntity(BASE_URL + "/web/searchPlanList",request, com.hyjf.am.response.trade.HjhPlanResponse.class).getBody();
@@ -1238,6 +1246,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/6/20 17:23
      */
     @Override
+    @Cached(name="appProjectListCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public Integer countAppProjectList(ProjectListRequest request) {
         AppProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countProjectList",request,AppProjectListResponse.class).getBody();
         if (Response.isSuccess(response)){
@@ -1252,7 +1262,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/6/20 17:24
      */
     @Override
-	@Cached(name="appHomeProjectListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+	@Cached(name="appProjectListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
 	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public List<AppProjectListCustomizeVO> searchAppProjectList(AppProjectListRequest request) {
         AppProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/searchAppProjectList",request,AppProjectListResponse.class).getBody();
@@ -1269,6 +1279,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
 
     @Override
+    @Cached(name="appCreditListCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
     public ProjectListResponse countAppCreditList(ProjectListRequest request) {
         ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countCreditList",request,ProjectListResponse.class).getBody();
         return response;
@@ -1280,6 +1292,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/6/19 16:39
      */
     @Override
+    @Cached(name="appCreditListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
     public ProjectListResponse searchAppCreditList(ProjectListRequest request) {
         ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/searchCreditList",request,ProjectListResponse.class).getBody();
         return response;
@@ -1291,6 +1305,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/6/22 9:59
      */
     @Override
+    @Cached(name="appPlanListCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 2, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
     public Integer countAppPlanList(ProjectListRequest request) {
         ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countPlanList",request,ProjectListResponse.class).getBody();
         if (Response.isSuccess(response)){
@@ -1306,6 +1322,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/6/22 9:59
      */
     @Override
+    @Cached(name="appPlanListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 2, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
     public List<HjhPlanCustomizeVO> searchAppPlanList(ProjectListRequest request) {
         com.hyjf.am.response.trade.HjhPlanResponse response =  restTemplate.postForEntity(BASE_URL + "/app/searchPlanList",request, com.hyjf.am.response.trade.HjhPlanResponse.class).getBody();
         if (Response.isSuccess(response)){
@@ -5416,6 +5434,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/10/9 15:53
      */
     @Override
+    @Cached(name="webHomeProjectTypeListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public List<BorrowProjectTypeVO> getProjectTypeList() {
         String url = "http://AM-TRADE/am-trade/config/projecttype/getProjectType";
         BorrowProjectTypeResponse response = restTemplate.getForEntity(url,BorrowProjectTypeResponse.class).getBody();
@@ -5868,8 +5888,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
+    @Cached(name="appHomeAnnouncementsCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 10, stopRefreshAfterLastAccess = 10, timeUnit = TimeUnit.MINUTES)
     public List<AppPushManageVO> getAnnouncements() {
-
         String url = "http://AM-TRADE/am-trade/projectlist/apphomepage/getAnnouncements";
         AppPushManageResponse response = restTemplate.getForEntity(url, AppPushManageResponse.class).getBody();
         if (Response.isSuccess(response)) {
@@ -5941,6 +5962,107 @@ public class AmTradeClientImpl implements AmTradeClient {
         StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResultStr();
+        }
+        return null;
+    }
+
+    @Override
+    @Cached(name="wechatHomeProjectListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+    public List<WechatHomeProjectListVO> getWechatProjectList(Map<String, Object> projectMap){
+        String url = HomePageDefine.WECHAT_HOME_PROJECT_LIST_URL;
+        WechatProjectListResponse res = restTemplate.postForEntity(url, projectMap, WechatProjectListResponse.class).getBody();
+        if (Response.isSuccess(res)){
+            return res.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * @author libin
+     * 抽出查询统计信息的方法
+     * @date 2018/9/5 11:38
+     */
+    @Override
+    @Cached(name="wechatTotalInvestAndInterestCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.MINUTES)
+    public TotalInvestAndInterestResponse getTotalInvestAndInterestResponse(){
+        TotalInvestAndInterestResponse res = restTemplate.getForEntity(HomePageDefine.INVEST_INVEREST_AMOUNT_URL, TotalInvestAndInterestResponse.class).getBody();
+        return res;
+    }
+
+    @Override
+    @Cached(name="wechatHomePlanLaterCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+    public List<WechatHomeProjectListVO> getWechatHomePlanLater() {
+        WechatProjectListResponse res = restTemplate.getForEntity(HomePageDefine.WECHAT_HOME_PLAN_LATER_URL,WechatProjectListResponse.class).getBody();
+        if (Response.isSuccess(res)){
+            return res.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    @Cached(name="wechatHomeRepaymentsProjectList-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+    public List<WechatHomeProjectListVO> getWechatHomeRepaymentsProjectList() {
+        WechatProjectListResponse res =  restTemplate.getForEntity(HomePageDefine.WECHAT_HOME_REPAYMENT_URL, WechatProjectListResponse.class).getBody();
+        if (Response.isSuccess(res)){
+            return res.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    @Cached(name="webCreditListCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+    public int getWebCreditListCount(CreditListRequest request) {
+        CreditListResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/projectlist/web/countCreditList", request, CreditListResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getCount();
+        }
+        return 0;
+    }
+
+    @Override
+    @Cached(name="webCreditListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+    public List<CreditListVO> getWebCreditList(CreditListRequest request) {
+        CreditListResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/projectlist/web/searchWebCreditList", request, CreditListResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 抽出查询noticeList的方法
+     * @date 2018/9/5 11:38
+     */
+    @Cached(name="webHomeNoticeCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+    @Override
+    public List<ContentArticleVO> getNoticeList(ContentArticleRequest contentArticleRequest) {
+        String url = "http://AM-CONFIG/am-config/article/noticeList";
+        ContentArticleResponse response = restTemplate.postForEntity(url,contentArticleRequest,ContentArticleResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 抽出查询bannner的方法
+     * @date 2018/9/5 11:38
+     */
+    @Cached(name="webHomeBannerCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+    @Override
+    public List<AppAdsCustomizeVO> getWebHomeBannerList(AdsRequest request) {
+        String url = "http://AM-MARKET/am-market/ads/getBannerList";
+        AppAdsCustomizeResponse res = restTemplate.postForEntity(url,request,AppAdsCustomizeResponse.class).getBody();
+        if (Response.isSuccess(res)){
+            return res.getResultList();
         }
         return null;
     }

@@ -35,9 +35,9 @@ public class DirectionalTransferAssociatedRecordsDao extends BaseMongoDao<Direct
         Query query = new Query();
         Criteria criteria = createCriteria(request);
         query.addCriteria(criteria);
-        if(request.getLimitStart()!=-1){
-            query.skip(request.getLimitStart()-1).limit(request.getLimitEnd());
-        }
+//        if(request.getLimitStart()!=-1){
+//            query.skip(request.getLimitStart()-1).limit(request.getLimitEnd());
+//        }
         return mongoTemplate.count(query,getEntityClass());
     }
     public List<DirectionalTransferAssociatedRecords> searchDirectionalTransferList(AssociatedRecordListRequest request){

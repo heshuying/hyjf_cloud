@@ -62,6 +62,10 @@ public interface EventService {
 	 */
 	 List<Event> getEvents(int begin, int end,int year);
 
-
-
+	/**
+	 * 查询符合条件的条数
+	 * @param request
+	 * @return
+	 */
+    int selectCount(EventsRequest request);
 }

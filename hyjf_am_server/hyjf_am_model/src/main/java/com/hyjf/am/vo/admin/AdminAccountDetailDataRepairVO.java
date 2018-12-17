@@ -4,6 +4,7 @@
 package com.hyjf.am.vo.admin;
 
 import com.hyjf.am.vo.BaseVO;
+import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 
@@ -13,6 +14,7 @@ import java.io.Serializable;
  */
 public class AdminAccountDetailDataRepairVO extends BaseVO implements Serializable {
     private Integer userId;
+    @ApiModelProperty("重发id")
     private String id;
 
     public Integer getUserId() {
@@ -29,5 +31,13 @@ public class AdminAccountDetailDataRepairVO extends BaseVO implements Serializab
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    @Override
+    public String toString() {
+        return "AdminAccountDetailDataRepairVO{" +
+                "userId=" + userId +
+                ", id='" + id + '\'' +
+                '}';
     }
 }

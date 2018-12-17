@@ -88,29 +88,23 @@ public class AssociatedRecodesController extends BaseController {
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
         int sheetCount = 0;
-        String sheetNameTmp = sheetName + "_第1页";
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
-        request.setCurrPage(1);
-        request.setPageSize(defaultRowMaxCount);
+//        request.setCurrPage(1);
+//        request.setPageSize(defaultRowMaxCount);
 
         Integer count = associatedRecordsService.getAssociatedRecordsCount(request);
-        // 检索列表
-        List<AssociatedRecordListVO> associatedRecordListVOS = associatedRecordsService.getAssociatedRecordList(request);
-
+        sheetCount = (count % defaultRowMaxCount) == 0 ? count / defaultRowMaxCount : count / defaultRowMaxCount + 1;
         if (count == null || count.equals(0)  ){
+            String sheetNameTmp = sheetName + "_第1页";
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-        }else{
-            int totalCount = count;
-            sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, associatedRecordListVOS);
         }
-
         for (int i = 1; i < sheetCount; i++) {
             request.setCurrPage(i+1);
+            request.setPageSize(defaultRowMaxCount);
             List<AssociatedRecordListVO> associatedRecordListVOS2 = associatedRecordsService.getAssociatedRecordList(request);
             if (!CollectionUtils.isEmpty(associatedRecordListVOS2)) {
-                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                String sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  associatedRecordListVOS2);
             } else {
                 break;

@@ -45,7 +45,6 @@ public class AppBannerController extends BaseController {
     private MessagePushNoticesService messagePushNoticesService;
     @Autowired
     private FileUpLoadUtil fileUpLoadUtil;
-
     //权限名称
     private static final String PERMISSIONS = "appbanner";
 
@@ -70,7 +69,7 @@ public class AppBannerController extends BaseController {
 
     @ApiOperation(value = "广告管理修改转跳", notes = "广告管理修改转跳")
     @PostMapping(value = "/infoAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_INFO,ShiroConstants.PERMISSION_ADD,ShiroConstants.PERMISSION_MODIFY})
     public AdminResult<AppBannerResponse> infoAction(@RequestBody  AdsVO adsVO) {
         AppBannerResponse response = new AppBannerResponse();
         AppBannerResponse prs = appBannerService.getRecordById(adsVO);
@@ -138,7 +137,7 @@ public class AppBannerController extends BaseController {
 
     @ApiOperation(value = "上传", notes = "上传")
     @PostMapping(value = "/upLoadFile")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_MODIFY,ShiroConstants.PERMISSION_ADD})
     public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         LinkedList<BorrowCommonImage> borrowCommonImages = fileUpLoadUtil.upLoad(request);

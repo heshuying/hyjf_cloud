@@ -3,7 +3,9 @@ package com.hyjf.admin.controller.content;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.ContentAdsService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.ContentAdsResponse;
@@ -32,8 +34,12 @@ public class ContentAdsController extends BaseController {
     @Autowired
     private ContentAdsService contentAdsService;
 
+    /** 权限 */
+    public static final String PERMISSIONS = "contentads";
+
     @ApiOperation(value = "条件列表查询", notes = "条件列表查询")
     @PostMapping("/searchaction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_VIEW , ShiroConstants.PERMISSION_SEARCH})
     public AdminResult searchAction(@RequestBody  ContentAdsRequest request){
         logger.info("查询内容中心-广告管理-条件列表查询开始......");
         ContentAdsResponse response = contentAdsService.searchAction(request);
@@ -75,6 +81,7 @@ public class ContentAdsController extends BaseController {
 
     @ApiOperation(value = "添加", notes = "添加")
     @PostMapping("/insert")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD )
     public AdminResult insert(@RequestBody ContentAdsRequest request){
         logger.info("添加内容中心-广告管理开始......");
         ContentAdsResponse response = contentAdsService.inserAction(request);
@@ -89,6 +96,7 @@ public class ContentAdsController extends BaseController {
 
     @ApiOperation(value = "修改根据id查找所需要数据", notes = "修改根据id查找所需要数据")
     @PostMapping("/infoaction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH )
     public AdminResult infoaction(@RequestBody ContentAdsRequest request){
         logger.info("修改内容中心-广告管理开始......");
 
@@ -113,6 +121,7 @@ public class ContentAdsController extends BaseController {
 
     @ApiOperation(value = "修改", notes = "修改")
     @PostMapping("/update")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY )
     public AdminResult update(@RequestBody ContentAdsRequest request){
         logger.info("修改内容中心-广告管理开始......");
         ContentAdsResponse response = contentAdsService.updateAction(request);
@@ -127,6 +136,7 @@ public class ContentAdsController extends BaseController {
 
     @ApiOperation(value = "修改状态", notes = "修改状态")
     @PostMapping("/statusaction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY )
     public AdminResult statusaction(@RequestBody ContentAdsRequest request){
         logger.info("修改广告管理状态开始......");
         Integer ids = request.getAds().getId();
@@ -146,6 +156,7 @@ public class ContentAdsController extends BaseController {
 
     @ApiOperation(value = "删除", notes = "删除")
     @RequestMapping(value = "/delete/{id}",method = RequestMethod.DELETE)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE )
     public AdminResult delete(@PathVariable Integer id){
         logger.info("删除内容中心-广告管理开始......");
         ContentAdsResponse response = contentAdsService.deleteById(id);
@@ -160,6 +171,7 @@ public class ContentAdsController extends BaseController {
 
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD , ShiroConstants.PERMISSION_MODIFY} )
     public  AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {

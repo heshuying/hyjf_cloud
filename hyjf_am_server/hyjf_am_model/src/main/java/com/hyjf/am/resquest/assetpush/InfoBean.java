@@ -1,21 +1,29 @@
 package com.hyjf.am.resquest.assetpush;
 
+import io.swagger.annotations.ApiModelProperty;
+
 import java.io.Serializable;
 
 public class InfoBean implements Serializable {
 		
 	private static final long serialVersionUID = 155405841080295756L;
 	// 下面是必须参数
+	@ApiModelProperty(value = "资产编号")
     private String assetId;
     //亚马逊
+	@ApiModelProperty(value = "亚马逊")
     private String amazonInfo;
     //易贝
+	@ApiModelProperty(value = "易贝")
     private String ebayInfo;
     //京东
+	@ApiModelProperty(value = "京东")
     private String jingdongInfo;
     //淘宝
+	@ApiModelProperty(value = "淘宝")
     private String taobaoInfo;
     //天猫
+	@ApiModelProperty(value = "天猫")
     private String tianmaoInfo;
     
     private int createUser;

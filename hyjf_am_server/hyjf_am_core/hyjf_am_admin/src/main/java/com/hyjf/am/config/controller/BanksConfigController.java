@@ -220,9 +220,8 @@ public class BanksConfigController extends BaseConfigController{
         BankConfig co = new BankConfig();
         BeanUtils.copyProperties(co,vo);
         //查询保证金配置条数
-        List<BankConfig> listBankConfig = bankConfigService.selectBankConfigListByPage(vo,-1,-1);
-        if(!CollectionUtils.isEmpty(listBankConfig)){
-            int total=listBankConfig.size();
+        int total = bankConfigService.selectBankConfigCount(vo,-1,-1);
+        if(total>0){
 //            BeanUtils.copyProperties(listBankConfig,listRes);
 //            for(BanksConfigVO banksConfig : listRes) {
 //                // 不支持快捷支付
@@ -230,21 +229,19 @@ public class BanksConfigController extends BaseConfigController{
 //                    banksConfig.setMonthCardQuota(new BigDecimal(0));
 //                }
 //            }
-            Paginator paginator = new Paginator(adminRequest.getCurrPage(),listBankConfig.size(),adminRequest.getPageSize() == 0 ?10:adminRequest.getPageSize() );
+            Paginator paginator = new Paginator(adminRequest.getCurrPage(),total,adminRequest.getPageSize() == 0 ?10:adminRequest.getPageSize() );
 //            BanksConfigVO bc=new BanksConfigVO();
 //            bc.setBankName(adminRequest.getBankName());
 //            bc.setPayAllianceCode(adminRequest.getPayAllianceCode());
-            listBankConfig = bankConfigService.selectBankConfigListByPage(vo, paginator.getOffset(), paginator.getLimit());
+            List<BankConfig> listBankConfig = bankConfigService.selectBankConfigListByPage(vo, paginator.getOffset(), paginator.getLimit());
             if(!CollectionUtils.isEmpty(listBankConfig)){
                 List<BankConfigVO> banksConfigVOList =CommonUtils.convertBeanList(listBankConfig,BankConfigVO.class);
                 response.setResultList(banksConfigVOList);
                 response.setRecordTotal(total);
                 response.setRtn(Response.SUCCESS);
-                return response;
             }
-            return null;
         }
-        return null;
+        return response;
     }
     /**
      * 根据bankName查询银行配置

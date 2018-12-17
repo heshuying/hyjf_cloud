@@ -1330,4 +1330,25 @@ public interface AmUserClient {
      * @return
      */
     Integer getBySourceIdAndTerm(String utmId,String sourceId, String utmTerm);
+
+    /**
+     * 查询短信统计导出条数
+     * @param request
+     * @return
+     */
+    Integer getSmsCountForExport(SmsCountRequest request);
+
+    /**
+     * 查询短信统计导出列表
+     * @param request
+     * @return
+     */
+    List<SmsCountCustomizeVO> getSmsListForExport(SmsCountRequest request);
+
+    /**
+     * 查询满足条件的服务费授权的条数
+     * @param userPayAuthRequest
+     * @return
+     */
+    int selectUserMemberCount(UserPayAuthRequest userPayAuthRequest);
 }

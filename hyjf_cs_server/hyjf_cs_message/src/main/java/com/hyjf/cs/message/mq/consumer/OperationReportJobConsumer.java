@@ -59,7 +59,7 @@ public class OperationReportJobConsumer extends Consumer {
     public class MessageListener implements MessageListenerConcurrently {
         @Override
         public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
-            logger.info("OperationReportJobConsumer 收到消息，开始处理....msgs is :{}", msgs);
+            logger.info("OperationReportJobConsumer 收到消息，开始处理....msgId is :{}", msgs.get(0).getMsgId());
             for (MessageExt msg : msgs) {
                 OperationReportJobBean bean = JSONObject.parseObject(msg.getBody(), OperationReportJobBean.class);
                 //查询在admin做成功处理逻辑

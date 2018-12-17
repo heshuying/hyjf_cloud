@@ -42,4 +42,7 @@ public interface AdminBorrowRepaymentService {
     List<AdminBorrowRepaymentPlanCustomize> selectBorrowRepaymentPlanList(BorrowRepaymentRequest request);
 
     AdminBorrowRepaymentPlanCustomize sumBorrowRepaymentPlanInfo(BorrowRepaymentRequest request);
+
+
+	int exportRepayClkActBorrowRepaymentInfoListCount(BorrowRepaymentPlanRequest request);
 }

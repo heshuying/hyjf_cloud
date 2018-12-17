@@ -106,7 +106,7 @@ public class AdminAccedeListServiceImpl implements AdminAccedeListService{
 	 * @return
 	 */
 	@Override
-	public List<AccedeListCustomizeVO> selectAccedeListList(AccedeListRequest form, int limitStart, int limitEnd) {
+	public List<AccedeListCustomizeVO> selectAccedeList(AccedeListRequest form, int limitStart, int limitEnd) {
 		Map<String, Object> param = new HashMap<String, Object>();
 		// 加入订单号
 		if (StringUtils.isNotEmpty(form.getAccedeOrderIdSrch())) {
@@ -160,6 +160,21 @@ public class AdminAccedeListServiceImpl implements AdminAccedeListService{
 		if (StringUtils.isNotEmpty(form.getInvestCountsSrch())) {
 			param.put("investCountsSrch", form.getInvestCountsSrch());
 		}
+		//预计开始退出时间
+		if (StringUtils.isNotEmpty(form.getEndDateStartSrch())) {
+			param.put("endDateStartSrch", form.getEndDateStartSrch());
+		}
+		if (StringUtils.isNotEmpty(form.getEndDateEndSrch())) {
+			param.put("endDateEndSrch", form.getEndDateEndSrch());
+		}
+		//实际退出时间
+		if (StringUtils.isNotEmpty(form.getAcctualPaymentTimeStartSrch())) {
+			param.put("acctualPaymentTimeStartSrch", form.getAcctualPaymentTimeStartSrch());
+		}
+		if (StringUtils.isNotEmpty(form.getAcctualPaymentTimeEndSrch())) {
+			param.put("acctualPaymentTimeEndSrch", form.getAcctualPaymentTimeEndSrch());
+		}
+
 		param.put("limitStart", limitStart);
 		param.put("limitEnd", limitEnd);
 		

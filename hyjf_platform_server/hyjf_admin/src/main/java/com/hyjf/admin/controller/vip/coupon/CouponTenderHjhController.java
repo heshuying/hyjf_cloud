@@ -4,7 +4,9 @@ import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.coupon.CouponTenderHjhService;
 import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
@@ -44,9 +46,12 @@ public class CouponTenderHjhController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(CouponTenderHjhController.class);
     @Autowired
     private CouponTenderHjhService couponTenderHjhService;
+    //权限名称
+    private static final String PERMISSIONS = "COUPONTENDERHJH";
 
     @ApiOperation(value = "页面初始化", notes = "汇计划使用列表")
     @PostMapping("/init")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<CouponTenderVo>> couponListInit(HttpServletRequest request, HttpServletResponse response, @RequestBody CouponTenderRequest couponTenderRequest) {
         CouponTenderVo couponTenderHztVo = new CouponTenderVo();
         ListResult<CouponTenderVo> lrs = new ListResult<CouponTenderVo>();
@@ -112,6 +117,7 @@ public class CouponTenderHjhController extends BaseController {
      */
     @ApiOperation(value = "优惠券使用-汇计划列表", notes = "优惠券使用-汇计划列表")
     @PostMapping("/exportAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportActionByDay(HttpServletRequest request, HttpServletResponse response, @RequestBody CouponTenderRequest couponTenderRequest) throws Exception {
         // 封装查询条件
         //设置默认查询时间
@@ -136,7 +142,7 @@ public class CouponTenderHjhController extends BaseController {
         couponTenderRequest.setCurrPage(1);
         // 需要输出的结果列表
         CouponTenderResponse recordList = this.couponTenderHjhService.getRecordExport(couponTenderRequest);
-        Integer totalCount = recordList.getResultList().size();
+        Integer totalCount = this.couponTenderHjhService.countRecord(couponTenderRequest);
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
@@ -160,7 +166,11 @@ public class CouponTenderHjhController extends BaseController {
                     couponTenderCustomize.setCouponQuota("￥"+couponTenderCustomize.getCouponQuota());
                 }
             }
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.getResultList(),sumSmsCount);
+            if(sheetCount != 1){
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.getResultList());
+            }else{
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.getResultList(),sumSmsCount);
+            }
         }
         for (int i = 1; i < sheetCount; i++) {
             couponTenderRequest.setPageSize(defaultRowMaxCount);
@@ -202,7 +212,7 @@ public class CouponTenderHjhController extends BaseController {
         map.put("borrowNid", "智投编号");
         map.put("account", "授权服务金额");
         map.put("borrowPeriod", "项目期限");
-        map.put("borrowApr", "年化收益");
+        map.put("borrowApr", "出借利率");
         map.put("operatingDeck", "操作平台");
         map.put("orderDate", "使用时间");
         return map;

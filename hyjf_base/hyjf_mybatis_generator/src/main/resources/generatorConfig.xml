@@ -1967,5 +1967,9 @@
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
+        <table tableName="ht_hjh_asset_risk_info" domainObjectName="HjhAssetRiskInfo">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+
     </context>
 </generatorConfiguration>

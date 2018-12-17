@@ -10,6 +10,7 @@ import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.PushMoneyRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.PushMoneyManageService;
@@ -56,15 +57,16 @@ public class PushMoneyManageController extends BaseController {
     @Autowired
     private PushMoneyManageService pushMoneyManageService;
 
-    /** 权限 */
-    public static final String PERMISSIONS = "pushmoneymanagelist";
+    /** 直投提成列表权限 */
+    public static final String PERMISSIONSLIST = "pushMoneyList";
 
-    //直投提成列表的权限
-    private static final String PUSHMONEYLIST_PERMISSIONS = "pushMoneyList";
+    /** 直投提成管理权限 */
+    public static final String PERMISSIONS = "pushMoneyManage";
+
 
     @ApiOperation(value = "直投提成管理", notes = "直投提成管理列表查询")
     @PostMapping(value = "/pushmoneylist")
-    //@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<PushMoneyVO>> getPushMoneyList( @RequestBody @Valid PushMoneyRequest request) {
         // 初始化原子层请求实体
         // 初始化返回LIST
@@ -90,6 +92,7 @@ public class PushMoneyManageController extends BaseController {
     //计算提成
     @ApiOperation(value = "计算提成", notes = "计算提成")
     @PostMapping(value = "/calculateushmoney")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_CALCULATE)
     public JSONObject calculatePushMoney(@RequestBody @Valid PushMoneyRequestBean requestBean){
         // 初始化原子层请求实体
         PushMoneyRequest form = new PushMoneyRequest();
@@ -152,9 +155,11 @@ public class PushMoneyManageController extends BaseController {
      */
     @ApiOperation(value = "直投提成管理记录导出", notes = "直投提成管理记录导出")
     @PostMapping(value = "/exportpushmoney")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportPushMoney(HttpServletRequest request, HttpServletResponse response,@RequestBody PushMoneyRequest requestBean) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+
         // 表格sheet名称
         String sheetName = "推广提成列表";
         // 文件名称
@@ -163,8 +168,8 @@ public class PushMoneyManageController extends BaseController {
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-        requestBean.setCurrPage(1);
-        requestBean.setPageSize(defaultRowMaxCount);
+//        requestBean.setCurrPage(1);
+////        requestBean.setPageSize(defaultRowMaxCount);
         Integer totalCount = pushMoneyManageService.findPushMoneyList(requestBean).getCount();
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
@@ -214,7 +219,7 @@ public class PushMoneyManageController extends BaseController {
      */
     @ApiOperation(value = "直投提成列表", notes = "直投提成列表")
     @PostMapping(value = "/pushMoneyList")
-    @AuthorityAnnotation(key = PUSHMONEYLIST_PERMISSIONS,value = PERMISSION_VIEW)
+    @AuthorityAnnotation(key = PERMISSIONSLIST,value = PERMISSION_VIEW)
     public AdminResult pushMoneyList(@RequestBody PushMoneyRequest request){
         logger.info("enter pushMoneyList controller for admin");
         if(null != request.getCombotreeListSrch() && request.getCombotreeListSrch().length>0){
@@ -281,7 +286,7 @@ public class PushMoneyManageController extends BaseController {
      */
     @ApiOperation(value = "直投提成列表导出",notes = "直投提成列表导出")
     @PostMapping(value = "/exportPushMoneyDetailExcelAction")
-    @AuthorityAnnotation(key = PUSHMONEYLIST_PERMISSIONS,value = PERMISSION_EXPORT)
+    @AuthorityAnnotation(key = PERMISSIONSLIST,value = PERMISSION_EXPORT)
     public void exportPushMoneyDetailExcelAction(HttpServletRequest request, HttpServletResponse response,@RequestBody PushMoneyRequest requestBean) throws Exception {
 
         // 是否具有组织机构查看权限
@@ -385,7 +390,7 @@ public class PushMoneyManageController extends BaseController {
 
     @ApiOperation(value = "发提成",notes = "发提成")
     @PostMapping(value = "/confirmPushMoneyAction")
-    @AuthorityAnnotation(key = PUSHMONEYLIST_PERMISSIONS,value = PERMISSION_CONFIRM)
+    @AuthorityAnnotation(key = PERMISSIONSLIST,value = PERMISSION_CONFIRM)
     public AdminResult confirmPushMoneyAction(HttpServletRequest request, @RequestBody PushMoneyRequest pushMoneyRequest){
         Integer userId = Integer.valueOf(getUser(request).getId());
         Integer id = pushMoneyRequest.getId();

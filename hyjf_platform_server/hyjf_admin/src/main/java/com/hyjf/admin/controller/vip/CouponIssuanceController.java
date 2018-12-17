@@ -5,7 +5,6 @@ package com.hyjf.admin.controller.vip;
 
 import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
@@ -30,20 +29,13 @@ import com.hyjf.common.util.StringPool;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -92,7 +84,7 @@ public class CouponIssuanceController extends BaseController {
 
     @ApiOperation(value = "详情页面", notes = "详情页面")
     @RequestMapping(value = "/infoAction", method = RequestMethod.POST)
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
     public AdminResult updateCouponConfig(@RequestBody CouponConfigRequest request) {
         CouponConfigResponse response = new CouponConfigResponse();
         CouponConfigVO configVO = new CouponConfigVO();
@@ -211,7 +203,7 @@ public class CouponIssuanceController extends BaseController {
 
     @ApiOperation(value = "保存修改信息", notes = "保存修改信息")
     @PostMapping("/saveAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult saveCouponConfig(@RequestBody CouponConfigRequest request) {
         if (request.getAuditUser() != null) {
             Integer userId = couponConfigService.getUserId(request.getAuditUser());
@@ -404,7 +396,7 @@ public class CouponIssuanceController extends BaseController {
 
     @ApiOperation(value = "检查编号唯一性", notes = "检查编号唯一性")
     @PostMapping("/checkAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public AdminResult checkAction(@RequestBody CouponConfigRequest request) {
         Integer couponQuantity = request.getCouponQuantity();
         // 优惠券编号
@@ -568,6 +560,7 @@ public class CouponIssuanceController extends BaseController {
      */
     @ApiOperation(value = "导出", notes = "导出")
     @RequestMapping(value = "/export", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportActionCc(HttpServletRequest request, HttpServletResponse response, @RequestBody CouponConfigRequest couponConfigRequest) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
@@ -579,44 +572,34 @@ public class CouponIssuanceController extends BaseController {
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
         couponConfigRequest.setLimitFlg(true);
-        //请求第一页5000条
-        couponConfigRequest.setPageSize(defaultRowMaxCount);
-        couponConfigRequest.setCurrPage(1);
-        // 需要输出的结果列表
-        CouponConfigExportCustomizeResponse exportCustomizeResponse = couponConfigService.getExportConfigList(couponConfigRequest);
-        Integer totalCount = exportCustomizeResponse.getCount();
+
+        // 导出列表总数
+        Integer totalCount = couponConfigService.getCountForExport(couponConfigRequest);
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-        }else{
-            //实现多个参数判断返回问题
-            for(CouponConfigExportCustomizeVO couponConfigExportCustomizeVO : exportCustomizeResponse.getResultList()){
-                if ("2".equals(couponConfigExportCustomizeVO.getCouponType())) {
-                    couponConfigExportCustomizeVO.setCouponQuota(couponConfigExportCustomizeVO.getCouponQuota() + "%");
-                } else if ("1".equals(couponConfigExportCustomizeVO.getCouponType()) || "3".equals(couponConfigExportCustomizeVO.getCouponType())) {
-                    couponConfigExportCustomizeVO.setCouponQuota(couponConfigExportCustomizeVO.getCouponQuota() + "元");
-                }
-            }
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, exportCustomizeResponse.getResultList());
         }
-        for (int i = 1; i < sheetCount; i++) {
+        //设置默认5000条/页
+        couponConfigRequest.setPageSize(defaultRowMaxCount);
+        couponConfigRequest.setExportCount(totalCount);
+        for (int i = 1; i <= sheetCount; i++) {
             couponConfigRequest.setPageSize(defaultRowMaxCount);
-            couponConfigRequest.setCurrPage(i+1);
-            CouponConfigExportCustomizeResponse exportCustomizeResponse2 = couponConfigService.getExportConfigList(couponConfigRequest);
-            if (exportCustomizeResponse2 != null && exportCustomizeResponse2.getResultList().size()> 0) {
+            couponConfigRequest.setCurrPage(i);
+            CouponConfigExportCustomizeResponse exportCustomizeResponse = couponConfigService.getExportConfigList(couponConfigRequest);
+            if (exportCustomizeResponse != null && exportCustomizeResponse.getResultList().size()> 0) {
                 //实现多个参数判断返回问题
-                for(CouponConfigExportCustomizeVO couponConfigExportCustomizeVO : exportCustomizeResponse2.getResultList()){
+                for(CouponConfigExportCustomizeVO couponConfigExportCustomizeVO : exportCustomizeResponse.getResultList()){
                     if ("2".equals(couponConfigExportCustomizeVO.getCouponType())) {
                         couponConfigExportCustomizeVO.setCouponQuota(couponConfigExportCustomizeVO.getCouponQuota() + "%");
                     } else if ("1".equals(couponConfigExportCustomizeVO.getCouponType()) || "3".equals(couponConfigExportCustomizeVO.getCouponType())) {
                         couponConfigExportCustomizeVO.setCouponQuota(couponConfigExportCustomizeVO.getCouponQuota() + "元");
                     }
                 }
-                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  exportCustomizeResponse2.getResultList());
+                sheetNameTmp = sheetName + "_第" + i + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  exportCustomizeResponse.getResultList());
             } else {
                 break;
             }

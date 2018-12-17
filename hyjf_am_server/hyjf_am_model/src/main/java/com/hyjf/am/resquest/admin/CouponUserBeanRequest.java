@@ -22,31 +22,31 @@ public class CouponUserBeanRequest extends BasePage implements Serializable {
     @ApiModelProperty(value = "优惠券编码")
     private String couponCode;
 
-    //优惠券编码
+    @ApiModelProperty(value = "优惠券用户编号")
     private String couponUserCode;
 
-    //优惠券名字
+    @ApiModelProperty(value = "优惠券名称")
     private String couponName;
 
     @ApiModelProperty(value = "优惠券类型")
     private String couponType;
 
-    //优惠券额度
+    @ApiModelProperty(value = "优惠券额度")
     private String couponQuota;
 
-    //优惠券适用平台
+    @ApiModelProperty(value = "优惠券使用平台")
     private String couponSystem;
 
-    //优惠券适用产品类型
+    @ApiModelProperty(value = "优惠券的使用项目类别")
     private String projectType;
 
-    //投资额度条件
+    @ApiModelProperty(value = "投资金额")
     private String tenderQuota;
 
-    //投资项目期限条件
+    @ApiModelProperty(value = "项目期限类别")
     private String projectExpirationType;
 
-    //活动id
+    @ApiModelProperty(value = "活动id")
     private Integer activityId;
 
     @ApiModelProperty(value = "优惠券来源")
@@ -59,7 +59,7 @@ public class CouponUserBeanRequest extends BasePage implements Serializable {
     @ApiModelProperty(value = "用户名")
     private String userNameSrch;
 
-    //备注
+    @ApiModelProperty(value = "备注")
     private String content;
 
     @ApiModelProperty(value = "使用状态")
@@ -68,6 +68,7 @@ public class CouponUserBeanRequest extends BasePage implements Serializable {
     //使用状态（页面展现）
     private String usedFlagView;
 
+    @ApiModelProperty(value = "使用截止日期")
     private String endTime;
 
     private String addTime;
@@ -86,6 +87,7 @@ public class CouponUserBeanRequest extends BasePage implements Serializable {
 
     private String readFlag;
 
+    @ApiModelProperty(value = "优惠券来源")
     private String couponSource;
     private String couponContent;
 
@@ -93,8 +95,10 @@ public class CouponUserBeanRequest extends BasePage implements Serializable {
 
     private String pcUtmSource;
 
+    @ApiModelProperty(value = "用券时用户属性")
     private String attribute;
 
+    @ApiModelProperty(value = "注册渠道")
     private String channel;
 
     /**

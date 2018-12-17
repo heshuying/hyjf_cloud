@@ -93,4 +93,18 @@ public interface CouponUserCustomizeMapper {
 	 * @return
 	 */
 	List<DataCenterCouponCustomize> selectDataCenterCouponDJList(DadaCenterCouponCustomizeRequest request);
+
+	/**
+	 * 获取加息券列表个数
+	 * @param request
+	 * @return
+	 */
+	int countJX(DadaCenterCouponCustomizeRequest request);
+
+	/**
+	 * 获取代金券列表个数
+	 * @param request
+	 * @return
+	 */
+	int countDJ(DadaCenterCouponCustomizeRequest request);
 }

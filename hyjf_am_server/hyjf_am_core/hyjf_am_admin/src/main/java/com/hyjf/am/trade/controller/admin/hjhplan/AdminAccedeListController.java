@@ -36,7 +36,52 @@ public class AdminAccedeListController {
 	
 	@Autowired
 	AdminAccedeListService adminAccedeListService;
-	
+
+	/**
+	 * 总数
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/getAccedeListByParamCount",method = RequestMethod.POST)
+	public AccedeListResponse getAccedeListByParamCount(@RequestBody @Valid AccedeListRequest request){
+		AccedeListResponse response = new AccedeListResponse();
+		Integer count = adminAccedeListService.countAccedeListTotal(request);
+		response.setCount(count);
+		return response;
+	}
+
+	/**
+	 * 分页查询数据
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/getAccedeListByParamList",method = RequestMethod.POST)
+	public AccedeListResponse getAccedeListByParamList(@RequestBody @Valid AccedeListRequest request){
+		AccedeListResponse response = new AccedeListResponse();
+
+		List<AccedeListCustomizeVO> list = adminAccedeListService.selectAccedeList(request,request.getLimitStart(),
+				request.getLimitEnd());
+		// 原param表查询拼装
+		if(!CollectionUtils.isEmpty(list)){
+			Map<String, String> map1 = CacheUtil.getParamNameMap("USER_PROPERTY");
+			for(AccedeListCustomizeVO vo : list){
+				vo.setRecommendAttr(map1.getOrDefault(vo.getRecommendAttr(),null));
+				vo.setInviteUserAttributeName(map1.getOrDefault(vo.getInviteUserAttributeName(),null));
+				vo.setAttribute(map1.getOrDefault(vo.getAttribute(),null));
+			}
+		}
+
+		if (!CollectionUtils.isEmpty(list)) {
+			response.setResultList(list);
+			//代表成功
+			response.setRtn(Response.SUCCESS);
+		}else{
+			response.setRtn(Response.FAIL_MSG);
+		}
+
+		return response;
+	}
+
 	/**
 	 * @Author: libin
 	 * @Desc :加入计划列表
@@ -54,7 +99,7 @@ public class AdminAccedeListController {
 			// 前台未传分页那默认 10
 			paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
 		}
-		List<AccedeListCustomizeVO> list = adminAccedeListService.selectAccedeListList(request,paginator.getOffset(), paginator.getLimit());
+		List<AccedeListCustomizeVO> list = adminAccedeListService.selectAccedeList(request,paginator.getOffset(), paginator.getLimit());
 		// 原param表查询拼装
 		if(!CollectionUtils.isEmpty(list)){
 			Map<String, String> map1 = CacheUtil.getParamNameMap("USER_PROPERTY");

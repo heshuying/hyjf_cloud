@@ -1,16 +1,18 @@
 package com.hyjf.am.resquest.trade;
 
+import io.swagger.annotations.ApiModelProperty;
+
 /**
  * 还款申请
  * @author hesy
  * @version RepayRequest, v0.1 2018/7/10 11:01
  */
 public class RepayRequest {
-    // 标的编号
+    @ApiModelProperty(value = "标的编号")
     private String borrowNid;
-    // 平台登录密码
+    @ApiModelProperty(value = "平台登录密码")
     private String password;
-
+    @ApiModelProperty(value = "是否一次性还款 0 否 1 是")
     private String isAllRepay;
 
     public String getBorrowNid() {

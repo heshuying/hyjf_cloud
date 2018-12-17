@@ -6,6 +6,9 @@ spring:
  application:
    name: zuul
  cloud:
+   loadbalancer:
+     retry:
+     enabled: true
    config:
       discovery:
         enabled: true
@@ -16,11 +19,11 @@ spring:
       client:
         url: http://MONITOR-SERVER
 # zipkin 监控端点
- zipkin: 
+ zipkin:
   base-url: http://ZIPKIN
  sleuth:
   sampler:
-   percentage: 0.1
+   percentage: 1
 
  profiles:
    active: dev
@@ -35,3 +38,14 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
+#stores:
+#  ribbon:
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.WeightedResponseTimeRule
+#
+#ribbon:
+# # 同一实例最大重试次数，不包括首次调用
+# MaxAutoRetries: 1
+# # 重试其他实例的最大重试次数，不包括首次所选的server
+# MaxAutoRetriesNextServer: 2
+# # 是否所有操作都进行重试
+# OkToRetryOnAllOperations: false

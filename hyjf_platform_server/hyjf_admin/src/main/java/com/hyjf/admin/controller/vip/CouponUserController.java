@@ -568,6 +568,7 @@ public class CouponUserController extends BaseController {
 
     @ApiOperation(value = "手动批量发券上传", notes = "手动批量发券上传")
     @RequestMapping(value = "/uploadAction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_IMPORT)
     public AdminResult uploadAction(HttpServletRequest request, HttpServletResponse response) throws IOException {
         AdminSystemVO user = getUser(request);
         String loginUserId = user.getId();
@@ -722,6 +723,7 @@ public class CouponUserController extends BaseController {
      */
     @ApiOperation(value = "导出", notes = "导出")
     @RequestMapping(value = "/exportAction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportActionCu(HttpServletRequest request, HttpServletResponse response, @RequestBody CouponUserBeanRequest beanRequest) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());

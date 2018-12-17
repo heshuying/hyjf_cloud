@@ -135,9 +135,9 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			// 遍历相应的拆标数据
 			for (int i = 0; i < borrowCommonNameAccountList.size(); i++) {
 				BorrowCommonNameAccountVO borrowCommonNameAccount = borrowCommonNameAccountList.get(i);
-				String name = borrowCommonNameAccount.getNames();
+				// String name = borrowCommonNameAccount.getNames();
 				String account = borrowCommonNameAccount.getAccounts();
-				if (StringUtils.isNotEmpty(name) && StringUtils.isNotEmpty(account)) {
+				if (StringUtils.isNotEmpty(account)) {
 					// 操作redis
 					String borrowPreNidNew = "";
 					String borrowNid = "";
@@ -222,7 +222,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					// 插入huiyingdai_borrow
 					BorrowWithBLOBs borrow = new BorrowWithBLOBs();
 					// 借款表插入
-					this.insertBorrowCommonData(borrowBean, borrow, borrowPreNid, borrowPreNidNew, borrowNid, name, account,adminUsername);
+					this.insertBorrowCommonData(borrowBean, borrow, borrowPreNid, borrowPreNidNew, borrowNid, account,adminUsername);
 					// 删写redis的定时发标时间
 					changeOntimeOfRedis(borrow);
 					//添加修改日志
@@ -265,7 +265,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	 * @throws Exception
 	 */
 	@Override
-	public void insertBorrowCommonData(BorrowCommonBean borrowBean, BorrowWithBLOBs borrow, String borrowPreNid, String newBorrowPreNid, String borrowNid, String name, String account,String adminUsername)
+	public void insertBorrowCommonData(BorrowCommonBean borrowBean, BorrowWithBLOBs borrow, String borrowPreNid, String newBorrowPreNid, String borrowNid,String account,String adminUsername)
 			throws Exception {
 		// 插入时间
 		Date systemNowDate = GetDate.getDate();
@@ -335,7 +335,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		// 借款编号
 		borrowBean.setBorrowNid(borrowNid);
 		// 借款标题
-		borrow.setName(name);
+		borrow.setName(borrowBean.getProjectName());
 		// 资产机构编号
 		borrow.setInstCode(borrowBean.getInstCode());
 		// 产品类型
@@ -795,7 +795,13 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			}
 		}
 		// 产品加息 add by liuyang 20180730 end
-		this.borrowMapper.insertSelective(borrow);
+		boolean isBorrowInsertFlag = this.borrowMapper.insertSelective(borrow) >0 ? true:false;
+		logger.info("准备插入borrow表,标的编号:[" + borrowNid + "].");
+		if (isBorrowInsertFlag) {
+			logger.info("borrow表插入数据成功,标的编号:[" + borrowNid + "].");
+		}else{
+			logger.info("borrow表插入数据失败~~~~~~,标的编号:[" + borrowNid + "].");
+		}
 		borrowinfo.setEntrustedFlg(Integer.valueOf(borrowBean.getEntrustedFlg()));
 		if("1".equals(borrowBean.getEntrustedFlg())){
 			borrowinfo.setEntrustedUserName(borrowBean.getEntrustedUsername().trim());
@@ -805,8 +811,14 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			borrowinfo.setEntrustedUserId(0);
 		}
 		borrowinfo.setTrusteePayTime(0);
+		logger.info("准备插入borrow_info表,标的编号:[" + borrowNid + "].");
+		boolean isBorrowInfoInsertFlag = this.borrowInfoMapper.insertSelective(borrowinfo) > 0 ? true : false;
 
-		this.borrowInfoMapper.insertSelective(borrowinfo);
+		if (isBorrowInfoInsertFlag) {
+			logger.info("borrow_info表插入数据成功,标的编号:[" + borrowNid + "].");
+		}else{
+			logger.info("borrow_info表插入失败~~~~!!,标的编号:[" + borrowNid + "].");
+		}
 		// 个人信息(信批新增字段)
 		this.insertBorrowManinfo(borrowNid, borrowBean, borrow);
 		// 公司信息(信批新增字段)
@@ -987,7 +999,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 
 		// 借款标题
 		if (borrowMainNid.equals(borrowNid)) {
-			borrow.setName(borrowBean.getName());
+			borrow.setName(borrowBean.getProjectName());
 		}
 		// 借款方式
 		// 车辆抵押:2 房产抵押:1

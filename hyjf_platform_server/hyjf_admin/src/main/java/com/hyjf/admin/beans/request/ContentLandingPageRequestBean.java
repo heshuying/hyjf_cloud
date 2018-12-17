@@ -35,11 +35,13 @@ public class ContentLandingPageRequestBean extends BaseRequest {
     /**
      * 前台时间接收
      */
+    @ApiModelProperty(value = "添加开始时间页面查询")
     private String startTime;
-
+    @ApiModelProperty(value = "添加结束时间页面查询")
     private String endTime;
-
+    @ApiModelProperty(value = "着落页名称页面查询")
     private String pageNameSrch;
+    @ApiModelProperty(value = "渠道页面查询")
     private String channelNameSrch;
 
     public Integer getId() {

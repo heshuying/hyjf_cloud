@@ -103,4 +103,13 @@ public class BankSettingServiceImpl implements BankSettingService {
     public void deleteFeeConfig(Integer id) {
         jxBankConfigMapper.deleteByPrimaryKey(id);
     }
+
+    /**
+     * 得到江西银行功能所有数据条数
+     * @return
+     */
+    @Override
+    public Integer getTotalCount() {
+        return jxBankConfigMapper.countByExample(new JxBankConfigExample());
+    }
 }

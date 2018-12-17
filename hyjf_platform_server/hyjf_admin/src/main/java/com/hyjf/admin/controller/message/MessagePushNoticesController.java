@@ -133,7 +133,7 @@ public class MessagePushNoticesController extends BaseController {
      */
     @ApiOperation(value = "画面迁移", notes = "画面迁移")
     @PostMapping(value = "/infoAction")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_RESEND)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_RESEND,ShiroConstants.PERMISSION_ADD,ShiroConstants.PERMISSION_MODIFY})
     public JSONObject info(@RequestBody MessagePushNoticesRequest form) {
         JSONObject jsonObject = new JSONObject();
             if (StringUtils.isNotEmpty(form.getIds())) {
@@ -192,7 +192,7 @@ public class MessagePushNoticesController extends BaseController {
      */
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @PostMapping(value = "/uploadFile")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_MODIFY,ShiroConstants.PERMISSION_ADD})
     public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
             LinkedList<BorrowCommonImage> borrowCommonImages = fileUpLoadUtil.upLoad(request);

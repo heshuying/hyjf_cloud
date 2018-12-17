@@ -74,7 +74,7 @@ public class AssetListController extends BaseController {
 	 * @param request
 	 * @return 进入资产列表页面   已测试
 	 */
-	@ApiOperation(value = "资产列表", notes = "资产列表页面初始化")
+	@ApiOperation(value = "资产列表页面初始化", notes = "资产列表页面初始化")
 	@PostMapping(value = "/init")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
@@ -115,7 +115,7 @@ public class AssetListController extends BaseController {
 	 * @param request
 	 * @return 进入资产列表页面   已测试
 	 */
-	@ApiOperation(value = "资产列表", notes = "资产列表页面产品类型下拉联动")
+	@ApiOperation(value = "资产列表页面产品类型下拉联动", notes = "资产列表页面产品类型下拉联动")
 	@PostMapping(value = "/link")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
@@ -150,7 +150,7 @@ public class AssetListController extends BaseController {
 	 * @param request
 	 * @return 进入资产列表页面
 	 */
-	@ApiOperation(value = "资产列表", notes = "资产列表查询")
+	@ApiOperation(value = "资产列表查询", notes = "资产列表查询")
 	@PostMapping(value = "/search")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
@@ -184,7 +184,7 @@ public class AssetListController extends BaseController {
 	 * @param request
 	 * @return 
 	 */
-	@ApiOperation(value = "资产列表", notes = "列总计查询")
+	@ApiOperation(value = "列总计查询", notes = "列总计查询")
 	@PostMapping(value = "/sum")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
@@ -216,7 +216,7 @@ public class AssetListController extends BaseController {
 	 * @param request
 	 * @return 查询详情
 	 */
-	@ApiOperation(value = "资产列表", notes = "资产列表页面查询详情")
+	@ApiOperation(value = "资产列表页面查询详情", notes = "资产列表页面查询详情")
 	@PostMapping(value = "/detail")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
@@ -352,7 +352,7 @@ public class AssetListController extends BaseController {
 	 * @param request
 	 * @return 带条件导出
 	 */
-	@ApiOperation(value = "资产列表", notes = "带条件导出EXCEL")
+	@ApiOperation(value = "带条件导出EXCEL", notes = "带条件导出EXCEL")
 	@PostMapping(value = "/export")
 	@ResponseBody
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
@@ -374,11 +374,11 @@ public class AssetListController extends BaseController {
 			// 将画面请求request赋值给原子层 request
 			BeanUtils.copyProperties(viewRequest, form);
 	        //请求第一页5000条
-//			form.setPageSize(defaultRowMaxCount);
-//			form.setCurrPage(1);
+			form.setPageSize(defaultRowMaxCount);
+			form.setCurrPage(1);
 			// 获取查询的列表
 			AssetListCustomizeResponse res = assetListService.findAssetListWithoutPage(form);
-	        Integer totalCount = res.getResultList().size();
+	        Integer totalCount = res.getCount();
 
 	        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
 	        Map<String, String> beanPropertyColumnMap = buildMap();
@@ -388,11 +388,15 @@ public class AssetListController extends BaseController {
 	        	 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
 	        }
 	        for (int i = 1; i <= sheetCount; i++) {
-				int start=(i-1) * defaultRowMaxCount;
-				int end = Math.min(totalCount, i * defaultRowMaxCount);
-
-				sheetNameTmp = sheetName + "_第" + (i) + "页";
-				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  res.getResultList().subList(start, end));
+	        	sheetNameTmp = sheetName + "_第" + (i) + "页";
+	        	if(sheetCount==1) {
+	        		helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  res.getResultList());
+	        	}else {
+	        		form.setCurrPage(sheetCount);
+	        		helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  assetListService.findAssetListWithoutPage(form).getResultList());
+	        	}
+				
+				
 	        }
 	        
 	        DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);

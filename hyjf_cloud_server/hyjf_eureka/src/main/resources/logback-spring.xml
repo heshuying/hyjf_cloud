@@ -6,10 +6,12 @@
     <logger name="org.springboot.sample" level="TRACE"/>
 
     <!-- 测试环境+开发环境. 多个使用逗号隔开. -->
-    <springProfile name="test,dev">
-        <logger name="org.springframework.web" level="INFO"/>
-        <logger name="org.springboot.sample" level="INFO"/>
-        <logger name="com.hyjf" level="INFO"/>
+    <springProfile name="test,dev,beta">
+        <logger name="org.springframework.web" level="DEBUG"/>
+        <logger name="org.springboot.sample" level="DEBUG"/>
+        <!-- 打印eureka的信息 -->
+        <logger name="com.netflix.eureka.registry" level="DEBUG"/>
+        <logger name="com.hyjf" level="DEBUG"/>
     </springProfile>
 
 

@@ -40,6 +40,7 @@ public class ProtocolsRequestBean extends FddTempletVO {
 	private String ids;
 
 	/** 列表list */
+	@ApiModelProperty(value = "列表list")
 	private List<FddTempletCustomizeVO> recordList;
 
 	/**

@@ -149,7 +149,7 @@ public class WebHomeServiceImpl implements WebHomeService {
         // 标的信息 和 统计信息
         // modify by libin 缓存
         //TotalInvestAndInterestResponse res2 = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);//加缓存
-        TotalInvestAndInterestResponse res2 = this.getTotalInvestAndInterestResponse();//加缓存
+        TotalInvestAndInterestResponse res2 =amTradeClient.getTotalInvestAndInterestResponse();//加缓存
         if(res2 == null){
         	logger.error("统计信息查询为空");
         }
@@ -175,7 +175,7 @@ public class WebHomeServiceImpl implements WebHomeService {
         if(!CollectionUtils.isEmpty(noticeList)){
             result.setNoticeInfo(noticeList.get(0));
         }*/
-        List<ContentArticleVO> noticeList = this.getNoticeList(contentArticleRequest);//加缓存
+        List<ContentArticleVO> noticeList = amTradeClient.getNoticeList(contentArticleRequest);//加缓存
         if(!CollectionUtils.isEmpty(noticeList)){
             result.setNoticeInfo(noticeList.get(0));
         }
@@ -197,7 +197,7 @@ public class WebHomeServiceImpl implements WebHomeService {
             result.setBannerList(new ArrayList<>());
         }*/
         
-        List<AppAdsCustomizeVO> bannerList = this.getBannerList(adsRequest);//加缓存
+        List<AppAdsCustomizeVO> bannerList = amTradeClient.getWebHomeBannerList(adsRequest);//加缓存
         if ( !CollectionUtils.isEmpty(bannerList)){
             result.setBannerList(bannerList);
         }else {
@@ -305,32 +305,6 @@ public class WebHomeServiceImpl implements WebHomeService {
     }
 
     /**
-     * @author libin
-     * 抽出查询bannner的方法
-     * @date 2018/9/5 11:38
-     */
-	@Cached(name="webHomeBannerCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
-	@CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
-    private List<AppAdsCustomizeVO> getBannerList(AdsRequest adsRequest){
-    	AppAdsCustomizeResponse res = baseClient.postExe(BANNER_LIST_URL,adsRequest,AppAdsCustomizeResponse.class);
-    	List<AppAdsCustomizeVO> bannerList = res.getResultList();
-    	return bannerList;
-    }
-	
-    /**
-     * @author libin
-     * 抽出查询noticeList的方法
-     * @date 2018/9/5 11:38
-     */
-	@Cached(name="webHomeNoticeCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
-	@CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
-	private List<ContentArticleVO> getNoticeList(ContentArticleRequest contentArticleRequest){
-        ContentArticleResponse response = baseClient.postExe(NOTICE_LIST_URL,contentArticleRequest,ContentArticleResponse.class);
-        List<ContentArticleVO> noticeList = response.getResultList();
-        return noticeList;
-	}
-	
-    /**
      * 安卓下载
      * @author zhangyk
      * @date 2018/9/5 11:38
@@ -353,16 +327,5 @@ public class WebHomeServiceImpl implements WebHomeService {
         }
     }
     
-    /**
-     * @author libin
-     * 抽出查询统计信息的方法
-     * @date 2018/9/5 11:38
-     */
-	@Cached(name="webTotalInvestAndInterestCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
-	@CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.MINUTES)
-    private TotalInvestAndInterestResponse getTotalInvestAndInterestResponse(){
-		TotalInvestAndInterestResponse res2 = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);//加缓存
-    	return res2;
-    }
 
 }

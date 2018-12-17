@@ -319,7 +319,7 @@ public class CouponConfigServiceImpl implements CouponConfigService {
     }
 
     @Override
-    public List<CouponConfigExportCustomize> exoportRecordList(CouponConfigCustomize configCustomize) {
+    public List<CouponConfigExportCustomize> getExportRecordList(CouponConfigCustomize configCustomize) {
         return couponConfigCustomizeMapper.exportCouponConfigList(configCustomize);
     }
 

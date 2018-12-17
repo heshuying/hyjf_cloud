@@ -89,6 +89,31 @@ public class FinmanChargeNewController extends BaseController {
         response.setAssetTypeList(assetTypeList);
         return new AdminResult<FinmanChargeNewResponse>(response) ;
     }
+    @ApiOperation(value = "查询费率配置详情", notes = "查询费率配置详情 ")
+    @PostMapping("/initAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
+    public AdminResult initAction(@RequestBody FinmanChargeNewRequest adminRequest) {
+        FinmanChargeNewResponse response = new FinmanChargeNewResponse();
+        BorrowFinmanNewChargeVO vo= new BorrowFinmanNewChargeVO();
+//        if (StringUtils.isNotEmpty(adminRequest.getManChargeCd())) {
+//            response = this.finmanChargeNewService.getRecordInfo(adminRequest.getManChargeCd());
+//            if(null != response.getResult()){
+//                vo =response.getResult();
+//            }
+//        }
+        // 汇直投项目列表
+        List<BorrowProjectTypeVO> borrowProjectTypeList = this.finmanChargeNewService.borrowProjectTypeList("HZT");
+        response.setBorrowProjectTypeList(borrowProjectTypeList);
+        List<ParamNameVO> paramNameVOS = this.finmanChargeNewService.getParamNameList(CustomConstants.ENDDAY_MONTH);
+        response.setParamNames(paramNameVOS);
+        // 资金来源
+        List<HjhInstConfigVO> hjhInstConfigList = this.finmanChargeNewService.hjhInstConfigList("");
+        response.setHjhInstConfigList(hjhInstConfigList);
+        // 产品类型
+        List<HjhAssetTypeVO> assetTypeList = this.finmanChargeNewService.hjhAssetTypeList(vo.getInstCode());
+        response.setAssetTypeList(assetTypeList);
+        return new AdminResult<FinmanChargeNewResponse>(response) ;
+    }
 
     @ApiOperation(value = "查询费率配置详情", notes = "查询费率配置详情 ")
     @PostMapping("/infoAction")

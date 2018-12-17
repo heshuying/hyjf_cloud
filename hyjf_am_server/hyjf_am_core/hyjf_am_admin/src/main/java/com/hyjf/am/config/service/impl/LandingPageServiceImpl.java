@@ -7,12 +7,14 @@ import com.hyjf.am.config.dao.mapper.auto.LandingPageMapper;
 import com.hyjf.am.config.dao.model.auto.LandingPage;
 import com.hyjf.am.config.dao.model.auto.LandingPageExample;
 import com.hyjf.am.config.service.LandingPageService;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.config.LandingPageResponse;
 import com.hyjf.am.resquest.admin.LandingPageRequest;
 import com.hyjf.am.vo.config.LandingPageVo;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
+import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,6 +80,19 @@ public class LandingPageServiceImpl implements LandingPageService {
 		LandingPage record = new LandingPage();
 		BeanUtils.copyProperties(request, record);
 		landingPageMapper.updateByPrimaryKey(record);
+	}
+	@Override
+	public	IntegerResponse countByPageName(LandingPageRequest requestBean){
+		IntegerResponse response = new IntegerResponse();
+		LandingPageExample example = new LandingPageExample();
+		LandingPageExample.Criteria cra = example.createCriteria();
+		if (Validator.isNotNull(requestBean.getId())) {
+			cra.andIdNotEqualTo(requestBean.getId());
+		}
+		cra.andPageNameEqualTo(requestBean.getPageName());
+		int cnt = landingPageMapper.countByExample(example);
+		response.setResultInt(cnt);
+		return response;
 	}
 
 	@Override

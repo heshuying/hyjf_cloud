@@ -5,8 +5,11 @@ package com.hyjf.admin.controller.msgpush;
 
 import com.alibaba.fastjson.JSONArray;
 import com.hyjf.admin.beans.BorrowCommonImage;
+import com.hyjf.admin.beans.PermissionsBean;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.MessagePushNoticesService;
 import com.hyjf.admin.service.MessagePushTagService;
 import com.hyjf.admin.service.MessagePushTemplateService;
@@ -46,11 +49,13 @@ public class MessagePushTemplateController extends BaseController {
     private MessagePushTemplateService messagePushTemplateService;
     @Autowired
     private MessagePushTagService messagePushTagService;
-    @Autowired
-    private MessagePushNoticesService messagePushNoticesService;
+
+    /** 权限关键字 */
+    public static final String PERMISSIONS = "msgpushtemplate";
 
     @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @RequestMapping(value = "/init", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<MessagePushTemplateResponse> init(@RequestBody MsgPushTemplateRequest request) {
         MessagePushTemplateResponse response = messagePushTemplateService.searchList(request);
         if (response == null) {
@@ -67,6 +72,7 @@ public class MessagePushTemplateController extends BaseController {
 
     @ApiOperation(value = "详情页信息", notes = "详情页信息")
     @RequestMapping(value = "/infoAction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public AdminResult<MessagePushTemplateResponse> infoAction(@RequestBody MsgPushTemplateRequest form) {
         MessagePushTemplateResponse response = new MessagePushTemplateResponse();
         if (form.getId() != null) {
@@ -124,6 +130,7 @@ public class MessagePushTemplateController extends BaseController {
 
     @ApiOperation(value = "添加模板", notes = "添加模板")
     @RequestMapping(value = "/insertAction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
     public AdminResult<MessagePushTemplateResponse> insertAction(HttpServletRequest request, @RequestBody MsgPushTemplateRequest templateRequest) {
         MessagePushTemplateResponse response = new MessagePushTemplateResponse();
         AdminSystemVO user = getUser(request);
@@ -175,6 +182,7 @@ public class MessagePushTemplateController extends BaseController {
 
     @ApiOperation(value = "修改模板", notes = "修改模板")
     @RequestMapping(value = "/updateAction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateAction(HttpServletRequest request, @RequestBody MsgPushTemplateRequest templateRequest) {
         MessagePushTemplateResponse response = new MessagePushTemplateResponse();
         AdminSystemVO user = getUser(request);
@@ -227,6 +235,7 @@ public class MessagePushTemplateController extends BaseController {
 
     @ApiOperation(value = "删除模板", notes = "删除模板")
     @RequestMapping(value = "/deleteAction/{ids}", method = RequestMethod.GET)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public AdminResult deleteAction(@PathVariable String ids) {
         if (ids == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -244,6 +253,7 @@ public class MessagePushTemplateController extends BaseController {
 
     @ApiOperation(value = "修改状态", notes = "修改状态")
     @RequestMapping(value = "/statusAction/{id}", method = RequestMethod.GET)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
     public AdminResult updateStatus(@PathVariable Integer id) {
         if (id != null) {
             MessagePushTemplateResponse response = messagePushTemplateService.getRecord(id);
@@ -273,6 +283,7 @@ public class MessagePushTemplateController extends BaseController {
 
     @ApiOperation(value = "检查名称唯一性", notes = "检查名称唯一")
     @RequestMapping(value = "/checkAction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public AdminResult checkAction(@RequestBody MsgPushTemplateRequest request) {
         Integer id = request.getId();
         String tagCode = request.getTagCode();
@@ -294,6 +305,7 @@ public class MessagePushTemplateController extends BaseController {
 
     @ApiOperation(value = "检查是否是url", notes = "检查是否是url")
     @RequestMapping(value = "/checkUrlAction", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public AdminResult checkUrlAction(HttpServletRequest request) {
         MessagePushTemplateResponse response = new MessagePushTemplateResponse();
         // 检查着名称唯一性
@@ -310,6 +322,7 @@ public class MessagePushTemplateController extends BaseController {
 
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {

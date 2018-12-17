@@ -22,7 +22,7 @@ spring:
     base-url: http://ZIPKIN
   sleuth:
     sampler:
-    percentage: 0.1
+    percentage: 1
     
   profiles:
     active: dev
@@ -39,3 +39,9 @@ management:
     health:
       show-details: ALWAYS
 
+info:
+  name: cs_user
+  version: '@project.version@'
+  encoding: '@project.build.sourceEncoding@'
+  java:
+    version: '@java.version@'

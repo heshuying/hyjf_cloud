@@ -767,7 +767,7 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public List<BankCardVO> getBankOpenAccountById(Integer userId) {
+	public List<BankCardVO> getTiedCardForBank(Integer userId) {
 		BankCardResponse bankCardResponse = restTemplate
 				.getForEntity(userService+"/callcenter/getTiedCardForBank/" + userId, BankCardResponse.class)
 				.getBody();

@@ -22,7 +22,7 @@ spring:
     base-url: http://ZIPKIN
  sleuth:
     sampler:
-    percentage: 0.1
+    percentage: 1
 
  profiles:
     active: dev
@@ -51,3 +51,9 @@ management:
     server:
       auto-time-requests: true
 
+info:
+  name: am_config
+  version: '@project.version@'
+  encoding: '@project.build.sourceEncoding@'
+  java:
+    version: '@java.version@'

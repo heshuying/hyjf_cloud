@@ -4,8 +4,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.excel.ReadExcel;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.promotion.channel.ChannelService;
 import com.hyjf.admin.utils.FileUpLoadUtil;
 import com.hyjf.am.response.admin.promotion.UtmResultResponse;
@@ -49,12 +51,15 @@ import java.util.*;
 @RequestMapping("/hyjf-admin/promotion/channel")
 public class ChannelController extends BaseController {
     private Logger logger = LoggerFactory.getLogger(ChannelController.class);
+    /** 查看权限 */
+    public static final String PERMISSIONS = "channel";
 
     @Resource
     private ChannelService channelService;
 
     @ApiOperation(value = "页面初始化", notes = "推广列表")
     @PostMapping("/init")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public UtmResultResponse channelListInit(HttpServletRequest request, HttpServletResponse response, @RequestBody ChannelCustomizeVO channelCustomizeVO) {
         UtmResultResponse adminResult = new UtmResultResponse();
         Integer count = this.channelService.countList(channelCustomizeVO);
@@ -70,6 +75,7 @@ public class ChannelController extends BaseController {
 
     @ApiOperation(value = "画面迁移(含有id更新，不含有id添加)", notes = "画面迁移(含有id更新，不含有id添加)")
     @PostMapping("/infoaction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public UtmResultResponse info(HttpServletRequest request, HttpServletResponse response, @RequestBody ChannelCustomizeVO channelCustomizeVO){
         UtmResultResponse adminResult = new UtmResultResponse();
         if (StringUtils.isNotEmpty(channelCustomizeVO.getUtmId())) {
@@ -96,6 +102,7 @@ public class ChannelController extends BaseController {
 
     @ApiOperation(value = "添加或修改信息", notes = "添加或修改信息")
     @PostMapping("/insertorupdateaction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public UtmResultResponse insertAction(HttpServletRequest request, HttpServletResponse response, @RequestBody ChannelCustomizeVO channelCustomizeVO){
         UtmResultResponse adminResult = new UtmResultResponse();
         //根据utmId判断，如存在，则为修改，如不存在，则为新增
@@ -115,6 +122,7 @@ public class ChannelController extends BaseController {
 
     @ApiOperation(value = "删除信息", notes = "删除信息")
     @PostMapping("/deleteaction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
     public UtmResultResponse deleteAction(HttpServletRequest request, HttpServletResponse response, @RequestBody ChannelCustomizeVO channelCustomizeVO){
         UtmResultResponse adminResult = new UtmResultResponse();
         //根据utmId判断，如存在，则为修改，如不存在，则为新增

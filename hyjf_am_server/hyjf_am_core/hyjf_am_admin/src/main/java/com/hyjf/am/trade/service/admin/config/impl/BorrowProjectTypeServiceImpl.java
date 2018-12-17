@@ -15,7 +15,6 @@ import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,6 +52,16 @@ public class BorrowProjectTypeServiceImpl implements BorrowProjectTypeService {
             borrowProjectType = borrowProjectTypes.get(0);
         }
         return borrowProjectType;
+    }
+
+    /**
+     * 分页查询分项目类型
+     * @param borrowProjectType
+     * @return
+     */
+    @Override
+    public Integer  selectProjectTypeCount(BorrowProjectTypeVO borrowProjectTypeVO){
+        return borrowProjectTypeCustomizeMapper.selectProjectTypeCount(borrowProjectTypeVO);
     }
     /*
     * 分页查询分项目类型

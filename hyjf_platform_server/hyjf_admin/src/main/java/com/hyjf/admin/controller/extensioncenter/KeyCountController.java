@@ -3,21 +3,20 @@
  */
 package com.hyjf.admin.controller.extensioncenter;
 
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.KeyCountService;
 import com.hyjf.admin.service.promotion.channel.ChannelService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.KeyCountResponse;
-import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.resquest.user.KeyCountRequest;
-import com.hyjf.am.vo.admin.ChannelStatisticsDetailVO;
 import com.hyjf.am.vo.user.KeyCountVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import com.hyjf.common.util.CustomConstants;
@@ -56,8 +55,12 @@ public class KeyCountController extends BaseController {
 	private KeyCountService keyCountService;
 	@Resource
 	private ChannelService channelService;
+	/** 查看权限 */
+	public static final String PERMISSIONS = "keycount";
+
 	@ApiOperation(value = "关键词设计", notes = "关键词设计列表")
 	@PostMapping("/searchaction")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH)
 	public AdminResult searchAction(@RequestBody KeyCountRequest request) {
 		logger.info("关键词设计查询开始......");
 		KeyCountResponse response = keyCountService.searchAction(request);
@@ -151,6 +154,7 @@ public class KeyCountController extends BaseController {
 	}
 	@ApiOperation(value = "数据导出--关键词设计", notes = "带条件导出EXCEL")
 	@PostMapping(value = "/exportAction")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
 	public void exportAction(HttpServletResponse response, @RequestBody KeyCountRequest form,
 			HttpServletRequest request) throws Exception {
 		// 表格sheet名称
@@ -167,7 +171,7 @@ public class KeyCountController extends BaseController {
 		SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
 		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-		Integer totalCount = recordList.size();
+		Integer totalCount = keyCountResponse.getCount();
 
 		int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount
 				: totalCount / defaultRowMaxCount + 1;
@@ -175,23 +179,25 @@ public class KeyCountController extends BaseController {
 		Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
 		String sheetNameTmp = sheetName + "_第1页";
 		if (totalCount == 0) {
-
 			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
 		} else {
-			// 当前下载数据超过一页上限
-			if (defaultRowMaxCount < recordList.size()) {
-				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,
-						recordList.subList(0, defaultRowMaxCount));
-				for (int i = 1; i < sheetCount; i++) {
-					sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-					helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,
-							recordList.subList(defaultRowMaxCount * i, defaultRowMaxCount * (i + 1)));
-				}
-			} else {
-				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,
-						recordList.subList(0, recordList.size()));
-			}
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList);
 		}
+
+        for (int i = 1; i < sheetCount; i++) {
+            //请求第一页5000条
+            form.setPageSize(defaultRowMaxCount);
+            form.setCurrPage(i+1);
+            // 封装查询条件
+            KeyCountResponse keyCountResponse2 = keyCountService.searchAction(form);
+            List<KeyCountVO> recordList2 = keyCountResponse2.getResultList();
+            if (recordList2 != null && recordList2.size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  recordList2);
+            } else {
+                break;
+            }
+        }
 
 		DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
 	}

@@ -2514,6 +2514,37 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     /*加入明细 start AM-ADMIN*/
     /**
+     * 查询总条数
+     *
+     * @param form
+     * @return
+     */
+    @Override
+    public AccedeListResponse getAccedeListByParamCount(AccedeListRequest form) {
+        AccedeListResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-trade/accedeList/getAccedeListByParamCount", form, AccedeListResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 分页查询数据
+     * @param form
+     * @return
+     */
+    @Override
+    public AccedeListResponse getAccedeListByParamList(AccedeListRequest form) {
+        AccedeListResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-trade/accedeList/getAccedeListByParamList", form, AccedeListResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
      * 检索加入明细列表
      *
      * @param form
@@ -2979,11 +3010,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @Date
      */
     @Override
-    public List<BorrowRepaymentPlanCustomizeVO> exportRepayClkActBorrowRepaymentInfoList(BorrowRepaymentPlanRequest request) {
+    public AdminBorrowRepaymentResponse exportRepayClkActBorrowRepaymentInfoList(BorrowRepaymentPlanRequest request) {
         String url = "http://AM-ADMIN/am-trade/adminBorrowRepayment/exportRepayClkActBorrowRepaymentInfoList";
         AdminBorrowRepaymentResponse response = restTemplate.postForEntity(url, request, AdminBorrowRepaymentResponse.class).getBody();
         if (response != null) {
-            return response.getBorrowRepaymentPlanList();
+            return response;
         }
         return null;
     }
@@ -6003,6 +6034,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     * @param contractId
     * @return ApplyAgreementInfoVO
     **/
+    @Override
     public ApplyAgreementInfoVO selectApplyAgreementInfoByContractId(String contractId) {
         String url = "http://AM-ADMIN/am-trade/applyAgreement/selectApplyAgreementInfoByContractId/"+contractId;
         ApplyAgreementInfoResponse response = restTemplate.getForEntity(url,ApplyAgreementInfoResponse.class).getBody();
@@ -6329,6 +6361,20 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * VIP中心-优惠券发行 查询导出列表总数
+     * @param request
+     * @return
+     */
+    @Override
+    public int getCouponConfigCountForExport(CouponConfigRequest request) {
+        IntegerResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/couponConfig/getCountForExport", request, IntegerResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    /**
      * 查询优惠券发行导出列表
      * @param request
      * @return
@@ -6387,6 +6433,16 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response.getResultInt()>0?true:false;
         }
         return false;
+    }
+
+    @Override
+    public Integer countBorrowRepaymentInfoExport(BorrowRepaymentInfoRequset copyForm) {
+        String url = "http://AM-ADMIN/am-trade/adminBorrowRepaymentInfo/countExport";
+        IntegerResponse response = restTemplate.postForObject(url, copyForm, IntegerResponse.class);
+        if (response != null) {
+            return response.getResultInt();
+        }
+        return null;
     }
 
     /**
@@ -6721,4 +6777,19 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
 		return null;
 	}
+
+    /**
+     * 资金中心-汇计划提成导出记录总数
+     * @param request
+     * @return
+     */
+    @Override
+    public int getHjhCommissionCountForExport(HjhCommissionRequest request) {
+        IntegerResponse response =
+                restTemplate.postForEntity("http://AM-ADMIN/am-trade/hjhCommission/getHjhCommissionCountForExport", request, IntegerResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
+    }
 }

@@ -1,7 +1,9 @@
 package com.hyjf.admin.controller.promotion.appReconcliation;
 
 import com.google.common.collect.Maps;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.promotion.AppChannelReconciliationService;
 import com.hyjf.admin.service.promotion.AppChannelStatisticsDetailService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
@@ -42,9 +44,12 @@ public class AppChannelStatisticsDetailController extends BaseController {
     AppChannelStatisticsDetailService appChannelStatisticsDetailService;
     @Autowired
     private AppChannelReconciliationService appChannelReconciliationService;
+    /** 查看权限 */
+    public static final String PERMISSIONS = "appchanneldetail";
 
     @ApiOperation(value = "app渠道统计明细-画面初始化", notes = "app渠道统计明细-画面初始化")
     @PostMapping("/init")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AppUtmRegResponse init(@RequestBody AppChannelStatisticsDetailRequest appChannelStatisticsDetailRequest, HttpServletRequest request){
         AdminSystemVO user = getUser(request);
         Integer userId = Integer.valueOf(user.getId());
@@ -184,6 +189,7 @@ public class AppChannelStatisticsDetailController extends BaseController {
      */
     @ApiOperation(value = "app渠道统计明细-导出", notes = "app渠道统计明细-导出")
     @GetMapping("/exportAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportAction(HttpServletRequest request, HttpServletResponse response, AppChannelStatisticsDetailRequest form) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
@@ -199,16 +205,28 @@ public class AppChannelStatisticsDetailController extends BaseController {
 
 
         Integer totalCount = resultList.size();
-
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
-        if (totalCount == 0) {
 
+        if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-        }else {
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
         }
+
+        for (int i = 1; i <= sheetCount; i++) {
+            //请求第一页5000条
+            form.setPageSize(defaultRowMaxCount);
+            form.setCurrPage(i);
+            List<AppUtmRegVO> resultResponse2 = appChannelStatisticsDetailService.paging(form,resultList);
+            if (resultResponse2 != null && resultResponse2.size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultResponse2);
+            } else {
+                break;
+            }
+        }
+
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
 

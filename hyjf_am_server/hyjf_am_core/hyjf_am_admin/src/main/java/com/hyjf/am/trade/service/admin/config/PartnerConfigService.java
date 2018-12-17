@@ -17,6 +17,10 @@ public interface PartnerConfigService {
     * */
     public Integer getInstConfigCount();
     /*
+       * 查询保证金记录条数查询
+       * */
+    public int instConfigInitCount();
+    /*
    * 查询合作机构配置总数
    * */
     public List<HjhInstConfig> instConfigInitByPage(int limitStart, int limitEnd);

@@ -10,8 +10,11 @@ import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.ic.AppChannelStatistics;
 import com.hyjf.cs.message.service.channel.ChannelStatisticsService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,6 +25,7 @@ import java.util.List;
  * @author yaoyong
  * @version ChannelStatisticsController, v0.1 2018/9/21 12:03
  */
+@Api(tags = "app端-app渠道统计")
 @RestController
 @RequestMapping("/cs-message/app")
 public class ChannelStatisticsController extends BaseController {
@@ -34,15 +38,21 @@ public class ChannelStatisticsController extends BaseController {
      * @param request
      * @return
      */
-    @RequestMapping("/channelstatistics")
+    @ApiOperation(value = "获取app渠道统计列表", notes = "获取app渠道统计列表")
+    @PostMapping("/channelstatistics")
     public AppChannelStatisticsResponse searchList(@RequestBody AppChannelStatisticsRequest request) {
         AppChannelStatisticsResponse response = new AppChannelStatisticsResponse();
-        List<AppChannelStatistics> list = channelStatisticsService.findChannelStatistics(request);
-        if (!CollectionUtils.isEmpty(list)) {
-            List<AppChannelStatisticsVO> voList = CommonUtils.convertBeanList(list,AppChannelStatisticsVO.class);
-            response.setResultList(voList);
-        }
+
         int count = channelStatisticsService.queryChannelStatisticsCount(request);
+        if(count > 0){
+
+            List<AppChannelStatistics> list = channelStatisticsService.findChannelStatistics(request);
+            if (!CollectionUtils.isEmpty(list)) {
+                List<AppChannelStatisticsVO> voList = CommonUtils.convertBeanList(list,AppChannelStatisticsVO.class);
+                response.setResultList(voList);
+            }
+        }
+
         response.setCount(count);
         return response;
     }
@@ -53,7 +63,8 @@ public class ChannelStatisticsController extends BaseController {
      * @param request
      * @return
      */
-    @RequestMapping("/export")
+    @ApiOperation(value = "导出app渠道统计列表", notes = "导出app渠道统计列表")
+    @PostMapping("/export")
     public AppChannelStatisticsResponse exportList(@RequestBody AppChannelStatisticsRequest request) {
         AppChannelStatisticsResponse response = new AppChannelStatisticsResponse();
         List<AppChannelStatistics> list = channelStatisticsService.exportList(request);

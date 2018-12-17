@@ -3,16 +3,15 @@
  */
 package com.hyjf.admin.controller.config;
 
-import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.beans.request.ProtocolsRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
-import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
-import com.hyjf.admin.service.ProtocolService;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.ProtocolsService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
@@ -23,7 +22,6 @@ import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.FddTempletCustomizeVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -32,13 +30,8 @@ import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
@@ -46,7 +39,6 @@ import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -61,11 +53,14 @@ public class ProtocolsController extends BaseController {
 	@Autowired
 	private ProtocolsService protocolsService;
 
+	public static final String PERMISSIONS = "protocols";
+
 	@Autowired
 	private SystemConfig systemConfig;
 
 	@ApiOperation(value = "展示协议管理列表", notes = "展示协议管理列表")
 	@PostMapping("/init")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<ListResult<FddTempletCustomizeVO>> selectFddTempletList(
 			@RequestBody ProtocolsRequestBean request) {
 		FddTempletCustomizeResponse response = protocolsService.selectFddTempletList(request);
@@ -80,6 +75,7 @@ public class ProtocolsController extends BaseController {
 
 	@ApiOperation(value = "添加协议管理", notes = "添加协议管理")
 	@PostMapping("/insert")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
 	public AdminResult insert(@RequestBody ProtocolsRequestBean requestBean, HttpServletRequest request) {
 		AdminSystemVO user = getUser(request);
 		requestBean.setCreateUserId(Integer.valueOf(user.getId()));
@@ -96,6 +92,7 @@ public class ProtocolsController extends BaseController {
 
 	@ApiOperation(value = "修改协议管理", notes = "修改协议管理")
 	@PostMapping("/update")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
 	public AdminResult update(@RequestBody ProtocolsRequestBean requestBean, HttpServletRequest request) {
 		AdminSystemVO user = getUser(request);
 		requestBean.setCreateUserId(Integer.valueOf(user.getId()));
@@ -112,6 +109,7 @@ public class ProtocolsController extends BaseController {
 
 	@ApiOperation(value = "画面迁移(含有id更新，不含有id添加)", notes = "画面迁移(含有id更新，不含有id添加)")
 	@PostMapping("/infoAction")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult info(@RequestBody ProtocolsRequestBean requestBean) {
 		logger.info(ProtocolsController.class.toString(), "infoAction");
 		FddTempletCustomizeResponse response = new FddTempletCustomizeResponse();
@@ -360,6 +358,7 @@ public class ProtocolsController extends BaseController {
 	 */
 	@ApiOperation(value = "导出excel", notes = "导出excel")
 	@PostMapping("/exportaction")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
 	 public void exportToExcel(@ModelAttribute ProtocolsRequestBean form, HttpServletRequest request, HttpServletResponse response) throws Exception {
 	        //sheet默认最大行数
 	        int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
@@ -388,19 +387,18 @@ public class ProtocolsController extends BaseController {
 	        Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
 	        String sheetNameTmp = sheetName + "_第1页";
 	        if (totalCount == 0) {
-	        	
 	            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
 	        }else {
-	        	 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.subList(0, defaultRowMaxCount));
+				helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList);
 	        }
 	        for (int i = 1; i < sheetCount; i++) {
 
 	        	form.setPageSize(defaultRowMaxCount);
 	        	form.setCurrPage(i+1);
 	        	FddTempletCustomizeResponse fddResponse2 = this.protocolsService.selectFddTempletList(form);
-	            if (fddResponse2 != null && fddResponse2.getResultList().size()> 0) {
+	            if (fddResponse2 != null && fddResponse2.getResultList() != null && fddResponse2.getResultList().size()> 0) {
 	                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-	                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  fddResponse2.getResultList().subList(defaultRowMaxCount*i, defaultRowMaxCount*(i+1)));
+	                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  fddResponse2.getResultList());
 	            } else {
 	                break;
 	            }
@@ -410,14 +408,14 @@ public class ProtocolsController extends BaseController {
 
 	    private Map<String, String> buildMap() {
 	        Map<String, String> map = Maps.newLinkedHashMap();
-	        map.put("regionName", "模版编号");
-	        map.put("branchName", "协议类型");
-	        map.put("departmentName", "启用状态");
-	        map.put("instName", "CA认证");
-	        map.put("userName", "认证时间");
-	        map.put("realName", "操作人");
-	        map.put("sex", "操作时间");
-	        map.put("birthday", "备注");
+	        map.put("templetId", "模版编号");
+	        map.put("protocolTypeName", "协议类型");
+	        map.put("isActive", "启用状态");
+	        map.put("caFlagName", "CA认证");
+	        map.put("certificateTime", "认证时间");
+	        map.put("createUserName", "操作人");
+	        map.put("createTime", "操作时间");
+	        map.put("remark", "备注");
 	        return map;
 	    }
 	    private Map<String, IValueFormatter> buildValueAdapter() {
@@ -425,13 +423,8 @@ public class ProtocolsController extends BaseController {
 	        IValueFormatter isActiveAdapter = new IValueFormatter() {
 	            @Override
 	            public String format(Object object) {
-	                String isActive = (String) object;
-	                if("0".equals(isActive)) {
-	                	return "启用";
-	                }else {
-	                	return "禁用";
-	                }
-	             
+	                Integer isActive = (Integer) object;
+					return  isActive.compareTo(1) == 0 ? "启用" : "关闭";
 	            }
 	        };
 	        IValueFormatter certificateTimeAdapter = new IValueFormatter() {
@@ -444,8 +437,8 @@ public class ProtocolsController extends BaseController {
 	        IValueFormatter createTimeAdapter = new IValueFormatter() {
 	            @Override
 	            public String format(Object object) {
-	            	Integer createTime = (Integer) object;
-	                return GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(createTime);
+					Date createTime = (Date) object;
+					return GetDate.date2Str(createTime, GetDate.date_sdf);
 	            }
 	        };
 	     

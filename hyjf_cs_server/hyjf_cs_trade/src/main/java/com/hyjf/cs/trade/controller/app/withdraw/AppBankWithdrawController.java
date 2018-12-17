@@ -18,8 +18,8 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.controller.BaseTradeController;
-import com.hyjf.cs.trade.service.withdraw.BankWithdrawService;
 import com.hyjf.cs.trade.service.auth.AuthService;
+import com.hyjf.cs.trade.service.withdraw.BankWithdrawService;
 import com.hyjf.cs.trade.vo.AppWithdrawResultVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -41,7 +41,6 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -443,6 +442,9 @@ public class AppBankWithdrawController extends BaseTradeController {
         String successfulUrl = super.getFrontHost(systemConfig,platform)+"/user/withdraw/result/success";
         String forgotPwdUrl=super.getForgotPwdUrl(platform,request,systemConfig);
         BankCallBean bean = bankWithdrawService.getUserBankWithdrawView(userVO,transAmt,cardNo,payAllianceCode,platform,BankCallConstant.CHANNEL_APP,ipAddr,retUrl,bgRetUrl,successfulUrl, forgotPwdUrl);
+        if (null == bean) {
+            throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
+        }
         try {
             Map<String,Object> data =  BankCallUtils.callApiMap(bean);
             result.setData(data);

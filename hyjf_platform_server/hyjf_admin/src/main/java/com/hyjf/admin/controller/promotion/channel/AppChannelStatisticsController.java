@@ -4,43 +4,36 @@
 package com.hyjf.admin.controller.promotion.channel;
 
 import com.google.common.collect.Maps;
-import com.hyjf.admin.beans.request.HjhPlanCapitalRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.util.ExportExcel;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.AdminUtmReadPermissionsService;
 import com.hyjf.admin.service.promotion.AppChannelStatisticsService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
 import com.hyjf.am.response.app.AppChannelStatisticsResponse;
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
-import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.AdminUtmReadPermissionsVO;
 import com.hyjf.am.vo.datacollect.AppChannelStatisticsVO;
-import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
-import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.UnsupportedEncodingException;
-import java.math.BigDecimal;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
@@ -61,8 +54,12 @@ public class AppChannelStatisticsController extends BaseController {
     @Autowired
     private AdminUtmReadPermissionsService adminUtmReadPermissionsService;
 
+    /** 权限关键字 */
+    public static final String PERMISSIONS = "appchannelstatistics";
+
     @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @RequestMapping(value = "/channelStatistics", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult init(HttpServletRequest request, @RequestBody AppChannelStatisticsRequest statisticsRequest) {
         AdminResult result = new AdminResult();
         //获取后天用户登录id
@@ -263,6 +260,7 @@ public class AppChannelStatisticsController extends BaseController {
 
     @ApiOperation(value = "导出", notes = "导出")
     @RequestMapping(value = "/export", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void export(HttpServletResponse response, HttpServletRequest request, @RequestBody AppChannelStatisticsRequest statisticsRequest) throws UnsupportedEncodingException {
         //获取后天用户登录id
         AdminSystemVO adminSystemVO = getUser(request);
@@ -297,13 +295,26 @@ public class AppChannelStatisticsController extends BaseController {
 
         Integer totalCount = resultList.size();
 
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
-        if (totalCount == 0) {
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-        }else {
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
+
+        if(totalCount == 0){
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  new ArrayList());
+        }
+
+        for (int i = 1; i <= sheetCount; i++) {
+            //请求第一页5000条
+            statisticsRequest.setPageSize(defaultRowMaxCount);
+            statisticsRequest.setCurrPage(i);
+            List<AppChannelStatisticsVO> statisticsResponse2 = appChannelStatisticsService.paging(statisticsRequest,resultList);
+            if (statisticsResponse2 != null && statisticsResponse2.size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i ) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  statisticsResponse2);
+            } else {
+                break;
+            }
         }
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }

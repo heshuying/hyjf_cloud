@@ -1,7 +1,6 @@
 package com.hyjf.zuul;
 
 import com.hyjf.zuul.filter.AccessFilter;
-import com.hyjf.zuul.filter.RefferFilter;
 import com.hyjf.zuul.filter.XSSFilter;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -28,6 +27,10 @@ public class ZuulApplication {
         SpringApplication.run(ZuulApplication.class, args);
     }
 
+//    @Bean
+//    public IRule ribbonRule() {
+//        return new WeightedResponseTimeRule();//这里配置策略，和配置文件对应
+//    }
     @Bean
     public AccessFilter accessFilter() {
         return new AccessFilter();

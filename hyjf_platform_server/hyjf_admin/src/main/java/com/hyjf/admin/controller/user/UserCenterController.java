@@ -556,7 +556,7 @@ public class UserCenterController extends BaseController {
 
         UserManagerRequest managerRequest = new UserManagerRequest();
         BeanUtils.copyProperties(userManagerRequestBean,managerRequest);
-        managerRequest.setLimitFlg(true);
+        managerRequest.setLimitFlg(false);
         //请求第一页5000条
         managerRequest.setPageSize(defaultRowMaxCount);
         managerRequest.setCurrPage(1);
@@ -565,7 +565,6 @@ public class UserCenterController extends BaseController {
         Integer totalCount = userManagerResponse.getCount();
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
-        int minId = 0;
         Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         if(!isShow){
