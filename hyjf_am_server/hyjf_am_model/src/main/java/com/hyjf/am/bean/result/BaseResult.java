@@ -12,6 +12,7 @@
 package com.hyjf.am.bean.result;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.hyjf.common.constants.MsgCode;
 import com.hyjf.common.util.StringUtil;
@@ -138,6 +139,6 @@ public class BaseResult<T> implements Serializable {
 	 */
 	@Override
 	public String toString() {
-		return JSON.toJSONString(this);
+		return JSON.toJSONString(this, SerializerFeature.WriteNullStringAsEmpty);
 	}
 }
