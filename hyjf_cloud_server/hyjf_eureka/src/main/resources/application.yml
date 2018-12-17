@@ -15,7 +15,7 @@ eureka:
     register-with-eureka: true
     fetch-registry: true
     serviceUrl:
-      defaultZone: @eureka.serviceUrl.default@
+      defaultZone: http://microserver1:1111/eureka,http://microserver2:1111/eureka
 
 
 management:
