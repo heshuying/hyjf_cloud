@@ -1,7 +1,6 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
- *//*
-
+ */
 package com.hyjf.admin.mq.consumer;
 
 import java.util.Calendar;
@@ -29,12 +28,10 @@ import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 
-*/
 /**
  * @author tyy
  * @version OperationReportJobAdminConsumer, v0.1 2018/7/2 10:11
- *//*
-
+ */
 @Service
 @RocketMQMessageListener(topic = MQConstant.OPERATIONREPORT_JOB_ADMIN_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.OPERATIONREPORT_JOB_ADMIN_GROUP)
 public class OperationReportJobAdminConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
@@ -184,14 +181,12 @@ public class OperationReportJobAdminConsumer implements RocketMQListener<Message
 
 
 
-    */
-/**
+    /**
      * 通过输入的日期，获取这个日期所在月份的最后一天
      *
      * @param cal
      * @return
-     *//*
-
+     */
     public static Date getLastDay(Calendar cal) {
         cal.set(Calendar.DAY_OF_MONTH, cal.getActualMaximum(Calendar.DAY_OF_MONTH));
         cal.set(Calendar.HOUR_OF_DAY, 23);
@@ -201,14 +196,12 @@ public class OperationReportJobAdminConsumer implements RocketMQListener<Message
     }
 
 
-    */
-/**
+    /**
      * 通过输入的日期，获取这个日期所在月的第一天
      *
      * @param cal
      * @return
-     *//*
-
+     */
     public static Date getFirstDay(Calendar cal) {
         cal.set(Calendar.DAY_OF_MONTH, 1);
         cal.set(Calendar.HOUR, 0);
@@ -217,4 +210,3 @@ public class OperationReportJobAdminConsumer implements RocketMQListener<Message
         return cal.getTime();
     }
 }
-*/

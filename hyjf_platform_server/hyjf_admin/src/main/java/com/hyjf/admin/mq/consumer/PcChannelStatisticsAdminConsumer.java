@@ -1,7 +1,6 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
- *//*
-
+ */
 package com.hyjf.admin.mq.consumer;
 
 import java.math.BigDecimal;
@@ -29,12 +28,10 @@ import com.hyjf.am.vo.datacollect.PcChannelStatisticsVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 
-*/
 /**
  * @author fuqiang
  * @version PcChannelStatisticsConsumer, v0.1 2018/7/2 10:11
- *//*
-
+ */
 @Service
 @RocketMQMessageListener(topic = MQConstant.PC_CHANNEL_STATISTICS_ADMIN_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.PC_CHANNEL_STATISTICS_ADMIN_GROUP)
 public class PcChannelStatisticsAdminConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
@@ -136,4 +133,3 @@ public class PcChannelStatisticsAdminConsumer implements RocketMQListener<Messag
 
 
 }
-*/
