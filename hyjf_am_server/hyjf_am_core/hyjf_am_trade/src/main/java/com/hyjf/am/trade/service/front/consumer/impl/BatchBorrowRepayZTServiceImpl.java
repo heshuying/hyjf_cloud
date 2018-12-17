@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.front.consumer.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.config.SystemConfig;
@@ -703,7 +704,9 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			if (repayFlag) {
 				try {
 					// 更新标的借款人余额，交易明细，标的表批次表的状态
+                    logger.info("【直投还款】更新标的状态前apicron:{}", JSON.toJSONString(apicron));
 					boolean borrowFlag = ((BatchBorrowRepayZTService)AopContext.currentProxy()).updateBorrowStatus(apicron, borrow, borrowInfo);
+                    logger.info("【直投还款】更新标的状态后apicron:{}", JSON.toJSONString(apicron));
 					if (borrowFlag) {
 						return true;
 					}
@@ -1770,6 +1773,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		// 标的是否可用担保机构还款
 		int isRepayOrgFlag = Validator.isNull(borrowInfo.getIsRepayOrgFlag()) ? 0 : borrowInfo.getIsRepayOrgFlag();
 		apicron = this.borrowApicronMapper.selectByPrimaryKey(apicron.getId());
+        logger.info("【直投还款】apicron:{}", JSON.toJSONString(apicron));
 		int repayUserId = apicron.getUserId();
 		int periodNow = apicron.getPeriodNow();
 		int repayCount = apicron.getTxCounts();// 放款总笔数
