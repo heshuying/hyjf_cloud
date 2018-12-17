@@ -132,9 +132,8 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         resultMap.put("isSetPassword", user.getIsSetPassword());
         resultMap.put("lastTime", userLogin.getLastTime());
         UsersContactVO usersContactVO = amUserClient.selectUserContact(user.getUserId());
-        resultMap.put("usersContract", usersContactVO==null?"":usersContactVO);
-        logger.info("usersContract：is {}",usersContactVO);
-        // 紧急联系人类型 
+        resultMap.put("usersContract", usersContactVO);
+        // 紧急联系人类型
         Map<String, String> result = CacheUtil.getParamNameMap("USER_RELATION");
         resultMap.put("userRelation", result);
         // 根据用户Id查询用户银行卡号 add by tyy 2018-6-27
