@@ -11,6 +11,7 @@
 	
 package com.hyjf.cs.common.bean.result;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.common.constants.MsgCode;
 import com.hyjf.cs.common.util.Page;
@@ -22,6 +23,7 @@ import java.io.Serializable;
  * 成功返回“000”
  * @author liubinWE
  */
+@JsonInclude(JsonInclude.Include.ALWAYS)
 public class WebResult<T> extends BaseResult<T> implements Serializable {
 	private static final long WEB = 1L;
 

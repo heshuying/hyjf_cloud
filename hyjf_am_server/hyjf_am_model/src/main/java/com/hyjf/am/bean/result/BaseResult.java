@@ -12,6 +12,7 @@
 package com.hyjf.am.bean.result;
 
 import com.alibaba.fastjson.JSON;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.hyjf.common.constants.MsgCode;
 import com.hyjf.common.util.StringUtil;
 
@@ -21,6 +22,7 @@ import java.io.Serializable;
  * 返回前端结果基类
  * @author liubin
  */
+@JsonInclude(JsonInclude.Include.ALWAYS)
 public class BaseResult<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String SUCCESS = "000";
