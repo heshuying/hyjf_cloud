@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.user.service.safe.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BindEmailLogRequest;
 import com.hyjf.am.resquest.user.UserNoticeSetRequest;
@@ -134,7 +133,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         resultMap.put("lastTime", userLogin.getLastTime());
         UsersContactVO usersContactVO = amUserClient.selectUserContact(user.getUserId());
         resultMap.put("usersContract", usersContactVO);
-
+        logger.info("usersContract：is {}",usersContactVO);
         // 紧急联系人类型 
         Map<String, String> result = CacheUtil.getParamNameMap("USER_RELATION");
         resultMap.put("userRelation", result);
