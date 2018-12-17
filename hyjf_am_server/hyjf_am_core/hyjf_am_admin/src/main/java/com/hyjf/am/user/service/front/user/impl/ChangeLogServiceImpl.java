@@ -46,7 +46,7 @@ public class ChangeLogServiceImpl extends BaseServiceImpl implements ChangeLogSe
         if (userChangeLog.getIs51() != null) {
             criteria.andIs51EqualTo(userChangeLog.getIs51());
         }
-        return usersChangeLogMapper.selectByExample(example);
+        return userChangeLogMapper.selectByExample(example);
     }
 
     /**

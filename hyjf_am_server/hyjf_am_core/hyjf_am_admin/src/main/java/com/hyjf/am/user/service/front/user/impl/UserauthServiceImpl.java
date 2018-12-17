@@ -250,7 +250,7 @@ public class UserauthServiceImpl extends BaseServiceImpl implements UserauthServ
 	@Override
 	public void insertUserAuthLog2(int userId, String orderId, String authType) {
        
-        User user=usersMapper.selectByPrimaryKey(userId);
+        User user=userMapper.selectByPrimaryKey(userId);
         HjhUserAuthLog hjhUserAuthLog=new HjhUserAuthLog();
         hjhUserAuthLog.setUserId(user.getUserId());
         hjhUserAuthLog.setUserName(user.getUsername());

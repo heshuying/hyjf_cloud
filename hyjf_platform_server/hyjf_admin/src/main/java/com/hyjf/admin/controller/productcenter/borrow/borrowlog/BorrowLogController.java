@@ -42,6 +42,7 @@ import java.util.*;
 @Api(value = "借款操作日志",tags ="借款操作日志")
 @RestController
 @RequestMapping("/hyjf-admin/borrow/borrowlog")
+@SuppressWarnings("unchecked")
 public class BorrowLogController extends BaseController {
 
     /** 查看权限 */

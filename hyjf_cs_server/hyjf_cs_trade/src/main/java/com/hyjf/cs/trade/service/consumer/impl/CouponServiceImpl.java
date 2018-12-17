@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.trade.service.consumer.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
@@ -22,8 +21,8 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.util.calculate.*;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.CouponLoansHjhMessageProducer;
 import com.hyjf.cs.trade.service.consumer.CouponService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -59,7 +58,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
     private AmUserClient amUserClient;
 
     @Autowired
-    private CouponLoansHjhMessageProducer couponLoansHjhMessageProducer;
+    private CommonProducer commonProducer;
 
     /**
      * 加入计划  体验金投资
@@ -295,7 +294,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             // 如果是计划类的
             if (CustomConstants.COUPON_TENDER_TYPE_HJH.equals(bean.getTenderType())) {
                 try{
-                    couponLoansHjhMessageProducer.messageSendDelay(new MessageContent(MQConstant.HJH_COUPON_LOAN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)),2);
+                    commonProducer.messageSendDelay(new MessageContent(MQConstant.HJH_COUPON_LOAN_TOPIC, UUID.randomUUID().toString(), params),2);
                 }catch (Exception e){
                     logger.error("优惠券放款失败  {} ",JSONObject.toJSONString(params));
                     e.printStackTrace();

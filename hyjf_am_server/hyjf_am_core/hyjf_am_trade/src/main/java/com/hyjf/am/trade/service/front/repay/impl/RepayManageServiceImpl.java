@@ -6,8 +6,8 @@ import com.hyjf.am.trade.bean.repay.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.EmployeeCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserTransferBorrowInfoCustomize;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.BorrowLoanRepayProducer;
 import com.hyjf.am.trade.service.front.repay.RepayManageService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
@@ -43,7 +43,7 @@ import java.util.*;
 public class RepayManageServiceImpl extends BaseServiceImpl implements RepayManageService {
 
     @Autowired
-    private BorrowLoanRepayProducer borrowLoanRepayProducer;
+    private CommonProducer commonProducer;
 
     /**
      * 普通借款人管理费总待还
@@ -4868,8 +4868,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
      */
     public void sendRepayMessage(BorrowApicron apiCron) {
         try {
-            borrowLoanRepayProducer.messageSendDelay(new MessageContent(MQConstant.BORROW_REPAY_REQUEST_TOPIC,
-                    apiCron.getBorrowNid(), JSON.toJSONBytes(apiCron)),2);
+            commonProducer.messageSendDelay(new MessageContent(MQConstant.BORROW_REPAY_REQUEST_TOPIC,
+                    apiCron.getBorrowNid(), apiCron),2);
             logger.info("【还款】发起还款消息:还款项目编号:[" + apiCron.getBorrowNid() + ",还款期数:[第" + apiCron.getPeriodNow() +
                     "],计划编号:[" + (org.apache.commons.lang3.StringUtils.isEmpty(apiCron.getPlanNid()) ? "" : apiCron.getPlanNid()));
         } catch (MQException e) {

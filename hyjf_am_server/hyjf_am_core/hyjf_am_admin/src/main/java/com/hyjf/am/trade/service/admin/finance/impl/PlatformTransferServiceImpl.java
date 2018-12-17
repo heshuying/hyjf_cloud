@@ -3,9 +3,8 @@
  */
 package com.hyjf.am.trade.service.admin.finance.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
-import com.hyjf.am.admin.mq.producer.AccountWebListProducer;
 import com.hyjf.am.resquest.admin.PlatformTransferListRequest;
 import com.hyjf.am.resquest.admin.PlatformTransferRequest;
 import com.hyjf.am.trade.dao.mapper.auto.*;
@@ -59,7 +58,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
     private BankMerchantAccountListMapper bankMerchantAccountListMapper;
 
     @Autowired
-    private AccountWebListProducer accountWebListProducer;
+    private CommonProducer commonProducer;
 
     // 充值状态:充值中
     private static final int RECHARGE_STATUS_WAIT = 1;
@@ -336,7 +335,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
         // ret += csMessageClient.insertAccountWebList(accountWebListVO);
 
         try {
-            boolean b = accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebListVO)));
+            boolean b = commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebListVO));
             if (b) {
                 ret++;
             }

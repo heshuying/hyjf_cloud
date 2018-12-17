@@ -37,6 +37,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/am-trade/protocol")
+@SuppressWarnings("unchecked")
 public class ProtocolsController extends BaseController {
 	@Autowired
 	private ProtocolsService protocolsService;

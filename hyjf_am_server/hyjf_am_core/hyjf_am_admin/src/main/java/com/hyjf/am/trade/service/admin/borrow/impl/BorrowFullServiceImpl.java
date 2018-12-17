@@ -3,9 +3,8 @@
  */
 package com.hyjf.am.trade.service.admin.borrow.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
-import com.hyjf.am.admin.mq.producer.BorrowLoanRepayProducer;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.BorrowFullRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
@@ -43,7 +42,7 @@ import java.util.Map;
 public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFullService {
 
     @Autowired
-    BorrowLoanRepayProducer borrowLoanRepayProducer;
+    private CommonProducer commonProducer;
 
     /**
      * 获取借款复审列表count
@@ -279,8 +278,8 @@ public class BorrowFullServiceImpl extends BaseServiceImpl implements BorrowFull
     private void sendRealTimeLoanMQ(String borrowNid, BorrowApicron borrowApicron, String borrowRealtimeloanPlanRequestTopic) {
         //由于是在事务内提交 会发生MQ消费时事务还没提交的情况 所以改成延时队列
         try {
-            borrowLoanRepayProducer.messageSendDelay(
-                    new MessageContent(borrowRealtimeloanPlanRequestTopic, borrowApicron.getBorrowNid(), JSON.toJSONBytes(borrowApicron)),2);
+            commonProducer.messageSendDelay(
+                    new MessageContent(borrowRealtimeloanPlanRequestTopic, borrowApicron.getBorrowNid(), borrowApicron),2);
         } catch (MQException e) {
             logger.error("[编号：" + borrowNid + "]发送放款MQ失败！", e);
         }

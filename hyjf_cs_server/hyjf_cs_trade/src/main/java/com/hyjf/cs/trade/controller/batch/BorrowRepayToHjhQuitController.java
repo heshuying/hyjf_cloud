@@ -11,8 +11,8 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetCode;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.HjhQuitProducer;
 import com.hyjf.cs.trade.service.batch.BorrowRepayToHjhQuitService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,7 +39,7 @@ public class BorrowRepayToHjhQuitController extends BaseTradeController {
     private BorrowRepayToHjhQuitService borrowRepayToHjhQuitService;
 
     @Autowired
-    private HjhQuitProducer hjhQuitProducer;
+    private CommonProducer commonProducer;
 
     @GetMapping("/hjhQuit")
     public void entryUpdate(){
@@ -56,7 +56,7 @@ public class BorrowRepayToHjhQuitController extends BaseTradeController {
                     params.put("orderStatus", accede.getOrderStatus());
                     params.put("creditCompleteFlag", accede.getCreditCompleteFlag());
                     try {
-                        hjhQuitProducer.messageSend(new MessageContent(MQConstant.HJH_QUIT_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.HJH_QUIT_TOPIC, UUID.randomUUID().toString(), params));
                     } catch (MQException e) {
                         logger.error("汇计划计划进入锁定期/退出计划发送消息失败...", e);
                     }

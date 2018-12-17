@@ -1,8 +1,7 @@
 package com.hyjf.am.user.service.front.ca.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
-import com.hyjf.am.admin.mq.producer.FddCertificateProducer;
 import com.hyjf.am.resquest.user.CertificateAuthorityExceptionRequest;
 import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
 import com.hyjf.am.user.dao.model.auto.CertificateAuthorityExample;
@@ -33,7 +32,7 @@ public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl im
 	  private static final Logger logger = LoggerFactory.getLogger(CertificateAuthorityExceptionServiceImpl.class);
 
     @Autowired
-    FddCertificateProducer fddProducer;
+    private CommonProducer commonProducer;
 
     /**
      * 检索CA异常件数
@@ -164,8 +163,8 @@ public class CertificateAuthorityExceptionServiceImpl extends BaseServiceImpl im
 
 		FddCertificateAuthorityVO fddCertificateAuthorityVO = new FddCertificateAuthorityVO();
 		fddCertificateAuthorityVO.setUserId(userId);
-		fddProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC,
-				UUID.randomUUID().toString(), JSON.toJSONBytes(fddCertificateAuthorityVO)));
+        commonProducer.messageSend(new MessageContent(MQConstant.FDD_CERTIFICATE_AUTHORITY_TOPIC,
+				UUID.randomUUID().toString(), fddCertificateAuthorityVO));
 
 		// 处理结束时间
 		String endTime = GetDate.dateToString(new Date());

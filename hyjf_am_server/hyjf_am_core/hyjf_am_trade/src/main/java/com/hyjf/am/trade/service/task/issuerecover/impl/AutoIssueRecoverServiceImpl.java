@@ -1,9 +1,8 @@
 package com.hyjf.am.trade.service.task.issuerecover.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.MailProducer;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.issuerecover.AutoIssueRecoverService;
 import com.hyjf.am.vo.message.MailMessage;
@@ -36,7 +35,7 @@ import java.util.*;
 public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements AutoIssueRecoverService {
 
     @Resource
-    private MailProducer mailProducer;
+    private CommonProducer commonProducer;
 
     @Value("${hyjf.env.test}")
     private Boolean env_test;
@@ -240,7 +239,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
                         MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
                 // 发送邮件
                 try {
-                    mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC,UUID.randomUUID().toString(), JSON.toJSONBytes(mailMessage)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC,UUID.randomUUID().toString(), mailMessage));
                     RedisUtils.set(RedisConstants.LABEL_MAIL_KEY + hjhPlanAsset.getAssetId(), hjhPlanAsset.getAssetId(), 24 * 60 * 60);
                 } catch (MQException e2) {
                     logger.error("发送邮件失败..", e2);

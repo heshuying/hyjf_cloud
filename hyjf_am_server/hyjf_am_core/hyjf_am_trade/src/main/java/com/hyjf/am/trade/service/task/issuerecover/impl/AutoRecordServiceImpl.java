@@ -1,11 +1,10 @@
 package com.hyjf.am.trade.service.task.issuerecover.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.task.issuerecover.AutoRecordService;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.common.constants.MQConstant;
@@ -47,7 +46,7 @@ public class AutoRecordServiceImpl implements AutoRecordService {
     @Resource
     private StzhWhiteListMapper stzhWhiteListMapper;
     @Resource
-    private SmsProducer smsProducer;
+    private CommonProducer commonProducer;
     @Resource
     private HjhPlanAssetMapper hjhPlanAssetMapper;
     @Override
@@ -111,7 +110,7 @@ public class AutoRecordServiceImpl implements AutoRecordService {
             SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_NOTICE_BORROW_RECORD_FAIL, CustomConstants.CHANNEL_TYPE_NORMAL);
 
             try {
-                smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
             } catch (MQException e2) {
                 logger.error("发送备案失败短信失败..", e2);
             }
@@ -158,8 +157,8 @@ public class AutoRecordServiceImpl implements AutoRecordService {
                replaceStrs.put("val_title", mqHjhPlanAsset.getBorrowNid());
                SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_NOTICE_BORROW_RECORD_FAIL,
                        CustomConstants.CHANNEL_TYPE_NORMAL);
-               smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
-                       UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+               commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
+                       UUID.randomUUID().toString(), smsMessage));
            }catch (Exception e){
                logger.info("备案失败 "+mqHjhPlanAsset.getBorrowNid()+ " 原因："+jsonObject.get("msg")+",消息发送失败！");
            }

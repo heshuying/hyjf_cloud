@@ -1181,7 +1181,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
      */
     @Override
     public List<User> selectAllUser(){
-        List<User> userList = usersMapper.selectByExample(new UserExample());
+        List<User> userList = userMapper.selectByExample(new UserExample());
         return userList;
     }
 
@@ -1403,19 +1403,19 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
                 UserChangeLogExample logExample = new UserChangeLogExample();
                 UserChangeLogExample.Criteria logCriteria = logExample.createCriteria();
                 logCriteria.andUserIdEqualTo(Integer.parseInt(request.getUserId()));
-                int count = usersChangeLogMapper.countByExample(logExample);
+                int count = userChangeLogMapper.countByExample(logExample);
                 if (count <= 0) {
                     // 如果从来没有添加过操作日志，则将原始信息插入修改日志中
                     if (users != null && !users.isEmpty()) {
                         changeLog.setRemark("初始注册");
                         changeLog.setUpdateUser("system");
                         changeLog.setUpdateTime(logRecord.getRegTime());
-                        usersChangeLogMapper.insertSelective(changeLog);
+                        userChangeLogMapper.insertSelective(changeLog);
                     }
                 }
 
                 // 根据主键查询用户信息
-                User user = usersMapper.selectByPrimaryKey(Integer.parseInt(request.getUserId()));
+                User user = userMapper.selectByPrimaryKey(Integer.parseInt(request.getUserId()));
                 // 更新相应的用户的信息
                 //用户状态
                 if (StringUtils.isNotBlank(request.getStatus())) {
@@ -1429,12 +1429,12 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
                 if (StringUtils.isNotBlank(request.getEmail())) {
                     user.setEmail(request.getEmail());
                 }
-                int usersUpdateFlag = usersMapper.updateByPrimaryKey(user);
+                int usersUpdateFlag = userMapper.updateByPrimaryKey(user);
                 // 查询用户详情
                 UserInfoExample usersInfoE = new UserInfoExample();
                 UserInfoExample.Criteria uipec = usersInfoE.createCriteria();
                 uipec.andUserIdEqualTo(user.getUserId());
-                List<UserInfo> usersInfoList = usersInfoMapper.selectByExample(usersInfoE);
+                List<UserInfo> usersInfoList = userInfoMapper.selectByExample(usersInfoE);
                 // 更新用户详情信息
                 if (usersInfoList != null && usersInfoList.size() == 1) {
                     UserInfo userInfo = usersInfoList.get(0);
@@ -1444,7 +1444,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
                     }
 
                     // 更新用户详情信息
-                    usersInfoMapper.updateByPrimaryKey(userInfo);
+                    userInfoMapper.updateByPrimaryKey(userInfo);
                     //设置log表的用户角色
                     if (StringUtils.isNotBlank(request.getUserRole())) {
                         changeLog.setRole(Integer.parseInt(request.getUserRole()));
@@ -1470,7 +1470,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
                 changeLog.setRemark(request.getRemark());
                 changeLog.setUpdateTime(new Date());
                 changeLog.setBorrowerType(userInfoType.getBorrowerType());
-                usersChangeLogMapper.insertSelective(changeLog);
+                userChangeLogMapper.insertSelective(changeLog);
                 return usersUpdateFlag;
             }
         }
@@ -1488,7 +1488,7 @@ public class UserManagerServiceImpl extends BaseServiceImpl implements UserManag
         if (userId != null) {
             UserInfoExample example = new UserInfoExample();
             example.createCriteria().andUserIdEqualTo(userId);
-            List<UserInfo> usersInfoList = this.usersInfoMapper.selectByExample(example);
+            List<UserInfo> usersInfoList = this.userInfoMapper.selectByExample(example);
             if (usersInfoList != null && usersInfoList.size() > 0) {
                 return usersInfoList.get(0);
             }

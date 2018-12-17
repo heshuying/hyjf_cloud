@@ -1,6 +1,5 @@
 package com.hyjf.am.trade.controller.batch;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountWithdrawResponse;
 import com.hyjf.am.resquest.trade.*;

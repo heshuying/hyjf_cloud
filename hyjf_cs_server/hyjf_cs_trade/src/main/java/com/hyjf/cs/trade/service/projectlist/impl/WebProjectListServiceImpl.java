@@ -1,6 +1,5 @@
 package com.hyjf.cs.trade.service.projectlist.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alicp.jetcache.anno.CacheRefresh;
@@ -44,8 +43,8 @@ import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.projectlist.WebProjectListService;
@@ -71,6 +70,7 @@ import java.util.concurrent.TimeUnit;
  * @version WebProjectListServiceImpl, v0.1 2018/6/13 10:21
  */
 @Service
+@SuppressWarnings("unchecked")
 public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements WebProjectListService {
 
     private static Logger logger = LoggerFactory.getLogger(WebProjectListServiceImpl.class);
@@ -104,7 +104,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
 
     @Autowired
-    private SmsProducer smsProducer;
+    private CommonProducer commonProducer;
 
     @Autowired
     private SystemConfig systemConfig;
@@ -798,7 +798,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             params.put("val_title", borrow.getBorrowNid());
             SmsMessage smsMessage = new SmsMessage(null, params, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, "【汇盈金服】", CustomConstants.PARAM_TPL_DSFB, CustomConstants.CHANNEL_TYPE_NORMAL);
             try {
-                smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
+                commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,UUID.randomUUID().toString(), smsMessage));
                 return true;
             }catch (Exception e){
                 logger.error("开标短信发送失败");

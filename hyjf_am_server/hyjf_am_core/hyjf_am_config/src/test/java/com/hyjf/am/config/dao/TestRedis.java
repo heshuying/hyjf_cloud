@@ -21,6 +21,7 @@ import java.util.List;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = AmConfigApplication.class)
+@SuppressWarnings("unchecked")
 public class TestRedis {
 	Logger logger = LoggerFactory.getLogger(TestDao.class);
 

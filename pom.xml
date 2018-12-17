@@ -57,6 +57,7 @@
 		<guava.version>23.0</guava.version>
 		<redis.version>2.9.0</redis.version>
 		<ip2region.version>1.7</ip2region.version>
+		<org.apache.commons.version>1.6</org.apache.commons.version>
 
 		<eureka.serviceUrl.default>http://microserver1:1111/eureka,http://microserver2:1111/eureka</eureka.serviceUrl.default>
 	</properties>
@@ -206,6 +207,17 @@
 				<version>${ip2region.version}</version>
 			</dependency>
 
+			<dependency>
+				<groupId>org.apache.rocketmq</groupId>
+				<artifactId>rocketmq-spring-boot-starter</artifactId>
+				<version>2.0.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-text</artifactId>
+				<version>${org.apache.commons.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 

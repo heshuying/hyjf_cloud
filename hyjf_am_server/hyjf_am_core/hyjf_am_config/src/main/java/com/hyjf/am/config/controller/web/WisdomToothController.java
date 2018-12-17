@@ -24,6 +24,7 @@ import java.util.*;
  */
 @RestController
 @RequestMapping("/am-config/content/help")
+@SuppressWarnings("unchecked")
 public class WisdomToothController extends BaseConfigController {
     private static final Logger logger = LoggerFactory.getLogger(WisdomToothController.class);
 

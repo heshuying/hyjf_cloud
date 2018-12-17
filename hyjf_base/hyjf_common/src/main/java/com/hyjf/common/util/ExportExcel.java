@@ -223,7 +223,7 @@ public class ExportExcel<T> implements Serializable {
 						} else {
 							HSSFRichTextString richString = new HSSFRichTextString(textValue);
 							HSSFFont font3 = workbook.createFont();
-							font3.setColor(HSSFColor.BLACK.index);
+							font3.setColor(IndexedColors.BLACK.index);
 							richString.applyFont(font3);
 							cellValue.setCellValue(richString);
 						}

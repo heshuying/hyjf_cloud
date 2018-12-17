@@ -4,7 +4,7 @@
 package com.hyjf.admin.service.impl.exception;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.admin.mq.FDDUserInfoChangeProducer;
+import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.exception.MobileSynchronizeService;
 import com.hyjf.admin.service.impl.BaseAdminServiceImpl;
@@ -29,7 +29,7 @@ import java.util.UUID;
 public class MobileSynchronizeServiceImpl extends BaseAdminServiceImpl implements MobileSynchronizeService {
 
     @Autowired
-    private FDDUserInfoChangeProducer fddUserInfoChangeProducer;
+    private CommonProducer commonProducer;
 
     /**
      * 查询手机号同步数量  用于前端分页显示
@@ -74,7 +74,7 @@ public class MobileSynchronizeServiceImpl extends BaseAdminServiceImpl implement
                 Map<String, String> params = new HashMap<String, String>();
                 params.put("mqMsgId", GetCode.getRandomCode(10));
                 params.put("userId", String.valueOf(userId));
-                fddUserInfoChangeProducer.messageSend(new MessageContent(MQConstant.FDD_USERINFO_CHANGE_TOPIC,UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
+                commonProducer.messageSend(new MessageContent(MQConstant.FDD_USERINFO_CHANGE_TOPIC,UUID.randomUUID().toString(),params));
 
                 ret.put("status", "success");
                 ret.put("result", "手机号同步成功");

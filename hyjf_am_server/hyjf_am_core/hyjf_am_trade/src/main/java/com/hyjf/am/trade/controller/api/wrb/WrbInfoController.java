@@ -3,25 +3,20 @@
  */
 package com.hyjf.am.trade.controller.api.wrb;
 
-import com.hyjf.am.response.trade.BorrowTenderResponse;
-import com.hyjf.am.response.trade.WrbBorrowListResponse;
-import com.hyjf.am.response.trade.WrbInvestRecordResponse;
-import com.hyjf.am.response.trade.wrbInvestRecoverPlanResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.user.WrbAccountResponse;
 import com.hyjf.am.response.user.WrbInvestSumResponse;
 import com.hyjf.am.resquest.api.WrbInvestRecordRequest;
-import com.hyjf.am.response.trade.WrbBorrowTenderCustomizeResponse;
-import com.hyjf.am.response.trade.WrbBorrowTenderSumCustomizeResponse;
 import com.hyjf.am.resquest.api.WrbInvestRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.BorrowTender;
 import com.hyjf.am.trade.dao.model.auto.CouponConfig;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
-import com.hyjf.am.trade.dao.model.auto.BorrowTender;
 import com.hyjf.am.trade.dao.model.customize.WrbBorrowListCustomize;
-import com.hyjf.am.trade.dao.model.customize.WrbInvestRecordCustomize;
 import com.hyjf.am.trade.dao.model.customize.WrbBorrowTenderCustomize;
 import com.hyjf.am.trade.dao.model.customize.WrbBorrowTenderSumCustomize;
+import com.hyjf.am.trade.dao.model.customize.WrbInvestRecordCustomize;
 import com.hyjf.am.trade.service.api.wrb.WrbInfoService;
 import com.hyjf.am.vo.api.WrbInvestRecordVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
@@ -29,8 +24,8 @@ import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderSumCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
-import org.springframework.beans.BeanUtils;
 import com.hyjf.common.util.GetDate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;

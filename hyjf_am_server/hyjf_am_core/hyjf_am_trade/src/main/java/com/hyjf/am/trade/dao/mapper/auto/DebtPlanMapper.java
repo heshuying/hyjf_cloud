@@ -3,8 +3,9 @@ package com.hyjf.am.trade.dao.mapper.auto;
 import com.hyjf.am.trade.dao.model.auto.DebtPlan;
 import com.hyjf.am.trade.dao.model.auto.DebtPlanExample;
 import com.hyjf.am.trade.dao.model.auto.DebtPlanWithBLOBs;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface DebtPlanMapper {
     int countByExample(DebtPlanExample example);

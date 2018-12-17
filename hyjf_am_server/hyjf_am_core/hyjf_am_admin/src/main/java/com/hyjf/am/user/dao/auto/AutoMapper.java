@@ -1,7 +1,5 @@
 package com.hyjf.am.user.dao.auto;
 
-
-import com.hyjf.am.admin.mq.producer.AppChannelStatisticsDetailProducer;
 import com.hyjf.am.user.dao.mapper.auto.*;
 import com.hyjf.am.user.dao.mapper.customize.AdminAccountCustomizeQuiryMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +16,9 @@ public class AutoMapper {
 
     @Autowired
     protected AccountMobileSynchMapper accountMobileSynchMapper;
+
+    @Autowired
+    protected AdminAccountCustomizeQuiryMapper adminAccountCustomizeQuiryMapper;
 
     @Autowired
     protected AppointmentAuthLogMapper appointmentAuthLogMapper;
@@ -117,6 +118,7 @@ public class AutoMapper {
 
     @Autowired
     protected PreRegistMapper preRegistMapper;
+
     @Autowired
     protected SmsCodeMapper smsCodeMapper;
 
@@ -196,35 +198,10 @@ public class AutoMapper {
     protected VipUserUpgradeMapper vipUserUpgradeMapper;
 
     @Autowired
-    protected UserChangeLogMapper usersChangeLogMapper;
-
-    @Autowired
     protected WhereaboutsPageConfigMapper whereaboutsPageConfigMapper;
 
     @Autowired
     protected WhereaboutsPagePictureMapper whereaboutsPagePictureMapper;
-
-    @Autowired
-    protected UserMapper usersMapper;
-
-    @Autowired
-    protected UserInfoMapper usersInfoMapper;
-
-    @Autowired
-    protected AppChannelStatisticsDetailProducer appChannelStatisticsDetailProducer;
-
-    @Autowired
-    protected MspConfigureMapper mspConfigureMapperAuto;
-
-    @Autowired
-    protected MspQuerydetailMapper mspQueryDetailMapper;
-    @Autowired
-    protected MspBlackdataMapper mspBlackDataMapper;
-
-    @Autowired
-    protected AdminAccountCustomizeQuiryMapper adminAccountCustomizeQuiryMapper;
-
-    
 
 }
 

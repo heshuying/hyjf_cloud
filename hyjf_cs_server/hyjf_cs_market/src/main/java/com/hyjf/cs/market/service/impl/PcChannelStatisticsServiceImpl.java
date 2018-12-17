@@ -3,13 +3,12 @@
  */
 package com.hyjf.cs.market.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.datacollect.PcChannelStatisticsVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.market.client.AmUserClient;
+import com.hyjf.cs.market.mq.base.CommonProducer;
 import com.hyjf.cs.market.mq.base.MessageContent;
-import com.hyjf.cs.market.mq.producer.PcChannelStatisticsAdminProducer;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
 import com.hyjf.cs.market.service.PcChannelStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ public class PcChannelStatisticsServiceImpl extends BaseMarketServiceImpl implem
 	@Autowired
 	private AmUserClient amUserClient;
 	@Autowired
-	private PcChannelStatisticsAdminProducer producer;
+	private CommonProducer producer;
 
 	@Override
 	public void insertStatistics() {
@@ -32,7 +31,7 @@ public class PcChannelStatisticsServiceImpl extends BaseMarketServiceImpl implem
 		try {
 			PcChannelStatisticsVO statisticsVO = new PcChannelStatisticsVO();
 			producer.messageSend(new MessageContent(MQConstant.PC_CHANNEL_STATISTICS_ADMIN_TOPIC,
-					System.currentTimeMillis() + "", JSONObject.toJSONBytes(statisticsVO) ));
+					System.currentTimeMillis() + "", statisticsVO));
 		} catch (MQException e) {
 			logger.error("PC渠道统计数据发送失败......", e);
 		}

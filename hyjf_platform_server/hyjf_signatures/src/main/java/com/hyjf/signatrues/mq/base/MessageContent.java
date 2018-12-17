@@ -10,22 +10,22 @@
   * @date 2018/07/06
   */
  public class MessageContent implements Serializable {
-      private static final long serialVersionUID = -6846413929342308237L;
-      public final String topic;
-      public final String tag;
-      public final String keys;
-      public final byte[] body;
+     private static final long serialVersionUID = -6846413929342308237L;
+     public final String topic;
+     public final String tag;
+     public final String keys;
+     public final Object body;
 
-      public MessageContent(String topic, String tag, String keys, byte[] body) {
-          this.topic = topic;
-          this.tag = tag;
-          this.keys = keys;
-          this.body = body;
-      }
+     public MessageContent(String topic, String tag, String keys, Object body) {
+         this.topic = topic;
+         this.tag = tag;
+         this.keys = keys;
+         this.body = body;
+     }
 
-      public MessageContent(String topic, String keys, byte[] body) {
-          this(topic, MQConstant.HYJF_DEFAULT_TAG, keys, body);
-      }
+     public MessageContent(String topic, String keys, Object body) {
+         this(topic, MQConstant.HYJF_DEFAULT_TAG, keys, body);
+     }
 
 
  }

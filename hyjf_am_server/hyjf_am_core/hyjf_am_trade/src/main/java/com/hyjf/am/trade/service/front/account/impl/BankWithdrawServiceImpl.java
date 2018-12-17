@@ -1,6 +1,5 @@
 package com.hyjf.am.trade.service.front.account.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.result.CheckResult;
 import com.hyjf.am.resquest.trade.AfterCashParamRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
@@ -13,7 +12,6 @@ import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;

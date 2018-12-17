@@ -1,11 +1,10 @@
 package com.hyjf.am.market.dao.mapper.customize.market;
 
-import java.util.Date;
-import java.util.List;
-
+import com.hyjf.am.vo.market.SellDailyVO;
 import org.apache.ibatis.annotations.Param;
 
-import com.hyjf.am.vo.market.SellDailyVO;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author fuqiang

@@ -3,7 +3,6 @@ package com.hyjf.am.trade.service.admin.borrow;
 import com.hyjf.am.resquest.admin.BorrowRepaymentInfoRequset;
 import com.hyjf.am.trade.dao.model.customize.AdminBorrowRepaymentInfoCustomize;
 
-import javax.validation.Valid;
 import java.util.List;
 
 /**

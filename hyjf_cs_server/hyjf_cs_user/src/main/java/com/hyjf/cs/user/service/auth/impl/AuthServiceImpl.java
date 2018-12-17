@@ -18,8 +18,8 @@ import com.hyjf.cs.user.bean.ApiAuthRequesBean;
 import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.sensorsdate.auth.SensorsDataAuthProducer;
 import com.hyjf.cs.user.service.auth.AuthService;
 
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
@@ -41,7 +41,7 @@ import java.util.*;
 public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService {
 
 	@Autowired
-	private SensorsDataAuthProducer sensorsDataAuthProducer;
+	private CommonProducer commonProducer;
 
 	@Override
 	public HjhUserAuthVO getHjhUserAuthByUserId(Integer userId) {
@@ -1232,7 +1232,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 	 * @param sensorsDataBean
 	 */
 	private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
-		this.sensorsDataAuthProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_AUTH_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
+		this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_AUTH_TOPIC, UUID.randomUUID().toString(), sensorsDataBean), 2);
 	}
 
 }

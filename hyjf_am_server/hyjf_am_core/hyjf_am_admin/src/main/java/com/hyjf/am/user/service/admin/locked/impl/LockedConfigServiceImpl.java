@@ -4,9 +4,9 @@
 package com.hyjf.am.user.service.admin.locked.impl;
 
 import com.hyjf.am.bean.admin.LockedConfig;
-import com.hyjf.am.user.controller.admin.locked.LockedConfigManager;
 import com.hyjf.am.config.dao.mapper.customize.AdminCustomizeMapper;
 import com.hyjf.am.config.dao.model.auto.Admin;
+import com.hyjf.am.user.controller.admin.locked.LockedConfigManager;
 import com.hyjf.am.user.dao.mapper.auto.LockedUserInfoMapper;
 import com.hyjf.am.user.dao.mapper.auto.UserMapper;
 import com.hyjf.am.user.dao.model.auto.LockedUserInfo;
@@ -216,7 +216,7 @@ public class LockedConfigServiceImpl implements LockedConfigService {
             e.printStackTrace();
         } finally {
             // 释放redis对象
-        	poolNew.returnBrokenResource(jedis);
+        	poolNew.close();
             // 返还到连接池
             RedisUtils.returnResource(poolNew, jedis);
         }

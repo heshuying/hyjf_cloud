@@ -1,11 +1,9 @@
 package com.hyjf.am.trade.controller.api.asset;
 
-import com.hyjf.am.response.admin.AssetDetailCustomizeResponse;
 import com.hyjf.am.response.api.ApiAssetStatusCustomizeResponse;
 import com.hyjf.am.resquest.api.AsseStatusRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.api.asset.AssetListService;
-import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
 import com.hyjf.am.vo.api.ApiAssetStatusCustomizeVO;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;

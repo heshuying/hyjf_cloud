@@ -3,10 +3,8 @@
  */
 package com.hyjf.am.trade.service.front.borrow.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
-import com.hyjf.am.admin.mq.producer.AccountWebListProducer;
-import com.hyjf.am.admin.mq.producer.FddProducer;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.HjhAccedeCustomize;
 import com.hyjf.am.trade.service.front.borrow.AutoTenderService;
@@ -45,10 +43,7 @@ import java.util.*;
 public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTenderService {
 
     @Autowired
-    private FddProducer fddProducer;
-
-    @Autowired
-    private AccountWebListProducer accountWebListProducer;
+    private CommonProducer commonProducer;
 
     // 分期数据结果
     protected final String ASSIGN_RESULT = "assignResult";
@@ -2066,7 +2061,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                                                     // 插入
                                                     boolean accountWebListFlag = false;
                                                     try {
-                                                        accountWebListFlag = accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+                                                        accountWebListFlag = commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
                                                     } catch (MQException e) {
                                                         e.printStackTrace();
                                                         throw new RuntimeException("网站收支插入（mongo）发生异常，用户userId" + userId + ",承接订单号：" + debtCreditTender.getAssignOrderId());
@@ -2398,8 +2393,8 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
             bean.setTenderType(3);
             bean.setAssignNid(assignNid);
             bean.setOrdid(assignNid);
-            fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,
-                    MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
+            commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,
+                    MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
         } catch (Exception e) {
             logger.info("-----------------生成计划债权转让协议失败，assignNid:" + assignNid + ",异常信息：" + e.getMessage());
             throw new RuntimeException(e);

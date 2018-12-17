@@ -6,6 +6,7 @@ package com.hyjf.am.user.service.front.account.impl;
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.user.BankCardRequest;
 import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.mq.base.CommonProducer;
 import com.hyjf.am.user.mq.base.MessageContent;
 import com.hyjf.am.user.service.front.account.BankOpenService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
@@ -16,6 +17,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -25,6 +27,9 @@ import java.util.UUID;
 @Service
 public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenService {
     private Logger logger = LoggerFactory.getLogger(BankOpenServiceImpl.class);
+    
+    @Autowired
+    private CommonProducer commonProducer;
 
     @Override
     public boolean updateUserAccountLog(int userId, String userName, String mobile, String logOrderId, String clientPc, String name, String idno, String cardNo, String srvAuthCode) {
@@ -199,8 +204,8 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
          * APP渠道统计明细更新-修改开户时间
          */
         try {
-            appChannelStatisticsDetailProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-                    MQConstant.APP_CHANNEL_STATISTICS_DETAIL_UPDATE_TAG,UUID.randomUUID().toString(),JSON.toJSONBytes(userId)));
+        	commonProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                    MQConstant.APP_CHANNEL_STATISTICS_DETAIL_UPDATE_TAG,UUID.randomUUID().toString(), userId));
         } catch (MQException e) {
             logger.error("开户统计app渠道失败....", e);
         }

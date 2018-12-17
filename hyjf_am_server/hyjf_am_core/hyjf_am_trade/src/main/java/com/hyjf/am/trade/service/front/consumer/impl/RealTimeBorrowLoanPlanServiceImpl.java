@@ -3,14 +3,10 @@
  */
 package com.hyjf.am.trade.service.front.consumer.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
-import com.hyjf.am.trade.mq.producer.FddProducer;
-import com.hyjf.am.trade.mq.producer.MailProducer;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.front.consumer.RealTimeBorrowLoanPlanService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
@@ -44,16 +40,7 @@ import java.util.*;
 public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implements RealTimeBorrowLoanPlanService {
     
 	@Autowired
-	private MailProducer mailProducer;
-    
-	@Autowired
-	private SmsProducer smsProducer;
-    
-	@Autowired
-	private FddProducer fddProducer;
-	
-	@Autowired
-	private AccountWebListProducer accountWebListProducer;
+	private CommonProducer commonProducer;
 	
 	/**
 	 * 请求放款
@@ -200,8 +187,8 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 	
 	/**
 	 * 自动扣款（放款）(调用江西银行满标接口)
-	 *
-	 * @param outCustId
+	 * @param apicron
+	 * @param map
 	 * @return
 	 */
 	@Override
@@ -353,7 +340,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 
 	/**
 	 * 查询满标自动放款结果
-	 * @param loanBean
+	 * @param bean
 	 * @return
 	 */ 
 	private BankCallBean queryAutoLendResult(BankCallBean bean) {
@@ -840,10 +827,10 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 
 	/**
 	 * 获取还款计划(原复审逻辑)
-	 * @param borrowTender 
-	 * @param borrow 
-	 * @param autoRepay 
-	 * @param isAuto 
+	 * @param borrow
+	 * @param borrowInfo
+	 * @param borrowTender
+	 * @param serviceFee
 	 * @return
 	 */
 	private boolean upsertRepayPlanInfo(Borrow borrow, BorrowInfo borrowInfo, BorrowTender borrowTender,BigDecimal serviceFee) {
@@ -1292,7 +1279,6 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 	 * @param apicron
 	 * @param borrow
 	 * @param borrowTender
-	 * @param bean
 	 * @return
 	 * @throws Exception
 	 */
@@ -1514,7 +1500,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			//网站首支明细队列
 			try {
 				logger.info("发送收支明细---" + borrowTender.getUserId() + "---------" + serviceFee);
-                accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+				commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
             } catch (MQException e) {
 	            logger.error("计划放款系统异常", e);
             }
@@ -1542,9 +1528,8 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 	/**
 	 * 更新借款API任务表
 	 *
-	 * @param id
+	 * @param apicron
 	 * @param status
-	 * @param data
 	 * @return
 	 * @throws Exception
 	 */
@@ -1737,7 +1722,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 	/**
 	 * 取得服务费,按金额算
 	 *
-	 * @param serviceFee
+	 * @param serviceFeeRate
 	 *            服务费率
 	 * @param account
 	 *            金额
@@ -1823,7 +1808,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_FANGKUAN_SUCCESS, CustomConstants.CHANNEL_TYPE_NORMAL);
 
 		try {
-			smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+			commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
 		} catch (MQException e2) {
 			logger.error("发送短信失败..", e2);
 		}
@@ -1853,8 +1838,8 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 			bean.setTenderType(0);
 			bean.setTenderInterest(recoverInterest);
 //			rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));
-			fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,
-                    MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
+			commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,
+                    MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
 			
 		}catch (Exception e){
 			logger.info("-----------------生成计划居间服务协议失败，ordid:" + nid + ",异常信息：" + e.getMessage());

@@ -1,6 +1,5 @@
 package com.hyjf.cs.trade.service.consumer.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -21,13 +20,13 @@ import com.hyjf.common.util.calculate.InterestInfo;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
-import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.consumer.CouponLoansService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -43,13 +42,10 @@ import java.util.*;
 public class CouponLoansServiceImpl implements CouponLoansService {
     private static final Logger logger = LoggerFactory.getLogger(CouponLoansServiceImpl.class);
 
-
-    @Resource
-    private SmsProducer smsProducer;
+    @Autowired
+    private CommonProducer commonProducer;
     @Resource
     private AmUserClient amUserClient;
-    @Resource
-    private AppMessageProducer appMessageProducer;
     @Resource
     private AmTradeClient borrowClient;
 
@@ -385,8 +381,8 @@ public class CouponLoansServiceImpl implements CouponLoansService {
                     SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(USERID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null,
                             CustomConstants.PARAM_TPL_COUPON_TENDER, CustomConstants.CHANNEL_TYPE_NORMAL);
                     try {
-                        smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
-                                JSON.toJSONBytes(smsMessage)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
+                                smsMessage));
                     } catch (MQException e) {
                         e.printStackTrace();
                     }
@@ -411,8 +407,8 @@ public class CouponLoansServiceImpl implements CouponLoansService {
                     AppMsMessage appMsMessage = new AppMsMessage(users.getUserId(), msg, null, MessageConstant.APP_MS_SEND_FOR_USER,
                             CustomConstants.JYTZ_COUPON_TENDER);
                     try{
-                        appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
-                                UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
+                                UUID.randomUUID().toString(), appMsMessage));
                     }catch (Exception e){
                         logger.error("优惠券投资成功推送消息异常！",e);
                     }

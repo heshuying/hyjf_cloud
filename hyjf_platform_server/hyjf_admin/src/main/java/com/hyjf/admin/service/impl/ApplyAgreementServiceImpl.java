@@ -10,7 +10,7 @@ import com.hyjf.admin.client.BaseClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.config.SystemConfig;
-import com.hyjf.admin.mq.FddProducer;
+import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.AccedeListService;
 import com.hyjf.admin.service.ApplyAgreementService;
@@ -74,7 +74,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
     @Autowired
     private SystemConfig systemConfig;
     @Autowired
-    FddProducer fddProducer;
+    CommonProducer commonProducer;
     @Autowired
     protected AutoTenderExceptionService autoTenderExceptionService;
 
@@ -328,7 +328,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                     } else {
-                        fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
                     }
                 } catch (MQException e) {
                     logger.error("法大大合同生成MQ发送失败！");
@@ -355,7 +355,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     // 签署成功(status = 2)
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
-                        fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
                     }
                 } catch (MQException e) {
                     logger.error("法大大合同生成MQ发送失败！");
@@ -377,7 +377,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
                     accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                 } else {
-                    fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
                 }
             } catch (MQException e) {
                 logger.error("法大大合同生成MQ发送失败！");
@@ -434,7 +434,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                     } else {
-                        fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
                     }
                 } catch (MQException e) {
                     logger.error("法大大合同生成MQ发送失败！");
@@ -462,7 +462,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                     } else {
-                        fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
                     }
                 } catch (MQException e) {
                     logger.error("法大大合同生成MQ发送失败！");
@@ -484,7 +484,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
                     accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                 } else {
-                    fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
                 }
             } catch (MQException e) {
                 logger.error("法大大合同生成MQ发送失败！");
@@ -535,7 +535,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                     } else {
-                        fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
                     }
                 } catch (MQException e) {
                     logger.error("法大大合同生成MQ发送失败！");
@@ -563,7 +563,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                     } else {
-                        fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
                     }
                 } catch (MQException e) {
                     logger.error("法大大合同生成MQ发送失败！");
@@ -585,7 +585,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                 if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
                     accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                 } else {
-                    fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
                 }
             } catch (MQException e) {
                 logger.error("法大大合同生成MQ发送失败！");
@@ -636,7 +636,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                     } else {
-                        fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
                     }
                 } catch (MQException e) {
                     logger.error("法大大合同生成MQ发送失败！");
@@ -664,7 +664,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     if (tenderAgreement != null && tenderAgreement.getStatus() == 2) {
                         accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                     } else {
-                        fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
                     }
                 } catch (MQException e) {
                     logger.error("法大大合同生成MQ发送失败！");
@@ -688,7 +688,7 @@ public class ApplyAgreementServiceImpl implements ApplyAgreementService {
                     accedeListService.updateSaveSignInfo(tenderAgreement, borrow_nid, FddGenerateContractConstant.PROTOCOL_TYPE_TENDER, borrow.getInstCode());
                 } else {
                     //logger.info("-------------------------处理不分期债转-汇计划，非债转新生成tenderAgreement："+JSONObject.toJSON(tenderAgreement));
-                    fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
                 }
             } catch (MQException e) {
                 logger.error("法大大合同生成MQ发送失败！");

@@ -3,10 +3,9 @@
  */
 package com.hyjf.am.trade.service.admin.exception.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
-import com.hyjf.am.admin.mq.producer.AccountWebListProducer;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.AdminTransferExceptionLogCustomize;
 import com.hyjf.am.trade.dao.model.customize.CouponRecoverCustomize;
@@ -36,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-
 /**
  * @author jun
  * @version AdminTransferExceptionLogServiceImpl, v0.1 2018/7/10 11:31
@@ -50,7 +48,7 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
     private static final String VAL_AMOUNT = "val_amount";
 
     @Autowired
-    private AccountWebListProducer producer;
+    private CommonProducer commonProducer;
     /**
      * 银行转账列表
      * @param request
@@ -411,7 +409,7 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
         accountWebList.setRemark(remark); // 投资编号
         accountWebList.setCreateTime(GetDate.getNowTime10());
 
-        producer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+        commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
 
 
         // 添加红包账户明细
@@ -523,10 +521,11 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
 
     /**
      * 根据订单编号取得该订单的还款列表
-     * @param realTenderId
+     * @param couponTenderNid
+     * @param periodNow
      * @return
      */
-    private CouponRecoverCustomize getCurrentCouponRecover(String couponTenderNid,int periodNow){
+    private CouponRecoverCustomize getCurrentCouponRecover(String couponTenderNid, int periodNow) {
 
         Map<String,Object> paramMap = new HashMap<String ,Object>();
         paramMap.put("tenderNid", couponTenderNid);
@@ -562,8 +561,8 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
     /**
      * 更新还款期
      * @param tenderNid 投资订单编号
-     * @param resetRecoverFlg 0:非还款期，1;还款期
-     * @param currentRecoverFlg 0:非还款期，1;还款期
+     * resetRecoverFlg 0:非还款期，1;还款期
+     * currentRecoverFlg 0:非还款期，1;还款期
      * @param period 期数
      */
     private void crRecoverPeriod(String tenderNid,int period){
@@ -577,6 +576,5 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
         paramMapCurrent.put("tenderNid", tenderNid);
         paramMapCurrent.put("period", period);
         this.couponRecoverCustomizeMapper.crRecoverPeriod(paramMapCurrent);
-
     }
 }

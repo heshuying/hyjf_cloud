@@ -17,7 +17,6 @@ import com.hyjf.am.vo.admin.TenderCommissionVO;
 import com.hyjf.am.vo.trade.hjh.HjhCommissionCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.GetDate;
-
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;

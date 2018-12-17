@@ -3,20 +3,6 @@
  */
 package com.hyjf.cs.trade.service.consumer.impl;
 
-import java.math.BigDecimal;
-import java.util.*;
-
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.exception.ServiceException;
-import com.hyjf.cs.trade.mq.producer.AccountWebListProducer;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.trade.CouponRecoverCustomizeRequest;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
@@ -25,15 +11,25 @@ import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.CsMessageClient;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.consumer.TyjCouponRepayService;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * @author yaoyong
@@ -71,9 +67,7 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
     @Autowired
     private CsMessageClient csMessageClient;
     @Autowired
-    private SmsProducer smsProducer;
-    @Autowired
-    private AccountWebListProducer accountWebListProducer;
+    private CommonProducer commonProducer;
 
     @Value("${hyjf.bank.merrp.account}")
     private String BANK_MERRP_ACCOUNT;
@@ -233,7 +227,7 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
             SmsMessage smsMessage =
                     new SmsMessage(null, replaceStrs, null, null,
                             "smsSendForManager", null, CustomConstants.PARAM_TPL_COUPON_JIA_YUE, CustomConstants.CHANNEL_TYPE_NORMAL);
-            smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+            commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
 
         } catch (Exception e) {
             logger.debug(this.getClass().toString(), "sendSmsFail", e.getMessage());
@@ -261,7 +255,7 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
         setDepartments(accountWebList);
         // 插入
         try {
-            accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+            commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
         } catch (MQException e) {
             throw new RuntimeException("网站收支记录(ht_account_web_list)更新失败！" + "[投资订单号：" + borrowTenderCpn.getNid() + "]");
         }

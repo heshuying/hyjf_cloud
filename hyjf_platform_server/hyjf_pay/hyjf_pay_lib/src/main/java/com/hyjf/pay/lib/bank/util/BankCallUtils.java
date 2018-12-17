@@ -25,7 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import java.io.Serializable;
 import java.util.Map;
-
+@SuppressWarnings("unchecked")
 public class BankCallUtils implements Serializable {
 	private static Logger logger = LoggerFactory.getLogger(BankCallUtils.class);
 

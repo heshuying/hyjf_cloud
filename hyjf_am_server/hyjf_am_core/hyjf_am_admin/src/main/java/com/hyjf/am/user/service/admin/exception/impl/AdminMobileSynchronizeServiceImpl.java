@@ -116,7 +116,7 @@ public class AdminMobileSynchronizeServiceImpl extends BaseServiceImpl implement
                     // 如果本地记录的手机号跟银行的手机号不一致,更新本地记录的手机号
                     if (!bankMobile.equals(mobile)) {
                         user.setMobile(bankMobile);
-                        boolean isMobileUpdateFlag = this.usersMapper.updateByPrimaryKeySelective(user) > 0;
+                        boolean isMobileUpdateFlag = this.userMapper.updateByPrimaryKeySelective(user) > 0;
                         if (!isMobileUpdateFlag) {
                             throw new Exception("更新用户手机号失败,用户ID:" + userId);
                         }
@@ -140,7 +140,7 @@ public class AdminMobileSynchronizeServiceImpl extends BaseServiceImpl implement
                             UserChangeLogExample logExample = new UserChangeLogExample();
                             UserChangeLogExample.Criteria logCriteria = logExample.createCriteria();
                             logCriteria.andUserIdEqualTo(Integer.parseInt(userId));
-                            int count = usersChangeLogMapper.countByExample(logExample);
+                            int count = userChangeLogMapper.countByExample(logExample);
                             if (count <= 0) {
                                 // 如果从来没有添加过操作日志，则将原始信息插入修改日志中
                                 if (userInfoForLog != null && !userInfoForLog.isEmpty()) {
@@ -165,7 +165,7 @@ public class AdminMobileSynchronizeServiceImpl extends BaseServiceImpl implement
                             changeLog.setUpdateUserId(Integer.parseInt(adminSystemVO.getId()));
                             changeLog.setRemark("江西银行手机号同步");
                             changeLog.setUpdateTime(GetDate.getNowTime());
-                            boolean isUsersChangeLogFlag = usersChangeLogMapper.insertSelective(changeLog) > 0;
+                            boolean isUsersChangeLogFlag = userChangeLogMapper.insertSelective(changeLog) > 0;
                             if (!isUsersChangeLogFlag) {
                                 throw new Exception("插入修改日志失败");
                             }

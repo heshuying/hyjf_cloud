@@ -21,6 +21,7 @@ import java.util.*;
  * @version OperationGroupReport, v0.1 2018/8/1 9:45
  */
 @Document(collection = "ht_operation_group_report")
+@SuppressWarnings("unchecked")
 public class OperationGroupReport implements Serializable {
     /**
      *

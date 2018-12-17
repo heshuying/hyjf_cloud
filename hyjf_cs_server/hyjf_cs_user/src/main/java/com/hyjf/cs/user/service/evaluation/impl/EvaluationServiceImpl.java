@@ -28,8 +28,8 @@ import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.CouponProducer;
 import com.hyjf.cs.user.service.evaluation.EvaluationService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.soa.apiweb.CommonParamBean;
@@ -63,7 +63,7 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
     SystemConfig systemConfig;
 
     @Autowired
-    private CouponProducer couponProducer;
+    CommonProducer commonProducer;
 
     @Override
     public List<QuestionCustomizeVO> getNewQuestionList() {
@@ -143,8 +143,8 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
                 params.put("sendFlg", "11");
                 String signValue = StringUtils.lowerCase(MD5.toMD5Code(systemConfig.couponAccesskey + String.valueOf(userId) + 11 + systemConfig.couponAccesskey));
                 params.put("sign", signValue);
-                couponProducer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC,
-                        UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                commonProducer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC,
+                        UUID.randomUUID().toString(), params));
             } catch (MQException e) {
                 e.printStackTrace();
 

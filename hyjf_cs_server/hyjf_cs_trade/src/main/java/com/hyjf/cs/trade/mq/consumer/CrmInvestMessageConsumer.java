@@ -5,8 +5,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.google.common.collect.Maps;
 import com.hyjf.am.bean.crmtender.CrmInvestMsgBean;
-import com.hyjf.am.response.user.HjhPlanResponse;
-import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
 import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
@@ -16,12 +14,10 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringUtil;
 import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
-import com.hyjf.cs.trade.mq.base.Consumer;
 import com.hyjf.cs.trade.util.CheckSignUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpStatus;
@@ -32,25 +28,22 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
-import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
-import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
-import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
-import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
+import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
+import org.apache.rocketmq.spring.core.RocketMQListener;
+import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.List;
 import java.util.Map;
 
-import static com.hyjf.common.util.GetDate.getDate;
-
-@Component
-public class CrmInvestMessageConsumer extends Consumer {
+@Service
+@RocketMQMessageListener(topic = MQConstant.CRM_TENDER_INFO_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.BORROW_GROUP)
+public class CrmInvestMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     private static final Logger logger = LoggerFactory.getLogger(CrmInvestMessageConsumer.class);
 
@@ -77,9 +70,7 @@ public class CrmInvestMessageConsumer extends Consumer {
 
 
     @Override
-    public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
-        defaultMQPushConsumer.setConsumerGroup(MQConstant.BORROW_GROUP);
-        defaultMQPushConsumer.subscribe(MQConstant.CRM_TENDER_INFO_TOPIC, "*");
+    public void prepareStart(DefaultMQPushConsumer defaultMQPushConsumer) {
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
         // 如果非第一次启动，那么按照上次消费的位置继续消费
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
@@ -89,67 +80,60 @@ public class CrmInvestMessageConsumer extends Consumer {
         defaultMQPushConsumer.setConsumeThreadMax(1);
         defaultMQPushConsumer.setConsumeMessageBatchMaxSize(1);
         defaultMQPushConsumer.setConsumeTimeout(30);
-        defaultMQPushConsumer.registerMessageListener(new MessageListener());
-        // Consumer对象在使用之前必须要调用start初始化，初始化一次即可<br>
-        defaultMQPushConsumer.start();
         logger.info("====" + CONSUMER_NAME + "监听初始化完成, 启动完毕=====");
     }
 
-    public class MessageListener implements MessageListenerConcurrently {
-
-        @Override
-        public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
-            logger.info("======" + CONSUMER_NAME + "消费开始 ========");
-            try {
-                logger.info("========" + CONSUMER_NAME + "监听器收到消息:{}========", JSON.toJSONString(msgs, SerializerFeature.IgnoreNonFieldGetter));
-                MessageExt msg = msgs.get(0);
-                String msgBody = new String(msg.getBody());
-                CrmInvestMsgBean crmInvestMsgBean = null;
-                crmInvestMsgBean = JSONObject.parseObject(msgBody, CrmInvestMsgBean.class);
-                if (crmInvestMsgBean == null) {
-                    logger.info("=====" + CONSUMER_NAME + "json解析为空," + CONSUMER_QUIT + "=====");
-                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                }
-                // 投资或加入订单号
-                String orderId = crmInvestMsgBean.getOrderId();
-                if (StringUtils.isEmpty(orderId)) {
-                    logger.info("=====" + CONSUMER_NAME + "投资或加入订单号为空," + CONSUMER_QUIT + "=====");
-                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                }
-                // 投资类型
-                Integer investType = crmInvestMsgBean.getInvestType();
-                String result = "";
-                try {
-                    JSONObject postData = buildData(orderId, investType);
-                    if (postData == null){
-                        logger.error("构造数据出错");
-                        return ConsumeConcurrentlyStatus.RECONSUME_LATER;
-                    }
-                    String postDataStr = postData.toJSONString();
-                    String postUrl = systemConfig.getCrmTenderUrl();
-                    logger.info("=====" + CONSUMER_NAME + "postUrl:[{}] =====", postUrl);
-                    logger.info("=====" + CONSUMER_NAME + "postParam: [{}] ====", postDataStr);
-                    result = postJson(postUrl, postDataStr);
-                    logger.info("=====" + CONSUMER_NAME + "投递CRM结果 :" + JSON.toJSONString(result));
-                } catch (Exception e) {
-                    logger.error("=====" + CONSUMER_NAME + ",发生异常,重新投递=====", e);
-                    return ConsumeConcurrentlyStatus.RECONSUME_LATER;
-                }
-                if (TRY.equals(result)) {
-                    logger.info("=====" + CONSUMER_NAME + "网络或者链接异常，重新投递======");
-                    return ConsumeConcurrentlyStatus.RECONSUME_LATER;
-                } else if (SUCCESS.equals(result)) {
-                    logger.info("=====" + CONSUMER_NAME + "数据同步成功=====");
-                    logger.info("=====" + CONSUMER_NAME + "消费结束 =====");
-                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                } else {
-                    logger.info("=====" + CONSUMER_NAME + "CRM返回未正常处理,不在重复投递 =====");
-                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                }
-            } catch (Exception e) {
-                logger.error("=====" + CONSUMER_NAME + "消费过程发生异常,重新投递 =====", e);
-                return ConsumeConcurrentlyStatus.RECONSUME_LATER;
+    @Override
+    public void onMessage(MessageExt msg) {
+        logger.info("======" + CONSUMER_NAME + "消费开始 ========");
+        try {
+            logger.info("========" + CONSUMER_NAME + "监听器收到消息:{}========", JSON.toJSONString(msg, SerializerFeature.IgnoreNonFieldGetter));
+            String msgBody = new String(msg.getBody());
+            CrmInvestMsgBean crmInvestMsgBean = null;
+            crmInvestMsgBean = JSONObject.parseObject(msgBody, CrmInvestMsgBean.class);
+            if (crmInvestMsgBean == null) {
+                logger.info("=====" + CONSUMER_NAME + "json解析为空," + CONSUMER_QUIT + "=====");
+                return;
             }
+            // 投资或加入订单号
+            String orderId = crmInvestMsgBean.getOrderId();
+            if (StringUtils.isEmpty(orderId)) {
+                logger.info("=====" + CONSUMER_NAME + "投资或加入订单号为空," + CONSUMER_QUIT + "=====");
+                return;
+            }
+            // 投资类型
+            Integer investType = crmInvestMsgBean.getInvestType();
+            String result = "";
+            try {
+                JSONObject postData = buildData(orderId, investType);
+                if (postData == null){
+                    logger.error("构造数据出错");
+                    return;
+                }
+                String postDataStr = postData.toJSONString();
+                String postUrl = systemConfig.getCrmTenderUrl();
+                logger.info("=====" + CONSUMER_NAME + "postUrl:[{}] =====", postUrl);
+                logger.info("=====" + CONSUMER_NAME + "postParam: [{}] ====", postDataStr);
+                result = postJson(postUrl, postDataStr);
+                logger.info("=====" + CONSUMER_NAME + "投递CRM结果 :" + JSON.toJSONString(result));
+            } catch (Exception e) {
+                logger.error("=====" + CONSUMER_NAME + ",发生异常,重新投递=====", e);
+                return;
+            }
+            if (TRY.equals(result)) {
+                logger.info("=====" + CONSUMER_NAME + "网络或者链接异常，重新投递======");
+                return;
+            } else if (SUCCESS.equals(result)) {
+                logger.info("=====" + CONSUMER_NAME + "数据同步成功=====");
+                logger.info("=====" + CONSUMER_NAME + "消费结束 =====");
+                return;
+            } else {
+                logger.info("=====" + CONSUMER_NAME + "CRM返回未正常处理,不在重复投递 =====");
+                return;
+            }
+        } catch (Exception e) {
+            logger.error("=====" + CONSUMER_NAME + "消费过程发生异常,重新投递 =====", e);
+            return;
         }
     }
 

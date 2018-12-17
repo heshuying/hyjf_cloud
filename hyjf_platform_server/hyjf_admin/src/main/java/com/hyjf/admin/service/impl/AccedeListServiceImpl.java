@@ -3,21 +3,18 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.controller.productcenter.plancenter.AccedeListController;
-import com.hyjf.admin.mq.FddProducer;
+import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.AccedeListService;
 import com.hyjf.am.response.admin.AccedeListResponse;
 import com.hyjf.am.resquest.admin.AccedeListRequest;
-import com.hyjf.am.resquest.admin.HjhCreditTenderRequest;
 import com.hyjf.am.vo.fdd.FddDessenesitizationBeanVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.hjh.AccedeListCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeSumVO;
-import com.hyjf.am.vo.trade.hjh.HjhCreditTenderCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.UserHjhInvistDetailVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -47,7 +44,7 @@ public class AccedeListServiceImpl implements AccedeListService{
     private AmUserClient amUserClient;
     
 	@Autowired
-	private FddProducer fddProducer;
+	private CommonProducer commonProducer;
 	
 	private static final Logger _log = LoggerFactory.getLogger(AccedeListController.class);
 
@@ -198,7 +195,7 @@ public class AccedeListServiceImpl implements AccedeListService{
 		/*rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_DOWNDESSENESITIZATION_CONTRACT, JSONObject.toJSONString(bean));*/
         try {
         	_log.info("-----------开始下载脱敏：" + bean.getOrdid() + ",开始推送脱敏队列");
-			fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG, UUID.randomUUID().toString(),JSON.toJSONBytes(bean)));
+			commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG, UUID.randomUUID().toString(),bean));
 			_log.info("-----------开始下载脱敏：" + bean.getOrdid() + ",推送脱敏队列完成1");
 
 		} catch (MQException e) {

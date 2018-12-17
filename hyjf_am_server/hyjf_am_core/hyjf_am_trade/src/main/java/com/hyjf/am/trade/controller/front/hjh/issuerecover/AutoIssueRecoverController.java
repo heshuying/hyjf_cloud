@@ -5,8 +5,8 @@ import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.hjh.issuerecover.*;
 import com.hyjf.am.trade.service.task.issuerecover.AutoIssueRecoverService;
 import com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs;
 import com.hyjf.common.constants.MQConstant;
@@ -15,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -27,20 +26,14 @@ import java.util.UUID;
  */
 @RestController
 @RequestMapping("/am-trade/hjhautoissuerecover")
+@SuppressWarnings("unchecked")
 public class AutoIssueRecoverController extends BaseController{
 
     @Autowired
     private AutoIssueRecoverService autoIssueRecoverService;
     @Autowired
-    private AutoIssueRecoverProducer autoIssueRecoverProducer;
-    @Autowired
-    private AutoRecordMessageProducer autoRecordMessageProducer;
-    @Resource
-    private AutoBailMessageProducer autoBailMessageProducer;
-    @Resource
-    private AutoPreAuditMessageProducer autoPreAuditMessageProducer;
-    @Resource
-    private AutoIssueMessageProducer autoIssueMessageProducer;
+    private CommonProducer commonProducer;
+
     /**
      *
      */
@@ -59,7 +52,7 @@ public class AutoIssueRecoverController extends BaseController{
                 try {
                     JSONObject params = new JSONObject();
                     params.put("planId", planAsset.getId());
-                    autoIssueRecoverProducer.messageSend(new MessageContent(MQConstant.HJH_AUTO_ISSUERECOVER_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.HJH_AUTO_ISSUERECOVER_TOPIC, UUID.randomUUID().toString(), params));
                 } catch (MQException e) {
                     logger.error("发送【录标修复】MQ失败...");
                 }
@@ -77,7 +70,7 @@ public class AutoIssueRecoverController extends BaseController{
                 try {
                     JSONObject params = new JSONObject();
                     params.put("planId", planAsset.getId());
-                    autoRecordMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), params));
                 } catch (MQException e) {
                     logger.error("发送【待备案修复】MQ失败...");
                 }
@@ -95,7 +88,7 @@ public class AutoIssueRecoverController extends BaseController{
                 try {
                     JSONObject params = new JSONObject();
                     params.put("assetId", planAsset.getAssetId());
-                    autoPreAuditMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), params));
                 } catch (MQException e) {
                     logger.error("发送【待初审修复】MQ失败...");
                 }
@@ -114,7 +107,7 @@ public class AutoIssueRecoverController extends BaseController{
                     JSONObject params = new JSONObject();
                     params.put("borrowNid", planAsset.getBorrowNid());
                     //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-                    autoIssueMessageProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)),2);
+                    commonProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), params),2);
                 } catch (MQException e) {
                     logger.error("发送【关联计划资产修复】MQ失败...");
                 }
@@ -132,7 +125,7 @@ public class AutoIssueRecoverController extends BaseController{
                     JSONObject params = new JSONObject();
                     params.put("creditNid", credit.getCreditNid());
                     //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-                    autoIssueMessageProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)),2);
+                    commonProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), params),2);
                 } catch (MQException e) {
                     logger.error("发送【债转待关联计划资产修复】MQ失败...");
                 }
@@ -152,7 +145,7 @@ public class AutoIssueRecoverController extends BaseController{
                     JSONObject params = new JSONObject();
                     params.put("borrowNid", borrow.getBorrowNid());
                     //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-                    autoIssueMessageProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)),2);
+                    commonProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), params),2);
                 } catch (MQException e) {
                     logger.error("发送【债转待关联计划资产修复】MQ失败...");
                 }
@@ -178,7 +171,7 @@ public class AutoIssueRecoverController extends BaseController{
                         JSONObject params = new JSONObject();
                         params.put("borrowNid", borrow.getBorrowNid());
                         params.put("planId", borrow.getId());
-                        autoRecordMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), params));
                     } catch (MQException e) {
                         logger.error("发送【自动备案消息到MQ】MQ失败...");
                     }
@@ -195,7 +188,7 @@ public class AutoIssueRecoverController extends BaseController{
                     try {
                         JSONObject params = new JSONObject();
                         params.put("borrowNid", borrow.getBorrowNid());
-                        autoBailMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_BAIL_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_BAIL_TOPIC, UUID.randomUUID().toString(), params));
                     } catch (MQException e) {
                         logger.error("发送【自动审核保证金消息到MQ】MQ失败...");
                     }
@@ -206,7 +199,7 @@ public class AutoIssueRecoverController extends BaseController{
                     try {
                         JSONObject params = new JSONObject();
                         params.put("borrowNid", borrow.getBorrowNid());
-                        autoPreAuditMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), params));
                     } catch (MQException e) {
                         logger.error("发送【自动初审消息到MQ】MQ失败...");
                     }
