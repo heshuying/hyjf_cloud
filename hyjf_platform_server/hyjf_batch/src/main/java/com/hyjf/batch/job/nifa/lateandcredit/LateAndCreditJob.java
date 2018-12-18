@@ -21,7 +21,7 @@ public class LateAndCreditJob extends BaseJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("LateAndCreditJob: {} execute...", context.getJobDetail().getKey().getName());
 
-        restTemplate.getForEntity("http://AM-TRADE/am-trade/late_and_credit/update_repay_info", boolean.class);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/late_and_credit/update_repay_info", boolean.class);
 
         logger.info("LateAndCreditJob execute end...");
     }

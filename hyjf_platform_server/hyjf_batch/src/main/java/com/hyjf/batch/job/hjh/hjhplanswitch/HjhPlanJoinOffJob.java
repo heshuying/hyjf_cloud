@@ -22,7 +22,7 @@ public class HjhPlanJoinOffJob extends BaseJob implements Job {
         logger.info("HjhPlanJoinOffJob: {} execute...", context.getJobDetail().getKey().getName());
 
         BooleanResponse result = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/hjhPlanSwitchController/batch/hjhPlanJoinOff", BooleanResponse.class).getBody();
+                "http://CS-TRADE/cs-trade/hjhPlanSwitch/batch/hjhPlanJoinOff", BooleanResponse.class).getBody();
 
         logger.info("HjhPlanJoinOffJob execute end...");
     }
