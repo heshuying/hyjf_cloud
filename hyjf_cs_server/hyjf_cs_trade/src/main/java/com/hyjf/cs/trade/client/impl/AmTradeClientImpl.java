@@ -6075,4 +6075,64 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    @Override
+    public void updateDayMarkLine() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/day_mark_line_total/update_day_mark_line", String.class);
+    }
+
+    @Override
+    public void taskAssign() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/taskAssign", String.class);
+    }
+
+    @Override
+    public void taskRepayAssign() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/autoReqRepayController/autoReqRepay", boolean.class);
+    }
+
+    @Override
+    public void taskReviewBorrowAssign() {
+        restTemplate.getForEntity("http://AM-TRADE/batch/borrowautoreview/autoreview", String.class);
+    }
+
+    @Override
+    public void taskAssignLoans() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/increaseinterestLoans", String.class);
+    }
+
+    @Override
+    public void taskAssignRepay() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/increaseInterestRepay", String.class);
+    }
+
+    @Override
+    public void noneSplitBorrow() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/timing_borrow/issue/none_split_borrow", String.class).getBody();
+    }
+
+    @Override
+    public void hjhBorrow() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/timing_borrow/issue/hjh_borrow", String.class).getBody();
+    }
+
+    @Override
+    public void splitBorrow() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/timing_borrow/issue/split_borrow", String.class).getBody();
+    }
+
+    @Override
+    public void couponExpired() {
+        restTemplate.getForObject("http://AM-TRADE/am-trade/batch/coupon/expired", StringResponse.class);
+    }
+
+    @Override
+    public void dataInfo() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/calculate_invest_interest", String.class);
+    }
+
+    @Override
+    public void downloadFile() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/nifa_file_deal/download_file", boolean.class);
+    }
 }

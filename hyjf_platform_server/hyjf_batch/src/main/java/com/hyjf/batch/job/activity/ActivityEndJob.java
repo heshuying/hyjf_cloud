@@ -18,7 +18,7 @@ public class ActivityEndJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("ActivityEndJobs: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://AM-MARKET/am-market/ads/batch/update", String.class);
+        restTemplate.getForEntity("http://CS-MARKET/cs-market/activityend/callActivityEnd", String.class);
         logger.info("ActivityEndJob execute end...");
     }
 }

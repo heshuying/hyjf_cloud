@@ -2472,5 +2472,29 @@ public interface AmTradeClient {
     WebUserTransferBorrowInfoCustomizeVO getUserTransferBorrowInfo(String borrowNid);
 
     List<WebUserRepayTransferCustomizeVO> getUserRepayDetailAjax(WebUserRepayTransferRequest repayTransferRequest);
+
+    void updateDayMarkLine();
+
+    void taskAssign();
+
+    void taskRepayAssign();
+
+    void taskReviewBorrowAssign();
+
+    void taskAssignLoans();
+
+    void taskAssignRepay();
+
+    void noneSplitBorrow();
+
+    void hjhBorrow();
+
+    void splitBorrow();
+
+    void couponExpired();
+
+    void dataInfo();
+
+    void downloadFile();
 }
 

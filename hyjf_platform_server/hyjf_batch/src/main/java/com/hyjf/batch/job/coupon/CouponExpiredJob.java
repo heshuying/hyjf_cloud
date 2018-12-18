@@ -25,7 +25,7 @@ public class CouponExpiredJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("CouponExpiredJob: {} execute...", context.getJobDetail().getKey().getName());
-        String result = restTemplate.getForObject("http://AM-TRADE/am-trade/batch/coupon/expired", StringResponse.class).getResultStr();
-        logger.info("CouponExpiredJob execute end...result is {}", result);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/timing/couponExpired", String.class).getBody();
+        logger.info("CouponExpiredJob execute end...");
     }
 }

@@ -19,10 +19,7 @@ public class SplitBorrowOfTimingIssueJob extends BaseJob implements Job {
 	@Override
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		logger.info("SplitBorrowOfTimingIssueJob: {} execute...", context.getJobDetail().getKey().getName());
-
-		String result = restTemplate
-				.getForEntity("http://AM-TRADE/am-trade/timing_borrow/issue/split_borrow", String.class).getBody();
-
-		logger.info("SplitBorrowOfTimingIssueJob execute end...result is :{}", result);
+		restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/timing/splitBorrow", String.class).getBody();
+		logger.info("SplitBorrowOfTimingIssueJob execute end...");
 	}
 }

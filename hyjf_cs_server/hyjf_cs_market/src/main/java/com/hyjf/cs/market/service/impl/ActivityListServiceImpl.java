@@ -28,4 +28,9 @@ public class ActivityListServiceImpl implements ActivityListService {
     public List<ActivityListBeanVO> queryActivityList(ActivityListRequest activityListRequest) {
         return amMarketClient.queryActivityList(activityListRequest);
     }
+
+    @Override
+    public void callActivityEnd() {
+        amMarketClient.callActivityEnd();
+    }
 }

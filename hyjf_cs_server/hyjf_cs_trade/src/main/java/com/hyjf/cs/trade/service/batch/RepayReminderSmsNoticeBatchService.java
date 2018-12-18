@@ -64,4 +64,14 @@ public interface RepayReminderSmsNoticeBatchService extends BaseTradeService {
      * @return
      */
     Integer updateBorrowRepayPlan(BorrowRepayPlanVO borrowRepayPlanVO, Integer repaySmsReminder);
+
+    void taskAssign();
+
+    void taskRepayAssign();
+
+    void taskReviewBorrowAssign();
+
+    void taskAssignLoans();
+
+    void taskAssignRepay();
 }

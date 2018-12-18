@@ -15,7 +15,7 @@ public class HolidaysConfigNewJob extends BaseJob implements Job {
 	@Override
 	public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 		logger.info("HolidaysConfigJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());
-		restTemplate.getForEntity("http://AM-CONFIG/am-config/holidays/save", String.class);
+		restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/timing/holidays", String.class).getBody();
 		logger.info("HolidaysConfigJob execute end...");
 	}
 }

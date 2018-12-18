@@ -21,7 +21,7 @@ public class NifaDownloadFileJob extends BaseJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("NifaDownloadFileJob: {} execute...", context.getJobDetail().getKey().getName());
 
-        restTemplate.getForEntity("http://AM-TRADE/am-trade/nifa_file_deal/download_file", boolean.class);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/timing/downloadFile", String.class).getBody();
 
         logger.info("NifaDownloadFileJob execute end...");
     }

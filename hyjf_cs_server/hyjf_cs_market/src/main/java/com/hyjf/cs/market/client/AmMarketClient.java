@@ -84,4 +84,9 @@ public interface AmMarketClient {
      * 计算第四、六、十列速率,第十六列净资金流
      */
     void calculateRate();
+
+    /**
+     * 进行中的活动列表状态变更定时
+     */
+    void callActivityEnd();
 }

@@ -20,7 +20,7 @@ public class DayMarkLineTotalJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         logger.info("DayMarkLineTotalJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://AM-TRADE/am-trade/day_mark_line_total/update_day_mark_line", String.class);
+        restTemplate.getForEntity("http://AM-TRADE/cs-trade/batch/dayMarkLineTotal/updateDayMarkLine", String.class);
         logger.info("DayMarkLineTotalJob execute end...");
     }
 }
