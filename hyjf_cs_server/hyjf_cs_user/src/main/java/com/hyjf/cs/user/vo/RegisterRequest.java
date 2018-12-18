@@ -32,14 +32,14 @@ public class RegisterRequest extends AppBaseRequest {
     private String presetProps;
 
     @ApiModelProperty(value = "ip地址")
-    private String ipAddr;
+    private String ip;
 
-    public String getIpAddr() {
-        return ipAddr;
+    public String getIp() {
+        return ip;
     }
 
-    public void setIpAddr(String ipAddr) {
-        this.ipAddr = ipAddr;
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 
     public String getInstCode() {

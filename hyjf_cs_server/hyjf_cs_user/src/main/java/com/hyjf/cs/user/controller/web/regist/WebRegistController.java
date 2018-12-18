@@ -96,7 +96,7 @@ public class WebRegistController extends BaseUserController {
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
     public WebResult register(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) {
         logger.info("Web端用户注册接口, registerVO is :{}", JSONObject.toJSONString(registerRequest));
-        logger.info("ip地址："+registerRequest.getIpAddr());
+        logger.info("ip地址："+registerRequest.getIp());
         WebResult result = new WebResult();
         // 1. 参数检查
         registerRequest.setPlatform(CommonConstant.CLIENT_PC);
