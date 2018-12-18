@@ -12,7 +12,6 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.RandomValidateCode;
-import com.hyjf.common.util.StringUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
@@ -97,6 +96,7 @@ public class WebRegistController extends BaseUserController {
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
     public WebResult register(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) {
         logger.info("Web端用户注册接口, registerVO is :{}", JSONObject.toJSONString(registerRequest));
+        logger.info("ip地址："+registerRequest.getIpAddr());
         WebResult result = new WebResult();
         // 1. 参数检查
         registerRequest.setPlatform(CommonConstant.CLIENT_PC);

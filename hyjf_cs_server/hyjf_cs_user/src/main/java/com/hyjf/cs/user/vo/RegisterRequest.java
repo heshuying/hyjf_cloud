@@ -31,6 +31,17 @@ public class RegisterRequest extends AppBaseRequest {
     @ApiModelProperty(value = "神策预置属性")
     private String presetProps;
 
+    @ApiModelProperty(value = "ip地址")
+    private String ipAddr;
+
+    public String getIpAddr() {
+        return ipAddr;
+    }
+
+    public void setIpAddr(String ipAddr) {
+        this.ipAddr = ipAddr;
+    }
+
     public String getInstCode() {
         return instCode;
     }
