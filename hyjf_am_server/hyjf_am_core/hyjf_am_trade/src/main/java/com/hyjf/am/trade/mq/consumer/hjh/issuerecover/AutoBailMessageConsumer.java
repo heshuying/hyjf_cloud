@@ -88,7 +88,7 @@ public class AutoBailMessageConsumer implements RocketMQListener<MessageExt>, Ro
                         borrow.getVerifyStatus() != null && borrow.getVerifyStatus().intValue() == 0){
                     logger.info(borrow.getBorrowNid()+" 该标的状态为审核保证金状态、开始自动审核");
                 } else {
-                    logger.info(borrow.getBorrowNid()+" 该标的状态不是审核保证金状态");
+                    logger.warn(borrow.getBorrowNid()+" 该标的状态不是审核保证金状态");
                     return;
                 }
                 //判断该资产是否可以自动审核保证金

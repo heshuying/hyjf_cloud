@@ -86,28 +86,28 @@ public class AutoIssueMessageConsumer implements RocketMQListener<MessageExt>, R
                     return;
                 }
                 if (borrow == null) {
-                    logger.info(autoIssuerecoverVO.getBorrowNid() + " 该标的在表里不存在");
+                    logger.warn(autoIssuerecoverVO.getBorrowNid() + " 该标的在表里不存在");
                     return;
                 }
                 // 业务校验
                 // 发标的状态
                 if (borrow.getStatus() != 2 || borrow.getVerifyStatus() != 4) {
-                    logger.info(autoIssuerecoverVO.getBorrowNid() + " 该标的不是已经发标的状态 ");
+                    logger.warn(autoIssuerecoverVO.getBorrowNid() + " 该标的不是已经发标的状态 ");
                     return;
                 }
                 if (StringUtils.isNotBlank(borrow.getPlanNid())) {
-                    logger.info(autoIssuerecoverVO.getBorrowNid() + " 该标的已经绑定计划 " + borrow.getLabelId());
+                    logger.warn(autoIssuerecoverVO.getBorrowNid() + " 该标的已经绑定计划 " + borrow.getLabelId());
                     return;
                 }
                 // 第三方资产
                 HjhPlanAsset asset = autoIssueMessageService.selectPlanAssetByBorrowNid(borrow.getBorrowNid(), borrowInfo.getInstCode());
                 if (asset != null) {
                     if (StringUtils.isNotBlank(asset.getPlanNid()) || asset.getLabelId() == null || asset.getLabelId().intValue() == 0) {
-                        logger.info(asset.getBorrowNid() + " 该标的对应资产已经绑定计划或无标签绑定 " + borrow.getLabelId());
+                        logger.warn(asset.getBorrowNid() + " 该标的对应资产已经绑定计划或无标签绑定 " + borrow.getLabelId());
                         return;
                     }
                     if (asset.getStatus().intValue() != 7) {
-                        logger.info(asset.getBorrowNid() + " 该标的对应资产不是投资中状态 " + borrow.getLabelId());
+                        logger.warn(asset.getBorrowNid() + " 该标的对应资产不是投资中状态 " + borrow.getLabelId());
                         return;
                     }
                 }
@@ -116,7 +116,7 @@ public class AutoIssueMessageConsumer implements RocketMQListener<MessageExt>, R
                     // 获取标签id
                     HjhLabel label = autoIssueMessageService.getLabelId(borrowInfo, borrow, null);
                     if (label == null || label.getId() == null) {
-                        logger.info(autoIssuerecoverVO.getBorrowNid() + " 该散标没有匹配到标签 ");
+                        logger.warn(autoIssuerecoverVO.getBorrowNid() + " 该散标没有匹配到标签 ");
 
                         return;
                     }
@@ -126,7 +126,7 @@ public class AutoIssueMessageConsumer implements RocketMQListener<MessageExt>, R
                 // 分配计划引擎
                 String planNid = autoIssueMessageService.getPlanNid(borrow.getLabelId());
                 if (planNid == null || borrow.getLabelId() == null || borrow.getLabelId().intValue() == 0) {
-                    logger.info(autoIssuerecoverVO.getBorrowNid() + " 该标的标签无计划关联 " + borrow.getLabelId());
+                    logger.warn(autoIssuerecoverVO.getBorrowNid() + " 该标的标签无计划关联 " + borrow.getLabelId());
                     return;
                 }
                 // 关联计划
@@ -148,22 +148,22 @@ public class AutoIssueMessageConsumer implements RocketMQListener<MessageExt>, R
 
                 HjhDebtCredit credit = autoIssueMessageService.getCreditByNid(autoIssuerecoverVO.getCreditNid());
                 if (credit == null) {
-                    logger.info(autoIssuerecoverVO.getCreditNid() + " 该债转在表里不存在");
+                    logger.warn(autoIssuerecoverVO.getCreditNid() + " 该债转在表里不存在");
                     return;
                 }
                 if (credit.getCreditStatus() != null && credit.getCreditStatus().intValue() != 0) {
-                    logger.info(autoIssuerecoverVO.getCreditNid() + " 该债转状态不为0 初始状态");
+                    logger.warn(autoIssuerecoverVO.getCreditNid() + " 该债转状态不为0 初始状态");
                     return;
                 }
                 // 业务校验
                 if (StringUtils.isNotBlank(credit.getPlanNidNew())) {
-                    logger.info(autoIssuerecoverVO.getCreditNid() + " 该债转已经绑定计划或无标签绑定 " + credit.getLabelId());
+                    logger.warn(autoIssuerecoverVO.getCreditNid() + " 该债转已经绑定计划或无标签绑定 " + credit.getLabelId());
                     return;
                 }
                 // 获取标签id
                 HjhLabel label = autoIssueMessageService.getLabelId(credit);
                 if (label == null || label.getId() == null) {
-                    logger.info(autoIssuerecoverVO.getCreditNid() + " 该债转没有匹配标签 ");
+                    logger.warn(autoIssuerecoverVO.getCreditNid() + " 该债转没有匹配标签 ");
                     /**汇计划三期邮件预警 BY LIBIN start*/
                     // 如果redis不存在这个KEY(一天有效期)，那么可以发邮件
                     if (!RedisUtils.exists(RedisConstants.LABEL_MAIL_KEY + autoIssuerecoverVO.getCreditNid())) {
@@ -199,7 +199,7 @@ public class AutoIssueMessageConsumer implements RocketMQListener<MessageExt>, R
                 // 分配计划引擎
                 String planNid = autoIssueMessageService.getPlanNid(credit.getLabelId());
                 if (planNid == null) {
-                    logger.info(autoIssuerecoverVO.getCreditNid() + " 该债转标签无计划关联 " + credit.getLabelId());
+                    logger.warn(autoIssuerecoverVO.getCreditNid() + " 该债转标签无计划关联 " + credit.getLabelId());
                     return;
                 }
                 // 关联计划
