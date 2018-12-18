@@ -33,7 +33,7 @@ import java.util.List;
  * @version HjhQuitConsumer, v0.1 2018/6/27 18:26
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.HJH_QUIT_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.HJH_QUIT_GROUP)
+@RocketMQMessageListener(topic = MQConstant.HJH_LOCK_QUIT_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.HJH_LOCK_QUIT_GROUP)
 public class HjhQuitConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     private static final Logger logger = LoggerFactory.getLogger(HjhQuitConsumer.class);

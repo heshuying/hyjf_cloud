@@ -56,7 +56,7 @@ public class BorrowRepayToHjhQuitController extends BaseTradeController {
                     params.put("orderStatus", accede.getOrderStatus());
                     params.put("creditCompleteFlag", accede.getCreditCompleteFlag());
                     try {
-                        commonProducer.messageSend(new MessageContent(MQConstant.HJH_QUIT_TOPIC, UUID.randomUUID().toString(), params));
+                        commonProducer.messageSend(new MessageContent(MQConstant.HJH_LOCK_QUIT_TOPIC, UUID.randomUUID().toString(), params));
                     } catch (MQException e) {
                         logger.error("汇计划计划进入锁定期/退出计划发送消息失败...", e);
                     }
