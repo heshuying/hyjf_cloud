@@ -6,8 +6,6 @@ spring:
 server:
   port: 1111
 eureka:
-  instance:
-    hostname: microserver1
     #preferIpAddress: true
   environment: ${spring.profiles.active}
   datacenter: Main

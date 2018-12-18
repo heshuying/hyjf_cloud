@@ -82,7 +82,7 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
                         // 业务校验
                         if(mqHjhPlanAsset.getStatus() != null && mqHjhPlanAsset.getStatus().intValue() != 3 &&
                                 mqHjhPlanAsset.getVerifyStatus() != null && mqHjhPlanAsset.getVerifyStatus().intValue() == 1){
-                            logger.info(mqHjhPlanAsset.getAssetId()+" 该资产状态不是备案状态");
+                            logger.warn(mqHjhPlanAsset.getAssetId()+" 该资产状态不是备案状态");
                             return;
                         }
                         //判断该资产是否可以自动备案，是否关联计划
@@ -91,7 +91,7 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
                         borrowInfo.setAssetType(mqHjhPlanAsset.getAssetType());
                         HjhAssetBorrowtype hjhAssetBorrowType = autoRecordService.selectAssetBorrowType(borrowInfo);
                         if(hjhAssetBorrowType == null || hjhAssetBorrowType.getAutoRecord() == null || hjhAssetBorrowType.getAutoRecord() != 1){
-                            logger.info(mqHjhPlanAsset.getAssetId()+" 该资产不能自动备案,原因自动备案未配置");
+                            logger.warn(mqHjhPlanAsset.getAssetId()+" 该资产不能自动备案,原因自动备案未配置");
                             return;
                         }
 
@@ -139,13 +139,13 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
                         // 标的状态位判断
                         if (null == borrow.getStatus() || borrow.getStatus() != 0 ||
                                 null == borrow.getRegistStatus() || borrow.getRegistStatus() != 0) {
-                            logger.info("标的："+borrow.getBorrowNid()+" 不是备案状态");
+                            logger.warn("标的："+borrow.getBorrowNid()+" 不是备案状态");
                             return;
                         }
                         //判断该资产是否可以自动备案，是否关联计划
                         HjhAssetBorrowtype hjhAssetBorrowType = autoRecordService.selectAssetBorrowType(borrowInfo);
                         if(hjhAssetBorrowType == null || hjhAssetBorrowType.getAutoRecord() == null || hjhAssetBorrowType.getAutoRecord() != 1){
-                            logger.info(borrow.getBorrowNid()+" 标的不能自动备案,原因自动备案未配置");
+                            logger.warn(borrow.getBorrowNid()+" 标的不能自动备案,原因自动备案未配置");
                             return;
                         }
 
