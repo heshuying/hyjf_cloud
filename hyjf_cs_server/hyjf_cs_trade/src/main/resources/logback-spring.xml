@@ -27,4 +27,40 @@
         <logger name="com.hyjf" level="INFO"/>
     </springProfile>
 
+    <property name="BATCH_FILE_NAME" value="cs-trade-batch.log" />
+    <!-- 配置job日志输出至单独的日志文件中 -->
+    <appender name="BATCH_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${BATCH_FILE_NAME}</File>
+        <!--滚动记录文件-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--日志文件输出的文件名-->
+            <FileNamePattern>${BATCH_FILE_NAME}.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <!-- 每产生一个日志文件，该日志文件的保存期限为30天 -->
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+        <encoder
+                class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
+            <!-- 日志输出编码 -->
+            <charset>UTF-8</charset>
+            <immediateFlush>true</immediateFlush>
+            <layout class="ch.qos.logback.classic.PatternLayout">
+                <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度%msg：日志消息，%n是换行符-->
+                <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{50} - %msg%n
+                </pattern>
+            </layout>
+        </encoder>
+        <!--日志文件最大的大小-->
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>10MB</MaxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+    <!--需要将日志单独输出的包路径-->
+    <logger name="com.hyjf.cs.trade.controller.batch" additivity="false" level="INFO">
+        <appender-ref ref="BATCH_LOG"/>
+    </logger>
+    <logger name="com.hyjf.cs.trade.service.batch" additivity="false" level="INFO">
+        <appender-ref ref="BATCH_LOG"/>
+    </logger>
+
 </configuration>

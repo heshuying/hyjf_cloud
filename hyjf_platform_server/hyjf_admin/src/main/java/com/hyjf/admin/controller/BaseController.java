@@ -32,7 +32,7 @@ public class BaseController{
 	@Autowired
 	public SystemConfig systemConfig;
 
-	public static final Logger logger = LoggerFactory.getLogger(BaseController.class);
+	public static final Logger logger = LoggerFactory.getLogger(this.getClass());
 	//redis存有用户信息的key
 	public static final String USER="user";
 	public static final String STATUS="status";
