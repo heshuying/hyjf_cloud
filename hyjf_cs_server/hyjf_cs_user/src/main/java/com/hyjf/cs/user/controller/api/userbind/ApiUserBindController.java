@@ -383,7 +383,7 @@ public class ApiUserBindController extends BaseUserController {
 		return result;
 	}
 
-    public static Map<String, String> objectToMap(Object obj){
+    public Map<String, String> objectToMap(Object obj){
         if(obj == null){
             return null;
         }
