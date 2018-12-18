@@ -136,11 +136,21 @@
 		date_format(hdpa.commission_count_time,'%Y-%c-%d %h:%i:%s') AS commission_count_time,
 		hdpa.create_time AS create_time,
 		hdpa.create_time AS add_time_long,
-		hdpa.invite_user_name AS invite_name
+		hdpa.invite_user_name AS invite_name,
+
+		tmp.borrow_nid,
+		tmp.status,
+		tmp.is_last,
+		tmp.resp_code,
+		tmp.resp_desc,
+		tmp.update_time
+
 		FROM
-		ht_hjh_accede hdpa
-		LEFT JOIN
-		ht_hjh_plan hdp ON hdpa.plan_nid = hdp.plan_nid
+			ht_hjh_accede hdpa
+			LEFT JOIN
+			ht_hjh_plan hdp ON hdpa.plan_nid = hdp.plan_nid
+			LEFT JOIN
+			ht_hjh_plan_borrow_tmp tmp ON hdpa.accede_order_id = tmp.accede_order_id
 		<where>
 			<if test="debtPlanNid != null and debtPlanNid != ''">
 				AND hdp.plan_nid LIKE CONCAT(#{debtPlanNid}, '%')
@@ -150,9 +160,6 @@
 			</if>
 			<if test="userName != null and userName != ''">
 				AND hdpa.user_name LIKE CONCAT(#{userNameSrch},'%')
-			</if>
-			<if test="refereeName != null and refereeName != ''">
-				AND hydui.username LIKE CONCAT(#{refereeName},'%')
 			</if>
 			<if test="orderStatus != null and orderStatus != ''">
 				AND hdpa.order_status <![CDATA[>=]]> #{orderStatus}
@@ -165,6 +172,15 @@
 			</if>
 			<if test="searchEndDate != null and searchEndDate !='' ">
 				AND hdpa.create_time <![CDATA[<=]]> CONCAT(#{searchEndDate},' 23:59:59')
+			</if>
+			<if test="borrowNid != null and borrowNid != ''">
+				AND tmp.borrow_nid = #{borrowNid}
+			</if>
+			<if test="respCode != null and respCode != ''">
+				AND tmp.respCode = #{respCode}
+			</if>
+			<if test="status != null and status != ''">
+				AND tmp.status = #{status}
 			</if>
 		</where>
 		ORDER BY

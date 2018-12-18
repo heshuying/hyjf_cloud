@@ -43,7 +43,7 @@ public class ApiUserWithdrawController extends BaseTradeController {
     @ApiOperation(value = "外部服务接口用户提现",notes = "外部服务接口用户提现")
     @PostMapping(value = "/withdraw.do")
     public ModelAndView withdraw(@RequestBody UserWithdrawRequestBean userWithdrawRequestBean, HttpServletRequest request){
-        BaseController.logger.info("用户提现第三方请求参数:" + JSONObject.toJSONString(userWithdrawRequestBean));
+        logger.info("用户提现第三方请求参数:" + JSONObject.toJSONString(userWithdrawRequestBean));
         Map<String,Object>  withdrawResult = userWithdrawService.withdraw(userWithdrawRequestBean, request);
         if(withdrawResult.get("modelAndView")!=null){
             ModelAndView result = (ModelAndView) withdrawResult.get("modelAndView");
@@ -90,7 +90,7 @@ public class ApiUserWithdrawController extends BaseTradeController {
     @ResponseBody
     @PostMapping(value = "/getUserWithdrawRecord")
     public BaseResultBean getUserWithdrawRecord(@RequestBody UserWithdrawRequestBean userWithdrawRequestBean){
-        BaseController.logger.info("获取用户提现记录请求参数:" + JSONObject.toJSONString(userWithdrawRequestBean));
+        logger.info("获取用户提现记录请求参数:" + JSONObject.toJSONString(userWithdrawRequestBean));
         return userWithdrawService.getUserWithdrawRecord(userWithdrawRequestBean);
     }
 }

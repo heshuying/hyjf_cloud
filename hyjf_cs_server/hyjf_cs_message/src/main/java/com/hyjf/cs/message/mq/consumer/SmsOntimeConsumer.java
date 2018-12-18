@@ -27,7 +27,7 @@ import org.springframework.stereotype.Service;
  * @version SmsOntimeConsumer, v0.1 2018/8/15 14:59
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.SMS_ONTIME_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.SMS_ONTIME_TOPIC)
+@RocketMQMessageListener(topic = MQConstant.SMS_ONTIME_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.SMS_ONTIME_GROUP)
 public class SmsOntimeConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
     private static final Logger logger = LoggerFactory.getLogger(SmsConsumer.class);
 

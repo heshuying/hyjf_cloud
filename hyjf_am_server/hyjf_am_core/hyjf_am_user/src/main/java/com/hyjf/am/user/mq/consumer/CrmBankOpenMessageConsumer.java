@@ -27,15 +27,10 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
-import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
-import com.hyjf.am.user.dao.model.auto.SpreadsUser;
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.dao.model.auto.*;
 import com.hyjf.am.user.service.front.ca.FddCertificateService;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.GetDate;
@@ -50,9 +45,6 @@ import com.hyjf.common.util.RSAKeyUtil;
 @RocketMQMessageListener(topic = MQConstant.CRM_ROUTINGKEY_BANCKOPEN_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.CRM_ROUTINGKEY_BANCKOPEN_GROUP)
 public class CrmBankOpenMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
     private static final Logger logger = LoggerFactory.getLogger(CrmBankOpenMessageConsumer.class);
-
-    @Autowired
-    private RestTemplate restTemplate;
 
     @Value("${crm.insertCustomerAction.url}")
     private String crmInsertUrl;
@@ -86,8 +78,9 @@ public class CrmBankOpenMessageConsumer implements RocketMQListener<MessageExt>,
             logger.error("【crm开户同步】异常，重新投递", e);
             return ;
         }
-        if (result.getStatusLine().getStatusCode() != HttpStatus.SC_OK ) {
-            logger.error("【crm开户同步】网络异常，重新投递");
+		if (result == null || result.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+			logger.error("【crm开户同步】网络异常，重新投递, response status code is : {}",
+					result == null ? null : result.getStatusLine().getStatusCode());
             return ;
         } else {
             logger.info("【crm开户同步】投递成功");

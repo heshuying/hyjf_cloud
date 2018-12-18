@@ -214,10 +214,10 @@ public interface MQConstant {
 	String ASSET_PUST_TOPIC = "ASSET_PUSH_TOPIC";
 
 	/**
-	 * 汇计划退出
+	 * 汇计划进入锁定期/退出
 	 */
-	String HJH_QUIT_GROUP = "HJH_QUIT_GROUP";
-	String HJH_QUIT_TOPIC = "HJH_QUIT_TOPIC";
+	String HJH_LOCK_QUIT_GROUP = "HJH_LOCK_QUIT_GROUP";
+	String HJH_LOCK_QUIT_TOPIC = "HJH_LOCK_QUIT_TOPIC";
 
 	/**
 	 * 汇计划自动计算公允价值

@@ -366,4 +366,52 @@
 			hydb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
 		</where>
 	</select>
+
+	<select id="selectUserRepayTransferListTotalByCreditTender" resultType="java.lang.Integer" parameterType="Map">
+		select COUNT(1) from ht_credit_tender where bid_nid = #{borrowNid,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectUserRepayTransferListTotalByHjhCreditTender" resultType="java.lang.Integer" parameterType="Map">
+		select COUNT(1) from ht_hjh_debt_credit_tender where borrow_nid = #{borrowNid,jdbcType=VARCHAR}
+	</select>
+
+	<resultMap id="HjhCreditTenderListMap" type="com.hyjf.am.trade.dao.model.customize.WebUserRepayTransferCustomize">
+		<result column="credit_user_id" property="creditUserId" jdbcType="VARCHAR" />
+		<result column="credit_user_name" property="creditUserName" jdbcType="VARCHAR" />
+		<result column="user_name" property="undertakerUserName" jdbcType="VARCHAR" />
+		<result column="assign_order_date" property="assignOrderDate" jdbcType="VARCHAR" />
+		<result column="assign_capital" property="assignCapital" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectUserRepayTransferListByHjhCreditTender" resultMap="HjhCreditTenderListMap" parameterType="Map">
+		select credit_user_id, user_name,credit_user_name, FROM_UNIXTIME(create_time, '%Y-%m-%d %H:%i') as assign_order_date, assign_account, assign_capital from ht_hjh_debt_credit_tender
+		where borrow_nid = #{borrowNid,jdbcType=VARCHAR}
+		<if test="limitStart != null and limitStart >= 0 and limitEnd !=null and limitEnd >= 0" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<resultMap id="CreditTenderListMap" type="com.hyjf.am.trade.dao.model.customize.WebUserRepayTransferCustomize">
+		<result column="credit_user_id" property="creditUserId" jdbcType="VARCHAR" />
+		<result column="credit_user_name" property="creditUserName" jdbcType="VARCHAR" />
+		<result column="undertaker_user_name" property="undertakerUserName" jdbcType="VARCHAR" />
+		<result column="assign_order_date" property="assignOrderDate" jdbcType="VARCHAR" />
+		<result column="assign_capital" property="assignCapital" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectUserRepayTransferListByCreditTender" resultMap="CreditTenderListMap" parameterType="Map">
+		select
+		u.username as undertaker_user_name,
+		ct.credit_user_id,
+		hu.username as credit_user_name,
+		ct.assign_capital,
+		ct.assign_price,
+		CASE WHEN ct.add_time != 0 AND ct.add_time IS NOT NULL THEN FROM_UNIXTIME( ct.add_time, '%Y-%m-%d %H:%i' ) ELSE '' END AS assign_order_date,
+		ct.assign_pay
+		from ht_credit_tender ct
+		LEFT JOIN ht_r_user u on u.user_id = ct.user_id
+		LEFT JOIN ht_r_user hu on hu.user_id = ct.credit_user_id
+		where bid_nid = #{borrowNid,jdbcType=VARCHAR}
+		<if test="limitStart != null and limitStart >= 0 and limitEnd !=null and limitEnd >= 0" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
 </mapper>

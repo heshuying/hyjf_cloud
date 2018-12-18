@@ -65,7 +65,7 @@ public class AutoSendMessageConsumer implements RocketMQListener<MessageExt>, Ro
                 // logger.info(mqHjhPlanAsset.getAssetId()+" 开始自动录标 "+ mqHjhPlanAsset.getInstCode());
                 // HjhPlanAsset hjhPlanAsset = autoIssueRecoverService.selectPlanAsset(mqHjhPlanAsset.getAssetId(), mqHjhPlanAsset.getInstCode());
                 if(mqHjhPlanAsset == null){
-                    logger.info(" 该资产在表里不存在！！");
+                    logger.warn(" 该资产在表里不存在！！");
                     return;
                 }
                 // redis 防重复检查
@@ -78,19 +78,19 @@ public class AutoSendMessageConsumer implements RocketMQListener<MessageExt>, Ro
                 // 业务校验
                 if(mqHjhPlanAsset.getStatus() != null && mqHjhPlanAsset.getStatus().intValue() != 0 &&
                         mqHjhPlanAsset.getVerifyStatus() != null && mqHjhPlanAsset.getVerifyStatus().intValue() == 1){
-                    logger.info(mqHjhPlanAsset.getAssetId()+" 该资产状态不是录标状态");
+                    logger.warn(mqHjhPlanAsset.getAssetId()+" 该资产状态不是录标状态");
                     return;
                 }
                 //判断该资产是否可以自动录标，是否关联计划
                 HjhAssetBorrowtype hjhAssetBorrowType = autoIssueRecoverService.selectAssetBorrowType(mqHjhPlanAsset);
                 if(hjhAssetBorrowType==null || hjhAssetBorrowType.getAutoAdd() != 1){
-                    logger.info(" 该资产不能自动录标,流程配置未启用");
+                    logger.warn(" 该资产不能自动录标,流程配置未启用");
                     return;
                 }
 
                 boolean flag = autoIssueRecoverService.insertSendBorrow(mqHjhPlanAsset,hjhAssetBorrowType);
                 if (!flag) {
-                    logger.info("自动录标失败！" + "[资产编号：" + mqHjhPlanAsset.getAssetId() + "]");
+                    logger.warn("自动录标失败！" + "[资产编号：" + mqHjhPlanAsset.getAssetId() + "]");
                 }else{
                     // 成功后到备案队列
                     try {
