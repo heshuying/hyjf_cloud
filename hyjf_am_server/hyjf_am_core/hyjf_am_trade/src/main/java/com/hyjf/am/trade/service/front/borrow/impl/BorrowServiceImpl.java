@@ -5,7 +5,6 @@ package com.hyjf.am.trade.service.front.borrow.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import com.hyjf.am.bean.crmtender.CrmInvestMsgBean;
 import com.hyjf.am.resquest.trade.BatchCenterCustomizeRequest;
 import com.hyjf.am.resquest.trade.BorrowRegistRequest;
@@ -15,9 +14,8 @@ import com.hyjf.am.trade.bean.repay.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BatchCenterCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebProjectRepayListCustomize;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.AmTradeProducer;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.front.account.AccountService;
 import com.hyjf.am.trade.service.front.borrow.BorrowService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
@@ -65,13 +63,10 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     Logger _log = LoggerFactory.getLogger(this.getClass());
 
     @Autowired
-    private SmsProducer smsProducer;
+    private CommonProducer commonProducer;
 
     @Autowired
     private AccountService accountService;
-
-    @Autowired
-    private AmTradeProducer amTradeProducer;
 
     @Override
     public BorrowFinmanNewCharge selectBorrowApr(BorrowFinmanNewChargeRequest request) {
@@ -466,7 +461,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         //crm投资推送
         try {
             logger.info("投资成功后,发送CRM投资统计MQ:投资订单号:[" + borrowTender.getNid() + "].");
-            amTradeProducer.messageSendDelay(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(crmInvestMsgBean)), 2);
+            commonProducer.messageSendDelay(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), crmInvestMsgBean), 2);
         } catch (Exception e) {
             logger.error("发送CRM消息失败:" + e.getMessage());
         }
@@ -508,8 +503,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
             // 发送短信验证码
             SmsMessage smsMessage = new SmsMessage(null, replaceMap, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_XMMB, CustomConstants.CHANNEL_TYPE_NORMAL);
             try{
-                smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
-                        UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
+                        UUID.randomUUID().toString(), smsMessage));
             }catch (Exception e){
                 e.printStackTrace();
                 logger.error("发送短信失败");
@@ -1142,13 +1137,11 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
     /***
      * 计算用户分期还款本期应还金额
-     *
      * @param repay
-     * @param borrowNid
-     * @param borrowApr
-     * @param repayTimeStr
-     * @param delayDays
-     * @throws ParseException
+     * @param borrow
+     * @param period
+     * @return
+     * @throws Exception
      */
     private BigDecimal calculateRepayPlan(RepayBean repay, BorrowCustomizeVO borrow, int period) throws Exception {
 
@@ -1466,13 +1459,11 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     }
     /***
      * 计算用户分期还款本期应还金额
-     *
      * @param repay
-     * @param borrowNid
-     * @param borrowApr
-     * @param repayTimeStr
-     * @param delayDays
-     * @throws ParseException
+     * @param borrow
+     * @param period
+     * @return
+     * @throws Exception
      */
     private BigDecimal calculateRepayPlanAll(RepayBean repay, BorrowCustomizeVO borrow, int period) throws Exception {
 
@@ -1600,13 +1591,9 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
     /**
      * 统计分期还款用户正常还款的总标
-     *
-     * @param repay
-     * @param borrowNid
-     * @param borrowStyle
-     * @param borrowApr
-     * @param interestDay
-     * @throws ParseException
+     * @param borrowRepayPlan
+     * @param borrow
+     * @param totalPeriod
      */
     private void calculateRecoverPlanAll(RepayDetailBean borrowRepayPlan, BorrowCustomizeVO borrow,int totalPeriod) {
 
@@ -1955,7 +1942,6 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
     /**
      * 获得剩余本金
-     * @param investOrderId
      * @param assignNid
      * @param recoverNid
      * @return
@@ -1979,13 +1965,11 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     }
 
     /***
-     *TODO 计算用户分期还款本期应还金额
-     *
-     * @param repay
-     * @param borrowNid
-     * @param borrowApr
-     * @param repayTimeStr
-     * @param delayDays
+     * 计算用户分期还款本期应还金额
+     * @param borrowRepayPlan
+     * @param borrow
+     * @param period
+     * @param repayTimeStart
      * @throws ParseException
      */
     private void calculateRecoverPlan(RepayDetailBean borrowRepayPlan, BorrowCustomizeVO borrow, int period, String repayTimeStart) throws ParseException {
@@ -2039,10 +2023,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
     /**
      * 统计分期还款用户逾期还款的总标
-     *
-     * @param repay
-     * @param borrowNid
-     * @param borrowApr
+     * @param borrowRepayPlan
+     * @param borrow
      * @param delayDays
      * @param lateDays
      * @throws ParseException
@@ -2364,11 +2346,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
     /**
      * 统计分期还款用户正常还款的总标
-     *
-     * @param repay
-     * @param borrowNid
-     * @param borrowStyle
-     * @param borrowApr
+     * @param borrowRepayPlan
+     * @param borrow
      * @param interestDay
      * @throws ParseException
      */
@@ -2611,10 +2590,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
     /**
      * 统计分期还款用户延期还款的总标
-     *
-     * @param repay
-     * @param borrowNid
-     * @param borrowApr
+     * @param borrowRepayPlan
+     * @param borrow
      * @param delayDays
      * @throws ParseException
      */
@@ -2903,12 +2880,8 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 
     /**
      * 统计分期还款用户还款信息
-     *
-     * @param repay
-     * @param borrowNid
-     * @param borrowStyle
-     * @param borrowApr
-     * @param interestDay
+     * @param borrowRepayPlan
+     * @param borrow
      * @throws ParseException
      */
     private void calculateRecoverPlan(RepayDetailBean borrowRepayPlan, BorrowCustomizeVO borrow) throws ParseException {
@@ -3198,8 +3171,6 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * 根据项目编号，投资用户，订单号获取用户的放款总记录
      *
      * @param borrowNid
-     * @param userId
-     * @param nid
      * @return
      */
     private List<BorrowRecover> selectBorrowRecoverList(String borrowNid) {
@@ -3432,7 +3403,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     }
 
     /**
-     * TODO  计算单期的用户的还款信息
+     *  计算单期的用户的还款信息
      *
      * @param repay
      * @param borrow
@@ -3501,8 +3472,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * 统计单期还款用户延期还款的总标
      *
      * @param repay
-     * @param borrowNid
-     * @param borrowApr
+     * @param borrow
      * @param delayDays
      * @throws ParseException
      */
@@ -3764,7 +3734,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * @param borrowNid
      * @param tenderOrderId
      * @param periodNow
-     * @param i
+     * @param status
      * @return
      */
     private List<CreditRepay> selectCreditRepay(String borrowNid, String tenderOrderId, Integer periodNow, int status) {
@@ -3822,11 +3792,10 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     /**
      * 判断是否完全承接  true:未完全承接
      * @param borrowRecover
-     * @param sumCapital
-     * @param bigDecimal
-     * @param userRecoverPlan
-     * @param borrowRecoverPlan
+     * @param recoverPlanCapital
+     * @param creditSumCapital
      * @param isMonth
+     * @param hjhFlag
      * @return
      */
     private boolean isOverUndertake(RepayRecoverBean borrowRecover, BigDecimal recoverPlanCapital, BigDecimal creditSumCapital, boolean isMonth, int hjhFlag) {
@@ -3850,10 +3819,10 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     /**
      * 判断是否完全承接  true:未完全承接
      * @param borrowRecover
+     * @param recoverPlanCapital
      * @param creditSumCapital
-     * @param bigDecimal
-     * @param userRecoverPlan
      * @param isMonth
+     * @param hjhFlag
      * @return
      */
     private boolean isOverUndertake(BorrowRecover borrowRecover, BigDecimal recoverPlanCapital, BigDecimal creditSumCapital, boolean isMonth, int hjhFlag) {
@@ -4091,8 +4060,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * 统计单期还款用户逾期还款的总标
      *
      * @param repay
-     * @param borrowNid
-     * @param borrowApr
+     * @param borrow
      * @param delayDays
      * @param lateDays
      * @throws ParseException
@@ -4353,8 +4321,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      * 统计单期还款用户提前还款的总标
      *
      * @param repay
-     * @param borrowNid
-     * @param borrowApr
+     * @param borrow
      * @param interestDay
      * @throws ParseException
      */

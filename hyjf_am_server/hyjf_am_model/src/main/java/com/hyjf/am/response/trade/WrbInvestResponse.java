@@ -13,6 +13,7 @@ import java.util.List;
  * @author fq
  * @version WrbInvestResponse, v0.1 2018/9/26 9:41
  */
+@SuppressWarnings("unchecked")
 public class WrbInvestResponse extends WrbResponse {
 
     private List<InvestDetail> invest_list;

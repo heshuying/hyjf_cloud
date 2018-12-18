@@ -3,11 +3,15 @@ package com.hyjf.cs.trade.service.repay;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.trade.RepayRequestDetailRequest;
+import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
+import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
+import com.hyjf.am.vo.user.WebUserRepayTransferCustomizeVO;
+import com.hyjf.am.vo.user.WebUserTransferBorrowInfoCustomizeVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
@@ -215,4 +219,20 @@ public interface RepayManageService extends BaseTradeService {
     File createAgreementPDFFileRepay(HttpServletRequest request, HttpServletResponse response, String borrowNid, String nid, String flag, Integer userId);
 
     List<WebUserInvestListCustomizeVO> selectUserInvestList(String borrowNid);
+
+    /**
+     * 获取标的信息
+     * @param borrowNid
+     * @return
+     */
+    WebUserTransferBorrowInfoCustomizeVO getUserTransferBorrowInfo(String borrowNid);
+
+    List<TenderAgreementVO> selectTenderAgreementByNid(String borrowNid);
+
+    /**
+     * 用户待还债转详情列表
+     * @return
+     * @Author : huanghui
+     */
+    List<WebUserRepayTransferCustomizeVO> selectUserRepayTransferDetailList(WebUserRepayTransferRequest repayTransferRequest);
 }

@@ -3,7 +3,6 @@ package com.hyjf.am.trade.mq.consumer;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.model.auto.Account;
-import com.hyjf.am.trade.mq.base.Consumer;
 import com.hyjf.am.trade.service.front.account.AccountService;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.RSAHelper;
@@ -17,23 +16,25 @@ import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
-import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyContext;
-import org.apache.rocketmq.client.consumer.listener.ConsumeConcurrentlyStatus;
-import org.apache.rocketmq.client.consumer.listener.MessageListenerConcurrently;
-import org.apache.rocketmq.client.exception.MQClientException;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
+import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
+import org.apache.rocketmq.spring.core.RocketMQListener;
+import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.io.File;
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * 同步账户额度到crm消费端
@@ -41,8 +42,9 @@ import java.util.*;
  * @author zhangyk
  * @date 2018/8/3 11:21
  */
-@Component
-public class SyncAccountConsumer extends Consumer {
+@Service
+@RocketMQMessageListener(topic = MQConstant.SYNC_ACCOUNT_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.SYNC_ACCOUNT_GROUP)
+public class SyncAccountConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     private static final Logger logger = LoggerFactory.getLogger(SyncAccountConsumer.class);
 
@@ -60,82 +62,63 @@ public class SyncAccountConsumer extends Consumer {
     @Value("${crm.updateCustomer.url}")
     private String crmUpdateCustomerUrl;
 
+    @Override
+    public void onMessage(MessageExt messageExt) {
+        try {
+            MessageExt msg = messageExt;
+            String tagName = msg.getTags();
+            String jsonMsg = new String(msg.getBody());
+            logger.info("====" + CONSUMER_NAME + "收到消息[{}],消费开始=====", jsonMsg);
+            JSONObject jsonObj = JSON.parseObject(jsonMsg);
+            if (jsonObj == null) {
+                logger.error("=====" + CONSUMER_NAME + "消息实体转换异常=====");
+                return;
+            }
+            String userId = jsonObj.getString("userId");
+            if (StringUtils.isBlank(userId)) {
+                logger.error("=====" + CONSUMER_NAME + "userId 为空=====");
+                return;
+            }
+            Account account = accountService.getAccount(Integer.valueOf(userId));
+            if (account == null) {
+                logger.error("=====" + CONSUMER_NAME + " 没有查询到目标账户, userId = [{}]=====", userId);
+                return;
+            }
+
+            String reqData = buildData(account).toJSONString();
+            logger.info("=====" + CONSUMER_NAME + " 请求crm[url = {}]更新数据用户数据[reqData = {}]=====", crmUpdateCustomerUrl, reqData);
+            CloseableHttpResponse response = postJson(crmUpdateCustomerUrl, reqData);
+            if (null == response || response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
+                // 请求没有返回200 则稍后重新消费
+                return;// ConsumeConcurrentlyStatus.RECONSUME_LATER;
+            }
+        } catch (Exception e1) {
+            logger.error("=====" + CONSUMER_NAME + "同步账户额度到crm异常=====");
+            logger.error(e1.getMessage());
+            return;
+        }
+        // 如果没有return success ，consumer会重新消费该消息，直到return success
+        return;
+    }
 
     @Override
-    public void init(DefaultMQPushConsumer defaultMQPushConsumer) throws MQClientException {
-
-        // defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
-        defaultMQPushConsumer.setConsumerGroup(MQConstant.SYNC_ACCOUNT_GROUP);
-        // 订阅指定MyTopic下tags等于MyTag
-        defaultMQPushConsumer.subscribe(MQConstant.SYNC_ACCOUNT_TOPIC, "*");
+    public void prepareStart(DefaultMQPushConsumer defaultMQPushConsumer) {
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
         // 如果非第一次启动，那么按照上次消费的位置继续消费
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         // 设置为集群消费(区别于广播消费)
         defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
-
         // 设置并发数
         defaultMQPushConsumer.setConsumeThreadMin(1);
         defaultMQPushConsumer.setConsumeThreadMax(1);
         defaultMQPushConsumer.setConsumeMessageBatchMaxSize(1);
         defaultMQPushConsumer.setConsumeTimeout(30);
-
-        defaultMQPushConsumer.registerMessageListener(new SyncAccountConsumer.MessageListener());
-        // Consumer对象在使用之前必须要调用start初始化，初始化一次即可<br>
-        defaultMQPushConsumer.start();
         logger.info("====" + CONSUMER_NAME + "监听初始化完成, 启动完毕=====");
-
-    }
-
-    public class MessageListener implements MessageListenerConcurrently {
-
-        @Override
-        public ConsumeConcurrentlyStatus consumeMessage(List<MessageExt> msgs, ConsumeConcurrentlyContext context) {
-
-
-            try {
-
-                MessageExt msg = msgs.get(0);
-                String tagName = msg.getTags();
-                String jsonMsg = new String(msg.getBody());
-                logger.info("====" + CONSUMER_NAME + "收到消息[{}],消费开始=====", jsonMsg);
-                JSONObject jsonObj = JSON.parseObject(jsonMsg);
-                if (jsonObj == null) {
-                    logger.error("=====" + CONSUMER_NAME + "消息实体转换异常=====");
-                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                }
-                String userId = jsonObj.getString("userId");
-                if (StringUtils.isBlank(userId)) {
-                    logger.error("=====" + CONSUMER_NAME + "userId 为空=====");
-                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                }
-                Account account = accountService.getAccount(Integer.valueOf(userId));
-                if (account == null) {
-                    logger.error("=====" + CONSUMER_NAME + " 没有查询到目标账户, userId = [{}]=====", userId);
-                    return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-                }
-
-                String reqData = buildData(account).toJSONString();
-                logger.info("=====" + CONSUMER_NAME + " 请求crm[url = {}]更新数据用户数据[reqData = {}]=====", crmUpdateCustomerUrl, reqData);
-                CloseableHttpResponse response = postJson(crmUpdateCustomerUrl, reqData);
-                if (null == response || response.getStatusLine().getStatusCode() != HttpStatus.SC_OK) {
-                    // 请求没有返回200 则稍后重新消费
-                    return ConsumeConcurrentlyStatus.RECONSUME_LATER;
-                }
-
-            } catch (Exception e1) {
-                logger.error("====="+CONSUMER_NAME+"同步账户额度到crm异常=====");
-                logger.error(e1.getMessage());
-                return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-            }
-            // 如果没有return success ，consumer会重新消费该消息，直到return success
-            return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-
-        }
     }
 
     /**
      * 组装请求参数
+     *
      * @author zhangyk
      * @date 2018/8/3 14:32
      */
@@ -144,10 +127,10 @@ public class SyncAccountConsumer extends Consumer {
         Map<String, Object> map = new HashMap<>();
         map.put("customerId", account.getUserId());
         map.put("availableBalance", account.getBankBalance());
-        if (account.getBankAwait() == null){
+        if (account.getBankAwait() == null) {
             account.setBankAwait(new BigDecimal("0.00"));
         }
-        if (account.getPlanAccountWait() == null){
+        if (account.getPlanAccountWait() == null) {
             account.setPlanAccountWait(new BigDecimal("0.00"));
         }
         map.put("pendingAmount", account.getBankAwait().add(account.getPlanAccountWait()));
@@ -207,12 +190,10 @@ public class SyncAccountConsumer extends Consumer {
      * @return json
      */
     public CloseableHttpResponse postJson(String url, String jsonStr) {
-
         // 实例化httpClient
         CloseableHttpClient httpclient = HttpClients.createDefault();
         // 实例化post方法
         HttpPost httpPost = new HttpPost(url);
-
         // 结果
         CloseableHttpResponse response = null;
         try {
@@ -229,9 +210,9 @@ public class SyncAccountConsumer extends Consumer {
             response = httpclient.execute(httpPost);
             if (response != null && response.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
                 String content = EntityUtils.toString(response.getEntity());
-                logger.info("======"+ CONSUMER_NAME+" 投递返回结果 [{}]=====",content);
-            }else{
-                logger.info("=====" + CONSUMER_NAME +" 投递结果httpStatus异常=====");
+                logger.info("======" + CONSUMER_NAME + " 投递返回结果 [{}]=====", content);
+            } else {
+                logger.info("=====" + CONSUMER_NAME + " 投递结果httpStatus异常=====");
             }
         } catch (Exception e) {
             e.printStackTrace();

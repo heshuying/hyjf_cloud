@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.controller.wechat.bankopen;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -13,13 +14,12 @@ import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetCilentIP;
-import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.bean.OpenAccountPageBean;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.service.bankopen.BankOpenService;
 import com.hyjf.cs.user.vo.BankOpenVO;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
@@ -51,7 +51,7 @@ public class WeChatBankOpenController extends BaseUserController {
     @Autowired
     private BankOpenService bankOpenService;
     @Autowired
-    private UserOperationLogProducer userOperationLogProducer;
+    private CommonProducer commonProducer;
     /**
      * 获取开户信息
      *
@@ -77,7 +77,7 @@ public class WeChatBankOpenController extends BaseUserController {
             userOperationLogEntity.setUserName(userVO.getUsername());
             userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
             try {
-                userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+                commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
             } catch (MQException e) {
                 logger.error("保存用户日志失败" , e);
             }

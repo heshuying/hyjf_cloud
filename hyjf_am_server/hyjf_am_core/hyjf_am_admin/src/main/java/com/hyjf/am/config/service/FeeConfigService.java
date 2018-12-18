@@ -1,7 +1,6 @@
 package com.hyjf.am.config.service;
 
 import com.hyjf.am.config.dao.model.auto.FeeConfig;
-import com.hyjf.am.response.admin.AdminFeeConfigResponse;
 import com.hyjf.am.resquest.admin.AdminFeeConfigRequest;
 
 import java.util.List;

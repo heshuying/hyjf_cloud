@@ -162,6 +162,10 @@ public class ErrorCodeConstant implements MessageConstants, PropertiesConstants 
     public static final String STATUS_ZT000008 = "ZT000008";
     // 资产不存在
     public static final String STATUS_ZT000009 = "ZT000009";
+    // 不能推送本平台资产
+    public static final String STATUS_ZT000010 = "ZT000010";
+    // 受托支付电子账户为空
+    public static final String STATUS_ZT000011 = "ZT000011";
     
     
     /********************资产推送    end***********************/

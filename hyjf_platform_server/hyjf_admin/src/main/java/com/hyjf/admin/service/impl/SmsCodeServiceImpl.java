@@ -3,12 +3,11 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.SmsLogRequestBean;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.client.CsMessageClient;
-import com.hyjf.admin.mq.SmsOnTimeProducer;
+import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.SmsCodeService;
 import com.hyjf.am.vo.admin.SmsCodeCustomizeVO;
@@ -37,7 +36,7 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 	@Autowired
 	private AmUserClient amUserClient;
 	@Autowired
-	private SmsOnTimeProducer smsOnTimeProducer;
+	private CommonProducer commonProducer;
 
 	@Override
 	public List<SmsCodeCustomizeVO> queryUser(SmsCodeRequestBean requestBean) {
@@ -89,8 +88,8 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 		// smsOntime.setCreateUserName(ShiroUtil.getLoginUsername());
 		smsOntime.setCreateTime(GetDate.getNowTime10());
 		try {
-			smsOnTimeProducer.messageSend(new MessageContent(MQConstant.SMS_ONTIME_TOPIC, UUID.randomUUID().toString(),
-					JSON.toJSONBytes(smsOntime)));
+			commonProducer.messageSend(new MessageContent(MQConstant.SMS_ONTIME_TOPIC, UUID.randomUUID().toString(),
+					smsOntime));
 		} catch (MQException e) {
 			return false;
 		}

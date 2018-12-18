@@ -3,16 +3,14 @@
  */
 package com.hyjf.am.trade.service.front.account.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.BorrowTenderTmpRequest;
 import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.CouponConfigCustomizeV2;
 import com.hyjf.am.trade.dao.model.customize.CouponUserCustomize;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.CalculateInvestInterestProducer;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.front.account.BankInvestAllService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
@@ -62,14 +60,10 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 	private static final Logger logger = LoggerFactory.getLogger(BankInvestAllExceptionServiceImpl.class);
 
 	@Autowired
-	private SmsProducer smsProducer;
+	private CommonProducer commonProducer;
 
 	@Autowired
 	private SystemConfig systemConfig;
-
-	@Autowired
-	private CalculateInvestInterestProducer calculateInvestInterestProducer;
-
 
 	private Borrow getBorrowByNid(String borrowNid) {
 		BorrowExample example = new BorrowExample();
@@ -81,7 +75,6 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 		}
 		return null;
 	}
-
 
 	/**
 	 * 拼装返回信息
@@ -112,7 +105,6 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 	private JSONObject checkParam(String borrowNid, String account, Integer userIdInt, String platform, String couponGrantId,
 								  BorrowTenderTmpRequest request) {
 
-		// TODO
 		CouponConfigCustomizeV2 cuc = null;
 		// -1:有可用的优惠券，但是投资时不选择优惠券 空或null：用户没有可用优惠券
 		UserInfoVO usersInfo=request.getUserInfo();
@@ -1139,8 +1131,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 					replaceMap.put("val_times", sendType.getAfterTime() + "");
 					// 发送短信验证码
 					SmsMessage smsMessage = new SmsMessage(null, replaceMap, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_XMMB, CustomConstants.CHANNEL_TYPE_NORMAL);
-					smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(smsMessage)));
-
+					commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
 				} else if (accountWait.compareTo(BigDecimal.ZERO) < 0) {
 					result.put("message", "投资失败！");
 					result.put("status", 0);
@@ -1174,10 +1165,10 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 		JSONObject params = new JSONObject();
 		params.put("tenderSum", accountDecimal);
 		try {
-			calculateInvestInterestProducer
+			commonProducer
 					.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC,
 							MQConstant.STATISTICS_CALCULATE_INVEST_SUM_TAG, UUID.randomUUID().toString(),
-							JSON.toJSONBytes(params)));
+							params));
 		} catch (MQException e) {
 			logger.error("投资成功累加统计数据失败,投资订单号:" + orderId, e);
 		}

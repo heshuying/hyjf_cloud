@@ -131,18 +131,23 @@ public class AdminBorrowCreditTenderController extends BaseController {
         // 生成一个表格
         SXSSFSheet sheet = workbook.createSheet(sheetNameTmp);
         int rowNum = 0;
-        for (BorrowCreditTenderVO vo : recordList) {
-            Row row = sheet.createRow(0);
-            rowNum++;
+        Row row = sheet.createRow(0);
+        for (int celLength = 0; celLength < titles.length; celLength++) {
+            // 创建相应的单元格
+            Cell cell = row.createCell(celLength);
+            cell.setCellValue(titles[celLength]);
+        }
+        for (int i = 0; i < recordList.size(); i++) {
+            Row columnValueRow = sheet.createRow(i + 1);
             // 循环数据
             for (int celLength = 0; celLength < titles.length; celLength++) {
-                BorrowCreditTenderVO borrowCommonCustomize = vo;
+                BorrowCreditTenderVO borrowCommonCustomize = recordList.get(i);
 
                 // 创建相应的单元格
-                Cell cell = row.createCell(celLength);
+                Cell cell = columnValueRow.createCell(celLength);
                 if (StringUtils.isNotBlank(request.getIsOrganizationView())){
                     if (celLength == 0) {
-                        cell.setCellValue(rowNum + 1);
+                        cell.setCellValue(rowNum++ + 1);
                     }
                     // 订单号
                     else if (celLength == 1) {
@@ -330,7 +335,7 @@ public class AdminBorrowCreditTenderController extends BaseController {
                     }
                 }else {
                     if (celLength == 0) {
-                        cell.setCellValue(rowNum + 1);
+                        cell.setCellValue(rowNum++ + 1);
                     }
                     // 订单号
                     else if (celLength == 1) {

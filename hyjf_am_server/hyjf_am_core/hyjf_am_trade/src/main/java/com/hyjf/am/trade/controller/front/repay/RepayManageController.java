@@ -3,25 +3,38 @@ package com.hyjf.am.trade.controller.front.repay;
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.*;
 import com.hyjf.am.response.trade.RepayListResponse;
+import com.hyjf.am.response.user.WebUserRepayTransferCustomizeResponse;
+import com.hyjf.am.response.user.WebUserTransferBorrowInfoCustomizeResponse;
 import com.hyjf.am.resquest.trade.*;
+import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.trade.bean.repay.ProjectBean;
 import com.hyjf.am.trade.bean.repay.RepayBean;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
+import com.hyjf.am.trade.dao.model.customize.WebUserRepayTransferCustomize;
+import com.hyjf.am.trade.dao.model.customize.WebUserTransferBorrowInfoCustomize;
 import com.hyjf.am.trade.service.front.repay.RepayManageService;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
+import com.hyjf.am.vo.user.WebUserRepayTransferCustomizeVO;
+import com.hyjf.am.vo.user.WebUserTransferBorrowInfoCustomizeVO;
+import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.List;
 import java.util.Map;
 
@@ -328,5 +341,68 @@ public class RepayManageController extends BaseController {
         ProjectBean projectBean = repayManageService.getOrgBatchRepayData(requestBean.getUserId(), requestBean.getStartDate(), requestBean.getEndDate());
         responseBean.setResultStr(JSON.toJSONString(projectBean));
         return responseBean;
+    }
+
+    /**
+     *
+     * @return
+     */
+    @GetMapping(value = "/get_user_transfer_borrow_info/{borrowNid}")
+    public WebUserTransferBorrowInfoCustomizeResponse getUserTransferBorrowInfo(@PathVariable String borrowNid){
+        WebUserTransferBorrowInfoCustomizeResponse response = new WebUserTransferBorrowInfoCustomizeResponse();
+        WebUserTransferBorrowInfoCustomize borrowInfoCustomize = repayManageService.getUserTransferBorrowInfo(borrowNid);
+
+        if (borrowInfoCustomize != null){
+            WebUserTransferBorrowInfoCustomizeVO userTransferBorrowInfoCustomizeVO = new WebUserTransferBorrowInfoCustomizeVO();
+            BeanUtils.copyProperties(borrowInfoCustomize,userTransferBorrowInfoCustomizeVO);
+            response.setResult(userTransferBorrowInfoCustomizeVO);
+        }
+        return response;
+    }
+
+    /**
+     * 获取列表
+     * @param repayTransferRequest
+     * @return
+     */
+    @PostMapping(value = "/userRepayDetailAjax", produces = "application/json; charset=utf-8")
+    public WebUserRepayTransferCustomizeResponse userRepayDetailAjax(@RequestBody WebUserRepayTransferRequest repayTransferRequest){
+        WebUserRepayTransferCustomizeResponse repayTransferCustomizeResponse = new WebUserRepayTransferCustomizeResponse();
+        repayTransferRequest.setBorrowNid(repayTransferRequest.getBorrowNid());
+        repayTransferRequest.setVerificationFlag(repayTransferRequest.getVerificationFlag());
+
+        // 总条数
+        int listCount = repayManageService.selectUserRepayTransferDetailListTotal(repayTransferRequest.getBorrowNid(), repayTransferRequest.getVerificationFlag());
+
+        if (listCount > 0){
+
+            if(repayTransferRequest.getCurrPage()>0){
+                Paginator paginator = new Paginator(repayTransferRequest.getCurrPage(), listCount);
+                repayTransferRequest.setLimitStart(paginator.getOffset());
+                repayTransferRequest.setLimitEnd(paginator.getLimit());
+            }
+
+
+            List<WebUserRepayTransferCustomize> repayList = repayManageService.selectUserRepayTransferDetailList(repayTransferRequest);
+
+            // 数据格式化的格式 10,000.00
+            DecimalFormat decimalFormat = new DecimalFormat("#,###.00");
+
+            // 遍历列表, 给承接人和转让人用户名加密
+            for (WebUserRepayTransferCustomize re: repayList) {
+                re.setCreditUserName(repayManageService.usernameEncryption(re.getCreditUserName()));
+                re.setUndertakerUserName(repayManageService.usernameEncryption(re.getUndertakerUserName()));
+                re.setAssignCapitalString(decimalFormat.format(re.getAssignCapital()));
+            }
+            String returnCode = "0";
+            List<WebUserRepayTransferCustomizeVO> voList = null;
+            if (CollectionUtils.isNotEmpty(repayList)){
+                voList = CommonUtils.convertBeanList(repayList, WebUserRepayTransferCustomizeVO.class);
+            }
+            repayTransferCustomizeResponse.setCount(listCount);
+            repayTransferCustomizeResponse.setRtn(returnCode);
+            repayTransferCustomizeResponse.setResultList(voList);
+        }
+        return repayTransferCustomizeResponse;
     }
 }

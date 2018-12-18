@@ -3,7 +3,6 @@ package com.hyjf.am.trade.service.task.impl;
 import com.hyjf.am.trade.dao.mapper.customize.batch.BorrowUserStatisticsMapper;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.BorrowUserStatisticsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

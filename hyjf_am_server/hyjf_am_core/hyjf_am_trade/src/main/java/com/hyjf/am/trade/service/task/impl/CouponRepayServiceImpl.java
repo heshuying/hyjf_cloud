@@ -3,7 +3,6 @@
  */
 package com.hyjf.am.trade.service.task.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.CouponRecoverCustomizeRequest;
 import com.hyjf.am.trade.dao.mapper.auto.*;
@@ -14,9 +13,8 @@ import com.hyjf.am.trade.dao.mapper.customize.CouponRecoverCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BatchCouponTimeoutCommonCustomize;
 import com.hyjf.am.trade.dao.model.customize.CouponRecoverCustomize;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.AppMessageProducer;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.task.CouponRepayService;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.message.AppMsMessage;
@@ -101,9 +99,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
     @Autowired
     private BankMerchantAccountListMapper bankMerchantAccountListMapper;
     @Autowired
-    private SmsProducer smsProducer;
-    @Autowired
-    private AppMessageProducer appMessageProducer;
+    private CommonProducer commonProducer;
 
     @Value("${hyjf.bank.merrp.account}")
     private String BANK_MERRP_ACCOUNT;
@@ -478,7 +474,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
             SmsMessage smsMessage =
                     new SmsMessage(null, replaceStrs, null, null,
                             "smsSendForManager", null, CustomConstants.PARAM_TPL_COUPON_JIA_YUE, CustomConstants.CHANNEL_TYPE_NORMAL);
-            smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+            commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
 
         } catch (Exception e) {
             logger.debug(this.getClass().toString(), "sendSmsFail", e.getMessage());
@@ -619,7 +615,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
                     }
                     SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(USERID)), msg, null, null, "smsSendForUser", null,
                             CustomConstants.PARAM_TPL_COUPON_PROFIT, CustomConstants.CHANNEL_TYPE_NORMAL);
-                    smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
                 }
             }
         }
@@ -637,7 +633,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
                     }
                     AppMsMessage appMsMessage = new AppMsMessage(user.getUserId(), msg, null, "appMsSendForUser",
                             CustomConstants.JYTZ_COUPON_PROFIT);
-                    appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), appMsMessage));
                 }
             }
         }

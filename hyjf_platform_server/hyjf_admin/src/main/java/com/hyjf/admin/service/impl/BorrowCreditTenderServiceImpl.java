@@ -13,7 +13,7 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.config.SystemConfig;
-import com.hyjf.admin.mq.FddProducer;
+import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.AccedeListService;
 import com.hyjf.admin.service.BorrowCreditTenderService;
@@ -55,8 +55,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.*;
 
 @Service
@@ -77,7 +75,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
     AccedeListService accedeListService;
 
     @Autowired
-    FddProducer fddProducer;
+    CommonProducer commonProducer;
 
     public static final String HZR_PREFIX = "HZR";
 
@@ -284,7 +282,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
             bean.setTenderType(1);
             // 法大大生成合同
             try {
-                fddProducer.messageSendDelay(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)),2);
+                commonProducer.messageSendDelay(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean),2);
             } catch (MQException e) {
                 logger.error("法大大合同生成MQ发送失败！");
                 return new AdminResult(BaseResult.FAIL, "法大大合同生成MQ发送失败");
@@ -363,7 +361,11 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
 
     @Override
     public AdminCreditTenderResponse getCreditTenderResponse(BorrowCreditTenderRequest request) {
-        return baseClient.postExe(TENDER_COUNT_URL, request, AdminCreditTenderResponse.class);
+        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
+        BorrowCreditRepayAmRequest req = CommonUtils.convertBean(request, BorrowCreditRepayAmRequest.class);
+        req.setLimitStart(page.getOffset());
+        req.setLimitEnd(page.getLimit());
+        return baseClient.postExe(TENDER_LIST_URL, request, AdminCreditTenderResponse.class);
     }
 
     /**

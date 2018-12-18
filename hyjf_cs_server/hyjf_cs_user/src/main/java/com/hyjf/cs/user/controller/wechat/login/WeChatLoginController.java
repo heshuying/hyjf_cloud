@@ -3,12 +3,12 @@
  */
 package com.hyjf.cs.user.controller.wechat.login;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
-import com.hyjf.am.vo.user.UserInfoVO;
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
+import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
@@ -24,8 +24,8 @@ import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.user.bean.LoginResultBean;
 import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.util.GetCilentIP;
@@ -41,10 +41,10 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.ServletInputStream;
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Map;
 import java.util.UUID;
-import java.io.IOException;
 
 /**
  * @author zhangqingqing
@@ -58,7 +58,7 @@ public class WeChatLoginController extends BaseUserController {
     @Autowired
     private LoginService loginService;
     @Autowired
-    private UserOperationLogProducer userOperationLogProducer;
+    private CommonProducer commonProducer;
 
     /**
      * 登录接口
@@ -74,22 +74,25 @@ public class WeChatLoginController extends BaseUserController {
     @PostMapping(value = "/doLogin.do")
     public BaseResultBean login(HttpServletRequest request, @RequestParam String userName, @RequestParam String password,
                                 @RequestParam(value = "env", defaultValue = "") String env) {
+        long start = System.currentTimeMillis();
         LoginResultBean result = new LoginResultBean();
         // 从payload里面获取预置属性
         String presetProps = getStringFromStream(request);
-        StringBuffer url = request.getRequestURL();
-        String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).toString();
         CheckUtil.check(null != userName && null != password, MsgEnum.STATUS_CE000001);
         // 现只支持两个参数  1微信  2风车理财
         if (!"1".equals(env) && !"2".equals(env)) {
             throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
+        logger.info("从payload里面获取预置属性===================:"+(System.currentTimeMillis()-start));
+        long startt = System.currentTimeMillis();
         //密码解密
         password = RSAJSPUtil.rsaToPassword(password);
         // weChat 只支持手机号登录
         if (!CommonUtils.isMobile(userName)) {
             throw new ReturnMessageException(MsgEnum.ERR_USER_LOGIN);
         }
+        logger.info("密码解密===================:"+(System.currentTimeMillis()-startt));
+
         //判断用户输入的密码错误次数---开始
         Map<String, String> errorInfo=loginService.insertErrorPassword(userName,password,BankCallConstant.CHANNEL_WEI);
         if (!errorInfo.isEmpty()){
@@ -99,7 +102,9 @@ public class WeChatLoginController extends BaseUserController {
             return result;
         }
         //判断用户输入的密码错误次数---结束
+        long start1 = System.currentTimeMillis();
         WebViewUserVO userVO = loginService.login(userName, password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI);
+        logger.info("wechat登录操作===================:"+(System.currentTimeMillis()-start1));
         if (userVO != null) {
             logger.info("weChat端登录成功, userId is :{}", userVO.getUserId());
             // add by liuyang 神策数据统计追加 登录成功后 将用户ID返回前端 20180717 start
@@ -131,7 +136,7 @@ public class WeChatLoginController extends BaseUserController {
             userOperationLogEntity.setUserName(userVO.getUsername());
             userOperationLogEntity.setUserRole(userVO.getRoleId());
             try {
-                userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+                commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
             } catch (MQException e) {
                 logger.error("保存用户日志失败", e);
             }
@@ -149,6 +154,7 @@ public class WeChatLoginController extends BaseUserController {
             result.setStatus(ApiResult.FAIL);
             result.setStatusDesc(MsgEnum.ERR_USER_LOGIN.getMsg());
         }
+        logger.info("总时间===================:"+(System.currentTimeMillis()-start));
         return result;
     }
 
@@ -181,7 +187,7 @@ public class WeChatLoginController extends BaseUserController {
             userOperationLogEntity.setUserName(token.getUsername());
             userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
             try {
-                userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+                commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
             } catch (MQException e) {
                 logger.error("保存用户日志失败", e);
             }            // 清除sign

@@ -26,6 +26,7 @@ import java.util.Map;
  */
 @Api(value = "admin基类",tags ="admin基类")
 @RestController
+@SuppressWarnings("unchecked")
 public class BaseController{
 
 	@Autowired

@@ -1,7 +1,7 @@
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import com.hyjf.am.resquest.api.AsseStatusRequest;
 import com.hyjf.am.resquest.admin.AssetListRequest;
+import com.hyjf.am.resquest.api.AsseStatusRequest;
 import com.hyjf.am.vo.admin.AssetDetailCustomizeVO;
 import com.hyjf.am.vo.admin.AssetListCustomizeVO;
 

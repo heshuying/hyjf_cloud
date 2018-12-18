@@ -1,6 +1,5 @@
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.admin.beans.BorrowCreditInfoResultBean;
 import com.hyjf.admin.beans.BorrowCreditListResultBean;
 import com.hyjf.admin.beans.request.BorrowCreditRequest;
@@ -9,7 +8,7 @@ import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.BaseClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
-import com.hyjf.admin.mq.AppMessageProducer;
+import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.BorrowCreditService;
 import com.hyjf.admin.utils.ConvertUtils;
@@ -30,8 +29,6 @@ import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.CheckUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -45,8 +42,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.*;
 
 @Service
@@ -64,7 +59,7 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
     private static final String BASE_URL = "http://AM-ADMIN/am-trade";
 
     @Autowired
-    private AppMessageProducer appMessageProducer;
+    private CommonProducer commonProducer;
 
     /**
      * 查询汇转让数据列表
@@ -255,7 +250,7 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
         params.put("val_profit",borrowCredit.getCreditInterestAssigned() + "");
         AppMsMessage appMsMessage = new AppMsMessage(Integer.valueOf(creditUserId),params,null,MessageConstant.APP_MS_SEND_FOR_USER,CustomConstants.JYTZ_TPL_ZHUANRANGJIESHU);
         try {
-            appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(appMsMessage)));
+            commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,UUID.randomUUID().toString(),appMsMessage));
         } catch (MQException e) {
             logger.error("apppush消息发送异常:{}",e);
         }

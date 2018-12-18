@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.trade.service.invest.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
@@ -36,9 +35,8 @@ import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.CsMessageClient;
 import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.*;
-import com.hyjf.cs.trade.mq.producer.sensorsdate.hzt.SensorsDataHztInvestProducer;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.consumer.CouponService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
@@ -91,25 +89,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     @Autowired
     private AmConfigClient amConfigClient;
     @Autowired
-    private AppChannelStatisticsDetailProducer appChannelStatisticsProducer;
-    @Autowired
-    private CalculateInvestInterestProducer calculateInvestInterestProducer;
-    @Autowired
-    private CouponTenderProducer couponTenderProducer;
-    @Autowired
     private HjhTenderService hjhTenderService;
     @Autowired
     private BorrowCreditTenderService borrowTenderService;
     @Autowired
     private AuthService authService;
     @Autowired
-    private SensorsDataHztInvestProducer sensorsDataHztInvestProducer;
-    @Autowired
-    private WrbCallBackProducer wrbCallBackProducer;
-    @Autowired
     private CsMessageClient amMongoClient;
     @Autowired
-    private UserOperationLogProducer userOperationLogProducer;
+    private CommonProducer commonProducer;
     /**
      * @param request
      * @Description 散标投资
@@ -180,7 +168,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         userOperationLogEntity.setUserName(userVO.getUsername());
         userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
         try {
-            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+            commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
         } catch (MQException e) {
             logger.error("保存用户日志失败", e);
         }
@@ -783,7 +771,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         params.put("nid", logOrdId);
         params.put("returnType", "1");
         try {
-            wrbCallBackProducer.messageSend(new MessageContent(MQConstant.WRB_QUEUE_CALLBACK_NOTIFY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            commonProducer.messageSend(new MessageContent(MQConstant.WRB_QUEUE_CALLBACK_NOTIFY_TOPIC, UUID.randomUUID().toString(), params));
         } catch (MQException e) {
            logger.error("风车理财投资回调异常...", e);
         }
@@ -2059,7 +2047,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             params.put("userId", userId+"");
             params.put("userName", userName);
             try {
-                couponTenderProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_TENDER_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                commonProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_TENDER_TOPIC, UUID.randomUUID().toString(), params));
             } catch (MQException e) {
                 logger.error("使用优惠券异常,userId:{},ordId:{},couponGrantId:{},borrowNid:{}",userId,ordid,couponGrantId,borrowNid);
                 e.printStackTrace();
@@ -2327,7 +2315,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             try {
                 // 网站累计投资追加
                 // 投资修改mongodb运营数据
-                calculateInvestInterestProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), params));
                 // 满标发短信在原子层
             } catch (MQException e) {
                 e.printStackTrace();
@@ -2460,8 +2448,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         params.put("investFlag", checkAppUtmInvestFlag(userId));
         //压入消息队列
         try {
-            appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-                    MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            commonProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                    MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), params));
         } catch (MQException e) {
             logger.error("渠道统计用户累计投资推送消息队列失败！！！", e);
         }
@@ -2476,7 +2464,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
      * @throws MQException
      */
     private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
-        this.sensorsDataHztInvestProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_HZT_INVEST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
+        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_HZT_INVEST_TOPIC, UUID.randomUUID().toString(), sensorsDataBean), 2);
     }
 
 }

@@ -15,7 +15,7 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
-import com.hyjf.admin.mq.FddProducer;
+import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.AccedeListService;
 import com.hyjf.admin.service.AdminCommonService;
@@ -75,7 +75,7 @@ public class HjhCreditTenderController extends BaseController{
     @Autowired
     private TenderCancelExceptionService tenderCancelExceptionService;
     @Autowired
-    private FddProducer fddProducer;
+    private CommonProducer commonProducer;
 	
     /** 权限 */
 	public static final String PERMISSIONS = "hjhcredittender";
@@ -375,7 +375,7 @@ public class HjhCreditTenderController extends BaseController{
 		map.put("assignServiceApr","债转服务费率");
 		map.put("assignServiceFee","债转服务费(元)");
 		map.put("tenderType", "复投承接(是/否)");
-		map.put("borrowPeriod", "项目期数");
+		map.put("assignPeriod", "项目期数");
 
 		return map;
 	}
@@ -491,7 +491,7 @@ public class HjhCreditTenderController extends BaseController{
             bean.setAssignNid(assignNid);
             bean.setOrdid(assignNid);
             /*rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_GENERATE_CONTRACT, JSONObject.toJSONString(bean));*/
-            fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
+			commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
         }
         ret.put("statusDesc", "操作成功,签署MQ已发送");
         ret.put("status", SUCCESS);

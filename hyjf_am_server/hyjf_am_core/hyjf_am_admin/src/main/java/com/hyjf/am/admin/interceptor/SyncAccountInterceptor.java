@@ -1,8 +1,8 @@
 package com.hyjf.am.admin.interceptor;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
-import com.hyjf.am.admin.mq.producer.SyncAccountProducer;
 import com.hyjf.common.constants.MQConstant;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.executor.Executor;
@@ -33,7 +33,7 @@ public class SyncAccountInterceptor implements Interceptor {
     private static final String INTERCEPTOR_NAME = "<<账户余额同步mybatis拦截器>>: ";
 
     @Autowired
-    private SyncAccountProducer syncAccountProducer;
+    private CommonProducer commonProducer;
 
 
     @Override
@@ -58,7 +58,7 @@ public class SyncAccountInterceptor implements Interceptor {
                 logger.info("====="+INTERCEPTOR_NAME+" paramObj=[{}] =====", JSON.toJSON(paramObj));
                 jsonStr = JSON.toJSONString(boundSql.getParameterObject());
                 // 延迟等级为9 (5分钟)
-                syncAccountProducer.messageSendDelay(new MessageContent(MQConstant.SYNC_ACCOUNT_TOPIC, UUID.randomUUID().toString(),jsonStr.getBytes()) , 9);
+                commonProducer.messageSendDelay(new MessageContent(MQConstant.SYNC_ACCOUNT_TOPIC, UUID.randomUUID().toString(), jsonStr) , 9);
                 logger.info("=====" + INTERCEPTOR_NAME + "发送账户信息[{}]到mq [成功]=====", jsonStr);
             }
         } catch (Exception e) {

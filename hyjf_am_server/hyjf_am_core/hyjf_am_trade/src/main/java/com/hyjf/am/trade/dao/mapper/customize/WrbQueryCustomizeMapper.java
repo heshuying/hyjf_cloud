@@ -3,14 +3,8 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize;
 
-import com.hyjf.am.trade.dao.model.customize.WrbBorrowListCustomize;
-import com.hyjf.am.trade.dao.model.customize.WrbBorrowTenderCustomize;
-import com.hyjf.am.trade.dao.model.customize.WrbInvestRecordCustomize;
-import com.hyjf.am.trade.dao.model.customize.WrbRecoverCustomize;
+import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.vo.api.WrbDaySumCustomize;
-import org.apache.ibatis.annotations.Param;
-import com.hyjf.am.trade.dao.model.customize.WrbBorrowTenderCustomize;
-import com.hyjf.am.trade.dao.model.customize.WrbBorrowTenderSumCustomize;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.Date;

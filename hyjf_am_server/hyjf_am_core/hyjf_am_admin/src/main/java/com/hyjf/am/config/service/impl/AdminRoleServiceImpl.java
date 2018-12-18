@@ -7,12 +7,7 @@ import com.hyjf.am.config.dao.mapper.auto.AdminRoleMapper;
 import com.hyjf.am.config.dao.mapper.auto.AdminRoleMenuPermissionsMapper;
 import com.hyjf.am.config.dao.mapper.customize.AdminRoleCustomizeMapper;
 import com.hyjf.am.config.dao.mapper.customize.AdminRoleMenuPermissionsCustomizeMapper;
-import com.hyjf.am.config.dao.model.auto.AdminAndRole;
-import com.hyjf.am.config.dao.model.auto.AdminAndRoleExample;
-import com.hyjf.am.config.dao.model.auto.AdminRole;
-import com.hyjf.am.config.dao.model.auto.AdminRoleExample;
-import com.hyjf.am.config.dao.model.auto.AdminRoleMenuPermissions;
-import com.hyjf.am.config.dao.model.auto.AdminRoleMenuPermissionsExample;
+import com.hyjf.am.config.dao.model.auto.*;
 import com.hyjf.am.config.dao.model.customize.AdminRoleCustomize;
 import com.hyjf.am.config.service.AdminRoleService;
 import com.hyjf.am.resquest.admin.UserRoleRequest;
@@ -21,6 +16,8 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,7 +42,7 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
      * 查看权限
      */
     public static final String VIEW = "PE0001";
-
+    protected Logger logger = LoggerFactory.getLogger(getClass());
     /**
      * 获取角色数
      * 
@@ -522,11 +519,16 @@ public class AdminRoleServiceImpl implements  AdminRoleService {
 				AdminRoleMenuPermissions permissions = new AdminRoleMenuPermissions();
 				permissions.setRoleId(roleId);
 				String[] split = s.split("_");
-				permissions.setMenuUuid(split[0]);
-				permissions.setPermissionUuid(split[1]);
-				// permissions.setMenuUuid(s);
-				// permissions.setPermissionUuid(VIEW);
-				adminList2.add(permissions);
+				if(split.length==2) {
+					permissions.setMenuUuid(split[0]);
+					permissions.setPermissionUuid(split[1]);
+					// permissions.setMenuUuid(s);
+					// permissions.setPermissionUuid(VIEW);
+					adminList2.add(permissions);
+				}else {
+					logger.error("权限录入错误格式:"+s);
+				}
+
 			}
 			// 将所有条件拼接好一次插入
 			adminRoleMenuPermissionsCustomizeMapper.insertMenuPerssion(adminList2);

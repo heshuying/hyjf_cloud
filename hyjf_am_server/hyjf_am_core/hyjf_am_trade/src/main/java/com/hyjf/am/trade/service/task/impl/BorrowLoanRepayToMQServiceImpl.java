@@ -3,14 +3,12 @@
  */
 package com.hyjf.am.trade.service.task.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.dao.model.auto.Account;
 import com.hyjf.am.trade.dao.model.auto.AccountExample;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicronExample;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.BorrowLoanRepayProducer;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.BorrowLoanRepayToMQService;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -46,10 +44,7 @@ public class BorrowLoanRepayToMQServiceImpl extends BaseServiceImpl implements B
 	private static final Integer TASK_LOAN_TYPE = 0;
 
     @Autowired
-    private BorrowLoanRepayProducer borrowLoanRepayProducer;
-    
-    @Autowired
-    private SmsProducer smsProducer;
+	private CommonProducer commonProducer;
 
 	/**
 	 * 对放款、还款任务进行分派
@@ -244,8 +239,8 @@ public class BorrowLoanRepayToMQServiceImpl extends BaseServiceImpl implements B
 		SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_FANGKUAN_SHIBAI, CustomConstants.CHANNEL_TYPE_NORMAL);
 
         try {
-            smsProducer.messageSend(
-                    new MessageContent(MQConstant.SMS_CODE_TOPIC, borrowNid, JSON.toJSONBytes(smsMessage)));
+			commonProducer.messageSend(
+                    new MessageContent(MQConstant.SMS_CODE_TOPIC, borrowNid, smsMessage));
         } catch (MQException e) {
         	logger.error("短信发送失败...", e);
         }
@@ -278,8 +273,8 @@ public class BorrowLoanRepayToMQServiceImpl extends BaseServiceImpl implements B
     public void sendMessage(String topic, BorrowApicron apiCron){
     	
         try {
-			borrowLoanRepayProducer.messageSendDelay(
-			        new MessageContent(topic, apiCron.getBorrowNid(), JSON.toJSONBytes(apiCron)), 2);
+			commonProducer.messageSendDelay(
+			        new MessageContent(topic, apiCron.getBorrowNid(), apiCron), 2);
 			
 		} catch (MQException e) {
 			e.printStackTrace();

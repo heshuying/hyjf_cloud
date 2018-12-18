@@ -1,8 +1,7 @@
 package com.hyjf.am.config.service.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
-import com.hyjf.am.admin.mq.producer.SmsProducer;
 import com.hyjf.am.config.dao.mapper.auto.AdminAndRoleMapper;
 import com.hyjf.am.config.dao.mapper.auto.AdminMapper;
 import com.hyjf.am.config.dao.mapper.auto.AdminRoleMapper;
@@ -46,7 +45,7 @@ public class AdminUserServiceImpl implements AdminUserService {
      * 短信mq生产端
      */
     @Autowired
-    private SmsProducer smsProducer;
+	private CommonProducer commonProducer;
 	/**
 	 * 获取账户列表
 	 *
@@ -91,7 +90,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 	/**
 	 * 账户插入
 	 *
-	 * @param record
+	 * @param form
 	 */
 	public void insertRecord(AdminRequest form) {
 		Admin record = new Admin();
@@ -130,8 +129,8 @@ public class AdminUserServiceImpl implements AdminUserService {
         SmsMessage smsMessage = new SmsMessage(null, replaceStrs,  record.getMobile(), null, MessageConstant.SMS_SEND_FOR_MOBILE, null,
                 CustomConstants.PARAM_TPL_GLYMM, CustomConstants.CHANNEL_TYPE_NORMAL);
         try {
-            smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
-                    JSON.toJSONBytes(smsMessage)));
+			commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
+                    smsMessage));
         } catch (MQException e) {
             e.printStackTrace();
         }
@@ -140,7 +139,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 	/**
 	 * 账户更新
 	 *
-	 * @param record
+	 * @param form
 	 */
 	public void updateRecord(AdminRequest form) {
 //		String nowTime = GetDate.getServerDateTime(9, new Date());
@@ -233,7 +232,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 	 * 检查邮箱唯一性
 	 *
 	 * @param id
-	 * @param username
+	 * @param email
 	 */
 	public int countAdminByEmail(Integer id, String email) {
 		AdminExample example = new AdminExample();
@@ -279,8 +278,8 @@ public class AdminUserServiceImpl implements AdminUserService {
 		        SmsMessage smsMessage = new SmsMessage(null, replaceStrs,  admin.getMobile(), null, MessageConstant.SMS_SEND_FOR_MOBILE, null,
 		                CustomConstants.PARAM_TPL_RESETPWD, CustomConstants.CHANNEL_TYPE_NORMAL);
 		        try {
-		            smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
-		                    JSON.toJSONBytes(smsMessage)));
+					commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
+		                    smsMessage));
 		        } catch (MQException e) {
 		            e.printStackTrace();
 		        }

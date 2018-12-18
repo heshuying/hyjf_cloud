@@ -4,6 +4,8 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.account.AccountRechargeCustomizeResponse;
 import com.hyjf.am.resquest.admin.AccountRechargeRequest;
 import com.hyjf.am.trade.controller.BaseController;
+import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.AccountRecharge;
 import com.hyjf.am.trade.dao.model.customize.RechargeManagementCustomize;
 import com.hyjf.am.trade.service.admin.finance.RechargeManagementService;
 import com.hyjf.am.vo.trade.account.AccountRechargeCustomizeVO;
@@ -12,7 +14,9 @@ import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.validator.Validator;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -102,22 +106,63 @@ public class RechargeManagementController extends BaseController {
      * @Author : huanghui
      */
     @RequestMapping(value = "/updateAccountAfterRecharge", method = RequestMethod.POST)
-    public boolean updateAccountAfterRecharge(@RequestBody AccountRechargeRequest request){
+    public AccountRechargeCustomizeResponse updateAccountAfterRecharge(@RequestBody AccountRechargeRequest request){
 
-        String status = request.getStatus();
+        AccountRechargeCustomizeResponse rechargeResponse =  new AccountRechargeCustomizeResponse();
+
+        String status = request.getStatusSearch();
         Integer userId = request.getUserId();
         String nid = request.getNidSearch();
+
+        if (Validator.isNull(userId) || StringUtils.isBlank(nid) || StringUtils.isBlank(status)) {
+            rechargeResponse.setRtn(Response.FAIL);
+            rechargeResponse.setMessage("确认发生错误,请重新操作!参数不正确[userId=" + userId + "]");
+            return rechargeResponse;
+        }
+
+        // 根据用户ID查询用户账户信息
+        Account account = rechargeManagementService.getAccountByUserId(userId);
+        if (Validator.isNull(account)){
+            rechargeResponse.setRtn(Response.FAIL);
+            rechargeResponse.setMessage("确认发生错误,请重新操作!参数不正确[userId=" + userId + "]账户异常！");
+            return rechargeResponse;
+        }
+
+        // 获取充值信息
+        AccountRecharge accountRecharge = rechargeManagementService.getAccountRechargeByNid(nid);
+        if (Validator.isNull(accountRecharge)){
+            rechargeResponse.setRtn(Response.FAIL);
+            rechargeResponse.setMessage("确认发生错误,请重新操作!参数不正确[nid=" + nid + "]账户异常！");
+            return rechargeResponse;
+        }
 
         // 确认充值 ; 0表示充值失败
         boolean isAccountUpdate = false;
         // 代码规约
         String errorStatus = "1";
         if (errorStatus.equals(status)){
-            isAccountUpdate = this.rechargeManagementService.updateAccountAfterRecharge(userId, nid);
+            try {
+                isAccountUpdate = this.rechargeManagementService.updateAccountAfterRecharge(userId, nid);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }else {
-            isAccountUpdate = this.rechargeManagementService.updateAccountAfterRechargeFail(userId, nid);
+            // 充值失败,更新充值订单
+            try {
+                isAccountUpdate = this.rechargeManagementService.updateAccountAfterRechargeFail(userId, nid);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
 
-        return isAccountUpdate;
+        // 充值数据状态更新
+        if (isAccountUpdate){
+            rechargeResponse.setRtn(Response.SUCCESS);
+            rechargeResponse.setMessage(Response.SUCCESS_MSG);
+        }else {
+            rechargeResponse.setRtn(Response.FAIL);
+            rechargeResponse.setMessage(Response.FAIL_MSG);
+        }
+        return rechargeResponse;
     }
 }

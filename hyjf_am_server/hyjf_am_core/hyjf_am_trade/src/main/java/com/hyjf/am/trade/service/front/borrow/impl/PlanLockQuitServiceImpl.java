@@ -3,12 +3,11 @@
  */
 package com.hyjf.am.trade.service.front.borrow.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.*;
 import com.hyjf.am.trade.service.CommisionComputeService;
 import com.hyjf.am.trade.service.front.borrow.PlanLockQuitService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
@@ -39,22 +38,7 @@ import java.util.*;
 @Service
 public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLockQuitService {
     @Autowired
-    private SmsProducer smsProducer;
-
-    @Autowired
-    private FddProducer fddProducer;
-
-    @Autowired
-    private AppMessageProducer appMessageProducer;
-
-    @Autowired
-    private CalculateInvestInterestProducer calculateInvestInterestProducer;
-
-    @Autowired
-    private CouponRepayMessageProducer couponRepayMessageProducer;
-
-    @Autowired
-    private CouponLoansMessageProducer couponLoansMessageProducer;
+    private CommonProducer commonProducer;
 
     @Autowired
     private CommisionComputeService commisionComputeService;
@@ -468,10 +452,10 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         JSONObject params1 = new JSONObject();
         params1.put("interestSum", accountInterest);
         try {
-            calculateInvestInterestProducer
+            commonProducer
                     .messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC,
                             MQConstant.STATISTICS_CALCULATE_INTEREST_SUM_TAG, UUID.randomUUID().toString(),
-                            JSON.toJSONBytes(params1)));
+                            params1));
         } catch (MQException e) {
             logger.error("退出计划累加统计数", e);
         }
@@ -483,7 +467,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         params.put("recoverInterestAmount", accountInterest);
         //运营数据队列
         try {
-            calculateInvestInterestProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), params));
         }catch (MQException e){
             logger.error("=================发送运营数据更新MQ失败,投资订单号:" + hjhAccede.getAccedeOrderId());
         }
@@ -568,8 +552,8 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_REPAY_HJH_SUCCESS,
                 CustomConstants.CHANNEL_TYPE_NORMAL);
         try {
-            smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
-                    JSON.toJSONBytes(smsMessage)));
+            commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
+                    smsMessage));
         } catch (MQException e) {
             logger.error("计划还款成功发送短信通知失败...", e);
         }
@@ -610,8 +594,8 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
                 }
                 AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_REPAY_SUCCESS);
                 try {
-                    appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(),
-                            JSON.toJSONBytes(smsMessage)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(),
+                            smsMessage));
                 } catch (MQException e) {
                     logger.error("计划退出推送消息通知失败...", e);
                 }
@@ -952,8 +936,8 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         // 推送消息队列
         AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_TOUZI_SUCCESS);
         try {
-            appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
-                    JSON.toJSONBytes(smsMessage)));
+            commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
+                    smsMessage));
         } catch (MQException e) {
             logger.error("发送app消息失败..", e);
         }
@@ -1100,8 +1084,8 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
             bean.setPlanEndDate(GetDate.getDateMyTimeInMillis(quitTime));
             bean.setTenderInterestFmt(waitTotal.toString());
             // 法大大生成合同MQ
-            fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,
-                    MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)));
+            commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,
+                    MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean));
 
         } catch (Exception e) {
             logger.info("-------------userid:" + userId + ",生成计划加入协议失败！----------",e);
@@ -1137,8 +1121,8 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         //发送app消息队列，需要根据userid取真实用户
         AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_PLAN_LOCK_SUCCESS);
         try {
-            appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
-                    JSON.toJSONBytes(smsMessage)));
+            commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
+                    smsMessage));
         } catch (MQException e) {
             logger.error("发送app消息失败..", e);
         }
@@ -1156,7 +1140,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         // 借款项目编号
         params.put("orderId", hjhAccede.getAccedeOrderId());
         //优惠券还款队列
-        couponRepayMessageProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+        commonProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_REPAY_TOPIC, UUID.randomUUID().toString(), params));
     }
 
     /**
@@ -1170,7 +1154,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         // 借款项目编号
         params.put("orderId", hjhAccede.getAccedeOrderId());
         //优惠券放款队列
-        couponLoansMessageProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_LOAN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+        commonProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_LOAN_TOPIC, UUID.randomUUID().toString(), params));
     }
 
     /**
@@ -1202,7 +1186,7 @@ public class PlanLockQuitServiceImpl extends BaseServiceImpl implements PlanLock
         smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USER_ID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_TOUZI_HJH_SUCCESS,
                 CustomConstants.CHANNEL_TYPE_NORMAL);
         try {
-            smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, String.valueOf(userId), JSON.toJSONBytes(smsMessage)));
+            commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, String.valueOf(userId), smsMessage));
         } catch (MQException e2) {
             logger.error("发送邮件失败..", e2);
         }

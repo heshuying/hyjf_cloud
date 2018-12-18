@@ -78,9 +78,9 @@ public class AccountBalanceController extends BaseController {
      * @param form
      */
     @ApiOperation(value = "数据中心-汇计划统计", notes = "数据中心-汇计划统计 导出日交易量")
-    @PostMapping("/exportActionByDay")
+    @GetMapping("/exportActionByDay")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT )
-    public void exportActionByDay(@RequestBody HjhAccountBalanceRequest form,HttpServletRequest request,HttpServletResponse response) throws Exception {
+    public void exportActionByDay( HjhAccountBalanceRequest form,HttpServletRequest request,HttpServletResponse response) throws Exception {
 
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
@@ -101,12 +101,16 @@ public class AccountBalanceController extends BaseController {
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = "";
-        for (int i = 1; i < sheetCount; i++) {
+        if(totalCount==0){
+            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }
+
+        for (int i = 1; i <= sheetCount; i++) {
             //请求第一页5000条
             form.setPageSize(defaultRowMaxCount);
-            form.setCurrPage(i+1);
+            form.setCurrPage(i);
             HjhInfoAccountBalanceResponse resultResponse2 = accountBalanceService.getSearchListByDay(form);
-            if (resultResponse2 != null && resultResponse2.getResultList().size()> 0) {
+            if (resultResponse2.getResultList() != null && resultResponse2.getResultList().size()> 0) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultResponse2.getResultList());
             } else {
@@ -177,12 +181,15 @@ public class AccountBalanceController extends BaseController {
         Map<String, String> beanPropertyColumnMap = monthBuildMap();
         Map<String, IValueFormatter> mapValueAdapter = monthBuildValueAdapter();
         String sheetNameTmp = "";
-        for (int i = 1; i < sheetCount; i++) {
+        if(totalCount==0){
+            helper.export(workbook, sheetName + "_第" + (1) + "页", beanPropertyColumnMap, mapValueAdapter, new ArrayList());
+        }
+        for (int i = 1; i <= sheetCount; i++) {
             //请求第一页5000条
             form.setPageSize(defaultRowMaxCount);
-            form.setCurrPage(i+1);
+            form.setCurrPage(i);
             HjhInfoAccountBalanceResponse resultResponse2 = accountBalanceService.getSearchListByMonth(form);
-            if (resultResponse2 != null && resultResponse2.getResultList().size()> 0) {
+            if (resultResponse2.getResultList() != null && resultResponse2.getResultList().size()> 0) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultResponse2.getResultList());
             } else {

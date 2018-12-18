@@ -11,7 +11,6 @@ import com.hyjf.am.trade.service.admin.pushmanage.AppPushManageService;
 import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetDateUtils;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;

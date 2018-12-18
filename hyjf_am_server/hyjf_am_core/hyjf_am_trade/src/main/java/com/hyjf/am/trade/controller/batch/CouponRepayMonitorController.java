@@ -3,27 +3,18 @@
  */
 package com.hyjf.am.trade.controller.batch;
 
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.AdminCouponRepayMonitorCustomizeResponse;
 import com.hyjf.am.response.trade.CouponRepayMonitorResponse;
-import com.hyjf.am.resquest.admin.CouponRepayRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.CouponRepayMonitor;
-import com.hyjf.am.trade.dao.model.customize.AdminCouponRepayMonitorCustomize;
 import com.hyjf.am.trade.service.task.CouponRepayMonitorService;
-import com.hyjf.am.vo.admin.AdminCouponRepayMonitorCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponRepayMonitorVO;
-import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author yaoy

@@ -7,8 +7,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.AleveLogCustomize;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.DownloadFileProducer;
 import com.hyjf.am.trade.service.front.account.AccountService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.AleveLogFileService;
@@ -44,7 +44,7 @@ public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLog
     SystemConfig systemConfig;
 
     @Autowired
-    private DownloadFileProducer downloadFileProducer;
+    private CommonProducer commonProducer;
 
     /**
      * 存款业务红包流水全明细数据文件下载
@@ -88,12 +88,12 @@ public class AleveLogFileServiceImpl extends BaseServiceImpl implements AleveLog
                         params.put("filePathEve", systemConfig.getEveFileName());
                         params.put("filePathAleve", systemConfig.getAleveFileName());
                         try {
-                            downloadFileProducer.messageSend(new MessageContent(MQConstant.ALEVE_FILE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                            commonProducer.messageSend(new MessageContent(MQConstant.ALEVE_FILE_TOPIC, UUID.randomUUID().toString(), params));
                         } catch (MQException e) {
                             logger.error("发送【导入手续费流水明细(aleve)】MQ失败...");
                         }
                         try {
-                            downloadFileProducer.messageSend(new MessageContent(MQConstant.EVE_FILE_TOPIC, UUID.randomUUID().toString(),JSONObject.toJSONBytes(params)));
+                            commonProducer.messageSend(new MessageContent(MQConstant.EVE_FILE_TOPIC, UUID.randomUUID().toString(),params));
                         } catch (MQException e) {
                             logger.error("发送【导入红包账户流水明细(eve)】MQ失败...");
                         }

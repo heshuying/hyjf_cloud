@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.trade.service.invest.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.response.config.DebtConfigResponse;
@@ -37,9 +36,8 @@ import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.*;
-import com.hyjf.cs.trade.mq.producer.sensorsdate.credit.SensorsDataCreditProducer;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
@@ -67,6 +65,8 @@ import java.util.*;
  */
 @Service
 public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implements BorrowCreditTenderService {
+    @Autowired
+    private CommonProducer commonProducer;
 
     @Autowired
     private AmUserClient amUserClient;
@@ -77,25 +77,9 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
     @Autowired
     private AmConfigClient amConfigClient;
     @Autowired
-    private AppChannelStatisticsDetailProducer appChannelStatisticsProducer;
-    @Autowired
-    private AppMessageProducer appMsProcesser;
-    @Autowired
     private AuthService authService;
     @Autowired
-    private SmsProducer smsProducer;
-    @Autowired
-    private AccountWebListProducer accountWebListProducer;
-    @Autowired
-    private CalculateInvestInterestProducer calculateInvestInterestProducer;
-    @Autowired
-    private FddProducer fddProducer;
-    @Autowired
     private HjhTenderService hjhTenderService;
-    @Autowired
-    private SensorsDataCreditProducer sensorsDataCreditProducer;
-    @Autowired
-    private UserOperationLogProducer userOperationLogProducer;
 
     private static String regex = "^[-+]?(([0-9]+)(([0-9]+))?|(([0-9]+))?)$";
     private static DecimalFormat DF_COM_VIEW = new DecimalFormat("######0.00");
@@ -160,7 +144,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         userOperationLogEntity.setUserName(user.getUsername());
         userOperationLogEntity.setUserRole(String.valueOf(userInfo.getRoleId()));
         try {
-            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+            commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
         } catch (MQException e) {
             logger.error("保存用户日志失败", e);
         }
@@ -325,8 +309,8 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             params.put("userId", userId);
             //压入消息队列
             try {
-                appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-                        MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                commonProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                        MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), params));
             } catch (MQException e) {
                 e.printStackTrace();
                 logger.error("渠道统计用户累计投资推送消息队列失败！！！");
@@ -958,7 +942,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         // 网站累计投资追加
                         // 投资修改mongodb运营数据
                         logger.info("网站累计投资追加 mq ");
-                        calculateInvestInterestProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), params));
                         // 满标发短信在原子层
                     } catch (MQException e) {
                         e.printStackTrace();
@@ -984,7 +968,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                         accountWebList.setOperator(null);
                         accountWebList.setFlag(1);
                         try {
-                            accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+                            commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
                         } catch (MQException e) {
                             logger.error("更新网站收支明细失败！logOrdId:{},userId:{}",logOrderId,userId);
                         }
@@ -1033,7 +1017,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         bean.setTenderType(1);
         try{
             logger.info("债转承接发送法大大协议----ing");
-            fddProducer.messageSendDelay(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_GENERATE_CONTRACT_TAG,UUID.randomUUID().toString(),JSON.toJSONBytes(bean)),2);
+            commonProducer.messageSendDelay(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_GENERATE_CONTRACT_TAG,UUID.randomUUID().toString(),bean),2);
         }catch (Exception e){
             logger.error("债转承接发送法大大协议失败  {}",JSONObject.toJSONString(bean));
         }
@@ -1055,7 +1039,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         params.put("investProjectPeriod", investProjectPeriod);
         //压入消息队列
         try {
-            appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.TENDER_CHANNEL_STATISTICS_DETAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            commonProducer.messageSend(new MessageContent(MQConstant.TENDER_CHANNEL_STATISTICS_DETAIL_TOPIC, UUID.randomUUID().toString(), params));
         } catch (MQException e) {
             e.printStackTrace();
             logger.error("渠道统计用户累计投资推送消息队列失败！！！");
@@ -1097,7 +1081,7 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
             appParam.put("val_balance", creditTender.getAssignPay() + "");
             appParam.put("val_profit", creditTender.getAssignInterest() + "");
             appParam.put("val_amount", creditTender.getAssignAccount() + "");
-            appMsProcesser.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(appParam)));
+            commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), appParam));
 
             if (borrowCredit.getCreditCapitalAssigned().compareTo(borrowCredit.getCreditCapital()) == 0) {
                 // 向出让人推送债转完全承接消息
@@ -1106,10 +1090,10 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
                 // 发送短信验证码
                 SmsMessage smsMessage = new SmsMessage(null, smsParam, webUser.getMobile(), null, MessageConstant.SMS_SEND_FOR_MOBILE, null, CustomConstants.PARAM_TPL_ZZQBZRCG,
                         CustomConstants.CHANNEL_TYPE_NORMAL);
-                smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
 
                 AppMsMessage appMsMessage = new AppMsMessage(null, smsParam, webUser.getMobile(), MessageConstant.APP_MS_SEND_FOR_MOBILE, CustomConstants.JYTZ_TPL_ZHUANRANGJIESHU);
-                smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
+                commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), appMsMessage));
             }
         }
     }
@@ -1526,6 +1510,6 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
      * @param sensorsDataBean
      */
     private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
-        this.sensorsDataCreditProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_CREDIT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
+        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_CREDIT_TOPIC, UUID.randomUUID().toString(), sensorsDataBean), 2);
     }
 }

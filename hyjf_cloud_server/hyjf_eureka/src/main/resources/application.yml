@@ -1,22 +1,21 @@
 spring:
   application:
-    name: eureka-server  
+    name: eureka-server
   profiles:
     active: dev
-  boot:
-    admin:
-      client:
-        url: http://MONITOR-SERVER
 server:
   port: 1111
 eureka:
+  instance:
+    hostname: microserver1
+    #preferIpAddress: true
   environment: ${spring.profiles.active}
   datacenter: Main
   client:
     register-with-eureka: true
-    fetch-registry: false
+    fetch-registry: true
     serviceUrl:
-      defaultZone: http://microserver1:1111/eureka,http://microserver2:1111/eureka
+      defaultZone: '@eureka.serviceUrl.default@'
 
 
 management:
@@ -31,3 +30,10 @@ management:
 logging:
   file: eureka.log
   file.max-size: 100MB
+
+info:
+  name: ${spring.profiles.active}
+  version: '@project.version@'
+  encoding: '@project.build.sourceEncoding@'
+  java:
+    version: '@java.version@'

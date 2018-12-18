@@ -1,12 +1,10 @@
 package com.hyjf.am.trade.service.task.bank.autoreview.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.BorrowCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.BorrowLoanRepayProducer;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.task.bank.autoreview.BatchAutoReviewService;
 import com.hyjf.am.trade.utils.constant.BorrowSendTypeEnum;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -46,7 +44,7 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
     @Resource
     private BorrowCustomizeMapper borrowCustomizeMapper;
     @Autowired
-    private SmsProducer smsProducer;
+    private CommonProducer commonProducer;
     @Resource
     private BorrowSendTypeMapper borrowSendTypeMapper;
     @Resource
@@ -63,8 +61,6 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
     private BorrowTenderTmpMapper borrowTenderTmpMapper;
     @Resource
     private FreezeHistoryMapper freezeHistoryMapper;
-    @Resource
-    BorrowLoanRepayProducer borrowLoanRepayProducer;
 
     @Override
     public void sendMsgToNotFullBorrow() {
@@ -81,7 +77,7 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
                 SmsMessage smsMessage = new SmsMessage(null, messageStrMap, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, borrowList.get(i).getBorrowNid(), CustomConstants.PARAM_TPL_XMDQ,
                         CustomConstants.CHANNEL_TYPE_NORMAL);
                 try {
-                    smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
                 } catch (MQException e2) {
                     logger.error("发送短信失败..", e2);
                 }
@@ -228,8 +224,8 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
                                     //由于是在事务内提交 会发生MQ消费时事务还没提交的情况 所以改成延时队列
                                     logger.debug("自动复审更新数据完成，开始发送放款MQ，标的编号：{}", borrowNid);
                                     try {
-                                        borrowLoanRepayProducer.messageSendDelay(
-                                                new MessageContent(MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_TOPIC, borrowApicron.getBorrowNid(), JSON.toJSONBytes(borrowApicron)), 2);
+                                        commonProducer.messageSendDelay(
+                                                new MessageContent(MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_TOPIC, borrowApicron.getBorrowNid(), borrowApicron), 2);
                                     } catch (MQException e) {
                                         logger.error("[编号：" + borrowNid + "]发送直投放款MQ失败！", e);
                                     }
@@ -269,7 +265,6 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
      */
     private void tenderCancel(BorrowTenderTmp info, String accountID) {
         String nid = info.getNid();
-        // TODO Auto-generated method stub
         BankCallBean callBean = bidCancel(info.getUserId(), accountID, info.getBorrowNid(), nid, info.getAccount().toString());
         if (Validator.isNotNull(callBean)) {
             String retCode = StringUtils.isNotBlank(callBean.getRetCode()) ? callBean.getRetCode() : "";
@@ -282,7 +277,6 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
                         logger.info("===============投资掉单数据已撤销,原投资订单号:" + nid);
                     }
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
                     throw new RuntimeException("投资撤销数据处理异常!原订单号:" + nid + "异常原因:" + e.getMessage());
                 }
             }else{

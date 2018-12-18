@@ -3,10 +3,10 @@ package com.hyjf.cs.market.service.impl;
 import java.math.BigDecimal;
 import java.util.*;
 
+import com.hyjf.cs.market.mq.base.CommonProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.market.SellDailyVO;
 import com.hyjf.common.constants.MQConstant;
@@ -16,7 +16,6 @@ import com.hyjf.cs.market.client.AmConfigClient;
 import com.hyjf.cs.market.client.AmMarketClient;
 import com.hyjf.cs.market.client.AmUserClient;
 import com.hyjf.cs.market.mq.base.MessageContent;
-import com.hyjf.cs.market.mq.producer.SellDailyProducer;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
 import com.hyjf.cs.market.service.DailyGeneratorDataService;
 
@@ -33,7 +32,7 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
     @Autowired
     private AmUserClient amUserClient;
     @Autowired
-    private SellDailyProducer sellDailyProducer;
+    private CommonProducer commonProducer;
 
     private static final String NMZX_DIVISION_NAME = "纳觅咨询";
     private static final String QGR_DIVISION_NAME = "裕峰瑞";
@@ -259,8 +258,8 @@ public class DailyGeneratorDataServiceImpl extends BaseMarketServiceImpl impleme
         params.put("startTime", startTime);
         params.put("endTime", endTime);
 		try {
-			sellDailyProducer.messageSend(new MessageContent(MQConstant.SELL_DAILY_TOPIC,
-					MQConstant.SELL_DAILY_SELECT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+			commonProducer.messageSend(new MessageContent(MQConstant.SELL_DAILY_TOPIC,
+					MQConstant.SELL_DAILY_SELECT_TAG, UUID.randomUUID().toString(), params));
 		} catch (MQException e) {
 			logger.error("销日报发送消息失败......", e);
 		}

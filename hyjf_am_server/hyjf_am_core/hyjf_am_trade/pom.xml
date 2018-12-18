@@ -37,13 +37,6 @@
 			<artifactId>mybatis-spring-boot-starter</artifactId>
 		</dependency>
 
-		<!-- spring boot admin start -->
-		<dependency>
-			<groupId>de.codecentric</groupId>
-			<artifactId>spring-boot-admin-starter-client</artifactId>
-		</dependency>
-		<!-- spring boot admin end -->
-
 		<dependency>
 			<groupId>org.apache.rocketmq</groupId>
 			<artifactId>rocketmq-client</artifactId>
@@ -96,6 +89,11 @@
 			<groupId>org.xhtmlrenderer</groupId>
 			<artifactId>core-renderer</artifactId>
 			<version>R8pre2</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.rocketmq</groupId>
+			<artifactId>rocketmq-spring-boot-starter</artifactId>
 		</dependency>
 	</dependencies>
 

@@ -4,8 +4,8 @@
 package com.hyjf.am.trade.service.admin.borrow.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
-import com.hyjf.am.admin.mq.producer.AutoPreAuditMessageProducer;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.BorrowBailInfoResponse;
 import com.hyjf.am.resquest.admin.BorrowFireRequest;
@@ -41,7 +41,7 @@ import java.util.UUID;
 public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFirstService {
 
     @Resource
-    private AutoPreAuditMessageProducer autoPreAuditMessageProducer;
+    private CommonProducer commonProducer;
 
     /**
      * 借款初审总条数
@@ -241,7 +241,7 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                 JSONObject params = new JSONObject();
                 params.put("instCode",borrowInfo.getInstCode());
                 params.put("borrowNid", borrowNid);
-                autoPreAuditMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                commonProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), params));
                 logger.info("自动初审MQ发送成功----------标的号:{}", borrowNid);
             } catch (Exception e) {
                 logger.error("发送MQ到初审失败，borrowNid：" + borrowNid);

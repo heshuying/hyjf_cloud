@@ -13,8 +13,8 @@ import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.trade.service.consumer.NifaContractEssenceMessageService;
 import com.hyjf.cs.trade.service.myproject.AppMyProjectService;
 import io.swagger.annotations.Api;
@@ -41,7 +41,7 @@ public class AppMyProjectDetailController extends BaseTradeController {
     @Autowired
     NifaContractEssenceMessageService nifaContractEssenceMessageService;
     @Autowired
-    UserOperationLogProducer userOperationLogProducer;
+    private CommonProducer commonProducer;
     /**
      * 用户中心我的散标详情
      * @date 2018/7/2 16:27
@@ -97,7 +97,7 @@ public class AppMyProjectDetailController extends BaseTradeController {
         userOperationLogEntity.setUserName(userVO.getUsername());
         userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
         try {
-            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+            commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
         } catch (MQException e) {
             logger.error("保存用户日志失败", e);
         }

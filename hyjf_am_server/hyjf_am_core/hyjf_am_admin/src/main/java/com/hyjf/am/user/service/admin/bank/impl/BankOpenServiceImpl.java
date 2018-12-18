@@ -3,7 +3,7 @@
  */
 package com.hyjf.am.user.service.admin.bank.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
 import com.hyjf.am.admin.utils.IdCard15To18;
 import com.hyjf.am.resquest.user.BankCardRequest;
@@ -16,6 +16,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -25,6 +26,9 @@ import java.util.UUID;
 @Service
 public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenService {
     private Logger logger = LoggerFactory.getLogger(BankOpenServiceImpl.class);
+
+    @Autowired
+    private CommonProducer commonProducer;
 
     @Override
     public boolean updateUserAccountLog(int userId, String userName, String mobile, String logOrderId, String clientPc, String name, String idno, String cardNo) {
@@ -139,7 +143,7 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         user.setUserType(0);
         user.setMobile(mobile);
         // 更新相应的用户表
-        boolean usersFlag = usersMapper.updateByPrimaryKeySelective(user) > 0 ? true : false;
+        boolean usersFlag = userMapper.updateByPrimaryKeySelective(user) > 0 ? true : false;
         if (!usersFlag) {
             logger.info("开户成功后,更新用户信息失败,用户ID:[" + userId + "]");
             throw new RuntimeException("更新用户表失败！");
@@ -160,7 +164,7 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         userInfo.setRoleId(roleId);
         logger.info("birthDay：：："+birthDay);
         // 更新用户详细信息表
-        boolean userInfoFlag = usersInfoMapper.updateByPrimaryKeySelective(userInfo) > 0 ? true : false;
+        boolean userInfoFlag = userInfoMapper.updateByPrimaryKeySelective(userInfo) > 0 ? true : false;
         if (!userInfoFlag) {
             logger.info("更新用户详细信息表失败,用户ID:[" + userId + "]");
             throw new RuntimeException("更新用户详情表失败！");
@@ -190,8 +194,8 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
          * APP渠道统计明细更新-修改开户时间
          */
         try {
-            appChannelStatisticsDetailProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-                    MQConstant.APP_CHANNEL_STATISTICS_DETAIL_UPDATE_TAG,UUID.randomUUID().toString(),JSON.toJSONBytes(userId)));
+            commonProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                    MQConstant.APP_CHANNEL_STATISTICS_DETAIL_UPDATE_TAG,UUID.randomUUID().toString(), userId));
         } catch (MQException e) {
             logger.error("开户统计app渠道失败....", e);
         }
@@ -200,7 +204,7 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
 
 
     public User getUsers(Integer userId) {
-        return usersMapper.selectByPrimaryKey(userId);
+        return userMapper.selectByPrimaryKey(userId);
     }
 
     /**
@@ -213,7 +217,7 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         if (userId != null) {
             UserInfoExample example = new UserInfoExample();
             example.createCriteria().andUserIdEqualTo(userId);
-            List<UserInfo> usersInfoList = this.usersInfoMapper.selectByExample(example);
+            List<UserInfo> usersInfoList = this.userInfoMapper.selectByExample(example);
             if (usersInfoList != null && usersInfoList.size() > 0) {
                 return usersInfoList.get(0);
             }
@@ -244,7 +248,7 @@ public class BankOpenServiceImpl extends BaseServiceImpl implements BankOpenServ
         UserInfoExample.Criteria cra = example.createCriteria();
         cra.andIdcardEqualTo(cardNo);
 
-        List<UserInfo> list = usersInfoMapper.selectByExample(example);
+        List<UserInfo> list = userInfoMapper.selectByExample(example);
 
         if (list != null && list.size() == 1) {
             return list.get(0);

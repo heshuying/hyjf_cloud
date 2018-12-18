@@ -1,11 +1,22 @@
 package com.hyjf.cs.trade.service.home.impl;
 
-import com.alicp.jetcache.anno.CacheRefresh;
-import com.alicp.jetcache.anno.CacheType;
-import com.alicp.jetcache.anno.Cached;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
-import com.hyjf.am.response.market.AppAdsCustomizeResponse;
-import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
@@ -22,29 +33,12 @@ import com.hyjf.common.http.HtmlUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.bean.HomeDataResultBean;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.home.WebHomeService;
-import com.hyjf.cs.trade.util.HomePageDefine;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class WebHomeServiceImpl implements WebHomeService {
@@ -69,9 +63,6 @@ public class WebHomeServiceImpl implements WebHomeService {
 
     @Autowired
     private SystemConfig systemConfig;
-
-    @Autowired
-    private BaseClient baseClient;
 
     @Autowired
     private AmTradeClient amTradeClient;
@@ -177,7 +168,13 @@ public class WebHomeServiceImpl implements WebHomeService {
         }*/
         List<ContentArticleVO> noticeList = amTradeClient.getNoticeList(contentArticleRequest);//加缓存
         if(!CollectionUtils.isEmpty(noticeList)){
-            result.setNoticeInfo(noticeList.get(0));
+            ContentArticleVO noticeInfo = noticeList.get(0);
+            // 精简首页不要的返回参数，减少网络消耗 begin add by zyk 2018年12月10日11:36:07
+            noticeInfo.setImgurl("");
+            noticeInfo.setSummary("");
+            noticeInfo.setContent("");
+            // 精简首页不要的返回参数，减少网络消耗 end add by zyk 2018年12月10日11:36:07
+            result.setNoticeInfo(noticeInfo);
         }
         // mod by libin by jetcache end
  
@@ -257,8 +254,21 @@ public class WebHomeServiceImpl implements WebHomeService {
                 }
             }
 
-            result.setCompanyArticle(companyDynamicsList.get(0));
+            // 精简首页不要的返回参数，减少网络消耗 begin add by zyk 2018年12月10日11:42:37
+            ContentArticleVO companArticle =  companyDynamicsList.get(0);
+            companArticle.setImgurl("");
+            companArticle.setSummary("");
+            companArticle.setAuthor("");
+            if (!CollectionUtils.isEmpty(companyDynamicsListSon)){
+                for (ContentArticleVO contentArticleVO : companyDynamicsListSon){
+                    contentArticleVO.setImgurl("");
+                    contentArticleVO.setSummary("");
+                    contentArticleVO.setContent("");
+                }
+            }
+            result.setCompanyArticle(companArticle);
             result.setCompanyDynamicsList(companyDynamicsListSon);
+            // 精简首页不需要的返回参数，减少网络消耗 end add by zyk 2018年12月10日11:42:41
         } else {
             result.setCompanyArticle(new ContentArticleVO());
             result.setCompanyDynamicsList(new ArrayList<>());
@@ -311,7 +321,7 @@ public class WebHomeServiceImpl implements WebHomeService {
      */
     @Override
     public void androidDownload(HttpServletResponse response) {
-        String url = "http://app.hyjf.com/data/download/com.huiyingdai.apptest_wangye.apk";
+        String url = "";
         VersionVO versionVO = amConfigClient.getLastestVersion();
         if( versionVO != null && StringUtils.isNotBlank(versionVO.getUrl())){
             url = versionVO.getUrl().trim();

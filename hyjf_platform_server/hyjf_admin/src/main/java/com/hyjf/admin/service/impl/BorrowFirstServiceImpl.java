@@ -11,7 +11,7 @@ import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
-import com.hyjf.admin.mq.AutoIssueMessageProducer;
+import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.BorrowFirstService;
 import com.hyjf.admin.utils.Page;
@@ -51,7 +51,7 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
     AmUserClient amUserClient;
 
     @Autowired
-    AutoIssueMessageProducer autoIssueMessageProducer;
+    CommonProducer commonProducer;
 
     /**
      * 借款初审列表
@@ -193,7 +193,7 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
                 try {
                     //自动关联计划
                     //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-                    autoIssueMessageProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)),2);
+                    commonProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), params),2);
                     logger.info("标的编号：" + borrowNid + "-----已发送至自动关联计划MQ");
                 } catch (Exception e){
                     logger.error("标的编号：" + borrowNid + "-----发送自动关联计划MQ异常", e);

@@ -73,9 +73,10 @@ public class ProtocolsServiceImpl implements ProtocolsService {
 					}
 					List<ParamNameVO> flagList = amConfigClient.getParamNameList("CA_FLAG");
 					if (!CollectionUtils.isEmpty(flagList)) {
-						ParamNameVO flagVo = flagList.get(0);
-						if (Objects.equals(flagVo.getNameCd(), vo.getProtocolType().toString())) {
-							vo.setCaFlagName(flagVo.getName());
+						for(ParamNameVO paramNameVO : flagList){
+							if (Objects.equals(paramNameVO.getNameCd(), vo.getCaFlag().toString())) {
+								vo.setCaFlagName(paramNameVO.getName());
+							}
 						}
 					}
 				}

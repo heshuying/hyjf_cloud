@@ -1,10 +1,13 @@
 package com.hyjf.am.trade.service.front.repay;
 
 import com.hyjf.am.resquest.trade.RepayListRequest;
+import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.trade.bean.repay.ProjectBean;
 import com.hyjf.am.trade.bean.repay.RepayBean;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
+import com.hyjf.am.trade.dao.model.customize.WebUserRepayTransferCustomize;
+import com.hyjf.am.trade.dao.model.customize.WebUserTransferBorrowInfoCustomize;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -69,4 +72,29 @@ public interface RepayManageService extends BaseService {
     BigDecimal searchRepayByTermTotal(int userId, Borrow borrow, BigDecimal borrowApr, String borrowStyle, int periodTotal) throws Exception;
 
     RepayBean calculateRepayByTerm(int userId, Borrow borrow) throws Exception;
+
+    WebUserTransferBorrowInfoCustomize getUserTransferBorrowInfo(String borrowNid);
+
+    int selectUserRepayTransferDetailListTotal(String borrowNid,  String verificationFlag);
+
+    /**
+     * 用户待还债转详情列表
+     * @return
+     */
+    List<WebUserRepayTransferCustomize> selectUserRepayTransferDetailList(WebUserRepayTransferRequest repayTransferRequest);
+
+    /**
+     *
+     * 以hyjf开头:
+     *      hyjf123456 的加密第5-8位
+     *      hyjf13125253333 的加密第8-11位
+     * 其他 :
+     *      a**
+     *          或
+     *      张**
+     * @param name
+     * @return
+     * @Author : huanghui
+     */
+    String usernameEncryption(String name);
 }

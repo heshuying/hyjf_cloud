@@ -12,7 +12,6 @@
 package com.hyjf.am.trade.dao.model.customize;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @author jijun 20180628

@@ -1,6 +1,5 @@
 package com.hyjf.cs.trade.service.myproject.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
@@ -40,9 +39,8 @@ import com.hyjf.cs.trade.bean.BorrowDetailBean;
 import com.hyjf.cs.trade.bean.BorrowProjectDetailBean;
 import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
 import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.SmsProducer;
-import com.hyjf.cs.trade.mq.producer.sensorsdate.credit.SensorsDataCreditProducer;
 import com.hyjf.cs.trade.service.credit.MyCreditListService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.myproject.AppMyProjectService;
@@ -76,22 +74,19 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
     public static final String  COUPON_RECOVER_PLAN_URL = "http://AM-TRADE/am-trade/coupon/getCounponRecoverList";
 
     @Autowired
+    private CommonProducer commonProducer;
+
+    @Autowired
     private BaseClient baseClient;
     
     @Autowired
     private SystemConfig systemConfig;
 
     @Autowired
-    private SmsProducer smsProducer;
-
-    @Autowired
     private SmsCodeService sendSmsCode;
 
     @Autowired
     private MyCreditListService myCreditListService;
-
-    @Autowired
-    private SensorsDataCreditProducer sensorsDataCreditProducer;
     
     /**
      * 折让率格式
@@ -1248,6 +1243,6 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
      * @throws MQException
      */
     private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
-        this.sensorsDataCreditProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_CREDIT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
+        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_CREDIT_TOPIC, UUID.randomUUID().toString(), sensorsDataBean), 2);
     }
 }

@@ -3,14 +3,10 @@
  */
 package com.hyjf.am.trade.service.task.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
-import com.hyjf.am.trade.mq.producer.AppMessageProducer;
-import com.hyjf.am.trade.mq.producer.MailProducer;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.IncreaseInterestRepayService;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
@@ -77,19 +73,10 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 	private static final Integer STATUS_ERROR = 9;
     
 	@Autowired
-	private MailProducer mailProducer;
-    
-	@Autowired
-	private SmsProducer smsProducer;
-
-	@Autowired
-	private AppMessageProducer appMessageProducer;
+	private CommonProducer commonProducer;
 	
 	@Autowired
-	private AccountWebListProducer accountWebListProducer;
-	
-	@Autowired
-	SystemConfig systemConfig;
+	private SystemConfig systemConfig;
 
 	/**
 	 * 检索未执行的还款任务
@@ -598,7 +585,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 										//网站首支明细队列
 										try {
 											logger.info("发送收支明细---" + investUserId + "---------" + repayInterest);
-							                accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+											commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
 							            } catch (MQException e) {
 							                logger.error("加息还款中发生系统", e);
 							            }
@@ -792,9 +779,9 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 
 	/**
 	 * 还款成功后,更新标的状态
-	 * 
+	 *
 	 * @Title updateBorrowStatus
-	 * @param borrowNid
+	 * @param borrow
 	 * @param periodNow
 	 * @param borrowUserId
 	 */
@@ -853,7 +840,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 	public void sendSms(List<Map<String, String>> msgList) {
 		if (msgList != null && msgList.size() > 0) {
 			for (Map<String, String> msg : msgList) {
-				if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isNumber(msg.get(VAL_USERID)) && Validator.isNotNull(msg.get(VAL_AMOUNT))) {
+				if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isCreatable(msg.get(VAL_USERID)) && Validator.isNotNull(msg.get(VAL_AMOUNT))) {
 //					Users users = getUsersByUserId(Integer.valueOf(msg.get(VAL_USERID)));
 //					if (users == null || Validator.isNull(users.getMobile()) || (users.getRecieveSms() != null && users.getRecieveSms() == 1)) {
 //						return;
@@ -879,7 +866,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 							CustomConstants.CHANNEL_TYPE_NORMAL);
 
 					try {
-						smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, msg.get(VAL_USERID), JSON.toJSONBytes(smsMessage)));
+						commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, msg.get(VAL_USERID), smsMessage));
 					} catch (MQException e2) {
 						logger.error("发送短信失败..", e2);
 					}
@@ -925,8 +912,8 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 					
 					AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_JIAXIHUANKUAN);
 					try {
-						appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, msg.get(VAL_USERID),
-								JSON.toJSONBytes(smsMessage)));
+						commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, msg.get(VAL_USERID),
+								smsMessage));
 					} catch (MQException e) {
 						logger.error("发送app消息失败..", e);
 					}
@@ -1049,7 +1036,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 							SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_HUANKUAN_SUCCESS,
 									CustomConstants.CHANNEL_TYPE_NORMAL);
 							try {
-								smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, borrowNid, JSON.toJSONBytes(smsMessage)));
+								commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, borrowNid, smsMessage));
 							} catch (MQException e2) {
 								logger.error("发送短信失败..", e2);
 							}
@@ -1119,7 +1106,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 					MailMessage message = new MailMessage(null, null, "[" + online + "] " + apicron.getBorrowNid() + "-" + apicron.getPeriodNow() + "融通宝加息还款失败",
 							msg.toString(), null, toMail, null, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
 					try {
-						mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, apicron.getBorrowNid(), JSON.toJSONBytes(message)));
+						commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, apicron.getBorrowNid(), message));
 					} catch (Exception e2) {
 						logger.error("发送邮件失败..", e2);
 					}

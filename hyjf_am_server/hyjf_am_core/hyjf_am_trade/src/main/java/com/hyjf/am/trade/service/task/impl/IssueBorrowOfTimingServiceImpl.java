@@ -1,12 +1,10 @@
 package com.hyjf.am.trade.service.task.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BorrowCustomize;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
-import com.hyjf.am.trade.mq.producer.hjh.issuerecover.AutoIssueMessageProducer;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.IssueBorrowOfTimingService;
 import com.hyjf.am.trade.utils.constant.BorrowSendTypeEnum;
@@ -24,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -36,10 +33,7 @@ import java.util.*;
 public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements IssueBorrowOfTimingService {
 
 	@Autowired
-	SmsProducer smsProducer;
-
-	@Resource
-	private AutoIssueMessageProducer autoIssueMessageProducer;
+	private CommonProducer commonProducer;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -140,7 +134,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 					JSONObject params = new JSONObject();
 					params.put("borrowNid", borrowNid);
 					//modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-					autoIssueMessageProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)),2);
+					commonProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), params),2);
 				} catch (MQException e) {
 					logger.error("发送【散标进计划自动发标进入计划】MQ失败...");
 				}
@@ -430,7 +424,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 					JSONObject params = new JSONObject();
 					params.put("borrowNid", borrow.getBorrowNid());
 					//modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-					autoIssueMessageProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)),2);
+					commonProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), params),2);
 				} catch (MQException e) {
 					logger.error("发送【拆分标自动发标进入计划】MQ失败...");
 				}
@@ -455,7 +449,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		SmsMessage smsMessage = new SmsMessage(null, params, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, sender,
 				tplCode, CustomConstants.CHANNEL_TYPE_NORMAL);
 
-		smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, borrowNid, JSON.toJSONBytes(smsMessage)));
+		commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, borrowNid, smsMessage));
 	}
 
 }

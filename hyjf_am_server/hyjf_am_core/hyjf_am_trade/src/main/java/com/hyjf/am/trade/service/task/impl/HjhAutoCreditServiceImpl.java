@@ -5,9 +5,8 @@ package com.hyjf.am.trade.service.task.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.hjh.calculatefairvalue.HjhCalculateFairValueProducer;
-import com.hyjf.am.trade.mq.producer.hjh.issuerecover.AutoIssueMessageProducer;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.HjhAutoCreditService;
 import com.hyjf.am.vo.trade.hjh.HjhCalculateFairValueVO;
@@ -37,10 +36,7 @@ import java.util.UUID;
 public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAutoCreditService {
 
     @Autowired
-    private HjhCalculateFairValueProducer hjhCalculateFairValueProducer;
-
-    @Autowired
-    private AutoIssueMessageProducer autoIssueMessageProducer;
+    private CommonProducer commonProducer;
 
 
     /**
@@ -69,7 +65,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
             JSONObject params = new JSONObject();
             params.put("accedeOrderId", hjhCalculateFairValueBean.getAccedeOrderId());
             params.put("calculateType", String.valueOf(hjhCalculateFairValueBean.getCalculateType()));
-            hjhCalculateFairValueProducer.messageSend(new MessageContent(MQConstant.HJH_CALCULATE_FAIR_VALUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+            commonProducer.messageSend(new MessageContent(MQConstant.HJH_CALCULATE_FAIR_VALUE_TOPIC, UUID.randomUUID().toString(), params));
         } catch (MQException e) {
             logger.error("发送汇计划加入订单计算公允价值MQ失败...");
             e.printStackTrace();
@@ -1305,7 +1301,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
             // 加入到消息队列
             JSONObject params = new JSONObject();
             params.put("creditNid", creditNid);
-            autoIssueMessageProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)),2);
+            commonProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), params),2);
             logger.info("清算完成后,发送MQ成功,债转编号:[" + creditNid + "].");
         } catch (MQException e) {
             e.printStackTrace();

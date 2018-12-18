@@ -34,8 +34,7 @@ import com.hyjf.signatrues.client.AmTradeClient;
 import com.hyjf.signatrues.client.AmUserClient;
 import com.hyjf.signatrues.client.config.SystemConfig;
 import com.hyjf.signatrues.mq.base.MessageContent;
-import com.hyjf.signatrues.mq.producer.FddProducer;
-import com.hyjf.signatrues.mq.producer.MailProducer;
+import com.hyjf.signatrues.mq.producer.CommonProducer;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -58,6 +57,7 @@ import java.util.*;
  * @date 20180627
  */
 @Component
+@SuppressWarnings("unchecked")
 public class FddHandle {
 
 	private static final Logger logger = LoggerFactory.getLogger(FddHandle.class);
@@ -75,11 +75,7 @@ public class FddHandle {
 	private SystemConfig systemConfig;
 
 	@Autowired
-	private FddProducer fddProducer;
-	@Autowired
-	private MailProducer mailProducer;
-
-
+	private CommonProducer commonProducer;
 
 
 	/**
@@ -581,7 +577,7 @@ public class FddHandle {
                 bean.setCreditCompany(isCreditCompany);
                 try {
 					logger.info("------------------------------------调用法大大发送下载脱敏消息:"+update);
-					fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG,UUID.randomUUID().toString(),JSON.toJSONBytes(bean)));
+					commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG,UUID.randomUUID().toString(),bean));
 				} catch (MQException e) {
 					e.printStackTrace();
 					logger.error("法大大发送下载脱敏消息失败...", e);	
@@ -1809,7 +1805,7 @@ public class FddHandle {
 			Map<String, String> msg = new HashMap<String, String>();
 			msg.put(VAL_USERID, String.valueOf(userId));
 			// 向每个投资人发送邮件
-			if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isNumber(msg.get(VAL_USERID))) {
+			if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isCreatable(msg.get(VAL_USERID))) {
 				UserVO users=this.amUserClient.findUserById(userId);
 				if (users == null || Validator.isNull(users.getEmail()) || users.getIsSmtp()==1) {
 					logger.info("=============cwyang eamil is users == null===========");
@@ -1860,7 +1856,7 @@ public class FddHandle {
 				MailMessage mailMessage = new MailMessage(Integer.valueOf(userId), msg, "智投服务协议", null, new String[] { filePath + "/" + fileName }, emails, CustomConstants.EMAITPL_EMAIL_LOCK_REPAY,
 						MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
 				// 发送邮件
-				mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(mailMessage)));
+				commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),mailMessage));
 
 
 				logger.info("计划订单状态由投资成功变为锁定中，发送此邮件提醒用户投资--------------------------结束!");
@@ -1884,7 +1880,7 @@ public class FddHandle {
 		msg.put(VAL_USERID, String.valueOf(userId));
 		try {
 			// 向每个投资人发送邮件
-			if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isNumber(msg.get(VAL_USERID))) {
+			if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isCreatable(msg.get(VAL_USERID))) {
 				UserVO users = this.amUserClient.findUserById(userId);
 				if (users == null || Validator.isNull(users.getEmail())) {
 					return;
@@ -1926,7 +1922,7 @@ public class FddHandle {
 				MailMessage mailMessage = new MailMessage(Integer.valueOf(userId), msg, "汇盈金服互联网金融服务平台居间服务协议", null, new String[] { filePath +"/" + fileName }, emails, CustomConstants.EMAILPARAM_TPL_LOANS,
 						MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
 				// 发送邮件
-				mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(mailMessage)));
+				commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),mailMessage));
 
 				// 更新BorrowRecover邮件发送状态
 				borrowRecover.setSendmail(1);

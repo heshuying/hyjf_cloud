@@ -2,8 +2,9 @@ package com.hyjf.am.trade.dao.mapper.auto;
 
 import com.hyjf.am.trade.dao.model.auto.CreditTenderLog;
 import com.hyjf.am.trade.dao.model.auto.CreditTenderLogExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface CreditTenderLogMapper {
     int countByExample(CreditTenderLogExample example);

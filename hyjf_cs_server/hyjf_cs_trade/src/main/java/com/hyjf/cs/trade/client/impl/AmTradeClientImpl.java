@@ -40,6 +40,7 @@ import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
+import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
@@ -6063,6 +6064,38 @@ public class AmTradeClientImpl implements AmTradeClient {
         AppAdsCustomizeResponse res = restTemplate.postForEntity(url,request,AppAdsCustomizeResponse.class).getBody();
         if (Response.isSuccess(res)){
             return res.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @param borrowNid
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public WebUserTransferBorrowInfoCustomizeVO getUserTransferBorrowInfo(String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/repay/get_user_transfer_borrow_info/"+ borrowNid;
+        WebUserTransferBorrowInfoCustomizeResponse response = restTemplate.getForEntity(url, WebUserTransferBorrowInfoCustomizeResponse.class).getBody();
+        if (response != null && Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 获取用户待还标的列表
+     * @param repayTransferRequest
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public List<WebUserRepayTransferCustomizeVO> getUserRepayDetailAjax(WebUserRepayTransferRequest repayTransferRequest) {
+        WebUserRepayTransferCustomizeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/repay/userRepayDetailAjax/", repayTransferRequest, WebUserRepayTransferCustomizeResponse.class).getBody();
+
+        if (response != null && Response.isSuccess(response)){
+            return response.getResultList();
         }
         return null;
     }

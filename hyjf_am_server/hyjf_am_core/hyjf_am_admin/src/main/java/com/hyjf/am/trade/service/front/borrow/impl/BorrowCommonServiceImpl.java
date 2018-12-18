@@ -2,9 +2,8 @@ package com.hyjf.am.trade.service.front.borrow.impl;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
-import com.hyjf.am.admin.mq.producer.AutoIssueMessageProducer;
-import com.hyjf.am.admin.mq.producer.AutoRecordMessageProducer;
 import com.hyjf.am.bean.admin.BorrowCommonBean;
 import com.hyjf.am.resquest.admin.BorrowCommonRequest;
 import com.hyjf.am.trade.bean.BorrowCommonFile;
@@ -14,9 +13,6 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.auto.BorrowInfoExample.Criteria;
 import com.hyjf.am.trade.service.front.borrow.BorrowCommonService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.user.dao.mapper.auto.UserMapper;
-import com.hyjf.am.user.dao.model.auto.User;
-import com.hyjf.am.user.dao.model.auto.UserExample;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisConstants;
@@ -31,7 +27,6 @@ import org.jsoup.helper.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
@@ -54,9 +49,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	public static final String BORROW_LOG_ADD = "新增";
 	public static final String BORROW_LOG_DEL = "删除";
     @Resource
-    private AutoIssueMessageProducer autoIssueMessageProducer;
-    @Autowired
-    private AutoRecordMessageProducer autoRecordMessageProducer;
+	private CommonProducer commonProducer;
 
 	@Value("${file.domain.url}")
     private String url; 
@@ -879,7 +872,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		                                JSONObject params = new JSONObject();
 		                                params.put("borrowNid", borrow.getBorrowNid());
 									 //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-		                                autoIssueMessageProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)),2);
+									 commonProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), params),2);
 		                            } catch (MQException e) {
 		                                logger.error("发送【关联计划队列】MQ失败...");
 		                            }
@@ -5856,7 +5849,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
                     JSONObject params = new JSONObject();
                     params.put("borrowNid", list.get(i).getBorrowNid());
                     params.put("planId", list.get(i).getId());
-                    autoRecordMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+					commonProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), params));
                 } catch (MQException e) {
                     logger.error("发送【自动备案消息到MQ】MQ失败...");
                 }

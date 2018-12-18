@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.trade.service.hjh.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.crmtender.CrmInvestMsgBean;
@@ -39,9 +38,8 @@ import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.*;
-import com.hyjf.cs.trade.mq.producer.sensorsdate.hjh.SensorsDataHjhInvestProducer;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.consumer.CouponService;
 import com.hyjf.cs.trade.service.coupon.AppCouponService;
@@ -78,31 +76,21 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
     public static final String PROSPECTIVE_EARNINGS = "历史回报 ";
 
     @Autowired
+    private CommonProducer commonProducer;
+    @Autowired
     private AmUserClient amUserClient;
     @Autowired
     private AmTradeClient amTradeClient;
     @Autowired
     private CouponService couponService;
     @Autowired
-    private AppChannelStatisticsDetailProducer appChannelStatisticsProducer;
-    @Autowired
-    private HjhCouponTenderProducer hjhCouponTenderProducer;
-    @Autowired
     private AppCouponService appCouponService;
-    @Autowired
-    private CalculateInvestInterestProducer calculateInvestInterestProducer;
-    @Autowired
-    private AmTradeProducer amTradeProducer;
     @Autowired
     private SystemConfig systemConfig;
     @Autowired
     private AuthService authService ;
     @Autowired
     private HjhTenderService hjhTenderService;
-    @Autowired
-    private SensorsDataHjhInvestProducer sensorsDataHjhInvestProducer;
-    @Autowired
-    private UserOperationLogProducer userOperationLogProducer;
     /**
      * @param request
      * @Description 检查加入计划的参数
@@ -176,7 +164,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         userOperationLogEntity.setUserName(user.getUsername());
         userOperationLogEntity.setUserRole(String.valueOf(userInfo.getRoleId()));
         try {
-            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+            commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
         } catch (MQException e) {
             logger.error("保存用户日志失败", e);
         }
@@ -795,7 +783,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
      */
     @Override
     public void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
-        this.sensorsDataHjhInvestProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_HJH_INVEST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
+        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_HJH_INVEST_TOPIC, UUID.randomUUID().toString(), sensorsDataBean), 2);
     }
 
     /**
@@ -932,8 +920,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                             if (result1 == null || result1.isEmpty()) {
                                 jedis.unwatch();
                                 logger.info("计划可用开放额度redis扣除失败：userId:{},planNid{},金额{}元", userId, plan.getPlanNid(), balance);
-                                redisMsgCode = MsgEnum.ERR_AMT_TENDER_INVESTMENT;
-                                throw new CheckException(redisMsgCode);
+                                //redisMsgCode = MsgEnum.ERR_AMT_TENDER_INVESTMENT;
+                                //throw new CheckException(redisMsgCode);
                             } else {
                                 logger.info("加计划redis操作成功userId:{},平台:{},planNid{},计划扣除后可用开放额度redis:{}", userId, request.getPlatform(), plan.getPlanNid(), lastAccount);
                                 // 写队列
@@ -1197,7 +1185,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             //crm投资推送
             try {
                 logger.info("投资成功后,发送CRM投资统计MQ:智投服务订单号:[" + planAccede.getAccedeOrderId() + "].");
-                amTradeProducer.messageSendDelay(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(crmInvestMsgBean)),2);
+                commonProducer.messageSendDelay(new MessageContent(MQConstant.CRM_TENDER_INFO_TOPIC, UUID.randomUUID().toString(), crmInvestMsgBean),2);
             } catch (Exception e) {
                 logger.error("发送CRM消息失败:" + e.getMessage());
             }
@@ -1214,7 +1202,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             try {
                 // 网站累计投资追加
                 // 投资修改mongodb运营数据
-                calculateInvestInterestProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_CALCULATE_INVEST_INTEREST_TOPIC, UUID.randomUUID().toString(), params));
             } catch (MQException e) {
                 e.printStackTrace();
             }
@@ -1243,8 +1231,8 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             params.put("userId", userId);
             //压入消息队列
             try {
-                appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-                        MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                commonProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                        MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), params));
             } catch (MQException e) {
                 e.printStackTrace();
                 logger.error("渠道统计用户累计投资推送消息队列失败！！！");
@@ -1277,7 +1265,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 params.put("account", request.getAccount());
                 params.put("mainTenderNid", request.getMainTenderNid());
                 logger.info("加入计划 开始调用优惠券投资：{} ",JSONObject.toJSONString(params));
-                hjhCouponTenderProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_TENDER_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                commonProducer.messageSend(new MessageContent(MQConstant.HJH_COUPON_TENDER_TOPIC, UUID.randomUUID().toString(), params));
 
             } catch (Exception e) {
                 logger.error("加入计划 优惠券投资出错",e);
@@ -1319,7 +1307,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         params.put("investProjectPeriod", investProjectPeriod);
         //压入消息队列
         try {
-            appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.TENDER_CHANNEL_STATISTICS_DETAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            commonProducer.messageSend(new MessageContent(MQConstant.TENDER_CHANNEL_STATISTICS_DETAIL_TOPIC, UUID.randomUUID().toString(), params));
         } catch (MQException e) {
             e.printStackTrace();
             logger.error("渠道统计用户累计投资推送消息队列失败！！！");

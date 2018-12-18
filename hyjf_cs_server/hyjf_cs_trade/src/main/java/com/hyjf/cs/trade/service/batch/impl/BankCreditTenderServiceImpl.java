@@ -1,18 +1,5 @@
 package com.hyjf.cs.trade.service.batch.impl;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.response.user.EmployeeCustomizeResponse;
 import com.hyjf.am.resquest.trade.CreditTenderRequest;
@@ -30,15 +17,24 @@ import com.hyjf.cs.common.service.BaseServiceImpl;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.CsMessageClient;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
-import com.hyjf.cs.trade.mq.producer.FddProducer;
-import com.hyjf.cs.trade.mq.producer.UtmRegProducer;
 import com.hyjf.cs.trade.service.batch.BankCreditTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * 债转投资异常Service实现类
@@ -56,13 +52,9 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
     @Autowired
     private AmUserClient amUserClient;
     @Autowired
-    private FddProducer fddProducer;
+    private CommonProducer commonProducer;
     @Autowired
     private CsMessageClient amMongoClient;
-    @Autowired
-    private AppChannelStatisticsDetailProducer appChannelStatisticsDetailProducer;
-    @Autowired
-    private UtmRegProducer utmRegProducer;
 
     /**
      * 处理债转投资异常
@@ -214,9 +206,9 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                         params.put("investFlag", checkIsNewUserCanInvest(userId));
 
                                         //推送mq
-                                        this.appChannelStatisticsDetailProducer.messageSend(
+                                        this.commonProducer.messageSend(
                                                 new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-                                                        MQConstant.APP_CHANNEL_STATISTICS_DETAIL_CREDIT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                                                        MQConstant.APP_CHANNEL_STATISTICS_DETAIL_CREDIT_TAG, UUID.randomUUID().toString(), params));
                                     }else{
 
                                         UtmRegVO utmRegVO=this.amUserClient.findUtmRegByUserId(userId);
@@ -235,7 +227,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                             // 首次投标项目期限
                                             params.put("investProjectPeriod", investProjectPeriod);
                                             //首次投标标志位
-                                            this.utmRegProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(params)));
+                                            this.commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC,UUID.randomUUID().toString(), params));
 
                                         }
                                     }
@@ -308,8 +300,8 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
         bean.setTransType(3);
         bean.setTenderType(1);
         try {
-            fddProducer.messageSendDelay(new MessageContent(MQConstant.FDD_TOPIC,
-                    MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)),2);
+            commonProducer.messageSendDelay(new MessageContent(MQConstant.FDD_TOPIC,
+                    MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean),2);
         } catch (MQException e) {
             e.printStackTrace();
             logger.error("法大大发送消息失败...", e);

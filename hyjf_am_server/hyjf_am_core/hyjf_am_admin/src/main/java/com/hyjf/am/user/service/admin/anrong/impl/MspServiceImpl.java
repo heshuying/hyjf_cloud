@@ -60,7 +60,7 @@ public class MspServiceImpl extends BaseServiceImpl implements MspService {
 	 */
 	@Override
 	public int sourceIdIsExists(String record) {
-		if (!GenericValidator.isInt(record) || !NumberUtils.isNumber(record) || Integer.valueOf(record) < 0 || StringUtils.isEmpty(record)) {
+		if (!GenericValidator.isInt(record) || !NumberUtils.isCreatable(record) || Integer.valueOf(record) < 0 || StringUtils.isEmpty(record)) {
 			return 1;
 		}
 

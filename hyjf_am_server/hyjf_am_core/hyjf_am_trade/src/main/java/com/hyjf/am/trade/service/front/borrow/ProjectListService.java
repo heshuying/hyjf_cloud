@@ -10,7 +10,10 @@ import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvest;
 import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
-import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
+import com.hyjf.am.vo.trade.CreditListVO;
+import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
+import com.hyjf.am.vo.trade.WechatHomeProjectListVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 

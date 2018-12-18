@@ -48,7 +48,7 @@ public interface AccountRechargeService extends BaseService {
      * @param request
      * @return
      */
-    boolean updateAccountAfterRecharge(AccountRechargeRequest request);
+    AccountRechargeCustomizeResponse updateAccountAfterRecharge(AccountRechargeRequest request);
 
     List<ParamNameVO> selectParamNameList(String nameClass);
 }

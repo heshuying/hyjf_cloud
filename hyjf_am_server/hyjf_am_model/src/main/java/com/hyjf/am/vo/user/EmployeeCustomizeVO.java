@@ -11,7 +11,7 @@ import java.io.Serializable;
 public class EmployeeCustomizeVO extends BaseVO implements Serializable {
 
 	/**
-	 * serialVersionUID:TODO  变量 
+	 * serialVersionUID: 变量
 	 */
 		
 	private static final long serialVersionUID = -6196389515034236590L;

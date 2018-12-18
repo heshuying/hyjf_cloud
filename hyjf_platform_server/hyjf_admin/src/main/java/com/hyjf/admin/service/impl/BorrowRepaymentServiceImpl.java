@@ -187,7 +187,7 @@ public class BorrowRepaymentServiceImpl implements BorrowRepaymentService {
         boolean retValue = validateMaxLength(itemname, value, maxLength, required);
 
         if (retValue && !StringUtils.isEmpty(value)) {
-            if (!GenericValidator.isInt(value) || !NumberUtils.isNumber(value) || Integer.valueOf(value) < 0) {
+            if (!GenericValidator.isInt(value) || !NumberUtils.isCreatable(value) || Integer.valueOf(value) < 0) {
                 retValue = false;
             }
         }

@@ -18,7 +18,6 @@ import com.hyjf.am.trade.service.admin.exception.BankCreditEndService;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.trade.BankCreditEndVO;
 import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
