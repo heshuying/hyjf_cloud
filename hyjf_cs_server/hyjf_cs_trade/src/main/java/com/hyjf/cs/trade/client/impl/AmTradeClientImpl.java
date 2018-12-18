@@ -6075,4 +6075,58 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return null;
     }
+
+    @Override
+    public BooleanResponse updateHjhPlanJoinOff() {
+        String url = "http://AM-TRADE/hjhPlanSwitchController/batch/hjhPlanJoinOff";
+        BooleanResponse response = restTemplate.getForObject(url, BooleanResponse.class);
+        if (response != null && Response.isSuccess(response)) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public BooleanResponse updateHjhPlanJoinOn() {
+        String url = "http://AM-TRADE/hjhPlanSwitchController/batch/hjhPlanJoinOn";
+        BooleanResponse response = restTemplate.getForObject(url, BooleanResponse.class);
+        if (response != null && Response.isSuccess(response)) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public void autoIssueRecover() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhautoissuerecover/autoissuerecover", String.class);
+    }
+
+    @Override
+    public BooleanResponse updateMatchDays() {
+        BooleanResponse response = restTemplate.getForObject("http://AM-TRADE/am-trade/tenderMatchDaysController/batch/tenderMatchDays", BooleanResponse.class);
+        if (response != null && Response.isSuccess(response)) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public void downloadFile() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/nifa_file_deal/download_file", boolean.class);
+    }
+
+    @Override
+    public void uploadFile() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/nifa_file_deal/upload_file", boolean.class);
+    }
+
+    @Override
+    public void updateRepayInfo() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/late_and_credit/update_repay_info", boolean.class);
+    }
+
+    @Override
+    public void countRechargeMoney() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/countRechargeMoney", String.class);
+    }
 }

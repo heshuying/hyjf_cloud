@@ -213,6 +213,21 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+    @Override
+    public void countRegist() {
+        restTemplate.getForEntity("http://AM-USER/am-user/batch/registrantChangeStatistics", String.class);
+    }
+
+	@Override
+	public void updateEntey() {
+		restTemplate.getForEntity("http://AM-USER//am-user/batch/entryupdate", String.class);
+	}
+
+	@Override
+	public void updateUserLeave() {
+		restTemplate.getForEntity("http://AM-USER/am-user/batch/leaveupdate", String.class);
+	}
+
 	/**
 	 * 保存验证码
 	 * @param mobile

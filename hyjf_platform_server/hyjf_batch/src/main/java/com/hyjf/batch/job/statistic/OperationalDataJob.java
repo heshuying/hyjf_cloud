@@ -18,7 +18,7 @@ public class OperationalDataJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         logger.info("OperationalDataJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/countRechargeMoney", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/countRechargeMoney", String.class);
         logger.info("OperationalDataJob: {} execute end...");
     }
 }

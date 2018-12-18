@@ -23,7 +23,7 @@ public class TenderMatchDaysJob extends BaseJob implements Job {
         logger.info("TenderMatchDaysJob: {} execute...", context.getJobDetail().getKey().getName());
 
         BooleanResponse result = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/tenderMatchDaysController/batch/tenderMatchDays", BooleanResponse.class).getBody();
+                "http://AM-TRADE/am-trade/tenderMatchDays/batch/tenderMatchDays", BooleanResponse.class).getBody();
 
         logger.info("TenderMatchDaysJob execute end...");
     }
