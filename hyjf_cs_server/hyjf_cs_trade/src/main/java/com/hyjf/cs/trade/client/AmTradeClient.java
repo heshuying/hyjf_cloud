@@ -2539,6 +2539,6 @@ public interface AmTradeClient {
 
     void dataInfo();
 
-    void downloadFile();
+    void downloadRedFile();
 }
 

@@ -6186,7 +6186,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-    public void downloadFile() {
-        restTemplate.getForEntity("http://AM-TRADE/am-trade/nifa_file_deal/download_file", boolean.class);
+    public void downloadRedFile() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/downloadFiles", String.class);
     }
 }

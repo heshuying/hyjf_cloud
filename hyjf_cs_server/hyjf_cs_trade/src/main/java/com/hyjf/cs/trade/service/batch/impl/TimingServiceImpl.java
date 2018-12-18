@@ -44,8 +44,8 @@ public class TimingServiceImpl implements TimingService {
     }
 
     @Override
-    public void downloadFile() {
-        amClient.downloadFile();
+    public void downloadRedFile() {
+        amClient.downloadRedFile();
     }
 
     @Override

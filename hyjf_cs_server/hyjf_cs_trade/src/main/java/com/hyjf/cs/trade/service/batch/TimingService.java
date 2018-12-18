@@ -17,7 +17,7 @@ public interface TimingService {
 
     void dataInfo();
 
-    void downloadFile();
+    void downloadRedFile();
 
     void holidays();
 

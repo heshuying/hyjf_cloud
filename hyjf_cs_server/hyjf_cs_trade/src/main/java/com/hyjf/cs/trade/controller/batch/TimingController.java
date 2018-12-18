@@ -75,7 +75,7 @@ public class TimingController {
      */
     @RequestMapping("/downloadFile")
     public String downloadFile() {
-        timingService.downloadFile();
+        timingService.downloadRedFile();
         return "success";
     }
 
