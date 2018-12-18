@@ -30,6 +30,7 @@
 	   <result column="real_account_yes" property="realAccountYes" jdbcType="VARCHAR" />
 	   <result column="all_repay_fee" property="allRepayFee" jdbcType="VARCHAR" />
 	   <result column="batch_service_fee" property="serviceFee" jdbcType="VARCHAR" />
+	   <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
     </resultMap>
 
     <select id="selectRepayList" resultMap="repayListResultMap" parameterType="java.util.Map">
@@ -122,7 +123,8 @@
 		ELSE
 		plan.repay_fee
 		END AS repay_fee,
-		hydbr.repay_fee AS all_repay_fee
+		hydbr.repay_fee AS all_repay_fee,
+		hydb.plan_nid
 		FROM
 		ht_borrow hydb
 		INNER JOIN ht_borrow_info hbi ON hydb.borrow_nid = hbi.borrow_nid

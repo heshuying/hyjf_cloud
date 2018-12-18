@@ -60,6 +60,11 @@ public class RepayListCustomizeVO extends BaseVO {
      */
     private int fddStatus;
 
+    /** 标的PlanNid */
+    private String planNid;
+
+    /** 用来标识当前标的是否有承接 */
+    private Integer listCount;
 
     public int getFddStatus() {
         return fddStatus;
@@ -335,5 +340,21 @@ public class RepayListCustomizeVO extends BaseVO {
 
     public void setRepayYesTime(String repayYesTime) {
         this.repayYesTime = repayYesTime;
+    }
+
+    public String getPlanNid() {
+        return planNid;
+    }
+
+    public void setPlanNid(String planNid) {
+        this.planNid = planNid;
+    }
+
+    public Integer getListCount() {
+        return listCount;
+    }
+
+    public void setListCount(Integer listCount) {
+        this.listCount = listCount;
     }
 }
