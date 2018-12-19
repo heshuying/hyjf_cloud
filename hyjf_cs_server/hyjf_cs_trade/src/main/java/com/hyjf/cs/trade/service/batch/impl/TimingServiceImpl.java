@@ -4,12 +4,14 @@ import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.service.batch.TimingService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 /**
  * @Author: yinhui
  * @Date: 2018/12/18 17:28
  * @Version 1.0
  */
+@Service
 public class TimingServiceImpl implements TimingService {
 
     @Autowired
