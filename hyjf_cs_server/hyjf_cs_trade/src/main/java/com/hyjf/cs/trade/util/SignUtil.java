@@ -77,6 +77,14 @@ public class SignUtil {
             //aems标的详情查询
             AemsBorrowDetailRequestBean bean = (AemsBorrowDetailRequestBean) paramBean;
             sign = bean.getInstCode() + bean.getBorrowNid() + bean.getTimestamp();
+        }else if (("/aems/assetpush/push").equals(methodName)) {
+            //aems资产推送个人-校验接口
+            AemsPushRequestBean bean = (AemsPushRequestBean) paramBean;
+            sign = bean.getTimestamp() + bean.getInstCode() + bean.getAssetType();
+        } else if (("/aems/assetpush/pushcompany").equals(methodName)) {
+            //aems资产推送公司-校验接口
+            AemsPushRequestBean bean = (AemsPushRequestBean) paramBean;
+            sign = bean.getTimestamp() + bean.getInstCode() + bean.getAssetType();
         }
         // TODO AEMS验签修改
         return ApiSignUtil.verifyByRSA("AEMS", paramBean.getChkValue(), sign);

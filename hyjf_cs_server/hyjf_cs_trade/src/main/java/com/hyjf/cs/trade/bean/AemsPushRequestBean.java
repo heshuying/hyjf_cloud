@@ -1,6 +1,6 @@
 package com.hyjf.cs.trade.bean;
 
-import io.swagger.annotations.ApiModelProperty;
+import com.hyjf.am.resquest.assetpush.InfoBean;
 
 import java.util.List;
 
@@ -9,15 +9,18 @@ import java.util.List;
  */
 public class AemsPushRequestBean extends BaseBean {
 
-
-	@ApiModelProperty(value = "结构产品类型")
+	/**
+	 * 结构产品类型
+	 */
     private Integer assetType;
-
-	@ApiModelProperty(value = "资产列表请求明细")
+	/**
+	 * 资产列表请求明细
+	 */
 	private List<AemsPushBean> reqData;
-
-	@ApiModelProperty(value = "商铺信息")
-	private List<AemsInfoBean> riskInfo;
+	/**
+	 * 商铺信息
+	 */
+	private List<InfoBean> riskInfo;
 
 	public List<AemsPushBean> getReqData() {
 		return reqData;
@@ -40,7 +43,7 @@ public class AemsPushRequestBean extends BaseBean {
 	 * @return the riskInfo
 	 */
 		
-	public List<AemsInfoBean> getRiskInfo() {
+	public List<InfoBean> getRiskInfo() {
 		return riskInfo;
 			
 	}
@@ -49,7 +52,7 @@ public class AemsPushRequestBean extends BaseBean {
 	 * @param riskInfo the riskInfo to set
 	 */
 		
-	public void setRiskInfo(List<AemsInfoBean> riskInfo) {
+	public void setRiskInfo(List<InfoBean> riskInfo) {
 		this.riskInfo = riskInfo;
 			
 	}
