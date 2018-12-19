@@ -93,7 +93,7 @@ public class SynBalanceServiceImpl implements SynBalanceService {
             accountList.setBankAwaitInterest(accountNew.getBankAwaitInterest());// 银行待收利息
             accountList.setBankAwait(accountNew.getBankAwait());// 银行待收总额
             accountList.setBankInterestSum(accountNew.getBankInterestSum()); // 银行累计收益
-            accountList.setBankInvestSum(accountNew.getBankInvestSum());// 银行累计投资
+            accountList.setBankInvestSum(accountNew.getBankInvestSum());// 银行累计出借
             accountList.setBankWaitRepay(accountNew.getBankWaitRepay());// 银行待还金额
             accountList.setPlanBalance(accountNew.getPlanBalance());//汇计划账户可用余额
             accountList.setPlanFrost(accountNew.getPlanFrost());

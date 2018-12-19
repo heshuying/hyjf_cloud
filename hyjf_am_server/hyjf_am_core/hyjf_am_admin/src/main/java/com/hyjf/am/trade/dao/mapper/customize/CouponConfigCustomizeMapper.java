@@ -37,7 +37,7 @@ public interface CouponConfigCustomizeMapper {
 
     /**
      * @Author walter.limeng
-     * @Description  根据优惠券投资订单编号，取得优惠券信息
+     * @Description  根据优惠券出借订单编号，取得优惠券信息
      * @Date 12:00 2018/7/17
      * @Param ordId
      * @return 
@@ -48,7 +48,7 @@ public interface CouponConfigCustomizeMapper {
 	 * @Author walter.limeng
 	 * @Description  更新还款期
 	 * @Date 14:15 2018/7/17
-	 * @Param tenderNid 投资订单编号
+	 * @Param tenderNid 出借订单编号
 	 * @Param currentRecoverFlg 0:非还款期，1;还款期
 	 * @Param period 期数
 	 * @return

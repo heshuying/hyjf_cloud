@@ -45,7 +45,7 @@ public class AppUtmReg implements Serializable {
     private Date openAccountTime;
 
     /**
-     * 首次投资时间
+     * 首次出借时间
      *
      * @mbggenerated
      */
@@ -59,21 +59,21 @@ public class AppUtmReg implements Serializable {
     private BigDecimal investAmount;
 
     /**
-     * 首次投资标的的项目类型
+     * 首次出借标的的项目类型
      *
      * @mbggenerated
      */
     private String investProjectType;
 
     /**
-     * 首次投资标的的项目期限
+     * 首次出借标的的项目期限
      *
      * @mbggenerated
      */
     private String investProjectPeriod;
 
     /**
-     * 累积投资金额
+     * 累积出借金额
      *
      * @mbggenerated
      */

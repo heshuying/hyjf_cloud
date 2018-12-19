@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 /**
  * @author libin
- * 第三方投资散标请求组合实体
+ * 第三方出借散标请求组合实体
  * @version AutoTenderComboRequest.java, v0.1 2018年8月27日 上午9:17:44
  */
 public class AutoTenderComboRequest extends BasePage implements Serializable{
@@ -36,7 +36,7 @@ public class AutoTenderComboRequest extends BasePage implements Serializable{
 	private Integer userId;
 	
 	/**
-	 * 投资金额
+	 * 出借金额
 	 */
 	private String account;
 	
@@ -85,7 +85,7 @@ public class AutoTenderComboRequest extends BasePage implements Serializable{
 	/** 响应代码 */
 	private String retCode;
 	
-	/** 授权码:投资人投标成功的授权号 */
+	/** 授权码:出借人投标成功的授权号 */
 	private String authCode;
 	
 	/** 交易日期 */

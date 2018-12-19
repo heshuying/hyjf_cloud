@@ -36,7 +36,7 @@ public class HjhDebtCreditRepay implements Serializable {
     private String creditUserName;
 
     /**
-     * 原始标的投资订单号
+     * 原始标的出借订单号
      *
      * @mbggenerated
      */
@@ -99,7 +99,7 @@ public class HjhDebtCreditRepay implements Serializable {
     private String assignOrderId;
 
     /**
-     * 投资人投标成功的授权号
+     * 出借人投标成功的授权号
      *
      * @mbggenerated
      */
@@ -316,63 +316,63 @@ public class HjhDebtCreditRepay implements Serializable {
     private BigDecimal repayDelayInterest;
 
     /**
-     * 投资人收到的还款本息
+     * 出借人收到的还款本息
      *
      * @mbggenerated
      */
     private BigDecimal receiveAccountYes;
 
     /**
-     * 投资人收到的还款本金
+     * 出借人收到的还款本金
      *
      * @mbggenerated
      */
     private BigDecimal receiveCapitalYes;
 
     /**
-     * 投资人收到的还款利息
+     * 出借人收到的还款利息
      *
      * @mbggenerated
      */
     private BigDecimal receiveInterestYes;
 
     /**
-     * 投资人收取提前还款利息
+     * 出借人收取提前还款利息
      *
      * @mbggenerated
      */
     private BigDecimal receiveAdvanceInterest;
 
     /**
-     * 投资人收取逾期利息
+     * 出借人收取逾期利息
      *
      * @mbggenerated
      */
     private BigDecimal receiveLateInterest;
 
     /**
-     * 投资人收取延期利息
+     * 出借人收取延期利息
      *
      * @mbggenerated
      */
     private BigDecimal receiveDelayInterest;
 
     /**
-     * 投资人已收取提前还款利息
+     * 出借人已收取提前还款利息
      *
      * @mbggenerated
      */
     private BigDecimal receiveAdvanceInterestYes;
 
     /**
-     * 投资人已收取逾期利息
+     * 出借人已收取逾期利息
      *
      * @mbggenerated
      */
     private BigDecimal receiveLateInterestYes;
 
     /**
-     * 投资人已收取延期利息
+     * 出借人已收取延期利息
      *
      * @mbggenerated
      */

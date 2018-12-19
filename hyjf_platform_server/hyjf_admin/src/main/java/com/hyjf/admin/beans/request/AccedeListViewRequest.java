@@ -55,7 +55,7 @@ public class AccedeListViewRequest extends BaseRequest implements Serializable{
 	@ApiModelProperty(value = "匹配期查询")
 	private String matchDatesSrch;
 	
-	@ApiModelProperty(value = "投资笔数查询")
+	@ApiModelProperty(value = "出借笔数查询")
 	private String investCountsSrch;
 
 	@ApiModelProperty(value = "是否具有组织架构查看权限")

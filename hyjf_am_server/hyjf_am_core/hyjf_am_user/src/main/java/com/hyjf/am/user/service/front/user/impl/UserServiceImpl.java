@@ -472,9 +472,9 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
             //getAddress(loginIp, userInfo);
         }
         userInfo.setUserId(userId);
-        // 默认投资人角色
+        // 默认出借人角色
         if (instType!=null&&instType == 0) {
-            //用户角色1投资人2借款人3垫付机构
+            //用户角色1出借人2借款人3垫付机构
             userInfo.setRoleId(2);
             //借款人类型 1：内部机构 2：外部机构
             userInfo.setBorrowerType(2);
@@ -734,7 +734,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
             hjhUserAuth.setAutoCreditTime(GetDate.getNowTime10());
             hjhUserAuth.setAutoCreateTime(GetDate.getNowTime10());
         }else if(ClientConstants.TXCODE_CREDIT_AUTH_QUERY.equals(txcode)){
-            //根据银行查询投资人签约状态
+            //根据银行查询出借人签约状态
             if(ClientConstants.QUERY_TYPE_1.equals(bean.getType())){
                 hjhUserAuth.setAutoInvesStatus(1);
                 hjhUserAuth.setAutoOrderId(bean.getOrderId());
@@ -1131,7 +1131,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     }
 
     /**
-     * 更新渠道用户首次投资信息
+     * 更新渠道用户首次出借信息
      *
      * @param bean
      * @return
@@ -1155,11 +1155,11 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         boolean result = false;
         if (Validator.isNotNull(userInfo) && Validator.isNotNull(userInfo.getVipId())){
             VipUserTender vt = new VipUserTender();
-            // 投资用户编号
+            // 出借用户编号
             vt.setUserId(userId);
-            // 投资用户vip编号
+            // 出借用户vip编号
             vt.setVipId(userInfo.getVipId());
-            // 投资编号
+            // 出借编号
             vt.setTenderNid(orderId);
             vt.setSumVipValue(userInfo.getVipValue());
             vt.setCreateTime(GetDate.getDate(nowTime));
@@ -1179,7 +1179,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     }
 
     /**
-     * 查询用户投资次数
+     * 查询用户出借次数
      *
      * @param userId
      * @return

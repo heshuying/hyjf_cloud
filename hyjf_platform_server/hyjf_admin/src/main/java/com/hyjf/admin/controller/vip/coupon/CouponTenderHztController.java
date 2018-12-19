@@ -99,7 +99,7 @@ public class CouponTenderHztController extends BaseController {
         String investTotal=this.couponTenderHztService.queryInvestTotalHzt(couponTenderRequest);
         String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         String[] titles = new String[] {"序号", "订单号", "用户名","优惠券id","优惠券类型编号",
-                "优惠券类型","面值","来源","内容","项目编号","投资金额","项目期限","年化收益" ,"操作平台" ,"使用时间" };
+                "优惠券类型","面值","来源","内容","项目编号","出借金额","项目期限","出借利率" ,"操作平台" ,"使用时间" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
 

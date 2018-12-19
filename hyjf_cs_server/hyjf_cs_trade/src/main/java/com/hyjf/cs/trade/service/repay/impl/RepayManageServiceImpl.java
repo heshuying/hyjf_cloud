@@ -624,7 +624,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
                 String borrowAprString = StringUtils.isEmpty(recordList.get(0).getBorrowApr())?"0.00":recordList.get(0).getBorrowApr().replace("%", "");
                 BigDecimal borrowApr = new BigDecimal(borrowAprString);
-                //投资金额
+                //出借金额
                 String accountString = StringUtils.isEmpty(recordList.get(0).getAccount())?"0.00":recordList.get(0).getAccount().replace(",", "");
                 BigDecimal account = new BigDecimal(accountString);
                 // 周期
@@ -635,10 +635,10 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                 borrowPeriodString = m.replaceAll("").trim();
                 Integer borrowPeriod = Integer.valueOf(borrowPeriodString);
                 if (org.apache.commons.lang.StringUtils.equals("endday", borrowStyle)){
-                    // 还款方式为”按天计息，到期还本还息“：预期收益=投资金额*年化收益÷365*锁定期；
+                    // 还款方式为”按天计息，到期还本还息“：预期收益=出借金额*年化收益÷365*锁定期；
                     earnings = DuePrincipalAndInterestUtils.getDayInterest(account, borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2, BigDecimal.ROUND_DOWN);
                 } else {
-                    // 还款方式为”按月计息，到期还本还息“：预期收益=投资金额*年化收益÷12*月数；
+                    // 还款方式为”按月计息，到期还本还息“：预期收益=出借金额*年化收益÷12*月数；
                     earnings = DuePrincipalAndInterestUtils.getMonthInterest(account, borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2, BigDecimal.ROUND_DOWN);
 
                 }

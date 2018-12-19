@@ -23,7 +23,7 @@ public interface AmUserClient {
 	UserVO findUserByMobile(final String mobile);
 
 	/**
-	 * 投资人按照年龄分布
+	 * 出借人按照年龄分布
 	 *
 	 * @param date 上个月的最后一天
 	 * @param firstAge  年龄下限
@@ -41,7 +41,7 @@ public interface AmUserClient {
 	List<OperationReportJobVO> getAgeCount(List<OperationReportJobVO> list);
 
 	/**
-	 * 十大投资人拆分
+	 * 十大出借人拆分
 	 *
 	 * @param list 多个用户id
 	 * @return
@@ -147,7 +147,7 @@ public interface AmUserClient {
 	int countNewUserTotal(Integer userId);
 
 	/**
-	 * 更新用户首次投资信息
+	 * 更新用户首次出借信息
 	 * @param params
 	 */
 	Integer updateFirstUtmReg(HashMap<String,Object> params);

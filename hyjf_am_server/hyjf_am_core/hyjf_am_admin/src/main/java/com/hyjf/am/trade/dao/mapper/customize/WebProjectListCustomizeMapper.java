@@ -24,14 +24,14 @@ import java.util.Map;
 public interface WebProjectListCustomizeMapper {
 
     /**
-     * 获取可投资项目列表
+     * 获取可出借项目列表
      * @param params
      * @return
      */
     List<WebProjectListCustomize> searchProjectList(Map<String, Object> params);
 
     /**
-     * 获取可投资项目列表count
+     * 获取可出借项目列表count
      * @param params
      * @return
      */
@@ -87,14 +87,14 @@ public interface WebProjectListCustomizeMapper {
     // ---------------------------------- app start --------------------------------------------
 
     /**
-     * 获取可投资项目列表
+     * 获取可出借项目列表
      * @param params
      * @return
      */
     List<AppProjectListCustomize> searchAppProjectList(Map<String, Object> params);
 
     /**
-     * 获取可投资项目列表count
+     * 获取可出借项目列表count
      * @param params
      * @return
      */

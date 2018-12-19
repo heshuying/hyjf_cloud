@@ -7,7 +7,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
- * 债转投资异常处理定时
+ * 债转出借异常处理定时
  * @author jun
  * @since 20180619	
  */

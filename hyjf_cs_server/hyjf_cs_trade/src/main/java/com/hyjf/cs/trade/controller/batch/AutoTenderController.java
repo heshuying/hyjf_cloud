@@ -16,7 +16,7 @@ import springfox.documentation.annotations.ApiIgnore;
 import java.util.List;
 
 /**
- * 自动投资
+ * 自动出借
  *
  * @author liubin
  * @version AutoTenderController, v0.1 2018/6/28 13:59
@@ -30,46 +30,46 @@ public class AutoTenderController extends BaseTradeController {
 
     @RequestMapping("/autotender")
     public BooleanResponse AutoTender() {
-        // add 汇计划三期 0点前后停止自动投资设定 liubin 20180515 start
+        // add 汇计划三期 0点前后停止自动出借设定 liubin 20180515 start
         if (!GetDate.belongCalendar(GetDate.getShortTimeDate(),
                 GetDate.getDateFromShortTime("00:30"),
                 GetDate.getDateFromShortTime("23:30"))
                 ) {
-            logger.info("汇计划自动投资任务 任务时间外...");
+            logger.info("汇计划自动出借任务 任务时间外...");
             return new BooleanResponse(true);
         }
-        // add 汇计划三期 0点前后停止自动投资设定 liubin 20180515 end
+        // add 汇计划三期 0点前后停止自动出借设定 liubin 20180515 end
 
-        logger.info("自动投资任务开始start...");
+        logger.info("自动出借任务开始start...");
         boolean flag = false;
 
-        // 取得自动投资用加入计划列表（改用消息队列要防止重复拉去）
+        // 取得自动出借用加入计划列表（改用消息队列要防止重复拉去）
         List<HjhAccedeVO> hjhAccedes = this.autoTenderService.selectPlanJoinList();
         if (hjhAccedes == null) {
-            logger.error("汇计划自动投资任务 结束... （hjhAccedes=null） ");
+            logger.error("汇计划自动出借任务 结束... （hjhAccedes=null） ");
             return new BooleanResponse(flag);
         }
 
-        // 循环每笔加入计划订单，进行计划投资
-        logger.info("汇计划自动投资任务 取得加入计划订单数:" + hjhAccedes.size());
+        // 循环每笔加入计划订单，进行计划出借
+        logger.info("汇计划自动出借任务 取得加入计划订单数:" + hjhAccedes.size());
         for (HjhAccedeVO hjhAccede : hjhAccedes) {
             String logMsgHeader = "======计划：" + hjhAccede.getPlanNid()
                     + "的计划订单号：" + hjhAccede.getAccedeOrderId();
             try {
-                logger.info(logMsgHeader + " 计划自动投资开始。");
-                // 汇计划加入订单 自动投资/复投
+                logger.info(logMsgHeader + " 计划自动出借开始。");
+                // 汇计划加入订单 自动出借/复投
                 flag = this.autoTenderService.autoTenderForOneAccede(hjhAccede);
                 if (!flag) {
-                    logger.info(logMsgHeader + " 计划自动投资结束。投资失败！！！");
+                    logger.info(logMsgHeader + " 计划自动出借结束。出借失败！！！");
                 } else {
-                    logger.info(logMsgHeader + " 计划自动投资结束。投资成功！");
+                    logger.info(logMsgHeader + " 计划自动出借结束。投标成功！");
                 }
             } catch (Exception e) {
-                logger.error(logMsgHeader + " 计划自动投资结束。投资异常！！！");
+                logger.error(logMsgHeader + " 计划自动出借结束。出借异常！！！");
                 e.printStackTrace();
             }
         }
-        logger.info("自动投资任务结束end...");
+        logger.info("自动出借任务结束end...");
         return new BooleanResponse(flag);
     }
 }

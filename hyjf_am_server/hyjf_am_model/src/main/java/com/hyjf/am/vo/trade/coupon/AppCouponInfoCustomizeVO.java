@@ -25,7 +25,7 @@ public class AppCouponInfoCustomizeVO implements Serializable {
 	// 优惠券编号
 	private String couponCode;
 
-	// 真实资金投资订单号
+	// 真实资金出借订单号
 	private String realOrderId;
 
 	// 待收本金

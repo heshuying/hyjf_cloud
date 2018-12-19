@@ -10,7 +10,7 @@ import com.sensorsdata.analytics.javasdk.exceptions.InvalidArgumentException;
 import java.io.IOException;
 
 /**
- * 神策数据统计:散标投资相关Service
+ * 神策数据统计:散标出借相关Service
  *
  * @author liuyang
  * @version SensorsDataHztInvestService, v0.1 2018/10/23 16:16

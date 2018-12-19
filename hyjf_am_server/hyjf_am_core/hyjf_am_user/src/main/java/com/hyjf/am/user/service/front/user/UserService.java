@@ -144,7 +144,7 @@ public interface UserService extends BaseService {
     UtmReg findUtmRegByUserId(Integer userId);
 
     /**
-     * 更新渠道用户首次投资信息
+     * 更新渠道用户首次出借信息
      * @param bean
      * @return
      */
@@ -157,7 +157,7 @@ public interface UserService extends BaseService {
 	boolean insertVipUserTender(JSONObject para);
 
 	/**
-	 * 查询用户投资次数
+	 * 查询用户出借次数
 	 * @param userId
 	 * @return
 	 */

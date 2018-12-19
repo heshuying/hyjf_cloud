@@ -40,7 +40,7 @@ public class CouponUserBeanRequest extends BasePage implements Serializable {
     @ApiModelProperty(value = "优惠券的使用项目类别")
     private String projectType;
 
-    @ApiModelProperty(value = "投资金额")
+    @ApiModelProperty(value = "出借金额")
     private String tenderQuota;
 
     @ApiModelProperty(value = "项目期限类别")

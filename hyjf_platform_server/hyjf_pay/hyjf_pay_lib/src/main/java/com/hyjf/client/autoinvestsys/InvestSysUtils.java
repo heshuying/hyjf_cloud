@@ -12,22 +12,22 @@ import java.util.concurrent.Executors;
 @Service
 public class InvestSysUtils {
 
-	//  自动投资插入同步crm接口
+	//  自动出借插入同步crm接口
 	private static final String AUTO_INSERT_INVEST_SYS = "/debtplanaccede/insertDebtAction.json";
 	
-	//  自动投资更新同步crm接口
+	//  自动出借更新同步crm接口
 	private static final String AUTO_UPDATE_INVEST_SYS = "/debtplanaccede/updateDebtAction.json";
-	//银行存管插入投资插入同步crm接口
+	//银行存管插入出借插入同步crm接口
 	private static final String AUTO_UPDATE_BORROWTENDER_SYS = "/borrowtender/insertInfoAction";
 	
 	
 	/**
-	 * 银行存管插入投资插入同步crm接口
+	 * 银行存管插入出借插入同步crm接口
 	 * add by cwyang 2017-5-18
 	 */
 	public static void insertBorrowTenderSys(String id) {
 		Map<String, String> params = new HashMap<String, String>();
-		// 需要保存的计划投资对象转json字符串
+		// 需要保存的计划出借对象转json字符串
 		params.put("id", id);
 		// 请求路径 todo
 		// String requestUrl = PropUtils.getSystem(PropertiesConstants.HYJF_CRM_URL) + AUTO_UPDATE_BORROWTENDER_SYS;
@@ -35,11 +35,11 @@ public class InvestSysUtils {
 		InvestSysUtils.noRetPost(requestUrl,params);
 	}
 	/**
-	 * 自动投资插入同步crm接口
+	 * 自动出借插入同步crm接口
 	 */
 	public static void insertInvestSys(String debtinfo) {
 		Map<String, String> params = new HashMap<String, String>();
-		// 需要保存的计划投资对象转json字符串
+		// 需要保存的计划出借对象转json字符串
 		params.put("debtinfo", debtinfo);
 		// 请求路径 todo
 		//String requestUrl = PropUtils.getSystem(PropertiesConstants.HYJF_CRM_URL) + AUTO_INSERT_INVEST_SYS;
@@ -47,11 +47,11 @@ public class InvestSysUtils {
 		InvestSysUtils.noRetPost(requestUrl,params);
 	}
 	/**
-	 * 自动投资更新同步crm接口
+	 * 自动出借更新同步crm接口
 	 */
 	public static void updateInvestSys(String debtinfo) {
 		Map<String, String> params = new HashMap<String, String>();
-		// 需要保存的计划投资对象转json字符串
+		// 需要保存的计划出借对象转json字符串
 		params.put("debtinfo", debtinfo);
 		// 请求路径 todo
 		//String requestUrl = PropUtils.getSystem(PropertiesConstants.HYJF_CRM_URL) + AUTO_UPDATE_INVEST_SYS;

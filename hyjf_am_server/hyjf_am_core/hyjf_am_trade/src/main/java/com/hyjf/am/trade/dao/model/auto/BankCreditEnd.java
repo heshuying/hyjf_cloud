@@ -56,14 +56,14 @@ public class BankCreditEnd implements Serializable {
     private String username;
 
     /**
-     * 投资人用户ID
+     * 出借人用户ID
      *
      * @mbggenerated
      */
     private Integer tenderUserId;
 
     /**
-     * 投资人用户名
+     * 出借人用户名
      *
      * @mbggenerated
      */
@@ -77,7 +77,7 @@ public class BankCreditEnd implements Serializable {
     private String accountId;
 
     /**
-     * 投资人电子账号
+     * 出借人电子账号
      *
      * @mbggenerated
      */
@@ -91,7 +91,7 @@ public class BankCreditEnd implements Serializable {
     private String orderId;
 
     /**
-     * 原始投资订单号
+     * 原始出借订单号
      *
      * @mbggenerated
      */

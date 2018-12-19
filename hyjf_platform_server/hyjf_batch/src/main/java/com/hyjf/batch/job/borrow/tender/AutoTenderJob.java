@@ -11,7 +11,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
- * 自动投资
+ * 自动出借
  * @author liubin
  * @version AutoTenderJob, v0.1 2018/6/28 13:56
  */

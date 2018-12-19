@@ -43,7 +43,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version AutoPlusController, v0.1 2018/6/11 14:20
  */
-@Api(value = "app端-用户授权自动投资自动债转接口",tags = "app端-用户授权自动投资自动债转接口")
+@Api(value = "app端-用户授权自动出借自动债转接口",tags = "app端-用户授权自动出借自动债转接口")
 @RestController
 @RequestMapping("/hyjf-app/bank/user/autoplus")
 public class APPAutoPlusController extends BaseUserController {
@@ -199,13 +199,13 @@ public class APPAutoPlusController extends BaseUserController {
     }
 
     /**
-     * 用户授权自动投资
+     * 用户授权自动出借
      *
      * @param request
      * @param
      * @return
      */
-    @ApiOperation(value = "用户授权自动投资", notes = "用户授权自动投资")
+    @ApiOperation(value = "用户授权自动出借", notes = "用户授权自动出借")
     @PostMapping(value = "/userAuthInves")
     public AppResult userAuthInves(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "token") String token,@RequestHeader(value = "sign") String sign,HttpServletRequest request) {
         AppResult<Object> result = new AppResult<>();
@@ -231,11 +231,11 @@ public class APPAutoPlusController extends BaseUserController {
     }
 
     /**
-     * 用户授权自动投资异步回调
+     * 用户授权自动出借异步回调
      * @param bean
      * @return
      */
-    @ApiOperation(value = "用户授权自动投资异步回调", notes = "用户授权自动投资异步回调")
+    @ApiOperation(value = "用户授权自动出借异步回调", notes = "用户授权自动出借异步回调")
     @PostMapping(value = "/userAuthInvesBgreturn")
     public String userAuthInvesBgreturn(@RequestBody BankCallBean bean) {
         logger.info("授权异步回调");

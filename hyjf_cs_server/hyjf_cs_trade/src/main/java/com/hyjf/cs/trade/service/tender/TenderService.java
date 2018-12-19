@@ -16,7 +16,7 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 public interface TenderService extends BaseTradeService{
 	
 	/**
-	 * 校验自动投资参数
+	 * 校验自动出借参数
 	 * 
 	 * @param borrowNid
 	 * @param account
@@ -35,9 +35,9 @@ public interface TenderService extends BaseTradeService{
 	 * @param userId
 	 *            用户id
 	 * @param account
-	 *            投资金额
+	 *            出借金额
 	 * @param ip
-	 *            投资人ip
+	 *            出借人ip
 	 * @param couponGrantId 
 	 * @param tenderUserName 
 	 * @return 操作是否成功
@@ -46,7 +46,7 @@ public interface TenderService extends BaseTradeService{
 	public boolean updateTenderLog(AutoTenderComboRequest autoTenderComboRequest);
 	
 	/**
-	 * 投资失败后,投标申请撤销
+	 * 出借失败后,投标申请撤销
 	 * 
 	 * @param borrowUserId
 	 * @param investUserId
@@ -57,7 +57,7 @@ public interface TenderService extends BaseTradeService{
 	public boolean bidCancel(int investUserId, String productId, String orgOrderId, String txAmount) throws Exception;
 	
 	/**
-	 * 删除投资记录临时表
+	 * 删除出借记录临时表
 	 * 
 	 * @param userId
 	 * @param ordId

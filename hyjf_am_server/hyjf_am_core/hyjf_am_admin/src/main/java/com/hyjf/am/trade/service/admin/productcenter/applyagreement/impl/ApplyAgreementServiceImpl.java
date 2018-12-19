@@ -226,7 +226,7 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
     }
 
     /**
-     * 获取用户投资协议
+     * 获取用户出借协议
      *
      * @param borrowNid
      * @return
@@ -237,7 +237,7 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
     }
 
     /**
-     * 获取用户投资协议分期
+     * 获取用户出借协议分期
      *
      * @param nid
      * @return
@@ -265,7 +265,7 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
         return list;
     }
     /**
-     * 获取用户投资协议分期
+     * 获取用户出借协议分期
      *
      * @param nid
      * @return

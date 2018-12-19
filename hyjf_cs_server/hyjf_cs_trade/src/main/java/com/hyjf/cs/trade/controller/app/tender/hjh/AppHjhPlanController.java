@@ -94,7 +94,7 @@ public class AppHjhPlanController extends BaseTradeController {
         return result;
     }
 
-    @ApiOperation(value = "APP端获取计划投资信息", notes = "APP端获取计划投资信息")
+    @ApiOperation(value = "APP端获取计划出借信息", notes = "APP端获取计划出借信息")
     @PostMapping(value = "/investInfo", produces = "application/json; charset=utf-8")
     public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "userId", required = true) Integer userId, @RequestBody @Valid TenderRequest tender) {
         tender.setUserId(userId);

@@ -166,7 +166,7 @@ public class ChangeLogController extends BaseController {
                     }
                     // 用户角色
                     else if (celLength == 4) {
-                        cell.setCellValue(changeLog.getRole()==null?"":changeLog.getRole()==1?"投资人":"借款人");
+                        cell.setCellValue(changeLog.getRole()==null?"":changeLog.getRole()==1?"出借人":"借款人");
                     }
                     // 用户属性
                     else if (celLength == 5) {
@@ -301,7 +301,7 @@ public class ChangeLogController extends BaseController {
             @Override
             public String format(Object object) {
                 Integer role = (Integer) object;
-                return role==null?"":role==1?"投资人":"借款人";
+                return role==null?"":role==1?"出借人":"借款人";
             }
         };
 

@@ -88,7 +88,7 @@ public interface WebUserInvestListCustomizeMapper {
 	/**
 	 * 
 	 * @method: selectUserDebtInvestList
-	 * @description: 	查询专属标投资信息		
+	 * @description: 	查询专属标出借信息
 	 *  @param params
 	 *  @return 
 	 * @return: List<WebUserInvestListCustomize>

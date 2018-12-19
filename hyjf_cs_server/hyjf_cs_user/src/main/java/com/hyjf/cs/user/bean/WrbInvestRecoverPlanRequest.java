@@ -9,7 +9,7 @@ public class WrbInvestRecoverPlanRequest {
     /** 平台用户id */
     private String pf_user_id;
 
-    /** 投资记录id */
+    /** 出借记录id */
     private String invest_record_id;
 
     /** 项目id */

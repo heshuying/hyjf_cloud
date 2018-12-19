@@ -99,7 +99,7 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     private static String REGIST_ACTIVITY_ID = "";
 //    public static final String REGIST_ACTIVITY_ID = PropUtils.getSystem("hyjf.activity.regist.id");
 
-    /** 投资满1000活动编号 */
+    /** 出借满1000活动编号 */
 //    @Value("${hyjf.activity.invest.id}")
     private static String INVEST_ACTIVITY_ID = "";
 //    public static final String INVEST_ACTIVITY_ID = PropUtils.getSystem("hyjf.activity.invest.id");
@@ -500,9 +500,9 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
 
     public static final String TRADE_TRANSFER_NM = "用户转账";
 
-    public static final String TRADE_TGTC_NM = "投资推广提成";
+    public static final String TRADE_TGTC_NM = "出借推广提成";
 
-    public static final String TRADE_TGTC_REMARK = "投资推广提成";
+    public static final String TRADE_TGTC_REMARK = "出借推广提成";
 
     // 充值手续费转账
     public static final String TRADE_RECHARGE_FEE_TRANSFER = "RECHARGE_FEE_TRANSFER";
@@ -561,7 +561,7 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /** 更换手机号-绑定新手机号 */
     public static final String PARAM_TPL_BDYSJH = "TPL_BDYSJH";
 
-    /** 资金相关-优惠券投资成功 */
+    /** 资金相关-优惠券投标成功 */
     public static final String PARAM_TPL_COUPON_TENDER = "TPL_COUPON_TENDER";
     
     /** 优惠券相关-注册送188元新手红包 */
@@ -585,16 +585,16 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /** 资金相关-提现成功 */
     public static final String PARAM_TPL_TIXIAN_SUCCESS = "TPL_TIXIAN_SUCCESS";
 
-    /** 资金相关-投资成功 */
+    /** 资金相关-投标成功 */
     public static final String PARAM_TPL_TOUZI_SUCCESS = "TPL_TOUZI_SUCCESS";
     
-    /** 资金相关-汇计划投资成功 */
+    /** 资金相关-汇计划投标成功 */
     public static final String PARAM_TPL_TOUZI_HJH_SUCCESS = "TPL_TOUZI_HJH_SUCCESS";
     
-    /** 资金相关-汇计划投资成功 */
+    /** 资金相关-汇计划投标成功 */
     public static final String PARAM_TPL_REPAY_HJH_SUCCESS = "TPL_REPAY_HJH_SUCCESS";
     
-    /**资金相关-分期投资成功*/
+    /**资金相关-分期投标成功*/
     public static final String PARAM_TPL_TOUZI_PLAN_SUCCESS = "TPL_TOUZI_PLAN_SUCCESS";
 
     /** 资金相关-收到还款 */
@@ -681,7 +681,7 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /** 还款完成提醒-还款完成 */
     public static final String PARAM_TPL_HUANKUAN_SUCCESS = "TPL_HUANKUAN_SUCCESS";
 
-    /** 关联资产不足，手动投资警报邮件模板编码 */
+    /** 关联资产不足，手动出借警报邮件模板编码 */
     public static final String PARAM_TPL_JYTZ_HTJ_SDTZ = "JYTZ_HTJ_SDTZ";
 
     /** 计划清算未完成，报警模版 */
@@ -693,7 +693,7 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /** 计划清算完成，即将还款 短信模板编码 */
     public static final String PARAM_TPL_JYTZ_HTJ_JJHK = "JYTZ_HTJ_JJHK";
 
-    /** 关联资产不足，手动投资警报邮件模板编码 */
+    /** 关联资产不足，手动出借警报邮件模板编码 */
     public static final String EMAILPARAM_TPL_JYTZ_HTJ_SDTZ = "JYTZ_HTJ_SDTZ";
 
     /** 资产部分募集警报 邮件模板编码 */
@@ -711,7 +711,7 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /** 汇计划自动发标修复 */
     public static final String MAILSENDFORMAILINGADDRESSMSG = "TPL_EMAIL_AUTOISSUERECOVER";
 
-    /** 计划订单状态由投资成功变为锁定中，发送此邮件提醒用户投资成功 */
+    /** 计划订单状态由投标成功变为锁定中，发送此邮件提醒用户投标成功 */
     public static final String EMAITPL_EMAIL_LOCK_REPAY = "TPL_EMAIL_LOCK_REPAY";
 
     /** 汇添金计划进入锁定中 */
@@ -774,7 +774,7 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /** 汇天利 借款手续费率 */
     public static final String HTL_BORROWERRATE = "0.30";
 
-    /** 汇天利 最大投资手续费率 */
+    /** 汇天利 最大出借手续费率 */
     public static final String HTL_MAXTENDERRATE = "0.00";
     
     /** 计划加入协议邮件模板 */
@@ -873,7 +873,7 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     public static final String UTF8 = "UTF-8";
 
     /** 合同生成配置 */
-    /** 投资合同生成配置 */
+    /** 出借合同生成配置 */
     public static final String TENDER_CONTRACT = "Tender";
     
     
@@ -884,7 +884,7 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /** 合同生成ftl配置 */
     public static final String CONTRACT_FTL_PATH = "hyjf.contract.ftlpath";
 
-    /** 投资合同生成ftl名称 */
+    /** 出借合同生成ftl名称 */
     public static final String CREDIT_CONTRACT_FTL_NAME = "credit.contract.ftl.name";
 
     /** 债转生成ftl名称 */
@@ -931,14 +931,14 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
 
     public static final String TRADE_COUPON_DJ = "代金券回款";
 
-    /** 汇添金投资计划服务协议生成配置 */
+    /** 汇添金出借计划服务协议生成配置 */
     public static final String HTJ_TENDER_CONTRACT = "HtjTender";
 
     /** 汇添金我的汇添金内服务协议生成配置 */
     public static final String HTJ_INVEST_CONTRACT = "HtjInvest";
     
     
-    /** 汇添金投资计划服务协议生成ftl名称 */
+    /** 汇添金出借计划服务协议生成ftl名称 */
     public static final String HTJ_TENDER_CONTRACT_FTL_NAME = "htj.tender.contract.ftl.name";
 
     /** 汇添金我的汇添金内服务协议生成ftl名称 */
@@ -1022,10 +1022,10 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /** 消息推送模板-提现失败 */
     public static final String JYTZ_CASH_FAILED = "JYTZ_CASH_FAILED";
 
-    /** 消息推送模板-投资成功 */
+    /** 消息推送模板-投标成功 */
     public static final String JYTZ_TPL_TOUZI_SUCCESS = "JYTZ_TPL_TOUZI_SUCCESS";
     
-    /** 消息推送模板-汇计划自动投资成功 */
+    /** 消息推送模板-汇计划自动投标成功 */
     public static final String JYTZ_PLAN_TOUZI_SUCCESS = "JYTZ_PLAN_TOUZI_SUCCESS";
     
     /**计划还款申请全部成功*/
@@ -1219,7 +1219,7 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /** 消息推送-消息模版-后续动作,2指定原生页面-原生页面类型-交易记录 */
     public static final int MSG_PUSH_NATUREURLS_4 = 4;
 
-    /** 消息推送-消息模版-后续动作,2指定原生页面-原生页面类型-我的投资 */
+    /** 消息推送-消息模版-后续动作,2指定原生页面-原生页面类型-我的出借 */
     public static final int MSG_PUSH_NATUREURLS_5 = 5;
 
     /** 消息推送模板-成功购买VIP，并获得VIP资格 */
@@ -1330,7 +1330,7 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /**银行账户交易状态  交易处理中*/
     public static final Integer BANK_MER_TRANS_UNDERWAY = 2;
     
-    /**************************************银行存管 投资校验返回错误码****************************/
+    /**************************************银行存管 出借校验返回错误码****************************/
     /**未开户*/
     public static final String BANK_TENDER_RETURN_OPENACCOUNT_FAIL = "708";
     /**未设置交易密码*/
@@ -1386,11 +1386,11 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     public static final String HJH_PROCESS_BF = "bf";
     /** 计划订单-自动投标/复投的标的放款" */
     public static final String HJH_PROCESS_C = "c";
-    /** 计划订单-自动承接清算出的债权（投资） */
+    /** 计划订单-自动承接清算出的债权（出借） */
     public static final String HJH_PROCESS_D = "d";
     /** 计划订单-自动承接清算出的债权（复投） */
     public static final String HJH_PROCESS_DF = "df";
-    /** 计划订单-自动投资/复投的订单撤销 */
+    /** 计划订单-自动出借/复投的订单撤销 */
     public static final String HJH_PROCESS_E = "e";
     /** 计划订单进入锁定期 */
     public static final String HJH_PROCESS_A1 = "a1";
@@ -1408,13 +1408,13 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /** 汇计划一个计划订单的连续承接失败次数容忍次数 */
 	public static final int HJH_ASSIGN_SERIAL_FAILE_COUNT = 5;
 
-    /** 汇计划可以投资的最小金额 */
+    /** 汇计划可以出借的最小金额 */
 	public static final BigDecimal HJH_TENDER_MIN_ACCOUNT = BigDecimal.valueOf(0.01).setScale(2, BigDecimal.ROUND_DOWN);
 
     /** 汇计划可以复投的最小金额 */
 	public static final BigDecimal HJH_RETENDER_MIN_ACCOUNT = BigDecimal.valueOf(10).setScale(2, BigDecimal.ROUND_DOWN);
 
-    /** 投资页面的阈值 - 目前固定1000元 */
+    /** 出借页面的阈值 - 目前固定1000元 */
 	public static final String TENDER_THRESHOLD = "1000";
 
 
@@ -1444,7 +1444,7 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
 
     /**  风车理财渠道编号 */
     public static final String WRB_CHANNEL_CODE = "wrb";
-    /**  风车理财投资标记 */
+    /**  风车理财出借标记 */
     public static final String TENDER_FROM_TAG = "wrb";
     /** 缴费授权状态  */
     public static final String PAYMENT_AUTH_STATUS = "paymentAuthStatus";
@@ -1462,11 +1462,11 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
 
 
     /**
-     * 优惠券投资  投资类别：1：直投类，2：汇添金 3：汇计划
+     * 优惠券出借  出借类别：1：直投类，2：汇添金 3：汇计划
      */
     public static final Integer COUPON_TENDER_TYPE_HJH = 3;
     /**
-     * 优惠券投资  投资类别：1：直投类，2：汇添金 3：汇计划
+     * 优惠券出借  出借类别：1：直投类，2：汇添金 3：汇计划
      */
     public static final Integer COUPON_TENDER_TYPE_HZT = 1;
 

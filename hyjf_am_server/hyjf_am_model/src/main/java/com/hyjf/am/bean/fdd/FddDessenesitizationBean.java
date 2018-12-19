@@ -21,7 +21,7 @@ public class FddDessenesitizationBean implements Serializable{
     private String downloadUrl;
     /**合同编号*/
     private String ordid;
-    /**判断投资人/承接人是否为企业用户*/
+    /**判断出借人/承接人是否为企业用户*/
     private boolean isTenderCompany;
     /**出让人是否为企业户*/
     private boolean isCreditCompany;

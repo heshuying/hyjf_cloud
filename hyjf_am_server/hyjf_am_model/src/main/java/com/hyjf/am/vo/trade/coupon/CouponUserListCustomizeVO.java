@@ -53,11 +53,11 @@ public class CouponUserListCustomizeVO extends BaseVO implements Serializable {
 
     private String projectNid;
 
-    //投资时间日
+    //出借时间日
     private String tenderTimeDay;
-    //投资时间小时
+    //出借时间小时
     private String tenderTimeHour;
-    //投资金额
+    //出借金额
     private String account;
     //借款收益率
     private String borrowApr;
@@ -72,7 +72,7 @@ public class CouponUserListCustomizeVO extends BaseVO implements Serializable {
     private String recoverAccount;
     //还款状态
     private String recoverStatus;
-    // 投资类型
+    // 出借类型
     private String tenderType;
     // 计划编号
     private String debtPlanNid;

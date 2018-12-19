@@ -29,7 +29,7 @@
 			  AND hydb.project_type <![CDATA[<>]]> '13'
 			  </if>
 			</if> 
-			<!-- 包含汇直投、尊享汇、新手汇  modify by cwyang 改版要求债权页面除新手汇项目其他投资项目 -->
+			<!-- 包含汇直投、尊享汇、新手汇  modify by cwyang 改版要求债权页面除新手汇项目其他出借项目 -->
 			<if test="(type == null or type == '') and projectType=='CFH' ">
 				AND hydb.project_type NOT IN (4,8)
 				AND CASE
@@ -65,7 +65,7 @@
 				<when test="status == '10'">
 					AND ( hb.status = 1 AND hb.verify_status = 3 )
 				</when>
-				<!-- 获取 投资中 -->
+				<!-- 获取 出借中 -->
 				<when test="status == '11'">
 					AND ( hb.status = 2 AND hb.verify_time + ( hb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
 				</when>
@@ -81,7 +81,7 @@
 				<when test="status == '14'">
 				AND ( hb.status = 1 AND hydb.project_type = 4 AND hb.verify_status = 3 )
 				</when>
-				<!-- 新手汇 投资中 -->
+				<!-- 新手汇 出借中 -->
 				<when test="status == '15'">
 				AND ( hb.status = 2 AND hydb.project_type = 4 AND hb.verify_time + ( hb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
 				</when>
@@ -354,7 +354,7 @@
 		<result column="send_time" property="sendTime" jdbcType="VARCHAR" />
 		<!-- 满标时间 fullTime -->
 		<result column="full_time" property="fullTime" jdbcType="VARCHAR" />
-		<!-- 项目状态 status 10 定时发标 11投资中 12复审中 13 还款中 14 已还款 15 已流标 -->
+		<!-- 项目状态 status 10 定时发标 11出借中 12复审中 13 还款中 14 已还款 15 已流标 -->
 		<result column="status" property="status" jdbcType="VARCHAR" />
 		<!-- 倍增金额  increaseMoney-->	
 		<result column="increase_money" property="increaseMoney" jdbcType="VARCHAR" />
@@ -362,9 +362,9 @@
 		<result column="interest_coupon" property="interestCoupon" jdbcType="VARCHAR" />
 		<!-- 体验金 tasteMoney -->
 		<result column="taste_money" property="tasteMoney" jdbcType="VARCHAR" />
-		<!-- 项目最小投资金额 -->
+		<!-- 项目最小出借金额 -->
 		<result column="tender_account_min" property="tenderAccountMin" jdbcType="VARCHAR" />
-		<!-- 最大投资金额 tenderAccountMax -->
+		<!-- 最大出借金额 tenderAccountMax -->
 		<result column="tender_account_max" property="tenderAccountMax" jdbcType="VARCHAR" />
 		<!-- 融通宝项目编号 borrowAssetNumber -->
 		<result column="borrow_asset_number" property="borrowAssetNumber" jdbcType="VARCHAR" />
@@ -386,7 +386,7 @@
 		<result column="contract_period" property="contractPeriod" jdbcType="VARCHAR" />
 		 <!-- 项目总额 account 万元-->
 		<result column="borrow_account_wan" property="borrowAccountWan" jdbcType="VARCHAR" />
-			<!-- 项目最小投资金额 万-->
+			<!-- 项目最小出借金额 万-->
 		<result column="tender_account_min_wan" property="tenderAccountMinWan" jdbcType="VARCHAR" />
 			<!-- 项目期限 borrowPeriod -->
 		<result column="borrow_period_type" property="borrowPeriodType" jdbcType="VARCHAR" />
@@ -1009,7 +1009,7 @@
 	</sql>
 	
 	<select id="selectHomeProjectList" resultMap="AppProjectListMap" parameterType="Map">
-	    <!-- 投资中 -->
+	    <!-- 出借中 -->
 		(SELECT
 			<include refid="Select_Clause" />
 		FROM

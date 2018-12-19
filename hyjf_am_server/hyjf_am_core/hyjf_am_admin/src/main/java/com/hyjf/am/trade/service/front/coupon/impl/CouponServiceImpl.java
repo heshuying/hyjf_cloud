@@ -61,7 +61,7 @@ public class CouponServiceImpl implements CouponService {
 	}
 
 	/**
-	 * 优惠券投资
+	 * 优惠券出借
 	 *
 	 * @param couponTender
 	 */
@@ -90,7 +90,7 @@ public class CouponServiceImpl implements CouponService {
 	}
 
 	/**
-	 * 获取优惠券投资
+	 * 获取优惠券出借
 	 *
 	 * @param userId
 	 * @param borrowNid
@@ -120,7 +120,7 @@ public class CouponServiceImpl implements CouponService {
 	}
 
 	/**
-	 * 取得优惠券投资信息
+	 * 取得优惠券出借信息
 	 * @param nid
 	 * @return
 	 */

@@ -128,7 +128,7 @@ public class WrbServiceImpl implements WrbService {
         user.setRechargeSms(0); // 充值成功短信 0发送 1不发送
         user.setWithdrawSms(0); // withdraw_sms
         //user.setInvestflag(0);// 新手标志位：0新手 1老手
-        user.setInvestSms(0);// 投资成功短信 0发送 1不发送
+        user.setInvestSms(0);// 投标成功短信 0发送 1不发送
         user.setRecieveSms(0);// 回收成功短信 0发送 1不发送
         //user.setVersion(BigDecimal.ZERO);// 版本号
         user.setUserType(0);// 用户类型 0普通用户 1企业用户
@@ -200,7 +200,7 @@ public class WrbServiceImpl implements WrbService {
         userInfo.setAttribute(0);// 默认为无主单
         userInfo.setUserId(userId);
         if (instType == 0) {
-            userInfo.setRoleId(2);// 用户角色1投资人2借款人3垫付机构
+            userInfo.setRoleId(2);// 用户角色1出借人2借款人3垫付机构
             userInfo.setBorrowerType(2);// 借款人类型 1：内部机构 2：外部机构
         } else {
             userInfo.setRoleId(1);

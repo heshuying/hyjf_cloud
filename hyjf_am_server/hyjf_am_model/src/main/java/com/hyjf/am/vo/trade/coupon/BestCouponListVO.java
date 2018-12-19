@@ -89,7 +89,7 @@ public class BestCouponListVO  extends CouponConfigVO {
     public String getTenderQuotaRange() {
 
         if(getTenderQuotaType()==0||getTenderQuotaType()==null){
-            tenderQuotaRange="投资金额不限";
+            tenderQuotaRange="出借金额不限";
         }else if(getTenderQuotaType()==1){
             tenderQuotaRange=getTenderQuotaMin()+"元~"+getTenderQuotaMax()+"元可用";
         }else if(getTenderQuotaType()==2){

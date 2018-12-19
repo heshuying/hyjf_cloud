@@ -22,9 +22,9 @@ public class TenderInfoResult extends BaseResultBean {
 	private Integer ifVip;
 	/**用户优惠券数量*/
 	private Integer recordTotal;
-	/**真实投资预期收益*/
+	/**真实出借预期收益*/
 	private String capitalInterest;
-	/**真实优惠券投资预期收益*/
+	/**真实优惠券出借预期收益*/
     private String couponCapitalInterest;
     /**产品加息利息*/
     private String borrowExtraYield;
@@ -61,17 +61,17 @@ public class TenderInfoResult extends BaseResultBean {
 
     private String realAmount;
 
-    /** 确认真实投资信息 */
+    /** 确认真实出借信息 */
     private String confirmRealAmount;
     /** 确认优惠券信息 */
     private String confirmCouponDescribe;
-    /** 确认真实投资收益信息 */
+    /** 确认真实出借收益信息 */
     private String borrowInterest;
     /** 确认是否使用优惠券 */
     private String isUsedCoupon;
 
 
-    // 投资描述
+    // 出借描述
     private String investmentDescription;
 
     // 起投金额
@@ -101,7 +101,7 @@ public class TenderInfoResult extends BaseResultBean {
     private String protocolUrlDesc;
     /** 协议列表url */
     private String protocolUrl;
-    /** 投资类型  */
+    /** 出借类型  */
     private String borrowType;
 
     /** 垫付利息  */

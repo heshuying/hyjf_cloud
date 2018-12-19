@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 自动投资
+ * 自动出借
  * @author liubin
  * @version AutoTenderService, v0.1 2018/6/28 21:15
  */
@@ -43,7 +43,7 @@ public interface AutoTenderService extends BaseService {
     HjhAccede selectHjhAccedeByAccedeOrderId(String accedeOrderId);
 
     /**
-     * 银行自动投资成功后，更新投资数据
+     * 银行自动投标成功后，更新出借数据
      * @param borrowNid
      * @param accedeOrderId
      * @param bean
@@ -66,7 +66,7 @@ public interface AutoTenderService extends BaseService {
     HjhDebtCredit selectCreditByNid(String creditNid);
 
     /**
-     * 投资完成更新计划明细
+     * 出借完成更新计划明细
      * @param hjhAccede
      * @param orderStaus
      * @return
@@ -74,7 +74,7 @@ public interface AutoTenderService extends BaseService {
     int updateHjhAccede(HjhAccede hjhAccede, int orderStaus);
 
     /**
-     * 删除 自动投资临时表
+     * 删除 自动出借临时表
      * @param borrowNid
      * @param hjhAccede
      * @return

@@ -11,7 +11,7 @@ import java.util.List;
  */
 public interface AmConfigClient {
     /**
-     * 取得汇直投投资信息
+     * 取得汇直投出借信息
      * 同步另外文件BorrowInvestCustomizeMapper
      * @param callcenterAccountHuifuRequest
      * @return

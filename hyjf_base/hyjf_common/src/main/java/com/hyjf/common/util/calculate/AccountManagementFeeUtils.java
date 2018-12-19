@@ -1,5 +1,5 @@
 /**
- * Description:收取对象：融资方；收取时间：融资方每期还款时，系统将管理费分账到平台的账户，将还款本息分账到投资方的账户；
+ * Description:收取对象：融资方；收取时间：融资方每期还款时，系统将管理费分账到平台的账户，将还款本息分账到出借方的账户；
  * Copyright: Copyright (HYJF Corporation)2015
  * Company: HYJF Corporation
  * @author: b
@@ -188,7 +188,7 @@ public class AccountManagementFeeUtils {
             }else {
                 //新的管理费计算方式最后一期加收益差率 
                 /* a、除最后一期外，当期账户管理费=当期应还本金金额*每月账户管理费率*当前还款期次
-                   b、最后一期的应付管理费=投资金额*最后一期总管理费/放款金额
+                   b、最后一期的应付管理费=出借金额*最后一期总管理费/放款金额
                 */
                  if (IsLast==1) {
                      count = invest.multiply(managerFee).divide(account,2, BigDecimal.ROUND_DOWN);

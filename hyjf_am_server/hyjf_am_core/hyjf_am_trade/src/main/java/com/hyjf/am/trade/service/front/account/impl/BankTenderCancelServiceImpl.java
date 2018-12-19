@@ -19,7 +19,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 投资撤销异常
+ * 出借撤销异常
  * @author jijun
  * @date 20180625
  */
@@ -52,25 +52,25 @@ public class BankTenderCancelServiceImpl implements BankTenderCancelService {
         String username= request.getUserName();
 
         if (tenderTmp==null || StringUtils.isBlank(username)){
-            logger.info("传入参数为空,撤销投资操作失败!");
-            throw new RuntimeException("传入参数为空,撤销投资操作失败!");
+            logger.info("传入参数为空,撤销出借操作失败!");
+            throw new RuntimeException("传入参数为空,撤销出借操作失败!");
         }
 
         Integer userId = tenderTmp.getUserId();
         boolean tenderTmpFlag = this.borrowTenderTmpMapper.deleteByPrimaryKey(tenderTmp.getId()) > 0 ? true : false;
         if (!tenderTmpFlag) {
-            logger.info("删除投资日志表失败，投资订单号：" + tenderTmp.getNid());
-            throw new RuntimeException("删除投资日志表失败，投资订单号：" + tenderTmp.getNid());
+            logger.info("删除出借日志表失败，出借订单号：" + tenderTmp.getNid());
+            throw new RuntimeException("删除出借日志表失败，出借订单号：" + tenderTmp.getNid());
         }
         FreezeHistory freezeHistory = new FreezeHistory();
         freezeHistory.setTrxId(tenderTmp.getNid());
-        freezeHistory.setNotes("自动任务银行投资撤销");
+        freezeHistory.setNotes("自动任务银行出借撤销");
         freezeHistory.setFreezeUser(username);
         freezeHistory.setFreezeTime(GetDate.getNowTime10());
         boolean freezeHisLog = this.freezeHistoryMapper.insert(freezeHistory) > 0 ? true : false;
         if (!freezeHisLog) {
-            logger.info("插入投资删除日志表失败，投资订单号：" + tenderTmp.getNid());
-            throw new RuntimeException("插入投资删除日志表失败，投资订单号：" + tenderTmp.getNid());
+            logger.info("插入出借删除日志表失败，出借订单号：" + tenderTmp.getNid());
+            throw new RuntimeException("插入出借删除日志表失败，出借订单号：" + tenderTmp.getNid());
         }
     }
 

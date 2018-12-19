@@ -47,7 +47,7 @@ public interface DataCustomizeMapper {
 	/**
 	 * @return
 	 * @method: selectTendMoneyInfo
-	 * @description: 投资金额占比
+	 * @description: 出借金额占比
 	 * @return: Map<String,Object>
 	 * @mender: zhouxiaoshuai
 	 * @date: 2016年5月23日 上午9:29:07
@@ -57,7 +57,7 @@ public interface DataCustomizeMapper {
 	/**
 	 * @return
 	 * @method: selectData
-	 * @description: 投资相关统计信息
+	 * @description: 出借相关统计信息
 	 * @return: Map<String,Object>
 	 * @mender: zhouxiaoshuai
 	 * @date: 2016年7月8日 上午11:53:12
@@ -65,10 +65,10 @@ public interface DataCustomizeMapper {
 	Map<String, Object> selectData();
 
 	/**
-	 * @param type 0投资 1债转投资
+	 * @param type 0出借 1债转出借
 	 * @return
 	 * @method: selectTenderListMap
-	 * @description: 搜索月投资金额
+	 * @description: 搜索月出借金额
 	 * @return: List<Map<String,Object>>
 	 * @mender: zhouxiaoshuai
 	 * @date: 2016年7月8日 下午12:04:25
@@ -77,7 +77,7 @@ public interface DataCustomizeMapper {
 
 	/**
 	 * @method: insertHyjfTenderMonthInfo
-	 * @description: 插入上月投资金额
+	 * @description: 插入上月出借金额
 	 * @return: void
 	 * @mender: zhouxiaoshuai
 	 * @date: 2016年7月8日 下午3:33:25
@@ -87,7 +87,7 @@ public interface DataCustomizeMapper {
 	/**
 	 * @return
 	 * @method: selectDebtBorrowWaitMoney
-	 * @description: 专属标待投资资产
+	 * @description: 专属标待出借资产
 	 * @return: BigDecimal
 	 * @mender: zhouxiaoshuai
 	 * @date: 2016年11月10日 上午11:28:00
@@ -105,7 +105,7 @@ public interface DataCustomizeMapper {
 	BigDecimal selectDebtCreditWaitMoney();
 
 	/**
-	 * @param orderType 0专属标投资 1债权
+	 * @param orderType 0专属标出借 1债权
 	 * @return
 	 * @method: selectDebtDetailYesInvestCount
 	 * @description: 计划持有债权数量

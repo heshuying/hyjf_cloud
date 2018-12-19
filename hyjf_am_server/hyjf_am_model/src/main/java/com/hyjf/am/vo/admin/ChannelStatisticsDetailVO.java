@@ -36,9 +36,9 @@ public class ChannelStatisticsDetailVO extends BaseVO implements Serializable {
     private String registerTime;
     /** 开户时间 */
     private String openAccountTime;
-    /** 首次投资时间 */
+    /** 首次出借时间 */
     private String firstInvestTime;
-    /** 累计投资金额 */
+    /** 累计出借金额 */
     private BigDecimal cumulativeInvest;
     /** 性别 导出用 **/
     private String sex;
@@ -53,23 +53,23 @@ public class ChannelStatisticsDetailVO extends BaseVO implements Serializable {
      */
     private String[] utmIdsSrch;
     /**
-     * 汇添金投资金额
+     * 汇添金出借金额
      */
     private BigDecimal htjInvest;
     /**
-     * 汇转让投资金额
+     * 汇转让出借金额
      */
     private BigDecimal hzrInvest;
     /**
-     * 首次投标的投资金额
+     * 首次投标的出借金额
      */
     private BigDecimal investAmount;
     /**
-     * 首次投资标的的项目类型
+     * 首次出借标的的项目类型
      */
     private String investProjectType;
     /**
-     * 首次投资标的的项目期限
+     * 首次出借标的的项目期限
      */
     private String investProjectPeriod;
     private String cumulativeInvestExcel;

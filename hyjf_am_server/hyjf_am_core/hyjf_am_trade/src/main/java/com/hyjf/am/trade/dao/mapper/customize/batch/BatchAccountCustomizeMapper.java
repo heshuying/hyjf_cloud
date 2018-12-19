@@ -12,7 +12,7 @@ import com.hyjf.am.trade.dao.model.auto.Account;
 public interface BatchAccountCustomizeMapper {
 
 	/**
-	 * 加息还款后,更新投资人账户信息
+	 * 加息还款后,更新出借人账户信息
 	 * 
 	 * @Title updateAccountAfterRepay
 	 * @param account

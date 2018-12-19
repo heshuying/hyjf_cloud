@@ -11,7 +11,7 @@ import java.text.DecimalFormat;
 
 /**
  * 
- * 资产管理用户投资计划包含项目
+ * 资产管理用户出借计划包含项目
  */
 public class UserHjhInvistListCustomize implements Serializable {
 
@@ -23,13 +23,13 @@ public class UserHjhInvistListCustomize implements Serializable {
 	private String nid;
 	// 项目编号(原标标号)
     private String borrowNid;
-    // 投资金额
+    // 出借金额
     private String account;
     // 计划加入订单号
     private String accedeOrderId;
     // 项目期限
     private String borrowPeriod;
-    // 投资时间
+    // 出借时间
     private String addTime;
     // 项目回款时间
     private String recoverTime;

@@ -17,7 +17,7 @@ public class CurrentHoldRepayMentPlanListVO extends BaseVO implements Serializab
 	DecimalFormat df = CustomConstants.DF_FOR_VIEW;
 	/**项目编号*/
 	private String borrowNid;
-	/**投资编号*/
+	/**出借编号*/
 	private String nid;
 	/**还款期数*/
     private String recoverPeriod;

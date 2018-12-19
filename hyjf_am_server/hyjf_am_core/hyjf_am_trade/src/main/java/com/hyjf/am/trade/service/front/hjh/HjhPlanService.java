@@ -64,7 +64,7 @@ public interface HjhPlanService {
     int insertHJHPlanAccede(HjhAccedeVO planAccede, Account userAccount);
 
     /**
-     * 获取汇计划投资详情
+     * 获取汇计划出借详情
      * @param params
      * @return
      */

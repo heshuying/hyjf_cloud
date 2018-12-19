@@ -345,7 +345,7 @@ public class PushMoneyManageController extends BaseController {
         map.put("accountTender", "出借金额");
         map.put("commission", "提成金额");
         map.put("statusName", "状态");
-        map.put("tenderTimeView", "投资时间");
+        map.put("tenderTimeView", "出借时间");
         map.put("sendTimeView", "发放时间");
         return map;
     }

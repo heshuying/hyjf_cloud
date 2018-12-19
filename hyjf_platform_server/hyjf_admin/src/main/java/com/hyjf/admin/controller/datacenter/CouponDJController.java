@@ -138,7 +138,7 @@ public class CouponDJController extends BaseController {
 			map.put("recoverInterest", "总收益");
 			map.put("recivedMoney", "已发放收益");
 			map.put("norecivedMoney", "待发放收益");
-			map.put("realTenderMoney", "累计真实投资金额");
+			map.put("realTenderMoney", "累计真实出借金额");
 
 			return map;
 		}

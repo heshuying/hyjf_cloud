@@ -63,7 +63,7 @@ public class WrbBorrowListCustomizeVO {
      */
     private String payback_way;
     /**
-     * 标的投资条件
+     * 标的出借条件
      */
     private String invest_condition;
     /**

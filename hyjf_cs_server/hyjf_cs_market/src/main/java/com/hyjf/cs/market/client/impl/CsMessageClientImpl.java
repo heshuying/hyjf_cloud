@@ -57,7 +57,7 @@ public class CsMessageClientImpl implements CsMessageClient {
     }
 
         /**
-         * 累计投资总额
+         * 累计出借总额
          * @return
          */
         @Override
@@ -79,7 +79,7 @@ public class CsMessageClientImpl implements CsMessageClient {
             return interestSum.getResultDec();
         }
         /**
-         * 累计投资笔数
+         * 累计出借笔数
          * @return
          */
         @Override

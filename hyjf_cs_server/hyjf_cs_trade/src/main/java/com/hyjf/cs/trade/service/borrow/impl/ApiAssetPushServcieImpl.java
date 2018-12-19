@@ -109,7 +109,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         // 授信期内校验
         BailConfigInfoCustomizeVO bailConfig = amTradeClient.selectBailConfigByInstCode(pushRequestBean.getInstCode());
         if(bailConfig == null){
-            logger.info("保证金配置不存在:{}", pushRequestBean.getInstCode());
+            logger.info("合作机构额度配置不存在:{}", pushRequestBean.getInstCode());
             resultBean.setStatusDesc("保证金配置不存在:{" + pushRequestBean.getInstCode() + "}");
             return resultBean;
         }
@@ -588,7 +588,7 @@ public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements Api
         // 授信期内校验
         BailConfigInfoCustomizeVO bailConfig = amTradeClient.selectBailConfigByInstCode(pushRequestBean.getInstCode());
         if(bailConfig == null){
-            logger.info("保证金配置不存在:{}", pushRequestBean.getInstCode());
+            logger.info("合作机构额度配置不存在:{}", pushRequestBean.getInstCode());
             resultBean.setStatusDesc("保证金配置不存在:{" + pushRequestBean.getInstCode() + "}");
             return resultBean;
         }

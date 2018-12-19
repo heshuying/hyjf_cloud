@@ -70,7 +70,7 @@
         FROM
         ht_product_list
         WHERE
-        invest_status = 0 # 投资成功
+        invest_status = 0 # 投标成功
         AND invest_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
         ) # 加入时间
@@ -120,7 +120,7 @@
         FROM
         ht_product_list
         WHERE
-        invest_status = 0 # 投资成功
+        invest_status = 0 # 投标成功
         AND invest_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
         ) # 加入时间
@@ -258,7 +258,7 @@
         FROM
         ht_product_list pl
         WHERE
-        invest_status = 0 # 投资成功
+        invest_status = 0 # 投标成功
         AND pl.invest_time <![CDATA[ < ]]> unix_timestamp(
         DATE_SUB(
         DATE_FORMAT(CURDATE(), '%Y-%m-01'),
@@ -594,7 +594,7 @@
         FROM
         ht_product_list
         WHERE
-        invest_status = 0 # 投资成功
+        invest_status = 0 # 投标成功
         AND invest_time  <![CDATA[ < ]]>  unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
         ) # 加入时间
@@ -747,7 +747,7 @@
         FROM
         ht_product_list
         WHERE
-        invest_status = 0 # 投资成功
+        invest_status = 0 # 投标成功
         AND invest_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
         ) # 加入时间
@@ -835,7 +835,7 @@
         FROM
         ht_product_list
         WHERE
-        invest_status = 0 # 投资成功
+        invest_status = 0 # 投标成功
         AND invest_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
         ) # 加入时间
@@ -950,7 +950,7 @@
         FROM
         ht_product_list
         WHERE
-        invest_status = 0 # 投资成功
+        invest_status = 0 # 投标成功
         AND invest_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
         ) # 加入时间
@@ -982,7 +982,7 @@
         END;
     </select>
 
-    <!-- 	十大投资人 -->
+    <!-- 	十大出借人 -->
     <select id="getTenMostMoney" resultMap="performanceMap">
        SELECT
         tmp.user_id as userId,
@@ -1071,7 +1071,7 @@
         FROM
         ht_product_list
         WHERE
-        invest_status = 0 # 投资成功
+        invest_status = 0 # 投标成功
         AND invest_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
         ) # 加入时间
@@ -1090,7 +1090,7 @@
         ) tmp
     </select>
 
-    <!-- 	超活跃，投资笔数最多 -->
+    <!-- 	超活跃，出借笔数最多 -->
     <select id="getOneInvestMost" resultMap="performanceMap">
         SELECT
         tmp.user_id as userId,
@@ -1179,7 +1179,7 @@
         FROM
         ht_product_list
         WHERE
-        invest_status = 0 # 投资成功
+        invest_status = 0 # 投标成功
         AND invest_time <![CDATA[ < ]]> unix_timestamp(
         DATE_FORMAT(CURDATE(), '%Y-%m-01')
         ) # 加入时间
@@ -1281,7 +1281,7 @@
     </select>
 
 
-    <!-- 	投资人年龄分布 -->
+    <!-- 	出借人年龄分布 -->
     <select id="getTenderAgeByRangeList"   resultMap="performanceMap">
         SELECT
         br .user_id as userId
@@ -1316,7 +1316,7 @@
         And  invest_status = 0
     </select>
 
-    <!-- 	投资人性别分布 -->
+    <!-- 	出借人性别分布 -->
     <select  id="getTenderSexGroupByList"  resultMap="performanceMap">
 
         SELECT
@@ -1361,7 +1361,7 @@
     </select>
 
 
-    <!-- 	投资人省份分布  a.p AS citycode, a.counts AS count, b.area AS cityname-->
+    <!-- 	出借人省份分布  a.p AS citycode, a.counts AS count, b.area AS cityname-->
     <select  id="getTenderCityGroupBy" parameterType="java.util.Date" resultMap="cityResultMap">
       SELECT
 		    	a.p AS citycode, a.counts AS count, b.area AS cityname

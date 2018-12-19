@@ -23,10 +23,10 @@ import java.util.Map;
 public interface AutoPlusService extends BaseUserService {
 
     /**
-     * 授权自动债转、投资
+     * 授权自动债转、出借
      * @param
      * @param client  0web 1wechat 2app
-     * @param type 1表示投资 2表示债转
+     * @param type 1表示出借 2表示债转
      * @param channel
      * @param lastSrvAuthCode
      * @param smsCode
@@ -35,7 +35,7 @@ public interface AutoPlusService extends BaseUserService {
     Map<String,Object> userCreditAuthInves(UserVO user, Integer client, String type, String channel, String lastSrvAuthCode, String smsCode);
 
     /**
-     * app、wechat授权自动债转、投资同步回调
+     * app、wechat授权自动债转、出借同步回调
      * @param token
      * @param bean
      * @param userAutoType
@@ -72,7 +72,7 @@ public interface AutoPlusService extends BaseUserService {
     BankCallBean apiUserAuth(String type, String smsSeq, UserVO user, AutoPlusRequestBean payRequestBean);
 
     /**
-     * api自动投资授权同步回调
+     * api自动出借授权同步回调
      * @param bean
      * @param callback
      * @param acqRes

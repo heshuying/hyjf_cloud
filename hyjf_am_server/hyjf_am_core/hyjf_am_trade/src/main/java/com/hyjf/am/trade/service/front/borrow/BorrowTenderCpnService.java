@@ -11,14 +11,14 @@ import com.hyjf.am.trade.dao.model.auto.BorrowTenderCpn;
  */
 public interface BorrowTenderCpnService {
     /**
-     * 更新优惠券投资信息
+     * 更新优惠券出借信息
      * @param borrowTenderCpn1
      * @return
      */
     int updateByPrimaryKeySelective(BorrowTenderCpn borrowTenderCpn1);
 
     /**
-     * 查询优惠券投资信息
+     * 查询优惠券出借信息
      * @param couponTenderNid
      * @return
      */

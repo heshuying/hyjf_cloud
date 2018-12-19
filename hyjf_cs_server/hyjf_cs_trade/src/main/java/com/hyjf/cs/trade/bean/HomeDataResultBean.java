@@ -34,7 +34,7 @@ public class HomeDataResultBean implements Serializable {
     /*欢迎标志*/
     private int helloFlag;
 
-    /*投资总额*/
+    /*出借总额*/
     private BigDecimal tenderSum;
 
     /*收益总额*/

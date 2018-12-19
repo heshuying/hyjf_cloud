@@ -31,9 +31,9 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 /**
- * app端散标投资
+ * app端散标出借
  */
-@Api(value = "app端-散标投资",tags = "app端-散标投资")
+@Api(value = "app端-散标出借",tags = "app端-散标出借")
 @RestController
 @RequestMapping("/hyjf-app/user/invest")
 public class AppBorrowTenderController extends BaseTradeController {
@@ -44,11 +44,11 @@ public class AppBorrowTenderController extends BaseTradeController {
     @Autowired
     private HjhTenderService hjhTenderService;
 
-    @ApiOperation(value = "APP端散标投资", notes = "APP端散标投资")
+    @ApiOperation(value = "APP端散标出借", notes = "APP端散标出借")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
     @RequestLimit(seconds=3)
     public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId") Integer userId,TenderRequest tender, HttpServletRequest request) {
-        logger.info("APP端请求投资接口--------------标的编号:{}，请求端：{}",tender.getBorrowNid(), tender.getPlatform());
+        logger.info("APP端请求出借接口--------------标的编号:{}，请求端：{}",tender.getBorrowNid(), tender.getPlatform());
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
         tender.setUserId(userId);
@@ -73,7 +73,7 @@ public class AppBorrowTenderController extends BaseTradeController {
     @PostMapping("/bgReturn")
     @ResponseBody
     public BankCallResult borrowTenderBgReturn(BankCallBean bean , @RequestParam("couponGrantId") String couponGrantId) {
-        logger.info("APP端散标投资异步处理start,userId:{}", bean.getLogUserId());
+        logger.info("APP端散标出借异步处理start,userId:{}", bean.getLogUserId());
         BankCallResult result ;
         try{
             result = borrowTenderService.borrowTenderBgReturn(bean,couponGrantId);
@@ -85,17 +85,17 @@ public class AppBorrowTenderController extends BaseTradeController {
         return result;
     }
 
-    @ApiOperation(value = "APP端散标投资获取投资结果", notes = "APP端散标投资获取投资结果")
+    @ApiOperation(value = "APP端散标出借获取出借结果", notes = "APP端散标出借获取出借结果")
     @PostMapping(value = "/getBorrowTenderResult", produces = "application/json; charset=utf-8")
     public WebResult<Map<String,Object>> getBorrowTenderResult(@RequestHeader(value = "userId") Integer userId,
                                                                @RequestParam String logOrdId,
                                                                @RequestParam String borrowNid,
                                                                HttpServletRequest request) {
-        logger.info("APP端请求获取投资结果接口，logOrdId{}",logOrdId);
+        logger.info("APP端请求获取出借结果接口，logOrdId{}",logOrdId);
         return  borrowTenderService.getBorrowTenderResult(userId,logOrdId,borrowNid);
     }
 
-    @ApiOperation(value = "APP端散标投资获取投资成功结果", notes = "APP端散标投资获取投资成功结果")
+    @ApiOperation(value = "APP端散标出借获取投标成功结果", notes = "APP端散标出借获取投标成功结果")
     @PostMapping(value = "/getBorrowTenderResultSuccess", produces = "application/json; charset=utf-8")
     public WebResult<Map<String, Object>> getBorrowTenderResultSuccess(@RequestHeader(value = "userId") Integer userId,
                                                                        @RequestParam String logOrdId,
@@ -103,14 +103,14 @@ public class AppBorrowTenderController extends BaseTradeController {
                                                                        @RequestParam String borrowNid,
                                                                        @RequestParam String isPrincipal,
                                                                        @RequestParam String account) {
-        logger.info("APP端散标投资获取投资成功结果，logOrdId{}", logOrdId);
+        logger.info("APP端散标出借获取投标成功结果，logOrdId{}", logOrdId);
         return borrowTenderService.getBorrowTenderResultSuccess(userId, logOrdId, borrowNid, couponGrantId,isPrincipal,account);
     }
 
-    @ApiOperation(value = "APP端获取投资信息", notes = "APP端获取投资信息")
+    @ApiOperation(value = "APP端获取出借信息", notes = "APP端获取出借信息")
     @PostMapping(value = "/getInvestInfo", produces = "application/json; charset=utf-8")
     public AppInvestInfoResultVO getInvestInfo(@RequestHeader(value = "userId") Integer userId, TenderRequest tender, HttpServletRequest request) {
-        logger.info("APP端获取投资信息,请求参数：",JSONObject.toJSONString(tender));
+        logger.info("APP端获取出借信息,请求参数：",JSONObject.toJSONString(tender));
         tender.setUserId(userId);
         if(tender.getCouponId()!=null&&!"".equals(tender.getCouponId())){
             tender.setCouponGrantId(Integer.parseInt(tender.getCouponId()));
@@ -128,10 +128,10 @@ public class AppBorrowTenderController extends BaseTradeController {
         return result;
     }
 
-    @ApiOperation(value = "APP端获取投资URL", notes = "APP端获取投资URL")
+    @ApiOperation(value = "APP端获取出借URL", notes = "APP端获取出借URL")
     @PostMapping(value = "/getTenderUrl", produces = "application/json; charset=utf-8")
     public JSONObject getTenderUrl(@RequestHeader(value = "userId") Integer userId, TenderRequest tender, HttpServletRequest request) {
-        logger.info("APP端获取投资URL,请求参数：",JSONObject.toJSONString(tender));
+        logger.info("APP端获取出借URL,请求参数：",JSONObject.toJSONString(tender));
         tender.setUserId(userId);
         JSONObject result = new JSONObject();
         try{

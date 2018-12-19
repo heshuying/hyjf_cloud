@@ -10,7 +10,7 @@ import com.hyjf.am.trade.dao.model.customize.CouponUserCustomize;
 import java.util.List;
 
 /**
- * 江西银行投资全部掉单处理自动任务
+ * 江西银行出借全部掉单处理自动任务
  * @author jun
  * @since 20180623
  */

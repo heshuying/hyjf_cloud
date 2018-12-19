@@ -33,13 +33,13 @@ public class InvestListCustomize implements Serializable {
 	private String borrowApr;
 	// 借款期限
 	private String borrowPeriod;
-	// 投资金额
+	// 出借金额
 	private String amount;
 	// 还款方式
 	private String borrowStyleName;
-	// 投资方式
+	// 出借方式
 	private String investType;
-	// 投资时间
+	// 出借时间
 	private String addTime;
 	// 预计还款时间
 	private String recoverTime;
@@ -49,7 +49,7 @@ public class InvestListCustomize implements Serializable {
 	private String recoverTotal;
 	// 实际收益
 	private String recoverAmountYes;
-	// 项目状态 0-投资中(投资未放款)  1-还款中(放款未还款) 2-已还款
+	// 项目状态 0-出借中(出借未放款)  1-还款中(放款未还款) 2-已还款
 	private String status;
 	// 计息时间
 	private String interestAt;
@@ -69,7 +69,7 @@ public class InvestListCustomize implements Serializable {
 	private String inviteBranchId;
 	// 推荐人三级部门ID
 	private String inviteDepartmentId;
-	// 投资人属性
+	// 出借人属性
 	private String tenderUserAttribute;
 	// 推荐人属性
 	private String inviteUserAttribute;

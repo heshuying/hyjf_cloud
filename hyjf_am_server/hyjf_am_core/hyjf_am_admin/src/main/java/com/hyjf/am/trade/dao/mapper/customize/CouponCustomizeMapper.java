@@ -25,14 +25,14 @@ public interface CouponCustomizeMapper {
     List<CouponCustomize> getCouponUser(Map<String,Object> paraMap);
 
     /**
-     * 获取优惠券投资信息
+     * 获取优惠券出借信息
      * @param paraMap
      * @return
      */
     BorrowTenderCpn getCouponTenderByTender(Map<String,Object> paraMap);
 
     /**
-     * 根据userId和orderId获取优惠券投资信息
+     * 根据userId和orderId获取优惠券出借信息
      * @author zhangyk
      * @date 2018/7/31 13:55
      */
@@ -46,7 +46,7 @@ public interface CouponCustomizeMapper {
     List<CurrentHoldRepayMentPlanListVO> couponRepaymentPlanList(String nid);
 
     /**
-     * 获取优惠券投资记录
+     * 获取优惠券出借记录
      * @author zhangyk
      * @date 2018/8/1 14:32
      */

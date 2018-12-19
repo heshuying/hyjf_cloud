@@ -58,7 +58,7 @@ public interface VipManageService {
     List<OADepartmentCustomizeVO> getCrmDepartmentList();
 
     /**
-     * 根据用户id获取用户投资信息
+     * 根据用户id获取用户出借信息
      * @param nid
      * @return
      */

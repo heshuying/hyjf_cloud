@@ -271,7 +271,7 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
-	 * 更新用户首次投资信息
+	 * 更新用户首次出借信息
 	 *
 	 * @param params
 	 */

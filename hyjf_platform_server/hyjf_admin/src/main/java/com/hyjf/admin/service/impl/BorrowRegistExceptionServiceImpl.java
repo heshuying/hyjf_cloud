@@ -105,7 +105,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     /**
      * 备案异常处理
      * @auth sunpeikai
-     * @param borrowNid 借款编号
+     * @param borrowNid 项目编号
      * @param loginUserId 当前登录用户id
      * @return
      */

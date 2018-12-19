@@ -64,7 +64,7 @@ public class CommissionLog implements Serializable {
     private String borrowNid;
 
     /**
-     * 投资id
+     * 出借id
      *
      * @mbggenerated
      */

@@ -18,8 +18,12 @@ public class GetCilentIP {
 	 * @return
 	 */
 	public static String getIpAddr(HttpServletRequest request) {
-		String ipAddress = request.getHeader("x-forwarded-for");
+		String ipAddress = request.getHeader("x-real-ip");
+		logger.info("ip地址为："+ipAddress);
 		if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
+			ipAddress = request.getHeader("x-forwarded-for");
+
+		}if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
 			ipAddress = request.getHeader("Proxy-Client-IP");
 		}
 		if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {

@@ -45,7 +45,7 @@ public interface AdminPlanAccedeListCustomizeMapper {
 	HjhAccedeSumVO sumAccedeRecord(Map<String, Object> param);
 	
 	/**
-	 * 查询用户投资信息
+	 * 查询用户出借信息
 	 * 
 	 * @Title selectAccedeRecordList
 	 * @param form

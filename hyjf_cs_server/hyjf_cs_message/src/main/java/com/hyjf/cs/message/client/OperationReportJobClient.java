@@ -15,14 +15,14 @@ public interface OperationReportJobClient {
 
 
     /**
-     * 按照省份统计投资人的分布
+     * 按照省份统计出借人的分布
      * @param date 上个月的最后一天
      */
     List<OperationReportJobVO> getTenderCityGroupByList(Date date);
 
 
     /**
-     * 按照性别统计投资人的分布
+     * 按照性别统计出借人的分布
      * @param date 上个月的最后一天
      */
     List<OperationReportJobVO>  getTenderSexGroupByList(Date date);
@@ -31,7 +31,7 @@ public interface OperationReportJobClient {
 
 
     /**
-     * 投资人按照年龄分布
+     * 出借人按照年龄分布
      *
      * @param date 上个月的最后一天
      * @param firstAge  年龄下限
@@ -67,12 +67,12 @@ public interface OperationReportJobClient {
     int getLoanNum(Date date);
 
     /**
-     * 获取截至日期的投资金额
+     * 获取截至日期的出借金额
      */
     double getInvestLastDate(Date date);
 
     /**
-     * 统计投资人总数，截至日期为上个月的最后一天
+     * 统计出借人总数，截至日期为上个月的最后一天
      * @param date 上个月的最后一天
      * @return
      */
@@ -180,7 +180,7 @@ public interface OperationReportJobClient {
 
 
     /**
-     * 十大投资人
+     * 十大出借人
      *
      * @param intervalMonth 今年间隔月份
      * @return
@@ -189,14 +189,14 @@ public interface OperationReportJobClient {
 
 
     /**
-     * 十大投资人拆分
+     * 十大出借人拆分
      *
      * @param list 多个用户id
      * @return
      */
     List<OperationReportJobVO> getUserNames( List<OperationReportJobVO> list);
     /**
-     * 超活跃，投资笔数最多
+     * 超活跃，出借笔数最多
      *
      * @param intervalMonth 今年间隔月份
      * @return

@@ -110,7 +110,7 @@ public class UserParamExceptionServiceImpl extends BaseServiceImpl implements Us
     }
 
     /**
-     * 查询固定时间间隔的用户投资列表
+     * 查询固定时间间隔的用户出借列表
      *
      * @param repairStartDate
      * @param repairEndDate
@@ -122,7 +122,7 @@ public class UserParamExceptionServiceImpl extends BaseServiceImpl implements Us
     }
 
     /**
-     * 更新用户的投资记录
+     * 更新用户的出借记录
      *
      * @param borrowTender
      * @param repairStartDate
@@ -131,24 +131,24 @@ public class UserParamExceptionServiceImpl extends BaseServiceImpl implements Us
      */
     @Override
     public void updateUserTender(BorrowTenderVO borrowTender, String repairStartDate, String repairEndDate) {
-        // 获取投资用户信息
+        // 获取出借用户信息
         int userId = borrowTender.getUserId();
-        // 投资人信息
+        // 出借人信息
         UserVO users = amUserClient.findUserById(userId);
         if (users != null) {
-            // 投资用户名
+            // 出借用户名
             borrowTender.setUserName(users.getUsername());
-            // 获取投资人属性
+            // 获取出借人属性
             UserInfoVO userInfo = amUserClient.findUserInfoById(userId);
             // 用户属性 0=>无主单 1=>有主单 2=>线下员工 3=>线上员工
             Integer attribute = null;
             if (userInfo != null) {
-                // 获取投资用户的用户属性
+                // 获取出借用户的用户属性
                 attribute = userInfo.getAttribute();
                 if (attribute != null) {
                     attribute = getUserAttribute(userId, attribute, borrowTender.getCreateTime(), repairStartDate,
                             repairEndDate);
-                    // 投资人用户属性
+                    // 出借人用户属性
                     borrowTender.setTenderUserAttribute(attribute);
                     // 如果是线上员工或线下员工，推荐人的userId和username不插
                     if (attribute == 2 || attribute == 3) {
@@ -365,7 +365,7 @@ public class UserParamExceptionServiceImpl extends BaseServiceImpl implements Us
 
                         // 入职时间
                         Date dateEntry = smp.parse(entryDateStr);
-                        // 用户投资的时间之后用户入职
+                        // 用户出借的时间之后用户入职
                         if (dateEntry.compareTo(addTime) >= 0) {
                             attribute = 0;
                         } else {
@@ -375,7 +375,7 @@ public class UserParamExceptionServiceImpl extends BaseServiceImpl implements Us
                                 String leaveEndTimeStartStr = userLeaveTemp.getEndTime();
                                 Date leaveEndTimeStart = smp.parse(leaveEndTimeStartStr);
 //                                int leaveEndTimeStart = GetDate.strYYYYMMDD2Timestamp2(leaveEndTimeStartStr);
-                                // 用户投资的时间之后用户发生过离职
+                                // 用户出借的时间之后用户发生过离职
                                 if (leaveEndTimeStart.compareTo(addTime) >= 0) {
 //                                if (addTime <= leaveEndTimeStart) {
                                     int staffType = Integer.parseInt(userLeaveTemp.getStaffType());
@@ -387,7 +387,7 @@ public class UserParamExceptionServiceImpl extends BaseServiceImpl implements Us
                                         attribute = 2;
                                     }
                                 } else {
-                                    // 用户投资的时间之前用户发生过离职
+                                    // 用户出借的时间之前用户发生过离职
                                     attribute = 0;
                                 }
                             } else {
@@ -417,7 +417,7 @@ public class UserParamExceptionServiceImpl extends BaseServiceImpl implements Us
                         // 用户的入职时间
                         String entryDateStr = userRefererLeaveTemp.getEntryDate() + " 00:00:01";
                         Date dateEntryDate = smp.parse(entryDateStr);
-                        // 用户投资的时间之后用户入职
+                        // 用户出借的时间之后用户入职
                         if (dateEntryDate.compareTo(addTime) >= 0) {
 //                        if (addTime <= entryTime) {
                             attribute = 0;
@@ -428,13 +428,13 @@ public class UserParamExceptionServiceImpl extends BaseServiceImpl implements Us
                                 String leaveEndTimeStartStr = userRefererLeaveTemp.getEndTime();
                                 Date leaveEndTimeStart = smp.parse(leaveEndTimeStartStr);
 //                                int leaveEndTimeStart = GetDate.strYYYYMMDD2Timestamp2(leaveEndTimeStartStr);
-                                // 用户投资的时间之后用户的推荐人发生过离职
+                                // 用户出借的时间之后用户的推荐人发生过离职
                                 if (leaveEndTimeStart.compareTo(addTime) >= 0) {
 //                                if (addTime <= leaveEndTimeStart) {
                                     // 用户为有主单
                                     attribute = 1;
                                 } else {
-                                    // 用户投资的时间之前用户的推荐人发生过离职
+                                    // 用户出借的时间之前用户的推荐人发生过离职
                                     attribute = 0;
                                 }
                             } else {
@@ -460,7 +460,7 @@ public class UserParamExceptionServiceImpl extends BaseServiceImpl implements Us
 //                        String entryDateStr = userLeaveTemp.getEntryDate();
 //                        // 入职时间
 //                        int entryTime = GetDate.strYYYYMMDD2Timestamp2(entryDateStr);
-                        // 用户投资的时间之后用户入职
+                        // 用户出借的时间之后用户入职
                         String entryDateStr = userLeaveTemp.getEntryDate() + " 00:00:01";
                         Date dateEntryDate = smp.parse(entryDateStr);
 //                        if (addTime <= entryTime) {
@@ -472,7 +472,7 @@ public class UserParamExceptionServiceImpl extends BaseServiceImpl implements Us
                                 // 用户的离职时间
                                 String leaveEndTimeStartStr = userLeaveTemp.getEndTime();
                                 Date leaveEndTimeStart = smp.parse(leaveEndTimeStartStr);
-                                // 用户投资的时间之后用户发生过离职
+                                // 用户出借的时间之后用户发生过离职
 //                                if (addTime <= leaveEndTimeStart) {
                                 if (leaveEndTimeStart.compareTo(addTime) >= 0) {
                                     int staffType = Integer.parseInt(userLeaveTemp.getStaffType());
@@ -484,7 +484,7 @@ public class UserParamExceptionServiceImpl extends BaseServiceImpl implements Us
                                         attribute = 2;
                                     }
                                 } else {
-                                    // 用户投资的时间之前用户发生过离职
+                                    // 用户出借的时间之前用户发生过离职
                                     attribute = 0;
 
                                 }
@@ -511,7 +511,7 @@ public class UserParamExceptionServiceImpl extends BaseServiceImpl implements Us
 //                        int entryTime = GetDate.strYYYYMMDD2Timestamp2(entryDateStr);
                         String entryDateStr = userRefererLeaveTemp.getEntryDate() + " 00:00:01";
                         Date dateEntryDate = smp.parse(entryDateStr);
-                        // 用户投资的时间之后用户入职
+                        // 用户出借的时间之后用户入职
 //                        if (addTime <= entryTime) {
                         if (dateEntryDate.compareTo(addTime) >= 0) {
                             attribute = 0;
@@ -521,14 +521,14 @@ public class UserParamExceptionServiceImpl extends BaseServiceImpl implements Us
                                 // 用户的推荐人的离职时间
                                 String leaveEndTimeStartStr = userRefererLeaveTemp.getEndTime();
                                /* int leaveEndTimeStart = GetDate.strYYYYMMDD2Timestamp2(leaveEndTimeStartStr);
-                                // 用户投资的时间之后用户的推荐人发生过离职
+                                // 用户出借的时间之后用户的推荐人发生过离职
                                 if (addTime <= leaveEndTimeStart) {*/
                                 Date leaveEndTimeStart = smp.parse(leaveEndTimeStartStr);
                                 if (leaveEndTimeStart.compareTo(addTime) >= 0) {
                                     // 用户为有主单
                                     attribute = 1;
                                 } else {
-                                    // 用户投资的时间之前用户的推荐人发生过离职
+                                    // 用户出借的时间之前用户的推荐人发生过离职
                                     attribute = 0;
 
                                 }
@@ -571,7 +571,7 @@ public class UserParamExceptionServiceImpl extends BaseServiceImpl implements Us
                     // 获取用户的推荐人的首次修改时间
 //                    int modTimeStart = Integer.parseInt(spreadUsersLog.getCreateTime());
 //                    spreadUsersLog.getCreateTime();
-                    // 用户投资的时间之前用户的推荐人被修改过
+                    // 用户出借的时间之前用户的推荐人被修改过
 //                    if (addTime <= modTimeStart) {
                     if (modTimeStart.compareTo(addTime) >= 0) {
                         spreadUserId = spreadUsersLog.getOldSpreadsUserId() == null ? 0

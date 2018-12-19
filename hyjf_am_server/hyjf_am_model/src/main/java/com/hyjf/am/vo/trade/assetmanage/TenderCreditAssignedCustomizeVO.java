@@ -19,7 +19,7 @@ public class TenderCreditAssignedCustomizeVO {
     private String assignNid;
     /* 认购单号 */
     private String assignNidMD5;
-    /* 投资本金 */
+    /* 出借本金 */
     private String assignCapital;
     /* 回收总额 */
     private String assignAccount;
@@ -63,9 +63,9 @@ public class TenderCreditAssignedCustomizeVO {
     private String bidApr;
     /* 折让率 */
     private String creditDiscount;
-    /* 投资时间 */
+    /* 出借时间 */
     private String tenderTime;
-    /* 债转投资人姓名 */
+    /* 债转出借人姓名 */
     private String creditAssignUserTrueName;
 
     public String getAssignId() {

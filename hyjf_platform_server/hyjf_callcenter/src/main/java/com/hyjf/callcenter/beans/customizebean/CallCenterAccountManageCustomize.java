@@ -73,7 +73,7 @@ public class CallCenterAccountManageCustomize {
 	 */
 	private BigDecimal fee;
 	/**
-	 * 新投资金额汇总
+	 * 新出借金额汇总
 	 */
 	private BigDecimal inMoney;
 	/**

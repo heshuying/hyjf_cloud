@@ -25,7 +25,7 @@ public class PlanListViewRequest extends BaseRequest implements Serializable{
 	@ApiModelProperty(value = "计划名称查询")
 	private String planNameSrch;
 	
-	@ApiModelProperty(value = "投资状态:0 全部,1 启用,2 关闭")
+	@ApiModelProperty(value = "出借状态:0 全部,1 启用,2 关闭")
 	private String planStatusSrch;
 	
 	@ApiModelProperty(value = "显示状态 :0 全部,1 显示,2 隐藏")
@@ -121,7 +121,7 @@ public class PlanListViewRequest extends BaseRequest implements Serializable{
 	@ApiModelProperty(value = "递增金额")
 	private String debtInvestmentIncrement;
 	
-	@ApiModelProperty(value = "最大投资金额")
+	@ApiModelProperty(value = "最大出借金额")
 	private String debtMaxInvestment;
 
 	@ApiModelProperty(value = "审核状态")
@@ -136,7 +136,7 @@ public class PlanListViewRequest extends BaseRequest implements Serializable{
 	@ApiModelProperty(value = "问题")
 	private String normalQuestion;
 	
-	@ApiModelProperty(value = "最小投资笔数")
+	@ApiModelProperty(value = "最小出借笔数")
 	private String minInvestCounts;
 
 	@ApiModelProperty(value = "登陆者userid")

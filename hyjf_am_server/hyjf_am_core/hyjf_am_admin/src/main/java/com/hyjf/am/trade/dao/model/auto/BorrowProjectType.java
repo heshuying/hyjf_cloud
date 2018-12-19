@@ -35,7 +35,7 @@ public class BorrowProjectType implements Serializable {
     private String borrowClass;
 
     /**
-     * 投资用户类型0:51老用户 1:新用户 2: 全部
+     * 出借用户类型0:51老用户 1:新用户 2: 全部
      *
      * @mbggenerated
      */
@@ -49,14 +49,14 @@ public class BorrowProjectType implements Serializable {
     private Integer status;
 
     /**
-     * 投资起始值
+     * 出借起始值
      *
      * @mbggenerated
      */
     private String investStart;
 
     /**
-     * 投资最大值
+     * 出借最大值
      *
      * @mbggenerated
      */

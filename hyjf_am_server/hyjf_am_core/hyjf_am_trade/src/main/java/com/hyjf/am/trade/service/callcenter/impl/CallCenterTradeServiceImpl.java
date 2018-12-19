@@ -135,7 +135,7 @@ public class CallCenterTradeServiceImpl implements CallCenterTradeService {
     }
     
     /**
-     * 查询投资明细(汇直投)
+     * 查询出借明细(汇直投)
      * @author libin
      * @param centerBaseRequest
      * @return

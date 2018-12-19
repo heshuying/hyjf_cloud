@@ -80,7 +80,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		// 是否月标(true:月标, false:天标)
 		boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
 				|| CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
-		// 取得投资详情列表
+		// 取得出借详情列表
 		List<BorrowRecover> listRecovers = this.getBorrowRecoverList(borrowNid, apicron);
 		// 是否有待还款记录
 		if (listRecovers == null || listRecovers.size() == 0) {
@@ -91,16 +91,16 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		boolean isEndMonth = CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle);
 		// 还款请求列表
 		List<BorrowRecover> recoverList = new ArrayList<BorrowRecover>();
-		// 取得投资详情列表
+		// 取得出借详情列表
 		List<BorrowRecoverPlan> recoverPlanList = new ArrayList<BorrowRecoverPlan>();
 		// 查询此笔债转承接的还款情况
 		List<CreditRepay> creditRepayList = new ArrayList<CreditRepay>();
 		try {
-			/** 循环投资详情列表 */
+			/** 循环出借详情列表 */
 			for (int i = 0; i < listRecovers.size(); i++) {
 				// 获取还款信息
 				BorrowRecover borrowRecover = listRecovers.get(i);
-				// 投资订单号
+				// 出借订单号
 				String tenderOrderId = borrowRecover.getNid();
 				// 分期的还款信息
 				BorrowRecoverPlan borrowRecoverPlan = null;
@@ -108,7 +108,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 					// 取得分期还款计划表
 					borrowRecoverPlan = this.getBorrowRecoverPlan(borrowNid, periodNow, borrowRecover.getUserId(), tenderOrderId);
 					if (Validator.isNull(borrowRecoverPlan)) {
-						throw new RuntimeException("分期还款计划表数据不存在。[借款编号：" + borrowNid + "]，" + "[投资订单号：" + tenderOrderId + "]，" + "[期数：" + periodNow + "]");
+						throw new RuntimeException("分期还款计划表数据不存在。[借款编号：" + borrowNid + "]，" + "[出借订单号：" + tenderOrderId + "]，" + "[期数：" + periodNow + "]");
 					}
 					// 保存还款订单号
 					if (StringUtils.isBlank(borrowRecoverPlan.getRepayOrderId())) {
@@ -119,7 +119,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 						// 更新还款信息
 						boolean recoverPlanFlag = this.updateBorrowRecoverPlan(borrowRecoverPlan);
 						if (!recoverPlanFlag) {
-							throw new RuntimeException("添加还款订单号，更新borrow_recover_plan表失败" + "，[投资订单号：" + tenderOrderId + "]");
+							throw new RuntimeException("添加还款订单号，更新borrow_recover_plan表失败" + "，[出借订单号：" + tenderOrderId + "]");
 						}
 						// 设置还款订单号
 						borrowRecover.setRepayOrdid(borrowRecoverPlan.getRepayOrderId());
@@ -128,7 +128,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 						// 更新还款信息
 						boolean flag = this.updateBorrowRecover(borrowRecover);
 						if (!flag) {
-							throw new RuntimeException("添加还款订单号，更新borrow_recover表失败" + "，[投资订单号：" + tenderOrderId + "]");
+							throw new RuntimeException("添加还款订单号，更新borrow_recover表失败" + "，[出借订单号：" + tenderOrderId + "]");
 						}
 					}
 					
@@ -144,7 +144,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 						// 更新还款信息
 						boolean flag = this.updateBorrowRecover(borrowRecover);
 						if (!flag) {
-							throw new RuntimeException("添加还款订单号，更新borrow_recover表失败" + "，[投资订单号：" + tenderOrderId + "]");
+							throw new RuntimeException("添加还款订单号，更新borrow_recover表失败" + "，[出借订单号：" + tenderOrderId + "]");
 						}
 					}
 				}
@@ -162,7 +162,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 								// 更新还款信息
 								boolean flag = this.creditRepayMapper.updateByPrimaryKeySelective(creditRepay) > 0 ? true : false;
 								if (!flag) {
-									throw new RuntimeException("添加还款订单号，更新credit_repay表失败" + "，[投资订单号：" + tenderOrderId + "]");
+									throw new RuntimeException("添加还款订单号，更新credit_repay表失败" + "，[出借订单号：" + tenderOrderId + "]");
 								}
 							}
 							if (isMonth && Validator.isNotNull(borrowRecoverPlan)) {
@@ -338,7 +338,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				repayAmountSum = repayAmountSum.add(txAmount).add(intAmount).add(serviceFee);
 				txAmountSum = txAmountSum.add(txAmount);// 交易总金额
 				serviceFeeSum = serviceFeeSum.add(serviceFee);// 总服务费
-				String authCode = creditRepay.getAuthCode();// 投资授权码
+				String authCode = creditRepay.getAuthCode();// 出借授权码
 				// 承接用户的开户信息
 				Account bankOpenAccount = this.getAccountByUserId(assignUserId);
 				// 判断承接用户开户信息
@@ -366,7 +366,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				// 获取不分期的放款信息
 				BorrowRecover borrowRecover = borrowRecoverList.get(i);
 				JSONObject subJson = new JSONObject();// 结果集对象
-				int tenderUserId = borrowRecover.getUserId();// 投资用户userId
+				int tenderUserId = borrowRecover.getUserId();// 出借用户userId
 				String recoverRepayOrderId = borrowRecover.getRepayOrdid();// 还款订单号
 				BigDecimal txAmount = borrowRecover.getRecoverCapitalWait();// 交易金额
 				BigDecimal intAmount = borrowRecover.getRecoverInterestWait().add(borrowRecover.getChargeInterest()).add(borrowRecover.getDelayInterest()).add(borrowRecover.getLateInterest());// 交易利息
@@ -374,10 +374,10 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				txAmountSum = txAmountSum.add(txAmount);// 交易总金额
 				repayAmountSum = repayAmountSum.add(txAmount).add(intAmount).add(serviceFee);
 				serviceFeeSum = serviceFeeSum.add(serviceFee);// 总服务费
-				String authCode = borrowRecover.getAuthCode();// 投资授权码
-				// 投资用户的开户信息
+				String authCode = borrowRecover.getAuthCode();// 出借授权码
+				// 出借用户的开户信息
 				Account bankOpenAccount = this.getAccountByUserId(tenderUserId);
-				// 判断投资用户开户信息
+				// 判断出借用户开户信息
 				if (Validator.isNotNull(bankOpenAccount) && StringUtils.isNotBlank(bankOpenAccount.getAccountId())) {
 					String accountId = bankOpenAccount.getAccountId();// 银行账户
 					subJson.put(BankCallConstant.PARAM_ACCOUNTID, borrowAccountId);// 融资人账号
@@ -400,7 +400,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 					// 获取分期的放款信息
 					BorrowRecoverPlan borrowRecoverPlan = borrowRecoverPlanList.get(i);
 					JSONObject subJson = new JSONObject();// 结果集对象
-					int tenderUserId = borrowRecoverPlan.getUserId();// 投资用户userId
+					int tenderUserId = borrowRecoverPlan.getUserId();// 出借用户userId
 					String recoverPlanRepayOrderId = borrowRecoverPlan.getRepayOrderId();
 					BigDecimal txAmount = borrowRecoverPlan.getRecoverCapitalWait();// 交易金额
 					BigDecimal intAmount = borrowRecoverPlan.getRecoverInterestWait().add(borrowRecoverPlan.getChargeInterest()).add(borrowRecoverPlan.getDelayInterest())
@@ -409,10 +409,10 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 					repayAmountSum = repayAmountSum.add(txAmount).add(intAmount).add(serviceFee);
 					txAmountSum = txAmountSum.add(txAmount);// 交易总金额
 					serviceFeeSum = serviceFeeSum.add(serviceFee);// 总服务费
-					String authCode = borrowRecoverPlan.getAuthCode();// 投资授权码
-					// 投资用户的开户信息
+					String authCode = borrowRecoverPlan.getAuthCode();// 出借授权码
+					// 出借用户的开户信息
 					Account bankOpenAccount = this.getAccountByUserId(tenderUserId);
-					// 判断投资用户开户信息
+					// 判断出借用户开户信息
 					if (Validator.isNotNull(bankOpenAccount) && StringUtils.isNotBlank(bankOpenAccount.getAccountId())) {
 						String accountId = bankOpenAccount.getAccountId();// 银行账户
 						subJson.put(BankCallConstant.PARAM_ACCOUNTID, borrowAccountId);// 融资人账号
@@ -699,7 +699,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		List<BankCallBean> resultBeans = this.queryBatchDetails(apicron);
 		// 还款成功后后续操作
 		try {
-			// 给标的的投资人更新明细，加钱，结束债权
+			// 给标的的出借人更新明细，加钱，结束债权
 			boolean repayFlag = this.debtRepays(apicron, borrow, borrowInfo, resultBeans);
 			if (repayFlag) {
 				try {
@@ -815,14 +815,14 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 					}
 				}
 			}
-			// 取得投资详情列表
+			// 取得出借详情列表
 			List<BorrowRecover> borrowRecoverList = this.getBorrowRecoverList(borrowNid, apicron);
 			if (borrowRecoverList != null && borrowRecoverList.size() > 0) {
 				// 遍历进行还款 
 				for (int i = 0; i < borrowRecoverList.size(); i++) {
-					// 投资明细
+					// 出借明细
 					BorrowRecover borrowRecover = borrowRecoverList.get(i);
-					String tenderOrderId = borrowRecover.getNid();// 投资订单号
+					String tenderOrderId = borrowRecover.getNid();// 出借订单号
 					String repayOrderId = borrowRecover.getRepayOrdid();// 还款订单号
 					if(1 == apicron.getIsAllrepay()){//一次性结清
 						repayOrderId = getAllRepayOrdid(borrowNid,periodNow,borrowRecover.getNid());
@@ -842,7 +842,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 								String creditRepayOrderId = creditRepay.getCreditRepayOrderId();
 								JSONObject assignRepayDetail = repayResults.get(creditRepayOrderId);
 								if (Validator.isNull(assignRepayDetail)) {
-									logger.info("银行端未查詢到相应的还款明细!" + "[投资订单号：" + tenderOrderId + "]");
+									logger.info("银行端未查詢到相应的还款明细!" + "[出借订单号：" + tenderOrderId + "]");
 									continue;
 								}
 								try {
@@ -872,7 +872,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 										}
 									} else {
 										creditRepayAllFlag = false;
-										// 更新投资详情表
+										// 更新出借详情表
 										boolean borrowTenderFlag = this.updateCreditRepay(apicron, creditRepay);
 										if (!borrowTenderFlag) {
 											throw new Exception("更新相应的creditrepay失败!" + "[承接订单号：" + assignOrderId + "]" + "[还款期数：" + periodNow + "]");
@@ -888,7 +888,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 								// 如果不是全部债转
 								if (borrowRecover.getRecoverCapital().compareTo(borrowRecover.getCreditAmount()) > 0) {
 									if (Validator.isNull(repayDetail)) {
-										logger.info("银行端未查詢到相应的还款明细!" + "[投资订单号：" + tenderOrderId + "]");
+										logger.info("银行端未查詢到相应的还款明细!" + "[出借订单号：" + tenderOrderId + "]");
 										continue;
 									}
 									String txState = repayDetail.getString(BankCallConstant.PARAM_TXSTATE);// 交易状态
@@ -905,15 +905,15 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 															// 更新相应的债权状态为结束
 															boolean debtStatusFlag = this.updateDebtStatus(borrowRecover, isMonth);
 															if (!debtStatusFlag) {
-																throw new Exception("更新相应的投资为债权结束失败!" + "[投资订单号：" + tenderOrderId + "]" + "[还款期数：" + periodNow + "]");
+																throw new Exception("更新相应的出借为债权结束失败!" + "[出借订单号：" + tenderOrderId + "]" + "[还款期数：" + periodNow + "]");
 															}
 														} else {
-															throw new Exception("结束债权失败!" + "[投资订单号：" + tenderOrderId + "]" + "[还款期数：" + periodNow + "]");
+															throw new Exception("结束债权失败!" + "[出借订单号：" + tenderOrderId + "]" + "[还款期数：" + periodNow + "]");
 														}
 													}
 												}
 											} else {
-												throw new Exception("还款失败!" + "[投资订单号：" + tenderOrderId + "]");
+												throw new Exception("还款失败!" + "[出借订单号：" + tenderOrderId + "]");
 											}
 										} catch (Exception e) {
 											logger.error("还款中发生系统", e);
@@ -921,10 +921,10 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 										}
 									} else {
 										try {
-											// 更新投资详情表
+											// 更新出借详情表
 											boolean recoverFlag = ((BatchBorrowRepayZTService)AopContext.currentProxy()).updateRecover(apicron, borrow, borrowRecover);
 											if (!recoverFlag) {
-												throw new Exception("还款失败!" + "[投资订单号：" + tenderOrderId + "]");
+												throw new Exception("还款失败!" + "[出借订单号：" + tenderOrderId + "]");
 											}
 										} catch (Exception e) {
 											logger.error("还款中发生系统", e);
@@ -935,7 +935,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 									try {
 										boolean tenderRepayFlag = ((BatchBorrowRepayZTService)AopContext.currentProxy()).updateTenderRepayStatus(apicron, borrow, borrowRecover);
 										if (!tenderRepayFlag) {
-											throw new Exception("更新相应的还款信息失败!" + "[投资订单号：" + tenderOrderId + "]");
+											throw new Exception("更新相应的还款信息失败!" + "[出借订单号：" + tenderOrderId + "]");
 										}
 									} catch (Exception e) {
 										logger.error("还款中发生系统", e);
@@ -948,7 +948,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 						}
 					} else {
 						if (Validator.isNull(repayDetail)) {
-							logger.info("银行端未查詢到相应的还款明细!" + "[投资订单号：" + tenderOrderId + "]");
+							logger.info("银行端未查詢到相应的还款明细!" + "[出借订单号：" + tenderOrderId + "]");
 							continue;
 						}
 						String txState = repayDetail.getString(BankCallConstant.PARAM_TXSTATE);// 交易状态
@@ -964,14 +964,14 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 											// 更新相应的债权状态为结束
 											boolean debtStatusFlag = this.updateDebtStatus(borrowRecover, isMonth);
 											if (!debtStatusFlag) {
-												throw new Exception("更新相应的投资为债权结束失败!" + "[投资订单号：" + tenderOrderId + "]" + "[还款期数：" + periodNow + "]");
+												throw new Exception("更新相应的出借为债权结束失败!" + "[出借订单号：" + tenderOrderId + "]" + "[还款期数：" + periodNow + "]");
 											}
 										} else {
-											throw new Exception("结束债权失败!" + "[投资订单号：" + tenderOrderId + "]" + "[还款期数：" + periodNow + "]");
+											throw new Exception("结束债权失败!" + "[出借订单号：" + tenderOrderId + "]" + "[还款期数：" + periodNow + "]");
 										}
 									}
 								} else {
-									throw new Exception("还款失败!" + "[投资订单号：" + tenderOrderId + "]");
+									throw new Exception("还款失败!" + "[出借订单号：" + tenderOrderId + "]");
 								}
 							} catch (Exception e) {
 								logger.error("还款中发生系统", e);
@@ -979,10 +979,10 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 							}
 						} else {
 							try {
-								// 更新投资详情表
+								// 更新出借详情表
 								boolean recoverFlag = ((BatchBorrowRepayZTService)AopContext.currentProxy()).updateRecover(apicron, borrow, borrowRecover);
 								if (!recoverFlag) {
-									throw new Exception("还款失败!" + "[投资订单号：" + tenderOrderId + "]");
+									throw new Exception("还款失败!" + "[出借订单号：" + tenderOrderId + "]");
 								}
 							} catch (Exception e) {
 								logger.error("还款中发生系统", e);
@@ -1043,7 +1043,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 
 		String orderId = assignRepayDetail.getString(BankCallConstant.PARAM_ORDERID);// 还款订单号
 		BigDecimal txAmount = assignRepayDetail.getBigDecimal(BankCallConstant.PARAM_TXAMOUNT);// 操作金额
-		String forAccountId = assignRepayDetail.getString(BankCallConstant.PARAM_FORACCOUNTID);// 投资人银行账户
+		String forAccountId = assignRepayDetail.getString(BankCallConstant.PARAM_FORACCOUNTID);// 出借人银行账户
 		/** 标的基本数据 */
 		// 标的是否可用担保机构还款
 		int isRepayOrgFlag = Validator.isNull(borrowInfo.getIsRepayOrgFlag()) ? 0 : borrowInfo.getIsRepayOrgFlag();
@@ -1053,9 +1053,9 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		String borrowStyle = borrow.getBorrowStyle();
 
 		/** 还款信息 */
-		// 投资订单号
+		// 出借订单号
 		String tenderOrderId = borrowRecover.getNid();
-		// 投资人用户ID
+		// 出借人用户ID
 		Integer tenderUserId = borrowRecover.getUserId();
 
 		/** 债权还款信息 */
@@ -1096,18 +1096,18 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		Integer periodNext = borrowPeriod - periodNow;
 		// 取得还款详情
 		BorrowRepay borrowRepay = getBorrowRepay(borrowNid);
-		// 投资信息
+		// 出借信息
 		BorrowTender borrowTender = getBorrowTender(tenderOrderId);
 		// 查询相应的债权转让
 		BorrowCredit borrowCredit = this.getBorrowCredit(creditNid);
-		// 投资用户开户信息
+		// 出借用户开户信息
 		Account assignBankAccount = getAccountByUserId(assignUserId);
-		// 投资用户银行账户
+		// 出借用户银行账户
 		String assignAccountId = assignBankAccount.getAccountId();
 		// 查询相应的债权承接记录
 		CreditTender creditTender = this.getCreditTender(assignNid);
 		if (Validator.isNull(creditTender)) {
-			throw new Exception("投资人未开户。[用户ID：" + repayUserId + "]，" + "[投资订单号：" + tenderOrderId + "]");
+			throw new Exception("出借人未开户。[用户ID：" + repayUserId + "]，" + "[出借订单号：" + tenderOrderId + "]");
 		}
 		// 是否月标(true:月标, false:天标)
 		boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
@@ -1120,30 +1120,30 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		}
 		// 债转的下次还款时间
 		int creditRepayNextTime = creditRepay.getAssignRepayNextTime();
-		// 更新账户信息(投资人)
+		// 更新账户信息(出借人)
 		Account assignUserAccount = new Account();
 		assignUserAccount.setUserId(assignUserId);
-		assignUserAccount.setBankTotal(lateInterest.add(delayInterest).add(chargeInterest));// 投资人资金总额
-		assignUserAccount.setBankBalance(repayAccount);// 投资人可用余额
-		assignUserAccount.setBankAwait(assignAccount);// 投资人待收金额
+		assignUserAccount.setBankTotal(lateInterest.add(delayInterest).add(chargeInterest));// 出借人资金总额
+		assignUserAccount.setBankBalance(repayAccount);// 出借人可用余额
+		assignUserAccount.setBankAwait(assignAccount);// 出借人待收金额
 		assignUserAccount.setBankAwaitCapital(assignCapital);
 		assignUserAccount.setBankAwaitInterest(assignInterest);
 		assignUserAccount.setBankInterestSum(repayInterest);
 		assignUserAccount.setBankBalanceCash(repayAccount);
 		boolean investAccountFlag = this.adminAccountCustomizeMapper.updateOfRepayTender(assignUserAccount) > 0 ? true : false;
 		if (!investAccountFlag) {
-			throw new Exception("承接人资金记录(huiyingdai_account)更新失败！" + "[投资订单号：" + tenderOrderId + "]");
+			throw new Exception("承接人资金记录(huiyingdai_account)更新失败！" + "[出借订单号：" + tenderOrderId + "]");
 		}
 		// 取得承接人账户信息
 		assignUserAccount = this.getAccountByUserId(creditRepay.getUserId());
 		if (Validator.isNull(assignAccount)) {
-			throw new Exception("承接人账户信息不存在。[投资人ID：" + borrowTender.getUserId() + "]，" + "[投资订单号：" + tenderOrderId + "]");
+			throw new Exception("承接人账户信息不存在。[出借人ID：" + borrowTender.getUserId() + "]，" + "[出借订单号：" + tenderOrderId + "]");
 		}
 		// 写入收支明细
 		AccountList accountList = new AccountList();
 		accountList.setNid(repayOrderId); // 还款订单号
-		accountList.setUserId(assignUserId); // 投资人
-		accountList.setAmount(repayAccount); // 投资总收入
+		accountList.setUserId(assignUserId); // 出借人
+		accountList.setAmount(repayAccount); // 出借总收入
 		/** 银行相关 */
 		accountList.setAccountId(assignAccountId);
 		accountList.setBankAwait(assignUserAccount.getBankAwait());
@@ -1179,14 +1179,14 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		accountList.setBankSeqNo(bankSeqNo);
 		/** 非银行相关 */
 		accountList.setType(1); // 1收入
-		accountList.setTrade("credit_tender_recover_yes"); // 投资成功
+		accountList.setTrade("credit_tender_recover_yes"); // 投标成功
 		accountList.setTradeCode("balance"); // 余额操作
-		accountList.setTotal(assignUserAccount.getTotal()); // 投资人资金总额
-		accountList.setBalance(assignUserAccount.getBalance()); // 投资人可用金额
+		accountList.setTotal(assignUserAccount.getTotal()); // 出借人资金总额
+		accountList.setBalance(assignUserAccount.getBalance()); // 出借人可用金额
 		accountList.setPlanFrost(assignUserAccount.getPlanFrost());// 汇添金冻结金额
 		accountList.setPlanBalance(assignUserAccount.getPlanBalance());// 汇添金可用金额
-		accountList.setFrost(assignUserAccount.getFrost()); // 投资人冻结金额
-		accountList.setAwait(assignUserAccount.getAwait()); // 投资人待收金额
+		accountList.setFrost(assignUserAccount.getFrost()); // 出借人冻结金额
+		accountList.setAwait(assignUserAccount.getAwait()); // 出借人待收金额
 //		accountList.setCreateTime(nowTime); // 创建时间
 //		accountList.setBaseUpdate(nowTime); // 更新时间
 		accountList.setOperator(CustomConstants.OPERATOR_AUTO_REPAY); // 操作者
@@ -1200,7 +1200,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		if (!assignAccountListFlag) {
 			throw new Exception("收支明细(huiyingdai_account_list)写入失败！" + "[承接订单号：" + assignNid + "]");
 		}
-		// 更新相应的债转投资表
+		// 更新相应的债转出借表
 		// 债转已还款总额
 		creditTender.setAssignRepayAccount(creditTender.getAssignRepayAccount().add(repayAccount));
 		// 债转已还款本金
@@ -1235,7 +1235,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		creditTender.setRecoverPeriod(periodNow);
 		boolean creditTenderFlag = this.creditTenderMapper.updateByPrimaryKeySelective(creditTender) > 0 ? true : false;
 		if (!creditTenderFlag) {
-			throw new Exception("债转投资表(huiyingdai_credit_tender)更新失败！" + "[承接订单号：" + creditRepay.getAssignNid() + "]");
+			throw new Exception("债转出借表(huiyingdai_credit_tender)更新失败！" + "[承接订单号：" + creditRepay.getAssignNid() + "]");
 		}
 		creditRepay.setAssignRepayAccount(creditRepay.getAssignRepayAccount().add(repayAccount));
 		creditRepay.setAssignRepayCapital(creditRepay.getAssignRepayCapital().add(repayCapital));
@@ -1290,7 +1290,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		// 更新还款表
 		boolean creditBorrowRecoverFlag = this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecover) > 0 ? true : false;
 		if (!creditBorrowRecoverFlag) {
-			throw new Exception("投资人还款表(huiyingdai_borrow_recover)更新失败！" + "[债转编号：" + creditRepay.getCreditNid() + "]");
+			throw new Exception("出借人还款表(huiyingdai_borrow_recover)更新失败！" + "[债转编号：" + creditRepay.getCreditNid() + "]");
 		}
 		// 更新总的还款明细
 		borrowRepay.setRepayAccountAll(borrowRepay.getRepayAccountAll().add(repayAccount).add(manageFee));
@@ -1410,9 +1410,9 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		newBrrow.setRepayFeeNormal(borrow.getRepayFeeNormal().add(manageFee));
 		boolean borrowFlag = this.borrowMapper.updateByPrimaryKeySelective(newBrrow) > 0 ? true : false;
 		if (!borrowFlag) {
-			throw new Exception("借款详情(huiyingdai_borrow)更新失败！" + "[投资订单号：" + tenderOrderId + "]");
+			throw new Exception("借款详情(huiyingdai_borrow)更新失败！" + "[出借订单号：" + tenderOrderId + "]");
 		}
-		// 更新投资表
+		// 更新出借表
 		// 已还款金额
 		borrowTender.setRecoverAccountYes(borrowTender.getRecoverAccountYes().add(repayAccount));
 		// 已还款利息
@@ -1427,20 +1427,20 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		borrowTender.setRecoverAccountInterestWait(borrowTender.getRecoverAccountInterestWait().subtract(assignInterest));
 		boolean borrowTenderFlag = borrowTenderMapper.updateByPrimaryKeySelective(borrowTender) > 0 ? true : false;
 		if (!borrowTenderFlag) {
-			throw new Exception("投资表(huiyingdai_borrow_tender)更新失败！" + "[投资订单号：" + tenderOrderId + "]");
+			throw new Exception("出借表(huiyingdai_borrow_tender)更新失败！" + "[出借订单号：" + tenderOrderId + "]");
 		}
 		// 管理费大于0时,插入网站收支明细
 		if (manageFee.compareTo(BigDecimal.ZERO) > 0) {
 			// 插入网站收支明细记录
 			AccountWebListVO accountWebList = new AccountWebListVO();
 			accountWebList.setOrdid(creditRepay.getAssignNid() + "_" + periodNow);// 订单号
-			accountWebList.setBorrowNid(borrowNid); // 投资编号
+			accountWebList.setBorrowNid(borrowNid); // 出借编号
 			accountWebList.setUserId(repayUserId); // 借款人
 			accountWebList.setAmount(Double.valueOf(manageFee.toString())); // 管理费
 			accountWebList.setType(CustomConstants.TYPE_IN); // 类型1收入,2支出
 			accountWebList.setTrade(CustomConstants.TRADE_REPAYFEE); // 管理费
 			accountWebList.setTradeType(CustomConstants.TRADE_REPAYFEE_NM); // 账户管理费
-			accountWebList.setRemark(borrowNid); // 投资编号
+			accountWebList.setRemark(borrowNid); // 出借编号
 			accountWebList.setCreateTime(nowTime);
 			accountWebList.setFlag(1);
 			//网站首支明细队列
@@ -1553,10 +1553,10 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	 */
 	private boolean requestDebtEnd(Integer userId, JSONObject repayDetail,String orgOrderId, Borrow borrow, BorrowInfo borrowInfo) {
 
-		String accountId = repayDetail.getString(BankCallConstant.PARAM_FORACCOUNTID);// 投资人账户
+		String accountId = repayDetail.getString(BankCallConstant.PARAM_FORACCOUNTID);// 出借人账户
 		String forAccountId = repayDetail.getString(BankCallConstant.PARAM_ACCOUNTID);// 借款人账户
 		String productId = repayDetail.getString(BankCallConstant.PARAM_PRODUCTID);// 项目编号
-		String authCode = repayDetail.getString(BankCallConstant.PARAM_AUTHCODE);// 投资授权码
+		String authCode = repayDetail.getString(BankCallConstant.PARAM_AUTHCODE);// 出借授权码
 
 		// 获取共同参数
 		String channel = BankCallConstant.CHANNEL_PC;
@@ -1600,7 +1600,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 //							debtEndBean.setChannel(channel);
 //							debtEndBean.setAccountId(forAccountId);// 借款人电子账户号
 //							debtEndBean.setOrderId(logOrderId);
-//							debtEndBean.setForAccountId(accountId);// 投资人电子账户号
+//							debtEndBean.setForAccountId(accountId);// 出借人电子账户号
 //							debtEndBean.setProductId(productId);
 //							debtEndBean.setAuthCode(authCode);
 //							debtEndBean.setLogUserId(String.valueOf(userId));
@@ -1620,7 +1620,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 //								continue;
 //							}
 							
-							logger.info(productId+" 直投还款结束债权  借款人: "+borrowUserId+"-"+forAccountId+" 投资人: "+userId+"-"+accountId+" 授权码: "+authCode+" 原始订单号: "+orgOrderId);
+							logger.info(productId+" 直投还款结束债权  借款人: "+borrowUserId+"-"+forAccountId+" 出借人: "+userId+"-"+accountId+" 授权码: "+authCode+" 原始订单号: "+orgOrderId);
 							BankCreditEnd record = new BankCreditEnd();
 							record.setUserId(borrowUserId);
 //							record.setUsername(borrowRecover);
@@ -1725,7 +1725,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	}
 
 	/**
-	 * 更新相应的原始投资为债权结束
+	 * 更新相应的原始出借为债权结束
 	 * 
 	 * @param borrowRecover
 	 * @param isMonth
@@ -1746,11 +1746,11 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 	 * @throws Exception
 	 */
 	private boolean updateCreditRepay(BorrowApicron apicron, CreditRepay creditRepay) throws Exception {
-		// 更新投资详情表
+		// 更新出借详情表
 		creditRepay.setStatus(2); // 状态 0未还款1已还款2还款失败
 		boolean creditRepayFlag = this.creditRepayMapper.updateByPrimaryKeySelective(creditRepay) > 0 ? true : false;
 		if (!creditRepayFlag) {
-			throw new Exception("债转还款记录(credit_repay)更新失败!" + "[投资订单号：" + creditRepay.getAssignNid() + "]" + ",期数：" + creditRepay.getRecoverPeriod());
+			throw new Exception("债转还款记录(credit_repay)更新失败!" + "[出借订单号：" + creditRepay.getAssignNid() + "]" + ",期数：" + creditRepay.getRecoverPeriod());
 		}
 		return true;
 	}
@@ -2377,7 +2377,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 
 
 	/**
-	 *  还款后变更投资人资金明细
+	 *  还款后变更出借人资金明细
 	 * @param apicron
 	 * @param borrow
 	 * @param borrowInfo
@@ -2412,7 +2412,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 
 		String orderId = repayDetail.getString(BankCallConstant.PARAM_ORDERID);// 还款订单号
 		BigDecimal txAmount = repayDetail.getBigDecimal(BankCallConstant.PARAM_TXAMOUNT);// 操作金额
-		String forAccountId = repayDetail.getString(BankCallConstant.PARAM_FORACCOUNTID);// 投资人银行账户
+		String forAccountId = repayDetail.getString(BankCallConstant.PARAM_FORACCOUNTID);// 出借人银行账户
 		/** 标的基本数据 */
 		// 标的是否可以担保机构还款
 		int isRepayOrgFlag = Validator.isNull(borrowInfo.getIsRepayOrgFlag()) ? 0 : borrowInfo.getIsRepayOrgFlag();
@@ -2420,10 +2420,10 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();
 		// 还款方式
 		String borrowStyle = borrow.getBorrowStyle();
-		/** 投资人数据 */
-		// 投资订单号
+		/** 出借人数据 */
+		// 出借订单号
 		String tenderOrderId = borrowRecover.getNid();
-		// 投资人用户ID
+		// 出借人用户ID
 		Integer tenderUserId = borrowRecover.getUserId();
 		// 还款时间
 		Integer recoverTime = borrowRecover.getRecoverTime();
@@ -2436,11 +2436,11 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		Integer periodNext = borrowPeriod - periodNow;
 		// 取得还款详情
 		BorrowRepay borrowRepay = getBorrowRepay(borrowNid);
-		// 投资信息
+		// 出借信息
 		BorrowTender borrowTender = getBorrowTender(tenderOrderId);
-		// 投资用户开户信息
+		// 出借用户开户信息
 		Account tenderBankAccount = getAccountByUserId(tenderUserId);
-		// 投资用户银行账户
+		// 出借用户银行账户
 		String tenderAccountId = tenderBankAccount.getAccountId();
 		// 应收管理费
 		BigDecimal recoverFee = BigDecimal.ZERO;
@@ -2486,7 +2486,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			// 取得分期还款计划表
 			borrowRecoverPlan = getBorrowRecoverPlan(borrowNid, periodNow, tenderUserId, tenderOrderId);
 			if (Validator.isNull(borrowRecoverPlan)) {
-				throw new Exception("分期还款计划表数据不存在。[借款编号：" + borrowNid + "]，" + "[投资订单号：" + tenderOrderId + "]，" + "[期数：" + periodNow + "]");
+				throw new Exception("分期还款计划表数据不存在。[借款编号：" + borrowNid + "]，" + "[出借订单号：" + tenderOrderId + "]，" + "[期数：" + periodNow + "]");
 			}
 			// 还款订单号
 			repayOrderId = borrowRecoverPlan.getRepayOrderId();
@@ -2570,30 +2570,30 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		if (countAccountListByNid(repayOrderId)) {
 			return true;
 		}
-		// 更新账户信息(投资人)
+		// 更新账户信息(出借人)
 		Account tenderAccount = new Account();
 		tenderAccount.setUserId(tenderUserId);
-		tenderAccount.setBankTotal(lateInterest.add(delayInterest).add(chargeInterest));// 投资人资金总额
-		tenderAccount.setBankBalance(repayAccount);// 投资人可用余额
-		tenderAccount.setBankAwait(recoverAccountWait);// 投资人待收金额
+		tenderAccount.setBankTotal(lateInterest.add(delayInterest).add(chargeInterest));// 出借人资金总额
+		tenderAccount.setBankBalance(repayAccount);// 出借人可用余额
+		tenderAccount.setBankAwait(recoverAccountWait);// 出借人待收金额
 		tenderAccount.setBankAwaitCapital(recoverCapitalWait);
 		tenderAccount.setBankAwaitInterest(recoverInterestWait);
 		tenderAccount.setBankInterestSum(repayInterest);
 		tenderAccount.setBankBalanceCash(repayAccount);
 		boolean investAccountFlag = this.adminAccountCustomizeMapper.updateOfRepayTender(tenderAccount) > 0 ? true : false;
 		if (!investAccountFlag) {
-			throw new Exception("投资人资金记录(huiyingdai_account)更新失败！" + "[投资订单号：" + tenderOrderId + "]");
+			throw new Exception("出借人资金记录(huiyingdai_account)更新失败！" + "[出借订单号：" + tenderOrderId + "]");
 		}
-		// 取得账户信息(投资人)
+		// 取得账户信息(出借人)
 		tenderAccount = this.getAccountByUserId(borrowTender.getUserId());
 		if (Validator.isNull(tenderAccount)) {
-			throw new Exception("投资人账户信息不存在。[投资人ID：" + borrowTender.getUserId() + "]，" + "[投资订单号：" + tenderOrderId + "]");
+			throw new Exception("出借人账户信息不存在。[出借人ID：" + borrowTender.getUserId() + "]，" + "[出借订单号：" + tenderOrderId + "]");
 		}
 		// 写入收支明细
 		AccountList accountList = new AccountList();
 		accountList.setNid(repayOrderId); // 还款订单号
-		accountList.setUserId(tenderUserId); // 投资人
-		accountList.setAmount(repayAccount); // 投资总收入
+		accountList.setUserId(tenderUserId); // 出借人
+		accountList.setAmount(repayAccount); // 出借总收入
 		/** 银行相关 */
 		accountList.setAccountId(tenderAccountId);
 		accountList.setBankAwait(tenderAccount.getBankAwait());
@@ -2629,14 +2629,14 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		accountList.setBankSeqNo(bankSeqNo);
 		/** 非银行相关 */
 		accountList.setType(1); // 1收入
-		accountList.setTrade("tender_recover_yes"); // 投资成功
+		accountList.setTrade("tender_recover_yes"); // 投标成功
 		accountList.setTradeCode("balance"); // 余额操作
-		accountList.setTotal(tenderAccount.getTotal()); // 投资人资金总额
-		accountList.setBalance(tenderAccount.getBalance()); // 投资人可用金额
+		accountList.setTotal(tenderAccount.getTotal()); // 出借人资金总额
+		accountList.setBalance(tenderAccount.getBalance()); // 出借人可用金额
 		accountList.setPlanFrost(tenderAccount.getPlanFrost());// 汇添金冻结金额
 		accountList.setPlanBalance(tenderAccount.getPlanBalance());// 汇添金可用金额
-		accountList.setFrost(tenderAccount.getFrost()); // 投资人冻结金额
-		accountList.setAwait(tenderAccount.getAwait()); // 投资人待收金额
+		accountList.setFrost(tenderAccount.getFrost()); // 出借人冻结金额
+		accountList.setAwait(tenderAccount.getAwait()); // 出借人待收金额
 //		accountList.setCreateTime(nowTime); // 创建时间
 //		accountList.setBaseUpdate(nowTime); // 更新时间
 		accountList.setOperator(CustomConstants.OPERATOR_AUTO_REPAY); // 操作者
@@ -2648,7 +2648,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		accountList.setWeb(0); // PC
 		boolean investAccountListFlag = this.accountListMapper.insertSelective(accountList) > 0 ? true : false;
 		if (!investAccountListFlag) {
-			throw new Exception("收支明细(huiyingdai_account_list)写入失败！" + "[投资订单号：" + tenderOrderId + "]");
+			throw new Exception("收支明细(huiyingdai_account_list)写入失败！" + "[出借订单号：" + tenderOrderId + "]");
 		}
 		// 更新还款明细表
 		// 分期并且不是最后一期
@@ -2682,9 +2682,9 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		borrowRecover.setWeb(2); // 写入网站收支
 		boolean borrowRecoverFlag = this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecover) > 0 ? true : false;
 		if (!borrowRecoverFlag) {
-			throw new Exception("还款明细(huiyingdai_borrow_recover)更新失败！" + "[投资订单号：" + tenderOrderId + "]");
+			throw new Exception("还款明细(huiyingdai_borrow_recover)更新失败！" + "[出借订单号：" + tenderOrderId + "]");
 		}else{  
-			logger.info("---------------------------------cwyang 标的号:" + borrowNid + ",还款订单号:" + borrowRecover.getRepayOrdid() + ",投资数据变更成功!");
+			logger.info("---------------------------------cwyang 标的号:" + borrowNid + ",还款订单号:" + borrowRecover.getRepayOrdid() + ",出借数据变更成功!");
 		}
 		if (borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
 			// 查询相应的债权转让
@@ -2742,7 +2742,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		borrowRepay.setRepayUsername(repayUserName);
 		boolean borrowRepayFlag = this.borrowRepayMapper.updateByPrimaryKeySelective(borrowRepay) > 0 ? true : false;
 		if (!borrowRepayFlag) {
-			throw new Exception("总的还款明细表(huiyingdai_borrow_repay)更新失败！" + "[投资订单号：" + tenderOrderId + "]");
+			throw new Exception("总的还款明细表(huiyingdai_borrow_repay)更新失败！" + "[出借订单号：" + tenderOrderId + "]");
 		}
 		// 更新借款表
 		borrow = getBorrowByNid(borrowNid);
@@ -2759,9 +2759,9 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		newBrrow.setRepayFeeNormal(borrow.getRepayFeeNormal().add(manageFee));
 		boolean borrowFlag = this.borrowMapper.updateByPrimaryKeySelective(newBrrow) > 0 ? true : false;
 		if (!borrowFlag) {
-			throw new Exception("借款详情(huiyingdai_borrow)更新失败！" + "[投资订单号：" + tenderOrderId + "]");
+			throw new Exception("借款详情(huiyingdai_borrow)更新失败！" + "[出借订单号：" + tenderOrderId + "]");
 		}
-		// 更新投资表
+		// 更新出借表
 		borrowTender.setRecoverAccountYes(borrowTender.getRecoverAccountYes().add(repayAccount));
 		borrowTender.setRecoverAccountCapitalYes(borrowTender.getRecoverAccountCapitalYes().add(repayCapital));
 		borrowTender.setRecoverAccountInterestYes(borrowTender.getRecoverAccountInterestYes().add(repayInterest));
@@ -2770,7 +2770,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		borrowTender.setRecoverAccountInterestWait(borrowTender.getRecoverAccountInterestWait().subtract(recoverInterestWait));
 		boolean borrowTenderFlag = borrowTenderMapper.updateByPrimaryKeySelective(borrowTender) > 0 ? true : false;
 		if (!borrowTenderFlag) {
-			throw new Exception("投资表(huiyingdai_borrow_tender)更新失败！" + "[投资订单号：" + tenderOrderId + "]");
+			throw new Exception("出借表(huiyingdai_borrow_tender)更新失败！" + "[出借订单号：" + tenderOrderId + "]");
 		}
 		// 分期时
 		if (Validator.isNotNull(borrowRecoverPlan)) {
@@ -2791,7 +2791,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			borrowRecoverPlan.setRecoverType(TYPE_YES);
 			boolean borrowRecoverPlanFlag = this.borrowRecoverPlanMapper.updateByPrimaryKeySelective(borrowRecoverPlan) > 0 ? true : false;
 			if (!borrowRecoverPlanFlag) {
-				throw new Exception("还款分期计划表(huiyingdai_borrow_recover_plan)更新失败！" + "[投资订单号：" + tenderOrderId + "]");
+				throw new Exception("还款分期计划表(huiyingdai_borrow_recover_plan)更新失败！" + "[出借订单号：" + tenderOrderId + "]");
 			}
 			// 更新总的还款计划
 			BorrowRepayPlan borrowRepayPlan = getBorrowRepayPlan(borrowNid, periodNow);
@@ -2827,10 +2827,10 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				borrowRepayPlan.setRepayUsername(repayUserName);
 				boolean borrowRepayPlanFlag = this.borrowRepayPlanMapper.updateByPrimaryKeySelective(borrowRepayPlan) > 0 ? true : false;
 				if (!borrowRepayPlanFlag) {
-					throw new Exception("还款分期计划表(huiyingdai_borrow_repay_plan)更新失败！" + "[投资订单号：" + tenderOrderId + "]");
+					throw new Exception("还款分期计划表(huiyingdai_borrow_repay_plan)更新失败！" + "[出借订单号：" + tenderOrderId + "]");
 				}
 			} else {
-				throw new Exception("还款分期计划表(huiyingdai_borrow_repay_plan)查询失败！" + "[投资订单号：" + tenderOrderId + "]");
+				throw new Exception("还款分期计划表(huiyingdai_borrow_repay_plan)查询失败！" + "[出借订单号：" + tenderOrderId + "]");
 			}
 
 		}
@@ -2839,13 +2839,13 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			// 插入网站收支明细记录
 			AccountWebListVO accountWebList = new AccountWebListVO();
 			accountWebList.setOrdid(borrowTender.getNid() + "_" + periodNow);// 订单号
-			accountWebList.setBorrowNid(borrowNid); // 投资编号
+			accountWebList.setBorrowNid(borrowNid); // 出借编号
 			accountWebList.setUserId(repayUserId); // 借款人
 			accountWebList.setAmount(Double.valueOf(manageFee.toString())); // 管理费
 			accountWebList.setType(CustomConstants.TYPE_IN); // 类型1收入,2支出
 			accountWebList.setTrade(CustomConstants.TRADE_REPAYFEE); // 管理费
 			accountWebList.setTradeType(CustomConstants.TRADE_REPAYFEE_NM); // 账户管理费
-			accountWebList.setRemark(borrowNid); // 投资编号
+			accountWebList.setRemark(borrowNid); // 出借编号
 			accountWebList.setCreateTime(nowTime);
 			accountWebList.setFlag(1);
 			//网站首支明细队列
@@ -2873,11 +2873,11 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			logger.error("还款中发生系统", e);
 		}
 
-		// 直投类还款成功之后， 判断是风车理财的投资，发送到队列，准备回调通知
+		// 直投类还款成功之后， 判断是风车理财的出借，发送到队列，准备回调通知
 		if(CustomConstants.WRB_CHANNEL_CODE.equals(borrowTender.getTenderFrom())){
 			Map<String, String> params = new HashMap<>();
 			params.put("userId", String.valueOf(borrowTender.getUserId()));
-			//投资订单号
+			//出借订单号
 			params.put("nid", borrowTender.getNid());
 			// 2-回款回调
 			params.put("returnType", "2");
@@ -2914,7 +2914,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			// 取得分期还款计划表
 			BorrowRecoverPlan borrowRecoverPlan = getBorrowRecoverPlan(borrowNid, periodNow, tenderUserId, tenderOrderId);
 			if (Validator.isNull(borrowRecoverPlan)) {
-				throw new RuntimeException("分期还款计划表数据不存在。[借款编号：" + borrowNid + "]，" + "[投资订单号：" + tenderOrderId + "]，" + "[期数：" + periodNow + "]");
+				throw new RuntimeException("分期还款计划表数据不存在。[借款编号：" + borrowNid + "]，" + "[出借订单号：" + tenderOrderId + "]，" + "[期数：" + periodNow + "]");
 			}else {
 				borrowRecoverPlan.setRecoverStatus(2);
 				boolean flag = this.borrowRecoverPlanMapper.updateByPrimaryKeySelective(borrowRecoverPlan) > 0 ? true : false;
@@ -2953,10 +2953,10 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		// 还款方式
 		String borrowStyle = borrow.getBorrowStyle();
 
-		/** 投资人数据 */
-		// 投资订单号
+		/** 出借人数据 */
+		// 出借订单号
 		String tenderOrderId = borrowRecover.getNid();
-		// 投资人用户ID
+		// 出借人用户ID
 		Integer tenderUserId = borrowRecover.getUserId();
 		// 还款时间
 		Integer recoverTime = borrowRecover.getRecoverTime();
@@ -2976,7 +2976,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			// 取得分期还款计划表
 			borrowRecoverPlan = getBorrowRecoverPlan(borrowNid, periodNow, tenderUserId, tenderOrderId);
 			if (Validator.isNull(borrowRecoverPlan)) {
-				throw new Exception("分期还款计划表数据不存在。[借款编号：" + borrowNid + "]，" + "[投资订单号：" + tenderOrderId + "]，" + "[期数：" + periodNow + "]");
+				throw new Exception("分期还款计划表数据不存在。[借款编号：" + borrowNid + "]，" + "[出借订单号：" + tenderOrderId + "]，" + "[期数：" + periodNow + "]");
 			}
 			// 还款订单号
 			repayOrderId = borrowRecoverPlan.getRepayOrderId();
@@ -3012,7 +3012,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 		borrowRecover.setRepayBatchNo(repayBatchNo);
 		boolean borrowRecoverFlag = this.borrowRecoverMapper.updateByPrimaryKeySelective(borrowRecover) > 0 ? true : false;
 		if (!borrowRecoverFlag) {
-			throw new Exception("还款明细(huiyingdai_borrow_recover)更新失败！" + "[投资订单号：" + tenderOrderId + "]");
+			throw new Exception("还款明细(huiyingdai_borrow_recover)更新失败！" + "[出借订单号：" + tenderOrderId + "]");
 		}
 		if (borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
 			// 查询相应的债权转让
@@ -3053,7 +3053,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			borrowRecoverPlan.setRecoverType(TYPE_YES);
 			boolean borrowRecoverPlanFlag = this.borrowRecoverPlanMapper.updateByPrimaryKeySelective(borrowRecoverPlan) > 0 ? true : false;
 			if (!borrowRecoverPlanFlag) {
-				throw new Exception("还款分期计划表(huiyingdai_borrow_recover_plan)更新失败！" + "[投资订单号：" + tenderOrderId + "]");
+				throw new Exception("还款分期计划表(huiyingdai_borrow_recover_plan)更新失败！" + "[出借订单号：" + tenderOrderId + "]");
 			}
 			// 更新总的还款计划
 			BorrowRepayPlan borrowRepayPlan = getBorrowRepayPlan(borrowNid, periodNow);
@@ -3066,10 +3066,10 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 				borrowRepayPlan.setRepayYestime(nowTime);
 				boolean borrowRepayPlanFlag = this.borrowRepayPlanMapper.updateByPrimaryKeySelective(borrowRepayPlan) > 0 ? true : false;
 				if (!borrowRepayPlanFlag) {
-					throw new Exception("还款分期计划表(huiyingdai_borrow_repay_plan)更新失败！" + "[投资订单号：" + tenderOrderId + "]");
+					throw new Exception("还款分期计划表(huiyingdai_borrow_repay_plan)更新失败！" + "[出借订单号：" + tenderOrderId + "]");
 				}
 			} else {
-				throw new Exception("还款分期计划表(huiyingdai_borrow_repay_plan)查询失败！" + "[投资订单号：" + tenderOrderId + "]");
+				throw new Exception("还款分期计划表(huiyingdai_borrow_repay_plan)查询失败！" + "[出借订单号：" + tenderOrderId + "]");
 			}
 
 		}
@@ -3216,7 +3216,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
                 repayAmountSum = repayAmountSum.add(txAmount).add(intAmount).add(serviceFee);
                 txAmountSum = txAmountSum.add(txAmount);// 交易总金额
                 serviceFeeSum = serviceFeeSum.add(serviceFee);// 总服务费
-                String authCode = creditRepay.getAuthCode();// 投资授权码
+                String authCode = creditRepay.getAuthCode();// 出借授权码
                 // 承接用户的开户信息
                 Account bankOpenAccount = this.getAccountByUserId(assignUserId);
                 // 判断承接用户开户信息
@@ -3236,7 +3236,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
                 // 获取不分期的放款信息
                 BorrowRecover borrowRecover = borrowRecoverList.get(i);
                 JSONObject subJson = new JSONObject();// 结果集对象
-                int tenderUserId = borrowRecover.getUserId();// 投资用户userId
+                int tenderUserId = borrowRecover.getUserId();// 出借用户userId
                 String recoverRepayOrderId = borrowRecover.getRepayOrdid();// 还款订单号
                 BigDecimal txAmount = borrowRecover.getRecoverCapitalWait();// 交易金额
                 BigDecimal intAmount = borrowRecover.getRecoverInterestWait().add(borrowRecover.getChargeInterest()).add(borrowRecover.getDelayInterest()).add(borrowRecover.getLateInterest());// 交易利息
@@ -3244,10 +3244,10 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
                 txAmountSum = txAmountSum.add(txAmount);// 交易总金额
                 repayAmountSum = repayAmountSum.add(txAmount).add(intAmount).add(serviceFee);
                 serviceFeeSum = serviceFeeSum.add(serviceFee);// 总服务费
-                String authCode = borrowRecover.getAuthCode();// 投资授权码
-                // 投资用户的开户信息
+                String authCode = borrowRecover.getAuthCode();// 出借授权码
+                // 出借用户的开户信息
                 Account bankOpenAccount = this.getAccountByUserId(tenderUserId);
-                // 判断投资用户开户信息
+                // 判断出借用户开户信息
                 if (Validator.isNotNull(bankOpenAccount) && StringUtils.isNotBlank(bankOpenAccount.getAccountId())) {
                     subJson = getSubJson(subJson, orgAccountId, borrowNid, recoverRepayOrderId, txAmount, intAmount, serviceFee, authCode, bankOpenAccount);
                     subPacksJson.add(subJson);
@@ -3262,7 +3262,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
                     // 获取分期的放款信息
                     BorrowRecoverPlan borrowRecoverPlan = borrowRecoverPlanList.get(i);
                     JSONObject subJson = new JSONObject();// 结果集对象
-                    int tenderUserId = borrowRecoverPlan.getUserId();// 投资用户userId
+                    int tenderUserId = borrowRecoverPlan.getUserId();// 出借用户userId
                     String recoverPlanRepayOrderId = borrowRecoverPlan.getRepayOrderId();
                     BigDecimal txAmount = borrowRecoverPlan.getRecoverCapitalWait();// 交易金额
                     BigDecimal intAmount = borrowRecoverPlan.getRecoverInterestWait().add(borrowRecoverPlan.getChargeInterest()).add(borrowRecoverPlan.getDelayInterest())
@@ -3271,10 +3271,10 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
                     repayAmountSum = repayAmountSum.add(txAmount).add(intAmount).add(serviceFee);
                     txAmountSum = txAmountSum.add(txAmount);// 交易总金额
                     serviceFeeSum = serviceFeeSum.add(serviceFee);// 总服务费
-                    String authCode = borrowRecoverPlan.getAuthCode();// 投资授权码
-                    // 投资用户的开户信息
+                    String authCode = borrowRecoverPlan.getAuthCode();// 出借授权码
+                    // 出借用户的开户信息
                     Account bankOpenAccount = this.getAccountByUserId(tenderUserId);
-                    // 判断投资用户开户信息
+                    // 判断出借用户开户信息
                     if (Validator.isNotNull(bankOpenAccount) && StringUtils.isNotBlank(bankOpenAccount.getAccountId())) {
                         subJson = getSubJson(subJson, orgAccountId, borrowNid, recoverPlanRepayOrderId, txAmount, intAmount, serviceFee, authCode, bankOpenAccount);
                         subPacksJson.add(subJson);
@@ -3339,11 +3339,11 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
         subJson.put(BankCallConstant.PARAM_TXAMOUNT, txAmount.toString());  // 交易金额               txAmount     代偿本金
         subJson.put(BankCallConstant.PARAM_RISKAMOUNT, "");                 // 风险准备金             riskAmount   暂不做使用，请送空
         subJson.put(BankCallConstant.PARAM_INTAMOUNT, intAmount.toString());// 交易利息               intAmount
-        subJson.put(BankCallConstant.PARAM_TXFEEIN, "0.00");                // 收款手续费             txFeeIn      向投资人收取的手续费
+        subJson.put(BankCallConstant.PARAM_TXFEEIN, "0.00");                // 收款手续费             txFeeIn      向出借人收取的手续费
         subJson.put(BankCallConstant.PARAM_FINEAMOUNT, "");                 // 罚息金额               fineAmount   暂不做使用，请送空
-        subJson.put(BankCallConstant.PARAM_FORACCOUNTID, forAccountId);     // 对手存管子账户         forAccountId 投资人账号
-        subJson.put(BankCallConstant.PARAM_PRODUCTID, borrowNid);           // 标的号                 productId    投资人投标成功的标的号
-        subJson.put(BankCallConstant.PARAM_AUTHCODE, authCode);             // 授权码                 authCode     投资人投标成功的授权号
+        subJson.put(BankCallConstant.PARAM_FORACCOUNTID, forAccountId);     // 对手存管子账户         forAccountId 出借人账号
+        subJson.put(BankCallConstant.PARAM_PRODUCTID, borrowNid);           // 标的号                 productId    出借人投标成功的标的号
+        subJson.put(BankCallConstant.PARAM_AUTHCODE, authCode);             // 授权码                 authCode     出借人投标成功的授权号
         subJson.put(BankCallConstant.PARAM_SEQFLAG, "");                    // 流水是否经过借款人标志 seqFlag      担保人资金是否过借款人标志。1：经过;空：不经过；
         subJson.put(BankCallConstant.PARAM_TXFEEOUT, serviceFee.toString());// 转出方手续费金额       txFeeOut     扣收担保人手续费
         return subJson;

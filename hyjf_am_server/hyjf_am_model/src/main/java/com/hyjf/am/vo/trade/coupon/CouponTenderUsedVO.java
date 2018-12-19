@@ -6,7 +6,7 @@ package com.hyjf.am.vo.trade.coupon;
 import java.math.BigDecimal;
 
 /**
- * @Description 优惠券投资实体
+ * @Description 优惠券出借实体
  * @Author sss
  * @Date 2018/6/27 15:49
  */

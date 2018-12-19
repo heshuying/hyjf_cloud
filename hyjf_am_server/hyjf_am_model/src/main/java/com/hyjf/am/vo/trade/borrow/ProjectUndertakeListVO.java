@@ -25,11 +25,11 @@ public class ProjectUndertakeListVO extends BaseVO implements Serializable {
 
 	//用户名
 	public String userName;
-	//投资金额
+	//出借金额
 	public String account;
 	//承接时间
 	public String undertakeTime;
-	//投资来源
+	//出借来源
 	public String client;
 	//vip等级
     private String vipId;

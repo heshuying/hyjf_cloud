@@ -281,8 +281,8 @@ public class PlanRepayController extends BaseController {
         map.put("planName", "智投名称");
         map.put("lockPeriod", "服务回报期限");
         map.put("expectApr", "参考年回报率");
-        map.put("userName", "用户名（投资人）");
-        map.put("recommendAttr", "投资人用户属性（当前）");
+        map.put("userName", "用户名（出借人）");
+        map.put("recommendAttr", "出借人用户属性（当前）");
         map.put("inviteUserName", "推荐人(当前)");
         if (StringUtils.isNotBlank(isOrganizationView)) {
             map.put("inviteUserRegionName", "分公司(当前)");
@@ -299,7 +299,7 @@ public class PlanRepayController extends BaseController {
         map.put("repayShouldTime", "预计开始退出时间");
         map.put("lqdServiceFee", "清算服务费");
         map.put("lqdServiceApr", "清算服务费率");
-        map.put("investServiceApr", "投资服务费率");
+        map.put("investServiceApr", "出借服务费率");
         map.put("lqdProgress", "清算进度");
         map.put("lastQuitTime", "最晚退出时间");
         map.put("joinTime", "授权服务时间");
@@ -366,7 +366,7 @@ public class PlanRepayController extends BaseController {
                 }else if(value == 7){
                     return "已退出";
                 }else if(value == 99){
-                    return "自动投资异常";
+                    return "自动出借异常";
                 }
 
                 return "";

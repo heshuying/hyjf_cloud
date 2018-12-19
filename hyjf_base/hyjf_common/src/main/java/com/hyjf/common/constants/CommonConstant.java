@@ -161,7 +161,7 @@ public class CommonConstant {
      */
     public static final String APP_BANK_REQUEST_TYPE_OPEN_ACCOUNT = "1";
     /**
-     * 散标投资
+     * 散标出借
      */
     public static final String APP_BANK_REQUEST_TYPE_TENDER = "2";
     /**
@@ -184,7 +184,7 @@ public class CommonConstant {
     public static final String APP_BANK_REQUEST_TYPE_RESET_PASSWORD = "6";
 
     /**
-     * 授权自动投资
+     * 授权自动出借
      */
     public static final String APP_BANK_REQUEST_TYPE_AUTHINVES = "7";
 
@@ -219,14 +219,14 @@ public class CommonConstant {
     public static final int DATASOURCE_AOP_DS = 1;
     public static final int DATASOURCE_AOP_TRANSACTION = 2;
 
-    /*  ----------------投资类型枚举 开始-------------------*/
+    /*  ----------------出借类型枚举 开始-------------------*/
 
-    /*计划投资*/
+    /*计划出借*/
     public static final String TENDER_TYPE_HJH = "HJH";
 
-    /*债转投资*/
+    /*债转出借*/
     public static final String TENDER_TYPE_CREDIT = "HZR";
 
-    /*  ----------------投资类型枚举 结束-------------------*/
+    /*  ----------------出借类型枚举 结束-------------------*/
     
 }

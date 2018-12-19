@@ -68,7 +68,7 @@ public interface KeyCountCustomMapper {
     OperationReportJobVO getUserAgeAndArea(int userId);
 
     /**
-     * 投资人按照年龄分布
+     * 出借人按照年龄分布
      *
      * @param
      * @param
@@ -78,13 +78,13 @@ public interface KeyCountCustomMapper {
     int getTenderAgeByRange(OperationReportJobRequest request);
 
     /**
-     * 按照性别统计投资人的分布
+     * 按照性别统计出借人的分布
      * @param request 上个月的最后一天
      */
     List<OperationReportJobVO>  getTenderSexGroupBy(OperationReportJobRequest request);
 
     /**
-     * 按照省份统计投资人的分布  上个月的最后一天
+     * 按照省份统计出借人的分布  上个月的最后一天
      *
      * @param cityUserIds
      */

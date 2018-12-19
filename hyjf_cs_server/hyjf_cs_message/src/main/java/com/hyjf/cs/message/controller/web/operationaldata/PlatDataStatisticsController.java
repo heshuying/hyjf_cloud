@@ -55,20 +55,20 @@ public class PlatDataStatisticsController {
 		DecimalFormat df = new DecimalFormat("#,##0");
 		OperationReport oe = platDataStatisticsService.findOneOperationReportEntity();
 		_log.info("获取到的OperationReport="+JSONObject.toJSONString(oe));
-		// 累计投资
+		// 累计出借
 		jsonObject.put("investTotal", df.format(platDataStatisticsService.selectTotalInvest().setScale(0, BigDecimal.ROUND_DOWN)));
 		// 累计收益
 		jsonObject.put("interestTotal",
 				df.format(platDataStatisticsService.selectTotalInterest().setScale(0, BigDecimal.ROUND_DOWN)));
 		// 累计交易笔数
 		jsonObject.put("tenderCounts",  platDataStatisticsService.selectTotalTradeSum());
-		// 累计人均投资金额
+		// 累计人均出借金额
 		jsonObject.put("perCapitaInvestment", df.format(oe.getPerInvest()));
 		// 借贷余额（原借款人待还）
 		jsonObject.put("totalRepayAwait", df.format(oe.getWillPayMoney()));
 		// 借贷笔数
 		jsonObject.put("totalRepayCounts", oe.getLoanNum());
-		// 投资人总数
+		// 出借人总数
 		jsonObject.put("registerCounts", oe.getTenderCount());
 
 		OperationGroupReport oegroup = platDataStatisticsService.findOneOperationMongoGroupEntity();

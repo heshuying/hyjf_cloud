@@ -1,5 +1,5 @@
 /**
- * Description:可转让投资列表实体类
+ * Description:可转让出借列表实体类
  * Copyright: Copyright (HYJF Corporation)2015
  * Company: HYJF Corporation
  * @author: Administrator
@@ -30,7 +30,7 @@ public class TenderCreditCustomize implements Serializable {
 	 */
 	private String borrowName;
 	/**
-	 * 借款编号
+	 * 项目编号
 	 */
 	private String borrowNid;
 	/**
@@ -38,7 +38,7 @@ public class TenderCreditCustomize implements Serializable {
 	 */
 	private String borrowType;
 	/**
-	 * 年化收益
+	 * 出借利率
 	 */
 	private String borrowApr;
 	/**
@@ -50,15 +50,15 @@ public class TenderCreditCustomize implements Serializable {
 	 */
 	private String borrowStyle;
 	/**
-	 * 投资时间
+	 * 出借时间
 	 */
 	private String tenderTime;
 	/**
-	 * 投资订单号
+	 * 出借订单号
 	 */
 	private String tenderNid;
 	/**
-	 * 投资本金
+	 * 出借本金
 	 */
 	private String investAccount;
 	/**

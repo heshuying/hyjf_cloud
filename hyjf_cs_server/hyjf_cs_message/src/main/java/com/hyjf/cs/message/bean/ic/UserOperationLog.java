@@ -21,7 +21,7 @@ public class UserOperationLog implements Serializable {
     private Integer operationType;
 
     /**
-     * 用户角色 : 1.投资人 2.借款人 3.担保机构
+     * 用户角色 : 1.出借人 2.借款人 3.担保机构
      */
     private String userRole;
 

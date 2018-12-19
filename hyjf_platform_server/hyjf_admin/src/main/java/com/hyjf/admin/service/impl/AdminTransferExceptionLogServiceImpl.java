@@ -70,7 +70,7 @@ public class AdminTransferExceptionLogServiceImpl extends BaseAdminServiceImpl i
 	}
 
     /**
-     * 取得优惠券投资信息
+     * 取得优惠券出借信息
      * @param nid
      * @return
      */

@@ -9,7 +9,7 @@ package com.hyjf.am.trade.dao.model.customize;
  */
 public class WebHomePageStatisticsCustomize {
 
-    //系统累计投资金额
+    //系统累计出借金额
     public String totalSum;
     //风险保证金
     public String bailTotal;

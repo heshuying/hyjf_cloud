@@ -50,7 +50,7 @@ public interface UserManagerCustomizeMapper {
     List<UserManagerUpdateCustomize> selectUserUpdateInfoByUserId(int userId);
 
     /**
-     * 查询用户投资数量
+     * 查询用户出借数量
      * @param userId
      * @return
      */

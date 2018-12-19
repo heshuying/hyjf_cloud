@@ -21,13 +21,13 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
- * 呼叫中心:按照用户名/手机号查询投资明细（汇添金）Controller
+ * 呼叫中心:按照用户名/手机号查询出借明细（汇添金）Controller
  * @author pcc
  * @version hyjf 1.0
  * @since hyjf 1.0 2017年07月15日 
  */
 
-@Api(value = "查询投资明细（汇添金）")
+@Api(value = "查询出借明细（汇添金）")
 @RestController
 @RequestMapping("/hyjf-callcenter/invest/htj")
 public class HtjInvestServer extends CallcenterBaseController {
@@ -37,11 +37,11 @@ public class HtjInvestServer extends CallcenterBaseController {
 	/**
 	 * @param request,response,UserBean
 	 * @Author: libin
-	 * @Desc :按照用户名/手机号查询投资明细（汇添金）
+	 * @Desc :按照用户名/手机号查询出借明细（汇添金）
 	 * @Date: 16:39 2018/6/6
 	 * @Return: ResultListBean
 	 */
-	@ApiOperation(value = "查询投资明细(汇添金)", notes = "查询投资明细(汇添金)")
+	@ApiOperation(value = "查询出借明细(汇添金)", notes = "查询出借明细(汇添金)")
 	@PostMapping(value = "/getInvestInfo", produces = "application/json; charset=utf-8")
 	@ResponseBody
 	public ResultListBean getContentOfHtjInvest(HttpServletRequest request, HttpServletResponse response,
@@ -60,7 +60,7 @@ public class HtjInvestServer extends CallcenterBaseController {
 		List<CallcenterHtjInvestVO> recordList = this.htjInvestService.getRecordList(
 				user,bean.getLimitStart(),bean.getLimitSize());
 		if (recordList == null) {
-			result.statusMessage(ResultListBean.STATUS_FAIL,"该用户未投资汇天金！");
+			result.statusMessage(ResultListBean.STATUS_FAIL,"该用户未出借汇天金！");
 			return result;
 		}
 		

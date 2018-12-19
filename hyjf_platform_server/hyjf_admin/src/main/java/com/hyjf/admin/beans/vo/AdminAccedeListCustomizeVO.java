@@ -56,7 +56,7 @@ public class AdminAccedeListCustomizeVO extends BaseVO implements Serializable{
 	@ApiModelProperty(value = "加入金额")
 	private String accedeAccount;
 
-	@ApiModelProperty(value = "已投资金额")
+	@ApiModelProperty(value = "已出借金额")
 	private String alreadyInvest;
 
 	@ApiModelProperty(value = "平台 ：0PC，1微信，2安卓APP，3IOS，4其他")
@@ -86,13 +86,13 @@ public class AdminAccedeListCustomizeVO extends BaseVO implements Serializable{
 	@ApiModelProperty(value = "计划名称")
 	private String debtPlanName;
 
-	@ApiModelProperty(value = "预期年化收益")
+	@ApiModelProperty(value = "预期出借利率")
 	private String expectApr;
 
-	@ApiModelProperty(value = "投资状态")
+	@ApiModelProperty(value = "出借状态")
 	private String debtPlanStatus;
 
-	@ApiModelProperty(value = "投资类型")
+	@ApiModelProperty(value = "出借类型")
 	private String tenderType;
 
 	@ApiModelProperty(value = "优惠券")
@@ -134,13 +134,13 @@ public class AdminAccedeListCustomizeVO extends BaseVO implements Serializable{
 	@ApiModelProperty(value = "推荐人当前信息")
 	private String inviteUserDepartmentname1;
 
-	@ApiModelProperty(value = "投资人当前信息")
+	@ApiModelProperty(value = "出借人当前信息")
 	private String inviteUserRegionname2;
 	
-	@ApiModelProperty(value = "投资人当前信息")
+	@ApiModelProperty(value = "出借人当前信息")
 	private String inviteUserBranchname2;
 	
-	@ApiModelProperty(value = "投资人当前信息")
+	@ApiModelProperty(value = "出借人当前信息")
 	private String inviteUserDepartmentname2;
 	
 	@ApiModelProperty(value = "加入计划时推荐人(不变)")
@@ -156,7 +156,7 @@ public class AdminAccedeListCustomizeVO extends BaseVO implements Serializable{
 	@ApiModelProperty(value = "加入金额合计")
 	private String sumAccedeAccount;
 	
-	@ApiModelProperty(value = "已投资金额")
+	@ApiModelProperty(value = "已出借金额")
 	private String sumAlreadyInvest;
 	
 	@ApiModelProperty(value = "待(收)还总额")
@@ -210,10 +210,10 @@ public class AdminAccedeListCustomizeVO extends BaseVO implements Serializable{
 	@ApiModelProperty(value = "公允价值")
 	private String fairValue;
 	
-	@ApiModelProperty(value = "实际年化收益率")
+	@ApiModelProperty(value = "实际出借利率")
 	private String actualApr;
 	
-	@ApiModelProperty(value = "投资笔数")
+	@ApiModelProperty(value = "出借笔数")
 	private String investCounts;
 	
 	@ApiModelProperty(value = "匹配期")
@@ -222,7 +222,7 @@ public class AdminAccedeListCustomizeVO extends BaseVO implements Serializable{
 	@ApiModelProperty(value = "计算用加入金额")
 	private BigDecimal jAccedeAccount;
 	
-	@ApiModelProperty(value = "计算用已投资金额")
+	@ApiModelProperty(value = "计算用已出借金额")
 	private BigDecimal jalreadyInvest;
 
 	@ApiModelProperty(value = "自动投标进度")

@@ -16,7 +16,7 @@ import com.hyjf.am.vo.BaseVO;
 import java.io.Serializable;
 
 /**
- * 散标投资记录bean
+ * 散标出借记录bean
  * @author zhangyk
  * @date 2018/8/9 17:20
  */
@@ -30,11 +30,11 @@ public class ProjectInvestListVO  extends BaseVO implements Serializable {
 	private String vipLevel;
 	//用户名
 	private String userName;
-	//投资金额
+	//出借金额
 	private String account;
-	//投资时间
+	//出借时间
 	private String investTime;
-	//投资来源
+	//出借来源
 	private String client;
 	//是否有红包
 	private String redbag;

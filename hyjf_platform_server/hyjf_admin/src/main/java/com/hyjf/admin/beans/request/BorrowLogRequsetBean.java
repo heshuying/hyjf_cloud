@@ -22,9 +22,9 @@ public class BorrowLogRequsetBean extends BaseRequest implements Serializable {
     private String col;
 
     /**
-     * 检索条件 借款编号
+     * 检索条件 项目编号
      */
-    @ApiModelProperty(value = "借款编号")
+    @ApiModelProperty(value = "项目编号")
     private String borrowNidSrch;
 
     /**

@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * 投资信息
+ * 出借信息
  * @author wenxin
  * @version ProjectListController, v0.1 2018/8/29 11:15
  */
@@ -27,7 +27,7 @@ public class BorrowListController  extends BaseController {
     private BorrowListService borrowListService;
 
     /**
-     * api： 投资记录查询列表
+     * api： 出借记录查询列表
      * @author wenxin
      * @date 2018/8/29 17:47
      */

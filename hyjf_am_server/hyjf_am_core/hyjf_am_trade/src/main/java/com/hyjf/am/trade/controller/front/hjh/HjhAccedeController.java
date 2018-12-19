@@ -49,7 +49,7 @@ public class HjhAccedeController extends BaseController {
         return response;
     }
     /**
-     * 判断用户是否有持有中的计划。如果有，则不能解除投资授权和债转授权
+     * 判断用户是否有持有中的计划。如果有，则不能解除出借授权和债转授权
      * @return
      */
     @GetMapping("/canCancelAuth/{userId}")

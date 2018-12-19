@@ -168,11 +168,11 @@
 		`od4`.`name` AS `referrer_department_name`,
 		CASE u.role_id
 		WHEN 1 THEN
-		'投资人'
+		'出借人'
 		WHEN 2 THEN
 		'借款人'
 		WHEN 3 THEN
-		'垫付机构'
+		'担保机构'
 		END AS roleid,
 		u.attribute AS user_attribute,
 		CASE

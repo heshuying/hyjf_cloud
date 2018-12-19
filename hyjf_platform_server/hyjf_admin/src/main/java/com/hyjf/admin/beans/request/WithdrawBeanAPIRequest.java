@@ -55,7 +55,7 @@ public class WithdrawBeanAPIRequest extends BaseRequest implements Serializable{
     @ApiModelProperty(value="查询条件-用户ID")
     private Integer userId;
 
-    @ApiModelProperty(value="查询条件-投资nid")
+    @ApiModelProperty(value="查询条件-出借nid")
     private String nid;
 
     @ApiModelProperty(value="查询条件-状态")

@@ -15,7 +15,7 @@ public class LandingPageResulltVO extends BaseResultBean {
     @ApiModelProperty("为用户赚取收益,亿元")
     private BigDecimal profitSum;
 
-    @ApiModelProperty("累计投资者,万人")
+    @ApiModelProperty("累计出借者,万人")
     private Integer serveUserSum;
 
     public BigDecimal getProfitSum() {

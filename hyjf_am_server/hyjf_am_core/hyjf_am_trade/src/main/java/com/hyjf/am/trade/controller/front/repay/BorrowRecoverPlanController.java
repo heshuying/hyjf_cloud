@@ -65,7 +65,7 @@ public class BorrowRecoverPlanController extends BaseController{
 	}
 
 	/**
-	 * 获取用户投资订单还款详情
+	 * 获取用户出借订单还款详情
 	 *
 	 * @param nid
 	 * @return

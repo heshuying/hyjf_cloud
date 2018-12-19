@@ -31,7 +31,7 @@ public class AuthServiceImpl extends BaseAdminServiceImpl implements com.hyjf.ad
     @Override
     public BankCallBean getTermsAuthQuery(int userId, String channel) {
         BankOpenAccountVO bankOpenAccount = getBankOpenAccount(userId);
-        // 调用查询投资人签约状态查询
+        // 调用查询出借人签约状态查询
         BankCallBean selectbean = new BankCallBean();
         selectbean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
         selectbean.setTxCode(BankCallConstant.TXCODE_TERMS_AUTH_QUERY);

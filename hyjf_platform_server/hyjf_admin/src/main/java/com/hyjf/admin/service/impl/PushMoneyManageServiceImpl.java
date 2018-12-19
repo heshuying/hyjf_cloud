@@ -113,15 +113,15 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
             TenderCommissionRequest tenderCommissionRequest = new TenderCommissionRequest();
             // 1 直投类提成
             tenderCommissionRequest.setTenderType(1);
-            // 投资人
+            // 出借人
             tenderCommissionRequest.setTenderUserId(borrowTender.getUserId());
-            // 投资金额
+            // 出借金额
             tenderCommissionRequest.setAccountTender(borrowTender.getAccount());
             // 项目编号
             tenderCommissionRequest.setBorrowNid(borrowNid);
-            // 投资ID
+            // 出借ID
             tenderCommissionRequest.setTenderId(borrowTender.getId());
-            // 投资时间
+            // 出借时间
             tenderCommissionRequest.setTenderTime(GetDate.getTime10(borrowTender.getCreateTime()));
             // 状态 0：未发放；1：已发放
             tenderCommissionRequest.setStatus(0);
@@ -149,7 +149,7 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
             }
             // 提成人id
             if (borrowTender.getTenderUserAttribute() == 3) {
-                // 投资时投资人是线上员工时，提成人是自己
+                // 出借时出借人是线上员工时，提成人是自己
                 tenderCommissionRequest.setUserId(borrowTender.getUserId());
                 if (tenderIs51 == 1) {
                     is51 = true;
@@ -157,34 +157,34 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
             } else {
                 UserInfoVO refererUsersInfo = amUserClient.findUserInfoById(borrowTender.getInviteUserId());
                 if (borrowTender.getInviteUserAttribute() != null && borrowTender.getInviteUserAttribute() == 3) {
-                    // 投资时推荐人的用户属性是线上员工，提成人是推荐人
+                    // 出借时推荐人的用户属性是线上员工，提成人是推荐人
                     tenderCommissionRequest.setUserId(borrowTender.getInviteUserId());
                     if (refererUsersInfo != null && refererUsersInfo.getIs51()!=null && refererUsersInfo.getIs51() == 1) {
                         is51 = true;
                     }
                 } else if (borrowTender.getInviteUserAttribute() != null && borrowTender.getInviteUserAttribute() < 2) {
-                    // 投资时推荐人不是员工，且推荐人是51老用户，提成人是推荐人
+                    // 出借时推荐人不是员工，且推荐人是51老用户，提成人是推荐人
                     if (refererUsersInfo != null && refererUsersInfo.getIs51()!=null && refererUsersInfo.getIs51() == 1) {
                         tenderCommissionRequest.setUserId(borrowTender.getInviteUserId());
                         is51 = true;
                     }
                 }
             }
-            logger.info("提成人用户id：" + tenderCommissionRequest.getUserId() + " 当前标的编号：" + borrowNid + " 当前投资订单号：" + borrowTender.getNid() + " 当前投资用户id：" + borrowTender.getUserId());
+            logger.info("提成人用户id：" + tenderCommissionRequest.getUserId() + " 当前标的编号：" + borrowNid + " 当前出借订单号：" + borrowTender.getNid() + " 当前出借用户id：" + borrowTender.getUserId());
             if(tenderCommissionRequest.getUserId()==null ||tenderCommissionRequest.getUserId()==0){
                 //如果没有提成人，返回
                 continue;
             }
-            // 投资人的账户信息
+            // 出借人的账户信息
             BankOpenAccountVO bankOpenAccountInfo = amTradeClient.getBankOpenAccount(tenderCommissionRequest.getUserId());
             if(bankOpenAccountInfo != null){
                 tenderCommissionRequest.setAccountId(bankOpenAccountInfo.getAccount());
             }
 
-            // 计算提成(提成金额,提成人,提成人部门ID,投资人部门ID)
+            // 计算提成(提成金额,提成人,提成人部门ID,出借人部门ID)
             logger.info("计算提成borrow：" + JSONObject.toJSON(borrow));
-            calculaeCommission(tenderCommissionRequest, borrowTender.getTenderUserAttribute(), // 投资时投资人的用户属性
-                    borrowTender.getInviteUserAttribute(), // 投资时推荐人的用户属性
+            calculaeCommission(tenderCommissionRequest, borrowTender.getTenderUserAttribute(), // 出借时出借人的用户属性
+                    borrowTender.getInviteUserAttribute(), // 出借时推荐人的用户属性
                     borrow.getBorrowStyle(), // 还款方式（endday表示天，其它表示月）
                     borrow.getBorrowPeriod(), // 借款期限（几个月/天）
                     borrow.getProjectType(), // 0汇保贷 1汇典贷 2汇小贷 3汇车贷 4新手标
@@ -248,7 +248,7 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
         BigDecimal rateDay = BigDecimal.ZERO;
         // 提成利率(月标)
         BigDecimal rateMonth = BigDecimal.ZERO;
-        // 投资金额
+        // 出借金额
         BigDecimal accountTender = tenderCommission.getAccountTender();
         // 年利率
         borrowApr = borrowApr.divide(new BigDecimal(100), 6, BigDecimal.ROUND_HALF_UP);
@@ -292,16 +292,16 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
             if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)) {
                 // 线上员工
                 if ( (tenderAttr!=null && tenderAttr==3) || (refererAttr!=null && refererAttr==3) ) {
-                    // 每笔提成= 投资金额*提成比例（天-线上员工）*融资天数
+                    // 每笔提成= 出借金额*提成比例（天-线上员工）*融资天数
                     commission = accountTender.multiply(rateDay).multiply(new BigDecimal(borrowPerios));
                 }
                 //51老用户（非员工）
                 else {
                     if (borrowPerios >= 50) {
-                        // 融资期限≥50天时，每笔提成=投资金额*提成比例（月-51老用户）
+                        // 融资期限≥50天时，每笔提成=出借金额*提成比例（月-51老用户）
                         commission = accountTender.multiply(rateMonth);
                     } else {
-                        // 融资期限＜50天时，每笔提成=投资金额*提成比例（天-51老用户）*天数
+                        // 融资期限＜50天时，每笔提成=出借金额*提成比例（天-51老用户）*天数
                         commission = accountTender.multiply(rateDay).multiply(new BigDecimal(borrowPerios));
                     }
                 }
@@ -310,12 +310,12 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
             else {
                 // 线上员工
                 if ( (tenderAttr!=null && tenderAttr==3) || (refererAttr!=null && refererAttr==3) ) {
-                    // 每笔提成=投资金额*提成比例（月-线上员工）*融资月数
+                    // 每笔提成=出借金额*提成比例（月-线上员工）*融资月数
                     commission = accountTender.multiply(rateMonth).multiply(new BigDecimal(borrowPerios));
                 }
                 //51老用户（非员工）
                 else {
-                    // 每笔提成= 投资金额*提成比例（月-51老用户）
+                    // 每笔提成= 出借金额*提成比例（月-51老用户）
                     commission = accountTender.multiply(rateMonth);
                 }
             }
@@ -336,12 +336,12 @@ public class PushMoneyManageServiceImpl extends BaseAdminServiceImpl implements 
             }
             //51老用户（非员工）
             else {
-                // 投资金额*提成比例
+                // 出借金额*提成比例
                 commission = accountTender.multiply(rateMonth);
             }
         }
 
-        logger.info("计算出的提成金额：" + commission + " 提成人：" + commissionUserId + " 投资金额：" +accountTender);
+        logger.info("计算出的提成金额：" + commission + " 提成人：" + commissionUserId + " 出借金额：" +accountTender);
         // 提成金额
         tenderCommission.setCommission(commission == null ? BigDecimal.ZERO : commission);
 

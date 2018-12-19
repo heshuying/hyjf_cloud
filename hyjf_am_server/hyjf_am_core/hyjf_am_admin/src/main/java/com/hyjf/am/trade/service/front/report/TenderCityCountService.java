@@ -14,14 +14,14 @@ import java.util.List;
 public interface TenderCityCountService {
 
     /**
-     * 投资人按照地域分布
+     * 出借人按照地域分布
      * @param lastDay 一个月的最后一天
      * @return
      */
     List<TenderCityCountVO> getTenderCityGroupBy(Date lastDay);
 
     /**
-     * 按照性别统计投资人的分布
+     * 按照性别统计出借人的分布
      * @param date 上个月的最后一天
      */
     List<TenderSexCountVO>  getTenderSexGroupBy(Date date);
@@ -60,12 +60,12 @@ public interface TenderCityCountService {
     int getLoanNum(Date date);
 
     /**
-     * 获取截至日期的投资金额
+     * 获取截至日期的出借金额
      */
     BigDecimal getInvestLastDate(Date date);
 
     /**
-     * 统计投资人总数，截至日期为上个月的最后一天
+     * 统计出借人总数，截至日期为上个月的最后一天
      * @param date 上个月的最后一天
      * @return
      */

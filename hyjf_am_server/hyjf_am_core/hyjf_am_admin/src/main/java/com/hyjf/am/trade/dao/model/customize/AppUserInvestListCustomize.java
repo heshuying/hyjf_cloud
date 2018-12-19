@@ -19,25 +19,25 @@ public class AppUserInvestListCustomize {
     // 用户身份证号码
     public String idCard;
 
-    // 投资金额
+    // 出借金额
     public String account;
 
-    // 投资期限
+    // 出借期限
     public String investPeriod;
 
-    // 年化收益率
+    // 出借利率
     public String interest;
 
-    // 投资开始日期
+    // 出借开始日期
     public String investStartTime;
 
-    // 投资结束日期
+    // 出借结束日期
     public String investEndTime;
 
-    // 投资开始日期
+    // 出借开始日期
     public String investStartDay;
 
-    // 投资结束日期
+    // 出借结束日期
     public String investEndDay;
 
     // 还款方式 key
@@ -49,7 +49,7 @@ public class AppUserInvestListCustomize {
     // 总还款本金及收益
     public String total;
 
-    // 用户唯一投资标识
+    // 用户唯一出借标识
     public String nid;
 
     public String orderId;

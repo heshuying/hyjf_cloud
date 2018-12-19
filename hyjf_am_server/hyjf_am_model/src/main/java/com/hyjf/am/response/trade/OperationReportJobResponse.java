@@ -10,7 +10,7 @@ public class OperationReportJobResponse extends Response<OperationReportJobVO> {
 
     private BigDecimal totalAccount;//月交易金额
 
-    private double account;//人均投资金额
+    private double account;//人均出借金额
 
     private float fullBillAverage;//平均满标时间
     public int getCount() {

@@ -12,7 +12,7 @@ public class BankCreditEndListRequest extends BasePage {
      */
     private String userIdSrch;
     /**
-     * 投资资用户ID(检索用)
+     * 出借资用户ID(检索用)
      */
     private String tenderUserIdSrch;
     /**
