@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -52,6 +53,11 @@ public class MailHandle {
     private AmUserClient amUserClient;
     @Autowired
     private AmConfigClient amConfigClient;
+    /**
+     * 是否为开发环境
+     */
+    @Value("${hyjf.env.test}")
+    private static boolean envTest;
 
 
     private void init() throws RuntimeException {
@@ -165,7 +171,9 @@ public class MailHandle {
             String[] toMailArray = new String[1];
             toMailArray[0] = setting.getSmtpReply();
             // 开始送信
-            send(toMailArray, subject, body, fileNames);
+            if (!envTest) {
+                send(toMailArray, subject, body, fileNames);
+            }
         } catch (Exception e) {
             logger.error("发送邮件失败...", e);
         }
@@ -181,8 +189,10 @@ public class MailHandle {
      */
     public void sendMail(String[] toMailArray, String subject, String body, String[] fileNames) {
         try {
-            // 开始送信
-            send(toMailArray, subject, body, fileNames);
+            if (!envTest) {
+                // 开始送信
+                send(toMailArray, subject, body, fileNames);
+            }
         } catch (Exception e) {
             logger.error("发送邮件失败...", e);
         }
