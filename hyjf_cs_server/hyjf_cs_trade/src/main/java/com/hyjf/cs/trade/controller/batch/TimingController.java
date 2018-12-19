@@ -73,14 +73,14 @@ public class TimingController {
      * 红包账户（aleve和eve文件处理）定时任务
      * @return
      */
-    @RequestMapping("/downloadFile")
+    @RequestMapping("/downloadRedFile")
     public String downloadFile() {
         timingService.downloadRedFile();
         return "success";
     }
 
     /**
-     * 红包账户（aleve和eve文件处理）定时任务
+     *
      * @return
      */
     @RequestMapping("/holidays")
