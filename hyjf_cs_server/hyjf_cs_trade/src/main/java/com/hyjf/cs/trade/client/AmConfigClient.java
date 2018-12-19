@@ -105,4 +105,6 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	SmsConfigVO findSmsConfig();
+
+	void holidays();
 }

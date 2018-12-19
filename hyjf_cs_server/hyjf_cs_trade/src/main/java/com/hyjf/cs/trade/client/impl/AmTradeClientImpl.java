@@ -769,8 +769,16 @@ public class AmTradeClientImpl implements AmTradeClient {
 		}
 		return null;
 	}
+    /**
+     * 投资全部掉单异常处理
+     */
+    @Override
+    public void recharge(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/bankException/recharge",BorrowTenderTmpResponse.class).getBody();
+    }
 
-	/**
+
+    /**
 	 * 获取BatchBorrowTenderCustomizeVO列表
 	 */
 	@Override
@@ -783,9 +791,79 @@ public class AmTradeClientImpl implements AmTradeClient {
 		}
 		return null;
 	}
+    /**
+     * 自动放款复审任务
+     */
+    @Override
+    public void hjhautoreview(){
+        restTemplate.getForEntity("http://AM-TRADE/batch/hjhautoreview/hjhautoreview",BatchBorrowTenderCustomizeResponse.class);
+    }
 
-	
-	/**
+    /**
+     * 汇计划各计划开放额度校验预警任务
+     */
+    @Override
+    public void hjhOpenAccountCheck(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAlarmController/batch/hjhOpenAccountCheck",BatchBorrowTenderCustomizeResponse.class);
+    }
+
+    /**
+     * 汇计划各计划开放额度校验预警任务
+     */
+    @Override
+    public void hjhOrderExitCheck(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAlarmController/batch/hjhOrderExitCheck",BatchBorrowTenderCustomizeResponse.class);
+    }
+    /**
+     * 订单投资异常短信预警
+     * @return
+     */
+    @Override
+    public void hjhCalculateFairValue(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAutoCalculateFairValue/hjhCalculateFairValue",BatchBorrowTenderCustomizeResponse.class);
+    }
+    /**
+     * 订单投资异常短信预警
+     * @return
+     */
+    @Override
+    public void hjhOrderInvestExceptionCheck(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAlarmController/batch/hjhOrderInvestExceptionCheck",BatchBorrowTenderCustomizeResponse.class);
+    }
+
+    /**
+     * 订单投资异常短信预警
+     * @return
+     */
+    @Override
+    public void hjhOrderMatchPeriodCheck(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAlarmController/batch/hjhOrderMatchPeriodCheck",BatchBorrowTenderCustomizeResponse.class);
+    }
+    /**
+     * 手续费分账明细插入定时
+     * @return
+     */
+    @Override
+    public void poundage(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/poundage",BatchBorrowTenderCustomizeResponse.class);
+    }
+    /**
+     * 汇计划自动结束转让定时任务
+     * @return
+     */
+    @Override
+    public void hjhAutoEndCredit(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAutoEndCredit/hjhAutoEndCredit",BatchBorrowTenderCustomizeResponse.class);
+    }
+    /**
+     *  汇计划自动清算
+     * @return
+     */
+    @Override
+    public void hjhAutoCredit(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAutoCredit/hjhAutoCredit",BatchBorrowTenderCustomizeResponse.class);
+    }
+    /**
 	 * 插入AuthCode
 	 */
 	@Override
@@ -4833,6 +4911,19 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
     /**
+     * 清算日前一天，扫描处于复审中或者投资中的原始标的进行预警
+     * @return
+     */
+    @Override
+    public Boolean alermBeforeLiquidateCheck(){
+        String url = "http://AM-TRADE/am-trade/hjhAlarmController/batch/alermBeforeLiquidateCheck";
+        BooleanResponse response = restTemplate.getForEntity(url,BooleanResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultBoolean();
+        }
+        return null;
+    }
+    /**
      * 查询产品加息信息
      * @auth sunpeikai
      * @param tenderNid 对应tender表里的nid
@@ -6075,5 +6166,119 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response.getResultList();
         }
         return null;
+    }
+
+    @Override
+    public BooleanResponse updateHjhPlanJoinOff() {
+        String url = "http://AM-TRADE/hjhPlanSwitchController/batch/hjhPlanJoinOff";
+        BooleanResponse response = restTemplate.getForObject(url, BooleanResponse.class);
+        if (response != null && Response.isSuccess(response)) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public BooleanResponse updateHjhPlanJoinOn() {
+        String url = "http://AM-TRADE/hjhPlanSwitchController/batch/hjhPlanJoinOn";
+        BooleanResponse response = restTemplate.getForObject(url, BooleanResponse.class);
+        if (response != null && Response.isSuccess(response)) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public void autoIssueRecover() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhautoissuerecover/autoissuerecover", String.class);
+    }
+
+    @Override
+    public BooleanResponse updateMatchDays() {
+        BooleanResponse response = restTemplate.getForObject("http://AM-TRADE/am-trade/tenderMatchDaysController/batch/tenderMatchDays", BooleanResponse.class);
+        if (response != null && Response.isSuccess(response)) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public void downloadFile() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/nifa_file_deal/download_file", boolean.class);
+    }
+
+    @Override
+    public void uploadFile() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/nifa_file_deal/upload_file", boolean.class);
+    }
+
+    @Override
+    public void updateRepayInfo() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/late_and_credit/update_repay_info", boolean.class);
+    }
+
+    @Override
+    public void countRechargeMoney() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/countRechargeMoney", String.class);
+    }
+
+    @Override
+    public void updateDayMarkLine() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/day_mark_line_total/update_day_mark_line", String.class);
+    }
+
+    @Override
+    public void taskAssign() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/taskAssign", String.class);
+    }
+
+    @Override
+    public void taskRepayAssign() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/autoReqRepayController/autoReqRepay", boolean.class);
+    }
+
+    @Override
+    public void taskReviewBorrowAssign() {
+        restTemplate.getForEntity("http://AM-TRADE/batch/borrowautoreview/autoreview", String.class);
+    }
+
+    @Override
+    public void taskAssignLoans() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/increaseinterestLoans", String.class);
+    }
+
+    @Override
+    public void taskAssignRepay() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/increaseInterestRepay", String.class);
+    }
+
+    @Override
+    public void noneSplitBorrow() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/timing_borrow/issue/none_split_borrow", String.class).getBody();
+    }
+
+    @Override
+    public void hjhBorrow() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/timing_borrow/issue/hjh_borrow", String.class).getBody();
+    }
+
+    @Override
+    public void splitBorrow() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/timing_borrow/issue/split_borrow", String.class).getBody();
+    }
+
+    @Override
+    public void couponExpired() {
+        restTemplate.getForObject("http://AM-TRADE/am-trade/batch/coupon/expired", StringResponse.class);
+    }
+
+    @Override
+    public void dataInfo() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/calculate_invest_interest", String.class);
+    }
+
+    @Override
+    public void downloadRedFile() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/downloadFiles", String.class);
     }
 }

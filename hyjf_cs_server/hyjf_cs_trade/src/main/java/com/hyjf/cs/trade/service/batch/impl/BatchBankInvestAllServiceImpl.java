@@ -255,6 +255,11 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 	private List<BorrowTenderTmpVO> getBorrowTenderTmpList() {
 		return this.amTradeClient.getBorrowTenderTmpList();
 	}
-
+	/**
+	 * 投资全部掉单异常处理
+	 */
+	public void recharge(){
+		amTradeClient.recharge();
+	}
 
 }

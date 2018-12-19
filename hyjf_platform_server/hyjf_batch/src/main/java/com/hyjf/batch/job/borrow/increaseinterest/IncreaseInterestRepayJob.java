@@ -21,9 +21,9 @@ public class IncreaseInterestRepayJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("IncreaseInterestRepayJob: {} execute...", context.getJobDetail().getKey().getName());
+
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/increaseinterest/taskAssignRepay", String.class);
         
-        ResponseEntity<String> result = restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/increaseInterestRepay", String.class);
-        
-        logger.info("IncreaseInterestRepayJob execute end..."+result.getBody());
+        logger.info("IncreaseInterestRepayJob execute end...");
     }
 }

@@ -20,9 +20,8 @@ public class BorrowOfTimingIssueJob extends BaseJob implements Job {
 	public void execute(JobExecutionContext context) throws JobExecutionException {
 		logger.info("BorrowOfTimingIssueJob: {} execute...", context.getJobDetail().getKey().getName());
 
-		String result = restTemplate
-				.getForEntity("http://AM-TRADE/am-trade/timing_borrow/issue/none_split_borrow", String.class).getBody();
+		restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/timing/noneSplitBorrow", String.class).getBody();
 
-		logger.info("BorrowOfTimingIssueJob execute end...result is :{}", result);
+		logger.info("BorrowOfTimingIssueJob execute end... ");
 	}
 }

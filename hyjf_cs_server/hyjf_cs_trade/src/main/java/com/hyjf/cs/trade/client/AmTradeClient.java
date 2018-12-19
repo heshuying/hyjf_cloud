@@ -1,6 +1,7 @@
 package com.hyjf.cs.trade.client;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
@@ -295,13 +296,63 @@ public interface AmTradeClient {
      * @return
      */
 	List<BorrowTenderTmpVO> getBorrowTenderTmpList();
+    /**
+     * 投资全部掉单异常处理
+     */
+    public void recharge();
 
 	/**
 	 * 获取BatchBorrowTenderCustomizeVO列表
 	 * @return
 	 */
 	List<BatchBorrowTenderCustomizeVO> queryAuthCodeBorrowTenderList();
+    /**
+     * 自动放款复审任务开始
+     * @return
+     */
+    void hjhautoreview();
 
+    /**
+     * 汇计划各计划开放额度校验预警任务
+     */
+    public void hjhOpenAccountCheck();
+    /**
+     * 汇计划各计划开放额度校验预警任务
+     * @return
+     */
+    public void hjhOrderExitCheck();
+    /**
+     * 汇计划自动计算计划订单公允价值
+     * @return
+     */
+    public void hjhCalculateFairValue();
+    /**
+     * 订单投资异常短信预警
+     * @return
+     */
+    public void hjhOrderInvestExceptionCheck();
+
+    /**
+     * hjh订单匹配期超过两天短信预警
+     * @return
+     */
+    public void hjhOrderMatchPeriodCheck();
+    /**
+     *手续费分账明细插入定时
+     * @return
+     */
+    public void poundage();
+    /**
+     * 汇计划自动结束转让定时任务
+     * @return
+     */
+    public void hjhAutoEndCredit();
+
+    /**
+     *  汇计划自动清算
+     * @return
+     */
+    public void hjhAutoCredit();
 	/**
 	 * @param list
 	 */
@@ -2109,7 +2160,11 @@ public interface AmTradeClient {
      * @return
      */
     IncreaseInterestInvestVO getIncreaseInterestInvestByOrdId(String orderId);
-
+    /**
+     * 清算日前一天，扫描处于复审中或者投资中的原始标的进行预警
+     * @return
+     */
+    Boolean alermBeforeLiquidateCheck();
     /**
      * 查询产品加息信息
      * @auth sunpeikai
@@ -2472,5 +2527,72 @@ public interface AmTradeClient {
     WebUserTransferBorrowInfoCustomizeVO getUserTransferBorrowInfo(String borrowNid);
 
     List<WebUserRepayTransferCustomizeVO> getUserRepayDetailAjax(WebUserRepayTransferRequest repayTransferRequest);
+
+    /**
+     * 计划定时关闭任务
+     * @return
+     */
+    BooleanResponse updateHjhPlanJoinOff();
+
+    /**
+     * 计划定时开启任务
+     * @return
+     */
+    BooleanResponse updateHjhPlanJoinOn();
+
+    /**
+     * 自动发标修复
+     */
+    void autoIssueRecover();
+
+    /**
+     * 计算自动投资的匹配期(每日)
+     * @return
+     */
+    BooleanResponse updateMatchDays();
+
+    /**
+     * 互金下载反馈文件
+     */
+    void downloadFile();
+
+    /**
+     * 互金上传文件上报数据
+     */
+    void uploadFile();
+
+    /**
+     * 互金拉取逾期和完全债转数据更新合同状态
+     */
+    void updateRepayInfo();
+
+    /**
+     * 资金变化统计
+     */
+    void countRechargeMoney();
+
+    void updateDayMarkLine();
+
+    void taskAssign();
+
+    void taskRepayAssign();
+
+    void taskReviewBorrowAssign();
+
+    void taskAssignLoans();
+
+    void taskAssignRepay();
+
+    void noneSplitBorrow();
+
+    void hjhBorrow();
+
+    void splitBorrow();
+
+    void couponExpired();
+
+    void dataInfo();
+
+    void downloadRedFile();
 }
 

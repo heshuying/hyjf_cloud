@@ -23,7 +23,7 @@ public class PoundageJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("PoundageJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/poundage", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/poundage", String.class);
         logger.info("PoundageJob execute end...");
     }
 }

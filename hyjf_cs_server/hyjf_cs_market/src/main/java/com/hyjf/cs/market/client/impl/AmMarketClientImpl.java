@@ -112,4 +112,10 @@ public class AmMarketClientImpl implements AmMarketClient {
                 Object.class);
     }
 
+    @Override
+    public void callActivityEnd() {
+        restTemplate.getForObject("http://AM-MARKET/am-market/ads/batch/update",
+                Object.class);
+    }
+
 }

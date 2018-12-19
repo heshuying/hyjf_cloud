@@ -3,14 +3,14 @@
 <mapper namespace="com.hyjf.am.config.dao.mapper.customize.HolidaysConfigCustomizeMapper">
 	
 	<insert id="batchInsert" parameterType="java.util.List">
-		INSERT INTO ht_holidays_config(day_time)
+		INSERT INTO ht_holidays_config_new(day_time)
 		<foreach collection="list" item="item" index="index" open="" close="" separator="union all">
 			SELECT #{item.dayTime, jdbcType=DATE} as a FROM DUAL
 		</foreach>
 	</insert>
 
 	<update id="batchUpdate" parameterType="java.util.List">
-		update ht_holidays_config
+		update ht_holidays_config_new
 		set  holiday_flag =
 		<foreach collection="list" item="item" index="index"
 				 separator=" " open="case id" close="end">
@@ -24,7 +24,7 @@
 	</update>
 
 	<delete id="deleteByYear">
-		delete FROM ht_holidays_config where day_time <![CDATA[>=]]> STR_TO_DATE(concat(#{year},'0101'),"%Y%m%d")
+		delete FROM ht_holidays_config_new where day_time <![CDATA[>=]]> STR_TO_DATE(concat(#{year},'0101'),"%Y%m%d")
 			and day_time  <![CDATA[<]]> STR_TO_DATE(concat(#{year} + 1,'0101'),"%Y%m%d")
 	</delete>
 
@@ -37,7 +37,7 @@
 	</resultMap>
 
 	<select id="selectByYearMonth" resultMap="selectByMonthMap">
-		select * from ht_holidays_config
+		select * from ht_holidays_config_new
 			where day_time <![CDATA[>=]]> STR_TO_DATE(concat(#{year},  LPAD(#{month},2,'0'),'01'),"%Y%m%d")
 			and day_time  <![CDATA[<]]> DATE_ADD(STR_TO_DATE(CONCAT(#{year} ,LPAD(#{month},2,'0'),'01'),"%Y%m%d"),INTERVAL 1 MONTH)
 	</select>

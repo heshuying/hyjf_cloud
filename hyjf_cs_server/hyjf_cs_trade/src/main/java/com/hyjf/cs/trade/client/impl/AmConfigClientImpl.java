@@ -256,4 +256,9 @@ public class AmConfigClientImpl implements AmConfigClient {
 		}
 		return null;
 	}
+
+	@Override
+	public void holidays() {
+		restTemplate.getForEntity("http://AM-CONFIG/am-config/holidays/save", String.class);
+	}
 }

@@ -580,4 +580,20 @@ public interface AmUserClient {
 	 * @return
 	 */
     UserVO updateUsersById(Integer userId);
+
+	/**
+	 * 运营数据-统计总注册人数
+	 */
+	void countRegist();
+	public void fddCertificate();
+
+	/**
+	 * 员工入职修改客户属性
+	 */
+	void updateEntey();
+
+	/**
+	 * 员工离职，修改客户属性
+	 */
+	void updateUserLeave();
 }

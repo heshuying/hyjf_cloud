@@ -103,8 +103,17 @@ public class BankExceptionController {
 		batchBankInvestAllService.updateTender();
 		logger.info("投资异常全部掉单跑批任务结束end...");
 	}
-	
-	
+
+	/**
+	 * 投资全部掉单异常处理
+	 */
+	@ApiOperation(value = "江西银行充值掉单异常处理定时任务", notes = "江西银行充值掉单异常处理定时任务")
+	@GetMapping(value = "/recharge")
+	public void recharge() {
+		logger.info("江西银行充值掉单异常处理定时任务start...");
+		batchBankInvestAllService.recharge();
+		logger.info("江西银行充值掉单异常处理定时任务end...");
+	}
 	
 }
 
