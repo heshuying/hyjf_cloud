@@ -17,7 +17,7 @@ public class CreditAssignedBean {
 	private String creditTenderNid;
 	/* 认购单号 */
 	private String assignNid;
-	/* 投资本金 */
+	/* 出借本金 */
 	private String assignCapital;
 	/* 回收总额 */
 	private String assignAccount;

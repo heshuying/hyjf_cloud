@@ -43,7 +43,7 @@ public class CallCenterBankAccountManageCustomize {
 	private BigDecimal bankWaitRepay;
 
 	/**
-	 * 银行累计投资
+	 * 银行累计出借
 	 */
 	private BigDecimal bankInvestSum;
 	/**

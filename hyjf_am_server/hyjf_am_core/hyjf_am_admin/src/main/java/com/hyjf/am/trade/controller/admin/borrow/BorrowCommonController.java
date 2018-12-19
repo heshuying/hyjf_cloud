@@ -47,7 +47,7 @@ import java.util.List;
 @RequestMapping("/am-trade/borrowcommon")
 public class BorrowCommonController extends BaseController {
 
-	// 机构属性 1-投资机构 0-借款机构
+	// 机构属性 1-出借机构 0-借款机构
 	private final int TENDER_INST_TYPE = 1;
 
 	@Autowired
@@ -131,13 +131,13 @@ public class BorrowCommonController extends BaseController {
             if (isExistsRecord) {
                 this.borrowCommonService.getBorrow(form);
             } else {
-                // 设置标的的投资有效时间
+                // 设置标的的出借有效时间
                 form.setBorrowValidTime(this.borrowCommonService.getBorrowConfig("BORROW_VALID_TIME"));
                 // 设置标的的银行注册时间
                 form.setBankRegistDays(this.borrowCommonService.getBorrowConfig("BORROW_REGIST_DAYS"));
             }
         } else {
-            // 设置标的的投资有效时间
+            // 设置标的的出借有效时间
             form.setBorrowValidTime(this.borrowCommonService.getBorrowConfig("BORROW_VALID_TIME"));
             // 设置标的的银行注册时间
             form.setBankRegistDays(this.borrowCommonService.getBorrowConfig("BORROW_REGIST_DAYS"));
@@ -238,7 +238,7 @@ public class BorrowCommonController extends BaseController {
 
 
 			// add by xiashuqing 20171129 begin
-			// 定向发标 只获取投资端机构
+			// 定向发标 只获取出借端机构
 	        bcr.setInstConfigList(CommonUtils.convertBeanList(this.instConfigService.getInstConfigByType(TENDER_INST_TYPE),HjhInstConfigVO.class));
 		//	modelAndView.addObject("instConfigList", this.instConfigService.getInstConfigByType(TENDER_INST_TYPE));
 			// add by xiashuqing 20171129 end
@@ -516,7 +516,7 @@ public class BorrowCommonController extends BaseController {
 //	}
 
 //	/**TODO放在用户里
-//	 * 垫付机构用户名是否存在
+//	 * 担保机构用户名是否存在
 //	 *
 //	 * @param request
 //	 * @return
@@ -571,12 +571,12 @@ public class BorrowCommonController extends BaseController {
 	}
 
 	/**
-	 * 获取融资服务费率 & 账户管理费率
+	 * 获取放款服务费率 & 还款服务费率
 	 *
 	 * @param borrowCommonRequest
 	 * @return
 	 */
-	@ApiOperation(value = "获取融资服务费率 & 账户管理费率")
+	@ApiOperation(value = "获取放款服务费率 & 还款服务费率")
 	@RequestMapping("/getBorrowServiceScale")
 	public BorrowCommonVO getBorrowServiceScale(@RequestBody @Valid BorrowCommonRequest borrowCommonRequest) {
 		BorrowCommonVO scale = this.borrowCommonService.getBorrowServiceScale(borrowCommonRequest);

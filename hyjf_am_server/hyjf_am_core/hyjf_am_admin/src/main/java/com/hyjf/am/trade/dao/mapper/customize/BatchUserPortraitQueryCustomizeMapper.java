@@ -39,14 +39,14 @@ public interface BatchUserPortraitQueryCustomizeMapper {
     int getTradeNumber(Integer userId);
 
     /**
-     * 获取用户年化投资金额
+     * 获取用户年化出借金额
      * @param userId
      * @return
      */
     BigDecimal getInvestSum(Integer userId);
 
     /**
-     * 获取计划标年化收益
+     * 获取计划标出借利率
      * @param userId
      * @return
      */

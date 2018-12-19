@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 public class BorrowRegistRequestBean extends BaseRequest implements Serializable {
 
-    @ApiModelProperty(value = "借款编号")
+    @ApiModelProperty(value = "项目编号")
     private String borrowNidSrch;
 
     @ApiModelProperty(value = "借款标题")

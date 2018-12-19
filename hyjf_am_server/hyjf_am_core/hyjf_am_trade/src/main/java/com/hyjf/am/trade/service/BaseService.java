@@ -144,7 +144,7 @@ public interface BaseService {
     BorrowRepay selectBorrowRepay(String borrowNid);
 
     /**
-     * 获取用户投资信息
+     * 获取用户出借信息
      *
      * @param borrowNid
      * @return

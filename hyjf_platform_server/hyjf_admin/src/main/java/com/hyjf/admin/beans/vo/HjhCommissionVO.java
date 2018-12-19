@@ -27,7 +27,7 @@ public class HjhCommissionVO extends BaseRequest implements Serializable{
 	@ApiModelProperty(value = "项目标题查询")
     private String borrowNameSearch;
 	
-	@ApiModelProperty(value = "投资人查询")
+	@ApiModelProperty(value = "出借人查询")
     private String usernameSearch;
 	
 	@ApiModelProperty(value = "客户端类型查询")
@@ -91,7 +91,7 @@ public class HjhCommissionVO extends BaseRequest implements Serializable{
 	@ApiModelProperty(value = "还款方式-汇计划")
     private String borrowStyleHjh;
 	
-	@ApiModelProperty(value = "预期年化收益率")
+	@ApiModelProperty(value = "预期出借利率")
     private BigDecimal expectApr;
 	
 	@ApiModelProperty(value = "计划订单锁定时间 开始")
@@ -130,7 +130,7 @@ public class HjhCommissionVO extends BaseRequest implements Serializable{
 	@ApiModelProperty(value = "推荐人用户名")
     private String referername;
 
-	@ApiModelProperty(value = "投资人用户名")
+	@ApiModelProperty(value = "出借人用户名")
     private String username;
 
 	@ApiModelProperty(value = "推荐人用户属性 0=>无主单 1=>有主单 2=>线下员工 3=>线上员工")
@@ -151,7 +151,7 @@ public class HjhCommissionVO extends BaseRequest implements Serializable{
 	@ApiModelProperty(value = "提成人用户属性")
     private String attributeTender;
 
-	@ApiModelProperty(value = "投资时间")
+	@ApiModelProperty(value = "出借时间")
     private String tenderTimeView;
 
 	@ApiModelProperty(value = "提成发放时间")

@@ -116,7 +116,7 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
             //System.out.println("构建查询条件******************3法大大协议状态：2");
             result.setFddStatus("1");
         }
-        // 真实资金投资
+        // 真实资金出借
         if (couponType == 0) {
             UserHjhInvistDetailCustomizeVO customize = amTradeClient.selectUserHjhInvistDetail(params);//myPlanService.selectUserHjhInvistDetail(params);
             if (customize == null) {
@@ -129,19 +129,19 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
 
             // 2.加入信息
             this.copyPlanCapitalInfoToResult(result, customize,type);
-            // 3. 真实资金投资优惠券信息是空
+            // 3. 真实资金出借优惠券信息是空
             result.setCouponIntr(null);
 
-            // 4.真实投资还款计划
+            // 4.真实出借还款计划
             /*HjhRepay hjhRepay = myPlanService.getPlanRepayment(orderId);*/
             String url ="http://AM-TRADE/am-trade/hjhRepay/hjhRepaymentDetails/"+ orderId;
             HjhRepayResponse repayResponse = baseClient.getExe(url,HjhRepayResponse.class);
             HjhRepayVO hjhRepayVO = CollectionUtils.isEmpty(repayResponse.getResultList())? null : repayResponse.getResultList().get(0);
             this.copyPlanRepaymentToResult(result, hjhRepayVO, customize);
 
-            // 计划处于投资中状态
+            // 计划处于出借中状态
             List<String> statusList = Arrays.asList("0", "2", "99");
-            // 投资中状态不显示持有列表
+            // 出借中状态不显示持有列表
             if (customize != null && !statusList.contains(customize.getOrderStatus())) {
                 // 5. 持有项目列表
                 String url1 = "http://AM-TRADE/am-trade/hjhDebtCredit/getUserHjhInvestList";
@@ -150,7 +150,7 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
                 this.copyPlanHoldInvestToResult(result,userHjhInvistListCustomizeVOList);
             }
 
-        } else { // 优惠券投资
+        } else { // 优惠券出借
             String url = "http://AM-TRADE/am-trade/coupon/getAppMyPlanCouponInfo";
             AppCouponResponse response = baseClient.postExe(url,params,AppCouponResponse.class);
             AppCouponCustomizeVO appCouponCustomize = CollectionUtils.isEmpty(response.getResultList()) ? null :response.getResultList().get(0);
@@ -161,7 +161,7 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
             }
             // 1. 计划信息
             this.copyCouponPlanBaseToResult(result, appCouponCustomize, type);
-            // 有本金投资才显示加入信息
+            // 有本金出借才显示加入信息
             if (!org.springframework.util.StringUtils.isEmpty(appCouponCustomize.getRealTenderId())) {
                 // 2.加入信息
                 this.copyCouponPlanCapitalToResult(result, appCouponCustomize, type);
@@ -171,20 +171,20 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
             // 3.优惠券信息
             this.copyPlanCouponInfoToResult(result, appCouponCustomize);
 
-            // 4.优惠券投资还款计划
+            // 4.优惠券出借还款计划
             String  couponRecoverPlanUrl = "http://AM-TRADE/am-trade/coupon/getCounponRecoverList/"+ orderId;
             CouponRepayResponse res = baseClient.getExe(couponRecoverPlanUrl,CouponRepayResponse.class);
             List<CurrentHoldRepayMentPlanListVO> repaymentPlanList = res.getResultList();
             this.copyPlanCouponRepaymentToResult(result, repaymentPlanList);
 
-            // 5.优惠券投资不显示持有项目
+            // 5.优惠券出借不显示持有项目
         }
         return  result;
     }
 
 
     /**
-     * 本金投资还款计划 目前只有一条 repay表存的是已回款金额，回款总额应从accede中取
+     * 本金出借还款计划 目前只有一条 repay表存的是已回款金额，回款总额应从accede中取
      *
      * @param result
      * @param hjhRepay
@@ -302,11 +302,11 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
                                             String type) {
         MyPlanDetailResultBean.ProjectIntr projectIntr = result.getProjectIntr();
         //projectIntr.setStatus(type);
-        // 计划处于投资中状态
+        // 计划处于出借中状态
         List<String> statusList = Arrays.asList("0", "2", "99", "9");
-        // 投资中状态不显示持有列表
+        // 出借中状态不显示持有列表
         if (appCouponCustomize != null && statusList.contains(appCouponCustomize.getOrderStatus())) {
-            projectIntr.setStatus("投资中");
+            projectIntr.setStatus("出借中");
         } else if("7".equals(appCouponCustomize.getOrderStatus())){
             projectIntr.setStatus("已退出");
         } else{
@@ -389,19 +389,19 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
     private void copyPlanBaseInfoToResult(MyPlanDetailResultBean result, UserHjhInvistDetailCustomizeVO customize,
                                           String type) {
         MyPlanDetailResultBean.ProjectIntr projectIntr = result.getProjectIntr();
-        // 计划处于投资中状态(orderStatus1锁定中 2退出中 3已退出)
+        // 计划处于出借中状态(orderStatus1锁定中 2退出中 3已退出)
         String orderStatus = customize.getOrderStatus();
         if(StringUtils.isNotBlank(orderStatus)){
-            //非锁定中,app端隐藏投资服务协议按钮
+            //非锁定中,app端隐藏出借服务协议按钮
             projectIntr.setType(orderStatus);
         }else{
             projectIntr.setType("0");
         }
-        // 计划处于投资中状态
+        // 计划处于出借中状态
         List<String> statusList = Arrays.asList("0", "2", "99", "9");
-        // 投资中状态不显示持有列表
+        // 出借中状态不显示持有列表
         if (customize != null && statusList.contains(customize.getOrderStatus())) {
-            projectIntr.setStatus("投资中");
+            projectIntr.setStatus("出借中");
         } else if("7".equals(customize.getOrderStatus())){
             projectIntr.setStatus("已退出");
         } else{
@@ -464,9 +464,9 @@ public class AppMyPlanServiceImpl extends BaseTradeServiceImpl implements AppMyP
         investIntr.setCapital(DF_FOR_VIEW.format(new BigDecimal(customize.getAccedeAccount().replaceAll(",",""))));
         investIntr.setCapitalInterest(customize.getReceivedTotal());
 
-        // 计划处于投资中状态
+        // 计划处于出借中状态
         List<String> statusList = Arrays.asList("0", "2", "99");
-        // 投资中状态不显示持有列表
+        // 出借中状态不显示持有列表
         if (customize != null && statusList.contains(customize.getOrderStatus())) {
             investIntr.setCapitalOnCall("--");
             investIntr.setInterestOnCall("--");

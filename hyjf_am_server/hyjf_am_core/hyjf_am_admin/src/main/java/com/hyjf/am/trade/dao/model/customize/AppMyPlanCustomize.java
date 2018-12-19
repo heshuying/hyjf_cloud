@@ -20,7 +20,7 @@ public class AppMyPlanCustomize implements Serializable {
     private String orderId;
     /** 锁定期限 */
     private String lockPeriod;
-    /** 投资金额 */
+    /** 出借金额 */
     private String account;
     /** 待收金额 */
     private String interest;
@@ -32,13 +32,13 @@ public class AppMyPlanCustomize implements Serializable {
     private String receivedInterest;
     /** 计划应还时间 */
     private String recoverTime;
-    /** 预计年化收益率 */
+    /** 预计出借利率 */
     private String expectApr;
     /** 状态名称 */
     private String statusName;
     /** 项目详情url */
     private String borrowUrl;
-    /** 投资合同url */
+    /** 出借合同url */
     private String contactUrl;
     /**标的第一项 */
     private String borrowTheFirst;

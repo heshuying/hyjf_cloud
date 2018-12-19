@@ -12,7 +12,7 @@ public class UserInfo implements Serializable {
     private Integer userId;
 
     /**
-     * 用户角色1投资人2借款人3担保机构
+     * 用户角色1出借人2借款人3担保机构
      *
      * @mbggenerated
      */

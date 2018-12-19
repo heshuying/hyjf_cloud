@@ -53,7 +53,7 @@ public class BorrowRepaymentInfoRequset extends BasePage {
     @ApiModelProperty(value = "应还日期开始")
     private String timeStartSrch;
     /**
-     * 投资时间 检索条件
+     * 出借时间 检索条件
      */
     @ApiModelProperty(value = "应还日期结束")
     private String timeEndSrch;

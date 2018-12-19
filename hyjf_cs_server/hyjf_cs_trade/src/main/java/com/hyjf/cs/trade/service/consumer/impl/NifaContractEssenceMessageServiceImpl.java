@@ -69,7 +69,7 @@ public class NifaContractEssenceMessageServiceImpl extends BaseServiceImpl imple
     }
 
     /**
-     * 根据放款编号获取该标的的投资信息
+     * 根据放款编号获取该标的的出借信息
      *
      * @param borrowNid
      * @return
@@ -91,7 +91,7 @@ public class NifaContractEssenceMessageServiceImpl extends BaseServiceImpl imple
     }
 
     /**
-     * 获取投资人详情
+     * 获取出借人详情
      *
      * @param userId
      * @return
@@ -182,7 +182,7 @@ public class NifaContractEssenceMessageServiceImpl extends BaseServiceImpl imple
     }
 
     /**
-     * 获取用户投资订单还款详情
+     * 获取用户出借订单还款详情
      *
      * @param nid
      * @return
@@ -193,7 +193,7 @@ public class NifaContractEssenceMessageServiceImpl extends BaseServiceImpl imple
     }
 
     /**
-     * 获取用户投资订单还款计划(到期还款)
+     * 获取用户出借订单还款计划(到期还款)
      *
      * @param nid
      * @return

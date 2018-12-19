@@ -30,13 +30,13 @@ public interface CouponService {
     CouponCustomize getCouponUser(String couponGrantId, Integer userId);
 
     /**
-     * 优惠券投资
+     * 优惠券出借
      * @param couponTender
      */
     void updateCouponTender(CouponTenderVO couponTender);
 
     /**
-     * 获取优惠券投资
+     * 获取优惠券出借
      * @param userId
      * @param borrowNid
      * @param logOrdId
@@ -53,7 +53,7 @@ public interface CouponService {
     CouponRecover getCouponRecoverByPrimaryKey(Integer id);
 
     /**
-     * 取得优惠券投资信息
+     * 取得优惠券出借信息
      * @param nid
      * @return
      */
@@ -61,7 +61,7 @@ public interface CouponService {
 
     /**
      * @Author walter.limeng
-     * @Description  获取汇计划投资列表（优惠券）
+     * @Description  获取汇计划出借列表（优惠券）
      * @Date 10:37 2018/7/17
      * @Param orderId 订单ID
      * @return
@@ -70,7 +70,7 @@ public interface CouponService {
 
     /**
      * @Author walter.limeng
-     * @Description  优惠券单独投资时用
+     * @Description  优惠券单独出借时用
      * @Date 10:50 2018/7/17
      * @Param couponOrderId   nid
      * @return
@@ -96,7 +96,7 @@ public interface CouponService {
     List<BorrowTenderCpn> getBorrowTenderCpnList(String borrowNid);
 
     /**
-     * 根据userId和orderId获取优惠券投资记录
+     * 根据userId和orderId获取优惠券出借记录
      * @author zhangyk
      * @date 2018/7/31 13:52
      */
@@ -111,14 +111,14 @@ public interface CouponService {
 
 
     /**
-     * 获取我的优惠券投资记录
+     * 获取我的优惠券出借记录
      * @author zhangyk
      * @date 2018/8/1 14:30
      */
     List<AppCouponCustomizeVO> getAppMyPlanCouponInfo(Map<String,Object> params);
 
     /**
-     * 根据订单号查询此笔投资是否使用优惠券
+     * 根据订单号查询此笔出借是否使用优惠券
      *
      * @param orderId
      * @return
@@ -126,7 +126,7 @@ public interface CouponService {
     CouponRealTender selectCouponRealTenderByOrderId(String orderId);
 
     /**
-     * 根据优惠券投资ID查询优惠券投资
+     * 根据优惠券出借ID查询优惠券出借
      *
      * @param couponTenderId
      * @return
@@ -142,7 +142,7 @@ public interface CouponService {
     CouponUser selectCouponUserById(Integer couponGrantId);
 
     /**
-     * 根据优惠券投资ID获取优惠券投资信息
+     * 根据优惠券出借ID获取优惠券出借信息
      *
      * @param couponTenderId
      * @return

@@ -93,7 +93,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
     }
 
 	/**
-	 * 投资校验
+	 * 出借校验
 	 * @param borrowNid
 	 * @param account
 	 * @param userIdInt
@@ -106,11 +106,11 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 								  BorrowTenderTmpRequest request) {
 
 		CouponConfigCustomizeV2 cuc = null;
-		// -1:有可用的优惠券，但是投资时不选择优惠券 空或null：用户没有可用优惠券
+		// -1:有可用的优惠券，但是出借时不选择优惠券 空或null：用户没有可用优惠券
 		UserInfoVO usersInfo=request.getUserInfo();
 		if (null != usersInfo) {
 			if (usersInfo.getRoleId() == 3) {// 担保机构用户
-				return jsonMessage("担保机构用户不能进行投资", "1");
+				return jsonMessage("担保机构用户不能进行出借", "1");
 			}
 		} else {
 			return jsonMessage("账户信息异常", "1");
@@ -153,24 +153,24 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 
 		Integer projectType = borrow.getProjectType();// 0，51老用户；1，新用户；2，全部用户
 		if (projectType == null) {
-			return jsonMessage("未设置该投资项目的项目类型", "1");
+			return jsonMessage("未设置该出借项目的项目类型", "1");
 		}
-		// 投资项目的配置信息
+		// 出借项目的配置信息
 		BorrowProjectType borrowProjectType = this.getBorrowProjectType(String.valueOf(projectType));
 		if (borrowProjectType == null) {
-			return jsonMessage("未查询到该投资项目的配置信息", "1");
+			return jsonMessage("未查询到该出借项目的配置信息", "1");
 		}
 		// 51老用户标
 		if ("0".equals(borrowProjectType.getInvestUserType())) {
 			//判断是否51老用户,如果是则返回true，否则返回false
 			if (!request.getIs51User()) {
-				return jsonMessage("该项目只能51老用户投资", "1");
+				return jsonMessage("该项目只能51老用户出借", "1");
 			}
 		}
 		if ("1".equals(borrowProjectType.getInvestUserType())) {
 			boolean newUser = this.checkIsNewUserCanInvest(Integer.parseInt(userId));
 			if (!newUser) {
-				return jsonMessage("该项目只能新手投资", "1");
+				return jsonMessage("该项目只能新手出借", "1");
 			}
 		}
 		
@@ -192,7 +192,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 			return jsonMessage("借款人汇付客户号不存在", "1");
 		}
 		if (userId.equals(String.valueOf(borrow.getUserId()))) {
-			return jsonMessage("借款人不可以自己投资项目", "1");
+			return jsonMessage("借款人不可以自己出借项目", "1");
 		}
 		
 		Borrow borrow1 = this.getBorrowByNid(borrowNid);
@@ -207,15 +207,15 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 		if (borrow1.getBorrowFullStatus() == 1) {
 			return jsonMessage("此项目已经满标", "1");
 		}
-		// 判断用户投资金额是否为空
+		// 判断用户出借金额是否为空
 		if (!(StringUtils.isNotEmpty(account) || (StringUtils.isEmpty(account) && cuc != null && cuc.getCouponType() == 3) ||
 				(StringUtils.isEmpty(account) && cuc != null && cuc.getCouponType() == 1))) {
-			return jsonMessage("请输入投资金额", "1");
+			return jsonMessage("请输入出借金额", "1");
 		}
 		// 还款金额是否数值
 		try {
 			// 新需求判断顺序变化
-			// 将投资金额转化为BigDecimal
+			// 将出借金额转化为BigDecimal
 			BigDecimal accountBigDecimal = new BigDecimal(account);
 			String balance = RedisUtils.get(RedisConstants.BORROW_NID+borrowNid);
 			if (StringUtils.isEmpty(balance)) {
@@ -244,17 +244,17 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 				} else {
 					Integer max = borrow.getTenderAccountMax();
 					if (max != null && max != 0 && accountBigDecimal.compareTo(new BigDecimal(max)) == 1) {
-						return jsonMessage("项目最大投资额为" + max + "元", "1");
+						return jsonMessage("项目最大出借额为" + max + "元", "1");
 					}
 				}
 			}
 			if (accountBigDecimal.compareTo(borrow1.getAccount()) > 0) {
-				return jsonMessage("投资金额不能大于项目总额", "1");
+				return jsonMessage("出借金额不能大于项目总额", "1");
 			}
-			// 投资人记录
+			// 出借人记录
 			Account tenderAccount = this.getAccountByUserId(Integer.parseInt(userId));
 			if (tenderAccount == null) {
-				return jsonMessage("未查询到投资人信息！", "1");
+				return jsonMessage("未查询到出借人信息！", "1");
 			}
 			if (tenderAccount.getBankBalance().compareTo(accountBigDecimal) < 0) {
 				return jsonMessage("余额不足，请充值！", "1");
@@ -267,7 +267,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 			if (accountBigDecimal.compareTo(new BigDecimal(balance)) == 1) {
 				return jsonMessage("剩余可投金额为" + balance + "元", "1");
 			}
-			// 如果验证没问题，则返回投资人借款人的汇付账号
+			// 如果验证没问题，则返回出借人借款人的汇付账号
 			String borrowerUsrcustid = accountChinapnrBorrower.getAccount();
 			String tenderUsrcustid = accountChinapnrTender.getAccount();
 			JSONObject jsonMessage = new JSONObject();
@@ -278,8 +278,8 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 			jsonMessage.put("tenderUserName", user.getUsername());
 			return jsonMessage;
 		} catch (Exception e) {
-			System.out.println("=========投资校验异常===========");
-			return jsonMessage("投资金额必须为整数", "1");
+			System.out.println("=========出借校验异常===========");
+			return jsonMessage("出借金额必须为整数", "1");
 		}
 
 	}
@@ -302,7 +302,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 
 
 	/**
-	 * 新用户新手标验证，标如果是新用户标，查看此用户是否有过投资记录，如果有返回true，提示不能投标了
+	 * 新用户新手标验证，标如果是新用户标，查看此用户是否有过出借记录，如果有返回true，提示不能投标了
 	 * @param userId
 	 * @return
 	 */
@@ -401,7 +401,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 		bean.setLogUserId(userId);
 		bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
 		bean.setLogOrderId(GetOrderIdUtils.getOrderId2(Integer.parseInt(userId)));
-		bean.setLogRemark("投资人投标申请查询");
+		bean.setLogRemark("出借人投标申请查询");
 		// 调用接口
 		return BankCallUtils.callApiBg(bean);
 	}
@@ -436,7 +436,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 		if (bean != null) {
 			bean.convert();
 			if ("1".equals(bean.getState())) {
-				// 投标中的投资数据
+				// 投标中的出借数据
 				String borrowId = bean.getProductId();// 借款Id
 				String account = bean.getTxAmount();// 借款金额
 				try {
@@ -444,15 +444,15 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 					// modify by cwyang borrowid 换成borrowNid
 					Borrow borrow = CommonUtils.convertBean(request.getBorrow(), Borrow.class);
 					String borrowNid = borrowId == null ? "" : borrow.getBorrowNid();// 项目编号
-					logger.info("===============开始修复投资全部掉单,标的号:" + borrowNid);
+					logger.info("===============开始修复出借全部掉单,标的号:" + borrowNid);
 					if (StringUtils.isBlank(borrowNid)) {
-						logger.info("=======================投资掉单修复,borrowNid 为空!");
+						logger.info("=======================出借掉单修复,borrowNid 为空!");
 					} else {
 						String couponGrantId = null;
 						couponGrantId = borrowTenderTmp.getCouponGrantId() + "";
 						JSONObject checkParamResult = checkParam(borrowNid, account, userId, null, couponGrantId,request);
 						if (checkParamResult == null) {
-							logger.info("投资掉单修复校验失败!");
+							logger.info("出借掉单修复校验失败!");
 						} else if (checkParamResult.get("error") != null && "1".equals(checkParamResult.get("error"))) {
 							logger.info(checkParamResult.get("data") + "");
 
@@ -463,33 +463,33 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 							if (StringUtils.isBlank(bean.getOrderId())) {
 								bean.setOrderId(orderId);
 							}
-							// 进行投资, tendertmp锁住
+							// 进行出借, tendertmp锁住
 							BorrowInfo borrow1=this.getBorrowInfoByNid(borrowNid);
 							if (borrow1 == null) {
 								throw new Exception("查询标的信息失败");
 							}
 							JSONObject tenderResult = this.updateTender(borrow,borrow1,bean,request);
-							// 投资成功
+							// 投标成功
 							if ("1".equals(tenderResult.getString("status"))) {
-								logger.info("投资全部掉单修复:" + userId + "***掉单修复投资成功：" + account);
+								logger.info("出借全部掉单修复:" + userId + "***掉单修复投标成功：" + account);
 								if (StringUtils.isNotBlank(couponGrantId)) {
-									// 优惠券投资校验
+									// 优惠券出借校验
 									try {
 										CouponConfigCustomizeV2 cuc = null;
 										cuc = getCouponUser(couponGrantId, userId);
 										// 排他check用
 										couponOldTime = cuc.getUserUpdateTime();
-										// 优惠券投资校验
+										// 优惠券出借校验
 										JSONObject couponCheckResult = CommonSoaUtils.CheckCoupon(userId + "", borrowNid, account, CustomConstants.CLIENT_PC, couponGrantId);
 										int couponStatus = couponCheckResult.getIntValue("status");
 										String statusDesc = couponCheckResult.getString("statusDesc");
-										logger.info("updateCouponTender" + "优惠券投资校验结果：" + statusDesc);
+										logger.info("updateCouponTender" + "优惠券出借校验结果：" + statusDesc);
 										if (couponStatus == 0) {
-											// 优惠券投资
+											// 优惠券出借
 											CommonSoaUtils.CouponInvestForPC(userId + "", borrowNid, account, CustomConstants.CLIENT_PC, couponGrantId, orderId, null, couponOldTime + "");
 										}
 									} catch (Exception e) {
-										logger.info("优惠券投资失败");
+										logger.info("优惠券出借失败");
 									}
 								}
 								// 如果是融通宝项目且存在加息
@@ -500,13 +500,13 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 									}
 								}
 							}
-							// 投资失败 回滚redis
+							// 出借失败 回滚redis
 							else {
 								// 更新tendertmp
 								boolean updateFlag = updateBorrowTenderTmp(userId, borrowNid, orderId);
-								// 更新失败，投资失败
+								// 更新失败，出借失败
 								if (updateFlag) {
-									// 投资失败,投资撤销
+									// 出借失败,出借撤销
 									try {
 										boolean flag = this.bidCancel(userId, borrowId, orderId, account);
 										if (!flag) {
@@ -516,7 +516,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 										logger.info("投标申请撤销失败,请联系客服人员!");
 									}
 								} else {
-									logger.info("恭喜您投资成功!");
+									logger.info("恭喜您投标成功!");
 									boolean updateTenderFlag = this.updateTender(userId, borrowNid, orderId, bean);
 									if (!updateTenderFlag) {
 										logger.info("投标出現错误,请联系客服人员!");
@@ -526,9 +526,9 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 						} catch (Exception e) {
 							// 更新tendertmp
 							boolean updateFlag = updateBorrowTenderTmp(userId, borrowNid, orderId);
-							// 更新失败，投资失败
+							// 更新失败，出借失败
 							if (updateFlag) {
-								// 投资失败,投资撤销
+								// 出借失败,出借撤销
 								try {
 									boolean flag = bidCancel(userId, borrowId, orderId, account);
 									if (!flag) {
@@ -538,7 +538,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 									logger.info("投标申请撤销失败,请联系客服人员!");
 								}
 							} else {
-								logger.info("恭喜您投资成功!");
+								logger.info("恭喜您投标成功!");
 								boolean updateTenderFlag = this.updateTender(userId, borrowNid, orderId, bean);
 								if (!updateTenderFlag) {
 									logger.info("投标出現错误,请联系客服人员!");
@@ -562,17 +562,17 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 				} else {
 					logger.info("==============变更borrowTenderTmp表状态失败!==============");
 				}
-				logger.info("====================投资信息不是投标中的状态,不予处理!===========================订单号: " + orderId);
+				logger.info("====================出借信息不是投标中的状态,不予处理!===========================订单号: " + orderId);
 			}
 		} else {
-			throw new Exception("=====================投资全部掉单处理没有找到匹配的标的信息,订单号: " + orderId + ", 请手动处理!==============");
+			throw new Exception("=====================出借全部掉单处理没有找到匹配的标的信息,订单号: " + orderId + ", 请手动处理!==============");
 		}
 
 	}
 
 		
 	private boolean updateTender(int userId, String borrowNid, String orderId, BankCallBean bean) {
-		String authCode = bean.getAuthCode();// 投资结果授权码
+		String authCode = bean.getAuthCode();// 出借结果授权码
 		BorrowTenderExample example = new BorrowTenderExample();
 		example.createCriteria().andUserIdEqualTo(userId).andBorrowNidEqualTo(borrowNid).andNidEqualTo(orderId);
 		BorrowTender borrowTender = new BorrowTender();
@@ -584,24 +584,24 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 	
 
 	public boolean bidCancel(int investUserId, String productId, String orgOrderId, String txAmount) throws Exception {
-		// 投资人的账户信息
+		// 出借人的账户信息
 		Account outCust=this.getAccountByUserId(investUserId);
 		if (outCust == null) {
-			throw new Exception("投资人未开户。[投资人ID：" + investUserId + "]，" + "[投资订单号：" + orgOrderId + "]");
+			throw new Exception("出借人未开户。[出借人ID：" + investUserId + "]，" + "[出借订单号：" + orgOrderId + "]");
 		}
 		String tenderAccountId = outCust.getAccountId();
-		// 调用交易查询接口(投资撤销)
+		// 调用交易查询接口(出借撤销)
 		BankCallBean queryTransStatBean = bidCancel(investUserId, tenderAccountId, productId, orgOrderId, txAmount);
 		if (queryTransStatBean == null) {
-			throw new Exception("调用投标申请撤销失败。" + ",[投资订单号：" + orgOrderId + "]");
+			throw new Exception("调用投标申请撤销失败。" + ",[出借订单号：" + orgOrderId + "]");
 		} else {
 			String queryRespCode = queryTransStatBean.getRetCode();
-			System.out.print("投资失败交易接口查询接口返回码：" + queryRespCode);
+			System.out.print("出借失败交易接口查询接口返回码：" + queryRespCode);
 			// 调用接口失败时(000以外)
 			if (!BankCallConstant.RESPCODE_SUCCESS.equals(queryRespCode)) {
 				String message = queryTransStatBean.getRetMsg();
-				logger.error(this.getClass().getName(), "bidCancel", "调用交易查询接口(解冻)失败。" + message + ",[投资订单号：" + orgOrderId + "]", null);
-				throw new Exception("调用投标申请撤销失败。" + queryRespCode + "：" + message + ",[投资订单号：" + orgOrderId + "]");
+				logger.error(this.getClass().getName(), "bidCancel", "调用交易查询接口(解冻)失败。" + message + ",[出借订单号：" + orgOrderId + "]", null);
+				throw new Exception("调用投标申请撤销失败。" + queryRespCode + "：" + message + ",[出借订单号：" + orgOrderId + "]");
 			} else if (queryRespCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_EXIST1) || queryRespCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_EXIST2)) {
 				logger.info("===============冻结记录不存在,不予处理========");
 				deleteBorrowTenderTmp(orgOrderId);
@@ -625,7 +625,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 
 
 	/**
-	 * 投标失败后,调用投资撤销接口
+	 * 投标失败后,调用出借撤销接口
 	 * @param investUserId
 	 * @param investUserAccountId
 	 * @param productId
@@ -671,7 +671,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 	
 
 	/**
-	 * 更新投资记录临时表
+	 * 更新出借记录临时表
 	 * 
 	 * @param userId
 	 * @param ordId
@@ -699,7 +699,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 		String ip = bean.getLogIp();
 		// 操作平台
 		int client = bean.getLogClient() != 0 ? bean.getLogClient() : 0;
-		// 投资人id
+		// 出借人id
 		Integer userId = Integer.parseInt(bean.getLogUserId());
 		// 借款金额
 		String account = bean.getTxAmount();
@@ -716,7 +716,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 		UserVO users = request.getLogUser();
 		// 生成额外利息订单
 		String orderId = GetOrderIdUtils.getOrderId2(userId);
-		// 根据orderid查询投资信息tender
+		// 根据orderid查询出借信息tender
 		BorrowTender tender = this.getBorrowTenderByNidUserIdBorrowNid(tenderOrderId, userId, borrowNid);
 		if (tender != null) {
 
@@ -745,10 +745,10 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 			increaseInterestInvest.setCreateUserName(users.getUsername());
 			boolean incinvflag = increaseInterestInvestMapper.insertSelective(increaseInterestInvest) > 0 ? true : false;
 			if (!incinvflag) {
-				System.err.println("融通宝投资额外利息投资失败，插入额外投资信息失败,投资订单号:" + tenderOrderId);
+				System.err.println("融通宝出借额外利息出借失败，插入额外出借信息失败,出借订单号:" + tenderOrderId);
 			}
 		} else {
-			System.err.println("融通宝投资额外利息投资失败，获取投资信息失败,投资订单号:" + tenderOrderId);
+			System.err.println("融通宝出借额外利息出借失败，获取出借信息失败,出借订单号:" + tenderOrderId);
 		}
 		
 	}
@@ -787,13 +787,13 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 		int nowTime = request.getNowTime();
 		String ip = bean.getLogIp();// 操作ip
 		int client = bean.getLogClient() != 0 ? bean.getLogClient() : 0;// 操作平台
-		String accountId = bean.getAccountId();// 获取投资用户的投资客户号
-		Integer userId = Integer.parseInt(bean.getLogUserId());// 投资人id
+		String accountId = bean.getAccountId();// 获取出借用户的出借客户号
+		Integer userId = Integer.parseInt(bean.getLogUserId());// 出借人id
 		String txAmount = bean.getTxAmount();// 借款金额
 		String orderId = bean.getOrderId();// 订单id
 		String orderDate = bean.getLogOrderDate(); // 订单日期
-		String retCode = bean.getRetCode();// 投资结果返回码
-		String authCode = bean.getAuthCode();// 投资结果授权码
+		String retCode = bean.getRetCode();// 出借结果返回码
+		String authCode = bean.getAuthCode();// 出借结果授权码
 		String borrowNid = borrow.getBorrowNid();// 项目编号
 		String borrowStyle = borrow.getBorrowStyle();// 项目的还款方式
 		int projectType = borrow1.getProjectType();// 项目类型
@@ -819,7 +819,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 				criteria1.andBorrowNidEqualTo(borrowNid);
 				boolean tenderTempFlag = borrowTenderTmpMapper.deleteByExample(borrowTenderTmpExample) > 0 ? true : false;
 				if (!tenderTempFlag) {
-					result.put("message", "投资失败！");
+					result.put("message", "出借失败！");
 					result.put("status", 0);
 					throw new Exception("删除borrowTenderTmp表失败");
 				}
@@ -840,7 +840,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 				record.setUnfreezeManual(0);
 				boolean freezeFlag = freezeListMapper.insertSelective(record) > 0 ? true : false;
 				if (!freezeFlag) {
-					result.put("message", "投资失败！");
+					result.put("message", "出借失败！");
 					result.put("status", 0);
 					throw new Exception("插入冻结表失败！");
 				}
@@ -863,7 +863,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 				//borrowTender.setAccountTender(new BigDecimal(0));
 				borrowTender.setAddIp(ip);
 				borrowTender.setBorrowNid(borrowNid);
-				borrowTender.setClient(1);// modify by cwyang 2017-5-3 投资平台为微信端
+				borrowTender.setClient(1);// modify by cwyang 2017-5-3 出借平台为微信端
 				borrowTender.setLoanAmount(accountDecimal.subtract(perService));
 				borrowTender.setNid(orderId);
 				borrowTender.setOrderDate(orderDate);
@@ -882,27 +882,27 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 				borrowTender.setRecoverTimes(0);
 				borrowTender.setStatus(0);
 				borrowTender.setUserId(userId);
-				// 投资人信息
+				// 出借人信息
 				UserVO users=request.getLogUser();
-				// add by zhangjp vip投资记录 start
+				// add by zhangjp vip出借记录 start
 				UserInfoVO userInfo = null;
-				// add by zhangjp vip投资记录 end
+				// add by zhangjp vip出借记录 end
 
 				if (users != null) {
-					// 投资用户名
+					// 出借用户名
 					borrowTender.setUserName(users.getUsername());
-					// 获取投资人属性
-					// modify by zhangjp vip投资记录 start
+					// 获取出借人属性
+					// modify by zhangjp vip出借记录 start
 					// UsersInfo userInfo = getUserInfo(userId);
 					userInfo = request.getLogUserInfo();
-					// modify by zhangjp vip投资记录 end
+					// modify by zhangjp vip出借记录 end
 					// 用户属性 0=>无主单 1=>有主单 2=>线下员工 3=>线上员工
 					Integer attribute = null;
 					if (userInfo != null) {
-						// 获取投资用户的用户属性
+						// 获取出借用户的用户属性
 						attribute = userInfo.getAttribute();
 						if (attribute != null) {
-							// 投资人用户属性
+							// 出借人用户属性
 							borrowTender.setTenderUserAttribute(attribute);
 							// 如果是线上员工或线下员工，推荐人的userId和username不插
 							if (attribute == 2 || attribute == 3) {
@@ -959,17 +959,17 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 //				borrowTender.setWebStatus(0);
 				borrowTender.setClient(client);
 				borrowTender.setInvestType(0);
-				// 单笔投资的融资服务费
+				// 单笔出借的融资服务费
 				borrowTender.setLoanFee(perService);
 				if (StringUtils.isNotBlank(authCode)) {
 					borrowTender.setAuthCode(authCode);
 				}
-				// add by zhangjp vip投资记录 start
-				borrowTender.setRemark("现金投资");
-				// add by zhangjp vip投资记录 end
+				// add by zhangjp vip出借记录 start
+				borrowTender.setRemark("现金出借");
+				// add by zhangjp vip出借记录 end
 				boolean trenderFlag = borrowTenderMapper.insertSelective(borrowTender) > 0 ? true : false;
 				// CRM 接口调用删除 del by liuyang 20180112 start
-//				// add by cwyang 2017-5-18 增加crm投资同步接口
+//				// add by cwyang 2017-5-18 增加crm出借同步接口
 //				int borrowID = 0;
 //				try {
 //					borrowID = borrowTender.getId();
@@ -980,9 +980,9 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 //				}
 				// CRM 接口调用删除 del by liuyang 20180112 end
 				if (!trenderFlag) {
-					result.put("message", "投资失败！");
+					result.put("message", "出借失败！");
 					result.put("status", 0);
-					throw new Exception("插入投资表失败！");
+					throw new Exception("插入出借表失败！");
 				}
 				logger.info("用户:" + userId + "***********************************插入borrowTender，订单号：" + orderId);
 
@@ -991,7 +991,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 				if (Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrow1.getBorrowExtraYield())) {
 					boolean increaseFlag = insertIncreaseInterest(borrow,bean,borrowTender) > 0;
 					if (!increaseFlag) {
-						result.put("message", "投资失败！");
+						result.put("message", "出借失败！");
 						result.put("status", 0);
 						throw new Exception("插入产品加息表失败！");
 					}
@@ -1001,18 +1001,18 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 				// 更新用户账户余额表
 				Account accountBean = new Account();
 				accountBean.setUserId(userId);
-				// 投资人冻结金额增加
+				// 出借人冻结金额增加
 				accountBean.setBankFrost(accountDecimal);
-				// 投资人可用余额扣减
+				// 出借人可用余额扣减
 				accountBean.setBankBalance(accountDecimal);
 				// 江西银行账户余额 update by yangchangwei 2017-4-28
-				// 此账户余额投资后应该扣减掉相应投资金额,sql已改
+				// 此账户余额出借后应该扣减掉相应出借金额,sql已改
 				accountBean.setBankBalanceCash(accountDecimal);
 				// 江西银行账户冻结金额
 				accountBean.setBankFrostCash(accountDecimal);
 				Boolean accountFlag = this.adminAccountCustomizeMapper.updateOfTender(accountBean) > 0 ? true : false;
 				if (!accountFlag) {
-					result.put("message", "投资失败！");
+					result.put("message", "出借失败！");
 					result.put("status", 0);
 					throw new Exception("用户账户信息表更新失败");
 				}
@@ -1020,7 +1020,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 				System.out.println("用户:" + userId + "***********************************更新account，订单号：" + orderId);
 				Account account = this.getAccountByUserId(userId);
 				if(account==null){
-					result.put("message", "投资失败！");
+					result.put("message", "出借失败！");
 					result.put("status", 0);
 					throw new Exception("查询Account失败");
 				}
@@ -1059,7 +1059,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 				accountList.setRemark(borrowNid);
 				accountList.setRepay(new BigDecimal(0));
 				accountList.setTotal(account.getTotal());
-				accountList.setTrade("tender");// 投资
+				accountList.setTrade("tender");// 出借
 				accountList.setTradeCode("frost");// 投标冻结后为frost
 				accountList.setType(3);// 收支类型1收入2支出3冻结
 				accountList.setUserId(userId);
@@ -1067,7 +1067,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 				accountList.setIsBank(1);// 是否是银行的交易记录(0:否,1:是)
 				boolean accountListFlag = accountListMapper.insertSelective(accountList) > 0 ? true : false;
 				if (!accountListFlag) {
-					result.put("message", "投资失败！");
+					result.put("message", "出借失败！");
 					result.put("status", 0);
 					throw new Exception("用户账户交易明细表更新失败");
 				}
@@ -1079,19 +1079,19 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 				borrowParam.put("borrowId", borrowId);
 				boolean updateBorrowAccountFlag = borrowCustomizeMapper.updateOfBorrow(borrowParam) > 0 ? true : false;
 				if (!updateBorrowAccountFlag) {
-					result.put("message", "投资失败！");
+					result.put("message", "出借失败！");
 					result.put("status", 0);
 					throw new Exception("borrow表更新失败");
 				}
 				logger.info("用户:" + userId + "***********************************更新borrow表，订单号：" + orderId);
 
-				// 投资成功累加统计数据
+				// 投标成功累加统计数据
 				calculateInvestTotal(accountDecimal, orderId);
 
-				// 计算此时的剩余可投资金额
+				// 计算此时的剩余可出借金额
 				Borrow waitBorrow = this.getBorrowByNid(borrowNid);
 				if (waitBorrow == null) {
-					result.put("message", "投资失败！");
+					result.put("message", "出借失败！");
 					result.put("status", 0);
 					throw new Exception("查询标的信息失败");
 				}
@@ -1103,7 +1103,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 					borrowFull.put("borrowId", borrowId);
 					boolean fullFlag = borrowCustomizeMapper.updateOfFullBorrow(borrowFull) > 0 ? true : false;
 					if (!fullFlag) {
-						result.put("message", "投资失败！");
+						result.put("message", "出借失败！");
 						result.put("status", 0);
 						throw new Exception("满标更新borrow表失败");
 					}
@@ -1118,13 +1118,13 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 					sendTypeCriteria.andSendCdEqualTo("AUTO_FULL");
 					List<BorrowSendType> sendTypeList = borrowSendTypeMapper.selectByExample(sendTypeExample);
 					if (sendTypeList == null || sendTypeList.size() == 0) {
-						result.put("message", "投资失败！");
+						result.put("message", "出借失败！");
 						result.put("status", 0);
 						throw new Exception("用户:" + userId + "***********************************冻结成功后处理afterChinaPnR：" + "数据库查不到 sendTypeList == null");
 					}
 					BorrowSendType sendType = sendTypeList.get(0);
 					if (sendType.getAfterTime() == null) {
-						result.put("message", "投资失败！");
+						result.put("message", "出借失败！");
 						result.put("status", 0);
 						throw new Exception("用户:" + userId + "***********************************冻结成功后处理afterChinaPnR：" + "sendType.getAfterTime()==null");
 					}
@@ -1133,21 +1133,21 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 					SmsMessage smsMessage = new SmsMessage(null, replaceMap, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_XMMB, CustomConstants.CHANNEL_TYPE_NORMAL);
 					commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
 				} else if (accountWait.compareTo(BigDecimal.ZERO) < 0) {
-					result.put("message", "投资失败！");
+					result.put("message", "出借失败！");
 					result.put("status", 0);
 					throw new Exception("用户:" + userId + "项目编号:" + borrowNid + "***********************************项目暴标");
 				}
 				// 事务提交
 				this.transactionManager.commit(txStatus);
-				result.put("message", "投资成功！");
+				result.put("message", "投标成功！");
 				result.put("status", 1);
 				return result;
 			} catch (Exception e) {
 				// 回滚事务
-				System.out.println("================投资异常!============");
+				System.out.println("================出借异常!============");
 				this.transactionManager.rollback(txStatus);
 				this.redisRecover(userId, borrowNid, txAmount);
-				result.put("message", "投资失败！");
+				result.put("message", "出借失败！");
 				result.put("status", 0);
 			}
 		}
@@ -1156,12 +1156,12 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 
 	/**
 	 *
-	 * @param accountDecimal 投资金额
+	 * @param accountDecimal 出借金额
 	 * @param orderId  订单号
 	 */
 	private void calculateInvestTotal(BigDecimal accountDecimal, String orderId) {
-		// 投资成功累加统计数据
-		logger.info("投资成功累加统计数据...");
+		// 投标成功累加统计数据
+		logger.info("投标成功累加统计数据...");
 		JSONObject params = new JSONObject();
 		params.put("tenderSum", accountDecimal);
 		try {
@@ -1170,7 +1170,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 							MQConstant.STATISTICS_CALCULATE_INVEST_SUM_TAG, UUID.randomUUID().toString(),
 							params));
 		} catch (MQException e) {
-			logger.error("投资成功累加统计数据失败,投资订单号:" + orderId, e);
+			logger.error("投标成功累加统计数据失败,出借订单号:" + orderId, e);
 		}
 	}
 
@@ -1184,7 +1184,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 		}
 
 		if (!Validator.isIncrease(borrow.getIncreaseInterestFlag(), borrowInfo.getBorrowExtraYield())) {
-			logger.error("不需要插入产品加息,投资订单号:" + bean.getOrderId());
+			logger.error("不需要插入产品加息,出借订单号:" + bean.getOrderId());
 			return 0;
 		}
 
@@ -1194,7 +1194,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 		String ip = bean.getLogIp();
 		// 操作平台
 		int client = bean.getLogClient() != 0 ? bean.getLogClient() : 0;
-		// 投资人id
+		// 出借人id
 		Integer userId = Integer.parseInt(bean.getLogUserId());
 		// 借款金额
 		String account = bean.getTxAmount();
@@ -1249,12 +1249,12 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 
 			boolean incinvflag = increaseInterestInvestMapper.insertSelective(increaseInterestInvest) > 0 ? true : false;
 			if (!incinvflag) {
-				logger.error("产品加息投资额外利息投资失败，插入额外投资信息失败,投资订单号:" + tenderOrderId);
-				throw new RuntimeException("产品加息投资额外利息投资失败，插入额外投资信息失败,投资订单号:" + tenderOrderId);
+				logger.error("产品加息出借额外利息出借失败，插入额外出借信息失败,出借订单号:" + tenderOrderId);
+				throw new RuntimeException("产品加息出借额外利息出借失败，插入额外出借信息失败,出借订单号:" + tenderOrderId);
 			}
 			return 1;
 		} else {
-			throw new RuntimeException("产品加息投资额外利息投资失败，borrowtender为空，投资订单号:" + tenderOrderId);
+			throw new RuntimeException("产品加息出借额外利息出借失败，borrowtender为空，出借订单号:" + tenderOrderId);
 		}
 	}
 	

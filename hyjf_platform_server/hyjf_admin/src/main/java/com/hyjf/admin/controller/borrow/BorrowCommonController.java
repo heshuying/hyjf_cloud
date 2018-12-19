@@ -228,21 +228,21 @@ public class BorrowCommonController extends BaseController {
 
 
 	/**
-	 * 垫付机构用户名是否存在
+	 * 担保机构用户名是否存在
 	 *
 	 * @param request
 	 * @return
 	 */
-	@ApiOperation(value = "垫付机构用户名是否存在")
+	@ApiOperation(value = "担保机构用户名是否存在")
 	@PostMapping("/isRepayOrgUser")
 	public AdminResult isRepayOrgUser(@RequestBody @Valid Map<String, String> name) {
 		 List<UserVO> user = this.borrowCommonService.selectUserByUsername(name.get("userName"));
 			if (user == null || user.size() == 0) {
-				return new AdminResult<>(FAIL, "请填写用户角色为垫付机构的已开户用户！！");
+				return new AdminResult<>(FAIL, "请填写用户角色为担保机构的已开户用户！！");
 			}
 				 UserInfoVO userinfo = borrowCommonService.findUserInfoById(user.get(0).getUserId());
 				if(userinfo.getRoleId()!=3) {
-					return new AdminResult<>(FAIL, "请填写用户角色为垫付机构的已开户用户！！");
+					return new AdminResult<>(FAIL, "请填写用户角色为担保机构的已开户用户！！");
 				}
 		Integer authState = CommonUtils.checkPaymentAuthStatus(user.get(0).getPaymentAuthStatus());
 		if (authState == 0) {
@@ -297,12 +297,12 @@ public class BorrowCommonController extends BaseController {
 	}
 
 	/**
-	 * 获取融资服务费率 & 账户管理费率
+	 * 获取放款服务费率 & 还款服务费率
 	 *
 	 * @param request
 	 * @return
 	 */
-	@ApiOperation(value = "获取融资服务费率 & 账户管理费率")
+	@ApiOperation(value = "获取放款服务费率 & 还款服务费率")
 	@PostMapping("/getBorrowServiceScale")
 	public AdminResult<BorrowCommonVO> getBorrowServiceScale(@RequestBody @Valid BorrowCommonRequest borrowCommonRequest) {
 		BorrowCommonVO ncv = this.borrowCommonService.getBorrowServiceScale(borrowCommonRequest);
@@ -730,15 +730,15 @@ public class BorrowCommonController extends BaseController {
 							resultMap.put("username", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 1){//项目申请人
 							resultMap.put("applicant", this.getValue(hssfRow.getCell(1)));
-						}else if(rowNum == 2){//垫付机构用户名
+						}else if(rowNum == 2){//担保机构用户名
 							resultMap.put("repayOrgName", this.getValue(hssfRow.getCell(1)));
-						}else if(rowNum == 3){//项目标题
+						}else if(rowNum == 3){//项目名称
 							resultMap.put("projectName", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 4){//借款标题
 							resultMap.put("name", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 5){//借款金额
 							resultMap.put("account", this.getValue(hssfRow.getCell(1)));
-						}else if(rowNum == 6){//年化收益
+						}else if(rowNum == 6){//出借利率
 							resultMap.put("borrowApr", this.getValue(hssfRow.getCell(1)));
 						}else if(rowNum == 7){//融资用途
 							resultMap.put("financePurpose", this.getValue(hssfRow.getCell(1)));
@@ -1040,15 +1040,15 @@ public class BorrowCommonController extends BaseController {
 							}else if (celLength == 1) {
 								cell.setCellValue("");
 							}
-						}else if(rowNum == 2){//垫付机构用户名
+						}else if(rowNum == 2){//担保机构用户名
 							if (celLength == 0) {
-								cell.setCellValue("垫付机构用户名");
+								cell.setCellValue("担保机构用户名");
 							}else if (celLength == 1) {
 								cell.setCellValue("");
 							}
-						}else if(rowNum == 3){//项目标题
+						}else if(rowNum == 3){//项目名称
 							if (celLength == 0) {
-								cell.setCellValue("项目标题");
+								cell.setCellValue("项目名称");
 							}else if (celLength == 1) {
 								cell.setCellValue("");
 							}
@@ -1064,9 +1064,9 @@ public class BorrowCommonController extends BaseController {
 							}else if (celLength == 1) {
 								cell.setCellValue("");
 							}
-						}else if(rowNum == 6){//年化收益
+						}else if(rowNum == 6){//出借利率
 							if (celLength == 0) {
-								cell.setCellValue("年化收益");
+								cell.setCellValue("出借利率");
 							}else if (celLength == 1) {
 								cell.setCellValue("");
 							}
@@ -1842,11 +1842,11 @@ public class BorrowCommonController extends BaseController {
 //
 //		//UPD BY LIUSHOUYI 合规检查 START
 //		/*
-//		String[] titles = new String[] { "序号", "借款编号", "计划编号", "借款人ID", "借款人用户名", "项目申请人","项目标题", "借款标题", "项目类型", "资产来源", "借款金额（元）", "借款期限", "年化收益", "还款方式", "融资服务费率", "账户管理费率", "合作机构", "已借到金额", "剩余金额", "借款进度", "项目状态", "添加时间",
-//				"初审通过时间", "定时发标时间","预约开始时间","预约截止时间", "实际发标时间", "投资截止时间", "满标时间", "复审通过时间", "放款完成时间", "最后还款日","备案时间","垫付机构用户名","复审人员","所在地区","借款人姓名","属性","是否受托支付","收款人用户名","标签名称","备注" };
+//		String[] titles = new String[] { "序号", "项目编号", "计划编号", "借款人ID", "借款人用户名", "项目申请人","项目名称", "借款标题", "项目类型", "资产来源", "借款金额（元）", "借款期限", "出借利率", "还款方式", "放款服务费率", "还款服务费率", "合作机构", "已借到金额", "剩余金额", "借款进度", "项目状态", "添加时间",
+//				"初审通过时间", "定时发标时间","预约开始时间","预约截止时间", "实际发标时间", "出借截止时间", "满标时间", "复审通过时间", "放款完成时间", "最后还款日","备案时间","担保机构用户名","复审人员","所在地区","借款人姓名","属性","是否受托支付","收款人用户名","标签名称","备注" };
 //		*/
-//		String[] titles = new String[] { "序号", "借款编号", "计划编号", "借款人ID", "用户名", "项目申请人", "项目标题", "项目类型", "资产来源", "借款金额（元）", "借款期限", "年化利率", "还款方式", "融资服务费率", "账户管理费率", "合作机构", "已借到金额", "剩余金额", "借款进度", "项目状态", "添加时间",
-//				"初审通过时间", "定时发标时间","预约开始时间","预约截止时间", "实际发标时间", "投资截止时间", "满标时间", "复审通过时间", "放款完成时间", "最后还款日","备案时间","复审人员","所在地区","借款人姓名","属性","是否受托支付","收款人用户名","标签名称","备注" ,"添加标的人员","标的备案人员","垫付机构用户名","加息收益率"};
+//		String[] titles = new String[] { "序号", "项目编号", "计划编号", "借款人ID", "用户名", "项目申请人", "项目名称", "项目类型", "资产来源", "借款金额（元）", "借款期限", "年化利率", "还款方式", "放款服务费率", "还款服务费率", "合作机构", "已借到金额", "剩余金额", "借款进度", "项目状态", "添加时间",
+//				"初审通过时间", "定时发标时间","预约开始时间","预约截止时间", "实际发标时间", "出借截止时间", "满标时间", "复审通过时间", "放款完成时间", "最后还款日","备案时间","复审人员","所在地区","借款人姓名","属性","是否受托支付","收款人用户名","标签名称","备注" ,"添加标的人员","标的备案人员","担保机构用户名","加息收益率"};
 //		// UPD BY LIUSHOUYI 合规检查 END
 //
 //		// 声明一个工作薄
@@ -1880,7 +1880,7 @@ public class BorrowCommonController extends BaseController {
 //					if (celLength == 0) {
 //						cell.setCellValue(i + 1);
 //					}
-//					// 借款编号
+//					// 项目编号
 //					else if (celLength == 1) {
 //						cell.setCellValue(borrowCommonCustomize.getBorrowNid());
 //					}
@@ -1900,7 +1900,7 @@ public class BorrowCommonController extends BaseController {
 //					else if (celLength == 5) {
 //						cell.setCellValue(borrowCommonCustomize.getApplicant());
 //					}
-//					// 项目标题
+//					// 项目名称
 //					else if (celLength == 6) {
 //						cell.setCellValue(StringUtils.isEmpty(borrowCommonCustomize.getProjectName()) ? ""
 //								: borrowCommonCustomize.getProjectName());
@@ -1921,7 +1921,7 @@ public class BorrowCommonController extends BaseController {
 //					else if (celLength == 10) {
 //						cell.setCellValue(borrowCommonCustomize.getBorrowPeriod());
 //					}
-//					// 年化收益
+//					// 出借利率
 //					else if (celLength == 11) {
 //						cell.setCellValue(borrowCommonCustomize.getBorrowApr());
 //					}
@@ -1929,11 +1929,11 @@ public class BorrowCommonController extends BaseController {
 //					else if (celLength == 12) {
 //						cell.setCellValue(borrowCommonCustomize.getBorrowStyle());
 //					}
-//					// 融资服务费率
+//					// 放款服务费率
 //					else if (celLength == 13) {
 //						cell.setCellValue(borrowCommonCustomize.getBorrowServiceScale());
 //					}
-//					// 账户管理费率
+//					// 还款服务费率
 //					else if (celLength == 14) {
 //						cell.setCellValue(borrowCommonCustomize.getBorrowManagerScale());
 //					}
@@ -2065,7 +2065,7 @@ public class BorrowCommonController extends BaseController {
 //                    else if (celLength == 41) {
 //                        cell.setCellValue(borrowCommonCustomize.getRegistname());
 //                    }
-//					// 垫付机构用户名
+//					// 担保机构用户名
 //					else if (celLength == 42) {
 //						cell.setCellValue(borrowCommonCustomize.getRepayOrgUserName());
 //					}
@@ -2132,19 +2132,19 @@ public class BorrowCommonController extends BaseController {
     }
 	   private Map<String, String> buildMap() {
 	        Map<String, String> map = Maps.newLinkedHashMap();
-	        map.put("borrowNid", "借款编号");
+	        map.put("borrowNid", "项目编号");
 	        map.put("planNid", "智投编号");
 	        map.put("userId", "借款人ID");
 	        map.put("username", "用户名");
 	        map.put("applicant", "项目申请人");
-	        map.put("projectName", "项目标题");
+	        map.put("projectName", "项目名称");
 	        map.put("borrowProjectTypeName", "项目类型");
 	        map.put("instName", "资产来源");
 	        map.put("account", "借款金额");
 	        map.put("borrowApr", "年化利率");
 	        map.put("borrowStyle", "还款方式");
-	        map.put("borrowServiceScale", "融资服务费率");
-	        map.put("borrowManagerScale", "账户管理费率");
+	        map.put("borrowServiceScale", "放款服务费率");
+	        map.put("borrowManagerScale", "还款服务费率");
 	        map.put("borrowMeasuresInstit", "合作机构");
 	        map.put("borrowAccountYes", "已借到金额");
 	        map.put("borrowAccountWait", "剩余金额");
@@ -2174,7 +2174,7 @@ public class BorrowCommonController extends BaseController {
 	        map.put("remark", "备注");
 	        map.put("createname", "添加标的人员");
 	        map.put("registname", "标的备案人员");
-	        map.put("repayOrgUserName", "垫付机构用户名");
+	        map.put("repayOrgUserName", "担保机构用户名");
 	        map.put("borrowExtraYield", "加息收益率");
 	        return map;
 	    }
@@ -2223,7 +2223,7 @@ public class BorrowCommonController extends BaseController {
 	                }else if(status==1) {
 	                	return "初审中";
 	                }else if(status==2) {
-	                	return "投资中";
+	                	return "出借中";
 	                }else if(status==3) {
 	                	return "复审中";
 	                }else if(status==4) {
@@ -2239,7 +2239,7 @@ public class BorrowCommonController extends BaseController {
 	                }
 	            }
 	        };
-// 0备案中,1初审中,2投资中,3复审中(满标),4还款中,5已还款,6流标,7受托 
+// 0备案中,1初审中,2出借中,3复审中(满标),4还款中,5已还款,6流标,7受托 
 	        mapAdapter.put("entrustedFlg", entrustedFlgAdapter);
 	        mapAdapter.put("borrowExtraYield", borrowExtraYieldAdapter);
 	        mapAdapter.put("status", statusAdapter);

@@ -18,17 +18,17 @@ public class TotalInvestAndInterestVO extends BaseVO {
 
     private String id;
 
-    // 累计投资总额
+    // 累计出借总额
     private BigDecimal totalInvestAmount;
-    // 累计投资收益
+    // 累计出借收益
     private BigDecimal totalInterestAmount;
-    // 累计投资总数
+    // 累计出借总数
     private int totalInvestNum;
-    // 计划累计投资总额
+    // 计划累计出借总额
     private BigDecimal hjhTotalInvestAmount;
-    // 计划累计投资收益
+    // 计划累计出借收益
     private BigDecimal hjhTotalInterestAmount;
-    // 计划累计投资总数
+    // 计划累计出借总数
     private int hjhTotalInvestNum;
 
 

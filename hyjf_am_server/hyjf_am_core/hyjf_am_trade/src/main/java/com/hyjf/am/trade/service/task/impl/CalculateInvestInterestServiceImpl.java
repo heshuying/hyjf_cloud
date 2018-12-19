@@ -48,7 +48,7 @@ public class CalculateInvestInterestServiceImpl implements CalculateInvestIntere
         calculateNew.setBorrowThreeSix(Integer.parseInt(mapPeriod.get("threesex") + ""));
         calculateNew.setBorrowSixTwelve(Integer.parseInt(mapPeriod.get("sextw") + ""));
         calculateNew.setBorrowTwelveUp(Integer.parseInt(mapPeriod.get("tw") + ""));
-        //投资金额分布
+        //出借金额分布
         Map<String, Object> mapTenderMoney = dataCustomizeMapper.selectTendMoneyInfo();
         calculateNew.setInvestOneDown(Integer.parseInt(mapTenderMoney.get("zeroone") + ""));
         calculateNew.setInvestOneFive(Integer.parseInt(mapTenderMoney.get("onefive") + ""));

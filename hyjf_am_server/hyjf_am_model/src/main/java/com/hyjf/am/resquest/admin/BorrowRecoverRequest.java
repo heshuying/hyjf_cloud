@@ -25,11 +25,11 @@ public class BorrowRecoverRequest  extends BasePage {
      */
     private String planNidSrch;
     /**
-     * 投资人 检索条件
+     * 出借人 检索条件
      */
     private String usernameSrch;
     /**
-     * 投资订单号 检索条件
+     * 出借订单号 检索条件
      */
     private String orderNumSrch;
     /**
@@ -41,11 +41,11 @@ public class BorrowRecoverRequest  extends BasePage {
      */
     private String isRecoverSrch;
     /**
-     * 投资时间 检索条件
+     * 出借时间 检索条件
      */
     private String timeRecoverStartSrch;
     /**
-     * 投资时间 检索条件
+     * 出借时间 检索条件
      */
     private String timeRecoverEndSrch;
     /**

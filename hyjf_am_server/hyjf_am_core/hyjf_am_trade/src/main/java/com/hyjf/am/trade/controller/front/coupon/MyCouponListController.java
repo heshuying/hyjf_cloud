@@ -151,7 +151,7 @@ public class MyCouponListController extends BaseController {
     }
 
     /**
-     * APP,PC,wechat散标投资查询优惠券列表
+     * APP,PC,wechat散标出借查询优惠券列表
      * @author walter.limeng
      * @date 2018/7/10 10:36
      */

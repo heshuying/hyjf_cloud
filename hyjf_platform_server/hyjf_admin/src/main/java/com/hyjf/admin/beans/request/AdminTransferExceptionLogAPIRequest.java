@@ -47,7 +47,7 @@ public class AdminTransferExceptionLogAPIRequest extends BaseRequest implements 
 	@ApiModelProperty(value = "返回结果")
 	private String result;
 
-	@ApiModelProperty(value = "投资编号")
+	@ApiModelProperty(value = "出借编号")
 	private Integer recoverId;
 
 	@ApiModelProperty(value = "0:体验金收益回款，1：加息券收益回款，2：其他")

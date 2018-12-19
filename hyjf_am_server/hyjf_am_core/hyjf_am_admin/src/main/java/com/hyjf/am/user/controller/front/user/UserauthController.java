@@ -78,7 +78,7 @@ public class UserauthController extends BaseController {
 		Map<String, Object> authUser = new HashMap<String, Object>();
 		authUser.put("userName", form.getUserName());
 		authUser.put("recommendName", form.getRecommendName());
-		// 投资授权状态
+		// 出借授权状态
 		authUser.put("autoInvesStatus", form.getAutoInvesStatus());
 		// 债转授权状态
 		authUser.put("autoCreditStatus", form.getAutoCreditStatus());
@@ -95,7 +95,7 @@ public class UserauthController extends BaseController {
 	 * 同步用户授权状态
 	 * @auth sunpeikai
 	 * @param userId 用户id
-	 * @param type 1自动投资授权  2债转授权
+	 * @param type 1自动出借授权  2债转授权
 	 * @return
 	 */
 	@ApiOperation(value = "同步用户授权状态", notes = "同步用户授权状态")
@@ -125,7 +125,7 @@ public class UserauthController extends BaseController {
 	}
 
 	/**
-	 * 自动投资解约
+	 * 自动出借解约
 	 *
 	 * @param userId,解约id
 	 */
@@ -134,7 +134,7 @@ public class UserauthController extends BaseController {
 	public AdminUserAuthListResponse cancelInvestAuth(@PathVariable int userId) {
 		// 返回结果
 		AdminUserAuthListResponse result = new AdminUserAuthListResponse();
-		logger.info("自动投资解约开始，用户：{}", userId);
+		logger.info("自动出借解约开始，用户：{}", userId);
 		
 		BankCallBean retBean = userauthService.cancelInvestAuth(userId, "000002");
 		
@@ -146,7 +146,7 @@ public class UserauthController extends BaseController {
         		String authType = "7";
         		// 在auth_log表中插入解约记录
         		userauthService.insertUserAuthLog2(userId, retBean.getRetCode(), authType);
-        		result.setMessage("自动投资解约成功！");
+        		result.setMessage("自动出借解约成功！");
         		result.setRtn(AdminUserAuthListResponse.SUCCESS);
             } else {
                 String retCode = retBean != null ? retBean.getRetCode() : "";
@@ -154,7 +154,7 @@ public class UserauthController extends BaseController {
         		result.setRtn(AdminUserAuthListResponse.ERROR);
             }
         } else {
-    		result.setMessage("自动投资解约失败！");
+    		result.setMessage("自动出借解约失败！");
     		result.setRtn(AdminUserAuthListResponse.ERROR);
         }
 

@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 
 public class WrbInvestSumResponse extends WrbResponse {
     /**
-     * 投资人数
+     * 出借人数
      */
     private Integer lend_count = 0;
 
@@ -21,7 +21,7 @@ public class WrbInvestSumResponse extends WrbResponse {
     private Integer borrow_count = 0;
 
     /**
-     * 投资总额
+     * 出借总额
      */
     private BigDecimal invest_all_money = BigDecimal.ZERO;
 

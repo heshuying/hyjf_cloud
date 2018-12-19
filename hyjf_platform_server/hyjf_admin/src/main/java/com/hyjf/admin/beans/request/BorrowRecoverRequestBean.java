@@ -12,9 +12,9 @@ import java.io.Serializable;
 public class BorrowRecoverRequestBean extends BaseRequest implements Serializable {
 
     /**
-     * 借款编号 检索条件
+     * 项目编号 检索条件
      */
-    @ApiModelProperty(value = "借款编号")
+    @ApiModelProperty(value = "项目编号")
     private String borrowNidSrch;
     /**
      * 借款名称 检索条件
@@ -32,14 +32,14 @@ public class BorrowRecoverRequestBean extends BaseRequest implements Serializabl
     @ApiModelProperty(value = "计划编号")
     private String planNidSrch;
     /**
-     * 投资人 检索条件
+     * 出借人
      */
-    @ApiModelProperty(value = "投资人")
+    @ApiModelProperty(value = "出借人")
     private String usernameSrch;
     /**
-     * 投资订单号 检索条件
+     * 出借订单号 检索条件
      */
-    @ApiModelProperty(value = "投资订单号")
+    @ApiModelProperty(value = "出借订单号")
     private String orderNumSrch;
     /**
      * 放款订单号 检索条件
@@ -52,14 +52,14 @@ public class BorrowRecoverRequestBean extends BaseRequest implements Serializabl
     @ApiModelProperty(value = "放款状态")
     private String isRecoverSrch;
     /**
-     * 投资时间 检索条件
+     * 出借时间 检索条件
      */
-    @ApiModelProperty(value = "投资时间开始")
+    @ApiModelProperty(value = "出借时间开始")
     private String timeRecoverStartSrch;
     /**
-     * 投资时间 检索条件
+     * 出借时间 检索条件
      */
-    @ApiModelProperty(value = "投资时间结束")
+    @ApiModelProperty(value = "出借时间结束")
     private String timeRecoverEndSrch;
     /**
      * 放款时间 检索条件

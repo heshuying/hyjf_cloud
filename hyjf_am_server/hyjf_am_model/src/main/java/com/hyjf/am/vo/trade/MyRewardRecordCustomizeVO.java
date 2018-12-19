@@ -11,9 +11,9 @@ public class MyRewardRecordCustomizeVO extends BaseVO {
 	/** 发奖时间  */
 	public String rewardTime;
 
-	public String borrowNid; //投资编号
+	public String borrowNid; //出借编号
 	
-	public BigDecimal account= new BigDecimal(0);//投资金额
+	public BigDecimal account= new BigDecimal(0);//出借金额
 
 	public BigDecimal pushMoney= new BigDecimal(0);//提成
 	//奖励类型

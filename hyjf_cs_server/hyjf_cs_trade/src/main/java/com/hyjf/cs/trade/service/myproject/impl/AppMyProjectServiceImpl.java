@@ -160,7 +160,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
     public JSONObject getMyProjectDetail(String borrowNid, HttpServletRequest request, String userId) {
         CheckUtil.check(StringUtils.isNotBlank(borrowNid),MsgEnum.ERR_OBJECT_BLANK, "标的编号");
         String orderId = request.getParameter("orderId");
-        // 优惠券类型，0代表本金投资
+        // 优惠券类型，0代表本金出借
         String couponType = request.getParameter("couponType");
         // 如果不为空，为承接的标的
         String assignNid = request.getParameter("assignNid");
@@ -196,7 +196,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             return jsonObject;
         }
 
-        // 跳转到投资服务协议
+        // 跳转到出借服务协议
         jsonObject.put("isCredit", false);
         // 1. 资产信息
         List<BorrowProjectDetailBean> detailBeansList = new ArrayList<>();
@@ -244,7 +244,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             }
 
             if (inc != null) {
-                // 2. 投资信息 ( 有真实资金，显示投资信息 )
+                // 2. 出借信息 ( 有真实资金，显示出借信息 )
                 this.setTenderInfoToResult(detailBeansList, inc.getTenderNid());
                 jsonObject.put("couponType", "加息"+borrow.getBorrowExtraYield() + "%");
                 jsonObject.put("couponTypeCode","4");
@@ -257,7 +257,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                 /*this.setIncreaseRepayPlanByStagesToResult(jsonObject, orderId);*/
             }
         }else if (!"0".equals(couponType)) {
-            // 区别本金投资和优惠券投资，返回值不同
+            // 区别本金出借和优惠券出借，返回值不同
             Map<String,Object> params = new HashMap<>();
             params.put("userId",userId);
             params.put("orderId",orderId);
@@ -265,7 +265,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             AppCouponInfoCustomizeVO appCouponInfoCustomize = response.getResult();
             if (appCouponInfoCustomize != null) {
                 if(StringUtils.isNotBlank(appCouponInfoCustomize.getRealOrderId())){
-                    // 2. 投资信息 ( 有真实资金，显示投资信息 )
+                    // 2. 出借信息 ( 有真实资金，显示出借信息 )
                     this.setTenderInfoToResult(detailBeansList, appCouponInfoCustomize.getRealOrderId());
                 }
                 List<BorrowDetailBean> borrowBeansList2 = new ArrayList<>();
@@ -310,17 +310,17 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             // 3. 优惠券回款计划
             this.setCouponRepayPlanToResult(jsonObject, orderId);
         } else {
-            // 这里要区别是普通投资 还是 承接债转
-            logger.info("债转编号： {}, 空代表普通投资，否则为承接债转...,投资订单号: {}", assignNid, orderId);
+            // 这里要区别是普通出借 还是 承接债转
+            logger.info("债转编号： {}, 空代表普通出借，否则为承接债转...,出借订单号: {}", assignNid, orderId);
             if(StringUtils.isBlank(assignNid)){
-                // 2. 投资信息(本金投资)
+                // 2. 出借信息(本金出借)
                 this.setTenderInfoToResult(detailBeansList, orderId);
 
                 if(CommonUtils.isStageRepay(borrow.getBorrowStyle())){
-                    // 3.回款计划(本金投资 - 分期)
+                    // 3.回款计划(本金出借 - 分期)
                     this.setRepayPlanByStagesToResult(jsonObject, orderId);
                 } else {
-                    // 3.回款计划(本金投资 - 不分期)
+                    // 3.回款计划(本金出借 - 不分期)
                     this.setRepayPlanToResult(jsonObject, orderId);
                 }
             } else {
@@ -332,7 +332,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                     creditTender = list.get(0);
                 }
                 if (creditTender != null) {
-                    // 2. 投资信息(承接标的投资信息)
+                    // 2. 出借信息(承接标的出借信息)
                     this.setCreditTenderInfoToResult(detailBeansList, creditTender);
                     // 3.回款计划(承接标的)
                     this.setCreditRepayPlanByStagesToResult(jsonObject, orderId);
@@ -429,7 +429,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
 
     /**
-     * 债转投资还款计划
+     * 债转出借还款计划
      * @param result
      * @param
      * @param
@@ -455,16 +455,16 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
     }
 
     /**
-     * 投资信息 - 承接标
+     * 出借信息 - 承接标
      * @param detailBeansList
      * @param
      */
     private void setCreditTenderInfoToResult(List<BorrowProjectDetailBean> detailBeansList, CreditTenderVO creditTender) {
-        // 2. 投资信息(本金投资)
+        // 2. 出借信息(本金出借)
         CreditRepayVO creditRepay = amTradeClient.selectCreditRepayListByAssignNid(creditTender.getAssignNid()).get(0);
         if (creditTender != null) {
             List<BorrowDetailBean> borrowBeansList1 = new ArrayList<>();
-            preckCredit(borrowBeansList1, "投资本金", CommonUtils.formatAmount(creditTender.getAssignCapital()) + "元");
+            preckCredit(borrowBeansList1, "出借本金", CommonUtils.formatAmount(creditTender.getAssignCapital()) + "元");
             preckCredit(borrowBeansList1, "已收本息", CommonUtils.formatAmount(creditRepay.getAssignRepayAccount()) + "元");
             preckCredit(borrowBeansList1, "待收本金", CommonUtils.formatAmount(creditRepay.getAssignCapital().subtract(creditRepay.getAssignRepayCapital())) + "元");
             if (creditRepay.getStatus() != 0){//已回款
@@ -472,15 +472,15 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             } else {
                 preckCredit(borrowBeansList1, "待收利息", CommonUtils.formatAmount(creditTender.getAssignInterest()) + "元");
             }
-            preckCredit(borrowBeansList1, "投资时间", GetDate.date2Str(creditTender.getCreateTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
-            preck(detailBeansList, "投资信息", borrowBeansList1);
+            preckCredit(borrowBeansList1, "出借时间", GetDate.date2Str(creditTender.getCreateTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")));
+            preck(detailBeansList, "出借信息", borrowBeansList1);
         } else {
-            preck(detailBeansList, "投资信息", new ArrayList<BorrowDetailBean>());
+            preck(detailBeansList, "出借信息", new ArrayList<BorrowDetailBean>());
         }
     }
 
     /**
-     * 本金投资还款计划 - 不分期
+     * 本金出借还款计划 - 不分期
      * @param result
      * @param
      */
@@ -504,7 +504,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
 
     /**
-     * 本金投资还款计划 - 分期
+     * 本金出借还款计划 - 分期
      * @param result
      * @param
      */
@@ -531,7 +531,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
 
     /**
-     * 优惠券投资还款计划
+     * 优惠券出借还款计划
      *
      * @param result
      * @param orderId
@@ -567,18 +567,18 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
 
 
     /**
-     * 投资信息
+     * 出借信息
      * @param detailBeansList
      * @param orderId
      */
     private void setTenderInfoToResult(List<BorrowProjectDetailBean> detailBeansList, String orderId) {
-        // 2. 投资信息(本金投资)
+        // 2. 出借信息(本金出借)
         BorrowTenderRequest btRequest = new BorrowTenderRequest();
         btRequest.setTenderNid(orderId);
         BorrowTenderVO borrowTender = amTradeClient.selectBorrowTender(btRequest);
         if (borrowTender != null) {
             List<BorrowDetailBean> borrowBeansList1 = new ArrayList<>();
-            preckCredit(borrowBeansList1, "投资本金", CommonUtils.formatAmount(borrowTender.getAccount()) + "元");
+            preckCredit(borrowBeansList1, "出借本金", CommonUtils.formatAmount(borrowTender.getAccount()) + "元");
             preckCredit(borrowBeansList1, "已收本息", CommonUtils.formatAmount(borrowTender.getRecoverAccountYes()) + "元");
             String borrowNid = borrowTender.getBorrowNid();
             BorrowAccountResponse response = baseClient.getExe(BORROW_ACCOUNT_URL + "/" +borrowNid ,BorrowAccountResponse.class);
@@ -593,14 +593,14 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             }
 
             if (borrowTender.getCreateTime() != null) {
-                preckCredit(borrowBeansList1, "投资时间", GetDate.date2Str(borrowTender.getCreateTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm")));
+                preckCredit(borrowBeansList1, "出借时间", GetDate.date2Str(borrowTender.getCreateTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm")));
             } else {
-                preckCredit(borrowBeansList1, "投资时间", "");
+                preckCredit(borrowBeansList1, "出借时间", "");
             }
 
-            preck(detailBeansList, "投资信息", borrowBeansList1);
+            preck(detailBeansList, "出借信息", borrowBeansList1);
         } else {
-            preck(detailBeansList, "投资信息", new ArrayList<BorrowDetailBean>());
+            preck(detailBeansList, "出借信息", new ArrayList<BorrowDetailBean>());
         }
     }
 
@@ -784,7 +784,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                 // 实付金额 承接本金*（1-折价率）+应垫付利息
                 assignPay = creditPrice.add(assignInterestAdvance);
                 // 预计收益 承接人债转本息—实付金额
-                assignInterest = creditAccount.subtract(assignPay);// 计算投资收益
+                assignInterest = creditAccount.subtract(assignPay);// 计算出借收益
             } else {// 按月
                 // 债转本息
                 creditAccount = DuePrincipalAndInterestUtils.getMonthPrincipalInterest(creditCapital, yearRate, borrow.getBorrowPeriod());
@@ -797,12 +797,12 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                 // 实付金额 承接本金*（1-折价率）+应垫付利息
                 assignPay = creditPrice.add(assignInterestAdvance);
                 // 预计收益 承接人债转本息—实付金额
-                assignInterest = creditAccount.subtract(assignPay);// 计算投资收益
+                assignInterest = creditAccount.subtract(assignPay);// 计算出借收益
             }
         }
         // 等额本息和等额本金和先息后本
         if (borrowStyle.equals(CalculatesUtil.STYLE_MONTH) || borrowStyle.equals(CalculatesUtil.STYLE_PRINCIPAL) || borrowStyle.equals(CalculatesUtil.STYLE_ENDMONTH)) {
-            // 根据投资订单号检索已债转还款信息
+            // 根据出借订单号检索已债转还款信息
             List<CreditRepayVO> creditRepayList = amTradeClient.selectCreditRepayList(borrowRecover.getTenderId());
             int lastDays = 0;
             List<BorrowRepayPlanVO> borrowRepayPlans = this.amTradeClient.selectBorrowRepayPlan(borrow.getBorrowNid(), 0);
@@ -832,14 +832,14 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                 }
             }
             creditInterest = borrowRecover.getRecoverInterestWait().subtract(creditRepayInterestWait);
-            // 垫付利息 垫息总额=投资人认购本金/出让人转让本金*出让人本期利息）-（债权本金*年化收益÷360*本期剩余天数
+            // 垫付利息 垫息总额=出借人认购本金/出让人转让本金*出让人本期利息）-（债权本金*年化收益÷360*本期剩余天数
             assignInterestAdvance = BeforeInterestAfterPrincipalUtils.getAssignInterestAdvance(creditCapital, creditCapital, yearRate, interest, new BigDecimal(lastDays + ""));
             // 债转利息
             assignPayInterest = creditInterest;
             // 实付金额 承接本金*（1-折价率）+应垫付利息
             assignPay = creditPrice.add(assignInterestAdvance);
             // 预计收益 承接人债转本息—实付金额
-            assignInterest = creditAccount.subtract(assignPay);// 计算投资收益
+            assignInterest = creditAccount.subtract(assignPay);// 计算出借收益
         }
         resultMap.put("creditAccount", creditAccount.setScale(2, BigDecimal.ROUND_DOWN));// 债转本息
         resultMap.put("creditInterest", creditInterest.setScale(2, BigDecimal.ROUND_DOWN));// 预计收益
@@ -882,7 +882,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
             jsonObject.put("creditStatus", null);
             return jsonObject;
         }
-        // 原投资订单号
+        // 原出借订单号
         String orderId = borrowCreditVO.getTenderNid();
         // 原标id
         String borrowNid = borrowCreditVO.getBidNid();
@@ -949,29 +949,29 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
         if(borrowTenderVO != null ){
 
             List<BorrowDetailBean> borrowBeansList1 = new ArrayList<>();
-            preckCredit(borrowBeansList1, "投资本金", DF_FOR_VIEW.format(borrowTenderVO.getAccount()) + "元");
+            preckCredit(borrowBeansList1, "出借本金", DF_FOR_VIEW.format(borrowTenderVO.getAccount()) + "元");
             preckCredit(borrowBeansList1, "已收本息", DF_FOR_VIEW.format(borrowTenderVO.getRecoverAccountYes()) + "元");
             preckCredit(borrowBeansList1, "待收本金", DF_FOR_VIEW.format(borrowTenderVO.getRecoverAccountCapitalWait()) + "元");
             preckCredit(borrowBeansList1, "待收本息", DF_FOR_VIEW.format(borrowTenderVO.getRecoverAccountInterestWait()) + "元");
             if(borrowTenderVO.getCreateTime() != null){
                 String strDate = GetDate.date2Str(borrowTenderVO.getCreateTime(),new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"));
-                logger.info("投资时间:"+strDate);
-                preckCredit(borrowBeansList1, "投资时间", strDate);
+                logger.info("出借时间:"+strDate);
+                preckCredit(borrowBeansList1, "出借时间", strDate);
             }else{
-                preckCredit(borrowBeansList1, "投资时间", "");
+                preckCredit(borrowBeansList1, "出借时间", "");
             }
 
-            preck(detailBeansList, "投资信息", borrowBeansList1);
+            preck(detailBeansList, "出借信息", borrowBeansList1);
         }else {
-            preck(detailBeansList, "投资信息", new ArrayList<BorrowDetailBean>());
+            preck(detailBeansList, "出借信息", new ArrayList<BorrowDetailBean>());
         }
         jsonObject.put("projectDetail", detailBeansList);
         if(borrowCreditVO.getCreditCapital().compareTo(borrowCreditVO.getCreditCapitalAssigned())>0){
             if(CommonUtils.isStageRepay(borrowDetail.getBorrowStyle())){
-                // 3.回款计划(本金投资 - 分期)
+                // 3.回款计划(本金出借 - 分期)
                 this.setRepayPlanByStagesToResult(jsonObject, orderId);
             } else {
-                // 3.回款计划(本金投资 - 不分期)
+                // 3.回款计划(本金出借 - 不分期)
                 this.setRepayPlanToResult(jsonObject, orderId);
             }
         }
@@ -1173,7 +1173,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                         // 实付金额 承接本金*（1-折价率）+应垫付利息
                         assignPay = creditPrice.add(assignInterestAdvance);
                         // 预计收益 承接人债转本息—实付金额
-                        assignInterest = creditAccount.subtract(assignPay);// 计算投资收益
+                        assignInterest = creditAccount.subtract(assignPay);// 计算出借收益
                     } else {// 按月
                         // 债转本息
                         creditAccount = DuePrincipalAndInterestUtils.getMonthPrincipalInterest(creditCapital, yearRate, borrowVO.getBorrowPeriod());
@@ -1186,7 +1186,7 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                         // 实付金额 承接本金*（1-折价率）+应垫付利息
                         assignPay = creditPrice.add(assignInterestAdvance);
                         // 预计收益 承接人债转本息—实付金额
-                        assignInterest = creditAccount.subtract(assignPay);// 计算投资收益
+                        assignInterest = creditAccount.subtract(assignPay);// 计算出借收益
                     }
                 }
 
@@ -1214,14 +1214,14 @@ public class AppMyProjectServiceImpl extends BaseTradeServiceImpl implements App
                             borrowVO.getBorrowPeriod());
                     // 债转期全部利息
                     creditInterest = BeforeInterestAfterPrincipalUtils.getInterestCount(creditCapital, yearRate, borrowVO.getBorrowPeriod(), borrowRecoverVO.getRecoverPeriod());
-                    // 垫付利息 垫息总额=投资人认购本金/出让人转让本金*出让人本期利息）-（债权本金*年化收益÷360*本期剩余天数
+                    // 垫付利息 垫息总额=出借人认购本金/出让人转让本金*出让人本期利息）-（债权本金*年化收益÷360*本期剩余天数
                     assignInterestAdvance = BeforeInterestAfterPrincipalUtils.getAssignInterestAdvance(creditCapital, creditCapital, yearRate, interest, new BigDecimal(lastDays + ""));
                     // 债转利息
                     assignPayInterest = creditInterest;
                     // 实付金额 承接本金*（1-折价率）+应垫付利息
                     assignPay = creditPrice.add(assignInterestAdvance);
                     // 预计收益 承接人债转本息—实付金额
-                    assignInterest = creditAccount.subtract(assignPay);// 计算投资收益
+                    assignInterest = creditAccount.subtract(assignPay);// 计算出借收益
                 }
             }
         }

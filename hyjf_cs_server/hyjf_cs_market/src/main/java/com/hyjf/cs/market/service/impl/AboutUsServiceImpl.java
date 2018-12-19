@@ -129,7 +129,7 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
     }
 
     /**
-     * 累计投资总额
+     * 累计出借总额
      * @return
      */
     @Override
@@ -145,7 +145,7 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
         return amDataCollectClient.selectInterestSum();
     }
     /**
-     * 累计投资笔数
+     * 累计出借笔数
      * @return
      */
     @Override

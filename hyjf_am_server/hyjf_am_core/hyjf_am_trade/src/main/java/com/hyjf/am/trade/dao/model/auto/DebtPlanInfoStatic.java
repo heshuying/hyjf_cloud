@@ -64,7 +64,7 @@ public class DebtPlanInfoStatic implements Serializable {
     private BigDecimal planRepayYes;
 
     /**
-     * 投资人加入总额
+     * 出借人加入总额
      *
      * @mbggenerated
      */

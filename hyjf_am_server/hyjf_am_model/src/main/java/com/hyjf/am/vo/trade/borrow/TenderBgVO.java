@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * @Description 投资异步
+ * @Description 出借异步
  * @Author sss
  * @Date 2018/6/27 18:39
  */

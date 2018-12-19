@@ -54,10 +54,10 @@ public class LateAndCreditController extends BaseController {
                     logger.info(thisMessName + "逾期未还款标的开始处理：" + record.getBorrowNid());
                     String borrowNid = record.getBorrowNid();
 
-                    // 获取用户投资信息
+                    // 获取用户出借信息
                     List<BorrowTender> borrowTenderList = this.lateAndCreditService.selectBorrowTenderListByBorrowNid(borrowNid);
                     if (null == borrowTenderList || borrowTenderList.size() <= 0) {
-                        logger.error(thisMessName + "未获取到用户投资信息，borrowNid:" + borrowNid);
+                        logger.error(thisMessName + "未获取到用户出借信息，borrowNid:" + borrowNid);
                         continue;
                     }
 
@@ -100,7 +100,7 @@ public class LateAndCreditController extends BaseController {
                     String nid = record.getNid();
                     BorrowTender borrowTender = this.lateAndCreditService.selectBorrowTenderByNid(nid);
                     if (null == borrowTender) {
-                        logger.error(thisMessName + "未获取到用户投资详情，nid:" + nid);
+                        logger.error(thisMessName + "未获取到用户出借详情，nid:" + nid);
                         continue;
                     }
                     String borrowNid = borrowTender.getBorrowNid();

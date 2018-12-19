@@ -351,14 +351,14 @@ public class BorrowProjectTypeController extends BaseController {
             message="还款方式不能为空,请重试。";
             return message;
         }
-        // 投资最小范围
+        // 出借最小范围
         if(StringUtils.isBlank(form.getInvestStart())|| (StringUtils.isNotBlank(form.getInvestStart())&&form.getInvestStart().length()>10)){
-            message="投资最小范围不能为空且最大长度为10位,请重试。";
+            message="出借最小范围不能为空且最大长度为10位,请重试。";
             return message;
         }
-        // 投资最大范围
+        // 出借最大范围
         if(StringUtils.isBlank(form.getInvestEnd())|| (StringUtils.isNotBlank(form.getInvestEnd())&&form.getInvestEnd().length()>10)){
-            message="投资最大范围不能为空且最大长度为10位,请重试。";
+            message="出借最大范围不能为空且最大长度为10位,请重试。";
             return message;
         }
         if ("N".equals(form.getModifyFlag())) {

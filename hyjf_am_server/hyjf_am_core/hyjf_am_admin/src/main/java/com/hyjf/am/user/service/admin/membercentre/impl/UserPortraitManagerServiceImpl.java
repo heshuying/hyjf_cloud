@@ -211,7 +211,7 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
                         customize.setCustomerSource(100);
                     }
 
-                    //投资进程评分
+                    //出借进程评分
                     if (usersPortrait.getInvestProcess() != null) {
                         String investProcess = usersPortrait.getInvestProcess();
                         if (investProcess.equals("注册")) {
@@ -220,7 +220,7 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
                             customize.setInvestProcess("60");
                         } else if (investProcess.equals("充值")) {
                             customize.setInvestProcess("80");
-                        } else if (investProcess.equals("投资")) {
+                        } else if (investProcess.equals("出借")) {
                             customize.setInvestProcess("100");
                         }
                     } else {
@@ -363,11 +363,11 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
                         } else if (age1 >= 40 && age1 < 65 && "WOMAN".equals(sex) && rechargeCount > 1) {
                             customize.setIdentityLabel("广场舞大妈");
                         } else if (age1 >= 35 && age1 < 58) {
-                            customize.setIdentityLabel("普通投资者");
+                            customize.setIdentityLabel("普通出借者");
                         } else if (age1 >= 58 && age1 < 80) {
-                            customize.setIdentityLabel("老年投资者");
+                            customize.setIdentityLabel("老年出借者");
                         } else if (age1 >= 18 && age1 <= 34) {
-                            customize.setIdentityLabel("青年投资者");
+                            customize.setIdentityLabel("青年出借者");
                         }else if (loginTime > 30 && usersPortrait.getRechargeSum().compareTo(new BigDecimal(0)) == 0) {
                             customize.setIdentityLabel("任务刷单者");
                         }  else {

@@ -19,11 +19,11 @@ public class UserLoginInfo {
     private Boolean isAllowed;
     // 是否完成风险测评
     private String isRiskTested;
-    // 是否投资授权
+    // 是否出借授权
     private Boolean isAutoInves;
     // 是否债转授权
     private Boolean isAutoTransfer;
-    // 角色是否允许投资
+    // 角色是否允许出借
     private Boolean isAllowedTender;
 
     /**
@@ -32,7 +32,7 @@ public class UserLoginInfo {
     private Integer paymentAuthStatus;
     // 缴费授权开关
     private Integer paymentAuthOn;
-    // 自动投资授权开关
+    // 自动出借授权开关
     private Integer invesAuthOn;
     // 自动债转授权开关
     private Integer creditAuthOn;

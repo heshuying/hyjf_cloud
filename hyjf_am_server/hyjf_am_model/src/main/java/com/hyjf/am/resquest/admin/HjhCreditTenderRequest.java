@@ -92,8 +92,8 @@ public class HjhCreditTenderRequest extends BasePage implements Serializable{
 	
 	/**
 	 * 承接订单号(计划订单号是加入计划时生成的订单号，
-	 * 加入后投资会有投资订单号 也就是tender表的nig，
-	 * 债转相当于再投资 然后债转再投资时生成 assignOrderId 类似于 nid,跟加入计划的订单号无关)
+	 * 加入后出借会有出借订单号 也就是tender表的nig，
+	 * 债转相当于再出借 然后债转再出借时生成 assignOrderId 类似于 nid,跟加入计划的订单号无关)
 	 */
 	private String assignOrderId;
 	

@@ -21,12 +21,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.List;
 
 /**
- * 呼叫中心:查询投资明细(直投产品)Controller
+ * 呼叫中心:查询出借明细(直投产品)Controller
  * @author libin
  * @version v1.0
  * @since v1.0 2018年6月16日
  */
-@Api(value = "查询投资明细(直投产品)")
+@Api(value = "查询出借明细(直投产品)")
 @RestController
 @RequestMapping("/hyjf-callcenter/invest/hzt")
 public class HztInvestServer extends CallcenterBaseController {
@@ -42,7 +42,7 @@ public class HztInvestServer extends CallcenterBaseController {
 	 * @Date: 16:39 2018/6/6
 	 * @Return: ResultListBean
 	 */
-	@ApiOperation(value = "查询投资明细(直投产品)", notes = "查询投资明细(直投产品)")
+	@ApiOperation(value = "查询出借明细(直投产品)", notes = "查询出借明细(直投产品)")
 	@PostMapping(value = "/getInvestInfo", produces = "application/json; charset=utf-8")
 	@ResponseBody
 	public ResultListBean getContentOfHztInvest(HttpServletRequest request, HttpServletResponse response,@RequestBody UserBean bean) {
@@ -58,10 +58,10 @@ public class HztInvestServer extends CallcenterBaseController {
 		}
 		//*************各自业务开始***************
 		HztInvestBean returnBean = new HztInvestBean();
-		//查询投资明细(直投产品)
+		//查询出借明细(直投产品)
 		List<CallcenterHztInvestVO> recordList = this.hztInvestService.getRecordList(user,bean.getLimitStart(),bean.getLimitSize());
 		if (recordList == null) {
-			result.statusMessage(ResultListBean.STATUS_FAIL,"该用户未投资汇直投！");
+			result.statusMessage(ResultListBean.STATUS_FAIL,"该用户未出借汇直投！");
 			return result;
 		}
 		

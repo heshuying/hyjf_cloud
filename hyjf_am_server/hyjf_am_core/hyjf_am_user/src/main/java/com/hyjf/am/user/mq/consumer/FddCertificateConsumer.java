@@ -42,8 +42,8 @@ public class FddCertificateConsumer implements RocketMQListener<MessageExt>, Roc
 
     @Autowired
     CommonProducer commonProducer;
-    
-    
+
+
 	@Override
 	public void onMessage(MessageExt  message) {
         logger.info("FddCertificateConsumer 收到消息，开始处理....msgs is :{}", new String(message.getBody()));
@@ -93,8 +93,8 @@ public class FddCertificateConsumer implements RocketMQListener<MessageExt>, Roc
             logger.error("消费出错", e);
             return;
         }
-    
-    
+
+
 	}
 
 	@Override

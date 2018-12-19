@@ -104,7 +104,7 @@
 			u.attribute AS user_property,
 			u.mobile,
 			CASE  u.role_id
-           WHEN 1 THEN '投资人'
+           WHEN 1 THEN '出借人'
            WHEN 2 THEN '借款人'
       	 	 END AS roleid ,
 			u.attribute AS user_attribute,

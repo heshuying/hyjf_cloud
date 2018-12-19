@@ -47,7 +47,7 @@ public class PushMoneyRequest extends PushMoneyVO implements Serializable {
 	@ApiModelProperty(value = "项目类型(检索用)")
 	public Integer projectType;
 
-	@ApiModelProperty(value = "投资人(检索用)")
+	@ApiModelProperty(value = "出借人(检索用)")
 	private String usernameSearch;
 
 	@ApiModelProperty(value = "提成人(检索用)")
@@ -62,7 +62,7 @@ public class PushMoneyRequest extends PushMoneyVO implements Serializable {
 	@ApiModelProperty(value = "状态0,未发放；1，已发放；9，all(检索用)")
 	private String statusSearch;
 
-	@ApiModelProperty(value = "投资类别 1：直投类，2：汇计划")
+	@ApiModelProperty(value = "出借类别 1：直投类，2：汇计划")
 	private Integer tenderType;
 
 	@ApiModelProperty(value = "创建时间 起始")

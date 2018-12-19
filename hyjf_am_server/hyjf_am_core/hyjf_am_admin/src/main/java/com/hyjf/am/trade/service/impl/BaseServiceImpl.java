@@ -169,7 +169,7 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
                 break;
 
             case CustomConstants.HJH_PROCESS_D:
-                //计划订单-自动承接(投资)
+                //计划订单-自动承接(出借)
             case CustomConstants.HJH_PROCESS_DF:
                 //计划订单-自动承接(复投)
                 //amount=自动投标金额=d
@@ -219,44 +219,44 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
             case CustomConstants.HJH_PROCESS_B:
                 //计划订单-自动投标
                 //amount=自动投标金额=b
-                hjhAccede.setAlreadyInvest(amount);// 计划订单已投资金额 +b
+                hjhAccede.setAlreadyInvest(amount);// 计划订单已出借金额 +b
             case CustomConstants.HJH_PROCESS_BF:
                 //计划订单-自动复投
                 //amount=自动投标金额=b
                 hjhAccede.setAvailableInvestAccount(amount.negate()); // 计划订单可用余额  -b
                 hjhAccede.setFrostAccount(amount); // 计划订单冻结金额 +b
-                // add 汇计划三期 计划订单投资笔数累加 liubin 20180515 start
-                hjhAccede.setInvestCounts(1);// 投资笔数 +1
-                // add 汇计划三期 计划订单投资笔数累加 liubin 20180515 end
+                // add 汇计划三期 计划订单出借笔数累加 liubin 20180515 start
+                hjhAccede.setInvestCounts(1);// 出借笔数 +1
+                // add 汇计划三期 计划订单出借笔数累加 liubin 20180515 end
                 break;
 
             case CustomConstants.HJH_PROCESS_D:
-                //计划订单-自动承接(投资)
+                //计划订单-自动承接(出借)
                 //amount=自动投标金额=d
-                hjhAccede.setAlreadyInvest(amount);// 计划订单已投资金额 +d
+                hjhAccede.setAlreadyInvest(amount);// 计划订单已出借金额 +d
             case CustomConstants.HJH_PROCESS_DF:
-                //计划订单-自动承接(投资/复投)
+                //计划订单-自动承接(出借/复投)
                 //amount=自动投标金额=d
                 hjhAccede.setAvailableInvestAccount(amount.negate()); // 计划订单可用余额  -d
-                // add 汇计划三期 计划订单投资笔数累加 liubin 20180515 start
-                hjhAccede.setInvestCounts(1); // 投资笔数 +1
-                // add 汇计划三期 计划订单投资笔数累加 liubin 20180515 end
+                // add 汇计划三期 计划订单出借笔数累加 liubin 20180515 start
+                hjhAccede.setInvestCounts(1); // 出借笔数 +1
+                // add 汇计划三期 计划订单出借笔数累加 liubin 20180515 end
                 break;
             case CustomConstants.HJH_PROCESS_F:
                 //计划订单锁定期-债权回款（承接和还款，要复投）
                 //amount=回款总额=f
                 hjhAccede.setAvailableInvestAccount(amount); // 计划订单可用余额  +f
-                // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
+                // add 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 start
                 hjhAccede.setLqdServiceFee(serviceFee); // 债转服务费累计
-                // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
+                // add 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 end
                 break;
             case CustomConstants.HJH_PROCESS_H:
                 //汇计划清算-债权回款（承接和还款，不复投）
                 //amount=回款总额=h
                 hjhAccede.setFrostAccount(amount); // 计划订单冻结金额 +h
-                // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
+                // add 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 start
                 hjhAccede.setLqdServiceFee(serviceFee); // 债转服务费累计
-                // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
+                // add 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 end
                 break;
             default:
                 break;
@@ -327,7 +327,7 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
     }
 
     /**
-     * 债转投资记录获取
+     * 债转出借记录获取
      * @auther: hesy
      * @date: 2018/8/7
      */
@@ -408,7 +408,7 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
     }
 
     /**
-     * 根据借款编号查询资产信息
+     * 根据项目编号查询资产信息
      *
      * @param borrowNid
      * @return

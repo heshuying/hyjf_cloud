@@ -28,7 +28,7 @@ public interface UserParamExceptionService {
     List<UserVO> getAllUser();
 
     /**
-     * 查询固定时间间隔的用户投资列表
+     * 查询固定时间间隔的用户出借列表
      *
      * @param repairStartDate
      * @param repairEndDate
@@ -37,7 +37,7 @@ public interface UserParamExceptionService {
     List<BorrowTenderVO> selectBorrowTenderListByDate(String repairStartDate, String repairEndDate);
 
     /**
-     * 更新用户的投资记录
+     * 更新用户的出借记录
      *
      * @param borrowTenderVO
      * @param repairStartDate

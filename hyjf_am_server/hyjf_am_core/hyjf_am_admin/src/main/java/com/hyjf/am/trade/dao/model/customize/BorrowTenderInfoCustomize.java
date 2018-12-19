@@ -5,12 +5,12 @@ import java.math.BigDecimal;
 public class BorrowTenderInfoCustomize {
 
 	/**
-	 * 投资编号
+	 * 出借编号
 	 */
 	private String nid;
 	
 	/**
-	 * 投资金额
+	 * 出借金额
 	 */
 	private BigDecimal tenderAccount;
 	

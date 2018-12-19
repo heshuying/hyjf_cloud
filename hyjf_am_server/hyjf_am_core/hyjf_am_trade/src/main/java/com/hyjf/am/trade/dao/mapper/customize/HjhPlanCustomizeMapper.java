@@ -43,7 +43,7 @@ public interface HjhPlanCustomizeMapper {
     int updateRepayPlanAccount(HjhPlan hjhPlan);
 
     /**
-     * 获取汇计划投资详情
+     * 获取汇计划出借详情
      * @param params
      * @return
      */
@@ -57,7 +57,7 @@ public interface HjhPlanCustomizeMapper {
     int updateHjhRepayForHjhRepay(HjhRepay repayParam);
 
     /**
-     * 更新汇计划投资明细金额
+     * 更新汇计划出借明细金额
      * @param hjhAccede
      * @return
      */

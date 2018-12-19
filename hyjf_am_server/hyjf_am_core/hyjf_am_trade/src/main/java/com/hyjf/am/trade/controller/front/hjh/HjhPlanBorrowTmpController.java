@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * 自动投资（原子层）
+ * 自动出借（原子层）
  *
  * @author liubin
  * @version AutoTenderController, v0.1 2018/6/28 19:08

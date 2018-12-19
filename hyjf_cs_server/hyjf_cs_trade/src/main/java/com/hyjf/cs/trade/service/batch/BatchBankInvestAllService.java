@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
 
 /**
- * 投资全部掉单异常处理
+ * 出借全部掉单异常处理
  * @author jijun
  * @version 20180623
  */

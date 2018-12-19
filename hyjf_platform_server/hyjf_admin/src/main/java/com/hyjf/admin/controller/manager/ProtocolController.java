@@ -294,8 +294,8 @@ public class ProtocolController extends BaseController{
         bean2.setName("《平台隐私条款》");
         selectList.add(bean2);
         ProtocolSelectBean bean3 = new ProtocolSelectBean();
-        bean3.setCode("《投资咨询与管理服务协议》");
-        bean3.setName("《投资咨询与管理服务协议》");
+        bean3.setCode("《出借咨询与管理服务协议》");
+        bean3.setName("《出借咨询与管理服务协议》");
         selectList.add(bean3);
         ProtocolSelectBean bean4 = new ProtocolSelectBean();
         bean4.setCode("《用户授权协议》");
@@ -306,8 +306,8 @@ public class ProtocolController extends BaseController{
         bean5.setName("《居间服务借款协议》");
         selectList.add(bean5);
         ProtocolSelectBean bean6 = new ProtocolSelectBean();
-        bean6.setCode("《投资风险确认书》");
-        bean6.setName("《投资风险确认书》");
+        bean6.setCode("《出借风险确认书》");
+        bean6.setName("《出借风险确认书》");
         selectList.add(bean6);
         ProtocolSelectBean bean7 = new ProtocolSelectBean();
         bean7.setCode("《债权转让协议》");
@@ -322,8 +322,8 @@ public class ProtocolController extends BaseController{
         bean9.setName("《开户协议》");
         selectList.add(bean9);
         ProtocolSelectBean bean10 = new ProtocolSelectBean();
-        bean10.setCode("《投资服务协议》");
-        bean10.setName("《投资服务协议》");
+        bean10.setCode("《出借服务协议》");
+        bean10.setName("《出借服务协议》");
         selectList.add(bean10);
         ProtocolSelectBean bean11 = new ProtocolSelectBean();
         bean11.setCode("《服务协议》");

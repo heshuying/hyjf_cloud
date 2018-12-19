@@ -19,11 +19,11 @@ public class CouponBeanVo implements Serializable {
     private String couponQuota;
     //优惠券额度
     private String couponQuotaStr;
-    //投资金额
+    //出借金额
     private String investQuota;
     //优惠券有效期
     private String time;
-    //投资期限
+    //出借期限
     private String investTime;
     //备注
     private String remarks;
@@ -43,7 +43,7 @@ public class CouponBeanVo implements Serializable {
     //汇计划优惠券使用期限
     private String endTime;
 
-    //汇计划投资金额
+    //汇计划出借金额
     private String tenderQuota;
 
     //汇计划优惠券有效期

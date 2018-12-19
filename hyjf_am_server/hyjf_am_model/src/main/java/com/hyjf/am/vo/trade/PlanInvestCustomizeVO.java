@@ -39,7 +39,7 @@ public class PlanInvestCustomizeVO extends BaseVO {
 	 */
 	private String borrowNid;
 	/**
-	 * 投资/承接订单号
+	 * 出借/承接订单号
 	 */
 	private String orderId;
 	/**
@@ -67,11 +67,11 @@ public class PlanInvestCustomizeVO extends BaseVO {
 	 */
 	private String borrowApr;
 	/**
-	 * 投资本金
+	 * 出借本金
 	 */
 	private String account;
 	/**
-	 * 投资状态
+	 * 出借状态
 	 */
 	private String status;
 	/**

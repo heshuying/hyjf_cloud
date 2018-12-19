@@ -83,11 +83,11 @@
         select
         id, user_id, username, truename,
       CASE role_name
-       WHEN '投资人' THEN
+       WHEN '出借人' THEN
            '1'
        WHEN '借款人' THEN
           '2'
-       WHEN ' 垫付机构' THEN
+       WHEN ' 担保机构' THEN
           ' 3 '
        END AS role_name,
        CASE user_type

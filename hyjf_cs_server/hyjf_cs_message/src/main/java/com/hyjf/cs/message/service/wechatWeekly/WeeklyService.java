@@ -58,7 +58,7 @@ public interface WeeklyService {
 
 
     /**
-     * 查询投资百分比
+     * 查询出借百分比
      * @param percentage
      * @param begin
      * @param end
@@ -69,7 +69,7 @@ public interface WeeklyService {
 
 
     /**
-     * 获取投资金额和预期金额
+     * 获取出借金额和预期金额
      * @param userid
      * @param begin
      * @param end
@@ -79,7 +79,7 @@ public interface WeeklyService {
 
 
     /**
-     * 获取投资金额和预期金额
+     * 获取出借金额和预期金额
      * @param userId
      * @param begin
      * @param end

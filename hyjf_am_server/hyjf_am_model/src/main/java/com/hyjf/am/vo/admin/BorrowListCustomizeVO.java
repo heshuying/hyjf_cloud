@@ -136,7 +136,7 @@ public class BorrowListCustomizeVO extends BaseVO implements Serializable {
      */
     private String contractPeriod;
     /**
-     * 最小投资金额万
+     * 最小出借金额万
      */
     private String tenderAccountMinWan;
     /**

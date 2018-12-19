@@ -16,7 +16,7 @@ public class UserChangeLogCustomizeVO implements Serializable {
     private String mobile;
     @ApiModelProperty(value = "身份证号")
     private String idcard;
-    @ApiModelProperty(value = "用户角色1投资人2借款人")
+    @ApiModelProperty(value = "用户角色1出借人2借款人")
     private Integer role;
     @ApiModelProperty(value = "用户属性 0=>无主单 1=>有主单 2=>线下员工 3=>线上员工")
     private Integer attribute;

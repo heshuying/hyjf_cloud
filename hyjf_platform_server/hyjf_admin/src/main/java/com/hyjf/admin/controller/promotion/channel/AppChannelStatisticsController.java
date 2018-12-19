@@ -119,8 +119,8 @@ public class AppChannelStatisticsController extends BaseController {
             }
         }
         AppChannelStatisticsResponse statisticsResponse = appChannelStatisticsService.exportList(statisticsRequest);
-        String[] titles = new String[]{"序号", "渠道", "访问数", "注册数", "注册数(无主单)", "开户数", "开户数(无主单)", "开户数(PC)", "开户数(iOS)", "开户数(Android)", "开户数(微官网)", "投资人数", "投资人数(无主单)", "投资人数(PC)", "投资人数(iOS)", "投资人数(Android)", "投资人数(微官网)", "累计充值", "累计充值(无主单)", "累计投资", "累计投资(无主单)", "汇直投投资金额", "汇消费投资金额", "汇天利投资金额",
-                "汇添金投资金额", "汇金理财投资金额", "汇转让投资金额"};
+        String[] titles = new String[]{"序号", "渠道", "访问数", "注册数", "注册数(无主单)", "开户数", "开户数(无主单)", "开户数(PC)", "开户数(iOS)", "开户数(Android)", "开户数(微官网)", "出借人数", "出借人数(无主单)", "出借人数(PC)", "出借人数(iOS)", "出借人数(Android)", "出借人数(微官网)", "累计充值", "累计充值(无主单)", "累计出借", "累计出借(无主单)", "汇直投出借金额", "汇消费出借金额", "汇天利出借金额",
+                "汇添金出借金额", "汇金理财出借金额", "汇转让出借金额"};
         HSSFWorkbook workbook = new HSSFWorkbook();
         // 生成一个表格
         HSSFSheet sheet = ExportExcel.createHSSFWorkbookTitle(workbook, titles, sheetName + "_第1页");
@@ -186,27 +186,27 @@ public class AppChannelStatisticsController extends BaseController {
                         cell.setCellValue(statisticsVO.getAccountNumberWechat());
                     }
 
-                    // 投资人数
+                    // 出借人数
                     else if (celLength == 11) {
                         cell.setCellValue(statisticsVO.getInvestNumber());
                     }
-                    // 投资人数(无主单)
+                    // 出借人数(无主单)
                     else if (celLength == 12) {
                         cell.setCellValue(statisticsVO.getInvestAttrNumber());
                     }
-                    // 投资人数（PC）
+                    // 出借人数（PC）
                     else if (celLength == 13) {
                         cell.setCellValue(statisticsVO.getTenderNumberPc());
                     }
-                    // 投资人数(iOS)
+                    // 出借人数(iOS)
                     else if (celLength == 14) {
                         cell.setCellValue(statisticsVO.getTenderNumberIos());
                     }
-                    // 投资人数(Android)
+                    // 出借人数(Android)
                     else if (celLength == 15) {
                         cell.setCellValue(statisticsVO.getTenderNumberAndroid());
                     }
-                    // 投资人数(微官网)
+                    // 出借人数(微官网)
                     else if (celLength == 16) {
                         cell.setCellValue(statisticsVO.getTenderNumberWechat());
                     }
@@ -218,35 +218,35 @@ public class AppChannelStatisticsController extends BaseController {
                     else if (celLength == 18) {
                         cell.setCellValue(statisticsVO.getCumulativeAttrCharge().doubleValue());
                     }
-                    // 累计投资
+                    // 累计出借
                     else if (celLength == 19) {
                         cell.setCellValue(statisticsVO.getCumulativeInvest().doubleValue());
                     }
-                    // 累计投资(无主单)
+                    // 累计出借(无主单)
                     else if (celLength == 20) {
                         cell.setCellValue(statisticsVO.getCumulativeAttrInvest().doubleValue());
                     }
-                    // 汇直投投资金额
+                    // 汇直投出借金额
                     else if (celLength == 21) {
                         cell.setCellValue(statisticsVO.getHztInvestSum().doubleValue());
                     }
-                    // 汇消费投资金额
+                    // 汇消费出借金额
                     else if (celLength == 22) {
                         cell.setCellValue(statisticsVO.getHxfInvestSum().doubleValue());
                     }
-                    // 汇天利投资金额
+                    // 汇天利出借金额
                     else if (celLength == 23) {
                         cell.setCellValue(statisticsVO.getHtlInvestSum().doubleValue());
                     }
-                    // 汇添金投资金额
+                    // 汇添金出借金额
                     else if (celLength == 24) {
                         cell.setCellValue(statisticsVO.getHtjInvestSum().doubleValue());
                     }
-                    // 汇金理财投资金额
+                    // 汇金理财出借金额
                     else if (celLength == 25) {
                         cell.setCellValue(statisticsVO.getRtbInvestSum().doubleValue());
                     }
-                    // 汇转让投资金额
+                    // 汇转让出借金额
                     else if (celLength == 26) {
                         cell.setCellValue(statisticsVO.getHzrInvestSum().doubleValue());
                     }
@@ -331,22 +331,22 @@ public class AppChannelStatisticsController extends BaseController {
         map.put("AccountNumberIos", "开户数(iOS)");
         map.put("AccountNumberAndroid", "开户数(Android)");
         map.put("AccountNumberWechat", "开户数(微官网)");
-        map.put("InvestNumber", "投资人数");
-        map.put("InvestAttrNumber", "投资人数(无主单)");
-        map.put("TenderNumberPc", "投资人数(PC)");
-        map.put("TenderNumberIos", "投资人数(iOS)");
-        map.put("TenderNumberAndroid", "投资人数(Android)");
-        map.put("TenderNumberWechat", "投资人数(微官网)");
+        map.put("InvestNumber", "出借人数");
+        map.put("InvestAttrNumber", "出借人数(无主单)");
+        map.put("TenderNumberPc", "出借人数(PC)");
+        map.put("TenderNumberIos", "出借人数(iOS)");
+        map.put("TenderNumberAndroid", "出借人数(Android)");
+        map.put("TenderNumberWechat", "出借人数(微官网)");
         map.put("CumulativeCharge", "累计充值");
         map.put("CumulativeAttrCharge", "累计充值(无主单)");
-        map.put("CumulativeInvest", "累计投资");
-        map.put("CumulativeAttrInvest", "累计投资(无主单)");
-        map.put("HztInvestSum", "汇直投投资金额");
-        map.put("HxfInvestSum", "汇消费投资金额");
-        map.put("HtlInvestSum", "汇天利投资金额");
-        map.put("HtjInvestSum", "汇添金投资金额");
-        map.put("RtbInvestSum", "汇金理财投资金额");
-        map.put("HzrInvestSum", "汇转让投资金额");
+        map.put("CumulativeInvest", "累计出借");
+        map.put("CumulativeAttrInvest", "累计出借(无主单)");
+        map.put("HztInvestSum", "汇直投出借金额");
+        map.put("HxfInvestSum", "汇消费出借金额");
+        map.put("HtlInvestSum", "汇天利出借金额");
+        map.put("HtjInvestSum", "汇添金出借金额");
+        map.put("RtbInvestSum", "汇金理财出借金额");
+        map.put("HzrInvestSum", "汇转让出借金额");
 
         return map;
     }

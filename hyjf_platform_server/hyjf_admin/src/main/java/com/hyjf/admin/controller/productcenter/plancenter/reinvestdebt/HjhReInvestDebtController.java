@@ -62,7 +62,7 @@ public class HjhReInvestDebtController extends BaseController {
         // 初始化承接方式List
         List<Object> undertakingMethodList = new ArrayList<>();
 
-        // 初始化投资方式Map
+        // 初始化出借方式Map
         Map<String, Object> undertakingMethodMap = new HashedMap();
         Map<String, Object> undertakingMethodMap1 = new HashedMap();
 

@@ -30,11 +30,11 @@ public interface AppCouponService extends BaseTradeService {
     Integer countMyCoupon(Integer userId,String couponStatus);
 
     /**
-     * APP,PC,wechat散标投资根据标的编号，投资金额等查询优惠券
+     * APP,PC,wechat散标出借根据标的编号，出借金额等查询优惠券
      * @param userId 用户ID
      * @param borrowNid 标的编号
-     * @param money 投资金额
-     * @param platform 投资平台
+     * @param money 出借金额
+     * @param platform 出借平台
      * @return Map<String,Object>
      */
     JSONObject getBorrowCoupon(Integer userId, String borrowNid, String money, String platform);
@@ -43,8 +43,8 @@ public interface AppCouponService extends BaseTradeService {
      * APP,PC,wechat加入计划获取我的优惠券列表
      * @param userId 用户ID
      * @param planNid 计划编号
-     * @param money 投资金额
-     * @param platform 投资平台
+     * @param money 出借金额
+     * @param platform 出借平台
      * @return Map<String,Object>
      */
     JSONObject getPlanCoupon(Integer userId, String planNid, String money, String platform);

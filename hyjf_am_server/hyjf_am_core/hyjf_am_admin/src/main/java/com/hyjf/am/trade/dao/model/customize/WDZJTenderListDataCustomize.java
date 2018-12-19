@@ -53,9 +53,9 @@ public class WDZJTenderListDataCustomize implements Serializable {
 	}
 	
 	/**
-	 * 投资人用户编号加密
-	 * 投资人ID加密规则：
-		1. 基础数据为投资人身份证号数据
+	 * 出借人用户编号加密
+	 * 出借人ID加密规则：
+		1. 基础数据为出借人身份证号数据
 		2. 字母部分：
 		转为数字，X转为9
 		3. 数字部分：

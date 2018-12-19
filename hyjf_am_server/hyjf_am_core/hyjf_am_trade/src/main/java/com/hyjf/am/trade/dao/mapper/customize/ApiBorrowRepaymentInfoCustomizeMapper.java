@@ -14,7 +14,7 @@ public interface ApiBorrowRepaymentInfoCustomizeMapper{
 
 
     /**
-     * 投资明细列表--外部api调用
+     * 出借明细列表--外部api调用
     * @author Zha Daojian
     * @date 2018/8/28 15:12
     * @param rquest

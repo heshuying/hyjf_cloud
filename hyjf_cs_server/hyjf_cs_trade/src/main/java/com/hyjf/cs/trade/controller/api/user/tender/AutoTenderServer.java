@@ -37,7 +37,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author libin
  * @version AutoTenderServer.java, v0.1 2018年8月24日 上午10:36:59
  */
-@Api(value = "api端-手动投资散标(第三方投资散标)",tags = "api端-手动投资散标(第三方投资散标)")
+@Api(value = "api端-手动出借散标(第三方出借散标)",tags = "api端-手动出借散标(第三方出借散标)")
 @Controller
 @RequestMapping("/hyjf-api/server/tender")
 public class AutoTenderServer extends BaseTradeController{
@@ -48,12 +48,12 @@ public class AutoTenderServer extends BaseTradeController{
     @Autowired
     SystemConfig systemConfig;
 
-    @ApiOperation(value = "手动投资散标", notes = "手动投资散标")
+    @ApiOperation(value = "手动出借散标", notes = "手动出借散标")
     @PostMapping(value = "/tender.do", produces = "application/json; charset=utf-8")
     @ResponseBody
     public AutoTenderResultBean autoTender(@RequestBody AutoTenderRequestBean autoTenderRequestBean, HttpServletRequest request, HttpServletResponse response) {
     	
-    	logger.info("投资输入参数.... autoTenderRequestBean is :{}", JSONObject.toJSONString(autoTenderRequestBean));
+    	logger.info("出借输入参数.... autoTenderRequestBean is :{}", JSONObject.toJSONString(autoTenderRequestBean));
     	
     	//初始化请求组合体
     	AutoTenderComboRequest autoTenderComboRequest = new AutoTenderComboRequest();
@@ -89,35 +89,35 @@ public class AutoTenderServer extends BaseTradeController{
             return resultBean;
         }
 		
-        logger.info("开始自动投资，请求参数 " + JSON.toJSONString(autoTenderRequestBean));
+        logger.info("开始自动出借，请求参数 " + JSON.toJSONString(autoTenderRequestBean));
 		
 		String couponGrantId = "";
 		String bizAccount = autoTenderRequestBean.getAccountId();
 		// 借款borrowNid
 		String borrowNid = autoTenderRequestBean.getBorrowNid();
-		// 投资金额
+		// 出借金额
 		String accountStr = autoTenderRequestBean.getMoney();
 		if (accountStr == null || "".equals(accountStr)) {
 			accountStr = "0";
 		}
         
-		// ————> 投资校验
+		// ————> 出借校验
 		JSONObject result = tenderService.checkAutoTenderParam(borrowNid, accountStr, bizAccount, "0", couponGrantId);
 		
 		if (result == null) {
-			logger.info("投资校验失败---------"+autoTenderRequestBean.getAccountId()+ " borrowNid: "+autoTenderRequestBean.getBorrowNid());
+			logger.info("出借校验失败---------"+autoTenderRequestBean.getAccountId()+ " borrowNid: "+autoTenderRequestBean.getBorrowNid());
 			resultBean.setStatusForResponse("TZ000099");
-			resultBean.setStatusDesc("投资失败,系统错误");
+			resultBean.setStatusDesc("出借失败,系统错误");
 			return resultBean;
 		} else if (result.get("error") != null && result.get("error").equals("1")) {
-			logger.info("投资校验失败，原因: "+result.get("data").toString()+"  "+autoTenderRequestBean.getAccountId()+ " borrowNid: "+autoTenderRequestBean.getBorrowNid());
+			logger.info("出借校验失败，原因: "+result.get("data").toString()+"  "+autoTenderRequestBean.getAccountId()+ " borrowNid: "+autoTenderRequestBean.getBorrowNid());
 			resultBean.setStatusForResponse("TZ000096");
-			resultBean.setStatusDesc("投资失败，原因: "+result.get("data").toString());
+			resultBean.setStatusDesc("出借失败，原因: "+result.get("data").toString());
 			return resultBean;
 		}
 		
 		
-		logger.info("1.到此说明投资校验成功！！");
+		logger.info("1.到此说明出借校验成功！！");
 		
 		
 		// 根据借款Id检索标的信息
@@ -137,7 +137,7 @@ public class AutoTenderServer extends BaseTradeController{
 		
 		// 生成订单
 		String orderId = GetOrderIdUtils.getOrderId2(userId);
-		// ————> 写日志 调用投资接口
+		// ————> 写日志 调用出借接口
 		Boolean flag = false;
 		BankCallBean registResult = null;
 		
@@ -155,14 +155,14 @@ public class AutoTenderServer extends BaseTradeController{
 			flag = tenderService.updateTenderLog(autoTenderComboRequest);
 			if (!flag) {
 				resultBean.setStatusForResponse("TZ000099");
-				resultBean.setStatusDesc("投资失败,系统错误");
+				resultBean.setStatusDesc("出借失败,系统错误");
 				return resultBean;
 			}
 			
 			logger.info("2.到此说明tenderService.updateTenderLog成功   .... borrowTenderTmpMapper和 borrowTenderTmpInfo更新成功！！");
 			
 			
-			logger.info("投资调用接口前---------"+autoTenderRequestBean.getAccountId()+ " borrowNid: "+autoTenderRequestBean.getBorrowNid()+" ordId: "+orderId);
+			logger.info("出借调用接口前---------"+autoTenderRequestBean.getAccountId()+ " borrowNid: "+autoTenderRequestBean.getBorrowNid()+" ordId: "+orderId);
 			BankCallBean bean = new BankCallBean();
 			// 获取共同参数
 			/*原String bankCode = PropUtils.getSystem(BankCallConstant.BANK_BANKCODE);*/
@@ -187,45 +187,45 @@ public class AutoTenderServer extends BaseTradeController{
 			bean.setContOrderId(autoOrderId);
 			bean.setLogOrderId(orderId);// 订单号
 			bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());// 订单日期
-			bean.setLogUserId(String.valueOf(userId));// 投资用户
+			bean.setLogUserId(String.valueOf(userId));// 出借用户
 			bean.setLogRemark("自动投标申请");
 			bean.setLogClient(0);
 			try {
 				registResult = BankCallUtils.callApiBg(bean);
 			} catch (Exception e) {
-				logger.info("投资调用接口异常---------"+autoTenderRequestBean.getAccountId()+ " borrowNid: "+autoTenderRequestBean.getBorrowNid()+" ordId: "+orderId);
+				logger.info("出借调用接口异常---------"+autoTenderRequestBean.getAccountId()+ " borrowNid: "+autoTenderRequestBean.getBorrowNid()+" ordId: "+orderId);
 				removeTenderTmp(borrowNid, userId, orderId);
 				e.printStackTrace();
 				resultBean.setStatusForResponse("TZ000098");
-				resultBean.setStatusDesc("调用投资银行接口异常");
+				resultBean.setStatusDesc("调用出借银行接口异常");
 				return resultBean;
 			}
 		} catch (Exception e1) {
 			e1.printStackTrace();
 			resultBean.setStatusForResponse("TZ000099");
-			resultBean.setStatusDesc("投资失败,系统错误");
+			resultBean.setStatusDesc("出借失败,系统错误");
 			return resultBean;
 		}
 		
 		if(registResult == null || StringUtils.isBlank(registResult.getRetCode())){
-			logger.info("投资调用接口返回为空---------"+autoTenderRequestBean.getAccountId()+ " borrowNid: "+autoTenderRequestBean.getBorrowNid()+" ordId: "+orderId);
+			logger.info("出借调用接口返回为空---------"+autoTenderRequestBean.getAccountId()+ " borrowNid: "+autoTenderRequestBean.getBorrowNid()+" ordId: "+orderId);
 //			removeTenderTmp(borrowNid, userId, orderId);
 			resultBean.setStatusForResponse("TZ000098");
-			resultBean.setStatusDesc("调用投资银行接口异常");
+			resultBean.setStatusDesc("调用出借银行接口异常");
 			return resultBean;
 		}
 		
 		if (!BankCallConstant.RESPCODE_SUCCESS.equals(registResult.getRetCode())) {
 			// 返回码提示余额不足，不结冻
-			logger.info("用户:" + userId + " 投资接口调用失败，错误码：" + registResult.getRetCode());
+			logger.info("用户:" + userId + " 出借接口调用失败，错误码：" + registResult.getRetCode());
 			removeTenderTmp(borrowNid, userId, orderId);
 			if (BankCallConstant.RETCODE_BIDAPPLY_YUE_FAIL.equals(registResult.getRetCode())) {
 				resultBean.setStatusForResponse("TZ000097");
-				resultBean.setStatusDesc("投资失败，可用余额不足！请联系客服.");
+				resultBean.setStatusDesc("出借失败，可用余额不足！请联系客服.");
 				return resultBean;
 			} else {
 				resultBean.setStatusForResponse("TZ000096");
-				resultBean.setStatusDesc("投资失败，原因: "+registResult.getRetMsg());
+				resultBean.setStatusDesc("出借失败，原因: "+registResult.getRetMsg());
 				return resultBean;
 			}
 		}
@@ -239,30 +239,30 @@ public class AutoTenderServer extends BaseTradeController{
 		registResult.convert();
 		String message ="";
 		try {
-			// 进行投资, tendertmp锁住
+			// 进行出借, tendertmp锁住
 			JSONObject tenderResult = this.tenderService.userAutoTender(borrow, registResult,couponGrantId);
 
-			// 投资成功
+			// 投标成功
 			if (tenderResult.getString("status").equals("1")) {
-				logger.info("用户:" + userId + "  投资成功：" + account);
-				message = "恭喜您投资成功!";
+				logger.info("用户:" + userId + "  投标成功：" + account);
+				message = "恭喜您投标成功!";
 			}
-			// 投资失败 回滚redis
+			// 出借失败 回滚redis
 			else {
-				logger.info("用户:" + userId + "   投资失败：" + account);
-				message = "投资失败";
-				// 投资失败,投资撤销
+				logger.info("用户:" + userId + "   出借失败：" + account);
+				message = "出借失败";
+				// 出借失败,出借撤销
 				try {
 					tenderService.bidCancel(userId, borrowNid, orderId, account);
 					tenderService.deleteBorrowTenderTmpByParam(userId, borrowNid, orderId);
 				} catch (Exception e) {
 					e.printStackTrace();
 					resultBean.setStatusForResponse("TZ000099");
-					resultBean.setStatusDesc("投资失败,系统错误");
+					resultBean.setStatusDesc("出借失败,系统错误");
 					return resultBean;
 				}
 				if(tenderResult != null && tenderResult.getString("message") != null){
-					message = "投资失败, 原因："+tenderResult.getString("message");
+					message = "出借失败, 原因："+tenderResult.getString("message");
 				}
 				resultBean.setStatusForResponse("TZ000096");
 				resultBean.setStatusDesc(message);
@@ -272,10 +272,10 @@ public class AutoTenderServer extends BaseTradeController{
 		} catch (Exception e) {
 			e.printStackTrace();
 			resultBean.setStatusForResponse("TZ000099");
-			resultBean.setStatusDesc("投资失败,系统错误");
+			resultBean.setStatusDesc("出借失败,系统错误");
 			return resultBean;
 		}
-		logger.info(autoTenderRequestBean.getInstCode()+" userid: "+userId+" 结束投资");
+		logger.info(autoTenderRequestBean.getInstCode()+" userid: "+userId+" 结束出借");
 		resultBean.setStatusForResponse(ErrorCodeConstant.SUCCESS);
 		resultBean.setStatusDesc(message);
 		resultBean.setOrderId(orderId);
@@ -283,14 +283,14 @@ public class AutoTenderServer extends BaseTradeController{
     }
     
 	/**
-	 * 投资失败,删除投资临时表
+	 * 出借失败,删除出借临时表
 	 * @param borrowNid
 	 * @param userId
 	 * @param orderId
 	 */
 	private void removeTenderTmp(String borrowNid, Integer userId,
 			String orderId) {
-		// 投资失败,投资撤销
+		// 出借失败,出借撤销
 		try {
 			@SuppressWarnings("unused")
 			boolean updateFlag = tenderService.deleteBorrowTenderTmpByParam(userId, borrowNid, orderId);

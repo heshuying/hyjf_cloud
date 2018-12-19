@@ -714,7 +714,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
     /**
      * 处理校验优惠券平台
      * @param couponSystem 优惠券适用平台
-     * @param platform 投资平台
+     * @param platform 出借平台
      * @return
      */
     public boolean dealCheckCouponSystem(String couponSystem,String platform){

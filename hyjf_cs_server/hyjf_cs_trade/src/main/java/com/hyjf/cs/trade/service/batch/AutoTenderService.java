@@ -9,20 +9,20 @@ import com.hyjf.cs.trade.service.BaseTradeService;
 import java.util.List;
 
 /**
- * 自动投资
+ * 自动出借
  * @author liubin
  * @version AutoTenderService, v0.1 2018/6/28 14:07
  */
 public interface AutoTenderService extends BaseTradeService {
 
     /**
-     * 取得自动投资用加入计划列表
+     * 取得自动出借用加入计划列表
      * @return
      */
     List<HjhAccedeVO> selectPlanJoinList();
 
     /**
-     * 汇计划加入订单 自动投资/复投
+     * 汇计划加入订单 自动出借/复投
      * @param hjhAccede
      * @return
      */

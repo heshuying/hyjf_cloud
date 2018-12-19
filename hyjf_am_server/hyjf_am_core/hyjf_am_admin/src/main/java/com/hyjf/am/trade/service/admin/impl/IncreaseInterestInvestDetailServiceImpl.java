@@ -46,12 +46,12 @@ public class IncreaseInterestInvestDetailServiceImpl extends BaseServiceImpl imp
         if (StringUtils.isNotEmpty(request.getBorrowNidSrch())) {
             cra.andBorrowNidEqualTo(request.getBorrowNidSrch());
         }
-        // 投资时间
+        // 出借时间
         //if (StringUtils.isNotEmpty(request.getTimeStartSrch())) {
         //    cra.andCreateTimeBetween(GetDate.str2Timestamp(request.getTimeStartSrch()), GetDate.str2Timestamp(request.getTimeEndSrch()));
         //}
 
-        // 投资时间结束时间加一秒
+        // 出借时间结束时间加一秒
         if (StringUtils.isNotEmpty(request.getTimeStartSrch())&&StringUtils.isNotEmpty(request.getTimeEndSrch())) {
             SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date timeStart = null;
@@ -83,11 +83,11 @@ public class IncreaseInterestInvestDetailServiceImpl extends BaseServiceImpl imp
         if (StringUtils.isNotEmpty(request.getBorrowNidSrch())) {
             cra.andBorrowNidEqualTo(request.getBorrowNidSrch());
         }
-        // 投资时间
+        // 出借时间
         //if (StringUtils.isNotEmpty(request.getTimeStartSrch())) {
         //    cra.andCreateTimeBetween(GetDate.str2Timestamp(request.getTimeStartSrch()), GetDate.str2Timestamp(request.getTimeEndSrch()));
         //}
-        // 投资时间结束时间加一秒
+        // 出借时间结束时间加一秒
         if (StringUtils.isNotEmpty(request.getTimeStartSrch())&&StringUtils.isNotEmpty(request.getTimeEndSrch())) {
             SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date timeStart = null;
@@ -135,12 +135,12 @@ public class IncreaseInterestInvestDetailServiceImpl extends BaseServiceImpl imp
         if (StringUtils.isNotEmpty(form.getBorrowNidSrch())) {
             cra.andBorrowNidEqualTo(form.getBorrowNidSrch());
         }
-        // 投资时间
+        // 出借时间
         //if (StringUtils.isNotEmpty(form.getTimeStartSrch())) {
         //    cra.andCreateTimeBetween(GetDate.str2Timestamp(form.getTimeStartSrch()), GetDate.str2Timestamp(form.getTimeEndSrch()));
         //}
 
-        // 投资时间结束时间加一秒
+        // 出借时间结束时间加一秒
         if (StringUtils.isNotEmpty(form.getTimeStartSrch())&&StringUtils.isNotEmpty(form.getTimeEndSrch())) {
             SimpleDateFormat formatter=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             Date timeStart = null;

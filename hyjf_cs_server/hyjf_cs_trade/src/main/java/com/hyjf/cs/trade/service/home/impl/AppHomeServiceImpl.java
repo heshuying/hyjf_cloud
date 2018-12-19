@@ -100,7 +100,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         //首页展示的项目集合
         List<AppProjectListCustomizeVO> list = new ArrayList<>();
 
-        info.put("warning", "市场有风险 投资需谨慎");
+        info.put("warning", "市场有风险 出借需谨慎");
         //判断用户是否登录
         Boolean loginFlag = Boolean.FALSE;
         UserVO userVO = null;
@@ -155,7 +155,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 info.put("userType", "2");
 
                 boolean isnew =false;
-                //获取用户累计投资条数
+                //获取用户累计出借条数
                 Integer count = amTradeClient.getTotalInverestCount(userId);
                 if (count <= 0 || count == null) {
                     //获取新手标
@@ -188,12 +188,12 @@ public class AppHomeServiceImpl implements AppHomeService {
 //        if (getNewProjectFlag) {
 //            this.createProjectNewPage(info, list, HOST);
 //        }
-        //获取累计投资金额
+        //获取累计出借金额
         //TotalInvestAndInterestResponse res = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);
         TotalInvestAndInterestResponse res = this.getTotalInvestAndInterestResponse();
         // modify by libin 加缓存
         if(res == null){
-        	logger.error("获取累计投资金额为空");
+        	logger.error("获取累计出借金额为空");
         }
         // modify by libin 加缓存
         
@@ -398,7 +398,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         params.put("limitEnd", INDEX_HJH_SHOW_SIZE);
         List<HjhPlanCustomizeVO> planList = this.searchIndexHjhExtensionPlanList(params);
         boolean hasInvestment = false;
-        //判断是否有可投资计划
+        //判断是否有可出借计划
         //mod by nxl 智投服务 修改立即加入->授权服务
         for (HjhPlanCustomizeVO hjhPlanCustomize:planList){
             /*if("立即加入".equals(hjhPlanCustomize.getStatusName())){
@@ -419,7 +419,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 AppProjectListCustomizeVO customize = projectList.get(0);
                 customize.setTag("优质资产");
                 customize.setBorrowDesc("项目剩余" + customize.getBorrowAccountWait());
-                customize.setStatusName("立即投资");
+                customize.setStatusName("立即出借");
                 list.add(customize);
                 return  list;
             }else{
@@ -457,7 +457,7 @@ public class AppHomeServiceImpl implements AppHomeService {
     }
 
     /**
-     * 查询已登录投资用户的项目详情
+     * 查询已登录出借用户的项目详情
      * @param info
      * @param version
      * @param HOST
@@ -483,7 +483,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         List<AppProjectListCustomizeVO> projectList = new ArrayList<>();
 
         AppHomePageRequest request = (AppHomePageRequest) ConvertUtils.convertMapToObject(projectMap, AppHomePageRequest.class);
-        //查询首页定时发标,投资中,复审中的项目
+        //查询首页定时发标,出借中,复审中的项目
         List<AppProjectListCustomizeVO> list = amTradeClient.selectHomeProjectList(request);
         if (list != null && list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
@@ -508,7 +508,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         AppHomePageCustomize pageCustomize = homePageCustomizes.get(0);
         pageCustomize.setTitle("新手专享");
         pageCustomize.setTag("新手限投1次");
-        pageCustomize.setBorrowDesc("100起投，最高投资5000");
+        pageCustomize.setBorrowDesc("100起投，最高出借5000");
         CommonUtils.convertNullToEmptyString(pageCustomize);
         AppHomePageRecommendProject recommendProject = convertToAppHomePageRecommendProject(pageCustomize);
         info.put("recommendProject", recommendProject);
@@ -577,7 +577,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         request.setLimitEnd(3);
         List<HjhPlanCustomizeVO> planList = amTradeClient.getAppHomePlanList(request);
         boolean hasInvestment = false;
-        //判断是否有可投资计划
+        //判断是否有可出借计划
         for (HjhPlanCustomizeVO hjhPlanCustomize:planList){
             /*if("立即加入".equals(hjhPlanCustomize.getStatusName())){
                 hasInvestment = true;
@@ -696,11 +696,11 @@ public class AppHomeServiceImpl implements AppHomeService {
             }*/else if("授权服务".equals(listCustomize.getStatusName())){  //1.启用  2.关闭
                 homePageCustomize.setStatus("20");
                 homePageCustomize.setStatusName("授权服务");
-            }else if("立即投资".equals(listCustomize.getStatusName())){
+            }else if("立即出借".equals(listCustomize.getStatusName())){
                 //add by nxl 智投服务->添加推荐服务标题
                 homePageCustomize.setTitle("推荐产品");
                 homePageCustomize.setStatus(listCustomize.getStatus());
-                homePageCustomize.setStatusName("立即投资");
+                homePageCustomize.setStatusName("立即出借");
                 homePageCustomize.setBorrowTheSecondDesc("项目期限");
                 // add by nxl 智投服务 推荐产品显示历史年回报率
                 homePageCustomize.setBorrowTheFirstDesc("历史年回报率");
@@ -757,7 +757,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             if(!("0".equals(onTime)||"".equals(onTime))){
                 homePageCustomize.setStatusName(onTime);
             } else {
-                homePageCustomize.setStatusName("立即投资");
+                homePageCustomize.setStatusName("立即出借");
             }
 
            // PlanDetailCustomizeVO planDetailCustomizeVO = amTradeClient.getPlanDetailByPlanNid(listCustomize.getBorrowNid());
@@ -1036,7 +1036,7 @@ public class AppHomeServiceImpl implements AppHomeService {
                 info.put("sprogBorrowApr", project.getBorrowApr());
                 info.put("sprogBorrowPeriod", project.getBorrowPeriod());
                 String balance = project.getBorrowAccountWait();//add by cwyang 根据borrowNid 获取项目可投金额
-                info.put("sprogBorrowMoney", balance);//新手标取得是可投余额不是投资总额 add by cwyang
+                info.put("sprogBorrowMoney", balance);//新手标取得是可投余额不是出借总额 add by cwyang
                 info.put("sprogBorrowNid", project.getBorrowNid());
                 info.put("sprogBorrowUrl", project.getBorrowUrl());
                 info.put("sprogTime", project.getOnTime());
@@ -1068,7 +1068,7 @@ public class AppHomeServiceImpl implements AppHomeService {
     }
     /**
      *
-     * 检查是否是新手(未登录或已登录未投资)
+     * 检查是否是新手(未登录或已登录未出借)
      * @author sunpeikai
      * @param
      * @return
@@ -1086,7 +1086,7 @@ public class AppHomeServiceImpl implements AppHomeService {
 
     private List<AppProjectListCustomizeVO> searchProjectNew(String host) {
         List<AppProjectListCustomizeVO> projectList = new ArrayList<>();
-        // 取得新手汇项目（投资中）
+        // 取得新手汇项目（出借中）
         String statusNewInvest = "15";
         AppProjectListRequest request = new AppProjectListRequest();
         request.setStatus(statusNewInvest);
@@ -1104,7 +1104,7 @@ public class AppHomeServiceImpl implements AppHomeService {
             }
             return projectList;
         }
-        // 新手汇项目（投资中）为空
+        // 新手汇项目（出借中）为空
         // 取得新手汇项目（定时发标）
         String statusNewOnTime = "14";
         request.setStatus(statusNewOnTime);

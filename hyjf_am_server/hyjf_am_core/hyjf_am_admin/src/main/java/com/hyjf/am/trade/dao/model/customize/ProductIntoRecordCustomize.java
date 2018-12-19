@@ -22,19 +22,19 @@ public class ProductIntoRecordCustomize implements Serializable {
     private Integer referee;//推荐人id
     private String refername;//推荐人
     private Integer productId;//产品id
-    private BigDecimal amount;//投资金额
-    private Integer investTime;//投资时间
-    private String investTimeStr;//投资时间str
+    private BigDecimal amount;//出借金额
+    private Integer investTime;//出借时间
+    private String investTimeStr;//出借时间str
     private BigDecimal redeemed;//已赎回金额
     private BigDecimal restAmount;//剩余金额
     private Integer status;//资金赎回状态
     private String orderId;//订单号
     private String orderDate;//订单时间
     private Integer client;//操作客户端
-    private String tenderStatus;//投资状态(log表中)
+    private String tenderStatus;//出借状态(log表中)
     private String mobile;//手机号
     private BigDecimal balance;//本金
-    private Integer investStatus;//投资状态
+    private Integer investStatus;//出借状态
     private Integer department;
     private String regionName;
     private String branceName;

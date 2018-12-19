@@ -10,7 +10,7 @@ public class HjhPlanRequest {
      */
     private String isHome;
 
-    // 没有可以投资的汇计划，按照锁定时间倒叙排列
+    // 没有可以出借的汇计划，按照锁定时间倒叙排列
     private String lockFlag;
 
 

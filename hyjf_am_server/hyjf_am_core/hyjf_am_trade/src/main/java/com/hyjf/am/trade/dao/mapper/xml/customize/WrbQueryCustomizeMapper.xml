@@ -82,11 +82,11 @@
 			AND plan_nid IS NULL
 			
 			<if test="status != null and status != ''">
-				<!-- 获取 等待投资中 -->
+				<!-- 获取 等待出借中 -->
 				<if test="status == '1'.toString()">
 				AND ( hydb.`status` = 1 AND hydb.verify_status = 3 )
 				</if>
-				<!-- 获取 投资中 -->
+				<!-- 获取 出借中 -->
 				<if test="status == '2'.toString()">
 				AND ( hydb.`status` = 2 AND hydb.verify_time + ( hydb.borrow_valid_time * 24 * 60 *60 ) <![CDATA[>]]> UNIX_TIMESTAMP( NOW() ) )
 				</if>

@@ -21,7 +21,7 @@ public class BorrowInvestCustomize {
      */
     private String referrerName;
     /**
-     * 借款编号
+     * 项目编号
      */
     private String borrowNid;
     /**
@@ -41,7 +41,7 @@ public class BorrowInvestCustomize {
      */
     private String borrowStyleName;
     /**
-     * 投资金额
+     * 出借金额
      */
     private String account;
     /**
@@ -53,7 +53,7 @@ public class BorrowInvestCustomize {
      */
     private String operatingDeck;
     /**
-     * 投资时间
+     * 出借时间
      */
     private String createTime;
 
@@ -77,7 +77,7 @@ public class BorrowInvestCustomize {
     private String borrowProjectTypeName;
 
     /**
-     * 投资订单号
+     * 出借订单号
      */
     private String tenderOrderNum;
 
@@ -87,12 +87,12 @@ public class BorrowInvestCustomize {
     private String freezeOrderNum;
 
     /**
-     * 投资人用户名
+     * 出借人用户名
      */
     private String tenderUsername;
 
     /**
-     * 投资人用户ID
+     * 出借人用户ID
      */
     private String tenderUserId;
 
@@ -101,54 +101,54 @@ public class BorrowInvestCustomize {
      */
     private String referrerUserId;
     /**
-     * 推荐人ID（投资时）
+     * 推荐人ID（出借时）
      */
     private String tenderReferrerUserId;
     /**
-     * 投资人用户属性（投资时）
+     * 出借人用户属性（出借时）
      */
     private String tenderUserAttribute;
     /**
-     * 推荐人用户属性（投资时）
+     * 推荐人用户属性（出借时）
      */
     private String inviteUserAttribute;
     /**
-     * 推荐人（投资时）
+     * 推荐人（出借时）
      */
     private String tenderReferrerUsername;
 
     /**
-     * 一级分部（投资时）
+     * 一级分部（出借时）
      */
     private String departmentLevel1Name;
 
     /**
-     * 二级分部（投资时）
+     * 二级分部（出借时）
      */
     private String departmentLevel2Name;
 
     /**
-     * 团队（投资时）
+     * 团队（出借时）
      */
     private String teamName;
 
     /**
-     * 投资人用户属性（当前）
+     * 出借人用户属性（当前）
      */
     private String tenderUserAttributeNow;
 
     /**
-     * 投资人所属一级分部（当前）
+     * 出借人所属一级分部（当前）
      */
     private String tenderRegionName;
 
     /**
-     * 投资人所属二级分部（当前）
+     * 出借人所属二级分部（当前）
      */
     private String tenderBranchName;
 
     /**
-     * 投资人所属团队（当前）
+     * 出借人所属团队（当前）
      */
     private String tenderDepartmentName;
 
@@ -172,7 +172,7 @@ public class BorrowInvestCustomize {
      */
     private String referrerDepartmentName;
     /**
-     * 投资类别 0手动投标，1或者别的预约投标
+     * 出借类别 0手动投标，1或者别的预约投标
      */
     private String investType;
 
@@ -247,7 +247,7 @@ public class BorrowInvestCustomize {
     private String imgUrl;
 
     /**
-     * 是否复投投资  1；是   0：否
+     * 是否复投投标  1；是   0：否
      */
     private String tenderType;
 

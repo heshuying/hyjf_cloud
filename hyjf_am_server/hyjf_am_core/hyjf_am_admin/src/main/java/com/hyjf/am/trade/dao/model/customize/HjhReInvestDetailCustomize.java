@@ -5,15 +5,15 @@ public class HjhReInvestDetailCustomize {
     //前画面传入
     private String planNid;
     private String date;
-    //计划投资订单号（检索）
+    //计划出借订单号（检索）
     private String accedeOrderIdSrch;
     //用户名（检索）
     private String userNameSrch;
-    //借款编号（检索）
+    //项目编号（检索）
     private String borrowNidSrch;
     //借款期限(锁定期)（检索）
     private String lockPeriodSrch;
-    //投资方式（检索）
+    //出借方式（检索）
     private String investTypeSrch;
     //还款方式（检索）
     private String borrowStyleSrch;
@@ -26,7 +26,7 @@ public class HjhReInvestDetailCustomize {
     private String inviteUserName;
     //用户属性
     private String userAttribute;
-    //借款编号
+    //项目编号
     private String borrowNid;
     //年化利率
     private String expectApr;
@@ -35,15 +35,15 @@ public class HjhReInvestDetailCustomize {
     //借款期限（带单位）
     private String borrowPeriodView;
     private String isMonth;
-    //投资金额
+    //出借金额
     private String accedeAccount;
     //还款方式
     private String borrowStyle;
-    //投资方式
+    //出借方式
     private String investType;
     //计息时间
     private String countInterestTime;
-    //投资时间
+    //出借时间
     private String addTime;
 
     public String getPlanNid() {

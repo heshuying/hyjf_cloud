@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 /**
  * 
  * @author cwyang
- * 投资掉单异常处理实体类
+ * 出借掉单异常处理实体类
  *
  */
 public class BatchBorrowTenderCustomize implements Serializable{

@@ -2065,7 +2065,7 @@ public class GetDate extends PropertyEditorSupport {
 		return Integer.parseInt(enddateStr);
 	}
 
-	// add 汇计划三期 汇计划自动投资 liubin 20180515 start
+	// add 汇计划三期 汇计划自动出借 liubin 20180515 start
 	/**
 	 * 根据HH:mm得到日期
 	 *
@@ -2196,7 +2196,7 @@ public class GetDate extends PropertyEditorSupport {
 		return getSomeDayEnd(calendar.getTime());
 	}
 
-	// add 汇计划三期 汇计划自动投资 liubin 20180515 end
+	// add 汇计划三期 汇计划自动出借 liubin 20180515 end
 
 	public static void main(String[] args) {
 		System.out.println(getMillis10(new Date()));

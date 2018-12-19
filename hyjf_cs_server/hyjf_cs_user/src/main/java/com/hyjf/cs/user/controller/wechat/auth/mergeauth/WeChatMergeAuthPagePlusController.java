@@ -106,19 +106,19 @@ public class WeChatMergeAuthPagePlusController extends BaseUserController {
             authBean.setOrderId(orderId);
             Map<String,Object> map = authService.getCallbankMV(authBean);
             if(authBean.getAutoBidStatus()&&authBean.getAutoCreditStatus()&&authBean.getPaymentAuthStatus()){
-                //开通自动投资、自动债转、缴费授权
+                //开通自动出借、自动债转、缴费授权
                 authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "14");
             }else if(authBean.getAutoBidStatus()&&authBean.getAutoCreditStatus()){
-                //开通自动投资、自动债转
+                //开通自动出借、自动债转
                 authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "11");
             }else if(authBean.getAutoBidStatus()&&authBean.getPaymentAuthStatus()){
-                //开通自动投资、缴费授权
+                //开通自动出借、缴费授权
                 authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "12");
             }else if(authBean.getPaymentAuthStatus()&&authBean.getAutoCreditStatus()){
                 //开通自动债转、缴费授权
                 authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "13");
             }else if(authBean.getAutoBidStatus()){
-                //开通自动投资
+                //开通自动出借
                 authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "1");
             }else if(authBean.getAutoCreditStatus()){
                 //开通自动债转
@@ -127,7 +127,7 @@ public class WeChatMergeAuthPagePlusController extends BaseUserController {
                 //开通缴费授权
                 authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "5");
             }else{
-                //开通自动投资、自动债转、缴费授权
+                //开通自动出借、自动债转、缴费授权
                 authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "14");
             }
             result.setData(map);

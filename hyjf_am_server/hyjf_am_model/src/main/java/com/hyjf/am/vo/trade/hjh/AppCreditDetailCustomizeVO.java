@@ -26,12 +26,12 @@ public class AppCreditDetailCustomizeVO extends BaseVO {
     private String creditNidPage;
 
     /**
-     * 投资期限
+     * 出借期限
      */
     private String borrowPeriod;
     
     /**
-     * 投资期限
+     * 出借期限
      */
     private String creditTerm;
     
@@ -92,7 +92,7 @@ public class AppCreditDetailCustomizeVO extends BaseVO {
     private String assignTime;
 
     /**
-     * 投资进度
+     * 出借进度
      */
     private String borrowSchedule;
 

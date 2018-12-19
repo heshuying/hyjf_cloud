@@ -12,7 +12,7 @@ public class BorrowCreditTenderPDFSignReq implements Serializable {
     @ApiModelProperty(value = "承接订单号")
     private String assignNid;
 
-    @ApiModelProperty(value = "原始投资订单号")
+    @ApiModelProperty(value = "原始出借订单号")
     private String creditTenderNid;
 
     @ApiModelProperty(value = "债转编号")

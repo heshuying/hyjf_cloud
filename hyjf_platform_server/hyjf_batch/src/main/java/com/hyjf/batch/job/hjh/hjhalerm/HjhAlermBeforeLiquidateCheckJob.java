@@ -8,7 +8,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
- * 清算日前一天扫描处于投资中或者复审中的原始标的进行预警
+ * 清算日前一天扫描处于出借中或者复审中的原始标的进行预警
  * @author zhangyk
  * @date 2018/8/20 15:49
  */

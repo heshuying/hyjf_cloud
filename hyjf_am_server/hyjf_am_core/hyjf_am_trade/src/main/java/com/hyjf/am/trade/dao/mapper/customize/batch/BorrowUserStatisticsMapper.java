@@ -21,7 +21,7 @@ public interface BorrowUserStatisticsMapper {
     int countCurrentBorrowUser();
 
     /**
-     * 当前投资人
+     * 当前出借人
      * @return
      */
     int countCurrentTenderUser();

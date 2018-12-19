@@ -39,11 +39,11 @@ public class AppProjectContractDetailCustomizeVO extends BaseVO implements Seria
 	private String tenderRealName;
 	/* 身份证号 tenderIdCard */
 	private String tenderIdCard;
-	/* 投资金额 invest */
+	/* 出借金额 invest */
 	private String invest;
-	/* 投资开始日 investStartDate */
+	/* 出借开始日 investStartDate */
 	private String investStartDate;
-	/* 投资到期日 investEndDate */
+	/* 出借到期日 investEndDate */
 	private String investEndDate;
 	/* 签订日期 signDate */
 	private String signDate;

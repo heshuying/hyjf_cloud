@@ -31,7 +31,7 @@ public interface MyCreditListService extends BaseTradeService {
     WebResult getCreditList(MyCreditListQueryRequest request, Integer userId);
 
     /**
-     * 用户中心查询投资可债转详情
+     * 用户中心查询出借可债转详情
      * @param request
      * @param userId
      * @return
@@ -39,7 +39,7 @@ public interface MyCreditListService extends BaseTradeService {
     WebResult tenderToCreditDetail(CreditDetailsRequestBean request, Integer userId);
 
     /**
-     * 用户中心验证投资人当天是否可以债转
+     * 用户中心验证出借人当天是否可以债转
      * @param request
      * @param userId
      * @return

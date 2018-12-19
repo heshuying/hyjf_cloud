@@ -46,11 +46,11 @@ public class AppHomePageRecommendProject implements Serializable {
      */
     private String borrowPeriod;
     /**
-     * 项目剩余100,000.00 / 开放额度1,000,011.00 / xxx起投，最高投资yyy
+     * 项目剩余100,000.00 / 开放额度1,000,011.00 / xxx起投，最高出借yyy
      */
     private String borrowDesc;
     /**
-     * 立即投资、立即加入
+     * 立即出借、立即加入
      */
     private String buttonText;
 

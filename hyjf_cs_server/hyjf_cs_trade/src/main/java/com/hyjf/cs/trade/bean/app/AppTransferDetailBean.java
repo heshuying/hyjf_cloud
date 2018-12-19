@@ -34,7 +34,7 @@ public class AppTransferDetailBean implements Serializable {
     private String transferLeft;
     /**项目进行状态 如 转让状态，0.进行中，1.停止*/
     private String status;
-    /**项目进度状态 0:发起转让 1:投资人认购 2:支付资金 3:计息 4:回款*/
+    /**项目进度状态 0:发起转让 1:出借人认购 2:支付资金 3:计息 4:回款*/
     private String borrowProgressStatus;
     /**剩余期限*/
     private String borrowPeriod;

@@ -7,7 +7,7 @@ import java.util.Date;
  * @version WrbInvestRequest, v0.1 2018/11/7 15:53
  */
 public class WrbInvestRequest {
-    /** 投资日期 */
+    /** 出借日期 */
     private String invest_date;
 
     /** 条数 */
@@ -16,7 +16,7 @@ public class WrbInvestRequest {
     /** 页数 */
     private Integer page;
 
-    /** 投资日期 */
+    /** 出借日期 */
     private Date date;
 
     /** 标的编号 */

@@ -35,15 +35,15 @@ public class CreditDetailsRequestBean implements Serializable
 	 */
 	private String borrowStyle;
 	/**
-	 * 投资时间
+	 * 出借时间
 	 */
 	private String tenderTime;
 	/**
-	 * 投资订单号
+	 * 出借订单号
 	 */
 	private String tenderNid;
 	/**
-	 * 投资本金
+	 * 出借本金
 	 */
 	private String investAccount;
 	/**

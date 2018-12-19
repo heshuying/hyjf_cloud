@@ -46,16 +46,16 @@ public class BorrowInvestRequest extends BasePage implements Serializable {
     private String clientSrch;
 
     /**
-     * 投资时间 检索条件
+     * 出借时间 检索条件
      */
     private String timeStartSrch;
     /**
-     * 投资时间 检索条件
+     * 出借时间 检索条件
      */
     private String timeEndSrch;
 
     /**
-     * 投资类别
+     * 出借类别
      */
     private String investType;
 
@@ -70,7 +70,7 @@ public class BorrowInvestRequest extends BasePage implements Serializable {
     private String accedeOrderIdSrch;
 
     /**
-     * 是否复投投资  1；是   0：否
+     * 是否复投投标  1；是   0：否
      */
     private String tenderType;
 
@@ -104,7 +104,7 @@ public class BorrowInvestRequest extends BasePage implements Serializable {
     private String borrowNid;
 
     /**
-     * 投资订单号
+     * 出借订单号
      */
     private String nid;
 

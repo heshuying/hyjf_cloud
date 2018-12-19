@@ -46,13 +46,13 @@ public class PushMoneyCustomize {
     private String accountId;
     // 提成人用户属性0=>无主单 1=>有主单 2=>线下员工 3=>线上员工
     private String attribute;
-    // 投资人
+    // 出借人
     private String usernameTender;
-    // 投资金额
+    // 出借金额
     private BigDecimal accountTender;
     // 状态
     private String statusName;
-    // 投资时间
+    // 出借时间
     private String tenderTimeView;
     // 提成发放时间
     private String sendTimeView;

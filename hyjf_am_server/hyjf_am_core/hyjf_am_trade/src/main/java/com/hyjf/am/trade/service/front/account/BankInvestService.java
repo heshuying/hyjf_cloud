@@ -8,7 +8,7 @@ import com.hyjf.am.trade.dao.model.customize.BatchBorrowTenderCustomize;
 import java.util.List;
 
 /**
- * 江西银行投资调单处理自动任务
+ * 江西银行出借调单处理自动任务
  * @author jun
  * @since 20180623
  */

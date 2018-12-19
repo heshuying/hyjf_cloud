@@ -117,7 +117,7 @@ public class AppUtmRegController extends BaseController {
     }
 
     /**
-     * 分页查询所有渠道投资信息
+     * 分页查询所有渠道出借信息
      *
      * @return
      */

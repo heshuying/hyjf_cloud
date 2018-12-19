@@ -53,7 +53,7 @@ public class AppProjectListCustomizeVO extends BaseVO {
 	private String borrowTotalMoney;
 	//剩余可投金额
 	private String borrowAccountWait;
-	//是否可用优惠券投资1代表可用，0代表不可用
+	//是否可用优惠券出借1代表可用，0代表不可用
 	private String couponEnable = "1";
 	//融通宝加息
 	private String borrowExtraYield ;

@@ -19,9 +19,9 @@ public class RepayMentPlanListCustomize implements Serializable {
     private String expectApr;
     /**计划期限*/
     private String debtLockPeriod;
-    /**投资用户编号*/
+    /**出借用户编号*/
     private String userId;
-    /**计划投资金额*/
+    /**计划出借金额*/
     private String accedeAccount;
     /**计划待收总额*/
     private String repayAccountYes;

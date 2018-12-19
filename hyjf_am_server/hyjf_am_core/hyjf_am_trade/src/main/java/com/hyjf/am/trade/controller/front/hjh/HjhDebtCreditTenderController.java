@@ -22,7 +22,7 @@ import java.util.List;
  * @date 20180629
  */
 
-@Api(value = "汇计划债转投资")
+@Api(value = "汇计划债转出借")
 @RestController
 @RequestMapping("/am-trade/hjhDebtCreditTender")
 public class HjhDebtCreditTenderController extends BaseController {

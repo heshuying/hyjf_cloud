@@ -46,14 +46,14 @@ public class BorrowUserStatisticsController extends BaseController {
     }
 
     /**
-     * 当前投资人
+     * 当前出借人
      * @return
      */
     @RequestMapping("/count_current_tender_user")
     public IntegerResponse countCurrentTenderUser() {
-        logger.info("获取当前投资人数据开始......");
+        logger.info("获取当前出借人数据开始......");
         int result = borrowUserStatisticsService.countCurrentTenderUser();
-        logger.info("获取当前投资人数据结束......");
+        logger.info("获取当前出借人数据结束......");
         return new IntegerResponse(result);
     }
 

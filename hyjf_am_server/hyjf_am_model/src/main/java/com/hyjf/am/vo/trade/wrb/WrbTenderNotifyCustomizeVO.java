@@ -9,15 +9,15 @@ import java.math.BigDecimal;
  */
 public class WrbTenderNotifyCustomizeVO {
     private Integer userId;
-    // 投资时间
+    // 出借时间
     private String addtime;
-    //投资订单号
+    //出借订单号
     private String nid;
-    // 投资金额
+    // 出借金额
     private BigDecimal account;
-    // 投资期限 按天计算 每月30天
+    // 出借期限 按天计算 每月30天
     private String investPeriod;
-    // 投资利率 整数
+    // 出借利率 整数
     private String borrowApr;
     // 还款方式 中文翻译
     private String borrowStyleName;

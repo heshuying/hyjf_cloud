@@ -8,7 +8,7 @@ import com.hyjf.am.vo.BaseVO;
 import java.io.Serializable;
 
 /**
- * @Description 投资返回结果
+ * @Description 出借返回结果
  * @Author sss
  * @Date 2018/6/28 14:56
  */

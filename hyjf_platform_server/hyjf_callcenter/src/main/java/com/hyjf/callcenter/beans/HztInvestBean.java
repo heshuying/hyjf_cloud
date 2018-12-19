@@ -39,7 +39,7 @@ public class HztInvestBean implements Serializable {
 	 */
 	private String borrowPeriod;
 	/**
-	 * 投资金额
+	 * 出借金额
 	 */
 	private String account;
 	/**
@@ -51,11 +51,11 @@ public class HztInvestBean implements Serializable {
 	 */
 	private String operatingDeck;
 	/**
-	 * 投资方式
+	 * 出借方式
 	 */
 	private String investType;
 	/**
-	 * 投资时间
+	 * 出借时间
 	 */
 	private String addtime;
 	public String getUserName() {

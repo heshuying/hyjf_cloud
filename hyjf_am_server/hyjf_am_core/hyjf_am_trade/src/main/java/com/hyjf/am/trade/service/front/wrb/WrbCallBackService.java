@@ -11,7 +11,7 @@ import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 public interface WrbCallBackService {
     /**
      * @Author walter.limeng
-     * @Description  风车理财根据投资订单号查询投资信息
+     * @Description  风车理财根据出借订单号查询出借信息
      * @Date 14:21 2018/7/20
      * @Param nid
      * @Param userId

@@ -47,7 +47,7 @@ public class DigitalUtils {
 		return result;
 	}
 
-	// add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
+	// add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 start
 	public static int min(int a, int b) {
 		return (a < b) ? a : b;
 	}
@@ -71,5 +71,5 @@ public class DigitalUtils {
 	public static BigDecimal max(BigDecimal a, BigDecimal b) {
 		return (a.compareTo(b) > 0) ? a : b;
 	}
-	// add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
+	// add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 end
 }

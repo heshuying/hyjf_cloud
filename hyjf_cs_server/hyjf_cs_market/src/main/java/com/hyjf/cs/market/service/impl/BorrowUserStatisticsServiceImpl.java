@@ -40,7 +40,7 @@ public class BorrowUserStatisticsServiceImpl extends BaseMarketServiceImpl imple
 		Integer countBorrowUser = amTradeClient.countBorrowUser();
 		// 当前借款人（定义：当前有尚未结清债权的底层借款人数量）
 		Integer countBorrowUserCurrent = amTradeClient.countCurrentBorrowUser();
-		// 当前投资人（定义：当前代还金额不为0的用户数量）
+		// 当前出借人（定义：当前代还金额不为0的用户数量）
 		Integer countCurrentTenderUser = amTradeClient.countCurrentTenderUser();
 		Calendar calendar = Calendar.getInstance();
 		// 要统计前一个月的数据，所以月份要减一

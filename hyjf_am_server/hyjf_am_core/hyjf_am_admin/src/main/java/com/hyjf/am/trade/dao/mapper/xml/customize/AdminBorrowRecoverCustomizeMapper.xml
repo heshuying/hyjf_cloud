@@ -18,7 +18,7 @@
 	<sql id="Where_Clause">
 		<where>
 			(b.`status` = 4 OR b.`status` = 5 OR (b.`status`= 3 AND b.reverify_status <![CDATA[<>]]> 0))
-			<!-- 借款编号 -->
+			<!-- 项目编号 -->
 			<if test="borrowNidSrch != null and borrowNidSrch != ''">
 				AND bt.borrow_nid LIKE CONCAT( #{borrowNidSrch}, '%')
 			</if>
@@ -32,7 +32,7 @@
 				AND binfo.inst_code = #{instCodeSrch}
 			</if>
 			<!-- add by LSY END -->
-			<!-- 投资订单号 -->
+			<!-- 出借订单号 -->
 			<if test="orderNumSrch != null and orderNumSrch != ''">
 				AND bt.nid = #{orderNumSrch}
 			</if>
@@ -40,7 +40,7 @@
 			<if test="loanOrdid != null and loanOrdid != ''">
 				AND bt.loan_ordid = #{loanOrdid}
 			</if>
-			<!-- 投资人 -->
+			<!-- 出借人 -->
 			<if test="usernameSrch != null and usernameSrch != ''">
 				AND bt.user_name LIKE CONCAT( #{usernameSrch}, '%')
 			</if>
@@ -56,7 +56,7 @@
 			<if test="loanBatchNo != null and loanBatchNo != ''">
 				AND br.loan_batch_no LIKE CONCAT( #{loanBatchNo}, '%')
 			</if>
-			<!-- 投资时间 -->
+			<!-- 出借时间 -->
 			<if test="timeRecoverStartSrch != null and timeRecoverStartSrch != ''">
 				<!-- 优化sql(字段类型转换) timestamp-->
 				AND bt.create_time >= STR_TO_DATE(#{timeRecoverStartSrch},'%Y-%m-%d %H:%i:%s')
@@ -83,7 +83,7 @@
 
 
 	<resultMap id="exportBorrowRecoverListMap" type="com.hyjf.am.trade.dao.model.customize.AdminBorrowRecoverCustomize">
-		<!-- 借款编号 -->
+		<!-- 项目编号 -->
 		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
 		<!-- add by LSY START -->
 		<!-- 资产来源 -->
@@ -99,21 +99,21 @@
 		<result column="borrow_project_type_name" property="borrowProjectTypeName" jdbcType="VARCHAR" />
 		<!-- 借款期限 -->
 		<result column="borrow_period" property="borrowPeriod" jdbcType="VARCHAR" />
-		<!-- 年化收益 -->
+		<!-- 出借利率 -->
 		<result column="borrow_apr" property="borrowApr" jdbcType="VARCHAR" />
 		<!-- 还款方式 -->
 		<result column="borrow_style_name" property="borrowStyleName" jdbcType="VARCHAR" />
-		<!-- 投资订单号 -->
+		<!-- 出借订单号 -->
 		<result column="order_num" property="orderNum" jdbcType="VARCHAR" />
 		<!-- 放款订单号 -->
 		<result column="loanOrdid" property="loanOrdid" jdbcType="VARCHAR" />
 		<!-- 合作机构编号 -->
 		<result column="inst_code" property="instCode" jdbcType="VARCHAR" />
-		<!-- 投资人用户名 -->
+		<!-- 出借人用户名 -->
 		<result column="tender_username" property="tenderUsername" jdbcType="VARCHAR" />
-		<!-- 投资人ID -->
+		<!-- 出借人ID -->
 		<result column="tender_user_id" property="tenderUserId" jdbcType="VARCHAR" />
-		<!-- 投资时间 -->
+		<!-- 出借时间 -->
 		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
 		<!-- 借款金额 -->
 		<result column="account" property="account" jdbcType="VARCHAR" />
@@ -135,19 +135,19 @@
 		<result column="loan_batch_no" property="loanBatchNo" jdbcType="VARCHAR" />
 
 
-		<!-- 投资人用户属性（投资时） -->
+		<!-- 出借人用户属性（出借时） -->
 		<result column="tender_user_attribute" property="tenderUserAttribute" jdbcType="VARCHAR" />
-		<!-- 推荐人用户属性（投资时） -->
+		<!-- 推荐人用户属性（出借时） -->
 		<result column="invite_user_attribute" property="inviteUserAttribute" jdbcType="VARCHAR" />
-		<!-- 推荐人（投资时） -->
+		<!-- 推荐人（出借时） -->
 		<result column="tender_referrer_username" property="tenderReferrerUsername" jdbcType="VARCHAR" />
-		<!-- 推荐人ID（投资时） -->
+		<!-- 推荐人ID（出借时） -->
 		<result column="tender_referrer_user_id" property="tenderReferrerUserId" jdbcType="VARCHAR" />
-		<!-- 一级分部（投资时） -->
+		<!-- 一级分部（出借时） -->
 		<result column="department_level_1_name" property="departmentLevel1Name" jdbcType="VARCHAR" />
-		<!-- 二级分部（投资时） -->
+		<!-- 二级分部（出借时） -->
 		<result column="department_level_2_name" property="departmentLevel2Name" jdbcType="VARCHAR" />
-		<!-- 团队（投资时） -->
+		<!-- 团队（出借时） -->
 		<result column="team_name" property="teamName" jdbcType="VARCHAR" />
 
 		<!-- 受托支付标志 0 否；1是 -->
@@ -210,19 +210,19 @@
 	<resultMap id="selectBorrowRecoverListMap" type="com.hyjf.am.trade.dao.model.customize.AdminBorrowRecoverCustomize">
 		<!-- 借款标题 -->
 		<result column="borrow_name" property="borrowName" jdbcType="VARCHAR" />
-		<!-- 借款编号 -->
+		<!-- 项目编号 -->
 		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
 		<!-- add by LSY START -->
 		<!-- 资产来源 -->
 		<result column="inst_name" property="instName" jdbcType="VARCHAR" />
 		<!-- add by LSY END -->
-		<!-- 投资订单号 -->
+		<!-- 出借订单号 -->
 		<result column="order_num" property="orderNum" jdbcType="VARCHAR" />
 		<!-- 合作机构编号 -->
 		<result column="inst_code" property="instCode" jdbcType="VARCHAR" />
-		<!-- 投资人 -->
+		<!-- 出借人 -->
 		<result column="username" property="username" jdbcType="VARCHAR" />
-		<!-- 投资金额 -->
+		<!-- 出借金额 -->
 		<result column="account" property="account" jdbcType="VARCHAR" />
 		<!-- 应收服务费 -->
 		<result column="service_price" property="servicePrice" jdbcType="VARCHAR" />
@@ -234,7 +234,7 @@
 		<result column="is_recover" property="isRecover" jdbcType="VARCHAR" />
 		<!-- 放款时间 -->
 		<result column="create_time" property="createTime" jdbcType="VARCHAR" />
-		<!-- 投资时间 -->
+		<!-- 出借时间 -->
 		<result column="time_recover" property="timeRecover" jdbcType="VARCHAR" />
 		<!-- 放款订单号-->
 		<result column="loanOrdid" property="loanOrdid" jdbcType="VARCHAR" />

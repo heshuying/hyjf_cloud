@@ -40,7 +40,7 @@ public interface WebProjectListService extends BaseTradeService {
     public WebResult getBorrowDetail(Map map,String userId);
 
     /**
-     * 获取新手标和散标详情：投资记录
+     * 获取新手标和散标详情：出借记录
      * @author zhangyk
      * @date 2018/8/9 16:58
      */

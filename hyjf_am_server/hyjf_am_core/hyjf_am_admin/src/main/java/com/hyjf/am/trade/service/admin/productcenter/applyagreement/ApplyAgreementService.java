@@ -71,7 +71,7 @@ public interface ApplyAgreementService extends BaseService{
     List<BorrowRepayAgreementCustomizeVO> selectBorrowRepay(BorrowRepayAgreementAmRequest request, int limitStart, int limitEnd);
 
     /**
-     * 获取用户投资协议
+     * 获取用户出借协议
      *
      * @param borrowNid
      * @return
@@ -97,7 +97,7 @@ public interface ApplyAgreementService extends BaseService{
     List<HjhDebtCreditRepay> selectHjhDebtCreditRepayList(String nid, int period);
 
     /**
-     * 获取用户投资协议
+     * 获取用户出借协议
      *
      * @param borrowNid
      * @return

@@ -98,7 +98,7 @@ public class HjhPlanController extends BaseTradeController {
         return result;
     }
 
-    @ApiOperation(value = "web获取计划投资信息", notes = "web获取计划投资信息")
+    @ApiOperation(value = "web获取计划出借信息", notes = "web获取计划出借信息")
     @PostMapping(value = "/investInfo", produces = "application/json; charset=utf-8")
     public WebResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "userId", required = false) Integer userId, @RequestBody TenderRequest tender) {
         tender.setUserId(userId);
@@ -106,7 +106,7 @@ public class HjhPlanController extends BaseTradeController {
         return  hjhTenderService.getInvestInfo(tender);
     }
 
-    @ApiOperation(value = "web计划投资校验", notes = "web计划投资校验")
+    @ApiOperation(value = "web计划出借校验", notes = "web计划出借校验")
     @PostMapping(value = "/planCheck", produces = "application/json; charset=utf-8")
     public WebResult<TenderInfoResult> planCheck(@RequestHeader(value = "userId", required = false) Integer userId, @RequestBody TenderRequest tender) {
         tender.setUserId(userId);
@@ -133,7 +133,7 @@ public class HjhPlanController extends BaseTradeController {
                     resultWebResult.setStatus(MsgEnum.STATUS_EV000004.getCode());
                     //tenderInfo.setStatus(MsgEnum.STATUS_EV000004.getCode());
                 }else if(CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)){
-                    //计划类判断用户类型为稳健型以上才可以投资
+                    //计划类判断用户类型为稳健型以上才可以出借
                     resultWebResult.setStatus(MsgEnum.STATUS_EV000007.getCode());
                     //tenderInfo.setStatus(MsgEnum.STATUS_EV000007.getCode());
                 }else if(CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS.equals(riskTested)){

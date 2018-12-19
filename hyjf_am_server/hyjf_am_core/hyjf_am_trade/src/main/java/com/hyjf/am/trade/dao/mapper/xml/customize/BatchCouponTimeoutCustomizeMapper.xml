@@ -6,7 +6,7 @@
 		<result column="user_id" property="userId"/>
 		<result column="coupon_quota" property="couponQuota"/>
 	</resultMap>
-	<!-- 查询体验金按收益期限还款的投资 -->
+	<!-- 查询体验金按收益期限还款的出借 -->
 	<select id="selectCouponQuota" resultMap="couponResult" parameterType="java.util.Map">
 		
 		SELECT

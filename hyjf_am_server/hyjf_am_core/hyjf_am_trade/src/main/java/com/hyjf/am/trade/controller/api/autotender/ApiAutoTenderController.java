@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 /**
  * @author libin
- * 第三方投资散标
+ * 第三方出借散标
  * @version ApiAutoTenderController.java, v0.1 2018年8月27日 上午10:03:39
  */
 @RestController
@@ -26,7 +26,7 @@ public class ApiAutoTenderController extends BaseController{
     
 	/**
 	 * 
-	 * 投资预插入
+	 * 出借预插入
 	 * 
 	 * @param borrowNid
 	 * @param orderId

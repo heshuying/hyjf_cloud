@@ -16,7 +16,7 @@ public class RepayBean extends BorrowRepayVO implements Serializable {
 	public String borrowPeriod;
 	// 用户的ip地址
 	private String ip;
-	/** 垫付机构ID*/
+	/** 担保机构ID*/
 	public Integer repayUserId;
 	/**
 	 * 校验标示 0:成功 1:失败

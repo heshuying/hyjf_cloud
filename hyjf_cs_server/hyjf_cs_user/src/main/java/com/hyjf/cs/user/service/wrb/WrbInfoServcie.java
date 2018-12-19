@@ -32,7 +32,7 @@ public interface WrbInfoServcie {
     List<MessagePushTemplateVO> getNoticeinfoDetailNew(MsgPushTemplateRequest request);
 
     /**
-     * 根据标的ID查询可投资标的信息
+     * 根据标的ID查询可出借标的信息
      * @param borrowNid
      * @return
      */
@@ -53,7 +53,7 @@ public interface WrbInfoServcie {
     BorrowAndInfoVO selectBorrowByBorrowNid(String borrowNid);
 
     /**
-     * 根据标的号和投资开始时间查询投资信息
+     * 根据标的号和出借开始时间查询出借信息
      * @param borrowNid
      * @param investTime
      * @return
@@ -61,7 +61,7 @@ public interface WrbInfoServcie {
     List<WrbBorrowTenderCustomizeVO> searchBorrowTenderByNidAndTime(String borrowNid, Date investTime);
 
     /**
-     * 根据标的号和投资开始时间查询汇总数据
+     * 根据标的号和出借开始时间查询汇总数据
      * @param borrowNid
      * @param investTime
      * @return
@@ -69,8 +69,8 @@ public interface WrbInfoServcie {
     WrbBorrowTenderSumCustomizeVO searchBorrowTenderSumByNidAndTime(String borrowNid, Date investTime);
 
     /**
-     * 获取某天投资情况
-     * @param invest_date 投资日期 格式2015-10-10
+     * 获取某天出借情况
+     * @param invest_date 出借日期 格式2015-10-10
      * @param limit
      * @param page
      * @return
@@ -78,7 +78,7 @@ public interface WrbInfoServcie {
     List<BorrowTenderVO> getInvestDetail(Date invest_date, Integer limit, Integer page);
 
     /**
-     *获取某天投资情况汇总
+     *获取某天出借情况汇总
      * @param date
      * @return
      */
@@ -99,15 +99,15 @@ public interface WrbInfoServcie {
     WrbAccountResponse getAccountInfo(String userId);
 
     /**
-     * 投资记录查询
+     * 出借记录查询
      * @param request
-     * @return 投资记录
+     * @return 出借记录
      * @throws Exception
      */
     WrbInvestRecordResponse getInvestRecord(WrbInvestRecordRequest request);
 
     /**
-     * 获取投资记录回款计划
+     * 获取出借记录回款计划
      * @param userId
      * @param investRecordId 流水号
      * @param borrowNid

@@ -19,7 +19,7 @@ public class AdminHjhInstConfigAPIVO extends BaseVO implements Serializable {
     @ApiModelProperty(value = "机构名称")
     private String instName;
 
-    @ApiModelProperty(value = "机构类别(0:借款机构,1:投资机构)")
+    @ApiModelProperty(value = "机构类别(0:借款机构,1:出借机构)")
     private Integer instType;
 
     @ApiModelProperty(value = "额度上限")

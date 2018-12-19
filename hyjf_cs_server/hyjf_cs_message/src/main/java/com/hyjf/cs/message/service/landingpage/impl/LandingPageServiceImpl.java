@@ -55,7 +55,7 @@ public class LandingPageServiceImpl implements LandingPageService {
         //累计收益(亿元)
         BigDecimal profitSum = selectInterestSum().divide(new BigDecimal("100000000")).setScale(0, BigDecimal.ROUND_DOWN);
 
-        //累计投资者(万人),等同于累计交易笔数
+        //累计出借者(万人),等同于累计交易笔数
         Integer serveUserSum = amUserClient.countAllUser();
         if (serveUserSum == null){
             serveUserSum = 0;

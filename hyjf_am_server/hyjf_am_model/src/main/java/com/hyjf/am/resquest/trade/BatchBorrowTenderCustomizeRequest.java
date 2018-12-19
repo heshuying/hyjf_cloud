@@ -6,7 +6,7 @@ import com.hyjf.am.vo.trade.borrow.BatchBorrowTenderCustomizeVO;
 import java.util.List;
 
 /**
- * 投资掉单请求参数封装
+ * 出借掉单请求参数封装
  * @author jun
  * @date 20180623
  */

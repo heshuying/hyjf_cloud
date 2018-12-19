@@ -229,12 +229,12 @@
         WHEN hbc.credit_capital_assigned IS NOT NULL THEN 1
         ELSE 0 END type,
         CASE
-        WHEN cast(borrow.`status` AS CHAR)<![CDATA[<>]]>4 THEN '投资中'
+        WHEN cast(borrow.`status` AS CHAR)<![CDATA[<>]]>4 THEN '出借中'
         ELSE
         CASE
         WHEN cast(hbc.credit_status AS CHAR)=0 THEN '转让中'
         WHEN cast(hbc.credit_status AS CHAR)=1 THEN '部分债转'
-        ELSE '现金投资' END
+        ELSE '现金出借' END
         END AS DATA,
         0 coupon_type,
         IF(borrow.repay_last_time='','--',
@@ -714,7 +714,7 @@
         WHEN hbr.credit_amount > 0 THEN
         '部分债转'
         ELSE
-        '现金投资'
+        '现金出借'
         END AS DATA,
         0 coupon_type,
         hbt.account groupaccount
@@ -1014,8 +1014,8 @@
         hdp.liquidate_should_time orderby_liquidate_should_time,
         0 type,
         CASE
-        WHEN hdp.debt_plan_status = 4 THEN '投资中'
-        ELSE '现金投资'
+        WHEN hdp.debt_plan_status = 4 THEN '出借中'
+        ELSE '现金出借'
         END AS DATA,
         0 coupon_type
         FROM ht_debt_plan_accede hdpa
@@ -1043,8 +1043,8 @@
         hha.quit_time orderby_last_payment_time,
         1 type,
         CASE
-        WHEN (hha.order_status =0 or hha.order_status =2 or hha.order_status =99 ) THEN '投资中'
-        ELSE '现金投资'
+        WHEN (hha.order_status =0 or hha.order_status =2 or hha.order_status =99 ) THEN '出借中'
+        ELSE '现金出借'
         END AS DATA,
         0 coupon_type
         FROM ht_hjh_accede hha
@@ -1192,7 +1192,7 @@
         FROM_UNIXTIME(hdp.liquidate_fact_time, '%Y-%m-%d' ) liquidate_fact_time,
         hdp.liquidate_fact_time orderby_liquidate_fact_time,
         0 type,
-        '现金投资' DATA,
+        '现金出借' DATA,
         0 coupon_type
         FROM ht_debt_plan_accede hdpa
         INNER JOIN ht_debt_plan hdp ON hdpa.plan_nid=hdp.debt_plan_nid
@@ -1216,7 +1216,7 @@
         '--',FROM_UNIXTIME( hha.acctual_payment_time, '%Y-%m-%d' )) AS quit_time,
         hha.acctual_payment_time orderby_quit_time,
         1 type,
-        '现金投资' AS DATA,
+        '现金出借' AS DATA,
         0 coupon_type
         FROM ht_hjh_accede hha
         LEFT JOIN ht_hjh_plan hhp ON hha.plan_nid=hhp.plan_nid
@@ -1935,7 +1935,7 @@
     </select>
 
 
-    <!-- 获取可转让的投资列表 -->
+    <!-- 获取可转让的出借列表 -->
     <select id="selectTenderToCreditListCount" resultType="java.lang.Integer" parameterType="com.hyjf.am.resquest.trade.AssetManageBeanRequest">
         SELECT
         *
@@ -1945,7 +1945,7 @@
         LEFT JOIN ht_borrow hb ON hbr.borrow_nid = hb.borrow_nid
         <include refid="TenderToCredit_Where_Clause" />
     </select>
-    <!-- 获取可转让的投资查询条件 -->
+    <!-- 获取可转让的出借查询条件 -->
     <sql id="TenderToCredit_Where_Clause">
         <where>
             <if test="borrowNid != null and borrowNid != ''">
@@ -2098,7 +2098,7 @@
         hha.create_time as order_by_addtime,
 
         CASE
-        WHEN (hha.order_status =0 or hha.order_status =2 or hha.order_status =99 ) THEN '投资中'
+        WHEN (hha.order_status =0 or hha.order_status =2 or hha.order_status =99 ) THEN '出借中'
         ELSE ''
         END AS statusName,
         0 coupon_type,

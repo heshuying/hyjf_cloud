@@ -2,7 +2,7 @@ package com.hyjf.am.vo.trade.assetmanage;
 
 public class TenderCreditAssignedStatisticCustomizeVO {
     /**
-     * 投资本金总额
+     * 出借本金总额
      */
     private String assignCapital;
     /**

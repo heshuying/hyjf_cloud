@@ -45,7 +45,7 @@ public interface CouponRepayService {
     List<BatchCouponTimeoutCommonCustomize> selectCouponQuota(int threeBeginDate, int threeEndDate);
 
     /**
-     * 优惠券单独投资放款
+     * 优惠券单独出借放款
      *
      * @param paramMap
      * @return

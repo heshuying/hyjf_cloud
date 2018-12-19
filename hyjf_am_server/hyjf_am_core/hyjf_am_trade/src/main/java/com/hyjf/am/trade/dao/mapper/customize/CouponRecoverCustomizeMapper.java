@@ -21,7 +21,7 @@ public interface CouponRecoverCustomizeMapper {
     BigDecimal selectCouponInterestReceivedToday(Map<String, Object> map);
 
     /**
-     * 取得标的下的优惠券投资列表
+     * 取得标的下的优惠券出借列表
      * @param paramMap
      * @return
      */
@@ -35,7 +35,7 @@ public interface CouponRecoverCustomizeMapper {
     CouponRecoverCustomize selectCurrentCouponRecover(Map<String, Object> paramMap);
 
     /**
-     * 获取优惠券投资还款列表(还款失败)
+     * 获取优惠券出借还款列表(还款失败)
      * @param paramMap
      * @return
      */

@@ -10,32 +10,32 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 标的投资详情查询相应
+ * 标的出借详情查询相应
  * @author fq
  * @version WrbBorrowInvestResponse, v0.1 2018/9/25 11:31
  */
 public class WrbBorrowInvestResponse extends WrbResponse {
     // 借款人id
     private String borrow_id;
-    // 首笔投资时间
+    // 首笔出借时间
     private String first_invest_time = "";
-    // 末笔投资时间
+    // 末笔出借时间
     private String last_invest_time = "";
-    // 标的投资人数
+    // 标的出借人数
     private String all_investors = "";
     // 标的已投金额
     private BigDecimal invest_all_money = BigDecimal.ZERO;
-    // 标的投资情况
+    // 标的出借情况
     private List<InvestInfo> invest_list = new ArrayList<InvestInfo>();
 
     public static final class InvestInfo{
         // 记录流水号
         private String index = "";
-        // 投资用户
+        // 出借用户
         private String invest_user = "";
-        // 投资金额
+        // 出借金额
         private BigDecimal invest_money = BigDecimal.ZERO;
-        // 投资时间
+        // 出借时间
         private String invest_time = "";
 
         public String getIndex() {

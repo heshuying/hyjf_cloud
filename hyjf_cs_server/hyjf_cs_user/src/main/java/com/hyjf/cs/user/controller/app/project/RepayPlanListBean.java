@@ -16,7 +16,7 @@ public class RepayPlanListBean extends AppRepayPlanListCustomizeVO implements Se
 	private String borrowNid;
 	private String orderId;
     
-    /** 投资类型*/
+    /** 出借类型*/
     private String investType;
 	/**
 	 * 翻页机能用的隐藏变量

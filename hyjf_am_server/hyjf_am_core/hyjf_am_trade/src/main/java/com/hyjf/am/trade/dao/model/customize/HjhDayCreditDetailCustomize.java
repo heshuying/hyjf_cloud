@@ -79,7 +79,7 @@ public class HjhDayCreditDetailCustomize {
     private String assignAccount;
 
     /**
-     * 待承接总金额-在投资金(ADD)
+     * 待承接总金额-在出借金(ADD)
      */
 
     private String creditAccountWait;

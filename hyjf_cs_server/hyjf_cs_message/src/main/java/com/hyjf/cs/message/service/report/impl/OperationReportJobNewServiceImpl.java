@@ -68,11 +68,11 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         oe.setTradeCountMonth(bean.getTradeCountMonth());
         //借贷笔数
         oe.setLoanNum(bean.getLoanNum());
-        //人均投资金额
+        //人均出借金额
         oe.setPerInvest(bean.getPerInvest());
         //平均满标时间
         oe.setFullBillTimeCurrentMonth(bean.getFullBillTimeCurrentMonth());
-        //投资人总数
+        //出借人总数
         oe.setTenderCount(bean.getTenderCount());
 //		System.out.println(sdf.format(cal.getTime()));
         //代偿金额
@@ -84,9 +84,9 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         if(borrowUserStatistic!=null) {
             // 累计借款人
             oe.setBorrowuserCountTotal(borrowUserStatistic.getBorrowuserCountTotal());
-            // 当前投资人
+            // 当前出借人
             oe.setBorrowuserCountCurrent(borrowUserStatistic.getBorrowuserCountCurrent());
-            // 当前投资人
+            // 当前出借人
             oe.setTenderuserCountCurrent(borrowUserStatistic.getTenderuserCountCurrent());
             // 最大单一借款人待还金额占比
             oe.setBorrowuserMoneyTopone(borrowUserStatistic.getBorrowuserMoneyTopone().divide(borrowUserStatistic.getBorrowuserMoneyTotal(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(2, BigDecimal.ROUND_HALF_UP));
@@ -111,18 +111,18 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         sdf = new SimpleDateFormat("yyyyMM");
         oegroup.setStatisticsMonth(transferDateToInt(cal, sdf));
 
-        // 投资人按照地域分布
+        // 出借人按照地域分布
         //查询出所有符合条件用户
         List<OperationReportJobVO> cityGroup = bean.getCityGroup();
         Map<Integer, String> cityMap = cityGrouptoMap(cityGroup);
         oegroup.setInvestorRegionMap(cityMap);
 
-        // 投资人按照性别分布
+        // 出借人按照性别分布
         List<OperationReportJobVO> sexGroup = bean.getSexGroup();
         Map<Integer, Integer> sexMap = sexGrouptoMap(sexGroup);
         oegroup.setInvestorSexMap(sexMap);
 
-        // 投资人按照年龄分布
+        // 出借人按照年龄分布
         Map<Integer, Integer> ageMap = new HashMap<Integer, Integer>();
         //代码拆分先查出所有符合条件的用户
         List<OperationReportJobVO> ageRangeUserIds = bean.getAgeRangeUserIds();
@@ -322,7 +322,7 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         //保存 用户分析
         this.saveUserOperationReport(operationReportId, 1, bean);
 
-        //保存 年度之最-十大投资人
+        //保存 年度之最-十大出借人
         this.saveTenthOperationReport(operationReportId, 1, bean, currentMonthDealMoney);
     }
 
@@ -517,7 +517,7 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         //保存 用户分析
         this.saveUserOperationReport(operationReportId, 2, bean);
 
-        //保存 年度之最-十大投资人
+        //保存 年度之最-十大出借人
         this.saveTenthOperationReport(operationReportId, 2, bean, quarterDealMoney);
     }
 
@@ -678,7 +678,7 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         //保存 用户分析
         this.saveUserOperationReport(operationReportId, 3, bean);
 
-        //保存 年度之最-十大投资人
+        //保存 年度之最-十大出借人
         this.saveTenthOperationReport(operationReportId, 3, bean, halfYearDealMoney);
     }
 
@@ -830,7 +830,7 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         //保存 用户分析
         this.saveUserOperationReport(operationReportId, 4, bean);
 
-        //保存 年度之最-十大投资人
+        //保存 年度之最-十大出借人
         this.saveTenthOperationReport(operationReportId, 4, bean, yearDealMoney);
     }
 

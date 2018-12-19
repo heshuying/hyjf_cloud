@@ -53,7 +53,7 @@ public class HjhCommissionViewRequest extends HjhCommissionVO implements Seriali
 	@ApiModelProperty(value = "提成人")
 	private String referernameSearch;
 	
-	@ApiModelProperty(value = "投资人")
+	@ApiModelProperty(value = "出借人")
 	private String usernameSearch;
 	
 	@ApiModelProperty(value = "提成发放状态0,未发放；1，已发放")

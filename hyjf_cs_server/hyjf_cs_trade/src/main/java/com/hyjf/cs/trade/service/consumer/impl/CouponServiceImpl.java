@@ -43,7 +43,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * @Description 优惠券投资相关
+ * @Description 优惠券出借相关
  * @Author sunss
  * @Date 2018/6/23 11:58
  */
@@ -61,7 +61,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
     private CommonProducer commonProducer;
 
     /**
-     * 加入计划  体验金投资
+     * 加入计划  体验金出借
      *
      * @param request
      * @param plan
@@ -86,7 +86,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
     }
 
     /**
-     * 优惠券投资
+     * 优惠券出借
      *
      * @param bean
      * @return
@@ -95,7 +95,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         Integer couponGrantId = bean.getCouponGrantId();
         Integer userId = bean.getUserId();
         String borrowStyle = bean.getBorrowStyle();
-        logger.info("散标优惠券投资组装调用原子层参数开始。。。。。。券编号：" + couponGrantId);
+        logger.info("散标优惠券出借组装调用原子层参数开始。。。。。。券编号：" + couponGrantId);
         // 调用原子层需要
         CouponTenderVO couponTender = new CouponTenderVO();
         int nowTime = GetDate.getNowTime10();
@@ -119,18 +119,18 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         }
         // 生成订单id
         String tenderNid = GetOrderIdUtils.getOrderId2(Integer.valueOf(userId));
-        // 投资金额
+        // 出借金额
         BigDecimal accountDecimal = null;
         BigDecimal planApr = bean.getExpectApr();
         if (couponType == 1) {
-            // 体验金 投资资金=体验金面值
+            // 体验金 出借资金=体验金面值
             accountDecimal = couponQuota;
         } else if (couponType == 2) {
-            // 加息券 投资资金=真实投资资金
+            // 加息券 出借资金=真实出借资金
             accountDecimal = new BigDecimal(bean.getAccount());
             planApr = couponQuota;
         } else if (couponType == 3) {
-            // 代金券 投资资金=体验金面值
+            // 代金券 出借资金=体验金面值
             accountDecimal = couponQuota;
         }
         BorrowTenderCpnVO borrowTenderCpn = new BorrowTenderCpnVO();
@@ -174,19 +174,19 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         }
 
         if (couponType == 1) {
-            // 体验金 投资
+            // 体验金 出借
             // 待收本息
             recoverAccountWait = couponInterest;
             // 待收利息
             recoverAccountInterestWait = couponInterest;
         } else if (couponType == 2) {
-            // 加息券 投资
+            // 加息券 出借
             // 待收本息
             recoverAccountWait = couponInterest;
             // 待收利息
             recoverAccountInterestWait = couponInterest;
         } else if (couponType == 3) {
-            // 代金券 投资资金=体验金面值
+            // 代金券 出借资金=体验金面值
             // 待收本息
             recoverAccountWait = couponQuota.add(couponInterest);
             // 待收本金
@@ -211,9 +211,9 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         borrowTenderCpn.setWebStatus(0);
         borrowTenderCpn.setTenderUserName(bean.getUserName());
         borrowTenderCpn.setClient(bean.getPlatform());
-        // 投资类别：1：直投类，2：汇添金 3：汇计划
+        // 出借类别：1：直投类，2：汇添金 3：汇计划
         borrowTenderCpn.setTenderType(bean.getTenderType());
-        // 单笔投资的融资服务费
+        // 单笔出借的融资服务费
         borrowTenderCpn.setLoanFee(new BigDecimal("0.00"));
         String remark = StringUtils.EMPTY;
         if (couponType == 1) {
@@ -238,7 +238,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
 
         // 状态 0，未放款，1，已放款
         borrowTenderCpn.setStatus(1);
-        // 投资状态 0，未放款，1，已放款
+        // 出借状态 0，未放款，1，已放款
         borrowTenderCpn.setTenderStatus(1);
         // 放款状态 0，未放款，1，已放款
         borrowTenderCpn.setApiStatus(0);
@@ -247,11 +247,11 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
         //1   borrowTenderCpn表，插入数据
         couponTender.setBorrowTenderCpn(borrowTenderCpn);
-        // 优惠券投资表
+        // 优惠券出借表
         CouponTenderVO ct = new CouponTenderVO();
         // 优惠券用户编号
         ct.setCouponGrantId(Integer.valueOf(couponGrantId));
-        // 优惠券投资编号
+        // 优惠券出借编号
         ct.setOrderId(tenderNid);
         ct.setAddTime(nowTime);
         ct.setAddUser(String.valueOf(userId));
@@ -261,18 +261,18 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         ct.setAttribute(userInfo.getAttribute());
         /* 2   ouponTender表，插入数据！*/
         couponTender.setCouponTender(ct);
-        // 优惠券投资与真实投资关联表
+        // 优惠券出借与真实出借关联表
         CouponRealTenderVO crt = new CouponRealTenderVO();
-        // 优惠券投资编号
+        // 优惠券出借编号
         crt.setCouponTenderId(tenderNid);
-        // 主单投资编号
+        // 主单出借编号
         crt.setRealTenderId(bean.getMainTenderNid());
         crt.setAddTime(new Date());
         crt.setAddUser(String.valueOf(userId));
         crt.setUpdateTime(new Date());
         crt.setUpdateUser(String.valueOf(userId));
         crt.setDelFlag(0);
-        //3   插入 优惠券投资与真实投资关联表
+        //3   插入 优惠券出借与真实出借关联表
         couponTender.setCouponRealTender(crt);
         // 优惠券用户表状态
         CouponUserVO cu = new CouponUserVO();
@@ -283,9 +283,9 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         cu.setUsedFlag(1);
         // 4   修改优惠券用户表状态
         couponTender.setCouponUser(cu);
-        logger.info("散标优惠券投资  请求原子层   参数为: {} ",JSONObject.toJSONString(couponTender));
+        logger.info("散标优惠券出借  请求原子层   参数为: {} ",JSONObject.toJSONString(couponTender));
         boolean tenderFlag = amTradeClient.updateCouponTender(couponTender);
-        logger.info("散标优惠券投资  请求原子层   结果为: {} ",tenderFlag);
+        logger.info("散标优惠券出借  请求原子层   结果为: {} ",tenderFlag);
        if (bean.getMainTenderNid() == null || bean.getMainTenderNid().length() == 0) {
             Map<String, String> params = new HashMap<String, String>();
             params.put("mqMsgId", GetCode.getRandomCode(10));
@@ -307,7 +307,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
     }
 
     /**
-     * 优惠券投资校验
+     * 优惠券出借校验
      * @param userId
      * @param accountStr
      * @param couponGrantId
@@ -319,7 +319,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
      */
     @Override
     public Map<String, String> validateCoupon(Integer userId, String accountStr, Integer couponGrantId, String platform, Integer period, String config,String nowType) {
-        logger.info("开始调用优惠券投资校验  {}   {}   {}   {}",couponGrantId ,userId ,period,config);
+        logger.info("开始调用优惠券出借校验  {}   {}   {}   {}",couponGrantId ,userId ,period,config);
         Map<String, String> result = new HashedMap();
         result.put("status", "0");
         if (couponGrantId == null || couponGrantId == 0) {
@@ -355,9 +355,9 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             result.put("statusDesc", "您选择的券已经使用，请重新选择优惠券！");
             return result;
         }
-        // 加息券不能单独投资
+        // 加息券不能单独出借
         if ((StringUtils.isEmpty(accountStr) || StringUtils.equals(accountStr, "0")) && configVO.getCouponType() == 2) {
-            result.put("statusDesc", "加息券投资，真实投资金额不能为空！");
+            result.put("statusDesc", "加息券出借，真实出借金额不能为空！");
             return result;
         }
         // 平台
@@ -373,15 +373,15 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         // 项目金额
         // 金额类别
         int tenderQuotaType = configVO.getTenderQuotaType();
-        // 投资金额
+        // 出借金额
         BigDecimal tenderAccount = new BigDecimal(accountStr);
         // 金额范围
         if (tenderQuotaType == 1) {
-            // 投资金额最小额度
+            // 出借金额最小额度
             BigDecimal tenderQuotaMin = new BigDecimal(configVO.getTenderQuotaMin());
-            // 投资金额最大额度
+            // 出借金额最大额度
             BigDecimal tenderQuotaMax = new BigDecimal(configVO.getTenderQuotaMax());
-            // 比较投资金额（-1表示小于,0是等于,1是大于）
+            // 比较出借金额（-1表示小于,0是等于,1是大于）
             int minCheck = tenderAccount.compareTo(tenderQuotaMin);
             int maxCheck = tenderAccount.compareTo(tenderQuotaMax);
             if (minCheck == -1 || maxCheck == 1) {
@@ -391,7 +391,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
         } else if (tenderQuotaType == 2) {
             // 大于等于
             BigDecimal tenderQuota = new BigDecimal(configVO.getTenderQuota());
-            // 比较投资金额（-1表示小于,0是等于,1是大于）
+            // 比较出借金额（-1表示小于,0是等于,1是大于）
             int chkFlg = tenderAccount.compareTo(tenderQuota);
             if (chkFlg == -1) {
                 result.put("statusDesc", "您选择的优惠券不满足使用条件，请核对后重新选择！");
@@ -449,7 +449,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
     }
 
     /**
-     * 散标投资优惠券使用
+     * 散标出借优惠券使用
      *
      * @param couponGrantId
      * @param borrow
@@ -483,7 +483,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             config += "1,";
         }
         Map<String, String> validateMap = this.validateCoupon(userId, account, Integer.parseInt(couponGrantId), platform + "", borrow.getBorrowPeriod(), config,nowType);
-        logger.info("优惠券投资校验完毕  结果：{}" , validateMap);
+        logger.info("优惠券出借校验完毕  结果：{}" , validateMap);
         if (MapUtils.isEmpty(validateMap)) {
             CouponTenderUsedVO couponTender = new CouponTenderUsedVO();
             couponTender.setAccount(account);
@@ -498,7 +498,7 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             couponTender.setTenderType(CustomConstants.COUPON_TENDER_TYPE_HZT);
             couponTender.setUserId(userId);
             couponTender.setUserName(bean.getLogUserName());
-            // 开始使用优惠券投资
+            // 开始使用优惠券出借
             this.updateCouponTender(couponTender);
         }
     }
@@ -535,23 +535,23 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
     public BigDecimal calculateCouponInterest(String borrowStyle,BigDecimal couponAccount,BigDecimal couponRate,Integer borrowPeriod){
         BigDecimal earnings = BigDecimal.ZERO;
         switch (borrowStyle) {
-            case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“：预期收益=投资金额*年化收益÷12*月数；
+            case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“：预期收益=出借金额*年化收益÷12*月数；
                 // 计算预期收益
                 earnings = DuePrincipalAndInterestUtils
                         .getMonthInterest(couponAccount, couponRate, borrowPeriod)
                         .divide(new BigDecimal("100"));
                 break;
-            case CalculatesUtil.STYLE_ENDDAY:// 还款方式为”按天计息，到期还本还息“：预期收益=投资金额*年化收益÷360*天数；
+            case CalculatesUtil.STYLE_ENDDAY:// 还款方式为”按天计息，到期还本还息“：预期收益=出借金额*年化收益÷360*天数；
                 earnings = DuePrincipalAndInterestUtils
                         .getDayInterest(couponAccount, couponRate, borrowPeriod)
                         .divide(new BigDecimal("100"));
                 break;
-            case CalculatesUtil.STYLE_ENDMONTH:// 还款方式为”先息后本“：预期收益=投资金额*年化收益÷12*月数；
+            case CalculatesUtil.STYLE_ENDMONTH:// 还款方式为”先息后本“：预期收益=出借金额*年化收益÷12*月数；
                 earnings = BeforeInterestAfterPrincipalUtils
                         .getInterestCount(couponAccount, couponRate, borrowPeriod, borrowPeriod)
                         .divide(new BigDecimal("100"));
                 break;
-            case CalculatesUtil.STYLE_MONTH:// 还款方式为”等额本息“：预期收益=投资金额*年化收益÷12*月数；
+            case CalculatesUtil.STYLE_MONTH:// 还款方式为”等额本息“：预期收益=出借金额*年化收益÷12*月数；
                 earnings = AverageCapitalPlusInterestUtils
                         .getInterestCount(couponAccount, couponRate, borrowPeriod)
                         .divide(new BigDecimal("100"));
@@ -582,36 +582,36 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
     @Override
     public BigDecimal getInterest(String borrowStyle, Integer couponType, BigDecimal borrowApr, BigDecimal couponQuota, String money, Integer borrowPeriod) {
         BigDecimal earnings = new BigDecimal("0");
-        // 投资金额
+        // 出借金额
         BigDecimal accountDecimal = null;
         if (couponType == 1) {
-            // 体验金 投资资金=体验金面值
+            // 体验金 出借资金=体验金面值
             accountDecimal = couponQuota;
         } else if (couponType == 2) {
-            // 加息券 投资资金=真实投资资金
+            // 加息券 出借资金=真实出借资金
             accountDecimal = new BigDecimal(money);
             borrowApr = couponQuota;
         } else if (couponType == 3) {
-            // 代金券 投资资金=体验金面值
+            // 代金券 出借资金=体验金面值
             accountDecimal = couponQuota;
         }
         switch (borrowStyle) {
-            // 还款方式为”按月计息，到期还本还息“：历史回报=投资金额*年化收益÷12*月数；
+            // 还款方式为”按月计息，到期还本还息“：历史回报=出借金额*年化收益÷12*月数；
             case CalculatesUtil.STYLE_END:
                 // 计算历史回报
                 earnings = DuePrincipalAndInterestUtils.getMonthInterest(accountDecimal, borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
                 break;
-            // 还款方式为”按天计息，到期还本还息“：历史回报=投资金额*年化收益÷360*天数；
+            // 还款方式为”按天计息，到期还本还息“：历史回报=出借金额*年化收益÷360*天数；
             case CalculatesUtil.STYLE_ENDDAY:
                 // 计算历史回报
                 earnings = DuePrincipalAndInterestUtils.getDayInterest(accountDecimal, borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
                 break;
-            // 还款方式为”先息后本“：历史回报=投资金额*年化收益÷12*月数；
+            // 还款方式为”先息后本“：历史回报=出借金额*年化收益÷12*月数；
             case CalculatesUtil.STYLE_ENDMONTH:
                 // 计算历史回报
                 earnings = BeforeInterestAfterPrincipalUtils.getInterestCount(accountDecimal, borrowApr.divide(new BigDecimal("100")), borrowPeriod, borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
                 break;
-            // 还款方式为”等额本息“：历史回报=投资金额*年化收益÷12*月数；
+            // 还款方式为”等额本息“：历史回报=出借金额*年化收益÷12*月数；
             case CalculatesUtil.STYLE_MONTH:
                 // 计算历史回报
                 earnings = AverageCapitalPlusInterestUtils.getInterestCount(accountDecimal, borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);

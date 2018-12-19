@@ -9,7 +9,7 @@ import java.io.Serializable;
  * @version BorrowRepaymentPlanCustomizeVO, v0.1 2018/7/5 10:32
  */
 public class BorrowRepaymentPlanCustomizeVO extends BaseVO implements Serializable {
-    private String nid;// 投资nid
+    private String nid;// 出借nid
     private String borrowNid;// 借款编号
     private String userId;// 借款人ID
     private String borrowUserName;// 借款人用户名
@@ -42,6 +42,8 @@ public class BorrowRepaymentPlanCustomizeVO extends BaseVO implements Serializab
     private String accedeOrderId;//汇计划加入订单号
     private String isMonth;//是否分期
     private String instName; //机构名称
+    private String repayAccountCapitalWait;// 未还本金
+    private String repayAccountInterestWait;// 未还利息
 
     public String getNid() {
         return nid;
@@ -305,5 +307,21 @@ public class BorrowRepaymentPlanCustomizeVO extends BaseVO implements Serializab
 
     public void setInstName(String instName) {
         this.instName = instName;
+    }
+
+    public String getRepayAccountCapitalWait() {
+        return repayAccountCapitalWait;
+    }
+
+    public void setRepayAccountCapitalWait(String repayAccountCapitalWait) {
+        this.repayAccountCapitalWait = repayAccountCapitalWait;
+    }
+
+    public String getRepayAccountInterestWait() {
+        return repayAccountInterestWait;
+    }
+
+    public void setRepayAccountInterestWait(String repayAccountInterestWait) {
+        this.repayAccountInterestWait = repayAccountInterestWait;
     }
 }

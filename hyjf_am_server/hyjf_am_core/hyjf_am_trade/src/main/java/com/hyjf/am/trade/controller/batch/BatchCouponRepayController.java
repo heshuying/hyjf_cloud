@@ -41,7 +41,7 @@ public class BatchCouponRepayController extends BaseController {
     private String BANK_MERRP_ACCOUNT;
 
     /**
-     *优惠券单独投资还款
+     *优惠券单独出借还款
      * @return
      */
     @PostMapping("/selectnidforcoupononly")
@@ -79,7 +79,7 @@ public class BatchCouponRepayController extends BaseController {
     }
 
     /**
-     * 取得优惠券投资信息
+     * 取得优惠券出借信息
      * @param couponTenderNid
      * @return
      */

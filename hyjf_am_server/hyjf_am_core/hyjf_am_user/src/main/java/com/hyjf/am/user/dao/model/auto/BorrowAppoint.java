@@ -27,7 +27,7 @@ public class BorrowAppoint implements Serializable {
     private String orderId;
 
     /**
-     * 投资订单号
+     * 出借订单号
      *
      * @mbggenerated
      */
@@ -97,21 +97,21 @@ public class BorrowAppoint implements Serializable {
     private Date cancelTime;
 
     /**
-     * 投资状态 0投资中 1投资成功 2投资失败
+     * 出借状态 0出借中 1投标成功 2出借失败
      *
      * @mbggenerated
      */
     private Integer tenderStatus;
 
     /**
-     * 投资时间
+     * 出借时间
      *
      * @mbggenerated
      */
     private Date tenderTime;
 
     /**
-     * 投资备注
+     * 出借备注
      *
      * @mbggenerated
      */

@@ -220,7 +220,7 @@
                 #{item.userId}
             </foreach>
     </select>
-    <!-- 	投资人性别分布 -->
+    <!-- 	出借人性别分布 -->
     <select id="getTenderSexGroupBy" resultMap="ageResultMap"  parameterType="com.hyjf.am.resquest.trade.OperationReportJobRequest">
         SELECT
         ui.sex as sex,count(1) as count

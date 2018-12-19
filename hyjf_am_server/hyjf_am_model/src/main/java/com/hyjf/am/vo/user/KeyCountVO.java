@@ -34,7 +34,7 @@ public class KeyCountVO extends BaseVO implements Serializable {
     private String accountNumber;
 
     /**
-     * 投资人数
+     * 出借人数
      */
     private String tenderNumber;
 

@@ -677,7 +677,7 @@
           GROUP BY u.user_id) y ON z.user_id=y.user_id
     </sql>
 
-    <!-- 昨日注册用户投资≥3000人数 -->
+    <!-- 昨日注册用户出借≥3000人数 -->
     <select id="countInvestGt3000UserNum" resultMap="sumResultMap">
         SELECT count(1) AS invest_gt3000_user_num,
         primary_division AS primary_division,
@@ -696,7 +696,7 @@
         GROUP BY t.primary_division, t.two_division
     </select>
 
-    <!-- 本月累计投资3000以上新客户数 -->
+    <!-- 本月累计出借3000以上新客户数 -->
     <select id="countInvestGt3000MonthUserNum" resultMap="sumResultMap">
         SELECT count(1) AS invest_gt3000_month_user_num,
         primary_division AS primary_division,

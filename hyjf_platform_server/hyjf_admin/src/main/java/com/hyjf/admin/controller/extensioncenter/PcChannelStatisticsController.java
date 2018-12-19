@@ -108,15 +108,15 @@ public class PcChannelStatisticsController extends BaseController {
         map.put("accessNumber", "访问数");
         map.put("registNumber", "注册数");
         map.put("openAccountNumber", "开户数");
-        map.put("tenderNumber", "投资人数");
+        map.put("tenderNumber", "出借人数");
         map.put("cumulativeRecharge", "累计充值");
-        map.put("cumulativeInvestment", "累计投资");
-        map.put("hztTenderPrice", "汇直投投资金额");
-        map.put("hxfTenderPrice", "汇消费投资金额");
-        map.put("htlTenderPrice", "汇天利投资金额");
-        map.put("htjTenderPrice", "汇添金投资金额");
-        map.put("rtbTenderPrice", "汇金理财投资金额");
-        map.put("hzrTenderPrice", "汇转让投资金额");
+        map.put("cumulativeInvestment", "累计出借");
+        map.put("hztTenderPrice", "汇直投出借金额");
+        map.put("hxfTenderPrice", "汇消费出借金额");
+        map.put("htlTenderPrice", "汇天利出借金额");
+        map.put("htjTenderPrice", "汇添金出借金额");
+        map.put("rtbTenderPrice", "汇金理财出借金额");
+        map.put("hzrTenderPrice", "汇转让出借金额");
         return map;
     }
 

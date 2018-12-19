@@ -16,21 +16,21 @@ import java.math.BigDecimal;
 import java.util.Map;
 
 /**
- * @Description web端投资
+ * @Description web端出借
  * @Author sunss
  * @Date 2018/6/24 14:23
  */
 public interface BorrowTenderService extends BaseTradeService {
 
     /**
-     * @Description 散标投资
+     * @Description 散标出借
      * @Author sunss
      * @Date 2018/6/24 14:35
      */
     WebResult<Map<String, Object>> borrowTender(TenderRequest tender);
 
     /**
-     * 散标投资异步处理
+     * 散标出借异步处理
      * @param bean
      * @param couponGrantId
      * @return
@@ -38,7 +38,7 @@ public interface BorrowTenderService extends BaseTradeService {
     BankCallResult borrowTenderBgReturn(BankCallBean bean, String couponGrantId);
 
     /**
-     * 获取投资
+     * 获取出借
      * @param userId
      * @param logOrdId
      * @param borrowNid
@@ -47,7 +47,7 @@ public interface BorrowTenderService extends BaseTradeService {
     WebResult<Map<String,Object>> getBorrowTenderResult(Integer userId, String logOrdId, String borrowNid);
 
     /**
-     * 查询投资成功的结果
+     * 查询投标成功的结果
      * @param userId
      * @param logOrdId
      * @param borrowNid
@@ -57,35 +57,35 @@ public interface BorrowTenderService extends BaseTradeService {
     WebResult<Map<String,Object>> getBorrowTenderResultSuccess(Integer userId, String logOrdId, String borrowNid, Integer couponGrantId,String isPrincipal,String account);
 
     /**
-     * 获取投资信息
+     * 获取出借信息
      * @param tender
      * @return
      */
     WebResult<TenderInfoResult> getInvestInfo(TenderRequest tender);
 
     /**
-     * 获取APP端投资信息
+     * 获取APP端出借信息
      * @param tender
      * @return
      */
     AppInvestInfoResultVO getInvestInfoApp(TenderRequest tender);
 
     /**
-     * app端获取投资url
+     * app端获取出借url
      * @param tender
      * @return
      */
     String getAppTenderUrl(TenderRequest tender,String flag);
 
     /**
-     * 微信端获取投资信息
+     * 微信端获取出借信息
      * @param tender
      * @return
      */
     AppInvestInfoResultVO getInvestInfoWeChat(TenderRequest tender);
 
     /**
-     * web散标投资校验
+     * web散标出借校验
      * @param request
      * @param borrow
      * @param borrowInfoVO

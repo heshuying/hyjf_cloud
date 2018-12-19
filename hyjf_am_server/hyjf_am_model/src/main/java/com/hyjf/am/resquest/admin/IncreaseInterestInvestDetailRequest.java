@@ -15,10 +15,10 @@ public class IncreaseInterestInvestDetailRequest extends BasePage implements Ser
     /** 借款编号(检索用) */
     private String borrowNidSrch;
 
-    /** 投资开始时间(检索用) */
+    /** 出借开始时间(检索用) */
     private String timeStartSrch;
 
-    /** 投资结束时间(检索用) */
+    /** 出借结束时间(检索用) */
     private String timeEndSrch;
 
     public int limitStart = -1;

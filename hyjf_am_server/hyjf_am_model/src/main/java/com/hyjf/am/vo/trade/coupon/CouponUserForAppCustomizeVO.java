@@ -39,7 +39,7 @@ public class CouponUserForAppCustomizeVO extends BaseVO implements Serializable 
     //有效期截止日
     private String endTime;
 
-    //投资额度条件
+    //出借额度条件
     private String tenderQuota;
 
     //优惠券详情url
@@ -54,28 +54,28 @@ public class CouponUserForAppCustomizeVO extends BaseVO implements Serializable 
     //优惠券的使用平台0:全部，1：PC，2：微官网，3：Android，4：IOS
     private String operationPlatform;
 
-    //投资金额
+    //出借金额
     private String tenderQuotaOrigin;
 
     //项目期限时长 以月为单位
     private String projectExpirationLength;
 
-    //投资金额最小额度
+    //出借金额最小额度
     private String tenderQuotaMin;
 
-    //投资金额最大额度
+    //出借金额最大额度
     private String tenderQuotaMax;
 
-    //投资金额
+    //出借金额
     private String tenderQuotaValue;
 
-    //投资金额
+    //出借金额
     private String investQuota;
 
-    //投资金额最大额度
+    //出借金额最大额度
     private String time;
 
-    //投资期限
+    //出借期限
     private String investTime;
 
     //项目期限类别0:不限，1;等于，2：期限范围，3：大于等于，4：小于等于
@@ -87,7 +87,7 @@ public class CouponUserForAppCustomizeVO extends BaseVO implements Serializable 
     //项目期限最长时长
     private Integer projectExpirationLengthMin;
 
-    //投资金额类别
+    //出借金额类别
     private Integer tenderQuotaType;
 
     public Integer getId() {

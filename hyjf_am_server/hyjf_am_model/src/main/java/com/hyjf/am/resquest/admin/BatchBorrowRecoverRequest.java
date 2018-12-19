@@ -157,12 +157,6 @@ public class BatchBorrowRecoverRequest extends BasePage{
 
     /*---add by LSY START-----*/
     /***
-     * 资产来源 检索条件
-     */
-    @ApiModelProperty(value = "资产来源 检索条件")
-    private String instCodeSrch;
-
-    /***
      * 资产来源
      */
     @ApiModelProperty(value = "资产来源")
@@ -427,14 +421,6 @@ public class BatchBorrowRecoverRequest extends BasePage{
 
     public void setNameClass(String nameClass) {
         this.nameClass = nameClass;
-    }
-
-    public String getInstCodeSrch() {
-        return instCodeSrch;
-    }
-
-    public void setInstCodeSrch(String instCodeSrch) {
-        this.instCodeSrch = instCodeSrch;
     }
 
     public String getInstName() {

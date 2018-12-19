@@ -471,7 +471,7 @@ public class HjhCreditTenderController extends BaseController{
             ret.put("status", FAIL);
             return ret;
         }
-		// 获取投资协议记录
+		// 获取出借协议记录
 		List<TenderAgreementVO> tenderAgreementList = this.accedeListService.selectTenderAgreementByNid(assignNid);
 		if(CollectionUtils.isNotEmpty(tenderAgreementList)){
 			tenderAgreement = tenderAgreementList.get(0);
