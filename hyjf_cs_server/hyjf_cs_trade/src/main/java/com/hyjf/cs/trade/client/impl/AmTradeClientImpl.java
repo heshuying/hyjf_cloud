@@ -316,21 +316,6 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * AMES借款人受托支付申请异步回调更新数据
-     * @param borrowNid
-     * @return
-     */
-    @Override
-    public boolean updateAemsTrusteePaySuccess(String borrowNid){
-        String url = "http://AM-TRADE/am-trade/trustee/update/" + borrowNid;
-        BooleanResponse response = restTemplate.getForEntity(url, BooleanResponse.class).getBody();
-        if(Response.isSuccess(response)){
-            return response.getResultBoolean();
-        }
-        return false;
-    }
-
-    /**
      * 根据用户id查询受托支付白名单
      *
      * @param userId
@@ -4598,7 +4583,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<ApiTransactionDetailsCustomizeVO> selectTransactionDetails(TransactionDetailsResultBean transactionDetailsResultBean) {
-        ApiTransactionDetailsCustomizeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/accountList/selectTransactionDetails", transactionDetailsResultBean, ApiTransactionDetailsCustomizeResponse.class).getBody();
+        ApiTransactionDetailsCustomizeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/accountList/selectTransactionDetails",
+                transactionDetailsResultBean, ApiTransactionDetailsCustomizeResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
         }
@@ -4954,15 +4940,6 @@ public class AmTradeClientImpl implements AmTradeClient {
                 String.class).getBody();
         if (result != null) {
         return result;
-        }
-        return null;
-    }
-
-    public List<BorrowAndInfoVO> getborrowByProductId (Map<String, Object> params){
-        BorrowResponse response =  restTemplate.postForEntity(
-                "http://AM-TRADE/am-trade/borrow/getborrowByProductId/",params, BorrowResponse.class).getBody();
-        if (response != null) {
-            return response.getResultList();
         }
         return null;
     }
@@ -6096,54 +6073,6 @@ public class AmTradeClientImpl implements AmTradeClient {
 
         if (response != null && Response.isSuccess(response)){
             return response.getResultList();
-        }
-        return null;
-    }
-
-    /**
-     * 根据机构编号,查询还款计划数量
-     *
-     * @param param
-     * @return
-     */
-    @Override
-    public Integer selectBorrowRepayPlanCountsByInstCode(Map<String, Object> param) {
-        AemsBorrowRepayPlanCustomizeResponse response = restTemplate.postForObject(
-                "http://AM-TRADE/am-trade/aems/repayplan/selectBorrowRepayPlanCountsByInstCode", param, AemsBorrowRepayPlanCustomizeResponse.class);
-        if (response != null) {
-            return response.getCount();
-        }
-        return null;
-    }
-
-    /**
-     * 根据机构编号查询还款计划
-     *
-     * @param param
-     * @return
-     */
-    @Override
-    public List<AemsBorrowRepayPlanCustomizeVO> selectBorrowRepayPlanList(Map<String, Object> param) {
-        String url = "http://AM-TRADE/am-trade/aems/repayplan/selectBorrowRepayPlanList";
-        AemsBorrowRepayPlanCustomizeResponse response = restTemplate.postForEntity(url,param,AemsBorrowRepayPlanCustomizeResponse.class).getBody();
-        if (Response.isSuccess(response)){
-            return response.getResultList();
-        }
-        return null;
-    }
-
-    /**
-     * 根据标的编号查询资产推送表
-     *
-     * @param borrowNid
-     * @return
-     */
-    @Override
-    public HjhPlanAssetVO selectHjhPlanAssetByBorrowNid(String borrowNid) {
-        HjhPlanAssetResponse response = restTemplate
-                .getForEntity("http://AM-TRADE/am-trade/assetPush/selectHjhPlanAssetByBorrowNid/" + borrowNid , HjhPlanAssetResponse.class).getBody();
-        if (response != null) {
-            return response.getResult();
         }
         return null;
     }

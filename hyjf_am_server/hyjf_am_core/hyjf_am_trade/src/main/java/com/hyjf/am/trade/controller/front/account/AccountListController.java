@@ -126,12 +126,9 @@ public class AccountListController extends BaseController {
         transactionDetailsCustomizeList = this.accountListService.selectTransactionDetails(detailsRequest);
 
         if (transactionDetailsCustomizeList != null) {
-            ApiTransactionDetailsCustomizeVO transactionDetailsCustomizeVO = new ApiTransactionDetailsCustomizeVO();
-            BeanUtils.copyProperties(transactionDetailsCustomizeList,transactionDetailsCustomizeVO);
-//            response.setResultList(transactionDetailsCustomizeList);
-            response.setResult(transactionDetailsCustomizeVO);
+            List<ApiTransactionDetailsCustomizeVO> transactionDetailsCustomizeVO = CommonUtils.convertBeanList(transactionDetailsCustomizeList, ApiTransactionDetailsCustomizeVO.class);
+            response.setResultList(transactionDetailsCustomizeVO);
         }
         return response;
     }
-
 }
