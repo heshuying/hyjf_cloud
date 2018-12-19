@@ -4661,7 +4661,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<ApiTransactionDetailsCustomizeVO> selectTransactionDetails(TransactionDetailsResultBean transactionDetailsResultBean) {
-        ApiTransactionDetailsCustomizeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/accountList/selectTransactionDetails", transactionDetailsResultBean, ApiTransactionDetailsCustomizeResponse.class).getBody();
+        ApiTransactionDetailsCustomizeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/accountList/selectTransactionDetails",
+                transactionDetailsResultBean, ApiTransactionDetailsCustomizeResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
         }

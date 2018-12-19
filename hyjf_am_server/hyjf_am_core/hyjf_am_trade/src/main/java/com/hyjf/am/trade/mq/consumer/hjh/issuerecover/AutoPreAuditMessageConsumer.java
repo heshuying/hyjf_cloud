@@ -71,7 +71,7 @@ public class AutoPreAuditMessageConsumer implements RocketMQListener<MessageExt>
                 // 自动初审
                 logger.info(borrow.getBorrowNid() + " 开始自动初审 " + borrowInfo.getInstCode());
                 if (borrow == null) {
-                    logger.info(" 该资产在表里不存在！！");
+                    logger.warn(" 该资产在表里不存在！！");
                     return;
                 }
                 // redis 防重复检查
@@ -84,13 +84,13 @@ public class AutoPreAuditMessageConsumer implements RocketMQListener<MessageExt>
                 // 业务校验
                 if (borrow.getStatus() != null && borrow.getStatus().intValue() != 1 &&
                         borrow.getVerifyStatus() != null && borrow.getVerifyStatus().intValue() != 1) {
-                    logger.info(borrow.getBorrowNid() + " 该资产状态不是初审(已审核保证金)状态");
+                    logger.warn(borrow.getBorrowNid() + " 该资产状态不是初审(已审核保证金)状态");
                     return;
                 }
                 //判断该资产是否可以自动初审，是否关联计划
                 HjhAssetBorrowtype hjhAssetBorrowType = autoRecordService.selectAssetBorrowType(borrowInfo);
                 if (hjhAssetBorrowType == null || hjhAssetBorrowType.getAutoAudit() == null || hjhAssetBorrowType.getAutoAudit() != 1) {
-                    logger.info(borrow.getBorrowNid() + " 标的不能自动初审,原因自动初审未配置");
+                    logger.warn(borrow.getBorrowNid() + " 标的不能自动初审,原因自动初审未配置");
                     return;
                 }
 
@@ -121,7 +121,7 @@ public class AutoPreAuditMessageConsumer implements RocketMQListener<MessageExt>
                 logger.info(autoIssuerecoverVO.getAssetId() + " 开始自动初审 " + autoIssuerecoverVO.getInstCode());
                 HjhPlanAsset hjhPlanAsset = autoPreAuditMessageService.selectPlanAsset(autoIssuerecoverVO.getAssetId(), autoIssuerecoverVO.getInstCode());
                 if (hjhPlanAsset == null) {
-                    logger.info(autoIssuerecoverVO.getAssetId() + " 该资产在表里不存在！！");
+                    logger.warn(autoIssuerecoverVO.getAssetId() + " 该资产在表里不存在！！");
                     return;
                 }
                 // redis 防重复检查

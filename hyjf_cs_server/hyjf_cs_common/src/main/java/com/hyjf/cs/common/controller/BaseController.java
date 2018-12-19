@@ -23,7 +23,7 @@ import java.util.Set;
  * @version BaseController, v0.1 2018/6/15 19:18
  */
 public class BaseController {
-    protected static final Logger logger = LoggerFactory.getLogger(BaseController.class);
+    protected final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     private static final String CALL_BACK_ACTION = "callBackAction";
     private static final String HIDE_SUBMIT_JSP_ERROR = "api/api_error_send.html";

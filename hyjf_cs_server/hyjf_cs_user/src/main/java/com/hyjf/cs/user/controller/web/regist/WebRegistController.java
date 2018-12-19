@@ -12,14 +12,12 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.RandomValidateCode;
-import com.hyjf.common.util.StringUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.common.validator.ValidatorCheckUtil;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.register.RegisterService;
-import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import io.swagger.annotations.Api;
@@ -86,7 +84,6 @@ public class WebRegistController extends BaseUserController {
 
 
     /**
-     * @param request
      * @Author: zhangqingqing
      * @Desc :注册
      * @Param: * @param registerVO
@@ -95,8 +92,9 @@ public class WebRegistController extends BaseUserController {
      */
     @ApiOperation(value = "用户注册", notes = "用户注册")
     @PostMapping(value = "/register", produces = "application/json; charset=utf-8")
-    public WebResult register(@RequestBody RegisterRequest registerRequest, HttpServletRequest request) {
+    public WebResult register(@RequestBody RegisterRequest registerRequest) {
         logger.info("Web端用户注册接口, registerVO is :{}", JSONObject.toJSONString(registerRequest));
+        logger.info("ip地址："+registerRequest.getIp());
         WebResult result = new WebResult();
         // 1. 参数检查
         registerRequest.setPlatform(CommonConstant.CLIENT_PC);
@@ -104,9 +102,10 @@ public class WebRegistController extends BaseUserController {
         password = RSAJSPUtil.rsaToPassword(password);
         registerRequest.setPassword(password);
         registService.checkParam(registerRequest);
+        String ip = registerRequest.getIp().substring(registerRequest.getIp().lastIndexOf(":")+1,registerRequest.getIp().length());
         WebViewUserVO webViewUserVO = registService.register(registerRequest.getMobile(),
                 registerRequest.getVerificationCode(), registerRequest.getPassword(),
-                registerRequest.getReffer(), CommonConstant.HYJF_INST_CODE, registerRequest.getUtmId(), String.valueOf(ClientConstants.WEB_CLIENT), GetCilentIP.getIpAddr(request));
+                registerRequest.getReffer(), CommonConstant.HYJF_INST_CODE, registerRequest.getUtmId(), String.valueOf(ClientConstants.WEB_CLIENT), ip);
 
         if (webViewUserVO != null) {
             // add by liuyang 神策数据统计追加 20181029 start
