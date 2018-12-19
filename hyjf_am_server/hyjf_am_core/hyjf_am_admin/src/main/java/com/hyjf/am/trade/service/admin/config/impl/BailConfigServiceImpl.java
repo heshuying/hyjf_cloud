@@ -143,7 +143,8 @@ public class BailConfigServiceImpl extends BaseServiceImpl implements BailConfig
         if (hjhBailConfigMapper.insertSelective(hjhBailConfig) > 0 ? false : true) {
             return false;
         }
-        List<HjhBailConfigInfo> hjhBailConfigInfoList = bailInfoDeal(bailConfigAddRequest);
+        // 合规改造删除 2018-12-03
+        /*List<HjhBailConfigInfo> hjhBailConfigInfoList = bailInfoDeal(bailConfigAddRequest);
         for (HjhBailConfigInfo hjhBailConfigInfo : hjhBailConfigInfoList) {
             // 设定资产编号
             hjhBailConfigInfo.setInstCode(bailConfigAddRequest.getInstCode());
@@ -157,7 +158,7 @@ public class BailConfigServiceImpl extends BaseServiceImpl implements BailConfig
             if (hjhBailConfigInfoMapper.insertSelective(hjhBailConfigInfo) > 0 ? false : true) {
                 return false;
             }
-        }
+        }*/
         return true;
     }
 
@@ -189,13 +190,13 @@ public class BailConfigServiceImpl extends BaseServiceImpl implements BailConfig
         }
         hjhBailConfig.setCycLoanTotal(sendedAccountByCycBD);
         // 发标额度上限
-        hjhBailConfig.setPushMarkLine(bailConfigAddRequest.getBailTatol().multiply(new BigDecimal("100")).divide(new BigDecimal(bailConfigAddRequest.getBailRate()),2, BigDecimal.ROUND_DOWN));
+//        hjhBailConfig.setPushMarkLine(bailConfigAddRequest.getBailTatol().multiply(new BigDecimal("100")).divide(new BigDecimal(bailConfigAddRequest.getBailRate()),2, BigDecimal.ROUND_DOWN));
         // 发标剩余额度计算
-        hjhBailConfig.setRemainMarkLine(BigDecimal.ZERO);
+//        hjhBailConfig.setRemainMarkLine(BigDecimal.ZERO);
         // 新设保证金上限大于已发额度设置剩余额度、否则为0
-        if(hjhBailConfig.getPushMarkLine().add(bailConfig.getRepayedCapital()).compareTo(bailConfig.getLoanMarkLine()) > 0) {
-            hjhBailConfig.setRemainMarkLine(hjhBailConfig.getPushMarkLine().add(bailConfig.getRepayedCapital()).subtract(bailConfig.getLoanMarkLine()));
-        }
+//        if(hjhBailConfig.getPushMarkLine().add(bailConfig.getRepayedCapital()).compareTo(bailConfig.getLoanMarkLine()) > 0) {
+//            hjhBailConfig.setRemainMarkLine(hjhBailConfig.getPushMarkLine().add(bailConfig.getRepayedCapital()).subtract(bailConfig.getLoanMarkLine()));
+//        }
         // 判断开始日期是否是1号
         boolean startDay = "01".equals(bailConfigAddRequest.getTimestart().substring(8, 10));
         if (!startDay) {
@@ -222,7 +223,8 @@ public class BailConfigServiceImpl extends BaseServiceImpl implements BailConfig
         if (hjhBailConfigMapper.updateByPrimaryKeySelective(hjhBailConfig) > 0 ? false : true) {
             return false;
         }
-        List<HjhBailConfigInfo> hjhBailConfigInfoList = bailInfoDeal(bailConfigAddRequest);
+        // 合规改造删除 2018-12-03
+        /*List<HjhBailConfigInfo> hjhBailConfigInfoList = bailInfoDeal(bailConfigAddRequest);
         for (HjhBailConfigInfo hjhBailConfigInfo : hjhBailConfigInfoList) {
             // 设定资产编号
             hjhBailConfigInfo.setInstCode(bailConfigAddRequest.getInstCode());
@@ -236,7 +238,7 @@ public class BailConfigServiceImpl extends BaseServiceImpl implements BailConfig
             if (hjhBailConfigInfoMapper.updateByExampleSelective(hjhBailConfigInfo, example) > 0 ? false : true) {
                 return false;
             }
-        }
+        }*/
 
         // 保证金修改日志
         HjhBailConfigLog hjhBailConfigLog = new HjhBailConfigLog();
@@ -247,19 +249,19 @@ public class BailConfigServiceImpl extends BaseServiceImpl implements BailConfig
         hjhBailConfigLog.setInstCode(bailConfigAddRequest.getInstCode());
         // 更新日志表
         // 保证金金额修改
-        if (bailConfig.getBailTatol().compareTo(bailConfigAddRequest.getBailTatol()) != 0) {
+        /*if (bailConfig.getBailTatol().compareTo(bailConfigAddRequest.getBailTatol()) != 0) {
             hjhBailConfigLog.setModifyColumn("保证金金额");
             hjhBailConfigLog.setAfterValue(bailConfigAddRequest.getBailTatol().toString());
             hjhBailConfigLog.setBeforeValue(bailConfig.getBailTatol().toString());
             hjhBailConfigLogMapper.insertSelective(hjhBailConfigLog);
-        }
+        }*/
         // 保证金比例
-        if (!bailConfig.getBailRate().equals(bailConfigAddRequest.getBailRate())) {
+        /*if (!bailConfig.getBailRate().equals(bailConfigAddRequest.getBailRate())) {
             hjhBailConfigLog.setModifyColumn("保证金比例");
             hjhBailConfigLog.setAfterValue(bailConfigAddRequest.getBailRate().toString());
             hjhBailConfigLog.setBeforeValue(bailConfig.getBailRate().toString());
             hjhBailConfigLogMapper.insertSelective(hjhBailConfigLog);
-        }
+        }*/
         // 日推标额度
         if (bailConfig.getDayMarkLine().compareTo(bailConfigAddRequest.getDayMarkLine()) != 0) {
             hjhBailConfigLog.setModifyColumn("日推标额度");
@@ -276,18 +278,29 @@ public class BailConfigServiceImpl extends BaseServiceImpl implements BailConfig
         }
         // 新增授信额度
         if (bailConfig.getNewCreditLine().compareTo(bailConfigAddRequest.getNewCreditLine()) != 0) {
-            hjhBailConfigLog.setModifyColumn("新增授信额度");
+            hjhBailConfigLog.setModifyColumn("合作额度");
             hjhBailConfigLog.setAfterValue(bailConfigAddRequest.getNewCreditLine().toString());
             hjhBailConfigLog.setBeforeValue(bailConfig.getNewCreditLine().toString());
             hjhBailConfigLogMapper.insertSelective(hjhBailConfigLog);
         }
+        // 合作周期
+        String timeStartDB = bailConfig.getTimestart() == null ? "" : bailConfig.getTimestart();
+        String timeEndDB = bailConfig.getTimeend() == null ? "" : bailConfig.getTimeend();
+        String timeStartPage = bailConfigAddRequest.getTimestart() == null ? "" : bailConfigAddRequest.getTimestart();
+        String timeEndPage = bailConfigAddRequest.getTimeend() == null ? "" : bailConfigAddRequest.getTimeend();
+        if (!timeStartDB.equals(timeStartPage) || !timeEndDB.equals(timeEndPage)) {
+            hjhBailConfigLog.setModifyColumn("合作周期");
+            hjhBailConfigLog.setAfterValue(timeStartPage + "~" + timeEndPage);
+            hjhBailConfigLog.setBeforeValue(timeStartDB + "~" + timeEndDB);
+            this.hjhBailConfigLogMapper.insertSelective(hjhBailConfigLog);
+        }
         // 在贷余额授信额度
-        if (bailConfig.getLoanCreditLine().compareTo(bailConfigAddRequest.getLoanCreditLine()) != 0) {
+        /*if (bailConfig.getLoanCreditLine().compareTo(bailConfigAddRequest.getLoanCreditLine()) != 0) {
             hjhBailConfigLog.setModifyColumn("在贷余额授信额度");
             hjhBailConfigLog.setAfterValue(bailConfigAddRequest.getLoanCreditLine().toString());
             hjhBailConfigLog.setBeforeValue(bailConfig.getLoanCreditLine().toString());
             hjhBailConfigLogMapper.insertSelective(hjhBailConfigLog);
-        }
+        }*/
         return true;
     }
 
@@ -311,11 +324,11 @@ public class BailConfigServiceImpl extends BaseServiceImpl implements BailConfig
             re = false;
         }
         // 保证金详情配置表物理删除
-        HjhBailConfigInfoExample hjhBailConfigInfoExample = new HjhBailConfigInfoExample();
+       /* HjhBailConfigInfoExample hjhBailConfigInfoExample = new HjhBailConfigInfoExample();
         hjhBailConfigInfoExample.createCriteria().andInstCodeEqualTo(hjhBailConfig.getInstCode());
         if (hjhBailConfigInfoMapper.deleteByExample(hjhBailConfigInfoExample) > 0 ? false : true) {
             re = false;
-        }
+        }*/
 
         // 表删除字段更新成功后删除redis值
 //        if (re && RedisUtils.exists(RedisConstants.DAY_MARK_LINE + hjhBailConfig.getInstCode())) {

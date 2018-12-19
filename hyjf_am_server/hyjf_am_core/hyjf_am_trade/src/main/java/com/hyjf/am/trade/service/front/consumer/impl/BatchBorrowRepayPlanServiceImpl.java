@@ -3478,17 +3478,17 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				//add by cwyang 更新汇计划相关机构的风险准备金
 				//判断是否最后一期
 				String instCode = borrowInfo.getInstCode();
-				//modify by cwyang 根据配置好的保证金配置进行保证金回滚 迁移by liushouyi
-				Integer repayCapitalType = borrow.getRepayCapitalType();
+				//modify by cwyang 根据配置好的保证金配置进行保证金回滚 迁移by liushouyi (合规改造删除 2018-12-03)
+//				Integer repayCapitalType = borrow.getRepayCapitalType();
 				//回滚标识位：0 到期回滚、1 分期回滚、 2 不回滚
-				if ("0".equals(repayCapitalType.toString())) {
+				/*if ("0".equals(repayCapitalType.toString())) {
 					if (periodNext == 0) {
 						updateInstitutionData(borrow, borrowInfo);
 					}
 				} else if ("1".equals(repayCapitalType.toString()) && !"10000000".equals(instCode)){
 					//分期回滚
 					updateInstitutionDataMonth(instCode,repayCapitalWait,borrowNid);
-				}
+				}*/
 				try { 
 					this.sendSmsForManager(borrowNid);
 				} catch (Exception e) {
@@ -3694,12 +3694,12 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 				
 				//add by cwyang 变更资产表对应状态
 				updatePlanAsset(borrowNid,status);
-				//add by cwyang 更新汇计划相关机构的风险准备金
+				//add by cwyang 更新汇计划相关机构的风险准备金 （合规改造删除 2018-12-03）
 				//判断标的是否分期，并且是否是最后一期
-				Integer repayCapitalType = borrow.getRepayCapitalType();
+				/*Integer repayCapitalType = borrow.getRepayCapitalType();
 				if("0".equals(repayCapitalType.toString())){
 					updateInstitutionData(borrow, borrowInfo);
-				}
+				}*/
 				try {
 					this.sendSmsForManager(borrowNid);
 				} catch (Exception e) {

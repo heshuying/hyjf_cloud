@@ -296,7 +296,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		}
 		borrow.setRemark(borrowBean.getRemark());
 		// 项目申请人
-		borrow.setApplicant(borrowBean.getApplicant());
+//		borrow.setApplicant(borrowBean.getApplicant());
 		borrow.setCreateUserName(adminUsername);
 		borrow.setRemark(borrowBean.getRemark());
 		// 垫付机构用户名
@@ -965,7 +965,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			}
 
 			// 项目申请人
-			borrow.setApplicant(borrowBean.getApplicant());
+//			borrow.setApplicant(borrowBean.getApplicant());
 			//项目标题
 			borrow.setProjectName(borrowBean.getProjectName());
 			// 垫付机构用户名
