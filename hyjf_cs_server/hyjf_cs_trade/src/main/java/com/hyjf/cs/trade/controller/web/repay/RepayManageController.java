@@ -250,7 +250,7 @@ public class RepayManageController extends BaseTradeController {
      */
     @ApiOperation(value = "用户待还标的-债转详情", notes = "用户待还标的-债转详情")
     @PostMapping(value = "/user_repay_detail")
-    public WebResult<Map<String,Object>>  userRepayDetail(@RequestHeader(value = "userId") Integer userId, @RequestHeader(value = "borrowNid") String borrowNid){
+    public WebResult<Map<String,Object>>  userRepayDetail(@RequestHeader(value = "userId", required = true) int userId, @RequestBody String borrowNid){
         WebResult<Map<String,Object>> result = new WebResult<>();
         Map<String,Object> resultMap = new HashMap<>();
 
@@ -260,44 +260,48 @@ public class RepayManageController extends BaseTradeController {
         String verificationFlag = null;
         if (userVO != null && StringUtils.isNotBlank(borrowNid)){
             WebUserTransferBorrowInfoCustomizeVO borrowInfo = this.repayManageService.getUserTransferBorrowInfo(borrowNid);
-            // 单纯的作为验证标识.
 
-            if (borrowInfo.getPlanNid() != null){
-                verificationFlag = borrowInfo.getPlanNid();
-            }else {
-                verificationFlag = null;
-            }
-
-            //居间协议
-            Integer fddStatus = 0;
-            List<TenderAgreementVO> tenderAgreementsNid =  this.repayManageService.selectTenderAgreementByNid(borrowNid);
-            if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
-                TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
-                fddStatus = tenderAgreement.getStatus();
-                //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
-                if(fddStatus.equals(3)){
-                    fddStatus = 1;
-                }else {
-                    //隐藏下载按钮
-                    fddStatus = 0;
+            try {
+                // 单纯的作为验证标识.
+                if (borrowInfo.getPlanNid() != null) {
+                    verificationFlag = borrowInfo.getPlanNid();
+                } else {
+                    verificationFlag = null;
                 }
-            }else {
-                //下载老版本协议
-                fddStatus = 1;
-            }
 
-            // 计算到账金额
-            if (borrowInfo.getSucSmount() != null){
-                BigDecimal oldYesAccount = borrowInfo.getSucSmount();
-                borrowInfo.setSucSmount(oldYesAccount.subtract(borrowInfo.getServiceFee()));
-            }else {
-                borrowInfo.setSucSmount(new BigDecimal(0));
-            }
+                //居间协议
+                Integer fddStatus = 0;
+                List<TenderAgreementVO> tenderAgreementsNid = this.repayManageService.selectTenderAgreementByNid(borrowNid);
+                if (tenderAgreementsNid != null && tenderAgreementsNid.size() > 0) {
+                    TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
+                    fddStatus = tenderAgreement.getStatus();
+                    //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
+                    if (fddStatus.equals(3)) {
+                        fddStatus = 1;
+                    } else {
+                        //隐藏下载按钮
+                        fddStatus = 0;
+                    }
+                } else {
+                    //下载老版本协议
+                    fddStatus = 1;
+                }
 
-            resultMap.put("verificationFlag", verificationFlag);
-            resultMap.put("borrowInfo", borrowInfo);
-            resultMap.put("fddStatus", fddStatus);
-            result.setData(resultMap);
+                // 计算到账金额
+                if (borrowInfo.getSucSmount() != null) {
+                    BigDecimal oldYesAccount = borrowInfo.getSucSmount();
+                    borrowInfo.setSucSmount(oldYesAccount.subtract(borrowInfo.getServiceFee()));
+                } else {
+                    borrowInfo.setSucSmount(new BigDecimal(0));
+                }
+
+                resultMap.put("verificationFlag", verificationFlag);
+                resultMap.put("borrowInfo", borrowInfo);
+                resultMap.put("fddStatus", fddStatus);
+                result.setData(resultMap);
+            }catch (NullPointerException e){
+                result.setStatusDesc("暂无数据");
+            }
         }
         return result;
     }
