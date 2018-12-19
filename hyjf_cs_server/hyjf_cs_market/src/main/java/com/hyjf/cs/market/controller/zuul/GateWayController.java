@@ -53,6 +53,7 @@ public class GateWayController {
             }
         } catch (Exception e) {
             logger.error("gate api config error...",e);
+            gatewayConfigs = new GatewayApiConfigResponse();
             List<GatewayApiConfigVO> gateConfig = cache.get("gateConfig");
             if(CollectionUtils.isEmpty(gateConfig)){
                 logger.warn("cache is empty!");
