@@ -7,7 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @version BankRepayFreezeOrgCheckRequestBean, v0.1 2018/10/19 16:11
  */
 public class BankRepayFreezeOrgCheckRequestBean {
-    @ApiModelProperty(value = "借款编号")
+    @ApiModelProperty(value = "项目编号")
     private String borrowNid;
     @ApiModelProperty(value = "冻结订单号")
     private String orderId;

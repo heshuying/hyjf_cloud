@@ -20,13 +20,13 @@ public class IncreaseInterestRepayInfoListRequest extends BasePage implements Se
     /** 用户名(检索用) */
     private String userNameSrch;
 
-    /** 投资开始时间(检索用) */
+    /** 出借开始时间(检索用) */
     private String timeStartSrch;
 
-    /** 投资结束时间(检索用) */
+    /** 出借结束时间(检索用) */
     private String timeEndSrch;
 
-    /** 投资Id(检索用) */
+    /** 出借Id(检索用) */
     private String investIdSrch;
 
     /** 还款期数(检索用) */

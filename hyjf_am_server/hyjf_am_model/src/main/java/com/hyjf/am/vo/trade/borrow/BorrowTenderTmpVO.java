@@ -15,13 +15,13 @@ import java.util.Date;
  * @author jijun
  * @date 20180623
  */
-@ApiModel(value = "投资")
+@ApiModel(value = "出借")
 public class BorrowTenderTmpVO extends BaseVO implements Serializable {
 	@ApiModelProperty(value = "主键id")
 	private Integer id;
 	@ApiModelProperty(value = "用户ID")
 	private Integer userId;
-	@ApiModelProperty(value = "投资用户名")
+	@ApiModelProperty(value = "出借用户名")
 	private String userName;
 	@ApiModelProperty(value = "借款人用户ID")
 	private Integer borrowUserId;
@@ -31,9 +31,9 @@ public class BorrowTenderTmpVO extends BaseVO implements Serializable {
 	private Integer status;
 	@ApiModelProperty(value = "标的编号")
 	private String borrowNid;
-	@ApiModelProperty(value = "投资订单号")
+	@ApiModelProperty(value = "出借订单号")
 	private String nid;
-	@ApiModelProperty(value = "投资金额")
+	@ApiModelProperty(value = "出借金额")
 	private BigDecimal account;
 	@ApiModelProperty(value = "满标状态(0:初始,1:满标)记录哪一笔是最后一笔满标")
 	private Integer recoverFullStatus;
@@ -71,33 +71,33 @@ public class BorrowTenderTmpVO extends BaseVO implements Serializable {
 	private String addip;
 	@ApiModelProperty(value = "平台0PC，1微信2安卓APP，3IOS APP，4其他")
 	private Integer client;
-	@ApiModelProperty(value = "推荐人用户名(投资时)")
+	@ApiModelProperty(value = "推荐人用户名(出借时)")
 	private String inviteUserName;
-	@ApiModelProperty(value = "推荐人用户id(投资时)")
+	@ApiModelProperty(value = "推荐人用户id(出借时)")
 	private Integer inviteUserId;
-	@ApiModelProperty(value = "一级部门id(投资时)")
+	@ApiModelProperty(value = "一级部门id(出借时)")
 	private Integer inviteRegionId;
-	@ApiModelProperty(value = "一级部门名称(投资时)")
+	@ApiModelProperty(value = "一级部门名称(出借时)")
 	private String inviteRegionName;
-	@ApiModelProperty(value = "二级部门id(投资时)")
+	@ApiModelProperty(value = "二级部门id(出借时)")
 	private Integer inviteBranchId;
-	@ApiModelProperty(value = "二级部门名称(投资时)")
+	@ApiModelProperty(value = "二级部门名称(出借时)")
 	private String inviteBranchName;
-	@ApiModelProperty(value = "三级部门id(投资时)")
+	@ApiModelProperty(value = "三级部门id(出借时)")
 	private Integer inviteDepartmentId;
-	@ApiModelProperty(value = "三级部门名称(投资时)")
+	@ApiModelProperty(value = "三级部门名称(出借时)")
 	private String inviteDepartmentName;
-	@ApiModelProperty(value = "投资人用户属性")
+	@ApiModelProperty(value = "出借人用户属性")
 	private Integer tenderUserAttribute;
 	@ApiModelProperty(value = "推荐人用户属性")
 	private Integer inviteUserAttribute;
-	@ApiModelProperty(value = "投资订单日期")
+	@ApiModelProperty(value = "出借订单日期")
 	private String orderDate;
 	@ApiModelProperty(value = "优惠券发放编号（coupon_user.id）")
 	private Integer couponGrantId;
-	@ApiModelProperty(value = "是否江西银行投资: 1 是")
+	@ApiModelProperty(value = "是否江西银行出借: 1 是")
 	private Integer isBankTender;
-	@ApiModelProperty(value = "投资来源:默认-hyjf,wrb-风车理财")
+	@ApiModelProperty(value = "出借来源:默认-hyjf,wrb-风车理财")
 	private String tenderFrom;
 	@ApiModelProperty(value = "银行返回码")
 	private String retCode;;

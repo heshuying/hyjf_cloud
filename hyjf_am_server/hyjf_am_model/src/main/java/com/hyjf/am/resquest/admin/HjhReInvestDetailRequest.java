@@ -15,13 +15,13 @@ public class HjhReInvestDetailRequest extends BasePage implements Serializable {
 
     private String planNid;
 
-    //计划投资订单号（检索）
+    //计划出借订单号（检索）
     private String accedeOrderIdSrch;
     //用户名（检索）
     private String userNameSrch;
     //借款期限(锁定期)（检索）
     private String lockPeriodSrch;
-    //投资方式（检索）
+    //出借方式（检索）
     private String investTypeSrch;
     //还款方式（检索）
     private String borrowStyleSrch;

@@ -1,5 +1,5 @@
 /**
- * Description:用户投资 投资中vO
+ * Description:用户出借 出借中vO
  * Copyright: Copyright (HYJF Corporation)2015
  * Company: HYJF Corporation
  * @author: 王坤

@@ -15,7 +15,7 @@ public class PlanDetailCustomize implements Serializable {
 	private String planNid;
 	//计划金额
 	private String planAccount;
-	//预期收益率(hjh)
+	//出借利率(hjh)
 	private String planApr;
 	//计划期限(hjh)
 	private String planPeriod; 
@@ -47,11 +47,11 @@ public class PlanDetailCustomize implements Serializable {
 	private String planName;
 	
 	private String couponConfig;
-	//最低投资金额
+	//最低出借金额
 	private String debtMinInvestment;
-	//投资增量
+	//出借增量
 	private String debtInvestmentIncrement;
-	//最高投资金额
+	//最高出借金额
 	private String debtMaxInvestment;
 	//倒计时
 	private String timer;

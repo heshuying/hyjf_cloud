@@ -85,14 +85,14 @@ public class CreditTender implements Serializable {
     private String assignNid;
 
     /**
-     * 投资人投标成功的授权号
+     * 出借人投标成功的授权号
      *
      * @mbggenerated
      */
     private String authCode;
 
     /**
-     * 投资本金
+     * 出借本金
      *
      * @mbggenerated
      */
@@ -232,7 +232,7 @@ public class CreditTender implements Serializable {
     private String inviteUserBranchname;
 
     /**
-     * 团队(投资时)
+     * 团队(出借时)
      *
      * @mbggenerated
      */

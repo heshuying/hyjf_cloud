@@ -114,12 +114,12 @@ public class BorrowFullCustomize implements Serializable {
     private String sumServiceScale;
 
     /**
-     * 投资人
+     * 出借人
      */
     private String investor;
 
     /**
-     * 投资金额（元）
+     * 出借金额（元）
      */
     private String investmentAmount;
 

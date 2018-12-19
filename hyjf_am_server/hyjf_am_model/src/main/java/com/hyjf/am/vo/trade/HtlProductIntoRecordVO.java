@@ -27,9 +27,9 @@ public class HtlProductIntoRecordVO extends BaseVO implements Serializable {
     private String refername;
     //产品id
     private Integer productId;
-    //投资金额
+    //出借金额
     private BigDecimal amount;
-    //投资时间
+    //出借时间
     private String investTimeStr;
     //已赎回金额
     private BigDecimal redeemed;
@@ -43,13 +43,13 @@ public class HtlProductIntoRecordVO extends BaseVO implements Serializable {
     private String orderDate;
     //操作客户端
     private Integer client;
-    //投资状态(log表中)
+    //出借状态(log表中)
     private String tenderStatus;
     //手机号
     private String mobile;
     //本金
     private BigDecimal balance;
-    //投资状态
+    //出借状态
     private Integer investStatus;
     private String regionName;
     private String branceName;

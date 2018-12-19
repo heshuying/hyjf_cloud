@@ -122,7 +122,7 @@ public class AccedeListController extends BaseController{
 		}
 		if(CollectionUtils.isNotEmpty(response.getResultList())){
 			for (AccedeListCustomizeVO accedeListCustomizeVO : response.getResultList()) {
-				// 自动投标进度=已投资金额/加入金额（不考虑复投）
+				// 自动投标进度=已出借金额/加入金额（不考虑复投）
 				// 确定分母不为0
 				if(accedeListCustomizeVO.getJalreadyInvest() == null &&  accedeListCustomizeVO.getjAccedeAccount() == null && accedeListCustomizeVO.getjAccedeAccount().equals(BigDecimal.ZERO)){
 					accedeListCustomizeVO.setAutoBidProgress("0");
@@ -192,9 +192,9 @@ public class AccedeListController extends BaseController{
 		java.math.BigDecimal hundred = new java.math.BigDecimal(100);
 		@SuppressWarnings("deprecation")
 		String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-		*//*String[] titles = new String[] { "序号","加入订单号", "计划编号","锁定期", "预定利率","用户名","投资人id","投资人用户属性（当前)", "分公司(当前)", "部门(当前)", "团队(当前)","推荐人（当前）","推荐人ID（当前）","推荐人姓名（当前）", "推荐人用户属性（当前）", "分公司(当前)", "部门(当前)", "团队(当前)", "投资人用户属性（投资时）","推荐人(投资时)", "推荐人ID（投资时）", "推荐人姓名（投资时）", "推荐人用户属性(投资时)", "分公司(投资时)", "部门(投资时)", "团队(投资时)", "加入金额", "已投资金额(元)","待还总额(元) ","待还本金(元) ","待还利息(元) ","操作平台","订单状态",  "计息时间", "加入时间" };*//*
-		String[] titles = new String[] { "序号","计划订单号", "计划编号",  "计划名称","锁定期", "预期年化收益率","用户名（投资人）","投资人id","投资人用户属性（当前)", "分公司(当前)", "部门(当前)", "团队(当前)","推荐人（当前）","推荐人ID（当前）","推荐人姓名（当前）", "推荐人用户属性（当前）", "分公司(当前)", "部门(当前)", "团队(当前)", "投资人用户属性（投资时）","推荐人(投资时)", "推荐人ID（投资时）", "推荐人姓名（投资时）", "推荐人用户属性(投资时)", "分公司(投资时)", "部门(投资时)", "团队(投资时)", "加入金额", 
-				"自动投标进度","可用余额(元) ", "冻结金额(元) ","公允价值(元) ","实际年化收益率","操作平台","订单状态","匹配期", "锁定时间", "加入时间" };
+		*//*String[] titles = new String[] { "序号","加入订单号", "计划编号","锁定期", "预定利率","用户名","出借人id","出借人用户属性（当前)", "分公司(当前)", "部门(当前)", "团队(当前)","推荐人（当前）","推荐人ID（当前）","推荐人姓名（当前）", "推荐人用户属性（当前）", "分公司(当前)", "部门(当前)", "团队(当前)", "出借人用户属性（出借时）","推荐人(出借时)", "推荐人ID（出借时）", "推荐人姓名（出借时）", "推荐人用户属性(出借时)", "分公司(出借时)", "部门(出借时)", "团队(出借时)", "加入金额", "已出借金额(元)","待还总额(元) ","待还本金(元) ","待还利息(元) ","操作平台","订单状态",  "计息时间", "加入时间" };*//*
+		String[] titles = new String[] { "序号","计划订单号", "计划编号",  "计划名称","锁定期", "预期出借利率率","用户名（出借人）","出借人id","出借人用户属性（当前)", "分公司(当前)", "部门(当前)", "团队(当前)","推荐人（当前）","推荐人ID（当前）","推荐人姓名（当前）", "推荐人用户属性（当前）", "分公司(当前)", "部门(当前)", "团队(当前)", "出借人用户属性（出借时）","推荐人(出借时)", "推荐人ID（出借时）", "推荐人姓名（出借时）", "推荐人用户属性(出借时)", "分公司(出借时)", "部门(出借时)", "团队(出借时)", "加入金额",
+				"自动投标进度","可用余额(元) ", "冻结金额(元) ","公允价值(元) ","实际出借利率率","操作平台","订单状态","匹配期", "锁定时间", "加入时间" };
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();
 		// 生成一个表格
@@ -244,7 +244,7 @@ public class AccedeListController extends BaseController{
 					else if (celLength == 4) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getDebtLockPeriod()) ? StringUtils.EMPTY : planAccedeDetail.getDebtLockPeriod());
 					}
-					// 预期年化收益率
+					// 预期出借利率率
 					else if (celLength == 5) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getExpectApr()) ? StringUtils.EMPTY : planAccedeDetail.getExpectApr() + "%");
 					}
@@ -252,11 +252,11 @@ public class AccedeListController extends BaseController{
 					else if (celLength == 6) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getUserName()) ? StringUtils.EMPTY : planAccedeDetail.getUserName());
 					}
-					// 投资人id
+					// 出借人id
 					else if (celLength == 7) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getUserId()) ? StringUtils.EMPTY : planAccedeDetail.getUserId());
 					}
-					// 投资人当前属性
+					// 出借人当前属性
 					else if (celLength == 8) {
 						if ("0".equals(planAccedeDetail.getUserAttribute())) {
 							cell.setCellValue("无主单");
@@ -270,15 +270,15 @@ public class AccedeListController extends BaseController{
 							cell.setCellValue(planAccedeDetail.getUserAttribute());
 						}
 					}
-					// 投资人公司
+					// 出借人公司
 					else if (celLength == 9) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserRegionname2()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserRegionname2());
 					}
-					// 投资人公司
+					// 出借人公司
 					else if (celLength == 10) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserBranchname2()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserBranchname2());
 					}
-					// 投资人公司
+					// 出借人公司
 					else if (celLength == 11) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserDepartmentname2()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserDepartmentname2());
 					}
@@ -310,7 +310,7 @@ public class AccedeListController extends BaseController{
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getInviteUserDepartmentname1()) ? StringUtils.EMPTY : planAccedeDetail.getInviteUserDepartmentname1());
 					}
 					
-					// 投资人当前属性
+					// 出借人当前属性
 					else if (celLength == 19) {
 						if ("0".equals(planAccedeDetail.getAttribute())) {
 							cell.setCellValue("无主单");
@@ -388,7 +388,7 @@ public class AccedeListController extends BaseController{
 							cell.setCellValue("0.0");
 						}
 					}
-					// 实际年化收益率
+					// 实际出借利率率
 					else if (celLength == 32) {
 						cell.setCellValue(StringUtils.isEmpty(planAccedeDetail.getActualApr()) ? StringUtils.EMPTY : planAccedeDetail.getActualApr() + "%");
 					}
@@ -417,7 +417,7 @@ public class AccedeListController extends BaseController{
 						} else if (7 == Integer.parseInt(planAccedeDetail.getOrderStatus())) {
 							cell.setCellValue("已退出");
 						} else if (99 == Integer.parseInt(planAccedeDetail.getOrderStatus())) {
-							cell.setCellValue("自动投资异常");
+							cell.setCellValue("自动出借异常");
 						}
 					}
 					// 匹配期
@@ -560,7 +560,7 @@ public class AccedeListController extends BaseController{
 			} else if (7 == Integer.parseInt(record.getOrderStatus())) {
 				record.setOrderStatus("已退出");
 			} else if (99 == Integer.parseInt(record.getOrderStatus())) {
-				record.setOrderStatus("自动投资异常");
+				record.setOrderStatus("自动出借异常");
 			}
 
 			if (StringUtils.isNotEmpty(record.getMatchDates())) {
@@ -586,9 +586,9 @@ public class AccedeListController extends BaseController{
 		map.put("debtPlanName", "智投名称");
 		map.put("debtLockPeriod", "服务回报期限");
 		map.put("expectApr", "参考年回报率");
-		map.put("userName", "用户名（投资人）");
-		map.put("userId", "投资人id");
-		map.put("userAttribute", "投资人用户属性（当前)");
+		map.put("userName", "用户名（出借人）");
+		map.put("userId", "出借人id");
+		map.put("userAttribute", "出借人用户属性（当前)");
 		if (StringUtils.isNotBlank(isOrganizationView)) {
 			map.put("inviteUserRegionname2", "分公司(当前)");
 			map.put("inviteUserBranchname2", "部门(当前)");
@@ -603,22 +603,22 @@ public class AccedeListController extends BaseController{
 			map.put("inviteUserBranchname1", "部门(当前)");
 			map.put("inviteUserDepartmentname1", "团队(当前)");
 		}
-		map.put("attribute", "投资人用户属性（投资时）");
-		map.put("inviteName", "推荐人(投资时)");
-		map.put("inviteUserId", "推荐人ID（投资时）");
-		map.put("inviteTrueName", "推荐人姓名（投资时）");
-		map.put("inviteUserAttributeName", "推荐人用户属性(投资时)");
+		map.put("attribute", "出借人用户属性（出借时）");
+		map.put("inviteName", "推荐人(出借时)");
+		map.put("inviteUserId", "推荐人ID（出借时）");
+		map.put("inviteTrueName", "推荐人姓名（出借时）");
+		map.put("inviteUserAttributeName", "推荐人用户属性(出借时)");
 		if (StringUtils.isNotBlank(isOrganizationView)) {
-			map.put("inviteUserRegionname", "分公司(投资时)");
-			map.put("inviteUserBranchname", "部门(投资时)");
-			map.put("inviteUserDepartmentname", "团队(投资时)");
+			map.put("inviteUserRegionname", "分公司(出借时)");
+			map.put("inviteUserBranchname", "部门(出借时)");
+			map.put("inviteUserDepartmentname", "团队(出借时)");
 		}
 		map.put("accedeAccount", "授权服务金额");
 		map.put("investScaleView", "自动投标进度");
 		map.put("availableInvestAccount", "可用余额(元) ");
 		map.put("frostAccount", "冻结金额(元) ");
 		map.put("fairValue", "公允价值(元) ");
-		map.put("actualApr", "实际年化收益率");
+		map.put("actualApr", "实际出借利率");
 		map.put("platform", "操作平台");
 		map.put("orderStatus", "订单状态");
 		map.put("matchDates", "匹配期");
@@ -825,7 +825,7 @@ public class AccedeListController extends BaseController{
 		} else if ("系统异常".equals(msg)){
 			jsonObject.put("result", msg);
 			jsonObject.put("status", "error");
-		} else if("计划信息异常（0条或者大于1条信息）,下载汇计划投资计划服务协议协议PDF失败".equals(msg)){
+		} else if("计划信息异常（0条或者大于1条信息）,下载汇计划出借计划服务协议协议PDF失败".equals(msg)){
 			jsonObject.put("result", msg);
 			jsonObject.put("status", "error");
 		} else if("发送状态已修改".equals(msg)){
@@ -855,7 +855,7 @@ public class AccedeListController extends BaseController{
     	AccedeListRequest request = new AccedeListRequest();
 		try {
 			// 参考FddDownPDFandDessensitizationMessageHandle.sendPlanMail
-			// 向每个投资人发送邮件
+			// 向每个出借人发送邮件
 			if (Validator.isNotNull(userid) && NumberUtils.isCreatable(userid)) {
 				UserVO users = this.accedeListService.getUserByUserId(Integer.valueOf(userid));
 				if (users == null) {
@@ -889,8 +889,8 @@ public class AccedeListController extends BaseController{
 				/***************************下载法大大协议******************************************/
 				if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
 					tenderAgreement = tenderAgreementsNid.get(0);
-					 _log.info("sendMail", "***************************下载法大大协议--投资orderId:"+planOrderId);
-					 _log.info("sendMail", "***************************下载法大大协议--投资pdfUrl:"+tenderAgreement.getImgUrl());
+					 _log.info("sendMail", "***************************下载法大大协议--出借orderId:"+planOrderId);
+					 _log.info("sendMail", "***************************下载法大大协议--出借pdfUrl:"+tenderAgreement.getImgUrl());
 				        if(tenderAgreement!=null){
 	                        String pdfUrl = tenderAgreement.getDownloadUrl();
 	                        if(StringUtils.isNotBlank(pdfUrl)){
@@ -901,9 +901,9 @@ public class AccedeListController extends BaseController{
 	                    }	 
 				}
 				String[] emails = { email };
-				 _log.info("sendMail***************************下载法大大协议--投资filePath:"+filePath + fileName);
-				// mod by nxl 智投服务 汇计划投资服务协议->智投服务协议
-                /*MailMessage mailMessage = new MailMessage(Integer.valueOf(userid), msg, "汇计划投资服务协议", null, new String[] { filePath + "/" + fileName }, emails, CustomConstants.EMAITPL_EMAIL_LOCK_REPAY,
+				 _log.info("sendMail***************************下载法大大协议--出借filePath:"+filePath + fileName);
+				// mod by nxl 智投服务 汇计划出借服务协议->智投服务协议
+                /*MailMessage mailMessage = new MailMessage(Integer.valueOf(userid), msg, "汇计划出借服务协议", null, new String[] { filePath + "/" + fileName }, emails, CustomConstants.EMAITPL_EMAIL_LOCK_REPAY,
                 		MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);*/
 				MailMessage mailMessage = new MailMessage(Integer.valueOf(userid), msg, "智投服务协议", null, new String[] { filePath + "/" + fileName }, emails, CustomConstants.EMAITPL_EMAIL_LOCK_REPAY,
 						MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
@@ -936,7 +936,7 @@ public class AccedeListController extends BaseController{
     	AccedeListRequest request = new AccedeListRequest();
 		try {
 			PdfGenerator pdfGenerator = new PdfGenerator();
-			// 向每个投资人发送邮件
+			// 向每个出借人发送邮件
 			if (Validator.isNotNull(userid) && NumberUtils.isCreatable(userid)) {
 				UserVO users = this.accedeListService.getUserByUserId(Integer.valueOf(userid));
 				if (users == null) {
@@ -991,8 +991,8 @@ public class AccedeListController extends BaseController{
 					
 					// 将生成的PDF嵌入邮件模板中
 					// 需要产品提供邮件模板????---- CustomConstants.EMAILPARAM_TPL_LOANS
-					// mod by nxl 智投服务 汇计划投资服务协议->智投服务协议
-//					MailMessage message = new MailMessage(Integer.valueOf(userid), msg, "汇盈金服互联网金融服务平台汇计划投资服务协议",null, new String[] { filePath + fileName }, emails, CustomConstants.HJD_JOIN_AGREEMENT, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
+					// mod by nxl 智投服务 汇计划出借服务协议->智投服务协议
+//					MailMessage message = new MailMessage(Integer.valueOf(userid), msg, "汇盈金服互联网金融服务平台汇计划出借服务协议",null, new String[] { filePath + fileName }, emails, CustomConstants.HJD_JOIN_AGREEMENT, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
 					MailMessage message = new MailMessage(Integer.valueOf(userid), msg, "汇盈金服互联网金融服务平台智投服务协议",null, new String[] { filePath + fileName }, emails, CustomConstants.HJD_JOIN_AGREEMENT, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
 					// 发送邮件
 					commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),message));
@@ -1007,8 +1007,8 @@ public class AccedeListController extends BaseController{
 					/*return null;*/
 				}
 			} else {
-				_log.info("计划信息异常（0条或者大于1条信息）,下载汇计划投资计划服务协议协议PDF失败");
-				return "计划信息异常（0条或者大于1条信息）,下载汇计划投资计划服务协议协议PDF失败";
+				_log.info("计划信息异常（0条或者大于1条信息）,下载汇计划出借计划服务协议协议PDF失败");
+				return "计划信息异常（0条或者大于1条信息）,下载汇计划出借计划服务协议协议PDF失败";
 			}
 		} catch (Exception e) {
 			_log.info(AccedeListController.class.getName(), "sendMail", e);
@@ -1018,14 +1018,14 @@ public class AccedeListController extends BaseController{
     }
     
 	/**
-	 * 带参跳转投资明细列表初始化下拉菜单   直接带参数请求汇直投的投资明细接口
+	 * 带参跳转出借明细列表初始化下拉菜单   直接带参数请求汇直投的出借明细接口
 	 * 
 	 * @param request
 	 * @param form
 	 * @return
 	 */
 /*	@SuppressWarnings("unchecked")
-	@ApiOperation(value = "汇计划加入明细列表", notes = "跳转投资明细列表初始化以及查询")
+	@ApiOperation(value = "汇计划加入明细列表", notes = "跳转出借明细列表初始化以及查询")
 	@PostMapping(value = "/tenderinfo")
 	@ResponseBody
 	public AdminResult tenderInfoAction(HttpServletRequest request, @RequestBody @Valid AccedeListViewRequest viewRequest) {
@@ -1048,7 +1048,7 @@ public class AccedeListController extends BaseController{
         //操作平台
         Map<String, String> clientList = adminCommonService.getParamNameMap("CLIENT");
         responseBean.setClientList(clientList);
-        //投资方式
+        //出借方式
         Map<String, String> investTypeList = adminCommonService.getParamNameMap("INVEST_TYPE");
         responseBean.setInvestTypeList(investTypeList);
         return new AdminResult(responseBean);

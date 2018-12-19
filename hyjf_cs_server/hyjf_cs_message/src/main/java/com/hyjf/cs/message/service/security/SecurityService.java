@@ -13,7 +13,7 @@ import java.math.BigDecimal;
  */
 public interface SecurityService extends BaseService {
     /**
-     * 查询累计投资
+     * 查询累计出借
      * @return
      */
     BigDecimal selectTotalInvest();

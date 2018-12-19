@@ -42,7 +42,7 @@ import java.util.Map;
  * @version AutoPlusController, v0.1 2018/6/11 14:37
  */
 
-@Api(tags = "weChat端-用户授权自动投资债转接口")
+@Api(tags = "weChat端-用户授权自动出借债转接口")
 @RestController
 @RequestMapping("/hyjf-wechat/wx/user/autoplus")
 public class WeChatAutoPlusController extends BaseUserController {
@@ -161,19 +161,19 @@ public class WeChatAutoPlusController extends BaseUserController {
     }
 
     /**
-     * 自动投资授权接口
+     * 自动出借授权接口
      * @param userId
      * @param sign
      * @param request
      * @return
      */
-    @ApiOperation(value = "自动投资授权接口")
+    @ApiOperation(value = "自动出借授权接口")
     @PostMapping(value = "/userAuthInves.page")
     public WeChatResult userAuthInves(@RequestHeader(value = "userId") Integer userId,@RequestHeader(value = "sign") String sign,HttpServletRequest request) {
         WeChatResult<Object> result = new WeChatResult<>();
         String srvAuthCode = request.getParameter("srvAuthCode");
         String code = request.getParameter("code");
-        logger.info("自动投资授权接口,srvAuthCode为：【" + srvAuthCode + "】,code为【" + code + "】,userid为：【" + userId + "】");
+        logger.info("自动出借授权接口,srvAuthCode为：【" + srvAuthCode + "】,code为【" + code + "】,userid为：【" + userId + "】");
         // 获取授权信息
         HjhUserAuthVO hjhUserAuth = autoPlusService.getHjhUserAuth(userId);
         //检查参数
@@ -215,12 +215,12 @@ public class WeChatAutoPlusController extends BaseUserController {
 
     /**
      * @Author: zhangqingqing
-     * @Desc :用户授权自动投资异步回调
+     * @Desc :用户授权自动出借异步回调
      * @Param: * @param bean
      * @Date: 16:37 2018/5/30
      * @Return: String
      */
-    @ApiOperation(value = "用户授权自动投资异步回调", notes = "用户授权自动投资异步回调")
+    @ApiOperation(value = "用户授权自动出借异步回调", notes = "用户授权自动出借异步回调")
     @ResponseBody
     @PostMapping(value = "/userAuthInvesBgreturn")
     public String userAuthInvesBgreturn(@RequestBody BankCallBean bean) {

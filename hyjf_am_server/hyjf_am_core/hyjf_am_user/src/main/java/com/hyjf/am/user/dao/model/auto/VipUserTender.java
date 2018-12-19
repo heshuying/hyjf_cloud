@@ -21,14 +21,14 @@ public class VipUserTender implements Serializable {
     private Integer vipId;
 
     /**
-     * 投资订单编号
+     * 出借订单编号
      *
      * @mbggenerated
      */
     private String tenderNid;
 
     /**
-     * 投资V值
+     * 出借V值
      *
      * @mbggenerated
      */

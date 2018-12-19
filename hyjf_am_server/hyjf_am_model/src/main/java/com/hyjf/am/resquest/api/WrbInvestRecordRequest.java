@@ -15,7 +15,7 @@ public class WrbInvestRecordRequest {
     /** 结束时间 */
     private String end_time;
 
-    /** 投资记录类型 */
+    /** 出借记录类型 */
     private Integer invest_status;
 
     /** 偏移 0,10,20递增 */
@@ -24,7 +24,7 @@ public class WrbInvestRecordRequest {
     /** 条数 10即每页10条 */
     private Integer limit;
 
-    /** 投资记录id  如果传了id，只查询该用户这个id的记录*/
+    /** 出借记录id  如果传了id，只查询该用户这个id的记录*/
     private String invest_record_id;
 
     public String getPf_user_id() {

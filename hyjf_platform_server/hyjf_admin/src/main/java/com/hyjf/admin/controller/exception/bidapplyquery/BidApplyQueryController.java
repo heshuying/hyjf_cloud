@@ -25,7 +25,7 @@ import javax.validation.Valid;
  * test: borrow tender 的 nid and bankopenaccount 的 account
  * start:pay server
  */
-@Api(value = "异常中心-投资人投标申请查询",tags = "异常中心-投资人投标申请查询")
+@Api(value = "异常中心-出借人投标申请查询",tags = "异常中心-出借人投标申请查询")
 @RestController
 @RequestMapping("/hyjf-admin/exception/bidapplyquery")
 public class BidApplyQueryController extends BaseController{
@@ -35,7 +35,7 @@ public class BidApplyQueryController extends BaseController{
 	
 	private static final String PERMISSIONS = "bidapplyquery";
 	
-    @ApiOperation(value = "异常中心-投资人投标申请查询", notes = "异常中心-投资人投标申请查询")
+    @ApiOperation(value = "异常中心-出借人投标申请查询", notes = "异常中心-出借人投标申请查询")
     @PostMapping(value = "/search")
     @ResponseBody
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
@@ -52,7 +52,7 @@ public class BidApplyQueryController extends BaseController{
     }
     
 	/**
-	 * 投资人投标申请查询      已测试
+	 * 出借人投标申请查询      已测试
 	 * @param request
 	 * @param form
 	 * @author libin

@@ -7,7 +7,7 @@ import com.hyjf.cs.common.service.BaseService;
 import java.util.List;
 
 /**
- * 第三方查询投资信息
+ * 第三方查询出借信息
  * @version UserInvestService, v0.1 2018/9/1 13:18
  * @Author: Zha Daojian
  */

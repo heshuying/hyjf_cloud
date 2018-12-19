@@ -11,7 +11,7 @@ public class CouponRepayBean {
      */
     private Integer periodNow;
     /**
-     * 体验金按收益期限还款的投资编号列表
+     * 体验金按收益期限还款的出借编号列表
      */
     private String nidList;
     /**
@@ -24,7 +24,7 @@ public class CouponRepayBean {
     private String planNid;
 
     /**
-     * 投资/加入订单号
+     * 出借/加入订单号
      */
     private String orderId;
 

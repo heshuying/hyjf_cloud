@@ -26,7 +26,7 @@ public class CallCenterCouponTenderCustomize implements Serializable {
 	private static final long serialVersionUID = 1L;
 	//主键id
     private Integer id;
-    //投资订单号
+    //出借订单号
     private String orderId;
     //项目编号
     private String borrowNid;
@@ -39,9 +39,9 @@ public class CallCenterCouponTenderCustomize implements Serializable {
     private String couponType;
     //优惠券额度
     private String couponQuota;
-    //投资金额
+    //出借金额
     private String account;
-    //投资平台
+    //出借平台
     private String operatingDeck;
     //年化利率
     private String borrowApr;
@@ -57,7 +57,7 @@ public class CallCenterCouponTenderCustomize implements Serializable {
     private String couponSystem;
     //优惠券适用产品类型
     private String projectType;
-    //投资项目期限条件
+    //出借项目期限条件
     private String projectExpirationType;
     public Integer getId() {
         return id;

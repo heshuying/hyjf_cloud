@@ -127,8 +127,8 @@ public class RepayAuthController extends BaseController {
 
         UserInfoVO usersInfo = paymentAuthPageService.getUserInfo(userId);
         if (usersInfo.getRoleId() == 1) {// 未开户
-            logger.info("-------------------用户为投资人角色无法授权！" + payRequestBean.getAccountId() + "！--------------------");
-            Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000010, "用户为投资账户！");
+            logger.info("-------------------用户为出借人角色无法授权！" + payRequestBean.getAccountId() + "！--------------------");
+            Map<String, String> params = payRequestBean.getErrorMap(ErrorCodeConstant.STATUS_CE000010, "用户为出借账户！");
             payRequestBean.doNotify(params);
             autoPlusService.getErrorMV(payRequestBean, modelAndView, ErrorCodeConstant.STATUS_CE000010);
             return modelAndView;
@@ -216,7 +216,7 @@ public class RepayAuthController extends BaseController {
         repwdResult.setCallBackAction(request.getParameter("callback").replace("*-*-*", "#"));
         bean.convert();
         repwdResult.set("accountId", bean.getAccountId());
-        //投资人签约状态查询
+        //出借人签约状态查询
         logger.info("还款授权同步回调调用查询接口查询状态");
         BankCallBean retBean = autoPlusService.getTermsAuthQuery(Integer.parseInt(bean.getLogUserId()), BankCallConstant.CHANNEL_PC);
         logger.info("还款授权同步回调调用查询接口查询状态结束  结果为:" + (retBean == null ? "空" : retBean.getRetCode()));

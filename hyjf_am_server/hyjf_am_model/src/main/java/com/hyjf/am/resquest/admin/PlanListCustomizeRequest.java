@@ -28,7 +28,7 @@ public class PlanListCustomizeRequest implements Serializable{
 	 */
 	private Integer lockPeriodSrch;
 	/**
-	 * 检索条件 投资状态
+	 * 检索条件 出借状态
 	 */
 	private Integer planStatusSrch;
 	/**

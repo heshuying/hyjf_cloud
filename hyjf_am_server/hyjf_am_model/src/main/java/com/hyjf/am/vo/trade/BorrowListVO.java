@@ -144,7 +144,7 @@ public class BorrowListVO  extends BaseVO implements Serializable {
 	private String borrowExtraYield;
 	// 协议期数
 	private String contractPeriod;
-	// 最小投资金额万
+	// 最小出借金额万
 	private String tenderAccountMinWan;
 	/* 倍增金额 increaseMoney ----------- */
 	private String increaseMoney;

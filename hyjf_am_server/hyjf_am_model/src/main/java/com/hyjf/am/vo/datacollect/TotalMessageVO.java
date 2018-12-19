@@ -6,11 +6,11 @@ package com.hyjf.am.vo.datacollect;
  */
 
 public class TotalMessageVO {
-    //投资总额(亿元)
+    //出借总额(亿元)
     String tenderSum;
     //收益总额(亿元)
     String interestSum;
-    //累计投资人数(万人)
+    //累计出借人数(万人)
     int totalTenderSum;
     //当前时间
     String date;

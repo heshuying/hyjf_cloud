@@ -16,7 +16,7 @@ public class RepaymentDetailHztBean implements Serializable  {
     private String mobile;
     private String borrowNid;// 借款编号
     private String borrowName;// 借款标题
-    private String nid;// 投资编号
+    private String nid;// 出借编号
     private String repayOrdid; //还款订单号
     private String recoverCapital;// 应还本金
     private String recoverInterest;// 应还利息

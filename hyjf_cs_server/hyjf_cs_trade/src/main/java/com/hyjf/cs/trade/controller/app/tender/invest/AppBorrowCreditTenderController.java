@@ -22,11 +22,11 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
- * @Description APP端散标债转投资
+ * @Description APP端散标债转出借
  * @Author sunss
  * @Date 2018/7/3 14:02
  */
-@Api(value = "app端-散标债转投资",tags = "app端-散标债转投资")
+@Api(value = "app端-散标债转出借",tags = "app端-散标债转出借")
 @RestController
 @RequestMapping("/hyjf-app/tender/credit")
 public class AppBorrowCreditTenderController extends BaseTradeController {
@@ -34,10 +34,10 @@ public class AppBorrowCreditTenderController extends BaseTradeController {
     @Autowired
     private BorrowCreditTenderService borrowTenderService;
 
-    @ApiOperation(value = "APP端散标债转投资", notes = "APP端散标债转投资")
+    @ApiOperation(value = "APP端散标债转出借", notes = "APP端散标债转出借")
     @PostMapping(value = "/tender", produces = "application/json; charset=utf-8")
     public WebResult<Map<String,Object>> borrowTender(@RequestHeader(value = "userId") Integer userId, TenderRequest tender, HttpServletRequest request) {
-        logger.info("APP端请求债转投资接口");
+        logger.info("APP端请求债转出借接口");
         String ip = CustomUtil.getIpAddr(request);
         tender.setIp(ip);
         tender.setUserId(userId);
@@ -61,16 +61,16 @@ public class AppBorrowCreditTenderController extends BaseTradeController {
     @PostMapping("/bgReturn")
     @ResponseBody
     public BankCallResult borrowCreditTenderBgReturn(BankCallBean bean ) {
-        logger.info("APP端债转投资异步处理start,userId:{},返回码:{}", bean.getLogUserId(),bean.getRetCode());
+        logger.info("APP端债转出借异步处理start,userId:{},返回码:{}", bean.getLogUserId(),bean.getRetCode());
         BankCallResult result = borrowTenderService.borrowCreditTenderBgReturn(bean);
         return result;
     }
 
-    @ApiOperation(value = "APP端债转投资获取投资结果  失败", notes = "APP端债转投资获取投资结果  失败")
+    @ApiOperation(value = "APP端债转出借获取出借结果  失败", notes = "APP端债转出借获取出借结果  失败")
     @PostMapping(value = "/getResult", produces = "application/json; charset=utf-8")
     public AppResult<Map<String,Object>> getBorrowTenderResult(@RequestHeader(value = "userId", required = true) Integer userId,
                                                                @RequestParam String logOrdId) {
-        logger.info("APP端债转投资获取投资结果，logOrdId{}",logOrdId);
+        logger.info("APP端债转出借获取出借结果，logOrdId{}",logOrdId);
         WebResult<Map<String,Object>> webResult = borrowTenderService.getFaileResult(userId,logOrdId);
         AppResult<Map<String,Object>> result  = new AppResult<Map<String,Object>>();
         Map<String,Object> data = webResult.getData();
@@ -84,11 +84,11 @@ public class AppBorrowCreditTenderController extends BaseTradeController {
         return result;
     }
 
-    @ApiOperation(value = "APP端债转投资获取投资结果  成功", notes = "APP端债转投资获取投资结果  成功")
+    @ApiOperation(value = "APP端债转出借获取出借结果  成功", notes = "APP端债转出借获取出借结果  成功")
     @PostMapping(value = "/getSuccessResult", produces = "application/json; charset=utf-8")
     public AppResult<Map<String,Object>> getSuccessResult(@RequestHeader(value = "userId", required = true) Integer userId,
                                                           @RequestParam String logOrdId) {
-        logger.info("APP端债转投资获取投资结果，logOrdId{}",logOrdId);
+        logger.info("APP端债转出借获取出借结果，logOrdId{}",logOrdId);
         WebResult<Map<String,Object>> webResult = borrowTenderService.getSuccessResult(userId,logOrdId);
         AppResult<Map<String,Object>> result  = new AppResult<Map<String,Object>>();
         Map<String,Object> data = webResult.getData();

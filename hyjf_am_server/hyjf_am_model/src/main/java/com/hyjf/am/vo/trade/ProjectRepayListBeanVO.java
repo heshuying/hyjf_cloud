@@ -14,7 +14,7 @@ public class ProjectRepayListBeanVO {
     public String userId;
     // 项目编号
     public String borrowNid;
-    //用户投资的唯一标示
+    //用户出借的唯一标示
     public String nid;
 
     /**

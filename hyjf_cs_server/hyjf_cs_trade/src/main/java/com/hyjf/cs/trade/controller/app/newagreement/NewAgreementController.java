@@ -154,12 +154,12 @@ public class NewAgreementController extends BaseTradeController{
 	
     /**
      * 
-     *（二）汇计划投资服务协议    已测试
+     *（二）汇计划出借服务协议    已测试
      * @author libin
      * @param request
      * @return
      */
-    @ApiOperation(value = "APP端协议接口", notes = "汇计划投资服务协议")
+    @ApiOperation(value = "APP端协议接口", notes = "汇计划出借服务协议")
     @ResponseBody
     @GetMapping("/hjhInfo")
     public NewAgreementResultBean hjhInfo(HttpServletRequest request) {
@@ -610,7 +610,7 @@ public class NewAgreementController extends BaseTradeController{
             }
             
             /*原 BorrowTender borrowTender=agreementService.getBorrowTenderByNid(investOrderId); 使用 criteria.andNidEqualTo(nid);*/
-            //现 获取用户投资信息(方法复用) example.createCriteria().andNidEqualTo(tenderNid);
+            //现 获取用户出借信息(方法复用) example.createCriteria().andNidEqualTo(tenderNid);
             List<BorrowTenderVO> tenderList = this.agreementService.getBorrowTenderListByNid(investOrderId);
             BorrowTenderVO borrowTender = null;
             if(CollectionUtils.isNotEmpty(tenderList)){
@@ -645,7 +645,7 @@ public class NewAgreementController extends BaseTradeController{
                     "&borrowType="+borrowType);
             list.add(newAgreementBean);
             /*原BorrowTender borrowTender=agreementService.getBorrowTenderByNid(creditTender.getCreditTenderNid());  criteria.andNidEqualTo(nid)*/
-            //现 获取用户投资信息(方法复用) example.createCriteria().andNidEqualTo(tenderNid);
+            //现 获取用户出借信息(方法复用) example.createCriteria().andNidEqualTo(tenderNid);
             List<BorrowTenderVO> tenderList = this.agreementService.getBorrowTenderListByNid(creditTender.getCreditTenderNid());
             BorrowTenderVO borrowTender = null;
             if(CollectionUtils.isNotEmpty(tenderList)){
@@ -668,14 +668,14 @@ public class NewAgreementController extends BaseTradeController{
     }
 
 	/**
-	 * 用户中心债转被投资的协议
+	 * 用户中心债转被出借的协议
 	 * 
 	 * @return
 	 */
     public JSONObject selectUserCreditContract(NewCreditAssignedBean tenderCreditAssignedBean,Integer userId) {
     	JSONObject resultMap = new JSONObject();
     	
-    	/*获取债转投资信息 start*/
+    	/*获取债转出借信息 start*/
     	List<CreditTenderVO> creditTenderList = null;
     	// 初始化查询bean(方法复用)
     	CreditTenderRequest request = new CreditTenderRequest();
@@ -695,9 +695,9 @@ public class NewAgreementController extends BaseTradeController{
     	} else {
     		 resultMap.put("errorMsg", "参数为空！");
     	}
-    	/*获取债转投资信息 end*/
+    	/*获取债转出借信息 end*/
     	
-    	// 获取债转投资信息不为空时继续
+    	// 获取债转出借信息不为空时继续
 		if (creditTenderList != null && creditTenderList.size() > 0) {
 		    DecimalFormat df = CustomConstants.DF_FOR_VIEW;
 			CreditTenderVO creditTender = creditTenderList.get(0);
@@ -939,7 +939,7 @@ public class NewAgreementController extends BaseTradeController{
         //现 获取标的信息
         BorrowAndInfoVO borrow = this.agreementService.getBorrowByNid(borrowNid);
         
-        //原 获取用户投资信息
+        //原 获取用户出借信息
 /*        BorrowTenderExample borrowTenderExample=new BorrowTenderExample();
         borrowTenderExample.createCriteria().andNidEqualTo(tenderNid);
         List<BorrowTender> borrowTenders=borrowTenderMapper.selectByExample(borrowTenderExample);
@@ -948,7 +948,7 @@ public class NewAgreementController extends BaseTradeController{
         }
         BorrowTender borrowTender=borrowTenders.get(0);*/
         
-        //现 获取用户投资信息(方法复用) example.createCriteria().andNidEqualTo(tenderNid);
+        //现 获取用户出借信息(方法复用) example.createCriteria().andNidEqualTo(tenderNid);
         List<BorrowTenderVO> tenderList = this.agreementService.getBorrowTenderListByNid(tenderNid);
         BorrowTenderVO borrowTender = null;
         if(CollectionUtils.isNotEmpty(tenderList)){
@@ -966,12 +966,12 @@ public class NewAgreementController extends BaseTradeController{
             return jsonObject; 
         }
         
-        //原 获取投资人信息
+        //原 获取出借人信息
 /*        UsersInfo lendersUserInfo=getUsersInfoByUserId(borrowTender.getUserId());
         if(lendersUserInfo==null){
             return jsonObject; 
         }*/
-        //现 获取投资人信息
+        //现 获取出借人信息
         UserInfoVO lendersUserInfo = this.agreementService.getUsersInfoByUserId(borrowTender.getUserId());
         if(lendersUserInfo==null){
             return jsonObject; 

@@ -107,7 +107,7 @@ public class ApiUserLoginController {
                     }
                     sign = SecretUtil.createToken(userId, users.getUsername(), accountId);
                     baseMapBean.set("sign", sign);
-                    //登录成功之后风车理财的特殊标记，供后续投资使用
+                    //登录成功之后风车理财的特殊标记，供后续出借使用
                     CookieUtils.addCookie(request, response, CustomConstants.TENDER_FROM_TAG,
                             CustomConstants.WRB_CHANNEL_CODE);
                     RedisUtils.del("loginFrom"+userId);

@@ -22,7 +22,7 @@ public class AdminBorrowInvestCustomizeVO extends BaseVO implements Serializable
     @ApiModelProperty(value = "推荐人")
     private String referrerName;
 
-    @ApiModelProperty(value = "借款编号")
+    @ApiModelProperty(value = "项目编号")
     private String borrowNid;
 
     @ApiModelProperty(value = "计划编号")
@@ -37,7 +37,7 @@ public class AdminBorrowInvestCustomizeVO extends BaseVO implements Serializable
     @ApiModelProperty(value = "还款方式")
     private String borrowStyleName;
 
-    @ApiModelProperty(value = "投资金额")
+    @ApiModelProperty(value = "出借金额")
     private String account;
 
     @ApiModelProperty(value = "渠道")
@@ -46,13 +46,13 @@ public class AdminBorrowInvestCustomizeVO extends BaseVO implements Serializable
     @ApiModelProperty(value = "操作平台")
     private String operatingDeck;
 
-    @ApiModelProperty(value = "投资时间")
+    @ApiModelProperty(value = "出借时间")
     private String createTime;
 
     @ApiModelProperty(value = "借款人ID")
     private String userId;
 
-    @ApiModelProperty(value = "投资订单号")
+    @ApiModelProperty(value = "出借订单号")
     private String nid;
 
     @ApiModelProperty(value = "是否邮件发送1可以发，0不可以发")
@@ -61,52 +61,52 @@ public class AdminBorrowInvestCustomizeVO extends BaseVO implements Serializable
     @ApiModelProperty(value = "项目类型")
     private String borrowProjectTypeName;
 
-    @ApiModelProperty(value = "投资订单号")
+    @ApiModelProperty(value = "出借订单号")
     private String tenderOrderNum;
 
     @ApiModelProperty(value = "冻结订单号")
     private String freezeOrderNum;
 
-    @ApiModelProperty(value = "投资人用户名")
+    @ApiModelProperty(value = "出借人用户名")
     private String tenderUsername;
 
-    @ApiModelProperty(value = "投资人用户ID")
+    @ApiModelProperty(value = "出借人用户ID")
     private String tenderUserId;
 
     @ApiModelProperty(value = "推荐人ID（当前）")
     private String referrerUserId;
 
-    @ApiModelProperty(value = "推荐人ID（投资时）")
+    @ApiModelProperty(value = "推荐人ID（出借时）")
     private String tenderReferrerUserId;
 
-    @ApiModelProperty(value = "投资人用户属性（投资时）")
+    @ApiModelProperty(value = "出借人用户属性（出借时）")
     private String tenderUserAttribute;
 
-    @ApiModelProperty(value = "推荐人用户属性（投资时）")
+    @ApiModelProperty(value = "推荐人用户属性（出借时）")
     private String inviteUserAttribute;
 
-    @ApiModelProperty(value = "推荐人（投资时）")
+    @ApiModelProperty(value = "推荐人（出借时）")
     private String tenderReferrerUsername;
 
-    @ApiModelProperty(value = "一级分部（投资时）")
+    @ApiModelProperty(value = "一级分部（出借时）")
     private String departmentLevel1Name;
 
-    @ApiModelProperty(value = "二级分部（投资时）")
+    @ApiModelProperty(value = "二级分部（出借时）")
     private String departmentLevel2Name;
 
-    @ApiModelProperty(value = "团队（投资时）")
+    @ApiModelProperty(value = "团队（出借时）")
     private String teamName;
 
-    @ApiModelProperty(value = "投资人用户属性（当前）")
+    @ApiModelProperty(value = "出借人用户属性（当前）")
     private String tenderUserAttributeNow;
 
-    @ApiModelProperty(value = "投资人所属一级分部（当前）")
+    @ApiModelProperty(value = "出借人所属一级分部（当前）")
     private String tenderRegionName;
 
-    @ApiModelProperty(value = "投资人所属二级分部（当前）")
+    @ApiModelProperty(value = "出借人所属二级分部（当前）")
     private String tenderBranchName;
 
-    @ApiModelProperty(value = "投资人所属团队（当前）")
+    @ApiModelProperty(value = "出借人所属团队（当前）")
     private String tenderDepartmentName;
 
     @ApiModelProperty(value = "推荐人姓名（当前）")
@@ -121,7 +121,7 @@ public class AdminBorrowInvestCustomizeVO extends BaseVO implements Serializable
     @ApiModelProperty(value = "推荐人所属团队（当前）")
     private String referrerDepartmentName;
 
-    @ApiModelProperty(value = "投资类别 0手动投标，1或者别的预约投标")
+    @ApiModelProperty(value = "出借类别 0手动投标，1或者别的预约投标")
     private String investType;
 
     @ApiModelProperty(value = "汇计划加入订单号")
@@ -163,7 +163,7 @@ public class AdminBorrowInvestCustomizeVO extends BaseVO implements Serializable
     @ApiModelProperty(value = "脱敏合同地址")
     private String imgUrl;
 
-    @ApiModelProperty(value = "是否复投投资  1；是   0：否")
+    @ApiModelProperty(value = "是否复投投标  1；是   0：否")
     private String tenderType;
 
     public String getBorrowName() {

@@ -106,7 +106,7 @@ public interface PropertiesConstants {
 	String HYJF_VIP_MONEY = "hyjf.vip.money";
 	
 	/**
-	 * 投资夺宝活动编号
+	 * 出借夺宝活动编号
 	 */
 	String TENDER_PRIZE_ACTIVITY_ID = "tender.prize.activity.id";
 	
@@ -121,7 +121,7 @@ public interface PropertiesConstants {
     String REGISTER_ALL_SEND_COUPON_ACTIVITY_ID = "hyjf.register.give.coupon.activity.id";
     
     /**
-     * 投资满1000送加息券活动id
+     * 出借满1000送加息券活动id
      */
     String TENDER_SEND_COUPON_ACTIVITY_ID = "hyjf.investment.give.coupon.activity.id";
     /**

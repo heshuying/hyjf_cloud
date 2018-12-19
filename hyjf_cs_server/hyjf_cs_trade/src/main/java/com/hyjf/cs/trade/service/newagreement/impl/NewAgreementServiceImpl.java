@@ -142,7 +142,7 @@ public class NewAgreementServiceImpl extends BaseTradeServiceImpl implements New
 	}
 
 	/**
-	* 会计划投资详情
+	* 会计划出借详情
 	* @param params
 	* @return
 	*/

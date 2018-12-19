@@ -85,7 +85,7 @@ public class AppMyProjectController extends BaseTradeController {
         switch (type) {
             // 当前持有
             case "1":
-                // 查询我的投资中债权总数
+                // 查询我的出借中债权总数
                 count = this.appMyProjectService.selectCurrentHoldObligatoryRightListTotal(params);
                 if (count > 0) {
                     // 获取用户当前持有债权列表
@@ -133,7 +133,7 @@ public class AppMyProjectController extends BaseTradeController {
     }
 
     /**
-     * 适应客户端数据返回 - 投资中
+     * 适应客户端数据返回 - 出借中
      *
      * @return
      */
@@ -170,7 +170,7 @@ public class AppMyProjectController extends BaseTradeController {
                     } else {
                         vo.setLabel("");
                     }
-                    investStatusDesc = "现金投资".equals(entity.getData()) ? "还款中" : entity.getData();
+                    investStatusDesc = "现金出借".equals(entity.getData()) ? "还款中" : entity.getData();
             }
             // 加息收益
             if("4".equals(entity.getType())){
@@ -180,13 +180,13 @@ public class AppMyProjectController extends BaseTradeController {
             }
             vo.setBorrowName(entity.getBorrowNid());
             vo.setBorrowTheFirst(CommonUtils.formatAmount(entity.getCapital()) + "元");
-            vo.setBorrowTheFirstDesc("投资金额");
+            vo.setBorrowTheFirstDesc("出借金额");
             vo.setBorrowTheSecond(entity.getBorrowPeriod());
             vo.setBorrowTheSecondDesc("项目期限");
             vo.setBorrowTheThird(entity.getAddtime());
-            vo.setBorrowTheThirdDesc("投资时间");
+            vo.setBorrowTheThirdDesc("出借时间");
             vo.setType("1");
-            // 投资订单号
+            // 出借订单号
             String assignNid = "";
             String nid = entity.getNid();
             if (!StringUtils.isBlank(entity.getCreditTenderNid())) {
@@ -235,7 +235,7 @@ public class AppMyProjectController extends BaseTradeController {
             vo = new MyProjectVo();
             BeanUtils.copyProperties(entity, vo);
             vo.setBorrowTheFirst(entity.getAccount() + "元");
-            vo.setBorrowTheFirstDesc("投资金额");
+            vo.setBorrowTheFirstDesc("出借金额");
             vo.setBorrowTheSecond(entity.getPeriod());
             vo.setBorrowTheSecondDesc("项目期限");
             vo.setBorrowTheThird(GetDate.times10toStrYYYYMMDD(Integer.valueOf(entity.getRecoverTime())));
@@ -299,13 +299,13 @@ public class AppMyProjectController extends BaseTradeController {
     }
 
     /**
-     * 拼接投资详情url
+     * 拼接出借详情url
      * @param borrowNid
      * @param orderId
      * @param type
      * @param couponType
      * @param assignNid
-     * @param investStatusDesc  投资状态
+     * @param investStatusDesc  出借状态
      * @return
      */
     private String concatInvestDetailUrl(String borrowNid, String orderId, String type, String couponType, String assignNid, String investStatusDesc) {
@@ -317,7 +317,7 @@ public class AppMyProjectController extends BaseTradeController {
         return url;
     }
     /**
-     * 判断用户某一投资是否满足债转条件
+     * 判断用户某一出借是否满足债转条件
      *
      * @param borrowNid
      * @param tenderNid

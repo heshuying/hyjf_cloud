@@ -443,10 +443,10 @@ public class CommonUtils {
 	}
 
 	/**
-	 * 获取标的投资等级和用户等级进行校验(只适用于计划)
+	 * 获取标的出借等级和用户等级进行校验(只适用于计划)
 	 * @author wenxin
 	 * @param UserLevel 用户等级
-	 * @return true能投资 false 不能投资
+	 * @return true能出借 false 不能出借
 	 */
 	public static Boolean checkStandardInvestment(String UserLevel){
 		boolean bolStr = false;

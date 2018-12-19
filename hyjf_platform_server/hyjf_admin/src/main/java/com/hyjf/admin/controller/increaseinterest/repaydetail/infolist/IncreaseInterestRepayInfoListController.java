@@ -118,19 +118,19 @@ public class IncreaseInterestRepayInfoListController extends BaseController {
 
 	private Map<String, String> buildMap() {
 		Map<String, String> map = Maps.newLinkedHashMap();
-		map.put("borrowNid", "借款编号");
-		map.put("investUserName", "投资人");
+		map.put("borrowNid", "项目编号");
+		map.put("investUserName", "出借人用户名");
 		map.put("borrowPeriodByStyle", "借款期限");
 		map.put("repayPeriod", "还款期数");
 		map.put("repayStyleName", "还款方式");
-		map.put("borrowApr", "年化收益率");
+		map.put("borrowApr", "出借利率");
 		map.put("borrowExtraYield", "加息收益率");
-		map.put("repayCapital", "投资本金");
+		map.put("repayCapital", "出借本金");
 		map.put("repayInterest", "应还加息收益");
-		map.put("repayTime", "应还时间");
+		map.put("repayTime", "应回时间");
 		map.put("repayStatus", "转账状态");
 		map.put("repayInterestYes", "实还加息收益");
-		map.put("repayActionTime", "实际还款时间");
+		map.put("repayActionTime", "实际回款时间");
 		return map;
 	}
 	private Map<String, IValueFormatter> buildValueAdapter() {

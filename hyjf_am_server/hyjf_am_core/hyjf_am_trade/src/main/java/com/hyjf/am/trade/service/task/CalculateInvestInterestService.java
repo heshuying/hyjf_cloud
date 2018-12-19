@@ -13,12 +13,12 @@ import java.util.Map;
  */
 public interface CalculateInvestInterestService {
     /**
-     * 插入投资统计表
+     * 插入出借统计表
      */
     void insertDataInfo(Map<String, Object> mapPeriod) throws MQException;
 
     /**
-     * 插入上月投资记录
+     * 插入上月出借记录
      */
     void insertAYearTenderInfo();
 

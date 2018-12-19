@@ -116,7 +116,7 @@ public class UserParamExceptionController extends BaseController {
     private static Boolean isOver = true;
 
     /**
-     * bug号15597  对应,注释掉更新全部和投资数据修复
+     * bug号15597  对应,注释掉更新全部和出借数据修复
      */
    /* @ApiOperation(value = "更新全部用户属性", notes = "更新全部用户属性")
     @PostMapping(value = "/updateAllUserParam")
@@ -139,7 +139,7 @@ public class UserParamExceptionController extends BaseController {
         return new AdminResult<>();
     }
 
-    @ApiOperation(value = "投资数据修复", notes = "投资数据修复")
+    @ApiOperation(value = "出借数据修复", notes = "出借数据修复")
     @PostMapping(value = "/tenderRepairAction")
     @ResponseBody
     public AdminResult tenderRepairAction(@RequestParam (value = "repairStartDate")  String repairStartDate, @RequestParam (value = "repairStartDate")  String repairEndDate) {

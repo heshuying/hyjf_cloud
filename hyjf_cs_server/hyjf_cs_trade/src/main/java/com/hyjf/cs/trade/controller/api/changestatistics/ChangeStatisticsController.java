@@ -33,7 +33,7 @@ public class ChangeStatisticsController extends BaseController {
     /** 总计注册人数 */
     private static final String TOTAL_REG_NUM = "total_reg_num";
 
-    /** 今日新增投资人数 */
+    /** 今日新增出借人数 */
     private static final String TODAY_ACCOUNT_NUM = "today_account_num";
 
     /** 今日新增充值人数 */
@@ -42,8 +42,8 @@ public class ChangeStatisticsController extends BaseController {
 
     /**
      * 数据全部在Redis中, 所以写在一个控制器中.
-     * 统计投资人
-     * 统计投资
+     * 统计出借人
+     * 统计出借
      * 统计充值
      * 注册人统计
      */
@@ -95,14 +95,14 @@ public class ChangeStatisticsController extends BaseController {
     }
 
     @PostMapping("/investorStatistics.do")
-    @ApiParam(required = true, name = "investorStatistics", value = "上海大屏幕投资人统计")
-    @ApiOperation(value = "上海大屏幕投资人统计接口", httpMethod = "POST", notes = "上海大屏幕统投资人计接口")
+    @ApiParam(required = true, name = "investorStatistics", value = "上海大屏幕出借人统计")
+    @ApiOperation(value = "上海大屏幕出借人统计接口", httpMethod = "POST", notes = "上海大屏幕统出借人计接口")
     public JSONObject investorStatistics(){
         JSONObject jsonObject = new JSONObject();
 
         String statisticalInvestorString = RedisUtils.get(RedisConstants.SH_OPERATIONAL_DATA + RedisConstants.STATISTICAL_INVESTOR);
 
-        logger.info("从Redis中获取投资人统计数据:" + statisticalInvestorString);
+        logger.info("从Redis中获取出借人统计数据:" + statisticalInvestorString);
 
         Map<String, Object> statisticalInvestorMap = new HashMap<>();
         if (StringUtils.isNotBlank(statisticalInvestorString)) {
@@ -117,13 +117,13 @@ public class ChangeStatisticsController extends BaseController {
     }
 
     @PostMapping("/fundStatistics.do")
-    @ApiParam(required = true, name = "fundStatistics", value = "投资资金统计")
-    @ApiOperation(value = "上海大屏幕投资资金统计接口", httpMethod = "POST", notes = "上海大屏幕投资资金统计接口")
+    @ApiParam(required = true, name = "fundStatistics", value = "出借资金统计")
+    @ApiOperation(value = "上海大屏幕出借资金统计接口", httpMethod = "POST", notes = "上海大屏幕出借资金统计接口")
     public JSONObject fundStatistics(){
         JSONObject jsonObject = new JSONObject();
 
         String investmentStatisticsString = RedisUtils.get(RedisConstants.SH_OPERATIONAL_DATA + RedisConstants.STATISTICAL_INVESTMENT);
-        logger.info("从Redis中获取投资资金统计数据:" + investmentStatisticsString);
+        logger.info("从Redis中获取出借资金统计数据:" + investmentStatisticsString);
         Map<String, Object> investmentStatisticsMap = new HashMap<>();
         if (StringUtils.isNotBlank(investmentStatisticsString)) {
             JSONObject jsonString = JSONObject.parseObject(investmentStatisticsString);

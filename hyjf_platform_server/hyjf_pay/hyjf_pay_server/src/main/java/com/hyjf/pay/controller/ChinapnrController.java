@@ -408,7 +408,7 @@ public class ChinapnrController extends BaseController {
                             else if (ChinaPnrConstant.CMDID_USR_ACCT_PAY.equals(bean.getCmdId())) {
                                 HttpDeal.post(callBackUrl, bean.getAllParams());
                             }
-                            // 用户投资
+                            // 用户出借
                             else if (ChinaPnrConstant.CMDID_INITIATIVE_TENDER.equals(bean.getCmdId())) {
                                 HttpDeal.post(callBackUrl, bean.getAllParams());
                             }

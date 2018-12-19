@@ -300,7 +300,7 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
         }
 
         String accedeOrderId = request.getAccedeOrderId();
-        // 页面固定传值0是投资中 1是锁定中 2是已回款
+        // 页面固定传值0是出借中 1是锁定中 2是已回款
         String type = request.getType();
         CheckUtil.check(StringUtils.isNotBlank(accedeOrderId),MsgEnum.ERR_OBJECT_REQUIRED,"加入订单号");
 
@@ -432,7 +432,7 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
         }
 
         String accedeOrderId = request.getAccedeOrderId();
-        // 页面固定传值0是投资中 1是锁定中 2是已回款
+        // 页面固定传值0是出借中 1是锁定中 2是已回款
         String type = request.getType();
         CheckUtil.check(StringUtils.isNotBlank(accedeOrderId),MsgEnum.ERR_OBJECT_REQUIRED,"加入订单号");
 
@@ -519,7 +519,7 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
         }
 
         String accedeOrderId = request.getAccedeOrderId();
-        // 页面固定传值0是投资中 1是锁定中 2是已回款
+        // 页面固定传值0是出借中 1是锁定中 2是已回款
         String type = request.getType();
         CheckUtil.check(StringUtils.isNotBlank(accedeOrderId),MsgEnum.ERR_OBJECT_REQUIRED,"加入订单号");
 

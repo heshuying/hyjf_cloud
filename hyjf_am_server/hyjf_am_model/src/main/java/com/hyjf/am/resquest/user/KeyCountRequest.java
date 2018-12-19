@@ -46,7 +46,7 @@ public class KeyCountRequest extends BasePage implements Serializable {
     private String accountNumber;
 
     /**
-     * 投资人数
+     * 出借人数
      */
     private String tenderNumber;
 

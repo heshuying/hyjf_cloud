@@ -103,7 +103,7 @@ public class OperationalDataWechatController {
 	}
 
 	/**
-	 * 获取借款&&投资数据
+	 * 获取借款&&出借数据
 	 * 
 	 * @return
 	 */
@@ -156,7 +156,7 @@ public class OperationalDataWechatController {
 	}
 
 	/**
-	 * 获取投资人地域分布数据
+	 * 获取出借人地域分布数据
 	 * 
 	 * @return
 	 */
@@ -171,10 +171,10 @@ public class OperationalDataWechatController {
 			OperationGroupReport oe = platDataStatisticsService.findOneOperationMongoGroupEntity();
 			if(Validator.isNull(oe)) {
 				result.put("status", "99");
-				result.put("statusDesc", "投资人地域分布数据为空");
+				result.put("statusDesc", "出借人地域分布数据为空");
 				return result;
 			}
-			// 获取投资人区域信息
+			// 获取出借人区域信息
 			Map<Integer, String> cityMap = oe.getInvestorRegionMap();
 			List<SubEntity> list = oe.orgnizeData(cityMap);
 			List<SubEntity> sublist=oe.formatList(list);
@@ -183,14 +183,14 @@ public class OperationalDataWechatController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			result.put("status", "99");
-			result.put("statusDesc", "获取投资人地域分布数据失败");
+			result.put("statusDesc", "获取出借人地域分布数据失败");
 		}
 
 		return result;
 	}
 
 	/**
-	 * 获取投资人性别&&年龄数据
+	 * 获取出借人性别&&年龄数据
 	 * 
 	 * @return
 	 */
@@ -204,7 +204,7 @@ public class OperationalDataWechatController {
 		try {
 			JSONObject info = new JSONObject();
 			OperationGroupReport oe = platDataStatisticsService.findOneOperationMongoGroupEntity();
-			// 投资人性别的分布
+			// 出借人性别的分布
 			Map<Integer, Integer> sexMap = oe.getInvestorSexMap();
             int maleCount = 0;
             int femaleCount = 0;
@@ -217,7 +217,7 @@ public class OperationalDataWechatController {
 			info.put("InvestorRegionMenRate", oe.formatDate(malePer) + "%");
 			info.put("InvestorRegionWoMenRate", oe.formatDate(femalePer) + "%");
 
-			// 投资人年龄分布
+			// 出借人年龄分布
 			Map<Integer, Integer> ageMap = oe.getInvestorAgeMap();
 			int r1 = ageMap.get(OperationGroupReport.ageRange1);
 			int r2 = ageMap.get(OperationGroupReport.ageRange2);

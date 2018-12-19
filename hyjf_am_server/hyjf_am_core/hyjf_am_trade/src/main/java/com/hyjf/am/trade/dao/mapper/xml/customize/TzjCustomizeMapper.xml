@@ -24,7 +24,7 @@
         </foreach>
     </select>
 
-    <!-- 投资人数、投资金额 -->
+    <!-- 出借人数、出借金额 -->
     <select id="getTenderInfo" resultMap="BaseResultMap">
         SELECT
         IFNULL(sum(temp.c),0) tenderCount,
@@ -72,7 +72,7 @@
         ) temp
     </select>
 
-    <!-- 首次投资人数、首次投资金额 -->
+    <!-- 首次出借人数、首次出借金额 -->
     <select id="getTenderFirstInfo" resultMap="BaseResultMap">
         SELECT
         IFNULL(sum(temp.c),0) tenderFirstCount,

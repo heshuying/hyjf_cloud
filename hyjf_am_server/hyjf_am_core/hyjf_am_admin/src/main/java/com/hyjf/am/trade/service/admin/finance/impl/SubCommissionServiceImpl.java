@@ -226,12 +226,12 @@ public class SubCommissionServiceImpl extends BaseServiceImpl implements SubComm
         receiveUserList.setType(1); // 1收入
         receiveUserList.setTrade("fee_share_in"); // 手续费分账转入
         receiveUserList.setTradeCode("balance"); // 余额操作
-        receiveUserList.setTotal(receiveUserAccount.getTotal()); // 投资人资金总额
-        receiveUserList.setBalance(receiveUserAccount.getBalance()); // 投资人可用金额
+        receiveUserList.setTotal(receiveUserAccount.getTotal()); // 出借人资金总额
+        receiveUserList.setBalance(receiveUserAccount.getBalance()); // 出借人可用金额
         receiveUserList.setPlanFrost(receiveUserAccount.getPlanFrost());// 汇添金冻结金额
         receiveUserList.setPlanBalance(receiveUserAccount.getPlanBalance());// 汇添金可用金额
-        receiveUserList.setFrost(receiveUserAccount.getFrost()); // 投资人冻结金额
-        receiveUserList.setAwait(receiveUserAccount.getAwait()); // 投资人待收金额
+        receiveUserList.setFrost(receiveUserAccount.getFrost()); // 出借人冻结金额
+        receiveUserList.setAwait(receiveUserAccount.getAwait()); // 出借人待收金额
         receiveUserList.setCreateTime(nowTime); // 创建时间
         receiveUserList.setBaseUpdate(nowTime); // 更新时间
         receiveUserList.setOperator(CustomConstants.OPERATOR_AUTO_REPAY); // 操作者

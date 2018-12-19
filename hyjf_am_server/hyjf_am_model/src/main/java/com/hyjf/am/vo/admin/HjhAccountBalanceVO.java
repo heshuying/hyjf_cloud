@@ -36,9 +36,9 @@ public class HjhAccountBalanceVO extends BaseVO implements Serializable {
     @ApiModelProperty(value = "债转资产交易额(元)")
     public BigDecimal creditAccount;
     /**
-     * 复投资金额(元)       db_column: reinvest_account
+     * 复出借金额(元)       db_column: reinvest_account
      */
-    @ApiModelProperty(value = "复投资金额(元)")
+    @ApiModelProperty(value = "复出借金额(元)")
     public BigDecimal reinvestAccount;
     /**
      * 新加入资金额(元)       db_column: add_account

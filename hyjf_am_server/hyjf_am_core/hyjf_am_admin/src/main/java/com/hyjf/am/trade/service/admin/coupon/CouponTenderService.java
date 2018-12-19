@@ -22,7 +22,7 @@ public interface CouponTenderService {
      */
     Integer countRecord(CouponTenderRequest request);
     /**
-     * 汇直投根据条件获取投资总金额
+     * 汇直投根据条件获取出借总金额
      * @param request 查询条件对象
      * @return String
      */
@@ -56,7 +56,7 @@ public interface CouponTenderService {
      */
     Integer countHjhRecord(CouponTenderRequest request);
     /**
-     * 汇计划根据条件获取投资总金额
+     * 汇计划根据条件获取出借总金额
      * @param request 查询条件对象
      * @return String
      */

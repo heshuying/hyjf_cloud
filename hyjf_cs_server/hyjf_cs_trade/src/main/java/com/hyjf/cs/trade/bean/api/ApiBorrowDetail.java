@@ -46,11 +46,11 @@ public class ApiBorrowDetail implements Serializable{
     private String borrowInterest;
     /* 项目进度 borrowSchedule */
     private String borrowSchedule;
-    // 最小投资金额
+    // 最小出借金额
     private String tenderAccountMin;
-    // 最小投资金额万
+    // 最小出借金额万
     private String tenderAccountMinWan;
-    // 最大投资金额
+    // 最大出借金额
     private String tenderAccountMax;
     /* 发标时间 sendTime ----------- */
     private String sendTime;
@@ -62,7 +62,7 @@ public class ApiBorrowDetail implements Serializable{
     private String onTime;
     /* 定时发标时间戳 time ----------- */
     private String time;
-    /* 项目状态 borrowStatus 10 定时发标 11投资中 12复审中 13 还款中 14 已还款 15 已流标 */
+    /* 项目状态 borrowStatus 10 定时发标 11出借中 12复审中 13 还款中 14 已还款 15 已流标 */
     private String borrowStatus;
     /* 倍增金额 increaseMoney ----------- */
     private String increaseMoney;

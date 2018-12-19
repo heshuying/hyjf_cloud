@@ -60,7 +60,7 @@ public class WrbInfoSericeImpl implements WrbInfoServcie {
 
     @Override
     public List<WrbBorrowTenderCustomizeVO> searchBorrowTenderByNidAndTime(String borrowNid, Date investTime) {
-        // 查询标的投资情况
+        // 查询标的出借情况
         List<WrbBorrowTenderCustomizeVO> list = amTradeClient.selectWrbBorrowTender(borrowNid, investTime);
         if (!CollectionUtils.isEmpty(list)) {
             for (WrbBorrowTenderCustomizeVO vo : list) {

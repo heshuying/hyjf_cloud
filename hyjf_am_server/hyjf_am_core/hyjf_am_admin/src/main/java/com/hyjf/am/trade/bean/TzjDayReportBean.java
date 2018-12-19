@@ -9,13 +9,13 @@ import java.math.BigDecimal;
 public class TzjDayReportBean {
     /** 每日充值人数 */
     private int rechargeCount;
-    /** 每日投资人数 */
+    /** 每日出借人数 */
     private int tenderCount;
     /** 每日首投人数 */
     private int tenderFirstCount;
     /** 每日复投人数 */
     private int tenderAgainCount;
-    /** 每日投资金额 */
+    /** 每日出借金额 */
     private BigDecimal tenderMoney;
     /** 每日首投金额  */
     private BigDecimal tenderFirstMoney;

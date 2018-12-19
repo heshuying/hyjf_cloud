@@ -358,7 +358,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 取得自动投资用加入计划列表
+     * 取得自动出借用加入计划列表
      *
      * @return
      * @author liubin
@@ -426,7 +426,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 银行自动投资成功后，更新投资数据
+     * 银行自动投标成功后，更新出借数据
      *
      * @return
      * @author liubin
@@ -439,8 +439,8 @@ public class AmTradeClientImpl implements AmTradeClient {
         UpdateBorrowForAutoTenderRequest request = new UpdateBorrowForAutoTenderRequest(borrowNid, accedeOrderId, bankCallBeanVO);
         Response response = restTemplate.postForEntity(url, request, Response.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
-            logger.error("[" + accedeOrderId + "] 银行自动投资成功后，更新投资数据失败。");
-            throw new RuntimeException("银行自动投资成功后，更新投资数据失败。");
+            logger.error("[" + accedeOrderId + "] 银行自动投标成功后，更新出借数据失败。");
+            throw new RuntimeException("银行自动投标成功后，更新出借数据失败。");
         }
         return true;
     }
@@ -577,7 +577,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 插入汇计划自动投资临时表
+     * 插入汇计划自动出借临时表
      * @author liubin
      */
     @Override
@@ -591,7 +591,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 删除汇计划自动投资临时表
+     * 删除汇计划自动出借临时表
      * @author liubin
      */
     @Override
@@ -605,7 +605,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据主键，更新汇计划自动投资临时表
+     * 根据主键，更新汇计划自动出借临时表
      * @author liubin
      */
     @Override
@@ -747,7 +747,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 
     /**
-     * 投资异常定时任务更新投资信息
+     * 出借异常定时任务更新出借信息
      * @param request
      * @return
      */
@@ -1143,7 +1143,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         return result.getResultInt();
     }
     /**
-     * 查询用户标的投资数量
+     * 查询用户标的出借数量
      * @param userId
      * @return
      */
@@ -1305,7 +1305,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     /*******************************  web end *************************************/
     /******************************  app start **************************************/
     /**
-     *  app端获取散标投资项目count
+     *  app端获取散标出借项目count
      * @author zhangyk
      * @date 2018/6/20 17:23
      */
@@ -1321,7 +1321,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * app端获取散标投资项目列表
+     * app端获取散标出借项目列表
      * @author zhangyk
      * @date 2018/6/20 17:24
      */
@@ -1644,7 +1644,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据投资订单号查询已承接金额
+     * 根据出借订单号查询已承接金额
      *
      * @param tenderNid
      * @return
@@ -1781,13 +1781,13 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 投资之前插入tmp表
+     * 出借之前插入tmp表
      *
      * @param request
      */
     @Override
     public boolean updateBeforeChinaPnR(TenderRequest request) {
-        logger.info("散标投资开始插入tmp表  参数 :{}",JSONObject.toJSONString(request));
+        logger.info("散标出借开始插入tmp表  参数 :{}",JSONObject.toJSONString(request));
         IntegerResponse result = restTemplate
                 .postForEntity("http://AM-TRADE/am-trade/borrow/insertBeforeTender", request, IntegerResponse.class).getBody();
         if (Response.isSuccess(result)) {
@@ -1797,14 +1797,14 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 用户投资散标操作表
+     * 用户出借散标操作表
      *
      * @param tenderBg
      * @return
      */
     @Override
     public boolean borrowTender(TenderBgVO tenderBg) {
-        logger.info("用户投资散标操作表,对象为：{}",JSONObject.toJSONString(tenderBg));
+        logger.info("用户出借散标操作表,对象为：{}",JSONObject.toJSONString(tenderBg));
         IntegerResponse result =  restTemplate
                 .postForEntity("http://AM-TRADE/am-trade/borrow/borrowTender", tenderBg, IntegerResponse.class).getBody();
         if (Response.isSuccess(result)) {
@@ -1839,7 +1839,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 获取投资异步结果
+     * 获取出借异步结果
      *
      * @param userId
      * @param logOrdId
@@ -1968,7 +1968,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据承接订单号查询债转投资表
+     * 根据承接订单号查询债转出借表
      * @param assignNid
      * @return
      */
@@ -2011,7 +2011,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     *同步回调收到后,根据logOrderId检索投资记录表
+     *同步回调收到后,根据logOrderId检索出借记录表
      * @param logOrderId
      * @return
      */
@@ -2434,7 +2434,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         return 0;
     }
     /**
-     * 根据投资订单号获取协议列表
+     * 根据出借订单号获取协议列表
      * @param nid
      * @return
      */
@@ -2645,7 +2645,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据优惠券查询投资信息
+     * 根据优惠券查询出借信息
      * @param couponTenderNid
      * @return
      */
@@ -2659,7 +2659,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 获取用户优惠券投资信息
+     * 获取用户优惠券出借信息
      *
      * @param userId
      * @param borrowNid
@@ -2706,7 +2706,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 散标优惠券投资
+     * 散标优惠券出借
      *
      * @param couponTender
      * @return
@@ -3006,7 +3006,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 验证投资人当天是否可以债转
+     * 验证出借人当天是否可以债转
      *
      * @param userId
      * @return
@@ -3022,7 +3022,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据投资订单号检索已债转还款信息
+     * 根据出借订单号检索已债转还款信息
      *
      * @param tenderId
      * @return
@@ -3076,7 +3076,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 前端Web页面投资可债转输入投资金额后收益提示 用户未登录 (包含查询条件)
+     * 前端Web页面出借可债转输入出借金额后收益提示 用户未登录 (包含查询条件)
      *
      * @param creditNid
      * @param assignCapital
@@ -3235,7 +3235,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 投资撤销历史数据处理
+     * 出借撤销历史数据处理
      * @param request
      * @return
      */
@@ -3258,7 +3258,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 查询前一天的投资临时数据并进行处理
+     * 查询前一天的出借临时数据并进行处理
      * @return
      */
     @Override
@@ -3272,7 +3272,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     *查询汇计划债转投资表
+     *查询汇计划债转出借表
      * @param request
      * @return
      */
@@ -3504,7 +3504,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 
     /**
-     *  更新投资协议信息
+     *  更新出借协议信息
      * @return
      */
     @Override
@@ -3518,7 +3518,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 通过主键获取投资协议信息
+     * 通过主键获取出借协议信息
      * @param tenderAgreementID
      * @return
      */
@@ -3641,7 +3641,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 散标投资记录数
+     * 散标出借记录数
      * @param params
      * @return
      */
@@ -3663,7 +3663,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 散标投资记录
+     * 散标出借记录
      * @param params
      * @return
      */
@@ -3804,7 +3804,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 获取债转投资人次和已债转金额
+     * 获取债转出借人次和已债转金额
      * @param transferId
      * @return
      */
@@ -4355,7 +4355,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 	/**
 	 *
-	 * 投资预插入
+	 * 出借预插入
 	 * @return
 	 * @author libin
 	 * @throws Exception
@@ -4401,7 +4401,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	}
 
 	/**
-	 * 根据userId和tenderNid查询投资记录
+	 * 根据userId和tenderNid查询出借记录
 	 * @author zhangyk
 	 * @date 2018/8/30 10:49
 	 */
@@ -4433,7 +4433,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 
     /**
-     * 根据tenderNid查询投资记录
+     * 根据tenderNid查询出借记录
      * @author zhangyk
      * @date 2018/8/30 10:49
      */
@@ -4670,7 +4670,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据放款编号获取该标的的投资信息 add by liushouyi
+     * 根据放款编号获取该标的的出借信息 add by liushouyi
      *
      * @param borrowNid
      * @return
@@ -4749,7 +4749,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 获取用户投资订单还款详情
+     * 获取用户出借订单还款详情
      *
      * @param nid
      * @return
@@ -4832,7 +4832,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 查询用户投资次数 包含直投类、债转、汇添金
+     * 查询用户出借次数 包含直投类、债转、汇添金
      * @auth sunpeikai
      * @param
      * @return
@@ -4940,7 +4940,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 查询投资记录
+     * 查询出借记录
      * @author wenxin
      * @date 2018/8/27 13:00
      */
@@ -4955,7 +4955,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 獲取銀行開戶信息(根据投资信息查询)
+     * 獲取銀行開戶信息(根据出借信息查询)
      * @author wenxin
      * @date 2018/8/27 13:00
      */
@@ -5455,7 +5455,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 获取用户投资数量
+     * 获取用户出借数量
      *
      * @param userId
      * @return
@@ -5688,7 +5688,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据用户ID查询用户投资记录
+     * 根据用户ID查询用户出借记录
      *
      * @param userId
      * @return
@@ -5752,7 +5752,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据加入订单号查询优惠券投资
+     * 根据加入订单号查询优惠券出借
      *
      * @param orderId
      * @return
@@ -5768,7 +5768,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据优惠券投资ID查询优惠券投资
+     * 根据优惠券出借ID查询优惠券出借
      *
      * @param couponTenderId
      * @return
@@ -5800,7 +5800,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据优惠券投资ID获取优惠券投资信息
+     * 根据优惠券出借ID获取优惠券出借信息
      *
      * @param couponTenderId
      * @return
@@ -5816,7 +5816,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据投资订单号查询投资信息
+     * 根据出借订单号查询出借信息
      *
      * @param orderId
      * @return
@@ -5866,7 +5866,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 查询首页定时发标,投资中,复审中的项目
+     * 查询首页定时发标,出借中,复审中的项目
      * @Author yangchangwei 2018/10/16
      * @param request
      * @return

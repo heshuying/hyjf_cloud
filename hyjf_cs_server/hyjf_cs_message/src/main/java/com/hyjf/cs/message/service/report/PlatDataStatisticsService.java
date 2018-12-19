@@ -17,7 +17,7 @@ import java.util.List;
 public interface PlatDataStatisticsService extends BaseService {
 
     /**
-     * 查询累计投资
+     * 查询累计出借
      * @return
      */
     BigDecimal selectTotalInvest();

@@ -7,9 +7,9 @@ public class CreditTenderListCustomize {
     private String userName;
     /* 用户是否vip 0不是 1是*/
     private String isVip;
-    /* 投资本金 */
+    /* 出借本金 */
     private String assignCapital;
-    /* 投资时间 */
+    /* 出借时间 */
     private String assignTime;
     //承接平台
     private String client;

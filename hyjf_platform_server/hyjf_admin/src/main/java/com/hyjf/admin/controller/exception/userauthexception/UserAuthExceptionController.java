@@ -30,11 +30,11 @@ import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_VIEW;
 /**
  * @author: sunpeikai
  * @version: UserAuthExceptionController, v0.1 2018/7/2 10:04
- * 后台管理系统，异常中心->自动投资债转授权异常
+ * 后台管理系统，异常中心->自动出借债转授权异常
  */
 @RestController
 @RequestMapping("/hyjf-admin/exception/user_auth_exception")
-@Api(value = "异常中心-自动投资债转授权异常",tags = "异常中心-自动投资债转授权异常")
+@Api(value = "异常中心-自动出借债转授权异常",tags = "异常中心-自动出借债转授权异常")
 public class UserAuthExceptionController extends BaseController {
 
     private final Logger logger = LoggerFactory.getLogger(getClass());
@@ -44,12 +44,12 @@ public class UserAuthExceptionController extends BaseController {
     private static final String PERMISSIONS = "exceptionuserauth";
 
     /**
-     * 自动投资债转授权异常list查询
+     * 自动出借债转授权异常list查询
      * @auth sunpeikai
      * @param request 筛选条件请求参数
      * @return
      */
-    @ApiOperation(value = "自动投资债转授权异常", notes = "自动投资债转授权异常list查询")
+    @ApiOperation(value = "自动出借债转授权异常", notes = "自动出借债转授权异常list查询")
     @PostMapping(value = "/user_auth_list")
     @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_VIEW)
     public AdminResult<ListResult<AdminUserAuthListVO>> userAuthException(@RequestBody AdminUserAuthListRequest request){

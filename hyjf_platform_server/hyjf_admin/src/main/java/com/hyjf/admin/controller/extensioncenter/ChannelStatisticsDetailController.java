@@ -97,8 +97,8 @@ public class ChannelStatisticsDetailController extends BaseController {
 		JSONObject json = channelStatisticsDetailService.searchAction(form);
 		List<ChannelStatisticsDetailVO> recordList = (List<ChannelStatisticsDetailVO>) json.get("recordList");
 		// 列头
-		String[] titles = new String[] { "序号", "推广链接ID", "渠道", "用户ID", "用户名", "性别", "注册时间", "开户时间", "首次投资时间", "首投项目类型",
-				"首投项目期限", "首投金额", "累计投资金额" };
+		String[] titles = new String[] { "序号", "推广链接ID", "渠道", "用户ID", "用户名", "性别", "注册时间", "开户时间", "首次出借时间", "首投项目类型",
+				"首投项目期限", "首投金额", "累计出借金额" };
 		// 声明一个工作薄
 		HSSFWorkbook workbook = new HSSFWorkbook();
 
@@ -168,7 +168,7 @@ public class ChannelStatisticsDetailController extends BaseController {
 							cell.setCellValue(record.getOpenAccountTime());
 						}
 					}
-					// 首次投资时间
+					// 首次出借时间
 					else if (celLength == 8) {
 						if (record.getFirstInvestTime() == null) {
 							cell.setCellValue("");
@@ -197,7 +197,7 @@ public class ChannelStatisticsDetailController extends BaseController {
 						cell.setCellValue(
 								record.getInvestAmount() == null ? "0.00" : record.getInvestAmount().toString());
 					}
-					// 累计投资金额
+					// 累计出借金额
 					else if (celLength == 12) {
 						BigDecimal cumulativeInvest = record.getCumulativeInvest() == null ? new BigDecimal(0)
 								: record.getCumulativeInvest();
@@ -281,11 +281,11 @@ public class ChannelStatisticsDetailController extends BaseController {
 		map.put("sex", "性别");
 		map.put("registerTime", "注册时间");
 		map.put("openAccountTime", "开户时间");
-		map.put("firstInvestTime", "首次投资时间");
+		map.put("firstInvestTime", "首次出借时间");
 		map.put("investProjectType", "首投项目类型");
 		map.put("investProjectPeriod", "首投项目期限");
 		map.put("investAmount", "首投金额");
-		map.put("cumulativeInvestExcel", "累计投资金额");
+		map.put("cumulativeInvestExcel", "累计出借金额");
 
 
 		return map;

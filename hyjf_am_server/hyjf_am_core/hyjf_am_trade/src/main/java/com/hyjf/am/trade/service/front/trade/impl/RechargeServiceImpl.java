@@ -375,7 +375,7 @@ public class RechargeServiceImpl extends BaseServiceImpl implements RechargeServ
 						accountList.setBankAwaitInterest(account.getBankAwaitInterest());// 银行待收利息
 						accountList.setBankAwait(account.getBankAwait());// 银行待收总额
 						accountList.setBankInterestSum(account.getBankInterestSum()); // 银行累计收益
-						accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计投资
+						accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计出借
 						accountList.setBankWaitRepay(account.getBankWaitRepay());// 银行待还金额
 						accountList.setPlanBalance(account.getPlanBalance());//汇计划账户可用余额
 						accountList.setPlanFrost(account.getPlanFrost());
@@ -576,7 +576,7 @@ public class RechargeServiceImpl extends BaseServiceImpl implements RechargeServ
 						accountList.setBankAwaitInterest(account.getBankAwaitInterest());// 银行待收利息
 						accountList.setBankAwait(account.getBankAwait());// 银行待收总额
 						accountList.setBankInterestSum(account.getBankInterestSum()); // 银行累计收益
-						accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计投资
+						accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计出借
 						accountList.setBankWaitRepay(account.getBankWaitRepay());// 银行待还金额
 						accountList.setPlanBalance(account.getPlanBalance());//汇计划账户可用余额
 						accountList.setPlanFrost(account.getPlanFrost());

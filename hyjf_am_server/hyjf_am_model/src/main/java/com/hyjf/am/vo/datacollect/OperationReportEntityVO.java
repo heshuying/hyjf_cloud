@@ -30,16 +30,16 @@ public class OperationReportEntityVO extends BaseVO {
     //累计交易笔数
     private int tradeCount;
 
-    // 投资人总数
+    // 出借人总数
     private int tenderCount;
-    // 累计投资总额
+    // 累计出借总额
     private BigDecimal totalCount;
-    //累计投资收益
+    //累计出借收益
     private BigDecimal totalInterest;
     //借贷笔数
     private int loanNum;
 
-    //人均投资金额
+    //人均出借金额
     private int perInvest;
 
     // 当月满标时间
@@ -54,7 +54,7 @@ public class OperationReportEntityVO extends BaseVO {
     private int borrowuserCountCurrent;
     // 最大单一借款人待还金额占比
     private BigDecimal borrowuserMoneyTopone;
-    // 当前投资人
+    // 当前出借人
     private int tenderuserCountCurrent;
 
 

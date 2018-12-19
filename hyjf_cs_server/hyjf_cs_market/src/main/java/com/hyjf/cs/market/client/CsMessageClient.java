@@ -24,13 +24,13 @@ public interface CsMessageClient {
     BorrowUserStatisticVO selectBorrowUserStatistic();
 
     /**
-     * 获取累计投资金额
+     * 获取累计出借金额
      *
      * @return
      */
     String getTotalInvestmentAmount();
     /**
-     * 累计投资总额
+     * 累计出借总额
      * @return
      */
     BigDecimal selectTenderSum();
@@ -42,7 +42,7 @@ public interface CsMessageClient {
     BigDecimal selectInterestSum();
 
     /**
-     * 累计投资笔数
+     * 累计出借笔数
      * @return
      */
     int selectTotalTenderSum();

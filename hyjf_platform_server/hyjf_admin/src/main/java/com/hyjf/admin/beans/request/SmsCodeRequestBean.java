@@ -44,17 +44,17 @@ public class SmsCodeRequestBean extends BaseRequest implements Serializable {
     private String re_time_end;
 
     /**
-     * 投资日期段开始时间
+     * 出借日期段开始时间
      */
     private String add_time_begin;
 
     /**
-     * 投资日期段结束时间
+     * 出借日期段结束时间
      */
     private String add_time_end;
 
     /**
-     * 累计投资金额
+     * 累计出借金额
      */
     private String add_money_count;
 

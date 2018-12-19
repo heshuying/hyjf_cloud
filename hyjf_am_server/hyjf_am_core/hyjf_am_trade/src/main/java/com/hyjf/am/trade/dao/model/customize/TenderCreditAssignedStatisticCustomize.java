@@ -2,7 +2,7 @@ package com.hyjf.am.trade.dao.model.customize;
 
 public class TenderCreditAssignedStatisticCustomize {
     /**
-     * 投资本金总额
+     * 出借本金总额
      */
     private String assignCapital;
     /**

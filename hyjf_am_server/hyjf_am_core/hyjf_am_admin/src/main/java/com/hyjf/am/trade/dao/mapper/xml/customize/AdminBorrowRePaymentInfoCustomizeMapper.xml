@@ -16,11 +16,11 @@
 	</select>
 	<sql id="Where_Clause">
 		<where>
-			<!-- 投资nid -->
+			<!-- 出借nid -->
 			<if test="nid != null and nid != ''">
 				AND br.nid = #{nid}
 			</if>
-			<!-- 借款编号 -->
+			<!-- 项目编号 -->
 			<if test="borrowNid != null and borrowNid != ''">
 				<if test="serchFlag == 0">
 					AND b.borrow_nid LIKE CONCAT( #{borrowNid}, '%')
@@ -39,7 +39,7 @@
 				AND b.borrow_user_name LIKE CONCAT( #{borrowUserName},
 				'%')
 			</if>
-			<!-- 投资人 -->
+			<!-- 出借人 -->
 			<if test="recoverUserName != null and recoverUserName != ''">
 				AND t.user_name LIKE CONCAT( #{recoverUserName},
 				'%')
@@ -93,13 +93,13 @@
 		<result column="borrowAccountYes" property="borrowAccountYes" jdbcType="VARCHAR" />
 		<result column="repayType" property="repayType" jdbcType="VARCHAR" />
 		<result column="recoverUserId" property="recoverUserId" jdbcType="VARCHAR" />
-		<!-- 投资人用户属性（当前） -->
+		<!-- 出借人用户属性（当前） -->
 		<result column="recover_user_attribute" property="recoverUserAttribute" jdbcType="VARCHAR" />
-		<!-- 投资人所属一级分部（当前） -->
+		<!-- 出借人所属一级分部（当前） -->
 		<result column="recover_region_name" property="recoverRegionName" jdbcType="VARCHAR" />
-		<!-- 投资人所属二级分部（当前） -->
+		<!-- 出借人所属二级分部（当前） -->
 		<result column="recover_branch_name" property="recoverBranchName" jdbcType="VARCHAR" />
-		<!-- 投资人所属团队（当前） -->
+		<!-- 出借人所属团队（当前） -->
 		<result column="recover_department_name" property="recoverDepartmentName" jdbcType="VARCHAR" />
 		<!-- 推荐人（当前） -->
 		<result column="referrer_name" property="referrerName" jdbcType="VARCHAR" />

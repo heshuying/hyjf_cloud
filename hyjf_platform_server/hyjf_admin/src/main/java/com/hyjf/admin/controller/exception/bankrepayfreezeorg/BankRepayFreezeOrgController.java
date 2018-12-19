@@ -216,7 +216,7 @@ public class BankRepayFreezeOrgController extends BaseController {
         String orderId = form.getOrderId();
         boolean isAllRepay = form.getAllRepayFlag() == 1;
         try {
-            // 垫付机构的还款
+            // 担保机构的还款
             RepayBean repay = bankRepayFreezeOrgService.getRepayBean(userId, "3", borrowNid, isAllRepay);
             if (repay != null) {
                 // 还款后变更数据
@@ -232,20 +232,20 @@ public class BankRepayFreezeOrgController extends BaseController {
                     this.bankRepayFreezeOrgService.updateBorrowCreditStautus(borrowNid);
 
                     //RedisUtils.del("batchOrgRepayUserid_" + form.getRepayUserId());
-                    logger.info("【代偿冻结异常处理】垫付机构:" + userId + "还款申请成功,标的号:" + borrowNid + ",订单号:" + orderId);
+                    logger.info("【代偿冻结异常处理】担保机构:" + userId + "还款申请成功,标的号:" + borrowNid + ",订单号:" + orderId);
                 } else {
-                    logger.error("【代偿冻结异常处理】垫付机构:" + userId + "还款更新数据失败,标的号:" + borrowNid + ",订单号:" + orderId);
+                    logger.error("【代偿冻结异常处理】担保机构:" + userId + "还款更新数据失败,标的号:" + borrowNid + ",订单号:" + orderId);
                     result.setStatusInfo(AdminResult.FAIL, "还款更新数据失败");
                     return result;
                 }
             } else {
-                logger.info("【代偿冻结异常处理】获取垫付机构:" + userId + "还款信息失败,标的号:" + borrowNid + ",订单号:" + orderId);
+                logger.info("【代偿冻结异常处理】获取担保机构:" + userId + "还款信息失败,标的号:" + borrowNid + ",订单号:" + orderId);
                 result.setStatusInfo(AdminResult.FAIL, "还款信息失败");
                 return result;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            logger.info("【代偿冻结异常处理】垫付机构:" + userId + "更新异常,标的号:" + borrowNid + ",订单号:" + orderId);
+            logger.info("【代偿冻结异常处理】担保机构:" + userId + "更新异常,标的号:" + borrowNid + ",订单号:" + orderId);
             result.setStatusInfo(AdminResult.FAIL, "更新异常");
             return result;
         }

@@ -34,7 +34,7 @@ public class SyncUserInfoResultBean extends BaseResultBean {
         private String frozenAmount;
         //资产总额
         private String totalAmount;
-        //累计投资金额
+        //累计出借金额
         private String investSum;
         //累计收益
         private String interestSum;

@@ -30,7 +30,7 @@ public interface UserPortraitManagerMapper {
     int countRecordList(Map<String, Object> userPortrait);
 
 	/**
-	 * 根据性别和年龄查询用户年化投资金额
+	 * 根据性别和年龄查询用户年化出借金额
 	 * @param map
 	 * @return
 	 */

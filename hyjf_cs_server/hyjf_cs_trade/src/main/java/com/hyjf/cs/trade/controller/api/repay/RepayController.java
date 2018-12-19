@@ -69,7 +69,7 @@ public class RepayController extends BaseController {
         BatchBorrowRecoverRequest batchBorrowRecoverRequest = new BatchBorrowRecoverRequest();
         // 借款编号 检索条件
         batchBorrowRecoverRequest.setBorrowNid(repaybean.getBorrowNid());
-        // 投资人 检索条件
+        // 出借人 检索条件
         batchBorrowRecoverRequest.setApiType(1);
         Integer count = this.repayService.countBatchCenter(batchBorrowRecoverRequest);
         if (count != null && count > 0) {
@@ -275,7 +275,7 @@ public class RepayController extends BaseController {
         BatchCenterCustomize batchCenterCustomize = new BatchCenterCustomize();
         // 借款编号 检索条件
         batchCenterCustomize.setBorrowNid(repaybean.getBorrowNid());
-        // 投资人 检索条件
+        // 出借人 检索条件
         batchCenterCustomize.setApiType(1);
         Integer count = this.batchBorrowRepayService.countBatchCenter(batchCenterCustomize);
         if (count != null && count > 0) {

@@ -120,7 +120,7 @@ public class BorrowRegistExceptionController extends BaseController {
     /**
      * 根据borrowNid查询borrow信息
      * @auth sunpeikai
-     * @param borrowNid 借款编号
+     * @param borrowNid 项目编号
      * @return
      */
     @ApiOperation(value = "根据borrowNid查询borrow信息", notes = "根据borrowNid查询borrow信息")

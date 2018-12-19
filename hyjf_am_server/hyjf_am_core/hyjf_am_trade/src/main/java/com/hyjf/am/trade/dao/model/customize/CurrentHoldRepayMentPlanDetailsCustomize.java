@@ -32,7 +32,7 @@ public class CurrentHoldRepayMentPlanDetailsCustomize implements Serializable {
      */
     private String recoverAccountYes;
     /**
-     * 投资时间
+     * 出借时间
      */
     private String createTime;
     /**

@@ -104,16 +104,16 @@ public class PushMoneyVO extends BaseVO {
     @ApiModelProperty(value = "导出用")
     private String is51Name;
 
-    @ApiModelProperty(value = "投资人")
+    @ApiModelProperty(value = "出借人")
     private String usernameTender;
 
-    @ApiModelProperty(value = "投资金额")
+    @ApiModelProperty(value = "出借金额")
     private BigDecimal accountTender;
 
     @ApiModelProperty(value = "状态")
     private String statusName;
 
-    @ApiModelProperty(value = "投资时间")
+    @ApiModelProperty(value = "出借时间")
     private String tenderTimeView;
 
     @ApiModelProperty(value = "提成发放时间")

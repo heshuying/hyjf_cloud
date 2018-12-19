@@ -147,7 +147,7 @@
 		c.project_type project_type,
 		CASE
 		WHEN c.tender_quota_type = 0 THEN
-		'投资金额不限'
+		'出借金额不限'
 		WHEN c.tender_quota_type = 1 THEN
 		CONCAT(
 		c.tender_quota_min,
@@ -162,11 +162,11 @@
 		'元'
 		)
 		ELSE
-		'投资金额不限'
+		'出借金额不限'
 		END tender_quota,
 		CASE
 		WHEN c.project_expiration_type = 0 THEN
-		'投资期限不限'
+		'出借期限不限'
 		WHEN c.project_expiration_type = 1 THEN
 		CONCAT(
 		'等于',

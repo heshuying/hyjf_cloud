@@ -9,13 +9,13 @@ public class AppTradeListCustomize {
      *
      */
     private static final long serialVersionUID = -1457644265103686234L;
-    // 类型：充值，提现，提现，投资成功，投资冻结等
+    // 类型：充值，提现，提现，投标成功，出借冻结等
     private String tradeType;
     // 时间
     private String tradeTime;
-    // 投资时间年
+    // 出借时间年
     private String tradeYear;
-    // 投资时间月
+    // 出借时间月
     private String tradeMonth;
     // 金额
     private String account;

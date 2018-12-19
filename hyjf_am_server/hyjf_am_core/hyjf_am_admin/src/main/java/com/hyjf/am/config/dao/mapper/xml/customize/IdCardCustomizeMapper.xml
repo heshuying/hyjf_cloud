@@ -23,7 +23,7 @@
 		</if>
 	</select>
 
-	<!-- 	投资人省份分布  a.p AS citycode, a.counts AS count, b.area AS cityname-->
+	<!-- 	出借人省份分布  a.p AS citycode, a.counts AS count, b.area AS cityname-->
 	<select  id="getTenderCityGroupBy" resultMap="cityResultMap"  parameterType="java.util.List">
 		SELECT
 		LEFT(bm, 2) AS citycode, LEFT(area, 3) AS cityname

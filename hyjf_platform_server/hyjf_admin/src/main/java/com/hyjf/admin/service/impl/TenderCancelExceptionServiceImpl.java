@@ -41,7 +41,7 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
     private String BANK_INSTCODE;
 
     /**
-     * 根据筛选条件查询银行投资撤销异常的数据count
+     * 根据筛选条件查询银行出借撤销异常的数据count
      * @auth sunpeikai
      * @param request 筛选条件
      * @return
@@ -52,7 +52,7 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
     }
 
     /**
-     * 根据筛选条件查询银行投资撤销异常list
+     * 根据筛选条件查询银行出借撤销异常list
      * @auth sunpeikai
      * @param request 筛选条件
      * @return
@@ -74,7 +74,7 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
     }
 
     /**
-     * 投资撤销异常处理
+     * 出借撤销异常处理
      * @auth sunpeikai
      * @param request 主要包含orderId
      * @return
@@ -93,17 +93,17 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
         BorrowTenderTmpVO tenderTmp = amTradeClient.searchBorrowTenderTmpByOrderId(orgOrderId);
         if (Validator.isNull(tenderTmp)) {
             jsonObject.put("status","error");
-            jsonObject.put("result","投资撤销失败，投资可能已经撤销！");
+            jsonObject.put("result","出借撤销失败，出借可能已经撤销！");
             return jsonObject;
         }
         int userId = tenderTmp.getUserId();
         String productId = tenderTmp.getBorrowNid();
         BigDecimal txAmount = tenderTmp.getAccount();
-        // 投资人的账户信息
+        // 出借人的账户信息
         BankOpenAccountVO bankAccount = amUserClient.searchBankOpenAccount(userId);
         if (Validator.isNull(bankAccount)) {
             jsonObject.put("status","error");
-            jsonObject.put("result","投资人的账户信息不存在");
+            jsonObject.put("result","出借人的账户信息不存在");
             return jsonObject;
         }
         String accountId = bankAccount.getAccount();
@@ -112,7 +112,7 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
         BankCallBean bean = this.bidCancel(userId, accountId, productId, orgOrderId, txAmount.toString(),adminSystemVO);
         logger.info("bean:[{}]", JSON.toJSONString(bean));
         String retCode = "";
-        String retMsg = "投资撤销失败，请联系客服！";
+        String retMsg = "出借撤销失败，请联系客服！";
         if (Validator.isNotNull(bean)) {
             retCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
             if (retCode.equals(BankCallConstant.RESPCODE_SUCCESS)) {
@@ -133,9 +133,9 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
                 if (tenderCancelFlag) {
                     jsonObject.put("status","success");
                     if (status == 1) {
-                        jsonObject.put("result","投资异常记录处理成功!");
+                        jsonObject.put("result","出借异常记录处理成功!");
                     }else{
-                        jsonObject.put("result","投资撤销成功!");
+                        jsonObject.put("result","出借撤销成功!");
                     }
                     return jsonObject;
                 }
@@ -152,7 +152,7 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
     }
 
     /**
-     * 银行投资撤销
+     * 银行出借撤销
      * @param userId
      * @param accountId
      * @param productId
@@ -161,7 +161,7 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
      * @return
      */
     public BankCallBean bidCancel(Integer userId, String accountId, String productId, String orgOrderId, String txAmount,AdminSystemVO adminSystemVO) {
-        // 标的投资撤销
+        // 标的出借撤销
         BankCallBean bean = new BankCallBean();
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         bean.setVersion(BankCallConstant.VERSION_10); // 版本号(必须)
@@ -191,16 +191,16 @@ public class TenderCancelExceptionServiceImpl extends BaseAdminServiceImpl imple
 
         boolean tenderTmpFlag = amTradeClient.deleteBorrowTenderTmpById(tenderTmp.getId()) > 0;
         if (!tenderTmpFlag) {
-            throw new Exception("删除投资日志表失败，投资订单号：" + tenderTmp.getNid());
+            throw new Exception("删除出借日志表失败，出借订单号：" + tenderTmp.getNid());
         }
         FreezeHistoryVO freezeHistory = new FreezeHistoryVO();
         freezeHistory.setTrxId(tenderTmp.getNid());
-        freezeHistory.setNotes("银行投资撤销");
+        freezeHistory.setNotes("银行出借撤销");
         freezeHistory.setFreezeUser(adminSystemVO.getUsername());
         freezeHistory.setFreezeTime(GetDate.getNowTime10());
         boolean freezeHisLog = amTradeClient.insertFreezeHistory(freezeHistory) > 0;
         if (!freezeHisLog) {
-            throw new Exception("插入投资删除日志表失败，投资订单号：" + tenderTmp.getNid());
+            throw new Exception("插入出借删除日志表失败，出借订单号：" + tenderTmp.getNid());
         }
         return true;
     }

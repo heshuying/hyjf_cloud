@@ -83,7 +83,7 @@ public class AppBorrowProjectInfoBeanVO extends BaseVO implements Serializable {
 	private String status;
 
 	/**
-	 * 项目进度状态 0:审核 1:信息发布 2:投资 3:计息 4:回款
+	 * 项目进度状态 0:审核 1:信息发布 2:出借 3:计息 4:回款
 	 * number
 	 * example: 2
 	 */

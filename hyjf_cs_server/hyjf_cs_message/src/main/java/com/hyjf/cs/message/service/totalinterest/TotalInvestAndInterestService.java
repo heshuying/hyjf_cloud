@@ -18,7 +18,7 @@ public interface TotalInvestAndInterestService extends BaseMessageService {
     void updateData();
 
     /**
-     * 累计投资总额
+     * 累计出借总额
      * @return
      */
     BigDecimal selectTenderSum();
@@ -30,7 +30,7 @@ public interface TotalInvestAndInterestService extends BaseMessageService {
     BigDecimal selectInterestSum();
 
     /**
-     * 累计投资笔数
+     * 累计出借笔数
      * @return
      */
     int selectTotalTenderSum();

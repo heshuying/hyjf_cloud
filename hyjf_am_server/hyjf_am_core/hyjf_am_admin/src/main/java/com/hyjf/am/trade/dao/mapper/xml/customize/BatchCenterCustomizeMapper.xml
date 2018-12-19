@@ -33,10 +33,6 @@
         <if test="borrowNid != null and borrowNid != ''">
             AND hba.borrow_nid = #{borrowNid}
         </if>
-        <!-- 资产来源 -->
-        <if test="instCodeSrch != null and instCodeSrch != ''">
-            AND bi.inst_code = #{instCodeSrch}
-        </if>
         <if test="batchNo != null and batchNo != ''">
             AND hba.batch_no = #{batchNo}
         </if>

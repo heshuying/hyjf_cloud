@@ -115,7 +115,7 @@
 	</select>
 	
 	
-	<!-- 	统计投资人总数，截至日期为上个月的最后一天 -->
+	<!-- 	统计出借人总数，截至日期为上个月的最后一天 -->
 	<select id="getTenderCount"  parameterType="java.util.Date" resultType="int">
 <!-- 		select count(*) from ht_users where reg_time &lt;= unix_timestamp(#{date}) -->
 		select count(*) from(
@@ -170,7 +170,7 @@
 			  FROM
 				  ht_product_list
 			  WHERE
-				  invest_status = 0  -- 投资成功
+				  invest_status = 0  -- 投标成功
 
 		  )t
 	</select>
@@ -206,7 +206,7 @@
 						FROM
 							ht_product_list
 						WHERE
-							invest_status = 0 -- 投资成功
+							invest_status = 0 -- 投标成功
 		) t
 	</select>
 
@@ -236,7 +236,7 @@
 	<select  id="getLoanNum"  parameterType="java.util.Date" resultType="int">
 		select count(*) from ht_borrow where create_time &lt;= #{date}
 	</select>
-<!-- 	人均投资金额 -->
+<!-- 	人均出借金额 -->
 	<select id="getPerInvestTotal" resultType="java.math.BigDecimal">
 		select sum(bank_invest_sum)/count(*) from ht_account where bank_invest_sum>0
 	</select>

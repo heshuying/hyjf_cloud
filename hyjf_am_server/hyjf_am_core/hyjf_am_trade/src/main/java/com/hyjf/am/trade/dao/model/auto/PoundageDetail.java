@@ -29,7 +29,7 @@ public class PoundageDetail implements Serializable {
     private String borrowType;
 
     /**
-     * 投资人用户名
+     * 出借人用户名
      *
      * @mbggenerated
      */

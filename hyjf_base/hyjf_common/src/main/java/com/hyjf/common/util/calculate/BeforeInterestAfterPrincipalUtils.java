@@ -19,14 +19,14 @@ import java.math.BigDecimal;
 public class BeforeInterestAfterPrincipalUtils {
 
 	/**
-	 * 先息后本 公式：每月应还利息=投资本金*年化收益率/12*投资月数/还款期数
+	 * 先息后本 公式：每月应还利息=出借本金*年化收益率/12*出借月数/还款期数
 	 *
 	 * @param invest
-	 *            投资本金
+	 *            出借本金
 	 * @param yearRate
 	 *            年化收益率
 	 * @param investMonth
-	 *            投资月数
+	 *            出借月数
 	 * @param repayTerm
 	 *            还款期数
 	 * @return 每期利息
@@ -41,11 +41,11 @@ public class BeforeInterestAfterPrincipalUtils {
 	 * 总利息
 	 *
 	 * @param invest
-	 *            投资本金
+	 *            出借本金
 	 * @param yearRate
 	 *            年化收益率
 	 * @param investMonth
-	 *            投资月数
+	 *            出借月数
 	 * @param repayTerm
 	 *            还款期数
 	 * @return 总利息
@@ -78,7 +78,7 @@ public class BeforeInterestAfterPrincipalUtils {
 	}
 
 	/**
-     * 垫付利息 垫息总额=投资人认购本金/出让人转让本金*出让人本期利息）-（债权本金*年化收益÷360*本期剩余天数
+     * 垫付利息 垫息总额=出借人认购本金/出让人转让本金*出让人本期利息）-（债权本金*年化收益÷360*本期剩余天数
      *
      * @return 应还本息总和
      */
@@ -89,8 +89,8 @@ public class BeforeInterestAfterPrincipalUtils {
 
 
 		/**
-		 * 这里有一个问题，比如投资人有一个投资，分三期，第一期已经还款，第二期还款日在T+5，但是T日借款人提前还款了，
-		 * 现在投资人想在T日将第三期债转出去，垫付利息就会是一个负数，导致插入数据库失败
+		 * 这里有一个问题，比如出借人有一个出借，分三期，第一期已经还款，第二期还款日在T+5，但是T日借款人提前还款了，
+		 * 现在出借人想在T日将第三期债转出去，垫付利息就会是一个负数，导致插入数据库失败
 		 * 解决方案： 计算为负数，则为0
 		 */
 		if(assignInterestAdvance.compareTo(BigDecimal.ZERO) < 0 ){
@@ -101,7 +101,7 @@ public class BeforeInterestAfterPrincipalUtils {
     }
 
 	/**
-	 * 垫付利息 垫息总额=投资人认购本金/出让人转让本金*出让人本期利息）-（债权本金*年化收益÷360*本期剩余天数
+	 * 垫付利息 垫息总额=出借人认购本金/出让人转让本金*出让人本期利息）-（债权本金*年化收益÷360*本期剩余天数
 	 *
 	 * @return 应还本息总和
 	 */

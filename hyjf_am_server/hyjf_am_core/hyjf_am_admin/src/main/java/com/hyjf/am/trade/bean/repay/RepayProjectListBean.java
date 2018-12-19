@@ -14,7 +14,7 @@ public class RepayProjectListBean extends WebUserRepayProjectListCustomizeVO imp
 
 	// 用户id
 	public String userId;
-	//用户角色 2借款人，3垫付机构
+	//用户角色 2借款人，3担保机构
 	public String roleId;
 	
 	// 应还时间开始

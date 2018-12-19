@@ -28,7 +28,7 @@ public class UserPortraitCustomizeVO implements Serializable {
     private String interest;
     @ApiModelProperty(value = "累计收益")
     private BigDecimal interestSum;
-    @ApiModelProperty(value = "累计年化投资金额")
+    @ApiModelProperty(value = "累计年化出借金额")
     private BigDecimal investSum;
     @ApiModelProperty(value = "累计充值金额")
     private BigDecimal rechargeSum;
@@ -44,7 +44,7 @@ public class UserPortraitCustomizeVO implements Serializable {
     private Integer lastRechargeTime;
     @ApiModelProperty(value = "最后一次提现时间")
     private Integer lastWithdrawTime;
-    @ApiModelProperty(value = "同时投资平台数")
+    @ApiModelProperty(value = "同时出借平台数")
     private Integer investPlatform;
     @ApiModelProperty(value = "投龄")
     private Integer investAge;
@@ -54,7 +54,7 @@ public class UserPortraitCustomizeVO implements Serializable {
     private String currentOwner;
     @ApiModelProperty(value = "是否加微信")
     private String addWechat;
-    @ApiModelProperty(value = "投资进程")
+    @ApiModelProperty(value = "出借进程")
     private String investProcess;
     @ApiModelProperty(value = "客户投诉")
     private String customerComplaint;
@@ -74,7 +74,7 @@ public class UserPortraitCustomizeVO implements Serializable {
     private Integer inviteRegist;
     @ApiModelProperty(value = "邀请充值数")
     private Integer inviteRecharge;
-    @ApiModelProperty(value = "邀请投资数")
+    @ApiModelProperty(value = "邀请出借数")
     private Integer inviteTender;
     @ApiModelProperty(value = "客均收益率")
     private BigDecimal yield;

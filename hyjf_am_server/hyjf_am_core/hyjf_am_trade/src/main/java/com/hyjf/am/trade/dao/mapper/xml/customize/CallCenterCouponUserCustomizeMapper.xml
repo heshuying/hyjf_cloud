@@ -120,7 +120,7 @@
             cc.project_type AS project_type,
             CASE
             WHEN cc.tender_quota_type = 0 THEN
-                '投资金额不限'
+                '出借金额不限'
             WHEN cc.tender_quota_type = 1 THEN
                 CONCAT(
                     cc.tender_quota_min,
@@ -140,7 +140,7 @@
                     '元（含）内可用'
                 )
             ELSE
-                '投资金额不限'
+                '出借金额不限'
             END tender_quota,
             CASE
             WHEN cc.project_expiration_type = 0 THEN

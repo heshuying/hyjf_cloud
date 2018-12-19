@@ -124,7 +124,7 @@ public class ChinapnrBeanVO extends PnrApiBeanVO implements Serializable {
     /** 子账户号 */
     public String SubAcctId;
 
-    /** 最大投资手续费率 */
+    /** 最大出借手续费率 */
     public String MaxTenderRate;
 
     /** 借款人信息 */

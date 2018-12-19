@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 /**
- * 投资调单异常处理controller
+ * 出借调单异常处理controller
  * 
  * @author jun
  * @since 20180623
@@ -27,7 +27,7 @@ public class HjhSmsNoticeController {
 	private HjhSmsNoticeService hjhSmsNoticeService;
 
 	/**
-	 * 处理债转投资异常
+	 * 处理债转出借异常
 	 * 
 	 * @return
 	 */

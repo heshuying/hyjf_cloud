@@ -55,10 +55,10 @@ public class HjhReInvestDetailController extends BaseController {
     public JSONObject dropDownBox(){
         JSONObject jsonObject = new JSONObject();
 
-        //初始投资方式List
+        //初始出借方式List
         List<Object> investmentMethodList = new ArrayList<>();
 
-        //初始投资方式Map
+        //初始出借方式Map
         Map<String, Object> investmentMethodListMap1 = new HashedMap();
         Map<String, Object> investmentMethodListMap2 = new HashedMap();
         Map<String, Object> investmentMethodListMap3 = new HashedMap();
@@ -245,14 +245,14 @@ public class HjhReInvestDetailController extends BaseController {
         map.put("userName", "用户名");
         map.put("inviteUserName", "推荐人");
         map.put("userAttribute", "用户属性");
-        map.put("borrowNid", "借款编号");
+        map.put("borrowNid", "项目编号");
         map.put("expectApr", "年化利率");
         map.put("borrowPeriodView", "借款期限");
-        map.put("accedeAccount", "投资金额（元）");
+        map.put("accedeAccount", "出借金额（元）");
         map.put("borrowStyle", "还款方式");
-        map.put("investType", "投资方式");
+        map.put("investType", "出借方式");
         map.put("countInterestTime", "开始计息时间");
-        map.put("addTime", "投资时间");
+        map.put("addTime", "出借时间");
 
         return map;
     }

@@ -17,7 +17,7 @@ public class RecentPaymentListCustomize implements Serializable {
 	private static final long serialVersionUID = 358190081082338992L;
 	/**项目名称*/
 	private String projectName;
-	/**项目年化收益率*/
+	/**项目出借利率*/
 	private String borrowApr;
 	/**预计还款时间*/
 	private String investDate;

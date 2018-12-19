@@ -129,8 +129,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         WebResult webResult = new WebResult();
         // 先抛错方式，避免代码看起来头重脚轻。
         if (count == null) {
-            logger.error("查询散标投资列表原子层count异常");
-            throw new RuntimeException("查询散标投资列表原子层count异常");
+            logger.error("查询散标出借列表原子层count异常");
+            throw new RuntimeException("查询散标出借列表原子层count异常");
         }
         page.setTotal(count);
         //由于result类在转json时会去掉null值，手动初始化为非null，保证json不丢失key
@@ -140,8 +140,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             List<WebProjectListCsVO> result = new ArrayList<>();
             List<WebProjectListCustomizeVO> list = amTradeClient.searchProjectList(request);
             if (CollectionUtils.isEmpty(list)) {
-                logger.error("查询散标投资列表原子层List异常");
-                throw new RuntimeException("查询散标投资列表原子层list数据异常");
+                logger.error("查询散标出借列表原子层List异常");
+                throw new RuntimeException("查询散标出借列表原子层list数据异常");
             }
             result = CommonUtils.convertBeanList(list, WebProjectListCsVO.class);
             resultBean.setList(result);
@@ -338,7 +338,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             // 登录登录状态和基本信息
             other.put("loginFlag", "0");//登录状态 0未登陆 1已登录
             other.put("openFlag", "0"); //开户状态 0未开户 1已开户
-            other.put("investFlag", "0");//是否投资过该项目 0未投资 1已投资
+            other.put("investFlag", "0");//是否出借过该项目 0未出借 1已出借
             other.put("riskFlag", "0");//是否进行过风险测评 0未测评 1已测评
             other.put("setPwdFlag", "0");//是否设置过交易密码 0未设置 1已设置
         } else {
@@ -385,12 +385,12 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             } else {
                 other.put("openFlag", "0");
             }
-            // 用户是否投资项目
+            // 用户是否出借项目
             int count = amTradeClient.countUserInvest(userId, borrowNid);
             if (count > 0) {
-                other.put("investFlag", "1");//是否投资过该项目 0未投资 1已投资
+                other.put("investFlag", "1");//是否出借过该项目 0未出借 1已出借
             } else {
-                other.put("investFlag", "0");//是否投资过该项目 0未投资 1已投资
+                other.put("investFlag", "0");//是否出借过该项目 0未出借 1已出借
             }
             //是否设置交易密码
             if (userVO.getIsSetPassword() == 1) {
@@ -589,33 +589,33 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
     private BigDecimal getInterest(String borrowStyle, Integer couponType, BigDecimal borrowApr, BigDecimal couponQuota, String money, Integer borrowPeriod) {
         BigDecimal earnings = new BigDecimal("0");
 
-        // 投资金额
+        // 出借金额
         BigDecimal accountDecimal = null;
         if (couponType == 1) {
-            // 体验金 投资资金=体验金面值
+            // 体验金 出借资金=体验金面值
             accountDecimal = couponQuota;
         } else if (couponType == 2) {
-            // 加息券 投资资金=真实投资资金
+            // 加息券 出借资金=真实出借资金
             accountDecimal = new BigDecimal(money);
             borrowApr = couponQuota;
         } else if (couponType == 3) {
-            // 代金券 投资资金=体验金面值
+            // 代金券 出借资金=体验金面值
             accountDecimal = couponQuota;
         }
         switch (borrowStyle) {
-            case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“：历史回报=投资金额*年化收益÷12*月数；
+            case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“：历史回报=出借金额*年化收益÷12*月数；
                 // 计算历史回报
                 earnings = DuePrincipalAndInterestUtils.getMonthInterest(accountDecimal, borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
                 break;
-            case CalculatesUtil.STYLE_ENDDAY:// 还款方式为”按天计息，到期还本还息“：历史回报=投资金额*年化收益÷360*天数；
+            case CalculatesUtil.STYLE_ENDDAY:// 还款方式为”按天计息，到期还本还息“：历史回报=出借金额*年化收益÷360*天数；
                 // 计算历史回报
                 earnings = DuePrincipalAndInterestUtils.getDayInterest(accountDecimal, borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
                 break;
-            case CalculatesUtil.STYLE_ENDMONTH:// 还款方式为”先息后本“：历史回报=投资金额*年化收益÷12*月数；
+            case CalculatesUtil.STYLE_ENDMONTH:// 还款方式为”先息后本“：历史回报=出借金额*年化收益÷12*月数；
                 // 计算历史回报
                 earnings = BeforeInterestAfterPrincipalUtils.getInterestCount(accountDecimal, borrowApr.divide(new BigDecimal("100")), borrowPeriod, borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
                 break;
-            case CalculatesUtil.STYLE_MONTH:// 还款方式为”等额本息“：历史回报=投资金额*年化收益÷12*月数；
+            case CalculatesUtil.STYLE_MONTH:// 还款方式为”等额本息“：历史回报=出借金额*年化收益÷12*月数；
                 // 计算历史回报
                 earnings = AverageCapitalPlusInterestUtils.getInterestCount(accountDecimal, borrowApr.divide(new BigDecimal("100")), borrowPeriod).setScale(2, BigDecimal.ROUND_DOWN);
                 break;
@@ -633,7 +633,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
 
 
     /**
-     * 获取新手标和散标详情：投资记录
+     * 获取新手标和散标详情：出借记录
      *
      * @author zhangyk
      * @date 2018/8/9 16:58
@@ -720,7 +720,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 return ontimeCheckBean;
             }
 
-            // Redis的投资余额校验
+            // Redis的出借余额校验
             if (RedisUtils.get(borrowNid) != null) {
                 logger.error(borrowNid + " 定时发标异常：标的编号在redis已经存在");
                 ontimeCheckBean.setStatus(-5);
@@ -771,11 +771,11 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         int nowTime = GetDate.getNowTime10();
         RightBorrowVO borrow = amTradeClient.getRightBorrowByNid(borrowNid);
         // DB验证
-        // 有投资金额发生异常
+        // 有出借金额发生异常
         BigDecimal zero = new BigDecimal("0");
         BigDecimal borrowAccountYes = borrow.getBorrowAccountYes();
         if (!(borrowAccountYes == null || borrowAccountYes.compareTo(zero) == 0)) {
-            logger.error(borrowNid + " 定时发标异常：标的已有投资人投资");
+            logger.error(borrowNid + " 定时发标异常：标的已有出借人出借");
             return false;
         }
         borrow.setBorrowEndTime(String.valueOf(nowTime + borrow.getBorrowValidTime() * 86400));
@@ -787,7 +787,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         borrow.setStatus(2);
         // 初审时间
         borrow.setVerifyTime(nowTime);
-        // 剩余可投资金额
+        // 剩余可出借金额
         borrow.setBorrowAccountWait(borrow.getAccount());
         boolean flag = amTradeClient.updateRightBorrowByBorrowNid(borrow);
         if (flag) {
@@ -1265,7 +1265,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             throw new CheckException("未查询到对应的计划");
 
         }
-        // 最小投资金额(起投金额)-->计算最后一笔投资
+        // 最小出借金额(起投金额)-->计算最后一笔出借
         if (planDetail.getDebtMinInvestment() != null) {
             result.put("debtMinInvestment", new BigDecimal(planDetail.getDebtMinInvestment()).intValue());
         }
@@ -1387,7 +1387,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 if (count > 0) {
                     investFlag = "1";
                 } else {
-                    investFlag = "0";//是否投资过该项目 0未投资 1已投资
+                    investFlag = "0";//是否出借过该项目 0未出借 1已出借
                 }
                 result.put("investFlag", investFlag);
                 // 用户是否开户
@@ -1442,7 +1442,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 //状态位用于判断tab的是否可见
                 result.put("loginFlag", "0");//登录状态 0未登陆 1已登录
                 result.put("openFlag", "0"); //开户状态 0未开户 1已开户
-                result.put("investFlag", "0");//是否投资过该项目 0未投资 1已投资
+                result.put("investFlag", "0");//是否出借过该项目 0未出借 1已出借
                 result.put("riskFlag", "0");//是否进行过风险测评 0未测评 1已测评
                 result.put("setPwdFlag", "0");//是否设置过交易密码 0未设置 1已设置
                 result.put("forbiddenFlag", "0");//是否禁用 0未禁用 1已禁用
@@ -1789,7 +1789,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         if(userId == null){
             info.put("loginFlag", "0");//登录状态 0未登陆 1已登录
             info.put("openFlag", "0"); //开户状态 0未开户 1已开户
-            info.put("investFlag", "0");//是否投资过该项目 0未投资 1已投资
+            info.put("investFlag", "0");//是否出借过该项目 0未出借 1已出借
             info.put("riskFlag", "0");//是否进行过风险测评 0未测评 1已测评
             info.put("setPwdFlag", "0");//是否设置过交易密码 0未设置 1已设置
             info.put("viewableFlag", "0");// add by nxl 未登录不可见
@@ -1808,16 +1808,16 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 count = amTradeClient.countUserInvest(userId,borrowNid);
             }
             if (count > 0) {
-                info.put("investFlag", "1");//是否投资过该项目 0未投资 1已投资
+                info.put("investFlag", "1");//是否出借过该项目 0未出借 1已出借
             }else{
-                info.put("investFlag", "0");//是否投资过该项目 0未投资 1已投资
+                info.put("investFlag", "0");//是否出借过该项目 0未出借 1已出借
             }
 
             // add 汇计划二期前端优化  针对区分原始标与债转标 nxl 20180424 start
             /**
              * 查看标的详情
              * 原始标：复审中、还款中、已还款状态下 如果当前用户是否投过此标，是：可看，否则不可见
-             * 债转标的：未被完全承接时，项目详情都可看；被完全承接时，只有投资者和承接者可查看
+             * 债转标的：未被完全承接时，项目详情都可看；被完全承接时，只有出借者和承接者可查看
              */
             String viewableFlag ="0";
             int intCount = 0;
@@ -1851,13 +1851,13 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 isDebt = true;
             }else {
                 //原始标
-                //复审中，还款中和已还款状态投资者(可看)(app使用的stattus判断,这里是用statusOriginal判断  不知道是否有影响)
+                //复审中，还款中和已还款状态出借者(可看)(app使用的stattus判断,这里是用statusOriginal判断  不知道是否有影响)
                 if(null != borrowDetailVo.getStatusOrginal() && (borrowDetailVo.getStatusOrginal() == 3 || borrowDetailVo.getStatusOrginal()== 4 || borrowDetailVo.getStatusOrginal() == 5)  ) {
                     if(count>0) {
                         //可以查看标的详情
                         viewableFlag ="1";
                     }else {
-                        //提示仅投资者可看
+                        //提示仅出借者可看
                         viewableFlag ="0";
                     }
                 }else {

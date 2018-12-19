@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @author: sunpeikai
  * @version: TenderCancelExceptionRequest, v0.1 2018/7/11 9:50
  */
-@ApiModel(value = "投资撤销请求参数")
+@ApiModel(value = "出借撤销请求参数")
 public class TenderCancelExceptionRequest extends BasePage implements Serializable {
     /**
      * serialVersionUID

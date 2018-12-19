@@ -247,7 +247,7 @@ public class PcChannelStatisticsJobController extends BaseController {
 
 
     /**
-     * 查询投资人数
+     * 查询出借人数
      * @param sourceId 账户推广平台
      * @param type 0无主单 1有主单
      * @return
@@ -285,7 +285,7 @@ public class PcChannelStatisticsJobController extends BaseController {
         return response;
     }
     /**
-     * 查询汇直投投资金额
+     * 查询汇直投出借金额
      * @param sourceId 账户推广平台
      * @param type 0无主单 1有主单
      * @return
@@ -304,7 +304,7 @@ public class PcChannelStatisticsJobController extends BaseController {
         return response;
     }
     /**
-     * 查询汇消费投资金额
+     * 查询汇消费出借金额
      * @param sourceId 账户推广平台
      * @param type 0无主单 1有主单
      * @return
@@ -324,7 +324,7 @@ public class PcChannelStatisticsJobController extends BaseController {
     }
 
     /**
-     * 查询汇天利投资金额
+     * 查询汇天利出借金额
      * @param sourceId 账户推广平台
      * @param type 0无主单 1有主单
      * @return
@@ -344,7 +344,7 @@ public class PcChannelStatisticsJobController extends BaseController {
     }
 
     /**
-     * 查询汇添金投资金额
+     * 查询汇添金出借金额
      * @param sourceId 账户推广平台
      * @param type 0无主单 1有主单
      * @return
@@ -364,7 +364,7 @@ public class PcChannelStatisticsJobController extends BaseController {
     }
 
     /**
-     * 融通宝投资金额
+     * 融通宝出借金额
      * @param sourceId 账户推广平台
      * @param type 0无主单 1有主单
      * @return
@@ -384,7 +384,7 @@ public class PcChannelStatisticsJobController extends BaseController {
     }
 
     /**
-     * 汇转让投资金额
+     * 汇转让出借金额
      * @param sourceId 账户推广平台
      * @param type 0无主单 1有主单
      * @return

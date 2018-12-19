@@ -76,7 +76,7 @@ public class CouponConfig implements Serializable {
     private Short expirationLengthDay;
 
     /**
-     * 是否与本金投资共用，0：共用，1：单独使用
+     * 是否与本金出借共用，0：共用，1：单独使用
      *
      * @mbggenerated
      */
@@ -132,28 +132,28 @@ public class CouponConfig implements Serializable {
     private Integer projectExpirationLengthMax;
 
     /**
-     * 投资金额类别
+     * 出借金额类别
      *
      * @mbggenerated
      */
     private Integer tenderQuotaType;
 
     /**
-     * 投资金额
+     * 出借金额
      *
      * @mbggenerated
      */
     private Integer tenderQuota;
 
     /**
-     * 投资金额最小额度
+     * 出借金额最小额度
      *
      * @mbggenerated
      */
     private Integer tenderQuotaMin;
 
     /**
-     * 投资金额最大额度
+     * 出借金额最大额度
      *
      * @mbggenerated
      */

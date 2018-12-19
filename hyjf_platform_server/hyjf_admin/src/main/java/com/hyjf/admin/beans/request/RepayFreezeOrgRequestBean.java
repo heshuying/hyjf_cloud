@@ -8,7 +8,7 @@ import io.swagger.annotations.ApiModelProperty;
  * @version RepayFreezeOrgRequestBean, v0.1 2018/10/19 9:53
  */
 public class RepayFreezeOrgRequestBean extends BasePage {
-    @ApiModelProperty(value = "借款编号")
+    @ApiModelProperty(value = "项目编号")
     private String borrowNid;
     @ApiModelProperty(value = "资产来源列表")
     private String instCode;

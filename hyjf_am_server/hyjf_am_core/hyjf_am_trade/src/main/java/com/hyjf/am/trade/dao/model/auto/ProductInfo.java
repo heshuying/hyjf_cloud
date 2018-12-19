@@ -50,7 +50,7 @@ public class ProductInfo implements Serializable {
     private BigDecimal loanBalance;
 
     /**
-     * 投资总金额
+     * 出借总金额
      *
      * @mbggenerated
      */

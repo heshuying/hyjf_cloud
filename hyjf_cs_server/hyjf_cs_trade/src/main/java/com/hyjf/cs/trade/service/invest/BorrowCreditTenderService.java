@@ -11,28 +11,28 @@ import com.hyjf.pay.lib.bank.bean.BankCallResult;
 import java.util.Map;
 
 /**
- * @Description 债转投资
+ * @Description 债转出借
  * @Author sunss
  * @Date 2018/7/3 15:06
  */
 public interface BorrowCreditTenderService extends BaseTradeService {
 
     /**
-     * 债转投资
+     * 债转出借
      * @param request
      * @return
      */
     WebResult<Map<String,Object>> borrowCreditTender(TenderRequest request);
 
     /**
-     * 债转投资异步
+     * 债转出借异步
      * @param bean
      * @return
      */
     BankCallResult borrowCreditTenderBgReturn(BankCallBean bean);
 
     /**
-     * 债转投资获取投资失败结果
+     * 债转出借获取出借失败结果
      * @param userId
      * @param logOrdId
      * @return
@@ -48,7 +48,7 @@ public interface BorrowCreditTenderService extends BaseTradeService {
     WebResult<Map<String,Object>> getSuccessResult(Integer userId, String logOrdId);
 
     /**
-     * 前端Web页面投资可债转输入投资金额后获取收益
+     * 前端Web页面出借可债转输入出借金额后获取收益
      * @param userId
      * @param creditNid
      * @param assignCapital
@@ -57,7 +57,7 @@ public interface BorrowCreditTenderService extends BaseTradeService {
     JSONObject getInterestInfo(int userId, String creditNid, String assignCapital);
 
     /**
-     * App页面投资可债转输入投资金额后获取收益
+     * App页面出借可债转输入出借金额后获取收益
      * @param tender
      * @param creditNid
      * @param assignCapital

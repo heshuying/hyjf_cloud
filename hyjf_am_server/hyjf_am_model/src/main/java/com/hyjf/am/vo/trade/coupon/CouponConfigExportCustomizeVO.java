@@ -35,7 +35,7 @@ public class CouponConfigExportCustomizeVO implements Serializable {
     private String projectType;
     //使用范围-项目期限
     private String tenderQuota;
-    //使用范围-投资金额
+    //使用范围-出借金额
     private String projectExpirationType;
     //状态
     private String status;

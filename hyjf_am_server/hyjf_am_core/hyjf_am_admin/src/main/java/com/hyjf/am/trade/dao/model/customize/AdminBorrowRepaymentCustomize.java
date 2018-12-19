@@ -16,7 +16,7 @@ public class AdminBorrowRepaymentCustomize extends BaseVO implements Serializabl
 
     private static final long serialVersionUID = 1L;
 
-    private String borrowNid;// 借款编号
+    private String borrowNid;// 项目编号
     private String userId;// 借款人ID
     private String borrowUserName;// 借款人用户名
     private String borrowName;// 借款标题
@@ -24,7 +24,7 @@ public class AdminBorrowRepaymentCustomize extends BaseVO implements Serializabl
     private String projectType;// 项目类型id
     private String projectTypeName;// 项目类型名称
     private String borrowPeriod;// 借款期限
-    private String borrowApr;// 年化收益
+    private String borrowApr;// 出借利率
     private String borrowAccount;// 借款金额
     private String borrowAccountYes;// 借到金额
     private String repayType;// 还款方式中文名
@@ -347,7 +347,7 @@ public class AdminBorrowRepaymentCustomize extends BaseVO implements Serializabl
          */
         private static final long serialVersionUID = -7406958514084024467L;
 
-        /** 借款编号 */
+        /** 项目编号 */
         private String borrowNid;
 
         /** 借款期限 */
@@ -362,16 +362,16 @@ public class AdminBorrowRepaymentCustomize extends BaseVO implements Serializabl
         /** 还款方式 */
         private String repayStyleName;
 
-        /** 投资人用户名 */
+        /** 出借人用户名 */
         private String investUserName;
 
-        /** 投资人用户ID */
+        /** 出借人用户ID */
         private String investUserId;
 
-        /** 投资id */
+        /** 出借id */
         private String investId;
 
-        /** 年化收益率 */
+        /** 出借利率 */
         private String borrowApr;
 
         /** 产品加息收益率 */

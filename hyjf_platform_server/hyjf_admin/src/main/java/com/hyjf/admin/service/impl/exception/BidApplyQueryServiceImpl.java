@@ -47,7 +47,7 @@ public class BidApplyQueryServiceImpl extends BaseAdminServiceImpl implements Bi
 		
 		//接口返回对象为空
 		if(Validator.isNull(resultBean)){
-			result.put("msg", "投资人投标申请查询"+"接口调用失败。");
+			result.put("msg", "出借人投标申请查询"+"接口调用失败。");
 			result.put("status", "99");
 			return result;
 		}
@@ -102,7 +102,7 @@ public class BidApplyQueryServiceImpl extends BaseAdminServiceImpl implements Bi
 		//接口返回对象完全返回页面
 		result = (JSONObject)JSON.toJSON(resultBean);
 		result.put("status", "000");
-		result.put("msg", "投资人投标申请查询"+"接口调用成功。");
+		result.put("msg", "出借人投标申请查询"+"接口调用成功。");
 		return result;
 	}
 	
@@ -116,13 +116,13 @@ public class BidApplyQueryServiceImpl extends BaseAdminServiceImpl implements Bi
 	private BankCallBean bidApplyQuery(BidApplyQueryBean form, Integer userId) {
 		// 银行接口用BEAN
 		BankCallBean bean = new BankCallBean(BankCallConstant.VERSION_10,
-				// 投资人投标申请查询  bidApplyQuery
+				// 出借人投标申请查询  bidApplyQuery
 				BankCallConstant.TXCODE_BID_APPLY_QUERY,
 				userId);
 		//设置特有参数
-		bean.setAccountId(form.getAccountId());// 投资人电子账号
+		bean.setAccountId(form.getAccountId());// 出借人电子账号
 		bean.setOrgOrderId(form.getOrgOrderId());//原投标订单号
-		bean.setLogRemark("投资人投标申请查询" + "（查询用）");
+		bean.setLogRemark("出借人投标申请查询" + "（查询用）");
 		try {
 			BankCallBean result = BankCallUtils.callApiBg(bean);
 			if (result != null && StringUtils.isBlank(result.getRetMsg())) {

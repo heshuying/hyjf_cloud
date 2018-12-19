@@ -13,14 +13,14 @@ public class DebtLoan implements Serializable {
     private Integer id;
 
     /**
-     * 投资用户id
+     * 出借用户id
      *
      * @mbggenerated
      */
     private Integer userId;
 
     /**
-     * 投资用户名
+     * 出借用户名
      *
      * @mbggenerated
      */
@@ -62,14 +62,14 @@ public class DebtLoan implements Serializable {
     private String planOrderId;
 
     /**
-     * 投资id
+     * 出借id
      *
      * @mbggenerated
      */
     private Integer investId;
 
     /**
-     * 投资订单号
+     * 出借订单号
      *
      * @mbggenerated
      */
@@ -97,21 +97,21 @@ public class DebtLoan implements Serializable {
     private BigDecimal loanCapital;
 
     /**
-     * 投资人收到的还款本息
+     * 出借人收到的还款本息
      *
      * @mbggenerated
      */
     private BigDecimal receiveAccountYes;
 
     /**
-     * 投资人收到的还款本金
+     * 出借人收到的还款本金
      *
      * @mbggenerated
      */
     private BigDecimal receiveCapitalYes;
 
     /**
-     * 投资人收到的还款利息
+     * 出借人收到的还款利息
      *
      * @mbggenerated
      */
@@ -274,42 +274,42 @@ public class DebtLoan implements Serializable {
     private BigDecimal repayDelayInterestYes;
 
     /**
-     * 投资人收取提前还款利息
+     * 出借人收取提前还款利息
      *
      * @mbggenerated
      */
     private BigDecimal receiveAdvanceInterest;
 
     /**
-     * 投资人收取逾期利息
+     * 出借人收取逾期利息
      *
      * @mbggenerated
      */
     private BigDecimal receiveLateInterest;
 
     /**
-     * 投资人收取延期利息
+     * 出借人收取延期利息
      *
      * @mbggenerated
      */
     private BigDecimal receiveDelayInterest;
 
     /**
-     * 投资人已收取提前还款利息
+     * 出借人已收取提前还款利息
      *
      * @mbggenerated
      */
     private BigDecimal receiveAdvanceInterestYes;
 
     /**
-     * 投资人已收取逾期利息
+     * 出借人已收取逾期利息
      *
      * @mbggenerated
      */
     private BigDecimal receiveLateInterestYes;
 
     /**
-     * 投资人已收取延期利息
+     * 出借人已收取延期利息
      *
      * @mbggenerated
      */

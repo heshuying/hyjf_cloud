@@ -350,7 +350,7 @@
 					JOIN ht_hjh_plan hp ON ha.plan_nid = hp.plan_nid
 					JOIN ht_hjh_debt_credit_repay cr ON
 							cr.borrow_nid = plan.borrow_nid -- 标的号;
-						AND cr.invest_order_id = plan.nid -- 原始标的投资订单号;
+						AND cr.invest_order_id = plan.nid -- 原始标的出借订单号;
 						AND cr.repay_period = plan.recover_period -- 当前期数;
 						AND cr.repay_status = 0 -- 未还款;
 						AND cr.del_flag = 0 -- 未删除;
@@ -431,7 +431,7 @@
 					AND NOT EXISTS(
 								SELECT 1 FROM ht_hjh_debt_credit_repay cr
 								WHERE cr.borrow_nid = plan.borrow_nid -- 标的号;
-									AND cr.invest_order_id = plan.nid -- 原始标的投资订单号;
+									AND cr.invest_order_id = plan.nid -- 原始标的出借订单号;
 									AND cr.repay_period = plan.recover_period -- 当前期数;
 									AND cr.repay_status = 0 -- 未还款;
 									AND cr.del_flag = 0 -- 未删除;
