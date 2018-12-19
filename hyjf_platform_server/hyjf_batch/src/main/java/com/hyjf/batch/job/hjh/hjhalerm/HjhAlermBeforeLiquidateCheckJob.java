@@ -21,7 +21,7 @@ public class HjhAlermBeforeLiquidateCheckJob extends BaseJob implements Job {
         logger.info("HjhAlermBeforeLiquidateCheckJob: {} execute...", context.getJobDetail().getKey().getName());
 
         Boolean result = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/hjhAlarmController/batch/alermBeforeLiquidateCheck", Boolean.class).getBody();
+                "http://CS-TRADE/cs-trade/hjhAlarmController/batch/alermBeforeLiquidateCheck", Boolean.class).getBody();
 
         logger.info("HjhAlermBeforeLiquidateCheckJob execute end...");
     }

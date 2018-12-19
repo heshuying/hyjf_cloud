@@ -22,7 +22,7 @@ public class HjhOrderExitCheckJob extends BaseJob implements Job {
         logger.info("HjhOrderExitCheckJob: {} execute...", context.getJobDetail().getKey().getName());
 
         Boolean result = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/hjhAlarmController/batch/hjhOrderExitCheck", Boolean.class).getBody();
+                "http://CS-TRADE/cs-trade/hjhAlarmController/batch/hjhOrderExitCheck", Boolean.class).getBody();
 
         logger.info("HjhOrderExitCheckJob execute end...");
     }

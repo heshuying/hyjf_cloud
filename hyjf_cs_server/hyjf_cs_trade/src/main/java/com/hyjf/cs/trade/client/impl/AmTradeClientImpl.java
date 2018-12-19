@@ -783,9 +783,79 @@ public class AmTradeClientImpl implements AmTradeClient {
 		}
 		return null;
 	}
+    /**
+     * 自动放款复审任务
+     */
+    @Override
+    public void hjhautoreview(){
+        restTemplate.getForEntity("http://AM-TRADE/batch/hjhautoreview/hjhautoreview",BatchBorrowTenderCustomizeResponse.class);
+    }
 
-	
-	/**
+    /**
+     * 汇计划各计划开放额度校验预警任务
+     */
+    @Override
+    public void hjhOpenAccountCheck(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAlarmController/batch/hjhOpenAccountCheck",BatchBorrowTenderCustomizeResponse.class);
+    }
+
+    /**
+     * 汇计划各计划开放额度校验预警任务
+     */
+    @Override
+    public void hjhOrderExitCheck(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAlarmController/batch/hjhOrderExitCheck",BatchBorrowTenderCustomizeResponse.class);
+    }
+    /**
+     * 订单投资异常短信预警
+     * @return
+     */
+    @Override
+    public void hjhCalculateFairValue(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAutoCalculateFairValue/hjhCalculateFairValue",BatchBorrowTenderCustomizeResponse.class);
+    }
+    /**
+     * 订单投资异常短信预警
+     * @return
+     */
+    @Override
+    public void hjhOrderInvestExceptionCheck(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAlarmController/batch/hjhOrderInvestExceptionCheck",BatchBorrowTenderCustomizeResponse.class);
+    }
+
+    /**
+     * 订单投资异常短信预警
+     * @return
+     */
+    @Override
+    public void hjhOrderMatchPeriodCheck(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAlarmController/batch/hjhOrderMatchPeriodCheck",BatchBorrowTenderCustomizeResponse.class);
+    }
+    /**
+     * 手续费分账明细插入定时
+     * @return
+     */
+    @Override
+    public void poundage(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/poundage",BatchBorrowTenderCustomizeResponse.class);
+    }
+    /**
+     * 汇计划自动结束转让定时任务
+     * @return
+     */
+    @Override
+    public void hjhAutoEndCredit(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAutoEndCredit/hjhAutoEndCredit",BatchBorrowTenderCustomizeResponse.class);
+    }
+    /**
+     *  汇计划自动清算
+     * @return
+     */
+    @Override
+    public void hjhAutoCredit(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAutoCredit/hjhAutoCredit",BatchBorrowTenderCustomizeResponse.class);
+    }
+    /**
 	 * 插入AuthCode
 	 */
 	@Override
@@ -4828,6 +4898,19 @@ public class AmTradeClientImpl implements AmTradeClient {
         IncreaseInterestInvestResponse response = restTemplate.getForEntity(url,IncreaseInterestInvestResponse.class).getBody();
         if(Response.isSuccess(response)){
             return response.getResult();
+        }
+        return null;
+    }
+    /**
+     * 清算日前一天，扫描处于复审中或者投资中的原始标的进行预警
+     * @return
+     */
+    @Override
+    public Boolean alermBeforeLiquidateCheck(){
+        String url = "http://AM-TRADE/am-trade/hjhAlarmController/batch/alermBeforeLiquidateCheck";
+        BooleanResponse response = restTemplate.getForEntity(url,BooleanResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultBoolean();
         }
         return null;
     }
