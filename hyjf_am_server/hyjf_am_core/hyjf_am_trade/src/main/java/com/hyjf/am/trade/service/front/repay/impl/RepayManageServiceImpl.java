@@ -112,6 +112,17 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         List<RepayListCustomizeVO> list = repayManageCustomizeMapper.selectRepayList(param);
         if (list != null && list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
+                // 查询承接条数(标的发生过债转,并且已有人承接)
+                int listCount = 0;
+                if (org.apache.commons.lang3.StringUtils.isNotEmpty(list.get(i).getPlanNid())){
+                    listCount =  webUserRepayListCustomizeMapper.selectUserRepayTransferListTotalByHjhCreditTender(list.get(i).getBorrowNid());
+                }else {
+                    listCount = webUserRepayListCustomizeMapper.selectUserRepayTransferListTotalByCreditTender(list.get(i).getBorrowNid());
+                }
+
+                // 承接条数
+                list.get(i).setListCount(listCount);
+
                 BigDecimal accountFee = BigDecimal.ZERO;
                 BigDecimal borrowTotal = BigDecimal.ZERO;
                 BigDecimal realAccountTotal = BigDecimal.ZERO;

@@ -27,14 +27,15 @@
         <logger name="com.hyjf" level="INFO"/>
     </springProfile>
 
+    <property name ="BATCH_FILE_DIR" value="/hyjfdata/log" />
     <property name="BATCH_FILE_NAME" value="cs-trade-batch.log" />
     <!-- 配置job日志输出至单独的日志文件中 -->
     <appender name="BATCH_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <File>${BATCH_FILE_NAME}</File>
+        <File>${BATCH_FILE_DIR}/${BATCH_FILE_NAME}</File>
         <!--滚动记录文件-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--日志文件输出的文件名-->
-            <FileNamePattern>${BATCH_FILE_NAME}.%d{yyyy-MM-dd}.log</FileNamePattern>
+            <FileNamePattern>${BATCH_FILE_DIR}/${BATCH_FILE_NAME}.%d{yyyy-MM-dd}.log</FileNamePattern>
             <!-- 每产生一个日志文件，该日志文件的保存期限为30天 -->
             <MaxHistory>30</MaxHistory>
         </rollingPolicy>
