@@ -769,8 +769,16 @@ public class AmTradeClientImpl implements AmTradeClient {
 		}
 		return null;
 	}
+    /**
+     * 投资全部掉单异常处理
+     */
+    @Override
+    public void recharge(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/bankException/recharge",BorrowTenderTmpResponse.class).getBody();
+    }
 
-	/**
+
+    /**
 	 * 获取BatchBorrowTenderCustomizeVO列表
 	 */
 	@Override

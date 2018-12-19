@@ -42,11 +42,10 @@ public class HjhAlermCheckController extends BaseTradeController {
      */
     @ApiOperation(value = "汇计划各计划开放额度校验预警任务", notes = "汇计划各计划开放额度校验预警任务")
     @GetMapping(value = "/hjhOpenAccountCheck")
-    public String hjhOpenAccountCheck() {
+    public void hjhOpenAccountCheck() {
         logger.info("汇计划各计划开放额度校验预警任务 开始... ");
         hjhAlarmService.hjhOpenAccountCheck();
         logger.info("汇计划各计划开放额度校验预警任务 结束... ");
-        return "Success";
     }
 
     /**

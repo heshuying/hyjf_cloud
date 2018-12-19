@@ -296,6 +296,10 @@ public interface AmTradeClient {
      * @return
      */
 	List<BorrowTenderTmpVO> getBorrowTenderTmpList();
+    /**
+     * 投资全部掉单异常处理
+     */
+    public void recharge();
 
 	/**
 	 * 获取BatchBorrowTenderCustomizeVO列表
