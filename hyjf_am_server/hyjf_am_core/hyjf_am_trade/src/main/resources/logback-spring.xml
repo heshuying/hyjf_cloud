@@ -28,17 +28,22 @@
     </springProfile>
 
     <property name ="BATCH_FILE_DIR" value="/hyjfdata/log" />
-    <property name="BATCH_FILE_NAME" value="am-trade-batch.log" />
+    <property name="BATCH_FILE_NAME" value="hyjf-am-trade-batch.log" />
     <!-- 配置job日志输出至单独的日志文件中 -->
     <appender name="BATCH_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <File>${BATCH_FILE_DIR}/${BATCH_FILE_NAME}</File>
-        <!--滚动记录文件-->
+        <append>true</append>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--日志文件输出的文件名-->
-            <FileNamePattern>${BATCH_FILE_DIR}/${BATCH_FILE_NAME}.%d{yyyy-MM-dd}.log</FileNamePattern>
-            <!-- 每产生一个日志文件，该日志文件的保存期限为30天 -->
+            <FileNamePattern>${BATCH_FILE_DIR}/${BATCH_FILE_NAME}.%d{yyyy-MM-dd}.%i.log</FileNamePattern>
+            <!--日志文件保留天数-->
             <MaxHistory>30</MaxHistory>
+
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>50MB</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
         </rollingPolicy>
+
         <encoder
                 class="ch.qos.logback.core.encoder.LayoutWrappingEncoder">
             <!-- 日志输出编码 -->
@@ -50,17 +55,13 @@
                 </pattern>
             </layout>
         </encoder>
-        <!--日志文件最大的大小-->
-        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-            <MaxFileSize>10MB</MaxFileSize>
-        </triggeringPolicy>
     </appender>
 
     <!--需要将日志单独输出的包路径-->
-    <logger name="com.hyjf.am.trade.controller.batch" additivity="false" level="INFO">
+    <logger name="com.hyjf.cs.trade.controller.batch" additivity="false" level="INFO">
         <appender-ref ref="BATCH_LOG"/>
     </logger>
-    <logger name="com.hyjf.am.trade.service.task" additivity="false" level="INFO">
+    <logger name="com.hyjf.cs.trade.service.batch" additivity="false" level="INFO">
         <appender-ref ref="BATCH_LOG"/>
     </logger>
 
