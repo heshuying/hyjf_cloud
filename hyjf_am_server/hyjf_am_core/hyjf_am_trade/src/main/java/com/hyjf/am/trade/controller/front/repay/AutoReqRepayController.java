@@ -43,10 +43,8 @@ public class AutoReqRepayController extends BaseController {
                     // 标的请求还款
                     if (this.autoReqRepayService.repayUserBorrowProject(autoReqRepayBorrow)) {
                         logger.info("标的" + autoReqRepayBorrow.getBorrowNid() + "自动请求还款成功。");
-                        return true;
                     } else {
                         logger.info("标的" + autoReqRepayBorrow.getBorrowNid() + "自动请求还款失败。");
-                        return false;
                     }
                 }
             } else {
