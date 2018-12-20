@@ -157,14 +157,14 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
                             if(borrowInfo.getEntrustedFlg() != null && borrowInfo.getEntrustedFlg().intValue() ==1){
                                 logger.info(borrow.getBorrowNid()+"  未推送，等待授权");
                             }else{
-                                // 审核保证金的标的发送MQ到消息队列
-                                if (null != hjhAssetBorrowType && null != hjhAssetBorrowType.getAutoBail() && hjhAssetBorrowType.getAutoBail() == 1) {
+                                // 发送到初审队列
+                                if (null != hjhAssetBorrowType && null != hjhAssetBorrowType.getAutoAudit() && hjhAssetBorrowType.getAutoAudit() == 1) {
                                     // 加入到消息队列
                                     try {
                                         JSONObject params = new JSONObject();
                                         params.put("borrowNid", borrow.getBorrowNid());
                                         //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-                                        commonProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_BAIL_TOPIC, UUID.randomUUID().toString(), params),2);
+                                        commonProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), params),2);
                                     } catch (MQException e) {
                                         logger.error("发送【审核保证金队列】MQ失败...");
                                     }

@@ -54,7 +54,7 @@
 			<!-- LEFT JOIN hyjf_user.ht_user u on hpa.user_id = u.user_id -->
 			LEFT JOIN ht_r_user u on hpa.user_id = u.user_id
 			
-			LEFT JOIN hyjf_config.ht_param_name ast on cast(hpa.`status` AS CHAR) = ast.name_cd AND ast.name_class = 'ASSET_STATUS'
+			LEFT JOIN hyjf_config.ht_param_name ast on cast(hpa.`status` AS CHAR) = ast.name_cd AND ast.name_class = 'ASSET_STATUS' and ast.del_flag = 0
 			LEFT JOIN hyjf_config.ht_param_name vast on cast(hpa.verify_status AS CHAR) = vast.name_cd AND vast.name_class = 'ASSET_APPLY_STATUS'
 			LEFT JOIN hyjf_config.ht_param_name pnusertype ON cast(u.user_type AS CHAR) = pnusertype.name_cd AND pnusertype.name_class = 'USER_TYPE'
 			LEFT JOIN hyjf_config.ht_param_name boa on cast(u.bank_open_account AS CHAR) = boa.name_cd AND boa.name_class = 'ACCOUNT_STATUS'

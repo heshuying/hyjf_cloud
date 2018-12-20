@@ -1,9 +1,18 @@
 package com.hyjf.cs.message.handle;
 
-import cn.jpush.api.common.resp.APIConnectionException;
-import cn.jpush.api.common.resp.APIRequestException;
-import cn.jpush.api.push.PushResult;
-import cn.jpush.api.push.model.PushPayload;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import com.hyjf.am.vo.user.UserAliasVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -19,17 +28,11 @@ import com.hyjf.cs.message.client.AmUserClient;
 import com.hyjf.cs.message.jpush.*;
 import com.hyjf.cs.message.mongo.mc.MessagePushMsgDao;
 import com.hyjf.cs.message.mongo.mc.MessagePushMsgHistoryDao;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import cn.jpush.api.common.resp.APIConnectionException;
+import cn.jpush.api.common.resp.APIRequestException;
+import cn.jpush.api.push.PushResult;
+import cn.jpush.api.push.model.PushPayload;
 
 @Component
 public class MsgPushHandle {
@@ -61,15 +64,18 @@ public class MsgPushHandle {
 		MessagePushMsg message = messagePushMsgDao.findById(msgId);
 
 		List<MessagePushMsgHistory> histories = addMessageHistoryRecord(message);
-		for (MessagePushMsgHistory history : histories) {
-			// 发送
-			try {
-				send(history);
-			} catch (Exception e) {
-				logger.error("发送失败...", e);
-				return -1;
+		if (!CollectionUtils.isEmpty(histories)) {
+			for (MessagePushMsgHistory history : histories) {
+				// 发送
+				try {
+					send(history);
+				} catch (Exception e) {
+					logger.error("发送失败...", e);
+					return -1;
+				}
 			}
 		}
+
 		return 0;
 	}
 
@@ -216,6 +222,11 @@ public class MsgPushHandle {
 	 */
 	public List<MessagePushMsgHistory> addMessageHistoryRecord(MessagePushMsg message) {
 		List<MessagePushMsgHistory> histories = new ArrayList<MessagePushMsgHistory>();
+		if (message.getMsgDestinationType() == null) {
+			logger.warn("MsgDestinationType is null, message send fail, id is :{}", message.getId());
+			return null;
+		}
+
 		if (message.getMsgDestinationType().intValue() == CustomConstants.MSG_PUSH_DESTINATION_TYPE_0) {
 			// 发给所有人
 			MessagePushMsgHistory history = new MessagePushMsgHistory();
