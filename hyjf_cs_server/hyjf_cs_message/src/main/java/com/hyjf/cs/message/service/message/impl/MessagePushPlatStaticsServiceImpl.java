@@ -7,7 +7,10 @@ import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
 import com.hyjf.cs.message.bean.mc.MessagePushPlatStatics;
 import com.hyjf.cs.message.mongo.mc.MessagePushPlatStaticsDao;
 import com.hyjf.cs.message.service.message.MessagePushPlatStaticsService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -29,11 +32,16 @@ public class MessagePushPlatStaticsServiceImpl implements MessagePushPlatStatics
 
     @Override
     public int selectCount(MessagePushPlatStaticsRequest request) {
-        request.setCurrPage(0);
-        List<MessagePushPlatStatics> list = staticsDao.selectPlatStatics(request);
-        if (!CollectionUtils.isEmpty(list)) {
-            return list.size();
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        if (StringUtils.isNotBlank(request.getStartDateSrch()) && StringUtils.isNotBlank(request.getEndDateSrch())) {
+            criteria.and("staDate").gte(request.getStartDateSrch() + " 00:00:00")
+                    .lte(request.getEndDateSrch() + " 23:59:59");
         }
-        return 0;
+        if (StringUtils.isNotBlank(request.getTagIdSrch())) {
+            criteria.and("tagId").is(request.getTagIdSrch());
+        }
+        query.addCriteria(criteria);
+        return staticsDao.count(query).intValue();
     }
 }

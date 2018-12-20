@@ -71,12 +71,20 @@ public class JobServiceImpl implements JobService {
 
 	@Override
 	public int selectCount(JobRequest request) {
-		request.setCurrPage(0);
-		List<Job> list = searchAction(request);
-		if (!CollectionUtils.isEmpty(list)) {
-			return list.size();
+		JobExample example = new JobExample();
+		JobExample.Criteria criteria = example.createCriteria();
+		if (StringUtils.isNotBlank(request.getOfficeName())) {
+			criteria.andOfficeNameEqualTo(request.getOfficeName());
 		}
-		return 0;
+		if (request.getStatus() != null) {
+			criteria.andStatusEqualTo(request.getStatus());
+		}
+		if (request.getStartTime() != null && request.getEndTime() != null) {
+			criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.getDayStartOfSomeDay(request.getStartTime()));
+			criteria.andCreateTimeLessThanOrEqualTo(GetDate.getDayEndOfSomeDay(request.getEndTime()));
+		}
+		example.setOrderByClause("create_time DESC");
+		return jobMapper.countByExample(example);
 	}
 
 	@Override

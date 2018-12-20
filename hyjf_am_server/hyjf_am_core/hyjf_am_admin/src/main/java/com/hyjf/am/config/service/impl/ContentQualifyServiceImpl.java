@@ -88,11 +88,19 @@ public class ContentQualifyServiceImpl implements ContentQualifyService {
 
 	@Override
 	public int selectCount(ContentQualifyRequest request) {
-		request.setCurrPage(0);
-		List<ContentQualify> list = searchAction(request);
-		if (!CollectionUtils.isEmpty(list)) {
-			return list.size();
+		ContentQualifyExample example = new ContentQualifyExample();
+		ContentQualifyExample.Criteria criteria = example.createCriteria();
+		if (StringUtils.isNotBlank(request.getName())) {
+			criteria.andNameEqualTo(request.getName());
 		}
-		return 0;
+		if (request.getStartTime() != null && request.getEndTime() != null) {
+			criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.getDayStartOfSomeDay(request.getStartTime()));
+			criteria.andCreateTimeLessThanOrEqualTo(GetDate.getDayEndOfSomeDay(request.getEndTime()));
+		}
+		if (request.getStatus() != null) {
+			criteria.andStatusEqualTo(request.getStatus());
+		}
+		example.setOrderByClause("create_time DESC");
+		return contentQualifyMapper.countByExample(example);
 	}
 }
