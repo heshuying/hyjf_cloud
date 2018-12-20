@@ -2,8 +2,11 @@ package com.hyjf.am.config.controller.admin;
 
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.Admin;
+import com.hyjf.am.config.dao.model.auto.AdminAndRole;
+import com.hyjf.am.config.dao.model.auto.AdminRole;
 import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.dao.model.customize.Tree;
+import com.hyjf.am.config.service.AdminRoleService;
 import com.hyjf.am.config.service.AdminSystemService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CouponTenderResponse;
@@ -29,6 +32,8 @@ public class AdminSystemController extends BaseConfigController {
 	private AdminSystemService adminSystemService;
 	@Autowired
 	private LockedUserService lockedUserService;
+	@Autowired
+	private AdminRoleService adminRoleService;
 
 	/**
 	 * 获取该用户菜单
@@ -86,6 +91,12 @@ public class AdminSystemController extends BaseConfigController {
 				}
 				//判断用户输入的密码错误次数---结束
 			}
+			 AdminRole role = adminRoleService.getRecord(Integer.valueOf(admin.getRole()));
+			 if(role.getStatus()!=0) {
+					asr.setRtn(Response.ERROR);
+					asr.setMessage("该用户角色状态异常");
+					return asr;
+			 }
 			asr.setRtn(Response.ERROR);
 			asr.setMessage("用户名或者密码无效");
 			return asr;

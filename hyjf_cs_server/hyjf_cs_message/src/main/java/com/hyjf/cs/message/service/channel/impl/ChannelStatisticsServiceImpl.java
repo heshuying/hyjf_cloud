@@ -119,23 +119,27 @@ public class ChannelStatisticsServiceImpl implements ChannelStatisticsService {
             criteria.and("addTime").gte(GetDate.getSomeDayStart(startTime)).lte(GetDate.getSomeDayEnd(endTime));
         }
         query.addCriteria(criteria);
-        if (request.getCurrPage() > 0) {
-            int currPage = request.getCurrPage();
-            int pageSize = request.getPageSize();
-            int limitStart = (currPage - 1) * pageSize;
-            query.skip(limitStart).limit(pageSize);
-        }
+
+        int currPage = request.getCurrPage();
+        int pageSize = request.getPageSize();
+        int limitStart = (currPage - 1) * pageSize;
+        query.skip(limitStart).limit(pageSize);
+
         query.with(new Sort(Sort.Direction.DESC, "_id"));
         return pcChannelStatisticsDao.find(query);
     }
 
     @Override
     public int selectCount(PcChannelStatisticsRequest request) {
-        request.setCurrPage(0);
-        List<PcChannelStatistics> list = searchPcChannelStatisticsList(request);
-        if (!CollectionUtils.isEmpty(list)) {
-            return list.size();
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        Date startTime = request.getStartTime();
+        Date endTime = request.getEndTime();
+        if (startTime != null && endTime != null) {
+            criteria.and("addTime").gte(GetDate.getSomeDayStart(startTime)).lte(GetDate.getSomeDayEnd(endTime));
         }
-        return 0;
+        query.addCriteria(criteria);
+        query.with(new Sort(Sort.Direction.DESC, "_id"));
+        return pcChannelStatisticsDao.count(query).intValue();
     }
 }

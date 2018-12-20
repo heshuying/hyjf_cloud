@@ -18,14 +18,10 @@ import java.util.List;
 public class AmConfigClientImpl implements AmConfigClient {
     @Autowired
     private RestTemplate restTemplate;
-
-    @Value("${am.config.service.name}")
-    private String configService;
-
     @Override
     public List<GatewayApiConfigVO> findGatewayConfigs() {
         GatewayApiConfigResponse response = restTemplate
-                .getForEntity(configService+"/gateConfig/findAll", GatewayApiConfigResponse.class).getBody();
+                .getForEntity("http://CS-MARKET/cs-market/zuul/gateConfig", GatewayApiConfigResponse.class).getBody();
         return response.getResultList();
     }
 }

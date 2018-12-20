@@ -5,6 +5,7 @@ import com.hyjf.am.response.*;
 import com.hyjf.am.response.trade.RepayListResponse;
 import com.hyjf.am.response.user.WebUserRepayTransferCustomizeResponse;
 import com.hyjf.am.response.user.WebUserTransferBorrowInfoCustomizeResponse;
+import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.trade.bean.repay.ProjectBean;
@@ -20,7 +21,6 @@ import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
 import com.hyjf.am.vo.user.WebUserRepayTransferCustomizeVO;
 import com.hyjf.am.vo.user.WebUserTransferBorrowInfoCustomizeVO;
-import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -374,35 +374,37 @@ public class RepayManageController extends BaseController {
         // 总条数
         int listCount = repayManageService.selectUserRepayTransferDetailListTotal(repayTransferRequest.getBorrowNid(), repayTransferRequest.getVerificationFlag());
 
-        if (listCount > 0){
-
-            if(repayTransferRequest.getCurrPage()>0){
-                Paginator paginator = new Paginator(repayTransferRequest.getCurrPage(), listCount);
-                repayTransferRequest.setLimitStart(paginator.getOffset());
+        if (repayTransferRequest.getCurrPage() > 0){
+            Paginator paginator = new Paginator(repayTransferRequest.getCurrPage(), listCount);
+            repayTransferRequest.setLimitStart(paginator.getOffset());
+            if (repayTransferRequest.getPageSize() > 0){
+                repayTransferRequest.setLimitEnd(repayTransferRequest.getPageSize());
+            }else{
                 repayTransferRequest.setLimitEnd(paginator.getLimit());
             }
-
-
-            List<WebUserRepayTransferCustomize> repayList = repayManageService.selectUserRepayTransferDetailList(repayTransferRequest);
-
-            // 数据格式化的格式 10,000.00
-            DecimalFormat decimalFormat = new DecimalFormat("#,###.00");
-
-            // 遍历列表, 给承接人和转让人用户名加密
-            for (WebUserRepayTransferCustomize re: repayList) {
-                re.setCreditUserName(repayManageService.usernameEncryption(re.getCreditUserName()));
-                re.setUndertakerUserName(repayManageService.usernameEncryption(re.getUndertakerUserName()));
-                re.setAssignCapitalString(decimalFormat.format(re.getAssignCapital()));
-            }
-            String returnCode = "0";
-            List<WebUserRepayTransferCustomizeVO> voList = null;
-            if (CollectionUtils.isNotEmpty(repayList)){
-                voList = CommonUtils.convertBeanList(repayList, WebUserRepayTransferCustomizeVO.class);
-            }
-            repayTransferCustomizeResponse.setCount(listCount);
-            repayTransferCustomizeResponse.setRtn(returnCode);
-            repayTransferCustomizeResponse.setResultList(voList);
         }
+
+
+        List<WebUserRepayTransferCustomize> repayList = repayManageService.selectUserRepayTransferDetailList(repayTransferRequest);
+
+        // 数据格式化的格式 10,000.00
+        DecimalFormat decimalFormat = new DecimalFormat("#,###.00");
+
+        // 遍历列表, 给承接人和转让人用户名加密
+        for (WebUserRepayTransferCustomize re: repayList) {
+            re.setCreditUserName(repayManageService.usernameEncryption(re.getCreditUserName()));
+            re.setUndertakerUserName(repayManageService.usernameEncryption(re.getUndertakerUserName()));
+            re.setAssignCapitalString(decimalFormat.format(re.getAssignCapital()));
+        }
+        String returnCode = "0";
+        List<WebUserRepayTransferCustomizeVO> voList = null;
+        if (CollectionUtils.isNotEmpty(repayList)){
+            voList = CommonUtils.convertBeanList(repayList, WebUserRepayTransferCustomizeVO.class);
+        }
+        repayTransferCustomizeResponse.setCount(listCount);
+        repayTransferCustomizeResponse.setRtn(returnCode);
+        repayTransferCustomizeResponse.setResultList(voList);
+
         return repayTransferCustomizeResponse;
     }
 }

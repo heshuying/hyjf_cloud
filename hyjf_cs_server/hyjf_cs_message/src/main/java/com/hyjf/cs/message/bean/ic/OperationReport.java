@@ -21,7 +21,7 @@ public class OperationReport {
 
     private String id;
     // 数据统计的月份，用于检索
-    @Indexed(unique=true,name="statisticsMonth")
+    // @Indexed(unique=true,name="statisticsMonth")  dba 维护
     private int statisticsMonth;
     // 插入数据的时间
     private int insertDate;

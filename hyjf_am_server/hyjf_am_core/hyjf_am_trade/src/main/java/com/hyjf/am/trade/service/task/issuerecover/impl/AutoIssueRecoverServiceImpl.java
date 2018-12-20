@@ -274,14 +274,14 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         borrowInfo.setBorrowPreNidNew(borrowPreNidNew);
         borrowInfo.setBorrowUserName(borrow.getBorrowUserName());
 
-        // 标的还款后的回滚方式
-        HjhBailConfigInfoExample example = new HjhBailConfigInfoExample();
+        // 标的还款后的回滚方式 (合规改造删除 2018-12-03)
+       /* HjhBailConfigInfoExample example = new HjhBailConfigInfoExample();
         example.createCriteria().andInstCodeEqualTo(hjhPlanAsset.getInstCode()).andBorrowStyleEqualTo(hjhPlanAsset.getBorrowStyle());
         List<HjhBailConfigInfo> hjhBailConfigInfoList = this.hjhBailConfigInfoMapper.selectByExample(example);
         // 推送资产的时候校验回滚方式是否配置、若未配置不得推送资产
         if(null!=hjhBailConfigInfoList && hjhBailConfigInfoList.size()>0) {
             borrow.setRepayCapitalType(hjhBailConfigInfoList.get(0).getRepayCapitalType());
-        }
+        }*/
 
         String borrowStyle = borrow.getBorrowStyle();
         Integer isMonth = 0;// 0:天标 1：月标
@@ -1166,11 +1166,11 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
             return -1;
         }
 
-        BigDecimal availableBalance = bailConfig.getRemainMarkLine();
+//        BigDecimal availableBalance = bailConfig.getRemainMarkLine();
         BigDecimal assetAcount = new BigDecimal(hjhPlanAsset.getAccount());
 
         // 可用发标额度余额校验
-        if (BigDecimal.ZERO.compareTo(availableBalance) >= 0) {
+        /*if (BigDecimal.ZERO.compareTo(availableBalance) >= 0) {
             logger.info("自动录标校验保证金：资产编号："+hjhPlanAsset.getAssetId()+" 可用发标额度余额小于等于零 " + availableBalance);
             // 可用发标额度余额小于等于0不能发标
             return 1;
@@ -1178,7 +1178,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         if(assetAcount.compareTo(availableBalance) > 0){
             // 可用发标额度余额不够不能发标
             return 1;
-        }
+        }*/
 
         // 日推标额度校验
         BigDecimal dayAvailable = BigDecimal.ZERO;
@@ -1211,8 +1211,13 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
             return 24;
         }
 
-        // 授信额度校验
-        HjhBailConfigInfo configInfo = getConfigInfo(hjhPlanAsset.getBorrowStyle(), hjhPlanAsset.getInstCode());
+        // 合作额度校验
+        if(!checkNewCredit(bailConfig, assetAcount)){
+            return 21;
+        }
+
+        // 授信额度校验 （合规改造删除 modify by hesy 2018-12-04）
+        /*HjhBailConfigInfo configInfo = getConfigInfo(hjhPlanAsset.getBorrowStyle(), hjhPlanAsset.getInstCode());
         if(configInfo == null){
             logger.info("自动录标校验保证金：HjhBailConfigInfo不存在，机构编号：{}, 还款方式：{}", hjhPlanAsset.getInstCode(), hjhPlanAsset.getBorrowStyle());
             return -1;
@@ -1240,7 +1245,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         if(configInfo.getIsNewCredit() != 1 && configInfo.getIsLoanCredit() != 1){
             logger.error("自动录标校验保证金：因还款方式未配置保证金授信方式，推标失败。instCode:" + instCode);
             return -1;
-        }
+        }*/
 
         return 0;
     }
