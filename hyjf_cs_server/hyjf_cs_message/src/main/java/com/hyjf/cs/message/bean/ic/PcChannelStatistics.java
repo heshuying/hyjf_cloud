@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.message.bean.ic;
 
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
@@ -45,6 +46,7 @@ public class PcChannelStatistics implements Serializable {
 
     private BigDecimal hzrTenderPrice;
 
+    // @Indexed  dba维护索引
     private Date addTime;
 
     private static final long serialVersionUID = 1L;

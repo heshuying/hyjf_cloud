@@ -119,12 +119,12 @@ public class ChannelStatisticsServiceImpl implements ChannelStatisticsService {
             criteria.and("addTime").gte(GetDate.getSomeDayStart(startTime)).lte(GetDate.getSomeDayEnd(endTime));
         }
         query.addCriteria(criteria);
-        if (request.getCurrPage() > 0) {
-            int currPage = request.getCurrPage();
-            int pageSize = request.getPageSize();
-            int limitStart = (currPage - 1) * pageSize;
-            query.skip(limitStart).limit(pageSize);
-        }
+
+        int currPage = request.getCurrPage();
+        int pageSize = request.getPageSize();
+        int limitStart = (currPage - 1) * pageSize;
+        query.skip(limitStart).limit(pageSize);
+
         query.with(new Sort(Sort.Direction.DESC, "_id"));
         return pcChannelStatisticsDao.find(query);
     }
