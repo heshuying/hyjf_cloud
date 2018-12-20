@@ -1,0 +1,573 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.auto.EvaluationConfigMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.trade.dao.model.auto.EvaluationConfig" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="debt_evaluation_type_check" property="debtEvaluationTypeCheck" jdbcType="BIT" />
+    <result column="intellectual_eveluation_type_check" property="intellectualEveluationTypeCheck" jdbcType="BIT" />
+    <result column="dept_evaluation_money_check" property="deptEvaluationMoneyCheck" jdbcType="BIT" />
+    <result column="intellectual_evaluation_money_check" property="intellectualEvaluationMoneyCheck" jdbcType="BIT" />
+    <result column="dept_collection_evaluation_check" property="deptCollectionEvaluationCheck" jdbcType="BIT" />
+    <result column="intellectual_collection_evaluation_check" property="intellectualCollectionEvaluationCheck" jdbcType="BIT" />
+    <result column="investment_evaluation_check" property="investmentEvaluationCheck" jdbcType="BIT" />
+    <result column="validity_evaluation_date" property="validityEvaluationDate" jdbcType="INTEGER" />
+    <result column="conservative_evaluation_single_money" property="conservativeEvaluationSingleMoney" jdbcType="DECIMAL" />
+    <result column="growup_evaluation_single_money" property="growupEvaluationSingleMoney" jdbcType="DECIMAL" />
+    <result column="steady_evaluation_single_money" property="steadyEvaluationSingleMoney" jdbcType="DECIMAL" />
+    <result column="enterprising_evaluation_singl_money" property="enterprisingEvaluationSinglMoney" jdbcType="DECIMAL" />
+    <result column="conservative_evaluation_principal_money" property="conservativeEvaluationPrincipalMoney" jdbcType="DECIMAL" />
+    <result column="growup_evaluation_principal_money" property="growupEvaluationPrincipalMoney" jdbcType="DECIMAL" />
+    <result column="steady_evaluation_principal_money" property="steadyEvaluationPrincipalMoney" jdbcType="DECIMAL" />
+    <result column="enterprising_evaluation_principal_money" property="enterprisingEvaluationPrincipalMoney" jdbcType="DECIMAL" />
+    <result column="bbb_evaluation_proposal" property="bbbEvaluationProposal" jdbcType="VARCHAR" />
+    <result column="A_evaluation_proposal" property="aEvaluationProposal" jdbcType="VARCHAR" />
+    <result column="AA0_evaluation_proposal" property="aa0EvaluationProposal" jdbcType="VARCHAR" />
+    <result column="AA1_evaluation_proposal" property="aa1EvaluationProposal" jdbcType="VARCHAR" />
+    <result column="AA2_evaluation_proposal" property="aa2EvaluationProposal" jdbcType="VARCHAR" />
+    <result column="AAA_evaluation_proposal" property="aaaEvaluationProposal" jdbcType="VARCHAR" />
+    <result column="create_user" property="createUser" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="update_user" property="updateUser" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, debt_evaluation_type_check, intellectual_eveluation_type_check, dept_evaluation_money_check, 
+    intellectual_evaluation_money_check, dept_collection_evaluation_check, intellectual_collection_evaluation_check, 
+    investment_evaluation_check, validity_evaluation_date, conservative_evaluation_single_money, 
+    growup_evaluation_single_money, steady_evaluation_single_money, enterprising_evaluation_singl_money, 
+    conservative_evaluation_principal_money, growup_evaluation_principal_money, steady_evaluation_principal_money, 
+    enterprising_evaluation_principal_money, bbb_evaluation_proposal, A_evaluation_proposal, 
+    AA0_evaluation_proposal, AA1_evaluation_proposal, AA2_evaluation_proposal, AAA_evaluation_proposal, 
+    create_user, create_time, update_time, update_user
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.EvaluationConfigExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_evaluation_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_evaluation_config
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_evaluation_config
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.trade.dao.model.auto.EvaluationConfigExample" >
+    delete from ht_evaluation_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.trade.dao.model.auto.EvaluationConfig" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_evaluation_config (debt_evaluation_type_check, intellectual_eveluation_type_check, 
+      dept_evaluation_money_check, intellectual_evaluation_money_check, 
+      dept_collection_evaluation_check, intellectual_collection_evaluation_check, 
+      investment_evaluation_check, validity_evaluation_date, 
+      conservative_evaluation_single_money, growup_evaluation_single_money, 
+      steady_evaluation_single_money, enterprising_evaluation_singl_money, 
+      conservative_evaluation_principal_money, growup_evaluation_principal_money, 
+      steady_evaluation_principal_money, enterprising_evaluation_principal_money, 
+      bbb_evaluation_proposal, A_evaluation_proposal, 
+      AA0_evaluation_proposal, AA1_evaluation_proposal, 
+      AA2_evaluation_proposal, AAA_evaluation_proposal, 
+      create_user, create_time, update_time, 
+      update_user)
+    values (#{debtEvaluationTypeCheck,jdbcType=BIT}, #{intellectualEveluationTypeCheck,jdbcType=BIT}, 
+      #{deptEvaluationMoneyCheck,jdbcType=BIT}, #{intellectualEvaluationMoneyCheck,jdbcType=BIT}, 
+      #{deptCollectionEvaluationCheck,jdbcType=BIT}, #{intellectualCollectionEvaluationCheck,jdbcType=BIT}, 
+      #{investmentEvaluationCheck,jdbcType=BIT}, #{validityEvaluationDate,jdbcType=INTEGER}, 
+      #{conservativeEvaluationSingleMoney,jdbcType=DECIMAL}, #{growupEvaluationSingleMoney,jdbcType=DECIMAL}, 
+      #{steadyEvaluationSingleMoney,jdbcType=DECIMAL}, #{enterprisingEvaluationSinglMoney,jdbcType=DECIMAL}, 
+      #{conservativeEvaluationPrincipalMoney,jdbcType=DECIMAL}, #{growupEvaluationPrincipalMoney,jdbcType=DECIMAL}, 
+      #{steadyEvaluationPrincipalMoney,jdbcType=DECIMAL}, #{enterprisingEvaluationPrincipalMoney,jdbcType=DECIMAL}, 
+      #{bbbEvaluationProposal,jdbcType=VARCHAR}, #{aEvaluationProposal,jdbcType=VARCHAR}, 
+      #{aa0EvaluationProposal,jdbcType=VARCHAR}, #{aa1EvaluationProposal,jdbcType=VARCHAR}, 
+      #{aa2EvaluationProposal,jdbcType=VARCHAR}, #{aaaEvaluationProposal,jdbcType=VARCHAR}, 
+      #{createUser,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{updateUser,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.EvaluationConfig" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_evaluation_config
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="debtEvaluationTypeCheck != null" >
+        debt_evaluation_type_check,
+      </if>
+      <if test="intellectualEveluationTypeCheck != null" >
+        intellectual_eveluation_type_check,
+      </if>
+      <if test="deptEvaluationMoneyCheck != null" >
+        dept_evaluation_money_check,
+      </if>
+      <if test="intellectualEvaluationMoneyCheck != null" >
+        intellectual_evaluation_money_check,
+      </if>
+      <if test="deptCollectionEvaluationCheck != null" >
+        dept_collection_evaluation_check,
+      </if>
+      <if test="intellectualCollectionEvaluationCheck != null" >
+        intellectual_collection_evaluation_check,
+      </if>
+      <if test="investmentEvaluationCheck != null" >
+        investment_evaluation_check,
+      </if>
+      <if test="validityEvaluationDate != null" >
+        validity_evaluation_date,
+      </if>
+      <if test="conservativeEvaluationSingleMoney != null" >
+        conservative_evaluation_single_money,
+      </if>
+      <if test="growupEvaluationSingleMoney != null" >
+        growup_evaluation_single_money,
+      </if>
+      <if test="steadyEvaluationSingleMoney != null" >
+        steady_evaluation_single_money,
+      </if>
+      <if test="enterprisingEvaluationSinglMoney != null" >
+        enterprising_evaluation_singl_money,
+      </if>
+      <if test="conservativeEvaluationPrincipalMoney != null" >
+        conservative_evaluation_principal_money,
+      </if>
+      <if test="growupEvaluationPrincipalMoney != null" >
+        growup_evaluation_principal_money,
+      </if>
+      <if test="steadyEvaluationPrincipalMoney != null" >
+        steady_evaluation_principal_money,
+      </if>
+      <if test="enterprisingEvaluationPrincipalMoney != null" >
+        enterprising_evaluation_principal_money,
+      </if>
+      <if test="bbbEvaluationProposal != null" >
+        bbb_evaluation_proposal,
+      </if>
+      <if test="aEvaluationProposal != null" >
+        A_evaluation_proposal,
+      </if>
+      <if test="aa0EvaluationProposal != null" >
+        AA0_evaluation_proposal,
+      </if>
+      <if test="aa1EvaluationProposal != null" >
+        AA1_evaluation_proposal,
+      </if>
+      <if test="aa2EvaluationProposal != null" >
+        AA2_evaluation_proposal,
+      </if>
+      <if test="aaaEvaluationProposal != null" >
+        AAA_evaluation_proposal,
+      </if>
+      <if test="createUser != null" >
+        create_user,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="updateUser != null" >
+        update_user,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="debtEvaluationTypeCheck != null" >
+        #{debtEvaluationTypeCheck,jdbcType=BIT},
+      </if>
+      <if test="intellectualEveluationTypeCheck != null" >
+        #{intellectualEveluationTypeCheck,jdbcType=BIT},
+      </if>
+      <if test="deptEvaluationMoneyCheck != null" >
+        #{deptEvaluationMoneyCheck,jdbcType=BIT},
+      </if>
+      <if test="intellectualEvaluationMoneyCheck != null" >
+        #{intellectualEvaluationMoneyCheck,jdbcType=BIT},
+      </if>
+      <if test="deptCollectionEvaluationCheck != null" >
+        #{deptCollectionEvaluationCheck,jdbcType=BIT},
+      </if>
+      <if test="intellectualCollectionEvaluationCheck != null" >
+        #{intellectualCollectionEvaluationCheck,jdbcType=BIT},
+      </if>
+      <if test="investmentEvaluationCheck != null" >
+        #{investmentEvaluationCheck,jdbcType=BIT},
+      </if>
+      <if test="validityEvaluationDate != null" >
+        #{validityEvaluationDate,jdbcType=INTEGER},
+      </if>
+      <if test="conservativeEvaluationSingleMoney != null" >
+        #{conservativeEvaluationSingleMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="growupEvaluationSingleMoney != null" >
+        #{growupEvaluationSingleMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="steadyEvaluationSingleMoney != null" >
+        #{steadyEvaluationSingleMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="enterprisingEvaluationSinglMoney != null" >
+        #{enterprisingEvaluationSinglMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="conservativeEvaluationPrincipalMoney != null" >
+        #{conservativeEvaluationPrincipalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="growupEvaluationPrincipalMoney != null" >
+        #{growupEvaluationPrincipalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="steadyEvaluationPrincipalMoney != null" >
+        #{steadyEvaluationPrincipalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="enterprisingEvaluationPrincipalMoney != null" >
+        #{enterprisingEvaluationPrincipalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="bbbEvaluationProposal != null" >
+        #{bbbEvaluationProposal,jdbcType=VARCHAR},
+      </if>
+      <if test="aEvaluationProposal != null" >
+        #{aEvaluationProposal,jdbcType=VARCHAR},
+      </if>
+      <if test="aa0EvaluationProposal != null" >
+        #{aa0EvaluationProposal,jdbcType=VARCHAR},
+      </if>
+      <if test="aa1EvaluationProposal != null" >
+        #{aa1EvaluationProposal,jdbcType=VARCHAR},
+      </if>
+      <if test="aa2EvaluationProposal != null" >
+        #{aa2EvaluationProposal,jdbcType=VARCHAR},
+      </if>
+      <if test="aaaEvaluationProposal != null" >
+        #{aaaEvaluationProposal,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        #{updateUser,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.trade.dao.model.auto.EvaluationConfigExample" resultType="java.lang.Integer" >
+    select count(*) from ht_evaluation_config
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_evaluation_config
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.debtEvaluationTypeCheck != null" >
+        debt_evaluation_type_check = #{record.debtEvaluationTypeCheck,jdbcType=BIT},
+      </if>
+      <if test="record.intellectualEveluationTypeCheck != null" >
+        intellectual_eveluation_type_check = #{record.intellectualEveluationTypeCheck,jdbcType=BIT},
+      </if>
+      <if test="record.deptEvaluationMoneyCheck != null" >
+        dept_evaluation_money_check = #{record.deptEvaluationMoneyCheck,jdbcType=BIT},
+      </if>
+      <if test="record.intellectualEvaluationMoneyCheck != null" >
+        intellectual_evaluation_money_check = #{record.intellectualEvaluationMoneyCheck,jdbcType=BIT},
+      </if>
+      <if test="record.deptCollectionEvaluationCheck != null" >
+        dept_collection_evaluation_check = #{record.deptCollectionEvaluationCheck,jdbcType=BIT},
+      </if>
+      <if test="record.intellectualCollectionEvaluationCheck != null" >
+        intellectual_collection_evaluation_check = #{record.intellectualCollectionEvaluationCheck,jdbcType=BIT},
+      </if>
+      <if test="record.investmentEvaluationCheck != null" >
+        investment_evaluation_check = #{record.investmentEvaluationCheck,jdbcType=BIT},
+      </if>
+      <if test="record.validityEvaluationDate != null" >
+        validity_evaluation_date = #{record.validityEvaluationDate,jdbcType=INTEGER},
+      </if>
+      <if test="record.conservativeEvaluationSingleMoney != null" >
+        conservative_evaluation_single_money = #{record.conservativeEvaluationSingleMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="record.growupEvaluationSingleMoney != null" >
+        growup_evaluation_single_money = #{record.growupEvaluationSingleMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="record.steadyEvaluationSingleMoney != null" >
+        steady_evaluation_single_money = #{record.steadyEvaluationSingleMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="record.enterprisingEvaluationSinglMoney != null" >
+        enterprising_evaluation_singl_money = #{record.enterprisingEvaluationSinglMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="record.conservativeEvaluationPrincipalMoney != null" >
+        conservative_evaluation_principal_money = #{record.conservativeEvaluationPrincipalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="record.growupEvaluationPrincipalMoney != null" >
+        growup_evaluation_principal_money = #{record.growupEvaluationPrincipalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="record.steadyEvaluationPrincipalMoney != null" >
+        steady_evaluation_principal_money = #{record.steadyEvaluationPrincipalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="record.enterprisingEvaluationPrincipalMoney != null" >
+        enterprising_evaluation_principal_money = #{record.enterprisingEvaluationPrincipalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="record.bbbEvaluationProposal != null" >
+        bbb_evaluation_proposal = #{record.bbbEvaluationProposal,jdbcType=VARCHAR},
+      </if>
+      <if test="record.aEvaluationProposal != null" >
+        A_evaluation_proposal = #{record.aEvaluationProposal,jdbcType=VARCHAR},
+      </if>
+      <if test="record.aa0EvaluationProposal != null" >
+        AA0_evaluation_proposal = #{record.aa0EvaluationProposal,jdbcType=VARCHAR},
+      </if>
+      <if test="record.aa1EvaluationProposal != null" >
+        AA1_evaluation_proposal = #{record.aa1EvaluationProposal,jdbcType=VARCHAR},
+      </if>
+      <if test="record.aa2EvaluationProposal != null" >
+        AA2_evaluation_proposal = #{record.aa2EvaluationProposal,jdbcType=VARCHAR},
+      </if>
+      <if test="record.aaaEvaluationProposal != null" >
+        AAA_evaluation_proposal = #{record.aaaEvaluationProposal,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createUser != null" >
+        create_user = #{record.createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateUser != null" >
+        update_user = #{record.updateUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_evaluation_config
+    set id = #{record.id,jdbcType=INTEGER},
+      debt_evaluation_type_check = #{record.debtEvaluationTypeCheck,jdbcType=BIT},
+      intellectual_eveluation_type_check = #{record.intellectualEveluationTypeCheck,jdbcType=BIT},
+      dept_evaluation_money_check = #{record.deptEvaluationMoneyCheck,jdbcType=BIT},
+      intellectual_evaluation_money_check = #{record.intellectualEvaluationMoneyCheck,jdbcType=BIT},
+      dept_collection_evaluation_check = #{record.deptCollectionEvaluationCheck,jdbcType=BIT},
+      intellectual_collection_evaluation_check = #{record.intellectualCollectionEvaluationCheck,jdbcType=BIT},
+      investment_evaluation_check = #{record.investmentEvaluationCheck,jdbcType=BIT},
+      validity_evaluation_date = #{record.validityEvaluationDate,jdbcType=INTEGER},
+      conservative_evaluation_single_money = #{record.conservativeEvaluationSingleMoney,jdbcType=DECIMAL},
+      growup_evaluation_single_money = #{record.growupEvaluationSingleMoney,jdbcType=DECIMAL},
+      steady_evaluation_single_money = #{record.steadyEvaluationSingleMoney,jdbcType=DECIMAL},
+      enterprising_evaluation_singl_money = #{record.enterprisingEvaluationSinglMoney,jdbcType=DECIMAL},
+      conservative_evaluation_principal_money = #{record.conservativeEvaluationPrincipalMoney,jdbcType=DECIMAL},
+      growup_evaluation_principal_money = #{record.growupEvaluationPrincipalMoney,jdbcType=DECIMAL},
+      steady_evaluation_principal_money = #{record.steadyEvaluationPrincipalMoney,jdbcType=DECIMAL},
+      enterprising_evaluation_principal_money = #{record.enterprisingEvaluationPrincipalMoney,jdbcType=DECIMAL},
+      bbb_evaluation_proposal = #{record.bbbEvaluationProposal,jdbcType=VARCHAR},
+      A_evaluation_proposal = #{record.aEvaluationProposal,jdbcType=VARCHAR},
+      AA0_evaluation_proposal = #{record.aa0EvaluationProposal,jdbcType=VARCHAR},
+      AA1_evaluation_proposal = #{record.aa1EvaluationProposal,jdbcType=VARCHAR},
+      AA2_evaluation_proposal = #{record.aa2EvaluationProposal,jdbcType=VARCHAR},
+      AAA_evaluation_proposal = #{record.aaaEvaluationProposal,jdbcType=VARCHAR},
+      create_user = #{record.createUser,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      update_user = #{record.updateUser,jdbcType=VARCHAR}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.trade.dao.model.auto.EvaluationConfig" >
+    update ht_evaluation_config
+    <set >
+      <if test="debtEvaluationTypeCheck != null" >
+        debt_evaluation_type_check = #{debtEvaluationTypeCheck,jdbcType=BIT},
+      </if>
+      <if test="intellectualEveluationTypeCheck != null" >
+        intellectual_eveluation_type_check = #{intellectualEveluationTypeCheck,jdbcType=BIT},
+      </if>
+      <if test="deptEvaluationMoneyCheck != null" >
+        dept_evaluation_money_check = #{deptEvaluationMoneyCheck,jdbcType=BIT},
+      </if>
+      <if test="intellectualEvaluationMoneyCheck != null" >
+        intellectual_evaluation_money_check = #{intellectualEvaluationMoneyCheck,jdbcType=BIT},
+      </if>
+      <if test="deptCollectionEvaluationCheck != null" >
+        dept_collection_evaluation_check = #{deptCollectionEvaluationCheck,jdbcType=BIT},
+      </if>
+      <if test="intellectualCollectionEvaluationCheck != null" >
+        intellectual_collection_evaluation_check = #{intellectualCollectionEvaluationCheck,jdbcType=BIT},
+      </if>
+      <if test="investmentEvaluationCheck != null" >
+        investment_evaluation_check = #{investmentEvaluationCheck,jdbcType=BIT},
+      </if>
+      <if test="validityEvaluationDate != null" >
+        validity_evaluation_date = #{validityEvaluationDate,jdbcType=INTEGER},
+      </if>
+      <if test="conservativeEvaluationSingleMoney != null" >
+        conservative_evaluation_single_money = #{conservativeEvaluationSingleMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="growupEvaluationSingleMoney != null" >
+        growup_evaluation_single_money = #{growupEvaluationSingleMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="steadyEvaluationSingleMoney != null" >
+        steady_evaluation_single_money = #{steadyEvaluationSingleMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="enterprisingEvaluationSinglMoney != null" >
+        enterprising_evaluation_singl_money = #{enterprisingEvaluationSinglMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="conservativeEvaluationPrincipalMoney != null" >
+        conservative_evaluation_principal_money = #{conservativeEvaluationPrincipalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="growupEvaluationPrincipalMoney != null" >
+        growup_evaluation_principal_money = #{growupEvaluationPrincipalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="steadyEvaluationPrincipalMoney != null" >
+        steady_evaluation_principal_money = #{steadyEvaluationPrincipalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="enterprisingEvaluationPrincipalMoney != null" >
+        enterprising_evaluation_principal_money = #{enterprisingEvaluationPrincipalMoney,jdbcType=DECIMAL},
+      </if>
+      <if test="bbbEvaluationProposal != null" >
+        bbb_evaluation_proposal = #{bbbEvaluationProposal,jdbcType=VARCHAR},
+      </if>
+      <if test="aEvaluationProposal != null" >
+        A_evaluation_proposal = #{aEvaluationProposal,jdbcType=VARCHAR},
+      </if>
+      <if test="aa0EvaluationProposal != null" >
+        AA0_evaluation_proposal = #{aa0EvaluationProposal,jdbcType=VARCHAR},
+      </if>
+      <if test="aa1EvaluationProposal != null" >
+        AA1_evaluation_proposal = #{aa1EvaluationProposal,jdbcType=VARCHAR},
+      </if>
+      <if test="aa2EvaluationProposal != null" >
+        AA2_evaluation_proposal = #{aa2EvaluationProposal,jdbcType=VARCHAR},
+      </if>
+      <if test="aaaEvaluationProposal != null" >
+        AAA_evaluation_proposal = #{aaaEvaluationProposal,jdbcType=VARCHAR},
+      </if>
+      <if test="createUser != null" >
+        create_user = #{createUser,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateUser != null" >
+        update_user = #{updateUser,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.trade.dao.model.auto.EvaluationConfig" >
+    update ht_evaluation_config
+    set debt_evaluation_type_check = #{debtEvaluationTypeCheck,jdbcType=BIT},
+      intellectual_eveluation_type_check = #{intellectualEveluationTypeCheck,jdbcType=BIT},
+      dept_evaluation_money_check = #{deptEvaluationMoneyCheck,jdbcType=BIT},
+      intellectual_evaluation_money_check = #{intellectualEvaluationMoneyCheck,jdbcType=BIT},
+      dept_collection_evaluation_check = #{deptCollectionEvaluationCheck,jdbcType=BIT},
+      intellectual_collection_evaluation_check = #{intellectualCollectionEvaluationCheck,jdbcType=BIT},
+      investment_evaluation_check = #{investmentEvaluationCheck,jdbcType=BIT},
+      validity_evaluation_date = #{validityEvaluationDate,jdbcType=INTEGER},
+      conservative_evaluation_single_money = #{conservativeEvaluationSingleMoney,jdbcType=DECIMAL},
+      growup_evaluation_single_money = #{growupEvaluationSingleMoney,jdbcType=DECIMAL},
+      steady_evaluation_single_money = #{steadyEvaluationSingleMoney,jdbcType=DECIMAL},
+      enterprising_evaluation_singl_money = #{enterprisingEvaluationSinglMoney,jdbcType=DECIMAL},
+      conservative_evaluation_principal_money = #{conservativeEvaluationPrincipalMoney,jdbcType=DECIMAL},
+      growup_evaluation_principal_money = #{growupEvaluationPrincipalMoney,jdbcType=DECIMAL},
+      steady_evaluation_principal_money = #{steadyEvaluationPrincipalMoney,jdbcType=DECIMAL},
+      enterprising_evaluation_principal_money = #{enterprisingEvaluationPrincipalMoney,jdbcType=DECIMAL},
+      bbb_evaluation_proposal = #{bbbEvaluationProposal,jdbcType=VARCHAR},
+      A_evaluation_proposal = #{aEvaluationProposal,jdbcType=VARCHAR},
+      AA0_evaluation_proposal = #{aa0EvaluationProposal,jdbcType=VARCHAR},
+      AA1_evaluation_proposal = #{aa1EvaluationProposal,jdbcType=VARCHAR},
+      AA2_evaluation_proposal = #{aa2EvaluationProposal,jdbcType=VARCHAR},
+      AAA_evaluation_proposal = #{aaaEvaluationProposal,jdbcType=VARCHAR},
+      create_user = #{createUser,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      update_user = #{updateUser,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
