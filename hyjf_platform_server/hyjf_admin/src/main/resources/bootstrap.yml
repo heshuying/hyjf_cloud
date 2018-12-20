@@ -16,7 +16,7 @@ spring:
     percentage: 1
 
   profiles:
-    active: beta
+    active: dev
 
 eureka:
   client:

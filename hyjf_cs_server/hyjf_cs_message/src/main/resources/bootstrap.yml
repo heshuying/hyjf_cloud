@@ -22,7 +22,7 @@ spring:
     percentage: 1
     
   profiles:
-    active: beta
+    active: dev
 server:
   port: 8084
 
