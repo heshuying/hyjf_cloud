@@ -129,9 +129,9 @@ public class AppUserWithdrawController extends BaseUserController {
 
                         if(jxBankConfigVO != null){
                             if (StringUtils.isNotEmpty(jxBankConfigVO.getBankIcon())) {
-                                bankCardBean.setLogo(systemConfig.getServerHost() + jxBankConfigVO.getBankLogo());
+                                bankCardBean.setLogo(systemConfig.getAppFrontHost() + jxBankConfigVO.getBankLogo());
                             } else {
-                                bankCardBean.setLogo(systemConfig.getServerHost() + "/data/upfiles/filetemp/image/bank_log.png");// 应前台要求，logo路径给绝对路径
+                                bankCardBean.setLogo(systemConfig.getAppFrontHost() + "/data/upfiles/filetemp/image/bank_log.png");// 应前台要求，logo路径给绝对路径
                             }
 
                             // 是否快捷卡
