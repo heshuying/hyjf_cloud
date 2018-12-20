@@ -245,6 +245,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
      * @param utmId
      * @param platform
      * @param ip
+     * @param userType 0:普通用户;1:企业用户;
      * @return
      * @throws ReturnMessageException
      */
@@ -262,9 +263,9 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
           @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
           // 超时时间
           @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50")})
-    public WebViewUserVO register(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, String ip)
+    public WebViewUserVO register(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, String ip, Integer userType)
             throws ReturnMessageException {
-        RegisterUserRequest registerUserRequest = new RegisterUserRequest(mobile, verificationCode, password, reffer, instCode, utmId, platform);
+        RegisterUserRequest registerUserRequest = new RegisterUserRequest(mobile, verificationCode, password, reffer, instCode, utmId, platform, userType);
         registerUserRequest.setLoginIp(ip);
 
         //add by libin 用户注册时通过ip获得用户所在的省，市 start

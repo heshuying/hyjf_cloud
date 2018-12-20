@@ -131,6 +131,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         String password = userRequest.getPassword();
         String utmId = userRequest.getUtmId();
         Integer instType = userRequest.getInstType();
+        Integer userType = userRequest.getUserType();
 
         Integer attribute = null;
         // 获取推荐人表
@@ -149,7 +150,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         }
 
         // 1. 写入用户信息表
-        User user = this.insertUser(mobile, password, loginIp, platform, userRequest.getInstCode());
+        User user = this.insertUser(mobile, password, loginIp, platform, userRequest.getInstCode(), userType);
         logger.info("写入用户...user is :{}", JSONObject.toJSONString(user));
         int userId = user.getUserId();
 
@@ -395,9 +396,10 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
      * @param platform
      * @param
      * @param
+     * @param userType 0:普通用户;1:企业用户;
      * @return
      */
-    private User insertUser(String mobile, String password, String loginIp, String platform, String instCode) {
+    private User insertUser(String mobile, String password, String loginIp, String platform, String instCode, Integer userType) {
         User user = new User();
         String userName = generateUniqueUsername(mobile);
         user.setInstCode(StringUtils.isBlank(instCode) ? CommonConstant.HYJF_INST_CODE : instCode);
@@ -408,7 +410,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         user.setWithdrawSms(0);
         user.setInvestSms(0);
         user.setRecieveSms(0);
-        user.setUserType(0);
+        user.setUserType(userType);
         user.setIsSetPassword(0);
         String codeSalt = GetCode.getRandomCode(6);
         //处理纳觅财富注册用户数据密码随机生成6位字母数字组合并发送短信通知用户
@@ -1338,8 +1340,10 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         String password=userRequest.getPassword();
         String loginIp=userRequest.getLoginIp();
         String platform=userRequest.getPlatform();
+        Integer userType = userRequest.getUserType();
+
         // 1. 写入用户信息表
-        User user = this.insertUser(mobile, password, loginIp, platform, userRequest.getInstCode());
+        User user = this.insertUser(mobile, password, loginIp, platform, userRequest.getInstCode(), userType);
         logger.info("写入用户...user is :{}", JSONObject.toJSONString(user));
         int userId = user.getUserId();
 
