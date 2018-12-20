@@ -75,7 +75,7 @@ public class CouponRecoverVO extends BaseVO implements Serializable {
 
     private Date updateTime;
     /**
-     * 优惠券投资编号
+     * 优惠券出借编号
      */
     private String tenderNid;
     /**

@@ -1,5 +1,5 @@
 /**
- * Description:我的投资
+ * Description:我的出借
  * Copyright: (HYJF Corporation) 2015
  * Company: HYJF Corporation
  * @author: 王坤
@@ -20,7 +20,7 @@ public interface AppUserInvestCustomizeMapper {
 
     /**
      * 
-     * 查询用户投资次数 包含直投类、债转、汇添金
+     * 查询用户出借次数 包含直投类、债转、汇添金
      * @author hsy
      * @param paraMap
      * @return

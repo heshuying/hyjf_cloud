@@ -1,5 +1,5 @@
 /**
- * Description:可转让投资列表实体类
+ * Description:可转让出借列表实体类
  * Copyright: Copyright (HYJF Corporation)2015
  * Company: HYJF Corporation
  * @author: Administrator
@@ -199,7 +199,7 @@ public class AppTenderCreditDetailCustomize implements Serializable {
     private String assignTime;
 
     /**
-     * 投资次数
+     * 出借次数
      */
     private Integer assignNum;
 
@@ -219,7 +219,7 @@ public class AppTenderCreditDetailCustomize implements Serializable {
     private Integer addTimeInt;
 
     /**
-     * 投资时间
+     * 出借时间
      */
     private String tenderTime;
 

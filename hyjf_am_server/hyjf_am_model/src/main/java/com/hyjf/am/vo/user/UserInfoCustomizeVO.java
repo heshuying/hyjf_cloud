@@ -35,11 +35,11 @@ public class UserInfoCustomizeVO extends BaseVO implements Serializable{
     private Integer attribute;
 
     /**
-     * 用户角色1投资人  2借款人 3垫付机构
+     * 用户角色1出借人  2借款人 3垫付机构
      */
     private Integer roleId;
     /**
-     * 用户角色1投资人  2借款人 3垫付机构
+     * 用户角色1出借人  2借款人 3垫付机构
      */
     private String roleName;
     /**

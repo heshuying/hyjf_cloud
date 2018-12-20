@@ -19,10 +19,10 @@ public class AppTenderCreditInvestListCustomize implements Serializable {
     // vip等级
     private String vipId;
 
-    // 投资金额
+    // 出借金额
     private String account;
 
-    // 投资时间
+    // 出借时间
     private String investTime;
 
     /**

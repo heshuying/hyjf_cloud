@@ -159,7 +159,7 @@ public class SensorsDataLoginServiceImpl extends BaseServiceImpl implements Sens
 
         // 用户角色
         if (userInfoVO.getRoleId() == 1) {
-            profiles.put("roleType", "投资人");
+            profiles.put("roleType", "出借人");
         } else if (userInfoVO.getRoleId() == 2) {
             profiles.put("roleType", "借款人");
         } else {
@@ -276,52 +276,52 @@ public class SensorsDataLoginServiceImpl extends BaseServiceImpl implements Sens
             }
         }
 
-        // 首次投资汇直投时间
-        // 根据用户ID查询投资记录表
+        // 首次出借汇直投时间
+        // 根据用户ID查询出借记录表
         List<BorrowTenderVO> borrowTenderVOList = this.amTradeClient.selectBorrowTenderByUserId(userId);
         if (borrowTenderVOList != null && borrowTenderVOList.size() > 0) {
             if (borrowTenderVOList.size() == 1) {
-                // 首次投资汇直投
+                // 首次出借汇直投
                 profiles.put("first_invest_hzt_time", GetDate.getDateTimeMyTimeInMillis(borrowTenderVOList.get(0).getCreateTime()));
-                // 最后一次投资汇直投
+                // 最后一次出借汇直投
                 profiles.put("last_invest_hzt_time", GetDate.getDateTimeMyTimeInMillis(borrowTenderVOList.get(0).getCreateTime()));
             } else {
-                // 首次投资汇直投
+                // 首次出借汇直投
                 profiles.put("first_invest_hzt_time", GetDate.getDateTimeMyTimeInMillis(borrowTenderVOList.get(0).getCreateTime()));
-                // 最后一次投资汇直投
+                // 最后一次出借汇直投
                 profiles.put("last_invest_hzt_time", GetDate.getDateTimeMyTimeInMillis(borrowTenderVOList.get(borrowTenderVOList.size() - 1).getCreateTime()));
             }
         }
 
-        // 首次投资汇转让的投资时间
+        // 首次出借汇转让的出借时间
         List<CreditTenderVO> creditTenderList = this.amTradeClient.selectCreditTenderByUserId(userId);
         if (creditTenderList != null && creditTenderList.size() > 0) {
             if (creditTenderList.size() == 1) {
-                // 首次投资汇直投
+                // 首次出借汇直投
                 profiles.put("first_invest_hzr_time", GetDate.getDateTimeMyTimeInMillis(creditTenderList.get(0).getCreateTime()));
-                // 最后一次投资汇直投
+                // 最后一次出借汇直投
                 profiles.put("last_invest_hzr_time", GetDate.getDateTimeMyTimeInMillis(creditTenderList.get(0).getCreateTime()));
             } else {
-                // 首次投资汇直投
+                // 首次出借汇直投
                 profiles.put("first_invest_hzr_time", GetDate.getDateTimeMyTimeInMillis(creditTenderList.get(0).getCreateTime()));
-                // 最后一次投资汇直投
+                // 最后一次出借汇直投
                 profiles.put("last_invest_hzr_time", GetDate.getDateTimeMyTimeInMillis(creditTenderList.get(creditTenderList.size() - 1).getCreateTime()));
             }
         }
 
-        // 首次投资汇计划的投资时间
+        // 首次出借汇计划的出借时间
         List<HjhAccedeVO> hjhAccedeList = this.amTradeClient.selectHjhAccedeListByUserId(userId);
 
         if (hjhAccedeList != null && hjhAccedeList.size() > 0) {
             if (hjhAccedeList.size() == 1) {
-                // 首次投资汇直投
+                // 首次出借汇直投
                 profiles.put("first_invest_hjh_time", GetDate.getDateTimeMyTimeInMillis(hjhAccedeList.get(0).getCreateTime()));
-                // 最后一次投资汇直投
+                // 最后一次出借汇直投
                 profiles.put("last_invest_hjh_time", GetDate.getDateTimeMyTimeInMillis(hjhAccedeList.get(0).getCreateTime()));
             } else {
-                // 首次投资汇直投
+                // 首次出借汇直投
                 profiles.put("first_invest_hjh_time", GetDate.getDateTimeMyTimeInMillis(hjhAccedeList.get(0).getCreateTime()));
-                // 最后一次投资汇直投
+                // 最后一次出借汇直投
                 profiles.put("last_invest_hjh_time", GetDate.getDateTimeMyTimeInMillis(hjhAccedeList.get(hjhAccedeList.size() - 1).getCreateTime()));
             }
         }

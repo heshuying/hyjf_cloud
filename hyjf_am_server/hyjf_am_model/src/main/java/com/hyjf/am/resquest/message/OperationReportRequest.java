@@ -86,7 +86,7 @@ public class OperationReportRequest extends BasePage implements Serializable{
 	private OperationReportVO operationReport;
 	@ApiModelProperty(value = "运营报告活动")
 	private OperationReportActivityVO operationReportActivity;
-	@ApiModelProperty(value = "运营报告十大投资")
+	@ApiModelProperty(value = "运营报告十大出借")
 	private TenthOperationReportVO tenthOperationReport;
 	@ApiModelProperty(value = "运营报告用户分析")
 	private UserOperationReportVO userOperationReport;

@@ -95,7 +95,7 @@ public interface AmTradeClient {
     public int updateTenderAgreement(TenderAgreementVO tenderAgreement);
 
     /**
-     * 根据投资订单号获取协议列表
+     * 根据出借订单号获取协议列表
      * @param nid
      * @return
      */
@@ -109,14 +109,14 @@ public interface AmTradeClient {
     public BorrowStyleVO getBorrowStyle(String borrowStyle);
 
     /**
-     * 获取投资协议集合
+     * 获取出借协议集合
      * @param tenderNid
      * @return
      */
     List<TenderAgreementVO> getTenderAgreementListByTenderNidAndStatusNot2(String tenderNid);
 
     /**
-     * 会计划投资详情
+     * 会计划出借详情
      * @param params
      * @return
      */
@@ -133,7 +133,7 @@ public interface AmTradeClient {
     public List<HjhDebtCreditTenderVO> selectHjhCreditTenderListByAssignOrderId(String assignOrderId);
 
     /**
-     * 查询汇计划债转投资表
+     * 查询汇计划债转出借表
      * @param request
      * @return
      */
@@ -177,7 +177,7 @@ public interface AmTradeClient {
     BorrowInfoWithBLOBsVO selectBorrowInfoWithBLOBSVOByBorrowId(String borrowNid);
 
     /**
-     * 通过主键获取投资协议
+     * 通过主键获取出借协议
      * @param tenderAgreementID
      * @return
      */

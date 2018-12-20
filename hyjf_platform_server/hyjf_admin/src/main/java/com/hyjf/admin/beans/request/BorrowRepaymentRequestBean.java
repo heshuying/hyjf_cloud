@@ -52,7 +52,7 @@ public class BorrowRepaymentRequestBean extends BaseRequest implements Serializa
     private String instCodeSrch;
 
     /**
-     * 借款编号 检索条件
+     * 项目编号 检索条件
      */
     private String borrowNid;
     /**

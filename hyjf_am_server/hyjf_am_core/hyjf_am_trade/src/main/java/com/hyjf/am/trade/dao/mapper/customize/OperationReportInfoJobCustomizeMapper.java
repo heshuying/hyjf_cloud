@@ -47,7 +47,7 @@ public interface OperationReportInfoJobCustomizeMapper {
     List<OperationReportJobVO> getRechargeMoneyAndSum(int intervalMonth);
 
     /**
-     * 按照性别统计投资人的分布
+     * 按照性别统计出借人的分布
      * @param date 上个月的最后一天
      */
     List<OperationReportJobVO>  getTenderSexGroupByList(@Param("date") Date date);
@@ -93,7 +93,7 @@ public interface OperationReportInfoJobCustomizeMapper {
     List<OperationReportJobVO> getMoneyDistribute(int intervalMonth);
 
     /**
-     * 十大投资人
+     * 十大出借人
      *
      * @param intervalMonth 今年间隔月份
      * @return
@@ -101,7 +101,7 @@ public interface OperationReportInfoJobCustomizeMapper {
     List<OperationReportJobVO> getTenMostMoney(int intervalMonth);
 
     /**
-     * 超活跃，投资笔数最多
+     * 超活跃，出借笔数最多
      *
      * @param intervalMonth 今年间隔月份
      * @return
@@ -125,7 +125,7 @@ public interface OperationReportInfoJobCustomizeMapper {
     OperationReportJobVO getUserAgeAndArea(Integer userId);
 
     /**
-     *投资人按照年龄分布 返回符合条件所有用户
+     *出借人按照年龄分布 返回符合条件所有用户
      *
      * @param date 上个月的最后一天
      * @return
@@ -133,7 +133,7 @@ public interface OperationReportInfoJobCustomizeMapper {
     List<OperationReportJobVO>  getTenderAgeByRangeList(@Param("date") Date date);
 
     /**
-     * 按照省份统计投资人的分布
+     * 按照省份统计出借人的分布
      * @param date 上个月的最后一天
      */
     List<OperationReportJobVO> getTenderCityGroupBy(Date date);

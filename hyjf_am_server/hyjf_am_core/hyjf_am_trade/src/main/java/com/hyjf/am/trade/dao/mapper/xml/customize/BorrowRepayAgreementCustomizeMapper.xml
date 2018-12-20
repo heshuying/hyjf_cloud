@@ -8,7 +8,7 @@
             <if test="repayStatus != null and repayStatus != ''">
                 AND rp.repay_status = #{repayStatus}
             </if>
-            <!-- 投资nid -->
+            <!-- 出借nid -->
             <if test="borrowNidSrch != null and borrowNidSrch != ''">
                 AND rp.borrow_nid = #{borrowNidSrch}
             </if>

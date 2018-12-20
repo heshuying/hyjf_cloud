@@ -210,7 +210,7 @@ public interface AmTradeClient {
     /**
      * 根据borrowNid查询出来异常标
      * @auth sunpeikai
-     * @param borrowNid 借款编号
+     * @param borrowNid 项目编号
      * @return
      */
     BorrowAndInfoVO searchBorrowByBorrowNid(String borrowNid);
@@ -402,20 +402,20 @@ public interface AmTradeClient {
     CouponRecoverVO getCouponRecoverByPrimaryKey(Integer recoverId);
 
     /**
-     *取得优惠券投资信息
+     *取得优惠券出借信息
      * @param nid
      * @return
      */
     BorrowTenderCpnVO getCouponTenderInfoByNid(String nid);
     /**
-     * 根据筛选条件查询银行投资撤销异常的数据count
+     * 根据筛选条件查询银行出借撤销异常的数据count
      * @auth sunpeikai
      * @param request 筛选条件
      * @return
      */
     Integer getTenderCancelExceptionCount(TenderCancelExceptionRequest request);
     /**
-     * 根据筛选条件查询银行投资撤销异常list
+     * 根据筛选条件查询银行出借撤销异常list
      * @auth sunpeikai
      * @param request 筛选条件
      * @return
@@ -631,7 +631,7 @@ public interface AmTradeClient {
      */
     boolean updateTenderByParam(int status,int accedeId);
     /**
-     * 更新投资数据
+     * 更新出借数据
      *
      * @return
      * @author nxl
@@ -809,7 +809,7 @@ public interface AmTradeClient {
     AdminResult updateBorrowOver(BorrowFullRequest borrowFullRequest);
 
     /**
-     * 投资明细记录 总数COUNT
+     * 出借明细记录 总数COUNT
      *
      * @param borrowInvestRequest
      * @return
@@ -817,7 +817,7 @@ public interface AmTradeClient {
     Integer countBorrowInvest(BorrowInvestRequest borrowInvestRequest);
 
     /**
-     * 投资明细列表
+     * 出借明细列表
      *
      * @param borrowInvestRequest
      * @return
@@ -825,7 +825,7 @@ public interface AmTradeClient {
     List<BorrowInvestCustomizeVO> selectBorrowInvestList(BorrowInvestRequest borrowInvestRequest);
 
     /**
-     * 投资明细列表合计
+     * 出借明细列表合计
      *
      * @param borrowInvestRequest
      * @return
@@ -833,7 +833,7 @@ public interface AmTradeClient {
     String selectBorrowInvestAccount(BorrowInvestRequest borrowInvestRequest);
 
     /**
-     * 投资明细导出列表
+     * 出借明细导出列表
      *
      * @param borrowInvestRequest
      * @return
@@ -841,7 +841,7 @@ public interface AmTradeClient {
     List<BorrowInvestCustomizeVO> getExportBorrowInvestList(BorrowInvestRequest borrowInvestRequest);
 
     /**
-     * 获取用户投资协议
+     * 获取用户出借协议
      *
      * @param nid
      * @return
@@ -849,7 +849,7 @@ public interface AmTradeClient {
     TenderAgreementVO selectTenderAgreement(String nid);
 
     /**
-     * 获取用户投资协议-垫付机构
+     * 获取用户出借协议-担保机构
      *
      * @param request
      * @return
@@ -907,7 +907,7 @@ public interface AmTradeClient {
     List<BorrowListCustomizeVO> selectBorrowList(String borrowNid);
 
     /**
-     * 标的投资信息
+     * 标的出借信息
      *
      * @param borrowInvestRequest
      * @return
@@ -1228,7 +1228,7 @@ public interface AmTradeClient {
     int updateSendStatusByParam(AccedeListRequest request);
 
     /**
-     * 查询用户投资信息
+     * 查询用户出借信息
      *
      * @Title selectAccedeRecordList
      * @param request
@@ -1740,7 +1740,7 @@ public interface AmTradeClient {
     boolean isExistsBorrowPreNidRecord(String borrowPreNid);
 
     /**
-     * 获取融资服务费率 & 账户管理费率
+     * 获取放款服务费率 & 还款服务费率
      *
      * @param borrowCommonRequest
      * @return
@@ -2799,7 +2799,7 @@ public interface AmTradeClient {
      */
     public IntegerResponse isExistsCheckAction(AdminPartnerConfigListRequest req);
     /**
-     * 查询固定时间间隔的用户投资列表
+     * 查询固定时间间隔的用户出借列表
      * @param repairStartDate
      * @param repairEndDate
      * @auth nxl
@@ -3125,21 +3125,21 @@ public interface AmTradeClient {
     /** 枚举类型 */
     enum IncreaseProperty {VO,STR,STR1}
     /**
-     * 产品中心-加息投资明细（总计）
+     * 产品中心-加息出借明细（总计）
      * @param request
      * @auth wenxin
      * @return
      */
     int getIncreaseInterestInvestDetaiCount(IncreaseInterestInvestDetailRequest request);
     /**
-     * 产品中心-加息投资明细（列表/导出）
+     * 产品中心-加息出借明细（列表/导出）
      * @param request
      * @auth wenxin
      * @return
      */
     EnumMap<AmTradeClient.IncreaseProperty,Object> getIncreaseInterestInvestDetaiList(IncreaseInterestInvestDetailRequest request);
     /**
-     * 产品中心-加息投资明细（合计）
+     * 产品中心-加息出借明细（合计）
      * @param request
      * @auth wenxin
      * @return
@@ -3236,7 +3236,7 @@ public interface AmTradeClient {
      */
     AssetListCustomizeResponse findAssetListWithoutPage(AssetListRequest request);
     /**
-     * 删除 自动投资临时表
+     * 删除 自动出借临时表
      * @auther: nxl
      * @date: 2018/7/10
      */

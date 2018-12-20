@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 public interface AppProjectListService extends BaseTradeService {
 
     /**
-     * 获取移动端散标投资列表
+     * 获取移动端散标出借列表
      * @param request
      * @author zhangyk
      * @return
@@ -64,7 +64,7 @@ public interface AppProjectListService extends BaseTradeService {
     public JSONObject getAppPlanDetail(String planNid, Integer userId);
 
     /**
-     * 散标投资记录列表
+     * 散标出借记录列表
      * @param info
      * @param form
      */

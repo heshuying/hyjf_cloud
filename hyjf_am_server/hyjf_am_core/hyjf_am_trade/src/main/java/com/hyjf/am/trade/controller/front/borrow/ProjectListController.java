@@ -207,7 +207,7 @@ public class ProjectListController extends BaseController {
     // --------------------------------------web end------------------------------------------
     //---------------------------------------app start------------------------------------------
     /**
-     * App端获取散标投资
+     * App端获取散标出借
      * @param request
      * @return
      */
@@ -224,7 +224,7 @@ public class ProjectListController extends BaseController {
     }
 
     /**
-     * app端散标投资count
+     * app端散标出借count
      * @param request
      * @return
      */
@@ -237,7 +237,7 @@ public class ProjectListController extends BaseController {
     }
 
     /**
-     * App端获取债转投资list
+     * App端获取债转出借list
      * @param request
      * @return
      */
@@ -253,7 +253,7 @@ public class ProjectListController extends BaseController {
     }
 
     /**
-     * app端获取债转投资count
+     * app端获取债转出借count
      * @param request
      * @return
      */
@@ -302,7 +302,7 @@ public class ProjectListController extends BaseController {
 
 
     /**
-     * 散标投资记录
+     * 散标出借记录
      * @return
      */
     @RequestMapping("/app/selectProjectInvestList")

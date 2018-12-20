@@ -33,7 +33,7 @@ public class HjhAutoEndCreditController extends BaseController {
     public void hjhAutoEndCredit() {
         logger.info("------汇计划自动结束转让定时任务开始------");
         try {
-            // 检索投资总的债权转让
+            // 检索出借总的债权转让
             List<HjhDebtCredit> hjhDebtCreditList = this.hjhAutoEndCreditService.selectHjhDebtCreditList();
             // 有未结束债权
             if (CollectionUtils.isNotEmpty(hjhDebtCreditList)) {

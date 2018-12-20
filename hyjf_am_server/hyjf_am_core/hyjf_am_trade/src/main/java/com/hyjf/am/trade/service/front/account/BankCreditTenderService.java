@@ -88,7 +88,7 @@ public interface BankCreditTenderService {
     ExpectCreditFeeVO selectExpectCreditFee(String borrowNid, String tenderNid);
 
     /**
-     * 投资人当天是否可以债转
+     * 出借人当天是否可以债转
      * @param userId
      * @return
      */
@@ -113,7 +113,7 @@ public interface BankCreditTenderService {
     Integer saveCreditTender(BorrowCreditVO request);
 
     /**
-     * 前端Web页面投资可债转输入投资金额后收益提示 用户未登录 (包含查询条件)
+     * 前端Web页面出借可债转输入出借金额后收益提示 用户未登录 (包含查询条件)
      * @param creditNid
      * @param assignCapital
      * @param userId
@@ -161,7 +161,7 @@ public interface BankCreditTenderService {
     CreditTenderVO getCreditTenderByUserIdOrdId(String logOrderId, String logUserId);
 
     /**
-     * 获取utm用户债转投资
+     * 获取utm用户债转出借
      * @param list utm注册用户userid集合
      * @return
      */

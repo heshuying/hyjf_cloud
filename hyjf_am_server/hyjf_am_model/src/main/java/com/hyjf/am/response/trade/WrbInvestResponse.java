@@ -36,13 +36,13 @@ public class WrbInvestResponse extends WrbResponse {
         /** 记录流水号 */
         private String index;
 
-        /** 投资用户 */
+        /** 出借用户 */
         private String invest_user = "";
 
-        /** 投资金额 */
+        /** 出借金额 */
         private BigDecimal invest_money = BigDecimal.ZERO;
 
-        /** 投资时间 */
+        /** 出借时间 */
         private String invest_time = null;
 
         /** 借款人ID */

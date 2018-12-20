@@ -83,7 +83,7 @@ public class DayCreditDetailVO extends BaseVO implements Serializable {
     private String assignAccount;
 
     /**
-     * 待承接总金额-在投资金(ADD)
+     * 待承接总金额-在出借金(ADD)
      */
 
     private String creditAccountWait;

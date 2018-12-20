@@ -47,7 +47,7 @@ public class BorrowTenderController extends BaseController {
 
 
     /**
-     * 获取投资笔数
+     * 获取出借笔数
      * @author zhangyk
      * @date 2018/6/26 9:31
      */
@@ -64,7 +64,7 @@ public class BorrowTenderController extends BaseController {
     public BorrowTenderResponse selectBorrowTender(@RequestBody BorrowTenderRequest request){
         BorrowTenderResponse response = new BorrowTenderResponse();
         BorrowTender borrowTender =borrowTenderService.selectBorrowTender(request);
-        logger.info("获取投资成功结果查询数据库："+borrowTender);
+        logger.info("获取投标成功结果查询数据库："+borrowTender);
         if (Validator.isNotNull(borrowTender)){
             response.setResult(CommonUtils.convertBean(borrowTender,BorrowTenderVO.class));
         }
@@ -121,7 +121,7 @@ public class BorrowTenderController extends BaseController {
     }
 
     /**
-     * 根据投资订单号查询已承接金额
+     * 根据出借订单号查询已承接金额
      * @param tenderNid
      * @return
      */
@@ -151,7 +151,7 @@ public class BorrowTenderController extends BaseController {
     }
 
     /**
-     * 获取utm注册用户投资次数
+     * 获取utm注册用户出借次数
      * @param list utm注册用户userid集合
      * @return
      */
@@ -211,7 +211,7 @@ public class BorrowTenderController extends BaseController {
     }
 
     /**
-     * 查询相应的app渠道用户Android投资数
+     * 查询相应的app渠道用户Android出借数
      * @param list utm注册用户userid集合
      * @return
      */
@@ -226,7 +226,7 @@ public class BorrowTenderController extends BaseController {
     }
 
     /**
-     * 查询相应的app渠道用户ios投资数
+     * 查询相应的app渠道用户ios出借数
      * @param list utm注册用户userid集合
      * @return
      */
@@ -241,7 +241,7 @@ public class BorrowTenderController extends BaseController {
     }
 
     /**
-     * 查询相应的app渠道用户pc投资数
+     * 查询相应的app渠道用户pc出借数
      * @param list utm注册用户userid集合
      * @return
      */
@@ -256,7 +256,7 @@ public class BorrowTenderController extends BaseController {
     }
 
     /**
-     * 查询相应的app渠道用户wechat投资数
+     * 查询相应的app渠道用户wechat出借数
      * @param list utm注册用户userid集合
      * @return
      */
@@ -272,7 +272,7 @@ public class BorrowTenderController extends BaseController {
 
     /**
      * @Author walter.limeng
-     * @Description  取得优惠券投资信息
+     * @Description  取得优惠券出借信息
      * @Date 17:24 2018/7/17
      * @Param couponTenderNid
      * @return
@@ -319,7 +319,7 @@ public class BorrowTenderController extends BaseController {
     }
 
     /**
-     * 查询固定时间间隔的用户投资列表
+     * 查询固定时间间隔的用户出借列表
      * @param repairStartDate
      * @param repairEndDate
      * @return
@@ -345,7 +345,7 @@ public class BorrowTenderController extends BaseController {
     }
 
     /**
-     * 根据放款编号获取该标的的投资信息 add by liushouyi
+     * 根据放款编号获取该标的的出借信息 add by liushouyi
      *
      * @param borrowNid
      * @return
@@ -376,7 +376,7 @@ public class BorrowTenderController extends BaseController {
 
 
     /**
-     * 根据用户ID查询用户投资记录
+     * 根据用户ID查询用户出借记录
      *
      * @param userId
      * @return
@@ -393,7 +393,7 @@ public class BorrowTenderController extends BaseController {
 
 
     /**
-     * 根据投资订单号查询投资记录
+     * 根据出借订单号查询出借记录
      *
      * @param orderId
      * @return
@@ -411,7 +411,7 @@ public class BorrowTenderController extends BaseController {
     }
 
     /**
-     * app渠道统计- 汇直投投资总额
+     * app渠道统计- 汇直投出借总额
      * @Param
      * @return
      */
@@ -427,7 +427,7 @@ public class BorrowTenderController extends BaseController {
     }
 
     /**
-     * app渠道统计-汇转让投资总额
+     * app渠道统计-汇转让出借总额
      * @Param
      * @return
      */

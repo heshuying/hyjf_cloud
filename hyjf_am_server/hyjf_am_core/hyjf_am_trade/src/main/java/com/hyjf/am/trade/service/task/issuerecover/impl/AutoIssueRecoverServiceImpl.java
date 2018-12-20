@@ -783,7 +783,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         // 根据项目类型设置下列
         BorrowProjectType borrowProjectType = getProjectType(hjhAssetBorrowType.getBorrowCd());
         if(borrowProjectType != null){
-            borrowInfo.setBorrowIncreaseMoney(borrowProjectType.getIncreaseMoney()); //递增投资金额
+            borrowInfo.setBorrowIncreaseMoney(borrowProjectType.getIncreaseMoney()); //递增出借金额
             borrowInfo.setBorrowInterestCoupon(borrowProjectType.getInterestCoupon());
             borrowInfo.setBorrowTasteMoney(borrowProjectType.getTasteMoney());//体验金
         }
@@ -888,16 +888,16 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 
         borrowInfo.setBorrowExtraYield(BigDecimal.ZERO);
         //默认全选
-        // 可投资平台_PC
+        // 可出借平台_PC
         borrowInfo.setCanTransactionPc("1");
 
-        // 可投资平台_微网站
+        // 可出借平台_微网站
         borrowInfo.setCanTransactionWei("1");
 
-        // 可投资平台_IOS
+        // 可出借平台_IOS
         borrowInfo.setCanTransactionIos("1");
 
-        // 可投资平台_Android
+        // 可出借平台_Android
         borrowInfo.setCanTransactionAndroid("1");
 
         // 运营标签->hjh 默认不填

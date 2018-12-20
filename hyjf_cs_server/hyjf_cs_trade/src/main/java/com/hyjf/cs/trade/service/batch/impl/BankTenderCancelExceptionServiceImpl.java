@@ -25,7 +25,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * 投资撤销异常Service实现类
+ * 出借撤销异常Service实现类
  *
  * @author jijun
  * @since 20180625
@@ -43,7 +43,7 @@ public class BankTenderCancelExceptionServiceImpl extends BaseServiceImpl implem
     private SystemConfig systemConfig;
 
     /**
-     * 执行投资异常处理
+     * 执行出借异常处理
      */
     @Override
     public void handle() {
@@ -51,7 +51,7 @@ public class BankTenderCancelExceptionServiceImpl extends BaseServiceImpl implem
     }
 
     /**
-     * 执行投资撤销
+     * 执行出借撤销
      */
     private void executeTenderCancel() {
         List<BorrowTenderTmpVO> tmpList = amTradeClient.getBorrowTenderTmpsForTenderCancel();
@@ -67,7 +67,7 @@ public class BankTenderCancelExceptionServiceImpl extends BaseServiceImpl implem
                     logger.info("该用户尚未在江西银行开户，userId=" + info.getUserId());
                     boolean ret = amTradeClient.updateBidCancelRecord(request);
                     if (!ret) {
-                        logger.info("投资撤销历史数据处理失败!" + JSONObject.toJSONString(request.getBorrowTenderTmpVO()));
+                        logger.info("出借撤销历史数据处理失败!" + JSONObject.toJSONString(request.getBorrowTenderTmpVO()));
                     }
                     continue;
                 }
@@ -77,15 +77,15 @@ public class BankTenderCancelExceptionServiceImpl extends BaseServiceImpl implem
 
                 if (Validator.isNotNull(callBean)) {
                     String retCode = StringUtils.isNotBlank(callBean.getRetCode()) ? callBean.getRetCode() : "";
-                    //投资正常撤销或投资订单不存在则删除冗余数据
+                    //出借正常撤销或出借订单不存在则删除冗余数据
                     if (retCode.equals(BankCallConstant.RESPCODE_SUCCESS) || retCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_EXIST1)
                             || retCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_EXIST2) || retCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_RIGHT)) {
                         boolean ret = amTradeClient.updateBidCancelRecord(request);
                         if (!ret) {
-                            logger.info("投资撤销历史数据处理失败!");
+                            logger.info("出借撤销历史数据处理失败!");
                         }
                     } else {
-                        logger.info("投资撤销接口返回错误!原订单号:" + info.getNid() + ",返回码:" + retCode);
+                        logger.info("出借撤销接口返回错误!原订单号:" + info.getNid() + ",返回码:" + retCode);
                         boolean ret = amTradeClient.updateTenderCancelExceptionData(info);
                         if (!ret) {
                             logger.info("处理撤销异常数据失败!");
@@ -93,7 +93,7 @@ public class BankTenderCancelExceptionServiceImpl extends BaseServiceImpl implem
                         continue;
                     }
                 } else {
-                    logger.info("投资撤销接口异常!");
+                    logger.info("出借撤销接口异常!");
                     boolean ret = amTradeClient.updateTenderCancelExceptionData(info);
                     if (!ret) {
                         logger.info("处理撤销异常数据失败!");
@@ -107,12 +107,12 @@ public class BankTenderCancelExceptionServiceImpl extends BaseServiceImpl implem
 
 
     /**
-     * 银行投资撤销
+     * 银行出借撤销
      *
      * @param userId
      */
     private BankCallBean bidCancel(Integer userId, String accountId, String productId, String orgOrderId, String txAmount, String username) {
-        // 标的投资撤销
+        // 标的出借撤销
         BankCallBean bean = new BankCallBean();
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         String bankCode = systemConfig.getBankBankcode();

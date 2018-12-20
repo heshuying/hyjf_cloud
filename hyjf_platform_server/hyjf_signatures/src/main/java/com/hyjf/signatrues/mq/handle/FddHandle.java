@@ -80,26 +80,26 @@ public class FddHandle {
 
 	/**
 	 *
-	 * 散标投资
+	 * 散标出借
 	 * 
 	 * @param bean
 	 */
 	public void tenderGenerateContract(FddGenerateContractBean bean) {
-		logger.info("--------------开始生成居间投资协议----订单号：" + bean.getOrdid());
-		// 投资人用户ID
+		logger.info("--------------开始生成居间出借协议----订单号：" + bean.getOrdid());
+		// 出借人用户ID
 		Integer tenderUserId = bean.getTenderUserId();
 		if (tenderUserId == null || tenderUserId == 0) {
-			throw new RuntimeException("投资人用户ID为空.");
+			throw new RuntimeException("出借人用户ID为空.");
 		}
-		// 投资人代收利息
+		// 出借人代收利息
 		BigDecimal tenderInterest = bean.getTenderInterest();
 		if (tenderInterest == null) {
-			throw new RuntimeException("投资人代收利息为空.");
+			throw new RuntimeException("出借人代收利息为空.");
 		}
-		// 投资订单号
+		// 出借订单号
 		String tenderNid = bean.getOrdid();
 		if (StringUtils.isBlank(tenderNid)) {
-			throw new RuntimeException("投资订单号为空.");
+			throw new RuntimeException("出借订单号为空.");
 		}
 		// 标的编号
 		String borrowNid = bean.getBorrowNid();
@@ -186,17 +186,17 @@ public class FddHandle {
 			}
 		}
 		// del by liuyang 20180326 借款人信息 借款主体为准 end
-		// 投资人用户信息
+		// 出借人用户信息
 		UserVO tenderUser = this.amUserClient.findUserById(tenderUserId);
 		if (tenderUser == null) {
-			throw new RuntimeException("根据投资人用户ID,查询投资人信息失败,投资人用户ID:[" + tenderUserId + "].");
+			throw new RuntimeException("根据出借人用户ID,查询出借人信息失败,出借人用户ID:[" + tenderUserId + "].");
 		}
-		// 投资人用户详情信息
+		// 出借人用户详情信息
 		UserInfoVO tenderUsersInfo = this.amUserClient.findUsersInfoById(tenderUserId);
 		if (tenderUsersInfo == null) {
-			throw new RuntimeException("根据投资人用户ID,查询投资人详情信息失败,投资人用户ID:[" + tenderUserId + "].");
+			throw new RuntimeException("根据出借人用户ID,查询出借人详情信息失败,出借人用户ID:[" + tenderUserId + "].");
 		}
-		// 查询投资记录
+		// 查询出借记录
 		BorrowTenderRequest btRequest = new BorrowTenderRequest();
 		btRequest.setTenderUserId(tenderUserId);
 		btRequest.setBorrowNid(borrowNid);
@@ -204,7 +204,7 @@ public class FddHandle {
 		BorrowTenderVO borrowTender = this.amTradeClient.selectBorrowTender(btRequest);
 		if (borrowTender == null) {
 			throw new RuntimeException(
-					"投资记录不存在,投资订单号:[" + tenderNid + "],投资人用户ID:[" + tenderUserId + "],标的编号:[" + borrowNid + "].");
+					"出借记录不存在,出借订单号:[" + tenderNid + "],出借人用户ID:[" + tenderUserId + "],标的编号:[" + borrowNid + "].");
 		}
 
 		String tenderTrueName = null;
@@ -234,7 +234,7 @@ public class FddHandle {
 		JSONObject paramter = new JSONObject();
 		paramter.put("nid", borrowTender.getNid());// 借款编号
 		paramter.put("recoverTime", bean.getSignDate());// 签署时间
-		paramter.put("realName", tenderTrueName);// 投资人真实姓名
+		paramter.put("realName", tenderTrueName);// 出借人真实姓名
 		paramter.put("idCard", tenderIdCard);// 证件号码
 		paramter.put("borrowUsername", borrowTrueName);// 借款人真实姓名
 		paramter.put("BorrowidCard", borrowIdCard);// 借款人证件号码
@@ -243,7 +243,7 @@ public class FddHandle {
 		paramter.put("borrowPeriod", borrowDate);// 借款期限
 		paramter.put("borrowApr", borrow.getBorrowApr() + "%");// 借款利率
 		paramter.put("borrowStyleName", this.getBorrowStyle(borrow.getBorrowStyle()));// 还款方式
-		paramter.put("userInvestAccount", borrowTender.getAccount().toString());// 投资人出借金额
+		paramter.put("userInvestAccount", borrowTender.getAccount().toString());// 出借人出借金额
 		paramter.put("ecoverAccountInterest", tenderInterest.toString());// 借款人预期收益
 
 		bean.setBorrowerCustomerID(borrowerCustomerID);
@@ -285,10 +285,10 @@ public class FddHandle {
                     updateSaveDownUrl(dzqzCallBean, bean);
                     updateSignContract(bean);
                 } else {
-                    logger.info("--------------开始生成居间投资协议返回错误，订单号：" + bean.getOrdid() + "错误码：" + code + ",错误描述：" + dzqzCallBean.getMsg());
+                    logger.info("--------------开始生成居间出借协议返回错误，订单号：" + bean.getOrdid() + "错误码：" + code + ",错误描述：" + dzqzCallBean.getMsg());
                 }
             } else {
-                logger.info("--------------开始生成居间投资协议异常，无法匹配模板----订单号：" + bean.getOrdid());
+                logger.info("--------------开始生成居间出借协议异常，无法匹配模板----订单号：" + bean.getOrdid());
             }
         }
 
@@ -345,7 +345,7 @@ public class FddHandle {
 
 		String payurl = systemConfig.getHyjfPayFddNotifyUrl();
 		String notifyUrl = payurl + DzqzConstant.REQUEST_MAPPING_CALLAPI_SIGNNODIFY + "?transType=" + transType;
-		// 投资人签署
+		// 出借人签署
 		DzqzCallBean callBean = new DzqzCallBean();
 		callBean.setContract_id(bean.getOrdid());
 		callBean.setCustomer_id(customerId);
@@ -641,10 +641,10 @@ public class FddHandle {
 	        JSONObject paramter = new JSONObject();
 	        paramter.put("accedeOrderId", bean.getOrdid());//合同编号
 	        paramter.put("addTime",bean.getSignDate());//签署时间
-	        paramter.put("truename", bean.getTenderTrueName());//投资人真实姓名
+	        paramter.put("truename", bean.getTenderTrueName());//出借人真实姓名
 	        paramter.put("idcard",bean.getIdCard());//证件号码
-//	        paramter.put("username", bean.getTenderUserName());//投资人用户名
-	        paramter.put("accedeAccount", bean.getTenderAccountFMT());//投资人加入金额
+//	        paramter.put("username", bean.getTenderUserName());//出借人用户名
+	        paramter.put("accedeAccount", bean.getTenderAccountFMT());//出借人加入金额
 	        paramter.put("planPeriod",bean.getBorrowDate());//计划期限
 	        paramter.put("planApr", bean.getBorrowRate());//计划收益率
 	        paramter.put("countInterestTime",bean.getPlanStartDate());//计划生效日期
@@ -682,10 +682,10 @@ public class FddHandle {
 	                    updateSaveDownUrl(dzqzCallBean, bean);
 	                    updateSignContract(bean);
 	                } else {
-	                    logger.info("--------------开始生成居间投资协议返回错误，订单号：" + bean.getOrdid() + "错误码：" + code + ",错误描述：" + dzqzCallBean.getMsg());
+	                    logger.info("--------------开始生成居间出借协议返回错误，订单号：" + bean.getOrdid() + "错误码：" + code + ",错误描述：" + dzqzCallBean.getMsg());
 	                }
 	            } else {
-	                logger.info("--------------开始生成居间投资协议异常，无法匹配模板----订单号：" + bean.getOrdid());
+	                logger.info("--------------开始生成居间出借协议异常，无法匹配模板----订单号：" + bean.getOrdid());
 	            }
 	        }
 	        
@@ -694,7 +694,7 @@ public class FddHandle {
 
 	
 	/**
-	 * 会计划投资详情
+	 * 会计划出借详情
 	 * @param params
 	 * @return
 	 */
@@ -703,7 +703,7 @@ public class FddHandle {
 	}
 
 	/**
-	 * 债转投资
+	 * 债转出借
 	 * 
 	 * @param bean
 	 */
@@ -726,10 +726,10 @@ public class FddHandle {
         if (StringUtils.isBlank(borrowNid)) {
             throw new RuntimeException("借款编号为空");
         }
-        // 原始投资订单号
+        // 原始出借订单号
         String creditTenderNid = bean.getCreditTenderNid();
         if (StringUtils.isBlank(creditTenderNid)) {
-            throw new RuntimeException("原始投资订单号");
+            throw new RuntimeException("原始出借订单号");
         }
         // 债转编号
         String creditNid = bean.getCreditNid();
@@ -737,7 +737,7 @@ public class FddHandle {
             throw new RuntimeException("债转编号为空");
         }
 
-        // 获取债转投资信息
+        // 获取债转出借信息
         CreditTenderRequest request = new CreditTenderRequest();
         request.setAssignNid(assignOrderId);
         request.setBidNid(borrowNid);
@@ -942,10 +942,10 @@ public class FddHandle {
 
                         updateSignContract(bean);
                     } else {
-                        logger.info("--------------开始生成债转投资协议返回错误，订单号：" + bean.getOrdid() + "错误码：" + code + ",错误描述：" + dzqzCallBean.getMsg());
+                        logger.info("--------------开始生成债转出借协议返回错误，订单号：" + bean.getOrdid() + "错误码：" + code + ",错误描述：" + dzqzCallBean.getMsg());
                     }
                 } else {
-                    logger.info("--------------开始生成债转投资协议异常，无法匹配模板----订单号：" + bean.getOrdid());
+                    logger.info("--------------开始生成债转出借协议异常，无法匹配模板----订单号：" + bean.getOrdid());
                 }
             }
         }
@@ -1003,10 +1003,10 @@ public class FddHandle {
 					updateSaveDownUrl(dzqzCallBean, bean);
 					updateSignContract(bean);
 				} else {
-					logger.info("--------------开始生成债转投资协议返回错误，订单号：" + bean.getOrdid() + "错误码：" + code + ",错误描述：" + msg);
+					logger.info("--------------开始生成债转出借协议返回错误，订单号：" + bean.getOrdid() + "错误码：" + code + ",错误描述：" + msg);
 				}
 			} else {
-				logger.info("--------------开始生成债转投资协议异常，无法匹配模板----订单号：" + bean.getOrdid());
+				logger.info("--------------开始生成债转出借协议异常，无法匹配模板----订单号：" + bean.getOrdid());
 			}
 		}
 	}
@@ -1060,10 +1060,10 @@ public class FddHandle {
 					updateSaveDownUrl(dzqzCallBean, bean);
 					updateSignContract(bean);
 				} else {
-					logger.info("--------------开始生成计划债转投资协议返回错误，订单号：" + bean.getAssignOrderId() + "错误码：" + code + ",错误描述：" + msg);
+					logger.info("--------------开始生成计划债转出借协议返回错误，订单号：" + bean.getAssignOrderId() + "错误码：" + code + ",错误描述：" + msg);
 				}
 			} else {
-				logger.info("--------------开始生成计划债转投资协议异常，无法匹配模板----订单号：" + bean.getAssignOrderId());
+				logger.info("--------------开始生成计划债转出借协议异常，无法匹配模板----订单号：" + bean.getAssignOrderId());
 			}
 		}
 	}
@@ -1095,8 +1095,8 @@ public class FddHandle {
 
 			tenderCreditAssignedBean.setBidNid(hjhCreditTender.getBorrowNid());// 标号
 			tenderCreditAssignedBean.setCreditNid(hjhCreditTender.getCreditNid());// 债转编号
-			tenderCreditAssignedBean.setCreditTenderNid(hjhCreditTender.getInvestOrderId());//原始投资订单号
-			tenderCreditAssignedBean.setAssignNid(hjhCreditTender.getAssignOrderId());//债转后的新的"投资"订单号
+			tenderCreditAssignedBean.setCreditTenderNid(hjhCreditTender.getInvestOrderId());//原始出借订单号
+			tenderCreditAssignedBean.setAssignNid(hjhCreditTender.getAssignOrderId());//债转后的新的"出借"订单号
 			tenderCreditAssignedBean.setCurrentUserId(hjhCreditTender.getUserId());//承接人id
 //            tenderUserid = hjhCreditTender.getUserId();
 			Date createTime = hjhCreditTender.getCreateTime();
@@ -1104,7 +1104,7 @@ public class FddHandle {
 			// 模板参数对象(查新表)
 			resultMap = this.selectHJHUserCreditContract(tenderCreditAssignedBean);
 		}else{
-			logger.error("开始生成计划债转协议失败-----------汇计划债转投资表中无该记录----------承接订单号:" + bean.getAssignNid());
+			logger.error("开始生成计划债转协议失败-----------汇计划债转出借表中无该记录----------承接订单号:" + bean.getAssignNid());
 		}
 		if(resultMap == null){
 			//logger.error("获取模板参数对象(查新表)失败");
@@ -1224,22 +1224,22 @@ public class FddHandle {
 					updateSaveDownUrl(dzqzCallBean, bean);
 					updateSignContract(bean);
 				} else {
-					logger.info("--------------开始生成计划债转投资协议返回错误，订单号：" + bean.getAssignNid() + "错误码：" + code + ",错误描述：" + dzqzCallBean.getMsg());
+					logger.info("--------------开始生成计划债转出借协议返回错误，订单号：" + bean.getAssignNid() + "错误码：" + code + ",错误描述：" + dzqzCallBean.getMsg());
 				}
 			} else {
-				logger.info("--------------开始生成计划债转投资协议异常，无法匹配模板----订单号：" + bean.getAssignNid());
+				logger.info("--------------开始生成计划债转出借协议异常，无法匹配模板----订单号：" + bean.getAssignNid());
 			}
 		}
 	}
 
 	/**
-	 * 查询汇计划债转投资表
+	 * 查询汇计划债转出借表
 	 * @param tenderCreditAssignedBean
 	 * @return
 	 */
 	public Map<String,Object> selectHJHUserCreditContract(CreditAssignedBean tenderCreditAssignedBean) {
 		Map<String, Object> resultMap = new HashMap<String, Object>();
-		// 获取债转投资信息
+		// 获取债转出借信息
 		//查询 hyjf_hjh_debt_credit_tender 表
 		HjhDebtCreditTenderRequest request = new HjhDebtCreditTenderRequest();
 		request.setBorrowNid(tenderCreditAssignedBean.getBidNid());
@@ -1377,7 +1377,7 @@ public class FddHandle {
 		//合同编号
 		String contract_id = bean.getContract_id();
 		logger.info("--------------------合同编号：" + contract_id + "，开始处理自动签署异步处理-------");
-		//投资人
+		//出借人
 		Integer userId = null;
 
 		String borrowNid = null;
@@ -1394,7 +1394,7 @@ public class FddHandle {
 			List<BorrowTenderVO> tenderList = this.amTradeClient.getBorrowTenderListByNid(contract_id);
 			if (tenderList != null && tenderList.size() > 0) {
 				BorrowTenderVO borrowTender = tenderList.get(0);
-				userId = borrowTender.getUserId(); //投资人
+				userId = borrowTender.getUserId(); //出借人
 				borrowNid = borrowTender.getBorrowNid();//标的号
 				BorrowAndInfoVO borrow = this.amTradeClient.getBorrowByNid(borrowNid);
 				BorrowInfoVO borrowInfoByNid = amTradeClient.getBorrowInfoByNid(borrowNid);
@@ -1521,7 +1521,7 @@ public class FddHandle {
 		//平台客户编号
 		String platFromCustomerId =systemConfig.getHyjfFddCustomerid();
 
-		//查询投资人/承接人是否为企业用户
+		//查询出借人/承接人是否为企业用户
 		boolean isTenderCompany = false;
 		UserVO users = this.amUserClient.findUserById(userId);
 		Integer userType = users.getUserType();
@@ -1539,7 +1539,7 @@ public class FddHandle {
 			}
 		}
 		//调用查询接口并保存返回数据
-		//查询投资人签署结果
+		//查询出借人签署结果
 		DzqzCallBean callBean = querySignResult(contract_id, tenderCustomerID, userId);
 		if (callBean != null) {
 			String sign_status = callBean.getSign_status();
@@ -1784,12 +1784,12 @@ public class FddHandle {
 	}
 
 	/**
-	 * 发送邮件(计划订单状态由投资成功变为锁定中，发送此邮件提醒用户投资成功)
+	 * 发送邮件(计划订单状态由投标成功变为锁定中，发送此邮件提醒用户投标成功)
 	 * @param hjhAccede
 	 */
 	private void sendPlanMail(HjhAccedeVO hjhAccede) {
 
-		logger.info("计划订单状态由投资成功变为锁定中，发送此邮件提醒用户投资--------------------------开始");
+		logger.info("计划订单状态由投标成功变为锁定中，发送此邮件提醒用户出借--------------------------开始");
 		try {
 			Map<String, Object> contents = new HashMap<String, Object>();
 			//1基本信息
@@ -1804,7 +1804,7 @@ public class FddHandle {
 			contents.put("userHjhInvistDetail", userHjhInvistDetailCustomize);
 			Map<String, String> msg = new HashMap<String, String>();
 			msg.put(VAL_USERID, String.valueOf(userId));
-			// 向每个投资人发送邮件
+			// 向每个出借人发送邮件
 			if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isCreatable(msg.get(VAL_USERID))) {
 				UserVO users=this.amUserClient.findUserById(userId);
 				if (users == null || Validator.isNull(users.getEmail()) || users.getIsSmtp()==1) {
@@ -1833,11 +1833,11 @@ public class FddHandle {
 				TenderAgreementVO tenderAgreement = new TenderAgreementVO();
 				List<TenderAgreementVO> tenderAgreementsNid=this.amTradeClient.selectTenderAgreementByNid(hjhAccede.getAccedeOrderId());
 				/***************************下载法大大协议******************************************/
-				//下载法大大协议--投资服务协议
+				//下载法大大协议--出借服务协议
 				if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
 					tenderAgreement = tenderAgreementsNid.get(0);
-					logger.info("sendMail", "***************************下载法大大协议--投资orderId:"+hjhAccede.getAccedeOrderId());
-					logger.info("sendMail", "***************************下载法大大协议--投资pdfUrl:"+tenderAgreement.getImgUrl());
+					logger.info("sendMail", "***************************下载法大大协议--出借orderId:"+hjhAccede.getAccedeOrderId());
+					logger.info("sendMail", "***************************下载法大大协议--出借pdfUrl:"+tenderAgreement.getImgUrl());
 					if(tenderAgreement!=null){
 						String pdfUrl = tenderAgreement.getDownloadUrl();
 						if(StringUtils.isNotBlank(pdfUrl)){
@@ -1849,9 +1849,9 @@ public class FddHandle {
 				}
 				String[] emails = { email };
 				//先用EMAILPARAM_TPL_LOANS测试，后期改成EMAITPL_EMAIL_LOCK_REPAY
-				logger.info("sendMail***************************下载法大大协议--投资filePath:"+filePath + fileName);
+				logger.info("sendMail***************************下载法大大协议--出借filePath:"+filePath + fileName);
 				// mod by nxl 修改计划->智投服务
-				/*MailMessage mailMessage = new MailMessage(Integer.valueOf(userId), msg, "汇计划投资服务协议", null, new String[] { filePath + "/" + fileName }, emails, CustomConstants.EMAITPL_EMAIL_LOCK_REPAY,
+				/*MailMessage mailMessage = new MailMessage(Integer.valueOf(userId), msg, "汇计划出借服务协议", null, new String[] { filePath + "/" + fileName }, emails, CustomConstants.EMAITPL_EMAIL_LOCK_REPAY,
 						MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);*/
 				MailMessage mailMessage = new MailMessage(Integer.valueOf(userId), msg, "智投服务协议", null, new String[] { filePath + "/" + fileName }, emails, CustomConstants.EMAITPL_EMAIL_LOCK_REPAY,
 						MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
@@ -1859,17 +1859,17 @@ public class FddHandle {
 				commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(),mailMessage));
 
 
-				logger.info("计划订单状态由投资成功变为锁定中，发送此邮件提醒用户投资--------------------------结束!");
+				logger.info("计划订单状态由投标成功变为锁定中，发送此邮件提醒用户出借--------------------------结束!");
 			}
 		} catch (Exception e) {
-			logger.info("计划订单状态由投资成功变为锁定中，发送此邮件提醒用户投资成功-----发送邮件失败");
+			logger.info("计划订单状态由投标成功变为锁定中，发送此邮件提醒用户投标成功-----发送邮件失败");
 		}
 
 	}
 
 
 	/**
-	 * 发送邮件(投资成功)居间服务协议
+	 * 发送邮件(投标成功)居间服务协议
 	 * @param borrowRecover
 	 */
 	private void sendMail(BorrowRecoverVO borrowRecover) {
@@ -1879,7 +1879,7 @@ public class FddHandle {
 		Map<String, String> msg = new HashMap<String, String>();
 		msg.put(VAL_USERID, String.valueOf(userId));
 		try {
-			// 向每个投资人发送邮件
+			// 向每个出借人发送邮件
 			if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isCreatable(msg.get(VAL_USERID))) {
 				UserVO users = this.amUserClient.findUserById(userId);
 				if (users == null || Validator.isNull(users.getEmail())) {
@@ -1889,7 +1889,7 @@ public class FddHandle {
 				if (StringUtils.isBlank(email) || users.getIsSmtp()==1) {
 					return;
 				}
-				logger.info("开始发送邮件。投资订单号:" + orderId);
+				logger.info("开始发送邮件。出借订单号:" + orderId);
 				msg.put(VAL_NAME, users.getUsername());
 				UserInfoVO usersInfo =this.amUserClient.findUsersInfoById(Integer.valueOf(userId));
 				if (Validator.isNotNull(usersInfo) && Validator.isNotNull(usersInfo.getSex())) {
@@ -1910,8 +1910,8 @@ public class FddHandle {
 				//下载法大大协议--居间
 				if(tenderAgreementsNid!=null && tenderAgreementsNid.size()>0){
 					tenderAgreement = tenderAgreementsNid.get(0);
-					logger.info("sendMail***************************下载法大大协议--投资orderId:"+orderId);
-					logger.info("sendMail***************************下载法大大协议--投资pdfUrl:"+tenderAgreement.getImgUrl());
+					logger.info("sendMail***************************下载法大大协议--出借orderId:"+orderId);
+					logger.info("sendMail***************************下载法大大协议--出借pdfUrl:"+tenderAgreement.getImgUrl());
 					if(tenderAgreement!=null){
 						File file= createFaddPDFImgFile(tenderAgreement,filePath);
 						fileName =  file.getName();
@@ -1928,7 +1928,7 @@ public class FddHandle {
 				borrowRecover.setSendmail(1);
 				this.amTradeClient.updateBorrowRecover(borrowRecover);
 
-				logger.info("结束发送邮件。投资订单号:" + orderId);
+				logger.info("结束发送邮件。出借订单号:" + orderId);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -2063,11 +2063,11 @@ public class FddHandle {
 		//出让人、借款人身份证号码图片
 		String borrowCardNoImage = "image/cardno.png";
 
-		//承接人、投资人真实姓名脱敏图片
+		//承接人、出借人真实姓名脱敏图片
 		String tenderTrueNametmImage = "image/companyname.png";
-		//承接人、投资人签章图片
+		//承接人、出借人签章图片
 		String tenderSigntmImage = "image/namesign.png";
-		//承接人、投资人身份证号码图片
+		//承接人、出借人身份证号码图片
 		String tenderCardNoImage = "image/cardno.png";
 
 		if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
@@ -2114,7 +2114,7 @@ public class FddHandle {
 		logger.info("-----------开始下载脱敏，获得签章图片父级别路径" + fileParent);
 		String signIcon = fileParent + borrowSigntmImage; //签章覆盖图片路径
 		logger.info("-----------开始下载脱敏，获得签章图片路径" + signIcon);
-		String tenderSignIcon = fileParent + tenderSigntmImage; //投资人。承接人签章覆盖图片路径
+		String tenderSignIcon = fileParent + tenderSigntmImage; //出借人。承接人签章覆盖图片路径
 		String signimageName = fileName + tmName_sign;  //签章脱敏后图片名称
 		String imageType = "png";  //图片类型jpg,jpeg,png,gif
 		Integer degree = null; //水印旋转角度-45，null表示不旋转
@@ -2141,7 +2141,7 @@ public class FddHandle {
 		}
 		ImageUtil.markImageByMoreIcon(signIcon, source, output, signimageName, imageType, degree, index_x, index_y);
 
-		//受让人/投资人/出借人 脱敏签章（个人显示第一个字，企业全部脱敏）——最后一页
+		//受让人/出借人/出借人 脱敏签章（个人显示第一个字，企业全部脱敏）——最后一页
 		source = output + "/" + signimageName + ".png";
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
 			index_x = 435;
@@ -2213,7 +2213,7 @@ public class FddHandle {
 		ImageUtil.markImageByMoreIcon(cardnoIcon, trueSource, output, trueImageName, imageType, degree, index_x, index_y);
 
 		String tenderTrueNameIcon = fileParent + tenderTrueNametmImage;
-		//脱敏受让人/投资人/出借人 真实姓名（个人显示第一个，企业全部脱敏）——第一页
+		//脱敏受让人/出借人/出借人 真实姓名（个人显示第一个，企业全部脱敏）——第一页
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
 			index_x = 388;
 			index_y = 490;
@@ -2235,7 +2235,7 @@ public class FddHandle {
 		ImageUtil.markImageByMoreIcon(tenderTrueNameIcon, trueSource, output, trueImageName, imageType, degree, index_x, index_y);
 
 		cardnoIcon = fileParent + tenderCardNoImage;
-		//脱敏受让人/投资人/出借人 证件号码——第一页
+		//脱敏受让人/出借人/出借人 证件号码——第一页
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
 			index_x = 355;
 			index_y = 555;

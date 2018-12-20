@@ -20,7 +20,7 @@ public class HtlCommonServiceImpl implements HtlCommonService {
     HtlCommonCustomizeMapper htlCommonCustomizeMapper;
 
     /**
-     * 获取投资人本金信息
+     * 获取出借人本金信息
      * @param productSearchForPage
      * @return
      */

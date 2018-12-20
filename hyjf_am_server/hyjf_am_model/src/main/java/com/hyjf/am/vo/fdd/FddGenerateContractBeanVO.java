@@ -15,13 +15,13 @@ public class FddGenerateContractBeanVO extends BaseVO implements Serializable{
     private int transType;
     /**借款人真实姓名*/
     private String borrowUserTrueName;
-    /**投资人用户名*/
+    /**出借人用户名*/
     private String tenderUserName;
-    /**投资人真实姓名*/
+    /**出借人真实姓名*/
     private String tenderTrueName;
-    /**投资人用户ID*/
+    /**出借人用户ID*/
     private int tenderUserId;
-    /**投资人证件号*/
+    /**出借人证件号*/
     private String idCard;
     /**乙方借款金额*/
     private BigDecimal borrowAccount;
@@ -43,10 +43,10 @@ public class FddGenerateContractBeanVO extends BaseVO implements Serializable{
     private String signDate;
     /**标的号*/
     private String borrowNid;
-    /**投资类型 0：原始 1：债转 2 :计划*/
+    /**出借类型 0：原始 1：债转 2 :计划*/
     private int tenderType;
     /**客户角色 1：接入平台 2-担保公司
-     3-投资人 4-借款人*/
+     3-出借人 4-借款人*/
     private String clientRole;
     /**计划生效日期*/
     private String planStartDate;
@@ -126,7 +126,7 @@ public class FddGenerateContractBeanVO extends BaseVO implements Serializable{
     private String creditNid;
 
     /**
-     * 债转原始投资订单号
+     * 债转原始出借订单号
      */
     private String creditTenderNid;
 

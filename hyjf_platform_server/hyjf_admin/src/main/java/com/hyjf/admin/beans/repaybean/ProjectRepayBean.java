@@ -13,7 +13,7 @@ public class ProjectRepayBean implements Serializable {
     // 用户id
     public String userId;
     
-    //垫付机构id
+    //担保机构id
     public Integer repayUserId;
 
     // 实际还款总额 本息和加费用

@@ -12,11 +12,11 @@ public class WebPandectCreditTenderCustomize {
 	 */
 	private BigDecimal creditAssign= new BigDecimal(0);
 	/**
-	 * 待还本金 （投资本金-已还本金）
+	 * 待还本金 （出借本金-已还本金）
 	 */
 	private BigDecimal creditCapitalWait= new BigDecimal(0);
 	/**
-	 * 待还利息 （回收总额-投资本金-已还利息）
+	 * 待还利息 （回收总额-出借本金-已还利息）
 	 */
 	private BigDecimal creditInterestWait= new BigDecimal(0);
 	/**

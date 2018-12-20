@@ -294,9 +294,9 @@ public class MyPlanDetailResultBean extends BaseResultBeanFrontEnd {
 	public static class BorrowComposition {
 		// 资产编号
 		private String borrowNid = "";
-		// 投资金额
+		// 出借金额
 		private String account = "";
-		// 投资时间
+		// 出借时间
 		private String tenderTime= "";
 		// 0-普通  1-债转
 		private String type = "";

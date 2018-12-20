@@ -47,7 +47,7 @@ public class UserChangeLog implements Serializable {
     private String idcard;
 
     /**
-     * 用户角色1投资人2借款人
+     * 用户角色1出借人2借款人
      *
      * @mbggenerated
      */

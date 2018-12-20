@@ -284,7 +284,7 @@ public class ChinaPnrConstant {
 	public static final String PARAM_SUBACCTTYPE = "SubAcctType";
 	/** 子账户号 */
 	public static final String PARAM_SUBACCTID = "SubAcctId";
-	/** 最大投资手续费率 */
+	/** 最大出借手续费率 */
 	public static final String PARAM_MAXTENDERRATE = "MaxTenderRate";
 	/** 借款人信息 */
 	public static final String PARAM_BORROWERDETAILS = "BorrowerDetails";
@@ -486,7 +486,7 @@ public class ChinaPnrConstant {
 	public static final String RESPCODE_NOTEXIST = "070";
 	/** 状态 107:重复交易 */
 	public static final String RESPCODE_REPEAT_DEAL = "107";
-	/** 状态 334:已放款金额加本次放款金额超过投资人原单中的投资金额 */
+	/** 状态 334:已放款金额加本次放款金额超过出借人原单中的出借金额 */
 	public static final String RESPCODE_ACCOUNT_OUT = "334";
 	/** 状态 349:本次还款金额加上已还款金额超过还款总额 */
 	public static final String RESPCODE_REPAY_OUT = "349";

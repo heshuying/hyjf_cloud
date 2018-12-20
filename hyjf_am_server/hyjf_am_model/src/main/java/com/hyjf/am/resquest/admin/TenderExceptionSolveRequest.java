@@ -6,7 +6,7 @@ package com.hyjf.am.resquest.admin;
 /**
  * @author nxl
  * @version TenderExceptionSolveRequestBean, v0.1 2018/7/12 16:09
- * 汇计划自动投资异常 ,异常处理请求bean
+ * 汇计划自动出借异常 ,异常处理请求bean
  */
 public class TenderExceptionSolveRequest {
     /**

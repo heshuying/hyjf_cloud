@@ -39,7 +39,7 @@ public interface WebPandectCustomizeMapper {
 	public BigDecimal queryFrostCapital(@Param("userId") Integer userId);
 
 	/**
-	 * 累计投资金额
+	 * 累计出借金额
 	 * @param userId
 	 * @return
 	 */

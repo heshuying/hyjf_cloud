@@ -46,7 +46,7 @@ public class BorrowListServiceImpl extends BaseTradeServiceImpl implements Borro
 	private AmTradeClient amTradeClient;
 
 	/**
-	 * 获取投资记录列表查询
+	 * 获取出借记录列表查询
 	 * 
 	 * @param bean{instCode：机构编号（必填）,startTime:开始时间（必填），
 	 *            endTime:结束时间（必填），account：电子账号（选填），borrowNid：标的编号}
@@ -86,7 +86,7 @@ public class BorrowListServiceImpl extends BaseTradeServiceImpl implements Borro
 		params.put("borrowNid", bean.getBorrowNid());
 		params.put("limitStart",bean.getLimitStart());
 		params.put("limitEnd",bean.getLimitEnd());
-		//获取投资信息
+		//获取出借信息
 		List<InvestListCustomizeVO> InvestList = amTradeClient.searchInvestListNew(params);
 		List<Integer> usr = new ArrayList<Integer>();
 		for (InvestListCustomizeVO vo:InvestList){

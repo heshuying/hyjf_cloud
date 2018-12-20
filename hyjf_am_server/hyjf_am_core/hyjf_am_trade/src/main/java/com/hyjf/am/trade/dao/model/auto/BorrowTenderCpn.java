@@ -24,7 +24,7 @@ public class BorrowTenderCpn implements Serializable {
     private String borrowNid;
 
     /**
-     * 投资订单号
+     * 出借订单号
      *
      * @mbggenerated
      */
@@ -56,7 +56,7 @@ public class BorrowTenderCpn implements Serializable {
     private Integer changePeriod;
 
     /**
-     * 投资状态
+     * 出借状态
      *
      * @mbggenerated
      */
@@ -65,7 +65,7 @@ public class BorrowTenderCpn implements Serializable {
     private String tenderNid;
 
     /**
-     * 投资奖励金额
+     * 出借奖励金额
      *
      * @mbggenerated
      */
@@ -170,7 +170,7 @@ public class BorrowTenderCpn implements Serializable {
     private BigDecimal recoverLateFee;
 
     /**
-     * 投资奖励增加
+     * 出借奖励增加
      *
      * @mbggenerated
      */
@@ -279,14 +279,14 @@ public class BorrowTenderCpn implements Serializable {
     private String inviteRegionName;
 
     /**
-     * 投资人username
+     * 出借人username
      *
      * @mbggenerated
      */
     private String tenderUserName;
 
     /**
-     * 投资类别 1：直投类，2：汇添金
+     * 出借类别 1：直投类，2：汇添金
      *
      * @mbggenerated
      */

@@ -45,7 +45,7 @@ public interface NifaContractEssenceMessageService extends BaseService {
     BorrowInfoVO selectBorrowInfoByBorrowNid(String borrowNid);
 
     /**
-     * 根据放款编号获取该标的的投资信息
+     * 根据放款编号获取该标的的出借信息
      *
      * @param borrowNid
      * @return
@@ -61,7 +61,7 @@ public interface NifaContractEssenceMessageService extends BaseService {
     List<NifaContractEssenceVO> selectNifaContractEssenceByContractNo(String contractNo);
 
     /**
-     * 获取投资人详情
+     * 获取出借人详情
      *
      * @param userId
      * @return
@@ -115,7 +115,7 @@ public interface NifaContractEssenceMessageService extends BaseService {
     BorrowManinfoVO selectBorrowMainfo(String borrowNid);
 
     /**
-     * 获取用户投资订单还款详情
+     * 获取用户出借订单还款详情
      *
      * @param nid
      * @return
@@ -123,7 +123,7 @@ public interface NifaContractEssenceMessageService extends BaseService {
     List<BorrowRecoverPlanVO> selectBorrowRecoverPlanList(String nid);
 
     /**
-     * 获取用户投资订单还款计划(到期还款)
+     * 获取用户出借订单还款计划(到期还款)
      *
      * @param nid
      * @return

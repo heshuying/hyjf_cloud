@@ -12,7 +12,7 @@ import java.io.Serializable;
 public class BorrowRepaymentInfoRequsetBean extends BaseRequest implements Serializable {
 
     private String nid;
-    @ApiModelProperty(value = "借款编号（导出用）")
+    @ApiModelProperty(value = "项目编号（导出用）")
     private String borrowNid;
     /**
      * 借款人 检索条件
@@ -22,12 +22,12 @@ public class BorrowRepaymentInfoRequsetBean extends BaseRequest implements Seria
     @ApiModelProperty(value = "资产来源")
     private String instCodeSrch;
     /**
-     * 借款编号 检索条件
+     * 项目编号 检索条件
      */
-    @ApiModelProperty(value = "借款编号")
+    @ApiModelProperty(value = "项目编号")
     private String borrowNidSrch;
     /**
-     * 借款编号 检索条件
+     * 项目编号 检索条件
      */
     @ApiModelProperty(value = "计划编号")
     private String planNidSrch;
@@ -54,7 +54,7 @@ public class BorrowRepaymentInfoRequsetBean extends BaseRequest implements Seria
     @ApiModelProperty(value = "应还日期开始")
     private String timeStartSrch;
     /**
-     * 投资时间 检索条件
+     * 出借时间 检索条件
      */
     @ApiModelProperty(value = "应还日期结束")
     private String timeEndSrch;

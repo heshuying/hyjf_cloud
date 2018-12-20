@@ -31,7 +31,7 @@ public class MyProjectServiceImpl extends BaseUserServiceImpl implements MyProje
         request.setUserId(userId);
         int total = amTradeClient.selectCurrentHoldObligatoryRightListTotal(request);
         if (total > 0) {
-        	//update by jijun 按照投资时间排序
+        	//update by jijun 按照出借时间排序
             request.setOrderByFlag("2");
             request.setSortBy("DESC");
             buildQueryPageParam(currentPage, pageSize, request);

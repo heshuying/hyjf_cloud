@@ -17,7 +17,7 @@ import java.util.Map;
  */
 public interface BorrowTenderCustomizeMapper {
 	/**
-	 * 获取utm注册用户投资次数
+	 * 获取utm注册用户出借次数
 	 * @param list utm注册用户userid集合
 	 * @param dayStart
 	 * @param dayEnd
@@ -28,7 +28,7 @@ public interface BorrowTenderCustomizeMapper {
 			@Param("dayEnd") String dayEnd, @Param("type") String type);
 
 	/**
-	 * 获取utm注册用户HZT投资额
+	 * 获取utm注册用户HZT出借额
 	 * @param list utm注册用户userid集合
 	 * @param dayStart
 	 * @param dayEnd
@@ -38,7 +38,7 @@ public interface BorrowTenderCustomizeMapper {
 			@Param("dayStart") String dayEnd);
 
 	/**
-	 * 获取utm注册用户HXF投资额
+	 * 获取utm注册用户HXF出借额
 	 * @param list utm注册用户userid集合
 	 * @param dayStart
 	 * @param dayEnd
@@ -48,7 +48,7 @@ public interface BorrowTenderCustomizeMapper {
 			@Param("dayStart") String dayEnd);
 
 	/**
-	 * 获取utm注册用户HXF投资额
+	 * 获取utm注册用户HXF出借额
 	 * @param list utm注册用户userid集合
 	 * @param dayStart
 	 * @param dayEnd
@@ -68,7 +68,7 @@ public interface BorrowTenderCustomizeMapper {
 
     /**
      * @Author walter.limeng
-     * @Description  风车理财根据投资订单号查询投资信息
+     * @Description  风车理财根据出借订单号查询出借信息
      * @Date 14:25 2018/7/20
      * @Param paramMap
      * @return

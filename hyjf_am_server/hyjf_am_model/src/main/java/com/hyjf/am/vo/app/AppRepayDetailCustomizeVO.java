@@ -60,12 +60,12 @@ public class AppRepayDetailCustomizeVO extends BaseVO implements Serializable {
     private String period;
 
     /**
-     * 投资金额
+     * 出借金额
      */
     private String account;
 
     /**
-     * 投资金额(计算用)
+     * 出借金额(计算用)
      */
     private BigDecimal accountNum;
 

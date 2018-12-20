@@ -99,22 +99,22 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         // 当前时间
         int nowTime = GetDate.getNowTime10();
         /** 标的基本数据 */
-        // 投资人用户ID
+        // 出借人用户ID
         Integer tenderUserId = null;
-        // 投资人用户ID
+        // 出借人用户ID
         tenderUserId = Integer.valueOf(ct.getUserId());
         String couponTenderNid = ct.getOrderId();
-        // 取得优惠券投资信息
+        // 取得优惠券出借信息
         BorrowTenderCpnVO borrowTenderCpn = this.getCouponTenderInfo(couponTenderNid);
-        // 投资人在银行存管的账户信息
+        // 出借人在银行存管的账户信息
         BankOpenAccountVO bankOpenAccountInfo = this.getBankOpenAccount(tenderUserId);
         if (bankOpenAccountInfo == null) {
-            throw new Exception("投资人未开户。[用户ID：" + tenderUserId + "]，" + "[优惠券投资编号：" + couponTenderNid + "]");
+            throw new Exception("出借人未开户。[用户ID：" + tenderUserId + "]，" + "[优惠券出借编号：" + couponTenderNid + "]");
         }
         // 当前还款
         CouponRecoverCustomizeVO currentRecover = this.getCurrentCouponRecover(couponTenderNid, 1);
         if (currentRecover == null) {
-            logger.info("优惠券还款数据不存在。[计划编号：" + planNid + "]，" + "[优惠券投资编号：" + couponTenderNid + "]");
+            logger.info("优惠券还款数据不存在。[计划编号：" + planNid + "]，" + "[优惠券出借编号：" + couponTenderNid + "]");
             return;
         }
         // 应还利息
@@ -156,7 +156,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
                 resultBean = BankCallUtils.callApiBg(bean);
                 if (resultBean == null || !BankCallConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
                     // 转账失败
-                    logger.info("转账失败..." + "[优惠券投资编号：" + couponTenderNid + "]");
+                    logger.info("转账失败..." + "[优惠券出借编号：" + couponTenderNid + "]");
                     cr.setReceivedFlg(4);
                     this.borrowClient.updateByPrimaryKeySelective(cr);
                     String errorMsg = StringUtils.EMPTY;
@@ -192,13 +192,13 @@ public class CouponRepayServiceImpl implements CouponRepayService {
 
             } catch (Exception e) {
                 logger.error(methodName, "系统发生异常，更新异常转账表失败,事物回滚", e);
-                throw new RuntimeException("系统发生异常，更新异常转账表失败,事物回滚!" + "[优惠券投资编号：" + couponTenderNid + "]");
+                throw new RuntimeException("系统发生异常，更新异常转账表失败,事物回滚!" + "[优惠券出借编号：" + couponTenderNid + "]");
             }
         }
 
         // 判断该收支明细是否存在时,跳出本次循环
         if (countAccountListByNidCoupon(orderId) == 0) {
-            // 更新账户信息(投资人)
+            // 更新账户信息(出借人)
             AccountVO account = new AccountVO();
             account.setUserId(tenderUserId);
 
@@ -214,22 +214,22 @@ public class CouponRepayServiceImpl implements CouponRepayService {
             // 更新用户计划账户
             int accountCnt = this.borrowClient.updateOfRepayCouponHjh(account);
             if (accountCnt == 0) {
-                throw new RuntimeException("投资人资金记录(huiyingdai_account)更新失败！" + "[优惠券投资编号：" + couponTenderNid + "]");
+                throw new RuntimeException("出借人资金记录(huiyingdai_account)更新失败！" + "[优惠券出借编号：" + couponTenderNid + "]");
             }
             TimeUnit.SECONDS.sleep(1);//秒
-            // 取得账户信息(投资人)
+            // 取得账户信息(出借人)
             account = this.borrowClient.getAccountByUserId(tenderUserId);
             if (account == null) {
-                throw new RuntimeException("投资人账户信息不存在。[投资人ID：" + borrowTenderCpn.getUserId() + "]，" + "[优惠券投资编号：" + couponTenderNid + "]");
+                throw new RuntimeException("出借人账户信息不存在。[出借人ID：" + borrowTenderCpn.getUserId() + "]，" + "[优惠券出借编号：" + couponTenderNid + "]");
             }
             // 写入收支明细
             AccountListVO accountList = dealAccountList(orderId, tenderUserId, account, bankOpenAccountInfo, seqNo, bean, recoverAccount, currentRecover, ct);
             int accountListCnt = insertAccountList(accountList);
             if (accountListCnt == 0) {
-                throw new RuntimeException("收支明细(huiyingdai_account_list)写入失败！" + "[优惠券投资编号：" + couponTenderNid + "]");
+                throw new RuntimeException("收支明细(huiyingdai_account_list)写入失败！" + "[优惠券出借编号：" + couponTenderNid + "]");
             }
         }
-        // 更新投资表
+        // 更新出借表
         // 已收总额
         borrowTenderCpn.setRecoverAccountYes(borrowTenderCpn.getRecoverAccountYes().add(recoverAccount));
         // 已收本金
@@ -244,9 +244,9 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         borrowTenderCpn.setRecoverAccountInterestWait(borrowTenderCpn.getRecoverAccountInterestWait().subtract(recoverInterest));
         int borrowTenderCnt = borrowClient.updateBorrowTenderCpn(borrowTenderCpn);
         if (borrowTenderCnt == 0) {
-            throw new RuntimeException("投资表(hyjf_borrow_tender_cpn)更新失败！" + "[优惠券投资编号：" + couponTenderNid + "]");
+            throw new RuntimeException("出借表(hyjf_borrow_tender_cpn)更新失败！" + "[优惠券出借编号：" + couponTenderNid + "]");
         }
-        // 更新优惠券投资还款表
+        // 更新优惠券出借还款表
         // 转账订单编号
         cr.setTransferId(orderId);
         // 已还款
@@ -281,8 +281,8 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         AccountWebListVO accountWebList = new AccountWebListVO();
         // 未分期
         accountWebList.setOrdid(borrowTenderCpn.getNid());// 订单号
-        accountWebList.setUserId(tenderUserId); // 投资者
-        accountWebList.setAmount(Double.valueOf(recoverAccount.toString())); // 优惠券投资受益
+        accountWebList.setUserId(tenderUserId); // 出借者
+        accountWebList.setAmount(Double.valueOf(recoverAccount.toString())); // 优惠券出借受益
         accountWebList.setType(CustomConstants.TYPE_OUT); // 类型1收入,2支出
 
         String tradeType = StringUtils.EMPTY;
@@ -304,11 +304,11 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         }
         accountWebList.setTradeType(tradeType); // 加息券回款
         String remark = "计划编号：" + planNid + "<br />优惠券:" + ct.getCouponUserCode();
-        accountWebList.setRemark(remark); // 投资编号
+        accountWebList.setRemark(remark); // 出借编号
         accountWebList.setCreateTime(nowTime);
         int accountWebListCnt = insertAccountWebList(accountWebList);
         if (accountWebListCnt == 0) {
-            throw new RuntimeException("网站收支记录(huiyingdai_account_web_list)更新失败！" + "[投资订单号：" + borrowTenderCpn.getNid() + "]");
+            throw new RuntimeException("网站收支记录(huiyingdai_account_web_list)更新失败！" + "[出借订单号：" + borrowTenderCpn.getNid() + "]");
         }
 
         // 添加红包账户明细
@@ -389,17 +389,17 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         Integer periodNext = borrowPeriod - periodNow;
         // 还款方式
         String borrowStyle = borrow.getBorrowStyle();
-        // 投资人用户ID
+        // 出借人用户ID
         Integer tenderUserId = null;
-        // 投资人用户ID
+        // 出借人用户ID
         tenderUserId = Integer.valueOf(ct.getUserId());
         String couponTenderNid = ct.getOrderId();
-        // 取得优惠券投资信息
+        // 取得优惠券出借信息
         BorrowTenderCpnVO borrowTenderCpn = this.getCouponTenderInfo(couponTenderNid);
-        // 投资人在银行存管的账户信息
+        // 出借人在银行存管的账户信息
         BankOpenAccountVO bankOpenAccountInfo = this.getBankOpenAccount(tenderUserId);
         if (bankOpenAccountInfo == null) {
-            throw new Exception("投资人未开户。[用户ID：" + tenderUserId + "]，" + "[优惠券投资编号：" + couponTenderNid + "]");
+            throw new Exception("出借人未开户。[用户ID：" + tenderUserId + "]，" + "[优惠券出借编号：" + couponTenderNid + "]");
         }
 
         // 是否月标(true:月标, false:天标)
@@ -417,8 +417,8 @@ public class CouponRepayServiceImpl implements CouponRepayService {
 
         }
         if (currentRecover == null) {
-            logger.info("优惠券还款数据不存在。[借款编号：" + borrowNid + "]，" + "[优惠券投资编号：" + couponTenderNid + "]");
-            //throw new Exception("优惠券还款数据不存在。[借款编号：" + borrowNid + "]，" + "[优惠券投资编号：" + couponTenderNid + "]");
+            logger.info("优惠券还款数据不存在。[借款编号：" + borrowNid + "]，" + "[优惠券出借编号：" + couponTenderNid + "]");
+            //throw new Exception("优惠券还款数据不存在。[借款编号：" + borrowNid + "]，" + "[优惠券出借编号：" + couponTenderNid + "]");
             return;
         }
         // 应还利息
@@ -460,7 +460,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
             try {
                 resultBean = BankCallUtils.callApiBg(bean);
                 if (resultBean == null || !BankCallConstant.RESPCODE_SUCCESS.equals(resultBean.getRetCode())) {
-                    logger.info("转账失败..." + "[优惠券投资编号：" + couponTenderNid + "]");
+                    logger.info("转账失败..." + "[优惠券出借编号：" + couponTenderNid + "]");
                     cr.setReceivedFlg(4);
                     this.borrowClient.updateByPrimaryKeySelective(cr);
                     String errorMsg = StringUtils.EMPTY;
@@ -496,42 +496,42 @@ public class CouponRepayServiceImpl implements CouponRepayService {
 
             } catch (Exception e) {
                 logger.error(methodName, "系统发生异常，更新异常转账表失败,事物回滚", e);
-                throw new RuntimeException("系统发生异常，更新异常转账表失败,事物回滚!" + "[优惠券投资编号：" + couponTenderNid + "]");
+                throw new RuntimeException("系统发生异常，更新异常转账表失败,事物回滚!" + "[优惠券出借编号：" + couponTenderNid + "]");
             }
         }
 
         // 判断该收支明细是否存在时,跳出本次循环
         if (countAccountListByNidCoupon(orderId) == 0) {
-            // 更新账户信息(投资人)
+            // 更新账户信息(出借人)
             AccountVO account = new AccountVO();
             account.setUserId(tenderUserId);
 
             account.setBankBalance(recoverAccount); // 账户余额
-            account.setBankTotal(BigDecimal.ZERO);// 投资人资金总额 +利息
-            account.setBankFrost(BigDecimal.ZERO);// 投资人冻结金额+投资金额(等额本金时投资金额可能会大于计算出的本金之和)
-            account.setBankAwait(recoverAccount);// 投资人待收金额+利息+
+            account.setBankTotal(BigDecimal.ZERO);// 出借人资金总额 +利息
+            account.setBankFrost(BigDecimal.ZERO);// 出借人冻结金额+出借金额(等额本金时出借金额可能会大于计算出的本金之和)
+            account.setBankAwait(recoverAccount);// 出借人待收金额+利息+
             // 本金
-            account.setBankAwaitCapital(BigDecimal.ZERO);// 投资人待收本金
-            account.setBankAwaitInterest(recoverAccount);// 投资人待收利息
+            account.setBankAwaitCapital(BigDecimal.ZERO);// 出借人待收本金
+            account.setBankAwaitInterest(recoverAccount);// 出借人待收利息
             account.setBankInterestSum(recoverAccount);
-            account.setBankInvestSum(BigDecimal.ZERO);// 投资人累计投资
+            account.setBankInvestSum(BigDecimal.ZERO);// 出借人累计出借
             account.setBankFrostCash(BigDecimal.ZERO);// 江西银行冻结金额
             logger.info("优惠券还款更新账户表");
             int accountCnt = this.borrowClient.updateOfRepayTender(account);
             if (accountCnt == 0) {
-                throw new RuntimeException("投资人资金记录(huiyingdai_account)更新失败！" + "[优惠券投资编号：" + couponTenderNid + "]");
+                throw new RuntimeException("出借人资金记录(huiyingdai_account)更新失败！" + "[优惠券出借编号：" + couponTenderNid + "]");
             }
-            // 取得账户信息(投资人)
+            // 取得账户信息(出借人)
             account = borrowClient.getAccountByUserId(tenderUserId);
             if (account == null) {
-                throw new RuntimeException("投资人账户信息不存在。[投资人ID：" + borrowTenderCpn.getUserId() + "]，" + "[优惠券投资编号：" + couponTenderNid + "]");
+                throw new RuntimeException("出借人账户信息不存在。[出借人ID：" + borrowTenderCpn.getUserId() + "]，" + "[优惠券出借编号：" + couponTenderNid + "]");
             }
             // 写入收支明细
             logger.info("优惠券还款写入收支明细");
             AccountListVO accountList = new AccountListVO();
             // 转账订单编号
             accountList.setNid(orderId);
-            // 投资人
+            // 出借人
             accountList.setUserId(tenderUserId);
             accountList.setBankAwait(account.getBankAwait());
             accountList.setBankAwaitCapital(account.getBankAwaitCapital());
@@ -554,7 +554,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
             accountList.setTradeStatus(1);
             accountList.setIsBank(1);
 
-            // 投资收入
+            // 出借收入
             accountList.setAmount(recoverAccount);
             // 1收入
             accountList.setType(1);
@@ -570,13 +570,13 @@ public class CouponRepayServiceImpl implements CouponRepayService {
             accountList.setTrade(trade);
             // 余额操作
             accountList.setTradeCode("balance");
-            // 投资人资金总额
+            // 出借人资金总额
             accountList.setTotal(account.getTotal());
-            // 投资人可用金额
+            // 出借人可用金额
             accountList.setBalance(account.getBalance());
-            // 投资人冻结金额
+            // 出借人冻结金额
             accountList.setFrost(account.getFrost());
-            // 投资人待收金额
+            // 出借人待收金额
             accountList.setAwait(account.getAwait());
             // 创建时间
             accountList.setCreateTime(nowTime);
@@ -600,10 +600,10 @@ public class CouponRepayServiceImpl implements CouponRepayService {
             accountList.setWeb(0); // PC
             int accountListCnt = insertAccountList(accountList);
             if (accountListCnt == 0) {
-                throw new RuntimeException("收支明细(huiyingdai_account_list)写入失败！" + "[优惠券投资编号：" + couponTenderNid + "]");
+                throw new RuntimeException("收支明细(huiyingdai_account_list)写入失败！" + "[优惠券出借编号：" + couponTenderNid + "]");
             }
         }
-        // 更新投资表
+        // 更新出借表
         // 已收总额
         borrowTenderCpn.setRecoverAccountYes(borrowTenderCpn.getRecoverAccountYes().add(recoverAccount));
         // 已收本金
@@ -618,9 +618,9 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         borrowTenderCpn.setRecoverAccountInterestWait(borrowTenderCpn.getRecoverAccountInterestWait().subtract(recoverInterest));
         int borrowTenderCnt = borrowClient.updateBorrowTenderCpn(borrowTenderCpn);
         if (borrowTenderCnt == 0) {
-            throw new RuntimeException("投资表(hyjf_borrow_tender_cpn)更新失败！" + "[优惠券投资编号：" + couponTenderNid + "]");
+            throw new RuntimeException("出借表(hyjf_borrow_tender_cpn)更新失败！" + "[优惠券出借编号：" + couponTenderNid + "]");
         }
-        // 更新优惠券投资还款表
+        // 更新优惠券出借还款表
         // 转账订单编号
         cr.setTransferId(orderId);
         // 已还款
@@ -664,9 +664,9 @@ public class CouponRepayServiceImpl implements CouponRepayService {
                 this.crRecoverPeriod(couponTenderNid, periodNow + 1);
             }
         }
-        accountWebList.setBorrowNid(borrowNid); // 投资编号
-        accountWebList.setUserId(tenderUserId); // 投资者
-        accountWebList.setAmount(Double.valueOf(recoverAccount.toString())); // 优惠券投资受益
+        accountWebList.setBorrowNid(borrowNid); // 出借编号
+        accountWebList.setUserId(tenderUserId); // 出借者
+        accountWebList.setAmount(Double.valueOf(recoverAccount.toString())); // 优惠券出借受益
         accountWebList.setType(CustomConstants.TYPE_OUT); // 类型1收入,2支出
 
         String tradeType = StringUtils.EMPTY;
@@ -688,11 +688,11 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         }
         accountWebList.setTradeType(tradeType); // 加息券回款
         String remark = "项目编号：" + borrowNid + "<br />优惠券:" + ct.getCouponUserCode();
-        accountWebList.setRemark(remark); // 投资编号
+        accountWebList.setRemark(remark); // 出借编号
         accountWebList.setCreateTime(nowTime);
         int accountWebListCnt = insertAccountWebList(accountWebList);
         if (accountWebListCnt == 0) {
-            throw new RuntimeException("网站收支记录(huiyingdai_account_web_list)更新失败！" + "[投资订单号：" + borrowTenderCpn.getNid() + "]");
+            throw new RuntimeException("网站收支记录(huiyingdai_account_web_list)更新失败！" + "[出借订单号：" + borrowTenderCpn.getNid() + "]");
         }
 
         // 添加红包账户明细
@@ -755,7 +755,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
     /**
      * 更新还款期
      *
-     * @param tenderNid 投资订单编号
+     * @param tenderNid 出借订单编号
      * @param period    期数
      */
     private void crRecoverPeriod(String tenderNid, int period) {
@@ -870,9 +870,9 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         transferExceptionLog.setRespcode(bankCallBean == null ? null : bankCallBean.getRetCode());
         // 交易金额
         transferExceptionLog.setTransAmt(transAmt);
-        // 投资人客户号
+        // 出借人客户号
         transferExceptionLog.setAccountId(accountId);
-        // 投资人编号
+        // 出借人编号
         transferExceptionLog.setUserId(userId);
         // 还款表（coupon_recover）id
         transferExceptionLog.setRecoverId(recoverId);
@@ -983,7 +983,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         AccountListVO accountList = new AccountListVO();
         // 转账订单编号
         accountList.setNid(orderId);
-        // 投资人
+        // 出借人
         accountList.setUserId(tenderUserId);
         accountList.setBankAwait(account.getBankAwait());
         accountList.setBankAwaitCapital(account.getBankAwaitCapital());
@@ -1005,7 +1005,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         accountList.setCheckStatus(0);
         accountList.setTradeStatus(1);
         accountList.setIsBank(1);
-        // 投资收入
+        // 出借收入
         accountList.setAmount(recoverAccount);
         // 1收入
         accountList.setType(1);
@@ -1021,13 +1021,13 @@ public class CouponRepayServiceImpl implements CouponRepayService {
         accountList.setTrade(trade);
         // 余额操作
         accountList.setTradeCode("balance");
-        // 投资人资金总额
+        // 出借人资金总额
         accountList.setTotal(account.getTotal());
-        // 投资人可用金额
+        // 出借人可用金额
         accountList.setBalance(account.getBalance());
-        // 投资人冻结金额
+        // 出借人冻结金额
         accountList.setFrost(account.getFrost());
-        // 投资人待收金额
+        // 出借人待收金额
         accountList.setAwait(account.getAwait());
         // 创建时间
         accountList.setCreateTime(GetDate.getNowTime10());
@@ -1053,7 +1053,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
     }
 
     /**
-     * 取得优惠券投资信息
+     * 取得优惠券出借信息
      *
      * @param couponTenderNid
      * @return
@@ -1086,7 +1086,7 @@ public class CouponRepayServiceImpl implements CouponRepayService {
     }
 
     /**
-     * 优惠券单独投资放款
+     * 优惠券单独出借放款
      *
      * @return
      */

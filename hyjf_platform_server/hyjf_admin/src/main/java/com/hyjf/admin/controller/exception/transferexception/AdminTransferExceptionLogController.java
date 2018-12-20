@@ -178,7 +178,7 @@ public class AdminTransferExceptionLogController extends BaseController {
                 jsonObject.put("BorrowTenderCpnVO",borrowTender);
                 //网站收支明细记录
                 AccountWebListVO accountWebList = new AccountWebListVO();
-                // 投资者
+                // 出借者
                 Integer userId=borrowTender.getUserId();
                 UserInfoVO userInfo=transferLogService.getUserInfoByUserId(userId);
                 if (Validator.isNotNull(userInfo)) {

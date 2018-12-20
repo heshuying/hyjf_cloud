@@ -37,7 +37,7 @@ import java.util.Map;
 import java.util.UUID;
 
 /**
- * 债转投资异常Service实现类
+ * 债转出借异常Service实现类
  *
  * @author jun
  * @since 20180619
@@ -57,11 +57,11 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
     private CsMessageClient amMongoClient;
 
     /**
-     * 处理债转投资异常
+     * 处理债转出借异常
      */
     @Override
     public void handle() {
-        logger.info("债转投资掉单异常处理开始...");
+        logger.info("债转出借掉单异常处理开始...");
         //查询债转承接掉单的数据
         List<CreditTenderLogVO> creditTenderLogs = amTradeClient.selectCreditTenderLogs();
         if (CollectionUtils.isNotEmpty(creditTenderLogs)){
@@ -71,7 +71,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                 String assignNid = creditTenderLog.getAssignNid();
                 Integer userId = creditTenderLog.getUserId();
                 String logOrderId = creditTenderLog.getLogOrderId();
-                // 根据承接订单号查询债转投资表
+                // 根据承接订单号查询债转出借表
                 List<CreditTenderVO> creditTenderList = this.amTradeClient.selectCreditTender(assignNid);
                 if (CollectionUtils.isNotEmpty(creditTenderList)) {
                     continue;
@@ -92,7 +92,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                             creditTenderLog.setStatus(9);
                             boolean tenderLogsFlag = this.amTradeClient.updateCreditTenderLog(creditTenderLog);
                             if(tenderLogsFlag) {
-                                logger.info("债转投资记录日志表creditTenderLog表更新成功，承接订单号编号：" + assignNid+"，应答码："+retCode);
+                                logger.info("债转出借记录日志表creditTenderLog表更新成功，承接订单号编号：" + assignNid+"，应答码："+retCode);
                             }
                         }
                         // 更新log表中的状态(有几个固定的状态，待确认)需将状态设置为9 end
@@ -121,7 +121,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                 	CreditTenderLogVO creditTenderLogVO = creditTenderLogVOs.get(0);
                                 	// 债转编号
                         			String creditNid = creditTenderLogVO.getCreditNid();
-                        			// 原始投资订单号
+                        			// 原始出借订单号
                         			String tenderOrderId = creditTenderLog.getCreditTenderNid();
                         			// 获取会转让标的列表
                                     borrowCreditList = this.amTradeClient.getBorrowCreditList(creditNid,sellerUserId,tenderOrderId);
@@ -194,7 +194,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                         params.put("userId", request.getUserId());
                                         // 认购本金
                                         params.put("accountDecimal", creditTenderLog.getAssignCapital());
-                                        // 投资时间
+                                        // 出借时间
                                         params.put("investTime", request.getNowTime());
                                         // 项目类型
                                         params.put("projectType", "汇转让");
@@ -202,7 +202,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                         String investProjectPeriod = request.getBorrowCreditList().get(0).getCreditTerm() + "天";
                                         params.put("investProjectPeriod", investProjectPeriod);
 
-                                        //根据investFlag标志位来决定更新哪种投资
+                                        //根据investFlag标志位来决定更新哪种出借
                                         params.put("investFlag", checkIsNewUserCanInvest(userId));
 
                                         //推送mq
@@ -218,7 +218,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                             params.put("id", utmRegVO.getId());
                                             
                                             params.put("accountDecimal", creditTenderLog.getAssignCapital());
-                                            // 投资时间
+                                            // 出借时间
                                             params.put("investTime", request.getNowTime());
                                             // 项目类型
                                             params.put("projectType", "汇转让");
@@ -237,7 +237,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                     // 发送法大大PDF处理MQ start
                                     this.sendFDDPdfToMQ(userId,creditTender.getBidNid(),creditTender.getAssignNid(),creditTender.getCreditNid(),creditTender.getCreditTenderNid());
                                     // 发送法大大PDF处理MQ end
-                                    logger.info("债转投资异常修复成功:承接订单号=" + creditTender.getAssignNid());
+                                    logger.info("债转出借异常修复成功:承接订单号=" + creditTender.getAssignNid());
                                 }else{
                                     continue;
                                 }
@@ -343,7 +343,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
         // 新的判断是否为新用户方法
         try {
             int total = amTradeClient.countNewUserTotal(userId);
-            logger.info("获取用户投资数量 userID {} 数量 {} ",userId,total);
+            logger.info("获取用户出借数量 userID {} 数量 {} ",userId,total);
             if (total == 0) {
                 return true;
             } else {

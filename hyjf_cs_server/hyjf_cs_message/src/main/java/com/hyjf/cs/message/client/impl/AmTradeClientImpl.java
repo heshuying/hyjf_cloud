@@ -33,7 +33,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 获取投资金额和预期金额
+     * 获取出借金额和预期金额
      * @param begin
      * @param end
      * @param userId

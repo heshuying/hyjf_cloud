@@ -19,7 +19,7 @@ public class SmsLog implements Serializable {
 
     private String ip;
 
-    @Indexed
+    // @Indexed dba维护索引
     private Integer posttime;
 
     private Integer status;

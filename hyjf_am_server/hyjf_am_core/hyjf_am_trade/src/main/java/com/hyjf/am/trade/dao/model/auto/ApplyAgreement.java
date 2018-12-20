@@ -47,7 +47,7 @@ public class ApplyAgreement implements Serializable {
     private Byte agreementNumber;
 
     /**
-     * 投资状态 0 全部；1申请中：2申请成功
+     * 出借状态 0 全部；1申请中：2申请成功
      *
      * @mbggenerated
      */

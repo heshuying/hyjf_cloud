@@ -35,7 +35,7 @@ import static com.hyjf.admin.common.util.ShiroConstants.PERMISSION_VIEW;
  */
 @RestController
 @RequestMapping("/hyjf-admin/exception/tendercancelexception")
-@Api(value = "异常中心-银行投资撤销异常",tags = "异常中心-银行投资撤销异常")
+@Api(value = "异常中心-银行出借撤销异常",tags = "异常中心-银行出借撤销异常")
 public class TenderCancelExceptionController extends BaseController {
 
     @Autowired
@@ -43,12 +43,12 @@ public class TenderCancelExceptionController extends BaseController {
     private static final String PERMISSIONS = "bidcancelexception";
 
     /**
-     * 查询银行投资撤销异常列表
+     * 查询银行出借撤销异常列表
      * @auth sunpeikai
      * @param request 筛选条件
      * @return
      */
-    @ApiOperation(value = "查询银行投资撤销异常list", notes = "查询银行投资撤销异常list")
+    @ApiOperation(value = "查询银行出借撤销异常list", notes = "查询银行出借撤销异常list")
     @PostMapping(value = "/searchlist")
     @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSION_VIEW)
     public AdminResult<ListResult<BorrowTenderTmpVO>> searchList(@RequestBody TenderCancelExceptionRequest request){
@@ -75,20 +75,20 @@ public class TenderCancelExceptionController extends BaseController {
         String borrowNid = request.getBorrowNid();
         BorrowAndInfoVO borrow = tenderCancelExceptionService.getBorrowByBorrowNid(borrowNid);
         Integer status = borrow.getStatus();
-        if (status!=null && status == 2) {//投资中标的
-            return new AdminResult(SUCCESS,"投资中标的,可撤销！");
+        if (status!=null && status == 2) {//出借中标的
+            return new AdminResult(SUCCESS,"出借中标的,可撤销！");
         }else{
-            return new AdminResult(FAIL,"该标的已经不是投资中的数据,请谨慎操作！是否继续撤销?");
+            return new AdminResult(FAIL,"该标的已经不是出借中的数据,请谨慎操作！是否继续撤销?");
         }
     }
 
     /**
-     * 投资撤销异常处理
+     * 出借撤销异常处理
      * @auth sunpeikai
      * @param
      * @return
      */
-    @ApiOperation(value = "投资撤销异常处理", notes = "投资撤销异常处理")
+    @ApiOperation(value = "出借撤销异常处理", notes = "出借撤销异常处理")
     @PostMapping(value = "/handletendercancelexception")
     @AuthorityAnnotation(key = PERMISSIONS,value = PERMISSIONS_BIDCANCEL)
     public AdminResult handleTenderCancelException(HttpServletRequest request, @RequestBody TenderCancelExceptionRequest tenderCancelExceptionRequest){

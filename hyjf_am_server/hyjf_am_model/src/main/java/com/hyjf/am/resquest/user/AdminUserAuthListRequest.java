@@ -47,7 +47,7 @@ public class AdminUserAuthListRequest extends BasePage {
 	@ApiModelProperty(value = "投标授权时间")
 	private String autoCreateTime;
 
-	@ApiModelProperty(value = "自动投资授权过期时间")
+	@ApiModelProperty(value = "自动出借授权过期时间")
 	private String autoInvesEndTime;
 
 	@ApiModelProperty(value = "投标订单号")
@@ -65,7 +65,7 @@ public class AdminUserAuthListRequest extends BasePage {
 	@ApiModelProperty(value = "签约到期日结束时间")
 	private String investEndTimeEnd;
 
-	@ApiModelProperty(value = "同步类型(1自动投资授权,2债转授权)")
+	@ApiModelProperty(value = "同步类型(1自动出借授权,2债转授权)")
 	private Integer type;
 
 	//默认为true ,获取全部数据，为false时，获取部分数据

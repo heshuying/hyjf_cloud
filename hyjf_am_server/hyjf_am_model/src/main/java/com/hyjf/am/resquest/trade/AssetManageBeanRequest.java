@@ -10,11 +10,11 @@ public class AssetManageBeanRequest extends BasePage {
     // 用户id
     @ApiModelProperty(value = "用户id")
     public Integer userId;
-    // 投资开始值
-    @ApiModelProperty(value = "投资开始值")
+    // 出借开始值
+    @ApiModelProperty(value = "出借开始值")
     public String startDate;
-    // 投资结束值
-    @ApiModelProperty(value = "投资结束值")
+    // 出借结束值
+    @ApiModelProperty(value = "出借结束值")
     public String endDate;
     //排序字段标识
     @ApiModelProperty(value = "排序字段标识")

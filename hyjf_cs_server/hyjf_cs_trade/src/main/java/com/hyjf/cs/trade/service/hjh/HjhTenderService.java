@@ -27,21 +27,21 @@ public interface HjhTenderService extends BaseTradeService {
     public WebResult<Map<String, Object>> joinPlan(TenderRequest request);
 
     /**
-     * 根据投资项目id历史回报
+     * 根据出借项目id历史回报
      * @param tender
      * @return
      */
     WebResult<TenderInfoResult> getInvestInfo(TenderRequest tender);
 
     /**
-     * App端获取计划投资信息
+     * App端获取计划出借信息
      * @param tender
      * @return
      */
     AppInvestInfoResultVO getInvestInfoApp(TenderRequest tender);
 
     /**
-     * 检查计划投资的参数
+     * 检查计划出借的参数
      * @param tender
      */
     Map<String, Object>  checkPlan(TenderRequest tender);
@@ -60,7 +60,7 @@ public interface HjhTenderService extends BaseTradeService {
     void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException;
 
     /**
-     * 检查计划投资的合规自查
+     * 检查计划出借的合规自查
      *
      * @param request
      */

@@ -62,28 +62,28 @@ public class HjhAccede implements Serializable {
     private String inviteUserName;
 
     /**
-     * 推荐人用户属性（投资时）
+     * 推荐人用户属性（出借时）
      *
      * @mbggenerated
      */
     private Integer inviteUserAttribute;
 
     /**
-     * 分公司(投资时)
+     * 分公司(出借时)
      *
      * @mbggenerated
      */
     private String inviteUserRegionname;
 
     /**
-     * 部门(投资时)
+     * 部门(出借时)
      *
      * @mbggenerated
      */
     private String inviteUserBranchname;
 
     /**
-     * 团队(投资时)
+     * 团队(出借时)
      *
      * @mbggenerated
      */
@@ -97,7 +97,7 @@ public class HjhAccede implements Serializable {
     private BigDecimal accedeAccount;
 
     /**
-     * 已投资金额
+     * 已出借金额
      *
      * @mbggenerated
      */
@@ -111,7 +111,7 @@ public class HjhAccede implements Serializable {
     private Integer client;
 
     /**
-     *  0自动投标中 2自动投标成功 3锁定中 5退出中 7已退出 9自动投资异常
+     *  0自动投标中 2自动投标成功 3锁定中 5退出中 7已退出 9自动出借异常
      *
      * @mbggenerated
      */
@@ -293,7 +293,7 @@ public class HjhAccede implements Serializable {
     private BigDecimal actualApr;
 
     /**
-     * 投资笔数
+     * 出借笔数
      *
      * @mbggenerated
      */
@@ -321,7 +321,7 @@ public class HjhAccede implements Serializable {
     private BigDecimal lqdServiceApr;
 
     /**
-     * 投资服务费率
+     * 出借服务费率
      *
      * @mbggenerated
      */

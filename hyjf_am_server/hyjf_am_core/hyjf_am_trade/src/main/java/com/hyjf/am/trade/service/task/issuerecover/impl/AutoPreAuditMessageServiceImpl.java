@@ -126,7 +126,7 @@ public class AutoPreAuditMessageServiceImpl extends BaseServiceImpl implements A
 
             HjhPlanAsset hjhPlanAssetnew = new HjhPlanAsset();
             hjhPlanAssetnew.setId(hjhPlanAsset.getId());
-            hjhPlanAssetnew.setStatus(7);//投资中
+            hjhPlanAssetnew.setStatus(7);//出借中
             //获取当前时间
             hjhPlanAssetnew.setUpdateTime(new Date());
             hjhPlanAssetnew.setUpdateUserId(1);

@@ -69,13 +69,13 @@ public interface HjhDebtCreditService {
     HjhDebtCreditTenderVO getHjhDebtCreditTenderByAssignOrderId(String assignOrderId);
 
     /**
-     *  查询汇计划的投资记录
+     *  查询汇计划的出借记录
      * @date 2018/8/1 14:00
      */
     List<UserHjhInvistListCustomize> getUserHjhInvestList(Map<String,Object> params);
 
     /**
-     * 查询汇计划的投资记录数目
+     * 查询汇计划的出借记录数目
      * @author zhangyk
      * @date 2018/11/22 16:08
      */

@@ -149,11 +149,11 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
         if(couponUserCode == null){
             throw new Exception("未查询到对应的CouponTender记录，[tender_nid：" + recover.getTenderId() + "]");
         }
-        //取得优惠券投资信息
+        //取得优惠券出借信息
         BorrowTenderCpnVO borrowTender = (BorrowTenderCpnVO) jsonObject.get("BorrowTenderCpnVO");
         //BorrowTenderCpn borrowTender = this.getCouponTenderInfo(recover.getTenderId());
         if(borrowTender == null) {
-            throw new Exception("未查询到对应的优惠券投资记录，[tender_nid：" + recover.getTenderId() + "]");
+            throw new Exception("未查询到对应的优惠券出借记录，[tender_nid：" + recover.getTenderId() + "]");
         }
 
         boolean isMonth = false;
@@ -187,7 +187,7 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
         CouponRecoverCustomize currentRecover = null;
         currentRecover = this.getCurrentCouponRecover(recover.getTenderId(),Integer.parseInt(periodNow));
         if (currentRecover == null) {
-            throw new Exception("优惠券还款数据不存在。[借款编号：" + borrowTender.getBorrowNid() + "]，" + "[优惠券投资编号：" + recover.getTenderId() + "]");
+            throw new Exception("优惠券还款数据不存在。[项目编号：" + borrowTender.getBorrowNid() + "]，" + "[优惠券出借编号：" + recover.getTenderId() + "]");
         }
 
         // 应还利息
@@ -203,13 +203,13 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
         // 判断该收支明细是否存在时,跳出本次循环
         if (countAccountListByNidCoupon(transfer.getOrderId()) == 0) {
 
-            // 更新账户信息(投资人)
+            // 更新账户信息(出借人)
             Account account = new Account();
 
             int accountCnt;
-            // 如果是计划类投资
+            // 如果是计划类出借
             if(borrowTender.getTenderType() == 3 ){
-                // 更新账户信息(投资人)
+                // 更新账户信息(出借人)
                 account.setUserId(transfer.getUserId());
 
                 account.setBankBalance(recoverAccount); // 账户余额
@@ -227,33 +227,33 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
             }else{
                 // 直投类
                 account.setUserId(transfer.getUserId());
-                account.setBankTotal(BigDecimal.ZERO);// 投资人资金总额 +利息
-                account.setBankFrost(BigDecimal.ZERO);// 投资人冻结金额+投资金额(等额本金时投资金额可能会大于计算出的本金之和)
+                account.setBankTotal(BigDecimal.ZERO);// 出借人资金总额 +利息
+                account.setBankFrost(BigDecimal.ZERO);// 出借人冻结金额+出借金额(等额本金时出借金额可能会大于计算出的本金之和)
                 account.setBankBalance(recoverAccount); // 账户余额
-                account.setBankAwait(recoverAccount);// 投资人待收金额+利息+ 本金
-                account.setBankAwaitCapital(BigDecimal.ZERO);// 投资人待收本金
-                account.setBankAwaitInterest(recoverAccount);// 投资人待收利息
+                account.setBankAwait(recoverAccount);// 出借人待收金额+利息+ 本金
+                account.setBankAwaitCapital(BigDecimal.ZERO);// 出借人待收本金
+                account.setBankAwaitInterest(recoverAccount);// 出借人待收利息
                 account.setBankInterestSum(recoverAccount);
-                account.setBankInvestSum(BigDecimal.ZERO);// 投资人累计投资
+                account.setBankInvestSum(BigDecimal.ZERO);// 出借人累计出借
                 account.setBankFrostCash(BigDecimal.ZERO);// 江西银行冻结金额
 
                 accountCnt = this.adminAccountCustomizeMapper.updateOfRepayTender(account);
             }
 
             if (accountCnt == 0) {
-                throw new Exception("投资人资金记录(huiyingdai_account)更新失败！" + "[优惠券投资编号：" + recover.getTenderId() + "]");
+                throw new Exception("出借人资金记录(huiyingdai_account)更新失败！" + "[优惠券出借编号：" + recover.getTenderId() + "]");
             }
-            // 取得账户信息(投资人)
+            // 取得账户信息(出借人)
             account  = getAccount(transfer.getUserId());
             if (account == null) {
-                throw new Exception("投资人账户信息不存在。[投资人ID：" + transfer.getUserId() + "]，" + "[优惠券投资编号：" + recover.getTenderId() + "]");
+                throw new Exception("出借人账户信息不存在。[出借人ID：" + transfer.getUserId() + "]，" + "[优惠券出借编号：" + recover.getTenderId() + "]");
             }
 
             // 写入收支明细
             AccountList accountList = new AccountList();
             // 转账订单编号
             accountList.setNid(transfer.getOrderId());
-            // 投资人
+            // 出借人
             accountList.setUserId(transfer.getUserId());
             accountList.setBankAwait(account.getBankAwait());
             accountList.setBankAwaitCapital(account.getBankAwaitCapital());
@@ -282,7 +282,7 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
             // 操作者
             accountList.setOperator(CustomConstants.OPERATOR_AUTO_REPAY);
 
-            // 投资收入
+            // 出借收入
             accountList.setAmount(transfer.getTransAmt());
             // 1收入
             accountList.setType(1);
@@ -309,7 +309,7 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
             accountList.setWeb(0); // PC
             int accountListCnt = insertAccountList(accountList);
             if (accountListCnt == 0) {
-                throw new Exception("收支明细(huiyingdai_account_list)写入失败！" + "[优惠券投资编号：" + recover.getTenderId() + "]");
+                throw new Exception("收支明细(huiyingdai_account_list)写入失败！" + "[优惠券出借编号：" + recover.getTenderId() + "]");
             }
         }
 
@@ -327,10 +327,10 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
         borrowTender.setRecoverAccountInterestWait(borrowTender.getRecoverAccountInterestWait().subtract(recoverInterest));
         int borrowTenderCnt = borrowTenderCpnMapper.updateByPrimaryKeySelective(CommonUtils.convertBean(borrowTender,BorrowTenderCpn.class));
         if (borrowTenderCnt == 0) {
-            throw new Exception("投资表(huiyingdai_borrow_tender)更新失败！" + "[优惠券投资编号：" + recover.getTenderId() + "]");
+            throw new Exception("出借表(huiyingdai_borrow_tender)更新失败！" + "[优惠券出借编号：" + recover.getTenderId() + "]");
         }
         CouponRecover crTemp = this.couponRecoverMapper.selectByPrimaryKey(recover.getId());
-        // 更新优惠券投资还款表
+        // 更新优惠券出借还款表
         CouponRecover cr = new CouponRecover();
         cr.setId(recover.getId());
         // 转账订单编号
@@ -383,9 +383,9 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
             }
         }
 
-        accountWebList.setBorrowNid(borrowTender.getBorrowNid()); // 投资编号
-        accountWebList.setUserId(borrowTender.getUserId()); // 投资者
-        accountWebList.setAmount(Double.valueOf(transfer.getTransAmt().toString())); // 优惠券投资受益
+        accountWebList.setBorrowNid(borrowTender.getBorrowNid()); // 出借编号
+        accountWebList.setUserId(borrowTender.getUserId()); // 出借者
+        accountWebList.setAmount(Double.valueOf(transfer.getTransAmt().toString())); // 优惠券出借受益
         accountWebList.setType(CustomConstants.TYPE_OUT); // 类型1收入,2支出
         String remark = "";
         if(currentRecover.getCouponType()==1){
@@ -406,7 +406,7 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
 
         }
         remark = "项目编号："+borrowTender.getBorrowNid()+"<br />优惠券:"+couponUserCode;
-        accountWebList.setRemark(remark); // 投资编号
+        accountWebList.setRemark(remark); // 出借编号
         accountWebList.setCreateTime(GetDate.getNowTime10());
 
         commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
@@ -504,7 +504,7 @@ public class TransferExceptionLogServiceImpl extends BaseServiceImpl implements 
     }
 
     /**
-     * 取得优惠券投资信息
+     * 取得优惠券出借信息
      * @param couponTenderNid
      * @return
      */

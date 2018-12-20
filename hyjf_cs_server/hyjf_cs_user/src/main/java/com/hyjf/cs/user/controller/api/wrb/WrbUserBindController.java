@@ -128,7 +128,7 @@ public class WrbUserBindController extends BaseUserController {
 						accountId = account.getAccount();
 					}
 					String loginsign = SecretUtil.createToken(userid, users.getUsername(), accountId);
-					//登录成功之后风车理财的特殊标记，供后续投资使用
+					//登录成功之后风车理财的特殊标记，供后续出借使用
 					CookieUtils.addCookie(request, response, CustomConstants.TENDER_FROM_TAG,
 							CustomConstants.WRB_CHANNEL_CODE);
 					RedisUtils.del("loginFrom"+userid);
@@ -274,7 +274,7 @@ public class WrbUserBindController extends BaseUserController {
             return jsonObj;
         }
         String sign = baseResultBean.getSign();
-        //登录成功之后风车理财的特殊标记，供后续投资使用
+        //登录成功之后风车理财的特殊标记，供后续出借使用
         CookieUtils.addCookie(request, response, CustomConstants.TENDER_FROM_TAG,
                 CustomConstants.WRB_CHANNEL_CODE);
         // 授权
@@ -365,7 +365,7 @@ public class WrbUserBindController extends BaseUserController {
             result.setEnum(ResultEnum.SUCCESS);
             result.setSign(sign);
             if (StringUtils.isNotBlank(env)) {
-                //登录成功之后风车理财的特殊标记，供后续投资使用
+                //登录成功之后风车理财的特殊标记，供后续出借使用
                 RedisUtils.del("loginFrom" + userVO.getUserId());
                 RedisUtils.set("loginFrom" + userVO.getUserId(), env, 1800);
             }

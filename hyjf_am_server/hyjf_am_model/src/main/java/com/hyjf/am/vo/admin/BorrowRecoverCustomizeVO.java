@@ -33,15 +33,15 @@ public class BorrowRecoverCustomizeVO extends BaseVO implements Serializable {
      */
     private String planNid;
     /**
-     * 投资订单号
+     * 出借订单号
      */
     private String orderNum;
     /**
-     * 投资人
+     * 出借人
      */
     private String username;
     /**
-     * 投资金额
+     * 出借金额
      */
     private String account;
     /**
@@ -49,7 +49,7 @@ public class BorrowRecoverCustomizeVO extends BaseVO implements Serializable {
      */
     private String accountYes;
     /**
-     * 投资金额
+     * 出借金额
      */
     private String accountPrice;
     /**
@@ -81,7 +81,7 @@ public class BorrowRecoverCustomizeVO extends BaseVO implements Serializable {
      */
     private String isRecover;
     /**
-     * 投资时间
+     * 出借时间
      */
     private String timeRecover;
     /**
@@ -115,12 +115,12 @@ public class BorrowRecoverCustomizeVO extends BaseVO implements Serializable {
     private String borrowStyleName;
 
     /**
-     * 投资人用户名
+     * 出借人用户名
      */
     private String tenderUsername;
 
     /**
-     * 投资人用户ID
+     * 出借人用户ID
      */
     private String tenderUserId;
     /**
@@ -129,34 +129,34 @@ public class BorrowRecoverCustomizeVO extends BaseVO implements Serializable {
     private String loanBatchNo;
 
     /**
-     * 推荐人ID（投资时）
+     * 推荐人ID（出借时）
      */
     private String tenderReferrerUserId;
     /**
-     * 投资人用户属性（投资时）
+     * 出借人用户属性（出借时）
      */
     private String tenderUserAttribute;
     /**
-     * 推荐人用户属性（投资时）
+     * 推荐人用户属性（出借时）
      */
     private String inviteUserAttribute;
     /**
-     * 推荐人（投资时）
+     * 推荐人（出借时）
      */
     private String tenderReferrerUsername;
 
     /**
-     * 一级分部（投资时）
+     * 一级分部（出借时）
      */
     private String departmentLevel1Name;
 
     /**
-     * 二级分部（投资时）
+     * 二级分部（出借时）
      */
     private String departmentLevel2Name;
 
     /**
-     * 团队（投资时）
+     * 团队（出借时）
      */
     private String teamName;
 

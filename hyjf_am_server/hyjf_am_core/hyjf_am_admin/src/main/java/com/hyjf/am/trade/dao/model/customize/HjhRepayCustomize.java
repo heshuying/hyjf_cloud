@@ -80,7 +80,7 @@ public class HjhRepayCustomize implements Serializable {
     private String recommendAttr;
 
     /**
-     * 推荐人部门信息(投资时)
+     * 推荐人部门信息(出借时)
      */
     private String inviteUserName;
     private String inviteUserAttributeName;
@@ -110,7 +110,7 @@ public class HjhRepayCustomize implements Serializable {
      */
     private String lqdServiceApr;
     /*
-     * 投资服务费率
+     * 出借服务费率
      */
     private String investServiceApr;
     /*

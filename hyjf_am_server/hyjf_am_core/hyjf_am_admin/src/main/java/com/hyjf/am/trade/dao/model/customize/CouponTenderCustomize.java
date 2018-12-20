@@ -18,7 +18,7 @@ public class CouponTenderCustomize implements Serializable {
     private static final long serialVersionUID = 1L;
     //主键id
     private Integer id;
-    //投资订单号
+    //出借订单号
     private String orderId;
     //用户名
     private String username;
@@ -38,7 +38,7 @@ public class CouponTenderCustomize implements Serializable {
     private String borrowNid;
     //状态
     private String receivedFlg;
-    //投资金额
+    //出借金额
     private BigDecimal account;
     //预期收益
     private BigDecimal recoverAccountAll;
@@ -46,7 +46,7 @@ public class CouponTenderCustomize implements Serializable {
     private BigDecimal recoverAccountInterestWait;
 
 
-    //投资平台
+    //出借平台
     private String operatingDeck;
     //年化利率
     private String borrowApr;

@@ -38,13 +38,13 @@ public class AdminHjhPlanVO extends BaseVO implements Serializable{
 	@ApiModelProperty(value = "天/月")
     private BigDecimal expectApr;
 
-	@ApiModelProperty(value = "最小投资额度")
+	@ApiModelProperty(value = "最小出借额度")
     private BigDecimal minInvestment;
 
-	@ApiModelProperty(value = "最大投资额度")
+	@ApiModelProperty(value = "最大出借额度")
     private BigDecimal maxInvestment;
 
-	@ApiModelProperty(value = "投资增量")
+	@ApiModelProperty(value = "出借增量")
     private BigDecimal investmentIncrement;
 	
 	@ApiModelProperty(value = "剩余可投金额(开放额度)")
@@ -53,7 +53,7 @@ public class AdminHjhPlanVO extends BaseVO implements Serializable{
 	@ApiModelProperty(value = "待还总额")
     private BigDecimal repayWaitAll;
 
-	@ApiModelProperty(value = "计划投资状态")
+	@ApiModelProperty(value = "计划出借状态")
     private Integer planInvestStatus;
 
 	@ApiModelProperty(value = "计划显示状态")
@@ -86,7 +86,7 @@ public class AdminHjhPlanVO extends BaseVO implements Serializable{
 	@ApiModelProperty(value = "已还本金")
     private BigDecimal planRepayCapital;
 
-	@ApiModelProperty(value = "最小自动投资笔数")
+	@ApiModelProperty(value = "最小自动投标笔数")
     private Integer minInvestCounts;
 
     private Integer delFlag;

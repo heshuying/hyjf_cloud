@@ -10,15 +10,15 @@ import java.math.BigDecimal;
  * @version WrbBorrowTenderCustomize, v0.1 2018/9/25 11:40
  */
 public class WrbBorrowTenderCustomize {
-    // 投资订单号
+    // 出借订单号
     private String nid;
-    // 投资用户id
+    // 出借用户id
     private String userId;
-    // 投资用户名
+    // 出借用户名
     private String username;
-    // 投资金额
+    // 出借金额
     private BigDecimal account;
-    //投资时间
+    //出借时间
     private String investTime;
 
     public String getNid() {

@@ -23,7 +23,7 @@ public interface UserauthService {
 	 * 调银行api拿用户数据(同步用户授权状态用)
 	 * @auth sunpeikai
 	 * @param userId 用户id
-	 * @param type 1自动投资授权  2债转授权
+	 * @param type 1自动出借授权  2债转授权
 	 * @return
 	 */
 	BankCallBean getUserAuthQuery(Integer userId, String type);
@@ -107,7 +107,7 @@ public interface UserauthService {
 	public int isDismissRePay(int userid);
 
 	/**
-	 * 投资授权解约更新
+	 * 出借授权解约更新
 	 * 
 	 * @param userId
 	 */
@@ -123,7 +123,7 @@ public interface UserauthService {
 	void updateCancelCreditAuth(int userId);
     /**
     *
-    * 投资授权解约
+    * 出借授权解约
     * @author sunss
     * @return
     */

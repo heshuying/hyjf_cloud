@@ -155,7 +155,7 @@ public class HjhDebtCreditController extends BaseController {
 
 
     /**
-     * 获取hjh投资列表信息
+     * 获取hjh出借列表信息
      * @return
      */
     @PostMapping("/getUserHjhInvestList")
@@ -169,7 +169,7 @@ public class HjhDebtCreditController extends BaseController {
     }
 
     /**
-     * 获取hjh投资列表信息count
+     * 获取hjh出借列表信息count
      * @return
      */
     @PostMapping("/getUserHjhInvestCount")

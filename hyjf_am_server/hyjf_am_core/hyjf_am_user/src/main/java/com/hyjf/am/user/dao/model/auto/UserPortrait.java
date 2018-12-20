@@ -70,7 +70,7 @@ public class UserPortrait implements Serializable {
     private BigDecimal interestSum;
 
     /**
-     * 累计年化投资金额
+     * 累计年化出借金额
      *
      * @mbggenerated
      */
@@ -126,7 +126,7 @@ public class UserPortrait implements Serializable {
     private Integer lastWithdrawTime;
 
     /**
-     * 同时投资平台数
+     * 同时出借平台数
      *
      * @mbggenerated
      */
@@ -161,7 +161,7 @@ public class UserPortrait implements Serializable {
     private String addWechat;
 
     /**
-     * 投资进程
+     * 出借进程
      *
      * @mbggenerated
      */
@@ -231,7 +231,7 @@ public class UserPortrait implements Serializable {
     private Integer inviteRecharge;
 
     /**
-     * 邀约投资客户数
+     * 邀约出借客户数
      *
      * @mbggenerated
      */

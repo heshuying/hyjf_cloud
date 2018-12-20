@@ -49,7 +49,7 @@ public interface AuthService extends BaseTradeService {
     Integer checkAuthExpire(Integer userId, String txcode);
     /**
      * 
-     * 检查自动投资授权状态
+     * 检查自动出借授权状态
      * @author pcc
      * @param userId
      * @return

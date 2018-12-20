@@ -79,7 +79,7 @@
 		CONCAT(#{host},'?creditNid=',credit_nid) AS borrow_url
 	</sql>
 	
-	<!-- 获取可转让的投资查询条件 -->
+	<!-- 获取可转让的出借查询条件 -->
 	<sql id="TenderToCredit_Where_Clause">
 		<where>
 			<if test="borrowNid != null and borrowNid != ''">
@@ -172,7 +172,7 @@
 	</resultMap>
 
 
-	<!-- 获取可转让的投资返回MAP -->
+	<!-- 获取可转让的出借返回MAP -->
 	<resultMap id="selectTenderToCreditListMap" type="com.hyjf.am.trade.dao.model.customize.AppTenderToCreditListCustomize">
 		<!-- 项目编号-->
 		<result column="borrow_nid" property="bidNid" jdbcType="VARCHAR" />
@@ -188,7 +188,7 @@
 		<!-- 立即转让URL -->
 		<result column="tender_credit_url" property="tenderCreditUrl" jdbcType="VARCHAR" />
 	</resultMap>
-	<!-- 获取可转让的投资列表 -->
+	<!-- 获取可转让的出借列表 -->
 	<select id="selectTenderToCreditList" resultMap="selectTenderToCreditListMap" parameterType="java.util.Map">
 		SELECT
 		hb.borrow_nid AS borrow_nid,
@@ -219,7 +219,7 @@
 	</select>
 
 
-	<!-- 获取投资记录的投资件数 -->
+	<!-- 获取出借记录的出借件数 -->
 	<select id="countTenderCreditInvestRecordTotal" resultType="java.lang.Integer" parameterType="Map">
 		SELECT
 		COUNT(*)
@@ -231,7 +231,7 @@
 	</select>
 
 
-	<!-- 获取投资记录列表 -->
+	<!-- 获取出借记录列表 -->
 	<resultMap id="AppCreditTenderInvestMap" type="com.hyjf.am.trade.dao.model.customize.AppTenderCreditInvestListCustomize">
 		<id column="user_name" property="userName" jdbcType="VARCHAR" />
 		<result column="account" property="account" jdbcType="VARCHAR" />

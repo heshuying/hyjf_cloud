@@ -10,7 +10,7 @@ import java.math.BigDecimal;
  * @since 20180620
  */
 public class CreditTenderResponse extends Response<CreditTenderVO> {
-    /** 汇转让投资金额 */
+    /** 汇转让出借金额 */
     private BigDecimal hzrTenderPrice;
 
     public BigDecimal getHzrTenderPrice() {

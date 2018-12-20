@@ -34,7 +34,7 @@ import java.math.BigDecimal;
 import java.util.*;
 
 /**
- * 自动投资
+ * 自动出借
  *
  * @author liubin
  * @version AutoTenderServiceImpl, v0.1 2018/6/28 21:26
@@ -73,10 +73,10 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
     protected final String ASSIGN_PERIOD_REPAY_LATE_INTEREST = "assignPeriodRepayLateInterest";
     // 承接服务费
     protected final String SERVICE_FEE = "serviceFee";
-    // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
+    // add 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 start
     // 承接服务费率
     protected final String SERVICE_APR = "serviceApr";
-    // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
+    // add 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 end
     /**
      * 出让标识
      */
@@ -143,7 +143,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
     }
 
     /**
-     * 删除 自动投资临时表
+     * 删除 自动出借临时表
      *
      * @param borrowNid
      * @param hjhAccede
@@ -163,7 +163,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
     }
 
     /**
-     * 银行自动投资成功后，更新投资数据
+     * 银行自动投标成功后，更新出借数据
      *
      * @param borrowNid
      * @param accedeOrderId
@@ -183,21 +183,21 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         //先插入冻结表
         insertFreezeList(borrow, hjhAccede, bean);
 
-        // 判定该笔投资是投资还是复投
+        // 判定该笔出借是出借还是复投
         String hjhProcess = null;
         if (hjhAccede.getOrderStatus() == 0) {
-            // 投资
+            // 出借
             hjhProcess = CustomConstants.HJH_PROCESS_B;
         } else {
             // 复投
             hjhProcess = CustomConstants.HJH_PROCESS_BF;
         }
-        // 汇计划重算更新用户账户信息表(投资人)
+        // 汇计划重算更新用户账户信息表(出借人)
         this.updateAccountForHjh(hjhProcess, hjhAccede.getUserId(), accountDecimal, null);
-        // 汇计划重算更新汇计划加入明细表(投资人)
+        // 汇计划重算更新汇计划加入明细表(出借人)
         this.updateHjhAccedeForHjh(hjhProcess, hjhAccede.getId(), accountDecimal, null, null);
 
-        // 投资表
+        // 出借表
         insertBorrowTender(borrow, hjhAccede, bean);
 
         // 交易明细
@@ -249,11 +249,11 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
      */
     private boolean insertFreezeList(Borrow borrow, HjhAccede hjhAccede, BankCallBean bean) {
 
-        String accountId = bean.getAccountId();// 获取投资用户的投资客户号
-        Integer userId = hjhAccede.getUserId();// 投资人id
+        String accountId = bean.getAccountId();// 获取出借用户的出借客户号
+        Integer userId = hjhAccede.getUserId();// 出借人id
         String txAmount = bean.getTxAmount();// 借款金额
         String orderId = bean.getOrderId();// 订单id
-        String retCode = bean.getRetCode();// 投资结果返回码
+        String retCode = bean.getRetCode();// 出借结果返回码
         String borrowNid = borrow.getBorrowNid();// 项目编号
         BigDecimal accountDecimal = new BigDecimal(txAmount);// 冻结前验证
 
@@ -278,7 +278,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
     }
 
     /**
-     * 插入投资表
+     * 插入出借表
      *
      * @param borrow
      * @param hjhAccede
@@ -289,13 +289,13 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         int nowTime = GetDate.getNowTime10();
         String ip = bean.getLogIp();// 操作ip
         int client = hjhAccede.getClient();// 操作平台
-//		String accountId = bean.getAccountId();// 获取投资用户的投资客户号
-        Integer userId = hjhAccede.getUserId();// 投资人id
+//		String accountId = bean.getAccountId();// 获取出借用户的出借客户号
+        Integer userId = hjhAccede.getUserId();// 出借人id
         String txAmount = bean.getTxAmount();// 借款金额
         String orderId = bean.getOrderId();// 订单id
         String orderDate = bean.getLogOrderDate(); // 订单日期
-//		String retCode = bean.getRetCode();// 投资结果返回码
-        String authCode = bean.getAuthCode();// 投资结果授权码
+//		String retCode = bean.getRetCode();// 出借结果返回码
+        String authCode = bean.getAuthCode();// 出借结果授权码
         String borrowNid = borrow.getBorrowNid();// 项目编号
         String borrowStyle = borrow.getBorrowStyle();// 项目的还款方式
 //		int projectType = borrow.getProjectType();// 项目类型
@@ -321,17 +321,17 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
             }
         }
 
-        Integer tenderType = null;//投资类型 0投资1复投
+        Integer tenderType = null;//出借类型 0出借1复投
         if (hjhAccede.getOrderStatus() == 0) {
             //0自动投标中
             tenderType = 0;
         } else {
-            //2自动投资成功或者3锁定中
+            //2自动投标成功或者3锁定中
             tenderType = 1;
         }
 
         BorrowTender borrowTender = new BorrowTender();
-        borrowTender.setTenderType(tenderType);//投资类型 0投资1复投
+        borrowTender.setTenderType(tenderType);//出借类型 0出借1复投
         borrowTender.setAccedeOrderId(accedeOrderId);//计划关联字段
         borrowTender.setAccount(accountDecimal);
         borrowTender.setBorrowNid(borrowNid);
@@ -356,12 +356,12 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         borrowTender.setUserName(hjhAccede.getUserName());
         borrowTender.setBorrowUserId(borrow.getUserId());
         borrowTender.setBorrowUserName(borrow.getBorrowUserName());
-        // 投资人信息
+        // 出借人信息
         RUser rUser = rUserMapper.selectByPrimaryKey(userId);
         if (rUser != null) {
-            // 投资用户名
+            // 出借用户名
             borrowTender.setUserName(rUser.getUsername());
-            // 获取投资人属性
+            // 获取出借人属性
             borrowTender.setTenderUserAttribute(rUser.getAttribute());
             // 获取推荐人信息
             RUser refUser = this.getRefUserByTenderUserId(rUser);
@@ -382,14 +382,14 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
             }
         }
         borrowTender.setClient(client);
-        borrowTender.setInvestType(2); //投资类型 0手动投标 1预约投标 2自动投标
-        // 单笔投资的融资服务费
+        borrowTender.setInvestType(2); //出借类型 0手动投标 1预约投标 2自动投标
+        // 单笔出借的放款服务费
         borrowTender.setLoanFee(perService);
-        //投资授权码
+        //出借授权码
         if (StringUtils.isNotBlank(authCode)) {
             borrowTender.setAuthCode(authCode);
         }
-        borrowTender.setRemark("自动投资");
+        borrowTender.setRemark("自动出借");
         boolean trenderFlag = borrowTenderMapper.insertSelective(borrowTender) > 0 ? true : false;
         if (!trenderFlag) {
             throw new RuntimeException("borrowtender表更新失败 " + orderId);
@@ -422,8 +422,8 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
     private boolean insertAccountList(Borrow borrow, HjhAccede hjhAccede, BankCallBean bean) {
 
         String ip = bean.getLogIp();// 操作ip
-        String accountId = bean.getAccountId();// 获取投资用户的投资客户号
-        Integer userId = Integer.parseInt(bean.getLogUserId());// 投资人id
+        String accountId = bean.getAccountId();// 获取出借用户的出借客户号
+        Integer userId = Integer.parseInt(bean.getLogUserId());// 出借人id
         String txAmount = bean.getTxAmount();// 借款金额
         String orderId = bean.getOrderId();// 订单id
         String borrowNid = borrow.getBorrowNid();// 项目编号
@@ -492,12 +492,12 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
     }
 
     private boolean updateBorrowFull(Borrow borrow, HjhAccede hjhAccede, BankCallBean bean) {
-        Integer userId = Integer.parseInt(bean.getLogUserId());// 投资人id
+        Integer userId = Integer.parseInt(bean.getLogUserId());// 出借人id
         String orderId = bean.getOrderId();// 订单id
         String borrowNid = borrow.getBorrowNid();// 项目编号
         Integer borrowId = borrow.getId();// 借款项目主键
         BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
-        // 计算此时的剩余可投资金额
+        // 计算此时的剩余可出借金额
         BigDecimal accountWait = this.selectBorrowByNid(borrowNid).getBorrowAccountWait();
         // 满标处理
         if (accountWait.compareTo(new BigDecimal(0)) == 0) {
@@ -575,7 +575,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
     }
 
     /**
-     * 投资完成更新计划明细
+     * 出借完成更新计划明细
      *
      * @param hjhAccede
      * @param orderStaus
@@ -595,7 +595,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
     }
 
     /**
-     * 银行自动投资成功后，更新投资数据
+     * 银行自动投标成功后，更新出借数据
      *
      * @param creditNid
      * @param accedeOrderId
@@ -638,18 +638,18 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
             hjhProcess = CustomConstants.HJH_PROCESS_H;
         }
 
-        // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
+        // mod 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 start
         //hjhCommonService.updateAccountForHjh(hjhProcess, credit.getUserId(), accountDecimal, null);
         BigDecimal serviceFee = (BigDecimal) resultMap.get(this.SERVICE_FEE);
         // 汇计划重算更新用户账户信息表(债转人)
         this.updateAccountForHjh(hjhProcess, credit.getUserId(), accountDecimal.subtract(serviceFee), null);
         // 汇计划重算更新汇计划加入明细表(债转人)
         this.updateHjhAccedeForHjh(hjhProcess, sellerHjhAccede.getId(), accountDecimal.subtract(serviceFee), null, serviceFee);
-        // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
+        // mod 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 end
 
-        // 判定该笔承接是投资还是复投
+        // 判定该笔承接是出借还是复投
         if (hjhAccede.getOrderStatus() == 0) {
-            // 投资
+            // 出借
             hjhProcess = CustomConstants.HJH_PROCESS_D;
         } else {
             // 复投
@@ -662,13 +662,13 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         this.updateHjhAccedeForHjh(hjhProcess, hjhAccede.getId(), accountDecimal, null, null);
 
         // 债权承接成功后后续处理
-        // mod 汇计划三期 汇计划自动投资 liubin 20180515 start
+        // mod 汇计划三期 汇计划自动出借 liubin 20180515 start
         boolean creditTenderFlag = this.saveCreditTender(sellerHjhAccede, credit,
                 hjhAccede, bean, bean.getOrderId(),
                 bean.getTxDate(),
                 hjhPlan.getExpectApr(), resultMap,
                 tenderUsrcustid, sellerUsrcustid);
-        // mod 汇计划三期 汇计划自动投资 liubin 20180515 end
+        // mod 汇计划三期 汇计划自动出借 liubin 20180515 end
         if (!creditTenderFlag) {
             return creditTenderFlag;
         }
@@ -705,7 +705,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         String liquidatesPlanNid = credit.getPlanNid();
         // 清算债权加入订单号
         String liquidatesPlanOrderId = credit.getPlanOrderId();
-        // 债权原有投资订单号
+        // 债权原有出借订单号
         String sellOrderId = credit.getSellOrderId();
         // 项目原标标号
         String borrowNid = credit.getBorrowNid();
@@ -747,9 +747,9 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         BigDecimal assignInterest = BigDecimal.ZERO;
         // 垫付利息
         BigDecimal assignAdvanceMentInterest = BigDecimal.ZERO;
-        // 投资人收取延期利息
+        // 出借人收取延期利息
         BigDecimal assignRepayDelayInterest = BigDecimal.ZERO;
-        // 投资人收取逾期利息
+        // 出借人收取逾期利息
         BigDecimal assignRepayLateInterest = BigDecimal.ZERO;
         // 实付金额
         BigDecimal assignPay = account;//BigDecimal.ZERO;
@@ -863,14 +863,14 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
             // 垫付总利息(实际支付-承接人每期承接本金之和)
             assignAdvanceMentInterest = assignPay.subtract(assignPeriodCapitalTotal);
         }
-        // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
+        // mod 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 start
         // 计算服务费
         //BigDecimal serviceFee = BigDecimal.ZERO;//this.calculateServiceFee(credit, assignCapital.add(assignAdvanceMentInterest));
         // 出让人加入计划信息
         HjhAccede sellerHjhAccede = this.selectHjhAccedeByAccedeOrderId(credit.getPlanOrderId());
         BigDecimal serviceApr = sellerHjhAccede.getLqdServiceApr();
         BigDecimal serviceFee = assignPay.multiply(serviceApr).setScale(2, BigDecimal.ROUND_DOWN);
-        // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
+        // mod 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 end
         // 返回结果封装
         result.put(ASSIGN_ACCOUNT, assignAccount);
         result.put(ASSIGN_CAPITAL, assignCapital);
@@ -880,9 +880,9 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         result.put(ASSIGN_REPAY_LATE_INTEREST, assignRepayLateInterest);
         result.put(ASSIGN_PAY, assignPay);
         result.put(SERVICE_FEE, serviceFee);
-        // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
+        // add 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 start
         result.put(SERVICE_APR, serviceApr);
-        // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
+        // add 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 end
         // 保存credit_tender_log表
         HjhDebtCreditTenderLog debtCreditTenderLog = new HjhDebtCreditTenderLog();
         debtCreditTenderLog.setUserId(userId);
@@ -919,9 +919,9 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         debtCreditTenderLog.setRepayPeriod(repayPeriod);
         debtCreditTenderLog.setAssignRepayPeriod(creditPeriod);
         debtCreditTenderLog.setAssignOrderDate(creditOrderDate);
-        // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
+        // mod 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 start
         debtCreditTenderLog.setAssignServiceApr(serviceApr);
-        // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
+        // mod 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 end
         debtCreditTenderLog.setAssignServiceFee(serviceFee);
         debtCreditTenderLog.setCreateUserId(userId);
         debtCreditTenderLog.setCreateUserName(userName);
@@ -931,7 +931,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         if (flag) {
             return result;
         } else {
-            throw new RuntimeException("债转日志debtCrditTenderLog表保存失败，债权标号：" + creditNid + ",投资编号：" + sellOrderId);
+            throw new RuntimeException("债转日志debtCrditTenderLog表保存失败，债权标号：" + creditNid + ",出借编号：" + sellOrderId);
         }
     }
 
@@ -956,7 +956,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         String liquidatesPlanNid = credit.getPlanNid();
         // 清算债权加入订单号
         String liquidatesPlanOrderId = credit.getPlanOrderId();
-        // 债权原有投资订单号
+        // 债权原有出借订单号
         String sellOrderId = credit.getSellOrderId();
         // 项目原标标号
         String borrowNid = credit.getBorrowNid();
@@ -998,9 +998,9 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         BigDecimal assignInterest = BigDecimal.ZERO;
         // 垫付利息
         BigDecimal assignAdvanceMentInterest = BigDecimal.ZERO;
-        // 投资人收取延期利息
+        // 出借人收取延期利息
         BigDecimal assignRepayDelayInterest = BigDecimal.ZERO;
-        // 投资人收取逾期利息
+        // 出借人收取逾期利息
         BigDecimal assignRepayLateInterest = BigDecimal.ZERO;
         // 实付金额
         BigDecimal assignPay = account;//BigDecimal.ZERO;
@@ -1114,14 +1114,14 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
             // 垫付总利息(实际支付-承接人每期承接本金之和)
             assignAdvanceMentInterest = assignPay.subtract(assignPeriodCapitalTotal);
         }
-        // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
+        // mod 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 start
         // 计算服务费
         //BigDecimal serviceFee = BigDecimal.ZERO;//this.calculateServiceFee(credit, assignCapital.add(assignAdvanceMentInterest));
         // 出让人加入计划信息
         HjhAccede sellerHjhAccede = this.selectHjhAccedeByAccedeOrderId(credit.getPlanOrderId());
         BigDecimal serviceApr = sellerHjhAccede.getLqdServiceApr();
         BigDecimal serviceFee = assignPay.multiply(serviceApr).setScale(2, BigDecimal.ROUND_DOWN);
-        // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
+        // mod 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 end
 
         // 返回结果封装
         result.put(ASSIGN_ACCOUNT, assignAccount);
@@ -1132,9 +1132,9 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         result.put(ASSIGN_REPAY_LATE_INTEREST, assignRepayLateInterest);
         result.put(ASSIGN_PAY, assignPay);
         result.put(SERVICE_FEE, serviceFee);
-        // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
+        // add 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 start
         result.put(SERVICE_APR, serviceApr);
-        // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
+        // add 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 end
         return result;
     }
 
@@ -1155,10 +1155,10 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                                      String creditOrderDate,
                                      BigDecimal expectApr, Map<String, Object> resultMap,
                                      String tenderUsrcustid, String sellerUsrcustid) {
-        // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
+        // add 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 start
         // 债转服务费
         BigDecimal serviceFee = (BigDecimal) resultMap.get(this.SERVICE_FEE);
-        // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
+        // add 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 end
 
         // 清算出的债权编号
         String creditNid = debtCredit.getCreditNid();
@@ -1168,7 +1168,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         String liquidatesPlanOrderId = debtCredit.getPlanOrderId();
         // 清算所在期数
         int liquidatesPeriod = debtCredit.getLiquidatesPeriod();
-        // 债权原有投资订单号
+        // 债权原有出借订单号
         String sellerOrderId = debtCredit.getSellOrderId();
         // 原标标号
         String borrowNid = debtCredit.getBorrowNid();
@@ -1268,14 +1268,14 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                         debtCreditTender.setAssignOrderDate(creditOrderDate);// 认购日期
                         debtCreditTender.setAssignPay(debtCreditTenderLog.getAssignPay());// 支付金额
                         debtCreditTender.setAssignServiceFee(serviceFee); // 服务费
-                        // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
+                        // mod 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 start
                         debtCreditTender.setAssignServiceApr(debtCreditTenderLog.getAssignServiceApr());// 债转服务费率
-                        // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
+                        // mod 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 end
                         debtCreditTender.setUserId(userId);// 用户id
                         debtCreditTender.setUserName(userName);// 承接人用户名
                         debtCreditTender.setStatus(0);// 状态
                         debtCreditTender.setAssignAccount(debtCreditTenderLog.getAssignAccount());// 回收总额
-                        debtCreditTender.setAssignCapital(debtCreditTenderLog.getAssignCapital()); // 投资本金
+                        debtCreditTender.setAssignCapital(debtCreditTenderLog.getAssignCapital()); // 出借本金
                         debtCreditTender.setAssignInterest(debtCreditTenderLog.getAssignInterest());// 债转利息\
                         debtCreditTender.setAssignRepayDelayInterest(debtCreditTenderLog.getAssignRepayDelayInterest());
                         debtCreditTender.setAssignRepayLateInterest(debtCreditTenderLog.getAssignRepayLateInterest());
@@ -1296,9 +1296,9 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                         debtCreditTender.setCreateTime(nowDate);
                         debtCreditTender.setAuthCode(bean.getAuthCode());//银行返回码
                         // add 汇计划二期迭代 复投债转的状态追加 liubin 20180330 start
-                        // 判定该笔承接是投资还是复投
+                        // 判定该笔承接是出借还是复投
                         if (assignDebtPlanAccede.getOrderStatus() == 0) {
-                            debtCreditTender.setTenderType(0);// 投资0
+                            debtCreditTender.setTenderType(0);// 出借0
                         } else {
                             debtCreditTender.setTenderType(1);// // 复投1
                         }
@@ -1316,16 +1316,16 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                             debtCredit.setCreditInterestAdvanceAssigned(debtCredit.getCreditInterestAdvanceAssigned().add(debtCreditTender.getAssignInterestAdvance()));//已承接垫付总利息
                             debtCredit.setCreditDelayInterestAssigned(debtCredit.getCreditDelayInterestAssigned().add(debtCreditTender.getAssignRepayDelayInterest()));//承接已垫付的延期利息
                             debtCredit.setCreditLateInterestAssigned(debtCredit.getCreditLateInterestAssigned().add(debtCreditTender.getAssignRepayLateInterest()));//承接已垫付的逾期利息
-                            // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start
+                            // mod 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 start
 //								debtCredit.setCreditServiceFee(debtCredit.getCreditServiceFee().add(debtCreditTender.getAssignServiceFee()));// 服务费
                             debtCredit.setCreditServiceFee(debtCredit.getCreditServiceFee().add(serviceFee));// 服务费
-                            // mod 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
+                            // mod 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 end
                             debtCredit.setCreditIncome(debtCredit.getCreditIncome().add(debtCreditTender.getAssignPay().subtract(serviceFee)));// 总收入,本金+垫付利息-服务费
                             debtCredit.setCreditPrice(debtCredit.getCreditPrice().add(debtCreditTender.getAssignPay()));// 总出让价格（每次承接累加）,本金+垫付利息
                             debtCredit.setUpdateTime(nowDate);// 认购时间
                             debtCredit.setUpdateUserId(userId);// 认购时间
                             debtCredit.setUpdateUserName(userName);// 认购时间
-                            debtCredit.setAssignNum(debtCredit.getAssignNum() + 1);// 投资次数
+                            debtCredit.setAssignNum(debtCredit.getAssignNum() + 1);// 出借次数
 //								if (debtCredit.getCreditCapitalWait().compareTo(new BigDecimal(0)) == 0) {
 //									debtCredit.setCreditStatus(2);//转让状态 2完全承接
 //									debtCredit.setIsLiquidates(1);
@@ -1410,10 +1410,10 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                                                         debtDetail.setRepayInterestWait(assignPeriodInterest);
                                                         debtDetail.setRepayCapitalYes(BigDecimal.ZERO);
                                                         debtDetail.setRepayInterestYes(BigDecimal.ZERO);
-                                                        // mod 汇计划三期 汇计划自动投资 liubin 20180515 start
+                                                        // mod 汇计划三期 汇计划自动出借 liubin 20180515 start
                                                         //debtDetail.setServiceFee(BigDecimal.ZERO);
                                                         debtDetail.setServiceFee(serviceFee);
-                                                        // mod 汇计划三期 汇计划自动投资 liubin 20180515 end
+                                                        // mod 汇计划三期 汇计划自动出借 liubin 20180515 end
                                                         debtDetail.setManageFee(BigDecimal.ZERO);
                                                         debtDetail.setClient(client);
                                                         debtDetail.setStatus(1);
@@ -1485,10 +1485,10 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                                                             debtCreditRepay.setRepayStatus(0);// 状态
                                                             debtCreditRepay.setRepayPeriod(1);// 原标还款期数
                                                             debtCreditRepay.setManageFee(BigDecimal.ZERO);// 管理费
-                                                            // mod 汇计划三期 汇计划自动投资 liubin 20180515 start
+                                                            // mod 汇计划三期 汇计划自动出借 liubin 20180515 start
                                                             //debtCreditRepay.setLiquidatesServiceFee(BigDecimal.ZERO);
                                                             debtCreditRepay.setLiquidatesServiceFee(serviceFee);
-                                                            // mod 汇计划三期 汇计划自动投资 liubin 20180515 end
+                                                            // mod 汇计划三期 汇计划自动出借 liubin 20180515 end
                                                             debtCreditRepay.setUniqueNid(creditOrderId + "_" + waitRepayPeriod);// 唯一nid
                                                             debtCreditRepay.setCreateTime(nowDate);// 添加时间
                                                             debtCreditRepay.setCreateUserId(userId);// 添加用户
@@ -1649,10 +1649,10 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                                                                         }
                                                                         boolean debtLoanFlag = this.borrowRecoverMapper.updateByPrimaryKeySelective(debtLoan) > 0 ? true : false;
                                                                         if (!debtLoanFlag) {
-                                                                            throw new RuntimeException("更新相应的投资订单的放款信息失败，投资订单号：" + debtCredit.getInvestOrderId());
+                                                                            throw new RuntimeException("更新相应的出借订单的放款信息失败，出借订单号：" + debtCredit.getInvestOrderId());
                                                                         }
                                                                     } else {
-                                                                        throw new RuntimeException("未查询到相应的投资订单的放款信息，投资订单号：" + debtCredit.getInvestOrderId());
+                                                                        throw new RuntimeException("未查询到相应的出借订单的放款信息，出借订单号：" + debtCredit.getInvestOrderId());
                                                                     }
                                                                 }
                                                             } else {
@@ -1724,10 +1724,10 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                                                             debtDetail.setRepayInterestWait(assignPeriodInterest);
                                                             debtDetail.setRepayCapitalYes(BigDecimal.ZERO);
                                                             debtDetail.setRepayInterestYes(BigDecimal.ZERO);
-                                                            // mod 汇计划三期 汇计划自动投资 liubin 20180515 start
+                                                            // mod 汇计划三期 汇计划自动出借 liubin 20180515 start
                                                             //debtDetail.setServiceFee(BigDecimal.ZERO);
                                                             debtDetail.setServiceFee(serviceFee);
-                                                            // mod 汇计划三期 汇计划自动投资 liubin 20180515 end
+                                                            // mod 汇计划三期 汇计划自动出借 liubin 20180515 end
                                                             debtDetail.setManageFee(BigDecimal.ZERO);
                                                             debtDetail.setClient(client);
                                                             debtDetail.setStatus(1);
@@ -1815,10 +1815,10 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                                                                 debtCreditRepay.setDelFlag(0);
                                                                 debtCreditRepay.setRepayPeriod(debtDetailOld.getRepayPeriod());// 原标还款期数
                                                                 debtCreditRepay.setManageFee(BigDecimal.ZERO);// 管理费
-                                                                // mod 汇计划三期 汇计划自动投资 liubin 20180515 start
+                                                                // mod 汇计划三期 汇计划自动出借 liubin 20180515 start
                                                                 //debtCreditRepay.setLiquidatesServiceFee(BigDecimal.ZERO);// 服务费
                                                                 debtCreditRepay.setLiquidatesServiceFee(serviceFee);// 服务费
-                                                                // mod 汇计划三期 汇计划自动投资 liubin 20180515 end
+                                                                // mod 汇计划三期 汇计划自动出借 liubin 20180515 end
                                                                 debtCreditRepay.setUniqueNid(creditOrderId + "_" + waitRepayPeriod);// 唯一nid
                                                                 debtCreditRepay.setCreateTime(nowDate);
                                                                 debtCreditRepay.setCreateUserId(debtDetailOld.getUserId());
@@ -1864,10 +1864,10 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                                                                             if (i == 0) {
                                                                                 debtDetailNew.setServiceFee(debtDetailOld.getServiceFee().add(serviceFee));
                                                                             } else {
-                                                                                // mod 汇计划三期 汇计划自动投资 liubin 20180515 start
+                                                                                // mod 汇计划三期 汇计划自动出借 liubin 20180515 start
                                                                                 //debtDetailNew.setServiceFee(BigDecimal.ZERO);
                                                                                 debtDetailNew.setServiceFee(serviceFee);
-                                                                                // mod 汇计划三期 汇计划自动投资 liubin 20180515 end
+                                                                                // mod 汇计划三期 汇计划自动出借 liubin 20180515 end
                                                                             }
                                                                             debtDetailNew.setManageFee(BigDecimal.ZERO);
                                                                             debtDetailNew.setClient(client);
@@ -1957,10 +1957,10 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                                                                                     if (i == 0) {
                                                                                         sellerDebtCreditRepay.setLiquidatesServiceFee(debtDetailOld.getServiceFee().add(serviceFee));// 清算服务费
                                                                                     } else {
-                                                                                        // mod 汇计划三期 汇计划自动投资 liubin 20180515 start
+                                                                                        // mod 汇计划三期 汇计划自动出借 liubin 20180515 start
                                                                                         //sellerDebtCreditRepay.setLiquidatesServiceFee(BigDecimal.ZERO);// 清算服务费
                                                                                         sellerDebtCreditRepay.setLiquidatesServiceFee(serviceFee);// 清算服务费
-                                                                                        // mod 汇计划三期 汇计划自动投资 liubin 20180515 end
+                                                                                        // mod 汇计划三期 汇计划自动出借 liubin 20180515 end
                                                                                     }
                                                                                     sellerDebtCreditRepay.setUniqueNid(sellerDebtCreditRepayOld.getAssignOrderId() + "_" + creditOrderId + "_" + waitRepayPeriod);// 唯一nid
                                                                                     sellerDebtCreditRepay.setCreateTime(nowDate);// 添加时间
@@ -1988,17 +1988,17 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                                                                             debtLoan.setCreditInterestAmount(debtLoan.getCreditInterestAmount().add(assignPeriodInterest));
                                                                             boolean debtLoanFlag = this.borrowRecoverMapper.updateByPrimaryKeySelective(debtLoan) > 0 ? true : false;
                                                                             if (!debtLoanFlag) {
-                                                                                throw new RuntimeException("更新相应的huiyingdai_borrow_recover信息失败，投资订单号：" + debtCredit.getInvestOrderId());
+                                                                                throw new RuntimeException("更新相应的huiyingdai_borrow_recover信息失败，出借订单号：" + debtCredit.getInvestOrderId());
                                                                             }
                                                                         } else {
-                                                                            throw new RuntimeException("未查询到相应的投资订单的放款信息，投资订单号：" + debtCredit.getInvestOrderId());
+                                                                            throw new RuntimeException("未查询到相应的出借订单的放款信息，出借订单号：" + debtCredit.getInvestOrderId());
                                                                         }
 
                                                                         // add 汇计划二期迭代 分前原始债转recoverplan表变更债转金额追加 liubin 20180410 start
                                                                         // 更新recoverplan表的相应的债转承接金额
                                                                         BorrowRecoverPlanExample borrowRecoverPlanExample = new BorrowRecoverPlanExample();
                                                                         BorrowRecoverPlanExample.Criteria borrowRecoverPlanCrt = borrowRecoverPlanExample.createCriteria();
-                                                                        borrowRecoverPlanCrt.andNidEqualTo(debtCredit.getInvestOrderId());//投资订单
+                                                                        borrowRecoverPlanCrt.andNidEqualTo(debtCredit.getInvestOrderId());//出借订单
                                                                         borrowRecoverPlanCrt.andRecoverPeriodEqualTo(debtDetailOld.getRepayPeriod()); // 原标还款期数
                                                                         List<BorrowRecoverPlan> borrowRecoverPlanList = this.borrowRecoverPlanMapper.selectByExample(borrowRecoverPlanExample);
                                                                         if (borrowRecoverPlanList != null && borrowRecoverPlanList.size() == 1) {
@@ -2008,10 +2008,10 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                                                                             borrowRecoverPlan.setCreditManageFee(BigDecimal.ZERO);
                                                                             boolean borrowRecoverPlanFlag = this.borrowRecoverPlanMapper.updateByPrimaryKeySelective(borrowRecoverPlan) > 0 ? true : false;
                                                                             if (!borrowRecoverPlanFlag) {
-                                                                                throw new RuntimeException("更新相应的huiyingdai_borrow_recover_plan信息失败，投资订单号：" + debtCredit.getInvestOrderId() + "期数：" + debtDetailOld.getRepayPeriod());
+                                                                                throw new RuntimeException("更新相应的huiyingdai_borrow_recover_plan信息失败，出借订单号：" + debtCredit.getInvestOrderId() + "期数：" + debtDetailOld.getRepayPeriod());
                                                                             }
                                                                         } else {
-                                                                            throw new RuntimeException("未查询到相应的投资订单的放款信息，投资订单号：" + debtCredit.getInvestOrderId());
+                                                                            throw new RuntimeException("未查询到相应的出借订单的放款信息，出借订单号：" + debtCredit.getInvestOrderId());
                                                                         }
 
 
@@ -2028,7 +2028,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
                                                         throw new RuntimeException("出让人债权详情表debtdetail老数据查询失败，加入订单号：" + planOrderId);
                                                     }
                                                 }
-                                                // 产生平台收取费用时 ****后期准备用,现在投资无服务，后期修改*****
+                                                // 产生平台收取费用时 ****后期准备用,现在出借无服务，后期修改*****
                                                 if (debtCreditTender.getAssignServiceFee().compareTo(new BigDecimal(0)) != 0) {
                                                     // 承接人用户详细信息
                                                     RUser rUser = this.getRUser(userId);
@@ -2402,8 +2402,8 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
     }
 
     /**
-     * 投资人为线下员工/线上员工时，取得投资人的部门信息
-     * 投资人为有主单时，取得推荐人的部门信息
+     * 出借人为线下员工/线上员工时，取得出借人的部门信息
+     * 出借人为有主单时，取得推荐人的部门信息
      *
      * @param rUser
      * @return
@@ -2427,7 +2427,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
     }
 
     /**
-     * 根据投资用户属性，取得推荐人信息
+     * 根据出借用户属性，取得推荐人信息
      *
      * @param rUser
      * @return

@@ -590,7 +590,7 @@ public class CouponUserController extends BaseController {
         CouponUserCustomizeResponse customizeResponse = couponUserService.searchList(beanRequest);
         List<CouponUserCustomizeVO> resultList = customizeResponse.getResultList();
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-        String[] titles = new String[]{"序号", "优惠券类别编号", "优惠券用户编号", "用户名", "发券时属性", "注册渠道", "优惠券类型", "面值", "投资限额", "有效期", "来源", "操作平台", "项目类型", "项目期限", "使用状态", "获得时间"};
+        String[] titles = new String[]{"序号", "优惠券类别编号", "优惠券用户编号", "用户名", "发券时属性", "注册渠道", "优惠券类型", "面值", "出借限额", "有效期", "来源", "操作平台", "项目类型", "项目期限", "使用状态", "获得时间"};
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
 
@@ -824,7 +824,7 @@ public class CouponUserController extends BaseController {
         map.put("channel", "注册渠道");
         map.put("couponType", "优惠券类型");
         map.put("couponQuota", "面值");
-        map.put("tenderQuota", "投资限额");
+        map.put("tenderQuota", "出借限额");
         map.put("endTime", "有效期");
         map.put("couponSource", "来源");
         map.put("couponSystem", "操作平台");

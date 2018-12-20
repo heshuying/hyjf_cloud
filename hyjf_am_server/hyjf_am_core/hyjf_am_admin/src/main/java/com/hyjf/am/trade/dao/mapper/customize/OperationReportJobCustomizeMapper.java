@@ -36,14 +36,14 @@ public interface OperationReportJobCustomizeMapper {
 	 */
 	int getTradeCount();
 	/**
-	 * 统计投资人总数，截至日期为上个月的最后一天
+	 * 统计出借人总数，截至日期为上个月的最后一天
 	 * @param date 上个月的最后一天
 	 * @return
 	 */
 	int getTenderCount(Date date);
 
 	/**
-	 * 统计累计投资总数，
+	 * 统计累计出借总数，
 	 *
 	 * @return
 	 */
@@ -83,12 +83,12 @@ public interface OperationReportJobCustomizeMapper {
 	int getLoanNum(@Param("date") Date date);
 	
 	/**
-	 * 人均投资金额
+	 * 人均出借金额
 	 */
 	BigDecimal getPerInvestTotal();
 	
 	/**
-	 * 获取截至日期的投资金额
+	 * 获取截至日期的出借金额
 	 */
 	double getInvestLastDate(@Param("date") Date date);
 

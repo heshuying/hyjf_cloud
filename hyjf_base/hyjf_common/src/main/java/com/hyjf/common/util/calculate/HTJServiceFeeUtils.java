@@ -567,7 +567,7 @@ public class HTJServiceFeeUtils {
 	}
 
 	/**
-	 * 到期公允价值=预期收益*（计划清算日-该项目放款日）/项目天数+投资本金（承接本金）
+	 * 到期公允价值=预期收益*（计划清算日-该项目放款日）/项目天数+出借本金（承接本金）
 	 * 
 	 * @Title calculationExpireFairValue
 	 * @param capital

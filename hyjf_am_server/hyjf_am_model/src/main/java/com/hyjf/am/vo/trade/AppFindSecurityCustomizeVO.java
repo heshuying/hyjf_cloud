@@ -15,7 +15,7 @@ public class AppFindSecurityCustomizeVO extends BaseVO {
     private String  CompanyGrade;              //企业评级
     private String  TotalTradeVolume;           //平台累计交易额
     private String  TotalUserIncome;           //平台累计用户收入
-    private String  TotalInvester;              //平台累计投资者
+    private String  TotalInvester;              //平台累计出借者
 
     public String getStartYear() {
         return StartYear;

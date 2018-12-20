@@ -19,7 +19,7 @@ import java.util.List;
  * @author wenxin
  * @version IncreaseInterestRepayInfoListController, v0.1 2018/8/30
  */
-@Api(value = "产品中心-汇直投-加息投资明细详情")
+@Api(value = "产品中心-汇直投-加息出借明细详情")
 @RestController
 @RequestMapping("/am-trade/increaseinterest")
 public class IncreaseInterestRepayInfoListController extends BaseController {

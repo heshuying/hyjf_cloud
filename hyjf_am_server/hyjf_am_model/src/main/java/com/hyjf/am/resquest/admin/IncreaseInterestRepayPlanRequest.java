@@ -15,10 +15,10 @@ public class IncreaseInterestRepayPlanRequest extends BasePage implements Serial
     /** 用户名(检索用) */
     private String userNameSrch;
 
-    /** 投资开始时间(检索用) */
+    /** 出借开始时间(检索用) */
     private String timeStartSrch;
 
-    /** 投资结束时间(检索用) */
+    /** 出借结束时间(检索用) */
     private String timeEndSrch;
 
     /**转账状态*/

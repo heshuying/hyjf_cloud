@@ -41,7 +41,7 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
         }
 
         String orderId = GetOrderIdUtils.getOrderId2(tenderUserId);
-        logger.info(borrowNid+" 直投还款结束债权  借款人: "+borrow.getUserId()+"-"+account.getAccountId()+" 投资人: "+tenderUserId+"-"+tenderAccountId+" 授权码: "+tenderAuthCode+" 原始订单号: "+hjhDebtCredit.getSellOrderId());
+        logger.info(borrowNid+" 直投还款结束债权  借款人: "+borrow.getUserId()+"-"+account.getAccountId()+" 出借人: "+tenderUserId+"-"+tenderAccountId+" 授权码: "+tenderAuthCode+" 原始订单号: "+hjhDebtCredit.getSellOrderId());
 
         BankCreditEnd record = new BankCreditEnd();
         record.setUserId(borrow.getUserId());

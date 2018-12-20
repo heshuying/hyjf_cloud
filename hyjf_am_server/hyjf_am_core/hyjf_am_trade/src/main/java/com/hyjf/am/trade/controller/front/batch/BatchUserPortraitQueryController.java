@@ -33,7 +33,7 @@ public class BatchUserPortraitQueryController extends BaseController {
     private BatchUserPortraitQueryService batchUserPortraitQueryService;
 
     /**
-     * 查询用户画像所需要的投资相关参数
+     * 查询用户画像所需要的出借相关参数
      * @param batchUserPortraitRequest 需要查询的userId的list
      * @return 返回与UserPortrait相同参数
      * */

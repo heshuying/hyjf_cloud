@@ -544,7 +544,7 @@
 	<sql id="selectCouponTenderList_Where_Clause">
 		<where>
 			1 = 1
-			<!-- 投资订单号 -->
+			<!-- 出借订单号 -->
 			<if test="orderId != null and orderId != ''">
 				AND hct.order_id = #{orderId}
 			</if>
@@ -564,7 +564,7 @@
 			<if test="borrowNid != null and borrowNid != ''">
 				AND hbt.borrow_nid = #{borrowNid}
 			</if>
-			<!-- 投资平台 -->
+			<!-- 出借平台 -->
 			<if test="operatingDeck != null and operatingDeck != ''">
 				AND hbt.client = #{operatingDeck}
 			</if>
@@ -947,7 +947,7 @@
 	<sql id="selectCouponTenderHjhList_Where_Clause">
 		<where>
 			1 = 1
-			<!-- 投资订单号 -->
+			<!-- 出借订单号 -->
 			<if test="orderId != null and orderId != ''">
 				AND hct.order_id = #{orderId}
 			</if>
@@ -967,7 +967,7 @@
 			<if test="borrowNid != null and borrowNid != ''">
 				AND hbt.borrow_nid = #{borrowNid}
 			</if>
-			<!-- 投资平台 -->
+			<!-- 出借平台 -->
 			<if test="operatingDeck != null and operatingDeck != ''">
 				AND hbt.client = #{operatingDeck}
 			</if>

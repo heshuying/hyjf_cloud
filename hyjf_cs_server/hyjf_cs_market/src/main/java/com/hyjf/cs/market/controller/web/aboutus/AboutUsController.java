@@ -62,7 +62,7 @@ public class AboutUsController extends BaseController {
 		try {
 			ContentArticleVO aboutus = aboutUsService.getAboutUs();
 			String contents = aboutus.getContent();
-			// 获取累计投资金额
+			// 获取累计出借金额
 			String totalInvestmentAmount = aboutUsService.getTotalInvestmentAmount();
 			totalInvestmentAmount = StringUtils.isBlank(totalInvestmentAmount) ? "0.00"
 					: DF_FOR_VIEW.format(new BigDecimal(totalInvestmentAmount));
@@ -313,11 +313,11 @@ public class AboutUsController extends BaseController {
 	public WebResult<TotalMessageVO> noviceGuide(@RequestHeader(value = "userId" ,required = false) Integer userId ) {
 
 		TotalMessageVO totalMessageVO = new TotalMessageVO();
-		//投资总额(亿元) tenderSum
+		//出借总额(亿元) tenderSum
 		String tenderSum = aboutUsService.selectTenderSum().divide(new BigDecimal("100000000")).setScale(0, BigDecimal.ROUND_DOWN).toString();
 		//收益总额(亿元) interestSum
 		String interestSum = aboutUsService.selectInterestSum().divide(new BigDecimal("100000000")).setScale(0, BigDecimal.ROUND_DOWN).toString();
-		//累计投资人数(万人) totalTenderSum
+		//累计出借人数(万人) totalTenderSum
 		int totalTenderSum = aboutUsService.selectTotalTenderSum() / 10000;
 		//当前时间 date
 		String date = GetDate.getDataString(GetDate.date_sdf_wz);

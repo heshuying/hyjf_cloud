@@ -89,7 +89,7 @@ public class BankRepayFreezeOrgServiceImpl extends BaseServiceImpl implements co
     }
 
     /**
-     * 删除垫付机构临时日志,外部调用
+     * 删除担保机构临时日志,外部调用
      */
     @Override
     public Integer deleteOrgFreezeTempLogs(String orderId, String borrowNid) {
@@ -108,9 +108,9 @@ public class BankRepayFreezeOrgServiceImpl extends BaseServiceImpl implements co
                 int flag = this.bankRepayOrgFreezeLogMapper.updateByPrimaryKey(record);
                 result += flag;
                 if (flag > 0) {
-                    logger.info("=============还款冻结成功,删除垫付机构还款冻结临时日志成功=========");
+                    logger.info("=============还款冻结成功,删除担保机构还款冻结临时日志成功=========");
                 } else {
-                    logger.info("==============删除垫付机构还款冻结临时日志失败============");
+                    logger.info("==============删除担保机构还款冻结临时日志失败============");
                 }
             }
         }
@@ -118,7 +118,7 @@ public class BankRepayFreezeOrgServiceImpl extends BaseServiceImpl implements co
     }
 
     /**
-     * 查询垫付机构冻结列表
+     * 查询担保机构冻结列表
      */
     @Override
     public List<BankRepayOrgFreezeLog> getBankRepayOrgFreezeLogList(String orderId, String borrowNid){

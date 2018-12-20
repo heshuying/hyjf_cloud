@@ -30,7 +30,7 @@ public class OperationReportResponse extends Response<OperationReportVO> {
     private OperationReportVO operationReport;
     //运营报告活动
     private OperationReportActivityVO operationReportActivity;
-    //运营报告十大投资
+    //运营报告十大出借
     private TenthOperationReportVO tenthOperationReport;
     //运营报告用户分析
     private UserOperationReportVO userOperationReport;

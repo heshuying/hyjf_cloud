@@ -20,7 +20,7 @@ public class AppMyPlanCustomizeVO implements Serializable {
     private String orderId;
     /** 锁定期限 */
     private String lockPeriod;
-    /** 投资金额 */
+    /** 出借金额 */
     private String account;
     /** 待收金额 */
     private String interest;
@@ -38,7 +38,7 @@ public class AppMyPlanCustomizeVO implements Serializable {
     private String statusName;
     /** 项目详情url */
     private String borrowUrl;
-    /** 投资合同url */
+    /** 出借合同url */
     private String contactUrl;
     /**标的第一项 */
     private String borrowTheFirst;

@@ -19,7 +19,7 @@ public class InvestorRequest implements Serializable {
     @ApiModelProperty(value = "用户ID")
     private String userId;
 
-    @ApiModelProperty(value = "投资订单号")
+    @ApiModelProperty(value = "出借订单号")
     private String nid;
 
     @ApiModelProperty(value = "邮箱")

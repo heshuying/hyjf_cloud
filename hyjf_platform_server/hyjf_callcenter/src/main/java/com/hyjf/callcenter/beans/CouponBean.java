@@ -27,7 +27,7 @@ public class CouponBean implements Serializable  {
     private String couponSystem;
     //优惠券适用产品类型
     private String projectType;
-    //投资项目期限条件
+    //出借项目期限条件
     private String projectExpirationType;
     //注册渠道
     private String channel;
@@ -35,7 +35,7 @@ public class CouponBean implements Serializable  {
     private String couponType;
     //优惠券面值
     private String couponQuota; 
-    //投资额度条件
+    //出借额度条件
     private String tenderQuota;
     //有效期
     private String endTime;

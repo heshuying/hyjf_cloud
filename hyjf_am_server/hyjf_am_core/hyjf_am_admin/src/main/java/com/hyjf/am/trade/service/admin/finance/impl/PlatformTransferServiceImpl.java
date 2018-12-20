@@ -291,7 +291,7 @@ public class PlatformTransferServiceImpl extends BaseServiceImpl implements Plat
         accountListVO.setBankAwait(accountVO.getBankAwait());
         // 银行累计收益
         accountListVO.setBankInterestSum(accountVO.getBankInterestSum());
-        // 银行累计投资
+        // 银行累计出借
         accountListVO.setBankInvestSum(accountVO.getBankInvestSum());
         // 银行待还金额
         accountListVO.setBankWaitRepay(accountVO.getBankWaitRepay());

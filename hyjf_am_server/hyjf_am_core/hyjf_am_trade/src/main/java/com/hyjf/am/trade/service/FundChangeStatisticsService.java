@@ -16,13 +16,13 @@ public interface FundChangeStatisticsService {
     Integer countRechargeMoney(Map<String, Object> params);
 
     /**
-     * 统计投资金额
+     * 统计出借金额
      * @return
      */
     Integer countInvestmentMoney(Map<String, Object> params);
 
     /**
-     * 统计债权投资金额
+     * 统计债权出借金额
      * @param params
      * @return
      */
@@ -36,13 +36,13 @@ public interface FundChangeStatisticsService {
     Integer countInvestmentHjhCreditTenderMoney(Map<String, Object> params);
 
     /**
-     * 上线以来所有投资金额
+     * 上线以来所有出借金额
      * @return
      */
     Integer countAllAccount();
 
     /**
-     * 统计投资人数
+     * 统计出借人数
      * @param params
      * @return
      */
