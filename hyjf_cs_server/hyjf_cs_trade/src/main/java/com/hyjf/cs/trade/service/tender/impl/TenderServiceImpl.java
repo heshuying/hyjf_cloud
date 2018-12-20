@@ -908,37 +908,48 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
                 }
             } else {
                 // 更新huiyingdai_utm_reg的首投信息
-                UtmRegVO utmReg = amUserClient.findUtmRegByUserId(userId);
-                if (utmReg != null) {
-                    Map<String, Object> params = new HashMap<String, Object>();
-                    params.put("id", utmReg.getId());
-                    params.put("accountDecimal", accountDecimal);
-                    // 出借时间
-                    params.put("investTime", nowTime);
-                    // 项目类型
-                    params.put("projectType", "汇直投");
-                    String investProjectPeriod = "";
-                    // 首次投标项目期限// 还款方式
-                    String borrowStyle = borrow.getBorrowStyle();
-                    if ("endday".equals(borrowStyle)) {
-                        investProjectPeriod = borrow.getBorrowPeriod() + "天";
-                    } else {
-                        investProjectPeriod = borrow.getBorrowPeriod() + "月";
-                    }
-                    // 首次投标项目期限
-                    params.put("investProjectPeriod", investProjectPeriod);
-                    // 更新渠道统计用户累计出借
-                    try {
-                        if(this.checkIsNewUserCanInvest(userId)){
-                            commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), params));
-                        }
-                    } catch (MQException e) {
-                        e.printStackTrace();
-                        logger.error("更新huiyingdai_utm_reg的首投信息失败");
-                    }
-                }
-            }
+				updateUtmReg(userId, accountDecimal, nowTime, borrow);
+			}
         }
     }
-	
+
+	/**
+	 * 更新首投信息
+	 * @param userId
+	 * @param accountDecimal
+	 * @param nowTime
+	 * @param borrow
+	 */
+	private void updateUtmReg(Integer userId, BigDecimal accountDecimal, Integer nowTime, BorrowAndInfoVO borrow) {
+		UtmRegVO utmReg = amUserClient.findUtmRegByUserId(userId);
+		if (utmReg != null) {
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("userId", utmReg.getUserId());
+			params.put("accountDecimal", accountDecimal);
+			// 出借时间
+			params.put("investTime", nowTime);
+			// 项目类型
+			params.put("projectType", "汇直投");
+			String investProjectPeriod = "";
+			// 首次投标项目期限// 还款方式
+			String borrowStyle = borrow.getBorrowStyle();
+			if ("endday".equals(borrowStyle)) {
+				investProjectPeriod = borrow.getBorrowPeriod() + "天";
+			} else {
+				investProjectPeriod = borrow.getBorrowPeriod() + "月";
+			}
+			// 首次投标项目期限
+			params.put("investProjectPeriod", investProjectPeriod);
+			// 更新渠道统计用户累计出借
+			try {
+				if(this.checkIsNewUserCanInvest(userId)){
+					commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), params));
+				}
+			} catch (MQException e) {
+				e.printStackTrace();
+				logger.error("更新huiyingdai_utm_reg的首投信息失败");
+			}
+		}
+	}
+
 }
