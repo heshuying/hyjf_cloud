@@ -507,5 +507,11 @@ public class AutoMapper {
 
     @Resource
     protected AppPushManageMapper appPushManageMapper;
+
+    @Resource
+    protected EvaluationConfigMapper evaluationConfigMapper;
+
+    @Resource
+    protected EvaluationConfigLogMapper evaluationConfigLogMapper;
 }
 
