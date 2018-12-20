@@ -14,9 +14,10 @@ public class WebUserRepayTransferRequest extends BasePage implements Serializabl
 
     private String verificationFlag;
 
-    /** 翻页开始 */
+    /**
+     * 分页变量
+     */
     private int limitStart = -1;
-    /** 翻页结束 */
     private int limitEnd = -1;
 
     public String getBorrowNid() {
