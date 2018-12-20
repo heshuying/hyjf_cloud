@@ -10,7 +10,10 @@ import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.mongo.mc.MessagePushTagDao;
 import com.hyjf.cs.message.mongo.mc.MessagePushTemplateStaticsDao;
 import com.hyjf.cs.message.service.message.MessagePushTemplateStaticsService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -36,12 +39,23 @@ public class MessagePushTemplateStaticsServiceImpl implements MessagePushTemplat
 
 	@Override
 	public int selectCount(MessagePushTemplateStaticsRequest request) {
-		request.setCurrPage(0);
-		List<MessagePushTemplateStatics> list = staticsDao.selectTemplateStatics(request);
-		if (!CollectionUtils.isEmpty(list)) {
-			return list.size();
+		Query query = new Query();
+		Criteria criteria = new Criteria();
+		if (StringUtils.isNotBlank(request.getStartDateSrch()) && StringUtils.isNotBlank(request.getEndDateSrch())) {
+			criteria.and("sendTime").gte(request.getStartDateSrch() + " 00:00:00")
+					.lte(request.getEndDateSrch() + " 23:59:59");
 		}
-		return 0;
+		if (StringUtils.isNotBlank(request.getMsgTitleSrch())) {
+			criteria.and("msgTitle").is(request.getMsgTitleSrch());
+		}
+		if (StringUtils.isNotBlank(request.getMsgCodeSrch())) {
+			criteria.and("msgCode").is(request.getMsgCodeSrch());
+		}
+		if (StringUtils.isNotBlank(request.getTagIdSrch())) {
+			criteria.and("tagId").is(request.getTagIdSrch());
+		}
+		query.addCriteria(criteria);
+		return staticsDao.count(query).intValue();
 	}
 
 	@Override

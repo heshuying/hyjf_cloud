@@ -139,4 +139,32 @@ public interface UtmRegCustomizeMapper {
 	 * @return
 	 */
 	List<ChannelReconciliationVO> selectAppChannelReconciliationRecordHjh(ChannelReconciliationRequest request);
+
+	/**
+	 * 查询app统计明细计划数量
+	 * @param request
+	 * @return
+	 */
+    int selectAppChannelReconciliationRecordHjhCount(ChannelReconciliationRequest request);
+
+    /**
+     * 查询pc统计明细散标数量
+     * @param request
+     * @return
+     */
+    int selectPcChannelReconciliationRecordCount(ChannelReconciliationRequest request);
+
+    /**
+     * 查询pc统计明细计划数量
+     * @param request
+     * @return
+     */
+    int selectPcChannelReconciliationRecordHjhCount(ChannelReconciliationRequest request);
+
+    /**
+     * 查询app统计明细计划数量
+     * @param request
+     * @return
+     */
+    int selectAppChannelReconciliationRecordCount(ChannelReconciliationRequest request);
 }
