@@ -19,18 +19,18 @@ public class GetCilentIP {
 	 */
 	public static String getIpAddr(HttpServletRequest request) {
 		String ipAddress = request.getHeader("ip");
-		logger.info("ip地址为："+ipAddress);
+		logger.debug("ip地址为："+ipAddress);
 		if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
 			ipAddress = request.getHeader("x-forwarded-for");
-			logger.info("x-forwarded-for为："+ipAddress);
+			logger.debug("x-forwarded-for为："+ipAddress);
 
 		}if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
 			ipAddress = request.getHeader("Proxy-Client-IP");
-			logger.info("Proxy-Client-IP为："+ipAddress);
+			logger.debug("Proxy-Client-IP为："+ipAddress);
 		}
 		if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
 			ipAddress = request.getHeader("WL-Proxy-Client-IP");
-			logger.info("WL-Proxy-Client-IP为："+ipAddress);
+			logger.debug("WL-Proxy-Client-IP为："+ipAddress);
 		}
 		if (ipAddress == null || ipAddress.length() == 0 || "unknown".equalsIgnoreCase(ipAddress)) {
 			ipAddress = request.getRemoteAddr();
