@@ -81,7 +81,6 @@ public class WeChatLoginController extends BaseUserController {
         if (!"1".equals(env) && !"2".equals(env)) {
             throw new ReturnMessageException(MsgEnum.ERR_PARAM);
         }
-        long startt = System.currentTimeMillis();
         //密码解密
         password = RSAJSPUtil.rsaToPassword(password);
         // weChat 只支持手机号登录
@@ -97,7 +96,6 @@ public class WeChatLoginController extends BaseUserController {
             return result;
         }
         //判断用户输入的密码错误次数---结束
-        long start1 = System.currentTimeMillis();
         WebViewUserVO userVO = loginService.login(userName, password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI);
         if (userVO != null) {
             // add by liuyang 神策数据统计追加 登录成功后 将用户ID返回前端 20180717 start
