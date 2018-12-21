@@ -24,8 +24,8 @@ import com.hyjf.common.util.SignValue;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.util.GetCilentIP;
 import com.hyjf.cs.user.vo.UserParameters;
@@ -64,7 +64,7 @@ public class AppLoginController extends BaseUserController {
     @Autowired
     SystemConfig systemConfig;
     @Autowired
-    private UserOperationLogProducer userOperationLogProducer;
+    private CommonProducer commonProducer;
     /**
      * 登录
      *
@@ -102,10 +102,12 @@ public class AppLoginController extends BaseUserController {
             return ret;
         }
         // 业务逻辑
-        try {
+       // try {
             // 解密
+            logger.info("APP登录 ---> 解密前 key：{}，username：{}，password：{}", key, username, password);
             username = DES.decodeValue(key, username);
             password = DES.decodeValue(key, password);
+            logger.info("APP登录 ---> 解密后 username：{}，password：{}", username, password);
             if (Validator.isNull(username)) {
                 ret.put("status", "1");
                 ret.put("statusDesc", "用户名不能为空");
@@ -138,7 +140,7 @@ public class AppLoginController extends BaseUserController {
                 userOperationLogEntity.setUserName(webViewUserVO.getUsername());
                 userOperationLogEntity.setUserRole(webViewUserVO.getRoleId());
                 try {
-                    userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
                 } catch (MQException e) {
                     logger.error("保存用户日志失败", e);
                 }
@@ -169,11 +171,11 @@ public class AppLoginController extends BaseUserController {
                 ret.put("status", "1");
                 ret.put("statusDesc", "app端登录失败");
             }
-        }catch (Exception e){
-            logger.error("app端登录失败...");
-            ret.put("status", "1");
-            ret.put("statusDesc", e.getMessage());
-        }
+//        }catch (Exception e){
+//            logger.error("app端登录失败...");
+//            ret.put("status", "1");
+//            ret.put("statusDesc", e.getMessage());
+//        }
         return ret;
     }
 
@@ -181,7 +183,6 @@ public class AppLoginController extends BaseUserController {
      * 用户退出登录
      *
      * @param request
-     * @param response
      * @return
      */
     @ApiOperation(value = "登出", notes = "登出")
@@ -223,7 +224,7 @@ public class AppLoginController extends BaseUserController {
                 userOperationLogEntity.setUserName(userVO.getUsername());
                 userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
                 try {
-                    userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
                 } catch (MQException e) {
                     logger.error("保存用户日志失败", e);
                 }
@@ -290,7 +291,7 @@ public class AppLoginController extends BaseUserController {
         }
 
         // 业务逻辑
-        try {
+       // try {
             Integer userId = SecretUtil.getUserId(sign);
             // 取得用户ID
             if (userId != null) {
@@ -306,11 +307,11 @@ public class AppLoginController extends BaseUserController {
                 ret.put("statusDesc", "用户信息不存在");
             }
 
-        } catch (Exception e) {
-            logger.error("异常信息打印："+e);
-            ret.put("status", "1");
-            ret.put("statusDesc", "获取用户相关数据发生错误");
-        }
+//        } catch (Exception e) {
+//            logger.error("异常信息打印："+e);
+//            ret.put("status", "1");
+//            ret.put("statusDesc", "获取用户相关数据发生错误");
+//        }
         return ret;
     }
 

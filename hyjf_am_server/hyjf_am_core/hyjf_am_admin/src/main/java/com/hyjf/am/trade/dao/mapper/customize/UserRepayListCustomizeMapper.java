@@ -4,7 +4,7 @@ import java.util.Map;
 public interface UserRepayListCustomizeMapper {
 
     /**
-     * 根据用户id查找标的投资详情表和标的放款记录（投资人） 总表 的个数
+     * 根据用户id查找标的出借详情表和标的放款记录（出借人） 总表 的个数
      * @param params
      * @return
      */

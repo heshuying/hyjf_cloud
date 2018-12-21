@@ -26,14 +26,14 @@ public class ProductListLog implements Serializable {
     private Integer productId;
 
     /**
-     * 投资金额
+     * 出借金额
      *
      * @mbggenerated
      */
     private BigDecimal amount;
 
     /**
-     * 投资时间
+     * 出借时间
      *
      * @mbggenerated
      */
@@ -96,7 +96,7 @@ public class ProductListLog implements Serializable {
     private Integer department;
 
     /**
-     * 投资资金状态
+     * 出借资金状态
      *
      * @mbggenerated
      */
@@ -133,7 +133,7 @@ public class ProductListLog implements Serializable {
     private Integer client;
 
     /**
-     * 是否为对公账户投资 0：否 1：是
+     * 是否为对公账户出借 0：否 1：是
      *
      * @mbggenerated
      */

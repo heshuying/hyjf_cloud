@@ -104,7 +104,7 @@ public class DebtFreeze implements Serializable {
     private Integer status;
 
     /**
-     * 冻结类型 0投资冻结 1汇添金冻结 2债权承接冻结 3还款冻结
+     * 冻结类型 0出借冻结 1汇添金冻结 2债权承接冻结 3还款冻结
      *
      * @mbggenerated
      */

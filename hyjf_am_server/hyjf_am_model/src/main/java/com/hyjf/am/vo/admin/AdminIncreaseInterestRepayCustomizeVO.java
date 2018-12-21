@@ -34,13 +34,13 @@ public class AdminIncreaseInterestRepayCustomizeVO extends BaseVO implements Ser
 	/** 还款方式 */
 	private String repayStyleName;
 
-	/** 投资人用户名 */
+	/** 出借人用户名 */
 	private String investUserName;
 
-	/** 投资人用户ID */
+	/** 出借人用户ID */
 	private String investUserId;
 
-	/** 投资id */
+	/** 出借id */
 	private String investId;
 
 	/** 年化收益率 */

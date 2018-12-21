@@ -208,7 +208,7 @@ public class BankCardExceptionServiceImpl extends BaseServiceImpl implements Ban
                             // 第二步,更新身份证号等等
                             UserInfoExample uie = new UserInfoExample();
                             uie.createCriteria().andUserIdEqualTo(accountChinapnr.getUserId());
-                            List<UserInfo> l = usersInfoMapper.selectByExample(uie);
+                            List<UserInfo> l = userInfoMapper.selectByExample(uie);
                             if (l != null && l.size() == 1) {
                                 UserInfo usersInfo = l.get(0);
                                 JSONObject obj = array.getJSONObject(0);
@@ -238,7 +238,7 @@ public class BankCardExceptionServiceImpl extends BaseServiceImpl implements Ban
                                         usersInfo.setTruename(UsrName);
                                     }
                                 }
-                                usersInfoMapper.updateByPrimaryKey(usersInfo);
+                                userInfoMapper.updateByPrimaryKey(usersInfo);
                             }
 
                         } else {

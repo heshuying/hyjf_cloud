@@ -3,11 +3,11 @@
  */
 package com.hyjf.cs.message.bean.ic;
 
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author fuqiang
@@ -45,6 +45,7 @@ public class PcChannelStatistics implements Serializable {
 
     private BigDecimal hzrTenderPrice;
 
+    // @Indexed  dba维护索引
     private Date addTime;
 
     private static final long serialVersionUID = 1L;

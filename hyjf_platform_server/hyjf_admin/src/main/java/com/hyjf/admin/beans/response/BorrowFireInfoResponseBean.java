@@ -12,7 +12,7 @@ import java.math.BigDecimal;
  * @version BorrowFireInfoResponseBean, v0.1 2018/7/3 18:50
  */
 public class BorrowFireInfoResponseBean {
-    @ApiModelProperty(value = "借款编号")
+    @ApiModelProperty(value = "项目编号")
     private String borrowNid;
 
     @ApiModelProperty(value = "借款标题")

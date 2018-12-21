@@ -267,19 +267,19 @@ public class BorrowCommonVO extends BaseVO {
 	 */
 	private String ontime;
 	/**
-	 * 可投资平台_PC
+	 * 可出借平台_PC
 	 */
 	private String canTransactionPc;
 	/**
-	 * 可投资平台_微网站
+	 * 可出借平台_微网站
 	 */
 	private String canTransactionWei;
 	/**
-	 * 可投资平台_IOS
+	 * 可出借平台_IOS
 	 */
 	private String canTransactionIos;
 	/**
-	 * 可投资平台_Android
+	 * 可出借平台_Android
 	 */
 	private String canTransactionAndroid;
 	/**

@@ -10,7 +10,7 @@ import java.util.List;
 public interface CallcenterHztInvestCustomizeMapper {
 
     /**
-     * 获取投资明细(汇直投)
+     * 获取出借明细(汇直投)
      * @author libin
      * @param centerBaseRequest
      * @return
@@ -18,7 +18,7 @@ public interface CallcenterHztInvestCustomizeMapper {
 	List<CallcenterHztInvestCustomize> getBorrowInvestList(CallcenterHztInvestRequest callcenterHztInvestRequest);
 	
     /**
-     * 获取投资明细(汇添金)
+     * 获取出借明细(汇添金)
      * @author libin
      * @param centerBaseRequest
      * @return

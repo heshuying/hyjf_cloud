@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.trade.CorpOpenAccountRecordResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.user.*;
@@ -461,7 +460,7 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 根据垫付机构用户名检索垫付机构用户
+     * 根据担保机构用户名检索担保机构用户
      *
      * @param repayOrgName
      * @return
@@ -621,7 +620,7 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 更新渠道用户首次投资信息
+     * 更新渠道用户首次出借信息
      *
      * @param bean
      * @return

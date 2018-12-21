@@ -1,5 +1,7 @@
 package com.hyjf.admin.controller.productcenter.plancenter.reinvestdebt;
 
+import cn.emay.slf4j.Logger;
+import cn.emay.slf4j.LoggerFactory;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.common.result.AdminResult;
@@ -43,6 +45,7 @@ import java.util.Map;
 @RequestMapping(value = "/hyjf-admin/hjhReInvestDebt")
 public class HjhReInvestDebtController extends BaseController {
 
+    private static Logger logger = LoggerFactory.getLogger(HjhReInvestDebtController.class);
     @Autowired
     private HjhReInvestDebtService hjhReInvestDebtService;
 
@@ -59,7 +62,7 @@ public class HjhReInvestDebtController extends BaseController {
         // 初始化承接方式List
         List<Object> undertakingMethodList = new ArrayList<>();
 
-        // 初始化投资方式Map
+        // 初始化出借方式Map
         Map<String, Object> undertakingMethodMap = new HashedMap();
         Map<String, Object> undertakingMethodMap1 = new HashedMap();
 
@@ -158,6 +161,13 @@ public class HjhReInvestDebtController extends BaseController {
     @ApiOperation(value = "复投承接债权导出", notes = "复投承接债权列表导出")
     @PostMapping(value = "/exportAction")
     public void exportAction(HttpServletRequest request, HttpServletResponse response, HjhReInvestDebtRequest requestBean) throws Exception {
+        if (StringUtils.isEmpty(requestBean.getDate())){
+            logger.error("复投承接债权导出日期为空无法导出!");
+        }
+
+        if (StringUtils.isEmpty(requestBean.getPlanNid())){
+            logger.error("复投承接债权导出智投编号为空无法导出!");
+        }
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称

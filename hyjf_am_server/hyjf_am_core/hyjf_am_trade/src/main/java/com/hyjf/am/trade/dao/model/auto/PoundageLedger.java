@@ -36,7 +36,7 @@ public class PoundageLedger implements Serializable {
     private String account;
 
     /**
-     * 分账类型   1:按投资人分账； 2:按借款人分账
+     * 分账类型   1:按出借人分账； 2:按借款人分账
      *
      * @mbggenerated
      */
@@ -71,14 +71,14 @@ public class PoundageLedger implements Serializable {
     private BigDecimal manageRatio;
 
     /**
-     * 投资人分公司id
+     * 出借人分公司id
      *
      * @mbggenerated
      */
     private Integer investorCompanyId;
 
     /**
-     * 投资人分公司名称
+     * 出借人分公司名称
      *
      * @mbggenerated
      */

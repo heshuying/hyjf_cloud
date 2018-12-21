@@ -28,7 +28,7 @@ public class RepayResultBean extends BaseResultBean {
 	private static final long serialVersionUID = 1L;
 
 	/**
-	 * 借款编号
+	 * 项目编号
 	 */
 	private String borrowNid;
 	

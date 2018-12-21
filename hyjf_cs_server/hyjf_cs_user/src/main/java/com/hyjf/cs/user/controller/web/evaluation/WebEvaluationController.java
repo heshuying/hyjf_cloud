@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.controller.web.evaluation;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.*;
@@ -16,8 +17,8 @@ import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.service.evaluation.EvaluationService;
 import com.hyjf.cs.user.vo.FinancialAdvisorSumitQO;
 import io.swagger.annotations.Api;
@@ -41,7 +42,7 @@ public class WebEvaluationController extends BaseUserController {
     @Autowired
     EvaluationService evaluationService;
     @Autowired
-    UserOperationLogProducer userOperationLogProducer;
+    CommonProducer commonProducer;
     /**
      * 测评问题以及评分标准
      * @return
@@ -62,7 +63,7 @@ public class WebEvaluationController extends BaseUserController {
         userOperationLogEntity.setUserName(user.getUsername());
         userOperationLogEntity.setUserRole(user.getRoleId());
         try {
-            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+            commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
         } catch (MQException e) {
             logger.error("保存用户日志失败", e);
         }
@@ -100,7 +101,7 @@ public class WebEvaluationController extends BaseUserController {
         userOperationLogEntity.setUserName(users.getUsername());
         userOperationLogEntity.setUserRole(users.getRoleId());
         try {
-            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+            commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
         } catch (MQException e) {
             logger.error("保存用户日志失败", e);
         }

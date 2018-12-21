@@ -8,7 +8,6 @@ import com.alibaba.fastjson.TypeReference;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -19,7 +18,6 @@ import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.ClientConstants;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.annotation.RequestLimit;
@@ -28,8 +26,8 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.TenderInfoResult;
 import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.trade.service.consumer.NifaContractEssenceMessageService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import io.swagger.annotations.Api;
@@ -62,7 +60,7 @@ public class WechatjhPlanController extends BaseTradeController {
     @Autowired
     private NifaContractEssenceMessageService nifaContractEssenceMessageService;
     @Autowired
-    private UserOperationLogProducer userOperationLogProducer;
+    private CommonProducer commonProducer;
 
     @ApiOperation(value = "加入计划", notes = "加入计划")
     @PostMapping(value = "/joinPlan", produces = "application/json; charset=utf-8")
@@ -73,8 +71,8 @@ public class WechatjhPlanController extends BaseTradeController {
         tender.setUserId(userId);
         tender.setPlatform(String.valueOf(ClientConstants.WECHAT_CLIENT));
         // 神策数据统计 add by liuyang 20180726 start
-        // 神策数据统计事件的预置属性
-        String presetProps = request.getParameter("presetProps");
+        // 从payload里面获取预置属性
+        String presetProps = tender.getPresetProps();
         // 神策数据统计 add by liuyang 20180726 end
         WebResult result = new WebResult();
         WeChatResult weChatResult = new WeChatResult();
@@ -99,7 +97,7 @@ public class WechatjhPlanController extends BaseTradeController {
             userOperationLogEntity.setUserName(userVO.getUsername());
             userOperationLogEntity.setUserRole(String.valueOf(usersInfo.getRoleId()));
             try {
-                userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+                commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
             } catch (MQException e) {
                 logger.error("保存用户日志失败", e);
             }
@@ -141,7 +139,7 @@ public class WechatjhPlanController extends BaseTradeController {
         return weChatResult;
     }
 
-    @ApiOperation(value = "获取计划投资信息", notes = "获取计划投资信息")
+    @ApiOperation(value = "获取计划出借信息", notes = "获取计划出借信息")
     @GetMapping(value = "/getInvestInfo", produces = "application/json; charset=utf-8")
     public WeChatResult<TenderInfoResult> getInvestInfo(@RequestHeader(value = "userId") Integer userId,TenderRequest tender) {
         tender.setUserId(userId);
@@ -151,4 +149,5 @@ public class WechatjhPlanController extends BaseTradeController {
         result.setObject(resultBean);
         return  result;
     }
+
 }

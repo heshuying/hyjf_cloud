@@ -2,20 +2,20 @@ package com.hyjf.cs.trade.controller.web.repay;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.resquest.trade.RepayListRequest;
 import com.hyjf.am.resquest.trade.RepayRequest;
 import com.hyjf.am.resquest.trade.RepayRequestDetailRequest;
+import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowApicronVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.HjhUserAuthVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
@@ -33,9 +33,8 @@ import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.controller.BaseTradeController;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.BorrowLoanRepayProducer;
-import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.repay.RepayManageService;
 import com.hyjf.cs.trade.vo.BatchRepayPageRequestVO;
@@ -89,11 +88,9 @@ public class RepayManageController extends BaseTradeController {
     public static final String SMSSENDFORUSER = "smsSendForUser";
 
     @Autowired
-    SmsProducer smsProducer;
+    private CommonProducer commonProducer;
     @Autowired
     RepayManageService repayManageService;
-    @Autowired
-    BorrowLoanRepayProducer borrowLoanRepayProducer;
     @Autowired
     AmUserClient amUserClient;
     @Autowired
@@ -241,6 +238,93 @@ public class RepayManageController extends BaseTradeController {
         }
 
         result.setPage(page);
+        return result;
+    }
+
+    /**
+     * 用户代还标的,债转详情.
+     * @param userId
+     * @param borrowNid
+     * @return
+     * @Author : huanghui
+     */
+    @ApiOperation(value = "用户待还标的-债转详情", notes = "用户待还标的-债转详情")
+    @PostMapping(value = "/user_repay_detail")
+    public WebResult<Map<String,Object>>  userRepayDetail(@RequestHeader(value = "userId", required = true) int userId, @RequestBody String borrowNid){
+        WebResult<Map<String,Object>> result = new WebResult<>();
+        Map<String,Object> resultMap = new HashMap<>();
+
+        // 根据用户ID 查询用户信息
+        WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
+        /** 当前用户已登录并且标的NID不为空 */
+        String verificationFlag = null;
+        if (userVO != null && StringUtils.isNotBlank(borrowNid)){
+            WebUserTransferBorrowInfoCustomizeVO borrowInfo = this.repayManageService.getUserTransferBorrowInfo(borrowNid);
+
+            try {
+                // 单纯的作为验证标识.
+                if (borrowInfo.getPlanNid() != null) {
+                    verificationFlag = borrowInfo.getPlanNid();
+                } else {
+                    verificationFlag = null;
+                }
+
+                //居间协议
+                Integer fddStatus = 0;
+                List<TenderAgreementVO> tenderAgreementsNid = this.repayManageService.selectTenderAgreementByNid(borrowNid);
+                if (tenderAgreementsNid != null && tenderAgreementsNid.size() > 0) {
+                    TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
+                    fddStatus = tenderAgreement.getStatus();
+                    //法大大协议生成状态：0:初始,1:成功,2:失败，3下载成功
+                    if (fddStatus.equals(3)) {
+                        fddStatus = 1;
+                    } else {
+                        //隐藏下载按钮
+                        fddStatus = 0;
+                    }
+                } else {
+                    //下载老版本协议
+                    fddStatus = 1;
+                }
+
+                // 计算到账金额
+                if (borrowInfo.getSucSmount() != null) {
+                    BigDecimal oldYesAccount = borrowInfo.getSucSmount();
+                    borrowInfo.setSucSmount(oldYesAccount.subtract(borrowInfo.getServiceFee()));
+                } else {
+                    borrowInfo.setSucSmount(new BigDecimal(0));
+                }
+
+                resultMap.put("verificationFlag", verificationFlag);
+                resultMap.put("borrowInfo", borrowInfo);
+                resultMap.put("fddStatus", fddStatus);
+                result.setData(resultMap);
+            }catch (NullPointerException e){
+                result.setStatusDesc("暂无数据");
+            }
+        }
+        return result;
+    }
+
+    /**
+     *
+     * @param repayTransferRequest
+     * @return
+     */
+    @ApiOperation(value = "用户待还标的-债转列表", notes = "用户待还标的-债转列表")
+    @PostMapping(value = "/userRepayDetailAjax", produces = "application/json; charset=utf-8")
+    public  WebResult<List<WebUserRepayTransferCustomizeVO>> userRepayDetailAjax(@RequestBody WebUserRepayTransferRequest repayTransferRequest){
+//        WebResult<WebUserRepayTransferCustomizeVO> result = new WebResult<>();
+        WebResult<List<WebUserRepayTransferCustomizeVO>> result = new WebResult<List<WebUserRepayTransferCustomizeVO>>();
+        result.setData(Collections.emptyList());
+
+        List<WebUserRepayTransferCustomizeVO> repayTransferCustomizeVO = null;
+        repayTransferCustomizeVO =  this.repayManageService.selectUserRepayTransferDetailList(repayTransferRequest);
+        if (repayTransferCustomizeVO != null){
+            result.setData(repayTransferCustomizeVO);
+        }
+        result.setStatus(BaseResult.SUCCESS);
+        result.setStatusDesc(BaseResult.SUCCESS_DESC);
         return result;
     }
 
@@ -690,13 +774,13 @@ public class RepayManageController extends BaseTradeController {
                     if (allRepaySize == successRepaySize) {//全部成功
                         SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, SMSSENDFORUSER, null, CustomConstants.JYTZ_PLAN_REPAYALL_SUCCESS,
                                 CustomConstants.CHANNEL_TYPE_NORMAL);
-                        smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
-                                UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
+                                UUID.randomUUID().toString(), smsMessage));
                     }else{// 改批次代偿，失败不发短信 2018-9-13 wgx
                         //SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, SMSSENDFORUSER, null, CustomConstants.JYTZ_PLAN_REPAYPART_SUCCESS,
                         //        CustomConstants.CHANNEL_TYPE_NORMAL);
                         //smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
-                        //        UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                        //        UUID.randomUUID().toString(), smsMessage));
                     }
                 }
             } catch (MQException e) {
@@ -866,13 +950,13 @@ public class RepayManageController extends BaseTradeController {
                     // 还款任务
                     if (StringUtils.isBlank(apicron.getPlanNid())) {
                         // 直投类还款
-                        borrowLoanRepayProducer.messageSend(new MessageContent(MQConstant.BORROW_REPAY_ZT_RESULT_TOPIC,
-                                apicron.getBorrowNid(), JSON.toJSONBytes(apicron)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.BORROW_REPAY_ZT_RESULT_TOPIC,
+                                apicron.getBorrowNid(), apicron));
                         logger.info("【还款业务处理结果异步通知】发送散标还款结果处理消息:还款项目编号:[{}]", apicron.getBorrowNid());
                     } else {
                         // 计划类还款
-                        borrowLoanRepayProducer.messageSend(new MessageContent(MQConstant.BORROW_REPAY_PLAN_RESULT_TOPIC,
-                                apicron.getBorrowNid(), JSON.toJSONBytes(apicron)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.BORROW_REPAY_PLAN_RESULT_TOPIC,
+                                apicron.getBorrowNid(), apicron));
                         logger.info("【还款业务处理结果异步通知】发送计划还款结果处理消息:还款项目编号:[{}],计划编号:{}",
                                 apicron.getBorrowNid(), apicron.getPlanNid());
                     }
@@ -902,7 +986,7 @@ public class RepayManageController extends BaseTradeController {
         List<File> files = new ArrayList<File>();
 
         //CreateAgreementController createAgreementController = new CreateAgreementController();
-        // 查询用户项目的投资情况
+        // 查询用户项目的出借情况
         List<WebUserInvestListCustomizeVO> investlist;
         investlist = repayManageService.selectUserInvestList(borrowNid);
 
@@ -924,7 +1008,7 @@ public class RepayManageController extends BaseTradeController {
 
         /*************************************借款人借款列表先不下载债转**********************************/
 		/*// 散标进计划--》建标时打上计划的标签，so散标债转只能转成散标，计划中的标的债转也只能转成计划中的标的
-		// 一个标的一旦开始被投资要么是散标中中的标的，要么是计划中用的标的
+		// 一个标的一旦开始被出借要么是散标中中的标的，要么是计划中用的标的
 
 		// (2.1)散标的债转协议(原)
 		Borrow borrow = this.repayService.getBorrowByNid(borrowNid);
@@ -937,8 +1021,8 @@ public class RepayManageController extends BaseTradeController {
 					CreditAssignedBean tenderCreditAssignedBean  = new CreditAssignedBean();
 					tenderCreditAssignedBean.setBidNid(hjhCreditTender.getBorrowNid());// 标号
 					tenderCreditAssignedBean.setCreditNid(hjhCreditTender.getCreditNid());// 债转编号
-					tenderCreditAssignedBean.setCreditTenderNid(hjhCreditTender.getInvestOrderId());//原始投资订单号
-					tenderCreditAssignedBean.setAssignNid(hjhCreditTender.getAssignOrderId());//债转后的新的"投资"订单号
+					tenderCreditAssignedBean.setCreditTenderNid(hjhCreditTender.getInvestOrderId());//原始出借订单号
+					tenderCreditAssignedBean.setAssignNid(hjhCreditTender.getAssignOrderId());//债转后的新的"出借"订单号
 					if(currentUserId != null){
 						tenderCreditAssignedBean.setCurrentUserId(currentUserId);
 					}
@@ -966,7 +1050,7 @@ public class RepayManageController extends BaseTradeController {
 						param.put("bidNid", creditTender.getBidNid());
 						// 债转编号
 						param.put("creditNid", creditTender.getCreditNid());
-						// 债转投资订单号
+						// 债转出借订单号
 						param.put("creditTenderNid", creditTender.getCreditTenderNid());
 						// 承接订单号
 						param.put("assignNid", creditTender.getAssignNid());
@@ -1059,9 +1143,10 @@ public class RepayManageController extends BaseTradeController {
                         //还款后变更数据
                         boolean updateResult = this.repayManageService.updateForRepayRequest(repay, callBackBean, isAllRepay);
                         if (updateResult) {
+                            repayManageService.deleteOrgFreezeTempLogs(orderId, borrowNid);
                             // 如果有正在出让的债权,先去把出让状态停止
                             this.repayManageService.updateBorrowCreditStautus(borrowNid);
-                            repayManageService.deleteOrgFreezeTempLogs(orderId, borrowNid);
+
                             logger.info("【代偿冻结异步回调】垫付机构:" + userId + "还款申请成功,标的号:{},订单号:{}", borrowNid, orderId);
                         } else {
                             logger.error("【代偿冻结异步回调】垫付机构:" + userId + "还款更新数据失败,标的号:{},订单号:{}", borrowNid, orderId);

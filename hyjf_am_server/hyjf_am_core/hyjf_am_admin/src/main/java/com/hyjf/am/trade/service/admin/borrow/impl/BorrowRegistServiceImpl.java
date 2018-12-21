@@ -4,9 +4,8 @@
 package com.hyjf.am.trade.service.admin.borrow.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
-import com.hyjf.am.admin.mq.producer.AutoBailMessageProducer;
-import com.hyjf.am.admin.mq.producer.AutoPreAuditMessageProducer;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.resquest.admin.BorrowRegistUpdateRequest;
@@ -41,10 +40,7 @@ import java.util.UUID;
 public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRegistService {
 
     @Resource
-    private AutoBailMessageProducer autoBailMessageProducer;
-
-    @Resource
-    private AutoPreAuditMessageProducer autoPreAuditMessageProducer;
+    private CommonProducer commonProducer;
 
     /**
      * 获取项目类型
@@ -247,7 +243,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
                                         JSONObject params = new JSONObject();
                                         params.put("borrowNid", borrow.getBorrowNid());
                                         params.put("instCode",borrowInfo.getInstCode());
-                                        autoBailMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_BAIL_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                                        commonProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_BAIL_TOPIC, UUID.randomUUID().toString(), params));
                                     } catch (Exception e) {
                                         logger.error("发送MQ到审核保证金失败，borrowNid：" + borrowNid);
                                         e.printStackTrace();
@@ -267,7 +263,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
                                             JSONObject params = new JSONObject();
                                             params.put("borrowNid", borrow.getBorrowNid());
                                             params.put("instCode",borrowInfo.getInstCode());
-                                            autoPreAuditMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+                                            commonProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), params));
                                         } catch (Exception e) {
                                             logger.error("发送MQ到初审失败，borrowNid：" + borrowNid);
                                             e.printStackTrace();
@@ -345,7 +341,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
         updateBorrow.setStatus(status);
         // add by liuyang 合规自查 20181119 start
         // 跳过已交保证金状态
-        borrow.setVerifyStatus(1);
+        updateBorrow.setVerifyStatus(1);
         // add by liuyang 合规自查 20181119 end
         updateBorrow.setRegistUserId(Integer.parseInt(currUserId));
         updateBorrow.setRegistUserName(currUserName);
@@ -371,6 +367,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
         example.createCriteria().andIdEqualTo(borrow.getId());
         updateBorrow.setRegistStatus(registStatus);
         updateBorrow.setStatus(status);
+        updateBorrow.setVerifyStatus(1);
         updateBorrow.setRegistUserId(Integer.parseInt(currUserId));
         updateBorrow.setRegistUserName(currUserName);
         updateBorrow.setRegistTime(nowDate);

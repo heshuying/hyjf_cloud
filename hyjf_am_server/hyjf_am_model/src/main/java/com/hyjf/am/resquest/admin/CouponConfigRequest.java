@@ -67,16 +67,16 @@ public class CouponConfigRequest extends BasePage {
     @ApiModelProperty(value = "项目期限最长时长")
     private Integer projectExpirationLengthMax;
 
-    @ApiModelProperty(value = "投资金额类别")
+    @ApiModelProperty(value = "出借金额类别")
     private Integer tenderQuotaType;
 
-    @ApiModelProperty(value = "投资金额")
+    @ApiModelProperty(value = "出借金额")
     private Integer tenderQuota;
 
-    @ApiModelProperty(value = "投资金额最小额度")
+    @ApiModelProperty(value = "出借金额最小额度")
     private Integer tenderQuotaMin;
 
-    @ApiModelProperty(value = "投资金额最大额度")
+    @ApiModelProperty(value = "出借金额最大额度")
     private Integer tenderQuotaMax;
 
     @ApiModelProperty(value = "优惠券描述")
@@ -106,6 +106,8 @@ public class CouponConfigRequest extends BasePage {
     private Date createTime;
 
     private Date updateTime;
+
+    private int exportCount;
     /**
      * 检索条件 时间开始
      */
@@ -419,5 +421,13 @@ public class CouponConfigRequest extends BasePage {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public int getExportCount() {
+        return exportCount;
+    }
+
+    public void setExportCount(int exportCount) {
+        this.exportCount = exportCount;
     }
 }

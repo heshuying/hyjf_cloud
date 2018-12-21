@@ -35,7 +35,7 @@ import java.util.Map;
  * @version AutoPlusController, v0.1 2018/6/11 14:31
  */
 
-@Api(tags = "api端-用户授权自动投资自动授权接口")
+@Api(tags = "api端-用户授权自动出借自动授权接口")
 @Controller
 @RequestMapping("/hyjf-api/server/autoPlus")
 public class ApiAutoPlusController extends BaseUserController {
@@ -66,12 +66,12 @@ public class ApiAutoPlusController extends BaseUserController {
 
     /**
      * @Author: zhangqingqing
-     * @Desc :自动投资授权
+     * @Desc :自动出借授权
      * @Param: * @param payRequestBean
      * @Date: 16:44 2018/5/30
      * @Return:
      */
-    @ApiIgnore(value = "自动投资授权")
+    @ApiIgnore(value = "自动出借授权")
     @PostMapping(value = "/userAuthInves")
     @ResponseBody
     public ModelAndView userAuthInves(@RequestBody @Valid AutoPlusRequestBean payRequestBean) {
@@ -143,12 +143,12 @@ public class ApiAutoPlusController extends BaseUserController {
     /**
      * @param bean
      * @Author: zhangqingqing
-     * @Desc :自动投资授权同步回调
+     * @Desc :自动出借授权同步回调
      * @Param: * @param request
      * @Date: 10:11 2018/5/31
      * @Return:
      */
-    @ApiIgnore(value = "自动投资授权同步回调")
+    @ApiIgnore(value = "自动出借授权同步回调")
     @GetMapping(value = "/userAuthInvesReturn")
     public ModelAndView userAuthInvesReturn(HttpServletRequest request, BankCallBean bean) {
         String callback = request.getParameter("callback").replace("*-*-*", "#");
@@ -158,9 +158,9 @@ public class ApiAutoPlusController extends BaseUserController {
         result.put("callBackAction", callback);
         result.put("status", ErrorCodeConstant.SUCCESS);
         result.put("acqRes",acqRes);
-        result.put("statusDesc", "自动投资授权成功");
+        result.put("statusDesc", "自动出借授权成功");
         if (repwdResult.get("flag").equals("1")){
-            result.put("statusDesc", "自动投资授权申请失败,失败原因：" + autoPlusService.getBankRetMsg(bean.getRetCode()));
+            result.put("statusDesc", "自动出借授权申请失败,失败原因：" + autoPlusService.getBankRetMsg(bean.getRetCode()));
             result.put("status",ErrorCodeConstant.STATUS_CE999999);
             return callbackErrorViewForMap(result);
         }
@@ -201,7 +201,7 @@ public class ApiAutoPlusController extends BaseUserController {
      * @return
      */
     @ResponseBody
-    @ApiIgnore(value = "授权自动投资异步回调")
+    @ApiIgnore(value = "授权自动出借异步回调")
     @PostMapping(value = "/userAuthInvesBgreturn")
     public BankCallResult userAuthInvesBgreturn(HttpServletRequest request,@RequestBody BankCallBean bean) {
         String callback = request.getParameter("callback").replace("*-*-*", "#");

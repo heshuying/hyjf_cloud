@@ -2,11 +2,14 @@ package com.hyjf.am.trade.service.front.repay.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.trade.RepayListRequest;
+import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.trade.bean.repay.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.EmployeeCustomize;
+import com.hyjf.am.trade.dao.model.customize.WebUserRepayTransferCustomize;
+import com.hyjf.am.trade.dao.model.customize.WebUserTransferBorrowInfoCustomize;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.BorrowLoanRepayProducer;
 import com.hyjf.am.trade.service.front.repay.RepayManageService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
@@ -42,7 +45,7 @@ import java.util.*;
 public class RepayManageServiceImpl extends BaseServiceImpl implements RepayManageService {
 
     @Autowired
-    private BorrowLoanRepayProducer borrowLoanRepayProducer;
+    private CommonProducer commonProducer;
 
     /**
      * 普通借款人管理费总待还
@@ -109,6 +112,17 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         List<RepayListCustomizeVO> list = repayManageCustomizeMapper.selectRepayList(param);
         if (list != null && list.size() > 0) {
             for (int i = 0; i < list.size(); i++) {
+                // 查询承接条数(标的发生过债转,并且已有人承接)
+                int listCount = 0;
+                if (org.apache.commons.lang3.StringUtils.isNotEmpty(list.get(i).getPlanNid())){
+                    listCount =  webUserRepayListCustomizeMapper.selectUserRepayTransferListTotalByHjhCreditTender(list.get(i).getBorrowNid());
+                }else {
+                    listCount = webUserRepayListCustomizeMapper.selectUserRepayTransferListTotalByCreditTender(list.get(i).getBorrowNid());
+                }
+
+                // 承接条数
+                list.get(i).setListCount(listCount);
+
                 BigDecimal accountFee = BigDecimal.ZERO;
                 BigDecimal borrowTotal = BigDecimal.ZERO;
                 BigDecimal realAccountTotal = BigDecimal.ZERO;
@@ -173,7 +187,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     }
 
     /**
-     * 获取投资协议
+     * 获取出借协议
      */
     private List<TenderAgreement> getTenderAgreement(String tenderNid) {
         TenderAgreementExample example = new TenderAgreementExample();
@@ -694,11 +708,11 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             for (int i = 0; i < borrowRecovers.size(); i++) {
                 BorrowRecover borrowRecover = borrowRecovers.get(i);
                 RepayRecoverBean repayRecoverBean = new RepayRecoverBean();
-                String tenderOrderId = borrowRecover.getNid();// 投资订单号
+                String tenderOrderId = borrowRecover.getNid();// 出借订单号
                 String recoverTime = GetDate.getDateTimeMyTimeInMillis(borrowRecover.getRecoverTime());
                 String createTime = GetDate.getDateTimeMyTimeInMillis(borrowRecover.getCreateTime());
                 int totalDays = GetDate.daysBetween(createTime, recoverTime);// 获取这两个时间之间有多少天
-                // 计算投资用户实际获得的本息和
+                // 计算出借用户实际获得的本息和
                 userAccount = borrowRecover.getRecoverAccount();
                 userCapital = borrowRecover.getRecoverCapital();
                 userInterest = borrowRecover.getRecoverInterest();
@@ -755,7 +769,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             for (int j = 0; j < creditRepayList.size(); j++) {
                                 CreditRepay creditRepay = creditRepayList.get(j);
                                 RepayCreditRepayBean creditRepayBean = new RepayCreditRepayBean();
-                                // 计算投资用户实际获得的本息和
+                                // 计算出借用户实际获得的本息和
                                 assignAccount = creditRepay.getAssignAccount();
                                 assignCapital = creditRepay.getAssignCapital();// 承接本金
                                 assignInterest = creditRepay.getAssignInterest();
@@ -857,7 +871,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             for (int j = 0; j < creditRepayList.size(); j++) {
                                 HjhDebtCreditRepay creditRepay = creditRepayList.get(j);
                                 HjhDebtCreditRepayBean creditRepayBean = new HjhDebtCreditRepayBean();
-                                // 计算投资用户实际获得的本息和
+                                // 计算出借用户实际获得的本息和
                                 assignAccount = creditRepay.getRepayAccount();
                                 assignCapital = creditRepay.getRepayCapital();// 承接本金
                                 assignInterest = creditRepay.getRepayInterest();
@@ -1110,7 +1124,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             for (int i = 0; i < borrowRecovers.size(); i++) {
                 BorrowRecover borrowRecover = borrowRecovers.get(i);
                 RepayRecoverBean repayRecoverBean = new RepayRecoverBean();
-                String tenderOrderId = borrowRecover.getNid();// 投资订单号
+                String tenderOrderId = borrowRecover.getNid();// 出借订单号
                 userAccount = borrowRecover.getRecoverAccount();// 获取未还款前用户能够获取的本息和
                 userCapital = borrowRecover.getRecoverCapital();
                 userInterest = borrowRecover.getRecoverInterest();
@@ -1356,7 +1370,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             for (int i = 0; i < borrowRecovers.size(); i++) {
                 BorrowRecover borrowRecover = borrowRecovers.get(i);
                 RepayRecoverBean repayRecoverBean = new RepayRecoverBean();
-                String tenderOrderId = borrowRecover.getNid();// 投资订单号
+                String tenderOrderId = borrowRecover.getNid();// 出借订单号
                 userAccount = borrowRecover.getRecoverAccount();// 计算用户实际获得的本息和
                 userCapital = borrowRecover.getRecoverCapital();
                 userInterest = borrowRecover.getRecoverInterest();
@@ -1367,7 +1381,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
 
                 if (borrowRecover.getCreditAmount().compareTo(BigDecimal.ZERO) > 0) {
                     if (Validator.isNull(borrowRecover.getAccedeOrderId())) {
-                        // 投资项目还款
+                        // 出借项目还款
                         List<CreditRepay> creditRepayList = this.selectCreditRepay(borrowNid, tenderOrderId, 1, 0);
                         if (creditRepayList != null && creditRepayList.size() > 0) {
                             List<RepayCreditRepayBean> creditRepayBeanList = new ArrayList<RepayCreditRepayBean>();
@@ -1542,7 +1556,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             for (int i = 0; i < borrowRecovers.size(); i++) {
                 BorrowRecover borrowRecover = borrowRecovers.get(i);
                 RepayRecoverBean repayRecoverBean = new RepayRecoverBean();
-                String tenderOrderId = borrowRecover.getNid();// 投资订单号
+                String tenderOrderId = borrowRecover.getNid();// 出借订单号
                 userAccount = borrowRecover.getRecoverAccount();
                 userCapital = borrowRecover.getRecoverCapital();
                 userInterest = borrowRecover.getRecoverInterest();
@@ -2084,8 +2098,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         for (int i = 0; i < borrowRecoverList.size(); i++) {
 
             BorrowRecover borrowRecover = borrowRecoverList.get(i);
-            String recoverNid = borrowRecover.getNid();// 投资订单号
-            int recoverUserId = borrowRecover.getUserId();// 投资用户userId
+            String recoverNid = borrowRecover.getNid();// 出借订单号
+            int recoverUserId = borrowRecover.getUserId();// 出借用户userId
 
             BigDecimal userAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
             BigDecimal userCapital = BigDecimal.ZERO; // 用户实际还款本本金
@@ -2096,8 +2110,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
 
             for (int j = 0; j < borrowRecoverPlans.size(); j++) {
                 BorrowRecoverPlan borrowRecoverPlan = borrowRecoverPlans.get(j);
-                String recoverPlanNid = borrowRecoverPlan.getNid();// 投资订单号
-                int recoverPlanUserId = borrowRecoverPlan.getUserId();// 投资用户userId
+                String recoverPlanNid = borrowRecoverPlan.getNid();// 出借订单号
+                int recoverPlanUserId = borrowRecoverPlan.getUserId();// 出借用户userId
 
                 if (recoverPlanNid.equals(recoverNid) && recoverUserId == recoverPlanUserId) {
 
@@ -2106,7 +2120,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     userCapital = borrowRecoverPlan.getRecoverCapital();
                     userInterest = borrowRecoverPlan.getRecoverInterest();
                     userManageFee = borrowRecoverPlan.getRecoverFee();// 获取应还款管理费
-                    BigDecimal recoverUserCapital = borrowRecover.getRecoverCapital().subtract(borrowRecover.getRecoverCapitalYes()); // 原始投资本金
+                    BigDecimal recoverUserCapital = borrowRecover.getRecoverCapital().subtract(borrowRecover.getRecoverCapitalYes()); // 原始出借本金
 
                     // 给页面展示，就不计算了
                     repayRecoverPlanBean.setRecoverAccountOld(userAccount);
@@ -2492,8 +2506,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         if (borrowRecoverList != null && borrowRecoverList.size() > 0) {
             for (int i = 0; i < borrowRecoverList.size(); i++) {
                 BorrowRecover borrowRecover = borrowRecoverList.get(i);
-                String recoverNid = borrowRecover.getNid();// 投资订单号
-                int recoverUserId = borrowRecover.getUserId();// 投资用户userId
+                String recoverNid = borrowRecover.getNid();// 出借订单号
+                int recoverUserId = borrowRecover.getUserId();// 出借用户userId
                 if (borrowRecoverPlans != null && borrowRecoverPlans.size() > 0) {
                     BigDecimal userAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
                     BigDecimal userCapital = BigDecimal.ZERO; // 用户实际还款本本金
@@ -2503,8 +2517,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     BigDecimal userOverdueInterest = BigDecimal.ZERO;// 计算用户逾期还款利息
                     for (int j = 0; j < borrowRecoverPlans.size(); j++) {
                         BorrowRecoverPlan borrowRecoverPlan = borrowRecoverPlans.get(j);
-                        String recoverPlanNid = borrowRecoverPlan.getNid();// 投资订单号
-                        int recoverPlanUserId = borrowRecoverPlan.getUserId();// 投资用户userId
+                        String recoverPlanNid = borrowRecoverPlan.getNid();// 出借订单号
+                        int recoverPlanUserId = borrowRecoverPlan.getUserId();// 出借用户userId
                         userAccount = borrowRecoverPlan.getRecoverAccount();
                         userCapital = borrowRecoverPlan.getRecoverCapital();
                         userInterest = borrowRecoverPlan.getRecoverInterest();
@@ -2515,7 +2529,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             userOverdueInterest = UnnormalRepayUtils.overduePlanRepayOverdueInterest(userAccount, lateDays, borrow.getLateInterestRate());
                         }
                         if (lateDays > 0) {
-                            logger.info("投资订单号:{},逾期天数{}", recoverPlanNid, lateDays);
+                            logger.info("出借订单号:{},逾期天数{}", recoverPlanNid, lateDays);
                             logger.info("实际获得的本息和:{},逾期利息{}", userAccount, userOverdueInterest);
                         }
                         // 计算用户延期利息
@@ -2813,8 +2827,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         if (borrowRecoverList != null && borrowRecoverList.size() > 0) {
             for (int i = 0; i < borrowRecoverList.size(); i++) {
                 BorrowRecover borrowRecover = borrowRecoverList.get(i);
-                String recoverNid = borrowRecover.getNid();// 投资订单号
-                int recoverUserId = borrowRecover.getUserId();// 投资用户userId
+                String recoverNid = borrowRecover.getNid();// 出借订单号
+                int recoverUserId = borrowRecover.getUserId();// 出借用户userId
                 if (borrowRecoverPlans != null && borrowRecoverPlans.size() > 0) {
                     BigDecimal userAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
                     BigDecimal userCapital = BigDecimal.ZERO; // 用户实际还款本本金
@@ -2823,8 +2837,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     BigDecimal userDelayInterest = BigDecimal.ZERO;// 计算用户提前还款利息
                     for (int j = 0; j < borrowRecoverPlans.size(); j++) {
                         BorrowRecoverPlan borrowRecoverPlan = borrowRecoverPlans.get(j);
-                        String recoverPlanNid = borrowRecoverPlan.getNid();// 投资订单号
-                        int recoverPlanUserId = borrowRecoverPlan.getUserId();// 投资用户userId
+                        String recoverPlanNid = borrowRecoverPlan.getNid();// 出借订单号
+                        int recoverPlanUserId = borrowRecoverPlan.getUserId();// 出借用户userId
                         if (recoverPlanNid.equals(recoverNid) && recoverUserId == recoverPlanUserId) {
                             RepayRecoverPlanBean repayRecoverPlanBean = new RepayRecoverPlanBean();
                             userAccount = borrowRecoverPlan.getRecoverAccount();
@@ -3098,8 +3112,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         if (borrowRecoverList != null && borrowRecoverList.size() > 0) {
             for (int i = 0; i < borrowRecoverList.size(); i++) {
                 BorrowRecover borrowRecover = borrowRecoverList.get(i);
-                String recoverNid = borrowRecover.getNid();// 投资订单号
-                int recoverUserId = borrowRecover.getUserId();// 投资用户userId
+                String recoverNid = borrowRecover.getNid();// 出借订单号
+                int recoverUserId = borrowRecover.getUserId();// 出借用户userId
                 if (borrowRecoverPlans != null && borrowRecoverPlans.size() > 0) {
                     BigDecimal userAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
                     BigDecimal userCapital = BigDecimal.ZERO; // 用户实际还款本本金
@@ -3107,8 +3121,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     BigDecimal userManageFee = BigDecimal.ZERO;// 计算用户還款管理費
                     for (int j = 0; j < borrowRecoverPlans.size(); j++) {
                         BorrowRecoverPlan borrowRecoverPlan = borrowRecoverPlans.get(j);
-                        String recoverPlanNid = borrowRecoverPlan.getNid();// 投资订单号
-                        int recoverPlanUserId = borrowRecoverPlan.getUserId();// 投资用户userId
+                        String recoverPlanNid = borrowRecoverPlan.getNid();// 出借订单号
+                        int recoverPlanUserId = borrowRecoverPlan.getUserId();// 出借用户userId
                         if (recoverPlanNid.equals(recoverNid) && recoverUserId == recoverPlanUserId) {
                             RepayRecoverPlanBean repayRecoverPlanBean = new RepayRecoverPlanBean();
                             userAccount = borrowRecoverPlan.getRecoverAccount();// 获取应还款本息
@@ -3341,8 +3355,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         if (borrowRecoverList != null && borrowRecoverList.size() > 0) {
             for (int i = 0; i < borrowRecoverList.size(); i++) {
                 BorrowRecover borrowRecover = borrowRecoverList.get(i);
-                String recoverNid = borrowRecover.getNid();// 投资订单号
-                int recoverUserId = borrowRecover.getUserId();// 投资用户userId
+                String recoverNid = borrowRecover.getNid();// 出借订单号
+                int recoverUserId = borrowRecover.getUserId();// 出借用户userId
                 if (borrowRecoverPlans != null && borrowRecoverPlans.size() > 0) {
                     BigDecimal userAccount = BigDecimal.ZERO;// 计算用户实际获得的本息和
                     BigDecimal userCapital = BigDecimal.ZERO; // 用户实际还款本本金
@@ -3353,8 +3367,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     BigDecimal userManageFee = BigDecimal.ZERO;// 计算用户還款管理費
                     for (int j = 0; j < borrowRecoverPlans.size(); j++) {
                         BorrowRecoverPlan borrowRecoverPlan = borrowRecoverPlans.get(j);
-                        String recoverPlanNid = borrowRecoverPlan.getNid();// 投资订单号
-                        int recoverPlanUserId = borrowRecoverPlan.getUserId();// 投资用户userId
+                        String recoverPlanNid = borrowRecoverPlan.getNid();// 出借订单号
+                        int recoverPlanUserId = borrowRecoverPlan.getUserId();// 出借用户userId
                         if (recoverPlanNid.equals(recoverNid) && recoverUserId == recoverPlanUserId) {
                             RepayRecoverPlanBean repayRecoverPlanBean = new RepayRecoverPlanBean();
                             userAccount = borrowRecoverPlan.getRecoverAccount();// 获取应还款本息
@@ -4248,7 +4262,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 for (int i = 0; i < recoverList.size(); i++) {
                     RepayRecoverBean repayRecover = recoverList.get(i);
                     BorrowRecover borrowRecoverOld = borrowRecoverMapper.selectByPrimaryKey(repayRecover.getId());
-                    Integer tenderUserId = borrowRecoverOld.getUserId(); // 投资人信息
+                    Integer tenderUserId = borrowRecoverOld.getUserId(); // 出借人信息
                     BigDecimal manageFee = BigDecimal.ZERO;
                     List<RepayCreditRepayBean> creditRepayList = repayRecover.getCreditRepayList();
                     List<HjhDebtCreditRepayBean> hjhCreditRepayList = repayRecover.getHjhCreditRepayList();//汇计划债转还款列表的
@@ -4325,13 +4339,13 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                     if (borrowRecoverFlag && creditFlag) {
                         RUser users = this.getRefUser(tenderUserId);
                         if (users != null) {
-                            // 获取投资人属性
+                            // 获取出借人属性
                             // 用户属性 0=>无主单 1=>有主单 2=>线下员工 3=>线上员工
                             Integer attribute = null;
-                            // 获取投资用户的用户属性
+                            // 获取出借用户的用户属性
                             attribute = users.getAttribute();
                             if (attribute != null) {
-                                // 投资人用户属性
+                                // 出借人用户属性
                                 borrowRecoverOld.setTenderUserAttribute(attribute);
                                 // 如果是线上员工或线下员工，推荐人的userId和username不插
                                 if (attribute == 2 || attribute == 3) {
@@ -4641,7 +4655,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                 for (int j = 0; j < repayRecoverPlans.size(); j++) {
                     RepayRecoverPlanBean repayRecoverPlan = repayRecoverPlans.get(j);
                     BorrowRecoverPlan borrowRecoverPlanOld = borrowRecoverPlanMapper.selectByPrimaryKey(repayRecoverPlan.getId());
-                    Integer tenderUserId = borrowRecoverPlanOld.getUserId();// 投资人信息
+                    Integer tenderUserId = borrowRecoverPlanOld.getUserId();// 出借人信息
                     BigDecimal manageFee = BigDecimal.ZERO;
                     List<RepayCreditRepayBean> creditRepayList = repayRecoverPlan.getCreditRepayList();
                     if (creditRepayList != null && creditRepayList.size() > 0) {
@@ -4721,7 +4735,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                             // 用户属性 0=>无主单 1=>有主单 2=>线下员工 3=>线上员工
                             Integer attribute = users.getAttribute();
                             if (attribute != null) {
-                                // 投资人用户属性
+                                // 出借人用户属性
                                 borrowRecoverPlanOld.setTenderUserAttribute(attribute);
                                 // 如果是线上员工或线下员工，推荐人的userId和username不插
                                 if (attribute == 2 || attribute == 3) {
@@ -4867,8 +4881,8 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
      */
     public void sendRepayMessage(BorrowApicron apiCron) {
         try {
-            borrowLoanRepayProducer.messageSendDelay(new MessageContent(MQConstant.BORROW_REPAY_REQUEST_TOPIC,
-                    apiCron.getBorrowNid(), JSON.toJSONBytes(apiCron)),2);
+            commonProducer.messageSendDelay(new MessageContent(MQConstant.BORROW_REPAY_REQUEST_TOPIC,
+                    apiCron.getBorrowNid(), apiCron),2);
             logger.info("【还款】发起还款消息:还款项目编号:[" + apiCron.getBorrowNid() + ",还款期数:[第" + apiCron.getPeriodNow() +
                     "],计划编号:[" + (org.apache.commons.lang3.StringUtils.isEmpty(apiCron.getPlanNid()) ? "" : apiCron.getPlanNid()));
         } catch (MQException e) {
@@ -5266,5 +5280,102 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
             this.calculateRepayPlan(repay, borrow, period);
         }
         return repay;
+    }
+
+    /**
+     *
+     * @param borrowNid
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public WebUserTransferBorrowInfoCustomize getUserTransferBorrowInfo(String borrowNid) {
+        return webUserRepayListCustomizeMapper.getBorrowInfo(borrowNid);
+    }
+
+    @Override
+    public int selectUserRepayTransferDetailListTotal(String borrowNid, String verificationFlag) {
+        if (StringUtils.isNotEmpty(verificationFlag)){
+            return webUserRepayListCustomizeMapper.selectUserRepayTransferListTotalByHjhCreditTender(borrowNid);
+        }else {
+            return webUserRepayListCustomizeMapper.selectUserRepayTransferListTotalByCreditTender(borrowNid);
+        }
+    }
+
+    /**
+     * 用户待还详情
+     * @param borrowNid
+     * @param verificationFlag 计划标的和非计划标的判断的Flag
+     * @return
+     */
+    @Override
+    public List<WebUserRepayTransferCustomize> selectUserRepayTransferDetailList(WebUserRepayTransferRequest repayTransferRequest) {
+
+        Integer limitStart = repayTransferRequest.getLimitStart();
+        Integer limitEnd = repayTransferRequest.getLimitEnd();
+        /**
+         * verificationFlag 为空时,为计划类的标的 查询 hyjf_hjh_debt_credit_tender 表
+         * verificationFlag 不为空时, 为非计划的标的,查询 huiyingdai_credit_tender 表
+         */
+        List<WebUserRepayTransferCustomize> list = null;
+        Map<String, Object> params = new HashMap<String, Object>();
+        if (StringUtils.isNotEmpty(repayTransferRequest.getVerificationFlag())){
+            params.put("borrowNid", repayTransferRequest.getBorrowNid());
+            if (limitStart == 0 || limitStart > 0) {
+                params.put("limitStart", limitStart);
+            }
+            if (limitEnd > 0) {
+                params.put("limitEnd", limitEnd);
+            }
+            list = webUserRepayListCustomizeMapper.selectUserRepayTransferListByHjhCreditTender(params);
+        }else {
+            params.put("borrowNid", repayTransferRequest.getBorrowNid());
+            if (limitStart == 0 || limitStart > 0) {
+                params.put("limitStart", limitStart);
+            }
+            if (limitEnd > 0) {
+                params.put("limitEnd", limitEnd);
+            }
+            list = webUserRepayListCustomizeMapper.selectUserRepayTransferListByCreditTender(params);
+        }
+
+        return list;
+    }
+
+    /**
+     *
+     * 以hyjf开头:
+     *      hyjf123456 的加密第5-8位
+     *      hyjf13125253333 的加密第8-11位
+     * 其他 :
+     *      a**
+     *          或
+     *      张**
+     * @param userName
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public String usernameEncryption(String userName){
+        if (StringUtils.isNotBlank(userName)){
+            /**
+             * 2,不为汉字时,截取前四位判断是否以hyjf开头.
+             * 3,以hyjf开头判断字符串长度,确定需要加密的位置.
+             */
+            String firstString = userName.substring(0, 1);
+
+            String str = "****";
+            if (userName.startsWith("hyjf")){
+                StringBuilder stringBuilder = new StringBuilder(userName);
+                if (userName.length() >= 15){
+                    return stringBuilder.replace(7, 11, str).toString();
+                }else {
+                    return stringBuilder.replace(4, 8, str).toString();
+                }
+            }else {
+                return firstString + "**";
+            }
+        }
+        return null;
     }
 }

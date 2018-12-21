@@ -22,28 +22,28 @@ public class UtmReg implements Serializable {
     private Integer userId;
 
     /**
-     * 首次投资时间
+     * 首次出借时间
      *
      * @mbggenerated
      */
     private Integer investTime;
 
     /**
-     * 首次投标的投资金额
+     * 首次投标的出借金额
      *
      * @mbggenerated
      */
     private BigDecimal investAmount;
 
     /**
-     * 首次投资标的的项目类型
+     * 首次出借标的的项目类型
      *
      * @mbggenerated
      */
     private String investProjectType;
 
     /**
-     * 首次投资标的的项目期限
+     * 首次出借标的的项目期限
      *
      * @mbggenerated
      */

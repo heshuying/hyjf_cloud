@@ -105,7 +105,7 @@ public class BankOpenAccountLogServiceImpl extends BaseServiceImpl implements Ba
                 Integer userId = bankOpenList.get(i).getUserId();
                 UserExample userExample = new UserExample();
                 userExample.createCriteria().andUserIdEqualTo(userId);
-                List<User> user = this.usersMapper.selectByExample(userExample);
+                List<User> user = this.userMapper.selectByExample(userExample);
                 if (user != null && user.size() > 0) {
                     for (int j = 0; j < user.size(); j++) {
                         User info = user.get(j);

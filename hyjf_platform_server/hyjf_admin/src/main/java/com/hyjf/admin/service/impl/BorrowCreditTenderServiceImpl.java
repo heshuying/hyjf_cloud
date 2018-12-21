@@ -13,7 +13,7 @@ import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.util.ExportExcel;
 import com.hyjf.admin.config.SystemConfig;
-import com.hyjf.admin.mq.FddProducer;
+import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.AccedeListService;
 import com.hyjf.admin.service.BorrowCreditTenderService;
@@ -55,8 +55,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.*;
 
 @Service
@@ -77,7 +75,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
     AccedeListService accedeListService;
 
     @Autowired
-    FddProducer fddProducer;
+    CommonProducer commonProducer;
 
     public static final String HZR_PREFIX = "HZR";
 
@@ -135,39 +133,6 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
         bean.setTotal(count);
         result.setData(bean);
         return result;
-    }
-
-    /**
-     * 还款信息列表导出
-     *
-     * @author zhangyk
-     * @date 2018/7/11 20:41
-     */
-    @Override
-    public void exportBorrowCreditRepayList(BorrowCreditRepayRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
-        BorrowCreditRepayAmRequest req = CommonUtils.convertBean(request, BorrowCreditRepayAmRequest.class);
-
-        String sheetName = "还款信息列表";
-        String[] titles = new String[]{"承接人", "债转编号", "出让人", "项目编号", "订单号", "应收本金", "应收利息", "应收本息", "已收本息", "还款服务费", "还款状态", "债权承接时间", "下次还款时间"};
-        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
-                + CustomConstants.EXCEL_EXT;
-
-        // 导出列表不需要分页,扩大数据查询范围，使失效
-        BorrowCreditTenderResponse res = baseClient.postExe(REPAY_LIST_URL, req, BorrowCreditTenderResponse.class);
-        List<BorrowCreditRepayVO> list = res.getResultList();
-        if (CollectionUtils.isNotEmpty(list)) {
-            // 特殊处理数据
-            for (BorrowCreditRepayVO vo : list) {
-                if ("0".equals(vo.getStatus())) {
-                    vo.setStatus("还款中");
-                } else {
-                    vo.setStatus("已还款");
-                }
-                vo.setCreditNid(HZR_PREFIX + vo.getCreditNid());
-            }
-        }
-
-        exportExcel(sheetName, fileName, titles, list, response);
     }
 
     /**
@@ -232,41 +197,6 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
     }
 
     /**
-     * 承接信息列表导出
-     *
-     * @author zhangyk
-     * @date 2018/7/13 10:49
-     */
-    @Override
-    public void exportCreditTenderList(BorrowCreditTenderRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
-        BorrowCreditRepayAmRequest req = CommonUtils.convertBean(request, BorrowCreditRepayAmRequest.class);
-        AdminCreditTenderResponse res = baseClient.postExe(TENDER_LIST_URL, req, AdminCreditTenderResponse.class);
-        List<BorrowCreditTenderVO> list = res.getResultList();
-        String sheetName = "汇转让-承接信息";
-
-        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
-
-        //String[] titles = new String[] { "序号","订单号","债转编号","项目编号","出让人","出让人当前的推荐人的用户名","出让人当前的推荐人的用户属性","出让人当前的推荐人的分公司","出让人当前的推荐人的部门","出让人当前的推荐人的团队","出让人承接时的推荐人的用户名", "出让人承接时的推荐人的用户属性", "出让人承接时的推荐人的分公司", "出让人承接时的推荐人的部门", "出让人承接时的推荐人的团队", "承接人","承接人当前的推荐人的用户名","承接人当前的推荐人的用户属性","承接人当前的推荐人的分公司","承接人当前的推荐人的部门","承接人当前的推荐人的团队","承接人承接时的推荐人的用户名", "承接人承接时的推荐人的用户属性", "承接人承接时的推荐人的分公司", "承接人承接时的推荐人的部门", "承接人承接时的推荐人的团队", "承接本金","折让率","认购价格","垫付利息", "债转服务费", "实付金额","承接平台", "承接时间" };
-       // String[] titles = new String[]{"序号", "订单号", "债转编号", "项目编号", "出让人", "承接人", "承接本金", "折让率", "认购价格", "垫付利息", "债转服务费", "实付金额", "承接平台", "承接时间"};
-        String[] titles = null;
-        if (StringUtils.isNotBlank(request.getIsOrganizationView())){
-            titles = new String[]{"序号", "订单号", "债转编号", "项目编号", "出让人", "出让人当前的推荐人的用户名", "出让人当前的推荐人的用户属性", "出让人当前的推荐人的分公司", "出让人当前的推荐人的部门", "出让人当前的推荐人的团队",
-                    "出让人承接时的推荐人的用户名", "出让人承接时的推荐人的用户属性", "出让人承接时的推荐人的分公司", "出让人承接时的推荐人的部门", "出让人承接时的推荐人的团队",
-                    "承接人", "承接人当前的推荐人的用户名", "承接人当前的推荐人的用户属性", "承接人当前的推荐人的分公司", "承接人当前的推荐人的部门", "承接人当前的推荐人的团队",
-                    "承接人承接时的推荐人的用户名", "承接人承接时的推荐人的用户属性", "承接人承接时的推荐人的分公司", "承接人承接时的推荐人的部门", "承接人承接时的推荐人的团队",
-                    "承接本金", "折让率", "认购价格", "垫付利息", "债转服务费", "实付金额", "承接平台", "承接时间"};
-        }else {
-            titles = new String[]{"序号", "订单号", "债转编号", "项目编号", "出让人", "出让人当前的推荐人的用户名", "出让人当前的推荐人的用户属性",
-                    "出让人承接时的推荐人的用户名", "出让人承接时的推荐人的用户属性",
-                    "承接人", "承接人当前的推荐人的用户名", "承接人当前的推荐人的用户属性",
-                    "承接人承接时的推荐人的用户名", "承接人承接时的推荐人的用户属性",
-                    "承接本金", "折让率", "认购价格", "垫付利息", "债转服务费", "实付金额", "承接平台", "承接时间"};
-        }
-        exportTenderExcel(request.getIsOrganizationView(), sheetName, fileName, titles, list, response);
-    }
-
-
-    /**
      * 查看债权人债权信息
      *
      * @author zhangyk
@@ -285,12 +215,12 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
         CreditUserInfoBean userInfo = new CreditUserInfoBean();
         if (accountVO != null) {
             String accountId = accountVO.getAccount();
-            // 调用江西银行查询单笔投资人投标申请接口
+            // 调用江西银行查询单笔出借人投标申请接口
             BankCallBean bankCallBean = bidApplyQuery(userId, assignNid, accountId);
             if (bankCallBean != null) {
                 userInfo = CommonUtils.convertBean(bankCallBean, CreditUserInfoBean.class);
             } else {
-                logger.error("调用江西银行查询单笔投资人投标申请接口异常");
+                logger.error("调用江西银行查询单笔出借人投标申请接口异常");
             }
         }
         result.setData(userInfo);
@@ -312,7 +242,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
         String borrowNid = request.getBorrowNid();
         // 承接订单号
         String assignNid = request.getAssignNid();
-        // 原始投资订单号
+        // 原始出借订单号
         String creditTenderNid = request.getCreditTenderNid();
         // 债转编号
         String creditNid = request.getCreditNid();
@@ -352,7 +282,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
             bean.setTenderType(1);
             // 法大大生成合同
             try {
-                fddProducer.messageSendDelay(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(bean)),2);
+                commonProducer.messageSendDelay(new MessageContent(MQConstant.FDD_TOPIC, MQConstant.FDD_GENERATE_CONTRACT_TAG, UUID.randomUUID().toString(), bean),2);
             } catch (MQException e) {
                 logger.error("法大大合同生成MQ发送失败！");
                 return new AdminResult(BaseResult.FAIL, "法大大合同生成MQ发送失败");
@@ -377,7 +307,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
         bean.setSeqNo(seqNo);
         bean.setChannel(channel);
         bean.setTxCode(BankCallConstant.TXCODE_BID_APPLY_QUERY);
-        bean.setAccountId(accountId);// 投资人电子账户号
+        bean.setAccountId(accountId);// 出借人电子账户号
         bean.setOrgOrderId(orderId);
         bean.setLogOrderId(GetOrderIdUtils.getOrderId0(Integer.parseInt(userId)));
         bean.setLogUserId(userId);
@@ -390,7 +320,7 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
     public AdminResult pdfPreview(BorrowCreditTenderPDFSignReq req) {
         String nid = req.getNid();
         CheckUtil.check(StringUtils.isNotBlank(nid),MsgEnum.ERR_OBJECT_REQUIRED,"nid");
-        // 根据订单号查询用户投资协议记录表
+        // 根据订单号查询用户出借协议记录表
         TenderAgreementVO tenderAgreement = amTradeClient.selectTenderAgreement(nid);
         if (tenderAgreement != null && org.apache.commons.lang3.StringUtils.isNotBlank(tenderAgreement.getImgUrl())) {
             JSONObject responseBean = new JSONObject();
@@ -406,8 +336,36 @@ public class BorrowCreditTenderServiceImpl implements BorrowCreditTenderService 
             responseBean.put("fileDomainUrl",fileDomainUrl);
             return new AdminResult(responseBean);
         } else {
-            return new AdminResult(BaseResult.FAIL, "未查询到用户投资协议");
+            return new AdminResult(BaseResult.FAIL, "未查询到用户出借协议");
         }
+    }
+
+    @Override
+    public int selectBorrowCreditRepayCount(BorrowCreditRepayRequest request) {
+        BorrowCreditRepayAmRequest req = CommonUtils.convertBean(request, BorrowCreditRepayAmRequest.class);
+        BorrowCreditRepayResponse borrowCreditRepayResponse = baseClient.postExe(REPAY_INFO_COUNT_URL, req, BorrowCreditRepayResponse.class);
+        if (borrowCreditRepayResponse != null) {
+            return borrowCreditRepayResponse.getCount();
+        }
+        return 0;
+    }
+
+    @Override
+    public int selectBorrowCreditTenderCount(BorrowCreditTenderRequest request) {
+        AdminCreditTenderResponse response = baseClient.postExe(TENDER_COUNT_URL, request, AdminCreditTenderResponse.class);
+        if (response != null) {
+            return response.getCount();
+        }
+        return 0;
+    }
+
+    @Override
+    public AdminCreditTenderResponse getCreditTenderResponse(BorrowCreditTenderRequest request) {
+        Page page = Page.initPage(request.getCurrPage(), request.getPageSize());
+        BorrowCreditRepayAmRequest req = CommonUtils.convertBean(request, BorrowCreditRepayAmRequest.class);
+        req.setLimitStart(page.getOffset());
+        req.setLimitEnd(page.getLimit());
+        return baseClient.postExe(TENDER_LIST_URL, request, AdminCreditTenderResponse.class);
     }
 
     /**

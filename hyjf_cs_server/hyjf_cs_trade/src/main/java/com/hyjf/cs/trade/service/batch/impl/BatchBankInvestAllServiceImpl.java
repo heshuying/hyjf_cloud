@@ -1,19 +1,5 @@
 package com.hyjf.cs.trade.service.batch.impl;
 
-import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
-
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.BorrowTenderTmpRequest;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
@@ -32,15 +18,25 @@ import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.CsMessageClient;
 import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.AppChannelStatisticsDetailProducer;
-import com.hyjf.cs.trade.mq.producer.UtmRegProducer;
-import com.hyjf.cs.trade.mq.producer.VIPUserTenderProducer;
 import com.hyjf.cs.trade.service.batch.BatchBankInvestAllService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 /**
  * @author jijun
@@ -49,6 +45,8 @@ import com.hyjf.pay.lib.bank.util.BankCallUtils;
 @Service
 public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implements BatchBankInvestAllService {
     private static final Logger logger = LoggerFactory.getLogger(BatchBankInvestAllServiceImpl.class);
+    @Autowired
+	private CommonProducer commonProducer;
 	/**
 	 * client
 	 */
@@ -62,12 +60,6 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 	 * mq生产端
 	 */
 	@Autowired
-	private AppChannelStatisticsDetailProducer appChannelStatisticsProducer;
-	@Autowired
-	private UtmRegProducer utmRegProducer;
-	@Autowired
-	private VIPUserTenderProducer vipUserTenderProducer;
-	@Autowired
 	private SystemConfig systemConfig;
 
 	@Override
@@ -76,7 +68,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 		if (CollectionUtils.isNotEmpty(borrowTenderTmpList)){
 			for (int i = 0; i < borrowTenderTmpList.size(); i++) {
 				String orderid = borrowTenderTmpList.get(i).getNid();
-				logger.info("开始处理投资订单号为:[" + orderid + "]");
+				logger.info("开始处理出借订单号为:[" + orderid + "]");
 				Integer userId = borrowTenderTmpList.get(i).getUserId();
 				UserVO user = this.amUserClient.findUserById(userId);
 				UserInfoVO userInfo=this.amUserClient.findUsersInfoById(userId);
@@ -133,11 +125,11 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 				
 				boolean ret = this.amTradeClient.updateTenderStart(request);
 				if (!ret){
-					logger.info("=============投资全部掉单异常处理失败! 失败订单: " + orderid);
+					logger.info("=============出借全部掉单异常处理失败! 失败订单: " + orderid);
 					//更新失败不继续执行
 					continue;
 				}else {
-					//更新渠道统计用户累计投资
+					//更新渠道统计用户累计出借
 					if (Validator.isNotNull(request.getLogUser())
 							&& Validator.isNotNull(request.getBorrowInfo())
 							&& request.getBorrowInfo().getProjectType()!=8){
@@ -147,7 +139,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 						if (Validator.isNotNull(appUtmRegVO)){
 							Map<String, Object> params = new HashMap<String, Object>();
 							params.put("accountDecimal", new BigDecimal(bean.getTxAmount()));
-							// 投资时间
+							// 出借时间
 							params.put("investTime", request.getNowTime());
 							// 项目类型
 							if (request.getBorrowInfo().getProjectType() == 13) {
@@ -163,49 +155,20 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 								investProjectPeriod = request.getBorrow().getBorrowPeriod() + "个月";
 							}
 							params.put("investProjectPeriod", investProjectPeriod);
-							//根据investFlag标志位来决定更新哪种投资
+							//根据investFlag标志位来决定更新哪种出借
 							params.put("investFlag",request.getLogUser().getInvestflag() == 1 ? false:true);
 							//压入消息队列
 							try {
-								appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-										MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+								commonProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+										MQConstant.APP_CHANNEL_STATISTICS_DETAIL_INVEST_TAG, UUID.randomUUID().toString(), params));
 							} catch (MQException e) {
 								e.printStackTrace();
-								logger.error("渠道统计用户累计投资推送消息队列失败！！！");
+								logger.error("渠道统计用户累计出借推送消息队列失败！！！");
 							}
 							logger.info("用户:" + userId + "***********************************预更新渠道统计表AppChannelStatisticsDetail，订单号：" + bean.getOrderId());
 						}else{
 							//更新首投信息
-							UtmRegVO utmRegVO =this.amUserClient.findUtmRegByUserId(Integer.parseInt(bean.getLogUserId()));
-							if(Validator.isNotNull(utmRegVO)){
-								Map<String, Object> params = new HashMap<String, Object>();
-								params.put("id", utmRegVO.getId());
-								params.put("accountDecimal", new BigDecimal(bean.getTxAmount()));
-								// 投资时间
-								params.put("investTime", request.getNowTime());
-								// 项目类型
-								if (request.getBorrowInfo().getProjectType() == 13) {
-									params.put("projectType", "汇金理财");
-								} else {
-									params.put("projectType", "汇直投");
-								}
-								// 首次投标项目期限
-								String investProjectPeriod = "";
-								if ("endday".equals(request.getBorrow().getBorrowStyle())) {
-									investProjectPeriod = request.getBorrow().getBorrowPeriod() + "天";
-								} else {
-									investProjectPeriod = request.getBorrow().getBorrowPeriod() + "个月";
-								}
-								params.put("investProjectPeriod", investProjectPeriod);
-
-								try {
-									this.utmRegProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC,UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
-									logger.info("******首投信息推送消息队列******");
-								} catch (MQException e) {
-									e.printStackTrace();
-									logger.info("******首投信息推送消息队列失败******");
-								}
-							}
+							updateUtmReg(bean, request);
 						}
 					}
 
@@ -216,7 +179,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 						para.put("userId",Integer.parseInt(bean.getLogUserId()));
 						para.put("orderId",bean.getOrderId());
 						try {
-							this.vipUserTenderProducer.messageSend(new MessageContent(MQConstant.VIP_USER_TENDER_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(para)));
+							this.commonProducer.messageSend(new MessageContent(MQConstant.VIP_USER_TENDER_TOPIC,UUID.randomUUID().toString(), para));
 						} catch (MQException e) {
 							e.printStackTrace();
 							logger.info("保存VIP用户信息推送消息队列失败！！！");
@@ -229,6 +192,44 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 		}
 
 
+	}
+
+	/**
+	 * 更新首投信息
+	 * @param bean
+	 * @param request
+	 */
+	private void updateUtmReg(BankCallBean bean, BorrowTenderTmpRequest request) {
+		UtmRegVO utmRegVO =this.amUserClient.findUtmRegByUserId(Integer.parseInt(bean.getLogUserId()));
+		if(Validator.isNotNull(utmRegVO)){
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("userId", utmRegVO.getUserId());
+			params.put("accountDecimal", new BigDecimal(bean.getTxAmount()));
+			// 出借时间
+			params.put("investTime", request.getNowTime());
+			// 项目类型
+			if (request.getBorrowInfo().getProjectType() == 13) {
+				params.put("projectType", "汇金理财");
+			} else {
+				params.put("projectType", "汇直投");
+			}
+			// 首次投标项目期限
+			String investProjectPeriod = "";
+			if ("endday".equals(request.getBorrow().getBorrowStyle())) {
+				investProjectPeriod = request.getBorrow().getBorrowPeriod() + "天";
+			} else {
+				investProjectPeriod = request.getBorrow().getBorrowPeriod() + "个月";
+			}
+			params.put("investProjectPeriod", investProjectPeriod);
+
+			try {
+				commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), params));
+				logger.info("******首投信息推送消息队列******");
+			} catch (MQException e) {
+				e.printStackTrace();
+				logger.info("******首投信息推送消息队列失败******");
+			}
+		}
 	}
 
 
@@ -254,7 +255,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 		bean.setLogUserId(userId);
 		bean.setLogOrderDate(GetOrderIdUtils.getOrderDate());
 		bean.setLogOrderId(GetOrderIdUtils.getOrderId2(Integer.parseInt(userId)));
-		bean.setLogRemark("投资人投标申请查询");
+		bean.setLogRemark("出借人投标申请查询");
 		// 调用接口
 		return BankCallUtils.callApiBg(bean);
 	}
@@ -263,6 +264,11 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 	private List<BorrowTenderTmpVO> getBorrowTenderTmpList() {
 		return this.amTradeClient.getBorrowTenderTmpList();
 	}
-
+	/**
+	 * 投资全部掉单异常处理
+	 */
+	public void recharge(){
+		amTradeClient.recharge();
+	}
 
 }

@@ -28,7 +28,7 @@ public class ErrorCodeConstant implements MessageConstants, PropertiesConstants 
     public static final String STATUS_CE000008 = "CE000008";
     // 请勿重复操作
     public static final String STATUS_CE000009 = "CE000009";
-    // 用户为投资账户
+    // 用户为出借账户
     public static final String STATUS_CE000010 = "CE000010";
     // 未进行缴费授权
     public static final String STATUS_CE000011 = "CE000011";
@@ -162,6 +162,10 @@ public class ErrorCodeConstant implements MessageConstants, PropertiesConstants 
     public static final String STATUS_ZT000008 = "ZT000008";
     // 资产不存在
     public static final String STATUS_ZT000009 = "ZT000009";
+    // 不能推送本平台资产
+    public static final String STATUS_ZT000010 = "ZT000010";
+    // 受托支付电子账户为空
+    public static final String STATUS_ZT000011 = "ZT000011";
     
     
     /********************资产推送    end***********************/

@@ -16,7 +16,7 @@ import java.util.Set;
 public class TzjServiceImpl extends BaseServiceImpl implements TzjService {
 
 	/**
-	 * 查询投之家当日投资数据：每日充值人数、投资人数 、投资金额、首投金额、首投人数、复投人数
+	 * 查询投之家当日出借数据：每日充值人数、出借人数 、出借金额、首投金额、首投人数、复投人数
 	 * 
 	 * @param tzjUserIds 投之家所有注册用户
 	 * @param startTime
@@ -30,7 +30,7 @@ public class TzjServiceImpl extends BaseServiceImpl implements TzjService {
 		// 1. 查询每日充值人数
 		bean.setRechargeCount(tzjCustomizeMapper.getRechargeCount(tzjUserIds, startTime, endTime));
 
-		// 2. 查询每日投资人数、投资金额
+		// 2. 查询每日出借人数、出借金额
 		TzjDayReportBean tenderInfo = tzjCustomizeMapper.getTenderInfo(tzjUserIds, startTime, endTime);
 		if (tenderInfo != null) {
 			bean.setTenderCount(tenderInfo.getTenderCount());

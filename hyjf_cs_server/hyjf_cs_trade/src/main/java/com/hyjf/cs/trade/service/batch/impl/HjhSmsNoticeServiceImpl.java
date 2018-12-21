@@ -1,14 +1,13 @@
 package com.hyjf.cs.trade.service.batch.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.batch.HjhSmsNoticeService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import org.apache.commons.collections.CollectionUtils;
@@ -32,7 +31,7 @@ public class HjhSmsNoticeServiceImpl extends BaseTradeServiceImpl implements Hjh
 	private static final Logger logger = LoggerFactory.getLogger(HjhSmsNoticeServiceImpl.class);
 
 	@Autowired
-	private SmsProducer smsProducer;
+	private CommonProducer commonProducer;
 
 	/**
 	 * 逾期还款标的短信通知
@@ -72,7 +71,7 @@ public class HjhSmsNoticeServiceImpl extends BaseTradeServiceImpl implements Hjh
 		param.put("val_title", borrowNid);
 		SmsMessage smsMessage = new SmsMessage(userId, param, null, null, MessageConstant.SMS_SEND_FOR_USER, null,
 				CustomConstants.PARAM_TPL_NOTICE_BORROW_REPAY_OVERDUE, CustomConstants.CHANNEL_TYPE_NORMAL);
-		smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+		commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
 	}
 
 }

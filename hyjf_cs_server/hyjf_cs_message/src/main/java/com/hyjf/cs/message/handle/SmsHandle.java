@@ -181,7 +181,7 @@ public class SmsHandle {
 				request.setName(tplCode);
 				SmsNoticeConfigVO smsNoticeConfig = amConfigClient.findSmsNotice(request);
 				if (smsNoticeConfig == null) {
-					logger.error("无可用通知配置模板,status:[{}],name:[{}]",request.getStatus(),tplCode);
+					logger.warn("无可用通知配置模板,status:[{}],name:[{}]",request.getStatus(),tplCode);
 					//下面这个抛出异常的，可以等上线再开启
 					//throw new RuntimeException("无可用通知配置模板");
 					return status;
@@ -228,7 +228,7 @@ public class SmsHandle {
 				request.setName(tplCode);
 				SmsNoticeConfigVO smsNoticeConfig = amConfigClient.findSmsNotice(request);
 				if (smsNoticeConfig == null) {
-					logger.error("无可用通知配置模板,status:[{}],name:[{}]",request.getStatus(),tplCode);
+					logger.warn("无可用通知配置模板,status:[{}],name:[{}]",request.getStatus(),tplCode);
 					//下面这个抛出异常的，可以等上线再开启
 					//throw new RuntimeException("无可用通知配置模板");
 					return status;
@@ -346,7 +346,7 @@ public class SmsHandle {
 			request.setTplCode(tplCode);
 			SmsTemplateVO smsTemplate = amConfigClient.findSmsTemplate(request);
 			if (smsTemplate == null) {
-				logger.error("无可用短信模板,查询条件为status:[1,开启状态的模板],TPLCode:[{}]",tplCode);
+				logger.warn("无可用短信模板,查询条件为status:[1,开启状态的模板],TPLCode:[{}]",tplCode);
 				//下面这个抛出异常的，可以等上线再开启
 				//throw new RuntimeException("无可用短信模板...");
 				return status;

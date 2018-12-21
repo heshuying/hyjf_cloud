@@ -53,11 +53,11 @@ public class AppInvestInfoResultVO implements Serializable {
 
     private String realAmount;
     
-    /** 确认真实投资信息 */
+    /** 确认真实出借信息 */
     private String confirmRealAmount;
     /** 确认优惠券信息 */
     private String confirmCouponDescribe;
-    /** 确认真实投资收益信息 */
+    /** 确认真实出借收益信息 */
     private String borrowInterest;
     /** 确认优惠券收益信息 */
     private String capitalInterest;
@@ -67,7 +67,7 @@ public class AppInvestInfoResultVO implements Serializable {
     /** 可用优惠券数量 */
     private String couponAvailableCount = "0";
 
-    // 投资描述
+    // 出借描述
     private String investmentDescription;
 
     // 起投金额
@@ -98,7 +98,7 @@ public class AppInvestInfoResultVO implements Serializable {
     /** 协议列表url */
     private String protocolUrl = "";
 
-    /** 投资类型  */
+    /** 出借类型  */
     private String borrowType = "";
     
     /** 垫付利息  */
@@ -129,7 +129,7 @@ public class AppInvestInfoResultVO implements Serializable {
     /** 按钮上的文字  */
     private String buttonWord;
 
-    /** 投资的阈值  */
+    /** 出借的阈值  */
     private String standardValues;
 
     /**产品加息利息*/
@@ -154,7 +154,7 @@ public class AppInvestInfoResultVO implements Serializable {
      */
     private boolean projectRevalJudge;
     /**
-     * 项目要求投资者风险测评类型描述
+     * 项目要求出借者风险测评类型描述
      */
     private String projectRiskLevelDesc;
 

@@ -26,7 +26,7 @@ public class AutoPreAuditMessageServiceImpl extends BaseServiceImpl implements A
         //检查是否交过保证金
         String borrowNid = borrow.getBorrowNid();
 
-        BorrowBailExample exampleBail = new BorrowBailExample();
+        /*BorrowBailExample exampleBail = new BorrowBailExample();
         BorrowBailExample.Criteria craBail = exampleBail.createCriteria();
         craBail.andBorrowNidEqualTo(borrowNid);
         List<BorrowBail> borrowBailList = this.borrowBailMapper.selectByExample(exampleBail);
@@ -34,7 +34,7 @@ public class AutoPreAuditMessageServiceImpl extends BaseServiceImpl implements A
         if (borrowBailList == null || borrowBailList.size() == 0) {
             logger.info("该借款编号没有交过保证金 "+borrowNid);
             return false;
-        }
+        }*/
 
         // 插入时间
         int systemNowDateLong = GetDate.getNowTime10();
@@ -115,9 +115,9 @@ public class AutoPreAuditMessageServiceImpl extends BaseServiceImpl implements A
 //        }
 
         // 风险保证金，初审
-        if(hjhAssetBorrowType.getAutoBail() != null && hjhAssetBorrowType.getAutoBail() == 1){
-            saveBailRecord(hjhPlanAsset.getBorrowNid());
-        }
+//        if(hjhAssetBorrowType.getAutoBail() != null && hjhAssetBorrowType.getAutoBail() == 1){
+//            saveBailRecord(hjhPlanAsset.getBorrowNid());
+//        }
 
         //修改发标状态 更新资产表，更新borrow
         if(hjhAssetBorrowType.getAutoAudit() != null && hjhAssetBorrowType.getAutoAudit() == 1){
@@ -126,7 +126,7 @@ public class AutoPreAuditMessageServiceImpl extends BaseServiceImpl implements A
 
             HjhPlanAsset hjhPlanAssetnew = new HjhPlanAsset();
             hjhPlanAssetnew.setId(hjhPlanAsset.getId());
-            hjhPlanAssetnew.setStatus(7);//投资中
+            hjhPlanAssetnew.setStatus(7);//出借中
             //获取当前时间
             hjhPlanAssetnew.setUpdateTime(new Date());
             hjhPlanAssetnew.setUpdateUserId(1);
@@ -149,7 +149,7 @@ public class AutoPreAuditMessageServiceImpl extends BaseServiceImpl implements A
         String borrowNid = hjhPlanAsset.getBorrowNid();
 
 
-        BorrowBailExample exampleBail = new BorrowBailExample();
+        /*BorrowBailExample exampleBail = new BorrowBailExample();
         BorrowBailExample.Criteria craBail = exampleBail.createCriteria();
         craBail.andBorrowNidEqualTo(borrowNid);
         List<BorrowBail> borrowBailList = this.borrowBailMapper.selectByExample(exampleBail);
@@ -157,7 +157,7 @@ public class AutoPreAuditMessageServiceImpl extends BaseServiceImpl implements A
         if (borrowBailList == null || borrowBailList.size() == 0) {
             logger.info("该借款编号没有交过保证金 "+borrowNid);
             return false;
-        }
+        }*/
 
         // 插入时间
         int systemNowDateLong = GetDate.getNowTime10();

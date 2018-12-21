@@ -12,12 +12,12 @@ public class InvestProjectBean implements Serializable {
 	/** 项目编号 */
 	private String borrowNid;
 
-	/** 投资单号 */
+	/** 出借单号 */
 	private String tenderNid;
 
 	/** 优惠券编号 */
 	private String couponCode;
-	/** 投资类型 3产品加息 */
+	/** 出借类型 3产品加息 */
 	private String investType;
 
 	public String getBorrowNid() {

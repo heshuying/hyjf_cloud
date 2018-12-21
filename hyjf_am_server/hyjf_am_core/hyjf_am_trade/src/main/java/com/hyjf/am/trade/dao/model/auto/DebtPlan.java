@@ -111,7 +111,7 @@ public class DebtPlan implements Serializable {
     private BigDecimal actualApr;
 
     /**
-     * 投资范围
+     * 出借范围
      *
      * @mbggenerated
      */
@@ -181,21 +181,21 @@ public class DebtPlan implements Serializable {
     private Integer debtLockPeriod;
 
     /**
-     * 最低投资金额
+     * 最低出借金额
      *
      * @mbggenerated
      */
     private BigDecimal debtMinInvestment;
 
     /**
-     * 投资增量
+     * 出借增量
      *
      * @mbggenerated
      */
     private BigDecimal debtInvestmentIncrement;
 
     /**
-     * 最高投资金额
+     * 最高出借金额
      *
      * @mbggenerated
      */
@@ -209,7 +209,7 @@ public class DebtPlan implements Serializable {
     private BigDecimal debtPlanBalance;
 
     /**
-     * 计划投资汇资产冻结金额
+     * 计划出借汇资产冻结金额
      *
      * @mbggenerated
      */
@@ -293,42 +293,42 @@ public class DebtPlan implements Serializable {
     private BigDecimal serviceFee;
 
     /**
-     * 最小投资笔数
+     * 最小出借笔数
      *
      * @mbggenerated
      */
     private Integer minInvestNumber;
 
     /**
-     * 最大投资笔数
+     * 最大出借笔数
      *
      * @mbggenerated
      */
     private Integer maxInvestNumber;
 
     /**
-     * 投资循环次数
+     * 出借循环次数
      *
      * @mbggenerated
      */
     private Integer cycleTimes;
 
     /**
-     * 无视规则投资次数
+     * 无视规则出借次数
      *
      * @mbggenerated
      */
     private Integer unableCycleTimes;
 
     /**
-     * 投资金额界定
+     * 出借金额界定
      *
      * @mbggenerated
      */
     private BigDecimal investAccountLimit;
 
     /**
-     * 最低剩余投资金额
+     * 最低剩余出借金额
      *
      * @mbggenerated
      */

@@ -3,7 +3,6 @@ package com.hyjf.am.trade.utils;
 import com.hyjf.am.trade.bean.WrbConstant;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;

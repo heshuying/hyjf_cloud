@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.admin.BorrowInvestRequest;
 import com.hyjf.am.resquest.trade.*;
+import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.admin.WebProjectRepayListCustomizeVO;
 import com.hyjf.am.vo.admin.WebUserInvestListCustomizeVO;
@@ -16,10 +17,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.repay.BankRepayFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.BankRepayOrgFreezeLogVO;
 import com.hyjf.am.vo.trade.repay.RepayListCustomizeVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
+import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.FddGenerateContractConstant;
@@ -626,7 +624,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
 
                 String borrowAprString = StringUtils.isEmpty(recordList.get(0).getBorrowApr())?"0.00":recordList.get(0).getBorrowApr().replace("%", "");
                 BigDecimal borrowApr = new BigDecimal(borrowAprString);
-                //投资金额
+                //出借金额
                 String accountString = StringUtils.isEmpty(recordList.get(0).getAccount())?"0.00":recordList.get(0).getAccount().replace(",", "");
                 BigDecimal account = new BigDecimal(accountString);
                 // 周期
@@ -637,10 +635,10 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
                 borrowPeriodString = m.replaceAll("").trim();
                 Integer borrowPeriod = Integer.valueOf(borrowPeriodString);
                 if (org.apache.commons.lang.StringUtils.equals("endday", borrowStyle)){
-                    // 还款方式为”按天计息，到期还本还息“：预期收益=投资金额*年化收益÷365*锁定期；
+                    // 还款方式为”按天计息，到期还本还息“：预期收益=出借金额*年化收益÷365*锁定期；
                     earnings = DuePrincipalAndInterestUtils.getDayInterest(account, borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2, BigDecimal.ROUND_DOWN);
                 } else {
-                    // 还款方式为”按月计息，到期还本还息“：预期收益=投资金额*年化收益÷12*月数；
+                    // 还款方式为”按月计息，到期还本还息“：预期收益=出借金额*年化收益÷12*月数；
                     earnings = DuePrincipalAndInterestUtils.getMonthInterest(account, borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2, BigDecimal.ROUND_DOWN);
 
                 }
@@ -1025,4 +1023,24 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
         return Collections.emptyMap();
     }
 
+    /**
+     * 获取标的信息
+     * @param borrowNid
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public WebUserTransferBorrowInfoCustomizeVO getUserTransferBorrowInfo(String borrowNid) {
+        return amTradeClient.getUserTransferBorrowInfo(borrowNid);
+    }
+
+    @Override
+    public List<TenderAgreementVO> selectTenderAgreementByNid(String borrowNid) {
+        return amTradeClient.selectTenderAgreementByNid(borrowNid);
+    }
+
+    @Override
+    public List<WebUserRepayTransferCustomizeVO> selectUserRepayTransferDetailList(WebUserRepayTransferRequest repayTransferRequest) {
+        return amTradeClient.getUserRepayDetailAjax(repayTransferRequest);
+    }
 }

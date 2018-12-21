@@ -4,7 +4,9 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.ProtocolService;
 import com.hyjf.am.response.admin.AdminProtocolResponse;
 import com.hyjf.am.resquest.admin.AdminProtocolRequest;
@@ -38,6 +40,9 @@ public class ProtocolController extends BaseController{
     @Autowired
     private ProtocolService protocolService;
 
+    /** 权限 */
+    public static final String PERMISSIONS = "protocolView";
+
     /**
      * 分页显示
      * @param request
@@ -45,6 +50,7 @@ public class ProtocolController extends BaseController{
      */
     @ApiOperation(value = "分页显示", notes = "分页显示")
     @PostMapping("/search")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_VIEW , ShiroConstants.PERMISSION_SEARCH})
     public AdminResult<ListResult<ProtocolTemplateCommonVO>> search(@RequestBody AdminProtocolRequest request){
         AdminProtocolResponse response = new AdminProtocolResponse();
         response = protocolService.searchPage(request);
@@ -62,6 +68,7 @@ public class ProtocolController extends BaseController{
      */
     @ApiOperation(value = "根据id查询显示修改界面", notes = "根据id查询显示修改界面")
     @PostMapping("/infoInfoAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH )
     public AdminResult<ProtocolTemplateCommonVO> infoInfoAction(@RequestBody  AdminProtocolRequest request){
         AdminProtocolResponse response = null;
         response = protocolService.getProtocolTemplateById(request);
@@ -79,6 +86,7 @@ public class ProtocolController extends BaseController{
      */
     @ApiOperation(value = "添加协议模板", notes = "添加协议模板")
     @PostMapping("/insertAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD )
     public AdminResult insertAction(@RequestBody AdminProtocolRequest request, HttpServletRequest httpServletRequest){
         AdminProtocolResponse response = new AdminProtocolResponse();
         AdminSystemVO user = getUser(httpServletRequest);
@@ -117,6 +125,7 @@ public class ProtocolController extends BaseController{
      */
     @ApiOperation(value = "修改协议模板", notes = "修改协议模板")
     @PostMapping("/updateAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY )
     public AdminResult updateAction(@RequestBody AdminProtocolRequest request, HttpServletRequest httpServletRequest){
         AdminProtocolResponse response = new AdminProtocolResponse();
         HashMap<String, Object> map = new HashMap<String, Object>();
@@ -152,6 +161,7 @@ public class ProtocolController extends BaseController{
      */
     @ApiOperation(value = "修改已经存在的协议模板", notes = "修改已经存在的协议模板")
     @PostMapping("/updateExistProtocol")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY )
     public AdminResult updateExistProtocol(@RequestBody AdminProtocolVersionRequest request, HttpServletRequest httpServletRequest){
         AdminProtocolResponse response = new AdminProtocolResponse();
         HashMap<String, Object> map = new HashMap<String, Object>();
@@ -187,6 +197,7 @@ public class ProtocolController extends BaseController{
      */
     @ApiOperation(value = "删除协议模板", notes = "删除协议模板")
     @RequestMapping(value="/deleteAction",method = RequestMethod.DELETE)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE )
     public AdminResult deleteAction(@RequestBody  AdminProtocolRequest request, HttpServletRequest httpServletRequest){
         HashMap<String, Object> map = new HashMap<String, Object>();
         AdminSystemVO user = getUser(httpServletRequest);
@@ -283,8 +294,8 @@ public class ProtocolController extends BaseController{
         bean2.setName("《平台隐私条款》");
         selectList.add(bean2);
         ProtocolSelectBean bean3 = new ProtocolSelectBean();
-        bean3.setCode("《投资咨询与管理服务协议》");
-        bean3.setName("《投资咨询与管理服务协议》");
+        bean3.setCode("《出借咨询与管理服务协议》");
+        bean3.setName("《出借咨询与管理服务协议》");
         selectList.add(bean3);
         ProtocolSelectBean bean4 = new ProtocolSelectBean();
         bean4.setCode("《用户授权协议》");
@@ -295,8 +306,8 @@ public class ProtocolController extends BaseController{
         bean5.setName("《居间服务借款协议》");
         selectList.add(bean5);
         ProtocolSelectBean bean6 = new ProtocolSelectBean();
-        bean6.setCode("《投资风险确认书》");
-        bean6.setName("《投资风险确认书》");
+        bean6.setCode("《出借风险确认书》");
+        bean6.setName("《出借风险确认书》");
         selectList.add(bean6);
         ProtocolSelectBean bean7 = new ProtocolSelectBean();
         bean7.setCode("《债权转让协议》");
@@ -311,8 +322,8 @@ public class ProtocolController extends BaseController{
         bean9.setName("《开户协议》");
         selectList.add(bean9);
         ProtocolSelectBean bean10 = new ProtocolSelectBean();
-        bean10.setCode("《投资服务协议》");
-        bean10.setName("《投资服务协议》");
+        bean10.setCode("《出借服务协议》");
+        bean10.setName("《出借服务协议》");
         selectList.add(bean10);
         ProtocolSelectBean bean11 = new ProtocolSelectBean();
         bean11.setCode("《服务协议》");

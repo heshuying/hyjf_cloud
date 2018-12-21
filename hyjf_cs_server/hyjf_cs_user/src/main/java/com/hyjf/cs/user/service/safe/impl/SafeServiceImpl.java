@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.user.service.safe.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.BindEmailLogRequest;
 import com.hyjf.am.resquest.user.UserNoticeSetRequest;
@@ -24,8 +23,8 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.MailProducer;
 import com.hyjf.cs.user.result.ContractSetResultBean;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.safe.SafeService;
@@ -63,7 +62,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
     SystemConfig systemConfig;
 
     @Autowired
-    private MailProducer mailProducer;
+    private CommonProducer commonProducer;
 
     /**
      * 修改登陆密码
@@ -133,13 +132,12 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         resultMap.put("isSetPassword", user.getIsSetPassword());
         resultMap.put("lastTime", userLogin.getLastTime());
         UsersContactVO usersContactVO = amUserClient.selectUserContact(user.getUserId());
-        resultMap.put("usersContract", usersContactVO);
-
-        // 紧急联系人类型 
+        resultMap.put("usersContract", usersContactVO==null?"":usersContactVO);
+        // 紧急联系人类型
         Map<String, String> result = CacheUtil.getParamNameMap("USER_RELATION");
         resultMap.put("userRelation", result);
         // 根据用户Id查询用户银行卡号 add by tyy 2018-6-27
-        List<BankCardVO> bankCards = this.amUserClient.getBankOpenAccountById(user.getUserId());
+        List<BankCardVO> bankCards = this.amUserClient.getTiedCardForBank(user.getUserId());
         BankCardVO bankCard = new BankCardVO();
         if (bankCards != null && !bankCards.isEmpty()) {
             bankCard = bankCards.get(0);
@@ -207,7 +205,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         // 还款授权
         int repayAuth = valdateAuthState(auth.getAutoRepayStatus(), auth.getAutoRepayEndTime());
         auth.setAutoRepayStatus(repayAuth);
-        // 自动投资授权
+        // 自动出借授权
         int invesAuth = valdateAuthState(auth.getAutoInvesStatus(), auth.getAutoBidEndTime());
         auth.setAutoInvesStatus(invesAuth);
         return auth;
@@ -270,7 +268,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         MailMessage mailMessage = new MailMessage(null, replaceMap, "绑定邮箱激活", null, null, new String[]{email},
                 CustomConstants.EMAILPARAM_TPL_BINDEMAIL, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
         // 发送邮件
-        mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(mailMessage)));
+        commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), mailMessage));
 
         return true;
     }
@@ -428,7 +426,7 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
             user.setWithdrawSms(smsValue);
         }
         if ("investSms".equals(smsKey)) {
-            //投资成功短信
+            //投标成功短信
             user.setInvestSms(smsValue);
         }
         if ("recieveSms".equals(smsKey)) {

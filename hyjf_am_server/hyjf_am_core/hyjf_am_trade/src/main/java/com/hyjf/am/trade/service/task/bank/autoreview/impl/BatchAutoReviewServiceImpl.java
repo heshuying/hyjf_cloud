@@ -1,12 +1,10 @@
 package com.hyjf.am.trade.service.task.bank.autoreview.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.BorrowCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.BorrowLoanRepayProducer;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.task.bank.autoreview.BatchAutoReviewService;
 import com.hyjf.am.trade.utils.constant.BorrowSendTypeEnum;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -46,7 +44,7 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
     @Resource
     private BorrowCustomizeMapper borrowCustomizeMapper;
     @Autowired
-    private SmsProducer smsProducer;
+    private CommonProducer commonProducer;
     @Resource
     private BorrowSendTypeMapper borrowSendTypeMapper;
     @Resource
@@ -63,8 +61,6 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
     private BorrowTenderTmpMapper borrowTenderTmpMapper;
     @Resource
     private FreezeHistoryMapper freezeHistoryMapper;
-    @Resource
-    BorrowLoanRepayProducer borrowLoanRepayProducer;
 
     @Override
     public void sendMsgToNotFullBorrow() {
@@ -81,7 +77,7 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
                 SmsMessage smsMessage = new SmsMessage(null, messageStrMap, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, borrowList.get(i).getBorrowNid(), CustomConstants.PARAM_TPL_XMDQ,
                         CustomConstants.CHANNEL_TYPE_NORMAL);
                 try {
-                    smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
                 } catch (MQException e2) {
                     logger.error("发送短信失败..", e2);
                 }
@@ -175,7 +171,7 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
             // 满标审核状态
             int borrowFullStatus = borrow.getBorrowFullStatus();
             if (borrowFullStatus == 1) {
-                // 如果标的投资记录存在没有授权码的记录，则不进行放款
+                // 如果标的出借记录存在没有授权码的记录，则不进行放款
                 int countErrorTender = this.countBorrowTenderError(borrowNid);
                 if (countErrorTender == 0) {
                     // 判断满标时间
@@ -228,8 +224,8 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
                                     //由于是在事务内提交 会发生MQ消费时事务还没提交的情况 所以改成延时队列
                                     logger.debug("自动复审更新数据完成，开始发送放款MQ，标的编号：{}", borrowNid);
                                     try {
-                                        borrowLoanRepayProducer.messageSendDelay(
-                                                new MessageContent(MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_TOPIC, borrowApicron.getBorrowNid(), JSON.toJSONBytes(borrowApicron)), 2);
+                                        commonProducer.messageSendDelay(
+                                                new MessageContent(MQConstant.BORROW_REALTIMELOAN_ZT_REQUEST_TOPIC, borrowApicron.getBorrowNid(), borrowApicron), 2);
                                     } catch (MQException e) {
                                         logger.error("[编号：" + borrowNid + "]发送直投放款MQ失败！", e);
                                     }
@@ -248,7 +244,7 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
     }
 
     /**
-     * 校验投资数据的合法性
+     * 校验出借数据的合法性
      * @param borrowNid
      * @return
      */
@@ -263,38 +259,36 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
     }
 
     /**
-     * 投资撤销
+     * 出借撤销
      * @param info
      * @param accountID
      */
     private void tenderCancel(BorrowTenderTmp info, String accountID) {
         String nid = info.getNid();
-        // TODO Auto-generated method stub
         BankCallBean callBean = bidCancel(info.getUserId(), accountID, info.getBorrowNid(), nid, info.getAccount().toString());
         if (Validator.isNotNull(callBean)) {
             String retCode = StringUtils.isNotBlank(callBean.getRetCode()) ? callBean.getRetCode() : "";
-            //投资正常撤销或投资订单不存在则删除冗余数据
+            //出借正常撤销或出借订单不存在则删除冗余数据
             if (retCode.equals(BankCallConstant.RESPCODE_SUCCESS) || retCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_EXIST1)
                     || retCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_EXIST2) || retCode.equals(BankCallConstant.RETCODE_BIDAPPLY_NOT_RIGHT)){
                 try {
                     boolean flag = updateBidCancelRecord(info);
                     if (flag) {
-                        logger.info("===============投资掉单数据已撤销,原投资订单号:" + nid);
+                        logger.info("===============出借掉单数据已撤销,原出借订单号:" + nid);
                     }
                 } catch (Exception e) {
-                    // TODO Auto-generated catch block
                     throw new RuntimeException("投资撤销数据处理异常!原订单号:" + nid + "异常原因:" + e.getMessage());
                 }
             }else{
-                throw new RuntimeException("投资撤销接口返回错误!原订单号:" + nid + ",返回码:" + retCode);
+                throw new RuntimeException("出借撤销接口返回错误!原订单号:" + nid + ",返回码:" + retCode);
             }
         }else{
-            throw new RuntimeException("投资撤销接口异常!");
+            throw new RuntimeException("出借撤销接口异常!");
         }
     }
 
     /**
-     * 投资撤销历史数据处理
+     * 出借撤销历史数据处理
      * @param tenderTmp
      * @return
      * @throws Exception
@@ -303,25 +297,25 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
         Integer userId = tenderTmp.getUserId();
         boolean tenderTmpFlag = this.borrowTenderTmpMapper.deleteByPrimaryKey(tenderTmp.getId()) > 0 ? true : false;
         if (!tenderTmpFlag) {
-            throw new Exception("删除投资日志表失败，投资订单号：" + tenderTmp.getNid());
+            throw new Exception("删除出借日志表失败，出借订单号：" + tenderTmp.getNid());
         }
         Account account = this.getAccountByUserId(userId);
         FreezeHistory freezeHistory = new FreezeHistory();
         freezeHistory.setTrxId(tenderTmp.getNid());
-        freezeHistory.setNotes("自动任务银行投资撤销");
+        freezeHistory.setNotes("自动任务银行出借撤销");
         if(account != null){
             freezeHistory.setFreezeUser(account.getUserName());
         }
         freezeHistory.setFreezeTime(GetDate.getNowTime10());
         boolean freezeHisLog = this.freezeHistoryMapper.insert(freezeHistory) > 0 ? true : false;
         if (!freezeHisLog) {
-            throw new Exception("插入投资删除日志表失败，投资订单号：" + tenderTmp.getNid());
+            throw new Exception("插入出借删除日志表失败，出借订单号：" + tenderTmp.getNid());
         }
         return true;
     }
 
     /**
-     * 银行投资撤销
+     * 银行出借撤销
      *
      * @param userId
      * @param accountId
@@ -331,7 +325,7 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
      * @return
      */
     public BankCallBean bidCancel(Integer userId, String accountId, String productId, String orgOrderId, String txAmount) {
-        // 标的投资撤销
+        // 标的出借撤销
         Account account = this.getAccountByUserId(userId);
 
         BankCallBean bean = new BankCallBean();
@@ -358,12 +352,12 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
     }
 
     /**
-     * 校验投资数据是否爆标
+     * 校验出借数据是否爆标
      * @param borrowNid
      * @return true:爆标/异常  false:正常
      */
     private boolean checkBorrowTenderOverFlow(String borrowNid) {
-        //校验投资金额是否超标
+        //校验出借金额是否超标
         BorrowTenderExample btexample = new BorrowTenderExample();
         btexample.createCriteria().andBorrowNidEqualTo(borrowNid);
         List<BorrowTender> btList = this.borrowTenderMapper.selectByExample(btexample);
@@ -378,22 +372,22 @@ public class BatchAutoReviewServiceImpl implements BatchAutoReviewService {
         List<Borrow> borrowList = this.borrowMapper.selectByExample(borrowExample);
         BigDecimal borrowAccount = borrowList.get(0).getAccount();
         if (sumTender.compareTo(borrowAccount) > 0) {
-            logger.error("========投资总额超过标的总额!========");
+            logger.error("========出借总额超过标的总额!========");
             return true;
         }
-        //校验投资掉单造成的爆标
+        //校验出借掉单造成的爆标
         BorrowTenderTmpExample example = new BorrowTenderTmpExample();
         example.createCriteria().andIsBankTenderEqualTo(1).andBorrowNidEqualTo(borrowNid);
         List<BorrowTenderTmp> borrowtmpList = this.borrowTenderTmpMapper.selectByExample(example);
         int index = 0;
-        if (borrowtmpList!=null && borrowtmpList.size() > 0) {//复审时存在全部掉单的投资数据,可能导致爆标的出现
+        if (borrowtmpList!=null && borrowtmpList.size() > 0) {//复审时存在全部掉单的出借数据,可能导致爆标的出现
             for (int i = 0; i < borrowtmpList.size(); i++) {
                 BorrowTenderTmp info = borrowtmpList.get(i);
                 Account accounts = this.getAccountByUserId(info.getUserId());
                 BankCallBean callBean = queryBorrowTenderList(accounts.getAccountId(), info.getNid(), info.getUserId()+"");
                 if (callBean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(callBean.getRetCode())
                         && StringUtils.isNoneBlank(callBean.getAuthCode())) {
-                    logger.error("==========存在全部掉单的投资数据,可能导致爆标,投资订单号:" + info.getNid());
+                    logger.error("==========存在全部掉单的出借数据,可能导致爆标,出借订单号:" + info.getNid());
                     tenderCancel(info,accounts.getAccountId());
                     index++;
                 }

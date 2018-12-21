@@ -44,11 +44,11 @@ public class BaseDefine {
     public static final String METHOD_MYACCOUNT_VIPINFO = "getUserVIPInfo";
     //我的账户优惠券信息
     public static final String METHOD_MYACCOUNT_COUPONINFO = "getCouponInfo";
-    //我的投资列表（投资中）
+    //我的出借列表（出借中）
     public static final String METHOD_MYTENDER_INVEST_LIST = "getInvestList";
-    //我的投资列表（换裤子）
+    //我的出借列表（换裤子）
     public static final String METHOD_MYTENDER_REPAY_LIST = "getRepayList";
-    //我的投资列表（已还款）
+    //我的出借列表（已还款）
     public static final String METHOD_MYTENDER_REPAYED_LIST = "getAlreadyRepayList";
     
     public static final String METHOD_INVITE_USER = "inviteUser";
@@ -71,7 +71,7 @@ public class BaseDefine {
     public static final String METHOD_COUPON_REPAY_HTJ = "couponRepayForHtj";
     // 体验金按收益期限还款
     public static final String METHOD_COUPON_REPAY_TYJ = "borrowRepayForTyjTo";
-    // 投资更新V值
+    // 出借更新V值
     public static final String METHOD_VIP_VALUE = "tenderVipValue";
     
     public static final String METHOD_GET_USER_RECOMMEND_INFO = "getRecommendInfo";
@@ -88,11 +88,11 @@ public class BaseDefine {
     public static final String METHOD_PHONENUM_CHECK = "doPhoneNumCheck";
     // 新年活动： 发送财神卡给好友
     public static final String METHOD_CARD_SEND = "doCardSend";
-    // 优惠券投资送财神卡
+    // 优惠券出借送财神卡
     public static final String METHOD_NEWYEAR_TENDER = "newyearTender";
-    // 优惠券投资送财神卡
+    // 优惠券出借送财神卡
     public static final String METHOD_NEWYEAR_SEND_CARD = "newyearSendCard";
-    // 优惠券投资送财神卡
+    // 优惠券出借送财神卡
     public static final String METHOD_NEWYEAR_REGIST = "newyearRegist";
     
     
@@ -127,11 +127,11 @@ public class BaseDefine {
  	public static final String METHOD_SEARCH_PLAN_ACCEDE = "searchPlanAccede";
  	// 查询相应的汇添金债权列表
  	public static final String METHOD_SEARCH_PLAN_BORROW = "searchPlanBorrow";
- 	// 跳转投资页面（获取投资信息）
+ 	// 跳转出借页面（获取出借信息）
  	public static final String METHOD_GET_PLAN_INVEST_INFO = "getPlanInvestInfo";
  	// 计算预期收益
  	public static final String METHOD_GET_PLAN_INVEST_EARNINGS = "getPlanInvestEarnings";
- 	// 投资二次确认
+ 	// 出借二次确认
  	public static final String METHOD_APPOINT_CHECK = "appointCheck";
  	// 加入计划
  	public static final String METHOD_JOIN_PLAN = "joinPlan";
@@ -139,7 +139,7 @@ public class BaseDefine {
  	public static final String METHOD_APPOINTMENT = "appointment";
  	// 预约授权校验
  	public static final String METHOD_CHECK_APPOINTMENT = "appointmentCheck";
- 	// 查询用户投资的汇添金
+ 	// 查询用户出借的汇添金
  	public static final String METHOD_SEARCH_USER_PROJECT_LIST = "searchUserProjectList";
  	
  	// 获取汇计划详情
@@ -163,7 +163,7 @@ public class BaseDefine {
     //计算优惠券预期收益
     public static final String METHOD_PLAN_GET_COUPON_INTEREST="plan/getCouponInterest";
     
-    //优惠券投资
+    //优惠券出借
     public static final String METHOD_PLAN_COUPON_TENDER_ACTION="plan/couponTender";
     //更新汇添金优惠券收益及还款时间
     public static final String METHOD_PLAN_COUPON_RECOVER="plan/updateCouponRecover";
@@ -304,9 +304,9 @@ public class BaseDefine {
     //上市活动
     public static final String GET_ACT_LIST = "/act2018list";
 
-    // 自动投资 债转  短信验证码
+    // 自动出借 债转  短信验证码
     public static final String METHOD_BORROW_AUTH_SEND_SMS = "/server/autoPlus/sendcode";
-    // 自动投资 增强
+    // 自动出借 增强
     public static final String METHOD_BORROW_AUTH_INVES = "/server/autoPlus/userAuthInves";
     // 自动 债转  授权增强
     public static final String METHOD_BORROW_AUTH_CREDIT = "/server/autoPlus/userCreditAuthInves";

@@ -3,10 +3,9 @@
  */
 package com.hyjf.am.trade.service.front.coupon.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
-import com.hyjf.am.admin.mq.producer.AppMessageProducer;
 import com.hyjf.am.resquest.admin.AdminCouponUserRequestBean;
 import com.hyjf.am.resquest.admin.CouponUserBeanRequest;
 import com.hyjf.am.resquest.admin.CouponUserRequest;
@@ -55,7 +54,7 @@ public class CouponUserServiceImpl implements CouponUserService {
     @Autowired
     private CouponOperationHistoryMapper couponOperationHistoryMapper;
     @Autowired
-    private AppMessageProducer appMessageProducer;
+    private CommonProducer commonProducer;
 
 
     @Override
@@ -76,7 +75,7 @@ public class CouponUserServiceImpl implements CouponUserService {
         int sevenBeginDate = GetDate.strYYYYMMDD2Timestamp2(GetDate.getDataString(GetDate.date_sdf, 7));
         int sevenEndDate = GetDate.strYYYYMMDD2Timestamp2(GetDate.getDataString(GetDate.date_sdf, 8));
 
-        // 取得体验金投资（无真实投资）的还款列表
+        // 取得体验金出借（无真实出借）的还款列表
         CouponUserExample example = new CouponUserExample();
         CouponUserExample.Criteria criteria = example.createCriteria();
         criteria.andDelFlagEqualTo(0);
@@ -338,8 +337,8 @@ public class CouponUserServiceImpl implements CouponUserService {
             param.put("val_coupon_type", couponConfig.getCouponType() == 1 ? "体验金" : couponConfig.getCouponType() == 2 ? "加息券" : couponConfig.getCouponType() == 3 ? "代金券" : "");
             AppMsMessage appMsMessage = new AppMsMessage(couponUserRequestBean.getUserId(), param, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_COUPON_SUCCESS);
             try {
-                appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(couponUserRequestBean.getUserId()),
-                        JSON.toJSONBytes(appMsMessage)));
+                commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(couponUserRequestBean.getUserId()),
+                        appMsMessage));
             } catch (MQException e) {
                 e.printStackTrace();
             }

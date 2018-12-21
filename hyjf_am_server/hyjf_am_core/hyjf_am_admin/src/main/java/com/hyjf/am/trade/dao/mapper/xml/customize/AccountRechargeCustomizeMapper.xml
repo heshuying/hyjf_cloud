@@ -63,7 +63,7 @@
 
 	<sql id="where-all-page-condition">
 		<if test="userId != null and userId != 0">
-			AND r.user_id = #{userId}
+			AND ui.user_id = #{userId}
 		</if>
 		<if test="nidSearch != null and nidSearch != 0">
 			AND r.nid = #{nidSearch}
@@ -116,9 +116,7 @@
 		<if test="usernameSearch != null and usernameSearch != ''">
 			LEFT JOIN ht_r_user ru ON r.user_id= ru.user_id
 		</if>
-		<if test="roleIdSearch != null and roleIdSearch != 0">
 			LEFT JOIN ht_r_user ui ON r.user_id= ui.user_id
-		</if>
 		<!-- LEFT JOIN
 		ht_fee_config p ON r.payment= p.bank_code-->
 		<!--<if test="bankCodeSearch != null and bankCodeSearch != ''">
@@ -168,11 +166,11 @@
 		`od4`.`name` AS `referrer_department_name`,
 		CASE u.role_id
 		WHEN 1 THEN
-		'投资人'
+		'出借人'
 		WHEN 2 THEN
 		'借款人'
 		WHEN 3 THEN
-		'垫付机构'
+		'担保机构'
 		END AS roleid,
 		u.attribute AS user_attribute,
 		CASE

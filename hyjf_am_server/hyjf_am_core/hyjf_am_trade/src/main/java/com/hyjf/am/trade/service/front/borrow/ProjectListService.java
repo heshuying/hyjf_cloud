@@ -10,7 +10,10 @@ import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvest;
 import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
-import com.hyjf.am.vo.trade.*;
+import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
+import com.hyjf.am.vo.trade.CreditListVO;
+import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
+import com.hyjf.am.vo.trade.WechatHomeProjectListVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 
@@ -96,28 +99,28 @@ public interface ProjectListService {
     // --------------------------web end --------------------------------------------------
     //---------------------------app start ------------------------------------------------
     /**
-     * app端获取散标投资count
+     * app端获取散标出借count
      * @author zhangyk
      * @date 2018/6/20 16:11
      */
      int  countAppProjectList(@Valid ProjectListRequest request);
 
     /**
-     * app端获取散标投资数据list
+     * app端获取散标出借数据list
      * @author zhangyk
      * @date 2018/6/20 16:11
      */
     List<AppProjectListCustomize> searchAppProjectList(@Valid ProjectListRequest request);
 
     /**
-     * app端获取散标投资count
+     * app端获取散标出借count
      * @author zhangyk
      * @date 2018/6/20 16:11
      */
     int  countAppCreditList(@Valid ProjectListRequest request);
 
     /**
-     * app端获取散标投资数据list
+     * app端获取散标出借数据list
      * @author zhangyk
      * @date 2018/6/20 16:11
      */
@@ -140,12 +143,12 @@ public interface ProjectListService {
 
 
     /*
-     * 散表投资记录数
+     * 散表出借记录数
      */
     int countProjectInvestRecordTotal(Map<String,Object> params);
 
     /**
-     * 获取散标投资记录
+     * 获取散标出借记录
      * @param params
      * @return
      */

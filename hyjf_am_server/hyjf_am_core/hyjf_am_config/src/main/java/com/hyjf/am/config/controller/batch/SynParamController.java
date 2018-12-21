@@ -3,18 +3,15 @@
  */
 package com.hyjf.am.config.controller.batch;
 
-import com.alibaba.fastjson.JSON;
-import com.hyjf.am.config.controller.BaseConfigController;
-import com.hyjf.am.config.mq.base.MessageContent;
-import com.hyjf.am.config.mq.producer.TestProducer;
-import com.hyjf.am.config.service.SiteSettingService;
-import com.hyjf.am.config.service.SynParamService;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.BaseVO;
-import com.hyjf.common.cache.CacheUtil;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.LineIterator;
 import org.apache.commons.lang3.StringUtils;
@@ -22,15 +19,22 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.config.controller.BaseConfigController;
+import com.hyjf.am.config.mq.base.MessageContent;
+import com.hyjf.am.config.service.SiteSettingService;
+import com.hyjf.am.config.service.SynParamService;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.vo.BaseVO;
+import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.ScanParams;
 import redis.clients.jedis.ScanResult;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author dxj
@@ -46,8 +50,8 @@ public class SynParamController extends BaseConfigController {
     @Autowired
     SiteSettingService siteSettingService;
     
-    @Autowired
-    TestProducer testProducer;
+//    @Autowired
+//    TestProducer testProducer;
     
     private static AtomicInteger painte = new AtomicInteger();
     
@@ -106,13 +110,13 @@ public class SynParamController extends BaseConfigController {
             int p1 = painte.incrementAndGet();
             maps.put("hehe", "sdf"+ p1);
             maps.put("uu", "僵死sdf"+ p1);
-            MessageContent message = new MessageContent(MQConstant.TEST_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(maps));
+            MessageContent message = new MessageContent(MQConstant.TEST_TOPIC, UUID.randomUUID().toString(),maps);
             
-            try {
-                testProducer.messageSend(message);
-            } catch (MQException e) {
-                 e.printStackTrace();
-            }
+//            try {
+//                testProducer.messageSend(message);
+//            } catch (MQException e) {
+//                 e.printStackTrace();
+//            }
             
         }
         
@@ -184,14 +188,10 @@ public class SynParamController extends BaseConfigController {
 			List<String> appkeys = new ArrayList<String>();
 			
 			for (String key : keys) {
-//				logger.info(key); 32+4+3
 				total = total+1;
 				if (StringUtils.startsWith(key, "web")) {
 					apptotal = apptotal+1;
 					appkeys.add(key);
-					
-//					//TODO:delte
-//					System.out.println(key+"    "+cursor);
 				}
 			}
 			

@@ -4,12 +4,8 @@
 package com.hyjf.am.trade.service.admin.finance.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
-import com.hyjf.am.admin.mq.producer.AccountWebListProducer;
-import com.hyjf.am.admin.mq.producer.AppMessageProducer;
-import com.hyjf.am.admin.mq.producer.SmsProducer;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.admin.AccountWebListResponse;
 import com.hyjf.am.resquest.admin.PushMoneyRequest;
 import com.hyjf.am.trade.dao.mapper.auto.CommissionLogMapper;
 import com.hyjf.am.trade.dao.mapper.customize.PushMoneyCustomizeMapper;
@@ -27,7 +23,10 @@ import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.*;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.GetterUtil;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -50,13 +49,10 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
     @Autowired
     private CommissionLogMapper commissionLogMapper;
     @Autowired
-    private SmsProducer smsProducer;
-    @Autowired
-    private AppMessageProducer appMessageProducer;
+    private CommonProducer commonProducer;
     @Autowired
     private RestTemplate restTemplate;
-    @Autowired
-    private AccountWebListProducer accountWebListProducer;
+
     /**
      * 提成管理 （列表）
      *
@@ -180,7 +176,7 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
             Integer time = GetDate.getMyTimeInMillis();
             // 发放人ID
             Integer userId = tenderCommissionVO.getUserId();
-            // 投资人ID
+            // 出借人ID
             Integer tenderUserId = tenderCommissionVO.getTenderUserId();
             // 操作者用户名
             String operator = request.getLoginUserName();
@@ -252,7 +248,7 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
             accountList.setBankAwaitInterest(account.getBankAwaitInterest());// 银行待收利息
             accountList.setBankAwait(account.getBankAwait());// 银行待收总额
             accountList.setBankInterestSum(account.getBankInterestSum()); // 银行累计收益
-            accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计投资
+            accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计出借
             accountList.setBankWaitRepay(account.getBankWaitRepay());// 银行待还金额
             accountList.setPlanBalance(account.getPlanBalance());//汇计划账户可用余额
             accountList.setPlanFrost(account.getPlanFrost());
@@ -276,16 +272,16 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
             // 插入网站收支明细记录
             AccountWebListVO accountWebList = new AccountWebListVO();
             accountWebList.setOrdid(bankBean.getLogOrderId());// 订单号
-            accountWebList.setUserId(accountList.getUserId()); // 投资者
+            accountWebList.setUserId(accountList.getUserId()); // 出借者
             accountWebList.setAmount(Double.valueOf(accountList.getAmount().toString())); // 管理费
             accountWebList.setType(CustomConstants.TYPE_OUT); // 类型1收入 2支出
             accountWebList.setTrade(CustomConstants.TRADE_TGTC); // 提成
-            accountWebList.setTradeType(CustomConstants.TRADE_TGTC_NM); // 投资推广提成
-            accountWebList.setRemark(getBorrowNidByOrdId(accountList.getNid())); // 投资推广提成
+            accountWebList.setTradeType(CustomConstants.TRADE_TGTC_NM); // 出借推广提成
+            accountWebList.setRemark(getBorrowNidByOrdId(accountList.getNid())); // 出借推广提成
             accountWebList.setCreateTime(GetterUtil.getInteger(accountList.getCreateTime()));
             try {
                 logger.debug("发送收支明细:[{}]",JSON.toJSONString(accountWebList));
-                boolean success = accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+                boolean success = commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
                 if(success){
                     ret += 1;
                 }
@@ -323,7 +319,7 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
                 bankMerchantAccountList.setUpdateTime(new Date());
                 bankMerchantAccountList.setCreateUserId(userId);
                 bankMerchantAccountList.setUpdateUserId(userId);
-                bankMerchantAccountList.setRemark("投资推广提成");
+                bankMerchantAccountList.setRemark("出借推广提成");
                 if(userInfoCustomize != null){
                     bankMerchantAccountList.setRegionName(StringUtils.isBlank(userInfoCustomize.getRegionName())?"":userInfoCustomize.getRegionName());
                     bankMerchantAccountList.setBranchName(StringUtils.isBlank(userInfoCustomize.getBranchName())?"":userInfoCustomize.getBranchName());
@@ -348,8 +344,8 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
                     new SmsMessage(userId, replaceMap, null, null, MessageConstant.SMS_SEND_FOR_USER, null,
                             CustomConstants.PARAM_TPL_SDTGTC, CustomConstants.CHANNEL_TYPE_NORMAL);
             try {
-                smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
-                        JSON.toJSONBytes(smsMessage)));
+                commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
+                        smsMessage));
             } catch (MQException e) {
                 e.printStackTrace();
             }
@@ -374,8 +370,8 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
                         CustomConstants.JYTZ_TPL_SDTGTC);
 
                 try {
-                    appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
-                            JSON.toJSONBytes(appMsMessage)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
+                            appMsMessage));
                 } catch (MQException e) {
                     logger.error("发送app消息失败..", e);
                 }
@@ -430,7 +426,7 @@ public class PushMoneyManageServiceImpl extends BaseServiceImpl implements PushM
     }
 
     /**
-     * 根据投资订单号取投资编号
+     * 根据出借订单号取出借编号
      *
      * @param ordId
      * @return

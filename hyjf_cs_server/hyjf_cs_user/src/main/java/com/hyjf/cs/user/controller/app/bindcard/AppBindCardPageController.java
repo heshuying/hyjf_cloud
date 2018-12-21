@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.controller.app.bindcard;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
@@ -16,8 +17,8 @@ import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.user.bean.BindCardPageBean;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.bean.BankCallResult;
@@ -50,7 +51,7 @@ public class AppBindCardPageController extends BaseUserController {
     @Autowired
     SystemConfig systemConfig;
     @Autowired
-    UserOperationLogProducer userOperationLogProducer;
+    CommonProducer commonProducer;
 
     /**
      * 页面请求绑卡
@@ -87,7 +88,7 @@ public class AppBindCardPageController extends BaseUserController {
         userOperationLogEntity.setUserName(userVO.getUsername());
         userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
         try {
-            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+            commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
         } catch (MQException e) {
             logger.error("保存用户日志失败", e);
         }

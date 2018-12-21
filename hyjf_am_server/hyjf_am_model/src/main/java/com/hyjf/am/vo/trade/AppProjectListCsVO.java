@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 /**
  * @author fuqiang
- * 指定类型投资项目
+ * 指定类型出借项目
  */
 public class AppProjectListCsVO  extends BaseVO implements Serializable {
     private static final long serialVersionUID = -2592366387227548926L;

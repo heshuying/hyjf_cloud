@@ -12,17 +12,14 @@ public class RedisConstants {
 
     // ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ key通用常量 ↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓ //
     /**
-     * 投资防重校验过期时间
+     * 出借防重校验过期时间
      */
     public static final Integer TENDER_OUT_TIME = 300;
 
-    // 汇计划分割线
-    public static final String HJH_SLASH = "_";
-
-    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
+    // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 start
     // _tmp
     public static final String HJH_SLASH_TMP = "_tmp";
-    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
+    // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 end
 
     // ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ key通用常量 ↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑ //
     /**
@@ -72,12 +69,12 @@ public class RedisConstants {
     public static final String HJH_LOCK_REPEAT = "hjh_lockisrepeat:";
 
     /**
-     * 散标投资异步防重校验（tender_orderid:LogOrderId）
+     * 散标出借异步防重校验（tender_orderid:LogOrderId）
      */
     public static final String TENDER_ORDERID = "tender_orderid:";
 
     /**
-     * 投资优惠券使用rediskey(RedisConstants.COUPON_TENDER_KEY+couponGrantId, 300)  by sunss
+     * 出借优惠券使用rediskey(RedisConstants.COUPON_TENDER_KEY+couponGrantId, 300)  by sunss
      */
     public static final String COUPON_TENDER_KEY = "coupon_tender:";
 
@@ -109,11 +106,11 @@ public class RedisConstants {
 
     // 汇计划标的队列标识 债转（债转标的） (queue:credit:$creditNid)
     public static final String HJH_BORROW_CREDIT = "credit:";
-    // 汇计划标的队列标识 投资（原始标的） (queue:invest:$borrowNid)
+    // 汇计划标的队列标识 出借（原始标的） (queue:invest:$borrowNid)
     public static final String HJH_BORROW_INVEST = "invest:";
 
     /**
-     * 散标投资防重校验(borrow_tender_repeat:$userId)
+     * 散标出借防重校验(borrow_tender_repeat:$userId)
      */
     public static final String BORROW_TENDER_REPEAT = "borrow_tender_repeat:";
 
@@ -286,12 +283,12 @@ public class RedisConstants {
     public static final String SH_OPERATIONAL_DATA = "sh_operational_data:";
 
     /**
-     * 上海大屏幕运营数据 : 统计投资人
+     * 上海大屏幕运营数据 : 统计出借人
      */
     public static final String STATISTICAL_INVESTOR = "statistical_investor:";
 
     /**
-     * 上海大屏幕运营数据 : 统计投资（statistical_investment:$String）
+     * 上海大屏幕运营数据 : 统计出借（statistical_investment:$String）
      */
     public static final String STATISTICAL_INVESTMENT = "statistical_investment:";
 
@@ -383,7 +380,7 @@ public class RedisConstants {
 
 
     /**
-     * 测评到期时间和测评结果投资金额上限用redis组
+     * 测评到期时间和测评结果出借金额上限用redis组
      */
     public static final String REVALUATION = "evaluation:";
 

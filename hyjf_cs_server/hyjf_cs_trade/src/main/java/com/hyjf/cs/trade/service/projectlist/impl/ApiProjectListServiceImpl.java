@@ -58,7 +58,7 @@ public class ApiProjectListServiceImpl implements ApiProjectListService {
         commonSvrChkService.checkLimit(reqBean.getLimitStart(), reqBean.getLimitEnd());
         // 标的状态验证
         CheckUtil.check(Validator.isNotNull(reqBean.getBorrowStatus()), MsgEnum.STATUS_CE000001);
-        // 标的状态=2投资中 验证
+        // 标的状态=2出借中 验证
         CheckUtil.check(reqBean.getBorrowStatus().equals("2"), MsgEnum.ERR_OBJECT_VALUE, "borrowStatus");
 
         // 验签
@@ -219,29 +219,29 @@ public class ApiProjectListServiceImpl implements ApiProjectListService {
         BigDecimal earnings = new BigDecimal("0");
         String version = "2.1.0";
         if (!org.apache.commons.lang.StringUtils.isBlank(money) && Double.parseDouble(money) >= 0) {
-            // 计算本金投资预期收益
+            // 计算本金出借预期收益
             switch (borrowStyle) {
-                case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“: 预期收益=投资金额*年化收益÷12*月数；
+                case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“: 预期收益=出借金额*年化收益÷12*月数；
                     earnings = DuePrincipalAndInterestUtils.getMonthInterest(new BigDecimal(money),
                             borrowApr.divide(new BigDecimal("100")), borrowPeriod)
                             .setScale(2, BigDecimal.ROUND_DOWN);
                     break;
-                case CalculatesUtil.STYLE_ENDDAY:// 还款方式为”按天计息，到期还本还息“: 预期收益=投资金额*年化收益÷360*天数；
+                case CalculatesUtil.STYLE_ENDDAY:// 还款方式为”按天计息，到期还本还息“: 预期收益=出借金额*年化收益÷360*天数；
                     earnings = DuePrincipalAndInterestUtils.getDayInterest(new BigDecimal(money),
                             borrowApr.divide(new BigDecimal("100")), borrowPeriod)
                             .setScale(2, BigDecimal.ROUND_DOWN);
                     break;
-                case CalculatesUtil.STYLE_ENDMONTH:// 还款方式为”先息后本“: 预期收益=投资金额*年化收益÷12*月数；
+                case CalculatesUtil.STYLE_ENDMONTH:// 还款方式为”先息后本“: 预期收益=出借金额*年化收益÷12*月数；
                     earnings = BeforeInterestAfterPrincipalUtils.getInterestCount(new BigDecimal(money),
                             borrowApr.divide(new BigDecimal("100")), borrowPeriod, borrowPeriod)
                             .setScale(2, BigDecimal.ROUND_DOWN);
                     break;
-                case CalculatesUtil.STYLE_MONTH:// 还款方式为”等额本息“: 预期收益=投资金额*年化收益÷12*月数；
+                case CalculatesUtil.STYLE_MONTH:// 还款方式为”等额本息“: 预期收益=出借金额*年化收益÷12*月数；
                     earnings = AverageCapitalPlusInterestUtils.getInterestCount(new BigDecimal(money),
                             borrowApr.divide(new BigDecimal("100")), borrowPeriod)
                             .setScale(2, BigDecimal.ROUND_DOWN);
                     break;
-                case CalculatesUtil.STYLE_PRINCIPAL:// 还款方式为”等额本金“: 预期收益=投资金额*年化收益÷12*月数；
+                case CalculatesUtil.STYLE_PRINCIPAL:// 还款方式为”等额本金“: 预期收益=出借金额*年化收益÷12*月数；
                     earnings = AverageCapitalUtils.getInterestCount(new BigDecimal(money),
                             borrowApr.divide(new BigDecimal("100")), borrowPeriod)
                             .setScale(2, BigDecimal.ROUND_DOWN);

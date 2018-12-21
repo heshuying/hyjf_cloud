@@ -267,7 +267,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 
     /**
-     * 根据承接订单号查询债转投资表
+     * 根据承接订单号查询债转出借表
      * @param assignNid
      * @return
      */
@@ -369,7 +369,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 
     /**
-     * 根据投资订单号获取协议列表
+     * 根据出借订单号获取协议列表
      * @param nid
      * @return
      */
@@ -385,7 +385,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 
     /**
-     *查询汇计划债转投资表
+     *查询汇计划债转出借表
      * @param request
      * @return
      */
@@ -404,7 +404,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 
     /**
-     *  更新投资协议信息
+     *  更新出借协议信息
      * @return
      */
     @Override
@@ -418,7 +418,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 通过主键获取投资协议信息
+     * 通过主键获取出借协议信息
      * @param tenderAgreementID
      * @return
      */

@@ -4,9 +4,9 @@ import com.hyjf.am.vo.trade.ApiTransactionDetailsCustomizeVO;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.trade.bean.ResultApiBean;
 import com.hyjf.cs.trade.bean.TransactionDetailsResultBean;
+import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.svrcheck.CommonSvrChkService;
 import com.hyjf.cs.trade.service.transactiondetails.TransactionDetailsService;
 import com.hyjf.cs.trade.util.SignUtil;
@@ -14,11 +14,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,20 +30,19 @@ import java.util.List;
  * @Author : huanghui
  */
 @Api(value = "api端 - 第三方交易明细查询",tags = "api端 - 第三方交易明细查询")
-@Controller
+@RestController
 @RequestMapping(value = "/hyjf-api/server/tradelist")
-public class TransactionDetailsController extends BaseController {
+public class TransactionDetailsController extends BaseTradeController {
 
     @Autowired
     private TransactionDetailsService transactionDetailsService;
     @Autowired
     private CommonSvrChkService commonSvrChkService;
 
-    @ApiOperation(value = "第三方同步余额", notes = "同步余额")
-    @PostMapping(value = "/tradelist.do", produces = "application/json; charset=utf-8")
-    public ResultApiBean srchTradeList(@RequestBody TransactionDetailsResultBean resultBean){
-
-        TransactionDetailsResultBean transactionDetailsResultBean = new TransactionDetailsResultBean();
+    @ApiOperation(value = "第三方同步余额",httpMethod = "POST", notes = "同步余额")
+    @PostMapping(value = "/tradelist.do")
+    public ResultApiBean srchTradeList(HttpServletRequest request, HttpServletResponse response,
+                                        TransactionDetailsResultBean resultBean){
 
         /**必传为空校验 start*/
         // 常规参数验证
@@ -79,9 +79,10 @@ public class TransactionDetailsController extends BaseController {
             CheckUtil.check(isGetTradeTypeSearch(resultBean.getTradeTypeSearch().trim()), MsgEnum.ERR_OBJECT_UNMATCH, "交易类型ID");
         }
         // 验证
-        CheckUtil.check(SignUtil.verifyRequestSign(resultBean, "/tradelist"),MsgEnum.ERR_SIGN);
+        CheckUtil.check(SignUtil.verifyRequestSign(resultBean, "/server/tradelist/tradelist"),MsgEnum.ERR_SIGN);
+        List<ApiTransactionDetailsCustomizeVO> result = transactionDetailsService.searchTradeList(resultBean);
         // 返回查询结果
-        return new ResultApiBean<List<ApiTransactionDetailsCustomizeVO>>(transactionDetailsService.searchTradeList(resultBean));
+        return new ResultApiBean<List<ApiTransactionDetailsCustomizeVO>>(result);
     }
 
     /**

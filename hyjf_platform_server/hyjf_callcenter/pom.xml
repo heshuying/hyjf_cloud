@@ -55,13 +55,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- spring boot admin start -->
-		<dependency>
-			<groupId>de.codecentric</groupId>
-			<artifactId>spring-boot-admin-starter-client</artifactId>
-		</dependency>
-		<!-- spring boot admin end -->
-
 		<dependency>
 			<groupId>org.apache.rocketmq</groupId>
 			<artifactId>rocketmq-client</artifactId>
@@ -124,14 +117,18 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<!--<configuration>
-					<excludes>
-						<exclude>**/application.yml</exclude>
-						<exclude>**/bootstrap.yml</exclude>
-					</excludes>
-				</configuration>-->
 			</plugin>
 		</plugins>
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/**.*</include>
+				</includes>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 	</build>
 
 </project>

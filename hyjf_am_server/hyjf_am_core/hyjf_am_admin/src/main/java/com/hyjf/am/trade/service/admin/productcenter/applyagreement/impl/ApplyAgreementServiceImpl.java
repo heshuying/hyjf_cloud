@@ -11,13 +11,11 @@ import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.BorrowRepayAgreementCustomizeVO;
 import com.hyjf.am.vo.trade.TenderAgreementVO;
 import com.hyjf.am.vo.trade.borrow.ApplyAgreementVO;
-import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -228,7 +226,7 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
     }
 
     /**
-     * 获取用户投资协议
+     * 获取用户出借协议
      *
      * @param borrowNid
      * @return
@@ -239,7 +237,7 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
     }
 
     /**
-     * 获取用户投资协议分期
+     * 获取用户出借协议分期
      *
      * @param nid
      * @return
@@ -267,7 +265,7 @@ public class ApplyAgreementServiceImpl extends BaseServiceImpl implements ApplyA
         return list;
     }
     /**
-     * 获取用户投资协议分期
+     * 获取用户出借协议分期
      *
      * @param nid
      * @return

@@ -1,22 +1,11 @@
 package com.hyjf.am.user.service.front.user.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.hyjf.am.resquest.api.WrbRegisterRequest;
-import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserLogMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserMapper;
-import com.hyjf.am.user.dao.mapper.auto.UtmRegMapper;
-import com.hyjf.am.user.dao.model.auto.*;
-import com.hyjf.am.user.mq.base.MessageContent;
-import com.hyjf.am.user.mq.producer.AccountProducer;
-import com.hyjf.am.user.mq.producer.SmsProducer;
-import com.hyjf.am.user.service.front.user.WrbService;
-import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.user.UtmPlatVO;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.*;
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +13,32 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import com.alibaba.fastjson.JSON;
+import com.hyjf.am.resquest.api.WrbRegisterRequest;
+import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
+import com.hyjf.am.user.dao.mapper.auto.UserLogMapper;
+import com.hyjf.am.user.dao.mapper.auto.UserMapper;
+import com.hyjf.am.user.dao.mapper.auto.UtmRegMapper;
+import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.am.user.dao.model.auto.UserExample;
+import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.dao.model.auto.UserLog;
+import com.hyjf.am.user.dao.model.auto.UtmPlat;
+import com.hyjf.am.user.dao.model.auto.UtmReg;
+import com.hyjf.am.user.mq.base.CommonProducer;
+import com.hyjf.am.user.mq.base.MessageContent;
+import com.hyjf.am.user.service.front.user.WrbService;
+import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.user.UtmPlatVO;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetCode;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.util.StringRandomUtil;
 
 /**
  * @author lisheng
@@ -46,11 +56,9 @@ public class WrbServiceImpl implements WrbService {
     @Autowired
     protected UserInfoMapper usersInfoMapper;
     @Autowired
-    private SmsProducer smsProcesser;
+    private CommonProducer commonProducer;
     @Autowired
     protected UserLogMapper usersLogMapper;
-    @Autowired
-    private AccountProducer accountProducer;
 
     /**
      * 根据电话号码和模版号给某电话发短信
@@ -120,7 +128,7 @@ public class WrbServiceImpl implements WrbService {
         user.setRechargeSms(0); // 充值成功短信 0发送 1不发送
         user.setWithdrawSms(0); // withdraw_sms
         //user.setInvestflag(0);// 新手标志位：0新手 1老手
-        user.setInvestSms(0);// 投资成功短信 0发送 1不发送
+        user.setInvestSms(0);// 投标成功短信 0发送 1不发送
         user.setRecieveSms(0);// 回收成功短信 0发送 1不发送
         //user.setVersion(BigDecimal.ZERO);// 版本号
         user.setUserType(0);// 用户类型 0普通用户 1企业用户
@@ -143,7 +151,7 @@ public class WrbServiceImpl implements WrbService {
                     param.put("val_password", password);
                     SmsMessage smsMessage = new SmsMessage(userId, param, mobiles, null, SMSSENDFORMOBILE, null, CustomConstants.THIRD_PARTY_REGIEST_PASSWORD, CustomConstants.CHANNEL_TYPE_NORMAL);
                     try {
-                        smsProcesser.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                    	commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
                     } catch (MQException e) {
                         e.printStackTrace();
                     }
@@ -192,7 +200,7 @@ public class WrbServiceImpl implements WrbService {
         userInfo.setAttribute(0);// 默认为无主单
         userInfo.setUserId(userId);
         if (instType == 0) {
-            userInfo.setRoleId(2);// 用户角色1投资人2借款人3垫付机构
+            userInfo.setRoleId(2);// 用户角色1出借人2借款人3垫付机构
             userInfo.setBorrowerType(2);// 借款人类型 1：内部机构 2：外部机构
         } else {
             userInfo.setRoleId(1);
@@ -325,7 +333,7 @@ public class WrbServiceImpl implements WrbService {
         log.info("注册插入account：{}", JSON.toJSONString(account));
         try {
             log.info("发送mq开始");
-            accountProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(account)));
+            commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(), account));
             log.info("发送mq结束");
         } catch (MQException e) {
             log.error("注册成功推送account——mq失败.... user_id is :{}", userId);

@@ -10,9 +10,8 @@ import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
 import com.hyjf.am.trade.dao.model.auto.HjhPlan;
 import com.hyjf.am.trade.dao.model.auto.HjhRepay;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.MailProducer;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.front.borrow.BorrowService;
 import com.hyjf.am.trade.service.front.hjh.HjhAccedeService;
 import com.hyjf.am.trade.service.front.hjh.HjhPlanService;
@@ -55,9 +54,7 @@ public class HjhAlarmController extends BaseController {
     @Autowired
     private BorrowService borrowService;
     @Autowired
-    private MailProducer mailProducer;
-    @Autowired
-    private SmsProducer smsProducer;
+    private CommonProducer commonProducer;
 
     /**
      * 汇计划各计划开放额度校验预警
@@ -151,7 +148,7 @@ public class HjhAlarmController extends BaseController {
                MailMessage message = new MailMessage(null, null, title, msg.toString(),null,toMail,
                        null,
                        MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
-               mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(message)));
+               commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), message));
                logger.info("邮件发送完成");
            }catch (Exception e){
                logger.error("计划订单匹配期>=2 邮件预警发送异常");
@@ -199,7 +196,7 @@ public class HjhAlarmController extends BaseController {
                 MailMessage message = new MailMessage(null, null, title, msg.toString(),null,toMail,
                         null,
                         MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
-                mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(message)));
+                commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), message));
                 logger.info("邮件发送完成");
                 return true;
             }catch (Exception e){
@@ -216,7 +213,7 @@ public class HjhAlarmController extends BaseController {
 
 
     /**
-     * 订单投资异常短信预警
+     * 订单出借异常短信预警
      * @author zhangyk
      * @date 2018/8/15 16:23
      */
@@ -226,12 +223,12 @@ public class HjhAlarmController extends BaseController {
         if (accedeList != null && accedeList.size() > 0) {
             try {
                 // 发送邮件通知
-                String title = "计划订单投资异常消息通知";
+                String title = "计划订单出借异常消息通知";
                 StringBuffer msg = new StringBuffer();
-                msg.append("计划订单投资异常，请至网站后台“异常投资-汇计化自动投资异常”查看并及时处理，谢谢");
+                msg.append("计划订单出借异常，请至网站后台“异常出借-汇计化自动出借异常”查看并及时处理，谢谢");
 
                 Boolean env_test = systemConfig.isEnvTest();
-                logger.info("计划订单投资异常 evn_test is test ? " + env_test);
+                logger.info("计划订单出借异常 evn_test is test ? " + env_test);
                 String emailList= "";
                 if (env_test){
                     emailList = systemConfig.getHyjfAlertEmailTest();
@@ -243,24 +240,24 @@ public class HjhAlarmController extends BaseController {
                 MailMessage message = new MailMessage(null, null, title, msg.toString(),null,toMail,
                         null,
                         MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
-                mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(message)));
+                commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), message));
                 // TODO: 2018/8/15   发送短信通知待完善
                /* SmsMessage smsMessage = new SmsMessage(null, null, null, null, MessageDefine.SMSSENDFORMANAGER, null,
                         CustomConstants.JYTZ_PLAN_ORDER_EXCECEPTION, CustomConstants.CHANNEL_TYPE_NORMAL);
                 smsProcesser.gather(smsMessage);*/
                 logger.info("短信发送成功");
             }catch (Exception e){
-                logger.error("订单投资异常预警发送异常 ");
+                logger.error("订单出借异常预警发送异常 ");
                 return  false;
             }
         }else {
-            logger.info("计划订单投资异常size为空, 不发送预警");
+            logger.info("计划订单出借异常size为空, 不发送预警");
         }
         return true;
     }
 
     /**
-     * 清算日前一天，扫描处于复审中或者投资中的原始标的进行预警
+     * 清算日前一天，扫描处于复审中或者出借中的原始标的进行预警
      * @author zhangyk
      * @date 2018/8/20 15:53
      */
@@ -280,7 +277,7 @@ public class HjhAlarmController extends BaseController {
                 String title = "原始标的风险状态消息通知";
                 StringBuffer msg = new StringBuffer();
                 StringBuffer targetId = new StringBuffer();
-                msg.append("明天即将进入清算日，部分原始标的仍然处于投资或复审中，请相关人员至后台查看并及时处理，谢谢 \n");
+                msg.append("明天即将进入清算日，部分原始标的仍然处于出借或复审中，请相关人员至后台查看并及时处理，谢谢 \n");
                 for (BorrowCustomizeVO borrow : list){
                     targetId.append(" " +borrow.getBorrowNid());
                 }
@@ -288,9 +285,9 @@ public class HjhAlarmController extends BaseController {
                 MailMessage message = new MailMessage(null, null, title, msg.toString(),null,toMail,
                         null,
                         MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
-                mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(message)));
+                commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), message));
             }catch (Exception e){
-                logger.error("扫描处于复审中或者投资中的原始标的进行预警发送异常 ");
+                logger.error("扫描处于复审中或者出借中的原始标的进行预警发送异常 ");
                 return  false;
             }
         }else{

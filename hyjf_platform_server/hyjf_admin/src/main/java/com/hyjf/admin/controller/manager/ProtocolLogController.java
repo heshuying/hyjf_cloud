@@ -2,7 +2,9 @@ package com.hyjf.admin.controller.manager;
 
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.ProtocolLogService;
 import com.hyjf.am.response.admin.ProtocolLogResponse;
 import com.hyjf.am.resquest.admin.ProtocolLogRequest;
@@ -29,6 +31,9 @@ public class ProtocolLogController extends BaseController {
     @Autowired
     private ProtocolLogService protocolLogService;
 
+    /** 权限 */
+    public static final String PERMISSIONS = "protocolLogView";
+
     /**
      * 分页显示
      *
@@ -37,6 +42,7 @@ public class ProtocolLogController extends BaseController {
      */
     @ApiOperation(value = "配置中心-协议模板日志管理", notes = "配置中心-协议模板日志管理 分页显示")
     @PostMapping("/search")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW )
     public AdminResult<ListResult<ProtocolLogVO>> search(@RequestBody ProtocolLogRequest request) {
         ProtocolLogResponse response = new ProtocolLogResponse();
         response = protocolLogService.searchPage(request);

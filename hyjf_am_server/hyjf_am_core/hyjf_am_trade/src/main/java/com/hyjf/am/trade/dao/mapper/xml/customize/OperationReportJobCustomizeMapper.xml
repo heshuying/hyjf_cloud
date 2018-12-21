@@ -115,7 +115,7 @@
 	</select>
 	
 	
-	<!-- 	统计投资人总数，截至日期为上个月的最后一天 -->
+	<!-- 	统计出借人总数，截至日期为上个月的最后一天 -->
 	<select id="getTenderCount"  parameterType="java.util.Date" resultType="int">
 <!-- 		select count(*) from ht_users where reg_time &lt;= unix_timestamp(#{date}) -->
 		select count(*) from(
@@ -170,7 +170,7 @@
 			  FROM
 				  ht_product_list
 			  WHERE
-				  invest_status = 0  -- 投资成功
+				  invest_status = 0  -- 投标成功
 
 		  )t
 	</select>
@@ -206,7 +206,7 @@
 						FROM
 							ht_product_list
 						WHERE
-							invest_status = 0 -- 投资成功
+							invest_status = 0 -- 投标成功
 		) t
 	</select>
 
@@ -224,24 +224,11 @@
 	<!--代偿金额 -->
 	<select id="getRepayTotal"  parameterType="java.util.Date" resultType="java.math.BigDecimal">
 
-		SELECT
-		SUM(A.recover_capital_wait)
-		FROM
-		( select br.id,br.recover_capital_wait
-		FROM  ht_borrow b
-		LEFT JOIN ht_borrow_recover br ON b.borrow_nid = br.borrow_nid
-		WHERE
-		br.recover_time >= UNIX_TIMESTAMP(#{date})
-		and br.id not in
-		(
-		select br.id
-		FROM  ht_borrow b
-		LEFT JOIN ht_borrow_recover br ON b.borrow_nid = br.borrow_nid
-		WHERE br.recover_time >= UNIX_TIMESTAMP(#{date})
-		AND br.recover_yestime <![CDATA[ <= ]]> UNIX_TIMESTAMP(#{date})
-		)
-
-		) A
+		 select SUM(br.recover_capital_wait)
+			FROM  ht_borrow b
+		 LEFT JOIN ht_borrow_recover br ON b.borrow_nid = br.borrow_nid
+		 WHERE br.recover_time <![CDATA[>=]]> UNIX_TIMESTAMP(#{date})
+		 and (br.recover_yestime is null or br.recover_yestime <![CDATA[>]]>UNIX_TIMESTAMP(#{date}) )
 
 	</select>	
 
@@ -249,7 +236,7 @@
 	<select  id="getLoanNum"  parameterType="java.util.Date" resultType="int">
 		select count(*) from ht_borrow where create_time &lt;= #{0}
 	</select>
-<!-- 	人均投资金额 -->
+<!-- 	人均出借金额 -->
 	<select id="getPerInvestTotal" resultType="java.math.BigDecimal">
 		select sum(bank_invest_sum)/count(*) from ht_account where bank_invest_sum>0
 	</select>

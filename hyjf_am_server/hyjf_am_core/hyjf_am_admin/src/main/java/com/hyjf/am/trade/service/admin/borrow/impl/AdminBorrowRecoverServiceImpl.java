@@ -5,9 +5,11 @@ import com.hyjf.am.trade.dao.model.customize.AdminBorrowRecoverCustomize;
 import com.hyjf.am.trade.service.admin.borrow.AdminBorrowRecoverService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.common.cache.CacheUtil;
+import com.hyjf.common.paginator.Paginator;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author pangchengchao
@@ -40,15 +42,21 @@ public class AdminBorrowRecoverServiceImpl extends BaseServiceImpl implements Ad
 
     @Override
     public List<AdminBorrowRecoverCustomize> exportBorrowRecoverList(BorrowRecoverRequest request) {
+		Paginator paginator = new Paginator(request.getCurrPage(),this.borrowRecoverCustomizeMapper.countBorrowRecover(request),request.getPageSize());
+		request.setLimitStart(paginator.getOffset());
+		request.setLimitEnd(paginator.getLimit());
         List<AdminBorrowRecoverCustomize> list=this.borrowRecoverCustomizeMapper.exportBorrowRecoverList(request);
+        
+         Map<String, String> loanStatus = CacheUtil.getParamNameMap("LOAN_STATUS");
+         Map<String, String> userProperty = CacheUtil.getParamNameMap("USER_PROPERTY");
         for (AdminBorrowRecoverCustomize customize:list) {
-            customize.setIsRecover(CacheUtil.getParamName("LOAN_STATUS",customize.getIsRecover()));
+            customize.setIsRecover(loanStatus.get(customize.getIsRecover()));
 
             if(customize.getTenderUserAttribute()!=null){
-                customize.setTenderUserAttribute(CacheUtil.getParamName("USER_PROPERTY",customize.getTenderUserAttribute()));
+                customize.setTenderUserAttribute(userProperty.get(customize.getTenderUserAttribute()));
             }
             if(customize.getInviteUserAttribute()!=null){
-                customize.setInviteUserAttribute(CacheUtil.getParamName("USER_PROPERTY",customize.getInviteUserAttribute()));
+                customize.setInviteUserAttribute(userProperty.get(customize.getInviteUserAttribute()));
             }
         }
         return list;

@@ -11,15 +11,15 @@ import java.util.List;
  */
 
 public class  DataSearchRequest implements Serializable {
-    @ApiModelProperty(value = "投资时间：开始")
+    @ApiModelProperty(value = "出借时间：开始")
     private String addTimeStart;
-    @ApiModelProperty(value = "投资时间：结束")
+    @ApiModelProperty(value = "出借时间：结束")
     private String addTimeEnd;
     @ApiModelProperty(value = "注册时间：开始")
     private String regTimeStart;
     @ApiModelProperty(value = "注册时间：结束")
     private String regTimeEnd;
-    @ApiModelProperty(value = "投资类型 1:全部 2计划 3散标")
+    @ApiModelProperty(value = "出借类型 1:全部 2计划 3散标")
     private String Type;
     @ApiModelProperty(value = "当前页")
     private int currPage;

@@ -18,8 +18,8 @@ import com.hyjf.cs.user.bean.ApiAuthRequesBean;
 import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.constants.ErrorCodeConstant;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.sensorsdate.auth.SensorsDataAuthProducer;
 import com.hyjf.cs.user.service.auth.AuthService;
 
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
@@ -41,7 +41,7 @@ import java.util.*;
 public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService {
 
 	@Autowired
-	private SensorsDataAuthProducer sensorsDataAuthProducer;
+	private CommonProducer commonProducer;
 
 	@Override
 	public HjhUserAuthVO getHjhUserAuthByUserId(Integer userId) {
@@ -244,7 +244,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 								sensorsDataBean.setEventCode("plan_auth_result");
 								sensorsDataBean.setOrderId(bean.getOrderId());
 								// 授权类型
-								logger.info("发送神策数据统计MQ,自动投资授权,授权订单号:[" + bean.getOrderId() + "],用户ID:[" + userId + "].");
+								logger.info("发送神策数据统计MQ,自动出借授权,授权订单号:[" + bean.getOrderId() + "],用户ID:[" + userId + "].");
 								sensorsDataBean.setAuthType(AuthBean.AUTH_TYPE_AUTO_BID);
 								this.sendSensorsDataMQ(sensorsDataBean);
 							} catch (Exception e) {
@@ -390,7 +390,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 					bean.setAutoBidMaxAmt(config.getEnterpriseMaxAmount()+"");
 				}
 				bean.setAutoBidDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
-				bean.setLogRemark("自动投资授权");
+				bean.setLogRemark("自动出借授权");
 				break;
 			case AuthBean.AUTH_TYPE_AUTO_CREDIT:
 				config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH);
@@ -492,7 +492,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 	@Override
 	public BankCallBean getTermsAuthQuery(int userId, String channel) {
 		BankOpenAccountVO bankOpenAccount = getBankOpenAccount(userId);
-		// 调用查询投资人签约状态查询
+		// 调用查询出借人签约状态查询
 		BankCallBean selectbean = new BankCallBean();
 		selectbean.setVersion(BankCallConstant.VERSION_10);// 接口版本号
 		selectbean.setTxCode(BankCallConstant.TXCODE_TERMS_AUTH_QUERY);
@@ -1122,7 +1122,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 					bean.setAutoBidMaxAmt(config.getEnterpriseMaxAmount()+"");
 				}
 				bean.setAutoBidDeadline(GetDate.date2Str(GetDate.countDate(1,config.getAuthPeriod()),new SimpleDateFormat("yyyyMMdd")));
-				bean.setLogRemark("自动投资授权");
+				bean.setLogRemark("自动出借授权");
 				break;
 			case AuthBean.AUTH_TYPE_AUTO_CREDIT:
 				config=this.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH);
@@ -1232,7 +1232,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 	 * @param sensorsDataBean
 	 */
 	private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
-		this.sensorsDataAuthProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_AUTH_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
+		this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_AUTH_TOPIC, UUID.randomUUID().toString(), sensorsDataBean), 2);
 	}
 
 }

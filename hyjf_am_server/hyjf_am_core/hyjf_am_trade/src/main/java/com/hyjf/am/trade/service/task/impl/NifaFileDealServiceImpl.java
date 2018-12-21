@@ -198,7 +198,7 @@ public class NifaFileDealServiceImpl extends BaseServiceImpl implements NifaFile
         }
 
         if (!this.selectNifaReportLogByFileName(businessDataFileName)) {
-            // 合同要素信息(记录投资信息)
+            // 合同要素信息(记录出借信息)
             List<NifaContractEssenceCustomize> nifaContractEssenceList = nifaContractEssenceCustomizeMapper.selectNifaContractEssenceList();
             if (null != nifaContractEssenceList && nifaContractEssenceList.size() > 0) {
                 // list类型转换

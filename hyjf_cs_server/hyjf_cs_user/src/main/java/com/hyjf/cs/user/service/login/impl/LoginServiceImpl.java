@@ -37,8 +37,8 @@ import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.config.locked.LockedConfigManager;
 import com.hyjf.cs.user.constants.VipImageUrlEnum;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.sensorsdate.login.SensorsDataLoginProducer;
 import com.hyjf.cs.user.service.auth.AuthService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.login.LoginService;
@@ -74,7 +74,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	private static final String paymentAuthDesc = "部分交易过程中，会收取相应费用，请进行授权。\n例如：提现手续费，债转服务费等。";
 	//三合一授权描述
 	private static final String mergeAuthDesc = "智投服务需进行以下授权：\n自动投标，自动债转，服务费授权。";
-	private static final String checkUserRoleDesc = "仅限出借人进行投资";
+	private static final String checkUserRoleDesc = "仅限出借人进行出借";
 	@Autowired
 	private AmUserClient amUserClient;
 
@@ -96,7 +96,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	private AuthService authService;
 
 	@Autowired
-	private SensorsDataLoginProducer sensorsDataLoginProducer;
+	private CommonProducer commonProducer;
 	/**
 	 * 登录
 	 *
@@ -354,7 +354,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			}
 			// 未绑卡
 			int bingCardStatus = ClientConstants.BANK_BINDCARD_STATUS_FAIL;
-			List<BankCardVO> bankCardList = amUserClient.getBankOpenAccountById(user.getUserId());
+			List<BankCardVO> bankCardList = amUserClient.getTiedCardForBank(user.getUserId());
 			if (bankCardList != null && bankCardList.size() > 0) {
 				bingCardStatus = ClientConstants.BANK_BINDCARD_STATUS_SUCCESS;
 			}
@@ -422,7 +422,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 					// vip等级显示图片
 					result.setVipJumpUrl(apphost + ClientConstants.APPLY_INIT + packageStr(request));
 				}
-				// 用户角色：1投资人2借款人3担保机构
+				// 用户角色：1出借人2借款人3担保机构
 				Integer roleId = userInfo.getRoleId();
 				result.setRoleId(roleId == null ? "" : String.valueOf(roleId));
 			} else {
@@ -812,7 +812,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			HjhUserAuthConfigVO creditCconfig = authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH);;
 			// 设置服务费授权开关
 			result.setPaymentAuthOn(paymenthCconfig.getEnabledStatus() + "");
-			// 设置自动投资授权开关
+			// 设置自动出借授权开关
 			result.setInvesAuthOn(invesCconfig.getEnabledStatus() + "");
 			// 设置自动债转授权开关
 			result.setCreditAuthOn(creditCconfig.getEnabledStatus() + "");
@@ -875,7 +875,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	}
 
 	/**
-	 * 检查是否是新手(未登录或已登录未投资)
+	 * 检查是否是新手(未登录或已登录未出借)
 	 *
 	 * @param userId
 	 * @return
@@ -1149,6 +1149,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	 */
 	@Override
 	public void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
-		this.sensorsDataLoginProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_LOGIN_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
+		this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_LOGIN_TOPIC, UUID.randomUUID().toString(), sensorsDataBean), 2);
 	}
 }

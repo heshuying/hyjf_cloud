@@ -50,7 +50,7 @@ public class UserauthServiceImpl extends BaseServiceImpl implements UserauthServ
 	 * 调银行api拿用户数据(同步用户授权状态用)
 	 * @auth sunpeikai
 	 * @param userId 用户id
-	 * @param type 1自动投资授权  2债转授权
+	 * @param type 1自动出借授权  2债转授权
 	 * @return
 	 */
 	@Override
@@ -59,7 +59,7 @@ public class UserauthServiceImpl extends BaseServiceImpl implements UserauthServ
 		BankOpenAccountExample.Criteria crt = accountExample.createCriteria();
 		crt.andUserIdEqualTo(userId);
 		BankOpenAccount bankOpenAccount = selectByExample(accountExample);
-		// 调用查询投资人签约状态查询
+		// 调用查询出借人签约状态查询
 		BankCallBean selectbean = new BankCallBean();
 		// 接口版本号
 		selectbean.setVersion(BankCallConstant.VERSION_10);
@@ -78,9 +78,9 @@ public class UserauthServiceImpl extends BaseServiceImpl implements UserauthServ
 		// 操作者ID
 		selectbean.setLogUserId(String.valueOf(userId));
 		selectbean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
-		//根据银行查询投资人签约状态
+		//根据银行查询出借人签约状态
 		if(BankCallConstant.QUERY_TYPE_1.equals(type)){
-			selectbean.setLogRemark("用户授权自动投资");
+			selectbean.setLogRemark("用户授权自动出借");
 		}else if(BankCallConstant.QUERY_TYPE_2.equals(type)){
 			selectbean.setLogRemark("用户授权自动债转");
 		}
@@ -101,7 +101,7 @@ public class UserauthServiceImpl extends BaseServiceImpl implements UserauthServ
 	public void updateUserAuthState(Integer userId, BankCallBean retBean) {
 		HjhUserAuth hjhUserAuth = this.getHjhUserAuthByUserId(userId);
 		if (retBean != null && BankCallConstant.RESPCODE_SUCCESS.equals(retBean.get(BankCallConstant.PARAM_RETCODE))) {
-			// 自动投资授权
+			// 自动出借授权
 			if("1".equals(retBean.getType())){
 				hjhUserAuth.setAutoInvesStatus(Integer.parseInt(retBean.getState()));
 				hjhUserAuth.setAutoOrderId(retBean.getOrderId());
@@ -250,7 +250,7 @@ public class UserauthServiceImpl extends BaseServiceImpl implements UserauthServ
 	@Override
 	public void insertUserAuthLog2(int userId, String orderId, String authType) {
        
-        User user=usersMapper.selectByPrimaryKey(userId);
+        User user=userMapper.selectByPrimaryKey(userId);
         HjhUserAuthLog hjhUserAuthLog=new HjhUserAuthLog();
         hjhUserAuthLog.setUserId(user.getUserId());
         hjhUserAuthLog.setUserName(user.getUsername());

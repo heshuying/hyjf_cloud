@@ -3,20 +3,6 @@
  */
 package com.hyjf.cs.trade.service.consumer.impl;
 
-import java.math.BigDecimal;
-import java.util.*;
-
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.exception.ServiceException;
-import com.hyjf.cs.trade.mq.producer.AccountWebListProducer;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.trade.CouponRecoverCustomizeRequest;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
@@ -25,15 +11,25 @@ import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
 import com.hyjf.am.vo.trade.coupon.CouponRecoverCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.client.CsMessageClient;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.consumer.TyjCouponRepayService;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * @author yaoyong
@@ -71,9 +67,7 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
     @Autowired
     private CsMessageClient csMessageClient;
     @Autowired
-    private SmsProducer smsProducer;
-    @Autowired
-    private AccountWebListProducer accountWebListProducer;
+    private CommonProducer commonProducer;
 
     @Value("${hyjf.bank.merrp.account}")
     private String BANK_MERRP_ACCOUNT;
@@ -83,7 +77,7 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
         List<Map<String, String>> retMsgList = new ArrayList<Map<String, String>>();
         Map<String, String> msg = new HashMap<String, String>();
         retMsgList.add(msg);
-        logger.info("体验金收益期限还款开始，投资编号：" + nid);
+        logger.info("体验金收益期限还款开始，出借编号：" + nid);
         Integer nowTime = GetDate.getNowTime10();
         // 当前还款
         CouponRecoverCustomizeVO currentRecover = null;
@@ -91,21 +85,21 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
         // [endday: 按天计息, end:按月计息]
         currentRecover = this.getCurrentCouponRecover(nid, 1);
         if (currentRecover == null) {
-            logger.info("优惠券还款数据不存在。[优惠券投资编号：" + nid + "]");
+            logger.info("优惠券还款数据不存在。[优惠券出借编号：" + nid + "]");
             return;
         }
-        // 取得优惠券投资信息
+        // 取得优惠券出借信息
         BorrowTenderCpnVO borrowTenderCpn = this.getCouponTenderInfo(nid);
         if (borrowTenderCpn == null) {
-            logger.info("投资编号不存在：" + nid);
+            logger.info("出借编号不存在：" + nid);
             return;
         }
         Integer tenderUserId = borrowTenderCpn.getUserId();
         String borrowNid = borrowTenderCpn.getBorrowNid();
-        // 投资人在银行存管的账户信息
+        // 出借人在银行存管的账户信息
         BankOpenAccountVO bankOpenAccountInfo = this.getBankOpenAccount(tenderUserId);
         if (bankOpenAccountInfo == null) {
-            throw new Exception("投资人未开户。[用户ID：" + tenderUserId + "]，" + "[优惠券投资编号：" + nid + "]");
+            throw new Exception("出借人未开户。[用户ID：" + tenderUserId + "]，" + "[优惠券出借编号：" + nid + "]");
         }
         // 应还利息
         String recoverInterestStr = StringUtils.isEmpty(currentRecover.getRecoverInterest()) ? "0.00" : currentRecover.getRecoverInterest();
@@ -147,10 +141,10 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
             accountWebList.setOrdid(borrowTenderCpn.getNid());// 订单号
             // 直投类
             if (borrowTenderCpn.getTenderType() == RECOVER_TYPE_HZT) {
-                accountWebList.setBorrowNid(borrowNid); // 投资编号
+                accountWebList.setBorrowNid(borrowNid); // 出借编号
             }
-            accountWebList.setUserId(tenderUserId); // 投资者
-            accountWebList.setAmount(Double.valueOf(recoverAccount.toString())); // 优惠券投资受益
+            accountWebList.setUserId(tenderUserId); // 出借者
+            accountWebList.setAmount(Double.valueOf(recoverAccount.toString())); // 优惠券出借受益
             accountWebList.setType(CustomConstants.TYPE_OUT); // 类型1收入,2支出
             String remark = StringUtils.EMPTY;
             if (currentRecover.getCouponType() == 1) {
@@ -179,7 +173,7 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
             }
             accountWebList.setTradeType(tradeType); // 加息券回款
             remark = "项目编号：" + borrowNid + "<br />" + remark;
-            accountWebList.setRemark(remark); // 投资编号
+            accountWebList.setRemark(remark); // 出借编号
             accountWebList.setCreateTime(nowTime);
             this.insertAccountWebList(accountWebList, borrowTenderCpn);
         }
@@ -198,7 +192,7 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
     }
 
     /**
-     * 取得优惠券投资信息
+     * 取得优惠券出借信息
      *
      * @param couponTenderNid
      * @return
@@ -233,7 +227,7 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
             SmsMessage smsMessage =
                     new SmsMessage(null, replaceStrs, null, null,
                             "smsSendForManager", null, CustomConstants.PARAM_TPL_COUPON_JIA_YUE, CustomConstants.CHANNEL_TYPE_NORMAL);
-            smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+            commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
 
         } catch (Exception e) {
             logger.debug(this.getClass().toString(), "sendSmsFail", e.getMessage());
@@ -241,7 +235,7 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
     }
 
     /**
-     * 查询投资用户详情
+     * 查询出借用户详情
      *
      * @param userId
      * @return
@@ -261,9 +255,9 @@ public class TyjCouponRepayServiceImpl implements TyjCouponRepayService {
         setDepartments(accountWebList);
         // 插入
         try {
-            accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+            commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
         } catch (MQException e) {
-            throw new RuntimeException("网站收支记录(ht_account_web_list)更新失败！" + "[投资订单号：" + borrowTenderCpn.getNid() + "]");
+            throw new RuntimeException("网站收支记录(ht_account_web_list)更新失败！" + "[出借订单号：" + borrowTenderCpn.getNid() + "]");
         }
     }
 

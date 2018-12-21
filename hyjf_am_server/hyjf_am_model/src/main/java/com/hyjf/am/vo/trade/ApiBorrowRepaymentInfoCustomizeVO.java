@@ -34,7 +34,7 @@ public class ApiBorrowRepaymentInfoCustomizeVO implements Serializable {
 	@ApiModelProperty(value = "资产编号")
 	private String assetId;
 
-	@ApiModelProperty(value = "投资订单号")
+	@ApiModelProperty(value = "出借订单号")
 	private String accedeOrderId;
 
 	@ApiModelProperty(value = "借款编号")
@@ -76,22 +76,22 @@ public class ApiBorrowRepaymentInfoCustomizeVO implements Serializable {
 	@ApiModelProperty(value = "还款方式")
 	private String repayType;
 
-	@ApiModelProperty(value = "投资人姓名")
+	@ApiModelProperty(value = "出借人姓名")
 	private String recoverTrueName;
 
-	@ApiModelProperty(value = "投资人用户名")
+	@ApiModelProperty(value = "出借人用户名")
 	private String recoverUserName;
 
-	@ApiModelProperty(value = "投资人用户属性（当前）")
+	@ApiModelProperty(value = "出借人用户属性（当前）")
 	private String recoverUserAttribute;
 
-	@ApiModelProperty(value = "投资人所属一级分部（当前）")
+	@ApiModelProperty(value = "出借人所属一级分部（当前）")
 	private String recoverRegionName;
 
-	@ApiModelProperty(value = "投资人所属二级分部（当前）")
+	@ApiModelProperty(value = "出借人所属二级分部（当前）")
 	private String recoverBranchName;
 
-	@ApiModelProperty(value = "投资人所属团队（当前)")
+	@ApiModelProperty(value = "出借人所属团队（当前)")
 	private String recoverDepartmentName;
 
 	@ApiModelProperty(value = "推荐人（当前")
@@ -112,10 +112,10 @@ public class ApiBorrowRepaymentInfoCustomizeVO implements Serializable {
 	@ApiModelProperty(value = "推荐人所属团队（当前）")
 	private String referrerDepartmentName;
 
-	@ApiModelProperty(value = "投资期限")
+	@ApiModelProperty(value = "出借期限")
 	private String recoverPeriod;
 
-	@ApiModelProperty(value = "投资金额")
+	@ApiModelProperty(value = "出借金额")
 	private String recoverTotal;
 
 	@ApiModelProperty(value = "应还本金")

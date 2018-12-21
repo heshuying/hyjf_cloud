@@ -70,6 +70,7 @@ public class MessagePushTagController extends BaseController {
 
     @ApiOperation(value = "详情页", notes = "详情页")
     @RequestMapping(value = "/infoAction", method = RequestMethod.GET)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
     public AdminResult infoAction(@RequestParam Integer id) {
         MessagePushTagResponse response = messagePushTagService.getRecord(id);
         if (response == null) {

@@ -16,12 +16,12 @@ public class AppTenderToCreditListCustomize implements Serializable {
     private static final long serialVersionUID = -3203050476725161683L;
 
     /***
-     * 借款编号
+     * 项目编号
      */
     private String bidNid;
 
     /**
-     * 预期年化收益率
+     * 预期出借利率
      */
     private String borrowApr;
 

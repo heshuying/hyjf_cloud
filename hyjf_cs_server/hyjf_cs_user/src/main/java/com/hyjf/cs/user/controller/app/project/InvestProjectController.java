@@ -1,5 +1,5 @@
 /**
- * Description:我的投资控制器
+ * Description:我的出借控制器
  * Copyright: Copyright (HYJF Corporation) 2015
  * Company: HYJF Corporation
  * @author: 王坤
@@ -72,7 +72,7 @@ public class InvestProjectController extends BaseUserController {
 
 
 	/**
-	 * 查询用户的投资项目列表还款中
+	 * 查询用户的出借项目列表还款中
 	 * 
 	 * @param form
 	 * @param request
@@ -124,14 +124,14 @@ public class InvestProjectController extends BaseUserController {
 	}
 
 	/**
-	 * 查询用户的投资项目列表投资中
+	 * 查询用户的出借项目列表出借中
 	 * 
 	 * @param form
 	 * @param request
 	 * @param response
 	 * @return
 	 */
-	@ApiOperation(value = "查询用户投资中列表", notes = "查询用户投资中列表")
+	@ApiOperation(value = "查询用户出借中列表", notes = "查询用户出借中列表")
 	@PostMapping(value = InvestProjectDefine.INVEST_LIST_ACTION, produces = "application/json; charset=utf-8")
 	public JSONObject searchInvestList(@ModelAttribute InvestListBean form, HttpServletRequest request,
                                        HttpServletResponse response) {
@@ -174,7 +174,7 @@ public class InvestProjectController extends BaseUserController {
 	}
 
 	/**
-	 * 查询用户的投资项目列表已回款
+	 * 查询用户的出借项目列表已回款
 	 * 
 	 * @param form
 	 * @param request
@@ -295,18 +295,18 @@ public class InvestProjectController extends BaseUserController {
 				if (CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyleStr)
 						|| CustomConstants.BORROW_STYLE_END.equals(borrowStyleStr)) {
 					if ("1".equals(isCouponTender)) {
-						// 优惠券投资回款计划
+						// 优惠券出借回款计划
 						createCouponRepayRecoverListPage(info, form);
 					} else {
-						// 普通投资回款计划
+						// 普通出借回款计划
 						createRepayRecoverListPage(info, form);
 					}
 				} else {
 					if ("1".equals(isCouponTender)) {
-						// 优惠券投资回款计划
+						// 优惠券出借回款计划
 						createCouponRepayRecoverListPage(info, form);
 					} else {
-						// 普通投资回款计划
+						// 普通出借回款计划
 						createRepayRecoverPlanListPage(info, form, borrowStyleStr);
 					}
 				}
@@ -702,7 +702,7 @@ public class InvestProjectController extends BaseUserController {
 			// 优惠券编号
 			params.put("couponCode", form.getCouponCode());
 			params.put("userId", userId);
-			// 优惠券投资
+			// 优惠券出借
 			AppRepayDetailCustomizeVO appCouponRepayDetailCustomize = this.investProjectService
 					.selectCouponRepayDetail(params);
 			if (appCouponRepayDetailCustomize != null) {
@@ -716,7 +716,7 @@ public class InvestProjectController extends BaseUserController {
 	}
 
 	/**
-	 * 查询投资中项目详情
+	 * 查询出借中项目详情
 	 * 
 	 * @author liuyang
 	 * @param form
@@ -724,7 +724,7 @@ public class InvestProjectController extends BaseUserController {
 	 * @param response
 	 * @return
 	 */
-	@ApiOperation(value = "查看投资中项目详情", notes = "查看投资中项目详情")
+	@ApiOperation(value = "查看出借中项目详情", notes = "查看出借中项目详情")
 	@PostMapping(value = InvestProjectDefine.INVEST_PROJECT_DETAIL_ACTION)
 	public ModelAndView searchInvestProjectDetail(InvestProjectBean form, HttpServletRequest request,
                                                   HttpServletResponse response) {
@@ -737,7 +737,7 @@ public class InvestProjectController extends BaseUserController {
 		modelAndView.addObject("investType", form.getInvestType());
 		params.put("userId", userId);
 		if (StringUtils.isEmpty(form.getCouponCode())) {
-			// 未使用优惠券投资
+			// 未使用优惠券出借
 			if (StringUtils.isNotEmpty(form.getBorrowNid()) && StringUtils.isNotEmpty(form.getTenderNid())) {
 				params.put("borrowNid", form.getBorrowNid());
 				params.put("tenderNid", form.getTenderNid());
@@ -775,7 +775,7 @@ public class InvestProjectController extends BaseUserController {
 					BigDecimal earnings = new BigDecimal("0");
 					df.setRoundingMode(RoundingMode.FLOOR);
 					switch (borrowStyle) {
-					case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“：历史回报=投资金额*年化收益÷12*月数；
+					case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“：历史回报=出借金额*年化收益÷12*月数；
 						// 计算历史回报
 						earnings = DuePrincipalAndInterestUtils.getMonthInterest(
 								appInvestDetailCustomize.getAccountNum(), borrowApr.divide(new BigDecimal("100")),
@@ -784,7 +784,7 @@ public class InvestProjectController extends BaseUserController {
 								earnings)));
 						appInvestDetailCustomize.setInterest(df.format(earnings));
 						break;
-					case CalculatesUtil.STYLE_ENDDAY:// 还款方式为”按天计息，到期还本还息“：历史回报=投资金额*年化收益÷360*天数；
+					case CalculatesUtil.STYLE_ENDDAY:// 还款方式为”按天计息，到期还本还息“：历史回报=出借金额*年化收益÷360*天数；
 						earnings = DuePrincipalAndInterestUtils.getDayInterest(
 								appInvestDetailCustomize.getAccountNum(), borrowApr.divide(new BigDecimal("100")),
 								borrowPeriod);
@@ -792,7 +792,7 @@ public class InvestProjectController extends BaseUserController {
 								earnings)));
 						appInvestDetailCustomize.setInterest(df.format(earnings));
 						break;
-					case CalculatesUtil.STYLE_ENDMONTH:// 还款方式为”先息后本“：历史回报=投资金额*年化收益÷12*月数；
+					case CalculatesUtil.STYLE_ENDMONTH:// 还款方式为”先息后本“：历史回报=出借金额*年化收益÷12*月数；
 						earnings = BeforeInterestAfterPrincipalUtils.getInterestCount(
 								appInvestDetailCustomize.getAccountNum(), borrowApr.divide(new BigDecimal("100")),
 								borrowPeriod, borrowPeriod);
@@ -800,7 +800,7 @@ public class InvestProjectController extends BaseUserController {
 								earnings)));
 						appInvestDetailCustomize.setInterest(df.format(earnings));
 						break;
-					case CalculatesUtil.STYLE_MONTH:// 还款方式为”等额本息“：历史回报=投资金额*年化收益÷12*月数；
+					case CalculatesUtil.STYLE_MONTH:// 还款方式为”等额本息“：历史回报=出借金额*年化收益÷12*月数；
 						earnings = AverageCapitalPlusInterestUtils.getInterestCount(
 								appInvestDetailCustomize.getAccountNum(), borrowApr.divide(new BigDecimal("100")),
 								borrowPeriod);
@@ -826,10 +826,10 @@ public class InvestProjectController extends BaseUserController {
 				return modelAndView;
 			}
 		} else {
-			// 优惠券投资项目详情
+			// 优惠券出借项目详情
 			// 优惠券编号
 			params.put("couponCode", form.getCouponCode());
-			// 优惠券投资
+			// 优惠券出借
 			AppRepayDetailCustomizeVO appCouponRepayDetailCustomize = this.investProjectService
 					.selectCouponInvestProjectDetail(params);
 			if (appCouponRepayDetailCustomize != null) {
@@ -852,7 +852,7 @@ public class InvestProjectController extends BaseUserController {
 				BigDecimal earnings = new BigDecimal("0");
 				df.setRoundingMode(RoundingMode.FLOOR);
 				switch (borrowStyle) {
-				case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“：历史回报=投资金额*年化收益÷12*月数；
+				case CalculatesUtil.STYLE_END:// 还款方式为”按月计息，到期还本还息“：历史回报=出借金额*年化收益÷12*月数；
 					// 计算历史回报
 					earnings = DuePrincipalAndInterestUtils.getMonthInterest(
 							appCouponRepayDetailCustomize.getAccountNum(), borrowApr.divide(new BigDecimal("100")),
@@ -861,7 +861,7 @@ public class InvestProjectController extends BaseUserController {
 							.add(earnings)));
 					appCouponRepayDetailCustomize.setInterest(df.format(earnings));
 					break;
-				case CalculatesUtil.STYLE_ENDDAY:// 还款方式为”按天计息，到期还本还息“：历史回报=投资金额*年化收益÷360*天数；
+				case CalculatesUtil.STYLE_ENDDAY:// 还款方式为”按天计息，到期还本还息“：历史回报=出借金额*年化收益÷360*天数；
 					earnings = DuePrincipalAndInterestUtils.getDayInterest(
 							appCouponRepayDetailCustomize.getAccountNum(), borrowApr.divide(new BigDecimal("100")),
 							borrowPeriod);
@@ -869,7 +869,7 @@ public class InvestProjectController extends BaseUserController {
 							.add(earnings)));
 					appCouponRepayDetailCustomize.setInterest(df.format(earnings));
 					break;
-				case CalculatesUtil.STYLE_ENDMONTH:// 还款方式为”先息后本“：历史回报=投资金额*年化收益÷12*月数；
+				case CalculatesUtil.STYLE_ENDMONTH:// 还款方式为”先息后本“：历史回报=出借金额*年化收益÷12*月数；
 					earnings = BeforeInterestAfterPrincipalUtils.getInterestCount(
 							appCouponRepayDetailCustomize.getAccountNum(), borrowApr.divide(new BigDecimal("100")),
 							borrowPeriod, borrowPeriod);
@@ -877,7 +877,7 @@ public class InvestProjectController extends BaseUserController {
 							.add(earnings)));
 					appCouponRepayDetailCustomize.setInterest(df.format(earnings));
 					break;
-				case CalculatesUtil.STYLE_MONTH:// 还款方式为”等额本息“：历史回报=投资金额*年化收益÷12*月数；
+				case CalculatesUtil.STYLE_MONTH:// 还款方式为”等额本息“：历史回报=出借金额*年化收益÷12*月数；
 					earnings = AverageCapitalPlusInterestUtils.getInterestCount(
 							appCouponRepayDetailCustomize.getAccountNum(), borrowApr.divide(new BigDecimal("100")),
 							borrowPeriod);
@@ -933,11 +933,11 @@ public class InvestProjectController extends BaseUserController {
 		// 用户Id
 		params.put("userId", userId);
 		if (StringUtils.isEmpty(form.getCouponCode())) {
-			// 未使用优惠券的投资
+			// 未使用优惠券的出借
 			if (StringUtils.isNotEmpty(form.getBorrowNid()) && StringUtils.isNotEmpty(form.getTenderNid())) {
 				// 借款编号
 				params.put("borrowNid", form.getBorrowNid());
-				// 投资单号
+				// 出借单号
 				params.put("tenderNid", form.getTenderNid());
 				params.put("investType", form.getInvestType());
 				AppRepayDetailCustomizeVO appRepayedDetailCustomize = this.investProjectService
@@ -956,7 +956,7 @@ public class InvestProjectController extends BaseUserController {
 				return modelAndView;
 			}
 		} else {
-			// 优惠券投资
+			// 优惠券出借
 			params.put("couponCode", form.getCouponCode());
 			AppRepayDetailCustomizeVO appRepayedDetailCustomize = this.investProjectService
 					.selectCouponRepayedProjectDetail(params);
@@ -989,7 +989,7 @@ public class InvestProjectController extends BaseUserController {
 			vo = new MyProjectVo();
 			BeanUtils.copyProperties(entity, vo);
 			vo.setBorrowTheFirst(entity.getAccount() + "元");
-			vo.setBorrowTheFirstDesc("投资金额");
+			vo.setBorrowTheFirstDesc("出借金额");
 			vo.setBorrowTheSecond(entity.getPeriod());
 			vo.setBorrowTheSecondDesc("项目期限");
 			vo.setBorrowTheThird(GetDate.times10toStrYYYYMMDD(Integer.valueOf(entity.getRecoverTime())));
@@ -1014,7 +1014,7 @@ public class InvestProjectController extends BaseUserController {
 	}
 
 	/**
-	 * 适应客户端数据返回 - 投资中
+	 * 适应客户端数据返回 - 出借中
 	 * 
 	 * @param appInvestListCustomizes
 	 * @return
@@ -1052,18 +1052,18 @@ public class InvestProjectController extends BaseUserController {
 				} else {
 					vo.setLabel("");
 				}
-				investStatusDesc = "现金投资".equals(entity.getData()) ? "还款中" : entity.getData();
+				investStatusDesc = "现金出借".equals(entity.getData()) ? "还款中" : entity.getData();
 			}
 
 			vo.setBorrowName(entity.getBorrowNid());
 			vo.setBorrowTheFirst(CommonUtils.formatAmount(entity.getCapital()) + "元");
-			vo.setBorrowTheFirstDesc("投资金额");
+			vo.setBorrowTheFirstDesc("出借金额");
 			vo.setBorrowTheSecond(entity.getBorrowPeriod());
 			vo.setBorrowTheSecondDesc("项目期限");
 			vo.setBorrowTheThird(entity.getAddtime());
-			vo.setBorrowTheThirdDesc("投资时间");
+			vo.setBorrowTheThirdDesc("出借时间");
 			vo.setType("1");
-			// 投资订单号
+			// 出借订单号
 			String assignNid = "";
 			String nid = entity.getNid();
 			if (!StringUtils.isBlank(entity.getCreditTenderNid())) {
@@ -1094,7 +1094,7 @@ public class InvestProjectController extends BaseUserController {
 
 
 	/**
-	 * 判断用户某一投资是否满足债转条件
+	 * 判断用户某一出借是否满足债转条件
 	 * 
 	 * @param borrowNid
 	 * @param tenderNid
@@ -1123,13 +1123,13 @@ public class InvestProjectController extends BaseUserController {
 	}
 
 	/**
-	 * 拼接投资详情url
+	 * 拼接出借详情url
 	 * @param borrowNid
 	 * @param orderId
 	 * @param type
 	 * @param couponType
 	 * @param assignNid
-	 * @param investStatusDesc  投资状态
+	 * @param investStatusDesc  出借状态
 	 * @return
 	 */
 	private String concatInvestDetailUrl(String borrowNid, String orderId, String type, String couponType, String assignNid, String investStatusDesc) {

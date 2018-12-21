@@ -14,7 +14,7 @@ import java.io.Serializable;
  */
 public class BorrowFullRequestBean extends BaseRequest implements Serializable {
 
-    @ApiModelProperty(value = "借款编号(所有接口需要传borrowNid时都在这个字段赋值)")
+    @ApiModelProperty(value = "项目编号(所有接口需要传borrowNid时都在这个字段赋值)")
     private String borrowNidSrch;
 
     @ApiModelProperty(value = "复审查询用:用户名")

@@ -2,7 +2,6 @@ package com.hyjf.am.trade.controller.admin.productcenter.applyagreement;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.google.gson.JsonObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.ApplyAgreementInfoResponse;
 import com.hyjf.am.response.trade.*;
@@ -155,7 +154,7 @@ public class ApplyAgreementController extends BaseController {
     }
 
     /**
-     * 获取用户投资协议列表，垫付协议用
+     * 获取用户出借协议列表，垫付协议用
      *
      * @param borrowNid
      * @return
@@ -172,7 +171,7 @@ public class ApplyAgreementController extends BaseController {
         return response;
     }
     /**
-     * 获取用户投资协议列表-分期，垫付协议用
+     * 获取用户出借协议列表-分期，垫付协议用
      *
      * @param nid
      * @param repayPeriod

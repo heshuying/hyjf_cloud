@@ -394,7 +394,7 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
         accountList.setBankAwait(account.getBankAwait());
         // 银行累计收益
         accountList.setBankInterestSum(account.getBankInterestSum());
-        // 银行累计投资
+        // 银行累计出借
         accountList.setBankInvestSum(account.getBankInvestSum());
         // 银行待还金额
         accountList.setBankWaitRepay(account.getBankWaitRepay());
@@ -410,7 +410,6 @@ public class BankAccountManageServiceImpl extends BaseServiceImpl implements Ban
         accountList.setCreateTime(GetDate.getNowTime());
 //        accountList.setBaseUpdate(GetDate.getNowTime10());
         accountList.setOperator(account.getUserId() + "");
-        // TODO int类型换成了boolean 类型、数据对应待调查
 //        accountList.setIsUpdate(0);
 //        accountList.setBaseUpdate(0);
         // 新表是否删除？

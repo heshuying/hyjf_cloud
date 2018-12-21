@@ -272,7 +272,7 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
-	 * 查询自动投资债转异常列表
+	 * 查询自动出借债转异常列表
 	 *
 	 * @auth sunpeikai
 	 * @param
@@ -291,7 +291,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 *
 	 * @auth sunpeikai
 	 * @param type
-	 *            1自动投资授权 2债转授权
+	 *            1自动出借授权 2债转授权
 	 * @return
 	 */
 	@Override
@@ -2569,7 +2569,7 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 	/**
-	 * 查看该用户在投资表和标的放款记录中是否存在
+	 * 查看该用户在出借表和标的放款记录中是否存在
 	 * @param userId
 	 * @auther: nxl
 	 * @return
@@ -2740,5 +2740,14 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResultList();
 		}
 		return null;
+	}
+
+	@Override
+	public int selectUserMemberCount(UserPayAuthRequest userPayAuthRequest) {
+		IntegerResponse response = restTemplate.postForObject("http://AM-ADMIN/am-user/userPayAuth/selectUserMemberCount", userPayAuthRequest, IntegerResponse.class);
+		if (response != null) {
+			return response.getResultInt();
+		}
+		return 0;
 	}
 }

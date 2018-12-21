@@ -94,7 +94,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
 
 
     /**
-     * APP端投资散标项目列表
+     * APP端出借散标项目列表
      *
      * @param request
      * @return
@@ -118,8 +118,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         // 对调用返回的结果进行转换和拼装
         // 先抛错方式，避免代码看起来头重脚轻。
         if (count == null) {
-            logger.error("app端查询散标投资列表原子层count异常");
-            throw new RuntimeException("app端查询散标投资列表原子层count异常");
+            logger.error("app端查询散标出借列表原子层count异常");
+            throw new RuntimeException("app端查询散标出借列表原子层count异常");
         }
         if (count > pageSizeCheck){
             count = pageSizeCheck;
@@ -133,8 +133,8 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             List<AppProjectListCsVO> result = new ArrayList<>();
             List<AppProjectListCustomizeVO> list = amTradeClient.searchAppProjectList(req);
             if (CollectionUtils.isEmpty(list)) {
-                logger.error("app端查询散标投资列表原子层List异常");
-                throw new RuntimeException("app端查询散标投资列表原子层list数据异常");
+                logger.error("app端查询散标出借列表原子层List异常");
+                throw new RuntimeException("app端查询散标出借列表原子层list数据异常");
             }else {
                 result = convertToAppProjectType(list);
                 CommonUtils.convertNullToEmptyString(result);
@@ -233,7 +233,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         userValidation.put("isCheckUserRole", Boolean.parseBoolean(systemConfig.getRoleIsopen()));
         // 服务费授权开关
         userValidation.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
-        // 自动投资授权开关
+        // 自动出借授权开关
         userValidation.put("invesAuthOn",authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
         // 自动债转授权开关
         userValidation.put("creditAuthOn",authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
@@ -250,7 +250,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             borrowProjectInfoBean.setBorrowApr(borrow.getBorrowApr());
             borrowProjectInfoBean.setBorrowId(borrowNid);
             borrowProjectInfoBean.setOnAccrual((borrow.getReverifyTime() == null ? "放款成功立即计息" : borrow.getReverifyTime()));
-            //0：备案中 1：初审中 2：投资中 3：复审中 4：还款中 5：已还款 6：已流标 7：待授权
+            //0：备案中 1：初审中 2：出借中 3：复审中 4：还款中 5：已还款 6：已流标 7：待授权
             borrowProjectInfoBean.setStatus(borrow.getBorrowStatus());
             //0初始 1放款请求中 2放款请求成功 3放款校验成功 4放款校验失败 5放款失败 6放款成功
             borrowProjectInfoBean.setBorrowProgressStatus(String.valueOf(borrow.getProjectStatus()));
@@ -393,7 +393,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             /**
              * 查看标的详情
              * 原始标：复审中、还款中、已还款状态下 如果当前用户是否投过此标，是：可看，否则不可见
-             * 债转标的：未被完全承接时，项目详情都可看；被完全承接时，只有投资者和承接者可查看
+             * 债转标的：未被完全承接时，项目详情都可看；被完全承接时，只有出借者和承接者可查看
              */
             int count = 0;
             if (userId != null){
@@ -432,14 +432,14 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 isDept = true;
             } else {
                 // 原始标
-                // 复审中，还款中和已还款状态投资者(可看)
+                // 复审中，还款中和已还款状态出借者(可看)
                 if ("3".equals(borrow.getBorrowStatus()) || "4".equals(borrow.getBorrowStatus())
                         || "5".equals(borrow.getBorrowStatus())) {
                     if (count > 0) {
                         // 可以查看标的详情
                         viewableFlag = true;
                     } else {
-                        // 提示仅投资者可看
+                        // 提示仅出借者可看
                         viewableFlag = false;
                     }
                 } else {
@@ -454,7 +454,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                         statusDescribe = "初审中";
                         break;
                     case "2":
-                        statusDescribe = "投资中";
+                        statusDescribe = "出借中";
                         break;
                     case "3":
                         statusDescribe = "复审中";
@@ -1034,7 +1034,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
 
 
     /**
-     * 是否投资flag
+     * 是否出借flag
      *
      * @param userId
      * @param borrowNid
@@ -1068,7 +1068,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
 
 
     /**
-     * APP端投资债转列表数据
+     * APP端出借债转列表数据
      *
      * @author zhangyk
      * @date 2018/6/20 9:11
@@ -1569,7 +1569,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
     }
 
     /**
-     * 散标投资记录列表
+     * 散标出借记录列表
      * @param info
      * @param form
      */
@@ -1752,7 +1752,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                     params.put("limitEnd", limit);
                 }
                 List<AppTenderCreditInvestListCustomizeVO> recordList = amTradeClient.searchTenderCreditInvestList(params);
-                //获取债转投资人次和已债转金额
+                //获取债转出借人次和已债转金额
                 List<BorrowCreditVO> creditList = amTradeClient.selectBorrowCreditByNid(transferId);
                 if (creditList != null && creditList.size() == 1) {
                     BorrowCreditVO credit = creditList.get(0);
@@ -1832,7 +1832,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             userLoginInfo.setOpened(userVO.getBankOpenAccount() == 0 ? Boolean.FALSE : Boolean.TRUE);
             // 4. 是否设置过交易密码
             userLoginInfo.setSetPassword(userVO.getIsSetPassword() == 1 ? Boolean.TRUE : Boolean.FALSE);
-            // 检查用户角色是否能投资  合规接口改造之后需要判断
+            // 检查用户角色是否能出借  合规接口改造之后需要判断
             UserInfoVO userInfo = amUserClient.findUsersInfoById(userId);
             // 返回前端角色
             userLoginInfo.setRoleId(userInfo.getRoleId());
@@ -1843,7 +1843,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                     userLoginInfo.setIsAllowedTender(Boolean.FALSE);
                 }
                 if("true".equals(systemConfig.getRoleIsopen())){
-                    if (userInfo.getRoleId() == 2) {// 借款人不能投资
+                    if (userInfo.getRoleId() == 2) {// 借款人不能出借
                         userLoginInfo.setIsAllowedTender(Boolean.FALSE);
                     }
                 }
@@ -2005,7 +2005,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 borrowAccountWait = CommonUtils.formatAmount(borrowAccountWait);
                 appProjectType.setStatusNameDesc(org.apache.commons.lang.StringUtils.isBlank(borrowAccountWait)?"":"剩余" + borrowAccountWait);
             }else if(status.equals("11")){
-                appProjectType.setStatusName("立即投资");
+                appProjectType.setStatusName("立即出借");
                 //可投金额
                 borrowAccountWait = CommonUtils.formatAmount(borrowAccountWait);
                 appProjectType.setStatusNameDesc(org.apache.commons.lang.StringUtils.isBlank(borrowAccountWait)?"":"剩余" + borrowAccountWait);

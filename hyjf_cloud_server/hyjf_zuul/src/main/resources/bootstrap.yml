@@ -1,22 +1,24 @@
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://microserver1:1111/eureka,http://microserver2:1111/eureka
+      defaultZone: @eureka.serviceUrl.default@
+  instance:
+    preferIpAddress: true
 spring:
  application:
    name: zuul
  cloud:
+   loadbalancer:
+     retry:
+     enabled: true
    config:
       discovery:
         enabled: true
         serviceId: CONFIG-SERVER
       failFast: true
- boot:
-    admin:
-      client:
-        url: http://MONITOR-SERVER
+
 # zipkin 监控端点
- zipkin: 
+ zipkin:
   base-url: http://ZIPKIN
  sleuth:
   sampler:
@@ -35,3 +37,14 @@ management:
   endpoint:
     health:
       show-details: ALWAYS
+#stores:
+#  ribbon:
+#    NFLoadBalancerRuleClassName: com.netflix.loadbalancer.WeightedResponseTimeRule
+#
+#ribbon:
+# # 同一实例最大重试次数，不包括首次调用
+# MaxAutoRetries: 1
+# # 重试其他实例的最大重试次数，不包括首次所选的server
+# MaxAutoRetriesNextServer: 2
+# # 是否所有操作都进行重试
+# OkToRetryOnAllOperations: false

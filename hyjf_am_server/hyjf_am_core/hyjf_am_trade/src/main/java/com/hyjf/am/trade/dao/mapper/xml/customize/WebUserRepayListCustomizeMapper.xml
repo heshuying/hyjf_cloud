@@ -296,4 +296,122 @@
 			</if>
 		</where>
 	</sql>
+	<resultMap id="BorrowInfoMap" type="com.hyjf.am.trade.dao.model.customize.WebUserTransferBorrowInfoCustomize">
+		<result column="borrow_nid" property="borrowNid"/>
+		<result column="plan_nid" property="planNid"/>
+		<result column="borrow_period" property="borrowPeriod"/>
+		<result column="account" property="account"/>
+		<result column="suc_amount" property="sucSmount"/>
+		<result column="borrow_apr" property="borrowApr"/>
+		<result column="send_time" property="sendTime"/>
+		<result column="full_time" property="borrowFullTime"/>
+		<result column="borrow_style" property="borrowStyle"/>
+		<result column="recover_last_time" property="recoverLastTime"/>
+		<result column="project_type" property="projectType"/>
+		<result column="borrow_status" property="borrowStatus"/>
+		<result column="batch_service_fee" property="serviceFee"/>
+		<!--<result column="borrow_extra_yield" property="borrowExtraYield"/>-->
+	</resultMap>
+
+	<select id="getBorrowInfo" resultMap="BorrowInfoMap" parameterType="Map">
+		select
+		hydb.borrow_nid,
+		hba.batch_service_fee,
+		hydb.plan_nid,
+		hydb.borrow_period,
+		hydb.account,
+		hba.suc_amount,
+		hydb.borrow_apr,
+		hydb.borrow_apr,
+		CASE
+		WHEN hydb.`status` = 1 AND hydb.verify_status = 3
+		THEN FROM_UNIXTIME( hydb.ontime, '%Y-%m-%d %H:%i' )
+		ELSE
+		FROM_UNIXTIME(
+		hydb.verify_time,
+		'%Y-%m-%d %H:%i'
+		)
+		END AS send_time,
+		FROM_UNIXTIME(
+		hydb.borrow_full_time,
+		'%Y-%m-%d %H:%i'
+		) AS full_time,
+		hydbs.name as borrow_style,
+		FROM_UNIXTIME(hydb.recover_last_time, '%Y-%m-%d %H:%i') AS recover_last_time,
+		hydb.project_type,
+-- 		hydb.borrow_extra_yield,
+		CASE
+		WHEN hydb.`status` = 1 AND hydb.verify_status = 3 THEN '10'
+		WHEN hydb.`status` = 2 AND hydb.borrow_full_status = 0
+		AND (
+		hydb.verify_time + (
+		hydb.borrow_valid_time * 24 * 60 * 60
+		) > UNIX_TIMESTAMP(NOW())
+		) THEN
+		'11'
+		WHEN hydb.`status` = 3
+		THEN
+		'12'
+		WHEN hydb.`status` = 4 THEN
+		'13'
+		WHEN hydb.`status` = 5 THEN
+		'14'
+		ELSE
+		''
+		END AS borrow_status
+		from ht_borrow hydb
+		LEFT JOIN ht_borrow_style hydbs ON hydb.borrow_style = hydbs.nid
+		LEFT JOIN ht_borrow_apicron hba ON hba.borrow_nid = hydb.borrow_nid AND hba.api_type = 0 AND hba.`status` = 6
+		<where>
+			hydb.borrow_nid = #{borrowNid,jdbcType=VARCHAR}
+		</where>
+	</select>
+
+	<select id="selectUserRepayTransferListTotalByCreditTender" resultType="java.lang.Integer" parameterType="Map">
+		select COUNT(1) from ht_credit_tender where bid_nid = #{borrowNid,jdbcType=VARCHAR}
+	</select>
+
+	<select id="selectUserRepayTransferListTotalByHjhCreditTender" resultType="java.lang.Integer" parameterType="Map">
+		select COUNT(1) from ht_hjh_debt_credit_tender where borrow_nid = #{borrowNid,jdbcType=VARCHAR}
+	</select>
+
+	<resultMap id="HjhCreditTenderListMap" type="com.hyjf.am.trade.dao.model.customize.WebUserRepayTransferCustomize">
+		<result column="credit_user_id" property="creditUserId" jdbcType="VARCHAR" />
+		<result column="credit_user_name" property="creditUserName" jdbcType="VARCHAR" />
+		<result column="user_name" property="undertakerUserName" jdbcType="VARCHAR" />
+		<result column="assign_order_date" property="assignOrderDate" jdbcType="VARCHAR" />
+		<result column="assign_capital" property="assignCapital" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectUserRepayTransferListByHjhCreditTender" resultMap="HjhCreditTenderListMap" parameterType="Map">
+		select credit_user_id, user_name,credit_user_name, FROM_UNIXTIME(create_time, '%Y-%m-%d %H:%i') as assign_order_date, assign_account, assign_capital from ht_hjh_debt_credit_tender
+		where borrow_nid = #{borrowNid,jdbcType=VARCHAR}
+		<if test="limitStart != null and limitStart >= 0 and limitEnd !=null and limitEnd >= 0" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
+
+	<resultMap id="CreditTenderListMap" type="com.hyjf.am.trade.dao.model.customize.WebUserRepayTransferCustomize">
+		<result column="credit_user_id" property="creditUserId" jdbcType="VARCHAR" />
+		<result column="credit_user_name" property="creditUserName" jdbcType="VARCHAR" />
+		<result column="undertaker_user_name" property="undertakerUserName" jdbcType="VARCHAR" />
+		<result column="assign_order_date" property="assignOrderDate" jdbcType="VARCHAR" />
+		<result column="assign_capital" property="assignCapital" jdbcType="VARCHAR" />
+	</resultMap>
+	<select id="selectUserRepayTransferListByCreditTender" resultMap="CreditTenderListMap" parameterType="Map">
+		select
+		u.username as undertaker_user_name,
+		ct.credit_user_id,
+		hu.username as credit_user_name,
+		ct.assign_capital,
+		ct.assign_price,
+		CASE WHEN ct.add_time != 0 AND ct.add_time IS NOT NULL THEN FROM_UNIXTIME( ct.add_time, '%Y-%m-%d %H:%i' ) ELSE '' END AS assign_order_date,
+		ct.assign_pay
+		from ht_credit_tender ct
+		LEFT JOIN ht_r_user u on u.user_id = ct.user_id
+		LEFT JOIN ht_r_user hu on hu.user_id = ct.credit_user_id
+		where bid_nid = #{borrowNid,jdbcType=VARCHAR}
+		<if test="limitStart != null and limitStart >= 0 and limitEnd !=null and limitEnd >= 0" >
+			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
+		</if>
+	</select>
 </mapper>

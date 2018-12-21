@@ -15,7 +15,7 @@ public class BaseResultBean implements Serializable {
 
     private Integer currentPage;//当前页
     private Integer pageSize;//每页显示条数
-    // 角色是否允许投资
+    // 角色是否允许出借
     private Boolean isAllowedTender;
     // 缴费授权状态
     private Integer paymentAuthStatus;

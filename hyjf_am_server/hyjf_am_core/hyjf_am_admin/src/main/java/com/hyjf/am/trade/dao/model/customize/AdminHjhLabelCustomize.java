@@ -4,7 +4,6 @@
 package com.hyjf.am.trade.dao.model.customize;
 
 import com.hyjf.am.vo.BaseVO;
-import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;

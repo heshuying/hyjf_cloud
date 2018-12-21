@@ -127,18 +127,18 @@ public class BorrowRepaymentPlanController extends BaseController {
 
     private Map<String, String> buildMap() {
         Map<String, String> map = Maps.newLinkedHashMap();
-        map.put("borrowNid","借款编号");
+        map.put("borrowNid","项目编号");
         map.put("instName","资产来源");
         map.put("userId","借款人ID");
         map.put("borrowUserName","借款人用户名");
         map.put("borrowName","借款标题");
         map.put("projectTypeName","项目类型");
         map.put("borrowPeriod","借款期限");
-        map.put("borrowApr","年化收益");
+        map.put("borrowApr","出借利率");
         map.put("borrowAccount","借款金额");
         map.put("borrowAccountYes","借到金额");
         map.put("repayType","还款方式");
-        map.put("repayPeriod","还款期次");
+        map.put("repayPeriod","还款期数");
         map.put("repayCapital","应还本金");
         map.put("repayInterest","应还利息");
         map.put("repayAccount","应还本息");

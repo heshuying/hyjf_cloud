@@ -58,7 +58,7 @@ public class PushMoneyManageController extends BaseController {
     private PushMoneyManageService pushMoneyManageService;
 
     /** 直投提成列表权限 */
-    public static final String PERMISSIONSLIST = "pushmoneymanagelist";
+    public static final String PERMISSIONSLIST = "pushMoneyList";
 
     /** 直投提成管理权限 */
     public static final String PERMISSIONS = "pushMoneyManage";
@@ -159,6 +159,7 @@ public class PushMoneyManageController extends BaseController {
     public void exportPushMoney(HttpServletRequest request, HttpServletResponse response,@RequestBody PushMoneyRequest requestBean) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
+
         // 表格sheet名称
         String sheetName = "推广提成列表";
         // 文件名称
@@ -167,8 +168,8 @@ public class PushMoneyManageController extends BaseController {
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-        requestBean.setCurrPage(1);
-        requestBean.setPageSize(defaultRowMaxCount);
+//        requestBean.setCurrPage(1);
+////        requestBean.setPageSize(defaultRowMaxCount);
         Integer totalCount = pushMoneyManageService.findPushMoneyList(requestBean).getCount();
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
@@ -303,8 +304,8 @@ public class PushMoneyManageController extends BaseController {
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-        requestBean.setCurrPage(1);
-        requestBean.setPageSize(defaultRowMaxCount);
+//        requestBean.setCurrPage(1);
+//        requestBean.setPageSize(defaultRowMaxCount);
         Integer totalCount = pushMoneyManageService.getPushMoneyListCount(requestBean);
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
@@ -340,11 +341,11 @@ public class PushMoneyManageController extends BaseController {
         map.put("username", "提成人");
         map.put("accountId", "电子账号");
         map.put("attribute", "用户属性");
-        map.put("usernameTender", "投资人");
-        map.put("accountTender", "授权服务金额");
+        map.put("usernameTender", "出借人");
+        map.put("accountTender", "出借金额");
         map.put("commission", "提成金额");
         map.put("statusName", "状态");
-        map.put("tenderTimeView", "投资时间");
+        map.put("tenderTimeView", "出借时间");
         map.put("sendTimeView", "发放时间");
         return map;
     }

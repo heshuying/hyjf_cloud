@@ -16,7 +16,7 @@ import java.util.List;
  */
 public interface BorrowInvestCustomizeMapper {
     /**
-     * 投资明细列表
+     * 出借明细列表
      *
      * @param borrowInvestRequest
      * @return
@@ -24,7 +24,7 @@ public interface BorrowInvestCustomizeMapper {
     List<BorrowInvestCustomize> selectBorrowInvestList(BorrowInvestRequest borrowInvestRequest);
 
     /**
-     * 投资明细记录 总数COUNT
+     * 出借明细记录 总数COUNT
      *
      * @param borrowInvestRequest
      * @return
@@ -32,7 +32,7 @@ public interface BorrowInvestCustomizeMapper {
     int countBorrowInvest(BorrowInvestRequest borrowInvestRequest);
 
     /**
-     * 导出投资明细列表
+     * 导出出借明细列表
      *
      * @param borrowInvestRequest
      * @return
@@ -40,7 +40,7 @@ public interface BorrowInvestCustomizeMapper {
     List<BorrowInvestCustomize> exportBorrowInvestList(BorrowInvestRequest borrowInvestRequest);
 
     /**
-     * 投资金额合计
+     * 出借金额合计
      *
      * @param borrowInvestRequest
      * @return
@@ -48,7 +48,7 @@ public interface BorrowInvestCustomizeMapper {
     String selectBorrowInvestAccount(BorrowInvestRequest borrowInvestRequest);
 
     /**
-     * 投资金额合计值取得
+     * 出借金额合计值取得
      *
      * @param borrowInvestRequest
      * @return
@@ -64,7 +64,7 @@ public interface BorrowInvestCustomizeMapper {
     List<BorrowListCustomize> selectBorrowList(@Param("borrowNid") String borrowNid);
 
     /**
-     * 获取用户投资数量
+     * 获取用户出借数量
      * @param userId
      * @return
      */

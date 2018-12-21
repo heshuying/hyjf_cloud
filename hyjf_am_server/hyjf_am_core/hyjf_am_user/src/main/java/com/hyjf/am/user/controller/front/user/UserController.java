@@ -44,6 +44,7 @@ import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/am-user/user")
+@SuppressWarnings("unchecked")
 public class UserController extends BaseController {
     @Autowired
     private UserService userService;
@@ -143,6 +144,29 @@ public class UserController extends BaseController {
         return null;
     }
 
+    /**
+     * 根据userId查询(查询主库)
+     *
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/updateById/{userId}")
+    public UserResponse updateById(@PathVariable Integer userId) {
+        logger.info("findUserByUserId run...userId is :{}", userId);
+        UserResponse response = new UserResponse();
+        if(userId!=null){
+            User user = userService.updateUserByUserId(userId);
+            logger.info("findUserByUserId run...user is :{}", user);
+            if (user != null) {
+                UserVO userVO = new UserVO();
+                BeanUtils.copyProperties(user, userVO);
+                response.setResult(userVO);
+                response.setRtn(Response.SUCCESS);
+            }
+            return response;
+        }
+        return null;
+    }
     /**
      * 根据userId查询查询主库
      *
@@ -696,7 +720,7 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 更新渠道用户首次投资信息
+     * 更新渠道用户首次出借信息
      *
      * @param bean
      * @return
@@ -963,7 +987,7 @@ public class UserController extends BaseController {
     }
 
     /**
-     * 更新用户首次投资信息
+     * 更新用户首次出借信息
      * @param params
      * @return
      */
@@ -973,7 +997,7 @@ public class UserController extends BaseController {
         try {
             userService.updateFirstUtmReg(params);
         }catch (Exception e){
-            logger.error("更新用户首次投资信息失败  参数为：{}",JSONObject.toJSONString(params));
+            logger.error("更新用户首次出借信息失败  参数为：{}",JSONObject.toJSONString(params));
         }
         return response;
     }

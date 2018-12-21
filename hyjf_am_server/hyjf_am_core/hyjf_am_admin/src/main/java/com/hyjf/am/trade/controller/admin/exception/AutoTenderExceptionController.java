@@ -16,9 +16,7 @@ import com.hyjf.am.resquest.trade.SaveCreditTenderLogRequest;
 import com.hyjf.am.resquest.trade.UpdateBorrowForAutoTenderRequest;
 import com.hyjf.am.resquest.trade.UpdateCreditForAutoTenderRequest;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.HjhAccede;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanBorrowTmp;
 import com.hyjf.am.trade.dao.model.customize.AdminPlanAccedeListCustomize;
 import com.hyjf.am.trade.service.admin.exception.AutoTenderExceptionService;
@@ -164,7 +162,7 @@ public class AutoTenderExceptionController  extends BaseController {
         return mapReturn;
     }
     /**
-     * 银行自动投资成功后，更新投资数据
+     * 银行自动投标成功后，更新出借数据
      *
      * @param request
      * @return
@@ -220,7 +218,7 @@ public class AutoTenderExceptionController  extends BaseController {
         String sellerUsrcustid = request.getSellerUsrcustid();
         HjhCreditCalcResultVO resultVO = request.getResultVO();
         BeanUtils.copyProperties(request.getBankCallBeanVO(), bean);
-        //银行自动投资成功后，更新投资数据
+        //银行自动投标成功后，更新出借数据
         boolean result = this.autoTenderExceptionService.updateCreditForAutoTender(
                 creditNid, accedeOrderId, planNid, bean,
                 tenderUsrcustid, sellerUsrcustid, resultVO

@@ -43,9 +43,22 @@ public interface ChannelReconciliationService {
     ChannelReconciliationResponse searchAppAction(ChannelReconciliationRequest request);
 
     /**
+     *app散标列表数量查询
+     * @param request
+     * @return
+     */
+    Integer searchAppActionCount(ChannelReconciliationRequest request);
+    /**
      * 计划列表查询
      * @param request
      * @return
      */
     ChannelReconciliationResponse searchAppHJHAction(ChannelReconciliationRequest request);
+    /**
+     * 计划列表数量查询
+     * @param request
+     * @return
+     */
+    Integer searchAppHJHCount(ChannelReconciliationRequest request);
+
 }

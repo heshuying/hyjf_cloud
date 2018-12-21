@@ -32,4 +32,14 @@ public class BatchBankInvestServiceImpl extends BaseTradeServiceImpl implements 
 			logger.info("BatchBankInvestServiceImpl.run.end...");
 		}
 	}
+	/**
+	 * 自动放款复审任务开始
+	 * @return
+	 */
+	@Override
+	public void hjhautoreview() {
+		logger.info("自动放款复审任务BatchBankInvestServiceImpl.run.start...");
+		this.amTradeClient.hjhautoreview();
+		logger.info("自动放款复审任务BatchBankInvestServiceImpl.run.end...");
+	}
 }

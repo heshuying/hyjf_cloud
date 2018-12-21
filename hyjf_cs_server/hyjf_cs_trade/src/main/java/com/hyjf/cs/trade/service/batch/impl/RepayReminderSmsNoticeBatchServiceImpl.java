@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.trade.service.batch.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowRepayPlanVO;
@@ -17,8 +16,8 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.batch.RepayReminderSmsNoticeBatchService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import org.apache.commons.lang.math.NumberUtils;
@@ -56,7 +55,7 @@ public class RepayReminderSmsNoticeBatchServiceImpl extends BaseTradeServiceImpl
     @Autowired
     AmUserClient userClient;
     @Autowired
-    SmsProducer smsProducer;
+    private CommonProducer commonProducer;
 
     @Override
     public List<BorrowAndInfoVO> selectBorrowList() {
@@ -96,8 +95,8 @@ public class RepayReminderSmsNoticeBatchServiceImpl extends BaseTradeServiceImpl
                     SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null,
                             temp, CustomConstants.CHANNEL_TYPE_NORMAL);
                     try {
-                        smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
-                                JSON.toJSONBytes(smsMessage)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
+                                smsMessage));
                     } catch (MQException e) {
                         logger.error("还款提醒发送消息通知失败...", e);
                     }
@@ -144,4 +143,28 @@ public class RepayReminderSmsNoticeBatchServiceImpl extends BaseTradeServiceImpl
         return this.amBorrowRepayClient.updateBorrowRepayPlan(borrowRepayPlanVO);
     }
 
+    @Override
+    public void taskAssign() {
+        amBorrowClient.taskAssign();
+    }
+
+    @Override
+    public void taskRepayAssign() {
+        amBorrowClient.taskRepayAssign();
+    }
+
+    @Override
+    public void taskReviewBorrowAssign() {
+        amBorrowClient.taskReviewBorrowAssign();
+    }
+
+    @Override
+    public void taskAssignLoans() {
+        amBorrowClient.taskAssignLoans();
+    }
+
+    @Override
+    public void taskAssignRepay() {
+        amBorrowClient.taskAssignRepay();
+    }
 }

@@ -12,8 +12,8 @@ import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.market.client.AmConfigClient;
 import com.hyjf.cs.market.client.AmMarketClient;
+import com.hyjf.cs.market.mq.base.CommonProducer;
 import com.hyjf.cs.market.mq.base.MessageContent;
-import com.hyjf.cs.market.mq.producer.MailProducer;
 import com.hyjf.cs.market.service.DailyAutoSendService;
 
 import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -51,7 +51,7 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
     @Autowired
     private AmConfigClient amConfigClient;
     @Autowired
-    private MailProducer mailProducer;
+    private CommonProducer commonProducer;
 
     @Override
     public List<SellDailyDistributionVO> listSellDailyDistribution() {
@@ -86,7 +86,7 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
         MailMessage mailMessage = new MailMessage(null, null, subject, null, fileNames, toEmail, null, MessageConstant.MAIL_SEND_FRO_SELL_DAILY, is);
         try {
             // 包含附件
-            mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(mailMessage)));
+            commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), mailMessage));
             logger.info("发送销售日报成功>>>>>>>>>>>>>>>>>>>>>");
         } catch (Exception e) {
             logger.error("发送销售日报失败>>>>>>>>>>>>>>>>>>>>> 失败原因：{}", e);
@@ -104,7 +104,7 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
         String sheetName = "销售数据日报表";
         String[] titles = new String[]{"序号", "一级分部", "二级分部", "门店数量", "本月累计规模业绩", "本月累计已还款", "上月对应累计规模业绩", "环比增速",
                 "本月累计提现", "提现占比", "本月累计充值", "本月累计年化业绩", "上月累计年化业绩", "环比增速", "昨日规模业绩", "昨日还款", "昨日年化业绩", "昨日提现", "昨日充值",
-                "昨日净资金流（充值-提现）", "当日待还", "昨日注册数", "其中充值≥3000人数", "其中投资≥3000人数", "本月累计投资3000以上新客户数"};
+                "昨日净资金流（充值-提现）", "当日待还", "昨日注册数", "其中充值≥3000人数", "其中出借≥3000人数", "本月累计出借3000以上新客户数"};
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
         // 生成一个表格

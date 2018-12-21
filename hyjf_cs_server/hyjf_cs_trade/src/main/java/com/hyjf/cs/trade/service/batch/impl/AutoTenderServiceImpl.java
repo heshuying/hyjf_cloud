@@ -37,7 +37,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * 自动投资
+ * 自动出借
  *
  * @author liubin
  * @version AutoTenderServiceImpl, v0.1 2018/6/28 14:09
@@ -58,7 +58,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
     SystemConfig systemConfig;
 
     /**
-     * 取得自动投资用加入计划列表
+     * 取得自动出借用加入计划列表
      *
      * @return
      */
@@ -68,12 +68,12 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
     }
 
     /**
-     * 汇计划加入订单 自动投资/复投
+     * 汇计划加入订单 自动出借/复投
      * 0. 取得计划信息
-     * 1. 取得投资人信息（授权账户等）
-     * 2. 有可投金额循环投资
+     * 1. 取得出借人信息（授权账户等）
+     * 2. 有可投金额循环出借
      * 3. 从队列中取得标的
-     * 4. 自动投资债转标的（承接）
+     * 4. 自动出借债转标的（承接）
      * 4.1. 债转用金额计算
      * 4.2. 获取债转详情
      * 4.3. 校验是否可以债转
@@ -81,12 +81,12 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
      * 4.5. 减去被投标的可投金额，部分承接时，余额推回队列
      * 4.6. 更新同步数据库
      * 4.7. 完全承接时，结束债券
-     * 5. 自动投资原始标的（投资）
-     * 5.1. 投资用金额计算
+     * 5. 自动出借原始标的（出借）
+     * 5.1. 出借用金额计算
      * 5.2. 获取标的详情
-     * 5.3. 校验是否可以投资
+     * 5.3. 校验是否可以出借
      * 5.4. 调用银行自动投标申请接口
-     * 5.5. 减去被投标的可投金额，部分投资时，余额推回队列
+     * 5.5. 减去被投标的可投金额，部分出借时，余额推回队列
      * 5.6. 更新同步数据库
      *
      * @param hjhAccede
@@ -103,21 +103,21 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         //一个计划订单的连续失败次数
         int serialFaileCount = 0;
 
-        // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
-        //是否分散投资
-        int diversifyCount = -1; //非分散投资
-        //已投资笔数
+        // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 start
+        //是否分散出借
+        int diversifyCount = -1; //非分散出借
+        //已出借笔数
         int investCountForLog = hjhAccede.getInvestCounts();
-        // add 汇计划三期 汇计划自动投资(分散投资) liu0180515 end
+        // add 汇计划三期 汇计划自动出借(分散出借) liu0180515 end
 
         if (hjhAccede.getOrderStatus() == 0) {
             //0自动投标中
-            logger.info("======计划加入订单号 " + accedeOrderId + "开始自动投资,订单状态" + hjhAccede.getOrderStatus() + "======");
-            // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
-            diversifyCount = 0; //初始分散投资 （只有投资原始标的（非复投）时，使用分散投资）
-            // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
+            logger.info("======计划加入订单号 " + accedeOrderId + "开始自动出借,订单状态" + hjhAccede.getOrderStatus() + "======");
+            // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 start
+            diversifyCount = 0; //初始分散出借 （只有出借原始标的（非复投）时，使用分散出借）
+            // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 end
         } else {
-            //2自动投资成功或者3锁定中
+            //2自动投标成功或者3锁定中
             logger.info("======计划加入订单号 " + accedeOrderId + "开始自动复投,订单状态" + hjhAccede.getOrderStatus() + "======");
         }
 
@@ -128,32 +128,32 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         // 计划订单可投金额
         BigDecimal ketouplanAmoust = hjhAccede.getAvailableInvestAccount();
 
-        // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
-        // 每组可投金额（分散投资的最小分散金额）
+        // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 start
+        // 每组可投金额（分散出借的最小分散金额）
         BigDecimal groupAmoust = ketouplanAmoust;
         // 最小分散组数
         int groupCount = 1;
         // 标的队列名称
         // 原始标的队列
-        String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_INVEST + RedisConstants.HJH_SLASH + hjhAccede.getPlanNid();
-        // ★临时队列有标的时，先推回主队列（恢复前次分散投资）★
+        String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_INVEST + hjhAccede.getPlanNid();
+        // ★临时队列有标的时，先推回主队列（恢复前次分散出借）★
         RedisUtils.lpoprpush(queueName + RedisConstants.HJH_SLASH_TMP, queueName);
-        // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
+        // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 end
 
         logger.info("====[" + accedeOrderId + "]" + "加入计划金额：" + accedeAccount.toString()+ "，初始可投金额：" + ketouplanAmoust.toString());
 
-        /** 1. 取得投资人信息（授权账户等） */
-        //获取投资授权码
+        /** 1. 取得出借人信息（授权账户等） */
+        //获取出借授权码
         HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(hjhAccede.getUserId());
         if (hjhUserAuth == null || StringUtils.isEmpty(hjhUserAuth.getAutoOrderId())) {
-            logger.error("====[" + accedeOrderId + "]" + "未获取到投资授权码  " + hjhAccede.getUserId());
+            logger.error("====[" + accedeOrderId + "]" + "未获取到出借授权码  " + hjhAccede.getUserId());
             return false;
         }
         if (StringUtils.isEmpty(hjhUserAuth.getAutoCreditOrderId())) {
             logger.error("====[" + accedeOrderId + "]" + "未获取到债转授权码  " + hjhAccede.getUserId());
             return false;
         }
-        //获取投资账户
+        //获取出借账户
         BankOpenAccountVO bankOpenAccount = this.amUserClient.selectBankAccountById(hjhAccede.getUserId());
         if (bankOpenAccount == null) {
             logger.error("====[" + accedeOrderId + "]" + "用户没开户 " + hjhAccede.getUserId());
@@ -164,27 +164,27 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         if (null != usersInfo) {
             String roleIsOpen = systemConfig.getRoleIsopen();
             if(org.apache.commons.lang3.StringUtils.isNotBlank(roleIsOpen) && roleIsOpen.equals("true")){
-                if (usersInfo.getRoleId() != 1) {// 非投资用户
-                    logger.error("====[" + accedeOrderId + "]" + "仅限出借人进行投资 " + hjhAccede.getUserId());
+                if (usersInfo.getRoleId() != 1) {// 非出借用户
+                    logger.error("====[" + accedeOrderId + "]" + "仅限出借人进行出借 " + hjhAccede.getUserId());
                     return false;
                 }
             }
         }
         String tenderUsrcustid = bankOpenAccount.getAccount();//获取江西银行电子账号
 
-        /** 2. 有可投金额循环投资	 */
-        // 计划订单的可投金额 >= minAccountEnable 进行投资/复投
-        // 计划订单的可投金额 < minAccountEnable 该计划订单投资/复投结束
+        /** 2. 有可投金额循环出借	 */
+        // 计划订单的可投金额 >= minAccountEnable 进行出借/复投
+        // 计划订单的可投金额 < minAccountEnable 该计划订单出借/复投结束
         BigDecimal minAccountEnable = getMinAccountEnable(hjhAccede);
         while (ketouplanAmoust.compareTo(minAccountEnable) >= 0) {
-            // add 汇计划三期 汇计划自动投资(投资笔数累计) liubin 20180515 start
-            logger.info("====计划加入订单号 " + accedeOrderId + "投前累计投资笔数：" + investCountForLog + "====");
+            // add 汇计划三期 汇计划自动出借(出借笔数累计) liubin 20180515 start
+            logger.info("====计划加入订单号 " + accedeOrderId + "投前累计出借笔数：" + investCountForLog + "====");
             investCountForLog += 1;
-            // add 汇计划三期 汇计划自动投资(投资笔数累计) liubin 20180515 end
+            // add 汇计划三期 汇计划自动出借(出借笔数累计) liubin 20180515 end
 
             // ketouplanAmoust小于1元时报警告信息
             if (ketouplanAmoust.compareTo(new BigDecimal(1)) < 0) {
-                logger.warn("警告====[" + accedeOrderId + "]" + "的可投资金额为" + ketouplanAmoust.toString() + ",小于1元");
+                logger.warn("警告====[" + accedeOrderId + "]" + "的可出借金额为" + ketouplanAmoust.toString() + ",小于1元");
             }
 
             /** 3. 从队列中取得标的	 */
@@ -192,56 +192,56 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             RedisBorrow redisBorrow = null;
 
             String borrowStr = null;//标的的JsonString
-            // del 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
+            // del 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 start
             //String queueName = null;//标的队列名称
-            // del 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
+            // del 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 end
             String borrowFlag = null;//标的类型（债转标，原始标）
 
             // 连续10次出投人相同后，换个计划订单投
             if (serialFaileCount >= CustomConstants.HJH_SERIAL_FAILE_COUNT) {
-                logger.error("[" + accedeOrderId + "]" + "借款人/出让人和计划订单的投资人连续相同次数超过" + CustomConstants.HJH_SERIAL_FAILE_COUNT + "次,跳过该计划订单");
+                logger.error("[" + accedeOrderId + "]" + "借款人/出让人和计划订单的出借人连续相同次数超过" + CustomConstants.HJH_SERIAL_FAILE_COUNT + "次,跳过该计划订单");
                 return false;
             }
             logger.info("[" + accedeOrderId + "]" + "连续相同次数" + serialFaileCount + "次");
             // 取债转标的（优先） (连续5次不能投债转标时,取原始标的)
             if (serialFaileCount < CustomConstants.HJH_ASSIGN_SERIAL_FAILE_COUNT) {
-                queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_CREDIT + RedisConstants.HJH_SLASH + hjhAccede.getPlanNid();
+                queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_CREDIT + hjhAccede.getPlanNid();
                 borrowStr = getBorrowFromQueue(queueName);
                 borrowFlag = RedisConstants.HJH_BORROW_CREDIT;
             } else {
-                logger.info("[" + accedeOrderId + "]" + "出让人和计划订单的投资人连续相同次数超过" + CustomConstants.HJH_ASSIGN_SERIAL_FAILE_COUNT + "次,只投原始标的");
+                logger.info("[" + accedeOrderId + "]" + "出让人和计划订单的出借人连续相同次数超过" + CustomConstants.HJH_ASSIGN_SERIAL_FAILE_COUNT + "次,只投原始标的");
             }
 
             // 取原始标的(无债转标的时)
             if (borrowStr == null) {
-                queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_INVEST + RedisConstants.HJH_SLASH + hjhAccede.getPlanNid();
-                // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
-                // ****分散投资主规则****
-                // 初始分散投资时
+                queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_INVEST + hjhAccede.getPlanNid();
+                // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 start
+                // ****分散出借主规则****
+                // 初始分散出借时
                 if (diversifyCount == 0) {
                     // 取得最小分散组数（计划最小分散笔数 & 队列中的标的数 取小的）
                     groupCount = (int) DigitalUtils.min((long) hjhPlan.getMinInvestCounts(), RedisUtils.llen(queueName));
                     groupCount = groupCount < 1 ? 1 : groupCount;//小于1时，组数取1
-                    // 计算每组投资金额（取百位）
+                    // 计算每组出借金额（取百位）
                     groupAmoust = ketouplanAmoust.divide(new BigDecimal(groupCount), -2, BigDecimal.ROUND_DOWN);
                 }
-                // 分散投资时（突然插入债转可能可投余额不够）
+                // 分散出借时（突然插入债转可能可投余额不够）
                 if (diversifyCount >= 0) {
-                    logger.info("[" + accedeOrderId + "]" + "开始分散投资。。。组数：" + groupCount + ", 每组金额：" + groupAmoust
+                    logger.info("[" + accedeOrderId + "]" + "开始分散出借。。。组数：" + groupCount + ", 每组金额：" + groupAmoust
                             + ", 当前组：" + (diversifyCount + 1));
                     groupAmoust = DigitalUtils.min(groupAmoust, ketouplanAmoust);
                 }
-                // 分散组数=1 或者 超出分散组数 或者 groupAmoust<100 的投资不再分散
+                // 分散组数=1 或者 超出分散组数 或者 groupAmoust<100 的出借不再分散
                 if (groupCount == 1 || diversifyCount == -1 || diversifyCount + 1 > groupCount || groupAmoust.compareTo(new BigDecimal(100)) < 0) {
                     groupAmoust = ketouplanAmoust;
                     diversifyCount = -1;
                 }
-                // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
+                // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 end
                 borrowStr = getBorrowFromQueue(queueName);
                 borrowFlag = RedisConstants.HJH_BORROW_INVEST;
             }
 
-            // 没有可投资标的
+            // 没有可出借标的
             if (borrowStr == null || borrowFlag == null) {
                 return false;
             }
@@ -267,16 +267,16 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             String borrowNidForCredit = "";
             try {
                 if (borrowFlag.equals(RedisConstants.HJH_BORROW_CREDIT)) {
-                    /** 4. 自动投资债转标的（承接）	 */
+                    /** 4. 自动出借债转标的（承接）	 */
                     logger.info("==[" + accedeOrderId + "]" + "自动承接债转标的" + redisBorrow.getBorrowNid());
                     logger.info("[" + accedeOrderId + "]" + "承前的可投金额：" + ketouplanAmoust + "，"
                             + redisBorrow.getBorrowNid() + "可投余额：" + redisBorrow.getBorrowAccountWait());
                     /** 4.1. 债转用金额计算	 */
-                    // 设置实际投资金额
+                    // 设置实际出借金额
                     // 债转标的： 清算时公允价值-已投本金和已投垫付利息
                     BigDecimal yujiAmoust = ketouplanAmoust;
                     if (yujiAmoust.compareTo(redisBorrow.getBorrowAccountWait()) >= 0) {
-                        // 该标的/债转最后一笔投资
+                        // 该标的/债转最后一笔出借
                         yujiAmoust = redisBorrow.getBorrowAccountWait();
                         isLast = true;
                     }
@@ -305,16 +305,16 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     }
 
                     /** 4.3. 校验是否可以债转	 */
-                    // 债权的转让人，和计划订单的投资人不能相同
+                    // 债权的转让人，和计划订单的出借人不能相同
                     if (credit.getUserId().compareTo(hjhAccede.getUserId()) == 0) {
 //						if (serialFaileCount >= CustomConstants.HJH_TENDER_SERIAL_FAILE_COUNT) {
 //							// 连续10次失败后，换个计划订单投
-//							logger.error("[" + accedeOrderId + "]" + "借款人/出让人和计划订单的投资人连续相同次数超过"+CustomConstants.HJH_TENDER_SERIAL_FAILE_COUNT+"次,跳过该计划订单");
+//							logger.error("[" + accedeOrderId + "]" + "借款人/出让人和计划订单的出借人连续相同次数超过"+CustomConstants.HJH_TENDER_SERIAL_FAILE_COUNT+"次,跳过该计划订单");
 //							return false;
 //						}
-                        logger.info("[" + accedeOrderId + "]" + "债权的转让人(" + credit.getUserId() + ")和计划订单的投资人(" + hjhAccede.getUserId() + ")不能相同");
+                        logger.info("[" + accedeOrderId + "]" + "债权的转让人(" + credit.getUserId() + ")和计划订单的出借人(" + hjhAccede.getUserId() + ")不能相同");
                         String redisStr = JSON.toJSONString(redisBorrow);
-                        RedisUtils.leftpush(queueName, redisStr);//标的推回队列头，再取标的投资。
+                        RedisUtils.leftpush(queueName, redisStr);//标的推回队列头，再取标的出借。
                         serialFaileCount++;
                         result = true;
                         continue;
@@ -371,17 +371,17 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                             tenderUsrcustid, sellerUsrcustid,
                             orderId, orderDate, isLast);
 
-                    // 投资失败不回滚队列
+                    // 出借失败不回滚队列
                     if (bean == null) {
-                        logger.error("[" + accedeOrderId + "]" + "用户投资失败,银行接口返回空,债转编号：" + credit.getBorrowNid() + "银行订单号：" + orderId);
+                        logger.error("[" + accedeOrderId + "]" + "用户出借失败,银行接口返回空,债转编号：" + credit.getBorrowNid() + "银行订单号：" + orderId);
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
                         // 不再操作队列
                         result = true;
                         return false;
                     }
                     if (!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
-                        logger.error("[" + accedeOrderId + "]" + "用户投资失败,银行接口返回 " + bean.getRetCode()
-                                + " 债转编号：" + credit.getBorrowNid() + " 投资订单号：" + bean.getLogOrderId());
+                        logger.error("[" + accedeOrderId + "]" + "用户出借失败,银行接口返回 " + bean.getRetCode()
+                                + " 债转编号：" + credit.getBorrowNid() + " 出借订单号：" + bean.getLogOrderId());
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
                         // 不再操作队列
                         result = true;
@@ -404,7 +404,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                                 bean, tenderUsrcustid, sellerUsrcustid, resultVO);
                     } catch (Exception e) {
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
-                        logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的投资/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_FAIL + "，请后台异常处理。"
+                        logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的出借/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_FAIL + "，请后台异常处理。"
                                 , e);
                         return false;
                     }
@@ -430,16 +430,16 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         }
                     }
                 } else if (borrowFlag.equals(RedisConstants.HJH_BORROW_INVEST)) {
-                    /** 5. 自动投资原始标的（投资）	 */
-                    logger.info("==投前[" + accedeOrderId + "]" + "自动投资原始标的" + redisBorrow.getBorrowNid());
+                    /** 5. 自动出借原始标的（出借）	 */
+                    logger.info("==投前[" + accedeOrderId + "]" + "自动出借原始标的" + redisBorrow.getBorrowNid());
                     logger.info("[" + accedeOrderId + "]" + "投前的可投金额：" + ketouplanAmoust + "，" + "投前的本组金额：" + groupAmoust + "，"
                             + redisBorrow.getBorrowNid() + "可投余额：" + redisBorrow.getBorrowAccountWait());
-                    /** 5.1. 投资用金额计算	 */
-                    // 设置实际投资金额
+                    /** 5.1. 出借用金额计算	 */
+                    // 设置实际出借金额
                     // 原始标的： 标的本金-已投本金
                     BigDecimal realAmoust = groupAmoust;
                     if (realAmoust.compareTo(redisBorrow.getBorrowAccountWait()) >= 0) {
-                        // 该标的/债转最后一笔投资
+                        // 该标的/债转最后一笔出借
                         realAmoust = redisBorrow.getBorrowAccountWait();
                         isLast = true;
                     }
@@ -452,26 +452,26 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                         return false;
                     }
 
-                    /** 5.3. 校验是否可以投资	 */
-                    // 借款人和计划订单的投资人不能相同
+                    /** 5.3. 校验是否可以出借	 */
+                    // 借款人和计划订单的出借人不能相同
                     if (borrow.getUserId().compareTo(hjhAccede.getUserId()) == 0) {
 //						if (serialFaileCount >= CustomConstants.HJH_TENDER_SERIAL_FAILE_COUNT) {
 //							// 连续10次失败后，换个计划订单投
-//							logger.error("[" + accedeOrderId + "]" + "借款人/出让人和计划订单的投资人连续相同次数超过"+CustomConstants.HJH_TENDER_SERIAL_FAILE_COUNT+"次,跳过该计划订单");
+//							logger.error("[" + accedeOrderId + "]" + "借款人/出让人和计划订单的出借人连续相同次数超过"+CustomConstants.HJH_TENDER_SERIAL_FAILE_COUNT+"次,跳过该计划订单");
 //							return false;
 //						}
-                        logger.info("[" + accedeOrderId + "]" + "借款人(" + borrow.getUserId() + ")和计划订单的投资人(" + hjhAccede.getUserId() + ")不能相同");
+                        logger.info("[" + accedeOrderId + "]" + "借款人(" + borrow.getUserId() + ")和计划订单的出借人(" + hjhAccede.getUserId() + ")不能相同");
                         String redisStr = JSON.toJSONString(redisBorrow);
-                        RedisUtils.leftpush(queueName, redisStr);//标的推回队列头，再取标的投资。
+                        RedisUtils.leftpush(queueName, redisStr);//标的推回队列头，再取标的出借。
                         serialFaileCount++;
                         result = true;
                         continue;
                     }
-                    //防止钱不够也投资校验
+                    //防止钱不够也出借校验
                     HjhAccedeVO hjhAccedeCheck = this.amTradeClient.getHjhAccedeByAccedeOrderId(hjhAccede.getAccedeOrderId());
                     if (realAmoust.compareTo(hjhAccedeCheck.getAvailableInvestAccount()) == 1) {
-                        logger.error("[" + accedeOrderId + "]" + " 投资支付金额" + realAmoust + ">当前计划订单的剩余可投金额" + hjhAccedeCheck.getAvailableInvestAccount()
-                                + "，投资操作不可，投资失败！");
+                        logger.error("[" + accedeOrderId + "]" + " 出借支付金额" + realAmoust + ">当前计划订单的剩余可投金额" + hjhAccedeCheck.getAvailableInvestAccount()
+                                + "，出借操作不可，出借失败！");
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_ERR);
                         return false;
                     }
@@ -479,20 +479,20 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     /** 5.4. 调用银行自动投标申请接口	 */
                     logger.info("[" + accedeOrderId + "]" + " 银行自动投标申请接口调用前  " + borrow.getBorrowNid());
 
-                    // 调用同步银行接口（投资）
+                    // 调用同步银行接口（出借）
                     BankCallBean bean = this.autotenderApi(borrow, hjhAccede, hjhUserAuth, realAmoust, tenderUsrcustid, isLast);
 
-                    // 投资失败不回滚队列
+                    // 出借失败不回滚队列
                     if (bean == null) {
-                        logger.error("[" + accedeOrderId + "]" + "用户投资失败,银行接口返回空,标的编号：" + borrow.getBorrowNid());
+                        logger.error("[" + accedeOrderId + "]" + "用户出借失败,银行接口返回空,标的编号：" + borrow.getBorrowNid());
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
                         // 不再操作队列
                         result = true;
                         return false;
                     }
                     if (!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())) {
-                        logger.error("[" + accedeOrderId + "]" + "用户投资失败,银行接口返回 " + bean.getRetCode()
-                                + " 标的编号：" + borrow.getBorrowNid() + " 投资订单号：" + bean.getLogOrderId());
+                        logger.error("[" + accedeOrderId + "]" + "用户出借失败,银行接口返回 " + bean.getRetCode()
+                                + " 标的编号：" + borrow.getBorrowNid() + " 出借订单号：" + bean.getLogOrderId());
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
                         // 不再操作队列
                         result = true;
@@ -501,38 +501,38 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
                     logger.info("[" + accedeOrderId + "]" + " 银行自动投标申请接口成功调用后  " + borrow.getBorrowNid());
 
-                    /** 5.5. 减去被投标的可投金额，部分投资时，余额推回队列	 */
-                    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
+                    /** 5.5. 减去被投标的可投金额，部分出借时，余额推回队列	 */
+                    // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 start
                     if (diversifyCount < 0) {
-                        // 不分散投资（推回投资主队列）
+                        // 不分散出借（推回出借主队列）
                         ketouplanAmoust = setRedisList(ketouplanAmoust, redisBorrow, queueName, realAmoust, "R");
                     } else {
-                        // 分散投资（推回投资临时队列）
+                        // 分散出借（推回出借临时队列）
                         ketouplanAmoust = setRedisList(ketouplanAmoust, redisBorrow, queueName + RedisConstants.HJH_SLASH_TMP, realAmoust
                                 , "L");
                         diversifyCount += 1;
                         if (diversifyCount >= groupCount) {
-                            // 最后一次分散投资，临时队列推回主队列
-                            // ★临时队列有标的时，先推回主队列（恢复前次分散投资）★
+                            // 最后一次分散出借，临时队列推回主队列
+                            // ★临时队列有标的时，先推回主队列（恢复前次分散出借）★
                             RedisUtils.lpoprpush(queueName + RedisConstants.HJH_SLASH_TMP, queueName);
                         }
                     }
-                    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
+                    // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 end
 
                     // result = true 后继操作不再操作队列
-                    logger.info("==投后[" + accedeOrderId + "]" + "自动投资原始标的" + redisBorrow.getBorrowNid() + "(银行投资冻结成功！队列可投金额更新，不可撤销)");
+                    logger.info("==投后[" + accedeOrderId + "]" + "自动出借原始标的" + redisBorrow.getBorrowNid() + "(银行出借冻结成功！队列可投金额更新，不可撤销)");
                     logger.info("[" + accedeOrderId + "]" + "投后的可投金额：" + ketouplanAmoust + "，"
                             + redisBorrow.getBorrowNid() + "可投余额：" + redisBorrow.getBorrowAccountWait());
                     // 不再操作队列
                     result = true;
 
                     /** 5.6. 更新同步数据库	 */
-                    // 单笔标的投资
+                    // 单笔标的出借
                     try {
                         this.amTradeClient.updateBorrowForAutoTender(borrow.getBorrowNid(), hjhAccede.getAccedeOrderId(), bean);
                     } catch (Exception e) {
                         this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_FAIL);
-                        logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的投资/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_FAIL + "，请后台异常处理。"
+                        logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的出借/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_FAIL + "，请后台异常处理。"
                                 , e);
                         return false;
                     }
@@ -542,7 +542,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                 }
             } catch (Exception e) {
                 this.updateHjhAccedeOfOrderStatus(hjhAccede, ORDER_STATUS_ERR);
-                logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的投资/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_ERR + "，请后台异常处理。"
+                logger.error("[" + accedeOrderId + "]对队列[" + queueName + "]的[" + redisBorrow.getBorrowNid() + "]的出借/承接操作出现 异常 被捕捉，HjhAccede状态更新为" + ORDER_STATUS_ERR + "，请后台异常处理。"
                         , e);
                 return false;
             } finally {
@@ -558,10 +558,10 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             }
         }
 
-        //投资完成更新计划明细
-        // 如果计划成功，则更新计划表为投资完成
+        //出借完成更新计划明细
+        // 如果计划成功，则更新计划表为出借完成
         if (ketouplanAmoust.compareTo(minAccountEnable) < 0) {
-            // 0投资
+            // 0出借
             if (hjhAccede.getOrderStatus() == 0) {
                 this.updateHjhAccedeOfOrderStatus(hjhAccede, 2);
             }
@@ -586,7 +586,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         return this.amTradeClient.updateHjhAccedeByPrimaryKey(newHjhAccede);
     }
 
-    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 start
+    // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 start
 
     /**
      * @param ketouplanAmoust
@@ -597,7 +597,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
      */
     private BigDecimal setRedisList(BigDecimal ketouplanAmoust, RedisBorrow redisBorrow, String queueName,
                                     BigDecimal realAmoust, String pushFlag) {
-        // 投资成功后减掉redis 钱
+        // 投标成功后减掉redis 钱
         redisBorrow.setBorrowAccountWait(redisBorrow.getBorrowAccountWait().subtract(realAmoust));
         ketouplanAmoust = ketouplanAmoust.subtract(realAmoust);
 
@@ -615,10 +615,10 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         }
         return ketouplanAmoust;
     }
-    // add 汇计划三期 汇计划自动投资(分散投资) liubin 20180515 end
+    // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 end
 
     /**
-     * 取得最小可投资/复投金额的条件
+     * 取得最小可出借/复投金额的条件
      *
      * @param hjhAccede
      * @return
@@ -626,7 +626,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
     private BigDecimal getMinAccountEnable(HjhAccedeVO hjhAccede) {
         BigDecimal minAccountEnable = null;
         if (hjhAccede.getOrderStatus() == 0) {
-            // 0投资
+            // 0出借
             minAccountEnable = CustomConstants.HJH_TENDER_MIN_ACCOUNT;
         } else {
             // 1复投
@@ -653,7 +653,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
     }
 
     /**
-     * 调用同步银行接口（投资）
+     * 调用同步银行接口（出借）
      *
      * @return
      */
@@ -673,18 +673,18 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         bean.setContOrderId(hjhUserAuth.getAutoOrderId());// 签约订单号
 
         try {
-            logger.info("=======atuoTenderServiceImpl 插入自动投资临时表=======");
-            // 插入 自动投资临时表
+            logger.info("=======atuoTenderServiceImpl 插入自动出借临时表=======");
+            // 插入 自动出借临时表
             Integer idKey = this.insertBorrowTmp(borrow, null, hjhAccede, account, hjhUserAuth, bean, RedisConstants.HJH_BORROW_INVEST, isLast ? 1 : 0);
 
             // 调用银行接口
-            logger.info(hjhAccede.getAccedeOrderId() + " 自动投资接口调用中  " + borrow.getBorrowNid() + " 请求订单号:" + orderId);
+            logger.info(hjhAccede.getAccedeOrderId() + " 自动出借接口调用中  " + borrow.getBorrowNid() + " 请求订单号:" + orderId);
             bankResult = BankCallUtils.callApiBg(bean);
 
-            // 更新 自动投资临时表
+            // 更新 自动出借临时表
             boolean updResult = updateBorrowTmp(hjhAccede.getAccedeOrderId(), borrow.getBorrowNid(), bankResult);
             if (!updResult) {
-                logger.error("更新自动投资临时表失败 idKey=" + idKey);
+                logger.error("更新自动出借临时表失败 idKey=" + idKey);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -716,26 +716,26 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         bean.setTxFee(CustomUtil.formatAmount(serviceFee.toString()));    //手续费 交易金额*当前清算服务费率=债转服务费
         bean.setTsfAmount(CustomUtil.formatAmount(assignCapital.toString()));    //转让金额  实际承接本金
         bean.setForAccountId(sellUsrcustid);    //对手电子账号
-        bean.setOrgOrderId(credit.getSellOrderId());    //原订单号 原投资订单号
+        bean.setOrgOrderId(credit.getSellOrderId());    //原订单号 原出借订单号
         bean.setOrgTxAmount(CustomUtil.formatAmount((credit.getCreditCapital().add(preCreditCapital)).toString()));    //原交易金额  债转总本金
         bean.setContOrderId(hjhUserAuth.getAutoCreditOrderId());
         bean.setTxDate(orderDate);
         bean.setLogOrderDate(orderDate);
 
         try {
-            // 插入 自动投资临时表
+            // 插入 自动出借临时表
             Integer idKey = this.insertBorrowTmp(null, credit, hjhAccede, account, hjhUserAuth, bean, RedisConstants.HJH_BORROW_CREDIT, isLast ? 1 : 0);
 
             // 调用银行接口
-            logger.info(hjhAccede.getAccedeOrderId() + " 银行自动投资接口("
+            logger.info(hjhAccede.getAccedeOrderId() + " 银行自动出借接口("
                     + BankCallConstant.TXCODE_CREDIT_AUTO_INVEST + ")调用中  "
                     + credit.getCreditNid() + " 请求订单号:" + orderId);
             bankResult = BankCallUtils.callApiBg(bean);
 
-            // 更新 自动投资临时表
+            // 更新 自动出借临时表
             boolean updResult = updateBorrowTmp(hjhAccede.getAccedeOrderId(), credit.getCreditNid(), bankResult);
             if (!updResult) {
-                logger.error("更新自动投资临时表失败 idKey=" + idKey);
+                logger.error("更新自动出借临时表失败 idKey=" + idKey);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -744,7 +744,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
     }
 
     /**
-     * 插入 自动投资临时表
+     * 插入 自动出借临时表
      *
      * @param borrow
      * @param hjhAccede
@@ -765,7 +765,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
         record.setAlreadyInvest(hjhAccede.getAlreadyInvest());
         record.setAccount(ketouplanAmoust);
         if (borrowFlag.equals(RedisConstants.HJH_BORROW_CREDIT)) {
-            // 汇计划自动投资债转
+            // 汇计划自动出借债转
             record.setInstCode(credit.getInstCode());
             record.setBorrowNid(credit.getCreditNid());//债转编号
             record.setBorrowAccount(credit.getCreditCapital());//债转总本金
@@ -775,7 +775,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
             record.setSellUserId(credit.getUserId());
             record.setSellOrderId(credit.getSellOrderId());
         } else {
-            // 汇计划自动投资原始标的
+            // 汇计划自动出借原始标的
             record.setInstCode(borrow.getInstCode());
             record.setBorrowNid(borrow.getBorrowNid());
             record.setBorrowAccount(borrow.getAccount());
@@ -804,7 +804,7 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
     }
 
     /**
-     * 更新 自动投资临时表
+     * 更新 自动出借临时表
      *
      * @param accedeOrderId
      * @param borrowNid

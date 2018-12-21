@@ -1,6 +1,5 @@
 package com.hyjf.am.trade.controller.batch;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.trade.account.AccountWithdrawResponse;
 import com.hyjf.am.resquest.trade.*;
@@ -128,7 +127,7 @@ public class BankExceptionController extends BaseController {
     }
 
     /**
-     * 同步回调收到后,根据logOrderId检索投资记录表
+     * 同步回调收到后,根据logOrderId检索出借记录表
      * @param logOrderId
      * @return
      */
@@ -205,7 +204,7 @@ public class BankExceptionController extends BaseController {
     }
 
     /**
-     * 查询出投资表authcode为空的记录
+     * 查询出出借表authcode为空的记录
      * @return
      */
     @GetMapping("/queryAuthCodeBorrowTenderList")
@@ -220,7 +219,7 @@ public class BankExceptionController extends BaseController {
 
 
     /**
-     * 处理投资掉单
+     * 处理出借掉单
      * add by jijun 20180623
      */
     @PostMapping("/updateAuthCode")
@@ -279,7 +278,7 @@ public class BankExceptionController extends BaseController {
     }
 
     /**
-     * 查询前一天的投资临时数据并进行处理
+     * 查询前一天的出借临时数据并进行处理
      * @return
      */
     @GetMapping("/getBorrowTenderTmpsForTenderCancel")
@@ -293,7 +292,7 @@ public class BankExceptionController extends BaseController {
     }
 
     /**
-     * 投资撤销历史数据处理
+     * 出借撤销历史数据处理
      * @param request
      * @return
      */

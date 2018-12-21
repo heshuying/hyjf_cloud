@@ -73,20 +73,18 @@
         </if>
         <if test="startDate != null and startDate != ''">
 
-            AND FROM_UNIXTIME(l.create_time, '%Y-%m-%d %H:%i:%S') &gt;= STR_TO_DATE(CONCAT(#{startDate},'00:00:00'
-            ),'%Y-%m-%d %H:%i:%s')
+            AND l.create_time &gt;= STR_TO_DATE(CONCAT(#{startDate},'00:00:00'),'%Y-%m-%d %H:%i:%s')
         </if>
         <if test="endDate != null and endDate != ''">
 
-            AND FROM_UNIXTIME(l.create_time, '%Y-%m-%d %H:%i:%S') &lt;= STR_TO_DATE(CONCAT(#{endDate},'23:59:59'
-            ),'%Y-%m-%d %H:%i:%s')
+            AND l.create_time &lt;= STR_TO_DATE(CONCAT(#{endDate},'23:59:59'),'%Y-%m-%d %H:%i:%s')
         </if>
     </sql>
 
     <select id="queryApiAccountDetails" resultMap="AccountDetailMapResult" parameterType="com.hyjf.am.trade.dao.mapper.customize.ApiTransactionDetailsCustomizeMapper">
         SELECT
         u.username,
-        u2.username AS 'referrer_name',
+        u.username AS 'referrer_name',
         l.nid,
         CASE l.type
         WHEN 1 THEN
@@ -105,10 +103,7 @@
         IFNULL(l.plan_balance, 0) AS planBalance,
         IFNULL(l.plan_frost, 0) AS planFrost,
         l.remark,
-        FROM_UNIXTIME(
         l.create_time,
-        '%Y-%m-%d %H:%i:%S'
-        ) AS 'create_time',
         l.account_id,
         l.is_bank,
         l.seq_no,

@@ -5,7 +5,9 @@ package com.hyjf.admin.controller.content;
 
 import com.hyjf.admin.beans.request.EventRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.EventService;
 import com.hyjf.am.bean.commonimage.BorrowCommonImage;
 import com.hyjf.am.response.Response;
@@ -44,11 +46,15 @@ public class EventController extends BaseController {
 	@Value("${file.upload.temp.path}")
 	private String temppath;
 
+	/** 权限关键字 */
+	public static final String PERMISSIONS = "contentevents";
+
 	@Autowired
 	private EventService eventService;
 
 	@ApiOperation(value = "公司管理-公司记事条件列表查询", notes = "公司管理-公司记事条件列表查询")
 	@PostMapping("/searchaction")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult searchAction(@RequestBody EventRequestBean requestBean) {
 		EventResponse response = eventService.searchAction(requestBean);
 		if (response == null) {
@@ -62,6 +68,7 @@ public class EventController extends BaseController {
 
 	@ApiOperation(value = "添加公司管理-公司记事", notes = "添加公司管理-公司记事")
 	@PostMapping("/insert")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD)
 	public AdminResult add(@RequestBody EventRequestBean requestBean, HttpServletRequest request) {
 		AdminSystemVO adminUser = getUser(request);
 		requestBean.setAddAdmin(adminUser.getUsername());
@@ -74,6 +81,7 @@ public class EventController extends BaseController {
 
 	@ApiOperation(value = "修改公司管理-公司记事", notes = "修改公司管理-公司记事")
 	@PostMapping("/update")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult update(@RequestBody EventRequestBean requestBean) {
 		int num = eventService.updateAction(requestBean);
 		if (num <= 0) {
@@ -84,6 +92,7 @@ public class EventController extends BaseController {
 
 	@ApiOperation(value = "修改公司管理-公司记事", notes = "修改公司管理-公司记事")
 	@PostMapping("/updatestatus")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult updatestatus(@RequestBody EventRequestBean requestBean) {
 		int num = eventService.updateStatus(requestBean);
 		if (num <= 0) {
@@ -94,6 +103,7 @@ public class EventController extends BaseController {
 
 	@ApiOperation(value = "删除公司管理-公司记事", notes = "删除公司管理-公司记事")
 	@GetMapping("/delete/{id}")
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE)
 	public AdminResult updatestatus(@PathVariable Integer id) {
 		int num = eventService.deleteById(id);
 		if (num <= 0) {
@@ -104,6 +114,7 @@ public class EventController extends BaseController {
 
 	@ApiOperation(value = "公司管理-公司记事初始化", notes = "公司管理-公司记事初始化")
 	@PostMapping("/select_by_id")
+	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
 	public AdminResult selectById(@RequestBody EventRequestBean requestBean) {
 		EventVO vo = eventService.selectById(requestBean);
 		return new AdminResult(vo);
@@ -118,6 +129,7 @@ public class EventController extends BaseController {
 	 */
 	@ApiOperation(value = "资料上传", notes = "资料上传")
 	@PostMapping("/uploadFile")
+	@AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD, ShiroConstants.PERMISSION_MODIFY})
 	public AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest)request;
 		String fileDomainUrl = UploadFileUtils.getDoPath(url);

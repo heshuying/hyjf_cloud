@@ -209,41 +209,25 @@ public class PcChannelStatisticsJobServiceImpl extends BaseServiceImpl implement
     @Override
     public int selectPcChannelReconciliationCount(ChannelReconciliationRequest request) {
         request.setCurrPage(0);
-        List<ChannelReconciliationVO> list = selectPcChannelReconciliationRecord(request);
-        if (!CollectionUtils.isEmpty(list)) {
-            return list.size();
-        }
-        return 0;
+        return pcChannelStatisticsJobCustomizeMapper.selectPcChannelReconciliationRecordCount(request);
     }
 
     @Override
     public int selectPcChannelReconciliationHjhCount(ChannelReconciliationRequest request) {
         request.setCurrPage(0);
-        List<ChannelReconciliationVO> list = selectPcChannelReconciliationRecordHjh(request);
-        if (!CollectionUtils.isEmpty(list)) {
-            return list.size();
-        }
-        return 0;
+        return pcChannelStatisticsJobCustomizeMapper.selectPcChannelReconciliationRecordHjhCount(request);
     }
 
     @Override
     public int selectAppChannelReconciliationCount(ChannelReconciliationRequest request) {
         request.setCurrPage(0);
-        List<ChannelReconciliationVO> list = selectAppChannelReconciliationRecord(request);
-        if (!CollectionUtils.isEmpty(list)) {
-            return list.size();
-        }
-        return 0;
+        return pcChannelStatisticsJobCustomizeMapper.selectAppChannelReconciliationRecordCount(request);
     }
 
     @Override
     public int selectAppChannelReconciliationHjhCount(ChannelReconciliationRequest request) {
         request.setCurrPage(0);
-        List<ChannelReconciliationVO> list = selectAppChannelReconciliationRecordHjh(request);
-        if (!CollectionUtils.isEmpty(list)) {
-            return list.size();
-        }
-        return 0;
+        return pcChannelStatisticsJobCustomizeMapper.selectAppChannelReconciliationRecordHjhCount(request);
     }
 
     @Override

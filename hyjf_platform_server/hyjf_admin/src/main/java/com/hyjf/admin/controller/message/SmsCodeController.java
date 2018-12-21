@@ -4,13 +4,12 @@
 package com.hyjf.admin.controller.message;
 
 import cn.emay.sdk.client.api.Client;
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.SmsLogRequestBean;
 import com.hyjf.admin.common.util.SmsUtil;
 import com.hyjf.admin.controller.BaseController;
-import com.hyjf.admin.mq.SmsProducer;
+import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.SmsCodeService;
 import com.hyjf.am.vo.admin.SmsCodeCustomizeVO;
@@ -50,7 +49,7 @@ public class SmsCodeController extends BaseController {
     @Autowired
     private SmsCodeService smsCodeService;
     @Autowired
-    private SmsProducer smsProducer;
+    private CommonProducer commonProducer;
 
     @ApiOperation(value = "筛选用户", notes = "筛选用户")
     @PostMapping("/query_user")
@@ -225,8 +224,8 @@ public class SmsCodeController extends BaseController {
                         try {
                             SmsMessage smsMessage = new SmsMessage(null, null, phones, send_message,
                                     MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType);
-                            smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
-                                    JSON.toJSONBytes(smsMessage)));
+                            commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
+                                    smsMessage));
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
@@ -247,8 +246,8 @@ public class SmsCodeController extends BaseController {
                         }
                         SmsMessage smsMessage = new SmsMessage(null, null, mbl, send_message,
                                 MessageConstant.SMS_SEND_FOR_USERS_NO_TPL, null, null, channelType);
-                        smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
-                                JSON.toJSONBytes(smsMessage)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
+                                smsMessage));
                     }
                 } catch (Exception e) {
                     e.printStackTrace();

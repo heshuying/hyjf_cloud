@@ -32,12 +32,8 @@ import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ResultEnum;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.AccountProducer;
-import com.hyjf.cs.user.mq.producer.AppChannelStatisticsDetailProducer;
-import com.hyjf.cs.user.mq.producer.CouponProducer;
-import com.hyjf.cs.user.mq.producer.SmsProducer;
-import com.hyjf.cs.user.mq.producer.sensorsdate.register.SensorsDataRegisterProducer;
 import com.hyjf.cs.user.result.UserRegistResult;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.service.register.RegisterService;
@@ -70,21 +66,11 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
     @Autowired
     private AmUserClient amUserClient;
     @Autowired
-    private AccountProducer accountProducer;
-    @Autowired
-    private CouponProducer couponProducer;
-    @Autowired
-    private SmsProducer smsProducer;
-    @Autowired
     private SystemConfig systemConfig;
     @Autowired
     private AmMarketClient amMarketClient;
-
     @Autowired
-    private AppChannelStatisticsDetailProducer appChannelStatisticsProducer;
-
-    @Autowired
-    private SensorsDataRegisterProducer sensorsDataRegisterProducer;
+    private CommonProducer commonProducer;
 
     /**
      * api注册参数校验
@@ -259,6 +245,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
      * @param utmId
      * @param platform
      * @param ip
+     * @param userType 0:普通用户;1:企业用户;
      * @return
      * @throws ReturnMessageException
      */
@@ -276,9 +263,9 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
           @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30"),
           // 超时时间
           @HystrixProperty(name = "fallback.isolation.semaphore.maxConcurrentRequests", value = "50")})
-    public WebViewUserVO register(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, String ip)
+    public WebViewUserVO register(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, String ip, Integer userType)
             throws ReturnMessageException {
-        RegisterUserRequest registerUserRequest = new RegisterUserRequest(mobile, verificationCode, password, reffer, instCode, utmId, platform);
+        RegisterUserRequest registerUserRequest = new RegisterUserRequest(mobile, verificationCode, password, reffer, instCode, utmId, platform, userType);
         registerUserRequest.setLoginIp(ip);
 
         //add by libin 用户注册时通过ip获得用户所在的省，市 start
@@ -679,8 +666,8 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                     params.put("registerTime",new Date());
                     params.put("cumulativeInvest",BigDecimal.ZERO);
                     try {
-                        appChannelStatisticsProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
-                                MQConstant.APP_CHANNEL_STATISTICS_DETAIL_SAVE_TAG, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
+                                MQConstant.APP_CHANNEL_STATISTICS_DETAIL_SAVE_TAG, UUID.randomUUID().toString(), params));
                     } catch (MQException e) {
                         e.printStackTrace();
                         logger.error("app注册推广保存用户数据！！！");
@@ -696,7 +683,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
      */
     @Override
     public void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
-        this.sensorsDataRegisterProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_REGISTER_TOPIC,UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)),2);
+        this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_REGISTER_TOPIC,UUID.randomUUID().toString(), sensorsDataBean),2);
     }
 
     /**
@@ -744,7 +731,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
         account.setPlanRepayInterest(BigDecimal.ZERO);
         logger.info("注册插入account：{}", JSON.toJSONString(account));
         try {
-            accountProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(account)));
+            commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(), account));
         } catch (MQException e) {
             logger.error("注册成功推送account——mq失败.... user_id is :{}", userId);
             throw new RuntimeException("注册成功推送account——mq失败...");
@@ -765,8 +752,8 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             params.put("sendFlg", "11");
             String signValue = StringUtils.lowerCase(MD5.toMD5Code(systemConfig.couponAccesskey + String.valueOf(userId) + 11 + systemConfig.couponAccesskey));
             params.put("sign", signValue);
-            couponProducer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC,
-                    UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+            commonProducer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC,
+                    UUID.randomUUID().toString(), params));
         } catch (Exception e) {
             logger.error("注册发放888红包失败...", e);
         }
@@ -775,8 +762,8 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
                 MessageConstant.SMS_SEND_FOR_MOBILE, null, CustomConstants.PARAM_TPL_TZJ_188HB,
                 CustomConstants.CHANNEL_TYPE_NORMAL);
         try {
-            smsProducer.messageSend(
-                    new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+            commonProducer.messageSend(
+                    new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
         } catch (MQException e) {
             logger.error("短信发送失败...", e);
         }
@@ -810,7 +797,7 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             webViewUserVO.setChinapnrUsrcustid(chinapnr.getChinapnrUsrcustid());
         }
         if (null != userVO.getBankOpenAccount() && userVO.getBankOpenAccount() == 1) {
-            List<BankCardVO> bankCardVOList = amUserClient.getBankOpenAccountById(userVO.getUserId());
+            List<BankCardVO> bankCardVOList = amUserClient.getTiedCardForBank(userVO.getUserId());
             if (null != bankCardVOList && bankCardVOList.size() > 0) {
                 BankCardVO bankCardVO = bankCardVOList.get(0);
                 webViewUserVO.setBankOpenAccount(true);

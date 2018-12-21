@@ -1,6 +1,5 @@
 package com.hyjf.admin.controller.exception.transferexception;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.AdminTransferExceptionLogAPIRequest;
 import com.hyjf.admin.beans.vo.AdminTransferExceptionLogAPIVO;
@@ -10,7 +9,7 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.config.SystemConfig;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
-import com.hyjf.admin.mq.SmsProducer;
+import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.AdminTransferExceptionLogService;
 import com.hyjf.am.response.Response;
@@ -69,7 +68,7 @@ public class AdminTransferExceptionLogController extends BaseController {
      * 短信mq生产端
      */
     @Autowired
-    private SmsProducer smsProducer;
+    private CommonProducer commonProducer;
     /**
      * 引入配置文件
      */
@@ -179,7 +178,7 @@ public class AdminTransferExceptionLogController extends BaseController {
                 jsonObject.put("BorrowTenderCpnVO",borrowTender);
                 //网站收支明细记录
                 AccountWebListVO accountWebList = new AccountWebListVO();
-                // 投资者
+                // 出借者
                 Integer userId=borrowTender.getUserId();
                 UserInfoVO userInfo=transferLogService.getUserInfoByUserId(userId);
                 if (Validator.isNotNull(userInfo)) {
@@ -271,7 +270,7 @@ public class AdminTransferExceptionLogController extends BaseController {
 
         if (CollectionUtils.isNotEmpty(msgList)) {
             for (Map<String, String> msg : msgList) {
-                if (Validator.isNotNull(msg.get(USERID)) && NumberUtils.isNumber(msg.get(USERID)) && Validator.isNotNull(msg.get(VAL_AMOUNT))) {
+                if (Validator.isNotNull(msg.get(USERID)) && NumberUtils.isCreatable(msg.get(USERID)) && Validator.isNotNull(msg.get(VAL_AMOUNT))) {
                     UserVO users = transferLogService.getUserByUserId(Integer.valueOf(msg.get(USERID)));
                     if (users == null || Validator.isNull(users.getMobile()) || (users.getRecieveSms() != null && users.getRecieveSms() == 1)) {
                         return;
@@ -279,8 +278,8 @@ public class AdminTransferExceptionLogController extends BaseController {
                     SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(USERID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null,
                             CustomConstants.PARAM_TPL_COUPON_PROFIT, CustomConstants.CHANNEL_TYPE_NORMAL);
                     try {
-                        smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
-                                JSON.toJSONBytes(smsMessage)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
+                                smsMessage));
                     } catch (MQException e) {
                         e.printStackTrace();
                     }

@@ -31,6 +31,7 @@ import java.util.Map;
  * @version AccessFilter, v0.1 2018/4/25 16:40 渠道过滤器，包含app pc api-web wechat
  * 功能：url增加前缀，区分渠道（按照域名）; 必要参数检查(渠道特有)
  */
+@SuppressWarnings("unchecked")
 public class AccessFilter extends ZuulFilter {
     private static Logger logger = LoggerFactory.getLogger(AccessFilter.class);
 

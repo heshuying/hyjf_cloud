@@ -2,21 +2,35 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.hyjf.am.trade.dao.mapper.customize.PoundageDetailCustomizeMapper">
 
-    <insert id="insertTimerPoundageDetailList">
-		insert into ht_poundage_detail (nid,borrow_nid,borrow_type,create_time,usernname,invite_region_name,source,amount,invite_user_id,ledger_id,ledger_time,poundage_type)
-			(SELECT
-						bt.nid,
-						bt.borrow_nid,
+	<resultMap id="poundageDetailList" type="com.hyjf.am.trade.dao.model.customize.TimerPoundageDetailListCustomize">
+		<result column="nid" property="nid" jdbcType="VARCHAR" />
+		<result column="borrow_nid" property="borrowNid" jdbcType="VARCHAR" />
+		<result column="borrowType" property="borrowType" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="usernname" property="usernname" jdbcType="VARCHAR" />
+		<result column="invite_region_name" property="inviteRegionName" jdbcType="VARCHAR" />
+		<result column="source" property="source" jdbcType="VARCHAR" />
+		<result column="amount" property="amount" jdbcType="DECIMAL" />
+		<result column="inviteUserId" property="inviteUserId" jdbcType="INTEGER" />
+		<result column="ledger_id" property="ledgerId" jdbcType="INTEGER" />
+		<result column="ledger_time" property="ledgerTime" jdbcType="INTEGER" />
+		<result column="poundage_type" property="poundageType" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectTimerPoundageDetailList" resultMap="poundageDetailList">
+				(SELECT
+						bt.nid as nid,
+						bt.borrow_nid as borrow_nid,
 						bpt.borrow_name as borrowType,
-						br.create_time,
-						hu.username,
-						bt.invite_region_name as inviteRegionName,
+						br.create_time as create_time,
+						hu.username as usernname,
+						bt.invite_region_name as invite_region_name,
 						'服务费' AS source,
 						truncate(bt.loan_fee * oatp.service_ratio,2) AS amount,
 						bt.invite_user_id as inviteUserId,
-						oatp.id as ledgerId,
-						UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)) as ledgerTime,
-						'投资人分账'
+						oatp.id as ledger_id,
+						UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)) as ledger_time,
+						'投资人分账' as poundage_type
 					FROM
 						ht_borrow_tender bt
 					INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
@@ -46,18 +60,18 @@
 					union all
 
 					 (SELECT
-							bt.nid,
-							bt.borrow_nid,
-							bpt.borrow_name,
-							br.recover_yestime,
-							hu.username,
-							br.invite_region_name,
-							'管理费' AS serviceName,
-							truncate(br.recover_fee * oatp.manage_ratio,2) AS service_price,
-							if(bt.invite_user_id =0,bt.user_id,bt.invite_user_id),
-							oatp.id,
-							UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)),
-							'投资人分账'
+							bt.nid as nid,
+							bt.borrow_nid as borrow_nid,
+							bpt.borrow_name as borrowType,
+							br.recover_yestime as create_time,
+							hu.username as usernname,
+							br.invite_region_name as invite_region_name,
+							'管理费' AS source,
+							truncate(br.recover_fee * oatp.manage_ratio,2) AS amount,
+							if(bt.invite_user_id =0,bt.user_id,bt.invite_user_id) as inviteUserId,
+							oatp.id as ledger_id,
+							UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)) as ledger_time,
+							'投资人分账' as poundage_type
 						FROM
 							ht_borrow AS b
 						INNER JOIN ht_borrow_tender  AS bt ON bt.borrow_nid = b.borrow_nid
@@ -83,18 +97,18 @@
 					union all
 
 					(SELECT
-								ct.assign_nid,
-								ct.bid_nid,
-								bpt.borrow_name,
-								ct.create_time,
-								hu.username,
-								ct.invite_user_regionname,
-								'债转服务费' AS serviceName,
-								truncate(ct.credit_fee * oatp.credit_ratio,2) AS credit_fee,
-								hui.user_id,
-								oatp.id,
-								UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)),
-								'投资人分账'
+								ct.assign_nid as nid,
+								ct.bid_nid as borrow_nid,
+								bpt.borrow_name as borrowType,
+								ct.create_time as create_time,
+								hu.username as usernname,
+								ct.invite_user_regionname as invite_region_name,
+								'债转服务费' AS source,
+								truncate(ct.credit_fee * oatp.credit_ratio,2) AS amount,
+								hui.user_id as inviteUserId,
+								oatp.id as ledger_id,
+								UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)) as ledger_time,
+								'投资人分账' as poundage_type
 							FROM
 								ht_credit_tender ct
 							LEFT JOIN ht_borrow b ON b.borrow_nid = ct.bid_nid
@@ -117,18 +131,18 @@
 					union all
 
 					(SELECT
-									hcr.assign_nid,
-									hcr.bid_nid,
-									bpt.borrow_name,
-									hcr.assign_repay_yes_time,
-									hu.username,
-									ct.invite_user_regionname,
-									'管理费' AS serviceName,
-									truncate(hcr.manage_fee  * oatp.manage_ratio,2) AS credit_fee,
-									hui.user_id,
-									oatp.id,
-									UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)),
-									'投资人分账'
+									hcr.assign_nid as nid,
+									hcr.bid_nid as borrow_nid,
+									bpt.borrow_name as borrowType,
+									hcr.assign_repay_yes_time as create_time,
+									hu.username as usernname,
+									ct.invite_user_regionname as invite_region_name,
+									'管理费' AS source,
+									truncate(hcr.manage_fee  * oatp.manage_ratio,2) AS amount,
+									hui.user_id as inviteUserId,
+									oatp.id as ledger_id,
+									UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)) as ledger_time,
+									'投资人分账' as poundage_type
 								FROM
 									ht_credit_repay hcr
 								LEFT JOIN ht_credit_tender ct ON ct.credit_nid = hcr.credit_nid and ct.user_id = hcr.user_id
@@ -150,20 +164,20 @@
 								AND ct.invite_user_regionname != ''
 								AND (oatp.project_type = 0 or FIND_IN_SET(bpt.id,oatp.project_type))
 								AND b.borrow_style not in ('principal','month','endmonth'))
-			union ALL
-			(SELECT
-						'--',
-						bt.borrow_nid,
+				  union ALL
+					(SELECT
+						'--' as nid,
+						bt.borrow_nid as borrow_nid,
 						bpt.borrow_name as borrowType,
-						br.create_time,
-						'--',
-						'--',
+						br.create_time as create_time,
+						'--' as usernname,
+						'--' as invite_region_name,
 						'服务费' AS source,
 						truncate(sum(bt.loan_fee) * oatp.service_ratio,2) AS amount,
-						0,
-						oatp.id as ledgerId,
-						UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)) as ledgerTime,
-						'借款人分账'
+						0 as inviteUserId,
+						oatp.id as ledger_id,
+						UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)) as ledger_time,
+						'借款人分账' as poundage_type
 					FROM
 						ht_borrow_tender bt
 					INNER JOIN ht_borrow b ON bt.borrow_nid = b.borrow_nid
@@ -190,22 +204,22 @@
 					AND bt.invite_department_id IS NOT NULL
 					AND bt.invite_department_id > 0
 					AND (oatp.project_type = 0 or FIND_IN_SET(bpt.id,oatp.project_type))
-			group by bt.borrow_nid,oatp.id)
+				  group by bt.borrow_nid,oatp.id)
 			union all
 
-			(SELECT
-							'--',
-							br.borrow_nid,
-							bpt.borrow_name,
-							br.recover_yestime,
-							'--',
-							'--',
-							'管理费' AS serviceName,
-							truncate(sum(br.recover_fee) * oatp.manage_ratio,2) AS service_price,
-							0,
-							oatp.id,
-							UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)),
-							'借款人分账'
+					(SELECT
+							'--' as nid,
+							br.borrow_nid as borrow_nid,
+							bpt.borrow_name as borrowType,
+							br.recover_yestime as create_time,
+							'--' as usernname,
+							'--' as invite_region_name,
+							'管理费' AS source,
+							truncate(sum(br.recover_fee) * oatp.manage_ratio,2) AS amount,
+							0 as inviteUserId,
+							oatp.id as ledger_id,
+							UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)) as ledger_time,
+							'借款人分账' as poundage_type
 						FROM
 							ht_borrow AS b
 						INNER JOIN ht_borrow_recover AS br ON br.borrow_nid = b.borrow_nid
@@ -225,22 +239,22 @@
 						AND br.invite_department_id > 0
 						AND (oatp.project_type = 0 or FIND_IN_SET(bpt.id,oatp.project_type))
 						AND b.borrow_style not in ('principal','month','endmonth')
-			group by br.borrow_nid,oatp.id)
+					group by br.borrow_nid,oatp.id)
 
-union all
-	  (SELECT
-							bt.nid,
-							bt.borrow_nid,
-							bpt.borrow_name,
-							br.recover_yestime,
-							hu.username,
-							bt.invite_region_name,
-							'管理费' AS serviceName,
-							truncate((br.recover_fee_yes-br.credit_manage_fee) * oatp.manage_ratio,2) AS service_price,
-							if(bt.invite_user_id =0,bt.user_id,bt.invite_user_id),
-							oatp.id,
-							UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)),
-							'投资人分账'
+				union all
+	  				(SELECT
+							bt.nid as nid,
+							bt.borrow_nid as borrow_nid,
+							bpt.borrow_name as borrowType,
+							br.recover_yestime as create_time,
+							hu.username as usernname,
+							bt.invite_region_name as invite_region_name,
+							'管理费' AS source,
+							truncate((br.recover_fee_yes-br.credit_manage_fee) * oatp.manage_ratio,2) AS amount,
+							if(bt.invite_user_id =0,bt.user_id,bt.invite_user_id) as inviteUserId,
+							oatp.id as ledger_id,
+							UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)) as ledger_time,
+							'投资人分账' as poundage_type
 						FROM
 							ht_borrow AS b
 						INNER JOIN ht_borrow_info bi ON bi.borrow_nid = b.borrow_nid
@@ -261,20 +275,20 @@ union all
 						AND bt.invite_department_id > 0
 						AND (oatp.project_type = 0 or FIND_IN_SET(bpt.id,oatp.project_type)))
 
-UNION ALL
+				UNION ALL
 					(SELECT
-									hcr.assign_nid,
-									hcr.bid_nid,
-									bpt.borrow_name,
-									hcr.assign_repay_yes_time,
-									hu.username,
-									ct.invite_user_regionname,
-									'管理费' AS serviceName,
-									truncate(hcr.manage_fee  * oatp.manage_ratio,2) AS credit_fee,
-									if(hu1.user_id =0,ct.user_id,hu1.user_id),
-									oatp.id,
-									UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)),
-									'投资人分账'
+									hcr.assign_nid as nid,
+									hcr.bid_nid as borrow_nid,
+									bpt.borrow_name as borrowType,
+									hcr.assign_repay_yes_time as create_time,
+									hu.username as usernname,
+									ct.invite_user_regionname as invite_region_name,
+									'管理费' AS source,
+									truncate(hcr.manage_fee  * oatp.manage_ratio,2) AS amount,
+									if(hu1.user_id =0,ct.user_id,hu1.user_id) as inviteUserId,
+									oatp.id as ledger_id,
+									UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)) as ledger_time,
+									'投资人分账' as poundage_type
 								FROM
 									ht_credit_repay hcr
 								LEFT JOIN ht_credit_tender ct on ct.assign_nid = hcr.assign_nid and ct.user_id = hcr.user_id
@@ -296,21 +310,21 @@ UNION ALL
 								AND ct.invite_user_regionname != ''
 								AND (oatp.project_type = 0 or FIND_IN_SET(bpt.id,oatp.project_type)))
 
-union  all
+				  union  all
 
 					(SELECT
-							'--',
-							br.borrow_nid,
-							bpt.borrow_name,
-							br.recover_yestime,
-							'--',
-							'--',
-							'管理费' AS serviceName,
-							truncate(sum(br.recover_fee_yes) * oatp.manage_ratio,2) AS service_price,
-							0,
-							oatp.id,
-							UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)),
-							'借款人分账'
+							'--' as nid,
+							br.borrow_nid as borrow_nid,
+							bpt.borrow_name as borrowType,
+							br.recover_yestime as create_time,
+							'--' as usernname,
+							'--' as invite_region_name,
+							'管理费' AS source,
+							truncate(sum(br.recover_fee_yes) * oatp.manage_ratio,2) AS amount,
+							0 as inviteUserId,
+							oatp.id as ledger_id,
+							UNIX_TIMESTAMP(date_sub(curdate(),interval 1 day)) as ledger_time,
+							'借款人分账' as poundage_type
 						FROM
 							ht_borrow AS b
 						INNER JOIN ht_borrow_recover_plan AS br ON br.borrow_nid = b.borrow_nid
@@ -330,6 +344,27 @@ union  all
 						AND br.invite_department_id > 0
 						AND (oatp.project_type = 0 or FIND_IN_SET(bpt.id,oatp.project_type))
 			group by br.borrow_nid,oatp.id)
+	</select>
+
+    <insert id="insertTimerPoundageDetailList" parameterType="java.util.List">
+		insert into ht_poundage_detail (nid,borrow_nid,borrow_type,create_time,usernname,invite_region_name,source,amount,invite_user_id,ledger_id,ledger_time,poundage_type)
+		values
+		<foreach collection="list" item="item" index="index" separator=",">
+			(
+			#{item.nid},
+			#{item.borrowNid},
+			#{item.borrowType},
+			#{item.createTime},
+			#{item.usernname},
+			#{item.inviteRegionName},
+			#{item.source},
+			#{item.amount},
+			#{item.inviteUserId},
+			#{item.ledgerId},
+			#{item.ledgerTime},
+			#{item.poundageType}
+			)
+		</foreach>
     </insert>
 
     <insert id="insertTimerPoundageList">

@@ -3,17 +3,30 @@
  */
 package com.hyjf.cs.user.controller.web.safe;
 
-import java.util.*;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.user.UserNoticeSetRequest;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserOperationLogConstant;
+import com.hyjf.common.enums.MsgEnum;
+import com.hyjf.common.exception.CheckException;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetCilentIP;
+import com.hyjf.common.validator.CheckUtil;
+import com.hyjf.cs.common.bean.result.ApiResult;
+import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
+import com.hyjf.cs.user.result.ContractSetResultBean;
+import com.hyjf.cs.user.service.safe.SafeService;
+import com.hyjf.cs.user.vo.BindEmailVO;
+import com.hyjf.cs.user.vo.UserNoticeSetVO;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,25 +34,9 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.user.UserNoticeSetRequest;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.exception.CheckException;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.validator.CheckUtil;
-import com.hyjf.cs.common.bean.result.ApiResult;
-import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.user.controller.BaseUserController;
-import com.hyjf.cs.user.result.ContractSetResultBean;
-import com.hyjf.cs.user.service.safe.SafeService;
-import com.hyjf.cs.user.vo.BindEmailVO;
-import com.hyjf.cs.user.vo.UserNoticeSetVO;
-
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiOperation;
+import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
+import java.util.*;
 
 /**
  * @author zhangqingqing
@@ -57,7 +54,7 @@ public class WebSafeController extends BaseUserController {
     @Autowired
     private SafeService safeService;
     @Autowired
-    UserOperationLogProducer userOperationLogProducer;
+    private CommonProducer commonProducer;
 
     /**
      * 账户设置查询
@@ -71,11 +68,13 @@ public class WebSafeController extends BaseUserController {
         logger.info("web端-账户设置查询, param is :{}",userId);
         WebResult<Object> response = new WebResult<>();
         UserVO user = safeService.getUsersById(userId);
+        CheckUtil.check(user!=null,MsgEnum.STATUS_ZT000001);
         Map<String, Object> result = safeService.safeInit(user);
         if (null == result) {
             response.setStatus(ApiResult.FAIL);
             response.setStatusDesc("账户设置查询失败");
         }
+        logger.info("账户设置查询 is {}"+result);
         response.setData(result);
         return response;
     }
@@ -161,7 +160,7 @@ public class WebSafeController extends BaseUserController {
         userOperationLogEntity.setUserName(webUser.getUsername());
         userOperationLogEntity.setUserRole(webUser.getRoleId());
         try {
-            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+            commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(),  userOperationLogEntity));
         } catch (MQException e) {
             logger.error("保存用户日志失败", e);
         }

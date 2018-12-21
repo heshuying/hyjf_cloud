@@ -45,9 +45,9 @@ public class BankSettingController {
      */
     @RequestMapping("/list")
     public AdminBankSettingResponse selectBankSettingListByPage(@RequestBody AdminBankSettingRequest adminRequest) {
-        JxBankConfig bc = new JxBankConfig();
         Integer totalCount = 0;
         List<JxBankConfig> recordList = null;
+        JxBankConfig bc = new JxBankConfig();
         bc.setBankName(adminRequest.getBankName());
         bc.setPayAllianceCode(adminRequest.getPayAllianceCode());
         AdminBankSettingResponse response = new AdminBankSettingResponse();
@@ -63,7 +63,7 @@ public class BankSettingController {
         }
 
         response.setRecordTotal(totalCount);
-        Paginator paginator = new Paginator(adminRequest.getCurrPage(), recordList.size(), adminRequest.getPageSize() == 0 ? 10 : adminRequest.getPageSize());
+        Paginator paginator = new Paginator(adminRequest.getCurrPage(), totalCount, adminRequest.getPageSize() == 0 ? 10 : adminRequest.getPageSize());
 
         try {
             // 数据查询

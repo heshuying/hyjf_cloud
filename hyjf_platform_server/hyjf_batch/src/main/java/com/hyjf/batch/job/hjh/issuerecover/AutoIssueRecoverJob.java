@@ -20,7 +20,7 @@ public class AutoIssueRecoverJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         logger.info("AutoIssueRecoverJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhautoissuerecover/autoissuerecover", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/hjhautoissuerecover/autoissuerecover", String.class);
         logger.info("AutoIssueRecoverJob execute end...");
     }
 }

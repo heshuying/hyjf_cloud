@@ -97,11 +97,20 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
-				<!-- <configuration> <excludes> <exclude>**/application.yml</exclude> 
-					<exclude>**/bootstrap.yml</exclude> </excludes> </configuration> -->
 			</plugin>
 		</plugins>
+
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<includes>
+					<include>**/**.*</include>
+				</includes>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 	</build>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>

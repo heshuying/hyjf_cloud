@@ -18,7 +18,6 @@ import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.controller.web.login.WebLoginController;
-import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.result.BaseResultBeanFrontEnd;
 import com.hyjf.cs.user.service.bindcard.BindCardService;
 import com.hyjf.cs.user.service.login.LoginService;
@@ -63,8 +62,6 @@ public class WrbUserBindController extends BaseUserController {
 	private UserRegisterService userRegisterService;
 	@Autowired
 	BindCardService bindCardService;
-    @Autowired
-    private UserOperationLogProducer userOperationLogProducer;
 
 	@Value("${hyjf.front.wei.host}")
 	public String wechatHost;
@@ -131,7 +128,7 @@ public class WrbUserBindController extends BaseUserController {
 						accountId = account.getAccount();
 					}
 					String loginsign = SecretUtil.createToken(userid, users.getUsername(), accountId);
-					//登录成功之后风车理财的特殊标记，供后续投资使用
+					//登录成功之后风车理财的特殊标记，供后续出借使用
 					CookieUtils.addCookie(request, response, CustomConstants.TENDER_FROM_TAG,
 							CustomConstants.WRB_CHANNEL_CODE);
 					RedisUtils.del("loginFrom"+userid);
@@ -277,7 +274,7 @@ public class WrbUserBindController extends BaseUserController {
             return jsonObj;
         }
         String sign = baseResultBean.getSign();
-        //登录成功之后风车理财的特殊标记，供后续投资使用
+        //登录成功之后风车理财的特殊标记，供后续出借使用
         CookieUtils.addCookie(request, response, CustomConstants.TENDER_FROM_TAG,
                 CustomConstants.WRB_CHANNEL_CODE);
         // 授权
@@ -368,7 +365,7 @@ public class WrbUserBindController extends BaseUserController {
             result.setEnum(ResultEnum.SUCCESS);
             result.setSign(sign);
             if (StringUtils.isNotBlank(env)) {
-                //登录成功之后风车理财的特殊标记，供后续投资使用
+                //登录成功之后风车理财的特殊标记，供后续出借使用
                 RedisUtils.del("loginFrom" + userVO.getUserId());
                 RedisUtils.set("loginFrom" + userVO.getUserId(), env, 1800);
             }

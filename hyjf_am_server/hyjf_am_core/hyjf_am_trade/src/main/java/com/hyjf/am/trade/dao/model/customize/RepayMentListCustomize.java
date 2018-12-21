@@ -25,9 +25,9 @@ public class RepayMentListCustomize implements Serializable {
 	private String borrowApr;
 	/**用户id*/
 	private String tenUserId;
-	/**投资订单号*/
+	/**出借订单号*/
 	private String nid;
-	/**投资金额*/
+	/**出借金额*/
 	private String account;
 	/**还款总额*/
 	private String recoverAccountAll;

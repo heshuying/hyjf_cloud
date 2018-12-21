@@ -51,7 +51,7 @@ public class ClientConstants implements Serializable {
 	public static final String CREDIT_AUTO_TYPE = "1";
 
 	/**
-	 * 用户授权自动投资
+	 * 用户授权自动出借
 	 */
 	public static final String INVES_AUTO_TYPE = "0";
 
@@ -67,7 +67,7 @@ public class ClientConstants implements Serializable {
 	public static final String CREDIT_URL_TYPE = "1";
 
 	/**
-	 * 自动投资URL_TYPE
+	 * 自动出借URL_TYPE
 	 */
 	public static final String INVES_URL_TYPE = "2";
 
@@ -162,9 +162,9 @@ public class ClientConstants implements Serializable {
 	/**2每月不确定日期支付*/
 	public static final String DEBT_INTTYPE_UNCERTAINDATE = "2";
 	
-	/**投资是否冻结 0不冻结*/
+	/**出借是否冻结 0不冻结*/
 	public static final String DEBT_FRZFLAG_UNFREEZE = "0";
-	/**投资是否冻结 1冻结 */
+	/**出借是否冻结 1冻结 */
 	public static final String DEBT_FRZFLAG_FREEZE = "1";
 	
 	/**批次交易种类 0所有交易*/
@@ -176,9 +176,9 @@ public class ClientConstants implements Serializable {
 	/**批次交易种类9合法性校验失败交易 */
 	public static final String DEBT_BATCH_TYPE_VERIFYFAIL = "9";
 	
-	/**投资人债权明细 0-所有债权*/
+	/**出借人债权明细 0-所有债权*/
 	public static final String ALL_INVESTOR_DEBT = "0";
-	/**投资人债权明细 1-有效债权（投标成功，且本息尚未返还完成） */
+	/**出借人债权明细 1-有效债权（投标成功，且本息尚未返还完成） */
 	public static final String EFFECTIVE_INVESTOR_DEBT = "1";
 	/** 受托人电子帐号 */
 	public static final String PARAM_RECEIPTACCOUNTID = "receiptAccountId";
@@ -207,7 +207,7 @@ public class ClientConstants implements Serializable {
     /**3.12.客户授权功能查询 */
     public static final String TXCODE_TERMS_AUTH_QUERY = "termsAuthQuery";
 	/**
-	 * 2.4.8.投资人自动债权转让签约增强
+	 * 2.4.8.出借人自动债权转让签约增强
 	 */
 	public static final String TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS = "autoCreditInvestAuthPlus";
 
@@ -222,7 +222,7 @@ public class ClientConstants implements Serializable {
 
 
 	/**
-	 * 2.4.4.投资人自动投标签约增强
+	 * 2.4.4.出借人自动投标签约增强
 	 */
 	public static final String TXCODE_AUTO_BID_AUTH_PLUS = "autoBidAuthPlus";
 
@@ -234,7 +234,7 @@ public class ClientConstants implements Serializable {
 	public static final String TXCODE_REPAY_AUTH_PAGE = "repayAuthPage";
 
 	/**
-	 * 投资人签约状态查询
+	 * 出借人签约状态查询
 	 */
 	public static final String TXCODE_CREDIT_AUTH_QUERY = "creditAuthQuery";
 
@@ -246,7 +246,7 @@ public class ClientConstants implements Serializable {
 
 
 	/**
-	 * 投资人投标申请查询
+	 * 出借人投标申请查询
 	 */
 	public static final String TXCODE_BID_APPLY_QUERY = "bidApplyQuery";
 

@@ -123,10 +123,10 @@
 		id = #{id,jdbcType=INTEGER}
 	</update>
 
-	<!--add 汇计划三期 计划订单投资笔数累加 liubin 20180515 start;
-	 add 汇计划三期 计划订单投资笔数累加 liubin 20180515 end;
-	 add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 start;-->
-	<!--add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end-->
+	<!--add 汇计划三期 计划订单出借笔数累加 liubin 20180515 start;
+	 add 汇计划三期 计划订单出借笔数累加 liubin 20180515 end;
+	 add 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 start;-->
+	<!--add 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 end-->
 	<update id="updateHjhAccedeForHjhProcess" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccede">
 		update ht_hjh_accede
 		<set>

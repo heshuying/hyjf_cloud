@@ -9,11 +9,7 @@ import com.hyjf.am.resquest.api.WrbInvestRequest;
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.WrbQueryCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
-import com.hyjf.am.trade.dao.model.customize.WrbBorrowListCustomize;
-import com.hyjf.am.trade.dao.model.customize.WrbBorrowTenderCustomize;
-import com.hyjf.am.trade.dao.model.customize.WrbInvestRecordCustomize;
-import com.hyjf.am.trade.dao.model.customize.WrbRecoverCustomize;
-import com.hyjf.am.trade.dao.model.customize.WrbBorrowTenderSumCustomize;
+import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.trade.service.api.wrb.WrbInfoService;
 import com.hyjf.am.vo.api.WrbDaySumCustomize;
 import com.hyjf.common.util.GetDate;
@@ -68,7 +64,7 @@ public class WrbInfoServiceImpl implements WrbInfoService {
             params.put("borrowNid", borrowNid);
         }else{
             params.put("projectType", "HZT");
-            params.put("status", 2);// 获取 投资中
+            params.put("status", 2);// 获取 出借中
         }
         List<WrbBorrowListCustomize> customizeList = wrbQueryCustomizeMapper.searchBorrowListByNid(params);
         for (WrbBorrowListCustomize wrbBorrowListCustomize : customizeList) {

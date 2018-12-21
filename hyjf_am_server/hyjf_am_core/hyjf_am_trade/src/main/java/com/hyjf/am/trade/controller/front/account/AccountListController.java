@@ -19,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -118,16 +119,16 @@ public class AccountListController extends BaseController {
      * @Author : huanghui
      */
     @RequestMapping(value = "/selectTransactionDetails", method = RequestMethod.POST)
-    public ApiTransactionDetailsCustomizeResponse selectTransactionDetails(ApiTransactionDetailsRequest detailsRequest){
+    public ApiTransactionDetailsCustomizeResponse selectTransactionDetails(@RequestBody ApiTransactionDetailsRequest detailsRequest){
         ApiTransactionDetailsCustomizeResponse response = new ApiTransactionDetailsCustomizeResponse();
-        List<ApiTransactionDetailsCustomize> transactionDetailsCustomizeList = this.accountListService.selectTransactionDetails(detailsRequest);
+        List<ApiTransactionDetailsCustomize> transactionDetailsCustomizeList = new ArrayList<>();
+
+        transactionDetailsCustomizeList = this.accountListService.selectTransactionDetails(detailsRequest);
 
         if (transactionDetailsCustomizeList != null) {
-            ApiTransactionDetailsCustomizeVO transactionDetailsCustomizeVO = new ApiTransactionDetailsCustomizeVO();
-            BeanUtils.copyProperties(transactionDetailsCustomizeList,transactionDetailsCustomizeVO);
-            response.setResult(transactionDetailsCustomizeVO);
+            List<ApiTransactionDetailsCustomizeVO> transactionDetailsCustomizeVO = CommonUtils.convertBeanList(transactionDetailsCustomizeList, ApiTransactionDetailsCustomizeVO.class);
+            response.setResultList(transactionDetailsCustomizeVO);
         }
         return response;
     }
-
 }

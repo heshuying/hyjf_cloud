@@ -2,8 +2,6 @@ package com.hyjf.am.user.dao.customize;
 
 import com.hyjf.am.trade.dao.mapper.auto.ROaDepartmentMapper;
 import com.hyjf.am.user.dao.auto.AutoMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserInfoMapper;
-import com.hyjf.am.user.dao.mapper.auto.UserMapper;
 import com.hyjf.am.user.dao.mapper.customize.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,10 +22,6 @@ public class CustomizeMapper extends AutoMapper {
 
     @Autowired
     protected UserAliasCustomizeMapper userAliasCustomizeMapper;
-    @Autowired
-    protected UserMapper userMapper;
-    @Autowired
-    protected UserInfoMapper userInfoMapper;
 
     @Autowired
     protected UserAdminBankAccountCheckCustomizeMapper userAdminBankAccountCheckCustomizeMapper;
@@ -58,7 +52,6 @@ public class CustomizeMapper extends AutoMapper {
 
     @Autowired
     protected ChannelCustomizeMapper channelCustomizeMapper;
-
 
     @Autowired
     protected EmployeeCustomizeMapper employeeCustomizeMapper;
@@ -107,6 +100,7 @@ public class CustomizeMapper extends AutoMapper {
 
     @Autowired
     protected AdminUserAuthCustomizeMapper adminUserAuthCustomizeMapper;
+
     @Autowired
     protected ROaDepartmentMapper rOaDepartmentMapper;
 

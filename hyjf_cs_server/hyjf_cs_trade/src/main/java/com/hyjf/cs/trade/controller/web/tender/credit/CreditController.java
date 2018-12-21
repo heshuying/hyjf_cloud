@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.trade.controller.web.tender.credit;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.MyCreditListQueryRequest;
 import com.hyjf.am.resquest.trade.MyCreditListRequest;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
@@ -19,8 +18,8 @@ import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.bean.CreditDetailsRequestBean;
 import com.hyjf.cs.trade.bean.TenderBorrowCreditCustomize;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.trade.service.consumer.NifaContractEssenceMessageService;
 import com.hyjf.cs.trade.service.credit.MyCreditListService;
 import io.swagger.annotations.Api;
@@ -39,7 +38,7 @@ import java.util.UUID;
  * @Author sss
  * @Date 2018/6/29 13:59
  */
-@Api(tags = "web端-债转投资")
+@Api(tags = "web端-债转出借")
 @RestController
 @RequestMapping("/hyjf-web/credit")
 public class CreditController {
@@ -50,7 +49,7 @@ public class CreditController {
     @Autowired
     NifaContractEssenceMessageService nifaContractEssenceMessageService;
     @Autowired
-    UserOperationLogProducer userOperationLogProducer;
+    private CommonProducer commonProducer;
     /**
      * 首页 > 账户中心 > 资产管理 > 我要转让列表
      * @param
@@ -77,7 +76,7 @@ public class CreditController {
         return result;
     }
 
-    @ApiOperation(value = "用户中心查询投资可债转详情", notes = "点击列表的转让按钮")
+    @ApiOperation(value = "用户中心查询出借可债转详情", notes = "点击列表的转让按钮")
     @PostMapping(value = "/tenderToCreditDetail", produces = "application/json; charset=utf-8")
     public WebResult tenderToCreditDetail(@RequestBody CreditDetailsRequestBean request,
                                     @RequestHeader(value = "userId",required = false) Integer userId){
@@ -85,7 +84,7 @@ public class CreditController {
         return result;
     }
 
-    @ApiOperation(value = "用户中心验证投资人当天是否可以债转 每天三次", notes = "用户中心验证投资人当天是否可以债转")
+    @ApiOperation(value = "用户中心验证出借人当天是否可以债转 每天三次", notes = "用户中心验证出借人当天是否可以债转")
     @PostMapping(value = "/tenderAbleToCredit", produces = "application/json; charset=utf-8")
     public WebResult tenderAbleToCredit(@RequestBody CreditDetailsRequestBean request,
                                           @RequestHeader(value = "userId",required = false) Integer userId){
@@ -130,7 +129,7 @@ public class CreditController {
         userOperationLogEntity.setUserName(userVO.getUsername());
         userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
         try {
-            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+            commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
         } catch (MQException e) {
             logger.error("保存用户日志失败", e);
         }

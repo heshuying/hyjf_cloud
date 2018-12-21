@@ -1,27 +1,14 @@
 package com.hyjf.am.user.service.front.user.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.google.common.base.Strings;
-import com.hyjf.am.resquest.user.*;
-import com.hyjf.am.user.dao.mapper.auto.LockedUserInfoMapper;
-import com.hyjf.am.user.dao.mapper.customize.QianleUserCustomizeMapper;
-import com.hyjf.am.user.dao.model.auto.*;
-import com.hyjf.am.user.dao.model.customize.UserDepartmentInfoCustomize;
-import com.hyjf.am.user.service.front.user.UserService;
-import com.hyjf.am.user.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
-import com.hyjf.am.vo.user.SpreadsUserVO;
-import com.hyjf.am.vo.user.UserDepartmentInfoCustomizeVO;
-import com.hyjf.am.vo.user.UserInfoVO;
-import com.hyjf.am.vo.user.UserVO;
-import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.CommonConstant;
-import com.hyjf.common.constants.UserConstant;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.*;
-import com.hyjf.common.validator.Validator;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
@@ -32,8 +19,83 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.text.SimpleDateFormat;
-import java.util.*;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.google.common.base.Strings;
+import com.hyjf.am.resquest.user.AnswerRequest;
+import com.hyjf.am.resquest.user.BankRequest;
+import com.hyjf.am.resquest.user.CertificateAuthorityRequest;
+import com.hyjf.am.resquest.user.LoanSubjectCertificateAuthorityRequest;
+import com.hyjf.am.resquest.user.RegisterUserRequest;
+import com.hyjf.am.resquest.user.UsersContractRequest;
+import com.hyjf.am.user.dao.mapper.auto.LockedUserInfoMapper;
+import com.hyjf.am.user.dao.mapper.customize.QianleUserCustomizeMapper;
+import com.hyjf.am.user.dao.model.auto.AccountChinapnr;
+import com.hyjf.am.user.dao.model.auto.AccountChinapnrExample;
+import com.hyjf.am.user.dao.model.auto.BankOpenAccount;
+import com.hyjf.am.user.dao.model.auto.BankOpenAccountExample;
+import com.hyjf.am.user.dao.model.auto.CertificateAuthority;
+import com.hyjf.am.user.dao.model.auto.CertificateAuthorityExample;
+import com.hyjf.am.user.dao.model.auto.CorpOpenAccountRecord;
+import com.hyjf.am.user.dao.model.auto.CorpOpenAccountRecordExample;
+import com.hyjf.am.user.dao.model.auto.Evalation;
+import com.hyjf.am.user.dao.model.auto.EvalationExample;
+import com.hyjf.am.user.dao.model.auto.HjhUserAuth;
+import com.hyjf.am.user.dao.model.auto.HjhUserAuthExample;
+import com.hyjf.am.user.dao.model.auto.HjhUserAuthLog;
+import com.hyjf.am.user.dao.model.auto.HjhUserAuthLogExample;
+import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthority;
+import com.hyjf.am.user.dao.model.auto.LoanSubjectCertificateAuthorityExample;
+import com.hyjf.am.user.dao.model.auto.LockedUserInfo;
+import com.hyjf.am.user.dao.model.auto.PreRegist;
+import com.hyjf.am.user.dao.model.auto.PreRegistExample;
+import com.hyjf.am.user.dao.model.auto.SpreadsUser;
+import com.hyjf.am.user.dao.model.auto.SpreadsUserExample;
+import com.hyjf.am.user.dao.model.auto.User;
+import com.hyjf.am.user.dao.model.auto.UserBindEmailLog;
+import com.hyjf.am.user.dao.model.auto.UserBindEmailLogExample;
+import com.hyjf.am.user.dao.model.auto.UserContact;
+import com.hyjf.am.user.dao.model.auto.UserEvalation;
+import com.hyjf.am.user.dao.model.auto.UserEvalationBehavior;
+import com.hyjf.am.user.dao.model.auto.UserEvalationExample;
+import com.hyjf.am.user.dao.model.auto.UserEvalationResult;
+import com.hyjf.am.user.dao.model.auto.UserEvalationResultExample;
+import com.hyjf.am.user.dao.model.auto.UserExample;
+import com.hyjf.am.user.dao.model.auto.UserInfo;
+import com.hyjf.am.user.dao.model.auto.UserLog;
+import com.hyjf.am.user.dao.model.auto.UserLoginLog;
+import com.hyjf.am.user.dao.model.auto.UserLoginLogExample;
+import com.hyjf.am.user.dao.model.auto.UtmPlat;
+import com.hyjf.am.user.dao.model.auto.UtmPlatExample;
+import com.hyjf.am.user.dao.model.auto.UtmReg;
+import com.hyjf.am.user.dao.model.auto.UtmRegExample;
+import com.hyjf.am.user.dao.model.auto.VipUserTender;
+import com.hyjf.am.user.dao.model.customize.UserDepartmentInfoCustomize;
+import com.hyjf.am.user.mq.base.CommonProducer;
+import com.hyjf.am.user.mq.base.MessageContent;
+import com.hyjf.am.user.service.front.user.UserService;
+import com.hyjf.am.user.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
+import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.am.vo.user.SpreadsUserVO;
+import com.hyjf.am.vo.user.UserDepartmentInfoCustomizeVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.CommonConstant;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.constants.UserConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.ClientConstants;
+import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetCode;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.common.util.MD5Utils;
+import com.hyjf.common.util.StringRandomUtil;
+import com.hyjf.common.validator.Validator;
 
 /**
  * @author xiasq
@@ -49,6 +111,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     @Autowired
     protected LockedUserInfoMapper lockedUserInfoMapper;
 
+    @Autowired
+    private CommonProducer smsProducer;
     /**
      * 注册
      *
@@ -67,6 +131,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         String password = userRequest.getPassword();
         String utmId = userRequest.getUtmId();
         Integer instType = userRequest.getInstType();
+        Integer userType = userRequest.getUserType();
 
         Integer attribute = null;
         // 获取推荐人表
@@ -85,7 +150,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         }
 
         // 1. 写入用户信息表
-        User user = this.insertUser(mobile, password, loginIp, platform, userRequest.getInstCode());
+        User user = this.insertUser(mobile, password, loginIp, platform, userRequest.getInstCode(), userType);
         logger.info("写入用户...user is :{}", JSONObject.toJSONString(user));
         int userId = user.getUserId();
 
@@ -331,9 +396,10 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
      * @param platform
      * @param
      * @param
+     * @param userType 0:普通用户;1:企业用户;
      * @return
      */
-    private User insertUser(String mobile, String password, String loginIp, String platform, String instCode) {
+    private User insertUser(String mobile, String password, String loginIp, String platform, String instCode, Integer userType) {
         User user = new User();
         String userName = generateUniqueUsername(mobile);
         user.setInstCode(StringUtils.isBlank(instCode) ? CommonConstant.HYJF_INST_CODE : instCode);
@@ -344,10 +410,36 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         user.setWithdrawSms(0);
         user.setInvestSms(0);
         user.setRecieveSms(0);
-        user.setUserType(0);
+        user.setUserType(userType);
         user.setIsSetPassword(0);
         String codeSalt = GetCode.getRandomCode(6);
-        user.setPassword(MD5Utils.MD5(MD5Utils.MD5(password) + codeSalt));
+        //处理纳觅财富注册用户数据密码随机生成6位字母数字组合并发送短信通知用户
+        if (instCode.equals("11000002") || instCode.equals("11000003")) {
+            final String passwords = StringRandomUtil.getStringRandom(6);
+            // 登陆密码
+            user.setPassword(MD5Utils.MD5(MD5Utils.MD5(passwords) + codeSalt));
+            final Integer userId = user.getUserId();
+            final String mobiles = mobile;
+            Thread thread = new Thread(){
+                public void run(){
+                    logger.info("线程启动，开始发短信");
+                    Map<String, String> param = new HashMap<String, String>();
+                    param.put("val_password", passwords);
+                    SmsMessage smsMessage = new SmsMessage(userId, param, mobiles, null, MessageConstant.SMS_SEND_FOR_MOBILE, null,
+                            CustomConstants.THIRD_PARTY_REGIEST_PASSWORD, CustomConstants.CHANNEL_TYPE_NORMAL);
+                    // 发送
+                    try {
+                        smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
+                    } catch (MQException e) {
+                        logger.error("短信发送失败...", e);
+                    }
+                }
+            };
+            thread.start();
+            logger.info("账号："+mobile+"，密码："+passwords);
+        }else {
+            user.setPassword(MD5Utils.MD5(MD5Utils.MD5(password) + codeSalt));
+        }
         user.setRegIp(loginIp);
         user.setRegTime(new Date());
         user.setStatus(0);
@@ -382,9 +474,9 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
             //getAddress(loginIp, userInfo);
         }
         userInfo.setUserId(userId);
-        // 默认投资人角色
+        // 默认出借人角色
         if (instType!=null&&instType == 0) {
-            //用户角色1投资人2借款人3垫付机构
+            //用户角色1出借人2借款人3垫付机构
             userInfo.setRoleId(2);
             //借款人类型 1：内部机构 2：外部机构
             userInfo.setBorrowerType(2);
@@ -644,7 +736,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
             hjhUserAuth.setAutoCreditTime(GetDate.getNowTime10());
             hjhUserAuth.setAutoCreateTime(GetDate.getNowTime10());
         }else if(ClientConstants.TXCODE_CREDIT_AUTH_QUERY.equals(txcode)){
-            //根据银行查询投资人签约状态
+            //根据银行查询出借人签约状态
             if(ClientConstants.QUERY_TYPE_1.equals(bean.getType())){
                 hjhUserAuth.setAutoInvesStatus(1);
                 hjhUserAuth.setAutoOrderId(bean.getOrderId());
@@ -1041,7 +1133,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     }
 
     /**
-     * 更新渠道用户首次投资信息
+     * 更新渠道用户首次出借信息
      *
      * @param bean
      * @return
@@ -1065,11 +1157,11 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         boolean result = false;
         if (Validator.isNotNull(userInfo) && Validator.isNotNull(userInfo.getVipId())){
             VipUserTender vt = new VipUserTender();
-            // 投资用户编号
+            // 出借用户编号
             vt.setUserId(userId);
-            // 投资用户vip编号
+            // 出借用户vip编号
             vt.setVipId(userInfo.getVipId());
-            // 投资编号
+            // 出借编号
             vt.setTenderNid(orderId);
             vt.setSumVipValue(userInfo.getVipValue());
             vt.setCreateTime(GetDate.getDate(nowTime));
@@ -1089,7 +1181,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     }
 
     /**
-     * 查询用户投资次数
+     * 查询用户出借次数
      *
      * @param userId
      * @return
@@ -1248,8 +1340,10 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
         String password=userRequest.getPassword();
         String loginIp=userRequest.getLoginIp();
         String platform=userRequest.getPlatform();
+        Integer userType = userRequest.getUserType();
+
         // 1. 写入用户信息表
-        User user = this.insertUser(mobile, password, loginIp, platform, userRequest.getInstCode());
+        User user = this.insertUser(mobile, password, loginIp, platform, userRequest.getInstCode(), userType);
         logger.info("写入用户...user is :{}", JSONObject.toJSONString(user));
         int userId = user.getUserId();
 
@@ -1470,4 +1564,15 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 		}
 		return null;
 	}
+
+    @Override
+    public User updateUserByUserId(Integer userId) {
+        UserExample usersExample = new UserExample();
+        usersExample.createCriteria().andUserIdEqualTo(userId);
+        List<User> usersList = userMapper.selectByExample(usersExample);
+        if (!CollectionUtils.isEmpty(usersList)) {
+            return usersList.get(0);
+        }
+        return null;
+    }
 }

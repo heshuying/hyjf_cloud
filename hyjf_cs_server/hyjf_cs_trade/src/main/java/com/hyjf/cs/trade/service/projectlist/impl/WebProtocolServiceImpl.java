@@ -72,7 +72,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
 
 
     /**
-     * 下载脱敏后居间服务借款协议（原始标的）_计划投资人
+     * 下载脱敏后居间服务借款协议（原始标的）_计划出借人
      * @author zhangyk
      * @date 2018/10/18 11:34
      */
@@ -143,7 +143,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                     contents.put("recoverTime", recordList.get(0).getReverifyTime());
                 }
                 form.setUserId(userId.toString());
-                // 用户投资列表
+                // 用户出借列表
                 List<WebUserInvestListCustomizeVO> tzList = planInfoSelectUserInvestList(form,0,100);
                 if (tzList != null && tzList.size() > 0) {
                     contents.put("userInvest", tzList.get(0));
@@ -262,7 +262,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
 
                     String borrowAprString = org.apache.commons.lang.StringUtils.isEmpty(recordList.get(0).getBorrowApr())?"0.00":recordList.get(0).getBorrowApr().replace("%", "");
                     BigDecimal borrowApr = new BigDecimal(borrowAprString);
-                    //投资金额
+                    //出借金额
                     String accountString = org.apache.commons.lang.StringUtils.isEmpty(recordList.get(0).getAccount())?"0.00":recordList.get(0).getAccount().replace(",", "");
                     BigDecimal account = new BigDecimal(accountString);
                     // 周期
@@ -273,10 +273,10 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                     borrowPeriodString = m.replaceAll("").trim();
                     Integer borrowPeriod = Integer.valueOf(borrowPeriodString);
                     if (org.apache.commons.lang.StringUtils.equals("endday", borrowStyle)){
-                        // 还款方式为”按天计息，到期还本还息“：历史回报=投资金额*年化收益÷365*锁定期；
+                        // 还款方式为”按天计息，到期还本还息“：历史回报=出借金额*年化收益÷365*锁定期；
                         earnings = DuePrincipalAndInterestUtils.getDayInterest(account, borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2, BigDecimal.ROUND_DOWN);
                     } else {
-                        // 还款方式为”按月计息，到期还本还息“：历史回报=投资金额*年化收益÷12*月数；
+                        // 还款方式为”按月计息，到期还本还息“：历史回报=出借金额*年化收益÷12*月数；
                         earnings = DuePrincipalAndInterestUtils.getMonthInterest(account, borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2, BigDecimal.ROUND_DOWN);
 
                     }
@@ -392,8 +392,8 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                             Map<String, Object> creditContract = null;
                             tenderCreditAssignedBean.setBidNid(hjhCreditTender.getBorrowNid());// 标号
                             tenderCreditAssignedBean.setCreditNid(hjhCreditTender.getCreditNid());// 债转编号
-                            tenderCreditAssignedBean.setCreditTenderNid(hjhCreditTender.getInvestOrderId());//原始投资订单号
-                            tenderCreditAssignedBean.setAssignNid(hjhCreditTender.getAssignOrderId());//债转后的新的"投资"订单号
+                            tenderCreditAssignedBean.setCreditTenderNid(hjhCreditTender.getInvestOrderId());//原始出借订单号
+                            tenderCreditAssignedBean.setAssignNid(hjhCreditTender.getAssignOrderId());//债转后的新的"出借"订单号
                             if(userId != null){
                                 tenderCreditAssignedBean.setCurrentUserId(userId);
                             }
@@ -565,7 +565,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
         String borrowNid = tenderCreditAssignedBean.getBidNid();
         String nid = tenderCreditAssignedBean.getCreditTenderNid();//原始标编号(取居间协议)
         String assignNid = tenderCreditAssignedBean.getAssignNid();//承接订单号(取债转协议)
-        logger.info("散标-转让记录-下载协议开始，用户ID:{}，标的编号:{}，出让人原始投资单号:{}，承接单号:{}", currentUserId, borrowNid, nid, assignNid);
+        logger.info("散标-转让记录-下载协议开始，用户ID:{}，标的编号:{}，出让人原始出借单号:{}，承接单号:{}", currentUserId, borrowNid, nid, assignNid);
         String flag = "1";
         // 出让人userid
         String creditUserId = tenderCreditAssignedBean.getCreditUserId();
@@ -579,7 +579,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
             //下载法大大协议--债转
             if(tenderAgreement!=null){
                 /** 脱敏规则三期
-                 *  投资债转：可以看到脱敏后的债权转让协议，出让人和承接人信息（姓名、证件号、盖章）均为脱敏后的信息*/
+                 *  出借债转：可以看到脱敏后的债权转让协议，出让人和承接人信息（姓名、证件号、盖章）均为脱敏后的信息*/
                 files = createFaddPDFImgFile(files,tenderAgreement);//下载脱敏
             }
             //下载法大大协议--居间
@@ -587,7 +587,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                 tenderAgreement = tenderAgreementsNid.get(0);
                 if(tenderAgreement!=null){
                     /** 脱敏规则三期
-                     *  投资债转：可以看到脱敏后的债权转让协议，出让人和承接人信息（姓名、证件号、盖章）均为脱敏后的信息*/
+                     *  出借债转：可以看到脱敏后的债权转让协议，出让人和承接人信息（姓名、证件号、盖章）均为脱敏后的信息*/
                     files = createFaddPDFImgFile(files,tenderAgreement);//下载脱敏
                 }
             }
@@ -659,7 +659,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
         Map<String, Object> resultMap = new HashMap<String, Object>();
         // 当前登陆者ID
         Integer currentUserId = tenderCreditAssignedBean.getCurrentUserId();
-        // 获取债转投资信
+        // 获取债转出借信
         //原代码
 //        CreditTenderExample creditTenderExample = new CreditTenderExample();
 //        CreditTenderExample.Criteria creditTenderCra = creditTenderExample.createCriteria();
@@ -848,13 +848,13 @@ public class WebProtocolServiceImpl implements WebProtocolService {
     }
 
     /**
-     * 查询汇计划债转投资表
+     * 查询汇计划债转出借表
      * @param tenderCreditAssignedBean
      * @return
      */
     private Map<String,Object> selectHJHUserCreditContract(CreditAssignedBean tenderCreditAssignedBean) {
         Map<String, Object> resultMap = new HashMap<String, Object>();
-        // 获取债转投资信息
+        // 获取债转出借信息
         //查询 hyjf_hjh_debt_credit_tender 表
         HjhDebtCreditTenderRequest request = new HjhDebtCreditTenderRequest();
         request.setBorrowNid(tenderCreditAssignedBean.getBidNid());
@@ -1139,7 +1139,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                 }
 
                 form.setUserId(userId.toString());
-                // 用户投资列表
+                // 用户出借列表
                 Map<String, Object> params = new HashMap<String, Object>();
                 params.put("borrowNid", form.getBorrowNid());
                 params.put("userId", form.getUserId());
@@ -1207,7 +1207,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                     }
                 }
                 form.setUserId(userId.toString());
-                // 用户投资列表
+                // 用户出借列表
                 Map<String, Object> params = new HashMap<String, Object>();
                 params.put("borrowNid", form.getBorrowNid());
                 params.put("userId", form.getUserId());
@@ -1235,7 +1235,7 @@ public class WebProtocolServiceImpl implements WebProtocolService {
 
                     String borrowAprString = StringUtils.isEmpty(recordList.get(0).getBorrowApr())?"0.00":recordList.get(0).getBorrowApr().replace("%", "");
                     BigDecimal borrowApr = new BigDecimal(borrowAprString);
-                    //投资金额
+                    //出借金额
                     String accountString = StringUtils.isEmpty(recordList.get(0).getAccount())?"0.00":recordList.get(0).getAccount().replace(",", "");
                     BigDecimal account = new BigDecimal(accountString);
                     // 周期
@@ -1246,10 +1246,10 @@ public class WebProtocolServiceImpl implements WebProtocolService {
                     borrowPeriodString = m.replaceAll("").trim();
                     Integer borrowPeriod = Integer.valueOf(borrowPeriodString);
                     if (StringUtils.equals("endday", borrowStyle)){
-                        // 还款方式为”按天计息，到期还本还息“：历史回报=投资金额*年化收益÷365*锁定期；
+                        // 还款方式为”按天计息，到期还本还息“：历史回报=出借金额*年化收益÷365*锁定期；
                         earnings = DuePrincipalAndInterestUtils.getDayInterest(account, borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2, BigDecimal.ROUND_DOWN);
                     } else {
-                        // 还款方式为”按月计息，到期还本还息“：历史回报=投资金额*年化收益÷12*月数；
+                        // 还款方式为”按月计息，到期还本还息“：历史回报=出借金额*年化收益÷12*月数；
                         earnings = DuePrincipalAndInterestUtils.getMonthInterest(account, borrowApr.divide(new BigDecimal("100")), borrowPeriod).divide(new BigDecimal("1"), 2, BigDecimal.ROUND_DOWN);
 
                     }

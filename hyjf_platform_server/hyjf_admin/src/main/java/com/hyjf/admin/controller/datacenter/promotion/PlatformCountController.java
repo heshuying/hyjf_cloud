@@ -74,8 +74,8 @@ public class PlatformCountController extends BaseController {
 
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
-        String[] titles = new String[] { "序号", "平台", "注册数", "开户数", "投资人数", "累计充值", "累计投资", "汇直投投资金额",
-                "汇消费投资金额", "汇天利投资金额", "汇添金投资金额", "智投服务投资金额", "汇转让投资金额" };
+        String[] titles = new String[] { "序号", "平台", "注册数", "开户数", "出借人数", "累计充值", "累计出借", "汇直投出借金额",
+                "汇消费出借金额", "汇天利出借金额", "汇添金出借金额", "智投服务出借金额", "汇转让出借金额" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
 
@@ -124,7 +124,7 @@ public class PlatformCountController extends BaseController {
                     else if (celLength == 3) {
                         cell.setCellValue(record.getAccountNumber());
                     }
-                    // 投资人数
+                    // 出借人数
 
                     else if (celLength == 4) {
                         cell.setCellValue(record.getTenderNumber());
@@ -133,31 +133,31 @@ public class PlatformCountController extends BaseController {
                     else if (celLength == 5) {
                         cell.setCellValue(record.getRechargePrice());
                     }
-                    // 累计投资
+                    // 累计出借
                     else if (celLength == 6) {
                         cell.setCellValue(record.getTenderPrice());
                     }
-                    // 汇直投投资金额
+                    // 汇直投出借金额
                     else if (celLength == 7) {
                         cell.setCellValue(record.getHztTenderPrice());
                     }
-                    // 汇消费投资金额
+                    // 汇消费出借金额
                     else if (celLength == 8) {
                         cell.setCellValue(record.getHxfTenderPrice());
                     }
-                    // 汇天利投资金额
+                    // 汇天利出借金额
                     else if (celLength == 9) {
                         cell.setCellValue(record.getHtlTenderPrice());
                     }
-                    // 汇添金投资金额
+                    // 汇添金出借金额
                     else if (celLength == 10) {
                         cell.setCellValue(record.getHtjTenderPrice());
                     }
-                    // 汇计划投资金额
+                    // 汇计划出借金额
                     else if (celLength == 11) {
                         cell.setCellValue(record.getHjhTenderPrice());
                     }
-                    // 汇转让投资金额
+                    // 汇转让出借金额
                     else if (celLength == 12) {
                         cell.setCellValue(record.getHzrTenderPrice());
                     }
@@ -177,7 +177,7 @@ public class PlatformCountController extends BaseController {
      */
     @ApiOperation(value = "导出excel", notes = "导出excel")
     @PostMapping("/exportAction")
-    public void exportToExcel(HttpServletRequest request, HttpServletResponse response, PlatformCountRequestBean form) throws Exception {
+    public void exportToExcel(HttpServletRequest request, HttpServletResponse response,@RequestBody  PlatformCountRequestBean form) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
@@ -193,30 +193,14 @@ public class PlatformCountController extends BaseController {
         List<PlatformCountCustomizeVO> recordList = platformCountService.searchAction(form);
         
         Integer totalCount = recordList.size();
-
-        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
-        int minId = 0;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
-        	
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }else {
         	 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList);
         }
-//        for (int i = 1; i < sheetCount; i++) {
-//
-//            managerRequest.setPageSize(defaultRowMaxCount);
-//            managerRequest.setCurrPage(i+1);
-//            UserManagerResponse userManagerResponse2 = userCenterService.selectUserMemberList(managerRequest);
-//            if (userManagerResponse2 != null && userManagerResponse2.getResultList().size()> 0) {
-//                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-//                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  userManagerResponse2.getResultList());
-//            } else {
-//                break;
-//            }
-//        }
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
 
@@ -226,15 +210,15 @@ public class PlatformCountController extends BaseController {
         map.put("accessNumber", "访问数");
         map.put("registNumber", "注册数");
         map.put("accountNumber", "开户数");
-        map.put("tenderNumber", "投资人数");
+        map.put("tenderNumber", "出借人数");
         map.put("rechargePrice", "累计充值");
-        map.put("tenderPrice", "累计投资");
-        map.put("hztTenderPrice", "汇直投投资金额");
-        map.put("hxfTenderPrice", "汇消费投资金额");
-        map.put("htlTenderPrice", "汇天利投资金额");
-        map.put("htjTenderPrice", "汇添金投资金额");
-        map.put("hjhTenderPrice", "智投服务投资金额");
-        map.put("hzrTenderPrice", "汇转让投资金额");
+        map.put("tenderPrice", "累计出借");
+        map.put("hztTenderPrice", "汇直投出借金额");
+        map.put("hxfTenderPrice", "汇消费出借金额");
+        map.put("htlTenderPrice", "汇天利出借金额");
+        map.put("htjTenderPrice", "汇添金出借金额");
+        map.put("hjhTenderPrice", "智投服务出借金额");
+        map.put("hzrTenderPrice", "汇转让出借金额");
     
         return map;
     }

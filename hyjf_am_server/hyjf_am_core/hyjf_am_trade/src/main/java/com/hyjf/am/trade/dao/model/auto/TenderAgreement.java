@@ -7,14 +7,14 @@ public class TenderAgreement implements Serializable {
     private Integer id;
 
     /**
-     * 投资用户ID
+     * 出借用户ID
      *
      * @mbggenerated
      */
     private Integer userId;
 
     /**
-     * 投资用户名
+     * 出借用户名
      *
      * @mbggenerated
      */
@@ -28,14 +28,14 @@ public class TenderAgreement implements Serializable {
     private String borrowNid;
 
     /**
-     * 投资类型:0:原始投资,1:承接债权,2:加入计划,3:计划承接
+     * 出借类型:0:原始出借,1:承接债权,2:加入计划,3:计划承接
      *
      * @mbggenerated
      */
     private Integer tenderType;
 
     /**
-     * 投资订单号或承接订单号
+     * 出借订单号或承接订单号
      *
      * @mbggenerated
      */

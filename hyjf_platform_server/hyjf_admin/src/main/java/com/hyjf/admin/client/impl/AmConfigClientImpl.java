@@ -1078,6 +1078,11 @@ public class AmConfigClientImpl implements AmConfigClient {
                 LandingPageResponse.class);
     }
     @Override
+    public IntegerResponse countByPageName(ContentLandingPageRequestBean requestBean){
+        return restTemplate.postForObject("http://AM-ADMIN/am-admin/content/contentlandingpage/countByPageName",
+                requestBean, IntegerResponse.class);
+    }
+    @Override
     public LandingPageResponse getLandingPageRecord(Integer id) {
         LandingPageResponse response = restTemplate.getForObject(
                 "http://AM-ADMIN/am-admin/content/contentlandingpage/getrecord/" + id, LandingPageResponse.class);

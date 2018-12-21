@@ -178,7 +178,30 @@
         ELSE
         CONCAT(hcc.coupon_quota, '%')
         END AS coupon_quota,
-
+        CASE
+        WHEN hcu.coupon_source = 1 THEN
+        '手动发放'
+        WHEN hcu.coupon_source = 2 THEN
+        '活动发放'
+        WHEN hcu.coupon_source = 3 THEN
+        '会员礼包'
+        ELSE
+        ''
+        END AS coupon_from,
+        CASE
+        WHEN hcu.coupon_source = 1 THEN
+        hcu.content
+        WHEN hcu.coupon_source = 2 THEN
+        hal.title
+        WHEN hcu.coupon_source = 3 THEN
+        IF (
+        vi.vip_level = 1,
+        "欢迎礼包",
+        "升级礼包"
+        )
+        ELSE
+        ''
+        END AS coupon_content,
 
         hbt.borrow_nid borrow_nid,
         hbt1.account account,
@@ -212,6 +235,9 @@
         LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
         LEFT JOIN ht_borrow_tender hbt1 ON hcrt.real_tender_id=hbt1.nid
         INNER JOIN ht_coupon_recover hcr ON hcr.tender_id = hbt.nid
+        LEFT JOIN hyjf_user.ht_vip_auth va ON hcu.coupon_code = va.coupon_code
+        LEFT JOIN hyjf_user.ht_vip_info vi ON va.vip_id = vi.id
+        LEFT JOIN hyjf_market.ht_activity_list hal ON hcu.activity_id = hal.id
         <include refid="selectCouponTenderList_Where_Clause" />
         GROUP BY hct.order_id
         ORDER BY hct.id DESC
@@ -550,7 +576,7 @@
     <sql id="selectCouponTenderList_Where_Clause">
         <where>
             1 = 1
-            <!-- 投资订单号 -->
+            <!-- 出借订单号 -->
             <if test="orderId != null and orderId != ''">
                 AND hct.order_id = #{orderId}
             </if>
@@ -570,7 +596,7 @@
             <if test="borrowNid != null and borrowNid != ''">
                 AND hbt.borrow_nid = #{borrowNid}
             </if>
-            <!-- 投资平台 -->
+            <!-- 出借平台 -->
             <if test="operatingDeck != null and operatingDeck != ''">
                 AND hbt.client = #{operatingDeck}
             </if>
@@ -630,11 +656,21 @@
         WHEN hcu.coupon_source = 2 THEN
         '活动发放'
         WHEN hcu.coupon_source = 3 THEN
-        'vip礼包'
+        '会员礼包'
         ELSE
         ''
         END coupon_source,
-        hcc.content coupon_content,
+        CASE
+        WHEN hcu.coupon_source = 1 THEN
+        hcu.content
+        WHEN hcu.coupon_source = 2 THEN
+        hal.title
+        WHEN hcu.coupon_source = 3 THEN
+        IF (
+        vi.vip_level = 1,
+        "欢迎礼包",
+        "升级礼包"
+        )  ELSE '' END as coupon_content,
         hbt.borrow_nid borrow_nid,
         hha.accede_account account,
         -- pa.`name` AS operating_deck,
@@ -674,6 +710,9 @@
         LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
         LEFT JOIN ht_hjh_accede hha ON hcrt.real_tender_id=hha.accede_order_id
         INNER JOIN ht_coupon_recover hcr ON hcr.tender_id = hbt.nid
+        LEFT JOIN hyjf_user.ht_vip_auth va ON hcu.coupon_code = va.coupon_code
+        LEFT JOIN hyjf_user.ht_vip_info vi ON va.vip_id = vi.id
+        LEFT JOIN hyjf_market.ht_activity_list hal ON hcu.activity_id = hal.id
         -- INNER JOIN ht_param_name pa1 ON pa1.name_class = 'COUPON_RECIVE_STATUS'
         -- AND pa1.name_cd = hcr.received_flg
         <include refid="selectCouponTenderHjhList_Where_Clause" />
@@ -959,7 +998,7 @@
     <sql id="selectCouponTenderHjhList_Where_Clause">
         <where>
             1 = 1
-            <!-- 投资订单号 -->
+            <!-- 出借订单号 -->
             <if test="orderId != null and orderId != ''">
                 AND hct.order_id = #{orderId}
             </if>
@@ -979,7 +1018,7 @@
             <if test="borrowNid != null and borrowNid != ''">
                 AND hbt.borrow_nid = #{borrowNid}
             </if>
-            <!-- 投资平台 -->
+            <!-- 出借平台 -->
             <if test="operatingDeck != null and operatingDeck != ''">
                 AND hbt.client = #{operatingDeck}
             </if>
@@ -1158,69 +1197,40 @@
 
     <select id="getRecordListHztTY" resultMap="selectCouponBackMoneyMap" parameterType="com.hyjf.am.vo.admin.coupon.CouponBackMoneyCustomize">
         SELECT
-        hcu.id id,
-        hcc.coupon_code coupon_code,
-        CASE
-        WHEN hcr.received_flg = 1 THEN
-        '未回款'
-        WHEN hcr.received_flg = 2 THEN
-        '未领取'
-        WHEN hcr.received_flg = 3 THEN
-        '转账中'
-        WHEN hcr.received_flg = 4 THEN
-        '转账失败'
-        WHEN hcr.received_flg = 5 THEN
-        '已领取'
-        WHEN hcr.received_flg = 6 THEN
-        '已过期'
-        ELSE
-        ''
-        END received_flg_string,
-        CASE
-        WHEN hcu.coupon_source = 1 THEN
-        '手动发放'
-        WHEN hcu.coupon_source = 2 THEN
-        '活动发放'
-        WHEN hcu.coupon_source = 3 THEN
-        'vip礼包'
-        ELSE
-        ''
-        END coupon_source,
-        hcc.content coupon_content,
-        CONCAT('第',hcr.recover_period, '期') recover_period,
-        hbt.nid nid,
         hu.username username,
-        IFNULL(hbten.account,'0.00') recover_capital,
-        hcu.coupon_user_code coupon_user_code,
-        hbt.borrow_nid borrow_nid,
+        hui.truename truename,
+        hu.mobile mobile,
+        hac.chinapnr_usrcustid chinapnr_usrcustid,
+        hbt.nid nid,
+        hbi.name borrow_name,
+        hb.borrow_period borrow_period,
         CONCAT(hb.borrow_apr,'%') borrow_apr,
-        hcr.recover_account recover_interest,
+        hbt.borrow_nid borrow_nid,
         hcc.coupon_quota coupon_quota,
         hcc.coupon_profit_time coupon_profit_time,
-        FROM_UNIXTIME(
-        hcr.recover_time,
-        '%Y-%m-%d'
-        ) recover_time,
+        hcu.coupon_user_code coupon_user_code,
+        date_format(hbt.create_time,'%Y-%m-%d') add_time,
+        date_format(hcr.create_time, '%Y-%m-%d') hcr_add_time,
+        FROM_UNIXTIME(hcr.recover_time,'%Y-%m-%d') recover_time,
         hcr.recover_account recover_interest,
-        -- pa.name received_flg,
-        hcr.received_flg received_flg,
-        DATE_FORMAT(
-        hbt.create_time,
-        '%Y-%m-%d'
-        ) add_time,
-        IFNULL(hcr.transfer_id,'') transfer_id
+        pa.name received_flg,
+        IFNULL(hcr.transfer_id,'') transfer_id,
+        FROM_UNIXTIME(hcr.recover_yestime,'%Y-%m-%d') recover_yestime,
+        IFNULL(hbten.account,'0.00') recover_capital
         FROM
         ht_coupon_tender hct
         INNER JOIN ht_coupon_user hcu ON hct.coupon_grant_id = hcu.id
         INNER JOIN ht_coupon_config hcc ON hcu.coupon_code = hcc.coupon_code
         INNER JOIN ht_borrow_tender_cpn hbt ON hct.order_id = hbt.nid AND hbt.tender_type=1
         INNER JOIN ht_borrow hb ON hbt.borrow_nid = hb.borrow_nid
+        INNER JOIN ht_borrow_info hbi ON hbi.borrow_nid = hb.borrow_nid
         INNER JOIN ht_r_user hu ON hcu.user_id = hu.user_id
+        INNER JOIN hyjf_user.ht_user_info hui ON hui.user_id = hu.user_id
         INNER JOIN ht_coupon_recover hcr ON hcr.tender_id = hbt.nid
-        -- INNER JOIN ht_param_name pa ON pa.name_class = 'COUPON_RECIVE_STATUS'
-        -- AND pa.name_cd = hcr.received_flg
+        INNER JOIN hyjf_config.ht_param_name pa ON pa.name_class = 'COUPON_RECIVE_STATUS' AND pa.name_cd = hcr.received_flg
         LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
         LEFT JOIN ht_borrow_tender hbten ON hcrt.real_tender_id=hbten.nid
+        LEFT JOIN hyjf_user.ht_account_chinapnr hac ON hac.user_id = hu.user_id
         <include refid="selectCouponBackMoneyList_Where_Clause" />
         ORDER BY hcr.recover_time DESC
         <if test="limitStart >= 0" >
@@ -1560,7 +1570,12 @@
         END coupon_source,
         hcc.content coupon_content,
         hbt.nid nid,
+        hhp.plan_name borrow_name,
+        hhp.lock_period borrow_period,
         hu.username username,
+        hui.truename truename,
+        hu.mobile mobile,
+        hac.chinapnr_usrcustid chinapnr_usrcustid,
         IFNULL(hha.accede_account,'0.00') recover_capital,
         hcu.coupon_user_code coupon_user_code,
         hbt.borrow_nid borrow_nid,
@@ -1568,10 +1583,9 @@
         hcr.recover_account recover_interest,
         hcc.coupon_quota coupon_quota,
         hcc.coupon_profit_time coupon_profit_time,
-        FROM_UNIXTIME(
-        hcr.recover_time,
-        '%Y-%m-%d'
-        ) recover_time,
+        date_format(hcr.create_time, '%Y-%m-%d') hcr_add_time,
+        FROM_UNIXTIME(hcr.recover_yestime,'%Y-%m-%d') recover_yestime,
+        FROM_UNIXTIME(hcr.recover_time,'%Y-%m-%d') recover_time,
         hcr.recover_account recover_interest,
         -- pa.name received_flg,
         hcr.received_flg received_flg,
@@ -1588,10 +1602,12 @@
         INNER JOIN ht_borrow_tender_cpn hbt ON hct.order_id = hbt.nid AND hbt.tender_type=3
         INNER JOIN ht_hjh_plan hhp ON hbt.borrow_nid = hhp.plan_nid
         INNER JOIN ht_r_user hu ON hcu.user_id = hu.user_id
+        INNER JOIN hyjf_user.ht_user_info hui ON hui.user_id = hu.user_id
         INNER JOIN ht_coupon_recover hcr ON hcr.tender_id = hbt.nid
         -- INNER JOIN ht_param_name pa ON pa.name_class = 'COUPON_RECIVE_STATUS' AND pa.name_cd = hcr.received_flg
         LEFT JOIN ht_coupon_real_tender hcrt ON hct.order_id=hcrt.coupon_tender_id
         LEFT JOIN ht_hjh_accede hha ON hcrt.real_tender_id=hha.accede_order_id
+        LEFT JOIN hyjf_user.ht_account_chinapnr hac ON hac.user_id = hu.user_id
         <include refid="selectCouponBackMoneyHjhList_Where_Clause" />
         ORDER BY hcr.recover_time DESC
         <if test="limitStart >= 0" >

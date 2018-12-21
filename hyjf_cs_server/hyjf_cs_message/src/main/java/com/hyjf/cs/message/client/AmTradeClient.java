@@ -14,14 +14,14 @@ public interface AmTradeClient {
 
      AccountVO getAccountByUserId(Integer userId);
      /**
-      * 获取投资金额和预期金额
+      * 获取出借金额和预期金额
       * @param begin
       * @param end
       * @return
       */
      BorrowTenderResponse getBorrowTender(int userId, int begin, int end);
      /**
-      * 获取投资金额和预期金额
+      * 获取出借金额和预期金额
       * @param userId
       * @param begin
       * @param end

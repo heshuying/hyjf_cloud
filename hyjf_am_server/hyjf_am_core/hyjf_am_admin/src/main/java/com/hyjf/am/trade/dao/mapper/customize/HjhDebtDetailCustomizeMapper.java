@@ -39,7 +39,7 @@ public interface HjhDebtDetailCustomizeMapper {
     public HjhDebtDetail selectDebtDetailCurRepayPeriod(String orderId);
 
     /**
-     * 根据投资订单号和还款期数 查询债权详情
+     * 根据出借订单号和还款期数 查询债权详情
      * @param orderId
      * @param repayPeriod
      * @return
@@ -47,7 +47,7 @@ public interface HjhDebtDetailCustomizeMapper {
     public HjhDebtDetail selectDebtDetailLastRepay(String orderId, int repayPeriod);
 
     /**
-     * 查询投资订单号未还款的债权详情
+     * 查询出借订单号未还款的债权详情
      * @param orderId
      * @return
      */

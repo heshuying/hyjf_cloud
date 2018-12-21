@@ -6,7 +6,9 @@ package com.hyjf.admin.controller.content;
 import com.hyjf.admin.beans.BorrowCommonImage;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.ContentAdsService;
 import com.hyjf.admin.service.ContentLinksService;
 import com.hyjf.am.response.Response;
@@ -35,8 +37,12 @@ public class ContentLinksController extends BaseController {
     @Autowired
     private ContentAdsService contentAdsService;
 
+    /** 权限 */
+    public static final String PERMISSIONS = "contentlinks";
+
     @ApiOperation(value = "内容中心-友情链接列表查询", notes = "内容中心-友情链接列表查询")
     @PostMapping("/searchaction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_VIEW , ShiroConstants.PERMISSION_SEARCH})
     public AdminResult<ListResult<LinkVO>> searchAction(@RequestBody ContentLinksRequest requestBean) {
         LinkResponse response = contentLinksService.searchAction(requestBean);
         if (response == null) {
@@ -50,6 +56,7 @@ public class ContentLinksController extends BaseController {
 
     @ApiOperation(value = "添加内容中心-友情链接", notes = "添加内容中心-友情链接")
     @PostMapping("/insert")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_ADD )
     public AdminResult add(@RequestBody ContentLinksRequest requestBean) {
         LinkResponse response = contentLinksService.insertAction(requestBean);
         if (response == null) {
@@ -63,6 +70,7 @@ public class ContentLinksController extends BaseController {
 
     @ApiOperation(value = "内容中心-友情链接  迁移到查看详细画面", notes = "内容中心-友情链接  迁移到查看详细画面")
     @PostMapping("/infoInfoAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_SEARCH )
     public AdminResult infoInfoAction(@RequestBody ContentLinksRequest requestBean) {
         LinkResponse response = contentLinksService.infoInfoAction(requestBean);
         if (response == null) {
@@ -76,6 +84,7 @@ public class ContentLinksController extends BaseController {
 
     @ApiOperation(value = "修改内容中心-友情链接", notes = "修改内容中心-友情链接")
     @PostMapping("/update")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY )
     public AdminResult update(@RequestBody ContentLinksRequest requestBean) {
         LinkResponse response = contentLinksService.updateAction(requestBean);
         if (response == null) {
@@ -89,6 +98,7 @@ public class ContentLinksController extends BaseController {
 
     @ApiOperation(value = "修改内容中心-友情链接状态", notes = "修改内容中心-友情链接状态")
     @PostMapping("/updatestatus")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY )
     public AdminResult updatestatus(@RequestBody ContentLinksRequest requestBean) {
         LinkResponse response = contentLinksService.updateStatus(requestBean);
         if (response == null) {
@@ -102,6 +112,7 @@ public class ContentLinksController extends BaseController {
 
     @ApiOperation(value = "删除内容中心-友情链接", notes = "删除内容中心-友情链接")
     @DeleteMapping("/delete/{id}")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_DELETE )
     public AdminResult delete(@PathVariable Integer id) {
         int num = contentLinksService.deleteById(id);
         if (num <= 0) {
@@ -112,6 +123,7 @@ public class ContentLinksController extends BaseController {
 
     @ApiOperation(value = "资料上传", notes = "资料上传")
     @RequestMapping(value = "/uploadFile", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_ADD , ShiroConstants.PERMISSION_MODIFY})
     public  AdminResult<LinkedList<BorrowCommonImage>> uploadFile(HttpServletRequest request) throws Exception {
         AdminResult<LinkedList<BorrowCommonImage>> adminResult = new AdminResult<>();
         try {

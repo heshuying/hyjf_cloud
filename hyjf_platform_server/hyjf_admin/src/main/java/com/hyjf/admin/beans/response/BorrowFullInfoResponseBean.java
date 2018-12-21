@@ -23,7 +23,7 @@ public class BorrowFullInfoResponseBean {
     @ApiModelProperty(value = "复审详细列表")
     private List<AdminBorrowFullCustomizeVO> recordList;
 
-    @ApiModelProperty(value = "复审详细列表统计(investmentAmount:投资金额合计 loanAmount:应放款金额合计 serviceCharge:应收服务费金额合计)")
+    @ApiModelProperty(value = "复审详细列表统计(investmentAmount:出借金额合计 loanAmount:应放款金额合计 serviceCharge:应收服务费金额合计)")
     private Map<String,String> sumAmount;
 
     @ApiModelProperty(value = "复审详细列表总条数")

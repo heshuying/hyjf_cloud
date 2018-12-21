@@ -36,7 +36,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	private RestTemplate restTemplate;
 
 	/**
-	 * 查询投之家每日充值人数、投资人数 、投资金额、首投金额、首投人数、复投人数
+	 * 查询投之家每日充值人数、出借人数 、出借金额、首投金额、首投人数、复投人数
 	 * 
 	 * @param tzjUserIds
 	 * @param startTime
@@ -194,7 +194,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 
 	/**
-	 *  汇直投投资总额
+	 *  汇直投出借总额
 	 */
 	@Override
 	public List<WrbTenderNotifyCustomizeVO> getBorrowTenderByAddtime(AppChannelStatisticsRequest request) {
@@ -207,7 +207,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	}
 
 	/**
-	 *  汇转让投资总额
+	 *  汇转让出借总额
 	 */
 	@Override
 	public List<WrbTenderNotifyCustomizeVO> getCreditTenderByAddtime(AppChannelStatisticsRequest request) {

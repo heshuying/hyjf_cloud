@@ -26,7 +26,7 @@ public class TzjController extends BaseController {
 	TzjService tzjService;
 
 	/**
-	 * 查询投之家当日投资数据：每日充值人数、投资人数 、投资金额、首投金额、首投人数、复投人数
+	 * 查询投之家当日出借数据：每日充值人数、出借人数 、出借金额、首投金额、首投人数、复投人数
 	 * 
 	 * @param request
 	 * @return
@@ -42,7 +42,7 @@ public class TzjController extends BaseController {
 			BeanUtils.copyProperties(tzjDayReportBean, vo);
 			response.setResult(vo);
 		} else {
-			logger.info("今日无投之家投资数据...request is：{}", JSONObject.toJSONString(request));
+			logger.info("今日无投之家出借数据...request is：{}", JSONObject.toJSONString(request));
 		}
 		return response;
 	}
@@ -64,7 +64,7 @@ public class TzjController extends BaseController {
 			BeanUtils.copyProperties(tzjDayReportBean, vo);
 			response.setResult(vo);
 		} else {
-			logger.info("今日无投之家新投资数据...request is：{}", JSONObject.toJSONString(request));
+			logger.info("今日无投之家新出借数据...request is：{}", JSONObject.toJSONString(request));
 		}
 		return response;
 	}

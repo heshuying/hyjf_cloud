@@ -99,8 +99,8 @@ public class BorrowRepaymentInfoListController {
         // 查询
         List<BorrowRepaymentInfoListCustomizeVO> resultList = this.borrowRepaymentInfoListService.selectExportBorrowRepaymentInfoListList(copyForm);
         // 列头
-        String[] titles = new String[] { "借款编号", "资产来源", "借款人ID","借款人用户名", "借款标题", "项目类型", "借款期限",
-                "年化收益", "借款金额", "借到金额", "还款方式", "还款期次", "投资人用户名", "投资人ID", "投资金额", "应还本金",
+        String[] titles = new String[] { "项目编号", "资产来源", "借款人ID","借款人用户名", "借款标题", "项目类型", "借款期限",
+                "出借利率", "借款金额", "借到金额", "还款方式", "还款期数", "出借人用户名", "出借人ID", "出借金额", "应还本金",
                 "应还利息", "应还本息", "还款服务费", "提前天数", "少还利息", "延期天数", "延期利息", "逾期天数", "逾期利息",
                 "应还总额", "还款订单号", "实还总额", "还款状态", "实际还款日期", "应还日期" };
         // 声明一个工作薄
@@ -129,7 +129,7 @@ public class BorrowRepaymentInfoListController {
                     // 创建相应的单元格
                     Cell cell = row.createCell(celLength);
 
-                    // 借款编号
+                    // 项目编号
                     if (celLength == 0) {
                         cell.setCellValue(record.getBorrowNid());
                     }
@@ -157,7 +157,7 @@ public class BorrowRepaymentInfoListController {
                     else if (celLength == 6) {
                         cell.setCellValue(record.getBorrowPeriod() + "个月");
                     }
-                    // 年化收益
+                    // 出借利率
                     else if (celLength == 7) {
                         cell.setCellValue(record.getBorrowApr() + "%");
                     }
@@ -173,19 +173,19 @@ public class BorrowRepaymentInfoListController {
                     else if (celLength == 10) {
                         cell.setCellValue(record.getRepayType());
                     }
-                    // 还款期次
+                    // 还款期数
                     else if (celLength == 11) {
                         cell.setCellValue("第" + record.getRecoverPeriod() + "期");
                     }
-                    // 投资人用户名
+                    // 出借人用户名
                     else if (celLength == 12) {
                         cell.setCellValue(record.getRecoverUserName());
                     }
-                    // 投资人ID
+                    // 出借人ID
                     else if (celLength == 13) {
                         cell.setCellValue(record.getRecoverUserId());
                     }
-                    // 投资金额
+                    // 出借金额
                     else if (celLength == 14) {
                         cell.setCellValue("".equals(record.getRecoverTotal()) ? 0 : Double.valueOf(record.getRecoverTotal()));
                     }
@@ -317,21 +317,21 @@ public class BorrowRepaymentInfoListController {
 
     private Map<String, String> buildMap() {
         Map<String, String> map = Maps.newLinkedHashMap();
-        map.put("borrowNid","借款编号");
+        map.put("borrowNid","项目编号");
         map.put("instName","资产来源");
         map.put("userId","借款人ID");
         map.put("borrowUserName","借款人用户名");
         map.put("borrowName","借款标题");
         map.put("projectTypeName","项目类型");
         map.put("borrowPeriod","借款期限");
-        map.put("borrowApr","年化收益");
+        map.put("borrowApr","出借利率");
         map.put("borrowAccount","借款金额");
         map.put("borrowAccountYes","借到金额");
         map.put("repayType","还款方式");
-        map.put("recoverPeriod","还款期次");
-        map.put("recoverUserName","投资人用户名");
-        map.put("recoverUserId","投资人ID");
-        map.put("recoverTotal","投资金额");
+        map.put("recoverPeriod","还款期数");
+        map.put("recoverUserName","出借人用户名");
+        map.put("recoverUserId","出借人ID");
+        map.put("recoverTotal","出借金额");
         map.put("recoverCapital","应还本金");
         map.put("recoverInterest","应还利息");
         map.put("recoverAccountCopy","应还本息");

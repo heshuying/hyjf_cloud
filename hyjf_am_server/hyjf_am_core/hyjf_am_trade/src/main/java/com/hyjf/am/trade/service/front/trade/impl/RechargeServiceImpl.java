@@ -1,6 +1,5 @@
 package com.hyjf.am.trade.service.front.trade.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.HandleAccountRechargeRequest;
 import com.hyjf.am.resquest.user.BankRequest;
@@ -9,9 +8,8 @@ import com.hyjf.am.trade.dao.mapper.auto.AccountMapper;
 import com.hyjf.am.trade.dao.mapper.auto.AccountRechargeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.AdminAccountCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.AppMessageProducer;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.front.trade.RechargeService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
@@ -53,13 +51,12 @@ public class RechargeServiceImpl extends BaseServiceImpl implements RechargeServ
 
 	@Autowired
 	protected AccountMapper accountMapper;
-	@Autowired
-	protected  AccountListMapper accountListMapper;
-	@Autowired
-	private SmsProducer smsProducer;
 
 	@Autowired
-	private AppMessageProducer appMessageProducer;
+	protected  AccountListMapper accountListMapper;
+
+	@Autowired
+	private CommonProducer commonProducer;
 
 	// 充值状态:充值中
 	private static final int RECHARGE_STATUS_WAIT = 1;
@@ -70,7 +67,6 @@ public class RechargeServiceImpl extends BaseServiceImpl implements RechargeServ
 
 	@Autowired
 	private AdminAccountCustomizeMapper adminAccountCustomizeMapper;
-
 
 	@Override
     public int selectByOrdId(String ordId){
@@ -315,7 +311,7 @@ public class RechargeServiceImpl extends BaseServiceImpl implements RechargeServ
 				// 交易金额
 				BigDecimal txAmount = BigDecimal.ZERO;
 				String txAmontString = bean.getTxAmount();
-				if (Validator.isNotNull(txAmontString) && NumberUtils.isNumber(txAmontString)) {
+				if (Validator.isNotNull(txAmontString) && NumberUtils.isCreatable(txAmontString)) {
 					txAmount = new BigDecimal(txAmontString);
 				}
 				logger.info("银行返回参数===============txAmount:[{}]",txAmount);
@@ -379,7 +375,7 @@ public class RechargeServiceImpl extends BaseServiceImpl implements RechargeServ
 						accountList.setBankAwaitInterest(account.getBankAwaitInterest());// 银行待收利息
 						accountList.setBankAwait(account.getBankAwait());// 银行待收总额
 						accountList.setBankInterestSum(account.getBankInterestSum()); // 银行累计收益
-						accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计投资
+						accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计出借
 						accountList.setBankWaitRepay(account.getBankWaitRepay());// 银行待还金额
 						accountList.setPlanBalance(account.getPlanBalance());//汇计划账户可用余额
 						accountList.setPlanFrost(account.getPlanFrost());
@@ -514,7 +510,7 @@ public class RechargeServiceImpl extends BaseServiceImpl implements RechargeServ
 				// 交易金额
 				BigDecimal txAmount = BigDecimal.ZERO;
 				String txAmontString = bean.getTxAmount();
-				if (Validator.isNotNull(txAmontString) && NumberUtils.isNumber(txAmontString)) {
+				if (Validator.isNotNull(txAmontString) && NumberUtils.isCreatable(txAmontString)) {
 					txAmount = new BigDecimal(txAmontString);
 				}
 				// 判断充值记录状态
@@ -580,7 +576,7 @@ public class RechargeServiceImpl extends BaseServiceImpl implements RechargeServ
 						accountList.setBankAwaitInterest(account.getBankAwaitInterest());// 银行待收利息
 						accountList.setBankAwait(account.getBankAwait());// 银行待收总额
 						accountList.setBankInterestSum(account.getBankInterestSum()); // 银行累计收益
-						accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计投资
+						accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计出借
 						accountList.setBankWaitRepay(account.getBankWaitRepay());// 银行待还金额
 						accountList.setPlanBalance(account.getPlanBalance());//汇计划账户可用余额
 						accountList.setPlanFrost(account.getPlanFrost());
@@ -630,8 +626,8 @@ public class RechargeServiceImpl extends BaseServiceImpl implements RechargeServ
 								SmsMessage smsMessage = new SmsMessage(userId, replaceMap, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_CHONGZHI_SUCCESS,
 										CustomConstants.CHANNEL_TYPE_NORMAL);
 								AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_CHONGZHI_SUCCESS);
-								smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
-								appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(),JSON.toJSONBytes(appMsMessage)));
+								commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
+								commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(), appMsMessage));
 
 							}
 							// 上市活动充值-暂时不迁

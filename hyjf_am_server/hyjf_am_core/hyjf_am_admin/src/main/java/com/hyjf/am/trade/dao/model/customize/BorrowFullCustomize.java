@@ -58,11 +58,11 @@ public class BorrowFullCustomize implements Serializable {
     private String reverifyStatusName;
 
     /**
-     * 融资服务费
+     * 放款服务费
      */
     private String serviceScale;
     /**
-     * 账户管理费率
+     * 还款服务费率
      */
     private String managerScale;
     /**
@@ -114,12 +114,12 @@ public class BorrowFullCustomize implements Serializable {
     private String sumServiceScale;
 
     /**
-     * 投资人
+     * 出借人
      */
     private String investor;
 
     /**
-     * 投资金额（元）
+     * 出借金额（元）
      */
     private String investmentAmount;
 

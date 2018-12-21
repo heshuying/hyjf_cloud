@@ -31,6 +31,7 @@ import java.util.List;
  * @version 2008/9/16 11:02:34
  * @since 1.0
  */
+@SuppressWarnings("unchecked")
 public class FileUtil {
 
 	private static final org.slf4j.Logger logger = LoggerFactory.getLogger(FileUtil.class);

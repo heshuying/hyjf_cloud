@@ -9,9 +9,12 @@ import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.trade.service.front.borrow.ProjectListService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.vo.api.ApiProjectListCustomize;
-import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.admin.AppPushManageVO;
+import com.hyjf.am.vo.api.ApiProjectListCustomize;
+import com.hyjf.am.vo.trade.AppProjectListCustomizeVO;
+import com.hyjf.am.vo.trade.CreditListVO;
+import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
+import com.hyjf.am.vo.trade.WechatHomeProjectListVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.common.util.CommonUtils;
@@ -214,7 +217,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
     // ----------------------------------------app start --------------------------------------------------
 
     /**
-     * app端获取散标投资count
+     * app端获取散标出借count
      * @author zhangyk
      * @date 2018/6/20 16:13
      */
@@ -238,7 +241,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
     }
 
     /**
-     * app端获取散标投资数据list
+     * app端获取散标出借数据list
      * @author zhangyk
      * @date 2018/6/20 16:11
      */
@@ -333,7 +336,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
     }
 
     /**
-     * app端散标投资记录数
+     * app端散标出借记录数
      * @param params
      * @return
      */
@@ -344,7 +347,7 @@ public class ProjectListServiceImpl extends BaseServiceImpl implements ProjectLi
     }
 
     /**
-     * 散标投资记录
+     * 散标出借记录
      * @param params
      * @return
      */

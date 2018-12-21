@@ -15,14 +15,14 @@ public class DebtInvest implements Serializable {
     private Integer userId;
 
     /**
-     * 投资用户名
+     * 出借用户名
      *
      * @mbggenerated
      */
     private String userName;
 
     /**
-     * 投资用户属性
+     * 出借用户属性
      *
      * @mbggenerated
      */
@@ -50,14 +50,14 @@ public class DebtInvest implements Serializable {
     private String borrowNid;
 
     /**
-     * 投资订单号
+     * 出借订单号
      *
      * @mbggenerated
      */
     private String orderId;
 
     /**
-     * 投资订单日期
+     * 出借订单日期
      *
      * @mbggenerated
      */
@@ -71,7 +71,7 @@ public class DebtInvest implements Serializable {
     private String trxId;
 
     /**
-     * 投资金额
+     * 出借金额
      *
      * @mbggenerated
      */
@@ -155,7 +155,7 @@ public class DebtInvest implements Serializable {
     private BigDecimal repayInterestWait;
 
     /**
-     * 投资类型 0手动投标 1预约投标 2自动投标
+     * 出借类型 0手动投标 1预约投标 2自动投标
      *
      * @mbggenerated
      */
@@ -216,7 +216,7 @@ public class DebtInvest implements Serializable {
     private String loanOrderDate;
 
     /**
-     * 投资状态 0冻结成功 1放款成功 2还款中 3还款成功
+     * 出借状态 0冻结成功 1放款成功 2还款中 3还款成功
      *
      * @mbggenerated
      */
@@ -293,7 +293,7 @@ public class DebtInvest implements Serializable {
     private BigDecimal recoverLateFee;
 
     /**
-     * 投资奖励增加
+     * 出借奖励增加
      *
      * @mbggenerated
      */
@@ -344,7 +344,7 @@ public class DebtInvest implements Serializable {
     private Integer changeUserid;
 
     /**
-     * 投资奖励金额
+     * 出借奖励金额
      *
      * @mbggenerated
      */

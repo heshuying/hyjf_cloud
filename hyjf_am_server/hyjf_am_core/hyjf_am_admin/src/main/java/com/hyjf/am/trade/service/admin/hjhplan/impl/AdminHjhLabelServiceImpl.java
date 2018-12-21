@@ -7,7 +7,6 @@ import com.hyjf.am.resquest.admin.HjhLabelInfoRequest;
 import com.hyjf.am.resquest.admin.HjhLabelRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.AdminHjhLabelCustomize;
-import com.hyjf.am.trade.dao.model.customize.AdminHjhLabelCustomizeExample;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhLabelService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.admin.HjhLabelCustomizeVO;
@@ -16,7 +15,6 @@ import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

@@ -68,10 +68,10 @@ public class ApplyAgreementController  extends BaseController {
         AdminResult result =  applyAgreementService.generateContract(borrowRepayAgreementRequest,currUser);
         return result;
     }
-    @ApiOperation(value = "下載垫付机构协议", notes = "下載垫付机构协议")
+    @ApiOperation(value = "下載担保机构协议", notes = "下載担保机构协议")
     @PostMapping("/downloadAction")
     public void downloadAction(@RequestBody DownloadAgreementRequest requestBean,HttpServletResponse response){
-        logger.info("------------------------------下載垫付机构协议requestBean:"+JSONObject.toJSON(requestBean));
+        logger.info("------------------------------下載担保机构协议requestBean:"+JSONObject.toJSON(requestBean));
         applyAgreementService.downloadAction(requestBean,response);
     }
 }

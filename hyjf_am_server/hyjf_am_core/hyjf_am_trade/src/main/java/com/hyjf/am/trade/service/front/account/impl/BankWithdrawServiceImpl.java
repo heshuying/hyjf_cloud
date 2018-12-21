@@ -1,6 +1,5 @@
 package com.hyjf.am.trade.service.front.account.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.result.CheckResult;
 import com.hyjf.am.resquest.trade.AfterCashParamRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
@@ -13,7 +12,6 @@ import com.hyjf.am.vo.user.BankCardVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomUtil;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.time.DateUtils;
 import org.slf4j.Logger;
@@ -168,7 +166,7 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
                 accountList.setBankAwaitInterest(account.getBankAwaitInterest());// 银行待收利息
                 accountList.setBankAwait(account.getBankAwait());// 银行待收总额
                 accountList.setBankInterestSum(account.getBankInterestSum()); // 银行累计收益
-                accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计投资
+                accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计出借
                 accountList.setBankWaitRepay(account.getBankWaitRepay());// 银行待还金额
                 accountList.setPlanBalance(account.getPlanBalance());//汇计划账户可用余额
                 accountList.setPlanFrost(account.getPlanFrost());

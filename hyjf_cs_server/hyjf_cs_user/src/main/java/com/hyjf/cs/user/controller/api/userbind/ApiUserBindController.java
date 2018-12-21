@@ -79,7 +79,7 @@ public class ApiUserBindController extends BaseUserController {
 
 
 	/**
-	 * 页面授权绑定 - 汇盈金服开放平台接口_投资端_v1.3.2
+	 * 页面授权绑定 - 汇盈金服开放平台接口_出借端_v1.3.2
 	 * @auth sunpeikai
 	 * @param
 	 * @return
@@ -89,7 +89,6 @@ public class ApiUserBindController extends BaseUserController {
 	public ModelAndView bindApi(HttpServletRequest request, HttpServletResponse response,@RequestBody ApiUserPostBean apiUserPostBean){
 		// 设置接口结果页的信息（返回Url）
 		this.initCheckUtil(apiUserPostBean);
-		//TODO:用户登录授权页面
 		ModelAndView modelAndView = new ModelAndView("wrb/wrb_result");
         BaseMapBean baseMapBean=new BaseMapBean();
         // 验证
@@ -384,7 +383,7 @@ public class ApiUserBindController extends BaseUserController {
 		return result;
 	}
 
-    public static Map<String, String> objectToMap(Object obj){
+    public Map<String, String> objectToMap(Object obj){
         if(obj == null){
             return null;
         }

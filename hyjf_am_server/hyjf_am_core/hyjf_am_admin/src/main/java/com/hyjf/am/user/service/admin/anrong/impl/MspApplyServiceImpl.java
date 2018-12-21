@@ -127,13 +127,13 @@ public class MspApplyServiceImpl extends BaseServiceImpl implements MspApplyServ
 	@Override
 	public List<MspConfigure> getConfigureList() {
 
-		return mspConfigureMapperAuto.selectByExample(new MspConfigureExample());
+		return mspConfigureMapper.selectByExample(new MspConfigureExample());
 	}
 
 	@Override
 	public MspConfigure getConfigure(int id) {
 
-		return mspConfigureMapperAuto.selectByPrimaryKey(id);
+		return mspConfigureMapper.selectByPrimaryKey(id);
 	}
 
 	@Override
@@ -190,14 +190,14 @@ public class MspApplyServiceImpl extends BaseServiceImpl implements MspApplyServ
 	public List<MspQuerydetail> getQueryDetail(String applyId) {
 		MspQuerydetailExample me = new MspQuerydetailExample();
 		me.or().andApplyIdEqualTo(applyId);
-		return mspQueryDetailMapper.selectByExample(me);
+		return mspQuerydetailMapper.selectByExample(me);
 	}
 
 	@Override
 	public List<MspBlackdata> getBlackData(String applyId) {
 		MspBlackdataExample me = new MspBlackdataExample();
 		me.or().andApplyIdEqualTo(applyId);
-		return mspBlackDataMapper.selectByExample(me);
+		return mspBlackdataMapper.selectByExample(me);
 	}
 
 	@Override

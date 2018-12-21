@@ -47,7 +47,7 @@ public class BorrowInvestController extends BaseController {
     BorrowInvestService borrowInvestService;
 
     /**
-     * 投资明细记录 总数COUNT
+     * 出借明细记录 总数COUNT
      *
      * @return
      */
@@ -60,7 +60,7 @@ public class BorrowInvestController extends BaseController {
     }
 
     /**
-     * 投资明细列表
+     * 出借明细列表
      *
      * @return
      */
@@ -76,7 +76,7 @@ public class BorrowInvestController extends BaseController {
     }
 
     /**
-     * 投资明细列表合计
+     * 出借明细列表合计
      *
      * @return
      */
@@ -89,7 +89,7 @@ public class BorrowInvestController extends BaseController {
     }
 
     /**
-     * 投资明细列表
+     * 出借明细列表
      *
      * @return
      */
@@ -105,7 +105,7 @@ public class BorrowInvestController extends BaseController {
     }
 
     /**
-     * 获取用户投资协议
+     * 获取用户出借协议
      * @param nid
      * @return
      */
@@ -122,7 +122,7 @@ public class BorrowInvestController extends BaseController {
     }
 
     /**
-     * 获取用户投资协议
+     * 获取用户出借协议
      * @param nid
      * @return
      */
@@ -155,7 +155,7 @@ public class BorrowInvestController extends BaseController {
     }
 
     /**
-     * 标的投资信息
+     * 标的出借信息
      * @param borrowInvestRequest
      * @return
      */

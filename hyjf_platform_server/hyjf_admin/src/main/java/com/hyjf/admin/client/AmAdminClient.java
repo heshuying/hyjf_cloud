@@ -28,6 +28,7 @@ import com.hyjf.am.resquest.config.AppBorrowImageRequest;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
+import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
@@ -53,7 +54,7 @@ import java.util.List;
 public interface AmAdminClient {
 
     /**
-     * 按照省份统计投资人的分布
+     * 按照省份统计出借人的分布
      * @param date 上个月的最后一天
      */
     List<OperationReportJobVO> getTenderCityGroupByList(Date date);
@@ -63,7 +64,7 @@ public interface AmAdminClient {
      */
     List<OperationReportJobVO> getPerformanceSum();
     /**
-     * 按照性别统计投资人的分布
+     * 按照性别统计出借人的分布
      * @param date 上个月的最后一天
      */
     List<OperationReportJobVO>  getTenderSexGroupByList(Date date);
@@ -120,7 +121,7 @@ public interface AmAdminClient {
      */
     List<OperationReportJobVO> getOneInterestsMost(int intervalMonth);
     /**
-     * 超活跃，投资笔数最多
+     * 超活跃，出借笔数最多
      *
      * @param intervalMonth 今年间隔月份
      * @return
@@ -134,7 +135,7 @@ public interface AmAdminClient {
      */
     List<OperationReportJobVO> getBorrowPeriod(int intervalMonth);
     /**
-     * 十大投资人
+     * 十大出借人
      *
      * @param intervalMonth 今年间隔月份
      * @return
@@ -142,7 +143,7 @@ public interface AmAdminClient {
     List<OperationReportJobVO> getTenMostMoney( int intervalMonth);
 
     /**
-     * 今年这个时候到手收益 和 去年这个时候到手收益 和  预期收益率
+     * 今年这个时候到手收益 和 去年这个时候到手收益 和  出借利率
      *
      * @param intervalMonth 今年间隔月份
      * @param startMonth    去年开始月份
@@ -159,12 +160,12 @@ public interface AmAdminClient {
     int getTradeCountByMonth(Date beginDate,Date endDate);
 
     /**
-     * 获取截至日期的投资金额
+     * 获取截至日期的出借金额
      */
     double getInvestLastDate(Date date);
 
     /**
-     * 统计投资人总数，截至日期为上个月的最后一天
+     * 统计出借人总数，截至日期为上个月的最后一天
      * @param date 上个月的最后一天
      * @return
      */
@@ -185,7 +186,7 @@ public interface AmAdminClient {
      */
     BigDecimal getAccountByMonth(Date beginDate, Date endDate);
     /**
-     *投资人按照年龄分布 返回符合条件所有用户
+     *出借人按照年龄分布 返回符合条件所有用户
      *
      * @param date 上个月的最后一天
      * @return
@@ -239,7 +240,7 @@ public interface AmAdminClient {
     Integer getOpenAccountNumber(Integer sourceId, String type);
 
     /**
-     * 投资人数
+     * 出借人数
      * @param sourceId
      * @param type 类型: pc,app
      * @return
@@ -255,7 +256,7 @@ public interface AmAdminClient {
     BigDecimal getCumulativeRecharge(Integer sourceId, String type);
 
     /**
-     * 汇直投投资金额
+     * 汇直投出借金额
      * @param sourceId
      * @param type 类型: pc,app
      * @return
@@ -263,7 +264,7 @@ public interface AmAdminClient {
     BigDecimal getHztTenderPrice(Integer sourceId, String type);
 
     /**
-     * 汇消费投资金额
+     * 汇消费出借金额
      * @param sourceId
      * @param type 类型: pc,app
      * @return
@@ -271,7 +272,7 @@ public interface AmAdminClient {
     BigDecimal getHxfTenderPrice(Integer sourceId, String type);
 
     /**
-     * 汇天利投资金额
+     * 汇天利出借金额
      * @param sourceId
      * @param type 类型: pc,app
      * @return
@@ -279,7 +280,7 @@ public interface AmAdminClient {
     BigDecimal getHtlTenderPrice(Integer sourceId, String type);
 
     /**
-     * 汇添金投资金额
+     * 汇添金出借金额
      * @param sourceId
      * @param type 类型: pc,app
      * @return
@@ -287,7 +288,7 @@ public interface AmAdminClient {
     BigDecimal getHtjTenderPrice(Integer sourceId, String type);
 
     /**
-     * 汇金理财投资金额
+     * 汇金理财出借金额
      * @param sourceId
      * @param type 类型: pc,app
      * @return
@@ -295,7 +296,7 @@ public interface AmAdminClient {
     BigDecimal getRtbTenderPrice(Integer sourceId, String type);
 
     /**
-     * 汇转让投资金额
+     * 汇转让出借金额
      * @param sourceId
      * @param type 类型: pc,app
      * @return
@@ -388,6 +389,13 @@ public interface AmAdminClient {
      * @return
      */
     Integer updatePoundage(PoundageCustomizeVO poundageCustomizeVO);
+
+    /**
+     * 批次中心-批次放款导出记录总数
+     * @param request
+     * @return
+     */
+    int getBatchBorrowRecoverCount(BatchBorrowRecoverRequest request);
 
 
     /**
@@ -567,6 +575,19 @@ public interface AmAdminClient {
 
 	List<DataCenterCouponCustomizeVO> getRecordListDJ(DataCenterCouponCustomizeVO dataCenterCouponCustomize);
 
+    /**
+     * 获取加息券列表个数
+     * @param
+     * @return
+     */
+    int getCountDJ();
+
+    /**
+     * 获取加息券列表个数
+     * @param
+     * @return
+     */
+    int getCountJX();
 
 	List<DataCenterCouponCustomizeVO> getRecordListJX(DataCenterCouponCustomizeVO dataCenterCouponCustomize);
 
@@ -610,6 +631,19 @@ public interface AmAdminClient {
      */
     ChannelReconciliationResponse selectAppChannelReconciliationRecordHjh(ChannelReconciliationRequest request);
 
+    /**
+     * APP统计明细计划列表查询
+     * @param request
+     * @return
+     */
+    ChannelReconciliationResponse selectAppChannelReconciliationRecordHjhCount(ChannelReconciliationRequest request);
+
+    /**
+     * APP统计明细计划列表数量查询
+     * @param request
+     * @return
+     */
+    ChannelReconciliationResponse selectAppChannelReconciliationCount(ChannelReconciliationRequest request);
     /**
      * 获取app渠道列表
      * @return
@@ -702,6 +736,7 @@ public interface AmAdminClient {
      * @return
      */
     List<BailConfigCustomizeVO> selectBailConfigRecordList(BailConfigRequest request);
+    IntegerResponse countBailConfigRecordList(BailConfigRequest request);
 
     /**
      * 获取锁定账户列表
@@ -1079,4 +1114,6 @@ public interface AmAdminClient {
      * @return
      */
     AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request);
+
+
 }

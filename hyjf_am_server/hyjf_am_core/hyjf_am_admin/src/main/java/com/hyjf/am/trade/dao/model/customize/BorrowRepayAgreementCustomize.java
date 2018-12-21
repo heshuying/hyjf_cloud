@@ -9,17 +9,17 @@ import java.math.BigDecimal;
 public class BorrowRepayAgreementCustomize {
 
     /**
-     * 实际还款人(垫付机构)id
+     * 实际还款人(担保机构)id
      */
     private String repayUserId;
 
     /**
-     * 实际还款人(垫付机构)
+     * 实际还款人(担保机构)
      */
     private String repayUsername;
 
     /**
-     * 借款编号
+     * 项目编号
      */
     private String borrowNid;
 

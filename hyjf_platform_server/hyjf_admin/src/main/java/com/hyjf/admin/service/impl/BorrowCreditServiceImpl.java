@@ -1,6 +1,5 @@
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.admin.beans.BorrowCreditInfoResultBean;
 import com.hyjf.admin.beans.BorrowCreditListResultBean;
 import com.hyjf.admin.beans.request.BorrowCreditRequest;
@@ -9,7 +8,7 @@ import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.BaseClient;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.util.ExportExcel;
-import com.hyjf.admin.mq.AppMessageProducer;
+import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.BorrowCreditService;
 import com.hyjf.admin.utils.ConvertUtils;
@@ -30,8 +29,6 @@ import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringPool;
 import com.hyjf.common.validator.CheckUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
@@ -40,12 +37,11 @@ import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.*;
 
 @Service
@@ -63,7 +59,7 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
     private static final String BASE_URL = "http://AM-ADMIN/am-trade";
 
     @Autowired
-    private AppMessageProducer appMessageProducer;
+    private CommonProducer commonProducer;
 
     /**
      * 查询汇转让数据列表
@@ -90,26 +86,6 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
         }
         result.setData(bean);
         return result;
-    }
-
-
-    /**
-     * 数据导出
-     *
-     * @author zhangyk
-     * @date 2018/7/10 14:09
-     */
-    @Override
-    public void exportBorrowCreditList(BorrowCreditRequest request, HttpServletResponse response) throws UnsupportedEncodingException {
-        BorrowCreditAmRequest req = CommonUtils.convertBean(request, BorrowCreditAmRequest.class);
-
-        String sheetName = "债权转让列表";
-        String[] titles = new String[]{"债转编号", "项目编号", "用户名", "债权本金", "转让本金", "折让率", "转让价格", "已转让金额", "发布时间",
-                "还款时间", "转让状态", "发起平台"};
-        String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date())
-                + CustomConstants.EXCEL_EXT;
-        List<BorrowCreditVO> list = amTradeClient.getBorrowCreditList(req);
-        exportExcel(sheetName, fileName, titles, list, response);
     }
 
     @Override
@@ -274,7 +250,7 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
         params.put("val_profit",borrowCredit.getCreditInterestAssigned() + "");
         AppMsMessage appMsMessage = new AppMsMessage(Integer.valueOf(creditUserId),params,null,MessageConstant.APP_MS_SEND_FOR_USER,CustomConstants.JYTZ_TPL_ZHUANRANGJIESHU);
         try {
-            appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,UUID.randomUUID().toString(),JSON.toJSONBytes(appMsMessage)));
+            commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,UUID.randomUUID().toString(),appMsMessage));
         } catch (MQException e) {
             logger.error("apppush消息发送异常:{}",e);
         }
@@ -295,5 +271,13 @@ public class BorrowCreditServiceImpl implements BorrowCreditService {
         List<DropDownVO> list =  ConvertUtils.convertParamMapToDropDown(creditStatusMap);
         result.setData(list);
         return result;
+    }
+
+    @Override
+    public int selectBorrowCreditCount(BorrowCreditRequest request) {
+        BorrowCreditAmRequest amRequest = new BorrowCreditAmRequest();
+        BeanUtils.copyProperties(request, amRequest);
+        Integer borrowCreditCount = amTradeClient.getBorrowCreditCount(amRequest);
+        return borrowCreditCount == null ? 0 : borrowCreditCount;
     }
 }

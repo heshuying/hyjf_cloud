@@ -38,7 +38,7 @@ public class IncreaseInterestRepayPlanServiceImpl extends BaseServiceImpl implem
     public int getIncreaseInterestRepayPlanCount(IncreaseInterestRepayPlanRequest form) {
         IncreaseInterestRepayDetailExample example = new IncreaseInterestRepayDetailExample();
         IncreaseInterestRepayDetailExample.Criteria cra = example.createCriteria();
-        // 借款编号
+        // 项目编号
         if (StringUtils.isNotEmpty(form.getBorrowNidSrch())) {
             cra.andBorrowNidEqualTo(form.getBorrowNidSrch());
         }
@@ -66,7 +66,7 @@ public class IncreaseInterestRepayPlanServiceImpl extends BaseServiceImpl implem
         IncreaseInterestRepayDetailExample example = new IncreaseInterestRepayDetailExample();
         IncreaseInterestRepayDetailExample.Criteria cra = example.createCriteria();
         List<IncreaseInterestRepayDetailVO> reslutList = new ArrayList<IncreaseInterestRepayDetailVO>();
-        // 借款编号
+        // 项目编号
         if (StringUtils.isNotEmpty(form.getBorrowNidSrch())) {
             cra.andBorrowNidEqualTo(form.getBorrowNidSrch());
         }

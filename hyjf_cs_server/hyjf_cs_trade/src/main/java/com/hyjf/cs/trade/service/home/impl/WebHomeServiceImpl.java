@@ -1,11 +1,22 @@
 package com.hyjf.cs.trade.service.home.impl;
 
-import com.alicp.jetcache.anno.CacheRefresh;
-import com.alicp.jetcache.anno.CacheType;
-import com.alicp.jetcache.anno.Cached;
+import java.io.IOException;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.text.StringEscapeUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
-import com.hyjf.am.response.market.AppAdsCustomizeResponse;
-import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.resquest.trade.ProjectListRequest;
@@ -22,29 +33,12 @@ import com.hyjf.common.http.HtmlUtil;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.common.service.BaseClient;
 import com.hyjf.cs.trade.bean.HomeDataResultBean;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.home.WebHomeService;
-import com.hyjf.cs.trade.util.HomePageDefine;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang3.StringEscapeUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 @Service
 public class WebHomeServiceImpl implements WebHomeService {
@@ -69,9 +63,6 @@ public class WebHomeServiceImpl implements WebHomeService {
 
     @Autowired
     private SystemConfig systemConfig;
-
-    @Autowired
-    private BaseClient baseClient;
 
     @Autowired
     private AmTradeClient amTradeClient;
@@ -149,7 +140,7 @@ public class WebHomeServiceImpl implements WebHomeService {
         // 标的信息 和 统计信息
         // modify by libin 缓存
         //TotalInvestAndInterestResponse res2 = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);//加缓存
-        TotalInvestAndInterestResponse res2 = this.getTotalInvestAndInterestResponse();//加缓存
+        TotalInvestAndInterestResponse res2 =amTradeClient.getTotalInvestAndInterestResponse();//加缓存
         if(res2 == null){
         	logger.error("统计信息查询为空");
         }
@@ -175,9 +166,15 @@ public class WebHomeServiceImpl implements WebHomeService {
         if(!CollectionUtils.isEmpty(noticeList)){
             result.setNoticeInfo(noticeList.get(0));
         }*/
-        List<ContentArticleVO> noticeList = this.getNoticeList(contentArticleRequest);//加缓存
+        List<ContentArticleVO> noticeList = amTradeClient.getNoticeList(contentArticleRequest);//加缓存
         if(!CollectionUtils.isEmpty(noticeList)){
-            result.setNoticeInfo(noticeList.get(0));
+            ContentArticleVO noticeInfo = noticeList.get(0);
+            // 精简首页不要的返回参数，减少网络消耗 begin add by zyk 2018年12月10日11:36:07
+            noticeInfo.setImgurl("");
+            noticeInfo.setSummary("");
+            noticeInfo.setContent("");
+            // 精简首页不要的返回参数，减少网络消耗 end add by zyk 2018年12月10日11:36:07
+            result.setNoticeInfo(noticeInfo);
         }
         // mod by libin by jetcache end
  
@@ -197,7 +194,7 @@ public class WebHomeServiceImpl implements WebHomeService {
             result.setBannerList(new ArrayList<>());
         }*/
         
-        List<AppAdsCustomizeVO> bannerList = this.getBannerList(adsRequest);//加缓存
+        List<AppAdsCustomizeVO> bannerList = amTradeClient.getWebHomeBannerList(adsRequest);//加缓存
         if ( !CollectionUtils.isEmpty(bannerList)){
             result.setBannerList(bannerList);
         }else {
@@ -257,8 +254,21 @@ public class WebHomeServiceImpl implements WebHomeService {
                 }
             }
 
-            result.setCompanyArticle(companyDynamicsList.get(0));
+            // 精简首页不要的返回参数，减少网络消耗 begin add by zyk 2018年12月10日11:42:37
+            ContentArticleVO companArticle =  companyDynamicsList.get(0);
+            companArticle.setImgurl("");
+            companArticle.setSummary("");
+            companArticle.setAuthor("");
+            if (!CollectionUtils.isEmpty(companyDynamicsListSon)){
+                for (ContentArticleVO contentArticleVO : companyDynamicsListSon){
+                    contentArticleVO.setImgurl("");
+                    contentArticleVO.setSummary("");
+                    contentArticleVO.setContent("");
+                }
+            }
+            result.setCompanyArticle(companArticle);
             result.setCompanyDynamicsList(companyDynamicsListSon);
+            // 精简首页不需要的返回参数，减少网络消耗 end add by zyk 2018年12月10日11:42:41
         } else {
             result.setCompanyArticle(new ContentArticleVO());
             result.setCompanyDynamicsList(new ArrayList<>());
@@ -305,39 +315,13 @@ public class WebHomeServiceImpl implements WebHomeService {
     }
 
     /**
-     * @author libin
-     * 抽出查询bannner的方法
-     * @date 2018/9/5 11:38
-     */
-	@Cached(name="webHomeBannerCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
-	@CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
-    private List<AppAdsCustomizeVO> getBannerList(AdsRequest adsRequest){
-    	AppAdsCustomizeResponse res = baseClient.postExe(BANNER_LIST_URL,adsRequest,AppAdsCustomizeResponse.class);
-    	List<AppAdsCustomizeVO> bannerList = res.getResultList();
-    	return bannerList;
-    }
-	
-    /**
-     * @author libin
-     * 抽出查询noticeList的方法
-     * @date 2018/9/5 11:38
-     */
-	@Cached(name="webHomeNoticeCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
-	@CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
-	private List<ContentArticleVO> getNoticeList(ContentArticleRequest contentArticleRequest){
-        ContentArticleResponse response = baseClient.postExe(NOTICE_LIST_URL,contentArticleRequest,ContentArticleResponse.class);
-        List<ContentArticleVO> noticeList = response.getResultList();
-        return noticeList;
-	}
-	
-    /**
      * 安卓下载
      * @author zhangyk
      * @date 2018/9/5 11:38
      */
     @Override
     public void androidDownload(HttpServletResponse response) {
-        String url = "http://app.hyjf.com/data/download/com.huiyingdai.apptest_wangye.apk";
+        String url = "";
         VersionVO versionVO = amConfigClient.getLastestVersion();
         if( versionVO != null && StringUtils.isNotBlank(versionVO.getUrl())){
             url = versionVO.getUrl().trim();
@@ -353,16 +337,5 @@ public class WebHomeServiceImpl implements WebHomeService {
         }
     }
     
-    /**
-     * @author libin
-     * 抽出查询统计信息的方法
-     * @date 2018/9/5 11:38
-     */
-	@Cached(name="webTotalInvestAndInterestCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
-	@CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.MINUTES)
-    private TotalInvestAndInterestResponse getTotalInvestAndInterestResponse(){
-		TotalInvestAndInterestResponse res2 = baseClient.getExe(HomePageDefine.INVEST_INVEREST_AMOUNT_URL,TotalInvestAndInterestResponse.class);//加缓存
-    	return res2;
-    }
 
 }

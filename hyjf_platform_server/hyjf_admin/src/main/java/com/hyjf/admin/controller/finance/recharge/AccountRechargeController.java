@@ -7,6 +7,7 @@ import com.hyjf.admin.beans.request.AccountRechargeRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.service.finance.recharge.AccountRechargeService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
@@ -17,10 +18,7 @@ import com.hyjf.am.resquest.admin.AccountRechargeRequest;
 import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.account.AccountRechargeCustomizeVO;
-import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.StringPool;
+import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -49,6 +47,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/hyjf-admin/recharge")
 public class AccountRechargeController extends BaseController {
+
+    public static final String PERMISSIONS = "recharge";
 
     @Autowired
     private AccountRechargeService rechargeService;
@@ -170,11 +170,11 @@ public class AccountRechargeController extends BaseController {
         userRoleMap.put("key", " ");
         userRoleMap.put("value", "全部");
         userRoleMap2.put("key", 1);
-        userRoleMap2.put("value", "投资人");
+        userRoleMap2.put("value", "出借人");
         userRoleMap3.put("key", 2);
         userRoleMap3.put("value", "借款人");
         userRoleMap4.put("key", 3);
-        userRoleMap4.put("value", "垫付机构");
+        userRoleMap4.put("value", "担保机构");
 
         userRoleList.add(userRoleMap);
         userRoleList.add(userRoleMap2);
@@ -214,11 +214,20 @@ public class AccountRechargeController extends BaseController {
      */
     @ApiOperation(value = "充值管理列表", notes = "资金中心->充值管理")
     @PostMapping(value = "/hjhDayCreditDetailList")
-    public AdminResult<ListResult<AccountRechargeCustomizeVO>> queryRechargeList(@RequestBody AccountRechargeRequestBean requestBean){
+    public AdminResult<ListResult<AccountRechargeCustomizeVO>> queryRechargeList(HttpServletRequest request, @RequestBody AccountRechargeRequestBean requestBean){
 
         AccountRechargeRequest copyRequest = new AccountRechargeRequest();
         BeanUtils.copyProperties(requestBean, copyRequest);
 
+        // 获取该角色 权限列表
+        List<String> perm = (List<String>) request.getSession().getAttribute("permission");
+        //判断权限
+        boolean isShow = false;
+        for (String string : perm) {
+            if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
+                isShow=true;
+            }
+        }
 
         //初始化返回List
         List<AccountRechargeCustomizeVO> returnList = new ArrayList<>();
@@ -232,8 +241,16 @@ public class AccountRechargeController extends BaseController {
             return new AdminResult<>(FAIL, rechargeResponse.getMessage());
         }
 
+        List<AccountRechargeCustomizeVO> accountRechargeCustomizeVO = rechargeResponse.getResultList();
+
         if (CollectionUtils.isNotEmpty(rechargeResponse.getResultList())){
-            returnList = CommonUtils.convertBeanList(rechargeResponse.getResultList(), AccountRechargeCustomizeVO.class);
+            if(!isShow){
+                //如果没有查看脱敏权限,显示加星
+                for(AccountRechargeCustomizeVO rechargeCustomizeVO:accountRechargeCustomizeVO){
+                    rechargeCustomizeVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(rechargeCustomizeVO.getMobile()));
+                }
+            }
+            returnList = CommonUtils.convertBeanList(accountRechargeCustomizeVO, AccountRechargeCustomizeVO.class);
             return new AdminResult<ListResult<AccountRechargeCustomizeVO>>(ListResult.build(returnList, rechargeResponse.getCount()));
         }else {
             return new AdminResult<ListResult<AccountRechargeCustomizeVO>>(ListResult.build(returnList, 0));
@@ -311,15 +328,10 @@ public class AccountRechargeController extends BaseController {
             return jsonObject;
         }
 
-        boolean isAccountUpdate = this.rechargeService.updateAccountAfterRecharge(copyRequest);
+        AccountRechargeCustomizeResponse isAccountUpdate = this.rechargeService.updateAccountAfterRecharge(copyRequest);
 
-        if (isAccountUpdate){
-            jsonObject.put("status", BaseResult.SUCCESS);
-            jsonObject.put("statusDesc", BaseResult.SUCCESS_DESC);
-        }else {
-            jsonObject.put("status", Response.FAIL);
-            jsonObject.put("statusDesc", Response.FAIL_MSG);
-        }
+        jsonObject.put("status", isAccountUpdate.getRtn());
+        jsonObject.put("statusDesc", isAccountUpdate.getMessage());
         return jsonObject;
     }
 
@@ -447,6 +459,22 @@ public class AccountRechargeController extends BaseController {
                 }
             }
         };
+        IValueFormatter statusAdapter = new IValueFormatter() {
+            @Override
+            public String format(Object object) {
+                // 充值类型
+                String status = (String) object;
+                if ("1".equals(status)) {
+                    return "充值中";
+                } else if ("2".equals(status)) {
+                    return "充值成功";
+                } else if ("3".equals(status)) {
+                    return "充值失败";
+                } else {
+                    return status;
+                }
+            }
+        };
         IValueFormatter moneyAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
@@ -467,6 +495,7 @@ public class AccountRechargeController extends BaseController {
         mapAdapter.put("fee", feeAdapter);
         mapAdapter.put("fianfuFee", feeAdapter);
         mapAdapter.put("balance", moneyAdapter);
+        mapAdapter.put("status", statusAdapter);
         return mapAdapter;
     }
 

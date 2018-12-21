@@ -139,7 +139,7 @@ public interface AmUserClient {
     EmployeeCustomizeVO searchEmployeeBuUserId(Integer userId);
 
     /**
-     * 查询自动投资债转异常列表
+     * 查询自动出借债转异常列表
      *
      * @param
      * @return
@@ -150,7 +150,7 @@ public interface AmUserClient {
     /**
      * 同步用户授权状态
      *
-     * @param type 1自动投资授权  2债转授权
+     * @param type 1自动出借授权  2债转授权
      * @return
      * @auth sunpeikai
      */
@@ -1254,7 +1254,7 @@ public interface AmUserClient {
      */
     HjhUserAuthResponse selectUserPayAuthByUserId(int userId);
     /**
-     * 查看该用户在投资表和标的放款记录中是否存在
+     * 查看该用户在出借表和标的放款记录中是否存在
      * @param userId
      * @auther: nxl
      * @return
@@ -1344,4 +1344,11 @@ public interface AmUserClient {
      * @return
      */
     List<SmsCountCustomizeVO> getSmsListForExport(SmsCountRequest request);
+
+    /**
+     * 查询满足条件的服务费授权的条数
+     * @param userPayAuthRequest
+     * @return
+     */
+    int selectUserMemberCount(UserPayAuthRequest userPayAuthRequest);
 }

@@ -47,7 +47,7 @@ import java.util.List;
 @RequestMapping("/am-trade/borrowcommon")
 public class BorrowCommonController extends BaseController {
 
-	// 机构属性 1-投资机构 0-借款机构
+	// 机构属性 1-出借机构 0-借款机构
 	private final int TENDER_INST_TYPE = 1;
 
 	@Autowired
@@ -80,7 +80,7 @@ public class BorrowCommonController extends BaseController {
         // 还款方式
   //      List<BorrowProjectRepay> borrowStyleList = this.borrowCommonService.borrowProjectRepayList();
         bcr.setBorrowStyleList(CommonUtils.convertBeanList(this.borrowCommonService.borrowProjectRepayList(),BorrowProjectRepayVO.class));
-//        //TODO 房屋类型 放在admin层取
+//        //房屋类型 放在admin层取
 //        modelAndView.addObject("housesTypeList", this.borrowCommonService.getParamNameList(CustomConstants.HOUSES_TYPE));
 //
 //        // 公司规模
@@ -92,7 +92,7 @@ public class BorrowCommonController extends BaseController {
         // 资产机构
 //        modelAndView.addObject("instList", this.borrowCommonService.getInstList());
         bcr.setInstList(CommonUtils.convertBeanList(this.borrowCommonService.getInstList(),HjhInstConfigVO.class));
-        //TODO 合作机构 放在admin层数
+        //合作机构 放在admin层数
        // modelAndView.addObject("links", this.borrowCommonService.getLinks());
         //货币种类
 //        List<ParamName> list = this.couponBackMoneyHztService.getParamNameList(CustomConstants.CURRENCY_STATUS);
@@ -131,13 +131,13 @@ public class BorrowCommonController extends BaseController {
             if (isExistsRecord) {
                 this.borrowCommonService.getBorrow(form);
             } else {
-                // 设置标的的投资有效时间
+                // 设置标的的出借有效时间
                 form.setBorrowValidTime(this.borrowCommonService.getBorrowConfig("BORROW_VALID_TIME"));
                 // 设置标的的银行注册时间
                 form.setBankRegistDays(this.borrowCommonService.getBorrowConfig("BORROW_REGIST_DAYS"));
             }
         } else {
-            // 设置标的的投资有效时间
+            // 设置标的的出借有效时间
             form.setBorrowValidTime(this.borrowCommonService.getBorrowConfig("BORROW_VALID_TIME"));
             // 设置标的的银行注册时间
             form.setBankRegistDays(this.borrowCommonService.getBorrowConfig("BORROW_REGIST_DAYS"));
@@ -194,7 +194,7 @@ public class BorrowCommonController extends BaseController {
         bcr.setBorrowProjectType(CommonUtils.convertBeanList(this.borrowCommonService.borrowProjectTypeList(CustomConstants.HZT),BorrowProjectTypeVO.class));
         // 还款方式
         bcr.setBorrowStyleList(CommonUtils.convertBeanList(this.borrowCommonService.borrowProjectRepayList(),BorrowProjectRepayVO.class));
-		// TODO 货币种类 配置表
+		// 货币种类 配置表
 		// List<ParamName> list =
 		// this.borrowCommonService.getParamNameList(CustomConstants.CURRENCY_STATUS);
 		//TODO 暂时屏蔽 画面验证(信批需求新增字段无需校验)
@@ -238,7 +238,7 @@ public class BorrowCommonController extends BaseController {
 
 
 			// add by xiashuqing 20171129 begin
-			// 定向发标 只获取投资端机构
+			// 定向发标 只获取出借端机构
 	        bcr.setInstConfigList(CommonUtils.convertBeanList(this.instConfigService.getInstConfigByType(TENDER_INST_TYPE),HjhInstConfigVO.class));
 		//	modelAndView.addObject("instConfigList", this.instConfigService.getInstConfigByType(TENDER_INST_TYPE));
 			// add by xiashuqing 20171129 end
@@ -470,7 +470,7 @@ public class BorrowCommonController extends BaseController {
 		return this.borrowCommonService.isExistsUser(userId);
 	}
 
-//	/**TODO 放在配置
+//	/**放在配置
 //	 * 项目申请人是否存在
 //	 *
 //	 * @param request
@@ -516,7 +516,7 @@ public class BorrowCommonController extends BaseController {
 //	}
 
 //	/**TODO放在用户里
-//	 * 垫付机构用户名是否存在
+//	 * 担保机构用户名是否存在
 //	 *
 //	 * @param request
 //	 * @return
@@ -571,12 +571,12 @@ public class BorrowCommonController extends BaseController {
 	}
 
 	/**
-	 * 获取融资服务费率 & 账户管理费率
+	 * 获取放款服务费率 & 还款服务费率
 	 *
 	 * @param borrowCommonRequest
 	 * @return
 	 */
-	@ApiOperation(value = "获取融资服务费率 & 账户管理费率")
+	@ApiOperation(value = "获取放款服务费率 & 还款服务费率")
 	@RequestMapping("/getBorrowServiceScale")
 	public BorrowCommonVO getBorrowServiceScale(@RequestBody @Valid BorrowCommonRequest borrowCommonRequest) {
 		BorrowCommonVO scale = this.borrowCommonService.getBorrowServiceScale(borrowCommonRequest);

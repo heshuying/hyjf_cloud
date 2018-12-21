@@ -64,11 +64,11 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
     SystemConfig systemConfig;
 
     /**
-     * 自动投资、债转授权
+     * 自动出借、债转授权
      *
      * @param user
      * @param client 0web 1wechat 2app
-     * @param type   1表示投资 2表示债转
+     * @param type   1表示出借 2表示债转
      * @param
      * @return
      */
@@ -80,7 +80,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
             //用户已授权自动债转
             throw new ReturnMessageException(MsgEnum.ERR_AUTHORIZE_REPEAT);
         } else if (hjhUserAuth != null && hjhUserAuth.getAutoInvesStatus().intValue() == 1 && type.equals(ClientConstants.QUERY_TYPE_1)) {
-            //用户已授权自动投资
+            //用户已授权自动出借
             throw new ReturnMessageException(MsgEnum.ERR_AUTHORIZE_REPEAT);
         }
         // 组装发往江西银行参数
@@ -99,11 +99,11 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
     }
 
     /**
-     * app wechat授权自动债转、投资同步回调
+     * app wechat授权自动债转、出借同步回调
      *
      * @param token
      * @param bean
-     * @param userAutoType 1债转 0投资
+     * @param userAutoType 1债转 0出借
      * @param
      * @return
      */
@@ -225,14 +225,14 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         // 异步调用路
         String bgRetUrl = "";
         if (BankCallConstant.QUERY_TYPE_1.equals(type)) {
-            remark = "投资人自动投标签约增强";
+            remark = "出借人自动投标签约增强";
             bgRetUrl = "http://CS-USER/hyjf-web/user/invesbgreturn";
             bean.setTxCode(BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS);
             bean.setDeadline(GetDate.date2Str(GetDate.countDate(1, 5), new SimpleDateFormat("yyyyMMdd")));
             bean.setTxAmount("1000000");
             bean.setTotAmount("1000000000");
         } else if (BankCallConstant.QUERY_TYPE_2.equals(type)) {
-            remark = "投资人自动债权转让签约增强";
+            remark = "出借人自动债权转让签约增强";
             bgRetUrl = "http://CS-USER/hyjf-web/user/creditbgreturn";
             bean.setTxCode(BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS);
         }
@@ -306,10 +306,10 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         }
         //来自债转成功页面
         if (userAuth == null || userAuth.getAutoInvesStatus() == 0) {
-            //未设置自动投资
+            //未设置自动出借
             result.put("inves", "1");
         } else {
-            //已设置自动投资
+            //已设置自动出借
             result.put("inves", "0");
         }
 
@@ -510,9 +510,9 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         bean.setRetUrl(retUrl);
         bean.setSuccessfulUrl(success);
         if (type == 1) {
-            // 2.4.4.投资人自动投标签约增强
+            // 2.4.4.出借人自动投标签约增强
             bgRetUrl += "/userAuthInvesBgreturn";
-            remark = "投资人自动投标签约增强";
+            remark = "出借人自动投标签约增强";
             txcode = BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS;
             // 签约到期时间
             bean.setDeadline(GetDate.date2Str(GetDate.countDate(1, 5), new SimpleDateFormat("yyyyMMdd")));
@@ -521,9 +521,9 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
             // 自动投标总金额上限（不算已还金额）
             bean.setTotAmount("1000000000");
         } else if (type == 2) {
-            // 2.4.8.投资人自动债权转让签约增强
+            // 2.4.8.出借人自动债权转让签约增强
             bgRetUrl += "/userAuthCreditBgreturn";
-            remark = "投资人自动债权转让签约增强";
+            remark = "出借人自动债权转让签约增强";
             txcode = BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS;
         }
         String orderId = GetOrderIdUtils.getOrderId2(users.getUserId());
@@ -580,7 +580,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
             // 判断是否授权过
             HjhUserAuthVO hjhUserAuth = this.getHjhUserAuth(user.getUserId());
             if (hjhUserAuth != null && hjhUserAuth.getAutoInvesStatus() == 1) {
-                throw new CheckException(BaseResultBeanFrontEnd.FAIL, "用户自动投资已授权,无需重复授权!");
+                throw new CheckException(BaseResultBeanFrontEnd.FAIL, "用户自动出借已授权,无需重复授权!");
             }
         }
 
@@ -749,7 +749,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         } else {
             repwdResult.set("accountId", bean.getAccountId());
         }
-        //投资人签约状态查询
+        //出借人签约状态查询
         BankCallBean retBean = getUserAuthQUery(Integer.parseInt(bean.getLogUserId()), type);
         bean = retBean;
         if (bean != null && BankCallStatusConstant.RESPCODE_SUCCESS.equals(bean.getRetCode()) && "1".equals(bean.getState())) {
@@ -838,7 +838,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
 
     @Override
     public BankCallBean getUserAuthQUery(Integer userId, String type) {
-        // 调用查询投资人签约状态查询
+        // 调用查询出借人签约状态查询
         BankOpenAccountVO bankOpenAccount = amUserClient.selectById(userId);
         BankCallBean selectbean = new BankCallBean();
         selectbean.setVersion(BankCallConstant.VERSION_10);
@@ -852,9 +852,9 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         // 操作者ID
         selectbean.setLogUserId(String.valueOf(userId));
         selectbean.setLogOrderId(GetOrderIdUtils.getOrderId2(userId));
-        //根据银行查询投资人签约状态
+        //根据银行查询出借人签约状态
         if (BankCallConstant.QUERY_TYPE_1.equals(type)) {
-            selectbean.setLogRemark("用户授权自动投资");
+            selectbean.setLogRemark("用户授权自动出借");
         } else if (BankCallConstant.QUERY_TYPE_2.equals(type)) {
             selectbean.setLogRemark("用户授权自动债转");
         }
@@ -886,7 +886,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         // 版本号  交易代码  机构代码  银行代码  交易日期  交易时间  交易流水号   交易渠道
         BankCallBean bean = new BankCallBean(BankCallConstant.VERSION_10, txcode, userId, channel);
         if (BankCallConstant.QUERY_TYPE_1.equals(type)) {
-            remark = "投资人自动投标签约增强";
+            remark = "出借人自动投标签约增强";
             retUrl += "/userAuthInvesReturn";
             bgRetUrl += "/userAuthInvesBgreturn";
             bean.setTxCode(BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS);
@@ -896,7 +896,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         } else if (BankCallConstant.QUERY_TYPE_2.equals(type)) {
             retUrl += "/userCreditAuthInvesReturn";
             bgRetUrl += "/userCreditAuthInvesBgreturn";
-            remark = "投资人自动债权转让签约增强";
+            remark = "出借人自动债权转让签约增强";
             bean.setTxCode(BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS);
         }
         retUrl += "?acqRes=" + payRequestBean.getAcqRes() + "&callback=" + payRequestBean.getNotifyUrl().replace("#", "*-*-*");
@@ -917,7 +917,7 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
     @Override
     public BankCallBean getTermsAuthQuery(int userId, String channel) {
         BankOpenAccountVO bankOpenAccount = this.getBankOpenAccount(userId);
-        // 调用查询投资人签约状态查询
+        // 调用查询出借人签约状态查询
         BankCallBean selectbean = new BankCallBean();
         // 接口版本号
         selectbean.setVersion(BankCallConstant.VERSION_10);
@@ -957,9 +957,9 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
         String forgetPassworedUrl = CustomConstants.FORGET_PASSWORD_URL + "?sign=" + sign;
 
         if (type == 1) {
-            // 2.4.4.投资人自动投标签约增强
+            // 2.4.4.出借人自动投标签约增强
             bgRetUrl += "/userAuthInvesBgreturn";
-            remark = "投资人自动投标签约增强";
+            remark = "出借人自动投标签约增强";
             txcode = BankCallConstant.TXCODE_AUTO_BID_AUTH_PLUS;
             // 签约到期时间
             bean.setDeadline(GetDate.date2Str(GetDate.countDate(1, 5), new SimpleDateFormat("yyyyMMdd")));
@@ -968,9 +968,9 @@ public class AutoPlusServiceImpl extends BaseUserServiceImpl implements AutoPlus
             // 自动投标总金额上限（不算已还金额）
             bean.setTotAmount("1000000000");
         } else if (type == 2) {
-            // 2.4.8.投资人自动债权转让签约增强
+            // 2.4.8.出借人自动债权转让签约增强
             bgRetUrl += "/userAuthCreditBgreturn";
-            remark = "投资人自动债权转让签约增强";
+            remark = "出借人自动债权转让签约增强";
             txcode = BankCallConstant.TXCODE_AUTO_CREDIT_INVEST_AUTH_PLUSS;
         }
         String orderId = GetOrderIdUtils.getOrderId2(users.getUserId());

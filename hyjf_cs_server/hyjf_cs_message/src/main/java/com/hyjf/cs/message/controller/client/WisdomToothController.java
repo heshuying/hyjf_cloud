@@ -27,6 +27,7 @@ import java.util.List;
 @Api(tags = "智齿客服",description = "WEB智齿客服")
 @RestController
 @RequestMapping("/hyjf-web/wisdomtooth")
+@SuppressWarnings("unchecked")
 public class WisdomToothController {
 
     Logger _log = LoggerFactory.getLogger(WisdomToothController.class);

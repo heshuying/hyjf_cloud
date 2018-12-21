@@ -3,6 +3,7 @@
  */
 package com.hyjf.admin.controller.config;
 
+import com.alibaba.fastjson.JSONObject;
 import com.google.common.collect.Maps;
 import com.hyjf.admin.beans.request.BailConfigRequestBean;
 import com.hyjf.admin.beans.request.UserManagerRequestBean;
@@ -26,6 +27,7 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.*;
+import io.netty.handler.codec.json.JsonObjectDecoder;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -52,7 +54,7 @@ import java.util.Map;
  * @author PC-LIUSHOUYI
  * @version BailConfigController, v0.1 2018/9/26 15:30
  */
-@Api(value = "配置中心-保证金配置", tags = "配置中心-保证金配置")
+@Api(value = "配置中心-合作额度配置", tags = "配置中心-合作额度配置")
 @RestController
 @RequestMapping("/hyjf-admin/bail_config")
 public class BailConfigController extends BaseController {
@@ -61,12 +63,12 @@ public class BailConfigController extends BaseController {
     BailConfigService bailConfigService;
 
     /**
-     * 保证金配置列表查询
+     * 合作额度配置列表查询
      *
      * @param request
      * @return
      */
-    @ApiOperation(value = "保证金配置列表查询", notes = "保证金配置列表查询")
+    @ApiOperation(value = "合作额度配置列表查询", notes = "合作额度配置列表查询")
     @PostMapping(value = "/search")
     @ResponseBody
     public AdminResult<BailConfigResponseBean> search(@RequestBody BailConfigRequest request) {
@@ -92,12 +94,12 @@ public class BailConfigController extends BaseController {
     }
 
     /**
-     * 画面迁移-保证金配置详情
+     * 画面迁移-合作额度配置详情
      *
      * @param idStr
      * @return
      */
-    @ApiOperation(value = "保证金配置详情", notes = "保证金配置详情")
+    @ApiOperation(value = "合作额度配置详情", notes = "合作额度配置详情")
     @GetMapping("/info/{idStr}")
     @ResponseBody
     public AdminResult<BailConfigInfoCustomizeVO> info(@PathVariable String idStr) {
@@ -106,7 +108,7 @@ public class BailConfigController extends BaseController {
         if (null == id || 0 == id) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
-        // 更新当前机构可用的还款方式并返回最新保证金详情(更新查询分开事务、查询取不到最新更新的数据)
+        // 更新当前机构可用的还款方式并返回最新合作额度详情(更新查询分开事务、查询取不到最新更新的数据)
         BailConfigInfoCustomizeVO bailConfigInfoCustomizeVO = bailConfigService.updateSelectBailConfigById(id);
         if (null == bailConfigInfoCustomizeVO) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -115,16 +117,16 @@ public class BailConfigController extends BaseController {
     }
 
     /**
-     * 未配置保证金的机构编号下拉框
+     * 未配置合作额度的机构编号下拉框
      *
      * @return
      */
-    @ApiOperation(value = "未配置保证金的机构编号下拉框", notes = "未配置保证金的机构编号下拉框")
+    @ApiOperation(value = "未配置合作额度的机构编号下拉框", notes = "未配置合作额度的机构编号下拉框")
     @GetMapping("/select_noused_inst_config_list")
     public AdminResult<List<DropDownVO>> selectNoUsedInstConfigList() {
         List<HjhInstConfigVO> hjhInstConfigVOList = bailConfigService.selectNoUsedInstConfigList();
         if (null == hjhInstConfigVOList || hjhInstConfigVOList.size() <= 0) {
-            return new AdminResult<>(FAIL, "未查询到未配置保证金的机构");
+            return new AdminResult<>(FAIL, "未查询到未配置合作额度的机构");
         }
         List<DropDownVO> dropDownVOList = ConvertUtils.convertListToDropDown(hjhInstConfigVOList, "instCode", "instName");
         AdminResult<List<DropDownVO>> result = new AdminResult<List<DropDownVO>>();
@@ -133,13 +135,13 @@ public class BailConfigController extends BaseController {
     }
 
     /**
-     * 添加保证金配置
+     * 添加合作额度配置
      *
      * @param request
      * @param requestBean
      * @return
      */
-    @ApiOperation(value = "添加保证金配置", notes = "添加保证金配置")
+    @ApiOperation(value = "添加合作额度配置", notes = "添加合作额度配置")
     @PostMapping("/insert_bail_config")
     public AdminResult insertBailConfig(HttpServletRequest request, @RequestBody BailConfigRequestBean requestBean) {
 
@@ -157,9 +159,9 @@ public class BailConfigController extends BaseController {
         bailConfigAddRequest.setCreateTime(new Date());
 
         // 发标额度上限
-        bailConfigAddRequest.setPushMarkLine(bailConfigAddRequest.getBailTatol().multiply(new BigDecimal("100")).divide(new BigDecimal(bailConfigAddRequest.getBailRate()), 2, BigDecimal.ROUND_DOWN));
+//        bailConfigAddRequest.setPushMarkLine(bailConfigAddRequest.getBailTatol().multiply(new BigDecimal("100")).divide(new BigDecimal(bailConfigAddRequest.getBailRate()), 2, BigDecimal.ROUND_DOWN));
         // 发标额度余额（默认为上限）
-        bailConfigAddRequest.setRemainMarkLine(bailConfigAddRequest.getPushMarkLine());
+//        bailConfigAddRequest.setRemainMarkLine(bailConfigAddRequest.getPushMarkLine());
 
         // 查询周期内发标已发额度
         BigDecimal sendedAccountByCycBD = BigDecimal.ZERO;
@@ -171,8 +173,8 @@ public class BailConfigController extends BaseController {
 
         boolean isInset = bailConfigService.insertBailConfig(bailConfigAddRequest);
         if (isInset) {
-            // 根据还款方式更新保证金还款方式验证的有效性
-            isInset = this.bailConfigService.updateBailInfoDelFlg(instCode);
+            // 根据还款方式更新合作额度还款方式验证的有效性
+//            isInset = this.bailConfigService.updateBailInfoDelFlg(instCode);
         } else {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -192,13 +194,13 @@ public class BailConfigController extends BaseController {
     }
 
     /**
-     * 更新保证金配置
+     * 更新合作额度配置
      *
      * @param request
      * @param requestBean
      * @return
      */
-    @ApiOperation(value = "更新保证金配置", notes = "更新保证金配置")
+    @ApiOperation(value = "更新合作额度配置", notes = "更新合作额度配置")
     @PostMapping("/update_bail_config")
     public AdminResult updateBailConfig(HttpServletRequest request, @RequestBody BailConfigRequestBean requestBean) {
 
@@ -217,8 +219,8 @@ public class BailConfigController extends BaseController {
 
         boolean isInset = bailConfigService.updateBailConfig(bailConfigAddRequest);
         if (isInset) {
-            // 根据还款方式更新保证金还款方式验证的有效性
-            isInset = this.bailConfigService.updateBailInfoDelFlg(instCode);
+            // 根据还款方式更新合作额度还款方式验证的有效性
+//            isInset = this.bailConfigService.updateBailInfoDelFlg(instCode);
         } else {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }
@@ -235,13 +237,13 @@ public class BailConfigController extends BaseController {
 
 
     /**
-     * 删除保证金配置
+     * 删除合作额度配置
      *
      * @param request
      * @param id
      * @return
      */
-    @ApiOperation(value = "删除保证金配置", notes = "删除保证金配置")
+    @ApiOperation(value = "删除合作额度配置", notes = "删除合作额度配置")
     @PostMapping("/delete_bail_config")
     public AdminResult deleteBailConfig(HttpServletRequest request, Integer id) {
         BailConfigAddRequest bailConfigAddRequest = new BailConfigAddRequest();
@@ -316,7 +318,7 @@ public class BailConfigController extends BaseController {
 
     public void exportAccountsExcel(@RequestBody BailConfigRequest request, HttpServletResponse response) throws Exception {
         // 表格sheet名称
-        String sheetName = "保证金配置列表";
+        String sheetName = "合作额度配置列表";
 
         List<BailConfigCustomizeVO> recordList = this.bailConfigService.selectRecordList(request);
         String fileName = null;
@@ -500,13 +502,13 @@ public class BailConfigController extends BaseController {
      * @param response
      * @param request
      */
-    @ApiOperation(value = "保证金配置列表导出", notes = "保证金配置列表导出")
+    @ApiOperation(value = "合作额度配置列表导出", notes = "合作额度配置列表导出")
     @PostMapping("/export_account_detail_excel")
     public void exportToExcel(HttpServletRequest requestt,@RequestBody BailConfigRequest request, HttpServletResponse response) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
-        String sheetName = "保证金配置列表";
+        String sheetName = "合作额度配置列表";
         // 文件名称
         String fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) +  CustomConstants.EXCEL_EXT;
         // 声明一个工作薄
@@ -514,49 +516,44 @@ public class BailConfigController extends BaseController {
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
         //请求第一页5000条
-//        request.setPageSize(defaultRowMaxCount);
-//        request.setCurrPage(1);
-        List<BailConfigCustomizeVO> recordList = this.bailConfigService.selectRecordList(request);
+        request.setPageSize(defaultRowMaxCount);
         
-        Integer totalCount = recordList.size();
+
+        Integer totalCount = bailConfigService.selectBailConfigCount(request);
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = "";
 
-        for (int i = 1; i < sheetCount; i++) {
-			int start=(i-1) * defaultRowMaxCount;
-			int end = Math.min(totalCount, i * defaultRowMaxCount);
-
+        for (int i = 1; i <= sheetCount; i++) {
+        	request.setCurrPage(i);
 			sheetNameTmp = sheetName + "_第" + (i) + "页";
-			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  recordList.subList(start, end));
+			helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, this.bailConfigService.selectRecordList(request));
         }
-        
         DataSet2ExcelSXSSFHelper.write2Response(requestt, response, fileName, workbook);
     }
 
     private Map<String, String> buildMap() {
         Map<String, String> map = Maps.newLinkedHashMap();
         map.put("instName", "资产来源");
+//        map.put("bailTatol", "保证金金额");
+//        map.put("bailRate", "保证金比例");
+//        map.put("newCreditLine", "新增授信额度");
+//        map.put("loanCreditLine", "在贷授信额度");
         map.put("dayMarkLine", "日推标额度");
         map.put("monthMarkLine", "月推标额度");
-        map.put("isAccumulate", "未用额度是否累计");
-        map.put("userName", "授信周期");
-        map.put("bailRate", "保证金比例");
-        map.put("bailTatol", "保证金金额");
-        map.put("newCreditLine", "新增授信额度");
-        map.put("loanCreditLine", "在贷余额额度");
-        map.put("monthLLL", "还款授信方式:等额本息");
-        map.put("endLLL", "还款授信方式:按月计息,到期还本还息");
-        map.put("endmonthLLL", "还款授信方式:先息后本");
-        map.put("enddayLLL", "还款授信方式:按天计息，到期还本息");
-        map.put("principalLLL", "还款授信方式:等额本金");
+//        map.put("pushMarkLine", "发标额度上限");
+//        map.put("loanMarkLine", "发标已发额度");
+//        map.put("remainMarkLine", "发标额度余额");
+//        map.put("repayedCapital", "已还本金");
+        map.put("newCreditLine", "合作额度");
+        map.put("cycLoanTotal", "周期内发标额度");
         return map;
     }
     private Map<String, IValueFormatter> buildValueAdapter() {
         Map<String, IValueFormatter> mapAdapter = Maps.newHashMap();
-        IValueFormatter isAccumulateAdapter = new IValueFormatter() {
+        /*IValueFormatter isAccumulateAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
                 String isAccumulateAdapter = (String) object;
@@ -565,19 +562,19 @@ public class BailConfigController extends BaseController {
                 }else {
                 	return "是";
                 }
-             
+
             }
         };
         IValueFormatter bailRateAdapter = new IValueFormatter() {
             @Override
             public String format(Object object) {
-                String bailRate = (String) object;
+                Integer bailRate = (Integer) object;
                 return bailRate+"%";
             }
         };
-     
+
         mapAdapter.put("isAccumulateAdapter", isAccumulateAdapter);
-        mapAdapter.put("bailRate", bailRateAdapter);
+        mapAdapter.put("bailRate", bailRateAdapter);*/
         return mapAdapter;
     }
 }

@@ -19,6 +19,11 @@ import java.util.List;
  * @version AccedeListService.java, v0.1 2018年7月7日 下午3:04:29
  */
 public interface AccedeListService {
+
+	int getAccedeListByParamCount(AccedeListRequest form);
+
+	List<AccedeListCustomizeVO> getAccedeListByParamList(AccedeListRequest form);
+
 	/**
      * 获取加入计划列表
      * @return
@@ -91,11 +96,19 @@ public interface AccedeListService {
 	void updateSaveSignInfo(TenderAgreementVO tenderAgreement,String borrowNid, Integer transType, String instCode);
 	
 	/**
-	 * 查询用户投资详情
+	 * 查询用户出借详情
 	 * @param tenderAgreement
 	 * @param borrowNid
 	 * @param transType
 	 * @param instCode
 	 */
 	UserHjhInvistDetailVO selectUserHjhInvistDetail(AccedeListRequest request);
+
+	/**
+	 * list分页
+	 * @param request
+	 * @param result
+	 * @return
+	 */
+	List<AccedeListCustomizeVO> paging(AccedeListRequest request, List<AccedeListCustomizeVO> result);
 }

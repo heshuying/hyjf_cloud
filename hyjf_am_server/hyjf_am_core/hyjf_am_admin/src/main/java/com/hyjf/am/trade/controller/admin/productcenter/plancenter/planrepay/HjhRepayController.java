@@ -5,7 +5,6 @@ import com.hyjf.am.response.trade.HjhRepayResponse;
 import com.hyjf.am.resquest.admin.HjhRepayRequest;
 import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.trade.dao.model.auto.HjhPlan;
-import com.hyjf.am.trade.dao.model.auto.HjhRepay;
 import com.hyjf.am.trade.service.admin.hjhplan.HjhRepayService;
 import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
 import com.hyjf.common.util.CommonUtils;
@@ -19,6 +18,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -77,7 +77,7 @@ public class HjhRepayController {
         //实际退出时间
         if (StringUtils.isNotEmpty(request.getActulRepayTimeStart())){
             params.put("actulRepayTimeStart", request.getActulRepayTimeStart() + " 00:00:00");
-            params.put("actulRepayTimeEnd", request.getActulRepayTimeEnd() + "23:59:59");
+            params.put("actulRepayTimeEnd", request.getActulRepayTimeEnd() + " 23:59:59");
         }
 
         // 汇计划三期新增 推荐人查询
@@ -86,8 +86,9 @@ public class HjhRepayController {
         }
         // 查询 总条数
         Integer count = this.hjhRepayService.getRepayCount(params);
-
+        List<HjhRepayVO> repayVOListSum = new ArrayList<>();
         if (request.getCurrPage() > 0){
+            repayVOListSum = this.hjhRepayService.selectByExample(params);
 
             Paginator paginator = new Paginator(request.getCurrPage(), count);
             params.put("limitStart", paginator.getOffset());
@@ -125,31 +126,31 @@ public class HjhRepayController {
         // 汇计划三期 清算服务费 总计
         BigDecimal sumLqdServiceFee = BigDecimal.ZERO;
 
-        for(int i = 0; i < repayVOList.size(); i++){
-            if (repayVOList.get(i).getAccedeAccount() == null){
+        for(int i = 0; i < repayVOListSum.size(); i++){
+            if (repayVOListSum.get(i).getAccedeAccount() == null){
                 sumAccedeAccount = BigDecimal.ZERO;
             }else {
-                sumAccedeAccount = sumAccedeAccount.add(repayVOList.get(i).getAccedeAccount());
+                sumAccedeAccount = sumAccedeAccount.add(repayVOListSum.get(i).getAccedeAccount());
             }
-            if (repayVOList.get(i).getRepayInterest() == null){
+            if (repayVOListSum.get(i).getRepayInterest() == null){
                 sumRepayInterest = BigDecimal.ZERO;
             }else {
-                sumRepayInterest = sumRepayInterest.add(repayVOList.get(i).getRepayInterest());
+                sumRepayInterest = sumRepayInterest.add(repayVOListSum.get(i).getRepayInterest());
             }
-            if (repayVOList.get(i).getActualRevenue() == null){
+            if (repayVOListSum.get(i).getActualRevenue() == null){
                 sumActualRevenue = BigDecimal.ZERO;
             }else {
-                sumActualRevenue = sumActualRevenue.add(repayVOList.get(i).getActualRevenue());
+                sumActualRevenue = sumActualRevenue.add(repayVOListSum.get(i).getActualRevenue());
             }
-            if (repayVOList.get(i).getActualPayTotal() == null){
+            if (repayVOListSum.get(i).getActualPayTotal() == null){
                 sumActualPayTotal = BigDecimal.ZERO;
             }else {
-                sumActualPayTotal = sumActualPayTotal.add(repayVOList.get(i).getActualPayTotal());
+                sumActualPayTotal = sumActualPayTotal.add(repayVOListSum.get(i).getActualPayTotal());
             }
-            if (repayVOList.get(i).getLqdServiceFee() == null){
+            if (repayVOListSum.get(i).getLqdServiceFee() == null){
                 sumLqdServiceFee = BigDecimal.ZERO;
             }else {
-                sumLqdServiceFee = sumLqdServiceFee.add(repayVOList.get(i).getLqdServiceFee());
+                sumLqdServiceFee = sumLqdServiceFee.add(repayVOListSum.get(i).getLqdServiceFee());
             }
         }
 

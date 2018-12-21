@@ -36,13 +36,11 @@ import java.util.List;
  * @author zhangqingqing
  * @version AmDataCollect, v0.1 2018/6/25 10:26
  * <p>
- * todo 这个类全部错了，都要改 ！！！！！！！！！！！！！！！！！！！！！！！！
  */
 @Service
 public class CsMessageClientImpl implements CsMessageClient {
     @Autowired
     private RestTemplate restTemplate;
-
 
     @Override
     public AccountWebListResponse queryAccountWebList(AccountWebListVO accountWebList) {
@@ -153,6 +151,11 @@ public class CsMessageClientImpl implements CsMessageClient {
         return response;
     }
 
+    @Override
+    public OperationReportResponse getRecordCount(OperationReportRequest request) {
+        OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/count", request, OperationReportResponse.class).getBody();
+        return response;
+    }
     @Override
     public OperationReportResponse listByRelease(OperationReportRequest request) {
         OperationReportResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/operation_report/listbyrelease", request, OperationReportResponse.class).getBody();

@@ -21,7 +21,7 @@ import java.io.Serializable;
 
 /**
  * @ClassName PlanLockCustomize
- * @Description TODO
+ * @Description
  * @author 孙小宝
  * @date 2016年11月24日 下午3:49:17
  */
@@ -113,7 +113,7 @@ public class PlanLockCustomizeVO extends BaseVO {
 	 */
 	private String cycleTimes;
 	/**
-	 * 此笔加入是否已经完成 0投资中 1投资完成 2还款中 3还款完成
+	 * 此笔加入是否已经完成 0出借中 1出借完成 2还款中 3还款完成
 	 */
 	private String status;
 	/**
@@ -196,7 +196,7 @@ public class PlanLockCustomizeVO extends BaseVO {
 	private String lastRepayTime;
 	
 	/**
-	 * 投资类型 1 直投  2 汇添金
+	 * 出借类型 1 直投  2 汇添金
 	 */
 	private String tenderType;
 	

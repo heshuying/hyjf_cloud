@@ -6,7 +6,6 @@ import com.hyjf.am.response.trade.BorrowTenderCpnResponse;
 import com.hyjf.am.response.trade.CoupUserResponse;
 import com.hyjf.am.response.trade.CouponUserResponse;
 import com.hyjf.am.response.trade.coupon.*;
-import com.hyjf.am.response.trade.coupon.*;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.CouponCustomize;
@@ -17,7 +16,6 @@ import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.repay.CurrentHoldRepayMentPlanListVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.validator.Validator;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
@@ -56,11 +54,11 @@ public class CouponController extends BaseController {
         return response;
     }
 
-    @ApiOperation(value = " 优惠券投资")
+    @ApiOperation(value = " 优惠券出借")
     @PostMapping("/updateCouponTender")
     public Integer updateCouponTender(@RequestBody CouponTenderVO couponTender) {
         try{
-            logger.info("优惠券投资开始。。。。。。。");
+            logger.info("优惠券出借开始。。。。。。。");
             couponService.updateCouponTender(couponTender);
             return 1;
         }catch (Exception e ) {
@@ -70,7 +68,7 @@ public class CouponController extends BaseController {
         }
     }
 
-    @ApiOperation(value = "获取优惠券投资信息")
+    @ApiOperation(value = "获取优惠券出借信息")
     @GetMapping("/getCouponTenderByTender/{userId}/{borrowNid}/{logOrdId}/{couponGrantId}")
     public BorrowTenderCpnResponse getCouponTenderByTender(@PathVariable("userId") Integer userId,
                                                            @PathVariable("borrowNid") String borrowNid,
@@ -97,7 +95,7 @@ public class CouponController extends BaseController {
         return response;
     }
 
-    @ApiOperation(value = "获取优惠券投资信息")
+    @ApiOperation(value = "获取优惠券出借信息")
     @GetMapping("/getCouponTenderInfoByNid/{nid}")
     public BorrowTenderCpnResponse getCouponTenderInfoByNid(@PathVariable String nid){
         BorrowTenderCpnResponse response=new BorrowTenderCpnResponse();
@@ -108,7 +106,7 @@ public class CouponController extends BaseController {
         return response;
     }
 
-    @ApiOperation(value = "获取汇计划投资列表（优惠券）")
+    @ApiOperation(value = "获取汇计划出借列表（优惠券）")
     @GetMapping("/getborrowtendercpnhjhlist/{orderId}")
     public HjhCouponLoansResponse getBorrowTenderCpnHjhList(@PathVariable String orderId){
         HjhCouponLoansResponse response=new HjhCouponLoansResponse();
@@ -117,7 +115,7 @@ public class CouponController extends BaseController {
         return response;
     }
 
-    @ApiOperation(value = "优惠券单独投资时用")
+    @ApiOperation(value = "优惠券单独出借时用")
     @GetMapping("/getborrowtendercpnhjhcoupononlylist/{couponOrderId}")
     public HjhCouponLoansResponse getBorrowTenderCpnHjhCouponOnlyList(@PathVariable String couponOrderId){
         HjhCouponLoansResponse response=new HjhCouponLoansResponse();
@@ -172,7 +170,7 @@ public class CouponController extends BaseController {
         return response;
     }
 
-    @ApiOperation(value = "获取我的优惠券投资记录")
+    @ApiOperation(value = "获取我的优惠券出借记录")
     @PostMapping("/getAppMyPlanCouponInfo")
     public AppCouponResponse getAppMyPlanCouponInfo(@RequestBody Map<String,Object> params){
         AppCouponResponse response = new AppCouponResponse();
@@ -182,7 +180,7 @@ public class CouponController extends BaseController {
     }
 
     /**
-     * 根据订单号查询此笔投资是否使用优惠券
+     * 根据订单号查询此笔出借是否使用优惠券
      *
      * @param orderId
      * @return
@@ -198,7 +196,7 @@ public class CouponController extends BaseController {
     }
 
     /**
-     * 根据优惠券投资ID获取优惠券投资信息
+     * 根据优惠券出借ID获取优惠券出借信息
      *
      * @param couponTenderId
      * @return
@@ -231,7 +229,7 @@ public class CouponController extends BaseController {
     }
 
     /**
-     * 根据优惠券投资ID获取优惠券投资信息
+     * 根据优惠券出借ID获取优惠券出借信息
      *
      * @param couponTenderId
      * @return

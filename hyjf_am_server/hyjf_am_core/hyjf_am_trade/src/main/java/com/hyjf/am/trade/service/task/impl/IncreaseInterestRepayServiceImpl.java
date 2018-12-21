@@ -3,14 +3,10 @@
  */
 package com.hyjf.am.trade.service.task.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.config.SystemConfig;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.AccountWebListProducer;
-import com.hyjf.am.trade.mq.producer.AppMessageProducer;
-import com.hyjf.am.trade.mq.producer.MailProducer;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.IncreaseInterestRepayService;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
@@ -77,19 +73,10 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 	private static final Integer STATUS_ERROR = 9;
     
 	@Autowired
-	private MailProducer mailProducer;
-    
-	@Autowired
-	private SmsProducer smsProducer;
-
-	@Autowired
-	private AppMessageProducer appMessageProducer;
+	private CommonProducer commonProducer;
 	
 	@Autowired
-	private AccountWebListProducer accountWebListProducer;
-	
-	@Autowired
-	SystemConfig systemConfig;
+	private SystemConfig systemConfig;
 
 	/**
 	 * 检索未执行的还款任务
@@ -303,13 +290,13 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 		BigDecimal repayInterest = BigDecimal.ZERO;
 		// 还款时间
 		Integer repayTime = null;
-		// 投资订单号
+		// 出借订单号
 		String investOrderId = increaseInterestLoan.getInvestOrderId();
-		// 投资人用户ID
+		// 出借人用户ID
 		Integer investUserId = increaseInterestLoan.getUserId();
-		// 取得融通宝加息投资信息
+		// 取得融通宝加息出借信息
 		IncreaseInterestInvest increaseInterestInvest = selectIncreaseInterestInvestInfo(investOrderId);
-		// 投资人在汇付的账户信息
+		// 出借人在汇付的账户信息
 		Account investUserCust = this.getAccount(investUserId);
 		// 交易流水号
 		Integer seqNo = 0;
@@ -320,9 +307,9 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 		// 融通宝放款详情
 		IncreaseInterestLoanDetail increaseInterestLoanDetail = null;
 		if (investUserCust == null || StringUtils.isEmpty(investUserCust.getAccountId())) {
-			throw new RuntimeException("投资人未开户。[用户ID:" + investUserId + "]，" + "[融通宝加息投资订单号:" + investOrderId + "]");
+			throw new RuntimeException("出借人未开户。[用户ID:" + investUserId + "]，" + "[融通宝加息出借订单号:" + investOrderId + "]");
 		}
-		// 投资人客户号
+		// 出借人客户号
 		String investUserCustId = investUserCust.getAccountId();
 
 		// 是否月标(true:月标, false:天标)
@@ -347,7 +334,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 					// 更新还款信息
 					boolean increaseInterestLoanDetailFlag = this.updateIncreaseInterestLoanDetail(increaseInterestLoanDetail) > 0 ? true : false;
 					if (!increaseInterestLoanDetailFlag) {
-						throw new RuntimeException("添加还款订单号，更新hyjf_increase_interest_loan_detail表失败" + "，[投资订单号:" + investOrderId + "]");
+						throw new RuntimeException("添加还款订单号，更新hyjf_increase_interest_loan_detail表失败" + "，[出借订单号:" + investOrderId + "]");
 					}
 					// 更新融通宝加息项目放款总表
 					increaseInterestLoan.setRepayOrderId(repayOrderId);
@@ -355,7 +342,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 					// 更新还款信息
 					boolean increaseInterestLoanFlag = this.updateIncreaseInterestLoan(increaseInterestLoan) > 0 ? true : false;
 					if (!increaseInterestLoanFlag) {
-						throw new RuntimeException("添加还款订单号，更新hyjf_increase_interest_loan表失败" + "，[投资订单号:" + investOrderId + "]");
+						throw new RuntimeException("添加还款订单号，更新hyjf_increase_interest_loan表失败" + "，[出借订单号:" + investOrderId + "]");
 					}
 				} else {
 					// 还款订单号
@@ -368,7 +355,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 				// 还款利息
 				repayInterest = increaseInterestLoanDetail.getRepayInterestWait();
 			} else {
-				throw new RuntimeException("分期还款计划表数据不存在。[借款编号:" + borrowNid + "]，" + "[投资订单号:" + investOrderId + "]，" + "[期数:" + periodNow + "]");
+				throw new RuntimeException("分期还款计划表数据不存在。[借款编号:" + borrowNid + "]，" + "[出借订单号:" + investOrderId + "]，" + "[期数:" + periodNow + "]");
 			}
 		}
 		// [endday: 按天计息, end:按月计息]
@@ -386,7 +373,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 				// 更新还款信息
 				boolean increaseInterestLoanFlag = this.updateIncreaseInterestLoan(increaseInterestLoan) > 0 ? true : false;
 				if (!increaseInterestLoanFlag) {
-					throw new RuntimeException("添加还款订单号，更新hyjf_increase_interest_loan表失败" + "，[投资订单号:" + investOrderId + "]");
+					throw new RuntimeException("添加还款订单号，更新hyjf_increase_interest_loan表失败" + "，[出借订单号:" + investOrderId + "]");
 				}
 			} else {
 				// 还款订单号
@@ -414,45 +401,45 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 			// 调用接口失败时(000以外)
 			if (!BankCallStatusConstant.RESPCODE_SUCCESS.equals(respCode)) {
 				String message = transferBean == null ? "" : transferBean.getRetMsg();
-				logger.error("融通宝自动还款调用转账接口失败。" + message + "，[投资订单号:" + investOrderId + "]");
-				throw new RuntimeException("融通宝自动还款调用转账接口失败。" + respCode + ":" + message + "，[投资订单号:" + investOrderId + "]");
+				logger.error("融通宝自动还款调用转账接口失败。" + message + "，[出借订单号:" + investOrderId + "]");
+				throw new RuntimeException("融通宝自动还款调用转账接口失败。" + respCode + ":" + message + "，[出借订单号:" + investOrderId + "]");
 			}
 			txDate = StringUtils.isNotBlank(transferBean.getTxDate()) ? Integer.parseInt(transferBean.getTxDate()) : 0;
 			txTime = StringUtils.isNotBlank(transferBean.getTxTime()) ? Integer.parseInt(transferBean.getTxTime()) : 0;
 			seqNo = StringUtils.isNotBlank(transferBean.getSeqNo()) ? Integer.parseInt(transferBean.getSeqNo()) : 0;
 		} else {
-			logger.info("融通宝自动还款。" + "[还款金额:" + repayInterest + "，[公司子账户可用余额:" + account + "，[投资订单号:" + investOrderId + "]");
+			logger.info("融通宝自动还款。" + "[还款金额:" + repayInterest + "，[公司子账户可用余额:" + account + "，[出借订单号:" + investOrderId + "]");
 		}
 
 		// 判断该收支明细是否存在时,跳出本次循环
 		if (countAccountListByNid(repayOrderId) == 0) {
-			// 更新账户信息(投资人)
+			// 更新账户信息(出借人)
 			Account investUserAccount = new Account();
 			investUserAccount.setUserId(investUserId);
-			// 投资人可用余额
+			// 出借人可用余额
 			investUserAccount.setBankBalance(repayInterest);
-			// 投资人待收金额
+			// 出借人待收金额
 			investUserAccount.setBankAwait(repayInterest);
-			// 投资人待收收益
+			// 出借人待收收益
 			investUserAccount.setBankAwaitInterest(repayInterest);
 			// 江西银行可用余额
 			investUserAccount.setBankBalanceCash(repayInterest);
 			// 累计收益
 			investUserAccount.setBankInterestSum(repayInterest);
-			// 还款后更新投资人的账户信息
+			// 还款后更新出借人的账户信息
 			boolean investAccountFlag = this.batchAccountCustomizeMapper.updateAccountAfterRepay(investUserAccount) > 0 ? true : false;
 			if (investAccountFlag) {
-				// 取得账户信息(投资人)
+				// 取得账户信息(出借人)
 				investUserAccount = this.selectAccountByUserId(investUserId);
 				if (investUserAccount != null) {
 					// 写入收支明细
 					AccountList accountList = new AccountList();
 					accountList.setNid(repayOrderId); // 还款订单号
-					accountList.setUserId(investUserId); // 投资人
-					accountList.setAmount(repayInterest); // 投资总收入
-					accountList.setAccountId(investUserCust.getAccountId());// 投资人客户号
+					accountList.setUserId(investUserId); // 出借人
+					accountList.setAmount(repayInterest); // 出借总收入
+					accountList.setAccountId(investUserCust.getAccountId());// 出借人客户号
 					accountList.setType(1); // 1收入
-					accountList.setTrade("increase_interest_repay_yes"); // 投资成功
+					accountList.setTrade("increase_interest_repay_yes"); // 投标成功
 					accountList.setTradeCode("balance"); // 余额操作
 					accountList.setTxDate(txDate);
 					accountList.setTxTime(txTime);
@@ -467,7 +454,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 					accountList.setBankAwaitInterest(investUserAccount.getBankAwaitInterest());// 银行待收利息
 					accountList.setBankAwait(investUserAccount.getBankAwait());// 银行待收总额
 					accountList.setBankInterestSum(investUserAccount.getBankInterestSum()); // 银行累计收益
-					accountList.setBankInvestSum(investUserAccount.getBankInvestSum());// 银行累计投资
+					accountList.setBankInvestSum(investUserAccount.getBankInvestSum());// 银行累计出借
 					accountList.setBankWaitRepay(investUserAccount.getBankWaitRepay());// 银行待还金额
 					accountList.setTotal(investUserAccount.getTotal());
 					accountList.setBalance(investUserAccount.getBalance());
@@ -571,14 +558,14 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 												boolean increaseInterestRepayDetailFlag = this.increaseInterestRepayDetailMapper.updateByPrimaryKeySelective(increaseInterestRepayDetail) > 0 ? true
 														: false;
 												if (!increaseInterestRepayDetailFlag) {
-													throw new RuntimeException("融通宝加息还款详情表(hyjf_increase_interest_repay_detail)更新失败!" + "[投资订单号:" + investOrderId + "]");
+													throw new RuntimeException("融通宝加息还款详情表(hyjf_increase_interest_repay_detail)更新失败!" + "[出借订单号:" + investOrderId + "]");
 												}
 
 											} else {
-												throw new RuntimeException("融通宝加息还款详情表(hyjf_increase_interest_repay_detail)查询失败!" + "[投资订单号:" + investOrderId + "]");
+												throw new RuntimeException("融通宝加息还款详情表(hyjf_increase_interest_repay_detail)查询失败!" + "[出借订单号:" + investOrderId + "]");
 											}
 										} else {
-											throw new RuntimeException("融通宝加息投资表(hyjf_increase_interest_invest)更新失败!" + "[投资订单号:" + investOrderId + "]");
+											throw new RuntimeException("融通宝加息出借表(hyjf_increase_interest_invest)更新失败!" + "[出借订单号:" + investOrderId + "]");
 										}
 									}
 									// 写入网站收支
@@ -586,7 +573,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 										// 插入网站收支明细记录
 										AccountWebListVO accountWebList = new AccountWebListVO();
 										accountWebList.setOrdid(increaseInterestInvest.getOrderId() + "_" + periodNow);// 订单号
-										accountWebList.setBorrowNid(borrowNid); // 投资编号
+										accountWebList.setBorrowNid(borrowNid); // 出借编号
 										accountWebList.setUserId(investUserId); // 借款人
 										accountWebList.setAmount(Double.valueOf(repayInterest.toString())); // 产品加息收益
 										accountWebList.setType(CustomConstants.TYPE_OUT); // 类型1收入,2支出
@@ -598,7 +585,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 										//网站首支明细队列
 										try {
 											logger.info("发送收支明细---" + investUserId + "---------" + repayInterest);
-							                accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+											commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
 							            } catch (MQException e) {
 							                logger.error("加息还款中发生系统", e);
 							            }
@@ -609,22 +596,22 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 										msg.put(VAL_PROFIT, repayInterest == null ? "0.00" : repayInterest.toString());
 									}
 								} else {
-									throw new RuntimeException("融通宝加息投资表(hyjf_increase_interest_invest)更新失败!" + "[投资订单号:" + investOrderId + "]");
+									throw new RuntimeException("融通宝加息出借表(hyjf_increase_interest_invest)更新失败!" + "[出借订单号:" + investOrderId + "]");
 								}
 							} else {
-								throw new RuntimeException("总的还款明细表(hyjf_increase_interest_repay)更新失败!" + "[投资订单号:" + investOrderId + "]");
+								throw new RuntimeException("总的还款明细表(hyjf_increase_interest_repay)更新失败!" + "[出借订单号:" + investOrderId + "]");
 							}
 						} else {
-							throw new RuntimeException("融通宝加息项目放款总表(hyjf_increase_interest_loan)更新失败!" + "[投资订单号:" + investOrderId + "]");
+							throw new RuntimeException("融通宝加息项目放款总表(hyjf_increase_interest_loan)更新失败!" + "[出借订单号:" + investOrderId + "]");
 						}
 					} else {
-						throw new RuntimeException("收支明细(huiyingdai_account_list)写入失败!" + "[投资订单号:" + investOrderId + "]");
+						throw new RuntimeException("收支明细(huiyingdai_account_list)写入失败!" + "[出借订单号:" + investOrderId + "]");
 					}
 				} else {
-					throw new RuntimeException("投资人账户信息不存在。[投资人ID:" + investUserId + "]，" + "[投资订单号:" + investOrderId + "]");
+					throw new RuntimeException("出借人账户信息不存在。[出借人ID:" + investUserId + "]，" + "[出借订单号:" + investOrderId + "]");
 				}
 			} else {
-				throw new RuntimeException("投资人资金记录(huiyingdai_account)更新失败!" + "[投资订单号:" + investOrderId + "]");
+				throw new RuntimeException("出借人资金记录(huiyingdai_account)更新失败!" + "[出借订单号:" + investOrderId + "]");
 			}
 		}
 		logger.info("-----------融通宝加息还款结束-----------" + apicron.getBorrowNid() + "-----[还款订单号:----" + repayOrderId + "]");
@@ -650,7 +637,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 	}
 
 	/**
-	 * 根据投资订单号检索融通宝加息投资信息
+	 * 根据出借订单号检索融通宝加息出借信息
 	 * 
 	 * @Title selectIncreaseInterestInvestInfo
 	 * @param investOrderId
@@ -668,7 +655,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 	}
 
 	/**
-	 * 根据标的编号,还款期数,投资用户Id,投资Id检索还款信息
+	 * 根据标的编号,还款期数,出借用户Id,出借Id检索还款信息
 	 * 
 	 * @Title selectIncreaseInterestLoanDetail
 	 * @param borrowNid
@@ -792,9 +779,9 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 
 	/**
 	 * 还款成功后,更新标的状态
-	 * 
+	 *
 	 * @Title updateBorrowStatus
-	 * @param borrowNid
+	 * @param borrow
 	 * @param periodNow
 	 * @param borrowUserId
 	 */
@@ -853,7 +840,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 	public void sendSms(List<Map<String, String>> msgList) {
 		if (msgList != null && msgList.size() > 0) {
 			for (Map<String, String> msg : msgList) {
-				if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isNumber(msg.get(VAL_USERID)) && Validator.isNotNull(msg.get(VAL_AMOUNT))) {
+				if (Validator.isNotNull(msg.get(VAL_USERID)) && NumberUtils.isCreatable(msg.get(VAL_USERID)) && Validator.isNotNull(msg.get(VAL_AMOUNT))) {
 //					Users users = getUsersByUserId(Integer.valueOf(msg.get(VAL_USERID)));
 //					if (users == null || Validator.isNull(users.getMobile()) || (users.getRecieveSms() != null && users.getRecieveSms() == 1)) {
 //						return;
@@ -879,7 +866,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 							CustomConstants.CHANNEL_TYPE_NORMAL);
 
 					try {
-						smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, msg.get(VAL_USERID), JSON.toJSONBytes(smsMessage)));
+						commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, msg.get(VAL_USERID), smsMessage));
 					} catch (MQException e2) {
 						logger.error("发送短信失败..", e2);
 					}
@@ -925,8 +912,8 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 					
 					AppMsMessage smsMessage = new AppMsMessage(Integer.valueOf(msg.get(VAL_USERID)), msg, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_JIAXIHUANKUAN);
 					try {
-						appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, msg.get(VAL_USERID),
-								JSON.toJSONBytes(smsMessage)));
+						commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, msg.get(VAL_USERID),
+								smsMessage));
 					} catch (MQException e) {
 						logger.error("发送app消息失败..", e);
 					}
@@ -1049,7 +1036,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 							SmsMessage smsMessage = new SmsMessage(null, replaceStrs, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_HUANKUAN_SUCCESS,
 									CustomConstants.CHANNEL_TYPE_NORMAL);
 							try {
-								smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, borrowNid, JSON.toJSONBytes(smsMessage)));
+								commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, borrowNid, smsMessage));
 							} catch (MQException e2) {
 								logger.error("发送短信失败..", e2);
 							}
@@ -1119,7 +1106,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 					MailMessage message = new MailMessage(null, null, "[" + online + "] " + apicron.getBorrowNid() + "-" + apicron.getPeriodNow() + "融通宝加息还款失败",
 							msg.toString(), null, toMail, null, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
 					try {
-						mailProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, apicron.getBorrowNid(), JSON.toJSONBytes(message)));
+						commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, apicron.getBorrowNid(), message));
 					} catch (Exception e2) {
 						logger.error("发送邮件失败..", e2);
 					}

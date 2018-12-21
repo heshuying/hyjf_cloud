@@ -105,6 +105,7 @@ public class BorrowRegistExceptionController extends BaseController {
         }else{
             jsonObject = borrowRegistExceptionService.handleBorrowRegistException(borrowNid,userId);
         }
+        logger.debug("银行标的备案异常处理->code:[{}],msg:[{}]",jsonObject.getString("success"),jsonObject.getString("msg"));
         if("0".equals(jsonObject.getString("success"))){
             return new AdminResult(SUCCESS,jsonObject.getString("msg"));
         }else{

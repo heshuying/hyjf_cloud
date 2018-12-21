@@ -3,10 +3,9 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.config.SystemConfig;
-import com.hyjf.admin.mq.AccountWebListProducer;
+import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.SubCommissionService;
 import com.hyjf.am.resquest.admin.SubCommissionRequest;
@@ -49,7 +48,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
     @Autowired
     private SystemConfig systemConfig;
     @Autowired
-    private AccountWebListProducer accountWebListProducer;
+    private CommonProducer commonProducer;
 
     /**
      * 发起账户分佣所需的detail信息
@@ -182,7 +181,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
             AccountWebListVO accountWebList = new AccountWebListVO();
             // 订单号
             accountWebList.setOrdid(orderId);
-            // 投资编号
+            // 出借编号
             accountWebList.setBorrowNid("");
             accountWebList.setUserId(receiveUserId);
             // 管理费
@@ -191,7 +190,7 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
             accountWebList.setType(CustomConstants.TYPE_OUT);
             // 管理费
             accountWebList.setTrade("fee_share_out");
-            // 账户管理费
+            // 还款服务费
             accountWebList.setTradeType("手续费分佣");
             // 备注
             accountWebList.setRemark(request.getRemark());
@@ -246,13 +245,13 @@ public class SubCommissionServiceImpl extends BaseAdminServiceImpl implements Su
                 //boolean accountWebListFlag = csMessageClient.insertAccountWebList(accountWebList) > 0;
                 try {
                     // 发mq 插入accountWebList
-                    accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebListVO)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebListVO));
                 } catch (MQException e) {
                     e.printStackTrace();
                     throw new RuntimeException("发送MQ(ht_account_web_list)失败！" + "[订单号：" + orderId + "]");
                 }
             } else {
-                throw new RuntimeException("网站收支记录(ht_account_web_list)已存在!" + "[投资订单号：" + orderId + "]");
+                throw new RuntimeException("网站收支记录(ht_account_web_list)已存在!" + "[出借订单号：" + orderId + "]");
             }
 
             request.setCallBankSuccess(true);

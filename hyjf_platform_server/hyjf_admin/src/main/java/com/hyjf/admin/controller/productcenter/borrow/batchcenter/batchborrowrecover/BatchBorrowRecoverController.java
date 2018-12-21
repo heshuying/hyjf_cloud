@@ -18,10 +18,7 @@ import io.swagger.annotations.*;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -108,7 +105,6 @@ public class BatchBorrowRecoverController extends BaseController{
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportBatchBorrowRecoverList(HttpServletRequest request,@RequestBody BatchBorrowRecoverRequest form,HttpServletResponse response) throws UnsupportedEncodingException {
 
-
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
@@ -120,37 +116,24 @@ public class BatchBorrowRecoverController extends BaseController{
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
         //请求第一页5000条
         form.setPageSize(defaultRowMaxCount);
+        form.setApiType(0);
         form.setCurrPage(1);
-        form.setLimitStart(-1);
-        JSONObject jsonObject = this.querybatchBorrowRecoverList(form);
-        if(FAIL.equals(jsonObject.get(STATUS))){
-            this.fail("暂时没有符合条件的数据！");
-        }
-        List<BatchBorrowRecoverVo> recordList = (List<BatchBorrowRecoverVo>) jsonObject.get(LIST);
-        Integer totalCount = recordList.size();
+        Integer totalCount = batchBorrowRecoverService.getBatchBorrowRecoverCount(form);
 
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
-
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-        }else {
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList);
         }
-        for (int i = 1; i < sheetCount; i++) {
-
-            form.setCurrPage(i+1);
+        for (int i = 1; i <= sheetCount; i++) {
+            form.setCurrPage(i);
             form.setPageSize(defaultRowMaxCount);
-            form.setLimitStart(-1);
             JSONObject jsonObject2 = this.querybatchBorrowRecoverList(form);
-            if(FAIL.equals(jsonObject.get(STATUS))){
-                this.fail("暂时没有符合条件的数据！");
-            }
             List<BatchBorrowRecoverVo> recordList2 = (List<BatchBorrowRecoverVo>) jsonObject2.get(LIST);
             if (recordList2 != null && recordList2.size()> 0) {
-                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                sheetNameTmp = sheetName + "_第" + i + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  recordList2);
             } else {
                 break;
@@ -162,7 +145,7 @@ public class BatchBorrowRecoverController extends BaseController{
 
     private Map<String, String> buildMap() {
         Map<String, String> map = Maps.newLinkedHashMap();
-        map.put("borrowNid","借款编号");
+        map.put("borrowNid","项目编号");
         map.put("instName","资产来源");
         map.put("batchNo","批次号");
         map.put("borrowAccount", "借款金额");

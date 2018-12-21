@@ -44,11 +44,11 @@ public class AppSecurityController extends BaseController {
             String IotalInterest = bigDecimal1.divide(new BigDecimal(100000000), 0, BigDecimal.ROUND_DOWN).toString();
 
             String yearFromDate = String.valueOf(GetDate.getYearFromDate(PUT_ONLINE_TIME));
-            //平台累计投资笔数
+            //平台累计出借笔数
             int tenderCount = securityService.selectTotalTradeSum();
             BigDecimal total = new BigDecimal(tenderCount);
             String totalTradeVolume = total.divide(new BigDecimal(10000)).setScale(0, BigDecimal.ROUND_DOWN).toString();
-            // 平台累计投资者
+            // 平台累计出借者
             appFindSecurityCustomize.setTotalInvester(totalTradeVolume + "万");
             // 累计收益
             appFindSecurityCustomize.setTotalUserIncome(IotalInterest + "亿");
@@ -58,7 +58,7 @@ public class AppSecurityController extends BaseController {
             appFindSecurityCustomize.setOperateYear(yearFromDate);
             // 企业评级
             appFindSecurityCustomize.setCompanyGrade("AAA");
-            // 平台累计投资
+            // 平台累计出借
             appFindSecurityCustomize.setTotalTradeVolume(TotalCount + "亿");
             ret.put("info", appFindSecurityCustomize);
         } catch (Exception e) {

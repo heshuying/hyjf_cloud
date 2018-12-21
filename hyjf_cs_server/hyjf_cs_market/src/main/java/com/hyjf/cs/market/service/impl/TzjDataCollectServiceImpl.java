@@ -1,14 +1,13 @@
 package com.hyjf.cs.market.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.market.client.AmTradeClient;
 import com.hyjf.cs.market.client.AmUserClient;
+import com.hyjf.cs.market.mq.base.CommonProducer;
 import com.hyjf.cs.market.mq.base.MessageContent;
-import com.hyjf.cs.market.mq.producer.StatisticsTzjProducer;
 import com.hyjf.cs.market.service.TzjDataCollectService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,7 +33,7 @@ public class TzjDataCollectServiceImpl implements TzjDataCollectService {
 	@Autowired
 	AmTradeClient amTradeClient;
 	@Autowired
-	StatisticsTzjProducer statisticsTzjProducer;
+	CommonProducer commonProducer;
 
 	@Override
 	public void queryTzjDayReport() {
@@ -56,7 +55,7 @@ public class TzjDataCollectServiceImpl implements TzjDataCollectService {
 		if (!CollectionUtils.isEmpty(registerUserIds)) {
 			// 2.1 新充人数 新投人数 （前提开户，所以用开户的用户ids）
 			TzjDayReportVO tzjTradeNewVO = amTradeClient.queryTradeNewDataOnToday(registerUserIds, startTime, endTime);
-			Assert.notNull(tzjTradeNewVO, "投之家日报查询新用户投资数据不能空...");
+			Assert.notNull(tzjTradeNewVO, "投之家日报查询新用户出借数据不能空...");
 			tzjDayReportVO.setRechargeNewCount(tzjTradeNewVO.getRechargeNewCount());
 			tzjDayReportVO.setTenderNewCount(tzjTradeNewVO.getTenderNewCount());
 		}
@@ -64,9 +63,9 @@ public class TzjDataCollectServiceImpl implements TzjDataCollectService {
 		// 3. 查询投之家所有的用户
 		Set<Integer> tzjUserIds = amUserClient.queryAllTzjUsers();
 		if (!CollectionUtils.isEmpty(tzjUserIds)) {
-			// 3.1 查询投之家每日充值人数、投资人数 、投资金额、首投金额、首投人数、复投人数
+			// 3.1 查询投之家每日充值人数、出借人数 、出借金额、首投金额、首投人数、复投人数
 			TzjDayReportVO tzjTradeVO = amTradeClient.queryTradeDataOnToday(tzjUserIds, startTime, endTime);
-			Assert.notNull(tzjTradeVO, "投之家日报查询用户投资数据不能空...");
+			Assert.notNull(tzjTradeVO, "投之家日报查询用户出借数据不能空...");
 			tzjDayReportVO.setRechargeCount(tzjTradeVO.getRechargeCount());
 			tzjDayReportVO.setTenderCount(tzjTradeVO.getTenderCount());
 			tzjDayReportVO.setTenderMoney(tzjTradeVO.getTenderMoney());
@@ -77,8 +76,8 @@ public class TzjDataCollectServiceImpl implements TzjDataCollectService {
 
 		// 4.mq通知
 		try {
-			statisticsTzjProducer.messageSend(new MessageContent(MQConstant.STATISTICS_TZJ_TOPIC,
-					System.currentTimeMillis() + "", JSON.toJSONBytes(tzjDayReportVO)));
+			commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_TZJ_TOPIC,
+					System.currentTimeMillis() + "", tzjDayReportVO));
 		} catch (MQException e) {
 			logger.error("投之家日报表发送mq失败...", e);
 		}

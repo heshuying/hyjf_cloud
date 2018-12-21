@@ -174,7 +174,7 @@ public class BorrowCreditController extends BaseController {
 
 
     /**
-     * 根据userid和tenderNid查询投资列表
+     * 根据userid和tenderNid查询出借列表
      * @author zhangyk
      * @date 2018/8/30 11:27
      */
@@ -190,7 +190,7 @@ public class BorrowCreditController extends BaseController {
 
 
     /**
-     * 根据credit查询投资列表
+     * 根据credit查询出借列表
      * @author zhangyk
      * @date 2018/8/30 13:27
      */

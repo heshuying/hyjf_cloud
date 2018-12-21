@@ -1,5 +1,5 @@
 /**
- * Description:可转让投资列表实体类
+ * Description:可转让出借列表实体类
  * Copyright: Copyright (HYJF Corporation)2015
  * Company: HYJF Corporation
  * @author: Administrator

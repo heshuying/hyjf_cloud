@@ -16,8 +16,8 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.market.client.AmTradeClient;
 import com.hyjf.cs.market.client.AmUserClient;
 import com.hyjf.cs.market.client.CsMessageClient;
+import com.hyjf.cs.market.mq.base.CommonProducer;
 import com.hyjf.cs.market.mq.base.MessageContent;
-import com.hyjf.cs.market.mq.producer.AppChannelStatisticsProducer;
 import com.hyjf.cs.market.service.AppChannelStatisticsService;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,7 +46,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 	private CsMessageClient csMessageClient;
 
 	@Autowired
-	private AppChannelStatisticsProducer producer;
+	private CommonProducer producer;
 
 	@Override
 	public void insertStatistics() {
@@ -72,21 +72,21 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 				Integer openaccountnumber = getOpenAccountNumber(request);
 				// 查询相应的app渠道无主单开户数
 				Integer openAccountAttrCount = getOpenAccountAttrCount(request);
-				// 查询相应的app渠道投资无主单用户数
+				// 查询相应的app渠道出借无主单用户数
 				Integer investAttrNumber = getTenderNumber(request,"all");
 				// 累计充值
 				BigDecimal cumulativeRecharge = getCumulativeRecharge(request);
-				// 汇直投投资金额
+				// 汇直投出借金额
 				BigDecimal hztTenderPrice = getHztTenderPrice(request);
-				// 汇消费投资金额
+				// 汇消费出借金额
 				BigDecimal hxfTenderPrice = getHxfTenderPrice(request);
-				// 汇天利投资金额
+				// 汇天利出借金额
 				BigDecimal htlTenderPrice = BigDecimal.ZERO;
-				// 汇添金投资金额
+				// 汇添金出借金额
 				BigDecimal htjTenderPrice = BigDecimal.ZERO;
-				// 汇金理财投资金额
+				// 汇金理财出借金额
 				BigDecimal rtbTenderPrice = BigDecimal.ZERO;
-				// 汇转让投资金额
+				// 汇转让出借金额
 				BigDecimal hzrTenderPrice = getHzrTenderPrice(request);
 				// app渠道主单注册数
 				BigDecimal registerAttrCount = getRegisterAttrCount(request);
@@ -98,21 +98,21 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 				Integer accountNumberAndroid = getAccountNumber(request,"android");
 				// 查询相应的app渠道微信开户数
 				Integer accountNumberWechat =  getAccountNumber(request,"wechat");
-				// 查询相应的app渠道用户Android投资数
+				// 查询相应的app渠道用户Android出借数
 				Integer tenderNumberAndroid = getTenderNumber(request,"android");
-				// 查询相应的app渠道用户IOS投资数
+				// 查询相应的app渠道用户IOS出借数
 				Integer tenderNumberIos = getTenderNumber(request,"ios");
-				// 查询相应的app渠道用户PC投资数
+				// 查询相应的app渠道用户PC出借数
 				Integer tenderNumberPc = getTenderNumber(request,"pc");
-				// 查询相应的app渠道用户微信投资数
+				// 查询相应的app渠道用户微信出借数
 				Integer tenderNumberWechat = getTenderNumber(request,"wechat");
-				// 投资用户数
+				// 出借用户数
 				Integer investNumber = getTenderNumber(request,"all");
 				// 查询相应的app渠道无主单用户充值数
 				BigDecimal cumulativeAttrCharge = getCumulativeAttrCharge(request);
-				// 查询相应的app渠道无主单用户投资总额
+				// 查询相应的app渠道无主单用户出借总额
 				BigDecimal cumulativeAttrInvest = hztTenderPrice.add(hxfTenderPrice).add(hzrTenderPrice);
-				// 查询相应的app渠道累计投资
+				// 查询相应的app渠道累计出借
 				BigDecimal cumulativeInvest = hztTenderPrice.add(hxfTenderPrice).add(hzrTenderPrice);
 				AppChannelStatisticsVO statisticsVO = new AppChannelStatisticsVO(sourceId, vo.getSourceName(),
 						accessNumber, registNumber, openaccountnumber, investNumber, cumulativeRecharge, hztTenderPrice,
@@ -122,7 +122,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 						openAccountAttrCount, investAttrNumber, cumulativeAttrInvest,cumulativeInvest);
 				try {
 					producer.messageSend(new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_TOPIC,
-							System.currentTimeMillis() + "", JSONObject.toJSONBytes(statisticsVO)));
+							System.currentTimeMillis() + "", statisticsVO));
 				} catch (MQException e) {
 					logger.error("APP渠道统计数据定时任务出错......", e);
 				}
@@ -275,7 +275,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 	}
 
 	/**
-	 * 汇直投投资金额
+	 * 汇直投出借金额
 	 * @param request
 	 * @return
 	 */
@@ -307,7 +307,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 	}
 
 	/**
-	 * 汇消费投资金额
+	 * 汇消费出借金额
 	 * @param request
 	 * @return
 	 */
@@ -339,7 +339,7 @@ public class AppChannelStatisticsServiceImpl extends BaseMarketServiceImpl imple
 	}
 
 	/**
-	 * 汇转让投资金额
+	 * 汇转让出借金额
 	 * @param request
 	 * @return
 	 */

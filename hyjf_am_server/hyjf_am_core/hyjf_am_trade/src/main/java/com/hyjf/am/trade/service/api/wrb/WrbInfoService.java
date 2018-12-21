@@ -5,15 +5,15 @@ package com.hyjf.am.trade.service.api.wrb;
 
 import com.hyjf.am.response.trade.wrbInvestRecoverPlanResponse;
 import com.hyjf.am.response.user.WrbInvestSumResponse;
+import com.hyjf.am.resquest.api.WrbInvestRequest;
 import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.BorrowTender;
 import com.hyjf.am.trade.dao.model.auto.CouponConfig;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
-import com.hyjf.am.resquest.api.WrbInvestRequest;
-import com.hyjf.am.trade.dao.model.auto.BorrowTender;
 import com.hyjf.am.trade.dao.model.customize.WrbBorrowListCustomize;
-import com.hyjf.am.trade.dao.model.customize.WrbInvestRecordCustomize;
 import com.hyjf.am.trade.dao.model.customize.WrbBorrowTenderCustomize;
 import com.hyjf.am.trade.dao.model.customize.WrbBorrowTenderSumCustomize;
+import com.hyjf.am.trade.dao.model.customize.WrbInvestRecordCustomize;
 
 import java.util.Date;
 import java.util.List;
@@ -32,13 +32,13 @@ public interface WrbInfoService {
     List<WrbBorrowListCustomize> borrowList(String borrowNid);
 
     /**
-     * 获取某天投资数据
+     * 获取某天出借数据
      * @param request
      * @return
      */
     List<BorrowTender> getBorrowTenderList(WrbInvestRequest request);
     /**
-     * 获取某天投资情况汇总
+     * 获取某天出借情况汇总
      * @param date
      * @return
      */
@@ -61,13 +61,13 @@ public interface WrbInfoService {
 
 
     /**
-     * 查询标的投资情况
+     * 查询标的出借情况
      * @return
      */
     List<WrbBorrowTenderCustomize> getBorrowTenderByBorrowNid(WrbInvestRequest request);
 
     /**
-     * 根据标的号和日期查询投资情况
+     * 根据标的号和日期查询出借情况
      * @param request
      * @return
      */
@@ -81,14 +81,14 @@ public interface WrbInfoService {
     CouponConfig getCouponByCouponCode(String couponCode);
 
     /**
-     *投资记录查询
+     *出借记录查询
      * @param params
      * @return
      */
     List<WrbInvestRecordCustomize> getWrbInvestRecord(Map<String, Object> params);
 
     /**
-     *获取投资记录回款计划
+     *获取出借记录回款计划
      * @param userId
      * @param investRecordId
      * @param borrowNid

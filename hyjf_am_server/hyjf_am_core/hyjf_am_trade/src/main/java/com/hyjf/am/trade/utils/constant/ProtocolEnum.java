@@ -11,12 +11,12 @@ package com.hyjf.am.trade.utils.constant;
 public enum ProtocolEnum {
     ZCXY("《注册协议》","zcxy"),
     PTYSTK("《平台隐私条款》","ptystk"),
-    TZZXYGLFWXY("《投资咨询与管理服务协议》","tzzxyglfwxy"),
+    TZZXYGLFWXY("《出借咨询与管理服务协议》","tzzxyglfwxy"),
     KHXY("《开户协议》","khxy"),
     YHSQXY("《用户授权协议》","yhsqxy"),
     JJFWJKXY("《居间服务借款协议》","jjfwjkxy"),
-    TZFXQRS("《投资风险确认书》","tzfxqrs"),
-    TZFWXY("《投资服务协议》","tzfwxy"),
+    TZFXQRS("《出借风险确认书》","tzfxqrs"),
+    TZFWXY("《出借服务协议》","tzfwxy"),
     ZQZRXY("《债权转让协议》","zqzrxy"),
     FXQRS("《风险确认书》","fxqrs");
 

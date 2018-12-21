@@ -1,6 +1,5 @@
 package com.hyjf.cs.trade.service.smscode.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -20,8 +19,8 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.smscode.SmsCodeService;
 import org.apache.commons.lang3.StringUtils;
@@ -43,7 +42,7 @@ public class SmsCodeServiceImpl extends BaseTradeServiceImpl implements SmsCodeS
     @Autowired
     private AmUserClient amUserClient;
     @Autowired
-    private SmsProducer smsProducer;
+    private CommonProducer commonProducer;
     @Autowired
     private AmConfigClient amConfigClient;
     @Autowired
@@ -78,7 +77,7 @@ public class SmsCodeServiceImpl extends BaseTradeServiceImpl implements SmsCodeS
                 validCodeType, CustomConstants.CHANNEL_TYPE_NORMAL);
 
         // 发送
-        smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+        commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
     }
 
     /**
@@ -120,8 +119,8 @@ public class SmsCodeServiceImpl extends BaseTradeServiceImpl implements SmsCodeS
                         MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_DUANXINCHAOXIAN,
                         CustomConstants.CHANNEL_TYPE_NORMAL);
                 try {
-                    smsProducer.messageSend(
-                            new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                    commonProducer.messageSend(
+                            new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
                 } catch (MQException e) {
                     logger.error("短信发送失败...", e);
                 }
@@ -148,8 +147,8 @@ public class SmsCodeServiceImpl extends BaseTradeServiceImpl implements SmsCodeS
                         MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_DUANXINCHAOXIAN,
                         CustomConstants.CHANNEL_TYPE_NORMAL);
                 try {
-                    smsProducer.messageSend(
-                            new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                    commonProducer.messageSend(
+                            new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
                 } catch (MQException e) {
                     logger.error("短信发送失败...", e);
                 }
@@ -267,8 +266,8 @@ public class SmsCodeServiceImpl extends BaseTradeServiceImpl implements SmsCodeS
                         MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_DUANXINCHAOXIAN,
                         CustomConstants.CHANNEL_TYPE_NORMAL);
                 try {
-                    smsProducer.messageSend(
-                            new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                    commonProducer.messageSend(
+                            new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
                 } catch (MQException e) {
                     logger.error("短信发送失败...", e);
                 }
@@ -301,8 +300,8 @@ public class SmsCodeServiceImpl extends BaseTradeServiceImpl implements SmsCodeS
                         MessageConstant.SMS_SEND_FOR_MANAGER, null, CustomConstants.PARAM_TPL_DUANXINCHAOXIAN,
                         CustomConstants.CHANNEL_TYPE_NORMAL);
                 try {
-                    smsProducer.messageSend(
-                            new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                    commonProducer.messageSend(
+                            new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
                 } catch (MQException e) {
                     logger.error("短信发送失败...", e);
                 }

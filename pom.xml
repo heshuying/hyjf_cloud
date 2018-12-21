@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.hyjf</groupId>
@@ -57,11 +57,10 @@
 		<guava.version>23.0</guava.version>
 		<redis.version>2.9.0</redis.version>
 		<ip2region.version>1.7</ip2region.version>
+		<org.apache.commons.version>1.6</org.apache.commons.version>
 
+		<eureka.serviceUrl.default>http://microserver1:1111/eureka,http://microserver2:1111/eureka</eureka.serviceUrl.default>
 	</properties>
-
-	<dependencies>
-	</dependencies>
 
 	<dependencyManagement>
 		<dependencies>
@@ -200,16 +199,34 @@
 				<artifactId>jetcache-starter-redis</artifactId>
 				<version>${jetcache.version}</version>
 			</dependency>
-			
-            <!-- https://gitee.com/lionsoul/ip2region -->
+
+			<!-- https://gitee.com/lionsoul/ip2region -->
 			<dependency>
 				<groupId>org.lionsoul</groupId>
 				<artifactId>ip2region</artifactId>
 				<version>${ip2region.version}</version>
 			</dependency>
-			
+
+			<dependency>
+				<groupId>org.apache.rocketmq</groupId>
+				<artifactId>rocketmq-spring-boot-starter</artifactId>
+				<version>2.0.0</version>
+			</dependency>
+
+			<dependency>
+				<groupId>org.apache.commons</groupId>
+				<artifactId>commons-text</artifactId>
+				<version>${org.apache.commons.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>de.codecentric</groupId>
+			<artifactId>spring-boot-admin-starter-client</artifactId>
+		</dependency>
+	</dependencies>
 
 	<repositories>
 		<repository>
@@ -237,8 +254,8 @@
 		<repository>
 			<id>nexus-releases</id>
 			<url>
-                http://10.10.2.100:18080/nexus-2.9.0/content/repositories/releases/
-            </url>
+				http://10.10.2.100:18080/nexus-2.9.0/content/repositories/releases/
+			</url>
 
 			<!--上海使用外网连接nexus私服，青岛使用内网 -->
 			<!--<url> -->
@@ -248,8 +265,8 @@
 		<snapshotRepository>
 			<id>nexus-snapshots</id>
 			<url>
-                http://10.10.2.100:18080/nexus-2.9.0/content/repositories/snapshots/
-            </url>
+				http://10.10.2.100:18080/nexus-2.9.0/content/repositories/snapshots/
+			</url>
 
 			<!--上海使用外网连接nexus私服，青岛使用内网 -->
 			<!--<url> -->

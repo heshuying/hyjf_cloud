@@ -6,13 +6,13 @@ import java.util.List;
 
 /**
  * 
- * @author jijun 20180623 投资掉单异常处理类
+ * @author jijun 20180623 出借掉单异常处理类
  *
  */
 public interface BatchBorrowTenderExceptionCustomizeMapper {
 
 	/**
-	 * 查询掉单的投资记录
+	 * 查询掉单的出借记录
 	 * 
 	 * @return
 	 */

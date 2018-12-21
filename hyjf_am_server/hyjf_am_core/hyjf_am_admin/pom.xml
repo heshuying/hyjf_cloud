@@ -33,13 +33,6 @@
 			<artifactId>mybatis-spring-boot-starter</artifactId>
 		</dependency>
 
-		<!-- spring boot admin start -->
-		<dependency>
-			<groupId>de.codecentric</groupId>
-			<artifactId>spring-boot-admin-starter-client</artifactId>
-		</dependency>
-		<!-- spring boot admin end -->
-
 		<dependency>
 			<groupId>org.apache.rocketmq</groupId>
 			<artifactId>rocketmq-client</artifactId>
@@ -86,6 +79,10 @@
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.rocketmq</groupId>
+			<artifactId>rocketmq-spring-boot-starter</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -118,6 +115,12 @@
 				<!-- <configuration> <excludes> <exclude>**/application.yml.bak</exclude> 
 					<exclude>**/bootstrap.yml</exclude> </excludes> </configuration> -->
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.6</version>
+			</plugin>
 		</plugins>
 
 		<resources>
@@ -136,7 +139,7 @@
 					<include>**/*.xml</include>
 					<include>**/*.yml</include>
 				</includes>
-				<filtering>false</filtering>
+				<filtering>true</filtering>
 			</resource>
 		</resources>
 	</build>

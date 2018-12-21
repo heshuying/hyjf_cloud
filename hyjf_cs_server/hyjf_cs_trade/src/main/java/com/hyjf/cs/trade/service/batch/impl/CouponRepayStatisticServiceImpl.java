@@ -258,4 +258,11 @@ public class CouponRepayStatisticServiceImpl implements CouponRepayStatisticServ
         return !amConfigClient.checkSomedayIsWorkDate(calendar.getTime());
     }
 
+    /**
+     * 日、月推标额度定时任务
+     */
+    @Override
+    public void updateDayMarkLine() {
+        amTradeClient.updateDayMarkLine();
+    }
 }

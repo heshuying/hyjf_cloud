@@ -3,9 +3,8 @@
  */
 package com.hyjf.am.trade.service.admin.exception.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
-import com.hyjf.am.admin.mq.producer.AutoPreAuditMessageProducer;
 import com.hyjf.am.resquest.admin.BorrowRegistListRequest;
 import com.hyjf.am.resquest.admin.BorrowRegistUpdateRequest;
 import com.hyjf.am.trade.dao.mapper.auto.BorrowProjectTypeMapper;
@@ -47,7 +46,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     private StzhWhiteListMapper stzhWhiteListMapper;
 
     @Autowired
-    private AutoPreAuditMessageProducer autoPreAuditMessageProducer;
+    private CommonProducer commonProducer;
 
     /**
      * 获取项目类型,筛选条件展示
@@ -202,7 +201,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                 params.put("assetId", hjhPlanAsset.getAssetId());
                 params.put("instCode", hjhPlanAsset.getInstCode());
                 try {
-                    autoPreAuditMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(params)));
+                    commonProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), params));
                     logger.info(hjhPlanAsset.getAssetId()+" 资产 加入队列 ");
                 } catch (MQException e) {
                     logger.info(hjhPlanAsset.getAssetId()+" 资产 加入队列失败");

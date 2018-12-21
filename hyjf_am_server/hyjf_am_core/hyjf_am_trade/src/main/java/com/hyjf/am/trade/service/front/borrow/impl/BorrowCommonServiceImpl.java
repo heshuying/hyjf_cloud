@@ -9,9 +9,8 @@ import com.hyjf.am.trade.bean.BorrowCommonFileData;
 import com.hyjf.am.trade.bean.BorrowWithBLOBs;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.auto.BorrowInfoExample.Criteria;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.hjh.issuerecover.AutoIssueMessageProducer;
-import com.hyjf.am.trade.mq.producer.hjh.issuerecover.AutoRecordMessageProducer;
 import com.hyjf.am.trade.service.front.borrow.BorrowCommonService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.trade.borrow.*;
@@ -27,7 +26,6 @@ import org.jsoup.helper.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
@@ -50,9 +48,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	public static final String BORROW_LOG_ADD = "新增";
 	public static final String BORROW_LOG_DEL = "删除";
     @Resource
-    private AutoIssueMessageProducer autoIssueMessageProducer;
-    @Autowired
-    private AutoRecordMessageProducer autoRecordMessageProducer;
+	private CommonProducer commonProducer;
 	@Value("${file.domain.url}")
     private String url; 
 	@Value("${file.physical.path}")
@@ -295,7 +291,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		}
 		borrow.setRemark(borrowBean.getRemark());
 		// 项目申请人
-		borrow.setApplicant(borrowBean.getApplicant());
+//		borrow.setApplicant(borrowBean.getApplicant());
 		borrow.setCreateUserName(adminUsername);
 		borrow.setRemark(borrowBean.getRemark());
 		// 垫付机构用户名
@@ -522,7 +518,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		}
 		// 投标次数
 		borrow.setTenderTimes(0);
-		// 最后投资时间
+		// 最后出借时间
 	//	borrow.setTenderLastTime("");
 	//	borrow.setRepayAdvanceStatus(0);// 插入时不用的字段
 	//	borrow.setRepayAdvanceTime("");// 插入时不用的字段
@@ -595,7 +591,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //		borrow.setGroupId(0);// 插入时不用的字段
 //
 //		borrow.setAwardStatus(0); // 插入时不用的字段 是否奖励
-//		borrow.setAwardFalse(0); // 插入时不用的字段 投资失败是否也奖励
+//		borrow.setAwardFalse(0); // 插入时不用的字段 出借失败是否也奖励
 //		// 插入时不用的字段 奖励金额
 //		borrow.setAwardAccount(BigDecimal.ZERO);
 //		// 插入时不用的字段 按比例奖励
@@ -703,28 +699,28 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				borrow.setBorrowManagerScaleEnd(jsonObject.getString("borrowManagerScaleEnd"));
 			}
 		}
-		// 可投资平台_PC
+		// 可出借平台_PC
 		if (StringUtils.isEmpty(borrowBean.getCanTransactionPc())) {
 			borrow.setCanTransactionPc("0");
 		} else {
 			borrow.setCanTransactionPc(borrowBean.getCanTransactionPc());
 		}
 
-		// 可投资平台_微网站
+		// 可出借平台_微网站
 		if (StringUtils.isEmpty(borrowBean.getCanTransactionWei())) {
 			borrow.setCanTransactionWei("0");
 		} else {
 			borrow.setCanTransactionWei(borrowBean.getCanTransactionWei());
 		}
 
-		// 可投资平台_IOS
+		// 可出借平台_IOS
 		if (StringUtils.isEmpty(borrowBean.getCanTransactionIos())) {
 			borrow.setCanTransactionIos("0");
 		} else {
 			borrow.setCanTransactionIos(borrowBean.getCanTransactionIos());
 		}
 
-		// 可投资平台_Android
+		// 可出借平台_Android
 		if (StringUtils.isEmpty(borrowBean.getCanTransactionAndroid())) {
 			borrow.setCanTransactionAndroid("0");
 		} else {
@@ -857,7 +853,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		                                JSONObject params = new JSONObject();
 		                                params.put("borrowNid", borrow.getBorrowNid());
 									 //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-		                                autoIssueMessageProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)),2);
+									 commonProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), params),2);
 		                            } catch (MQException e) {
 		                                logger.error("发送【关联计划队列】MQ失败...");
 		                            }
@@ -950,7 +946,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			}
 
 			// 项目申请人
-			borrow.setApplicant(borrowBean.getApplicant());
+//			borrow.setApplicant(borrowBean.getApplicant());
 			//项目标题
 			borrow.setProjectName(borrowBean.getProjectName());
 			// 垫付机构用户名
@@ -1240,7 +1236,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					borrow.setStatus(1);// 状态
 					borrow.setVerifyStatus(Integer.valueOf(borrowBean.getVerifyStatus()));// 初审状态
 				}
-				// 发标方式为”立即发标4“时，项目状态变为”投资中
+				// 发标方式为”立即发标4“时，项目状态变为”出借中
 				else if (Integer.valueOf(borrowBean.getVerifyStatus()) == 4) {
 					// 借款到期时间
 					borrow.setBorrowEndTime(String.valueOf(time + borrow.getBorrowValidTime() * 86400));
@@ -1308,28 +1304,28 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		}
 
 		if (borrowMainNid.equals(borrowNid)) {
-			// 可投资平台_PC
+			// 可出借平台_PC
 			if (StringUtils.isEmpty(borrowBean.getCanTransactionPc())) {
 				borrow.setCanTransactionPc("0");
 			} else {
 				borrow.setCanTransactionPc(borrowBean.getCanTransactionPc());
 			}
 
-			// 可投资平台_微网站
+			// 可出借平台_微网站
 			if (StringUtils.isEmpty(borrowBean.getCanTransactionWei())) {
 				borrow.setCanTransactionWei("0");
 			} else {
 				borrow.setCanTransactionWei(borrowBean.getCanTransactionWei());
 			}
 
-			// 可投资平台_IOS
+			// 可出借平台_IOS
 			if (StringUtils.isEmpty(borrowBean.getCanTransactionIos())) {
 				borrow.setCanTransactionIos("0");
 			} else {
 				borrow.setCanTransactionIos(borrowBean.getCanTransactionIos());
 			}
 
-			// 可投资平台_Android
+			// 可出借平台_Android
 			if (StringUtils.isEmpty(borrowBean.getCanTransactionAndroid())) {
 				borrow.setCanTransactionAndroid("0");
 			} else {
@@ -2730,13 +2726,13 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		borrowBean.setBorrowManagerScale(this.getValue(borrowWithBLOBs.getManageFeeRate()));
 		// 账户管理费率(上限)
 		borrowBean.setBorrowManagerScaleEnd(this.getValue(borrowWithBLOBs.getBorrowManagerScaleEnd()));
-		// 可投资平台_PC
+		// 可出借平台_PC
 		borrowBean.setCanTransactionPc(this.getValue(borrowWithBLOBs.getCanTransactionPc()));
-		// 可投资平台_微网站
+		// 可出借平台_微网站
 		borrowBean.setCanTransactionWei(this.getValue(borrowWithBLOBs.getCanTransactionWei()));
-		// 可投资平台_IOS
+		// 可出借平台_IOS
 		borrowBean.setCanTransactionIos(this.getValue(borrowWithBLOBs.getCanTransactionIos()));
-		// 可投资平台_Android
+		// 可出借平台_Android
 		borrowBean.setCanTransactionAndroid(this.getValue(borrowWithBLOBs.getCanTransactionAndroid()));
 		// 运营标签
 		borrowBean.setOperationLabel(this.getValue(borrowWithBLOBs.getOperationLabel()));
@@ -3419,7 +3415,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //				return 3;
 //			}
 
-//			// 1 ：投资人 2：借款人
+//			// 1 ：出借人 2：借款人
 //			UsersInfoExample usersInfoExample = new UsersInfoExample();
 //			UsersInfoExample.Criteria usersInfoCra = usersInfoExample.createCriteria();
 //			usersInfoCra.andUserIdEqualTo(users.getUserId());
@@ -5813,7 +5809,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
                     JSONObject params = new JSONObject();
                     params.put("borrowNid", list.get(i).getBorrowNid());
                     params.put("planId", list.get(i).getId());
-                    autoRecordMessageProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)));
+					commonProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), params));
                 } catch (MQException e) {
                     logger.error("发送【自动备案消息到MQ】MQ失败...");
                 }

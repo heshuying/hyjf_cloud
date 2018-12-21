@@ -16,7 +16,7 @@ public interface EventsCustomizeMapper {
      */
     Event selectZong(ContentEventsCustomize contentEventsCustomize);
     /**
-     * 根据 查询投资百分比
+     * 根据 查询出借百分比
      * @param
      * @return
      */

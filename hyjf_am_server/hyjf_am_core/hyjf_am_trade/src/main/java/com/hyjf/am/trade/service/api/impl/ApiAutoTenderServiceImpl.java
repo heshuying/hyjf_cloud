@@ -72,12 +72,12 @@ public class ApiAutoTenderServiceImpl extends BaseServiceImpl implements ApiAuto
 		/*temp.setTenderUserName(userName);*/
         String couponGrantId = autoTenderComboRequest.getCouponGrantId();
         if(StringUtils.isNotEmpty(couponGrantId)){
-        	temp.setCouponGrantId(Integer.valueOf(couponGrantId));// 为投资完全掉单优惠券投资时修复做记录
+        	temp.setCouponGrantId(Integer.valueOf(couponGrantId));// 为出借完全掉单优惠券出借时修复做记录
         }
         boolean tenderTmpFlag = borrowTenderTmpMapper.insertSelective(temp) > 0 ? true : false;
 		if (!tenderTmpFlag) {
 			try {
-				throw new Exception("插入borrowTenderTmp表失败，投资订单号：" + autoTenderComboRequest.getGenerateOrderId());
+				throw new Exception("插入borrowTenderTmp表失败，出借订单号：" + autoTenderComboRequest.getGenerateOrderId());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -99,9 +99,8 @@ public class ApiAutoTenderServiceImpl extends BaseServiceImpl implements ApiAuto
 		flg = borrowTenderTmpinfoMapper.insertSelective(info);
 		if(flg == null){
 			try {
-				throw new Exception("插入borrowTenderTmpInfo表失败，投资订单号：" + autoTenderComboRequest.getGenerateOrderId());
+				throw new Exception("插入borrowTenderTmpInfo表失败，出借订单号：" + autoTenderComboRequest.getGenerateOrderId());
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			return 0;

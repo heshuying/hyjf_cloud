@@ -91,6 +91,11 @@ public class AppRegistController extends BaseUserController {
         // 神策预置属性
         String presetProps = request.getParameter("presetProps");
 
+        // 合规改造 add by huanghui 20181220 start
+        String userTypeStr = request.getParameter("userType");
+        Integer userType = Integer.valueOf(userTypeStr);
+        // 合规改造 add by huanghui 20181220 end
+
         String jumpCommand = GetJumpCommand.getLinkJumpPrefix(request, version);
         //检查版本
         if(version.length()>=5){
@@ -129,7 +134,7 @@ public class AppRegistController extends BaseUserController {
         }
         WebViewUserVO webViewUserVO = registService.register(register.getMobile(),
                 register.getVerificationCode(), register.getPassword(),
-                register.getReffer(), CommonConstant.HYJF_INST_CODE, register.getUtmId(), platform, GetCilentIP.getIpAddr(request));
+                register.getReffer(), CommonConstant.HYJF_INST_CODE, register.getUtmId(), platform, GetCilentIP.getIpAddr(request), userType);
 
         // add by liuyang 神策数据统计追加 20181029 start
         if (webViewUserVO != null && webViewUserVO.getUserId() != null && webViewUserVO.getUserId() != 0) {

@@ -3,11 +3,10 @@
  */
 package com.hyjf.admin.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.controller.productcenter.plancenter.AccedeListController;
-import com.hyjf.admin.mq.FddProducer;
+import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.AccedeListService;
 import com.hyjf.am.response.admin.AccedeListResponse;
@@ -27,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -44,9 +44,30 @@ public class AccedeListServiceImpl implements AccedeListService{
     private AmUserClient amUserClient;
     
 	@Autowired
-	private FddProducer fddProducer;
+	private CommonProducer commonProducer;
 	
 	private static final Logger _log = LoggerFactory.getLogger(AccedeListController.class);
+
+	/**
+	 * 获取加入计划列表的总数
+	 * @return
+	 */
+	@Override
+	public int getAccedeListByParamCount(AccedeListRequest form) {
+		AccedeListResponse response = amTradeClient.getAccedeListByParamCount(form);
+		return response.getCount();
+	}
+
+	/**
+	 * 分页获取加入计划列表
+	 * @return
+	 */
+	@Override
+	public List<AccedeListCustomizeVO> getAccedeListByParamList(AccedeListRequest form) {
+		AccedeListResponse response = amTradeClient.getAccedeListByParamList(form);
+		return response.getResultList();
+	}
+
 	/**
      * 获取加入计划列表
      * @return
@@ -174,7 +195,7 @@ public class AccedeListServiceImpl implements AccedeListService{
 		/*rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_DOWNDESSENESITIZATION_CONTRACT, JSONObject.toJSONString(bean));*/
         try {
         	_log.info("-----------开始下载脱敏：" + bean.getOrdid() + ",开始推送脱敏队列");
-			fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG, UUID.randomUUID().toString(),JSON.toJSONBytes(bean)));
+			commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG, UUID.randomUUID().toString(),bean));
 			_log.info("-----------开始下载脱敏：" + bean.getOrdid() + ",推送脱敏队列完成1");
 
 		} catch (MQException e) {
@@ -184,12 +205,34 @@ public class AccedeListServiceImpl implements AccedeListService{
 	}
 
 	/**
-	 * 查询用户投资详情
+	 * 查询用户出借详情
 	 * @param request
 	 */
 	@Override
 	public UserHjhInvistDetailVO selectUserHjhInvistDetail(AccedeListRequest request) {
 		UserHjhInvistDetailVO vo = amTradeClient.selectUserHjhInvistDetail(request);
 		return vo;
+	}
+
+	@Override
+	public List<AccedeListCustomizeVO> paging(AccedeListRequest request, List<AccedeListCustomizeVO> result){
+		int current=request.getCurrPage(); //页码
+		int pageSize=request.getPageSize(); //每页显示的数量
+		int totalCount=result.size();
+		int pageCount = (totalCount / pageSize) + ((totalCount % pageSize > 0) ? 1 : 0);
+
+		if(current < 1){
+			current = 1;
+		}
+		int start=(current-1) * pageSize;
+		int end = Math.min(totalCount, current * pageSize);
+
+		if(pageCount >= current){
+			result=result.subList(start,end);
+		}else{
+			result = new ArrayList<>();
+		}
+
+		return result;
 	}
 }

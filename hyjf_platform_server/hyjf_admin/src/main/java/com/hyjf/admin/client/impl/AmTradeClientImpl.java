@@ -392,7 +392,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     /**
      * 根据borrowNid查询出来异常标
      *
-     * @param borrowNid 借款编号
+     * @param borrowNid 项目编号
      * @return
      * @auth sunpeikai
      */
@@ -775,7 +775,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 
     /**
-     * 根据筛选条件查询银行投资撤销异常的数据count
+     * 根据筛选条件查询银行出借撤销异常的数据count
      *
      * @param request 筛选条件
      * @return
@@ -789,7 +789,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据筛选条件查询银行投资撤销异常list
+     * 根据筛选条件查询银行出借撤销异常list
      *
      * @param request 筛选条件
      * @return
@@ -922,7 +922,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 取得优惠券投资信息
+     * 取得优惠券出借信息
      *
      * @param nid
      * @return
@@ -1305,7 +1305,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 更新投资数据
+     * 更新出借数据
      *
      * @return
      * @author nxl
@@ -1318,8 +1318,8 @@ public class AmTradeClientImpl implements AmTradeClient {
         UpdateBorrowForAutoTenderRequest request = new UpdateBorrowForAutoTenderRequest(borrowNid, accedeOrderId, bankCallBeanVO);
         Response response = restTemplate.postForEntity(url, request, Response.class).getBody();
         if (!Response.isSuccess(response)) {
-            logger.error("[" + accedeOrderId + "] 银行自动投资成功后，更新投资数据失败。");
-            throw new RuntimeException("银行自动投资成功后，更新投资数据失败。");
+            logger.error("[" + accedeOrderId + "] 银行自动投标成功后，更新出借数据失败。");
+            throw new RuntimeException("银行自动投标成功后，更新出借数据失败。");
         }
         return true;
     }
@@ -1846,7 +1846,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 投资明细记录 总数COUNT
+     * 出借明细记录 总数COUNT
      *
      * @param borrowInvestRequest
      * @return
@@ -1863,7 +1863,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 投资明细列表
+     * 出借明细列表
      *
      * @param borrowInvestRequest
      * @return
@@ -1880,7 +1880,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 投资明细列表合计
+     * 出借明细列表合计
      *
      * @param borrowInvestRequest
      * @return
@@ -1897,7 +1897,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 投资明细导出列表
+     * 出借明细导出列表
      *
      * @param borrowInvestRequest
      * @return
@@ -1914,7 +1914,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 获取用户投资协议
+     * 获取用户出借协议
      *
      * @param nid
      * @return
@@ -1930,7 +1930,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 获取用户投资协议
+     * 获取用户出借协议
      *
      * @param request
      * @return
@@ -2046,7 +2046,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 标的投资信息
+     * 标的出借信息
      *
      * @param borrowInvestRequest
      * @return
@@ -2514,6 +2514,37 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     /*加入明细 start AM-ADMIN*/
     /**
+     * 查询总条数
+     *
+     * @param form
+     * @return
+     */
+    @Override
+    public AccedeListResponse getAccedeListByParamCount(AccedeListRequest form) {
+        AccedeListResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-trade/accedeList/getAccedeListByParamCount", form, AccedeListResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
+     * 分页查询数据
+     * @param form
+     * @return
+     */
+    @Override
+    public AccedeListResponse getAccedeListByParamList(AccedeListRequest form) {
+        AccedeListResponse response = restTemplate
+                .postForEntity("http://AM-ADMIN/am-trade/accedeList/getAccedeListByParamList", form, AccedeListResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
+
+    /**
      * 检索加入明细列表
      *
      * @param form
@@ -2979,11 +3010,11 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @Date
      */
     @Override
-    public List<BorrowRepaymentPlanCustomizeVO> exportRepayClkActBorrowRepaymentInfoList(BorrowRepaymentPlanRequest request) {
+    public AdminBorrowRepaymentResponse exportRepayClkActBorrowRepaymentInfoList(BorrowRepaymentPlanRequest request) {
         String url = "http://AM-ADMIN/am-trade/adminBorrowRepayment/exportRepayClkActBorrowRepaymentInfoList";
         AdminBorrowRepaymentResponse response = restTemplate.postForEntity(url, request, AdminBorrowRepaymentResponse.class).getBody();
         if (response != null) {
-            return response.getBorrowRepaymentPlanList();
+            return response;
         }
         return null;
     }
@@ -3687,9 +3718,12 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @Author : huanghui
      */
     @Override
-    public boolean updateAccountAfterRecharge(AccountRechargeRequest request) {
-        BooleanResponse booleanResponse = restTemplate.postForEntity("http://AM-ADMIN/am-trade/rechargemanagement/updateAccountAfterRecharge", request, BooleanResponse.class).getBody();
-        return booleanResponse.getResultBoolean();
+    public AccountRechargeCustomizeResponse updateAccountAfterRecharge(AccountRechargeRequest request) {
+        AccountRechargeCustomizeResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/rechargemanagement/updateAccountAfterRecharge", request, AccountRechargeCustomizeResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
     }
 
     /**
@@ -5935,7 +5969,7 @@ public class AmTradeClientImpl implements AmTradeClient {
                 .getBody();
     }
     /**
-     * 查询固定时间间隔的用户投资列表
+     * 查询固定时间间隔的用户出借列表
      * @param repairStartDate
      * @param repairEndDate
      * @auth nxl
@@ -6003,6 +6037,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     * @param contractId
     * @return ApplyAgreementInfoVO
     **/
+    @Override
     public ApplyAgreementInfoVO selectApplyAgreementInfoByContractId(String contractId) {
         String url = "http://AM-ADMIN/am-trade/applyAgreement/selectApplyAgreementInfoByContractId/"+contractId;
         ApplyAgreementInfoResponse response = restTemplate.getForEntity(url,ApplyAgreementInfoResponse.class).getBody();
@@ -6329,6 +6364,20 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * VIP中心-优惠券发行 查询导出列表总数
+     * @param request
+     * @return
+     */
+    @Override
+    public int getCouponConfigCountForExport(CouponConfigRequest request) {
+        IntegerResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/couponConfig/getCountForExport", request, IntegerResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    /**
      * 查询优惠券发行导出列表
      * @param request
      * @return
@@ -6389,8 +6438,18 @@ public class AmTradeClientImpl implements AmTradeClient {
         return false;
     }
 
+    @Override
+    public Integer countBorrowRepaymentInfoExport(BorrowRepaymentInfoRequset copyForm) {
+        String url = "http://AM-ADMIN/am-trade/adminBorrowRepaymentInfo/countExport";
+        IntegerResponse response = restTemplate.postForObject(url, copyForm, IntegerResponse.class);
+        if (response != null) {
+            return response.getResultInt();
+        }
+        return null;
+    }
+
     /**
-     * 产品中心-加息投资明细（总计）
+     * 产品中心-加息出借明细（总计）
      * @param request
      * @auth wenxin
      * @return
@@ -6405,7 +6464,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         return 0;
     }
     /**
-     * 产品中心-加息投资明细（列表/导出）
+     * 产品中心-加息出借明细（列表/导出）
      * @param request
      * @auth wenxin
      * @return
@@ -6423,7 +6482,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
     /**
-     * 产品中心-加息投资明细（合计）
+     * 产品中心-加息出借明细（合计）
      * @param request
      * @auth wenxin
      * @return
@@ -6678,7 +6737,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
     /**
-     * 删除 自动投资临时表
+     * 删除 自动出借临时表
      * @auther: nxl
      * @date: 2018/7/10
      */
@@ -6721,4 +6780,19 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
 		return null;
 	}
+
+    /**
+     * 资金中心-汇计划提成导出记录总数
+     * @param request
+     * @return
+     */
+    @Override
+    public int getHjhCommissionCountForExport(HjhCommissionRequest request) {
+        IntegerResponse response =
+                restTemplate.postForEntity("http://AM-ADMIN/am-trade/hjhCommission/getHjhCommissionCountForExport", request, IntegerResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
+    }
 }

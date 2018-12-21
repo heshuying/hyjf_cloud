@@ -1,6 +1,5 @@
 package com.hyjf.cs.trade.service.consumer.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -21,13 +20,13 @@ import com.hyjf.common.util.calculate.InterestInfo;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
-import com.hyjf.cs.trade.mq.producer.SmsProducer;
 import com.hyjf.cs.trade.service.consumer.CouponLoansService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -43,13 +42,10 @@ import java.util.*;
 public class CouponLoansServiceImpl implements CouponLoansService {
     private static final Logger logger = LoggerFactory.getLogger(CouponLoansServiceImpl.class);
 
-
-    @Resource
-    private SmsProducer smsProducer;
+    @Autowired
+    private CommonProducer commonProducer;
     @Resource
     private AmUserClient amUserClient;
-    @Resource
-    private AppMessageProducer appMessageProducer;
     @Resource
     private AmTradeClient borrowClient;
 
@@ -57,11 +53,11 @@ public class CouponLoansServiceImpl implements CouponLoansService {
     private static final String VAL_PROFIT = "val_profit";
     /** 用户ID */
     private static final String USERID = "userId";
-    /** 投资金额 */
+    /** 出借金额 */
     private static final String VAL_AMOUNT = "val_amount";
-    /** 优惠券投资 */
+    /** 优惠券出借 */
     private static final String COUPON_TYPE = "coupon_type";
-    /** 优惠券投资订单编号 */
+    /** 优惠券出借订单编号 */
     private static final String TENDER_NID = "tender_nid";
     /** 优惠券面值 */
     private static final String VAL_COUPON_BALANCE = "val_coupon_balance";
@@ -142,11 +138,11 @@ public class CouponLoansServiceImpl implements CouponLoansService {
         msg = new HashMap<String, String>();
         retMsgList.add(msg);
 
-        // 投资订单号
+        // 出借订单号
         String ordId = borrowTenderCpn.getNid();
         CouponConfigVO couponConfig = borrowClient.getCouponConfig(ordId);
         if (couponConfig == null) {
-            throw new RuntimeException("优惠券投资放款失败" + "[投资订单号：" + ordId + "]");
+            throw new RuntimeException("优惠券出借放款失败" + "[出借订单号：" + ordId + "]");
         }
         InterestInfo interestInfo = null;
         // 月利率(算出管理费用[上限])
@@ -228,7 +224,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
 
         int borrowTenderCnt2 = updateBorrowTender(borrowTenderCpn, allAccount, interestTender, allCapital);
         if (borrowTenderCnt2 == 0) {
-            throw new RuntimeException("投资详情(huiyingdai_borrow_tender)更新失败!" + "[投资订单号：" + ordId + "]");
+            throw new RuntimeException("出借详情(huiyingdai_borrow_tender)更新失败!" + "[出借订单号：" + ordId + "]");
         }
         // [principal: 等额本金, month:等额本息, month:等额本息, end:先息后本]
         if (isMonth && couponConfig.getCouponType() != 1) {
@@ -245,7 +241,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
                         recoverTime = monthly.getRepayTime() ; // 估计还款时间
                     }
                     CouponRecoverVO cr = new CouponRecoverVO();
-                    // 投资订单编号
+                    // 出借订单编号
                     cr.setTenderId(borrowTenderCpn.getNid());
                     // 还款状态（0:未还款，1：已还款）
                     cr.setRecoverStatus(0);
@@ -291,7 +287,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
         } else {
             // 不分期还款的场合
             CouponRecoverVO cr = new CouponRecoverVO();
-            // 投资订单编号
+            // 出借订单编号
             cr.setTenderId(borrowTenderCpn.getNid());
             // 还款状态（0:未还款，1：已还款）
             cr.setRecoverStatus(0);
@@ -333,28 +329,28 @@ public class CouponLoansServiceImpl implements CouponLoansService {
             this.borrowClient.insertSelective(cr);
         }
         borrowClient.crRecoverPeriod(borrowTenderCpn.getNid(), 1, 1);
-        // 更新账户信息(投资人)
+        // 更新账户信息(出借人)
         AccountVO account = new AccountVO();
 
         account.setUserId(borrowTenderCpn.getUserId());
-        account.setBankTotal(allAccount);// 投资人资金总额 +利息
+        account.setBankTotal(allAccount);// 出借人资金总额 +利息
         // 本金
         account.setPlanInterestWait(interestTender);
         account.setPlanAccountWait(allAccount);
 
         int accountCnt = this.borrowClient.updateOfLoansTenderHjh(account);
         if (accountCnt == 0) {
-            throw new RuntimeException("投资人资金记录(huiyingdai_account)更新失败!" + "[投资订单号：" + ordId + "]");
+            throw new RuntimeException("出借人资金记录(huiyingdai_account)更新失败!" + "[出借订单号：" + ordId + "]");
         }
-        // 取得账户信息(投资人)
+        // 取得账户信息(出借人)
         account = borrowClient.getAccountByUserId(borrowTenderCpn.getUserId());
         if (account == null) {
-            throw new RuntimeException("投资人账户信息不存在。[投资人ID：" + borrowTenderCpn.getUserId() + "]，" + "[投资订单号：" + ordId + "]");
+            throw new RuntimeException("出借人账户信息不存在。[出借人ID：" + borrowTenderCpn.getUserId() + "]，" + "[出借订单号：" + ordId + "]");
         }
 
-        // 投资人编号
+        // 出借人编号
         msg.put(USERID, borrowTenderCpn.getUserId().toString());
-        // 投资额
+        // 出借额
         msg.put(VAL_AMOUNT, allAccount.toString());
         // 代收收益
         msg.put(VAL_PROFIT, sumInterest.toString());
@@ -363,7 +359,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
         // 优惠券面值
         msg.put(VAL_COUPON_BALANCE, couponConfig.getCouponType() == 1 ? couponConfig.getCouponQuota() + "元"
                 : couponConfig.getCouponType() == 2 ? couponConfig.getCouponQuota() + "%" : couponConfig.getCouponQuota() + "元");
-        // 投资订单编号
+        // 出借订单编号
         msg.put(TENDER_NID, borrowTenderCpn.getNid());
         // 优惠券
         msg.put(COUPON_TYPE, "1");
@@ -385,8 +381,8 @@ public class CouponLoansServiceImpl implements CouponLoansService {
                     SmsMessage smsMessage = new SmsMessage(Integer.valueOf(msg.get(USERID)), msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null,
                             CustomConstants.PARAM_TPL_COUPON_TENDER, CustomConstants.CHANNEL_TYPE_NORMAL);
                     try {
-                        smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
-                                JSON.toJSONBytes(smsMessage)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(),
+                                smsMessage));
                     } catch (MQException e) {
                         e.printStackTrace();
                     }
@@ -411,10 +407,10 @@ public class CouponLoansServiceImpl implements CouponLoansService {
                     AppMsMessage appMsMessage = new AppMsMessage(users.getUserId(), msg, null, MessageConstant.APP_MS_SEND_FOR_USER,
                             CustomConstants.JYTZ_COUPON_TENDER);
                     try{
-                        appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
-                                UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
+                                UUID.randomUUID().toString(), appMsMessage));
                     }catch (Exception e){
-                        logger.error("优惠券投资成功推送消息异常！",e);
+                        logger.error("优惠券投标成功推送消息异常！",e);
                     }
                 }
             }
@@ -470,11 +466,11 @@ public class CouponLoansServiceImpl implements CouponLoansService {
         msg = new HashMap<String, String>();
         retMsgList.add(msg);
 
-        // 投资订单号
+        // 出借订单号
         String ordId = borrowTenderCpn.getNid();
         CouponConfigVO couponConfig = borrowClient.getCouponConfig(ordId);
         if (couponConfig == null) {
-            throw new RuntimeException("优惠券投资放款失败" + "[投资订单号：" + ordId + "]");
+            throw new RuntimeException("优惠券出借放款失败" + "[出借订单号：" + ordId + "]");
         }
         InterestInfo interestInfo = null;
         // 月利率(算出管理费用[上限])
@@ -546,7 +542,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
             recoverTime = interestInfo.getRepayTime(); // 估计还款时间
         }
 
-        // 更新投资详情表
+        // 更新出借详情表
         BorrowTenderCpnVO newBorrowTender = new BorrowTenderCpnVO();
         newBorrowTender.setId(borrowTenderCpn.getId());
         // 待收总额（优惠券利息）
@@ -565,7 +561,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
         newBorrowTender.setLoanFee(BigDecimal.valueOf(0));
         // 状态 0，未放款，1，已放款
         newBorrowTender.setStatus(1);
-        // 投资状态 0，未放款，1，已放款
+        // 出借状态 0，未放款，1，已放款
         newBorrowTender.setTenderStatus(1);
         // 放款状态 0，未放款，1，已放款
         newBorrowTender.setApiStatus(1);
@@ -575,7 +571,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
         newBorrowTender.setWeb(2);
         int borrowTenderCnt2 = this.updateBorrowTenderCpn(newBorrowTender);
         if (borrowTenderCnt2 == 0) {
-            throw new RuntimeException("投资详情(huiyingdai_borrow_tender)更新失败!" + "[投资订单号：" + ordId + "]");
+            throw new RuntimeException("出借详情(huiyingdai_borrow_tender)更新失败!" + "[出借订单号：" + ordId + "]");
         }
         // [principal: 等额本金, month:等额本息, month:等额本息, end:先息后本]
         if (isMonth && couponConfig.getCouponType() != 1) {
@@ -585,7 +581,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
                 for (int j = 0; j < interestInfo.getListMonthly().size(); j++) {
                     monthly = interestInfo.getListMonthly().get(j);
                     CouponRecoverVO cr = new CouponRecoverVO();
-                    // 投资订单编号
+                    // 出借订单编号
                     cr.setTenderId(borrowTenderCpn.getNid());
                     // 还款状态（0:未还款，1：已还款）
                     cr.setRecoverStatus(0);
@@ -631,7 +627,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
         } else {
             // 不分期还款的场合
             CouponRecoverVO cr = new CouponRecoverVO();
-            // 投资订单编号
+            // 出借订单编号
             cr.setTenderId(borrowTenderCpn.getNid());
             // 还款状态（0:未还款，1：已还款）
             cr.setRecoverStatus(0);
@@ -672,33 +668,33 @@ public class CouponLoansServiceImpl implements CouponLoansService {
             this.borrowClient.insertSelective(cr);
         }
         this.borrowClient.crRecoverPeriod(borrowTenderCpn.getNid(), 1, 1);
-        // 更新账户信息(投资人)
+        // 更新账户信息(出借人)
         AccountVO account = new AccountVO();
 
         account.setUserId(borrowTenderCpn.getUserId());
-        account.setBankTotal(allAccount);// 投资人资金总额 +利息
-        account.setBankFrost(BigDecimal.ZERO);// 投资人冻结金额+投资金额(等额本金时投资金额可能会大于计算出的本金之和)
-        account.setBankAwait(allAccount);// 投资人待收金额+利息+
+        account.setBankTotal(allAccount);// 出借人资金总额 +利息
+        account.setBankFrost(BigDecimal.ZERO);// 出借人冻结金额+出借金额(等额本金时出借金额可能会大于计算出的本金之和)
+        account.setBankAwait(allAccount);// 出借人待收金额+利息+
         // 本金
-        account.setBankAwaitCapital(BigDecimal.ZERO);// 投资人待收本金
-        account.setBankAwaitInterest(interestTender);// 投资人待收利息
-        account.setBankInvestSum(BigDecimal.ZERO);// 投资人累计投资
+        account.setBankAwaitCapital(BigDecimal.ZERO);// 出借人待收本金
+        account.setBankAwaitInterest(interestTender);// 出借人待收利息
+        account.setBankInvestSum(BigDecimal.ZERO);// 出借人累计出借
         account.setBankFrostCash(BigDecimal.ZERO);// 江西银行冻结金额
 
         logger.info("更新用户账户："+account.getUserId());
         int accountCnt = this.borrowClient.updateOfLoansTender(account);
         if (accountCnt == 0) {
-            throw new RuntimeException("投资人资金记录(huiyingdai_account)更新失败!" + "[投资订单号：" + ordId + "]");
+            throw new RuntimeException("出借人资金记录(huiyingdai_account)更新失败!" + "[出借订单号：" + ordId + "]");
         }
-        // 取得账户信息(投资人)
+        // 取得账户信息(出借人)
         account = borrowClient.getAccountByUserId(borrowTenderCpn.getUserId());
         if (account == null) {
-            throw new RuntimeException("投资人账户信息不存在。[投资人ID：" + borrowTenderCpn.getUserId() + "]，" + "[投资订单号：" + ordId + "]");
+            throw new RuntimeException("出借人账户信息不存在。[出借人ID：" + borrowTenderCpn.getUserId() + "]，" + "[出借订单号：" + ordId + "]");
         }
 
-        // 投资人编号
+        // 出借人编号
         msg.put(USERID, borrowTenderCpn.getUserId().toString());
-        // 投资额
+        // 出借额
         msg.put(VAL_AMOUNT, allAccount.toString());
         // 代收收益
         msg.put(VAL_PROFIT, sumInterest.toString());
@@ -707,7 +703,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
         // 优惠券面值
         msg.put(VAL_COUPON_BALANCE, couponConfig.getCouponType() == 1 ? couponConfig.getCouponQuota() + "元"
                 : couponConfig.getCouponType() == 2 ? couponConfig.getCouponQuota() + "%" : couponConfig.getCouponQuota() + "元");
-        // 投资订单编号
+        // 出借订单编号
         msg.put(TENDER_NID, borrowTenderCpn.getNid());
         // 优惠券
         msg.put(COUPON_TYPE, "1");
@@ -723,7 +719,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
      * @return
      */
     public int updateBorrowTender(BorrowTenderCpnVO borrowTenderCpn,BigDecimal allAccount,BigDecimal interestTender,BigDecimal allCapital){
-        // 更新投资详情表
+        // 更新出借详情表
         BorrowTenderCpnVO newBorrowTender = new BorrowTenderCpnVO();
         newBorrowTender.setId(borrowTenderCpn.getId());
         // 待收总额（优惠券利息）
@@ -742,7 +738,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
         newBorrowTender.setLoanFee(BigDecimal.valueOf(0));
         // 状态 0，未放款，1，已放款
         newBorrowTender.setStatus(1);
-        // 投资状态 0，未放款，1，已放款
+        // 出借状态 0，未放款，1，已放款
         newBorrowTender.setTenderStatus(1);
         // 放款状态 0，未放款，1，已放款
         newBorrowTender.setApiStatus(1);
@@ -764,7 +760,7 @@ public class CouponLoansServiceImpl implements CouponLoansService {
     private BigDecimal getInterestTYJ(BigDecimal account, BigDecimal borrowApr,Integer couponProfitTime) {
         BigDecimal interest = BigDecimal.ZERO;
         // 保留两位小数（去位）
-        // 应回款=体验金面值*投资标的年化/365*收益期限（体验金发行配置）
+        // 应回款=体验金面值*出借标的年化/365*收益期限（体验金发行配置）
         interest = account.multiply(borrowApr.divide(new BigDecimal(100), 6, BigDecimal.ROUND_HALF_UP))
                 .divide(new BigDecimal(365), 6, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(couponProfitTime))
                 .setScale(2, BigDecimal.ROUND_DOWN);

@@ -108,8 +108,8 @@ public class BorrowRecoverController extends BaseController {
         copyForm.setPageSize(defaultRowMaxCount);
         copyForm.setCurrPage(1);
         // 查询
-        List<BorrowRecoverCustomizeVO> resultList = this.borrowRecoverService.exportBorrowRecoverList(copyForm);
-        Integer totalCount = resultList.size();
+ 
+        Integer totalCount = this.borrowRecoverService.countBorrowRecover(copyForm);
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap(isOrganizationView);
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
@@ -117,18 +117,16 @@ public class BorrowRecoverController extends BaseController {
         if (totalCount == 0) {
 
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-        }else {
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
         }
         for (int i = 1; i < sheetCount; i++) {
 
             copyForm.setPageSize(defaultRowMaxCount);
-            copyForm.setCurrPage(i+1);
+            copyForm.setCurrPage(i);
             // 查询
-            List<BorrowRecoverCustomizeVO> resultList2 = this.borrowRecoverService.exportBorrowRecoverList(copyForm);
-            if (resultList2 != null && resultList2.size()> 0) {
-                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultList2);
+            List<BorrowRecoverCustomizeVO> resultList = this.borrowRecoverService.exportBorrowRecoverList(copyForm);
+            if (resultList != null && resultList.size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i ) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultList);
             } else {
                 break;
             }
@@ -138,39 +136,39 @@ public class BorrowRecoverController extends BaseController {
 
     private Map<String, String> buildMap(String isOrganizationView) {
         Map<String, String> map = Maps.newLinkedHashMap();
-        map.put("borrowNid","借款编号");
+        map.put("borrowNid","项目编号");
         map.put("instName","资产来源");
         map.put("planNid","智投编号");
         map.put("userId","借款人ID");
         map.put("username","借款人用户名");
         map.put("entrustedFlg","是否受托支付");
         map.put("entrustedUserName","受托支付用户名");
-        map.put("borrowName","借款标题");
+//        map.put("borrowName","借款标题");
         map.put("borrowProjectTypeName","项目类型");
         map.put("borrowPeriod","借款期限");
-        map.put("borrowApr","年化收益");
+        map.put("borrowApr","出借利率");
         map.put("borrowStyleName","还款方式");
-        map.put("orderNum","投资订单号");
+        map.put("orderNum","出借订单号");
         map.put("loanOrdid","放款订单号");
         map.put("instCode","合作机构编号");
-        map.put("tenderUsername","投资人用户名");
-        map.put("tenderUserId","投资人ID");
-        map.put("createTime","投资时间");
-        map.put("account","投资金额");
+        map.put("tenderUsername","出借人用户名");
+        map.put("tenderUserId","出借人ID");
+        map.put("createTime","出借时间");
+        map.put("account","出借金额");
         map.put("accountYes","应放款金额");
         map.put("loanFee","放款服务费");
         map.put("recoverPrice","实际放款金额");
         map.put("servicePrice","实收服务费");
         map.put("isRecover","放款状态");
         map.put("timeRecover","放款时间");
-        map.put("tenderUserAttribute","投资人用户属性（投资时）");
-        map.put("inviteUserAttribute","推荐人用户属性（投资时）");
-        map.put("tenderReferrerUsername","推荐人（投资时）");
-        map.put("tenderReferrerUserId","推荐人ID（投资时）");
+        map.put("tenderUserAttribute","出借人用户属性（出借时）");
+        map.put("inviteUserAttribute","推荐人用户属性（出借时）");
+        map.put("tenderReferrerUsername","推荐人（出借时）");
+        map.put("tenderReferrerUserId","推荐人ID（出借时）");
         if (StringUtils.isNotBlank(isOrganizationView)) {
-            map.put("departmentLevel1Name", "一级分部（投资时）");
-            map.put("departmentLevel2Name", "二级分部（投资时）");
-            map.put("teamName", "团队（投资时）");
+            map.put("departmentLevel1Name", "一级分部（出借时）");
+            map.put("departmentLevel2Name", "二级分部（出借时）");
+            map.put("teamName", "团队（出借时）");
         }
         return map;
     }

@@ -123,7 +123,7 @@ public interface BorrowCustomizeMapper {
     Long countBorrow(BorrowCommonCustomizeVO borrowCommonCustomizeVO);
 
     /**
-     * 清算日前一天，查询处于投资中或者复审中的原始标的
+     * 清算日前一天，查询处于出借中或者复审中的原始标的
      * @author zhangyk
      * @date 2018/8/20 16:29
      */

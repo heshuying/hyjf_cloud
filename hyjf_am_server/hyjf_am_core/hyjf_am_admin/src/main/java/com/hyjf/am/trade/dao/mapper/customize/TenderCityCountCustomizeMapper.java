@@ -15,13 +15,13 @@ import java.util.List;
 public interface TenderCityCountCustomizeMapper {
 
     /**
-     * 按照省份统计投资人的分布
+     * 按照省份统计出借人的分布
      * @param date 上个月的最后一天
      */
     List<TenderCityCount> getTenderCityGroupBy(Date date);
 
     /**
-     * 按照性别统计投资人的分布
+     * 按照性别统计出借人的分布
      * @param date 上个月的最后一天
      */
     List<TenderSexCount>  getTenderSexGroupBy(Date date);
@@ -60,12 +60,12 @@ public interface TenderCityCountCustomizeMapper {
     int getLoanNum(@Param("date")Date date);
 
     /**
-     * 获取截至日期的投资金额
+     * 获取截至日期的出借金额
      */
     BigDecimal getInvestLastDate(@Param("date")Date date);
 
     /**
-     * 统计投资人总数，截至日期为上个月的最后一天
+     * 统计出借人总数，截至日期为上个月的最后一天
      * @param date 上个月的最后一天
      * @return
      */

@@ -179,7 +179,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
         return amTradeClient.selectBorrowByNid(borrowNid);
     }
     /**
-     * 更新投资数据
+     * 更新出借数据
      *
      * @return
      * @author nxl
@@ -230,7 +230,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
         String userId = tenderExceptionSolveRequestBean.getUserId();
         String planOrderId = tenderExceptionSolveRequestBean.getPlanOrderId();
         String debtPlanNid = tenderExceptionSolveRequestBean.getDebtPlanNid();
-        logger.info("===自动投资异常处理开始。。。 userId:"+userId+",planOrderId:"+planOrderId+",debtPlanNid:"+debtPlanNid);
+        logger.info("===自动出借异常处理开始。。。 userId:"+userId+",planOrderId:"+planOrderId+",debtPlanNid:"+debtPlanNid);
         TenderExceptionSolveRequest tenderExceptionSolveRequest = new TenderExceptionSolveRequest();
         BeanUtils.copyProperties(tenderExceptionSolveRequestBean, tenderExceptionSolveRequest);
         String retMessage = "系统异常";
@@ -250,20 +250,20 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
             // 债转也是一样。如失败则直接更新
             HjhPlanBorrowTmpVO hjhPlanBorrowTmp =getHjhPlanBorrowTmpVO(tenderExceptionSolveRequest);
             if(hjhPlanBorrowTmp == null){
-                logger.info(planOrderId+" 没有投资异常明细");
-                return planOrderId+" 没有投资异常明细";
+                logger.info(planOrderId+" 没有出借异常明细");
+                return planOrderId+" 没有出借异常明细";
             }
 
             logger.info(planOrderId+"， "+hjhPlanBorrowTmp.getBorrowNid()+",  异常返回码："+hjhPlanBorrowTmp.getRespCode());
 
             if(StringUtils.isBlank(hjhPlanBorrowTmp.getOrderId())){
-                return planOrderId+" 没有投资异常订单";
+                return planOrderId+" 没有出借异常订单";
 
             }
             BankOpenAccountVO borrowUserAccount = amUserClient.queryBankOpenAccountByUserId(userIdint);
             if (borrowUserAccount == null || StringUtils.isBlank(borrowUserAccount.getAccount())) {
-                logger.info("投资人未开户:" + userId);
-                return "投资人未开户:" + userId;
+                logger.info("出借人未开户:" + userId);
+                return "出借人未开户:" + userId;
 
             }
             // 借款人账户
@@ -271,7 +271,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
             // 为了判断
             int orderStatus = hjhAccede.getOrderStatus()%10;
             hjhAccede.setOrderStatus(orderStatus);
-            // 原始标投资
+            // 原始标出借
             if(hjhPlanBorrowTmp.getBorrowType() == 0){
                 BorrowAndInfoVO borrow = selectBorrowByNid(hjhPlanBorrowTmp.getBorrowNid());
                 if (borrow == null) {
@@ -290,7 +290,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                 boolean bankQueryisOK = false;
                 if (BankCallConstant.RESPCODE_SUCCESS.equals(queryRetCode)) {
                     String state = StringUtils.isNotBlank(debtQuery.getState()) ? debtQuery.getState() : "";
-                    logger.info(("查询投资请求成功:" + hjhPlanBorrowTmp.getOrderId())+ " 状态 "+state);
+                    logger.info(("查询出借请求成功:" + hjhPlanBorrowTmp.getOrderId())+ " 状态 "+state);
                     // 1：投标中； 2：计息中；4：本息已返还；9：已撤销；
                     if (StringUtils.isNotBlank(state)) {
                         if ("1".equals(state)) {
@@ -304,11 +304,11 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                     // 如果有tmp表，说明第一接口调用了，调用成功，表更新失败，无如都是需要调用下面的方法
                     boolean isOK = updateBorrowForAutoTender(borrow,hjhAccede,debtQuery);
                     if(isOK){
-                        // 更改加入明细状态和投资临时表状态
+                        // 更改加入明细状态和出借临时表状态
                         updateTenderByParam(orderStatus,hjhAccede.getId());
                         // 只有不是接口成功表失败的情况才会退回队列
-                        // 投资成功后减掉redis 钱
-                        String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_INVEST + RedisConstants.HJH_SLASH + hjhAccede.getPlanNid();
+                        // 投标成功后减掉redis 钱
+                        String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_INVEST + hjhAccede.getPlanNid();
                         RedisBorrow redisBorrow = new RedisBorrow();
                         redisBorrow.setBorrowAccountWait(borrow.getBorrowAccountWait().subtract(hjhPlanBorrowTmp.getAccount()));
                         redisBorrow.setBorrowNid(borrow.getBorrowNid());
@@ -322,15 +322,15 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                     }
                     // 投标记录不存在才会继续，不然属于未知情况
                 }else if ("CA101141".equals(queryRetCode)){
-                    // 更改加入明细状态和投资临时表状态
-                    logger.info(hjhPlanBorrowTmp.getRespCode()+" 查询银行记录成功，但是投资失败:" + userId);
+                    // 更改加入明细状态和出借临时表状态
+                    logger.info(hjhPlanBorrowTmp.getRespCode()+" 查询银行记录成功，但是出借失败:" + userId);
                     updateTenderByParam(orderStatus,hjhAccede.getId());
 
                     // 只有不是接口成功表失败的情况才会退回队列
                     // 此处 if判断为汇计划三期优化改动
                     if(!BankCallConstant.RESPCODE_SUCCESS.equals(hjhPlanBorrowTmp.getRespCode())) {
-                        // 投资成功后减掉redis 钱
-                        String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_INVEST + RedisConstants.HJH_SLASH + hjhAccede.getPlanNid();
+                        // 投标成功后减掉redis 钱
+                        String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_INVEST + hjhAccede.getPlanNid();
                         RedisBorrow redisBorrow = new RedisBorrow();
                         redisBorrow.setBorrowAccountWait(borrow.getBorrowAccountWait());
                         redisBorrow.setBorrowNid(borrow.getBorrowNid());
@@ -351,16 +351,16 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                 }else{
                     return planOrderId+" 暂时没有处理该异常，需要协调开发处理  "+ queryRetCode;
                 }
-                // 债转标投资
+                // 债转标出借
             }else if(hjhPlanBorrowTmp.getBorrowType() == 1){
                 HjhDebtCreditVO credit =amTradeClient.selectHjhDebtCreditByCreditNid(hjhPlanBorrowTmp.getBorrowNid());
                 if (credit == null) {
                     logger.error("[" + hjhPlanBorrowTmp.getAccedeOrderId() + "]" + "债转号不存在 "+hjhPlanBorrowTmp.getBorrowNid());
                     return planOrderId+" 债转号不存在 "+hjhPlanBorrowTmp.getBorrowNid();
                 }
-                // 为了即信同步银行的结果，先调用下“投资人投标申请查询”接口，返回的txAmount不带承接利息
+                // 为了即信同步银行的结果，先调用下“出借人投标申请查询”接口，返回的txAmount不带承接利息
                 BankCallBean bean = debtStatusQuery(userIdint, borrowUserAccountId,hjhPlanBorrowTmp.getOrderId());
-                // 调用下“投资人购买债权查询”接口，返回的txAmount带承接利息
+                // 调用下“出借人购买债权查询”接口，返回的txAmount带承接利息
                 bean = creditStatusQuery(userIdint, borrowUserAccountId, hjhPlanBorrowTmp.getOrderId());
                 String queryRetCode = StringUtils.isNotBlank(bean.getRetCode()) ? bean.getRetCode() : "";
                 if(BankCallConstant.RESPCODE_SUCCESS.equals(queryRetCode)){
@@ -378,7 +378,7 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                     // 债权承接订单日期
                     String orderDate = GetDate.getServerDateTime(1, new Date());
                     Boolean isLast = false;
-                    //是否标的的最后一笔投资/承接(0:非最后一笔；1:最后一笔)
+                    //是否标的的最后一笔出借/承接(0:非最后一笔；1:最后一笔)
                     if(hjhPlanBorrowTmp.getIsLast()==1){
                         isLast = true;
                     }
@@ -389,15 +389,15 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                         logger.info("保存creditTenderLog表失败，计划订单号：" + hjhAccede.getAccedeOrderId());
                         return  "保存creditTenderLog表失败，计划订单号：" + hjhAccede.getAccedeOrderId();
                     }
-                    //汇计划自动投资(收债转服务费)
+                    //汇计划自动出借(收债转服务费)
                     logger.info("[" + hjhAccede.getAccedeOrderId() + "]" + "承接用计算完成\n"
                             + resultVO.toLog());
-                    // add 汇计划三期 汇计划自动投资(收债转服务费) liubin 20180515 end
+                    // add 汇计划三期 汇计划自动出借(收债转服务费) liubin 20180515 end
                     bean.setOrderId(hjhPlanBorrowTmp.getOrderId());
                     logger.info("===========updateCreditForAutoTender============");
                     boolean isOK = updateCreditForAutoTender(credit, hjhAccede, hjhPlan, bean, borrowUserAccountId, sellerUsrcustid, resultVO);
                     if(isOK){
-                        // 更改加入明细状态和投资临时表状态
+                        // 更改加入明细状态和出借临时表状态
                         updateTenderByParam(orderStatus,hjhAccede.getId());
                         // 更新后重新查
                         credit =amTradeClient.selectHjhDebtCreditByCreditNid(hjhPlanBorrowTmp.getBorrowNid());
@@ -406,8 +406,8 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                             return planOrderId+" 债转号不存在 结束债权 "+hjhPlanBorrowTmp.getBorrowNid();
                         }
                         // 只有不是接口成功表失败的情况才会退回队列
-                        // 投资成功后减掉redis 钱
-                        String queueName =RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_CREDIT + RedisConstants.HJH_SLASH  + hjhAccede.getPlanNid();
+                        // 投标成功后减掉redis 钱
+                        String queueName =RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_CREDIT + hjhAccede.getPlanNid();
                         RedisBorrow redisBorrow = new RedisBorrow();
                         BigDecimal await = credit.getLiquidationFairValue().subtract(credit.getCreditPrice());
                         redisBorrow.setBorrowAccountWait(await);
@@ -443,12 +443,12 @@ public class AutoTenderExceptionServiceImpl extends BaseServiceImpl implements A
                         }
                     }
                 }else if ("CA110112".equals(queryRetCode)){
-                    // 更改加入明细状态和投资临时表状态
+                    // 更改加入明细状态和出借临时表状态
                     updateTenderByParam(orderStatus,hjhAccede.getId());
                     // 只有不是接口成功表失败的情况才会退回队列
                     if(!BankCallConstant.RESPCODE_SUCCESS.equals(hjhPlanBorrowTmp.getRespCode())){
-                        // 投资成功后减掉redis 钱
-                        String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_CREDIT + RedisConstants.HJH_SLASH + hjhAccede.getPlanNid();
+                        // 投标成功后减掉redis 钱
+                        String queueName = RedisConstants.HJH_PLAN_LIST + RedisConstants.HJH_BORROW_CREDIT + hjhAccede.getPlanNid();
                         RedisBorrow redisBorrow = new RedisBorrow();
                         BigDecimal await = credit.getLiquidationFairValue().subtract(credit.getCreditPrice());
                         redisBorrow.setBorrowAccountWait(await);

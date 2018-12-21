@@ -22,7 +22,7 @@ public class HjhOrderMatchPeriodCheckJob extends BaseJob implements Job {
         logger.info("HjhOrderMatchPeriodCheckJob: {} execute...", context.getJobDetail().getKey().getName());
 
         Boolean result = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/hjhAlarmController/batch/hjhOrderMatchPeriodCheck", Boolean.class).getBody();
+                "http://CS-TRADE/cs-trade/hjhAlarmController/batch/hjhOrderMatchPeriodCheck", Boolean.class).getBody();
 
         logger.info("HjhOrderMatchPeriodCheckJob execute end...");
     }

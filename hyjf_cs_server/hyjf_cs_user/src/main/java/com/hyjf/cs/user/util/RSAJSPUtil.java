@@ -134,24 +134,32 @@ public class RSAJSPUtil {
 		}
 	}
 
+	private static volatile Cipher encryptCipher;
+
 	public static byte[] encrypt(PublicKey pk, byte[] data) throws Exception {
+
+		synchronized (RSAJSPUtil.class){
+			if(encryptCipher == null){
+				encryptCipher = Cipher.getInstance("RSA", new org.bouncycastle.jce.provider.BouncyCastleProvider());
+			}
+		}
+
 		try {
-			Cipher cipher = Cipher.getInstance("RSA", new org.bouncycastle.jce.provider.BouncyCastleProvider());
-			cipher.init(Cipher.ENCRYPT_MODE, pk);
-			int blockSize = cipher.getBlockSize();// 获得加密块大小，如：加密前数据为128个byte，而key_size=1024
+			encryptCipher.init(Cipher.ENCRYPT_MODE, pk);
+			int blockSize = encryptCipher.getBlockSize();// 获得加密块大小，如：加密前数据为128个byte，而key_size=1024
 			// 加密块大小为127
 			// byte,加密后为128个byte;因此共有2个加密块，第一个127
 			// byte第二个为1个byte
-			int outputSize = cipher.getOutputSize(data.length);// 获得加密块加密后块大小
+			int outputSize = encryptCipher.getOutputSize(data.length);// 获得加密块加密后块大小
 			int leavedSize = data.length % blockSize;
 			int blocksSize = leavedSize != 0 ? data.length / blockSize + 1 : data.length / blockSize;
 			byte[] raw = new byte[outputSize * blocksSize];
 			int i = 0;
 			while (data.length - i * blockSize > 0) {
 				if (data.length - i * blockSize > blockSize) {
-					cipher.doFinal(data, i * blockSize, blockSize, raw, i * outputSize);
+					encryptCipher.doFinal(data, i * blockSize, blockSize, raw, i * outputSize);
 				} else {
-                    cipher.doFinal(data, i * blockSize, data.length - i * blockSize, raw, i * outputSize);
+					encryptCipher.doFinal(data, i * blockSize, data.length - i * blockSize, raw, i * outputSize);
                 }
 				// 这里面doUpdate方法不可用，查看源代码后发现每次doUpdate后并没有什么实际动作除了把byte[]放到
 				// ByteArrayOutputStream中，而最后doFinal的时候才将所有的byte[]进行加密，可是到了此时加密块大小很可能已经超出了
@@ -165,16 +173,24 @@ public class RSAJSPUtil {
 		}
 	}
 
+	private static volatile Cipher decryptCipher;
+
 	public static byte[] decrypt(PrivateKey pk, byte[] raw) throws Exception {
+
+		synchronized (RSAJSPUtil.class){
+			if(decryptCipher == null){
+				decryptCipher = Cipher.getInstance("RSA", new org.bouncycastle.jce.provider.BouncyCastleProvider());
+			}
+		}
+
 		try {
-			Cipher cipher = Cipher.getInstance("RSA", new org.bouncycastle.jce.provider.BouncyCastleProvider());
-			cipher.init(Cipher.DECRYPT_MODE, pk);
-			int blockSize = cipher.getBlockSize();
+			decryptCipher.init(Cipher.DECRYPT_MODE, pk);
+			int blockSize = decryptCipher.getBlockSize();
 			ByteArrayOutputStream bout = new ByteArrayOutputStream(64);
 			int j = 0;
 
 			while (raw.length - j * blockSize > 0) {
-				bout.write(cipher.doFinal(raw, j * blockSize, blockSize));
+				bout.write(decryptCipher.doFinal(raw, j * blockSize, blockSize));
 				j++;
 			}
 			return bout.toByteArray();
@@ -218,18 +234,18 @@ public class RSAJSPUtil {
 		String password = null;
 		try {
 			String prik = "";
-			byte[] keyBytes3 =
+			/*byte[] keyBytes3 =
 			Base64.decodeBase64("MIIBNgIBADANBgkqhkiG9w0BAQEFAASCASAwggEcAgEAAoGBALVbwYZxzBE6" +
 							"Dgxx/ZYCO2XJyH9Dj1mRN7TiCCqNU1JiJM9rgUW0aHFcMc+iSWGSIGyrQiT0" +
 							"EA7moBsTfekwGRXIv16KNXTkDX1G8lzgmkFCpXNxEHAzyle/jHdqJ82dBzDa" +
 							"rfHNSnZJPHNUcB3n5FojRty+eJZkuWwq/wmRGWEDAgEAAoGAckTPCfP3nT8U" +
 							"DPlhyzu6yya5op4h21BpZhopBQ6o2jamdN6KxC2oxQxPAkGBtO2Kao35jikN" +
 							"WSYs6QJ+CghZNNXSW8XlrnFqHQNTlpwehsdxpqH8N4OcPC3jl/ZkZdYhvfoY" +
-					"CkG9ljdDE06fVSJZ40x3LSqXJCYbvkS2ppywkLkCAQACAQACAQACAQACAQA=");
+					"CkG9ljdDE06fVSJZ40x3LSqXJCYbvkS2ppywkLkCAQACAQACAQACAQACAQA=");*/
 
-			/*String req = getHyjfReqPriKeyPath();
+			String req = getHyjfReqPriKeyPath();
 			prik = readToString(req + PRIK_NAME);
-			byte[] keyBytes3 = Base64.decodeBase64(prik);*/
+			byte[] keyBytes3 = Base64.decodeBase64(prik);
 
 			PrivateKey privateKey = RSAKeyUtil.getPrivateKey(keyBytes3);
 

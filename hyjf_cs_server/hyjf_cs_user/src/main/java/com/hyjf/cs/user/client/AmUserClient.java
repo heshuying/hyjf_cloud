@@ -298,7 +298,7 @@ public interface AmUserClient {
 
 	CorpOpenAccountRecordVO getCorpOpenAccountRecord(int userId);
 
-    List<BankCardVO> getBankOpenAccountById(Integer userId);
+    List<BankCardVO> getTiedCardForBank(Integer userId);
 
     /**
      * @Description 查询开户失败原因
@@ -573,4 +573,27 @@ public interface AmUserClient {
 	UserVO fUserById(int userId);
 
 	UserInfoVO fUserInfoById(int userId);
+
+	/**
+	 * 主从延迟问题，查询主库
+	 * @param userId
+	 * @return
+	 */
+    UserVO updateUsersById(Integer userId);
+
+	/**
+	 * 运营数据-统计总注册人数
+	 */
+	void countRegist();
+	public void fddCertificate();
+
+	/**
+	 * 员工入职修改客户属性
+	 */
+	void updateEntey();
+
+	/**
+	 * 员工离职，修改客户属性
+	 */
+	void updateUserLeave();
 }

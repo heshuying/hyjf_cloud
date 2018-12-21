@@ -17,7 +17,7 @@ public interface AutoReqRepayBorrowCustomizeMapper {
 	List<BorrowInvestCustomize> selectBorrowInvestList(BorrowInvestCustomize borrowInvestCustomize);
 
 	/**
-	 * 投资明细记录 总数COUNT
+	 * 出借明细记录 总数COUNT
 	 * 
 	 * @param borrowInvestCustomize
 	 * @return
@@ -25,7 +25,7 @@ public interface AutoReqRepayBorrowCustomizeMapper {
 	Long countBorrowInvest(BorrowInvestCustomize borrowInvestCustomize);
 
 	/**
-	 * 导出投资明细列表
+	 * 导出出借明细列表
 	 * 
 	 * @param borrowInvestCustomize
 	 * @return
@@ -33,7 +33,7 @@ public interface AutoReqRepayBorrowCustomizeMapper {
 	List<BorrowInvestCustomize> exportBorrowInvestList(BorrowInvestCustomize borrowInvestCustomize);
 
 	/**
-	 * 投资金额合计
+	 * 出借金额合计
 	 * 
 	 * @param borrowInvestCustomize
 	 * @return

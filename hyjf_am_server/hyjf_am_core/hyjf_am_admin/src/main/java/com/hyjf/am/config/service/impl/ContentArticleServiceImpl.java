@@ -15,7 +15,6 @@ import com.hyjf.am.resquest.config.ContentArticleRequest;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.common.enums.ContentArticleEnum;
 import com.hyjf.common.util.GetDate;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

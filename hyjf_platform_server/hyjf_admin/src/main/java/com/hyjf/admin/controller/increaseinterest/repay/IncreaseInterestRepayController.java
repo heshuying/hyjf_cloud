@@ -83,8 +83,8 @@ public class IncreaseInterestRepayController extends BaseController {
 		SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
 		DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
 
-		form.setCurrPage(1);
-		form.setPageSize(defaultRowMaxCount);
+//		form.setCurrPage(1);
+//		form.setPageSize(defaultRowMaxCount);
 		IncreaseInterestRepayResponse repayResponse = increaseInterestRepayService.searchPage(form);
 		Integer totalCount = repayResponse.getTotal() == null ? 0 : repayResponse.getTotal();
 
@@ -112,12 +112,12 @@ public class IncreaseInterestRepayController extends BaseController {
 
 	private Map<String, String> buildMap() {
 		Map<String, String> map = Maps.newLinkedHashMap();
-		map.put("borrowNid", "借款编号");
-		map.put("userName", "借款人");
+		map.put("borrowNid", "项目编号");
+		map.put("userName", "出借人");
 		map.put("borrowPeriodByStyle", "项目期限");
-		map.put("borrowAccount", "借款金额");
+		map.put("borrowAccount", "出借金额");
 		map.put("borrowStyleName", "还款方式");
-		map.put("borrowApr", "年化收益率");
+		map.put("borrowApr", "出借利率");
 		map.put("borrowExtraYield", "加息收益率");
 		map.put("repayInterest", "应还加息收益");
 		map.put("repayTime", "应还日期");

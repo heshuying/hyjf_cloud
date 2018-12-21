@@ -3,25 +3,20 @@
  */
 package com.hyjf.am.trade.controller.api.wrb;
 
-import com.hyjf.am.response.trade.BorrowTenderResponse;
-import com.hyjf.am.response.trade.WrbBorrowListResponse;
-import com.hyjf.am.response.trade.WrbInvestRecordResponse;
-import com.hyjf.am.response.trade.wrbInvestRecoverPlanResponse;
+import com.hyjf.am.response.trade.*;
 import com.hyjf.am.response.user.WrbAccountResponse;
 import com.hyjf.am.response.user.WrbInvestSumResponse;
 import com.hyjf.am.resquest.api.WrbInvestRecordRequest;
-import com.hyjf.am.response.trade.WrbBorrowTenderCustomizeResponse;
-import com.hyjf.am.response.trade.WrbBorrowTenderSumCustomizeResponse;
 import com.hyjf.am.resquest.api.WrbInvestRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Account;
+import com.hyjf.am.trade.dao.model.auto.BorrowTender;
 import com.hyjf.am.trade.dao.model.auto.CouponConfig;
 import com.hyjf.am.trade.dao.model.auto.CouponUser;
-import com.hyjf.am.trade.dao.model.auto.BorrowTender;
 import com.hyjf.am.trade.dao.model.customize.WrbBorrowListCustomize;
-import com.hyjf.am.trade.dao.model.customize.WrbInvestRecordCustomize;
 import com.hyjf.am.trade.dao.model.customize.WrbBorrowTenderCustomize;
 import com.hyjf.am.trade.dao.model.customize.WrbBorrowTenderSumCustomize;
+import com.hyjf.am.trade.dao.model.customize.WrbInvestRecordCustomize;
 import com.hyjf.am.trade.service.api.wrb.WrbInfoService;
 import com.hyjf.am.vo.api.WrbInvestRecordVO;
 import com.hyjf.am.vo.trade.borrow.BorrowTenderVO;
@@ -29,8 +24,8 @@ import com.hyjf.am.vo.trade.wrb.WrbBorrowListCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderSumCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
-import org.springframework.beans.BeanUtils;
 import com.hyjf.common.util.GetDate;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -73,7 +68,7 @@ public class WrbInfoController extends BaseController {
     }
 
     /**
-     * 获取某天投资情况汇总
+     * 获取某天出借情况汇总
      * @return
      */
     @RequestMapping("/ws_sum/{date}")
@@ -127,9 +122,9 @@ public class WrbInfoController extends BaseController {
     }
 
     /**
-     * 投资记录查询
+     * 出借记录查询
      * @param request
-     * @return 投资记录
+     * @return 出借记录
      * @throws Exception
      */
     @RequestMapping("/getInvestRecord")
@@ -159,7 +154,7 @@ public class WrbInfoController extends BaseController {
     }
 
     /**
-     * 获取投资记录回款计划
+     * 获取出借记录回款计划
      * @return
      */
     @RequestMapping("/getRecoverPlan/{userId}/{investRecordId}/{borrowNid}")
@@ -219,14 +214,14 @@ public class WrbInfoController extends BaseController {
     }
 
     /**
-     * 获取某天投资数据
+     * 获取某天出借数据
      * @param request
      * @return
      */
     @RequestMapping("/borrow_tender")
     public BorrowTenderResponse getBorrowTenderList(@RequestBody WrbInvestRequest request) {
         BorrowTenderResponse response = new BorrowTenderResponse();
-        // 获取某天投资数据
+        // 获取某天出借数据
         List<BorrowTender> list = wrbInfoService.getBorrowTenderList(request);
         if (!CollectionUtils.isEmpty(list)) {
             List<BorrowTenderVO> voList = CommonUtils.convertBeanList(list, BorrowTenderVO.class);
@@ -236,13 +231,13 @@ public class WrbInfoController extends BaseController {
     }
 
     /**
-     * 查询标的投资情况
+     * 查询标的出借情况
      * @return
      */
     @RequestMapping("/wrb_borrow_tender")
     public WrbBorrowTenderCustomizeResponse getBorrowTenderByBorrowNid(@RequestBody WrbInvestRequest request) {
         WrbBorrowTenderCustomizeResponse response = new WrbBorrowTenderCustomizeResponse();
-        // 查询标的投资情况
+        // 查询标的出借情况
         List<WrbBorrowTenderCustomize> list = wrbInfoService.getBorrowTenderByBorrowNid(request);
         if (!CollectionUtils.isEmpty(list)) {
             List<WrbBorrowTenderCustomizeVO> voList = CommonUtils.convertBeanList(list, WrbBorrowTenderCustomizeVO.class);
@@ -252,13 +247,13 @@ public class WrbInfoController extends BaseController {
     }
 
     /**
-     * 根据标的号和日期查询投资情况
+     * 根据标的号和日期查询出借情况
      * @return
      */
     @RequestMapping("/search_borrow_tender_sum")
     public WrbBorrowTenderSumCustomizeResponse getBorrowTenderByBorrowNidAndTime(@RequestBody WrbInvestRequest request) {
         WrbBorrowTenderSumCustomizeResponse response = new WrbBorrowTenderSumCustomizeResponse();
-        // 查询标的投资情况
+        // 查询标的出借情况
         WrbBorrowTenderSumCustomize customize = wrbInfoService.getBorrowTenderByBorrowNidAndTime(request);
         if (customize != null) {
             WrbBorrowTenderSumCustomizeVO vo = new WrbBorrowTenderSumCustomizeVO();

@@ -22,7 +22,7 @@ public interface CouponTenderHjhService {
     Integer countRecord(CouponTenderRequest couponTenderRequest);
 
     /**
-     * 根据条件获取投资总金额
+     * 根据条件获取出借总金额
      * @param couponTenderRequest 查询条件对象
      * @return String
      */

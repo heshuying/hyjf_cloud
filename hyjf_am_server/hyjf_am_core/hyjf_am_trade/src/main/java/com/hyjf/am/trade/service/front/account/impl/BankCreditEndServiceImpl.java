@@ -42,7 +42,7 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
         }
 
         String orderId = GetOrderIdUtils.getOrderId2(tenderUserId);
-        logger.info(borrowNid+" 直投还款结束债权  借款人: "+borrow.getUserId()+"-"+account.getAccountId()+" 投资人: "+tenderUserId+"-"+tenderAccountId+" 授权码: "+tenderAuthCode+" 原始订单号: "+hjhDebtCredit.getSellOrderId());
+        logger.info(borrowNid+" 直投还款结束债权  借款人: "+borrow.getUserId()+"-"+account.getAccountId()+" 出借人: "+tenderUserId+"-"+tenderAccountId+" 授权码: "+tenderAuthCode+" 原始订单号: "+hjhDebtCredit.getSellOrderId());
 
         BankCreditEnd record = new BankCreditEnd();
         record.setUserId(borrow.getUserId());
@@ -233,7 +233,6 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
         cra.andTxDateEqualTo(bean.getTxDate());
         cra.andTxTimeEqualTo(bean.getTxTime());
         cra.andSeqNoEqualTo(bean.getSeqNo());
-//        cra.andStatusEqualTo(0); // 确定先收到合法性//TODO:
 
         BankCreditEndExample exampleLimit = example;
         exampleLimit.setLimitStart(0);

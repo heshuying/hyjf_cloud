@@ -85,7 +85,7 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
     }
 
     /**
-     * 根据投资订单号查询已承接金额
+     * 根据出借订单号查询已承接金额
      *
      * @param tenderNid
      * @return
@@ -176,7 +176,7 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
     }
 
     /**
-     * 查询固定时间间隔的用户投资列表
+     * 查询固定时间间隔的用户出借列表
      * @param repairStartDate
      * @param repairEndDate
      * @return
@@ -204,7 +204,7 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
     }
 
     /**
-     * 更新标的投资详情表
+     * 更新标的出借详情表
      * @param borrowTender
      * @return
      */
@@ -220,7 +220,7 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
     }
 
     /**
-     * 根据放款编号获取该标的的投资信息 add by liushouyi
+     * 根据放款编号获取该标的的出借信息 add by liushouyi
      *
      * @param borrowNid
      * @return
@@ -234,7 +234,7 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
     }
 
     /**
-     * 查询用户投资次数
+     * 查询用户出借次数
      *
      * @param userId
      * @return
@@ -245,7 +245,7 @@ public class BorrowTenderServiceImpl extends BaseServiceImpl implements BorrowTe
     }
 
     /**
-     * 根据用户ID查询用户投资记录
+     * 根据用户ID查询用户出借记录
      *
      * @param userId
      * @return

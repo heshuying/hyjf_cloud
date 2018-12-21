@@ -25,4 +25,5 @@ public interface BorrowLogService {
      * @Date 查询借款操作日志列表导出
      */
     List<BorrowLogCustomizeVO> exportBorrowLogList(BorrowLogRequset copyForm);
+	Integer countBorrowLog(BorrowLogRequset request);
 }

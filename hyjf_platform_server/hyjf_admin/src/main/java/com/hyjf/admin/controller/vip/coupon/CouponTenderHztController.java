@@ -29,10 +29,7 @@ import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -102,7 +99,7 @@ public class CouponTenderHztController extends BaseController {
         String investTotal=this.couponTenderHztService.queryInvestTotalHzt(couponTenderRequest);
         String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         String[] titles = new String[] {"序号", "订单号", "用户名","优惠券id","优惠券类型编号",
-                "优惠券类型","面值","来源","内容","项目编号","投资金额","项目期限","年化收益" ,"操作平台" ,"使用时间" };
+                "优惠券类型","面值","来源","内容","项目编号","出借金额","项目期限","出借利率" ,"操作平台" ,"使用时间" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
 
@@ -225,13 +222,14 @@ public class CouponTenderHztController extends BaseController {
         // 声明一个工作薄
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
+        //查询总条数
+        Integer totalCount = this.couponTenderHztService.countRecord(couponTenderRequest);
 //        couponTenderRequest.setLimitFlg(true);
         //请求第一页5000条
         couponTenderRequest.setPageSize(defaultRowMaxCount);
         couponTenderRequest.setCurrPage(1);
         // 需要输出的结果列表
         CouponTenderResponse recordList = this.couponTenderHztService.getRecordExport(couponTenderRequest);
-        Integer totalCount = recordList.getCount();
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
@@ -255,7 +253,11 @@ public class CouponTenderHztController extends BaseController {
                     couponTenderCustomize.setCouponQuota("￥"+couponTenderCustomize.getCouponQuota());
                 }
             }
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.getResultList(),sumSmsCount);
+            if(sheetCount == 1){
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.getResultList(),sumSmsCount);
+            }else{
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, recordList.getResultList());
+            }
         }
         for (int i = 1; i < sheetCount; i++) {
             couponTenderRequest.setPageSize(defaultRowMaxCount);
@@ -298,9 +300,9 @@ public class CouponTenderHztController extends BaseController {
         map.put("couponFrom", "来源");
         map.put("couponContent", "内容");
         map.put("borrowNid", "项目编号");
-        map.put("account", "投资金额");
+        map.put("account", "授权服务金额");
         map.put("borrowPeriod", "项目期限");
-        map.put("borrowApr", "年化收益");
+        map.put("borrowApr", "出借利率");
         map.put("operatingDeck", "操作平台");
         map.put("orderDate", "使用时间");
         return map;

@@ -105,7 +105,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
     /**
      * 备案异常处理
      * @auth sunpeikai
-     * @param borrowNid 借款编号
+     * @param borrowNid 项目编号
      * @param loginUserId 当前登录用户id
      * @return
      */
@@ -145,34 +145,44 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                         String subPacks = searchResult.getSubPacks();
                         logger.info("subPacks:[{}]",subPacks);
                         if (StringUtils.isNotBlank(subPacks)) {
+                            logger.debug("subPacks不为空");
                             JSONArray debtDetails = JSONObject.parseArray(subPacks);
                             if (debtDetails != null) {
+                                logger.debug("debtDetails不为空");
                                 if (debtDetails.size() == 0) {
+                                    logger.debug("debtDetails.size == 0");
                                     // 更新相应的标的状态为备案中
                                     boolean debtRegistingFlag = this.updateBorrowRegist(borrowVO, 0, 1,1);
                                     if (debtRegistingFlag) {
+                                        logger.debug("debtRegistingFlag=[{}]",debtRegistingFlag);
                                         try {
                                             //modify by 受托支付
                                             BankCallBean registResult = this.borrowRegist(borrowVO, isMonth, bankOpenAccountVO.getAccount(), loginUserId);
                                             if (Validator.isNotNull(registResult)) {
+                                                logger.debug("registResult不为空");
                                                 String registRetCode = StringUtils.isNotBlank(registResult.getRetCode()) ? registResult.getRetCode() : "";
                                                 if (BankCallConstant.RESPCODE_SUCCESS.equals(registRetCode)) {
+                                                    logger.debug("registRetCode是成功状态");
                                                     //new added by 受托支付备案
                                                     if(borrowVO.getEntrustedFlg()==1){
+                                                        logger.debug("受托支付备案状态==1");
                                                         boolean debtEntrustedRegistedFlag = this.updateBorrowRegist(borrowVO, 7, 2,2);
                                                         if (debtEntrustedRegistedFlag) {
+                                                            logger.debug("备案成功");
                                                             result.put("success", "0");
                                                             result.put("msg", "备案成功！");
                                                             // 更新标的资产信息如果关联计划的话
                                                             //受托支付传4
                                                             amTradeClient.updateBorrowAsset(borrowVO,4);
                                                         } else {
+                                                            logger.debug("@@1@@");
                                                             result.put("success", "1");
                                                             result.put("msg", "备案成功后，更新相应的状态失败,请联系客服！");
                                                         }
                                                     } else {
                                                         boolean debtRegistedFlag = this.updateBorrowRegist(borrowVO, 1, 2,1);
                                                         if (debtRegistedFlag) {
+                                                            logger.debug("备案成功");
                                                             result.put("success", "0");
                                                             result.put("msg", "备案成功！");
                                                             // 更新标的资产信息如果关联计划的话
@@ -180,140 +190,176 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                                                             amTradeClient.updateBorrowAsset(borrowVO,5);
 
                                                         } else {
+                                                            logger.debug("@@2@@");
                                                             result.put("success", "1");
                                                             result.put("msg", "备案成功后，更新相应的状态失败,请联系客服！");
                                                         }
                                                     }
                                                 } else {
+                                                    logger.debug("@@3@@");
                                                     this.updateBorrowRegist(borrowVO, 0, 4,1);
                                                     String message = registResult.getRetMsg();
                                                     result.put("success", "1");
                                                     result.put("msg", StringUtils.isNotBlank(message) ? message : "银行备案接口调用失败！");
                                                 }
                                             } else {
+                                                logger.debug("@@4@@");
                                                 result.put("success", "1");
                                                 result.put("msg", "银行备案接口调用失败！");
                                             }
                                         } catch (Exception e) {
+                                            logger.debug("@@5@@");
                                             e.printStackTrace();
                                             this.updateBorrowRegist(borrowVO, 0, 4,1);
                                             result.put("success", "1");
                                             result.put("msg", "银行备案接口调用失败！");
                                         }
                                     } else {
+                                        logger.debug("@@6@@");
                                         result.put("success", "1");
                                         result.put("msg", "更新相应的标的信息失败,请稍后再试！");
                                     }
                                 }else if (debtDetails.size() == 1) {
+                                    logger.debug("debtDetails.size == 1");
                                     JSONObject debtDetail = debtDetails.getJSONObject(0);
+                                    // TODO:这里state是2
                                     String state = debtDetail.getString(BankCallConstant.PARAM_STATE);
                                     if ("9".equals(state)) {
+                                        logger.debug("@@7@@");
                                         // 2备案状态已撤销直接更改标的状态为:流标,撤销备案
                                         boolean debtRegistedNewFlag = this.updateBorrowRegist(borrowVO, 6, 3,1);
                                         if (debtRegistedNewFlag) {
+                                            logger.debug("@@8@@");
                                             result.put("success", "0");
                                             result.put("msg", "备案已经撤销！");
                                         } else {
+                                            logger.debug("@@9@@");
                                             result.put("success", "1");
                                             result.put("msg", "备案已经撤销后，更新相应的状态失败,请联系客服！");
                                         }
                                     } else if ("8".equals(state)) {
+                                        logger.debug("@@10@@");
                                         // 2备案处理中更改备案状态为备案中
                                         boolean debtRegistedNewFlag = this.updateBorrowRegist(borrowVO, 0, 1,1);
                                         if (debtRegistedNewFlag) {
+                                            logger.debug("@@11@@");
                                             result.put("success", "0");
                                             result.put("msg", "银行备案处理中！");
                                         } else {
+                                            logger.debug("@@12@@");
                                             result.put("success", "1");
                                             result.put("msg", "银行备案处理中，更新相应的状态失败,请联系客服！");
                                         }
                                     } else if ("1".equals(state)) {
+                                        logger.debug("@@13@@");
                                         // 2备案成功直接更改备案状态:银行确认state为1的情况,银行标的备案成功
                                         //new added by 受托支付备案
                                         if(1==borrowVO.getEntrustedFlg()){
+                                            logger.debug("@@14@@");
                                             boolean debtEntrustedRegistedFlag = this.updateBorrowRegist(borrowVO, 7, 2,2);
                                             if (debtEntrustedRegistedFlag) {
+                                                logger.debug("@@15@@");
                                                 result.put("success", "0");
                                                 result.put("msg", "备案成功！");
                                                 //受托支付传4
                                                 amTradeClient.updateBorrowAsset(borrowVO,4);
                                             } else {
+                                                logger.debug("@@16@@");
                                                 result.put("success", "1");
                                                 result.put("msg", "备案成功后，更新相应的状态失败,请联系客服！");
                                             }
                                         } else {
+                                            logger.debug("@@17@@");
                                             boolean debtRegistedNewFlag = this.updateBorrowRegist(borrowVO, 1, 2,1);
                                             if (debtRegistedNewFlag) {
+                                                logger.debug("@@18@@");
                                                 result.put("success", "0");
                                                 result.put("msg", "备案成功！");
                                                 // 更新标的资产信息如果关联计划的话
                                                 // 非受托支付传5
                                                 amTradeClient.updateBorrowAsset(borrowVO,5);
                                             } else {
+                                                logger.debug("@@19@@");
                                                 result.put("success", "1");
                                                 result.put("msg", "备案成功后，更新相应的状态失败,请联系客服！");
                                             }
                                         }
                                     }
                                 } else {
+                                    logger.debug("@@20@@");
                                     result.put("success", "1");
                                     result.put("msg", "银行端标号重复,请联系客服！");
                                 }
                             } else {
+                                logger.debug("@@21@@");
                                 // 更新相应的标的状态为备案中
                                 boolean debtRegistingFlag = this.updateBorrowRegist(borrowVO, 0, 1,1);
                                 if (debtRegistingFlag) {
+                                    logger.debug("@@22@@");
                                     try {
                                         BankCallBean registResult = this.borrowRegist(borrowVO, isMonth, bankOpenAccountVO.getAccount(), loginUserId);
                                         if (Validator.isNotNull(registResult)) {
+                                            logger.debug("@@23@@");
                                             String registRetCode = StringUtils.isNotBlank(registResult.getRetCode()) ? registResult.getRetCode() : "";
                                             if (BankCallConstant.RESPCODE_SUCCESS.equals(registRetCode)) {
+                                                logger.debug("@@24@@");
                                                 boolean debtRegistedFlag = this.updateBorrowRegist(borrowVO, 1, 2,1);
                                                 if (debtRegistedFlag) {
+                                                    logger.debug("@@25@@");
                                                     result.put("success", "0");
                                                     result.put("msg", "备案成功！");
                                                 } else {
+                                                    logger.debug("@@26@@");
                                                     result.put("success", "1");
                                                     result.put("msg", "备案成功后，更新相应的状态失败,请联系客服！");
                                                 }
                                             } else {
+                                                logger.debug("@@27@@");
                                                 this.updateBorrowRegist(borrowVO, 0, 4,1);
                                                 String message = registResult.getRetMsg();
                                                 result.put("success", "1");
                                                 result.put("msg", StringUtils.isNotBlank(message) ? message : "银行备案接口调用失败！");
                                             }
                                         } else {
+                                            logger.debug("@@28@@");
                                             result.put("success", "1");
                                             result.put("msg", "银行备案接口调用失败！");
                                         }
                                     } catch (Exception e) {
+                                        logger.debug("@@29@@");
                                         e.printStackTrace();
                                         this.updateBorrowRegist(borrowVO, 0, 4,1);
                                         result.put("success", "1");
                                         result.put("msg", "银行备案接口调用失败！");
                                     }
                                 } else {
+                                    logger.debug("@@30@@");
                                     result.put("success", "1");
                                     result.put("msg", "更新相应的标的信息失败,请稍后再试！");
                                 }
                             }
                         } else {
+                            logger.debug("@@31@@");
                             result.put("success", "1");
                             result.put("msg", "查询标的备案状态失败,请联系客服！");
                         }
                     } else {
+                        logger.debug("@@32@@");
                         result.put("success", "1");
                         result.put("msg", "查询标的备案状态失败,请联系客服！");
                     }
                 } else {
+                    logger.debug("@@33@@");
                     result.put("success", "1");
                     result.put("msg", "查询标的备案状态失败,请联系客服！");
                 }
             }else{
+                logger.debug("@@34@@");
                 result.put("success", "1");
                 result.put("msg", "未查询到借款人开户信息！");
             }
         }else{
+            logger.debug("@@35@@");
             result.put("success", "1");
             result.put("msg", "项目编号为空！");
         }

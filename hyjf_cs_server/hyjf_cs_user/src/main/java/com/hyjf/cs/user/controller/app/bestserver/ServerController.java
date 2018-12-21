@@ -13,15 +13,14 @@ import com.hyjf.common.util.SignValue;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.AppAccessStatisticsProducer;
 import com.hyjf.cs.user.result.ServerResultBean;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -40,7 +39,7 @@ public class ServerController extends BaseUserController {
 	SystemConfig systemConfig;
 
 	@Autowired
-	AppAccessStatisticsProducer producer;
+	private CommonProducer commonProducer;
 
 	/**
 	 * 获取最优服务器
@@ -162,8 +161,8 @@ public class ServerController extends BaseUserController {
 				int sourceId = Integer.parseInt(temp[3]);
 				vo.setSourceId(sourceId);
 				vo.setAccessTime(new Date());
-				producer.messageSend(
-						new MessageContent(MQConstant.APP_ACCESS_STATISTICS_TOPIC, sign, JSON.toJSONBytes(vo)));
+				commonProducer.messageSend(
+						new MessageContent(MQConstant.APP_ACCESS_STATISTICS_TOPIC, sign, vo));
 			}
 
 		} catch (Exception e) {

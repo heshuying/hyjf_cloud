@@ -37,31 +37,31 @@ public class AppChannelStatisticsRequest extends BasePage implements Serializabl
     @ApiModelProperty(value = "开户数")
     private String openAccountCount;
 
-    @ApiModelProperty(value = "投资人数")
+    @ApiModelProperty(value = "出借人数")
     private String investNumber;
 
     @ApiModelProperty(value = "累计充值")
     private String cumulativeCharge;
 
-    @ApiModelProperty(value = "累计投资")
+    @ApiModelProperty(value = "累计出借")
     private String cumulativeInvest;
 
-    @ApiModelProperty(value = "汇直投投资金额")
+    @ApiModelProperty(value = "汇直投出借金额")
     private String hztInvestSum;
 
-    @ApiModelProperty(value = "汇消费投资金额")
+    @ApiModelProperty(value = "汇消费出借金额")
     private String hxfInvestSum;
 
-    @ApiModelProperty(value = "汇天利投资金额")
+    @ApiModelProperty(value = "汇天利出借金额")
     private String htlInvestSum;
 
-    @ApiModelProperty(value = "汇添金投资金额")
+    @ApiModelProperty(value = "汇添金出借金额")
     private String htjInvestSum;
 
-    @ApiModelProperty(value = "汇金理财投资金额")
+    @ApiModelProperty(value = "汇金理财出借金额")
     private String rtbInvestSum;
 
-    @ApiModelProperty(value = "汇转让投资金额")
+    @ApiModelProperty(value = "汇转让出借金额")
     private String hzrInvestSum;
 
     @ApiModelProperty(value = "开户数ios")
@@ -76,16 +76,16 @@ public class AppChannelStatisticsRequest extends BasePage implements Serializabl
     @ApiModelProperty(value = "开户数Android")
     private String accountNumberAndroid;
 
-    @ApiModelProperty(value = "投资人数Android")
+    @ApiModelProperty(value = "出借人数Android")
     private String tenderNumberAndroid;
 
-    @ApiModelProperty(value = "投资人数pc")
+    @ApiModelProperty(value = "出借人数pc")
     private String tenderNumberPc;
 
-    @ApiModelProperty(value = "投资人数wechat")
+    @ApiModelProperty(value = "出借人数wechat")
     private String tenderNumberWechat;
 
-    @ApiModelProperty(value = "投资人数ios")
+    @ApiModelProperty(value = "出借人数ios")
     private String tenderNumberIos;
 
     @ApiModelProperty(value = "累计充值(无主单)")
@@ -94,10 +94,10 @@ public class AppChannelStatisticsRequest extends BasePage implements Serializabl
     @ApiModelProperty(value = "开户数(无主单)")
     private String openAccountAttrCount;
 
-    @ApiModelProperty(value = "投资人数(无主单)")
+    @ApiModelProperty(value = "出借人数(无主单)")
     private String investAttrNumber;
 
-    @ApiModelProperty(value = "累计投资(无主单)")
+    @ApiModelProperty(value = "累计出借(无主单)")
     private String cumulativeAttrInvest;
 
     @ApiModelProperty(value = "渠道类别")

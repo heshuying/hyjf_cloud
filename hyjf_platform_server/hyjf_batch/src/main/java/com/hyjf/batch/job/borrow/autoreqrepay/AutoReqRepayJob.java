@@ -18,7 +18,7 @@ public class AutoReqRepayJob extends BaseJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("AutoReqRepayJob: {} execute...", context.getJobDetail().getKey().getName());
         
-        restTemplate.getForEntity("http://AM-TRADE/am-trade/autoReqRepayController/autoReqRepay", boolean.class);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/autoRepay/taskRepayAssign", boolean.class);
         
         logger.info("AutoReqRepayJob execute end...");
     }

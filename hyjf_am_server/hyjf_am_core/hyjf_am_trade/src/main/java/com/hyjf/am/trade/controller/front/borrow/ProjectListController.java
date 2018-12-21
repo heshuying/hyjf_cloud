@@ -18,11 +18,11 @@ import com.hyjf.am.trade.dao.model.auto.BorrowCredit;
 import com.hyjf.am.trade.dao.model.auto.IncreaseInterestInvest;
 import com.hyjf.am.trade.dao.model.customize.*;
 import com.hyjf.am.trade.service.front.borrow.ProjectListService;
+import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
 import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
 import com.hyjf.am.vo.trade.*;
-import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCustomizeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.trade.hjh.PlanDetailCustomizeVO;
@@ -207,7 +207,7 @@ public class ProjectListController extends BaseController {
     // --------------------------------------web end------------------------------------------
     //---------------------------------------app start------------------------------------------
     /**
-     * App端获取散标投资
+     * App端获取散标出借
      * @param request
      * @return
      */
@@ -224,7 +224,7 @@ public class ProjectListController extends BaseController {
     }
 
     /**
-     * app端散标投资count
+     * app端散标出借count
      * @param request
      * @return
      */
@@ -237,7 +237,7 @@ public class ProjectListController extends BaseController {
     }
 
     /**
-     * App端获取债转投资list
+     * App端获取债转出借list
      * @param request
      * @return
      */
@@ -253,7 +253,7 @@ public class ProjectListController extends BaseController {
     }
 
     /**
-     * app端获取债转投资count
+     * app端获取债转出借count
      * @param request
      * @return
      */
@@ -302,7 +302,7 @@ public class ProjectListController extends BaseController {
 
 
     /**
-     * 散标投资记录
+     * 散标出借记录
      * @return
      */
     @RequestMapping("/app/selectProjectInvestList")

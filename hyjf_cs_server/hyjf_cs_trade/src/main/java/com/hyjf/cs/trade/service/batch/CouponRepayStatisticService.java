@@ -10,4 +10,6 @@ package com.hyjf.cs.trade.service.batch;
 public interface CouponRepayStatisticService {
 
     int updateOrSaveCouponStatistic();
+
+    void updateDayMarkLine();
 }

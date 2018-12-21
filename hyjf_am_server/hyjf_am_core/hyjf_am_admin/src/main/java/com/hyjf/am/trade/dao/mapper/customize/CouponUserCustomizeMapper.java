@@ -54,7 +54,7 @@ public interface CouponUserCustomizeMapper {
 	 */
 	CouponConfigCustomizeV2 selectCouponConfigByGrantId(Map<String,Object> paramMap);
 	/**
-     * 根据优惠券投资nid（hyjf_borrow_tender_cpn）
+     * 根据优惠券出借nid（hyjf_borrow_tender_cpn）
      * @param paramMap
      * @return
      */
@@ -93,4 +93,18 @@ public interface CouponUserCustomizeMapper {
 	 * @return
 	 */
 	List<DataCenterCouponCustomize> selectDataCenterCouponDJList(DadaCenterCouponCustomizeRequest request);
+
+	/**
+	 * 获取加息券列表个数
+	 * @param request
+	 * @return
+	 */
+	int countJX(DadaCenterCouponCustomizeRequest request);
+
+	/**
+	 * 获取代金券列表个数
+	 * @param request
+	 * @return
+	 */
+	int countDJ(DadaCenterCouponCustomizeRequest request);
 }

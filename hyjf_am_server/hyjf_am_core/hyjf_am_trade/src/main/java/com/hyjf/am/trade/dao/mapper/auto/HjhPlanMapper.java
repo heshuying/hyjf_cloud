@@ -3,8 +3,9 @@ package com.hyjf.am.trade.dao.mapper.auto;
 import com.hyjf.am.trade.dao.model.auto.HjhPlan;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanExample;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanWithBLOBs;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface HjhPlanMapper {
     int countByExample(HjhPlanExample example);

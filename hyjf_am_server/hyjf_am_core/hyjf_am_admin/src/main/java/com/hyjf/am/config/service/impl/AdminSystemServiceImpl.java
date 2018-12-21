@@ -11,7 +11,6 @@ import com.hyjf.am.config.dao.model.customize.AdminSystem;
 import com.hyjf.am.config.dao.model.customize.Tree;
 import com.hyjf.am.config.service.AdminSystemService;
 import com.hyjf.common.security.util.MD5;
-
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

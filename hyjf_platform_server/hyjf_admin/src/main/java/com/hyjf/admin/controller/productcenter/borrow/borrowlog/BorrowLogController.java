@@ -9,6 +9,7 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.BorrowLogService;
 import com.hyjf.admin.utils.ConvertUtils;
+import com.hyjf.admin.utils.Page;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.resquest.admin.BorrowLogRequset;
@@ -41,6 +42,7 @@ import java.util.*;
 @Api(value = "借款操作日志",tags ="借款操作日志")
 @RestController
 @RequestMapping("/hyjf-admin/borrow/borrowlog")
+@SuppressWarnings("unchecked")
 public class BorrowLogController extends BaseController {
 
     /** 查看权限 */
@@ -91,11 +93,7 @@ public class BorrowLogController extends BaseController {
         SXSSFWorkbook workbook = new SXSSFWorkbook(SXSSFWorkbook.DEFAULT_WINDOW_SIZE);
         DataSet2ExcelSXSSFHelper helper = new DataSet2ExcelSXSSFHelper();
         //请求第一页5000条
-        copyForm.setPageSize(defaultRowMaxCount);
-        copyForm.setCurrPage(1);
-        // 查询
-        List<BorrowLogCustomizeVO> resultList = this.borrowLogService.exportBorrowLogList(copyForm);
-        Integer totalCount = resultList.size();
+        Integer totalCount = this.borrowLogService.countBorrowLog(copyForm);
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = new HashMap<>();
@@ -103,16 +101,15 @@ public class BorrowLogController extends BaseController {
         if (totalCount == 0) {
 
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-        }else {
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
         }
-        for (int i = 1; i < sheetCount; i++) {
-
-            copyForm.setPageSize(defaultRowMaxCount);
-            copyForm.setCurrPage(i+1);
+        for (int i = 1; i <= sheetCount; i++) {
+            Page page = Page.initPage(i, defaultRowMaxCount);
+            page.setTotal(totalCount);
+            copyForm.setLimitStart(page.getOffset());
+            copyForm.setLimitEnd(page.getLimit());
             List<BorrowLogCustomizeVO> resultList2 = this.borrowLogService.exportBorrowLogList(copyForm);
             if (resultList2 != null && resultList2.size()> 0) {
-                sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
+                sheetNameTmp = sheetName + "_第" + (i ) + "页";
                 helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultList2);
             } else {
                 break;
@@ -123,7 +120,7 @@ public class BorrowLogController extends BaseController {
 
     private Map<String, String> buildMap() {
         Map<String, String> map = Maps.newLinkedHashMap();
-        map.put("borrowNid","借款编号");
+        map.put("borrowNid","项目编号");
         map.put("borrowStatus","项目状态");
         map.put("type","修改类型");
         map.put("createUserName","操作人");

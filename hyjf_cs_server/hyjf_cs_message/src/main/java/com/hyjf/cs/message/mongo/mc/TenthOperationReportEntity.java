@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 /**
- * 运营报告十大投资
+ * 运营报告十大出借
  * @author tanyy
  * @version TenthOperationReportEntity, v0.1 2018/7/23 10:03
  */

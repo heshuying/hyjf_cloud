@@ -78,7 +78,7 @@ public class HjhCreditEndExceptionController extends BaseController {
             //获取出让人投标成功的授权号
             String sellerAuthCode = this.hjhCreditEndExceptionService.getSellerAuthCode(credit.getSellOrderId(), credit.getSourceType());
             if (sellerAuthCode == null) {
-               return this.fail("未取得出让人投资的授权码。");
+               return this.fail("未取得出让人出借的授权码。");
             }
 
             try {

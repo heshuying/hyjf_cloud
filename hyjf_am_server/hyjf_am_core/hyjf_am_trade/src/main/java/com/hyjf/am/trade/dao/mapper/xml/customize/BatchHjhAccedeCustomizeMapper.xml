@@ -68,7 +68,7 @@
 		lqd_progress, create_user, update_user, del_flag, create_time, update_time
 	</sql>
 	<select id="selectHjhAutoTenderList" resultMap="BaseResultMap" parameterType="java.util.Map">
-		<!--   	自动投资成功的回款复投 -->
+		<!--   	自动投标成功的回款复投 -->
 		(
 		SELECT
 		<include refid="Base_Column_List"/>
@@ -81,7 +81,7 @@
 		id ASC
 		)
 		UNION ALL
-		<!-- 	自动投资中的投资 -->
+		<!-- 	自动出借中的出借 -->
 		(
 		SELECT
 		<include refid="Base_Column_List"/>

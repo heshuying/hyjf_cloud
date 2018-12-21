@@ -4,6 +4,7 @@ import com.hyjf.admin.beans.BorrowRepaymentBean;
 import com.hyjf.admin.beans.BorrowRepaymentPlanBean;
 import com.hyjf.admin.beans.DelayRepayInfoBean;
 import com.hyjf.admin.beans.RepayInfoBean;
+import com.hyjf.am.response.admin.AdminBorrowRepaymentResponse;
 import com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentRequest;
 import com.hyjf.am.vo.admin.BorrowRepaymentCustomizeVO;
@@ -21,7 +22,7 @@ public interface BorrowRepaymentService {
 
     BorrowRepaymentBean searchBorrowRepayment(BorrowRepaymentRequest copyForm);
 
-    List<BorrowRepaymentPlanCustomizeVO> exportRepayClkActBorrowRepaymentInfoList(BorrowRepaymentPlanRequest copyForm);
+    AdminBorrowRepaymentResponse exportRepayClkActBorrowRepaymentInfoList(BorrowRepaymentPlanRequest copyForm);
 
     List<BorrowRepaymentCustomizeVO> selectBorrowRepaymentList(BorrowRepaymentRequest copyForm);
 

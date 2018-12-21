@@ -137,13 +137,13 @@ public class BankRequest extends BaseVO {
     public String intAmount;
     /** 还款手续费:向融资人收取的手续费 */
     public String txFeeOut;
-    /** 收款手续费:向投资人收取的手续费 */
+    /** 收款手续费:向出借人收取的手续费 */
     public String txFeeIn;
-    /** 对手电子账号:投资人账号 */
+    /** 对手电子账号:出借人账号 */
     public String forAccountId;
     /** 标的号 */
     public String productId;
-    /** 授权码:投资人投标成功的授权号 */
+    /** 授权码:出借人投标成功的授权号 */
     public String authCode;
     /** 冻结资金开关 */
     public String frzFlag;
@@ -191,7 +191,7 @@ public class BankRequest extends BaseVO {
     /** 总记录数 最大10条记录 */
     public String totalItems;
 
-    /** 投资手续费 */
+    /** 出借手续费 */
     public String bidFee;
     /** 融资手续费 */
     public String debtFee;

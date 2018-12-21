@@ -13,8 +13,10 @@ import com.hyjf.am.response.app.AppProjectInvestListCustomizeResponse;
 import com.hyjf.am.response.app.AppProjectListResponse;
 import com.hyjf.am.response.app.AppTenderCreditInvestListCustomizeResponse;
 import com.hyjf.am.response.config.AppReapyCalendarResponse;
+import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.market.AppAdsCustomizeResponse;
 import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.trade.ContentArticleResponse;
 import com.hyjf.am.response.trade.HjhPlanDetailResponse;
 import com.hyjf.am.response.trade.HjhPlanResponse;
 import com.hyjf.am.response.trade.account.*;
@@ -38,6 +40,7 @@ import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
+import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.admin.*;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
@@ -49,6 +52,7 @@ import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
@@ -81,6 +85,7 @@ import com.hyjf.cs.trade.bean.TransactionDetailsResultBean;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.util.HomePageDefine;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -353,7 +358,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 取得自动投资用加入计划列表
+     * 取得自动出借用加入计划列表
      *
      * @return
      * @author liubin
@@ -421,7 +426,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 银行自动投资成功后，更新投资数据
+     * 银行自动投标成功后，更新出借数据
      *
      * @return
      * @author liubin
@@ -434,8 +439,8 @@ public class AmTradeClientImpl implements AmTradeClient {
         UpdateBorrowForAutoTenderRequest request = new UpdateBorrowForAutoTenderRequest(borrowNid, accedeOrderId, bankCallBeanVO);
         Response response = restTemplate.postForEntity(url, request, Response.class).getBody();
         if (response == null || !Response.isSuccess(response)) {
-            logger.error("[" + accedeOrderId + "] 银行自动投资成功后，更新投资数据失败。");
-            throw new RuntimeException("银行自动投资成功后，更新投资数据失败。");
+            logger.error("[" + accedeOrderId + "] 银行自动投标成功后，更新出借数据失败。");
+            throw new RuntimeException("银行自动投标成功后，更新出借数据失败。");
         }
         return true;
     }
@@ -572,7 +577,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 插入汇计划自动投资临时表
+     * 插入汇计划自动出借临时表
      * @author liubin
      */
     @Override
@@ -586,7 +591,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 删除汇计划自动投资临时表
+     * 删除汇计划自动出借临时表
      * @author liubin
      */
     @Override
@@ -600,7 +605,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据主键，更新汇计划自动投资临时表
+     * 根据主键，更新汇计划自动出借临时表
      * @author liubin
      */
     @Override
@@ -742,7 +747,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 
     /**
-     * 投资异常定时任务更新投资信息
+     * 出借异常定时任务更新出借信息
      * @param request
      * @return
      */
@@ -764,8 +769,16 @@ public class AmTradeClientImpl implements AmTradeClient {
 		}
 		return null;
 	}
+    /**
+     * 投资全部掉单异常处理
+     */
+    @Override
+    public void recharge(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/bankException/recharge",BorrowTenderTmpResponse.class).getBody();
+    }
 
-	/**
+
+    /**
 	 * 获取BatchBorrowTenderCustomizeVO列表
 	 */
 	@Override
@@ -778,9 +791,79 @@ public class AmTradeClientImpl implements AmTradeClient {
 		}
 		return null;
 	}
+    /**
+     * 自动放款复审任务
+     */
+    @Override
+    public void hjhautoreview(){
+        restTemplate.getForEntity("http://AM-TRADE/batch/hjhautoreview/hjhautoreview",BatchBorrowTenderCustomizeResponse.class);
+    }
 
-	
-	/**
+    /**
+     * 汇计划各计划开放额度校验预警任务
+     */
+    @Override
+    public void hjhOpenAccountCheck(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAlarmController/batch/hjhOpenAccountCheck",BatchBorrowTenderCustomizeResponse.class);
+    }
+
+    /**
+     * 汇计划各计划开放额度校验预警任务
+     */
+    @Override
+    public void hjhOrderExitCheck(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAlarmController/batch/hjhOrderExitCheck",BatchBorrowTenderCustomizeResponse.class);
+    }
+    /**
+     * 订单投资异常短信预警
+     * @return
+     */
+    @Override
+    public void hjhCalculateFairValue(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAutoCalculateFairValue/hjhCalculateFairValue",BatchBorrowTenderCustomizeResponse.class);
+    }
+    /**
+     * 订单投资异常短信预警
+     * @return
+     */
+    @Override
+    public void hjhOrderInvestExceptionCheck(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAlarmController/batch/hjhOrderInvestExceptionCheck",BatchBorrowTenderCustomizeResponse.class);
+    }
+
+    /**
+     * 订单投资异常短信预警
+     * @return
+     */
+    @Override
+    public void hjhOrderMatchPeriodCheck(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAlarmController/batch/hjhOrderMatchPeriodCheck",BatchBorrowTenderCustomizeResponse.class);
+    }
+    /**
+     * 手续费分账明细插入定时
+     * @return
+     */
+    @Override
+    public void poundage(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/poundage",BatchBorrowTenderCustomizeResponse.class);
+    }
+    /**
+     * 汇计划自动结束转让定时任务
+     * @return
+     */
+    @Override
+    public void hjhAutoEndCredit(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAutoEndCredit/hjhAutoEndCredit",BatchBorrowTenderCustomizeResponse.class);
+    }
+    /**
+     *  汇计划自动清算
+     * @return
+     */
+    @Override
+    public void hjhAutoCredit(){
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAutoCredit/hjhAutoCredit",BatchBorrowTenderCustomizeResponse.class);
+    }
+    /**
 	 * 插入AuthCode
 	 */
 	@Override
@@ -1060,7 +1143,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         return result.getResultInt();
     }
     /**
-     * 查询用户标的投资数量
+     * 查询用户标的出借数量
      * @param userId
      * @return
      */
@@ -1116,7 +1199,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     @Cached(name="webHomeProjectListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
-	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public List<WebProjectListCustomizeVO> searchProjectList(ProjectListRequest request) {
         ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/searchProjectList",request,ProjectListResponse.class).getBody();
         if (Response.isSuccess(response)){
@@ -1126,6 +1209,8 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
+    @Cached(name="webHomeProjectListCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public Integer countProjectList(ProjectListRequest request) {
         ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/countProjectList",request,ProjectListResponse.class).getBody();
         if (Response.isSuccess(response)){
@@ -1176,6 +1261,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/6/21 15:28
      */
     @Override
+    @Cached(name="webPlanListCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 2, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
     public Integer countPlanList(ProjectListRequest request) {
         ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/web/countPlanList",request,ProjectListResponse.class).getBody();
         if (Response.isSuccess(response)){
@@ -1190,7 +1277,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/6/21 15:29
      */
     @Override
-	@Cached(name="webHomeHjhCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+	@Cached(name="webPlanListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
 	@CacheRefresh(refresh = 2, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
     public List<HjhPlanCustomizeVO> searchPlanList(ProjectListRequest request) {
         com.hyjf.am.response.trade.HjhPlanResponse response =  restTemplate.postForEntity(BASE_URL + "/web/searchPlanList",request, com.hyjf.am.response.trade.HjhPlanResponse.class).getBody();
@@ -1218,11 +1305,13 @@ public class AmTradeClientImpl implements AmTradeClient {
     /*******************************  web end *************************************/
     /******************************  app start **************************************/
     /**
-     *  app端获取散标投资项目count
+     *  app端获取散标出借项目count
      * @author zhangyk
      * @date 2018/6/20 17:23
      */
     @Override
+    @Cached(name="appProjectListCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public Integer countAppProjectList(ProjectListRequest request) {
         AppProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countProjectList",request,AppProjectListResponse.class).getBody();
         if (Response.isSuccess(response)){
@@ -1232,12 +1321,12 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * app端获取散标投资项目列表
+     * app端获取散标出借项目列表
      * @author zhangyk
      * @date 2018/6/20 17:24
      */
     @Override
-	@Cached(name="appHomeProjectListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+	@Cached(name="appProjectListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
 	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public List<AppProjectListCustomizeVO> searchAppProjectList(AppProjectListRequest request) {
         AppProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/searchAppProjectList",request,AppProjectListResponse.class).getBody();
@@ -1254,6 +1343,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
 
     @Override
+    @Cached(name="appCreditListCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
     public ProjectListResponse countAppCreditList(ProjectListRequest request) {
         ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countCreditList",request,ProjectListResponse.class).getBody();
         return response;
@@ -1265,6 +1356,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/6/19 16:39
      */
     @Override
+    @Cached(name="appCreditListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
     public ProjectListResponse searchAppCreditList(ProjectListRequest request) {
         ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/searchCreditList",request,ProjectListResponse.class).getBody();
         return response;
@@ -1276,6 +1369,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/6/22 9:59
      */
     @Override
+    @Cached(name="appPlanListCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 2, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
     public Integer countAppPlanList(ProjectListRequest request) {
         ProjectListResponse response =  restTemplate.postForEntity(BASE_URL + "/app/countPlanList",request,ProjectListResponse.class).getBody();
         if (Response.isSuccess(response)){
@@ -1291,6 +1386,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/6/22 9:59
      */
     @Override
+    @Cached(name="appPlanListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 2, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
     public List<HjhPlanCustomizeVO> searchAppPlanList(ProjectListRequest request) {
         com.hyjf.am.response.trade.HjhPlanResponse response =  restTemplate.postForEntity(BASE_URL + "/app/searchPlanList",request, com.hyjf.am.response.trade.HjhPlanResponse.class).getBody();
         if (Response.isSuccess(response)){
@@ -1547,7 +1644,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据投资订单号查询已承接金额
+     * 根据出借订单号查询已承接金额
      *
      * @param tenderNid
      * @return
@@ -1684,13 +1781,13 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 投资之前插入tmp表
+     * 出借之前插入tmp表
      *
      * @param request
      */
     @Override
     public boolean updateBeforeChinaPnR(TenderRequest request) {
-        logger.info("散标投资开始插入tmp表  参数 :{}",JSONObject.toJSONString(request));
+        logger.info("散标出借开始插入tmp表  参数 :{}",JSONObject.toJSONString(request));
         IntegerResponse result = restTemplate
                 .postForEntity("http://AM-TRADE/am-trade/borrow/insertBeforeTender", request, IntegerResponse.class).getBody();
         if (Response.isSuccess(result)) {
@@ -1700,14 +1797,14 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 用户投资散标操作表
+     * 用户出借散标操作表
      *
      * @param tenderBg
      * @return
      */
     @Override
     public boolean borrowTender(TenderBgVO tenderBg) {
-        logger.info("用户投资散标操作表,对象为：{}",JSONObject.toJSONString(tenderBg));
+        logger.info("用户出借散标操作表,对象为：{}",JSONObject.toJSONString(tenderBg));
         IntegerResponse result =  restTemplate
                 .postForEntity("http://AM-TRADE/am-trade/borrow/borrowTender", tenderBg, IntegerResponse.class).getBody();
         if (Response.isSuccess(result)) {
@@ -1742,7 +1839,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 获取投资异步结果
+     * 获取出借异步结果
      *
      * @param userId
      * @param logOrdId
@@ -1871,7 +1968,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据承接订单号查询债转投资表
+     * 根据承接订单号查询债转出借表
      * @param assignNid
      * @return
      */
@@ -1914,7 +2011,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     *同步回调收到后,根据logOrderId检索投资记录表
+     *同步回调收到后,根据logOrderId检索出借记录表
      * @param logOrderId
      * @return
      */
@@ -2337,7 +2434,7 @@ public class AmTradeClientImpl implements AmTradeClient {
         return 0;
     }
     /**
-     * 根据投资订单号获取协议列表
+     * 根据出借订单号获取协议列表
      * @param nid
      * @return
      */
@@ -2548,7 +2645,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据优惠券查询投资信息
+     * 根据优惠券查询出借信息
      * @param couponTenderNid
      * @return
      */
@@ -2562,7 +2659,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 获取用户优惠券投资信息
+     * 获取用户优惠券出借信息
      *
      * @param userId
      * @param borrowNid
@@ -2609,7 +2706,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 散标优惠券投资
+     * 散标优惠券出借
      *
      * @param couponTender
      * @return
@@ -2909,7 +3006,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 验证投资人当天是否可以债转
+     * 验证出借人当天是否可以债转
      *
      * @param userId
      * @return
@@ -2925,7 +3022,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据投资订单号检索已债转还款信息
+     * 根据出借订单号检索已债转还款信息
      *
      * @param tenderId
      * @return
@@ -2979,7 +3076,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 前端Web页面投资可债转输入投资金额后收益提示 用户未登录 (包含查询条件)
+     * 前端Web页面出借可债转输入出借金额后收益提示 用户未登录 (包含查询条件)
      *
      * @param creditNid
      * @param assignCapital
@@ -3138,7 +3235,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 投资撤销历史数据处理
+     * 出借撤销历史数据处理
      * @param request
      * @return
      */
@@ -3161,7 +3258,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 查询前一天的投资临时数据并进行处理
+     * 查询前一天的出借临时数据并进行处理
      * @return
      */
     @Override
@@ -3175,7 +3272,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     *查询汇计划债转投资表
+     *查询汇计划债转出借表
      * @param request
      * @return
      */
@@ -3407,7 +3504,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 
     /**
-     *  更新投资协议信息
+     *  更新出借协议信息
      * @return
      */
     @Override
@@ -3421,7 +3518,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 通过主键获取投资协议信息
+     * 通过主键获取出借协议信息
      * @param tenderAgreementID
      * @return
      */
@@ -3544,7 +3641,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 散标投资记录数
+     * 散标出借记录数
      * @param params
      * @return
      */
@@ -3566,7 +3663,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 散标投资记录
+     * 散标出借记录
      * @param params
      * @return
      */
@@ -3707,7 +3804,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 获取债转投资人次和已债转金额
+     * 获取债转出借人次和已债转金额
      * @param transferId
      * @return
      */
@@ -4258,7 +4355,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 	/**
 	 *
-	 * 投资预插入
+	 * 出借预插入
 	 * @return
 	 * @author libin
 	 * @throws Exception
@@ -4304,7 +4401,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 	}
 
 	/**
-	 * 根据userId和tenderNid查询投资记录
+	 * 根据userId和tenderNid查询出借记录
 	 * @author zhangyk
 	 * @date 2018/8/30 10:49
 	 */
@@ -4336,7 +4433,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 
     /**
-     * 根据tenderNid查询投资记录
+     * 根据tenderNid查询出借记录
      * @author zhangyk
      * @date 2018/8/30 10:49
      */
@@ -4564,7 +4661,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public List<ApiTransactionDetailsCustomizeVO> selectTransactionDetails(TransactionDetailsResultBean transactionDetailsResultBean) {
-        ApiTransactionDetailsCustomizeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/accountList/selectTransactionDetails", transactionDetailsResultBean, ApiTransactionDetailsCustomizeResponse.class).getBody();
+        ApiTransactionDetailsCustomizeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/accountList/selectTransactionDetails",
+                transactionDetailsResultBean, ApiTransactionDetailsCustomizeResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
             return response.getResultList();
         }
@@ -4572,7 +4670,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据放款编号获取该标的的投资信息 add by liushouyi
+     * 根据放款编号获取该标的的出借信息 add by liushouyi
      *
      * @param borrowNid
      * @return
@@ -4651,7 +4749,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 获取用户投资订单还款详情
+     * 获取用户出借订单还款详情
      *
      * @param nid
      * @return
@@ -4734,7 +4832,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 查询用户投资次数 包含直投类、债转、汇添金
+     * 查询用户出借次数 包含直投类、债转、汇添金
      * @auth sunpeikai
      * @param
      * @return
@@ -4813,6 +4911,19 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
     /**
+     * 清算日前一天，扫描处于复审中或者投资中的原始标的进行预警
+     * @return
+     */
+    @Override
+    public Boolean alermBeforeLiquidateCheck(){
+        String url = "http://AM-TRADE/am-trade/hjhAlarmController/batch/alermBeforeLiquidateCheck";
+        BooleanResponse response = restTemplate.getForEntity(url,BooleanResponse.class).getBody();
+        if(Response.isSuccess(response)){
+            return response.getResultBoolean();
+        }
+        return null;
+    }
+    /**
      * 查询产品加息信息
      * @auth sunpeikai
      * @param tenderNid 对应tender表里的nid
@@ -4829,7 +4940,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 查询投资记录
+     * 查询出借记录
      * @author wenxin
      * @date 2018/8/27 13:00
      */
@@ -4844,7 +4955,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 獲取銀行開戶信息(根据投资信息查询)
+     * 獲取銀行開戶信息(根据出借信息查询)
      * @author wenxin
      * @date 2018/8/27 13:00
      */
@@ -5344,7 +5455,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 获取用户投资数量
+     * 获取用户出借数量
      *
      * @param userId
      * @return
@@ -5392,6 +5503,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @date 2018/10/9 15:53
      */
     @Override
+    @Cached(name="webHomeProjectTypeListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     public List<BorrowProjectTypeVO> getProjectTypeList() {
         String url = "http://AM-TRADE/am-trade/config/projecttype/getProjectType";
         BorrowProjectTypeResponse response = restTemplate.getForEntity(url,BorrowProjectTypeResponse.class).getBody();
@@ -5575,7 +5688,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据用户ID查询用户投资记录
+     * 根据用户ID查询用户出借记录
      *
      * @param userId
      * @return
@@ -5639,7 +5752,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据加入订单号查询优惠券投资
+     * 根据加入订单号查询优惠券出借
      *
      * @param orderId
      * @return
@@ -5655,7 +5768,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据优惠券投资ID查询优惠券投资
+     * 根据优惠券出借ID查询优惠券出借
      *
      * @param couponTenderId
      * @return
@@ -5687,7 +5800,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据优惠券投资ID获取优惠券投资信息
+     * 根据优惠券出借ID获取优惠券出借信息
      *
      * @param couponTenderId
      * @return
@@ -5703,7 +5816,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 根据投资订单号查询投资信息
+     * 根据出借订单号查询出借信息
      *
      * @param orderId
      * @return
@@ -5753,7 +5866,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
-     * 查询首页定时发标,投资中,复审中的项目
+     * 查询首页定时发标,出借中,复审中的项目
      * @Author yangchangwei 2018/10/16
      * @param request
      * @return
@@ -5844,8 +5957,9 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
+    @Cached(name="appHomeAnnouncementsCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 10, stopRefreshAfterLastAccess = 10, timeUnit = TimeUnit.MINUTES)
     public List<AppPushManageVO> getAnnouncements() {
-
         String url = "http://AM-TRADE/am-trade/projectlist/apphomepage/getAnnouncements";
         AppPushManageResponse response = restTemplate.getForEntity(url, AppPushManageResponse.class).getBody();
         if (Response.isSuccess(response)) {
@@ -5919,5 +6033,252 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response.getResultStr();
         }
         return null;
+    }
+
+    @Override
+    @Cached(name="wechatHomeProjectListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+    public List<WechatHomeProjectListVO> getWechatProjectList(Map<String, Object> projectMap){
+        String url = HomePageDefine.WECHAT_HOME_PROJECT_LIST_URL;
+        WechatProjectListResponse res = restTemplate.postForEntity(url, projectMap, WechatProjectListResponse.class).getBody();
+        if (Response.isSuccess(res)){
+            return res.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * @author libin
+     * 抽出查询统计信息的方法
+     * @date 2018/9/5 11:38
+     */
+    @Override
+    @Cached(name="wechatTotalInvestAndInterestCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.MINUTES)
+    public TotalInvestAndInterestResponse getTotalInvestAndInterestResponse(){
+        TotalInvestAndInterestResponse res = restTemplate.getForEntity(HomePageDefine.INVEST_INVEREST_AMOUNT_URL, TotalInvestAndInterestResponse.class).getBody();
+        return res;
+    }
+
+    @Override
+    @Cached(name="wechatHomePlanLaterCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+    public List<WechatHomeProjectListVO> getWechatHomePlanLater() {
+        WechatProjectListResponse res = restTemplate.getForEntity(HomePageDefine.WECHAT_HOME_PLAN_LATER_URL,WechatProjectListResponse.class).getBody();
+        if (Response.isSuccess(res)){
+            return res.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    @Cached(name="wechatHomeRepaymentsProjectList-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+    public List<WechatHomeProjectListVO> getWechatHomeRepaymentsProjectList() {
+        WechatProjectListResponse res =  restTemplate.getForEntity(HomePageDefine.WECHAT_HOME_REPAYMENT_URL, WechatProjectListResponse.class).getBody();
+        if (Response.isSuccess(res)){
+            return res.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    @Cached(name="webCreditListCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+    public int getWebCreditListCount(CreditListRequest request) {
+        CreditListResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/projectlist/web/countCreditList", request, CreditListResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getCount();
+        }
+        return 0;
+    }
+
+    @Override
+    @Cached(name="webCreditListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+    public List<CreditListVO> getWebCreditList(CreditListRequest request) {
+        CreditListResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/projectlist/web/searchWebCreditList", request, CreditListResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 抽出查询noticeList的方法
+     * @date 2018/9/5 11:38
+     */
+    @Cached(name="webHomeNoticeCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+    @Override
+    public List<ContentArticleVO> getNoticeList(ContentArticleRequest contentArticleRequest) {
+        String url = "http://AM-CONFIG/am-config/article/noticeList";
+        ContentArticleResponse response = restTemplate.postForEntity(url,contentArticleRequest,ContentArticleResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 抽出查询bannner的方法
+     * @date 2018/9/5 11:38
+     */
+    @Cached(name="webHomeBannerCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 60, timeUnit = TimeUnit.SECONDS)
+    @Override
+    public List<AppAdsCustomizeVO> getWebHomeBannerList(AdsRequest request) {
+        String url = "http://AM-MARKET/am-market/ads/getBannerList";
+        AppAdsCustomizeResponse res = restTemplate.postForEntity(url,request,AppAdsCustomizeResponse.class).getBody();
+        if (Response.isSuccess(res)){
+            return res.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     *
+     * @param borrowNid
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public WebUserTransferBorrowInfoCustomizeVO getUserTransferBorrowInfo(String borrowNid) {
+        String url = "http://AM-TRADE/am-trade/repay/get_user_transfer_borrow_info/"+ borrowNid;
+        WebUserTransferBorrowInfoCustomizeResponse response = restTemplate.getForEntity(url, WebUserTransferBorrowInfoCustomizeResponse.class).getBody();
+        if (response != null && Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 获取用户待还标的列表
+     * @param repayTransferRequest
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public List<WebUserRepayTransferCustomizeVO> getUserRepayDetailAjax(WebUserRepayTransferRequest repayTransferRequest) {
+        WebUserRepayTransferCustomizeResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/repay/userRepayDetailAjax/", repayTransferRequest, WebUserRepayTransferCustomizeResponse.class).getBody();
+
+        if (response != null && Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    @Override
+    public BooleanResponse updateHjhPlanJoinOff() {
+        String url = "http://AM-TRADE/hjhPlanSwitchController/batch/hjhPlanJoinOff";
+        BooleanResponse response = restTemplate.getForObject(url, BooleanResponse.class);
+        if (response != null && Response.isSuccess(response)) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public BooleanResponse updateHjhPlanJoinOn() {
+        String url = "http://AM-TRADE/hjhPlanSwitchController/batch/hjhPlanJoinOn";
+        BooleanResponse response = restTemplate.getForObject(url, BooleanResponse.class);
+        if (response != null && Response.isSuccess(response)) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public void autoIssueRecover() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhautoissuerecover/autoissuerecover", String.class);
+    }
+
+    @Override
+    public BooleanResponse updateMatchDays() {
+        BooleanResponse response = restTemplate.getForObject("http://AM-TRADE/am-trade/tenderMatchDaysController/batch/tenderMatchDays", BooleanResponse.class);
+        if (response != null && Response.isSuccess(response)) {
+            return response;
+        }
+        return null;
+    }
+
+    @Override
+    public void downloadFile() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/nifa_file_deal/download_file", boolean.class);
+    }
+
+    @Override
+    public void uploadFile() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/nifa_file_deal/upload_file", boolean.class);
+    }
+
+    @Override
+    public void updateRepayInfo() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/late_and_credit/update_repay_info", boolean.class);
+    }
+
+    @Override
+    public void countRechargeMoney() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/countRechargeMoney", String.class);
+    }
+
+    @Override
+    public void updateDayMarkLine() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/day_mark_line_total/update_day_mark_line", String.class);
+    }
+
+    @Override
+    public void taskAssign() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/taskAssign", String.class);
+    }
+
+    @Override
+    public void taskRepayAssign() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/autoReqRepayController/autoReqRepay", boolean.class);
+    }
+
+    @Override
+    public void taskReviewBorrowAssign() {
+        restTemplate.getForEntity("http://AM-TRADE/batch/borrowautoreview/autoreview", String.class);
+    }
+
+    @Override
+    public void taskAssignLoans() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/increaseinterestLoans", String.class);
+    }
+
+    @Override
+    public void taskAssignRepay() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/increaseInterestRepay", String.class);
+    }
+
+    @Override
+    public void noneSplitBorrow() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/timing_borrow/issue/none_split_borrow", String.class).getBody();
+    }
+
+    @Override
+    public void hjhBorrow() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/timing_borrow/issue/hjh_borrow", String.class).getBody();
+    }
+
+    @Override
+    public void splitBorrow() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/timing_borrow/issue/split_borrow", String.class).getBody();
+    }
+
+    @Override
+    public void couponExpired() {
+        restTemplate.getForObject("http://AM-TRADE/am-trade/batch/coupon/expired", StringResponse.class);
+    }
+
+    @Override
+    public void dataInfo() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/calculate_invest_interest", String.class);
+    }
+
+    @Override
+    public void downloadRedFile() {
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/downloadFiles", String.class);
     }
 }

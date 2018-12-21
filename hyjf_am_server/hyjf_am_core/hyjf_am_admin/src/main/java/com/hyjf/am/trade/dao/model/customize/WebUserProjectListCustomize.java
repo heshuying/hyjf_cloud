@@ -23,11 +23,11 @@ public class WebUserProjectListCustomize {
 	public String borrowSchedule;
 	// 项目是个人还是企业
 	public String comOrPer;
-	// 投资时间
+	// 出借时间
 	public String investTime;
-	// 投资时间
+	// 出借时间
 	public String createTime;
-	// 投资金额
+	// 出借金额
 	public String accountInvest;
 	// 待收金额
 	public String accountWait;
@@ -43,7 +43,7 @@ public class WebUserProjectListCustomize {
 	public String status;
 	// 项目状态
 	public String transStatus;
-	//投资类型 1 普通投资 2 优惠券投资
+	//出借类型 1 普通出借 2 优惠券出借
 	public String investType;
 	//备注
 	public String remark;

@@ -34,7 +34,7 @@ public interface UserPayAuthService {
      */
     String getBankRetMsg(String retCode);
     /**
-     * 查看该用户在投资表和标的放款记录中是否存在
+     * 查看该用户在出借表和标的放款记录中是否存在
      * @param userId
      * @auther: nxl
      * @return
@@ -87,4 +87,11 @@ public interface UserPayAuthService {
      * @return
      */
     int updateCancelRePayAuth(int userId);
+
+    /**
+     * 查询满足条件的服务费授权的条数
+     * @param userPayAuthRequest
+     * @return
+     */
+    int selectUserMemberCount(UserPayAuthRequest userPayAuthRequest);
 }

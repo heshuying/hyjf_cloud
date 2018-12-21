@@ -3,13 +3,12 @@
  */
 package com.hyjf.cs.market.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.datacollect.PcChannelStatisticsVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.market.client.AmUserClient;
+import com.hyjf.cs.market.mq.base.CommonProducer;
 import com.hyjf.cs.market.mq.base.MessageContent;
-import com.hyjf.cs.market.mq.producer.PcChannelStatisticsAdminProducer;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
 import com.hyjf.cs.market.service.PcChannelStatisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,7 @@ public class PcChannelStatisticsServiceImpl extends BaseMarketServiceImpl implem
 	@Autowired
 	private AmUserClient amUserClient;
 	@Autowired
-	private PcChannelStatisticsAdminProducer producer;
+	private CommonProducer producer;
 
 	@Override
 	public void insertStatistics() {
@@ -32,7 +31,7 @@ public class PcChannelStatisticsServiceImpl extends BaseMarketServiceImpl implem
 		try {
 			PcChannelStatisticsVO statisticsVO = new PcChannelStatisticsVO();
 			producer.messageSend(new MessageContent(MQConstant.PC_CHANNEL_STATISTICS_ADMIN_TOPIC,
-					System.currentTimeMillis() + "", JSONObject.toJSONBytes(statisticsVO) ));
+					System.currentTimeMillis() + "", statisticsVO));
 		} catch (MQException e) {
 			logger.error("PC渠道统计数据发送失败......", e);
 		}
@@ -56,7 +55,7 @@ public class PcChannelStatisticsServiceImpl extends BaseMarketServiceImpl implem
 				if(openaccountnumber==null){
 					openaccountnumber=0;
 				}
-				// 投资人数
+				// 出借人数
 				Integer tenderNumber = amUserClient.getTenderNumber(sourceId, "pc");
 				if(tenderNumber==null){
 					tenderNumber=0;
@@ -66,32 +65,32 @@ public class PcChannelStatisticsServiceImpl extends BaseMarketServiceImpl implem
 				if(cumulativeRecharge==null){
 					cumulativeRecharge=BigDecimal.ZERO;
 				}
-				// 汇直投投资金额
+				// 汇直投出借金额
 				BigDecimal hztTenderPrice = amUserClient.getHztTenderPrice(sourceId, "pc");
 				if(hztTenderPrice==null){
 					hztTenderPrice=BigDecimal.ZERO;
 				}
-				// 汇消费投资金额
+				// 汇消费出借金额
 				BigDecimal hxfTenderPrice = amUserClient.getHxfTenderPrice(sourceId, "pc");
 				if(hxfTenderPrice==null){
 					hxfTenderPrice=BigDecimal.ZERO;
 				}
-				// 汇天利投资金额
+				// 汇天利出借金额
 				BigDecimal htlTenderPrice = amUserClient.getHtlTenderPrice(sourceId, "pc");
 				if(htlTenderPrice==null){
 					htlTenderPrice=BigDecimal.ZERO;
 				}
-				// 汇添金投资金额
+				// 汇添金出借金额
 				BigDecimal htjTenderPrice = amUserClient.getHtjTenderPrice(sourceId, "pc");
 				if(htjTenderPrice==null){
 					htjTenderPrice=BigDecimal.ZERO;
 				}
-				// 汇金理财投资金额
+				// 汇金理财出借金额
 				BigDecimal rtbTenderPrice = amUserClient.getRtbTenderPrice(sourceId, "pc");
 				if(rtbTenderPrice==null){
 					rtbTenderPrice=BigDecimal.ZERO;
 				}
-				// 汇转让投资金额//
+				// 汇转让出借金额//
 				BigDecimal hzrTenderPrice = amUserClient.getHzrTenderPrice(sourceId, "pc");
 				if(hzrTenderPrice==null){
 					hzrTenderPrice=BigDecimal.ZERO;

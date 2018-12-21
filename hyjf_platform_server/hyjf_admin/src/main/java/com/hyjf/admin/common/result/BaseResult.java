@@ -22,7 +22,7 @@ import java.io.Serializable;
  * 返回前端结果基类
  * @author liubin
  */
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.ALWAYS)
 public class BaseResult<T> implements Serializable {
 	private static final long serialVersionUID = 1L;
 	public static final String SUCCESS = "000";

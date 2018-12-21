@@ -24,7 +24,6 @@ import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponTenderCustomizeVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -324,7 +323,7 @@ public class CouponConfigController extends BaseController {
      * @Author walter.limeng
      * @Description  更新还款期
      * @Date 14:15 2018/7/17
-     * @Param tenderNid 投资订单编号
+     * @Param tenderNid 出借订单编号
      * @Param currentRecoverFlg 0:非还款期，1;还款期
      * @Param period 期数
      * @return

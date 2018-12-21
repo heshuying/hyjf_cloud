@@ -29,6 +29,7 @@ import com.google.zxing.qrcode.decoder.ErrorCorrectionLevel;
  * @author liuyang
  *
  */
+@SuppressWarnings("unchecked")
 public class QRCodeUtil {
 	private static final String CHARSET = "utf-8";
 	private static final String FORMAT_NAME = "JPG";

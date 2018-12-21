@@ -6,7 +6,7 @@ package com.hyjf.admin.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.mq.FddProducer;
+import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.HjhCreditTenderService;
 import com.hyjf.am.response.admin.HjhCreditTenderResponse;
@@ -24,6 +24,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -38,7 +39,7 @@ public class HjhCreditTenderServiceImpl implements HjhCreditTenderService{
     private AmTradeClient amTradeClient;
     
 	@Autowired
-	private FddProducer fddProducer;
+	private CommonProducer commonProducer;
 	private static final Logger _log = LoggerFactory.getLogger(HjhCreditTenderServiceImpl.class);
 	/**
 	 * 获取详细列表
@@ -91,7 +92,7 @@ public class HjhCreditTenderServiceImpl implements HjhCreditTenderService{
 		bean.setOrdid(tenderAgreement.getTenderNid());
 		/*rabbitTemplate.convertAndSend(RabbitMQConstants.EXCHANGES_NAME, RabbitMQConstants.ROUTINGKEY_DOWNDESSENESITIZATION_CONTRACT, JSONObject.toJSONString(bean));*/
         try {
-			fddProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG, UUID.randomUUID().toString(),JSON.toJSONBytes(bean)));
+			commonProducer.messageSend(new MessageContent(MQConstant.FDD_TOPIC,MQConstant.FDD_DOWNPDF_AND_DESSENSITIZATION_TAG, UUID.randomUUID().toString(),bean));
 		} catch (MQException e) {
 			e.printStackTrace();
 			_log.error("法大大发送下载脱敏消息失败...", e);	
@@ -110,4 +111,25 @@ public class HjhCreditTenderServiceImpl implements HjhCreditTenderService{
 		return vo;
 	}
 
+	@Override
+	public List<HjhCreditTenderCustomizeVO> paging(HjhCreditTenderRequest request, List<HjhCreditTenderCustomizeVO> result){
+		int current=request.getCurrPage(); //页码
+		int pageSize=request.getPageSize(); //每页显示的数量
+		int totalCount=result.size();
+		int pageCount = (totalCount / pageSize) + ((totalCount % pageSize > 0) ? 1 : 0);
+
+		if(current < 1){
+			current = 1;
+		}
+		int start=(current-1) * pageSize;
+		int end = Math.min(totalCount, current * pageSize);
+
+		if(pageCount >= current){
+			result=result.subList(start,end);
+		}else{
+			result = new ArrayList<>();
+		}
+
+		return result;
+	}
 }

@@ -12,15 +12,15 @@ import java.io.Serializable;
 public class BorrowRepaymentInfoListRequestBean extends BaseRequest implements Serializable {
     @ApiModelProperty(value = "是否分期")
     private String isMonth;
-    @ApiModelProperty(value = "投资nid,还款订单号")
+    @ApiModelProperty(value = "出借nid,还款订单号")
     private String nid;
-    @ApiModelProperty(value = "借款编号")
+    @ApiModelProperty(value = "项目编号")
     private String borrowNid;
     @ApiModelProperty(value = "加入订单号")
     private String accedeOrderId;
-    @ApiModelProperty(value = "还款期次")
+    @ApiModelProperty(value = "还款期数")
     private String recoverPeriod;
-    @ApiModelProperty(value = "投资人用户名")
+    @ApiModelProperty(value = "出借人用户名")
     private String recoverUserName;
     @ApiModelProperty(value = "还款状态")
     private String status;
@@ -32,18 +32,18 @@ public class BorrowRepaymentInfoListRequestBean extends BaseRequest implements S
     /**
      * 应还日期 检索条件
      */
-    @ApiModelProperty(value = "借款编号（导出用）")
+    @ApiModelProperty(value = "项目编号（导出用）")
     private String recoverTimeStartSrch;
 
     /**
      * 机构名称代号 检索条件
      */
-    @ApiModelProperty(value = "借款编号（导出用）")
+    @ApiModelProperty(value = "项目编号（导出用）")
     private String instCodeSrch;
     /**
      * 应还日期 检索条件
      */
-    @ApiModelProperty(value = "借款编号（导出用）")
+    @ApiModelProperty(value = "项目编号（导出用）")
     private String recoverTimeEndSrch;
 
     public String getIsMonth() {

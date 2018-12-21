@@ -21,6 +21,7 @@ import java.util.*;
  * @version OperationGroupReport, v0.1 2018/8/1 9:45
  */
 @Document(collection = "ht_operation_group_report")
+@SuppressWarnings("unchecked")
 public class OperationGroupReport implements Serializable {
     /**
      *
@@ -53,7 +54,7 @@ public class OperationGroupReport implements Serializable {
     private String id;
     // 数据统计的月份，用于检索
 
-    @Indexed(unique = true,name="statisticsMonth")
+    // @Indexed(unique = true,name="statisticsMonth")  dba维护
     private int statisticsMonth;
     // 插入数据的时间
     private int insertDate;
@@ -135,7 +136,7 @@ public class OperationGroupReport implements Serializable {
     }
 
     /**
-     * 整理投资人区域信息，按照由小到大排列
+     * 整理出借人区域信息，按照由小到大排列
      *
      * @param cityMap
      */

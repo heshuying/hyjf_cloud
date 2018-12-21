@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.controller.app.riskassesment;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.config.NewAppQuestionCustomizeVO;
@@ -17,8 +18,8 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.StringUtil;
 import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.UserOperationLogProducer;
 import com.hyjf.cs.user.result.RiskAssesmentResponse;
 import com.hyjf.cs.user.service.evaluation.EvaluationService;
 import com.hyjf.cs.user.vo.UserAnswerRequestBean;
@@ -50,7 +51,7 @@ public class AppRiskAssesmentController extends BaseUserController {
     SystemConfig systemConfig;
 
     @Autowired
-    UserOperationLogProducer userOperationLogProducer;
+    CommonProducer commonProducer;
     /**
      * 风险测评
      *
@@ -79,7 +80,7 @@ public class AppRiskAssesmentController extends BaseUserController {
         userOperationLogEntity.setUserName(userVO.getUsername());
         userOperationLogEntity.setUserRole(String.valueOf(userInfoVO.getRoleId()));
         try {
-            userOperationLogProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(userOperationLogEntity)));
+            commonProducer.messageSend(new MessageContent(MQConstant.USER_OPERATION_LOG_TOPIC, UUID.randomUUID().toString(), userOperationLogEntity));
         } catch (MQException e) {
             logger.error("保存用户日志失败", e);
         }

@@ -27,7 +27,7 @@ public class ApiProjectListCustomize extends BaseVO implements Serializable {
     private String borrowAccount;
     // 项目进度
     private String borrowSchedule;
-    // 标的状态（投资中：2、复审中：3、还款中：4、已还款：5、已流标：6）
+    // 标的状态（出借中：2、复审中：3、还款中：4、已还款：5、已流标：6）
     private String borrowStatus;
     // 剩余可投金额
     private String borrowAccountWait;

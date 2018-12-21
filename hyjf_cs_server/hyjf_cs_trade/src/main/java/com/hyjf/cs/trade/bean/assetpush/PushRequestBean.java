@@ -4,12 +4,15 @@ import com.hyjf.am.resquest.assetpush.InfoBean;
 import com.hyjf.cs.trade.bean.BaseBean;
 import io.swagger.annotations.ApiModelProperty;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * 资产推送请求参数
  */
-public class PushRequestBean extends BaseBean {
+public class PushRequestBean extends BaseBean implements Serializable {
+
+	private static final long serialVersionUID = 155405841080295756L;
 
 	@ApiModelProperty(value = "资产类别")
     private Integer assetType;

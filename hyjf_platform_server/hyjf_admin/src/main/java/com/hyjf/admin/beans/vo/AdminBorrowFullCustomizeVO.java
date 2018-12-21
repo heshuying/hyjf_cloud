@@ -13,7 +13,7 @@ import java.io.Serializable;
  * @version AdminBorrowFullCustomizeVO, v0.1 2018/7/23 14:20
  */
 public class AdminBorrowFullCustomizeVO extends BaseVO implements Serializable {
-    @ApiModelProperty(value = "借款编号")
+    @ApiModelProperty(value = "项目编号")
     private String borrowNid;
 
     @ApiModelProperty(value = "借款标题")
@@ -49,10 +49,10 @@ public class AdminBorrowFullCustomizeVO extends BaseVO implements Serializable {
     @ApiModelProperty(value = "复审状态名称")
     private String reverifyStatusName;
 
-    @ApiModelProperty(value = "融资服务费")
+    @ApiModelProperty(value = "放款服务费")
     private String serviceScale;
 
-    @ApiModelProperty(value = "账户管理费率")
+    @ApiModelProperty(value = "还款服务费率")
     private String managerScale;
 
     @ApiModelProperty(value = "发标时间")
@@ -73,7 +73,7 @@ public class AdminBorrowFullCustomizeVO extends BaseVO implements Serializable {
     @ApiModelProperty(value = "项目类型名称")
     private String projectTypeName;
 
-    @ApiModelProperty(value = "账户管理费率下线")
+    @ApiModelProperty(value = "还款服务费率下线")
     private String managerScaleEnd;
 
     @ApiModelProperty(value = "爆标标识")
@@ -88,10 +88,10 @@ public class AdminBorrowFullCustomizeVO extends BaseVO implements Serializable {
     @ApiModelProperty(value = "服务费合计")
     private String sumServiceScale;
 
-    @ApiModelProperty(value = "投资人")
+    @ApiModelProperty(value = "出借人")
     private String investor;
 
-    @ApiModelProperty(value = "投资金额（元）")
+    @ApiModelProperty(value = "出借金额（元）")
     private String investmentAmount;
 
     @ApiModelProperty(value = "应放款金额")

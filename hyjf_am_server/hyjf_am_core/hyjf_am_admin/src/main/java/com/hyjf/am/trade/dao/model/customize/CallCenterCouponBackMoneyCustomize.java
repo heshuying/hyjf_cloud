@@ -19,11 +19,11 @@ public class CallCenterCouponBackMoneyCustomize implements Serializable {
 	private String couponUserCode;
 	//优惠券类型
     private String couponType;
-    //项目年化收益
+    //项目出借利率
     private String borrowApr;
     //项目期限
     private String borrowPeriod;
-    //投资金额
+    //出借金额
     private String account;
     //回款期数
     private String recoverPeriod;

@@ -10,7 +10,7 @@ import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 
 /**
- * 订单投资异常短信预警
+ * 订单出借异常短信预警
  * @author zhangyk
  * @date 2018/8/15 16:22
  */
@@ -22,7 +22,7 @@ public class HjhOrderInvestExceptionCheckJob extends BaseJob implements Job {
         logger.info("HjhOrderExitCheckJob: {} execute...", context.getJobDetail().getKey().getName());
 
         Boolean result = restTemplate.getForEntity(
-                "http://AM-TRADE/am-trade/hjhAlarmController/batch/hjhOrderInvestExceptionCheck", Boolean.class).getBody();
+                "http://CS-TRADE/cs-trade/hjhAlarmController/batch/hjhOrderInvestExceptionCheck", Boolean.class).getBody();
 
         logger.info("HjhOrderExitCheckJob execute end...");
     }

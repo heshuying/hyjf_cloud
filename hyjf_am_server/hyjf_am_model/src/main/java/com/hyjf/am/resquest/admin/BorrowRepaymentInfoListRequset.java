@@ -8,11 +8,11 @@ import com.hyjf.am.vo.BasePage;
  */
 public class BorrowRepaymentInfoListRequset extends BasePage {
     private String isMonth;//是否分期
-    private String nid;// 投资nid,还款订单号
+    private String nid;// 出借nid,还款订单号
     private String borrowNid;// 借款编号
     private String accedeOrderId;//加入订单号
     private String recoverPeriod;// 还款期次
-    private String recoverUserName;// 投资人用户名
+    private String recoverUserName;// 出借人用户名
     private String status;// 还款状态
     /**
      * 来自哪个Controller,0,1等

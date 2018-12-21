@@ -50,7 +50,7 @@ public class SignUtil {
             Integer assetType = bean.getAssetType();
             sign = timestamp + instCode + assetType;
         } else if(Objects.equals("/tender", methodName)){
-        	//自动投资
+        	//自动出借
         	AutoTenderRequestBean bean = (AutoTenderRequestBean) paramBean;
         	sign = bean.getInstCode() + bean.getAccountId() + bean.getBorrowNid() + bean.getTimestamp();
         }else if (Objects.equals("/tradelist", methodName)){

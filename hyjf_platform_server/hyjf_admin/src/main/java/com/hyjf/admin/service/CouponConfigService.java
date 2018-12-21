@@ -72,6 +72,13 @@ public interface CouponConfigService {
     String getAdminInfoByUserId(String userId);
 
     /**
+     * VIP中心-优惠券发行 查询导出列表总数
+     * @param request
+     * @return
+     */
+    int getCountForExport(CouponConfigRequest request);
+
+    /**
      * 查询导出列表
      * @param request
      * @return

@@ -2,8 +2,9 @@ package com.hyjf.am.trade.dao.mapper.auto;
 
 import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype;
 import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtypeExample;
-import java.util.List;
 import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 public interface HjhAssetBorrowtypeMapper {
     int countByExample(HjhAssetBorrowtypeExample example);

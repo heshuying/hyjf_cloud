@@ -7,6 +7,7 @@ import com.hyjf.admin.beans.RepayInfoBean;
 import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.BorrowRepaymentService;
 import com.hyjf.admin.utils.Page;
+import com.hyjf.am.response.admin.AdminBorrowRepaymentResponse;
 import com.hyjf.am.resquest.admin.BorrowRepaymentPlanRequest;
 import com.hyjf.am.resquest.admin.BorrowRepaymentRequest;
 import com.hyjf.am.vo.admin.AdminRepayDelayCustomizeVO;
@@ -66,7 +67,7 @@ public class BorrowRepaymentServiceImpl implements BorrowRepaymentService {
     }
 
     @Override
-    public List<BorrowRepaymentPlanCustomizeVO> exportRepayClkActBorrowRepaymentInfoList(BorrowRepaymentPlanRequest request) {
+    public AdminBorrowRepaymentResponse exportRepayClkActBorrowRepaymentInfoList(BorrowRepaymentPlanRequest request) {
         return  this.amTradeClient.exportRepayClkActBorrowRepaymentInfoList(request);
     }
 
@@ -186,7 +187,7 @@ public class BorrowRepaymentServiceImpl implements BorrowRepaymentService {
         boolean retValue = validateMaxLength(itemname, value, maxLength, required);
 
         if (retValue && !StringUtils.isEmpty(value)) {
-            if (!GenericValidator.isInt(value) || !NumberUtils.isNumber(value) || Integer.valueOf(value) < 0) {
+            if (!GenericValidator.isInt(value) || !NumberUtils.isCreatable(value) || Integer.valueOf(value) < 0) {
                 retValue = false;
             }
         }

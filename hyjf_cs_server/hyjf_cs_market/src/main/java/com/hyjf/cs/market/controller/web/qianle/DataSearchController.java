@@ -1,24 +1,10 @@
 package com.hyjf.cs.market.controller.web.qianle;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
-import com.hyjf.am.resquest.trade.DataSearchRequest;
-import com.hyjf.am.vo.config.SmsConfigVO;
-import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.trade.DataSearchCustomizeVO;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.*;
-import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.common.util.Page;
-import com.hyjf.cs.market.bean.DataSearchBean;
-import com.hyjf.cs.market.mq.base.MessageContent;
-import com.hyjf.cs.market.mq.producer.SmsProducer;
-import com.hyjf.cs.market.service.qianle.DataSearchService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import java.util.*;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
@@ -30,9 +16,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.util.*;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.trade.DataSearchCustomizeResponse;
+import com.hyjf.am.resquest.trade.DataSearchRequest;
+import com.hyjf.am.vo.config.SmsConfigVO;
+import com.hyjf.am.vo.message.SmsMessage;
+import com.hyjf.am.vo.trade.DataSearchCustomizeVO;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.exception.MQException;
+import com.hyjf.common.util.*;
+import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.common.util.Page;
+import com.hyjf.cs.market.bean.DataSearchBean;
+import com.hyjf.cs.market.mq.base.CommonProducer;
+import com.hyjf.cs.market.mq.base.MessageContent;
+import com.hyjf.cs.market.service.qianle.DataSearchService;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * @author lisheng
@@ -41,13 +44,14 @@ import java.util.*;
 @Api(tags = "web端-千乐数据查询统计")
 @RestController
 @RequestMapping("/hyjf-web/qianle")
+@SuppressWarnings("unchecked")
 public class DataSearchController {
     @Autowired
     DataSearchService dataSearchService;
-    public static final String SMSSENDFORMOBILE = "smsSendForMobile";
+    public static final String SMSSENDFORMOBILE = MessageConstant.SMS_SEND_FOR_MOBILE;
 
     @Autowired
-    SmsProducer smsProducer;
+    CommonProducer commonProducer;
     private Logger logger = LoggerFactory.getLogger(DataSearchController.class);
 
     /**
@@ -155,7 +159,7 @@ public class DataSearchController {
         // 发送短信验证码
         SmsMessage smsMessage = new SmsMessage(null, param, mobile, null, SMSSENDFORMOBILE, null, CustomConstants.PARAM_TPL_ZHUCE, CustomConstants.CHANNEL_TYPE_NORMAL);
         try {
-            result = smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+            result = commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
         } catch (MQException e) {
             e.printStackTrace();
         }
@@ -207,9 +211,9 @@ public class DataSearchController {
         List<DataSearchCustomizeVO> resultList = result.getResultList();
         String fileName = sheetName + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         String[] titles = new String[]
-                { "序号", "注册时间", "用户名", "姓名", "手机号","推荐人姓名", "投资类型",
-                        "项目/智投编号",  "投资金额", "投资期限","年化金额"
-                        ,"佣金7%","投资时间"
+                { "序号", "注册时间", "用户名", "姓名", "手机号","推荐人姓名", "出借类型",
+                        "项目/智投编号",  "出借金额", "出借期限","年化金额"
+                        ,"佣金7%","出借时间"
                 };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
@@ -260,22 +264,22 @@ public class DataSearchController {
                         cell.setCellValue(record.getReffername());//推荐人姓名
                     }
                     else if (celLength == 6) {
-                        cell.setCellValue(record.getType());//投资类型
+                        cell.setCellValue(record.getType());//出借类型
                     }
                     else if (celLength == 7) {
                         cell.setCellValue(record.getPlannid());//项目/计划编号
                     }
                     else if (celLength == 8) {
-                        cell.setCellValue(record.getAccount());//投资金额
+                        cell.setCellValue(record.getAccount());//出借金额
                     }
                     else if (celLength == 9) {
-                        cell.setCellValue(record.getBorrow_period());//投资期限
+                        cell.setCellValue(record.getBorrow_period());//出借期限
                     }else if (celLength == 10) {
                         cell.setCellValue(record.getYearAccount());//年化金额
                     }else if (celLength == 11) {
                         cell.setCellValue(record.getMoney());//佣金7%
                     }else if (celLength == 12) {
-                        cell.setCellValue(record.getAddtimesT());//投资日期
+                        cell.setCellValue(record.getAddtimesT());//出借日期
                     }
                 }
             }

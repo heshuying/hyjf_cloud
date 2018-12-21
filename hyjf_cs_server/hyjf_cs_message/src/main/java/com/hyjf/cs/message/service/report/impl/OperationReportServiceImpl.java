@@ -39,7 +39,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 	@Autowired
 	public QuarterOperationReportMongDao quarterOperationReportMongDao;//季度运营报告
 	@Autowired
-	public TenthOperationReportMongDao tenthOperationReportMongDao;//运营报告十大投资
+	public TenthOperationReportMongDao tenthOperationReportMongDao;//运营报告十大出借
 	@Autowired
 	public UserOperationReportMongDao userOperationReportMongDao;//用户分析报告
 	@Autowired
@@ -537,7 +537,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 					response.setWonderfulActivities(wonderfulActivities);
 				}
 			}
-			//查询十大投资报告
+			//查询十大出借报告
 			Query query4 = new Query();
 			Criteria criteria4 = Criteria.where("operationReportId").is(operationReportColumn.getId());
 			query4.addCriteria(criteria4);
@@ -712,7 +712,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		return operationActivityReport;
 	}
 
-	//查询十大投资详情
+	//查询十大出借详情
 	public List<TenthOperationReportEntity> getTenthOperationReport(String id, Query query2) {
 		List<TenthOperationReportEntity> tenthOperationReportEntity = tenthOperationReportMongDao.find(query2);
 		return tenthOperationReportEntity;
@@ -812,7 +812,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			if (StringUtils.isNotBlank(userOperationReportId)) {
 				response.setUserOperationReportId(userOperationReportId);
 			}
-			//添加十大投资
+			//添加十大出借
 			String tenthOperationReportId = insertTenthOperationReport(form, operationId, operationReport.getOperationReportType(), createTime, createUserId);
 			if (StringUtils.isNotBlank(tenthOperationReportId)) {
 				response.setTenthOperationReportId(tenthOperationReportId);
@@ -869,7 +869,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			if (StringUtils.isNotBlank(userOperationReportId)) {
 				response.setUserOperationReportId(userOperationReportId);
 			}
-			//添加十大投资
+			//添加十大出借
 			String tenthOperationReportId = insertTenthOperationReport(form, operationId, operationReport.getOperationReportType(), createTime, createUserId);
 			if (StringUtils.isNotBlank(tenthOperationReportId)) {
 				response.setTenthOperationReportId(tenthOperationReportId);
@@ -981,7 +981,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			if (StringUtils.isNotBlank(userOperationReportId)) {
 				response.setUserOperationReportId(userOperationReportId);
 			}
-			//添加十大投资
+			//添加十大出借
 			String tenthOperationReportId = insertTenthOperationReport(form, operationId, operationReport.getOperationReportType(), createTime, createUserId);
 			if (StringUtils.isNotBlank(tenthOperationReportId)) {
 				response.setTenthOperationReportId(tenthOperationReportId);
@@ -1084,7 +1084,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		if(StringUtils.isNotBlank(userOperationReportId)){
 			response.setUserOperationReportId(userOperationReportId);
 		}
-		//修改十大投资人
+		//修改十大出借人
 		String tenthOperationReportId = updateTenthOperationReport(form, updateTime, updateUserId);
 		if(StringUtils.isNotBlank(userOperationReportId)){
 			response.setTenthOperationReportId(tenthOperationReportId);
@@ -1178,7 +1178,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		//对其他几个表进行修改
 		//修改用户报告
 		updateUserOperationReport(form, updateTime, updateUserId);
-		//修改十大投资人
+		//修改十大出借人
 		updateTenthOperationReport(form, updateTime, updateUserId);
 		//根据operationReportId查询活动，对其删除
 		Query query2 = new Query();
@@ -1201,7 +1201,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 	}
 
 	/**
-	 * 十大投资表
+	 * 十大出借表
 	 *
 	 * @param form
 	 * @param id
@@ -1281,7 +1281,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 	}
 
 	/**
-	 * 插入活动，十大投资，用户
+	 * 插入活动，十大出借，用户
 	 *
 	 * @param form
 	 * @param id 运营报告id
@@ -1354,7 +1354,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		quarterOperationReportMongDao.save(entity);
 		//修改用户报告
 		updateUserOperationReport(form, updateTime, updateUserId);
-		//修改十大投资人
+		//修改十大出借人
 		 updateTenthOperationReport(form, updateTime, updateUserId);
 		//根据operationReportId查询活动，对其删除
 		Query query2 = new Query();
@@ -1424,7 +1424,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		if(StringUtils.isNotBlank(quarterOperationReportId)){
 			response.setUserOperationReportId(userOperationReportId);
 		}
-		//修改十大投资人
+		//修改十大出借人
 		String tenthOperationReportId = updateTenthOperationReport(form, updateTime, updateUserId);
 		if(StringUtils.isNotBlank(tenthOperationReportId)){
 			response.setTenthOperationReportId(tenthOperationReportId);
@@ -1586,7 +1586,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		updateHalfYearOperationReport(form, updateTime, updateUserId);
 		//修改用户报告
 		updateUserOperationReport(form, updateTime, updateUserId);
-		//修改十大投资人
+		//修改十大出借人
 		updateTenthOperationReport(form, updateTime, updateUserId);
 		//根据operationReportId查询活动，对其删除
 		Query query = new Query();
@@ -1658,7 +1658,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		if(StringUtils.isNotBlank(userOperationReportId)){
 			response.setUserOperationReportId(userOperationReportId);
 		}
-		//修改十大投资人
+		//修改十大出借人
 		String tenthOperationReportId = updateTenthOperationReport(form, updateTime, updateUserId);
 		if(StringUtils.isNotBlank(tenthOperationReportId)){
 			response.setTenthOperationReportId(tenthOperationReportId);
@@ -1760,7 +1760,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		yearOperationReportMongDao.save(operationYearReport);
 		//修改用户报告
 		updateUserOperationReport(form, updateTime, updateUserId);
-		//修改十大投资人
+		//修改十大出借人
 		updateTenthOperationReport(form, updateTime, updateUserId);
 		//根据operationReportId查询活动，对其删除
 		Query query2 = new Query();
@@ -1856,7 +1856,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 			if(StringUtils.isNotBlank(userOperationReportId)){
 				response.setUserOperationReportId(userOperationReportId);
 			}
-			//添加十大投资
+			//添加十大出借
 			String tenthOperationReportId = insertTenthOperationReport(form, operationId, operationReport.getOperationReportType(), createTime, createUserId);
 			if(StringUtils.isNotBlank(tenthOperationReportId)){
 				response.setTenthOperationReportId(tenthOperationReportId);
@@ -1925,7 +1925,7 @@ public class OperationReportServiceImpl  implements OperationReportService {
 		if(StringUtils.isNotBlank(userOperationReportId)){
 			response.setUserOperationReportId(userOperationReportId);
 		}
-		//修改十大投资人
+		//修改十大出借人
 		String tenthOperationReportId = updateTenthOperationReport(form, updateTime, updateUserId);
 		if(StringUtils.isNotBlank(tenthOperationReportId)){
 			response.setTenthOperationReportId(tenthOperationReportId);

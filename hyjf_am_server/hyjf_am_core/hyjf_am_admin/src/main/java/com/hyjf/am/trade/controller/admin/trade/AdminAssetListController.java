@@ -13,7 +13,6 @@ import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -127,8 +126,8 @@ public class AdminAssetListController extends BaseController {
 		conditionMap.put("borrowNidSrch", borrowNidSrch);
 		conditionMap.put("planNidSrch", planNidSrch);
 		conditionMap.put("userNameSrch", userNameSrch);
-		// 1 保证金不足 21 新增授信额度不足 22 在贷余额额度不足
-		conditionMap.put("statusSrch", new int[]{1,21,22,23,24});
+		// 1 保证金不足 21 合作额度不足 22 在贷余额额度不足 23 日推标额度不足 24 月推标额度不足
+		conditionMap.put("statusSrch", new int[]{21,23,24});
 		return conditionMap;
 	}
 
@@ -141,7 +140,12 @@ public class AdminAssetListController extends BaseController {
 	public AssetListCustomizeResponse findAssetListWithoutPage(@RequestBody @Valid AssetListRequest request){
 		AssetListCustomizeResponse response = new AssetListCustomizeResponse();
 		Map<String, Object> mapParam = paramSet(request);
-		List<AssetListCustomizeVO> assetList = assetListService.findAssetListWithoutPage(mapParam);
+		int count=assetListService.getBZJBZCount(mapParam);
+		Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
+		int limitStart = paginator.getOffset();
+		int limitEnd = paginator.getLimit();
+		List<AssetListCustomizeVO> assetList = assetListService.findAssetListWithoutPage(mapParam,limitStart,limitEnd);
+		response.setCount(count);
         if(assetList.size() > 0){
             if (!CollectionUtils.isEmpty(assetList)) {
                 response.setResultList(assetList);

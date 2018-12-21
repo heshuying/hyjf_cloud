@@ -9,6 +9,9 @@ import com.hyjf.cs.trade.service.BaseTradeService;
 public interface BatchBankInvestService extends BaseTradeService {
 
 	void handle();
-   
-	
+	/**
+	 * 自动放款复审任务开始
+	 * @return
+	 */
+	void hjhautoreview();
 }

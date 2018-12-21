@@ -17,8 +17,11 @@ import java.util.List;
  * @version BorrowInvestService, v0.1 2018/7/10 9:17
  */
 public interface BorrowInvestService {
+
+    Integer countBorrowInvest(BorrowInvestRequest borrowInvestRequest);
+
     /**
-     * 投资明细列表
+     * 出借明细列表
      *
      * @param borrowInvestRequest
      * @return
@@ -26,7 +29,7 @@ public interface BorrowInvestService {
     BorrowInvestResponseBean getBorrowInvestList(BorrowInvestRequest borrowInvestRequest);
 
     /**
-     * 投资明细导出列表
+     * 出借明细导出列表
      *
      * @param borrowInvestRequest
      * @return
@@ -34,7 +37,7 @@ public interface BorrowInvestService {
     List<BorrowInvestCustomizeVO> getExportBorrowInvestList(BorrowInvestRequest borrowInvestRequest);
 
     /**
-     * 投资人债权明细
+     * 出借人债权明细
      *
      * @param investorDebtBean
      * @return

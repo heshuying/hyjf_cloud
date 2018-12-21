@@ -89,14 +89,14 @@ public class HjhUserAuth implements Serializable {
     private String autoCreditEndTime;
 
     /**
-     * 自动投资授权时间
+     * 自动出借授权时间
      *
      * @mbggenerated
      */
     private Integer autoBidTime;
 
     /**
-     * 自动投资授权过期时间
+     * 自动出借授权过期时间
      *
      * @mbggenerated
      */
@@ -145,7 +145,7 @@ public class HjhUserAuth implements Serializable {
     private String autoRepayEndTime;
 
     /**
-     * 投资授权解约时间
+     * 出借授权解约时间
      *
      * @mbggenerated
      */
@@ -173,7 +173,7 @@ public class HjhUserAuth implements Serializable {
     private String repayCancelTime;
 
     /**
-     * 自动投资单笔最大金额
+     * 自动出借单笔最大金额
      *
      * @mbggenerated
      */
@@ -208,14 +208,14 @@ public class HjhUserAuth implements Serializable {
     private Integer delFlag;
 
     /**
-     * 投资交易上限
+     * 出借交易上限
      *
      * @mbggenerated
      */
     private Integer txAmount;
 
     /**
-     * 投资交易总额上限
+     * 出借交易总额上限
      *
      * @mbggenerated
      */

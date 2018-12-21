@@ -1,24 +1,29 @@
 package com.hyjf.am.user.interceptor;
 
-import com.alibaba.fastjson.JSON;
-import com.google.common.collect.Maps;
-import com.hyjf.am.user.mq.base.MessageContent;
-import com.hyjf.am.user.mq.producer.AmUserProducer;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
+import java.util.Map;
+import java.util.Properties;
+import java.util.UUID;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.ibatis.executor.Executor;
 import org.apache.ibatis.mapping.BoundSql;
 import org.apache.ibatis.mapping.MappedStatement;
-import org.apache.ibatis.plugin.*;
+import org.apache.ibatis.plugin.Interceptor;
+import org.apache.ibatis.plugin.Intercepts;
+import org.apache.ibatis.plugin.Invocation;
+import org.apache.ibatis.plugin.Plugin;
+import org.apache.ibatis.plugin.Signature;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Map;
-import java.util.Properties;
-import java.util.UUID;
+import com.alibaba.fastjson.JSON;
+import com.google.common.collect.Maps;
+import com.hyjf.am.user.mq.base.CommonProducer;
+import com.hyjf.am.user.mq.base.MessageContent;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 
 /**
  * 同步用户信息的mybaitis 拦截器
@@ -36,7 +41,7 @@ public class SyncRuserInterceptor implements Interceptor {
     private Logger logger = LoggerFactory.getLogger(getClass());
     
     @Autowired
-    private AmUserProducer amUserProducer;
+    private CommonProducer commonProducer;
 
     @Override
     public Object intercept(Invocation invocation) throws Throwable {
@@ -122,7 +127,7 @@ public class SyncRuserInterceptor implements Interceptor {
     }
 
     private void sendToMq(Object parameterObject, String methodName, String tagName) throws MQException {
-        amUserProducer.messageSend(new MessageContent(MQConstant.SYNC_RUSER_TOPIC, tagName, UUID.randomUUID().toString(), JSON.toJSONBytes(parameterObject)));
+    	commonProducer.messageSend(new MessageContent(MQConstant.SYNC_RUSER_TOPIC, tagName, UUID.randomUUID().toString(), parameterObject));
         logger.info("【{}】发送用户信息同步,同步信息：{}", methodName + "/" + tagName, JSON.toJSON(parameterObject).toString());
     }
 

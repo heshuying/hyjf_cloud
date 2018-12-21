@@ -124,7 +124,7 @@ public class LateAndCreditServiceImpl extends BaseServiceImpl implements LateAnd
     }
 
     /**
-     * 根据nid获取投资信息
+     * 根据nid获取出借信息
      *
      * @param nid
      * @return

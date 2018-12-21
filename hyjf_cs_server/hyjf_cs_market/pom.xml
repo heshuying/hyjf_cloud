@@ -39,13 +39,6 @@
 			<scope>test</scope>
 		</dependency>
 
-		<!-- spring boot admin start -->
-		<dependency>
-			<groupId>de.codecentric</groupId>
-			<artifactId>spring-boot-admin-starter-client</artifactId>
-		</dependency>
-		<!-- spring boot admin end -->
-
 		<dependency>
 			<groupId>org.apache.rocketmq</groupId>
 			<artifactId>rocketmq-client</artifactId>
@@ -66,6 +59,10 @@
             <artifactId>poi</artifactId>
             <version>3.5-FINAL</version>
         </dependency>
+		<dependency>
+			<groupId>org.apache.rocketmq</groupId>
+			<artifactId>rocketmq-spring-boot-starter</artifactId>
+		</dependency>
     </dependencies>
 
 	<build>
@@ -116,7 +113,7 @@
 					<include>**/*.xml</include>
 					<include>**/*.yml</include>
 				</includes>
-				<filtering>false</filtering>
+				<filtering>true</filtering>
 			</resource>
 		</resources>
 	</build>

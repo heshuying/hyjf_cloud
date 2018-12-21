@@ -3,11 +3,8 @@
  */
 package com.hyjf.am.trade.service.admin.finance.impl;
 
-import com.alibaba.fastjson.JSON;
+import com.hyjf.am.admin.mq.base.CommonProducer;
 import com.hyjf.am.admin.mq.base.MessageContent;
-import com.hyjf.am.admin.mq.producer.AccountWebListProducer;
-import com.hyjf.am.admin.mq.producer.AppMessageProducer;
-import com.hyjf.am.admin.mq.producer.SmsProducer;
 import com.hyjf.am.resquest.admin.CommissionComboRequest;
 import com.hyjf.am.resquest.admin.HjhCommissionRequest;
 import com.hyjf.am.trade.dao.model.auto.*;
@@ -53,11 +50,8 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
     // 根据用户ID和模版号给某用户发短信
     public static final String SMSSENDFORUSER = "smsSendForUser";
 	@Autowired
-	private AccountWebListProducer accountWebListProducer;
-	@Autowired
-	private SmsProducer smsProducer;
-	@Autowired
-	private AppMessageProducer appMessageProducer;
+	private CommonProducer commonProducer;
+
 	@Override
 	public Integer countTotal(HjhCommissionRequest request) {
 		// 部门
@@ -153,7 +147,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 		Integer time = GetDate.getMyTimeInMillis();
 		// 发放人ID
 		Integer userId = commission.getUserId();
-		// 投资人ID
+		// 出借人ID
 		Integer tenderUserId = commission.getTenderUserId();
 		// 操作者用户名
 		String operator = commission.getLoginUserName();
@@ -252,7 +246,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
         accountList.setBankAwaitInterest(account.getBankAwaitInterest());// 银行待收利息
         accountList.setBankAwait(account.getBankAwait());// 银行待收总额
         accountList.setBankInterestSum(account.getBankInterestSum()); // 银行累计收益
-        accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计投资
+        accountList.setBankInvestSum(account.getBankInvestSum());// 银行累计出借
         accountList.setBankWaitRepay(account.getBankWaitRepay());// 银行待还金额
         accountList.setPlanBalance(account.getPlanBalance());
         accountList.setPlanFrost(account.getPlanFrost());
@@ -284,18 +278,18 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 		/*5.插入网站收支明细记录 改为插入mongo库*/
 		AccountWebListVO accountWebList = new AccountWebListVO();
 		accountWebList.setOrdid(accountList.getNid());// 订单号
-		accountWebList.setUserId(accountList.getUserId()); // 投资者
+		accountWebList.setUserId(accountList.getUserId()); // 出借者
 		accountWebList.setAmount(Double.valueOf(accountList.getAmount().toString())); // 管理费
 		accountWebList.setType(CustomConstants.TYPE_OUT); // 类型1收入 2支出
 		accountWebList.setTrade(CustomConstants.TRADE_TGTC); // 提成
-		accountWebList.setTradeType(CustomConstants.TRADE_TGTC_NM); // 投资推广提成
-		accountWebList.setRemark(getBorrowNidByOrdId(accountList.getNid())); // 投资推广提成
+		accountWebList.setTradeType(CustomConstants.TRADE_TGTC_NM); // 出借推广提成
+		accountWebList.setRemark(getBorrowNidByOrdId(accountList.getNid())); // 出借推广提成
 		accountWebList.setCreateTime(GetterUtil.getInteger(accountList.getCreateTime()));
 		//TODO: 网站首支明细队列 参照 RealTimeBorrowLoanServiceImpl line 1656
 		/*原ret += insertAccountWebList(accountWebList);*/
 		try {
 			logger.info("发送收支明细---" + request.getAccount() + "---------" + accountList.getAmount());
-            accountWebListProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(accountWebList)));
+			commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_WEB_LIST_TOPIC, UUID.randomUUID().toString(), accountWebList));
         } catch (MQException e) {
             e.printStackTrace();
         }
@@ -345,7 +339,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 		        bankMerchantAccountList.setCreateUserName(request.getUserName());
 		        /*原bankMerchantAccountList.setUpdateUserName(userInfoCustomize.getUserName());*/
 		        bankMerchantAccountList.setUpdateUserName(request.getUserName());
-		        bankMerchantAccountList.setRemark("投资推广提成");
+		        bankMerchantAccountList.setRemark("出借推广提成");
 		        this.bankMerchantAccountListMapper.insertSelective(bankMerchantAccountList);
 		    }
 		}
@@ -361,7 +355,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 		SmsMessage smsMessage = new SmsMessage(userId, msg, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_SDTGTC,
 				CustomConstants.CHANNEL_TYPE_NORMAL); 
 		try {
-			smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, String.valueOf(userId), JSON.toJSONBytes(smsMessage)));
+			commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, String.valueOf(userId), smsMessage));
 		} catch (MQException e2) {
 			logger.error("发送短信失败..", e2);
 		}
@@ -403,8 +397,8 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
         param.put("val_amount", commission.getCommission().toString());
 		AppMsMessage appsmsMessage = new AppMsMessage(userId, param, null,MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_SDTGTC);
 		try {
-			appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
-					JSON.toJSONBytes(appsmsMessage)));
+			commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC, String.valueOf(userId),
+					appsmsMessage));
 		} catch (MQException e) {
 			logger.error("发送app消息失败..", e);
 		}
@@ -413,7 +407,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 	}
 	
 	/**
-	 * 根据投资订单号取投资编号
+	 * 根据出借订单号取出借编号
 	 *
 	 * @param ordId
 	 * @return
@@ -459,7 +453,7 @@ public class AdminHjhCommissionServiceImpl extends BaseServiceImpl implements Ad
 	 * 取得提成利率
 	 *
 	 * @param borrowNid
-	 * @param userId
+	 * @param attribute
 	 */
 	private BigDecimal getScales(String borrowNid, Integer attribute) {
 		BigDecimal rate = BigDecimal.ZERO;

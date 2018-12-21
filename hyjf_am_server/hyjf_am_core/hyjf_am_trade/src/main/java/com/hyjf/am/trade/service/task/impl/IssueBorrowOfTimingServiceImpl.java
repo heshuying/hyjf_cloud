@@ -1,12 +1,10 @@
 package com.hyjf.am.trade.service.task.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.dao.model.customize.BorrowCustomize;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
-import com.hyjf.am.trade.mq.producer.hjh.issuerecover.AutoIssueMessageProducer;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.IssueBorrowOfTimingService;
 import com.hyjf.am.trade.utils.constant.BorrowSendTypeEnum;
@@ -24,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -36,10 +33,7 @@ import java.util.*;
 public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements IssueBorrowOfTimingService {
 
 	@Autowired
-	SmsProducer smsProducer;
-
-	@Resource
-	private AutoIssueMessageProducer autoIssueMessageProducer;
+	private CommonProducer commonProducer;
 
 	@Override
 	@Transactional(rollbackFor = Exception.class)
@@ -140,7 +134,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 					JSONObject params = new JSONObject();
 					params.put("borrowNid", borrowNid);
 					//modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-					autoIssueMessageProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)),2);
+					commonProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), params),2);
 				} catch (MQException e) {
 					logger.error("发送【散标进计划自动发标进入计划】MQ失败...");
 				}
@@ -194,11 +188,11 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 
 
 		// DB验证
-		// 有投资金额发生异常
+		// 有出借金额发生异常
 		BigDecimal zero = new BigDecimal("0");
 		BigDecimal borrowAccountYes = borrow.getBorrowAccountYes();
 		if (!(borrowAccountYes == null || borrowAccountYes.compareTo(zero) == 0)) {
-			logger.error(borrowNid + " 定时发标异常：标的已有投资人投资");
+			logger.error(borrowNid + " 定时发标异常：标的已有出借人出借");
 			return false;
 		}
 
@@ -211,7 +205,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		borrow.setStatus(2);
 		// 初审时间
 		borrow.setVerifyTime(nowTime);
-		// 可投资金额
+		// 可出借金额
 		borrow.setBorrowAccountWait(borrow.getAccount());
 		boolean flag = this.borrowMapper.updateByPrimaryKeySelective(borrow) > 0 ? true : false;
 		if (flag) {
@@ -265,11 +259,11 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 
 		//董泽杉要求加redis  add by yagnchangwei 2018-10-15
 		RedisUtils.set(RedisConstants.BORROW_NID+borrow.getBorrowNid(), borrow.getAccount().toString());
-		// 有投资金额发生异常
+		// 有出借金额发生异常
 		BigDecimal zero = new BigDecimal("0");
 		BigDecimal borrowAccountYes = borrow.getBorrowAccountYes();
 		if (!(borrowAccountYes == null || borrowAccountYes.compareTo(zero) == 0)) {
-			logger.error(borrowNid + " 定时发标异常：标的已有投资人投资");
+			logger.error(borrowNid + " 定时发标异常：标的已有出借人出借");
 			return false;
 		}
 
@@ -284,7 +278,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		borrow.setVerifyTime(nowTime);
 		// 0未交保证金 1已交保证金 2暂不发布 3定时发标 4立即发标（立即发标状态的标的才能进汇计划）
 		borrow.setVerifyStatus(4);
-		// 剩余可投资金额
+		// 剩余可出借金额
 		borrow.setBorrowAccountWait(borrow.getAccount());
 		boolean result = this.borrowMapper.updateByPrimaryKeySelective(borrow) > 0 ? true : false;
 		if(result){
@@ -311,7 +305,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 
 		HjhPlanAsset hjhPlanAssetnew = list.get(0);
 		// 受托支付，更新为待授权
-		// 7 投资中
+		// 7 出借中
 		hjhPlanAssetnew.setStatus(7);
 		// 获取当前时间
 		hjhPlanAssetnew.setUpdateUserId(1);
@@ -412,7 +406,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		borrow.setVerifyUserid("auto");
 		// 初审用户
 		borrow.setVerifyUserName("auto");
-		// 可投资金额
+		// 可出借金额
 		borrow.setBorrowAccountWait(borrow.getAccount());
 		boolean flag = this.borrowMapper.updateByPrimaryKeySelective(borrow) > 0 ? true : false;
 		if (flag) {
@@ -430,7 +424,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 					JSONObject params = new JSONObject();
 					params.put("borrowNid", borrow.getBorrowNid());
 					//modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-					autoIssueMessageProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), JSONObject.toJSONBytes(params)),2);
+					commonProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), params),2);
 				} catch (MQException e) {
 					logger.error("发送【拆分标自动发标进入计划】MQ失败...");
 				}
@@ -455,7 +449,7 @@ public class IssueBorrowOfTimingServiceImpl extends BaseServiceImpl implements I
 		SmsMessage smsMessage = new SmsMessage(null, params, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, sender,
 				tplCode, CustomConstants.CHANNEL_TYPE_NORMAL);
 
-		smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, borrowNid, JSON.toJSONBytes(smsMessage)));
+		commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, borrowNid, smsMessage));
 	}
 
 }

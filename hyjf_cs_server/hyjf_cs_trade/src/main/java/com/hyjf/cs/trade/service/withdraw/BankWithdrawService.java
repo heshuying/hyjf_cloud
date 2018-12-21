@@ -148,7 +148,7 @@ public interface BankWithdrawService extends BaseTradeService {
      */
     JxBankConfigVO getBanksConfigByBankId(Integer bankId);
     /**
-     * 查询用户投资记录
+     * 查询用户出借记录
      * @param userId
      * @return
      */
@@ -162,7 +162,7 @@ public interface BankWithdrawService extends BaseTradeService {
 
     List<AccountRechargeVO> getRechargeMoney(Integer userId);
     /**
-     * @Description 查询用户投资记录
+     * @Description 查询用户出借记录
      * @Author pangchengchao
      * @Version v0.1
      * @Date

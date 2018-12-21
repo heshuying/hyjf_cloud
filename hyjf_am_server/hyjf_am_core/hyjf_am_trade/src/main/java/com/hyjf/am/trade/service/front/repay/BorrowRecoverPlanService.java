@@ -16,7 +16,7 @@ public interface BorrowRecoverPlanService {
     List<BorrowRecoverPlan> selectRecoverPlanListByTenderNid(String tenderNid);
 
     /**
-     * 获取用户投资订单还款详情
+     * 获取用户出借订单还款详情
      *
      * @param nid
      * @return

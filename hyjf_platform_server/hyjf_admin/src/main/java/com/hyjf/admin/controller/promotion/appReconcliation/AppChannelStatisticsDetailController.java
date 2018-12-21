@@ -1,7 +1,9 @@
 package com.hyjf.admin.controller.promotion.appReconcliation;
 
 import com.google.common.collect.Maps;
+import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.promotion.AppChannelReconciliationService;
 import com.hyjf.admin.service.promotion.AppChannelStatisticsDetailService;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
@@ -42,9 +44,12 @@ public class AppChannelStatisticsDetailController extends BaseController {
     AppChannelStatisticsDetailService appChannelStatisticsDetailService;
     @Autowired
     private AppChannelReconciliationService appChannelReconciliationService;
+    /** 查看权限 */
+    public static final String PERMISSIONS = "appchanneldetail";
 
     @ApiOperation(value = "app渠道统计明细-画面初始化", notes = "app渠道统计明细-画面初始化")
     @PostMapping("/init")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AppUtmRegResponse init(@RequestBody AppChannelStatisticsDetailRequest appChannelStatisticsDetailRequest, HttpServletRequest request){
         AdminSystemVO user = getUser(request);
         Integer userId = Integer.valueOf(user.getId());
@@ -74,7 +79,7 @@ public class AppChannelStatisticsDetailController extends BaseController {
 
         String fileName = URLEncoder.encode(sheetName, "UTF-8") + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
 
-        String[] titles = new String[] { "序号", "渠道", "用户ID", "用户名",  "注册时间", "开户时间", "首次投资时间", "首投项目类型", "首投项目期限", "首投金额", "累计投资金额" };
+        String[] titles = new String[] { "序号", "渠道", "用户ID", "用户名",  "注册时间", "开户时间", "首次出借时间", "首投项目类型", "首投项目期限", "首投金额", "累计出借金额" };
         // 声明一个工作薄
         HSSFWorkbook workbook = new HSSFWorkbook();
 
@@ -136,7 +141,7 @@ public class AppChannelStatisticsDetailController extends BaseController {
                             cell.setCellValue(GetDate.date2Str(record.getOpenAccountTime(), GetDate.datetimeFormat));
                         }
                     }
-                    // 首次投资时间
+                    // 首次出借时间
                     else if (celLength == 6) {
                         if (record.getFirstInvestTime() == null) {
                             cell.setCellValue("");
@@ -164,7 +169,7 @@ public class AppChannelStatisticsDetailController extends BaseController {
                     else if (celLength == 9) {
                         cell.setCellValue(record.getInvestAmount() == null ? "0.00" : record.getInvestAmount().toString());
                     }
-                    // 累计投资金额
+                    // 累计出借金额
                     else if (celLength == 10) {
                         cell.setCellValue(record.getCumulativeInvest().toString());
                     }
@@ -184,6 +189,7 @@ public class AppChannelStatisticsDetailController extends BaseController {
      */
     @ApiOperation(value = "app渠道统计明细-导出", notes = "app渠道统计明细-导出")
     @GetMapping("/exportAction")
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
     public void exportAction(HttpServletRequest request, HttpServletResponse response, AppChannelStatisticsDetailRequest form) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
@@ -199,16 +205,28 @@ public class AppChannelStatisticsDetailController extends BaseController {
 
 
         Integer totalCount = resultList.size();
-
+        int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
         String sheetNameTmp = sheetName + "_第1页";
-        if (totalCount == 0) {
 
+        if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-        }else {
-            helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, resultList);
         }
+
+        for (int i = 1; i <= sheetCount; i++) {
+            //请求第一页5000条
+            form.setPageSize(defaultRowMaxCount);
+            form.setCurrPage(i);
+            List<AppUtmRegVO> resultResponse2 = appChannelStatisticsDetailService.paging(form,resultList);
+            if (resultResponse2 != null && resultResponse2.size()> 0) {
+                sheetNameTmp = sheetName + "_第" + (i) + "页";
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  resultResponse2);
+            } else {
+                break;
+            }
+        }
+
         DataSet2ExcelSXSSFHelper.write2Response(request, response, fileName, workbook);
     }
 
@@ -219,11 +237,11 @@ public class AppChannelStatisticsDetailController extends BaseController {
         map.put("userName", "用户名");
         map.put("registerTime", "注册时间");
         map.put("openAccountTime", "开户时间");
-        map.put("firstInvestTimeT", "首次投资时间");
+        map.put("firstInvestTimeT", "首次出借时间");
         map.put("investProjectType", "首投项目类型");
         map.put("investProjectPeriod", "首投项目期限");
         map.put("investAmount", "首投金额");
-        map.put("cumulativeInvest", "累计投资金额");
+        map.put("cumulativeInvest", "累计出借金额");
 
         return map;
     }

@@ -24,7 +24,7 @@ public class CouponBackMoneyBean implements Serializable  {
     private String borrowApr;
     //项目期限
     private String borrowPeriod;
-    //投资金额
+    //出借金额
     private String account;
     //回款期数
     private String recoverPeriod;

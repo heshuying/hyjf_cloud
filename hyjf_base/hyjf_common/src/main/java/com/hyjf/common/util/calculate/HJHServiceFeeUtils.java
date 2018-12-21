@@ -227,7 +227,7 @@ public class HJHServiceFeeUtils {
 
 	/**
 	 * 计算本期待收本金
-	 * @param assignPay	投资金额（实际支付）
+	 * @param assignPay	出借金额（实际支付）
 	 * @param liquidationValue	出让债权价值
 	 * @param currentPeriodCapital	出让人当期待收本金(不变)
 	 * @param currentPeriodCreditCapitalWait	待承接本金（变）
@@ -239,9 +239,9 @@ public class HJHServiceFeeUtils {
 		if (isLast) {
 			assignCapital = currentPeriodCreditCapitalWait;
 		}else {
-			// 待收本金=投资金额（实际支付）/出让债权价值*出让人当期待收本金
+			// 待收本金=出借金额（实际支付）/出让债权价值*出让人当期待收本金
 			assignCapital = assignPay.multiply(currentPeriodCapital).divide(liquidationValue, 16, BigDecimal.ROUND_DOWN);
-			// 如果计算误差问题，承接的本金>待成承接的本金处理（异常还是赋值??） TODO
+			// 如果计算误差问题，承接的本金>待成承接的本金处理（异常还是赋值??）
 			if (assignCapital.compareTo(currentPeriodCreditCapitalWait) >= 0) {
 				assignCapital = currentPeriodCreditCapitalWait;
 			}
@@ -253,7 +253,7 @@ public class HJHServiceFeeUtils {
 	
 	/**
 	 * 计算本期待收收益
-	 * @param assignPay	投资金额（实际支付）
+	 * @param assignPay	出借金额（实际支付）
 	 * @param liquidationValue	出让债权价值
 	 * @param currentPeriodInterest	出让人当期待收收益
 	 * @param currentPeriodCreditInterestWait	待承接利息（变）
@@ -266,7 +266,7 @@ public class HJHServiceFeeUtils {
 		if (isLast) {
 			assignInterest = currentPeriodCreditInterestWait;
 		}else {
-			// 待收收益=投资金额（实际支付）/出让债权价值*出让人当期待收收益
+			// 待收收益=出借金额（实际支付）/出让债权价值*出让人当期待收收益
 			assignInterest = assignPay.multiply(currentPeriodInterest).divide(liquidationValue, 16, BigDecimal.ROUND_DOWN);
 			if (assignInterest.compareTo(currentPeriodCreditInterestWait) >= 0) {
 				assignInterest = currentPeriodCreditInterestWait;

@@ -31,4 +31,6 @@ public interface ActivityListService {
      * @return List
      */
     List<ActivityListBeanVO> queryActivityList(ActivityListRequest activityListRequest);
+
+    void callActivityEnd();
 }

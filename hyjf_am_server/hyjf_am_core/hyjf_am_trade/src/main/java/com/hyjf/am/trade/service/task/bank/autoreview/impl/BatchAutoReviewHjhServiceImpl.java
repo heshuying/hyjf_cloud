@@ -1,12 +1,10 @@
 package com.hyjf.am.trade.service.task.bank.autoreview.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.BorrowCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.mq.producer.BorrowLoanRepayProducer;
-import com.hyjf.am.trade.mq.producer.SmsProducer;
 import com.hyjf.am.trade.service.task.bank.autoreview.BatchAutoReviewHjhService;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
@@ -34,7 +32,7 @@ public class BatchAutoReviewHjhServiceImpl implements BatchAutoReviewHjhService 
     @Resource
     private BorrowCustomizeMapper borrowCustomizeMapper;
     @Resource
-    private SmsProducer smsProducer;
+    private CommonProducer commonProducer;
     @Resource
     private BorrowMapper borrowMapper;
     @Resource
@@ -45,8 +43,6 @@ public class BatchAutoReviewHjhServiceImpl implements BatchAutoReviewHjhService 
     private BorrowApicronMapper borrowApicronMapper;
     @Resource
     private BorrowTenderMapper borrowTenderMapper;
-    @Resource
-    BorrowLoanRepayProducer borrowLoanRepayProducer;
 
     @Override
     public void sendMsgToNotFullBorrow() {
@@ -63,7 +59,7 @@ public class BatchAutoReviewHjhServiceImpl implements BatchAutoReviewHjhService 
                     SmsMessage smsMessage = new SmsMessage(null, messageStrMap, null, null, MessageConstant.SMS_SEND_FOR_MANAGER, borrowList.get(i).getBorrowNid(), CustomConstants.PARAM_TPL_XMDQ,
                             CustomConstants.CHANNEL_TYPE_NORMAL);
                     try {
-                        smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
+                        commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
                     } catch (MQException e2) {
                         logger.error("发送短信失败..", e2);
                     }
@@ -135,7 +131,7 @@ public class BatchAutoReviewHjhServiceImpl implements BatchAutoReviewHjhService 
             // 满标审核状态
             int borrowFullStatus = borrow.getBorrowFullStatus();
             if (borrowFullStatus == 1) {
-                // 如果标的投资记录存在没有授权码的记录，则不进行放款
+                // 如果标的出借记录存在没有授权码的记录，则不进行放款
                 int countErrorTender = this.countBorrowTenderError(borrowNid);
                 if (countErrorTender == 0) {
                     // 判断满标时间
@@ -186,8 +182,8 @@ public class BatchAutoReviewHjhServiceImpl implements BatchAutoReviewHjhService 
                                 //由于是在事务内提交 会发生MQ消费时事务还没提交的情况 所以改成延时队列
                                 logger.debug("自动复审更新数据完成，开始发送放款MQ，标的编号：{}", borrowNid);
                                 try {
-                                    borrowLoanRepayProducer.messageSendDelay(
-                                            new MessageContent(MQConstant.BORROW_REALTIMELOAN_PLAN_REQUEST_TOPIC, borrowApicron.getBorrowNid(), JSON.toJSONBytes(borrowApicron)),2);
+                                    commonProducer.messageSendDelay(
+                                            new MessageContent(MQConstant.BORROW_REALTIMELOAN_PLAN_REQUEST_TOPIC, borrowApicron.getBorrowNid(), borrowApicron),2);
                                 } catch (MQException e) {
                                     logger.error("[编号：" + borrowNid + "]发送计划放款MQ失败！", e);
                                 }
@@ -206,7 +202,7 @@ public class BatchAutoReviewHjhServiceImpl implements BatchAutoReviewHjhService 
     }
 
     /**
-     * 校验投资数据的合法性
+     * 校验出借数据的合法性
      * @param borrowNid
      * @return
      */
