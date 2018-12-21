@@ -559,7 +559,11 @@ public class BorrowCreditTenderServiceImpl extends BaseTradeServiceImpl implemen
         //校验用户测评
         //给测评接口金额赋值
         request.setAccount(request.getAssignCapital());
-        Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(request);
+        // 原标项目编号
+        String bidNid = borrowCredit.getBidNid();
+        // 根据原标标号取借款信息
+        BorrowAndInfoVO borrowAndInfoVO = amTradeClient.getBorrowByNid(bidNid);
+        Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(request,borrowAndInfoVO.getInvestLevel(),CustomConstants.TENDER_CHECK_LEVE_HZR);
         logger.info("债转投资校验通过始   userId:{},credNid:{},ip:{},平台{}", userId, request.getCreditNid(), request.getIp(), request.getPlatform());
         return resultEval;
     }

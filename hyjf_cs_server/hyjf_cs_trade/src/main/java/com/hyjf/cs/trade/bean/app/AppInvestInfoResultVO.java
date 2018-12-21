@@ -153,6 +153,12 @@ public class AppInvestInfoResultVO implements Serializable {
      * 是否显示项目风险测评弹窗
      */
     private boolean projectRevalJudge;
+
+    /**
+     * 是否显示项目风险测评弹窗（代收本金）
+     */
+    private boolean revalPrincipalJudge;
+
     /**
      * 项目要求投资者风险测评类型描述
      */
@@ -211,6 +217,14 @@ public class AppInvestInfoResultVO implements Serializable {
 //        this.protocols = protocols;
 //    }
 
+
+    public boolean isRevalPrincipalJudge() {
+        return revalPrincipalJudge;
+    }
+
+    public void setRevalPrincipalJudge(boolean revalPrincipalJudge) {
+        this.revalPrincipalJudge = revalPrincipalJudge;
+    }
 
     public String getEvalType() {
         return evalType;

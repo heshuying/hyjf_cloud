@@ -1345,11 +1345,20 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     public static final String BANK_TENDER_RETURN_AUTH_ALL_FAIL = "713";
     /**测评过期*/
     public static final String BANK_TENDER_RETURN_ANSWER_EXPIRED = "714";
-    /**测评限额超额*/
+    /**测评限额超额(原系统715被占用改为719：未获得缴费授权 BANK_TENDER_RETURN_AUTH_PAYMENT_FAIL)*/
     public static final String BANK_TENDER_RETURN_LIMIT_EXCESS = "715";
     /**测评标的用户类型不匹配*/
     public static final String BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL = "716";
-
+    /**测评限额超额（代收本金）*/
+    public static final String BANK_TENDER_RETURN_LIMIT_EXCESS_PRINCIPAL = "717";
+    /**测评标的等级（转让）*/
+    public static final String TENDER_CHECK_LEVE_HZR = "HZR";
+    /**测评标的等级（计划）*/
+    public static final String TENDER_CHECK_LEVE_HJH = "HJH";
+    /**测评标的等级（散标）*/
+    public static final String TENDER_CHECK_LEVE_HSB = "HSB";
+    /**测评开关开启状态*/
+    public static final String EVALUATION_CHECK = "1";
     /**************************************汇计划机构代码****************************/
     
     /** 汇盈平台  */
