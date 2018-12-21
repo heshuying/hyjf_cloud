@@ -1484,7 +1484,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 // mod by nxl 智投服务修改锁定期限->服务回报期限
 //                appProjectListCustomize.setBorrowTheSecondDesc("锁定期限");
                 appProjectListCustomize.setBorrowTheSecondDesc("服务回报期限");
-                appProjectListCustomize.setStatusNameDesc(StringUtils.isNotBlank(entity.getAvailableInvestAccount()) ? "额度"+ entity.getAvailableInvestAccount() : "");
+               // appProjectListCustomize.setStatusNameDesc(StringUtils.isNotBlank(entity.getAvailableInvestAccount()) ? "额度"+ entity.getAvailableInvestAccount() : "");
 
                 if ("稍后开启".equals(entity.getStatusName())){    //1.启用  2.关闭
                     // 20.立即加入  21.稍后开启
@@ -1498,6 +1498,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
                 else if("授权服务".equals(entity.getStatusName())){  //1.启用  2.关闭
                     appProjectListCustomize.setStatus("20");
                     appProjectListCustomize.setStatusName("授权服务");
+                    appProjectListCustomize.setStatusNameDesc(StringUtils.isNotBlank(entity.getAvailableInvestAccountNew()) ? "额度"+ CommonUtils.formatAmount(entity.getAvailableInvestAccountNew()) : "");
                 }
                 /*重构整合 结束*/
                 appProjectListCustomize.setBorrowName(entity.getPlanName());
