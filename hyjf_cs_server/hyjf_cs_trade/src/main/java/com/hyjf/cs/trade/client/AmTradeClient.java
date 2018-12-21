@@ -2597,9 +2597,9 @@ public interface AmTradeClient {
     void downloadRedFile();
 
     /** 用户测评配置 */
-    public List<EvaluationConfigVO> selectEvaluationConfig(EvaluationConfigVO record);
+    List<EvaluationConfigVO> selectEvaluationConfig(EvaluationConfigVO record);
 
     /** 测评获取冻结金额和代收本经明细 */
-    public CallCenterAccountDetailVO queryAccountEvalDetail(Integer userId);
+    CallCenterAccountDetailVO queryAccountEvalDetail(Integer userId);
 }
 
