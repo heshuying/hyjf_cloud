@@ -227,22 +227,46 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
                 //保进取型代收本金限额金额
                 RedisUtils.set(RedisConstants.REVALUATION_AGGRESSIVE_PRINCIPAL, request.getEnterprisingEvaluationPrincipalMoney()+"");
             }
+            //获取操作之后的测评配置，保存操作日志
+            EvaluationConfig record = evaluationConfigMapper.selectByPrimaryKey(request.getId());
+            //填充操作内容
+
+            //测评到期时间
+            record.setValidityEvaluationDate(request.getValidityEvaluationDate());
+            //成长型单笔投资限额金额
+            record.setGrowupEvaluationSingleMoney(request.getGrowupEvaluationSingleMoney());
+            //稳健型单笔投资限额金额
+            record.setSteadyEvaluationSingleMoney(request.getSteadyEvaluationSingleMoney());
+            //进取型单笔投资限额金额
+            record.setEnterprisingEvaluationSinglMoney(request.getEnterprisingEvaluationSinglMoney());
+            //保守型单笔投资限额金额
+            record.setConservativeEvaluationSingleMoney(request.getConservativeEvaluationSingleMoney());
+            //成长型代收本金限额金额
+            record.setGrowupEvaluationPrincipalMoney(request.getGrowupEvaluationPrincipalMoney());
+            //稳健型代收本金限额金额
+            record.setSteadyEvaluationPrincipalMoney(request.getSteadyEvaluationPrincipalMoney());
+            //进取型代收本金限额金额
+            record.setEnterprisingEvaluationPrincipalMoney(request.getEnterprisingEvaluationPrincipalMoney());
+            //保守型代收本金限额金额
+            record.setConservativeEvaluationPrincipalMoney(request.getConservativeEvaluationPrincipalMoney());
+            record.setUpdateUser(request.getUpdateUser());
             //新增日志表
             EvaluationConfigLog log =  new EvaluationConfigLog();
-            BeanUtils.copyProperties(request,log);
+            BeanUtils.copyProperties(record,log);
             // IP地址
             String ip = GetCilentIP.getIpAddr(GetSessionOrRequestUtils.getRequest());
             log.setIp(ip);
             //1开关配置 2限额配置 3信用等级
             log.setStatus(2);
             log.setUpdateTime(new Date());
-            evaluationConfigLogMapper.insert(log);
+            log.setCreateTime(new Date());
+            evaluationConfigLogMapper.insertSelective(log);
         }
         return true;
     }
 
     /**
-     * 更新风险测评-限额配置
+     * 更新风险测评-开关配置
      *
      * @param request
      * @return
@@ -252,16 +276,28 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
         EvaluationConfig evaluationConfig = new EvaluationConfig();
         BeanUtils.copyProperties(request,evaluationConfig);
         if(evaluationConfigMapper.updateByPrimaryKeySelective(evaluationConfig)>0){
+            //填充操作内容
+            //获取操作之后的测评配置，保存操作日志
+            EvaluationConfig record = evaluationConfigMapper.selectByPrimaryKey(request.getId());
+            record.setDebtEvaluationTypeCheck(request.getDebtEvaluationTypeCheck());
+            record.setIntellectualCollectionEvaluationCheck(request.getIntellectualCollectionEvaluationCheck());
+            record.setDeptEvaluationMoneyCheck(request.getDeptEvaluationMoneyCheck());
+            record.setIntellectualEvaluationMoneyCheck(request.getIntellectualEvaluationMoneyCheck());
+            record.setDeptCollectionEvaluationCheck(request.getDeptCollectionEvaluationCheck());
+            record.setIntellectualCollectionEvaluationCheck(request.getIntellectualCollectionEvaluationCheck());
+            record.setInvestmentEvaluationCheck(request.getInvestmentEvaluationCheck());
+            record.setUpdateUser(request.getUpdateUser());
             //新增日志表
             EvaluationConfigLog log =  new EvaluationConfigLog();
-            BeanUtils.copyProperties(request,log);
+            BeanUtils.copyProperties(record,log);
             // IP地址
             String ip = GetCilentIP.getIpAddr(GetSessionOrRequestUtils.getRequest());
             log.setIp(ip);
             //1开关配置 2限额配置 3信用等级
             log.setStatus(1);
             log.setUpdateTime(new Date());
-            evaluationConfigLogMapper.insert(log);
+            log.setCreateTime(new Date());
+            evaluationConfigLogMapper.insertSelective(log);
         }
         return true;
     }
