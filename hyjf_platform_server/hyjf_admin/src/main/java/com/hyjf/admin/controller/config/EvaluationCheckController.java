@@ -59,7 +59,7 @@ public class EvaluationCheckController extends BaseController {
 	@ApiOperation(value = "修改画面迁移", notes = "修改画面迁移")
 	@PostMapping("/infoAction")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-	public AdminResult info(@RequestBody ProtocolsRequestBean requestBean) {
+	public AdminResult info(@RequestBody EvaluationCheckRequest requestBean) {
 		logger.info(EvaluationCheckController.class.toString(), "infoAction");
 		EvaluationCheckResponse response = new EvaluationCheckResponse();
 		if (requestBean.getId() != null) {

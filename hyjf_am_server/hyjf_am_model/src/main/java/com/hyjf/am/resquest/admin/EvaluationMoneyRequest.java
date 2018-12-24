@@ -17,6 +17,7 @@ public class EvaluationMoneyRequest extends BasePage implements Serializable {
 
 
 
+    private Integer id;
     @ApiModelProperty(value = "测评到期时间")
     private Integer validityEvaluationDate;
 
@@ -151,4 +152,12 @@ public class EvaluationMoneyRequest extends BasePage implements Serializable {
     public int getLimitEnd() { return limitEnd; }
 
     public void setLimitEnd(int limitEnd) { this.limitEnd = limitEnd; }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 }

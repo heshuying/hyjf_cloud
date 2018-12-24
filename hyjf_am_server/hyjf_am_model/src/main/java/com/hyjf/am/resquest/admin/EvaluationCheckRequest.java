@@ -16,6 +16,7 @@ import java.util.Date;
 public class EvaluationCheckRequest extends BasePage implements Serializable {
 
 
+    private Integer id;
     @ApiModelProperty(value = "散标债转出借者测评类型校验")
     private Integer debtEvaluationTypeCheck;
 
@@ -128,4 +129,12 @@ public class EvaluationCheckRequest extends BasePage implements Serializable {
     public int getLimitEnd() { return limitEnd; }
 
     public void setLimitEnd(int limitEnd) { this.limitEnd = limitEnd; }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 }

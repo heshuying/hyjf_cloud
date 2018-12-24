@@ -59,7 +59,7 @@ public class EvaluationMoneyController extends BaseController {
 	@ApiOperation(value = "修改画面迁移", notes = "修改画面迁移")
 	@PostMapping("/infoAction")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-	public AdminResult info(@RequestBody ProtocolsRequestBean requestBean) {
+	public AdminResult info(@RequestBody EvaluationMoneyRequest requestBean) {
 		logger.info(EvaluationMoneyController.class.toString(), "infoAction");
 		EvaluationMoneyResponse response = new EvaluationMoneyResponse();
 		if (requestBean.getId() != null) {
