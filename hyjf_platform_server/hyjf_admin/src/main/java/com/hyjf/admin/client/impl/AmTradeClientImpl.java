@@ -6795,4 +6795,84 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return 0;
     }
+
+    /**
+     * 配置中心-风险测评开关配置（列表）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param request
+     **/
+    @Override
+    public EvaluationCheckResponse getEvaluationCheckList(EvaluationCheckRequest request) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-trade/evaluation/getEvaluationCheckList", request, EvaluationCheckResponse.class);
+    }
+
+    /**
+     * 根据id查询风险测评开关配置
+     * @author Zha Daojian
+     * @date 2018/12/20 18:03
+     * @param id
+     * @return com.hyjf.am.vo.trade.EvaluationCheckConfigVO
+     **/
+    @Override
+    public EvaluationCheckConfigVO getEvaluationCheckById(Integer id) {
+        String url = "http://AM-ADMIN/am-trade/evaluation/getEvaluationCheckById/" + id;
+        EvaluationCheckResponse response = restTemplate.getForEntity(url, EvaluationCheckResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新风险测评开关配置
+     * @author Zha Daojian
+     * @date 2018/12/20 18:03
+     * @param request
+     **/
+    @Override
+    public EvaluationCheckResponse updateEvaluationCheck(EvaluationCheckRequest request) {
+        EvaluationCheckResponse response = restTemplate.postForEntity(tradeService + "/evaluation/updateEvaluationCheck", request, EvaluationCheckResponse.class).getBody();
+        return response;
+    }
+
+    /**
+     * 配置中心-风险测评限额配置（列表）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param request
+     **/
+    @Override
+    public EvaluationMoneyResponse getEvaluatioMoneyList(EvaluationMoneyRequest request) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-trade/evaluation/getEvaluationMoneyList", request, EvaluationMoneyResponse.class);
+    }
+
+    /**
+     * 根据id查询风险测评限额配置
+     * @author Zha Daojian
+     * @date 2018/12/20 18:03
+     * @param id
+     * @return com.hyjf.am.vo.trade.EvaluationCheckConfigVO
+     **/
+    @Override
+    public EvaluationMoneyConfigVO getEvaluationMoneyById(Integer id) {
+        String url = "http://AM-ADMIN/am-trade/evaluation/getEvaluationMoneyById/" + id;
+        EvaluationMoneyResponse response = restTemplate.getForEntity(url, EvaluationMoneyResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新风险测评限额配置
+     * @author Zha Daojian
+     * @date 2018/12/20 18:03
+     * @param request
+     **/
+    @Override
+    public EvaluationMoneyResponse updateEvaluationMoney(EvaluationMoneyRequest request) {
+        EvaluationMoneyResponse response = restTemplate.postForEntity(tradeService + "/evaluation/updateEvaluationMoney", request, EvaluationMoneyResponse.class).getBody();
+        return response;
+    }
 }

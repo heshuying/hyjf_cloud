@@ -3264,5 +3264,53 @@ public interface AmTradeClient {
      * @return
      */
     int getHjhCommissionCountForExport(HjhCommissionRequest request);
+
+    /**
+     * 配置中心-风险测评开关配置（列表）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param request
+     **/
+    EvaluationCheckResponse getEvaluationCheckList(EvaluationCheckRequest request);
+
+    /**
+     * 配置中心-风险测评开关配置（修改详情）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param id
+     **/
+    EvaluationCheckConfigVO getEvaluationCheckById(Integer id);
+
+    /**
+     * 配置中心-风险测评开关配置（修改）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param request
+     **/
+    EvaluationCheckResponse updateEvaluationCheck(EvaluationCheckRequest request);
+
+    /**
+     * 配置中心-风险测评限额配置（列表）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param request
+     **/
+    EvaluationMoneyResponse getEvaluatioMoneyList(EvaluationMoneyRequest request);
+
+    /**
+     * 配置中心-风险测评限额配置（修改详情）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param id
+     **/
+    EvaluationMoneyConfigVO getEvaluationMoneyById(Integer id);
+
+    /**
+     * 配置中心-风险测评限额配置（修改）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param request
+     **/
+    EvaluationMoneyResponse updateEvaluationMoney(EvaluationMoneyRequest request);
 }
 
