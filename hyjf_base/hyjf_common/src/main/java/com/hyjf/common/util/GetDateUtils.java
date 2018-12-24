@@ -298,6 +298,19 @@ public class GetDateUtils {
     }
 
     /**
+     * 格式化日期
+     * @param date
+     * @return yyyy-MM-dd HH:mm
+     */
+    public static String formatDate(Date date) {
+        if (date == null) {
+            return null;
+        }
+        SimpleDateFormat format = new SimpleDateFormat(FORMAT_TIME_MINUTE);
+        return format.format(date);
+    }
+
+    /**
      * 格式化日期字符串
      *
      * @param date    日期

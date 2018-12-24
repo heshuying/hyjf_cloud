@@ -6144,12 +6144,26 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public WebUserTransferBorrowInfoCustomizeVO getUserTransferBorrowInfo(String borrowNid) {
-        String url = "http://AM-TRADE/am-trade/repay/get_user_transfer_borrow_info/"+ borrowNid;
-        WebUserTransferBorrowInfoCustomizeResponse response = restTemplate.getForEntity(url, WebUserTransferBorrowInfoCustomizeResponse.class).getBody();
+        WebUserTransferBorrowInfoCustomizeResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/repay/get_user_transfer_borrow_info/" + borrowNid, WebUserTransferBorrowInfoCustomizeResponse.class).getBody();
         if (response != null && Response.isSuccess(response)){
             return response.getResult();
         }
         return null;
+    }
+
+    /**
+     * 转让通知借款人 统计
+     * @param repayTransferRequest
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public Integer getUserRepayDetailAjaxCount(WebUserRepayTransferRequest repayTransferRequest) {
+        IntegerResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/repay/getUserRepayDetailAjaxCount/", repayTransferRequest, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultInt();
+        }
+        return 0;
     }
 
     /**

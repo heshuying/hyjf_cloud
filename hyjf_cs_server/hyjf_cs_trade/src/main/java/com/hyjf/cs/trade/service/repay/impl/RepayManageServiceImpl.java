@@ -35,6 +35,8 @@ import com.hyjf.common.util.calculate.DuePrincipalAndInterestUtils;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.common.util.Page;
+import com.hyjf.cs.trade.bean.WebUserRepayTransferListBean;
 import com.hyjf.cs.trade.bean.repay.ProjectBean;
 import com.hyjf.cs.trade.bean.repay.ProjectRepayListBean;
 import com.hyjf.cs.trade.bean.repay.RepayBean;
@@ -1040,7 +1042,30 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     }
 
     @Override
-    public List<WebUserRepayTransferCustomizeVO> selectUserRepayTransferDetailList(WebUserRepayTransferRequest repayTransferRequest) {
-        return amTradeClient.getUserRepayDetailAjax(repayTransferRequest);
+    public WebResult selectUserRepayTransferDetailList(WebUserRepayTransferRequest repayTransferRequest) {
+
+        WebUserRepayTransferListBean repayTransferListBean = new WebUserRepayTransferListBean();
+
+        // 对调用返回的结果进行转换和拼装
+        WebResult webResult = new WebResult();
+
+        // 初始化分页参数，并组合到请求参数
+        Page page = Page.initPage(repayTransferRequest.getCurrPage(), repayTransferRequest.getPageSize());
+        repayTransferRequest.setLimitStart(page.getOffset());
+        repayTransferRequest.setLimitEnd(page.getLimit());
+        Integer count = amTradeClient.getUserRepayDetailAjaxCount(repayTransferRequest);
+
+        page.setTotal(count);
+
+        // 初始化返回列表
+        List<WebUserRepayTransferCustomizeVO> resultList = new ArrayList<>();
+        if (count > 0) {
+            resultList = amTradeClient.getUserRepayDetailAjax(repayTransferRequest);
+            repayTransferListBean.setList(resultList);
+        }
+
+        webResult.setData(repayTransferListBean);
+        webResult.setPage(page);
+        return webResult;
     }
 }

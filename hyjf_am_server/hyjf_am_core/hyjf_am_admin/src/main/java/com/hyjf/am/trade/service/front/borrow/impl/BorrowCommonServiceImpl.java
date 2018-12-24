@@ -3936,7 +3936,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 						// 图片真实名称
 						borrowCommonFileData.setFilename(borrowCommonImage.getImageRealName());
 						// 图片路径
-						borrowCommonFileData.setFileurl(borrowCommonImage.getImagePath());
+						borrowCommonFileData.setFileurl(borrowCommonImage.getImagePath()+borrowCommonImage.getImageRealName());
 						// 文件已经存在
 						fileMap.remove(borrowCommonImage.getImageRealName());
 					}

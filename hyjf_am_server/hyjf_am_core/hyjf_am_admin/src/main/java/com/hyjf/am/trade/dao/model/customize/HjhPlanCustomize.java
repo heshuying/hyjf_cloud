@@ -40,6 +40,8 @@ public class HjhPlanCustomize extends BaseVO {
 	// add by xiashuqing 20171108 begin app使用
 	private String couponEnable;
 	// add by xiashuqing 20171108 end app使用
+	// 计划可投金额
+	private String availableInvestAccountNew;
 
 	public HjhPlanCustomize() {
 		super();
@@ -119,5 +121,13 @@ public class HjhPlanCustomize extends BaseVO {
 
 	public void setIsMonth(String isMonth) {
 		this.isMonth = isMonth;
+	}
+
+	public String getAvailableInvestAccountNew() {
+		return availableInvestAccountNew;
+	}
+
+	public void setAvailableInvestAccountNew(String availableInvestAccountNew) {
+		this.availableInvestAccountNew = availableInvestAccountNew;
 	}
 }

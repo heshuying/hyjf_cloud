@@ -187,8 +187,8 @@ public class CouponSendMessageServiceImpl implements CouponSendMessageService {
                 AppMsMessage appMsMessage =
                         new AppMsMessage(Integer.parseInt(userId), param, null, MessageConstant.APP_MS_SEND_FOR_USER,
                                 CustomConstants.JYTZ_COUPON_SUCCESS);
-                MessageContent messageContent = new MessageContent(MQConstant.GRANT_COUPON_TOPIC,
-                        UUID.randomUUID().toString(), param);
+                MessageContent messageContent = new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
+                        UUID.randomUUID().toString(), appMsMessage);
                 commonProducer.messageSend(messageContent);
                 logger.info("--------------发放优惠券push消息推送结束------------------");
             }
