@@ -45,7 +45,7 @@ public class CouponLoansMessageConsumer implements RocketMQListener<MessageExt>,
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         // 设置为集群消费(区别于广播消费)
         defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
-        logger.info("====CouponLoansHjhMessageConsumer start=====");
+        logger.info("====CouponLoansMessageConsumer start=====");
     }
 
     public static void main(String[] args) {
@@ -56,7 +56,7 @@ public class CouponLoansMessageConsumer implements RocketMQListener<MessageExt>,
 
     @Override
     public void onMessage(MessageExt paramBean) {
-        logger.info("CouponLoansHjhMessageConsumer 收到消息，开始处理....");
+        logger.info("CouponLoansMessageConsumer 收到消息，开始处理....");
         CouponLoansBean loansBean = null;
         String msgBody = new String(paramBean.getBody());
         try {
@@ -116,7 +116,7 @@ public class CouponLoansMessageConsumer implements RocketMQListener<MessageExt>,
             logger.info("----------------------------优惠券放款结束--------------------------------");
             return;
         } catch (Exception e) {
-            logger.error("汇计划优惠券放款失败");
+            logger.error("散标优惠券放款失败");
             return;
         }
     }

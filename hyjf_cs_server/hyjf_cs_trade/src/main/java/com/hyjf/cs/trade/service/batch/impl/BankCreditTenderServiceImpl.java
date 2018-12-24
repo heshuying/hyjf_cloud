@@ -210,26 +210,8 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
                                                 new MessageContent(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC,
                                                         MQConstant.APP_CHANNEL_STATISTICS_DETAIL_CREDIT_TAG, UUID.randomUUID().toString(), params));
                                     }else{
-
-                                        UtmRegVO utmRegVO=this.amUserClient.findUtmRegByUserId(userId);
-                                        if (Validator.isNotNull(utmRegVO)){
-                                            Map<String, Object> params = new HashMap<String, Object>();
-                                            
-                                            params.put("id", utmRegVO.getId());
-                                            
-                                            params.put("accountDecimal", creditTenderLog.getAssignCapital());
-                                            // 出借时间
-                                            params.put("investTime", request.getNowTime());
-                                            // 项目类型
-                                            params.put("projectType", "汇转让");
-                                            // 首次投标项目期限
-                                            String investProjectPeriod = request.getBorrowCreditList().get(0).getCreditTerm() + "天";
-                                            // 首次投标项目期限
-                                            params.put("investProjectPeriod", investProjectPeriod);
-                                            //首次投标标志位
-                                            this.commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC,UUID.randomUUID().toString(), params));
-
-                                        }
+                                        // 更新首投信息
+                                        updateUtmReg(creditTenderLog, userId, request);
                                     }
 
                                     // 查询相应的承接记录，如果相应的承接记录存在，则承接成功
@@ -255,6 +237,35 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
             }
         }
 
+    }
+
+    /**
+     * 更新首投信息
+     * @param creditTenderLog
+     * @param userId
+     * @param request
+     * @throws MQException
+     */
+    private void updateUtmReg(CreditTenderLogVO creditTenderLog, Integer userId, CreditTenderRequest request) throws MQException {
+        UtmRegVO utmRegVO=this.amUserClient.findUtmRegByUserId(userId);
+        if (Validator.isNotNull(utmRegVO)){
+            Map<String, Object> params = new HashMap<String, Object>();
+
+            params.put("userId", utmRegVO.getUserId());
+
+            params.put("accountDecimal", creditTenderLog.getAssignCapital());
+            // 出借时间
+            params.put("investTime", request.getNowTime());
+            // 项目类型
+            params.put("projectType", "汇转让");
+            // 首次投标项目期限
+            String investProjectPeriod = request.getBorrowCreditList().get(0).getCreditTerm() + "天";
+            // 首次投标项目期限
+            params.put("investProjectPeriod", investProjectPeriod);
+            //首次投标标志位
+            this.commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), params));
+
+        }
     }
 
 

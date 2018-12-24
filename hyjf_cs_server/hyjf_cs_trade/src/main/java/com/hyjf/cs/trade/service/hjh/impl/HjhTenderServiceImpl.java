@@ -1307,7 +1307,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         params.put("investProjectPeriod", investProjectPeriod);
         //压入消息队列
         try {
-            commonProducer.messageSend(new MessageContent(MQConstant.TENDER_CHANNEL_STATISTICS_DETAIL_TOPIC, UUID.randomUUID().toString(), params));
+            commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), params));
         } catch (MQException e) {
             e.printStackTrace();
             logger.error("渠道统计用户累计出借推送消息队列失败！！！");

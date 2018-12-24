@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.user.service.login.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.admin.AdminBankAccountCheckCustomizeVO;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
@@ -25,7 +24,6 @@ import com.hyjf.common.util.*;
 import com.hyjf.common.util.calculate.DateUtils;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.bean.BaseDefine;
 import com.hyjf.cs.user.bean.SynBalanceRequestBean;
@@ -123,7 +121,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	@Override
 	public WebViewUserVO loginOperationOnly(UserVO userVO,String loginUserName,String ip,String channel) {
 		int userId = userVO.getUserId();
-		WebViewUserVO webViewUserVO = new WebViewUserVO();
 		// 是否禁用
 		if (userVO.getStatus() == 1) {
 			throw new CheckException(MsgEnum.ERR_USER_INVALID);
@@ -133,7 +130,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		updateUserByUserId(userVO);
 		// 1. 登录成功将登陆密码错误次数的key删除
 		RedisUtils.del(RedisConstants.PASSWORD_ERR_COUNT_ALL + userId);
-		webViewUserVO = this.getWebViewUserByUserId(userVO.getUserId());
+		WebViewUserVO webViewUserVO = this.getWebViewUserByUserId(userVO.getUserId());
 		// 2. 缓存
 		webViewUserVO = setToken(webViewUserVO);
 		BankOpenAccountVO account = this.getBankOpenAccount(userId);
@@ -144,7 +141,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			SynBalanceRequestBean bean = new SynBalanceRequestBean();
 			bean.setInstCode(user.getInstCode());
 			bean.setAccountId(accountId);
-            SynBalanceResultBean resultBean = synBalanceService.synBalance(bean,ip);
+            synBalanceService.synBalance(bean,ip);
 		}
 		if (channel.equals(BankCallConstant.CHANNEL_WEI)) {
 			String sign = SecretUtil.createToken(userId, loginUserName, accountId);
@@ -179,9 +176,6 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		if (password.equals(passwordDb)) {
 		webViewUserVO = loginOperationOnly(userVO,loginUserName,ip,channel);
 		} else {
-            //调用前已经插入了Redis值   --------kdl
-			// 密码错误，增加错误次数
-//			RedisUtils.incr(RedisConstants.PASSWORD_ERR_COUNT_ALL + userVO.getUserId());
 			CheckUtil.check(false, MsgEnum.ERR_USER_LOGIN);
 		}
 		return webViewUserVO;

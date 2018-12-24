@@ -2136,7 +2136,7 @@ public class BorrowCommonController extends BaseController {
 	        map.put("planNid", "智投编号");
 	        map.put("userId", "借款人ID");
 	        map.put("username", "用户名");
-	        map.put("applicant", "项目申请人");
+//	        map.put("applicant", "项目申请人");
 	        map.put("projectName", "项目名称");
 	        map.put("borrowProjectTypeName", "项目类型");
 	        map.put("instName", "资产来源");

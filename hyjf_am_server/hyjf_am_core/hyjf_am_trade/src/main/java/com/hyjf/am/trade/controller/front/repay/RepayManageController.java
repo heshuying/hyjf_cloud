@@ -23,9 +23,11 @@ import com.hyjf.am.vo.user.WebUserRepayTransferCustomizeVO;
 import com.hyjf.am.vo.user.WebUserTransferBorrowInfoCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDateUtils;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -361,6 +363,20 @@ public class RepayManageController extends BaseController {
     }
 
     /**
+     * 转让通知借款人 统计
+     * @param repayTransferRequest
+     * @return
+     * @Author : huanghui
+     */
+    @PostMapping(value = "/getUserRepayDetailAjaxCount", produces = "application/json; charset=utf-8")
+    public IntegerResponse getUserRepayDetailAjaxCount(@RequestBody WebUserRepayTransferRequest repayTransferRequest){
+        IntegerResponse responseBean = new IntegerResponse();
+        Integer listCount = repayManageService.selectUserRepayTransferDetailListTotal(repayTransferRequest.getBorrowNid(), repayTransferRequest.getVerificationFlag());
+        responseBean.setResultInt(listCount);
+        return responseBean;
+    }
+
+    /**
      * 获取列表
      * @param repayTransferRequest
      * @return
@@ -371,37 +387,26 @@ public class RepayManageController extends BaseController {
         repayTransferRequest.setBorrowNid(repayTransferRequest.getBorrowNid());
         repayTransferRequest.setVerificationFlag(repayTransferRequest.getVerificationFlag());
 
-        // 总条数
-        int listCount = repayManageService.selectUserRepayTransferDetailListTotal(repayTransferRequest.getBorrowNid(), repayTransferRequest.getVerificationFlag());
+        List<WebUserRepayTransferCustomize> repayList = repayManageService.selectUserRepayTransferDetailList(repayTransferRequest);
 
-        if (repayTransferRequest.getCurrPage() > 0){
-            Paginator paginator = new Paginator(repayTransferRequest.getCurrPage(), listCount);
-            repayTransferRequest.setLimitStart(paginator.getOffset());
-            if (repayTransferRequest.getPageSize() > 0){
-                repayTransferRequest.setLimitEnd(repayTransferRequest.getPageSize());
-            }else{
-                repayTransferRequest.setLimitEnd(paginator.getLimit());
+        if(null != repayList && repayList.size() > 0){
+            // 数据格式化的格式 10,000.00
+            DecimalFormat decimalFormat = new DecimalFormat("#,###.00");
+
+            // 遍历列表, 给承接人和转让人用户名加密
+            for (WebUserRepayTransferCustomize re: repayList) {
+                re.setCreditUserName(repayManageService.usernameEncryption(re.getCreditUserName()));
+                re.setUndertakerUserName(repayManageService.usernameEncryption(re.getUndertakerUserName()));
+                re.setAssignCapitalString(decimalFormat.format(re.getAssignCapital()));
+                re.setAssignOrderDateStr(GetDateUtils.formatDate(re.getAssignOrderDate()));
             }
         }
 
-
-        List<WebUserRepayTransferCustomize> repayList = repayManageService.selectUserRepayTransferDetailList(repayTransferRequest);
-
-        // 数据格式化的格式 10,000.00
-        DecimalFormat decimalFormat = new DecimalFormat("#,###.00");
-
-        // 遍历列表, 给承接人和转让人用户名加密
-        for (WebUserRepayTransferCustomize re: repayList) {
-            re.setCreditUserName(repayManageService.usernameEncryption(re.getCreditUserName()));
-            re.setUndertakerUserName(repayManageService.usernameEncryption(re.getUndertakerUserName()));
-            re.setAssignCapitalString(decimalFormat.format(re.getAssignCapital()));
-        }
         String returnCode = "0";
         List<WebUserRepayTransferCustomizeVO> voList = null;
         if (CollectionUtils.isNotEmpty(repayList)){
             voList = CommonUtils.convertBeanList(repayList, WebUserRepayTransferCustomizeVO.class);
         }
-        repayTransferCustomizeResponse.setCount(listCount);
         repayTransferCustomizeResponse.setRtn(returnCode);
         repayTransferCustomizeResponse.setResultList(voList);
 

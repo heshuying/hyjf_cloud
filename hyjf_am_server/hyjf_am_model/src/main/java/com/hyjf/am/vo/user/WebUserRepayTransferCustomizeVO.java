@@ -5,6 +5,7 @@ import com.hyjf.common.paginator.Paginator;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,7 +25,8 @@ public class WebUserRepayTransferCustomizeVO extends BaseVO implements Serializa
     private String undertakerUserName;
 
     /** 承接日期 */
-    private String assignOrderDate;
+    private Date assignOrderDate;
+    private String assignOrderDateStr;
 
     /** 承接金额 */
     private BigDecimal assignCapital;
@@ -32,13 +34,8 @@ public class WebUserRepayTransferCustomizeVO extends BaseVO implements Serializa
     /** 承接金额 格式化后的*/
     private String assignCapitalString;
 
-    // web服务地址
-    private String host;
+    private int count;
 
-    private List<WebUserRepayTransferCustomizeVO> projectList;
-
-    // 分页信息
-    private Paginator paginator;
 
     public boolean isStatus() {
         return status;
@@ -72,12 +69,20 @@ public class WebUserRepayTransferCustomizeVO extends BaseVO implements Serializa
         this.undertakerUserName = undertakerUserName;
     }
 
-    public String getAssignOrderDate() {
+    public Date getAssignOrderDate() {
         return assignOrderDate;
     }
 
-    public void setAssignOrderDate(String assignOrderDate) {
+    public void setAssignOrderDate(Date assignOrderDate) {
         this.assignOrderDate = assignOrderDate;
+    }
+
+    public String getAssignOrderDateStr() {
+        return assignOrderDateStr;
+    }
+
+    public void setAssignOrderDateStr(String assignOrderDateStr) {
+        this.assignOrderDateStr = assignOrderDateStr;
     }
 
     public BigDecimal getAssignCapital() {
@@ -96,11 +101,11 @@ public class WebUserRepayTransferCustomizeVO extends BaseVO implements Serializa
         this.assignCapitalString = assignCapitalString;
     }
 
-    public String getHost() {
-        return host;
+    public int getCount() {
+        return count;
     }
 
-    public void setHost(String host) {
-        this.host = host;
+    public void setCount(int count) {
+        this.count = count;
     }
 }

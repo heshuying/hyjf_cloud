@@ -31,16 +31,10 @@ public class RegisterRequest extends AppBaseRequest {
     @ApiModelProperty(value = "神策预置属性")
     private String presetProps;
 
-    @ApiModelProperty(value = "ip地址")
-    private String ip;
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
-        this.ip = ip;
-    }
+    // 合规改造 add by huanghui 20181220 start
+    @ApiModelProperty(value = "当前注册用的类型:0:普通用户;1:企业用户;")
+    private Integer userType;
+    // 合规改造 add by huanghui 20181220 end
 
     public String getInstCode() {
         return instCode;
@@ -96,5 +90,13 @@ public class RegisterRequest extends AppBaseRequest {
 
     public void setPresetProps(String presetProps) {
         this.presetProps = presetProps;
+    }
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
     }
 }

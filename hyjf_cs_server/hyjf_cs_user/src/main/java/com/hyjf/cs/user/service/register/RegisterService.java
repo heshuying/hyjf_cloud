@@ -55,10 +55,11 @@ public interface RegisterService extends BaseUserService {
      * @param utmId
      * @param platform
      * @param ip
+     * @param userType 0:普通用户;1:企业用户;
      * @return
      * @throws ReturnMessageException
      */
-    WebViewUserVO register(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, String ip)
+    WebViewUserVO register(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, String ip, Integer userType)
             throws ReturnMessageException;
 
     /**

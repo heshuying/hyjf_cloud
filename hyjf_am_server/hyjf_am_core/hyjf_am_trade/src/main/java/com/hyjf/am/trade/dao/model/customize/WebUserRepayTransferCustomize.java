@@ -4,6 +4,7 @@ import com.hyjf.common.paginator.Paginator;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -24,21 +25,14 @@ public class WebUserRepayTransferCustomize implements Serializable {
     private String undertakerUserName;
 
     /** 承接日期 */
-    private String assignOrderDate;
+    private Date assignOrderDate;
+    private String assignOrderDateStr;
 
     /** 承接金额 */
     private BigDecimal assignCapital;
 
     /** 承接金额 格式化后的*/
     private String assignCapitalString;
-
-    // web服务地址
-    private String host;
-
-    private List<WebUserRepayTransferCustomize> projectList;
-
-    // 分页信息
-    private Paginator paginator;
 
     public boolean isStatus() {
         return status;
@@ -72,11 +66,11 @@ public class WebUserRepayTransferCustomize implements Serializable {
         this.undertakerUserName = undertakerUserName;
     }
 
-    public String getAssignOrderDate() {
+    public Date getAssignOrderDate() {
         return assignOrderDate;
     }
 
-    public void setAssignOrderDate(String assignOrderDate) {
+    public void setAssignOrderDate(Date assignOrderDate) {
         this.assignOrderDate = assignOrderDate;
     }
 
@@ -96,27 +90,11 @@ public class WebUserRepayTransferCustomize implements Serializable {
         this.assignCapitalString = assignCapitalString;
     }
 
-    public String getHost() {
-        return host;
+    public String getAssignOrderDateStr() {
+        return assignOrderDateStr;
     }
 
-    public void setHost(String host) {
-        this.host = host;
-    }
-
-    public List<WebUserRepayTransferCustomize> getProjectList() {
-        return projectList;
-    }
-
-    public void setProjectList(List<WebUserRepayTransferCustomize> projectList) {
-        this.projectList = projectList;
-    }
-
-    public Paginator getPaginator() {
-        return paginator;
-    }
-
-    public void setPaginator(Paginator paginator) {
-        this.paginator = paginator;
+    public void setAssignOrderDateStr(String assignOrderDateStr) {
+        this.assignOrderDateStr = assignOrderDateStr;
     }
 }

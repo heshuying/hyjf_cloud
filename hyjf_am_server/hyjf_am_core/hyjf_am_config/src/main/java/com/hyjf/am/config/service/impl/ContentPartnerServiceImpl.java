@@ -88,11 +88,24 @@ public class ContentPartnerServiceImpl implements ContentPartnerService {
 
 	@Override
 	public int selectCount(ContentPartnerRequest request) {
-		request.setCurrPage(0);
-		List<Link> list = searchAction(request);
-		if (!CollectionUtils.isEmpty(list)) {
-			return list.size();
+		LinkExample example = new LinkExample();
+		LinkExample.Criteria criteria = example.createCriteria();
+		if (StringUtils.isNotBlank(request.getWebname())) {
+			criteria.andWebnameEqualTo(request.getWebname());
 		}
-		return 0;
+		if (request.getStartTime() != null && request.getEndTime() != null) {
+			criteria.andCreateTimeGreaterThanOrEqualTo(GetDate.getDayStartOfSomeDay(request.getStartTime()));
+			criteria.andCreateTimeLessThanOrEqualTo(GetDate.getDayEndOfSomeDay(request.getEndTime()));
+		}
+		if (request.getStatus() != null) {
+			criteria.andStatusEqualTo(request.getStatus());
+		}
+		if (request.getPartnerType() != null) {
+			criteria.andStatusEqualTo(1);// 启用状态
+			criteria.andTypeEqualTo(2);// 合作伙伴
+			criteria.andPartnerTypeEqualTo(request.getPartnerType());
+		}
+		example.setOrderByClause("`partner_type` ASC,`order` Asc,`create_time` Desc");
+		return linkMapper.countByExample(example);
 	}
 }

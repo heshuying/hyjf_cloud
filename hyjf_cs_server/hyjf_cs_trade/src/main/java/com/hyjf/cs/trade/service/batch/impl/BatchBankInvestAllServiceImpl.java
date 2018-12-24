@@ -168,36 +168,7 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 							logger.info("用户:" + userId + "***********************************预更新渠道统计表AppChannelStatisticsDetail，订单号：" + bean.getOrderId());
 						}else{
 							//更新首投信息
-							UtmRegVO utmRegVO =this.amUserClient.findUtmRegByUserId(Integer.parseInt(bean.getLogUserId()));
-							if(Validator.isNotNull(utmRegVO)){
-								Map<String, Object> params = new HashMap<String, Object>();
-								params.put("id", utmRegVO.getId());
-								params.put("accountDecimal", new BigDecimal(bean.getTxAmount()));
-								// 出借时间
-								params.put("investTime", request.getNowTime());
-								// 项目类型
-								if (request.getBorrowInfo().getProjectType() == 13) {
-									params.put("projectType", "汇金理财");
-								} else {
-									params.put("projectType", "汇直投");
-								}
-								// 首次投标项目期限
-								String investProjectPeriod = "";
-								if ("endday".equals(request.getBorrow().getBorrowStyle())) {
-									investProjectPeriod = request.getBorrow().getBorrowPeriod() + "天";
-								} else {
-									investProjectPeriod = request.getBorrow().getBorrowPeriod() + "个月";
-								}
-								params.put("investProjectPeriod", investProjectPeriod);
-
-								try {
-									commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC,UUID.randomUUID().toString(), params));
-									logger.info("******首投信息推送消息队列******");
-								} catch (MQException e) {
-									e.printStackTrace();
-									logger.info("******首投信息推送消息队列失败******");
-								}
-							}
+							updateUtmReg(bean, request);
 						}
 					}
 
@@ -221,6 +192,44 @@ public class BatchBankInvestAllServiceImpl extends BaseTradeServiceImpl implemen
 		}
 
 
+	}
+
+	/**
+	 * 更新首投信息
+	 * @param bean
+	 * @param request
+	 */
+	private void updateUtmReg(BankCallBean bean, BorrowTenderTmpRequest request) {
+		UtmRegVO utmRegVO =this.amUserClient.findUtmRegByUserId(Integer.parseInt(bean.getLogUserId()));
+		if(Validator.isNotNull(utmRegVO)){
+			Map<String, Object> params = new HashMap<String, Object>();
+			params.put("userId", utmRegVO.getUserId());
+			params.put("accountDecimal", new BigDecimal(bean.getTxAmount()));
+			// 出借时间
+			params.put("investTime", request.getNowTime());
+			// 项目类型
+			if (request.getBorrowInfo().getProjectType() == 13) {
+				params.put("projectType", "汇金理财");
+			} else {
+				params.put("projectType", "汇直投");
+			}
+			// 首次投标项目期限
+			String investProjectPeriod = "";
+			if ("endday".equals(request.getBorrow().getBorrowStyle())) {
+				investProjectPeriod = request.getBorrow().getBorrowPeriod() + "天";
+			} else {
+				investProjectPeriod = request.getBorrow().getBorrowPeriod() + "个月";
+			}
+			params.put("investProjectPeriod", investProjectPeriod);
+
+			try {
+				commonProducer.messageSend(new MessageContent(MQConstant.STATISTICS_UTM_REG_TOPIC, UUID.randomUUID().toString(), params));
+				logger.info("******首投信息推送消息队列******");
+			} catch (MQException e) {
+				e.printStackTrace();
+				logger.info("******首投信息推送消息队列失败******");
+			}
+		}
 	}
 
 

@@ -124,6 +124,18 @@ public class WeChatRegistController extends BaseUserController {
         // 神策数据统计的预置属性
         String presetProps = getStringFromStream(request);
         // 神策数据统计追加 add by liuyang 20180725 end
+
+        // 合规改造 add by huanghui 20181220 start
+        /**
+         * 当前注册用的类型
+         * 1:普通用户;
+         * 2:企业用户;
+         * 根据前端传值来判定, 如果不传或者传值其他值 默认为普通用户
+         */
+        Integer userType = Integer.valueOf(request.getParameter("userType"));
+
+        // 合规改造 add by huanghui 20181220 end
+
         //密码解密
         password = RSAJSPUtil.rsaToPassword(password);
         // 推荐人
@@ -140,7 +152,7 @@ public class WeChatRegistController extends BaseUserController {
         }
         WebViewUserVO webViewUserVO = registService.register(register.getMobile(),
                 register.getVerificationCode(), register.getPassword(),
-                register.getReffer(), CommonConstant.HYJF_INST_CODE, register.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT), GetCilentIP.getIpAddr(request));
+                register.getReffer(), CommonConstant.HYJF_INST_CODE, register.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT), GetCilentIP.getIpAddr(request), userType);
         //注册成功重新登录
         WebViewUserVO userVO = loginService.login(webViewUserVO.getUsername(), password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI);
          if(null!=userVO){
@@ -271,6 +283,10 @@ public class WeChatRegistController extends BaseUserController {
         String presetProps = getStringFromStream(request);
         // 神策数据统计追加 add by liuyang 20181105 end
 
+        // 合规改造 add by huanghui 20181220 start
+        // 当前注册用的类型:0:普通用户;1:企业用户;Warning:着陆页只有普通用户注册.没有企业注册
+        Integer userType = 0;
+        // 合规改造 add by huanghui 20181220 end
 
         logger.info("当前注册手机号: {}", mobile);
         if (Validator.isNull(mobile)) {
@@ -362,7 +378,7 @@ public class WeChatRegistController extends BaseUserController {
 
        /* user =  registService.insertUserActionUtm(mobile, password,bean.getVerificationCode(), refferUserId, CustomUtil.getIpAddr(request),
                 CustomConstants.CLIENT_WECHAT,bean.getUtmId(),bean.getUtmSource());*/
-        WebViewUserVO user = registService.register(mobile,bean.getVerificationCode(), password,refferUserId, CommonConstant.HYJF_INST_CODE,bean.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT),GetCilentIP.getIpAddr(request));
+        WebViewUserVO user = registService.register(mobile,bean.getVerificationCode(), password,refferUserId, CommonConstant.HYJF_INST_CODE,bean.getUtmId(), String.valueOf(ClientConstants.WECHAT_CLIENT),GetCilentIP.getIpAddr(request), userType);
         WebViewUserVO userVO = loginService.login(user.getUsername(), password, GetCilentIP.getIpAddr(request), BankCallConstant.CHANNEL_WEI);
         if(null!=userVO){
             ret.put("sign",userVO.getToken());

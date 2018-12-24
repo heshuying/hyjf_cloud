@@ -19,6 +19,9 @@ public class RegisterUserRequest {
     private String city;
     // add by libin end
 
+    //用户类型 0:普通用户;1:企业用户;
+    private Integer userType;
+
     public RegisterUserRequest() {
 
     }
@@ -33,7 +36,7 @@ public class RegisterUserRequest {
      * @param utmId
      * @param platform
      */
-    public RegisterUserRequest(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform) {
+    public RegisterUserRequest(String mobile, String verificationCode, String password, String reffer, String instCode, String utmId, String platform, Integer userType) {
         this.mobile = mobile;
         this.verificationCode = verificationCode;
         this.reffer = reffer;
@@ -41,6 +44,7 @@ public class RegisterUserRequest {
         this.password = password;
         this.utmId = utmId;
         this.platform = platform;
+        this.userType = userType;
     }
 
 
@@ -131,4 +135,12 @@ public class RegisterUserRequest {
 	public void setCity(String city) {
 		this.city = city;
 	}
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
+    }
 }

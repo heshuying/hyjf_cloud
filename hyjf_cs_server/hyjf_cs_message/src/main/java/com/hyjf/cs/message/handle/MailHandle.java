@@ -146,7 +146,9 @@ public class MailHandle {
             String body = replaceAllParameter(template.getMailContent(), replaceMap);
 
             // 开始送信
-            send(toMailArray, subject, body, fileNames);
+            if (!envTest) {
+                send(toMailArray, subject, body, fileNames);
+            }
         } catch (Exception e) {
             logger.error("发送邮件失败", e);
         }

@@ -47,6 +47,8 @@
 			r.repay_time BETWEEN UNIX_TIMESTAMP( date( sysdate( ) ) )
 			AND UNIX_TIMESTAMP( adddate( date( sysdate( ) ), 1 ) ) - 1
 			AND r.repay_status = 0
+			<!-- 垫付机构还款修改了银行还款接口，不能自动还款 wgx create in 2018/12/20 -->
+			AND f.repayer_type = 2
 			AND NOT EXISTS (
 			SELECT
 				1

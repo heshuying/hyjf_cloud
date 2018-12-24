@@ -83,12 +83,14 @@ public class EventServiceImpl implements EventService {
 
 	@Override
 	public int selectCount(EventsRequest request) {
-		request.setCurrPage(0);
-		List<Event> list = searchAction(request);
-		if (!CollectionUtils.isEmpty(list)) {
-			return list.size();
+		EventExample example = new EventExample();
+		EventExample.Criteria criteria = example.createCriteria();
+		if (request.getStartTime() != null && request.getEndTime() != null) {
+			criteria.andEventTimeGreaterThanOrEqualTo(GetDate.dateToString2(request.getStartTime()));
+			criteria.andEventTimeLessThanOrEqualTo(GetDate.dateToString2(request.getEndTime()));
 		}
-		return 0;
+		example.setOrderByClause("event_time DESC, create_time DESC");
+		return eventMapper.countByExample(example);
 	}
 
 
