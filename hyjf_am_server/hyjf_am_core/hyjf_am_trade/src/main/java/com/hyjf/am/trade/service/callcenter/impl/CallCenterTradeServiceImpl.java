@@ -97,6 +97,18 @@ public class CallCenterTradeServiceImpl implements CallCenterTradeService {
 
     /**
      *
+     * 测评获取冻结金额和代收本经明细
+     * @author wenxin
+     * @param userId
+     * @return
+     */
+    @Override
+    public CallCenterAccountDetailCustomize queryAccountEvalDetail(Integer userId) {
+        return callCenterAccountDetailCustomizeMapper.queryAccountEvalDetail(userId);
+    }
+
+    /**
+     *
      * 查询充值明细
      * @author wangjun
      * @param centerBaseRequest

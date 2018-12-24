@@ -31,6 +31,7 @@ import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
@@ -2594,5 +2595,11 @@ public interface AmTradeClient {
     void dataInfo();
 
     void downloadRedFile();
+
+    /** 用户测评配置 */
+    List<EvaluationConfigVO> selectEvaluationConfig(EvaluationConfigVO record);
+
+    /** 测评获取冻结金额和代收本经明细 */
+    CallCenterAccountDetailVO queryAccountEvalDetail(Integer userId);
 }
 
