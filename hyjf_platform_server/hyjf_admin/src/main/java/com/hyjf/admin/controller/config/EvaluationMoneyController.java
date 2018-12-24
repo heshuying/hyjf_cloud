@@ -34,13 +34,13 @@ import javax.servlet.http.HttpServletRequest;
  **/
 @Api(tags = "配置中心-风险测评限额配置")
 @RestController
-@RequestMapping("/hyjf-admin/evaluationcheck")
+@RequestMapping("/hyjf-admin/evaluationmoney")
 public class EvaluationMoneyController extends BaseController {
 
 	@Autowired
 	private EvaluationMoneyService service;
 
-	public static final String PERMISSIONS = "evaluationcheck";
+	public static final String PERMISSIONS = "evaluationmoney";
 
 	@ApiOperation(value = "风险测评限额配置", notes = "风险测评限额配置")
 	@PostMapping("/init")
