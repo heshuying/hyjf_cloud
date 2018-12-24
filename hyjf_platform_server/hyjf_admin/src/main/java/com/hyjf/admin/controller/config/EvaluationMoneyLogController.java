@@ -30,13 +30,13 @@ import org.springframework.web.bind.annotation.RestController;
  **/
 @Api(tags = "配置中心-风险测评限额配置日志")
 @RestController
-@RequestMapping("/hyjf-admin/evaluationchecklog")
+@RequestMapping("/hyjf-admin/evaluationmoneylog")
 public class EvaluationMoneyLogController extends BaseController {
 
 	@Autowired
 	private EvaluationMoneyLogService service;
 
-	public static final String PERMISSIONS = "evaluationchecklog";
+	public static final String PERMISSIONS = "evaluationmoneylog";
 
 	@ApiOperation(value = "风险测评限额配置日志", notes = "风险测评限额配置日志")
 	@PostMapping("/init")
