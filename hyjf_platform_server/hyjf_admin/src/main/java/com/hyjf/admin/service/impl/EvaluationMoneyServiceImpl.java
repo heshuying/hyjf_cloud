@@ -24,7 +24,7 @@ public class EvaluationMoneyServiceImpl implements EvaluationMoneyService {
      * @return
      */
     public EvaluationMoneyResponse getEvaluationMoneyList(EvaluationMoneyRequest request) {
-		EvaluationMoneyResponse evaluationConfigVOList = tradeClient.getEvaluatioMoneyList(request);
+		EvaluationMoneyResponse evaluationConfigVOList = tradeClient.getEvaluationMoneyList(request);
 		return  evaluationConfigVOList;
     }
 

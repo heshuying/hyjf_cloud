@@ -13,6 +13,7 @@ import com.hyjf.admin.service.EvaluationMoneyService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.EvaluationMoneyResponse;
 import com.hyjf.am.resquest.admin.EvaluationMoneyRequest;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.EvaluationMoneyConfigVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 风险测评开关配置
@@ -76,7 +79,9 @@ public class EvaluationMoneyController extends BaseController {
 	@ApiOperation(value = "修改风险测评限额配置", notes = "修改风险测评限额配置")
 	@PostMapping("/updateAction")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
-	public AdminResult updateAction(@RequestBody EvaluationMoneyRequest requestBean) {
+	public AdminResult updateAction(HttpServletRequest request, @RequestBody EvaluationMoneyRequest requestBean) {
+		AdminSystemVO loginUser=getUser(request);
+		requestBean.setUpdateUser(loginUser.getUsername());
 		EvaluationMoneyResponse response = service.updateEvaluationMoney(requestBean);
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);

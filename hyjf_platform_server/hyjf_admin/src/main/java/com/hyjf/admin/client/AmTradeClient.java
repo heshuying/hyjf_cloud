@@ -3295,7 +3295,7 @@ public interface AmTradeClient {
      * @date 2018/12/20 17:35
      * @param request
      **/
-    EvaluationMoneyResponse getEvaluatioMoneyList(EvaluationMoneyRequest request);
+    EvaluationMoneyResponse getEvaluationMoneyList(EvaluationMoneyRequest request);
 
     /**
      * 配置中心-风险测评限额配置（修改详情）
@@ -3312,5 +3312,21 @@ public interface AmTradeClient {
      * @param request
      **/
     EvaluationMoneyResponse updateEvaluationMoney(EvaluationMoneyRequest request);
+
+    /**
+     * 配置中心-风险测评限额配置（日志列表）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param request
+     **/
+    EvaluationMoneyLogResponse getEvaluationMoneyLogList(EvaluationMoneyLogRequest request);
+
+    /**
+     * 配置中心-风险测评限额配置（日志列表）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param request
+     **/
+    EvaluationCheckLogResponse getEvaluationCheckLogList(EvaluationCheckLogRequest request);
 }
 

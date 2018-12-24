@@ -3,11 +3,9 @@
  */
 package com.hyjf.am.trade.service.admin.config;
 
-import com.hyjf.am.resquest.admin.BailConfigAddRequest;
-import com.hyjf.am.resquest.admin.BailConfigRequest;
-import com.hyjf.am.resquest.admin.EvaluationCheckRequest;
-import com.hyjf.am.resquest.admin.EvaluationMoneyRequest;
+import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.trade.dao.model.auto.EvaluationConfig;
+import com.hyjf.am.trade.dao.model.auto.EvaluationConfigLog;
 import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.admin.BailConfigCustomizeVO;
@@ -27,10 +25,10 @@ public interface EvaluationConfigService extends BaseService {
     /**
      * 获取风险测评配置总数
      *
-     * @param bailConfigRequest
+     * @param request
      * @return
      */
-    Integer selectEvaluationMoneyCount(EvaluationMoneyRequest bailConfigRequest);
+    Integer selectEvaluationMoneyCount(EvaluationMoneyRequest request);
 
     /**
      * 获取风险测评-限额配置列表
@@ -43,10 +41,10 @@ public interface EvaluationConfigService extends BaseService {
     /**
      * 获取风险测评配置总数
      *
-     * @param bailConfigRequest
+     * @param request
      * @return
      */
-    Integer selectEvaluationCheckCount(EvaluationCheckRequest bailConfigRequest);
+    Integer selectEvaluationCheckCount(EvaluationCheckRequest request);
 
     /**
      * 获取风险测评-限额配置列表
@@ -55,6 +53,39 @@ public interface EvaluationConfigService extends BaseService {
      * @return
      */
     List<EvaluationConfig> selectEvaluationCheckList(EvaluationCheckRequest request);
+
+
+    /**
+     * 获取风险测评配置总数(操作日志)
+     *
+     * @param request
+     * @return
+     */
+    Integer selectEvaluationMoneyLogCount(EvaluationMoneyLogRequest request);
+
+    /**
+     * 获取风险测评-限额配置列表(操作日志)
+     *
+     * @param request
+     * @return
+     */
+    List<EvaluationConfigLog> selectEvaluationMoneyLogList(EvaluationMoneyLogRequest request);
+
+    /**
+     * 获取风险测评配置总数(操作日志)
+     *
+     * @param request
+     * @return
+     */
+    Integer selectEvaluationCheckLogCount(EvaluationCheckLogRequest request);
+
+    /**
+     * 获取风险测评-限额配置列表(操作日志)
+     *
+     * @param request
+     * @return
+     */
+    List<EvaluationConfigLog> selectEvaluationCheckLogList(EvaluationCheckLogRequest request);
 
 
     /**

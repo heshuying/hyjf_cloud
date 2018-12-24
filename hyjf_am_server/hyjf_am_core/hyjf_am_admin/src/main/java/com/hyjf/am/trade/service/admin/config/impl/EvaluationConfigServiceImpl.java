@@ -3,10 +3,7 @@
  */
 package com.hyjf.am.trade.service.admin.config.impl;
 
-import com.hyjf.am.resquest.admin.BailConfigAddRequest;
-import com.hyjf.am.resquest.admin.BailConfigRequest;
-import com.hyjf.am.resquest.admin.EvaluationCheckRequest;
-import com.hyjf.am.resquest.admin.EvaluationMoneyRequest;
+import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.trade.dao.mapper.auto.EvaluationConfigMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.admin.config.BailConfigService;
@@ -39,6 +36,7 @@ import java.util.*;
 @Service
 public class EvaluationConfigServiceImpl extends BaseServiceImpl implements EvaluationConfigService {
 
+    private static final SimpleDateFormat datetimeFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     /**
      * 获取风险测评-限额配置总数
      * @param request
@@ -89,6 +87,68 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
             example.setLimitEnd(request.getLimitEnd());
         }
         return evaluationConfigMapper.selectByExample(example);
+    }
+
+
+
+    /**
+     * 获取风险测评-限额配置总数(操作日志)
+     * @param request
+     * @return
+     */
+    @Override
+    public Integer selectEvaluationMoneyLogCount(EvaluationMoneyLogRequest request) {
+        EvaluationConfigLogExample example = new EvaluationConfigLogExample();
+        return evaluationConfigLogMapper.countByExample(example);
+    }
+
+    /**
+     * 获取风险测评-限额配置列表(操作日志)
+     * @param request
+     * @return
+     */
+    @Override
+    public List<EvaluationConfigLog> selectEvaluationMoneyLogList(EvaluationMoneyLogRequest request) {
+        EvaluationConfigLogExample example = new EvaluationConfigLogExample();
+        if (request.getLimitStart() != -1) {
+            example.setLimitStart(request.getLimitStart());
+            example.setLimitEnd(request.getLimitEnd());
+        }
+        EvaluationConfigLogExample.Criteria criteria = example.createCriteria();
+        criteria.andStatusEqualTo(1);
+        if(StringUtils.isNotEmpty(request.getUpdateUser())){
+            criteria.andUpdateUserEqualTo(request.getUpdateUser());
+        }
+        if (StringUtils.isNotBlank(request.getStartTime()) && StringUtils.isNotBlank(request.getEndTime())) {
+            criteria.andUpdateTimeBetween(GetDate.str2Date(GetDate.getDayStart(request.getStartTime()),datetimeFormat), GetDate.str2Date(GetDate.getDayEnd(request.getEndTime()),datetimeFormat));
+        }
+        return evaluationConfigLogMapper.selectByExample(example);
+    }
+
+    /**
+     * 获取风险测评-限额配置总数(操作日志)
+     * @param request
+     * @return
+     */
+    @Override
+    public Integer selectEvaluationCheckLogCount(EvaluationCheckLogRequest request) {
+        EvaluationConfigLogExample example = new EvaluationConfigLogExample();
+        return evaluationConfigLogMapper.countByExample(example);
+    }
+
+    /**
+     * 获取风险测评-限额配置列表(操作日志)
+     * @param request
+     * @return
+     */
+    @Override
+    public List<EvaluationConfigLog> selectEvaluationCheckLogList(EvaluationCheckLogRequest request) {
+        EvaluationConfigLogExample example = new EvaluationConfigLogExample();
+        if (request.getLimitStart() != -1) {
+            example.setLimitStart(request.getLimitStart());
+            example.setLimitEnd(request.getLimitEnd());
+        }
+        return evaluationConfigLogMapper.selectByExample(example);
     }
 
     /**
@@ -151,7 +211,7 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
                 RedisUtils.set(RedisConstants.REVALUATION_AGGRESSIVE, request.getEnterprisingEvaluationSinglMoney()+"");
             }
 
-           /* if (RedisUtils.exists(RedisConstants.REVALUATION_CONSERVATIVE_PRINCIPAL)) {
+            if (RedisUtils.exists(RedisConstants.REVALUATION_CONSERVATIVE_PRINCIPAL)) {
                 //保守型代收本金限额金额
                 RedisUtils.set(RedisConstants.REVALUATION_CONSERVATIVE_PRINCIPAL, request.getConservativeEvaluationPrincipalMoney()+"");
             }
@@ -166,16 +226,12 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
             if (RedisUtils.exists(RedisConstants.REVALUATION_AGGRESSIVE_PRINCIPAL)) {
                 //保进取型代收本金限额金额
                 RedisUtils.set(RedisConstants.REVALUATION_AGGRESSIVE_PRINCIPAL, request.getEnterprisingEvaluationPrincipalMoney()+"");
-            }*/
+            }
             //新增日志表
             EvaluationConfigLog log =  new EvaluationConfigLog();
             BeanUtils.copyProperties(request,log);
             // IP地址
             String ip = GetCilentIP.getIpAddr(GetSessionOrRequestUtils.getRequest());
-            // 当前登录用户id
-            String username ="";
-            //操作人
-            log.setUpdateUser(username);
             log.setIp(ip);
             //1开关配置 2限额配置 3信用等级
             log.setStatus(2);
@@ -195,18 +251,12 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
     public Boolean updateEvaluationCheck(EvaluationCheckRequest request) {
         EvaluationConfig evaluationConfig = new EvaluationConfig();
         BeanUtils.copyProperties(request,evaluationConfig);
-        evaluationConfig.setUpdateUser("");
-        evaluationConfig.setUpdateTime(new Date());
         if(evaluationConfigMapper.updateByPrimaryKeySelective(evaluationConfig)>0){
             //新增日志表
             EvaluationConfigLog log =  new EvaluationConfigLog();
             BeanUtils.copyProperties(request,log);
             // IP地址
             String ip = GetCilentIP.getIpAddr(GetSessionOrRequestUtils.getRequest());
-            // 当前登录用户id
-            String username ="";
-            //操作人
-            log.setUpdateUser(username);
             log.setIp(ip);
             //1开关配置 2限额配置 3信用等级
             log.setStatus(1);

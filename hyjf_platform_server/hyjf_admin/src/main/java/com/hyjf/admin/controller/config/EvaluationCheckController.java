@@ -13,6 +13,7 @@ import com.hyjf.admin.service.EvaluationCheckService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.EvaluationCheckResponse;
 import com.hyjf.am.resquest.admin.EvaluationCheckRequest;
+import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.trade.EvaluationCheckConfigVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -21,6 +22,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * 风险测评开关配置
@@ -76,7 +79,9 @@ public class EvaluationCheckController extends BaseController {
 	@ApiOperation(value = "修改风险测评开关配置", notes = "修改风险测评开关配置")
 	@PostMapping("/updateAction")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
-	public AdminResult updateAction(@RequestBody EvaluationCheckRequest requestBean) {
+	public AdminResult updateAction(HttpServletRequest request, @RequestBody EvaluationCheckRequest requestBean) {
+		AdminSystemVO loginUser=getUser(request);
+		requestBean.setUpdateUser(loginUser.getUsername());
 		EvaluationCheckResponse response = service.updateEvaluationCheck(requestBean);
 		if (response == null) {
 			return new AdminResult<>(FAIL, FAIL_DESC);

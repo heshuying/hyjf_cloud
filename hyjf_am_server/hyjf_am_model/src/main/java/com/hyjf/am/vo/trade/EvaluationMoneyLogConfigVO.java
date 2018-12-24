@@ -1,20 +1,12 @@
-package com.hyjf.am.resquest.admin;
+package com.hyjf.am.vo.trade;
 
-import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
-/**
- *
- * @author Zha Daojian
- * @date 2018/12/20 17:36
- * @param 
- * @return 
- **/
-public class EvaluationMoneyRequest extends BasePage implements Serializable {
-
+public class EvaluationMoneyLogConfigVO implements Serializable {
 
 
     @ApiModelProperty(value = "测评到期时间")
@@ -44,25 +36,20 @@ public class EvaluationMoneyRequest extends BasePage implements Serializable {
     @ApiModelProperty(value = "保守型代收本金限额金额")
     private BigDecimal enterprisingEvaluationPrincipalMoney;
 
-    /**
-     * 修改人
-     *
-     * @mbggenerated
-     */
+    @ApiModelProperty(value = "添加人")
+    private String createUser;
+
+    @ApiModelProperty(value = "添加时间")
+    private Date createTime;
+
+    @ApiModelProperty(value = "修改时间")
+    private Date updateTime;
+
+    @ApiModelProperty(value = "修改人")
     private String updateUser;
-    public String getUpdateUser() {
-        return updateUser;
-    }
 
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser;
-    }
+    private static final long serialVersionUID = 1L;
 
-    public int limit;
-
-    public int limitStart;
-
-    public int limitEnd;
 
     public Integer getValidityEvaluationDate() {
         return validityEvaluationDate;
@@ -136,19 +123,35 @@ public class EvaluationMoneyRequest extends BasePage implements Serializable {
         this.enterprisingEvaluationPrincipalMoney = enterprisingEvaluationPrincipalMoney;
     }
 
-    public int getLimit() {
-        return limit;
+    public String getCreateUser() {
+        return createUser;
     }
 
-    public void setLimit(int limit) {
-        this.limit = limit;
+    public void setCreateUser(String createUser) {
+        this.createUser = createUser == null ? null : createUser.trim();
     }
 
-    public int getLimitStart() { return limitStart; }
+    public Date getCreateTime() {
+        return createTime;
+    }
 
-    public void setLimitStart(int limitStart) { this.limitStart = limitStart; }
+    public void setCreateTime(Date createTime) {
+        this.createTime = createTime;
+    }
 
-    public int getLimitEnd() { return limitEnd; }
+    public Date getUpdateTime() {
+        return updateTime;
+    }
 
-    public void setLimitEnd(int limitEnd) { this.limitEnd = limitEnd; }
+    public void setUpdateTime(Date updateTime) {
+        this.updateTime = updateTime;
+    }
+
+    public String getUpdateUser() {
+        return updateUser;
+    }
+
+    public void setUpdateUser(String updateUser) {
+        this.updateUser = updateUser == null ? null : updateUser.trim();
+    }
 }

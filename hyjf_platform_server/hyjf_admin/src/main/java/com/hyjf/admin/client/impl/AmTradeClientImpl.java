@@ -6843,7 +6843,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @param request
      **/
     @Override
-    public EvaluationMoneyResponse getEvaluatioMoneyList(EvaluationMoneyRequest request) {
+    public EvaluationMoneyResponse getEvaluationMoneyList(EvaluationMoneyRequest request) {
         return restTemplate.postForObject("http://AM-ADMIN/am-trade/evaluation/getEvaluationMoneyList", request, EvaluationMoneyResponse.class);
     }
 
@@ -6874,5 +6874,27 @@ public class AmTradeClientImpl implements AmTradeClient {
     public EvaluationMoneyResponse updateEvaluationMoney(EvaluationMoneyRequest request) {
         EvaluationMoneyResponse response = restTemplate.postForEntity(tradeService + "/evaluation/updateEvaluationMoney", request, EvaluationMoneyResponse.class).getBody();
         return response;
+    }
+
+    /**
+     * 配置中心-风险测评限额配置（日志列表）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param request
+     **/
+    @Override
+    public EvaluationMoneyLogResponse getEvaluationMoneyLogList(EvaluationMoneyLogRequest request) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-trade/evaluation/getEvaluationMoneyLogList", request, EvaluationMoneyLogResponse.class);
+    }
+
+    /**
+     * 配置中心-风险测评开关配置（日志列表）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param request
+     **/
+    @Override
+    public EvaluationCheckLogResponse getEvaluationCheckLogList(EvaluationCheckLogRequest request) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-trade/evaluation/getEvaluationCheckLogList", request, EvaluationCheckLogResponse.class);
     }
 }
