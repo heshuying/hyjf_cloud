@@ -10,9 +10,9 @@ import java.util.List;
 
 /**
  * @author fuqiang
- * @version MessagePushTemplateServcie, v0.1 2018/5/8 10:39
+ * @version MessagePushTemplateService, v0.1 2018/5/8 10:39
  */
-public interface MessagePushTemplateServcie {
+public interface MessagePushTemplateService {
     /**
      * 根据tplCode查询消息推送模板
      *
@@ -81,7 +81,7 @@ public interface MessagePushTemplateServcie {
 
     /**
      * 删除模板
-     * @param id
+     * @param ids
      * @return
      */
     Integer deleteAction(List<Integer> ids);

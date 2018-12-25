@@ -20,10 +20,10 @@ import java.util.List;
 
 /**
  * @author lisheng
- * @version WrbInfoServcie, v0.1 2018/9/20 15:42
+ * @version WrbInfoService, v0.1 2018/9/20 15:42
  */
 
-public interface WrbInfoServcie {
+public interface WrbInfoService {
     /**
      * 查询平台的公告信息
      * @param request
