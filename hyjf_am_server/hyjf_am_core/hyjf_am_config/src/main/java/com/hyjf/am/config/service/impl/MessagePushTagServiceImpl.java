@@ -3,24 +3,25 @@
  */
 package com.hyjf.am.config.service.impl;
 
-import com.hyjf.am.config.dao.mapper.auto.MessagePushTagMapper;
-import com.hyjf.am.config.dao.model.auto.MessagePushTag;
-import com.hyjf.am.config.dao.model.auto.MessagePushTagExample;
-import com.hyjf.am.config.service.MessagePushTagServcie;
-import com.hyjf.am.resquest.config.MessagePushTagRequest;
-import com.hyjf.common.validator.Validator;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import java.util.List;
+import com.hyjf.am.config.dao.mapper.auto.MessagePushTagMapper;
+import com.hyjf.am.config.dao.model.auto.MessagePushTag;
+import com.hyjf.am.config.dao.model.auto.MessagePushTagExample;
+import com.hyjf.am.config.service.MessagePushTagService;
+import com.hyjf.am.resquest.config.MessagePushTagRequest;
+import com.hyjf.common.validator.Validator;
 
 /**
  * @author fuqiang
- * @version MessagePushTagServcieImpl, v0.1 2018/6/26 11:48
+ * @version MessagePushTagServiceImpl, v0.1 2018/6/26 11:48
  */
 @Service
-public class MessagePushTagServcieImpl implements MessagePushTagServcie {
+public class MessagePushTagServiceImpl implements MessagePushTagService {
 
     @Autowired
     private MessagePushTagMapper messagePushTagMapper;
