@@ -1,20 +1,22 @@
 package com.hyjf.cs.market.client.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.market.ActivityListResponse;
+import com.hyjf.am.response.market.AppAdsCustomizeResponse;
 import com.hyjf.am.response.market.SellDailyDistributionResponse;
 import com.hyjf.am.response.market.SellDailyResponse;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.admin.SellDailyDistributionVO;
 import com.hyjf.am.vo.market.ActivityListBeanVO;
+import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.SellDailyVO;
 import com.hyjf.cs.market.client.AmMarketClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Auther: walter.limeng
@@ -118,4 +120,18 @@ public class AmMarketClientImpl implements AmMarketClient {
                 Object.class);
     }
 
+    /**
+     * 查询首页banner
+     * @param ads
+     * @return
+     */
+    public List<AppAdsCustomizeVO> searchBannerList(Map<String, Object> ads) {
+        AppAdsCustomizeResponse response = restTemplate.postForObject(
+                "http://AM-MARKET/am-market/homepage/getStartPage", ads,
+                AppAdsCustomizeResponse.class);
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
 }

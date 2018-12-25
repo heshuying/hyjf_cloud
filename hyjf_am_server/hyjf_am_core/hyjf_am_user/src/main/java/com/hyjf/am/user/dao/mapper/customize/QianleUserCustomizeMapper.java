@@ -1,5 +1,7 @@
 package com.hyjf.am.user.dao.mapper.customize;
 
+import org.apache.ibatis.annotations.Param;
+
 import java.util.List;
 
 /**
@@ -8,5 +10,5 @@ import java.util.List;
  */
 
 public interface QianleUserCustomizeMapper {
-    List<Integer> queryQianleUser();
+    List<Integer> queryQianleUser(@Param(value = "sourceId") String sourceId);
 }

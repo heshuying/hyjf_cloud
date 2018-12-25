@@ -5,7 +5,8 @@ package com.hyjf.cs.market.service.impl;
 
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.user.EvalationCustomizeVO;
-import com.hyjf.cs.market.client.AmHomePageClient;
+import com.hyjf.cs.market.client.AmMarketClient;
+import com.hyjf.cs.market.client.AmUserClient;
 import com.hyjf.cs.market.service.HomePageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +22,10 @@ import java.util.Map;
 public class HomePageServiceImpl implements HomePageService {
 
     @Autowired
-    private AmHomePageClient amHomePageClient;
+    private AmMarketClient amMarketClient;
+
+    @Autowired
+    private AmUserClient amUserClient;
 
     /**
      * 查询首页banner
@@ -30,7 +34,7 @@ public class HomePageServiceImpl implements HomePageService {
      */
     @Override
     public List<AppAdsCustomizeVO> searchBannerList(Map<String, Object> ads) {
-        return amHomePageClient.searchBannerList(ads);
+        return amMarketClient.searchBannerList(ads);
     }
 
     /**
@@ -40,6 +44,6 @@ public class HomePageServiceImpl implements HomePageService {
      */
     @Override
     public List<EvalationCustomizeVO> getEvalationRecord() {
-        return amHomePageClient.getEvalationRecord();
+        return amUserClient.getEvalationRecord();
     }
 }

@@ -34,12 +34,14 @@ public class DataSearchServiceImpl implements DataSearchService {
     AmTradeClient amTradeClient;
     @Value("${qianle.mobile}")
     private String  configMobile;
+    @Value("${qianle.sourceid}")
+    private String  sourceid;
 
 
     @Override
     public DataSearchCustomizeResponse findDataList(DataSearchRequest dataSearchRequest) {
         DataSearchCustomizeResponse dataSearchCustomizeResponse = new DataSearchCustomizeResponse();
-        List<Integer> qianleUser = amUserClient.getQianleUser();
+        List<Integer> qianleUser = amUserClient.getQianleUser(sourceid);
         if (CollectionUtils.isEmpty(qianleUser)) {
             return dataSearchCustomizeResponse;
         }
@@ -59,7 +61,7 @@ public class DataSearchServiceImpl implements DataSearchService {
     @Override
     public DataSearchCustomizeResponse findExportDataList(DataSearchRequest dataSearchRequest) {
         DataSearchCustomizeResponse dataSearchCustomizeResponse = new DataSearchCustomizeResponse();
-        List<Integer> qianleUser = amUserClient.getQianleUser();
+        List<Integer> qianleUser = amUserClient.getQianleUser(sourceid);
         if (CollectionUtils.isEmpty(qianleUser)) {
             return dataSearchCustomizeResponse;
         }
