@@ -7,9 +7,13 @@
             FROM
                 ht_utm_reg r
             LEFT JOIN ht_utm u ON u.utm_id = r.utm_id
-            WHERE
-                u.utm_source LIKE '千乐%'
+            LEFT JOIN ht_utm_plat p ON  u.utm_source=p.source_name
+            WHERE 1=1
+            <if test="sourceId != null and sourceId !=''">
+                AND  p.source_id=#{sourceId}
+            </if>
     </select>
+
 
 </mapper>
 

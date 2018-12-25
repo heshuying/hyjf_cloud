@@ -133,8 +133,8 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-    public List<Integer> getQianleUser() {
-		return restTemplate.getForObject("http://AM-USER/am-user/user/getQianleUser", List.class);
+    public List<Integer> getQianleUser(String sourceId ) {
+		return restTemplate.getForObject("http://AM-USER/am-user/user/getQianleUser/"+sourceId, List.class);
     }
 
 

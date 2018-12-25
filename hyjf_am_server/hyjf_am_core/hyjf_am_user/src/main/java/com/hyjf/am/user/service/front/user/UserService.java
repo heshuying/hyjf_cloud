@@ -263,7 +263,7 @@ public interface UserService extends BaseService {
 	 * 查询千乐渠道用户
 	 * @return
 	 */
-	List<Integer> getQianleUser();
+	List<Integer> getQianleUser(String sourceId);
 	/**
 	 * 更新ht_hjh_user_auth_log
 	 * @param hjhUserAuthLog

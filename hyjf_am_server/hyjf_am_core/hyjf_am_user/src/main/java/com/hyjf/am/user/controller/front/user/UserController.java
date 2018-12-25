@@ -912,9 +912,9 @@ public class UserController extends BaseController {
      * 查询千乐渠道的用户id
      * @return
      */
-    @GetMapping("/getQianleUser")
-    public List<Integer> getQianleUser() {
-        return userService.getQianleUser();
+    @GetMapping("/getQianleUser/{sourceId}")
+    public List<Integer> getQianleUser(@PathVariable String sourceId) {
+        return userService.getQianleUser(sourceId);
     }
 
     /**
