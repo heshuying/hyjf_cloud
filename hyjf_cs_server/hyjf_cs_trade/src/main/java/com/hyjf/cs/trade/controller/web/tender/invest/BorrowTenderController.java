@@ -97,12 +97,15 @@ public class BorrowTenderController extends BaseTradeController {
                 }else if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
                     //已过期需要重新评测
                     result.setStatus(MsgEnum.STATUS_EV000004.getCode());
-                //}else if(CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)){
-                    //计划类判断用户类型为稳健型以上才可以投资
-                //    result.setStatus(MsgEnum.STATUS_EV000007.getCode());
+                }else if(CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)){
+                    //计划类判断用户类型为标的设置类型以上才可以投资
+                    result.setStatus(MsgEnum.STATUS_EV000007.getCode());
                 }else if(CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS.equals(riskTested)){
                     //金额对比判断（校验金额 大于 设置测评金额）
                     result.setStatus(MsgEnum.STATUS_EV000005.getCode());
+                }else if(CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS_PRINCIPAL.equals(riskTested)){
+                    //金额对比判断（校验金额 大于 设置测评金额）代收本金
+                    result.setStatus(MsgEnum.STATUS_EV000008.getCode());
                 }
             }
         }
