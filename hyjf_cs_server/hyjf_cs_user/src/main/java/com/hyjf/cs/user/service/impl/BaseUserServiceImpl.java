@@ -97,6 +97,18 @@ public class BaseUserServiceImpl extends BaseServiceImpl implements BaseUserServ
 	}
 
 	/**
+	 * 通过当前用户ID 查询用户所在一级分部,从而关联用户所属渠道
+	 * @param userId
+	 * @return
+	 * @Author : huanghui
+	 */
+	@Override
+	public UserUtmInfoCustomizeVO getUserUtmInfo(Integer userId) {
+		UserUtmInfoCustomizeVO userUtmInfoCustomizeVO = amUserClient.getUserUtmInfo(userId);
+		return userUtmInfoCustomizeVO;
+	}
+
+	/**
 	 * @param userId
 	 * @Description 根据userid查询用户（查询主库）
 	 * @Author sunss
