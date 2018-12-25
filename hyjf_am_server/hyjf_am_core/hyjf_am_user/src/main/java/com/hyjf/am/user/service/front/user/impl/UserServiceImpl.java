@@ -1473,8 +1473,8 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
      * @return
      */
     @Override
-    public List<Integer> getQianleUser() {
-        return qianleUserCustomizeMapper.queryQianleUser();
+    public List<Integer> getQianleUser(String sourceId) {
+        return qianleUserCustomizeMapper.queryQianleUser(sourceId);
     }
 
     /**
