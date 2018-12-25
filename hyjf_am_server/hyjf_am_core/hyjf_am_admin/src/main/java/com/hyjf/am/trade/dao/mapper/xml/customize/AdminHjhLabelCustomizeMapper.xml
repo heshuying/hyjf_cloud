@@ -34,6 +34,8 @@
 	    <result column="update_time" property="updateTime" jdbcType="INTEGER" />
 	    <result column="del_flag" property="delFlg" jdbcType="TINYINT" />
 		<result column="plan_nid" property="planNid" jdbcType="VARCHAR"/>
+		<result column="createUser" property="createUser" jdbcType="VARCHAR"/>
+		<result column="updateUser" property="updateUser" jdbcType="VARCHAR"/>
 	 </resultMap>
 
 
@@ -53,9 +55,7 @@
 	    la.inst_code, la.inst_name, la.asset_type, la.asset_type_name, la.project_type, la.project_type_name,
 	    la.is_credit, is_late, la.credit_sum_max, la.push_time_start, la.push_time_end, la.remaining_days_start,
 	    la.remaining_days_end, la.label_state, la.create_user_id, la.create_time, la.update_user_id, la.update_time,
-	    la.del_flag,
-	    en.id AS labelisUsed,
-	    en.plan_nid
+	    la.del_flag,en.id AS labelisUsed,en.plan_nid,ha.truename createUser,ha1.truename updateUser
 	</sql>
 
 
@@ -109,6 +109,8 @@
 		ht_hjh_label la
 		left join
 		ht_hjh_allocation_engine en ON la.id = en.label_id
+		left join hyjf_config.ht_admin ha on la.create_user_id = ha.id
+		left join hyjf_config.ht_admin ha1 on la.update_user_id = ha1.id
 		<include refid="Where_Clause" />
 		order by la.create_time DESC
 		<if test="limitStart >= 0" >
