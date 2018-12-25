@@ -208,12 +208,6 @@ public interface CsMessageClient {
      */
     List<MessagePushMsgHistoryVO> getRecordListT(MessagePushErrorRequest request, int limitStart, int limitEnd);
 
-    /**
-     * 获取标签列表
-     *
-     * @return
-     */
-    List<MessagePushTagVO> getTagList();
 
     /**
      * 获取单个信息
