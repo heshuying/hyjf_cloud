@@ -56,6 +56,6 @@ public class UserPortraitScoreController extends BaseController {
         if (!Response.isSuccess(response)) {
             return new AdminResult<>(FAIL, response.getMessage());
         }
-        return new AdminResult<ListResult<UserPortraitScoreCustomizeVO>>(ListResult.build(list, response.getCount()));
+        return new AdminResult<>(ListResult.build(list, response.getCount()));
     }
 }
