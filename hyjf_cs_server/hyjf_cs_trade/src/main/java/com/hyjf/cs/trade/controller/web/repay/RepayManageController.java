@@ -250,7 +250,7 @@ public class RepayManageController extends BaseTradeController {
      */
     @ApiOperation(value = "用户待还标的-债转详情", notes = "用户待还标的-债转详情")
     @PostMapping(value = "/user_repay_detail")
-    public WebResult<Map<String,Object>>  userRepayDetail(@RequestHeader(value = "userId", required = true) int userId, @RequestBody String borrowNid){
+    public WebResult<Map<String,Object>>  userRepayDetail(@RequestHeader(value = "userId") Integer userId, @RequestBody WebUserRepayTransferRequest transferRequest){
         WebResult<Map<String,Object>> result = new WebResult<>();
         Map<String,Object> resultMap = new HashMap<>();
 
@@ -258,8 +258,8 @@ public class RepayManageController extends BaseTradeController {
         WebViewUserVO userVO = repayManageService.getUserFromCache(userId);
         /** 当前用户已登录并且标的NID不为空 */
         String verificationFlag = null;
-        if (userVO != null && StringUtils.isNotBlank(borrowNid)){
-            WebUserTransferBorrowInfoCustomizeVO borrowInfo = this.repayManageService.getUserTransferBorrowInfo(borrowNid);
+        if (userVO != null && StringUtils.isNotBlank(transferRequest.getBorrowNid())){
+            WebUserTransferBorrowInfoCustomizeVO borrowInfo = this.repayManageService.getUserTransferBorrowInfo(transferRequest.getBorrowNid());
 
             try {
                 // 单纯的作为验证标识.
@@ -271,7 +271,8 @@ public class RepayManageController extends BaseTradeController {
 
                 //居间协议
                 Integer fddStatus = 0;
-                List<TenderAgreementVO> tenderAgreementsNid = this.repayManageService.selectTenderAgreementByNid(borrowNid);
+                List<TenderAgreementVO> tenderAgreementsNid = null;
+                tenderAgreementsNid = this.repayManageService.selectTenderAgreementByNid(transferRequest.getBorrowNid());
                 if (tenderAgreementsNid != null && tenderAgreementsNid.size() > 0) {
                     TenderAgreementVO tenderAgreement = tenderAgreementsNid.get(0);
                     fddStatus = tenderAgreement.getStatus();
@@ -298,6 +299,7 @@ public class RepayManageController extends BaseTradeController {
                 resultMap.put("verificationFlag", verificationFlag);
                 resultMap.put("borrowInfo", borrowInfo);
                 resultMap.put("fddStatus", fddStatus);
+                resultMap.put("userId", userVO.getUserId());
                 result.setData(resultMap);
             }catch (NullPointerException e){
                 result.setStatusDesc("暂无数据");
@@ -313,18 +315,8 @@ public class RepayManageController extends BaseTradeController {
      */
     @ApiOperation(value = "用户待还标的-债转列表", notes = "用户待还标的-债转列表")
     @PostMapping(value = "/userRepayDetailAjax", produces = "application/json; charset=utf-8")
-    public  WebResult<List<WebUserRepayTransferCustomizeVO>> userRepayDetailAjax(@RequestBody WebUserRepayTransferRequest repayTransferRequest){
-//        WebResult<WebUserRepayTransferCustomizeVO> result = new WebResult<>();
-        WebResult<List<WebUserRepayTransferCustomizeVO>> result = new WebResult<List<WebUserRepayTransferCustomizeVO>>();
-        result.setData(Collections.emptyList());
-
-        List<WebUserRepayTransferCustomizeVO> repayTransferCustomizeVO = null;
-        repayTransferCustomizeVO =  this.repayManageService.selectUserRepayTransferDetailList(repayTransferRequest);
-        if (repayTransferCustomizeVO != null){
-            result.setData(repayTransferCustomizeVO);
-        }
-        result.setStatus(BaseResult.SUCCESS);
-        result.setStatusDesc(BaseResult.SUCCESS_DESC);
+    public  WebResult userRepayDetailAjax(@RequestBody WebUserRepayTransferRequest repayTransferRequest){
+        WebResult result = repayManageService.selectUserRepayTransferDetailList(repayTransferRequest);
         return result;
     }
 

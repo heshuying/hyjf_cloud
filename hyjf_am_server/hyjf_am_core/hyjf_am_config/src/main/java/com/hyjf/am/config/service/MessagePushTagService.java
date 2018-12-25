@@ -10,9 +10,9 @@ import java.util.List;
 
 /**
  * @author fuqiang
- * @version MessagePushTagServcie, v0.1 2018/6/26 11:47
+ * @version MessagePushTagService, v0.1 2018/6/26 11:47
  */
-public interface MessagePushTagServcie {
+public interface MessagePushTagService {
     /**
      * 根据名称获取消息模板标签
      *

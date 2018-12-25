@@ -2526,6 +2526,20 @@ public interface AmTradeClient {
      */
     WebUserTransferBorrowInfoCustomizeVO getUserTransferBorrowInfo(String borrowNid);
 
+    /**
+     * 转让通知借款人 统计
+     * @param repayTransferRequest
+     * @return
+     * @Author : huanghui
+     */
+    Integer getUserRepayDetailAjaxCount(WebUserRepayTransferRequest repayTransferRequest);
+
+    /**
+     * 转让通知借款人 列表
+     * @param repayTransferRequest
+     * @return
+     * @Author : huanghui
+     */
     List<WebUserRepayTransferCustomizeVO> getUserRepayDetailAjax(WebUserRepayTransferRequest repayTransferRequest);
 
     /**

@@ -119,6 +119,13 @@ public class HjhLabelCustomizeVO extends BaseVO implements Serializable{
 	@ApiModelProperty(value = "智投编号")
 	private String planNid;
 
+	@ApiModelProperty(value = "创建人")
+	private String createUser;
+
+	@ApiModelProperty(value = "修改人")
+	private String updateUser;
+
+
 	public String getPlanNid() {
 		return planNid;
 	}
@@ -396,5 +403,21 @@ public class HjhLabelCustomizeVO extends BaseVO implements Serializable{
 
 	public void setPushTimeEndString(String pushTimeEndString) {
 		this.pushTimeEndString = pushTimeEndString;
+	}
+
+	public String getCreateUser() {
+		return createUser;
+	}
+
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
+	}
+
+	public String getUpdateUser() {
+		return updateUser;
+	}
+
+	public void setUpdateUser(String updateUser) {
+		this.updateUser = updateUser;
 	}
 }

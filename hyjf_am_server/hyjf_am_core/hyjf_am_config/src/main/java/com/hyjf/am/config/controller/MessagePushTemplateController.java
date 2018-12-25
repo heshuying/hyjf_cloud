@@ -4,7 +4,7 @@
 package com.hyjf.am.config.controller;
 
 import com.hyjf.am.config.dao.model.auto.MessagePushTemplate;
-import com.hyjf.am.config.service.MessagePushTemplateServcie;
+import com.hyjf.am.config.service.MessagePushTemplateService;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.config.MessagePushTemplateResponse;
@@ -37,7 +37,7 @@ public class MessagePushTemplateController {
     Logger logger = LoggerFactory.getLogger(MessagePushTemplateController.class);
 
     @Autowired
-    private MessagePushTemplateServcie templateServcie;
+    private MessagePushTemplateService templateServcie;
 
     /**
      * 根据tplCode查询消息推送模板

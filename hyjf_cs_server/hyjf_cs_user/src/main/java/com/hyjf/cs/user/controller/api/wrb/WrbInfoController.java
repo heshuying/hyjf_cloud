@@ -19,7 +19,7 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.WrbParseParamUtil;
 import com.hyjf.cs.user.bean.*;
 import com.hyjf.cs.user.bean.WrbNoticeinfoResponse.NoticeinfoDetail;
-import com.hyjf.cs.user.service.wrb.WrbInfoServcie;
+import com.hyjf.cs.user.service.wrb.WrbInfoService;
 import io.swagger.annotations.Api;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -52,7 +52,7 @@ public class WrbInfoController {
     public static final String datetimeFormat_key = "yyyy-MM-dd HH:mm:ss";
 
     @Autowired
-    private WrbInfoServcie wrbInvestServcie;
+    private WrbInfoService wrbInvestServcie;
 
     @RequestMapping("/notice_info")
     public WrbNoticeinfoResponse getNoticeinfoDetail(@RequestParam String param,
