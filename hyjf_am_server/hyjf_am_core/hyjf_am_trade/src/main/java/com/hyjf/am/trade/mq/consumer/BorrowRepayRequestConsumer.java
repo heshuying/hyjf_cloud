@@ -42,7 +42,7 @@ import java.util.Map;
  * @version BorrowRepayRequestConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.BORROW_REPAY_REQUEST_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.BORROW_REPAY_REQUEST_GROUP)
+//@RocketMQMessageListener(topic = MQConstant.BORROW_REPAY_REQUEST_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.BORROW_REPAY_REQUEST_GROUP)
 public class BorrowRepayRequestConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     private static final Logger logger = LoggerFactory.getLogger(BorrowRepayRequestConsumer.class);
