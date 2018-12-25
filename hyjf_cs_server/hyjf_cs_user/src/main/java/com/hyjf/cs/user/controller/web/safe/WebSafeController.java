@@ -262,7 +262,6 @@ public class WebSafeController extends BaseUserController {
     @PostMapping(value = "/updateSmsConfig", produces = "application/json; charset=utf-8")
     public WebResult updateSmsConfig(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String, String> param, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<>();
-        String token = request.getHeader("token");
         String key = param.get("key");
         String value = param.get("value");
         // 加入验证
@@ -313,12 +312,11 @@ public class WebSafeController extends BaseUserController {
     @ApiOperation(value = "上传头像", notes = "上传头像")
     @ApiImplicitParam(name = "param", value = "{image:String}", dataType = "Map")
     @PostMapping(value = "/avatar", produces = "application/json; charset=utf-8")
-    public WebResult uploadAvatarAction(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String, String> param, HttpServletRequest request) {
-        logger.info("用户上传头像 -> userId::[{}]",userId);
+    public WebResult uploadAvatarAction(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String, String> param) {
+        logger.info("用户上传头像 -> param::[{}]",param);
         WebResult<Object> result = new WebResult<>();
         CheckUtil.check(userId != null, MsgEnum.STATUS_CE000006);
         String image = param.get("image");
-        String token = request.getHeader("HttpServletRequest request");
         try {
             UserVO user = safeService.queryUserByUserId(userId);
             String imgFilePath = safeService.uploadAvatar(user, userId, image);
