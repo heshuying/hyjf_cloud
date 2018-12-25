@@ -12,7 +12,7 @@ import com.hyjf.admin.service.EvaluationMoneyLogService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.EvaluationMoneyLogResponse;
 import com.hyjf.am.resquest.admin.EvaluationMoneyLogRequest;
-import com.hyjf.am.vo.trade.EvaluationMoneyLogConfigVO;
+import com.hyjf.am.vo.admin.EvaluationMoneyLogConfigVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

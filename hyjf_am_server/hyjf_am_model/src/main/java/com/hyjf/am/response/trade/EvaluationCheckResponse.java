@@ -4,7 +4,7 @@
 package com.hyjf.am.response.trade;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.trade.EvaluationCheckConfigVO;
+import com.hyjf.am.vo.admin.EvaluationCheckConfigVO;
 import com.hyjf.common.paginator.Paginator;
 
 import java.util.Map;

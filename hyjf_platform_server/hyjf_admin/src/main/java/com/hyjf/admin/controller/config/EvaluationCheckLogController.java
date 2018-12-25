@@ -12,7 +12,7 @@ import com.hyjf.admin.service.EvaluationCheckLogService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.EvaluationCheckLogResponse;
 import com.hyjf.am.resquest.admin.EvaluationCheckLogRequest;
-import com.hyjf.am.vo.trade.EvaluationCheckLogConfigVO;
+import com.hyjf.am.vo.admin.EvaluationCheckLogConfigVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

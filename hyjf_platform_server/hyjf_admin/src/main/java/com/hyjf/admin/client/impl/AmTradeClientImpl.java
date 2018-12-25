@@ -6812,7 +6812,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @author Zha Daojian
      * @date 2018/12/20 18:03
      * @param id
-     * @return com.hyjf.am.vo.trade.EvaluationCheckConfigVO
+     * @return com.hyjf.am.vo.admin.EvaluationCheckConfigVO
      **/
     @Override
     public EvaluationCheckConfigVO getEvaluationCheckById(Integer id) {
@@ -6852,7 +6852,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @author Zha Daojian
      * @date 2018/12/20 18:03
      * @param id
-     * @return com.hyjf.am.vo.trade.EvaluationCheckConfigVO
+     * @return com.hyjf.am.vo.admin.EvaluationCheckConfigVO
      **/
     @Override
     public EvaluationMoneyConfigVO getEvaluationMoneyById(Integer id) {

@@ -4,8 +4,7 @@ import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.service.EvaluationCheckService;
 import com.hyjf.am.response.trade.EvaluationCheckResponse;
 import com.hyjf.am.resquest.admin.EvaluationCheckRequest;
-import com.hyjf.am.vo.trade.EvaluationCheckConfigVO;
-import com.hyjf.common.util.GetDate;
+import com.hyjf.am.vo.admin.EvaluationCheckConfigVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

@@ -3,7 +3,6 @@
  */
 package com.hyjf.admin.controller.config;
 
-import com.hyjf.admin.beans.request.ProtocolsRequestBean;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
@@ -14,7 +13,7 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.EvaluationMoneyResponse;
 import com.hyjf.am.resquest.admin.EvaluationMoneyRequest;
 import com.hyjf.am.vo.config.AdminSystemVO;
-import com.hyjf.am.vo.trade.EvaluationMoneyConfigVO;
+import com.hyjf.am.vo.admin.EvaluationMoneyConfigVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

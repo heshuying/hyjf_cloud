@@ -1,11 +1,8 @@
 package com.hyjf.admin.service;
 
-import com.hyjf.am.response.trade.EvaluationCheckResponse;
 import com.hyjf.am.response.trade.EvaluationMoneyResponse;
-import com.hyjf.am.resquest.admin.EvaluationCheckRequest;
 import com.hyjf.am.resquest.admin.EvaluationMoneyRequest;
-import com.hyjf.am.vo.trade.EvaluationCheckConfigVO;
-import com.hyjf.am.vo.trade.EvaluationMoneyConfigVO;
+import com.hyjf.am.vo.admin.EvaluationMoneyConfigVO;
 
 public interface EvaluationMoneyService {
 

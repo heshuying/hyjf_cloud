@@ -2,7 +2,7 @@ package com.hyjf.admin.service;
 
 import com.hyjf.am.response.trade.EvaluationCheckResponse;
 import com.hyjf.am.resquest.admin.EvaluationCheckRequest;
-import com.hyjf.am.vo.trade.EvaluationCheckConfigVO;
+import com.hyjf.am.vo.admin.EvaluationCheckConfigVO;
 
 public interface EvaluationCheckService {
 
