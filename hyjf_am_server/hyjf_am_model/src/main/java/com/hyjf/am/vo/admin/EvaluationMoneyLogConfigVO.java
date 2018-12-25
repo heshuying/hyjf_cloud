@@ -9,6 +9,9 @@ import java.util.Date;
 public class EvaluationMoneyLogConfigVO implements Serializable {
 
 
+    @ApiModelProperty(value = "id")
+    private Integer id;
+
     @ApiModelProperty(value = "测评到期时间")
     private Integer validityEvaluationDate;
 
@@ -50,6 +53,14 @@ public class EvaluationMoneyLogConfigVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getValidityEvaluationDate() {
         return validityEvaluationDate;

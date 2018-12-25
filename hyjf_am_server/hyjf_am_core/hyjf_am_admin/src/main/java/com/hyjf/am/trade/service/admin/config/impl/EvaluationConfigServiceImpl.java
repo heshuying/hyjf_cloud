@@ -183,7 +183,6 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
     public Boolean updateEvaluationMoney(EvaluationMoneyRequest request) {
         EvaluationConfig evaluationConfig = new EvaluationConfig();
         BeanUtils.copyProperties(request,evaluationConfig);
-        evaluationConfig.setUpdateUser("");
         evaluationConfig.setUpdateTime(new Date());
         if(evaluationConfigMapper.updateByPrimaryKeySelective(evaluationConfig)>0){
 

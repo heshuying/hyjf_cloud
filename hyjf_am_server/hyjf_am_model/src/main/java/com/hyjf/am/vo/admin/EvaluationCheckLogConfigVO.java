@@ -8,6 +8,9 @@ import java.util.Date;
 public class EvaluationCheckLogConfigVO implements Serializable {
 
 
+    @ApiModelProperty(value = "id")
+    private Integer id;
+
     @ApiModelProperty(value = "散标债转出借者测评类型校验")
     private Integer debtEvaluationTypeCheck;
 
@@ -43,6 +46,13 @@ public class EvaluationCheckLogConfigVO implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
 
     public Integer getDebtEvaluationTypeCheck() {
         return debtEvaluationTypeCheck;
