@@ -42,7 +42,7 @@ public class EvaluationCheckController extends BaseController {
 
 	public static final String PERMISSIONS = "evaluationcheck";
 
-	@ApiOperation(value = "风险测评开关配置", notes = "风险测评开关配置")
+	@ApiOperation(value = "风险测评开关配置列表页", notes = "风险测评开关配置列表页")
 	@PostMapping("/init")
 	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<ListResult<EvaluationCheckConfigVO>> getRecordList(@RequestBody EvaluationCheckRequest requestBean) {

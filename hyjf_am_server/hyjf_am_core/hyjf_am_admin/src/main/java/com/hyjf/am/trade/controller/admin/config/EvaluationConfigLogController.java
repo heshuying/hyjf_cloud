@@ -4,25 +4,24 @@
 package com.hyjf.am.trade.controller.admin.config;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.trade.*;
+import com.hyjf.am.response.trade.EvaluationCheckLogResponse;
+import com.hyjf.am.response.trade.EvaluationMoneyLogResponse;
 import com.hyjf.am.resquest.admin.EvaluationCheckLogRequest;
-import com.hyjf.am.resquest.admin.EvaluationCheckRequest;
 import com.hyjf.am.resquest.admin.EvaluationMoneyLogRequest;
-import com.hyjf.am.resquest.admin.EvaluationMoneyRequest;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.dao.model.auto.EvaluationConfig;
 import com.hyjf.am.trade.dao.model.auto.EvaluationConfigLog;
 import com.hyjf.am.trade.service.admin.config.EvaluationConfigService;
-import com.hyjf.am.vo.trade.EvaluationCheckConfigVO;
 import com.hyjf.am.vo.trade.EvaluationCheckLogConfigVO;
-import com.hyjf.am.vo.trade.EvaluationMoneyConfigVO;
 import com.hyjf.am.vo.trade.EvaluationMoneyLogConfigVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
