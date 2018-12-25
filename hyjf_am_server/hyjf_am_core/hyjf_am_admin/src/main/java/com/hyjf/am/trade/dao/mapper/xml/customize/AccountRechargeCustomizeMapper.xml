@@ -208,7 +208,6 @@
 		r.`status` WHEN 0 THEN '初始' WHEN 1 THEN '处理中' WHEN 2
 		THEN '成功' ELSE '失败' END as
 		statusName ,
-		-- 			FROM_UNIXTIME(r.create_time,'%Y-%m-%d %H:%i:%S') as create_time,
 		CASE r.client WHEN 0 THEN 'PC'
 		WHEN 1 THEN '微信' WHEN 2 THEN
 		'android' WHEN
@@ -222,7 +221,14 @@
 		r.account_id,
 		UNIX_TIMESTAMP()-UNIX_TIMESTAMP(r.create_time) as outtime,
 		r.create_time,
-		r.`status`,
+		CASE
+		r.`status`
+		WHEN 0 THEN 0
+		WHEN 1 THEN 1
+		WHEN 2
+		THEN 2
+		ELSE 3
+		END as status ,
 		r.is_bank
 		FROM
 		ht_account_recharge r
@@ -230,10 +236,6 @@
 			LEFT JOIN
 			ht_r_user ui ON r.user_id= ui.user_id
 		</if>
-		<!--<if test="userProperty != null and userProperty != ''">-->
--- 			LEFT JOIN
--- 			ht_r_user ui ON r.user_id= ui.user_id
-		<!--</if>-->
 		WHERE
 		1=1
 		<include refid="where-all-page-condition" />

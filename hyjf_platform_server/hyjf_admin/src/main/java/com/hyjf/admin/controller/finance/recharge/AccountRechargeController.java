@@ -223,10 +223,14 @@ public class AccountRechargeController extends BaseController {
         List<String> perm = (List<String>) request.getSession().getAttribute("permission");
         //判断权限
         boolean isShow = false;
-        for (String string : perm) {
-            if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
-                isShow=true;
+        try {
+            for (String string : perm) {
+                if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
+                    isShow = true;
+                }
             }
+        }catch (NullPointerException e){
+            logger.error("Admin - 充值管理未获取到当前用户的权限列表!", e.getMessage());
         }
 
         //初始化返回List

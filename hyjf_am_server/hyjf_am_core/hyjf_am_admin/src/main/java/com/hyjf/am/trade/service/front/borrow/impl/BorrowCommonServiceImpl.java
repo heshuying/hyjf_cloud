@@ -3871,7 +3871,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	public String getUploadImage(BorrowCommonBean borrowBean, String files, String borrowNid) throws Exception {
 
 		HashMap<String, String> fileMap = new HashMap<String, String>();
-
+		logger.error(files);
 		// 项目资料
 		if (StringUtils.isNotEmpty(files)) {
 			List<BorrowCommonFile> borrowCommonFileList = JSONArray.parseArray(files, BorrowCommonFile.class);
@@ -3880,6 +3880,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					List<BorrowCommonFileData> fileDataList = borrowCommonFile.getData();
 					if (fileDataList != null && fileDataList.size() > 0) {
 						for (BorrowCommonFileData borrowCommonFileData : fileDataList) {
+							_log.error("进来了");
 							if (StringUtils.isEmpty(borrowCommonFileData.getFileRealName())) {
 								fileMap.put(borrowCommonFileData.getName(), borrowCommonFileData.getFileurl());
 							} else {
@@ -3918,15 +3919,18 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					borrowCommonFileData.setFileurl(fileUploadRealPath + fileName);
 					// 垃圾文件删除
 					UploadFileUtils.removeFile4Dir(borrowCommonImage.getImagePath());
+					_log.error("之前没有");
 				} else {
 					// 该文件是否已经存在-不存在
 					if (!(fileMap.containsKey(borrowCommonImage.getImageRealName()) || fileMap.containsKey(borrowCommonImage.getImageName()))) {
+						_log.error("没找到重新上传");
 						// 图片路径
 						String fileName = UploadFileUtils.upload4CopyFile(filePhysicalPath + borrowCommonImage.getImagePath(), filePhysicalPath + fileUploadRealPath);
 						borrowCommonFileData.setFileurl(fileUploadRealPath + fileName);
 						// 垃圾文件删除
 						UploadFileUtils.removeFile4Dir(borrowCommonImage.getImagePath());
 					} else {
+						_log.error("找到不用重新上传");
 						// 图片顺序
 						borrowCommonFileData.setImageSort(borrowCommonImage.getImageSort().trim());
 						// 图片名称
