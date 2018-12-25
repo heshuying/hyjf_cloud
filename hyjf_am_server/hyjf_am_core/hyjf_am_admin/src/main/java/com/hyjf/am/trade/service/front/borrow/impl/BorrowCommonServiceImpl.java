@@ -854,9 +854,9 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				borrowCra.andBorrowPreNidNewEqualTo(borrowList.getBorrowPreNidNew());
 				//添加修改日志
 				BorrowLog borrowLog = new BorrowLog();
-				List<BorrowInfo> borrowAllList = this.borrowInfoMapper.selectByExample(borrowExample);
+				List<BorrowInfoWithBLOBs> borrowAllList = this.borrowInfoMapper.selectByExampleWithBLOBs(borrowExample);
 				if (borrowAllList != null && borrowAllList.size() > 0) {
-					for (BorrowInfo borrow : borrowAllList) {
+					for (BorrowInfoWithBLOBs borrow : borrowAllList) {
 						BorrowWithBLOBs bwb=new BorrowWithBLOBs();
 						 BeanUtils.copyProperties(borrow,bwb);
 						 BeanUtils.copyProperties(this.getBorrow(borrowNid),bwb);
