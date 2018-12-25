@@ -54,7 +54,7 @@ public interface AmUserClient {
      * 得到千乐渠道用户
      * @return
      */
-    List<Integer> getQianleUser();
+    List<Integer> getQianleUser(String sourceId);
 
     /**
      * 保存短信信息
