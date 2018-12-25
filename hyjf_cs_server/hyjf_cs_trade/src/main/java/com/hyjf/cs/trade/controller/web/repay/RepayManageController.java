@@ -299,6 +299,7 @@ public class RepayManageController extends BaseTradeController {
                 resultMap.put("verificationFlag", verificationFlag);
                 resultMap.put("borrowInfo", borrowInfo);
                 resultMap.put("fddStatus", fddStatus);
+                resultMap.put("userId", userVO.getUserId());
                 result.setData(resultMap);
             }catch (NullPointerException e){
                 result.setStatusDesc("暂无数据");
