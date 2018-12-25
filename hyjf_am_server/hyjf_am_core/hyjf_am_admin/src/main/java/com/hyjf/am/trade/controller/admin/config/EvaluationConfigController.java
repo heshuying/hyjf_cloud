@@ -3,32 +3,18 @@
  */
 package com.hyjf.am.trade.controller.admin.config;
 
-import com.hyjf.am.response.BooleanResponse;
-import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
-import com.hyjf.am.response.StringResponse;
-import com.hyjf.am.response.admin.BailConfigCustomizeResponse;
-import com.hyjf.am.response.admin.BailConfigInfoCustomizeResponse;
 import com.hyjf.am.response.trade.EvaluationCheckResponse;
 import com.hyjf.am.response.trade.EvaluationMoneyResponse;
-import com.hyjf.am.response.user.HjhInstConfigResponse;
-import com.hyjf.am.resquest.admin.BailConfigAddRequest;
-import com.hyjf.am.resquest.admin.BailConfigRequest;
 import com.hyjf.am.resquest.admin.EvaluationCheckRequest;
 import com.hyjf.am.resquest.admin.EvaluationMoneyRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.EvaluationConfig;
-import com.hyjf.am.trade.dao.model.auto.HjhInstConfig;
-import com.hyjf.am.trade.service.admin.config.BailConfigService;
 import com.hyjf.am.trade.service.admin.config.EvaluationConfigService;
-import com.hyjf.am.vo.admin.BailConfigCustomizeVO;
-import com.hyjf.am.vo.admin.BailConfigInfoCustomizeVO;
-import com.hyjf.am.vo.trade.EvaluationCheckConfigVO;
-import com.hyjf.am.vo.trade.EvaluationMoneyConfigVO;
-import com.hyjf.am.vo.user.HjhInstConfigVO;
+import com.hyjf.am.vo.admin.EvaluationCheckConfigVO;
+import com.hyjf.am.vo.admin.EvaluationMoneyConfigVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.GetterUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;

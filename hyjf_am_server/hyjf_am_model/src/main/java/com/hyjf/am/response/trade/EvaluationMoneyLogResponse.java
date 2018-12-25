@@ -4,8 +4,8 @@
 package com.hyjf.am.response.trade;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.trade.EvaluationMoneyConfigVO;
-import com.hyjf.am.vo.trade.EvaluationMoneyLogConfigVO;
+import com.hyjf.am.vo.admin.EvaluationMoneyConfigVO;
+import com.hyjf.am.vo.admin.EvaluationMoneyLogConfigVO;
 import com.hyjf.common.paginator.Paginator;
 
 import java.util.Map;

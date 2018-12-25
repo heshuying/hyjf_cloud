@@ -6812,7 +6812,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @author Zha Daojian
      * @date 2018/12/20 18:03
      * @param id
-     * @return com.hyjf.am.vo.trade.EvaluationCheckConfigVO
+     * @return com.hyjf.am.vo.admin.EvaluationCheckConfigVO
      **/
     @Override
     public EvaluationCheckConfigVO getEvaluationCheckById(Integer id) {
@@ -6832,7 +6832,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      **/
     @Override
     public EvaluationCheckResponse updateEvaluationCheck(EvaluationCheckRequest request) {
-        EvaluationCheckResponse response = restTemplate.postForEntity(tradeService + "/evaluation/updateEvaluationCheck", request, EvaluationCheckResponse.class).getBody();
+        EvaluationCheckResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/evaluation/updateEvaluationCheck", request, EvaluationCheckResponse.class).getBody();
         return response;
     }
 
@@ -6852,7 +6852,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @author Zha Daojian
      * @date 2018/12/20 18:03
      * @param id
-     * @return com.hyjf.am.vo.trade.EvaluationCheckConfigVO
+     * @return com.hyjf.am.vo.admin.EvaluationCheckConfigVO
      **/
     @Override
     public EvaluationMoneyConfigVO getEvaluationMoneyById(Integer id) {
@@ -6872,7 +6872,7 @@ public class AmTradeClientImpl implements AmTradeClient {
      **/
     @Override
     public EvaluationMoneyResponse updateEvaluationMoney(EvaluationMoneyRequest request) {
-        EvaluationMoneyResponse response = restTemplate.postForEntity(tradeService + "/evaluation/updateEvaluationMoney", request, EvaluationMoneyResponse.class).getBody();
+        EvaluationMoneyResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/evaluation/updateEvaluationMoney", request, EvaluationMoneyResponse.class).getBody();
         return response;
     }
 
