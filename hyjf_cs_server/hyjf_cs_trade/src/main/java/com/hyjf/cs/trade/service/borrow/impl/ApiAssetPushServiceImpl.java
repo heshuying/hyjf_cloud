@@ -56,9 +56,9 @@ import java.util.UUID;
  * @version ApiAssetPushServcieImpl, v0.1 2018/6/11 18:06
  */
 @Service
-public class ApiAssetPushServcieImpl extends BaseTradeServiceImpl implements ApiAssetPushService {
+public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements ApiAssetPushService {
 
-    private Logger logger = LoggerFactory.getLogger(ApiAssetPushServcieImpl.class);
+    private Logger logger = LoggerFactory.getLogger(ApiAssetPushServiceImpl.class);
 
     private static final Long MAX_ASSET_MONEY = 1000000L;
 

@@ -91,10 +91,13 @@ public class BorrowRepayRequestConsumer implements RocketMQListener<MessageExt>,
                 return;
             }
             // 确认是否真的还款请求
-    //	        if(borrowApicron.getStatus().intValue() != 1) {
-    //	            logger.error(borrowNid+"【本金还款请求】接收到的消息中信息不全");
-    //            	return ConsumeConcurrentlyStatus.CONSUME_SUCCESS;
-    //	        }
+    	    if(borrowApicron.getStatus().intValue() == 1 || borrowApicron.getStatus().intValue() == 7 ) {
+    	        ;
+    	    }else {
+    	    	logger.error(borrowNid+" 已经请求过还款！！");
+                return;
+    	    }
+    	    
             boolean result = this.outRepeatQueue(redisKey, borrowApicron);//modify by cwyang 数据库事故后变更,不设时间,待所有流程结束后再去除防重标示
             if (result) {
                 logger.error(borrowNid + " 本金还款请求中....");
