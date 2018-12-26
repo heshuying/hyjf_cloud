@@ -775,7 +775,15 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
      * @param userVO
      * @return
      */
-    private WebViewUserVO assembleWebViewUserVO(UserVO userVO) {
+    private WebViewUserVO assembleWebViewUserVO(UserVO paramUser) {
+
+        // 此时userVO只包含传递参数数据，数据库初始化的数据(非空字段有默认值)并不包含，所以调用一次查询
+        UserVO userVO = amUserClient.findUserById(paramUser.getUserId());
+        if(userVO == null){
+            userVO = new UserVO();
+            BeanUtils.copyProperties(paramUser, userVO);
+        }
+
         WebViewUserVO webViewUserVO = new WebViewUserVO();
         BeanUtils.copyProperties(userVO, webViewUserVO);
         UserInfoVO usersInfo = amUserClient.findUserInfoById(userVO.getUserId());

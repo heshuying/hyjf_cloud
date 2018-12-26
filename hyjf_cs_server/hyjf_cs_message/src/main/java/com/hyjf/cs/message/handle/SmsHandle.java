@@ -314,7 +314,7 @@ public class SmsHandle {
 			}
 
 			UserInfoVO userInfoVO = amUserClient.findUsersInfoById(userId);
-			// 为保护客户隐私，只显示客户姓氏，不显示客户全名。 胡宝志20160115
+			// 为保护客户隐私，只显示客户姓氏，不显示客户全名。
 			replaceStrs.put("val_name", userInfoVO.getTruename().substring(0, 1));
 			replaceStrs.put("val_sex", userInfoVO.getSex() == 1 ? "先生" : "女士");
 
@@ -348,7 +348,7 @@ public class SmsHandle {
 			SmsTemplateVO smsTemplate = amConfigClient.findSmsTemplate(request);
 			if (smsTemplate == null) {
 				logger.warn("无可用短信模板,查询条件为status:[1,开启状态的模板],TPLCode:[{}]",tplCode);
-				//下面这个抛出异常的，可以等上线再开启
+				//下面这个抛出异常的，可以等上线再开启 todo
 				//throw new RuntimeException("无可用短信模板...");
 				return status;
 			}
