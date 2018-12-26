@@ -36,6 +36,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.*;
 
 /**
@@ -312,12 +314,13 @@ public class WebSafeController extends BaseUserController {
     @ApiOperation(value = "上传头像", notes = "上传头像")
     @ApiImplicitParam(name = "param", value = "{image:String}", dataType = "Map")
     @PostMapping(value = "/avatar", produces = "application/json; charset=utf-8")
-    public WebResult uploadAvatarAction(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String, String> param) {
+    public WebResult uploadAvatarAction(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String, String> param) throws UnsupportedEncodingException {
         logger.info("上传头像开始。。。。。。。。。。。");
-        logger.info("用户上传头像 -> param::[{}]",param);
         WebResult<Object> result = new WebResult<>();
         CheckUtil.check(userId != null, MsgEnum.STATUS_CE000006);
         String image = param.get("image");
+        image = URLDecoder.decode(image,"UTF-8");
+        logger.info("用户上传头像 -> image::[{}]",image);
         try {
             UserVO user = safeService.queryUserByUserId(userId);
             String imgFilePath = safeService.uploadAvatar(user, userId, image);
