@@ -777,7 +777,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 if (!CommonUtils.checkStandardInvestment(eval_type,borrowFlag,checkLeve)) {
                     //返回错误码
                     result.put("evalType",eval_type);
-                    result.put("revaluationMoney",StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money)));
+                    result.put("revaluationMoney",StringUtil.getTenThousandOfANumber(Double.valueOf(revaluation_money).intValue()));
                     //返回错误码
                     result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL);
                     result.put("message",CommonUtils.DESC_PROJECT_RISK_LEVEL_DESC.replace("{0}", userEvalationResultCustomize.getEvalType()).replace("{1}",checkLeve));

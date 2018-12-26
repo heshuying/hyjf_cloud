@@ -99,6 +99,8 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
     @Override
     public Integer selectEvaluationMoneyLogCount(EvaluationMoneyLogRequest request) {
         EvaluationConfigLogExample example = new EvaluationConfigLogExample();
+        EvaluationConfigLogExample.Criteria criteria = example.createCriteria();
+        criteria.andStatusEqualTo(2);
         return evaluationConfigLogMapper.countByExample(example);
     }
 
@@ -115,29 +117,32 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
             example.setLimitEnd(request.getLimitEnd());
         }
         EvaluationConfigLogExample.Criteria criteria = example.createCriteria();
-        criteria.andStatusEqualTo(1);
+        criteria.andStatusEqualTo(2);
         if(StringUtils.isNotEmpty(request.getUpdateUser())){
             criteria.andUpdateUserEqualTo(request.getUpdateUser());
         }
         if (StringUtils.isNotBlank(request.getStartTime()) && StringUtils.isNotBlank(request.getEndTime())) {
             criteria.andUpdateTimeBetween(GetDate.str2Date(GetDate.getDayStart(request.getStartTime()),datetimeFormat), GetDate.str2Date(GetDate.getDayEnd(request.getEndTime()),datetimeFormat));
         }
+        example.setOrderByClause("create_time DESC");
         return evaluationConfigLogMapper.selectByExample(example);
     }
 
     /**
-     * 获取风险测评-限额配置总数(操作日志)
+     * 获取风险测评-开关配置总数(操作日志)
      * @param request
      * @return
      */
     @Override
     public Integer selectEvaluationCheckLogCount(EvaluationCheckLogRequest request) {
         EvaluationConfigLogExample example = new EvaluationConfigLogExample();
+        EvaluationConfigLogExample.Criteria criteria = example.createCriteria();
+        criteria.andStatusEqualTo(1);
         return evaluationConfigLogMapper.countByExample(example);
     }
 
     /**
-     * 获取风险测评-限额配置列表(操作日志)
+     * 获取风险测评-开关配置列表(操作日志)
      * @param request
      * @return
      */
@@ -148,6 +153,15 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
             example.setLimitStart(request.getLimitStart());
             example.setLimitEnd(request.getLimitEnd());
         }
+        EvaluationConfigLogExample.Criteria criteria = example.createCriteria();
+        criteria.andStatusEqualTo(1);
+        if(StringUtils.isNotEmpty(request.getUpdateUser())){
+            criteria.andUpdateUserEqualTo(request.getUpdateUser());
+        }
+        if (StringUtils.isNotBlank(request.getStartTime()) && StringUtils.isNotBlank(request.getEndTime())) {
+            criteria.andUpdateTimeBetween(GetDate.str2Date(GetDate.getDayStart(request.getStartTime()),datetimeFormat), GetDate.str2Date(GetDate.getDayEnd(request.getEndTime()),datetimeFormat));
+        }
+        example.setOrderByClause("create_time DESC");
         return evaluationConfigLogMapper.selectByExample(example);
     }
 
