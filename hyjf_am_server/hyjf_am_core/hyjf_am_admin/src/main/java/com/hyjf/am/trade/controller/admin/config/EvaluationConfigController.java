@@ -57,6 +57,7 @@ public class EvaluationConfigController extends BaseController {
         if (null != evaluationCheckConfigVOList && evaluationCheckConfigVOList.size() > 0) {
             List<EvaluationCheckConfigVO> evaluationCheckConfigVOs = CommonUtils.convertBeanList(evaluationCheckConfigVOList, EvaluationCheckConfigVO.class);
             response.setResultList(evaluationCheckConfigVOs);
+            response.setCount(recordTotal);
             response.setRtn(Response.SUCCESS);
         }
         return response;
@@ -75,6 +76,7 @@ public class EvaluationConfigController extends BaseController {
         if (null != evaluationConfigList && evaluationConfigList.size() > 0) {
             List<EvaluationMoneyConfigVO> evaluationCheckConfigVOs = CommonUtils.convertBeanList(evaluationConfigList, EvaluationMoneyConfigVO.class);
             response.setResultList(evaluationCheckConfigVOs);
+            response.setCount(recordTotal);
             response.setRtn(Response.SUCCESS);
         }
         return response;

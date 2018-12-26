@@ -20,23 +20,7 @@ import java.util.Map;
 public class EvaluationCheckLogResponse extends Response<EvaluationCheckLogConfigVO> {
 	private int count;
 
-	private Map<String,Object> map;
-
-	private int cuttype;
-
-	private int cnt;
-
 	private EvaluationCheckConfigVO form;
-
-	Boolean resultBoolean;
-
-	public Boolean getResultBoolean() {
-		return resultBoolean;
-	}
-
-	public void setResultBoolean(Boolean resultBoolean) {
-		this.resultBoolean = resultBoolean;
-	}
 
 	/**
 	 * 翻页机能用的隐藏变量
@@ -73,30 +57,6 @@ public class EvaluationCheckLogResponse extends Response<EvaluationCheckLogConfi
 
 	public void setCount(int count) {
 		this.count = count;
-	}
-
-	public Map<String, Object> getMap() {
-		return map;
-	}
-
-	public void setMap(Map<String, Object> map) {
-		this.map = map;
-	}
-
-	public int getCuttype() {
-		return cuttype;
-	}
-
-	public void setCuttype(int cuttype) {
-		this.cuttype = cuttype;
-	}
-
-	public int getCnt() {
-		return cnt;
-	}
-
-	public void setCnt(int cnt) {
-		this.cnt = cnt;
 	}
 
 	public EvaluationCheckConfigVO getForm() {
