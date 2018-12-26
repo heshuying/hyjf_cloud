@@ -99,6 +99,8 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
     @Override
     public Integer selectEvaluationMoneyLogCount(EvaluationMoneyLogRequest request) {
         EvaluationConfigLogExample example = new EvaluationConfigLogExample();
+        EvaluationConfigLogExample.Criteria criteria = example.createCriteria();
+        criteria.andStatusEqualTo(2);
         return evaluationConfigLogMapper.countByExample(example);
     }
 
