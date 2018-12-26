@@ -2,9 +2,8 @@ package com.hyjf.am.trade.dao.mapper.auto;
 
 import com.hyjf.am.trade.dao.model.auto.BorrowApicron;
 import com.hyjf.am.trade.dao.model.auto.BorrowApicronExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface BorrowApicronMapper {
     int countByExample(BorrowApicronExample example);
