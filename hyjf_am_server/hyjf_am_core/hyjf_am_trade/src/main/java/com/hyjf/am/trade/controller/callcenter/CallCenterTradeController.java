@@ -83,6 +83,23 @@ public class CallCenterTradeController extends BaseController {
     }
 
     /**
+     * 返回用户冻结金额和代收本金
+     * @author wenxin
+     * @param userId
+     * @return
+     */
+    @RequestMapping("/queryAccountEvalDetail/{userId}")
+    public CallCenterAccountDetailResponse queryAccountEvalDetail(@PathVariable Integer userId){
+        CallCenterAccountDetailResponse callCenterAccountDetailResponse = new CallCenterAccountDetailResponse();
+        CallCenterAccountDetailCustomize callCenterAccountDetail = callCenterTradeService.queryAccountEvalDetail(userId);
+        if(callCenterAccountDetail != null){
+            CallCenterAccountDetailVO callCenterAccountDetailVOS = CommonUtils.convertBean(callCenterAccountDetail,CallCenterAccountDetailVO.class);
+            callCenterAccountDetailResponse.setResult(callCenterAccountDetailVOS);
+        }
+        return callCenterAccountDetailResponse;
+    }
+
+    /**
      * 查询充值明细
      * @author wangjun
      * @param request

@@ -1,9 +1,9 @@
 package com.hyjf.cs.message.bean.mc;
 
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-
 import java.io.Serializable;
+import java.util.Date;
+
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author xiasq
@@ -20,7 +20,7 @@ public class SmsLog implements Serializable {
     private String ip;
 
     // @Indexed dba维护索引
-    private Integer posttime;
+    private Date posttime;
 
     private Integer status;
 
@@ -66,11 +66,11 @@ public class SmsLog implements Serializable {
         this.ip = ip == null ? null : ip.trim();
     }
 
-    public Integer getPosttime() {
+    public Date getPosttime() {
         return posttime;
     }
 
-    public void setPosttime(Integer posttime) {
+    public void setPosttime(Date posttime) {
         this.posttime = posttime;
     }
 

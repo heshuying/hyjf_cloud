@@ -4605,6 +4605,76 @@ public class BorrowExample {
             addCriterion("repay_capital_type not between", value1, value2, "repayCapitalType");
             return (Criteria) this;
         }
+
+        public Criteria andInvestLevelIsNull() {
+            addCriterion("invest_level is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestLevelIsNotNull() {
+            addCriterion("invest_level is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestLevelEqualTo(String value) {
+            addCriterion("invest_level =", value, "investLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestLevelNotEqualTo(String value) {
+            addCriterion("invest_level <>", value, "investLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestLevelGreaterThan(String value) {
+            addCriterion("invest_level >", value, "investLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestLevelGreaterThanOrEqualTo(String value) {
+            addCriterion("invest_level >=", value, "investLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestLevelLessThan(String value) {
+            addCriterion("invest_level <", value, "investLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestLevelLessThanOrEqualTo(String value) {
+            addCriterion("invest_level <=", value, "investLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestLevelLike(String value) {
+            addCriterion("invest_level like", value, "investLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestLevelNotLike(String value) {
+            addCriterion("invest_level not like", value, "investLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestLevelIn(List<String> values) {
+            addCriterion("invest_level in", values, "investLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestLevelNotIn(List<String> values) {
+            addCriterion("invest_level not in", values, "investLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestLevelBetween(String value1, String value2) {
+            addCriterion("invest_level between", value1, value2, "investLevel");
+            return (Criteria) this;
+        }
+
+        public Criteria andInvestLevelNotBetween(String value1, String value2) {
+            addCriterion("invest_level not between", value1, value2, "investLevel");
+            return (Criteria) this;
+        }
     }
 
     public static class Criteria extends GeneratedCriteria {

@@ -247,6 +247,15 @@ public class PlanListRequest extends BasePage implements Serializable{
 	 */
 	private int userid;
 
+	/**
+	 * 智投服务风险测评等级
+	 *
+	 */
+	private String investLevel;
+
+
+
+
 	public String getSort() {
 		return sort;
 	}
@@ -630,7 +639,16 @@ public class PlanListRequest extends BasePage implements Serializable{
 	public void setUserid(int userid) {
 		this.userid = userid;
 	}
-	
+
+	public String getInvestLevel() {
+		return investLevel;
+	}
+
+	public void setInvestLevel(String investLevel) {
+		this.investLevel = investLevel;
+	}
+
+
 	/**
 	 * 检索条件 计划类型 “配置中心-汇添金配置”中所有计划类型（暂时不用）
 	 */

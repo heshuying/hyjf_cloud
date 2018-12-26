@@ -28,4 +28,11 @@ public class AmMarketClientImpl implements AmMarketClient {
         }
         return null;
     }
+    @Override
+    public void  updateJoinTime(String borrowNid,Integer nowTime){
+        String url = "http://AM-ADMIN/am-market/returncash/updatejointime/"+borrowNid+"/"+nowTime;
+         restTemplate.getForEntity(url,String.class);
+
+    }
+
 }

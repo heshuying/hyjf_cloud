@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -147,7 +148,7 @@ public class SmsHandle {
 		SmsLog smsLog = new SmsLog();
 		smsLog.setType(type);
 		smsLog.setContent(messageStr);// 短信内容
-		smsLog.setPosttime(GetDate.getNowTime10());
+		smsLog.setPosttime(new Date());
 		smsLog.setMobile(mobile);
 		if (StringUtils.isEmpty(sender)) {
 			smsLog.setSender(title);
@@ -300,20 +301,20 @@ public class SmsHandle {
 			}
 			String mobile = user.getMobile();
 			if (StringUtils.isEmpty(mobile)) {
-				logger.error("用户电话为空");
-				//下面这个抛出异常的，可以等上线再开启
+				logger.error("手机号不能为空， userId is : {}", userId);
+				//下面这个抛出异常的，可以等上线再开启  todo
 				//throw new Exception("用户电话为空");
 				return status;
 			}
 			if (!Validator.isPhoneNumber(mobile)) {
 				logger.error("用户电话号码格式不正确");
-				//下面这个抛出异常的，可以等上线再开启
+				//下面这个抛出异常的，可以等上线再开启  todo
 				//throw new Exception("用户电话号码格式不正确");
 				return status;
 			}
 
 			UserInfoVO userInfoVO = amUserClient.findUsersInfoById(userId);
-			// 为保护客户隐私，只显示客户姓氏，不显示客户全名。 胡宝志20160115
+			// 为保护客户隐私，只显示客户姓氏，不显示客户全名。
 			replaceStrs.put("val_name", userInfoVO.getTruename().substring(0, 1));
 			replaceStrs.put("val_sex", userInfoVO.getSex() == 1 ? "先生" : "女士");
 
@@ -347,7 +348,7 @@ public class SmsHandle {
 			SmsTemplateVO smsTemplate = amConfigClient.findSmsTemplate(request);
 			if (smsTemplate == null) {
 				logger.warn("无可用短信模板,查询条件为status:[1,开启状态的模板],TPLCode:[{}]",tplCode);
-				//下面这个抛出异常的，可以等上线再开启
+				//下面这个抛出异常的，可以等上线再开启 todo
 				//throw new RuntimeException("无可用短信模板...");
 				return status;
 			}

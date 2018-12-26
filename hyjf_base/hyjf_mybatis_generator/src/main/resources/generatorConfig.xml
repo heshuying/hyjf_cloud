@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_trade.properties"/>
+    <properties resource="init_market.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -1953,6 +1953,10 @@
             <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
+        <table tableName="ht_sell_daily" domainObjectName="SellDaily">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+
         <table tableName="ht_app_push_manage" domainObjectName="AppPushManage">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
             <columnOverride column="jump_type" javaType="java.lang.Integer" jdbcType="TINYINT" />
@@ -1970,6 +1974,17 @@
         <table tableName="ht_hjh_asset_risk_info" domainObjectName="HjhAssetRiskInfo">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
-
+        <!--纳觅用户表-->
+        <table tableName="ht_nm_user" domainObjectName="NmUser">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!--业绩返现详情-->
+        <table tableName="ht_performance_return_detail" domainObjectName="PerformanceReturnDetail">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+        <!--邀请人返现明细-->
+        <table tableName="ht_inviter_return_detail" domainObjectName="InviterReturnDetail">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
     </context>
 </generatorConfiguration>

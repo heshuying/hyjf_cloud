@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <meta charset="UTF-8">
     <title>Batch</title>
@@ -30,15 +30,19 @@
                     <tr>
                         <td>
                             <a href="#" class="easyui-linkbutton" iconCls="grid-add" plain="true"
-                               onclick="TaskInfo.addTaskInfo()">Add</a>
+                               onclick="TaskInfo.addTaskInfo()">新增前请维护batch文档</a>
                             <div class="datagrid-btn-separator"
                                  style="vertical-align: middle; height: 15px;display:inline-block;float:none"></div>
-                            <a href="#" class="easyui-linkbutton" iconCls="grid-edit" plain="true"
-                               onclick="TaskInfo.updateTaskInfo()">Edit</a>
-                            <div class="datagrid-btn-separator"
-                                 style="vertical-align: middle; height: 15px;display:inline-block;float:none"></div>
-                            <a href="#" class="easyui-linkbutton" iconCls="grid-del" plain="true"
-                               onclick="TaskInfo.deleteTaskInfo()">Remove</a>
+                            <span th:if ="${role}==admin">
+                                 <a href="#" class="easyui-linkbutton" iconCls="grid-edit" plain="true"
+                                 onclick="TaskInfo.updateTaskInfo()">Edit</a>
+                                <div class="datagrid-btn-separator"
+                                     style="vertical-align: middle; height: 15px;display:inline-block;float:none"></div>
+                                <a href="#" class="easyui-linkbutton" iconCls="grid-del" plain="true"
+                                   onclick="TaskInfo.deleteTaskInfo()">Remove</a>
+                            </span>
+
+
                         </td>
                     </tr>
                 </table>

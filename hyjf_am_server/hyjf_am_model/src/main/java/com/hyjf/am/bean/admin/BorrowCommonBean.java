@@ -1075,6 +1075,12 @@ public class BorrowCommonBean implements Serializable {
 	private String borrowAuthenJson;
 
 	/**
+	 * 标的投资风险测评等级
+	 *
+	 */
+	private String investLevel;
+
+	/**
 	 * borrowNameJson
 	 * 
 	 * @return the borrowNameJson
@@ -3544,5 +3550,13 @@ public class BorrowCommonBean implements Serializable {
 
 	public void setIsRegistFlg(String isRegistFlg) {
 		this.isRegistFlg = isRegistFlg;
+	}
+
+	public String getInvestLevel() {
+		return investLevel;
+	}
+
+	public void setInvestLevel(String investLevel) {
+		this.investLevel = investLevel;
 	}
 }

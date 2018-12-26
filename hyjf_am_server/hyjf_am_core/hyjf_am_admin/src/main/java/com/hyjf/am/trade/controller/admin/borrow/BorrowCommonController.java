@@ -3,11 +3,13 @@ package com.hyjf.am.trade.controller.admin.borrow;
 
 import com.hyjf.am.bean.admin.BorrowCommonBean;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.BorrowCommonResponse;
 import com.hyjf.am.resquest.admin.BorrowCommonRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
+import com.hyjf.am.trade.dao.model.auto.EvaluationConfig;
 import com.hyjf.am.trade.dao.model.auto.HjhLabel;
 import com.hyjf.am.trade.service.admin.hjhplan.AdminHjhLabelService;
 import com.hyjf.am.trade.service.front.borrow.BorrowCommonService;
@@ -26,11 +28,9 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -124,6 +124,16 @@ public class BorrowCommonController extends BaseController {
        
         // 机构编号
         form.setInstCode(form.getInstCode() == null ? "10000000" : form.getInstCode());
+
+        // 获取风险测评等级配置
+		EvaluationConfig evaluationConfig = this.borrowCommonService.selectEvaluationConfig();
+		if(evaluationConfig!=null){
+			String investLevel = evaluationConfig.getAa1EvaluationProposal();
+			form.setInvestLevel(investLevel);
+		}else {
+			form.setInvestLevel("保守型");
+		}
+
 
         if (StringUtils.isNotEmpty(borrowNid)) {
             // 借款编码是否存在
@@ -785,4 +795,42 @@ public class BorrowCommonController extends BaseController {
 //		LogUtil.endLog(BorrowCommonController.class.toString(), BorrowCommonDefine.IS_CA_IDNO_CHECK_ACTION);
 //		return ret;
 //	}
+
+	/**
+	 * 获取标的投资等级
+	 *
+	 * @param borrowLevel
+	 * @return
+	 */
+	@ApiOperation(value = "获取标的投资等级")
+	@RequestMapping("/getBorrowLevelAction/{borrowLevel}")
+	public StringResponse getBorrowLevelAction(@PathVariable String borrowLevel) {
+		StringResponse response = new StringResponse();
+		String investLevel = "保守型";
+		EvaluationConfig evaluationConfig = this.borrowCommonService.selectEvaluationConfig();
+		if (evaluationConfig != null) {
+			switch (borrowLevel) {
+				case "BBB":
+					investLevel = evaluationConfig.getBbbEvaluationProposal();
+					break;
+				case "A":
+					investLevel = evaluationConfig.getaEvaluationProposal();
+					break;
+				case "AA-":
+					investLevel = evaluationConfig.getAa0EvaluationProposal();
+					break;
+				case "AA":
+					investLevel = evaluationConfig.getAa1EvaluationProposal();
+					break;
+				case "AA+":
+					investLevel = evaluationConfig.getAa2EvaluationProposal();
+					break;
+				case "AAA":
+					investLevel = evaluationConfig.getAaaEvaluationProposal();
+					break;
+			}
+		}
+		response.setResultStr(investLevel);
+		return response;
+	}
 }

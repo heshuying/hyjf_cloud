@@ -8,6 +8,7 @@ import com.hyjf.admin.beans.repaybean.RepayBean;
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
@@ -44,6 +45,7 @@ import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.EnumMap;
 import java.util.List;
@@ -3121,6 +3123,16 @@ public interface AmTradeClient {
      */
     Integer countBorrowRepaymentInfoExport(BorrowRepaymentInfoRequset copyForm);
 
+    /**
+     * 获取标的风险投资等级
+     *
+     * @param borrowLevel
+     * @return
+     */
+    String getBorrowLevelAction(@Valid String borrowLevel);
+
+
+
     /** 加息接口开始*/
     /** 枚举类型 */
     enum IncreaseProperty {VO,STR,STR1}
@@ -3264,5 +3276,104 @@ public interface AmTradeClient {
      * @return
      */
     int getHjhCommissionCountForExport(HjhCommissionRequest request);
+
+    /**
+     * 配置中心-风险测评开关配置（列表）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param request
+     **/
+    EvaluationCheckResponse getEvaluationCheckList(EvaluationCheckRequest request);
+
+    /**
+     * 配置中心-风险测评开关配置（修改详情）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param id
+     **/
+    EvaluationCheckConfigVO getEvaluationCheckById(Integer id);
+
+    /**
+     * 配置中心-风险测评开关配置（修改）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param request
+     **/
+    EvaluationCheckResponse updateEvaluationCheck(EvaluationCheckRequest request);
+
+    /**
+     * 配置中心-风险测评限额配置（列表）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param request
+     **/
+    EvaluationMoneyResponse getEvaluationMoneyList(EvaluationMoneyRequest request);
+
+    /**
+     * 配置中心-风险测评限额配置（修改详情）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param id
+     **/
+    EvaluationMoneyConfigVO getEvaluationMoneyById(Integer id);
+
+    /**
+     * 配置中心-风险测评限额配置（修改）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param request
+     **/
+    EvaluationMoneyResponse updateEvaluationMoney(EvaluationMoneyRequest request);
+
+    /**
+     * 配置中心-风险测评限额配置（日志列表）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param request
+     **/
+    EvaluationMoneyLogResponse getEvaluationMoneyLogList(EvaluationMoneyLogRequest request);
+
+    /**
+     * 配置中心-风险测评限额配置（日志列表）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param request
+     **/
+    EvaluationCheckLogResponse getEvaluationCheckLogList(EvaluationCheckLogRequest request);
+
+
+    /**
+     * 风险测评配置-风险测评等级配置
+     *
+     * @param requestBean
+     * @return
+     */
+    EvaluationBorrowLevelConfigResponse getEvaluationBorrowLevelConfigList(EvaluationBorrowLevelConfigRequest requestBean);
+
+
+    /**
+     * 风险测评配置-风险测评等级配置
+     * @param id
+     * @return
+     */
+    EvaluationBorrowLevelConfigVO getEvaluationBorrowLevelConfigById(Integer id);
+
+
+    /**
+     * 更新风险测评配置-风险测评等级配置
+     *
+     * @param requestBean
+     * @return
+     */
+    EvaluationBorrowLevelConfigResponse updateBorrowLevelConfig(EvaluationBorrowLevelConfigRequest requestBean);
+
+
+    /**
+     * 配置中心-风险测评等级配置（日志列表）
+     *
+     * @param requestBean
+     * @return
+     */
+    EvaluationBorrowLevelConfigLogResponse getBorrowLevelConfigLogList(EvaluationBorrowLevelConfigLogRequest requestBean);
 }
 
