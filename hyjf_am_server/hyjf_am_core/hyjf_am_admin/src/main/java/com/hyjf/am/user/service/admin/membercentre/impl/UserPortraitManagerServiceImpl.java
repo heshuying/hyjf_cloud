@@ -220,7 +220,7 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
                             customize.setInvestProcess("60");
                         } else if (investProcess.equals("充值")) {
                             customize.setInvestProcess("80");
-                        } else if (investProcess.equals("出借")) {
+                        } else if (investProcess.equals("出借") || investProcess.equals("投资")) {
                             customize.setInvestProcess("100");
                         }
                     } else {
