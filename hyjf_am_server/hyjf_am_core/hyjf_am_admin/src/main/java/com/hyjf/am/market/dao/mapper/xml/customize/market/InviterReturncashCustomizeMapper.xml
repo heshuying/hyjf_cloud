@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.mybatis.mapper.customize.InviterReturnCashCustomizeMapper">
+	<resultMap id="selectReturnCashListMap" type="com.hyjf.mybatis.model.customize.InviterReturnCashCustomize">
+		<id column="id" property="id" jdbcType="INTEGER" />
+		<result column="user_name" property="userName" jdbcType="VARCHAR" />
+		<result column="true_name" property="trueName" jdbcType="VARCHAR" />
+		<result column="reffer_name" property="refferName" jdbcType="VARCHAR" />
+		<result column="reffer_id" property="refferId" jdbcType="INTEGER" />
+		<result column="return_performance" property="returnPerformance" jdbcType="DECIMAL" />
+		<result column="return_amount" property="returnAmount" jdbcType="DECIMAL" />
+		<result column="tender_name" property="tenderName" jdbcType="VARCHAR" />
+		<result column="tender_no" property="tenderNo" jdbcType="VARCHAR" />
+		<result column="tender_amount" property="tenderAmount" jdbcType="DECIMAL" />
+		<result column="term" property="term" jdbcType="VARCHAR" />
+		<result column="product_type" property="productType" jdbcType="VARCHAR" />
+		<result column="product_no" property="productNo" jdbcType="VARCHAR" />
+		<result column="join_time" property="joinTime" jdbcType="VARCHAR" />
+		<result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+		<result column="debt_id" property="debtId" jdbcType="INTEGER" />
+		<result column="debt_name" property="debtName" jdbcType="VARCHAR" />
+	</resultMap>
+
+	<select id="selectReturnCashList" resultType="com.hyjf.mybatis.model.customize.InviterReturnCashCustomize" parameterType="java.lang.Integer">
+		SELECT  t1.username as userName,t1.truename as trueName,t1.id as debtId,t1.name as debtName, u1.username as refferName,u1.user_id as refferId  FROM
+		(
+		SELECT  u.user_id,u.username,ui.truename,od.id,od.name,su.spreads_userid from huiyingdai_users u
+		LEFT JOIN  huiyingdai_users_info ui ON u.user_id = ui.user_id
+		LEFT JOIN huiyingdai_spreads_users su ON u.user_id = su.user_id
+		LEFT JOIN `hyjf_crm`.`oa_users` `ou`
+		on ou.hyd_id = u.user_id AND ou.user_status IN ('E','Q1','Q11','Q2','Q21')
+		LEFT JOIN `hyjf_crm`.`oa_department` `od` ON `od`.`id` = `ou`.`departmentid` and `od`.`id` IS NOT NULL
+		where u.user_id = #{userId}
+		) t1 LEFT JOIN huiyingdai_users u1 ON  t1.spreads_userid = u1.user_id
+	</select>
+
+</mapper>
