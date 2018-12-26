@@ -315,6 +315,8 @@ public class WebSafeController extends BaseUserController {
     @ApiImplicitParam(name = "param", value = "{image:String}", dataType = "Map")
     @PostMapping(value = "/avatar", produces = "application/json; charset=utf-8")
     public WebResult uploadAvatarAction(@RequestHeader(value = "userId") Integer userId, @RequestBody Map<String, String> param) throws UnsupportedEncodingException {
+
+        logger.info("用户上传头像 -> param::[{}]",param);
         logger.info("上传头像开始。。。。。。。。。。。");
         WebResult<Object> result = new WebResult<>();
         CheckUtil.check(userId != null, MsgEnum.STATUS_CE000006);
