@@ -3,7 +3,6 @@ package com.hyjf.am.trade.dao.auto;
 
 import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.mapper.customize.BorrowFullCustomizeMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -482,13 +481,19 @@ public class AutoMapper {
     @Resource
     protected HjhBailConfigLogMapper hjhBailConfigLogMapper;
 
-    @Autowired
+    @Resource
     protected ApplyAgreementMapper applyAgreementMapper;
 
-    @Autowired
+    @Resource
     protected ApplyAgreementInfoMapper applyAgreementInfoMapper;
 
     @Resource
     protected BankRepayOrgFreezeLogMapper bankRepayOrgFreezeLogMapper;
+
+    @Resource
+    protected EvaluationConfigMapper evaluationConfigMapper;
+
+    @Resource
+    protected EvaluationConfigLogMapper evaluationConfigLogMapper;
 }
 

@@ -202,6 +202,15 @@ public class BorrowCommonController extends BaseController {
 			return new AdminResult();
 	}
 
+
+
+	@ApiOperation(value = " 获取标的风险投资等级")
+	@PostMapping("/getBorrowLevelAction")
+	public AdminResult<String> getBorrowLevelAction(@RequestBody @Valid Map<String, String> investLevel) {
+		String borrowLevel = borrowCommonService.getBorrowLevelAction(investLevel.get("investLevel"));
+		return new AdminResult<>(borrowLevel);
+
+	}
 //	/**
 //	 * 验证发标金额是否合法
 //	 *

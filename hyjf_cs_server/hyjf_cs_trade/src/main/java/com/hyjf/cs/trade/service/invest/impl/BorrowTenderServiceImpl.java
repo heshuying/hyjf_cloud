@@ -8,11 +8,15 @@ import com.hyjf.am.resquest.trade.MyCouponListRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.trade.TenderRequest;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
+import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
+import com.hyjf.am.vo.trade.EvaluationConfigVO;
+import com.hyjf.am.vo.trade.TenderToCreditAssignCustomizeVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.BestCouponListVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserVO;
+import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -1337,6 +1341,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     @Override
     public Map<String,Object> checkEvalApp(TenderRequest tender) {
         Map<String,Object> investInfo = new HashMap<>();
+        // 出借类型
+        String investType = tender.getBorrowNid().substring(0, 3);
+        String creditNid = tender.getBorrowNid().substring(3);
         //初始化接口回传参数
         investInfo.put("revalJudge",false);
         investInfo.put("projectRevalJudge",false);
@@ -1344,8 +1351,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         investInfo.put("revaluationMoney","");
         investInfo.put("riskLevelDesc","");
         investInfo.put("projectRiskLevelDesc","");
-        // 出借类型
-        String investType = tender.getBorrowNid().substring(0, 3);
         //测评判断逻辑开始
         UserVO loginUser = amUserClient.findUserById(tender.getUserId());
         //风险测评
@@ -1353,27 +1358,136 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             //从user中获取客户类型，ht_user_evalation_result（用户测评总结表）
             UserEvalationResultVO userEvalationResultCustomize = amUserClient.selectUserEvalationResultByUserId(tender.getUserId());
             if (userEvalationResultCustomize != null) {
-                //从redis中获取测评类型和上限金额
-                String revaluation_money;
+                EvaluationConfigVO evalConfig = new EvaluationConfigVO();
+                //1.散标／债转出借者测评类型校验
+                String debtEvaluationTypeCheck = "0";
+                //2.散标／债转单笔投资金额校验
+                String deptEvaluationMoneyCheck = "0";
+                //3.散标／债转待收本金校验
+                String deptCollectionEvaluationCheck = "0";
+                //4.智投出借者测评类型校验
+                String intellectualEveluationTypeCheck = "0";
+                //5.智投单笔投资金额校验
+                String intellectualEvaluationMoneyCheck = "0";
+                //6.智投待收本金校验
+                String intellectualCollectionEvaluationCheck = "0";
+                //获取开关信息
+                List<EvaluationConfigVO> evalConfigList = amTradeClient.selectEvaluationConfig(evalConfig);
+                if (evalConfigList != null && evalConfigList.size() > 0) {
+                    evalConfig = evalConfigList.get(0);
+                    //1.散标／债转出借者测评类型校验
+                    debtEvaluationTypeCheck = evalConfig.getDebtEvaluationTypeCheck() == null ? "0" : String.valueOf(evalConfig.getDebtEvaluationTypeCheck());
+                    //2.散标／债转单笔投资金额校验
+                    deptEvaluationMoneyCheck = evalConfig.getDeptEvaluationMoneyCheck() == null ? "0" : String.valueOf(evalConfig.getDeptEvaluationMoneyCheck());
+                    //3.散标／债转待收本金校验
+                    deptCollectionEvaluationCheck = evalConfig.getDeptCollectionEvaluationCheck() == null ? "0" : String.valueOf(evalConfig.getDeptCollectionEvaluationCheck());
+                    //4.智投出借者测评类型校验
+                    intellectualEveluationTypeCheck = evalConfig.getIntellectualEveluationTypeCheck() == null ? "0" : String.valueOf(evalConfig.getIntellectualEveluationTypeCheck());
+                    //5.智投单笔投资金额校验
+                    intellectualEvaluationMoneyCheck = evalConfig.getIntellectualEvaluationMoneyCheck() == null ? "0" : String.valueOf(evalConfig.getIntellectualEvaluationMoneyCheck());
+                    //6.智投待收本金校验
+                    intellectualCollectionEvaluationCheck = evalConfig.getIntellectualCollectionEvaluationCheck() == null ? "0" : String.valueOf(evalConfig.getIntellectualCollectionEvaluationCheck());
+                    //7.投标时校验（二期）(预留二期开发)
+                }
+                //初始化金额返回值
+                String revaluation_money, revaluation_money_principal;
+                //根据类型从redis或数据库中获取测评类型和上限金额
                 String eval_type = userEvalationResultCustomize.getEvalType();
                 //初始化接口回传参数
                 investInfo.put("evalType",eval_type);
-                //金额类型判断
                 switch (eval_type) {
                     case "保守型":
-                        revaluation_money = RedisUtils.get(com.hyjf.common.cache.RedisConstants.REVALUATION_CONSERVATIVE);
+                        //从redis获取金额（单笔）
+                        revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0" : RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE);
+                        //如果reids不存在或者为零尝试获取数据库（单笔）
+                        if ("0".equals(revaluation_money)) {
+                            revaluation_money = evalConfig.getConservativeEvaluationSingleMoney() == null ? "0" : String.valueOf(evalConfig.getConservativeEvaluationSingleMoney());
+                        }
+                        //从redis获取金额（代收本金）
+                        revaluation_money_principal = RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE_PRINCIPAL) == null ? "0" : RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE_PRINCIPAL);
+                        //如果reids不存在或者为零尝试获取数据库（代收本金）
+                        if ("0".equals(revaluation_money_principal)) {
+                            revaluation_money_principal = evalConfig.getConservativeEvaluationPrincipalMoney() == null ? "0" : String.valueOf(evalConfig.getConservativeEvaluationPrincipalMoney());
+                        }
                         break;
                     case "稳健型":
-                        revaluation_money = RedisUtils.get(com.hyjf.common.cache.RedisConstants.REVALUATION_ROBUSTNESS);
+                        //从redis获取金额（单笔）
+                        revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS) == null ? "0" : RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS);
+                        //如果reids不存在或者为零尝试获取数据库（单笔）
+                        if ("0".equals(revaluation_money)) {
+                            revaluation_money = evalConfig.getSteadyEvaluationSingleMoney() == null ? "0" : String.valueOf(evalConfig.getSteadyEvaluationSingleMoney());
+                        }
+                        //从redis获取金额（代收本金）
+                        revaluation_money_principal = RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS_PRINCIPAL) == null ? "0" : RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS_PRINCIPAL);
+                        //如果reids不存在或者为零尝试获取数据库（代收本金）
+                        if ("0".equals(revaluation_money_principal)) {
+                            revaluation_money_principal = evalConfig.getSteadyEvaluationPrincipalMoney() == null ? "0" : String.valueOf(evalConfig.getSteadyEvaluationPrincipalMoney());
+                        }
                         break;
                     case "成长型":
-                        revaluation_money = RedisUtils.get(com.hyjf.common.cache.RedisConstants.REVALUATION_GROWTH);
+                        //从redis获取金额（单笔）
+                        revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_GROWTH) == null ? "0" : RedisUtils.get(RedisConstants.REVALUATION_GROWTH);
+                        //如果reids不存在或者为零尝试获取数据库（单笔）
+                        if ("0".equals(revaluation_money)) {
+                            revaluation_money = evalConfig.getGrowupEvaluationSingleMoney() == null ? "0" : String.valueOf(evalConfig.getGrowupEvaluationSingleMoney());
+                        }
+                        //从redis获取金额（代收本金）
+                        revaluation_money_principal = RedisUtils.get(RedisConstants.REVALUATION_GROWTH_PRINCIPAL) == null ? "0" : RedisUtils.get(RedisConstants.REVALUATION_GROWTH_PRINCIPAL);
+                        //如果reids不存在或者为零尝试获取数据库（代收本金）
+                        if ("0".equals(revaluation_money_principal)) {
+                            revaluation_money_principal = evalConfig.getGrowupEvaluationPrincipalMoney() == null ? "0" : String.valueOf(evalConfig.getGrowupEvaluationPrincipalMoney());
+                        }
                         break;
                     case "进取型":
-                        revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE);
+                        //从redis获取金额（单笔）
+                        revaluation_money = RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE) == null ? "0" : RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE);
+                        //如果reids不存在或者为零尝试获取数据库（单笔）
+                        if ("0".equals(revaluation_money)) {
+                            revaluation_money = evalConfig.getEnterprisingEvaluationSinglMoney() == null ? "0" : String.valueOf(evalConfig.getEnterprisingEvaluationSinglMoney());
+                        }
+                        //从redis获取金额（代收本金）
+                        revaluation_money_principal = RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE_PRINCIPAL) == null ? "0" : RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE_PRINCIPAL);
+                        //如果reids不存在或者为零尝试获取数据库（代收本金）
+                        if ("0".equals(revaluation_money_principal)) {
+                            revaluation_money_principal = evalConfig.getEnterprisingEvaluationPrincipalMoney() == null ? "0" : String.valueOf(evalConfig.getEnterprisingEvaluationPrincipalMoney());
+                        }
                         break;
                     default:
-                        revaluation_money = "0";
+                        revaluation_money = null;
+                        revaluation_money_principal = null;
+                }
+                String checkLeve = null;
+                String borrowFlag = null;
+                // 2. 转让投资信息
+                if ("HZR".equals(investType) && StringUtils.isNotEmpty(creditNid)) {
+                    // 查询债转信息
+                    TenderToCreditAssignCustomizeVO creditAssign = this.amTradeClient.getInterestInfo(creditNid, tender.getMoney(),tender.getUserId());
+                    // 原标项目编号
+                    String bidNid = creditAssign.getBorrowNid();
+                    BorrowAndInfoVO borrowInfoVO = this.amTradeClient.getBorrowByNid(bidNid);
+                    if (borrowInfoVO != null) {
+                        checkLeve = borrowInfoVO.getInvestLevel();
+                        borrowFlag = "BORROW_ZZ";
+                    }
+                }else
+                    // 3. 汇计划投资
+                    if ("HJH".equals(investType)) {
+                        String planNid = tender.getBorrowNid();
+                        // 根据项目标号获取相应的计划信息
+                        HjhPlanVO plan = amTradeClient.getPlanByNid(planNid);
+                        if (plan != null) {
+                            checkLeve = plan.getInvestLevel();
+                            borrowFlag = "BORROW_JH";
+                        }
+                }else{
+                    // 1. 散标投资信息
+                    String bidNid = tender.getBorrowNid();
+                    // 查询项目信息
+                    BorrowAndInfoVO borrowInfoVO = this.amTradeClient.getBorrowByNid(bidNid);
+                    if (borrowInfoVO != null) {
+                        checkLeve = borrowInfoVO.getInvestLevel();
+                        borrowFlag = "BORROW_SB";
+                    }
                 }
                 //测评到期日
                 Long lCreate = loginUser.getEvaluationExpiredTime().getTime();
@@ -1396,24 +1510,53 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                         investInfo.put("riskLevelDesc","根据监管要求，出借前必须进行风险测评。");
                     }
                 }
-                //计划类判断用户类型为稳健型以上才可以出借
-                if("HJH".equals(investType)) {
-                    if (!CommonUtils.checkStandardInvestment(userEvalationResultCustomize.getEvalType())) {
+                //风险类型校验
+                if ((CustomConstants.EVALUATION_CHECK.equals(debtEvaluationTypeCheck) && (CustomConstants.TENDER_CHECK_LEVE_HZR.equals(borrowFlag) || CustomConstants.TENDER_CHECK_LEVE_HSB.equals(borrowFlag)))
+                        || (CustomConstants.EVALUATION_CHECK.equals(intellectualEveluationTypeCheck) && CustomConstants.TENDER_CHECK_LEVE_HJH.equals(borrowFlag))) {
+                    //计划类判断用户类型为稳健型以上才可以投资
+                    if (!CommonUtils.checkStandardInvestment(eval_type,borrowFlag,checkLeve)) {
                         //返回类型和限额
                         investInfo.put("projectRevalJudge",true);
-                        investInfo.put("projectRiskLevelDesc",CommonUtils.DESC_PROJECT_RISK_LEVEL_DESC.replace("{0}", userEvalationResultCustomize.getEvalType()));
+                        investInfo.put("projectRiskLevelDesc",CommonUtils.DESC_PROJECT_RISK_LEVEL_DESC.replace("{0}", userEvalationResultCustomize.getEvalType()).replace("{1}",checkLeve));
                     }
                 }
-                if ("0".equals(revaluation_money) || revaluation_money == null) {
+                if (revaluation_money_principal == null) {
                     logger.info("=============从redis中获取测评类型和上限金额异常!(没有获取到对应类型的限额数据) eval_type=" + eval_type);
-                }else {
-                    investInfo.put("revaluationMoney",StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money)));
-                    //金额对比判断（校验金额 大于 设置测评金额）
-                    if (new BigDecimal(tender.getMoney()).compareTo(new BigDecimal(revaluation_money)) > 0) {
-                        //是否需要重新测评
-                        investInfo.put("revalJudge",true);
-                        investInfo.put("riskLevelDesc","您当前的风险测评类型为 #"+eval_type+"# \n根据监管要求,\n"+eval_type+"用户单笔最高出借限额 #"
-                                +StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money))+"# 。");
+                } else {
+                    //代收本金限额校验
+                    if ((CustomConstants.EVALUATION_CHECK.equals(deptCollectionEvaluationCheck) && (CustomConstants.TENDER_CHECK_LEVE_HZR.equals(borrowFlag) || CustomConstants.TENDER_CHECK_LEVE_HSB.equals(borrowFlag)))
+                            || (CustomConstants.EVALUATION_CHECK.equals(intellectualCollectionEvaluationCheck) && CustomConstants.TENDER_CHECK_LEVE_HJH.equals(borrowFlag))) {
+                        //获取冻结金额和代收本金
+                        CallCenterAccountDetailVO accountDetail = amTradeClient.queryAccountEvalDetail(tender.getUserId());
+                        if (accountDetail != null) {
+                            BigDecimal planFrost = accountDetail.getPlanFrost();// plan_frost 汇添金计划真实冻结金额
+                            BigDecimal bankFrost = accountDetail.getBankFrost();// bank_frost 银行冻结金额
+                            BigDecimal bankAwaitCapital = accountDetail.getBankAwaitCapital();// bank_await_capital 银行待收本金
+                            BigDecimal account = BigDecimal.ZERO;
+                            //加法运算
+                            account = account.add(planFrost).add(bankFrost).add(bankAwaitCapital).add(new BigDecimal(tender.getMoney()));
+                            //金额对比判断（校验金额 大于 设置测评金额）（代收本金）
+                            if (account.compareTo(new BigDecimal(revaluation_money_principal)) > 0) {
+                                //返回类型和限额
+                                investInfo.put("revalPrincipalJudge",true);
+                                investInfo.put("riskLevelDesc","如果您继续出借， ## \n当前累计出借本金将超过 \n您的风险等级 #"+eval_type+"# 对应的限额。");
+                            }
+                        }
+                    }
+                }
+                if (revaluation_money == null) {
+                    logger.info("=============从redis中获取测评类型和上限金额异常!(没有获取到对应类型的限额数据) eval_type=" + eval_type);
+                } else {
+                    if ((CustomConstants.EVALUATION_CHECK.equals(deptEvaluationMoneyCheck) && (CustomConstants.TENDER_CHECK_LEVE_HZR.equals(borrowFlag) || CustomConstants.TENDER_CHECK_LEVE_HSB.equals(borrowFlag)))
+                            || (CustomConstants.EVALUATION_CHECK.equals(intellectualEvaluationMoneyCheck) && CustomConstants.TENDER_CHECK_LEVE_HJH.equals(borrowFlag))) {
+                        investInfo.put("revaluationMoney",StringUtil.getTenThousandOfANumber(Double.valueOf(revaluation_money).intValue()));
+                        //金额对比判断（校验金额 大于 设置测评金额）
+                        if (new BigDecimal(tender.getMoney()).compareTo(new BigDecimal(revaluation_money)) > 0) {
+                            //返回类型和限额
+                            investInfo.put("revalJudge",true);
+                            investInfo.put("riskLevelDesc","您当前的风险测评类型为 #"+eval_type+"# \n根据监管要求,\n"+eval_type+"用户单笔最高出借限额 #"
+                                    +StringUtil.getTenThousandOfANumber(Double.valueOf(revaluation_money).intValue())+"# 。");
+                        }
                     }
                 }
             } else {
@@ -1454,7 +1597,6 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 计划不需要跳转江西银行, 不能使用前端出借的统一页面，所以针对计划单独跳转前端处理页面
         if (CommonConstant.TENDER_TYPE_HJH.equalsIgnoreCase(borrowType)) {
             logger.info(presetProps);
-
             // 计划的
             Map<String, Object> result = hjhTenderService.checkPlan(tender);
             if ("getTenderUrl".equals(flag)) {
@@ -1472,6 +1614,9 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     } else if (CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS.equals(riskTested)) {
                         //金额对比判断（校验金额 大于 设置测评金额）
                         throw new CheckException(MsgEnum.STATUS_EV000005);
+                    } else if (CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS_PRINCIPAL.equals(riskTested)) {
+                        //金额对比判断（校验金额 大于 设置测评金额 代收本金）
+                        throw new CheckException(MsgEnum.STATUS_EV000008);
                     }
                 }
             }
@@ -1505,12 +1650,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     } else if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
                         //已过期需要重新评测
                         throw new CheckException(MsgEnum.STATUS_EV000004);
-                    //}else if(CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)){
+                    }else if(CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)){
                         //计划类判断用户类型为稳健型以上才可以出借
-                    //    throw new CheckException(MsgEnum.STATUS_EV000007);
+                        throw new CheckException(MsgEnum.STATUS_EV000007);
                     }else if(CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS.equals(riskTested)){
                         //金额对比判断（校验金额 大于 设置测评金额）
                         throw new CheckException(MsgEnum.STATUS_EV000005);
+                    } else if (CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS_PRINCIPAL.equals(riskTested)) {
+                        //金额对比判断（校验金额 大于 设置测评金额 代收本金）
+                        throw new CheckException(MsgEnum.STATUS_EV000008);
                     }
                 }
             }
@@ -1532,12 +1680,15 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                 } else if(CustomConstants.BANK_TENDER_RETURN_ANSWER_EXPIRED.equals(riskTested)){
                     //已过期需要重新评测
                     throw new CheckException(MsgEnum.STATUS_EV000004);
-                //}else if(CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)){
+                }else if(CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL.equals(riskTested)){
                     //计划类判断用户类型为稳健型以上才可以出借
-                //    throw new CheckException(MsgEnum.STATUS_EV000007);
+                    throw new CheckException(MsgEnum.STATUS_EV000007);
                 }else if(CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS.equals(riskTested)){
                     //金额对比判断（校验金额 大于 设置测评金额）
                     throw new CheckException(MsgEnum.STATUS_EV000005);
+                } else if (CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS_PRINCIPAL.equals(riskTested)) {
+                    //金额对比判断（校验金额 大于 设置测评金额 代收本金）
+                    throw new CheckException(MsgEnum.STATUS_EV000008);
                 }
             }
         }
@@ -1804,7 +1955,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         // 检查用户状态  角色  授权状态等  是否允许出借
         checkUser(user, userInfo);
         //校验用户测评
-        Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(request);
+        Map<String, Object> resultEval = hjhTenderService.checkEvaluationTypeMoney(request,borrow.getInvestLevel(),CustomConstants.TENDER_CHECK_LEVE_HSB);
         // 检查江西银行账户
         if(account ==null){
             account = amUserClient.selectBankAccountById(userId);

@@ -121,6 +121,7 @@ public class AppBorrowTenderController extends BaseTradeController {
         Map<String,Object>  resultEval = borrowTenderService.checkEvalApp(tender);
         result.setRevalJudge((boolean) resultEval.get("revalJudge"));
         result.setProjectRevalJudge((boolean) resultEval.get("projectRevalJudge"));
+        result.setRevalPrincipalJudge((boolean) resultEval.get("revalPrincipalJudge"));
         result.setEvalType((String) resultEval.get("evalType"));
         result.setRevaluationMoney((String) resultEval.get("revaluationMoney"));
         result.setRiskLevelDesc((String) resultEval.get("riskLevelDesc"));

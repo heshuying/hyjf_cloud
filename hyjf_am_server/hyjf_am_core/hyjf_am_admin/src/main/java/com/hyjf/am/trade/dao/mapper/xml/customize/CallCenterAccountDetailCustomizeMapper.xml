@@ -26,6 +26,8 @@
 		<result column="bank_total" property="bankTotal" /> <!-- 银行存管总资产-->
 		<result column="check_status" property="checkStatus" /> <!-- 对账状态 -->
 		<result column="trade_status" property="tradeStatus" /> <!-- 交易状态  -->
+		<!-- wenxin -->
+		<result column="bank_await_capital" property="bankAwaitCapital" /> <!-- 银行待收本金  -->
 	</resultMap>
 	<sql id="where-all-page-condition">
 		<if test="userId != null and userId != 0">
@@ -79,6 +81,21 @@
 	    <if test="limitStart >= 0" >
 	      LIMIT #{limitStart} , #{limitEnd}
 	    </if>
+	</select>
+
+	<select id="queryAccountEvalDetail" resultMap="AccountDetailMapResult"
+			parameterType="java.lang.Integer">
+		SELECT
+		l.id,
+		l.balance,
+		IFNULL(l.plan_frost, 0) AS planFrost,
+		IFNULL(l.bank_frost, 0) AS bank_frost,
+		IFNULL(l.bank_await_capital, 0) + IFNULL(l.plan_capital_wait, 0) AS bank_await_capital
+		FROM
+		ht_account l
+		WHERE 1=1
+		AND l.user_id = #{userId,jdbcType=INTEGER}
+		ORDER BY l.create_time DESC, l.id DESC
 	</select>
 </mapper>
 

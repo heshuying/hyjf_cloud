@@ -36,7 +36,7 @@ public class CommonUtils {
 	private final static Logger logger = LoggerFactory.getLogger(CommonUtils.class);
 
 	// 项目要求投资者风险测评类型描述
-	public final static String DESC_PROJECT_RISK_LEVEL_DESC = "您的风险等级为 #{0}# \n达到 #稳健型# 及以上才可以出借此项目";
+	public final static String DESC_PROJECT_RISK_LEVEL_DESC = "您当前的风险测评类型为 #{0}# \n达到 #{1}# 及以上才可进行出借";
 
 	/**
 	 * 提供对象属性null转""方法，目前只支持String的属性
@@ -445,27 +445,49 @@ public class CommonUtils {
 	/**
 	 * 获取标的出借等级和用户等级进行校验(只适用于计划)
 	 * @author wenxin
-	 * @param UserLevel 用户等级
+	 * @param UserLevel 用户等级，标的类型（计划，散标，债转），限制类型（从计划（hyjf_hjh_plan）标的或者散标（huiyingdai_borrow）标的表中获取）：invest_level
 	 * @return true能出借 false 不能出借
 	 */
-	public static Boolean checkStandardInvestment(String UserLevel){
+	public static Boolean checkStandardInvestment(String UserLevel,String borrowFlag,String checkLeve){
 		boolean bolStr = false;
 		//判断入参
-		if(StringUtils.isNotEmpty(UserLevel)){
+		if(StringUtils.isNotEmpty(UserLevel) && StringUtils.isNotEmpty(checkLeve)){
 			//过滤空格
 			UserLevel = UserLevel.trim();
-			switch (UserLevel){
+			checkLeve = checkLeve.trim();
+			//循环校验配置类型
+			switch (checkLeve){
 				case "保守型":
-					bolStr = false;
+					//如果配置为保守型，校验用户类型为保守型/成长型/进取型/稳健型才可以投资
+					if("保守型".equals(UserLevel) || "成长型".equals(UserLevel) || "进取型".equals(UserLevel) || "稳健型".equals(UserLevel)){
+						bolStr = true;
+					}else{
+						bolStr = false;
+					}
 					break;
 				case "稳健型":
-					bolStr = true;
+					//如果配置为稳健型，校验用户类型为成长型/进取型/稳健型才可以投资
+					if("成长型".equals(UserLevel) || "进取型".equals(UserLevel) || "稳健型".equals(UserLevel)){
+						bolStr = true;
+					}else{
+						bolStr = false;
+					}
 					break;
 				case "成长型":
-					bolStr = true;
+					//如果配置为成长型，校验用户类型为成长型/进取型才可以投资
+					if("成长型".equals(UserLevel) || "进取型".equals(UserLevel)){
+						bolStr = true;
+					}else{
+						bolStr = false;
+					}
 					break;
 				case "进取型":
-					bolStr = true;
+					//如果配置的是进取型，校验用户类型为进取型才可以投资
+					if("进取型".equals(UserLevel)){
+						bolStr = true;
+					}else{
+						bolStr = false;
+					}
 					break;
 				default:
 					bolStr = false;
