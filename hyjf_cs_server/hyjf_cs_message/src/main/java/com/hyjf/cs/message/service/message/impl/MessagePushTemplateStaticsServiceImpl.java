@@ -7,7 +7,6 @@ import com.hyjf.am.resquest.message.MessagePushTemplateStaticsRequest;
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.cs.message.bean.mc.MessagePushTemplateStatics;
 import com.hyjf.cs.message.client.AmConfigClient;
-import com.hyjf.cs.message.mongo.mc.MessagePushTagDao;
 import com.hyjf.cs.message.mongo.mc.MessagePushTemplateStaticsDao;
 import com.hyjf.cs.message.service.message.MessagePushTemplateStaticsService;
 import org.apache.commons.lang3.StringUtils;
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -27,8 +25,6 @@ import java.util.List;
 public class MessagePushTemplateStaticsServiceImpl implements MessagePushTemplateStaticsService {
 	@Autowired
 	private MessagePushTemplateStaticsDao staticsDao;
-	@Autowired
-	private MessagePushTagDao messagePushTagDao;
 	@Autowired
 	private AmConfigClient amConfigClient;
 

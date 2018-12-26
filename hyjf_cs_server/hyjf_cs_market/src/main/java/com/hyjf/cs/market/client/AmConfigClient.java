@@ -12,6 +12,7 @@ import com.hyjf.am.resquest.admin.SmsConfigRequest;
 import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.BasePage;
+import com.hyjf.am.vo.app.AppContentArticleVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
@@ -215,4 +216,11 @@ public interface AmConfigClient {
      * @author xiehuili
      */
     SmsConfigResponse initSmsConfig(SmsConfigRequest request);
+
+    /**
+     * 根据id获取网贷知识
+     * @param contentArticleId
+     * @return
+     */
+    AppContentArticleVO getContentArticleByIdApp(Integer contentArticleId);
 }

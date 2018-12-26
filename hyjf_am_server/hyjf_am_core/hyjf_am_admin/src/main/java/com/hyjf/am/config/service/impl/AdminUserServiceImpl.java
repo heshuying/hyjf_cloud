@@ -292,7 +292,7 @@ public class AdminUserServiceImpl implements AdminUserService {
 	public List<AdminRole> getAdminRoleList() {
 		AdminRoleExample example = new AdminRoleExample();
 		com.hyjf.am.config.dao.model.auto.AdminRoleExample.Criteria criteria = example.createCriteria();
-			criteria.andStatusEqualTo(1);
+			criteria.andStatusEqualTo(0);
 			criteria.andDelFlagEqualTo(0);
 		example.setOrderByClause(" sort ");
 		return adminRoleMapper.selectByExample(example);

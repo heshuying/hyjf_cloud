@@ -5,7 +5,6 @@ package com.hyjf.cs.message.service.msgpush;
 
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
-import com.hyjf.cs.message.bean.mc.MessagePushTag;
 
 import java.util.List;
 
@@ -28,13 +27,6 @@ public interface MessagePushErrorService {
      * @return
      */
     List<MessagePushMsgHistory> getRecordList(MessagePushErrorRequest request, int limitStart, int limitEnd);
-
-    /**
-     * 获取标签列表
-     *
-     * @return
-     */
-    List<MessagePushTag> getTagList();
 
     /**
      * 获取单个信息

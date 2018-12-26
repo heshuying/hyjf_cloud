@@ -4,7 +4,7 @@
 package com.hyjf.cs.market.service.impl;
 
 import com.hyjf.am.vo.app.AppContentArticleVO;
-import com.hyjf.cs.market.client.AppContentArticleClient;
+import com.hyjf.cs.market.client.AmConfigClient;
 import com.hyjf.cs.market.service.AppContentArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Service;
 public class AppContentArticleImpl implements AppContentArticleService {
 
     @Autowired
-    AppContentArticleClient appContentArticleClient;
+    private AmConfigClient amConfigClient;
 
     /**
      * 根据id获取网贷知识
@@ -26,6 +26,6 @@ public class AppContentArticleImpl implements AppContentArticleService {
      */
     @Override
     public AppContentArticleVO getContentArticleById(Integer contentArticleId) {
-        return appContentArticleClient.getContentArticleById(contentArticleId);
+        return amConfigClient.getContentArticleByIdApp(contentArticleId);
     }
 }

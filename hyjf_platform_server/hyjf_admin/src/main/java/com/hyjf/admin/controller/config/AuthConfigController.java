@@ -4,9 +4,7 @@
 package com.hyjf.admin.controller.config;
 
 import com.hyjf.admin.beans.vo.HjhUserAuthConfigCustomizeAPIVO;
-import com.hyjf.admin.beans.vo.HjhUserAuthConfigLogCustomizeAPIVO;
 import com.hyjf.admin.common.result.AdminResult;
-import com.hyjf.admin.common.result.BaseResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
@@ -16,24 +14,20 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminAuthConfigLogResponse;
 import com.hyjf.am.response.admin.AdminAuthConfigCustomizeResponse;
 import com.hyjf.am.response.admin.AdminAuthConfigResponse;
-import com.hyjf.am.vo.admin.HjhUserAuthConfigCustomizeVO;
 import com.hyjf.am.vo.admin.HjhUserAuthConfigLogCustomizeVO;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.user.HjhUserAuthConfigVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CommonUtils;
-import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.catalina.manager.util.SessionUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -69,17 +63,15 @@ public class AuthConfigController extends BaseController {
     @ApiOperation(value = "授权配置记录", notes = "授权配置记录")
     @PostMapping(value = "/authConfigLogList")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<HjhUserAuthConfigLogCustomizeAPIVO>> getAuthConfigLogList(@RequestBody HjhUserAuthConfigLogCustomizeAPIVO request) {
-        AdminAuthConfigLogResponse response = authConfigService.getAuthConfigLogList(CommonUtils.convertBean(request,HjhUserAuthConfigLogCustomizeVO.class));
+    public AdminResult<ListResult<HjhUserAuthConfigLogCustomizeVO>> getAuthConfigLogList(@RequestBody HjhUserAuthConfigLogCustomizeVO request) {
+        AdminAuthConfigLogResponse response = authConfigService.getAuthConfigLogList(request);
         if (response == null){
             return new AdminResult<>(FAIL, FAIL_DESC);
         }else if(!Response.isSuccess(response)){
             return new AdminResult<>(FAIL, response.getMessage());
         }
 
-        List<HjhUserAuthConfigLogCustomizeAPIVO> apiList = CommonUtils.convertBeanList(response.getResultList(), HjhUserAuthConfigLogCustomizeAPIVO.class);
-        return new AdminResult<ListResult<HjhUserAuthConfigLogCustomizeAPIVO>>(ListResult.build(apiList, response.getCount()));
-
+        return new AdminResult<ListResult<HjhUserAuthConfigLogCustomizeVO>>(ListResult.build(response.getResultList(), response.getCount()));
     }
 
 

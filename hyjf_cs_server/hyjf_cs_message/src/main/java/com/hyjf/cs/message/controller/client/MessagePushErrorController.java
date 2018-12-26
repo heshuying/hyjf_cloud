@@ -11,7 +11,6 @@ import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
-import com.hyjf.cs.message.bean.mc.MessagePushTag;
 import com.hyjf.cs.message.handle.MsgPushHandle;
 import com.hyjf.cs.message.service.msgpush.MessagePushErrorService;
 import org.apache.commons.collections.CollectionUtils;
@@ -65,25 +64,6 @@ public class MessagePushErrorController {
         List<MessagePushMsgHistory> messagePushMsgHistory = messagePushErrorService.getRecordList(request, request.getLimitStart(), request.getLimitEnd());
         if (!CollectionUtils.isEmpty(messagePushMsgHistory)){
             List<MessagePushMsgHistoryVO> messagePushErrorVO = CommonUtils.convertBeanList(messagePushMsgHistory, MessagePushMsgHistoryVO.class);
-            response.setResultList(messagePushErrorVO);
-            return response;
-        }
-        response.setRtn(Response.FAIL);
-        response.setMessage(Response.FAIL_MSG);
-        return response;
-    }
-
-    /**
-     * 获取标签列表
-     *
-     * @return
-     */
-    @RequestMapping("getTagList")
-    public MessagePushTagResponse getTagList() {
-        MessagePushTagResponse response = new MessagePushTagResponse();
-        List<MessagePushTag> tagList = messagePushErrorService.getTagList();
-        if (!CollectionUtils.isEmpty(tagList)){
-            List<MessagePushTagVO> messagePushErrorVO = CommonUtils.convertBeanList(tagList, MessagePushTagVO.class);
             response.setResultList(messagePushErrorVO);
             return response;
         }

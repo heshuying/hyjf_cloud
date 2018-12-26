@@ -5,11 +5,13 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.datacollect.TzjDayReportResponse;
+import com.hyjf.am.response.user.EvalationCustomizeResponse;
 import com.hyjf.am.response.user.SmsCodeResponse;
 import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
 import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
+import com.hyjf.am.vo.user.EvalationCustomizeVO;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.market.client.AmUserClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
-import java.math.BigDecimal;
 import java.util.*;
 
 /**
@@ -132,8 +133,8 @@ public class AmUserClientImpl implements AmUserClient {
 	 * @return
 	 */
 	@Override
-    public List<Integer> getQianleUser() {
-		return restTemplate.getForObject("http://AM-USER/am-user/user/getQianleUser", List.class);
+    public List<Integer> getQianleUser(String sourceId ) {
+		return restTemplate.getForObject("http://AM-USER/am-user/user/getQianleUser/"+sourceId, List.class);
     }
 
 
@@ -207,4 +208,16 @@ public class AmUserClientImpl implements AmUserClient {
 		return null;
 	}
 
+	/**
+	 * 获取评分标准列表
+	 * @return
+	 */
+	public List<EvalationCustomizeVO> getEvalationRecord() {
+		EvalationCustomizeResponse response = restTemplate
+				.getForEntity("http://AM-USER/am-user/user/getEvalationRecord", EvalationCustomizeResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
 }

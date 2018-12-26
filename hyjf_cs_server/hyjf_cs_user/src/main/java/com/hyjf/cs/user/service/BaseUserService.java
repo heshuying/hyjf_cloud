@@ -7,7 +7,6 @@ import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.user.bean.AutoPlusRequestBean;
 import com.hyjf.cs.user.bean.BaseBean;
-import com.hyjf.cs.user.bean.SynBalanceRequestBean;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -41,6 +40,14 @@ public interface BaseUserService extends BaseService{
 	 * @Date 2018/6/12 10:37
 	 */
 	UserVO getUsersById(Integer userId);
+
+	/**
+	 * 通过当前用户ID 查询用户所在一级分部,从而关联用户所属渠道
+	 * @param userId
+	 * @return
+	 * @Author : huanghui
+	 */
+	UserUtmInfoCustomizeVO getUserUtmInfo(Integer userId);
 
 	/**
 	 * 验证验证码
