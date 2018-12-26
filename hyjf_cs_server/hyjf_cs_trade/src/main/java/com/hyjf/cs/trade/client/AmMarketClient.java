@@ -15,4 +15,6 @@ public interface AmMarketClient {
 
 	List<InvitePrizeConfVO> getListByGroupCode(String groupCode);
 
+	void  updateJoinTime(String borrowNid,Integer nowTime);
+
 }
