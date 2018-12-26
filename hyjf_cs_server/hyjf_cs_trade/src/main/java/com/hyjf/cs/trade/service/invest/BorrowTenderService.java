@@ -98,7 +98,7 @@ public interface BorrowTenderService extends BaseTradeService {
     /**
      * 校验风险测评
      *
-     * @param tender
+     * @param tender,checkLeve,borrowFlag
      * @return
      */
     Map<String,Object> checkEvalApp(TenderRequest tender);

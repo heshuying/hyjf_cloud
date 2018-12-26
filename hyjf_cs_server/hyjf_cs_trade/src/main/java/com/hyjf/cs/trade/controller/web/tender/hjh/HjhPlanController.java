@@ -140,6 +140,10 @@ public class HjhPlanController extends BaseTradeController {
                     //金额对比判断（校验金额 大于 设置测评金额）
                     resultWebResult.setStatus(MsgEnum.STATUS_EV000005.getCode());
                     //tenderInfo.setStatus(MsgEnum.STATUS_EV000005.getCode());
+                }else if(CustomConstants.BANK_TENDER_RETURN_LIMIT_EXCESS_PRINCIPAL.equals(riskTested)){
+                    //金额对比判断（校验金额 大于 设置测评金额）代收本金
+                    resultWebResult.setStatus(MsgEnum.STATUS_EV000008.getCode());
+                    //tenderInfo.setStatus(MsgEnum.STATUS_EV000008.getCode());
                 }
             }
             resultWebResult.setData(tenderInfo);

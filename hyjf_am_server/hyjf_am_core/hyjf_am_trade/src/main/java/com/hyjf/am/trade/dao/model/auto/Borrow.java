@@ -477,6 +477,13 @@ public class Borrow implements Serializable {
      */
     private Integer repayCapitalType;
 
+    /**
+     * 标的投资等级
+     *
+     * @mbggenerated
+     */
+    private String investLevel;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -1045,5 +1052,13 @@ public class Borrow implements Serializable {
 
     public void setRepayCapitalType(Integer repayCapitalType) {
         this.repayCapitalType = repayCapitalType;
+    }
+
+    public String getInvestLevel() {
+        return investLevel;
+    }
+
+    public void setInvestLevel(String investLevel) {
+        this.investLevel = investLevel == null ? null : investLevel.trim();
     }
 }

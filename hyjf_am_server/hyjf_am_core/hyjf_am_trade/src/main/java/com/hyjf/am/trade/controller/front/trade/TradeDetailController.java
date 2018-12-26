@@ -1,6 +1,7 @@
 package com.hyjf.am.trade.controller.front.trade;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.trade.EvaluationConfigResponse;
 import com.hyjf.am.response.trade.TenderDetailResponse;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.trade.TradeDetailBeanRequest;
@@ -11,6 +12,7 @@ import com.hyjf.am.trade.dao.model.customize.WebUserTradeListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserWithdrawListCustomize;
 import com.hyjf.am.trade.service.front.trade.TradeDetailService;
 import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
+import com.hyjf.am.vo.trade.EvaluationConfigVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
@@ -166,6 +168,24 @@ public class TradeDetailController extends BaseController {
         int count = this.tradeDetailService.countAppTradeDetailListRecordTotal(request);
 
         response.setAppTradeDetailListCount(count);
+        return response;
+    }
+
+    /**
+     * @Description 获取测评配置
+     * @Author wenxin
+     * @Version v0.1
+     * @Date
+     */
+    @RequestMapping("/selectEvaluationConfig")
+    public EvaluationConfigResponse selectEvaluationConfig(@RequestBody EvaluationConfigVO request){
+        logger.info("请求参数:" +JSONObject.toJSON(request));
+        EvaluationConfigResponse response = new EvaluationConfigResponse();
+        List<EvaluationConfigVO> list = tradeDetailService.selectEvaluationConfigList(request);
+        if(!CollectionUtils.isEmpty(list)){
+            List<EvaluationConfigVO> voList = CommonUtils.convertBeanList(list, EvaluationConfigVO.class);
+            response.setResultList(voList);
+        }
         return response;
     }
 }

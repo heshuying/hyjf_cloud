@@ -5,6 +5,7 @@ import com.hyjf.admin.client.AmTradeClient;
 import com.hyjf.admin.client.AmUserClient;
 import com.hyjf.admin.service.BorrowCommonService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.BorrowCommonResponse;
 import com.hyjf.am.response.admin.BorrowCustomizeResponse;
 import com.hyjf.am.response.config.AdminSystemResponse;
@@ -19,6 +20,7 @@ import com.hyjf.am.vo.user.UserVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 /**
@@ -160,6 +162,18 @@ public class BorrowCommonServiceImpl implements BorrowCommonService{
 		}
 
 		return result;
+	}
+
+	/**
+	 * 获取标的投资风险测评等级
+	 *
+	 * @param borrowLevel
+	 * @return
+	 */
+	@Override
+	public String getBorrowLevelAction(@Valid String borrowLevel) {
+		String investLevel = this.amTradeClient.getBorrowLevelAction(borrowLevel);
+		return investLevel;
 	}
 
 }
