@@ -260,7 +260,7 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
                 default:
                     revaluation_money = "0";
             }
-            returnMap.put("revaluationMoney", StringUtil.getTenThousandOfANumber(Integer.valueOf(revaluation_money)));
+            returnMap.put("revaluationMoney", StringUtil.getTenThousandOfANumber(Double.valueOf(revaluation_money).intValue()));
             returnMap.put("evalType", eval_type);
         }
         userEvalationResult.setEvalType((String) returnMap.get("evalType"));
