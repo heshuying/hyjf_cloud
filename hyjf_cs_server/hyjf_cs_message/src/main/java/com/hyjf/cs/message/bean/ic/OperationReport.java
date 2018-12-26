@@ -3,17 +3,17 @@
  */
 package com.hyjf.cs.message.bean.ic;
 
-import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
-
+import java.io.Serializable;
 import java.math.BigDecimal;
+
+import org.springframework.data.mongodb.core.mapping.Document;
 
 /**
  * @author tanyy
  * @version OperationReport, v0.1 2018/8/1 11:32
  */
 @Document(collection = "ht_operation_report")
-public class OperationReport {
+public class OperationReport implements Serializable {
     /**
      *
      */

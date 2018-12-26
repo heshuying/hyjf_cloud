@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -147,7 +148,7 @@ public class SmsHandle {
 		SmsLog smsLog = new SmsLog();
 		smsLog.setType(type);
 		smsLog.setContent(messageStr);// 短信内容
-		smsLog.setPosttime(GetDate.getNowTime10());
+		smsLog.setPosttime(new Date());
 		smsLog.setMobile(mobile);
 		if (StringUtils.isEmpty(sender)) {
 			smsLog.setSender(title);
@@ -300,14 +301,14 @@ public class SmsHandle {
 			}
 			String mobile = user.getMobile();
 			if (StringUtils.isEmpty(mobile)) {
-				logger.error("用户电话为空");
-				//下面这个抛出异常的，可以等上线再开启
+				logger.error("手机号不能为空， userId is : {}", userId);
+				//下面这个抛出异常的，可以等上线再开启  todo
 				//throw new Exception("用户电话为空");
 				return status;
 			}
 			if (!Validator.isPhoneNumber(mobile)) {
 				logger.error("用户电话号码格式不正确");
-				//下面这个抛出异常的，可以等上线再开启
+				//下面这个抛出异常的，可以等上线再开启  todo
 				//throw new Exception("用户电话号码格式不正确");
 				return status;
 			}
