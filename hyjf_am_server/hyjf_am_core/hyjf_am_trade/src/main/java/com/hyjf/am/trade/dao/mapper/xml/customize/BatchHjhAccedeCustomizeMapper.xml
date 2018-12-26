@@ -140,4 +140,14 @@
 		order_status <![CDATA[<]]> 3;
 	</update>
 	<!--add 汇计划三期 计算匹配期处理 liubin 20180515 end-->
+
+	<!--如果订单状态异常时，且开始计息时间为空时也是要拿这个当前时间－授权服务时间-->
+	<update id="updateMatchDatesTwo" parameterType="com.hyjf.am.trade.dao.model.auto.HjhAccede">
+        UPDATE hyjf_hjh_accede
+        SET
+            match_dates = IF(datediff(now(),FROM_UNIXTIME(create_time)) >= 99,99,datediff(now(),FROM_UNIXTIME(create_time)))
+        WHERE
+            order_status between #{start,jdbcType=INTEGER} and #{end,jdbcType=INTEGER}
+    </update>
+	<!-- add 获取发生异常且开始计息时间为空的的数据并更新其匹配期 huanghui 20181129 end-->
 </mapper>

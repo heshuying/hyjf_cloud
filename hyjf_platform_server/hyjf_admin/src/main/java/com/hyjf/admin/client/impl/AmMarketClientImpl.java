@@ -240,14 +240,11 @@ public class AmMarketClientImpl implements AmMarketClient {
     @Override
     public MessagePushTagResponse getTagList() {
 		MessagePushTagResponse response = restTemplate
-				.getForEntity("http://CS-MESSAGE/cs-message/history_message/get_push_tag",
+				.getForEntity("http://AM-CONFIG/am-config/messagePushTag/getTagList",
 						MessagePushTagResponse.class)
 				.getBody();
 		return response;
     }
-
-
-
 
 	@Override
     public ActivityListResponse getInfoById(Integer id) {

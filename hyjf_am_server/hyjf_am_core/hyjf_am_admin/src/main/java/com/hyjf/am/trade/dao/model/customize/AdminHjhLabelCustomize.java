@@ -89,6 +89,10 @@ public class AdminHjhLabelCustomize extends BaseVO implements Serializable{
 
 	private String planNid;
 
+	private String createUser;
+
+	private String updateUser;
+
 	public String getPlanNid() {
 		return planNid;
 	}
@@ -366,5 +370,21 @@ public class AdminHjhLabelCustomize extends BaseVO implements Serializable{
 
 	public void setPushTimeEndString(String pushTimeEndString) {
 		this.pushTimeEndString = pushTimeEndString;
+	}
+
+	public String getCreateUser() {
+		return createUser;
+	}
+
+	public void setCreateUser(String createUser) {
+		this.createUser = createUser;
+	}
+
+	public String getUpdateUser() {
+		return updateUser;
+	}
+
+	public void setUpdateUser(String updateUser) {
+		this.updateUser = updateUser;
 	}
 }

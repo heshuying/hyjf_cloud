@@ -338,22 +338,6 @@ public class CsMessageClientImpl implements CsMessageClient {
     }
 
     /**
-     * 获取标签列表
-     *
-     * @return
-     */
-    @Override
-    public List<MessagePushTagVO> getTagList() {
-        MessagePushTagResponse response = restTemplate
-                .getForObject("http://CS-MESSAGE/cs-message/msgpush/error/getTagList",
-                        MessagePushTagResponse.class);
-        if (response != null) {
-            return response.getResultList();
-        }
-        return null;
-    }
-
-    /**
      * 获取单个信息
      *
      * @return

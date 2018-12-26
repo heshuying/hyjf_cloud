@@ -854,9 +854,9 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				borrowCra.andBorrowPreNidNewEqualTo(borrowList.getBorrowPreNidNew());
 				//添加修改日志
 				BorrowLog borrowLog = new BorrowLog();
-				List<BorrowInfo> borrowAllList = this.borrowInfoMapper.selectByExample(borrowExample);
+				List<BorrowInfoWithBLOBs> borrowAllList = this.borrowInfoMapper.selectByExampleWithBLOBs(borrowExample);
 				if (borrowAllList != null && borrowAllList.size() > 0) {
-					for (BorrowInfo borrow : borrowAllList) {
+					for (BorrowInfoWithBLOBs borrow : borrowAllList) {
 						BorrowWithBLOBs bwb=new BorrowWithBLOBs();
 						 BeanUtils.copyProperties(borrow,bwb);
 						 BeanUtils.copyProperties(this.getBorrow(borrowNid),bwb);
@@ -3880,7 +3880,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 					List<BorrowCommonFileData> fileDataList = borrowCommonFile.getData();
 					if (fileDataList != null && fileDataList.size() > 0) {
 						for (BorrowCommonFileData borrowCommonFileData : fileDataList) {
-							logger.error("进来了");
 							if (StringUtils.isEmpty(borrowCommonFileData.getFileRealName())) {
 								fileMap.put(borrowCommonFileData.getName(), borrowCommonFileData.getFileurl());
 							} else {
@@ -3904,48 +3903,49 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 			List<BorrowCommonFileData> fileDataList = new ArrayList<BorrowCommonFileData>();
 			for (BorrowCommonImageVO borrowCommonImage : borrowCommonImageList) {
 				BorrowCommonFileData borrowCommonFileData = new BorrowCommonFileData();
-				// 图片顺序
-				borrowCommonFileData.setImageSort(borrowCommonImage.getImageSort().trim());
-				// 图片名称
-				borrowCommonFileData.setName(borrowCommonImage.getImageName());
-				// 图片真实名称
-				borrowCommonFileData.setFileRealName(borrowCommonImage.getImageRealName());
-				// 图片真实名称
-				borrowCommonFileData.setFilename(borrowCommonImage.getImageRealName());
-
-				if (fileMap == null || fileMap.isEmpty()) {
-					// 图片路径
-					String fileName = UploadFileUtils.upload4CopyFile(filePhysicalPath + borrowCommonImage.getImagePath(), filePhysicalPath + fileUploadRealPath);
-					borrowCommonFileData.setFileurl(fileUploadRealPath + fileName);
-					// 垃圾文件删除
-					UploadFileUtils.removeFile4Dir(borrowCommonImage.getImagePath());
-					logger.error("之前没有");
-				} else {
-					// 该文件是否已经存在-不存在
-					if (!(fileMap.containsKey(borrowCommonImage.getImageRealName()) || fileMap.containsKey(borrowCommonImage.getImageName()))) {
-						logger.error("没找到重新上传");
+				if(!borrowCommonImage.getImagePath().isEmpty()) {
+					
+					
+					// 图片顺序
+					borrowCommonFileData.setImageSort(borrowCommonImage.getImageSort().trim());
+					// 图片名称
+					borrowCommonFileData.setName(borrowCommonImage.getImageName());
+					// 图片真实名称
+					borrowCommonFileData.setFileRealName(borrowCommonImage.getImageRealName());
+					// 图片真实名称
+					borrowCommonFileData.setFilename(borrowCommonImage.getImageRealName());
+	
+					if (fileMap == null || fileMap.isEmpty()) {
 						// 图片路径
 						String fileName = UploadFileUtils.upload4CopyFile(filePhysicalPath + borrowCommonImage.getImagePath(), filePhysicalPath + fileUploadRealPath);
 						borrowCommonFileData.setFileurl(fileUploadRealPath + fileName);
 						// 垃圾文件删除
 						UploadFileUtils.removeFile4Dir(borrowCommonImage.getImagePath());
 					} else {
-						logger.error("找到不用重新上传");
-						// 图片顺序
-						borrowCommonFileData.setImageSort(borrowCommonImage.getImageSort().trim());
-						// 图片名称
-						borrowCommonFileData.setName(borrowCommonImage.getImageName());
-						// 图片真实名称
-						borrowCommonFileData.setFileRealName(borrowCommonImage.getImageRealName());
-						// 图片真实名称
-						borrowCommonFileData.setFilename(borrowCommonImage.getImageRealName());
-						// 图片路径
-						borrowCommonFileData.setFileurl(borrowCommonImage.getImagePath());
-						// 文件已经存在
-						fileMap.remove(borrowCommonImage.getImageRealName());
+						// 该文件是否已经存在-不存在
+						if (!(fileMap.containsKey(borrowCommonImage.getImageRealName()) || fileMap.containsKey(borrowCommonImage.getImageName()))) {
+							// 图片路径
+							String fileName = UploadFileUtils.upload4CopyFile(filePhysicalPath + borrowCommonImage.getImagePath(), filePhysicalPath + fileUploadRealPath);
+							borrowCommonFileData.setFileurl(fileUploadRealPath + fileName);
+							// 垃圾文件删除
+							UploadFileUtils.removeFile4Dir(borrowCommonImage.getImagePath());
+						} else {
+							// 图片顺序
+							borrowCommonFileData.setImageSort(borrowCommonImage.getImageSort().trim());
+							// 图片名称
+							borrowCommonFileData.setName(borrowCommonImage.getImageName());
+							// 图片真实名称
+							borrowCommonFileData.setFileRealName(borrowCommonImage.getImageRealName());
+							// 图片真实名称
+							borrowCommonFileData.setFilename(borrowCommonImage.getImageRealName());
+							// 图片路径
+							borrowCommonFileData.setFileurl(borrowCommonImage.getImagePath());
+							// 文件已经存在
+							fileMap.remove(borrowCommonImage.getImageRealName());
+						}
 					}
+					fileDataList.add(borrowCommonFileData);
 				}
-				fileDataList.add(borrowCommonFileData);
 			}
 
 			// 垃圾文件删除
