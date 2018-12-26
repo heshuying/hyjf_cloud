@@ -100,6 +100,9 @@ public class SystemConfig {
     @Value("${hyjf.wechat.qrcode.url}")
     private String wechatQrcodeUrl;
 
+    @Value("${hyjf.web.qrcode.url}")
+    private String webQrcodeUrl;
+
     @Value("${wcsr.retranspassword}")
     /**
      需要在配置文件中 添加  wcsr.retranspassword = http://app.rongdongfeng.zhugedai.com/wcsr-app/userTransPassword/callBack
@@ -401,5 +404,13 @@ public class SystemConfig {
 
     public void setExitLabelShowFlag(String exitLabelShowFlag) {
         this.exitLabelShowFlag = exitLabelShowFlag;
+    }
+
+    public String getWebQrcodeUrl() {
+        return webQrcodeUrl;
+    }
+
+    public void setWebQrcodeUrl(String webQrcodeUrl) {
+        this.webQrcodeUrl = webQrcodeUrl;
     }
 }

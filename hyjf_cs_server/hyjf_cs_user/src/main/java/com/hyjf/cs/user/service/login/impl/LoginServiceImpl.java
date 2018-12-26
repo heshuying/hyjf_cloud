@@ -695,8 +695,16 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			}
 		}
 		{
+			//通过用户ID 获取用户关联渠道 add by huanghui
+			String linkUrl = null;
+			UserUtmInfoCustomizeVO userUtmInfoCustomizeVO = amUserClient.getUserUtmInfo(userId);
+			if (userUtmInfoCustomizeVO != null){
+				linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfoCustomizeVO.getSourceId().toString() + "&utmSource=" + userUtmInfoCustomizeVO.getSourceName();
+			}else {
+				linkUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId;
+			}
 			// 二维码
-			result.setQrCodeUrl(systemConfig.getWechatQrcodeUrl().replace("{userId}", String.valueOf(userId)));
+			result.setQrCodeUrl(linkUrl);
 		}
 		{
 			// 风险测评结果
