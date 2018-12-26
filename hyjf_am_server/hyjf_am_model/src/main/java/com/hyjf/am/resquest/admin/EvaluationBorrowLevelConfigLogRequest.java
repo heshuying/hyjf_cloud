@@ -16,13 +16,13 @@ public class EvaluationBorrowLevelConfigLogRequest extends BasePage implements S
 
 
     @ApiModelProperty(value = "操作人")
-    private String updateUser;
+    private String updateUserSrch;
 
     @ApiModelProperty(value = "开始时间")
-    private String startTime;
+    private String startTimeSrch;
 
     @ApiModelProperty(value = "结束时间")
-    private String endTime;
+    private String endTimeSrch;
 
     public int limit;
 
@@ -30,28 +30,28 @@ public class EvaluationBorrowLevelConfigLogRequest extends BasePage implements S
 
     public int limitEnd;
 
-    public String getUpdateUser() {
-        return updateUser;
+    public String getUpdateUserSrch() {
+        return updateUserSrch;
     }
 
-    public void setUpdateUser(String updateUser) {
-        this.updateUser = updateUser;
+    public void setUpdateUserSrch(String updateUserSrch) {
+        this.updateUserSrch = updateUserSrch;
     }
 
-    public String getStartTime() {
-        return startTime;
+    public String getStartTimeSrch() {
+        return startTimeSrch;
     }
 
-    public void setStartTime(String startTime) {
-        this.startTime = startTime;
+    public void setStartTimeSrch(String startTimeSrch) {
+        this.startTimeSrch = startTimeSrch;
     }
 
-    public String getEndTime() {
-        return endTime;
+    public String getEndTimeSrch() {
+        return endTimeSrch;
     }
 
-    public void setEndTime(String endTime) {
-        this.endTime = endTime;
+    public void setEndTimeSrch(String endTimeSrch) {
+        this.endTimeSrch = endTimeSrch;
     }
 
     public int getLimit() {

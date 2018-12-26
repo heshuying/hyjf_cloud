@@ -51,6 +51,9 @@ public class EvaluationMoneyLogConfigVO implements Serializable {
     @ApiModelProperty(value = "修改人")
     private String updateUser;
 
+    @ApiModelProperty(value = "IP")
+    private String ip;
+
     private static final long serialVersionUID = 1L;
 
 
@@ -164,5 +167,13 @@ public class EvaluationMoneyLogConfigVO implements Serializable {
 
     public void setUpdateUser(String updateUser) {
         this.updateUser = updateUser == null ? null : updateUser.trim();
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 }

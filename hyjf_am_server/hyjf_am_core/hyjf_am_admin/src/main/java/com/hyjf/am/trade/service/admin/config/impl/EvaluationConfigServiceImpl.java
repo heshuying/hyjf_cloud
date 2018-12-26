@@ -14,10 +14,7 @@ import com.hyjf.am.vo.admin.BailConfigInfoCustomizeVO;
 import com.hyjf.am.vo.admin.EvaluationConfigVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.util.CustomUtil;
-import com.hyjf.common.util.GetCilentIP;
-import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetSessionOrRequestUtils;
+import com.hyjf.common.util.*;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
@@ -101,6 +98,12 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
         EvaluationConfigLogExample example = new EvaluationConfigLogExample();
         EvaluationConfigLogExample.Criteria criteria = example.createCriteria();
         criteria.andStatusEqualTo(2);
+        if (StringUtils.isNotBlank(request.getUpdateUserSrch())) {
+            criteria.andUpdateUserEqualTo(request.getUpdateUserSrch());
+        }
+        if (StringUtils.isNotBlank(request.getStartTimeSrch()) && StringUtils.isNotBlank(request.getEndTimeSrch())) {
+            criteria.andCreateTimeBetween(GetDate.str2Date(GetDate.getDayStart(request.getStartTimeSrch()),datetimeFormat), GetDate.str2Date(GetDate.getDayEnd(request.getEndTimeSrch()),datetimeFormat));
+        }
         return evaluationConfigLogMapper.countByExample(example);
     }
 
@@ -112,17 +115,17 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
     @Override
     public List<EvaluationConfigLog> selectEvaluationMoneyLogList(EvaluationMoneyLogRequest request) {
         EvaluationConfigLogExample example = new EvaluationConfigLogExample();
-        if (request.getLimitStart() != -1) {
+        EvaluationConfigLogExample.Criteria criteria = example.createCriteria();
+        criteria.andStatusEqualTo(2);
+        if (request.getLimitStart()!= -1) {
             example.setLimitStart(request.getLimitStart());
             example.setLimitEnd(request.getLimitEnd());
         }
-        EvaluationConfigLogExample.Criteria criteria = example.createCriteria();
-        criteria.andStatusEqualTo(2);
-        if(StringUtils.isNotEmpty(request.getUpdateUser())){
-            criteria.andUpdateUserEqualTo(request.getUpdateUser());
+        if (StringUtils.isNotBlank(request.getUpdateUserSrch())) {
+            criteria.andUpdateUserEqualTo(request.getUpdateUserSrch());
         }
-        if (StringUtils.isNotBlank(request.getStartTime()) && StringUtils.isNotBlank(request.getEndTime())) {
-            criteria.andUpdateTimeBetween(GetDate.str2Date(GetDate.getDayStart(request.getStartTime()),datetimeFormat), GetDate.str2Date(GetDate.getDayEnd(request.getEndTime()),datetimeFormat));
+        if (StringUtils.isNotBlank(request.getStartTimeSrch()) && StringUtils.isNotBlank(request.getEndTimeSrch())) {
+            criteria.andCreateTimeBetween(GetDate.str2Date(GetDate.getDayStart(request.getStartTimeSrch()),datetimeFormat), GetDate.str2Date(GetDate.getDayEnd(request.getEndTimeSrch()),datetimeFormat));
         }
         example.setOrderByClause("create_time DESC");
         return evaluationConfigLogMapper.selectByExample(example);
@@ -138,6 +141,16 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
         EvaluationConfigLogExample example = new EvaluationConfigLogExample();
         EvaluationConfigLogExample.Criteria criteria = example.createCriteria();
         criteria.andStatusEqualTo(1);
+        if (request.getLimitStart()!= -1) {
+            example.setLimitStart(request.getLimitStart());
+            example.setLimitEnd(request.getLimitEnd());
+        }
+        if (StringUtils.isNotBlank(request.getUpdateUserSrch())) {
+            criteria.andUpdateUserEqualTo(request.getUpdateUserSrch());
+        }
+        if (StringUtils.isNotBlank(request.getStartTimeSrch()) && StringUtils.isNotBlank(request.getEndTimeSrch())) {
+            criteria.andCreateTimeBetween(GetDate.str2Date(GetDate.getDayStart(request.getStartTimeSrch()),datetimeFormat), GetDate.str2Date(GetDate.getDayEnd(request.getEndTimeSrch()),datetimeFormat));
+        }
         return evaluationConfigLogMapper.countByExample(example);
     }
 
@@ -149,17 +162,17 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
     @Override
     public List<EvaluationConfigLog> selectEvaluationCheckLogList(EvaluationCheckLogRequest request) {
         EvaluationConfigLogExample example = new EvaluationConfigLogExample();
-        if (request.getLimitStart() != -1) {
+        EvaluationConfigLogExample.Criteria criteria = example.createCriteria();
+        criteria.andStatusEqualTo(1);
+        if (request.getLimitStart()!= -1) {
             example.setLimitStart(request.getLimitStart());
             example.setLimitEnd(request.getLimitEnd());
         }
-        EvaluationConfigLogExample.Criteria criteria = example.createCriteria();
-        criteria.andStatusEqualTo(1);
-        if(StringUtils.isNotEmpty(request.getUpdateUser())){
-            criteria.andUpdateUserEqualTo(request.getUpdateUser());
+        if (StringUtils.isNotBlank(request.getUpdateUserSrch())) {
+            criteria.andUpdateUserEqualTo(request.getUpdateUserSrch());
         }
-        if (StringUtils.isNotBlank(request.getStartTime()) && StringUtils.isNotBlank(request.getEndTime())) {
-            criteria.andUpdateTimeBetween(GetDate.str2Date(GetDate.getDayStart(request.getStartTime()),datetimeFormat), GetDate.str2Date(GetDate.getDayEnd(request.getEndTime()),datetimeFormat));
+        if (StringUtils.isNotBlank(request.getStartTimeSrch()) && StringUtils.isNotBlank(request.getEndTimeSrch())) {
+            criteria.andCreateTimeBetween(GetDate.str2Date(GetDate.getDayStart(request.getStartTimeSrch()),datetimeFormat), GetDate.str2Date(GetDate.getDayEnd(request.getEndTimeSrch()),datetimeFormat));
         }
         example.setOrderByClause("create_time DESC");
         return evaluationConfigLogMapper.selectByExample(example);
@@ -386,6 +399,12 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
         EvaluationConfigLogExample example = new EvaluationConfigLogExample();
         EvaluationConfigLogExample.Criteria cra = example.createCriteria();
         cra.andStatusEqualTo(3);
+        if (StringUtils.isNotBlank(request.getUpdateUserSrch())) {
+            cra.andUpdateUserEqualTo(request.getUpdateUserSrch());
+        }
+        if (StringUtils.isNotBlank(request.getStartTimeSrch()) && StringUtils.isNotBlank(request.getEndTimeSrch())) {
+            cra.andCreateTimeBetween(GetDate.str2Date(GetDate.getDayStart(request.getStartTimeSrch()),datetimeFormat), GetDate.str2Date(GetDate.getDayEnd(request.getEndTimeSrch()),datetimeFormat));
+        }
         return evaluationConfigLogMapper.countByExample(example);
     }
 
@@ -400,6 +419,18 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
         EvaluationConfigLogExample example = new EvaluationConfigLogExample();
         EvaluationConfigLogExample.Criteria cra = example.createCriteria();
         cra.andStatusEqualTo(3);
+        if (request.getLimitStart()!= -1) {
+            example.setLimitStart(request.getLimitStart());
+            example.setLimitEnd(request.getLimitEnd());
+        }
+        if (StringUtils.isNotBlank(request.getUpdateUserSrch())) {
+            cra.andUpdateUserEqualTo(request.getUpdateUserSrch());
+        }
+        if (StringUtils.isNotBlank(request.getStartTimeSrch()) && StringUtils.isNotBlank(request.getEndTimeSrch())) {
+            cra.andCreateTimeBetween(GetDate.str2Date(GetDate.getDayStart(request.getStartTimeSrch()),datetimeFormat), GetDate.str2Date(GetDate.getDayEnd(request.getEndTimeSrch()),datetimeFormat));
+        }
+        // 条件查询
+        example.setOrderByClause("create_time desc");
         return evaluationConfigLogMapper.selectByExample(example);
     }
 }

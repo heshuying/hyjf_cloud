@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.vo.admin;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
@@ -45,6 +46,9 @@ public class EvaluationBorrowLevelConfigLogVO implements Serializable{
 
     @ApiModelProperty(value = "修改人")
     private String updateUser;
+
+    @ApiModelProperty(value = "IP")
+    private String ip;
 
     public String getBbbEvaluationProposal() {
         return bbbEvaluationProposal;
@@ -124,5 +128,13 @@ public class EvaluationBorrowLevelConfigLogVO implements Serializable{
 
     public void setUpdateUser(String updateUser) {
         this.updateUser = updateUser;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public void setIp(String ip) {
+        this.ip = ip;
     }
 }
