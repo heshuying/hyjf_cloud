@@ -181,14 +181,14 @@ public class SellDaily implements Serializable {
     private Integer rechargeGt3000UserNum;
 
     /**
-     * 出借≥3000人数（昨日注册）
+     * 投资≥3000人数（昨日注册）
      *
      * @mbggenerated
      */
     private Integer investGt3000UserNum;
 
     /**
-     * 本月累计出借3000以上新客户数
+     * 本月累计投资3000以上新客户数
      *
      * @mbggenerated
      */
