@@ -17,6 +17,7 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.PlanListService;
 import com.hyjf.admin.utils.AdminValidatorFieldCheckUtil;
+import com.hyjf.admin.utils.ConvertUtils;
 import com.hyjf.admin.utils.exportutils.DataSet2ExcelSXSSFHelper;
 import com.hyjf.admin.utils.exportutils.IValueFormatter;
 import com.hyjf.am.response.Response;
@@ -24,10 +25,12 @@ import com.hyjf.am.response.admin.HjhPlanCapitalResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
 import com.hyjf.am.resquest.admin.HjhPlanCapitalRequest;
 import com.hyjf.am.resquest.admin.PlanListRequest;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanDetailVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanSumVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -51,10 +54,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author libin
@@ -161,6 +161,7 @@ public class PlanListController extends BaseController{
     	PlanListRequest form = new PlanListRequest();
     	// 将画面请求request赋值给原子层 request
     	BeanUtils.copyProperties(viewRequest, form);
+
 		String planNid = form.getDebtPlanNid();
 		if (StringUtils.isNotBlank(planNid) && planNid.length() < 3
 				&& !"HJH".equals(planNid.substring(0, 3))) {
@@ -229,6 +230,8 @@ public class PlanListController extends BaseController{
 		form.setAddTime(this.getValue(String.valueOf(vo.getAddTime())));
 		// 最小投资笔数
 		form.setMinInvestCounts(this.getValue(String.valueOf(vo.getMinInvestCounts())));
+		// 风险投资等级
+		form.setInvestLevel(this.getValue(String.valueOf(vo.getInvestLevel())));
 	}
 	
 	private String getValue(String value) {
@@ -744,5 +747,16 @@ public class PlanListController extends BaseController{
 		mapAdapter.put("planInvestStatus", planInvestStatusAdapter);
 		mapAdapter.put("addTime", addTimeAdapter);
 		return mapAdapter;
+	}
+
+
+	public List<Integer> mapToList( Map<String, String> map){
+		List<Integer> result = new ArrayList<>();
+		Iterator iterator = map.keySet().iterator();
+		while(iterator.hasNext()){
+			String key =iterator.next().toString();
+			result.add(Integer.parseInt(key));
+		}
+		return result;
 	}
 }

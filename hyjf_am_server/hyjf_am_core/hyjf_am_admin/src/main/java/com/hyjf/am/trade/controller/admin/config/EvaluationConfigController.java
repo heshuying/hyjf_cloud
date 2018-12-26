@@ -4,13 +4,16 @@
 package com.hyjf.am.trade.controller.admin.config;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.EvaluationBorrowLevelConfigResponse;
 import com.hyjf.am.response.trade.EvaluationCheckResponse;
 import com.hyjf.am.response.trade.EvaluationMoneyResponse;
+import com.hyjf.am.resquest.admin.EvaluationBorrowLevelConfigRequest;
 import com.hyjf.am.resquest.admin.EvaluationCheckRequest;
 import com.hyjf.am.resquest.admin.EvaluationMoneyRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.EvaluationConfig;
 import com.hyjf.am.trade.service.admin.config.EvaluationConfigService;
+import com.hyjf.am.vo.admin.EvaluationBorrowLevelConfigVO;
 import com.hyjf.am.vo.admin.EvaluationCheckConfigVO;
 import com.hyjf.am.vo.admin.EvaluationMoneyConfigVO;
 import com.hyjf.common.paginator.Paginator;
@@ -151,4 +154,59 @@ public class EvaluationConfigController extends BaseController {
         response.setRtn(Response.SUCCESS);
         return response;
     }
+
+
+    @ApiOperation(value = "风险测评标的等级配置查询列表")
+    @PostMapping("/getEvaluationBorrowLevelConfigList")
+    public EvaluationBorrowLevelConfigResponse getEvaluationBorrowLevelConfigList(@RequestBody EvaluationBorrowLevelConfigRequest request) {
+        EvaluationBorrowLevelConfigResponse response = new EvaluationBorrowLevelConfigResponse();
+        Integer recordTotal = configService.getEvaluationBorrowLevelConfigCount(request);
+        Paginator paginator = new Paginator(request.getCurrPage(), recordTotal, request.getPageSize());
+        request.setLimitStart(paginator.getOffset());
+        request.setLimitEnd(paginator.getLimit());
+        List<EvaluationConfig> evaluationConfigList = configService.getEvaluationBorrowLevelConfigList(request);
+        if (null != evaluationConfigList && evaluationConfigList.size() > 0) {
+            List<EvaluationBorrowLevelConfigVO> evaluationCheckConfigVOs = CommonUtils.convertBeanList(evaluationConfigList, EvaluationBorrowLevelConfigVO.class);
+            response.setResultList(evaluationCheckConfigVOs);
+            response.setCount(recordTotal);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+
+    /**
+     * 根据id查询风险测评配置
+     * @param id
+     * @return
+     */
+    @ApiOperation(value = "根据id查询风险测评配置")
+    @GetMapping("/getEvaluationBorrowLevelConfigById/{id}")
+    public EvaluationBorrowLevelConfigResponse getEvaluationBorrowLevelConfigById(@PathVariable Integer id) {
+        EvaluationBorrowLevelConfigResponse response = new EvaluationBorrowLevelConfigResponse();
+        EvaluationConfig evaluationConfig = configService.selectEvaluationMoneyById(id);
+        if (null != evaluationConfig) {
+            EvaluationBorrowLevelConfigVO evaluationBorrowLevelConfigVO = CommonUtils.convertBean(evaluationConfig, EvaluationBorrowLevelConfigVO.class);
+            response.setResult(evaluationBorrowLevelConfigVO);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
+
+    /**
+     * 修改风险测评等级配置
+     *
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "修改风险测评等级配置")
+    @PostMapping("/updateBorrowLevelConfig")
+    public EvaluationBorrowLevelConfigResponse updateBorrowLevelConfig(@RequestBody EvaluationBorrowLevelConfigRequest request) {
+        EvaluationBorrowLevelConfigResponse response = new EvaluationBorrowLevelConfigResponse();
+        response.setUpdateResult(configService.updateBorrowLevelConfig(request));
+        response.setRtn(Response.SUCCESS);
+        return response;
+    }
+
 }

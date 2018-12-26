@@ -64,6 +64,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -6449,6 +6450,22 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 获取标的风险测评等级
+     *
+     * @param borrowLevel
+     * @return
+     */
+    @Override
+    public String getBorrowLevelAction(@Valid String borrowLevel) {
+        String url = "http://AM-ADMIN//am-trade/borrowcommon/getBorrowLevelAction/" + borrowLevel;
+        StringResponse response = restTemplate.getForEntity(url, StringResponse.class).getBody();
+        if (response != null) {
+            return response.getResultStr();
+        }
+        return null;
+    }
+
+    /**
      * 产品中心-加息投资明细（总计）
      * @param request
      * @auth wenxin
@@ -6896,5 +6913,55 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public EvaluationCheckLogResponse getEvaluationCheckLogList(EvaluationCheckLogRequest request) {
         return restTemplate.postForObject("http://AM-ADMIN/am-trade/evaluation/getEvaluationCheckLogList", request, EvaluationCheckLogResponse.class);
+    }
+
+    /**
+     * 风险测评配置-风险测评等级配置
+     *
+     * @param requestBean
+     * @return
+     */
+    public EvaluationBorrowLevelConfigResponse getEvaluationBorrowLevelConfigList(EvaluationBorrowLevelConfigRequest requestBean){
+        return restTemplate.postForObject("http://AM-ADMIN/am-trade/evaluation/getEvaluationBorrowLevelConfigList", requestBean, EvaluationBorrowLevelConfigResponse.class);
+    }
+
+
+    /**
+     * 风险测评配置-风险测评等级配置
+     * @param id
+     * @return
+     */
+   public EvaluationBorrowLevelConfigVO getEvaluationBorrowLevelConfigById(Integer id){
+       String url = "http://AM-ADMIN/am-trade/evaluation/getEvaluationBorrowLevelConfigById/" + id;
+       EvaluationBorrowLevelConfigResponse response = restTemplate.getForEntity(url, EvaluationBorrowLevelConfigResponse.class).getBody();
+       if (Response.isSuccess(response)) {
+           return response.getResult();
+       }
+       return null;
+   }
+
+
+    /**
+     * 更新风险测评配置-风险测评等级配置
+     *
+     * @param requestBean
+     * @return
+     */
+   public EvaluationBorrowLevelConfigResponse updateBorrowLevelConfig(EvaluationBorrowLevelConfigRequest requestBean){
+       EvaluationBorrowLevelConfigResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/evaluation/updateBorrowLevelConfig", requestBean, EvaluationBorrowLevelConfigResponse.class).getBody();
+       return response;
+   }
+
+
+
+    /**
+     * 配置中心-风险测评等级配置（日志列表）
+     *
+     * @param requestBean
+     * @return
+     */
+    public EvaluationBorrowLevelConfigLogResponse getBorrowLevelConfigLogList(EvaluationBorrowLevelConfigLogRequest requestBean){
+        EvaluationBorrowLevelConfigLogResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/evaluation/getBorrowLevelConfigLogList", requestBean, EvaluationBorrowLevelConfigLogResponse.class).getBody();
+        return response;
     }
 }

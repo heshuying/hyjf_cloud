@@ -8,6 +8,7 @@ import com.hyjf.admin.beans.repaybean.RepayBean;
 import com.hyjf.admin.beans.request.*;
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.CouponUserCustomizeResponse;
 import com.hyjf.am.response.admin.HjhPlanResponse;
@@ -44,6 +45,7 @@ import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.EnumMap;
 import java.util.List;
@@ -3121,6 +3123,16 @@ public interface AmTradeClient {
      */
     Integer countBorrowRepaymentInfoExport(BorrowRepaymentInfoRequset copyForm);
 
+    /**
+     * 获取标的风险投资等级
+     *
+     * @param borrowLevel
+     * @return
+     */
+    String getBorrowLevelAction(@Valid String borrowLevel);
+
+
+
     /** 加息接口开始*/
     /** 枚举类型 */
     enum IncreaseProperty {VO,STR,STR1}
@@ -3328,5 +3340,40 @@ public interface AmTradeClient {
      * @param request
      **/
     EvaluationCheckLogResponse getEvaluationCheckLogList(EvaluationCheckLogRequest request);
+
+
+    /**
+     * 风险测评配置-风险测评等级配置
+     *
+     * @param requestBean
+     * @return
+     */
+    EvaluationBorrowLevelConfigResponse getEvaluationBorrowLevelConfigList(EvaluationBorrowLevelConfigRequest requestBean);
+
+
+    /**
+     * 风险测评配置-风险测评等级配置
+     * @param id
+     * @return
+     */
+    EvaluationBorrowLevelConfigVO getEvaluationBorrowLevelConfigById(Integer id);
+
+
+    /**
+     * 更新风险测评配置-风险测评等级配置
+     *
+     * @param requestBean
+     * @return
+     */
+    EvaluationBorrowLevelConfigResponse updateBorrowLevelConfig(EvaluationBorrowLevelConfigRequest requestBean);
+
+
+    /**
+     * 配置中心-风险测评等级配置（日志列表）
+     *
+     * @param requestBean
+     * @return
+     */
+    EvaluationBorrowLevelConfigLogResponse getBorrowLevelConfigLogList(EvaluationBorrowLevelConfigLogRequest requestBean);
 }
 

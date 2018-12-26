@@ -462,4 +462,11 @@ public interface BorrowCommonService extends BaseService {
 	 * @param borrowPreNid
 	 */
 	void isAutoRecord(String borrowPreNid);
+
+	/**
+	 * 获取风险测评配置
+	 *
+	 * @return
+	 */
+    EvaluationConfig selectEvaluationConfig();
 }

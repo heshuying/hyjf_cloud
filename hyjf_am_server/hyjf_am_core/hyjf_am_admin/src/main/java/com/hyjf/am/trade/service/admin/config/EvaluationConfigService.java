@@ -15,10 +15,11 @@ import java.util.List;
 
 /**
  * 风险测评配置
+ *
+ * @param
  * @author Zha Daojian
  * @date 2018/12/24 10:28
- * @param 
- * @return 
+ * @return
  **/
 public interface EvaluationConfigService extends BaseService {
 
@@ -112,6 +113,46 @@ public interface EvaluationConfigService extends BaseService {
      * @return
      */
     Boolean updateEvaluationMoney(EvaluationMoneyRequest request);
+
     Boolean updateEvaluationCheck(EvaluationCheckRequest request);
 
+    /**
+     * 获取风险测评配置风险测评等级配置数量
+     *
+     * @param request
+     * @return
+     */
+    Integer getEvaluationBorrowLevelConfigCount(EvaluationBorrowLevelConfigRequest request);
+
+    /**
+     * 获取风险测评配置风险测评等级配置列表
+     *
+     * @param request
+     * @return
+     */
+    List<EvaluationConfig> getEvaluationBorrowLevelConfigList(EvaluationBorrowLevelConfigRequest request);
+
+    /**
+     * 更新测评等级配置
+     *
+     * @param request
+     * @return
+     */
+    boolean updateBorrowLevelConfig(EvaluationBorrowLevelConfigRequest request);
+
+    /**
+     * 查询风险测评配置日志件数
+     *
+     * @param request
+     * @return
+     */
+    Integer getBorrowLevelConfigLogListCount(EvaluationBorrowLevelConfigLogRequest request);
+
+    /**
+     * 查询风险测评配置日志列表
+     *
+     * @param request
+     * @return
+     */
+    List<EvaluationConfigLog> getBorrowLevelConfigLogList(EvaluationBorrowLevelConfigLogRequest request);
 }

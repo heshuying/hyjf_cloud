@@ -4,13 +4,16 @@
 package com.hyjf.am.trade.controller.admin.config;
 
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.EvaluationBorrowLevelConfigLogResponse;
 import com.hyjf.am.response.trade.EvaluationCheckLogResponse;
 import com.hyjf.am.response.trade.EvaluationMoneyLogResponse;
+import com.hyjf.am.resquest.admin.EvaluationBorrowLevelConfigLogRequest;
 import com.hyjf.am.resquest.admin.EvaluationCheckLogRequest;
 import com.hyjf.am.resquest.admin.EvaluationMoneyLogRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.EvaluationConfigLog;
 import com.hyjf.am.trade.service.admin.config.EvaluationConfigService;
+import com.hyjf.am.vo.admin.EvaluationBorrowLevelConfigLogVO;
 import com.hyjf.am.vo.admin.EvaluationCheckLogConfigVO;
 import com.hyjf.am.vo.admin.EvaluationMoneyLogConfigVO;
 import com.hyjf.common.paginator.Paginator;
@@ -84,4 +87,30 @@ public class EvaluationConfigLogController extends BaseController {
         }
         return response;
     }
+
+
+    /**
+     * 风险测评风险等级配置查询列表，操作日志
+     *
+     * @param request
+     * @return
+     */
+    @ApiOperation(value = "风险测评风险等级配置查询列表，操作日志")
+    @PostMapping("/getBorrowLevelConfigLogList")
+    public EvaluationBorrowLevelConfigLogResponse getBorrowLevelConfigLogList(@RequestBody EvaluationBorrowLevelConfigLogRequest request) {
+        EvaluationBorrowLevelConfigLogResponse response = new EvaluationBorrowLevelConfigLogResponse();
+        Integer recordTotal = configService.getBorrowLevelConfigLogListCount(request);
+        Paginator paginator = new Paginator(request.getCurrPage(), recordTotal, request.getPageSize());
+        request.setLimitStart(paginator.getOffset());
+        request.setLimitEnd(paginator.getLimit());
+        List<EvaluationConfigLog> evaluationCheckConfigVOList = configService.getBorrowLevelConfigLogList(request);
+        if (null != evaluationCheckConfigVOList && evaluationCheckConfigVOList.size() > 0) {
+            List<EvaluationBorrowLevelConfigLogVO> evaluationCheckConfigVOs = CommonUtils.convertBeanList(evaluationCheckConfigVOList, EvaluationBorrowLevelConfigLogVO.class);
+            response.setResultList(evaluationCheckConfigVOs);
+            response.setCount(recordTotal);
+            response.setRtn(Response.SUCCESS);
+        }
+        return response;
+    }
+
 }

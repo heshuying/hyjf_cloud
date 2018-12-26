@@ -301,4 +301,91 @@ public class EvaluationConfigServiceImpl extends BaseServiceImpl implements Eval
         return true;
     }
 
+    /**
+     * 获取风险测评配置风险测评等级配置数量
+     *
+     * @param request
+     * @return
+     */
+    public Integer getEvaluationBorrowLevelConfigCount(EvaluationBorrowLevelConfigRequest request) {
+        EvaluationConfigExample example = new EvaluationConfigExample();
+        return evaluationConfigMapper.countByExample(example);
+    }
+
+    /**
+     * 获取风险测评配置风险测评等级配置列表
+     *
+     * @param request
+     * @return
+     */
+    public List<EvaluationConfig> getEvaluationBorrowLevelConfigList(EvaluationBorrowLevelConfigRequest request){
+        EvaluationConfigExample example = new EvaluationConfigExample();
+        if (request.getLimitStart() != -1) {
+            example.setLimitStart(request.getLimitStart());
+            example.setLimitEnd(request.getLimitEnd());
+        }
+        return evaluationConfigMapper.selectByExample(example);
+    }
+
+
+    /**
+     * 更新测评等级配置
+     *
+     * @param request
+     * @return
+     */
+    public boolean updateBorrowLevelConfig(EvaluationBorrowLevelConfigRequest request){
+        EvaluationConfig evaluationConfig = this.evaluationConfigMapper.selectByPrimaryKey(request.getId());
+        BeanUtils.copyProperties(request,evaluationConfig);
+        if(evaluationConfigMapper.updateByPrimaryKeySelective(evaluationConfig)>0){
+            //填充操作内容
+            //获取操作之后的测评配置，保存操作日志
+            EvaluationConfig record = evaluationConfigMapper.selectByPrimaryKey(request.getId());
+            record.setBbbEvaluationProposal(request.getBbbEvaluationProposal());
+            record.setAa0EvaluationProposal(request.getAa0EvaluationProposal());
+            record.setAa1EvaluationProposal(request.getAa1EvaluationProposal());
+            record.setAa2EvaluationProposal(request.getAa2EvaluationProposal());
+            record.setAaaEvaluationProposal(request.getAaaEvaluationProposal());
+            record.setUpdateUser(request.getUpdateUser());
+            // 新增日志表
+            EvaluationConfigLog log =  new EvaluationConfigLog();
+            BeanUtils.copyProperties(record,log);
+            // IP地址
+            String ip = GetCilentIP.getIpAddr(GetSessionOrRequestUtils.getRequest());
+            log.setIp(ip);
+            //1开关配置 2限额配置 3信用等级
+            log.setStatus(3);
+            log.setUpdateTime(new Date());
+            log.setCreateTime(new Date());
+            evaluationConfigLogMapper.insertSelective(log);
+        }
+        return true;
+    }
+
+    /**
+     * 查询风险测评配置日志件数
+     *
+     * @param request
+     * @return
+     */
+    public Integer getBorrowLevelConfigLogListCount(EvaluationBorrowLevelConfigLogRequest request){
+        EvaluationConfigLogExample example = new EvaluationConfigLogExample();
+        EvaluationConfigLogExample.Criteria cra = example.createCriteria();
+        cra.andStatusEqualTo(3);
+        return evaluationConfigLogMapper.countByExample(example);
+    }
+
+
+    /**
+     * 查询风险测评配置日志列表
+     *
+     * @param request
+     * @return
+     */
+    public List<EvaluationConfigLog> getBorrowLevelConfigLogList(EvaluationBorrowLevelConfigLogRequest request){
+        EvaluationConfigLogExample example = new EvaluationConfigLogExample();
+        EvaluationConfigLogExample.Criteria cra = example.createCriteria();
+        cra.andStatusEqualTo(3);
+        return evaluationConfigLogMapper.selectByExample(example);
+    }
 }
