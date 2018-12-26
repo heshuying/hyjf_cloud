@@ -77,7 +77,7 @@ public class InviteController extends BaseUserController {
             inviteLinkWechat = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId;
         }
         // 二维码的下载地址
-        String downloadUrl = systemConfig.webHost + "/hyjf-web/coupon/download/" + userId;
+        String downloadUrl = systemConfig.webHost + "/hyjf-web/user/invite/download/" + userId;
         logger.info("二维码下载地址：" + downloadUrl);
 
         resultMap.putAll(pageData);
