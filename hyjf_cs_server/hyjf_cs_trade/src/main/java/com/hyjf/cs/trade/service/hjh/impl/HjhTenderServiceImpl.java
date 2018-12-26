@@ -1239,7 +1239,14 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
             }
         }
 
+        //发送纳觅返现mq  add   tyy2018-12-25
+        try {
+            sendReturnCashActivity(userId,planOrderId,new BigDecimal(accountStr),3);
 
+        } catch (Exception e) {
+            logger.error("加入计划 纳觅返现mq出错",e);
+            e.printStackTrace();
+        }
         Integer couponGrantId = request.getCouponGrantId();
         if (couponGrantId != null && couponGrantId.intValue() >0) {
             logger.info("开始优惠券出借,userId{},平台{},优惠券{}", userId, request.getPlatform(), couponGrantId);
@@ -1274,7 +1281,26 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         }
         return true;
     }
-
+    /**
+     * 纳觅返现活动
+     * @param userId
+     * @param order
+     */
+    private void sendReturnCashActivity(Integer userId,String order,BigDecimal investMoney,int projectType) throws MQException {
+        // 加入到消息队列
+        JSONObject params = new JSONObject();
+        params.put("userId", userId);
+        params.put("orderId", order);
+        params.put("investMoney", investMoney.toString());
+        //来源,1=新手标，2=散标，3=汇计划
+        Integer productType = 2;
+        //4 新手标
+        if(4 == projectType){
+            productType = 1;
+        }
+        params.put("productType", productType);
+        commonProducer.messageSend(new MessageContent(MQConstant.RETURN_CASH_ACTIVITY_SAVE_TOPIC, UUID.randomUUID().toString(), params));
+    }
     /**
      * 更新  渠道统计用户累计出借  和  huiyingdai_utm_reg的首投信息 开始
      *

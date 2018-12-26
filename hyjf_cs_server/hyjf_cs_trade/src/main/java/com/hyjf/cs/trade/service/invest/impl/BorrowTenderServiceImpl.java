@@ -2331,10 +2331,11 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     this.notifyToWrb(user.getUserId(), bean.getOrderId());
                 }
             }
-
             // 投标成功后,发送神策数据统计MQ
             // add by liuyang 神策数据统计 20180823 start
             try {
+                // 投标成功后,参与纳觅返现
+                sendReturnCashActivity(Integer.parseInt(bean.getLogUserId()),bean.getLogOrderId(),accountDecimal,borrow.getProjectType());
                 // 投标成功后,发送神策数据统计MQ
                 SensorsDataBean sensorsDataBean = new SensorsDataBean();
                 sensorsDataBean.setUserId(Integer.parseInt(bean.getLogUserId()));
@@ -2466,5 +2467,24 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
         this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_HZT_INVEST_TOPIC, UUID.randomUUID().toString(), sensorsDataBean), 2);
     }
-
+    /**
+     * 纳觅返现活动
+     * @param userId
+     * @param order
+     */
+    private void sendReturnCashActivity(Integer userId,String order,BigDecimal investMoney,int projectType) throws MQException {
+        // 加入到消息队列
+        JSONObject params = new JSONObject();
+        params.put("userId", userId);
+        params.put("orderId", order);
+        params.put("investMoney", investMoney.toString());
+        //来源,1=新手标，2=散标，3=汇计划
+        Integer productType = 2;
+        //4 新手标
+        if(4 == projectType){
+            productType = 1;
+        }
+        params.put("productType", productType);
+        commonProducer.messageSend(new MessageContent(MQConstant.RETURN_CASH_ACTIVITY_SAVE_TOPIC, UUID.randomUUID().toString(), params));
+    }
 }
