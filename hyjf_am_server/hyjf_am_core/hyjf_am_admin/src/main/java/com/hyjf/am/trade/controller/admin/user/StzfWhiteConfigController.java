@@ -14,6 +14,7 @@ import com.hyjf.am.trade.service.admin.StzfWhiteConfigService;
 import com.hyjf.am.vo.trade.STZHWhiteListVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -51,6 +52,9 @@ public class StzfWhiteConfigController extends BaseController {
 		if (count > 0) {
 			if (!CollectionUtils.isEmpty(list)) {
 				List<STZHWhiteListVO> voList = CommonUtils.convertBeanList(list, STZHWhiteListVO.class);
+				for (STZHWhiteListVO vo : voList) {
+					vo.setApprovalTime(GetDate.timestamptoStrYYYYMMDD(Integer.valueOf(vo.getApprovalTime())));
+				}
 				response.setResultList(voList);
 				response.setCount(count);
 			} else {
