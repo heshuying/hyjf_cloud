@@ -9,7 +9,6 @@ import com.hyjf.am.market.service.NaMiMarketingService;
 import com.hyjf.am.resquest.admin.NaMiMarketingRequest;
 import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.vo.admin.NaMiMarketingVO;
-import com.hyjf.am.vo.admin.PerformanceReturnDetailVO;
 import com.hyjf.common.util.ActivityDateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
