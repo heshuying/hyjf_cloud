@@ -34,11 +34,11 @@ public class OntimeMessageController extends BaseController {
 	 */
 	@RequestMapping("/send")
 	public void ontimeMessage() {
-		List<SmsOntime> listApicron = messageService.getOntimeList(STATUS_WAIT);
-		if (!CollectionUtils.isEmpty(listApicron)) {
-			for (SmsOntime apicron : listApicron) {
+		List<SmsOntime> smsOntimeList = messageService.getOntimeList(STATUS_WAIT);
+		if (!CollectionUtils.isEmpty(smsOntimeList)) {
+			for (SmsOntime smsOntime : smsOntimeList) {
 				try {
-					messageService.sendMessage(apicron);
+					messageService.sendMessage(smsOntime);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

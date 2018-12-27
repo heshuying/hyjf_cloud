@@ -2060,19 +2060,9 @@ public class AmUserClientImpl implements AmUserClient {
 
 	@Override
 	public List<SmsCodeCustomizeVO> queryUser(SmsCodeRequestBean requestBean) {
-		SmsCodeCustomizeResponse response = restTemplate.postForObject("http://AM-ADMIN/am-trade/sms_code/query_user",
+		SmsCodeCustomizeResponse response = restTemplate.postForObject("http://AM-ADMIN/am-trade/smsCode/queryUser",
 				requestBean, SmsCodeCustomizeResponse.class);
 		if (response != null) {
-			/*List<SmsCodeCustomizeVO> list = response.getResultList();
-			SmsCodeCustomizeResponse response1 = restTemplate.postForObject("http://AM-ADMIN/am-user/sms_code/query_user",
-					requestBean, SmsCodeCustomizeResponse.class);
-			if (response1 != null) {
-				List<SmsCodeCustomizeVO> list1 = response1.getResultList();
-				if (!CollectionUtils.isEmpty(list) && !CollectionUtils.isEmpty(list1)) {
-					list.retainAll(list1);
-					return list;
-				}
-			}*/
 			return response.getResultList();
 		}
 		return null;
