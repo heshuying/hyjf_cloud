@@ -19,4 +19,11 @@ public interface SmsCodeService {
      * @return
      */
     List<SmsCodeCustomize> queryUser(SmsCodeUserRequest request);
+
+    /**
+     * 筛选符合条件的用户数量
+     * @param request
+     * @return
+     */
+    int countUser(SmsCodeUserRequest request);
 }

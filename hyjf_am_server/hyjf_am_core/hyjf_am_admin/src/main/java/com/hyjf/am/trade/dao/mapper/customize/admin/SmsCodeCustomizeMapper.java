@@ -15,8 +15,15 @@ import java.util.Map;
 public interface SmsCodeCustomizeMapper {
     /**
      * 筛选用户
-     * @param request
+     * @param params
      * @return
      */
     List<SmsCodeCustomize> queryUser(Map<String, Object> params);
+
+    /**
+     * 查询符合条件用户数量
+     * @param params
+     * @return
+     */
+    int countUser(Map<String, Object> params);
 }

@@ -2740,4 +2740,14 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return 0;
 	}
+
+	@Override
+	public int countUser(SmsCodeRequestBean requestBean) {
+		IntegerResponse response = restTemplate.postForObject("http://AM-ADMIN/am-trade/smsCode/countUser",
+				requestBean, IntegerResponse.class);
+		if (response != null) {
+			return response.getResultInt();
+		}
+		return 0;
+	}
 }

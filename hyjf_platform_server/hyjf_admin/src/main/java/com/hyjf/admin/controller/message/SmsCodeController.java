@@ -25,7 +25,6 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -57,12 +56,9 @@ public class SmsCodeController extends BaseController {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(STATUS, SUCCESS);
         jsonObject.put("statusDesc", SUCCESS_DESC);
-        // 在筛选条件下查询出用户
-        List<SmsCodeCustomizeVO> msgs = smsCodeService.queryUser(requestBean);
-        jsonObject.put("user_number", 0);
-		if (!CollectionUtils.isEmpty(msgs)) {
-			jsonObject.put("user_number", msgs.size());
-		}
+        // 在筛选条件下查询出用户数量
+        int count = smsCodeService.countUser(requestBean);
+		jsonObject.put("user_number",count);
         jsonObject.put("smsCode", requestBean);
         BigDecimal remain_money = BigDecimal.ZERO;
         int remain_number = 0;
