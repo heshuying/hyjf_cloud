@@ -3,19 +3,11 @@
  */
 package com.hyjf.admin.controller.message;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
-import com.hyjf.admin.interceptor.AuthorityAnnotation;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.*;
-
 import com.hyjf.admin.common.result.AdminResult;
 import com.hyjf.admin.common.result.ListResult;
 import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
+import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.SmsLogService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.SmsLogResponse;
@@ -24,9 +16,14 @@ import com.hyjf.am.resquest.message.SmsLogRequest;
 import com.hyjf.am.vo.admin.SmsLogVO;
 import com.hyjf.am.vo.admin.SmsOntimeVO;
 import com.hyjf.common.util.AsteriskProcessUtil;
-
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * @author fuqiang
@@ -99,7 +96,21 @@ public class SmsLogController extends BaseController {
             if(!isShow){
                 //如果没有查看脱敏权限,显示加星
                 for(SmsLogVO vo:list){
-                    vo.setMobile(AsteriskProcessUtil.getAsteriskedValue(vo.getMobile()));
+                    if (vo.getMobile().contains(",")) {
+                        String[] mobiles = vo.getMobile().split(",");
+                        StringBuilder stringBuilder = new StringBuilder();
+                        for (int i = 0; i<mobiles.length; i++) {
+                            if (i != mobiles.length - 1) {
+                                stringBuilder.append(AsteriskProcessUtil.getAsteriskedValue(mobiles[i])).append(",");
+                            } else {
+                                stringBuilder.append(AsteriskProcessUtil.getAsteriskedValue(mobiles[i]));
+                            }
+                        }
+                        vo.setMobile(stringBuilder.toString());
+                    } else {
+                        vo.setMobile(AsteriskProcessUtil.getAsteriskedValue(vo.getMobile()));
+                    }
+
                 }
             }
         }
