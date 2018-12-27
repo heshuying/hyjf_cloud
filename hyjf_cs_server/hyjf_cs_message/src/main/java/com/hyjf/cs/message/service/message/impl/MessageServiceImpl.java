@@ -60,7 +60,7 @@ public class MessageServiceImpl implements MessageService {
 	public List<SmsOntime> getOntimeList(Integer statusWait) {
 		Criteria criteria = new Criteria();
 		criteria.and("status").is(statusWait);
-		criteria.and("endTime").gte(GetDate.getSearchStartTime(new Date())).lte(GetDate.getNowTime10());
+		criteria.and("endtime").gte(GetDate.getSearchStartTime(new Date())).lte(GetDate.getNowTime10());
 		Query query = new Query(criteria);
 		List<SmsOntime> list = smsOntimeMongoDao.find(query);
 		if (!CollectionUtils.isEmpty(list)) {
