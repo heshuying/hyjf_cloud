@@ -15,7 +15,6 @@ import com.hyjf.am.response.admin.SmsCodeCustomizeResponse;
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.admin.message.SmsCodeService;
-import com.hyjf.am.user.dao.model.customize.SmsCodeCustomize;
 import com.hyjf.am.vo.admin.SmsCodeCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 

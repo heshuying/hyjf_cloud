@@ -6,7 +6,6 @@ package com.hyjf.am.trade.service.admin.message;
 import java.util.List;
 
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
-import com.hyjf.am.user.dao.model.customize.SmsCodeCustomize;
 
 /**
  * @author fq

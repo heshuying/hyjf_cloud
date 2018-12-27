@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.trade.dao.mapper.customize.admin.SmsCodeCustomizeMapper;
 import com.hyjf.am.trade.service.admin.message.SmsCodeService;
-import com.hyjf.am.user.dao.model.customize.SmsCodeCustomize;
 import com.hyjf.common.util.GetDate;
 
 /**

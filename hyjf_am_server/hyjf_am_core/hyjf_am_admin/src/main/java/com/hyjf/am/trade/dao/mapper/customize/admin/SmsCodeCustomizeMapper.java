@@ -6,8 +6,6 @@ package com.hyjf.am.trade.dao.mapper.customize.admin;
 import java.util.List;
 import java.util.Map;
 
-import com.hyjf.am.user.dao.model.customize.SmsCodeCustomize;
-
 /**
  * @author fq
  * @version SmsCodeCustomizeMapper, v0.1 2018/8/20 20:33
