@@ -6321,4 +6321,22 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    /**
+     * 获取需要推送法大大协议的标的
+     * add by yangchangwei 2018-11-26
+     * @return
+     */
+    @Override
+    public List<BorrowApicronVO> getFddPushBorrowList() {
+
+
+        String url = "http://AM-TRADE/am-trade/batch/fddpush/getfddpushborrowlist";
+        BorrowApicronResponse response = restTemplate.getForObject(url, BorrowApicronResponse.class);
+        if (response != null && Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+
+        return null;
+
+    }
 }

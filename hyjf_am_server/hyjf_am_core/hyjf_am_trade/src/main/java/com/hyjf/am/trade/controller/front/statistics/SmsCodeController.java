@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller.admin.message;
+package com.hyjf.am.trade.controller.front.statistics;
 
 import java.util.List;
 
@@ -11,13 +11,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.hyjf.am.response.admin.SmsCodeCustomizeResponse;
+import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.trade.controller.BaseController;
-import com.hyjf.am.trade.service.admin.message.SmsCodeService;
-import com.hyjf.am.user.dao.model.customize.SmsCodeCustomize;
-import com.hyjf.am.vo.admin.SmsCodeCustomizeVO;
-import com.hyjf.common.util.CommonUtils;
+import com.hyjf.am.trade.controller.front.statistics.message.SmsCodeService;
 
 /**
  * @author fq
@@ -35,12 +32,11 @@ public class SmsCodeController extends BaseController {
      * @return
      */
     @RequestMapping("/queryUser")
-    public SmsCodeCustomizeResponse queryUser(@RequestBody SmsCodeUserRequest request) {
-        SmsCodeCustomizeResponse response = new SmsCodeCustomizeResponse();
-        List<SmsCodeCustomize> list = smsCodeService.queryUser(request);
+    public Response queryUser(@RequestBody SmsCodeUserRequest request) {
+        Response response = new Response();
+        List<String> list = smsCodeService.queryUser(request);
         if (!CollectionUtils.isEmpty(list)) {
-            List<SmsCodeCustomizeVO> voList = CommonUtils.convertBeanList(list, SmsCodeCustomizeVO.class);
-            response.setResultList(voList);
+            response.setResultList(list);
         }
         return response;
     }

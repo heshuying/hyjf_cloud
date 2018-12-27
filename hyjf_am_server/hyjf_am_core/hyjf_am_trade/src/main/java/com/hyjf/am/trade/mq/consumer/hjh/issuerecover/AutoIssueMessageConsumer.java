@@ -52,10 +52,10 @@ public class AutoIssueMessageConsumer implements RocketMQListener<MessageExt>, R
     private Boolean env_test;
 
     @Value("${hyjf.alerm.email.test}")
-    private static String emailList1;
+    private String emailList1;
 
     @Value("${hyjf.alerm.email}")
-    private static String emaillist2;
+    private String emaillist2;
 
     @Override
     public void onMessage(MessageExt messageExt) {

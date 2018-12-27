@@ -5,6 +5,7 @@ package com.hyjf.cs.message.service.message.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
@@ -13,6 +14,7 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.message.bean.mc.SmsOntime;
 import com.hyjf.cs.message.client.AmConfigClient;
+import com.hyjf.cs.message.client.AmTradeClient;
 import com.hyjf.cs.message.mongo.mc.SmsOntimeMongoDao;
 import com.hyjf.cs.message.mq.base.CommonProducer;
 import com.hyjf.cs.message.mq.base.MessageContent;
@@ -49,13 +51,16 @@ public class MessageServiceImpl implements MessageService {
 	private AmConfigClient amConfigClient;
 
 	@Autowired
+	private AmTradeClient amTradeClient;
+
+	@Autowired
 	private CommonProducer smsProducer;
 
 	@Override
 	public List<SmsOntime> getOntimeList(Integer statusWait) {
 		Criteria criteria = new Criteria();
 		criteria.and("status").is(statusWait);
-		criteria.and("endTime").gte(GetDate.getSearchStartTime(new Date())).lte(GetDate.getNowTime10());
+		criteria.and("endtime").gte(GetDate.getSearchStartTime(new Date())).lte(GetDate.getNowTime10());
 		Query query = new Query(criteria);
 		List<SmsOntime> list = smsOntimeMongoDao.find(query);
 		if (!CollectionUtils.isEmpty(list)) {
@@ -65,49 +70,49 @@ public class MessageServiceImpl implements MessageService {
 	}
 
 	@Override
-	public void sendMessage(SmsOntime apicron) throws Exception {
+	public void sendMessage(SmsOntime smsOntime) throws Exception {
 		int errorCnt = 0;
 		// 错误信息
 		StringBuffer sbError = new StringBuffer();
-		logger.info("定时发短信任务开始。手机号：{}", apicron.getMobile());
+		logger.info("定时发短信任务开始。手机号：{}", smsOntime.getMobile());
 		// 更新任务API状态为进行中
-		this.updatetOntime(apicron, STATUS_RUNNING, null);
-		if (apicron.getContent() == null) {
+		this.updatetOntime(smsOntime, STATUS_RUNNING, null);
+		if (smsOntime.getContent() == null) {
 			sbError.append("发送消息不能为空");
 			return;
 		}
-		if (apicron.getChannelType() == null) {
+		if (smsOntime.getChannelType() == null) {
 			sbError.append("发送消息渠道不能为空");
 			return;
 		}
-		String mobile = apicron.getMobile();
-		String send_message = apicron.getContent();
-		String channelType = apicron.getChannelType();
+		String mobile = smsOntime.getMobile();
+		String send_message = smsOntime.getContent();
+		String channelType = smsOntime.getChannelType();
 		if (StringUtils.isEmpty(mobile)) {
 			// 在筛选条件下查询出用户
-			List<UserVO> msgs = this.queryUser(apicron);
+			List<String> mobiles = this.queryUser(smsOntime);
 			// 用户数
-			System.out.println("发送用户数" + msgs.size());
+			logger.info("发送用户数" + mobiles.size());
 			// 用户未手写手机号码
 			int number = 200;// 分组每组数
-			if (msgs != null && msgs.size() != 0) {
-				int i = msgs.size() / number;
+			if (mobiles != null && mobiles.size() != 0) {
+				int i = mobiles.size() / number;
 				for (int j = 0; j <= i; j++) {
 					int tosize = (j + 1) * number;
-					List<UserVO> smslist;
-					if (tosize > msgs.size()) {
-						smslist = msgs.subList(j * number, msgs.size());
+					List<String> smslist;
+					if (tosize > mobiles.size()) {
+						smslist = mobiles.subList(j * number, mobiles.size());
 					} else {
-						smslist = msgs.subList(j * number, tosize);
+						smslist = mobiles.subList(j * number, tosize);
 					}
 					String phones = "";
 					for (int z = 0; z < smslist.size(); z++) {
-						if (StringUtils.isNotEmpty(smslist.get(z).getMobile())
-								&& Validator.isPhoneNumber(smslist.get(z).getMobile())) {
+						if (StringUtils.isNotEmpty(smslist.get(z))
+								&& Validator.isPhoneNumber(smslist.get(z))) {
 							if (z < smslist.size() - 1) {
-								phones += smslist.get(z).getMobile() + ",";
+								phones += smslist.get(z) + ",";
 							} else {
-								phones += smslist.get(z).getMobile();
+								phones += smslist.get(z);
 							}
 						}
 					}
@@ -148,50 +153,48 @@ public class MessageServiceImpl implements MessageService {
 
 		// 有错误时
 		if (errorCnt > 0) {
-			throw new Exception("定时发送短信时发生错误。" + "[错误记录id：" + apicron.getId() + "]," + "[错误件数：" + errorCnt + "]");
+			throw new Exception("定时发送短信时发生错误。" + "[错误记录id：" + smsOntime.getId() + "]," + "[错误件数：" + errorCnt + "]");
 		}
 		// 更新任务API状态为完成
-		updatetOntime(apicron, STATUS_RUNNING, null);
+		updatetOntime(smsOntime, STATUS_RUNNING, null);
 	}
 
 	/**
 	 * 获取查询出来的用户手机号码和数量
-	 * 
+	 *
 	 * @param apicron
 	 * @return
 	 */
-	private List<UserVO> queryUser(SmsOntime apicron) {
-		JSONObject params = new JSONObject();
-		if (apicron.getAddMoneyCount() != null) {
-			params.put("add_money_count", apicron.getAddMoneyCount());
+	private List<String> queryUser(SmsOntime smsOntime) {
+		SmsCodeUserRequest request = new SmsCodeUserRequest();
+
+		if (smsOntime.getAddMoneyCount() != null) {
+			request.setAdd_money_count(smsOntime.getAddMoneyCount().toString());
 		}
 
-		if (StringUtils.isNotEmpty(apicron.getAddTimeBegin())) {
-			int begin = Integer.parseInt(GetDate.get10Time(apicron.getAddTimeBegin()));
-			params.put("add_time_begin", begin);
+		if (StringUtils.isNotEmpty(smsOntime.getAddTimeBegin())) {
+			int begin = Integer.parseInt(GetDate.get10Time(smsOntime.getAddTimeBegin()));
+			request.setAdd_time_begin(String.valueOf(begin));
 		}
 
-		if (StringUtils.isNotEmpty(apicron.getAddTimeEnd())) {
-			int end = Integer.parseInt(GetDate.get10Time(apicron.getAddTimeEnd()));
-			params.put("add_time_end", end);
+		if (StringUtils.isNotEmpty(smsOntime.getAddTimeEnd())) {
+			int end = Integer.parseInt(GetDate.get10Time(smsOntime.getAddTimeEnd()));
+			request.setAdd_time_end(String.valueOf(end));
 		}
 
-		if (StringUtils.isNotEmpty(apicron.getReTimeBegin())) {
-			int re_begin = Integer.parseInt(GetDate.get10Time(apicron.getReTimeBegin()));
-			params.put("re_time_begin", re_begin);
+		if (StringUtils.isNotEmpty(smsOntime.getReTimeBegin())) {
+			int re_begin = Integer.parseInt(GetDate.get10Time(smsOntime.getReTimeBegin()));
+			request.setRe_time_begin(String.valueOf(re_begin));
 		}
 
-		if (StringUtils.isNotEmpty(apicron.getReTimeEnd())) {
-			int re_end = Integer.parseInt(GetDate.get10Time(apicron.getReTimeEnd()));
-			params.put("re_time_end", re_end);
+		if (StringUtils.isNotEmpty(smsOntime.getReTimeEnd())) {
+			int re_end = Integer.parseInt(GetDate.get10Time(smsOntime.getReTimeEnd()));
+			request.setRe_time_end(String.valueOf(re_end));
 		}
-		if (apicron.getOpenAccount() != null) {
-			params.put("open_account", apicron.getOpenAccount());
-		} else {
-			/* sm.setOpen_account(3); */
-			params.put("open_account", 4);
+		if (smsOntime.getOpenAccount() != null) {
+			request.setOpen_account(smsOntime.getOpenAccount());
 		}
-		return amConfigClient.queryUser(params);
+		return amTradeClient.queryUser(request);
 	}
 
 	/**

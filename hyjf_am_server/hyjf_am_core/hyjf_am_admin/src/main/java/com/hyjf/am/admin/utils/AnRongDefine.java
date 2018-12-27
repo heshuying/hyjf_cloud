@@ -7,10 +7,6 @@ public class AnRongDefine{
 	// 处理结果
 	/** 处理成功 */
 	public static final String SUCCESS = "0";
-	/** 处理失败 */
-	public static final String FAILED = "1";
-	/** 请求url queryUser */
-    public static final String URL_ANRONG_QUERY_USER = "/queryUser";
     /** 安融返回结果msp 的key */
     public static final String RESULT_KEY_MSP = "msp";
     /** 安融返回结果msp 的errorCode */
