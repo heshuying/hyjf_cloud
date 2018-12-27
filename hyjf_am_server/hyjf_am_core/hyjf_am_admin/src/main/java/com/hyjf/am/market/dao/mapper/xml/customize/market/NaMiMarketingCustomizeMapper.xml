@@ -62,7 +62,7 @@
             </if>
     </sql>
     <resultMap id="PerfanceResult"
-               type="com.hyjf.mybatis.model.customize.NaMiMarketing.NaMiMarketingCustomize">
+               type="com.hyjf.am.vo.admin.NaMiMarketingVO">
         <result column="id" property="id" />
         <result column="user_name" property="username" />
         <result column="true_name" property="truename" />
@@ -80,7 +80,7 @@
         <result column="debt_id" property="debtId" />
     </resultMap>
 
-    <select id="selectId0List"  resultType="com.hyjf.mybatis.model.auto.Users"  parameterType="com.hyjf.mybatis.model.auto.ActivityList">
+    <select id="selectId0List"  resultType="com.hyjf.am.user.dao.model.auto.User"  parameterType="com.hyjf.am.market.dao.model.auto.ActivityList">
         select s.user_id userId,s.username from huiyingdai_users s inner join hyjf_nm_user n on s.username = n.user_name
     </select>
 
@@ -154,7 +154,7 @@
         </if>
     </select>
 
-    <select id="selectNaMiMarketingList" resultType="com.hyjf.mybatis.model.customize.NaMiMarketing.NaMiMarketingCustomize" parameterType="java.util.HashMap">
+    <select id="selectNaMiMarketingList" resultType="com.hyjf.am.vo.admin.NaMiMarketingVO" parameterType="java.util.HashMap">
         select u.user_id as id,u.username as username,u.mobile as mobile,u2.truename as truename,
         (select u1.username from huiyingdai_users u1 where u1.user_id=u.referrer) as refferName ,
         from_unixtime(u.reg_time,'%Y-%m-%d %H:%i:%s') as regTime  from huiyingdai_users u
@@ -202,7 +202,7 @@
         </if>
     </select>
 
-    <select id="selectReturnDetail" resultType="com.hyjf.mybatis.model.auto.PerformanceReturnDetail" parameterType="java.lang.String">
+    <select id="selectReturnDetail" resultType="com.hyjf.am.market.dao.model.auto.PerformanceReturnDetail" parameterType="java.lang.String">
         select d.username userName,d1.username refferName
         from huiyingdai_users d left join huiyingdai_users d1 on d.referrer=d1.user_id
         where d.username =#{referName}
