@@ -88,6 +88,8 @@ public class BorrowApicronVO extends BaseVO implements Serializable{
 
     private String data;
 
+    private Integer agreementStatus;
+
     private static final long serialVersionUID = 1L;
 
     public Integer getId() {
@@ -384,6 +386,14 @@ public class BorrowApicronVO extends BaseVO implements Serializable{
 
     public void setData(String data) {
         this.data = data == null ? null : data.trim();
+    }
+
+    public Integer getAgreementStatus() {
+        return agreementStatus;
+    }
+
+    public void setAgreementStatus(Integer agreementStatus) {
+        this.agreementStatus = agreementStatus;
     }
 }
 

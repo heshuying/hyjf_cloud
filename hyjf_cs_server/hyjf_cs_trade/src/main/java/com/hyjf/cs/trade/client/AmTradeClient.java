@@ -2621,5 +2621,11 @@ public interface AmTradeClient {
      * @return
      */
     List<BorrowApicronVO> getFddPushBorrowList();
+
+    /**
+     * 开始推送法大大协议
+     * @param borrowApicronVO
+     */
+    void updateFddPush(BorrowApicronVO borrowApicronVO);
 }
 

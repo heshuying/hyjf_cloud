@@ -37,7 +37,6 @@ import com.hyjf.am.resquest.api.AsseStatusRequest;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.assetpush.InfoBean;
-import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
@@ -6331,12 +6330,24 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 
         String url = "http://AM-TRADE/am-trade/batch/fddpush/getfddpushborrowlist";
-        BorrowApicronResponse response = restTemplate.getForObject(url, BorrowApicronResponse.class);
+        BorrowApicronResponse response = restTemplate.getForEntity(url, BorrowApicronResponse.class).getBody();
         if (response != null && Response.isSuccess(response)) {
             return response.getResultList();
         }
 
         return null;
+
+    }
+
+    /**
+     * 开始推送法大大协议
+     * add by yangchangwei 2018-11-27
+     * @param borrowApicronVO
+     */
+    @Override
+    public void updateFddPush(BorrowApicronVO borrowApicronVO) {
+        String url = "http://AM-TRADE/am-trade/batch/fddpush/updateFddPush";
+        restTemplate.postForEntity(url, borrowApicronVO,null).getBody();
 
     }
 }
