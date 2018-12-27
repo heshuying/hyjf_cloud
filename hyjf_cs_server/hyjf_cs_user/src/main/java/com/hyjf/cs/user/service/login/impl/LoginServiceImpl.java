@@ -69,9 +69,9 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
     private SynBalanceService synBalanceService;
 
 	// 服务费授权描述
-	private static final String paymentAuthDesc = "部分交易过程中，会收取相应费用，请进行授权。\n例如：提现手续费，债转服务费等。";
+	private static final String paymentAuthDesc = "应合规要求，出借、提现等交易前需进行以下授权：\n服务费授权。";
 	//三合一授权描述
-	private static final String mergeAuthDesc = "智投服务需进行以下授权：\n自动投标，自动债转，服务费授权。";
+	private static final String mergeAuthDesc = "应合规要求，出借、提现等交易前需进行以下授权：\n自动投标，自动债转，服务费授权。";
 	private static final String checkUserRoleDesc = "仅限出借人进行出借";
 	@Autowired
 	private AmUserClient amUserClient;
@@ -828,6 +828,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			result.setMergeAuthExpire(authService.checkAuthExpire(userId, AuthBean.AUTH_TYPE_MERGE_AUTH)+"");
 			//三合一授权过期标识0未授权，1正常，2即将过期，3已过期
 			result.setPaymentAuthExpire(authService.checkAuthExpire(userId, AuthBean.AUTH_TYPE_PAYMENT_AUTH)+"");
+			//二合一授权过期标识（服务费授权、还款授权） 0未授权，1正常，2即将过期，3已过期
+			result.setPayRepayAuthExpire(authService.checkAuthExpire(userId, AuthBean.AUTH_TYPE_PAY_REPAY_AUTH)+"");
 			String imminentExpiryDesc="您授权的服务期限过短，请重新授权。\n请勿随意修改您的授权额度和有效期。";
 			String expireDesc="您授权的服务期限过期，请重新授权。\n请勿随意修改您的授权额度和有效期";
 			// 三合一授权描述
@@ -844,7 +846,16 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			}else if("2".equals(result.getPaymentAuthExpire())){
 				result.setPaymentAuthDesc(imminentExpiryDesc);
 			}
+			// 二合一授权描述
+			if("3".equals(result.getPayRepayAuthExpire())){
+				result.setMergeAuthDesc(expireDesc);
+			}else if("2".equals(result.getPayRepayAuthExpire())){
+				result.setMergeAuthDesc(imminentExpiryDesc);
+			}
 			String sign=request.getParameter("sign");
+
+			/*
+			注释 By dangzw -->start
 			// 自动投标授权URL
 			result.setAutoInvesUrl(systemConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_AUTHMERGE);// 0:未授权
 			// 自动投标授权URL
@@ -853,6 +864,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			result.setPaymentAuthUrl(systemConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_AUTHPAYMENT);
 			// 还款授权URL
 			result.setRepayAuthUrl(systemConfig.getAppFrontHost()+"/public/formsubmit?sign="+sign+"&requestType="+CommonConstant.APP_BANK_REQUEST_TYPE_AUTHREPAY);
+			注释 By dangzw -->end
+			*/
 		}
 		// add by pcc app3.1.1追加 20180823 start
 		// 我的计划列表退出中标签显示标识（临时使用，功能上线以后可以删除）

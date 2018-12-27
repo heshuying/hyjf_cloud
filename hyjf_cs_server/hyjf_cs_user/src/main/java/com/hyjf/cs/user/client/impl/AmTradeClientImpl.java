@@ -17,6 +17,7 @@ import com.hyjf.am.response.user.RecentPaymentListCustomizeResponse;
 import com.hyjf.am.response.user.WrbAccountResponse;
 import com.hyjf.am.response.user.WrbInvestSumResponse;
 import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
+import com.hyjf.am.resquest.api.WrbInvestRecordRequest;
 import com.hyjf.am.resquest.api.WrbInvestRequest;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
 import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
@@ -41,10 +42,12 @@ import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderSumCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.am.resquest.api.WrbInvestRecordRequest;
 import com.hyjf.cs.user.client.AmTradeClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
@@ -873,5 +876,23 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response.getResultDec();
         }
         return BigDecimal.ZERO;
+    }
+
+    /**
+     * 获得所有协议类型
+     * @return
+     */
+    @Override
+    public List<ProtocolTemplateVO> getProtocolTypes() {
+        ResponseEntity<Response<ProtocolTemplateVO>> response =
+                restTemplate.exchange("http://AM-TRADE/am-trade/protocol/getnewinfo", HttpMethod.GET,
+                        null, new ParameterizedTypeReference<Response<ProtocolTemplateVO>>() {});
+
+        List<ProtocolTemplateVO> vo = null;
+        if(response.getBody().getResultList().size() > 0){
+
+            vo =  response.getBody().getResultList();
+        }
+        return vo;
     }
 }

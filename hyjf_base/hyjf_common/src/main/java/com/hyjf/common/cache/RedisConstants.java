@@ -540,4 +540,8 @@ public class RedisConstants {
      */
     public static final String ADMIN_UNIQUE_ID = "admin@:";
 
+    /**
+     * 纳觅返现活动
+     */
+    public static final String RETURN_CASH_ACTIVITY = "RETURN_CASH_ACTIVITY:";
 }

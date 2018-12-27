@@ -1,9 +1,9 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.user.dao.mapper.customize;
+package com.hyjf.am.trade.dao.mapper.customize.admin;
 
-import com.hyjf.am.user.dao.model.customize.SmsCodeCustomize;
+import com.hyjf.am.trade.dao.model.customize.SmsCodeCustomize;
 
 import java.util.List;
 import java.util.Map;

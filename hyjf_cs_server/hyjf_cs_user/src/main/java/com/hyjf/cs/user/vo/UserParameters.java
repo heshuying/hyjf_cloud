@@ -149,6 +149,18 @@ public class UserParameters {
 	//缴费授权过期标识0未授权，1正常，2即将过期，3已过期
 	private String paymentAuthExpire;
 	/**
+	 *二合一授权过期标识（服务费授权、还款授权） 0未授权，1正常，2即将过期，3已过期
+	 */
+	private String payRepayAuthExpire;
+
+	public String getPayRepayAuthExpire() {
+		return payRepayAuthExpire;
+	}
+
+	public void setPayRepayAuthExpire(String payRepayAuthExpire) {
+		this.payRepayAuthExpire = payRepayAuthExpire;
+	}
+	/**
 	 * 缴费授权固定消息
 	 */
 	private String paymentAuthDesc = "部分交易过程中，会收取相应费用，请进行授权。\n例如：提现手续费，债转服务费等。";

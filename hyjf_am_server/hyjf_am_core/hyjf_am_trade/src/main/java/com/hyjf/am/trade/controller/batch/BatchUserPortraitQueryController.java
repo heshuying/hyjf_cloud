@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.trade.controller.front.batch;
+package com.hyjf.am.trade.controller.batch;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.response.trade.BatchUserPortraitQueryResponse;

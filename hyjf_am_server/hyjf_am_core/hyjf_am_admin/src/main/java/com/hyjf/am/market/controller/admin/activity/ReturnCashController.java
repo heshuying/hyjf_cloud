@@ -1,13 +1,11 @@
 package com.hyjf.am.market.controller.admin.activity;
 
 import com.hyjf.am.market.service.ReturnCashActivityService;
+import com.hyjf.am.resquest.admin.ReturnCashRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author tyy
@@ -24,5 +22,8 @@ public class ReturnCashController {
     public void getInfoById(@PathVariable String borrowNid,@PathVariable Integer nowTime) {
         returnCashActivityService.updateJoinTime(borrowNid,nowTime);
     }
-
+    @PostMapping("/saveReturnCash")
+    public void saveReturnCash(@RequestBody ReturnCashRequest request) {
+        returnCashActivityService.saveReturnCash(request.getUserId(),request.getOrderId(),request.getProductType(),request.getInvestMoney());
+    }
 }

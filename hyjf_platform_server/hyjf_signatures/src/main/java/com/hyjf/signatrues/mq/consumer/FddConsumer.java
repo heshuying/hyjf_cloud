@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service;
  * @version 20180627
  */
 
-//todo by xiashuqing  法大大消费代码报错，暂时先改成单线程普通队列
 @Service
 @RocketMQMessageListener(topic = MQConstant.FDD_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.FDD_GROUP)
 public class FddConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
