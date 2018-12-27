@@ -9,7 +9,6 @@ import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectRepayVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
-import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,13 +31,7 @@ public class BorrowProjectTypeServiceImpl implements BorrowProjectTypeService {
      */
     @Override
    public BorrowProjectTypeResponse selectProjectTypeList(BorrowProjectTypeRequest adminRequest){
-        BorrowProjectTypeResponse  result=new BorrowProjectTypeResponse();
-        List<ParamNameVO> paramNameVO =amConfigClient.selectProjectTypeParamList();
-        if(!CollectionUtils.isEmpty(paramNameVO)){
-            adminRequest.setParamNameVO(paramNameVO);
-            result=amTradeClient.selectProjectTypeList(adminRequest);
-        }
-        return  result;
+        return  amTradeClient.selectProjectTypeList(adminRequest);
     }
 
 

@@ -11,7 +11,6 @@ import com.hyjf.am.resquest.trade.BorrowProjectTypeRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.dao.model.auto.BorrowProjectType;
 import com.hyjf.am.trade.service.admin.config.BorrowProjectTypeService;
-import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectRepayVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
@@ -41,7 +40,6 @@ public class BorrowProjectTypeController extends BaseController {
     @RequestMapping("/selectProjectTypeList")
     public BorrowProjectTypeResponse selectProjectTypeList(@RequestBody BorrowProjectTypeRequest adminRequest) {
         logger.info("项目类型列表..." + JSONObject.toJSON(adminRequest));
-        List<ParamNameVO> paramNameVOS = adminRequest.getParamNameVO();
         BorrowProjectTypeResponse  result=new BorrowProjectTypeResponse();
          int count = borrowProjectTypeService.selectProjectTypeCount(new BorrowProjectTypeVO());
         if(count >0){

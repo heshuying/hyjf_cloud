@@ -55,7 +55,7 @@
 
     <select id="selectProjectTypeList" resultMap="getProjectTypeListMap" parameterType="com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO">
         SELECT
-        typ.borrow_project_type,
+        pn1.name as borrow_project_type,
         typ.borrow_cd,
         typ.borrow_name,
         typ.borrow_class,
@@ -73,6 +73,7 @@
         typ.increase_interest_flag
         FROM
         ht_borrow_project_type typ
+        LEFT JOIN hyjf_config.ht_param_name pn1 ON typ.borrow_project_type = pn1.name_cd AND pn1.name_class = 'BORROW_PROJTCT'
         LEFT JOIN ht_borrow_project_repay pr ON typ.borrow_class = pr.borrow_class
         GROUP BY
         pr.borrow_class	,
