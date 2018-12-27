@@ -56,7 +56,7 @@ public class AdminAccountDetailController {
         Map<String, Object> mapParam = paramSet(request);
         logger.info("---selectAccountDetailList by param---  " + JSONObject.toJSON(mapParam));
         int intCountAccountDetail = accountDetailService.countAccountDetail(mapParam);
-        Paginator paginator = new Paginator(request.getCurrPage(), request.getPageSize(),intCountAccountDetail);
+        Paginator paginator = new Paginator(request.getCurrPage(),intCountAccountDetail,request.getPageSize());
         if (request.getPageSize() == 0) {
             paginator = new Paginator(request.getCurrPage(), intCountAccountDetail);
         }
