@@ -5,6 +5,7 @@ package com.hyjf.am.trade.controller.admin.message;
 
 import java.util.List;
 
+import com.hyjf.am.trade.dao.model.customize.SmsCodeCustomize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,7 +16,6 @@ import com.hyjf.am.response.admin.SmsCodeCustomizeResponse;
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.admin.message.SmsCodeService;
-import com.hyjf.am.user.dao.model.customize.SmsCodeCustomize;
 import com.hyjf.am.vo.admin.SmsCodeCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 

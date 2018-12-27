@@ -501,7 +501,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 		params.put("nowTime", nowTime);//放款时间
 		commonProducer.messageSend(new MessageContent(MQConstant.RETURN_CASH1_ACTIVITY_SAVE_TOPIC, UUID.randomUUID().toString(), params));
 	}
-	//TODO: 处理tender,判定成功状态，recover 无需要重复获取
+	//处理tender,判定成功状态，recover 无需要重复获取
 	@Override
 	public Map updateTenderMuti(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BigDecimal serviceFee, BorrowTender borrowTender) throws Exception {
 		

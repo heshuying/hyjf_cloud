@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize.admin;
 
+import com.hyjf.am.trade.dao.model.customize.SmsCodeCustomize;
+
 import java.util.List;
 import java.util.Map;
-
-import com.hyjf.am.user.dao.model.customize.SmsCodeCustomize;
 
 /**
  * @author fq

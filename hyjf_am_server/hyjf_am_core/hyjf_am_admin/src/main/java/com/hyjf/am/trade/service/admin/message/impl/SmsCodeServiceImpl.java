@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.hyjf.am.trade.dao.model.customize.SmsCodeCustomize;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,7 +16,6 @@ import org.springframework.stereotype.Service;
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.trade.dao.mapper.customize.admin.SmsCodeCustomizeMapper;
 import com.hyjf.am.trade.service.admin.message.SmsCodeService;
-import com.hyjf.am.user.dao.model.customize.SmsCodeCustomize;
 import com.hyjf.common.util.GetDate;
 
 /**

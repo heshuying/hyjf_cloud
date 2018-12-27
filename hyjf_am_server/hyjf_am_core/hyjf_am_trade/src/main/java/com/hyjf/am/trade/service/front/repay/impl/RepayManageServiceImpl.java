@@ -600,7 +600,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     }
 
     /**
-     * TODO  计算单期的用户的还款信息
+     * 计算单期的用户的还款信息
      *
      * @param repay
      * @param borrow
@@ -2218,7 +2218,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
                                     creditRepayBean.setManageFee(assignManageFee);
                                     creditRepayBean.setAdvanceStatus(1);
                                     creditRepayBean.setChargeInterest(assignChargeInterest.multiply(new BigDecimal(-1)));
-                                    creditRepayBean.setChargeDays(3);// TODO:默认是3天
+                                    creditRepayBean.setChargeDays(3);// 默认是3天
                                     creditRepayBeanList.add(creditRepayBean);
                                     // 统计出让人还款金额
                                     userAccount = userAccount.subtract(assignAccount);
@@ -2423,7 +2423,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     }
 
     /***
-     *TODO 计算用户分期还款本期应还金额
+     * 计算用户分期还款本期应还金额
      */
     private void calculateRecoverPlan(RepayDetailBean borrowRepayPlan, Borrow borrow, int period, Integer repayTimeStart) throws ParseException {
 
@@ -4616,7 +4616,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     }
 
     /**
-     * TODO 处理还款数据
+     * 处理还款数据
      * @param userId
      * @param borrowNid
      * @param period

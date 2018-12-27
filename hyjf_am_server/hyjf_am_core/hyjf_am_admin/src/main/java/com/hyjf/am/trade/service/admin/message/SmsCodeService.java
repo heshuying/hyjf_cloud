@@ -3,10 +3,10 @@
  */
 package com.hyjf.am.trade.service.admin.message;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
-import com.hyjf.am.user.dao.model.customize.SmsCodeCustomize;
+import com.hyjf.am.trade.dao.model.customize.SmsCodeCustomize;
+
+import java.util.List;
 
 /**
  * @author fq
