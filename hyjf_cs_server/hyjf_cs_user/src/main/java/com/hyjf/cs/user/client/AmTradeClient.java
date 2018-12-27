@@ -424,4 +424,10 @@ public interface AmTradeClient {
 
     Integer selectMyCouponCount(MyCouponListRequest requestBean);
     BigDecimal selectMyRewardTotal(MyInviteListRequest requestBean);
+
+    /**
+     * 获得所有协议类型
+     * @return
+     */
+    List<ProtocolTemplateVO> getProtocolTypes();
 }

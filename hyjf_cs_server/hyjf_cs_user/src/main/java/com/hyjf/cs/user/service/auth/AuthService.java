@@ -1,5 +1,6 @@
 package com.hyjf.cs.user.service.auth;
 
+import com.hyjf.am.vo.trade.ProtocolTemplateVO;
 import com.hyjf.am.vo.user.HjhUserAuthConfigVO;
 import com.hyjf.am.vo.user.HjhUserAuthVO;
 import com.hyjf.cs.common.bean.result.WebResult;
@@ -9,6 +10,7 @@ import com.hyjf.cs.user.service.BaseUserService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.springframework.web.servlet.ModelAndView;
 
+import java.util.List;
 import java.util.Map;
 
 public interface AuthService extends BaseUserService {
@@ -130,4 +132,10 @@ public interface AuthService extends BaseUserService {
     Map<String,String> checkApiParam(ApiAuthRequesBean requestBean);
 
     ModelAndView getApiCallbankMV(AuthBean authBean);
+
+    /**
+     * 获得所有协议类型
+     * @return
+     */
+    List<ProtocolTemplateVO> getProtocolTypes();
 }

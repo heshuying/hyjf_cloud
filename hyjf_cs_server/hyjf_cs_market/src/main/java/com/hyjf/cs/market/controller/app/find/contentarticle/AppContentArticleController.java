@@ -6,7 +6,7 @@ package com.hyjf.cs.market.controller.app.find.contentarticle;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.app.AppContentArticleResponse;
-import com.hyjf.am.vo.app.AppContentArticleVO;
+import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.market.controller.BaseMarketController;
 import com.hyjf.cs.market.service.AppContentArticleService;
@@ -47,7 +47,7 @@ public class AppContentArticleController extends BaseMarketController {
         response.setTopTitle(getTopTitle(type));
         try {
             // 根据id返回文章详情
-            AppContentArticleVO contentArticle = appContentArticleService.getContentArticleById(contentArticleId);
+            ContentArticleVO contentArticle = appContentArticleService.getContentArticleById(contentArticleId);
             if(contentArticle != null){
                 JSONObject details = new JSONObject();
                 details.put("title",contentArticle.getTitle());
