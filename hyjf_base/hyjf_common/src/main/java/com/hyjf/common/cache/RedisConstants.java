@@ -409,6 +409,25 @@ public class RedisConstants {
      */
     public static final String REVALUATION_AGGRESSIVE =  REVALUATION  + "aggressive";
 
+    /**
+     * 保守型（代收本金）
+     */
+    public static final String REVALUATION_CONSERVATIVE_PRINCIPAL = REVALUATION  + "principalconservative";
+
+    /**
+     * 稳健型（代收本金）
+     */
+    public static final String REVALUATION_ROBUSTNESS_PRINCIPAL = REVALUATION  + "principalrobustness";
+
+    /**
+     * 成长型（代收本金）
+     */
+    public static final String REVALUATION_GROWTH_PRINCIPAL = REVALUATION  + "principalgrowth";
+
+    /**
+     * 进取型（代收本金）
+     */
+    public static final String REVALUATION_AGGRESSIVE_PRINCIPAL =  REVALUATION  + "principalaggressive";
 
     /**
      * 上传合同模板暂存地址(template_upload_url:templetId)
@@ -521,4 +540,8 @@ public class RedisConstants {
      */
     public static final String ADMIN_UNIQUE_ID = "admin@:";
 
+    /**
+     * 纳觅返现活动
+     */
+    public static final String RETURN_CASH_ACTIVITY = "RETURN_CASH_ACTIVITY:";
 }

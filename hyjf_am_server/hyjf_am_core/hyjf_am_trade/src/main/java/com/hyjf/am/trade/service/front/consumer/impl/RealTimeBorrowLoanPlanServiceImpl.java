@@ -543,7 +543,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 	}
 
 
-	//TODO: 处理tender,判定成功状态，recover 无需要重复获取
+	//处理tender,判定成功状态，recover 无需要重复获取
 	@Override
 	public Map updateTenderMuti(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BigDecimal serviceFee, BorrowTender borrowTender) throws Exception {
 		

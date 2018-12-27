@@ -6,9 +6,7 @@ import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.CreditListResponse;
 import com.hyjf.am.response.trade.MyCreditListQueryResponse;
 import com.hyjf.am.response.trade.ProjectListResponse;
-import com.hyjf.am.response.trade.WechatProjectListResponse;
 import com.hyjf.am.response.trade.coupon.CouponResponse;
-import com.hyjf.am.response.user.WebUserRepayTransferCustomizeResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.api.ApiRepayListRequest;
 import com.hyjf.am.resquest.api.AsseStatusRequest;
@@ -31,12 +29,14 @@ import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.EvaluationConfigVO;
 import com.hyjf.am.vo.trade.IncreaseInterestInvestVO;
 import com.hyjf.am.vo.trade.account.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
@@ -2608,5 +2608,24 @@ public interface AmTradeClient {
     void dataInfo();
 
     void downloadRedFile();
+
+    /** 用户测评配置 */
+    List<EvaluationConfigVO> selectEvaluationConfig(EvaluationConfigVO record);
+
+    /** 测评获取冻结金额和代收本经明细 */
+    CallCenterAccountDetailVO queryAccountEvalDetail(Integer userId);
+
+    /**
+     * 获取需要推送法大大协议的标的
+     * add by yangchangwei 2018-12-26
+     * @return
+     */
+    List<BorrowApicronVO> getFddPushBorrowList();
+
+    /**
+     * 开始推送法大大协议
+     * @param borrowApicronVO
+     */
+    void updateFddPush(BorrowApicronVO borrowApicronVO);
 }
 

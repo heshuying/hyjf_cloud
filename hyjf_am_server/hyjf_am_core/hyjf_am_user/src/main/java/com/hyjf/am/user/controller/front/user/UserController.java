@@ -10,6 +10,7 @@ import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.dao.model.customize.UserUtmInfoCustomize;
 import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
@@ -140,6 +141,31 @@ public class UserController extends BaseController {
                 response.setRtn(Response.SUCCESS);
             }
             return response;
+        }
+        return null;
+    }
+
+    /**
+     * 通过当前用户ID 查询用户所在一级分部,从而关联用户所属渠道
+     * @param userId
+     * @return
+     * @Author : huanghui
+     */
+    @RequestMapping(value = "/getUserUtmInfo/{userId}", method = RequestMethod.GET)
+    public UserUtmInfoResponse getUserUtmInfo(@PathVariable Integer userId){
+        logger.info("getUserUtmInfo run...userId is :{}", userId);
+        UserUtmInfoResponse userUtmInfoResponse = new UserUtmInfoResponse();
+
+        if (userId != null){
+            UserUtmInfoCustomize userUtmInfo = userService.getUserUtmInfo(userId);
+            logger.info("getUserUtmInfo run...user is :{}", userUtmInfo);
+            if (userUtmInfo != null){
+                UserUtmInfoCustomizeVO userUtmInfoCustomizeVO = new UserUtmInfoCustomizeVO();
+                BeanUtils.copyProperties(userUtmInfo, userUtmInfoCustomizeVO);
+                userUtmInfoResponse.setResult(userUtmInfoCustomizeVO);
+                userUtmInfoResponse.setRtn(Response.SUCCESS);
+            }
+            return userUtmInfoResponse;
         }
         return null;
     }
@@ -608,20 +634,20 @@ public class UserController extends BaseController {
             for(EvalationCustomizeVO evalStr : evalationVOList){
                 switch (evalStr.getEvalType()){
                     case "保守型":
-                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
-                                RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE))));
+                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
+                                RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE)).intValue()));
                         break;
                     case "稳健型":
-                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
-                                RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS))));
+                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
+                                RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS)).intValue()));
                         break;
                     case "成长型":
-                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
-                                RedisUtils.get(RedisConstants.REVALUATION_GROWTH) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_GROWTH))));
+                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
+                                RedisUtils.get(RedisConstants.REVALUATION_GROWTH) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_GROWTH)).intValue()));
                         break;
                     case "进取型":
-                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
-                                RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE))));
+                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
+                                RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE)).intValue()));
                         break;
                     default:
                         evalStr.setRevaluationMoney("0");

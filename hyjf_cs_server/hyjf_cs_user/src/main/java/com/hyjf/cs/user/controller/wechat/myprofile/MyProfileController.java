@@ -6,6 +6,7 @@ package com.hyjf.cs.user.controller.wechat.myprofile;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
+import com.hyjf.am.vo.user.UserUtmInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.common.bean.result.WeChatResult;
@@ -86,7 +87,19 @@ public class MyProfileController extends BaseUserController {
             imagePath = systemConfig.getFilePrefixUrl() + user.getIconUrl();
         }
         myProfileVO.getUserAccountInfo().setIconUrl(imagePath);
-        myProfileVO.getUserAccountInfo().setQrcodeUrl(systemConfig.getWechatQrcodeUrl().replace("{userId}", String.valueOf(userId)));
+
+        // 通过当前用户ID 查询用户所在一级分部,从而关联用户所属渠道
+        // 合规自查添加
+        UserUtmInfoCustomizeVO userUtmInfo = myProfileService.getUserUtmInfo(userId);
+        String userQrCodeUrl = null;
+        if (userUtmInfo != null) {
+            userQrCodeUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
+        }else {
+            // 已确认未关联渠道的用户
+            userQrCodeUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId;
+        }
+        myProfileVO.getUserAccountInfo().setQrcodeUrl(userQrCodeUrl);
+        //        myProfileVO.getUserAccountInfo().setQrcodeUrl(systemConfig.getWechatQrcodeUrl().replace("{userId}", String.valueOf(userId)));
     }
 
     /**

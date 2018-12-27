@@ -236,6 +236,13 @@ public class BorrowApicron implements Serializable {
     private Integer isAllrepay;
 
     /**
+     * 是否生成合同
+     *
+     * @mbggenerated
+     */
+    private Integer agreementStatus;
+
+    /**
      * 创建时间
      *
      * @mbggenerated
@@ -536,6 +543,14 @@ public class BorrowApicron implements Serializable {
 
     public void setIsAllrepay(Integer isAllrepay) {
         this.isAllrepay = isAllrepay;
+    }
+
+    public Integer getAgreementStatus() {
+        return agreementStatus;
+    }
+
+    public void setAgreementStatus(Integer agreementStatus) {
+        this.agreementStatus = agreementStatus;
     }
 
     public Date getCreateTime() {

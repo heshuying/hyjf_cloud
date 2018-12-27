@@ -12,6 +12,7 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -131,4 +132,12 @@ public interface BorrowCommonService {
 	public UserVO getUserByUserName(String userName);
 
 	List<BorrowCommonCustomizeVO> paging(BorrowBeanRequest request, List<BorrowCommonCustomizeVO> result);
+
+	/**
+	 * 获取标的投资的等级
+	 *
+	 * @param borrowLevel
+	 * @return
+	 */
+	String getBorrowLevelAction(@Valid String borrowLevel);
 }

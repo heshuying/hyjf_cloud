@@ -167,6 +167,13 @@ public class HjhPlan implements Serializable {
     private Integer minInvestCounts;
 
     /**
+     * 服务投资等级
+     *
+     * @mbggenerated
+     */
+    private String investLevel;
+
+    /**
      * 删除标识
      *
      * @mbggenerated
@@ -385,6 +392,14 @@ public class HjhPlan implements Serializable {
 
     public void setMinInvestCounts(Integer minInvestCounts) {
         this.minInvestCounts = minInvestCounts;
+    }
+
+    public String getInvestLevel() {
+        return investLevel;
+    }
+
+    public void setInvestLevel(String investLevel) {
+        this.investLevel = investLevel == null ? null : investLevel.trim();
     }
 
     public Integer getDelFlag() {

@@ -138,6 +138,7 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
         Jedis jedis = getJedis(redisKey,request);
 
         List<UserPortraitVO> usersPortraits = userPortraitManagerMapper.selectUserPortraitList(userPortrait);
+        logger.info("selectUserPortraitScoreList usersPortraits.size="+usersPortraits.size());
         if (!CollectionUtils.isEmpty(usersPortraits)) {
             try {
                 for (UserPortraitVO usersPortrait : usersPortraits) {
@@ -220,7 +221,7 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
                             customize.setInvestProcess("60");
                         } else if (investProcess.equals("充值")) {
                             customize.setInvestProcess("80");
-                        } else if (investProcess.equals("出借")) {
+                        } else if (investProcess.equals("出借") || investProcess.equals("投资")) {
                             customize.setInvestProcess("100");
                         }
                     } else {
@@ -404,11 +405,12 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
                     list.add(customize);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("用户画像评分查询异常 e :" + e);
             } finally {
 				jedis.close();
 			}
         }
+        logger.info("selectUserPortraitScoreList List<UserPortraitScoreCustomize> list.size="+list.size());
         return list;
     }
 

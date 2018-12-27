@@ -2296,6 +2296,66 @@ public class BorrowApicronExample {
             return (Criteria) this;
         }
 
+        public Criteria andAgreementStatusIsNull() {
+            addCriterion("agreement_status is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAgreementStatusIsNotNull() {
+            addCriterion("agreement_status is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andAgreementStatusEqualTo(Integer value) {
+            addCriterion("agreement_status =", value, "agreementStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andAgreementStatusNotEqualTo(Integer value) {
+            addCriterion("agreement_status <>", value, "agreementStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andAgreementStatusGreaterThan(Integer value) {
+            addCriterion("agreement_status >", value, "agreementStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andAgreementStatusGreaterThanOrEqualTo(Integer value) {
+            addCriterion("agreement_status >=", value, "agreementStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andAgreementStatusLessThan(Integer value) {
+            addCriterion("agreement_status <", value, "agreementStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andAgreementStatusLessThanOrEqualTo(Integer value) {
+            addCriterion("agreement_status <=", value, "agreementStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andAgreementStatusIn(List<Integer> values) {
+            addCriterion("agreement_status in", values, "agreementStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andAgreementStatusNotIn(List<Integer> values) {
+            addCriterion("agreement_status not in", values, "agreementStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andAgreementStatusBetween(Integer value1, Integer value2) {
+            addCriterion("agreement_status between", value1, value2, "agreementStatus");
+            return (Criteria) this;
+        }
+
+        public Criteria andAgreementStatusNotBetween(Integer value1, Integer value2) {
+            addCriterion("agreement_status not between", value1, value2, "agreementStatus");
+            return (Criteria) this;
+        }
+
         public Criteria andCreateTimeIsNull() {
             addCriterion("create_time is null");
             return (Criteria) this;

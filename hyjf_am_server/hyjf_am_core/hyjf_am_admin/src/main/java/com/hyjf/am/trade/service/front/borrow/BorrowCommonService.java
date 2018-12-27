@@ -255,7 +255,7 @@ public interface BorrowCommonService extends BaseService {
 //	 * 项目申请人是否存在
 //	 * @param request
 //	 * @return
-//	 */TODO 放在配置am层
+//	 */ 放在配置am层
 //	public String isExistsApplicant(HttpServletRequest request);
 
 	/**
@@ -268,7 +268,7 @@ public interface BorrowCommonService extends BaseService {
 
 //	/**
 //	 * 发标金额是否合法
-//	 * TODO 放在admin项目
+//	 * 放在admin项目
 //	 * @param request
 //	 * @return
 //	 */
@@ -462,4 +462,11 @@ public interface BorrowCommonService extends BaseService {
 	 * @param borrowPreNid
 	 */
 	void isAutoRecord(String borrowPreNid);
+
+	/**
+	 * 获取风险测评配置
+	 *
+	 * @return
+	 */
+    EvaluationConfig selectEvaluationConfig();
 }

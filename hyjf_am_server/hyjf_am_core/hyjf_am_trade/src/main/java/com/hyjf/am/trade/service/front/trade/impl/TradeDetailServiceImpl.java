@@ -2,15 +2,20 @@ package com.hyjf.am.trade.service.front.trade.impl;
 
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.trade.TradeDetailBeanRequest;
+import com.hyjf.am.trade.dao.mapper.auto.EvaluationConfigMapper;
+import com.hyjf.am.trade.dao.model.auto.EvaluationConfig;
+import com.hyjf.am.trade.dao.model.auto.EvaluationConfigExample;
 import com.hyjf.am.trade.dao.model.customize.AppTradeListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserRechargeListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserTradeListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserWithdrawListCustomize;
 import com.hyjf.am.trade.service.front.trade.TradeDetailService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
+import com.hyjf.am.vo.trade.EvaluationConfigVO;
 import com.hyjf.common.cache.CacheUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -229,5 +234,16 @@ public class TradeDetailServiceImpl extends BaseServiceImpl implements TradeDeta
         params.put("tradeYear", request.getYear());
         params.put("tradeMonth", request.getMonth());
         return userTradeDetailCustomizeMapper.countTradeDetailListRecordTotal(params);
+    }
+
+    @Override
+    public List<EvaluationConfigVO> selectEvaluationConfigList(EvaluationConfigVO request) {
+        EvaluationConfigExample example = new EvaluationConfigExample();
+        List<EvaluationConfigVO> configVO = null;
+        List<EvaluationConfig> config = evaluationConfigMapper.selectByExample(example);
+        if(config != null && config.size() > 0){
+            BeanUtils.copyProperties(config, configVO);
+        }
+        return configVO;
     }
 }

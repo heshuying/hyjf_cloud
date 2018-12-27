@@ -64,5 +64,5 @@ public interface HjhTenderService extends BaseTradeService {
      *
      * @param request
      */
-    public Map<String, Object> checkEvaluationTypeMoney(TenderRequest request);
+    Map<String, Object> checkEvaluationTypeMoney(TenderRequest request,String checkLeve,String flag);
 }

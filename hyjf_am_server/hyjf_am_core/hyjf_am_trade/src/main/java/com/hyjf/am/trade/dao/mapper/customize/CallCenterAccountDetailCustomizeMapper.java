@@ -16,4 +16,13 @@ public interface CallCenterAccountDetailCustomizeMapper {
 	 */
 	public List<CallCenterAccountDetailCustomize> queryAccountDetails(CallCenterAccountDetailRequest callCenterAccountDetailRequest);
 
+
+	/**
+	 * 测评获取冻结金额和代收本经明细
+	 *
+	 * @param userId
+	 * @return
+	 */
+	public CallCenterAccountDetailCustomize queryAccountEvalDetail(Integer userId);
+
 }

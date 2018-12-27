@@ -7,11 +7,13 @@ import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.datacollect.TzjDayReportResponse;
 import com.hyjf.am.response.user.EvalationCustomizeResponse;
 import com.hyjf.am.response.user.SmsCodeResponse;
+import com.hyjf.am.response.user.UserUtmInfoResponse;
 import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
 import com.hyjf.am.resquest.user.SmsCodeRequest;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import com.hyjf.am.vo.user.EvalationCustomizeVO;
+import com.hyjf.am.vo.user.UserUtmInfoCustomizeVO;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.market.client.AmUserClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -217,6 +219,16 @@ public class AmUserClientImpl implements AmUserClient {
 				.getForEntity("http://AM-USER/am-user/user/getEvalationRecord", EvalationCustomizeResponse.class).getBody();
 		if (response != null) {
 			return response.getResultList();
+		}
+		return null;
+	}
+
+	@Override
+	public UserUtmInfoCustomizeVO getUserUtmInfo(Integer userId) {
+		String url = "http://AM-USER/am-user/user/getUserUtmInfo/" + userId;
+		UserUtmInfoResponse response = restTemplate.getForEntity(url, UserUtmInfoResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
 		}
 		return null;
 	}

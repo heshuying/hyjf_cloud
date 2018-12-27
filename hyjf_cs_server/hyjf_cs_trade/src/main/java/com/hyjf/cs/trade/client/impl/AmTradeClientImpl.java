@@ -12,6 +12,7 @@ import com.hyjf.am.response.app.AppNewAgreementResponse;
 import com.hyjf.am.response.app.AppProjectInvestListCustomizeResponse;
 import com.hyjf.am.response.app.AppProjectListResponse;
 import com.hyjf.am.response.app.AppTenderCreditInvestListCustomizeResponse;
+import com.hyjf.am.response.callcenter.CallCenterAccountDetailResponse;
 import com.hyjf.am.response.config.AppReapyCalendarResponse;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.market.AppAdsCustomizeResponse;
@@ -52,12 +53,14 @@ import com.hyjf.am.vo.app.AppProjectInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTenderCreditInvestListCustomizeVO;
 import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
+import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.*;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
+import com.hyjf.am.vo.trade.EvaluationConfigVO;
 import com.hyjf.am.vo.trade.IncreaseInterestInvestVO;
 import com.hyjf.am.vo.trade.account.*;
 import com.hyjf.am.vo.trade.account.AccountRechargeVO;
@@ -6294,5 +6297,57 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public void downloadRedFile() {
         restTemplate.getForEntity("http://AM-TRADE/am-trade/batch/downloadFiles", String.class);
+    }
+
+    /** 用户测评配置 */
+    @Override
+    public List<EvaluationConfigVO> selectEvaluationConfig(EvaluationConfigVO record){
+        EvaluationConfigResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/tradedetail/selectEvaluationConfig/", record, EvaluationConfigResponse.class).getBody();
+        if (response != null && Response.isSuccess(response)){
+            return response.getResultList();
+        }
+        return null;
+    }
+
+    /** 测评获取冻结金额和代收本经明细 */
+    @Override
+    public CallCenterAccountDetailVO queryAccountEvalDetail(Integer userId){
+        String url = "http://AM-TRADE/am-trade/callcenter/queryAccountEvalDetail/"+ userId;
+        CallCenterAccountDetailResponse response = restTemplate.getForEntity(url, CallCenterAccountDetailResponse.class).getBody();
+        if (response != null && Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 获取需要推送法大大协议的标的
+     * add by yangchangwei 2018-11-26
+     * @return
+     */
+    @Override
+    public List<BorrowApicronVO> getFddPushBorrowList() {
+
+
+        String url = "http://AM-TRADE/am-trade/batch/fddpush/getfddpushborrowlist";
+        BorrowApicronResponse response = restTemplate.getForEntity(url, BorrowApicronResponse.class).getBody();
+        if (response != null && Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+
+        return null;
+
+    }
+
+    /**
+     * 开始推送法大大协议
+     * add by yangchangwei 2018-11-27
+     * @param borrowApicronVO
+     */
+    @Override
+    public void updateFddPush(BorrowApicronVO borrowApicronVO) {
+        String url = "http://AM-TRADE/am-trade/batch/fddpush/updateFddPush";
+        restTemplate.postForEntity(url, borrowApicronVO,null).getBody();
+
     }
 }

@@ -64,6 +64,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.util.*;
 
@@ -6449,6 +6450,22 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 获取标的风险测评等级
+     *
+     * @param borrowLevel
+     * @return
+     */
+    @Override
+    public String getBorrowLevelAction(@Valid String borrowLevel) {
+        String url = "http://AM-ADMIN//am-trade/borrowcommon/getBorrowLevelAction/" + borrowLevel;
+        StringResponse response = restTemplate.getForEntity(url, StringResponse.class).getBody();
+        if (response != null) {
+            return response.getResultStr();
+        }
+        return null;
+    }
+
+    /**
      * 产品中心-加息出借明细（总计）
      * @param request
      * @auth wenxin
@@ -6794,5 +6811,157 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response.getResultInt();
         }
         return 0;
+    }
+
+    /**
+     * 配置中心-风险测评开关配置（列表）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param request
+     **/
+    @Override
+    public EvaluationCheckResponse getEvaluationCheckList(EvaluationCheckRequest request) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-trade/evaluation/getEvaluationCheckList", request, EvaluationCheckResponse.class);
+    }
+
+    /**
+     * 根据id查询风险测评开关配置
+     * @author Zha Daojian
+     * @date 2018/12/20 18:03
+     * @param id
+     * @return com.hyjf.am.vo.admin.EvaluationCheckConfigVO
+     **/
+    @Override
+    public EvaluationCheckConfigVO getEvaluationCheckById(Integer id) {
+        String url = "http://AM-ADMIN/am-trade/evaluation/getEvaluationCheckById/" + id;
+        EvaluationCheckResponse response = restTemplate.getForEntity(url, EvaluationCheckResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新风险测评开关配置
+     * @author Zha Daojian
+     * @date 2018/12/20 18:03
+     * @param request
+     **/
+    @Override
+    public EvaluationCheckResponse updateEvaluationCheck(EvaluationCheckRequest request) {
+        EvaluationCheckResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/evaluation/updateEvaluationCheck", request, EvaluationCheckResponse.class).getBody();
+        return response;
+    }
+
+    /**
+     * 配置中心-风险测评限额配置（列表）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param request
+     **/
+    @Override
+    public EvaluationMoneyResponse getEvaluationMoneyList(EvaluationMoneyRequest request) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-trade/evaluation/getEvaluationMoneyList", request, EvaluationMoneyResponse.class);
+    }
+
+    /**
+     * 根据id查询风险测评限额配置
+     * @author Zha Daojian
+     * @date 2018/12/20 18:03
+     * @param id
+     * @return com.hyjf.am.vo.admin.EvaluationCheckConfigVO
+     **/
+    @Override
+    public EvaluationMoneyConfigVO getEvaluationMoneyById(Integer id) {
+        String url = "http://AM-ADMIN/am-trade/evaluation/getEvaluationMoneyById/" + id;
+        EvaluationMoneyResponse response = restTemplate.getForEntity(url, EvaluationMoneyResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResult();
+        }
+        return null;
+    }
+
+    /**
+     * 更新风险测评限额配置
+     * @author Zha Daojian
+     * @date 2018/12/20 18:03
+     * @param request
+     **/
+    @Override
+    public EvaluationMoneyResponse updateEvaluationMoney(EvaluationMoneyRequest request) {
+        EvaluationMoneyResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/evaluation/updateEvaluationMoney", request, EvaluationMoneyResponse.class).getBody();
+        return response;
+    }
+
+    /**
+     * 配置中心-风险测评限额配置（日志列表）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param request
+     **/
+    @Override
+    public EvaluationMoneyLogResponse getEvaluationMoneyLogList(EvaluationMoneyLogRequest request) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-trade/evaluation/getEvaluationMoneyLogList", request, EvaluationMoneyLogResponse.class);
+    }
+
+    /**
+     * 配置中心-风险测评开关配置（日志列表）
+     * @author Zha Daojian
+     * @date 2018/12/20 17:35
+     * @param request
+     **/
+    @Override
+    public EvaluationCheckLogResponse getEvaluationCheckLogList(EvaluationCheckLogRequest request) {
+        return restTemplate.postForObject("http://AM-ADMIN/am-trade/evaluation/getEvaluationCheckLogList", request, EvaluationCheckLogResponse.class);
+    }
+
+    /**
+     * 风险测评配置-风险测评等级配置
+     *
+     * @param requestBean
+     * @return
+     */
+    public EvaluationBorrowLevelConfigResponse getEvaluationBorrowLevelConfigList(EvaluationBorrowLevelConfigRequest requestBean){
+        return restTemplate.postForObject("http://AM-ADMIN/am-trade/evaluation/getEvaluationBorrowLevelConfigList", requestBean, EvaluationBorrowLevelConfigResponse.class);
+    }
+
+
+    /**
+     * 风险测评配置-风险测评等级配置
+     * @param id
+     * @return
+     */
+   public EvaluationBorrowLevelConfigVO getEvaluationBorrowLevelConfigById(Integer id){
+       String url = "http://AM-ADMIN/am-trade/evaluation/getEvaluationBorrowLevelConfigById/" + id;
+       EvaluationBorrowLevelConfigResponse response = restTemplate.getForEntity(url, EvaluationBorrowLevelConfigResponse.class).getBody();
+       if (Response.isSuccess(response)) {
+           return response.getResult();
+       }
+       return null;
+   }
+
+
+    /**
+     * 更新风险测评配置-风险测评等级配置
+     *
+     * @param requestBean
+     * @return
+     */
+   public EvaluationBorrowLevelConfigResponse updateBorrowLevelConfig(EvaluationBorrowLevelConfigRequest requestBean){
+       EvaluationBorrowLevelConfigResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/evaluation/updateBorrowLevelConfig", requestBean, EvaluationBorrowLevelConfigResponse.class).getBody();
+       return response;
+   }
+
+
+
+    /**
+     * 配置中心-风险测评等级配置（日志列表）
+     *
+     * @param requestBean
+     * @return
+     */
+    public EvaluationBorrowLevelConfigLogResponse getBorrowLevelConfigLogList(EvaluationBorrowLevelConfigLogRequest requestBean){
+        EvaluationBorrowLevelConfigLogResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/evaluation/getBorrowLevelConfigLogList", requestBean, EvaluationBorrowLevelConfigLogResponse.class).getBody();
+        return response;
     }
 }

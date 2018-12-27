@@ -377,6 +377,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 	 */
 	private boolean borrowLoans(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BankCallBean bean) throws Exception {
 		/** 基本变量 */
+		int nowTime = GetDate.getNowTime10();
 		String borrowNid = apicron.getBorrowNid();// 借款编号
 //		BorrowApicronExample example = new BorrowApicronExample();
 //		example.createCriteria().andIdEqualTo(apicron.getId()).andStatusEqualTo(apicron.getStatus());
@@ -464,7 +465,9 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 						
 						// 累加成功的出借更新
 						tenderChkCnt = tenderChkCnt + 1;
-
+						//  处理纳觅返现活动mq tyy
+						logger.info("纳觅返现活动标的加入时间更新");
+						sendReturnCashActivity(borrowNid,nowTime);
 					}
 				} catch (Exception e) {
 					logger.info("======== 放款变更出借人数据异常!异常:" + e.getMessage());
@@ -486,8 +489,19 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 		}
 	}
 
-
-	//TODO: 处理tender,判定成功状态，recover 无需要重复获取
+	/**
+	 * 纳觅返现活动
+	 * @param borrowNid
+	 * @param nowTime
+	 */
+	private void sendReturnCashActivity(String borrowNid,int nowTime) throws MQException {
+		// 加入到消息队列
+		JSONObject params = new JSONObject();
+		params.put("borrowNid", borrowNid);
+		params.put("nowTime", nowTime);//放款时间
+		commonProducer.messageSend(new MessageContent(MQConstant.RETURN_CASH1_ACTIVITY_SAVE_TOPIC, UUID.randomUUID().toString(), params));
+	}
+	//处理tender,判定成功状态，recover 无需要重复获取
 	@Override
 	public Map updateTenderMuti(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BigDecimal serviceFee, BorrowTender borrowTender) throws Exception {
 		
