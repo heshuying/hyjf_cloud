@@ -11,6 +11,7 @@ import com.hyjf.am.vo.trade.borrow.RightBorrowVO;
 import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.service.BaseClient;
@@ -29,6 +30,7 @@ import org.apache.http.util.EntityUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
+import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.slf4j.Logger;
@@ -40,7 +42,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @Service
-//@RocketMQMessageListener(topic = MQConstant.CRM_TENDER_INFO_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.BORROW_GROUP)
+@RocketMQMessageListener(topic = MQConstant.CRM_TENDER_INFO_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.BORROW_GROUP)
 public class CrmInvestMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     private static final Logger logger = LoggerFactory.getLogger(CrmInvestMessageConsumer.class);

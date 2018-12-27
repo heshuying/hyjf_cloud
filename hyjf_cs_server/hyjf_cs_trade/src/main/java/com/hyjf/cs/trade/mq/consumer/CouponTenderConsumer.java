@@ -9,6 +9,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.service.consumer.CouponService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -16,6 +17,7 @@ import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
+import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.slf4j.Logger;
@@ -33,7 +35,7 @@ import java.util.Map;
  * @Date 2018/7/11 14:26
  */
 @Service
-//@RocketMQMessageListener(topic = MQConstant.HZT_COUPON_TENDER_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.HZT_COUPON_TENDER_GROUP)
+@RocketMQMessageListener(topic = MQConstant.HZT_COUPON_TENDER_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.HZT_COUPON_TENDER_GROUP)
 public class CouponTenderConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
     private static final Logger logger = LoggerFactory.getLogger(CouponTenderConsumer.class);
 
