@@ -1043,7 +1043,6 @@ public class RedisUtils {
 
     /**
      * 分布式锁(可以在并发中使用的不可重复设置锁，
-     * PS：前面那个分布式锁的还有BUG，千万不要用，因为 unwatch()是取消所有key的监视 )
      * @param rediskey
      * @param value
      * @param seconds
