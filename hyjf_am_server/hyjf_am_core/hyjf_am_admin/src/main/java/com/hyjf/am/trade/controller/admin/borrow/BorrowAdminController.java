@@ -110,6 +110,7 @@ public class BorrowAdminController  {
 			corrowCommonCustomize.setLimitEnd(paginator.getLimit());
 			List<BorrowCustomizeVO> recordList = this.borrowService.selectBorrowList(corrowCommonCustomize);
 			mcr.setResultList(recordList);
+			mcr.setSumAccount(this.borrowService.sumAccount(corrowCommonCustomize));
 		}
 		return mcr;
 	}

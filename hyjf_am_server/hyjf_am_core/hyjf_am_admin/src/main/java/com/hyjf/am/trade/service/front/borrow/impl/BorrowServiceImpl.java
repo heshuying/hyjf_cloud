@@ -565,4 +565,9 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
 	public List<BorrowCommonCustomizeVO> exportBorrowList(BorrowCommonCustomizeVO BorrowCommonCustomizeVO) {
 		return this.borrowCustomizeMapper.exportBorrowList(BorrowCommonCustomizeVO);
 	}
+
+	@Override
+	public BigDecimal sumAccount(BorrowCommonCustomizeVO borrowCommonCustomizeVO) {
+		return this.borrowCustomizeMapper.sumAccount(borrowCommonCustomizeVO);
+	}
 }

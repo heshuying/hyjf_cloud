@@ -9,6 +9,7 @@ import com.hyjf.am.vo.trade.ProjectCustomeDetailVO;
 import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -131,6 +132,12 @@ public interface BorrowCustomizeMapper {
 
 
     List<BorrowCommonCustomizeVO> exportBorrowList(BorrowCommonCustomizeVO BorrowCommonCustomizeVO);
-
+	/**
+	 * 总额合计
+	 * 
+	 * @param borrowCustomize
+	 * @return
+	 */
+	BigDecimal sumAccount(BorrowCommonCustomizeVO borrowCommonCustomizeVO);
 
 }

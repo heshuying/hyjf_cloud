@@ -10,6 +10,7 @@ import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowStyleVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +27,15 @@ public class BorrowCustomizeResponse extends AdminResponse<BorrowCustomizeVO> {
 	private Map<String, String> bs;
 	private List<BorrowCommonCustomizeVO> borrowCommonCustomizeList;
 	private String webUrl;
+	private BigDecimal sumAccount;
 	
+	
+	public BigDecimal getSumAccount() {
+		return sumAccount;
+	}
+	public void setSumAccount(BigDecimal sumAccount) {
+		this.sumAccount = sumAccount;
+	}
 	public String getWebUrl() {
 		return webUrl;
 	}
