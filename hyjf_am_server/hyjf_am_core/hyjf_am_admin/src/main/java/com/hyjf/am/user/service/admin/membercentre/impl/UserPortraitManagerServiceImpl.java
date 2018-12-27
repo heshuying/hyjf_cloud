@@ -138,6 +138,7 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
         Jedis jedis = getJedis(redisKey,request);
 
         List<UserPortraitVO> usersPortraits = userPortraitManagerMapper.selectUserPortraitList(userPortrait);
+        logger.info("selectUserPortraitScoreList usersPortraits.size="+usersPortraits.size());
         if (!CollectionUtils.isEmpty(usersPortraits)) {
             try {
                 for (UserPortraitVO usersPortrait : usersPortraits) {
@@ -404,11 +405,12 @@ public class UserPortraitManagerServiceImpl extends BaseServiceImpl implements U
                     list.add(customize);
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                logger.error("用户画像评分查询异常 e :" + e);
             } finally {
 				jedis.close();
 			}
         }
+        logger.info("selectUserPortraitScoreList List<UserPortraitScoreCustomize> list.size="+list.size());
         return list;
     }
 
