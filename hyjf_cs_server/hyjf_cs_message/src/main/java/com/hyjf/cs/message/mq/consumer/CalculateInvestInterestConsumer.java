@@ -83,8 +83,7 @@ public class CalculateInvestInterestConsumer implements RocketMQListener<Message
                 calculateInvestInterestDao.update(query, update);
             }
 
-            // 更新t_total_invest_and_interest- 运营数据用，考虑和上面的表合并（）  todo xiasq
-            else {
+            // 更新t_total_invest_and_interest- 运营数据用，考虑和上面的表合并（）             else {
                 if (data.containsKey("money")) {
                     BigDecimal money = new BigDecimal(data.get("money").toString());
                     // 已收利息

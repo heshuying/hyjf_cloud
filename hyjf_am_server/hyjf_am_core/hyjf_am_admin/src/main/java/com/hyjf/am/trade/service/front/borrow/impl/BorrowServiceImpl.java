@@ -107,7 +107,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         example.createCriteria().andIdEqualTo(borrowVO.getId()).andStatusEqualTo(borrowVO.getStatus()).andRegistStatusEqualTo(borrowVO.getRegistStatus());
         borrowVO.setRegistStatus(registStatus);
         borrowVO.setStatus(status);
-        borrowVO.setRegistUserId(1);//TODO:id写死1
+        borrowVO.setRegistUserId(1);
         borrowVO.setRegistUserName("AutoRecord");
         borrowVO.setRegistTime(nowDate);
         Borrow borrow = new Borrow();
