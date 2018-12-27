@@ -1,5 +1,6 @@
 package com.hyjf.am.market.controller.admin.activity;
 
+import com.hyjf.am.market.dao.model.auto.PerformanceReturnDetail;
 import com.hyjf.am.market.service.NaMiMarketingService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.NaMiMarketingResponse;
@@ -7,6 +8,7 @@ import com.hyjf.am.resquest.admin.NaMiMarketingRequest;
 import com.hyjf.am.vo.admin.NaMiMarketingVO;
 import com.hyjf.am.vo.admin.PerformanceReturnDetailVO;
 import com.hyjf.common.paginator.Paginator;
+import com.hyjf.common.util.CommonUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -89,7 +91,8 @@ public class NaMiMarketController {
         //id为空，不查询
         if(null != request.getId()&& request.getId().intValue() >0){
             //根据id查询上级推荐人
-            List<PerformanceReturnDetailVO> recordList=this.naMiMarketingService.selectNaMiMarketingPerfanceInfo(request);
+            List<PerformanceReturnDetail> performanceReturnDetailVOS=this.naMiMarketingService.selectNaMiMarketingPerfanceInfo(request);
+            List<PerformanceReturnDetailVO> recordList = CommonUtils.convertBeanList(performanceReturnDetailVOS, PerformanceReturnDetailVO.class);
             if(!CollectionUtils.isEmpty(recordList)){
                 BigDecimal returnAmount = recordList.get(0).getReturnAmount();
                 if(recordList.size()==1){

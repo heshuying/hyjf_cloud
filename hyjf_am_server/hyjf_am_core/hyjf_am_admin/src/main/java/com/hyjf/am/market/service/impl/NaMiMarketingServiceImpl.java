@@ -1,8 +1,10 @@
 package com.hyjf.am.market.service.impl;
 
 import com.hyjf.am.market.dao.mapper.auto.ActivityListMapper;
+import com.hyjf.am.market.dao.mapper.auto.PerformanceReturnDetailMapper;
 import com.hyjf.am.market.dao.mapper.customize.market.NaMiMarketingCustomizeMapper;
 import com.hyjf.am.market.dao.model.auto.ActivityList;
+import com.hyjf.am.market.dao.model.auto.PerformanceReturnDetail;
 import com.hyjf.am.market.service.NaMiMarketingService;
 import com.hyjf.am.resquest.admin.NaMiMarketingRequest;
 import com.hyjf.am.user.dao.model.auto.User;
@@ -29,8 +31,8 @@ public class NaMiMarketingServiceImpl implements NaMiMarketingService {
     @Autowired
     public ActivityListMapper activityListMapper;
 
-    /*@Autowired
-    public PerformanceReturnDetailMapper performanceReturnDetailMapper;*/
+    @Autowired
+    public PerformanceReturnDetailMapper performanceReturnDetailMapper;
 
     /**
      * 查询活动是否开始
@@ -85,8 +87,8 @@ public class NaMiMarketingServiceImpl implements NaMiMarketingService {
     }
 
     @Override
-    public List<PerformanceReturnDetailVO> selectNaMiMarketingPerfanceInfo(NaMiMarketingRequest request) {
-        List<PerformanceReturnDetailVO> returnDetails= new ArrayList<>();
+    public List<PerformanceReturnDetail> selectNaMiMarketingPerfanceInfo(NaMiMarketingRequest request) {
+        List<PerformanceReturnDetail> returnDetails= new ArrayList<>();
         ActivityList activityList = checkActivityIfAvailable(ActivityDateUtil.RETURNCASH_ACTIVITY_ID);
         if(activityList==null){
             return null;
@@ -102,8 +104,8 @@ public class NaMiMarketingServiceImpl implements NaMiMarketingService {
             userName.add(u.getUsername());
         }
         //查询当前业绩
-        PerformanceReturnDetailVO detail = null;
-               // performanceReturnDetailMapper.selectByPrimaryKey(request.getId());
+        PerformanceReturnDetail detail =  performanceReturnDetailMapper.selectByPrimaryKey(request.getId());
+
         return selectReturnDetailList(returnDetails,detail, userName);
 
     }
@@ -111,7 +113,7 @@ public class NaMiMarketingServiceImpl implements NaMiMarketingService {
     /**
      * 迭代查询 所有朋友
      */
-    public  List<PerformanceReturnDetailVO> selectReturnDetailList(List<PerformanceReturnDetailVO> returnDetails,PerformanceReturnDetailVO detail,List<String> users){
+    public  List<PerformanceReturnDetail> selectReturnDetailList(List<PerformanceReturnDetail> returnDetails,PerformanceReturnDetail detail,List<String> users){
         //判断是否是合伙人
         if(users.contains(detail.getUserName())){
             returnDetails.add(detail);
@@ -119,7 +121,7 @@ public class NaMiMarketingServiceImpl implements NaMiMarketingService {
         }
         returnDetails.add(detail);
         //根据推荐人，查询上级好友
-        PerformanceReturnDetailVO details=naMiMarketingCustomizeMapper.selectReturnDetail(detail.getRefferName());
+        PerformanceReturnDetail details=naMiMarketingCustomizeMapper.selectReturnDetail(detail.getRefferName());
         if(details == null){
             return returnDetails;
         }

@@ -1,6 +1,7 @@
 package com.hyjf.am.market.dao.mapper.customize.market;
 
 import com.hyjf.am.market.dao.model.auto.ActivityList;
+import com.hyjf.am.market.dao.model.auto.PerformanceReturnDetail;
 import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.vo.admin.NaMiMarketingVO;
 import com.hyjf.am.vo.admin.PerformanceReturnDetailVO;
@@ -61,5 +62,5 @@ public interface NaMiMarketingCustomizeMapper {
      * @param id
      * @return
      */
-    PerformanceReturnDetailVO selectReturnDetail(@Param("referName") String referName );
+    PerformanceReturnDetail selectReturnDetail(@Param("referName") String referName );
 }

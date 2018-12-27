@@ -1,5 +1,6 @@
 package com.hyjf.am.market.service;
 
+import com.hyjf.am.market.dao.model.auto.PerformanceReturnDetail;
 import com.hyjf.am.response.admin.NaMiMarketingResponse;
 import com.hyjf.am.resquest.admin.NaMiMarketingRequest;
 import com.hyjf.am.vo.admin.NaMiMarketingVO;
@@ -44,6 +45,6 @@ public interface NaMiMarketingService {
      * 查询业绩返现详情
      * @return
      */
-    List<PerformanceReturnDetailVO> selectNaMiMarketingPerfanceInfo(NaMiMarketingRequest request);
+    List<PerformanceReturnDetail> selectNaMiMarketingPerfanceInfo(NaMiMarketingRequest request);
 
 }
