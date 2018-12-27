@@ -95,4 +95,9 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 		}
 		return true;
 	}
+
+	@Override
+	public int countUser(SmsCodeRequestBean requestBean) {
+		return amUserClient.countUser(requestBean);
+	}
 }

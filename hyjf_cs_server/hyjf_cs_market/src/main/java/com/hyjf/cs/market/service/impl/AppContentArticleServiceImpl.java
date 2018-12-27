@@ -3,7 +3,7 @@
  */
 package com.hyjf.cs.market.service.impl;
 
-import com.hyjf.am.vo.app.AppContentArticleVO;
+import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.cs.market.client.AmConfigClient;
 import com.hyjf.cs.market.service.AppContentArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
  * @version AppContentArticleImpl, v0.1 2018/7/30 23:36
  */
 @Service
-public class AppContentArticleImpl implements AppContentArticleService {
+public class AppContentArticleServiceImpl implements AppContentArticleService {
 
     @Autowired
     private AmConfigClient amConfigClient;
@@ -25,7 +25,7 @@ public class AppContentArticleImpl implements AppContentArticleService {
      * @return
      */
     @Override
-    public AppContentArticleVO getContentArticleById(Integer contentArticleId) {
-        return amConfigClient.getContentArticleByIdApp(contentArticleId);
+    public ContentArticleVO getContentArticleById(Integer contentArticleId) {
+        return amConfigClient.getContentArticleById(contentArticleId);
     }
 }

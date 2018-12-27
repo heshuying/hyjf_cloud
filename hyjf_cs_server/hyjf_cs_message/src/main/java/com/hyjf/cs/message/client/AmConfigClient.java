@@ -1,6 +1,7 @@
 package com.hyjf.cs.message.client;
 
-import com.alibaba.fastjson.JSONObject;
+import java.util.List;
+
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.config.EventResponse;
 import com.hyjf.am.resquest.config.SmsNoticeConfigRequest;
@@ -9,8 +10,6 @@ import com.hyjf.am.vo.admin.ContentHelpCustomizeVO;
 import com.hyjf.am.vo.admin.ContentHelpVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.user.UserVO;
-
-import java.util.List;
 
 /**
  * @author xiasq
@@ -70,13 +69,6 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	ContentHelpVO help(Integer id);
-	/**
-	 * 在筛选条件下查询出用户
-	 * 
-	 * @param params
-	 * @return
-	 */
-	List<UserVO> queryUser(JSONObject params);
 
 	/**
 	 * 获取所有模版

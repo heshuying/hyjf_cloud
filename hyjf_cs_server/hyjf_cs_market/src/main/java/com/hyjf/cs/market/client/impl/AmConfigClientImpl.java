@@ -6,7 +6,6 @@ package com.hyjf.cs.market.client.impl;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.JxBankConfigResponse;
-import com.hyjf.am.response.app.AppContentArticleResponse;
 import com.hyjf.am.response.config.*;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.ContentArticleResponse;
@@ -17,7 +16,6 @@ import com.hyjf.am.resquest.admin.SmsConfigRequest;
 import com.hyjf.am.resquest.config.WechatContentArticleRequest;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.BasePage;
-import com.hyjf.am.vo.app.AppContentArticleVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.market.ShareNewsBeanVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
@@ -80,16 +78,6 @@ public class AmConfigClientImpl implements AmConfigClient {
 				"http://AM-CONFIG/am-config/article/contentArticleList", articleRequest, ContentArticleResponse.class);
 		if (response != null) {
 			return response.getResultList();
-		}
-		return null;
-	}
-
-	@Override
-	public ContentArticleVO getNoticeInfo(Integer id) {
-		ContentArticleResponse response = restTemplate
-				.getForObject("http://AM-CONFIG/am-config/article/getarticlebyid/" + id, ContentArticleResponse.class);
-		if (response != null) {
-			return response.getResult();
 		}
 		return null;
 	}
@@ -351,19 +339,5 @@ public class AmConfigClientImpl implements AmConfigClient {
 	@Override
 	public SmsConfigResponse initSmsConfig(SmsConfigRequest request) {
 		return restTemplate.postForEntity("http://AM-CONFIG/am-config/smsConfig/initSmsConfig", request, SmsConfigResponse.class).getBody();
-	}
-
-	/**
-	 * 根据id获取网贷知识
-	 * @param id
-	 * @return
-	 */
-	public AppContentArticleVO getContentArticleByIdApp(Integer id) {
-		String url = "http://AM-CONFIG/am-config/find/contentArticle/getContentArticleById/" + id;
-		AppContentArticleResponse response = restTemplate.getForEntity(url,AppContentArticleResponse.class).getBody();
-		if (response != null) {
-			return response.getResult();
-		}
-		return null;
 	}
 }

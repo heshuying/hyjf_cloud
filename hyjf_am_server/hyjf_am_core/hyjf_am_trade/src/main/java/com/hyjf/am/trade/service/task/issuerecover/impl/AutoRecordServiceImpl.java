@@ -503,7 +503,7 @@ public class AutoRecordServiceImpl implements AutoRecordService {
         example.createCriteria().andIdEqualTo(borrow.getId()).andStatusEqualTo(borrow.getStatus()).andRegistStatusEqualTo(borrow.getRegistStatus());
         borrow.setRegistStatus(registStatus);
         borrow.setStatus(status);
-        borrow.setRegistUserId(1);//TODO:id写死1
+        borrow.setRegistUserId(1);//id写死1
         borrow.setRegistUserName("AutoRecord");
         borrow.setRegistTime(nowDate);
         boolean flag = this.borrowMapper.updateByExampleSelective(borrow, example) > 0 ? true : false;

@@ -30,6 +30,7 @@ import com.hyjf.am.response.user.*;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
+import com.hyjf.am.resquest.admin.BorrowApicronRequest;
 import com.hyjf.am.resquest.admin.CouponRepayRequest;
 import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
 import com.hyjf.am.resquest.api.ApiRepayListRequest;
@@ -37,7 +38,6 @@ import com.hyjf.am.resquest.api.AsseStatusRequest;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.assetpush.InfoBean;
-import com.hyjf.am.resquest.callcenter.CallCenterAccountDetailRequest;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
@@ -79,6 +79,7 @@ import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
@@ -6321,4 +6322,36 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    /**
+     * 获取需要推送法大大协议的标的
+     * add by yangchangwei 2018-11-26
+     * @return
+     */
+    @Override
+    public List<BorrowApicronVO> getFddPushBorrowList() {
+
+
+        String url = "http://AM-TRADE/am-trade/batch/fddpush/getfddpushborrowlist";
+        BorrowApicronResponse response = restTemplate.getForEntity(url, BorrowApicronResponse.class).getBody();
+        if (response != null && Response.isSuccess(response)) {
+            return response.getResultList();
+        }
+
+        return null;
+
+    }
+
+    /**
+     * 开始推送法大大协议
+     * add by yangchangwei 2018-11-27
+     * @param borrowApicronVO
+     */
+    @Override
+    public void updateFddPush(BorrowApicronVO borrowApicronVO) {
+        BorrowApicronRequest request;
+        request = CommonUtils.convertBean(borrowApicronVO,BorrowApicronRequest.class);
+        String url = "http://AM-TRADE/am-trade/batch/fddpush/updateFddPush";
+        restTemplate.postForEntity(url, request,null).getBody();
+
+    }
 }

@@ -1,10 +1,10 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.user.service.admin.message;
+package com.hyjf.am.trade.service.admin.message;
 
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
-import com.hyjf.am.user.dao.model.customize.SmsCodeCustomize;
+import com.hyjf.am.trade.dao.model.customize.SmsCodeCustomize;
 
 import java.util.List;
 
@@ -20,17 +20,10 @@ public interface SmsCodeService {
      */
     List<SmsCodeCustomize> queryUser(SmsCodeUserRequest request);
 
-
-
     /**
-     * 校验千乐验证码
-     * @param phone
-     * @param code
+     * 筛选符合条件的用户数量
+     * @param request
      * @return
      */
-    int checkQianleMobileCode(String phone, String code);
-
-
-    int save(String mobile, String verificationType, String verificationCode, String platform, Integer status);
-
+    int countUser(SmsCodeUserRequest request);
 }

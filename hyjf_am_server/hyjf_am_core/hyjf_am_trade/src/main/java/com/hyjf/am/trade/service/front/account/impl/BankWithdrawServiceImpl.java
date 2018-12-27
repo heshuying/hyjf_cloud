@@ -85,7 +85,6 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
 
         BankCallBeanVO bean= request.getBankCallBeanVO();
         AccountWithdrawVO accountWithdraw = request.getAccountWithdrawVO();
-        BankCardVO bankCard = request.getBankCardVO();
         String fee = request.getWithdrawFee();
 
         String ordId = accountWithdraw.getNid();
@@ -93,7 +92,6 @@ public class BankWithdrawServiceImpl extends BaseServiceImpl implements BankWith
         // 当前时间
         int nowTime = GetDate.getNowTime10();
 
-        // TODO
         Date nowDate = new Date();
         if (BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode()) || "CE999028".equals(bean.getRetCode())) {
             if("00".equals(bean.getResult()) && !"1".equals(bean.getOrFlag())){

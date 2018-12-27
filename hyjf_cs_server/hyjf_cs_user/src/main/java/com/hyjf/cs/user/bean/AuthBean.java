@@ -1,12 +1,19 @@
 package com.hyjf.cs.user.bean;
 
 public class AuthBean extends BaseBean {
-	
-	public static final String AUTH_TYPE_AUTO_BID = "autoBid";
-	public static final String AUTH_TYPE_AUTO_CREDIT = "autoCredit";
-	public static final String AUTH_TYPE_PAYMENT_AUTH = "paymentAuth";
-	public static final String AUTH_TYPE_REPAY_AUTH = "repayAuth";
-	public static final String AUTH_TYPE_MERGE_AUTH = "mergeAuth";
+
+    //自动投标授权
+    public static final String AUTH_TYPE_AUTO_BID = "autoBid";
+    //自动债转授权
+    public static final String AUTH_TYPE_AUTO_CREDIT = "autoCredit";
+    //服务费授权
+    public static final String AUTH_TYPE_PAYMENT_AUTH = "paymentAuth";
+    //还款授权
+    public static final String AUTH_TYPE_REPAY_AUTH = "repayAuth";
+    //合并授权（自动投标、自动债转、服务费授权）三合一
+    public static final String AUTH_TYPE_MERGE_AUTH = "mergeAuth";
+    //（服务费授权、还款授权）二合一
+    public static final String AUTH_TYPE_PAY_REPAY_AUTH = "payRepayAuth";
 	
 	public static final String AUTH_START_OPEN = "1";
 	public static final String AUTH_START_CLOSE = "0";
@@ -50,6 +57,8 @@ public class AuthBean extends BaseBean {
     private  boolean autoCreditStatus=false;
     //缴费授权标识
     private  boolean paymentAuthStatus=false;
+    //还款授权标识
+    private  boolean repayAuthAuthStatus=false;
     
     public Integer getUserId() {
         return userId;
@@ -164,5 +173,11 @@ public class AuthBean extends BaseBean {
     }
     public void setSuccessUrl(String successUrl) {
         this.successUrl = successUrl;
+    }
+    public boolean getRepayAuthAuthStatus() {
+        return repayAuthAuthStatus;
+    }
+    public void setRepayAuthAuthStatus(boolean repayAuthAuthStatus) {
+        this.repayAuthAuthStatus = repayAuthAuthStatus;
     }
 }

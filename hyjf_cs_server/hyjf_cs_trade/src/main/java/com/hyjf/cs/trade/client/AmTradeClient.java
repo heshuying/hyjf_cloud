@@ -2614,5 +2614,18 @@ public interface AmTradeClient {
 
     /** 测评获取冻结金额和代收本经明细 */
     CallCenterAccountDetailVO queryAccountEvalDetail(Integer userId);
+
+    /**
+     * 获取需要推送法大大协议的标的
+     * add by yangchangwei 2018-12-26
+     * @return
+     */
+    List<BorrowApicronVO> getFddPushBorrowList();
+
+    /**
+     * 开始推送法大大协议
+     * @param borrowApicronVO
+     */
+    void updateFddPush(BorrowApicronVO borrowApicronVO);
 }
 

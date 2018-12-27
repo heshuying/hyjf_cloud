@@ -1,19 +1,14 @@
 package com.hyjf.admin.client;
 
-import java.util.List;
-import java.util.Map;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.*;
-import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.response.config.WhereaboutsPageResponse;
 import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.admin.*;
-import com.hyjf.am.resquest.admin.AppChannelStatisticsDetailRequest;
 import com.hyjf.am.resquest.trade.CorpOpenAccountRecordRequest;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.vo.admin.*;
@@ -22,6 +17,9 @@ import com.hyjf.am.vo.admin.promotion.channel.UtmChannelVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -470,7 +468,7 @@ public interface AmUserClient {
     /**
      * 导出根据参数查询用户画像信息
      *
-     * @param mapParam
+     * @param userPortraitRequest
      * @return
      */
     UserPortraitResponse exportRecordList(UserPortraitRequest userPortraitRequest);
@@ -1351,4 +1349,11 @@ public interface AmUserClient {
      * @return
      */
     int selectUserMemberCount(UserPayAuthRequest userPayAuthRequest);
+
+    /**
+     * 在筛选条件下查询出用户数量
+     * @param requestBean
+     * @return
+     */
+    int countUser(SmsCodeRequestBean requestBean);
 }

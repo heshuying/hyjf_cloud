@@ -26,6 +26,16 @@ public class MyProfileVO {
 
     private BigDecimal planAccountWait; //我的计划
 
+    private Integer roleId; //用户角色 1投资人 2借款人 3担保机构
+
+    public Integer getRoleId() {
+        return roleId;
+    }
+
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
+    }
+
     public UserAccountInfoVO getUserAccountInfo() {
         return userAccountInfo;
     }
