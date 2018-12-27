@@ -424,4 +424,10 @@ public interface AmTradeClient {
      * 获取正确的额borrowVo对象
      */
     RightBorrowVO getRightBorrowByNid(String borrowId);
+
+    /**
+     * 获得所有协议类型
+     * @return
+     */
+    List<ProtocolTemplateVO> getProtocolTypes();
 }

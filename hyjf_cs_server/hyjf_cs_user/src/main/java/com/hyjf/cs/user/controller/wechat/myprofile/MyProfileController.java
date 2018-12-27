@@ -6,6 +6,7 @@ package com.hyjf.cs.user.controller.wechat.myprofile;
 import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.trade.coupon.CouponUserForAppCustomizeVO;
 import com.hyjf.am.vo.trade.coupon.CouponUserListCustomizeVO;
+import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.common.bean.result.WeChatResult;
 import com.hyjf.cs.user.config.SystemConfig;
@@ -60,6 +61,15 @@ public class MyProfileController extends BaseUserController {
         myProfileVO.setUserAccountInfo(userAccountInfo);
         //设置用户账户信息
         myProfileService.buildOutInfo(userId, myProfileVO);
+        //获得用户角色
+        UserInfoVO userInfo = myProfileService.getUserInfo(userId);
+        if (userInfo.getRoleId() == null || userInfo == null ){
+            result.setStatus("99");
+            result.setStatusDesc("用户信息不存在！");
+            return result;
+        }
+        //1、出借人（投资人）2、借款人3、担保机构授权
+        myProfileVO.setRoleId(userInfo.getRoleId());
 
         result.setObject(myProfileVO);
 
