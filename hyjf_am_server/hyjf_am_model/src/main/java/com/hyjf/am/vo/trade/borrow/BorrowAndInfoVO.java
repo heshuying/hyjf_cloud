@@ -488,7 +488,17 @@ public class BorrowAndInfoVO extends BaseVO implements Serializable {
 
     private String repayLastTimeStr;
 
+    private String investLevel;
+
     private static final long serialVersionUID = 1L;
+
+    public String getInvestLevel() {
+        return investLevel;
+    }
+
+    public void setInvestLevel(String investLevel) {
+        this.investLevel = investLevel;
+    }
 
     public Integer getId() {
         return id;

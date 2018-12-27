@@ -182,7 +182,6 @@ public class SafeServiceImpl extends BaseUserServiceImpl implements SafeService 
         }else {
             resultMap.put("iconUrl", "");
         }
-        resultMap.put("inviteLink", systemConfig.getFrontHost() + "/landingPage/init.do?refferUserId=" + user.getUserId());
         return resultMap;
     }
 

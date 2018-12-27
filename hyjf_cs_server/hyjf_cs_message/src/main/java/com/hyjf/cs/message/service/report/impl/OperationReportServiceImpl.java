@@ -164,25 +164,22 @@ public class OperationReportServiceImpl  implements OperationReportService {
 							operationReportCustomize.getSortMonth()));
 				}
 			}
-			Collections.sort(recordList, new Comparator<OperationReportVO>() {
-				@Override
-				public int compare(OperationReportVO o1, OperationReportVO o2) {
-					String arg1 = "";
-					String arg2 = "";
-					if (o1.getSortMonth() < 10) {
-						arg1 = o1.getYear() + 0 + o1.getSortMonth() + o1.getSortDay();
-					} else {
-						arg1 = o1.getYear() + o1.getSortMonth() + o1.getSortDay();
-					}
-					if (o2.getSortMonth() < 10) {
-						arg2 = o2.getYear() + 0 + o2.getSortMonth() + o2.getSortDay();
-					} else {
-						arg2 = o2.getYear() + o2.getSortMonth() + o2.getSortDay();
-					}
-					int o = arg2.compareTo(arg1);
-					return o;
-				}
-			});
+			Collections.sort(recordList, (o1, o2) -> {
+                String arg1 = "";
+                String arg2 = "";
+                if (o1.getSortMonth() < 10) {
+                    arg1 = o1.getYear() + 0 + o1.getSortMonth() + o1.getSortDay();
+                } else {
+                    arg1 = o1.getYear() + o1.getSortMonth() + o1.getSortDay();
+                }
+                if (o2.getSortMonth() < 10) {
+                    arg2 = o2.getYear() + 0 + o2.getSortMonth() + o2.getSortDay();
+                } else {
+                    arg2 = o2.getYear() + o2.getSortMonth() + o2.getSortDay();
+                }
+                int o = arg2.compareTo(arg1);
+                return o;
+            });
 			response.put("recordList", recordList);
 			response.put("success", "success");
 		} else {

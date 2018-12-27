@@ -3163,7 +3163,7 @@ public class StringUtil {
      */
     public static String getTenThousandOfANumber(Integer num) {
         if (num < 10000) {
-            return String.valueOf(num);
+            return String.valueOf(num) + "元";
         }
         String numStr = new DecimalFormat("#.00").format(num / 10000d);
         String[] ss = numStr.split("\\.");

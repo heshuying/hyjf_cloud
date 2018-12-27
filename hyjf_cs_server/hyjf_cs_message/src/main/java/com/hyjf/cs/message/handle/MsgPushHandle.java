@@ -130,6 +130,12 @@ public class MsgPushHandle {
 			logger.error("未找到对应的模板:" + tplCode, e);
 			return -3;
 		}
+
+		if(messagePushTemplate == null){
+			logger.warn("未找到对应的模板, tplCode is :{}", tplCode);
+			return -3;
+		}
+
 		try {
 			String messageStr = messagePushTemplate.getTemplateContent();
 			if (Validator.isNotNull(messageStr)) {

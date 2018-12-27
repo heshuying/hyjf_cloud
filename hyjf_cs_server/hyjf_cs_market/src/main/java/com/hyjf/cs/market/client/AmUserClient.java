@@ -3,6 +3,7 @@ package com.hyjf.cs.market.client;
 import com.hyjf.am.vo.admin.UtmVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
 import com.hyjf.am.vo.user.EvalationCustomizeVO;
+import com.hyjf.am.vo.user.UserUtmInfoCustomizeVO;
 
 import java.util.Date;
 import java.util.List;
@@ -85,4 +86,13 @@ public interface AmUserClient {
      * @return
      */
     List<EvalationCustomizeVO> getEvalationRecord();
+
+    /**
+     * 通过当前用户ID 查询用户所在一级分部,从而关联用户所属渠道
+     * @param userId
+     * @return
+     * @Author : huanghui
+     */
+    UserUtmInfoCustomizeVO getUserUtmInfo(Integer userId);
+
 }

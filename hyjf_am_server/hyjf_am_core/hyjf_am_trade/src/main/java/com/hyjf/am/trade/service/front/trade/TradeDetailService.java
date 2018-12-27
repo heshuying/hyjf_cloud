@@ -7,6 +7,7 @@ import com.hyjf.am.trade.dao.model.customize.WebUserRechargeListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserTradeListCustomize;
 import com.hyjf.am.trade.dao.model.customize.WebUserWithdrawListCustomize;
 import com.hyjf.am.trade.service.BaseService;
+import com.hyjf.am.vo.trade.EvaluationConfigVO;
 
 import java.util.List;
 
@@ -30,4 +31,6 @@ public interface TradeDetailService  extends BaseService {
     List<AppTradeListCustomize> searchAppTradeDetailList(AppTradeDetailBeanRequest request);
 
     int countAppTradeDetailListRecordTotal(AppTradeDetailBeanRequest request);
+
+    List<EvaluationConfigVO> selectEvaluationConfigList(EvaluationConfigVO request);
 }
