@@ -1115,5 +1115,10 @@ public interface AmAdminClient {
      */
     AppUtmRegResponse exportStatisticsList(AppChannelStatisticsDetailRequest request);
 
-
+    /**
+     * 查询邀请明细列表
+     * @param naMiMarketingRequest
+     * @return
+     */
+    NaMiMarketingResponse getNaMiMarketingList(NaMiMarketingRequest naMiMarketingRequest);
 }

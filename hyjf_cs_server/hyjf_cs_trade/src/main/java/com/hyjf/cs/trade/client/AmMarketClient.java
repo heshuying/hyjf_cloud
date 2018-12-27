@@ -3,8 +3,11 @@
  */
 package com.hyjf.cs.trade.client;
 
+import com.hyjf.am.response.StringResponse;
+import com.hyjf.am.resquest.admin.ReturnCashRequest;
 import com.hyjf.am.resquest.trade.InvitePrizeConfVO;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -15,4 +18,9 @@ public interface AmMarketClient {
 
 	List<InvitePrizeConfVO> getListByGroupCode(String groupCode);
 
+	void updateJoinTime(String borrowNid, Integer nowTime);
+
+	StringResponse checkActivityIfAvailable(Integer activityId);
+
+	void saveReturnCash(ReturnCashRequest returnCashRequest);
 }

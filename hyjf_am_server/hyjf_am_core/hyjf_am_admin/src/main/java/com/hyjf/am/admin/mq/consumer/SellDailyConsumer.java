@@ -75,151 +75,153 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
             // app推广单独查询
             SellDailyVO appSellDaily = null;
             long timeStart = System.currentTimeMillis();
-            switch (Integer.parseInt(column)) {
-                case 1:
-                    list = sellDailyService.countTotalInvestOnMonth(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-                    ocSellDailyList = sellDailyService.countTotalInvestOnMonth(startTime, endTime,
-                            QUERY_OC_THREE_DIVISION_TYPE);
-                    shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                            : ocSellDailyList.get(0);
-                    appSellDailyList = sellDailyService.countTotalInvestOnMonth(startTime, endTime, QUERY_APP_TYPE);
-                    appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                            : appSellDailyList.get(0);
-                    break;
-                case 2:
-                    list = sellDailyService.countTotalRepayOnMonth(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-                    ocSellDailyList = sellDailyService.countTotalRepayOnMonth(startTime, endTime,
-                            QUERY_OC_THREE_DIVISION_TYPE);
-                    shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                            : ocSellDailyList.get(0);
-                    break;
-                case 3:
-                    list = sellDailyService.countTotalInvestOnPreviousMonth(startTime, endTime,
-                            QUERY_ALL_DIVISION_TYPE);
-                    ocSellDailyList = sellDailyService.countTotalInvestOnPreviousMonth(startTime, endTime,
-                            QUERY_OC_THREE_DIVISION_TYPE);
-                    shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                            : ocSellDailyList.get(0);
-                    appSellDailyList = sellDailyService.countTotalInvestOnPreviousMonth(startTime, endTime,
-                            QUERY_APP_TYPE);
-                    appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                            : appSellDailyList.get(0);
-                    break;
-                case 5:
-                    list = sellDailyService.countTotalWithdrawOnMonth(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-                    ocSellDailyList = sellDailyService.countTotalWithdrawOnMonth(startTime, endTime,
-                            QUERY_OC_THREE_DIVISION_TYPE);
-                    shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                            : ocSellDailyList.get(0);
-                    break;
-                case 7:
-                    list = sellDailyService.countTotalRechargeOnMonth(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-                    ocSellDailyList = sellDailyService.countTotalRechargeOnMonth(startTime, endTime,
-                            QUERY_OC_THREE_DIVISION_TYPE);
-                    shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                            : ocSellDailyList.get(0);
-                    break;
-                case 8:
-                    list = sellDailyService.countTotalAnnualInvestOnMonth(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-                    ocSellDailyList = sellDailyService.countTotalAnnualInvestOnMonth(startTime, endTime,
-                            QUERY_OC_THREE_DIVISION_TYPE);
-                    shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                            : ocSellDailyList.get(0);
-                    appSellDailyList = sellDailyService.countTotalAnnualInvestOnMonth(startTime, endTime,
-                            QUERY_APP_TYPE);
-                    appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                            : appSellDailyList.get(0);
-                    break;
-                case 9:
-                    list = sellDailyService.countTotalAnnualInvestOnPreviousMonth(startTime, endTime,
-                            QUERY_ALL_DIVISION_TYPE);
-                    ocSellDailyList = sellDailyService.countTotalAnnualInvestOnPreviousMonth(startTime, endTime,
-                            QUERY_OC_THREE_DIVISION_TYPE);
-                    shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                            : ocSellDailyList.get(0);
-                    appSellDailyList = sellDailyService.countTotalAnnualInvestOnPreviousMonth(startTime, endTime,
-                            QUERY_APP_TYPE);
-                    appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                            : appSellDailyList.get(0);
-                    break;
-                case 11:
-                    list = sellDailyService.countTotalTenderYesterday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-                    ocSellDailyList = sellDailyService.countTotalTenderYesterday(startTime, endTime,
-                            QUERY_OC_THREE_DIVISION_TYPE);
-                    shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                            : ocSellDailyList.get(0);
-                    appSellDailyList = sellDailyService.countTotalTenderYesterday(startTime, endTime, QUERY_APP_TYPE);
-                    appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                            : appSellDailyList.get(0);
-                    break;
-                case 12:
-                    list = sellDailyService.countTotalRepayYesterday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-                    ocSellDailyList = sellDailyService.countTotalRepayYesterday(startTime, endTime,
-                            QUERY_OC_THREE_DIVISION_TYPE);
-                    shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                            : ocSellDailyList.get(0);
-                    break;
-                case 13:
-                    list = sellDailyService.countTotalAnnualInvestYesterday(startTime, endTime,
-                            QUERY_ALL_DIVISION_TYPE);
-                    ocSellDailyList = sellDailyService.countTotalAnnualInvestYesterday(startTime, endTime,
-                            QUERY_OC_THREE_DIVISION_TYPE);
-                    shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                            : ocSellDailyList.get(0);
-                    appSellDailyList = sellDailyService.countTotalAnnualInvestYesterday(startTime, endTime,
-                            QUERY_APP_TYPE);
-                    appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                            : appSellDailyList.get(0);
-                    break;
-                case 14:
-                    list = sellDailyService.countTotalWithdrawYesterday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-                    ocSellDailyList = sellDailyService.countTotalWithdrawYesterday(startTime, endTime,
-                            QUERY_OC_THREE_DIVISION_TYPE);
-                    shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                            : ocSellDailyList.get(0);
-                    break;
-                case 15:
-                    list = sellDailyService.countTotalRechargeYesterday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-                    ocSellDailyList = sellDailyService.countTotalRechargeYesterday(startTime, endTime,
-                            QUERY_OC_THREE_DIVISION_TYPE);
-                    shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                            : ocSellDailyList.get(0);
-                    break;
-                case 17:
-                    list = sellDailyService.countNoneRepayToday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-                    ocSellDailyList = sellDailyService.countNoneRepayToday(startTime, endTime,
-                            QUERY_OC_THREE_DIVISION_TYPE);
-                    shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                            : ocSellDailyList.get(0);
-                    break;
-                case 18:
-                    list = sellDailyService.countRegisterTotalYesterday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-                    ocSellDailyList = sellDailyService.countRegisterTotalYesterday(startTime, endTime,
-                            QUERY_OC_THREE_DIVISION_TYPE);
-                    shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                            : ocSellDailyList.get(0);
-                    break;
-                case 19:
-                    list = sellDailyService.countRechargeGt3000UserNum(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-                    ocSellDailyList = sellDailyService.countRechargeGt3000UserNum(startTime, endTime,
-                            QUERY_OC_THREE_DIVISION_TYPE);
-                    shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                            : ocSellDailyList.get(0);
-                    break;
-                case 20:
-                    list = sellDailyService.countInvestGt3000UserNum(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-                    ocSellDailyList = sellDailyService.countInvestGt3000UserNum(startTime, endTime,
-                            QUERY_OC_THREE_DIVISION_TYPE);
-                    shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                            : ocSellDailyList.get(0);
-                    break;
-                case 21:
-                    list = sellDailyService.countInvestGt3000MonthUserNum(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
-                    ocSellDailyList = sellDailyService.countInvestGt3000MonthUserNum(startTime, endTime,
-                            QUERY_OC_THREE_DIVISION_TYPE);
-                    shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
-                            : ocSellDailyList.get(0);
-                    break;
+            if (column != null) {
+                switch (Integer.parseInt(column)) {
+                    case 1:
+                        list = sellDailyService.countTotalInvestOnMonth(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
+                        ocSellDailyList = sellDailyService.countTotalInvestOnMonth(startTime, endTime,
+                                QUERY_OC_THREE_DIVISION_TYPE);
+                        shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
+                                : ocSellDailyList.get(0);
+                        appSellDailyList = sellDailyService.countTotalInvestOnMonth(startTime, endTime, QUERY_APP_TYPE);
+                        appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
+                                : appSellDailyList.get(0);
+                        break;
+                    case 2:
+                        list = sellDailyService.countTotalRepayOnMonth(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
+                        ocSellDailyList = sellDailyService.countTotalRepayOnMonth(startTime, endTime,
+                                QUERY_OC_THREE_DIVISION_TYPE);
+                        shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
+                                : ocSellDailyList.get(0);
+                        break;
+                    case 3:
+                        list = sellDailyService.countTotalInvestOnPreviousMonth(startTime, endTime,
+                                QUERY_ALL_DIVISION_TYPE);
+                        ocSellDailyList = sellDailyService.countTotalInvestOnPreviousMonth(startTime, endTime,
+                                QUERY_OC_THREE_DIVISION_TYPE);
+                        shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
+                                : ocSellDailyList.get(0);
+                        appSellDailyList = sellDailyService.countTotalInvestOnPreviousMonth(startTime, endTime,
+                                QUERY_APP_TYPE);
+                        appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
+                                : appSellDailyList.get(0);
+                        break;
+                    case 5:
+                        list = sellDailyService.countTotalWithdrawOnMonth(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
+                        ocSellDailyList = sellDailyService.countTotalWithdrawOnMonth(startTime, endTime,
+                                QUERY_OC_THREE_DIVISION_TYPE);
+                        shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
+                                : ocSellDailyList.get(0);
+                        break;
+                    case 7:
+                        list = sellDailyService.countTotalRechargeOnMonth(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
+                        ocSellDailyList = sellDailyService.countTotalRechargeOnMonth(startTime, endTime,
+                                QUERY_OC_THREE_DIVISION_TYPE);
+                        shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
+                                : ocSellDailyList.get(0);
+                        break;
+                    case 8:
+                        list = sellDailyService.countTotalAnnualInvestOnMonth(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
+                        ocSellDailyList = sellDailyService.countTotalAnnualInvestOnMonth(startTime, endTime,
+                                QUERY_OC_THREE_DIVISION_TYPE);
+                        shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
+                                : ocSellDailyList.get(0);
+                        appSellDailyList = sellDailyService.countTotalAnnualInvestOnMonth(startTime, endTime,
+                                QUERY_APP_TYPE);
+                        appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
+                                : appSellDailyList.get(0);
+                        break;
+                    case 9:
+                        list = sellDailyService.countTotalAnnualInvestOnPreviousMonth(startTime, endTime,
+                                QUERY_ALL_DIVISION_TYPE);
+                        ocSellDailyList = sellDailyService.countTotalAnnualInvestOnPreviousMonth(startTime, endTime,
+                                QUERY_OC_THREE_DIVISION_TYPE);
+                        shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
+                                : ocSellDailyList.get(0);
+                        appSellDailyList = sellDailyService.countTotalAnnualInvestOnPreviousMonth(startTime, endTime,
+                                QUERY_APP_TYPE);
+                        appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
+                                : appSellDailyList.get(0);
+                        break;
+                    case 11:
+                        list = sellDailyService.countTotalTenderYesterday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
+                        ocSellDailyList = sellDailyService.countTotalTenderYesterday(startTime, endTime,
+                                QUERY_OC_THREE_DIVISION_TYPE);
+                        shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
+                                : ocSellDailyList.get(0);
+                        appSellDailyList = sellDailyService.countTotalTenderYesterday(startTime, endTime, QUERY_APP_TYPE);
+                        appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
+                                : appSellDailyList.get(0);
+                        break;
+                    case 12:
+                        list = sellDailyService.countTotalRepayYesterday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
+                        ocSellDailyList = sellDailyService.countTotalRepayYesterday(startTime, endTime,
+                                QUERY_OC_THREE_DIVISION_TYPE);
+                        shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
+                                : ocSellDailyList.get(0);
+                        break;
+                    case 13:
+                        list = sellDailyService.countTotalAnnualInvestYesterday(startTime, endTime,
+                                QUERY_ALL_DIVISION_TYPE);
+                        ocSellDailyList = sellDailyService.countTotalAnnualInvestYesterday(startTime, endTime,
+                                QUERY_OC_THREE_DIVISION_TYPE);
+                        shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
+                                : ocSellDailyList.get(0);
+                        appSellDailyList = sellDailyService.countTotalAnnualInvestYesterday(startTime, endTime,
+                                QUERY_APP_TYPE);
+                        appSellDaily = CollectionUtils.isEmpty(appSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
+                                : appSellDailyList.get(0);
+                        break;
+                    case 14:
+                        list = sellDailyService.countTotalWithdrawYesterday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
+                        ocSellDailyList = sellDailyService.countTotalWithdrawYesterday(startTime, endTime,
+                                QUERY_OC_THREE_DIVISION_TYPE);
+                        shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
+                                : ocSellDailyList.get(0);
+                        break;
+                    case 15:
+                        list = sellDailyService.countTotalRechargeYesterday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
+                        ocSellDailyList = sellDailyService.countTotalRechargeYesterday(startTime, endTime,
+                                QUERY_OC_THREE_DIVISION_TYPE);
+                        shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
+                                : ocSellDailyList.get(0);
+                        break;
+                    case 17:
+                        list = sellDailyService.countNoneRepayToday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
+                        ocSellDailyList = sellDailyService.countNoneRepayToday(startTime, endTime,
+                                QUERY_OC_THREE_DIVISION_TYPE);
+                        shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
+                                : ocSellDailyList.get(0);
+                        break;
+                    case 18:
+                        list = sellDailyService.countRegisterTotalYesterday(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
+                        ocSellDailyList = sellDailyService.countRegisterTotalYesterday(startTime, endTime,
+                                QUERY_OC_THREE_DIVISION_TYPE);
+                        shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
+                                : ocSellDailyList.get(0);
+                        break;
+                    case 19:
+                        list = sellDailyService.countRechargeGt3000UserNum(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
+                        ocSellDailyList = sellDailyService.countRechargeGt3000UserNum(startTime, endTime,
+                                QUERY_OC_THREE_DIVISION_TYPE);
+                        shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
+                                : ocSellDailyList.get(0);
+                        break;
+                    case 20:
+                        list = sellDailyService.countInvestGt3000UserNum(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
+                        ocSellDailyList = sellDailyService.countInvestGt3000UserNum(startTime, endTime,
+                                QUERY_OC_THREE_DIVISION_TYPE);
+                        shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
+                                : ocSellDailyList.get(0);
+                        break;
+                    case 21:
+                        list = sellDailyService.countInvestGt3000MonthUserNum(startTime, endTime, QUERY_ALL_DIVISION_TYPE);
+                        ocSellDailyList = sellDailyService.countInvestGt3000MonthUserNum(startTime, endTime,
+                                QUERY_OC_THREE_DIVISION_TYPE);
+                        shOCSellDaily = CollectionUtils.isEmpty(ocSellDailyList) ? sellDailyService.constructionSellDaily(null, null)
+                                : ocSellDailyList.get(0);
+                        break;
+                }
             }
 
             // 2. 处理drawOrder=2特殊分部的数据

@@ -1,8 +1,12 @@
 package com.hyjf.cs.user.controller.web.invite;
 
 import com.hyjf.am.vo.user.MyInviteListCustomizeVO;
+import com.hyjf.am.vo.user.UserUtmInfoCustomizeVO;
+import com.hyjf.common.file.UploadFileUtils;
+import com.hyjf.common.util.QRCodeUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.util.Page;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.invite.InviteService;
 import io.swagger.annotations.Api;
@@ -13,8 +17,15 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -33,6 +44,49 @@ public class InviteController extends BaseUserController {
     @Autowired
     InviteService inviteService;
 
+    @Autowired
+    private SystemConfig systemConfig;
+
+    /**
+     *
+     * @param userId
+     * @param request
+     * @return
+     * @Author : huanghui
+     */
+    @ApiOperation(value = "我的邀请信息", notes = "我的邀请奖励和邀请链接")
+    @PostMapping(value = "/myInviteInfo", produces = "application/json; charset=utf-8")
+    public WebResult<Map<String,Object>> selectMyInviteInfo(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request){
+
+        WebResult<Map<String,Object>> result = new WebResult<>();
+
+        // 初始化返回Map
+        Map<String,Object> resultMap = new HashMap<>();
+
+        Map<String,String> pageData = inviteService.selectInvitePageData(String.valueOf(userId));
+
+        String inviteLink = null;
+        String inviteLinkWechat = null;
+
+        UserUtmInfoCustomizeVO userUtmInfo = inviteService.getUserUtmInfo(userId);
+        if (userUtmInfo != null){
+            inviteLink = systemConfig.getWebQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
+            inviteLinkWechat = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
+        }else {
+            inviteLink = systemConfig.getWebQrcodeUrl() + "refferUserId=" + userId;
+            inviteLinkWechat = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId;
+        }
+        // 二维码的下载地址
+        String downloadUrl = systemConfig.webHost + "/hyjf-web/user/invite/download/" + userId;
+        logger.info("二维码下载地址：" + downloadUrl);
+
+        resultMap.putAll(pageData);
+        resultMap.put("downloadUrl", downloadUrl);
+        resultMap.put("inviteLink", inviteLink);
+        resultMap.put("inviteLinkWechat", inviteLinkWechat);
+        result.setData(resultMap);
+        return result;
+    }
     /**
      * 我的邀请列表
      * @auther: hesy
@@ -65,6 +119,82 @@ public class InviteController extends BaseUserController {
 
         result.setPage(page);
         return result;
+    }
+
+    /**
+     * 下载二维码
+     */
+    @GetMapping("/download/{userId}")
+    public void download(@PathVariable  Integer userId, HttpServletRequest request, HttpServletResponse response){
+        logger.info("开始生成二维码图片，userId：" + userId);
+        try {
+            String downloadUrl = null;
+            UserUtmInfoCustomizeVO userUtmInfo = inviteService.getUserUtmInfo(userId);
+            if (userUtmInfo != null){
+                downloadUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
+            }else {
+                downloadUrl = systemConfig.getWechatQrcodeUrl() + "refferUserId=" + userId;
+            }
+            QRCodeUtil.encode(downloadUrl, String.valueOf(userId),systemConfig.getPhysicalPath() + systemConfig.getFileUpload(), false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String webhost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
+        String fileUploadRealPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
+        logger.info("开始下载二维码：userid：" + userId + " webhost: " + webhost +" fileUploadRealPath: " + fileUploadRealPath);
+        try {
+            logger.info("download url: " + webhost + fileUploadRealPath+String.valueOf(userId)+".jpg");
+            this.getServletFile(request, response, webhost + fileUploadRealPath+String.valueOf(userId)+".jpg", String.valueOf(userId)+".jpg");
+        } catch (Exception e) {
+            logger.error("下载二维码异常", e);
+        }
+    }
+
+    /**
+     * 通过HTTP方式获取文件,文件类型.jpg
+     *
+     * @param strUrl
+     * @param fileName
+     * @return
+     * @throws IOException
+     */
+    public boolean getServletFile(HttpServletRequest request, HttpServletResponse response, String strUrl, String fileName) throws IOException {
+
+        URL url = new URL(strUrl);
+        HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+        // 设置是否向httpUrlConnection输出，因为这个是post请求，参数要放在
+        // http正文内，因此需要设为true, 默认情况下是false;
+        conn.setDoOutput(true);
+        // 设置是否从httpUrlConnection读入，默认情况下是true;
+        conn.setDoInput(true);
+        // Post 请求不能使用缓存
+        conn.setUseCaches(false);
+        conn.setRequestProperty("Content-type", "application/x-java-serialized-object");
+        conn.setRequestProperty("Accept-Charset", "UTF-8");
+        // 设定请求的方法为"POST"，默认是GET
+        conn.setRequestMethod("GET");
+        DataInputStream input =null;
+        ServletOutputStream output = null;
+        byte[] buffer = new byte[1024];
+        int count = 0;
+        try {
+            output = response.getOutputStream();
+            response.reset();
+            response.setContentType("image/jpeg;charset=utf-8");
+            response.setHeader("content-disposition", "attachment;filename=" + new String((fileName).getBytes("UTF-8"), "ISO8859-1"));
+            input=new DataInputStream(conn.getInputStream());
+            while ((count = input.read(buffer)) != -1) {
+                output.write(buffer, 0, count);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            output.flush();
+            output.close();
+            input.close();
+        }
+        return true;
     }
 
 }

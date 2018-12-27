@@ -10,10 +10,7 @@ import com.hyjf.am.response.user.WrbInvestSumResponse;
 import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
 import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
-import com.hyjf.am.resquest.trade.ApiUserWithdrawRequest;
-import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
-import com.hyjf.am.resquest.trade.MyCouponListRequest;
-import com.hyjf.am.resquest.trade.SynBalanceBeanRequest;
+import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BatchUserPortraitRequest;
 import com.hyjf.am.resquest.user.HtlTradeRequest;
 import com.hyjf.am.vo.admin.UnderLineRechargeVO;
@@ -424,4 +421,7 @@ public interface AmTradeClient {
      * 获取正确的额borrowVo对象
      */
     RightBorrowVO getRightBorrowByNid(String borrowId);
+
+    Integer selectMyCouponCount(MyCouponListRequest requestBean);
+    BigDecimal selectMyRewardTotal(MyInviteListRequest requestBean);
 }

@@ -5863,6 +5863,22 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 	}
 
 	/**
+	 * 获取风险测评配置
+	 *
+	 * @return
+	 */
+	@Override
+	public EvaluationConfig selectEvaluationConfig() {
+		EvaluationConfigExample example = new EvaluationConfigExample();
+		EvaluationConfigExample.Criteria cra = example.createCriteria();
+		List<EvaluationConfig> list = this.evaluationConfigMapper.selectByExample(example);
+		if (list != null && list.size() >0 ){
+			return list.get(0);
+		}
+		return null;
+	}
+
+	/**
 	 * 校验受托用户名
 	 *
 	 * @param instCode

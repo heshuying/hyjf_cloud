@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.client.impl;
 
+import com.hyjf.am.response.BigDecimalResponse;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
@@ -19,10 +20,7 @@ import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
 import com.hyjf.am.resquest.api.WrbInvestRequest;
 import com.hyjf.am.resquest.app.AppProjectContractDetailBeanRequest;
 import com.hyjf.am.resquest.app.AppRepayPlanListBeanRequest;
-import com.hyjf.am.resquest.trade.ApiUserWithdrawRequest;
-import com.hyjf.am.resquest.trade.AssetManageBeanRequest;
-import com.hyjf.am.resquest.trade.MyCouponListRequest;
-import com.hyjf.am.resquest.trade.SynBalanceBeanRequest;
+import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BatchUserPortraitRequest;
 import com.hyjf.am.resquest.user.HtlTradeRequest;
 import com.hyjf.am.vo.admin.UnderLineRechargeVO;
@@ -843,5 +841,37 @@ public class AmTradeClientImpl implements AmTradeClient {
             return response.getResult();
         }
         return null;
+    }
+
+    /**
+     * 统计总的优惠券数
+     *
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public Integer selectMyCouponCount(MyCouponListRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/coupon/myCouponCount";
+        IntegerResponse response = restTemplate.postForEntity(url, requestBean, IntegerResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+    /**
+     * 统计总的奖励金额
+     *
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public BigDecimal selectMyRewardTotal(MyInviteListRequest requestBean) {
+        String url = "http://AM-TRADE/am-trade/reward/myRewardTotal";
+        BigDecimalResponse response = restTemplate.postForEntity(url, requestBean, BigDecimalResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultDec();
+        }
+        return BigDecimal.ZERO;
     }
 }

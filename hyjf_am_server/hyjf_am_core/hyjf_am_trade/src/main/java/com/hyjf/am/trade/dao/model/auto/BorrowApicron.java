@@ -240,7 +240,7 @@ public class BorrowApicron implements Serializable {
      *
      * @mbggenerated
      */
-    private Boolean agreementStatus;
+    private Integer agreementStatus;
 
     /**
      * 创建时间
@@ -545,11 +545,11 @@ public class BorrowApicron implements Serializable {
         this.isAllrepay = isAllrepay;
     }
 
-    public Boolean getAgreementStatus() {
+    public Integer getAgreementStatus() {
         return agreementStatus;
     }
 
-    public void setAgreementStatus(Boolean agreementStatus) {
+    public void setAgreementStatus(Integer agreementStatus) {
         this.agreementStatus = agreementStatus;
     }
 

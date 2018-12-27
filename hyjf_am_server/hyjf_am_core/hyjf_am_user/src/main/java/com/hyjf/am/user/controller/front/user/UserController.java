@@ -634,20 +634,20 @@ public class UserController extends BaseController {
             for(EvalationCustomizeVO evalStr : evalationVOList){
                 switch (evalStr.getEvalType()){
                     case "保守型":
-                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
-                                RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE))));
+                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
+                                RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_CONSERVATIVE)).intValue()));
                         break;
                     case "稳健型":
-                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
-                                RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS))));
+                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
+                                RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_ROBUSTNESS)).intValue()));
                         break;
                     case "成长型":
-                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
-                                RedisUtils.get(RedisConstants.REVALUATION_GROWTH) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_GROWTH))));
+                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
+                                RedisUtils.get(RedisConstants.REVALUATION_GROWTH) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_GROWTH)).intValue()));
                         break;
                     case "进取型":
-                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Integer.valueOf(
-                                RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE))));
+                        evalStr.setRevaluationMoney(StringUtil.getTenThousandOfANumber(Double.valueOf(
+                                RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE) == null ? "0": RedisUtils.get(RedisConstants.REVALUATION_AGGRESSIVE)).intValue()));
                         break;
                     default:
                         evalStr.setRevaluationMoney("0");

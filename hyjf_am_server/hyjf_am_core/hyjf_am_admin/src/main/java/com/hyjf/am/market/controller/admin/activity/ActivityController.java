@@ -5,6 +5,7 @@ import com.hyjf.am.market.dao.model.auto.ActivityList;
 import com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize;
 import com.hyjf.am.market.service.ActivityService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.admin.ActivityListCustomizeResponse;
 import com.hyjf.am.response.admin.CouponTenderResponse;
 import com.hyjf.am.response.market.ActivityListResponse;
@@ -263,6 +264,25 @@ public class ActivityController {
             activityListVO.setAcEndTime(GetDate.getDateTimeMyTime(activityList.getTimeEnd()));
             response.setResult(activityListVO);
         }
+        return response;
+    }
+    @GetMapping("/checkActivityIfAvailable/{id}")
+    public StringResponse checkActivityIfAvailable(@PathVariable Integer id){
+        StringResponse response = new StringResponse();
+        ActivityList activityList = activityService.getActivityInfo(id);
+        if (activityList == null) {
+            response.setResultStr("104");
+            return response;
+        }
+        if (activityList.getTimeStart() > GetDate.getNowTime10()) {
+            response.setResultStr("101");
+            return response;
+        }
+        if (activityList.getTimeEnd() < GetDate.getNowTime10()) {
+            response.setResultStr("102");
+            return response;
+        }
+        response.setResultStr("000");
         return response;
     }
 }
