@@ -196,22 +196,25 @@ public class UserCenterController extends BaseController {
         {
             //邀请信息
             UserUtmInfoCustomizeVO userUtmInfo = userCenterService.getUserUtmInfo(Integer.valueOf(userId));
-            logger.info("获取用户所在渠道信息:" + userUtmInfo.getSourceId() + ":" + userUtmInfo.getSourceName());
 
+            Map<String, String> information = new HashMap<>();
             // web 着陆页URl 显示用
             String linkUrl = null;
             // 微信着陆页Url 二维码使用
             String linkUrlQr = null;
 
-            Map<String, String> information = new HashMap<>();
             if (userUtmInfo != null) {
+                logger.info("获取用户所在渠道信息:" + userUtmInfo.getSourceId() + ":" + userUtmInfo.getSourceName());
+
                 linkUrl = systemConfig.getWebLandingPageUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
                 linkUrlQr = systemConfig.getWechatLandingPageUrl() + "refferUserId=" + userId + "&utmId=" + userUtmInfo.getSourceId().toString() + "&utmSource=" + userUtmInfo.getSourceName();
-            } else {
+
+            }else {
                 // 已确认未关联渠道的用户
                 linkUrl = systemConfig.getWebLandingPageUrl() + "refferUserId=" + userId;
                 linkUrlQr = systemConfig.getWechatLandingPageUrl() + "refferUserId=" + userId;
             }
+
             information.put("linkUrl", linkUrl);
             information.put("linkUrlQr", linkUrlQr);
             userDetailInfoResponseBean.setInvitationInformation(information);
