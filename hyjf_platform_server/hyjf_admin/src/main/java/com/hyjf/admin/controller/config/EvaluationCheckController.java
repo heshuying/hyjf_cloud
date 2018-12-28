@@ -77,7 +77,7 @@ public class EvaluationCheckController extends BaseController {
 
 	@ApiOperation(value = "修改风险测评开关配置", notes = "修改风险测评开关配置")
 	@PostMapping("/updateAction")
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult updateAction(HttpServletRequest request, @RequestBody EvaluationCheckRequest requestBean) {
 		AdminSystemVO loginUser=getUser(request);
 		requestBean.setUpdateUser(loginUser.getUsername());
