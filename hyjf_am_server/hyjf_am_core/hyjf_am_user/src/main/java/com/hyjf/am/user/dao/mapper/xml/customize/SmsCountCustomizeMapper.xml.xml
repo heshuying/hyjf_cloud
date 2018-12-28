@@ -126,5 +126,23 @@
         ORDER BY s.posttime desc
         ) t
     </select>
+
+    <select id="queryUser" resultType="java.lang.String" parameterType="java.util.Map">
+        SELECT
+        mobile
+        FROM
+        ht_user
+        <where>
+            <if test="re_time_begin != null" >
+                AND create_time <![CDATA[>=]]> #{re_time_begin,jdbcType=INTEGER}
+            </if>
+            <if test="re_time_end != null" >
+                AND create_time <![CDATA[<=]]> #{re_time_end,jdbcType=INTEGER}
+            </if>
+            <if test="open_account!= null and open_account == 1" >
+                AND open_account = 1
+            </if>
+        </where>
+    </select>
 	
 </mapper>

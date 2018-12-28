@@ -8,6 +8,7 @@ import com.hyjf.am.user.dao.model.customize.OADepartmentCustomize;
 import com.hyjf.am.user.dao.model.customize.SmsCountCustomize;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author fq
@@ -21,4 +22,11 @@ public interface SmsCountCustomizeMapper {
     List<OADepartmentCustomize> queryDepartmentInfo();
 
     int selectCount(SmsCountRequest request);
+
+    /**
+     * 查询符合条件的用户
+     * @param params
+     * @return
+     */
+    List<String> queryUser(Map<String,Object> params);
 }

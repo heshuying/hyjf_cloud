@@ -13,7 +13,7 @@ import java.util.Map;
 public interface SmsCodeCustomizeMapper {
     /**
      *筛选符合条件的用户
-     * @param request
+     * @param params
      * @return
      */
     List<String> queryUser(Map<String,Object> params);

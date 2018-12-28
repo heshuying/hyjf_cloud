@@ -3,7 +3,9 @@
  */
 package com.hyjf.am.user.controller.admin.message;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.SmsCountCustomizeResponse;
+import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.resquest.user.SmsCountRequest;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.customize.OADepartmentCustomize;
@@ -113,6 +115,20 @@ public class SmsCountController extends BaseController {
         if (!CollectionUtils.isEmpty(list)) {
             List<OADepartmentCustomizeVO> voList = CommonUtils.convertBeanList(list, OADepartmentCustomizeVO.class);
             response.setList(voList);
+        }
+        return response;
+    }
+
+    /**
+     * 查询符合条件的用户的号码集合
+     * @return
+     */
+    @RequestMapping("/queryUser")
+    public Response queryUser(@RequestBody SmsCodeUserRequest request) {
+        Response response = new Response();
+        List<String> list = smsCountService.queryUser(request);
+        if (!CollectionUtils.isEmpty(list)) {
+            response.setResultList(list);
         }
         return response;
     }

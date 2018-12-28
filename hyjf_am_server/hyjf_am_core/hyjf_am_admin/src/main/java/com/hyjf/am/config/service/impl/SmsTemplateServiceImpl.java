@@ -121,13 +121,7 @@ public class SmsTemplateServiceImpl implements SmsTemplateService {
 			if (StringUtils.isNotBlank(request.getTplName())) {
 				criteria.andTplNameEqualTo(request.getTplName());
 			}
-
-			List<SmsTemplate> list = smsTemplateMapper.selectByExample(example);
-			if (!CollectionUtils.isEmpty(list)) {
-				return list.size();
-			} else {
-				return 0;
-			}
+			return smsTemplateMapper.countByExample(example);
 		}
 		return smsTemplateMapper.countByExample(example);
 	}
