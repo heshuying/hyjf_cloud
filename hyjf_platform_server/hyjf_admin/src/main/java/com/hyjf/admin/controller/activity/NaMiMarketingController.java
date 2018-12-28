@@ -79,6 +79,9 @@ public class NaMiMarketingController  extends BaseController {
             return new AdminResult<>(FAIL, response.getMessage());
         }
         List<NaMiMarketingVO> resultList = response.getResultList();
+        if(CollectionUtils.isEmpty(resultList)){
+            return new AdminResult<ListResult<NaMiMarketingVO>>(ListResult.build(resultList, 0));
+        }
         return new AdminResult<ListResult<NaMiMarketingVO>>(ListResult.build(resultList, response.getCount()));
     }
 
@@ -114,21 +117,25 @@ public class NaMiMarketingController  extends BaseController {
         request.setCurrPage(1);
         NaMiMarketingResponse response = naMiMarketingService.getRecordList(request);
         Integer totalCount = response.getCount();
+        if (totalCount == null) {
+            totalCount = 0;
+        }
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap1();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
-        String sheetNameTmp = "";
+        String sheetNameTmp = sheetName + "_第1页";
         if(totalCount==0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }
         for (int i = 1; i <= sheetCount; i++) {
-            sheetNameTmp = sheetName + "_第" + (i) + "页";
-            if(sheetCount==1) {
-                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  response.getResultList());
-            }else {
-                request.setCurrPage(sheetCount);
-                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  naMiMarketingService.getRecordList(request).getResultList());
+            sheetNameTmp = sheetName + "_第" + i + "页";
+            request.setCurrPage(i);
+            List<NaMiMarketingVO> resultList = naMiMarketingService.getRecordList(request).getResultList();
+            if (!CollectionUtils.isEmpty(resultList)) {
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,resultList );
             }
+
+
         }
         DataSet2ExcelSXSSFHelper.write2Response(req, res, fileName, workbook);
     }
@@ -151,20 +158,22 @@ public class NaMiMarketingController  extends BaseController {
         request.setCurrPage(1);
         NaMiMarketingResponse response = naMiMarketingService.getPerformanceList(request);
         Integer totalCount = response.getCount();
+        if (totalCount == null) {
+            totalCount = 0;
+        }
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMap2();
         Map<String, IValueFormatter> mapValueAdapter = buildValueAdapter();
-        String sheetNameTmp = "";
+        String sheetNameTmp = sheetName + "_第1页";
         if(totalCount==0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
         }
         for (int i = 1; i <= sheetCount; i++) {
-            sheetNameTmp = sheetName + "_第" + (i) + "页";
-            if(sheetCount==1) {
-                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  response.getResultList());
-            }else {
-                request.setCurrPage(sheetCount);
-                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  naMiMarketingService.getPerformanceList(request).getResultList());
+            sheetNameTmp = sheetName + "_第" + i + "页";
+            request.setCurrPage(i);
+            List<NaMiMarketingVO> resultList = naMiMarketingService.getPerformanceList(request).getResultList();
+            if (!CollectionUtils.isEmpty(resultList)) {
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,resultList);
             }
         }
         DataSet2ExcelSXSSFHelper.write2Response(req, res, fileName, workbook);
