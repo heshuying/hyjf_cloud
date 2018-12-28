@@ -57,11 +57,17 @@ import java.util.*;
 @RequestMapping("/hyjf-admin/vipmanage")
 public class VipManageController extends BaseController {
 
-    /** 查看权限 */
+    /**
+     * 查看权限
+     */
     public static final String PERMISSIONS = "vipmanage";
-    /** vip详情权限 */
+    /**
+     * vip详情权限
+     */
     public static final String PERMISSIONS_DETAIL = "vipdatail";
-    /** vip升级权限 */
+    /**
+     * vip升级权限
+     */
     public static final String PERMISSIONS_UPGRADE = "vipupgrade";
 
     @Autowired
@@ -71,7 +77,7 @@ public class VipManageController extends BaseController {
 
     @ApiOperation(value = "页面初始化", notes = "页面初始化")
     @PostMapping("/vipManageList")
-    @AuthorityAnnotation(key = PERMISSIONS,value = ShiroConstants.PERMISSION_VIEW)
+    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult searchUser(HttpServletRequest request, @RequestBody VipManageRequest vipManageRequest) {
         VipManageResponse response = vipManageService.searchList(vipManageRequest);
         // 用户角色
@@ -117,16 +123,21 @@ public class VipManageController extends BaseController {
     }
 
     @ApiOperation(value = "VIP详情页面", notes = "VIP详情页面")
-    @RequestMapping (value = "/vipdetailInit",method = RequestMethod.POST)
-    @AuthorityAnnotation(key = PERMISSIONS_DETAIL,value = ShiroConstants.PERMISSION_VIEW)
+    @RequestMapping(value = "/vipdetailInit", method = RequestMethod.POST)
+    @AuthorityAnnotation(key = PERMISSIONS_DETAIL, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult vipDetailInit(@RequestBody VipDetailListRequest vdr) {
-        VipDetailListResponse vdl = vipManageService.searchDetailList(vdr);
+        VipDetailListResponse vdl = new VipDetailListResponse();
+        if (vdr != null) {
+            vdl = vipManageService.searchDetailList(vdr);
+        }
         if (!CollectionUtils.isEmpty(vdl.getResultList())) {
             List<VipDetailListVO> vipDetailListVOS = vdl.getResultList();
             for (VipDetailListVO vipDetailList : vipDetailListVOS) {
-                String nid = vipDetailList.getTenderNid();
-                BorrowTenderVO borrowTenderVO = vipManageService.getBorrowTenderList(nid);
-                vipDetailList.setAccount(borrowTenderVO.getAccount().toPlainString());
+                if (vipDetailList.getTenderNid() != null) {
+                    String nid = vipDetailList.getTenderNid();
+                    BorrowTenderVO borrowTenderVO = vipManageService.getBorrowTenderList(nid);
+                    vipDetailList.setAccount(borrowTenderVO.getAccount().toPlainString());
+                }
             }
         }
         if (vdl == null) {
@@ -139,7 +150,7 @@ public class VipManageController extends BaseController {
     }
 
     @ApiOperation(value = "VIP升级详情页面", notes = "VIP升级详情页面")
-    @RequestMapping(value = "/vipupgradeInit",method = RequestMethod.POST)
+    @RequestMapping(value = "/vipupgradeInit", method = RequestMethod.POST)
     @AuthorityAnnotation(key = PERMISSIONS_UPGRADE, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult vipUpdateGradeInit(@RequestBody VipUpdateGradeListRequest vgl) {
         VipUpdateGradeListResponse vgr = vipManageService.searchUpdateGradeList(vgl);
@@ -265,11 +276,11 @@ public class VipManageController extends BaseController {
      * @param response
      * @throws Exception
      */
-    @ApiOperation(value = "导出",notes = "导出")
-    @RequestMapping(value = "/exportVips",method = RequestMethod.POST)
+    @ApiOperation(value = "导出", notes = "导出")
+    @RequestMapping(value = "/exportVips", method = RequestMethod.POST)
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_EXPORT)
-    public void exportExcelVips( VipManageRequest vipManageRequest, HttpServletRequest request,
-                             HttpServletResponse response) throws Exception {
+    public void exportExcelVips(VipManageRequest vipManageRequest, HttpServletRequest request,
+                                HttpServletResponse response) throws Exception {
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
         // 表格sheet名称
@@ -292,16 +303,16 @@ public class VipManageController extends BaseController {
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-        }else{
+        } else {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, vipManageResponse.getResultList());
         }
         for (int i = 1; i < sheetCount; i++) {
             vipManageRequest.setPageSize(defaultRowMaxCount);
-            vipManageRequest.setCurrPage(i+1);
+            vipManageRequest.setCurrPage(i + 1);
             VipManageResponse vipManageResponse2 = vipManageService.searchList(vipManageRequest);
-            if (vipManageResponse2 != null && vipManageResponse2.getResultList().size()> 0) {
+            if (vipManageResponse2 != null && vipManageResponse2.getResultList().size() > 0) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  vipManageResponse2.getResultList());
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, vipManageResponse2.getResultList());
             } else {
                 break;
             }
