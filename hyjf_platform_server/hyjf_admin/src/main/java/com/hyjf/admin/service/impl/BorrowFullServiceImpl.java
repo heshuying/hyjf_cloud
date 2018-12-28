@@ -23,6 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,6 +71,9 @@ public class BorrowFullServiceImpl implements BorrowFullService {
             accountMap.put("sumBorrowAccountYes", sumAccount.getSumBorrowAccountYes());
             accountMap.put("sumServiceScale", sumAccount.getSumServiceScale());
             borrowFullResponseBean.setSumAccount(accountMap);
+        } else {
+            //没数据时初始化
+            borrowFullResponseBean.setRecordList(new ArrayList<>());
         }
         return borrowFullResponseBean;
     }
