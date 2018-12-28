@@ -5,7 +5,6 @@ package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.SmsLogRequestBean;
-import com.hyjf.am.vo.admin.SmsCodeCustomizeVO;
 
 import java.text.ParseException;
 import java.util.List;
@@ -20,7 +19,7 @@ public interface SmsCodeService {
      * @param requestBean
      * @return
      */
-    List<SmsCodeCustomizeVO> queryUser(SmsCodeRequestBean requestBean);
+    List<String> queryUser(SmsCodeRequestBean requestBean);
 
     /**
      * 条件查询短信记录列表

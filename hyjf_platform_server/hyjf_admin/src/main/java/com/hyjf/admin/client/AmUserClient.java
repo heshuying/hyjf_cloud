@@ -1038,7 +1038,7 @@ public interface AmUserClient {
      * @param requestBean
      * @return
      */
-    List<SmsCodeCustomizeVO> queryUser(SmsCodeRequestBean requestBean);
+    List<String> queryUser(SmsCodeRequestBean requestBean);
 
 	/**
      * 获取用户账户信息byaccountId

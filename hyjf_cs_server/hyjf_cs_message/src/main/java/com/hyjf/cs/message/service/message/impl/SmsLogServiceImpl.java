@@ -16,7 +16,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.List;
 
@@ -121,12 +120,8 @@ public class SmsLogServiceImpl implements SmsLogService {
 			criteria.and("status").is(status);
 		}
 		query.addCriteria(criteria);
-		List<SmsLog> list = smsLogDao.find(query);
-		if (!CollectionUtils.isEmpty(list)) {
-			return list.size();
-		} else {
-			return 0;
-		}
+		long count = smsLogDao.count(query);
+		return Math.toIntExact(count);
 	}
 
 	@Override

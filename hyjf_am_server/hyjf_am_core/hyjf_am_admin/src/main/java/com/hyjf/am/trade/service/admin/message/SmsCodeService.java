@@ -4,7 +4,6 @@
 package com.hyjf.am.trade.service.admin.message;
 
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
-import com.hyjf.am.trade.dao.model.customize.SmsCodeCustomize;
 
 import java.util.List;
 
@@ -18,7 +17,7 @@ public interface SmsCodeService {
      * @param request
      * @return
      */
-    List<SmsCodeCustomize> queryUser(SmsCodeUserRequest request);
+    List<String> queryUser(SmsCodeUserRequest request);
 
     /**
      * 筛选符合条件的用户数量
