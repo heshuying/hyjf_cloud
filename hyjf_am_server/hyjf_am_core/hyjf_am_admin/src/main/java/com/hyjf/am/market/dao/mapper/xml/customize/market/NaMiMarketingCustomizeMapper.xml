@@ -81,18 +81,18 @@
     </resultMap>
 
     <select id="selectId0List"  resultType="com.hyjf.am.user.dao.model.auto.User"  parameterType="com.hyjf.am.market.dao.model.auto.ActivityList">
-        select s.user_id userId,s.username from huiyingdai_users s inner join hyjf_nm_user n on s.username = n.user_name
+        select s.user_id userId,s.username from ht_users s inner join ht_nm_user n on s.username = n.user_name
     </select>
 
     <select id="selectRefferIdByName" parameterType="java.lang.String" resultType="java.lang.Integer">
-       select u.user_id from huiyingdai_users u where u.username = #{refferName}
+       select u.user_id from ht_users u where u.username = #{refferName}
     </select>
 
     <select id="selectIdList" resultType="java.lang.Integer" parameterType="java.util.HashMap">
         select a.user_id from
         (select
         s1.user_id,s1.username as username,s1.referrer,from_unixtime(s1.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time
-        from huiyingdai_users s1 where s1.referrer in
+        from ht_users s1 where s1.referrer in
         <foreach collection="id0"  open="(" close=")" separator="," item="user">
             #{user.userId}
         </foreach>
@@ -104,8 +104,8 @@
         UNION
         select
         s2.user_id,s2.username as username,s2.referrer,from_unixtime(s2.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time
-        from huiyingdai_users s2
-        inner JOIN huiyingdai_users s1 ON s2.referrer = s1.user_id
+        from ht_users s2
+        inner JOIN ht_users s1 ON s2.referrer = s1.user_id
         where s1.referrer in
         <foreach collection="id0"  open="(" close=")" separator="," item="user">
             #{user.userId}
@@ -119,9 +119,9 @@
         UNION
         select
         s3.user_id,s3.username as username,s3.referrer,from_unixtime(s3.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time
-        from huiyingdai_users s3
-        inner JOIN huiyingdai_users s2 ON s3.referrer = s2.user_id
-        inner JOIN huiyingdai_users s1 ON s2.referrer = s1.user_id
+        from ht_users s3
+        inner JOIN ht_users s2 ON s3.referrer = s2.user_id
+        inner JOIN ht_users s1 ON s2.referrer = s1.user_id
         where s1.referrer in
         <foreach collection="id0"  open="(" close=")" separator="," item="user">
             #{user.userId}
@@ -134,7 +134,7 @@
         and s2.reg_time<![CDATA[>=]]> #{activityList.timeStart} and s2.reg_time<![CDATA[<=]]>#{activityList.timeEnd}
         and s3.reg_time<![CDATA[>=]]> #{activityList.timeStart} and s3.reg_time<![CDATA[<=]]>#{activityList.timeEnd}
         ) a
-        left join huiyingdai_users_info i on a.user_id=i.user_id
+        left join ht_users_info i on a.user_id=i.user_id
         where 1=1
         <if test="username != null and username != '' ">
             and a.username= #{username}
@@ -156,9 +156,9 @@
 
     <select id="selectNaMiMarketingList" resultType="com.hyjf.am.vo.admin.NaMiMarketingVO" parameterType="java.util.HashMap">
         select u.user_id as id,u.username as username,u.mobile as mobile,u2.truename as truename,
-        (select u1.username from huiyingdai_users u1 where u1.user_id=u.referrer) as refferName ,
-        from_unixtime(u.reg_time,'%Y-%m-%d %H:%i:%s') as regTime  from huiyingdai_users u
-        left join huiyingdai_users_info u2 on u.user_id=u2.user_id
+        (select u1.username from ht_users u1 where u1.user_id=u.referrer) as refferName ,
+        from_unixtime(u.reg_time,'%Y-%m-%d %H:%i:%s') as regTime  from ht_users u
+        left join ht_users_info u2 on u.user_id=u2.user_id
         where u.user_id in
         <foreach collection="ids"  open="(" close=")" separator="," item="userId">
             #{userId}
@@ -178,7 +178,7 @@
 
     <select id="selectNaMiMarketingPerfanceCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
         select count(d.id)
-        from hyjf_performance_return_detail d
+        from ht_performance_return_detail d
         where d.join_time is not null and d.join_time <![CDATA[!=]]> ''
         <include refid="Where_Clause1"/>
     </select>
@@ -187,7 +187,7 @@
         select d.id,d.user_name,d.true_name,d.reffer_name,d.tender_no,ifnull(d.tender_amount,0.00) as tender_amount,
         d.term,d.product_type,d.product_no,ifnull(d.return_performance,0) as return_performance,
         ifnull(d.return_amount,0.00)as return_amount,d.join_time
-        from hyjf_performance_return_detail d
+        from ht_performance_return_detail d
         where d.join_time is not null and d.join_time <![CDATA[!=]]> ''
         <include refid="Where_Clause1"/>
         ORDER BY d.join_time
@@ -204,14 +204,14 @@
 
     <select id="selectReturnDetail" resultType="com.hyjf.am.market.dao.model.auto.PerformanceReturnDetail" parameterType="java.lang.String">
         select d.username userName,d1.username refferName
-        from huiyingdai_users d left join huiyingdai_users d1 on d.referrer=d1.user_id
+        from ht_users d left join ht_users d1 on d.referrer=d1.user_id
         where d.username =#{referName}
         limit 1
     </select>
 
     <select id="selectNaMiMarketingRefferCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
         select count(d.id)
-        from hyjf_inviter_return_detail d
+        from ht_inviter_return_detail d
         where d.join_time is not null and d.join_time <![CDATA[!=]]> ''
         <include refid="Where_Clause1"/>
     </select>
@@ -219,7 +219,7 @@
     <select id="selectNaMiMarketingRefferList" resultMap="PerfanceResult" parameterType="java.util.HashMap">
         select d.user_name,d.true_name,ifnull(d.return_performance,0.00) as return_performance,ifnull(d.return_amount,0.00) as return_amount,d.tender_name as reffer_name,d.tender_no,
         ifnull(d.tender_amount,0.00) as tender_amount,d.term,d.product_type,d.product_no,d.join_time
-        from hyjf_inviter_return_detail d
+        from ht_inviter_return_detail d
         where d.join_time is not null and d.join_time <![CDATA[!=]]> ''
         <include refid="Where_Clause1"/>
         ORDER BY d.join_time
@@ -236,7 +236,7 @@
 
     <select id="selectNaMiMarketingRefferTotalCount" resultType="java.lang.Integer" parameterType="java.util.HashMap">
         select count(m.user_name)
-        from (select d.user_name from hyjf_inviter_return_detail d
+        from (select d.user_name from ht_inviter_return_detail d
         where d.join_time is not null and d.join_time <![CDATA[!=]]> ''
         <include refid="Where_Clause1"/>
         group by d.user_name,left(d.join_time,7)
@@ -245,7 +245,7 @@
 
     <select id="selectNaMiMarketingRefferTotalList" resultMap="PerfanceResult" parameterType="java.util.HashMap">
         select d.user_name,d.true_name,d.debt_name,d.debt_id,ifnull(sum(d.return_amount),0.00) as return_amount,left(d.join_time,7) join_time
-        from hyjf_inviter_return_detail d
+        from ht_inviter_return_detail d
         where d.join_time is not null and d.join_time != ''
         <include refid="Where_Clause1"/>
         group by d.user_name,left(d.join_time,7)
@@ -266,13 +266,13 @@
 
     <select id="selectNaMiMarketingRefferTotalAmount" resultType="java.math.BigDecimal" parameterType="java.util.HashMap">
         select ifnull(sum(d.return_amount),0.00) as totalAmount
-        from hyjf_inviter_return_detail d
+        from ht_inviter_return_detail d
         where d.join_time is not null and d.join_time != ''
         <include refid="Where_Clause1"/>
     </select>
 
     <select id="selectMonthList" resultType="java.lang.String" >
-        select left(d.join_time,7) join_time from hyjf_inviter_return_detail d group by left(d.join_time,7) order by join_time desc
+        select left(d.join_time,7) join_time from ht_inviter_return_detail d group by left(d.join_time,7) order by join_time desc
     </select>
 </mapper>
 

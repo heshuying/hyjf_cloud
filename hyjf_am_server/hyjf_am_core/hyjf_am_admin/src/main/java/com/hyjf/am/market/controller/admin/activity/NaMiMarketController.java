@@ -28,7 +28,7 @@ import java.util.Map;
  * @version NaMiMarketController, v0.1 2018/12/26 15:21
  */
 @RestController
-@RequestMapping("/am-market/activity")
+@RequestMapping("/am-market/namimarketing")
 public class NaMiMarketController {
     @Autowired
     NaMiMarketingService naMiMarketingService;
@@ -78,6 +78,7 @@ public class NaMiMarketController {
         }
         return response;
     }
+
 
     /**
      * 业绩返现详情

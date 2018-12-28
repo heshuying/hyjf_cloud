@@ -30,6 +30,7 @@ import com.hyjf.am.response.user.*;
 import com.hyjf.am.response.wdzj.BorrowDataResponse;
 import com.hyjf.am.response.wdzj.PreapysListResponse;
 import com.hyjf.am.resquest.admin.BatchBorrowRecoverRequest;
+import com.hyjf.am.resquest.admin.BorrowApicronRequest;
 import com.hyjf.am.resquest.admin.CouponRepayRequest;
 import com.hyjf.am.resquest.admin.UnderLineRechargeRequest;
 import com.hyjf.am.resquest.api.ApiRepayListRequest;
@@ -78,6 +79,7 @@ import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
@@ -6346,8 +6348,10 @@ public class AmTradeClientImpl implements AmTradeClient {
      */
     @Override
     public void updateFddPush(BorrowApicronVO borrowApicronVO) {
+        BorrowApicronRequest request;
+        request = CommonUtils.convertBean(borrowApicronVO,BorrowApicronRequest.class);
         String url = "http://AM-TRADE/am-trade/batch/fddpush/updateFddPush";
-        restTemplate.postForEntity(url, borrowApicronVO,null).getBody();
+        restTemplate.postForEntity(url, request,null).getBody();
 
     }
 }

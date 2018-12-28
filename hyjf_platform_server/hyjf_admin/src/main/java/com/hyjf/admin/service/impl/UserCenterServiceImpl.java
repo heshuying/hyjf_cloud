@@ -686,4 +686,16 @@ public class UserCenterServiceImpl extends BaseServiceImpl implements UserCenter
     public UserInfoVO selectUserInfoByUserId(String userId) {
         return userCenterClient.findUsersInfoById(Integer.parseInt(userId));
     }
+
+    /**
+     * 通过当前用户ID 查询用户所在一级分部,从而关联用户所属渠道
+     * @param userId
+     * @return
+     * @Author : huanghui
+     */
+    @Override
+    public UserUtmInfoCustomizeVO getUserUtmInfo(Integer userId) {
+        UserUtmInfoCustomizeVO userUtmInfoCustomizeVO = userCenterClient.getUserUtmInfo(userId);
+        return userUtmInfoCustomizeVO;
+    }
 }

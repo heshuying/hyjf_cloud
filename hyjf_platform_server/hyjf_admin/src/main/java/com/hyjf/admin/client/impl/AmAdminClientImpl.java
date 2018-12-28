@@ -1948,4 +1948,16 @@ public class AmAdminClientImpl implements AmAdminClient {
         return restTemplate.postForEntity("http://AM-ADMIN/am-market/namimarketing/getNaMiMarketingList",
                 request,NaMiMarketingResponse.class).getBody();
     }
+
+    @Override
+    public NaMiMarketingResponse getPerformanceList(NaMiMarketingRequest request) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-market/namimarketing/performanceInit",
+                request,NaMiMarketingResponse.class).getBody();
+    }
+
+    @Override
+    public NaMiMarketingResponse getPerformancInfo(NaMiMarketingRequest request) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-market/namimarketing/performanceInfo",
+                request,NaMiMarketingResponse.class).getBody();
+    }
 }

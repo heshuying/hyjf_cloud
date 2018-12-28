@@ -1121,4 +1121,18 @@ public interface AmAdminClient {
      * @return
      */
     NaMiMarketingResponse getNaMiMarketingList(NaMiMarketingRequest naMiMarketingRequest);
+
+    /**
+     *业绩返现列表
+     * @param naMiMarketingRequest
+     * @return
+     */
+    NaMiMarketingResponse getPerformanceList(NaMiMarketingRequest naMiMarketingRequest);
+
+    /**
+     * 业绩返现详情列表
+     * @param request
+     * @return
+     */
+    NaMiMarketingResponse getPerformancInfo(NaMiMarketingRequest request);
 }

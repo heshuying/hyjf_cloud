@@ -146,6 +146,12 @@ public class SystemConfig {
     @Value("${hyjf.defaultRowMaxCount}")
     private String defaultRowMaxCount;
 
+    @Value("${hyjf.web.qrcode.url}")
+    private String webLandingPageUrl;
+
+    @Value("${hyjf.wechat.qrcode.url}")
+    private String wechatLandingPageUrl;
+
     public String getFileDomainUrl() {
         return fileDomainUrl;
     }
@@ -514,5 +520,21 @@ public class SystemConfig {
 
     public void setHyjfFtpBasepathPdf(String hyjfFtpBasepathPdf) {
         this.hyjfFtpBasepathPdf = hyjfFtpBasepathPdf;
+    }
+
+    public String getWebLandingPageUrl() {
+        return webLandingPageUrl;
+    }
+
+    public void setWebLandingPageUrl(String webLandingPageUrl) {
+        this.webLandingPageUrl = webLandingPageUrl;
+    }
+
+    public String getWechatLandingPageUrl() {
+        return wechatLandingPageUrl;
+    }
+
+    public void setWechatLandingPageUrl(String wechatLandingPageUrl) {
+        this.wechatLandingPageUrl = wechatLandingPageUrl;
     }
 }

@@ -137,6 +137,9 @@ public class BorrowInvestServiceImpl implements BorrowInvestService {
             String sumAccount = amTradeClient.selectBorrowInvestAccount(borrowInvestRequest);
             responseBean.setRecordList(voList);
             responseBean.setSumAccount(sumAccount);
+        } else {
+            //没数据时初始化
+            responseBean.setRecordList(new ArrayList<>());
         }
         return responseBean;
     }

@@ -190,4 +190,13 @@ public interface AmTradeClient {
     List<BorrowCreditVO> getBorrowCreditList(BorrowCreditRequest request1);
 
 
+    /**
+     * 根据条件获取还款计划分期信息
+     * add by yangchangwei
+     * @param borrowNid
+     * @param nid
+     * @param period
+     * @return
+     */
+    BorrowRecoverPlanVO getBorrowRecoverPlanByNidandPeriod(String borrowNid, String nid, Integer period);
 }

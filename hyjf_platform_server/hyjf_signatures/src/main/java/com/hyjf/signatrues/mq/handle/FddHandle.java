@@ -14,6 +14,7 @@ import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -231,22 +232,57 @@ public class FddHandle {
 		} else {
 			borrowDate = borrowPeriod + "天";
 		}
-		JSONObject paramter = new JSONObject();
-		paramter.put("nid", borrowTender.getNid());// 借款编号
-		paramter.put("recoverTime", bean.getSignDate());// 签署时间
-		paramter.put("realName", tenderTrueName);// 出借人真实姓名
-		paramter.put("idCard", tenderIdCard);// 证件号码
-		paramter.put("borrowUsername", borrowTrueName);// 借款人真实姓名
-		paramter.put("BorrowidCard", borrowIdCard);// 借款人证件号码
+		boolean isInstalment = false;//是否分期
+		if(CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
+				|| CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle)){
+			isInstalment = true;
+		}
 
-		paramter.put("account", borrow.getAccount().toString());// 借款金额
-		paramter.put("borrowPeriod", borrowDate);// 借款期限
-		paramter.put("borrowApr", borrow.getBorrowApr() + "%");// 借款利率
-		paramter.put("borrowStyleName", this.getBorrowStyle(borrow.getBorrowStyle()));// 还款方式
-		paramter.put("userInvestAccount", borrowTender.getAccount().toString());// 出借人出借金额
-		paramter.put("ecoverAccountInterest", tenderInterest.toString());// 借款人预期收益
+		//月偿还本息
+		String monthPayAccount;
+		String lastPayAccount = "";
+		//查询标的分期信息
+		if(isInstalment){
+			BorrowRecoverPlanVO planInfo = this.getborrowRecoverPlan(borrowNid,borrowTender.getNid(),1);
+			if(planInfo == null){
+				throw new RuntimeException("分期还款记录不存在,投资订单号:[" + tenderNid + "],投资人用户ID:[" + tenderUserId + "],标的编号:[" + borrowNid + "].");
+			}
+			monthPayAccount = planInfo.getRecoverAccount().toString();
+			BorrowRecoverPlanVO lastPlanInfo = this.getborrowRecoverPlan(borrowNid,borrowTender.getNid(),borrow.getBorrowPeriod());
+			if(lastPlanInfo != null){
+				lastPayAccount = lastPlanInfo.getRecoverAccount().toString();
+			}
+		}else{
+			monthPayAccount = "-";
+			lastPayAccount = borrowTender.getRecoverAccountAll().toString();
+		}
+
+		//中北互金修改借款人用途取值 add by yangchangwei 20181227
+		String financePurpose;//借款用途
+		financePurpose = CacheUtil.getParamName(FddGenerateContractConstant.FINANCE_PURPOSE,borrow.getFinancePurpose());
+		JSONObject paramter = new JSONObject();
+
+		paramter.put("nid", borrowTender.getNid());//借款编号
+		paramter.put("recoverTime", bean.getSignDate());//签署时间
+		paramter.put("realName", tenderTrueName);//出借人真实姓名
+		paramter.put("idCard", tenderIdCard);//证件号码
+		paramter.put("borrowUsername", borrowTrueName);//借款人真实姓名
+		paramter.put("BorrowidCard", borrowIdCard);//借款人证件号码
+		paramter.put("borrowUse", financePurpose);//借款用途
+		paramter.put("borrowValueDay", GetDate.date2Str(GetDate.getDate(borrow.getRecoverLastTime()), GetDate.date_sdf_wz));//放款时间
+		paramter.put("borrowDueDay", GetDate.date2Str(GetDate.getDate(Integer.valueOf(borrow.getRepayLastTime())), GetDate.date_sdf_wz));//还款时间
+		paramter.put("borrowLendingDay", GetDate.date2Str(GetDate.getDate(borrow.getRecoverLastTime()), GetDate.date_sdf_wz));//放款日
+		paramter.put("monthPayAccount", monthPayAccount);//月偿还本息
+		paramter.put("lastPayAccount", lastPayAccount);//最后偿还金额
+		paramter.put("account", borrow.getAccount().toString());//借款金额
+		paramter.put("borrowApr", borrow.getBorrowApr()+"%");//借款利率
+		paramter.put("borrowPeriod", borrowDate);//借款期限
+		paramter.put("borrowStyleName", this.getBorrowStyle(borrow.getBorrowStyle()));//还款方式
+		paramter.put("userInvestAccount", borrowTender.getAccount().toString());//出借人出借金额
+		paramter.put("ecoverAccountInterest", tenderInterest.toString());//借款人预期收益
 
 		bean.setBorrowerCustomerID(borrowerCustomerID);
+        bean.setTenderUserName(tenderUser.getUsername());
 		logger.info("-----------，合同编号：" + borrowTender.getNid() + ",获得借款人认证编号：" + bean.getBorrowerCustomerID());
 		bean.setContractName(FddGenerateContractConstant.CONTRACT_DOC_TITLE);
 		logger.info("-----------，合同编号：" + borrowTender.getNid() + ",开始判断合同状态");
@@ -292,6 +328,18 @@ public class FddHandle {
             }
         }
 
+	}
+
+	/**
+	 * 获取标的的分期还款信息
+	 * @param borrowNid
+	 * @param nid
+	 * @param period
+	 * @return
+	 */
+	private BorrowRecoverPlanVO getborrowRecoverPlan(String borrowNid, String nid, Integer period) {
+		BorrowRecoverPlanVO info = this.amTradeClient.getBorrowRecoverPlanByNidandPeriod(borrowNid,nid,period);
+		return info;
 	}
 
 	 /**
