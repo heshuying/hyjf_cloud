@@ -12,7 +12,6 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.SmsCodeService;
-import com.hyjf.am.vo.admin.SmsCodeCustomizeVO;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -191,7 +190,7 @@ public class SmsCodeController extends BaseController {
                     return jsonObject;
                 }
                 // 在筛选条件下查询出用户
-                List<SmsCodeCustomizeVO> msgs = smsCodeService.queryUser(form);
+                List<String> msgs = smsCodeService.queryUser(form);
                 // 用户数
                 jsonObject.put("user_number", msgs.size());
                 // 用户未手写手机号码
@@ -200,7 +199,7 @@ public class SmsCodeController extends BaseController {
                     int i = msgs.size() / number;
                     for (int j = 0; j <= i; j++) {
                         int tosize = (j + 1) * number;
-                        List<SmsCodeCustomizeVO> smslist;
+                        List<String> smslist;
                         if (tosize > msgs.size()) {
                             smslist = msgs.subList(j * number, msgs.size());
                         } else {
@@ -208,12 +207,12 @@ public class SmsCodeController extends BaseController {
                         }
                         String phones = "";
                         for (int z = 0; z < smslist.size(); z++) {
-                            if (StringUtils.isNotEmpty(smslist.get(z).getUser_phones())
-                                    && Validator.isPhoneNumber(smslist.get(z).getUser_phones())) {
+                            if (StringUtils.isNotEmpty(smslist.get(z))
+                                    && Validator.isPhoneNumber(smslist.get(z))) {
                                 if (z < smslist.size() - 1) {
-                                    phones += smslist.get(z).getUser_phones() + ",";
+                                    phones += smslist.get(z) + ",";
                                 } else {
-                                    phones += smslist.get(z).getUser_phones();
+                                    phones += smslist.get(z);
                                 }
                             }
                         }

@@ -5,7 +5,6 @@ package com.hyjf.am.trade.service.admin.message.impl;
 
 import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.trade.dao.mapper.customize.admin.SmsCodeCustomizeMapper;
-import com.hyjf.am.trade.dao.model.customize.SmsCodeCustomize;
 import com.hyjf.am.trade.service.admin.message.SmsCodeService;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
@@ -28,18 +27,8 @@ public class SmsCodeServiceImpl implements SmsCodeService {
     private SmsCodeCustomizeMapper smsCodeCustomizeMapper;
 
     @Override
-    public List<SmsCodeCustomize> queryUser(SmsCodeUserRequest request) {
+    public List<String> queryUser(SmsCodeUserRequest request) {
         Map<String, Object> params = new HashMap<>();
-		if (request.getOpen_account() != null && request.getOpen_account() != 3) {
-            params.put("open_account", request.getOpen_account());
-        }
-        if (StringUtils.isNotBlank(request.getRe_time_begin())) {
-            params.put("re_time_begin", GetDate.dateString2Timestamp(request.getRe_time_begin()));
-            params.put("re_time_begin", GetDate.dateString2Timestamp(GetDate.getDayStart(request.getRe_time_begin())));
-        }
-        if (StringUtils.isNotBlank(request.getRe_time_end())) {
-            params.put("re_time_end", GetDate.dateString2Timestamp(GetDate.getDayEnd(request.getRe_time_end())));
-        }
         if (StringUtils.isNotBlank(request.getAdd_time_begin())) {
             params.put("add_time_begin", GetDate.dateString2Timestamp(GetDate.getDayStart(request.getAdd_time_begin())));
         }
@@ -60,7 +49,6 @@ public class SmsCodeServiceImpl implements SmsCodeService {
             params.put("open_account", request.getOpen_account());
         }
         if (StringUtils.isNotBlank(request.getRe_time_begin())) {
-            params.put("re_time_begin", GetDate.dateString2Timestamp(request.getRe_time_begin()));
             params.put("re_time_begin", GetDate.dateString2Timestamp(GetDate.getDayStart(request.getRe_time_begin())));
         }
         if (StringUtils.isNotBlank(request.getRe_time_end())) {

@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.user.service.admin.message;
 
+import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.resquest.user.SmsCountRequest;
 import com.hyjf.am.user.dao.model.customize.OADepartmentCustomize;
 import com.hyjf.am.user.dao.model.customize.SmsCountCustomize;
@@ -39,4 +40,11 @@ public interface SmsCountService {
      * @return
      */
     int selectCount(SmsCountRequest request);
+
+    /**
+     * 查询符合条件的用户的号码集合
+     * @param request
+     * @return
+     */
+    List<String> queryUser(SmsCodeUserRequest request);
 }
