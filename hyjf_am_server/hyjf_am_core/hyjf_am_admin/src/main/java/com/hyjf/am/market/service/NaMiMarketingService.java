@@ -6,6 +6,7 @@ import com.hyjf.am.resquest.admin.NaMiMarketingRequest;
 import com.hyjf.am.vo.admin.NaMiMarketingVO;
 import com.hyjf.am.vo.admin.PerformanceReturnDetailVO;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -47,4 +48,33 @@ public interface NaMiMarketingService {
      */
     List<PerformanceReturnDetail> selectNaMiMarketingPerfanceInfo(NaMiMarketingRequest request);
 
+    /**
+     * 查询邀请人返现明细 条数
+     * @param paraMap
+     * @return
+     */
+    int selectNaMiMarketingRefferCount(Map<String, Object> paraMap);
+
+    List<NaMiMarketingVO> selectNaMiMarketingRefferList(Map<String, Object> paraMap);
+
+    /**
+     * 查询邀请人返现统计 条数
+     * @param paraMap
+     * @return
+     */
+    int selectNaMiMarketingRefferTotalCount(Map<String, Object> paraMap);
+
+    /**
+     * 查询邀请人返现统计 列表
+     * @param paraMap
+     * @return
+     */
+    List<NaMiMarketingVO> selectNaMiMarketingRefferTotalList(Map<String, Object> paraMap);
+
+    /**
+     * 查询邀请人返现统计 合计
+     * @param paraMap
+     * @return
+     */
+    BigDecimal selectNaMiMarketingRefferTotalAmount(Map<String, Object> paraMap);
 }

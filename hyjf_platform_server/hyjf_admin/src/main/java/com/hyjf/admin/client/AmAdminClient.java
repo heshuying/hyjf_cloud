@@ -1135,4 +1135,21 @@ public interface AmAdminClient {
      * @return
      */
     NaMiMarketingResponse getPerformancInfo(NaMiMarketingRequest request);
+
+
+    /**
+     * 查询邀请人返现明细 列表
+     * @param naMiMarketingRequest
+     * @return
+     */
+    NaMiMarketingResponse  selectNaMiMarketingRefferList(NaMiMarketingRequest naMiMarketingRequest);
+
+    IntegerResponse selectNaMiMarketingRefferCount(NaMiMarketingRequest request);
+    IntegerResponse selectNaMiMarketingRefferTotalCount(NaMiMarketingRequest request);
+    /**
+     * 查询邀请人返现统计 列表
+     * @param naMiMarketingRequest
+     * @return
+     */
+    NaMiMarketingResponse selectNaMiMarketingRefferTotalList(NaMiMarketingRequest naMiMarketingRequest);
 }

@@ -2,6 +2,7 @@ package com.hyjf.am.market.controller.admin.activity;
 
 import com.hyjf.am.market.dao.model.auto.PerformanceReturnDetail;
 import com.hyjf.am.market.service.NaMiMarketingService;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.NaMiMarketingResponse;
 import com.hyjf.am.resquest.admin.NaMiMarketingRequest;
@@ -9,6 +10,7 @@ import com.hyjf.am.vo.admin.NaMiMarketingVO;
 import com.hyjf.am.vo.admin.PerformanceReturnDetailVO;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
@@ -19,9 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author lisheng
@@ -79,7 +79,121 @@ public class NaMiMarketController {
         return response;
     }
 
+    /**
+     * 查询邀请人返现明细列表
+     * @param request
+     */
+    @PostMapping("/selectNaMiMarketingRefferList")
+    public NaMiMarketingResponse selectNaMiMarketingRefferList(@RequestBody NaMiMarketingRequest request){
+        NaMiMarketingResponse response = new NaMiMarketingResponse();
+        Map<String,Object> paraMap= beanToMapReffer(request);
+        int count = naMiMarketingService.selectNaMiMarketingRefferCount(paraMap);
+        List<NaMiMarketingVO> list = new ArrayList<>();
+        if (count > 0) {
+            Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
+            paraMap.put("limitStart",paginator.getOffset());
+            paraMap.put("limitEnd",paginator.getLimit());
+            list = this.naMiMarketingService.selectNaMiMarketingRefferList(paraMap);
+        }
+        response.setResultList(list);
+        response.setCount(count);
+        return response;
+    }
 
+    /**
+     * 查询邀请人返现明细条数
+     * @param request
+     */
+    @PostMapping("/selectNaMiMarketingRefferCount")
+    public IntegerResponse selectNaMiMarketingRefferCount(@RequestBody NaMiMarketingRequest request){
+        IntegerResponse response = new IntegerResponse();
+        Map<String,Object> paraMap= beanToMapReffer(request);
+        int count = naMiMarketingService.selectNaMiMarketingRefferCount(paraMap);
+        response.setResultInt(count);
+        return response;
+    }
+
+    /**
+     * 查询邀请人返现明细列表
+     * @param request
+     */
+    @PostMapping("/selectNaMiMarketingRefferTotalList")
+    public NaMiMarketingResponse selectNaMiMarketingRefferTotalList(@RequestBody NaMiMarketingRequest request){
+        NaMiMarketingResponse response = new NaMiMarketingResponse();
+        Map<String,Object> paraMap= beanToMapReffer(request);
+        int count = naMiMarketingService.selectNaMiMarketingRefferTotalCount(paraMap);
+        List<NaMiMarketingVO> list = new ArrayList<>();
+        BigDecimal totalAmount = new BigDecimal(0.00);
+        if (count > 0) {
+            Paginator paginator = new Paginator(request.getCurrPage(), count,request.getPageSize());
+            paraMap.put("limitStart",paginator.getOffset());
+            paraMap.put("limitEnd",paginator.getLimit());
+            list = this.naMiMarketingService.selectNaMiMarketingRefferTotalList(paraMap);
+            totalAmount = naMiMarketingService.selectNaMiMarketingRefferTotalAmount(paraMap);
+        }
+        response.setResultList(list);
+        response.setCount(count);
+        response.setTotalAmount(totalAmount);
+        return response;
+    }
+    /**
+     * 查询邀请人返现明细条数
+     * @param request
+     */
+    @PostMapping("/selectNaMiMarketingRefferTotalCount")
+    public IntegerResponse selectNaMiMarketingRefferTotalCount(@RequestBody NaMiMarketingRequest request){
+        IntegerResponse response = new IntegerResponse();
+        Map<String,Object> paraMap= beanToMapReffer(request);
+        int count = naMiMarketingService.selectNaMiMarketingRefferTotalCount(paraMap);
+        response.setResultInt(count);
+        return response;
+    }
+
+
+    public Map<String, Object> beanToMapReffer(NaMiMarketingRequest request){
+        Map<String, Object> paraMap = new HashMap<String, Object>();
+        if(StringUtils.isNotBlank(request.getUsername())){
+            paraMap.put("username", request.getUsername().trim());
+        }
+        if(StringUtils.isNotBlank(request.getTruename())){
+            paraMap.put("truename", request.getTruename().trim());
+        }
+        if(StringUtils.isNotBlank(request.getRefferName())){
+            paraMap.put("tenderName", request.getRefferName().trim());
+        }
+        if(StringUtils.isNotBlank(request.getCol())){
+            paraMap.put("col", request.getCol().trim());
+        }
+        if(StringUtils.isNotBlank(request.getSort())){
+            paraMap.put("sort", request.getSort().trim());
+        }
+        if(StringUtils.isNotBlank(request.getProductType())){
+            paraMap.put("productType", request.getProductType().trim());
+        }
+        if(StringUtils.isNotBlank(request.getProductNo())){
+            paraMap.put("productNo", request.getProductNo().trim());
+        }
+        if(StringUtils.isNotBlank(request.getJoinTimeStart())){
+            paraMap.put("joinTimeStart", request.getJoinTimeStart().trim()+" 00:00:00");
+        }
+        if(StringUtils.isNotBlank(request.getJoinTimeEnd())){
+            paraMap.put("joinTimeEnd", request.getJoinTimeEnd().trim()+" 23:59:59");
+        }
+        if(StringUtils.isNotBlank(request.getMonth())){
+            request.setJoinTimeStart(request.getMonth()+"-01");
+            request.setJoinTimeEnd(getLastMinuTime(request.getMonth()));
+            paraMap.put("joinTimeStart", request.getMonth()+"-01 00:00:00");
+            paraMap.put("joinTimeEnd", getLastMinuTime(request.getMonth())+" 23:59:59");
+        }
+        return paraMap;
+    }
+    public String getLastMinuTime(String oldTime){
+        //String转 date
+        Date d= GetDate.stringToDate2(oldTime+"-01");
+        //最后一天日期
+        Date lastT=GetDate.getLastDayOnMonth(d);
+        return GetDate.formatDate(lastT,"yyyy-MM-dd");
+    }
     /**
      * 业绩返现详情
      * @param request

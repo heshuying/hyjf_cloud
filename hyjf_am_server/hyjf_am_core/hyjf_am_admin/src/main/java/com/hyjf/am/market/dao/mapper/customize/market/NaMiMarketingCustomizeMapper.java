@@ -7,6 +7,7 @@ import com.hyjf.am.vo.admin.NaMiMarketingVO;
 import com.hyjf.am.vo.admin.PerformanceReturnDetailVO;
 import org.apache.ibatis.annotations.Param;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
@@ -51,16 +52,41 @@ public interface NaMiMarketingCustomizeMapper {
      */
     Integer selectNaMiMarketingPerfanceCount(Map<String, Object> paraMap);
 
+    int selectNaMiMarketingRefferCount(Map<String, Object> paraMap);
+
     /**
      * 查询业绩返现详情列表
      * @param paraMap
      * @return
      */
     List<NaMiMarketingVO> selectNaMiMarketingPerfanceList(Map<String, Object> paraMap);
+
+    List<NaMiMarketingVO> selectNaMiMarketingRefferList(Map<String, Object> paraMap);
     /**
      * 业绩返现详情 根据推荐人用户名查询
      * @param id
      * @return
      */
     PerformanceReturnDetail selectReturnDetail(@Param("referName") String referName );
+
+    /**
+     * 查询邀请人返现统计 条数
+     * @param paraMap
+     * @return
+     */
+    int selectNaMiMarketingRefferTotalCount(Map<String, Object> paraMap);
+
+    /**
+     * 查询邀请人返现统计 列表
+     * @param paraMap
+     * @return
+     */
+    List<NaMiMarketingVO> selectNaMiMarketingRefferTotalList(Map<String, Object> paraMap);
+
+    /**
+     * 查询邀请人返现统计 合计
+     * @param paraMap
+     * @return
+     */
+    BigDecimal selectNaMiMarketingRefferTotalAmount(Map<String, Object> paraMap);
 }
