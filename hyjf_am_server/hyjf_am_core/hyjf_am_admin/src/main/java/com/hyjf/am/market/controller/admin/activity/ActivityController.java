@@ -23,9 +23,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author xiasq
@@ -158,25 +156,6 @@ public class ActivityController {
             response.setRtn(Response.FAIL);
         }
         return response;
-    }
-
-
-
-
-    /**
-     * 查询条件设置
-     *
-     * @param activityListRequest
-     * @return
-     */
-    private Map<String, Object> paramSet(ActivityListRequest activityListRequest) {
-        Map<String, Object> mapParam = new HashMap<String, Object>();
-        mapParam.put("title", activityListRequest.getTitle());
-        mapParam.put("startTime", activityListRequest.getStartTime());
-        mapParam.put("endTime", activityListRequest.getEndTime());
-        mapParam.put("startCreate",activityListRequest.getStartCreate());
-        mapParam.put("endCreate", activityListRequest.getEndCreate());
-        return mapParam;
     }
 
     /**

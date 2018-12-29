@@ -1,6 +1,5 @@
 package com.hyjf.cs.user.service.smscode.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.config.SmsConfigVO;
 import com.hyjf.am.vo.message.SmsMessage;
@@ -55,10 +54,10 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
      * @param validCodeType
      * @param mobile
      * @param ip
-     * @throws MQException
+     * @throws Exception
      */
     @Override
-    public void sendSmsCode(String validCodeType, String mobile,String platform, String ip) throws MQException {
+    public void sendSmsCode(String validCodeType, String mobile,String platform, String ip) throws Exception {
 
         // 生成验证码
         String checkCode = GetCode.getRandomSMSCode(6);

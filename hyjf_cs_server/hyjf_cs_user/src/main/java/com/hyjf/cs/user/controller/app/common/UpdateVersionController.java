@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.controller.app.common;
 
+import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -47,7 +50,7 @@ public class UpdateVersionController {
      * @param
      * @return
      */
-    @ApiOperation("版本更新")
+    @ApiOperation("ios版本更新")
     @GetMapping(value = "/hjh-update.jsp")
     public ModelAndView hjhUpdateIos(HttpServletRequest request) {
         String sign = request.getParameter("sign");
@@ -55,4 +58,5 @@ public class UpdateVersionController {
         ModelAndView modelAndView = new ModelAndView("redirect:"+url);
         return modelAndView;
     }
+
 }

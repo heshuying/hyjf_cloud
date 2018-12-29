@@ -12,8 +12,6 @@ import com.hyjf.am.resquest.datacollect.TzjDayReportRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.datacollect.TzjDayReportVO;
-import com.hyjf.am.vo.trade.TenderCityCountVO;
-import com.hyjf.am.vo.trade.TenderSexCountVO;
 import com.hyjf.am.vo.trade.wrb.WrbTenderNotifyCustomizeVO;
 import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.market.client.AmTradeClient;
@@ -79,21 +77,6 @@ public class AmTradeClientImpl implements AmTradeClient {
 			return response.getResult();
 		}
 		return null;
-	}
-
-	@Override
-	public List<TenderCityCountVO> getTenderCityGroupBy(Date lastDay) {
-		return null;
-	}
-
-	@Override
-	public List<TenderSexCountVO> getTenderSexGroupBy(Date lastDay) {
-		return null;
-	}
-
-	@Override
-	public int getTenderAgeByRange(Date date, int firstAge, int endAge) {
-		return 0;
 	}
 
 	@Override

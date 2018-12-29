@@ -20,7 +20,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -47,11 +48,9 @@ public class CornerController extends BaseController {
      */
     @ApiOperation(value = "获取版本号",notes = "获取版本号")
     @PostMapping(value = "/getVersion")
-    public JSONObject getVersion(@RequestHeader(value = "key") String key, HttpServletRequest request, HttpServletResponse response) {
+    public JSONObject getVersion(@RequestHeader(value = "key") String key, HttpServletRequest request) {
         JSONObject map = new JSONObject();
         map.put("request", "/hyjf-app/app/common/getVersion");
-        // 唯一标识
-        String sign = request.getParameter("sign");
         // 平台
         String clientStr = request.getParameter("platform");
         //版本号
@@ -159,7 +158,7 @@ public class CornerController extends BaseController {
      */
     @ApiOperation(value = "接收设备唯一标识",notes = "接收设备唯一标识")
     @PostMapping(value = "/mobileCode")
-    public JSONObject mobileCode(@RequestHeader(value = "key") String key,@RequestHeader(value = "userId") Integer userId,HttpServletRequest request, HttpServletResponse response) {
+    public JSONObject mobileCode(@RequestHeader(value = "key") String key,@RequestHeader(value = "userId") Integer userId,HttpServletRequest request) {
         JSONObject map = new JSONObject();
         map.put("request", "/hyjf-app/app/common/mobileCode");
         // 唯一标识
@@ -228,62 +227,18 @@ public class CornerController extends BaseController {
     @PostMapping(value = "/setCorner")
     public AppResult setCorner(HttpServletRequest request) {
         AppResult result = new AppResult();
-/*
-        Map<String,String> map = new HashMap<>();
-        map.put("request", "/hyjf-app/app/common/setCorner");
-        // 唯一标识
-        String sign = request.getParameter("sign");
-        //设备标识码
-        String mobileCodeStr = request.getParameter("mobileCode");
-        //角标
-        String cornerStr = request.getParameter("corner");
-        logger.info("key=[{}],sign=[{}],mobileCode=[{}],corner=[{}]",key,sign,mobileCodeStr,cornerStr);
-        // 取得加密用的Key
-        if (Validator.isNull(key)) {
-            result.setStatusInfo(MsgEnum.ERR_OBJECT_VALUE,"key");
-            return result;
-        }
-        if(StringUtils.isEmpty(mobileCodeStr)){
-            result.setStatusInfo(MsgEnum.ERR_OBJECT_VALUE,"mobileCode");
-            return result;
-        }
-        if(StringUtils.isEmpty(cornerStr)){
-            result.setStatusInfo(MsgEnum.ERR_OBJECT_VALUE,"corner");
-            return result;
-        }
-
-        // 检查参数
-        try {
-            int corner = Integer.parseInt(cornerStr);
-            UserCornerVO cornerInfo = cornerService.getUserCornerBySign(sign);
-            if(cornerInfo != null){
-                cornerInfo.setCorner(corner);
-                cornerService.updateUserCorner(cornerInfo);
-            }else{
-                cornerInfo = new UserCornerVO();
-                cornerInfo.setCorner(corner);
-                cornerInfo.setSign(sign);
-                cornerService.insertUserCorner(cornerInfo);
-            }
-            result.setStatusInfo(BaseResult.SUCCESS,"设置成功");
-        } catch (Exception e) {
-            result.setStatusInfo(BaseResult.FAIL,"设置角标异常");
-        }
-        result.setData(map);*/
         result.setStatusInfo("0","设置成功");
         return result;
     }
 
     /**
      * 获取最新版本号下载地址
-     * @param request
-     * @param response
      * @return
      */
     @ApiOperation("获取最新版本号下载地址")
     @ResponseBody
     @PostMapping(value = "/getNewVersionURL")
-    public JSONObject getNewVersionURL(HttpServletRequest request, HttpServletResponse response) {
+    public JSONObject getNewVersionURL() {
         JSONObject map = new JSONObject();
         map.put("status", "000");
         map.put("request", "/hyjf-app/app/common/getVersion");
@@ -293,4 +248,20 @@ public class CornerController extends BaseController {
         return map;
     }
 
+    /**
+     *
+     * ios下载页
+     * @return
+     */
+    @ApiOperation("ios下载页")
+    @GetMapping(value = "/iosinit")
+    public AppResult initIOS() {
+        AppResult result = new AppResult();
+        String downloadUrl = "itms-apps://itunes.apple.com/cn/app/id1044961717?mt=8";
+        Map<String,String> resultMap = new HashMap<>();
+        resultMap.put("downloadUrl",downloadUrl);
+        result.setData(resultMap);
+        result.setStatus("000");
+        return result;
+    }
 }

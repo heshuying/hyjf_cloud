@@ -1,14 +1,18 @@
 package com.hyjf.cs.message.client.impl;
 
-import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.OperationReportJobResponse;
-import com.hyjf.am.response.user.*;
+import com.hyjf.am.response.user.UserAliasResponse;
+import com.hyjf.am.response.user.UserInfoCustomizeResponse;
+import com.hyjf.am.response.user.UserInfoResponse;
+import com.hyjf.am.response.user.UserResponse;
 import com.hyjf.am.resquest.message.FindAliasesForMsgPushRequest;
 import com.hyjf.am.resquest.trade.OperationReportJobRequest;
-import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
-import com.hyjf.am.vo.user.*;
+import com.hyjf.am.vo.user.UserAliasVO;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.cs.message.client.AmUserClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -16,7 +20,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -212,20 +215,6 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
-	 * 通过手机号获取设备标识码
-	 *
-	 * @param mobile
-	 * @return
-	 */
-	@Override
-	public AdminMsgPushCommonCustomizeVO getMobileCodeByNumber(String mobile) {
-		String url = "http://AM-USER/am-user/userInfo/getMobileCodeByNumber/" + mobile;
-		AdminMsgPushCommonCustomizeVO response = restTemplate.getForEntity(url,AdminMsgPushCommonCustomizeVO.class).getBody();
-		return response;
-	}
-
-
-	/**
 	 * 获取用户表总记录数
 	 *
 	 * @return
@@ -239,48 +228,4 @@ public class AmUserClientImpl implements AmUserClient {
 		return response.getCount();
 	}
 
-	/**
-	 * 根据userId查询用户推广链接注册
-	 *
-	 * @param userId
-	 * @return
-	 */
-	@Override
-	public UtmRegVO findUtmRegByUserId(Integer userId) {
-		String url = "http://AM-USER/am-user/user/findUtmRegByUserId/" + userId;
-		UtmRegResponse response = restTemplate.getForEntity(url, UtmRegResponse.class).getBody();
-		if (response != null) {
-			return response.getResult();
-		}
-		return null;
-	}
-
-	/**
-	 * 检查用户是不是新手
-	 * @param userId
-	 * @return
-	 */
-	@Override
-	public int countNewUserTotal(Integer userId) {
-		Integer result = restTemplate
-				.getForEntity("http://AM-TRADE/am-trade/borrowTender/countNewUserTotal/" + userId,  Integer.class).getBody();
-		if (result != null) {
-			return result;
-		}
-		return 0;
-	}
-
-	/**
-	 * 更新用户首次出借信息
-	 *
-	 * @param params
-	 */
-	@Override
-	public Integer updateFirstUtmReg(HashMap<String, Object> params) {
-		IntegerResponse result = restTemplate.postForEntity("http://AM-USER/am-user/user/updateFirstUtmReg",params,IntegerResponse.class).getBody();
-		if (IntegerResponse.isSuccess(result)) {
-			return result.getResultInt();
-		}
-		return 0;
-	}
 }

@@ -1,6 +1,7 @@
 package com.hyjf.cs.user.controller.web.smscode;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.bean.result.BaseResult;
 import com.hyjf.am.vo.user.SmsCodeVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
@@ -49,15 +50,20 @@ public class WebSmsCodeController extends BaseUserController {
 	@ApiImplicitParam(name = "param",value = "{validCodeType:string,mobile:string,platform:String}", dataType = "Map")
 	public WebResult sendSmsCode(@RequestBody Map<String,String> param,
 								 @RequestHeader(value = "userId", required = false) Integer userId,
-								 HttpServletRequest request)
-			throws MQException {
+								 HttpServletRequest request){
 		logger.info("web端发送短信验证码接口, param is :{}", JSONObject.toJSONString(param));
 		String validCodeType = param.get("validCodeType");
 		String mobile = param.get("mobile");
 		String platform = param.get("platform");
 		WebResult resultBean = new WebResult();
 		sendSmsCode.sendSmsCodeCheckParam(validCodeType, mobile, userId, GetCilentIP.getIpAddr(request));
-		sendSmsCode.sendSmsCode(validCodeType, mobile,platform, GetCilentIP.getIpAddr(request));
+		try {
+			sendSmsCode.sendSmsCode(validCodeType, mobile,platform, GetCilentIP.getIpAddr(request));
+		} catch (Exception e) {
+			logger.error("web端发送短信验证码失败，失败原因: ", e);
+			resultBean.setStatus(BaseResult.FAIL);
+			resultBean.setStatusDesc(BaseResult.FAIL_DESC);
+		}
 		return resultBean;
 	}
 
