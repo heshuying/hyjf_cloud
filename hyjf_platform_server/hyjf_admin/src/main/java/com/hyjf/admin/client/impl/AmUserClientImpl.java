@@ -33,6 +33,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -2059,11 +2060,17 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public List<SmsCodeCustomizeVO> queryUser(SmsCodeRequestBean requestBean) {
-		SmsCodeCustomizeResponse response = restTemplate.postForObject("http://AM-ADMIN/am-trade/smsCode/queryUser",
-				requestBean, SmsCodeCustomizeResponse.class);
-		if (response != null) {
-			return response.getResultList();
+	public List<String> queryUser(SmsCodeRequestBean requestBean) {
+		Response tradeResponse = restTemplate.postForObject("http://AM-ADMIN/am-trade/smsCode/queryUser",
+				requestBean, Response.class);
+		Response userResponse = restTemplate.postForObject("http://AM-ADMIN/am-user/sms_count/queryUser", requestBean, Response.class);
+		if (tradeResponse != null && userResponse != null) {
+			List<String> tradeList = tradeResponse.getResultList();
+			List<String> userList = userResponse.getResultList();
+			if (!CollectionUtils.isEmpty(tradeList) && !CollectionUtils.isEmpty(userList)) {
+				tradeList.retainAll(userList);
+			}
+			return tradeList;
 		}
 		return null;
 	}

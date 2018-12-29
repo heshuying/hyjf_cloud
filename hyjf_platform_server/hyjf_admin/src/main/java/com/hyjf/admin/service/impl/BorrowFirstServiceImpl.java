@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -77,6 +78,9 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
             String sumAccount = amTradeClient.sumBorrowFirstAccount(borrowFirstRequest);
             borrowFirstResponseBean.setRecordList(adminList);
             borrowFirstResponseBean.setSumAccount(sumAccount);
+        } else {
+            //没数据时初始化
+            borrowFirstResponseBean.setRecordList(new ArrayList<>());
         }
         return borrowFirstResponseBean;
     }

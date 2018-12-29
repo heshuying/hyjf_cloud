@@ -25,6 +25,7 @@ import com.hyjf.common.validator.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -75,6 +76,9 @@ public class BorrowRegistServiceImpl implements BorrowRegistService {
             String sumAccount = amTradeClient.sumBorrowRegistAccount(borrowRegistListRequest);
             borrowRegistResponseBean.setRecordList(adminList);
             borrowRegistResponseBean.setSumAccount(sumAccount);
+        } else {
+            //没数据时初始化
+            borrowRegistResponseBean.setRecordList(new ArrayList<>());
         }
         return borrowRegistResponseBean;
     }

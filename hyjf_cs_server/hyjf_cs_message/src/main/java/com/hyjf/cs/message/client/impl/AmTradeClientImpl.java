@@ -1,11 +1,5 @@
 package com.hyjf.cs.message.client.impl;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
 import com.hyjf.am.response.trade.*;
@@ -15,6 +9,12 @@ import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.cs.message.client.AmTradeClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 /**
  * @author lisheng
@@ -133,10 +133,16 @@ public class AmTradeClientImpl implements AmTradeClient {
 
 	@Override
 	public List<String> queryUser(SmsCodeUserRequest request) {
-		Response response = restTemplate.postForObject("http://AM-TRADE/am-trade/smsCode/queryUser", request,
+		Response tradeResponse = restTemplate.postForObject("http://AM-TRADE/am-trade/smsCode/queryUser", request,
 				Response.class);
-		if (response != null) {
-			return response.getResultList();
+		Response userResponse = restTemplate.postForObject("http://AM-USER/am-user/smsCode/queryUser", request, Response.class);
+		if (tradeResponse != null && userResponse != null) {
+			List<String> tradeList = tradeResponse.getResultList();
+			List<String> userList = userResponse.getResultList();
+            if (!CollectionUtils.isEmpty(tradeList) && !CollectionUtils.isEmpty(userList)) {
+                tradeList.retainAll(userList);
+            }
+			return tradeList;
 		}
 		return null;
 	}

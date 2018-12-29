@@ -851,7 +851,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 
 				borrowExample = new BorrowInfoExample();
 				borrowCra = borrowExample.createCriteria();
-				borrowCra.andBorrowPreNidNewEqualTo(borrowList.getBorrowPreNidNew());
+				borrowCra.andBorrowNidEqualTo(borrowList.getBorrowNid());
 				//添加修改日志
 				BorrowLog borrowLog = new BorrowLog();
 				List<BorrowInfoWithBLOBs> borrowAllList = this.borrowInfoMapper.selectByExampleWithBLOBs(borrowExample);
