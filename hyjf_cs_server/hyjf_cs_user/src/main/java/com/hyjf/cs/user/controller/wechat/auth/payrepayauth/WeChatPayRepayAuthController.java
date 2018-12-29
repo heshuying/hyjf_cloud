@@ -58,12 +58,12 @@ public class WeChatPayRepayAuthController extends BaseUserController {
     SystemConfig systemConfig;
 
     /**
-     * 用户合并授权
+     * 二合一授权(缴费授权、还款授权)
      * @param userId
      * @return
      */
     @ResponseBody
-    @ApiOperation(value = "用户二合一授权(缴费授权、还款授权)", notes = "用户二合一授权(缴费授权、还款授权)")
+    @ApiOperation(value = "二合一授权(缴费授权、还款授权)", notes = "二合一授权(缴费授权、还款授权)")
     @GetMapping(value = PAY_REPAY_AUTH, produces = "application/json; charset=utf-8")
     public  WebResult<Object> auth(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
         logger.info("缴费、还款二合一授权开始", "className："+ this.getClass().getName() + "methodPath："+ PAY_REPAY_CLASS_NAME + PAY_REPAY_AUTH);
@@ -147,7 +147,7 @@ public class WeChatPayRepayAuthController extends BaseUserController {
     }
 
     /**
-     * 用户合并授权异步回调
+     * 缴费、还款二合一授权异步回调
      * @param bean
      * @return
      */
@@ -164,7 +164,7 @@ public class WeChatPayRepayAuthController extends BaseUserController {
         if(authService.checkDefaultConfig(bean, AuthBean.AUTH_TYPE_PAY_REPAY_AUTH)){
 
             authService.updateUserAuthLog(bean.getLogOrderId(),"QuotaError");
-            logger.info("[用户缴费、还款二合一授权完成后,[异步回调]结束]");
+            logger.info("缴费、还款二合一授权[异步回调]结束");
             result.setMessage("缴费、还款二合一授权成功");
             result.setStatus(true);
             return JSONObject.toJSONString(result, true);
@@ -185,26 +185,25 @@ public class WeChatPayRepayAuthController extends BaseUserController {
         }else{
             authService.updateUserAuthLog(bean.getLogOrderId(),authService.getBankRetMsg(bean.getRetCode()));
         }
-        logger.info("用户缴费、还款二合一授权完成后,[异步回调]结束", "className："+ this.getClass().getName() + "methodPath："+ PAY_REPAY_CLASS_NAME + PAY_REPAY_BG_AUTH);
+        logger.info("缴费、还款二合一授权[异步回调]结束", "className："+ this.getClass().getName() + "methodPath："+ PAY_REPAY_CLASS_NAME + PAY_REPAY_BG_AUTH);
         result.setMessage("缴费、还款二合一授权成功");
         result.setStatus(true);
         return JSONObject.toJSONString(result, true);
     }
 
     /**
-     * @Description web端查询提现失败原因
-     * @Author pangchengchao
-     * @Version v0.1
-     * @Date
+     * wechat端-用户缴费、还款二合一授权失败原因查询
+     * @param vo
+     * @return
      */
-    @ApiOperation(value = "查询缴费、还款二合一授权失败原因", notes = "查询缴费、还款二合一授权失败原因")
+    @ApiOperation(value = "缴费、还款二合一授权失败原因查询", notes = "缴费、还款二合一授权失败原因查询")
     @PostMapping(PAY_REPAY_SEACH_AUTH)
     @ResponseBody
     public WebResult<Object> seachUserAuthErrorMessgae(@RequestBody @Valid AuthVO vo) {
         String logOrdId = vo.getLogOrdId();
-        logger.info("查询缴费、还款二合一授权失败原因[开始],订单号:[" + logOrdId + "].");
+        logger.info("缴费、还款二合一授权失败原因查询[开始],订单号:[" + logOrdId + "].");
         WebResult<Object> result = authService.seachUserAuthErrorMessgae(logOrdId);
-        logger.info("查询缴费、还款二合一授权[结束]");
+        logger.info("缴费、还款二合一授权失败原因查询[结束]");
         return result;
     }
 
