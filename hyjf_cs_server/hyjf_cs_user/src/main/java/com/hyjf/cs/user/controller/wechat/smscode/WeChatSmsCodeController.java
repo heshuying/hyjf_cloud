@@ -76,14 +76,14 @@ public class WeChatSmsCodeController extends BaseUserController {
 					// 着陆页注册, 使用无感知验证码
 
 					// 拼装所需参数
-					String aid 			= "2026782647";
+					String aid = "2026782647";
 					String AppSecretKey = "0K6K0OwY9HELsYAQ2u_gzQA**";
-					String ticket 		= request.getParameter("ticket");
-					String randstr 		= request.getParameter("randstr");
-					String userIp 		= GetCilentIP.getIpAddr(request);
-					String verifyUrl 	= "https://ssl.captcha.qq.com/ticket/verify?aid=" + aid + "&AppSecretKey=" + AppSecretKey + "&Ticket=" + ticket + "&Randstr=" + randstr + "&UserIP=" + userIp;
+					String ticket = request.getParameter("ticket");
+					String randstr = request.getParameter("randstr");
+					String userIp = GetCilentIP.getIpAddr(request);
+					String verifyUrl = "https://ssl.captcha.qq.com/ticket/verify?aid=" + aid + "&AppSecretKey=" + AppSecretKey + "&Ticket=" + ticket + "&Randstr=" + randstr + "&UserIP=" + userIp;
 					logger.info(mobile + "=>无感知验证码请求地址:" + verifyUrl);
-					String backRes 		= HttpDeal.get(verifyUrl);
+					String backRes = HttpDeal.get(verifyUrl);
 					logger.info(mobile + "=>无感知验证码请求返回:" + backRes);
 
 					// 解析返回的JSON串
