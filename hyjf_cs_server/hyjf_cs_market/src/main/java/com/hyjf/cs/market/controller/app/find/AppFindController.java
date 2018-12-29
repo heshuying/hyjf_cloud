@@ -9,6 +9,7 @@ import com.hyjf.am.vo.config.ContentArticleCustomizeVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.market.bean.AppContentArticleBean;
+import com.hyjf.cs.market.contants.ArticleTypeEnum;
 import com.hyjf.cs.market.controller.BaseMarketController;
 import com.hyjf.cs.market.service.AppFindService;
 import io.swagger.annotations.Api;
@@ -164,7 +165,7 @@ public class AppFindController extends BaseMarketController {
 		JSONObject ret = new JSONObject();
 		ret.put("status", "000");
 		ret.put("statusDesc", "成功");
-		ret.put("topTitle", getTopTitle(type));
+		ret.put("topTitle", ArticleTypeEnum.getTitle(type));
 		try {
 			if (type != null && 4 == type) {// 3.0.9 新增推送公告详情
 				AppPushManageVO manageInfo = appFindService.getAppPushManagerContentByID(contentArticleId);
@@ -200,24 +201,4 @@ public class AppFindController extends BaseMarketController {
 				"/hyjf-app/find/contentArticle/{type}/{contentArticleId}");
 		return ret;
 	}
-
-	private String getTopTitle(Integer type) {
-		switch (type) {
-			case 2:
-				return "网站公告";
-			case 3:
-				return "网贷知识";
-			case 5:
-				return "关于我们";
-			case 101:
-				return "风险教育";
-			case 8:
-				return "联系我们";
-			case 20:
-				return "公司动态";
-			default:
-				return "";
-		}
-	}
-
 }

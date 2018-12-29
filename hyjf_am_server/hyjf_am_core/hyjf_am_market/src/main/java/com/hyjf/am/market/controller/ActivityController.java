@@ -19,9 +19,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author xiasq
@@ -38,19 +36,21 @@ public class ActivityController {
 
 
     @GetMapping("/getActivityList")
-    public ActivityListResponse getActivityList(){
-        ActivityListResponse response = new ActivityListResponse();
-        List<ActivityList> list=activityService.getActivityList();
-        if (CollectionUtils.isNotEmpty(list)){
-            response.setResultList(CommonUtils.convertBeanList(list,ActivityListVO.class));
-        }
-        return response;
-    }
+	public ActivityListResponse getActivityList() {
+        logger.info("getActivityList start...");
+		ActivityListResponse response = new ActivityListResponse();
+		List<ActivityList> list = activityService.getActivityList();
+		if (CollectionUtils.isNotEmpty(list)) {
+			response.setResultList(CommonUtils.convertBeanList(list, ActivityListVO.class));
+		}
+		return response;
+	}
 
 
 
     @PostMapping("/selectActivityList")
     public ActivityListResponse selectActivityList(@RequestBody ActivityListRequest activityListRequest){
+        logger.info("selectActivityList start, reqeust is : {}", JSONObject.toJSONString(activityListRequest));
         ActivityListResponse response = new ActivityListResponse();
         ActivityList activityList = activityService.selectActivityList(activityListRequest.getId());
         if(activityList != null){
@@ -65,6 +65,7 @@ public class ActivityController {
 
     @RequestMapping("/selectActivity/{activityId}")
     public ActivityListResponse selectActivityList(@PathVariable int activityId){
+        logger.info("selectActivityList start, activityId is : {}", activityId);
         ActivityList activityList = activityService.selectActivityList(activityId);
         ActivityListResponse response = new ActivityListResponse();
         if(null != activityList){
@@ -157,24 +158,6 @@ public class ActivityController {
     }
 
 
-
-
-    /**
-     * 查询条件设置
-     *
-     * @param activityListRequest
-     * @return
-     */
-    private Map<String, Object> paramSet(ActivityListRequest activityListRequest) {
-        Map<String, Object> mapParam = new HashMap<String, Object>();
-        mapParam.put("title", activityListRequest.getTitle());
-        mapParam.put("startTime", activityListRequest.getStartTime());
-        mapParam.put("endTime", activityListRequest.getEndTime());
-        mapParam.put("startCreate",activityListRequest.getStartCreate());
-        mapParam.put("endCreate", activityListRequest.getEndCreate());
-        return mapParam;
-    }
-
     /**
      * @auth walter.limeng
      * 根据活动ID获取活动title
@@ -190,23 +173,6 @@ public class ActivityController {
         }
         return response;
     }
-
-
-    /**
-     * 获取有效活动列表
-     * @param request
-     * @return
-     */
-//    @PostMapping("/selectRecordListValid")
-//    public ActivityListCustomizeResponse selectRecordListValid(@RequestBody ActivityListCustomizeVO request) {
-//        ActivityListCustomizeResponse response = new ActivityListCustomizeResponse();
-//        List<ActivityListCustomize> recordList = activityService.selectRecordListValid(new ActivityListCustomize(),-1,-1);
-//        if (!CollectionUtils.isEmpty(recordList)) {
-//            List<ActivityListCustomizeVO> activityListCustomizeVOS = CommonUtils.convertBeanList(recordList,ActivityListCustomizeVO.class);
-//            response.setResultList(activityListCustomizeVOS);
-//        }
-//        return response;
-//    }
 
     /**
      * @Author walter.limeng
@@ -248,18 +214,4 @@ public class ActivityController {
         activityListResponse.setResultList(activityListVOS);
         return activityListResponse;
     }
-
-//    @GetMapping("/getInfoById/{id}")
-//    public ActivityListResponse getInfoById(@PathVariable Integer id) {
-//        ActivityListResponse response = new ActivityListResponse();
-//        ActivityList activityList = activityService.getActivityInfo(id);
-//        ActivityListVO activityListVO = new ActivityListVO();
-//        if (activityList != null) {
-//            BeanUtils.copyProperties(activityList, activityListVO);
-//            activityListVO.setAcStartTime(GetDate.getDateTimeMyTime(activityList.getTimeStart()));
-//            activityListVO.setAcEndTime(GetDate.getDateTimeMyTime(activityList.getTimeEnd()));
-//            response.setResult(activityListVO);
-//        }
-//        return response;
-//    }
 }
