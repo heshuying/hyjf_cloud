@@ -80,18 +80,20 @@
     </resultMap>
 
     <select id="selectId0List"  resultType="com.hyjf.am.user.dao.model.auto.User"  parameterType="com.hyjf.am.market.dao.model.auto.ActivityList">
-        select s.user_id userId,s.username from ht_users s inner join ht_nm_user n on s.username = n.user_name
+        select s.user_id userId,s.username from hyjf_user.ht_user s inner join ht_nm_user n on s.username = n.user_name
     </select>
 
     <select id="selectRefferIdByName" parameterType="java.lang.String" resultType="java.lang.Integer">
-       select u.user_id from ht_users u where u.username = #{refferName}
+       select u.user_id from hyjf_user.ht_user u where u.username = #{refferName}
     </select>
 
     <select id="selectIdList" resultType="java.lang.Integer" parameterType="java.util.HashMap">
         select a.user_id from
         (select
-        s1.user_id,s1.username as username,s1.referrer,from_unixtime(s1.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time
-        from ht_users s1 where s1.referrer in
+        s1.user_id,s1.username as username,su.user_id referrer,from_unixtime(s1.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time
+        from hyjf_user.ht_user s1
+        INNER JOIN hyjf_user.ht_spreads_user su on s1.user_id=su.spreads_user_id
+        where su.user_id in
         <foreach collection="id0"  open="(" close=")" separator="," item="user">
             #{user.userId}
         </foreach>
@@ -102,10 +104,11 @@
         and s1.reg_time<![CDATA[>=]]> #{activityList.timeStart} and s1.reg_time<![CDATA[<=]]>#{activityList.timeEnd}
         UNION
         select
-        s2.user_id,s2.username as username,s2.referrer,from_unixtime(s2.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time
-        from ht_users s2
-        inner JOIN ht_users s1 ON s2.referrer = s1.user_id
-        where s1.referrer in
+        s2.user_id,s2.username as username,su.user_id referrer,from_unixtime(s2.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time
+        from hyjf_user.ht_user s2
+        INNER JOIN hyjf_user.ht_spreads_user su on s2.user_id=su.spreads_user_id
+        inner JOIN hyjf_user.ht_user s1 ON su.user_id = s1.user_id
+        where su.spreads_user_id in
         <foreach collection="id0"  open="(" close=")" separator="," item="user">
             #{user.userId}
         </foreach>
@@ -117,11 +120,13 @@
         and s2.reg_time<![CDATA[>=]]> #{activityList.timeStart} and s2.reg_time<![CDATA[<=]]>#{activityList.timeEnd}
         UNION
         select
-        s3.user_id,s3.username as username,s3.referrer,from_unixtime(s3.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time
-        from ht_users s3
-        inner JOIN ht_users s2 ON s3.referrer = s2.user_id
-        inner JOIN ht_users s1 ON s2.referrer = s1.user_id
-        where s1.referrer in
+        s3.user_id,s3.username as username,su.user_id referrer,from_unixtime(s3.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time
+        from hyjf_user.ht_user s3
+        INNER JOIN hyjf_user.ht_spreads_user su on s3.user_id=su.spreads_user_id
+        inner JOIN hyjf_user.ht_user s2 ON su.user_id = s2.user_id
+        INNER JOIN hyjf_user.ht_spreads_user su2 on s2.user_id=su2.spreads_user_id
+        inner JOIN hyjf_user.ht_user s1 ON su.user_id = s1.user_id
+        where s1.user_id in
         <foreach collection="id0"  open="(" close=")" separator="," item="user">
             #{user.userId}
         </foreach>
@@ -133,7 +138,7 @@
         and s2.reg_time<![CDATA[>=]]> #{activityList.timeStart} and s2.reg_time<![CDATA[<=]]>#{activityList.timeEnd}
         and s3.reg_time<![CDATA[>=]]> #{activityList.timeStart} and s3.reg_time<![CDATA[<=]]>#{activityList.timeEnd}
         ) a
-        left join ht_users_info i on a.user_id=i.user_id
+        left join hyjf_user.ht_user_info i on a.user_id=i.user_id
         where 1=1
         <if test="username != null and username != '' ">
             and a.username= #{username}
@@ -155,9 +160,11 @@
 
     <select id="selectNaMiMarketingList" resultType="com.hyjf.am.vo.admin.NaMiMarketingVO" parameterType="java.util.HashMap">
         select u.user_id as id,u.username as username,u.mobile as mobile,u2.truename as truename,
-        (select u1.username from ht_users u1 where u1.user_id=u.referrer) as refferName ,
-        from_unixtime(u.reg_time,'%Y-%m-%d %H:%i:%s') as regTime  from ht_users u
-        left join ht_users_info u2 on u.user_id=u2.user_id
+        (select u1.username from hyjf_user.ht_user u1 where u1.user_id=su.user_id) as refferName ,
+        from_unixtime(u.reg_time,'%Y-%m-%d %H:%i:%s') as regTime
+        from hyjf_user.ht_user u
+        INNER JOIN hyjf_user.ht_spreads_user su on u.user_id=su.spreads_user_id
+        left join hyjf_user.ht_user_info u2 on u.user_id=u2.user_id
         where u.user_id in
         <foreach collection="ids"  open="(" close=")" separator="," item="userId">
             #{userId}
@@ -202,8 +209,9 @@
     </select>
 
     <select id="selectReturnDetail" resultType="com.hyjf.am.market.dao.model.auto.PerformanceReturnDetail" parameterType="java.lang.String">
-        select d.username userName,d1.username refferName
-        from ht_users d left join ht_users d1 on d.referrer=d1.user_id
+      select d.username userName,u.username refferName
+        from hyjf_user.ht_user d INNER JOIN hyjf_user.ht_spreads_user d1 on d1.spreads_user_id=d1.user_id
+	  INNER  JOIN   hyjf_user.ht_user u on d1.spreads_user_id=u.user_id
         where d.username =#{referName}
         limit 1
     </select>
