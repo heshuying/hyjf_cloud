@@ -1554,7 +1554,6 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                     calculateRecoverPlanAll(repayPlanDetail, borrow, totalPeriod);
                     borrowRepayPlanDeails.add(repayPlanDetail);
 
-                    // TODO: 累加以下值
                     repay.setRepayAccountAll(repay.getRepayAccountAll().add(repayPlanDetail.getRepayAccountAll()));
                     repay.setRepayAccount(repay.getRepayAccount().add(repayPlanDetail.getRepayAccount()));
                     repay.setRepayCapital(repay.getRepayCapital().add(repayPlanDetail.getRepayCapital()));
