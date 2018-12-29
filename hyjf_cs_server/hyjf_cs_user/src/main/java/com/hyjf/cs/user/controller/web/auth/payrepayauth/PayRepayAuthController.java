@@ -181,6 +181,7 @@ public class PayRepayAuthController extends BaseUserController {
                 logger.info("缴费、还款二合一授权[异步回调]更新签约状态和日志表异常！",
                         "className："+ this.getClass().getName() + "methodPath："+ PAY_REPAY_CLASS_NAME + PAY_REPAY_BG_AUTH,
                         e);
+                logger.info("code：{}；message：{}", bean.getRetCode(), authService.getBankRetMsg(bean.getRetCode()));
                 authService.updateUserAuthLog(bean.getLogOrderId(),authService.getBankRetMsg(bean.getRetCode()));
             }
         }else{

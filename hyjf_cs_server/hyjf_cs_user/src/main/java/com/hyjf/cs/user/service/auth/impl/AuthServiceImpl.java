@@ -1062,7 +1062,7 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 	@Override
 	public WebResult<Object> seachUserAuthErrorMessgae(String logOrdId) {
 		WebResult<Object> result = new WebResult<Object>();
-		HjhUserAuthLogVO hjhUserAuthLogVO=amUserClient.selectByExample(logOrdId);
+		HjhUserAuthLogVO hjhUserAuthLogVO = amUserClient.selectByExample(logOrdId);
 		result.setStatus(WebResult.SUCCESS);
 		Map<String,String> map = new HashedMap();
 		if(hjhUserAuthLogVO!=null){
