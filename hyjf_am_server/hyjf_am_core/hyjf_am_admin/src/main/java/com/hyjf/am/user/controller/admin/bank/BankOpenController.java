@@ -99,30 +99,6 @@ public class BankOpenController extends BaseController {
 		return result?1:0;
 	}
 
-	/**
-	 * 更新开户日志表
-	 *
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping("/updateCardNoToBank")
-	public int updateCardNoToBank(@RequestBody @Valid BankOpenRequest request) {
-		logger.info("updateCardNoToBank...param is :{}", JSONObject.toJSONString(request));
-		
-		Integer userId = request.getUserId();
-		String orderId = request.getOrderId();
-		String accountId = request.getAccountId();
-		Integer bankAccountEsb = request.getBankAccountEsb();
-		String trueName = request.getTrueName();
-		String idNo = request.getIdNo();
-		String mobile = request.getMobile();
-		
-		// TODO:保留，业务继续。。
-//		boolean result = this.bankOpenService.updateCardNoToBank(userId, trueName, orderId, accountId, idNo, bankAccountEsb, mobile);
-        
-		return 1;
-	}
-
 	@RequestMapping("/findByCardId/{cardId}")
 	public UserInfoResponse findByCardId(@PathVariable String cardId) {
 		UserInfoResponse response = new UserInfoResponse();
