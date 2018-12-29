@@ -261,6 +261,7 @@ public class CornerController extends BaseController {
         Map<String,String> resultMap = new HashMap<>();
         resultMap.put("downloadUrl",downloadUrl);
         result.setData(resultMap);
+        result.setStatus("000");
         return result;
     }
 }
