@@ -556,7 +556,6 @@ public class AssetManageServiceImpl extends BaseTradeServiceImpl implements Asse
             // 3持有项目列表
             if (type != null && "1".equals(type)) {
                 // 锁定中
-                // TODO 不要分页 查两次 合并
                 List<PlanInvestCustomizeVO> debtInvestList = amTradeClient.selectInvestCreditList(params1);
                 List<PlanInvestCustomizeVO> debtCreditList = amTradeClient.selectCreditCreditList(params1);
                 List<PlanInvestCustomizeVO> tmpList = new ArrayList<PlanInvestCustomizeVO>();

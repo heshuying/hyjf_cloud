@@ -537,12 +537,11 @@ public class UserWithdrawServiceImpl extends BaseUserServiceImpl implements User
             // 调用江西银行提现接口
             // 调用汇付接口(提现)
 
-            // todo  url的域名先干掉，应该加什么？？
-            String bankRetUrl =  "/server/user/withdraw/return.do?callback=" + retUrl.replace("#", "*-*-*");
+            String bankRetUrl =  systemConfig.getServerHost()+"/server/user/withdraw/return.do?callback=" + retUrl.replace("#", "*-*-*");
            // String bankRetUrl = systemConfig.httpWebHost + "/server/user/withdraw/return.do?callback=" + retUrl.replace("#", "*-*-*");
             // 支付工程路径
            // String bankBgRetUrl = systemConfig.httpWebHost + "/server/user/withdraw/callback.do?callback=" + bgRetUrl.replace("#", "*-*-*");// 支付工程路径
-            String bankBgRetUrl = "/server/user/withdraw/callback.do?callback=" + bgRetUrl.replace("#", "*-*-*");// 支付工程路径
+            String bankBgRetUrl = "http://CS-USER/server/user/withdraw/callback.do?callback=" + bgRetUrl.replace("#", "*-*-*");// 支付工程路径
 
             // 路由代码
             String routeCode = "";
