@@ -541,7 +541,7 @@ public class UserWithdrawServiceImpl extends BaseUserServiceImpl implements User
            // String bankRetUrl = systemConfig.httpWebHost + "/server/user/withdraw/return.do?callback=" + retUrl.replace("#", "*-*-*");
             // 支付工程路径
            // String bankBgRetUrl = systemConfig.httpWebHost + "/server/user/withdraw/callback.do?callback=" + bgRetUrl.replace("#", "*-*-*");// 支付工程路径
-            String bankBgRetUrl = "/server/user/withdraw/callback.do?callback=" + bgRetUrl.replace("#", "*-*-*");// 支付工程路径
+            String bankBgRetUrl = "http://CS-USER/server/user/withdraw/callback.do?callback=" + bgRetUrl.replace("#", "*-*-*");// 支付工程路径
 
             // 路由代码
             String routeCode = "";
