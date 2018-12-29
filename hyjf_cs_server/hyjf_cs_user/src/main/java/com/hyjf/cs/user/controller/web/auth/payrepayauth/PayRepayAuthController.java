@@ -194,20 +194,18 @@ public class PayRepayAuthController extends BaseUserController {
     }
 
     /**
-     * @Description web端查询提现失败原因
+     * @Description web端查询缴费、还款二合一授权失败原因
      * @Author dangzw
      * @Version v0.1
      * @Date
      */
-    @ApiOperation(value = "查询缴费、还款二合一授权失败原因", notes = "查询缴费、还款二合一授权失败原因")
+    @ApiOperation(value = "缴费、还款二合一授权失败原因查询", notes = "缴费、还款二合一授权失败原因查询")
     @PostMapping(PAY_REPAY_SEACH_AUTH)
     @ResponseBody
     public WebResult<Object> seachUserAuthErrorMessgae(@RequestBody @Valid AuthVO vo) {
         String logOrdId = vo.getLogOrdId();
-        String faileCode = authService.getFailedMess(logOrdId);
-        String faileMessage = authService.getBankRetMsg(faileCode);
-        logger.info("查询缴费、还款二合一授权[开始]，失败原因:银行返回响应代码:[" + faileCode + "],失败原因:[" + faileMessage + "],订单号:[" + logOrdId + "].");
-        WebResult<Object> result = authService.seachUserAuthErrorMessgae(vo.getLogOrdId());
+        logger.info("查询缴费、还款二合一授权失败原因[开始],订单号:[" + logOrdId + "].");
+        WebResult<Object> result = authService.seachUserAuthErrorMessgae(logOrdId);
         logger.info("查询缴费、还款二合一授权[结束]");
         return result;
     }

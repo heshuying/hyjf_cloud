@@ -202,9 +202,9 @@ public class WeChatPayRepayAuthController extends BaseUserController {
     @ResponseBody
     public WebResult<Object> seachUserAuthErrorMessgae(@RequestBody @Valid AuthVO vo) {
         String logOrdId = vo.getLogOrdId();
-        logger.info("查询缴费、还款二合一授权失败原因 -->start, logOrdId:{}", logOrdId);
+        logger.info("查询缴费、还款二合一授权失败原因[开始],订单号:[" + logOrdId + "].");
         WebResult<Object> result = authService.seachUserAuthErrorMessgae(logOrdId);
-        logger.info("查询缴费、还款二合一授权失败原因 -->end");
+        logger.info("查询缴费、还款二合一授权[结束]");
         return result;
     }
 
