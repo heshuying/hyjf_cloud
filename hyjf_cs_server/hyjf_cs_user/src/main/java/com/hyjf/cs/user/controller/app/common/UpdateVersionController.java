@@ -50,7 +50,7 @@ public class UpdateVersionController {
      * @param
      * @return
      */
-    @ApiOperation("版本更新")
+    @ApiOperation("ios版本更新")
     @GetMapping(value = "/hjh-update.jsp")
     public ModelAndView hjhUpdateIos(HttpServletRequest request) {
         String sign = request.getParameter("sign");
@@ -64,7 +64,7 @@ public class UpdateVersionController {
      * ios下载页
      * @return
      */
-    @RequestMapping(value = "/iosinit")
+    @GetMapping(value = "/iosinit")
     public AppResult initIOS() {
         AppResult result = new AppResult();
         String downloadUrl = "itms-apps://itunes.apple.com/cn/app/id1044961717?mt=8";
