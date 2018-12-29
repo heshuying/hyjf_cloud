@@ -40,4 +40,19 @@ public class UpdateVersionController {
         ModelAndView modelAndView = new ModelAndView("redirect:"+url);
         return modelAndView;
     }
+
+    /**
+     * 获取最新版本号下载地址
+     * @param request
+     * @param
+     * @return
+     */
+    @ApiOperation("版本更新")
+    @GetMapping(value = "/hjh-update.jsp")
+    public ModelAndView hjhUpdateIos(HttpServletRequest request) {
+        String sign = request.getParameter("sign");
+        String url = systemConfig.getAppFrontHost()+"/update/package/ios?sign="+sign;
+        ModelAndView modelAndView = new ModelAndView("redirect:"+url);
+        return modelAndView;
+    }
 }
