@@ -11,7 +11,6 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.SynBalanceRequestBean;
 import com.hyjf.cs.user.bean.SynBalanceResultBean;
 import com.hyjf.cs.user.bean.WxSynBalanceResultBean;
-import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.result.BaseResultBean;
@@ -38,10 +37,6 @@ import java.text.DecimalFormat;
 public class WeChatSynBalanceController extends BaseUserController {
     @Autowired
     SynBalanceService synBalanceService;
-
-    @Autowired
-    SystemConfig systemConfig;
-
 
     @ApiOperation(value = "我的-刷新", notes = "我的-刷新")
     @PostMapping(value = "/init.do")

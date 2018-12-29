@@ -1,7 +1,6 @@
 package com.hyjf.cs.user.service.smscode;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.exception.MQException;
 import com.hyjf.cs.user.service.BaseUserService;
 
 /**
@@ -14,9 +13,9 @@ public interface SmsCodeService extends BaseUserService {
      * @param validCodeType
      * @param mobile
      * @param ip
-     * @throws MQException
+     * @throws Exception
      */
-    void sendSmsCode(String validCodeType, String mobile,String platform, String ip) throws MQException;
+    void sendSmsCode(String validCodeType, String mobile,String platform, String ip) throws Exception;
 
 
     /**
