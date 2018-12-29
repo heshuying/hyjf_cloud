@@ -59,18 +59,4 @@ public class UpdateVersionController {
         return modelAndView;
     }
 
-    /**
-     *
-     * ios下载页
-     * @return
-     */
-    @GetMapping(value = "/iosinit")
-    public AppResult initIOS() {
-        AppResult result = new AppResult();
-        String downloadUrl = "itms-apps://itunes.apple.com/cn/app/id1044961717?mt=8";
-        Map<String,String> resultMap = new HashMap<>();
-        resultMap.put("downloadUrl",downloadUrl);
-        result.setData(resultMap);
-        return result;
-    }
 }
