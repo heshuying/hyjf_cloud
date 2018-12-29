@@ -6,7 +6,6 @@ package com.hyjf.admin.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.admin.client.AmTradeClient;
-import com.hyjf.admin.controller.finance.merchant.transfer.TransferCustomizeBean;
 import com.hyjf.admin.service.TransferService;
 import com.hyjf.am.response.admin.MerchantAccountResponse;
 import com.hyjf.am.response.admin.UserTransferResponse;
@@ -69,13 +68,6 @@ public class TransferServiceImpl extends BaseAdminServiceImpl implements Transfe
             return account.getBalance().toString();
         }
         return null;
-    }
-
-    @Override
-    public void checkTransferParam(TransferCustomizeBean form) {
-        checkTransfer(form.getOutUserName());
-        // TODO: 2018/7/6 zhangqingqing 说明 
-       // ValidatorFieldCheckUtil.validateMaxLength(modelAndView, "remark", form.getRemark(), 60, true);
     }
 
     @Override

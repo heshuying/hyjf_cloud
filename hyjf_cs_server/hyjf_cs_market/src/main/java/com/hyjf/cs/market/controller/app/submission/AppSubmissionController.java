@@ -26,11 +26,11 @@ import java.util.Date;
 @RestController
 @RequestMapping("/hyjf-app/submission")
 public class AppSubmissionController {
-    Logger logger = LoggerFactory.getLogger(getClass());
+    private Logger logger = LoggerFactory.getLogger(getClass());
     public static final String RETURN_REQUEST = "/hyjf-app/submission/addSubmission";
 
     @Autowired
-    SubmissionService submissionService;
+    private SubmissionService submissionService;
 
     /**
      * 查询列表
