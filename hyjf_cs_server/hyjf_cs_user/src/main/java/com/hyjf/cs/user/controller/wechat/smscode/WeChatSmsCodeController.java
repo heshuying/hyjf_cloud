@@ -1,7 +1,9 @@
 package com.hyjf.cs.user.controller.wechat.smscode;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.CommonConstant;
+import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
@@ -48,6 +50,10 @@ public class WeChatSmsCodeController extends BaseUserController {
 		JSONObject ret = new JSONObject();
 		ret.put("request", "/hyjf-wechat/userRegist/sendVerificationCodeAction");
 
+		// 无感知图形验证码验证开始  Add By huanghui 20181227
+		// 注册页面类型(register : 注册页, 使用图形验证码; landingpage : 着陆页,使用无感知图形验证码.)
+		String pageType = request.getParameter("pageType");
+
 		// 验证码类型
 		String verificationType = request.getParameter("verificationType");
 		// 手机号
@@ -59,50 +65,128 @@ public class WeChatSmsCodeController extends BaseUserController {
 		// 业务逻辑
 
 		try {
-			if(!verificationType.equals(CommonConstant.PARAM_TPL_BDYSJH)){
-				sendSmsCode.sendSmsCode(verificationType, mobile, String.valueOf(ClientConstants.WECHAT_CLIENT), GetCilentIP.getIpAddr(request));
+			if("TPL_ZHUCE".equals(verificationType)){
+				// 发送短信 标识
+				boolean success = false;
+				if ("register".equals(pageType)){
+					sendSmsCode.sendSmsCode(verificationType, mobile, String.valueOf(ClientConstants.WECHAT_CLIENT), GetCilentIP.getIpAddr(request));
 					ret.put("status", "000");
 					ret.put("statusDesc", "发送验证码成功");
-			}else{
-				//未登录无法调用银行短信验证码发送接口
-				if(userId == null){
-					ret.put("status", "99");
-					ret.put("statusDesc","未登录");
-					return ret;
-				}
+				}else {
+					// 着陆页注册, 使用无感知验证码
 
-				// 请求发送短信验证码
-				BankCallBean bean = sendSmsCode.callSendCode(userId,mobile, BankCallMethodConstant.TXCODE_MOBILE_MODIFY_PLUS, BankCallConstant.CHANNEL_WEI,null);
-				if(bean == null){
-					ret.put("status", "99");
-					ret.put("statusDesc","发送短信验证码异常");
-					return ret;
-				}
-				//返回失败
-				if(!BankCallConstant.RESPCODE_SUCCESS.equals(bean.getRetCode())){
-					if(!Validator.isNull(bean.getSrvAuthCode())){
+					// 拼装所需参数
+					String aid 			= "2026782647";
+					String AppSecretKey = "0K6K0OwY9HELsYAQ2u_gzQA**";
+					String ticket 		= request.getParameter("ticket");
+					String randstr 		= request.getParameter("randstr");
+					String userIp 		= GetCilentIP.getIpAddr(request);
+					String verifyUrl 	= "https://ssl.captcha.qq.com/ticket/verify?aid=" + aid + "&AppSecretKey=" + AppSecretKey + "&Ticket=" + ticket + "&Randstr=" + randstr + "&UserIP=" + userIp;
+					logger.info(mobile + "=>无感知验证码请求地址:" + verifyUrl);
+					String backRes 		= HttpDeal.get(verifyUrl);
+					logger.info(mobile + "=>无感知验证码请求返回:" + backRes);
+
+					// 解析返回的JSON串
+					JSONObject jsonObject = JSON.parseObject(backRes);
+					String backResponse = (String) jsonObject.get("response");
+					String backErrMsg = (String) jsonObject.get("err_msg");
+
+					if ("1".equals(backResponse)){
+						// 无感知图形验证码验证通过
+						sendSmsCode.sendSmsCode(verificationType, mobile, String.valueOf(ClientConstants.WECHAT_CLIENT), GetCilentIP.getIpAddr(request));
 						ret.put("status", "000");
 						ret.put("statusDesc", "发送验证码成功");
-						//业务授权码
-						ret.put("bankCode", bean.getSrvAuthCode());
+					}else {
+						String getBackErrMsg = this.backErrMsg(backErrMsg);
+						ret.put("status", "99");
+						ret.put("statusDesc", "图形验证码:" + getBackErrMsg);
 						return ret;
 					}
-					ret.put("status", "99");
-					ret.put("statusDesc","发送短信验证码失败，失败原因：" + bean.getRetMsg());
-					return ret;
 				}
-				//成功返回业务授权码
-				ret.put("status", "000");
-				ret.put("statusDesc", "发送验证码成功");
-				//业务授权码
-				ret.put("bankCode", bean.getSrvAuthCode());
 			}
-
 		} catch (Exception e) {
 			ret.put("status", "99");
 			ret.put("statusDesc", e.getMessage());
 		}
 		return ret;
+	}
+
+	/**
+	 * 匹配返回的错误信息
+	 * @param errCode
+	 * @return
+	 */
+	private String backErrMsg(String errCode){
+		String backMsg = "";
+		switch (errCode){
+			case "OK":
+				backMsg = "验证通过";
+				break;
+			case "user code len error":
+				backMsg = "验证码长度不匹配";
+				break;
+			case "captcha no match":
+				backMsg = "验证码答案不匹配/Randstr参数不匹配";
+				break;
+			case "verify timeout":
+				backMsg = "验证码签名超时";
+				break;
+			case "Sequnce repeat":
+				backMsg = "验证码签名重放";
+				break;
+			case "Sequnce invalid":
+				backMsg = "验证码签名序列";
+				break;
+			case "Cookie invalid":
+				backMsg = "验证码cookie信息不合法";
+				break;
+			case "verify ip no match":
+				backMsg = "ip不匹配";
+				break;
+			case "decrypt fail":
+				backMsg = "验证码签名解密失败";
+				break;
+			case "appid no match":
+				backMsg = "验证码强校验appid错误";
+				break;
+			case "param err":
+				backMsg = "AppSecretKey参数校验错误";
+				break;
+			case "cmd no match":
+				backMsg = "验证码系统命令号不匹配";
+				break;
+			case "uin no match":
+				backMsg = "号码不匹配";
+				break;
+			case "seq redirect":
+				backMsg = "重定向验证";
+				break;
+			case "opt no vcode":
+				backMsg = "操作使用pt免验证码校验错误";
+				break;
+			case "diff":
+				backMsg = "差别，验证错误";
+				break;
+			case "captcha type not match":
+				backMsg = "验证码类型与拉取时不一致";
+				break;
+			case "verify type error":
+				backMsg = "验证类型错误";
+				break;
+			case "invalid pkg":
+				backMsg = "非法请求包";
+				break;
+			case "bad visitor":
+				backMsg = "策略拦截";
+				break;
+			case "system busy":
+				backMsg = "系统内部错误";
+				break;
+			default:
+				backMsg = "验证错误";
+				break;
+		}
+		return backMsg;
 	}
 
 	/**

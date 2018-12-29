@@ -53,10 +53,10 @@ public class PayRepayAuthController extends BaseUserController {
     private static final String PAY_REPAY_CLASS_NAME = "/hyjf-web/user/auth/payrepayauth";
 
     @Autowired
-    private AuthService authService;
+    SystemConfig systemConfig;
 
     @Autowired
-    SystemConfig systemConfig;
+    private AuthService authService;
 
     /**
      * 用户二合一授权(缴费授权、还款授权)
@@ -110,19 +110,21 @@ public class PayRepayAuthController extends BaseUserController {
         try {
             authBean.setOrderId(orderId);
             Map<String,Object> map = authService.getCallbankMV(authBean);
+            String type;
             if(authBean.getPaymentAuthStatus() && authBean.getRepayAuthAuthStatus()){
-                //开通缴费授权、还款授权
-                authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "15");
+                // 缴费授权、还款授权
+                type = "15";
             }else if(authBean.getPaymentAuthStatus()){
-                //开通缴费授权
-                authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "5");
+                // 缴费授权
+                type = "5";
             }else if(authBean.getRepayAuthAuthStatus()){
-                //开通还款授权
-                authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "6");
+                // 还款授权
+                type = "6";
             }else{
-                //开通缴费授权、还款授权
-                authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "15");
+                // 缴费授权、还款授权
+                type = "15";
             }
+            authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), type);
             result.setData(map);
         } catch (Exception e) {
             logger.info("缴费、还款二合一授权、插入日志表异常",
