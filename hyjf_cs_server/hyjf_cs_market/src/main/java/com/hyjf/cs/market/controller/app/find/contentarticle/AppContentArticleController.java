@@ -37,53 +37,56 @@ public class AppContentArticleController extends BaseMarketController {
     @Autowired
     private AppContentArticleService appContentArticleService;
 
-    @ApiOperation(value = "文章详情页", httpMethod = "POST", notes = "文章详情页")
-    @PostMapping(value = GET_CONTENT_ARTICLE_ID_ACTION)
-    @ResponseBody
-    public AppResult getContentArticleById(@PathVariable("articleType") Integer type, @PathVariable("articleId") Integer contentArticleId) {
-        logger.info(AppContentArticleController.class.toString(), "startLog -- /hyjf-app/find/contentArticle/{articleType}/{articleId}");
-        AppContentArticleResponse response = new AppContentArticleResponse();
-        response.setRtn("000");
-        response.setTopTitle(getTopTitle(type));
-        try {
-            // 根据id返回文章详情
-            ContentArticleVO contentArticle = appContentArticleService.getContentArticleById(contentArticleId);
-            if(contentArticle != null){
-                JSONObject details = new JSONObject();
-                details.put("title",contentArticle.getTitle());
-                details.put("content",contentArticle.getContent());
-                details.put("date",new SimpleDateFormat("yyyy-MM-dd").format(contentArticle.getCreateTime()));
-                response.setDetails(details);
-            }else{
-                return new AppResult<>(Response.ERROR, Response.FAIL_MSG);
-            }
-        } catch (Exception e) {
-            return new AppResult<>(Response.ERROR, Response.FAIL_MSG);
-        }
-        AppResult appResult = new AppResult<>(response);
-        appResult.setStatus("000");
-        appResult.setStatusDesc("成功！");
-        logger.info(AppContentArticleController.class.toString(), "endLog -- /hyjf-app/find/contentArticle/{articleType}/{articleId}");
-        return appResult;
-    }
+	@ApiOperation(value = "文章详情页", httpMethod = "POST", notes = "文章详情页")
+	@PostMapping(value = GET_CONTENT_ARTICLE_ID_ACTION)
+	@ResponseBody
+	public AppResult getContentArticleById(@PathVariable("articleType") Integer type,
+			@PathVariable("articleId") Integer contentArticleId) {
+		logger.info(AppContentArticleController.class.toString(),
+				"startLog -- /hyjf-app/find/contentArticle/{articleType}/{articleId}");
+		AppContentArticleResponse response = new AppContentArticleResponse();
+		response.setRtn("000");
+		response.setTopTitle(getTopTitle(type));
+		try {
+			// 根据id返回文章详情
+			ContentArticleVO contentArticle = appContentArticleService.getContentArticleById(contentArticleId);
+			if (contentArticle != null) {
+				JSONObject details = new JSONObject();
+				details.put("title", contentArticle.getTitle());
+				details.put("content", contentArticle.getContent());
+				details.put("date", new SimpleDateFormat("yyyy-MM-dd").format(contentArticle.getCreateTime()));
+				response.setDetails(details);
+			} else {
+				return new AppResult<>(Response.ERROR, Response.FAIL_MSG);
+			}
+		} catch (Exception e) {
+			return new AppResult<>(Response.ERROR, Response.FAIL_MSG);
+		}
+		AppResult appResult = new AppResult<>(response);
+		appResult.setStatus("000");
+		appResult.setStatusDesc("成功！");
+		logger.info(AppContentArticleController.class.toString(),
+				"endLog -- /hyjf-app/find/contentArticle/{articleType}/{articleId}");
+		return appResult;
+	}
 
-    private String getTopTitle(Integer type) {
-        switch (type) {
-            case 2:
-                return "网站公告";
-            case 3:
-                return "网贷知识";
-            case 5:
-                return "关于我们";
-            case 101:
-                return "风险教育";
-            case 8:
-                return "联系我们";
-            case 20:
-                return "公司动态";
-            default:
-                return "";
-        }
-    }
+	private String getTopTitle(Integer type) {
+		switch (type) {
+			case 2:
+				return "网站公告";
+			case 3:
+				return "网贷知识";
+			case 5:
+				return "关于我们";
+			case 101:
+				return "风险教育";
+			case 8:
+				return "联系我们";
+			case 20:
+				return "公司动态";
+			default:
+				return "";
+		}
+	}
 
 }

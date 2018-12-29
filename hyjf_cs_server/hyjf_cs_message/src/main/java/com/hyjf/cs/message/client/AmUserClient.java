@@ -1,11 +1,12 @@
 package com.hyjf.cs.message.client;
 
-import com.hyjf.am.vo.admin.AdminMsgPushCommonCustomizeVO;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
-import com.hyjf.am.vo.user.*;
+import com.hyjf.am.vo.user.UserAliasVO;
+import com.hyjf.am.vo.user.UserInfoCustomizeVO;
+import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.user.UserVO;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -116,14 +117,6 @@ public interface AmUserClient {
 	 */
 	 UserInfoCustomizeVO queryUserInfoCustomizeByUserId(Integer userId);
 
-	/**
-	 * 通过手机号获取设备标识码
-	 *
-	 * @param mobile
-	 * @return
-	 */
-	AdminMsgPushCommonCustomizeVO getMobileCodeByNumber(String mobile);
-
 
 	/**
 	 * 获取用户表总记录数
@@ -131,24 +124,4 @@ public interface AmUserClient {
 	 * @return
 	 */
 	Integer countAllUser();
-
-	/**
-	 * 查询用户utm信息
-	 * @param userId
-	 * @return
-	 */
-    UtmRegVO findUtmRegByUserId(Integer userId);
-
-	/**
-	 * 检查用户是不是新手
-	 * @param userId
-	 * @return
-	 */
-	int countNewUserTotal(Integer userId);
-
-	/**
-	 * 更新用户首次出借信息
-	 * @param params
-	 */
-	Integer updateFirstUtmReg(HashMap<String,Object> params);
 }
