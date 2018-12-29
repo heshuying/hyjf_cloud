@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.user.controller.app.common;
 
+import com.hyjf.cs.common.bean.result.AppResult;
 import com.hyjf.cs.user.config.SystemConfig;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author zhangqingqing
@@ -54,5 +57,20 @@ public class UpdateVersionController {
         String url = systemConfig.getAppFrontHost()+"/update/package/ios?sign="+sign;
         ModelAndView modelAndView = new ModelAndView("redirect:"+url);
         return modelAndView;
+    }
+
+    /**
+     *
+     * ios下载页
+     * @return
+     */
+    @RequestMapping(value = "/iosinit")
+    public AppResult initIOS() {
+        AppResult result = new AppResult();
+        String downloadUrl = "itms-apps://itunes.apple.com/cn/app/id1044961717?mt=8";
+        Map<String,String> resultMap = new HashMap<>();
+        resultMap.put("downloadUrl",downloadUrl);
+        result.setData(resultMap);
+        return result;
     }
 }
