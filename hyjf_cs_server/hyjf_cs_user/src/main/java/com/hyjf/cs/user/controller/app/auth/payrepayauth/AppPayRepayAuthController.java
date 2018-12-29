@@ -50,10 +50,10 @@ public class AppPayRepayAuthController extends BaseUserController {
     private static final String PAY_REPAY_CLASS_NAME = "/hyjf-app/bank/user/auth/payrepayauth";
 
     @Autowired
-    private AuthService authService;
+    SystemConfig systemConfig;
 
     @Autowired
-    SystemConfig systemConfig;
+    private AuthService authService;
 
     /**
      * 用户二合一授权(缴费授权、还款授权)
@@ -82,7 +82,7 @@ public class AppPayRepayAuthController extends BaseUserController {
         // 同步地址  是否跳转到前端页面
         String retUrl = super.getFrontHost(systemConfig,platform) + errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAY_REPAY_AUTH;
         String successUrl = super.getFrontHost(systemConfig,platform) + successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAY_REPAY_AUTH;
-        String bgRetUrl = "http://CS-USER/hyjf-app/bank/user/auth/payrepayauth/payRepayAuthBgreturn" ;
+        String bgRetUrl = "http://CS-USER" + PAY_REPAY_CLASS_NAME + PAY_REPAY_BG_AUTH;
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);
         BankOpenAccountVO bankOpenAccountVO = authService.getBankOpenAccount(userId);
@@ -108,19 +108,21 @@ public class AppPayRepayAuthController extends BaseUserController {
         try {
             authBean.setOrderId(orderId);
             Map<String,Object> map = authService.getCallbankMV(authBean);
+            String type;
             if(authBean.getPaymentAuthStatus() && authBean.getRepayAuthAuthStatus()){
-                //开通缴费授权、还款授权
-                authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "15");
+                // 缴费授权、还款授权
+                type = "15";
             }else if(authBean.getPaymentAuthStatus()){
-                //开通缴费授权
-                authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "5");
+                // 缴费授权
+                type = "5";
             }else if(authBean.getRepayAuthAuthStatus()){
-                //开通还款授权
-                authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "6");
+                // 还款授权
+                type = "6";
             }else{
-                //开通缴费授权、还款授权
-                authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "15");
+                // 缴费授权、还款授权
+                type = "15";
             }
+            authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), type);
             result.setData(map);
         } catch (Exception e) {
             logger.info("缴费、还款二合一授权、插入日志表异常",
@@ -205,13 +207,14 @@ public class AppPayRepayAuthController extends BaseUserController {
      * @Version v0.1
      * @Date
      */
-    @ApiOperation(value = "查询授权失败原因", notes = "查询授权失败原因")
+    @ApiOperation(value = "查询缴费、还款二合一授权失败原因", notes = "查询缴费、还款二合一授权失败原因")
     @PostMapping(PAY_REPAY_SEACH_AUTH)
     @ResponseBody
     public WebResult<Object> seachUserAuthErrorMessgae(HttpServletRequest request) {
-        String logOrdId=request.getParameter("logOrdId");
-        logger.info("查询授权失败原因start,logOrdId:{}", logOrdId);
+        String logOrdId = request.getParameter("logOrdId");
+        logger.info("查询缴费、还款二合一授权失败原因 -->start, logOrdId:{}", logOrdId);
         WebResult<Object> result = authService.seachUserAuthErrorMessgae(logOrdId);
+        logger.info("查询缴费、还款二合一授权失败原因 -->end");
         return result;
     }
 

@@ -84,7 +84,7 @@ public class PayRepayAuthController extends BaseUserController {
         // 同步地址  是否跳转到前端页面
         String retUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_PC) + errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAY_REPAY_AUTH;
         String successUrl = super.getFrontHost(systemConfig,CustomConstants.CLIENT_PC) + successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAY_REPAY_AUTH;
-        String bgRetUrl = "http://CS-USER/hyjf-web/user/auth/payrepayauth/payRepayAuthBgreturn";
+        String bgRetUrl = "http://CS-USER" + PAY_REPAY_CLASS_NAME + PAY_REPAY_BG_AUTH;
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);
         BankOpenAccountVO bankOpenAccountVO = authService.getBankOpenAccount(userId);
@@ -199,12 +199,13 @@ public class PayRepayAuthController extends BaseUserController {
      * @Version v0.1
      * @Date
      */
-    @ApiOperation(value = "查询授权失败原因", notes = "查询授权失败原因")
+    @ApiOperation(value = "查询缴费、还款二合一授权失败原因", notes = "查询缴费、还款二合一授权失败原因")
     @PostMapping(PAY_REPAY_SEACH_AUTH)
     @ResponseBody
     public WebResult<Object> seachUserAuthErrorMessgae(@RequestBody @Valid AuthVO vo) {
-        logger.info("查询授权失败原因start,logOrdId:{}", vo.getLogOrdId());
+        logger.info("查询缴费、还款二合一授权失败原因 -->start, logOrdId:{}", vo.getLogOrdId());
         WebResult<Object> result = authService.seachUserAuthErrorMessgae(vo.getLogOrdId());
+        logger.info("查询缴费、还款二合一授权失败原因 -->end");
         return result;
     }
 
