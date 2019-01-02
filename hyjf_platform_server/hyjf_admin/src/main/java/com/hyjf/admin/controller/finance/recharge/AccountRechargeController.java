@@ -334,8 +334,18 @@ public class AccountRechargeController extends BaseController {
 
         AccountRechargeCustomizeResponse isAccountUpdate = this.rechargeService.updateAccountAfterRecharge(copyRequest);
 
-        jsonObject.put("status", isAccountUpdate.getRtn());
-        jsonObject.put("statusDesc", isAccountUpdate.getMessage());
+        String backStatus = null;
+        String backMsg = null;
+        if (isAccountUpdate != null){
+            backStatus = BaseResult.SUCCESS;
+            backMsg = BaseResult.SUCCESS_DESC;
+        }else {
+            backStatus = BaseResult.FAIL;
+            backMsg = BaseResult.FAIL_DESC;
+        }
+
+        jsonObject.put("status", backStatus);
+        jsonObject.put("statusDesc", backMsg);
         return jsonObject;
     }
 
