@@ -996,6 +996,7 @@
 		</if>
 
 		) AS a
+		where 1 = 1
 		<if test="userIdList != null">
 			AND a.user_id in
 			<foreach collection="userIdList" open="(" close=")" separator="," item="utmName">
@@ -1189,6 +1190,7 @@
 		</if>
 
 		) AS a
+		where 1 = 1
 		<if test="userIdList != null">
 			AND a.user_id in
 			<foreach collection="userIdList" open="(" close=")" separator="," item="utmName">
