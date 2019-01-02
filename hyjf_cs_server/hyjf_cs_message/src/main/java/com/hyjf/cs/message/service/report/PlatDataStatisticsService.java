@@ -48,6 +48,4 @@ public interface PlatDataStatisticsService extends BaseService {
      * @return
      */
     List<OperationReport> findOperationReportEntityList();
-
-    OperationReport findOneOperationMongDaoByMonth(int month);
 }

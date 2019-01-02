@@ -36,27 +36,27 @@ public class FindController {
     @ResponseBody
     @GetMapping(value = "/hyjf-app/find")
     @ApiOperation(value = "app发现页信息", notes = "app发现页信息")
-    public JSONObject find() {
-        JSONObject ret = new JSONObject();
-        List<ContentArticleVO> newsList = appFindService.searchHomeNoticeList("20", 0, 3);
-        JSONArray jsonArray = new JSONArray();
-        for(ContentArticleVO article:newsList){
-            JSONObject detailsJson = new JSONObject();
-            detailsJson.put("id", article.getId());
-            detailsJson.put("img", article.getImgurl());
-            detailsJson.put("title", article.getTitle());
-            detailsJson.put("date", DateFormatUtils.format(article.getCreateTime(), DATE_FORMAT));
-            detailsJson.put("shareTitle", article.getTitle());
-            detailsJson.put("shareContent", article.getSummary());
-            detailsJson.put("sharePicUrl", "https://www.hyjf.com/data/upfiles/image/20140617/1402991818340.png");
-            detailsJson.put("shareUrl", webHost+ REQUEST_MAPPING+
-                    GET_CONTENT_ARTICLE_ID_ACTION.replace("{contentArticleId}", article.getId()+"").replace("{type}", "20"));
-            jsonArray.add(detailsJson);
-        }
-        ret.put("status", "000");
-        ret.put("statusDesc", "成功");
-        ret.put("newsList", jsonArray);
-        return ret;
-    }
+	public JSONObject find() {
+		JSONObject ret = new JSONObject();
+		List<ContentArticleVO> newsList = appFindService.searchHomeNoticeList("20", 0, 3);
+		JSONArray jsonArray = new JSONArray();
+		for (ContentArticleVO article : newsList) {
+			JSONObject detailsJson = new JSONObject();
+			detailsJson.put("id", article.getId());
+			detailsJson.put("img", article.getImgurl());
+			detailsJson.put("title", article.getTitle());
+			detailsJson.put("date", DateFormatUtils.format(article.getCreateTime(), DATE_FORMAT));
+			detailsJson.put("shareTitle", article.getTitle());
+			detailsJson.put("shareContent", article.getSummary());
+			detailsJson.put("sharePicUrl", "https://www.hyjf.com/data/upfiles/image/20140617/1402991818340.png");
+			detailsJson.put("shareUrl", webHost + REQUEST_MAPPING + GET_CONTENT_ARTICLE_ID_ACTION
+					.replace("{contentArticleId}", article.getId() + "").replace("{type}", "20"));
+			jsonArray.add(detailsJson);
+		}
+		ret.put("status", "000");
+		ret.put("statusDesc", "成功");
+		ret.put("newsList", jsonArray);
+		return ret;
+	}
 }
 

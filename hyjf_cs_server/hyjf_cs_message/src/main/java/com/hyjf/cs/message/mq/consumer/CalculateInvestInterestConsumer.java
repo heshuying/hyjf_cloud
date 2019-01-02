@@ -113,8 +113,6 @@ public class CalculateInvestInterestConsumer implements RocketMQListener<Message
                         BigDecimal totalInterestAmount = recoverInterestAmount == null ? BigDecimal.ZERO : recoverInterestAmount;
                         logger.info("已收收益： {}", totalInterestAmount.toString());
 
-                        // TODO: 2018/7/7 这里需要查询   没用到  先放
-                        //operationDataService.searchPlanStatisticData();
                         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
                         TotalInvestAndInterestEntity entity = totalInvestAndInterestMongoDao.findOne(new Query());
                         // 第一次插入

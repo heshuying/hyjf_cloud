@@ -24,7 +24,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -148,7 +147,7 @@ public class SmsHandle {
 		SmsLog smsLog = new SmsLog();
 		smsLog.setType(type);
 		smsLog.setContent(messageStr);// 短信内容
-		smsLog.setPosttime(new Date());
+		smsLog.setPosttime(GetDate.getNowTime10());
 		smsLog.setMobile(mobile);
 		if (StringUtils.isEmpty(sender)) {
 			smsLog.setSender(title);
@@ -273,8 +272,6 @@ public class SmsHandle {
 		try {
 			if (Validator.isNull(userId)) {
 				logger.error("用户ID不可为空");
-				//下面这个抛出异常的，可以等上线再开启
-				//throw new Exception("用户ID不可为空");
 				return status;
 			}
 
@@ -302,14 +299,10 @@ public class SmsHandle {
 			String mobile = user.getMobile();
 			if (StringUtils.isEmpty(mobile)) {
 				logger.error("手机号不能为空， userId is : {}", userId);
-				//下面这个抛出异常的，可以等上线再开启  todo
-				//throw new Exception("用户电话为空");
 				return status;
 			}
 			if (!Validator.isPhoneNumber(mobile)) {
 				logger.error("用户电话号码格式不正确");
-				//下面这个抛出异常的，可以等上线再开启  todo
-				//throw new Exception("用户电话号码格式不正确");
 				return status;
 			}
 
@@ -348,8 +341,6 @@ public class SmsHandle {
 			SmsTemplateVO smsTemplate = amConfigClient.findSmsTemplate(request);
 			if (smsTemplate == null) {
 				logger.warn("无可用短信模板,查询条件为status:[1,开启状态的模板],TPLCode:[{}]",tplCode);
-				//下面这个抛出异常的，可以等上线再开启 todo
-				//throw new RuntimeException("无可用短信模板...");
 				return status;
 			}
 			String messageStr = smsTemplate.getTplContent();

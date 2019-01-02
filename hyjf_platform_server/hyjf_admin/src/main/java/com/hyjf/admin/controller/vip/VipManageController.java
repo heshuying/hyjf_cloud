@@ -64,7 +64,7 @@ public class VipManageController extends BaseController {
     /**
      * vip详情权限
      */
-    public static final String PERMISSIONS_DETAIL = "vipdatail";
+    public static final String PERMISSIONS_DETAIL = "vipdetail";
     /**
      * vip升级权限
      */

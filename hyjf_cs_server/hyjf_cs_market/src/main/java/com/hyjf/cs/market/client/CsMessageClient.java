@@ -47,13 +47,6 @@ public interface CsMessageClient {
      */
     int selectTotalTenderSum();
 
-    /**
-     * 统计前一个月的数据
-     * @param i 时间戳
-     * @return
-     */
-    OperationReportEntityVO getOperationReport(int i);
-
     List<AppAccesStatisticsVO> getAppAccesStatisticsVO(AppChannelStatisticsRequest request);
 
     List<AppUtmRegVO> getAppChannelStatisticsDetailVO(AppChannelStatisticsRequest request);

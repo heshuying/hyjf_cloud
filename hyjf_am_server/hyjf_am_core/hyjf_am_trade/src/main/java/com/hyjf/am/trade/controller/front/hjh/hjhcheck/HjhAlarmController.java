@@ -18,12 +18,14 @@ import com.hyjf.am.trade.service.front.hjh.HjhPlanService;
 import com.hyjf.am.trade.service.front.hjh.HjhRepayService;
 import com.hyjf.am.vo.admin.BorrowCustomizeVO;
 import com.hyjf.am.vo.message.MailMessage;
+import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.chatbot.dd.DDChatbot;
 import com.hyjf.common.chatbot.dd.DDChatbotBean;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.util.CustomConstants;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -241,10 +243,9 @@ public class HjhAlarmController extends BaseController {
                         null,
                         MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
                 commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), message));
-                // TODO: 2018/8/15   发送短信通知待完善
-               /* SmsMessage smsMessage = new SmsMessage(null, null, null, null, MessageDefine.SMSSENDFORMANAGER, null,
+               SmsMessage smsMessage = new SmsMessage(null, null, null, null, "smsSendForManager", null,
                         CustomConstants.JYTZ_PLAN_ORDER_EXCECEPTION, CustomConstants.CHANNEL_TYPE_NORMAL);
-                smsProcesser.gather(smsMessage);*/
+                commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
                 logger.info("短信发送成功");
             }catch (Exception e){
                 logger.error("订单出借异常预警发送异常 ");

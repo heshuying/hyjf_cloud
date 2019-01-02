@@ -28,8 +28,6 @@ public interface TransferService extends BaseAdminService{
 
     String searchBalance(String outUserName);
 
-    void checkTransferParam(TransferCustomizeBean form);
-
     /**
      * 插入订单
      * @param form

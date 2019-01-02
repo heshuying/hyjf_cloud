@@ -41,30 +41,6 @@ public interface AmTradeClient {
 	TzjDayReportVO queryTradeNewDataOnToday(Set<Integer> registerUserIds, Date startTime, Date endTime);
 
 	/**
-	 * 出借人按照地域分布
-	 * @param lastDay 一个月的最后一天
-	 * @return
-	 */
-	List<TenderCityCountVO> getTenderCityGroupBy(Date lastDay);
-
-	/**
-	 * 出借人按照性别分布
-	 * @param lastDay
-	 * @return
-	 */
-	List<TenderSexCountVO> getTenderSexGroupBy(Date lastDay);
-
-	/**
-	 *
-	 * @param date 上个月的最后一天
-	 * @param firstAge  年龄下限
-	 * @param endAge	年龄上限
-	 * @return
-	 */
-	int getTenderAgeByRange(Date date,int firstAge,int endAge);
-
-
-	/**
 	 * 累计借款人（定义：系统累计到现在进行过发表的底层借款人数量）
 	 * @return
 	 */

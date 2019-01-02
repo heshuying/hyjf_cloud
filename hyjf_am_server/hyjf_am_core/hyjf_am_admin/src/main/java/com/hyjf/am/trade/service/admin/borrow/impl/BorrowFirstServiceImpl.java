@@ -178,7 +178,6 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                     // 根据此标的是否跑引擎操作redis ：0未使用 1使用
                     if (borrow.getIsEngineUsed() == 0) {
                         // borrowNid，借款的borrowNid,account借款总额
-                        //todo wangjun rediskey暂时修改 后期如果有变动统一再修改
                         RedisUtils.set(RedisConstants.BORROW_NID + borrow.getBorrowNid(), borrow.getAccount().toString());
                     }
 
@@ -255,7 +254,6 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
      * @param borrow
      */
     private void changeOntimeOfRedis(Borrow borrow) {
-        //todo wangjun rediskey暂时修改 后期如果有变动统一再修改
         if (borrow.getVerifyStatus() == 3) {
             //定时发标 写定时发标时间 redis 有效期10天
             RedisUtils.set(RedisConstants.ONTIME + borrow.getBorrowNid(), String.valueOf(borrow.getOntime()), 864000);

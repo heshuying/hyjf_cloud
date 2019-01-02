@@ -1743,8 +1743,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             result.setCardNo((cardNo==null || "".equals(cardNo))?"银行卡已删除":cardNo);
             result.setBank(accountWithdrawVO.getBank());
             result.setStatus(map.get(String.valueOf(accountWithdrawVO.getStatus())));
-            //TODO:这里有问题，数据库表的字段已经更换。同时由于nxl代码中有关于老字段的应用，所以这里需要确认
-            // result.setWithdrawTime(accountWithdrawVO.getAddtime());
+            result.setWithdrawTime(String.valueOf(accountWithdrawVO.getCreateTime()));
             result.setWithdrawTime(GetDate.dateToString(accountWithdrawVO.getCreateTime()));
             resultList.add(result);
         }
