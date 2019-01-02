@@ -20,7 +20,7 @@ public class SmsLog implements Serializable {
     private String ip;
 
     // @Indexed dba维护索引
-    private Date posttime;
+    private Integer posttime;
 
     private Integer status;
 
@@ -66,11 +66,11 @@ public class SmsLog implements Serializable {
         this.ip = ip == null ? null : ip.trim();
     }
 
-    public Date getPosttime() {
+    public Integer getPosttime() {
         return posttime;
     }
 
-    public void setPosttime(Date posttime) {
+    public void setPosttime(Integer posttime) {
         this.posttime = posttime;
     }
 

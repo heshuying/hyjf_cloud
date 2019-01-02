@@ -17,6 +17,8 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +32,8 @@ import java.util.Map;
 @RestController
 @RequestMapping("/am-trade/rechargemanagement")
 public class RechargeManagementController extends BaseController {
+
+    Logger logger = LoggerFactory.getLogger(RechargeManagementController.class);
 
     @Autowired
     private RechargeManagementService rechargeManagementService;
@@ -117,6 +121,7 @@ public class RechargeManagementController extends BaseController {
         if (Validator.isNull(userId) || StringUtils.isBlank(nid) || StringUtils.isBlank(status)) {
             rechargeResponse.setRtn(Response.FAIL);
             rechargeResponse.setMessage("确认发生错误,请重新操作!参数不正确[userId=" + userId + "]");
+            logger.info("确认发生错误,请重新操作!参数不正确[userId=" + userId + "]");
             return rechargeResponse;
         }
 
@@ -125,6 +130,7 @@ public class RechargeManagementController extends BaseController {
         if (Validator.isNull(account)){
             rechargeResponse.setRtn(Response.FAIL);
             rechargeResponse.setMessage("确认发生错误,请重新操作!参数不正确[userId=" + userId + "]账户异常！");
+            logger.info("确认发生错误,请重新操作!参数不正确[userId=" + userId + "]账户异常！");
             return rechargeResponse;
         }
 
@@ -133,6 +139,7 @@ public class RechargeManagementController extends BaseController {
         if (Validator.isNull(accountRecharge)){
             rechargeResponse.setRtn(Response.FAIL);
             rechargeResponse.setMessage("确认发生错误,请重新操作!参数不正确[nid=" + nid + "]账户异常！");
+            logger.info("确认发生错误,请重新操作!参数不正确[nid=" + nid + "]账户异常！");
             return rechargeResponse;
         }
 
@@ -154,7 +161,7 @@ public class RechargeManagementController extends BaseController {
                 e.printStackTrace();
             }
         }
-
+        logger.info("Fix更新充值状态为:");
         // 充值数据状态更新
         if (isAccountUpdate){
             rechargeResponse.setRtn(Response.SUCCESS);

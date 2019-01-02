@@ -9,6 +9,7 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.http.HttpDeal;
 import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.message.bean.mc.SmsLog;
 import com.hyjf.cs.message.client.AmConfigClient;
@@ -23,7 +24,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -147,7 +147,7 @@ public class SmsHandle {
 		SmsLog smsLog = new SmsLog();
 		smsLog.setType(type);
 		smsLog.setContent(messageStr);// 短信内容
-		smsLog.setPosttime(new Date());
+		smsLog.setPosttime(GetDate.getNowTime10());
 		smsLog.setMobile(mobile);
 		if (StringUtils.isEmpty(sender)) {
 			smsLog.setSender(title);
