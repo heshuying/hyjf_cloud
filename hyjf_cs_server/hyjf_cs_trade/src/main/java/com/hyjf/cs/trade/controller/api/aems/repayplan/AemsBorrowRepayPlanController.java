@@ -41,7 +41,7 @@ import java.util.List;
  */
 @Api(value = "api端AEMS系统还款计划查询接口", tags = "api端-AEMS系统还款计划查询")
 @RestController
-@RequestMapping("/aems/repayplan")
+@RequestMapping("/hyjf-api/aems/repayplan")
 public class AemsBorrowRepayPlanController extends BaseTradeController {
 
     @Autowired

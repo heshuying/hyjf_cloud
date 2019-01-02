@@ -31,6 +31,7 @@ import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
@@ -44,6 +45,7 @@ import java.util.Map;
  * @version AemsUserDirectRechargeService, v0.1 2018/12/6 18:14
  * @Author: Zha Daojian
  */
+@Service
 public class AemsUserDirectRechargeServiceImpl extends BaseTradeServiceImpl implements AemsUserDirectRechargeService {
     @Autowired
     private SystemConfig systemConfig;

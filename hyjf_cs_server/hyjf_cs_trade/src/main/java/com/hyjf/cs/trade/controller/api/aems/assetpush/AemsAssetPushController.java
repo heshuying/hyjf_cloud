@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.AemsPushBean;
+import com.hyjf.cs.trade.bean.AemsPushRequestBean;
 import com.hyjf.cs.trade.bean.AemsPushResultBean;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.service.aems.assetpush.AemsAssetPushService;

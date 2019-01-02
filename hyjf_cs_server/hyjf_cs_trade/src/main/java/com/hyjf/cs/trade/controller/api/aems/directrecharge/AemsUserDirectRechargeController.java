@@ -24,7 +24,7 @@ import java.util.Map;
 
 @Api(value = "api端-AEMS用户充值(页面调用)",tags = "api端-AEMS用户充值(页面调用)")
 @Controller
-@RequestMapping(value = "/hyjf-api/aems/authState")
+@RequestMapping(value = "/hyjf-api/aems/directRechargePage")
 public class AemsUserDirectRechargeController extends BaseTradeController {
 
     @Autowired

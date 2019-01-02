@@ -23,6 +23,7 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.IdCard15To18;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.bean.AemsPushBean;
+import com.hyjf.cs.trade.bean.AemsPushRequestBean;
 import com.hyjf.cs.trade.bean.AemsPushResultBean;
 import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;

@@ -3,6 +3,7 @@
  */
 package com.hyjf.cs.trade.service.aems.assetpush;
 
+import com.hyjf.cs.trade.bean.AemsPushRequestBean;
 import com.hyjf.cs.trade.bean.AemsPushResultBean;
 import com.hyjf.cs.trade.service.BaseTradeService;
 

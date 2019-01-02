@@ -20,8 +20,8 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.AemsUserRegisterRequestBean;
 import com.hyjf.cs.user.client.AmTradeClient;
 import com.hyjf.cs.user.client.AmUserClient;
+import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.mq.producer.AccountProducer;
 import com.hyjf.cs.user.service.aems.register.AemsUserRegisterService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
 import com.hyjf.cs.user.util.GetInfoByUserIp;
@@ -55,7 +55,7 @@ public class AemsUserRegisterServiceImpl extends BaseUserServiceImpl implements 
     private AmTradeClient amTradeClient;
 
     @Autowired
-    private AccountProducer accountProducer;
+    private CommonProducer commonProducer;
 
     /**
      * 参数校验
@@ -232,7 +232,7 @@ public class AemsUserRegisterServiceImpl extends BaseUserServiceImpl implements 
         account.setPlanRepayInterest(BigDecimal.ZERO);
         logger.info("注册插入account：{}", JSON.toJSONString(account));
         try {
-            accountProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(account)));
+            commonProducer.messageSend(new MessageContent(MQConstant.ACCOUNT_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(account)));
         } catch (MQException e) {
             logger.error("注册成功推送account——mq失败.... user_id is :{}", userId);
             throw new RuntimeException("注册成功推送account——mq失败...");

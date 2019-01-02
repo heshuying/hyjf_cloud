@@ -36,7 +36,7 @@ import java.util.Map;
 **/
 @Api(value = "api端-AEMS用户提现接口",tags = "api端-AEMS用户提现接口")
 @Controller
-@RequestMapping(value = "/hyjf-api/server/user/withdraw")
+@RequestMapping(value = "/hyjf-api/aems/user/withdraw")
 public class AemsUserWithdrawController extends BaseTradeController {
 
     @Autowired
@@ -51,7 +51,7 @@ public class AemsUserWithdrawController extends BaseTradeController {
     @ApiOperation(value = "AEMS用户提现",notes = "AEMS用户提现")
     @PostMapping(value = "/withdraw.do")
     public ModelAndView withdraw(@RequestBody AemsUserWithdrawRequestBean userWithdrawRequestBean, HttpServletRequest request){
-        BaseController.logger.info("用户提现第三方请求参数:" + JSONObject.toJSONString(userWithdrawRequestBean));
+        logger.info("用户提现第三方请求参数:" + JSONObject.toJSONString(userWithdrawRequestBean));
         Map<String,Object>  withdrawResult = userWithdrawService.withdraw(userWithdrawRequestBean, request);
         if(withdrawResult.get("modelAndView")!=null){
             ModelAndView result = (ModelAndView) withdrawResult.get("modelAndView");
@@ -98,7 +98,7 @@ public class AemsUserWithdrawController extends BaseTradeController {
     @ResponseBody
     @PostMapping(value = "/getUserWithdrawRecord")
     public BaseResultBean getUserWithdrawRecord(@RequestBody UserWithdrawRequestBean userWithdrawRequestBean){
-        BaseController.logger.info("获取用户提现记录请求参数:" + JSONObject.toJSONString(userWithdrawRequestBean));
+       logger.info("获取用户提现记录请求参数:" + JSONObject.toJSONString(userWithdrawRequestBean));
         return userWithdrawService.getUserWithdrawRecord(userWithdrawRequestBean);
     }
 }

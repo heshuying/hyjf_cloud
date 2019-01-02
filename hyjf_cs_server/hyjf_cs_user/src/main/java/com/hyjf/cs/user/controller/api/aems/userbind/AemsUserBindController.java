@@ -395,7 +395,8 @@ public class AemsUserBindController extends BaseUserController {
             try {
                 map.put(field.getName(), String.valueOf(field.get(obj)));
             }catch (Exception e){
-                logger.error("转换异常！");
+                // logger.error("转换异常！");
+				e.printStackTrace();
             }
         }
 

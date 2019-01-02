@@ -29,10 +29,8 @@ import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.mq.producer.AppMessageProducer;
-import com.hyjf.cs.trade.mq.producer.SmsProducer;
-import com.hyjf.cs.trade.mq.producer.sensorsdate.withdraw.SensorsDataWithdrawProducer;
 import com.hyjf.cs.trade.service.aems.withdraw.AemsUserWithdrawService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.util.ErrorCodeConstant;
@@ -83,13 +81,7 @@ public class AemsUserWithdrawServiceImpl extends BaseTradeServiceImpl implements
 	SystemConfig systemConfig;
 
 	@Autowired
-	AppMessageProducer appMessageProducer;
-
-	@Autowired
-	SmsProducer smsProducer;
-
-	@Autowired
-	private SensorsDataWithdrawProducer sensorsDataWithdrawProducer;
+	private CommonProducer commonProducer;
 
 	@Value("${hyjf.bank.fee}")
 	private String FEETMP;
@@ -170,9 +162,9 @@ public class AemsUserWithdrawServiceImpl extends BaseTradeServiceImpl implements
 								SmsMessage smsMessage = new SmsMessage(userId, replaceMap, null, null, MessageConstant.SMS_SEND_FOR_USER, null, CustomConstants.PARAM_TPL_TIXIAN_SUCCESS,
 										CustomConstants.CHANNEL_TYPE_NORMAL);
 								AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_TIXIAN_SUCCESS);
-								smsProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
+								commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC,
 										UUID.randomUUID().toString(), JSON.toJSONBytes(smsMessage)));
-								appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
+								commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
 										UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
 
 							} else {
@@ -184,7 +176,7 @@ public class AemsUserWithdrawServiceImpl extends BaseTradeServiceImpl implements
 								replaceMap.put("val_name", info.getTruename().substring(0, 1));
 								replaceMap.put("val_sex", info.getSex() == 2 ? "女士" : "先生");
 								AppMsMessage appMsMessage = new AppMsMessage(userId, replaceMap, null, MessageConstant.APP_MS_SEND_FOR_USER, CustomConstants.JYTZ_TPL_TIXIAN_SUCCESS);
-								appMessageProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
+								commonProducer.messageSend(new MessageContent(MQConstant.APP_MESSAGE_TOPIC,
 										UUID.randomUUID().toString(), JSON.toJSONBytes(appMsMessage)));
 							}
 							// TODO 活动统计 需要的时候放开
@@ -1089,6 +1081,6 @@ public class AemsUserWithdrawServiceImpl extends BaseTradeServiceImpl implements
 	 * @param sensorsDataBean
 	 */
 	private void sendSensorsDataMQ(SensorsDataBean sensorsDataBean) throws MQException {
-		this.sensorsDataWithdrawProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_WITHDRAW_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
+		this.commonProducer.messageSendDelay(new MessageContent(MQConstant.SENSORSDATA_WITHDRAW_TOPIC, UUID.randomUUID().toString(), JSON.toJSONBytes(sensorsDataBean)), 2);
 	}
 }
