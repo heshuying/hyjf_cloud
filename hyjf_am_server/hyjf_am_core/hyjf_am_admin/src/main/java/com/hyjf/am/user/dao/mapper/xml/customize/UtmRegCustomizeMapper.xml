@@ -996,12 +996,7 @@
 		</if>
 
 		) AS a
-		<if test="userIdList != null">
-			AND a.user_id in
-			<foreach collection="userIdList" open="(" close=")" separator="," item="utmName">
-				#{utmName}
-			</foreach>
-		</if>
+		where 1 = 1
 		) mm
 
 		<if test="userName != null and userName !=''">
@@ -1189,12 +1184,7 @@
 		</if>
 
 		) AS a
-		<if test="userIdList != null">
-			AND a.user_id in
-			<foreach collection="userIdList" open="(" close=")" separator="," item="utmName">
-				#{utmName}
-			</foreach>
-		</if>
+		where 1 = 1
 		) mm
 
 		<if test="userName != null and userName !=''">
