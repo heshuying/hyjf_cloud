@@ -49,6 +49,7 @@ public class AuthConfigController extends BaseController {
     @GetMapping(value = "/authConfigList")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<ListResult<HjhUserAuthConfigCustomizeAPIVO>> getAuthConfigList() {
+        logger.info("初始化授权配置列表!!!");
         AdminAuthConfigCustomizeResponse authConfigResponse = authConfigService.getAuthConfigList();
         if (authConfigResponse == null) {
             return new AdminResult<>(FAIL, "获取授权配置列表失败");
