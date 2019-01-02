@@ -185,6 +185,16 @@ public class AdminMenuServiceImpl  implements AdminMenuService {
         AdminMenuExample.Criteria criteria = example.createCriteria();
         criteria.andMenuUuidIn(ids);
         adminMenuMapper.updateByExampleSelective(record, example);
+        //删除菜单后应把权限也都删除掉
+        List<AdminMenu> res = adminMenuMapper.selectByExample(example);
+        List<String> uuid = new ArrayList<String>();
+        for (AdminMenu adminMenu : res) {
+        	uuid.add(adminMenu.getMenuUuid());
+		}
+        AdminRoleMenuPermissionsExample example2=new AdminRoleMenuPermissionsExample();
+        com.hyjf.am.config.dao.model.auto.AdminMenuExample.Criteria criteria2 = example.createCriteria();
+        criteria2.andMenuUuidIn(uuid);
+		adminRoleMenuPermissionsMapper.deleteByExample(example2);
     }
 
     /**

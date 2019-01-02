@@ -20,6 +20,7 @@ import com.hyjf.am.vo.trade.hjh.HjhRepayVO;
 import com.hyjf.common.util.CommonUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -52,7 +53,7 @@ public class BatchHjhBorrowRepayController extends BaseController {
     public HjhAccedeResponse selectHjhAccedeListByOrderId(@PathVariable String accedeOrderId) {
         HjhAccedeResponse response = new HjhAccedeResponse();
         List<HjhAccede> hjhAccedes = batchHjhBorrowRepayService.selectHjhAccedeListByOrderId(accedeOrderId);
-        if (hjhAccedes != null) {
+        if (!CollectionUtils.isEmpty(hjhAccedes)) {
             List<HjhAccedeVO> hjhAccedeVOS = CommonUtils.convertBeanList(hjhAccedes,HjhAccedeVO.class);
             response.setResultList(hjhAccedeVOS);
         }
