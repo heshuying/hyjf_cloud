@@ -41,7 +41,7 @@ import java.util.List;
 @RequestMapping("/hyjf-admin/configCenter/authConfig")
 public class AuthConfigController extends BaseController {
 
-    public static final String PERMISSIONS = "authConfig";
+    public static final String PERMISSIONS = "authconfig";
     @Autowired
     private AuthConfigService authConfigService;
 
