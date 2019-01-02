@@ -998,7 +998,7 @@
 		) AS a
 		where 1 = 1
 		) mm
-
+        where 1 = 1
 		<if test="userName != null and userName !=''">
 			AND mm.user_name LIKE #{userName,jdbcType=VARCHAR}
 		</if>
@@ -1186,7 +1186,7 @@
 		) AS a
 		where 1 = 1
 		) mm
-
+        where 1 = 1
 		<if test="userName != null and userName !=''">
 			AND mm.user_name LIKE #{userName,jdbcType=VARCHAR}
 		</if>
