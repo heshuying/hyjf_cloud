@@ -148,7 +148,7 @@ public class SmsHandle {
 		SmsLog smsLog = new SmsLog();
 		smsLog.setType(type);
 		smsLog.setContent(messageStr);// 短信内容
-		smsLog.setPosttime(new Date());
+		smsLog.setPosttime(GetDate.getNowTime10());
 		smsLog.setMobile(mobile);
 		if (StringUtils.isEmpty(sender)) {
 			smsLog.setSender(title);
