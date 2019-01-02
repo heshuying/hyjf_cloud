@@ -1,16 +1,5 @@
 package com.hyjf.cs.trade.service.recharge.impl;
 
-import java.math.BigDecimal;
-import java.util.*;
-
-import org.apache.commons.collections.map.HashedMap;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
@@ -51,6 +40,16 @@ import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallStatusConstant;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import org.apache.commons.collections.map.HashedMap;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.math.BigDecimal;
+import java.util.*;
 
 /**
  * 用户充值Service实现类
@@ -391,12 +390,22 @@ public class RechargeServiceImpl extends BaseTradeServiceImpl implements Recharg
 		return bean;
 	}
 
-	public BankCallBean fallBackRecharge(UserDirectRechargeBean directRechargeBean,int userId, String ipAddr, String mobile, String money) throws Exception {
-		logger.info("==================已进入 充值(三端) fallBackRecharge 方法================");
-		return null;
-	}
+    /**
+     * 充值(三端) fallBackRecharge 方法
+     * @param directRechargeBean
+     * @param userId
+     * @param ipAddr
+     * @param mobile
+     * @param money
+     * @return
+     * @throws Exception
+     */
+    public BankCallBean fallBackRecharge(UserDirectRechargeBean directRechargeBean,int userId, String ipAddr, String mobile, String money) throws Exception {
+        logger.info("==================已进入 充值(三端) fallBackRecharge 方法================");
+        return null;
+    }
 
-	@Override
+    @Override
 	public WebResult<Object> toRecharge(WebViewUserVO user) {
 		WebResult<Object> result = new WebResult<Object>();
 		UserVO userVO=this.getUsers(user.getUserId());

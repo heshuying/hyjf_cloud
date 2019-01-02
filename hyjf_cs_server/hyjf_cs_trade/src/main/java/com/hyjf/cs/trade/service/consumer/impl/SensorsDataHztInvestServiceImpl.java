@@ -4,7 +4,6 @@
 package com.hyjf.cs.trade.service.consumer.impl;
 
 import com.hyjf.am.resquest.trade.SensorsDataBean;
-import com.hyjf.am.vo.trade.BorrowVO;
 import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.coupon.CouponConfigVO;
 import com.hyjf.am.vo.trade.coupon.CouponRealTenderVO;
@@ -363,9 +362,7 @@ public class SensorsDataHztInvestServiceImpl extends BaseServiceImpl implements 
             properties.put("product_suitable", createProjectTypeString(couponConfig.getProjectType()));
             // 出借金额限制
             properties.put("tender_amount_limit", createCouponTenderMoney(couponConfig.getTenderQuotaType(), couponConfig.getTenderQuotaMin(), couponConfig.getTenderQuotaMax(), couponConfig.getTenderQuota()));
-            // 奖励券创建时间 TODO CouponUserVO add_time 字段变更
             properties.put("coupon_createtime", couponUser.getCreateTime());
-            // 奖励券到期时间 TODO CouponUserVO end_time 字段变更
             properties.put("coupon_endtime", GetDate.getDateTimeMyTime(couponUser.getEndTime()));
         } else {
             // 此笔出借未使用优惠券

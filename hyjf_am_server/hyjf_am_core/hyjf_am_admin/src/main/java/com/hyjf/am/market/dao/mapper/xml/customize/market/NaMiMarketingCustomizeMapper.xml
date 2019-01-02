@@ -32,7 +32,6 @@
         </where>
     </sql>
 
-
     <sql id="Where_Clause1">
             <if test="username != null and username != ''">
                 AND d.user_name = #{username}

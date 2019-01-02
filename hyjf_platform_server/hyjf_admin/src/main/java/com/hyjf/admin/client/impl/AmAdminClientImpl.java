@@ -1960,4 +1960,26 @@ public class AmAdminClientImpl implements AmAdminClient {
         return restTemplate.postForEntity("http://AM-ADMIN/am-market/namimarketing/performanceInfo",
                 request,NaMiMarketingResponse.class).getBody();
     }
+
+    @Override
+    public NaMiMarketingResponse selectNaMiMarketingRefferList(NaMiMarketingRequest request) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-market/namimarketing/selectNaMiMarketingRefferList",
+                request,NaMiMarketingResponse.class).getBody();
+    }
+    @Override
+    public  IntegerResponse selectNaMiMarketingRefferCount(NaMiMarketingRequest request){
+        return restTemplate.postForEntity("http://AM-ADMIN/am-market/namimarketing/selectNaMiMarketingRefferCount",
+                request,IntegerResponse.class).getBody();
+    }
+    @Override
+    public  IntegerResponse selectNaMiMarketingRefferTotalCount(NaMiMarketingRequest request){
+        return restTemplate.postForEntity("http://AM-ADMIN/am-market/namimarketing/selectNaMiMarketingRefferTotalCount",
+                request,IntegerResponse.class).getBody();
+    }
+
+    @Override
+    public NaMiMarketingResponse selectNaMiMarketingRefferTotalList(NaMiMarketingRequest request) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-market/namimarketing/selectNaMiMarketingRefferTotalList",
+                request,NaMiMarketingResponse.class).getBody();
+    }
 }

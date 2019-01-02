@@ -654,6 +654,9 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /** 汇添金计划未满 */
     public static final String HTJ_PARAM_TPL_JHWM = "JYTZ_HTJ_FAILED";
 
+    /**计划订单异常*/
+    public static final String JYTZ_PLAN_ORDER_EXCECEPTION = "JYTZ_PLAN_ORDER_EXCEPTION";
+
     /** 消息推送模板-加息放款 */
     public static final String JYTZ_TPL_JIAXIFANGKUAN = "JYTZ_TPL_JIAXIFANGKUAN";
 

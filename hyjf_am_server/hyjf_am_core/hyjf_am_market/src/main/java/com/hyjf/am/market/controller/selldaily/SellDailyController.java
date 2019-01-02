@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.market.controller;
+package com.hyjf.am.market.controller.selldaily;
 
 import java.util.List;
 

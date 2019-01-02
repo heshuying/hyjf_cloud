@@ -503,8 +503,8 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 							 
 							logger.info("放款成功：" + borrowNid + " 订单: "+tenderOrderId+" 应收利息 "+recoverInterest);
 							
-							// 生成出借人居间服务协议
-							createTenderGenerateContract(borrow, borrowInfo, borrowTender, recoverInterest);
+							// 生成出借人居间服务协议 modify by yangchangwei 2018-12-29 改由放款后batch任务主动推送
+//							createTenderGenerateContract(borrow, borrowInfo, borrowTender, recoverInterest);
 							
 						}else {
 							logger.info("放款已经成功：" + borrowNid + " 订单: "+tenderOrderId);
@@ -1822,7 +1822,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 	 * @param borrowTender
 	 * @param recoverInterest
 	 */
-	private void createTenderGenerateContract(Borrow borrow, BorrowInfo borrowInfo, BorrowTender borrowTender, BigDecimal recoverInterest) {
+	/*private void createTenderGenerateContract(Borrow borrow, BorrowInfo borrowInfo, BorrowTender borrowTender, BigDecimal recoverInterest) {
 		String nid = borrowTender.getNid();
 		try {
 			Integer userId = borrowTender.getUserId();
@@ -1844,7 +1844,7 @@ public class RealTimeBorrowLoanPlanServiceImpl extends BaseServiceImpl implement
 		}catch (Exception e){
 			logger.info("-----------------生成计划居间服务协议失败，ordid:" + nid + ",异常信息：" + e.getMessage());
 		}
-	}
+	}*/
 
 	/**
 	 * 变更保证金少放款相关金额

@@ -28,43 +28,37 @@ import java.util.List;
 @RequestMapping("/hyjf-app/activity")
 public class ActivityListController extends BaseMarketController {
 
-    @Resource
-    private ActivityListService activityListService;
+	@Resource
+	private ActivityListService activityListService;
 
-    @ApiOperation(value = "获取活动专区", notes = "app活动-获取活动专区")
-    @PostMapping("/activityList")
-    public ActivityListResponse init(HttpServletRequest request, @RequestBody ActivityListRequest activityListRequest){
-        ActivityListResponse response = new ActivityListResponse();
-// 检查参数正确性
-        if (Validator.isNull(activityListRequest.getVersion()) || Validator.isNull(activityListRequest.getNetStatus()) || Validator.isNull(activityListRequest.getPlatform()) || Validator.isNull(activityListRequest.getSign())) {
-            response.setStatus("1");
-            response.setStatusDesc("请求参数非法");
-            return response;
-        }
+	@ApiOperation(value = "获取活动专区", notes = "app活动-获取活动专区")
+	@PostMapping("/activityList")
+	public ActivityListResponse init(HttpServletRequest request, @RequestBody ActivityListRequest activityListRequest) {
+		ActivityListResponse response = new ActivityListResponse();
+		// 检查参数正确性
+		if (Validator.isNull(activityListRequest.getVersion()) || Validator.isNull(activityListRequest.getNetStatus())
+				|| Validator.isNull(activityListRequest.getPlatform())
+				|| Validator.isNull(activityListRequest.getSign())) {
+			response.setStatus("1");
+			response.setStatusDesc("请求参数非法");
+			return response;
+		}
 
-//        // 判断sign是否存在
-//        boolean isSignExists = SecretUtil.isExists(sign);
-//        if (!isSignExists) {
-//            ret.put("status", "1");
-//            ret.put("statusDesc", "请求参数非法");
-//            return ret;
-//        }
+		// 取得加密用的Key
+		String key = SecretUtil.getKey(activityListRequest.getSign());
+		if (Validator.isNull(key)) {
+			response.setStatus("1");
+			response.setStatusDesc("请求参数非法");
+			return response;
+		}
 
-        // 取得加密用的Key
-        String key = SecretUtil.getKey(activityListRequest.getSign());
-        if (Validator.isNull(key)) {
-            response.setStatus("1");
-            response.setStatusDesc("请求参数非法");
-            return response;
-        }
+		int count = activityListService.queryActivityCount(activityListRequest);
+		response.setStatus("10");
+		response.setStatusDesc("成功");
+		response.setCount(count);
 
-        int count= activityListService.queryActivityCount(activityListRequest);
-        response.setStatus("10");
-        response.setStatusDesc("成功");
-        response.setCount(count);
-
-        List<ActivityListBeanVO> activityListBeans = activityListService.queryActivityList(activityListRequest);
-        response.setActivityList(activityListBeans);
-        return response;
-    }
+		List<ActivityListBeanVO> activityListBeans = activityListService.queryActivityList(activityListRequest);
+		response.setActivityList(activityListBeans);
+		return response;
+	}
 }

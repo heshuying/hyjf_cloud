@@ -64,7 +64,7 @@ public class VipManageController extends BaseController {
     /**
      * vip详情权限
      */
-    public static final String PERMISSIONS_DETAIL = "vipdatail";
+    public static final String PERMISSIONS_DETAIL = "vipdetail";
     /**
      * vip升级权限
      */
@@ -126,6 +126,7 @@ public class VipManageController extends BaseController {
     @RequestMapping(value = "/vipdetailInit", method = RequestMethod.POST)
     @AuthorityAnnotation(key = PERMISSIONS_DETAIL, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult vipDetailInit(@RequestBody VipDetailListRequest vdr) {
+        logger.info("vip详情接口开始 vdr :" + vdr);
         VipDetailListResponse vdl = new VipDetailListResponse();
         if (vdr != null) {
             vdl = vipManageService.searchDetailList(vdr);

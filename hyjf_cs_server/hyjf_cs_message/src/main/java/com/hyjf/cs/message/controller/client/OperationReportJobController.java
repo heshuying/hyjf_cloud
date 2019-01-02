@@ -3,12 +3,9 @@
  */
 package com.hyjf.cs.message.controller.client;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.response.message.BorrowUserStatisticResponse;
-import com.hyjf.am.response.message.OperationReportEntityResponse;
 import com.hyjf.am.vo.datacollect.BorrowUserStatisticVO;
-import com.hyjf.am.vo.datacollect.OperationReportEntityVO;
 import com.hyjf.am.vo.message.OperationReportJobBean;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -17,16 +14,12 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.controller.BaseController;
 import com.hyjf.cs.message.bean.ic.BorrowUserStatistic;
-import com.hyjf.cs.message.bean.ic.OperationReport;
 import com.hyjf.cs.message.mq.base.CommonProducer;
 import com.hyjf.cs.message.mq.base.MessageContent;
-
 import com.hyjf.cs.message.service.report.OperationReportJobNewService;
-import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
@@ -46,9 +39,6 @@ public class OperationReportJobController extends BaseController {
 
 	@Autowired
 	private OperationReportJobNewService operationReportJobNewService;
-
-	@Autowired
-	private PlatDataStatisticsService platDataStatisticsService;
 	@Autowired
 	CommonProducer operationReportJobAdminProducer;
 
@@ -104,19 +94,6 @@ public class OperationReportJobController extends BaseController {
 		if(borrowUserStatistic != null){
 
 			BeanUtils.copyProperties(borrowUserStatistic,vo);
-		}
-		response.setResult(vo);
-		return response;
-	}
-
-	@RequestMapping("/findOneOperationMongDaoByMonth/{month}")
-	public OperationReportEntityResponse getBorrowUserStatistic(@PathVariable Integer month) {
-		OperationReportEntityResponse response = new OperationReportEntityResponse();
-		OperationReportEntityVO vo = new OperationReportEntityVO();
-		OperationReport operationReport = platDataStatisticsService.findOneOperationMongDaoByMonth(month);
-		if(operationReport != null){
-
-			BeanUtils.copyProperties(operationReport,vo);
 		}
 		response.setResult(vo);
 		return response;
