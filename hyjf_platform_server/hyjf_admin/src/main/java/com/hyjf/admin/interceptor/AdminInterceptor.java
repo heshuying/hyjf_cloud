@@ -73,6 +73,7 @@ public class AdminInterceptor implements HandlerInterceptor {
 			}
 			// 获取该角色 权限列表
 			List<String> perm = (List<String>) request.getSession().getAttribute("permission");
+			logger.info("用户授权列表(perm):"+JSONObject.toJSONString(perm));
 			if(perm.isEmpty()){
 				return false;
 			}
