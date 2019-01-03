@@ -51,10 +51,7 @@
 		IFNULL(l.plan_balance, 0) AS planBalance,
 		IFNULL(l.plan_frost, 0) AS planFrost,
 		l.remark,
-		date_format(
 		l.create_time,
-		'%Y-%c-%d %H:%i:%s'
-		) AS 'create_time',
 		l.account_id,
 		l.is_bank,
 		l.seq_no,
