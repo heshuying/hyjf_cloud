@@ -149,7 +149,7 @@ public class BorrowLoanPlanRealTimeConsumer implements RocketMQListener<MessageE
                         throw new Exception("错误收件人没有配置。" + "[借款编号：" + borrowNid + "]");
                     }
                     MailMessage mailmessage = new MailMessage(null, null, "[" + online + "] " + borrowNid + " 第" + failTimes + "次放款失败", msg.toString(), null, toMail, null,
-                            MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
+                            MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
                     commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, borrowNid, mailmessage));
                 } catch (Exception e2) {
                     logger.error("发送邮件失败..", e2);
