@@ -7,6 +7,7 @@ import com.hyjf.am.resquest.config.MessagePushPlatStaticsRequest;
 import com.hyjf.cs.message.bean.mc.MessagePushPlatStatics;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
@@ -46,6 +47,7 @@ public class MessagePushPlatStaticsDao extends BaseMongoDao<MessagePushPlatStati
             int limitStart = (currPage - 1) * pageSize;
             query.skip(limitStart).limit(pageSize);
         }
+        query.with(new Sort(Sort.Direction.DESC, "_id"));
         return mongoTemplate.find(query, getEntityClass());
     }
 }
