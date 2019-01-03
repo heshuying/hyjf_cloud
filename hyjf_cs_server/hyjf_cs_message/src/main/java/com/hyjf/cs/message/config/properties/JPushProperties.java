@@ -9,24 +9,45 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties(prefix = "hyjf.jpush")
 public class JPushProperties {
 
+    /**
+     * 所有安卓 ios,渠道号79
+     */
     private String appKey;
     private String masterSecret;
 
+    /**
+     * ios-pro，渠道号39
+     */
     private String proAppKey;
     private String proMasterSecret;
 
+    /**
+     * ios-测试版，渠道号149
+     */
     private String testAppKey;
     private String testMasterSecret;
 
+    /**
+     * ios-悦享版，渠道号153
+     */
     private String yxbAppKey;
     private String yxbMasterSecret;
 
+    /**
+     * ios-周年版，渠道号152
+     */
     private String znbAppKey;
     private String znbMasterSecret;
 
+    /**
+     * ios-专业版，渠道号150
+     */
     private String zybAppKey;
     private String zybMasterSecret;
 
+    /**
+     * ios-至尊版，渠道号151
+     */
     private String zzbAppKey;
     private String zzbMasterSecret;
 
