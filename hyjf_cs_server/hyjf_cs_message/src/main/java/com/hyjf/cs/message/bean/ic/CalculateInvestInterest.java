@@ -7,6 +7,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @Description 网站运营数据
@@ -47,9 +48,9 @@ public class CalculateInvestInterest implements Serializable {
 
     private BigDecimal bailMoney;
 
-    private Integer updateTime;
+    private Date updateTime;
 
-    private Integer createTime;
+    private Date createTime;
 
     private static final long serialVersionUID = 1L;
 
@@ -181,19 +182,19 @@ public class CalculateInvestInterest implements Serializable {
         this.bailMoney = bailMoney;
     }
 
-    public Integer getUpdateTime() {
+    public Date getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(Integer updateTime) {
+    public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
     }
 
-    public Integer getCreateTime() {
+    public Date getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Integer createTime) {
+    public void setCreateTime(Date createTime) {
         this.createTime = createTime;
     }
 

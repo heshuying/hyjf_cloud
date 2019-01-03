@@ -4141,7 +4141,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     public List<HjhAccedeVO> selectHjhAccedeListByOrderId(String accedeOrderId) {
         HjhAccedeResponse response = restTemplate
                 .getForEntity("http://AM-TRADE/am-trade/batchHjhBorrowRepay/selectHjhAccedeListByOrderId/" + accedeOrderId, HjhAccedeResponse.class).getBody();
-        if (response != null) {
+        if (Response.isSuccess(response)) {
             return response.getResultList();
         }
         return null;

@@ -207,7 +207,7 @@ public class BorrowCommonController extends BaseController {
 		// 货币种类 配置表
 		// List<ParamName> list =
 		// this.borrowCommonService.getParamNameList(CustomConstants.CURRENCY_STATUS);
-		//TODO 暂时屏蔽 画面验证(信批需求新增字段无需校验)
+		// 暂时屏蔽 画面验证(信批需求新增字段无需校验)
 		//this.borrowCommonService.validatorFieldCheck( form, isExistsRecord, CustomConstants.HZT);
 		/*
 		 * HttpSession session = request.getSession(); String sessionToken
@@ -229,7 +229,7 @@ public class BorrowCommonController extends BaseController {
 //			List<BorrowProjectRepay> borrowStyleList = this.borrowCommonService.borrowProjectRepayList();
 //			modelAndView.addObject("borrowStyleList", borrowStyleList);
 
-//TODO放在配置里			// 房屋类型
+//放在配置里			// 房屋类型
 //			modelAndView.addObject("housesTypeList",
 //					this.borrowCommonService.getParamNameList(CustomConstants.HOUSES_TYPE));
 //

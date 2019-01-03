@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import java.util.HashMap;
 import java.util.List;
@@ -56,32 +57,33 @@ public class HjhQuitConsumer implements RocketMQListener<MessageExt>, RocketMQPu
 
     @Override
     public void onMessage(MessageExt msg) {
-        // --> 消息检查
-        if(msg == null || msg.getBody() == null){
-            logger.error("【汇计划计划进入锁定期/退出计划】接收到的消息为null");
-            return;
-        }
-
-        // --> 消息转换
-        String msgBody = new String(msg.getBody());
-        logger.info("【汇计划计划进入锁定期/退出计划】接收到的消息：" + msgBody);
-
         HjhAccedeVO mqHjhAccede;
+        //转换队列消息
         try {
+            // --> 消息检查
+            if(msg == null || msg.getBody() == null){
+                logger.error("【汇计划计划进入锁定期/退出计划】接收到的消息为null");
+                return;
+            }
+
+            // --> 消息转换
+            String msgBody = new String(msg.getBody());
+            logger.info("【汇计划计划进入锁定期/退出计划】接收到的消息：" + msgBody);
+
             mqHjhAccede = JSONObject.parseObject(msgBody, HjhAccedeVO.class);
             if(mqHjhAccede == null || mqHjhAccede.getAccedeOrderId() == null || mqHjhAccede.getOrderStatus() == null ||mqHjhAccede.getCreditCompleteFlag() == null){
                 logger.info("解析为空：" + msgBody);
                 return;
             }
         } catch (Exception e1) {
-            logger.error("计划锁定/退出参数解释失败：" + msgBody, e1);
+            logger.error("计划锁定/退出参数解释失败：", e1);
             return;
         }
+        //业务处理
+        String accedeOrderId = mqHjhAccede.getAccedeOrderId();
+        Integer orderStatus = mqHjhAccede.getOrderStatus();
+        Integer creditCompleteFlag = mqHjhAccede.getCreditCompleteFlag();
         try {
-            String accedeOrderId = mqHjhAccede.getAccedeOrderId();
-            Integer orderStatus = mqHjhAccede.getOrderStatus();
-            Integer creditCompleteFlag = mqHjhAccede.getCreditCompleteFlag();
-
             // 生成任务key 校验并发请求
             String redisKey = RedisConstants.PLAN_REPAY_TASK + accedeOrderId;
             boolean result = RedisUtils.tranactionSet(redisKey, 300);
@@ -102,7 +104,6 @@ public class HjhQuitConsumer implements RocketMQListener<MessageExt>, RocketMQPu
                 amTradeClient.updateForQuit(accedeOrderId);
             }
 
-            RedisUtils.srem(RedisConstants.HJH_LOCK_REPEAT, accedeOrderId);
             RedisUtils.del(redisKey);
             logger.info("--------------计划订单号：" + accedeOrderId + "，锁定/退出结束------");
 
@@ -110,12 +111,14 @@ public class HjhQuitConsumer implements RocketMQListener<MessageExt>, RocketMQPu
         } catch (Exception e){
             logger.error("计划锁定/退出失败：" + mqHjhAccede.getAccedeOrderId(), e);
             return;
+        } finally {
+            RedisUtils.srem(RedisConstants.HJH_LOCK_REPEAT, accedeOrderId);
         }
     }
 
     private void updateForLock(String accedeOrderId) {
         List<HjhAccedeVO> accedeVOS = amTradeClient.selectHjhAccedeListByOrderId(accedeOrderId);
-        if(accedeVOS != null){
+        if(!CollectionUtils.isEmpty(accedeVOS)){
             HjhAccedeVO hjhAccedeVO = accedeVOS.get(0);
             UserInfoVO inverestUserInfo = amUserClient.selectUserInfoByUserId(hjhAccedeVO.getInviteUserId());
 
