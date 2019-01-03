@@ -712,7 +712,7 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     public static final String EMAILPARAM_TPL_LOANS = "TPL_EMAIL_LOANS";
 
     /** 汇计划自动发标修复 */
-    public static final String MAILSENDFORMAILINGADDRESSMSG = "TPL_EMAIL_AUTOISSUERECOVER";
+    public static final String EMAILPARAM_TPL_EMAIL_AUTOISSUERECOVER = "TPL_EMAIL_AUTOISSUERECOVER";
 
     /** 计划订单状态由投标成功变为锁定中，发送此邮件提醒用户投标成功 */
     public static final String EMAITPL_EMAIL_LOCK_REPAY = "TPL_EMAIL_LOCK_REPAY";

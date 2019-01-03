@@ -75,7 +75,17 @@ public class PlanDetailCustomize implements Serializable {
 	private String borrowStyleName;
 	// 默认0 天标，1 月标
 	private String isMonth;
-	
+	// 标的状态
+	private String investLevel;
+
+	public String getInvestLevel() {
+		return investLevel;
+	}
+
+	public void setInvestLevel(String investLevel) {
+		this.investLevel = investLevel;
+	}
+
 	public PlanDetailCustomize() {
 		super();
 	}

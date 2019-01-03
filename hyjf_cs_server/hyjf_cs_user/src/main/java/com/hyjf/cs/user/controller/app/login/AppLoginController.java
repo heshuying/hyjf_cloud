@@ -36,7 +36,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -58,9 +57,6 @@ import java.util.UUID;
 public class AppLoginController extends BaseUserController {
 
     private static final Logger logger = LoggerFactory.getLogger(AppLoginController.class);
-
-    @Value("${hyjf.web.host}")
-    public String webHost;
 
     @Autowired
     SystemConfig systemConfig;
@@ -308,19 +304,19 @@ public class AppLoginController extends BaseUserController {
                 //1、出借人 -->自动投标、自动债转、服务费授权；
                 if(userParameters.getRoleId().equals("1")){
                     //跳转授权须知页面的路径
-                    userParameters.setPaymentAuthUrl(webHost + "/needs/authorization"+packageStr(request)+"&usertype="+0);
+                    userParameters.setPaymentAuthUrl(systemConfig.getAppFrontHost() + "/needs/authorization"+packageStr(request)+"&usertype="+0);
                     //用来兼容之前的版本
-                    userParameters.setMergeAuthUrl(webHost + "/needs/authorization"+packageStr(request)+"&usertype="+0);
+                    userParameters.setMergeAuthUrl(systemConfig.getAppFrontHost() + "/needs/authorization"+packageStr(request)+"&usertype="+0);
                     //跳转授权须知页面之前的弹框信息
                     userParameters.setPaymentAuthDesc("应合规要求，出借、提现等交易前需进行以下授权：\n自动投标，自动债转，服务费授权。");
                 }else if (userParameters.getRoleId().equals("2")) {
                     //2、借款人 -->服务费授权、还款授权
-                    userParameters.setRepayAuthUrl(webHost + "/needs/authorization"+packageStr(request)+"&usertype="+1);
-                    userParameters.setPaymentAuthUrl(webHost + "/needs/authorization"+packageStr(request)+"&usertype="+1);
+                    userParameters.setRepayAuthUrl(systemConfig.getAppFrontHost() + "/needs/authorization"+packageStr(request)+"&usertype="+1);
+                    userParameters.setPaymentAuthUrl(systemConfig.getAppFrontHost() + "/needs/authorization"+packageStr(request)+"&usertype="+1);
                     userParameters.setPaymentAuthDesc("应合规要求，借款、提现等交易前需进行以下授权：\n服务费授权，还款授权。");
                 }else {
                     //3、担保机构 -->服务费授权
-                    userParameters.setPaymentAuthUrl(webHost + "/needs/authorization"+packageStr(request)+"&usertype="+2);
+                    userParameters.setPaymentAuthUrl(systemConfig.getAppFrontHost() + "/needs/authorization"+packageStr(request)+"&usertype="+2);
                     userParameters.setPaymentAuthDesc("应合规要求，借款、提现等交易前需进行以下授权：\n服务费授权");
                 }
                 ret.put("status", "0");

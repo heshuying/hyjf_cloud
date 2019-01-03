@@ -180,7 +180,7 @@ public class AutoIssueMessageConsumer implements RocketMQListener<MessageExt>, R
                         }
                         String[] toMail = emailList.split(",");
                         MailMessage mailMessage = new MailMessage(null, null, "债转编号为：" + autoIssuerecoverVO.getCreditNid(), emailmsg.toString(), null, toMail, null,
-                                MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
+                                MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
                         try {
                             commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), mailMessage));
                             RedisUtils.set(RedisConstants.LABEL_MAIL_KEY + autoIssuerecoverVO.getCreditNid(), autoIssuerecoverVO.getCreditNid(), 24 * 60 * 60);

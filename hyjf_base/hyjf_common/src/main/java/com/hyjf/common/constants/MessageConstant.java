@@ -39,7 +39,7 @@ public class MessageConstant {
 	/** 给指定邮件地址发邮件 */
 	public static final String MAIL_SEND_FOR_MAILING_ADDRESS = "mail_send_for_mailing_address";
 
-	/** 给指定邮件地址发邮件 */
+	/** 批量给邮件地址发送邮件信息 */
 	public static final String MAIL_SEND_FOR_MAILING_ADDRESS_MSG = "mail_send_for_mailing_address_msg";
 
 	/** 发送销售日报邮件 */

@@ -227,7 +227,8 @@
         <result column="status_orginal" property="statusOrginal" />
         <!--标的审核状态-->
         <result column="project_status" property="projectStatus"></result>
-
+        <!--标的状态-->
+        <result column="invest_level" property="investLevel"></result>
     </resultMap>
     <!--Web端获取项目列表-->
     <select id="searchProjectList" resultMap="ProjectListNewMap" parameterType="Map">
@@ -423,7 +424,8 @@
         hydb.recover_last_time,
         '%Y年%m月%d日'
         ) recover_last_time,
-        htbi.borrow_level
+        htbi.borrow_level,
+        hydb.invest_level
         FROM
         ht_borrow hydb
         left join ht_borrow_info htbi on hydb.borrow_nid =  htbi.borrow_nid
@@ -737,6 +739,7 @@
         <result column="plan_invest_status" property="planStatus" jdbcType="VARCHAR" />
         <result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
         <result column="name" property="borrowStyleName" jdbcType="VARCHAR" />
+        <result column="invest_level" property="investLevel" jdbcType="VARCHAR" />
     </resultMap>
 
     <select id="getPlanDetail" resultMap="DebtPlanDetailMap" >
@@ -759,7 +762,8 @@
 			dp.plan_invest_status,
 			dp.coupon_config,
 			dp.borrow_style,
-			hbs.name
+			hbs.name,
+			dp.invest_level
 		FROM
 			ht_hjh_plan dp
 		LEFT JOIN
