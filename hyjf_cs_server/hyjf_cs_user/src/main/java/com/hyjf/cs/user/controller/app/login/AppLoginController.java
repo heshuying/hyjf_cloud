@@ -306,14 +306,14 @@ public class AppLoginController extends BaseUserController {
                 }
                 //用户角色 1、出借人 2、借款人 3、担保机构
                 //1、出借人 -->自动投标、自动债转、服务费授权；
-                if(userParameters.getRoleId().equals(1)){
+                if(userParameters.getRoleId().equals("1")){
                     //跳转授权须知页面的路径
                     userParameters.setPaymentAuthUrl(webHost + "/needs/authorization"+packageStr(request)+"&usertype="+0);
                     //用来兼容之前的版本
                     userParameters.setMergeAuthUrl(webHost + "/needs/authorization"+packageStr(request)+"&usertype="+0);
                     //跳转授权须知页面之前的弹框信息
                     userParameters.setPaymentAuthDesc("应合规要求，出借、提现等交易前需进行以下授权：\n自动投标，自动债转，服务费授权。");
-                }else if (userParameters.getRoleId().equals(2)) {
+                }else if (userParameters.getRoleId().equals("2")) {
                     //2、借款人 -->服务费授权、还款授权
                     userParameters.setRepayAuthUrl(webHost + "/needs/authorization"+packageStr(request)+"&usertype="+1);
                     userParameters.setPaymentAuthUrl(webHost + "/needs/authorization"+packageStr(request)+"&usertype="+1);
