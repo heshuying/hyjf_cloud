@@ -1351,6 +1351,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         investInfo.put("revaluationMoney","");
         investInfo.put("riskLevelDesc","");
         investInfo.put("projectRiskLevelDesc","");
+        investInfo.put("revalPrincipalJudge",false);
         //测评判断逻辑开始
         UserVO loginUser = amUserClient.findUserById(tender.getUserId());
         //风险测评

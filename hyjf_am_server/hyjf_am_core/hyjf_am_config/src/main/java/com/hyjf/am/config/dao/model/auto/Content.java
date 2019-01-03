@@ -69,13 +69,6 @@ public class Content implements Serializable {
      */
     private String summary;
 
-    /**
-     * 内容
-     *
-     * @mbggenerated
-     */
-    private String content;
-
     private String seoTitle;
 
     private String seoKeyword;
@@ -115,6 +108,13 @@ public class Content implements Serializable {
     private Date createTime;
 
     private Date updateTime;
+
+    /**
+     * 内容
+     *
+     * @mbggenerated
+     */
+    private String content;
 
     private static final long serialVersionUID = 1L;
 
@@ -198,14 +198,6 @@ public class Content implements Serializable {
         this.summary = summary == null ? null : summary.trim();
     }
 
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content == null ? null : content.trim();
-    }
-
     public String getSeoTitle() {
         return seoTitle;
     }
@@ -284,5 +276,13 @@ public class Content implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content == null ? null : content.trim();
     }
 }
