@@ -14,7 +14,7 @@ public interface CallCenterAccountDetailCustomizeMapper {
 	 * @param callCenterAccountDetailRequest
 	 * @return
 	 */
-	public List<CallCenterAccountDetailCustomize> queryAccountDetails(CallCenterAccountDetailRequest callCenterAccountDetailRequest);
+	List<CallCenterAccountDetailCustomize> queryAccountDetails(CallCenterAccountDetailRequest callCenterAccountDetailRequest);
 
 
 	/**
@@ -23,6 +23,6 @@ public interface CallCenterAccountDetailCustomizeMapper {
 	 * @param userId
 	 * @return
 	 */
-	public CallCenterAccountDetailCustomize queryAccountEvalDetail(Integer userId);
+	CallCenterAccountDetailCustomize queryAccountEvalDetail(Integer userId);
 
 }
