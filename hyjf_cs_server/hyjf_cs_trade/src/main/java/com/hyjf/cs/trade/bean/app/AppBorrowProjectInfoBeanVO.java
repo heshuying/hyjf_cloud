@@ -124,6 +124,16 @@ public class AppBorrowProjectInfoBeanVO extends BaseVO implements Serializable {
 	 */
 	private String repayStyle;
 
+	private String investLevel;
+
+	public String getInvestLevel() {
+		return investLevel;
+	}
+
+	public void setInvestLevel(String investLevel) {
+		this.investLevel = investLevel;
+	}
+
 	public AppBorrowProjectInfoBeanVO() {
 		super();
 	}

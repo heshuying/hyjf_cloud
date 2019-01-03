@@ -159,6 +159,15 @@ public class ProjectCustomeDetailVO  extends BaseVO {
     private String borrowStatus;
 
     private String reverifyTime;
+    private String investLevel;
+
+    public String getInvestLevel() {
+        return investLevel;
+    }
+
+    public void setInvestLevel(String investLevel) {
+        this.investLevel = investLevel;
+    }
 
     public String getReverifyTime() {
         return reverifyTime;
