@@ -67,11 +67,15 @@ public class HjhAlermCheckController extends BaseTradeController {
      */
     @ApiOperation(value = "订单投资异常短信预警", notes = "订单投资异常短信预警")
     @GetMapping(value = "/hjhOrderInvestExceptionCheck")
-    public String hjhOrderInvestExceptionCheck() {
+    public Boolean hjhOrderInvestExceptionCheck() {
         logger.info("订单投资异常短信预警 开始... ");
-        hjhAlarmService.hjhOrderInvestExceptionCheck();
+        try {
+            hjhAlarmService.hjhOrderInvestExceptionCheck();
+        } catch (Exception e) {
+            logger.error("订单投资异常短信预警 异常 e :" + e);
+        }
         logger.info("订单投资异常短信预警 结束... ");
-        return "Success";
+        return true;
     }
     /**
      * 订单投资异常短信预警
