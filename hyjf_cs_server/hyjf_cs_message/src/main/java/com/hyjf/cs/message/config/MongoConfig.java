@@ -3,12 +3,13 @@
  */
 package com.hyjf.cs.message.config;
 
+import com.hyjf.cs.message.config.properties.MongoDbProperties;
 import com.hyjf.cs.message.converter.BigDecimalToDecimal128Converter;
 import com.hyjf.cs.message.converter.Decimal128ToBigDecimalConverter;
 import com.mongodb.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.mongodb.MongoDbFactory;
@@ -29,41 +30,12 @@ import java.util.List;
  */
 @Configuration
 public class MongoConfig extends AbstractMongoConfiguration {
-
     private Logger logger = LoggerFactory.getLogger(this.getClass());
+    @Autowired
+    private MongoDbProperties mongoDbProperties;
 
-    @Value("${mongodb.hostports}")
-    private String hostports;
-
-    @Value("${mongodb.username}")
-    private String username;
-
-    @Value("${mongodb.password}")
-    private String password;
-
-    @Value("${mongodb.authenticationDatabase}")
-    private String authenticationDatabase;
-
-    @Value("${mongodb.database}")
-    private String database;
-
-    @Value("${mongodb.minConnectionsPerHost}")
-    private Integer minConnectionsPerHost = 10;
-
-    @Value("${mongodb.connectionsPerHost}")
-    private Integer connectionsPerHost = 100;
-
-    @Value("${mongodb.connectTimeout}")
-    private Integer connectTimeout;
-
-    @Value("${mongodb.maxWaitTime}")
-    private Integer maxWaitTime;
-
-    @Value("${mongodb.socketTimeout}")
-    private Integer socketTimeout;
-
-    @Override
     @Bean
+    @Override
     public MongoTemplate mongoTemplate() {
         logger.info("mongoTemplate init ....");
         return new MongoTemplate(this.dbFactory(), this.mappingMongoConverter());
@@ -76,7 +48,7 @@ public class MongoConfig extends AbstractMongoConfiguration {
 
     @Override
     protected String getDatabaseName() {
-        return database;
+        return mongoDbProperties.getDatabase();
     }
 
     @Override
@@ -116,7 +88,7 @@ public class MongoConfig extends AbstractMongoConfiguration {
 
         List<ServerAddress> serverAddresses = new ArrayList<>();
 
-        String[] hostAndports = hostports.split(",");
+        String[] hostAndports = mongoDbProperties.getHostports().split(",");
 
         for (String hostport : hostAndports) {
             String[] hostAndport = hostport.split(":");
@@ -132,11 +104,11 @@ public class MongoConfig extends AbstractMongoConfiguration {
     private MongoClientOptions mongoClientOptions() {
         // 客户端配置（连接数、副本集群验证）
         MongoClientOptions.Builder builder = new MongoClientOptions.Builder();
-        builder.connectionsPerHost(connectionsPerHost);
-        builder.minConnectionsPerHost(minConnectionsPerHost);
-        builder.connectTimeout(connectTimeout);
-        builder.maxWaitTime(maxWaitTime);
-        builder.socketTimeout(socketTimeout);
+        builder.connectionsPerHost(mongoDbProperties.getConnectionsPerHost());
+        builder.minConnectionsPerHost(mongoDbProperties.getMinConnectionsPerHost());
+        builder.connectTimeout(mongoDbProperties.getConnectTimeout());
+        builder.maxWaitTime(mongoDbProperties.getMaxWaitTime());
+        builder.socketTimeout(mongoDbProperties.getSocketTimeout());
         builder.readPreference(ReadPreference.secondaryPreferred());
         return builder.build();
     }
@@ -147,7 +119,7 @@ public class MongoConfig extends AbstractMongoConfiguration {
      * @return
      */
     private MongoCredential mongoCredential() {
-        return MongoCredential.createScramSha1Credential(username, authenticationDatabase,
-                password.toCharArray());
+        return MongoCredential.createScramSha1Credential(mongoDbProperties.getUsername(), mongoDbProperties.getAuthenticationDatabase(),
+                mongoDbProperties.getPassword().toCharArray());
     }
 }

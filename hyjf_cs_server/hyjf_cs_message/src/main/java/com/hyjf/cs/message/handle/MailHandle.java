@@ -9,12 +9,12 @@ import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.client.AmUserClient;
+import com.hyjf.cs.message.config.PropertiesConfig;
 import com.hyjf.cs.message.util.MyAuthenticator;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.InputStreamSource;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
@@ -53,12 +53,6 @@ public class MailHandle {
     private AmUserClient amUserClient;
     @Autowired
     private AmConfigClient amConfigClient;
-    /**
-     * 是否为开发环境
-     */
-    @Value("${hyjf.env.test}")
-    private static boolean envTest;
-
 
     private void init() throws RuntimeException {
         if (setting == null) {
@@ -146,7 +140,7 @@ public class MailHandle {
             String body = replaceAllParameter(template.getMailContent(), replaceMap);
 
             // 开始送信
-            if (!envTest) {
+            if (!PropertiesConfig.hyjfEnvProperties.isTest()) {
                 send(toMailArray, subject, body, fileNames);
             }
         } catch (Exception e) {
@@ -173,7 +167,7 @@ public class MailHandle {
             String[] toMailArray = new String[1];
             toMailArray[0] = setting.getSmtpReply();
             // 开始送信
-            if (!envTest) {
+            if (!PropertiesConfig.hyjfEnvProperties.isTest()) {
                 send(toMailArray, subject, body, fileNames);
             }
         } catch (Exception e) {
@@ -191,7 +185,7 @@ public class MailHandle {
      */
     public void sendMail(String[] toMailArray, String subject, String body, String[] fileNames) {
         try {
-            if (!envTest) {
+            if (!PropertiesConfig.hyjfEnvProperties.isTest()) {
                 // 开始送信
                 send(toMailArray, subject, body, fileNames);
             }

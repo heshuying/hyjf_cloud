@@ -10,7 +10,7 @@ import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.common.controller.BaseController;
-import com.hyjf.cs.message.bean.MsgPushBean;
+import com.hyjf.cs.message.bean.mc.MsgPushBean;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistoryNew;
 import com.hyjf.cs.message.service.msgpush.MsgPushService;
