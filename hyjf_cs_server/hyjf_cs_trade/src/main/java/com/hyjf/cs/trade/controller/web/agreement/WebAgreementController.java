@@ -32,13 +32,13 @@ public class WebAgreementController extends BaseTradeController {
      * @param aliasName
      * @return
      */
-    @ApiOperation(value = "获得协议模板pdf显示地址", httpMethod = "POST", notes = "获得协议模板pdf显示地址")
+    @ApiOperation(value = "web-获得协议模板pdf显示地址", httpMethod = "POST", notes = "web-获得协议模板pdf显示地址")
     @PostMapping("/getAgreementPdfOrImg")
     public NewAgreementResultBean gotAgreementPdfOrImg(@RequestParam(value="aliasName",required = true) String aliasName) {
         return agreementService.getAgreementPdf(aliasName);
     }
 
-    @ApiOperation(value = "协议名称-动态获得", httpMethod = "GET", notes = "协议名称-动态获得")
+    @ApiOperation(value = "web-获得前台展示协议名称", httpMethod = "GET", notes = "web-协议名称-动态获得")
     @GetMapping("/getdisplayNameDynamic")
     public JSONObject getdisplayNameDynamic() {
         JSONObject jsonObject = agreementService.getdisplayNameDynamicMethod();
