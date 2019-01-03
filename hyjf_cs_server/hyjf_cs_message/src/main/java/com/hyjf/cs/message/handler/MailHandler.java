@@ -1,4 +1,4 @@
-package com.hyjf.cs.message.handle;
+package com.hyjf.cs.message.handler;
 
 import com.hyjf.am.vo.config.SiteSettingsVO;
 import com.hyjf.am.vo.config.SmsMailTemplateVO;
@@ -40,9 +40,9 @@ import java.util.Properties;
  * @version 1.0.0
  */
 @Component
-public class MailHandle {
+public class MailHandler {
 
-    private static final Logger logger = LoggerFactory.getLogger(MailHandle.class);
+    private static final Logger logger = LoggerFactory.getLogger(MailHandler.class);
     private static SiteSettingsVO setting = null;
     /**
      * 超时时间

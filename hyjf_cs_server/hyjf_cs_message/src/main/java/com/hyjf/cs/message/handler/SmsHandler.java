@@ -1,4 +1,4 @@
-package com.hyjf.cs.message.handle;
+package com.hyjf.cs.message.handler;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.config.SmsNoticeConfigRequest;
@@ -29,8 +29,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class SmsHandle {
-	private static Logger logger = LoggerFactory.getLogger(SmsHandle.class);
+public class SmsHandler {
+	private static Logger logger = LoggerFactory.getLogger(SmsHandler.class);
 	/**
 	 * http请求参数集合
 	 */

@@ -1,5 +1,6 @@
 package com.hyjf.cs.message.handle;
 
+import com.hyjf.cs.message.handler.MsgPushHandler;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,13 +17,13 @@ import com.hyjf.cs.message.CsMessageApplication;
 @SpringBootTest(classes = CsMessageApplication.class)
 public class MsgPushHandlerTest {
     @Autowired
-    private MsgPushHandle msgPushHandle;
+    private MsgPushHandler msgPushHandler;
 
 
     @Test
     public void sendTest(){
 
-        msgPushHandle.sendMessages("5bd03bbdef9d26416c6e8eb4");
+        msgPushHandler.sendMessages("5bd03bbdef9d26416c6e8eb4");
     }
 
 

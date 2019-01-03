@@ -1,4 +1,4 @@
-package com.hyjf.cs.message.handle;
+package com.hyjf.cs.message.handler;
 
 import cn.jpush.api.common.resp.APIConnectionException;
 import cn.jpush.api.common.resp.APIRequestException;
@@ -16,6 +16,7 @@ import com.hyjf.cs.message.bean.mc.MessagePushMsg;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.client.AmUserClient;
+import com.hyjf.cs.message.config.PropertiesConfig;
 import com.hyjf.cs.message.jpush.JPush;
 import com.hyjf.cs.message.mongo.mc.MessagePushMsgDao;
 import com.hyjf.cs.message.mongo.mc.MessagePushMsgHistoryDao;
@@ -34,8 +35,8 @@ import java.util.List;
 import java.util.Map;
 
 @Component
-public class MsgPushHandle {
-	private final static Logger logger = LoggerFactory.getLogger(MsgPushHandle.class);
+public class MsgPushHandler {
+	private final static Logger logger = LoggerFactory.getLogger(MsgPushHandler.class);
 
 	@Autowired
 	private AmUserClient amUserClient;
@@ -331,13 +332,13 @@ public class MsgPushHandle {
 			return;
 		}
 		logger.info("开始推送: msg_id is :{}, msg_content is:{}", msg.getId(), msg.getMsgContent());
-//		if(hyjfEnvProperties.isTest()){
-//			logger.info("测试环境不推送.....");
-//			msg.setSendTime(GetDate.getNowTime10());
-//			msg.setMsgSendStatus(CustomConstants.MSG_PUSH_SEND_STATUS_1);
-//			messagePushMsgHistoryDao.save(msg);
-//			return;
-//		}
+		if(PropertiesConfig.hyjfEnvProperties.isTest()){
+			logger.info("测试环境不推送.....");
+			msg.setSendTime(GetDate.getNowTime10());
+			msg.setMsgSendStatus(CustomConstants.MSG_PUSH_SEND_STATUS_1);
+			messagePushMsgHistoryDao.save(msg);
+			return;
+		}
 
 		// 错误消息
 		String errorMsg = "";

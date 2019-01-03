@@ -1,4 +1,4 @@
-package com.hyjf.cs.message.handle;
+package com.hyjf.cs.message.handler;
 
 import org.apache.commons.lang3.StringUtils;
 
