@@ -739,6 +739,7 @@
         <result column="plan_invest_status" property="planStatus" jdbcType="VARCHAR" />
         <result column="borrow_style" property="borrowStyle" jdbcType="VARCHAR" />
         <result column="name" property="borrowStyleName" jdbcType="VARCHAR" />
+        <result column="invest_level" property="investLevel" jdbcType="VARCHAR" />
     </resultMap>
 
     <select id="getPlanDetail" resultMap="DebtPlanDetailMap" >
@@ -761,7 +762,8 @@
 			dp.plan_invest_status,
 			dp.coupon_config,
 			dp.borrow_style,
-			hbs.name
+			hbs.name,
+			dp.invest_level
 		FROM
 			ht_hjh_plan dp
 		LEFT JOIN
