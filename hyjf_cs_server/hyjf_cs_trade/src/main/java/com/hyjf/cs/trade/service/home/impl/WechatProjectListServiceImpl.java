@@ -222,6 +222,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             borrowProjectInfoBean.setAccount(borrow.getBorrowAccount());
             borrowProjectInfoBean.setBorrowApr(borrow.getBorrowApr());
             borrowProjectInfoBean.setBorrowId(borrowNid);
+            borrowProjectInfoBean.setInvestLevel(borrow.getInvestLevel());
             if (StringUtils.isNotBlank(borrow.getIncreaseInterestFlag()) && borrow.getIncreaseInterestFlag().equals("1")){
                 borrowProjectInfoBean.setBorrowExtraYield(borrow.getBorrowExtraYield());
             }else{
