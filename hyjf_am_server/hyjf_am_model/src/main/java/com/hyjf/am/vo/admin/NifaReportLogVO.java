@@ -26,6 +26,8 @@ public class NifaReportLogVO extends BaseVO implements Serializable {
 
     private String uploadName;
 
+    private String historyDate;
+
     private String feedbackName;
 
     private String uploadPath;
@@ -144,5 +146,13 @@ public class NifaReportLogVO extends BaseVO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getHistoryDate() {
+        return historyDate;
+    }
+
+    public void setHistoryDate(String historyDate) {
+        this.historyDate = historyDate;
     }
 }
