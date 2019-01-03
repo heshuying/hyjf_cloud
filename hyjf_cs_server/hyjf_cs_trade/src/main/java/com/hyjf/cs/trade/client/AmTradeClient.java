@@ -330,7 +330,7 @@ public interface AmTradeClient {
      * 订单投资异常短信预警
      * @return
      */
-    public void hjhOrderInvestExceptionCheck();
+    public boolean hjhOrderInvestExceptionCheck();
 
     /**
      * hjh订单匹配期超过两天短信预警

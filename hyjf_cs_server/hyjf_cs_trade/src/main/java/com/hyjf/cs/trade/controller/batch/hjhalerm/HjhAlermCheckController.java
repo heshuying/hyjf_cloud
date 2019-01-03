@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.controller.batch.hjhalerm;
 
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.controller.batch.BankExceptionController;
 import com.hyjf.cs.trade.service.batch.HjhAlarmCheckService;
@@ -69,13 +70,14 @@ public class HjhAlermCheckController extends BaseTradeController {
     @GetMapping(value = "/hjhOrderInvestExceptionCheck")
     public Boolean hjhOrderInvestExceptionCheck() {
         logger.info("订单投资异常短信预警 开始... ");
+        boolean response = false;
         try {
-            hjhAlarmService.hjhOrderInvestExceptionCheck();
+            response = hjhAlarmService.hjhOrderInvestExceptionCheck();
         } catch (Exception e) {
             logger.error("订单投资异常短信预警 异常 e :" + e);
         }
         logger.info("订单投资异常短信预警 结束... ");
-        return true;
+        return response;
     }
     /**
      * 订单投资异常短信预警
