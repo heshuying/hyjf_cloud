@@ -988,6 +988,12 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /** 货币种类 */
     public static final String CURRENCY_STATUS = "CURRENCY_STATUS";
 
+    /** 借款用途 */
+    public static final String FINANCE_PURPOSE = "FINANCE_PURPOSE";
+
+    /** 岗位职业 */
+    public static final String POSITION = "POSITION";
+
     // 优惠券（体验金）
     public static final String TRADE_COUPON_TYJ = "EXPERIENCE_PROFIT";
 

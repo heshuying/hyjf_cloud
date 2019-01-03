@@ -6,6 +6,7 @@ import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.response.config.LinkResponse;
 import com.hyjf.am.resquest.admin.BorrowBeanRequest;
 import com.hyjf.am.resquest.admin.BorrowCommonRequest;
+import com.hyjf.am.vo.config.ParamNameVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowCommonVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author GOGTZ-Z
@@ -140,4 +142,12 @@ public interface BorrowCommonService {
 	 * @return
 	 */
 	String getBorrowLevelAction(@Valid String borrowLevel);
+
+	/**
+	 * map转ParamNameVO
+	 *
+	 * @param map
+	 * @return
+	 */
+    List<ParamNameVO> mapToParamNameVO(Map<String,String> map);
 }
