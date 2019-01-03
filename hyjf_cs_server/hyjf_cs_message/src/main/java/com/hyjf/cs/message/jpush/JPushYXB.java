@@ -1,5 +1,10 @@
 package com.hyjf.cs.message.jpush;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.hyjf.cs.message.config.PropertiesConfig;
+
 import cn.jpush.api.JPushClient;
 import cn.jpush.api.common.ClientConfig;
 import cn.jpush.api.common.resp.APIConnectionException;
@@ -7,9 +12,6 @@ import cn.jpush.api.common.resp.APIRequestException;
 import cn.jpush.api.push.PushResult;
 import cn.jpush.api.push.model.SMS;
 import cn.jpush.api.report.ReceivedsResult;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
 
 /**
  * 极光接口 服务APP：ios-悦享版，渠道号153
@@ -17,25 +19,8 @@ import org.springframework.beans.factory.annotation.Value;
  * @author Michael
  */
 public class JPushYXB {
-	protected static final Logger LOG = LoggerFactory.getLogger(JPushYXB.class);
-
-	/**
-	 * appkey 值
-	 */
-	private static final String appKey = "bdb9b2c46dd55ca3144c4aaf";
-
-	/**
-	 * 秘钥
-	 */
-	private static final String masterSecret = "1d50d5ebef1f7a4694e9bc32";
-
+	protected static final Logger logger = LoggerFactory.getLogger(JPushYXB.class);
 	private static JPushClient jpushClient = null;
-
-	/**
-	 * ios是否为开发环境
-	 */
-	@Value("${hyjf.env.test}")
-	private static boolean envTest;
 
 	/**
 	 * 单例 实例化
@@ -45,14 +30,13 @@ public class JPushYXB {
 	public static JPushClient getClientInstance() {
 		if (jpushClient == null) {
 			ClientConfig clientConfig = ClientConfig.getInstance();
-			clientConfig.setApnsProduction(!envTest); // ios 开发环境
-			jpushClient = new JPushClient(masterSecret, appKey, null, clientConfig);
+			clientConfig.setApnsProduction(!PropertiesConfig.hyjfEnvProperties.isTest()); // ios
+																							// 开发环境
+			jpushClient = new JPushClient(PropertiesConfig.jPushProperties.getYxbMasterSecret(),
+					PropertiesConfig.jPushProperties.getYxbAppKey(), null, clientConfig);
 		}
 		return jpushClient;
 	}
-
-
-
 
 	/**
 	 * 给安卓用户发送短信

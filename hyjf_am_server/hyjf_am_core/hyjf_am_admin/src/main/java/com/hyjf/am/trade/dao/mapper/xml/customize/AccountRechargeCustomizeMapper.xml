@@ -205,7 +205,7 @@
 		r.balance ,r.payment,
 		CASE r.`type` WHEN 0 THEN '线下充值' WHEN 1 THEN '线上充值' END AS type,
 		CASE r.`status` WHEN 1 THEN '转账中' WHEN 2
-		THEN '成功' ELSE '失败' END as
+		THEN '成功' WHEN 4 THEN '终止' ELSE '失败' END as
 		statusName ,
 		CASE r.client WHEN 0 THEN 'PC'
 		WHEN 1 THEN '微信' WHEN 2 THEN

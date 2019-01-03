@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
-import com.hyjf.cs.message.handle.MailHandle;
+import com.hyjf.cs.message.handler.MailHandler;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -33,7 +33,7 @@ public class MailConsumer implements RocketMQListener<MessageExt>, RocketMQPushC
     private static int MAX_RECONSUME_TIME = 3;
 
     @Autowired
-    private MailHandle mailHandle;
+    private MailHandler mailHandler;
     @Override
     public void onMessage(MessageExt  message) {
         MailMessage mailMessage = JSONObject.parseObject(message.getBody(), MailMessage.class);
@@ -41,15 +41,15 @@ public class MailConsumer implements RocketMQListener<MessageExt>, RocketMQPushC
         if (null != mailMessage) {
             switch (mailMessage.getServiceType()) {
                 case MessageConstant.MAIL_SEND_FOR_USER:
-                    mailHandle.sendMail(mailMessage.getUserId(), mailMessage.getSubject(), mailMessage.getBody(),
+                    mailHandler.sendMail(mailMessage.getUserId(), mailMessage.getSubject(), mailMessage.getBody(),
                             mailMessage.getFileNames());
                     break;
                 case MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS:
-                    mailHandle.sendMail(mailMessage.getToMailArray(), mailMessage.getSubject(),
+                    mailHandler.sendMail(mailMessage.getToMailArray(), mailMessage.getSubject(),
                             mailMessage.getMailKbn(), mailMessage.getReplaceStrs(), mailMessage.getFileNames());
                     break;
                 case MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG:
-                    mailHandle.sendMail(mailMessage.getToMailArray(), mailMessage.getSubject(), mailMessage.getBody(),
+                    mailHandler.sendMail(mailMessage.getToMailArray(), mailMessage.getSubject(), mailMessage.getBody(),
                             mailMessage.getFileNames());
                     break;
                 case MessageConstant.MAIL_SEND_FRO_SELL_DAILY:
@@ -57,7 +57,7 @@ public class MailConsumer implements RocketMQListener<MessageExt>, RocketMQPushC
                     String[] fileNames = mailMessage.getFileNames();
                     logger.info("销售日报发送邮件消费者接受参数 : {}", mailMessage.getToMailArray(), mailMessage.getSubject(), fileNames, mailMessage.getIs());
                     try {
-                        mailHandle.sendAttachmentsMailOnPort465(mailMessage.getToMailArray(), mailMessage.getSubject(),
+                        mailHandler.sendAttachmentsMailOnPort465(mailMessage.getToMailArray(), mailMessage.getSubject(),
                                 content, fileNames, mailMessage.getIs());
                     } catch (Exception e) {
                         throw new MailSendException("发送销售邮件失败");
