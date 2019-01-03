@@ -104,7 +104,9 @@ public class CallCenterTradeServiceImpl implements CallCenterTradeService {
      */
     @Override
     public CallCenterAccountDetailCustomize queryAccountEvalDetail(Integer userId) {
-        return callCenterAccountDetailCustomizeMapper.queryAccountEvalDetail(userId);
+        CallCenterAccountDetailRequest callCenterAccountDetailRequest = new CallCenterAccountDetailRequest();
+        callCenterAccountDetailRequest.setUserId(userId);
+        return callCenterAccountDetailCustomizeMapper.queryAccountEvalDetail(callCenterAccountDetailRequest);
     }
 
     /**

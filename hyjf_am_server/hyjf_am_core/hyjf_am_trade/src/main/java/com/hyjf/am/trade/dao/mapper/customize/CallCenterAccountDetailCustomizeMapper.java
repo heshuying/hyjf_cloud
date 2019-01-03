@@ -20,9 +20,9 @@ public interface CallCenterAccountDetailCustomizeMapper {
 	/**
 	 * 测评获取冻结金额和代收本经明细
 	 *
-	 * @param userId
+	 * @param callCenterAccountDetailRequest
 	 * @return
 	 */
-	CallCenterAccountDetailCustomize queryAccountEvalDetail(Integer userId);
+	CallCenterAccountDetailCustomize queryAccountEvalDetail(CallCenterAccountDetailRequest callCenterAccountDetailRequest);
 
 }

@@ -123,6 +123,18 @@ public class CallCenterAccountDetailCustomize implements Serializable {
 	 * 交易状态
 	 */
 	private String tradeStatus;
+	/**
+	 * 银行待收本金
+	 */
+	private BigDecimal bankAwaitCapital;
+
+	public BigDecimal getBankAwaitCapital() {
+		return bankAwaitCapital;
+	}
+
+	public void setBankAwaitCapital(BigDecimal bankAwaitCapital) {
+		this.bankAwaitCapital = bankAwaitCapital;
+	}
 
 	public int getLimitStart() {
 		return limitStart;
