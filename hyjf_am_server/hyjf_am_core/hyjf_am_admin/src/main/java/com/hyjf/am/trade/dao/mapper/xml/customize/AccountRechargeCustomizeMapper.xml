@@ -204,8 +204,7 @@
 		r.money, r.fee,
 		r.balance ,r.payment,
 		CASE r.`type` WHEN 0 THEN '线下充值' WHEN 1 THEN '线上充值' END AS type,
-		CASE
-		r.`status` WHEN 0 THEN '初始' WHEN 1 THEN '处理中' WHEN 2
+		CASE r.`status` WHEN 1 THEN '转账中' WHEN 2
 		THEN '成功' ELSE '失败' END as
 		statusName ,
 		CASE r.client WHEN 0 THEN 'PC'
@@ -221,14 +220,7 @@
 		r.account_id,
 		UNIX_TIMESTAMP()-UNIX_TIMESTAMP(r.create_time) as outtime,
 		r.create_time,
-		CASE
-		r.`status`
-		WHEN 0 THEN 0
-		WHEN 1 THEN 1
-		WHEN 2
-		THEN 2
-		ELSE 3
-		END as status ,
+		r.`status`,
 		r.is_bank
 		FROM
 		ht_account_recharge r
