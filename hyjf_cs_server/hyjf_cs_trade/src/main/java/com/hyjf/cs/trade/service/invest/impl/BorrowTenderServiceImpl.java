@@ -196,6 +196,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             map.put("account","0");
             map.put("borrowNid",request.getBorrowNid());
             map.put("isPrincipal","0");
+            map.put("investLevel",borrow.getInvestLevel());
             map.putAll(resultEval);
             result.setData(map);
             return result;
@@ -278,6 +279,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             Map<String, Object> map = BankCallUtils.callApiMap(callBean);
             WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
             map.putAll(resultEval);
+            map.put("investLevel",borrow.getInvestLevel());
             result.setData(map);
             return result;
         } catch (Exception e) {

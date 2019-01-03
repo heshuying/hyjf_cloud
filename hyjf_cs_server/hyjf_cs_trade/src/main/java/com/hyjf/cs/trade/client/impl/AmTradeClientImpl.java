@@ -832,8 +832,12 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
-    public void hjhOrderInvestExceptionCheck(){
-        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAlarmController/batch/hjhOrderInvestExceptionCheck",BatchBorrowTenderCustomizeResponse.class);
+    public boolean hjhOrderInvestExceptionCheck(){
+        BooleanResponse response = restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAlarmController/batch/hjhOrderInvestExceptionCheck",BooleanResponse.class).getBody();
+        if (response!=null){
+            return response.getResultBoolean();
+        }
+        return false;
     }
 
     /**

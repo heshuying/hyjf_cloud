@@ -14,7 +14,7 @@ import cn.jpush.api.push.model.SMS;
 import cn.jpush.api.report.ReceivedsResult;
 
 /**
- * 极光接口 服务APP：ios-至尊版，渠道号151
+ * 极光接口 服务APP：ios-测试版，渠道号149
  * 
  * @author Michael
  */
