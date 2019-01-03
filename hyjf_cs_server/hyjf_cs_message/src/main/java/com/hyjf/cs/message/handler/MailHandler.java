@@ -207,10 +207,7 @@ public class MailHandler {
 			}
 			String body = replaceAllParameter(template.getMailContent(), replaceMap);
 
-			// 开始送信
-			if (!PropertiesConfig.hyjfEnvProperties.isTest()) {
-				send(toMailArray, subject, body, fileNames);
-			}
+			send(toMailArray, subject, body, fileNames);
 		} catch (Exception e) {
 			logger.error("发送邮件失败", e);
 		}
@@ -234,9 +231,7 @@ public class MailHandler {
 			String[] toMailArray = new String[1];
 			toMailArray[0] = setting.getSmtpReply();
 			// 开始送信
-			if (!PropertiesConfig.hyjfEnvProperties.isTest()) {
-				send(toMailArray, subject, body, fileNames);
-			}
+			send(toMailArray, subject, body, fileNames);
 		} catch (Exception e) {
 			logger.error("发送邮件失败...", e);
 		}
@@ -252,10 +247,8 @@ public class MailHandler {
 	 */
 	public void sendMail(String[] toMailArray, String subject, String body, String[] fileNames) {
 		try {
-			if (!PropertiesConfig.hyjfEnvProperties.isTest()) {
-				// 开始送信
-				send(toMailArray, subject, body, fileNames);
-			}
+			// 开始送信
+			send(toMailArray, subject, body, fileNames);
 		} catch (Exception e) {
 			logger.error("发送邮件失败...", e);
 		}
@@ -287,6 +280,11 @@ public class MailHandler {
 	 * @throws Exception
 	 */
 	private void send(String[] toMailArray, String subject, String content, String[] fileNames) throws Exception {
+		if (PropertiesConfig.hyjfEnvProperties.isTest()) {
+			logger.warn("测试环境不发送邮件， subject is : {}", subject);
+			return;
+		}
+
 		init();
 		if (setting == null) {
 			throw new RuntimeException(CustomConstants.ECOMS001);
