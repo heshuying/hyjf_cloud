@@ -272,7 +272,7 @@
 		<!--LEFT JOIN ht_hjh_inst_config hic ON hic.inst_code = binfo.inst_code-->
 		<include refid="Where_Clause" />
 		ORDER BY
-		bt.create_time DESC, br.id DESC
+		bt.id DESC
 		<if test="limitStart >= 0" >
 			LIMIT #{limitStart} , #{limitEnd}
 		</if>
