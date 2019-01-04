@@ -1704,7 +1704,7 @@ public class FddHandle {
 		String fileType = null;
 		if (Integer.valueOf(transType) == FddGenerateContractConstant.PROTOCOL_TYPE_TENDER){
 			fileName = FddGenerateContractConstant.CONTRACT_DOC_FILE_NAME_TENDER;
-			fileType = "8.png";
+			fileType = "10.png";
 		}else if(Integer.valueOf(transType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT
 				|| Integer.valueOf(transType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET
 				|| Integer.valueOf(transType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET
