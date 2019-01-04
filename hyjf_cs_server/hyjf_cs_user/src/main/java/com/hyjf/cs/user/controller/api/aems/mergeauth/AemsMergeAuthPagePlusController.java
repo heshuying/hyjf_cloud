@@ -63,7 +63,7 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
     SystemConfig systemConfig;
 
 
-    @ApiOperation(value = "多合一授权", notes = "多合一授权")
+    @ApiOperation(value = "AEMS系统:多合一授权", notes = "AEMS系统:多合一授权")
     @PostMapping(value = "/mergeAuth", produces = "application/json; charset=utf-8")
     public ModelAndView mergeAuthPage(@RequestBody @Valid AemsMergeAuthPagePlusRequestBean requestBean, HttpServletRequest request) {
         logger.info("AEMS系统请求页面多合一授权, AemsMergeAuthPagePlusRequestBean is :{}", JSONObject.toJSONString(requestBean));
@@ -174,7 +174,7 @@ public class AemsMergeAuthPagePlusController extends BaseUserController {
      * @param bean
      * @return
      */
-    @ApiOperation(value = "页面开户异步处理", notes = "页面开户异步处理")
+    @ApiOperation(value = "页面授权处理", notes = "页面授权处理")
     @RequestMapping("/bgReturn")
     @ResponseBody
     public BankCallResult bgReturn(HttpServletRequest request, @RequestBody BankCallBean bean) {

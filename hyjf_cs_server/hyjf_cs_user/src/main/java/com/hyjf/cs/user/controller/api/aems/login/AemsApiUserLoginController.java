@@ -38,7 +38,7 @@ import javax.servlet.http.HttpServletResponse;
  **/
 @Api(value = "api端-AEMS用戶自动登录",tags = "api端-AEMS用戶自动登录")
 @RestController
-@RequestMapping("/hyjf-api/api/aems")
+@RequestMapping("/hyjf-api/aems/login")
 public class AemsApiUserLoginController extends BaseUserController {
 	/** 跳转的jsp页面 */
 	private static final String SEND_JSP = "/bank/bank_send";
@@ -59,7 +59,7 @@ public class AemsApiUserLoginController extends BaseUserController {
 
 		ModelAndView modelAndView = new ModelAndView(SEND_JSP);
 		ApiSkipFormBean apiSkipFormBean = new ApiSkipFormBean();
-		String returl = CustomConstants.HOST + "/api/aems/thirdLogin.do";
+		String returl = CustomConstants.HOST + "/api/aems/login/thirdLogin.do";
 
 		apiSkipFormBean.setAction(returl);
 		apiSkipFormBean.set("bindUniqueIdScy", bean.getBindUniqueIdScy());
@@ -130,7 +130,7 @@ public class AemsApiUserLoginController extends BaseUserController {
 	 * @param bean
 	 */
 	public void checkSign(AemsUserPostRequsettBean bean) {
-		CheckUtil.check(SignUtil.AEMSVerifyRequestSign(bean, "/aems//bindAems"),MsgEnum.ERR_SIGN);
+		CheckUtil.check(SignUtil.AEMSVerifyRequestSign(bean, "/aems/bindAems"),MsgEnum.ERR_SIGN);
 	}
 	/**
 	 * 传入信息验证,自动登录

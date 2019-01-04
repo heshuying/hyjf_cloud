@@ -47,7 +47,7 @@ public class AemsAssetPushController extends BaseTradeController {
     @ApiParam(required = true, name = "pushRequestBean", value = "个人资产信息")
     @ApiOperation(value = "个人资产推送", httpMethod = "POST", notes = "个人资产推送")
     public JSONObject push(@RequestBody AemsPushRequestBean pushRequestBean) {
-        logger.info(this.getClass().getName(), "api端-资产推送接口 个人资产推送 start", pushRequestBean.toString(), "/hyjf-api/server/assetpush/push.do");
+        logger.info(this.getClass().getName(), "api端-资产推送接口 个人资产推送 start", pushRequestBean.toString(), "/hyjf-api/aems/assetpush/push.do");
 
         JSONObject result = new JSONObject();
         // 验证请求参数
@@ -90,7 +90,7 @@ public class AemsAssetPushController extends BaseTradeController {
     @ApiParam(required = true, name = "pushRequestBean", value = "企业资产信息")
     @ApiOperation(value = "企业资产推送", httpMethod = "POST", notes = "企业资产推送")
     public JSONObject pushcompany(@RequestBody AemsPushRequestBean pushRequestBean) {
-        logger.info(this.getClass().getName(), "api端-资产推送接口 企业资产推送 start", pushRequestBean.toString(), "/hyjf-api/server/assetpush/pushcompany.do");
+        logger.info(this.getClass().getName(), "api端-资产推送接口 企业资产推送 start", pushRequestBean.toString(), "/hyjf-api/aems/assetpush/pushcompany.do");
         JSONObject result = new JSONObject();
 
         // 验证请求参数
@@ -104,7 +104,7 @@ public class AemsAssetPushController extends BaseTradeController {
         }
 
         // 验签
-        if (!SignUtil.verifyRequestSign(pushRequestBean, "/pushcompany")) {
+        if (!SignUtil.AEMSVerifyRequestSign(pushRequestBean, "/aems/assetpush/pushcompany")) {
             logger.info("------------------验签失败！---------------------");
             result.put("status", ErrorCodeConstant.STATUS_CE000002);
             result.put("statusDesc", "验签失败！");

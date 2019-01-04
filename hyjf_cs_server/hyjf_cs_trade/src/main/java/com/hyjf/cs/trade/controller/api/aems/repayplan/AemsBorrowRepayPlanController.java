@@ -23,6 +23,7 @@ import com.hyjf.cs.trade.service.svrcheck.CommonSvrChkService;
 import com.hyjf.cs.trade.util.SignUtil;
 import com.netflix.discovery.converters.Auto;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -56,6 +57,7 @@ public class AemsBorrowRepayPlanController extends BaseTradeController {
      * @return
      */
     @ResponseBody
+    @ApiOperation(value = "AEMS系统还款计划查询" , notes = "AEMS系统还款计划查询")
     @RequestMapping("/getRepayPlan")
     public AemsBorrowRepayPlanResultBean getRepayPlanInfo(@RequestBody AemsBorrowRepayPlanRequestBean requestBean) {
         logger.info("查询还款计划, 请求参数requestBean is :{}", JSONObject.toJSONString(requestBean));
@@ -82,7 +84,7 @@ public class AemsBorrowRepayPlanController extends BaseTradeController {
             commonSvrChkService.checkLimit(requestBean.getLimitStart(), requestBean.getLimitEnd());
 
             // 验签
-            if (!SignUtil.AEMSVerifyRequestSign(requestBean, "")) {
+            if (!SignUtil.AEMSVerifyRequestSign(requestBean, "/aems/repayplan/getRepayPlan")) {
                 logger.info("----验签失败----");
                 resultBean.setStatus(AemsErrorCodeConstant.STATUS_CE000002);
                 resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_CE000002);
@@ -126,6 +128,7 @@ public class AemsBorrowRepayPlanController extends BaseTradeController {
      * @return
      */
     @ResponseBody
+    @ApiOperation(value = "AEMS系统还款计划详情查询" , notes = "AEMS系统还款计划详情查询")
     @RequestMapping("/getRepayPlanDetail")
     public AemsBorrowRepayPlanResultBean getRepayPlanInfoDetail(@RequestBody AemsBorrowRepayPlanRequestBean requestBean) {
         logger.info("查询还款详情查询, requestBean is :{}", JSONObject.toJSONString(requestBean));
@@ -160,7 +163,7 @@ public class AemsBorrowRepayPlanController extends BaseTradeController {
             commonSvrChkService.checkLimit(requestBean.getLimitStart(), requestBean.getLimitEnd());
 
             // 验签
-            if (!SignUtil.AEMSVerifyRequestSign(requestBean, "")) {
+            if (!SignUtil.AEMSVerifyRequestSign(requestBean, "/aems/repayplan/getRepayPlanDetail")) {
                 logger.info("----验签失败----");
                 resultBean.setStatus(AemsErrorCodeConstant.STATUS_CE000002);
                 resultBean.setStatusForResponse(AemsErrorCodeConstant.STATUS_CE000002);

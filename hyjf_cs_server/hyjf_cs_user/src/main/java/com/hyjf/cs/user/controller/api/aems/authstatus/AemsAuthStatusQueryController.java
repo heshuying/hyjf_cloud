@@ -47,7 +47,7 @@ public class AemsAuthStatusQueryController extends BaseController {
      * @return
      */
     @PostMapping("/status.do")
-    @ApiParam(required = true, name = "findDetailById", value = "Aems授权状态查询接口")
+    @ApiParam(required = true, name = "findDetailById", value = "AEMS授权状态查询接口")
     @ApiOperation(value = "AEMS授权状态查询接口", httpMethod = "POST", notes = "AEMS授权状态查询接口")
     public AemsAuthStatusQueryResultBean sendCode(@RequestBody AemsAuthStatusQueryRequestBean autoStateQuery, HttpServletRequest request, HttpServletResponse response) {
 

@@ -207,10 +207,8 @@ public class AemsTrusteePayController extends BaseController {
                 + StringPool.AMPERSAND + BankCallConstant.PARAM_PRODUCTID + StringPool.EQUAL + payRequestBean.getProductId()
                 + "&callback=" + payRequestBean.getRetUrl().replace("#", "*-*-*");
         // 异步调用路
-        String bgRetUrl = systemConfig.getAppFrontHost() + request.getContextPath()
-                + "/aems/trusteePay/trusteePayBgReturn.do?acqRes="
+        String bgRetUrl = "http://CS-TRADE/hyjf-api/aems/trusteePay/trusteePayBgreturn?acqRes="
                 + payRequestBean.getAcqRes() + "&callback=" + payRequestBean.getNotifyUrl().replace("#", "*-*-*");
-
         // 调用受托支付授权接口
         BankCallBean bean = new BankCallBean();
         // 设置共同参数

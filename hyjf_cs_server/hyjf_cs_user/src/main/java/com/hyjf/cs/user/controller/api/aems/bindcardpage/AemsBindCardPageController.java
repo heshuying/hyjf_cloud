@@ -58,7 +58,7 @@ public class AemsBindCardPageController extends BaseController {
      * @return
      */
     @PostMapping("/bind.do")
-    @ApiParam(required = true, name = "findDetailById", value = "Aems用户页面绑卡")
+    @ApiParam(required = true, name = "findDetailById", value = "AEMS用户页面绑卡")
     @ApiOperation(value = "AEMS用户页面绑卡", httpMethod = "POST", notes = "AEMS用户页面绑卡")
     public ModelAndView userBindCardPlus(@RequestBody AemsBindCardPageRequestBean bankCardRequestBean, HttpServletRequest request, HttpServletResponse response) {
         logger.info("请求页面绑卡接口参数" + JSONObject.toJSONString(bankCardRequestBean, true) + "]");

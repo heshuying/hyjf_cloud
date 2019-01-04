@@ -85,6 +85,19 @@ public class SignUtil {
             //aems资产推送公司-校验接口
             AemsPushRequestBean bean = (AemsPushRequestBean) paramBean;
             sign = bean.getTimestamp() + bean.getInstCode() + bean.getAssetType();
+        }else if (("/aems/repayplan/getRepayPlan").equals(methodName)){
+            // AEMS系统还款计划查询
+            AemsBorrowRepayPlanRequestBean bean = (AemsBorrowRepayPlanRequestBean) paramBean;
+            sign =  bean.getRepayType() +  bean.getInstCode() + bean.getTimestamp();
+        }else if ("/aems/repayplan/getRepayPlanDetail".equals(methodName)){
+            // 还款计划详情
+            AemsBorrowRepayPlanRequestBean bean = (AemsBorrowRepayPlanRequestBean) paramBean;
+            sign =  bean.getProductId() + bean.getRepayType() +  bean.getInstCode() + bean.getTimestamp();
+        }else if(("/aems/user/withdraw/withdraw").equals(methodName)){
+            //aems获取用户提现记录
+            AemsUserWithdrawRequestBean bean = (AemsUserWithdrawRequestBean) paramBean;
+            sign = bean.getChannel() + bean.getAccountId() + bean.getAccount() + bean.getCardNo() + bean.getRetUrl()
+                    + bean.getBgRetUrl() + bean.getTimestamp();
         }
         // TODO AEMS验签修改
         return ApiSignUtil.verifyByRSA("AEMS", paramBean.getChkValue(), sign);
