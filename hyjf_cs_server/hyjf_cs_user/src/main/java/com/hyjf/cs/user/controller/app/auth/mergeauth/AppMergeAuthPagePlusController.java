@@ -28,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.Map;
 
 /**
@@ -58,7 +57,7 @@ public class AppMergeAuthPagePlusController extends BaseUserController {
      */
     @ResponseBody
     @ApiOperation(value = "用户合并授权", notes = "用户合并授权")
-    @PostMapping(value = "/page", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/page", produces = "application/json; charset=utf-8")
     public  WebResult<Object> page(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
         // 验证请求参数
@@ -203,7 +202,7 @@ public class AppMergeAuthPagePlusController extends BaseUserController {
     }
 
     /**
-     * @Description web端查询提现失败原因
+     * @Description app端查询提现失败原因
      * @Author pangchengchao
      * @Version v0.1
      * @Date

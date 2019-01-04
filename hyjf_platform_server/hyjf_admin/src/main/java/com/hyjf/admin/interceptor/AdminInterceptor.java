@@ -80,7 +80,8 @@ public class AdminInterceptor implements HandlerInterceptor {
 			for(String value : authorityAnnotation.value()){
 
 				if(!perm.contains(authorityAnnotation.key() + ":" + value)){
-					return false;
+					throw new ReturnMessageException(MsgEnum.ERR_USER_AUTHORITY);
+					//return false;
 				}
 			}
 			return true;

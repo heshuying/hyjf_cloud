@@ -100,6 +100,16 @@ public class AdminSystemController extends BaseConfigController {
 			adminSystem1.setUsername(adminSystemR.getUsername());
 			Admin admin = adminSystemService.getUserInfoAll(adminSystem1);
 			if (admin!=null){
+				Integer id = admin.getId();
+				AdminAndRole adminAndRole = adminRoleService.getRole(id);
+				if (adminAndRole != null) {
+					AdminRole role = adminRoleService.getRecord(Integer.valueOf(adminAndRole.getRoleId()));
+					if(role.getStatus()!=0) {
+						asr.setRtn(Response.ERROR);
+						asr.setMessage("该用户角色状态异常");
+						return asr;
+					}
+				}
 				//判断用户输入的密码错误次数---开始
 				Map<String, String> errorInfo=lockedUserService.insertErrorPassword(adminSystemR.getUsername(),adminSystemR.getPassword(),admin);
 				if (!errorInfo.isEmpty()){
@@ -108,13 +118,10 @@ public class AdminSystemController extends BaseConfigController {
 					return asr;
 				}
 				//判断用户输入的密码错误次数---结束
+
+
 			}
-			 AdminRole role = adminRoleService.getRecord(Integer.valueOf(admin.getRole()));
-			 if(role.getStatus()!=0) {
-					asr.setRtn(Response.ERROR);
-					asr.setMessage("该用户角色状态异常");
-					return asr;
-			 }
+
 			asr.setRtn(Response.ERROR);
 			asr.setMessage("用户名或者密码无效");
 			return asr;
