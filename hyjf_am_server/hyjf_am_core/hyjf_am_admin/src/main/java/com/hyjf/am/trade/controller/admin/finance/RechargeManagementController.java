@@ -72,13 +72,27 @@ public class RechargeManagementController extends BaseController {
             String bankTypeKey = RedisConstants.CACHE_PARAM_NAME + CustomConstants.BANK_TYPE;
             // 用户类型 Key
             String userPropertyKey = RedisConstants.CACHE_PARAM_NAME + CustomConstants.USER_PROPERTY;
+
             Map<String, String> rechargeStatusMap = RedisUtils.hgetall(rechargeStatusKey);
+            logger.info("Redis中充值状态:" + CustomConstants.RECHARGE_STATUS + "的值为:" + rechargeStatusMap);
             Map<String, String> bankTypeMap = RedisUtils.hgetall(bankTypeKey);
+            logger.info("Redis中托管平台:" + CustomConstants.BANK_TYPE + "中的值为:" + bankTypeMap);
             Map<String, String> userPropertyMap = RedisUtils.hgetall(userPropertyKey);
+            logger.info("Redis中用户类型:" + CustomConstants.USER_PROPERTY + "中的值为:" + userPropertyMap);
 
             // 遍历列表从, 从Redis中读取配置信息
             for (RechargeManagementCustomize ac : responseList) {
-//                ac.setStatus(rechargeStatusMap.get(ac.getStatus()));
+
+                // 处理中 和 失败 的数据需要进行数据处理
+                // TODO: 后期需要处理
+                if ("1".equals(ac.getStatus())) {
+                    ac.setStatus("1");
+                }else if ("3".equals(ac.getStatus())){
+                    ac.setStatus("3");
+                }else {
+                    ac.setStatus(null);
+                }
+
                 ac.setIsBank(bankTypeMap.get(ac.getIsBank()));
                 ac.setUserProperty(userPropertyMap.get(ac.getUserProperty()));
             }

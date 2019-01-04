@@ -1,4 +1,4 @@
-package com.hyjf.cs.message.handle;
+package com.hyjf.cs.message.handler;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.config.SmsNoticeConfigRequest;
@@ -14,13 +14,14 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.message.bean.mc.SmsLog;
 import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.client.AmUserClient;
+import com.hyjf.cs.message.config.PropertiesConfig;
+import com.hyjf.cs.message.config.properties.SmsProperties;
 import com.hyjf.cs.message.mongo.mc.SmsLogDao;
 import com.thoughtworks.xstream.XStream;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.Serializable;
@@ -28,17 +29,17 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Component
-public class SmsHandle {
-	private static Logger logger = LoggerFactory.getLogger(SmsHandle.class);
+public class SmsHandler {
+	private static Logger logger = LoggerFactory.getLogger(SmsHandler.class);
 	/**
 	 * http请求参数集合
 	 */
-	private Map<String, String> parmMap = null;
+	private Map<String, String> paramMap = null;
 
 	/**
 	 * http请求参数集合
 	 */
-	private Map<String, String> parmMapMaketing = null;
+	private Map<String, String> paramMapMaketing = null;
 
 	@Autowired
 	private SmsLogDao smsLogDao;
@@ -46,28 +47,8 @@ public class SmsHandle {
 	private AmUserClient amUserClient;
 	@Autowired
 	private AmConfigClient amConfigClient;
-
-	@Value("${sms.send.title}")
-	private String title;
-	@Value("${sms.send.suffix}")
-	private String suffix;
-
-	@Value("${sms.send.url}")
-	private String url;
-	@Value("${sms.send.softSerialNo}")
-	private String softSerialNo;
-	@Value("${sms.send.key}")
-	private String key;
-
-	@Value("${sms.send.market.url}")
-	private String marketUrl;
-	@Value("${sms.send.market.softSerialNo}")
-	private String marketSoftSerialNo;
-	@Value("${sms.send.market.key}")
-	private String marketKey;
-
-	@Value(("${hyjf.env.test}"))
-	private boolean envTest;
+	@Autowired
+	private SmsProperties smsProperties;
 
 	/**
 	 * 获取参数集合
@@ -75,26 +56,26 @@ public class SmsHandle {
 	 * @return
 	 * @throws Exception
 	 */
-	private Map<String, String> getParmMap(String channelType) throws Exception {
-		if (parmMap == null || parmMapMaketing == null) {
+	private Map<String, String> getParamMap(String channelType) throws Exception {
+		if (paramMap == null || paramMapMaketing == null) {
 			syncInitParmMap();
 		}
 		if (CustomConstants.CHANNEL_TYPE_NORMAL.equals(channelType)) {
-			return parmMap;
+			return paramMap;
 		} else {
-			return parmMapMaketing;
+			return paramMapMaketing;
 		}
 	}
 
 	private synchronized void syncInitParmMap() {
-		if (parmMap == null || parmMapMaketing == null) {
+		if (paramMap == null || paramMapMaketing == null) {
 			try {
-				parmMap = new HashMap<String, String>();
-				parmMap.put("cdkey", softSerialNo);
-				parmMap.put("password", key);
-				parmMapMaketing = new HashMap<String, String>();
-				parmMapMaketing.put("cdkey", marketSoftSerialNo);
-				parmMapMaketing.put("password", marketKey);
+				paramMap = new HashMap<>();
+				paramMap.put("cdkey", smsProperties.getSoftSerialNo());
+				paramMap.put("password", smsProperties.getKey());
+				paramMapMaketing = new HashMap<>();
+				paramMapMaketing.put("cdkey", smsProperties.getMarketSoftSerialNo());
+				paramMapMaketing.put("password", smsProperties.getMarketKey());
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -118,23 +99,23 @@ public class SmsHandle {
 	 */
 	public Integer sendMessage(String mobile, String messageStr, String type, String sender, String channelType)
 			throws Exception {
-		String smsSendUrl = url;
-		Map<String, String> parmMap = getParmMap(channelType);
-		parmMap.put("phone", mobile);
+		String smsSendUrl = smsProperties.getUrl();
+		Map<String, String> paramMap = getParamMap(channelType);
+		paramMap.put("phone", mobile);
 		if (CustomConstants.CHANNEL_TYPE_MARKETING.equals(channelType)) {
-			parmMap.put("message", title + messageStr + suffix);
-			smsSendUrl = marketUrl;
+			paramMap.put("message", smsProperties.getTitle() + messageStr + smsProperties.getSuffix());
+			smsSendUrl = smsProperties.getMarketUrl();
 		} else {
-			parmMap.put("message", title + messageStr);
+			paramMap.put("message", smsProperties.getTitle() + messageStr);
 		}
 
 		String result = null;
 		int status = 0;
-		if (!envTest) {
-			result = HttpDeal.post(smsSendUrl, parmMap).trim();
+		if (!PropertiesConfig.hyjfEnvProperties.isTest()) {
+			result = HttpDeal.post(smsSendUrl, paramMap).trim();
 			logger.info("短信发送结果: {}", result);
 			if (StringUtils.isBlank(result)) {
-				logger.error("调用短信平台失败...parmMap is：{}", JSONObject.toJSONString(parmMap));
+				logger.error("调用短信平台失败...parmMap is：{}", JSONObject.toJSONString(paramMap));
 				return 0;
 			}
 			XStream xStream = new XStream();
@@ -150,7 +131,7 @@ public class SmsHandle {
 		smsLog.setPosttime(GetDate.getNowTime10());
 		smsLog.setMobile(mobile);
 		if (StringUtils.isEmpty(sender)) {
-			smsLog.setSender(title);
+			smsLog.setSender(smsProperties.getTitle());
 		} else {
 			smsLog.setSender(sender);
 		}

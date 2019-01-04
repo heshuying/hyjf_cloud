@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
-import com.hyjf.cs.message.handle.SmsHandle;
+import com.hyjf.cs.message.handler.SmsHandler;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -31,7 +31,7 @@ public class SmsConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
     private static int MAX_RECONSUME_TIME = 3;
 
     @Autowired
-    private SmsHandle smsHandle;
+    private SmsHandler smsHandler;
 
     @Override
     public void onMessage(MessageExt message) {
@@ -41,20 +41,20 @@ public class SmsConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
         if (null != smsMessage) {
             switch (smsMessage.getServiceType()) {
                 case MessageConstant.SMS_SEND_FOR_MANAGER:
-                    smsHandle.sendMessages(smsMessage.getTplCode(), smsMessage.getReplaceStrs(), smsMessage.getSender(),
+                    smsHandler.sendMessages(smsMessage.getTplCode(), smsMessage.getReplaceStrs(), smsMessage.getSender(),
                             smsMessage.getChannelType());
                     break;
                 case MessageConstant.SMS_SEND_FOR_MOBILE:
-                    smsHandle.sendMessages(smsMessage.getMobile(), smsMessage.getTplCode(), smsMessage.getReplaceStrs(),
+                    smsHandler.sendMessages(smsMessage.getMobile(), smsMessage.getTplCode(), smsMessage.getReplaceStrs(),
                             smsMessage.getChannelType());
                     break;
                 case MessageConstant.SMS_SEND_FOR_USER:
-                    smsHandle.sendMessages(smsMessage.getUserId(), smsMessage.getTplCode(), smsMessage.getReplaceStrs(),
+                    smsHandler.sendMessages(smsMessage.getUserId(), smsMessage.getTplCode(), smsMessage.getReplaceStrs(),
                             smsMessage.getChannelType());
                     break;
                 case MessageConstant.SMS_SEND_FOR_USERS_NO_TPL:
                     try {
-                        smsHandle.sendMessage(smsMessage.getMobile(), smsMessage.getMessage(),
+                        smsHandler.sendMessage(smsMessage.getMobile(), smsMessage.getMessage(),
                                 smsMessage.getServiceType(), null, smsMessage.getChannelType());
                     } catch (Exception e) {
                         logger.error("send sms error....");

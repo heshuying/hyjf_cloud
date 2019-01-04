@@ -3445,7 +3445,7 @@ public class AmTradeClientImpl implements AmTradeClient {
     @Override
     public BankOpenAccountVO getBankOpenAccount(Integer userId) {
         BankOpenAccountResponse response = restTemplate
-                .getForEntity("http://AM-USER/am-user/bankopen/selectById/" + userId, BankOpenAccountResponse.class).getBody();
+                .getForEntity("http://AM-ADMIN/am-user/bankopen/selectById/" + userId, BankOpenAccountResponse.class).getBody();
         if (response != null) {
             return response.getResult();
         }

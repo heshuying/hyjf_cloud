@@ -667,6 +667,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         result.put("riskTested","");
         result.put("message","");
         result.put("evalType","");
+        result.put("evalFlagType","");
         result.put("revaluationMoney","");
         //测评判断逻辑开始
         UserVO loginUser = amUserClient.findUserById(request.getUserId());
@@ -770,19 +771,6 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                     revaluation_money = null;
                     revaluation_money_principal = null;
             }
-            //风险类型校验
-            if ((CustomConstants.EVALUATION_CHECK.equals(debtEvaluationTypeCheck) && (CustomConstants.TENDER_CHECK_LEVE_HZR.equals(borrowFlag) || CustomConstants.TENDER_CHECK_LEVE_HSB.equals(borrowFlag)))
-                    || (CustomConstants.EVALUATION_CHECK.equals(intellectualEveluationTypeCheck) && CustomConstants.TENDER_CHECK_LEVE_HJH.equals(borrowFlag))) {
-                //计划类判断用户类型为稳健型以上才可以投资
-                if (!CommonUtils.checkStandardInvestment(eval_type,borrowFlag,checkLeve)) {
-                    //返回错误码
-                    result.put("evalType",eval_type);
-                    result.put("revaluationMoney",StringUtil.getTenThousandOfANumber(Double.valueOf(revaluation_money).intValue()));
-                    //返回错误码
-                    result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL);
-                    result.put("message",CommonUtils.DESC_PROJECT_RISK_LEVEL_DESC.replace("{0}", userEvalationResultCustomize.getEvalType()).replace("{1}",checkLeve));
-                }
-            }
             if (revaluation_money_principal == null) {
                 logger.info("=============从redis中获取测评类型和上限金额异常!(没有获取到对应类型的限额数据) eval_type=" + eval_type);
             } else {
@@ -825,6 +813,20 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                         result.put("message","您当前的风险测评类型为 #"+eval_type+"# \n根据监管要求,\n"+eval_type+"用户单笔最高出借限额 #"
                                 +StringUtil.getTenThousandOfANumber(Double.valueOf(revaluation_money).intValue())+"# 。");
                     }
+                }
+            }
+            //风险类型校验
+            if ((CustomConstants.EVALUATION_CHECK.equals(debtEvaluationTypeCheck) && (CustomConstants.TENDER_CHECK_LEVE_HZR.equals(borrowFlag) || CustomConstants.TENDER_CHECK_LEVE_HSB.equals(borrowFlag)))
+                    || (CustomConstants.EVALUATION_CHECK.equals(intellectualEveluationTypeCheck) && CustomConstants.TENDER_CHECK_LEVE_HJH.equals(borrowFlag))) {
+                //计划类判断用户类型为稳健型以上才可以投资
+                if (!CommonUtils.checkStandardInvestment(eval_type,borrowFlag,checkLeve)) {
+                    //返回错误码
+                    result.put("evalType",eval_type);
+                    result.put("evalFlagType",checkLeve);
+                    result.put("revaluationMoney",StringUtil.getTenThousandOfANumber(Double.valueOf(revaluation_money).intValue()));
+                    //返回错误码
+                    result.put("riskTested",CustomConstants.BANK_TENDER_RETURN_CUSTOMER_STANDARD_FAIL);
+                    result.put("message",CommonUtils.DESC_PROJECT_RISK_LEVEL_DESC.replace("{0}", userEvalationResultCustomize.getEvalType()).replace("{1}",checkLeve));
                 }
             }
         }else{
