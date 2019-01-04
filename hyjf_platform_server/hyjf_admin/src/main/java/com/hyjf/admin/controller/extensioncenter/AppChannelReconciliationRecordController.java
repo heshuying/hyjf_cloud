@@ -21,10 +21,12 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.lang.reflect.Array;
 import java.net.URLEncoder;
 import java.util.*;
 
@@ -66,18 +68,16 @@ public class AppChannelReconciliationRecordController extends BaseController {
     @PostMapping("/search_hjh")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult searchHJHAction(@RequestBody ChannelReconciliationRequest request) {
-        List<UtmVO> list = channelService.searchUtmList(1);
-        if (request.getUtmPlat() == null) {
-            List<String> utmList = new ArrayList<>();
-            for (UtmVO vo : list) {
-                if (Objects.equals(vo.getDelFlag(), 0)) {
-                    utmList.add(vo.getSourceId().toString());
-                }
+        List<Integer> userIdList = channelService.searchUserIdList(1);
+        if (!CollectionUtils.isEmpty(userIdList)) {
+            int[] integers = new int[userIdList.size()];
+            String[] array = new String[userIdList.size()];
+            for (int i = 0; i < integers.length; i++) {
+                array[i] = String.valueOf(integers[i]);
             }
-            String[] integers = new String[utmList.size()];
-            String[] array = utmList.toArray(integers);
             request.setUtmPlat(array);
         }
+
         ChannelReconciliationResponse response = channelService.searchAppHJHAction(request);
         return new AdminResult(response);
     }

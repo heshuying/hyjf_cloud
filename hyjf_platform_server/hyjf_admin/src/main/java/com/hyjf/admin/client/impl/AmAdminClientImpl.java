@@ -1982,4 +1982,18 @@ public class AmAdminClientImpl implements AmAdminClient {
         return restTemplate.postForEntity("http://AM-ADMIN/am-market/namimarketing/selectNaMiMarketingRefferTotalList",
                 request,NaMiMarketingResponse.class).getBody();
     }
+
+    @Override
+    public List<Integer> searchUserIdList(int sourceType) {
+        Response response = restTemplate.getForObject("http://AM-ADMIN/am-user/promotion/utm/searchUserIdList/" + sourceType, Response.class);
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public  NaMiMarketingResponse selectMonthList(){
+        NaMiMarketingResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-market/namimarketing/selectMonthList", NaMiMarketingResponse.class).getBody();
+        return response;
+    }
 }

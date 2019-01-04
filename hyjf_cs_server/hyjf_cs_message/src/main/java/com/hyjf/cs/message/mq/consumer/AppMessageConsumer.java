@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.message.AppMsMessage;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
-import com.hyjf.cs.message.handle.MsgPushHandle;
+import com.hyjf.cs.message.handler.MsgPushHandler;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -30,7 +30,7 @@ public class AppMessageConsumer implements RocketMQListener<MessageExt>, RocketM
 	private static int MAX_RECONSUME_TIME = 3;
 
 	@Autowired
-	private MsgPushHandle msgPushHandle;
+	private MsgPushHandler msgPushHandler;
 	@Override
 	public void onMessage(MessageExt  message) {
 		AppMsMessage appMsMessage = JSONObject.parseObject(message.getBody(), AppMsMessage.class);
@@ -38,16 +38,16 @@ public class AppMessageConsumer implements RocketMQListener<MessageExt>, RocketM
 		if (null != appMsMessage) {
 			switch (appMsMessage.getServiceType()) {
 				case MessageConstant.APP_MS_SEND_FOR_MOBILE:
-					msgPushHandle.sendMessages(appMsMessage.getTplCode(), appMsMessage.getReplaceStrs(),
+					msgPushHandler.sendMessages(appMsMessage.getTplCode(), appMsMessage.getReplaceStrs(),
 							appMsMessage.getMobile());
 					break;
 				case MessageConstant.APP_MS_SEND_FOR_USER:
-					msgPushHandle.sendMessages(appMsMessage.getTplCode(), appMsMessage.getReplaceStrs(),
+					msgPushHandler.sendMessages(appMsMessage.getTplCode(), appMsMessage.getReplaceStrs(),
 							appMsMessage.getUserId());
 					break;
 
 				case MessageConstant.APP_MS_SEND_FOR_MSG:
-					msgPushHandle.sendMessages(appMsMessage.getMsgId());
+					msgPushHandler.sendMessages(appMsMessage.getMsgId());
 					break;
 
 				default:

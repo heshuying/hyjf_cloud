@@ -235,7 +235,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
                     emailList = emaillist2;
                 }
                 String [] toMail = emailList.split(",");
-                MailMessage mailMessage = new MailMessage(null, null, "资产ID为：" + hjhPlanAsset.getAssetId(), msg.toString(), null, toMail, CustomConstants.MAILSENDFORMAILINGADDRESSMSG,
+                MailMessage mailMessage = new MailMessage(null, null, "资产ID为：" + hjhPlanAsset.getAssetId(), msg.toString(), null, toMail, CustomConstants.EMAILPARAM_TPL_EMAIL_AUTOISSUERECOVER,
                         MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
                 // 发送邮件
                 try {

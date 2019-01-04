@@ -89,7 +89,7 @@ public class NaMiMarketingController  extends BaseController {
     @PostMapping("/performanceInfo")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult<NaMiMarketingResponse> performanceInfo(@RequestBody NaMiMarketingRequest naMiMarketingRequest) {
-        NaMiMarketingResponse response = naMiMarketingService.getPerformanceList(naMiMarketingRequest);
+        NaMiMarketingResponse response = naMiMarketingService.getPerformanceInfo(naMiMarketingRequest);
         if (response == null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }

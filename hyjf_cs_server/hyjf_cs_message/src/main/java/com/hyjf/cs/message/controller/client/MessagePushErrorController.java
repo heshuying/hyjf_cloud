@@ -5,13 +5,11 @@ package com.hyjf.cs.message.controller.client;
 
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.MessagePushHistoryResponse;
-import com.hyjf.am.response.admin.MessagePushTagResponse;
 import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
-import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
-import com.hyjf.cs.message.handle.MsgPushHandle;
+import com.hyjf.cs.message.handler.MsgPushHandler;
 import com.hyjf.cs.message.service.msgpush.MessagePushErrorService;
 import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.BeanUtils;
@@ -38,7 +36,7 @@ public class MessagePushErrorController {
     private MessagePushErrorService messagePushErrorService;
 
     @Autowired
-    private MsgPushHandle msgPushHandle;
+    private MsgPushHandler msgPushHandler;
 
     /**
      * 获取列表记录数
@@ -102,7 +100,7 @@ public class MessagePushErrorController {
         Response response = new Response();
         MessagePushMsgHistory msg = new MessagePushMsgHistory();
         BeanUtils.copyProperties(messagePushMsgHistoryVO, msg);
-        msgPushHandle.send(msg);
+        msgPushHandler.send(msg);
         return response;
     }
 }

@@ -152,7 +152,7 @@ public class BorrowLoanRealTimeConsumer implements RocketMQListener<MessageExt>,
                     }
                     MailMessage mailmessage = new MailMessage(null, null,
                             "[" + online + "] " + borrowNid + " 第" + failTimes + "次放款失败", msg.toString(), null, toMail,
-                            null, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
+                            null, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
                     commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, borrowNid, mailmessage));
                 } catch (Exception e2) {
                     logger.error("发送邮件失败..", e2);

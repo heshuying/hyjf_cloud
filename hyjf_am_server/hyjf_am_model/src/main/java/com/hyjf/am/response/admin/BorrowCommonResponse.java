@@ -31,6 +31,8 @@ public class BorrowCommonResponse extends AdminResponse<BorrowCommonBean> {
 	private List<ParamNameVO> companySizeList;
 	private List<ParamNameVO> levelList;
 	private List<ParamNameVO> currencyList;
+	private List<ParamNameVO> financePurposeList;
+	private List<ParamNameVO> positionList;
 	private BorrowWithBLOBs bo;
 
 	
@@ -102,5 +104,20 @@ public class BorrowCommonResponse extends AdminResponse<BorrowCommonBean> {
 	public void setBorrowStyleList(List<BorrowProjectRepayVO> borrowStyleList) {
 		this.borrowStyleList = borrowStyleList;
 	}
-	
+
+	public List<ParamNameVO> getFinancePurposeList() {
+		return financePurposeList;
+	}
+
+	public void setFinancePurposeList(List<ParamNameVO> financePurposeList) {
+		this.financePurposeList = financePurposeList;
+	}
+
+	public List<ParamNameVO> getPositionList() {
+		return positionList;
+	}
+
+	public void setPositionList(List<ParamNameVO> positionList) {
+		this.positionList = positionList;
+	}
 }

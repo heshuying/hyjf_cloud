@@ -62,7 +62,7 @@ public class AppPayRepayAuthController extends BaseUserController {
      */
     @ResponseBody
     @ApiOperation(value = "二合一授权(缴费授权、还款授权)", notes = "二合一授权(缴费授权、还款授权)")
-    @PostMapping(value = PAY_REPAY_AUTH, produces = "application/json; charset=utf-8")
+    @GetMapping(value = PAY_REPAY_AUTH, produces = "application/json; charset=utf-8")
     public  WebResult<Object> auth(@RequestHeader(value = "userId", required = false) Integer userId, HttpServletRequest request) {
         logger.info("缴费、还款二合一授权开始", "className："+ this.getClass().getName() + "methodPath："+ PAY_REPAY_CLASS_NAME + PAY_REPAY_AUTH);
         WebResult<Object> result = new WebResult<>();

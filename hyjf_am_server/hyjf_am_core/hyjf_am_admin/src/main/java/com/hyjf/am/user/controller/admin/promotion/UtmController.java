@@ -1,5 +1,6 @@
 package com.hyjf.am.user.controller.admin.promotion;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UtmResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
@@ -407,6 +408,21 @@ public class UtmController extends BaseController {
         UtmResponse response = new UtmResponse();
         Integer total = utmService.getBySourceIdAndTerm(sourceId,utmTerm,utmId);
         response.setRecordTotal(total);
+        return response;
+    }
+
+    /**
+     * 根据条件查询符合条件的sourceId集合
+     * @param sourceType
+     * @return
+     */
+    @RequestMapping("/searchUserIdList/{sourceType}")
+    public Response searchUserIdList(@PathVariable int sourceType) {
+        Response response = new Response();
+        List<Integer> list = utmService.searchUserIdList(sourceType);
+        if (!CollectionUtils.isEmpty(list)) {
+            response.setResultList(list);
+        }
         return response;
     }
 }

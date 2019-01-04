@@ -217,4 +217,11 @@ public interface UtmService extends BaseService {
      * @return
      */
     Integer getBySourceIdAndTerm(String sourceId, String utmTerm,String utmId);
+
+    /**
+     * 根据条件查询符合条件的sourceId集合
+     * @param sourceType
+     * @return
+     */
+    List<Integer> searchUserIdList(int sourceType);
 }
