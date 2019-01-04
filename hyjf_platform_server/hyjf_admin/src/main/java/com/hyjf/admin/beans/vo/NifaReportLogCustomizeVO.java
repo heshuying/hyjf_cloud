@@ -23,6 +23,8 @@ public class NifaReportLogCustomizeVO {
 	private Integer feedbackResult;
 	@ApiModelProperty(value = "上传文件包名")
 	private String uploadName;
+	@ApiModelProperty(value = "数据处理日期")
+	private String historyDate;
 	@ApiModelProperty(value = "反馈文件包名")
 	private String feedbackName;
 	@ApiModelProperty(value = "上传文件包路径")
@@ -140,5 +142,13 @@ public class NifaReportLogCustomizeVO {
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
+	}
+
+	public String getHistoryDate() {
+		return historyDate;
+	}
+
+	public void setHistoryDate(String historyDate) {
+		this.historyDate = historyDate;
 	}
 }

@@ -5,6 +5,7 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="package_information" property="packageInformation" jdbcType="VARCHAR" />
     <result column="upload_time" property="uploadTime" jdbcType="INTEGER" />
+    <result column="history_date" property="historyDate" jdbcType="VARCHAR" />
     <result column="file_upload_status" property="fileUploadStatus" jdbcType="TINYINT" />
     <result column="feedback_result" property="feedbackResult" jdbcType="TINYINT" />
     <result column="upload_name" property="uploadName" jdbcType="VARCHAR" />
@@ -75,9 +76,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, package_information, upload_time, file_upload_status, feedback_result, upload_name, 
-    feedback_name, upload_path, feedback_path, create_user_id, update_user_id, create_time, 
-    update_time
+    id, package_information, upload_time, history_date, file_upload_status, feedback_result, 
+    upload_name, feedback_name, upload_path, feedback_path, create_user_id, update_user_id, 
+    create_time, update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.NifaReportLogExample" >
     select
@@ -116,16 +117,16 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_nifa_report_log (package_information, upload_time, file_upload_status, 
-      feedback_result, upload_name, feedback_name, 
-      upload_path, feedback_path, create_user_id, 
-      update_user_id, create_time, update_time
-      )
-    values (#{packageInformation,jdbcType=VARCHAR}, #{uploadTime,jdbcType=INTEGER}, #{fileUploadStatus,jdbcType=TINYINT}, 
-      #{feedbackResult,jdbcType=TINYINT}, #{uploadName,jdbcType=VARCHAR}, #{feedbackName,jdbcType=VARCHAR}, 
-      #{uploadPath,jdbcType=VARCHAR}, #{feedbackPath,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, 
-      #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
-      )
+    insert into ht_nifa_report_log (package_information, upload_time, history_date, 
+      file_upload_status, feedback_result, upload_name, 
+      feedback_name, upload_path, feedback_path, 
+      create_user_id, update_user_id, create_time, 
+      update_time)
+    values (#{packageInformation,jdbcType=VARCHAR}, #{uploadTime,jdbcType=INTEGER}, #{historyDate,jdbcType=VARCHAR}, 
+      #{fileUploadStatus,jdbcType=TINYINT}, #{feedbackResult,jdbcType=TINYINT}, #{uploadName,jdbcType=VARCHAR}, 
+      #{feedbackName,jdbcType=VARCHAR}, #{uploadPath,jdbcType=VARCHAR}, #{feedbackPath,jdbcType=VARCHAR}, 
+      #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, 
+      #{updateTime,jdbcType=TIMESTAMP})
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.NifaReportLog" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -138,6 +139,9 @@
       </if>
       <if test="uploadTime != null" >
         upload_time,
+      </if>
+      <if test="historyDate != null" >
+        history_date,
       </if>
       <if test="fileUploadStatus != null" >
         file_upload_status,
@@ -176,6 +180,9 @@
       </if>
       <if test="uploadTime != null" >
         #{uploadTime,jdbcType=INTEGER},
+      </if>
+      <if test="historyDate != null" >
+        #{historyDate,jdbcType=VARCHAR},
       </if>
       <if test="fileUploadStatus != null" >
         #{fileUploadStatus,jdbcType=TINYINT},
@@ -227,6 +234,9 @@
       <if test="record.uploadTime != null" >
         upload_time = #{record.uploadTime,jdbcType=INTEGER},
       </if>
+      <if test="record.historyDate != null" >
+        history_date = #{record.historyDate,jdbcType=VARCHAR},
+      </if>
       <if test="record.fileUploadStatus != null" >
         file_upload_status = #{record.fileUploadStatus,jdbcType=TINYINT},
       </if>
@@ -267,6 +277,7 @@
     set id = #{record.id,jdbcType=INTEGER},
       package_information = #{record.packageInformation,jdbcType=VARCHAR},
       upload_time = #{record.uploadTime,jdbcType=INTEGER},
+      history_date = #{record.historyDate,jdbcType=VARCHAR},
       file_upload_status = #{record.fileUploadStatus,jdbcType=TINYINT},
       feedback_result = #{record.feedbackResult,jdbcType=TINYINT},
       upload_name = #{record.uploadName,jdbcType=VARCHAR},
@@ -289,6 +300,9 @@
       </if>
       <if test="uploadTime != null" >
         upload_time = #{uploadTime,jdbcType=INTEGER},
+      </if>
+      <if test="historyDate != null" >
+        history_date = #{historyDate,jdbcType=VARCHAR},
       </if>
       <if test="fileUploadStatus != null" >
         file_upload_status = #{fileUploadStatus,jdbcType=TINYINT},
@@ -327,6 +341,7 @@
     update ht_nifa_report_log
     set package_information = #{packageInformation,jdbcType=VARCHAR},
       upload_time = #{uploadTime,jdbcType=INTEGER},
+      history_date = #{historyDate,jdbcType=VARCHAR},
       file_upload_status = #{fileUploadStatus,jdbcType=TINYINT},
       feedback_result = #{feedbackResult,jdbcType=TINYINT},
       upload_name = #{uploadName,jdbcType=VARCHAR},
