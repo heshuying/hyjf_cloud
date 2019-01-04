@@ -87,7 +87,7 @@ public class HjhCommissionController extends BaseController{
 	private SystemConfig systemConfig;
 
 	/*权限*/
-	public static final String PERMISSIONS = "hjhcommission";
+	public static final String PERMISSIONS = "pushMoneyListHJH";
 
 	private static final Logger logger = LoggerFactory.getLogger(HjhCommissionController.class);
 	/*类名*/
