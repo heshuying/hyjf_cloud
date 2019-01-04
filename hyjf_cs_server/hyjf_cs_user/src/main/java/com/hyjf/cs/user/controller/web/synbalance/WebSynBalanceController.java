@@ -10,9 +10,7 @@ import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.user.bean.SynBalanceRequestBean;
 import com.hyjf.cs.user.bean.SynBalanceResultBean;
-import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.service.synbalance.SynBalanceService;
 import io.swagger.annotations.Api;
@@ -34,9 +32,6 @@ public class WebSynBalanceController extends BaseUserController {
 
     @Autowired
     SynBalanceService synBalanceService;
-
-    @Autowired
-    SystemConfig systemConfig;
     /**
      * 用户同步余额
      */
@@ -51,10 +46,7 @@ public class WebSynBalanceController extends BaseUserController {
         /***********同步线下充值记录 start***********/
         BankOpenAccountVO bankOpenAccountVO=synBalanceService.getBankOpenAccount(user.getUserId());
         String ip = GetCilentIP.getIpAddr(request);
-        SynBalanceRequestBean bean = new SynBalanceRequestBean();
-        bean.setInstCode(user.getInstCode());
-        bean.setAccountId(bankOpenAccountVO.getAccount());
-        SynBalanceResultBean resultBean = synBalanceService.synBalance(bean,ip);
+		SynBalanceResultBean resultBean = synBalanceService.synBalance(bankOpenAccountVO.getAccount(), ip);
         CheckUtil.check("成功".equals(resultBean.getStatusDesc()), MsgEnum.ERR_OBJECT_GET,"余额");
         //余额数据
         ret.put("info",resultBean.getBankBalance().toString());

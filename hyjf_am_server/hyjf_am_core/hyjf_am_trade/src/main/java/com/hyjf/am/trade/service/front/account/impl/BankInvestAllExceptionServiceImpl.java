@@ -479,13 +479,14 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 										cuc = getCouponUser(couponGrantId, userId);
 										// 排他check用
 										couponOldTime = cuc.getUserUpdateTime();
-										// 优惠券出借校验
+										// 优惠券出借校验 todo 同下
 										JSONObject couponCheckResult = CommonSoaUtils.CheckCoupon(userId + "", borrowNid, account, CustomConstants.CLIENT_PC, couponGrantId);
 										int couponStatus = couponCheckResult.getIntValue("status");
 										String statusDesc = couponCheckResult.getString("statusDesc");
 										logger.info("updateCouponTender" + "优惠券出借校验结果：" + statusDesc);
 										if (couponStatus == 0) {
 											// 优惠券出借
+											// todo 这块要修改， 源代码调用 api-web InvestServer.couponTender
 											CommonSoaUtils.CouponInvestForPC(userId + "", borrowNid, account, CustomConstants.CLIENT_PC, couponGrantId, orderId, null, couponOldTime + "");
 										}
 									} catch (Exception e) {
