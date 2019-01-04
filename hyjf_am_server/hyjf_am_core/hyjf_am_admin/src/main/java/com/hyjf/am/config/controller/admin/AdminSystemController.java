@@ -107,14 +107,20 @@ public class AdminSystemController extends BaseConfigController {
 					asr.setRtn(Response.ERROR);
 					return asr;
 				}
-				//判断用户输入的密码错误次数---结束
+				Integer id = admin.getId();
+				AdminAndRole adminAndRole = adminRoleService.getRole(id);
+				if (adminAndRole != null) {
+					//判断用户输入的密码错误次数---结束
+					AdminRole role = adminRoleService.getRecord(Integer.valueOf(adminAndRole.getRoleId()));
+					if(role.getStatus()!=0) {
+						asr.setRtn(Response.ERROR);
+						asr.setMessage("该用户角色状态异常");
+						return asr;
+					}
+				}
+
 			}
-			 AdminRole role = adminRoleService.getRecord(Integer.valueOf(admin.getRole()));
-			 if(role.getStatus()!=0) {
-					asr.setRtn(Response.ERROR);
-					asr.setMessage("该用户角色状态异常");
-					return asr;
-			 }
+
 			asr.setRtn(Response.ERROR);
 			asr.setMessage("用户名或者密码无效");
 			return asr;

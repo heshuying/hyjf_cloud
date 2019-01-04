@@ -67,7 +67,9 @@ public class ChangeLogController extends BaseController {
 		clr.setRecommendUser(map.get("recommendUser"));
 		clr.setStartTime(map.get("startTime"));
 		clr.setEndTime(map.get("endTime"));
-		clr.setCurrPage(Integer.valueOf(map.get("currPage")));
+		if (map.get("currPage") != null) {
+            clr.setCurrPage(Integer.valueOf(map.get("currPage")));
+        }
 		clr.setPageSize(Integer.valueOf(map.get("pageSize")));
 		clr.setAttribute(map.get("attribute"));
 		//add by nxl 添加邮箱查询

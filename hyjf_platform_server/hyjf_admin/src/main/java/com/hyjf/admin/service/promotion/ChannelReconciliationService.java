@@ -61,4 +61,10 @@ public interface ChannelReconciliationService {
      */
     Integer searchAppHJHCount(ChannelReconciliationRequest request);
 
+    /**
+     * 根据条件查询符合条件的sourceId集合
+     * @param sourceType
+     * @return
+     */
+    List<Integer> searchUserIdList(int sourceType);
 }

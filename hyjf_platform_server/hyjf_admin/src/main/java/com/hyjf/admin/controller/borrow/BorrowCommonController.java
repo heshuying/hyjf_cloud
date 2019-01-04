@@ -111,7 +111,11 @@ public class BorrowCommonController extends BaseController {
 		bcr.setLevelList(customerTransferService.searchParamNameList(CustomConstants.BORROW_LEVEL));
 		bcr.setCurrencyList(customerTransferService.searchParamNameList(CustomConstants.CURRENCY_STATUS));
 		bcr.setLinkList(borrowCommonService.getLinks().getResultList());
-	
+		Map<String ,String> financePurposeMap = CacheUtil.getParamNameMap(CustomConstants.FINANCE_PURPOSE);
+		bcr.setFinancePurposeList(borrowCommonService.mapToParamNameVO(financePurposeMap));
+		Map<String ,String> positionMap = CacheUtil.getParamNameMap(CustomConstants.POSITION);
+		bcr.setPositionList(borrowCommonService.mapToParamNameVO(positionMap));
+
 		return new AdminResult<BorrowCommonResponse>(bcr);
     }
 
@@ -146,6 +150,10 @@ public class BorrowCommonController extends BaseController {
 		bcr.setLevelList(customerTransferService.searchParamNameList(CustomConstants.BORROW_LEVEL));
 		bcr.setCurrencyList(customerTransferService.searchParamNameList(CustomConstants.CURRENCY_STATUS));
 		bcr.setLinkList(borrowCommonService.getLinks().getResultList());
+		Map<String ,String> financePurposeMap = CacheUtil.getParamNameMap(CustomConstants.FINANCE_PURPOSE);
+		bcr.setFinancePurposeList(borrowCommonService.mapToParamNameVO(financePurposeMap));
+		Map<String ,String> positionMap = CacheUtil.getParamNameMap(CustomConstants.POSITION);
+		bcr.setPositionList(borrowCommonService.mapToParamNameVO(positionMap));
 	
 		return new AdminResult<BorrowCommonResponse>(bcr);
 	}
