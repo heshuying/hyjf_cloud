@@ -46,4 +46,9 @@ public class NaMiMarketingRefferServiceImpl  implements NaMiMarketingRefferServi
     public NaMiMarketingResponse selectNaMiMarketingRefferTotalList(NaMiMarketingRequest naMiMarketingRequest){
         return amAdminClient.selectNaMiMarketingRefferTotalList(naMiMarketingRequest);
     }
+    @Override
+    public NaMiMarketingResponse selectMonthList(){
+        return amAdminClient.selectMonthList();
+
+    }
 }

@@ -76,6 +76,7 @@ public interface NaMiMarketingCustomizeMapper {
      */
     int selectNaMiMarketingRefferTotalCount(Map<String, Object> paraMap);
 
+    public List<String> selectMonthList();
     /**
      * 查询邀请人返现统计 列表
      * @param paraMap

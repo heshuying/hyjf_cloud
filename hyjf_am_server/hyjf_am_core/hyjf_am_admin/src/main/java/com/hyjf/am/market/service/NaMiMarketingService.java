@@ -65,6 +65,12 @@ public interface NaMiMarketingService {
     int selectNaMiMarketingRefferTotalCount(Map<String, Object> paraMap);
 
     /**
+     * 查询 月份列表
+     * @return
+     */
+    public List<String> selectMonthList();
+
+    /**
      * 查询邀请人返现统计 列表
      * @param paraMap
      * @return
