@@ -2766,7 +2766,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public UserUtmInfoCustomizeVO getUserUtmInfo(Integer userId) {
-		String url = "http://AM-USER/am-user/user/getUserUtmInfo/" + userId;
+		String url = "http://AM-ADMIN/am-user/user/getUserUtmInfo/" + userId;
 		UserUtmInfoResponse response = restTemplate.getForEntity(url, UserUtmInfoResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getResult();
