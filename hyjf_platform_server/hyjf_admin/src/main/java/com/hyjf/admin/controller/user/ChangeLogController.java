@@ -72,7 +72,7 @@ public class ChangeLogController extends BaseController {
         } else {
             clr.setCurrPage(1);
         }
-        if (map.get("pageSize") == null) {
+        if (map.get("pageSize") != null) {
             clr.setPageSize(Integer.valueOf(map.get("pageSize")));
         } else {
             clr.setPageSize(10);
