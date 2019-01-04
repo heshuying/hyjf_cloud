@@ -100,17 +100,9 @@ public class AdminSystemController extends BaseConfigController {
 			adminSystem1.setUsername(adminSystemR.getUsername());
 			Admin admin = adminSystemService.getUserInfoAll(adminSystem1);
 			if (admin!=null){
-				//判断用户输入的密码错误次数---开始
-				Map<String, String> errorInfo=lockedUserService.insertErrorPassword(adminSystemR.getUsername(),adminSystemR.getPassword(),admin);
-				if (!errorInfo.isEmpty()){
-					asr.setMessage(errorInfo.get("info"));
-					asr.setRtn(Response.ERROR);
-					return asr;
-				}
 				Integer id = admin.getId();
 				AdminAndRole adminAndRole = adminRoleService.getRole(id);
 				if (adminAndRole != null) {
-					//判断用户输入的密码错误次数---结束
 					AdminRole role = adminRoleService.getRecord(Integer.valueOf(adminAndRole.getRoleId()));
 					if(role.getStatus()!=0) {
 						asr.setRtn(Response.ERROR);
@@ -118,6 +110,15 @@ public class AdminSystemController extends BaseConfigController {
 						return asr;
 					}
 				}
+				//判断用户输入的密码错误次数---开始
+				Map<String, String> errorInfo=lockedUserService.insertErrorPassword(adminSystemR.getUsername(),adminSystemR.getPassword(),admin);
+				if (!errorInfo.isEmpty()){
+					asr.setMessage(errorInfo.get("info"));
+					asr.setRtn(Response.ERROR);
+					return asr;
+				}
+				//判断用户输入的密码错误次数---结束
+
 
 			}
 
