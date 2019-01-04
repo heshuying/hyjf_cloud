@@ -40,6 +40,7 @@
 		<springfox.swagger.version>2.9.2</springfox.swagger.version>
 
 		<rocketmq.starter.version>2.0.0</rocketmq.starter.version>
+		<rocketmq.version>4.3.0</rocketmq.version>
 		<druid.version>1.1.10</druid.version>
 		<fastjson.version>1.2.47</fastjson.version>
 		<jetcache.version>2.5.9</jetcache.version>
@@ -210,6 +211,12 @@
 			</dependency>
 
 			<dependency>
+				<groupId>org.apache.rocketmq</groupId>
+				<artifactId>rocketmq-client</artifactId>
+				<version>${rocketmq.version}</version>
+			</dependency>
+
+			<dependency>
 				<groupId>org.apache.commons</groupId>
 				<artifactId>commons-text</artifactId>
 				<version>${org.apache.commons.version}</version>
@@ -260,14 +267,14 @@
 		</repository>
 		<snapshotRepository>
 			<id>nexus-snapshots</id>
-			<!--<url>
+			<url>
 				http://10.10.2.100:18080/nexus-2.9.0/content/repositories/snapshots/
-			</url>-->
+			</url>
 
 			<!--上海使用外网连接nexus私服，青岛使用内网 -->
-			<url>
-			http://219.147.28.242:18080/nexus-2.9.0/content/repositories/snapshots/
-			</url>
+			<!--<url>-->
+			<!--http://219.147.28.242:18080/nexus-2.9.0/content/repositories/snapshots/-->
+			<!--</url>-->
 		</snapshotRepository>
 	</distributionManagement>
 
