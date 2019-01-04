@@ -42,33 +42,32 @@ import java.util.Map;
  * @package
  * @date 2018/6/27
  */
-@Api(value = "会员中心-操作日志", tags = "会员中心-操作日志")
+@Api(value = "会员中心-操作日志",tags ="会员中心-操作日志")
 @RestController
 @RequestMapping("/hyjf-admin/changelog")
 public class ChangeLogController extends BaseController {
-    //	private Logger logger = LoggerFactory.getLogger(ChangeLogController.class);
-    @Autowired
-    private ChangeLogService changeLogService;
-
-    /**
-     * 权限维护画面初始化
-     *
-     * @param request
-     * @return
-     */
-    @ApiOperation(value = "查询操作日志", notes = "查询操作日志")
-    @PostMapping(value = "/userauthlist")
-    @ResponseBody
-    public AdminResult<ListResult<ChangeLogVO>> userManagerInit(HttpServletRequest request, HttpServletResponse response,
-                                                                @RequestBody Map<String, String> map) {
-        ChangeLogRequest clr = new ChangeLogRequest();
-        clr.setUsername(map.get("username"));
-        clr.setRealName(map.get("realName"));
-        clr.setMobile(map.get("mobile"));
-        clr.setRecommendUser(map.get("recommendUser"));
-        clr.setStartTime(map.get("startTime"));
-        clr.setEndTime(map.get("endTime"));
-        if (map.get("currPage") != null) {
+//	private Logger logger = LoggerFactory.getLogger(ChangeLogController.class);
+	@Autowired
+	private ChangeLogService changeLogService;
+	/**
+	 * 权限维护画面初始化
+	 *
+	 * @param request
+	 * @return
+	 */
+	@ApiOperation(value = "查询操作日志", notes = "查询操作日志")
+	@PostMapping(value = "/userauthlist")
+	@ResponseBody
+	public AdminResult<ListResult<ChangeLogVO>> userManagerInit(HttpServletRequest request, HttpServletResponse response,
+			@RequestBody Map<String, String> map) {
+		ChangeLogRequest clr = new ChangeLogRequest();
+		clr.setUsername(map.get("username"));
+		clr.setRealName(map.get("realName"));
+		clr.setMobile(map.get("mobile"));
+		clr.setRecommendUser(map.get("recommendUser"));
+		clr.setStartTime(map.get("startTime"));
+		clr.setEndTime(map.get("endTime"));
+		if (map.get("currPage") != null) {
             clr.setCurrPage(Integer.valueOf(map.get("currPage")));
         } else {
             clr.setCurrPage(1);
@@ -90,17 +89,17 @@ public class ChangeLogController extends BaseController {
         }
         return new AdminResult<ListResult<ChangeLogVO>>(ListResult.build(prs.getResultList(), prs.getRecordTotal()));
 
-    }
+	}
 
-    /**
+	 /**
      * 导出用户信息修改列表EXCEL
      * @param request
      * @param response
      * @throws Exception
      */
-    //@ApiOperation(value = "下载操作日志", notes = "下载操作日志")
-    //@PostMapping(value = "/exportAccountsExcel")
-    //@ResponseBody
+	//@ApiOperation(value = "下载操作日志", notes = "下载操作日志")
+	//@PostMapping(value = "/exportAccountsExcel")
+	//@ResponseBody
     /*public void exportAccountsExcel(HttpServletRequest request,HttpServletResponse response,@RequestBody Map<String, String> map)
             throws Exception {
 		ChangeLogRequest clr = new ChangeLogRequest();
@@ -228,19 +227,19 @@ public class ChangeLogController extends BaseController {
     @ApiOperation(value = "下载操作日志", notes = "下载操作日志")
     @PostMapping(value = "/exportAccountsExcel")
     @ResponseBody
-    public void exportToExcelLog(HttpServletRequest request, HttpServletResponse response, @RequestBody Map<String, String> map) throws Exception {
+    public void exportToExcelLog(HttpServletRequest request,HttpServletResponse response,@RequestBody Map<String, String> map) throws Exception {
         // 封装查询条件
         ChangeLogRequest clr = new ChangeLogRequest();
-        clr.setUsername(map.get("username"));
-        clr.setRealName(map.get("realName"));
-        clr.setMobile(map.get("mobile"));
-        clr.setRecommendUser(map.get("recommendUser"));
-        clr.setStartTime(map.get("startTime"));
-        clr.setEndTime(map.get("endTime"));
-        clr.setCurrPage(Integer.valueOf(map.get("currPage")));
-        clr.setPageSize(Integer.valueOf(map.get("pageSize")));
-        clr.setAttribute(map.get("attribute"));
-        //add by nxl 添加邮箱查询
+		clr.setUsername(map.get("username"));
+		clr.setRealName(map.get("realName"));
+		clr.setMobile(map.get("mobile"));
+		clr.setRecommendUser(map.get("recommendUser"));
+		clr.setStartTime(map.get("startTime"));
+		clr.setEndTime(map.get("endTime"));
+		clr.setCurrPage(Integer.valueOf(map.get("currPage")));
+		clr.setPageSize(Integer.valueOf(map.get("pageSize")));
+		clr.setAttribute(map.get("attribute"));
+		//add by nxl 添加邮箱查询
         clr.setEmail(map.get("email"));
         //sheet默认最大行数
         int defaultRowMaxCount = Integer.valueOf(systemConfig.getDefaultRowMaxCount());
@@ -256,7 +255,7 @@ public class ChangeLogController extends BaseController {
         clr.setPageSize(defaultRowMaxCount);
         clr.setCurrPage(1);
         // 需要输出的结果列表
-        ChangeLogResponse prs = changeLogService.getChangeLogList(clr);
+        ChangeLogResponse prs =changeLogService.getChangeLogList(clr);
         Integer totalCount = prs.getRecordTotal();
         int sheetCount = (totalCount % defaultRowMaxCount) == 0 ? totalCount / defaultRowMaxCount : totalCount / defaultRowMaxCount + 1;
         Map<String, String> beanPropertyColumnMap = buildMapLog();
@@ -264,16 +263,16 @@ public class ChangeLogController extends BaseController {
         String sheetNameTmp = sheetName + "_第1页";
         if (totalCount == 0) {
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, new ArrayList());
-        } else {
+        }else{
             helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, prs.getResultList());
         }
         for (int i = 1; i < sheetCount; i++) {
             clr.setPageSize(defaultRowMaxCount);
-            clr.setCurrPage(i + 1);
+            clr.setCurrPage(i+1);
             ChangeLogResponse prs2 = changeLogService.getChangeLogList(clr);
-            if (prs2 != null && prs2.getResultList().size() > 0) {
+            if (prs2 != null && prs2.getResultList().size()> 0) {
                 sheetNameTmp = sheetName + "_第" + (i + 1) + "页";
-                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter, prs2.getResultList());
+                helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  prs2.getResultList());
             } else {
                 break;
             }
@@ -310,7 +309,7 @@ public class ChangeLogController extends BaseController {
             @Override
             public String format(Object object) {
                 Integer role = (Integer) object;
-                return role == null ? "" : role == 1 ? "出借人" : "借款人";
+                return role==null?"":role==1?"出借人":"借款人";
             }
         };
 
@@ -318,7 +317,7 @@ public class ChangeLogController extends BaseController {
             @Override
             public String format(Object object) {
                 String attribute = (String) object;
-                return attribute == null ? "" : attribute.equals("0") ? "无主单" : attribute.equals("1") ? "有主单" : attribute.equals("2") ? "线下员工" : "线上员工";
+                return attribute==null?"":attribute.equals("0")?"无主单":attribute.equals("1")?"有主单":attribute.equals("2")?"线下员工":"线上员工";
             }
         };
 
@@ -326,7 +325,7 @@ public class ChangeLogController extends BaseController {
             @Override
             public String format(Object object) {
                 Integer status = (Integer) object;
-                return status == null ? "" : status == 0 ? "启用" : "禁用";
+                return status==null?"":status==0?"启用" : "禁用";
             }
         };
         mapAdapter.put("mobile", mobileAdapter);
