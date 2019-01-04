@@ -72,6 +72,8 @@ public class ChangeLogController extends BaseController {
         }
         if (map.get("pageSize") != null) {
             clr.setPageSize(Integer.valueOf(map.get("pageSize")));
+        }else {
+            clr.setPageSize(10);
         }
 		clr.setAttribute(map.get("attribute"));
 		//add by nxl 添加邮箱查询
