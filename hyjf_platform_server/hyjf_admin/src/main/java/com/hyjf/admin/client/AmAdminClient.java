@@ -1152,4 +1152,11 @@ public interface AmAdminClient {
      * @return
      */
     NaMiMarketingResponse selectNaMiMarketingRefferTotalList(NaMiMarketingRequest naMiMarketingRequest);
+
+    /**
+     * 根据条件查询符合条件的sourceId集合
+     * @param sourceType
+     * @return
+     */
+    List<Integer> searchUserIdList(int sourceType);
 }

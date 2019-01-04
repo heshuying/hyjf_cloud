@@ -167,4 +167,11 @@ public interface UtmRegCustomizeMapper {
      * @return
      */
     int selectAppChannelReconciliationRecordCount(ChannelReconciliationRequest request);
+
+	/**
+	 * 根据条件查询符合条件的sourceId集合
+	 * @param sourceType
+	 * @return
+	 */
+	List<Integer> searchUserIdList(@Param("sourceType")int sourceType);
 }
