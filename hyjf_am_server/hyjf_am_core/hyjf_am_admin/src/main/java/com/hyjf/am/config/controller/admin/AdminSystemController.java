@@ -1,5 +1,6 @@
 package com.hyjf.am.config.controller.admin;
 
+import com.hyjf.am.bean.admin.LockedConfig;
 import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.Admin;
 import com.hyjf.am.config.dao.model.auto.AdminAndRole;
@@ -13,11 +14,16 @@ import com.hyjf.am.response.admin.CouponTenderResponse;
 import com.hyjf.am.response.config.AdminSystemResponse;
 import com.hyjf.am.response.config.TreeResponse;
 import com.hyjf.am.resquest.config.AdminSystemRequest;
+import com.hyjf.am.user.controller.admin.locked.LockedConfigManager;
 import com.hyjf.am.user.service.admin.locked.LockedUserService;
 import com.hyjf.am.vo.config.AdminSystemVO;
 import com.hyjf.am.vo.config.TreeVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.CommonUtils;
+import com.hyjf.common.util.calculate.DateUtils;
 import com.hyjf.common.validator.Validator;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -74,6 +80,18 @@ public class AdminSystemController extends BaseConfigController {
 				asr.setRtn(Response.ERROR);
 				return asr;
 			}
+			//1.获取该用户密码错误次数
+			String passwordErrorNum=RedisUtils.get(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + adminSystemr.getId());
+			//2.获取用户允许输入的最大错误次数
+			Integer maxLoginErrorNum=LockedConfigManager.getInstance().getAdminConfig().getMaxLoginErrorNum();
+			//3.redis配置的超限有效时间
+			long retTime  = RedisUtils.ttl(RedisConstants.PASSWORD_ERR_COUNT_ADMIN + adminSystemr.getId());
+			//判断密码错误次数是否超限
+			if (!StringUtils.isEmpty(passwordErrorNum)&&Integer.parseInt(passwordErrorNum)>=maxLoginErrorNum) {
+				asr.setMessage("您的登录失败次数超限，请"+DateUtils.SToHMSStr(retTime)+"之后重试!");
+				asr.setRtn(Response.ERROR);
+				return asr;
+			}
 			BeanUtils.copyProperties(adminSystemr, asv);
 			asr.setResult(asv);
 			return asr;
@@ -82,6 +100,16 @@ public class AdminSystemController extends BaseConfigController {
 			adminSystem1.setUsername(adminSystemR.getUsername());
 			Admin admin = adminSystemService.getUserInfoAll(adminSystem1);
 			if (admin!=null){
+				Integer id = admin.getId();
+				AdminAndRole adminAndRole = adminRoleService.getRole(id);
+				if (adminAndRole != null) {
+					AdminRole role = adminRoleService.getRecord(Integer.valueOf(adminAndRole.getRoleId()));
+					if(role.getStatus()!=0) {
+						asr.setRtn(Response.ERROR);
+						asr.setMessage("该用户角色状态异常");
+						return asr;
+					}
+				}
 				//判断用户输入的密码错误次数---开始
 				Map<String, String> errorInfo=lockedUserService.insertErrorPassword(adminSystemR.getUsername(),adminSystemR.getPassword(),admin);
 				if (!errorInfo.isEmpty()){
@@ -90,13 +118,10 @@ public class AdminSystemController extends BaseConfigController {
 					return asr;
 				}
 				//判断用户输入的密码错误次数---结束
+
+
 			}
-			 AdminRole role = adminRoleService.getRecord(Integer.valueOf(admin.getRole()));
-			 if(role.getStatus()!=0) {
-					asr.setRtn(Response.ERROR);
-					asr.setMessage("该用户角色状态异常");
-					return asr;
-			 }
+
 			asr.setRtn(Response.ERROR);
 			asr.setMessage("用户名或者密码无效");
 			return asr;

@@ -1,5 +1,7 @@
 package com.hyjf.cs.trade.service.batch;
 
+import com.hyjf.am.response.BooleanResponse;
+
 /**
  * @author xiehuili on 2018/12/18.
  */
@@ -25,7 +27,7 @@ public interface HjhAlarmCheckService {
      * 订单投资异常短信预警
      * @return
      */
-    public void hjhOrderInvestExceptionCheck();
+    public boolean hjhOrderInvestExceptionCheck();
 
     /**
      * hjh订单匹配期超过两天短信预警

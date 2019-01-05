@@ -77,7 +77,7 @@ public class EvaluationMoneyController extends BaseController {
 
 	@ApiOperation(value = "修改风险测评限额配置", notes = "修改风险测评限额配置")
 	@PostMapping("/updateAction")
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult updateAction(HttpServletRequest request, @RequestBody EvaluationMoneyRequest requestBean) {
 		AdminSystemVO loginUser=getUser(request);
 		requestBean.setUpdateUser(loginUser.getUsername());

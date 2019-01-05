@@ -59,10 +59,11 @@ public class AppLoginController extends BaseUserController {
     private static final Logger logger = LoggerFactory.getLogger(AppLoginController.class);
 
     @Autowired
-    private LoginService loginService;
+    SystemConfig systemConfig;
 
     @Autowired
-    SystemConfig systemConfig;
+    private LoginService loginService;
+
     @Autowired
     private CommonProducer commonProducer;
     /**
@@ -291,28 +292,81 @@ public class AppLoginController extends BaseUserController {
         }
 
         // 业务逻辑
-       // try {
-            Integer userId = SecretUtil.getUserId(sign);
+        try {
             // 取得用户ID
+            Integer userId = SecretUtil.getUserId(sign);
             if (userId != null) {
                 UserParameters userParameters = loginService.getUserParameters(userId,platform, request);
                 if (StringUtils.isBlank(userParameters.getIdcard()) || userParameters.getIdcard().length() < 15) {
                     userParameters.setIdcard("000000000000000000");
                 }
+                //用户角色 1、出借人 2、借款人 3、担保机构
+                //1、出借人 -->自动投标、自动债转、服务费授权；
+                if(userParameters.getRoleId().equals("1")){
+                    //跳转授权须知页面的路径
+                    userParameters.setPaymentAuthUrl(systemConfig.getAppFrontHost() + "/needs/authorization"+packageStr(request)+"&usertype="+0);
+                    //用来兼容之前的版本
+                    userParameters.setMergeAuthUrl(systemConfig.getAppFrontHost() + "/needs/authorization"+packageStr(request)+"&usertype="+0);
+                    //跳转授权须知页面之前的弹框信息
+                    userParameters.setPaymentAuthDesc("应合规要求，出借、提现等交易前需进行以下授权：\n自动投标，自动债转，服务费授权。");
+                }else if (userParameters.getRoleId().equals("2")) {
+                    //2、借款人 -->服务费授权、还款授权
+                    userParameters.setRepayAuthUrl(systemConfig.getAppFrontHost() + "/needs/authorization"+packageStr(request)+"&usertype="+1);
+                    userParameters.setPaymentAuthUrl(systemConfig.getAppFrontHost() + "/needs/authorization"+packageStr(request)+"&usertype="+1);
+                    userParameters.setPaymentAuthDesc("应合规要求，借款、提现等交易前需进行以下授权：\n服务费授权，还款授权。");
+                }else {
+                    //3、担保机构 -->服务费授权
+                    userParameters.setPaymentAuthUrl(systemConfig.getAppFrontHost() + "/needs/authorization"+packageStr(request)+"&usertype="+2);
+                    userParameters.setPaymentAuthDesc("应合规要求，借款、提现等交易前需进行以下授权：\n服务费授权");
+                }
                 ret.put("status", "0");
                 ret.put("params", userParameters);
                 ret.put("statusDesc", "获取用户相关数据成功");
+
             } else {
                 ret.put("status", "1");
                 ret.put("statusDesc", "用户信息不存在");
             }
 
-//        } catch (Exception e) {
-//            logger.error("异常信息打印："+e);
-//            ret.put("status", "1");
-//            ret.put("statusDesc", "获取用户相关数据发生错误");
-//        }
+        } catch (Exception e) {
+            logger.error("app授权获取用户相关数据异常",
+                    "methodName："+ this.getClass().getName() + "methodPath："+ "/hyjf-app/appUser/getUserinfoAction",
+                    e);
+            ret.put("status", "1");
+            ret.put("statusDesc", "获取用户相关数据发生错误");
+        }
         return ret;
+    }
+
+    /**
+     * 组装url
+     * @param request
+     * @return
+     */
+    private String packageStr(HttpServletRequest request) {
+        StringBuffer sbUrl = new StringBuffer();
+        // 版本号
+        String version = request.getParameter("version");
+        // 网络状态
+        String netStatus = request.getParameter("netStatus");
+        // 平台
+        String platform = request.getParameter("platform");
+        // token
+        String token = request.getParameter("token");
+        // 唯一标识
+        String sign = request.getParameter("sign");
+        // 随机字符串
+        String randomString = request.getParameter("randomString");
+        // Order
+        String order = request.getParameter("order");
+        sbUrl.append("?").append("version").append("=").append(version);
+        sbUrl.append("&").append("netStatus").append("=").append(netStatus);
+        sbUrl.append("&").append("platform").append("=").append(platform);
+        sbUrl.append("&").append("randomString").append("=").append(randomString);
+        sbUrl.append("&").append("sign").append("=").append(sign);
+        sbUrl.append("&").append("token").append("=").append(strEncode(token));
+        sbUrl.append("&").append("order").append("=").append(strEncode(order));
+        return sbUrl.toString();
     }
 
     /**

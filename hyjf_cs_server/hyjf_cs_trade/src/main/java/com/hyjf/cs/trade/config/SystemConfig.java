@@ -72,10 +72,10 @@ public class SystemConfig {
     @Value("${file.upload.real.path}")
     public String fileUploadRealPath;
 
-    @Value("hyjf.notice.status")
+    @Value("${hyjf.notice.status}")
     public String noticeStatus;
 
-    @Value("hyjf.notice.requesturl.ios")
+    @Value("${hyjf.notice.requesturl.ios}")
     public String iosNoticeRequestUrl;
 
     @Value("${hyjf.notice.ios.version}")

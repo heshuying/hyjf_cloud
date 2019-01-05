@@ -61,85 +61,71 @@ public class AdminServiceImpl extends BaseAdminServiceImpl implements AdminServi
 
 	@Override
 	public TreeResponse infoAction(AdminMenuRequest form) {
-		// TODO 自动生成的方法存根
 		return null;
 	}
 
 	@Override
 	public AdminSystemResponse insertAction(AdminMenuRequest form) {
-		// TODO 自动生成的方法存根
 		return null;
 	}
 
 	@Override
 	public AdminSystemResponse getuser(AdminMenuRequest form) {
-		// TODO 自动生成的方法存根
 		return null;
 	}
 
 	@Override
 	public AdminSystemResponse deleteRecordAction(AdminMenuRequest form) {
-		// TODO 自动生成的方法存根
 		return null;
 	}
 
 	@Override
 	public AdminSystemResponse moveToAuthAction(AdminMenuRequest form) {
-		// TODO 自动生成的方法存根
 		return null;
 	}
 
 	@Override
 	public AdminSystemResponse updateMenuPermissionsAction(AdminMenuRequest form) {
-		// TODO 自动生成的方法存根
 		return null;
 	}
 
 	@Override
 	public AdminRoleResponse search(AdminRoleRequest form) {
-		// TODO 自动生成的方法存根
 		return null;
 	}
 
 	@Override
 	public AdminRoleResponse moveToInfoAction(AdminRoleRequest form) {
-		// TODO 自动生成的方法存根
 		return null;
 	}
 
 	@Override
 	public AdminRoleResponse insertAction(AdminRoleRequest form) {
-		// TODO 自动生成的方法存根
 		return null;
 	}
 
 	@Override
 	public AdminRoleResponse updateAction(AdminRoleRequest form) {
-		// TODO 自动生成的方法存根
 		return null;
 	}
 
 	@Override
 	public AdminRoleResponse deleteRecordAction(AdminRoleRequest form) {
-		// TODO 自动生成的方法存根
 		return null;
 	}
 
 	@Override
 	public String getAdminRoleMenu(String roleId) {
-		// TODO 自动生成的方法存根
 		return null;
 	}
 
 	@Override
 	public AdminRoleResponse modifyPermissionAction(AdminRoleRequest bean) {
-		// TODO 自动生成的方法存根
 		return null;
 	}
 
 	@Override
 	public AdminRoleResponse checkAction(AdminRoleRequest bean) {
-		// TODO 自动生成的方法存根
 		return null;
 	}
 }

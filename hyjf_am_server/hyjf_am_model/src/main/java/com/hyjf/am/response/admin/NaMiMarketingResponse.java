@@ -4,7 +4,10 @@ import com.hyjf.am.response.Response;
 import com.hyjf.am.vo.admin.NaMiMarketingVO;
 import com.hyjf.am.vo.admin.PerformanceReturnDetailVO;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -15,8 +18,9 @@ import java.util.Map;
 public class NaMiMarketingResponse extends Response<NaMiMarketingVO> {
     Integer count;
     Integer active;
+    BigDecimal totalAmount = BigDecimal.ZERO;
     Map<String,PerformanceReturnDetailVO> map=new HashMap<String,PerformanceReturnDetailVO>();
-
+    List<String> monthList = new ArrayList<String>();
 
     public Integer getCount() {
         return count;
@@ -40,5 +44,21 @@ public class NaMiMarketingResponse extends Response<NaMiMarketingVO> {
 
     public void setActive(Integer active) {
         this.active = active;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public void setTotalAmount(BigDecimal totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public List<String> getMonthList() {
+        return monthList;
+    }
+
+    public void setMonthList(List<String> monthList) {
+        this.monthList = monthList;
     }
 }

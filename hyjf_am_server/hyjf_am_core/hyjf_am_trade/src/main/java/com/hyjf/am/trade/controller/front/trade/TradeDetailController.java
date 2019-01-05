@@ -183,8 +183,7 @@ public class TradeDetailController extends BaseController {
         EvaluationConfigResponse response = new EvaluationConfigResponse();
         List<EvaluationConfigVO> list = tradeDetailService.selectEvaluationConfigList(request);
         if(!CollectionUtils.isEmpty(list)){
-            List<EvaluationConfigVO> voList = CommonUtils.convertBeanList(list, EvaluationConfigVO.class);
-            response.setResultList(voList);
+            response.setResultList(list);
         }
         return response;
     }

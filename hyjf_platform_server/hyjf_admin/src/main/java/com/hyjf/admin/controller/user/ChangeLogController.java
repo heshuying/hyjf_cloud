@@ -67,19 +67,27 @@ public class ChangeLogController extends BaseController {
 		clr.setRecommendUser(map.get("recommendUser"));
 		clr.setStartTime(map.get("startTime"));
 		clr.setEndTime(map.get("endTime"));
-		clr.setCurrPage(Integer.valueOf(map.get("currPage")));
-		clr.setPageSize(Integer.valueOf(map.get("pageSize")));
-		clr.setAttribute(map.get("attribute"));
-		//add by nxl 添加邮箱查询
+		if (map.get("currPage") != null) {
+            clr.setCurrPage(Integer.valueOf(map.get("currPage")));
+        } else {
+            clr.setCurrPage(1);
+        }
+        if (map.get("pageSize") != null) {
+            clr.setPageSize(Integer.valueOf(map.get("pageSize")));
+        } else {
+            clr.setPageSize(10);
+        }
+        clr.setAttribute(map.get("attribute"));
+        //add by nxl 添加邮箱查询
         clr.setEmail(map.get("email"));
-		ChangeLogResponse prs=changeLogService.getChangeLogList(clr);
-		if (prs == null) {
-			return new AdminResult<ListResult<ChangeLogVO>>(ListResult.build(new ArrayList<ChangeLogVO>(), 0));
-		}
-		if (!AdminResponse.isSuccess(prs)) {
-			return new AdminResult<>(FAIL, prs.getMessage());
-		}
-		return new AdminResult<ListResult<ChangeLogVO>>(ListResult.build(prs.getResultList(), prs.getRecordTotal()));
+        ChangeLogResponse prs = changeLogService.getChangeLogList(clr);
+        if (prs == null) {
+            return new AdminResult<ListResult<ChangeLogVO>>(ListResult.build(new ArrayList<ChangeLogVO>(), 0));
+        }
+        if (!AdminResponse.isSuccess(prs)) {
+            return new AdminResult<>(FAIL, prs.getMessage());
+        }
+        return new AdminResult<ListResult<ChangeLogVO>>(ListResult.build(prs.getResultList(), prs.getRecordTotal()));
 
 	}
 

@@ -18,6 +18,7 @@ import com.hyjf.am.vo.user.UtmPlatVO;
 public class AppUtmRegResponse extends Response<AppUtmRegVO> {
     private Integer count;
     List<UtmPlatVO> appUtm;
+    List<Integer> userIdList;
     AdminUtmReadPermissionsVO adminUtmReadPermissions;
 
     public Integer getCount() {

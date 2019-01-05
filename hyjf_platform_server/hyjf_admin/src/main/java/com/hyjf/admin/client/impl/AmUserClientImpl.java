@@ -33,6 +33,7 @@ import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -2059,21 +2060,17 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	@Override
-	public List<SmsCodeCustomizeVO> queryUser(SmsCodeRequestBean requestBean) {
-		SmsCodeCustomizeResponse response = restTemplate.postForObject("http://AM-ADMIN/am-trade/sms_code/query_user",
-				requestBean, SmsCodeCustomizeResponse.class);
-		if (response != null) {
-			/*List<SmsCodeCustomizeVO> list = response.getResultList();
-			SmsCodeCustomizeResponse response1 = restTemplate.postForObject("http://AM-ADMIN/am-user/sms_code/query_user",
-					requestBean, SmsCodeCustomizeResponse.class);
-			if (response1 != null) {
-				List<SmsCodeCustomizeVO> list1 = response1.getResultList();
-				if (!CollectionUtils.isEmpty(list) && !CollectionUtils.isEmpty(list1)) {
-					list.retainAll(list1);
-					return list;
-				}
-			}*/
-			return response.getResultList();
+	public List<String> queryUser(SmsCodeRequestBean requestBean) {
+		Response tradeResponse = restTemplate.postForObject("http://AM-ADMIN/am-trade/smsCode/queryUser",
+				requestBean, Response.class);
+		Response userResponse = restTemplate.postForObject("http://AM-ADMIN/am-user/sms_count/queryUser", requestBean, Response.class);
+		if (tradeResponse != null && userResponse != null) {
+			List<String> tradeList = tradeResponse.getResultList();
+			List<String> userList = userResponse.getResultList();
+			if (!CollectionUtils.isEmpty(tradeList) && !CollectionUtils.isEmpty(userList)) {
+				tradeList.retainAll(userList);
+			}
+			return tradeList;
 		}
 		return null;
 	}
@@ -2749,5 +2746,31 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResultInt();
 		}
 		return 0;
+	}
+
+	@Override
+	public int countUser(SmsCodeRequestBean requestBean) {
+		IntegerResponse response = restTemplate.postForObject("http://AM-ADMIN/am-trade/smsCode/countUser",
+				requestBean, IntegerResponse.class);
+		if (response != null) {
+			return response.getResultInt();
+		}
+		return 0;
+	}
+
+	/**
+	 * 通过当前用户ID 查询用户所在一级分部,从而关联用户所属渠道
+	 * @param userId
+	 * @return
+	 * @Author : huanghui
+	 */
+	@Override
+	public UserUtmInfoCustomizeVO getUserUtmInfo(Integer userId) {
+		String url = "http://AM-ADMIN/am-user/user/getUserUtmInfo/" + userId;
+		UserUtmInfoResponse response = restTemplate.getForEntity(url, UserUtmInfoResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+			return response.getResult();
+		}
+		return null;
 	}
 }

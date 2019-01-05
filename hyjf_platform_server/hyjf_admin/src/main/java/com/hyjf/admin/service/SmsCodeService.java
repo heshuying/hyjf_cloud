@@ -5,7 +5,6 @@ package com.hyjf.admin.service;
 
 import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.SmsLogRequestBean;
-import com.hyjf.am.vo.admin.SmsCodeCustomizeVO;
 
 import java.text.ParseException;
 import java.util.List;
@@ -20,11 +19,11 @@ public interface SmsCodeService {
      * @param requestBean
      * @return
      */
-    List<SmsCodeCustomizeVO> queryUser(SmsCodeRequestBean requestBean);
+    List<String> queryUser(SmsCodeRequestBean requestBean);
 
     /**
      * 条件查询短信记录列表
-     * @param smlogCustomize
+     * @param requestBean
      * @return
      */
     Integer queryLogCount(SmsLogRequestBean requestBean);
@@ -42,4 +41,11 @@ public interface SmsCodeService {
      * @return
      */
     boolean sendSmsOntime(SmsCodeRequestBean form) throws ParseException;
+
+    /**
+     * 在筛选条件下查询出用户数量
+     * @param form
+     * @return
+     */
+    int countUser(SmsCodeRequestBean form);
 }

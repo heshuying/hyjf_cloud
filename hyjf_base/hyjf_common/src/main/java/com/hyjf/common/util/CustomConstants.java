@@ -654,6 +654,9 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /** 汇添金计划未满 */
     public static final String HTJ_PARAM_TPL_JHWM = "JYTZ_HTJ_FAILED";
 
+    /**计划订单异常*/
+    public static final String JYTZ_PLAN_ORDER_EXCECEPTION = "JYTZ_PLAN_ORDER_EXCEPTION";
+
     /** 消息推送模板-加息放款 */
     public static final String JYTZ_TPL_JIAXIFANGKUAN = "JYTZ_TPL_JIAXIFANGKUAN";
 
@@ -709,7 +712,7 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     public static final String EMAILPARAM_TPL_LOANS = "TPL_EMAIL_LOANS";
 
     /** 汇计划自动发标修复 */
-    public static final String MAILSENDFORMAILINGADDRESSMSG = "TPL_EMAIL_AUTOISSUERECOVER";
+    public static final String EMAILPARAM_TPL_EMAIL_AUTOISSUERECOVER = "TPL_EMAIL_AUTOISSUERECOVER";
 
     /** 计划订单状态由投标成功变为锁定中，发送此邮件提醒用户投标成功 */
     public static final String EMAITPL_EMAIL_LOCK_REPAY = "TPL_EMAIL_LOCK_REPAY";
@@ -984,6 +987,12 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     
     /** 货币种类 */
     public static final String CURRENCY_STATUS = "CURRENCY_STATUS";
+
+    /** 借款用途 */
+    public static final String FINANCE_PURPOSE = "FINANCE_PURPOSE";
+
+    /** 岗位职业 */
+    public static final String POSITION = "POSITION";
 
     // 优惠券（体验金）
     public static final String TRADE_COUPON_TYJ = "EXPERIENCE_PROFIT";

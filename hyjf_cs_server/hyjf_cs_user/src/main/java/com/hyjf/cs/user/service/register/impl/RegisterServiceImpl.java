@@ -101,9 +101,9 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
 
         CheckUtil.check(Validator.isMobile(mobile), MsgEnum.STATUS_ZC000003);
 
-        // TODO: 2018/6/23 原代码平台推荐人未作处理
+        // 2018/6/23 原代码平台推荐人未作处理
         if (StringUtils.isNotEmpty(reffer)) {
-            // CheckUtil.check(amUserClient.countUserByRecommendName(recommended) > 0, MsgEnum.ERR_OBJECT_INVALID,"推荐人");//无效的推荐人
+             // CheckUtil.check(amUserClient.countUserByRecommendName(recommended) > 0, MsgEnum.ERR_OBJECT_INVALID,"推荐人");//无效的推荐人
         }
     }
 
@@ -750,8 +750,6 @@ public class RegisterServiceImpl extends BaseUserServiceImpl implements Register
             params.put("mqMsgId", GetCode.getRandomCode(10));
             params.put("userId", String.valueOf(userId));
             params.put("sendFlg", "11");
-            String signValue = StringUtils.lowerCase(MD5.toMD5Code(systemConfig.couponAccesskey + String.valueOf(userId) + 11 + systemConfig.couponAccesskey));
-            params.put("sign", signValue);
             commonProducer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC,
                     UUID.randomUUID().toString(), params));
         } catch (Exception e) {

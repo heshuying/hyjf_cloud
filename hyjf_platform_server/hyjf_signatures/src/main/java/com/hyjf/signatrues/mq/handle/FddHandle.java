@@ -14,6 +14,7 @@ import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.constants.FddGenerateContractConstant;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
@@ -231,22 +232,57 @@ public class FddHandle {
 		} else {
 			borrowDate = borrowPeriod + "天";
 		}
-		JSONObject paramter = new JSONObject();
-		paramter.put("nid", borrowTender.getNid());// 借款编号
-		paramter.put("recoverTime", bean.getSignDate());// 签署时间
-		paramter.put("realName", tenderTrueName);// 出借人真实姓名
-		paramter.put("idCard", tenderIdCard);// 证件号码
-		paramter.put("borrowUsername", borrowTrueName);// 借款人真实姓名
-		paramter.put("BorrowidCard", borrowIdCard);// 借款人证件号码
+		boolean isInstalment = false;//是否分期
+		if(CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)
+				|| CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrowStyle)){
+			isInstalment = true;
+		}
 
-		paramter.put("account", borrow.getAccount().toString());// 借款金额
-		paramter.put("borrowPeriod", borrowDate);// 借款期限
-		paramter.put("borrowApr", borrow.getBorrowApr() + "%");// 借款利率
-		paramter.put("borrowStyleName", this.getBorrowStyle(borrow.getBorrowStyle()));// 还款方式
-		paramter.put("userInvestAccount", borrowTender.getAccount().toString());// 出借人出借金额
-		paramter.put("ecoverAccountInterest", tenderInterest.toString());// 借款人预期收益
+		//月偿还本息
+		String monthPayAccount;
+		String lastPayAccount = "";
+		//查询标的分期信息
+		if(isInstalment){
+			BorrowRecoverPlanVO planInfo = this.getborrowRecoverPlan(borrowNid,borrowTender.getNid(),1);
+			if(planInfo == null){
+				throw new RuntimeException("分期还款记录不存在,投资订单号:[" + tenderNid + "],投资人用户ID:[" + tenderUserId + "],标的编号:[" + borrowNid + "].");
+			}
+			monthPayAccount = planInfo.getRecoverAccount().toString();
+			BorrowRecoverPlanVO lastPlanInfo = this.getborrowRecoverPlan(borrowNid,borrowTender.getNid(),borrow.getBorrowPeriod());
+			if(lastPlanInfo != null){
+				lastPayAccount = lastPlanInfo.getRecoverAccount().toString();
+			}
+		}else{
+			monthPayAccount = "-";
+			lastPayAccount = borrowTender.getRecoverAccountAll().toString();
+		}
+
+		//中北互金修改借款人用途取值 add by yangchangwei 20181227
+		String financePurpose;//借款用途
+		financePurpose = CacheUtil.getParamName(FddGenerateContractConstant.FINANCE_PURPOSE,borrow.getFinancePurpose());
+		JSONObject paramter = new JSONObject();
+
+		paramter.put("nid", borrowTender.getNid());//借款编号
+		paramter.put("recoverTime", bean.getSignDate());//签署时间
+		paramter.put("realName", tenderTrueName);//出借人真实姓名
+		paramter.put("idCard", tenderIdCard);//证件号码
+		paramter.put("borrowUsername", borrowTrueName);//借款人真实姓名
+		paramter.put("BorrowidCard", borrowIdCard);//借款人证件号码
+		paramter.put("borrowUse", financePurpose);//借款用途
+		paramter.put("borrowValueDay", GetDate.date2Str(GetDate.getDate(borrow.getRecoverLastTime()), GetDate.date_sdf_wz));//放款时间
+		paramter.put("borrowDueDay", GetDate.date2Str(GetDate.getDate(Integer.valueOf(borrow.getRepayLastTime())), GetDate.date_sdf_wz));//还款时间
+		paramter.put("borrowLendingDay", GetDate.date2Str(GetDate.getDate(borrow.getRecoverLastTime()), GetDate.date_sdf_wz));//放款日
+		paramter.put("monthPayAccount", monthPayAccount);//月偿还本息
+		paramter.put("lastPayAccount", lastPayAccount);//最后偿还金额
+		paramter.put("account", borrow.getAccount().toString());//借款金额
+		paramter.put("borrowApr", borrow.getBorrowApr()+"%");//借款利率
+		paramter.put("borrowPeriod", borrowDate);//借款期限
+		paramter.put("borrowStyleName", this.getBorrowStyle(borrow.getBorrowStyle()));//还款方式
+		paramter.put("userInvestAccount", borrowTender.getAccount().toString());//出借人出借金额
+		paramter.put("ecoverAccountInterest", tenderInterest.toString());//借款人预期收益
 
 		bean.setBorrowerCustomerID(borrowerCustomerID);
+        bean.setTenderUserName(tenderUser.getUsername());
 		logger.info("-----------，合同编号：" + borrowTender.getNid() + ",获得借款人认证编号：" + bean.getBorrowerCustomerID());
 		bean.setContractName(FddGenerateContractConstant.CONTRACT_DOC_TITLE);
 		logger.info("-----------，合同编号：" + borrowTender.getNid() + ",开始判断合同状态");
@@ -292,6 +328,18 @@ public class FddHandle {
             }
         }
 
+	}
+
+	/**
+	 * 获取标的的分期还款信息
+	 * @param borrowNid
+	 * @param nid
+	 * @param period
+	 * @return
+	 */
+	private BorrowRecoverPlanVO getborrowRecoverPlan(String borrowNid, String nid, Integer period) {
+		BorrowRecoverPlanVO info = this.amTradeClient.getBorrowRecoverPlanByNidandPeriod(borrowNid,nid,period);
+		return info;
 	}
 
 	 /**
@@ -1656,7 +1704,7 @@ public class FddHandle {
 		String fileType = null;
 		if (Integer.valueOf(transType) == FddGenerateContractConstant.PROTOCOL_TYPE_TENDER){
 			fileName = FddGenerateContractConstant.CONTRACT_DOC_FILE_NAME_TENDER;
-			fileType = "8.png";
+			fileType = "10.png";
 		}else if(Integer.valueOf(transType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT
 				|| Integer.valueOf(transType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET
 				|| Integer.valueOf(transType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET
@@ -2100,7 +2148,7 @@ public class FddHandle {
 		String tmName_sign = "";
 		String tmName_content = "tm_0";
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
-			tmName_sign = "tm_8";
+			tmName_sign = "tm_10";
 		}else if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
 				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET
 				|| Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET
@@ -2109,7 +2157,7 @@ public class FddHandle {
 		}
 		String output = imageSavePath;
 		String source = imageFilePath;    //签章源图片路径
-        logger.info("-----------开始下载脱敏，获得签章源图片路径" + imageFilePath);
+		logger.info("-----------开始下载脱敏，获得签章源图片路径" + imageFilePath);
 		String fileParent = systemConfig.getFddFileUpload();
 		logger.info("-----------开始下载脱敏，获得签章图片父级别路径" + fileParent);
 		String signIcon = fileParent + borrowSigntmImage; //签章覆盖图片路径
@@ -2122,18 +2170,18 @@ public class FddHandle {
 		int index_x = 0;
 		int index_y = 0;
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
-			index_x = 910;
-			index_y = 1190;
+			index_x = 887;
+			index_y = 270;
 			if(isCompanyUser){
-				index_x = 850;
-				index_y = 1070;
+				index_x = 825;
+				index_y = 155;
 			}
 		}else if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
 				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET
 				|| Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET
 				|| Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET){
-			index_x = 430;
-			index_y = 990;
+			index_x = 410;
+			index_y = 1100;
 			if(creditCompany){
 				index_x = 400;
 				index_y = 990;
@@ -2144,18 +2192,18 @@ public class FddHandle {
 		//受让人/出借人/出借人 脱敏签章（个人显示第一个字，企业全部脱敏）——最后一页
 		source = output + "/" + signimageName + ".png";
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
-			index_x = 435;
-			index_y = 1190;
+			index_x = 385;
+			index_y = 270;
 			if(isTenderConmpany){
 				index_x = 405;
-				index_y = 1190;
+				index_y = 270;
 			}
 		}else if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
 				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET
 				|| Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET
 				|| Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET){
-			index_x = 430;
-			index_y = 1290;
+			index_x = 410;
+			index_y = 1400;
 			if(isTenderConmpany){
 				index_x = 400;
 				index_y = 1290;
@@ -2168,11 +2216,11 @@ public class FddHandle {
 		String trueSource = trueImageFilePath;//待脱敏图片路径
 		String icon = fileParent + borrowTrueNametmImage;  //覆盖图片路径
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
-			index_x = 385;
-			index_y = 690;
+			index_x = 375;
+			index_y = 730;
 			if(isCompanyUser){
-				index_x = 360;
-				index_y = 690;
+				index_x = 350;
+				index_y = 730;
 			}
 		}else if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
 				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET
@@ -2193,17 +2241,17 @@ public class FddHandle {
 
 		//脱敏转让人/借款人 证件号码（个人显示前3后4，企业全部脱敏）——第一页
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
-			index_x = 355;
-			index_y = 755;
+			index_x = 340;
+			index_y = 795;
 			if(isCompanyUser){
 				index_x = 305;
-				index_y = 755;
+				index_y = 795;
 			}
 		}else if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
 				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET
 				|| Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_CRIDET
 				|| Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_APPLY_PLAN_CRIDET){
-			index_x = 340;
+			index_x = 330;
 			index_y = 530;
 			if(creditCompany){
 				index_x = 300;
@@ -2215,11 +2263,11 @@ public class FddHandle {
 		String tenderTrueNameIcon = fileParent + tenderTrueNametmImage;
 		//脱敏受让人/出借人/出借人 真实姓名（个人显示第一个，企业全部脱敏）——第一页
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
-			index_x = 388;
-			index_y = 490;
+			index_x = 375;
+			index_y = 530;
 			if(isTenderConmpany){
 				index_x = 238;
-				index_y = 490;
+				index_y = 530;
 			}
 		}else if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
 				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET
@@ -2237,11 +2285,11 @@ public class FddHandle {
 		cardnoIcon = fileParent + tenderCardNoImage;
 		//脱敏受让人/出借人/出借人 证件号码——第一页
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
-			index_x = 355;
-			index_y = 555;
+			index_x = 332;
+			index_y = 595;
 			if(isTenderConmpany){
 				index_x = 305;
-				index_y = 555;
+				index_y = 595;
 			}
 		}else if(Integer.valueOf(pdfType) == FddGenerateContractConstant.PROTOCOL_TYPE_CREDIT ||
 				Integer.valueOf(pdfType) == FddGenerateContractConstant.FDD_TRANSTYPE_PLAN_CRIDET

@@ -462,11 +462,8 @@ public class CouponServiceImpl extends BaseTradeServiceImpl implements CouponSer
             logger.error("当前优惠券正在使用....");
             return;
         }
-        // 下单时间
-        String ordDate = GetDate.getServerDateTime(1, new Date());
         // 金额
         String account = bean.getTxAmount();
-        String ip = bean.getLogIp();
         String borrowNid = borrow.getBorrowNid();
         String ordId = bean.getLogOrderId();
         Integer userId = Integer.parseInt(bean.getLogUserId());

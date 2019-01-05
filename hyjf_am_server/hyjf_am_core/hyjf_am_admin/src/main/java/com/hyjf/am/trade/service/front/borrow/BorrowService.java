@@ -16,6 +16,7 @@ import com.hyjf.am.vo.trade.WebProjectPersonDetailVO;
 import com.hyjf.am.vo.trade.borrow.TenderBgVO;
 import com.hyjf.am.vo.trade.borrow.TenderRetMsg;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -163,4 +164,5 @@ public interface BorrowService extends BaseService {
 	 * @return
 	 */
 	public List<BorrowCommonCustomizeVO> exportBorrowList(BorrowCommonCustomizeVO borrowCommonCustomizeVO);
+	public BigDecimal sumAccount(BorrowCommonCustomizeVO borrowCommonCustomizeVO) ;
 }

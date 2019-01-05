@@ -316,7 +316,7 @@ public class BatchBorrowRepayZTServiceImpl extends BaseServiceImpl implements Ba
 			List<CreditRepay> creditRepayList) throws Exception {
 		String borrowNid = borrow.getBorrowNid();
 		boolean delFlag = false;
-		//TODO 还款请求组装数据
+		// 还款请求组装数据
 		Map map = new HashMap<>();
 		int txCounts = 0;// 交易笔数
 		BigDecimal txAmountSum = BigDecimal.ZERO;// 交易总金额

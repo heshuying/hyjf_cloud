@@ -121,7 +121,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         example.createCriteria().andIdEqualTo(borrowVO.getId()).andStatusEqualTo(borrowVO.getStatus()).andRegistStatusEqualTo(borrowVO.getRegistStatus());
         borrowVO.setRegistStatus(registStatus);
         borrowVO.setStatus(status);
-        borrowVO.setRegistUserId(1);//TODO:id写死1
+        borrowVO.setRegistUserId(1);
         borrowVO.setRegistUserName("AutoRecord");
         borrowVO.setRegistTime(nowDate);
         Borrow borrow = new Borrow();
@@ -1554,7 +1554,6 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                     calculateRecoverPlanAll(repayPlanDetail, borrow, totalPeriod);
                     borrowRepayPlanDeails.add(repayPlanDetail);
 
-                    // TODO: 累加以下值
                     repay.setRepayAccountAll(repay.getRepayAccountAll().add(repayPlanDetail.getRepayAccountAll()));
                     repay.setRepayAccount(repay.getRepayAccount().add(repayPlanDetail.getRepayAccount()));
                     repay.setRepayCapital(repay.getRepayCapital().add(repayPlanDetail.getRepayCapital()));
@@ -1748,7 +1747,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
                                     creditRepayBean.setManageFee(assignManageFee);
                                     creditRepayBean.setAdvanceStatus(1);
                                     creditRepayBean.setChargeInterest(assignChargeInterest.multiply(new BigDecimal(-1)));
-                                    creditRepayBean.setChargeDays(3);// TODO:默认是3天
+                                    creditRepayBean.setChargeDays(3);// 默认是3天
                                     creditRepayBeanList.add(creditRepayBean);
                                     // 统计出让人还款金额
                                     userAccount = userAccount.subtract(assignAccount);

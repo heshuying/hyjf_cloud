@@ -14,6 +14,9 @@ public class FddGenerateContractConstant {
     public static final int FDD_TRANSTYPE_APPLY_CRIDET = 5;
     /** 汇计划垫付债转出借 */
     public static final int FDD_TRANSTYPE_APPLY_PLAN_CRIDET = 6;
+    //中北互金修改借款人用途取值 add by yangchangwei 20181227
+    /** 借款用途 param对应name_class */
+    public static final String FINANCE_PURPOSE = "FINANCE_PURPOSE";
     /**合同标题——居间服务协议*/
     public static final String CONTRACT_DOC_TITLE = "汇盈金服互联网金融服务平台居间服务借款协议";
     /**合同标题——计划加入协议*/

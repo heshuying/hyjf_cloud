@@ -11,7 +11,6 @@ import io.swagger.annotations.ApiModelProperty;
  * @version SmsCodeUserRequest, v0.1 2018/8/20 19:05
  */
 public class SmsCodeUserRequest extends BasePage {
-    private static final long serialVersionUID = 1L;
     /**
      * 用户手机号码，以英文逗号间隔
      */

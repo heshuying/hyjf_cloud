@@ -315,6 +315,76 @@ public class NifaReportLogExample {
             return (Criteria) this;
         }
 
+        public Criteria andHistoryDateIsNull() {
+            addCriterion("history_date is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryDateIsNotNull() {
+            addCriterion("history_date is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryDateEqualTo(String value) {
+            addCriterion("history_date =", value, "historyDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryDateNotEqualTo(String value) {
+            addCriterion("history_date <>", value, "historyDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryDateGreaterThan(String value) {
+            addCriterion("history_date >", value, "historyDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryDateGreaterThanOrEqualTo(String value) {
+            addCriterion("history_date >=", value, "historyDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryDateLessThan(String value) {
+            addCriterion("history_date <", value, "historyDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryDateLessThanOrEqualTo(String value) {
+            addCriterion("history_date <=", value, "historyDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryDateLike(String value) {
+            addCriterion("history_date like", value, "historyDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryDateNotLike(String value) {
+            addCriterion("history_date not like", value, "historyDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryDateIn(List<String> values) {
+            addCriterion("history_date in", values, "historyDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryDateNotIn(List<String> values) {
+            addCriterion("history_date not in", values, "historyDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryDateBetween(String value1, String value2) {
+            addCriterion("history_date between", value1, value2, "historyDate");
+            return (Criteria) this;
+        }
+
+        public Criteria andHistoryDateNotBetween(String value1, String value2) {
+            addCriterion("history_date not between", value1, value2, "historyDate");
+            return (Criteria) this;
+        }
+
         public Criteria andFileUploadStatusIsNull() {
             addCriterion("file_upload_status is null");
             return (Criteria) this;

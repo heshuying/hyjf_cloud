@@ -1,6 +1,5 @@
 package com.hyjf.cs.message.client.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.CategoryResponse;
 import com.hyjf.am.response.config.*;
@@ -137,20 +136,10 @@ public class AmConfigClientImpl implements AmConfigClient {
 	}
 	@Override
 	public ContentHelpVO help(Integer id){
-	/*	CategoryResponse response =  restTemplate
-				.getForEntity("http://AM-CONFIG/am-config/content/help/help/"+id, CategoryResponse.class).getBody();
-		if (response != null) {
-			return response.getContentHelpVO();
-		}*/
 		ParameterizedTypeReference<ContentHelpVO> responseType = new ParameterizedTypeReference<ContentHelpVO>(){};
 		ResponseEntity<ContentHelpVO> user = restTemplate.exchange("http://AM-CONFIG/am-config/content/help/help/"+id,
 				HttpMethod.GET, null, responseType);
 		return user.getBody();
-	}
-
-	@Override
-	public List<UserVO> queryUser(JSONObject params) {
-		return null;// todo
 	}
 
 	@Override

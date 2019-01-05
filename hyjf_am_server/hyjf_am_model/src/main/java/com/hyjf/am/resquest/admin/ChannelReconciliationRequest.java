@@ -39,6 +39,8 @@ public class ChannelReconciliationRequest extends BasePage {
     @ApiModelProperty(value = "渠道")
     private String[] utmPlat;
 
+    private String sourceId;
+
     private int limitStart;
 
     private int limitEnd;
@@ -133,6 +135,15 @@ public class ChannelReconciliationRequest extends BasePage {
     public void setUtmPlat(String[] utmPlat) {
         this.utmPlat = utmPlat;
     }
+
+    public String getSourceId() {
+        return sourceId;
+    }
+
+    public void setSourceId(String sourceId) {
+        this.sourceId = sourceId;
+    }
+
     // 用户id集合
     private List<Integer> userIdList;
 

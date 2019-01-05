@@ -23,7 +23,6 @@ import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
 import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
-import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.slf4j.Logger;
@@ -39,7 +38,7 @@ import java.util.UUID;
  * @version BorrowRepayZTConsumer.java, v0.1 2018年6月20日 下午6:09:19
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.BORROW_REPAY_ZT_RESULT_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.BORROW_REPAY_ZT_RESULT_GROUP)
+//@RocketMQMessageListener(topic = MQConstant.BORROW_REPAY_ZT_RESULT_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.BORROW_REPAY_ZT_RESULT_GROUP)
 public class BorrowRepayZTConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 	
 	private static final Logger logger = LoggerFactory.getLogger(BorrowRepayZTConsumer.class);
@@ -167,7 +166,7 @@ public class BorrowRepayZTConsumer implements RocketMQListener<MessageExt>, Rock
 						throw new Exception("错误收件人没有配置。" + "[借款编号：" + borrowNid + "]");
 					}
 					MailMessage mailMessage = new MailMessage(null, null, "[" + online + "] " + borrowApicron.getBorrowNid(), msg.toString(), null, toMail, null,
-							MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
+							MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
 					commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC, borrowApicron.getBorrowNid(), mailMessage));
 				} catch (Exception e2) {
 					logger.error("发送邮件失败..", e2);

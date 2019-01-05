@@ -3,40 +3,31 @@
  */
 package com.hyjf.cs.user.controller.wechat.regist;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
-import com.hyjf.am.vo.message.SmsMessage;
-import com.hyjf.am.vo.user.BankOpenAccountVO;
-import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
-import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.CommonConstant;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.*;
+import com.hyjf.common.util.ClientConstants;
+import com.hyjf.common.util.CustomConstants;
+import com.hyjf.common.util.GetCilentIP;
+import com.hyjf.common.util.RandomValidateCode;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.BaseMapBean;
-import com.hyjf.cs.user.bean.LoginResultBean;
 import com.hyjf.cs.user.bean.RegistLandingPageCommitRequestBean;
 import com.hyjf.cs.user.config.SystemConfig;
-import com.hyjf.cs.user.constants.ResultEnum;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.mq.base.CommonProducer;
-import com.hyjf.cs.user.mq.base.MessageContent;
-import com.hyjf.cs.user.result.BaseResultBean;
 import com.hyjf.cs.user.result.UserRegistResult;
 import com.hyjf.cs.user.service.login.LoginService;
 import com.hyjf.cs.user.service.register.RegisterService;
 import com.hyjf.cs.user.util.RSAJSPUtil;
 import com.hyjf.cs.user.vo.RegisterRequest;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import com.hyjf.soa.apiweb.CommonSoaUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -52,9 +43,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -551,117 +540,6 @@ public class WeChatRegistController extends BaseUserController {
             ret.put("statusDesc", "图形验证码不正确!");
             return ret;
         }
-    }
-
-    /**
-     * 发送短信(注册送188元新手红包)
-     * @auth sunpeikai
-     * @param userVO 用户信息
-     * @return
-     */
-    private void sendSmsCoupon(UserVO userVO) {
-        if (userVO == null || Validator.isNull(userVO.getUserId())) {
-            return;
-        }
-        try{
-            // 发送
-            SmsMessage smsMessage = new SmsMessage(userVO.getUserId(), null, userVO.getMobile(), null, MessageConstant.SMS_SEND_FOR_MOBILE, null, CustomConstants.PARAM_TPL_TZJ_188HB,
-                    CustomConstants.CHANNEL_TYPE_NORMAL);
-            commonProducer.messageSend(new MessageContent(MQConstant.SMS_CODE_TOPIC, UUID.randomUUID().toString(), smsMessage));
-
-        }catch (MQException e){
-            e.printStackTrace();
-            logger.error("发送短信(注册送188元新手红包)失败! userId=[{}]",userVO.getUserId());
-        }
-
-    }
-
-    /**
-     * 注册888红包发放
-     * @auth sunpeikai
-     * @param userVO 用户信息
-     * @return
-     */
-    private void sendCoupon(UserVO userVO) {
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("mqMsgId", GetCode.getRandomCode(10));
-        params.put("userId", userVO.getUserId().toString());
-        params.put("sendFlg", "11");
-
-        String signValue = StringUtils.lowerCase(MD5.toMD5Code(systemConfig.couponAccesskey + userVO.getUserId().toString() + 11 + systemConfig.couponAccesskey));
-        params.put("sign", signValue);
-
-        try {
-            commonProducer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC,
-                    UUID.randomUUID().toString(), params));
-        } catch (MQException e) {
-            e.printStackTrace();
-            logger.error("注册888红包发放失败");
-        }
-    }
-
-    /**
-     * 完成登录操作
-     *  add by jijun 2018/03/30
-     */
-    private BaseResultBean proceedLoginAction(HttpServletRequest request, String userName, String password) {
-        logger.info("执行登录操作开始,手机号为：【"+userName+"】");
-        LoginResultBean result = new LoginResultBean();
-        if(StringUtils.isBlank(userName)||StringUtils.isBlank(password)){
-            return result.setEnum(ResultEnum.PARAM);
-        }
-        int userId = registService.updateLoginInAction(userName, password, CustomUtil.getIpAddr(request));
-        switch (userId) {
-            case -1:
-                result.setEnum(ResultEnum.ERROR_001);
-                break;
-            case -2:
-                result.setEnum(ResultEnum.ERROR_002);
-                break;
-            case -3:
-                result.setEnum(ResultEnum.ERROR_003);
-                break;
-            default:
-                UserVO userVO = registService.getUsersById(userId);
-
-                BankOpenAccountVO account = registService.getBankOpenAccount(userId);
-                String accountId = null;
-                if(account!=null&&StringUtils.isNoneBlank(account.getAccount())){
-                    accountId = account.getAccount();
-                    /*********** 登录时自动同步线下充值记录 start ***********/
-                    if (userVO.getBankOpenAccount() == 1) {
-                        CommonSoaUtils.synBalance(userVO.getUserId());
-                    }
-                    /*********** 登录时自动同步线下充值记录 end ***********/
-                }
-                String sign = SecretUtil.createToken(userId, userVO.getUsername(), accountId);
-
-                try {
-                    StringBuffer url = request.getRequestURL();
-                    String tempContextUrl = url.delete(url.length() - request.getRequestURI().length(), url.length()).toString();
-                    String host = CustomConstants.WECHAT_HOST;
-                    logger.info("登录url为===="+tempContextUrl);
-                    logger.info("获取登录配置为==="+host);
-                    logger.info("登录配置和url是否相等==="+(tempContextUrl.equals(host)));
-                    String str[] = tempContextUrl.split(":");
-                    String str1[] = host.split(":");
-                    if(str.length > 1 && str1.length > 1){
-                        if (str[1].equals(str1[1])) {
-                            RedisUtils.del("loginFrom"+userId);
-                            RedisUtils.set("loginFrom"+userId, "2", 1800);
-                        }
-                    }
-                } catch (Exception e) {
-                    logger.error("处理登陆来源异常！");
-                }
-                // 登录完成返回值
-                result.setEnum(ResultEnum.SUCCESS);
-                result.setSign(sign);
-                break;
-        }
-
-        logger.info("执行登录操作结束,手机号为：【"+userName+"】");
-        return result;
     }
 
     /**

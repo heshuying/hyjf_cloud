@@ -3,10 +3,8 @@
  */
 package com.hyjf.am.trade.dao.mapper.customize.admin;
 
-import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
-import com.hyjf.am.trade.dao.model.customize.SmsCodeCustomize;
-
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author fq
@@ -15,8 +13,8 @@ import java.util.List;
 public interface SmsCodeCustomizeMapper {
     /**
      *筛选符合条件的用户
-     * @param request
+     * @param params
      * @return
      */
-    List<SmsCodeCustomize> queryUser(SmsCodeUserRequest request);
+    List<String> queryUser(Map<String,Object> params);
 }

@@ -83,7 +83,7 @@ public class CalculateInvestInterestConsumer implements RocketMQListener<Message
                 calculateInvestInterestDao.update(query, update);
             }
 
-            // 更新t_total_invest_and_interest- 运营数据用，考虑和上面的表合并（）  todo xiasq
+            // 更新t_total_invest_and_interest- 运营数据用，考虑和上面的表合并（）
             else {
                 if (data.containsKey("money")) {
                     BigDecimal money = new BigDecimal(data.get("money").toString());
@@ -113,8 +113,6 @@ public class CalculateInvestInterestConsumer implements RocketMQListener<Message
                         BigDecimal totalInterestAmount = recoverInterestAmount == null ? BigDecimal.ZERO : recoverInterestAmount;
                         logger.info("已收收益： {}", totalInterestAmount.toString());
 
-                        // TODO: 2018/7/7 这里需要查询   没用到  先放
-                        //operationDataService.searchPlanStatisticData();
                         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
                         TotalInvestAndInterestEntity entity = totalInvestAndInterestMongoDao.findOne(new Query());
                         // 第一次插入

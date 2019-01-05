@@ -21,4 +21,14 @@ public class NaMiMarketingServiceImpl  implements NaMiMarketingService {
     public NaMiMarketingResponse getRecordList(NaMiMarketingRequest naMiMarketingRequest) {
         return amAdminClient.getNaMiMarketingList(naMiMarketingRequest);
     }
+
+    @Override
+    public NaMiMarketingResponse getPerformanceList(NaMiMarketingRequest naMiMarketingRequest) {
+        return amAdminClient.getPerformanceList(naMiMarketingRequest);
+    }
+
+    @Override
+    public NaMiMarketingResponse getPerformanceInfo(NaMiMarketingRequest naMiMarketingRequest) {
+        return amAdminClient.getPerformancInfo(naMiMarketingRequest);
+    }
 }

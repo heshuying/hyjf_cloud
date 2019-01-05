@@ -10,7 +10,6 @@ import com.hyjf.admin.client.CsMessageClient;
 import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.SmsCodeService;
-import com.hyjf.am.vo.admin.SmsCodeCustomizeVO;
 import com.hyjf.am.vo.admin.SmsOntimeVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
@@ -39,7 +38,7 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 	private CommonProducer commonProducer;
 
 	@Override
-	public List<SmsCodeCustomizeVO> queryUser(SmsCodeRequestBean requestBean) {
+	public List<String> queryUser(SmsCodeRequestBean requestBean) {
 		return amUserClient.queryUser(requestBean);
 	}
 
@@ -94,5 +93,10 @@ public class SmsCodeServiceImpl implements SmsCodeService {
 			return false;
 		}
 		return true;
+	}
+
+	@Override
+	public int countUser(SmsCodeRequestBean requestBean) {
+		return amUserClient.countUser(requestBean);
 	}
 }

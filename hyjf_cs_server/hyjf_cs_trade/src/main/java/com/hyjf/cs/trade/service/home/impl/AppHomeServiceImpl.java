@@ -788,7 +788,10 @@ public class AppHomeServiceImpl implements AppHomeService {
         String noticeStatus = systemConfig.noticeStatus;
         String noticeUrlIOS = systemConfig.iosNoticeRequestUrl;
         String iosVersion = systemConfig.iosNoticeVersion;
-        noticeUrlIOS = HOST + ProjectConstant.REQUEST_HOME + "/" + noticeUrlIOS+"?version="+version;
+        if (StringUtils.isNotBlank(noticeUrlIOS)){
+            noticeUrlIOS = (noticeUrlIOS.substring(0,1).equals("/")) ? noticeUrlIOS.substring(1) : noticeUrlIOS;
+        }
+        noticeUrlIOS = HOST +"/"+ noticeUrlIOS+"?version="+version;
 
         boolean isNeedUpdate = false;
         if(StringUtils.isEmpty(version)){

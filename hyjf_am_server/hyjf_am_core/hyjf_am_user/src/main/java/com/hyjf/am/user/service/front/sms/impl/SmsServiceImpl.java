@@ -1,5 +1,7 @@
 package com.hyjf.am.user.service.front.sms.impl;
 
+import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
+import com.hyjf.am.user.dao.mapper.customize.SmsCountCustomizeMapper;
 import com.hyjf.am.user.dao.model.auto.SmsCode;
 import com.hyjf.am.user.dao.model.auto.SmsCodeExample;
 import com.hyjf.am.user.service.front.sms.SmsService;
@@ -7,11 +9,11 @@ import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.MD5;
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author xiasq
@@ -19,6 +21,9 @@ import java.util.List;
  */
 @Service
 public class SmsServiceImpl extends BaseServiceImpl implements SmsService {
+
+    @Autowired
+    private SmsCountCustomizeMapper smsCountCustomizeMapper;
 
 	@Override
 	public int save(String mobile, String verificationType, String verificationCode, String platform, Integer status) {
@@ -182,6 +187,21 @@ public class SmsServiceImpl extends BaseServiceImpl implements SmsService {
 		cra.andMobileEqualTo(phone);
 		cra.andCheckcodeEqualTo(code);
 		return smsCodeMapper.countByExample(example);
+	}
+
+	@Override
+	public List<String> queryUser(SmsCodeUserRequest request) {
+        Map<String, Object> params = new HashMap<>();
+        if (request.getOpen_account() != null && request.getOpen_account() != 3) {
+            params.put("open_account", request.getOpen_account());
+        }
+        if (StringUtils.isNotBlank(request.getRe_time_begin())) {
+            params.put("re_time_begin", GetDate.dateString2Timestamp(GetDate.getDayStart(request.getRe_time_begin())));
+        }
+        if (org.apache.commons.lang3.StringUtils.isNotBlank(request.getRe_time_end())) {
+            params.put("re_time_end", GetDate.dateString2Timestamp(GetDate.getDayEnd(request.getRe_time_end())));
+        }
+        return smsCountCustomizeMapper.queryUser(params);
 	}
 
 }

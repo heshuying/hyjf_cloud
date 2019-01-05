@@ -84,7 +84,7 @@
 	</select>
 
 	<select id="queryAccountEvalDetail" resultMap="AccountDetailMapResult"
-			parameterType="java.lang.Integer">
+			parameterType="com.hyjf.am.trade.dao.mapper.customize.CallCenterAccountDetailCustomizeMapper">
 		SELECT
 		l.id,
 		l.balance,

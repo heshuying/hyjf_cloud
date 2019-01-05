@@ -501,7 +501,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 		params.put("nowTime", nowTime);//放款时间
 		commonProducer.messageSend(new MessageContent(MQConstant.RETURN_CASH1_ACTIVITY_SAVE_TOPIC, UUID.randomUUID().toString(), params));
 	}
-	//TODO: 处理tender,判定成功状态，recover 无需要重复获取
+	//处理tender,判定成功状态，recover 无需要重复获取
 	@Override
 	public Map updateTenderMuti(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BigDecimal serviceFee, BorrowTender borrowTender) throws Exception {
 		
@@ -1688,8 +1688,8 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 		if (!apicronSuccessFlag) {
 			throw new RuntimeException("批次放款记录(borrowApicron)更新失败!" + "[项目编号：" + borrowNid + "]");
 		}
-		
-		createTenderGenerateContract(borrow,borrowTender,awaitInterest);
+		// 生成出借人居间服务协议 modify by yangchangwei 2018-12-29 改由放款后batch任务主动推送
+//		createTenderGenerateContract(borrow,borrowTender,awaitInterest);
 		try {
 //			this.sendMail(borrowRecover);
 			this.sendMessage(borrowRecover);
@@ -1793,7 +1793,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 	 * 标的信息
 	 * @param borrowTender
 	 * @param recoverInterest
-	 */
+	 *//*
 	private void createTenderGenerateContract(Borrow borrow, BorrowTender borrowTender, BigDecimal recoverInterest) {
 		String nid = borrowTender.getNid();
 		try {
@@ -1816,7 +1816,7 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 		}catch (Exception e){
 			logger.info("-----------------生成居间服务协议失败，ordid:" + nid + ",异常信息：" + e.getMessage());
 		}
-	}
+	}*/
 
 	/**
 	 * 推送消息

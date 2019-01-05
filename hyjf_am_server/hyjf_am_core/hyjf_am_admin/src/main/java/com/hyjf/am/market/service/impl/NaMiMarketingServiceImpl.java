@@ -9,13 +9,13 @@ import com.hyjf.am.market.service.NaMiMarketingService;
 import com.hyjf.am.resquest.admin.NaMiMarketingRequest;
 import com.hyjf.am.user.dao.model.auto.User;
 import com.hyjf.am.vo.admin.NaMiMarketingVO;
-import com.hyjf.am.vo.admin.PerformanceReturnDetailVO;
 import com.hyjf.common.util.ActivityDateUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -80,12 +80,54 @@ public class NaMiMarketingServiceImpl implements NaMiMarketingService {
     public Integer selectNaMiMarketingPerfanceCount(Map<String, Object> paraMap) {
         return  naMiMarketingCustomizeMapper.selectNaMiMarketingPerfanceCount(paraMap);
     }
+    @Override
+    public int selectNaMiMarketingRefferCount(Map<String, Object> paraMap){
+        return  naMiMarketingCustomizeMapper.selectNaMiMarketingRefferCount(paraMap);
+
+    }
 
     @Override
     public List<NaMiMarketingVO> selectNaMiMarketingPerfanceList(Map<String, Object> paraMap) {
         return naMiMarketingCustomizeMapper.selectNaMiMarketingPerfanceList(paraMap);
     }
+    @Override
+    public List<NaMiMarketingVO> selectNaMiMarketingRefferList(Map<String, Object> paraMap){
+        return naMiMarketingCustomizeMapper.selectNaMiMarketingRefferList(paraMap);
 
+    }
+    /**
+     * 查询邀请人返现统计 条数
+     * @param paraMap
+     * @return
+     */
+    @Override
+    public int selectNaMiMarketingRefferTotalCount(Map<String, Object> paraMap){
+        return naMiMarketingCustomizeMapper.selectNaMiMarketingRefferTotalCount(paraMap);
+    }
+    @Override
+    public List<String> selectMonthList(){
+        return  naMiMarketingCustomizeMapper.selectMonthList();
+    }
+
+    /**
+     * 查询邀请人返现统计 列表
+     * @param paraMap
+     * @return
+     */
+    @Override
+    public List<NaMiMarketingVO> selectNaMiMarketingRefferTotalList(Map<String, Object> paraMap){
+        return naMiMarketingCustomizeMapper.selectNaMiMarketingRefferTotalList(paraMap);
+    }
+
+    /**
+     * 查询邀请人返现统计 合计
+     * @param paraMap
+     * @return
+     */
+    @Override
+    public BigDecimal selectNaMiMarketingRefferTotalAmount(Map<String, Object> paraMap) {
+        return naMiMarketingCustomizeMapper.selectNaMiMarketingRefferTotalAmount(paraMap);
+    }
     @Override
     public List<PerformanceReturnDetail> selectNaMiMarketingPerfanceInfo(NaMiMarketingRequest request) {
         List<PerformanceReturnDetail> returnDetails= new ArrayList<>();

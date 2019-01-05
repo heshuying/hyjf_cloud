@@ -11,7 +11,6 @@ import java.util.Date;
  */
 public class UserVO extends BaseVO implements Serializable {
 
-
 	private Integer userId;
 
 	private String username;

@@ -1948,4 +1948,52 @@ public class AmAdminClientImpl implements AmAdminClient {
         return restTemplate.postForEntity("http://AM-ADMIN/am-market/namimarketing/getNaMiMarketingList",
                 request,NaMiMarketingResponse.class).getBody();
     }
+
+    @Override
+    public NaMiMarketingResponse getPerformanceList(NaMiMarketingRequest request) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-market/namimarketing/performanceInit",
+                request,NaMiMarketingResponse.class).getBody();
+    }
+
+    @Override
+    public NaMiMarketingResponse getPerformancInfo(NaMiMarketingRequest request) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-market/namimarketing/performanceInfo",
+                request,NaMiMarketingResponse.class).getBody();
+    }
+
+    @Override
+    public NaMiMarketingResponse selectNaMiMarketingRefferList(NaMiMarketingRequest request) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-market/namimarketing/selectNaMiMarketingRefferList",
+                request,NaMiMarketingResponse.class).getBody();
+    }
+    @Override
+    public  IntegerResponse selectNaMiMarketingRefferCount(NaMiMarketingRequest request){
+        return restTemplate.postForEntity("http://AM-ADMIN/am-market/namimarketing/selectNaMiMarketingRefferCount",
+                request,IntegerResponse.class).getBody();
+    }
+    @Override
+    public  IntegerResponse selectNaMiMarketingRefferTotalCount(NaMiMarketingRequest request){
+        return restTemplate.postForEntity("http://AM-ADMIN/am-market/namimarketing/selectNaMiMarketingRefferTotalCount",
+                request,IntegerResponse.class).getBody();
+    }
+
+    @Override
+    public NaMiMarketingResponse selectNaMiMarketingRefferTotalList(NaMiMarketingRequest request) {
+        return restTemplate.postForEntity("http://AM-ADMIN/am-market/namimarketing/selectNaMiMarketingRefferTotalList",
+                request,NaMiMarketingResponse.class).getBody();
+    }
+
+    @Override
+    public List<Integer> searchUserIdList(int sourceType) {
+        Response response = restTemplate.getForObject("http://AM-ADMIN/am-user/promotion/utm/searchUserIdList/" + sourceType, Response.class);
+        if (response != null) {
+            return response.getResultList();
+        }
+        return null;
+    }
+    @Override
+    public  NaMiMarketingResponse selectMonthList(){
+        NaMiMarketingResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-market/namimarketing/selectMonthList", NaMiMarketingResponse.class).getBody();
+        return response;
+    }
 }

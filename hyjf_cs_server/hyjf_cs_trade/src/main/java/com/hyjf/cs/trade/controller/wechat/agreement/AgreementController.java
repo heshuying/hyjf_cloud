@@ -29,13 +29,13 @@ public class AgreementController extends BaseTradeController{
      * @param aliasName
      * @return
      */
-    @ApiOperation(value = "获得协议模板pdf显示地址", httpMethod = "POST", notes = "获得协议模板pdf显示地址")
+    @ApiOperation(value = "wechat-获得协议模板pdf显示地址", httpMethod = "POST", notes = "wechat-获得协议模板pdf显示地址")
     @PostMapping("/getAgreementPdfOrImg")
     public NewAgreementResultBean gotAgreementPdfOrImg(@RequestParam(value="aliasName",required = true) String aliasName) {
         return agreementService.setProtocolImg(aliasName);
     }
 
-    @ApiOperation(value = "协议名称-动态获得", httpMethod = "GET", notes = "协议名称-动态获得")
+    @ApiOperation(value = "wechat-获得前台展示协议名称", httpMethod = "GET", notes = "wechat-获得前台展示协议名称")
     @GetMapping("/getdisplayNameDynamic")
     public JSONObject getdisplayNameDynamic() {
         JSONObject jsonObject = agreementService.getdisplayNameDynamicMethod();

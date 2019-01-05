@@ -1121,4 +1121,44 @@ public interface AmAdminClient {
      * @return
      */
     NaMiMarketingResponse getNaMiMarketingList(NaMiMarketingRequest naMiMarketingRequest);
+
+    /**
+     *业绩返现列表
+     * @param naMiMarketingRequest
+     * @return
+     */
+    NaMiMarketingResponse getPerformanceList(NaMiMarketingRequest naMiMarketingRequest);
+
+    /**
+     * 业绩返现详情列表
+     * @param request
+     * @return
+     */
+    NaMiMarketingResponse getPerformancInfo(NaMiMarketingRequest request);
+
+
+    /**
+     * 查询邀请人返现明细 列表
+     * @param naMiMarketingRequest
+     * @return
+     */
+    NaMiMarketingResponse  selectNaMiMarketingRefferList(NaMiMarketingRequest naMiMarketingRequest);
+
+    IntegerResponse selectNaMiMarketingRefferCount(NaMiMarketingRequest request);
+    IntegerResponse selectNaMiMarketingRefferTotalCount(NaMiMarketingRequest request);
+    /**
+     * 查询邀请人返现统计 列表
+     * @param naMiMarketingRequest
+     * @return
+     */
+    NaMiMarketingResponse selectNaMiMarketingRefferTotalList(NaMiMarketingRequest naMiMarketingRequest);
+
+    NaMiMarketingResponse selectMonthList();
+
+    /**
+     * 根据条件查询符合条件的sourceId集合
+     * @param sourceType
+     * @return
+     */
+    List<Integer> searchUserIdList(int sourceType);
 }

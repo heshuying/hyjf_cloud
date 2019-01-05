@@ -74,7 +74,7 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
 
     @Override
     public ContentArticleVO getNoticeInfo(Integer id) {
-        return amConfigClient.getNoticeInfo(id);
+        return amConfigClient.getContentArticleById(id);
     }
 
     /**

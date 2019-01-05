@@ -196,6 +196,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             map.put("account","0");
             map.put("borrowNid",request.getBorrowNid());
             map.put("isPrincipal","0");
+            map.put("investLevel",borrow.getInvestLevel());
             map.putAll(resultEval);
             result.setData(map);
             return result;
@@ -278,6 +279,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
             Map<String, Object> map = BankCallUtils.callApiMap(callBean);
             WebResult<Map<String, Object>> result = new WebResult<Map<String, Object>>();
             map.putAll(resultEval);
+            map.put("investLevel",borrow.getInvestLevel());
             result.setData(map);
             return result;
         } catch (Exception e) {
@@ -571,10 +573,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     @Override
     public BankCallResult borrowTenderBgReturn(BankCallBean bean, String couponGrantId) {
         logger.info("开始调用散标出借异步方法,logOrdId:{},userId:{},优惠券:{},平台为:{} 返回码为：{}",bean.getLogOrderId(),bean.getLogUserId(),couponGrantId,bean.getLogClient(),bean.getRetCode());
-        // 用户Userid
-        if(couponGrantId==null||couponGrantId.equals("null") ||couponGrantId.equals("")){
-            couponGrantId = "0";
-        }
+        // 用户userId
+		if (couponGrantId == null || "null".equals(couponGrantId) || couponGrantId.equals("")) {
+			couponGrantId = "0";
+		}
         int userId = StringUtils.isBlank(bean.getLogUserId()) ? 0 : Integer.parseInt(bean.getLogUserId());
         // 出借结果返回码
         String respCode = bean.getRetCode();
@@ -1351,6 +1353,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
         investInfo.put("revaluationMoney","");
         investInfo.put("riskLevelDesc","");
         investInfo.put("projectRiskLevelDesc","");
+        investInfo.put("revalPrincipalJudge",false);
         //测评判断逻辑开始
         UserVO loginUser = amUserClient.findUserById(tender.getUserId());
         //风险测评

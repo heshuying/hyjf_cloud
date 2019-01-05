@@ -18,6 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
+import java.util.List;
 
 /**
  * @author DongZeShan
@@ -71,7 +72,7 @@ public class AdminInterceptor implements HandlerInterceptor {
 				return true;
 			}
 			// 获取该角色 权限列表
-			/*List<String> perm = (List<String>) request.getSession().getAttribute("permission");
+			List<String> perm = (List<String>) request.getSession().getAttribute("permission");
 			if(perm.isEmpty()){
 				return false;
 			}
@@ -79,9 +80,10 @@ public class AdminInterceptor implements HandlerInterceptor {
 			for(String value : authorityAnnotation.value()){
 
 				if(!perm.contains(authorityAnnotation.key() + ":" + value)){
-					return false;
+					throw new ReturnMessageException(MsgEnum.ERR_USER_AUTHORITY);
+					//return false;
 				}
-			}*/
+			}
 			return true;
 //			for (String string : perm) {
 //				if (string.equals(authorityAnnotation.key() + ":" + authorityAnnotation.value())) {

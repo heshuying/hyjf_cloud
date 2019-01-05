@@ -447,6 +447,11 @@ public class UtmServiceImpl extends BaseServiceImpl implements UtmService {
         return 0;
     }
 
+    @Override
+    public List<Integer> searchUserIdList(int sourceType) {
+        return utmRegCustomizeMapper.searchUserIdList(sourceType);
+    }
+
     /**
      * @Author walter.limeng
      * @Description  转换utmplat对象

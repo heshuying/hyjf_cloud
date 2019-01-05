@@ -30,6 +30,8 @@ public class ContentPartnerServiceImpl implements ContentPartnerService {
 	public List<Link> searchAction(ContentPartnerRequest request) {
 		LinkExample example = new LinkExample();
 		LinkExample.Criteria criteria = example.createCriteria();
+		// 合作伙伴
+		criteria.andTypeEqualTo(2);
 		if (StringUtils.isNotBlank(request.getWebname())) {
 			criteria.andWebnameEqualTo(request.getWebname());
 		}
@@ -41,8 +43,6 @@ public class ContentPartnerServiceImpl implements ContentPartnerService {
 			criteria.andStatusEqualTo(request.getStatus());
 		}
 		if (request.getPartnerType() != null) {
-			criteria.andStatusEqualTo(1);// 启用状态
-			criteria.andTypeEqualTo(2);// 合作伙伴
 			criteria.andPartnerTypeEqualTo(request.getPartnerType());
 		}
 		if (request.getCurrPage() > 0 && request.getPageSize() > 0) {
@@ -94,6 +94,8 @@ public class ContentPartnerServiceImpl implements ContentPartnerService {
 	public int selectCount(ContentPartnerRequest request) {
 		LinkExample example = new LinkExample();
 		LinkExample.Criteria criteria = example.createCriteria();
+		// 合作伙伴
+		criteria.andTypeEqualTo(2);
 		if (StringUtils.isNotBlank(request.getWebname())) {
 			criteria.andWebnameEqualTo(request.getWebname());
 		}
@@ -105,8 +107,6 @@ public class ContentPartnerServiceImpl implements ContentPartnerService {
 			criteria.andStatusEqualTo(request.getStatus());
 		}
 		if (request.getPartnerType() != null) {
-			criteria.andStatusEqualTo(1);// 启用状态
-			criteria.andTypeEqualTo(2);// 合作伙伴
 			criteria.andPartnerTypeEqualTo(request.getPartnerType());
 		}
 		example.setOrderByClause("`partner_type` ASC,`order` Asc,`create_time` Desc");

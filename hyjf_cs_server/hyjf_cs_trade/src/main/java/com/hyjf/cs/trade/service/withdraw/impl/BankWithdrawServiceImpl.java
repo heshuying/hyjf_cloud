@@ -188,7 +188,6 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         // 银联行号
         String payAllianceCode = bean.getLogAcqResBean() == null ? "" : bean.getLogAcqResBean().getPayAllianceCode();
         int nowTime = GetDate.getNowTime10(); // 当前时间
-        // TODO
         Date nowDate = new Date();
         List<AccountWithdrawVO> listAccountWithdraw = this.amTradeClient.selectAccountWithdrawByOrdId(ordId);
 
@@ -626,7 +625,6 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
     private BankWithdrawBeanRequest createBankWithdrawBeanRequest(AccountWithdrawVO accountWithdraw, BigDecimal transAmt, String fee, BigDecimal feeAmt, BigDecimal total, int userId, String ordId, int nowTime, String accountId, String ip) {
         BankWithdrawBeanRequest bankWithdrawBeanRequest = new BankWithdrawBeanRequest();
-        // TODO
         Date nowDate = new Date();
         bankWithdrawBeanRequest.setUserId(userId);
         bankWithdrawBeanRequest.setTransAmt(transAmt);
@@ -1745,8 +1743,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             result.setCardNo((cardNo==null || "".equals(cardNo))?"银行卡已删除":cardNo);
             result.setBank(accountWithdrawVO.getBank());
             result.setStatus(map.get(String.valueOf(accountWithdrawVO.getStatus())));
-            //TODO:这里有问题，数据库表的字段已经更换。同时由于nxl代码中有关于老字段的应用，所以这里需要确认
-            // result.setWithdrawTime(accountWithdrawVO.getAddtime());
+            result.setWithdrawTime(String.valueOf(accountWithdrawVO.getCreateTime()));
             result.setWithdrawTime(GetDate.dateToString(accountWithdrawVO.getCreateTime()));
             resultList.add(result);
         }

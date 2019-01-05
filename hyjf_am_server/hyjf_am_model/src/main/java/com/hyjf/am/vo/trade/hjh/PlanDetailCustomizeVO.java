@@ -78,6 +78,16 @@ public class PlanDetailCustomizeVO extends BaseVO {
 	// 默认0 天标，1 月标
 	private String isMonth;
 
+	private String investLevel;
+
+	public String getInvestLevel() {
+		return investLevel;
+	}
+
+	public void setInvestLevel(String investLevel) {
+		this.investLevel = investLevel;
+	}
+
 	public PlanDetailCustomizeVO() {
 		super();
 	}

@@ -460,6 +460,29 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
+    /**
+     * 根据条件获取还款计划分期信息
+     * add by yangchangwei 20181227
+     * @param borrowNid
+     * @param nid
+     * @param period
+     * @return
+     */
+    @Override
+    public BorrowRecoverPlanVO getBorrowRecoverPlanByNidandPeriod(String borrowNid, String nid, Integer period) {
+
+        BorrowRecoverPlanVO info = new BorrowRecoverPlanVO();
+        info.setBorrowNid(borrowNid);
+        info.setNid(nid);
+        info.setRecoverPeriod(period);
+        String url = "http://AM-TRADE/am-trade/batch/fddpush/getBorrowRecoverPlanByNidandPeriod";
+        BorrowRecoverPlanResponse response = restTemplate.postForEntity(url, info, BorrowRecoverPlanResponse.class).getBody();
+        if(response != null){
+            return response.getResult();
+        }
+        return null;
+    }
+
 
     /**
      * 根据contract_id查询垫付协议生成详情

@@ -16,4 +16,18 @@ public interface NaMiMarketingService {
      * @return
      */
     NaMiMarketingResponse getRecordList(NaMiMarketingRequest naMiMarketingRequest);
+
+    /**
+     * 业绩返现列表
+     * @param naMiMarketingRequest
+     * @return
+     */
+    NaMiMarketingResponse getPerformanceList(NaMiMarketingRequest naMiMarketingRequest);
+
+    /**
+     * 业绩返现详情列表
+     * @param naMiMarketingRequest
+     * @return
+     */
+    NaMiMarketingResponse getPerformanceInfo(NaMiMarketingRequest naMiMarketingRequest);
 }
