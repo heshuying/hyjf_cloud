@@ -206,7 +206,7 @@ public class NaMiMarketController {
      * @return
      */
     @PostMapping("/performanceInfo")
-    public NaMiMarketingResponse performanceInfo(NaMiMarketingRequest request) {
+    public NaMiMarketingResponse performanceInfo(@RequestBody NaMiMarketingRequest request) {
         NaMiMarketingResponse response = new NaMiMarketingResponse();
         Map<String, PerformanceReturnDetailVO> map = response.getMap();
         //id为空，不查询

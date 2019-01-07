@@ -102,6 +102,7 @@ public class MongoSeachController extends BaseController {
     public AccountWebListResponse queryWebList(@RequestBody AccountWebListVO accountWebList) {
         AccountWebListResponse response = new AccountWebListResponse();
         int recordTotal = (int) accountWebListDao.queryWebCount(accountWebList);
+        logger.info("网站明细总条数recordTotal=="+recordTotal);
         if (recordTotal > 0) {
             Paginator paginator = new Paginator(accountWebList.getCurrPage(), recordTotal,accountWebList.getPageSize());
             List<AccountWebList> recordList = accountWebListDao.queryWebList(accountWebList, paginator.getOffset(), paginator.getLimit());

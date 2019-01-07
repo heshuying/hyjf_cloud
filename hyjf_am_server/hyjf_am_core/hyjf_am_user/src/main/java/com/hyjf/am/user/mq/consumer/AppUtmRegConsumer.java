@@ -1,8 +1,10 @@
 package com.hyjf.am.user.mq.consumer;
 
-import java.math.BigDecimal;
-import java.util.Date;
-
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.user.dao.model.auto.AppUtmReg;
+import com.hyjf.am.user.service.front.user.AppUtmRegService;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.validator.Validator;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -15,11 +17,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.user.dao.model.auto.AppUtmReg;
-import com.hyjf.am.user.service.front.user.AppUtmRegService;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.validator.Validator;
+import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author xiasq
@@ -30,14 +29,13 @@ import com.hyjf.common.validator.Validator;
 @RocketMQMessageListener(topic = MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.APP_CHANNEL_STATISTICS_DETAIL_GROUP)
 public class AppUtmRegConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 	private static final Logger logger = LoggerFactory.getLogger(AppUtmRegConsumer.class);
-
 	@Autowired
 	private AppUtmRegService appUtmRegService;
 	
 	
 	@Override
 	public void onMessage(MessageExt  message) {
-		logger.info("AppChannelStatisticsDetailConsumer 收到消息，开始处理....msgs is :{}", new String(message.getBody()));
+		logger.info("AppUtmRegConsumer 收到消息，开始处理....msgs is :{}", new String(message.getBody()));
 
 		MessageExt msg = message;
 
@@ -50,7 +48,7 @@ public class AppUtmRegConsumer implements RocketMQListener<MessageExt>, RocketMQ
 					logger.error("参数错误，userId is null...");
 					return ;
 				}
-				// 更新AppChannelStatisticsDetailDao开户时间
+				// 更新开户时间
 				AppUtmReg entity = appUtmRegService.findByUserId(userId);
 				if (entity != null) {
 					entity.setOpenAccountTime(new Date());
@@ -105,17 +103,12 @@ public class AppUtmRegConsumer implements RocketMQListener<MessageExt>, RocketMQ
 
 	@Override
     public void prepareStart(DefaultMQPushConsumer defaultMQPushConsumer) {
-//		defaultMQPushConsumer.setInstanceName(String.valueOf(System.currentTimeMillis()));
-//		defaultMQPushConsumer.setConsumerGroup(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_GROUP);
-//		// 订阅指定MyTopic下tags等于MyTag
-//		defaultMQPushConsumer.subscribe(MQConstant.APP_CHANNEL_STATISTICS_DETAIL_TOPIC, "*");
 		// 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
 		// 如果非第一次启动，那么按照上次消费的位置继续消费
 		defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
 		// 设置为集群消费(区别于广播消费)
 		defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
 		defaultMQPushConsumer.setMaxReconsumeTimes(3);
-//		defaultMQPushConsumer.registerMessageListener(new MessageListener());
-		logger.info("====AppChannelStatisticsDetail consumer=====");
+		logger.info("====AppUtmRegConsumer consumer=====");
 	}
 }
