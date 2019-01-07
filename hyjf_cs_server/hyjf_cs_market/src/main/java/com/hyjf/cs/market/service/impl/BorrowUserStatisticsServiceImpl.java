@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.market.service.impl;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.datacollect.BorrowUserStatisticVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
@@ -53,12 +52,12 @@ public class BorrowUserStatisticsServiceImpl extends BaseMarketServiceImpl imple
 		BigDecimal sumBorrowUserMoneyTopOne = amTradeClient.sumBorrowUserMoneyTopOne();
 		BorrowUserStatisticVO statisticVO = csMessageClient.selectBorrowUserStatistic();
 		BorrowUserStatisticVO record = new BorrowUserStatisticVO();
-		record.setBorrowuserCountTotal(countBorrowUser);
-		record.setBorrowuserCountCurrent(countBorrowUserCurrent);
-		record.setTenderuserCountCurrent(countCurrentTenderUser);
-		record.setBorrowuserMoneyTotal(sumBorrowUserMoney);
-		record.setBorrowuserMoneyTopone(sumBorrowUserMoneyTopOne);
-		record.setBorrowuserMoneyTopten(sumBorrowUserMoneyTopTen);
+		record.setBorrowUserCountTotal(countBorrowUser);
+		record.setBorrowUserCountCurrent(countBorrowUserCurrent);
+		record.setTenderUserCountCurrent(countCurrentTenderUser);
+		record.setBorrowUserMoneyTotal(sumBorrowUserMoney);
+		record.setBorrowUserMoneyTopOne(sumBorrowUserMoneyTopOne);
+		record.setBorrowUserMoneyTopTen(sumBorrowUserMoneyTopTen);
 		if (statisticVO == null) {
 			// 第一次插入
 			record.setAddTime(GetDate.getNowTime10());

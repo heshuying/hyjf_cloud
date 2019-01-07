@@ -16,17 +16,17 @@ import java.math.BigDecimal;
 public class BorrowUserStatistic implements Serializable {
     private String id;
 
-    private Integer borrowuserCountTotal;
+    private Integer borrowUserCountTotal;
 
-    private Integer borrowuserCountCurrent;
+    private Integer borrowUserCountCurrent;
 
-    private BigDecimal borrowuserMoneyTopten;
+    private BigDecimal borrowUserMoneyTopTen;
 
-    private BigDecimal borrowuserMoneyTopone;
+    private BigDecimal borrowUserMoneyTopOne;
 
-    private BigDecimal borrowuserMoneyTotal;
+    private BigDecimal borrowUserMoneyTotal;
 
-    private Integer tenderuserCountCurrent;
+    private Integer tenderUserCountCurrent;
 
     private Integer addTime;
 
@@ -42,52 +42,52 @@ public class BorrowUserStatistic implements Serializable {
         this.id = id;
     }
 
-    public Integer getBorrowuserCountTotal() {
-        return borrowuserCountTotal;
+    public Integer getBorrowUserCountTotal() {
+        return borrowUserCountTotal;
     }
 
-    public void setBorrowuserCountTotal(Integer borrowuserCountTotal) {
-        this.borrowuserCountTotal = borrowuserCountTotal;
+    public void setBorrowUserCountTotal(Integer borrowUserCountTotal) {
+        this.borrowUserCountTotal = borrowUserCountTotal;
     }
 
-    public Integer getBorrowuserCountCurrent() {
-        return borrowuserCountCurrent;
+    public Integer getBorrowUserCountCurrent() {
+        return borrowUserCountCurrent;
     }
 
-    public void setBorrowuserCountCurrent(Integer borrowuserCountCurrent) {
-        this.borrowuserCountCurrent = borrowuserCountCurrent;
+    public void setBorrowUserCountCurrent(Integer borrowUserCountCurrent) {
+        this.borrowUserCountCurrent = borrowUserCountCurrent;
     }
 
-    public BigDecimal getBorrowuserMoneyTopten() {
-        return borrowuserMoneyTopten;
+    public BigDecimal getBorrowUserMoneyTopTen() {
+        return borrowUserMoneyTopTen;
     }
 
-    public void setBorrowuserMoneyTopten(BigDecimal borrowuserMoneyTopten) {
-        this.borrowuserMoneyTopten = borrowuserMoneyTopten;
+    public void setBorrowUserMoneyTopTen(BigDecimal borrowUserMoneyTopTen) {
+        this.borrowUserMoneyTopTen = borrowUserMoneyTopTen;
     }
 
-    public BigDecimal getBorrowuserMoneyTopone() {
-        return borrowuserMoneyTopone;
+    public BigDecimal getBorrowUserMoneyTopOne() {
+        return borrowUserMoneyTopOne;
     }
 
-    public void setBorrowuserMoneyTopone(BigDecimal borrowuserMoneyTopone) {
-        this.borrowuserMoneyTopone = borrowuserMoneyTopone;
+    public void setBorrowUserMoneyTopOne(BigDecimal borrowUserMoneyTopOne) {
+        this.borrowUserMoneyTopOne = borrowUserMoneyTopOne;
     }
 
-    public BigDecimal getBorrowuserMoneyTotal() {
-        return borrowuserMoneyTotal;
+    public BigDecimal getBorrowUserMoneyTotal() {
+        return borrowUserMoneyTotal;
     }
 
-    public void setBorrowuserMoneyTotal(BigDecimal borrowuserMoneyTotal) {
-        this.borrowuserMoneyTotal = borrowuserMoneyTotal;
+    public void setBorrowUserMoneyTotal(BigDecimal borrowUserMoneyTotal) {
+        this.borrowUserMoneyTotal = borrowUserMoneyTotal;
     }
 
-    public Integer getTenderuserCountCurrent() {
-        return tenderuserCountCurrent;
+    public Integer getTenderUserCountCurrent() {
+        return tenderUserCountCurrent;
     }
 
-    public void setTenderuserCountCurrent(Integer tenderuserCountCurrent) {
-        this.tenderuserCountCurrent = tenderuserCountCurrent;
+    public void setTenderUserCountCurrent(Integer tenderUserCountCurrent) {
+        this.tenderUserCountCurrent = tenderUserCountCurrent;
     }
 
     public Integer getAddTime() {

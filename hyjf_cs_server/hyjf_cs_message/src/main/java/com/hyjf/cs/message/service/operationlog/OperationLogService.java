@@ -1,6 +1,6 @@
 package com.hyjf.cs.message.service.operationlog;
 
-import com.hyjf.cs.message.bean.ic.UserOperationLog;
+import com.hyjf.cs.message.bean.ic.userbehaviourn.UserOperationLog;
 
 import java.util.List;
 import java.util.Map;
