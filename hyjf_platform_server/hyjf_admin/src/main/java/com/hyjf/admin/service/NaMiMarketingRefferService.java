@@ -28,6 +28,7 @@ public interface NaMiMarketingRefferService {
      */
     NaMiMarketingResponse selectNaMiMarketingRefferTotalList(NaMiMarketingRequest naMiMarketingRequest);
 
+    NaMiMarketingResponse selectMonthList();
     IntegerResponse selectNaMiMarketingRefferTotalCount(NaMiMarketingRequest request);
 
 

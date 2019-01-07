@@ -573,10 +573,10 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
     @Override
     public BankCallResult borrowTenderBgReturn(BankCallBean bean, String couponGrantId) {
         logger.info("开始调用散标出借异步方法,logOrdId:{},userId:{},优惠券:{},平台为:{} 返回码为：{}",bean.getLogOrderId(),bean.getLogUserId(),couponGrantId,bean.getLogClient(),bean.getRetCode());
-        // 用户Userid
-        if(couponGrantId==null||couponGrantId.equals("null") ||couponGrantId.equals("")){
-            couponGrantId = "0";
-        }
+        // 用户userId
+		if (couponGrantId == null || "null".equals(couponGrantId) || couponGrantId.equals("")) {
+			couponGrantId = "0";
+		}
         int userId = StringUtils.isBlank(bean.getLogUserId()) ? 0 : Integer.parseInt(bean.getLogUserId());
         // 出借结果返回码
         String respCode = bean.getRetCode();

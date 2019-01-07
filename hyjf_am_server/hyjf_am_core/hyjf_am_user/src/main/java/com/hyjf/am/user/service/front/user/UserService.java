@@ -3,7 +3,6 @@ package com.hyjf.am.user.service.front.user;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.model.auto.*;
-import com.hyjf.am.user.dao.model.customize.UserUtmInfoCustomize;
 import com.hyjf.am.user.service.BaseService;
 import com.hyjf.am.vo.admin.locked.LockedUserInfoVO;
 import com.hyjf.am.vo.user.SpreadsUserVO;
@@ -87,14 +86,6 @@ public interface UserService extends BaseService {
 	int updateByPrimaryKeySelective(HjhUserAuth record);
 
     void updateUserAuthInves(BankRequest bean);
-
-	/**
-	 * 通过当前用户ID 查询用户所在一级分部,从而关联用户所属渠道
-	 * @param userId
-	 * @return
-	 * @Author : huanghui
-	 */
-	UserUtmInfoCustomize getUserUtmInfo(Integer userId);
 
 	/**
 	 * 修改用户表By主键

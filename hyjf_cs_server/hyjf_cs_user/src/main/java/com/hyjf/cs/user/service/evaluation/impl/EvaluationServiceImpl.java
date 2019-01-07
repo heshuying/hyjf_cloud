@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.user.service.evaluation.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.google.common.base.Strings;
 import com.hyjf.am.resquest.user.AnswerRequest;
@@ -32,7 +31,6 @@ import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
 import com.hyjf.cs.user.service.evaluation.EvaluationService;
 import com.hyjf.cs.user.service.impl.BaseUserServiceImpl;
-import com.hyjf.soa.apiweb.CommonParamBean;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -130,19 +128,12 @@ public class EvaluationServiceImpl extends BaseUserServiceImpl implements Evalua
         // String
         String result = StringUtils.EMPTY;
         if (StringUtils.isEmpty(resultActivity) && StringUtils.isEmpty(resultPlatform)) {
-            CommonParamBean couponParamBean = new CommonParamBean();
-            // 用户编号
-            couponParamBean.setUserId(String.valueOf(userId));
-            // 评测送加息券
-            couponParamBean.setSendFlg(1);
             // 发放优惠券（1张加息券）
             try {
                 JSONObject params = new JSONObject();
                 params.put("mqMsgId", GetCode.getRandomCode(10));
                 params.put("userId", String.valueOf(userId));
                 params.put("sendFlg", "11");
-                String signValue = StringUtils.lowerCase(MD5.toMD5Code(systemConfig.couponAccesskey + String.valueOf(userId) + 11 + systemConfig.couponAccesskey));
-                params.put("sign", signValue);
                 commonProducer.messageSend(new MessageContent(MQConstant.GRANT_COUPON_TOPIC,
                         UUID.randomUUID().toString(), params));
             } catch (MQException e) {

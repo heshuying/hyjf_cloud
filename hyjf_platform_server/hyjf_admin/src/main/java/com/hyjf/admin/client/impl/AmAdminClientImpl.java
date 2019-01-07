@@ -1991,4 +1991,9 @@ public class AmAdminClientImpl implements AmAdminClient {
         }
         return null;
     }
+    @Override
+    public  NaMiMarketingResponse selectMonthList(){
+        NaMiMarketingResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-market/namimarketing/selectMonthList", NaMiMarketingResponse.class).getBody();
+        return response;
+    }
 }

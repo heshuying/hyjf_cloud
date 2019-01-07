@@ -9,6 +9,7 @@ import com.hyjf.am.response.user.*;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.dao.model.customize.UserUtmInfoCustomize;
 import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.user.*;
@@ -838,5 +839,30 @@ public class UserController extends BaseController {
     public int findUserByUsername(@PathVariable String userId) {
         logger.info("findUserByCondition run...condition is :{}", userId);
         return userService.isExistsUser(userId);
+    }
+
+    /**
+     * 通过当前用户ID 查询用户所在一级分部,从而关联用户所属渠道
+     * @param userId
+     * @return
+     * @Author : huanghui
+     */
+    @RequestMapping(value = "/getUserUtmInfo/{userId}", method = RequestMethod.GET)
+    public UserUtmInfoResponse getUserUtmInfo(@PathVariable Integer userId){
+        logger.info("getUserUtmInfo run...userId is :{}", userId);
+        UserUtmInfoResponse userUtmInfoResponse = new UserUtmInfoResponse();
+
+        if (userId != null){
+            UserUtmInfoCustomize userUtmInfo = userService.getUserUtmInfo(userId);
+            logger.info("getUserUtmInfo run...user is :{}", userUtmInfo);
+            if (userUtmInfo != null){
+                UserUtmInfoCustomizeVO userUtmInfoCustomizeVO = new UserUtmInfoCustomizeVO();
+                BeanUtils.copyProperties(userUtmInfo, userUtmInfoCustomizeVO);
+                userUtmInfoResponse.setResult(userUtmInfoCustomizeVO);
+                userUtmInfoResponse.setRtn(Response.SUCCESS);
+            }
+            return userUtmInfoResponse;
+        }
+        return null;
     }
 }

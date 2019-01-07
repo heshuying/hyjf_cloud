@@ -162,7 +162,7 @@ public interface UtmRegCustomizeMapper {
     int selectPcChannelReconciliationRecordHjhCount(ChannelReconciliationRequest request);
 
     /**
-     * 查询app统计明细计划数量
+     * 查询app统计明细数量
      * @param request
      * @return
      */
