@@ -1,8 +1,8 @@
 package com.hyjf.cs.message.service.report;
 
 import com.hyjf.cs.common.service.BaseService;
-import com.hyjf.cs.message.bean.ic.OperationGroupReport;
-import com.hyjf.cs.message.bean.ic.OperationReport;
+import com.hyjf.cs.message.bean.ic.report.OperationGroupReport;
+import com.hyjf.cs.message.bean.ic.report.OperationReport;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

@@ -4,8 +4,8 @@ package com.hyjf.cs.message.controller.web.operationaldata;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.message.PlatDataAgeDataBean;
 import com.hyjf.cs.common.bean.result.WebResult;
-import com.hyjf.cs.message.bean.ic.OperationGroupReport;
-import com.hyjf.cs.message.bean.ic.OperationReport;
+import com.hyjf.cs.message.bean.ic.report.OperationGroupReport;
+import com.hyjf.cs.message.bean.ic.report.OperationReport;
 import com.hyjf.cs.message.bean.ic.SubEntity;
 import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import io.swagger.annotations.Api;
@@ -223,11 +223,11 @@ public class PlatDataStatisticsController {
 
         //借款人相关数据统计：
 
-        jsonObject.put("borrowuserCountTotal", oe.getBorrowuserCountTotal());
-        jsonObject.put("borrowuserCountCurrent", oe.getBorrowuserCountCurrent());
-        jsonObject.put("tenderuserCountCurrent", oe.getTenderuserCountCurrent());
-        jsonObject.put("borrowuserMoneyTopone", oe.getBorrowuserMoneyTopone().setScale(2, BigDecimal.ROUND_DOWN));
-        jsonObject.put("borrowuserMoneyTopten", oe.getBorrowuserMoneyTopten().setScale(2, BigDecimal.ROUND_DOWN));
+        jsonObject.put("borrowuserCountTotal", oe.getBorrowUserCountTotal());
+        jsonObject.put("borrowuserCountCurrent", oe.getBorrowUserCountCurrent());
+        jsonObject.put("tenderuserCountCurrent", oe.getTenderUserCountCurrent());
+        jsonObject.put("borrowuserMoneyTopone", oe.getBorrowUserMoneyTopOne().setScale(2, BigDecimal.ROUND_DOWN));
+        jsonObject.put("borrowuserMoneyTopten", oe.getBorrowUserMoneyTopTen().setScale(2, BigDecimal.ROUND_DOWN));
         result.setData(jsonObject);
         return result;
     }

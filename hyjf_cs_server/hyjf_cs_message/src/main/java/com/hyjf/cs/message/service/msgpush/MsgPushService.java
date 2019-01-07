@@ -4,7 +4,6 @@
 package com.hyjf.cs.message.service.msgpush;
 
 import com.hyjf.am.vo.config.MessagePushTagVO;
-import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import com.hyjf.cs.message.bean.mc.MessagePushMsg;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
 
@@ -20,12 +19,6 @@ public interface MsgPushService {
 	 * 消息推送
 	 */
 	void pushMessage();
-
-	/**
-	 * 消息推送统计
-	 * @return
-	 */
-	List<MessagePushTemplateVO> getAllTemplates();
 
 	/**
 	 * 获得消息列表数量

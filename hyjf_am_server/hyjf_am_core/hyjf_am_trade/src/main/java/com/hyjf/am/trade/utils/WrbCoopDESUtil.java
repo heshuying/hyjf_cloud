@@ -1,6 +1,6 @@
 package com.hyjf.am.trade.utils;
 
-import com.hyjf.am.trade.bean.WrbConstant;
+import com.hyjf.am.trade.utils.constant.WrbConstant;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 
