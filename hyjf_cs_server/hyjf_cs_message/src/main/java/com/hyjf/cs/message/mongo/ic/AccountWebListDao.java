@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
-import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -73,7 +72,7 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
     }
 
     public Criteria createCriteria(AccountWebListVO accountWebList){
-        Criteria criteria = new Criteria();
+        Criteria criteria = null;
         if(null!=accountWebList){
             criteria = Criteria.where("id").ne("").ne(null);
             if(StringUtils.isNotBlank(accountWebList.getOrdid())){
@@ -112,11 +111,9 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
         long startTime = System.currentTimeMillis();
 
         double total = 0;
-        // 结果集默认16M， 需要设置磁盘缓冲allowDiskUse(true)
 		Aggregation aggregation = Aggregation
 				.newAggregation(match(createCriteria(accountWebList)),
-						Aggregation.group("flag").sum("amount").as("amount"))
-				.withOptions(AggregationOptions.builder().allowDiskUse(true).build());
+						Aggregation.group("flag").sum("amount").as("amount"));
         AggregationResults<Map> ar = mongoTemplate.aggregate(aggregation,getEntityClass(), Map.class);
 
         long endTime = System.currentTimeMillis();
@@ -124,7 +121,8 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
 
         List<Map> result = ar.getMappedResults();
         for (Map<String,Object> map :result) {
-            total += Double.parseDouble(map.get("amount")==null||map.get("amount").equals("")?"0":map.get("amount").toString());
+			total += Double.parseDouble(
+					map.get("amount") == null || map.get("amount").equals("") ? "0" : map.get("amount").toString());
         }
 
         long endTime2 = System.currentTimeMillis();
