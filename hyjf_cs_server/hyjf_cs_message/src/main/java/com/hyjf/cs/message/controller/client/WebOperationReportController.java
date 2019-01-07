@@ -7,7 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.resquest.message.OperationReportRequest;
 import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.common.controller.BaseController;
-import com.hyjf.cs.message.bean.ic.OperationColumnReport;
+import com.hyjf.cs.message.bean.ic.report.OperationColumnReport;
 import com.hyjf.cs.message.service.report.OperationReportService;
 import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import io.swagger.annotations.Api;

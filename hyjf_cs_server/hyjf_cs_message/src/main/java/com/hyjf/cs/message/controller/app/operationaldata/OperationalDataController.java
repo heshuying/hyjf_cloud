@@ -3,8 +3,8 @@ package com.hyjf.cs.message.controller.app.operationaldata;
 
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.hyjf.cs.message.bean.ic.OperationGroupReport;
-import com.hyjf.cs.message.bean.ic.OperationReport;
+import com.hyjf.cs.message.bean.ic.report.OperationGroupReport;
+import com.hyjf.cs.message.bean.ic.report.OperationReport;
 import com.hyjf.cs.message.bean.ic.SubEntity;
 import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import io.swagger.annotations.Api;

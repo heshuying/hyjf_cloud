@@ -7,12 +7,10 @@ import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.ic.AppChannelStatistics;
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
-import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -38,7 +36,6 @@ public class AppChannelStatisticsDao extends BaseMongoDao<AppChannelStatistics> 
         String timeStartSrch = request.getTimeStartSrch();
         String timeEndSrch = request.getTimeEndSrch();
         String[] utmIdsSrch = request.getUtmIdsSrch();
-        Query query = new Query();
         Criteria criteria = new Criteria();
         if (StringUtils.isNotBlank(timeStartSrch) && StringUtils.isNotBlank(timeEndSrch)) {
             Integer begin = GetDate.dateString2Timestamp(timeStartSrch + " 00:00:00");
@@ -48,12 +45,7 @@ public class AppChannelStatisticsDao extends BaseMongoDao<AppChannelStatistics> 
         if (utmIdsSrch != null && utmIdsSrch.length > 0) {
             List<Integer> listInt = new ArrayList<>();
             List<String> sourceIds = Arrays.asList(utmIdsSrch);
-            CollectionUtils.collect(sourceIds, new Transformer() {
-                @Override
-                public Object transform(Object o) {
-                    return Integer.valueOf(String.valueOf(o));
-                }
-            },listInt);
+            CollectionUtils.collect(sourceIds, o -> Integer.valueOf(String.valueOf(o)),listInt);
             criteria.and("sourceId").in(listInt);
         }
         Aggregation aggregation = Aggregation.newAggregation(

@@ -7,10 +7,11 @@ import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.common.enums.DateEnum;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.ic.*;
+import com.hyjf.cs.message.bean.ic.report.*;
 import com.hyjf.cs.message.client.AmUserClient;
-import com.hyjf.cs.message.mongo.mc.BorrowUserStatisticMongDao;
-import com.hyjf.cs.message.mongo.mc.OperationMongDao;
-import com.hyjf.cs.message.mongo.mc.OperationMongoGroupDao;
+import com.hyjf.cs.message.mongo.ic.BorrowUserStatisticMongDao;
+import com.hyjf.cs.message.mongo.ic.report.OperationMongDao;
+import com.hyjf.cs.message.mongo.ic.report.OperationMongoGroupDao;
 import com.hyjf.cs.message.service.report.OperationReportJobNewService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -376,7 +377,7 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         operationMonthlyReport.setOperationReportId(operationReportId);//运营报告ID
 
 //        monthlyOperationReportMapper.insert(monthlyOperationReport);
-        monthlyOperationReportMongDao.insert(operationMonthlyReport);
+        operationMonthlyReportMongDao.insert(operationMonthlyReport);
 
     }
 
@@ -580,7 +581,7 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         operationQuarterReport.setOperationReportId(operationReportId);//运营报告ID
 
 //        quarterOperationReportMapper.insert(quarterOperationReport);
-        quarterOperationReportMongDao.insert(operationQuarterReport);
+        operationQuarterReportMongDao.insert(operationQuarterReport);
     }
 
     //保存半年度运营报告
@@ -688,7 +689,7 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         operationHalfYearReport.setOperationReportId(operationReportId);//运营报告ID
 
 //        halfYearOperationReportMapper.insert(halfYearOperationReport);
-        halfYearOperationReportMongDao.insert(operationHalfYearReport);
+        operationHalfYearReportMongDao.insert(operationHalfYearReport);
     }
 
     /**
@@ -875,7 +876,7 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         operationYearReport.setOperationReportId(operationReportId);//运营报告ID
 
 //        yearOperationReportMapper.insert(YearOperationReport);
-        yearOperationReportMongDao.insert(operationYearReport);
+        operationYearReportMongDao.insert(operationYearReport);
     }
 
 }

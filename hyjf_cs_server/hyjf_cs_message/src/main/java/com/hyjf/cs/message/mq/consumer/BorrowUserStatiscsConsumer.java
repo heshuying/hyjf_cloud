@@ -6,7 +6,7 @@ package com.hyjf.cs.message.mq.consumer;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.cs.message.bean.ic.BorrowUserStatistic;
-import com.hyjf.cs.message.mongo.mc.BorrowUserStatisticMongDao;
+import com.hyjf.cs.message.mongo.ic.BorrowUserStatisticMongDao;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
