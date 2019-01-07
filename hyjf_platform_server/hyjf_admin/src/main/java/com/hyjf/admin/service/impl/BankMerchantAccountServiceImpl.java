@@ -25,7 +25,6 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.*;
 import com.hyjf.pay.lib.chinapnr.util.ChinaPnrConstant;
-import com.hyjf.soa.apiweb.CommonSoaUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -41,23 +40,18 @@ import java.util.Map;
  */
 @Service
 public class BankMerchantAccountServiceImpl implements BankMerchantAccountService {
-
-    @Autowired
-    AmTradeClient amTradeClient;
-
-    @Autowired
-    AmConfigClient amConfigClient;
-
-    @Autowired
-    CsMessageClient csMessageClient;
-
-    @Autowired
-    SystemConfig systemConfig;
-
-
+    private static final String REQUEST_MAPPING = "/bank/merchant/account";
     private static final String OPT_SUCCESS_URL = "/result/success";
-
     private static final String OPT_ERROR_URL = "/result/fail";
+
+    @Autowired
+    private AmTradeClient amTradeClient;
+    @Autowired
+    private AmConfigClient amConfigClient;
+    @Autowired
+    private CsMessageClient csMessageClient;
+    @Autowired
+    private SystemConfig systemConfig;
 
     @Override
     public BankMerchantAccountResponse selectBankMerchantAccount(BankMerchantAccountListRequest form) {
@@ -105,7 +99,7 @@ public class BankMerchantAccountServiceImpl implements BankMerchantAccountServic
         String retUrl = systemConfig.getAdminFrontHost() +OPT_ERROR_URL+"?logOrdId="+bean.getLogOrderId()+"&type=pwd";
         String successUrl = systemConfig.getAdminFrontHost() +OPT_SUCCESS_URL+"?type=pwd";
         // 异步调用路
-        String bgRetUrl = systemConfig.getAdminHost() + CommonSoaUtils.REQUEST_MAPPING
+        String bgRetUrl = systemConfig.getAdminHost() + REQUEST_MAPPING
                 + "/passwordBgreturn";
         // 消息类型
         bean.setVersion(BankCallConstant.VERSION_10);
@@ -197,7 +191,7 @@ public class BankMerchantAccountServiceImpl implements BankMerchantAccountServic
         String retUrl = systemConfig.getAdminFrontHost() +OPT_ERROR_URL+"?logOrdId="+bean.getLogOrderId()+"&type=pwd";
         String successUrl = systemConfig.getAdminFrontHost() +OPT_SUCCESS_URL+"?type=pwd";
         // 异步调用路
-        String bgRetUrl = systemConfig.getAdminHost() + CommonSoaUtils.REQUEST_MAPPING
+        String bgRetUrl = systemConfig.getAdminHost() + REQUEST_MAPPING
                 + "/resetPasswordBgreturn";
         // 消息类型(用户开户)
         bean.setTxCode(BankCallConstant.TXCODE_PASSWORD_RESET_PAGE);

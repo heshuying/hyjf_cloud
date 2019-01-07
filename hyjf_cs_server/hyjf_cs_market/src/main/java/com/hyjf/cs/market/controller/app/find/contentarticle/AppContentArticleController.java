@@ -3,22 +3,24 @@
  */
 package com.hyjf.cs.market.controller.app.find.contentarticle;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.response.Response;
-import com.hyjf.am.response.app.AppContentArticleResponse;
-import com.hyjf.am.vo.config.ContentArticleVO;
-import com.hyjf.cs.common.bean.result.AppResult;
-import com.hyjf.cs.market.contants.ArticleTypeEnum;
-import com.hyjf.cs.market.controller.BaseMarketController;
-import com.hyjf.cs.market.service.AppContentArticleService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
+import java.text.SimpleDateFormat;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.app.AppContentArticleResponse;
+import com.hyjf.am.vo.config.ContentArticleVO;
+import com.hyjf.common.enums.ContentArticleEnum;
+import com.hyjf.cs.common.bean.result.AppResult;
+import com.hyjf.cs.market.controller.BaseMarketController;
+import com.hyjf.cs.market.service.AppContentArticleService;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 /**
  * @author dangzw
@@ -46,7 +48,7 @@ public class AppContentArticleController extends BaseMarketController {
 		logger.info("文章详情页: /hyjf-app/find/contentArticle/{articleType}/{articleId}", type, contentArticleId);
 		AppContentArticleResponse response = new AppContentArticleResponse();
 		response.setRtn("000");
-		response.setTopTitle(ArticleTypeEnum.getTitle(type));
+		response.setTopTitle(ContentArticleEnum.getName(String.valueOf(type)));
 		try {
 			// 根据id返回文章详情
 			ContentArticleVO contentArticle = appContentArticleService.getContentArticleById(contentArticleId);

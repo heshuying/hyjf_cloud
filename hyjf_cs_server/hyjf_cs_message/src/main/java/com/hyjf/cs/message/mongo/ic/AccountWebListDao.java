@@ -6,6 +6,7 @@ import com.hyjf.cs.message.bean.ic.AccountWebList;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
 import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
@@ -105,10 +106,12 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
 
     public double selectBorrowInvestAccount(AccountWebListVO accountWebList){
         double total = 0;
-        Aggregation aggregation = Aggregation.newAggregation(
-                match(createCriteria(accountWebList)),
-                Aggregation.group("id").sum("amount").as("amount")
-        );
+        // 结果集默认16M， 需要设置磁盘缓冲allowDiskUse(true)
+		Aggregation aggregation = Aggregation
+				.newAggregation(match(createCriteria(accountWebList)),
+						Aggregation.group("id").sum("amount").as("amount"))
+				.withOptions(AggregationOptions.builder().allowDiskUse(true).build());
+
         AggregationResults<Map> ar = mongoTemplate.aggregate(aggregation,getEntityClass(), Map.class);
         List<Map> result = ar.getMappedResults();
         for (Map<String,Object> map :result) {
