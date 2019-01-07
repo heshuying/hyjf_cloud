@@ -113,7 +113,7 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
         double total = 0;
 		Aggregation aggregation = Aggregation
 				.newAggregation(match(createCriteria(accountWebList)),
-						Aggregation.group("flag").sum("amount").as("amount"));
+						Aggregation.group("'hyjf'").sum("amount").as("amount"));
         AggregationResults<Map> ar = mongoTemplate.aggregate(aggregation,getEntityClass(), Map.class);
 
         long endTime = System.currentTimeMillis();
