@@ -874,7 +874,7 @@
 		WHEN ifnull(
 		(
 		SELECT
-		count(id)
+		id
 		FROM
 		hyjf_trade.ht_borrow_tender bt
 		WHERE
@@ -885,7 +885,7 @@
 		) + ifnull(
 		(
 		SELECT
-		count(assign_id)
+		assign_id
 		FROM
 		hyjf_trade.ht_credit_tender ct
 		WHERE
@@ -896,7 +896,7 @@
 		) + ifnull(
 		(
 		SELECT
-		count(id)
+		id
 		FROM
 		hyjf_trade.ht_borrow_tender_cpn bc
 		WHERE
@@ -907,7 +907,7 @@
 		) + ifnull(
 		(
 		SELECT
-		count(id)
+		id
 		FROM
 		hyjf_trade.ht_hjh_accede ha
 		WHERE
