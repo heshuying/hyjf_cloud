@@ -1,5 +1,6 @@
 package com.hyjf.am.admin.utils;
 
+import com.hyjf.am.admin.utils.constant.WrbConstant;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 
@@ -32,9 +33,9 @@ public class WrbCoopDESUtil {
     // 测试环境汇盈金服使用的加解密的key， 主要用来屏蔽敏感字段，比如userId
 //	public static final String PF_KEY = "uaIH/eUCWHMxOxUyeUWirnzjf+kEEG1/";
     // 生产环境风车理财提供的密钥字符串
-    public static final String KEY = "ByAsy7z4UV61V83a9JR2aFcWI3/WKZez";
+    public static final String KEY = WrbConstant.KEY;
     // 生产环境汇盈金服使用的加解密的key， 主要用来屏蔽敏感字段，比如userId
-    public static final String PF_KEY = "ByAsy7z4UV61V83a9JR2aFcWI3/WKZez";
+    public static final String PF_KEY = WrbConstant.PF_KEY;
 
     /**
      * des加密

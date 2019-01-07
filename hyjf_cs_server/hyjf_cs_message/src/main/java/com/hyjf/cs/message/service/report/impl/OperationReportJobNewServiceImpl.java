@@ -83,15 +83,15 @@ public class OperationReportJobNewServiceImpl extends StatisticsOperationReportB
         logger.info("BorrowUserStatistic is: {}", JSONObject.toJSONString(borrowUserStatistic));
         if(borrowUserStatistic!=null) {
             // 累计借款人
-            oe.setBorrowuserCountTotal(borrowUserStatistic.getBorrowuserCountTotal());
+            oe.setBorrowUserCountTotal(borrowUserStatistic.getBorrowUserCountTotal());
             // 当前出借人
-            oe.setBorrowuserCountCurrent(borrowUserStatistic.getBorrowuserCountCurrent());
+            oe.setBorrowUserCountCurrent(borrowUserStatistic.getBorrowUserCountCurrent());
             // 当前出借人
-            oe.setTenderuserCountCurrent(borrowUserStatistic.getTenderuserCountCurrent());
+            oe.setTenderUserCountCurrent(borrowUserStatistic.getTenderUserCountCurrent());
             // 最大单一借款人待还金额占比
-            oe.setBorrowuserMoneyTopone(borrowUserStatistic.getBorrowuserMoneyTopone().divide(borrowUserStatistic.getBorrowuserMoneyTotal(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(2, BigDecimal.ROUND_HALF_UP));
+            oe.setBorrowUserMoneyTopOne(borrowUserStatistic.getBorrowUserMoneyTopOne().divide(borrowUserStatistic.getBorrowuserMoneyTotal(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(2, BigDecimal.ROUND_HALF_UP));
             // 前十大借款人待还金额占比
-            oe.setBorrowuserMoneyTopten(borrowUserStatistic.getBorrowuserMoneyTopten().divide(borrowUserStatistic.getBorrowuserMoneyTotal(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(2, BigDecimal.ROUND_HALF_UP));
+            oe.setBorrowUserMoneyTopTen(borrowUserStatistic.getBorrowUserMoneyTopTen().divide(borrowUserStatistic.getBorrowuserMoneyTotal(), 4, BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal("100")).setScale(2, BigDecimal.ROUND_HALF_UP));
         }
         logger.info("借款数据....  oe is :{}", oe);
         operationMongDao.save(oe);
