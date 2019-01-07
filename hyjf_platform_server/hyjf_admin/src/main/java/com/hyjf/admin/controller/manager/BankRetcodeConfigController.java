@@ -85,7 +85,6 @@ public class BankRetcodeConfigController extends BaseController {
 
             // 没有添加权限 同时 也没能检索出数据的时候异常
             if (!isExists) {
-                //todo
 //                Subject currentUser = SecurityUtils.getSubject();
 //                currentUser.checkPermission(ShiroConstants.PERMISSION_ADD);
             }
@@ -113,9 +112,7 @@ public class BankRetcodeConfigController extends BaseController {
         String message = this.validatorFieldCheck(mv, adminRequest);
         // 返回码功能按钮是否重复
         if (this.bankRetcodeConfigService.isExistsReturnCode(adminRequest)) {
-//            todo
-//            String message = ValidatorFieldCheckUtil.getErrorMessage("retCode.repeat", "返回码");
-//            ValidatorFieldCheckUtil.validateSpecialError(mv, "retCode", adminRequest.getRetCode(), message);
+            message = "返回码重复";
         }
         // 数据检索
         if (StringUtils.isNotBlank(message)) {
@@ -148,9 +145,7 @@ public class BankRetcodeConfigController extends BaseController {
         String message = this.validatorFieldCheck(mv, adminRequest);
         // 返回码功能按钮是否重复
         if (this.bankRetcodeConfigService.isExistsReturnCode(adminRequest)) {
-//            todo
-//            String message = ValidatorFieldCheckUtil.getErrorMessage("retCode.repeat", "返回码");
-//            ValidatorFieldCheckUtil.validateSpecialError(mv, "retCode", adminRequest.getRetCode(), message);
+            message = "返回码重复";
         }
         // 数据检索
         if (StringUtils.isNotBlank(message)) {

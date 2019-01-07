@@ -56,7 +56,7 @@ public class BankConfigController extends BaseController {
        //可以直接使用
         BeanUtils.copyProperties(bankConfigRequestBean, request);
         AdminBankConfigResponse response = bankConfigService.bankConfigInit(request);
-        //获取图片路径-----todo
+        //获取图片路径
 //        String fileDomainUrl = UploadFileUtils.getDoPath(PropUtils.getSystem("file.domain.url"));
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);

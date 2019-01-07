@@ -8,7 +8,6 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetCilentIP;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.user.bean.SynBalanceRequestBean;
 import com.hyjf.cs.user.bean.SynBalanceResultBean;
 import com.hyjf.cs.user.bean.WxSynBalanceResultBean;
 import com.hyjf.cs.user.constants.ResultEnum;
@@ -62,10 +61,7 @@ public class WeChatSynBalanceController extends BaseUserController {
         /***********同步线下充值记录 start***********/
         BankOpenAccountVO bankOpenAccountVO = synBalanceService.getBankOpenAccount(user.getUserId());
         String ip = GetCilentIP.getIpAddr(request);
-        SynBalanceRequestBean bean = new SynBalanceRequestBean();
-        bean.setInstCode(user.getInstCode());
-        bean.setAccountId(bankOpenAccountVO.getAccount());
-        SynBalanceResultBean resultBean = synBalanceService.synBalance(bean,ip);
+		SynBalanceResultBean resultBean = synBalanceService.synBalance(bankOpenAccountVO.getAccount(), ip);
         //校验获取余额是否成功
         if ("成功".equals(resultBean.getStatusDesc().toString())) {
             //余额数据

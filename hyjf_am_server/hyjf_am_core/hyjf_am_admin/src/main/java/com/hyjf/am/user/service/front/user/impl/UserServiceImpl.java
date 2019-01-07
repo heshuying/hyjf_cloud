@@ -6,6 +6,7 @@ import com.google.common.base.Strings;
 import com.hyjf.am.resquest.user.*;
 import com.hyjf.am.user.dao.mapper.auto.HjhUserAuthMapper;
 import com.hyjf.am.user.dao.model.auto.*;
+import com.hyjf.am.user.dao.model.customize.UserUtmInfoCustomize;
 import com.hyjf.am.user.service.front.user.UserService;
 import com.hyjf.am.user.service.impl.BaseServiceImpl;
 import com.hyjf.am.vo.user.SpreadsUserVO;
@@ -1334,5 +1335,15 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
 			return  CommonUtils.checkAuthStatus(auth==null?null:auth.getAutoRepayStatus(),auth==null?null:auth.getAutoPaymentStatus());
 		}
 		return 1;
+	}
+
+	/**
+	 * 通过当前用户ID 查询用户所在一级分部,从而关联用户所属渠道
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public UserUtmInfoCustomize getUserUtmInfo(Integer userId) {
+		return userCustomizeMapper.getUserUtmInfo(userId);
 	}
 }
