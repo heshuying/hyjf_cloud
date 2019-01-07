@@ -24,7 +24,7 @@ public class BorrowUserStatistic implements Serializable {
 
     private BigDecimal borrowUserMoneyTopOne;
 
-    private BigDecimal borrowuserMoneyTotal;
+    private BigDecimal borrowUserMoneyTotal;
 
     private Integer tenderUserCountCurrent;
 
@@ -74,12 +74,12 @@ public class BorrowUserStatistic implements Serializable {
         this.borrowUserMoneyTopOne = borrowUserMoneyTopOne;
     }
 
-    public BigDecimal getBorrowuserMoneyTotal() {
-        return borrowuserMoneyTotal;
+    public BigDecimal getBorrowUserMoneyTotal() {
+        return borrowUserMoneyTotal;
     }
 
-    public void setBorrowuserMoneyTotal(BigDecimal borrowuserMoneyTotal) {
-        this.borrowuserMoneyTotal = borrowuserMoneyTotal;
+    public void setBorrowUserMoneyTotal(BigDecimal borrowUserMoneyTotal) {
+        this.borrowUserMoneyTotal = borrowUserMoneyTotal;
     }
 
     public Integer getTenderUserCountCurrent() {
