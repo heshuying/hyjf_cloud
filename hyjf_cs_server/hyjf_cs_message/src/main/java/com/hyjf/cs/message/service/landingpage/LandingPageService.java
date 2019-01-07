@@ -31,11 +31,11 @@ public interface LandingPageService {
      * @param adsType
      * @return
      */
-    public List<AdsVO> getAdsList(String adsType);
+    List<AdsVO> getAdsList(String adsType);
 
     /**
      * 数据统计
      * @return
      */
-    public CalculateInvestInterest getTenderSum();
+    CalculateInvestInterest getTenderSum();
 }

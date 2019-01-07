@@ -8,11 +8,13 @@ import com.hyjf.am.vo.message.OperationReportJobBean;
 import com.hyjf.am.vo.trade.OperationReportJobVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.common.service.BaseServiceImpl;
-import com.hyjf.cs.message.bean.ic.OperationColumnReport;
-import com.hyjf.cs.message.bean.ic.OperationUserReport;
+import com.hyjf.cs.message.bean.ic.report.OperationColumnReport;
+import com.hyjf.cs.message.bean.ic.userbehaviourn.UserOperationReport;
+import com.hyjf.cs.message.bean.ic.report.OperationTenthReport;
 import com.hyjf.cs.message.client.AmConfigClient;
 import com.hyjf.cs.message.client.AmUserClient;
-import com.hyjf.cs.message.mongo.mc.*;
+import com.hyjf.cs.message.mongo.ic.report.*;
+import com.hyjf.cs.message.mongo.ic.userbehaviourn.UserOperationReportMongDao;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -40,19 +42,19 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
     @Autowired
     public OperationReportColumnMongDao operationReportColumnMongDao;//运营报告
     @Autowired
-    public HalfYearOperationReportMongDao halfYearOperationReportMongDao;//半年度度运营报告
+    public OperationHalfYearReportMongDao operationHalfYearReportMongDao;//半年度度运营报告
     @Autowired
-    public MonthlyOperationReportMongDao monthlyOperationReportMongDao;//月度运营报告
+    public OperationMonthlyReportMongDao operationMonthlyReportMongDao;//月度运营报告
     @Autowired
     public OperationReportActivityMongDao operationReportActivityMongDao;//运营报告活动
     @Autowired
-    public QuarterOperationReportMongDao quarterOperationReportMongDao;//季度运营报告
+    public OperationQuarterReportMongDao operationQuarterReportMongDao;//季度运营报告
     @Autowired
-    public TenthOperationReportMongDao tenthOperationReportMongDao;//运营报告十大出借
+    public OperationTenthReportMongDao operationTenthReportMongDao;//运营报告十大出借
     @Autowired
     public UserOperationReportMongDao userOperationReportMongDao;//用户分析报告
     @Autowired
-    public YearOperationReportMongDao yearOperationReportMongDao;//年度运营报告
+    public OperationYearReportMongDao operationYearReportMongDao;//年度运营报告
 
 
     public static BigDecimal bigHundred = new BigDecimal(100);
@@ -205,7 +207,7 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
             userOperationReport.setAmountFirveStageTenderProportion(assignCompute(amountFirveStageTenderNum, amountStageTenderNumSum, bigflag));//50万以上出借人数（%）
         }
 
-        OperationUserReport operationUserReport = new OperationUserReport();
+        UserOperationReport operationUserReport = new UserOperationReport();
         BeanUtils.copyProperties(userOperationReport, operationUserReport);
         operationUserReport.setOperationReportId(operationReportId);//运营报告ID
 
@@ -350,12 +352,12 @@ public class StatisticsOperationReportBase extends BaseServiceImpl {
             }
         }
 
-        TenthOperationReportEntity tenthOperationReportEntity = new TenthOperationReportEntity();
-        BeanUtils.copyProperties(tenthOperationReport,tenthOperationReportEntity);
-        tenthOperationReportEntity.setOperationReportId(operationReportId);//运营报告ID
+        OperationTenthReport operationTenthReport = new OperationTenthReport();
+        BeanUtils.copyProperties(tenthOperationReport, operationTenthReport);
+        operationTenthReport.setOperationReportId(operationReportId);//运营报告ID
 
 //        tenthOperationReportMapper.insert(tenthOperationReport);
-        tenthOperationReportMongDao.insert(tenthOperationReportEntity);
+        operationTenthReportMongDao.insert(operationTenthReport);
     }
 
 

@@ -20,7 +20,6 @@ import org.springframework.data.mongodb.core.aggregation.AggregationResults;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 
@@ -49,7 +48,6 @@ public class ChannelStatisticsServiceImpl implements ChannelStatisticsService {
         String timeStartSrch = request.getTimeStartSrch();
         String timeEndSrch = request.getTimeEndSrch();
         String[] utmIdsSrch = request.getUtmIdsSrch();
-        Query query = new Query();
         Criteria criteria = new Criteria();
         if (StringUtils.isNotBlank(timeStartSrch) && StringUtils.isNotBlank(timeEndSrch)) {
             Integer begin = GetDate.dateString2Timestamp(timeStartSrch + " 00:00:00");

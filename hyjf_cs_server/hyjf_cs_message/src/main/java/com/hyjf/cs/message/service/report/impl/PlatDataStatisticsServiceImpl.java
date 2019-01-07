@@ -1,12 +1,12 @@
 package com.hyjf.cs.message.service.report.impl;
 
 import com.hyjf.cs.common.service.BaseServiceImpl;
-import com.hyjf.cs.message.bean.ic.OperationGroupReport;
-import com.hyjf.cs.message.bean.ic.OperationReport;
+import com.hyjf.cs.message.bean.ic.report.OperationGroupReport;
+import com.hyjf.cs.message.bean.ic.report.OperationReport;
 import com.hyjf.cs.message.bean.ic.TotalInvestAndInterestEntity;
 import com.hyjf.cs.message.mongo.ic.TotalInvestAndInterestMongoDao;
-import com.hyjf.cs.message.mongo.mc.OperationMongDao;
-import com.hyjf.cs.message.mongo.mc.OperationMongoGroupDao;
+import com.hyjf.cs.message.mongo.ic.report.OperationMongDao;
+import com.hyjf.cs.message.mongo.ic.report.OperationMongoGroupDao;
 import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import org.bson.Document;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -69,14 +69,21 @@ public class WebsiteController extends BaseController {
         AccountWebListVO accountWebList = new AccountWebListVO();
         BeanUtils.copyProperties(form, accountWebList);
         WebsiteResponse websiteResponse = new WebsiteResponse();
+
         //交易类型列表
+        Long startTime = System.currentTimeMillis();
         List<AccountTradeVO> trades= this.websiteService.selectTradeTypes();
+        logger.info("selectTradeTypes 耗时：" + (System.currentTimeMillis() - startTime));
+        startTime = System.currentTimeMillis();
         AccountWebListResponse response = websiteService.queryAccountWebList(accountWebList);
+        logger.info("queryAccountWebList 耗时：" + (System.currentTimeMillis() - startTime));
         if (!Response.isSuccess(response)) {
             return new AdminResult<>();
         }
         //交易金额总计
+        startTime = System.currentTimeMillis();
         String sumAccount = this.websiteService.selectBorrowInvestAccount(accountWebList);
+        logger.info("selectBorrowInvestAccount 耗时：" + (System.currentTimeMillis() - startTime));
         if(response == null||response.getRecordTotal()==0) {
             sumAccount = "0.00";
         }

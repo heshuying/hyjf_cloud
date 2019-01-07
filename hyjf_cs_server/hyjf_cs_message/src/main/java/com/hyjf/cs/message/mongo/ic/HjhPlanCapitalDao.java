@@ -5,7 +5,6 @@ import com.hyjf.am.vo.trade.HjhPlanCapitalVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanCapitalCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.common.util.GetDateUtils;
 import com.hyjf.cs.message.bean.ic.HjhPlanCapital;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -27,9 +26,6 @@ public class HjhPlanCapitalDao extends BaseMongoDao<HjhPlanCapital> {
     protected Class<HjhPlanCapital> getEntityClass(){
         return HjhPlanCapital.class;
     }
-//    protected Class<HjhPlanCapitalVO> getEntityClass() {
-//        return HjhPlanCapitalVO.class;
-//    }
 
     /**
      * 查询类表条数
