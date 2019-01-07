@@ -104,6 +104,10 @@ public class NaMiMarketingServiceImpl implements NaMiMarketingService {
     public int selectNaMiMarketingRefferTotalCount(Map<String, Object> paraMap){
         return naMiMarketingCustomizeMapper.selectNaMiMarketingRefferTotalCount(paraMap);
     }
+    @Override
+    public List<String> selectMonthList(){
+        return  naMiMarketingCustomizeMapper.selectMonthList();
+    }
 
     /**
      * 查询邀请人返现统计 列表

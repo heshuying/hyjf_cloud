@@ -26,8 +26,6 @@ import com.hyjf.common.validator.CheckUtil;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.bean.AuthBean;
 import com.hyjf.cs.user.bean.BaseDefine;
-import com.hyjf.cs.user.bean.SynBalanceRequestBean;
-import com.hyjf.cs.user.bean.SynBalanceResultBean;
 import com.hyjf.cs.user.client.AmConfigClient;
 import com.hyjf.cs.user.client.AmMarketClient;
 import com.hyjf.cs.user.client.AmTradeClient;
@@ -137,11 +135,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 		String accountId = null;
 		if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
 			accountId = account.getAccount();
-			UserVO user = synBalanceService.getUsersById(userId);
-			SynBalanceRequestBean bean = new SynBalanceRequestBean();
-			bean.setInstCode(user.getInstCode());
-			bean.setAccountId(accountId);
-            synBalanceService.synBalance(bean,ip);
+			synBalanceService.synBalance(accountId, ip);
 		}
 		if (channel.equals(BankCallConstant.CHANNEL_WEI)) {
 			String sign = SecretUtil.createToken(userId, loginUserName, accountId);
@@ -1131,11 +1125,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 			BankOpenAccountVO account = this.getBankOpenAccount(userId);
 			String accountId = null;
 			if (account != null && StringUtils.isNoneBlank(account.getAccount())) {
-				UserVO user = synBalanceService.getUsersById(userId);
-				SynBalanceRequestBean bean = new SynBalanceRequestBean();
-				bean.setInstCode(user.getInstCode());
-				bean.setAccountId(accountId);
-                SynBalanceResultBean resultBean = synBalanceService.synBalance(bean,ipAddr);
+                synBalanceService.synBalance(accountId,ipAddr);
 			}
 			String sign = SecretUtil.createToken(userId, usernameString, accountId);
 			r.put("sign", sign);

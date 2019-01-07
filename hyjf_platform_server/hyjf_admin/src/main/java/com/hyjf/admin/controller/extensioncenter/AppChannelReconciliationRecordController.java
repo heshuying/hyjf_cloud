@@ -48,16 +48,13 @@ public class AppChannelReconciliationRecordController extends BaseController {
     @PostMapping("/search")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult searchAction(@RequestBody ChannelReconciliationRequest request) {
-        List<UtmVO> list = channelService.searchUtmList(1);
-        if (request.getUtmPlat() == null) {
-            List<String> utmList = new ArrayList<>();
-            for (UtmVO vo : list) {
-                if (Objects.equals(vo.getDelFlag(), 0)) {
-                    utmList.add(vo.getSourceId().toString());
-                }
+        List<Integer> userIdList = channelService.searchUserIdList(1);
+        if (!CollectionUtils.isEmpty(userIdList)) {
+            int[] integers = new int[userIdList.size()];
+            String[] array = new String[userIdList.size()];
+            for (int i = 0; i < integers.length; i++) {
+                array[i] = String.valueOf(integers[i]);
             }
-            String[] integers = new String[utmList.size()];
-            String[] array = utmList.toArray(integers);
             request.setUtmPlat(array);
         }
         ChannelReconciliationResponse response = channelService.searchAppAction(request);

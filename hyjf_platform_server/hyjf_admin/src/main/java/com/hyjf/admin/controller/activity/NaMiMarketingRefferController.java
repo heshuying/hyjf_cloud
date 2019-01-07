@@ -24,6 +24,7 @@ import io.swagger.annotations.ApiOperation;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -86,6 +87,15 @@ public class NaMiMarketingRefferController extends BaseController {
         }
         List<NaMiMarketingVO> resultList = response.getResultList();
         return new AdminResult<ListResult<NaMiMarketingVO>>(ListResult.build(resultList, response.getCount()));
+    }
+
+    @ApiOperation(value = "纳觅返现月份下拉框", notes = "纳觅返现月份下拉框")
+    @GetMapping("/initMonth")
+    public AdminResult<NaMiMarketingResponse> initMonth() {
+        AdminResult result = new AdminResult();
+        NaMiMarketingResponse response = naMiMarketingService.selectMonthList();
+        result.setData(response);
+        return result;
     }
 
     @ApiOperation(value = "邀请人返现明细导出", notes = "邀请人返现明细导出")
@@ -427,4 +437,5 @@ public class NaMiMarketingRefferController extends BaseController {
         return GetDate.formatDate(lastT,"yyyy-MM-dd");
     }
 */
+
 }

@@ -1153,6 +1153,8 @@ public interface AmAdminClient {
      */
     NaMiMarketingResponse selectNaMiMarketingRefferTotalList(NaMiMarketingRequest naMiMarketingRequest);
 
+    NaMiMarketingResponse selectMonthList();
+
     /**
      * 根据条件查询符合条件的sourceId集合
      * @param sourceType
