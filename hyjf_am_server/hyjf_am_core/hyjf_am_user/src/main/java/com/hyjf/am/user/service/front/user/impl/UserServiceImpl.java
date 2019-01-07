@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+import com.hyjf.am.user.dao.model.customize.UserUtmInfoCustomize;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
@@ -673,6 +674,16 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
     @Override
     public int updateUserById(User record) {
         return userMapper.updateByPrimaryKeySelective(record);
+    }
+
+    /**
+     * 通过当前用户ID 查询用户所在一级分部,从而关联用户所属渠道
+     * @param userId
+     * @return
+     */
+    @Override
+    public UserUtmInfoCustomize getUserUtmInfo(Integer userId) {
+        return userCustomizeMapper.getUserUtmInfo(userId);
     }
 
     @Override

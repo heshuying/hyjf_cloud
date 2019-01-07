@@ -65,7 +65,7 @@ public class PlatDataStatisticsController {
 		// 累计人均出借金额
 		jsonObject.put("perCapitaInvestment", df.format(oe.getPerInvest()));
 		// 借贷余额（原借款人待还）
-		jsonObject.put("totalRepayAwait", df.format(oe.getWillPayMoney()));
+		jsonObject.put("totalRepayAwait", df.format(oe.getWillPayMoney().longValue()));
 		// 借贷笔数
 		jsonObject.put("totalRepayCounts", oe.getLoanNum());
 		// 出借人总数
