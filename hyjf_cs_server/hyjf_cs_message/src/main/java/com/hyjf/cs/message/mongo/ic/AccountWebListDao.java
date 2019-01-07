@@ -117,7 +117,6 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
 				.withOptions(AggregationOptions.builder().allowDiskUse(true).build());
         AggregationResults<Map> ar = mongoTemplate.aggregate(aggregation,getEntityClass(), Map.class);
         List<Map> result = ar.getMappedResults();
-        logger.info("统计数量==="+ JSONObject.toJSONString(result));
         for (Map<String,Object> map :result) {
             total += Double.parseDouble(map.get("amount")==null||map.get("amount").equals("")?"0":map.get("amount").toString());
         }
