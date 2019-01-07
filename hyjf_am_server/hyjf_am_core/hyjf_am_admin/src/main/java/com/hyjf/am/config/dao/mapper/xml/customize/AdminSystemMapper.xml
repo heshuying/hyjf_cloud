@@ -89,7 +89,7 @@
 		<result column="permission" property="permission" jdbcType="VARCHAR" />
 	</resultMap>
 	<select id="getUserPermission" resultMap="getUserPermissionResultMap" parameterType="com.hyjf.am.config.dao.model.customize.AdminSystem">
-		SELECT DISTINCT
+		SELECT 
 		  CASE WHEN m.menu_ctrl IS NULL OR m.menu_ctrl = '' THEN m.menu_uuid ELSE m.menu_ctrl END AS menu_ctrl,
 	      p.permission
 		FROM
