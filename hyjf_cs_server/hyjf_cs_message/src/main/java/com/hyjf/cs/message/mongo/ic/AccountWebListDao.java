@@ -113,7 +113,7 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
         // 结果集默认16M， 需要设置磁盘缓冲allowDiskUse(true)
 		Aggregation aggregation = Aggregation
 				.newAggregation(match(createCriteria(accountWebList)),
-						Aggregation.group("id").sum("amount").as("amount"))
+						Aggregation.group("flag").sum("amount").as("amount"))
 				.withOptions(AggregationOptions.builder().allowDiskUse(true).build());
         AggregationResults<Map> ar = mongoTemplate.aggregate(aggregation,getEntityClass(), Map.class);
         List<Map> result = ar.getMappedResults();
