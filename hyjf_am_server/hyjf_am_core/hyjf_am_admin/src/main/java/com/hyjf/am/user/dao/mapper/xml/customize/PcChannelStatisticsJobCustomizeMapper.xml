@@ -879,7 +879,7 @@
 		hyjf_trade.ht_borrow_tender bt
 		WHERE
 		bt.user_id = a.user_id
-		AND bt.create_time <![CDATA[<]]> a.invest_time
+		AND bt.create_time <![CDATA[<]]> a.invest_time LIMIT 1
 		),
 		0
 		) + ifnull(
@@ -890,7 +890,7 @@
 		hyjf_trade.ht_credit_tender ct
 		WHERE
 		ct.user_id = a.user_id
-		AND ct.create_time <![CDATA[<]]> concat(a.invest_time)
+		AND ct.create_time <![CDATA[<]]> concat(a.invest_time) LIMIT 1
 		),
 		0
 		) + ifnull(
@@ -901,7 +901,7 @@
 		hyjf_trade.ht_borrow_tender_cpn bc
 		WHERE
 		bc.user_id = a.user_id
-		AND bc.create_time <![CDATA[<]]> a.invest_time
+		AND bc.create_time <![CDATA[<]]> a.invest_time LIMIT 1
 		),
 		0
 		) + ifnull(
@@ -912,7 +912,7 @@
 		hyjf_trade.ht_hjh_accede ha
 		WHERE
 		ha.user_id = a.user_id
-		AND ha.create_time <![CDATA[<]]> a.invest_time
+		AND ha.create_time <![CDATA[<]]> a.invest_time LIMIT 1
 		),
 		0
 		) = 0 THEN
