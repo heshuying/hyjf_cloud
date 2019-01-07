@@ -1,9 +1,12 @@
 package com.hyjf.cs.message.mongo.ic;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.ic.AccountWebList;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.AggregationOptions;
@@ -23,6 +26,7 @@ import static org.springframework.data.mongodb.core.aggregation.Aggregation.matc
  */
 @Repository
 public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
+    protected final Logger logger = LoggerFactory.getLogger(AccountWebListDao.class);
 
     @Override
     protected Class<AccountWebList> getEntityClass() {
@@ -53,7 +57,7 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
     public List<AccountWebList> queryWebList(AccountWebListVO accountWebList,int start,int end){
         Query query = new Query();
         Criteria criteria = createCriteria(accountWebList);
-        query.with(new Sort(Sort.Direction.DESC, "id"));
+        query.with(new Sort(Sort.Direction.DESC, "_id"));
         query.addCriteria(criteria);
         /*if(0==start){
             return mongoTemplate.find(query,getEntityClass());
@@ -111,9 +115,9 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
 				.newAggregation(match(createCriteria(accountWebList)),
 						Aggregation.group("id").sum("amount").as("amount"))
 				.withOptions(AggregationOptions.builder().allowDiskUse(true).build());
-
         AggregationResults<Map> ar = mongoTemplate.aggregate(aggregation,getEntityClass(), Map.class);
         List<Map> result = ar.getMappedResults();
+        logger.info("统计数量==="+ JSONObject.toJSONString(result));
         for (Map<String,Object> map :result) {
             total += Double.parseDouble(map.get("amount")==null||map.get("amount").equals("")?"0":map.get("amount").toString());
         }

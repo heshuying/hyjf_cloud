@@ -32,12 +32,10 @@ public class AdminBorrowRecoverController extends BaseController {
     @RequestMapping(value = "/countBorrowRecover")
     public AdminBorrowRecoverResponse countBorrowRecover(@RequestBody @Valid BorrowRecoverRequest request){
         logger.info("请求参数:" +JSONObject.toJSON(request));
-        logger.info("count开始");
         AdminBorrowRecoverResponse response = new AdminBorrowRecoverResponse();
         int count = this.adminBorrowRecoverService.countBorrowRecover(request);
 
         response.setTotal(count);
-        logger.info("count结束");
         return response;
     }
 
@@ -57,7 +55,6 @@ public class AdminBorrowRecoverController extends BaseController {
     @RequestMapping(value = "/selectBorrowRecoverList")
     public AdminBorrowRecoverResponse selectBorrowRecoverList(@RequestBody @Valid BorrowRecoverRequest request){
         logger.info("请求参数:" +JSONObject.toJSON(request));
-        logger.info("select开始");
         AdminBorrowRecoverResponse response = new AdminBorrowRecoverResponse();
 
         List<AdminBorrowRecoverCustomize> list = adminBorrowRecoverService.selectBorrowRecoverList(request);
@@ -65,14 +62,12 @@ public class AdminBorrowRecoverController extends BaseController {
             List<BorrowRecoverCustomizeVO> voList = CommonUtils.convertBeanList(list, BorrowRecoverCustomizeVO.class);
             response.setResultList(voList);
         }
-        logger.info("select结束");
         return response;
     }
 
     @RequestMapping(value = "/sumBorrowRecoverList")
     public AdminBorrowRecoverResponse sumBorrowRecoverList(@RequestBody @Valid BorrowRecoverRequest request){
         logger.info("请求参数:" +JSONObject.toJSON(request));
-        logger.info("sum开始");
         AdminBorrowRecoverResponse response = new AdminBorrowRecoverResponse();
 
         AdminBorrowRecoverCustomize customize = adminBorrowRecoverService.sumBorrowRecoverList(request);
@@ -80,7 +75,6 @@ public class AdminBorrowRecoverController extends BaseController {
             BorrowRecoverCustomizeVO vo = CommonUtils.convertBean(customize,BorrowRecoverCustomizeVO.class);
             response.setResult(vo);
         }
-        logger.info("sum结束");
         return response;
     }
 
