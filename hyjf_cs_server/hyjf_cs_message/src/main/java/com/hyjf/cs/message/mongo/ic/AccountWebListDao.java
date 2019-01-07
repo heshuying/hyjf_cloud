@@ -1,6 +1,5 @@
 package com.hyjf.cs.message.mongo.ic;
 
-import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.message.bean.ic.AccountWebList;
@@ -109,6 +108,9 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
     }
 
     public double selectBorrowInvestAccount(AccountWebListVO accountWebList){
+        logger.debug("selectBorrowInvestAccount start...");
+        long startTime = System.currentTimeMillis();
+
         double total = 0;
         // 结果集默认16M， 需要设置磁盘缓冲allowDiskUse(true)
 		Aggregation aggregation = Aggregation
@@ -116,10 +118,18 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
 						Aggregation.group("flag").sum("amount").as("amount"))
 				.withOptions(AggregationOptions.builder().allowDiskUse(true).build());
         AggregationResults<Map> ar = mongoTemplate.aggregate(aggregation,getEntityClass(), Map.class);
+
+        long endTime = System.currentTimeMillis();
+        logger.debug("mongoTemplate.aggregate cost: {}ms...", endTime - startTime);
+
         List<Map> result = ar.getMappedResults();
         for (Map<String,Object> map :result) {
             total += Double.parseDouble(map.get("amount")==null||map.get("amount").equals("")?"0":map.get("amount").toString());
         }
+
+        long endTime2 = System.currentTimeMillis();
+        logger.debug("parse cost: {}ms...", endTime2 - endTime);
+
         return total;
     }
 }
