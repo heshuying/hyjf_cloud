@@ -3,29 +3,31 @@
  */
 package com.hyjf.cs.market.controller.app.find;
 
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.admin.AppPushManageVO;
-import com.hyjf.am.vo.config.ContentArticleCustomizeVO;
-import com.hyjf.am.vo.config.ContentArticleVO;
-import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.market.bean.AppContentArticleBean;
-import com.hyjf.cs.market.contants.ArticleTypeEnum;
-import com.hyjf.cs.market.controller.BaseMarketController;
-import com.hyjf.cs.market.service.AppFindService;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.admin.AppPushManageVO;
+import com.hyjf.am.vo.config.ContentArticleCustomizeVO;
+import com.hyjf.am.vo.config.ContentArticleVO;
+import com.hyjf.common.enums.ContentArticleEnum;
+import com.hyjf.common.validator.Validator;
+import com.hyjf.cs.market.bean.AppContentArticleBean;
+import com.hyjf.cs.market.controller.BaseMarketController;
+import com.hyjf.cs.market.service.AppFindService;
+
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 
 /**
  * @author fq
@@ -165,7 +167,7 @@ public class AppFindController extends BaseMarketController {
 		JSONObject ret = new JSONObject();
 		ret.put("status", "000");
 		ret.put("statusDesc", "成功");
-		ret.put("topTitle", ArticleTypeEnum.getTitle(type));
+		ret.put("topTitle", ContentArticleEnum.getName(String.valueOf(type)));
 		try {
 			if (type != null && 4 == type) {// 3.0.9 新增推送公告详情
 				AppPushManageVO manageInfo = appFindService.getAppPushManagerContentByID(contentArticleId);

@@ -683,7 +683,7 @@ public class UserServiceImpl extends BaseServiceImpl implements UserService {
      */
     @Override
     public UserUtmInfoCustomize getUserUtmInfo(Integer userId) {
-        return userCustomizeMapper.getUserUtmInfoM(userId);
+        return userCustomizeMapper.getUserUtmInfo(userId);
     }
 
     @Override

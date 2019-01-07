@@ -44,7 +44,7 @@
 		<result column="utm_id" property="sourceId" jdbcType="INTEGER" />
 		<result column="utm_source" property="sourceName" jdbcType="VARCHAR" />
 	</resultMap>
-	<select id="getUserUtmInfoM" resultMap="userUtmInfoMap" parameterType="java.lang.Integer">
+	<select id="getUserUtmInfo" resultMap="userUtmInfoMap" parameterType="java.lang.Integer">
 		SELECT
 		up.utm_id,
 		up.utm_source

@@ -30,5 +30,5 @@ public interface UserCustomizeMapper {
      * @param userId
      * @return
      */
-    UserUtmInfoCustomize getUserUtmInfoM(@Param("userId") Integer userId);
+    UserUtmInfoCustomize getUserUtmInfo(@Param("userId") Integer userId);
 }

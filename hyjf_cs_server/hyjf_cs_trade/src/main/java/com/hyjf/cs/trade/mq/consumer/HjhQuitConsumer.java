@@ -88,7 +88,6 @@ public class HjhQuitConsumer implements RocketMQListener<MessageExt>, RocketMQPu
             String redisKey = RedisConstants.PLAN_REPAY_TASK + accedeOrderId;
             boolean result = RedisUtils.tranactionSet(redisKey, 300);
             if (!result) {
-                RedisUtils.srem(RedisConstants.HJH_LOCK_REPEAT, accedeOrderId);
                 logger.error("计划订单号：" + accedeOrderId + " 锁定/退出中....");
                 return;
             }

@@ -56,51 +56,11 @@ public class ChannelReconciliationServiceImpl implements ChannelReconciliationSe
     @Override
     public ChannelReconciliationResponse searchAppAction(ChannelReconciliationRequest request) {
 
-        // app渠道信息
-        AppChannelStatisticsDetailRequest request1 = new AppChannelStatisticsDetailRequest();
-        if (request.getUtmPlat() != null && request.getUtmPlat().length == 1) {
-            request1.setSourceIdSrch(Integer.valueOf(request.getUtmPlat()[0]));
-        }
-        AppUtmRegResponse appResponse = amAdminClient.exportStatisticsList(request1);
-        if (appResponse != null) {
-            List<AppUtmRegVO> appResultList = appResponse.getResultList();
-            if (!CollectionUtils.isEmpty(appResultList)) {
-                List<Integer> userIdList = new ArrayList<>();
-                List<String> list = Arrays.asList(request.getUtmPlat());
-                for (AppUtmRegVO appVo: appResultList) {
-                    Integer sourceId = appVo.getSourceId();
-                    if (list.contains(sourceId.toString())) {
-                        Integer userId = appVo.getUserId();
-                        userIdList.add(userId);
-                    }
-                }
-                request.setUserIdList(userIdList);
-            } else {
-                return new ChannelReconciliationResponse();
-            }
-        } else {
-            return new ChannelReconciliationResponse();
-        }
         // 出借信息
-        ChannelReconciliationResponse response = amAdminClient.selectAppChannelReconciliationRecord(request);
-        if (response != null) {
-            List<ChannelReconciliationVO> resultList = response.getResultList();
-            if (!CollectionUtils.isEmpty(resultList)) {
-                for (ChannelReconciliationVO vo : resultList) {
-                    if (appResponse != null) {
-                        List<AppUtmRegVO> appResultList = appResponse.getResultList();
-                        if (!CollectionUtils.isEmpty(appResultList)) {
-                            for (AppUtmRegVO appVo: appResultList) {
-                                if (appVo.getUserId().equals(vo.getUserId())) {
-                                    vo.setUtmName(appVo.getSourceName());
-                                    break;
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+        if (request.getUtmPlat() != null && request.getUtmPlat().length == 1) {
+            request.setSourceId(request.getUtmPlat()[0]);
         }
+        ChannelReconciliationResponse response = amAdminClient.selectAppChannelReconciliationRecord(request);
         return response;
     }
 

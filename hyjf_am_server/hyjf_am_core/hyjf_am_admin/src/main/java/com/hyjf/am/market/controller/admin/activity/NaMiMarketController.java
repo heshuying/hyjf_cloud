@@ -14,10 +14,7 @@ import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.math.BigDecimal;
@@ -148,7 +145,16 @@ public class NaMiMarketController {
         response.setResultInt(count);
         return response;
     }
-
+    @GetMapping("/selectMonthList")
+    public NaMiMarketingResponse selectMonthList(){
+        NaMiMarketingResponse response = new NaMiMarketingResponse();
+        List<String> resultList = naMiMarketingService.selectMonthList();
+        if(CollectionUtils.isEmpty(resultList)){
+            resultList = new ArrayList<>();
+        }
+        response.setMonthList(resultList);
+        return response;
+    }
 
     public Map<String, Object> beanToMapReffer(NaMiMarketingRequest request){
         Map<String, Object> paraMap = new HashMap<String, Object>();
@@ -200,7 +206,7 @@ public class NaMiMarketController {
      * @return
      */
     @PostMapping("/performanceInfo")
-    public NaMiMarketingResponse performanceInfo(NaMiMarketingRequest request) {
+    public NaMiMarketingResponse performanceInfo(@RequestBody NaMiMarketingRequest request) {
         NaMiMarketingResponse response = new NaMiMarketingResponse();
         Map<String, PerformanceReturnDetailVO> map = response.getMap();
         //id为空，不查询

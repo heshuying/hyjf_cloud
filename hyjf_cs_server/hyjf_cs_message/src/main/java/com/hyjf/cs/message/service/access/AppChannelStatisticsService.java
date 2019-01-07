@@ -1,9 +1,9 @@
 package com.hyjf.cs.message.service.access;
 
-import java.util.List;
-
 import com.hyjf.am.resquest.admin.AppChannelStatisticsRequest;
 import com.hyjf.am.vo.datacollect.AppAccesStatisticsVO;
+
+import java.util.List;
 
 /**
  * @author：yinhui
@@ -12,6 +12,4 @@ import com.hyjf.am.vo.datacollect.AppAccesStatisticsVO;
 public interface AppChannelStatisticsService {
 
     List<AppAccesStatisticsVO> getAppAccesStatisticsVO(AppChannelStatisticsRequest request);
-
-//    List<AppUtmRegVO> getAppChannelStatisticsDetailVO(AppChannelStatisticsRequest request);
 }

@@ -86,17 +86,6 @@ public class MsgPushServiceImpl implements MsgPushService {
 	}
 
 	@Override
-	public List<MessagePushTemplateVO> getAllTemplates() {
-		// 获取所有模板
-		List<MessagePushTemplateVO> templateList = amConfigClient.getAllTemplates();
-		// 插入统计数据
-		for (int i = 0; i < templateList.size(); i++) {
-			this.insertTemplateStatics(templateList.get(i));
-		}
-		return null;
-	}
-
-	@Override
 	public Integer countMsgHistoryRecord(Integer tagId, Integer userId, String platform) {
 		return msgHistoryDao.countMsgHistoryRecord(tagId, userId, platform);
 	}

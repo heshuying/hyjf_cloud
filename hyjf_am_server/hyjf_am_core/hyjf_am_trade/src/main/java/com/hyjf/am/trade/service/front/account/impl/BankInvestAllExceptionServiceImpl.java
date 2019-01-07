@@ -34,7 +34,6 @@ import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import com.hyjf.pay.lib.bank.util.BankCallMethodConstant;
 import com.hyjf.pay.lib.bank.util.BankCallUtils;
-import com.hyjf.soa.apiweb.CommonSoaUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -457,7 +456,6 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 							logger.info(checkParamResult.get("data") + "");
 
 						}
-						int couponOldTime = Integer.MIN_VALUE;
 						// 如果redis操作成功
 						try {
 							if (StringUtils.isBlank(bean.getOrderId())) {
@@ -475,18 +473,30 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 								if (StringUtils.isNotBlank(couponGrantId)) {
 									// 优惠券出借校验
 									try {
-										CouponConfigCustomizeV2 cuc = null;
-										cuc = getCouponUser(couponGrantId, userId);
-										// 排他check用
-										couponOldTime = cuc.getUserUpdateTime();
-										// 优惠券出借校验
-										JSONObject couponCheckResult = CommonSoaUtils.CheckCoupon(userId + "", borrowNid, account, CustomConstants.CLIENT_PC, couponGrantId);
-										int couponStatus = couponCheckResult.getIntValue("status");
-										String statusDesc = couponCheckResult.getString("statusDesc");
-										logger.info("updateCouponTender" + "优惠券出借校验结果：" + statusDesc);
-										if (couponStatus == 0) {
-											// 优惠券出借
-											CommonSoaUtils.CouponInvestForPC(userId + "", borrowNid, account, CustomConstants.CLIENT_PC, couponGrantId, orderId, null, couponOldTime + "");
+										// 开始使用优惠券
+										Map<String, String> params = new HashMap<>();
+										params.put("mqMsgId", GetCode.getRandomCode(10));
+										// 真实出借金额
+										params.put("money", borrow.getAccount().toString());
+										// 借款项目编号
+										params.put("borrowNid", borrowNid);
+										// 平台
+										params.put("platform", bean.getLogClient() != 0 ? bean.getLogClient()+"" : "0");
+										// 优惠券id
+										params.put("couponGrantId", couponGrantId);
+										// ip
+										params.put("ip", bean.getLogIp());
+										// 真实出借订单号
+										params.put("ordId", bean.getOrderId());
+										// 用户编号
+										params.put("userId", userId+"");
+
+										params.put("userName", request.getLogUser().getUsername());
+										try {
+											commonProducer.messageSend(new MessageContent(MQConstant.HZT_COUPON_TENDER_TOPIC, UUID.randomUUID().toString(), params));
+										} catch (MQException e) {
+											logger.error("使用优惠券异常,userId:{},ordId:{},couponGrantId:{},borrowNid:{}",
+													userId, bean.getOrderId(), couponGrantId, borrowNid, e);
 										}
 									} catch (Exception e) {
 										logger.info("优惠券出借失败");
@@ -796,7 +806,6 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 		String authCode = bean.getAuthCode();// 出借结果授权码
 		String borrowNid = borrow.getBorrowNid();// 项目编号
 		String borrowStyle = borrow.getBorrowStyle();// 项目的还款方式
-		int projectType = borrow1.getProjectType();// 项目类型
 		BigDecimal serviceFeeRate = Validator.isNull(borrow.getServiceFeeRate()) ? BigDecimal.ZERO : new BigDecimal(borrow.getServiceFeeRate()); // 服务费率
 		Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();// 借款期数
 		Integer borrowId = borrow.getId();// 借款项目主键
@@ -823,7 +832,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 					result.put("status", 0);
 					throw new Exception("删除borrowTenderTmp表失败");
 				}
-				System.out.println("用户:" + userId + "***********************************删除borrowTenderTmp，订单号：" + orderId);
+				logger.info("用户:" + userId + "***********************************删除borrowTenderTmp，订单号：" + orderId);
 				// 插入冻结表
 				FreezeList record = new FreezeList();
 				record.setAmount(accountDecimal);
@@ -844,7 +853,7 @@ public class BankInvestAllExceptionServiceImpl extends BaseServiceImpl implement
 					result.put("status", 0);
 					throw new Exception("插入冻结表失败！");
 				}
-				System.out.println("用户:" + userId + "***********************************插入FreezeList，订单号：" + orderId);
+				logger.info("用户:" + userId + "***********************************插入FreezeList，订单号：" + orderId);
 				BigDecimal perService = new BigDecimal(0);
 				if (StringUtils.isNotEmpty(borrowStyle)) {
 					BigDecimal serviceScale = serviceFeeRate;

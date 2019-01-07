@@ -4,8 +4,8 @@ package com.hyjf.cs.message.controller.wechat.operationaldata;
 import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.hyjf.common.validator.Validator;
-import com.hyjf.cs.message.bean.ic.OperationGroupReport;
-import com.hyjf.cs.message.bean.ic.OperationReport;
+import com.hyjf.cs.message.bean.ic.report.OperationGroupReport;
+import com.hyjf.cs.message.bean.ic.report.OperationReport;
 import com.hyjf.cs.message.bean.ic.SubEntity;
 import com.hyjf.cs.message.service.report.PlatDataStatisticsService;
 import io.swagger.annotations.ApiOperation;
@@ -138,11 +138,11 @@ public class OperationalDataWechatController {
 			detail.put("overdue90Total", 0);
 			detail.put("overdue90Num", 0);
 			//借款人相关数据统计：
-			detail.put("TotalBorrower", oe.getBorrowuserCountTotal());
-			detail.put("NowBorrower", oe.getBorrowuserCountCurrent());
-			detail.put("CurrentInvestor", oe.getTenderuserCountCurrent());
-			detail.put("MaxBorrowerRate", oe.getBorrowuserMoneyTopone());
-			detail.put("Top10BorrowerRate", oe.getBorrowuserMoneyTopten());
+			detail.put("TotalBorrower", oe.getBorrowUserCountTotal());
+			detail.put("NowBorrower", oe.getBorrowUserCountCurrent());
+			detail.put("CurrentInvestor", oe.getTenderUserCountCurrent());
+			detail.put("MaxBorrowerRate", oe.getBorrowUserMoneyTopOne());
+			detail.put("Top10BorrowerRate", oe.getBorrowUserMoneyTopTen());
 
 			result.put("info", detail);
 
