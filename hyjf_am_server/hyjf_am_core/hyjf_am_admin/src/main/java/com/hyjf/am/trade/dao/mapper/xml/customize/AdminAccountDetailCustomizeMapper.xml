@@ -69,7 +69,7 @@
 		LEFT JOIN ht_r_user hu2 on hu.spreads_user_id = hu2.user_id
 		WHERE 1=1
 		<include refid="where-all-page-condition"/>
-		ORDER BY l.create_time DESC, l.id DESC
+		ORDER BY l.id DESC
 		<if test="limitStart >= 0 and limitEnd > 0" >
 			LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
 		</if>
