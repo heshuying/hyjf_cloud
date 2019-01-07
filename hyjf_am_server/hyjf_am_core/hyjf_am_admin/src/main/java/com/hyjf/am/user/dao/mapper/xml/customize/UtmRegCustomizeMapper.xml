@@ -843,56 +843,11 @@
         r.source_name as utm_name,
         DATE_FORMAT(a.invest_time,'%Y-%m-%d %H:%i:%s') as invest_time,
         DATE_FORMAT(u.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time,
-        CASE
-        WHEN ifnull(
-        (
-        SELECT
-        count(id)
-        FROM
-        hyjf_trade.ht_borrow_tender bt
-        WHERE
-        bt.user_id = a.user_id
-        AND bt.create_time <![CDATA[<]]> a.invest_time
-        ),
-        0
-        ) + ifnull(
-        (
-        SELECT
-        count(assign_id)
-        FROM
-        hyjf_trade.ht_credit_tender ct
-        WHERE
-        ct.user_id = a.user_id
-        AND ct.create_time  <![CDATA[<]]> concat(a.invest_time)
-        ),
-        0
-        ) + ifnull(
-        (
-        SELECT
-        count(id)
-        FROM
-        hyjf_trade.ht_borrow_tender_cpn bc
-        WHERE
-        bc.user_id = a.user_id
-        AND bc.create_time <![CDATA[<]]> a.invest_time
-        ),
-        0
-        ) + ifnull(
-        (
-        SELECT
-        count(id)
-        FROM
-        hyjf_trade.ht_hjh_accede ha
-        WHERE
-        ha.user_id = a.user_id
-        AND ha.create_time <![CDATA[<]]> a.invest_time
-        ),
-        0
-        ) = 0 THEN
-        '1'
-        ELSE
-        '0'
-        END is_first
+        CASE   WHEN ifnull(( SELECT id FROM  hyjf_trade.ht_borrow_tender bt  WHERE bt.user_id = a.user_id AND bt.create_time <![CDATA[<]]> a.invest_time  limit 1), 0)
+        + ifnull((SELECT  assign_id  FROM  hyjf_trade.ht_credit_tender ct  WHERE  ct.user_id = a.user_id AND ct.create_time <![CDATA[<]]> concat(a.invest_time) limit 1),0)
+        + ifnull((SELECT id  FROM  hyjf_trade.ht_borrow_tender_cpn bc  WHERE bc.user_id = a.user_id AND bc.create_time <![CDATA[<]]> a.invest_time limit 1),0)
+        + ifnull((SELECT id  FROM  hyjf_trade.ht_hjh_accede ha WHERE ha.user_id = a.user_id AND ha.create_time <![CDATA[<]]> a.invest_time limit 1),0) = 0
+        THEN '1' ELSE '0' END is_first
         FROM
         (
         SELECT
@@ -939,15 +894,6 @@
         ) AS a
         INNER JOIN ht_user u ON a.user_id = u.user_id
         INNER JOIN ht_app_utm_reg r ON a.user_id = r.user_id
-
-        AND a.user_id in
-        (
-        select reg.user_id from ht_app_utm_reg reg
-        <if test="sourceId != null and sourceId != ''">
-            source_id = #{sourceId}
-        </if>
-        )
-
         ) tmp where 1=1
         <if test="registStartTime != null">
             AND tmp.reg_time <![CDATA[>=]]> DATE_FORMAT(#{registStartTime},'%Y-%m-%d %H:%i:%s')
@@ -972,7 +918,11 @@
         </if>
         <if test="investEndTime != null">
             AND tmp.invest_time <![CDATA[<=]]> DATE_FORMAT(#{investEndTime},'%Y-%m-%d %H:%i:%s')
-        </if> order by tmp.invest_time desc
+        </if>
+        <if test="sourceId != null and sourceId != ''">
+            r.source_id = #{sourceId}
+        </if>
+        order by tmp.invest_time desc
         <if test="limitStart != null and limitStart != -1  and limitEnd !=null and limitEnd != -1" >
             LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
         </if>
@@ -990,56 +940,11 @@
         r.source_name as utm_name,
         DATE_FORMAT(a.invest_time,'%Y-%m-%d %H:%i:%s') as invest_time,
         DATE_FORMAT(u.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time,
-        CASE
-        WHEN ifnull(
-        (
-        SELECT
-        count(id)
-        FROM
-        hyjf_trade.ht_borrow_tender bt
-        WHERE
-        bt.user_id = a.user_id
-        AND bt.create_time <![CDATA[<]]> a.invest_time
-        ),
-        0
-        ) + ifnull(
-        (
-        SELECT
-        count(assign_id)
-        FROM
-        hyjf_trade.ht_credit_tender ct
-        WHERE
-        ct.user_id = a.user_id
-        AND ct.create_time  <![CDATA[<]]> concat(a.invest_time)
-        ),
-        0
-        ) + ifnull(
-        (
-        SELECT
-        count(id)
-        FROM
-        hyjf_trade.ht_borrow_tender_cpn bc
-        WHERE
-        bc.user_id = a.user_id
-        AND bc.create_time <![CDATA[<]]> a.invest_time
-        ),
-        0
-        ) + ifnull(
-        (
-        SELECT
-        count(id)
-        FROM
-        hyjf_trade.ht_hjh_accede ha
-        WHERE
-        ha.user_id = a.user_id
-        AND ha.create_time <![CDATA[<]]> a.invest_time
-        ),
-        0
-        ) = 0 THEN
-        '1'
-        ELSE
-        '0'
-        END is_first
+        CASE   WHEN ifnull(( SELECT id FROM  hyjf_trade.ht_borrow_tender bt  WHERE bt.user_id = a.user_id AND bt.create_time <![CDATA[<]]> a.invest_time  limit 1), 0)
+        + ifnull((SELECT  assign_id  FROM  hyjf_trade.ht_credit_tender ct  WHERE  ct.user_id = a.user_id AND ct.create_time <![CDATA[<]]> concat(a.invest_time) limit 1),0)
+        + ifnull((SELECT id  FROM  hyjf_trade.ht_borrow_tender_cpn bc  WHERE bc.user_id = a.user_id AND bc.create_time <![CDATA[<]]> a.invest_time limit 1),0)
+        + ifnull((SELECT id  FROM  hyjf_trade.ht_hjh_accede ha WHERE ha.user_id = a.user_id AND ha.create_time <![CDATA[<]]> a.invest_time limit 1),0) = 0
+        THEN '1' ELSE '0' END is_first
         FROM
         (
         SELECT
@@ -1086,15 +991,6 @@
         ) AS a
         INNER JOIN ht_user u ON a.user_id = u.user_id
         INNER JOIN ht_app_utm_reg r ON a.user_id = r.user_id
-
-        AND a.user_id in
-        (
-        select reg.user_id from ht_app_utm_reg reg
-        <if test="sourceId != null and sourceId != ''">
-            source_id = #{sourceId}
-        </if>
-        )
-
         ) tmp where 1=1
         <if test="registStartTime != null">
             AND tmp.reg_time <![CDATA[>=]]> DATE_FORMAT(#{registStartTime},'%Y-%m-%d %H:%i:%s')
@@ -1119,7 +1015,11 @@
         </if>
         <if test="investEndTime != null">
             AND tmp.invest_time <![CDATA[<=]]> DATE_FORMAT(#{investEndTime},'%Y-%m-%d %H:%i:%s')
-        </if> order by tmp.invest_time desc
+        </if>
+        <if test="sourceId != null and sourceId != ''">
+            r.source_id = #{sourceId}
+        </if>
+        order by tmp.invest_time desc
         <if test="limitStart != null and limitStart != -1  and limitEnd !=null and limitEnd != -1" >
             LIMIT #{limitStart,jdbcType=INTEGER} , #{limitEnd,jdbcType=INTEGER}
         </if>

@@ -129,11 +129,11 @@ public class OperationalDataController {
 				detail.put("fullScaleHour", oe.getHour(time));
 				detail.put("fullScaleMinute", oe.getMinutes(time));
 				detail.put("fullScaleSecond", oe.getSeconds(time));
-				detail.put("TotalBorrower", oe.getBorrowuserCountTotal());
-				detail.put("NowBorrower", oe.getBorrowuserCountCurrent());
-				detail.put("CurrentInvestor", oe.getTenderuserCountCurrent());
-				detail.put("MaxBorrowerRate", oe.getBorrowuserMoneyTopone());
-				detail.put("Top10BorrowerRate", oe.getBorrowuserMoneyTopten());
+				detail.put("TotalBorrower", oe.getBorrowUserCountTotal());
+				detail.put("NowBorrower", oe.getBorrowUserCountCurrent());
+				detail.put("CurrentInvestor", oe.getTenderUserCountCurrent());
+				detail.put("MaxBorrowerRate", oe.getBorrowUserMoneyTopOne());
+				detail.put("Top10BorrowerRate", oe.getBorrowUserMoneyTopTen());
 			}
 
 			detail.put("relationshipTotal", 0);

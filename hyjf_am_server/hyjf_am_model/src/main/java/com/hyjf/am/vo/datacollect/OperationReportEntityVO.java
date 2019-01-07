@@ -47,15 +47,15 @@ public class OperationReportEntityVO extends BaseVO {
     // 待偿还金额
     private BigDecimal willPayMoney;
     // 累计借款人
-    private int borrowuserCountTotal;
+    private int borrowUserCountTotal;
     // 前十大借款人待还金额占比
-    private BigDecimal borrowuserMoneyTopten;
+    private BigDecimal borrowUserMoneyTopTen;
     // 当前借款人
-    private int borrowuserCountCurrent;
+    private int borrowUserCountCurrent;
     // 最大单一借款人待还金额占比
-    private BigDecimal borrowuserMoneyTopone;
+    private BigDecimal borrowUserMoneyTopOne;
     // 当前出借人
-    private int tenderuserCountCurrent;
+    private int tenderUserCountCurrent;
 
 
     public String getId() {
@@ -162,44 +162,44 @@ public class OperationReportEntityVO extends BaseVO {
         this.perInvest = perInvest;
     }
 
-    public int getBorrowuserCountTotal() {
-        return borrowuserCountTotal;
+    public int getBorrowUserCountTotal() {
+        return borrowUserCountTotal;
     }
 
-    public void setBorrowuserCountTotal(int borrowuserCountTotal) {
-        this.borrowuserCountTotal = borrowuserCountTotal;
+    public void setBorrowUserCountTotal(int borrowUserCountTotal) {
+        this.borrowUserCountTotal = borrowUserCountTotal;
     }
 
-    public BigDecimal getBorrowuserMoneyTopten() {
-        return borrowuserMoneyTopten;
+    public BigDecimal getBorrowUserMoneyTopTen() {
+        return borrowUserMoneyTopTen;
     }
 
-    public void setBorrowuserMoneyTopten(BigDecimal borrowuserMoneyTopten) {
-        this.borrowuserMoneyTopten = borrowuserMoneyTopten;
+    public void setBorrowUserMoneyTopTen(BigDecimal borrowUserMoneyTopTen) {
+        this.borrowUserMoneyTopTen = borrowUserMoneyTopTen;
     }
 
-    public int getBorrowuserCountCurrent() {
-        return borrowuserCountCurrent;
+    public int getBorrowUserCountCurrent() {
+        return borrowUserCountCurrent;
     }
 
-    public void setBorrowuserCountCurrent(int borrowuserCountCurrent) {
-        this.borrowuserCountCurrent = borrowuserCountCurrent;
+    public void setBorrowUserCountCurrent(int borrowUserCountCurrent) {
+        this.borrowUserCountCurrent = borrowUserCountCurrent;
     }
 
-    public BigDecimal getBorrowuserMoneyTopone() {
-        return borrowuserMoneyTopone;
+    public BigDecimal getBorrowUserMoneyTopOne() {
+        return borrowUserMoneyTopOne;
     }
 
-    public void setBorrowuserMoneyTopone(BigDecimal borrowuserMoneyTopone) {
-        this.borrowuserMoneyTopone = borrowuserMoneyTopone;
+    public void setBorrowUserMoneyTopOne(BigDecimal borrowUserMoneyTopOne) {
+        this.borrowUserMoneyTopOne = borrowUserMoneyTopOne;
     }
 
-    public int getTenderuserCountCurrent() {
-        return tenderuserCountCurrent;
+    public int getTenderUserCountCurrent() {
+        return tenderUserCountCurrent;
     }
 
-    public void setTenderuserCountCurrent(int tenderuserCountCurrent) {
-        this.tenderuserCountCurrent = tenderuserCountCurrent;
+    public void setTenderUserCountCurrent(int tenderUserCountCurrent) {
+        this.tenderUserCountCurrent = tenderUserCountCurrent;
     }
 
     public int getHour(float f){
@@ -240,11 +240,11 @@ public class OperationReportEntityVO extends BaseVO {
                 ", perInvest=" + perInvest +
                 ", fullBillTimeCurrentMonth=" + fullBillTimeCurrentMonth +
                 ", willPayMoney=" + willPayMoney +
-                ", borrowuserCountTotal=" + borrowuserCountTotal +
-                ", borrowuserMoneyTopten=" + borrowuserMoneyTopten +
-                ", borrowuserCountCurrent=" + borrowuserCountCurrent +
-                ", borrowuserMoneyTopone=" + borrowuserMoneyTopone +
-                ", tenderuserCountCurrent=" + tenderuserCountCurrent +
+                ", borrowUserCountTotal=" + borrowUserCountTotal +
+                ", borrowUserMoneyTopTen=" + borrowUserMoneyTopTen +
+                ", borrowUserCountCurrent=" + borrowUserCountCurrent +
+                ", borrowUserMoneyTopOne=" + borrowUserMoneyTopOne +
+                ", tenderUserCountCurrent=" + tenderUserCountCurrent +
                 '}';
     }
 }

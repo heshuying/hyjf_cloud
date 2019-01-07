@@ -138,11 +138,11 @@ public class OperationalDataWechatController {
 			detail.put("overdue90Total", 0);
 			detail.put("overdue90Num", 0);
 			//借款人相关数据统计：
-			detail.put("TotalBorrower", oe.getBorrowuserCountTotal());
-			detail.put("NowBorrower", oe.getBorrowuserCountCurrent());
-			detail.put("CurrentInvestor", oe.getTenderuserCountCurrent());
-			detail.put("MaxBorrowerRate", oe.getBorrowuserMoneyTopone());
-			detail.put("Top10BorrowerRate", oe.getBorrowuserMoneyTopten());
+			detail.put("TotalBorrower", oe.getBorrowUserCountTotal());
+			detail.put("NowBorrower", oe.getBorrowUserCountCurrent());
+			detail.put("CurrentInvestor", oe.getTenderUserCountCurrent());
+			detail.put("MaxBorrowerRate", oe.getBorrowUserMoneyTopOne());
+			detail.put("Top10BorrowerRate", oe.getBorrowUserMoneyTopTen());
 
 			result.put("info", detail);
 
