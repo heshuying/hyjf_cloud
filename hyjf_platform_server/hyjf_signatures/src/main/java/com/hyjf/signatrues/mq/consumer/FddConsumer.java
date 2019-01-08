@@ -8,7 +8,6 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import com.hyjf.signatrues.mq.handle.FddHandle;
-import com.sun.xml.internal.bind.v2.TODO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
