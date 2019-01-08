@@ -8,6 +8,7 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.fadada.bean.DzqzCallBean;
 import com.hyjf.signatrues.mq.handle.FddHandle;
+import com.sun.xml.internal.bind.v2.TODO;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
@@ -46,8 +47,8 @@ public class FddConsumer implements RocketMQListener<MessageExt>, RocketMQPushCo
 		defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
 		//设置线程数量
 		defaultMQPushConsumer.setConsumeThreadMin(1);
-		//TODO modify by cwyang 2019-01-07 为处理测试环境异常数据，暂时先注释小单线程处理，处理完毕后恢复
-//		defaultMQPushConsumer.setConsumeThreadMax(1);
+
+		defaultMQPushConsumer.setConsumeThreadMax(1);
 		//设置最大重试次数
 		defaultMQPushConsumer.setMaxReconsumeTimes(MAX_RECONSUME_TIME);
 	}
