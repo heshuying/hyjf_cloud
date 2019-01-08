@@ -19,9 +19,6 @@ public class WrbConstant {
     @Value("${hyjf.env.test}")
     public void setKEY(boolean hyjfEnvTest) {
         if (hyjfEnvTest) {
-//            WrbConstant.KEY = "uaIH/eUCWHMxOxUyeUWirnzjf+kEEG1/";
-            WrbConstant.KEY = wrbKeyTest;
-        } else {
 //            WrbConstant.KEY = "ByAsy7z4UV61V83a9JR2aFcWI3/WKZez";
             WrbConstant.KEY = wrbKeyPro;
         }
