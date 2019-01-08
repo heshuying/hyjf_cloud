@@ -7,7 +7,7 @@ import com.hyjf.am.trade.dao.model.auto.BorrowStyleExample;
 import com.hyjf.am.trade.dao.model.auto.BorrowStyleWithBLOBs;
 import com.hyjf.am.trade.service.front.borrow.BorrowStyleService;
 import com.hyjf.common.util.CustomConstants;
-import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;

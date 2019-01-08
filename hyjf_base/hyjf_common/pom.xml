@@ -93,13 +93,6 @@
 			<artifactId>springfox-swagger-ui</artifactId>
 		</dependency>
 
-
-		<dependency>
-			<groupId>org.apache.poi</groupId>
-			<artifactId>poi-excelant</artifactId>
-			<version>3.17</version>
-		</dependency>
-
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
