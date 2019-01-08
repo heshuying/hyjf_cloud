@@ -92,7 +92,7 @@ public class ProtocolsController extends BaseController {
 
 	@ApiOperation(value = "修改协议管理", notes = "修改协议管理")
 	@PostMapping("/update")
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_UPDATE)
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
 	public AdminResult update(@RequestBody ProtocolsRequestBean requestBean, HttpServletRequest request) {
 		AdminSystemVO user = getUser(request);
 		requestBean.setCreateUserId(Integer.valueOf(user.getId()));

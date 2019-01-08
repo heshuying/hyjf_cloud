@@ -30,32 +30,40 @@ import java.util.List;
 @Service
 @RocketMQMessageListener(topic = MQConstant.SELL_DAILY_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.SELL_DAILY_GROUP)
 public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
-	private static final Logger logger = LoggerFactory.getLogger(SellDailyConsumer.class);
+    private static final Logger logger = LoggerFactory.getLogger(SellDailyConsumer.class);
 
-	@Autowired
-	private SellDailyService sellDailyService;
-    private static int  MAX_RECONSUME_TIME=3;
-	private static final String NMZX_DIVISION_NAME = "纳觅咨询";
-	private static final String QGR_DIVISION_NAME = "裕峰瑞";
-	private static final String DTHJ_DIVISION_NAME = "大唐汇金";
-	private static final String SHRJ_DIVISION_NAME = "上海嵘具";
-	private static final String YYZX_DIVISION_NAME = "运营中心";
-	private static final String HZSW_DIVISION_NAME = "惠众";
+    @Autowired
+    private SellDailyService sellDailyService;
+    private static int MAX_RECONSUME_TIME = 3;
+    private static final String NMZX_DIVISION_NAME = "纳觅咨询";
+    private static final String QGR_DIVISION_NAME = "裕峰瑞";
+    private static final String DTHJ_DIVISION_NAME = "大唐汇金";
+    private static final String SHRJ_DIVISION_NAME = "上海嵘具";
+    private static final String YYZX_DIVISION_NAME = "运营中心";
+    private static final String HZSW_DIVISION_NAME = "惠众";
 
-	private static final int DRAW_ORDER_LEVEL1 = 1;
-	private static final int DRAW_ORDER_LEVEL2 = 2;
-	private static final int DRAW_ORDER_LEVEL3 = 3;
-	private static final int DRAW_ORDER_LEVEL4 = 4;
+    private static final int DRAW_ORDER_LEVEL1 = 1;
+    private static final int DRAW_ORDER_LEVEL2 = 2;
+    private static final int DRAW_ORDER_LEVEL3 = 3;
+    private static final int DRAW_ORDER_LEVEL4 = 4;
 
-	/** 查询所有分部 */
-	private static final Integer QUERY_ALL_DIVISION_TYPE = 1;
-	/** 上海运营中心-网络运营部 id:327 */
-	private static final Integer QUERY_OC_THREE_DIVISION_TYPE = 2;
-	/** 查询APP推广 */
-	private static final Integer QUERY_APP_TYPE = 3;
-	/** 不需要显示的网点 */
-	private static final List NMZX_IGNORE_TWODIVISION_LIST = Arrays.asList("胶州分部");
-	private static final List DTHJ_IGNORE_TWODIVISION_LIST = Arrays.asList("樟树分部", "东莞分部", "西安分部");
+    /**
+     * 查询所有分部
+     */
+    private static final Integer QUERY_ALL_DIVISION_TYPE = 1;
+    /**
+     * 上海运营中心-网络运营部 id:327
+     */
+    private static final Integer QUERY_OC_THREE_DIVISION_TYPE = 2;
+    /**
+     * 查询APP推广
+     */
+    private static final Integer QUERY_APP_TYPE = 3;
+    /**
+     * 不需要显示的网点
+     */
+    private static final List NMZX_IGNORE_TWODIVISION_LIST = Arrays.asList("胶州分部");
+    private static final List DTHJ_IGNORE_TWODIVISION_LIST = Arrays.asList("樟树分部", "东莞分部", "西安分部");
 
     @Override
     public void onMessage(MessageExt messageExt) {
@@ -228,14 +236,16 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
             // 运营中心无主单 - 月累计投资
             BigDecimal noneRefferTotalTmp = BigDecimal.ZERO;
             BigDecimal hzTotalTmp = BigDecimal.ZERO;
-            for (SellDailyVO entity : list) {
-                if (StringUtils.isEmpty(entity.getPrimaryDivision()) || "杭州分公司".equals(entity.getPrimaryDivision())
-                        || "特殊一级分部（勿动）".equals(entity.getPrimaryDivision())) {
-                    noneRefferTotalTmp = sellDailyService.addValue(noneRefferTotalTmp, column, entity);
-                }
+            if (!CollectionUtils.isEmpty(list)) {
+                for (SellDailyVO entity : list) {
+                    if (StringUtils.isEmpty(entity.getPrimaryDivision()) || "杭州分公司".equals(entity.getPrimaryDivision())
+                            || "特殊一级分部（勿动）".equals(entity.getPrimaryDivision())) {
+                        noneRefferTotalTmp = sellDailyService.addValue(noneRefferTotalTmp, column, entity);
+                    }
 
-                if ("惠众商务".equals(entity.getPrimaryDivision())) {
-                    hzTotalTmp = sellDailyService.addValue(hzTotalTmp, column, entity);
+                    if ("惠众商务".equals(entity.getPrimaryDivision())) {
+                        hzTotalTmp = sellDailyService.addValue(hzTotalTmp, column, entity);
+                    }
                 }
             }
 
@@ -281,7 +291,7 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
         // 设置为集群消费(区别于广播消费)
         defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
         //设置最大重试次数
-            defaultMQPushConsumer.setMaxReconsumeTimes(MAX_RECONSUME_TIME);
+        defaultMQPushConsumer.setMaxReconsumeTimes(MAX_RECONSUME_TIME);
 
         logger.info("====销售日报 消费端开始执行=====");
     }
