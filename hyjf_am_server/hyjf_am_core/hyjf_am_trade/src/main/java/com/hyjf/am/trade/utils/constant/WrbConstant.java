@@ -10,7 +10,7 @@ public class WrbConstant {
     /** 汇盈金服使用的加解密的key， 主要用来屏蔽敏感字段，比如userId */
     public static String PF_KEY;
 
-    @Value("${hyjf.nifa.passWord}")
+    @Value("${hyjf.wrb.key.test}")
     private String wrbKeyTest;
 
     @Value("${hyjf.wrb.key.pro}")
@@ -19,9 +19,6 @@ public class WrbConstant {
     @Value("${hyjf.env.test}")
     public void setKEY(boolean hyjfEnvTest) {
         if (hyjfEnvTest) {
-//            WrbConstant.KEY = "uaIH/eUCWHMxOxUyeUWirnzjf+kEEG1/";
-            WrbConstant.KEY = wrbKeyTest;
-        } else {
 //            WrbConstant.KEY = "ByAsy7z4UV61V83a9JR2aFcWI3/WKZez";
             WrbConstant.KEY = wrbKeyPro;
         }
