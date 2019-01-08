@@ -20,8 +20,8 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 @EnableDiscoveryClient
 @EnableCircuitBreaker
-@ComponentScan(basePackages={"com.hyjf.cs","com.hyjf.common", "com.hyjf.cs.trade","com.hyjf.pay"})
-@EnableMethodCache(basePackages = "com.hyjf.cs")
+@ComponentScan(basePackages={"com.hyjf.common", "com.hyjf.cs.trade","com.hyjf.pay.lib"})
+@EnableMethodCache(basePackages = "com.hyjf.cs.trade")
 @EnableCreateCacheAnnotation
 public class CsTradeApplication {
 
