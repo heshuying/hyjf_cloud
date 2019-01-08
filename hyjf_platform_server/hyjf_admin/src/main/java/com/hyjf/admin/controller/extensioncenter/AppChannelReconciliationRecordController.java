@@ -48,15 +48,6 @@ public class AppChannelReconciliationRecordController extends BaseController {
     @PostMapping("/search")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult searchAction(@RequestBody ChannelReconciliationRequest request) {
-        List<Integer> userIdList = channelService.searchUserIdList(1);
-        if (!CollectionUtils.isEmpty(userIdList)) {
-            int[] integers = new int[userIdList.size()];
-            String[] array = new String[userIdList.size()];
-            for (int i = 0; i < integers.length; i++) {
-                array[i] = String.valueOf(integers[i]);
-            }
-            request.setUtmPlat(array);
-        }
         ChannelReconciliationResponse response = channelService.searchAppAction(request);
         return new AdminResult(response);
     }
@@ -65,16 +56,6 @@ public class AppChannelReconciliationRecordController extends BaseController {
     @PostMapping("/search_hjh")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
     public AdminResult searchHJHAction(@RequestBody ChannelReconciliationRequest request) {
-        List<Integer> userIdList = channelService.searchUserIdList(1);
-        if (!CollectionUtils.isEmpty(userIdList)) {
-            int[] integers = new int[userIdList.size()];
-            String[] array = new String[userIdList.size()];
-            for (int i = 0; i < integers.length; i++) {
-                array[i] = String.valueOf(integers[i]);
-            }
-            request.setUtmPlat(array);
-        }
-
         ChannelReconciliationResponse response = channelService.searchAppHJHAction(request);
         return new AdminResult(response);
     }
