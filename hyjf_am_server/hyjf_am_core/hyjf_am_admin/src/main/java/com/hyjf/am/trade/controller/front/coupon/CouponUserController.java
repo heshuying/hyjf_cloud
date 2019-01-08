@@ -40,6 +40,7 @@ public class CouponUserController extends BaseController {
 
     /**
      * 根据优惠券编号查询用户优惠券
+     *
      * @param couponCode
      * @return
      */
@@ -66,14 +67,14 @@ public class CouponUserController extends BaseController {
         if (request.getPageSize() == 0) {
             paginator = new Paginator(request.getCurrPage(), recordCount);
         }
-        List<CouponUserCustomize> couponUserCustomizes = couponUserService.getRecordList(request, paginator.getOffset(), paginator.getLimit());
         if (recordCount > 0) {
+            List<CouponUserCustomize> couponUserCustomizes = couponUserService.getRecordList(request, paginator.getOffset(), paginator.getLimit());
             if (!CollectionUtils.isEmpty(couponUserCustomizes)) {
                 List<CouponUserCustomizeVO> couponUserCustomizeVOS = CommonUtils.convertBeanList(couponUserCustomizes, CouponUserCustomizeVO.class);
                 response.setResultList(couponUserCustomizeVOS);
-                response.setCount(recordCount);
             }
         }
+        response.setCount(recordCount);
         return response;
     }
 
@@ -124,6 +125,7 @@ public class CouponUserController extends BaseController {
 
     /**
      * 根据优惠券编码查询用户优惠券
+     *
      * @param couponCode
      * @return
      */
@@ -132,7 +134,7 @@ public class CouponUserController extends BaseController {
         CouponUserResponse response = new CouponUserResponse();
         List<CouponUser> couponUserList = couponUserService.getCouponUserByCouponCode(couponCode);
         if (!CollectionUtils.isEmpty(couponUserList)) {
-            List<CouponUserVO> couponUserVOS = CommonUtils.convertBeanList(couponUserList,CouponUserVO.class);
+            List<CouponUserVO> couponUserVOS = CommonUtils.convertBeanList(couponUserList, CouponUserVO.class);
             response.setResultList(couponUserVOS);
         }
         return response;
@@ -140,6 +142,7 @@ public class CouponUserController extends BaseController {
 
     /**
      * 根据id查询用户优惠券
+     *
      * @param couponUserId
      * @return
      */
@@ -149,7 +152,7 @@ public class CouponUserController extends BaseController {
         CouponUser couponUser = couponUserService.selectCouponUserById(couponUserId);
         if (couponUser != null) {
             CouponUserVO couponUserVO = new CouponUserVO();
-            BeanUtils.copyProperties(couponUser,couponUserVO);
+            BeanUtils.copyProperties(couponUser, couponUserVO);
             couponUserVO.setUpdateTime(GetDate.getTime10(couponUser.getUpdateTime()));
             couponUserVO.setAddTime(GetDate.getTime10(couponUser.getCreateTime()));
             response.setCouponUser(couponUserVO);
@@ -159,6 +162,7 @@ public class CouponUserController extends BaseController {
 
     /**
      * 用户优惠券审批
+     *
      * @param couponUserRequestBean
      * @return
      */
@@ -168,7 +172,7 @@ public class CouponUserController extends BaseController {
         Integer count = couponUserService.auditRecord(couponUserRequestBean);
         if (count > 0) {
             response.setCount(count);
-        }else {
+        } else {
             response.setRtn(Response.FAIL);
             response.setMessage(Response.FAIL_MSG);
         }
