@@ -15,7 +15,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 @EnableDiscoveryClient
 @ServletComponentScan
-@ComponentScan(basePackages = {"com.hyjf.am.config","com.hyjf.common","com.hyjf.pay.lib"})
+@ComponentScan(basePackages = {"com.hyjf.am.config","com.hyjf.common"})
 public class AmConfigApplication {
 
 	@Bean
