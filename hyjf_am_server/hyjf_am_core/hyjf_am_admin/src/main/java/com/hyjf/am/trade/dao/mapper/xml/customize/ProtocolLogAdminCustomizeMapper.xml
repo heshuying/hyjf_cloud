@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.ProtocolLogAdminCustomizeMapper">
+	<resultMap id="BaseResultMap" type="com.hyjf.am.vo.admin.ProtocolLogVO" >
+		<result column="id" property="id" />
+		<result column="protocolName" property="protocolName" />
+		<result column="versionNumber" property="versionNumber" />
+		<result column="operation" property="operation" />
+		<result column="updateTime" property="updateTime" />
+		<result column="userName" property="userName" />
+	</resultMap>
+
+	<select id="getProtocolLogList" parameterType="com.hyjf.am.resquest.admin.ProtocolLogRequest" resultMap="BaseResultMap">
+		SELECT
+		pl.id AS id,
+		pl.protocol_name AS protocolName,
+		pl.version_number AS versionNumber,
+		pl.operation AS operation,
+		pl.update_time AS updateTime,
+		IFNULL(ha.username, 'admin') AS userName
+		FROM
+		ht_protocol_log pl
+		LEFT JOIN hyjf_config.ht_admin ha ON pl.update_user = ha.id
+		ORDER BY
+		pl.id DESC,
+		pl.create_time ASC
+		<if test="limitStart !=null and limitStart >= 0" >
+			LIMIT #{limitStart} , #{limitEnd}
+		</if>
+	</select>
+
+
+</mapper>
