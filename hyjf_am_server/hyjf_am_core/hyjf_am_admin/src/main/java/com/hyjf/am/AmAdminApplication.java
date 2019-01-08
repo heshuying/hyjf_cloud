@@ -20,7 +20,7 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication
 @EnableDiscoveryClient
 @ServletComponentScan
-@ComponentScan(basePackages = "com.hyjf")
+@ComponentScan(basePackages = {"com.hyjf.am","com.hyjf.common","com.hyjf.pay.lib"})
 public class AmAdminApplication {
 
     @Bean

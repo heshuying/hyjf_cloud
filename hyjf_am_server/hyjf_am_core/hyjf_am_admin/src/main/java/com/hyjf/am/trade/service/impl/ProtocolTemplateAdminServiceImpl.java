@@ -5,6 +5,7 @@ import com.hyjf.am.resquest.admin.ProtocolLogRequest;
 import com.hyjf.am.trade.dao.mapper.auto.ProtocolLogMapper;
 import com.hyjf.am.trade.dao.mapper.auto.ProtocolTemplateMapper;
 import com.hyjf.am.trade.dao.mapper.auto.ProtocolVersionMapper;
+import com.hyjf.am.trade.dao.mapper.customize.ProtocolLogAdminCustomizeMapper;
 import com.hyjf.am.trade.dao.mapper.customize.ProtocolTemplateAdminCustomizeMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.ProtocolTemplateAdminService;
@@ -41,6 +42,9 @@ public class ProtocolTemplateAdminServiceImpl implements ProtocolTemplateAdminSe
 
     @Autowired
     private ProtocolLogMapper protocolLogMapper;
+
+    @Autowired
+    private ProtocolLogAdminCustomizeMapper protocolLogAdminCustomizeMapper;
 
     @Override
     public List<ProtocolTemplateVO> getProtocolTemplateVOByDisplayName(String displayName) {
@@ -354,23 +358,7 @@ public class ProtocolTemplateAdminServiceImpl implements ProtocolTemplateAdminSe
     public List<ProtocolLogVO> getProtocolLogVOAll(ProtocolLogRequest request) {
         List<ProtocolLogVO> listVO = new ArrayList<>();
 
-        //查询所有协议
-        ProtocolLogExample example=new ProtocolLogExample();
-        if (request.getLimitEnd() != -1) {
-            example.setLimitStart(request.getLimitStart());
-            example.setLimitEnd(request.getLimitEnd());
-        }
-
-        ProtocolLogExample.Criteria criteria = example.createCriteria();
-        // 条件查询
-        example.setOrderByClause("`id` Desc,`create_time` ASC");
-        List<ProtocolLog> protocolLogs=protocolLogMapper.selectByExample(example);
-        ProtocolLogVO protocolLogVO = null;
-        for (ProtocolLog protocolLog : protocolLogs){
-            protocolLogVO = new ProtocolLogVO();
-            BeanUtils.copyProperties(protocolLog,protocolLogVO);
-            listVO.add(protocolLogVO);
-        }
+        listVO = protocolLogAdminCustomizeMapper.getProtocolLogList(request);
         return listVO;
 
     }

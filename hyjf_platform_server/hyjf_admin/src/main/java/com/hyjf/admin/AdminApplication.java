@@ -18,7 +18,7 @@ import org.springframework.web.client.RestTemplate;
 @EnableDiscoveryClient
 @EnableCircuitBreaker
 @CrossOrigin(origins = "*")
-@ComponentScan(basePackages = "com.hyjf")
+@ComponentScan(basePackages = {"com.hyjf.admin","com.hyjf.common","com.hyjf.pay.lib"})
 public class AdminApplication {
 
 	@Bean

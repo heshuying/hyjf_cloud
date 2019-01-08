@@ -18,8 +18,8 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootApplication(exclude = { DataSourceAutoConfiguration.class })
 @EnableDiscoveryClient
 @EnableCircuitBreaker
-@ComponentScan(basePackages={"com.hyjf"})
-@EnableMethodCache(basePackages = "com.hyjf.cs")
+@ComponentScan(basePackages = {"com.hyjf.cs.message","com.hyjf.common","com.hyjf.cs.common"})
+@EnableMethodCache(basePackages = "com.hyjf.cs.message")
 @EnableCreateCacheAnnotation
 public class CsMessageApplication {
 	
