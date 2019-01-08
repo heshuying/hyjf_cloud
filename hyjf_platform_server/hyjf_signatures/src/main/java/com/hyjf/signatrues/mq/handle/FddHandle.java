@@ -1,6 +1,5 @@
 package com.hyjf.signatrues.mq.handle;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.fdd.FddDessenesitizationBean;
 import com.hyjf.am.bean.fdd.FddGenerateContractBean;
@@ -22,8 +21,6 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.file.FavFTPUtil;
 import com.hyjf.common.file.FileUtil;
 import com.hyjf.common.file.SFTPParameter;
-import com.hyjf.common.pdf.ImageUtil;
-import com.hyjf.common.pdf.PDFToImage;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.validator.Validator;
@@ -36,6 +33,9 @@ import com.hyjf.signatrues.client.AmUserClient;
 import com.hyjf.signatrues.client.config.SystemConfig;
 import com.hyjf.signatrues.mq.base.MessageContent;
 import com.hyjf.signatrues.mq.producer.CommonProducer;
+import com.hyjf.signatrues.util.pdf.ImageUtil;
+import com.hyjf.signatrues.util.pdf.PDFToImage;
+import com.hyjf.signatrues.util.pdf.PdfUtil;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -2056,7 +2056,7 @@ public class FddHandle {
 	private boolean replaceImageToPdf(List imagePathList,String pdfSavePath){
 
 		try{
-			FileUtil.imageTOpdf(imagePathList,pdfSavePath);
+			PdfUtil.imageTOpdf(imagePathList,pdfSavePath);
 		}catch (Exception e){
 			logger.info("-----------------脱敏图片转换成pdf失败--------");
 			return false;
