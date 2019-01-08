@@ -70,26 +70,26 @@ public class CouponUserServiceImpl implements CouponUserService {
     @Override
     public CouponUserCustomizeResponse searchList(CouponUserBeanRequest couponUserBeanRequest) {
         CouponUserCustomizeResponse response = amTradeClient.searchList(couponUserBeanRequest);
-        List<CouponUserCustomizeVO> list=response.getResultList();
-        if (CollectionUtils.isNotEmpty(list)){
-            //获取活动集合
-            List<ActivityListVO> activityListVOs = amMarketClient.getActivityList();
-            //活动集合转成 <id,title>格式的map
-            Map<Integer,String> dicMap = this.convertToIdTitleMap(activityListVOs);
-            for (CouponUserCustomizeVO couponUser:list) {
-                if ("活动发放".equals(couponUser.getCouponSource())){
-                    if (StringUtils.isNotEmpty(dicMap.get(couponUser.getActivityId()))){
-                        couponUser.setCouponContent(dicMap.get(couponUser.getActivityId()));
-                    }else{
-                        if (StringUtils.isNotEmpty(couponUser.getContent())){
-                            couponUser.setCouponContent(couponUser.getContent());
-                        }else{
-                            couponUser.setCouponContent("");
-                        }
-                    }
-                }
-            }
-        }
+//        List<CouponUserCustomizeVO> list=response.getResultList();
+//        if (CollectionUtils.isNotEmpty(list)){
+//            //获取活动集合
+//            List<ActivityListVO> activityListVOs = amMarketClient.getActivityList();
+//            //活动集合转成 <id,title>格式的map
+//            Map<Integer,String> dicMap = this.convertToIdTitleMap(activityListVOs);
+//            for (CouponUserCustomizeVO couponUser:list) {
+//                if ("活动发放".equals(couponUser.getCouponSource())){
+//                    if (StringUtils.isNotEmpty(dicMap.get(couponUser.getActivityId()))){
+//                        couponUser.setCouponContent(dicMap.get(couponUser.getActivityId()));
+//                    }else{
+//                        if (StringUtils.isNotEmpty(couponUser.getContent())){
+//                            couponUser.setCouponContent(couponUser.getContent());
+//                        }else{
+//                            couponUser.setCouponContent("");
+//                        }
+//                    }
+//                }
+//            }
+//        }
         return response;
     }
 
