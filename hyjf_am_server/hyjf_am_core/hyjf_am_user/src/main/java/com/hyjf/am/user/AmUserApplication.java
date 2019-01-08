@@ -13,7 +13,7 @@ import org.springframework.web.client.RestTemplate;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-@ComponentScan(basePackages = {"com.hyjf.am。user","com.hyjf.common","com.hyjf.pay.lib"})
+@ComponentScan(basePackages = {"com.hyjf.am.user","com.hyjf.common","com.hyjf.pay.lib"})
 public class AmUserApplication {
 
 	@Bean
