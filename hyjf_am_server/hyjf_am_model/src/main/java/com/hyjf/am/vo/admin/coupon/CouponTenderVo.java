@@ -1,5 +1,6 @@
 package com.hyjf.am.vo.admin.coupon;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -7,7 +8,7 @@ public class CouponTenderVo<T> {
     //项目状态
     private Map<String, String> couponReciveStatusList;
     private String investTotal;
-    private List<T>  recordList;
+    private List<T>  recordList = new ArrayList<T>();
     private CouponTenderDetailVo detail;
     private List<T> couponRecoverlist;
     private String recoverInterest;
