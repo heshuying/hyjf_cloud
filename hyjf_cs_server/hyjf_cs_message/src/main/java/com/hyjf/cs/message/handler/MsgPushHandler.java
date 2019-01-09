@@ -340,19 +340,18 @@ public class MsgPushHandler {
 			// 判断是否发送所有人 0发送所有人 1个人
 			if (msg.getMsgDestinationType() == CustomConstants.MSG_PUSH_DESTINATION_TYPE_0) {
 				// 广播模式，测试环境不推送
-				if(!PropertiesConfig.isPassSend(null)){
+				logger.info("env.test: {}", PropertiesConfig.hyjfEnvProperties.isTest());
+				// if(PropertiesConfig.hyjfEnvProperties.isTest()){ todo 上线放开
+				if (true) {
 					logger.warn("广播模式下测试环境不推送.....");
-					msg.setSendTime(GetDate.getNowTime10());
-					msg.setMsgSendStatus(CustomConstants.MSG_PUSH_SEND_STATUS_1);
-					messagePushMsgHistoryDao.save(msg);
 					return;
 				}
 
 				// 广播模式判断客户端
 				String clientStr = msg.getMsgTerminal();
-				if(StringUtils.isBlank(clientStr)){
+				if (StringUtils.isBlank(clientStr)) {
 					logger.warn("client must be not empty...");
-					return ;
+					return;
 				}
 
 				customizePushResult = sendBroadcast(msg, clientStr, packageCode);
