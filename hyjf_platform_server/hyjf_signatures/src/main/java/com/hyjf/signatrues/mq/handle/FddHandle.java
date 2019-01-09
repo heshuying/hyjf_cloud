@@ -819,6 +819,8 @@ public class FddHandle {
                 paramter.put("assignCapital", creditTender.getAssignCapital().toString());
                 //转让价款
                 paramter.put("assignPay", creditTender.getAssignPay().toString());
+				//转让服务费
+				paramter.put("coverCharge", creditTender.getCreditFee().toString());
                 // 签署时间
                 paramter.put("addTime", tenderToCreditDetailList.get(0).getSignTime());
             }
@@ -906,6 +908,9 @@ public class FddHandle {
 
             // 标的编号
             paramter.put("borrowNid", borrow.getBorrowNid());
+			String repayLastTime = borrow.getRepayLastTimeStr();
+			//到期日
+			paramter.put("borrowDueDay", repayLastTime);
             //编号
             paramter.put("NID", assignOrderId);
             //借款本金总额
@@ -2170,7 +2175,7 @@ public class FddHandle {
 		int index_x = 0;
 		int index_y = 0;
 		if(FddGenerateContractConstant.PROTOCOL_TYPE_TENDER == Integer.valueOf(pdfType)){
-			index_x = 887;
+			index_x = 867;
 			index_y = 270;
 			if(isCompanyUser){
 				index_x = 825;

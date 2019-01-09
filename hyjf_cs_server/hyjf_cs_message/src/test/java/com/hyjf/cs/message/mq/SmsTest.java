@@ -1,6 +1,5 @@
 package com.hyjf.cs.message.mq;
 
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;

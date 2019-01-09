@@ -24,7 +24,6 @@ import com.hyjf.am.vo.admin.AssociatedRecordListVO;
 import com.hyjf.am.vo.admin.BindLogVO;
 import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
 import com.hyjf.am.vo.admin.MessagePushMsgVO;
-import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -313,52 +312,6 @@ public class CsMessageClientImpl implements CsMessageClient {
             return response.getResultList();
         }
         return null;
-    }
-
-    /**
-     * 数据修改 APP消息推送 异常处理
-     *
-     * @param request
-     * @return
-     */
-    @Override
-    public MessagePushErrorResponse update(MessagePushErrorRequest request) {
-        MessagePushErrorResponse response = restTemplate
-                .postForEntity("http://CS-MESSAGE/cs-message/msgpush/error/request",
-                        request, MessagePushErrorResponse.class).getBody();
-        if (response != null) {
-            return response;
-        }
-        return null;
-    }
-
-    /**
-     * 获取单个信息
-     *
-     * @return
-     */
-    @Override
-    public MessagePushMsgHistoryVO getRecord(String id) {
-        MessagePushHistoryResponse response = restTemplate
-                .getForObject("http://CS-MESSAGE/cs-message/msgpush/error/getRecord/" + id,
-                        MessagePushHistoryResponse.class);
-        if (response != null) {
-            return response.getResult();
-        }
-        return null;
-    }
-
-    /**
-     * 推送极光消息
-     *
-     * @param msg
-     * @return 成功返回消息id  失败返回 error
-     * @author Michael
-     */
-    @Override
-    public void sendMessage(MessagePushMsgHistoryVO msg) {
-        restTemplate.postForObject("http://CS-MESSAGE/cs-message/msgpush/error/sendMessage/", msg,
-                Response.class);
     }
 
     /**

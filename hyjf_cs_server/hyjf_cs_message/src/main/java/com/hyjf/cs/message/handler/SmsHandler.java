@@ -111,7 +111,10 @@ public class SmsHandler {
 
 		String result = null;
 		int status = 0;
-		if (!PropertiesConfig.hyjfEnvProperties.isTest()) {
+		if (!PropertiesConfig.isPassSend(mobile)) {
+			logger.info("测试环境非白名单内不发送短信, mobile is : {}", mobile);
+			status = 1;
+		} else {
 			result = HttpDeal.post(smsSendUrl, paramMap).trim();
 			logger.info("短信发送结果: {}", result);
 			if (StringUtils.isBlank(result)) {
@@ -121,8 +124,6 @@ public class SmsHandler {
 			XStream xStream = new XStream();
 			xStream.alias("response", SmsResponse.class);
 			status = ((SmsResponse) xStream.fromXML(result)).getError();
-		} else {
-			status = 1;
 		}
 
 		SmsLog smsLog = new SmsLog();
