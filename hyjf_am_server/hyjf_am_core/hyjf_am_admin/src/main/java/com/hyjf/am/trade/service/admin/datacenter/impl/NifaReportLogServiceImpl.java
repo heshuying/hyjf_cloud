@@ -25,9 +25,6 @@ import java.util.List;
 @Service
 public class NifaReportLogServiceImpl extends BaseServiceImpl implements NifaReportLogService {
 
-    @Autowired
-    private NifaReportLogMapper nifaReportLogMapper;
-
     /**
      * 查找互金协会报送日志列表
      * @param request
@@ -58,6 +55,12 @@ public class NifaReportLogServiceImpl extends BaseServiceImpl implements NifaRep
             }
             if (null!=request.getFileUploadStatus()) {
                 creteria.andFileUploadStatusEqualTo(request.getFileUploadStatus());
+            }
+            if (null!=request.getFeedbackResult()) {
+                creteria.andFeedbackResultEqualTo(request.getFeedbackResult());
+            }
+            if (StringUtils.isNotBlank(request.getHistoryDate())) {
+                creteria.andHistoryDateEqualTo(request.getHistoryDate());
             }
         }
         if (limtStart != -1) {
@@ -95,6 +98,12 @@ public class NifaReportLogServiceImpl extends BaseServiceImpl implements NifaRep
             }
             if (null!=request.getFileUploadStatus()) {
                 creteria.andFileUploadStatusEqualTo(request.getFileUploadStatus());
+            }
+            if (null!=request.getFeedbackResult()) {
+                creteria.andFeedbackResultEqualTo(request.getFeedbackResult());
+            }
+            if (StringUtils.isNotBlank(request.getHistoryDate())) {
+                creteria.andHistoryDateEqualTo(request.getHistoryDate());
             }
         }
         int intCount = nifaReportLogMapper.countByExample(example);

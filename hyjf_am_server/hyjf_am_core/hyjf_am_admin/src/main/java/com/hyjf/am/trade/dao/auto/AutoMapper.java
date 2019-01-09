@@ -495,5 +495,8 @@ public class AutoMapper {
 
     @Resource
     protected EvaluationConfigLogMapper evaluationConfigLogMapper;
+
+    @Resource
+    protected NifaReportLogMapper nifaReportLogMapper;
 }
 
