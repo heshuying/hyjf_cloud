@@ -230,55 +230,60 @@ public class SellDailyConsumer implements RocketMQListener<MessageExt>, RocketMQ
                                 : ocSellDailyList.get(0);
                         break;
                 }
-            }
 
-            // 2. 处理drawOrder=2特殊分部的数据
-            // 运营中心无主单 - 月累计投资
-            BigDecimal noneRefferTotalTmp = BigDecimal.ZERO;
-            BigDecimal hzTotalTmp = BigDecimal.ZERO;
-            if (!CollectionUtils.isEmpty(list)) {
-                for (SellDailyVO entity : list) {
-                    if (StringUtils.isEmpty(entity.getPrimaryDivision()) || "杭州分公司".equals(entity.getPrimaryDivision())
-                            || "特殊一级分部（勿动）".equals(entity.getPrimaryDivision())) {
-                        noneRefferTotalTmp = sellDailyService.addValue(noneRefferTotalTmp, column, entity);
-                    }
+                // 2. 处理drawOrder=2特殊分部的数据
+                // 运营中心无主单 - 月累计投资
+                BigDecimal noneRefferTotalTmp = BigDecimal.ZERO;
+                BigDecimal hzTotalTmp = BigDecimal.ZERO;
+                if (!CollectionUtils.isEmpty(list)) {
+                    for (SellDailyVO entity : list) {
+                        if (StringUtils.isEmpty(entity.getPrimaryDivision()) || "杭州分公司".equals(entity.getPrimaryDivision())
+                                || "特殊一级分部（勿动）".equals(entity.getPrimaryDivision())) {
+                            noneRefferTotalTmp = sellDailyService.addValue(noneRefferTotalTmp, column, entity);
+                        }
 
-                    if ("惠众商务".equals(entity.getPrimaryDivision())) {
-                        hzTotalTmp = sellDailyService.addValue(hzTotalTmp, column, entity);
+                        if ("惠众商务".equals(entity.getPrimaryDivision())) {
+                            hzTotalTmp = sellDailyService.addValue(hzTotalTmp, column, entity);
+                        }
                     }
                 }
+
+                // 2.1 网络运营部特指：上海运营中心-网络运营部 单独查询
+                if (shOCSellDaily != null) {
+                    list.add(sellDailyService.constructionSellDaily(shOCSellDaily, YYZX_DIVISION_NAME, "网络运营部", 2, 0));
+                }
+                // 2.2 无主单包含： 部门空 + 杭州分部 + 特殊一级分部（勿动）
+                SellDailyVO noneRefferRecord = sellDailyService.constructionSellDaily(YYZX_DIVISION_NAME, "无主单");
+                if (noneRefferRecord != null) {
+                    noneRefferRecord = sellDailyService.setValue(noneRefferTotalTmp, Integer.parseInt(column), noneRefferRecord,
+                            sellDailyService.constructionSellDaily("", ""));
+                }
+                list.add(noneRefferRecord);
+
+                // 2.3 app推广计算app渠道投资， 只显示 本月累计规模业绩 上月对应累计规模业绩 环比增速 本月累计年化业绩 上月累计年化业绩 环比增速
+                // 昨日规模业绩
+                // 昨日年化业绩 昨日注册数 其中充值≥3000人数 其中投资≥3000人数 本月累计投资3000以上新客户数
+                if (Arrays.asList(1, 3, 8, 9, 11, 13).contains(column)) {
+                    list.add(sellDailyService.constructionSellDaily(appSellDaily, "其中：", "APP推广", 2, 0));
+                }
+
+                // 2.4 惠众-其它 排除 上海运营中心-网络运营部
+                SellDailyVO hzRecord = sellDailyService.constructionSellDaily(HZSW_DIVISION_NAME, "其它");
+                if (shOCSellDaily != null) {
+                    hzRecord = sellDailyService.setValue(hzTotalTmp, Integer.parseInt(column), hzRecord, shOCSellDaily);
+                }
+                list.add(hzRecord);
+
+                // 3. 批量更新
+                long timeTmp = System.currentTimeMillis();
+                logger.info("填充数据耗时: " + (timeTmp - timeStart) + "ms, 批量更新开始，column: " + column);
+                sellDailyService.batchUpdate(list);
+                long timeEnd = System.currentTimeMillis();
+                logger.info("批量更新结束， column: " + column + ", 耗时: " + (timeEnd - timeTmp) + "ms");
+
+                // 如果没有return success ，consumer会重新消费该消息，直到return success
+                return;
             }
-
-            // 2.1 网络运营部特指：上海运营中心-网络运营部 单独查询
-            list.add(sellDailyService.constructionSellDaily(shOCSellDaily, YYZX_DIVISION_NAME, "网络运营部", 2, 0));
-
-            // 2.2 无主单包含： 部门空 + 杭州分部 + 特殊一级分部（勿动）
-            SellDailyVO noneRefferRecord = sellDailyService.constructionSellDaily(YYZX_DIVISION_NAME, "无主单");
-            noneRefferRecord = sellDailyService.setValue(noneRefferTotalTmp, Integer.parseInt(column), noneRefferRecord,
-                    sellDailyService.constructionSellDaily("", ""));
-            list.add(noneRefferRecord);
-
-            // 2.3 app推广计算app渠道投资， 只显示 本月累计规模业绩 上月对应累计规模业绩 环比增速 本月累计年化业绩 上月累计年化业绩 环比增速
-            // 昨日规模业绩
-            // 昨日年化业绩 昨日注册数 其中充值≥3000人数 其中投资≥3000人数 本月累计投资3000以上新客户数
-            if (Arrays.asList(1, 3, 8, 9, 11, 13).contains(column)) {
-                list.add(sellDailyService.constructionSellDaily(appSellDaily, "其中：", "APP推广", 2, 0));
-            }
-
-            // 2.4 惠众-其它 排除 上海运营中心-网络运营部
-            SellDailyVO hzRecord = sellDailyService.constructionSellDaily(HZSW_DIVISION_NAME, "其它");
-            hzRecord = sellDailyService.setValue(hzTotalTmp, Integer.parseInt(column), hzRecord, shOCSellDaily);
-            list.add(hzRecord);
-
-            // 3. 批量更新
-            long timeTmp = System.currentTimeMillis();
-            logger.info("填充数据耗时: " + (timeTmp - timeStart) + "ms, 批量更新开始，column: " + column);
-            sellDailyService.batchUpdate(list);
-            long timeEnd = System.currentTimeMillis();
-            logger.info("批量更新结束， column: " + column + ", 耗时: " + (timeEnd - timeTmp) + "ms");
-
-            // 如果没有return success ，consumer会重新消费该消息，直到return success
-            return;
         }
         return;// ConsumeConcurrentlyStatus.RECONSUME_LATER;
     }
