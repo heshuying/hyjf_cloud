@@ -341,7 +341,7 @@ public class MsgPushHandler {
 			if (msg.getMsgDestinationType() == CustomConstants.MSG_PUSH_DESTINATION_TYPE_0) {
 				// 广播模式，测试环境不推送
 				if(!PropertiesConfig.isPassSend(null)){
-					logger.info("广播模式测试环境不推送.....");
+					logger.warn("广播模式下测试环境不推送.....");
 					msg.setSendTime(GetDate.getNowTime10());
 					msg.setMsgSendStatus(CustomConstants.MSG_PUSH_SEND_STATUS_1);
 					messagePushMsgHistoryDao.save(msg);
