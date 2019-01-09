@@ -16,6 +16,12 @@ public class NifaReportLogRequestBean extends BaseRequest {
     //文件状态
     @ApiModelProperty(value = "文件状态")
     private Integer fileUploadStatus;
+    //文件状态
+    @ApiModelProperty(value = "反馈文件状态")
+    private Integer feedbackResult;
+    //文件状态
+    @ApiModelProperty(value = "数据处理日期")
+    private String historyDate;
     //上传时间(开始)
     @ApiModelProperty(value = "上传时间(开始)")
     private String createTimeStart;
@@ -53,5 +59,21 @@ public class NifaReportLogRequestBean extends BaseRequest {
 
     public void setCreateTimeEnd(String createTimeEnd) {
         this.createTimeEnd = createTimeEnd;
+    }
+
+    public Integer getFeedbackResult() {
+        return feedbackResult;
+    }
+
+    public void setFeedbackResult(Integer feedbackResult) {
+        this.feedbackResult = feedbackResult;
+    }
+
+    public String getHistoryDate() {
+        return historyDate;
+    }
+
+    public void setHistoryDate(String historyDate) {
+        this.historyDate = historyDate;
     }
 }

@@ -821,6 +821,7 @@ public class FddHandle {
                 paramter.put("assignPay", creditTender.getAssignPay().toString());
 				//转让服务费
 				paramter.put("coverCharge", creditTender.getCreditFee().toString());
+				logger.info("------------承接订单号：" + assignOrderId + "，转让服务费：" + creditTender.getCreditFee().toString());
                 // 签署时间
                 paramter.put("addTime", tenderToCreditDetailList.get(0).getSignTime());
             }
@@ -911,7 +912,9 @@ public class FddHandle {
 			String repayLastTime = borrow.getRepayLastTimeStr();
 			//到期日
 			paramter.put("borrowDueDay", repayLastTime);
-            //编号
+			logger.info("------------承接订单号：" + assignOrderId + "，到期日：" + repayLastTime);
+
+			//编号
             paramter.put("NID", assignOrderId);
             //借款本金总额
             paramter.put("borrowAccount", borrow.getAccount().toString());
