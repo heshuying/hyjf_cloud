@@ -53,23 +53,4 @@ public class MessagePushErrorServiceImpl implements MessagePushErrorService {
     public List<ParamNameVO> getParamNameList(String msg_push_send_status) {
         return amConfigClient.getParamNameList(msg_push_send_status);
     }
-    /**
-     * 获取单个信息
-     *
-     * @return
-     */
-    @Override
-    public MessagePushMsgHistoryVO getRecord(String id) {
-        return csMessageClient.getRecord(id);
-    }
-    /**
-     * 推送极光消息
-     * @param msg
-     * @return 成功返回消息id  失败返回 error
-     * @author Michael
-     */
-    @Override
-    public void sendMessage(MessagePushMsgHistoryVO msg) {
-        csMessageClient.sendMessage(msg);
-    }
 }

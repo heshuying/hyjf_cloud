@@ -13,11 +13,24 @@ public class HyjfEnvProperties {
      */
     private boolean test;
 
+    /**
+     * 测试环境短信和推送白名单
+     */
+    private String whiteList;
+
     public boolean isTest() {
         return test;
     }
 
     public void setTest(boolean test) {
         this.test = test;
+    }
+
+    public String getWhiteList() {
+        return whiteList;
+    }
+
+    public void setWhiteList(String whiteList) {
+        this.whiteList = whiteList;
     }
 }

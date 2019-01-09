@@ -9,13 +9,14 @@ import com.hyjf.am.resquest.config.MessagePushErrorRequest;
 import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.cs.message.bean.mc.MessagePushMsgHistory;
-import com.hyjf.cs.message.handler.MsgPushHandler;
 import com.hyjf.cs.message.service.msgpush.MessagePushErrorService;
 import org.apache.commons.collections.CollectionUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import springfox.documentation.annotations.ApiIgnore;
 
 import java.util.List;
@@ -34,9 +35,6 @@ public class MessagePushErrorController {
 
     @Autowired
     private MessagePushErrorService messagePushErrorService;
-
-    @Autowired
-    private MsgPushHandler msgPushHandler;
 
     /**
      * 获取列表记录数
@@ -67,40 +65,6 @@ public class MessagePushErrorController {
         }
         response.setRtn(Response.FAIL);
         response.setMessage(Response.FAIL_MSG);
-        return response;
-    }
-
-    /**
-     * 获取单个信息
-     *
-     * @return
-     */
-    @RequestMapping("getRecord/{id}")
-    public MessagePushHistoryResponse getRecord(@PathVariable String id) {
-        MessagePushHistoryResponse response = new MessagePushHistoryResponse();
-        MessagePushMsgHistory msg = messagePushErrorService.getRecord(id);
-        if (msg != null){
-            MessagePushMsgHistoryVO messagePushErrorVO = CommonUtils.convertBean(msg, MessagePushMsgHistoryVO.class);
-            response.setResult(messagePushErrorVO);
-            return response;
-        }
-        response.setRtn(Response.FAIL);
-        response.setMessage(Response.FAIL_MSG);
-        return response;
-    }
-
-    /**
-     * 推送极光消息
-     * @param messagePushMsgHistoryVO
-     * @return 成功返回消息id  失败返回 error
-     * @author Michael
-     */
-    @RequestMapping("sendMessage")
-    public Response sendMessage(@RequestBody MessagePushMsgHistoryVO messagePushMsgHistoryVO) throws Exception {
-        Response response = new Response();
-        MessagePushMsgHistory msg = new MessagePushMsgHistory();
-        BeanUtils.copyProperties(messagePushMsgHistoryVO, msg);
-        msgPushHandler.send(msg);
         return response;
     }
 }

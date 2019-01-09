@@ -38,20 +38,17 @@ import java.util.Map;
 public class MsgPushHandler {
 	private final static Logger logger = LoggerFactory.getLogger(MsgPushHandler.class);
 
-	@Autowired
-	private AmUserClient amUserClient;
-
-	@Autowired
-	private AmConfigClient amConfigClient;
-
-	@Autowired
-	private MessagePushMsgHistoryDao messagePushMsgHistoryDao;
-
-	@Autowired
-	private MessagePushMsgDao messagePushMsgDao;
-
 	private static final Integer SUCCESS_SEND = 0;
 	private static final Integer ERROR_SEND = -1;
+
+	@Autowired
+	private AmUserClient amUserClient;
+	@Autowired
+	private AmConfigClient amConfigClient;
+	@Autowired
+	private MessagePushMsgHistoryDao messagePushMsgHistoryDao;
+	@Autowired
+	private MessagePushMsgDao messagePushMsgDao;
 
 	/**
 	 * 
@@ -332,37 +329,42 @@ public class MsgPushHandler {
 			return;
 		}
 		logger.info("开始推送: msg_id is :{}, msg_content is:{}", msg.getId(), msg.getMsgContent());
-		if(PropertiesConfig.hyjfEnvProperties.isTest()){
-			logger.info("测试环境不推送.....");
-			msg.setSendTime(GetDate.getNowTime10());
-			msg.setMsgSendStatus(CustomConstants.MSG_PUSH_SEND_STATUS_1);
-			messagePushMsgHistoryDao.save(msg);
-			return;
-		}
 
 		// 错误消息
 		String errorMsg = "";
 		// 包区分 39新极光 79老极光
 		String packageCode = "39";
 
-
-		// 广播模式判断客户端
-		String clientStr = msg.getMsgTerminal();
-		if(StringUtils.isBlank(clientStr)){
-			logger.warn("client must be not empty...");
-			return ;
-		}
-
 		CustomizePushResult customizePushResult = null;
 		try {
 			// 判断是否发送所有人 0发送所有人 1个人
 			if (msg.getMsgDestinationType() == CustomConstants.MSG_PUSH_DESTINATION_TYPE_0) {
-				// 广播
-				customizePushResult = sendBroadcast(msg, clientStr, packageCode);
+				// 广播模式，测试环境不推送
+				if(!PropertiesConfig.isPassSend(null)){
+					logger.info("广播模式测试环境不推送.....");
+					msg.setSendTime(GetDate.getNowTime10());
+					msg.setMsgSendStatus(CustomConstants.MSG_PUSH_SEND_STATUS_1);
+					messagePushMsgHistoryDao.save(msg);
+					return;
+				}
 
+				// 广播模式判断客户端
+				String clientStr = msg.getMsgTerminal();
+				if(StringUtils.isBlank(clientStr)){
+					logger.warn("client must be not empty...");
+					return ;
+				}
+
+				customizePushResult = sendBroadcast(msg, clientStr, packageCode);
 			} else if (msg.getMsgDestinationType() == CustomConstants.MSG_PUSH_DESTINATION_TYPE_1) {
 				// 个人用户推送
-				UserAliasVO userAliasVO = amUserClient.findAliasByMobile(msg.getMsgDestination());
+				String mobile = msg.getMsgDestination();
+				if(!PropertiesConfig.isPassSend(mobile)){
+					logger.warn("个人推送未加入白名单，不推送, mobile is:{}....", mobile);
+					return;
+				}
+
+				UserAliasVO userAliasVO = amUserClient.findAliasByMobile(mobile);
 				if (userAliasVO != null) {
 					msg.setMsgUserId(userAliasVO.getUserId());
 					packageCode = userAliasVO.getPackageCode();
