@@ -1,7 +1,7 @@
 package com.hyjf.admin.utils.exportutils;
 
 import com.google.common.collect.Lists;
-import com.hyjf.common.util.ExportExcel;
+import com.hyjf.admin.utils.ExportExcel;
 import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;

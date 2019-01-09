@@ -1,4 +1,4 @@
-package com.hyjf.common.pdf;
+package com.hyjf.admin.utils;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPageTree;
@@ -32,9 +32,7 @@ public class PdfToHtml extends PDFToImage {
      */
 	 public static List<String> pdftoImg(String pdfPath, String savePath, String imgType) {
 	        List<String> listImg = new ArrayList<>();
-	        String fileName = pdfPath.substring(pdfPath.lastIndexOf("/") + 1, pdfPath.length());
-	        fileName = fileName.substring(0, fileName.lastIndexOf("."));
-	        
+
 	        File file = new File(pdfPath);
 	        PDDocument pdDocument = null;
 	        
@@ -67,36 +65,6 @@ public class PdfToHtml extends PDFToImage {
 	                }
 	            }
 	        }
-	        
-	        /*--------------------------------2.0.9jar包替换（ZhaDdaojian 2018-07-30）
-	        /* InputStream is = null;
-	         File p = new File(savePath);
-	        if (!p.exists()) {
-	            p.mkdir();
-	        }
-	        try {
-	            is = new BufferedInputStream(new FileInputStream(pdfPath));
-	            PDFParser parser = new PDFParser(is);
-	            parser.parse();
-	            pdDocument = parser.getPDDocument();
-	            List<PDPage> pages = pdDocument.getDocumentCatalog().getAllPages();
-	            for (int i = 0; i < pages.size(); i++) {
-	                String saveFileName = savePath + "/"+i + "." + imgType;
-	                PDPage page = pages.get(i);
-	                pdfPage2Img(page, saveFileName, imgType);
-	                listImg.add(String.valueOf(i));
-	            }
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        } finally {
-	            if (pdDocument != null) {
-	                try {
-	                    pdDocument.close();
-	                } catch (IOException e) {
-	                    e.printStackTrace();
-	                }
-	            }
-	        }*/
 
 	        return listImg;
 	    }

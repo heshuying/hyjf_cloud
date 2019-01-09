@@ -9,7 +9,7 @@ import com.hyjf.am.trade.service.front.account.AccountTradeService;
 import com.hyjf.am.vo.trade.AccountTradeVO;
 import com.hyjf.am.vo.trade.account.AppAccountTradeListCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
-import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

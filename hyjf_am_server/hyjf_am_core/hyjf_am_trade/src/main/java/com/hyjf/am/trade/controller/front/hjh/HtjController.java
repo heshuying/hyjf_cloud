@@ -7,9 +7,9 @@ import com.hyjf.am.trade.controller.BaseController;
 import com.hyjf.am.trade.service.front.hjh.HtjService;
 import com.hyjf.am.vo.trade.PlanInvestCustomizeVO;
 import com.hyjf.am.vo.trade.PlanLockCustomizeVO;
-import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
