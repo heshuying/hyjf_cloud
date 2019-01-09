@@ -72,9 +72,9 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
     }
 
     public Criteria createCriteria(AccountWebListVO accountWebList){
-        Criteria criteria = null;
+        Criteria criteria = new Criteria();
         if(null!=accountWebList){
-            criteria = Criteria.where("id").ne("").ne(null);
+//            criteria = Criteria.where("id").ne("").ne(null);
             if(StringUtils.isNotBlank(accountWebList.getOrdid())){
                 criteria = criteria.and("ordid").is(accountWebList.getOrdid());
             }
@@ -113,7 +113,7 @@ public class AccountWebListDao extends BaseMongoDao<AccountWebList> {
         double total = 0;
 		Aggregation aggregation = Aggregation
 				.newAggregation(match(createCriteria(accountWebList)),
-						Aggregation.group("flag").sum("amount").as("amount"));
+						Aggregation.group().sum("amount").as("amount"));
         AggregationResults<Map> ar = mongoTemplate.aggregate(aggregation,getEntityClass(), Map.class);
 
         long endTime = System.currentTimeMillis();

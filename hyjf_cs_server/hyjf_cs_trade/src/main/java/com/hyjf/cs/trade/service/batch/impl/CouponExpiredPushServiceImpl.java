@@ -11,7 +11,6 @@ import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.client.AmTradeClient;
-import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.service.batch.CouponExpiredPushService;
@@ -36,8 +35,6 @@ public class CouponExpiredPushServiceImpl implements CouponExpiredPushService {
     private static final Logger logger = LoggerFactory.getLogger(CouponExpiredPushServiceImpl.class);
     @Autowired
     private AmTradeClient couponUserClient;
-    @Autowired
-    private AmUserClient couponConfigClient;
     @Autowired
     private CommonProducer commonProducer;
 

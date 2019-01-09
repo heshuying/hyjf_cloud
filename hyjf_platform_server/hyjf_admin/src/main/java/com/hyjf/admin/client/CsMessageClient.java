@@ -21,7 +21,6 @@ import com.hyjf.am.vo.admin.AssociatedRecordListVO;
 import com.hyjf.am.vo.admin.BindLogVO;
 import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
 import com.hyjf.am.vo.admin.MessagePushMsgVO;
-import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 
 import java.util.List;
@@ -207,29 +206,6 @@ public interface CsMessageClient {
      * @return
      */
     List<MessagePushMsgHistoryVO> getRecordListT(MessagePushErrorRequest request, int limitStart, int limitEnd);
-
-
-    /**
-     * 获取单个信息
-     *
-     * @return
-     */
-    MessagePushMsgHistoryVO getRecord(String id);
-
-    /**
-     * 推送极光消息
-     * @param msg
-     * @return 成功返回消息id  失败返回 error
-     * @author Michael
-     */
-    void sendMessage(MessagePushMsgHistoryVO msg);
-
-    /**
-     * 数据修改 APP消息推送 异常处理
-     * @param request
-     * @return
-     */
-    MessagePushErrorResponse update(MessagePushErrorRequest request);
 
     /**
      *查询定时发送短信列表

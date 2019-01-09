@@ -40,7 +40,7 @@ public enum JPushCientEnum {
 				}
 			}
 		}
-		return JPUSH_TEST.getPushClient();
+		return JPUSH.getPushClient();
 	}
 
     /**
@@ -57,7 +57,7 @@ public enum JPushCientEnum {
 				}
 			}
 		}
-		return JPUSH_TEST.getFieldName();
+		return JPUSH.getFieldName();
 	}
 
 

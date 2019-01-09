@@ -18,6 +18,10 @@ public class NifaReportLogRequest extends BasePage implements Serializable{
 	private String createTimeStart;
 	//上传时间(结束)
 	private String createTimeEnd;
+	// 反馈文件状态
+	private Integer feedbackResult;
+	// 数据处理日期
+	private String historyDate;
 
 	public Integer getFileUploadStatus() {
 		return fileUploadStatus;
@@ -41,5 +45,21 @@ public class NifaReportLogRequest extends BasePage implements Serializable{
 
 	public void setCreateTimeEnd(String createTimeEnd) {
 		this.createTimeEnd = createTimeEnd;
+	}
+
+	public Integer getFeedbackResult() {
+		return feedbackResult;
+	}
+
+	public void setFeedbackResult(Integer feedbackResult) {
+		this.feedbackResult = feedbackResult;
+	}
+
+	public String getHistoryDate() {
+		return historyDate;
+	}
+
+	public void setHistoryDate(String historyDate) {
+		this.historyDate = historyDate;
 	}
 }

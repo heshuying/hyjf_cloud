@@ -9,7 +9,7 @@ import com.hyjf.am.trade.service.front.repay.ApiBorrowRepaymentInfoService;
 import com.hyjf.am.vo.trade.ApiBorrowRepaymentInfoCustomizeVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
-import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
