@@ -27,7 +27,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version CornerController, v0.1 2018/7/18 11:21
  */
-@Api(tags = "app端-汇天利资金中心接口")
+@Api(tags = "app端-基础信息设置")
 @RestController
 @RequestMapping("/hyjf-app/app/common")
 public class CornerController extends BaseController {
@@ -158,57 +158,44 @@ public class CornerController extends BaseController {
      */
     @ApiOperation(value = "接收设备唯一标识",notes = "接收设备唯一标识")
     @PostMapping(value = "/mobileCode")
-    public JSONObject mobileCode(@RequestHeader(value = "key") String key,@RequestHeader(value = "userId") Integer userId,HttpServletRequest request) {
+    public JSONObject mobileCode(@RequestHeader(value = "userId") Integer userId,
+                                 @RequestHeader(value = "sign") String sign,
+                                 @RequestHeader(value = "platform") String platform,
+                                 @RequestHeader(value = "version") String version,
+                                 @RequestParam(value = "mobileCode") String alias) {
+        logger.debug("userId is : {}, alias is: {}", userId, alias);
+
         JSONObject map = new JSONObject();
         map.put("request", "/hyjf-app/app/common/mobileCode");
-        // 唯一标识
-        String sign = request.getParameter("sign");
-        // 平台
-        String clientStr = request.getParameter("platform");
-        //设备标识码
-        String mobileCodeStr = request.getParameter("mobileCode");
-        //版本号
-        String versionStr = request.getParameter("version");
-        // 取得加密用的Key
-        if (Validator.isNull(key)) {
-            map.put("status", "1");
-            map.put("statusDesc", "请求参数非法");
-            return map;
-        }
-        if(StringUtils.isEmpty(mobileCodeStr)){
-            map.put("status","1");
-            map.put("statusDesc","请求参数非法");
-            return map;
-        }
-        //用户id
         map.put("status","0");
         map.put("statusDesc","请求成功");
 
         //版本号为  1.0.0.16  16为渠道号 不记版本
-        if(StringUtils.isNotEmpty(versionStr) ){
-            String vers[] = versionStr.split("\\.");
+        if(StringUtils.isNotEmpty(version) ){
+            String vers[] = version.split("\\.");
             if(vers != null && vers.length > 0){
-                versionStr = vers[3] ;
+                version = vers[3] ;
             }
         }
         try {
-            UserAliasVO mobileCode = amUserClient.findAliasesByUserId(userId);
-            if(mobileCode != null){
-                if(!mobileCode.getAlias().equals(mobileCodeStr)){
-                    mobileCode.setAlias(mobileCodeStr);
-                    mobileCode.setClient(clientStr);
-                    mobileCode.setPackageCode(versionStr);
-                    mobileCode.setSign(sign);
-                    amUserClient.updateAliases(mobileCode);
+            UserAliasVO userAliasVO = amUserClient.findAliasesByUserId(userId);
+            if(userAliasVO != null){
+                logger.debug("userAliasVO is : {}", JSONObject.toJSONString(userAliasVO));
+                if(!userAliasVO.getAlias().equals(alias)){
+                    userAliasVO.setAlias(alias);
+                    userAliasVO.setClient(platform);
+                    userAliasVO.setPackageCode(version);
+                    userAliasVO.setSign(sign);
+                    amUserClient.updateAliases(userAliasVO);
                 }
             }else{
-                mobileCode = new UserAliasVO();
-                mobileCode.setAlias(mobileCodeStr);
-                mobileCode.setUserId(userId);
-                mobileCode.setSign(sign);
-                mobileCode.setClient(clientStr);
-                mobileCode.setPackageCode(versionStr);
-                amUserClient.insertMobileCode(mobileCode);
+                userAliasVO = new UserAliasVO();
+                userAliasVO.setAlias(alias);
+                userAliasVO.setUserId(userId);
+                userAliasVO.setSign(sign);
+                userAliasVO.setClient(platform);
+                userAliasVO.setPackageCode(version);
+                amUserClient.insertMobileCode(userAliasVO);
             }
         } catch (Exception e) {
             map.put("status","1");
