@@ -28,6 +28,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -62,14 +63,17 @@ public class EvalationController extends BaseController {
         // 获取该角色 权限列表
         List<String> perm = (List<String>) request.getSession().getAttribute("permission");
         //判断权限
-        boolean isShow = false;
-        for (String string : perm) {
+        String isShow = "0";
+       for (String string : perm) {
             if (string.equals(PERMISSIONS + ":" + ShiroConstants.PERMISSION_HIDDEN_SHOW)) {
-                isShow=true;
+                isShow="1";
+                break;
             }
         }
         EvalationRequest evalationRequest = new EvalationRequest();
         BeanUtils.copyProperties(evalationRequestBean,evalationRequest);
+        //脱敏参数
+        evalationRequest.setIsShow(isShow);
         EvalationResultResponse evalationResponse = evalationService.selectUserEvalationResultList(evalationRequest);
         if(evalationResponse==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
@@ -78,13 +82,7 @@ public class EvalationController extends BaseController {
             return new AdminResult<>(FAIL, evalationResponse.getMessage());
         }
         List<EvalationCustomizeVO> evalationCustomizeVOList = new ArrayList<EvalationCustomizeVO>();
-        if(null!=evalationResponse.getResultList()&&evalationResponse.getResultList().size()>0){
-            if(!isShow){
-                //如果没有查看脱敏权限,显示加星
-                for (EvalationResultVO registRecordVO:evalationResponse.getResultList()){
-                    registRecordVO.setMobile(AsteriskProcessUtil.getAsteriskedValue(registRecordVO.getMobile()));
-                }
-            }
+        if(!CollectionUtils.isEmpty(evalationResponse.getResultList())){
             evalationCustomizeVOList = CommonUtils.convertBeanList(evalationResponse.getResultList(),EvalationCustomizeVO.class);
         }
         return new AdminResult<ListResult<EvalationCustomizeVO>>(ListResult.build(evalationCustomizeVOList, evalationResponse.getCount())) ;

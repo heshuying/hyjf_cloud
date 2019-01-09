@@ -109,6 +109,7 @@ public class EvaluationManagerController extends BaseController {
         mapParam.put("accountStatus", userRequest.getAccountStatus());
         mapParam.put("evaluationStatus", userRequest.getEvaluationStatus());
         mapParam.put("userProperty", userRequest.getUserProperty());
+        mapParam.put("isShow", userRequest.getIsShow());
         return mapParam;
     }
 

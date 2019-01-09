@@ -18,6 +18,7 @@ public class EvalationRequest extends BasePage {
     private String is51;
     private String evaluationStatus;
     private String evaluationType;
+    private String isShow;
 
     public String getUserName() {
         return userName;
@@ -83,4 +84,11 @@ public class EvalationRequest extends BasePage {
         this.evaluationType = evaluationType;
     }
 
+    public String getIsShow() {
+        return isShow;
+    }
+
+    public void setIsShow(String isShow) {
+        this.isShow = isShow;
+    }
 }

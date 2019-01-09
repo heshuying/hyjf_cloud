@@ -1,4 +1,4 @@
-package com.hyjf.signatrues.util.pdf;
+package com.hyjf.admin.utils;
 
 
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -90,6 +90,11 @@ public class PDFToImage {
         g.dispose();  
         return target;  
     }  
+
+
+
+
+
 
     public static PDDocument pdfInfo(String filePath) throws IOException{
     	 File file = new File(filePath);
