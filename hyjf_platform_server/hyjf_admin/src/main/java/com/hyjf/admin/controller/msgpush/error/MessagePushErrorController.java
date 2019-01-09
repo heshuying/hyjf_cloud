@@ -9,6 +9,8 @@ import com.hyjf.admin.common.util.ShiroConstants;
 import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.controller.manager.banksetting.BankSettingController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
+import com.hyjf.admin.mq.base.CommonProducer;
+import com.hyjf.admin.mq.base.MessageContent;
 import com.hyjf.admin.service.MessagePushErrorService;
 import com.hyjf.admin.service.MessagePushHistoryService;
 import com.hyjf.am.response.admin.MessagePushErrorResponse;
@@ -17,6 +19,10 @@ import com.hyjf.am.vo.admin.AdminAccountDetailDataRepairVO;
 import com.hyjf.am.vo.admin.MessagePushMsgHistoryVO;
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.ParamNameVO;
+import com.hyjf.am.vo.message.AppMsMessage;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.constants.MessageConstant;
+import com.hyjf.common.exception.MQException;
 import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.common.paginator.Paginator;
 import io.swagger.annotations.Api;
@@ -39,19 +45,20 @@ import java.util.List;
 @RestController
 @RequestMapping("/hyjf-admin/msgpush/error")
 public class MessagePushErrorController extends BaseController {
-
     private static final Logger logger = LoggerFactory.getLogger(BankSettingController.class);
-
     @Value("file.domain.url")
     private String FILE_DOMAIN_URL;
-
-    //权限名称
+    /**
+     * 权限名称
+     */
     public static final String PERMISSIONS = "msgpusherror";
 
     @Autowired
     private MessagePushErrorService messagePushErrorService;
     @Autowired
-    MessagePushHistoryService messagePushHistoryService;
+    private MessagePushHistoryService messagePushHistoryService;
+    @Autowired
+    private CommonProducer commonProducer;
 
 
     @PostMapping("/getListByConditions")
@@ -94,20 +101,26 @@ public class MessagePushErrorController extends BaseController {
     @PutMapping("/update")
     @ApiOperation(value = "重发 APP消息推送 异常处理", httpMethod = "PUT", notes = "重发 APP消息推送 异常处理")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_MODIFY)
-    public AdminResult update(@RequestBody AdminAccountDetailDataRepairVO requestParam) {
-        logger.info(this.getClass().getName(), "(条件)查询 APP消息推送 异常处理 列表 start", requestParam.toString(), "/hyjf-admin/msgpush/error/getListByConditions");
-        MessagePushErrorResponse response = new MessagePushErrorResponse();
-        try {
-            // 重发此消息
-            MessagePushMsgHistoryVO msg = this.messagePushErrorService.getRecord(requestParam.getId());
-            //推送极光消息（暂不开启）
-            this.messagePushErrorService.sendMessage(msg);
-        }catch (Exception e){
-            logger.info(this.getClass().getName(), "(条件)查询 APP消息推送 异常处理 列表 异常!", "/hyjf-admin/msgpush/error/getListByConditions",
-                    e);
-            return new AdminResult(FAIL, FAIL_DESC);
-        }
-        logger.info(this.getClass().getName(), "(条件)查询 APP消息推送 异常处理 列表 end", "/hyjf-admin/msgpush/error/getListByConditions");
-        return new AdminResult(response);
-    }
+	public AdminResult update(@RequestBody AdminAccountDetailDataRepairVO requestParam) {
+		logger.info(this.getClass().getName(), "(条件)查询 APP消息推送 异常处理 列表 start", requestParam.toString(),
+				"/hyjf-admin/msgpush/error/getListByConditions");
+		MessagePushErrorResponse response = new MessagePushErrorResponse();
+		try {
+			// 重发此消息
+			AppMsMessage appMsMessage = new AppMsMessage(MessageConstant.APP_MS_SEND_REPEAT, requestParam.getId());
+			try {
+				commonProducer.messageSend(
+						new MessageContent(MQConstant.APP_MESSAGE_TOPIC, requestParam.getId(), appMsMessage));
+			} catch (MQException e) {
+				logger.error("app push send error...", e);
+			}
+		} catch (Exception e) {
+			logger.info(this.getClass().getName(), "(条件)查询 APP消息推送 异常处理 列表 异常!",
+					"/hyjf-admin/msgpush/error/getListByConditions", e);
+			return new AdminResult(FAIL, FAIL_DESC);
+		}
+		logger.info(this.getClass().getName(), "(条件)查询 APP消息推送 异常处理 列表 end",
+				"/hyjf-admin/msgpush/error/getListByConditions");
+		return new AdminResult(response);
+	}
 }

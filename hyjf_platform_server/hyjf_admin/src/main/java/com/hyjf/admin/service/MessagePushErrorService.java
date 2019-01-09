@@ -36,19 +36,4 @@ public interface MessagePushErrorService {
      * @return
      */
     List<ParamNameVO> getParamNameList(String msg_push_send_status);
-
-    /**
-     * 获取单个信息
-     *
-     * @return
-     */
-    MessagePushMsgHistoryVO getRecord(String id);
-
-    /**
-     * 推送极光消息
-     * @param msg
-     * @return 成功返回消息id  失败返回 error
-     * @author Michael
-     */
-    void sendMessage(MessagePushMsgHistoryVO msg);
 }
