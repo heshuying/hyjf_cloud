@@ -2677,6 +2677,8 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		// 借款方式
 		borrowBean.setBorrowLevel(this.getValue(String.valueOf(borrowWithBLOBs.getBorrowLevel())));
 
+		borrowBean.setInvestLevel(this.getValue(String.valueOf(borrowWithBLOBs.getInvestLevel())));
+
 		if ("BORROW_FIRST".equals(borrowBean.getMoveFlag())) {
 			// 立即发标 20171101修改为"借款初审内，每个标的点开默认暂不发标"--查道健
 			borrowBean.setVerifyStatus("2");
