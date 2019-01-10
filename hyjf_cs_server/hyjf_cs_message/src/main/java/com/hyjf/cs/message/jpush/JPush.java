@@ -36,7 +36,7 @@ public class JPush {
 	public static JPushClient getClientInstance() {
 		if (jpushClient == null) {
 			ClientConfig clientConfig = ClientConfig.getInstance();
-			clientConfig.setApnsProduction(!PropertiesConfig.hyjfEnvProperties.isTest());
+			clientConfig.setApnsProduction(true);
 			jpushClient = new JPushClient(PropertiesConfig.jPushProperties.getMasterSecret(),
 					PropertiesConfig.jPushProperties.getAppKey(), null, clientConfig);
 		}
