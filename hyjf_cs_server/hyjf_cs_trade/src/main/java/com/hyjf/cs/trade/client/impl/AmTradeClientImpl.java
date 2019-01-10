@@ -4790,35 +4790,6 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     @Override
-    public ChinapnrExclusiveLogWithBLOBsVO selectChinapnrExclusiveLog(long id) {
-        String url = "http://AM-TRADE/am-trade/chinapnr/selectChinapnrExclusiveLog/"+id ;
-        ChinapnrExclusiveLogWithBLOBsResponse response = restTemplate.getForEntity(url,ChinapnrExclusiveLogWithBLOBsResponse.class).getBody();
-        if (Response.isSuccess(response)){
-            return response.getResult();
-        }
-        return null;
-    }
-
-    @Override
-    public int updateChinapnrExclusiveLog(ChinapnrExclusiveLogWithBLOBsVO record) {
-        IntegerResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/chinapnr/updateChinapnrExclusiveLog", record, IntegerResponse.class).getBody();
-        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
-            return response.getResultInt();
-        }
-        return 0;
-    }
-
-    @Override
-    public List<ChinapnrLogVO> getChinapnrLog(String ordId) {
-        String url = "http://AM-TRADE/am-trade/chinapnr/getChinapnrLog/"+ordId ;
-        ChinapnrLogResponse response = restTemplate.getForEntity(url,ChinapnrLogResponse.class).getBody();
-        if (Response.isSuccess(response)){
-            return response.getResultList();
-        }
-        return null;
-    }
-
-    @Override
     public boolean handlerAfterCash(ChinaPnrWithdrawRequest chinaPnrWithdrawRequest) {
         BooleanResponse response = restTemplate.postForEntity("http://AM-TRADE/am-trade/chinapnr/handlerAfterCash", chinaPnrWithdrawRequest, BooleanResponse.class).getBody();
         if (response != null && Response.SUCCESS.equals(response.getRtn())) {
@@ -4834,11 +4805,6 @@ public class AmTradeClientImpl implements AmTradeClient {
         restTemplate.getForEntity(url,IntegerResponse.class).getBody();
     }
 
-    @Override
-    public void updateChinapnrExclusiveLogStatus(long uuid, String status) {
-        String url = "http://AM-TRADE/am-trade/chinapnr/updateChinapnrExclusiveLogStatus/"+uuid+"/"+ status;
-        restTemplate.getForEntity(url,IntegerResponse.class).getBody();
-    }
 
     /**
      * 查询用户出借次数 包含直投类、债转、汇添金
