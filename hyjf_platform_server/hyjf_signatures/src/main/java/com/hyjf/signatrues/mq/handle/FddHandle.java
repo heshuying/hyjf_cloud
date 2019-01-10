@@ -1146,6 +1146,8 @@ public class FddHandle {
 			HjhDebtCreditTenderVO hjhCreditTender = hjhCreditTenderList.get(0);
 			paramter.put("assignCapital",hjhCreditTender.getAssignCapital().toString());
 			paramter.put("assignPay",hjhCreditTender.getAssignPay().toString());
+			//转让服务费
+			paramter.put("coverCharge", hjhCreditTender.getAssignServiceFee().toString());
 			//调用下载计划债转协议的方法
 			CreditAssignedBean tenderCreditAssignedBean = new CreditAssignedBean();
 
@@ -1167,6 +1169,7 @@ public class FddHandle {
 			//return;
 			throw new RuntimeException("获取模板参数对象(查新表)失败");
 		}
+
 		BorrowAndInfoVO borrow = (BorrowAndInfoVO) resultMap.get("borrow");
 		UserInfoVO creditUsersInfo = (UserInfoVO) resultMap.get("usersInfoCredit");
 		UserVO creditUser = (UserVO) resultMap.get("usersCredit");
@@ -1174,7 +1177,9 @@ public class FddHandle {
 		UserVO tenderUser = (UserVO) resultMap.get("users");
 		HjhDebtCreditVO borrowCredit = (HjhDebtCreditVO) resultMap.get("borrowCredit");
 		UserVO borrowUsers = this.amUserClient.findUserById(borrow.getUserId());
-
+		if (borrow.getRepayLastTime() != null) {
+			borrow.setRepayLastTimeStr(GetDate.getDateMyTimeInMillis(borrow.getRepayLastTime()));
+		}
 		/** 标的基本数据 */
 		String borrowStyle = borrow.getBorrowStyle();// 还款方式
 		Integer borrowPeriod = borrow.getBorrowPeriod();
@@ -1197,6 +1202,8 @@ public class FddHandle {
 
 		// 标的编号
 		paramter.put("borrowNid", borrow.getBorrowNid());
+		//到期日
+		paramter.put("borrowDueDay", borrow.getRepayLastTimeStr());
 		// 编号
 		paramter.put("NID", bean.getAssignNid());
 		//签署日期
