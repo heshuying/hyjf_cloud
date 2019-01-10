@@ -34,7 +34,7 @@ public class CsMessageClientImpl implements CsMessageClient {
 	@Override
 	public BorrowUserStatisticVO selectBorrowUserStatistic() {
 		BorrowUserStatisticResponse response = restTemplate.getForObject(
-				"http://CS-MESSAGE/cs-message/operation_report_job/getBorrowUserStatistic",
+				"http://CS-MESSAGE/cs-message/operationReportJob/getBorrowUserStatistic",
 				BorrowUserStatisticResponse.class);
 		return response.getResult();
 	}
@@ -60,7 +60,7 @@ public class CsMessageClientImpl implements CsMessageClient {
 	@Override
 	public BigDecimal selectTenderSum() {
 		BigDecimalResponse tenderSum = restTemplate.getForObject(
-				"http://CS-MESSAGE/cs-message/totalinvestandinterest/selectTenderSum", BigDecimalResponse.class);
+				"http://CS-MESSAGE/cs-message/totalInvestAndInterest/selectTenderSum", BigDecimalResponse.class);
 		return tenderSum.getResultDec();
 	}
 
@@ -72,7 +72,7 @@ public class CsMessageClientImpl implements CsMessageClient {
 	@Override
 	public BigDecimal selectInterestSum() {
 		BigDecimalResponse interestSum = restTemplate.getForObject(
-				"http://CS-MESSAGE/cs-message/totalinvestandinterest/selectInterestSum", BigDecimalResponse.class);
+				"http://CS-MESSAGE/cs-message/totalInvestAndInterest/selectInterestSum", BigDecimalResponse.class);
 		return interestSum.getResultDec();
 	}
 
@@ -84,7 +84,7 @@ public class CsMessageClientImpl implements CsMessageClient {
 	@Override
 	public int selectTotalTenderSum() {
 		IntegerResponse totalTenderSum = restTemplate.getForObject(
-				"http://CS-MESSAGE/cs-message/totalinvestandinterest/selectTotalTenderSum", IntegerResponse.class);
+				"http://CS-MESSAGE/cs-message/totalInvestAndInterest/selectTotalTenderSum", IntegerResponse.class);
 		return totalTenderSum.getResultInt();
 	}
 

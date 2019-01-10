@@ -24,7 +24,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @ApiIgnore
 @RestController
-@RequestMapping("/cs-message/history_message")
+@RequestMapping("/cs-message/historyMessage")
 public class MessagePushHistoryController {
     @Autowired
     MessagePushHistoryService messagePushHistoryService;
@@ -36,7 +36,7 @@ public class MessagePushHistoryController {
      * @param request
      * @return
      */
-    @RequestMapping("/get_message_list")
+    @RequestMapping("/getMessageList")
     public MessagePushHistoryResponse getMessageList(@RequestBody MessagePushHistoryRequest request) {
         MessagePushHistoryResponse response = new MessagePushHistoryResponse();
         Integer count = messagePushHistoryService.getRecordCount(request);

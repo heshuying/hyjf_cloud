@@ -20,7 +20,7 @@ import java.util.List;
  */
 @ApiIgnore
 @RestController
-@RequestMapping("/cs-message/sms_ontime")
+@RequestMapping("/cs-message/smsOntime")
 public class OntimeMessageController extends BaseController {
 
 	/** 任务状态:未执行 */

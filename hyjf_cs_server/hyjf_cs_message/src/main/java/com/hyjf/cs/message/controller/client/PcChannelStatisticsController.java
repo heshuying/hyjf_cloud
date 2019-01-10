@@ -28,7 +28,7 @@ import java.util.List;
  */
 @Api(tags = "app端-PC渠道统计")
 @RestController
-@RequestMapping("/cs-message/pc_channel_statistics")
+@RequestMapping("/cs-message/pcChannelStatistics")
 public class PcChannelStatisticsController extends BaseController {
     @Autowired
     private ChannelStatisticsService channelStatisticsService;

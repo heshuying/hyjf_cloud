@@ -19,7 +19,7 @@ public class StatisticsOperationReportJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("StatisticsOperationReportJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-MESSAGE/cs-message/operation_report_job/countOperationReport", StringResponse.class);
+        restTemplate.getForEntity("http://CS-MESSAGE/cs-message/operationReportJob/countOperationReport", StringResponse.class);
         logger.info("StatisticsOperationReportJob: {} execute end...", context.getJobDetail().getKey().getName());
     }
 }

@@ -36,7 +36,7 @@ import java.util.List;
  */
 @ApiIgnore
 @RestController
-@RequestMapping("/cs-message/hjh_plan_capital")
+@RequestMapping("/cs-message/hjhPlanCapital")
 public class HjhPlanCapitalController extends BaseController {
 
     @Autowired
@@ -48,7 +48,7 @@ public class HjhPlanCapitalController extends BaseController {
      * 定时计划资金统计任务
      * @return
      */
-    @RequestMapping("/hjhplancapital")
+    @RequestMapping("/hjhPlanCapital")
     public BooleanResponse hjhPlanCapital() {
             logger.info("汇计划资本预估统计(每日)任务 开始... ");
             Boolean result = false;

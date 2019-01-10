@@ -36,7 +36,7 @@ import java.util.List;
  */
 @ApiIgnore
 @RestController
-@RequestMapping("/cs-message/app_message")
+@RequestMapping("/cs-message/appMessage")
 public class MessagePushMsgController extends BaseController {
 
 	@Autowired
@@ -48,13 +48,13 @@ public class MessagePushMsgController extends BaseController {
 	@Autowired
 	private MessagePushMsgService messagePushMsgService;
 
-	@RequestMapping("/push_all")
+	@RequestMapping("/pushAll")
 	public void messagePush() {
 		logger.info("消息推送定时任务开始......");
 		msgPushService.pushMessage();
 	}
 
-	@RequestMapping("/push_statics")
+	@RequestMapping("/pushStatics")
 	public void messagePushStatics() {
 		logger.info("消息推送统计定时任务开始......");
 		// 时间戳定义
@@ -82,7 +82,7 @@ public class MessagePushMsgController extends BaseController {
 		}
 	}
 
-	@RequestMapping("/push_plat_statics")
+	@RequestMapping("/pushPlatStatics")
 	public void messagePlatPushStatics() {
 		try {
 			int N = 7;// 更新或插入7天之内的数据
@@ -118,7 +118,7 @@ public class MessagePushMsgController extends BaseController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/selectmessagepushmsg")
+	@RequestMapping("/selectMessagePushMsg")
 	public MessagePushMsgResponse selectMessagePushMsg(@RequestBody MessagePushMsgRequest request) {
 		MessagePushMsgResponse response = new MessagePushMsgResponse();
 		long count = messagePushMsgService.countMessagePushMsg(request);
@@ -137,7 +137,7 @@ public class MessagePushMsgController extends BaseController {
 	 * @param id
 	 * @return
 	 */
-	@RequestMapping("/getmessagepushmsgbyid/{id}")
+	@RequestMapping("/getMessagePushMsgById/{id}")
 	public MessagePushMsgResponse getMessagePushMsgById (@PathVariable String id){
 		MessagePushMsgResponse response = new MessagePushMsgResponse();
 		MessagePushMsg messagePushMsg = messagePushMsgService.getMessagePushMsgById(id);
@@ -154,7 +154,7 @@ public class MessagePushMsgController extends BaseController {
 	 * @param msgVO
 	 * @return
 	 */
-	@RequestMapping("/insertmessagepushmsg")
+	@RequestMapping("/insertMessagePushMsg")
 	public MessagePushMsgResponse insertMessagePushMsg(@RequestBody MessagePushMsgVO msgVO) {
 		MessagePushMsgResponse response = new MessagePushMsgResponse();
 		MessagePushMsg msg = new MessagePushMsg();
@@ -171,7 +171,7 @@ public class MessagePushMsgController extends BaseController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/updatemessagepushmsg")
+	@RequestMapping("/updateMessagePushMsg")
 	public MessagePushMsgResponse updateMessagePushMsg(@RequestBody MessagePushMsgRequest request) {
 		MessagePushMsgResponse response = new MessagePushMsgResponse();
 		MessagePushMsg messagePushMsg = new MessagePushMsg();
@@ -188,7 +188,7 @@ public class MessagePushMsgController extends BaseController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/deletemessagepushmsg")
+	@RequestMapping("/deleteMessagePushMsg")
 	public MessagePushMsgResponse deleteMessagePushMsg(@RequestBody MessagePushMsgRequest request) {
 		MessagePushMsgResponse response = new MessagePushMsgResponse();
 		List<MessagePushMsgVO> recordList = request.getRecordList();

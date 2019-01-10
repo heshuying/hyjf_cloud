@@ -266,6 +266,28 @@ public class SystemConfig {
     @Value("${hyjf.wechat.invite.url}")
     private String wechatInviteUrl;
 
+    @Value("${hyjf.online.type}")
+    private String hyjfOnlineType;
+
+    @Value("${hyjf.cdn.domain.url}")
+    private String hyjfCdnDomainUrl;
+
+    public String getHyjfOnlineType() {
+        return hyjfOnlineType;
+    }
+
+    public void setHyjfOnlineType(String hyjfOnlineType) {
+        this.hyjfOnlineType = hyjfOnlineType;
+    }
+
+    public String getHyjfCdnDomainUrl() {
+        return hyjfCdnDomainUrl;
+    }
+
+    public void setHyjfCdnDomainUrl(String hyjfCdnDomainUrl) {
+        this.hyjfCdnDomainUrl = hyjfCdnDomainUrl;
+    }
+
     public String getAppForgetpassword() {
         return appForgetpassword;
     }
