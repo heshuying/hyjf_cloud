@@ -1069,6 +1069,8 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 
 			// 新增协议期限字段
 			borrow.setBorrowLevel(borrowBean.getBorrowLevel());
+			// 标的风险测评投资等级
+			borrow.setInvestLevel(borrowBean.getInvestLevel());
 			// 新增协议期限字段
 			if (StringUtils.isNotEmpty(borrowBean.getContractPeriod())) {
 				borrow.setContractPeriod(Integer.parseInt(borrowBean.getContractPeriod()));
