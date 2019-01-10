@@ -1,5 +1,20 @@
 package com.hyjf.cs.user.client.impl;
 
+import static org.slf4j.LoggerFactory.getLogger;
+
+import java.io.UnsupportedEncodingException;
+import java.util.List;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.IntegerResponse;
@@ -23,20 +38,6 @@ import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmUserClient;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.io.UnsupportedEncodingException;
-import java.util.List;
-
-import static org.slf4j.LoggerFactory.getLogger;
 
 /**
  * @author xiasq
@@ -259,6 +260,7 @@ public class AmUserClientImpl implements AmUserClient {
 	 */
 	@Override
 	public int saveSmsCode(String mobile, String checkCode, String validCodeType, Integer status, String platform) {
+		logger.debug("短信验证码入库, mobile is:　{}", mobile);
 		SmsCodeRequest request = new SmsCodeRequest();
 		request.setMobile(mobile);
 		request.setVerificationCode(checkCode);
@@ -266,10 +268,11 @@ public class AmUserClientImpl implements AmUserClient {
 		request.setStatus(status);
 		request.setPlatform(platform);
 		SmsCodeResponse response = restTemplate
-				.postForEntity(userService+"/smsCode/save", request, SmsCodeResponse.class).getBody();
+				.postForEntity(userService + "/smsCode/save", request, SmsCodeResponse.class).getBody();
 		if (response != null && Response.SUCCESS.equals(response.getRtn())) {
 			return response.getCnt();
 		} else {
+			logger.warn("response is null, send fail....");
 			throw new RuntimeException("发送验证码失败...");
 		}
 	}

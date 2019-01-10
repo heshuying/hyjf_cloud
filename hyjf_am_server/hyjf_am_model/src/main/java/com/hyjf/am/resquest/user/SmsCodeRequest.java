@@ -79,4 +79,17 @@ public class SmsCodeRequest extends BaseVO {
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
+
+	@Override
+	public String toString() {
+		return "SmsCodeRequest{" +
+				"mobile='" + mobile + '\'' +
+				", verificationCode='" + verificationCode + '\'' +
+				", verificationType='" + verificationType + '\'' +
+				", platform='" + platform + '\'' +
+				", status=" + status +
+				", updateStatus=" + updateStatus +
+				", isUpdate=" + isUpdate +
+				'}';
+	}
 }

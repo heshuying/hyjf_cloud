@@ -33,6 +33,7 @@ public class CommonProducer {
      * @throws MQException
      */
     public boolean messageSend(MessageContent messageContent) throws MQException {
+        logger.debug("普通队列mq消息发送, messageContent is: {}", messageContent);
         try {
             SendResult sendResult = null;
             if(StringUtils.isNotEmpty(messageContent.keys)) {

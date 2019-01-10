@@ -38,6 +38,7 @@ public class SmsCodeController extends BaseController {
 	 */
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public SmsCodeResponse saveSmsCode(@RequestBody @Valid SmsCodeRequest request) {
+		logger.info("sms code save, request is : {}", request);
 		SmsCodeResponse response = new SmsCodeResponse();
 		int cnt = smsService.save(request.getMobile(), request.getVerificationType(), request.getVerificationCode(),
 				request.getPlatform(), request.getStatus());
