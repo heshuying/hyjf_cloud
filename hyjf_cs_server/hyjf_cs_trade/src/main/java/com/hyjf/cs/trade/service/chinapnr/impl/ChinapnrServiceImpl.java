@@ -221,12 +221,12 @@ public class ChinapnrServiceImpl extends BaseTradeServiceImpl implements Chinapn
 
     @Override
     public ChinapnrExclusiveLogWithBLOBsVO selectChinapnrExclusiveLog(long id) {
-        return amTradeClient.selectChinapnrExclusiveLog(id);
+        return csMessageClient.selectChinapnrExclusiveLog(id);
     }
 
     @Override
     public int updateChinapnrExclusiveLog(ChinapnrExclusiveLogWithBLOBsVO record) {
-        return amTradeClient.updateChinapnrExclusiveLog(record);
+        return csMessageClient.updateChinapnrExclusiveLog(record);
     }
 
     @Override
@@ -269,7 +269,7 @@ public class ChinapnrServiceImpl extends BaseTradeServiceImpl implements Chinapn
         List<String> respCode = new ArrayList<String>();
         respCode.add(ChinaPnrConstant.RESPCODE_SUCCESS);
         respCode.add(ChinaPnrConstant.RESPCODE_CHECK);
-        List<ChinapnrLogVO> list =  amTradeClient.getChinapnrLog(ordId);
+        List<ChinapnrLogVO> list =  csMessageClient.getChinapnrLog(ordId);
         if (list != null && list.size() > 0) {
             String msgData = list.get(0).getMsgdata();
             if (Validator.isNotNull(msgData)) {
@@ -301,7 +301,7 @@ public class ChinapnrServiceImpl extends BaseTradeServiceImpl implements Chinapn
 
     @Override
     public void updateChinapnrExclusiveLogStatus(long uuid, String status) {
-        amTradeClient.updateChinapnrExclusiveLogStatus(uuid,status);
+        csMessageClient.updateChinapnrExclusiveLogStatus(uuid,status);
     }
 
     private boolean updateBeforeCash(ChinapnrBean bean, Map<String, String> params, AccountBankVO accountBank) {

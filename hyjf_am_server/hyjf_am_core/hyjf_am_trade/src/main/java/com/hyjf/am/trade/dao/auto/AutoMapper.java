@@ -143,9 +143,6 @@ public class AutoMapper {
     protected BorrowUserMapper borrowUserMapper;
 
     @Resource
-    protected ChinapnrExclusiveLogMapper chinapnrExclusiveLogMapper;
-
-    @Resource
     protected ChinapnrLogMapper chinapnrLogMapper;
 
     @Resource

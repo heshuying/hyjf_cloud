@@ -20,6 +20,7 @@ import com.hyjf.cs.trade.bean.assetpush.UserWithdrawRequestBean;
 import com.hyjf.cs.trade.client.AmConfigClient;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.client.CsMessageClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.BaseTradeService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -47,6 +48,8 @@ public class BaseTradeServiceImpl extends BaseServiceImpl implements BaseTradeSe
     @Autowired
     public AmConfigClient amConfigClient;
 
+    @Autowired
+    public CsMessageClient csMessageClient;
 
     /**
      * @Description 根据token查询user
