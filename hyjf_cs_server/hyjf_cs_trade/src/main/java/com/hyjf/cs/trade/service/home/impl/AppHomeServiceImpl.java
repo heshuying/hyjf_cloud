@@ -33,6 +33,7 @@ import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.home.AppHomeService;
+import com.hyjf.cs.trade.util.CdnUrlUtil;
 import com.hyjf.cs.trade.util.HomePageDefine;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import org.apache.commons.lang3.StringUtils;
@@ -826,7 +827,12 @@ public class AppHomeServiceImpl implements AppHomeService {
         AdsRequest adsRequest = new AdsRequest();
         adsRequest.setLimitStart(HomePageDefine.BANNER_SIZE_LIMIT_START);
         adsRequest.setLimitEnd(HomePageDefine.BANNER_SIZE_LIMIT_END);
+        String cdnDomainUrl = CdnUrlUtil.getCdnUrl();
         adsRequest.setHost(HOST);
+        if (StringUtils.isNotBlank(cdnDomainUrl)){
+            adsRequest.setHost(cdnDomainUrl);
+        }
+
         String code = "";
         if ("2".equals(platform)) {
             code = "android_banner";
@@ -937,7 +943,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         if(StringUtils.isEmpty(uniqueIdentifier)){
             return 0;
         }
-        String baseUrl= "http://CS-MESSAGE/cs-message/userdeviceuniquecode/";
+        String baseUrl= "http://CS-MESSAGE/cs-message/userDeviceUniqueCode/";
         String url = baseUrl + uniqueIdentifier;
         UserDeviceUniqueCodeResponse response = baseClient.getExe(url,UserDeviceUniqueCodeResponse.class);
         List<UserDeviceUniqueCodeVO> list = response.getResultList();

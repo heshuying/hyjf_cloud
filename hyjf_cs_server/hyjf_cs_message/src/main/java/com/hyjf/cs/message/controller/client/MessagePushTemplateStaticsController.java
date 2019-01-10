@@ -28,7 +28,7 @@ import java.util.List;
  */
 @Api(tags = "app端-查询模板消息统计报表")
 @RestController
-@RequestMapping("/cs-message/messagepush_template_statics")
+@RequestMapping("/cs-message/messagePushTemplateStatics")
 public class MessagePushTemplateStaticsController extends BaseController {
 	@Autowired
 	private MessagePushTemplateStaticsService staticsService;
@@ -40,7 +40,7 @@ public class MessagePushTemplateStaticsController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "查询模板消息统计报表", notes = "查询模板消息统计报表")
-	@PostMapping("/select_template_statics")
+	@PostMapping("/selectTemplateStatics")
 	public MessagePushTemplateStaticsResponse selectTemplateStatics(
 			@RequestBody MessagePushTemplateStaticsRequest request) {
 		MessagePushTemplateStaticsResponse response = new MessagePushTemplateStaticsResponse();

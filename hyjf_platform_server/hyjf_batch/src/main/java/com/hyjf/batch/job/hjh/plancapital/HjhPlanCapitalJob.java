@@ -23,7 +23,7 @@ public class HjhPlanCapitalJob extends BaseJob implements Job {
         logger.info("HjhPlanCapitalJob: {} execute...", context.getJobDetail().getKey().getName());
 
         BooleanResponse result = restTemplate.getForEntity(
-                "http://CS-MESSAGE/cs-message/hjh_plan_capital/hjhplancapital", BooleanResponse.class).getBody();
+                "http://CS-MESSAGE/cs-message/hjhPlanCapital/hjhPlanCapital", BooleanResponse.class).getBody();
 
         logger.info("HjhPlanCapitalJob execute end...");
     }

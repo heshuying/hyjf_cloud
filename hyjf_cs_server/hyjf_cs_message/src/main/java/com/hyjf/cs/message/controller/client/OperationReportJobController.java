@@ -34,7 +34,7 @@ import java.util.Date;
  */
 @ApiIgnore
 @RestController
-@RequestMapping("/cs-message/operation_report_job")
+@RequestMapping("/cs-message/operationReportJob")
 public class OperationReportJobController extends BaseController {
 
 	@Autowired

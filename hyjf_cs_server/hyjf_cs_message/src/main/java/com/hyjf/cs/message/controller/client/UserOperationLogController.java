@@ -33,7 +33,7 @@ import java.util.Map;
  */
 @Api(tags ="会员操作日志")
 @RestController
-@RequestMapping("/cs-message/manager/operationlog")
+@RequestMapping("/cs-message/manager/operationLog")
 public class UserOperationLogController extends BaseController {
 
     private Logger logger = LoggerFactory.getLogger(UserOperationLogController.class);

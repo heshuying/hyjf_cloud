@@ -44,6 +44,7 @@ import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.home.WechatProjectListService;
 import com.hyjf.cs.trade.service.repay.RepayPlanService;
+import com.hyjf.cs.trade.util.CdnUrlUtil;
 import com.hyjf.cs.trade.util.HomePageDefine;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import org.apache.commons.lang.StringUtils;
@@ -947,7 +948,8 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         request.setLimitStart(HomePageDefine.BANNER_SIZE_LIMIT_START);
         request.setLimitEnd(HomePageDefine.BANNER_SIZE_LIMIT_END);
         //去掉host前缀
-        request.setHost("");
+        String cdnDomainUrl = CdnUrlUtil.getCdnUrl();
+        request.setHost(cdnDomainUrl);
         String code = "wechat_banner";
         request.setCode(code);
         request.setPlatformType("3");

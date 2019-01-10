@@ -19,7 +19,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @ApiIgnore
 @RestController
-@RequestMapping("/cs-message/totalinvestandinterest")
+@RequestMapping("/cs-message/totalInvestAndInterest")
 public class TotalInvestAndInterestController extends BaseController {
     @Autowired
     private TotalInvestAndInterestService service;

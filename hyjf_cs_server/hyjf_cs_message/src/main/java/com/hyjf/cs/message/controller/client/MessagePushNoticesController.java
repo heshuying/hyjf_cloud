@@ -27,7 +27,7 @@ import java.util.List;
  */
 @ApiIgnore
 @RestController
-@RequestMapping("/cs-message/admin_message")
+@RequestMapping("/cs-message/adminMessage")
 public class MessagePushNoticesController {
     @Autowired
     MessagePushNoticesService messagePushNoticesService;
@@ -38,7 +38,7 @@ public class MessagePushNoticesController {
      * @param request
      * @return
      */
-    @RequestMapping("/message_push_list")
+    @RequestMapping("/messagePushList")
     public MessagePushNoticesResponse selectMessagePushList(
             @RequestBody MessagePushNoticesRequest request) {
         MessagePushNoticesResponse response = new MessagePushNoticesResponse();
@@ -62,7 +62,7 @@ public class MessagePushNoticesController {
      * @param request
      * @return
      */
-    @RequestMapping("/insert_push_list")
+    @RequestMapping("/insertPushList")
     public MessagePushNoticesResponse insertMessagePushList(
             @RequestBody MessagePushNoticesRequest request) {
         MessagePushNoticesResponse response = new MessagePushNoticesResponse();
@@ -76,7 +76,7 @@ public class MessagePushNoticesController {
      *
      * @return
      */
-    @RequestMapping("/delete_push_list")
+    @RequestMapping("/deletePushList")
     public MessagePushNoticesResponse deleteRecordAction(@RequestBody MessagePushNoticesRequest request) {
         String ids = request.getIds();
         //List<String> recordList = JSONArray.parseArray(ids, String.class);
@@ -93,7 +93,7 @@ public class MessagePushNoticesController {
      *
      * @return
      */
-    @RequestMapping("/get_push_record")
+    @RequestMapping("/getPushRecord")
     public MessagePushNoticesResponse getRecordAction(@RequestBody MessagePushNoticesRequest request) {
         MessagePushNoticesResponse response = new MessagePushNoticesResponse();
         MessagePushMsg record = messagePushNoticesService.getRecord(request);
@@ -110,7 +110,7 @@ public class MessagePushNoticesController {
      * @param form
      * @return
      */
-    @RequestMapping("/update_push_list")
+    @RequestMapping("/updatePushList")
     public MessagePushNoticesResponse updateAction(@RequestBody MessagePushNoticesRequest form) {
         MessagePushNoticesResponse response = new MessagePushNoticesResponse();
         // 更新
