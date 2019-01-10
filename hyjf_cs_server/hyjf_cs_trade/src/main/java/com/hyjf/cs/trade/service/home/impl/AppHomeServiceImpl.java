@@ -937,7 +937,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         if(StringUtils.isEmpty(uniqueIdentifier)){
             return 0;
         }
-        String baseUrl= "http://CS-MESSAGE/cs-message/userdeviceuniquecode/";
+        String baseUrl= "http://CS-MESSAGE/cs-message/userDeviceUniqueCode/";
         String url = baseUrl + uniqueIdentifier;
         UserDeviceUniqueCodeResponse response = baseClient.getExe(url,UserDeviceUniqueCodeResponse.class);
         List<UserDeviceUniqueCodeVO> list = response.getResultList();

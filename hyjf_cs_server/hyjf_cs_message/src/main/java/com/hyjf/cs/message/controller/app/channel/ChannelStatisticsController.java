@@ -39,7 +39,7 @@ public class ChannelStatisticsController extends BaseController {
      * @return
      */
     @ApiOperation(value = "获取app渠道统计列表", notes = "获取app渠道统计列表")
-    @PostMapping("/channelstatistics")
+    @PostMapping("/channelStatistics")
     public AppChannelStatisticsResponse searchList(@RequestBody AppChannelStatisticsRequest request) {
         AppChannelStatisticsResponse response = new AppChannelStatisticsResponse();
 

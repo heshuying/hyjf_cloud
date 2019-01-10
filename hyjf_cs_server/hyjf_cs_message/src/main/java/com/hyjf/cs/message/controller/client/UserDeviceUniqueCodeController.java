@@ -20,7 +20,7 @@ import java.util.List;
  */
 @ApiIgnore
 @RestController
-@RequestMapping("/cs-message/userdeviceuniquecode")
+@RequestMapping("/cs-message/userDeviceUniqueCode")
 public class UserDeviceUniqueCodeController extends BaseController {
 
     @Autowired

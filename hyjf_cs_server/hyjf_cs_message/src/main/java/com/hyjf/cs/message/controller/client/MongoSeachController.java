@@ -155,7 +155,7 @@ public class MongoSeachController extends BaseController {
      * @param request 前端给传的筛选参数
      * @return
      */
-    @PostMapping(value = "/getassociatedrecordscount")
+    @PostMapping(value = "/getAssociatedRecordsCount")
     public AssociatedRecordListResponse getDirectionalTransferCount(@RequestBody AssociatedRecordListRequest request){
         AssociatedRecordListResponse response = new AssociatedRecordListResponse();
         long count = directionalTransferAssociatedRecordsDao.getDirectionalTransferCount(request);
@@ -170,7 +170,7 @@ public class MongoSeachController extends BaseController {
      * @param request 前端给传的筛选参数
      * @return
      */
-    @PostMapping("/searchassociatedrecordlist")
+    @PostMapping("/searchAssociatedRecordList")
     public AssociatedRecordListResponse searchDirectionalTransferList(@RequestBody AssociatedRecordListRequest request){
         AssociatedRecordListResponse response = new AssociatedRecordListResponse();
         Long count = directionalTransferAssociatedRecordsDao.getDirectionalTransferCount(request);
@@ -196,7 +196,7 @@ public class MongoSeachController extends BaseController {
      * @param request 前端给传的筛选参数
      * @return
      */
-    @PostMapping(value = "/getassociatedlogcount")
+    @PostMapping(value = "/getAssociatedLogCount")
     public BindLogResponse getDirectionalTransferLogCount(@RequestBody BindLogListRequest request){
         BindLogResponse response = new BindLogResponse();
         long count = directionalTransferAssociatedLogDao.getDirectionalTransferLogCount(request);
@@ -211,7 +211,7 @@ public class MongoSeachController extends BaseController {
      * @param request 前端给传的筛选参数
      * @return
      */
-    @PostMapping("/searchassociatedloglist")
+    @PostMapping("/searchAssociatedLogList")
     public BindLogResponse searchDirectionalTransferLogList(@RequestBody BindLogListRequest request){
         BindLogResponse response = new BindLogResponse();
         Long count = directionalTransferAssociatedLogDao.getDirectionalTransferLogCount(request);
