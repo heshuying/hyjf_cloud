@@ -428,6 +428,9 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		if (StringUtils.isNotEmpty(borrowBean.getBorrowLevel())) {
 			borrow.setBorrowLevel(borrowBean.getBorrowLevel());
 		}
+		if (StringUtils.isNotEmpty(borrowBean.getInvestLevel())){
+			borrow.setInvestLevel(borrowBean.getInvestLevel());
+		}
 		// ----------风险缓释金添加-------
 		// 资产编号
 		borrow.setBorrowAssetNumber(borrowBean.getBorrowAssetNumber());
