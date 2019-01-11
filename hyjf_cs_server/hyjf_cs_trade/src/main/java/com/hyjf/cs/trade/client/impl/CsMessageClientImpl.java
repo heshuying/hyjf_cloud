@@ -3,6 +3,12 @@
  */
 package com.hyjf.cs.trade.client.impl;
 
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.ChinapnrExclusiveLogWithBLOBsResponse;
+import com.hyjf.am.response.trade.ChinapnrLogResponse;
+import com.hyjf.am.vo.trade.ChinapnrExclusiveLogWithBLOBsVO;
+import com.hyjf.am.vo.trade.ChinapnrLogVO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -12,6 +18,8 @@ import com.hyjf.am.response.app.AppUtmRegResponse;
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.cs.trade.client.CsMessageClient;
+
+import java.util.List;
 
 /**
  * @author yaoyong
@@ -45,6 +53,43 @@ public class CsMessageClientImpl implements CsMessageClient {
                 AppUtmRegResponse.class).getBody();
         if (response != null) {
             return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public ChinapnrExclusiveLogWithBLOBsVO selectChinapnrExclusiveLog(long id) {
+        String url = "http://CS-MESSAGE/cs-message/chinapnr/selectChinapnrExclusiveLog/"+id ;
+        ChinapnrExclusiveLogWithBLOBsResponse response = restTemplate.getForEntity(url,ChinapnrExclusiveLogWithBLOBsResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResult();
+        }
+        return null;
+    }
+
+    @Override
+    public void updateChinapnrExclusiveLogStatus(long uuid, String status) {
+        String url = "http://CS-MESSAGE/cs-message/chinapnr/updateChinapnrExclusiveLogStatus/"+uuid+"/"+ status;
+        restTemplate.getForEntity(url,IntegerResponse.class).getBody();
+    }
+
+    @Override
+    public int updateChinapnrExclusiveLog(ChinapnrExclusiveLogWithBLOBsVO record) {
+        IntegerResponse response = restTemplate.postForEntity("http://CS-MESSAGE/cs-message/chinapnr/updateChinapnrExclusiveLog", record, IntegerResponse.class).getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response.getResultInt();
+        }
+        return 0;
+    }
+
+
+
+    @Override
+    public List<ChinapnrLogVO> getChinapnrLog(String ordId) {
+        String url = "http://CS-MESSAGE/cs-message/chinapnr/getChinapnrLog/"+ordId ;
+        ChinapnrLogResponse response = restTemplate.getForEntity(url,ChinapnrLogResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResultList();
         }
         return null;
     }
