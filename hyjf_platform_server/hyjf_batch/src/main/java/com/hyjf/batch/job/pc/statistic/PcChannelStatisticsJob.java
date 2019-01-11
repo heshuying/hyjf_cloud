@@ -20,7 +20,7 @@ public class PcChannelStatisticsJob extends BaseJob implements Job {
 	public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
 		logger.info("PcChannelStatisticsJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());
 		restTemplate
-				.getForObject("http://CS-MARKET/cs-market/pcchannelstatistics/insertStatistics", String.class);
+				.getForObject("http://CS-MARKET/cs-market/pcChannelStatistics/insertStatistics", String.class);
 		logger.info("PcChannelStatisticsJob execute end...result is {}");
 	}
 }

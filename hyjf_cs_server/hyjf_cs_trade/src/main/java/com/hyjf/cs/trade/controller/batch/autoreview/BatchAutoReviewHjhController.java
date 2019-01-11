@@ -19,7 +19,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @ApiIgnore
 @RestController
-@RequestMapping(value = "/cs-trade/batch/hjhautoreview")
+@RequestMapping(value = "/cs-trade/batch/hjhAutoReview")
 public class BatchAutoReviewHjhController  extends BaseTradeController {
 
 
@@ -31,7 +31,7 @@ public class BatchAutoReviewHjhController  extends BaseTradeController {
      * @return
      */
     @ApiOperation(value = "自动放款复审任务", notes = "自动放款复审任务")
-    @GetMapping(value = "/hjhautoreview")
+    @GetMapping(value = "/hjhAutoReview")
     public String autoReview() {
         logger.info("自动放款复审任务BatchAutoReviewHjhController开始...");
         batchBankInvestService.hjhautoreview();

@@ -23,7 +23,7 @@ public class UserEntryJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("UserEntryJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-USER//cs-user/batch/entryupdate", String.class);
+        restTemplate.getForEntity("http://CS-USER//cs-user/batch/entryUpdate", String.class);
         logger.info("UserEntryJob execute end...");
     }
 }
