@@ -161,17 +161,17 @@ public class RedisConstants {
      * admin单点登陆用户(admin:$username)
      */
     public static final String ADMIN_REQUEST = "admin:";
-    
+
     /**
      * 协议模板---协议前台展示名称的别名+$aliasName
      */
     public static final String PROTOCOL_TEMPLATE_ALIAS = "protocol_template_alias:";
-    
+
     /**
      * 协议模板---协议文件存储Redis前缀+$protocolId
      */
     public static final String PROTOCOL_TEMPLATE_URL = "protocol_template_url:";
-    
+
 
     /**
      * 用户token令牌前缀（token:token）
@@ -544,4 +544,13 @@ public class RedisConstants {
      * 纳觅返现活动
      */
     public static final String RETURN_CASH_ACTIVITY = "RETURN_CASH_ACTIVITY:";
+
+    /**合规数据上报 CERT 批次号自增 序列号*/
+    public static final String CERT_BATCH_NUMBER_SEQ_ID = "CERT_BATCH_NUMBER_SEQ_ID";
+    /**合规数据上报 CERT 是否初始化标的  没有 就是没初始化*/
+    public static final String CERT_BATCH_IS_INIT_BORROW= "CERT_BATCH_IS_INIT_BORROW";
+
+    /**合规数据上报 CERT 是否开始实时上报数据  0不上报  1上报*/
+    public static final String CERT_CAN_RUN= "CERT_CAN_RUN";
+
 }
