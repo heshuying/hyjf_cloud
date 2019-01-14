@@ -379,6 +379,9 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 				plan.setUpdateTime(new Date());
 				// 更新用户ID
 				plan.setUpdateUser(form.getUserid());
+				// 计划风险投资
+				plan.setInvestLevel(StringUtils.isEmpty(form.getInvestLevel()) ? "" : form.getInvestLevel());
+
 				// 跟新汇计划表
 				count1 = this.hjhPlanMapper.updateByPrimaryKeySelective(plan);
 				
@@ -493,6 +496,9 @@ public class AdminHjhPlanServiceImpl implements AdminHjhPlanService{
 		plan.setCreateTime(new Date());
 		// 删除标识
 		plan.setDelFlag(0);
+		// 计划风险投资
+		plan.setInvestLevel(StringUtils.isEmpty(form.getInvestLevel()) ? "" : form.getInvestLevel());
+
 		int success = this.hjhPlanMapper.insertSelective(plan);
 		if(success > 0){
 			return success;
