@@ -92,6 +92,8 @@ public class WebBankOpenController extends BaseUserController {
         result.setStatus(ApiResult.SUCCESS);
         Map<String,String> map = new HashedMap();
         map.put("mobile",user.getMobile());
+        // 用户开户区分企业用户或个人用户 add by huanghui
+        map.put("userType", String.valueOf(user.getUserType()));
         result.setData(map);
         return result;
     }
