@@ -21,7 +21,7 @@ import java.util.List;
  */
 @ApiIgnore
 @RestController
-@RequestMapping("/cs-market/daily_send")
+@RequestMapping("/cs-market/dailySend")
 public class DailyAutoSendController extends BaseMarketController {
 
     @Autowired

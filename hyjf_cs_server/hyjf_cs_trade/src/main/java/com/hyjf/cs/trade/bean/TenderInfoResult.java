@@ -127,6 +127,25 @@ public class TenderInfoResult extends BaseResultBean {
     private boolean status;
     private String riskTested;
 
+    private String investLevel;
+    private String evalFlagType;
+
+    public String getEvalFlagType() {
+        return evalFlagType;
+    }
+
+    public void setEvalFlagType(String evalFlagType) {
+        this.evalFlagType = evalFlagType;
+    }
+
+    public String getInvestLevel() {
+        return investLevel;
+    }
+
+    public void setInvestLevel(String investLevel) {
+        this.investLevel = investLevel;
+    }
+
     public String getMessage() {
         return message;
     }

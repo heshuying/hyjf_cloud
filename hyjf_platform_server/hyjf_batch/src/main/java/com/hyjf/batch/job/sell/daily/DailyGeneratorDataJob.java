@@ -17,7 +17,7 @@ public class DailyGeneratorDataJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("DailyGeneratorDataJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-MARKET/cs-market/daily_generator_data/data", Object.class);
+        restTemplate.getForEntity("http://CS-MARKET/cs-market/dailyGeneratorData/data", Object.class);
         logger.info("DailyGeneratorDataJob execute end...");
     }
 }

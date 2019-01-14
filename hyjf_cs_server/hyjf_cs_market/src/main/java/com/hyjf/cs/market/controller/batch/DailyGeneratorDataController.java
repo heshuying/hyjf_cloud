@@ -16,7 +16,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @ApiIgnore
 @RestController
-@RequestMapping("/cs-market/daily_generator_data")
+@RequestMapping("/cs-market/dailyGeneratorData")
 public class DailyGeneratorDataController extends BaseMarketController {
 
 	@Autowired

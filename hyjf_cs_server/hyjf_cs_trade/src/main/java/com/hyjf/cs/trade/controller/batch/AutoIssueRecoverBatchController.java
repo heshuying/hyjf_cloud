@@ -16,13 +16,13 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @RestController
 @ApiIgnore
-@RequestMapping("/cs-trade/hjhautoissuerecover")
+@RequestMapping("/cs-trade/hjhAutoIssueRecover")
 public class AutoIssueRecoverBatchController {
 
     @Autowired
     private AutoIssueRecoverService autoIssueRecoverService;
 
-    @RequestMapping("/autoissuerecover")
+    @RequestMapping("/autoIssueRecover")
     public void autoIssueRecover() {
         autoIssueRecoverService.autoIssueRecover();
     }
