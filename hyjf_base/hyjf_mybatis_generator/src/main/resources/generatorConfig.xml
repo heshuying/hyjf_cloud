@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_market.properties"/>
+    <properties resource="init_config.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -1986,5 +1986,28 @@
         <table tableName="ht_inviter_return_detail" domainObjectName="InviterReturnDetail">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
+
+
+        <!-- 国家互联网应急中心错误日志表 -->
+        <table tableName="ht_cert_err_log" domainObjectName="CertErrLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="send_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="send_count" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="query_result" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
+        <!-- 国家互联网应急中心已上送用户表 -->
+        <table tableName="ht_cert_user" domainObjectName="CertUser">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+        </table>
+
+        <!-- 国家互联网应急中心初始化标的表 -->
+        <table tableName="ht_cert_log" domainObjectName="CertLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="send_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="send_count" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="query_result" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
     </context>
 </generatorConfiguration>
