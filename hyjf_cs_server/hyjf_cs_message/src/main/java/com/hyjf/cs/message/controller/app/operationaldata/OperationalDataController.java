@@ -250,18 +250,6 @@ public class OperationalDataController {
 
 
 	/**
-	 * 查询出借人年龄分布
-	 * 
-	 * @param startAge
-	 * @param endAge
-	 * @return
-	 */
-	private String getAgeRate(int startAge, int endAge) {
-		String rate = "25.00";
-		return rate;
-	}
-
-	/**
 	 * 转化数字格式的日期
 	 * @param date
 	 * @return

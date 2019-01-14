@@ -42,18 +42,4 @@ public class AppChannelStatisticsController  extends BaseController {
         }
         return response;
     }
-
-    /**
-     * 根据开始时间、结束时间和来源查询数据
-     * @return
-     */
-  /*  @RequestMapping("/getRegistNumber")
-    public AppUtmRegResponse getRegistNumber(@RequestBody AppChannelStatisticsRequest request) {
-        AppUtmRegResponse response = new AppUtmRegResponse();
-        List<AppUtmRegVO>  list = appChannelStatisticsService.getAppChannelStatisticsDetailVO(request);
-        if (!CollectionUtils.isEmpty(list)) {
-            response.setResultList(list);
-        }
-        return response;
-    }*/
 }
