@@ -6,6 +6,7 @@ package com.hyjf.cs.market.service.impl;
 import com.hyjf.am.vo.config.ContentArticleVO;
 import com.hyjf.cs.market.client.AmConfigClient;
 import com.hyjf.cs.market.service.AppContentArticleService;
+import com.hyjf.cs.market.util.CdnUrlUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +27,10 @@ public class AppContentArticleServiceImpl implements AppContentArticleService {
      */
     @Override
     public ContentArticleVO getContentArticleById(Integer contentArticleId) {
-        return amConfigClient.getContentArticleById(contentArticleId);
+        ContentArticleVO contentArticle = amConfigClient.getContentArticleById(contentArticleId);
+        String cdnUrl = CdnUrlUtil.getCdnUrl();
+        String imgurl = contentArticle.getImgurl();
+        contentArticle.setImgurl(cdnUrl + imgurl);
+        return contentArticle;
     }
 }
