@@ -34,8 +34,10 @@ public class AppContentArticleServiceImpl implements AppContentArticleService {
         if (StringUtils.isNotBlank(content)) {
             int start = content.indexOf("http");
             int end = content.indexOf(".com");
-            String imgUrl = content.substring(start, end + 4);
-            contentArticle.setContent(content.replaceAll(imgUrl, cdnUrl));
+            if (start >=0 && end >=0) {
+                String imgUrl = content.substring(start, end + 4);
+                contentArticle.setContent(content.replaceAll(imgUrl, cdnUrl));
+            }
         }
         return contentArticle;
     }
