@@ -103,7 +103,7 @@ public class MsgPushHandler {
 
 		UserInfoVO userInfoVO = amUserClient.findUsersInfoById(userVO.getUserId());
 		// 为保护客户隐私，只显示客户姓氏，不显示客户全名。
-		if(userInfoVO==null){
+		if (userInfoVO == null) {
 			logger.warn("未找到用户信息， userId is: {}", userVO.getUserId());
 			return ERROR_SEND;
 		}
@@ -249,7 +249,7 @@ public class MsgPushHandler {
 			histories.add(saveMessagePushMsgHistory(message, null));
 		}
 		if (message.getMsgDestinationType().intValue() == CustomConstants.MSG_PUSH_DESTINATION_TYPE_1) {
-			logger.info("单条或者多条发送...");
+			logger.info("单条或者多条推送， 目的地: {}",  message.getMsgDestination());
 			// 发给固定人群
 			String[] mobiles = message.getMsgDestination().split(",");
 			// 获取设备唯一编码
@@ -402,8 +402,8 @@ public class MsgPushHandler {
 			// 苹果马甲版本多，使用反射赋值。
 			this.setField(msg, JPushCientEnum.getFieldName(packageCode), customizePushResult.getIosMsgId());
 
-			logger.info("发送消息成功：msgId: " + customizePushResult.getAndroidMsgId());
-			logger.info("发送消息成功：iosMsgId: {}", customizePushResult.getIosMsgId());
+			logger.info("推送成功：安卓-msgId: " + customizePushResult.getAndroidMsgId());
+			logger.info("推送成功：苹果-msgId: {}", customizePushResult.getIosMsgId());
 		} else {
 			msg.setSendTime(GetDate.getNowTime10());
 			msg.setMsgSendStatus(CustomConstants.MSG_PUSH_SEND_STATUS_2);
