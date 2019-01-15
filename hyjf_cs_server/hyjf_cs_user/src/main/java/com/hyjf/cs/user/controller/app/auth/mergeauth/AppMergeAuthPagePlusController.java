@@ -64,6 +64,7 @@ public class AppMergeAuthPagePlusController extends BaseUserController {
         CheckUtil.check(userId != null,MsgEnum.ERR_USER_NOT_LOGIN);
         UserVO user = this.authService.getUsersById(userId);
         String platform = request.getParameter("platform");
+        logger.info("进行缴费授权的平台是,platform:["+ platform +"]");
         //检查用户信息
         checkUserMessage(user);
 
