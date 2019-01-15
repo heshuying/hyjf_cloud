@@ -119,7 +119,7 @@ public class HjhPlanController extends BaseTradeController {
             TenderInfoResult tenderInfo = new TenderInfoResult();
             tenderInfo.setStatus(false);
             tenderInfo.setEvalType((String) resultMap.get("evalType"));
-            tenderInfo.setInvestLevel((String) resultMap.get("evalType"));
+            tenderInfo.setInvestLevel((String) resultMap.get("investLevel"));
             tenderInfo.setEvalFlagType((String) resultMap.get("evalFlagType"));
             tenderInfo.setRevaluationMoney((String) resultMap.get("revaluationMoney"));
             tenderInfo.setRiskTested((String) resultMap.get("riskTested"));

@@ -13,6 +13,4 @@ public interface QuestionCustomizeMapper {
 
     List<NewAppQuestionCustomize> getNewAppQuestionList();
 
-
-
 }
