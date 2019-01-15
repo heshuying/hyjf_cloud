@@ -430,7 +430,7 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 			return pushBean;
 		}
 
-		return saveAssetAndSendNext(pushBean, instCode, assetType, pushBean.getIdcard(), userInfo.getUserId(),
+		return saveAssetAndSendNext(pushBean, instCode, assetType, userInfo.getIdcard(), userInfo.getUserId(),
 				users.getMobile(), users.getUsername(), bankOpenAccount.getAccount(), userInfo.getTruename(),
 				stzAccount, 1);
 	}
