@@ -250,6 +250,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             borrowProjectInfoBean.setBorrowApr(borrow.getBorrowApr());
             borrowProjectInfoBean.setBorrowId(borrowNid);
             borrowProjectInfoBean.setOnAccrual((borrow.getReverifyTime() == null ? "放款成功立即计息" : borrow.getReverifyTime()));
+            borrowProjectInfoBean.setInvestLevel(borrow.getInvestLevel());
             //0：备案中 1：初审中 2：出借中 3：复审中 4：还款中 5：已还款 6：已流标 7：待授权
             borrowProjectInfoBean.setStatus(borrow.getBorrowStatus());
             //0初始 1放款请求中 2放款请求成功 3放款校验成功 4放款校验失败 5放款失败 6放款成功

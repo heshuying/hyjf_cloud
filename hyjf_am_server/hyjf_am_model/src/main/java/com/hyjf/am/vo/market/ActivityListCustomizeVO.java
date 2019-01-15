@@ -22,6 +22,7 @@ public class ActivityListCustomizeVO extends ActivityListVO {
     protected Integer nowTime;
     protected String platform; //平台
 
+    protected String host;
 
     public Integer getStartTime() {
         return startTime;
@@ -71,5 +72,13 @@ public class ActivityListCustomizeVO extends ActivityListVO {
     @Override
     public void setPlatform(String platform) {
         this.platform = platform;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
     }
 }
