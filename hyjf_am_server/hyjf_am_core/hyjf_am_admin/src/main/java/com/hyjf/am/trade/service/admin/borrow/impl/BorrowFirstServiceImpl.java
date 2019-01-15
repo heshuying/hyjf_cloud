@@ -240,7 +240,7 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
                 JSONObject params = new JSONObject();
                 params.put("instCode",borrowInfo.getInstCode());
                 params.put("borrowNid", borrowNid);
-                commonProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), params));
+                commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), params));
                 logger.info("自动初审MQ发送成功----------标的号:{}", borrowNid);
             } catch (Exception e) {
                 logger.error("发送MQ到初审失败，borrowNid：" + borrowNid);

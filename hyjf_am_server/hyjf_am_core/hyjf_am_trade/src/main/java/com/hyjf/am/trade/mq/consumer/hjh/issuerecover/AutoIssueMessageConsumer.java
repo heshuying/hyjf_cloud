@@ -39,7 +39,7 @@ import java.util.UUID;
  * 关联计划
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.ROCKETMQ_BORROW_ISSUE_GROUP)
+@RocketMQMessageListener(topic = MQConstant.AUTO_JOIN_PLAN_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.AUTO_JOIN_PLAN_GROUP)
 public class AutoIssueMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
     private static final Logger logger = LoggerFactory.getLogger(AutoIssueMessageConsumer.class);
     @Resource

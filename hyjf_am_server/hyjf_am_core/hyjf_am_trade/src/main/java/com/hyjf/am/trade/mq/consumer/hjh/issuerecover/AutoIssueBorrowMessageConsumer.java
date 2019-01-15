@@ -29,12 +29,12 @@ import java.util.UUID;
 /**
  * 自动录标
  * @author walter.limeng
- * @version AutoSendMessageConsumer, v0.1 2018/7/11 10:30
+ * @version AutoIssueBorrowMessageConsumer, v0.1 2018/7/11 10:30
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.HJH_AUTO_ISSUERECOVER_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.HJH_AUTO_ISSUERECOVER_GROUP)
-public class AutoSendMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
-    private static final Logger logger = LoggerFactory.getLogger(AutoSendMessageConsumer.class);
+@RocketMQMessageListener(topic = MQConstant.AUTO_ISSUE_RECOVER_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.AUTO_ISSUE_RECOVER_GROUP)
+public class AutoIssueBorrowMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
+    private static final Logger logger = LoggerFactory.getLogger(AutoIssueBorrowMessageConsumer.class);
     @Autowired
     private AutoIssueRecoverService autoIssueRecoverService;
     @Autowired
@@ -44,7 +44,7 @@ public class AutoSendMessageConsumer implements RocketMQListener<MessageExt>, Ro
 
     @Override
     public void onMessage(MessageExt messageExt) {
-        logger.info("AutoSendMessageConsumer 收到消息，开始处理....");
+        logger.info("AutoIssueBorrowMessageConsumer 收到消息，开始处理....");
         MessageExt msg = messageExt;
         Integer planId = null;
         try {
@@ -97,7 +97,7 @@ public class AutoSendMessageConsumer implements RocketMQListener<MessageExt>, Ro
                         JSONObject params = new JSONObject();
                         params.put("planId", mqHjhPlanAsset.getId());
                         //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-                        commonProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), params),2);
+                        commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), params),2);
                     } catch (MQException e) {
                         logger.error("发送【自动录标】MQ失败...");
                     }
@@ -121,6 +121,6 @@ public class AutoSendMessageConsumer implements RocketMQListener<MessageExt>, Ro
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         // 设置为集群消费(区别于广播消费)
         defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
-        logger.info("====AutoSendMessageConsumer start=====");
+        logger.info("====AutoIssueBorrowMessageConsumer start=====");
     }
 }

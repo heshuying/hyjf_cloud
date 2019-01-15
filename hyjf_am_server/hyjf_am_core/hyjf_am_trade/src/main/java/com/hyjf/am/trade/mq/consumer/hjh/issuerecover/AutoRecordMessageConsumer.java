@@ -37,7 +37,7 @@ import java.util.UUID;
  * @version AutoSendMessageConsumer, v0.1 2018/7/11 16:30
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.ROCKETMQ_BORROW_RECORD_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.ROCKETMQ_BORROW_RECORD_GROUP)
+@RocketMQMessageListener(topic = MQConstant.AUTO_BORROW_RECORD_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.AUTO_BORROW_RECORD_GROUP)
 public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
     private static final Logger logger = LoggerFactory.getLogger(AutoRecordMessageConsumer.class);
 
@@ -107,7 +107,7 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
                                 params.put("assetId", mqHjhPlanAsset.getAssetId());
                                 params.put("instCode",mqHjhPlanAsset.getInstCode());
                                 //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-                                commonProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), params),2);
+                                commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), params),2);
                                 logger.info(mqHjhPlanAsset.getAssetId()+" 成功发送到初审队列");
                             }
                             // 备案成功后随机睡0.2到0.5秒
@@ -164,7 +164,7 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
                                         JSONObject params = new JSONObject();
                                         params.put("borrowNid", borrow.getBorrowNid());
                                         //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-                                        commonProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), params),2);
+                                        commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), params),2);
                                     } catch (MQException e) {
                                         logger.error("发送【审核保证金队列】MQ失败...");
                                     }

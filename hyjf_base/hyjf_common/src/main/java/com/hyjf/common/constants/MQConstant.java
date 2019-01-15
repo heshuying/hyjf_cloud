@@ -51,12 +51,6 @@ public interface MQConstant {
 	/** ------------------------------ 优惠券相关 start ------------------------------ */
 
 	/**
-	 * 优惠券发放 - 后台批量发放
-	 */
-	String BATCH_GRANT_COUPON_GROUP = "BATCH_GRANT_COUPON_GROUP";
-	String BATCH_GRANT_COUPON_TOPIC = "BATCH_GRANT_COUPON_TOPIC";
-
-	/**
 	 * 优惠券发放
 	 */
 	String GRANT_COUPON_GROUP = "COUPON_GROUP";
@@ -103,12 +97,6 @@ public interface MQConstant {
 	 */
 	String TYJ_COUPON_REPAY_GROUP = "TYJ_COUPON_REPAY_GROUP";
 	String TYJ_COUPON_REPAY_TOPIC = "TYJ_COUPON_REPAY_TOPIC";
-
-	/**
-	 * 优惠券批量发放
-	 */
-	String BATCH_USER_COUPON_SEND_GROUP = "BATCH_USER_COUPON_SEND_GROUP";
-	String BATCH_USER_COUPON_SEND_TOPIC = "BATCH_USER_COUPON_SEND_TOPIC";
 
 	/** ------------------------------- 优惠券相关 end ------------------------- end */
 
@@ -208,12 +196,6 @@ public interface MQConstant {
 	/** ------------------------------ 汇计划 start ------------------------------ */
 
 	/**
-	 * 资产推送发送mq
-	 */
-	String ASSET_PUSH_GROUP = "ASSET_PUSH_GROUP";
-	String ASSET_PUST_TOPIC = "ASSET_PUSH_TOPIC";
-
-	/**
 	 * 汇计划进入锁定期/退出
 	 */
 	String HJH_LOCK_QUIT_GROUP = "HJH_LOCK_QUIT_GROUP";
@@ -235,24 +217,24 @@ public interface MQConstant {
 	/**
 	 * 自动录标
 	 */
-	String HJH_AUTO_ISSUERECOVER_GROUP = "HJH_AUTO_ISSUERECOVER_GROUP";
-	String HJH_AUTO_ISSUERECOVER_TOPIC = "HJH_AUTO_ISSUERECOVER_TOPIC";
+	String AUTO_ISSUE_RECOVER_GROUP = "AUTO_ISSUE_RECOVER_GROUP";
+	String AUTO_ISSUE_RECOVER_TOPIC = "AUTO_ISSUE_RECOVER_TOPIC";
 
 	/** 自动备案 */
-	String ROCKETMQ_BORROW_RECORD_GROUP = "HYJF-ROCKETMQ-BORROW-RECORD-GROUP";
-	String ROCKETMQ_BORROW_RECORD_TOPIC = "HYJF-ROCKETMQ-BORROW-RECORD-TOPIC";
+	String AUTO_BORROW_RECORD_GROUP = "AUTO_BORROW_RECORD_GROUP";
+	String AUTO_BORROW_RECORD_TOPIC = "AUTO_BORROW_RECORD_TOPIC";
 
 	/** 自动初审 */
-	String ROCKETMQ_BORROW_PREAUDIT_GROUP = "HYJF-ROCKETMQ-BORROW-PREAUDIT-GROUP";
-	String ROCKETMQ_BORROW_PREAUDIT_TOPIC = "HYJF-ROCKETMQ-BORROW-PREAUDIT-TOPIC";
+	String AUTO_BORROW_PREAUDIT_GROUP = "AUTO_BORROW_PREAUDIT_GROUP";
+	String AUTO_BORROW_PREAUDIT_TOPIC = "AUTO_BORROW_PREAUDIT_TOPIC";
 
 	/** 自动关联计划 */
-	String ROCKETMQ_BORROW_ISSUE_GROUP = "HYJF-ROCKETMQ-BORROW-ISSUE-GROUP";
-	String ROCKETMQ_BORROW_ISSUE_TOPIC = "HYJF-ROCKETMQ-BORROW-ISSUE-TOPIC";
+	String AUTO_JOIN_PLAN_GROUP = "AUTO_JOIN_PLAN_GROUP";
+	String AUTO_JOIN_PLAN_TOPIC = "AUTO_JOIN_PLAN_TOPIC";
 
 	/** 自动审核保证金 */
-	String ROCKETMQ_BORROW_BAIL_GROUP = "HYJF-ROCKETMQ-BORROW-BAIL-GROUP";
-	String ROCKETMQ_BORROW_BAIL_TOPIC = "HYJF-ROCKETMQ-BORROW-BAIL-TOPIC";
+	String AUTO_VERIFY_BAIL_GROUP = "AUTO_VERIFY_BAIL_GROUP";
+	String AUTO_VERIFY_BAIL_TOPIC = "AUTO_VERIFY_BAIL_TOPIC";
 
 	/** ------------------------------ 标的自动化 end ------------------------------ */
 
@@ -268,8 +250,6 @@ public interface MQConstant {
 	/** 注册送188红包 */
 	String REGISTER_COUPON_TOPIC = "REGISTER_COUPON_TOPIC";
 	String REGISTER_COUPON_TAG = "REGISTER_COUPON_TAG";
-	/** 投之家送2张加息券 */
-	String TZJ_REGISTER_INTEREST_TAG = "TZJ_REGISTER_INTEREST_TAG";
 
 	/** ------------------------------ 开户流程 end ------------------------------ */
 

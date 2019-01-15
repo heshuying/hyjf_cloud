@@ -664,7 +664,7 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
 		try {
 			// modify by liushouyi 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
 			commonProducer.messageSendDelay(
-					new MessageContent(MQConstant.HJH_AUTO_ISSUERECOVER_TOPIC, UUID.randomUUID().toString(), params),
+					new MessageContent(MQConstant.AUTO_ISSUE_RECOVER_TOPIC, UUID.randomUUID().toString(), params),
 					2);
 		} catch (MQException e) {
 			logger.error("自动录标发送消息失败...", e);

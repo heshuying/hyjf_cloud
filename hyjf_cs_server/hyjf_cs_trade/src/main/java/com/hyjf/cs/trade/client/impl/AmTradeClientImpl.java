@@ -6179,7 +6179,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public void autoIssueRecover() {
-        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhautoissuerecover/autoissuerecover", String.class);
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAutoIssueRecover/autoIssueRecover", String.class);
     }
 
     @Override

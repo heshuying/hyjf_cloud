@@ -39,7 +39,7 @@ import java.util.UUID;
  * 保证金审核
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.ROCKETMQ_BORROW_BAIL_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.ROCKETMQ_BORROW_BAIL_GROUP)
+@RocketMQMessageListener(topic = MQConstant.AUTO_VERIFY_BAIL_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.AUTO_VERIFY_BAIL_GROUP)
 public class AutoBailMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
     private static final Logger logger = LoggerFactory.getLogger(AutoBailMessageConsumer.class);
 
@@ -100,7 +100,7 @@ public class AutoBailMessageConsumer implements RocketMQListener<MessageExt>, Ro
                     try {
                         JSONObject params = new JSONObject();
                         params.put("borrowNid", borrow.getBorrowNid());
-                        commonProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), params));
+                        commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), params));
                     } catch (MQException e) {
                         logger.error("发送【初审队列】MQ失败...");
                     }

@@ -201,7 +201,7 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                 params.put("assetId", hjhPlanAsset.getAssetId());
                 params.put("instCode", hjhPlanAsset.getInstCode());
                 try {
-                    commonProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), params));
+                    commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), params));
                     logger.info(hjhPlanAsset.getAssetId()+" 资产 加入队列 ");
                 } catch (MQException e) {
                     logger.info(hjhPlanAsset.getAssetId()+" 资产 加入队列失败");

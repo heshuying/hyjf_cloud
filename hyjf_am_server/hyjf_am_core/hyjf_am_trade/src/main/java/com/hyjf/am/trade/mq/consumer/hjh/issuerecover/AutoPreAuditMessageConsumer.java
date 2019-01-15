@@ -37,7 +37,7 @@ import java.util.UUID;
  * @Description: autoPreAuditMessageConsumer
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.ROCKETMQ_BORROW_PREAUDIT_GROUP)
+@RocketMQMessageListener(topic = MQConstant.AUTO_BORROW_PREAUDIT_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.AUTO_BORROW_PREAUDIT_GROUP)
 public class AutoPreAuditMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
     private static final Logger logger = LoggerFactory.getLogger(AutoPreAuditMessageConsumer.class);
 
@@ -104,7 +104,7 @@ public class AutoPreAuditMessageConsumer implements RocketMQListener<MessageExt>
                             JSONObject params = new JSONObject();
                             params.put("borrowNid", borrow.getBorrowNid());
                             //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-                            commonProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), params),2);
+                            commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_JOIN_PLAN_TOPIC, UUID.randomUUID().toString(), params),2);
                         } catch (MQException e) {
                             logger.error("发送【关联计划队列】MQ失败...");
                         }
@@ -148,7 +148,7 @@ public class AutoPreAuditMessageConsumer implements RocketMQListener<MessageExt>
                         JSONObject params = new JSONObject();
                         params.put("borrowNid", hjhPlanAsset.getBorrowNid());
                         //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-                        commonProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), params),2);
+                        commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_JOIN_PLAN_TOPIC, UUID.randomUUID().toString(), params),2);
                     } catch (MQException e) {
                         logger.error("发送【关联计划队列】MQ失败...");
                     }
