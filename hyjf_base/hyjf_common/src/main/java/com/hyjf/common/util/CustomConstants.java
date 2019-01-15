@@ -1518,4 +1518,14 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     /** 首页列表缓存存活时间 秒 */
     public static final int HOME_CACHE_LIVE_TIME = 12*60*60;
 
+    // 迁移 合规数据上报 共通 常量定义 jijun 20190115 start
+    /** 合规数据上报 */
+    public static final String HG_DATAREPORT = "合规数据上报";
+    /** 国家互联网应急中心 缩写 */
+    public static final String HG_DATAREPORT_CERT = "CERT";
+    /** 中国互金协会 缩写 */
+    public static final String HG_DATAREPORT_NIFA = "NIFA";
+    /** 北京互金协会 缩写 */
+    public static final String HG_DATAREPORT_BIFA = "BIFA";
+    // 迁移 合规数据上报 共通 常量定义 jijun 20190115 end
 }
