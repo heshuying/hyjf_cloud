@@ -216,25 +216,65 @@ public interface MQConstant {
 
 	/**
 	 * 自动录标
+	 *
+	 * 来源:
+	 * 	1. 资产推送成功;
+	 * 	2. 汇计划发标修复定时任务;
 	 */
 	String AUTO_ISSUE_RECOVER_GROUP = "AUTO_ISSUE_RECOVER_GROUP";
 	String AUTO_ISSUE_RECOVER_TOPIC = "AUTO_ISSUE_RECOVER_TOPIC";
 
-	/** 自动备案 */
+	/**
+	 * 自动备案
+	 *
+	 * 来源：
+	 * 	1.admin录入标的成功判断是自动备案;
+	 * 	2.自动录标成功;
+	 * 	3.汇计划发标修复定时任务;
+	 */
 	String AUTO_BORROW_RECORD_GROUP = "AUTO_BORROW_RECORD_GROUP";
 	String AUTO_BORROW_RECORD_TOPIC = "AUTO_BORROW_RECORD_TOPIC";
 
-	/** 自动初审 */
+	/**
+	 * 自动初审
+	 *
+	 * 来源：
+	 * 	1.admin确认已交保证金判断是自动初审;
+	 * 	2.admin标的备案成功判断是自动初审;
+	 * 	3.admin异常中心-标的备案掉单
+	 * 	4.汇计划发标修复定时任务;
+	 * 	5.自动审核保证金成功;
+	 * 	6.自动备案成功;
+	 * 	7.借款人受托支付申请异步回调更新;
+	 */
 	String AUTO_BORROW_PREAUDIT_GROUP = "AUTO_BORROW_PREAUDIT_GROUP";
 	String AUTO_BORROW_PREAUDIT_TOPIC = "AUTO_BORROW_PREAUDIT_TOPIC";
 
-	/** 自动关联计划 */
-	String AUTO_JOIN_PLAN_GROUP = "AUTO_JOIN_PLAN_GROUP";
-	String AUTO_JOIN_PLAN_TOPIC = "AUTO_JOIN_PLAN_TOPIC";
-
-	/** 自动审核保证金 */
+	/**
+	 * 自动审核保证金
+	 *
+	 * 来源：
+	 * 	1.admin标的备案成功;
+	 * 	2.汇计划发标修复定时任务;
+	 *
+	 */
 	String AUTO_VERIFY_BAIL_GROUP = "AUTO_VERIFY_BAIL_GROUP";
 	String AUTO_VERIFY_BAIL_TOPIC = "AUTO_VERIFY_BAIL_TOPIC";
+
+	/**
+	 * 自动关联计划
+	 *
+	 * 来源：
+	 * 	1.admin发标 产品中心-汇直投-借款初审查询初审状态暂不发布的;
+	 * 	2.admin标的录入
+	 * 	3.汇计划发标修复定时任务;
+	 * 	4.自动初审成功
+	 * 	5.汇计划自动清算
+	 * 	6.汇计划定时发标
+	 * 	7.散标定时发标 - 拆分标的
+	 */
+	String AUTO_JOIN_PLAN_GROUP = "AUTO_JOIN_PLAN_GROUP";
+	String AUTO_JOIN_PLAN_TOPIC = "AUTO_JOIN_PLAN_TOPIC";
 
 	/** ------------------------------ 标的自动化 end ------------------------------ */
 
