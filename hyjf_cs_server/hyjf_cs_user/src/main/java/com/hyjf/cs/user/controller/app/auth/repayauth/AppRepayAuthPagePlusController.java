@@ -4,7 +4,6 @@
 package com.hyjf.cs.user.controller.app.auth.repayauth;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.user.AuthorizedVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -29,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.Map;
 
 /**
@@ -58,14 +56,14 @@ public class AppRepayAuthPagePlusController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "用户还款授权", notes = "用户还款授权")
-    @PostMapping(value = "/page", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/page", produces = "application/json; charset=utf-8")
     public  WebResult<Object> page(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
         // 验证请求参数
         CheckUtil.check(userId != null,MsgEnum.ERR_USER_NOT_LOGIN);
         UserVO user = this.authService.getUsersById(userId);
         String platform = request.getParameter("platform");
-        String sign=request.getParameter("sign");
+        //String sign = request.getParameter("sign");
         //检查用户信息
         checkUserMessage(user);
 
