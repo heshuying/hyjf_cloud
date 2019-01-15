@@ -4,7 +4,6 @@
 package com.hyjf.cs.user.controller.app.auth.paymentauth;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.user.AuthorizedVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -29,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.Map;
 
 /**
@@ -58,7 +56,7 @@ public class AppPaymentAuthPagePlusController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "用户缴费授权", notes = "用户缴费授权")
-    @PostMapping(value = "/page", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/page", produces = "application/json; charset=utf-8")
     @ResponseBody
     public  WebResult<Object> page(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();

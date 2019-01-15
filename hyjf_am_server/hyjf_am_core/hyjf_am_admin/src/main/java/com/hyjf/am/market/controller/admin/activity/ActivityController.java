@@ -86,8 +86,8 @@ public class ActivityController {
         if (request.getPageSize() == 0) {
             paginator = new Paginator(request.getCurrPage(), recordCount);
         }
-        List<ActivityList> activityLists = activityService.getRecordList(request,paginator.getOffset(), paginator.getLimit());
         if(recordCount>0){
+            List<ActivityList> activityLists = activityService.getRecordList(request,paginator.getOffset(), paginator.getLimit());
             if (!CollectionUtils.isEmpty(activityLists)) {
                 List<ActivityListVO> activityListVOS = CommonUtils.convertBeanList(activityLists, ActivityListVO.class);
                 response.setResultList(activityListVOS);
@@ -157,6 +157,7 @@ public class ActivityController {
         }
         return response;
     }
+
 
     /**
      * @auth walter.limeng

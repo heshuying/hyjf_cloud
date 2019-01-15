@@ -18,6 +18,7 @@ import com.hyjf.cs.market.bean.ContentArticleBean;
 import com.hyjf.cs.market.bean.RechargeDescResultBean;
 import com.hyjf.cs.market.service.AboutUsService;
 import com.hyjf.cs.market.service.AppFindService;
+import com.hyjf.cs.market.util.CdnUrlUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.commons.lang3.StringUtils;
@@ -43,9 +44,6 @@ import java.util.Map;
 public class AboutUsController extends BaseController {
 
 	private static DecimalFormat DF_FOR_VIEW = new DecimalFormat("#,##0.00");
-
-	@Value("${hyjf.web.host}")
-	private String webUrl;
 
 	@Autowired
 	private AboutUsService aboutUsService;
@@ -392,9 +390,9 @@ public class AboutUsController extends BaseController {
 		}
 		if (mediaReport != null) {
 			if (mediaReport.getContent().contains("../../../..")) {
-				mediaReport.setContent(mediaReport.getContent().replaceAll("../../../..", webUrl));
+				mediaReport.setContent(mediaReport.getContent().replaceAll("../../../..", CdnUrlUtil.getCdnUrl()));
 			} else if (mediaReport.getContent().contains("src=\"/")) {
-				mediaReport.setContent(mediaReport.getContent().replaceAll("src=\"/", "src=\"" + webUrl) + "//");
+				mediaReport.setContent(mediaReport.getContent().replaceAll("src=\"/", "src=\"" + CdnUrlUtil.getCdnUrl()) + "//");
 			}
 		}
 		webResult = new WebResult(mediaReport);
@@ -417,9 +415,9 @@ public class AboutUsController extends BaseController {
 		ContentArticleVO mediaReport = aboutUsService.getNoticeInfo(id);
 		if (mediaReport != null) {
 			if (mediaReport.getContent().contains("../../../..")) {
-				mediaReport.setContent(mediaReport.getContent().replaceAll("../../../..", webUrl));
+				mediaReport.setContent(mediaReport.getContent().replaceAll("../../../..", CdnUrlUtil.getCdnUrl()));
 			} else if (mediaReport.getContent().contains("src=\"/")) {
-				mediaReport.setContent(mediaReport.getContent().replaceAll("src=\"/", "src=\"" + webUrl) + "//");
+				mediaReport.setContent(mediaReport.getContent().replaceAll("src=\"/", "src=\"" + CdnUrlUtil.getCdnUrl()) + "//");
 			}
 		}
 
@@ -446,10 +444,10 @@ public class AboutUsController extends BaseController {
 		List<ContentArticleVO> companyDynamicsList = response.getResultList();
 		for (ContentArticleVO companyDynamics : companyDynamicsList) {
 			if (companyDynamics.getContent().contains("../../../..")) {
-				companyDynamics.setContent(companyDynamics.getContent().replaceAll("../../../..", webUrl));
+				companyDynamics.setContent(companyDynamics.getContent().replaceAll("../../../..", CdnUrlUtil.getCdnUrl()));
 			} else if (companyDynamics.getContent().contains("src=\"/")) {
 				companyDynamics.setContent(companyDynamics.getContent().replaceAll("src=\"/",
-						"src=\"" + webUrl)
+						"src=\"" + CdnUrlUtil.getCdnUrl())
 						+ "//");
 			}
 		}
