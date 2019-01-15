@@ -102,8 +102,14 @@ public class MsgPushHandler {
 		}
 
 		UserInfoVO userInfoVO = amUserClient.findUsersInfoById(userVO.getUserId());
-		// 为保护客户隐私，只显示客户姓氏，不显示客户全名。 胡宝志20160115
-		replaceStrs.put("val_name", userInfoVO.getTruename().substring(0, 1));
+		// 为保护客户隐私，只显示客户姓氏，不显示客户全名。
+		if(userInfoVO==null){
+			logger.warn("未找到用户信息， userId is: {}", userVO.getUserId());
+			return ERROR_SEND;
+		}
+		String trueName = userInfoVO.getTruename();
+		String replaceName = StringUtils.isBlank(trueName)?"":trueName.substring(0, 1);
+		replaceStrs.put("val_name", replaceName);
 		replaceStrs.put("val_sex", userInfoVO.getSex() == 1 ? "先生" : "女士");
 
 		return sendMessages(tplCode, replaceStrs, userVO.getMobile());
