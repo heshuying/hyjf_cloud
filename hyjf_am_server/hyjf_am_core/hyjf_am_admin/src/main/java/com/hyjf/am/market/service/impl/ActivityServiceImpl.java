@@ -11,6 +11,7 @@ import com.hyjf.am.market.service.ActivityService;
 import com.hyjf.am.resquest.market.ActivityListRequest;
 import com.hyjf.am.vo.market.ActivityListBeanVO;
 import com.hyjf.am.vo.market.ActivityListCustomizeVO;
+import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.GetDate;
 import org.springframework.stereotype.Service;
 
@@ -194,36 +195,14 @@ public class ActivityServiceImpl implements ActivityService {
     public List<ActivityListBeanVO> queryActivityList(ActivityListRequest activityListRequest) {
         ActivityListCustomizeVO activityListCustomize = dealActivityParam(activityListRequest);
         List<ActivityListCustomizeVO> activitys = AppActivityListCustomizeMapper.queryActivityList(activityListCustomize);
-
-        List<ActivityListBeanVO> beanList= new ArrayList<ActivityListBeanVO>();
-        if(activitys!=null && activitys.size()>0){
-            for(ActivityListCustomizeVO al:activitys){
-                ActivityListBeanVO bean =new ActivityListBeanVO();
-                bean.setImg(systemConfig.getWebHost()+al.getImg());//应前台要求，路径给绝对路径
-                bean.setTitle(al.getTitle());
-                bean.setTimeStart(al.getTimeStart());
-                bean.setTimeEnd(al.getTimeEnd());
-                bean.setUrlForeground(al.getUrlForeground());
-                if (al.getTimeStart() >= GetDate.getNowTime10()) {
-                    bean.setStatus("未开始");
-                }
-                if (al.getTimeEnd() <= GetDate.getNowTime10()) {
-                    bean.setStatus("已完成");
-                }
-                if (al.getTimeEnd() >= GetDate.getNowTime10()
-                        && al.getTimeStart() <= GetDate.getNowTime10()) {
-                    bean.setStatus("进行中");
-                }
-                beanList.add(bean);
-            }
-        }
+        List<ActivityListBeanVO> beanList= CommonUtils.convertBeanList(activitys,ActivityListBeanVO.class);
         return beanList;
     }
 
     public ActivityListCustomizeVO dealActivityParam(ActivityListRequest activityListRequest){
         ActivityListCustomizeVO activityListCustomize =new ActivityListCustomizeVO();
         activityListCustomize.setPlatform(activityListRequest.getPlatform());
-
+        activityListCustomize.setHost(systemConfig.getWebHost());
         Integer page = activityListRequest.getPage();
         Integer pageSize = activityListRequest.getPageSize();
 
