@@ -64,7 +64,7 @@ public class AppCreditAuthPagePlusController extends BaseUserController {
         CheckUtil.check(userId != null,MsgEnum.ERR_USER_NOT_LOGIN);
         UserVO user = this.authService.getUsersById(userId);
         String platform = request.getParameter("platform");
-        String sign=request.getParameter("sign");
+        //String sign = request.getParameter("sign");
         //检查用户信息
         checkUserMessage(user);
 
