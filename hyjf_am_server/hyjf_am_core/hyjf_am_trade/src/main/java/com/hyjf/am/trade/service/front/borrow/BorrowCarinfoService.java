@@ -8,5 +8,4 @@ public interface BorrowCarinfoService {
 
     List<BorrowCarinfo> getBorrowCarinfoListByNid(String borrowNid);
 
-
 }

@@ -19,7 +19,6 @@ import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.HSSFColor;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.slf4j.Logger;
@@ -136,7 +135,7 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
                     if (drawOrder == 2 && "惠众".equals(sellDaily.getPrimaryDivision())) {
                         Row row = sheet.createRow(++rowNum);
                         HSSFCellStyle sumOCCellStyle = createTotalCellStyle(row, sheet, workbook, "运营中心汇总", rowNum,
-                                HSSFColor.GOLD.index);
+                                IndexedColors.GOLD.index);
                         SellDailyVO sumOCSellDaily = getSumSellDaily(1);
                         for (int celLength = 3; celLength < titles.length; celLength++) {
                             // 创建相应的单元格
@@ -160,7 +159,7 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
                 // 3. 插入一级分部合计行
                 Row row = sheet.createRow(++rowNum);
                 HSSFCellStyle sumPrimaryDivisionCellStyle = createTotalCellStyle(row, sheet, workbook,
-                        concatPrimaryDivisionTotalTitle(drawOrder), rowNum, HSSFColor.LIGHT_TURQUOISE.index);
+                        concatPrimaryDivisionTotalTitle(drawOrder), rowNum, IndexedColors.LIGHT_TURQUOISE.index);
                 SellDailyVO sumPrimaryDivisionSellDaily = getSumSellDaily(2, drawOrder);
                 // 第三列到第24列计算合计数据
                 for (int i = 3; i < titles.length; i++) {
@@ -173,7 +172,7 @@ public class DailyAutoSendServiceImpl implements DailyAutoSendService {
             // 4. 插入总合计行
             Row row = sheet.createRow(++rowNum);
             HSSFCellStyle allTotalCellStyle = createTotalCellStyle(row, sheet, workbook, "合计", rowNum,
-                    HSSFColor.YELLOW.index);
+                    IndexedColors.YELLOW.index);
             SellDailyVO allTotalSellDaily = getSumSellDaily(3);
             for (int i = 3; i < titles.length; i++) {
                 Cell totalCell = row.createCell(i);
