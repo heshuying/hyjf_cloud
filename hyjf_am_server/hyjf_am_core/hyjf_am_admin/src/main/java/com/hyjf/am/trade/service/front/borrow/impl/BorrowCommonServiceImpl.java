@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
@@ -5845,7 +5846,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 
 		List<BorrowInfo> list = borrowInfoMapper.selectByExample(example);
 		// 未拉取到数据返回
-		if (list.isEmpty() || null == list) {
+		if (CollectionUtils.isEmpty(list)) {
 			logger.error("判断是否自动备案发送MQ拉取标的信息失败！");
 			return;
 		}
@@ -5854,17 +5855,17 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		HjhAssetBorrowtype hjhAssetBorrowType = this.selectAssetBorrowType(list.get(0).getBorrowNid());
 		if (null != hjhAssetBorrowType && null != hjhAssetBorrowType.getAutoRecord() && hjhAssetBorrowType.getAutoRecord() == 1) {
 			// 遍历borrowNid
-			for (int i = 0; i < list.size(); i++) {
-                logger.info(list.get(i).getBorrowNid()+" 发送自动备案消息到MQ ");
+			for (BorrowInfo borrowInfo : list) {
+                logger.info(borrowInfo.getBorrowNid()+" 发送自动备案消息到MQ ");
                 try {
                     JSONObject params = new JSONObject();
-                    params.put("borrowNid", list.get(i).getBorrowNid());
-                    params.put("planId", list.get(i).getId());
-					commonProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), params));
+                    params.put("borrowNid", borrowInfo.getBorrowNid());
+                    params.put("planId", borrowInfo.getId());
+					commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), params));
                 } catch (MQException e) {
                     logger.error("发送【自动备案消息到MQ】MQ失败...");
                 }
-				logger.info("标的编号：" + list.get(i).getBorrowNid()+ " 已发送到自动备案消息队列！");
+				logger.info("标的编号：" + borrowInfo.getBorrowNid()+ " 已发送到自动备案消息队列！");
 			}
 		}
 	}
