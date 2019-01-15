@@ -1322,7 +1322,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         tenderCreditDetail.setTag("");
         tenderCreditDetail.setType("HZR");
         tenderCreditDetail.setRepayStyle(tenderCredit.getRepayStyle());
-        ;
+        tenderCreditDetail.setInvestLevel(tenderCredit.getInvestLevel());
         return tenderCreditDetail;
     }
 
@@ -1954,6 +1954,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         // 计息时间
         projectInfo.setOnAccrual(ProjectConstant.PLAN_ON_ACCRUAL);
         projectInfo.setRepayStyle(customize.getBorrowStyleName());
+
+        //标的等级
+        projectInfo.setInvestLevel(customize.getInvestLevel());
 
         Map<String, Object> projectDetail = new HashMap<>();
         projectDetail.put("addCondition", MessageFormat.format(ProjectConstant.PLAN_ADD_CONDITION, customize.getDebtMinInvestment(),
