@@ -223,6 +223,8 @@ public interface MQConstant {
 	 */
 	String AUTO_ISSUE_RECOVER_GROUP = "AUTO_ISSUE_RECOVER_GROUP";
 	String AUTO_ISSUE_RECOVER_TOPIC = "AUTO_ISSUE_RECOVER_TOPIC";
+	String AUTO_ISSUE_RECOVER_PUSH_TAG = "AUTO_ISSUE_RECOVER_PUSH_TAG";
+	String AUTO_ISSUE_RECOVER_REPAIR_TAG = "AUTO_ISSUE_RECOVER_REPAIR_TAG";
 
 	/**
 	 * 自动备案
@@ -234,6 +236,17 @@ public interface MQConstant {
 	 */
 	String AUTO_BORROW_RECORD_GROUP = "AUTO_BORROW_RECORD_GROUP";
 	String AUTO_BORROW_RECORD_TOPIC = "AUTO_BORROW_RECORD_TOPIC";
+
+	/**
+	 * 自动审核保证金
+	 *
+	 * 来源：
+	 * 	1.admin标的备案成功;
+	 * 	2.汇计划发标修复定时任务;
+	 *
+	 */
+	String AUTO_VERIFY_BAIL_GROUP = "AUTO_VERIFY_BAIL_GROUP";
+	String AUTO_VERIFY_BAIL_TOPIC = "AUTO_VERIFY_BAIL_TOPIC";
 
 	/**
 	 * 自动初审
@@ -249,17 +262,6 @@ public interface MQConstant {
 	 */
 	String AUTO_BORROW_PREAUDIT_GROUP = "AUTO_BORROW_PREAUDIT_GROUP";
 	String AUTO_BORROW_PREAUDIT_TOPIC = "AUTO_BORROW_PREAUDIT_TOPIC";
-
-	/**
-	 * 自动审核保证金
-	 *
-	 * 来源：
-	 * 	1.admin标的备案成功;
-	 * 	2.汇计划发标修复定时任务;
-	 *
-	 */
-	String AUTO_VERIFY_BAIL_GROUP = "AUTO_VERIFY_BAIL_GROUP";
-	String AUTO_VERIFY_BAIL_TOPIC = "AUTO_VERIFY_BAIL_TOPIC";
 
 	/**
 	 * 自动关联计划

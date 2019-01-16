@@ -51,8 +51,10 @@ public class AutoIssueRecoverController extends BaseController{
                 logger.debug(planAsset.getAssetId()+" 开始录标修复 ");
                 try {
                     JSONObject params = new JSONObject();
-                    params.put("planId", planAsset.getId());
-                    commonProducer.messageSend(new MessageContent(MQConstant.AUTO_ISSUE_RECOVER_TOPIC, UUID.randomUUID().toString(), params));
+                    params.put("assetId", planAsset.getAssetId());
+                    params.put("instCode", planAsset.getInstCode());
+					commonProducer.messageSend(new MessageContent(MQConstant.AUTO_ISSUE_RECOVER_TOPIC,
+							MQConstant.AUTO_ISSUE_RECOVER_REPAIR_TAG, planAsset.getAssetId(), params));
                 } catch (MQException e) {
                     logger.error("发送【录标修复】MQ失败...");
                 }
