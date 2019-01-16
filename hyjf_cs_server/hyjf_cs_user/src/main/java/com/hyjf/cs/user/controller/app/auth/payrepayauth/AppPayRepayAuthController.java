@@ -70,6 +70,10 @@ public class AppPayRepayAuthController extends BaseUserController {
         CheckUtil.check(userId != null,MsgEnum.ERR_USER_NOT_LOGIN);
         UserVO user = this.authService.getUsersById(userId);
         String platform = request.getParameter("platform");
+        logger.info("app二合一授权入参打印,data:[userId:"+ userId +
+                ",request:"+ JSONObject.toJSONString(request) +"]"+
+                ",platform:"+ platform +"]"
+        );
         //检查用户信息
         checkUserMessage(user);
 
@@ -80,8 +84,16 @@ public class AppPayRepayAuthController extends BaseUserController {
         String successPath = "/user/setting/repayauth/result/success";
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         // 同步地址  是否跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig,platform) + errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAY_REPAY_AUTH;
-        String successUrl = super.getFrontHost(systemConfig,platform) + successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAY_REPAY_AUTH;
+        String retUrl = super.getFrontHost(systemConfig,platform) + errorPath +
+                                                            "?logOrdId="+ orderId +
+                                                            "&authType="+ AuthBean.AUTH_TYPE_PAY_REPAY_AUTH +
+                                                            "&platform="+ platform
+                                                            ;
+        String successUrl = super.getFrontHost(systemConfig,platform) + successPath +
+                                                            "?logOrdId="+ orderId +
+                                                            "&authType="+ AuthBean.AUTH_TYPE_PAY_REPAY_AUTH +
+                                                            "&platform="+ platform
+                                                            ;
         String bgRetUrl = "http://CS-USER" + PAY_REPAY_CLASS_NAME + PAY_REPAY_BG_AUTH;
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);
