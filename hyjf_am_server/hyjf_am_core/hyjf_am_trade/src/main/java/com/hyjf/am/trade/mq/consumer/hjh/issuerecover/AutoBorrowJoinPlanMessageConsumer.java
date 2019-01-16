@@ -41,9 +41,15 @@ import java.util.UUID;
 public class AutoBorrowJoinPlanMessageConsumer
 		implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 	private static final Logger logger = LoggerFactory.getLogger(AutoBorrowJoinPlanMessageConsumer.class);
+	/**
+	 * 普通标的
+	 */
 	private final List<String> BORROW_NID_TAGS_LIST = Arrays.asList(MQConstant.AUTO_JOIN_PLAN_JOB_TAG,
 			MQConstant.AUTO_JOIN_PLAN_AUTO_PRE_ISSUE_TAG, MQConstant.AUTO_JOIN_PLAN_BORROW_REPAIR_TAG,
 			MQConstant.AUTO_JOIN_PLAN_ADMIN_INSERT_TAG, MQConstant.AUTO_JOIN_PLAN_ADMIN_ISSUE_TAG);
+	/**
+	 * 计划内债转标的
+	 */
 	private final List<String> CREDIT_NID_TAGS_LIST = Arrays.asList(MQConstant.AUTO_JOIN_PLAN_CLEAR_TAG,
 			MQConstant.AUTO_JOIN_PLAN_CREDIT_REPAIR_TAG);
 	@Autowired
@@ -89,6 +95,12 @@ public class AutoBorrowJoinPlanMessageConsumer
 			}
 			this.doJoinPlanOfCredit(creditNid);
 		}
+
+        // 3. 错误消息
+        else {
+            logger.warn("不明消息，不予消费....");
+            return;
+        }
 	}
 
 	private void doJoinPlanOfBorrow(String borrowNid) {
@@ -185,37 +197,11 @@ public class AutoBorrowJoinPlanMessageConsumer
 		HjhLabel label = autoIssueMessageService.getLabelId(credit);
 		if (label == null || label.getId() == null) {
 			logger.warn(creditNid + " 该债转没有匹配标签 ");
-			/** 汇计划三期邮件预警 BY LIBIN start */
-			// 如果redis不存在这个KEY(一天有效期)，那么可以发邮件
-			if (!RedisUtils.exists(RedisConstants.LABEL_MAIL_KEY + creditNid)) {
-				StringBuffer emailmsg = new StringBuffer();
-				emailmsg.append("债转编号：").append(creditNid).append("<br/>");
-				emailmsg.append("当前时间：").append(GetDate.formatTime()).append("<br/>");
-				emailmsg.append("错误信息：").append("该债转没有匹配标签！").append("<br/>");
-				// 邮箱集合
-				String emailList = "";
-				if (env_test) {
-					emailList = emailList1;
-				} else {
-					emailList = emaillist2;
-				}
-				String[] toMail = emailList.split(",");
-				MailMessage mailMessage = new MailMessage(null, null, "债转编号为：" + creditNid, emailmsg.toString(), null,
-						toMail, null, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
-				try {
-					commonProducer.messageSend(
-							new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), mailMessage));
-					RedisUtils.set(RedisConstants.LABEL_MAIL_KEY + creditNid, creditNid, 24 * 60 * 60);
-				} catch (MQException e2) {
-					logger.error("发送邮件失败..", e2);
-				}
-
-			} else {
-				logger.info("此邮件key值还未过期(一天)");
-			}
-			/** 汇计划三期邮件预警 BY LIBIN end */
+			// 汇计划三期邮件预警
+			this.sendWarnMail(creditNid);
 			return;
 		}
+
 		credit.setLabelId(label.getId());
 		credit.setLabelName(label.getLabelName());
 		// 分配计划引擎
@@ -239,5 +225,40 @@ public class AutoBorrowJoinPlanMessageConsumer
 		// 设置为集群消费(区别于广播消费)
 		defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
 		logger.info("====AutoBorrowJoinPlanMessageConsumer start=====");
+	}
+
+	/**
+	 * 汇计划三期邮件预警
+	 * 
+	 * @param creditNid
+	 */
+	private void sendWarnMail(String creditNid) {
+		// 如果redis不存在这个KEY(一天有效期)，那么可以发邮件
+		if (!RedisUtils.exists(RedisConstants.LABEL_MAIL_KEY + creditNid)) {
+			StringBuffer emailmsg = new StringBuffer();
+			emailmsg.append("债转编号：").append(creditNid).append("<br/>");
+			emailmsg.append("当前时间：").append(GetDate.formatTime()).append("<br/>");
+			emailmsg.append("错误信息：").append("该债转没有匹配标签！").append("<br/>");
+			// 邮箱集合
+			String emailList = "";
+			if (env_test) {
+				emailList = emailList1;
+			} else {
+				emailList = emaillist2;
+			}
+			String[] toMail = emailList.split(",");
+			MailMessage mailMessage = new MailMessage(null, null, "债转编号为：" + creditNid, emailmsg.toString(), null,
+					toMail, null, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);
+			try {
+				commonProducer.messageSend(
+						new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), mailMessage));
+				RedisUtils.set(RedisConstants.LABEL_MAIL_KEY + creditNid, creditNid, 24 * 60 * 60);
+			} catch (MQException e2) {
+				logger.error("发送邮件失败..", e2);
+			}
+
+		} else {
+			logger.info("此邮件key值还未过期(一天)");
+		}
 	}
 }

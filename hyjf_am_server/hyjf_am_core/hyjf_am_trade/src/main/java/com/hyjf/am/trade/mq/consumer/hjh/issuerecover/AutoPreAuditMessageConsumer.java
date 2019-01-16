@@ -93,6 +93,12 @@ public class AutoPreAuditMessageConsumer
 			}
 			this.doPreAuditBorrow(assetId, instCode);
 		}
+
+		// 3. 错误消息
+		else {
+			logger.warn("不明消息，不予消费....");
+			return;
+		}
 	}
 
 	@Override
