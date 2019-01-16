@@ -170,7 +170,6 @@ public class AppSmsCodeController extends BaseUserController {
 
         // 验证码类型
         String verificationType = request.getParameter("verificationType");
-        logger.info("验证码类型:"+verificationType);
         // 手机号
         String mobile = request.getParameter("mobile");
 
@@ -198,8 +197,10 @@ public class AppSmsCodeController extends BaseUserController {
                 ret.put("statusDesc", "请输入您的真实手机号码");
                 return ret;
             }
-            smsCodeService.appSendSmsCodeCheckParam(verificationType, mobile, userId, GetCilentIP.getIpAddr(request));
-
+            ret = smsCodeService.appSendSmsCodeCheckParam(verificationType, mobile, userId, GetCilentIP.getIpAddr(request));
+            if(ret.get("status")!=null){
+                return ret;
+            }
             if(!verificationType.equals(CommonConstant.PARAM_TPL_BDYSJH)){
                 //判断用户是否登录
                 //UserVO userVO = smsCodeService.getUsersById(userId);
