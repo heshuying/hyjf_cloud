@@ -1257,33 +1257,67 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         request.setNowTime(nowTime);
         request.setOrderId(planOrderId);
         if (Validator.isNotNull(userInfo)) {
-            UserVO spreadsUsers = amUserClient.getSpreadsUsersByUserId(userId);
-
-            if (spreadsUsers != null) {
-                int refUserId = spreadsUsers.getUserId();
-                logger.info("推荐人信息：" + refUserId);
-                // 查找用户推荐人详情信息  部门啥的
-                UserInfoCrmVO userInfoCustomize = amUserClient.queryUserCrmInfoByUserId(refUserId);
-                logger.info("查询推荐人1   :{}",JSONObject.toJSONString(userInfoCustomize));
-                if (Validator.isNotNull(userInfoCustomize)) {
-                    planAccede.setInviteUserId(userInfoCustomize.getUserId());
-                    planAccede.setInviteUserName(userInfoCustomize.getUserName());
-                    planAccede.setInviteUserAttribute(userInfoCustomize.getAttribute());
-                    planAccede.setInviteUserRegionname(userInfoCustomize.getRegionName());
-                    planAccede.setInviteUserBranchname(userInfoCustomize.getBranchName());
-                    planAccede.setInviteUserDepartmentname(userInfoCustomize.getDepartmentName());
-                }
-            } else if (userInfo.getAttribute() == 2 || userInfo.getAttribute() == 3) {
-                // 查找用户推荐人详情信息
-                UserInfoCrmVO userInfoCustomize = amUserClient.queryUserCrmInfoByUserId(userId);
-                logger.info("查询推荐人2   :{}",JSONObject.toJSONString(userInfoCustomize));
-                if (Validator.isNotNull(userInfoCustomize)) {
-                    planAccede.setInviteUserId(userInfoCustomize.getUserId());
-                    planAccede.setInviteUserName(userInfoCustomize.getUserName());
-                    planAccede.setInviteUserAttribute(userInfoCustomize.getAttribute());
-                    planAccede.setInviteUserRegionname(userInfoCustomize.getRegionName());
-                    planAccede.setInviteUserBranchname(userInfoCustomize.getBranchName());
-                    planAccede.setInviteUserDepartmentname(userInfoCustomize.getDepartmentName());
+           // UserVO spreadsUsers = amUserClient.getSpreadsUsersByUserId(userId);
+            // 用户属性 0=>无主单 1=>有主单 2=>线下员工 3=>线上员工
+            Integer attribute = null;
+            if (userInfo != null) {
+                // 获取出借用户的用户属性
+                attribute = userInfo.getAttribute();
+                if (attribute != null) {
+                    // 出借人用户属性
+                    planAccede.setUserAttribute(attribute);
+                    // 如果是线上员工或线下员工，推荐人的userId和username不插
+                    if (attribute == 2 || attribute == 3) {
+                        EmployeeCustomizeVO employeeCustomize = this.amUserClient.selectEmployeeByUserId(userId);
+                        if (employeeCustomize != null) {
+                            planAccede.setInviteUserRegionname(employeeCustomize.getRegionName());
+                            planAccede.setInviteUserBranchname(employeeCustomize.getBranchName());
+                            planAccede.setInviteUserDepartmentname(employeeCustomize.getDepartmentName());
+                        }
+                    } else if (attribute == 1) {
+                        // 有主单
+                        SpreadsUserVO spreadsUserVO = amUserClient.querySpreadsUsersByUserId(userId);
+                        if (spreadsUserVO!=null) {
+                            int refUserId = spreadsUserVO.getSpreadsUserId();
+                            // 查找用户推荐人
+                            UserVO userss = getUsers(refUserId);
+                            if (userss != null) {
+                                planAccede.setInviteUserId(userss.getUserId());
+                                planAccede.setInviteUserName(userss.getUsername());
+                            }
+                            // 推荐人信息
+                            UserInfoVO refUsers = this.getUsersInfoByUserId(refUserId);
+                            // 推荐人用户属性
+                            if (refUsers != null) {
+                                planAccede.setInviteUserAttribute(refUsers.getAttribute());
+                            }
+                            // 查找用户推荐人部门
+                            EmployeeCustomizeVO employeeCustomize =this.amUserClient.selectEmployeeByUserId(refUserId);
+                            if (employeeCustomize != null) {
+                                planAccede.setInviteUserRegionname(employeeCustomize.getRegionName());
+                                planAccede.setInviteUserBranchname(employeeCustomize.getBranchName());
+                                planAccede.setInviteUserDepartmentname(employeeCustomize.getDepartmentName());
+                            }
+                        }
+                    } else if (attribute == 0) {
+                        // 无主单
+                        SpreadsUserVO spreadsUserVO = amUserClient.querySpreadsUsersByUserId(userId);
+                        if (spreadsUserVO != null) {
+                            int refUserId = spreadsUserVO.getSpreadsUserId();
+                            // 查找推荐人
+                            UserVO userss = getUsers(refUserId);
+                            if (userss != null) {
+                                planAccede.setInviteUserId(userss.getUserId());
+                                planAccede.setInviteUserName(userss.getUsername());
+                            }
+                            // 推荐人信息
+                            UserInfoVO refUsers = getUsersInfoByUserId(refUserId);
+                            // 推荐人用户属性
+                            if (refUsers != null) {
+                                planAccede.setInviteUserAttribute(refUsers.getAttribute());
+                            }
+                        }
+                    }
                 }
             }
         }
