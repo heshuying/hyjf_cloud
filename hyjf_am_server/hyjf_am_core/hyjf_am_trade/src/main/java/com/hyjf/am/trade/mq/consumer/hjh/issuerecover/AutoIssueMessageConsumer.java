@@ -59,7 +59,7 @@ public class AutoIssueMessageConsumer implements RocketMQListener<MessageExt>, R
 
     @Override
     public void onMessage(MessageExt messageExt) {
-        logger.info("AutoSendMessageConsumer 收到消息，开始处理....");
+        logger.info("AutoIssueMessageConsumer 收到消息，开始处理....");
         MessageExt msg = messageExt;
         String borrowNid = null;
         try {

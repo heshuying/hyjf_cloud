@@ -60,12 +60,6 @@ public class AutoIssueBorrowMessageConsumer
 			return;
 		}
 
-		HjhPlanAsset hjhPlanAsset = autoPreAuditMessageService.selectPlanAsset(assetId, instCode);
-		if (hjhPlanAsset == null) {
-			logger.warn(" 该资产在表里不存在！！");
-			return;
-		}
-
 		// 1. 资产推送录标
 		if (MQConstant.AUTO_ISSUE_RECOVER_PUSH_TAG.equals(msg.getTags())) {
 			logger.info("自动录标来源: 资产推送录标...");
@@ -75,6 +69,17 @@ public class AutoIssueBorrowMessageConsumer
 		else if (MQConstant.AUTO_ISSUE_RECOVER_REPAIR_TAG.equals(msg.getTags())) {
 			logger.info("自动录标来源: 汇计划发标修复定时任务录标...");
 			// do nothing, only remark
+		}
+		// 错误消息
+		else {
+			logger.warn("不明消息，不予消费....");
+			return;
+		}
+
+		HjhPlanAsset hjhPlanAsset = autoPreAuditMessageService.selectPlanAsset(assetId, instCode);
+		if (hjhPlanAsset == null) {
+			logger.warn(" 该资产在表里不存在！！");
+			return;
 		}
 
 		// redis 防重复检查

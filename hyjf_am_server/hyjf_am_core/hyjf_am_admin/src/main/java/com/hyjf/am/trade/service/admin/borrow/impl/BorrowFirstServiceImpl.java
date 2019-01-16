@@ -31,7 +31,6 @@ import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 /**
  * @author wangjun
@@ -238,10 +237,10 @@ public class BorrowFirstServiceImpl extends BaseServiceImpl implements BorrowFir
         if (hjhAssetBorrowType.getAutoAudit() == 1) {
             try {
                 JSONObject params = new JSONObject();
-                params.put("instCode",borrowInfo.getInstCode());
                 params.put("borrowNid", borrowNid);
-                commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), params));
-                logger.info("自动初审MQ发送成功----------标的号:{}", borrowNid);
+				commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_PREAUDIT_TOPIC,
+						MQConstant.AUTO_BORROW_PREAUDIT_ADMIN_BAIL_TAG, borrowNid, params));
+				logger.info("自动初审MQ发送成功----------标的号:{}", borrowNid);
             } catch (Exception e) {
                 logger.error("发送MQ到初审失败，borrowNid：" + borrowNid);
                 e.printStackTrace();

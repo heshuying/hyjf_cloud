@@ -20,14 +20,16 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author: sunpeikai
@@ -197,15 +199,15 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
             if(borrowVO.getEntrustedFlg() !=1){
                 // 加入到消息队列
                 Map<String, String> params = new HashMap<>();
-                params.put("mqMsgId", GetCode.getRandomCode(10));
                 params.put("assetId", hjhPlanAsset.getAssetId());
                 params.put("instCode", hjhPlanAsset.getInstCode());
-                try {
-                    commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), params));
-                    logger.info(hjhPlanAsset.getAssetId()+" 资产 加入队列 ");
-                } catch (MQException e) {
-                    logger.info(hjhPlanAsset.getAssetId()+" 资产 加入队列失败");
-                }
+				try {
+					commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_PREAUDIT_TOPIC,
+							MQConstant.AUTO_BORROW_PREAUDIT_ADMIN_EXCEPTION_TAG, hjhPlanAsset.getAssetId(), params));
+					logger.info(hjhPlanAsset.getAssetId() + " 资产 加入队列 ");
+				} catch (MQException e) {
+					logger.info(hjhPlanAsset.getAssetId() + " 资产 加入队列失败");
+				}
             }
 
         }

@@ -97,6 +97,16 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 
 	}
 
+	@Override
+	public void prepareStart(DefaultMQPushConsumer defaultMQPushConsumer) {
+		// 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
+		// 如果非第一次启动，那么按照上次消费的位置继续消费
+		defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
+		// 设置为集群消费(区别于广播消费)
+		defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
+		logger.info("====AutoRecordMessageConsumer start=====");
+	}
+
 	private void doRecordBorrowByAuto(String assetId, String instCode) {
 		HjhPlanAsset hjhPlanAsset = autoPreAuditMessageService.selectPlanAsset(assetId, instCode);
 		if (hjhPlanAsset == null) {
@@ -147,8 +157,8 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 			JSONObject params = new JSONObject();
 			params.put("assetId", assetId);
 			params.put("instCode", instCode);
-			commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_BORROW_PREAUDIT_TOPIC, assetId, params),
-					2);
+			commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_BORROW_PREAUDIT_TOPIC,
+					MQConstant.AUTO_BORROW_PREAUDIT_ASSET_RECORD_TAG, assetId, params), 2);
 		} catch (MQException e) {
 			logger.error("发送【自动初审】MQ失败...");
 		}
@@ -201,22 +211,13 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 				requestParams.put("borrowNid", borrow.getBorrowNid());
 				// 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
 				commonProducer.messageSendDelay(
-						new MessageContent(MQConstant.AUTO_BORROW_PREAUDIT_TOPIC, borrow.getBorrowNid(), requestParams),
+						new MessageContent(MQConstant.AUTO_BORROW_PREAUDIT_TOPIC,
+								MQConstant.AUTO_BORROW_PREAUDIT_ASSET_RECORD_TAG, borrow.getBorrowNid(), requestParams),
 						2);
 			} catch (MQException e) {
 				logger.error("发送【审核保证金队列】MQ失败...");
 			}
 			logger.info(borrow.getBorrowNid() + " 成功发送到审核保证金队列, 结束自动备案");
 		}
-	}
-
-	@Override
-	public void prepareStart(DefaultMQPushConsumer defaultMQPushConsumer) {
-		// 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
-		// 如果非第一次启动，那么按照上次消费的位置继续消费
-		defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
-		// 设置为集群消费(区别于广播消费)
-		defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
-		logger.info("====AutoRecordMessageConsumer start=====");
 	}
 }

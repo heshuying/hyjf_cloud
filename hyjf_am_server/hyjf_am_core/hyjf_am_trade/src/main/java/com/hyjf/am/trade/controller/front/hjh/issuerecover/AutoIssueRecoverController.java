@@ -89,13 +89,15 @@ public class AutoIssueRecoverController extends BaseController{
 
             for (HjhPlanAsset planAsset : preauditList) {
                 logger.debug(planAsset.getAssetId()+" 开始待初审修复 ");
-                try {
-                    JSONObject params = new JSONObject();
-                    params.put("assetId", planAsset.getAssetId());
-                    commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), params));
-                } catch (MQException e) {
-                    logger.error("发送【待初审修复】MQ失败...");
-                }
+				try {
+					JSONObject params = new JSONObject();
+					params.put("assetId", planAsset.getAssetId());
+					params.put("instCode", planAsset.getInstCode());
+					commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_PREAUDIT_TOPIC,
+							MQConstant.AUTO_BORROW_PREAUDIT_ASSET_REPAIR_TAG, planAsset.getAssetId(), params));
+				} catch (MQException e) {
+					logger.error("发送【待初审修复】MQ失败...");
+				}
                 logger.debug(planAsset.getAssetId()+" 结束待初审修复");
             }
 
@@ -193,7 +195,8 @@ public class AutoIssueRecoverController extends BaseController{
                     try {
                         JSONObject params = new JSONObject();
                         params.put("borrowNid", borrow.getBorrowNid());
-                        commonProducer.messageSend(new MessageContent(MQConstant.AUTO_VERIFY_BAIL_TOPIC, UUID.randomUUID().toString(), params));
+						commonProducer.messageSend(new MessageContent(MQConstant.AUTO_VERIFY_BAIL_TOPIC,
+								MQConstant.AUTO_VERIFY_BAIL_REPAIR_TAG, borrow.getBorrowNid(), params));
                     } catch (MQException e) {
                         logger.error("发送【自动审核保证金消息到MQ】MQ失败...");
                     }
@@ -201,13 +204,15 @@ public class AutoIssueRecoverController extends BaseController{
                 // 已审核保证金的标的发送到初审发标队列
                 if (borrow.getStatus() == 1 && borrow.getVerifyStatus() > 0) {
                     logger.debug(borrow.getBorrowNid()+" 发送自动初审消息到MQ ");
-                    try {
-                        JSONObject params = new JSONObject();
-                        params.put("borrowNid", borrow.getBorrowNid());
-                        commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), params));
-                    } catch (MQException e) {
-                        logger.error("发送【自动初审消息到MQ】MQ失败...");
-                    }
+					try {
+						JSONObject params = new JSONObject();
+						params.put("borrowNid", borrow.getBorrowNid());
+						commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_PREAUDIT_TOPIC,
+								MQConstant.AUTO_BORROW_PREAUDIT_BORROW_REPAIR_TAG, UUID.randomUUID().toString(),
+								params));
+					} catch (MQException e) {
+						logger.error("发送【自动初审消息到MQ】MQ失败...");
+					}
                 }
                 logger.debug(borrow.getBorrowNid()+" 结束自动备案、初审标的自动审核");
             }
