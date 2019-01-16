@@ -17,7 +17,6 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.exception.MQException;
-import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.IdCard15To18;
 import com.hyjf.cs.trade.bean.assetpush.PushBean;
@@ -40,7 +39,6 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @author fuqiang
@@ -658,14 +656,12 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
      */
 	private void sendToAutoIssueRecoverQueue(HjhPlanAssetVO hjhPlanAsset) {
 		JSONObject params = new JSONObject();
-		params.put("mqMsgId", GetCode.getRandomCode(10));
 		params.put("assetId", hjhPlanAsset.getAssetId());
 		params.put("instCode", hjhPlanAsset.getInstCode());
 		try {
 			// modify by liushouyi 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-			commonProducer.messageSendDelay(
-					new MessageContent(MQConstant.HJH_AUTO_ISSUERECOVER_TOPIC, UUID.randomUUID().toString(), params),
-					2);
+			commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_ISSUE_RECOVER_TOPIC,
+					MQConstant.AUTO_ISSUE_RECOVER_PUSH_TAG, hjhPlanAsset.getAssetId(), params), 2);
 		} catch (MQException e) {
 			logger.error("自动录标发送消息失败...", e);
 		}

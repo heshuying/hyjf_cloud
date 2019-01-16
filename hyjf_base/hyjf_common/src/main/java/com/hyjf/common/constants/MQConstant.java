@@ -51,12 +51,6 @@ public interface MQConstant {
 	/** ------------------------------ 优惠券相关 start ------------------------------ */
 
 	/**
-	 * 优惠券发放 - 后台批量发放
-	 */
-	String BATCH_GRANT_COUPON_GROUP = "BATCH_GRANT_COUPON_GROUP";
-	String BATCH_GRANT_COUPON_TOPIC = "BATCH_GRANT_COUPON_TOPIC";
-
-	/**
 	 * 优惠券发放
 	 */
 	String GRANT_COUPON_GROUP = "COUPON_GROUP";
@@ -103,12 +97,6 @@ public interface MQConstant {
 	 */
 	String TYJ_COUPON_REPAY_GROUP = "TYJ_COUPON_REPAY_GROUP";
 	String TYJ_COUPON_REPAY_TOPIC = "TYJ_COUPON_REPAY_TOPIC";
-
-	/**
-	 * 优惠券批量发放
-	 */
-	String BATCH_USER_COUPON_SEND_GROUP = "BATCH_USER_COUPON_SEND_GROUP";
-	String BATCH_USER_COUPON_SEND_TOPIC = "BATCH_USER_COUPON_SEND_TOPIC";
 
 	/** ------------------------------- 优惠券相关 end ------------------------- end */
 
@@ -208,12 +196,6 @@ public interface MQConstant {
 	/** ------------------------------ 汇计划 start ------------------------------ */
 
 	/**
-	 * 资产推送发送mq
-	 */
-	String ASSET_PUSH_GROUP = "ASSET_PUSH_GROUP";
-	String ASSET_PUST_TOPIC = "ASSET_PUSH_TOPIC";
-
-	/**
 	 * 汇计划进入锁定期/退出
 	 */
 	String HJH_LOCK_QUIT_GROUP = "HJH_LOCK_QUIT_GROUP";
@@ -234,25 +216,96 @@ public interface MQConstant {
 
 	/**
 	 * 自动录标
+	 *
+	 * 来源:
+	 * 	1. 资产推送成功;
+	 * 	2. 汇计划发标修复定时任务;
 	 */
-	String HJH_AUTO_ISSUERECOVER_GROUP = "HJH_AUTO_ISSUERECOVER_GROUP";
-	String HJH_AUTO_ISSUERECOVER_TOPIC = "HJH_AUTO_ISSUERECOVER_TOPIC";
+	String AUTO_ISSUE_RECOVER_GROUP = "AUTO_ISSUE_RECOVER_GROUP";
+	String AUTO_ISSUE_RECOVER_TOPIC = "AUTO_ISSUE_RECOVER_TOPIC";
+	/** TAG */
+	String AUTO_ISSUE_RECOVER_PUSH_TAG = "AUTO_ISSUE_RECOVER_PUSH_TAG";
+	String AUTO_ISSUE_RECOVER_REPAIR_TAG = "AUTO_ISSUE_RECOVER_REPAIR_TAG";
 
-	/** 自动备案 */
-	String ROCKETMQ_BORROW_RECORD_GROUP = "HYJF-ROCKETMQ-BORROW-RECORD-GROUP";
-	String ROCKETMQ_BORROW_RECORD_TOPIC = "HYJF-ROCKETMQ-BORROW-RECORD-TOPIC";
+	/**
+	 * 自动备案
+	 *
+	 * 来源：
+	 * 	1.admin录入标的成功判断是自动备案;
+	 * 	2.自动录标成功;
+	 * 	3.汇计划发标修复定时任务;
+	 */
+	String AUTO_BORROW_RECORD_GROUP = "AUTO_BORROW_RECORD_GROUP";
+	String AUTO_BORROW_RECORD_TOPIC = "AUTO_BORROW_RECORD_TOPIC";
+	/** TAG */
+	String AUTO_BORROW_RECORD_ADMIN_TAG = "AUTO_BORROW_RECORD_ADMIN_TAG";
+	String AUTO_BORROW_RECORD_ISSUE_TAG = "AUTO_BORROW_RECORD_ISSUE_TAG";
+	String AUTO_BORROW_RECORD_REPAIR_TAG = "AUTO_BORROW_RECORD_REPAIR_TAG";
 
-	/** 自动初审 */
-	String ROCKETMQ_BORROW_PREAUDIT_GROUP = "HYJF-ROCKETMQ-BORROW-PREAUDIT-GROUP";
-	String ROCKETMQ_BORROW_PREAUDIT_TOPIC = "HYJF-ROCKETMQ-BORROW-PREAUDIT-TOPIC";
+	/**
+	 * 自动审核保证金
+	 *
+	 * 来源：
+	 * 	1.admin标的备案成功;
+	 * 	2.汇计划发标修复定时任务;
+	 *
+	 */
+	String AUTO_VERIFY_BAIL_GROUP = "AUTO_VERIFY_BAIL_GROUP";
+	String AUTO_VERIFY_BAIL_TOPIC = "AUTO_VERIFY_BAIL_TOPIC";
+	/** TAG */
+	String AUTO_VERIFY_BAIL_ADMIN_TAG =  "AUTO_VERIFY_BAIL_ADMIN_TAG";
+	String AUTO_VERIFY_BAIL_REPAIR_TAG =  "AUTO_VERIFY_BAIL_REPAIR_TAG";
 
-	/** 自动关联计划 */
-	String ROCKETMQ_BORROW_ISSUE_GROUP = "HYJF-ROCKETMQ-BORROW-ISSUE-GROUP";
-	String ROCKETMQ_BORROW_ISSUE_TOPIC = "HYJF-ROCKETMQ-BORROW-ISSUE-TOPIC";
+	/**
+	 * 自动初审
+	 *
+	 * 来源：
+	 * 	1.admin确认已交保证金判断是自动初审;
+	 * 	2.admin标的备案成功判断是自动初审;
+	 * 	3.admin异常中心-标的备案掉单
+	 * 	4.汇计划发标修复定时任务;
+	 * 	5.自动审核保证金成功;
+	 * 	6.自动备案成功;
+	 * 	7.借款人受托支付申请异步回调更新;
+	 */
+	String AUTO_BORROW_PREAUDIT_GROUP = "AUTO_BORROW_PREAUDIT_GROUP";
+	String AUTO_BORROW_PREAUDIT_TOPIC = "AUTO_BORROW_PREAUDIT_TOPIC";
+	/** TAG */
+	String AUTO_BORROW_PREAUDIT_ADMIN_BAIL_TAG = "AUTO_BORROW_PREAUDIT_ADMIN_BAIL_TAG";
+	String AUTO_BORROW_PREAUDIT_ADMIN_RECORD_TAG = "AUTO_BORROW_PREAUDIT_ADMIN_RECORD_TAG";
+	String AUTO_BORROW_PREAUDIT_ADMIN_EXCEPTION_TAG = "AUTO_BORROW_PREAUDIT_ADMIN_EXCEPTION_TAG";
+	/** 汇计划发标修复定时任务发两种消息，标的和资产的，分开区分 **/
+	String AUTO_BORROW_PREAUDIT_ASSET_REPAIR_TAG = "AUTO_BORROW_PREAUDIT_REPAIR_TAG";
+	String AUTO_BORROW_PREAUDIT_BORROW_REPAIR_TAG = "AUTO_BORROW_PREAUDIT_REPAIR_TAG";
+	String AUTO_BORROW_PREAUDIT_AUTO_BAIL_TAG = "AUTO_BORROW_PREAUDIT_AUTO_BAIL_TAG";
+	/** 自动备案成功发两种消息，标的和资产的，分开区分 **/
+	String AUTO_BORROW_PREAUDIT_ASSET_RECORD_TAG = "AUTO_BORROW_PREAUDIT_AUTO_RECORD_TAG";
+	String AUTO_BORROW_PREAUDIT_BORROW_RECORD_TAG = "AUTO_BORROW_PREAUDIT_AUTO_RECORD_TAG";
+	String AUTO_BORROW_PREAUDIT_ST_TAG = "AUTO_BORROW_PREAUDIT_ST_TAG";
 
-	/** 自动审核保证金 */
-	String ROCKETMQ_BORROW_BAIL_GROUP = "HYJF-ROCKETMQ-BORROW-BAIL-GROUP";
-	String ROCKETMQ_BORROW_BAIL_TOPIC = "HYJF-ROCKETMQ-BORROW-BAIL-TOPIC";
+	/**
+	 * 自动关联计划
+	 *
+	 * 来源：
+	 * 	1.admin发标 产品中心-汇直投-借款初审查询初审状态暂不发布的;
+	 * 	2.admin标的录入
+	 * 	3.汇计划发标修复定时任务;
+	 * 	4.自动初审成功
+	 * 	5.汇计划自动清算
+	 * 	6.汇计划定时发标
+	 * 	7.散标定时发标 - 拆分标的
+	 */
+	String AUTO_JOIN_PLAN_GROUP = "AUTO_JOIN_PLAN_GROUP";
+	String AUTO_JOIN_PLAN_TOPIC = "AUTO_JOIN_PLAN_TOPIC";
+	/** TAG */
+	String AUTO_JOIN_PLAN_ADMIN_ISSUE_TAG = "AUTO_JOIN_PLAN_ADMIN_ISSUE_TAG";
+	String AUTO_JOIN_PLAN_ADMIN_INSERT_TAG = "AUTO_JOIN_PLAN_ADMIN_INSERT_TAG";
+	/** 汇计划发标修复定时任务发两种消息，原始标的和债转标的，分开区分 **/
+	String AUTO_JOIN_PLAN_BORROW_REPAIR_TAG = "AUTO_JOIN_PLAN_BORROW_REPAIR_TAG";
+	String AUTO_JOIN_PLAN_CREDIT_REPAIR_TAG = "AUTO_JOIN_PLAN_CREDIT_REPAIR_TAG";
+	String AUTO_JOIN_PLAN_AUTO_PRE_ISSUE_TAG = "AUTO_JOIN_PLAN_AUTO_PRE_ISSUE_TAG";
+	String AUTO_JOIN_PLAN_CLEAR_TAG = "AUTO_JOIN_PLAN_CLEAR_TAG";
+	String AUTO_JOIN_PLAN_JOB_TAG = "AUTO_JOIN_PLAN_JOB_TAG";
 
 	/** ------------------------------ 标的自动化 end ------------------------------ */
 
@@ -268,8 +321,6 @@ public interface MQConstant {
 	/** 注册送188红包 */
 	String REGISTER_COUPON_TOPIC = "REGISTER_COUPON_TOPIC";
 	String REGISTER_COUPON_TAG = "REGISTER_COUPON_TAG";
-	/** 投之家送2张加息券 */
-	String TZJ_REGISTER_INTEREST_TAG = "TZJ_REGISTER_INTEREST_TAG";
 
 	/** ------------------------------ 开户流程 end ------------------------------ */
 

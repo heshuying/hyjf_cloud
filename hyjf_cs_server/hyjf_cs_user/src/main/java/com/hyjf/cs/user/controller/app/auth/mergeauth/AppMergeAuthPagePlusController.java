@@ -77,20 +77,12 @@ public class AppMergeAuthPagePlusController extends BaseUserController {
         String successPath = "/user/setting/mergeauth/result/success";
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         // 同步地址  是否跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig,platform) + errorPath +
-                                                            "?logOrdId="+ orderId +
-                                                            "&authType="+ AuthBean.AUTH_TYPE_MERGE_AUTH +
-                                                            "&platform="+ platform
-                                                            ;
-        String successUrl = super.getFrontHost(systemConfig,platform) + successPath +
-                                                            "?logOrdId="+ orderId +
-                                                            "&authType="+ AuthBean.AUTH_TYPE_MERGE_AUTH +
-                                                            "&platform="+ platform
-                                                            ;
+        String retUrl = super.getFrontHost(systemConfig, platform)+errorPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_MERGE_AUTH+"&platform="+platform;
+        String successUrl = super.getFrontHost(systemConfig, platform)+successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_MERGE_AUTH+"&platform="+platform;
         String bgRetUrl = "http://CS-USER/hyjf-app/bank/user/auth/mergeauthpageplus/mergeAuthBgreturn" ;
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);
-        BankOpenAccountVO bankOpenAccountVO=authService.getBankOpenAccount(userId);
+        BankOpenAccountVO bankOpenAccountVO = authService.getBankOpenAccount(userId);
         // 用户ID
         AuthBean authBean = new AuthBean();
         authBean.setUserId(user.getUserId());
@@ -107,7 +99,7 @@ public class AppMergeAuthPagePlusController extends BaseUserController {
         authBean.setForgotPwdUrl(super.getForgotPwdUrl(platform,request,systemConfig));
         authBean.setName(usersInfo.getTruename());
         authBean.setIdNo(usersInfo.getIdcard());
-        authBean.setIdentity(usersInfo.getRoleId() + "");
+        authBean.setIdentity(String.valueOf(usersInfo.getRoleId()));
         authBean.setUserType(user.getUserType());
         // 跳转到江西银行画面
         try {
