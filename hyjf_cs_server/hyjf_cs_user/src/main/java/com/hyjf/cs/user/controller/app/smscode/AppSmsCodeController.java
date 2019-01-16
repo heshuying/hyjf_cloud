@@ -170,6 +170,7 @@ public class AppSmsCodeController extends BaseUserController {
 
         // 验证码类型
         String verificationType = request.getParameter("verificationType");
+        logger.info("验证码类型:"+verificationType);
         // 手机号
         String mobile = request.getParameter("mobile");
 
