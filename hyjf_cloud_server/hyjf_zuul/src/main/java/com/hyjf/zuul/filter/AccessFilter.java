@@ -35,6 +35,8 @@ import java.util.Map;
 public class AccessFilter extends ZuulFilter {
     private static Logger logger = LoggerFactory.getLogger(AccessFilter.class);
 
+    private static final String TOKEN_IS_NULL = "tokenIsNull";
+
     @Value("${ignore.urls.app.key}")
     private String appKeyIgnoreUrls;
 
@@ -237,8 +239,13 @@ public class AccessFilter extends ZuulFilter {
             result.put("status", "708");
             result.put("statusDesc", "need login");
         } else {
-            result.put("status", "999");
-            result.put("statusDesc", "登录过期，请重新登录");
+            if (ctx.get(TOKEN_IS_NULL) != null){
+                result.put("status", "999");
+                result.put("statusDesc", "用户未登录");
+            }else{
+                result.put("status", "999");
+                result.put("statusDesc", "登录过期，请重新登录");
+            }
         }
         ctx.setResponseBody(result.toJSONString());
         ctx.getResponse().setContentType("application/json;charset=UTF-8");
@@ -359,6 +366,8 @@ public class AccessFilter extends ZuulFilter {
             ctx.addZuulRequestHeader("accountId", accountId);
             ctx.addZuulRequestHeader("sign", sign);
         } else {
+            // 加入标志位，区分token是失效还是null，进行不同场景提示信息返回
+            ctx.set(TOKEN_IS_NULL,"1");
             return executeResultOfTokenInvalid(ctx, isNecessary, GatewayConstant.WECHAT_CHANNEL);
         }
         return ctx;

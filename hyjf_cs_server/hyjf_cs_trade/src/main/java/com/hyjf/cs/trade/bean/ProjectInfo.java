@@ -30,6 +30,17 @@ public class ProjectInfo implements Serializable {
     // 还款方式: 按天计息，到期还本还息
     private String repayStyle;
 
+    // 标的类型
+    private String investLevel;
+
+    public String getInvestLevel() {
+        return investLevel;
+    }
+
+    public void setInvestLevel(String investLevel) {
+        this.investLevel = investLevel;
+    }
+
     public String getType() {
         return type;
     }

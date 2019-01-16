@@ -532,7 +532,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
      * @param borrowLevel 信用评级
      * @return
      */
-    private List<BorrowMsgBean> packDetail(Object objBean, int type, int borrowType, String borrowLevel) {
+    private List<BorrowMsgBean> packDetail(Object objBean, int type, int borrowType, String borrowLevel, String investLevel) {
         List<BorrowMsgBean> detailBeanList = new ArrayList<BorrowMsgBean>();
         String currencyName = "元";
         // 得到对象
@@ -1023,12 +1023,18 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             }
         }
         if (type == 1 || type == 4) {
-            //信用评级单独封装
+            // 信用评级单独封装
             BorrowMsgBean detailBean = new BorrowMsgBean();
             detailBean.setId("borrowLevel");
             detailBean.setKey("信用评级");
             detailBean.setVal(borrowLevel);
             detailBeanList.add(detailBean);
+            // 标的等级单独封装
+            BorrowMsgBean detailBeanLeve = new BorrowMsgBean();
+            detailBeanLeve.setId("investLevel");
+            detailBeanLeve.setKey("标的等级");
+            detailBeanLeve.setVal(investLevel);
+            detailBeanList.add(detailBeanLeve);
         }
         return detailBeanList;
     }
@@ -1206,39 +1212,39 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             int borrowType = borrowInfoVO.getCompanyOrPersonal();
             if (borrowType == 1 && borrowUsers != null) {
                 //基础信息
-                baseTableData = packDetail(borrowUsers, 1, borrowType, borrow.getBorrowLevel());
+                baseTableData = packDetail(borrowUsers, 1, borrowType, borrow.getBorrowLevel(), borrow.getInvestLevel());
                 //信用状况
-                credTableData = packDetail(borrowUsers, 4, borrowType, borrow.getBorrowLevel());
+                credTableData = packDetail(borrowUsers, 4, borrowType, borrow.getBorrowLevel(), borrow.getInvestLevel());
                 //审核信息
-                reviewTableData = packDetail(borrowUsers, 5, borrowType, borrow.getBorrowLevel());
+                reviewTableData = packDetail(borrowUsers, 5, borrowType, borrow.getBorrowLevel(), borrow.getInvestLevel());
                 //其他信息
-                otherTableData = packDetail(borrowUsers, 6, borrowType, borrow.getBorrowLevel());
+                otherTableData = packDetail(borrowUsers, 6, borrowType, borrow.getBorrowLevel(), borrow.getInvestLevel());
             } else {
                 if (borrowManinfoVO != null) {
                     //基础信息
-                    baseTableData = packDetail(borrowManinfoVO, 1, borrowType, borrow.getBorrowLevel());
+                    baseTableData = packDetail(borrowManinfoVO, 1, borrowType, borrow.getBorrowLevel(), borrow.getInvestLevel());
                     //信用状况
-                    credTableData = packDetail(borrowManinfoVO, 4, borrowType, borrow.getBorrowLevel());
+                    credTableData = packDetail(borrowManinfoVO, 4, borrowType, borrow.getBorrowLevel(), borrow.getInvestLevel());
                     //审核信息
-                    reviewTableData = packDetail(borrowManinfoVO, 5, borrowType, borrow.getBorrowLevel());
+                    reviewTableData = packDetail(borrowManinfoVO, 5, borrowType, borrow.getBorrowLevel(), borrow.getInvestLevel());
                     //其他信息
-                    otherTableData = packDetail(borrowManinfoVO, 6, borrowType, borrow.getBorrowLevel());
+                    otherTableData = packDetail(borrowManinfoVO, 6, borrowType, borrow.getBorrowLevel(), borrow.getInvestLevel());
                 }
             }
 
             //资产信息
             if (!CollectionUtils.isEmpty(borrowHousesList)) {
                 for (BorrowHousesVO borrowHouses : borrowHousesList) {
-                    assetsTableData.addAll(packDetail(borrowHouses, 2, borrowType, borrow.getBorrowLevel()));
+                    assetsTableData.addAll(packDetail(borrowHouses, 2, borrowType, borrow.getBorrowLevel(), borrow.getInvestLevel()));
                 }
             }
             if (!CollectionUtils.isEmpty(borrowCarinfoList)) {
                 for (BorrowCarinfoVO borrowCarinfo : borrowCarinfoList) {
-                    assetsTableData.addAll(packDetail(borrowCarinfo, 2, borrowType, borrow.getBorrowLevel()));
+                    assetsTableData.addAll(packDetail(borrowCarinfo, 2, borrowType, borrow.getBorrowLevel(), borrow.getInvestLevel()));
                 }
             }
             //项目介绍
-            intrTableData = packDetail(borrow, 3, borrowType, borrow.getBorrowLevel());
+            intrTableData = packDetail(borrow, 3, borrowType, borrow.getBorrowLevel(), borrow.getInvestLevel());
             JSONObject baseTableDataJson = new JSONObject();
             JSONObject assetsTableDataJson = new JSONObject();
             JSONObject intrTableDataJson = new JSONObject();
@@ -1322,7 +1328,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         tenderCreditDetail.setTag("");
         tenderCreditDetail.setType("HZR");
         tenderCreditDetail.setRepayStyle(tenderCredit.getRepayStyle());
-        ;
+        tenderCreditDetail.setInvestLevel(tenderCredit.getInvestLevel());
         return tenderCreditDetail;
     }
 
@@ -1954,6 +1960,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         // 计息时间
         projectInfo.setOnAccrual(ProjectConstant.PLAN_ON_ACCRUAL);
         projectInfo.setRepayStyle(customize.getBorrowStyleName());
+
+        //标的等级
+        projectInfo.setInvestLevel(customize.getInvestLevel());
 
         Map<String, Object> projectDetail = new HashMap<>();
         projectDetail.put("addCondition", MessageFormat.format(ProjectConstant.PLAN_ADD_CONDITION, customize.getDebtMinInvestment(),

@@ -1,7 +1,7 @@
-package com.hyjf.am.market.controller.admin.activity;
+package com.hyjf.am.trade.controller.admin.activity;
 
-import com.hyjf.am.market.service.ReturnCashActivityService;
 import com.hyjf.am.resquest.admin.ReturnCashRequest;
+import com.hyjf.am.trade.service.admin.ReturnCashActivityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
