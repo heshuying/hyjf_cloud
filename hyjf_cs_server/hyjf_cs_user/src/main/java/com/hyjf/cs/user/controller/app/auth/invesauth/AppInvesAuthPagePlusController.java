@@ -63,8 +63,8 @@ public class AppInvesAuthPagePlusController extends BaseUserController {
         // 验证请求参数
         CheckUtil.check(userId != null,MsgEnum.ERR_USER_NOT_LOGIN);
         UserVO user = this.authService.getUsersById(userId);
+        String sign = request.getParameter("sign");
         String platform = request.getParameter("platform");
-        //String sign = request.getParameter("sign");
         //检查用户信息
         checkUserMessage(user);
 
@@ -78,11 +78,13 @@ public class AppInvesAuthPagePlusController extends BaseUserController {
         String retUrl = super.getFrontHost(systemConfig,platform) + errorPath +
                                         "?logOrdId="+ orderId +
                                         "&authType="+ AuthBean.AUTH_TYPE_AUTO_BID +
+                                        "&sign="+ sign +
                                         "&platform="+ platform
                                         ;
         String successUrl = super.getFrontHost(systemConfig,platform) + successPath +
                                         "?logOrdId="+ orderId +
                                         "&authType="+ AuthBean.AUTH_TYPE_AUTO_BID +
+                                        "&sign="+ sign +
                                         "&platform="+ platform
                                         ;
         String bgRetUrl = "http://CS-USER/hyjf-app/bank/user/auth/invesauthpageplus/invesAuthBgreturn" ;
@@ -105,7 +107,7 @@ public class AppInvesAuthPagePlusController extends BaseUserController {
         authBean.setForgotPwdUrl(super.getForgotPwdUrl(platform,request,systemConfig));
         authBean.setName(usersInfo.getTruename());
         authBean.setIdNo(usersInfo.getIdcard());
-        authBean.setIdentity(usersInfo.getRoleId() + "");
+        authBean.setIdentity(String.valueOf(usersInfo.getRoleId()));
         authBean.setUserType(user.getUserType());
         // 跳转到江西银行画面
         try {
