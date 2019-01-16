@@ -139,6 +139,9 @@ public class WeChatLoginController extends BaseUserController {
             // 登录完成返回值
             result.setStatus(ResultEnum.SUCCESS.getStatus());
             result.setStatusDesc("登录成功");
+
+            // Add by huanghui 用户开户区分企业用户或个人用户
+            result.setUserType(userVO.getUserType());
             result.setSign(userVO.getToken());
         } else {
             logger.error("weChat端登录失败...");

@@ -3629,6 +3629,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
+    @Cached(name="appPlanDetailCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 300, timeUnit = TimeUnit.SECONDS)
     public int countPlanBorrowRecordTotal(Map<String, Object> params) {
 	    String url = urlBase+"hjhPlan/countPlanBorrowRecordTotal";
         return restTemplate.postForEntity(url,params,Integer.class).getBody();
@@ -3640,6 +3642,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
+    @Cached(name="appPlanDetailListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 300, timeUnit = TimeUnit.SECONDS)
     public List<DebtPlanBorrowCustomizeVO> selectPlanBorrowList(Map<String, Object> params) {
         String url = urlBase+"hjhPlan/selectPlanBorrowList";
         DebtPlanBorrowCustomizeResponse response = restTemplate.postForEntity(url,params,DebtPlanBorrowCustomizeResponse.class).getBody();
@@ -3755,6 +3759,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
+    @Cached(name="appAndWxPlanAccedeSumCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 300, timeUnit = TimeUnit.SECONDS)
     public Long selectPlanAccedeSum(Map<String, Object> params) {
         String url = "http://AM-TRADE/am-trade/hjhPlan/selectPlanAccedeSum";
         return restTemplate.postForEntity(url,params,Long.class).getBody();
