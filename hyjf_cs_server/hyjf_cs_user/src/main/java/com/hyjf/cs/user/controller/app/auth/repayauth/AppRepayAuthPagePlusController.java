@@ -4,7 +4,6 @@
 package com.hyjf.cs.user.controller.app.auth.repayauth;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.user.AuthorizedVO;
 import com.hyjf.am.vo.user.BankOpenAccountVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
@@ -29,7 +28,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.validation.Valid;
 import java.util.Map;
 
 /**
@@ -58,14 +56,14 @@ public class AppRepayAuthPagePlusController extends BaseUserController {
      * @return
      */
     @ApiOperation(value = "用户还款授权", notes = "用户还款授权")
-    @PostMapping(value = "/page", produces = "application/json; charset=utf-8")
+    @GetMapping(value = "/page", produces = "application/json; charset=utf-8")
     public  WebResult<Object> page(@RequestHeader(value = "userId") Integer userId, HttpServletRequest request) {
         WebResult<Object> result = new WebResult<Object>();
         // 验证请求参数
         CheckUtil.check(userId != null,MsgEnum.ERR_USER_NOT_LOGIN);
         UserVO user = this.authService.getUsersById(userId);
+        String sign = request.getParameter("sign");
         String platform = request.getParameter("platform");
-        String sign=request.getParameter("sign");
         //检查用户信息
         checkUserMessage(user);
 
@@ -76,8 +74,18 @@ public class AppRepayAuthPagePlusController extends BaseUserController {
         String successPath = "/user/setting/repayauth/result/success";
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         // 同步地址  是否跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig,platform) + errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_REPAY_AUTH;
-        String successUrl = super.getFrontHost(systemConfig,platform) + successPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_REPAY_AUTH;
+        String retUrl = super.getFrontHost(systemConfig,platform) + errorPath +
+                                                            "?logOrdId="+ orderId +
+                                                            "&authType="+ AuthBean.AUTH_TYPE_REPAY_AUTH +
+                                                            "&sign="+ sign +
+                                                            "&platform="+ platform
+                                                            ;
+        String successUrl = super.getFrontHost(systemConfig,platform) + successPath +
+                                                            "?logOrdId="+ orderId +
+                                                            "&authType="+ AuthBean.AUTH_TYPE_REPAY_AUTH +
+                                                            "&sign="+ sign +
+                                                            "&platform="+ platform
+                                                            ;
         String bgRetUrl = "http://CS-USER/hyjf-app/bank/user/auth/repayauthpageplus/repayauthBgreturn" ;
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);
@@ -98,7 +106,7 @@ public class AppRepayAuthPagePlusController extends BaseUserController {
         authBean.setForgotPwdUrl(super.getForgotPwdUrl(platform,request,systemConfig));
         authBean.setName(usersInfo.getTruename());
         authBean.setIdNo(usersInfo.getIdcard());
-        authBean.setIdentity(usersInfo.getRoleId() + "");
+        authBean.setIdentity(String.valueOf(usersInfo.getRoleId()));
         authBean.setUserType(user.getUserType());
         // 跳转到江西银行画面
         try {

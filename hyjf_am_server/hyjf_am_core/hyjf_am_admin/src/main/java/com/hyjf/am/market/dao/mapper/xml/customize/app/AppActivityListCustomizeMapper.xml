@@ -29,7 +29,11 @@
 
 	<select id="queryActivityList" resultMap="BaseResultMap"
 			parameterType="com.hyjf.am.vo.market.ActivityListCustomizeVO">
-		SELECT title, img, time_start, time_end, url_foreground
+		SELECT title, CONCAT(#{host},img,'') img, time_start, time_end, url_foreground,
+		CASE WHEN time_start &gt;=unix_timestamp(now()) THEN '未开始'
+		WHEN time_end &lt;=unix_timestamp(now()) THEN '已完成'
+		WHEN time_end &gt;=unix_timestamp(now()) AND time_start &lt;=unix_timestamp(now()) THEN '进行中'
+		ELSE '' END  status
 		FROM ht_activity_list
 		WHERE 1=1
 		<include refid="where-all-page-condition" />

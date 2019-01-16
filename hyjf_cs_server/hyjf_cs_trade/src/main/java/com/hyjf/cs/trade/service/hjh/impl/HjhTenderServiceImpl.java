@@ -669,6 +669,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         result.put("evalType","");
         result.put("evalFlagType","");
         result.put("revaluationMoney","");
+        result.put("investLevel",checkLeve);
         //测评判断逻辑开始
         UserVO loginUser = amUserClient.findUserById(request.getUserId());
         Integer userId = loginUser.getUserId();

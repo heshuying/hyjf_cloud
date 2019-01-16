@@ -105,10 +105,10 @@ public class AppLoginController extends BaseUserController {
         // 业务逻辑
        // try {
             // 解密
-            logger.info("APP登录 ---> 解密前 key：{}，username：{}，password：{}", key, username, password);
+            //logger.info("APP登录 ---> 解密前 key：{}，username：{}，password：{}", key, username, password);
             username = DES.decodeValue(key, username);
             password = DES.decodeValue(key, password);
-            logger.info("APP登录 ---> 解密后 username：{}，password：{}", username, password);
+            //logger.info("APP登录 ---> 解密后 username：{}，password：{}", username, password);
             if (Validator.isNull(username)) {
                 ret.put("status", "1");
                 ret.put("statusDesc", "用户名不能为空");

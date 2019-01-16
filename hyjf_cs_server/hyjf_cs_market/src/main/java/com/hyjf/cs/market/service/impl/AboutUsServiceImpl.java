@@ -15,6 +15,7 @@ import com.hyjf.cs.market.client.CsMessageClient;
 import com.hyjf.cs.market.service.AboutUsService;
 import com.hyjf.cs.market.service.BaseMarketServiceImpl;
 import com.hyjf.cs.market.util.CdnUrlUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -77,8 +78,15 @@ public class AboutUsServiceImpl extends BaseMarketServiceImpl implements AboutUs
     public ContentArticleVO getNoticeInfo(Integer id) {
         ContentArticleVO contentArticle = amConfigClient.getContentArticleById(id);
         String cdnUrl = CdnUrlUtil.getCdnUrl();
-        String imgurl = contentArticle.getImgurl();
-        contentArticle.setImgurl(cdnUrl + imgurl);
+        String content = contentArticle.getContent();
+        if (StringUtils.isNotBlank(content)) {
+            int start = content.indexOf("http");
+            int end = content.indexOf(".com");
+            if (start >=0 && end >=0) {
+                String imgUrl = content.substring(start, end + 4);
+                contentArticle.setContent(content.replaceAll(imgUrl, cdnUrl));
+            }
+        }
         return contentArticle;
     }
 
