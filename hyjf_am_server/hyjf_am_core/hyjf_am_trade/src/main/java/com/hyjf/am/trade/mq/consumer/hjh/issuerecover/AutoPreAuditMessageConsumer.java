@@ -29,7 +29,6 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @Auther: walter.limeng
@@ -42,15 +41,15 @@ public class AutoPreAuditMessageConsumer
 		implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 	private static final Logger logger = LoggerFactory.getLogger(AutoPreAuditMessageConsumer.class);
 
-    /**
-     * 消费参数 borrow_nid
-     */
+	/**
+	 * 消费参数 borrow_nid
+	 */
 	private final List<String> BORROW_NID_TAGS_LIST = Arrays.asList(MQConstant.AUTO_BORROW_PREAUDIT_ADMIN_BAIL_TAG,
 			MQConstant.AUTO_BORROW_PREAUDIT_ADMIN_RECORD_TAG, MQConstant.AUTO_BORROW_PREAUDIT_BORROW_REPAIR_TAG,
 			MQConstant.AUTO_BORROW_PREAUDIT_AUTO_BAIL_TAG, MQConstant.AUTO_BORROW_PREAUDIT_ASSET_RECORD_TAG);
-    /**
-     * 消费参数 inst_code + asset_id
-     */
+	/**
+	 * 消费参数 inst_code + asset_id
+	 */
 	private final List<String> ASSET_TAGS_LIST = Arrays.asList(MQConstant.AUTO_BORROW_PREAUDIT_ADMIN_EXCEPTION_TAG,
 			MQConstant.AUTO_BORROW_PREAUDIT_ASSET_REPAIR_TAG, MQConstant.AUTO_BORROW_PREAUDIT_BORROW_RECORD_TAG,
 			MQConstant.AUTO_BORROW_PREAUDIT_ST_TAG);
@@ -75,6 +74,7 @@ public class AutoPreAuditMessageConsumer
 		String tags = msg.getTags();
 		logger.info("consumer tags is: {}", tags);
 
+		// 1.标的
 		if (BORROW_NID_TAGS_LIST.contains(tags)) {
 			String borrowNid = params.getString("borrowNid");
 			if (StringUtils.isBlank(borrowNid)) {
@@ -82,7 +82,9 @@ public class AutoPreAuditMessageConsumer
 				return;
 			}
 			this.doPreAuditBorrow(borrowNid);
-		} else if (ASSET_TAGS_LIST.contains(tags)) {
+		}
+		// 2.资产
+		else if (ASSET_TAGS_LIST.contains(tags)) {
 			String assetId = params.getString("assetId");
 			String instCode = params.getString("instCode");
 			if (StringUtils.isBlank(assetId) || StringUtils.isBlank(instCode)) {
@@ -141,17 +143,9 @@ public class AutoPreAuditMessageConsumer
 
 		if (borrow.getIsEngineUsed() != null && borrow.getIsEngineUsed() == 1) {
 			// 成功后到关联计划队列
-			try {
-				JSONObject params = new JSONObject();
-				params.put("borrowNid", borrow.getBorrowNid());
-				// modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2
-				commonProducer.messageSendDelay(
-						new MessageContent(MQConstant.AUTO_JOIN_PLAN_TOPIC, UUID.randomUUID().toString(), params), 2);
-			} catch (MQException e) {
-				logger.error("发送【关联计划队列】MQ失败...");
-			}
+			this.sendAutoJoinPlanMessage(borrow.getBorrowNid());
 		} else {
-		    logger.info("散标修改redis：借款的borrowNid,account借款总额");
+			logger.info("散标修改redis：借款的borrowNid,account借款总额");
 			RedisUtils.set(RedisConstants.BORROW_NID + borrow.getBorrowNid(), borrow.getAccount().toString());
 		}
 		logger.info(borrow.getBorrowNid() + " 结束自动初审");
@@ -187,16 +181,24 @@ public class AutoPreAuditMessageConsumer
 		}
 
 		// 成功后到关联计划队列
+		this.sendAutoJoinPlanMessage(hjhPlanAsset.getBorrowNid());
+		logger.info(hjhPlanAsset.getAssetId() + " 结束自动初审");
+	}
+
+	/**
+	 * 发送关联计划消息
+	 * 
+	 * @param borrowNid
+	 */
+	private void sendAutoJoinPlanMessage(String borrowNid) {
 		try {
 			JSONObject params = new JSONObject();
-			params.put("borrowNid", hjhPlanAsset.getBorrowNid());
+			params.put("borrowNid", borrowNid);
 			// modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-			commonProducer.messageSendDelay(
-					new MessageContent(MQConstant.AUTO_JOIN_PLAN_TOPIC, UUID.randomUUID().toString(), params), 2);
+			commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_JOIN_PLAN_TOPIC,
+					MQConstant.AUTO_JOIN_PLAN_AUTO_PRE_ISSUE_TAG, borrowNid, params), 2);
 		} catch (MQException e) {
 			logger.error("发送【关联计划队列】MQ失败...");
 		}
-		logger.info(hjhPlanAsset.getAssetId() + " 结束自动初审");
-
 	}
 }

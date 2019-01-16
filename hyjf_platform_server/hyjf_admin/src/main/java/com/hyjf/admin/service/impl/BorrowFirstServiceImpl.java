@@ -34,7 +34,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 /**
  * @author wangjun
@@ -197,7 +196,8 @@ public class BorrowFirstServiceImpl implements BorrowFirstService {
                 try {
                     //自动关联计划
                     //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-                    commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_JOIN_PLAN_TOPIC, UUID.randomUUID().toString(), params),2);
+					commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_JOIN_PLAN_TOPIC,
+							MQConstant.AUTO_JOIN_PLAN_ADMIN_ISSUE_TAG, borrowVO.getBorrowNid(), params), 2);
                     logger.info("标的编号：" + borrowNid + "-----已发送至自动关联计划MQ");
                 } catch (Exception e){
                     logger.error("标的编号：" + borrowNid + "-----发送自动关联计划MQ异常", e);

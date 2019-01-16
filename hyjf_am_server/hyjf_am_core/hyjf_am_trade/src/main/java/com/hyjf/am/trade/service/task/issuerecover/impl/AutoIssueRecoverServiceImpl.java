@@ -292,23 +292,16 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         this.insertBorrowManinfo(borrowNid, hjhPlanAsset,borrowInfo.getBorrowPreNid(), borrow);
 
         // 更新资产表
-        HjhPlanAsset hjhPlanAssetnew = new HjhPlanAsset();
-        hjhPlanAssetnew.setId(hjhPlanAsset.getId());
         // 标的编号，计划编号在关联资产更新
-        hjhPlanAssetnew.setBorrowNid(borrowNid);
-        hjhPlanAssetnew.setLabelId(label.getId());
-        hjhPlanAssetnew.setLabelName(label.getLabelName());
+        hjhPlanAsset.setBorrowNid(borrowNid);
+        hjhPlanAsset.setLabelId(label.getId());
+        hjhPlanAsset.setLabelName(label.getLabelName());
 
-        hjhPlanAssetnew.setStatus(3);//备案中
+        hjhPlanAsset.setStatus(3);//备案中
         //获取当前时间
-        hjhPlanAssetnew.setUpdateTime(new Date());
-        hjhPlanAssetnew.setUpdateUserId(1);
-        boolean borrowFlag = this.hjhPlanAssetMapper.updateByPrimaryKeySelective(hjhPlanAssetnew)>0?true:false;
-        if(borrowFlag){
-            result = true;
-        }
-
-        return result;
+        hjhPlanAsset.setUpdateTime(new Date());
+        hjhPlanAsset.setUpdateUserId(1);
+		return this.hjhPlanAssetMapper.updateByPrimaryKeySelective(hjhPlanAsset) > 0 ? true : false;
     }
 
     /**

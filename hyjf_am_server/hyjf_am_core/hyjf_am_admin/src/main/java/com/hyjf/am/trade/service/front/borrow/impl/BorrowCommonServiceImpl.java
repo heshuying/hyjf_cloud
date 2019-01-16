@@ -872,14 +872,17 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 						if (borrowBean.getVerifyStatus() != null && StringUtils.isNotEmpty(borrowBean.getVerifyStatus())) {
 							if ( bwb.getIsEngineUsed().equals(1) && Integer.valueOf(borrowBean.getVerifyStatus()) == 4) {
 								//成功后到关联计划队列 RabbitMQConstants.ROUTINGKEY_BORROW_ISSUE
-								 try {
-		                                JSONObject params = new JSONObject();
-		                                params.put("borrowNid", borrow.getBorrowNid());
-									 //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-									 commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_JOIN_PLAN_TOPIC, UUID.randomUUID().toString(), params),2);
-		                            } catch (MQException e) {
-		                                logger.error("发送【关联计划队列】MQ失败...");
-		                            }
+								try {
+									JSONObject params = new JSONObject();
+									params.put("borrowNid", borrow.getBorrowNid());
+									// modify by yangchangwei
+									// 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
+									commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_JOIN_PLAN_TOPIC,
+											MQConstant.AUTO_JOIN_PLAN_ADMIN_INSERT_TAG, borrow.getBorrowNid(), params),
+											2);
+								} catch (MQException e) {
+									logger.error("发送【关联计划队列】MQ失败...");
+								}
 							}
 						}
 

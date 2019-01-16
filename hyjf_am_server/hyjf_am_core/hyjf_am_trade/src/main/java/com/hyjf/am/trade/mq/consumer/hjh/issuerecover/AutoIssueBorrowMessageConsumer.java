@@ -114,7 +114,7 @@ public class AutoIssueBorrowMessageConsumer
 			commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_BORROW_RECORD_TOPIC,
 					MQConstant.AUTO_BORROW_RECORD_ISSUE_TAG, hjhPlanAsset.getAssetId(), params), 2);
 		} catch (MQException e) {
-			logger.error("发送【自动录标】MQ失败...");
+			logger.error("发送【自动备案】MQ失败...");
 		}
 		logger.info(hjhPlanAsset.getAssetId() + " 结束自动录标");
 	}
