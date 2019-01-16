@@ -71,8 +71,7 @@ public class AppPayRepayAuthController extends BaseUserController {
         UserVO user = this.authService.getUsersById(userId);
         String platform = request.getParameter("platform");
         logger.info("app二合一授权入参打印,data:[userId:"+ userId +
-                ",request:"+ JSONObject.toJSONString(request) +"]"+
-                ",platform:"+ platform +"]"
+                                                    ",platform:"+ platform +"]"
         );
         //检查用户信息
         checkUserMessage(user);

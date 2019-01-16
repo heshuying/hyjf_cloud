@@ -65,7 +65,6 @@ public class AppPaymentAuthPagePlusController extends BaseUserController {
         UserVO user = this.authService.getUsersById(userId);
         String platform = request.getParameter("platform");
         logger.info("app缴费授权入参打印,data:[userId:"+ userId +
-                                                ",request:"+ JSONObject.toJSONString(request) +"]"+
                                                 ",platform:"+ platform +"]"
         );
         //检查用户信息
