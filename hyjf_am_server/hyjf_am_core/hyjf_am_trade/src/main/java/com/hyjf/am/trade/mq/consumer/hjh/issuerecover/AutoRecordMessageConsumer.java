@@ -95,6 +95,12 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 			this.doRecordBorrowByAuto(assetId, instCode);
 		}
 
+		// 4. 错误消息
+		else {
+			logger.warn("不明消息，不予消费....");
+			return;
+		}
+
 	}
 
 	@Override
