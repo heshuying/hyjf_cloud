@@ -71,8 +71,10 @@ public class AutoIssueRecoverController extends BaseController{
                 logger.debug(planAsset.getAssetId()+" 开始待备案修复 ");
                 try {
                     JSONObject params = new JSONObject();
-                    params.put("planId", planAsset.getId());
-                    commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), params));
+                    params.put("assetId", planAsset.getAssetId());
+                    params.put("instCode", planAsset.getInstCode());
+                    commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_RECORD_TOPIC,
+                            MQConstant.AUTO_BORROW_RECORD_REPAIR_TAG, UUID.randomUUID().toString(), params));
                 } catch (MQException e) {
                     logger.error("发送【待备案修复】MQ失败...");
                 }
@@ -172,8 +174,9 @@ public class AutoIssueRecoverController extends BaseController{
                     try {
                         JSONObject params = new JSONObject();
                         params.put("borrowNid", borrow.getBorrowNid());
-                        params.put("planId", borrow.getId());
-                        commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), params));
+                        params.put("instCode", borrow.getInstCode());
+						commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_RECORD_TOPIC,
+								MQConstant.AUTO_BORROW_RECORD_REPAIR_TAG, UUID.randomUUID().toString(), params));
                     } catch (MQException e) {
                         logger.error("发送【自动备案消息到MQ】MQ失败...");
                     }

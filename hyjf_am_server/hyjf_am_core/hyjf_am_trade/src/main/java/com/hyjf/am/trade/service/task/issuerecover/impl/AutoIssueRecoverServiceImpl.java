@@ -108,11 +108,6 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
     }
 
     @Override
-    public HjhPlanAsset getHjhPlanAssetById(Integer planId) {
-        return hjhPlanAssetMapper.selectByPrimaryKey(planId);
-    }
-
-    @Override
     public HjhAssetBorrowtype selectAssetBorrowType(HjhPlanAsset mqHjhPlanAsset) {
         HjhAssetBorrowtypeExample example = new HjhAssetBorrowtypeExample();
         HjhAssetBorrowtypeExample.Criteria cra = example.createCriteria();
@@ -193,7 +188,6 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         Map<String,Object> paraMap = new HashMap<>();
         paraMap.put("amount", assetAccount);
         paraMap.put("instCode", instCode);
-
         return  apiBailConfigInfoCustomizeMapper.updateForSendBorrow(paraMap);
     }
 
@@ -1166,29 +1160,17 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
             return -1;
         }
 
-//        BigDecimal availableBalance = bailConfig.getRemainMarkLine();
         BigDecimal assetAcount = new BigDecimal(hjhPlanAsset.getAccount());
-
-        // 可用发标额度余额校验
-        /*if (BigDecimal.ZERO.compareTo(availableBalance) >= 0) {
-            logger.info("自动录标校验保证金：资产编号："+hjhPlanAsset.getAssetId()+" 可用发标额度余额小于等于零 " + availableBalance);
-            // 可用发标额度余额小于等于0不能发标
-            return 1;
-        }
-        if(assetAcount.compareTo(availableBalance) > 0){
-            // 可用发标额度余额不够不能发标
-            return 1;
-        }*/
 
         // 日推标额度校验
         BigDecimal dayAvailable = BigDecimal.ZERO;
         // 今日已用额度
         String dayUsedKey = RedisConstants.DAY_USED + instCode + "_" + GetDate.getDate("yyyyMMdd");
-        BigDecimal dayUsed = getValueInRedis(dayUsedKey);
+		BigDecimal dayUsed = getValueInRedis(dayUsedKey, new Long(60 * 60 * 24 * 2));
         logger.info("自动录标校验保证金：dayUsedKey: " + dayUsedKey + " day userd in redis: " + dayUsed);
         // 累积可用额度
         String accumulateKey = RedisConstants.DAY_MARK_ACCUMULATE + instCode;
-        BigDecimal accumulate = getValueInRedis(accumulateKey);
+        BigDecimal accumulate = getValueInRedis(accumulateKey, null);
         logger.info("自动录标校验保证金：accumulateKey: " + accumulateKey + " accumulate in redis: " + accumulate);
         dayAvailable = dayAvailable.add(bailConfig.getDayMarkLine()).subtract(dayUsed);
         if(bailConfig.getIsAccumulate() == 1){
@@ -1203,7 +1185,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         // 月推标额度校验
         BigDecimal monthAvailable = BigDecimal.ZERO;
         String monthKey = RedisConstants.MONTH_USED + instCode + "_" + GetDate.getDate("yyyyMM");
-        BigDecimal monthUsed = getValueInRedis(monthKey);
+		BigDecimal monthUsed = getValueInRedis(monthKey, new Long(60 * 60 * 24 * 31 * 2));
         logger.info("自动录标校验保证金：monthKey: " + monthKey + " month userd in redis: " + monthUsed);
         monthAvailable = monthAvailable.add(bailConfig.getMonthMarkLine()).subtract(monthUsed);
         if(monthAvailable.compareTo(assetAcount) < 0){
@@ -1215,37 +1197,6 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         if(!checkNewCredit(bailConfig, assetAcount)){
             return 21;
         }
-
-        // 授信额度校验 （合规改造删除 modify by hesy 2018-12-04）
-        /*HjhBailConfigInfo configInfo = getConfigInfo(hjhPlanAsset.getBorrowStyle(), hjhPlanAsset.getInstCode());
-        if(configInfo == null){
-            logger.info("自动录标校验保证金：HjhBailConfigInfo不存在，机构编号：{}, 还款方式：{}", hjhPlanAsset.getInstCode(), hjhPlanAsset.getBorrowStyle());
-            return -1;
-        }
-
-        if(configInfo.getIsNewCredit() == 1 && configInfo.getIsLoanCredit() != 1){
-            // 新增授信校验
-            if(!checkNewCredit(bailConfig, assetAcount)){
-                return 21;
-            }
-
-        }else if(configInfo.getIsNewCredit() != 1 && configInfo.getIsLoanCredit() == 1){
-            // 在贷余额授信校验
-            if(!checkLoanCredit(bailConfig, assetAcount)){
-                return 22;
-            }
-
-        }else if(configInfo.getIsNewCredit() == 1 && configInfo.getIsLoanCredit() == 1){
-            // 新增授信校验或在贷余额校验一个校验通过就可以
-            if(!checkNewCredit(bailConfig, assetAcount) && !checkLoanCredit(bailConfig, assetAcount)){
-                return 21;
-            }
-        }
-        // 新增授信校验或在贷余额校验都没有配置
-        if(configInfo.getIsNewCredit() != 1 && configInfo.getIsLoanCredit() != 1){
-            logger.error("自动录标校验保证金：因还款方式未配置保证金授信方式，推标失败。instCode:" + instCode);
-            return -1;
-        }*/
 
         return 0;
     }
@@ -1268,44 +1219,6 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         return true;
     }
 
-    /**
-     * 在贷余额额度校验
-     * @return
-     */
-    private boolean checkLoanCredit(HjhBailConfig bailConfig, BigDecimal account){
-        // 在贷授信额度
-        BigDecimal loanCreditLine = bailConfig.getLoanCreditLine();
-        // 历史标的发标总额
-        BigDecimal hisLoanTotal = bailConfig.getLoanMarkLine().add(account);
-        logger.info("机构编号：{}, 发标已发额度+本次推标额度：{}", bailConfig.getInstCode(), hisLoanTotal);
-        // 已还本金
-        BigDecimal repayedCapital = bailConfig.getRepayedCapital();
-        logger.info("机构编号：{}, 已还本金：{}", bailConfig.getInstCode(), repayedCapital);
-
-        if(loanCreditLine.compareTo(hisLoanTotal.subtract(repayedCapital)) < 0){
-            logger.info("机构编号：{}, 在贷余额额度已超过授信额度", bailConfig.getInstCode());
-            return false;
-        }
-        return true;
-    }
-
-    /**
-     * 获取保证金配置详情
-     *
-     * @param borrowStyle
-     * @param instCode
-     * @return
-     */
-    private HjhBailConfigInfo getConfigInfo(String borrowStyle, String instCode){
-        HjhBailConfigInfoExample example = new HjhBailConfigInfoExample();
-        example.createCriteria().andInstCodeEqualTo(instCode).andBorrowStyleEqualTo(borrowStyle).andDelFlgEqualTo(0);
-
-        List<HjhBailConfigInfo> list = hjhBailConfigInfoMapper.selectByExample(example);
-        if(list != null && !list.isEmpty()){
-            return list.get(0);
-        }
-        return null;
-    }
 
     /**
      * 获取redis值
@@ -1313,16 +1226,20 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
      * @param key
      * @return
      */
-    private BigDecimal getValueInRedis(String key){
-        logger.info("get value in redis, key:{}", key);
-        String value = RedisUtils.get(key);
-        logger.info("value in redis, key:{}, value:{}", key, value);
+	private BigDecimal getValueInRedis(String key, Long seconds) {
+		logger.info("get value in redis, key:{}", key);
+		String value = RedisUtils.get(key);
+		logger.info("value in redis, key:{}, value:{}", key, value);
 
-        if (StringUtils.isBlank(value)){
-            RedisUtils.set(key, "0");
-            return BigDecimal.ZERO;
-        }
-        return new BigDecimal(value);
-    }
+		if (StringUtils.isBlank(value)) {
+			if (seconds == null || seconds.longValue() < 0) {
+				RedisUtils.set(key, "0");
+			} else {
+				RedisUtils.set(key, "0", seconds.longValue());
+			}
+			return BigDecimal.ZERO;
+		}
+		return new BigDecimal(value);
+	}
 
 }

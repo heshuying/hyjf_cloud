@@ -48,13 +48,6 @@ public interface AutoIssueRecoverService extends BaseService {
     List<BorrowWithBLOBs> selectAutoBorrowNidList();
 
     /**
-     * 根据ID查询用户加入计划订单
-     * @param planId 主键ID
-     * @return
-     */
-    HjhPlanAsset getHjhPlanAssetById(Integer planId);
-
-    /**
      * 根据机构比那好和类型查询对象
      * @param mqHjhPlanAsset
      * @return

@@ -47,10 +47,10 @@ public class AutoIssueBorrowMessageConsumer
 	public void onMessage(MessageExt msg) {
 		JSONObject params = JSONObject.parseObject(msg.getBody(), JSONObject.class);
 		if (params == null) {
-			logger.warn("AutoIssueBorrowMessageConsumer收到空消息,不处理，msgId is: {}", msg.getMsgId());
+			logger.warn("自动录标 AutoIssueBorrowMessageConsumer收到空消息,不处理，msgId is: {}", msg.getMsgId());
 			return;
 		}
-		logger.info("AutoIssueBorrowMessageConsumer 收到消息，content is: {}", params.toJSONString());
+		logger.info("自动录标 AutoIssueBorrowMessageConsumer 收到消息，content is: {}", params.toJSONString());
 
 		String assetId = params.getString("assetId");
 		String instCode = params.getString("instCode");
@@ -68,12 +68,12 @@ public class AutoIssueBorrowMessageConsumer
 
 		// 1. 资产推送录标
 		if (MQConstant.AUTO_ISSUE_RECOVER_PUSH_TAG.equals(msg.getTags())) {
-			logger.info("资产推送录标...");
+			logger.info("自动录标来源: 资产推送录标...");
 			// do nothing, only remark
 		}
 		// 2. 汇计划发标修复定时任务录标
 		else if (MQConstant.AUTO_ISSUE_RECOVER_REPAIR_TAG.equals(msg.getTags())) {
-			logger.info("汇计划发标修复定时任务录标...");
+			logger.info("自动录标来源: 汇计划发标修复定时任务录标...");
 			// do nothing, only remark
 		}
 
@@ -105,12 +105,9 @@ public class AutoIssueBorrowMessageConsumer
 
 		// 成功后到备案队列
 		try {
-			JSONObject requestParams = new JSONObject();
-			requestParams.put("planId", hjhPlanAsset.getId());
 			// modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2
-			commonProducer.messageSendDelay(
-					new MessageContent(MQConstant.AUTO_BORROW_RECORD_TOPIC, hjhPlanAsset.getAssetId(), requestParams),
-					2);
+			commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_BORROW_RECORD_TOPIC,
+					MQConstant.AUTO_BORROW_RECORD_ISSUE_TAG, hjhPlanAsset.getAssetId(), params), 2);
 		} catch (MQException e) {
 			logger.error("发送【自动录标】MQ失败...");
 		}

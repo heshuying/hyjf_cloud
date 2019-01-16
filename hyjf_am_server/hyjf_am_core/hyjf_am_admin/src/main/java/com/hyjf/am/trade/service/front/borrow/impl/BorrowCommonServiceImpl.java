@@ -5860,8 +5860,9 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
                 try {
                     JSONObject params = new JSONObject();
                     params.put("borrowNid", borrowInfo.getBorrowNid());
-                    params.put("planId", borrowInfo.getId());
-					commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), params));
+                    params.put("instCode", borrowInfo.getInstCode());
+					commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_RECORD_TOPIC,
+							MQConstant.AUTO_BORROW_RECORD_ADMIN_TAG, borrowInfo.getBorrowNid(), params));
                 } catch (MQException e) {
                     logger.error("发送【自动备案消息到MQ】MQ失败...");
                 }
