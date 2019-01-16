@@ -4,7 +4,6 @@
 package com.hyjf.cs.message.service.msgpush.impl;
 
 import cn.jpush.api.report.ReceivedsResult;
-import com.alibaba.fastjson.JSON;
 import com.hyjf.am.vo.config.MessagePushTagVO;
 import com.hyjf.am.vo.config.MessagePushTemplateVO;
 import com.hyjf.am.vo.message.AppMsMessage;
@@ -72,13 +71,16 @@ public class MsgPushServiceImpl implements MsgPushService {
 	public void pushMessage() {
 		List<MessagePushMsg> list = messagePushMsgDao.findAllMessage();
 		try {
-			if (list != null && list.size() > 0) {
+			if (!CollectionUtils.isEmpty(list)) {
+				logger.info("待推送消息列表大小: {}", list.size());
 				for (int i = 0; i < list.size(); i++) {
 					// 添加到发送队列
 					AppMsMessage message = new AppMsMessage(MessageConstant.APP_MS_SEND_FOR_MSG, list.get(i).getId());
 					appMessageProducer.messageSend(
 							new MessageContent(MQConstant.APP_MESSAGE_TOPIC, UUID.randomUUID().toString(),message));
 				}
+			} else {
+				logger.info("无待推送消息....");
 			}
 		} catch (MQException e) {
 			e.printStackTrace();

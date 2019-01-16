@@ -46,6 +46,17 @@ public class AppTransferDetailBean implements Serializable {
     private String tag;
     /**还款方式*/
     private String repayStyle;
+    /**标的类型*/
+    private String investLevel;
+
+    public String getInvestLevel() {
+        return investLevel;
+    }
+
+    public void setInvestLevel(String investLevel) {
+        this.investLevel = investLevel;
+    }
+
     public String getBorrowRemain() {
         return borrowRemain;
     }

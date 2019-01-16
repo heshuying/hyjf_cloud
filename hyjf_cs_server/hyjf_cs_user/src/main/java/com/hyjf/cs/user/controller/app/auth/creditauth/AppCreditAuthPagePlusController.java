@@ -64,7 +64,7 @@ public class AppCreditAuthPagePlusController extends BaseUserController {
         CheckUtil.check(userId != null,MsgEnum.ERR_USER_NOT_LOGIN);
         UserVO user = this.authService.getUsersById(userId);
         String platform = request.getParameter("platform");
-        String sign=request.getParameter("sign");
+        //String sign = request.getParameter("sign");
         //检查用户信息
         checkUserMessage(user);
 
@@ -75,8 +75,16 @@ public class AppCreditAuthPagePlusController extends BaseUserController {
         String successPath = "/user/setting/authorization/result/success";
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         // 同步地址  是否跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig,platform) + errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_AUTO_CREDIT;
-        String successUrl = super.getFrontHost(systemConfig,platform) + successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_AUTO_CREDIT;
+        String retUrl = super.getFrontHost(systemConfig,platform) + errorPath +
+                                        "?logOrdId="+ orderId +
+                                        "&authType="+ AuthBean.AUTH_TYPE_AUTO_CREDIT +
+                                        "&platform="+ platform
+                                        ;
+        String successUrl = super.getFrontHost(systemConfig,platform) + successPath +
+                                        "?logOrdId="+ orderId +
+                                        "&authType="+ AuthBean.AUTH_TYPE_AUTO_CREDIT +
+                                        "&platform="+ platform
+                                        ;
         String bgRetUrl = "http://CS-USER/hyjf-app/bank/user/auth/creditauthpageplus/creditAuthBgreturn";
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);

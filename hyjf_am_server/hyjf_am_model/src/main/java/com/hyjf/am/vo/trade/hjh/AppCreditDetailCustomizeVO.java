@@ -96,6 +96,19 @@ public class AppCreditDetailCustomizeVO extends BaseVO {
      */
     private String borrowSchedule;
 
+    /**
+     * 标的类型
+     */
+    private String investLevel;
+
+    public String getInvestLevel() {
+        return investLevel;
+    }
+
+    public void setInvestLevel(String investLevel) {
+        this.investLevel = investLevel;
+    }
+
     public Integer getCreditNid() {
         return creditNid;
     }

@@ -64,6 +64,9 @@ public class AppPaymentAuthPagePlusController extends BaseUserController {
         CheckUtil.check(userId != null,MsgEnum.ERR_USER_NOT_LOGIN);
         UserVO user = this.authService.getUsersById(userId);
         String platform = request.getParameter("platform");
+        logger.info("app缴费授权入参打印,data:[userId:"+ userId +
+                                                ",platform:"+ platform +"]"
+        );
         //检查用户信息
         checkUserMessage(user);
 
@@ -74,8 +77,16 @@ public class AppPaymentAuthPagePlusController extends BaseUserController {
         String successPath = "/user/setting/paymentauth/result/success";
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         // 同步地址  是否跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig,platform) + errorPath +"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAYMENT_AUTH;
-        String successUrl = super.getFrontHost(systemConfig,platform) + successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAYMENT_AUTH;
+        String retUrl = super.getFrontHost(systemConfig,platform) + errorPath +
+                                                            "?logOrdId="+ orderId +
+                                                            "&authType="+ AuthBean.AUTH_TYPE_PAYMENT_AUTH +
+                                                            "&platform="+ platform
+                                                            ;
+        String successUrl = super.getFrontHost(systemConfig,platform) + successPath +
+                                                            "?logOrdId="+ orderId +
+                                                            "&authType="+ AuthBean.AUTH_TYPE_PAYMENT_AUTH +
+                                                            "&platform="+ platform
+                                                            ;
         String bgRetUrl = "http://CS-USER/hyjf-app/bank/user/auth/paymentauthpageplus/paymentauthBgreturn" ;
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);
