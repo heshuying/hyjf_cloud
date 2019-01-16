@@ -12,6 +12,10 @@ public class LoginResultBean extends BaseResultBean {
 
     private String userId;
     private String sign;
+
+    // add by huanghui 用户开户区分企业用户或个人用户
+    private Integer userType;
+
     public String getSign() {
         return sign;
     }
@@ -25,5 +29,13 @@ public class LoginResultBean extends BaseResultBean {
 
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+
+    public Integer getUserType() {
+        return userType;
+    }
+
+    public void setUserType(Integer userType) {
+        this.userType = userType;
     }
 }

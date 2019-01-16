@@ -1,22 +1,24 @@
 package com.hyjf.common.cache;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.common.spring.SpringUtils;
-import com.hyjf.common.util.GetCode;
-import com.hyjf.common.util.GetDate;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import redis.clients.jedis.Jedis;
-import redis.clients.jedis.JedisPool;
-import redis.clients.jedis.Transaction;
-
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.common.spring.SpringUtils;
+import com.hyjf.common.util.GetCode;
+import com.hyjf.common.util.GetDate;
+
+import redis.clients.jedis.Jedis;
+import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.Transaction;
 
 /**
  * redis工具类
@@ -374,6 +376,33 @@ public class RedisUtils {
      * 赋值数据
      * @param key
      * @param value
+     * @param expireSeconds 过期时间: 秒
+     * @return
+     */
+	public static String set(String key, String value, long expireSeconds) {
+		String result = null;
+		JedisPool pool = null;
+		Jedis jedis = null;
+		try {
+			pool = getPool();
+			jedis = pool.getResource();
+			result = jedis.set(key, value, "nx", "ex", expireSeconds);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			// 释放redis对象
+			// 释放
+			// 返还到连接池
+			returnResource(pool, jedis);
+		}
+
+		return result;
+	}
+
+    /**
+     * 赋值数据
+     * @param key
+     * @param value
      * @return
      */
     public static String setObj(String key, Object value) {
@@ -403,15 +432,14 @@ public class RedisUtils {
      * @param expireSeconds  过期时间 秒
      * @return
      */
-    public static Long setObjEx(String key, Object value, int expireSeconds) {
-        Long result = null;
+    public static String setObjEx(String key, Object value, long expireSeconds) {
+        String result = null;
         JedisPool pool = null;
         Jedis jedis = null;
         try {
             pool = getPool();
             jedis = pool.getResource();
-            jedis.set(key, JSONObject.toJSONString(value));
-            result = jedis.expire(key, expireSeconds);
+			result = jedis.set(key, JSONObject.toJSONString(value), "nx", "ex", expireSeconds);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -420,7 +448,6 @@ public class RedisUtils {
             // 返还到连接池
             returnResource(pool, jedis);
         }
-
         return result;
     }
 
