@@ -33,15 +33,4 @@ public class PlanCapitalServiceImpl extends BaseServiceImpl implements PlanCapit
 		List<HjhPlanCapitalVO> list = this.hjhPlanCapitalCustomizeMapper.selectPlanCapitalForProformaList(fromDate, toDate);
 		return list;
 	}
-
-	/**
-	 *获取该期间的汇计划日交易量
-	 * @param date
-	 * @return
-	 */
-	@Override
-	public List<HjhAccountBalanceVO> getHjhAccountBalanceForActList(Date date) {
-		List<HjhAccountBalanceVO> list = this.hjhAccountBalanceCustomizeMapper.selectHjhAccountBalanceForActList(date);
-		return list;
-	}
 }

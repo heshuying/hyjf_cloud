@@ -1,5 +1,15 @@
 package com.hyjf.cs.message.client.impl;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.RestTemplate;
+
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.admin.CategoryResponse;
 import com.hyjf.am.response.config.*;
@@ -10,23 +20,14 @@ import com.hyjf.am.vo.admin.ContentHelpCustomizeVO;
 import com.hyjf.am.vo.admin.ContentHelpVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.message.client.AmConfigClient;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
 
 /**
  * @author xiasq
  * @version AmConfigClientImpl, v0.1 2018/5/4 10:00
  */
-@Service
+@Cilent
 public class AmConfigClientImpl implements AmConfigClient {
 
 	@Autowired

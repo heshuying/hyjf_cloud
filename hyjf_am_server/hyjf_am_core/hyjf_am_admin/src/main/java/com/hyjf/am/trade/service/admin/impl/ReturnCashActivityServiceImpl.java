@@ -44,11 +44,11 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
     @Autowired
     ActivityMidauInfoCustomizeMapper activityMidauInfoCustomizeMapper;
     @Override
-    public  boolean saveReturnCash(Integer userId, String orderId, Integer productType, BigDecimal investMoney){
+    public  boolean saveReturnCash(Integer userId, String orderId, Integer productType, BigDecimal investMoney,InviterReturnCashCustomize inviterReturnCashCustomize){
         List<ActivityMidauInfo> tenderList = null;
         ActivityMidauInfo activityMidauInfo = null;
         PerformanceReturnDetail performanceReturnDetail = new PerformanceReturnDetail();
-        InviterReturnCashCustomize inviterReturnCashCustomize = inviterReturnCashCustomizeMapper.selectReturnCashList(userId);
+        //InviterReturnCashCustomize inviterReturnCashCustomize = inviterReturnCashCustomizeMapper.selectReturnCashList(userId);
         _log.info("开始保存投资记录");
         //1=新手标，2=散标，3=汇计划
         if(productType == 3){
@@ -201,6 +201,11 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
         }
         return getLevel(userId,count,userNames);
 
+    }
+    @Override
+    public  InviterReturnCashCustomize selectReturnCashList(Integer userId){
+        InviterReturnCashCustomize inviterReturnCashCustomize = inviterReturnCashCustomizeMapper.selectReturnCashList(userId);
+        return inviterReturnCashCustomize;
     }
 
     @Override
