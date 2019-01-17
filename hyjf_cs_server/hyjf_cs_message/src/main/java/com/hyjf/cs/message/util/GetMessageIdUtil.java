@@ -1,5 +1,6 @@
 package com.hyjf.cs.message.util;
 
+import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.util.GetDate;
 
@@ -12,7 +13,7 @@ public class GetMessageIdUtil {
 	private static int EXPIRE_SECONDS = 24 * 60 * 60 * 2;
 
 	public static synchronized String getNewMsgCode(String tagCode) {
-		String key = tagCode + "_" + GetDate.getDate("yyyyMMdd") + "_";
+		String key = RedisConstants.MSG_PUSH_CODE + tagCode + "_" + GetDate.getDate("yyyyMMdd") + "_";
 		Long value = RedisUtils.incr(key);
 		RedisUtils.expire(key, EXPIRE_SECONDS);
 		int result = 1;

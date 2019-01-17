@@ -544,4 +544,8 @@ public class RedisConstants {
      * 纳觅返现活动
      */
     public static final String RETURN_CASH_ACTIVITY = "RETURN_CASH_ACTIVITY:";
+    /**
+     * 推送表的消息唯一标识
+     */
+    public static final String MSG_PUSH_CODE = "MSG_PUSH_CODE:";
 }
