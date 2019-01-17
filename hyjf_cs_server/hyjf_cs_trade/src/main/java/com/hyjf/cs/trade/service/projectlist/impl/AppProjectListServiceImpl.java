@@ -113,6 +113,19 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
         req.setLimitEnd(page.getLimit());
         req.setProjectType("CFH");  // 原来逻辑： 如果projectType == "HZT" ，则setProjectType == CFH；
         ProjectListRequest params = CommonUtils.convertBean(req,ProjectListRequest.class);
+
+        // 合规审批需求  add by huanghui 20181123 start
+        info.put("riskWarningHint", "散标是经过汇盈金服对借款人进行信息搜集和资信评估后在汇盈金服平台发布的借款标的统称。请您充分了解标的信息，谨慎出借。");
+        info.put("riskWarningContent", " $散标介绍$ " +
+                "\n" +
+                "散标是经过汇盈金服对具有借款需求的借款人进行信息搜集和资信评估后在汇盈金服平台发布的借款标的统称，包括但不限于实物抵押标、第三方保证标以及汇盈金服平台不时增加和发布的其他类型借款标。" +
+                "\n\n" +
+                " $出借人适当性管理告知$ " +
+                "\n" +
+                "作为网络借贷的出借人，应当具备出借风险意识，风险识别能力，拥有一定的金融产品出借经验并熟悉互联网金融。请您在出借前，确保了解借款项目的主要风险，同时确认具有相应的风险认知和承受能力，并自行承担出借可能产生的相关损失。");
+
+        // 合规审批需求  add by huanghui 20181123 end
+
         // ①查询count
         Integer count = amTradeClient.countAppProjectList(params);
         // 对调用返回的结果进行转换和拼装
@@ -1093,6 +1106,18 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             logger.error("查询债权转让原子层count异常");
             throw new RuntimeException("查询债权转让原子层count异常");
         }
+
+        // 合规审批需求  add by huanghui 20181123 start
+        info.put("riskWarningHint", "债权转让是债权持有人在汇盈金服平台将债权挂出并将所持有的债权转让给受让人的操作。请您充分了解标的信息，谨慎出借。");
+        info.put("riskWarningContent", " $债权转让介绍$ " +
+                "\n" +
+                "债权持有人通过汇盈金服平台债权转让系统将债权挂出且与承接人签订债权转让协议，将所持有的债权转让给承接人的操作。" +
+                "\n\n" +
+                " $出借人适当性管理告知$ " +
+                "\n" +
+                "作为网络借贷的出借人，应当具备出借风险意识，风险识别能力，拥有一定的金融产品出借经验并熟悉互联网金融。请您在出借前，确保了解借款项目的主要风险，同时确认具有相应的风险认知和承受能力，并自行承担出借可能产生的相关损失。");
+        // 合规审批需求  add by huanghui 20181123 end
+
         int count = res.getCount();
         info.put(ProjectConstant.APP_PROJECT_LIST, new ArrayList<>());
         if (count > 0) {
@@ -1445,6 +1470,19 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             logger.error("app查询计划原子层count异常");
             throw new RuntimeException("app查询计划原子层count异常");
         }
+
+        // 合规审批需求  add by huanghui 20181123 start
+        info.put("riskWarningHint", "智投服务是平台根据出借人授权，帮助出借人分散投标、循环出借的服务。到期后退出时效以实际债权转让完成用时为准 。");
+        info.put("riskWarningContent", " $智投介绍$ " +
+                "\n" +
+                "智投服务是汇盈金服为您提供的本金自动循环出借及到期自动转让退出的自动投标服务，自动投标授权服务期限自授权出借之日起至退出完成。出借范围仅限于平台发布的借款标的或服务中被转让债权，您可随时查看持有的债权标的列表及标的详情。" +
+                "\n\n" +
+                " $出借人适当性管理告知$ " +
+                "\n" +
+                "作为网络借贷的出借人，应当具备出借风险意识，风险识别能力，请您在出借前，确保了解借款项目的主要风险，谨慎出借。\n" +
+                "汇盈金服展示的参考回报不代表对实际回报的承诺；您的出借本金及对应回报可能无法按时收回。服务回报期限届满，系统对尚未结清标的自动发起债权转让。退出完成需债权标的全部结清，并且债权转让全部完成。您所持债权转让完成的具体时间，视债权转让市场交易情况而定。");
+        // 合规审批需求  add by huanghui 20181123 end
+
         page.setTotal(count);
         if (count > 0) {
             List<HjhPlanCustomizeVO> list = amTradeClient.searchAppPlanList(request);

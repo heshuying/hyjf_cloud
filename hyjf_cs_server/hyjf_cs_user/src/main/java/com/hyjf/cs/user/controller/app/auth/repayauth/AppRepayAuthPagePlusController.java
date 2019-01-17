@@ -62,7 +62,6 @@ public class AppRepayAuthPagePlusController extends BaseUserController {
         // 验证请求参数
         CheckUtil.check(userId != null,MsgEnum.ERR_USER_NOT_LOGIN);
         UserVO user = this.authService.getUsersById(userId);
-        String sign = request.getParameter("sign");
         String platform = request.getParameter("platform");
         //检查用户信息
         checkUserMessage(user);
@@ -74,18 +73,8 @@ public class AppRepayAuthPagePlusController extends BaseUserController {
         String successPath = "/user/setting/repayauth/result/success";
         String orderId = GetOrderIdUtils.getOrderId2(userId);
         // 同步地址  是否跳转到前端页面
-        String retUrl = super.getFrontHost(systemConfig,platform) + errorPath +
-                                                            "?logOrdId="+ orderId +
-                                                            "&authType="+ AuthBean.AUTH_TYPE_REPAY_AUTH +
-                                                            "&sign="+ sign +
-                                                            "&platform="+ platform
-                                                            ;
-        String successUrl = super.getFrontHost(systemConfig,platform) + successPath +
-                                                            "?logOrdId="+ orderId +
-                                                            "&authType="+ AuthBean.AUTH_TYPE_REPAY_AUTH +
-                                                            "&sign="+ sign +
-                                                            "&platform="+ platform
-                                                            ;
+        String retUrl = super.getFrontHost(systemConfig, platform)+errorPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_REPAY_AUTH+"&platform="+platform;
+        String successUrl = super.getFrontHost(systemConfig, platform)+successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_REPAY_AUTH+"&platform="+platform;
         String bgRetUrl = "http://CS-USER/hyjf-app/bank/user/auth/repayauthpageplus/repayauthBgreturn" ;
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);
