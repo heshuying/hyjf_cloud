@@ -457,7 +457,6 @@ public class AppLoginController extends BaseUserController {
         String encryptValue;
         // 获取sign对应的加密key
         String value = RedisUtils.get(RedisConstants.SIGN+sign);
-        logger.info("获取sign对应的加密key:"+(value));
         SignValue signValue;
         if (StringUtils.isNotBlank(value)) {
             signValue = JSON.parseObject(value, SignValue.class);
@@ -466,7 +465,8 @@ public class AppLoginController extends BaseUserController {
             encryptValue = DES.encryptDES_ECB(encryptString, signValue.getKey());
             signValue.setToken(encryptValue);
             RedisUtils.set(RedisConstants.SIGN+sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
-            logger.info("更新sign:"+JSON.toJSONString(signValue));
+            value =RedisUtils.get(RedisConstants.SIGN+sign);
+            logger.info("更新sign:"+JSON.toJSONString(value));
         } else {
             throw new RuntimeException("参数异常");
         }
