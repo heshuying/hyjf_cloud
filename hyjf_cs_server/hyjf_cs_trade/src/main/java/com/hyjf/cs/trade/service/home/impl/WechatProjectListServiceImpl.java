@@ -1122,6 +1122,8 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         // 计息时间
         projectInfo.setOnAccrual(ProjectConstant.PLAN_ON_ACCRUAL);
         projectInfo.setRepayStyle(customize.getBorrowStyleName());
+        // 标的等级
+        projectInfo.setInvestLevel(customize.getInvestLevel());
 
         Map<String, Object> projectDetail = new HashMap<>();
         projectDetail.put("addCondition", MessageFormat.format(ProjectConstant.PLAN_ADD_CONDITION, customize.getDebtMinInvestment(),

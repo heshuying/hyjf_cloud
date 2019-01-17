@@ -41,7 +41,7 @@
 	</select>
 
 
-	<select id="queryTenderRecoverList" resultMap="BaseResultMap"
+	<select id="queryTenderRecoverList" resultType="com.hyjf.am.market.dao.model.customize.ActivityMidauInfo"
 			parameterType="com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize">
 				SELECT
 		te.account AS investMoney,
@@ -62,7 +62,7 @@
 		WHERE
 		te.nid = #{orderid,jdbcType=VARCHAR} and te.user_id = #{userid,jdbcType=INTEGER};
 	</select>
-	<select id="queryPlanList" resultMap="BaseResultMap"
+	<select id="queryPlanList" resultType="com.hyjf.am.market.dao.model.customize.ActivityMidauInfo"
 			parameterType="com.hyjf.am.market.dao.model.customize.app.ActivityListCustomize">
 			SELECT
 			hdpa.accede_account AS investMoney,
