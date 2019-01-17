@@ -114,7 +114,9 @@
         <!-- 成功时间 -->
         FROM_UNIXTIME(hbc.assign_time,'%Y-%m-%d %H:%i:%s') AS assignTime,
         <!-- 出借进度 -->
-        truncate(hbc.credit_capital_assigned/hbc.credit_capital*100,2) AS borrowSchedule
+        truncate(hbc.credit_capital_assigned/hbc.credit_capital*100,2) AS borrowSchedule,
+        <!-- 标的详情 -->
+        hb.invest_level AS investLevel
         FROM
         ht_borrow_credit hbc
         LEFT JOIN ht_borrow hb ON hbc.bid_nid = hb.borrow_nid

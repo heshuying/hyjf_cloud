@@ -115,18 +115,6 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 		return null;
 	}
 
-	/**
-	 * 保存编辑信息
-	 * @param couponConfig
-	 * @return
-	 */
-	@Override
-	public int saveCouponConfig(CouponConfig couponConfig) {
-		int count = couponConfigMapper.updateByPrimaryKey(couponConfig);
-		this.operationLog(couponConfig, CustomConstants.OPERATION_CODE_MODIFY);
-		return count;
-	}
-
 	private void operationLog(CouponConfig couponConfig, int operationCode) {
 		CouponOperationHistoryWithBLOBs co = new CouponOperationHistoryWithBLOBs();
 		// 编号
@@ -155,28 +143,6 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 	}
 
 	/**
-	 * 添加发行信息
-	 * @param couponConfig
-	 * @return
-	 */
-	@Override
-	public int insertAction(CouponConfig couponConfig) {
-		int insert = couponConfigMapper.insert(couponConfig);
-		return insert;
-	}
-
-	/**
-	 * 根据id删除发行信息
-	 * @param id
-	 * @return
-	 */
-	@Override
-	public int deleteCouponConfig(int id) {
-		int result = couponConfigMapper.deleteByPrimaryKey(id);
-		return result;
-	}
-
-	/**
 	 * 根据优惠券编号查询已发行数量
 	 * @param couponCode
 	 * @return
@@ -196,14 +162,6 @@ public class CouponConfigServiceImpl implements CouponConfigService {
 	public CouponConfigVO getCouponConfigById(String couponId) {
 		return couponConfigCustomizeMapper.getCouponConfigById(couponId);
 	}
-
-	@Override
-    public Integer countByTenderId(String tenderNid) {
-		CouponRecoverExample checkExample = new CouponRecoverExample();
-		checkExample.createCriteria().andTenderIdEqualTo(tenderNid);
-		int count = couponRecoverMapper.countByExample(checkExample);
-		return count;
-    }
 
     @Override
     public Integer crRecoverPeriod(String tenderNid, Integer currentRecoverFlg, Integer period) {

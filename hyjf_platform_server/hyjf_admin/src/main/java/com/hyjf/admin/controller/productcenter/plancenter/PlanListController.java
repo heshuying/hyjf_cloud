@@ -404,17 +404,25 @@ public class PlanListController extends BaseController{
 			// (修改请求)更新操作
 			int flg = this.planListService.updateRecord(form);
 			if(flg > 0){
-				success();
+				//success();
+				jsonObject.put("status", SUCCESS);
+				jsonObject.put("statusDesc", SUCCESS_DESC);
 			} else {
-				fail("");
+				//fail("");
+				jsonObject.put("status", FAIL);
+				jsonObject.put("statusDesc", FAIL_DESC);
 			}
 		} else {
 			// (新增请求)插入操作
 			int flag = this.planListService.insertRecord(form);
 			if(flag > 0){
-				success();
+				//success();
+				jsonObject.put("status", SUCCESS);
+				jsonObject.put("statusDesc", SUCCESS_DESC);
 			} else {
-				fail("");
+				//fail("");
+				jsonObject.put("status", FAIL);
+				jsonObject.put("statusDesc", FAIL_DESC);
 			}
 		}
 		return jsonObject;

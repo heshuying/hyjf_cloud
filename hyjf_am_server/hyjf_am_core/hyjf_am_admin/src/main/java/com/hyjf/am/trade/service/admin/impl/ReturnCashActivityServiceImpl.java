@@ -1,8 +1,9 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.market.service.impl;
+package com.hyjf.am.trade.service.admin.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.market.dao.mapper.auto.InviterReturnDetailMapper;
 import com.hyjf.am.market.dao.mapper.auto.NmUserMapper;
 import com.hyjf.am.market.dao.mapper.auto.PerformanceReturnDetailMapper;
@@ -10,8 +11,8 @@ import com.hyjf.am.market.dao.mapper.customize.market.ActivityMidauInfoCustomize
 import com.hyjf.am.market.dao.mapper.customize.market.InviterReturnCashCustomizeMapper;
 import com.hyjf.am.market.dao.model.auto.*;
 import com.hyjf.am.market.dao.model.customize.ActivityMidauInfo;
-import com.hyjf.am.market.service.ReturnCashActivityService;
 import com.hyjf.am.resquest.market.InviterReturnCashCustomize;
+import com.hyjf.am.trade.service.admin.ReturnCashActivityService;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -44,11 +45,11 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
     @Autowired
     ActivityMidauInfoCustomizeMapper activityMidauInfoCustomizeMapper;
     @Override
-    public  boolean saveReturnCash(Integer userId, String orderId, Integer productType, BigDecimal investMoney){
+    public  boolean saveReturnCash(Integer userId, String orderId, Integer productType, BigDecimal investMoney,InviterReturnCashCustomize inviterReturnCashCustomize){
         List<ActivityMidauInfo> tenderList = null;
         ActivityMidauInfo activityMidauInfo = null;
         PerformanceReturnDetail performanceReturnDetail = new PerformanceReturnDetail();
-        InviterReturnCashCustomize inviterReturnCashCustomize = inviterReturnCashCustomizeMapper.selectReturnCashList(userId);
+        //InviterReturnCashCustomize inviterReturnCashCustomize = inviterReturnCashCustomizeMapper.selectReturnCashList(userId);
         _log.info("开始保存投资记录");
         //1=新手标，2=散标，3=汇计划
         if(productType == 3){
@@ -82,6 +83,7 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
 
             activityMidauInfo = tenderList.get(0);
         }
+        _log.info("activityMidauInfo==="+ JSONObject.toJSONString(activityMidauInfo));
         BigDecimal yearAmount = BigDecimal.ZERO;
         //累计年化投资金额=SUM（m1*n1/12+m2*n2/12+...），m为单笔投资金额，n为单笔投资期限。
         //月=投资金额*几个月/12
@@ -186,6 +188,9 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
         //计数器
         count++;
         InviterReturnCashCustomize inviterReturnCash = inviterReturnCashCustomizeMapper.selectReturnCashList(userId);
+        if(inviterReturnCash==null){
+            return 0;
+        }
         if(userNames.contains(inviterReturnCash.getUserName())){
             return count;
         }
@@ -198,6 +203,11 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
         }
         return getLevel(userId,count,userNames);
 
+    }
+    @Override
+    public  InviterReturnCashCustomize selectReturnCashList(Integer userId){
+        InviterReturnCashCustomize inviterReturnCashCustomize = inviterReturnCashCustomizeMapper.selectReturnCashList(userId);
+        return inviterReturnCashCustomize;
     }
 
     @Override

@@ -4,7 +4,7 @@ import com.hyjf.am.resquest.admin.MessagePushNoticesRequest;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
-import com.hyjf.cs.common.util.GetMessageIdUtil;
+import com.hyjf.cs.message.util.GetMessageIdUtil;
 import com.hyjf.cs.message.bean.mc.MessagePushMsg;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import org.apache.commons.lang3.StringUtils;

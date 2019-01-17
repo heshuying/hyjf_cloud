@@ -7,8 +7,4 @@ package com.hyjf.am.market.service;
 
 public interface AppConfigService {
 
-
-
-
-
 }

@@ -1470,7 +1470,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     BorrowAndInfoVO borrowInfoVO = this.amTradeClient.getBorrowByNid(bidNid);
                     if (borrowInfoVO != null) {
                         checkLeve = borrowInfoVO.getInvestLevel();
-                        borrowFlag = "BORROW_ZZ";
+                        borrowFlag = "HZR";
                     }
                 }else
                     // 3. 汇计划投资
@@ -1480,7 +1480,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                         HjhPlanVO plan = amTradeClient.getPlanByNid(planNid);
                         if (plan != null) {
                             checkLeve = plan.getInvestLevel();
-                            borrowFlag = "BORROW_JH";
+                            borrowFlag = "HJH";
                         }
                 }else{
                     // 1. 散标投资信息
@@ -1489,7 +1489,7 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                     BorrowAndInfoVO borrowInfoVO = this.amTradeClient.getBorrowByNid(bidNid);
                     if (borrowInfoVO != null) {
                         checkLeve = borrowInfoVO.getInvestLevel();
-                        borrowFlag = "BORROW_SB";
+                        borrowFlag = "HSB";
                     }
                 }
                 //测评到期日
@@ -1521,6 +1521,23 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                         //返回类型和限额
                         investInfo.put("projectRevalJudge",true);
                         investInfo.put("projectRiskLevelDesc",CommonUtils.DESC_PROJECT_RISK_LEVEL_DESC.replace("{0}", userEvalationResultCustomize.getEvalType()).replace("{1}",checkLeve));
+                        return investInfo;
+                    }
+                }
+                if (revaluation_money == null) {
+                    logger.info("=============从redis中获取测评类型和上限金额异常!(没有获取到对应类型的限额数据) eval_type=" + eval_type);
+                } else {
+                    if ((CustomConstants.EVALUATION_CHECK.equals(deptEvaluationMoneyCheck) && (CustomConstants.TENDER_CHECK_LEVE_HZR.equals(borrowFlag) || CustomConstants.TENDER_CHECK_LEVE_HSB.equals(borrowFlag)))
+                            || (CustomConstants.EVALUATION_CHECK.equals(intellectualEvaluationMoneyCheck) && CustomConstants.TENDER_CHECK_LEVE_HJH.equals(borrowFlag))) {
+                        investInfo.put("revaluationMoney",StringUtil.getTenThousandOfANumber(Double.valueOf(revaluation_money).intValue()));
+                        //金额对比判断（校验金额 大于 设置测评金额）
+                        if (new BigDecimal(tender.getMoney()).compareTo(new BigDecimal(revaluation_money)) > 0) {
+                            //返回类型和限额
+                            investInfo.put("revalJudge",true);
+                            investInfo.put("riskLevelDesc","您当前的风险测评类型为 #"+eval_type+"# \n根据监管要求,\n"+eval_type+"用户单笔最高出借限额 #"
+                                    +StringUtil.getTenThousandOfANumber(Double.valueOf(revaluation_money).intValue())+"# 。");
+                            return investInfo;
+                        }
                     }
                 }
                 if (revaluation_money_principal == null) {
@@ -1543,22 +1560,8 @@ public class BorrowTenderServiceImpl extends BaseTradeServiceImpl implements Bor
                                 //返回类型和限额
                                 investInfo.put("revalPrincipalJudge",true);
                                 investInfo.put("riskLevelDesc","如果您继续出借， ## \n当前累计出借本金将超过 \n您的风险等级 #"+eval_type+"# 对应的限额。");
+                                return investInfo;
                             }
-                        }
-                    }
-                }
-                if (revaluation_money == null) {
-                    logger.info("=============从redis中获取测评类型和上限金额异常!(没有获取到对应类型的限额数据) eval_type=" + eval_type);
-                } else {
-                    if ((CustomConstants.EVALUATION_CHECK.equals(deptEvaluationMoneyCheck) && (CustomConstants.TENDER_CHECK_LEVE_HZR.equals(borrowFlag) || CustomConstants.TENDER_CHECK_LEVE_HSB.equals(borrowFlag)))
-                            || (CustomConstants.EVALUATION_CHECK.equals(intellectualEvaluationMoneyCheck) && CustomConstants.TENDER_CHECK_LEVE_HJH.equals(borrowFlag))) {
-                        investInfo.put("revaluationMoney",StringUtil.getTenThousandOfANumber(Double.valueOf(revaluation_money).intValue()));
-                        //金额对比判断（校验金额 大于 设置测评金额）
-                        if (new BigDecimal(tender.getMoney()).compareTo(new BigDecimal(revaluation_money)) > 0) {
-                            //返回类型和限额
-                            investInfo.put("revalJudge",true);
-                            investInfo.put("riskLevelDesc","您当前的风险测评类型为 #"+eval_type+"# \n根据监管要求,\n"+eval_type+"用户单笔最高出借限额 #"
-                                    +StringUtil.getTenThousandOfANumber(Double.valueOf(revaluation_money).intValue())+"# 。");
                         }
                     }
                 }

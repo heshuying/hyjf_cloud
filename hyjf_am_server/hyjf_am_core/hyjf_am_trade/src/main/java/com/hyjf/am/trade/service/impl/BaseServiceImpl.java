@@ -640,10 +640,9 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         example.createCriteria().andInstCodeEqualTo(instCode).andDelFlgEqualTo(0);
 
         List<HjhBailConfig> list = hjhBailConfigMapper.selectByExample(example);
-        if(list != null && !list.isEmpty()){
+        if(!CollectionUtils.isEmpty(list)){
             return list.get(0);
         }
-
         return null;
     }
 }

@@ -1,5 +1,24 @@
 package com.hyjf.cs.trade.client.impl;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
+import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.CollectionUtils;
+import org.springframework.web.client.RestTemplate;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alicp.jetcache.anno.CacheRefresh;
@@ -43,8 +62,8 @@ import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
 import com.hyjf.am.resquest.user.BankRequest;
 import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
-import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.AppPushManageVO;
 import com.hyjf.am.vo.admin.coupon.CouponRecoverVO;
 import com.hyjf.am.vo.api.ApiAssetStatusCustomizeVO;
 import com.hyjf.am.vo.api.ApiProjectListCustomize;
@@ -79,6 +98,7 @@ import com.hyjf.am.vo.trade.tradedetail.WebUserWithdrawListCustomizeVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.am.vo.wdzj.BorrowListCustomizeVO;
 import com.hyjf.am.vo.wdzj.PreapysListCustomizeVO;
+import com.hyjf.common.annotation.Cilent;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -92,31 +112,12 @@ import com.hyjf.cs.trade.bean.repay.RepayBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.util.HomePageDefine;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
-import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
-import org.springframework.web.client.RestTemplate;
-
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author xiasq
  * @version AmTradeClientImpl, v0.1 2018/6/19 15:44
  */
-@Service
+@Cilent
 public class AmTradeClientImpl implements AmTradeClient {
     private static Logger logger = LoggerFactory.getLogger(AmTradeClientImpl.class);
 
@@ -3629,6 +3630,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
+    @Cached(name="appPlanDetailCountCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 300, timeUnit = TimeUnit.SECONDS)
     public int countPlanBorrowRecordTotal(Map<String, Object> params) {
 	    String url = urlBase+"hjhPlan/countPlanBorrowRecordTotal";
         return restTemplate.postForEntity(url,params,Integer.class).getBody();
@@ -3640,6 +3643,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
+    @Cached(name="appPlanDetailListCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 300, timeUnit = TimeUnit.SECONDS)
     public List<DebtPlanBorrowCustomizeVO> selectPlanBorrowList(Map<String, Object> params) {
         String url = urlBase+"hjhPlan/selectPlanBorrowList";
         DebtPlanBorrowCustomizeResponse response = restTemplate.postForEntity(url,params,DebtPlanBorrowCustomizeResponse.class).getBody();
@@ -3755,6 +3760,8 @@ public class AmTradeClientImpl implements AmTradeClient {
      * @return
      */
     @Override
+    @Cached(name="appAndWxPlanAccedeSumCache-", expire = CustomConstants.HOME_CACHE_LIVE_TIME, cacheType = CacheType.BOTH)
+    @CacheRefresh(refresh = 60, stopRefreshAfterLastAccess = 300, timeUnit = TimeUnit.SECONDS)
     public Long selectPlanAccedeSum(Map<String, Object> params) {
         String url = "http://AM-TRADE/am-trade/hjhPlan/selectPlanAccedeSum";
         return restTemplate.postForEntity(url,params,Long.class).getBody();
@@ -5953,23 +5960,6 @@ public class AmTradeClientImpl implements AmTradeClient {
         return null;
     }
 
-    /**
-     * 根据contract_id查询垫付协议生成详情
-     * @author Zha Daojian
-     * @date 2018/8/23 15:47
-     * @param contractId
-     * @return ApplyAgreementInfoVO
-     **/
-    public List<ApplyAgreementInfoVO>  selectApplyAgreementInfoByContractId(String contractId) {
-        String url = "http://AM-TRADE/am-trade/applyAgreement/selectApplyAgreementInfoByContractId/"+contractId;
-        ApplyAgreementInfoResponse response = restTemplate.getForEntity(url,ApplyAgreementInfoResponse.class).getBody();
-        if (response != null) {
-            return response.getResultList();
-        }
-        return null;
-    }
-
-
     @Override
     public List<PlanInvestCustomizeVO> selectInvestCreditList(Map<String, Object> param) {
         String url = "http://AM-TRADE/am-trade/htj/selectInvestCreditList";
@@ -6179,7 +6169,7 @@ public class AmTradeClientImpl implements AmTradeClient {
 
     @Override
     public void autoIssueRecover() {
-        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhautoissuerecover/autoissuerecover", String.class);
+        restTemplate.getForEntity("http://AM-TRADE/am-trade/hjhAutoIssueRecover/autoIssueRecover", String.class);
     }
 
     @Override

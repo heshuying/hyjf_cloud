@@ -41,6 +41,7 @@ import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderCustomizeVO;
 import com.hyjf.am.vo.trade.wrb.WrbBorrowTenderSumCustomizeVO;
 import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.RecentPaymentListCustomizeVO;
+import com.hyjf.common.annotation.Cilent;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmTradeClient;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,7 +49,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.math.BigDecimal;
@@ -60,7 +60,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version AmTradeClientImpl, v0.1 2018/6/20 12:45
  */
-@Service
+@Cilent
 public class AmTradeClientImpl implements AmTradeClient {
     @Autowired
     private RestTemplate restTemplate;

@@ -1,13 +1,8 @@
 package com.hyjf.common.http;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
-
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLSession;
-
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
+import com.hyjf.common.util.StringPool;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -15,18 +10,17 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.web.client.RestTemplate;
 
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
-import com.hyjf.common.util.StringPool;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLSession;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
 
 /**
  * 在java中处理http请求.
@@ -99,6 +93,7 @@ public class HttpDealBank {
 		String methodName = "post";
 		log.info("[开始post请求, URL=" + url + ", 参数=" + params + "]");
 		String result = null;
+		ResponseEntity response = null;
 		try {
 			RestTemplate restTemplate = new RestTemplate(new ArrayList<HttpMessageConverter<?>>() {
 				{
@@ -119,12 +114,13 @@ public class HttpDealBank {
 			HttpsURLConnection.setDefaultHostnameVerifier(hv);
 			HttpEntity entity = new HttpEntity(params, headers);
 			// 请求到即信端
-			ResponseEntity response = restTemplate.exchange(url, HttpMethod.POST, entity, Map.class);
+			response = restTemplate.exchange(url, HttpMethod.POST, entity, Map.class);
 			// 响应报文
 			Map<String,String> responseMap = (Map<String,String>) response.getBody();
 			result = JSONObject.toJSONString(responseMap);
 		} catch (Exception e) {
-			e.printStackTrace();
+			log.error("请求发生异常："+e);
+			log.info(response.getStatusCode()+"响应报文：{}",response.getBody());
 		}
 		return result;
 	}

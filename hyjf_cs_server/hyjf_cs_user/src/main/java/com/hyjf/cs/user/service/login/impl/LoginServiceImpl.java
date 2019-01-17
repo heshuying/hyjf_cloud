@@ -103,7 +103,7 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 	 */
 	@Override
 	public WebViewUserVO login(String loginUserName, String loginPassword, String ip, String channel) {
-	    logger.info("登陆参数，用户名："+loginUserName+"；密码："+loginPassword);
+	    //logger.info("登陆参数，用户名："+loginUserName+"；密码："+loginPassword);
 		if (checkMaxLength(loginUserName, 16) || checkMaxLength(loginPassword, 32)) {
 			CheckUtil.check(false, MsgEnum.ERR_USER_LOGIN);
 		}
