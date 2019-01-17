@@ -13,14 +13,13 @@ public class GetMessageIdUtil {
 
 	public static synchronized String getNewMsgCode(String tagCode) {
 		String key = tagCode + "_" + GetDate.getDate("yyyyMMdd") + "_";
-		Integer value = RedisUtils.getObj(key, Integer.class);
+		Long value = RedisUtils.incr(key);
+		RedisUtils.expire(key, EXPIRE_SECONDS);
+		int result = 1;
 		if (value == null) {
-			value = 1;
 		} else {
-			value = value + 1;
+			result = value.intValue();
 		}
-		RedisUtils.setObjEx(key, value, EXPIRE_SECONDS);
-
-		return key.concat(String.format("%05d", value));
+		return key.concat(String.format("%05d", result));
 	}
 }
