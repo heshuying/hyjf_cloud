@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.user.service.password.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.bean.app.BaseResultBeanFrontEnd;
 import com.hyjf.am.vo.config.SmsConfigVO;
@@ -198,7 +197,7 @@ public class  PassWordServiceImpl  extends BaseUserServiceImpl implements PassWo
         bean.setNotifyUrl(bgRetUrl);
         // 操作者ID
         bean.setLogUserId(String.valueOf(userId));
-        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_MOBILE);
+        bean.setLogBankDetailUrl(BankCallConstant.BANK_URL_PASSWORDRESETPAGE);
         Map<String,Object> map = new HashMap<>();
         try {
             map = BankCallUtils.callApiMap(bean);
