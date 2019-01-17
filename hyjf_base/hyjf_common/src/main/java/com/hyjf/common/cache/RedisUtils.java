@@ -277,7 +277,9 @@ public class RedisUtils {
         try {
             pool = getPool();
             jedis = pool.getResource();
-            result = jedis.set(key, value, "xx", "ex", expireSeconds);
+
+            result = jedis.set(key, value);
+            jedis.expire(key, expireSeconds);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
