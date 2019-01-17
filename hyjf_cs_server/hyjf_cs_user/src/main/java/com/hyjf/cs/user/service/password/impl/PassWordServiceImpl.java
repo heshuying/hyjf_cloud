@@ -196,6 +196,7 @@ public class PassWordServiceImpl extends BaseUserServiceImpl implements PassWord
         String retUrl = super.getFrontHost(systemConfig, String.valueOf(ClientConstants.WEB_CLIENT)) + "/user/setPasswordResult" + "?channel=1&logOrdId=" + bean.getLogOrderId();
         // 异步调用路
         String bgRetUrl = "http://CS-USER/hyjf-web/user/password/resetPasswordBgreturn";
+        logger.info("同步回调地址："+retUrl);
         bean.setRetUrl(retUrl);
         bean.setNotifyUrl(bgRetUrl);
         // 操作者ID
