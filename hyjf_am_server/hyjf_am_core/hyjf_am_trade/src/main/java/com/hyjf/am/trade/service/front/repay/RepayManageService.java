@@ -48,11 +48,11 @@ public interface RepayManageService extends BaseService {
 
     boolean updateBorrowCreditStautus(String borrowNid);
 
-    abstract RepayBean searchRepayTotalV2(int userId, Borrow borrow) throws Exception;
+    RepayBean searchRepayTotalV2(int userId, Borrow borrow) throws Exception;
 
-    abstract RepayBean searchRepayPlanTotal(int userId, Borrow borrow) throws Exception;
+    RepayBean searchRepayPlanTotal(int userId, Borrow borrow) throws Exception;
 
-    abstract RepayBean searchRepayByTermTotalV2(int userId, Borrow borrow, BigDecimal borrowApr, String borrowStyle, int periodTotal) throws Exception;
+    RepayBean searchRepayByTermTotalV2(int userId, Borrow borrow, BigDecimal borrowApr, String borrowStyle, int periodTotal) throws Exception;
 
     boolean updateBorrowApicron(BorrowApicron apicron, int status);
 
