@@ -116,7 +116,7 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 	private void doRecordBorrowByAuto(String assetId, String instCode) {
 		HjhPlanAsset hjhPlanAsset = autoPreAuditMessageService.selectPlanAsset(assetId, instCode);
 		if (hjhPlanAsset == null) {
-			logger.warn(" 该资产在表里不存在！！");
+			logger.warn("该资产不存在！！");
 			return;
 		}
 		// 资产自动备案
