@@ -12,7 +12,7 @@ public class GetMessageIdUtil {
 
 	private static int EXPIRE_SECONDS = 24 * 60 * 60 * 2;
 
-	public static synchronized String getNewMsgCode(String tagCode) {
+	public static String getNewMsgCode(String tagCode) {
 		String key = RedisConstants.MSG_PUSH_CODE + tagCode + "_" + GetDate.getDate("yyyyMMdd") + "_";
 		Long value = RedisUtils.incr(key);
 		RedisUtils.expire(key, EXPIRE_SECONDS);
