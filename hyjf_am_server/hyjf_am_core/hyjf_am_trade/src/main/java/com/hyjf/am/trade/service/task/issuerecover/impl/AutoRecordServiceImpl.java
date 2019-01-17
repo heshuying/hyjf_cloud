@@ -11,7 +11,6 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;
 import com.hyjf.common.exception.MQException;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetDate;
 import com.hyjf.common.util.GetOrderIdUtils;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -136,8 +135,6 @@ public class AutoRecordServiceImpl implements AutoRecordService {
             }else{
                 hjhPlanAssetnew.setStatus(5);//初审中
             }
-            //获取当前时间
-            int nowTime = GetDate.getNowTime10();
             hjhPlanAssetnew.setUpdateTime(new Date());
             hjhPlanAssetnew.setUpdateUserId(1);
             boolean borrowFlag = this.hjhPlanAssetMapper.updateByPrimaryKeySelective(hjhPlanAssetnew)>0?true:false;
@@ -184,10 +181,10 @@ public class AutoRecordServiceImpl implements AutoRecordService {
             BorrowInfo borrowInfo = getBorrowInfoById(borrow.getBorrowNid());
             // 检查是否备案失败，如果是，跳过
             if(borrow.getStatus()==0 && borrow.getRegistStatus()==4){
-                logger.info("标的："+borrowNid+" 自动备案失败过");
-                result.put("success", "2");
-                result.put("msg", "自动备案失败过！");
-                return result;
+				logger.info("标的：" + borrowNid + " 自动备案失败过");
+				result.put("success", "2");
+				result.put("msg", "自动备案失败过！");
+				return result;
             }
 
 

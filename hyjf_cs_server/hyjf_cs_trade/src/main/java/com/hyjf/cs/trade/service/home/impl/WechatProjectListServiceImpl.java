@@ -903,7 +903,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                 }
             }
         }
-        result.setHomeXshProjectList(vo.getHomeXshProjectList());
+        result.setHomeXshProjectList(vo.getHomeXshProjectList() != null?vo.getHomeXshProjectList():new ArrayList<>());
         result.setStatus(HomePageDefine.WECHAT_STATUS_SUCCESS);
         result.setStatusDesc(HomePageDefine.WECHAT_STATUC_DESC);
         return result;
