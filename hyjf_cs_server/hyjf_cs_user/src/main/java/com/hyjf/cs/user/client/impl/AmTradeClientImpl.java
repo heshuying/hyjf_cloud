@@ -60,7 +60,7 @@ import java.util.Map;
  * @author zhangqingqing
  * @version AmTradeClientImpl, v0.1 2018/6/20 12:45
  */
-@Service
+@Cilent
 public class AmTradeClientImpl implements AmTradeClient {
     @Autowired
     private RestTemplate restTemplate;
