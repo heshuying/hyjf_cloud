@@ -95,6 +95,12 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 			this.doRecordBorrowByAuto(assetId, instCode);
 		}
 
+		// 4. 错误消息
+		else {
+			logger.warn("不明消息，不予消费....");
+			return;
+		}
+
 	}
 
 	@Override
@@ -110,7 +116,7 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 	private void doRecordBorrowByAuto(String assetId, String instCode) {
 		HjhPlanAsset hjhPlanAsset = autoPreAuditMessageService.selectPlanAsset(assetId, instCode);
 		if (hjhPlanAsset == null) {
-			logger.warn(" 该资产在表里不存在！！");
+			logger.warn("该资产不存在！！");
 			return;
 		}
 		// 资产自动备案

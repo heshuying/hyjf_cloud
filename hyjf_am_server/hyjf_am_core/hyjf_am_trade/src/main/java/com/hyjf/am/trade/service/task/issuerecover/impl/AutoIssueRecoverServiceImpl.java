@@ -131,7 +131,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
             return false;
         }
         if (checkResult > 0) {
-            logger.info("资产编号："+hjhPlanAsset.getAssetId()+" 录标校验未通过:" + checkResult);
+            logger.warn("资产编号："+hjhPlanAsset.getAssetId()+" 录标校验未通过:" + checkResult);
             //add by cwyang 20180420 增加待补缴状态
             HjhPlanAsset planAsset = new HjhPlanAsset();
             planAsset.setId(hjhPlanAsset.getId());
@@ -156,13 +156,13 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         }
         BorrowFinmanNewCharge borrowFinmanNewCharge = this.selectBorrowApr(borrowClass,hjhPlanAsset.getInstCode(),hjhPlanAsset.getAssetType(),queryBorrowStyle,hjhPlanAsset.getBorrowPeriod());
         if(borrowFinmanNewCharge == null || borrowFinmanNewCharge.getAutoBorrowApr() == null){
-            logger.info("资产编号："+hjhPlanAsset.getAssetId()+" 录标失败 ,没有取到项目费率");
+            logger.warn("资产编号："+hjhPlanAsset.getAssetId()+" 录标失败 ,没有取到项目费率");
             return false;
         }
 
         // 录标 a. 根据表配置判断发标项目类型
         if(!insertRecord(hjhPlanAsset,hjhAssetBorrowType,borrowFinmanNewCharge)){
-            logger.info("资产编号："+hjhPlanAsset.getAssetId()+" 录标失败");
+            logger.warn("资产编号："+hjhPlanAsset.getAssetId()+" 录标失败");
             return false;
         }
 

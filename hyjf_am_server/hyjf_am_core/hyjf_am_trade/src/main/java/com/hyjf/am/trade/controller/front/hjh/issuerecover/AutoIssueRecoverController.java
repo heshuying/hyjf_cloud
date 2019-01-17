@@ -104,7 +104,7 @@ public class AutoIssueRecoverController extends BaseController{
             // =================================
             // 查询待关联计划资产列表
             List<HjhPlanAsset> issueList = this.autoIssueRecoverService.selectBorrowAssetList();
-            logger.info(" 原始标待关联计划总数: "+issueList.size());
+            logger.info("原始标待关联计划总数: "+issueList.size());
 
             for (HjhPlanAsset planAsset : issueList) {
                 logger.debug(planAsset.getAssetId()+" 开始待关联计划资产修复 ");
@@ -121,9 +121,9 @@ public class AutoIssueRecoverController extends BaseController{
                 logger.debug(planAsset.getAssetId()+" 结束待关联计划资产修复");
             }
 
-            // 查询待发标关联计划列表
+            // 查询债转待关联计划总数
             List<HjhDebtCredit> creditissueList = this.autoIssueRecoverService.selectCreditAssetList();
-            logger.info(" 债转待关联计划总数: "+creditissueList.size());
+            logger.info("债转待关联计划总数: "+creditissueList.size());
 
             for (HjhDebtCredit credit : creditissueList) {
                 logger.debug(credit.getCreditNid()+" 开始债转待关联计划资产修复 ");
@@ -144,7 +144,7 @@ public class AutoIssueRecoverController extends BaseController{
             // =================================================
             // 查询散标关联计划资产列表
             List<Borrow> borrowList = this.autoIssueRecoverService.selectBorrowList();
-            logger.info(" 散标待关联计划总数: "+borrowList.size());
+            logger.info("散标待关联计划总数: "+borrowList.size());
 
             for (Borrow borrow : borrowList) {
                 logger.debug(borrow.getBorrowNid()+" 开始散标待关联计划资产修复 ");
