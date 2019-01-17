@@ -270,15 +270,16 @@ public class RedisUtils {
      * @param expireSeconds(过期时间，秒)
      * @return value
      */
-    public static Long set(String key, String value, int expireSeconds) {
-        Long result = null;
+    public static String set(String key, String value, int expireSeconds) {
+        String result = null;
         JedisPool pool = null;
         Jedis jedis = null;
         try {
             pool = getPool();
             jedis = pool.getResource();
-            jedis.set(key, value);
-            result = jedis.expire(key, expireSeconds);
+
+            result = jedis.set(key, value);
+            jedis.expire(key, expireSeconds);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -290,6 +291,18 @@ public class RedisUtils {
 
         return result;
     }
+
+    /**
+     * 赋值数据
+     * @param key
+     * @param value
+     * @param expireSeconds 过期时间: 秒
+     * @return
+     */
+	public static String set(String key, String value, long expireSeconds) {
+		return set(key, value, new Long(expireSeconds).intValue());
+	}
+
 
     /**
      * 设置过期时间
@@ -403,15 +416,15 @@ public class RedisUtils {
      * @param expireSeconds  过期时间 秒
      * @return
      */
-    public static Long setObjEx(String key, Object value, int expireSeconds) {
-        Long result = null;
+    public static String setObjEx(String key, Object value, int expireSeconds) {
+        String result = null;
         JedisPool pool = null;
         Jedis jedis = null;
         try {
             pool = getPool();
             jedis = pool.getResource();
-            jedis.set(key, JSONObject.toJSONString(value));
-            result = jedis.expire(key, expireSeconds);
+			result = jedis.set(key, JSONObject.toJSONString(value));
+			jedis.expire(key, expireSeconds);
         } catch (Exception e) {
             e.printStackTrace();
         } finally {
@@ -420,10 +433,18 @@ public class RedisUtils {
             // 返还到连接池
             returnResource(pool, jedis);
         }
-
         return result;
     }
-
+    /**
+     * 赋值数据
+     * @param key
+     * @param value
+     * @param expireSeconds  过期时间 秒
+     * @return
+     */
+    public static String setObjEx(String key, Object value, long expireSeconds) {
+        return setObjEx(key, value, new Long(expireSeconds).intValue());
+    }
 
     /**
      * 赋值数据
@@ -785,7 +806,7 @@ public class RedisUtils {
         Calendar tommorowDate = new GregorianCalendar(curDate
                 .get(Calendar.YEAR), curDate.get(Calendar.MONTH), curDate
                 .get(Calendar.DATE) + 1, 0, 0, 0);
-        return (int)(tommorowDate.getTimeInMillis() - curDate .getTimeInMillis()) / 1000;
+        return new Long((tommorowDate.getTimeInMillis() - curDate .getTimeInMillis()) / 1000).intValue();
     }
 
     /**

@@ -721,7 +721,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             }
 
             // Redis的出借余额校验
-            if (RedisUtils.get(borrowNid) != null) {
+            if (RedisUtils.get(RedisConstants.BORROW_NID + borrowNid) != null) {
                 logger.error(borrowNid + " 定时发标异常：标的编号在redis已经存在");
                 ontimeCheckBean.setStatus(-5);
                 ontimeCheckBean.setStatusInfo("定时标的状态异常");

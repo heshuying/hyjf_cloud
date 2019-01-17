@@ -27,6 +27,13 @@ public class TestRedis {
 
 	@Test
 	public void testRedis() {
+
+		String result11 = RedisUtils.set("xiasq-2019-1-17-1", "value122", RedisUtils.signExpireTime);
+		logger.info("result11：" + result11);
+		String value1 = RedisUtils.get("xiasq-2019-1-17-1");
+		logger.info("value1:" + value1);
+
+
 		String result = RedisUtils.set("key", "value");
 		logger.info("result：" + result);
 		String value = RedisUtils.get("key");

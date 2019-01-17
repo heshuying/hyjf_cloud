@@ -62,42 +62,43 @@ public class AutoBailMessageServiceImpl implements AutoBailMessageService {
     }
 
     @Override
-    public boolean updateRecordBorrow(BorrowInfo borrowInfo, Borrow borrow, HjhAssetBorrowtype hjhAssetBorrowType) {
-        // 借款编号存在
-        if (StringUtils.isNotEmpty(borrow.getBorrowNid())) {
+	public boolean updateRecordBorrow(BorrowInfo borrowInfo, Borrow borrow, HjhAssetBorrowtype hjhAssetBorrowType) {
+		// 借款编号存在
+		if (StringUtils.isNotEmpty(borrow.getBorrowNid())) {
 
-                // 该借款编号没有交过保证金
-                BorrowBailExample exampleBail = new BorrowBailExample();
-                BorrowBailExample.Criteria craBail = exampleBail.createCriteria();
-                craBail.andBorrowNidEqualTo(borrow.getBorrowNid());
-                List<BorrowBail> borrowBailList = this.borrowBailMapper.selectByExample(exampleBail);
-                if (borrowBailList == null || borrowBailList.size() == 0) {
-//							AdminSystem adminSystem = (AdminSystem) SessionUtils.getSession(CustomConstants.LOGIN_USER_INFO);
-                    BorrowBail borrowBail = new BorrowBail();
-                    // 借款人的ID
-                    borrowBail.setBorrowUid(borrow.getUserId());
-                    // 操作人的ID
-                    borrowBail.setOperaterUid(1);
-                    // 借款编号
-                    borrowBail.setBorrowNid(borrow.getBorrowNid());
-                    // 保证金数值
-                    BigDecimal bailPercent = new BigDecimal(this.getBorrowConfig(CustomConstants.BORROW_BAIL_RATE));// 计算公式：保证金金额=借款金额×3％
-                    BigDecimal accountBail = (borrow.getAccount()).multiply(bailPercent).setScale(2, BigDecimal.ROUND_DOWN);
-                    borrowBail.setBailNum(accountBail);
-                    // 10位系统时间（到秒）
-                    borrowBail.setUpdateTime(new Date());
-                    boolean bailFlag = this.borrowBailMapper.insertSelective(borrowBail) > 0 ? true : false;
-                    if (bailFlag) {
-                        borrow.setVerifyStatus(1);
-                        boolean borrowFlag = this.borrowMapper.updateByPrimaryKey(borrow) > 0 ? true : false;
-                        if (borrowFlag) {
-                            return true;
-                        }
-                    }
-                }
-        }
-        return false;
-    }
+			// 该借款编号没有交过保证金
+			BorrowBailExample exampleBail = new BorrowBailExample();
+			BorrowBailExample.Criteria craBail = exampleBail.createCriteria();
+			craBail.andBorrowNidEqualTo(borrow.getBorrowNid());
+			List<BorrowBail> borrowBailList = this.borrowBailMapper.selectByExample(exampleBail);
+			if (borrowBailList == null || borrowBailList.size() == 0) {
+				// AdminSystem adminSystem = (AdminSystem)
+				// SessionUtils.getSession(CustomConstants.LOGIN_USER_INFO);
+				BorrowBail borrowBail = new BorrowBail();
+				// 借款人的ID
+				borrowBail.setBorrowUid(borrow.getUserId());
+				// 操作人的ID
+				borrowBail.setOperaterUid(1);
+				// 借款编号
+				borrowBail.setBorrowNid(borrow.getBorrowNid());
+				// 保证金数值
+				BigDecimal bailPercent = new BigDecimal(this.getBorrowConfig(CustomConstants.BORROW_BAIL_RATE));// 计算公式：保证金金额=借款金额×3％
+				BigDecimal accountBail = (borrow.getAccount()).multiply(bailPercent).setScale(2, BigDecimal.ROUND_DOWN);
+				borrowBail.setBailNum(accountBail);
+				// 10位系统时间（到秒）
+				borrowBail.setUpdateTime(new Date());
+				boolean bailFlag = this.borrowBailMapper.insertSelective(borrowBail) > 0 ? true : false;
+				if (bailFlag) {
+					borrow.setVerifyStatus(1);
+					boolean borrowFlag = this.borrowMapper.updateByPrimaryKey(borrow) > 0 ? true : false;
+					if (borrowFlag) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;
+	}
 
     /**
      * 获取系统配置

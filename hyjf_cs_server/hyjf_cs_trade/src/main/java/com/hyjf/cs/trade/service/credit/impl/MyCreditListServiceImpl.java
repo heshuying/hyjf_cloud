@@ -714,7 +714,7 @@ public class MyCreditListServiceImpl extends BaseTradeServiceImpl implements MyC
                 assignInterest = creditAccount.subtract(assignPay);// 计算出借收益
                 // 预计收益 出让人预期收益 =本金+本金持有期利息-本金*折让率-服务费
                 expectInterest = creditCapital.add(assignInterestAdvance).subtract(creditCapital.multiply(new BigDecimal(creditDiscount).divide(new BigDecimal(100))))
-                        .subtract(assignPay.multiply(new BigDecimal(0.01)).setScale(2, BigDecimal.ROUND_DOWN));
+                        .subtract(assignPay.multiply(config.getAttornRate().divide(new BigDecimal(100))).setScale(2, BigDecimal.ROUND_DOWN));
             } else {// 按月
                 // 债转本息
                 creditAccount = DuePrincipalAndInterestUtils.getMonthPrincipalInterest(creditCapital, yearRate, borrow.getBorrowPeriod());

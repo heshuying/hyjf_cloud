@@ -20,7 +20,7 @@ import java.util.List;
  * @Date:2018/7/7
  * @Description: 法大大垫付机构协议管理（cs-trade调用）
  */
-@Api(value = "Admin端产品中心-汇转让-垫付协议管理")
+@Api(value = "根据合同id查询垫付协议生成详情")
 @RestController
 @RequestMapping("/am-trade/applyAgreement")
 public class ApplyAgreementController extends BaseController {
