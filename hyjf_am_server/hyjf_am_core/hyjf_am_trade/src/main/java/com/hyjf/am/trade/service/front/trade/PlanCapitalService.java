@@ -24,12 +24,4 @@ public interface PlanCapitalService extends BaseService {
 	 */
 	List<HjhPlanCapitalVO> getPlanCapitalForProformaList(Date fromDate, Date toDate);
 
-	/**
-	 *获取该期间的汇计划日交易量
-	 * @param date
-	 * @return
-	 */
-	List<HjhAccountBalanceVO> getHjhAccountBalanceForActList(Date date);
-
-
 }

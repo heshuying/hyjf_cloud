@@ -1223,7 +1223,6 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     private WechatHomePageResult getProjectListAsyn(WechatHomePageResult vo, int currentPage, int pageSize, String showPlanFlag) {
 
-        List<WechatHomeProjectListVO> list = null;
         Map<String, Object> projectMap = new HashMap<String, Object>();
         // 汇盈金服app首页定向标过滤
         projectMap.put("publishInstCode", CustomConstants.HYJF_INST_CODE);
@@ -1238,8 +1237,15 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             projectMap.put("showPlanFlag", showPlanFlag);
         }
         //WechatProjectListResponse response = baseClient.postExe(HomePageDefine.WECHAT_HOME_PROJECT_LIST_URL, projectMap, WechatProjectListResponse.class);
-        list = amTradeClient.getWechatProjectList(projectMap);
-        //list = response.getResultList();
+
+        List<WechatHomeProjectListVO> tempList  = amTradeClient.getWechatProjectList(projectMap);
+        List<WechatHomeProjectListVO> list = new ArrayList<>();
+        WechatHomeProjectListVO temp ;
+        for (WechatHomeProjectListVO vo1 : tempList){
+            temp = CommonUtils.convertBean(vo1,WechatHomeProjectListVO.class);
+            list.add(temp);
+        }
+
         if (!CollectionUtils.isEmpty(list)) {
             if (list.size() == (pageSize + 1)) {
                 list.remove(list.size() - 1);

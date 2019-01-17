@@ -8,12 +8,12 @@ import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.vo.market.ActivityListVO;
 import com.hyjf.am.vo.market.AdsVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
+import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.user.client.AmMarketClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
  * @author xiasq
  * @version AmMarketClientImpl, v0.1 2018/5/14 16:11
  */
-@Service
+@Cilent
 public class AmMarketClientImpl implements AmMarketClient {
 	private static Logger logger = LoggerFactory.getLogger(AmMarketClientImpl.class);
 

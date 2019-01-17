@@ -14,6 +14,7 @@ import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.user.QuestionCustomizeVO;
+import com.hyjf.common.annotation.Cilent;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.user.client.AmConfigClient;
 import org.apache.commons.lang3.StringUtils;
@@ -21,7 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
@@ -30,7 +30,7 @@ import java.util.List;
  * @author xiasq
  * @version AmConfigClientImpl, v0.1 2018/4/23 20:01
  */
-@Service
+@Cilent
 public class AmConfigClientImpl implements AmConfigClient {
     private static Logger logger = LoggerFactory.getLogger(AmConfigClientImpl.class);
 

@@ -3,18 +3,19 @@
  */
 package com.hyjf.cs.user.client.impl;
 
-import com.hyjf.am.response.StringResponse;
-import com.hyjf.cs.user.client.AmDataCollectClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import com.hyjf.am.response.StringResponse;
+import com.hyjf.common.annotation.Cilent;
+import com.hyjf.cs.user.client.AmDataCollectClient;
 
 /**
  * @author zhangqingqing
  * @version AmDataCollect, v0.1 2018/6/25 10:26
  */
-@Service
+@Cilent
 public class  AmDataCollectClientImpl  implements AmDataCollectClient{
     @Autowired
     private RestTemplate restTemplate;

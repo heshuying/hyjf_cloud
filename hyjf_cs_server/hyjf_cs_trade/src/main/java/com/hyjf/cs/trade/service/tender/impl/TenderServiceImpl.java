@@ -664,8 +664,11 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 								break;
 							} else {
 								Transaction transaction = jedis.multi();
+								logger.info("-------------标的:" + borrowNid + "减扣之前金额：" + accountRedisWait);
 								BigDecimal lastAccount = new BigDecimal(accountRedisWait).subtract(accountDecimal);
-								transaction.set(borrowNid, lastAccount.toString());
+//								transaction.set(borrowNid, lastAccount.toString());
+								logger.info("-------------标的:" + borrowNid + "减扣之后金额：" + lastAccount);
+								transaction.set(RedisConstants.BORROW_NID + borrowNid, lastAccount.toString());
 								List<Object> result = transaction.exec();
 								if (result == null || result.isEmpty()) {
 									jedis.unwatch();

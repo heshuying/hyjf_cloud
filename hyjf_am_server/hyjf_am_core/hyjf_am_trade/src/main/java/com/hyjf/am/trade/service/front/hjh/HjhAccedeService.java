@@ -25,7 +25,7 @@ public interface HjhAccedeService extends BaseService {
      * @param userId
      * @return
      */
-	public boolean canCancelAuth(int userId);
+	boolean canCancelAuth(int userId);
 
     /**
      * 
@@ -40,7 +40,7 @@ public interface HjhAccedeService extends BaseService {
      * @author zhangyk
      * @date 2018/6/27 19:10
      */
-    public int countAccede(String planNid);
+    int countAccede(String planNid);
 
     List<PlanDetailCustomize> getPlanDetail(String planNid);
 
