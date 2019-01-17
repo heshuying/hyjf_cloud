@@ -1,5 +1,14 @@
 package com.hyjf.cs.trade.client.impl;
 
+import java.util.List;
+import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.client.RestTemplate;
+
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.UtmResponse;
@@ -17,17 +26,9 @@ import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.user.*;
+import com.hyjf.common.annotation.Cilent;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.AmUserClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
-
-import java.util.List;
-import java.util.Map;
 
 /**
  * @Description 
@@ -36,7 +37,7 @@ import java.util.Map;
  * @Date  
  */
 
-@Service
+@Cilent
 public class AmUserClientImpl implements AmUserClient {
 	private static Logger logger = LoggerFactory.getLogger(AmUserClient.class);
 	public static final String urlBase = "http://AM-USER/am-user/";

@@ -381,8 +381,10 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 			// 出借人记录
 			/*原Account tenderAccount = this.getAccount(Integer.parseInt(userId)); criteria.andUserIdEqualTo(userId);*/
 			AccountVO tenderAccount = amUserClient.getAccount(Integer.parseInt(userId));//criteria.andUserIdEqualTo(userId);
+			logger.info("test---------", userId, "-----" + tenderAccount.getBankBalance());
 			
 			if (tenderAccount.getBankBalance().compareTo(accountBigDecimal) < 0) {
+				logger.info("!!!!!!!!!!!!");
 				return jsonMessage("余额不足，请充值！", "1");
 			}
 			// 判断用户是否禁用

@@ -145,6 +145,7 @@ public class AppLoginController extends BaseUserController {
                 } catch (MQException e) {
                     logger.error("保存用户日志失败", e);
                 }
+                logger.info("appAfterLogin:"+sign);
                 this.appAfterLogin(sign, webViewUserVO, username);
 
                 if (StringUtils.isNotEmpty(presetProps)){
@@ -464,6 +465,8 @@ public class AppLoginController extends BaseUserController {
             encryptValue = DES.encryptDES_ECB(encryptString, signValue.getKey());
             signValue.setToken(encryptValue);
             RedisUtils.set(RedisConstants.SIGN+sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
+            value =RedisUtils.get(RedisConstants.SIGN+sign);
+            logger.info("更新sign:"+JSON.toJSONString(value));
         } else {
             throw new RuntimeException("参数异常");
         }

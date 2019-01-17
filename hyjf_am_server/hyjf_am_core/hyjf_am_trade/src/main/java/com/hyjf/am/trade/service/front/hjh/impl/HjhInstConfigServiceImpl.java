@@ -45,19 +45,6 @@ public class HjhInstConfigServiceImpl implements HjhInstConfigService {
         return null;
     }
 
-    /**
-     * 获取所有机构列表
-     * @return
-     */
-    @Override
-    public  List<HjhInstConfig> selectInstConfigAll(){
-        HjhInstConfigExample example = new HjhInstConfigExample();
-        HjhInstConfigExample.Criteria cra = example.createCriteria();
-        cra.andDelFlagEqualTo(0);
-        List<HjhInstConfig> hjhInstConfigList = this.hjhInstConfigMapper.selectByExample(example);
-        return  hjhInstConfigList;
-    }
-
     @Override
     public List<RecentPaymentListCustomize> selectRecentPaymentList(Map<String, Object> paraMap) {
         return assetManageCustomizeMapper.selectRecentPaymentList(paraMap);

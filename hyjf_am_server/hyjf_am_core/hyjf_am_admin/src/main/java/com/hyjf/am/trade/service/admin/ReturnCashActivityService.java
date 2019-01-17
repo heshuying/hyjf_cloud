@@ -3,6 +3,9 @@
  */
 package com.hyjf.am.trade.service.admin;
 
+import com.hyjf.am.resquest.market.InviterReturnCashCustomize;
+import org.apache.ibatis.annotations.Param;
+
 import java.math.BigDecimal;
 
 /**
@@ -11,7 +14,9 @@ import java.math.BigDecimal;
  */
 public interface ReturnCashActivityService {
 
-    boolean saveReturnCash(Integer userId, String orderId, Integer productType, BigDecimal investMoney);
+    boolean saveReturnCash(Integer userId, String orderId, Integer productType, BigDecimal investMoney,InviterReturnCashCustomize inviterReturnCashCustomize);
+
+    InviterReturnCashCustomize selectReturnCashList(Integer userId);
 
     void  updateJoinTime(String borrowNid, Integer nowTime);
 
