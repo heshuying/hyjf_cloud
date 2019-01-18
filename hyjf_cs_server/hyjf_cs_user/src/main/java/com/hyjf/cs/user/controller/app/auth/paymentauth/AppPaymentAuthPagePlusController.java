@@ -96,6 +96,10 @@ public class AppPaymentAuthPagePlusController extends BaseUserController {
         //异步地址
         String bgRetUrl = "http://CS-USER"+APP_PAYMENT_CLASS_NAME+APP_PAYMENT_AUTH;
 
+        logger.info("缴费授权-->同步路径成功:["+successUrl+"]");
+        logger.info("缴费授权-->同步路径失败:["+retUrl+"]");
+        logger.info("缴费授权-->异步路径成功:["+bgRetUrl+"]");
+
         UserInfoVO usersInfo = authService.getUserInfo(userId);
         BankOpenAccountVO bankOpenAccountVO=authService.getBankOpenAccount(userId);
 
