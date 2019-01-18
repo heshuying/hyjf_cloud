@@ -91,8 +91,8 @@ public class AppMergeAuthPagePlusController extends BaseUserController {
         String errorPath = "/user/setting/mergeauth/result/failed";
 
         //同步地址
-        String retUrl = super.getFrontHost(systemConfig, platform)+errorPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_MERGE_AUTH+"&platform="+platform;
-        String successUrl = super.getFrontHost(systemConfig, platform)+successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_MERGE_AUTH+"&platform="+platform;
+        String retUrl = super.getFrontHost(systemConfig,platform)+errorPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_MERGE_AUTH+"&platform="+platform;;
+        String successUrl = super.getFrontHost(systemConfig,platform)+successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_MERGE_AUTH+"&platform="+platform;;
         //异步地址
         String bgRetUrl = "http://CS-USER"+APP_MERGE_CLASS_NAME+APP_MERGE_BG_AUTH;
 
