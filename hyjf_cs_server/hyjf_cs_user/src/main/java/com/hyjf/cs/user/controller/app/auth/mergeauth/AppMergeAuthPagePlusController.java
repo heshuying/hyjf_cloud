@@ -154,6 +154,7 @@ public class AppMergeAuthPagePlusController extends BaseUserController {
             }
             authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), authType);
             result.setData(map);
+            logger.info("三合一授权-->银行返回数据:["+JSONObject.toJSONString(map)+"]");
         } catch (Exception e) {
             logger.info("APP-三合一授权结束 请求银行 或 插入授权日志表ht_hjh_user_auth_log 异常,详情如下:["+ e +"]");
             throw new CheckException(MsgEnum.STATUS_CE999999);

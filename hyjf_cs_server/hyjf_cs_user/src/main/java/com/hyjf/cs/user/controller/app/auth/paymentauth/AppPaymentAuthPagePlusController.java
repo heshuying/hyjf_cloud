@@ -128,6 +128,7 @@ public class AppPaymentAuthPagePlusController extends BaseUserController {
             Map<String,Object> map = authService.getCallbankMV(authBean);
             authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "5");
             result.setData(map);
+            logger.info("缴费授权-->银行返回数据:["+JSONObject.toJSONString(map)+"]");
         } catch (Exception e) {
             logger.info("APP-缴费授权 请求银行 或 插入授权日志表ht_hjh_user_auth_log 异常,详情如下:["+ e +"]");
             throw new CheckException(MsgEnum.STATUS_CE999999);
