@@ -5,6 +5,7 @@ import com.hyjf.am.trade.dao.mapper.auto.*;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.issuerecover.AutoRecordService;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.common.constants.MQConstant;
@@ -31,7 +32,7 @@ import java.util.*;
  * @version AutoIssueRecoverJob, v0.1 2018/7/11 16:30
  */
 @Service
-public class AutoRecordServiceImpl implements AutoRecordService {
+public class AutoRecordServiceImpl extends BaseServiceImpl implements AutoRecordService {
     private static final Logger logger = LoggerFactory.getLogger(AutoRecordServiceImpl.class);
 
     @Resource

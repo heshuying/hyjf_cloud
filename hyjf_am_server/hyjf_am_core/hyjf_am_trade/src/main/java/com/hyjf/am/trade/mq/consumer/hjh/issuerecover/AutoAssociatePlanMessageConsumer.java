@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.service.task.issuerecover.AutoBailMessageService;
 import com.hyjf.am.trade.service.task.issuerecover.AutoIssueMessageService;
+import com.hyjf.am.trade.service.task.issuerecover.AutoIssueRecoverService;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -34,13 +34,13 @@ import java.util.UUID;
 /**
  * @Auther: walter.limeng
  * @Date: 2018/7/12 10:56
- * @Description: AutoBorrowJoinPlanMessageConsumer 关联计划
+ * @Description: AutoAssociatePlanMessageConsumer 关联计划
  */
 @Service
 @RocketMQMessageListener(topic = MQConstant.AUTO_ASSOCIATE_PLAN_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.AUTO_ASSOCIATE_PLAN_GROUP)
-public class AutoBorrowJoinPlanMessageConsumer
+public class AutoAssociatePlanMessageConsumer
 		implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
-	private static final Logger logger = LoggerFactory.getLogger(AutoBorrowJoinPlanMessageConsumer.class);
+	private static final Logger logger = LoggerFactory.getLogger(AutoAssociatePlanMessageConsumer.class);
 	/**
 	 * 普通标的
 	 */
@@ -53,9 +53,9 @@ public class AutoBorrowJoinPlanMessageConsumer
 	private final List<String> CREDIT_NID_TAGS_LIST = Arrays.asList(MQConstant.AUTO_ASSOCIATE_PLAN_CLEAR_TAG,
 			MQConstant.AUTO_ASSOCIATE_PLAN_CREDIT_REPAIR_TAG);
 	@Autowired
-	private AutoBailMessageService autoBailMessageService;
-	@Autowired
 	private AutoIssueMessageService autoIssueMessageService;
+	@Autowired
+	private AutoIssueRecoverService autoIssueRecoverService;
 	@Autowired
 	private CommonProducer commonProducer;
 	@Value("${hyjf.env.test}")
@@ -69,10 +69,10 @@ public class AutoBorrowJoinPlanMessageConsumer
 	public void onMessage(MessageExt msg) {
 		JSONObject params = JSONObject.parseObject(msg.getBody(), JSONObject.class);
 		if (params == null) {
-			logger.warn("自动关联计划 AutoBorrowJoinPlanMessageConsumer 收到空消息,不处理，msgId is: {}", msg.getMsgId());
+			logger.warn("自动关联计划 AutoAssociatePlanMessageConsumer 收到空消息,不处理，msgId is: {}", msg.getMsgId());
 			return;
 		}
-		logger.info("自动关联计划 AutoBorrowJoinPlanMessageConsumer 收到消息，content is: {}", params.toJSONString());
+		logger.info("自动关联计划 AutoAssociatePlanMessageConsumer 收到消息，content is: {}", params.toJSONString());
 
 		String tags = msg.getTags();
 		logger.info("consumer tags is: {}", tags);
@@ -105,8 +105,8 @@ public class AutoBorrowJoinPlanMessageConsumer
 
 	private void doJoinPlanOfBorrow(String borrowNid) {
 		logger.info(borrowNid + " 原始标开始关联计划 ");
-		Borrow borrow = autoBailMessageService.getBorrowByBorrowNidrowNid(borrowNid);
-		BorrowInfo borrowInfo = autoBailMessageService.getByBorrowNid(borrowNid);
+		Borrow borrow = autoIssueMessageService.getBorrowByNid(borrowNid);
+		BorrowInfo borrowInfo = autoIssueMessageService.getBorrowInfoByNid(borrowNid);
 
 		// redis 防重复检查
 		String redisKey = RedisConstants.BORROW_ISSUE + borrowNid;
@@ -146,7 +146,7 @@ public class AutoBorrowJoinPlanMessageConsumer
 		// 如果散标过来的标的，没有标签先打上
 		if (asset == null && borrow.getLabelId() != null && borrow.getLabelId().intValue() == 0) {
 			// 获取标签id
-			HjhLabel label = autoIssueMessageService.getLabelId(borrowInfo, borrow, null);
+			HjhLabel label = autoIssueRecoverService.getLabelId(borrow, asset, borrowInfo);
 			if (label == null || label.getId() == null) {
 				logger.warn(borrowNid + " 该散标没有匹配到标签 ");
 				return;
@@ -224,7 +224,7 @@ public class AutoBorrowJoinPlanMessageConsumer
 		defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
 		// 设置为集群消费(区别于广播消费)
 		defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
-		logger.info("====AutoBorrowJoinPlanMessageConsumer start=====");
+		logger.info("====AutoAssociatePlanMessageConsumer start=====");
 	}
 
 	/**

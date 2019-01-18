@@ -7,9 +7,7 @@ import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
 import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.service.task.issuerecover.AutoBailMessageService;
 import com.hyjf.am.trade.service.task.issuerecover.AutoPreAuditMessageService;
-import com.hyjf.am.trade.service.task.issuerecover.AutoRecordService;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
@@ -55,10 +53,6 @@ public class AutoPreAuditMessageConsumer
 			MQConstant.AUTO_BORROW_PREAUDIT_ST_TAG);
 	@Resource
 	private AutoPreAuditMessageService autoPreAuditMessageService;
-	@Resource
-	private AutoBailMessageService autoBailMessageService;
-	@Resource
-	private AutoRecordService autoRecordService;
 	@Resource
 	private CommonProducer commonProducer;
 
@@ -112,8 +106,8 @@ public class AutoPreAuditMessageConsumer
 	}
 
 	private void doPreAuditBorrow(String borrowNid) {
-		Borrow borrow = autoBailMessageService.getBorrowByBorrowNidrowNid(borrowNid);
-		BorrowInfo borrowInfo = autoBailMessageService.getByBorrowNid(borrowNid);
+		Borrow borrow = autoPreAuditMessageService.getBorrowByNid(borrowNid);
+		BorrowInfo borrowInfo = autoPreAuditMessageService.getBorrowInfoByNid(borrowNid);
 		// 自动初审
 		logger.info(borrow.getBorrowNid() + " 开始自动初审 " + borrowInfo.getInstCode());
 		if (borrow == null) {
@@ -134,7 +128,8 @@ public class AutoPreAuditMessageConsumer
 			return;
 		}
 		// 判断该资产是否可以自动初审，是否关联计划
-		HjhAssetBorrowtype hjhAssetBorrowType = autoRecordService.selectAssetBorrowType(borrowInfo);
+		HjhAssetBorrowtype hjhAssetBorrowType = autoPreAuditMessageService
+				.selectAssetBorrowType(borrowInfo.getInstCode(), borrowInfo.getAssetType());
 		if (hjhAssetBorrowType == null || hjhAssetBorrowType.getAutoAudit() == null
 				|| hjhAssetBorrowType.getAutoAudit() != 1) {
 			logger.warn(borrow.getBorrowNid() + " 标的不能自动初审,原因自动初审未配置");
@@ -179,8 +174,14 @@ public class AutoPreAuditMessageConsumer
 			return;
 		}
 		// 判断该资产是否可以自动初审，是否关联计划t
-		HjhAssetBorrowtype hjhAssetBorrowType = autoPreAuditMessageService.selectAssetBorrowType(hjhPlanAsset);
-		boolean flags = autoPreAuditMessageService.updateRecordBorrow(hjhPlanAsset, hjhAssetBorrowType);
+		HjhAssetBorrowtype hjhAssetBorrowType = autoPreAuditMessageService.selectAssetBorrowType(instCode,
+				hjhPlanAsset.getAssetType());
+		if (hjhAssetBorrowType == null || hjhAssetBorrowType.getAutoAudit() == null
+				|| hjhAssetBorrowType.getAutoAudit() != 1) {
+			logger.warn(" 该资产不能自动初审,流程配置未启用");
+			return;
+		}
+		boolean flags = autoPreAuditMessageService.updateRecordBorrow(hjhPlanAsset);
 		if (!flags) {
 			logger.error("自动初审失败！" + "[资产编号：" + hjhPlanAsset.getAssetId() + "]");
 			return;

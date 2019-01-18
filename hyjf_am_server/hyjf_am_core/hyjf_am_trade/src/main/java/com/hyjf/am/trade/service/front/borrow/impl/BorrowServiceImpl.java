@@ -467,7 +467,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
         }
 
         // 计算此时的剩余可出借金额
-        BigDecimal accountWait = this.getBorrow(tenderBg.getBorrowNid()).getBorrowAccountWait();
+        BigDecimal accountWait = this.getBorrowByNid(tenderBg.getBorrowNid()).getBorrowAccountWait();
         String borrowNid = tenderBg.getBorrowNid();
         logger.info("标的{}  剩余可投为：{} ",borrowNid,accountWait);
         // 满标处理

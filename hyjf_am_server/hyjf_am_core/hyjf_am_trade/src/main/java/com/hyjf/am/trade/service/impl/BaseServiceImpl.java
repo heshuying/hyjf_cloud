@@ -375,14 +375,19 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
      * @param borrowNid
      * @return
      */
-    @Override
-    public HjhAssetBorrowtype selectAssetBorrowType(String borrowNid) {
-        BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
-        HjhAssetBorrowtypeExample example = new HjhAssetBorrowtypeExample();
-        example.createCriteria().andInstCodeEqualTo(borrowInfo.getInstCode()).andAssetTypeEqualTo(borrowInfo.getAssetType());
-        List<HjhAssetBorrowtype> list = this.hjhAssetBorrowtypeMapper.selectByExample(example);
-        return CollectionUtils.isEmpty(list) ? null : list.get(0);
-    }
+	@Override
+	public HjhAssetBorrowtype selectAssetBorrowType(String borrowNid) {
+		BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
+		return selectAssetBorrowType(borrowInfo.getInstCode(), borrowInfo.getAssetType());
+	}
+
+	@Override
+	public HjhAssetBorrowtype selectAssetBorrowType(String instCode, Integer assetType) {
+		HjhAssetBorrowtypeExample example = new HjhAssetBorrowtypeExample();
+		example.createCriteria().andInstCodeEqualTo(instCode).andAssetTypeEqualTo(assetType).andIsOpenEqualTo(1);
+		List<HjhAssetBorrowtype> list = this.hjhAssetBorrowtypeMapper.selectByExample(example);
+		return CollectionUtils.isEmpty(list) ? null : list.get(0);
+	}
 
     /**
      * 判断是否属于线下充值类型.
@@ -587,6 +592,20 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         example.createCriteria().andInstCodeEqualTo(instCode).andDelFlgEqualTo(0);
 
         List<HjhBailConfig> list = hjhBailConfigMapper.selectByExample(example);
+        return CollectionUtils.isEmpty(list) ? null : list.get(0);
+    }
+
+    @Override
+    public HjhPlanAsset selectPlanAsset(String assetId, String instCode) {
+        HjhPlanAssetExample example = new HjhPlanAssetExample();
+        HjhPlanAssetExample.Criteria crt = example.createCriteria();
+        if (StringUtils.isNotBlank(assetId)) {
+            crt.andAssetIdEqualTo(assetId);
+        }
+        if (StringUtils.isNotBlank(instCode)) {
+            crt.andInstCodeEqualTo(instCode);
+        }
+        List<HjhPlanAsset> list = hjhPlanAssetMapper.selectByExample(example);
         return CollectionUtils.isEmpty(list) ? null : list.get(0);
     }
 }

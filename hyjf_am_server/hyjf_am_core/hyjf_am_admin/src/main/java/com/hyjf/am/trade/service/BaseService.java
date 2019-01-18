@@ -129,4 +129,5 @@ public interface BaseService {
      * @Author : huanghui
      */
     boolean getIsRechargeTransType(String tranType);
+
 }

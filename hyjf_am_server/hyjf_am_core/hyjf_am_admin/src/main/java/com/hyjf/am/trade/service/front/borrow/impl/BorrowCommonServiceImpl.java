@@ -171,7 +171,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //							}
 //						}
 //					}else{
-					
+
 					Jedis jedis = poolNew.getResource();
 					try {
 						while ("OK".equals(jedis.watch("borrowPreNid"))) {
@@ -5863,6 +5863,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
                 try {
                     JSONObject params = new JSONObject();
                     params.put("borrowNid", borrowInfo.getBorrowNid());
+                    params.put("instCode", borrowInfo.getInstCode());
 					commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_RECORD_TOPIC,
 							MQConstant.AUTO_BORROW_RECORD_ADMIN_TAG, borrowInfo.getBorrowNid(), params));
                 } catch (MQException e) {

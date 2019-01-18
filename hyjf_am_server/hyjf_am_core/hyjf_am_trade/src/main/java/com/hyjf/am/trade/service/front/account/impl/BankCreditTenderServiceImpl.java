@@ -181,18 +181,6 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 		}
 	}
 
-	private Borrow getBorrowByNid(String borrowNid) {
-		BorrowExample example = new BorrowExample();
-		BorrowExample.Criteria criteria = example.createCriteria();
-		criteria.andBorrowNidEqualTo(borrowNid);
-		List<Borrow> list = borrowMapper.selectByExample(example);
-		if (list != null && !list.isEmpty()) {
-			return list.get(0);
-		}
-		return null;
-	}
-
-
 
 	/**
 	 * 调用银行结束债权接口

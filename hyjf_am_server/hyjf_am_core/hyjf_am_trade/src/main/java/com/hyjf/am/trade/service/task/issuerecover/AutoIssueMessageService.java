@@ -1,13 +1,14 @@
 package com.hyjf.am.trade.service.task.issuerecover;
 
 import com.hyjf.am.trade.dao.model.auto.*;
+import com.hyjf.am.trade.service.BaseService;
 
 /**
  * @Author walter.limeng
  * @Description  关联计划消息
  * @Date 11:10 2018/7/12
  */
-public interface AutoIssueMessageService {
+public interface AutoIssueMessageService extends BaseService{
     /**
      * @Author walter.limeng
      * @Description  根据标的编号和机构编号查询资产
@@ -17,16 +18,6 @@ public interface AutoIssueMessageService {
      * @return HjhPlanAsset
      */
     HjhPlanAsset selectPlanAssetByBorrowNid(String borrowNid, String instCode);
-
-    /**
-     * @Author walter.limeng
-     * @Description  标的匹配标签,取匹配最优的标签
-     * @Date 11:15 2018/7/12
-     * @Param borrow
-     * @Param hjhPlanAsset
-     * @return
-     */
-    HjhLabel getLabelId(BorrowInfo borrowInfo,Borrow borrow, HjhPlanAsset hjhPlanAsset);
 
     /**
      * @Author walter.limeng

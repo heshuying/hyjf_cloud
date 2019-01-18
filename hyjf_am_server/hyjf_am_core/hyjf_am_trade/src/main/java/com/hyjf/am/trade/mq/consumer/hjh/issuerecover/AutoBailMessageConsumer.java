@@ -7,7 +7,6 @@ import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype;
 import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.service.task.issuerecover.AutoBailMessageService;
-import com.hyjf.am.trade.service.task.issuerecover.AutoRecordService;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
@@ -22,7 +21,6 @@ import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -41,8 +39,6 @@ public class AutoBailMessageConsumer implements RocketMQListener<MessageExt>, Ro
 	private AutoBailMessageService autoBailMessageService;
 	@Resource
 	private CommonProducer commonProducer;
-	@Autowired
-	private AutoRecordService autoRecordService;
 
 	@Override
 	public void onMessage(MessageExt msg) {
@@ -75,8 +71,8 @@ public class AutoBailMessageConsumer implements RocketMQListener<MessageExt>, Ro
 			return;
 		}
 
-		Borrow borrow = autoBailMessageService.getBorrowByBorrowNidrowNid(borrowNid);
-		BorrowInfo borrowInfo = autoBailMessageService.getByBorrowNid(borrowNid);
+		Borrow borrow = autoBailMessageService.getBorrowByNid(borrowNid);
+		BorrowInfo borrowInfo = autoBailMessageService.getBorrowInfoByNid(borrowNid);
 		if (borrow == null || borrowInfo == null) {
 			logger.info(borrowNid + " 该标的不存在！！");
 			return;
@@ -100,13 +96,25 @@ public class AutoBailMessageConsumer implements RocketMQListener<MessageExt>, Ro
 			return;
 		}
 		// 判断该资产是否可以自动审核保证金
-		HjhAssetBorrowtype hjhAssetBorrowType = autoRecordService.selectAssetBorrowType(borrowInfo);
-		boolean flag = autoBailMessageService.updateRecordBorrow(borrowInfo, borrow, hjhAssetBorrowType);
+		HjhAssetBorrowtype hjhAssetBorrowType = autoBailMessageService.selectAssetBorrowType(borrowInfo.getInstCode(),
+				borrowInfo.getAssetType());
+		if (hjhAssetBorrowType == null || hjhAssetBorrowType.getAutoBail() == null
+				|| hjhAssetBorrowType.getAutoBail() != 1) {
+			logger.warn("该资产不能自动审核保证金,流程配置未启用");
+			return;
+		}
+
+		boolean flag = autoBailMessageService.updateRecordBorrow(borrow);
 		if (!flag) {
 			logger.error("自动审核保证金失败！" + "[资产编号：" + borrowNid + "]");
 			return;
 		}
 
+		if (hjhAssetBorrowType == null || hjhAssetBorrowType.getAutoAudit() == null
+				|| hjhAssetBorrowType.getAutoAudit() != 1) {
+			logger.warn("该资产不发初审队列,流程配置未启用");
+			return;
+		}
 		try {
 			commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_PREAUDIT_TOPIC,
 					MQConstant.AUTO_BORROW_PREAUDIT_AUTO_BAIL_TAG, borrowNid, params));

@@ -1,5 +1,15 @@
 package com.hyjf.am.trade.mq.consumer.hjh.issuerecover;
 
+import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype;
+import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
+import com.hyjf.am.trade.mq.base.CommonProducer;
+import com.hyjf.am.trade.mq.base.MessageContent;
+import com.hyjf.am.trade.service.task.issuerecover.AutoIssueRecoverService;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
+import com.hyjf.common.exception.MQException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
@@ -12,18 +22,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype;
-import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
-import com.hyjf.am.trade.mq.base.CommonProducer;
-import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.service.task.issuerecover.AutoIssueRecoverService;
-import com.hyjf.am.trade.service.task.issuerecover.AutoPreAuditMessageService;
-import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
-import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.exception.MQException;
 
 /**
  * 自动录标
@@ -40,8 +38,6 @@ public class AutoIssueBorrowMessageConsumer
 	private AutoIssueRecoverService autoIssueRecoverService;
 	@Autowired
 	private CommonProducer commonProducer;
-	@Autowired
-	private AutoPreAuditMessageService autoPreAuditMessageService;
 
 	@Override
 	public void onMessage(MessageExt msg) {
@@ -76,7 +72,7 @@ public class AutoIssueBorrowMessageConsumer
 			return;
 		}
 
-		HjhPlanAsset hjhPlanAsset = autoPreAuditMessageService.selectPlanAsset(assetId, instCode);
+		HjhPlanAsset hjhPlanAsset = autoIssueRecoverService.selectPlanAsset(assetId, instCode);
 		if (hjhPlanAsset == null) {
 			logger.warn(" 该资产在表里不存在！！");
 			return;
@@ -98,7 +94,8 @@ public class AutoIssueBorrowMessageConsumer
 		// 判断该资产是否开启流程配置
 		HjhAssetBorrowtype hjhAssetBorrowType = autoIssueRecoverService
 				.selectAssetBorrowType(hjhPlanAsset.getAssetType(), hjhPlanAsset.getInstCode());
-		if (hjhAssetBorrowType == null || hjhAssetBorrowType.getAutoAdd() != 1) {
+		if (hjhAssetBorrowType == null || hjhAssetBorrowType.getAutoAdd() == null
+				|| hjhAssetBorrowType.getAutoAdd() != 1) {
 			logger.warn(" 该资产不能自动录标,流程配置未启用");
 			return;
 		}

@@ -567,6 +567,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
      * @param borrow
      * @return
      */
+    @Override
 	public HjhLabel getLabelId(Borrow borrow, HjhPlanAsset hjhPlanAsset, BorrowInfo borrowInfo) {
 		HjhLabel resultLabel = null;
 

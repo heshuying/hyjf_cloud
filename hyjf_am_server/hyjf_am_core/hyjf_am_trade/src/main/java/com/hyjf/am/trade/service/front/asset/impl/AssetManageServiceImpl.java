@@ -341,7 +341,7 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
                 }
                 break;
             case "1":
-                borrow = this.getBorrow(borrowNid);
+                borrow = this.getBorrowByNid(borrowNid);
                 if(borrow == null){
                     logger.error("未查询到标的信息，标的编号:{}", borrowNid);
                     break;
@@ -364,7 +364,7 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
                 response = this.couponRepaymentPlan(params);
                 break;
             case "4":
-                borrow=this.getBorrow(borrowNid);
+                borrow=this.getBorrowByNid(borrowNid);
                 if(borrow == null){
                     logger.error("未查询到标的信息，标的编号:{}", borrowNid);
                     break;

@@ -74,7 +74,7 @@ public interface BaseService {
      * @param interest
      * @return
      */
-    public Boolean updateHjhAccedeForHjh(String hjhProcessFlg, Integer id, BigDecimal amount, BigDecimal interest, BigDecimal serviceFee) ;
+    Boolean updateHjhAccedeForHjh(String hjhProcessFlg, Integer id, BigDecimal amount, BigDecimal interest, BigDecimal serviceFee) ;
 
     BorrowRepay getBorrowRepay(String borrowNid);
 
@@ -103,12 +103,20 @@ public interface BaseService {
     BigDecimal getBankBalance(Integer userId, String accountId);
 
     /**
-     * 根据借款编号获取该机构的审核配置
+     * 根据借款编号获取该机构的自动化流程配置
      *
      * @param borrowNid
      * @return
      */
     HjhAssetBorrowtype selectAssetBorrowType(String borrowNid);
+
+    /**
+     * 根据资产类型获取自动化流程配置
+     * @param instCode
+     * @param assetType
+     * @return
+     */
+    HjhAssetBorrowtype selectAssetBorrowType(String instCode, Integer assetType);
 
     /**
      *  判断是否属于线下充值类型.
@@ -193,4 +201,12 @@ public interface BaseService {
      * @return
      */
     HjhBailConfig getBailConfig(String instCode);
+
+    /**
+     * 根据资产编号和机构获取资产
+     * @param assetId
+     * @param instCode
+     * @return
+     */
+    HjhPlanAsset selectPlanAsset(String assetId, String instCode);
 }

@@ -1,9 +1,6 @@
 package com.hyjf.am.trade.service.task.issuerecover;
 
-import com.hyjf.am.trade.dao.model.auto.Borrow;
-import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype;
-import com.hyjf.am.trade.dao.model.auto.HjhDebtCredit;
-import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
+import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.BaseService;
 import com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs;
 
@@ -15,6 +12,15 @@ import java.util.List;
  * @version AutoIssueRecoverJob, v0.1 2018/7/11 10:30
  */
 public interface AutoIssueRecoverService extends BaseService {
+
+    /**
+     * 匹配标签
+     * @param borrow
+     * @param hjhPlanAsset
+     * @param borrowInfo
+     * @return
+     */
+    HjhLabel getLabelId(Borrow borrow, HjhPlanAsset hjhPlanAsset, BorrowInfo borrowInfo);
 
     /**
      * 查询待录标列表

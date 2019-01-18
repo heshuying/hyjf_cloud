@@ -7,7 +7,6 @@ import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
 import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.service.task.issuerecover.AutoPreAuditMessageService;
 import com.hyjf.am.trade.service.task.issuerecover.AutoRecordService;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
@@ -23,7 +22,6 @@ import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -43,8 +41,6 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 	private AutoRecordService autoRecordService;
 	@Resource
 	private CommonProducer commonProducer;
-	@Autowired
-	private AutoPreAuditMessageService autoPreAuditMessageService;
 
 	@Override
 	public void onMessage(MessageExt msg) {
@@ -112,7 +108,7 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 	}
 
 	private void doRecordBorrow(String assetId, String instCode) {
-		HjhPlanAsset hjhPlanAsset = autoPreAuditMessageService.selectPlanAsset(assetId, instCode);
+		HjhPlanAsset hjhPlanAsset = autoRecordService.selectPlanAsset(assetId, instCode);
 		if (hjhPlanAsset == null) {
 			logger.warn("该资产不存在！！");
 			return;
