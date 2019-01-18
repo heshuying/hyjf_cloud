@@ -27,7 +27,7 @@ import javax.annotation.Resource;
 import java.util.*;
 
 /**
- * 汇计划自动发标修复
+ * 汇计划备案
  * @author walter.limeng
  * @version AutoIssueRecoverJob, v0.1 2018/7/11 16:30
  */
@@ -38,10 +38,6 @@ public class AutoRecordServiceImpl extends BaseServiceImpl implements AutoRecord
     @Resource
     private BorrowMapper borrowMapper;
     @Resource
-    private BorrowInfoMapper borrowInfoMapper;
-    @Resource
-    private HjhAssetBorrowtypeMapper hjhAssetBorrowtypeMapper;
-    @Resource
     private AccountMapper accountMapper;
     @Resource
     private StzhWhiteListMapper stzhWhiteListMapper;
@@ -49,45 +45,6 @@ public class AutoRecordServiceImpl extends BaseServiceImpl implements AutoRecord
     private CommonProducer commonProducer;
     @Resource
     private HjhPlanAssetMapper hjhPlanAssetMapper;
-    @Override
-    public Borrow getBorrowByBorrowNid(String borrowNid) {
-        BorrowExample example = new BorrowExample();
-        BorrowExample.Criteria criteria = example.createCriteria();
-        criteria.andBorrowNidEqualTo(borrowNid);
-        List<Borrow> list = borrowMapper.selectByExample(example);
-        if (list != null && !list.isEmpty()) {
-            return list.get(0);
-        }
-        return null;
-    }
-
-    @Override
-    public HjhAssetBorrowtype selectAssetBorrowType(BorrowInfo borrowInfo) {
-        HjhAssetBorrowtypeExample example = new HjhAssetBorrowtypeExample();
-        HjhAssetBorrowtypeExample.Criteria cra = example.createCriteria();
-        cra.andInstCodeEqualTo(borrowInfo.getInstCode());
-        cra.andAssetTypeEqualTo(borrowInfo.getAssetType());
-        cra.andIsOpenEqualTo(1);
-
-        List<HjhAssetBorrowtype> list = this.hjhAssetBorrowtypeMapper.selectByExample(example);
-        if (list != null && list.size() > 0) {
-            return list.get(0);
-        }
-
-        return null;
-    }
-
-    @Override
-    public BorrowInfo getBorrowInfoById(String borrowNid) {
-        BorrowInfoExample borrowExample = new BorrowInfoExample();
-        BorrowInfoExample.Criteria borrowCra = borrowExample.createCriteria();
-        borrowCra.andBorrowNidEqualTo(borrowNid);
-        List<BorrowInfo> list = borrowInfoMapper.selectByExample(borrowExample);
-        if (list != null && !list.isEmpty()) {
-            return list.get(0);
-        }
-        return null;
-    }
 
     @Override
     public boolean updateRecordBorrow(Borrow borrow,BorrowInfo borrowInfo) {
@@ -179,7 +136,7 @@ public class AutoRecordServiceImpl extends BaseServiceImpl implements AutoRecord
         List<Borrow> borrowList = this.borrowMapper.selectByExample(borrowExample);// 获取相应的标的信息
         if (borrowList != null && borrowList.size() == 1) {
             Borrow borrow = borrowList.get(0);
-            BorrowInfo borrowInfo = getBorrowInfoById(borrow.getBorrowNid());
+            BorrowInfo borrowInfo = getBorrowInfoByNid(borrow.getBorrowNid());
             // 检查是否备案失败，如果是，跳过
             if(borrow.getStatus()==0 && borrow.getRegistStatus()==4){
 				logger.warn("标的：" + borrowNid + " 自动备案失败过");
@@ -494,7 +451,6 @@ public class AutoRecordServiceImpl extends BaseServiceImpl implements AutoRecord
 
     private boolean updateBorrowRegist(Borrow borrow, int status, int registStatus) {
         Date nowDate = new Date();
-//		AdminSystem adminSystem = (AdminSystem) SessionUtils.getSession(CustomConstants.LOGIN_USER_INFO);
         BorrowExample example = new BorrowExample();
         example.createCriteria().andIdEqualTo(borrow.getId()).andStatusEqualTo(borrow.getStatus()).andRegistStatusEqualTo(borrow.getRegistStatus());
         borrow.setRegistStatus(registStatus);

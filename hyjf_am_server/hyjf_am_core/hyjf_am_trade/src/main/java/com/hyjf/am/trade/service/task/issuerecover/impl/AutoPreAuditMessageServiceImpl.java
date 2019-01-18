@@ -51,31 +51,23 @@ public class AutoPreAuditMessageServiceImpl extends BaseServiceImpl implements A
 	}
 
 	@Override
-	public boolean updateRecordBorrow(HjhPlanAsset hjhPlanAsset) {
-        this.updateBorrowOfAudit(hjhPlanAsset);
-
-        hjhPlanAsset.setStatus(7);// 出借中
-		// 获取当前时间
-        hjhPlanAsset.setUpdateTime(new Date());
-        hjhPlanAsset.setUpdateUserId(1);
-        return this.hjhPlanAssetMapper.updateByPrimaryKeySelective(hjhPlanAsset) > 0 ? true : false;
+	public boolean updateRecordBorrow(HjhPlanAsset hjhPlanAsset, Borrow borrow) {
+		return this.updateBorrowOfAudit(borrow) && this.updateAssetOfAudit(hjhPlanAsset);
 	}
 
 	/**
 	 * 初审通过发标，更新borrow状态
 	 *
-	 * @param hjhPlanAsset
+	 * @param borrow
 	 */
-	private boolean updateBorrowOfAudit(HjhPlanAsset hjhPlanAsset) {
-		String borrowNid = hjhPlanAsset.getBorrowNid();
+	private boolean updateBorrowOfAudit(Borrow borrow) {
 
 		// 插入时间
 		int systemNowDateLong = GetDate.getNowTime10();
 		Date systemNowDate = GetDate.getDate(systemNowDateLong);
 
-		Borrow borrow = getBorrowByNid(borrowNid);
 		if (borrow != null) {
-			BorrowInfo borrowInfo = getBorrowInfoByNid(borrowNid);
+			BorrowInfo borrowInfo = getBorrowInfoByNid(borrow.getBorrowNid());
 			// 剩余的金额
 			borrow.setBorrowAccountWait(borrow.getAccount());
 			int time = systemNowDateLong;
@@ -97,5 +89,18 @@ public class AutoPreAuditMessageServiceImpl extends BaseServiceImpl implements A
 			return true;
 		}
 		return false;
+	}
+
+	/**
+	 * 初审通过发标，更新asset状态
+	 *
+	 * @param hjhPlanAsset
+	 */
+	private boolean updateAssetOfAudit(HjhPlanAsset hjhPlanAsset) {
+		hjhPlanAsset.setStatus(7);// 出借中
+		// 获取当前时间
+		hjhPlanAsset.setUpdateTime(new Date());
+		hjhPlanAsset.setUpdateUserId(1);
+		return this.hjhPlanAssetMapper.updateByPrimaryKeySelective(hjhPlanAsset) > 0 ? true : false;
 	}
 }

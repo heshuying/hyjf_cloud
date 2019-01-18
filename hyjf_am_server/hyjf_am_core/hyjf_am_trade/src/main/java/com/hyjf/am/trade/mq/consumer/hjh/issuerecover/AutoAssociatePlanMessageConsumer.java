@@ -24,7 +24,6 @@ import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -58,12 +57,6 @@ public class AutoAssociatePlanMessageConsumer
 	private AutoIssueRecoverService autoIssueRecoverService;
 	@Autowired
 	private CommonProducer commonProducer;
-	@Value("${hyjf.env.test}")
-	private Boolean env_test;
-	@Value("${hyjf.alerm.email.test}")
-	private String emailList1;
-	@Value("${hyjf.alerm.email}")
-	private String emaillist2;
 
 	@Override
 	public void onMessage(MessageExt msg) {
@@ -96,16 +89,20 @@ public class AutoAssociatePlanMessageConsumer
 			this.doJoinPlanOfCredit(creditNid);
 		}
 
-        // 3. 错误消息
-        else {
-            logger.warn("不明消息，不予消费....");
-            return;
-        }
+		// 3. 错误消息
+		else {
+			logger.warn("不明消息，不予消费....");
+			return;
+		}
 	}
 
 	private void doJoinPlanOfBorrow(String borrowNid) {
 		logger.info(borrowNid + " 原始标开始关联计划 ");
 		Borrow borrow = autoIssueMessageService.getBorrowByNid(borrowNid);
+		if (borrow == null) {
+			logger.warn(borrowNid + " 该标的在表里不存在");
+			return;
+		}
 		BorrowInfo borrowInfo = autoIssueMessageService.getBorrowInfoByNid(borrowNid);
 
 		// redis 防重复检查
@@ -115,10 +112,7 @@ public class AutoAssociatePlanMessageConsumer
 			logger.warn(borrowNid + " 正在关联计划(redis)");
 			return;
 		}
-		if (borrow == null) {
-			logger.warn(borrowNid + " 该标的在表里不存在");
-			return;
-		}
+
 		// 业务校验
 		// 发标的状态
 		if (borrow.getStatus() != 2 || borrow.getVerifyStatus() != 4) {
@@ -130,8 +124,7 @@ public class AutoAssociatePlanMessageConsumer
 			return;
 		}
 		// 第三方资产
-		HjhPlanAsset asset = autoIssueMessageService.selectPlanAssetByBorrowNid(borrow.getBorrowNid(),
-				borrowInfo.getInstCode());
+		HjhPlanAsset asset = autoIssueMessageService.selectPlanAsset(borrow.getBorrowNid(), borrowInfo.getInstCode());
 		if (asset != null) {
 			if (StringUtils.isNotBlank(asset.getPlanNid()) || asset.getLabelId() == null
 					|| asset.getLabelId().intValue() == 0) {
@@ -240,12 +233,12 @@ public class AutoAssociatePlanMessageConsumer
 			emailmsg.append("当前时间：").append(GetDate.formatTime()).append("<br/>");
 			emailmsg.append("错误信息：").append("该债转没有匹配标签！").append("<br/>");
 			// 邮箱集合
-			String emailList = "";
-			if (env_test) {
-				emailList = emailList1;
-			} else {
-				emailList = emaillist2;
+			String emailList = autoIssueMessageService.getSystemEmailList();
+			if (StringUtils.isBlank(emailList)) {
+				logger.warn("系统邮件未配置...");
+				return;
 			}
+
 			String[] toMail = emailList.split(",");
 			MailMessage mailMessage = new MailMessage(null, null, "债转编号为：" + creditNid, emailmsg.toString(), null,
 					toMail, null, MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS_MSG);

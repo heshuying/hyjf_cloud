@@ -9,15 +9,6 @@ import com.hyjf.am.trade.service.BaseService;
  * @Date 11:10 2018/7/12
  */
 public interface AutoIssueMessageService extends BaseService{
-    /**
-     * @Author walter.limeng
-     * @Description  根据标的编号和机构编号查询资产
-     * @Date 11:12 2018/7/12
-     * @Param borrowNid 标的编号
-     * @Param instCode 机构编号
-     * @return HjhPlanAsset
-     */
-    HjhPlanAsset selectPlanAssetByBorrowNid(String borrowNid, String instCode);
 
     /**
      * @Author walter.limeng

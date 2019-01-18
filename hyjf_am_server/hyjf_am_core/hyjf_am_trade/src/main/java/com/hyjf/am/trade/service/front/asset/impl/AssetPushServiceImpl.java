@@ -111,23 +111,6 @@ public class AssetPushServiceImpl extends BaseServiceImpl implements AssetPushSe
     }
 
     @Override
-    public HjhPlanAsset selectPlanAsset(String assetId, String instCode) {
-        HjhPlanAsset resultAsset = null;
-        HjhPlanAssetExample example = new HjhPlanAssetExample();
-        HjhPlanAssetExample.Criteria crt = example.createCriteria();
-        crt.andAssetIdEqualTo(assetId);
-        crt.andInstCodeEqualTo(instCode);
-
-        List<HjhPlanAsset> list = this.hjhPlanAssetMapper.selectByExample(example);
-
-        if(list != null && list.size() > 0){
-            resultAsset = list.get(0);
-        }
-
-        return resultAsset;
-    }
-
-    @Override
     public void updatePlanAsset(HjhPlanAssetVO planAssetVO) {
         HjhPlanAsset planAsset = new HjhPlanAsset();
         planAsset.setId(planAssetVO.getId());

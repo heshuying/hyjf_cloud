@@ -12,32 +12,6 @@ import com.hyjf.am.trade.service.BaseService;
  * @version AutoIssueRecoverJob, v0.1 2018/7/11 10:30
  */
 public interface AutoRecordService extends BaseService{
-    /**
-     * @Author walter.limeng
-     * @Description 根据BorrowNid获取borrow
-     * @Date 17:48 2018/7/11
-     * @Param borrowNid
-     * @return Borrow
-     */
-    Borrow getBorrowByBorrowNid(String borrowNid);
-
-    /**
-     * @Author walter.limeng
-     * @Description  判断该资产是否可以自动备案，是否关联计划
-     * @Date 17:50 2018/7/11
-     * @Param borrowInfo
-     * @return HjhAssetBorrowtype
-     */
-    HjhAssetBorrowtype selectAssetBorrowType(BorrowInfo borrowInfo);
-
-    /**
-     * @Author walter.limeng
-     * @Description  根据ID获取对象
-     * @Date 17:52 2018/7/11
-     * @Param borrowNid
-     * @return
-     */
-    BorrowInfo getBorrowInfoById(String borrowNid);
 
     /**
      * @Author walter.limeng

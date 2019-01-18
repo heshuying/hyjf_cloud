@@ -25,7 +25,8 @@ public interface AutoPreAuditMessageService extends BaseService {
     /**
      * 资产自动初审
      * @param hjhPlanAsset
+     * @param borrow
      * @return
      */
-    boolean updateRecordBorrow(HjhPlanAsset hjhPlanAsset);
+    boolean updateRecordBorrow(HjhPlanAsset hjhPlanAsset, Borrow borrow);
 }

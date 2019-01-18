@@ -178,17 +178,26 @@ public class AutoPreAuditMessageConsumer
 				hjhPlanAsset.getAssetType());
 		if (hjhAssetBorrowType == null || hjhAssetBorrowType.getAutoAudit() == null
 				|| hjhAssetBorrowType.getAutoAudit() != 1) {
-			logger.warn(" 该资产不能自动初审,流程配置未启用");
+			logger.warn("该资产不能自动初审,流程配置未启用");
 			return;
 		}
-		boolean flags = autoPreAuditMessageService.updateRecordBorrow(hjhPlanAsset);
+
+		// 初审修改表
+		Borrow borrow = autoPreAuditMessageService.getBorrowByNid(hjhPlanAsset.getBorrowNid());
+		if(borrow == null){
+			logger.warn("未找到标的信息， assetId is: {}", hjhPlanAsset.getAssetId());
+			return;
+		}
+		boolean flags = autoPreAuditMessageService.updateRecordBorrow(hjhPlanAsset, borrow);
 		if (!flags) {
 			logger.error("自动初审失败！" + "[资产编号：" + hjhPlanAsset.getAssetId() + "]");
 			return;
 		}
 
-		// 成功后到关联计划队列
-		this.sendAutoJoinPlanMessage(hjhPlanAsset.getBorrowNid());
+		// 未匹配计划发送关联计划队列
+		if (StringUtils.isBlank(borrow.getPlanNid())) {
+			this.sendAutoJoinPlanMessage(hjhPlanAsset.getBorrowNid());
+		}
 		logger.info(hjhPlanAsset.getAssetId() + " 结束自动初审");
 	}
 
@@ -201,7 +210,7 @@ public class AutoPreAuditMessageConsumer
 		try {
 			JSONObject params = new JSONObject();
 			params.put("borrowNid", borrowNid);
-			// modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
+			// 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2
 			commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_ASSOCIATE_PLAN_TOPIC,
 					MQConstant.AUTO_ASSOCIATE_PLAN_AUTO_PRE_ISSUE_TAG, borrowNid, params), 2);
 		} catch (MQException e) {

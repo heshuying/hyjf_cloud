@@ -107,6 +107,11 @@ public class AutoIssueBorrowMessageConsumer
 		}
 
 		// 成功后到备案队列
+		if (hjhAssetBorrowType == null || hjhAssetBorrowType.getAutoRecord() == null
+				|| hjhAssetBorrowType.getAutoRecord() != 1) {
+			logger.warn(" 该资产不能自动备案,流程配置未启用");
+			return;
+		}
 		try {
 			// modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2
 			commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_BORROW_RECORD_TOPIC,

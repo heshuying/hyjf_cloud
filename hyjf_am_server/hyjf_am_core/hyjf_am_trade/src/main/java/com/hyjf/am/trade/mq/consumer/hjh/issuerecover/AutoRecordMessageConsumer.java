@@ -133,7 +133,7 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 		BorrowInfo borrowInfo = new BorrowInfo();
 		borrowInfo.setInstCode(hjhPlanAsset.getInstCode());
 		borrowInfo.setAssetType(hjhPlanAsset.getAssetType());
-		HjhAssetBorrowtype hjhAssetBorrowType = autoRecordService.selectAssetBorrowType(borrowInfo);
+		HjhAssetBorrowtype hjhAssetBorrowType = autoRecordService.selectAssetBorrowType(borrowInfo.getBorrowNid());
 		if (hjhAssetBorrowType == null || hjhAssetBorrowType.getAutoRecord() == null
 				|| hjhAssetBorrowType.getAutoRecord() != 1) {
 			logger.warn(hjhPlanAsset.getAssetId() + " 该资产不能自动备案,原因自动备案未配置");
@@ -167,8 +167,8 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 
 	private void doRecordBorrow(String borrowNid) {
 		// 获取当前标的详情
-		Borrow borrow = autoRecordService.getBorrowByBorrowNid(borrowNid);
-		BorrowInfo borrowInfo = autoRecordService.getBorrowInfoById(borrow.getBorrowNid());
+		Borrow borrow = autoRecordService.getBorrowByNid(borrowNid);
+		BorrowInfo borrowInfo = autoRecordService.getBorrowInfoByNid(borrow.getBorrowNid());
 		String instCode = borrowInfo.getInstCode();
 
 		// admin手动录入标的
@@ -188,7 +188,7 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 			return;
 		}
 		// 判断该资产是否可以自动备案，是否关联计划
-		HjhAssetBorrowtype hjhAssetBorrowType = autoRecordService.selectAssetBorrowType(borrowInfo);
+		HjhAssetBorrowtype hjhAssetBorrowType = autoRecordService.selectAssetBorrowType(borrowInfo.getBorrowNid());
 		if (hjhAssetBorrowType == null || hjhAssetBorrowType.getAutoRecord() == null
 				|| hjhAssetBorrowType.getAutoRecord() != 1) {
 			logger.warn(borrow.getBorrowNid() + " 标的不能自动备案,原因自动备案未配置");
