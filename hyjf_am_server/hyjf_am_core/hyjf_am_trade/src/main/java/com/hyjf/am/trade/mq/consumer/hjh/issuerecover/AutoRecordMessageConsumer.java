@@ -65,21 +65,19 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 				logger.warn("参数不全, msgId is: {}", msg.getMsgId());
 				return;
 			}
-			this.doRecordBorrowByAuto(assetId, instCode);
+			this.doRecordBorrow(assetId, instCode);
 		}
 
 		// 2. admin手工录入标的
 		else if (MQConstant.AUTO_BORROW_RECORD_ADMIN_TAG.equals(msg.getTags())) {
 			logger.info("自动备案来源: admin手工录入标的...");
 			String borrowNid = params.getString("borrowNid");
-			String instCode = params.getString("instCode");
-
 			if (StringUtils.isBlank(borrowNid)) {
 				logger.warn("参数不全, msgId is: {}", msg.getMsgId());
 				return;
 			}
 
-			this.doRecordBorrowByHand(borrowNid, instCode);
+			this.doRecordBorrow(borrowNid);
 		}
 
 		// 3. 汇计划发标修复定时任务录标
@@ -92,7 +90,7 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 				logger.warn("参数不全, msgId is: {}", msg.getMsgId());
 				return;
 			}
-			this.doRecordBorrowByAuto(assetId, instCode);
+			this.doRecordBorrow(assetId, instCode);
 		}
 
 		// 4. 错误消息
@@ -113,7 +111,7 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 		logger.info("====AutoRecordMessageConsumer start=====");
 	}
 
-	private void doRecordBorrowByAuto(String assetId, String instCode) {
+	private void doRecordBorrow(String assetId, String instCode) {
 		HjhPlanAsset hjhPlanAsset = autoPreAuditMessageService.selectPlanAsset(assetId, instCode);
 		if (hjhPlanAsset == null) {
 			logger.warn("该资产不存在！！");
@@ -171,7 +169,12 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 		logger.info(hjhPlanAsset.getAssetId() + " 成功发送到初审队列, 自动备案处理结束");
 	}
 
-	private void doRecordBorrowByHand(String borrowNid, String instCode) {
+	private void doRecordBorrow(String borrowNid) {
+		// 获取当前标的详情
+		Borrow borrow = autoRecordService.getBorrowByBorrowNid(borrowNid);
+		BorrowInfo borrowInfo = autoRecordService.getBorrowInfoById(borrow.getBorrowNid());
+		String instCode = borrowInfo.getInstCode();
+
 		// admin手动录入标的
 		logger.info(borrowNid + " 开始自动备案 " + instCode);
 		// redis 防重复检查
@@ -181,9 +184,7 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 			logger.info(instCode + " 正在备案(redis) " + borrowNid);
 			return;
 		}
-		// 获取当前标的详情
-		Borrow borrow = autoRecordService.getBorrowByBorrowNid(borrowNid);
-		BorrowInfo borrowInfo = autoRecordService.getBorrowInfoById(borrow.getBorrowNid());
+
 		// 标的状态位判断
 		if (null == borrow.getStatus() || borrow.getStatus() != 0 || null == borrow.getRegistStatus()
 				|| borrow.getRegistStatus() != 0) {

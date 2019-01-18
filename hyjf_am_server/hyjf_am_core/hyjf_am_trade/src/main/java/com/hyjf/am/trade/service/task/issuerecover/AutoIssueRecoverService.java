@@ -48,11 +48,12 @@ public interface AutoIssueRecoverService extends BaseService {
     List<BorrowWithBLOBs> selectAutoBorrowNidList();
 
     /**
-     * 根据机构比那好和类型查询对象
-     * @param mqHjhPlanAsset
+     * 根据机构号和资产类型查询自动化流程配置
+     * @param assetType
+     * @param instCode
      * @return
      */
-    HjhAssetBorrowtype selectAssetBorrowType(HjhPlanAsset mqHjhPlanAsset);
+    HjhAssetBorrowtype selectAssetBorrowType(Integer assetType, String instCode);
 
     /**
      * 判断是否可以自动录标

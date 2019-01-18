@@ -44,15 +44,12 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
      * @return
      */
     @Override
-    public Borrow getBorrow(String borrowNid) {
+    public Borrow getBorrowByNid(String borrowNid) {
         BorrowExample example = new BorrowExample();
         BorrowExample.Criteria criteria = example.createCriteria();
         criteria.andBorrowNidEqualTo(borrowNid);
         List<Borrow> list = this.borrowMapper.selectByExample(example);
-        if (CollectionUtils.isNotEmpty(list)){
-            return list.get(0);
-        }
-        return null;
+        return CollectionUtils.isEmpty(list) ? null : list.get(0);
     }
 
     /**
@@ -66,10 +63,7 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         BorrowInfoExample.Criteria cra = example.createCriteria();
         cra.andBorrowNidEqualTo(borrowNid);
         List<BorrowInfo> list=this.borrowInfoMapper.selectByExample(example);
-        if (CollectionUtils.isNotEmpty(list)){
-            return list.get(0);
-        }
-        return null;
+        return CollectionUtils.isEmpty(list) ? null : list.get(0);
     }
 
     /**
@@ -78,51 +72,44 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
      * @param userId
      * @return 获取用户的账户信息
      */
-    @Override
-    public Account getAccount(Integer userId) {
-        AccountExample example = new AccountExample();
-        AccountExample.Criteria criteria = example.createCriteria();
-        criteria.andUserIdEqualTo(userId);
-        List<Account> listAccount = this.accountMapper.selectByExample(example);
-        if (listAccount != null && listAccount.size() > 0) {
-            return listAccount.get(0);
-        }
-        return null;
-    }
+	@Override
+	public Account getAccount(Integer userId) {
+		AccountExample example = new AccountExample();
+		AccountExample.Criteria criteria = example.createCriteria();
+		criteria.andUserIdEqualTo(userId);
+		List<Account> list = this.accountMapper.selectByExample(example);
+		return CollectionUtils.isEmpty(list) ? null : list.get(0);
+	}
 
-    /**
-     * 取得本库冗余的用户信息
-     * @param userId
-     * @return
-     */
-    @Override
-    public RUser getRUser(Integer userId) {
-        RUserExample example = new RUserExample();
-        RUserExample.Criteria cra = example.createCriteria();
-        cra.andUserIdEqualTo(userId);
-        List<RUser> list=this.rUserMapper.selectByExample(example);
-        if (CollectionUtils.isNotEmpty(list)){
-            return list.get(0);
-        }
-        return null;
-    }
+	/**
+	 * 取得本库冗余的用户信息
+	 * 
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public RUser getRUser(Integer userId) {
+		RUserExample example = new RUserExample();
+		RUserExample.Criteria cra = example.createCriteria();
+		cra.andUserIdEqualTo(userId);
+		List<RUser> list = this.rUserMapper.selectByExample(example);
+		return CollectionUtils.isEmpty(list) ? null : list.get(0);
+	}
 
-    /**
-     * 取得本库冗余的用户信息
-     * @param userName
-     * @return
-     */
-    @Override
-    public RUser getRUser(String userName) {
-        RUserExample example = new RUserExample();
-        RUserExample.Criteria cra = example.createCriteria();
-        cra.andUsernameEqualTo(userName);
-        List<RUser> list=this.rUserMapper.selectByExample(example);
-        if (CollectionUtils.isNotEmpty(list)){
-            return list.get(0);
-        }
-        return null;
-    }
+	/**
+	 * 取得本库冗余的用户信息
+	 * 
+	 * @param userName
+	 * @return
+	 */
+	@Override
+	public RUser getRUser(String userName) {
+		RUserExample example = new RUserExample();
+		RUserExample.Criteria cra = example.createCriteria();
+		cra.andUsernameEqualTo(userName);
+		List<RUser> list = this.rUserMapper.selectByExample(example);
+		return CollectionUtils.isEmpty(list) ? null : list.get(0);
+	}
 
     /**
      * 取得本库冗余的推荐人信息
@@ -269,12 +256,8 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         BorrowRepayExample borrowRepayExample = new BorrowRepayExample();
         BorrowRepayExample.Criteria borrowRepayCrt = borrowRepayExample.createCriteria();
         borrowRepayCrt.andBorrowNidEqualTo(borrowNid);
-        List<BorrowRepay> borrowRepays = borrowRepayMapper.selectByExample(borrowRepayExample);
-        if (borrowRepays != null && borrowRepays.size() == 1) {
-            return borrowRepays.get(0);
-        } else {
-            return null;
-        }
+        List<BorrowRepay> list = borrowRepayMapper.selectByExample(borrowRepayExample);
+        return CollectionUtils.isEmpty(list) ? null : list.get(0);
     }
 
     @Override
@@ -307,12 +290,8 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         BorrowRepayPlanExample.Criteria borrowRepayPlanCrt = borrowRepayPlanExample.createCriteria();
         borrowRepayPlanCrt.andBorrowNidEqualTo(borrowNid);
         borrowRepayPlanCrt.andRepayPeriodEqualTo(period);
-        List<BorrowRepayPlan> borrowRepayPlans = borrowRepayPlanMapper.selectByExample(borrowRepayPlanExample);
-        if (borrowRepayPlans != null && borrowRepayPlans.size() == 1) {
-            return borrowRepayPlans.get(0);
-        } else {
-            return null;
-        }
+        List<BorrowRepayPlan> list = borrowRepayPlanMapper.selectByExample(borrowRepayPlanExample);
+        return CollectionUtils.isEmpty(list) ? null : list.get(0);
     }
 
     /**
@@ -325,11 +304,8 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         CreditTenderExample example = new CreditTenderExample();
         CreditTenderExample.Criteria crt = example.createCriteria();
         crt.andAssignNidEqualTo(assignNid);
-        List<CreditTender> creditTenderList = this.creditTenderMapper.selectByExample(example);
-        if (creditTenderList != null && creditTenderList.size() == 1) {
-            return creditTenderList.get(0);
-        }
-        return null;
+        List<CreditTender> list = this.creditTenderMapper.selectByExample(example);
+        return CollectionUtils.isEmpty(list) ? null : list.get(0);
     }
 
     /**
@@ -343,11 +319,8 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         HjhDebtCreditTenderExample example = new HjhDebtCreditTenderExample();
         HjhDebtCreditTenderExample.Criteria crt = example.createCriteria();
         crt.andAssignOrderIdEqualTo(assignNid);
-        List<HjhDebtCreditTender> creditTenderList = this.hjhDebtCreditTenderMapper.selectByExample(example);
-        if (creditTenderList != null && creditTenderList.size() == 1) {
-            return creditTenderList.get(0);
-        }
-        return null;
+        List<HjhDebtCreditTender> list = this.hjhDebtCreditTenderMapper.selectByExample(example);
+        return CollectionUtils.isEmpty(list) ? null : list.get(0);
     }
 
     /**
@@ -408,10 +381,7 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         HjhAssetBorrowtypeExample example = new HjhAssetBorrowtypeExample();
         example.createCriteria().andInstCodeEqualTo(borrowInfo.getInstCode()).andAssetTypeEqualTo(borrowInfo.getAssetType());
         List<HjhAssetBorrowtype> list = this.hjhAssetBorrowtypeMapper.selectByExample(example);
-        if (list != null && list.size() > 0) {
-            return list.get(0);
-        }
-        return null;
+        return CollectionUtils.isEmpty(list) ? null : list.get(0);
     }
 
     /**
@@ -473,11 +443,8 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
     public String selectBorrowConfig(String configCd) {
         BorrowConfigExample example = new BorrowConfigExample();
         example.createCriteria().andConfigCdEqualTo(configCd);
-        List<BorrowConfig> borrowConfigList = this.borrowConfigMapper.selectByExample(example);
-        if (null != borrowConfigList && borrowConfigList.size() > 0 ) {
-            return borrowConfigList.get(0).getConfigValue();
-        }
-        return null;
+        List<BorrowConfig> list = this.borrowConfigMapper.selectByExample(example);
+        return CollectionUtils.isEmpty(list) ? null : list.get(0).getConfigValue();
     }
 
     /**
@@ -529,11 +496,8 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         BorrowRepayExample example = new BorrowRepayExample();
         BorrowRepayExample.Criteria criteria = example.createCriteria();
         criteria.andBorrowNidEqualTo(borrowNid);
-        List<BorrowRepay> borrowRepayList = this.borrowRepayMapper.selectByExample(example);
-        if (null != borrowRepayList && borrowRepayList.size() > 0) {
-            return borrowRepayList.get(0);
-        }
-        return null;
+        List<BorrowRepay> list = this.borrowRepayMapper.selectByExample(example);
+        return CollectionUtils.isEmpty(list) ? null : list.get(0);
     }
 
     /**
@@ -548,11 +512,7 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         BorrowTenderExample example = new BorrowTenderExample();
         BorrowTenderExample.Criteria criteria = example.createCriteria();
         criteria.andBorrowNidEqualTo(borrowNid);
-        List<BorrowTender> borrowTenderList = this.borrowTenderMapper.selectByExample(example);
-        if (null == borrowTenderList || borrowTenderList.size() <= 0) {
-            return null;
-        }
-        return borrowTenderList;
+        return this.borrowTenderMapper.selectByExample(example);
     }
 
     /**
@@ -566,11 +526,8 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         // 获取用户放款信息
         BorrowRecoverExample example = new BorrowRecoverExample();
         example.createCriteria().andNidEqualTo(nid);
-        List<BorrowRecover> borrowRecoverList = this.borrowRecoverMapper.selectByExample(example);
-        if (null != borrowRecoverList && borrowRecoverList.size() > 0) {
-            return borrowRecoverList.get(0);
-        }
-        return null;
+        List<BorrowRecover> list = this.borrowRecoverMapper.selectByExample(example);
+        return CollectionUtils.isEmpty(list) ? null : list.get(0);
     }
 
     /**
@@ -583,11 +540,8 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
     public NifaContractStatus selectNifaContractStatusByNid(String nid) {
         NifaContractStatusExample example = new NifaContractStatusExample();
         example.createCriteria().andContractNoEqualTo(nid);
-        List<NifaContractStatus> nifaContractStatusList = this.nifaContractStatusMapper.selectByExample(example);
-        if (null != nifaContractStatusList && nifaContractStatusList.size() > 0) {
-            return nifaContractStatusList.get(0);
-        }
-        return null;
+        List<NifaContractStatus> list = this.nifaContractStatusMapper.selectByExample(example);
+        return CollectionUtils.isEmpty(list) ? null : list.get(0);
     }
     /**
      * 根据借款编号和还款期次查询放款信息总表
@@ -602,11 +556,7 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         BorrowRecoverPlanExample.Criteria criteria = example.createCriteria();
         criteria.andBorrowNidEqualTo(borrowNid);
         criteria.andRecoverPeriodEqualTo(repayPeriod);
-        List<BorrowRecoverPlan> borrowRecoverPlanList = this.borrowRecoverPlanMapper.selectByExample(example);
-        if (null != borrowRecoverPlanList && borrowRecoverPlanList.size() > 0) {
-            return borrowRecoverPlanList;
-        }
-        return null;
+        return this.borrowRecoverPlanMapper.selectByExample(example);
     }
 
     /**
@@ -623,10 +573,7 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         criteria.andBorrowNidEqualTo(borrowNid);
         criteria.andRecoverPeriodEqualTo(repayPeriod);
         List<BorrowRecover> borrowRecoverList = this.borrowRecoverMapper.selectByExample(example);
-        if (null != borrowRecoverList && borrowRecoverList.size() > 0) {
-            return borrowRecoverList;
-        }
-        return null;
+        return CollectionUtils.isEmpty(borrowRecoverList) ? null : borrowRecoverList;
     }
 
     /**
@@ -640,9 +587,6 @@ public class BaseServiceImpl extends CustomizeMapper implements BaseService {
         example.createCriteria().andInstCodeEqualTo(instCode).andDelFlgEqualTo(0);
 
         List<HjhBailConfig> list = hjhBailConfigMapper.selectByExample(example);
-        if(!CollectionUtils.isEmpty(list)){
-            return list.get(0);
-        }
-        return null;
+        return CollectionUtils.isEmpty(list) ? null : list.get(0);
     }
 }

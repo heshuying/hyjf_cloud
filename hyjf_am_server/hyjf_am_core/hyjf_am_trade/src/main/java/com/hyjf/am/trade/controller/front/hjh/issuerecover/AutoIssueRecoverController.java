@@ -113,8 +113,8 @@ public class AutoIssueRecoverController extends BaseController{
                     JSONObject params = new JSONObject();
                     params.put("borrowNid", planAsset.getBorrowNid());
                     //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-					commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_JOIN_PLAN_TOPIC,
-							MQConstant.AUTO_JOIN_PLAN_BORROW_REPAIR_TAG, planAsset.getBorrowNid(), params), 2);
+					commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_ASSOCIATE_PLAN_TOPIC,
+							MQConstant.AUTO_ASSOCIATE_PLAN_BORROW_REPAIR_TAG, planAsset.getBorrowNid(), params), 2);
                 } catch (MQException e) {
                     logger.error("发送【关联计划资产修复】MQ失败...");
                 }
@@ -132,8 +132,8 @@ public class AutoIssueRecoverController extends BaseController{
                     JSONObject params = new JSONObject();
                     params.put("creditNid", credit.getCreditNid());
                     //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-					commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_JOIN_PLAN_TOPIC,
-							MQConstant.AUTO_JOIN_PLAN_CREDIT_REPAIR_TAG, credit.getCreditNid(), params), 2);
+					commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_ASSOCIATE_PLAN_TOPIC,
+							MQConstant.AUTO_ASSOCIATE_PLAN_CREDIT_REPAIR_TAG, credit.getCreditNid(), params), 2);
                 } catch (MQException e) {
                     logger.error("发送【债转待关联计划资产修复】MQ失败...");
                 }
@@ -153,8 +153,8 @@ public class AutoIssueRecoverController extends BaseController{
                     JSONObject params = new JSONObject();
                     params.put("borrowNid", borrow.getBorrowNid());
                     //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-					commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_JOIN_PLAN_TOPIC,
-							MQConstant.AUTO_JOIN_PLAN_BORROW_REPAIR_TAG, borrow.getBorrowNid(), params), 2);
+					commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_ASSOCIATE_PLAN_TOPIC,
+							MQConstant.AUTO_ASSOCIATE_PLAN_BORROW_REPAIR_TAG, borrow.getBorrowNid(), params), 2);
                 } catch (MQException e) {
                     logger.error("发送【债转待关联计划资产修复】MQ失败...");
                 }
@@ -179,7 +179,6 @@ public class AutoIssueRecoverController extends BaseController{
                     try {
                         JSONObject params = new JSONObject();
                         params.put("borrowNid", borrow.getBorrowNid());
-                        params.put("instCode", borrow.getInstCode());
 						commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_RECORD_TOPIC,
 								MQConstant.AUTO_BORROW_RECORD_REPAIR_TAG, UUID.randomUUID().toString(), params));
                     } catch (MQException e) {

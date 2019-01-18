@@ -19,7 +19,7 @@ public interface BaseService {
      * @param borrowNid
      * @return
      */
-    Borrow getBorrow(String borrowNid);
+    Borrow getBorrowByNid(String borrowNid);
 
     /**
      * 根据标的编号检索标的借款详情

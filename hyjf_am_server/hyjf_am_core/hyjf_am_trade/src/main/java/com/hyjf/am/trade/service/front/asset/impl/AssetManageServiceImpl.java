@@ -327,7 +327,7 @@ public class AssetManageServiceImpl extends BaseServiceImpl implements AssetMana
         params.put("nid", nid);
         switch (type) {
             case "0":
-                borrow= this.getBorrow(borrowNid);
+                borrow= this.getBorrowByNid(borrowNid);
                 if(borrow == null){
                     logger.error("未查询到标的信息，标的编号:{}", borrowNid);
                     break;

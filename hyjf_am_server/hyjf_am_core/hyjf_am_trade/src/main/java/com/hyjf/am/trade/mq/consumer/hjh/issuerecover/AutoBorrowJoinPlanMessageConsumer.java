@@ -37,21 +37,21 @@ import java.util.UUID;
  * @Description: AutoBorrowJoinPlanMessageConsumer 关联计划
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.AUTO_JOIN_PLAN_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.AUTO_JOIN_PLAN_GROUP)
+@RocketMQMessageListener(topic = MQConstant.AUTO_ASSOCIATE_PLAN_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.AUTO_ASSOCIATE_PLAN_GROUP)
 public class AutoBorrowJoinPlanMessageConsumer
 		implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 	private static final Logger logger = LoggerFactory.getLogger(AutoBorrowJoinPlanMessageConsumer.class);
 	/**
 	 * 普通标的
 	 */
-	private final List<String> BORROW_NID_TAGS_LIST = Arrays.asList(MQConstant.AUTO_JOIN_PLAN_JOB_TAG,
-			MQConstant.AUTO_JOIN_PLAN_AUTO_PRE_ISSUE_TAG, MQConstant.AUTO_JOIN_PLAN_BORROW_REPAIR_TAG,
-			MQConstant.AUTO_JOIN_PLAN_ADMIN_INSERT_TAG, MQConstant.AUTO_JOIN_PLAN_ADMIN_ISSUE_TAG);
+	private final List<String> BORROW_NID_TAGS_LIST = Arrays.asList(MQConstant.AUTO_ASSOCIATE_PLAN_JOB_TAG,
+			MQConstant.AUTO_ASSOCIATE_PLAN_AUTO_PRE_ISSUE_TAG, MQConstant.AUTO_ASSOCIATE_PLAN_BORROW_REPAIR_TAG,
+			MQConstant.AUTO_ASSOCIATE_PLAN_ADMIN_INSERT_TAG, MQConstant.AUTO_ASSOCIATE_PLAN_ADMIN_ISSUE_TAG);
 	/**
 	 * 计划内债转标的
 	 */
-	private final List<String> CREDIT_NID_TAGS_LIST = Arrays.asList(MQConstant.AUTO_JOIN_PLAN_CLEAR_TAG,
-			MQConstant.AUTO_JOIN_PLAN_CREDIT_REPAIR_TAG);
+	private final List<String> CREDIT_NID_TAGS_LIST = Arrays.asList(MQConstant.AUTO_ASSOCIATE_PLAN_CLEAR_TAG,
+			MQConstant.AUTO_ASSOCIATE_PLAN_CREDIT_REPAIR_TAG);
 	@Autowired
 	private AutoBailMessageService autoBailMessageService;
 	@Autowired

@@ -1583,7 +1583,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 	// 分期的标的
 	private void updateCreditPlan(CreditTenderBgVO request) {
 		String BorrowNid = request.getCreditTenderLog().getBidNid();
-		Borrow borrow = getBorrow(BorrowNid);
+		Borrow borrow = getBorrowByNid(BorrowNid);
 		String borrowStyle = borrow.getBorrowStyle();
 		BorrowRecoverVO borrowRecover = request.getBorrowRecover();
 		boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)

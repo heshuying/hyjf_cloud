@@ -18,6 +18,7 @@ import com.hyjf.common.util.GetOrderIdUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
@@ -108,20 +109,15 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
     }
 
     @Override
-    public HjhAssetBorrowtype selectAssetBorrowType(HjhPlanAsset mqHjhPlanAsset) {
-        HjhAssetBorrowtypeExample example = new HjhAssetBorrowtypeExample();
-        HjhAssetBorrowtypeExample.Criteria cra = example.createCriteria();
-        cra.andInstCodeEqualTo(mqHjhPlanAsset.getInstCode());
-        cra.andAssetTypeEqualTo(mqHjhPlanAsset.getAssetType());
-        cra.andIsOpenEqualTo(1);
-
-        List<HjhAssetBorrowtype> list = this.hjhAssetBorrowtypeMapper.selectByExample(example);
-        if (list != null && list.size() > 0) {
-            return list.get(0);
-        }
-
-        return null;
-    }
+	public HjhAssetBorrowtype selectAssetBorrowType(Integer assetType, String instCode) {
+		HjhAssetBorrowtypeExample example = new HjhAssetBorrowtypeExample();
+		HjhAssetBorrowtypeExample.Criteria cra = example.createCriteria();
+		cra.andInstCodeEqualTo(instCode);
+		cra.andAssetTypeEqualTo(assetType);
+		cra.andIsOpenEqualTo(1);
+		List<HjhAssetBorrowtype> list = this.hjhAssetBorrowtypeMapper.selectByExample(example);
+		return CollectionUtils.isEmpty(list) ? null : list.get(0);
+	}
 
     @Override
     public boolean insertSendBorrow(HjhPlanAsset hjhPlanAsset, HjhAssetBorrowtype hjhAssetBorrowType) {
@@ -154,17 +150,18 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         }else {
             queryBorrowStyle = "month";
         }
-        BorrowFinmanNewCharge borrowFinmanNewCharge = this.selectBorrowApr(borrowClass,hjhPlanAsset.getInstCode(),hjhPlanAsset.getAssetType(),queryBorrowStyle,hjhPlanAsset.getBorrowPeriod());
-        if(borrowFinmanNewCharge == null || borrowFinmanNewCharge.getAutoBorrowApr() == null){
-            logger.warn("资产编号："+hjhPlanAsset.getAssetId()+" 录标失败 ,没有取到项目费率");
-            return false;
-        }
+		BorrowFinmanNewCharge borrowFinmanNewCharge = this.selectBorrowApr(borrowClass, hjhPlanAsset.getInstCode(),
+				hjhPlanAsset.getAssetType(), queryBorrowStyle, hjhPlanAsset.getBorrowPeriod());
+		if (borrowFinmanNewCharge == null || borrowFinmanNewCharge.getAutoBorrowApr() == null) {
+			logger.warn("资产编号：" + hjhPlanAsset.getAssetId() + " 录标失败 ,没有取到项目费率");
+			return false;
+		}
 
-        // 录标 a. 根据表配置判断发标项目类型
-        if(!insertRecord(hjhPlanAsset,hjhAssetBorrowType,borrowFinmanNewCharge)){
-            logger.warn("资产编号："+hjhPlanAsset.getAssetId()+" 录标失败");
-            return false;
-        }
+		// 录标 a. 根据表配置判断发标项目类型
+		if (!insertRecord(hjhPlanAsset, hjhAssetBorrowType, borrowFinmanNewCharge)) {
+			logger.warn("资产编号：" + hjhPlanAsset.getAssetId() + " 录标失败");
+			return false;
+		}
 
         // 更新额度
         updateForSend(hjhPlanAsset.getInstCode(), new BigDecimal(hjhPlanAsset.getAccount()));
@@ -198,64 +195,28 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
      * @throws Exception
      */
     private boolean insertRecord(HjhPlanAsset hjhPlanAsset,HjhAssetBorrowtype hjhAssetBorrowType,BorrowFinmanNewCharge borrowFinmanNewCharge) {
-
         boolean result = false;
-
 
         // borrow_class
         String beforeFix = borrowFinmanNewCharge.getProjectType();
-
         Borrow borrow = this.setBorrowCommonData(hjhPlanAsset, hjhAssetBorrowType, borrowFinmanNewCharge);
-
-
         BorrowInfoWithBLOBs borrowInfo = this.setBorrowInfo(hjhPlanAsset, hjhAssetBorrowType, borrowFinmanNewCharge, borrow);
 
         // 获取标签ID
         HjhLabel label = this.getLabelId(borrow,hjhPlanAsset,borrowInfo);
         if(label == null || label.getId() ==null){
             logger.info(hjhPlanAsset.getAssetId()+" 没有获取到标签");
-
-            /**汇计划三期邮件预警 BY LIBIN start*/
-            // 如果redis不存在这个KEY(一天有效期)，那么可以发邮件
-            if(!RedisUtils.exists(RedisConstants.LABEL_MAIL_KEY + hjhPlanAsset.getAssetId())){
-                StringBuffer msg = new StringBuffer();
-                msg.append("资产ID：").append(hjhPlanAsset.getAssetId()).append("<br/>");
-                msg.append("当前时间：").append(GetDate.formatTime()).append("<br/>");
-                msg.append("错误信息：").append("该资产在自动录标时未打上标签！").append("<br/>");
-                String emailList= "";
-                if (env_test){
-                    emailList = emailList1;
-                }else{
-                    emailList = emaillist2;
-                }
-                String [] toMail = emailList.split(",");
-                MailMessage mailMessage = new MailMessage(null, null, "资产ID为：" + hjhPlanAsset.getAssetId(), msg.toString(), null, toMail, CustomConstants.EMAILPARAM_TPL_EMAIL_AUTOISSUERECOVER,
-                        MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
-                // 发送邮件
-                try {
-                    commonProducer.messageSend(new MessageContent(MQConstant.MAIL_TOPIC,UUID.randomUUID().toString(), mailMessage));
-                    RedisUtils.set(RedisConstants.LABEL_MAIL_KEY + hjhPlanAsset.getAssetId(), hjhPlanAsset.getAssetId(), 24 * 60 * 60);
-                } catch (MQException e2) {
-                    logger.error("发送邮件失败..", e2);
-                }
-
-            } else {
-                logger.info("此邮件key值还未过期(一天)");
-            }
-            /**汇计划三期邮件预警 BY LIBIN end*/
+            // 发送邮件预警
+            this.sendWarnMail(hjhPlanAsset.getAssetId());
             return result;
         }
 
         // 获取下一个标的编号
         String borrowPreNidNew = getNextBorrowNid();
-
         // 标签ID
         borrow.setLabelId(label.getId());
-        /*--------add by liushouyi HJH3 Start---------*/
         // 默认使用引擎
         borrow.setIsEngineUsed(1);
-        /*--------add by liushouyi HJH3 End---------*/
-
         String borrowNid = beforeFix + borrowPreNidNew;
         //项目标题
         borrowInfo.setProjectName(borrowNid);
@@ -267,16 +228,6 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         // 新借款预编码
         borrowInfo.setBorrowPreNidNew(borrowPreNidNew);
         borrowInfo.setBorrowUserName(borrow.getBorrowUserName());
-
-        // 标的还款后的回滚方式 (合规改造删除 2018-12-03)
-       /* HjhBailConfigInfoExample example = new HjhBailConfigInfoExample();
-        example.createCriteria().andInstCodeEqualTo(hjhPlanAsset.getInstCode()).andBorrowStyleEqualTo(hjhPlanAsset.getBorrowStyle());
-        List<HjhBailConfigInfo> hjhBailConfigInfoList = this.hjhBailConfigInfoMapper.selectByExample(example);
-        // 推送资产的时候校验回滚方式是否配置、若未配置不得推送资产
-        if(null!=hjhBailConfigInfoList && hjhBailConfigInfoList.size()>0) {
-            borrow.setRepayCapitalType(hjhBailConfigInfoList.get(0).getRepayCapitalType());
-        }*/
-
         String borrowStyle = borrow.getBorrowStyle();
         Integer isMonth = 0;// 0:天标 1：月标
         if(!CustomConstants.BORROW_STYLE_ENDDAY.equals(borrowStyle)){
@@ -286,8 +237,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 
         // 借款表插入
         this.borrowMapper.insertSelective(borrow);
-//        borrowInfo.setId(id);
-        borrowInfoMapper.insertSelective(borrowInfo);
+        this.borrowInfoMapper.insertSelective(borrowInfo);
         // 个人信息
         this.insertBorrowManinfo(borrowNid, hjhPlanAsset,borrowInfo.getBorrowPreNid(), borrow);
 
@@ -296,12 +246,47 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         hjhPlanAsset.setBorrowNid(borrowNid);
         hjhPlanAsset.setLabelId(label.getId());
         hjhPlanAsset.setLabelName(label.getLabelName());
-
         hjhPlanAsset.setStatus(3);//备案中
         //获取当前时间
         hjhPlanAsset.setUpdateTime(new Date());
         hjhPlanAsset.setUpdateUserId(1);
 		return this.hjhPlanAssetMapper.updateByPrimaryKeySelective(hjhPlanAsset) > 0 ? true : false;
+    }
+
+    /**
+     * 汇计划三期邮件预警
+     *
+     * @param creditNid
+     */
+    private void sendWarnMail(String assetId) {
+        // 如果redis不存在这个KEY(一天有效期)，那么可以发邮件
+        if (!RedisUtils.exists(RedisConstants.LABEL_MAIL_KEY + assetId)) {
+            StringBuffer msg = new StringBuffer();
+            msg.append("资产ID：").append(assetId).append("<br/>");
+            msg.append("当前时间：").append(GetDate.formatTime()).append("<br/>");
+            msg.append("错误信息：").append("该资产在自动录标时未打上标签！").append("<br/>");
+            String emailList = "";
+            if (env_test) {
+                emailList = emailList1;
+            } else {
+                emailList = emaillist2;
+            }
+            String[] toMail = emailList.split(",");
+            MailMessage mailMessage = new MailMessage(null, null, "资产ID为：" + assetId, msg.toString(), null, toMail,
+                    CustomConstants.EMAILPARAM_TPL_EMAIL_AUTOISSUERECOVER,
+                    MessageConstant.MAIL_SEND_FOR_MAILING_ADDRESS);
+            // 发送邮件
+            try {
+                commonProducer.messageSend(
+                        new MessageContent(MQConstant.MAIL_TOPIC, UUID.randomUUID().toString(), mailMessage));
+                RedisUtils.set(RedisConstants.LABEL_MAIL_KEY + assetId, assetId, 24 * 60 * 60);
+            } catch (MQException e2) {
+                logger.error("发送邮件失败..", e2);
+            }
+
+        } else {
+            logger.info("此邮件key值还未过期(一天)");
+        }
     }
 
     /**
@@ -582,149 +567,150 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
      * @param borrow
      * @return
      */
-    public HjhLabel getLabelId(Borrow borrow, HjhPlanAsset hjhPlanAsset,BorrowInfo borrowInfo) {
+	public HjhLabel getLabelId(Borrow borrow, HjhPlanAsset hjhPlanAsset, BorrowInfo borrowInfo) {
+		HjhLabel resultLabel = null;
 
-        HjhLabel resultLabel = null;
+		List<HjhLabel> list = this.getLabelListByBorrowStyle(borrow.getBorrowStyle());
+		if (CollectionUtils.isEmpty(list)) {
+			logger.warn(borrow.getBorrowStyle() + " 该原始标还款方式 没有一个标签");
+			return resultLabel;
+		}
 
+		// continue过滤输入了但是不匹配的标签，如果找到就是第一个
+		for (HjhLabel hjhLabel : list) {
+			// 标的期限
+			if (hjhLabel.getLabelTermEnd() != null && hjhLabel.getLabelTermEnd().intValue() > 0
+					&& hjhLabel.getLabelTermStart() != null && hjhLabel.getLabelTermStart().intValue() > 0) {
+				if (borrow.getBorrowPeriod() >= hjhLabel.getLabelTermStart()
+						&& borrow.getBorrowPeriod() <= hjhLabel.getLabelTermEnd()) {
+				} else {
+					continue;
+				}
+			} else if ((hjhLabel.getLabelTermEnd() != null && hjhLabel.getLabelTermEnd().intValue() > 0)
+					|| (hjhLabel.getLabelTermStart() != null && hjhLabel.getLabelTermStart().intValue() > 0)) {
+				if (borrow.getBorrowPeriod().equals(hjhLabel.getLabelTermStart())
+						|| borrow.getBorrowPeriod().equals(hjhLabel.getLabelTermEnd())) {
+				} else {
+					continue;
+				}
+			} else {
+				continue;
+			}
+			// 标的实际利率
+			if (hjhLabel.getLabelAprStart() != null && hjhLabel.getLabelAprStart().compareTo(BigDecimal.ZERO) > 0
+					&& hjhLabel.getLabelAprEnd() != null && hjhLabel.getLabelAprEnd().compareTo(BigDecimal.ZERO) > 0) {
+				if (borrow.getBorrowApr().compareTo(hjhLabel.getLabelAprStart()) >= 0
+						&& borrow.getBorrowApr().compareTo(hjhLabel.getLabelAprEnd()) <= 0) {
+				} else {
+					continue;
+				}
+			} else if (hjhLabel.getLabelAprStart() != null
+					&& hjhLabel.getLabelAprStart().compareTo(BigDecimal.ZERO) > 0) {
+				if (borrow.getBorrowApr().compareTo(hjhLabel.getLabelAprStart()) == 0) {
+				} else {
+					continue;
+				}
+
+			} else if (hjhLabel.getLabelAprEnd() != null && hjhLabel.getLabelAprEnd().compareTo(BigDecimal.ZERO) > 0) {
+				if (borrow.getBorrowApr().compareTo(hjhLabel.getLabelAprEnd()) == 0) {
+				} else {
+					continue;
+				}
+			}
+			// 标的实际支付金额
+			if (hjhLabel.getLabelPaymentAccountStart() != null
+					&& hjhLabel.getLabelPaymentAccountStart().compareTo(BigDecimal.ZERO) > 0
+					&& hjhLabel.getLabelPaymentAccountEnd() != null
+					&& hjhLabel.getLabelPaymentAccountEnd().compareTo(BigDecimal.ZERO) > 0) {
+				if (borrow.getAccount().compareTo(hjhLabel.getLabelPaymentAccountStart()) >= 0
+						&& borrow.getAccount().compareTo(hjhLabel.getLabelPaymentAccountEnd()) <= 0) {
+				} else {
+					continue;
+				}
+			} else if (hjhLabel.getLabelPaymentAccountStart() != null
+					&& hjhLabel.getLabelPaymentAccountStart().compareTo(BigDecimal.ZERO) > 0) {
+				if (borrow.getAccount().compareTo(hjhLabel.getLabelPaymentAccountStart()) == 0) {
+				} else {
+					continue;
+				}
+
+			} else if (hjhLabel.getLabelPaymentAccountEnd() != null
+					&& hjhLabel.getLabelPaymentAccountEnd().compareTo(BigDecimal.ZERO) > 0) {
+				if (borrow.getAccount().compareTo(hjhLabel.getLabelPaymentAccountEnd()) == 0) {
+				} else {
+					continue;
+				}
+			}
+			// 资产来源
+			if (StringUtils.isNotBlank(hjhLabel.getInstCode())) {
+				if (hjhLabel.getInstCode().equals(borrowInfo.getInstCode())) {
+				} else {
+					continue;
+				}
+			}
+			// 产品类型
+			if (hjhLabel.getAssetType() != null && hjhLabel.getAssetType().intValue() >= 0) {
+				if (hjhLabel.getAssetType().equals(borrowInfo.getAssetType())) {
+					;
+				} else {
+					continue;
+				}
+			}
+			// 项目类型
+			if (hjhLabel.getProjectType() != null && hjhLabel.getProjectType().intValue() >= 0) {
+				if (hjhLabel.getProjectType().equals(borrowInfo.getProjectType())) {
+					;
+				} else {
+					continue;
+				}
+			}
+
+			// 推送时间节点
+			if (hjhPlanAsset != null && hjhPlanAsset.getRecieveTime() != null
+					&& hjhPlanAsset.getRecieveTime().intValue() > 0) {
+				Date reciveDate = GetDate.getDate(hjhPlanAsset.getRecieveTime());
+
+				if (hjhLabel.getPushTimeStart() != null && hjhLabel.getPushTimeEnd() != null) {
+					if (reciveDate.getTime() >= hjhLabel.getPushTimeStart().getTime()
+							&& reciveDate.getTime() <= hjhLabel.getPushTimeEnd().getTime()) {
+					} else {
+						continue;
+					}
+				} else if (hjhLabel.getPushTimeStart() != null) {
+					if (reciveDate.getTime() == hjhLabel.getPushTimeStart().getTime()) {
+					} else {
+						continue;
+					}
+
+				} else if (hjhLabel.getPushTimeEnd() != null) {
+					if (reciveDate.getTime() == hjhLabel.getPushTimeEnd().getTime()) {
+					} else {
+						continue;
+					}
+				}
+			}
+			// 如果找到返回最近的一个
+			return hjhLabel;
+		}
+		return resultLabel;
+	}
+
+
+    /**
+     * 根据还款方式获取标签列表
+     * @param borrowStyle
+     * @return
+     */
+    private List<HjhLabel> getLabelListByBorrowStyle(String borrowStyle){
         HjhLabelExample example = new HjhLabelExample();
         HjhLabelExample.Criteria cra = example.createCriteria();
-
         cra.andDelFlagEqualTo(0);
         cra.andLabelStateEqualTo(1);
-        cra.andBorrowStyleEqualTo(borrow.getBorrowStyle());
+        cra.andBorrowStyleEqualTo(borrowStyle);
         cra.andIsCreditEqualTo(0); // 原始标
         cra.andIsLateEqualTo(0); // 是否逾期
         example.setOrderByClause(" update_time desc ");
-
-        List<HjhLabel> list = this.hjhLabelMapper.selectByExample(example);
-        if (list != null && list.size() <= 0) {
-            logger.info(borrow.getBorrowStyle()+" 该原始标还款方式 没有一个标签");
-            return resultLabel;
-        }
-        // continue过滤输入了但是不匹配的标签，如果找到就是第一个
-        for (HjhLabel hjhLabel : list) {
-            // 标的期限
-//			int score = 0;
-            if(hjhLabel.getLabelTermEnd() != null && hjhLabel.getLabelTermEnd().intValue()>0 && hjhLabel.getLabelTermStart()!=null
-                    && hjhLabel.getLabelTermStart().intValue()>0){
-                if(borrow.getBorrowPeriod() >= hjhLabel.getLabelTermStart() && borrow.getBorrowPeriod() <= hjhLabel.getLabelTermEnd()){
-//					score = score+1;
-                }else{
-                    continue;
-                }
-            }else if ((hjhLabel.getLabelTermEnd() != null && hjhLabel.getLabelTermEnd().intValue()>0) ||
-                    (hjhLabel.getLabelTermStart()!=null && hjhLabel.getLabelTermStart().intValue()>0)) {
-                if(borrow.getBorrowPeriod().equals(hjhLabel.getLabelTermStart()) || borrow.getBorrowPeriod().equals(hjhLabel.getLabelTermEnd())){
-//					score = score+1;
-                }else{
-                    continue;
-                }
-            }else{
-                continue;
-            }
-            // 标的实际利率
-            if(hjhLabel.getLabelAprStart() != null && hjhLabel.getLabelAprStart().compareTo(BigDecimal.ZERO)>0 &&
-                    hjhLabel.getLabelAprEnd()!=null && hjhLabel.getLabelAprEnd().compareTo(BigDecimal.ZERO)>0){
-                if(borrow.getBorrowApr().compareTo(hjhLabel.getLabelAprStart())>=0 && borrow.getBorrowApr().compareTo(hjhLabel.getLabelAprEnd())<=0){
-//					score = score+1;
-                }else{
-                    continue;
-                }
-            }else if (hjhLabel.getLabelAprStart() != null && hjhLabel.getLabelAprStart().compareTo(BigDecimal.ZERO)>0) {
-                if(borrow.getBorrowApr().compareTo(hjhLabel.getLabelAprStart())==0 ){
-//					score = score+1;
-                }else{
-                    continue;
-                }
-
-            }else if (hjhLabel.getLabelAprEnd()!=null && hjhLabel.getLabelAprEnd().compareTo(BigDecimal.ZERO)>0 ) {
-                if(borrow.getBorrowApr().compareTo(hjhLabel.getLabelAprEnd())==0){
-//					score = score+1;
-                }else {
-                    continue;
-                }
-            }
-            // 标的实际支付金额
-            if(hjhLabel.getLabelPaymentAccountStart() != null && hjhLabel.getLabelPaymentAccountStart().compareTo(BigDecimal.ZERO)>0 &&
-                    hjhLabel.getLabelPaymentAccountEnd()!=null && hjhLabel.getLabelPaymentAccountEnd().compareTo(BigDecimal.ZERO)>0){
-                if(borrow.getAccount().compareTo(hjhLabel.getLabelPaymentAccountStart())>=0 && borrow.getAccount().compareTo(hjhLabel.getLabelPaymentAccountEnd())<=0){
-//					score = score+1;
-                }else{
-                    continue;
-                }
-            }else if (hjhLabel.getLabelPaymentAccountStart() != null && hjhLabel.getLabelPaymentAccountStart().compareTo(BigDecimal.ZERO)>0) {
-                if(borrow.getAccount().compareTo(hjhLabel.getLabelPaymentAccountStart())==0 ){
-//					score = score+1;
-                }else{
-                    continue;
-                }
-
-            }else if (hjhLabel.getLabelPaymentAccountEnd()!=null && hjhLabel.getLabelPaymentAccountEnd().compareTo(BigDecimal.ZERO)>0 ) {
-                if(borrow.getAccount().compareTo(hjhLabel.getLabelPaymentAccountEnd())==0){
-//					score = score+1;
-                }else{
-                    continue;
-                }
-            }
-            // 资产来源
-            if(StringUtils.isNotBlank(hjhLabel.getInstCode())){
-                if(hjhLabel.getInstCode().equals(borrowInfo.getInstCode())){
-//					score = score+1;
-                }else{
-                    continue;
-                }
-            }
-            // 产品类型
-            if(hjhLabel.getAssetType() != null && hjhLabel.getAssetType().intValue() >= 0){
-                if(hjhLabel.getAssetType().equals(borrowInfo.getAssetType())){
-                    ;
-                }else{
-                    continue;
-                }
-            }
-            // 项目类型
-            if(hjhLabel.getProjectType() != null && hjhLabel.getProjectType().intValue() >= 0){
-                if(hjhLabel.getProjectType().equals(borrowInfo.getProjectType())){
-                    ;
-                }else{
-                    continue;
-                }
-            }
-
-            // 推送时间节点
-            if(hjhPlanAsset != null && hjhPlanAsset.getRecieveTime() != null && hjhPlanAsset.getRecieveTime().intValue() > 0){
-                Date reciveDate = GetDate.getDate(hjhPlanAsset.getRecieveTime());
-
-                if(hjhLabel.getPushTimeStart() != null && hjhLabel.getPushTimeEnd()!=null){
-                    if(reciveDate.getTime() >= hjhLabel.getPushTimeStart().getTime() &&
-                            reciveDate.getTime() <= hjhLabel.getPushTimeEnd().getTime()){
-//						score = score+1;
-                    }else{
-                        continue;
-                    }
-                }else if (hjhLabel.getPushTimeStart() != null) {
-                    if(reciveDate.getTime() == hjhLabel.getPushTimeStart().getTime() ){
-//						score = score+1;
-                    }else{
-                        continue;
-                    }
-
-                }else if (hjhLabel.getPushTimeEnd()!=null) {
-                    if(reciveDate.getTime() == hjhLabel.getPushTimeEnd().getTime() ){
-//						score = score+1;
-                    }else{
-                        continue;
-                    }
-                }
-
-            }
-
-            // 如果找到返回最近的一个
-            return hjhLabel;
-
-        }
-
-        return resultLabel;
+        return this.hjhLabelMapper.selectByExample(example);
     }
 
     /**
@@ -743,12 +729,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
         cra.andStatusEqualTo(0);
 
         List<BorrowFinmanNewCharge> list = this.borrowFinmanNewChargeMapper.selectByExample(example);
-        if (list != null && list.size() > 0) {
-            return list.get(0);
-        }
-
-        return null;
-
+        return CollectionUtils.isEmpty(list) ? null : list.get(0);
     }
 
     private BorrowInfoWithBLOBs setBorrowInfo(HjhPlanAsset hjhPlanAsset, HjhAssetBorrowtype hjhAssetBorrowType, BorrowFinmanNewCharge borrowFinmanNewCharge,Borrow borrow){

@@ -183,7 +183,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
     public int insertBeforeTender(TenderRequest tenderRequest) {
         Integer userId = tenderRequest.getUserId();
 
-        Borrow borrow = getBorrow(tenderRequest.getBorrowNid());
+        Borrow borrow = getBorrowByNid(tenderRequest.getBorrowNid());
         BorrowTenderTmp temp = new BorrowTenderTmp();
         temp.setUserId(userId);
         temp.setUserName(tenderRequest.getUserName());
@@ -272,7 +272,7 @@ public class BorrowServiceImpl extends BaseServiceImpl implements BorrowService 
      */
     @Override
     public void updateTenderAfter(TenderBgVO tenderBg) {
-        Borrow borrow = getBorrow(tenderBg.getBorrowNid());
+        Borrow borrow = getBorrowByNid(tenderBg.getBorrowNid());
         BorrowInfo borrowInfo = getBorrowInfoByNid(tenderBg.getBorrowNid());
         Integer userId = tenderBg.getUserId();
         // 删除临时表

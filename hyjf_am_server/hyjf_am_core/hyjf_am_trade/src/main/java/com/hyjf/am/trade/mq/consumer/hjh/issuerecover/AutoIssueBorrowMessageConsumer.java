@@ -86,7 +86,7 @@ public class AutoIssueBorrowMessageConsumer
 		String redisKey = RedisConstants.BORROW_SEND + hjhPlanAsset.getInstCode() + hjhPlanAsset.getAssetId();
 		boolean result = RedisUtils.tranactionSet(redisKey, 60 * 5);
 		if (!result) {
-			logger.info(hjhPlanAsset.getInstCode() + " 正在录标 (redis)" + hjhPlanAsset.getAssetId());
+			logger.warn(hjhPlanAsset.getInstCode() + " 正在录标 (redis)" + hjhPlanAsset.getAssetId());
 			return;
 		}
 		// 业务校验
@@ -95,8 +95,9 @@ public class AutoIssueBorrowMessageConsumer
 			logger.warn(hjhPlanAsset.getAssetId() + " 该资产状态不是录标状态");
 			return;
 		}
-		// 判断该资产是否可以自动录标，是否关联计划
-		HjhAssetBorrowtype hjhAssetBorrowType = autoIssueRecoverService.selectAssetBorrowType(hjhPlanAsset);
+		// 判断该资产是否开启流程配置
+		HjhAssetBorrowtype hjhAssetBorrowType = autoIssueRecoverService
+				.selectAssetBorrowType(hjhPlanAsset.getAssetType(), hjhPlanAsset.getInstCode());
 		if (hjhAssetBorrowType == null || hjhAssetBorrowType.getAutoAdd() != 1) {
 			logger.warn(" 该资产不能自动录标,流程配置未启用");
 			return;

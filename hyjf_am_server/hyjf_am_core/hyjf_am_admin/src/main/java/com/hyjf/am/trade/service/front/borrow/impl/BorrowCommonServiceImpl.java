@@ -877,8 +877,8 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 									params.put("borrowNid", borrow.getBorrowNid());
 									// modify by yangchangwei
 									// 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-									commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_JOIN_PLAN_TOPIC,
-											MQConstant.AUTO_JOIN_PLAN_ADMIN_INSERT_TAG, borrow.getBorrowNid(), params),
+									commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_ASSOCIATE_PLAN_TOPIC,
+											MQConstant.AUTO_ASSOCIATE_PLAN_ADMIN_INSERT_TAG, borrow.getBorrowNid(), params),
 											2);
 								} catch (MQException e) {
 									logger.error("发送【关联计划队列】MQ失败...");
@@ -5863,7 +5863,6 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
                 try {
                     JSONObject params = new JSONObject();
                     params.put("borrowNid", borrowInfo.getBorrowNid());
-                    params.put("instCode", borrowInfo.getInstCode());
 					commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_RECORD_TOPIC,
 							MQConstant.AUTO_BORROW_RECORD_ADMIN_TAG, borrowInfo.getBorrowNid(), params));
                 } catch (MQException e) {

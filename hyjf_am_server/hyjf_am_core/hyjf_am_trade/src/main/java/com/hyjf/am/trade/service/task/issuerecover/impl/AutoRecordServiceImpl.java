@@ -181,12 +181,11 @@ public class AutoRecordServiceImpl implements AutoRecordService {
             BorrowInfo borrowInfo = getBorrowInfoById(borrow.getBorrowNid());
             // 检查是否备案失败，如果是，跳过
             if(borrow.getStatus()==0 && borrow.getRegistStatus()==4){
-				logger.info("标的：" + borrowNid + " 自动备案失败过");
+				logger.warn("标的：" + borrowNid + " 自动备案失败过");
 				result.put("success", "2");
 				result.put("msg", "自动备案失败过！");
 				return result;
             }
-
 
             String borrowStyle = borrow.getBorrowStyle();// 項目还款方式
             // 是否月标(true:月标, false:天标)
@@ -344,12 +343,11 @@ public class AutoRecordServiceImpl implements AutoRecordService {
 
             // 检查是否备案失败，如果是，跳过
             if(borrow.getStatus()==0 && borrow.getRegistStatus()==4){
-                logger.info("标的："+borrow.getBorrowNid()+" 自动备案失败过");
+                logger.warn("标的："+borrow.getBorrowNid()+" 自动备案失败过");
                 result.put("success", "2");
                 result.put("msg", "自动备案失败过！");
                 return result;
             }
-
 
             String borrowStyle = borrow.getBorrowStyle();// 項目还款方式
             // 是否月标(true:月标, false:天标)
