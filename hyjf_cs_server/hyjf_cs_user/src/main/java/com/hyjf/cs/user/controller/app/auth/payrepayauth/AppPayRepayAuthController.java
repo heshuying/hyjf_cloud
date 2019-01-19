@@ -97,6 +97,10 @@ public class AppPayRepayAuthController extends BaseUserController {
         //异步地址
         String bgRetUrl = "http://CS-USER" + PAY_REPAY_CLASS_NAME + PAY_REPAY_BG_AUTH;
 
+        logger.info("二合一授权-->同步路径成功:["+successUrl+"]");
+        logger.info("二合一授权-->同步路径失败:["+retUrl+"]");
+        logger.info("二合一授权-->异步路径成功:["+bgRetUrl+"]");
+
         UserInfoVO usersInfo = authService.getUserInfo(userId);
         BankOpenAccountVO bankOpenAccountVO = authService.getBankOpenAccount(userId);
 

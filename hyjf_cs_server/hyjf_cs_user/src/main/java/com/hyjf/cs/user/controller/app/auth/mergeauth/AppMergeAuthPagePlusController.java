@@ -91,10 +91,14 @@ public class AppMergeAuthPagePlusController extends BaseUserController {
         String errorPath = "/user/setting/mergeauth/result/failed";
 
         //同步地址
-        String retUrl = super.getFrontHost(systemConfig, platform)+errorPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_MERGE_AUTH+"&platform="+platform;
-        String successUrl = super.getFrontHost(systemConfig, platform)+successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_MERGE_AUTH+"&platform="+platform;
+        String retUrl = super.getFrontHost(systemConfig,platform)+errorPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_MERGE_AUTH+"&platform="+platform;;
+        String successUrl = super.getFrontHost(systemConfig,platform)+successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_MERGE_AUTH+"&platform="+platform;;
         //异步地址
         String bgRetUrl = "http://CS-USER"+APP_MERGE_CLASS_NAME+APP_MERGE_BG_AUTH;
+
+        logger.info("三合一授权-->同步路径成功:["+successUrl+"]");
+        logger.info("三合一授权-->同步路径失败:["+retUrl+"]");
+        logger.info("三合一授权-->异步路径成功:["+bgRetUrl+"]");
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);
         BankOpenAccountVO bankOpenAccountVO = authService.getBankOpenAccount(userId);
@@ -150,6 +154,7 @@ public class AppMergeAuthPagePlusController extends BaseUserController {
             }
             authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), authType);
             result.setData(map);
+            logger.info("三合一授权-->银行返回数据:["+JSONObject.toJSONString(map)+"]");
         } catch (Exception e) {
             logger.info("APP-三合一授权结束 请求银行 或 插入授权日志表ht_hjh_user_auth_log 异常,详情如下:["+ e +"]");
             throw new CheckException(MsgEnum.STATUS_CE999999);

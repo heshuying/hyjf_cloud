@@ -90,8 +90,8 @@ public class AppInvesAuthPagePlusController extends BaseUserController {
         String errorPath = "/user/openError";
 
         //同步地址
-        String retUrl = super.getFrontHost(systemConfig, platform)+errorPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_AUTO_BID+"&platform="+platform;
-        String successUrl = super.getFrontHost(systemConfig, platform)+successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_AUTO_BID+"&platform="+platform;
+        String retUrl = super.getFrontHost(systemConfig,platform)+errorPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_AUTO_BID+"&platform="+platform;;
+        String successUrl = super.getFrontHost(systemConfig,platform)+successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_AUTO_BID+"&platform="+platform;;
         //异步地址
         String bgRetUrl = "http://CS-USER"+APP_INVES_CLASS_NAME+APP_INVES_BG_AUTH;
 
