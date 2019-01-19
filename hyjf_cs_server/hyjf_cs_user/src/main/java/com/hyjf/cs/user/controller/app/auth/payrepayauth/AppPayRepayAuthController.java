@@ -165,10 +165,7 @@ public class AppPayRepayAuthController extends BaseUserController {
 
         BankCallResult result = new BankCallResult();
         //包装信息到map, 用作请求银行
-        logger.info("页面传递过来的对象bean"+JSONObject.toJSONString(bean));
         bean.convert();
-        logger.info("页面传递过来的对象bean"+bean.getAllParams());
-
         //用户ID
         Integer userId = Integer.parseInt(bean.getLogUserId()); // 用户ID
         // 查询用户开户状态
