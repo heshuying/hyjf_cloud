@@ -541,7 +541,10 @@ public class AuthServiceImpl extends BaseUserServiceImpl implements AuthService 
 		bean.setLogClient(Integer.parseInt(authBean.getPlatform()));
 		bean.setOrderId(authBean.getOrderId());
 		try {
+			_log.info("before调用bean=="+JSONObject.toJSONString(bean));
 			Map<String,Object> map = BankCallUtils.callApiMap(bean);
+			_log.info("affter调用bean=="+JSONObject.toJSONString(map));
+
 			return map;
 		} catch (Exception e) {
 			e.printStackTrace();
