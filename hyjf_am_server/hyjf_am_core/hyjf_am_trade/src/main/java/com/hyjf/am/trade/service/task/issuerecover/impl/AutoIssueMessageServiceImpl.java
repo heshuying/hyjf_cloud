@@ -1,8 +1,7 @@
 package com.hyjf.am.trade.service.task.issuerecover.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.hyjf.am.trade.dao.mapper.auto.*;
-import com.hyjf.am.trade.dao.mapper.customize.HjhPlanCustomizeMapper;
+import com.hyjf.am.trade.dao.mapper.auto.HjhAllocationEngineMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.am.trade.service.task.issuerecover.AutoIssueMessageService;
@@ -32,18 +31,9 @@ import java.util.List;
 @Service
 public class AutoIssueMessageServiceImpl extends BaseServiceImpl implements AutoIssueMessageService {
 	private static final Logger logger = LoggerFactory.getLogger(AutoIssueMessageServiceImpl.class);
-	@Resource
-	private HjhPlanAssetMapper hjhPlanAssetMapper;
-	@Resource
-	private HjhLabelMapper hjhLabelMapper;
+
 	@Resource
 	private HjhAllocationEngineMapper hjhAllocationEngineMapper;
-	@Resource
-	private BorrowMapper borrowMapper;
-	@Resource
-	private HjhPlanCustomizeMapper hjhPlanCustomizeMapper;
-	@Resource
-	private HjhDebtCreditMapper hjhDebtCreditMapper;
 
 	@Override
 	public String getPlanNid(Integer labelId) {

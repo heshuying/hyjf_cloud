@@ -45,7 +45,7 @@ public class AutoIssueRecoverController extends BaseController{
             statusList.add(0);
             //statusList.add(1);
             // 查询待录标列表
-            List<HjhPlanAsset> sendList = this.autoIssueRecoverService.selectAssetList(statusList);
+            List<HjhPlanAsset> sendList = this.autoIssueRecoverService.selectAssetListByStatus(statusList);
             logger.info(" 待录标总数: "+sendList.size());
             for (HjhPlanAsset planAsset : sendList) {
                 logger.debug(planAsset.getAssetId()+" 开始录标修复 ");
@@ -64,7 +64,7 @@ public class AutoIssueRecoverController extends BaseController{
             // 查询待备案列表
             statusList = new ArrayList();
             statusList.add(3);
-            List<HjhPlanAsset> recordList = this.autoIssueRecoverService.selectAssetList(statusList);
+            List<HjhPlanAsset> recordList = this.autoIssueRecoverService.selectAssetListByStatus(statusList);
             logger.info(" 待备案总数: "+recordList.size());
 
             for (HjhPlanAsset planAsset : recordList) {
@@ -84,7 +84,7 @@ public class AutoIssueRecoverController extends BaseController{
             // 查询待初审列表
             statusList = new ArrayList();
             statusList.add(5);
-            List<HjhPlanAsset> preauditList = this.autoIssueRecoverService.selectAssetList(statusList);
+            List<HjhPlanAsset> preauditList = this.autoIssueRecoverService.selectAssetListByStatus(statusList);
             logger.info(" 待初审总数: "+preauditList.size());
 
             for (HjhPlanAsset planAsset : preauditList) {

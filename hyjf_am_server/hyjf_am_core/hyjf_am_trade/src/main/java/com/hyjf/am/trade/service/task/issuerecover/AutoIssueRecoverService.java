@@ -27,7 +27,7 @@ public interface AutoIssueRecoverService extends BaseService {
      * @param statusList
      * @return
      */
-    List<HjhPlanAsset> selectAssetList(List statusList);
+    List<HjhPlanAsset> selectAssetListByStatus(List statusList);
 
     /**
      * 查询待关联计划资产列表

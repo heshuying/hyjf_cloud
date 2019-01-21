@@ -39,7 +39,7 @@ public class AutoIssueRecoverServiceImpl extends BaseServiceImpl implements Auto
 	private CommonProducer commonProducer;
 
 	@Override
-	public List<HjhPlanAsset> selectAssetList(List statusList) {
+	public List<HjhPlanAsset> selectAssetListByStatus(List statusList) {
 		HjhPlanAssetExample example = new HjhPlanAssetExample();
 		HjhPlanAssetExample.Criteria crt = example.createCriteria();
 		crt.andVerifyStatusEqualTo(1);

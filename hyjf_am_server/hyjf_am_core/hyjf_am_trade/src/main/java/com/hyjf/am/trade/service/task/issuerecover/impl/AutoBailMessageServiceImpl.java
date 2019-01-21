@@ -1,7 +1,5 @@
 package com.hyjf.am.trade.service.task.issuerecover.impl;
 
-import com.hyjf.am.trade.dao.mapper.auto.BorrowBailMapper;
-import com.hyjf.am.trade.dao.mapper.auto.BorrowMapper;
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowBail;
 import com.hyjf.am.trade.dao.model.auto.BorrowBailExample;
@@ -13,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
@@ -26,10 +23,6 @@ import java.util.List;
 @Service
 public class AutoBailMessageServiceImpl extends BaseServiceImpl implements AutoBailMessageService {
 	private static final Logger logger = LoggerFactory.getLogger(AutoBailMessageServiceImpl.class);
-	@Resource
-	private BorrowMapper borrowMapper;
-	@Resource
-	private BorrowBailMapper borrowBailMapper;
 
 	@Override
 	public boolean updateRecordBorrow(Borrow borrow) {
