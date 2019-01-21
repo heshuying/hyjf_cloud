@@ -5,19 +5,19 @@
     <id column="id" property="id" jdbcType="INTEGER" />
     <result column="user_id" property="userId" jdbcType="INTEGER" />
     <result column="user_name" property="userName" jdbcType="VARCHAR" />
-    <result column="accountid" property="accountid" jdbcType="VARCHAR" />
+    <result column="account_id" property="accountId" jdbcType="VARCHAR" />
     <result column="mobile" property="mobile" jdbcType="VARCHAR" />
     <result column="customer_name" property="customerName" jdbcType="VARCHAR" />
     <result column="st_user_id" property="stUserId" jdbcType="INTEGER" />
     <result column="st_user_name" property="stUserName" jdbcType="VARCHAR" />
-    <result column="st_accountid" property="stAccountid" jdbcType="VARCHAR" />
+    <result column="st_account_id" property="stAccountId" jdbcType="VARCHAR" />
     <result column="st_mobile" property="stMobile" jdbcType="VARCHAR" />
     <result column="st_customer_name" property="stCustomerName" jdbcType="VARCHAR" />
     <result column="approval_name" property="approvalName" jdbcType="VARCHAR" />
     <result column="approval_time" property="approvalTime" jdbcType="VARCHAR" />
     <result column="remark" property="remark" jdbcType="VARCHAR" />
-    <result column="instCode" property="instcode" jdbcType="VARCHAR" />
-    <result column="instName" property="instname" jdbcType="VARCHAR" />
+    <result column="inst_code" property="instCode" jdbcType="VARCHAR" />
+    <result column="inst_name" property="instName" jdbcType="VARCHAR" />
     <result column="state" property="state" jdbcType="TINYINT" />
     <result column="del_flag" property="delFlag" jdbcType="TINYINT" />
     <result column="create_user_id" property="createUserId" jdbcType="INTEGER" />
@@ -84,9 +84,9 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, user_id, user_name, accountid, mobile, customer_name, st_user_id, st_user_name, 
-    st_accountid, st_mobile, st_customer_name, approval_name, approval_time, remark, 
-    instCode, instName, `state`, del_flag, create_user_id, update_user_id, create_time, 
+    id, user_id, user_name, account_id, mobile, customer_name, st_user_id, st_user_name, 
+    st_account_id, st_mobile, st_customer_name, approval_name, approval_time, remark, 
+    inst_code, inst_name, `state`, del_flag, create_user_id, update_user_id, create_time, 
     update_time
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.trade.dao.model.auto.StzhWhiteListExample" >
@@ -126,19 +126,19 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_stzh_white_list (user_id, user_name, accountid, 
+    insert into ht_stzh_white_list (user_id, user_name, account_id, 
       mobile, customer_name, st_user_id, 
-      st_user_name, st_accountid, st_mobile, 
+      st_user_name, st_account_id, st_mobile, 
       st_customer_name, approval_name, approval_time, 
-      remark, instCode, instName, 
+      remark, inst_code, inst_name, 
       `state`, del_flag, create_user_id, 
       update_user_id, create_time, update_time
       )
-    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{accountid,jdbcType=VARCHAR}, 
+    values (#{userId,jdbcType=INTEGER}, #{userName,jdbcType=VARCHAR}, #{accountId,jdbcType=VARCHAR}, 
       #{mobile,jdbcType=VARCHAR}, #{customerName,jdbcType=VARCHAR}, #{stUserId,jdbcType=INTEGER}, 
-      #{stUserName,jdbcType=VARCHAR}, #{stAccountid,jdbcType=VARCHAR}, #{stMobile,jdbcType=VARCHAR}, 
+      #{stUserName,jdbcType=VARCHAR}, #{stAccountId,jdbcType=VARCHAR}, #{stMobile,jdbcType=VARCHAR}, 
       #{stCustomerName,jdbcType=VARCHAR}, #{approvalName,jdbcType=VARCHAR}, #{approvalTime,jdbcType=VARCHAR}, 
-      #{remark,jdbcType=VARCHAR}, #{instcode,jdbcType=VARCHAR}, #{instname,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{instCode,jdbcType=VARCHAR}, #{instName,jdbcType=VARCHAR}, 
       #{state,jdbcType=TINYINT}, #{delFlag,jdbcType=TINYINT}, #{createUserId,jdbcType=INTEGER}, 
       #{updateUserId,jdbcType=INTEGER}, #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}
       )
@@ -155,8 +155,8 @@
       <if test="userName != null" >
         user_name,
       </if>
-      <if test="accountid != null" >
-        accountid,
+      <if test="accountId != null" >
+        account_id,
       </if>
       <if test="mobile != null" >
         mobile,
@@ -170,8 +170,8 @@
       <if test="stUserName != null" >
         st_user_name,
       </if>
-      <if test="stAccountid != null" >
-        st_accountid,
+      <if test="stAccountId != null" >
+        st_account_id,
       </if>
       <if test="stMobile != null" >
         st_mobile,
@@ -188,11 +188,11 @@
       <if test="remark != null" >
         remark,
       </if>
-      <if test="instcode != null" >
-        instCode,
+      <if test="instCode != null" >
+        inst_code,
       </if>
-      <if test="instname != null" >
-        instName,
+      <if test="instName != null" >
+        inst_name,
       </if>
       <if test="state != null" >
         `state`,
@@ -220,8 +220,8 @@
       <if test="userName != null" >
         #{userName,jdbcType=VARCHAR},
       </if>
-      <if test="accountid != null" >
-        #{accountid,jdbcType=VARCHAR},
+      <if test="accountId != null" >
+        #{accountId,jdbcType=VARCHAR},
       </if>
       <if test="mobile != null" >
         #{mobile,jdbcType=VARCHAR},
@@ -235,8 +235,8 @@
       <if test="stUserName != null" >
         #{stUserName,jdbcType=VARCHAR},
       </if>
-      <if test="stAccountid != null" >
-        #{stAccountid,jdbcType=VARCHAR},
+      <if test="stAccountId != null" >
+        #{stAccountId,jdbcType=VARCHAR},
       </if>
       <if test="stMobile != null" >
         #{stMobile,jdbcType=VARCHAR},
@@ -253,11 +253,11 @@
       <if test="remark != null" >
         #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="instcode != null" >
-        #{instcode,jdbcType=VARCHAR},
+      <if test="instCode != null" >
+        #{instCode,jdbcType=VARCHAR},
       </if>
-      <if test="instname != null" >
-        #{instname,jdbcType=VARCHAR},
+      <if test="instName != null" >
+        #{instName,jdbcType=VARCHAR},
       </if>
       <if test="state != null" >
         #{state,jdbcType=TINYINT},
@@ -297,8 +297,8 @@
       <if test="record.userName != null" >
         user_name = #{record.userName,jdbcType=VARCHAR},
       </if>
-      <if test="record.accountid != null" >
-        accountid = #{record.accountid,jdbcType=VARCHAR},
+      <if test="record.accountId != null" >
+        account_id = #{record.accountId,jdbcType=VARCHAR},
       </if>
       <if test="record.mobile != null" >
         mobile = #{record.mobile,jdbcType=VARCHAR},
@@ -312,8 +312,8 @@
       <if test="record.stUserName != null" >
         st_user_name = #{record.stUserName,jdbcType=VARCHAR},
       </if>
-      <if test="record.stAccountid != null" >
-        st_accountid = #{record.stAccountid,jdbcType=VARCHAR},
+      <if test="record.stAccountId != null" >
+        st_account_id = #{record.stAccountId,jdbcType=VARCHAR},
       </if>
       <if test="record.stMobile != null" >
         st_mobile = #{record.stMobile,jdbcType=VARCHAR},
@@ -330,11 +330,11 @@
       <if test="record.remark != null" >
         remark = #{record.remark,jdbcType=VARCHAR},
       </if>
-      <if test="record.instcode != null" >
-        instCode = #{record.instcode,jdbcType=VARCHAR},
+      <if test="record.instCode != null" >
+        inst_code = #{record.instCode,jdbcType=VARCHAR},
       </if>
-      <if test="record.instname != null" >
-        instName = #{record.instname,jdbcType=VARCHAR},
+      <if test="record.instName != null" >
+        inst_name = #{record.instName,jdbcType=VARCHAR},
       </if>
       <if test="record.state != null" >
         `state` = #{record.state,jdbcType=TINYINT},
@@ -364,19 +364,19 @@
     set id = #{record.id,jdbcType=INTEGER},
       user_id = #{record.userId,jdbcType=INTEGER},
       user_name = #{record.userName,jdbcType=VARCHAR},
-      accountid = #{record.accountid,jdbcType=VARCHAR},
+      account_id = #{record.accountId,jdbcType=VARCHAR},
       mobile = #{record.mobile,jdbcType=VARCHAR},
       customer_name = #{record.customerName,jdbcType=VARCHAR},
       st_user_id = #{record.stUserId,jdbcType=INTEGER},
       st_user_name = #{record.stUserName,jdbcType=VARCHAR},
-      st_accountid = #{record.stAccountid,jdbcType=VARCHAR},
+      st_account_id = #{record.stAccountId,jdbcType=VARCHAR},
       st_mobile = #{record.stMobile,jdbcType=VARCHAR},
       st_customer_name = #{record.stCustomerName,jdbcType=VARCHAR},
       approval_name = #{record.approvalName,jdbcType=VARCHAR},
       approval_time = #{record.approvalTime,jdbcType=VARCHAR},
       remark = #{record.remark,jdbcType=VARCHAR},
-      instCode = #{record.instcode,jdbcType=VARCHAR},
-      instName = #{record.instname,jdbcType=VARCHAR},
+      inst_code = #{record.instCode,jdbcType=VARCHAR},
+      inst_name = #{record.instName,jdbcType=VARCHAR},
       `state` = #{record.state,jdbcType=TINYINT},
       del_flag = #{record.delFlag,jdbcType=TINYINT},
       create_user_id = #{record.createUserId,jdbcType=INTEGER},
@@ -396,8 +396,8 @@
       <if test="userName != null" >
         user_name = #{userName,jdbcType=VARCHAR},
       </if>
-      <if test="accountid != null" >
-        accountid = #{accountid,jdbcType=VARCHAR},
+      <if test="accountId != null" >
+        account_id = #{accountId,jdbcType=VARCHAR},
       </if>
       <if test="mobile != null" >
         mobile = #{mobile,jdbcType=VARCHAR},
@@ -411,8 +411,8 @@
       <if test="stUserName != null" >
         st_user_name = #{stUserName,jdbcType=VARCHAR},
       </if>
-      <if test="stAccountid != null" >
-        st_accountid = #{stAccountid,jdbcType=VARCHAR},
+      <if test="stAccountId != null" >
+        st_account_id = #{stAccountId,jdbcType=VARCHAR},
       </if>
       <if test="stMobile != null" >
         st_mobile = #{stMobile,jdbcType=VARCHAR},
@@ -429,11 +429,11 @@
       <if test="remark != null" >
         remark = #{remark,jdbcType=VARCHAR},
       </if>
-      <if test="instcode != null" >
-        instCode = #{instcode,jdbcType=VARCHAR},
+      <if test="instCode != null" >
+        inst_code = #{instCode,jdbcType=VARCHAR},
       </if>
-      <if test="instname != null" >
-        instName = #{instname,jdbcType=VARCHAR},
+      <if test="instName != null" >
+        inst_name = #{instName,jdbcType=VARCHAR},
       </if>
       <if test="state != null" >
         `state` = #{state,jdbcType=TINYINT},
@@ -460,19 +460,19 @@
     update ht_stzh_white_list
     set user_id = #{userId,jdbcType=INTEGER},
       user_name = #{userName,jdbcType=VARCHAR},
-      accountid = #{accountid,jdbcType=VARCHAR},
+      account_id = #{accountId,jdbcType=VARCHAR},
       mobile = #{mobile,jdbcType=VARCHAR},
       customer_name = #{customerName,jdbcType=VARCHAR},
       st_user_id = #{stUserId,jdbcType=INTEGER},
       st_user_name = #{stUserName,jdbcType=VARCHAR},
-      st_accountid = #{stAccountid,jdbcType=VARCHAR},
+      st_account_id = #{stAccountId,jdbcType=VARCHAR},
       st_mobile = #{stMobile,jdbcType=VARCHAR},
       st_customer_name = #{stCustomerName,jdbcType=VARCHAR},
       approval_name = #{approvalName,jdbcType=VARCHAR},
       approval_time = #{approvalTime,jdbcType=VARCHAR},
       remark = #{remark,jdbcType=VARCHAR},
-      instCode = #{instcode,jdbcType=VARCHAR},
-      instName = #{instname,jdbcType=VARCHAR},
+      inst_code = #{instCode,jdbcType=VARCHAR},
+      inst_name = #{instName,jdbcType=VARCHAR},
       `state` = #{state,jdbcType=TINYINT},
       del_flag = #{delFlag,jdbcType=TINYINT},
       create_user_id = #{createUserId,jdbcType=INTEGER},

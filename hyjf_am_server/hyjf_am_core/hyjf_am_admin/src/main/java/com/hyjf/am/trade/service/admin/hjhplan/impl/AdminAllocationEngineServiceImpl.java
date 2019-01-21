@@ -316,10 +316,10 @@ public class AdminAllocationEngineServiceImpl extends BaseServiceImpl implements
 		HjhAllocationEngineExample example = new HjhAllocationEngineExample(); 
 		HjhAllocationEngineExample.Criteria criteria = example.createCriteria();
 		criteria.andLabelNameEqualTo(form.getLabelName());
-		/*criteria.andPlanNidEqualTo(planNid);*/
-		/*criteria.andLabelStatusEqualTo(1);*///标签状态 0：停用 1：启用
+		/*criteria.andConfigStatusEqualTo(1);//(父)计划专区(是否配置)状态 0：停用 1：启用
+*/		criteria.andLabelStatusEqualTo(1);//(子)配置中心的标签状态 0：停用 1：启用
 		criteria.andLabelIdEqualTo(labelId);
-		criteria.andPlanNidEqualTo(form.getPlanNid());
+		/*criteria.andPlanNidEqualTo(form.getPlanNid());*/
 		List<HjhAllocationEngine> result = this.hjhAllocationEngineMapper.selectByExample(example);
 		if (result != null) {
 			flg = result.size();

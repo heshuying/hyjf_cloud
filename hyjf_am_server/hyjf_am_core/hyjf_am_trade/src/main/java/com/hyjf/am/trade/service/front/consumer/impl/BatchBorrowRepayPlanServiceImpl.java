@@ -86,7 +86,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 			throw new Exception("更新还款任务失败。[项目编号：" + borrowNid + "]");
 		}
 		
-		Borrow borrow = this.getBorrow(borrowNid);
+		Borrow borrow = this.getBorrowByNid(borrowNid);
 		borrow.setRepayStatus(status);
 		boolean borrowFlag = this.borrowMapper.updateByPrimaryKey(borrow) > 0 ? true : false;
 		if (!borrowFlag) {
@@ -212,7 +212,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 		}
 		String repayAccountId = repayBankAccount.getAccountId();// 借款人相应的银行账号
 		// 取得借款详情
-		Borrow borrow = this.getBorrow(borrowNid);
+		Borrow borrow = this.getBorrowByNid(borrowNid);
 		if (borrow == null) {
 			throw new RuntimeException("借款详情不存在。[用户ID：" + repayUserId + "]," + "[借款编号：" + borrowNid + "]");
 		}
@@ -424,7 +424,7 @@ public class BatchBorrowRepayPlanServiceImpl extends BaseServiceImpl implements 
 	public boolean reapyBatchDetailsUpdate(BorrowApicron apicron) {
 
 		String borrowNid = apicron.getBorrowNid();// 項目编号
-		Borrow borrow = this.getBorrow(borrowNid);
+		Borrow borrow = this.getBorrowByNid(borrowNid);
 		BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
 		// 调用批次查询接口查询批次返回结果
 		List<BankCallBean> resultBeans = this.queryBatchDetails(apicron);

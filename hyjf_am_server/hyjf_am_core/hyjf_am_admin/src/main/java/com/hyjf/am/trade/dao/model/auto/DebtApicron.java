@@ -6,42 +6,137 @@ import java.util.Date;
 public class DebtApicron implements Serializable {
     private Integer id;
 
+    /**
+     * 唯一标识
+     *
+     * @mbggenerated
+     */
     private String nid;
 
+    /**
+     * 计划编号
+     *
+     * @mbggenerated
+     */
     private String planNid;
 
+    /**
+     * 借款人用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 借款人用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 项目编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 当前还款期数
+     *
+     * @mbggenerated
+     */
     private Integer periodNow;
 
+    /**
+     * 放款状态0未完成1已完成2放款执行中9放款失败
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 0放款1还款2清算
+     *
+     * @mbggenerated
+     */
     private Integer apiType;
 
+    /**
+     * 计算状态
+     *
+     * @mbggenerated
+     */
     private Integer webStatus;
 
+    /**
+     * 还款状态0未完成1已完成
+     *
+     * @mbggenerated
+     */
     private Integer repayStatus;
 
+    /**
+     * 债转还款状态
+     *
+     * @mbggenerated
+     */
     private Integer creditRepayStatus;
 
+    /**
+     * 清算状态 0待清算 1已清算 9清算失败
+     *
+     * @mbggenerated
+     */
     private Integer liquidatesStatus;
 
+    /**
+     * 创建用户id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private String updateUserName;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
+    /**
+     * 错误信息
+     *
+     * @mbggenerated
+     */
     private String data;
 
     private static final long serialVersionUID = 1L;

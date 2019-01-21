@@ -4,22 +4,62 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Answer implements Serializable {
+    /**
+     * id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 问题id
+     *
+     * @mbggenerated
+     */
     private Integer questionId;
 
+    /**
+     * 答案
+     *
+     * @mbggenerated
+     */
     private String answer;
 
+    /**
+     * 评分
+     *
+     * @mbggenerated
+     */
     private Integer score;
 
+    /**
+     * 状态0是可用，1是不可用
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
     private Integer sort;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remarks;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
     private Date createTime;

@@ -7,22 +7,67 @@ import java.util.Date;
 public class ProductRewardList implements Serializable {
     private Integer id;
 
+    /**
+     * 推荐人user_id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 汇天利用户总收益
+     *
+     * @mbggenerated
+     */
     private BigDecimal totalInterest;
 
+    /**
+     * 推荐人提成金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal reward;
 
+    /**
+     * 发放状态:0未发放，1已发放
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 发放时间
+     *
+     * @mbggenerated
+     */
     private Integer giveTime;
 
+    /**
+     * 活动月份
+     *
+     * @mbggenerated
+     */
     private String actMonth;
 
+    /**
+     * 提成说明
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 唯一标识
+     *
+     * @mbggenerated
+     */
     private String orderId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private static final long serialVersionUID = 1L;

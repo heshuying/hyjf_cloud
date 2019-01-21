@@ -37,7 +37,7 @@ public interface IncreaseInterestRepayService extends BaseService {
 	 * @param statusError
 	 * @param errorMsg
 	 */
-	public int updateBorrowApicron(Integer id, Integer statusError, String errorMsg);
+	int updateBorrowApicron(Integer id, Integer statusError, String errorMsg);
 
 	/**
 	 * 更新还款任务
@@ -46,7 +46,7 @@ public interface IncreaseInterestRepayService extends BaseService {
 	 * @param id
 	 * @param statusWait
 	 */
-	public int updateBorrowApicron(Integer id, Integer statusWait);
+	int updateBorrowApicron(Integer id, Integer statusWait);
 
 	/**
 	 * 根据借款编号检索还款信息
@@ -55,7 +55,7 @@ public interface IncreaseInterestRepayService extends BaseService {
 	 * @param borrowNid
 	 * @return
 	 */
-	public List<IncreaseInterestLoan> selectIncreaseInterestLoanList(String borrowNid);
+	List<IncreaseInterestLoan> selectIncreaseInterestLoanList(String borrowNid);
 
 	/**
 	 * 根据借款人userId检索借款人账款信息
@@ -64,7 +64,7 @@ public interface IncreaseInterestRepayService extends BaseService {
 	 * @param borrowUserId
 	 * @return
 	 */
-	public Account selectAccountByUserId(Integer borrowUserId);
+	Account selectAccountByUserId(Integer borrowUserId);
 
 	/**
 	 * 根据借款编号,期数 ,借款方式取得还款金额
@@ -75,7 +75,7 @@ public interface IncreaseInterestRepayService extends BaseService {
 	 * @param periodNow
 	 * @return
 	 */
-	public BigDecimal selectBorrowAccountWithPeriod(String borrowNid, String borrowStyle, Integer periodNow);
+	BigDecimal selectBorrowAccountWithPeriod(String borrowNid, String borrowStyle, Integer periodNow);
 
 	/**
 	 * 检索融通宝加息子账户剩余金额
@@ -83,7 +83,7 @@ public interface IncreaseInterestRepayService extends BaseService {
 	 * @Title selectCompanyAccount
 	 * @return
 	 */
-	public BigDecimal selectCompanyAccount();
+	BigDecimal selectCompanyAccount();
 
 	/**
 	 * 自动还款
@@ -104,7 +104,7 @@ public interface IncreaseInterestRepayService extends BaseService {
 	 * @param periodNow
 	 * @param borrowUserId
 	 */
-	public void updateBorrowStatus(Borrow borrow, Integer periodNow, Integer borrowUserId);
+	void updateBorrowStatus(Borrow borrow, Integer periodNow, Integer borrowUserId);
 
 	/**
 	 * 还款成功后,发送短信
@@ -112,7 +112,7 @@ public interface IncreaseInterestRepayService extends BaseService {
 	 * @Title sendSms
 	 * @param msgList
 	 */
-	public void sendSms(List<Map<String, String>> msgList);
+	void sendSms(List<Map<String, String>> msgList);
 
 	/**
 	 * 还款成功后,发送消息推送
@@ -120,7 +120,7 @@ public interface IncreaseInterestRepayService extends BaseService {
 	 * @Title sendMessage
 	 * @param msgList
 	 */
-	public void sendMessage(List<Map<String, String>> msgList);
+	void sendMessage(List<Map<String, String>> msgList);
 
 	/**
 	 * 一次性还款的情况下获取优先处理任务

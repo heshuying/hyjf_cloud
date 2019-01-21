@@ -4,28 +4,88 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class ApplyAgreement implements Serializable {
+    /**
+     * 计划id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 借款编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 期数
+     *
+     * @mbggenerated
+     */
     private Integer repayPeriod;
 
+    /**
+     * 申请人id
+     *
+     * @mbggenerated
+     */
     private Integer applyUserId;
 
+    /**
+     * 申请人
+     *
+     * @mbggenerated
+     */
     private String applyUserName;
 
-    private Integer agreementNumber;
+    /**
+     * 协议份数
+     *
+     * @mbggenerated
+     */
+    private Byte agreementNumber;
 
+    /**
+     * 投资状态 0 全部；1申请中：2申请成功
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 删除标识
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 最后修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;
@@ -70,11 +130,11 @@ public class ApplyAgreement implements Serializable {
         this.applyUserName = applyUserName == null ? null : applyUserName.trim();
     }
 
-    public Integer getAgreementNumber() {
+    public Byte getAgreementNumber() {
         return agreementNumber;
     }
 
-    public void setAgreementNumber(Integer agreementNumber) {
+    public void setAgreementNumber(Byte agreementNumber) {
         this.agreementNumber = agreementNumber;
     }
 

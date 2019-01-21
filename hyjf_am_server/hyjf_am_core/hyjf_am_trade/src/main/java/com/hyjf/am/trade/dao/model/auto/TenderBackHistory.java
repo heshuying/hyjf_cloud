@@ -7,7 +7,7 @@ public class TenderBackHistory implements Serializable {
     private Integer id;
 
     /**
-     * 撤销方 0：运营方 1：出借方
+     * 撤销方 0：运营方 1：投资方
      *
      * @mbggenerated
      */
@@ -42,7 +42,7 @@ public class TenderBackHistory implements Serializable {
     private String accountYes;
 
     /**
-     * 出借用户名
+     * 投资用户名
      *
      * @mbggenerated
      */
@@ -56,7 +56,7 @@ public class TenderBackHistory implements Serializable {
     private String amount;
 
     /**
-     * 出借订单号
+     * 投资订单号
      *
      * @mbggenerated
      */

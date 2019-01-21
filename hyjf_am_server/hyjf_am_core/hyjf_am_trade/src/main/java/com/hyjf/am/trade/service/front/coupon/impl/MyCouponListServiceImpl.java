@@ -115,7 +115,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
         String platform = request.getPlatform();
         map.put("userId", userId);
         // 查询项目信息
-        Borrow borrow = borrowService.getBorrow(borrowNid);
+        Borrow borrow = borrowService.getBorrowByNid(borrowNid);
         BorrowInfo borrowInfo = borrowInfoService.getBorrowInfo(borrowNid);
         BorrowProjectType borrowProjectType = borrowProjectTypeService.getProjectTypeByBorrowNid(borrowNid);
         String style = borrow.getBorrowStyle();
@@ -193,7 +193,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("userId", userId);
         // 查询项目信息
-        Borrow borrow = borrowService.getBorrow(borrowNid);
+        Borrow borrow = borrowService.getBorrowByNid(borrowNid);
         BorrowInfo borrowInfo = borrowInfoService.getBorrowInfo(borrowNid);
         BorrowProjectType borrowProjectType = borrowProjectTypeService.getProjectTypeByBorrowNid(borrowNid);
         Integer couponFlg = borrowInfo.getBorrowInterestCoupon();
@@ -493,7 +493,7 @@ public class MyCouponListServiceImpl implements MyCouponListService {
         map.put("userId", userId);
         map.put("usedFlag", "0");
         // 查询项目信息
-        Borrow borrow = borrowService.getBorrow(borrowNid);
+        Borrow borrow = borrowService.getBorrowByNid(borrowNid);
         BorrowInfo borrowInfo = borrowInfoService.getBorrowInfo(borrowNid);
         BorrowProjectType borrowProjectType = borrowProjectTypeService.getProjectTypeByBorrowNid(borrowNid);
         String style = borrow.getBorrowStyle();

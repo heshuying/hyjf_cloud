@@ -32,7 +32,7 @@ public class BankCreditEndServiceImpl extends BaseServiceImpl implements BankCre
         String borrowNid = hjhDebtCredit.getBorrowNid();
         Integer tenderUserId = hjhDebtCredit.getUserId();
 
-        Borrow borrow = this.getBorrow(borrowNid);
+        Borrow borrow = this.getBorrowByNid(borrowNid);
         if (borrow == null) {
             throw new RuntimeException("结束债券接口：标的"+borrowNid+"不存在");
         }

@@ -4,24 +4,64 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class SmsNoticeConfig extends SmsNoticeConfigKey implements Serializable {
+    /**
+     * 配置说明
+     *
+     * @mbggenerated
+     */
     private String title;
 
+    /**
+     * 配置值
+     *
+     * @mbggenerated
+     */
     private String configValue;
 
+    /**
+     * 纯号码
+     *
+     * @mbggenerated
+     */
     private String pvalue;
 
     private String content;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private String remark;
 
+    /**
+     * 状态，0是关闭，1是开启
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
     private static final long serialVersionUID = 1L;

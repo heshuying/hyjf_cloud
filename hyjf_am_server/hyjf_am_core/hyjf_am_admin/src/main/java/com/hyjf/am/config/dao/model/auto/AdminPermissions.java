@@ -4,22 +4,67 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class AdminPermissions implements Serializable {
+    /**
+     * 权限编号
+     *
+     * @mbggenerated
+     */
     private String permissionUuid;
 
+    /**
+     * 权限按钮ID
+     *
+     * @mbggenerated
+     */
     private String permission;
 
+    /**
+     * 权限名称
+     *
+     * @mbggenerated
+     */
     private String permissionName;
 
+    /**
+     * 描述
+     *
+     * @mbggenerated
+     */
     private String description;
 
+    /**
+     * 删除FLAG
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

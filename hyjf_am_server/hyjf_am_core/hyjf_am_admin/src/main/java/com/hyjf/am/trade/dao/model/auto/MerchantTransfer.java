@@ -5,44 +5,144 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class MerchantTransfer implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 订单编号
+     *
+     * @mbggenerated
+     */
     private String orderId;
 
+    /**
+     * 转出账户id
+     *
+     * @mbggenerated
+     */
     private Integer outAccountId;
 
+    /**
+     * 转出账户代码
+     *
+     * @mbggenerated
+     */
     private String outAccountCode;
 
+    /**
+     * 转出账户
+     *
+     * @mbggenerated
+     */
     private String outAccountName;
 
+    /**
+     * 转入账户id
+     *
+     * @mbggenerated
+     */
     private Integer inAccountId;
 
+    /**
+     * 转入账户代码
+     *
+     * @mbggenerated
+     */
     private String inAccountCode;
 
+    /**
+     * 转入账户
+     *
+     * @mbggenerated
+     */
     private String inAccountName;
 
+    /**
+     * 转账金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal transferAmount;
 
+    /**
+     * 转账时间
+     *
+     * @mbggenerated
+     */
     private Date transferTime;
 
+    /**
+     * 转让状态 0 待转账 1 转帐中 2 转账成功 3 转账失败
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 转账类型 1自动转账 0手动转账
+     *
+     * @mbggenerated
+     */
     private Integer transferType;
 
+    /**
+     * 说明
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 失败原因
+     *
+     * @mbggenerated
+     */
     private String message;
 
+    /**
+     * 创建者用户id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 更新者用户id
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 更新者
+     *
+     * @mbggenerated
+     */
     private String updateUserName;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

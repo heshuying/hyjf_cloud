@@ -392,7 +392,7 @@ public class AboutUsController extends BaseController {
 			if (mediaReport.getContent().contains("../../../..")) {
 				mediaReport.setContent(mediaReport.getContent().replaceAll("../../../..", CdnUrlUtil.getCdnUrl()));
 			} else if (mediaReport.getContent().contains("src=\"/")) {
-				mediaReport.setContent(mediaReport.getContent().replaceAll("src=\"/", "src=\"" + CdnUrlUtil.getCdnUrl()) + "//");
+				mediaReport.setContent(mediaReport.getContent().replaceAll("src=\"/", "src=\"" + CdnUrlUtil.getCdnUrl()));
 			}
 		}
 		webResult = new WebResult(mediaReport);
@@ -417,7 +417,7 @@ public class AboutUsController extends BaseController {
 			if (mediaReport.getContent().contains("../../../..")) {
 				mediaReport.setContent(mediaReport.getContent().replaceAll("../../../..", CdnUrlUtil.getCdnUrl()));
 			} else if (mediaReport.getContent().contains("src=\"/")) {
-				mediaReport.setContent(mediaReport.getContent().replaceAll("src=\"/", "src=\"" + CdnUrlUtil.getCdnUrl()) + "//");
+				mediaReport.setContent(mediaReport.getContent().replaceAll("src=\"/", "src=\"" + CdnUrlUtil.getCdnUrl()) );
 			}
 		}
 
@@ -448,7 +448,7 @@ public class AboutUsController extends BaseController {
 			} else if (companyDynamics.getContent().contains("src=\"/")) {
 				companyDynamics.setContent(companyDynamics.getContent().replaceAll("src=\"/",
 						"src=\"" + CdnUrlUtil.getCdnUrl())
-						+ "//");
+						);
 			}
 		}
 		webResult = new WebResult(companyDynamicsList);

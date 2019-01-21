@@ -5,44 +5,144 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class DebtFreezeLog implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 用户userId
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 用户汇付客户号
+     *
+     * @mbggenerated
+     */
     private String userCustId;
 
+    /**
+     * 计划编号
+     *
+     * @mbggenerated
+     */
     private String planNid;
 
+    /**
+     * 计划加入订单号
+     *
+     * @mbggenerated
+     */
     private String planOrderId;
 
+    /**
+     * 项目编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 冻结订单号
+     *
+     * @mbggenerated
+     */
     private String orderId;
 
+    /**
+     * 冻结订单日期
+     *
+     * @mbggenerated
+     */
     private String orderDate;
 
+    /**
+     * 冻结标识
+     *
+     * @mbggenerated
+     */
     private String trxId;
 
+    /**
+     * 冻结金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal amount;
 
+    /**
+     * 冻结操作状态  0初始 1成功
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 冻结类型 0投资冻结 
+     *
+     * @mbggenerated
+     */
     private Integer freezeType;
 
+    /**
+     * 是否有效 0有效 1无效记录
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建用户userId
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 更新用户userid
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private String updateUserName;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

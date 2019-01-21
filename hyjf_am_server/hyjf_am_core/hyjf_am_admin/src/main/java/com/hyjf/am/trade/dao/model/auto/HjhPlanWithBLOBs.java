@@ -3,14 +3,39 @@ package com.hyjf.am.trade.dao.model.auto;
 import java.io.Serializable;
 
 public class HjhPlanWithBLOBs extends HjhPlan implements Serializable {
+    /**
+     * 计划介绍
+     *
+     * @mbggenerated
+     */
     private String planConcept;
 
+    /**
+     * 计划原理
+     *
+     * @mbggenerated
+     */
     private String planPrinciple;
 
+    /**
+     * 风控保障措施
+     *
+     * @mbggenerated
+     */
     private String safeguardMeasures;
 
+    /**
+     * 风险保证金措施
+     *
+     * @mbggenerated
+     */
     private String marginMeasures;
 
+    /**
+     * 常见问题
+     *
+     * @mbggenerated
+     */
     private String normalQuestions;
 
     private static final long serialVersionUID = 1L;

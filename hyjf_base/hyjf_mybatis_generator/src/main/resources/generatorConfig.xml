@@ -4,7 +4,7 @@
 <generatorConfiguration>
 
     <!-- 引入配置文件 -->
-    <properties resource="init_market.properties"/>
+    <properties resource="init_trade.properties"/>
 
     <classPathEntry location="${classPath}"/>
 
@@ -515,6 +515,7 @@
             <columnOverride column="is_repay_org_flag" javaType="java.lang.Integer" jdbcType="TINYINT" />
             <columnOverride column="fail_times" javaType="java.lang.Integer" jdbcType="TINYINT" />
 			<columnOverride column="is_allrepay" javaType="java.lang.Integer" jdbcType="TINYINT" />
+			<columnOverride column="agreement_status" javaType="java.lang.Integer" jdbcType="TINYINT" />
         </table>
 
         <table tableName="ht_borrow_bail" domainObjectName="BorrowBail">
@@ -1986,5 +1987,28 @@
         <table tableName="ht_inviter_return_detail" domainObjectName="InviterReturnDetail">
             <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
         </table>
+
+        <table tableName="ht_evaluation_config" domainObjectName="EvaluationConfig">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="debt_evaluation_type_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="intellectual_eveluation_type_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="dept_evaluation_money_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="intellectual_evaluation_money_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="dept_collection_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="intellectual_collection_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="investment_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+        <table tableName="ht_evaluation_config_log" domainObjectName="EvaluationConfigLog">
+            <generatedKey column="id" sqlStatement="MySql" type="post" identity="true" />
+            <columnOverride column="debt_evaluation_type_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="intellectual_eveluation_type_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="dept_evaluation_money_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="intellectual_evaluation_money_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="dept_collection_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="intellectual_collection_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="investment_evaluation_check" javaType="java.lang.Integer" jdbcType="TINYINT" />
+            <columnOverride column="status" javaType="java.lang.Integer" jdbcType="TINYINT" />
+        </table>
+
     </context>
 </generatorConfiguration>

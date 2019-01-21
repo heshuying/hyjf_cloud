@@ -6,22 +6,67 @@ import java.util.Date;
 public class VipAuth implements Serializable {
     private Integer id;
 
+    /**
+     * vip编号
+     *
+     * @mbggenerated
+     */
     private Integer vipId;
 
+    /**
+     * 优惠券编号
+     *
+     * @mbggenerated
+     */
     private String couponCode;
 
+    /**
+     * 优惠券数量
+     *
+     * @mbggenerated
+     */
     private Integer couponQuantity;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 删除标识 0：未删除，1：已删除
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;
