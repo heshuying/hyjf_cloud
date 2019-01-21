@@ -1427,20 +1427,23 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 if (Validator.isNotNull(hjhUserAuth)) {
                     String autoInvesFlag = hjhUserAuth.getAutoInvesStatus().toString();
                     result.put("autoInvesFlag", autoInvesFlag);
+                    //自动投标授权状态 0未授权  1已授权
+                    result.put("autoInvesAuthStatus", hjhUserAuth.getAutoInvesStatus());
+                    //自动债转授权
+                    result.put("autoCreditStatus", hjhUserAuth.getAutoCreditStatus());
+                    //服务费授权
+                    result.put("paymentAuthStatus", hjhUserAuth.getAutoPaymentStatus());
                 } else {
                     result.put("autoInvesFlag", "0");//自动投标授权状态 0: 未授权    1:已授权
                 }
-                // 合规三期
-                // 是否开启 自动投标授权、自动债转授权、服务费授权 0未开启  1已开启
-                if(hjhUserAuth != null &&
-                   hjhUserAuth.getAutoInvesStatus() == 1 &&
-                   hjhUserAuth.getAutoCreditStatus() == 1 &&
-                   hjhUserAuth.getAutoPaymentStatus() == 1){
-                    result.put("paymentAuthStatus", 1);
-                }else {
-                    result.put("paymentAuthStatus", 0);
-                }
+                //是否进行自动投标授权 0-否 1-是
+                result.put("autoTenderAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+                //是否进行自动债转授权~
+                result.put("autoCreditAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+                //是否进行缴费授权~
                 result.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
+
+                // 合规三期
                 result.put("isCheckUserRole",systemConfig.getRoleIsopen());
             } else {
                 //状态位用于判断tab的是否可见
