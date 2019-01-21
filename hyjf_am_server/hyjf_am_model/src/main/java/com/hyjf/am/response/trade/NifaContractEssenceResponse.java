@@ -4,7 +4,7 @@
 package com.hyjf.am.response.trade;
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.trade.nifa.NifaContractEssenceVO;
+import com.hyjf.am.vo.hgreportdata.nifa.NifaContractEssenceVO;
 
 /**
  * @author PC-LIUSHOUYI

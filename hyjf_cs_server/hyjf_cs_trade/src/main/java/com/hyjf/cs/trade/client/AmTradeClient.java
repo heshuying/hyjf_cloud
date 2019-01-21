@@ -46,7 +46,7 @@ import com.hyjf.am.vo.trade.coupon.*;
 import com.hyjf.am.vo.trade.hjh.*;
 import com.hyjf.am.vo.trade.hjh.calculate.HjhCreditCalcResultVO;
 import com.hyjf.am.vo.trade.htj.DebtPlanAccedeCustomizeVO;
-import com.hyjf.am.vo.trade.nifa.NifaContractEssenceVO;
+import com.hyjf.am.vo.hgreportdata.nifa.NifaContractEssenceVO;
 import com.hyjf.am.vo.trade.repay.*;
 import com.hyjf.am.vo.trade.tradedetail.WebUserRechargeListCustomizeVO;
 import com.hyjf.am.vo.trade.tradedetail.WebUserTradeListCustomizeVO;
@@ -2600,5 +2600,21 @@ public interface AmTradeClient {
      * @param borrowApicronVO
      */
     void updateFddPush(BorrowApicronVO borrowApicronVO);
+
+    /**
+     * 查询用户借款笔数(企业)
+     *
+     * @param username
+     * @return
+     */
+    Integer selectBorrowUsersCount(String username);
+
+    /**
+     * 查询用户借款笔数(个人)
+     *
+     * @param username
+     * @return
+     */
+    Integer selectBorrowManInfoCount(String username);
 }
 
