@@ -16,6 +16,8 @@ import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.cert.CertSendUserVO;
+import com.hyjf.am.vo.trade.cert.CertUserVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.AmUserClient;
@@ -960,4 +962,85 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResult();
 		}
 		return null;
-	}}
+	}
+
+	/**
+	 * 根据userId查询需要上报的用户信息
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public CertSendUserVO getCertSendUserByUserId(int userId) {
+		CertSendUserResponse response = restTemplate.getForEntity(
+				userService+"certUser/getCertSendUserByUserId/" + userId,
+				CertSendUserResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 插入国家互联网应急中心已上送用户表
+	 *
+	 * @param certUser
+	 */
+	@Override
+	public Integer insertCertUser(CertUserVO certUser) {
+		IntegerResponse response = restTemplate
+				.postForEntity(userService+"/certUser/insertCertUser", certUser, IntegerResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getResultInt())) {
+			return response.getResultInt();
+		}
+		return null;
+	}
+
+	/**
+	 * 修改国家互联网应急中心已上送用户表
+	 *
+	 * @param certUser
+	 */
+	@Override
+	public Integer updateCertUser(CertUserVO certUser) {
+		IntegerResponse response = restTemplate
+				.postForEntity(userService+"/certUser/updateCertUser", certUser, IntegerResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getResultInt())) {
+			return response.getResultInt();
+		}
+		return null;
+	}
+
+	/**
+	 * 批量插入上报记录
+	 *
+	 * @param certUsers
+	 */
+	@Override
+	public Integer insertCertUserByList(List<CertUserVO> certUsers) {
+		IntegerResponse response = restTemplate
+				.postForEntity(userService+"/certUser/insertCertUserByList", certUsers, IntegerResponse.class).getBody();
+		if (response != null && Response.SUCCESS.equals(response.getResultInt())) {
+			return response.getResultInt();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据borrowNid userId查询
+	 *
+	 * @param userId
+	 * @param borrowNid
+	 * @return
+	 */
+	@Override
+	public CertUserVO getCertUserByUserIdBorrowNid(int userId, String borrowNid) {
+		CertUserResponse response = restTemplate.getForEntity(
+				userService+"certUser/getCertUserByUserIdBorrowNid/" + userId+"/"+borrowNid,
+				CertUserResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+}
