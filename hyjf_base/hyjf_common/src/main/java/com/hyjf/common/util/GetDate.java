@@ -2201,4 +2201,52 @@ public class GetDate extends PropertyEditorSupport {
 	public static void main(String[] args) {
 		System.out.println(getMillis10(new Date()));
 	}
+
+	/**
+	 * 时间戳转YYYYMM
+	 * @param timeParam
+	 * @return
+	 */
+	public static String times10toStrYYYYMM(String timeParam) {
+		Timestamp time = getTimestamp(Long.valueOf(timeParam) * 1000);
+		Date date = null;
+		if (null != time) {
+			date = new Date(time.getTime());
+			return date2Str(date, new SimpleDateFormat("yyyy-MM"));
+		}
+		return "";
+	}
+
+	/**
+	 * 默认方式表示的系统当前日期，具体格式：年月日
+	 *
+	 */
+	public static String formatTime3() {
+		return new SimpleDateFormat("yyyyMMdd").format(getCalendar().getTime());
+	}
+
+	/**
+	 * 默认方式表示的系统当前日期，具体格式：年月
+	 * @return
+	 */
+	public static String formatTimeYYYYMM() {
+		return new SimpleDateFormat("yyyyMM").format(getCalendar().getTime());
+	}
+
+	/**
+	 * 获得当前月有多少天
+	 * @param dateStr
+	 * @return
+	 */
+	public static String getDaysOfMonth(String dateStr) {
+		Date date = null;
+		try{
+			date =  new SimpleDateFormat("yyyy-MM-dd").parse(dateStr);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTime(date);
+		return calendar.getActualMaximum(Calendar.DAY_OF_MONTH)+"";
+	}
 }

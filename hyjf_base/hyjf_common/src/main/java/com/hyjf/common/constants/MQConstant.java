@@ -518,4 +518,15 @@ public interface MQConstant {
 	String SELL_DAILY_GROUP = "SELL_DAILY_GROUP";
 	String SELL_DAILY_TOPIC = "SELL_DAILY_TOPIC";
     String SELL_DAILY_SELECT_TAG = "SELL_DAILY_SELECT_TAG";
+
+    /**--------------------------------- 应急中心 -------------------------------------*/
+
+    /**用户信息*/
+	String CERT_USER_INFO_GROUP = "CERT_USER_INFO_GROUP";
+	String CERT_USER_INFO_TOPIC = "SELL_DAILY_TOPIC";
+	String CERT_USER_INFO_TAG = "CERT_USER_INFO_TAG";
+
+
+	/**--------------------------------- 应急中心 -------------------------------------*/
+
 }
