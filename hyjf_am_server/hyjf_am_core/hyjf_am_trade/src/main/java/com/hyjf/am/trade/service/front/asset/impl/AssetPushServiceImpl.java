@@ -62,8 +62,8 @@ public class AssetPushServiceImpl extends BaseServiceImpl implements AssetPushSe
     public StzhWhiteList selectStzfWhiteList(String instCode, String entrustedAccountId) {
         StzhWhiteListExample example = new StzhWhiteListExample();
         StzhWhiteListExample.Criteria crt = example.createCriteria();
-        crt.andStAccountidEqualTo(entrustedAccountId);
-        crt.andInstcodeEqualTo(instCode);
+        crt.andStAccountIdEqualTo(entrustedAccountId);
+        crt.andInstCodeEqualTo(instCode);
         crt.andDelFlagEqualTo(0);
         crt.andStateEqualTo(1);
         List<StzhWhiteList> list = this.stzhWhiteListMapper.selectByExample(example);

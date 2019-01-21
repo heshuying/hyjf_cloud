@@ -191,7 +191,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
                 logger.info("标的备案受托支付查询：机构编号:{}，受托用户ID:{}", borrowInfo.getInstCode().trim(), borrowInfo.getEntrustedUserId());
                 if (stzhWhiteList != null) {
                     debtRegistBean.setEntrustFlag(borrowInfo.getEntrustedFlg().toString());
-                    debtRegistBean.setReceiptAccountId(stzhWhiteList.getStAccountid());
+                    debtRegistBean.setReceiptAccountId(stzhWhiteList.getStAccountId());
                 } else {
                     this.updateBorrowRegist(borrow, 0, 4, currUserId, currUserName);
                     return new Response(Response.FAIL, "受托白名单查询为空！");
@@ -313,7 +313,7 @@ public class BorrowRegistServiceImpl extends BaseServiceImpl implements BorrowRe
         StzhWhiteListExample example = new StzhWhiteListExample();
         StzhWhiteListExample.Criteria crt = example.createCriteria();
         crt.andStUserIdEqualTo(entrustedUserId);
-        crt.andInstcodeEqualTo(instCode);
+        crt.andInstCodeEqualTo(instCode);
         crt.andDelFlagEqualTo(0);
         crt.andStateEqualTo(1);
         List<StzhWhiteList> list = this.stzhWhiteListMapper.selectByExample(example);

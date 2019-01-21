@@ -5931,7 +5931,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				// 借款人用户名不存在。
 				return 4;
 			}
-			if(!whiteList.get(0).getInstcode().equals(instCode)){
+			if(!whiteList.get(0).getInstCode().equals(instCode)){
 				return 5;
 			}
 		}
