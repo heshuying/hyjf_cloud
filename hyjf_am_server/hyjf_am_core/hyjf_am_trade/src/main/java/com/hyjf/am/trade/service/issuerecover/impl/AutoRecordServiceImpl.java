@@ -223,7 +223,6 @@ public class AutoRecordServiceImpl extends BaseServiceImpl implements AutoRecord
 
 	private BankCallBean buildBankCallBean(Borrow borrow, BorrowInfo borrowInfo, String accountId, String entrustFlag,
 			String stAccountId, String repayOrgAccountId) {
-		BankCallBean bankCallBean = new BankCallBean();
 		// 获取共同参数
 		String channel = BankCallConstant.CHANNEL_PC;
 		String orderId = GetOrderIdUtils.getOrderId2(borrow.getUserId());
@@ -286,7 +285,7 @@ public class AutoRecordServiceImpl extends BaseServiceImpl implements AutoRecord
 		debtRegistBean.setLogUserId(String.valueOf(borrow.getUserId()));
 		debtRegistBean.setLogRemark("借款人标的登记");
 		debtRegistBean.setLogClient(0);
-		return bankCallBean;
+		return debtRegistBean;
 	}
 
 	private StzhWhiteList getStzhWhiteList(Integer StUserId, String instCode) {
