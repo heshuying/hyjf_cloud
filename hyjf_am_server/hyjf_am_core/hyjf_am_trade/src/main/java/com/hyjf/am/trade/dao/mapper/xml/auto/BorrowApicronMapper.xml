@@ -37,7 +37,7 @@
     <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
     <result column="ordid" property="ordid" jdbcType="VARCHAR" />
     <result column="is_allrepay" property="isAllrepay" jdbcType="TINYINT" />
-    <result column="agreement_status" property="agreementStatus" jdbcType="TINYINT" />
+    <result column="agreement_status" property="agreementStatus" jdbcType="BIT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -196,7 +196,7 @@
       #{sucAmount,jdbcType=DECIMAL}, #{failCounts,jdbcType=INTEGER}, #{failAmount,jdbcType=DECIMAL}, 
       #{serviceFee,jdbcType=DECIMAL}, #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER}, 
       #{seqNo,jdbcType=INTEGER}, #{bankSeqNo,jdbcType=VARCHAR}, #{planNid,jdbcType=VARCHAR}, 
-      #{ordid,jdbcType=VARCHAR}, #{isAllrepay,jdbcType=TINYINT}, #{agreementStatus,jdbcType=TINYINT}, 
+      #{ordid,jdbcType=VARCHAR}, #{isAllrepay,jdbcType=TINYINT}, #{agreementStatus,jdbcType=BIT}, 
       #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{data,jdbcType=LONGVARCHAR}
       )
   </insert>
@@ -425,7 +425,7 @@
         #{isAllrepay,jdbcType=TINYINT},
       </if>
       <if test="agreementStatus != null" >
-        #{agreementStatus,jdbcType=TINYINT},
+        #{agreementStatus,jdbcType=BIT},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -553,7 +553,7 @@
         is_allrepay = #{record.isAllrepay,jdbcType=TINYINT},
       </if>
       <if test="record.agreementStatus != null" >
-        agreement_status = #{record.agreementStatus,jdbcType=TINYINT},
+        agreement_status = #{record.agreementStatus,jdbcType=BIT},
       </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
@@ -606,7 +606,7 @@
       plan_nid = #{record.planNid,jdbcType=VARCHAR},
       ordid = #{record.ordid,jdbcType=VARCHAR},
       is_allrepay = #{record.isAllrepay,jdbcType=TINYINT},
-      agreement_status = #{record.agreementStatus,jdbcType=TINYINT},
+      agreement_status = #{record.agreementStatus,jdbcType=BIT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       `data` = #{record.data,jdbcType=LONGVARCHAR}
@@ -651,7 +651,7 @@
       plan_nid = #{record.planNid,jdbcType=VARCHAR},
       ordid = #{record.ordid,jdbcType=VARCHAR},
       is_allrepay = #{record.isAllrepay,jdbcType=TINYINT},
-      agreement_status = #{record.agreementStatus,jdbcType=TINYINT},
+      agreement_status = #{record.agreementStatus,jdbcType=BIT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -764,7 +764,7 @@
         is_allrepay = #{isAllrepay,jdbcType=TINYINT},
       </if>
       <if test="agreementStatus != null" >
-        agreement_status = #{agreementStatus,jdbcType=TINYINT},
+        agreement_status = #{agreementStatus,jdbcType=BIT},
       </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
@@ -814,7 +814,7 @@
       plan_nid = #{planNid,jdbcType=VARCHAR},
       ordid = #{ordid,jdbcType=VARCHAR},
       is_allrepay = #{isAllrepay,jdbcType=TINYINT},
-      agreement_status = #{agreementStatus,jdbcType=TINYINT},
+      agreement_status = #{agreementStatus,jdbcType=BIT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       `data` = #{data,jdbcType=LONGVARCHAR}
@@ -856,7 +856,7 @@
       plan_nid = #{planNid,jdbcType=VARCHAR},
       ordid = #{ordid,jdbcType=VARCHAR},
       is_allrepay = #{isAllrepay,jdbcType=TINYINT},
-      agreement_status = #{agreementStatus,jdbcType=TINYINT},
+      agreement_status = #{agreementStatus,jdbcType=BIT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

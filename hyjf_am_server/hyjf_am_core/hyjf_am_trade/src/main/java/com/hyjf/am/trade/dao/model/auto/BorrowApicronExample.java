@@ -2306,52 +2306,52 @@ public class BorrowApicronExample {
             return (Criteria) this;
         }
 
-        public Criteria andAgreementStatusEqualTo(Integer value) {
+        public Criteria andAgreementStatusEqualTo(Boolean value) {
             addCriterion("agreement_status =", value, "agreementStatus");
             return (Criteria) this;
         }
 
-        public Criteria andAgreementStatusNotEqualTo(Integer value) {
+        public Criteria andAgreementStatusNotEqualTo(Boolean value) {
             addCriterion("agreement_status <>", value, "agreementStatus");
             return (Criteria) this;
         }
 
-        public Criteria andAgreementStatusGreaterThan(Integer value) {
+        public Criteria andAgreementStatusGreaterThan(Boolean value) {
             addCriterion("agreement_status >", value, "agreementStatus");
             return (Criteria) this;
         }
 
-        public Criteria andAgreementStatusGreaterThanOrEqualTo(Integer value) {
+        public Criteria andAgreementStatusGreaterThanOrEqualTo(Boolean value) {
             addCriterion("agreement_status >=", value, "agreementStatus");
             return (Criteria) this;
         }
 
-        public Criteria andAgreementStatusLessThan(Integer value) {
+        public Criteria andAgreementStatusLessThan(Boolean value) {
             addCriterion("agreement_status <", value, "agreementStatus");
             return (Criteria) this;
         }
 
-        public Criteria andAgreementStatusLessThanOrEqualTo(Integer value) {
+        public Criteria andAgreementStatusLessThanOrEqualTo(Boolean value) {
             addCriterion("agreement_status <=", value, "agreementStatus");
             return (Criteria) this;
         }
 
-        public Criteria andAgreementStatusIn(List<Integer> values) {
+        public Criteria andAgreementStatusIn(List<Boolean> values) {
             addCriterion("agreement_status in", values, "agreementStatus");
             return (Criteria) this;
         }
 
-        public Criteria andAgreementStatusNotIn(List<Integer> values) {
+        public Criteria andAgreementStatusNotIn(List<Boolean> values) {
             addCriterion("agreement_status not in", values, "agreementStatus");
             return (Criteria) this;
         }
 
-        public Criteria andAgreementStatusBetween(Integer value1, Integer value2) {
+        public Criteria andAgreementStatusBetween(Boolean value1, Boolean value2) {
             addCriterion("agreement_status between", value1, value2, "agreementStatus");
             return (Criteria) this;
         }
 
-        public Criteria andAgreementStatusNotBetween(Integer value1, Integer value2) {
+        public Criteria andAgreementStatusNotBetween(Boolean value1, Boolean value2) {
             addCriterion("agreement_status not between", value1, value2, "agreementStatus");
             return (Criteria) this;
         }

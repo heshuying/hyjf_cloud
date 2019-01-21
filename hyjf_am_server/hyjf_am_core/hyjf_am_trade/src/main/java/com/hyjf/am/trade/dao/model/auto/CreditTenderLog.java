@@ -78,7 +78,7 @@ public class CreditTenderLog implements Serializable {
     private String assignNid;
 
     /**
-     * 出借本金
+     * 投资本金
      *
      * @mbggenerated
      */

@@ -113,7 +113,7 @@ public class Account implements Serializable {
     private BigDecimal planAccedeBalance;
 
     /**
-     * 出借汇添金标的出借的未放款金额
+     * 投资汇添金标的投资的未放款金额
      *
      * @mbggenerated
      */
@@ -197,7 +197,7 @@ public class Account implements Serializable {
     private BigDecimal bankInterestSum;
 
     /**
-     * 银行累计出借
+     * 银行累计投资
      *
      * @mbggenerated
      */

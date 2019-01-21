@@ -150,7 +150,7 @@ public class AutoRecordServiceImpl extends BaseServiceImpl implements AutoRecord
 			StzhWhiteList sTZHWhiteList = getStzhWhiteList(borrowInfo.getEntrustedUserId(), borrowInfo.getInstCode());
 			if (sTZHWhiteList != null) {
 				entrustFlag = borrowInfo.getEntrustedFlg().toString();
-				stAccountId = sTZHWhiteList.getStAccountid();
+				stAccountId = sTZHWhiteList.getStAccountId();
 				/*----------------upd by liushouyi HJH3 Start-----------------------*/
 			} else {
 				// 原逻辑三方资产此处未处理、推送资产时已校验过白名单、手动录标的时候白名单依然做校验处理
@@ -293,7 +293,7 @@ public class AutoRecordServiceImpl extends BaseServiceImpl implements AutoRecord
 		StzhWhiteListExample sTZHWhiteListExample = new StzhWhiteListExample();
 		StzhWhiteListExample.Criteria sTZHCra = sTZHWhiteListExample.createCriteria();
 		sTZHCra.andStUserIdEqualTo(StUserId);
-		sTZHCra.andInstcodeEqualTo(instCode);
+		sTZHCra.andInstCodeEqualTo(instCode);
 		/*----------------upd by liushouyi HJH3 Start-----------------------*/
 		sTZHCra.andDelFlagEqualTo(0);
 		sTZHCra.andStateEqualTo(1);

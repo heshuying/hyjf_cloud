@@ -110,14 +110,14 @@ public class HjhAllocationEngine implements Serializable {
     private Integer actulPaySortPriority;
 
     /**
-     * 出借进度排序 0：从小到大 1：从大到小
+     * 投资进度排序 0：从小到大 1：从大到小
      *
      * @mbggenerated
      */
     private Integer investProgressSort;
 
     /**
-     * 出借进度优先级
+     * 投资进度优先级
      *
      * @mbggenerated
      */

@@ -27,14 +27,14 @@ public class Product implements Serializable {
     private BigDecimal interestRate;
 
     /**
-     * 出借上限-出借人
+     * 投资上限-投资人
      *
      * @mbggenerated
      */
     private BigDecimal pupper;
 
     /**
-     * 出借下限-出借人
+     * 投资下限-投资人
      *
      * @mbggenerated
      */

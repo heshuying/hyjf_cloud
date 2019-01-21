@@ -706,7 +706,7 @@ public class ApiAssetPushServiceImpl extends BaseTradeServiceImpl implements Api
             record.setEntrustedFlg(1);
             record.setEntrustedUserId(stzAccount.getStUserId());
             record.setEntrustedUserName(stzAccount.getStUserName());
-            record.setEntrustedAccountId(stzAccount.getStAccountid());
+            record.setEntrustedAccountId(stzAccount.getStAccountId());
         }
 
         // 0：个人，1：企业

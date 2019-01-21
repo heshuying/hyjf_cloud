@@ -4,7 +4,6 @@
 package com.hyjf.am.vo.trade;
 
 import com.hyjf.am.vo.BaseVO;
-import com.hyjf.common.util.GetDate;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -14,55 +13,156 @@ import java.util.Date;
  * @version STZHWhiteListVO, v0.1 2018/6/11 19:16
  */
 public class STZHWhiteListVO extends BaseVO implements Serializable {
+    private static final long serialVersionUID = 1L;
+
     private Integer id;
 
+    /**
+     * 机构/个人userid
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 机构/个人 用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
-    private String accountid;
+    /**
+     * 电子账号
+     *
+     * @mbggenerated
+     */
+    private String accountId;
 
+    /**
+     * 手机号
+     *
+     * @mbggenerated
+     */
     private String mobile;
 
+    /**
+     * 姓名
+     *
+     * @mbggenerated
+     */
     private String customerName;
 
+    /**
+     * 受托支付收款人userid
+     *
+     * @mbggenerated
+     */
     private Integer stUserId;
 
+    /**
+     * 受托支付收款人用户名
+     *
+     * @mbggenerated
+     */
     private String stUserName;
 
-    private String stAccountid;
+    /**
+     * 收款人电子账号
+     *
+     * @mbggenerated
+     */
+    private String stAccountId;
 
+    /**
+     * 收款人  手机号
+     *
+     * @mbggenerated
+     */
     private String stMobile;
 
+    /**
+     * 收款人名称/姓名
+     *
+     * @mbggenerated
+     */
     private String stCustomerName;
 
-    private Integer state;
-
-    private String createtime;
-
-    private String createuser;
-
-    private String updatetime;
-
-    private String updateuser;
-
-    private Integer delFlag;
-
+    /**
+     * 审批人
+     *
+     * @mbggenerated
+     */
     private String approvalName;
 
+    /**
+     * 审批时间
+     *
+     * @mbggenerated
+     */
     private String approvalTime;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
-    private String instcode;
+    /**
+     * 机构编号
+     *
+     * @mbggenerated
+     */
+    private String instCode;
 
-    private String instname;
+    /**
+     * 机构名称
+     *
+     * @mbggenerated
+     */
+    private String instName;
 
+    /**
+     * 状态 1启用  0禁用
+     *
+     * @mbggenerated
+     */
+    private Integer state;
+
+    /**
+     * 删除标识
+     *
+     * @mbggenerated
+     */
+    private Integer delFlag;
+
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
+    private Integer createUserId;
+
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
+    private Integer updateUserId;
+
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
-
-    private static final long serialVersionUID = 1L;
 
     public Integer getId() {
         return id;
@@ -85,15 +185,15 @@ public class STZHWhiteListVO extends BaseVO implements Serializable {
     }
 
     public void setUserName(String userName) {
-        this.userName = userName == null ? null : userName.trim();
+        this.userName = userName;
     }
 
-    public String getAccountid() {
-        return accountid;
+    public String getAccountId() {
+        return accountId;
     }
 
-    public void setAccountid(String accountid) {
-        this.accountid = accountid == null ? null : accountid.trim();
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
     }
 
     public String getMobile() {
@@ -101,7 +201,7 @@ public class STZHWhiteListVO extends BaseVO implements Serializable {
     }
 
     public void setMobile(String mobile) {
-        this.mobile = mobile == null ? null : mobile.trim();
+        this.mobile = mobile;
     }
 
     public String getCustomerName() {
@@ -109,7 +209,7 @@ public class STZHWhiteListVO extends BaseVO implements Serializable {
     }
 
     public void setCustomerName(String customerName) {
-        this.customerName = customerName == null ? null : customerName.trim();
+        this.customerName = customerName;
     }
 
     public Integer getStUserId() {
@@ -125,15 +225,15 @@ public class STZHWhiteListVO extends BaseVO implements Serializable {
     }
 
     public void setStUserName(String stUserName) {
-        this.stUserName = stUserName == null ? null : stUserName.trim();
+        this.stUserName = stUserName;
     }
 
-    public String getStAccountid() {
-        return stAccountid;
+    public String getStAccountId() {
+        return stAccountId;
     }
 
-    public void setStAccountid(String stAccountid) {
-        this.stAccountid = stAccountid == null ? null : stAccountid.trim();
+    public void setStAccountId(String stAccountId) {
+        this.stAccountId = stAccountId;
     }
 
     public String getStMobile() {
@@ -141,7 +241,7 @@ public class STZHWhiteListVO extends BaseVO implements Serializable {
     }
 
     public void setStMobile(String stMobile) {
-        this.stMobile = stMobile == null ? null : stMobile.trim();
+        this.stMobile = stMobile;
     }
 
     public String getStCustomerName() {
@@ -149,7 +249,47 @@ public class STZHWhiteListVO extends BaseVO implements Serializable {
     }
 
     public void setStCustomerName(String stCustomerName) {
-        this.stCustomerName = stCustomerName == null ? null : stCustomerName.trim();
+        this.stCustomerName = stCustomerName;
+    }
+
+    public String getApprovalName() {
+        return approvalName;
+    }
+
+    public void setApprovalName(String approvalName) {
+        this.approvalName = approvalName;
+    }
+
+    public String getApprovalTime() {
+        return approvalTime;
+    }
+
+    public void setApprovalTime(String approvalTime) {
+        this.approvalTime = approvalTime;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
+    }
+
+    public String getInstCode() {
+        return instCode;
+    }
+
+    public void setInstCode(String instCode) {
+        this.instCode = instCode;
+    }
+
+    public String getInstName() {
+        return instName;
+    }
+
+    public void setInstName(String instName) {
+        this.instName = instName;
     }
 
     public Integer getState() {
@@ -160,44 +300,6 @@ public class STZHWhiteListVO extends BaseVO implements Serializable {
         this.state = state;
     }
 
-    public String getCreatetime() {
-        if (createTime != null) {
-            return GetDate.getDateTimeMyTimeInMillis(createTime);
-        }
-        return null;
-    }
-
-    public void setCreatetime(String createtime) {
-        this.createtime = createtime == null ? null : createtime.trim();
-    }
-
-    public String getCreateuser() {
-        return createuser;
-    }
-
-    public void setCreateuser(String createuser) {
-        this.createuser = createuser == null ? null : createuser.trim();
-    }
-
-    public String getUpdatetime() {
-        if (updateTime != null) {
-            return GetDate.getDateTimeMyTimeInMillis(updateTime);
-        }
-        return null;
-    }
-
-    public void setUpdatetime(String updatetime) {
-        this.updatetime = updatetime == null ? null : updatetime.trim();
-    }
-
-    public String getUpdateuser() {
-        return updateuser;
-    }
-
-    public void setUpdateuser(String updateuser) {
-        this.updateuser = updateuser == null ? null : updateuser.trim();
-    }
-
     public Integer getDelFlag() {
         return delFlag;
     }
@@ -206,44 +308,20 @@ public class STZHWhiteListVO extends BaseVO implements Serializable {
         this.delFlag = delFlag;
     }
 
-    public String getApprovalName() {
-        return approvalName;
+    public Integer getCreateUserId() {
+        return createUserId;
     }
 
-    public void setApprovalName(String approvalName) {
-        this.approvalName = approvalName == null ? null : approvalName.trim();
+    public void setCreateUserId(Integer createUserId) {
+        this.createUserId = createUserId;
     }
 
-    public String getApprovalTime() {
-        return approvalTime;
+    public Integer getUpdateUserId() {
+        return updateUserId;
     }
 
-    public void setApprovalTime(String approvalTime) {
-        this.approvalTime = approvalTime == null ? null : approvalTime.trim();
-    }
-
-    public String getRemark() {
-        return remark;
-    }
-
-    public void setRemark(String remark) {
-        this.remark = remark == null ? null : remark.trim();
-    }
-
-    public String getInstcode() {
-        return instcode;
-    }
-
-    public void setInstcode(String instcode) {
-        this.instcode = instcode == null ? null : instcode.trim();
-    }
-
-    public String getInstname() {
-        return instname;
-    }
-
-    public void setInstname(String instname) {
-        this.instname = instname == null ? null : instname.trim();
+    public void setUpdateUserId(Integer updateUserId) {
+        this.updateUserId = updateUserId;
     }
 
     public Date getCreateTime() {
@@ -260,33 +338,5 @@ public class STZHWhiteListVO extends BaseVO implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    @Override
-    public String toString() {
-        return "STZHWhiteListVO{" +
-                "id=" + id +
-                ", userId=" + userId +
-                ", userName='" + userName + '\'' +
-                ", accountid='" + accountid + '\'' +
-                ", mobile='" + mobile + '\'' +
-                ", customerName='" + customerName + '\'' +
-                ", stUserId=" + stUserId +
-                ", stUserName='" + stUserName + '\'' +
-                ", stAccountid='" + stAccountid + '\'' +
-                ", stMobile='" + stMobile + '\'' +
-                ", stCustomerName='" + stCustomerName + '\'' +
-                ", state=" + state +
-                ", createtime='" + createtime + '\'' +
-                ", createuser='" + createuser + '\'' +
-                ", updatetime='" + updatetime + '\'' +
-                ", updateuser='" + updateuser + '\'' +
-                ", delFlag=" + delFlag +
-                ", approvalName='" + approvalName + '\'' +
-                ", approvalTime='" + approvalTime + '\'' +
-                ", remark='" + remark + '\'' +
-                ", instcode='" + instcode + '\'' +
-                ", instname='" + instname + '\'' +
-                '}';
     }
 }

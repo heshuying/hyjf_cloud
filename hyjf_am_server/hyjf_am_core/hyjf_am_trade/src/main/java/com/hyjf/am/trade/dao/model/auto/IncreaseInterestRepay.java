@@ -22,21 +22,21 @@ public class IncreaseInterestRepay implements Serializable {
     private String userName;
 
     /**
-     * 出借id
+     * 投资id
      *
      * @mbggenerated
      */
     private Integer investId;
 
     /**
-     * 出借订单号
+     * 投资订单号
      *
      * @mbggenerated
      */
     private String investOrderId;
 
     /**
-     * 出借金额
+     * 投资金额
      *
      * @mbggenerated
      */
