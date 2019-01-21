@@ -7,88 +7,298 @@ import java.util.Date;
 public class CreditTender implements Serializable {
     private Integer assignId;
 
+    /**
+     * 承接人用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 承接人用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 出让人用户ID
+     *
+     * @mbggenerated
+     */
     private Integer creditUserId;
 
+    /**
+     * 出让人用户名
+     *
+     * @mbggenerated
+     */
     private String creditUserName;
 
+    /**
+     * 状态
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 原标标号
+     *
+     * @mbggenerated
+     */
     private String bidNid;
 
+    /**
+     * 标的借款人用户ID
+     *
+     * @mbggenerated
+     */
     private Integer borrowUserId;
 
+    /**
+     * 标的借款人用户名
+     *
+     * @mbggenerated
+     */
     private String borrowUserName;
 
+    /**
+     * 债转标号
+     *
+     * @mbggenerated
+     */
     private String creditNid;
 
+    /**
+     * 债转投标单号
+     *
+     * @mbggenerated
+     */
     private String creditTenderNid;
 
+    /**
+     * 认购单号
+     *
+     * @mbggenerated
+     */
     private String assignNid;
 
+    /**
+     * 投资人投标成功的授权号
+     *
+     * @mbggenerated
+     */
     private String authCode;
 
+    /**
+     * 投资本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignCapital;
 
+    /**
+     * 回收总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignAccount;
 
+    /**
+     * 债转利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignInterest;
 
+    /**
+     * 垫付利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignInterestAdvance;
 
+    /**
+     * 购买价格
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignPrice;
 
+    /**
+     * 支付金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignPay;
 
+    /**
+     * 已还总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignRepayAccount;
 
+    /**
+     * 已还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignRepayCapital;
 
+    /**
+     * 已还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignRepayInterest;
 
+    /**
+     * 最后还款日
+     *
+     * @mbggenerated
+     */
     private Integer assignRepayEndTime;
 
+    /**
+     * 上次还款时间
+     *
+     * @mbggenerated
+     */
     private Integer assignRepayLastTime;
 
+    /**
+     * 下次还款时间
+     *
+     * @mbggenerated
+     */
     private Integer assignRepayNextTime;
 
+    /**
+     * 最终实际还款时间
+     *
+     * @mbggenerated
+     */
     private Integer assignRepayYesTime;
 
+    /**
+     * 还款期数
+     *
+     * @mbggenerated
+     */
     private Integer assignRepayPeriod;
 
+    /**
+     * 认购日期
+     *
+     * @mbggenerated
+     */
     private Integer assignCreateDate;
 
+    /**
+     * 服务费
+     *
+     * @mbggenerated
+     */
     private BigDecimal creditFee;
 
+    /**
+     * 承接人的推荐人用户名
+     *
+     * @mbggenerated
+     */
     private String inviteUserName;
 
+    /**
+     * 承接人的推荐人用户属性
+     *
+     * @mbggenerated
+     */
     private Integer inviteUserAttribute;
 
+    /**
+     * 承接人的推荐人部门信息
+     *
+     * @mbggenerated
+     */
     private String inviteUserRegionname;
 
+    /**
+     * 承接人的推荐人部门信息
+     *
+     * @mbggenerated
+     */
     private String inviteUserBranchname;
 
+    /**
+     * 团队(投资时)
+     *
+     * @mbggenerated
+     */
     private String inviteUserDepartmentname;
 
+    /**
+     * 出让人的推荐人用户名
+     *
+     * @mbggenerated
+     */
     private String inviteUserCreditName;
 
+    /**
+     * 出让人的推荐人属性
+     *
+     * @mbggenerated
+     */
     private Integer inviteUserCreditAttribute;
 
+    /**
+     * 出让人的推荐人用户部门信息
+     *
+     * @mbggenerated
+     */
     private String inviteUserCreditRegionname;
 
+    /**
+     * 出让人的推荐人用户部门信息
+     *
+     * @mbggenerated
+     */
     private String inviteUserCreditBranchname;
 
+    /**
+     * 出让人的推荐人用户部门信息
+     *
+     * @mbggenerated
+     */
     private String inviteUserCreditDepartmentname;
 
+    /**
+     * 客户端
+     *
+     * @mbggenerated
+     */
     private Integer client;
 
+    /**
+     * 已还款期数
+     *
+     * @mbggenerated
+     */
     private Integer recoverPeriod;
 
+    /**
+     * create ip
+     *
+     * @mbggenerated
+     */
     private String addIp;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private static final long serialVersionUID = 1L;

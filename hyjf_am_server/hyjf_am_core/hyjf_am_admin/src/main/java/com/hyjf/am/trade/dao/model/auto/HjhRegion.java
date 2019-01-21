@@ -4,24 +4,74 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class HjhRegion implements Serializable {
+    /**
+     * 计划专区表id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 计划编号
+     *
+     * @mbggenerated
+     */
     private String planNid;
 
+    /**
+     * 计划名称
+     *
+     * @mbggenerated
+     */
     private String planName;
 
+    /**
+     * 计划专区添加时间
+     *
+     * @mbggenerated
+     */
     private Integer configAddTime;
 
+    /**
+     * 计划专区状态 0：停用 1：启用
+     *
+     * @mbggenerated
+     */
     private Integer configStatus;
 
+    /**
+     * 删除标识
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建人id
+     *
+     * @mbggenerated
+     */
     private Integer createUser;
 
+    /**
+     * 更新人id
+     *
+     * @mbggenerated
+     */
     private Integer updateUser;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

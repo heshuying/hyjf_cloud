@@ -4,24 +4,69 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class HjhAssetType implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 机构编号
+     *
+     * @mbggenerated
+     */
     private String instCode;
 
     private Integer assetType;
 
+    /**
+     * 资产类型名称
+     *
+     * @mbggenerated
+     */
     private String assetTypeName;
 
+    /**
+     * 状态(0:启用,1:关闭)
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 添加人
+     *
+     * @mbggenerated
+     */
     private Integer createUser;
 
+    /**
+     * 更新人
+     *
+     * @mbggenerated
+     */
     private Integer updateUser;
 
+    /**
+     * 删除标识
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

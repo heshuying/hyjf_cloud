@@ -4,32 +4,92 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class AdminMenu implements Serializable {
+    /**
+     * 文档ID
+     *
+     * @mbggenerated
+     */
     private String menuUuid;
 
+    /**
+     * 上级分类ID
+     *
+     * @mbggenerated
+     */
     private String menuPuuid;
 
     private String menuCtrl;
 
     private String menuIcon;
 
+    /**
+     * 标题
+     *
+     * @mbggenerated
+     */
     private String menuName;
 
+    /**
+     * 排序（同级有效）
+     *
+     * @mbggenerated
+     */
     private Integer menuSort;
 
+    /**
+     * 链接地址
+     *
+     * @mbggenerated
+     */
     private String menuUrl;
 
+    /**
+     * 是否隐藏
+     *
+     * @mbggenerated
+     */
     private Integer menuHide;
 
+    /**
+     * 提示
+     *
+     * @mbggenerated
+     */
     private String menuTip;
 
+    /**
+     * 删除FLAG
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -5,60 +5,200 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class AleveLog implements Serializable {
+    /**
+     * 银行号
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 银行号
+     *
+     * @mbggenerated
+     */
     private Integer bank;
 
+    /**
+     * 电子账号
+     *
+     * @mbggenerated
+     */
     private String cardnbr;
 
+    /**
+     * 交易金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal amount;
 
+    /**
+     * 货币代码(156)
+     *
+     * @mbggenerated
+     */
     private Integer curNum;
 
+    /**
+     * 交易金额符号 --小于零等于C；大于零等于D
+     *
+     * @mbggenerated
+     */
     private String crflag;
 
+    /**
+     * 入帐日期 --YYYYMMDD 账务日期
+     *
+     * @mbggenerated
+     */
     private String valdate;
 
+    /**
+     * 交易日期 --YYYYMMDD 卡系统日期
+     *
+     * @mbggenerated
+     */
     private String inpdate;
 
+    /**
+     * 自然日期 --YYYYMMDD 服务器日期
+     *
+     * @mbggenerated
+     */
     private String reldate;
 
+    /**
+     * 交易时间--HH24MISSTT
+     *
+     * @mbggenerated
+     */
     private Integer inptime;
 
+    /**
+     * 交易流水号
+     *
+     * @mbggenerated
+     */
     private String tranno;
 
+    /**
+     * 关联交易流水号
+     *
+     * @mbggenerated
+     */
     private Integer oriTranno;
 
+    /**
+     * 交易类型
+     *
+     * @mbggenerated
+     */
     private Integer transtype;
 
+    /**
+     * 交易描述
+     *
+     * @mbggenerated
+     */
     private String desline;
 
+    /**
+     * 交易后余额
+     *
+     * @mbggenerated
+     */
     private BigDecimal currBal;
 
+    /**
+     * 对手交易帐号
+     *
+     * @mbggenerated
+     */
     private String forcardnbr;
 
+    /**
+     * 冲正、撤销标志 --1-已撤销/冲正空或0-正常交易
+     *
+     * @mbggenerated
+     */
     private Integer revind;
 
+    /**
+     * 交易标识 --1-调账该字段为1时，标识该笔流水为行内调账交易
+     *
+     * @mbggenerated
+     */
     private String accchg;
 
+    /**
+     * 系统跟踪号
+     *
+     * @mbggenerated
+     */
     private Integer seqno;
 
+    /**
+     * 原交易流水号
+     *
+     * @mbggenerated
+     */
     private Integer oriNum;
 
+    /**
+     * 保留域
+     *
+     * @mbggenerated
+     */
     private String resv;
 
+    /**
+     * 日期，记录导入数据所属日期
+     *
+     * @mbggenerated
+     */
     private String createDay;
 
+    /**
+     * 创建用户
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新用户
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
+    /**
+     * 删除标识
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 是否处理 0未处理 1 已处理
+     *
+     * @mbggenerated
+     */
     private Integer updFlag;
 
     private static final long serialVersionUID = 1L;

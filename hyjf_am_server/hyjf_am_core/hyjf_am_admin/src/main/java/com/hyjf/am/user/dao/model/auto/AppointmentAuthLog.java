@@ -4,16 +4,46 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class AppointmentAuthLog implements Serializable {
+    /**
+     * 主键id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 授权方式：0完全授权，1部分授权
+     *
+     * @mbggenerated
+     */
     private Integer authType;
 
+    /**
+     * 操作状态：0：取消授权1：授权
+     *
+     * @mbggenerated
+     */
     private Integer authStatus;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

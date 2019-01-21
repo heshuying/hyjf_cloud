@@ -6,32 +6,102 @@ import java.math.BigDecimal;
 public class DebtUserInfo implements Serializable {
     private Integer id;
 
+    /**
+     * 名字
+     *
+     * @mbggenerated
+     */
     private String name;
 
+    /**
+     * 1男2女
+     *
+     * @mbggenerated
+     */
     private Integer sex;
 
+    /**
+     * 年龄
+     *
+     * @mbggenerated
+     */
     private Integer old;
 
+    /**
+     * 1已婚2未婚
+     *
+     * @mbggenerated
+     */
     private Integer merry;
 
+    /**
+     * 工作地:省
+     *
+     * @mbggenerated
+     */
     private String pro;
 
+    /**
+     * 工作地:城市
+     *
+     * @mbggenerated
+     */
     private String city;
 
+    /**
+     * 行业
+     *
+     * @mbggenerated
+     */
     private String industry;
 
+    /**
+     * 个人授信额度
+     *
+     * @mbggenerated
+     */
     private Integer credit;
 
+    /**
+     * 公司规模（人数）
+     *
+     * @mbggenerated
+     */
     private String size;
 
+    /**
+     * 月营业额
+     *
+     * @mbggenerated
+     */
     private BigDecimal business;
 
+    /**
+     * 在现单位工作的时间
+     *
+     * @mbggenerated
+     */
     private String wtime;
 
+    /**
+     * 借款编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 借款预编号
+     *
+     * @mbggenerated
+     */
     private Integer borrowPreNid;
 
+    /**
+     * 岗位职业
+     *
+     * @mbggenerated
+     */
     private String position;
 
     private static final long serialVersionUID = 1L;

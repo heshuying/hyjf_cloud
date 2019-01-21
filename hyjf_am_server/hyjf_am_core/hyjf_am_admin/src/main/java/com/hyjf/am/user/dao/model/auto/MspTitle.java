@@ -5,34 +5,109 @@ import java.io.Serializable;
 public class MspTitle implements Serializable {
     private Integer id;
 
+    /**
+     * 申请编号
+     *
+     * @mbggenerated
+     */
     private String applyId;
 
+    /**
+     * 姓名
+     *
+     * @mbggenerated
+     */
     private String customername;
 
+    /**
+     * 身份证号
+     *
+     * @mbggenerated
+     */
     private String papernumber;
 
+    /**
+     * 报告生成时间
+     *
+     * @mbggenerated
+     */
     private String reporttime;
 
+    /**
+     * 未结清
+     *
+     * @mbggenerated
+     */
     private String wjqcount;
 
+    /**
+     * 已结清
+     *
+     * @mbggenerated
+     */
     private String jqcount;
 
+    /**
+     * 小计
+     *
+     * @mbggenerated
+     */
     private String totalcount;
 
+    /**
+     * 未结清
+     *
+     * @mbggenerated
+     */
     private String ewjqcount;
 
+    /**
+     * 已结清
+     *
+     * @mbggenerated
+     */
     private String ejqcount;
 
+    /**
+     * 小计
+     *
+     * @mbggenerated
+     */
     private String etotalcount;
 
+    /**
+     * 申请中笔数
+     *
+     * @mbggenerated
+     */
     private String applyingcount;
 
+    /**
+     * 通过笔数
+     *
+     * @mbggenerated
+     */
     private String applypassedcount;
 
+    /**
+     * 拒绝笔数
+     *
+     * @mbggenerated
+     */
     private String applyrejectcount;
 
+    /**
+     * 小计
+     *
+     * @mbggenerated
+     */
     private String applytotalcount;
 
+    /**
+     * 申请/债权/逾期/补录/行业不良记录
+     *
+     * @mbggenerated
+     */
     private String querycount;
 
     private static final long serialVersionUID = 1L;

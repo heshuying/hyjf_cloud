@@ -5,24 +5,74 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class CouponRepayMonitor implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 日
+     *
+     * @mbggenerated
+     */
     private String day;
 
+    /**
+     * 星期
+     *
+     * @mbggenerated
+     */
     private String week;
 
+    /**
+     * 待收收益总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal interestWaitTotal;
 
+    /**
+     * 已收收益总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal interestYesTotal;
 
+    /**
+     * 删除标识 0：未删除，1：已删除
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

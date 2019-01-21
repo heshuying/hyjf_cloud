@@ -8,26 +8,81 @@ public class ContentHelp implements Serializable {
 
     private Integer pcateId;
 
+    /**
+     * 分类ID
+     *
+     * @mbggenerated
+     */
     private Integer cateId;
 
+    /**
+     * 问题标题
+     *
+     * @mbggenerated
+     */
     private String title;
 
+    /**
+     * 内容
+     *
+     * @mbggenerated
+     */
     private String content;
 
+    /**
+     * 排序
+     *
+     * @mbggenerated
+     */
     private Integer order;
 
+    /**
+     * 状态  0启用 1开启
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 是否单页1单页，0非单页
+     *
+     * @mbggenerated
+     */
     private Integer type;
 
+    /**
+     * 别名
+     *
+     * @mbggenerated
+     */
     private String code;
 
+    /**
+     * 文章来源
+     *
+     * @mbggenerated
+     */
     private String source;
 
+    /**
+     * 作者
+     *
+     * @mbggenerated
+     */
     private String author;
 
+    /**
+     * 缩略图
+     *
+     * @mbggenerated
+     */
     private String thumb;
 
+    /**
+     * 简要介绍
+     *
+     * @mbggenerated
+     */
     private String summary;
 
     private String seoTitle;
@@ -36,18 +91,38 @@ public class ContentHelp implements Serializable {
 
     private String seoDescription;
 
+    /**
+     * 点击数
+     *
+     * @mbggenerated
+     */
     private Integer hits;
 
     private String outLink;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
     private Date createTime;
 
     private Date updateTime;
 
+    /**
+     * 智齿客服状态
+     *
+     * @mbggenerated
+     */
     private Integer zhichiStatus;
 
     private static final long serialVersionUID = 1L;

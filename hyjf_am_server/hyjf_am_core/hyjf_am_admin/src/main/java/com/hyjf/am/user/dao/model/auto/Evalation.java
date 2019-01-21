@@ -4,26 +4,81 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class Evalation implements Serializable {
+    /**
+     * id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 评分上限
+     *
+     * @mbggenerated
+     */
     private Short scoreUp;
 
+    /**
+     * 评分下线
+     *
+     * @mbggenerated
+     */
     private Short scoreDown;
 
+    /**
+     * 测评类型
+     *
+     * @mbggenerated
+     */
     private String evalType;
 
+    /**
+     * 测评分析
+     *
+     * @mbggenerated
+     */
     private String summary;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remarks;
 
+    /**
+     * 状态0是可用，1是不可用
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private String createUser;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private String updateUser;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

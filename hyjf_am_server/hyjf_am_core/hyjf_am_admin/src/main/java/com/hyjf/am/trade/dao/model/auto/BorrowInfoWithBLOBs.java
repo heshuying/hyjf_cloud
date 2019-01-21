@@ -3,24 +3,74 @@ package com.hyjf.am.trade.dao.model.auto;
 import java.io.Serializable;
 
 public class BorrowInfoWithBLOBs extends BorrowInfo implements Serializable {
+    /**
+     * 财务信息
+     *
+     * @mbggenerated
+     */
     private String accountContents;
 
+    /**
+     * 借款的详情
+     *
+     * @mbggenerated
+     */
     private String borrowContents;
 
+    /**
+     * 资金运转-用途
+     *
+     * @mbggenerated
+     */
     private String borrowRunningUse;
 
+    /**
+     * 资金运转-来源
+     *
+     * @mbggenerated
+     */
     private String borrowRunningSoruce;
 
+    /**
+     * 风险控制措施-机构
+     *
+     * @mbggenerated
+     */
     private String borrowMeasuresInstit;
 
+    /**
+     * 风险控制措施-抵押物
+     *
+     * @mbggenerated
+     */
     private String borrowMeasuresMort;
 
+    /**
+     * 险控制措施-措施
+     *
+     * @mbggenerated
+     */
     private String borrowMeasuresMea;
 
+    /**
+     * 项目资料
+     *
+     * @mbggenerated
+     */
     private String files;
 
+    /**
+     * 机构介绍
+     *
+     * @mbggenerated
+     */
     private String borrowCompanyInstruction;
 
+    /**
+     * 操作流程
+     *
+     * @mbggenerated
+     */
     private String borrowOperatingProcess;
 
     private static final long serialVersionUID = 1L;

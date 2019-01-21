@@ -5,6 +5,11 @@ import java.io.Serializable;
 public class SmsNoticeConfigKey implements Serializable {
     private Integer id;
 
+    /**
+     * 标识名称
+     *
+     * @mbggenerated
+     */
     private String name;
 
     private static final long serialVersionUID = 1L;

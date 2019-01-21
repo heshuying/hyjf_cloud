@@ -7,78 +7,260 @@ import java.util.Date;
 public class BorrowApicron implements Serializable {
     private Integer id;
 
+    /**
+     * 标的编号_用户ID_期数
+     *
+     * @mbggenerated
+     */
     private String nid;
 
     private Integer userId;
 
     private String borrowNid;
 
+    /**
+     * 放款状态0未完成1已完成2放款执行中9放款失败
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 计算状态
+     *
+     * @mbggenerated
+     */
     private Integer webStatus;
 
+    /**
+     * 0放款1还款
+     *
+     * @mbggenerated
+     */
     private Integer apiType;
 
+    /**
+     * 还款状态0未完成1已完成
+     *
+     * @mbggenerated
+     */
     private Integer repayStatus;
 
+    /**
+     * 汇租赁当前期数
+     *
+     * @mbggenerated
+     */
     private Integer periodNow;
 
+    /**
+     * 债转还款状态
+     *
+     * @mbggenerated
+     */
     private Integer creditRepayStatus;
 
+    /**
+     * 融通宝加息利息放款状态0未完成1已完成2放款执行中9放款失败
+     *
+     * @mbggenerated
+     */
     private Integer extraYieldStatus;
 
+    /**
+     * 融通宝加息利息还款状态0未完成1已完成
+     *
+     * @mbggenerated
+     */
     private Integer extraYieldRepayStatus;
 
+    /**
+     * 是否是担保机构还款(0:否,1:是)
+     *
+     * @mbggenerated
+     */
     private Integer isRepayOrgFlag;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 借款金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal borrowAccount;
 
+    /**
+     * 总期数
+     *
+     * @mbggenerated
+     */
     private Integer borrowPeriod;
 
+    /**
+     * 还款批次号
+     *
+     * @mbggenerated
+     */
     private String batchNo;
 
+    /**
+     * 应放款本金，或者是还款金额，共用
+     *
+     * @mbggenerated
+     */
     private BigDecimal batchAmount;
 
+    /**
+     * 批次放款总数或者还款总记录数
+     *
+     * @mbggenerated
+     */
     private Integer batchCounts;
 
+    /**
+     * 放款总服务费或还款总服务费
+     *
+     * @mbggenerated
+     */
     private BigDecimal batchServiceFee;
 
+    /**
+     * 应放款金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal txAmount;
 
+    /**
+     * 交易笔数
+     *
+     * @mbggenerated
+     */
     private Integer txCounts;
 
+    /**
+     * 失败次数
+     *
+     * @mbggenerated
+     */
     private Integer failTimes;
 
+    /**
+     * 成功笔数
+     *
+     * @mbggenerated
+     */
     private Integer sucCounts;
 
+    /**
+     * 成功交易金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal sucAmount;
 
+    /**
+     * 失败笔数
+     *
+     * @mbggenerated
+     */
     private Integer failCounts;
 
+    /**
+     * 失败交易金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal failAmount;
 
+    /**
+     * 应收服务费
+     *
+     * @mbggenerated
+     */
     private BigDecimal serviceFee;
 
+    /**
+     * 交易日期
+     *
+     * @mbggenerated
+     */
     private Integer txDate;
 
+    /**
+     * 交易时间
+     *
+     * @mbggenerated
+     */
     private Integer txTime;
 
+    /**
+     * 交易流水号
+     *
+     * @mbggenerated
+     */
     private Integer seqNo;
 
+    /**
+     * 交易日期+交易时间+交易流水号
+     *
+     * @mbggenerated
+     */
     private String bankSeqNo;
 
+    /**
+     * 计划编号
+     *
+     * @mbggenerated
+     */
     private String planNid;
 
+    /**
+     * 放款订单号
+     *
+     * @mbggenerated
+     */
     private String ordid;
 
+    /**
+     * 批次任务是否属于一次性还款 0：否 1：是
+     *
+     * @mbggenerated
+     */
     private Integer isAllrepay;
 
+    /**
+     * 是否生成合同
+     *
+     * @mbggenerated
+     */
+    private Boolean agreementStatus;
+
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
+    /**
+     * 错误信息
+     *
+     * @mbggenerated
+     */
     private String data;
 
     private static final long serialVersionUID = 1L;
@@ -361,6 +543,14 @@ public class BorrowApicron implements Serializable {
 
     public void setIsAllrepay(Integer isAllrepay) {
         this.isAllrepay = isAllrepay;
+    }
+
+    public Boolean getAgreementStatus() {
+        return agreementStatus;
+    }
+
+    public void setAgreementStatus(Boolean agreementStatus) {
+        this.agreementStatus = agreementStatus;
     }
 
     public Date getCreateTime() {

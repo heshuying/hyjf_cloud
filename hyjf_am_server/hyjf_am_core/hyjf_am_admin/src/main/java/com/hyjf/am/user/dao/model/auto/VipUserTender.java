@@ -6,26 +6,81 @@ import java.util.Date;
 public class VipUserTender implements Serializable {
     private Integer id;
 
+    /**
+     * 用户编号
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * vip编号
+     *
+     * @mbggenerated
+     */
     private Integer vipId;
 
+    /**
+     * 出借订单编号
+     *
+     * @mbggenerated
+     */
     private String tenderNid;
 
+    /**
+     * 出借V值
+     *
+     * @mbggenerated
+     */
     private Integer tenderVipValue;
 
+    /**
+     * 账户V值
+     *
+     * @mbggenerated
+     */
     private Integer sumVipValue;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 删除标识 0：未删除，1：已删除
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -5,12 +5,32 @@ import java.io.Serializable;
 public class BorrowStyle implements Serializable {
     private Integer id;
 
+    /**
+     * 标示名
+     *
+     * @mbggenerated
+     */
     private String nid;
 
+    /**
+     * 是否启用
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 名称
+     *
+     * @mbggenerated
+     */
     private String name;
 
+    /**
+     * 名称，可改
+     *
+     * @mbggenerated
+     */
     private String title;
 
     private static final long serialVersionUID = 1L;

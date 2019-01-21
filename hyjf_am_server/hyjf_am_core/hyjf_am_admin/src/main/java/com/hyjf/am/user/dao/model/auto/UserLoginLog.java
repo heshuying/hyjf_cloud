@@ -4,20 +4,60 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class UserLoginLog implements Serializable {
+    /**
+     * 用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 登录次数
+     *
+     * @mbggenerated
+     */
     private Integer loginTimes;
 
+    /**
+     * 最后登录ip
+     *
+     * @mbggenerated
+     */
     private String loginIp;
 
+    /**
+     * 最后登录时间
+     *
+     * @mbggenerated
+     */
     private Date loginTime;
 
+    /**
+     * 上一次登录ip
+     *
+     * @mbggenerated
+     */
     private String lastIp;
 
+    /**
+     * 上一次登录时间
+     *
+     * @mbggenerated
+     */
     private Date lastTime;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;
