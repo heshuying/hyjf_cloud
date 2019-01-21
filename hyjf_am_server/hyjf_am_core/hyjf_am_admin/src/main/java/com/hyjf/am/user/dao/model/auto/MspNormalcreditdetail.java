@@ -5,24 +5,74 @@ import java.io.Serializable;
 public class MspNormalcreditdetail implements Serializable {
     private Integer id;
 
+    /**
+     * 申请编号
+     *
+     * @mbggenerated
+     */
     private String applyId;
 
+    /**
+     * 借款日期
+     *
+     * @mbggenerated
+     */
     private String creditstartdate;
 
+    /**
+     * 到期日期
+     *
+     * @mbggenerated
+     */
     private String creditenddate;
 
+    /**
+     * 借款地点
+     *
+     * @mbggenerated
+     */
     private String creditaddress;
 
+    /**
+     * 借款类型
+     *
+     * @mbggenerated
+     */
     private String loantype;
 
+    /**
+     * 担保方式
+     *
+     * @mbggenerated
+     */
     private String assuretype;
 
+    /**
+     * 合同金额
+     *
+     * @mbggenerated
+     */
     private String loanmoney;
 
+    /**
+     * 还款期数
+     *
+     * @mbggenerated
+     */
     private String loanperiods;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 借款编号
+     *
+     * @mbggenerated
+     */
     private String num;
 
     private static final long serialVersionUID = 1L;

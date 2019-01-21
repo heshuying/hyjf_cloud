@@ -381,8 +381,10 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 			// 出借人记录
 			/*原Account tenderAccount = this.getAccount(Integer.parseInt(userId)); criteria.andUserIdEqualTo(userId);*/
 			AccountVO tenderAccount = amUserClient.getAccount(Integer.parseInt(userId));//criteria.andUserIdEqualTo(userId);
+			logger.info("test---------", userId, "-----" + tenderAccount.getBankBalance());
 			
 			if (tenderAccount.getBankBalance().compareTo(accountBigDecimal) < 0) {
+				logger.info("!!!!!!!!!!!!");
 				return jsonMessage("余额不足，请充值！", "1");
 			}
 			// 判断用户是否禁用
@@ -662,8 +664,11 @@ public class TenderServiceImpl extends BaseTradeServiceImpl implements TenderSer
 								break;
 							} else {
 								Transaction transaction = jedis.multi();
+								logger.info("-------------标的:" + borrowNid + "减扣之前金额：" + accountRedisWait);
 								BigDecimal lastAccount = new BigDecimal(accountRedisWait).subtract(accountDecimal);
-								transaction.set(borrowNid, lastAccount.toString());
+//								transaction.set(borrowNid, lastAccount.toString());
+								logger.info("-------------标的:" + borrowNid + "减扣之后金额：" + lastAccount);
+								transaction.set(RedisConstants.BORROW_NID + borrowNid, lastAccount.toString());
 								List<Object> result = transaction.exec();
 								if (result == null || result.isEmpty()) {
 									jedis.unwatch();

@@ -2449,15 +2449,6 @@ public interface AmTradeClient {
 
     List<BorrowCustomizeVO> searchBorrowCustomizeList(BorrowCommonCustomizeVO borrowCommonCustomize);
 
-    /**
-     * 根据contract_id查询垫付协议生成详情
-     * @author Zha Daojian
-     * @date 2018/8/23 15:47
-     * @param contractId
-     * @return com.hyjf.am.response.admin.ApplyAgreementInfoResponse
-     **/
-    List<ApplyAgreementInfoVO>  selectApplyAgreementInfoByContractId(String contractId);
-
     List<PlanInvestCustomizeVO> selectInvestCreditList(Map<String,Object> param);
 
     List<PlanInvestCustomizeVO> selectCreditCreditList(Map<String,Object> param);

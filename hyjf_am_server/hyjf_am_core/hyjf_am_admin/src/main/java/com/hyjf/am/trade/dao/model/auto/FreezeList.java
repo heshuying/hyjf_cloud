@@ -23,10 +23,20 @@ public class FreezeList implements Serializable {
 
     private Integer xfrom;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private Integer unfreezeManual;
 
+    /**
+     * 冻结标识  0冻结 1解冻
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
     private static final long serialVersionUID = 1L;

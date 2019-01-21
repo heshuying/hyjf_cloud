@@ -69,14 +69,14 @@ public class DebtCredit implements Serializable {
     private BigDecimal actualApr;
 
     /**
-     * 原始标的出借订单号
+     * 原始标的投资订单号
      *
      * @mbggenerated
      */
     private String investOrderId;
 
     /**
-     * 原出借订单号
+     * 原投资订单号
      *
      * @mbggenerated
      */

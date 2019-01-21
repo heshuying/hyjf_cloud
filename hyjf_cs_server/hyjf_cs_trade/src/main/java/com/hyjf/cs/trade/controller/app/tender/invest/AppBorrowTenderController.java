@@ -118,6 +118,11 @@ public class AppBorrowTenderController extends BaseTradeController {
         result.setRevalJudge((boolean) resultEval.get("revalJudge"));
         result.setProjectRevalJudge((boolean) resultEval.get("projectRevalJudge"));
         result.setRevalPrincipalJudge((boolean) resultEval.get("revalPrincipalJudge"));
+        // 根据前端王琪要求当revalPrincipalJudge为true时，设置revalJudge为true
+        if((boolean) resultEval.get("revalPrincipalJudge")){
+            result.setRevalJudge(true);
+        }
+        // 以下参数为测评返回变量信息
         result.setEvalType((String) resultEval.get("evalType"));
         result.setRevaluationMoney((String) resultEval.get("revaluationMoney"));
         result.setRiskLevelDesc((String) resultEval.get("riskLevelDesc"));

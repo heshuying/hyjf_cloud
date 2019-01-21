@@ -311,14 +311,14 @@ public class DebtBorrow implements Serializable {
     private String cancelContents;
 
     /**
-     * 最小的出借额
+     * 最小的投资额
      *
      * @mbggenerated
      */
     private Integer tenderAccountMin;
 
     /**
-     * 最大的出借额
+     * 最大的投资额
      *
      * @mbggenerated
      */
@@ -332,7 +332,7 @@ public class DebtBorrow implements Serializable {
     private Integer tenderTimes;
 
     /**
-     * 最后出借时间
+     * 最后投资时间
      *
      * @mbggenerated
      */
@@ -627,7 +627,7 @@ public class DebtBorrow implements Serializable {
     private Integer awardStatus;
 
     /**
-     * 出借失败是否也奖励
+     * 投资失败是否也奖励
      *
      * @mbggenerated
      */
@@ -834,28 +834,28 @@ public class DebtBorrow implements Serializable {
     private String differentialRate;
 
     /**
-     * 可出借平台_PC
+     * 可投资平台_PC
      *
      * @mbggenerated
      */
     private String canTransactionPc;
 
     /**
-     * 可出借平台_微网站
+     * 可投资平台_微网站
      *
      * @mbggenerated
      */
     private String canTransactionWei;
 
     /**
-     * 可出借平台_IOS
+     * 可投资平台_IOS
      *
      * @mbggenerated
      */
     private String canTransactionIos;
 
     /**
-     * 可出借平台_Android
+     * 可投资平台_Android
      *
      * @mbggenerated
      */

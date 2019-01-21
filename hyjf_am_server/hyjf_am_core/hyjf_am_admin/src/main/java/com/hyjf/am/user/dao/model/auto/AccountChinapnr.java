@@ -8,8 +8,18 @@ public class AccountChinapnr implements Serializable {
 
     private Integer userId;
 
+    /**
+     * 汇付帐号
+     *
+     * @mbggenerated
+     */
     private String chinapnrUsrid;
 
+    /**
+     * 客户号
+     *
+     * @mbggenerated
+     */
     private Long chinapnrUsrcustid;
 
     private Integer isok;

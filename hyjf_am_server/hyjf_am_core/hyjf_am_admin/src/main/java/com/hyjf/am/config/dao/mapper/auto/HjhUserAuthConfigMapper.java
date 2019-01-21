@@ -2,12 +2,10 @@ package com.hyjf.am.config.dao.mapper.auto;
 
 import com.hyjf.am.config.dao.model.auto.HjhUserAuthConfig;
 import com.hyjf.am.config.dao.model.auto.HjhUserAuthConfigExample;
+import java.util.List;
 import org.apache.ibatis.annotations.Param;
 
-import java.util.List;
-
 public interface HjhUserAuthConfigMapper {
-
     int countByExample(HjhUserAuthConfigExample example);
 
     int deleteByExample(HjhUserAuthConfigExample example);
@@ -29,5 +27,4 @@ public interface HjhUserAuthConfigMapper {
     int updateByPrimaryKeySelective(HjhUserAuthConfig record);
 
     int updateByPrimaryKey(HjhUserAuthConfig record);
-
 }

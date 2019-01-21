@@ -4,28 +4,88 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class BankInterface implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 银行接口类型
+     *
+     * @mbggenerated
+     */
     private String interfaceType;
 
+    /**
+     * 银行接口类型名称
+     *
+     * @mbggenerated
+     */
     private String interfaceName;
 
+    /**
+     * 银行接口使用状态(0:老接口，1:新接口)
+     *
+     * @mbggenerated
+     */
     private Integer interfaceStatus;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 创建用户id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
+    /**
+     * 更新用户id
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private String updateUserName;
 
+    /**
+     * 是否可用 0否 1是
+     *
+     * @mbggenerated
+     */
     private Integer isUsable;
 
+    /**
+     * 是否删除 0否 1是
+     *
+     * @mbggenerated
+     */
     private Integer isDelete;
 
     private static final long serialVersionUID = 1L;

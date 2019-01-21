@@ -2,9 +2,8 @@ package com.hyjf.am.market.dao.mapper.auto;
 
 import com.hyjf.am.market.dao.model.auto.NmUser;
 import com.hyjf.am.market.dao.model.auto.NmUserExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface NmUserMapper {
     int countByExample(NmUserExample example);

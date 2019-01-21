@@ -4,10 +4,7 @@
 package com.hyjf.am.trade.service.front.trade;
 
 import com.hyjf.am.resquest.trade.ChinaPnrWithdrawRequest;
-import com.hyjf.am.trade.dao.model.auto.ChinapnrLog;
 import com.hyjf.am.trade.service.BaseService;
-
-import java.util.List;
 
 /**
  * 汇付

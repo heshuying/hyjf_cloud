@@ -79,7 +79,7 @@ public class HjhCalculateFairValueServiceImpl extends BaseServiceImpl implements
                 // 债权原标编号
                 String borrowNid = hjhDebtDetail.getBorrowNid();
                 // 根据标的号查询标的信息
-                Borrow borrow = this.getBorrow(borrowNid);
+                Borrow borrow = this.getBorrowByNid(borrowNid);
                 if (borrow == null) {
                     throw new RuntimeException("根据标的编号查询标的详情失败,标的编号:[" + borrowNid + "].");
                 }

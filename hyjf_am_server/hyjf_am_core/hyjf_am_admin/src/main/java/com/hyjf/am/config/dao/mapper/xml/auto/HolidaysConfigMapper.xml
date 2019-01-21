@@ -72,7 +72,7 @@
     </where>
   </sql>
   <sql id="Base_Column_List" >
-    id, `year`, events_name, statr_time, end_time, create_user_id, update_user_id, create_time,
+    id, `year`, events_name, statr_time, end_time, create_user_id, update_user_id, create_time, 
     update_time, remarks
   </sql>
   <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.HolidaysConfigExample" >
@@ -93,7 +93,7 @@
     </if>
   </select>
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
-    select
+    select 
     <include refid="Base_Column_List" />
     from ht_holidays_config
     where id = #{id,jdbcType=INTEGER}
@@ -112,14 +112,14 @@
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
       SELECT LAST_INSERT_ID()
     </selectKey>
-    insert into ht_holidays_config (`year`, events_name, statr_time,
-    end_time, create_user_id, update_user_id,
-    create_time, update_time, remarks
-    )
-    values (#{year,jdbcType=VARCHAR}, #{eventsName,jdbcType=VARCHAR}, #{statrTime,jdbcType=VARCHAR},
-    #{endTime,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER},
-    #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR}
-    )
+    insert into ht_holidays_config (`year`, events_name, statr_time, 
+      end_time, create_user_id, update_user_id, 
+      create_time, update_time, remarks
+      )
+    values (#{year,jdbcType=VARCHAR}, #{eventsName,jdbcType=VARCHAR}, #{statrTime,jdbcType=VARCHAR}, 
+      #{endTime,jdbcType=VARCHAR}, #{createUserId,jdbcType=INTEGER}, #{updateUserId,jdbcType=INTEGER}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{remarks,jdbcType=VARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.HolidaysConfig" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -232,15 +232,15 @@
   <update id="updateByExample" parameterType="map" >
     update ht_holidays_config
     set id = #{record.id,jdbcType=INTEGER},
-    `year` = #{record.year,jdbcType=VARCHAR},
-    events_name = #{record.eventsName,jdbcType=VARCHAR},
-    statr_time = #{record.statrTime,jdbcType=VARCHAR},
-    end_time = #{record.endTime,jdbcType=VARCHAR},
-    create_user_id = #{record.createUserId,jdbcType=INTEGER},
-    update_user_id = #{record.updateUserId,jdbcType=INTEGER},
-    create_time = #{record.createTime,jdbcType=TIMESTAMP},
-    update_time = #{record.updateTime,jdbcType=TIMESTAMP},
-    remarks = #{record.remarks,jdbcType=VARCHAR}
+      `year` = #{record.year,jdbcType=VARCHAR},
+      events_name = #{record.eventsName,jdbcType=VARCHAR},
+      statr_time = #{record.statrTime,jdbcType=VARCHAR},
+      end_time = #{record.endTime,jdbcType=VARCHAR},
+      create_user_id = #{record.createUserId,jdbcType=INTEGER},
+      update_user_id = #{record.updateUserId,jdbcType=INTEGER},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      remarks = #{record.remarks,jdbcType=VARCHAR}
     <if test="_parameter != null" >
       <include refid="Update_By_Example_Where_Clause" />
     </if>

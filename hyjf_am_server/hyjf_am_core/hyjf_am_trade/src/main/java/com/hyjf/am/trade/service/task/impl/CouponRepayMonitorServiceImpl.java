@@ -41,12 +41,6 @@ public class CouponRepayMonitorServiceImpl implements CouponRepayMonitorService 
     }
 
     @Override
-    public List<AdminCouponRepayMonitorCustomize> selectCouponRepayMonitorPage(Map<String, Object> paraMap) {
-        List<AdminCouponRepayMonitorCustomize> couponRepayMonitorList =  adminCouponRepayMonitorCustomizeMapper.selectRecordList(paraMap);
-        return couponRepayMonitorList;
-    }
-
-    @Override
     public int insertCouponRepayMonitor(CouponRepayMonitor couponRepayMonitor) {
         int result = couponRepayMonitorMapper.insertSelective(couponRepayMonitor);
         return result;
@@ -65,10 +59,5 @@ public class CouponRepayMonitorServiceImpl implements CouponRepayMonitorService 
         paraMap.put("timeEndSrch", form.getTimeEndSrch());
         int cnt = adminCouponRepayMonitorCustomizeMapper.countRecordTotal(paraMap);
         return cnt;
-    }
-
-    @Override
-    public List<AdminCouponRepayMonitorCustomize> selectInterestSum(Map<String, Object> paraMap) {
-        return adminCouponRepayMonitorCustomizeMapper.selectInterestSum(paraMap);
     }
 }

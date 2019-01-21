@@ -181,18 +181,6 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 		}
 	}
 
-	private Borrow getBorrowByNid(String borrowNid) {
-		BorrowExample example = new BorrowExample();
-		BorrowExample.Criteria criteria = example.createCriteria();
-		criteria.andBorrowNidEqualTo(borrowNid);
-		List<Borrow> list = borrowMapper.selectByExample(example);
-		if (list != null && !list.isEmpty()) {
-			return list.get(0);
-		}
-		return null;
-	}
-
-
 
 	/**
 	 * 调用银行结束债权接口
@@ -1583,7 +1571,7 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 	// 分期的标的
 	private void updateCreditPlan(CreditTenderBgVO request) {
 		String BorrowNid = request.getCreditTenderLog().getBidNid();
-		Borrow borrow = getBorrow(BorrowNid);
+		Borrow borrow = getBorrowByNid(BorrowNid);
 		String borrowStyle = borrow.getBorrowStyle();
 		BorrowRecoverVO borrowRecover = request.getBorrowRecover();
 		boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrowStyle) || CustomConstants.BORROW_STYLE_MONTH.equals(borrowStyle)

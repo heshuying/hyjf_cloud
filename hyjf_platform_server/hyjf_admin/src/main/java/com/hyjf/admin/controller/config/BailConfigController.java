@@ -320,7 +320,6 @@ public class BailConfigController extends BaseController {
         try {
             fileName = URLEncoder.encode(sheetName, CustomConstants.UTF8) + StringPool.UNDERLINE + GetDate.getServerDateTime(8, new Date()) + CustomConstants.EXCEL_EXT;
         } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
             logger.error("转码错误....", e);
         }
 

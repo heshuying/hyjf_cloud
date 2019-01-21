@@ -15,7 +15,7 @@ public class BorrowTenderTmp implements Serializable {
     private Integer userId;
 
     /**
-     * 出借用户名
+     * 投资用户名
      *
      * @mbggenerated
      */
@@ -50,14 +50,14 @@ public class BorrowTenderTmp implements Serializable {
     private String borrowNid;
 
     /**
-     * 出借订单号
+     * 投资订单号
      *
      * @mbggenerated
      */
     private String nid;
 
     /**
-     * 出借金额
+     * 投资金额
      *
      * @mbggenerated
      */
@@ -183,14 +183,14 @@ public class BorrowTenderTmp implements Serializable {
     private Integer client;
 
     /**
-     * 推荐人用户名(出借时)
+     * 推荐人用户名(投资时)
      *
      * @mbggenerated
      */
     private String inviteUserName;
 
     /**
-     * 推荐人用户id(出借时)
+     * 推荐人用户id(投资时)
      *
      * @mbggenerated
      */
@@ -199,42 +199,42 @@ public class BorrowTenderTmp implements Serializable {
     private Integer inviteRegionId;
 
     /**
-     * 一级部门id(出借时)
+     * 一级部门id(投资时)
      *
      * @mbggenerated
      */
     private String inviteRegionName;
 
     /**
-     * 二级部门id(出借时)
+     * 二级部门id(投资时)
      *
      * @mbggenerated
      */
     private Integer inviteBranchId;
 
     /**
-     * 二级部门名称(出借时)
+     * 二级部门名称(投资时)
      *
      * @mbggenerated
      */
     private String inviteBranchName;
 
     /**
-     * 三级部门id(出借时)
+     * 三级部门id(投资时)
      *
      * @mbggenerated
      */
     private Integer inviteDepartmentId;
 
     /**
-     * 三级部门名称(出借时)
+     * 三级部门名称(投资时)
      *
      * @mbggenerated
      */
     private String inviteDepartmentName;
 
     /**
-     * 出借人用户属性
+     * 投资人用户属性
      *
      * @mbggenerated
      */
@@ -248,7 +248,7 @@ public class BorrowTenderTmp implements Serializable {
     private Integer inviteUserAttribute;
 
     /**
-     * 出借订单日期
+     * 投资订单日期
      *
      * @mbggenerated
      */
@@ -262,14 +262,14 @@ public class BorrowTenderTmp implements Serializable {
     private Integer couponGrantId;
 
     /**
-     * 是否江西银行出借: 1 是
+     * 是否江西银行投资: 1 是
      *
      * @mbggenerated
      */
     private Integer isBankTender;
 
     /**
-     * 出借来源:默认-hyjf,wrb-风车理财
+     * 投资来源:默认-hyjf,wrb-风车理财
      *
      * @mbggenerated
      */

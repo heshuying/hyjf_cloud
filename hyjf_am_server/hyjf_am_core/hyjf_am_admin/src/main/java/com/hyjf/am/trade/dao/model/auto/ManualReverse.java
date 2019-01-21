@@ -7,28 +7,88 @@ import java.util.Date;
 public class ManualReverse implements Serializable {
     private Integer id;
 
+    /**
+     * 原交易流水号
+     *
+     * @mbggenerated
+     */
     private Integer seqNo;
 
+    /**
+     * 交易流水号
+     *
+     * @mbggenerated
+     */
     private String bankSeqNo;
 
+    /**
+     * 交易时间
+     *
+     * @mbggenerated
+     */
     private Date txTime;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String username;
 
+    /**
+     * 电子账号
+     *
+     * @mbggenerated
+     */
     private String accountId;
 
+    /**
+     * 资金托管平台 0:汇付，1:江西银行
+     *
+     * @mbggenerated
+     */
     private Integer isBank;
 
+    /**
+     * 收支类型 0收入 1支出
+     *
+     * @mbggenerated
+     */
     private Integer type;
 
+    /**
+     * 交易类型
+     *
+     * @mbggenerated
+     */
     private String transType;
 
+    /**
+     * 操作金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal amount;
 
+    /**
+     * 操作状态 0 成功 1失败
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 创建用户ID
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private static final long serialVersionUID = 1L;

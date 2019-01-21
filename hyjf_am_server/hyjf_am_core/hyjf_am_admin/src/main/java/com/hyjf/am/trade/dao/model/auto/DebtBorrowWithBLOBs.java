@@ -3,40 +3,120 @@ package com.hyjf.am.trade.dao.model.auto;
 import java.io.Serializable;
 
 public class DebtBorrowWithBLOBs extends DebtBorrow implements Serializable {
+    /**
+     * 财务信息
+     *
+     * @mbggenerated
+     */
     private String accountContents;
 
+    /**
+     * 借款的详情
+     *
+     * @mbggenerated
+     */
     private String borrowContents;
 
+    /**
+     * 上传的附件
+     *
+     * @mbggenerated
+     */
     private String borrowUpfiles;
 
     private String diyaContents;
 
     private String borrowPawnDescription;
 
+    /**
+     * 资金运转-用途
+     *
+     * @mbggenerated
+     */
     private String borrowRunningUse;
 
+    /**
+     * 资金运转-来源
+     *
+     * @mbggenerated
+     */
     private String borrowRunningSoruce;
 
+    /**
+     * 风险控制措施-机构
+     *
+     * @mbggenerated
+     */
     private String borrowMeasuresInstit;
 
+    /**
+     * 风险控制措施-抵押物
+     *
+     * @mbggenerated
+     */
     private String borrowMeasuresMort;
 
+    /**
+     * 险控制措施-措施
+     *
+     * @mbggenerated
+     */
     private String borrowMeasuresMea;
 
+    /**
+     * 政策及市场分析-政策支持
+     *
+     * @mbggenerated
+     */
     private String borrowAnalysisPolicy;
 
+    /**
+     * 政策及市场分析-市场分析
+     *
+     * @mbggenerated
+     */
     private String borrowAnalysisMarket;
 
+    /**
+     * 企业背景
+     *
+     * @mbggenerated
+     */
     private String borrowCompany;
 
+    /**
+     * 企业信息-营业范围
+     *
+     * @mbggenerated
+     */
     private String borrowCompanyScope;
 
+    /**
+     * 企业信息-经营状况
+     *
+     * @mbggenerated
+     */
     private String borrowCompanyBusiness;
 
+    /**
+     * 项目资料
+     *
+     * @mbggenerated
+     */
     private String files;
 
+    /**
+     * 机构介绍
+     *
+     * @mbggenerated
+     */
     private String borrowCompanyInstruction;
 
+    /**
+     * 操作流程
+     *
+     * @mbggenerated
+     */
     private String borrowOperatingProcess;
 
     private static final long serialVersionUID = 1L;

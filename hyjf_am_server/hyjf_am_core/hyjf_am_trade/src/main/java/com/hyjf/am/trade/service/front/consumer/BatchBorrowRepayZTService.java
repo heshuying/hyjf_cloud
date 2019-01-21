@@ -29,7 +29,7 @@ public interface BatchBorrowRepayZTService extends BaseService {
 	boolean updateBorrowStatus(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo) throws Exception;
 
 	boolean updateTenderRepay(BorrowApicron apicron, Borrow borrow, BorrowInfo borrowInfo, BorrowRecover borrowRecover,
-			JSONObject repayDetail) throws Exception;
+			JSONObject repayDetail, boolean creditEndAllFlag) throws Exception;
 
 	boolean updateRecover(BorrowApicron apicron, Borrow borrow, BorrowRecover borrowRecover) throws Exception;
 

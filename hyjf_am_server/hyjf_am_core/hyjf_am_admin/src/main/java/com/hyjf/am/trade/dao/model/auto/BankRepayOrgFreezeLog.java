@@ -5,58 +5,200 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class BankRepayOrgFreezeLog implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 还款人用户userId
+     *
+     * @mbggenerated
+     */
     private Integer repayUserId;
 
+    /**
+     * 还款人用户名
+     *
+     * @mbggenerated
+     */
     private String repayUserName;
 
+    /**
+     * 借款人userId
+     *
+     * @mbggenerated
+     */
     private Integer borrowUserId;
 
+    /**
+     * 借款人用户名
+     *
+     * @mbggenerated
+     */
     private String borrowUserName;
 
+    /**
+     * 电子账号
+     *
+     * @mbggenerated
+     */
     private String account;
 
+    /**
+     * 订单号:txDate+txTime+seqNo
+     *
+     * @mbggenerated
+     */
     private String orderId;
 
+    /**
+     * 借款编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 计划编号
+     *
+     * @mbggenerated
+     */
     private String planNid;
 
+    /**
+     * 资产来源
+     *
+     * @mbggenerated
+     */
     private String instCode;
 
+    /**
+     * 借款金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal amount;
 
+    /**
+     * 应还本息
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayAccount;
 
+    /**
+     * 还款服务费
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayFee;
 
+    /**
+     * 冻结金额
+     *
+     * @mbggenerated
+     */
+    private BigDecimal amountFreeze;
+
+    /**
+     * 减息金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal lowerInterest;
 
+    /**
+     * 违约金
+     *
+     * @mbggenerated
+     */
     private BigDecimal penaltyAmount;
 
+    /**
+     * 逾期罚息
+     *
+     * @mbggenerated
+     */
     private BigDecimal defaultInterest;
 
+    /**
+     * 借款期限
+     *
+     * @mbggenerated
+     */
     private String borrowPeriod;
 
+    /**
+     * 总期数
+     *
+     * @mbggenerated
+     */
     private Integer totalPeriod;
 
+    /**
+     * 当前期数
+     *
+     * @mbggenerated
+     */
     private Integer currentPeriod;
 
+    /**
+     * 是否全部还款 0否 1是
+     *
+     * @mbggenerated
+     */
     private Integer allRepayFlag;
 
+    /**
+     * 是否有效 0有效 1无效记录
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 创建用户userId
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 最后修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
+    /**
+     * 更新用户userId
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private String updateUserName;
 
     private static final long serialVersionUID = 1L;
@@ -163,6 +305,14 @@ public class BankRepayOrgFreezeLog implements Serializable {
 
     public void setRepayFee(BigDecimal repayFee) {
         this.repayFee = repayFee;
+    }
+
+    public BigDecimal getAmountFreeze() {
+        return amountFreeze;
+    }
+
+    public void setAmountFreeze(BigDecimal amountFreeze) {
+        this.amountFreeze = amountFreeze;
     }
 
     public BigDecimal getLowerInterest() {

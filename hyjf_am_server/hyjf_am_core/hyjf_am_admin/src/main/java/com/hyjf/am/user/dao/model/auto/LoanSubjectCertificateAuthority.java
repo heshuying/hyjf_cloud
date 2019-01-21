@@ -6,34 +6,109 @@ import java.util.Date;
 public class LoanSubjectCertificateAuthority implements Serializable {
     private Integer id;
 
+    /**
+     * 姓名或企业名称
+     *
+     * @mbggenerated
+     */
     private String name;
 
+    /**
+     * 手机号
+     *
+     * @mbggenerated
+     */
     private String mobile;
 
+    /**
+     * 证件类型:0:身份证,1:企业证件号码
+     *
+     * @mbggenerated
+     */
     private Integer idType;
 
+    /**
+     * 证件号码
+     *
+     * @mbggenerated
+     */
     private String idNo;
 
+    /**
+     * 邮箱
+     *
+     * @mbggenerated
+     */
     private String email;
 
+    /**
+     * 状态:success:成功,error:失败
+     *
+     * @mbggenerated
+     */
     private String status;
 
+    /**
+     * 认证状态:1000：操作成功 2001：参数缺失或者不合法 2002：业务异常，失败原因见 msg 2003：其他错误，请联系法大大
+     *
+     * @mbggenerated
+     */
     private String code;
 
+    /**
+     * 客户编号
+     *
+     * @mbggenerated
+     */
     private String customerId;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 创建用户id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private String updateUserName;
 
+    /**
+     * 添加时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

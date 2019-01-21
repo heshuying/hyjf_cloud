@@ -8,12 +8,32 @@ public class ProductRedeemDay implements Serializable {
 
     private Integer userId;
 
+    /**
+     * 用户投资总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal amount;
 
+    /**
+     * 总收益
+     *
+     * @mbggenerated
+     */
     private BigDecimal interest;
 
+    /**
+     * 插入时间
+     *
+     * @mbggenerated
+     */
     private Integer investTime;
 
+    /**
+     * 累计收益
+     *
+     * @mbggenerated
+     */
     private BigDecimal interestAll;
 
     private Integer flag;

@@ -6,20 +6,60 @@ import java.util.Date;
 public class LockedUserInfo implements Serializable {
     private Integer id;
 
+    /**
+     * 锁定用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userid;
 
+    /**
+     * 锁定用户用户名
+     *
+     * @mbggenerated
+     */
     private String username;
 
+    /**
+     * 用户手机号
+     *
+     * @mbggenerated
+     */
     private String mobile;
 
+    /**
+     * 是否是前端锁定用户1：前端 0：后台
+     *
+     * @mbggenerated
+     */
     private Integer front;
 
+    /**
+     * 是否被解锁 1：已解锁 0：锁定
+     *
+     * @mbggenerated
+     */
     private Integer unlocked;
 
+    /**
+     * 被锁定时间（最后一次登录失败时间）
+     *
+     * @mbggenerated
+     */
     private Date lockTime;
 
+    /**
+     * 解锁时间(自动解锁是redis过期时间)
+     *
+     * @mbggenerated
+     */
     private Date unlockTime;
 
+    /**
+     * 解锁用户ID
+     *
+     * @mbggenerated
+     */
     private Integer operator;
 
     private static final long serialVersionUID = 1L;

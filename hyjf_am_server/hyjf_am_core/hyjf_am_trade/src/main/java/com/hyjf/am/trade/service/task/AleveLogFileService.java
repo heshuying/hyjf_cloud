@@ -22,24 +22,6 @@ public interface AleveLogFileService extends BaseService {
     void downloadFiles();
 
     /**
-     * aleveLog表数据插入
-     * @param aleveLog
-     */
-    void insertAleveLog(AleveLog aleveLog);
-
-    /**
-     * eveLog表数据插入
-     * @param eveLog
-     */
-    void insertEveLog(EveLog eveLog);
-
-    /**
-     * aleveErrorLog表数据插入
-     * @param aleveErrorLog
-     */
-    void insertAleveErrorLog(AleveErrorLog aleveErrorLog);
-
-    /**
      * 检查导入的ALEVE数据中是否含有利息相关记录
      * @param tranStype
      * @return

@@ -460,7 +460,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         String userId = StringUtils.isNotEmpty(form.getUserId()) ? form.getUserId() : null;
         String borrowNid = StringUtils.isNotEmpty(form.getBorrowNid()) ? form.getBorrowNid() : null;
 
-        Borrow borrow = this.getBorrow(borrowNid);
+        Borrow borrow = this.getBorrowByNid(borrowNid);
         BorrowInfo borrowInfo = this.getBorrowInfoByNid(borrowNid);
 
         if (borrow != null && borrowInfo != null) {
@@ -4221,7 +4221,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         String nid = "";
         Boolean repayFlag = false;
         int errorCount = 0;
-        Borrow borrow = this.getBorrow(borrowNid);
+        Borrow borrow = this.getBorrowByNid(borrowNid);
         BorrowInfo borrowInfo = getBorrowInfoByNid(borrowNid);
         /** 标的基本数据 */
         Integer borrowPeriod = Validator.isNull(borrow.getBorrowPeriod()) ? 1 : borrow.getBorrowPeriod();// 借款期数
@@ -4896,7 +4896,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
      */
     @Override
     public boolean updateBorrowCreditStautus(String borrowNid) {
-        Borrow borrow = this.getBorrow(borrowNid);
+        Borrow borrow = this.getBorrowByNid(borrowNid);
         String planNid = borrow.getPlanNid();
         BigDecimal rollBackAccount = BigDecimal.ZERO;
         if (StringUtils.isNotBlank(planNid)) {//计划标的
@@ -5100,7 +5100,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         borrowApicronMapper.updateByExampleSelective(apicron, example);
 
         //更新borrow表状态
-        Borrow borrow = this.getBorrow(borrowNid);
+        Borrow borrow = this.getBorrowByNid(borrowNid);
         borrow.setRepayStatus(status);
         this.borrowMapper.updateByPrimaryKey(borrow);
 
@@ -5236,7 +5236,7 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
         }
         List<BorrowInfo> borrowInfoList = this.borrowInfoMapper.selectByExample(example);
         if (borrowInfoList != null && borrowInfoList.size() == 1) {
-            return this.getBorrow(borrowInfoList.get(0).getBorrowNid());
+            return this.getBorrowByNid(borrowInfoList.get(0).getBorrowNid());
         } else {
             return null;
         }

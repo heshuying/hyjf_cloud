@@ -4,42 +4,137 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class HjhAssetBorrowtype implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 机构编号
+     *
+     * @mbggenerated
+     */
     private String instCode;
 
+    /**
+     * 资产类型
+     *
+     * @mbggenerated
+     */
     private Integer assetType;
 
+    /**
+     * 标的类型
+     *
+     * @mbggenerated
+     */
     private Integer borrowCd;
 
+    /**
+     * 是否开启：0 未开启  1 已开启
+     *
+     * @mbggenerated
+     */
     private Integer isOpen;
 
+    /**
+     * 自动录标: 0 否 1 是
+     *
+     * @mbggenerated
+     */
     private Integer autoAdd;
 
+    /**
+     * 自动备案：0 否 1 是
+     *
+     * @mbggenerated
+     */
     private Integer autoRecord;
 
+    /**
+     * 自动保证金：0 否 1 是
+     *
+     * @mbggenerated
+     */
     private Integer autoBail;
 
+    /**
+     * 自动初审: 0 否 1 是
+     *
+     * @mbggenerated
+     */
     private Integer autoAudit;
 
+    /**
+     * 自动复审: 0 否 1 是
+     *
+     * @mbggenerated
+     */
     private Integer autoReview;
 
+    /**
+     * 自动发标时间间隔(分钟)
+     *
+     * @mbggenerated
+     */
     private Integer autoSendMinutes;
 
+    /**
+     * 自动复审时间间隔(分钟)
+     *
+     * @mbggenerated
+     */
     private Integer autoReviewMinutes;
 
+    /**
+     * 项目申请人
+     *
+     * @mbggenerated
+     */
     private String applicant;
 
+    /**
+     * 垫付机构
+     *
+     * @mbggenerated
+     */
     private String repayOrgName;
 
+    /**
+     * 说明
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 添加人
+     *
+     * @mbggenerated
+     */
     private Integer createUser;
 
+    /**
+     * 更新用户
+     *
+     * @mbggenerated
+     */
     private Integer updateUser;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;
