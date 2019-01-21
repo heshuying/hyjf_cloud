@@ -1,14 +1,14 @@
 package com.hyjf.cs.trade.service;
 
 import com.hyjf.am.vo.trade.account.AccountVO;
-import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.common.service.BaseService;
 import com.hyjf.cs.trade.bean.BaseBean;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 
 public interface BaseTradeService extends BaseService{
@@ -100,4 +100,62 @@ public interface BaseTradeService extends BaseService{
     boolean verifyRequestSign(BaseBean paramBean, String methodName);
 
     boolean checkIsNewUserCanInvest2(Integer userId);
+
+    /**
+     * 获取标的还款信息
+     *
+     * @param borrowNid
+     * @return
+     */
+    BorrowRepayVO selectBorrowRepay(String borrowNid);
+
+    /**
+     * 获取标的放款信息
+     *
+     * @param borrowNid
+     * @return
+     */
+    List<BorrowRecoverVO> selectBorrowRecoverListByBorrowNid(String borrowNid);
+
+    /**
+     * 获取标的投资人信息
+     *
+     * @param borrowNid
+     * @return
+     */
+    List<BorrowTenderVO> selectBorrowTenderByBorrowNid(String borrowNid);
+
+    /**
+     * 获取借款人信息（企业）
+     *
+     * @param borrowNid
+     * @return
+     */
+    BorrowUserVO selectBorrowUsersByBorrowNid(String borrowNid);
+
+    /**
+     * 获取借款人信息（个人）
+     *
+     * @param borrowNid
+     * @return
+     */
+    BorrowManinfoVO selectBorrowMainfo(String borrowNid);
+
+    /**
+     * 获取用户CA认证信息
+     *
+     * @param username
+     * @param cardNo
+     * @param idType
+     * @return
+     */
+    CertificateAuthorityVO selectCAInfoByUsername(String username, String cardNo, Integer idType);
+
+    /**
+     * 根据平台借款等级变换中互金借款等级
+     *
+     * @param borrowLevel
+     * @return
+     */
+    Integer getBorrowLevel(String borrowLevel);
 }
