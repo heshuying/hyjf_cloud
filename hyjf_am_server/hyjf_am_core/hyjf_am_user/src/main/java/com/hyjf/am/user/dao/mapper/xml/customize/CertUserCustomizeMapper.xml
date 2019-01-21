@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.user.dao.mapper.customize.CertUserCustomizeMapper">
+    <resultMap id="certOldUserMap" type="com.hyjf.am.user.dao.model.customize.CertSendUserCustomize">
+        <id column="user_id" property="userId" jdbcType="INTEGER" />
+        <result column="username" property="username" jdbcType="CHAR" />
+        <result column="mobile" property="mobile" jdbcType="CHAR" />
+        <result column="email" property="email" jdbcType="CHAR" />
+        <result column="password" property="password" jdbcType="CHAR" />
+        <result column="paypassword" property="paypassword" jdbcType="CHAR" />
+        <result column="referrer" property="referrer" jdbcType="INTEGER" />
+        <result column="salt" property="salt" jdbcType="CHAR" />
+        <result column="logintime" property="logintime" jdbcType="INTEGER" />
+        <result column="reg_ip" property="regIp" jdbcType="CHAR" />
+        <result column="reg_time" property="regTime" jdbcType="INTEGER" />
+        <result column="login_ip" property="loginIp" jdbcType="CHAR" />
+        <result column="login_time" property="loginTime" jdbcType="INTEGER" />
+        <result column="last_ip" property="lastIp" jdbcType="CHAR" />
+        <result column="last_time" property="lastTime" jdbcType="INTEGER" />
+        <result column="status" property="status" jdbcType="TINYINT" />
+        <result column="open_account" property="openAccount" jdbcType="TINYINT" />
+        <result column="borrow_sms" property="borrowSms" jdbcType="INTEGER" />
+        <result column="recharge_sms" property="rechargeSms" jdbcType="TINYINT" />
+        <result column="withdraw_sms" property="withdrawSms" jdbcType="TINYINT" />
+        <result column="is_smtp" property="isSmtp" jdbcType="TINYINT" />
+        <result column="if_receive_notice" property="ifReceiveNotice" jdbcType="INTEGER" />
+        <result column="iconUrl" property="iconurl" jdbcType="VARCHAR" />
+        <result column="version" property="version" jdbcType="DECIMAL" />
+        <result column="invest_sms" property="investSms" jdbcType="TINYINT" />
+        <result column="recieve_sms" property="recieveSms" jdbcType="TINYINT" />
+        <result column="reg_esb" property="regEsb" jdbcType="TINYINT" />
+        <result column="eprovince" property="eprovince" jdbcType="VARCHAR" />
+        <result column="send_sms" property="sendSms" jdbcType="TINYINT" />
+        <result column="pid" property="pid" jdbcType="INTEGER" />
+        <result column="usernamep" property="usernamep" jdbcType="VARCHAR" />
+        <result column="is_inst_flag" property="isInstFlag" jdbcType="TINYINT" />
+        <result column="inst_code" property="instCode" jdbcType="VARCHAR" />
+        <result column="ptype" property="ptype" jdbcType="TINYINT" />
+        <result column="account_esb" property="accountEsb" jdbcType="TINYINT" />
+        <result column="referrer_user_name" property="referrerUserName" jdbcType="VARCHAR" />
+        <result column="investFlag" property="investflag" jdbcType="TINYINT" />
+        <result column="user_type" property="userType" jdbcType="TINYINT" />
+        <result column="auth_type" property="authType" jdbcType="INTEGER" />
+        <result column="auth_status" property="authStatus" jdbcType="INTEGER" />
+        <result column="payment_auth_status" property="paymentAuthStatus" jdbcType="TINYINT" />
+        <result column="auth_time" property="authTime" jdbcType="TIMESTAMP" />
+        <result column="recod_total" property="recodTotal" jdbcType="INTEGER" />
+        <result column="recod_time" property="recodTime" jdbcType="TIMESTAMP" />
+        <result column="recod_truncate_time" property="recodTruncateTime" jdbcType="TIMESTAMP" />
+        <result column="is_set_password" property="isSetPassword" jdbcType="TINYINT" />
+        <result column="bank_open_account" property="bankOpenAccount" jdbcType="TINYINT" />
+        <result column="bank_account_esb" property="bankAccountEsb" jdbcType="TINYINT" />
+        <result column="is_data_update" property="isDataUpdate" jdbcType="TINYINT" />
+        <result column="is_evaluation_flag" property="isEvaluationFlag" jdbcType="TINYINT" />
+        <result column="evaluation_expired_time" property="evaluationExpiredTime" jdbcType="TIMESTAMP" />
+        <result column="is_ca_flag" property="isCaFlag" jdbcType="TINYINT" />
+
+        <result column="role_id" property="userAttr" jdbcType="INTEGER" />
+        <result column="true_name" property="truename" jdbcType="VARCHAR" />
+        <result column="idcard" property="userIdcard" jdbcType="VARCHAR" />
+        <result column="account" property="userPayAccount" jdbcType="VARCHAR" />
+        <result column="bank" property="userBank" jdbcType="VARCHAR" />
+        <result column="card_no" property="userBankAccount" jdbcType="VARCHAR" />
+        <result column="eval_type" property="evalType" jdbcType="VARCHAR" />
+
+        <result column="cert_mobile" property="certMobile" jdbcType="VARCHAR" />
+        <result column="hash_salt" property="hashSalt" jdbcType="VARCHAR" />
+        <result column="phone_hash" property="phoneHash" jdbcType="VARCHAR" />
+        <result column="group_by_date" property="groupByDate" jdbcType="VARCHAR" />
+
+    </resultMap>
+
+
+    <!--查询需要上报的用户信息-->
+    <select id="getCertSendUserByUserId" resultMap="certOldUserMap">
+		SELECT
+		DISTINCT
+		  a.*, b.role_id role_id,
+		  b.truename true_name,
+		  b.idcard idcard,
+		  c.account account,
+		  d.bank bank,
+		  d.card_no card_no,
+		  e.type eval_type,
+		  f.mobile cert_mobile,
+		  f.salt hash_salt,
+		  f.phoneHash phone_hash
+		FROM
+		  huiyingdai_users a
+		LEFT JOIN huiyingdai_users_info b ON a.user_id = b.user_id
+		LEFT JOIN hyjf_bank_open_account c ON c.user_id = a.user_id
+		LEFT JOIN hyjf_bank_card d ON d.user_id = a.user_id AND d. STATUS = 1
+		LEFT JOIN huiyingdai_user_evalation_result e ON e.user_id = a.user_id
+		LEFT JOIN ht_cert_mobile_hash f ON f.user_id = a.user_id
+
+		WHERE
+		a.user_id = #{userId} and
+		   a.bank_open_account = 1
+		AND a.`status` = 0
+	</select>
+
+</mapper>
