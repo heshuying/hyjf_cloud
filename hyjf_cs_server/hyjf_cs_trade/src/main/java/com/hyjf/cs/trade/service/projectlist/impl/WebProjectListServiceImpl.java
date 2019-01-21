@@ -1246,6 +1246,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         result.put("threshold", threshold);
         // 缴费授权
         //update by jijun 2018/04/09 合规接口改造一期
+        result.put("autoTenderAuthStatus", "");
+        result.put("autoCreditStatus", "");
         result.put("paymentAuthStatus", "");
 
         //加入总人数
@@ -1428,7 +1430,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                     String autoInvesFlag = hjhUserAuth.getAutoInvesStatus().toString();
                     result.put("autoInvesFlag", autoInvesFlag);
                     //自动投标授权状态 0未授权  1已授权
-                    result.put("autoInvesAuthStatus", hjhUserAuth.getAutoInvesStatus());
+                    result.put("autoTenderAuthStatus", hjhUserAuth.getAutoInvesStatus());
                     //自动债转授权
                     result.put("autoCreditStatus", hjhUserAuth.getAutoCreditStatus());
                     //服务费授权
@@ -1447,6 +1449,10 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 result.put("isCheckUserRole",systemConfig.getRoleIsopen());
             } else {
                 //状态位用于判断tab的是否可见
+                result.put("autoTenderAuthStatus", "0");
+                result.put("autoTenderAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+                result.put("autoCreditStatus", "0");
+                result.put("autoCreditAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
                 result.put("paymentAuthStatus", "0");
                 result.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
                 //状态位用于判断tab的是否可见
