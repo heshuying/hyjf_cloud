@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.service.admin.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.market.dao.mapper.auto.InviterReturnDetailMapper;
 import com.hyjf.am.market.dao.mapper.auto.NmUserMapper;
 import com.hyjf.am.market.dao.mapper.auto.PerformanceReturnDetailMapper;
@@ -82,6 +83,7 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
 
             activityMidauInfo = tenderList.get(0);
         }
+        _log.info("activityMidauInfo==="+ JSONObject.toJSONString(activityMidauInfo));
         BigDecimal yearAmount = BigDecimal.ZERO;
         //累计年化投资金额=SUM（m1*n1/12+m2*n2/12+...），m为单笔投资金额，n为单笔投资期限。
         //月=投资金额*几个月/12
