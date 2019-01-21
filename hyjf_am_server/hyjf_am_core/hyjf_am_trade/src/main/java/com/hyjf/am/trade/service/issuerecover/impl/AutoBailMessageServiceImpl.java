@@ -1,10 +1,10 @@
-package com.hyjf.am.trade.service.task.issuerecover.impl;
+package com.hyjf.am.trade.service.issuerecover.impl;
 
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowBail;
 import com.hyjf.am.trade.dao.model.auto.BorrowBailExample;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.trade.service.task.issuerecover.AutoBailMessageService;
+import com.hyjf.am.trade.service.issuerecover.AutoBailMessageService;
 import com.hyjf.common.util.CustomConstants;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

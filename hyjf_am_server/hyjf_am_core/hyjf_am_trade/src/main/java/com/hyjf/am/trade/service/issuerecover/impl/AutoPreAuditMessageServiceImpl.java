@@ -1,10 +1,10 @@
-package com.hyjf.am.trade.service.task.issuerecover.impl;
+package com.hyjf.am.trade.service.issuerecover.impl;
 
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.dao.model.auto.BorrowInfo;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.trade.service.task.issuerecover.AutoPreAuditMessageService;
+import com.hyjf.am.trade.service.issuerecover.AutoPreAuditMessageService;
 import com.hyjf.common.util.GetDate;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.hyjf.am.trade.service.task.issuerecover;
+package com.hyjf.am.trade.service.issuerecover;
 
 import com.hyjf.am.trade.dao.model.auto.Borrow;
 import com.hyjf.am.trade.service.BaseService;

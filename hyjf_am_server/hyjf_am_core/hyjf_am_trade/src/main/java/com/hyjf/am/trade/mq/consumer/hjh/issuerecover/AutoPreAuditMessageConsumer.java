@@ -7,7 +7,7 @@ import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
 import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.service.task.issuerecover.AutoPreAuditMessageService;
+import com.hyjf.am.trade.service.issuerecover.AutoPreAuditMessageService;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;

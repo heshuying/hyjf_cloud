@@ -1,10 +1,10 @@
-package com.hyjf.am.trade.service.task.issuerecover.impl;
+package com.hyjf.am.trade.service.issuerecover.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.hyjf.am.trade.dao.mapper.auto.HjhAllocationEngineMapper;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.trade.service.task.issuerecover.AutoIssueMessageService;
+import com.hyjf.am.trade.service.issuerecover.AutoIssueMessageService;
 import com.hyjf.common.bean.RedisBorrow;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;

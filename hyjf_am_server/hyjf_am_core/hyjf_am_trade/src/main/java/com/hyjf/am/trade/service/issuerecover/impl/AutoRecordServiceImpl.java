@@ -1,11 +1,11 @@
-package com.hyjf.am.trade.service.task.issuerecover.impl;
+package com.hyjf.am.trade.service.issuerecover.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.trade.service.task.issuerecover.AutoRecordService;
+import com.hyjf.am.trade.service.issuerecover.AutoRecordService;
 import com.hyjf.am.vo.message.SmsMessage;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.MessageConstant;

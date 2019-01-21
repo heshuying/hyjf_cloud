@@ -1,10 +1,10 @@
-package com.hyjf.am.trade.service.task.issuerecover.impl;
+package com.hyjf.am.trade.service.issuerecover.impl;
 
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
-import com.hyjf.am.trade.service.task.issuerecover.AutoIssueRecoverService;
+import com.hyjf.am.trade.service.issuerecover.AutoIssueRecoverService;
 import com.hyjf.am.vo.message.MailMessage;
 import com.hyjf.am.vo.task.issuerecover.BorrowWithBLOBs;
 import com.hyjf.common.cache.RedisConstants;
