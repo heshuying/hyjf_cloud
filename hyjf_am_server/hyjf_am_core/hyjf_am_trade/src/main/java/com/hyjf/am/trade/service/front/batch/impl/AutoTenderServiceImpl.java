@@ -730,7 +730,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         int client = debtPlanAccede.getClient();
 
         // 获取借款数据
-        Borrow borrow = this.getBorrow(credit.getBorrowNid());
+        Borrow borrow = this.getBorrowByNid(credit.getBorrowNid());
         if (borrow == null) {
             throw new RuntimeException("未查询到相应的标的信息，项目编号：" + borrowNid + ",还款期数：" + repayPeriod + 1);
         }
@@ -982,7 +982,7 @@ public class AutoTenderServiceImpl extends BaseServiceImpl implements AutoTender
         int client = debtPlanAccede.getClient();
 
         // 获取借款数据
-        Borrow borrow = this.getBorrow(credit.getBorrowNid());
+        Borrow borrow = this.getBorrowByNid(credit.getBorrowNid());
         if (borrow == null) {
             throw new RuntimeException("未查询到相应的标的信息，项目编号：" + borrowNid + ",还款期数：" + repayPeriod + 1);
         }

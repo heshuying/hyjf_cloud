@@ -4,22 +4,67 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class HjhBailConfigLog implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 机构编号
+     *
+     * @mbggenerated
+     */
     private String instCode;
 
+    /**
+     * 修改字段
+     *
+     * @mbggenerated
+     */
     private String modifyColumn;
 
+    /**
+     * 修改前值
+     *
+     * @mbggenerated
+     */
     private String beforeValue;
 
+    /**
+     * 修改后值
+     *
+     * @mbggenerated
+     */
     private String afterValue;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 最后修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

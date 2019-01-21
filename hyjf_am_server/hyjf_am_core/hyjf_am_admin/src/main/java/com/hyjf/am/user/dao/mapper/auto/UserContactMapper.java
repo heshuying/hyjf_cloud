@@ -2,9 +2,8 @@ package com.hyjf.am.user.dao.mapper.auto;
 
 import com.hyjf.am.user.dao.model.auto.UserContact;
 import com.hyjf.am.user.dao.model.auto.UserContactExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface UserContactMapper {
     int countByExample(UserContactExample example);

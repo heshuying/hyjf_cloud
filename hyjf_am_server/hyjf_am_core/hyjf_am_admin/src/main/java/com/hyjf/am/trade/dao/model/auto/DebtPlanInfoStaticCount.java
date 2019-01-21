@@ -7,60 +7,200 @@ import java.util.Date;
 public class DebtPlanInfoStaticCount implements Serializable {
     private Integer id;
 
+    /**
+     * 加入金额分布-金额分布0-1万
+     *
+     * @mbggenerated
+     */
     private BigDecimal accedeMoneyOne;
 
+    /**
+     * 加入金额分布-金额分布1-2万
+     *
+     * @mbggenerated
+     */
     private BigDecimal accedeMoneyTwo;
 
+    /**
+     * 加入金额分布-金额分布2-3万
+     *
+     * @mbggenerated
+     */
     private BigDecimal accedeMoneyThree;
 
+    /**
+     * 加入金额分布-金额分布3-4万
+     *
+     * @mbggenerated
+     */
     private BigDecimal accedeMoneyFour;
 
+    /**
+     * 加入金额分布-金额分布4-5万
+     *
+     * @mbggenerated
+     */
     private BigDecimal accedeMoneyFive;
 
+    /**
+     * 加入金额分布-金额分布5万以上
+     *
+     * @mbggenerated
+     */
     private BigDecimal accedeMoneyFiveUp;
 
+    /**
+     * 加入金额分布-人次分布0-1万
+     *
+     * @mbggenerated
+     */
     private Integer accedeMoneyCountOne;
 
+    /**
+     * 加入金额分布-人次分布1-2万
+     *
+     * @mbggenerated
+     */
     private Integer accedeMoneyCountTwo;
 
+    /**
+     * 加入金额分布-人次分布2-3万
+     *
+     * @mbggenerated
+     */
     private Integer accedeMoneyCountThree;
 
+    /**
+     * 加入金额分布-人次分布3-4万
+     *
+     * @mbggenerated
+     */
     private Integer accedeMoneyCountFour;
 
+    /**
+     * 加入金额分布-人次分布4-5万
+     *
+     * @mbggenerated
+     */
     private Integer accedeMoneyCountFive;
 
+    /**
+     * 加入金额分布-人次分布5万以上
+     *
+     * @mbggenerated
+     */
     private Integer accedeMoneyCountFiveUp;
 
+    /**
+     * 加入次数分布-人次分布1次
+     *
+     * @mbggenerated
+     */
     private Integer accedeCountOne;
 
+    /**
+     * 加入次数分布-人次分布2-4次
+     *
+     * @mbggenerated
+     */
     private Integer accedeCountTwoFour;
 
+    /**
+     * 加入次数分布-人次分布5-8次
+     *
+     * @mbggenerated
+     */
     private Integer accedeCountFiveEgiht;
 
+    /**
+     * 加入次数分布-人次分布9-15次
+     *
+     * @mbggenerated
+     */
     private Integer accedeCountNineFifteen;
 
+    /**
+     * 加入次数分布-人次分布16-30次
+     *
+     * @mbggenerated
+     */
     private Integer accedeCountSixteenThirty;
 
+    /**
+     * 加入次数分布-人次分布31次以上
+     *
+     * @mbggenerated
+     */
     private Integer accedeCountThirtyfirstUp;
 
+    /**
+     * 平台加入金额-pc
+     *
+     * @mbggenerated
+     */
     private BigDecimal accedeClientMoneyPc;
 
+    /**
+     * 平台加入金额-wei
+     *
+     * @mbggenerated
+     */
     private BigDecimal accedeClientMoneyWei;
 
+    /**
+     * 平台加入金额-ios
+     *
+     * @mbggenerated
+     */
     private BigDecimal accedeClientMoneyIos;
 
+    /**
+     * 平台加入金额-android
+     *
+     * @mbggenerated
+     */
     private BigDecimal accedeClientMoneyAndroid;
 
+    /**
+     * 平台加入人次-pc
+     *
+     * @mbggenerated
+     */
     private Integer accedeClientCountPc;
 
+    /**
+     * 平台加入人次-wei
+     *
+     * @mbggenerated
+     */
     private Integer accedeClientCountWei;
 
+    /**
+     * 平台加入人次-ios
+     *
+     * @mbggenerated
+     */
     private Integer accedeClientCountIos;
 
+    /**
+     * 平台加入人次-android
+     *
+     * @mbggenerated
+     */
     private Integer accedeClientCountAndroid;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

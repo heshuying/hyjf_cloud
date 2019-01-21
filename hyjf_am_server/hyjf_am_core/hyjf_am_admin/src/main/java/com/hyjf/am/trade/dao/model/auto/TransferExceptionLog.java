@@ -7,38 +7,123 @@ import java.util.Date;
 public class TransferExceptionLog implements Serializable {
     private String uuid;
 
+    /**
+     * 订单编号
+     *
+     * @mbggenerated
+     */
     private String orderId;
 
+    /**
+     * 投资编号
+     *
+     * @mbggenerated
+     */
     private Integer recoverId;
 
+    /**
+     * 0:体验金收益回款，1：加息券收益回款，2：其他
+     *
+     * @mbggenerated
+     */
     private Integer type;
 
+    /**
+     * 0：成功，1：失败
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 汇付返回码
+     *
+     * @mbggenerated
+     */
     private String respcode;
 
+    /**
+     * 交易金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal transAmt;
 
+    /**
+     * 用户客户号
+     *
+     * @mbggenerated
+     */
     private String accountId;
 
+    /**
+     * 交易流水号
+     *
+     * @mbggenerated
+     */
     private String seqNo;
 
+    /**
+     * 入账商户号
+     *
+     * @mbggenerated
+     */
     private String cusId;
 
+    /**
+     * 入账子账户号
+     *
+     * @mbggenerated
+     */
     private String acctId;
 
+    /**
+     * 用户编号
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 删除标识
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 发行者用户id
+     *
+     * @mbggenerated
+     */
     private String createUser;
 
+    /**
+     * 更新者
+     *
+     * @mbggenerated
+     */
     private String updateUser;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

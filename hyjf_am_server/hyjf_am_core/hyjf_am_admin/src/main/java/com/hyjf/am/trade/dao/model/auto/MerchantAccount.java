@@ -7,36 +7,116 @@ import java.util.Date;
 public class MerchantAccount implements Serializable {
     private Integer id;
 
+    /**
+     * 子账户名称
+     *
+     * @mbggenerated
+     */
     private String subAccountName;
 
+    /**
+     * 子账户类型
+     *
+     * @mbggenerated
+     */
     private String subAccountType;
 
+    /**
+     * 子账户代号
+     *
+     * @mbggenerated
+     */
     private String subAccountCode;
 
+    /**
+     * 子账户转入:0 不支持 1 支持
+     *
+     * @mbggenerated
+     */
     private Integer transferIntoFlg;
 
+    /**
+     * 子账户转出:0 不支持 1 支持
+     *
+     * @mbggenerated
+     */
     private Integer transferOutFlg;
 
+    /**
+     * 余额下限(元)
+     *
+     * @mbggenerated
+     */
     private Long balanceLowerLimit;
 
+    /**
+     * 自动转出:0 否 1 是
+     *
+     * @mbggenerated
+     */
     private Integer autoTransferOut;
 
+    /**
+     * 自动转出:0 否 1 是
+     *
+     * @mbggenerated
+     */
     private Integer autoTransferInto;
 
+    /**
+     * 转入比例
+     *
+     * @mbggenerated
+     */
     private Integer transferIntoRatio;
 
+    /**
+     * 账户余额
+     *
+     * @mbggenerated
+     */
     private BigDecimal accountBalance;
 
+    /**
+     * 可用余额
+     *
+     * @mbggenerated
+     */
     private BigDecimal availableBalance;
 
+    /**
+     * 冻结金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal frost;
 
+    /**
+     * 用途
+     *
+     * @mbggenerated
+     */
     private String purpose;
 
+    /**
+     * 排序
+     *
+     * @mbggenerated
+     */
     private Short sort;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 最后修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

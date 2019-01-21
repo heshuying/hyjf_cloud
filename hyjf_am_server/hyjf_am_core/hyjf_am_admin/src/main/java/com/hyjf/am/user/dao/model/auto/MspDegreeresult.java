@@ -5,26 +5,81 @@ import java.io.Serializable;
 public class MspDegreeresult implements Serializable {
     private Integer id;
 
+    /**
+     * 申请编号
+     *
+     * @mbggenerated
+     */
     private String applyId;
 
+    /**
+     * 学历查询结果状态
+     *
+     * @mbggenerated
+     */
     private String status;
 
+    /**
+     * 毕业院校
+     *
+     * @mbggenerated
+     */
     private String school;
 
+    /**
+     * 学历
+     *
+     * @mbggenerated
+     */
     private String degree;
 
+    /**
+     * 入学年份
+     *
+     * @mbggenerated
+     */
     private String admissionyear;
 
+    /**
+     * 专业
+     *
+     * @mbggenerated
+     */
     private String major;
 
+    /**
+     * 毕业时间
+     *
+     * @mbggenerated
+     */
     private String graduationtime;
 
+    /**
+     * 毕业结论
+     *
+     * @mbggenerated
+     */
     private String graduationconclusion;
 
+    /**
+     * 学历类型
+     *
+     * @mbggenerated
+     */
     private String degreetype;
 
+    /**
+     * 学校性质
+     *
+     * @mbggenerated
+     */
     private String schoolnature;
 
+    /**
+     * 照片的64位串，可以通过编译转换成图片
+     *
+     * @mbggenerated
+     */
     private String photobase64code;
 
     private static final long serialVersionUID = 1L;

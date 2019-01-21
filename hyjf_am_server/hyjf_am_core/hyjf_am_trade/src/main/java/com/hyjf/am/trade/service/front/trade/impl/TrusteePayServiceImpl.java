@@ -114,7 +114,7 @@ public class TrusteePayServiceImpl extends BaseServiceImpl implements TrusteePay
     @Override
     public StzhWhiteList getSTZHWhiteList(String instCode, String receiptAccountId){
         StzhWhiteListExample example = new StzhWhiteListExample();
-        example.createCriteria().andStAccountidEqualTo(receiptAccountId).andInstcodeEqualTo(instCode);
+        example.createCriteria().andStAccountIdEqualTo(receiptAccountId).andInstCodeEqualTo(instCode);
         List<StzhWhiteList> lists = this.sTZHWhiteListMapper.selectByExample(example);
         if (lists != null && lists.size() > 0) {
             return lists.get(0);

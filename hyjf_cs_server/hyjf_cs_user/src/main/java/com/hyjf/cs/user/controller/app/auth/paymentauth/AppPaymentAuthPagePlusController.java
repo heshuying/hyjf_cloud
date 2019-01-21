@@ -91,10 +91,14 @@ public class AppPaymentAuthPagePlusController extends BaseUserController {
         String errorPath = "/user/setting/paymentauth/result/failed";
 
         //同步地址
-        String retUrl = super.getFrontHost(systemConfig, platform)+errorPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAYMENT_AUTH+"&platform="+platform;
-        String successUrl = super.getFrontHost(systemConfig, platform)+successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAYMENT_AUTH+"&platform="+platform;
+        String retUrl = super.getFrontHost(systemConfig,platform)+errorPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAYMENT_AUTH+"&platform="+platform;;
+        String successUrl = super.getFrontHost(systemConfig,platform)+successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAYMENT_AUTH+"&platform="+platform;;
         //异步地址
         String bgRetUrl = "http://CS-USER"+APP_PAYMENT_CLASS_NAME+APP_PAYMENT_AUTH;
+
+        logger.info("缴费授权-->同步路径成功:["+successUrl+"]");
+        logger.info("缴费授权-->同步路径失败:["+retUrl+"]");
+        logger.info("缴费授权-->异步路径成功:["+bgRetUrl+"]");
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);
         BankOpenAccountVO bankOpenAccountVO=authService.getBankOpenAccount(userId);
@@ -124,6 +128,7 @@ public class AppPaymentAuthPagePlusController extends BaseUserController {
             Map<String,Object> map = authService.getCallbankMV(authBean);
             authService.insertUserAuthLog(authBean.getUserId(), orderId, Integer.parseInt(authBean.getPlatform()), "5");
             result.setData(map);
+            logger.info("缴费授权-->银行返回数据:["+JSONObject.toJSONString(map)+"]");
         } catch (Exception e) {
             logger.info("APP-缴费授权 请求银行 或 插入授权日志表ht_hjh_user_auth_log 异常,详情如下:["+ e +"]");
             throw new CheckException(MsgEnum.STATUS_CE999999);

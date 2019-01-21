@@ -88,13 +88,14 @@ public class AppPayRepayAuthController extends BaseUserController {
         // 成功页面
         String successPath = "/user/setting/repayauth/result/success";
         // 失败页面
-        String errorPath = "/user/setting/repayauth/result/failed";
-
+        String errorPath = "/user/setting/repayauth/result/failed?logOrdId="+orderId+"&authType=payRepayAuth&platform="+platform+"";
         //同步地址
-        String retUrl = super.getFrontHost(systemConfig, platform)+errorPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAY_REPAY_AUTH+"&platform="+platform;
+        //String retUrl = super.getFrontHost(systemConfig, platform)+errorPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAY_REPAY_AUTH+"&platform="+platform;
+        String retUrl = super.getFrontHost(systemConfig, platform)+errorPath;
+
         String successUrl = super.getFrontHost(systemConfig, platform)+successPath+"?logOrdId="+orderId+"&authType="+AuthBean.AUTH_TYPE_PAY_REPAY_AUTH+"&platform="+platform;
         //异步地址
-        String bgRetUrl = "http://CS-USER"+PAY_REPAY_CLASS_NAME+PAY_REPAY_BG_AUTH;
+        String bgRetUrl = "http://CS-USER" + PAY_REPAY_CLASS_NAME + PAY_REPAY_BG_AUTH;
 
         UserInfoVO usersInfo = authService.getUserInfo(userId);
         BankOpenAccountVO bankOpenAccountVO = authService.getBankOpenAccount(userId);
@@ -164,7 +165,10 @@ public class AppPayRepayAuthController extends BaseUserController {
 
         BankCallResult result = new BankCallResult();
         //包装信息到map, 用作请求银行
+        logger.info("页面传递过来的对象bean"+JSONObject.toJSONString(bean));
         bean.convert();
+        logger.info("页面传递过来的对象bean"+bean.getAllParams());
+
         //用户ID
         Integer userId = Integer.parseInt(bean.getLogUserId()); // 用户ID
         // 查询用户开户状态

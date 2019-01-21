@@ -7,56 +7,186 @@ import java.util.Date;
 public class DebtPlanConfig implements Serializable {
     private Integer id;
 
+    /**
+     * 计划类型 与hyjf_debt_plan表debt_plan_type外键
+     *
+     * @mbggenerated
+     */
     private Integer debtPlanType;
 
+    /**
+     * 计划类型名称
+     *
+     * @mbggenerated
+     */
     private String debtPlanTypeName;
 
+    /**
+     * 计划前缀
+     *
+     * @mbggenerated
+     */
     private String debtPlanPrefix;
 
+    /**
+     * 锁定期 月
+     *
+     * @mbggenerated
+     */
     private Integer debtLockPeriod;
 
+    /**
+     * 最低投资金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal debtMinInvestment;
 
+    /**
+     * 投资增量
+     *
+     * @mbggenerated
+     */
     private BigDecimal debtInvestmentIncrement;
 
+    /**
+     * 最高投资金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal debtMaxInvestment;
 
+    /**
+     * 退出方式:0:到期退出
+     *
+     * @mbggenerated
+     */
     private Integer debtQuitStyle;
 
+    /**
+     * 退出天数
+     *
+     * @mbggenerated
+     */
     private Integer debtQuitPeriod;
 
+    /**
+     * 最小投资笔数
+     *
+     * @mbggenerated
+     */
     private Integer minInvestNumber;
 
+    /**
+     * 最大投资笔数
+     *
+     * @mbggenerated
+     */
     private Integer maxInvestNumber;
 
+    /**
+     * 投资循环次数
+     *
+     * @mbggenerated
+     */
     private Integer cycleTimes;
 
+    /**
+     * 无视规则投资次数
+     *
+     * @mbggenerated
+     */
     private Integer unableCycleTimes;
 
+    /**
+     * 汇添金专属资产最后一笔界定金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal investAccountLimit;
 
+    /**
+     * 最低剩余投资金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal minSurplusInvestAccount;
 
+    /**
+     * 取整金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal roundAmount;
 
+    /**
+     * 是否可用券：0 不可用 1 体验金 2 加息券 3 代金券
+     *
+     * @mbggenerated
+     */
     private String couponConfig;
 
+    /**
+     * 状态 0关闭  1启用
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 删除状态 1:删除  0:未删除
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建人用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 修改人用户名
+     *
+     * @mbggenerated
+     */
     private String updateUserName;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
+    /**
+     * 常见问题
+     *
+     * @mbggenerated
+     */
     private String remark;
 
     private static final long serialVersionUID = 1L;

@@ -9,46 +9,141 @@ public class TenderCommission implements Serializable {
 
     private String borrowNid;
 
+    /**
+     * 投资类别 1：直投类，2：汇计划
+     *
+     * @mbggenerated
+     */
     private Integer tenderType;
 
+    /**
+     * 充值订单号
+     *
+     * @mbggenerated
+     */
     private String ordid;
 
     private Integer tenderId;
 
+    /**
+     * 获得提成的uid
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 获得提成的部门id
+     *
+     * @mbggenerated
+     */
     private Integer departmentId;
 
+    /**
+     * 投资人的uid
+     *
+     * @mbggenerated
+     */
     private Integer tenderUserId;
 
+    /**
+     * 投资人的部门id
+     *
+     * @mbggenerated
+     */
     private Integer tenderDepartmentId;
 
+    /**
+     * 投资金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal accountTender;
 
+    /**
+     * 投资时间
+     *
+     * @mbggenerated
+     */
     private Integer tenderTime;
 
+    /**
+     * 提成发放时间
+     *
+     * @mbggenerated
+     */
     private Integer sendTime;
 
+    /**
+     * 提成
+     *
+     * @mbggenerated
+     */
     private BigDecimal commission;
 
+    /**
+     * 0:未发放;1:已发放;100:删除
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
     private String remark;
 
+    /**
+     * 计算时间
+     *
+     * @mbggenerated
+     */
     private Integer computeTime;
 
+    /**
+     * 地区ID
+     *
+     * @mbggenerated
+     */
     private Integer regionId;
 
+    /**
+     * 分公司ID
+     *
+     * @mbggenerated
+     */
     private Integer branchId;
 
+    /**
+     * 地区名
+     *
+     * @mbggenerated
+     */
     private String regionName;
 
+    /**
+     * 分公司名
+     *
+     * @mbggenerated
+     */
     private String branchName;
 
+    /**
+     * 部门名
+     *
+     * @mbggenerated
+     */
     private String departmentName;
 
+    /**
+     * 电子账号
+     *
+     * @mbggenerated
+     */
     private String accountId;
 
+    /**
+     * 返现时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

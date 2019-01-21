@@ -2,9 +2,8 @@ package com.hyjf.am.user.dao.mapper.auto;
 
 import com.hyjf.am.user.dao.model.auto.UserEvalation;
 import com.hyjf.am.user.dao.model.auto.UserEvalationExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface UserEvalationMapper {
     int countByExample(UserEvalationExample example);

@@ -4,40 +4,130 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class WhereaboutsPageConfig implements Serializable {
+    /**
+     * 页面id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 页面title
+     *
+     * @mbggenerated
+     */
     private String title;
 
+    /**
+     * 渠道编号
+     *
+     * @mbggenerated
+     */
     private Integer utmId;
 
+    /**
+     * 推荐人id
+     *
+     * @mbggenerated
+     */
     private Integer referrer;
 
+    /**
+     * 注册按钮名称
+     *
+     * @mbggenerated
+     */
     private String topButton;
 
+    /**
+     * 注册成功跳转地址
+     *
+     * @mbggenerated
+     */
     private String jumpPath;
 
+    /**
+     * 下载按钮启用状态  0：启用   1：不启用 
+     *
+     * @mbggenerated
+     */
     private Integer bottomButtonStatus;
 
+    /**
+     * 按钮名称  
+     *
+     * @mbggenerated
+     */
     private String bottomButton;
 
+    /**
+     * 下载按钮跳转路径
+     *
+     * @mbggenerated
+     */
     private String downloadPath;
 
+    /**
+     * 描述
+     *
+     * @mbggenerated
+     */
     private String describe;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 样式 0:通用模板 1:大转盘
+     *
+     * @mbggenerated
+     */
     private Integer style;
 
+    /**
+     * 开启状态：0 未开启  1 开启
+     *
+     * @mbggenerated
+     */
     private Integer statusOn;
 
+    /**
+     * 删除状态  0：未删除   1：已删除 
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private String createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private String updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

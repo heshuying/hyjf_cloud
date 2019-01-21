@@ -130,7 +130,7 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 //		Users borrowUser = this.getUsersByUserId(borrowUserid);
 		/** 标的基本数据 */
 		// 取得标的详情
-		Borrow borrow = getBorrow(borrowNid);
+		Borrow borrow = getBorrowByNid(borrowNid);
 		BorrowInfo borrowInfo = getBorrowInfoByNid(borrowNid);
 		Map<String, String> msg = new HashMap<String, String>();
 		retMsgList.add(msg);
@@ -728,7 +728,7 @@ public class IncreaseinterestLoansServiceImpl extends BaseServiceImpl implements
 //							throw new Exception("借款人未开户。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
 //						}
 						// 取得借款详情
-						Borrow borrow = getBorrow(borrowNid);
+						Borrow borrow = getBorrowByNid(borrowNid);
 						if (borrow == null) {
 							throw new Exception("借款详情不存在。[用户ID：" + borrowUserId + "]," + "[借款编号：" + borrowNid + "]");
 						}
