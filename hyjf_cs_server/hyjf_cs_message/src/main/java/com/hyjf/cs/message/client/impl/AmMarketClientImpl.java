@@ -1,11 +1,12 @@
 package com.hyjf.cs.message.client.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.client.RestTemplate;
+
 import com.hyjf.am.response.market.ActivityListResponse;
 import com.hyjf.am.response.market.AdsResponse;
+import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.message.client.AmMarketClient;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 
 
 
@@ -13,7 +14,7 @@ import org.springframework.web.client.RestTemplate;
  * @author lisheng
  * @version AmMarketClientImpl, v0.1 2018/7/31 15:11
  */
-@Service
+@Cilent
 public class AmMarketClientImpl implements AmMarketClient {
     @Autowired
     private RestTemplate restTemplate;

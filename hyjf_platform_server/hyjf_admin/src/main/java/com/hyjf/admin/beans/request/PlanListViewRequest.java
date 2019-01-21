@@ -141,6 +141,9 @@ public class PlanListViewRequest extends BaseRequest implements Serializable{
 
 	@ApiModelProperty(value = "登陆者userid")
 	private int userid;
+
+	@ApiModelProperty(value = "计划风险测评投资等级")
+	private String investLevel;
 	/**
 	 * 排序
 	 */
@@ -513,5 +516,13 @@ public class PlanListViewRequest extends BaseRequest implements Serializable{
 	public void setLimit(int limit) {
 		this.limit = limit;
 	}
-	
+
+
+	public String getInvestLevel() {
+		return investLevel;
+	}
+
+	public void setInvestLevel(String investLevel) {
+		this.investLevel = investLevel;
+	}
 }

@@ -31,7 +31,7 @@ import java.util.List;
  */
 @ApiIgnore
 @RestController
-@RequestMapping("/cs-message/sms_log")
+@RequestMapping("/cs-message/smsLog")
 public class SmsLogController extends BaseController {
 
 	@Autowired
@@ -76,7 +76,7 @@ public class SmsLogController extends BaseController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/query_time")
+	@RequestMapping("/queryTime")
 	public SmsOntimeResponse queryTime(@RequestBody SmsLogRequest request) {
 		SmsOntimeResponse response = new SmsOntimeResponse();
 		List<SmsOntime> list = smsLogService.queryTime(request);
@@ -134,7 +134,7 @@ public class SmsLogController extends BaseController {
 	 * @param request
 	 * @return
 	 */
-	@RequestMapping("/query_log_count")
+	@RequestMapping("/queryLogCount")
 	public SmsLogResponse queryLogCount(@RequestBody SmsLogRequest request) {
 		SmsLogResponse response = new SmsLogResponse();
 		Integer logCount = smsLogService.queryLogCount(request);

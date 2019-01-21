@@ -105,10 +105,10 @@ public class AppLoginController extends BaseUserController {
         // 业务逻辑
        // try {
             // 解密
-            logger.info("APP登录 ---> 解密前 key：{}，username：{}，password：{}", key, username, password);
+            //logger.info("APP登录 ---> 解密前 key：{}，username：{}，password：{}", key, username, password);
             username = DES.decodeValue(key, username);
             password = DES.decodeValue(key, password);
-            logger.info("APP登录 ---> 解密后 username：{}，password：{}", username, password);
+            //logger.info("APP登录 ---> 解密后 username：{}，password：{}", username, password);
             if (Validator.isNull(username)) {
                 ret.put("status", "1");
                 ret.put("statusDesc", "用户名不能为空");
@@ -145,6 +145,7 @@ public class AppLoginController extends BaseUserController {
                 } catch (MQException e) {
                     logger.error("保存用户日志失败", e);
                 }
+                logger.info("appAfterLogin:"+sign);
                 this.appAfterLogin(sign, webViewUserVO, username);
 
                 if (StringUtils.isNotEmpty(presetProps)){
@@ -464,6 +465,8 @@ public class AppLoginController extends BaseUserController {
             encryptValue = DES.encryptDES_ECB(encryptString, signValue.getKey());
             signValue.setToken(encryptValue);
             RedisUtils.set(RedisConstants.SIGN+sign, JSON.toJSONString(signValue), RedisUtils.signExpireTime);
+            value =RedisUtils.get(RedisConstants.SIGN+sign);
+            logger.info("更新sign:"+JSON.toJSONString(value));
         } else {
             throw new RuntimeException("参数异常");
         }

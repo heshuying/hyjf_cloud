@@ -462,6 +462,13 @@ public class BorrowCommonRequest extends BasePage implements Serializable {
 	 * 借款人评级
 	 */
 	private String borrowLevel;
+
+	/**
+	 *
+	 * 风险测评投资等级
+	 *
+	 */
+	private String investLevel;
 	
 	/**
 	 * 涉诉情况
@@ -3563,5 +3570,13 @@ public class BorrowCommonRequest extends BasePage implements Serializable {
 
 	public void setRegistrationAddress(String registrationAddress) {
 		this.registrationAddress = registrationAddress;
+	}
+
+	public String getInvestLevel() {
+		return investLevel;
+	}
+
+	public void setInvestLevel(String investLevel) {
+		this.investLevel = investLevel;
 	}
 }

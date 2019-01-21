@@ -20,7 +20,7 @@ public class MsgPushPlatStaticsJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         logger.info("MsgPushPlatStaticsJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-MESSAGE/cs-message/app_message/push_plat_statics", Object.class);
+        restTemplate.getForEntity("http://CS-MESSAGE/cs-message/appMessage/pushPlatStatics", Object.class);
         logger.info("MsgPushPlatStaticsJob execute end...");
     }
 }

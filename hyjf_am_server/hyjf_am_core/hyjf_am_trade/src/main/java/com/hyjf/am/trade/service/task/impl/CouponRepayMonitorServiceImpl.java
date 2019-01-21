@@ -66,9 +66,4 @@ public class CouponRepayMonitorServiceImpl implements CouponRepayMonitorService 
         int cnt = adminCouponRepayMonitorCustomizeMapper.countRecordTotal(paraMap);
         return cnt;
     }
-
-    @Override
-    public List<AdminCouponRepayMonitorCustomize> selectInterestSum(Map<String, Object> paraMap) {
-        return adminCouponRepayMonitorCustomizeMapper.selectInterestSum(paraMap);
-    }
 }

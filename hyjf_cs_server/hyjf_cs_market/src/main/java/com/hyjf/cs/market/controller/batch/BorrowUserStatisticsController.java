@@ -17,12 +17,12 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @ApiIgnore
 @RestController
-@RequestMapping("/cs-market/operation_report")
+@RequestMapping("/cs-market/operationReport")
 public class BorrowUserStatisticsController extends BaseMarketController {
     @Autowired
     private BorrowUserStatisticsService statisticsService;
 
-    @RequestMapping("/insertstatistic")
+    @RequestMapping("/insertStatistic")
     public StringResponse insertStatistics() {
         StringResponse response = new StringResponse();
         statisticsService.insertStatistics();

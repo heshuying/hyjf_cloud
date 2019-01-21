@@ -2022,27 +2022,6 @@ public interface AmTradeClient {
     List<ApiTransactionDetailsCustomizeVO> selectTransactionDetails(TransactionDetailsResultBean resultBean);
 
     /**
-     * 取得检证数据
-     * @param id
-     * @return
-     */
-    ChinapnrExclusiveLogWithBLOBsVO selectChinapnrExclusiveLog(long id);
-
-    /**
-     * 将状态更新成[2:处理中]
-     * @param record
-     * @return
-     */
-    int updateChinapnrExclusiveLog(ChinapnrExclusiveLogWithBLOBsVO record);
-
-    /**
-     * 取得成功时的信息
-     * @param ordId
-     * @return
-     */
-    List<ChinapnrLogVO> getChinapnrLog(String ordId);
-
-    /**
      * 汇付提现后处理
      * @param chinaPnrWithdrawRequest
      * @return
@@ -2056,12 +2035,6 @@ public interface AmTradeClient {
      */
     void updateAccountWithdrawByOrdId(String ordId, String reason);
 
-    /**
-     * 更新状态
-     * @param uuid
-     * @param status
-     */
-    void updateChinapnrExclusiveLogStatus(long uuid, String status);
 
     /**
      * 根据放款编号获取该标的的出借信息 add by liushouyi
@@ -2475,15 +2448,6 @@ public interface AmTradeClient {
     List<AppPushManageVO> getAnnouncements();
 
     List<BorrowCustomizeVO> searchBorrowCustomizeList(BorrowCommonCustomizeVO borrowCommonCustomize);
-
-    /**
-     * 根据contract_id查询垫付协议生成详情
-     * @author Zha Daojian
-     * @date 2018/8/23 15:47
-     * @param contractId
-     * @return com.hyjf.am.response.admin.ApplyAgreementInfoResponse
-     **/
-    List<ApplyAgreementInfoVO>  selectApplyAgreementInfoByContractId(String contractId);
 
     List<PlanInvestCustomizeVO> selectInvestCreditList(Map<String,Object> param);
 

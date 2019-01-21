@@ -161,7 +161,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 	@Override
 	public MessagePushNoticesResponse getRecordList(MessagePushNoticesRequest bean) {
 		MessagePushNoticesResponse response = restTemplate
-				.postForEntity("http://CS-MESSAGE/cs-message/admin_message/message_push_list",bean,
+				.postForEntity("http://CS-MESSAGE/cs-message/adminMessage/messagePushList",bean,
 						MessagePushNoticesResponse.class)
 				.getBody();
 		return response;
@@ -175,7 +175,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 	@Override
 	public MessagePushNoticesResponse insertRecord(MessagePushNoticesRequest bean) {
 		MessagePushNoticesResponse response = restTemplate
-				.postForEntity("http://CS-MESSAGE/cs-message/admin_message/insert_push_list",bean,
+				.postForEntity("http://CS-MESSAGE/cs-message/adminMessage/insertPushList",bean,
 						MessagePushNoticesResponse.class)
 				.getBody();
 		return response;
@@ -189,7 +189,7 @@ public class AmMarketClientImpl implements AmMarketClient {
     @Override
     public MessagePushNoticesResponse deleteRecord(MessagePushNoticesRequest bean) {
 		MessagePushNoticesResponse response = restTemplate
-				.postForEntity("http://CS-MESSAGE/cs-message/admin_message/delete_push_list",bean,
+				.postForEntity("http://CS-MESSAGE/cs-message/adminMessage/deletePushList",bean,
 						MessagePushNoticesResponse.class)
 				.getBody();
 		return response;
@@ -204,7 +204,7 @@ public class AmMarketClientImpl implements AmMarketClient {
 	@Override
 	public MessagePushNoticesResponse updateRecord(MessagePushNoticesRequest bean) {
 		MessagePushNoticesResponse response = restTemplate
-				.postForEntity("http://CS-MESSAGE/cs-message/admin_message/update_push_list",bean,
+				.postForEntity("http://CS-MESSAGE/cs-message/adminMessage/updatePushList",bean,
 						MessagePushNoticesResponse.class)
 				.getBody();
 		return response;
@@ -219,7 +219,7 @@ public class AmMarketClientImpl implements AmMarketClient {
     @Override
     public MessagePushHistoryResponse getRecordList(MessagePushHistoryRequest request) {
 		MessagePushHistoryResponse response = restTemplate
-				.postForEntity("http://CS-MESSAGE/cs-message/history_message/get_message_list",request,
+				.postForEntity("http://CS-MESSAGE/cs-message/historyMessage/getMessageList",request,
 						MessagePushHistoryResponse.class)
 				.getBody();
 		return response;
@@ -231,7 +231,7 @@ public class AmMarketClientImpl implements AmMarketClient {
     @Override
     public MessagePushNoticesResponse getRecord(MessagePushNoticesRequest bean) {
 		MessagePushNoticesResponse response = restTemplate
-				.postForEntity("http://CS-MESSAGE/cs-message/admin_message/get_push_record",bean,
+				.postForEntity("http://CS-MESSAGE/cs-message/adminMessage/getPushRecord",bean,
 						MessagePushNoticesResponse.class)
 				.getBody();
 		return response;

@@ -21,12 +21,12 @@ public class UserEntryController {
     @Autowired
     private UserEntryService userEntryService;
 
-    @RequestMapping("/entryupdate")
+    @RequestMapping("/entryUpdate")
     public void entryUpdate() {
         userEntryService.entryUpdate();
     }
 
-    @RequestMapping("/leaveupdate")
+    @RequestMapping("/leaveUpdate")
     public void leaveUpdate() {
         userEntryService.leaveUpdate();
     }

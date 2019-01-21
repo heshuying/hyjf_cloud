@@ -33,6 +33,7 @@ import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.home.AppHomeService;
+import com.hyjf.cs.trade.util.CdnUrlUtil;
 import com.hyjf.cs.trade.util.HomePageDefine;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import org.apache.commons.lang3.StringUtils;
@@ -101,6 +102,34 @@ public class AppHomeServiceImpl implements AppHomeService {
         List<AppProjectListCustomizeVO> list = new ArrayList<>();
 
         info.put("warning", "市场有风险 出借需谨慎");
+
+        // 合规自查 - 注册协议及隐私政策弹窗 add by huanghui 20181123 start
+        String privacyAgreementContent = "在您注册成为汇盈金服用户的过程中，您需要完成我们的注册流程，并通过点击同意的形式在线签署以下的协议，请您务必仔细阅读、充分理解协议中的条款内容后，再点击同意：\n" +
+                "《注册协议》\n" +
+                "《平台隐私条款》\n" +
+                "\n" +
+                "【请您注意】如果您不同意上述协议或者其中任何条款约定，请您停止注册。如您按照注册流程提示填写信息、阅读点击并同意上述协议且完成全部注册流程后，即表示您已充分阅读、理解并接受协议的全部内容，并表明您也同意，汇盈金服可以依据以上的隐私政策内容来处理您的个人信息。\n" +
+                "如您对以上协议内容有任何疑问，您可随时与汇盈金服联系，在线客服电话：400-900-7878";
+        info.put("registerProtocolsDesc", privacyAgreementContent);
+
+        // 拼接 协议 Url
+        String urlSplice = "platform=" + platform + "&version=" + version;
+        // 平台注册协议
+        Map<String, Object> registrationAgreement = new HashMap<>();
+        // 平台隐私条款
+        Map<String, Object> registrationAgreement2 = new HashMap<>();
+
+        // 协议数组
+        List<Object> arrList = new ArrayList<>();
+        registrationAgreement.put("name", "《平台隐私条款》");
+        registrationAgreement.put("url", HOST + "/agreement/privacyClauseAgreement?" + urlSplice);
+        registrationAgreement2.put("name", "《注册协议》");
+        registrationAgreement2.put("url", HOST + "/agreement/RegisterRuleAgreement?" + urlSplice);
+        arrList.add(registrationAgreement);
+        arrList.add(registrationAgreement2);
+        info.put("registerProtocols", arrList);
+        // 合规自查 - 注册协议及隐私政策弹窗 add by huanghui 20181123 end
+
         //判断用户是否登录
         Boolean loginFlag = Boolean.FALSE;
         UserVO userVO = null;
@@ -826,7 +855,12 @@ public class AppHomeServiceImpl implements AppHomeService {
         AdsRequest adsRequest = new AdsRequest();
         adsRequest.setLimitStart(HomePageDefine.BANNER_SIZE_LIMIT_START);
         adsRequest.setLimitEnd(HomePageDefine.BANNER_SIZE_LIMIT_END);
+        String cdnDomainUrl = CdnUrlUtil.getCdnUrl();
         adsRequest.setHost(HOST);
+        if (StringUtils.isNotBlank(cdnDomainUrl)){
+            adsRequest.setHost(cdnDomainUrl);
+        }
+
         String code = "";
         if ("2".equals(platform)) {
             code = "android_banner";
@@ -937,7 +971,7 @@ public class AppHomeServiceImpl implements AppHomeService {
         if(StringUtils.isEmpty(uniqueIdentifier)){
             return 0;
         }
-        String baseUrl= "http://CS-MESSAGE/cs-message/userdeviceuniquecode/";
+        String baseUrl= "http://CS-MESSAGE/cs-message/userDeviceUniqueCode/";
         String url = baseUrl + uniqueIdentifier;
         UserDeviceUniqueCodeResponse response = baseClient.getExe(url,UserDeviceUniqueCodeResponse.class);
         List<UserDeviceUniqueCodeVO> list = response.getResultList();

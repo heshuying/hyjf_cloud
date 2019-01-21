@@ -21,7 +21,7 @@ public class BatchAutoReviewHjhTask extends BaseJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("BatchAutoReviewHjhTask: {} execute...", context.getJobDetail().getKey().getName());
 
-        restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/hjhautoreview/hjhautoreview", String.class);
+        restTemplate.getForEntity("http://CS-TRADE/cs-trade/batch/hjhAutoReview/hjhAutoReview", String.class);
 
         logger.info("BatchAutoReviewHjhTask execute end...");
     }

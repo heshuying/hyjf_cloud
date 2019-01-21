@@ -226,8 +226,8 @@ public class PlatDataStatisticsController {
         jsonObject.put("borrowuserCountTotal", oe.getBorrowUserCountTotal());
         jsonObject.put("borrowuserCountCurrent", oe.getBorrowUserCountCurrent());
         jsonObject.put("tenderuserCountCurrent", oe.getTenderUserCountCurrent());
-        jsonObject.put("borrowuserMoneyTopone", oe.getBorrowUserMoneyTopOne().setScale(2, BigDecimal.ROUND_DOWN));
-        jsonObject.put("borrowuserMoneyTopten", oe.getBorrowUserMoneyTopTen().setScale(2, BigDecimal.ROUND_DOWN));
+        jsonObject.put("borrowuserMoneyTopone", oe.getBorrowUserMoneyTopOne() == null ? 0.00 : oe.getBorrowUserMoneyTopOne().setScale(2, BigDecimal.ROUND_DOWN));
+        jsonObject.put("borrowuserMoneyTopten", oe.getBorrowUserMoneyTopTen() == null ? 0.00 : oe.getBorrowUserMoneyTopTen().setScale(2, BigDecimal.ROUND_DOWN));
         result.setData(jsonObject);
         return result;
     }

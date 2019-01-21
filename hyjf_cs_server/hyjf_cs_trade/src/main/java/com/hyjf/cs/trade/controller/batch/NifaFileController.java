@@ -16,18 +16,18 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @RestController
 @ApiIgnore
-@RequestMapping("/cs-trade/nifa_file_deal")
+@RequestMapping("/cs-trade/nifaFileDeal")
 public class NifaFileController {
 
     @Autowired
     private NifaFileService nifaFileService;
 
-    @RequestMapping("/download_file")
+    @RequestMapping("/downloadFile")
     public void downloadFile() {
         nifaFileService.downloadFile();
     }
 
-    @RequestMapping("/upload_file")
+    @RequestMapping("/uploadFile")
     public void uploadFile() {
         nifaFileService.uploadFile();
         }

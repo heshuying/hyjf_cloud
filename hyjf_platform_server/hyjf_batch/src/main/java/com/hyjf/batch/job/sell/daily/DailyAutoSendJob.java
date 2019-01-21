@@ -20,7 +20,7 @@ public class DailyAutoSendJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         logger.info("DailyAutoSendJob: {} execute...", context.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-MARKET/cs-market/daily_send/send", Object.class);
+        restTemplate.getForEntity("http://CS-MARKET/cs-market/dailySend/send", Object.class);
         logger.info("DailyAutoSendJob execute end...");
     }
 }

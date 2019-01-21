@@ -10,7 +10,6 @@ import com.hyjf.am.trade.mq.base.MessageContent;
 import com.hyjf.am.trade.service.front.trade.TrusteePayService;
 import com.hyjf.am.trade.service.impl.BaseServiceImpl;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.common.util.GetCode;
 import com.hyjf.common.util.GetDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -69,15 +68,17 @@ public class TrusteePayServiceImpl extends BaseServiceImpl implements TrusteePay
                 HjhPlanAsset hjhHp = getHjhPlanAsset(borrowNid);
                 // 推送消息到mq
                 try {
-                    if (hjhHp != null) {
-                        Map<String, String> params = new HashMap<String, String>();
-                        params.put("mqMsgId", GetCode.getRandomCode(10));
-                        params.put("assetId", hjhHp.getAssetId());
-                        params.put("instCode", hjhHp.getInstCode());
-                        //modify by liushouyi 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-                        //commonProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), params));
-                        commonProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_PREAUDIT_TOPIC, UUID.randomUUID().toString(), params),2);
-                    }
+					if (hjhHp != null) {
+						Map<String, String> params = new HashMap<>();
+						params.put("assetId", hjhHp.getAssetId());
+						params.put("instCode", hjhHp.getInstCode());
+						// modify by liushouyi 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2
+						// 延时5秒
+						commonProducer.messageSendDelay(
+								new MessageContent(MQConstant.AUTO_BORROW_PREAUDIT_TOPIC,
+										MQConstant.AUTO_BORROW_PREAUDIT_ST_TAG, UUID.randomUUID().toString(), params),
+								2);
+					}
                 } catch (Exception e) {
                     logger.error("发送自动初审MQ失败(AM),标的编号:【" + borrowNid + "】错误原因：", e);
                 }

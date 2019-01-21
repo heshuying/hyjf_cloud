@@ -20,7 +20,7 @@ public class BorrowUserStatisticJob extends BaseJob implements Job {
     @Override
     public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
         logger.info("BorrowUserStatisticJob: {} execute...", jobExecutionContext.getJobDetail().getKey().getName());
-        restTemplate.getForEntity("http://CS-MARKET/cs-market/operation_report/insertstatistic", StringResponse.class);
+        restTemplate.getForEntity("http://CS-MARKET/cs-market/operationReport/insertStatistic", StringResponse.class);
         logger.info("BorrowUserStatisticJob execute end...");
     }
 }

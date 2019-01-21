@@ -44,6 +44,7 @@ import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.home.WechatProjectListService;
 import com.hyjf.cs.trade.service.repay.RepayPlanService;
+import com.hyjf.cs.trade.util.CdnUrlUtil;
 import com.hyjf.cs.trade.util.HomePageDefine;
 import com.hyjf.cs.trade.util.ProjectConstant;
 import org.apache.commons.lang.StringUtils;
@@ -902,7 +903,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
                 }
             }
         }
-        result.setHomeXshProjectList(vo.getHomeXshProjectList());
+        result.setHomeXshProjectList(vo.getHomeXshProjectList() != null?vo.getHomeXshProjectList():new ArrayList<>());
         result.setStatus(HomePageDefine.WECHAT_STATUS_SUCCESS);
         result.setStatusDesc(HomePageDefine.WECHAT_STATUC_DESC);
         return result;
@@ -947,7 +948,8 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         request.setLimitStart(HomePageDefine.BANNER_SIZE_LIMIT_START);
         request.setLimitEnd(HomePageDefine.BANNER_SIZE_LIMIT_END);
         //去掉host前缀
-        request.setHost("");
+        String cdnDomainUrl = CdnUrlUtil.getCdnUrl();
+        request.setHost(cdnDomainUrl);
         String code = "wechat_banner";
         request.setCode(code);
         request.setPlatformType("3");
@@ -1120,6 +1122,8 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         // 计息时间
         projectInfo.setOnAccrual(ProjectConstant.PLAN_ON_ACCRUAL);
         projectInfo.setRepayStyle(customize.getBorrowStyleName());
+        // 标的等级
+        projectInfo.setInvestLevel(customize.getInvestLevel());
 
         Map<String, Object> projectDetail = new HashMap<>();
         projectDetail.put("addCondition", MessageFormat.format(ProjectConstant.PLAN_ADD_CONDITION, customize.getDebtMinInvestment(),
@@ -1221,7 +1225,6 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 	@CacheRefresh(refresh = 5, stopRefreshAfterLastAccess = 600, timeUnit = TimeUnit.SECONDS)
     private WechatHomePageResult getProjectListAsyn(WechatHomePageResult vo, int currentPage, int pageSize, String showPlanFlag) {
 
-        List<WechatHomeProjectListVO> list = null;
         Map<String, Object> projectMap = new HashMap<String, Object>();
         // 汇盈金服app首页定向标过滤
         projectMap.put("publishInstCode", CustomConstants.HYJF_INST_CODE);
@@ -1236,8 +1239,15 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
             projectMap.put("showPlanFlag", showPlanFlag);
         }
         //WechatProjectListResponse response = baseClient.postExe(HomePageDefine.WECHAT_HOME_PROJECT_LIST_URL, projectMap, WechatProjectListResponse.class);
-        list = amTradeClient.getWechatProjectList(projectMap);
-        //list = response.getResultList();
+
+        List<WechatHomeProjectListVO> tempList  = amTradeClient.getWechatProjectList(projectMap);
+        List<WechatHomeProjectListVO> list = new ArrayList<>();
+        WechatHomeProjectListVO temp ;
+        for (WechatHomeProjectListVO vo1 : tempList){
+            temp = CommonUtils.convertBean(vo1,WechatHomeProjectListVO.class);
+            list.add(temp);
+        }
+
         if (!CollectionUtils.isEmpty(list)) {
             if (list.size() == (pageSize + 1)) {
                 list.remove(list.size() - 1);

@@ -17,7 +17,7 @@ import springfox.documentation.annotations.ApiIgnore;
  */
 @ApiIgnore
 @RestController
-@RequestMapping("/cs-market/pcchannelstatistics")
+@RequestMapping("/cs-market/pcChannelStatistics")
 public class PcChannelStatisticsController extends BaseController {
 	@Autowired
 	private PcChannelStatisticsService pcChannelStatisticsService;

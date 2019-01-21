@@ -44,6 +44,4 @@ public interface CouponRepayMonitorService {
      * @return
      */
     Integer countRecordTotal(CouponRepayRequest form);
-
-    List<AdminCouponRepayMonitorCustomize> selectInterestSum(Map<String, Object> paraMap);
 }

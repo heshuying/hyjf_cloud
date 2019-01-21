@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.Transaction;
@@ -427,6 +428,9 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		}
 		if (StringUtils.isNotEmpty(borrowBean.getBorrowLevel())) {
 			borrow.setBorrowLevel(borrowBean.getBorrowLevel());
+		}
+		if (StringUtils.isNotEmpty(borrowBean.getInvestLevel())){
+			borrow.setInvestLevel(borrowBean.getInvestLevel());
 		}
 		// ----------风险缓释金添加-------
 		// 资产编号
@@ -868,14 +872,17 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 						if (borrowBean.getVerifyStatus() != null && StringUtils.isNotEmpty(borrowBean.getVerifyStatus())) {
 							if ( bwb.getIsEngineUsed().equals(1) && Integer.valueOf(borrowBean.getVerifyStatus()) == 4) {
 								//成功后到关联计划队列 RabbitMQConstants.ROUTINGKEY_BORROW_ISSUE
-								 try {
-		                                JSONObject params = new JSONObject();
-		                                params.put("borrowNid", borrow.getBorrowNid());
-									 //modify by yangchangwei 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-									 commonProducer.messageSendDelay(new MessageContent(MQConstant.ROCKETMQ_BORROW_ISSUE_TOPIC, UUID.randomUUID().toString(), params),2);
-		                            } catch (MQException e) {
-		                                logger.error("发送【关联计划队列】MQ失败...");
-		                            }
+								try {
+									JSONObject params = new JSONObject();
+									params.put("borrowNid", borrow.getBorrowNid());
+									// modify by yangchangwei
+									// 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
+									commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_JOIN_PLAN_TOPIC,
+											MQConstant.AUTO_JOIN_PLAN_ADMIN_INSERT_TAG, borrow.getBorrowNid(), params),
+											2);
+								} catch (MQException e) {
+									logger.error("发送【关联计划队列】MQ失败...");
+								}
 							}
 						}
 
@@ -1069,6 +1076,8 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 
 			// 新增协议期限字段
 			borrow.setBorrowLevel(borrowBean.getBorrowLevel());
+			// 标的风险测评投资等级
+			borrow.setInvestLevel(borrowBean.getInvestLevel());
 			// 新增协议期限字段
 			if (StringUtils.isNotEmpty(borrowBean.getContractPeriod())) {
 				borrow.setContractPeriod(Integer.parseInt(borrowBean.getContractPeriod()));
@@ -2671,6 +2680,8 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		borrowBean.setType(this.getValue(String.valueOf(borrowWithBLOBs.getType())));
 		// 借款方式
 		borrowBean.setBorrowLevel(this.getValue(String.valueOf(borrowWithBLOBs.getBorrowLevel())));
+
+		borrowBean.setInvestLevel(this.getValue(String.valueOf(borrowWithBLOBs.getInvestLevel())));
 
 		if ("BORROW_FIRST".equals(borrowBean.getMoveFlag())) {
 			// 立即发标 20171101修改为"借款初审内，每个标的点开默认暂不发标"--查道健
@@ -5838,7 +5849,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 
 		List<BorrowInfo> list = borrowInfoMapper.selectByExample(example);
 		// 未拉取到数据返回
-		if (list.isEmpty() || null == list) {
+		if (CollectionUtils.isEmpty(list)) {
 			logger.error("判断是否自动备案发送MQ拉取标的信息失败！");
 			return;
 		}
@@ -5847,17 +5858,18 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		HjhAssetBorrowtype hjhAssetBorrowType = this.selectAssetBorrowType(list.get(0).getBorrowNid());
 		if (null != hjhAssetBorrowType && null != hjhAssetBorrowType.getAutoRecord() && hjhAssetBorrowType.getAutoRecord() == 1) {
 			// 遍历borrowNid
-			for (int i = 0; i < list.size(); i++) {
-                logger.info(list.get(i).getBorrowNid()+" 发送自动备案消息到MQ ");
+			for (BorrowInfo borrowInfo : list) {
+                logger.info(borrowInfo.getBorrowNid()+" 发送自动备案消息到MQ ");
                 try {
                     JSONObject params = new JSONObject();
-                    params.put("borrowNid", list.get(i).getBorrowNid());
-                    params.put("planId", list.get(i).getId());
-					commonProducer.messageSend(new MessageContent(MQConstant.ROCKETMQ_BORROW_RECORD_TOPIC, UUID.randomUUID().toString(), params));
+                    params.put("borrowNid", borrowInfo.getBorrowNid());
+                    params.put("instCode", borrowInfo.getInstCode());
+					commonProducer.messageSend(new MessageContent(MQConstant.AUTO_BORROW_RECORD_TOPIC,
+							MQConstant.AUTO_BORROW_RECORD_ADMIN_TAG, borrowInfo.getBorrowNid(), params));
                 } catch (MQException e) {
                     logger.error("发送【自动备案消息到MQ】MQ失败...");
                 }
-				logger.info("标的编号：" + list.get(i).getBorrowNid()+ " 已发送到自动备案消息队列！");
+				logger.info("标的编号：" + borrowInfo.getBorrowNid()+ " 已发送到自动备案消息队列！");
 			}
 		}
 	}

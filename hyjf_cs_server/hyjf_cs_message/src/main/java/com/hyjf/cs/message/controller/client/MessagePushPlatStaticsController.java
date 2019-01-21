@@ -27,7 +27,7 @@ import java.util.List;
  */
 @ApiIgnore
 @RestController
-@RequestMapping("/cs-message/messageplat_statics")
+@RequestMapping("/cs-message/messagePlatStatics")
 public class MessagePushPlatStaticsController extends BaseController {
     @Autowired
     private MessagePushPlatStaticsService service;
@@ -39,7 +39,7 @@ public class MessagePushPlatStaticsController extends BaseController {
      * @param request
      * @return
      */
-	@RequestMapping("/select_plat_statics")
+	@RequestMapping("/selectPlatPtatics")
 	public MessagePushPlatStaticsResponse selectPlatStatics(@RequestBody MessagePushPlatStaticsRequest request) {
 		MessagePushPlatStaticsResponse response = new MessagePushPlatStaticsResponse();
 		List<MessagePushPlatStatics> list = service.selectPlatStatics(request);

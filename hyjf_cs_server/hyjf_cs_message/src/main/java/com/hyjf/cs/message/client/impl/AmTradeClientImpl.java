@@ -8,9 +8,9 @@ import com.hyjf.am.resquest.admin.SmsCodeUserRequest;
 import com.hyjf.am.vo.config.EventVO;
 import com.hyjf.am.vo.datacollect.TotalInvestAndInterestVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.message.client.AmTradeClient;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.RestTemplate;
 
@@ -20,7 +20,7 @@ import java.util.List;
  * @author lisheng
  * @version AmTradeClientImpl, v0.1 2018/7/30 14:42
  */
-@Service
+@Cilent
 public class AmTradeClientImpl implements AmTradeClient {
 	@Autowired
 	private RestTemplate restTemplate;

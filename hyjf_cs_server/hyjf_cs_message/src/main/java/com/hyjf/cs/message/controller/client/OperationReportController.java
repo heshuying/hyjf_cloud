@@ -28,7 +28,7 @@ import java.util.Map;
  */
 @Api(tags ="app和web和api通用接口:运营报告")
 @RestController
-@RequestMapping("/cs-message/operation_report")
+@RequestMapping("/cs-message/operationReport")
 public class OperationReportController extends BaseController {
 
 
@@ -191,7 +191,7 @@ public class OperationReportController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "根据id查询运营报告", notes = "根据id查询运营报告")
-	@GetMapping("/selectdetail/{id}")
+	@GetMapping("/selectDetail/{id}")
 	public OperationReportResponse selectDetail(@PathVariable String id) {
 		OperationReportResponse response = operationReportService.selectOperationreportCommon(id);
 		return response;
@@ -204,7 +204,7 @@ public class OperationReportController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "月度运营报告新增修改", notes = "月度运营报告新增修改")
-	@PostMapping("/insertmonthaction")
+	@PostMapping("/insertMonthAction")
 	public OperationReportResponse insertMonthAction(@RequestBody OperationReportRequest request) {
 		OperationReportResponse response = new OperationReportResponse();
 		OperationReportVO operationReport = request.getOperationReport();
@@ -295,7 +295,7 @@ public class OperationReportController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "季度运营报告新增修改", notes = "季度运营报告新增修改")
-	@PostMapping("/insertquarteraction")
+	@PostMapping("/insertQuarterAction")
 	public OperationReportResponse insertQuarterAction(@RequestBody OperationReportRequest request) {
 		OperationReportResponse response = new OperationReportResponse();
 		OperationReportVO operationReport = request.getOperationReport();
@@ -343,7 +343,7 @@ public class OperationReportController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "上半年度运营报告新增修改", notes = "上半年度运营报告新增修改")
-	@PostMapping("/inserthalfyearaction")
+	@PostMapping("/insertHalfYearAction")
 	public OperationReportResponse insertHalfYearAction(@RequestBody OperationReportRequest request) {
 		OperationReportResponse response = new OperationReportResponse();
 		OperationReportVO operationReport = request.getOperationReport();
@@ -377,7 +377,7 @@ public class OperationReportController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "年度运营报告新增修改", notes = "年度运营报告新增修改")
-	@PostMapping("/insertyearaction")
+	@PostMapping("/insertYearAction")
 	public OperationReportResponse insertYearAction(@RequestBody OperationReportRequest request) {
 		OperationReportResponse response = new OperationReportResponse();
 		OperationReportVO operationReport = request.getOperationReport();
@@ -410,7 +410,7 @@ public class OperationReportController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "月度新增修改页面预览", notes = "月度新增修改页面预览")
-	@PostMapping("/monthpreview")
+	@PostMapping("/monthPreview")
 	public OperationReportResponse monthPreview(@RequestBody OperationReportRequest request) {
 		OperationReportResponse response = new OperationReportResponse();
 		OperationReportVO operationReport = request.getOperationReport();
@@ -441,7 +441,7 @@ public class OperationReportController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "年度新增修改页面预览", notes = "年度新增修改页面预览")
-	@PostMapping("/yearpreview")
+	@PostMapping("/yearPreview")
 	public OperationReportResponse yearPreview(@RequestBody OperationReportRequest request) {
 		OperationReportResponse response = new OperationReportResponse();
 		OperationReportVO operationReport = request.getOperationReport();
@@ -473,7 +473,7 @@ public class OperationReportController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "季度新增修改页面预览", notes = "季度新增修改页面预览")
-	@PostMapping("/quarterpreview")
+	@PostMapping("/quarterPreview")
 	public OperationReportResponse quarterPreview(@RequestBody OperationReportRequest request) {
 		OperationReportResponse response = new OperationReportResponse();
 		OperationReportVO operationReport = request.getOperationReport();
@@ -506,7 +506,7 @@ public class OperationReportController extends BaseController {
 	 * @return
 	 */
 	@ApiOperation(value = "半年度新增修改页面预览", notes = "半年度新增修改页面预览")
-	@PostMapping("/halfpreview")
+	@PostMapping("/halfPreview")
 	public OperationReportResponse Halfpreview(@RequestBody OperationReportRequest request) {
 		OperationReportResponse response = new OperationReportResponse();
 		OperationReportVO operationReport = request.getOperationReport();

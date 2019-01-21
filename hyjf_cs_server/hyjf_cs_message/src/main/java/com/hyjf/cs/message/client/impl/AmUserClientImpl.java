@@ -13,10 +13,10 @@ import com.hyjf.am.vo.user.UserAliasVO;
 import com.hyjf.am.vo.user.UserInfoCustomizeVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
+import com.hyjf.common.annotation.Cilent;
 import com.hyjf.cs.message.client.AmUserClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Date;
@@ -26,7 +26,7 @@ import java.util.List;
  * @author xiasq
  * @version AmUserClientImpl, v0.1 2018/4/19 12:44
  */
-@Service
+@Cilent
 public class AmUserClientImpl implements AmUserClient {
 
 	@Autowired

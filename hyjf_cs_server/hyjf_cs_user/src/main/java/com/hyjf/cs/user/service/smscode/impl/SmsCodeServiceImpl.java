@@ -344,6 +344,7 @@ public class SmsCodeServiceImpl extends BaseUserServiceImpl implements SmsCodeSe
     @Override
     public boolean existUser(String mobile) {
         UserVO userVO = amUserClient.findUserByMobile(mobile);
+        logger.info("手机号为："+mobile+"；user信息："+(userVO==null));
         return userVO == null ? false : true;
     }
 
