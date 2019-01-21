@@ -909,7 +909,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 		}
 		BorrowWithBLOBs bwb = new BorrowWithBLOBs();
 		BeanUtils.copyProperties(this.getBorrowInfoByNid(borrowNid), bwb);
-		BeanUtils.copyProperties(this.getBorrow(borrowNid), bwb);
+		BeanUtils.copyProperties(this.getBorrowByNid(borrowNid), bwb);
 
 		return bwb;
 	}

@@ -10,7 +10,7 @@ public class TenderCommission implements Serializable {
     private String borrowNid;
 
     /**
-     * 出借类别 1：直投类，2：汇计划
+     * 投资类别 1：直投类，2：汇计划
      *
      * @mbggenerated
      */
@@ -40,28 +40,28 @@ public class TenderCommission implements Serializable {
     private Integer departmentId;
 
     /**
-     * 出借人的uid
+     * 投资人的uid
      *
      * @mbggenerated
      */
     private Integer tenderUserId;
 
     /**
-     * 出借人的部门id
+     * 投资人的部门id
      *
      * @mbggenerated
      */
     private Integer tenderDepartmentId;
 
     /**
-     * 出借金额
+     * 投资金额
      *
      * @mbggenerated
      */
     private BigDecimal accountTender;
 
     /**
-     * 出借时间
+     * 投资时间
      *
      * @mbggenerated
      */

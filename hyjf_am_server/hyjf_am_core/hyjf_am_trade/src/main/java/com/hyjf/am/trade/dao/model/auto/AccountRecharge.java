@@ -66,7 +66,7 @@ public class AccountRecharge implements Serializable {
     private Integer isBank;
 
     /**
-     * 充值状态:0:充值中,1:充值失败,2:充值成功
+     * 充值状态:0:初始,1:充值中,2:充值成功,3:充值失败,4:终止.
      *
      * @mbggenerated
      */

@@ -38,14 +38,29 @@ public class ConsumeList implements Serializable {
 
     private String insertTime;
 
+    /**
+     * 状态  0：通过 1：不通过
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
     private String sex;
 
+    /**
+     * 打包状态 0:未打包 1：已打包
+     *
+     * @mbggenerated
+     */
     private Integer release;
 
     private String insertDay;
 
+    /**
+     * 资产包编号
+     *
+     * @mbggenerated
+     */
     private String consumeId;
 
     private static final long serialVersionUID = 1L;

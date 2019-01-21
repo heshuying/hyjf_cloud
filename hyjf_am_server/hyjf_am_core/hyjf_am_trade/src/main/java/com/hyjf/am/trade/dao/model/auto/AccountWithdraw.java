@@ -22,7 +22,7 @@ public class AccountWithdraw implements Serializable {
     private String nid;
 
     /**
-     * 提现状态:0:提现中,1:失败,2:成功
+     * 提现状态:0:初始,1:提现中,2:提现成功,3:提现失败，4：银行失败
      *
      * @mbggenerated
      */

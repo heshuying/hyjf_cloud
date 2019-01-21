@@ -5,26 +5,81 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class BankRechargeConfig implements Serializable {
+    /**
+     * 主键id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 银行id（bank_config）
+     *
+     * @mbggenerated
+     */
     private Integer bankId;
 
+    /**
+     * 接入方式  0全国
+     *
+     * @mbggenerated
+     */
     private Integer accessCode;
 
+    /**
+     * 银行卡类型 0借记卡
+     *
+     * @mbggenerated
+     */
     private Integer bankType;
 
+    /**
+     * 单笔充值限额
+     *
+     * @mbggenerated
+     */
     private BigDecimal singleQuota;
 
+    /**
+     * 单卡单日累计充值限额
+     *
+     * @mbggenerated
+     */
     private BigDecimal singleCardQuota;
 
+    /**
+     * 状态 0 启用 1禁用
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

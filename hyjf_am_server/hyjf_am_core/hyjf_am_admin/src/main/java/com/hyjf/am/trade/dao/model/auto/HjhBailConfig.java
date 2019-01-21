@@ -5,52 +5,172 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class HjhBailConfig implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 机构编号
+     *
+     * @mbggenerated
+     */
     private String instCode;
 
+    /**
+     * 保证金金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal bailTatol;
 
+    /**
+     * 保证金比例
+     *
+     * @mbggenerated
+     */
     private Integer bailRate;
 
+    /**
+     * 授信周期开始
+     *
+     * @mbggenerated
+     */
     private String timestart;
 
+    /**
+     * 授信周期结束
+     *
+     * @mbggenerated
+     */
     private String timeend;
 
+    /**
+     * 新增授信额度（元）
+     *
+     * @mbggenerated
+     */
     private BigDecimal newCreditLine;
 
+    /**
+     * 在贷授信额度（元）
+     *
+     * @mbggenerated
+     */
     private BigDecimal loanCreditLine;
 
+    /**
+     * 日推标额度（元）
+     *
+     * @mbggenerated
+     */
     private BigDecimal dayMarkLine;
 
+    /**
+     * 月推标额度（元）
+     *
+     * @mbggenerated
+     */
     private BigDecimal monthMarkLine;
 
+    /**
+     * 发标额度上限（元）
+     *
+     * @mbggenerated
+     */
     private BigDecimal pushMarkLine;
 
+    /**
+     * 发标已发额度（元）
+     *
+     * @mbggenerated
+     */
     private BigDecimal loanMarkLine;
 
+    /**
+     * 发标额度余额（元）
+     *
+     * @mbggenerated
+     */
     private BigDecimal remainMarkLine;
 
+    /**
+     * 已还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal repayedCapital;
 
+    /**
+     * 历史标的放款总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal hisLoanTotal;
 
+    /**
+     * 周期内发标已发额度
+     *
+     * @mbggenerated
+     */
     private BigDecimal cycLoanTotal;
 
+    /**
+     * 在贷余额
+     *
+     * @mbggenerated
+     */
     private BigDecimal loanBalance;
 
+    /**
+     * 未用额度是否累计 0：否 1：是
+     *
+     * @mbggenerated
+     */
     private Integer isAccumulate;
 
+    /**
+     * 说明
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 最后修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
+    /**
+     * 删除标识
+     *
+     * @mbggenerated
+     */
     private Integer delFlg;
 
     private static final long serialVersionUID = 1L;

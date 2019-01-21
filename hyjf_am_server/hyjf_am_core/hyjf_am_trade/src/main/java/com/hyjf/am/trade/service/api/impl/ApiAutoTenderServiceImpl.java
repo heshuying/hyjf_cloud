@@ -35,7 +35,7 @@ public class ApiAutoTenderServiceImpl extends BaseServiceImpl implements ApiAuto
 	public Integer updateTenderLog(AutoTenderComboRequest autoTenderComboRequest) {
 		Integer flg;
 		Integer userId = autoTenderComboRequest.getUserId();
-		Borrow borrow = getBorrow(autoTenderComboRequest.getBorrowNid());
+		Borrow borrow = getBorrowByNid(autoTenderComboRequest.getBorrowNid());
 		// 1，更新 BorrowTenderTmp 表
 		BorrowTenderTmp temp = new BorrowTenderTmp();
 		// 注意注掉的部分微服务已不再用

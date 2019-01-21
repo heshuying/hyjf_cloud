@@ -2,9 +2,8 @@ package com.hyjf.am.trade.dao.mapper.auto;
 
 import com.hyjf.am.trade.dao.model.auto.DebtCompanyAuthen;
 import com.hyjf.am.trade.dao.model.auto.DebtCompanyAuthenExample;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
+import org.apache.ibatis.annotations.Param;
 
 public interface DebtCompanyAuthenMapper {
     int countByExample(DebtCompanyAuthenExample example);

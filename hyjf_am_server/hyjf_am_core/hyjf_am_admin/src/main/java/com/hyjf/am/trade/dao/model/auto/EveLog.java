@@ -7,42 +7,137 @@ import java.util.Date;
 public class EveLog implements Serializable {
     private Integer id;
 
+    /**
+     * 发送方标识码
+     *
+     * @mbggenerated
+     */
     private String forcode;
 
+    /**
+     * 系统跟踪号
+     *
+     * @mbggenerated
+     */
     private Integer seqno;
 
+    /**
+     * 交易传输时间
+     *
+     * @mbggenerated
+     */
     private Integer cendt;
 
+    /**
+     * 主账号
+     *
+     * @mbggenerated
+     */
     private String cardnbr;
 
+    /**
+     * 交易金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal amount;
 
+    /**
+     * 交易金额符号--小于零等于C；大于零等于D
+     *
+     * @mbggenerated
+     */
     private String crflag;
 
+    /**
+     * 消息类型--提现冲正交易是0420
+     *
+     * @mbggenerated
+     */
     private Integer msgtype;
 
+    /**
+     * 交易类型码
+     *
+     * @mbggenerated
+     */
     private Integer proccode;
 
+    /**
+     * 订单号
+     *
+     * @mbggenerated
+     */
     private String orderno;
 
+    /**
+     * 内部交易流水号
+     *
+     * @mbggenerated
+     */
     private String tranno;
 
+    /**
+     * 内部保留域
+     *
+     * @mbggenerated
+     */
     private String reserved;
 
+    /**
+     * 冲正、撤销标志 --1-已撤销/冲正空或0-正常交易
+     *
+     * @mbggenerated
+     */
     private Integer revind;
 
+    /**
+     * 日期，记录导入数据所属日期
+     *
+     * @mbggenerated
+     */
     private String createDay;
 
+    /**
+     * 交易类型
+     *
+     * @mbggenerated
+     */
     private Integer transtype;
 
+    /**
+     * 创建用户
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 更新用户
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 删除标识
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

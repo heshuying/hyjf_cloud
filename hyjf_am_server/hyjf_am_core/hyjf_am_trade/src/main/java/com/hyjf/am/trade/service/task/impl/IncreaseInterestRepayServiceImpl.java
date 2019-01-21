@@ -989,7 +989,7 @@ public class IncreaseInterestRepayServiceImpl extends BaseServiceImpl implements
 //							throw new Exception("借款人未开户。[用户ID：" + borrowUserId + "]，" + "[借款编号：" + borrowNid + "]");
 //						}
 						// 取得借款详情
-						Borrow borrow = getBorrow(borrowNid);
+						Borrow borrow = getBorrowByNid(borrowNid);
 						if (borrow == null) {
 							throw new Exception("借款详情不存在。[用户ID：" + borrowUserId + "]，" + "[借款编号：" + borrowNid + "]");
 						}

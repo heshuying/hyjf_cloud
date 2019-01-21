@@ -4,14 +4,39 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class UtmSource implements Serializable {
+    /**
+     * 渠道平台ID
+     *
+     * @mbggenerated
+     */
     private Integer sourceId;
 
+    /**
+     * 渠道平台名称
+     *
+     * @mbggenerated
+     */
     private String utmSource;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

@@ -7,44 +7,139 @@ import java.util.Date;
 public class InvitePrizeConf implements Serializable {
     private Integer id;
 
+    /**
+     * 奖品名称
+     *
+     * @mbggenerated
+     */
     private String prizeName;
 
+    /**
+     * 奖品数量
+     *
+     * @mbggenerated
+     */
     private Integer prizeQuantity;
 
+    /**
+     * 所需推荐星数量
+     *
+     * @mbggenerated
+     */
     private Integer recommendQuantity;
 
+    /**
+     * 奖品剩余数量
+     *
+     * @mbggenerated
+     */
     private Integer prizeReminderQuantity;
 
+    /**
+     * 奖品分组
+     *
+     * @mbggenerated
+     */
     private String prizeGroupCode;
 
+    /**
+     * 奖品类别 1：实物奖品，2：优惠券
+     *
+     * @mbggenerated
+     */
     private Integer prizeType;
 
     private String couponCode;
 
+    /**
+     * 中奖概率
+     *
+     * @mbggenerated
+     */
     private BigDecimal prizeProbability;
 
+    /**
+     * 实物奖品图片
+     *
+     * @mbggenerated
+     */
     private String prizePicUrl;
 
+    /**
+     * 奖品类别  1：兑奖，2：抽奖
+     *
+     * @mbggenerated
+     */
     private Integer prizeKind;
 
+    /**
+     * 奖品排序  
+     *
+     * @mbggenerated
+     */
     private Integer prizeSort;
 
+    /**
+     * 奖品状态，0：启用，1：禁用
+     *
+     * @mbggenerated
+     */
     private Integer prizeStatus;
 
+    /**
+     * 兑奖成功时的提示消息
+     *
+     * @mbggenerated
+     */
     private String successMessage;
 
+    /**
+     * 奖品的适用时间，以月为单位
+     *
+     * @mbggenerated
+     */
     private Integer prizeApplyTime;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 删除标识 0：未删除，1：已删除
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

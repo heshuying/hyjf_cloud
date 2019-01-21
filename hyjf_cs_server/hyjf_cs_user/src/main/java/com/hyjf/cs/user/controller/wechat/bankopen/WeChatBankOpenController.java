@@ -68,6 +68,22 @@ public class WeChatBankOpenController extends BaseUserController {
         if (userVO != null) {
             logger.info("app openAccount userInfo, success, userId is :{}", userVO.getUserId());
             UserInfoVO userInfoVO =  bankOpenService.getUserInfo(userId);
+            
+            // modify by libin start
+            if(userInfoVO==null){
+                logger.error("openAccount userInfo failed...");
+                result.put("status","99");
+                result.put("statusDesc","操作失败");
+                return result;
+            }
+            if(userInfoVO.getRoleId()==null){
+                logger.error("openAccount userInfo failed...");
+                result.put("status","99");
+                result.put("statusDesc","操作失败");
+                return result;
+            }
+            // modify by libin end
+            
             UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
             userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE3);
             userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));

@@ -5,42 +5,137 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class JxBankConfig implements Serializable {
+    /**
+     * 主键
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 银行ID
+     *
+     * @mbggenerated
+     */
     private Integer bankId;
 
+    /**
+     * 银行名称
+     *
+     * @mbggenerated
+     */
     private String bankName;
 
+    /**
+     * 银行总行的行联号
+     *
+     * @mbggenerated
+     */
     private String payAllianceCode;
 
+    /**
+     * 银行代码
+     *
+     * @mbggenerated
+     */
     private String bankCode;
 
+    /**
+     * 银行icon
+     *
+     * @mbggenerated
+     */
     private String bankIcon;
 
+    /**
+     * 银行logo
+     *
+     * @mbggenerated
+     */
     private String bankLogo;
 
+    /**
+     * 支持快捷支付：0 不支持  1 支持
+     *
+     * @mbggenerated
+     */
     private Integer quickPayment;
 
+    /**
+     * 单笔限额
+     *
+     * @mbggenerated
+     */
     private BigDecimal singleQuota;
 
+    /**
+     * 单卡单日限额
+     *
+     * @mbggenerated
+     */
     private BigDecimal singleCardQuota;
 
+    /**
+     * 提现手续费
+     *
+     * @mbggenerated
+     */
     private BigDecimal feeWithdraw;
 
+    /**
+     * 排序id
+     *
+     * @mbggenerated
+     */
     private Short sortId;
 
+    /**
+     * 备注说明
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
+    /**
+     * 删除标识
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 单月限额
+     *
+     * @mbggenerated
+     */
     private BigDecimal monthCardQuota;
 
     private static final long serialVersionUID = 1L;
@@ -195,30 +290,5 @@ public class JxBankConfig implements Serializable {
 
     public void setMonthCardQuota(BigDecimal monthCardQuota) {
         this.monthCardQuota = monthCardQuota;
-    }
-
-    @Override
-    public String toString() {
-        return "JxBankConfig{" +
-                "id=" + id +
-                ", bankId=" + bankId +
-                ", bankName='" + bankName + '\'' +
-                ", payAllianceCode='" + payAllianceCode + '\'' +
-                ", bankCode='" + bankCode + '\'' +
-                ", bankIcon='" + bankIcon + '\'' +
-                ", bankLogo='" + bankLogo + '\'' +
-                ", quickPayment=" + quickPayment +
-                ", singleQuota=" + singleQuota +
-                ", singleCardQuota=" + singleCardQuota +
-                ", feeWithdraw=" + feeWithdraw +
-                ", sortId=" + sortId +
-                ", remark='" + remark + '\'' +
-                ", createUserId=" + createUserId +
-                ", updateUserId=" + updateUserId +
-                ", createTime=" + createTime +
-                ", updateTime=" + updateTime +
-                ", delFlag=" + delFlag +
-                ", monthCardQuota=" + monthCardQuota +
-                '}';
     }
 }

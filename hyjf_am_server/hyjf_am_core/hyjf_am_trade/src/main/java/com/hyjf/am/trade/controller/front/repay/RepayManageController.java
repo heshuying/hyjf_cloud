@@ -5,7 +5,6 @@ import com.hyjf.am.response.*;
 import com.hyjf.am.response.trade.RepayListResponse;
 import com.hyjf.am.response.user.WebUserRepayTransferCustomizeResponse;
 import com.hyjf.am.response.user.WebUserTransferBorrowInfoCustomizeResponse;
-import com.hyjf.am.resquest.admin.Paginator;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.WebUserRepayTransferRequest;
 import com.hyjf.am.trade.bean.repay.ProjectBean;
@@ -27,13 +26,10 @@ import com.hyjf.common.util.GetDateUtils;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -291,7 +287,7 @@ public class RepayManageController extends BaseController {
         logger.info("获取计算完的还款Bean开始：{}", paraMap);
 
         try {
-            Borrow borrow = repayManageService.getBorrow(borrowNid);
+            Borrow borrow = repayManageService.getBorrowByNid(borrowNid);
             Account account = repayManageService.getAccount(Integer.parseInt(userId));
             // 担保机构
             if(roleId.equals("3")){

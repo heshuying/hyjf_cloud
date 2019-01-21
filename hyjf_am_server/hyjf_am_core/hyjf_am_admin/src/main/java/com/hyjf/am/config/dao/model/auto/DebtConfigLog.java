@@ -5,28 +5,88 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class DebtConfigLog implements Serializable {
+    /**
+     * 主键ID
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 债转配置主键
+     *
+     * @mbggenerated
+     */
     private Integer hyjfDebtConfigId;
 
+    /**
+     * 服务费率
+     *
+     * @mbggenerated
+     */
     private BigDecimal attornRate;
 
+    /**
+     * 折让率上限
+     *
+     * @mbggenerated
+     */
     private BigDecimal concessionRateUp;
 
+    /**
+     * 折让率下限
+     *
+     * @mbggenerated
+     */
     private BigDecimal concessionRateDown;
 
+    /**
+     * 散标债转开关
+     *
+     * @mbggenerated
+     */
     private Integer toggle;
 
+    /**
+     * 关闭提示
+     *
+     * @mbggenerated
+     */
     private String closeDes;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUser;
 
+    /**
+     * 修改人名称
+     *
+     * @mbggenerated
+     */
     private String updateUsername;
 
+    /**
+     * 最后修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
+    /**
+     * ip地址
+     *
+     * @mbggenerated
+     */
     private String ipAddress;
 
+    /**
+     * MAC地址
+     *
+     * @mbggenerated
+     */
     private String macAddress;
 
     private static final long serialVersionUID = 1L;

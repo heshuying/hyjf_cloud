@@ -54,7 +54,7 @@ public class ProtocolVersion implements Serializable {
     private String remarks;
 
     /**
-     * 是否启用(0.版本不启用1.版本启用)
+     * 是否启用(0.版本不启用1.版本启用2.版本废弃)
      *
      * @mbggenerated
      */
