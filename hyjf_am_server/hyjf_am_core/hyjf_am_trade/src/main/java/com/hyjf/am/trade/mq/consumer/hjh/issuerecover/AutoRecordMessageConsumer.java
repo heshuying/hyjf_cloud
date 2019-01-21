@@ -133,7 +133,7 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 		BorrowInfo borrowInfo = new BorrowInfo();
 		borrowInfo.setInstCode(hjhPlanAsset.getInstCode());
 		borrowInfo.setAssetType(hjhPlanAsset.getAssetType());
-		HjhAssetBorrowtype hjhAssetBorrowType = autoRecordService.selectAssetBorrowType(borrowInfo.getBorrowNid());
+		HjhAssetBorrowtype hjhAssetBorrowType = autoRecordService.selectAssetBorrowType(hjhPlanAsset.getBorrowNid());
 		if (hjhAssetBorrowType == null || hjhAssetBorrowType.getAutoRecord() == null
 				|| hjhAssetBorrowType.getAutoRecord() != 1) {
 			logger.warn(hjhPlanAsset.getAssetId() + " 该资产不能自动备案,原因自动备案未配置");
