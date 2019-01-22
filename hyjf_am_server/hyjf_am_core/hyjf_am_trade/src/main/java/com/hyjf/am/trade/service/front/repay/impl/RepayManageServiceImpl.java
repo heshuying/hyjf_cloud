@@ -336,6 +336,28 @@ public class RepayManageServiceImpl extends BaseServiceImpl implements RepayMana
     }
 
     /**
+     * 垫付机构本期应还总额
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public BigDecimal selectOrgRepayWaitCurrent(RepayListRequest requestBean){
+        Map<String, Object> param = new HashMap<String, Object>();
+        param.put("userId", requestBean.getUserId());
+        param.put("status", requestBean.getStatus());
+        param.put("repayStatus", requestBean.getRepayStatus());
+        param.put("startDate", requestBean.getStartDate());
+        param.put("endDate", requestBean.getEndDate());
+        param.put("repayTimeOrder", requestBean.getRepayTimeOrder());
+        param.put("checkTimeOrder", requestBean.getCheckTimeOrder());
+        param.put("borrowNid", requestBean.getBorrowNid());
+
+        BigDecimal waitTotal =  repayManageCustomizeMapper.selectOrgRepayWaitTotal(param);
+
+        return waitTotal;
+    }
+
+    /**
      * 统计垫付机构待垫付总记录数
      * @param requestBean
      * @return

@@ -3391,6 +3391,21 @@ public class AmTradeClientImpl implements AmTradeClient {
     }
 
     /**
+     * 垫付机构本期应还总额
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public BigDecimal orgRepayWaitTotalCurrent(RepayListRequest requestBean) {
+        BigDecimalResponse response = restTemplate
+                .postForEntity( "http://AM-TRADE/am-trade/repay/orgrepay_waittotal_current", requestBean, BigDecimalResponse.class).getBody();
+        if (Response.isSuccess(response)) {
+            return response.getResultDec();
+        }
+        return BigDecimal.ZERO;
+    }
+
+    /**
      * 还款申请更新
      * @auther: hesy
      * @date: 2018/7/10
