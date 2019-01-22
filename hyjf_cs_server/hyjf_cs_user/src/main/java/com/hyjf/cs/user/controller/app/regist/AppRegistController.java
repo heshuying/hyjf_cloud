@@ -178,6 +178,7 @@ public class AppRegistController extends BaseUserController {
             ret.put(CustomConstants.APP_STATUS, 0);
             ret.put(CustomConstants.APP_STATUS_DESC, statusDesc);
             ret.put("successUrl", baseMapBean.getUrl());
+            logger.info("active:" + active +";注册成功:" + ret.toString());
             return ret;
         }else {
             AdsRequest adsRequest = new AdsRequest();
@@ -206,6 +207,7 @@ public class AppRegistController extends BaseUserController {
             ret.put(CustomConstants.APP_STATUS, 0);
             ret.put(CustomConstants.APP_STATUS_DESC, statusDesc);
             ret.put("successUrl", baseMapBean.getUrl());
+            logger.info("active:" + active +";注册成功:" + ret.toString());
             return ret;
         }
     }
