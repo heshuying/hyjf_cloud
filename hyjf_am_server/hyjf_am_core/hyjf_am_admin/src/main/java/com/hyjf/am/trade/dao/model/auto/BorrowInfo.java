@@ -7,160 +7,545 @@ import java.util.Date;
 public class BorrowInfo implements Serializable {
     private Integer id;
 
+    /**
+     * 借款的识别名
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
     private String borrowPreNid;
 
+    /**
+     * 新的标的编号排序
+     *
+     * @mbggenerated
+     */
     private String borrowPreNidNew;
 
+    /**
+     * 标题
+     *
+     * @mbggenerated
+     */
     private String name;
 
+    /**
+     * 借款用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 借款用户名称
+     *
+     * @mbggenerated
+     */
     private String borrowUserName;
 
+    /**
+     * 项目申请人
+     *
+     * @mbggenerated
+     */
     private String applicant;
 
+    /**
+     * 担保机构用户名
+     *
+     * @mbggenerated
+     */
     private String repayOrgName;
 
+    /**
+     * 是否可用担保机构还款(0:否,1:是)
+     *
+     * @mbggenerated
+     */
     private Integer isRepayOrgFlag;
 
+    /**
+     * 担保机构用户ID
+     *
+     * @mbggenerated
+     */
     private Integer repayOrgUserId;
 
+    /**
+     * 1房贷2车贷
+     *
+     * @mbggenerated
+     */
     private String type;
 
+    /**
+     * 用途
+     *
+     * @mbggenerated
+     */
     private String borrowUse;
 
+    /**
+     * 借款有效时间
+     *
+     * @mbggenerated
+     */
     private Integer borrowValidTime;
 
+    /**
+     * 机构编号
+     *
+     * @mbggenerated
+     */
     private String instCode;
 
+    /**
+     * 资产类型
+     *
+     * @mbggenerated
+     */
     private Integer assetType;
 
+    /**
+     * 资产类型名称
+     *
+     * @mbggenerated
+     */
     private String assetTypeName;
 
+    /**
+     * 受托支付标志 0 否；1是
+     *
+     * @mbggenerated
+     */
     private Integer entrustedFlg;
 
+    /**
+     * 受托支付用户名
+     *
+     * @mbggenerated
+     */
     private String entrustedUserName;
 
+    /**
+     * 受托支付用户id
+     *
+     * @mbggenerated
+     */
     private Integer entrustedUserId;
 
+    /**
+     * 受托支付申请时间
+     *
+     * @mbggenerated
+     */
     private Integer trusteePayTime;
 
+    /**
+     * 最小的投资额
+     *
+     * @mbggenerated
+     */
     private Integer tenderAccountMin;
 
+    /**
+     * 最大的投资额
+     *
+     * @mbggenerated
+     */
     private Integer tenderAccountMax;
 
+    /**
+     *  发标上传图片
+     *
+     * @mbggenerated
+     */
     private String upfilesId;
 
+    /**
+     * 0汇保贷 1汇典贷 2汇小贷 3汇车贷 4新手标
+     *
+     * @mbggenerated
+     */
     private Integer projectType;
 
+    /**
+     * 可投资平台_PC
+     *
+     * @mbggenerated
+     */
     private String canTransactionPc;
 
+    /**
+     * 可投资平台_微网站
+     *
+     * @mbggenerated
+     */
     private String canTransactionWei;
 
+    /**
+     * 可投资平台_IOS
+     *
+     * @mbggenerated
+     */
     private String canTransactionIos;
 
+    /**
+     * 可投资平台_Android
+     *
+     * @mbggenerated
+     */
     private String canTransactionAndroid;
 
+    /**
+     * 运营标签
+     *
+     * @mbggenerated
+     */
     private String operationLabel;
 
+    /**
+     * 借款人信息 借款类型 1：公司 2：个人
+     *
+     * @mbggenerated
+     */
     private Integer companyOrPersonal;
 
+    /**
+     * 账户管理费率下线
+     *
+     * @mbggenerated
+     */
     private String borrowManagerScaleEnd;
 
+    /**
+     * 资产包编号
+     *
+     * @mbggenerated
+     */
     private String consumeId;
 
+    /**
+     * 售价预估    
+     *
+     * @mbggenerated
+     */
     private String disposalPriceEstimate;
 
+    /**
+     * 处置周期    
+     *
+     * @mbggenerated
+     */
     private String disposalPeriod;
 
+    /**
+     * 处置渠道    
+     *
+     * @mbggenerated
+     */
     private String disposalChannel;
 
+    /**
+     * 处置结果预案
+     *
+     * @mbggenerated
+     */
     private String disposalResult;
 
+    /**
+     * 备注说明
+     *
+     * @mbggenerated
+     */
     private String disposalNote;
 
+    /**
+     * 项目名称    
+     *
+     * @mbggenerated
+     */
     private String disposalProjectName;
 
+    /**
+     * 项目类型    
+     *
+     * @mbggenerated
+     */
     private String disposalProjectType;
 
+    /**
+     * 所在地区    
+     *
+     * @mbggenerated
+     */
     private String disposalArea;
 
+    /**
+     * 预估价值    
+     *
+     * @mbggenerated
+     */
     private String disposalPredictiveValue;
 
+    /**
+     * 权属类别    
+     *
+     * @mbggenerated
+     */
     private String disposalOwnershipCategory;
 
+    /**
+     * 资产成因    
+     *
+     * @mbggenerated
+     */
     private String disposalAssetOrigin;
 
+    /**
+     * 附件信息
+     *
+     * @mbggenerated
+     */
     private String disposalAttachmentInfo;
 
+    /**
+     * 递增金额
+     *
+     * @mbggenerated
+     */
     private Long borrowIncreaseMoney;
 
+    /**
+     * 优惠券
+     *
+     * @mbggenerated
+     */
     private Integer borrowInterestCoupon;
 
+    /**
+     * 体验金
+     *
+     * @mbggenerated
+     */
     private Integer borrowTasteMoney;
 
+    /**
+     * 资产编号（风险缓释金）
+     *
+     * @mbggenerated
+     */
     private String borrowAssetNumber;
 
+    /**
+     * 项目来源（项目详情中）
+     *
+     * @mbggenerated
+     */
     private String borrowProjectSource;
 
+    /**
+     * 起息时间（项目详情中）
+     *
+     * @mbggenerated
+     */
     private String borrowInterestTime;
 
+    /**
+     * 到期时间（项目详情中）
+     *
+     * @mbggenerated
+     */
     private String borrowDueTime;
 
+    /**
+     * 保障方式（项目详情中）
+     *
+     * @mbggenerated
+     */
     private String borrowSafeguardWay;
 
+    /**
+     * 收益说明（项目详情中）
+     *
+     * @mbggenerated
+     */
     private String borrowIncomeDescription;
 
+    /**
+     * 发行人（风险缓释金）
+     *
+     * @mbggenerated
+     */
     private String borrowPublisher;
 
+    /**
+     * 产品加息收益率（风险缓释金）
+     *
+     * @mbggenerated
+     */
     private BigDecimal borrowExtraYield;
 
+    /**
+     * 是否加息标志位(0:否,1:是)
+     *
+     * @mbggenerated
+     */
     private Integer increaseInterestFlag;
 
+    /**
+     * 融通宝协议期数
+     *
+     * @mbggenerated
+     */
     private Integer contractPeriod;
 
+    /**
+     * 借款人评级
+     *
+     * @mbggenerated
+     */
     private String borrowLevel;
 
+    /**
+     * 资产属性 1:抵押标 2:质押标 3:信用标 4:债权转让标 5:净值标
+     *
+     * @mbggenerated
+     */
     private Integer assetAttributes;
 
+    /**
+     * 银行募集开始时间
+     *
+     * @mbggenerated
+     */
     private String bankRaiseStartDate;
 
+    /**
+     * 银行募集结束时间
+     *
+     * @mbggenerated
+     */
     private String bankRaiseEndDate;
 
+    /**
+     * 银行备案天数
+     *
+     * @mbggenerated
+     */
     private Integer bankRegistDays;
 
+    /**
+     * 银行项目天数
+     *
+     * @mbggenerated
+     */
     private Integer bankBorrowDays;
 
+    /**
+     * 项目标题
+     *
+     * @mbggenerated
+     */
     private String projectName;
 
+    /**
+     * 融资用途
+     *
+     * @mbggenerated
+     */
     private String financePurpose;
 
+    /**
+     * 月薪收入
+     *
+     * @mbggenerated
+     */
     private String monthlyIncome;
 
+    /**
+     * 还款来源
+     *
+     * @mbggenerated
+     */
     private String payment;
 
+    /**
+     * 第一还款来源
+     *
+     * @mbggenerated
+     */
     private String firstPayment;
 
+    /**
+     * 第二还款来源
+     *
+     * @mbggenerated
+     */
     private String secondPayment;
 
+    /**
+     * 费用说明
+     *
+     * @mbggenerated
+     */
     private String costIntrodution;
 
+    /**
+     * 财务状况
+     *
+     * @mbggenerated
+     */
     private String fianceCondition;
 
+    /**
+     * 是否为新标 0 为老标 1为新标 （网站改版后都为新标）
+     *
+     * @mbggenerated
+     */
     private Integer isNew;
 
+    /**
+     * 定向标: 0-全部  其他值-资金机构的编号
+     *
+     * @mbggenerated
+     */
     private String publishInstCode;
 
+    /**
+     * 100位字符限制-备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 创建用户-添加标的人员（账户操作人）
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * create ip
+     *
+     * @mbggenerated
+     */
     private String addIp;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

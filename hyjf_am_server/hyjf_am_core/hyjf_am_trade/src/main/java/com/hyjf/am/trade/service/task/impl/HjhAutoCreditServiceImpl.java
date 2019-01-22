@@ -156,7 +156,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
                 // 债权原标编号
                 String borrowNid = hjhDebtDetail.getBorrowNid();
                 // 根据标的号查询项目详情
-                Borrow borrow = this.getBorrow(borrowNid);
+                Borrow borrow = this.getBorrowByNid(borrowNid);
                 if (borrow == null) {
                     throw new RuntimeException("根据标的编号查询标的详情失败,标的编号:[" + borrowNid + "].");
                 }
@@ -1000,7 +1000,7 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
             for (int i = 0; i < borrowTenderList.size(); i++) {
                 BorrowTender borrowTender = borrowTenderList.get(i);
                 // 判断出借的标的是否未放款
-                Borrow tenderBorrow = this.getBorrow(borrowTender.getBorrowNid());
+                Borrow tenderBorrow = this.getBorrowByNid(borrowTender.getBorrowNid());
                 if (tenderBorrow == null) {
                     throw new RuntimeException("根据标的编号查询标的信息失败,标的编号:[" + borrowTender.getBorrowNid() + "].");
                 }
@@ -1301,8 +1301,8 @@ public class HjhAutoCreditServiceImpl extends BaseServiceImpl implements HjhAuto
 			// 加入到消息队列
 			JSONObject params = new JSONObject();
 			params.put("creditNid", creditNid);
-			commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_JOIN_PLAN_TOPIC,
-					MQConstant.AUTO_JOIN_PLAN_CLEAR_TAG, creditNid, params), 2);
+			commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_ASSOCIATE_PLAN_TOPIC,
+					MQConstant.AUTO_ASSOCIATE_PLAN_CLEAR_TAG, creditNid, params), 2);
 			logger.info("清算完成后,发送MQ成功,债转编号:[" + creditNid + "].");
 		} catch (MQException e) {
 			e.printStackTrace();

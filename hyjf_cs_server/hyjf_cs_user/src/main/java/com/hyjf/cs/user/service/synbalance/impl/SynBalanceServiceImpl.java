@@ -213,6 +213,9 @@ public class SynBalanceServiceImpl extends BaseUserServiceImpl implements SynBal
         }
         //用户可用余额
         AccountVO accountUser = getAccount(user.getUserId());
+        if(accountUser==null){
+            accountUser = new AccountVO();
+        }
         BigDecimal accountBalance = accountUser.getBankBalance();
         //客户号
         if(systemConfig.isHyjfEnvTest()){

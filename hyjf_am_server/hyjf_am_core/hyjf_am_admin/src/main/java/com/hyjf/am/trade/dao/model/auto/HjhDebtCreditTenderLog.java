@@ -7,90 +7,295 @@ import java.util.Date;
 public class HjhDebtCreditTenderLog implements Serializable {
     private Integer id;
 
+    /**
+     * 用户名称
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 承接用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 出让人id
+     *
+     * @mbggenerated
+     */
     private Integer creditUserId;
 
+    /**
+     * 出让人用户名
+     *
+     * @mbggenerated
+     */
     private String creditUserName;
 
+    /**
+     * 状态 0初始 1成功 2失败
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 原标标号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 原标的已还款期数
+     *
+     * @mbggenerated
+     */
     private Integer repayPeriod;
 
+    /**
+     * 原标投资订单号
+     *
+     * @mbggenerated
+     */
     private String sellOrderId;
 
+    /**
+     * 债转标号
+     *
+     * @mbggenerated
+     */
     private String creditNid;
 
+    /**
+     * 原始标的投资订单号
+     *
+     * @mbggenerated
+     */
     private String investOrderId;
 
     private String liquidatesPlanNid;
 
     private String liquidatesPlanOrderId;
 
+    /**
+     * 承接计划nid，同承接计划nid
+     *
+     * @mbggenerated
+     */
     private String assignPlanNid;
 
+    /**
+     * 计划订单号
+     *
+     * @mbggenerated
+     */
     private String assignPlanOrderId;
 
+    /**
+     * 认购单号
+     *
+     * @mbggenerated
+     */
     private String assignOrderId;
 
+    /**
+     * 冻结订单日期
+     *
+     * @mbggenerated
+     */
     private String assignOrderDate;
 
+    /**
+     * 投资本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignCapital;
 
+    /**
+     * 回收总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignAccount;
 
+    /**
+     * 债转利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignInterest;
 
+    /**
+     * 承接的延期利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignRepayDelayInterest;
 
+    /**
+     * 承接的逾期利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignRepayLateInterest;
 
+    /**
+     * 垫付利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignInterestAdvance;
 
+    /**
+     * 购买价格
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignPrice;
 
+    /**
+     * 支付金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignPay;
 
+    /**
+     * 已还总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignRepayAccount;
 
+    /**
+     * 已还本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignRepayCapital;
 
+    /**
+     * 已还利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignRepayInterest;
 
+    /**
+     * 最后还款日
+     *
+     * @mbggenerated
+     */
     private Integer assignRepayEndTime;
 
+    /**
+     * 上次还款时间
+     *
+     * @mbggenerated
+     */
     private Integer assignRepayLastTime;
 
+    /**
+     * 下次还款时间
+     *
+     * @mbggenerated
+     */
     private Integer assignRepayNextTime;
 
+    /**
+     * 最终实际还款时间
+     *
+     * @mbggenerated
+     */
     private Integer assignRepayYesTime;
 
+    /**
+     * 债权承接期数
+     *
+     * @mbggenerated
+     */
     private Integer assignRepayPeriod;
 
+    /**
+     * 服务费率（清算1小时1变）
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignServiceApr;
 
+    /**
+     * 服务费=交易金额*服务费率 
+     *
+     * @mbggenerated
+     */
     private BigDecimal assignServiceFee;
 
+    /**
+     * 承接类型 0 自动承接 1手动承接
+     *
+     * @mbggenerated
+     */
     private Integer assignType;
 
+    /**
+     * create ip
+     *
+     * @mbggenerated
+     */
     private String addIp;
 
+    /**
+     * 客户端
+     *
+     * @mbggenerated
+     */
     private Integer client;
 
+    /**
+     * 创建用户id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private String updateUserName;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

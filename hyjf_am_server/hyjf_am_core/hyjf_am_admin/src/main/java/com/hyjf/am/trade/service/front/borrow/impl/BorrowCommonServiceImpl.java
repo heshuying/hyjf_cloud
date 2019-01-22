@@ -171,7 +171,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 //							}
 //						}
 //					}else{
-					
+
 					Jedis jedis = poolNew.getResource();
 					try {
 						while ("OK".equals(jedis.watch("borrowPreNid"))) {
@@ -877,8 +877,8 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 									params.put("borrowNid", borrow.getBorrowNid());
 									// modify by yangchangwei
 									// 防止队列触发太快，导致无法获得本事务变泵的数据，延时级别为2 延时5秒
-									commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_JOIN_PLAN_TOPIC,
-											MQConstant.AUTO_JOIN_PLAN_ADMIN_INSERT_TAG, borrow.getBorrowNid(), params),
+									commonProducer.messageSendDelay(new MessageContent(MQConstant.AUTO_ASSOCIATE_PLAN_TOPIC,
+											MQConstant.AUTO_ASSOCIATE_PLAN_ADMIN_INSERT_TAG, borrow.getBorrowNid(), params),
 											2);
 								} catch (MQException e) {
 									logger.error("发送【关联计划队列】MQ失败...");
@@ -5931,7 +5931,7 @@ public class BorrowCommonServiceImpl extends BaseServiceImpl implements BorrowCo
 				// 借款人用户名不存在。
 				return 4;
 			}
-			if(!whiteList.get(0).getInstcode().equals(instCode)){
+			if(!whiteList.get(0).getInstCode().equals(instCode)){
 				return 5;
 			}
 		}

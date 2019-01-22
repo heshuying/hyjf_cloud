@@ -6,16 +6,46 @@ import java.util.Date;
 public class SmsCount implements Serializable {
     private Integer id;
 
+    /**
+     * 分公司ID
+     *
+     * @mbggenerated
+     */
     private Integer departmentId;
 
+    /**
+     * 分公司名字
+     *
+     * @mbggenerated
+     */
     private String departmentName;
 
+    /**
+     * 短信发送数量
+     *
+     * @mbggenerated
+     */
     private Integer smsNumber;
 
+    /**
+     * 提交日期
+     *
+     * @mbggenerated
+     */
     private Date posttime;
 
+    /**
+     * 添加时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

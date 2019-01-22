@@ -5,10 +5,25 @@ import java.io.Serializable;
 public class BorrowCompanyAuthen implements Serializable {
     private Integer id;
 
+    /**
+     * 认证项目名称
+     *
+     * @mbggenerated
+     */
     private String authenName;
 
+    /**
+     * 认证时间
+     *
+     * @mbggenerated
+     */
     private String authenTime;
 
+    /**
+     * 展示顺序
+     *
+     * @mbggenerated
+     */
     private Integer authenSortKey;
 
     private String borrowNid;

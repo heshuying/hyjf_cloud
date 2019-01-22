@@ -3,10 +3,14 @@
  */
 package com.hyjf.am.trade.service.admin;
 
+import com.hyjf.am.market.dao.model.auto.InviterReturnDetail;
+import com.hyjf.am.market.dao.model.auto.NmUser;
+import com.hyjf.am.market.dao.model.auto.PerformanceReturnDetail;
 import com.hyjf.am.resquest.market.InviterReturnCashCustomize;
 import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 /**
  * @author tyy
@@ -14,10 +18,11 @@ import java.math.BigDecimal;
  */
 public interface ReturnCashActivityService {
 
-    boolean saveReturnCash(Integer userId, String orderId, Integer productType, BigDecimal investMoney,InviterReturnCashCustomize inviterReturnCashCustomize);
+    boolean selectReturnCash(Integer userId, String orderId, Integer productType, BigDecimal investMoney,InviterReturnCashCustomize inviterReturnCashCustomize, List<NmUser> nmUserList);
 
     InviterReturnCashCustomize selectReturnCashList(Integer userId);
-
-    void  updateJoinTime(String borrowNid, Integer nowTime);
+    List<InviterReturnDetail> selectInviterReturnDetailList(String borrowNid);
+    List<PerformanceReturnDetail> selectPerformanceReturnDetailList(String borrowNid);
+    void updateJoinTime(Integer nowTime,List<InviterReturnDetail> inviterReturnDetailList,List<PerformanceReturnDetail> performanceReturnDetailList);
 
 }

@@ -9,7 +9,7 @@ public class ProductRedeemDay implements Serializable {
     private Integer userId;
 
     /**
-     * 用户出借总额
+     * 用户投资总额
      *
      * @mbggenerated
      */

@@ -4,18 +4,53 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 public class DebtConfig implements Serializable {
+    /**
+     * 主键ID
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 服务费率
+     *
+     * @mbggenerated
+     */
     private BigDecimal attornRate;
 
+    /**
+     * 折让率上限
+     *
+     * @mbggenerated
+     */
     private BigDecimal concessionRateUp;
 
+    /**
+     * 折让率下限
+     *
+     * @mbggenerated
+     */
     private BigDecimal concessionRateDown;
 
+    /**
+     * 散标债转开关
+     *
+     * @mbggenerated
+     */
     private Integer toggle;
 
+    /**
+     * 关闭提示
+     *
+     * @mbggenerated
+     */
     private String closeDes;
 
+    /**
+     * 类型1:债转配置
+     *
+     * @mbggenerated
+     */
     private Integer configType;
 
     private static final long serialVersionUID = 1L;

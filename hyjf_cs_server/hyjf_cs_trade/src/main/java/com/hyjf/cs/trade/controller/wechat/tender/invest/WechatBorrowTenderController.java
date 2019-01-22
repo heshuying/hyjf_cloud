@@ -21,7 +21,6 @@ import com.hyjf.cs.common.bean.result.WebResult;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.service.consumer.NifaContractEssenceMessageService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import com.hyjf.cs.trade.service.invest.BorrowTenderService;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -50,8 +49,6 @@ public class WechatBorrowTenderController extends BaseTradeController {
     @Autowired
     private BorrowTenderService borrowTenderService;
     @Autowired
-    NifaContractEssenceMessageService nifaContractEssenceMessageService;
-    @Autowired
     private CommonProducer commonProducer;
     @Autowired
     private HjhTenderService hjhTenderService;
@@ -78,7 +75,7 @@ public class WechatBorrowTenderController extends BaseTradeController {
                 tender.setTenderFrom(cookieValue);
             }
             result =  borrowTenderService.borrowTender(tender);
-            BorrowAndInfoVO borrow = this.nifaContractEssenceMessageService.selectBorrowByBorrowNid(tender.getBorrowNid());
+            BorrowAndInfoVO borrow = borrowTenderService.getBorrowByNid(tender.getBorrowNid());
             boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_MONTH.equals(borrow.getBorrowStyle())
                     || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrow.getBorrowStyle())|| CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle());
 

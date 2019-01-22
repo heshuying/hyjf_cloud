@@ -4,36 +4,111 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class FeeConfig implements Serializable {
+    /**
+     * 主键ID
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
     private String bankCode;
 
+    /**
+     * 银行名称
+     *
+     * @mbggenerated
+     */
     private String name;
 
+    /**
+     * 个人网银充值
+     *
+     * @mbggenerated
+     */
     private String personalCredit;
 
+    /**
+     * 企业网银充值
+     *
+     * @mbggenerated
+     */
     private String enterpriseCredit;
 
+    /**
+     * 快捷支付充值
+     *
+     * @mbggenerated
+     */
     private String quickPayment;
 
+    /**
+     * 即时提现
+     *
+     * @mbggenerated
+     */
     private String directTakeout;
 
+    /**
+     * 即时提现、千分比
+     *
+     * @mbggenerated
+     */
     private String directTakeoutPercent;
 
+    /**
+     * 快速提现
+     *
+     * @mbggenerated
+     */
     private String quickTakeout;
 
+    /**
+     * 快速提现、千分比
+     *
+     * @mbggenerated
+     */
     private String quickTakeoutPercent;
 
+    /**
+     * 普通提现
+     *
+     * @mbggenerated
+     */
     private String normalTakeout;
 
+    /**
+     * 说明
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

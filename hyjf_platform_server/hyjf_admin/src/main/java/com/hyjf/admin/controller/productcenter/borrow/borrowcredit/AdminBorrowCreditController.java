@@ -18,6 +18,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -97,7 +98,7 @@ public class AdminBorrowCreditController {
             AdminResult borrowCreditList = borrowCreditService.getBorrowCreditList(request);
             if (borrowCreditList != null) {
                 BorrowCreditListResultBean data = (BorrowCreditListResultBean) borrowCreditList.getData();
-                if (data != null && data.getRecordList().size() > 0) {
+                if (data != null && !CollectionUtils.isEmpty(data.getRecordList())) {
                     sheetNameTmp = sheetName + "_第" + (i) + "页";
                     helper.export(workbook, sheetNameTmp, beanPropertyColumnMap, mapValueAdapter,  data.getRecordList());
                 } else {

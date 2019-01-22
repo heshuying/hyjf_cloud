@@ -3,7 +3,6 @@
  */
 package com.hyjf.cs.user.controller.web.login;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.hyjf.am.resquest.trade.SensorsDataBean;
@@ -17,8 +16,10 @@ import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.constants.UserOperationLogConstant;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.exception.MQException;
+import com.hyjf.common.file.UploadFileUtils;
 import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.common.bean.result.WebResult;
+import com.hyjf.cs.user.config.SystemConfig;
 import com.hyjf.cs.user.controller.BaseUserController;
 import com.hyjf.cs.user.mq.base.CommonProducer;
 import com.hyjf.cs.user.mq.base.MessageContent;
@@ -36,6 +37,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
@@ -55,6 +57,9 @@ public class WebLoginController extends BaseUserController {
     private LoginService loginService;
     @Autowired
     private CommonProducer commonProducer;
+
+    @Autowired
+    SystemConfig systemConfig;
 
     /**
      * 登录
@@ -123,6 +128,38 @@ public class WebLoginController extends BaseUserController {
             result.setStatus(ApiResult.FAIL);
             result.setStatusDesc(MsgEnum.ERR_USER_LOGIN.getMsg());
         }
+        return result;
+    }
+
+    /**
+     * web返回用户特定信息
+     * @param userId
+     * @return
+     */
+    @ApiOperation(value = "获取用户信息", notes = "获取用户信息")
+    @PostMapping(value = "/getuserinfo")
+    public WebResult<Object> getUserInfo(@RequestHeader(value = "userId") int userId) {
+        WebResult<Object> result = new WebResult<>();
+        UserVO userVO = loginService.getUsersById(userId);
+        if (userVO==null){
+            userVO = new UserVO();
+        }
+        UserInfoVO userInfoVO = loginService.getUserInfo(userId);
+        if (userInfoVO==null){
+            userInfoVO = new UserInfoVO();
+        }
+        Map<String,Object> userInfoMap = new HashMap<>();
+        userInfoMap.put("roleId",userInfoVO.getRoleId());
+        userInfoMap.put("mobile",userVO.getMobile());
+        if (StringUtils.isNotBlank(userVO.getIconUrl())) {
+            String imghost = UploadFileUtils.getDoPath(systemConfig.getFileDomainUrl());
+            imghost = imghost.substring(0, imghost.length() - 1);
+            String fileUploadTempPath = UploadFileUtils.getDoPath(systemConfig.getFileUpload());
+            if(StringUtils.isNotEmpty(userVO.getIconUrl())){
+                userInfoMap.put("iconurl",imghost + fileUploadTempPath + userVO.getIconUrl());
+            }
+        }
+        result.setData(userInfoMap);
         return result;
     }
 

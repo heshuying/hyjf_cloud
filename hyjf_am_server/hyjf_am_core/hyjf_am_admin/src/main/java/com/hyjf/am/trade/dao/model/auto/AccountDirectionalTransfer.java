@@ -5,24 +5,74 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 public class AccountDirectionalTransfer implements Serializable {
+    /**
+     * 主键id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 订单号
+     *
+     * @mbggenerated
+     */
     private String orderId;
 
+    /**
+     * 转出账户用户名
+     *
+     * @mbggenerated
+     */
     private String turnOutUsername;
 
+    /**
+     * 转出账户用户编号
+     *
+     * @mbggenerated
+     */
     private Integer turnOutUserId;
 
+    /**
+     * 转入账户用户名
+     *
+     * @mbggenerated
+     */
     private String shiftToUsername;
 
+    /**
+     * 转入账户用户编号
+     *
+     * @mbggenerated
+     */
     private Integer shiftToUserId;
 
+    /**
+     * 转账金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal transferAccountsMoney;
 
+    /**
+     * 状态状态（0转账中 1 成功 2 失败）
+     *
+     * @mbggenerated
+     */
     private Integer transferAccountsState;
 
+    /**
+     * 转账时间
+     *
+     * @mbggenerated
+     */
     private Date transferAccountsTime;
 
+    /**
+     * 备注说明
+     *
+     * @mbggenerated
+     */
     private String remark;
 
     private static final long serialVersionUID = 1L;

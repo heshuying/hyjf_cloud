@@ -75,7 +75,16 @@ public class WebBankOpenController extends BaseUserController {
             throw new CheckException(MsgEnum.ERR_BANK_ACCOUNT_ALREADY_OPEN);
         }
         UserInfoVO userInfoVO = this.bankOpenService.getUserInfo(userId);
-
+        // modify by libin start
+        if(userInfoVO==null){
+        	logger.error("使用"+ userId + "查询用户详情信息为空！");
+            throw new CheckException(MsgEnum.ERR_USER_NOT_LOGIN); 
+        }
+        if(userInfoVO.getRoleId()==null){
+        	logger.error("该用户" + userId + "角色为空！");
+            throw new CheckException(MsgEnum.ERR_USER_NOT_LOGIN);
+        }
+        // modify by libin end
         UserOperationLogEntityVO userOperationLogEntity = new UserOperationLogEntityVO();
         userOperationLogEntity.setOperationType(UserOperationLogConstant.USER_OPERATION_LOG_TYPE3);
         userOperationLogEntity.setIp(GetCilentIP.getIpAddr(request));

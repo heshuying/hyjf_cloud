@@ -241,7 +241,7 @@ public class AccountList implements Serializable {
     private BigDecimal bankInterestSum;
 
     /**
-     * 银行累计出借
+     * 银行累计投资
      *
      * @mbggenerated
      */

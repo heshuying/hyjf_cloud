@@ -41,12 +41,6 @@ public class CouponRepayMonitorServiceImpl implements CouponRepayMonitorService 
     }
 
     @Override
-    public List<AdminCouponRepayMonitorCustomize> selectCouponRepayMonitorPage(Map<String, Object> paraMap) {
-        List<AdminCouponRepayMonitorCustomize> couponRepayMonitorList =  adminCouponRepayMonitorCustomizeMapper.selectRecordList(paraMap);
-        return couponRepayMonitorList;
-    }
-
-    @Override
     public int insertCouponRepayMonitor(CouponRepayMonitor couponRepayMonitor) {
         int result = couponRepayMonitorMapper.insertSelective(couponRepayMonitor);
         return result;

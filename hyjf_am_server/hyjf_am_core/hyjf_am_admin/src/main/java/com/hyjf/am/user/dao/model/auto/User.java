@@ -6,68 +6,218 @@ import java.util.Date;
 public class User implements Serializable {
     private Integer userId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String username;
 
+    /**
+     * 手机号
+     *
+     * @mbggenerated
+     */
     private String mobile;
 
+    /**
+     * 邮箱
+     *
+     * @mbggenerated
+     */
     private String email;
 
+    /**
+     * 密码
+     *
+     * @mbggenerated
+     */
     private String password;
 
+    /**
+     * 加密验证字符
+     *
+     * @mbggenerated
+     */
     private String salt;
 
+    /**
+     * 用户是否锁定,0未锁定,1锁定
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 是否开户,0未开户,1已开户
+     *
+     * @mbggenerated
+     */
     private Integer openAccount;
 
+    /**
+     * 充值成功短信 0发送 1不发送
+     *
+     * @mbggenerated
+     */
     private Integer rechargeSms;
 
+    /**
+     * 提现成功短信 0发送 1不发送
+     *
+     * @mbggenerated
+     */
     private Integer withdrawSms;
 
+    /**
+     * app头像的url
+     *
+     * @mbggenerated
+     */
     private String iconUrl;
 
+    /**
+     * 手机端是否接收推送通知 0：不接收，1：接收
+     *
+     * @mbggenerated
+     */
     private Integer ifReceiveNotice;
 
+    /**
+     * 投标成功短信 0发送 1不发送
+     *
+     * @mbggenerated
+     */
     private Integer investSms;
 
+    /**
+     * 回收成功短信 0发送 1不发送
+     *
+     * @mbggenerated
+     */
     private Integer recieveSms;
 
+    /**
+     * 账户开通平台 0pc 1微信 2安卓 3IOS 4其他
+     *
+     * @mbggenerated
+     */
     private Integer regEsb;
 
     private String eprovince;
 
     private Integer sendSms;
 
+    /**
+     * 是否是第三方推送用户(0:否,1:是)
+     *
+     * @mbggenerated
+     */
     private Integer isInstFlag;
 
+    /**
+     * 第三方机构编号
+     *
+     * @mbggenerated
+     */
     private String instCode;
 
+    /**
+     * 账户开通平台 0pc 1微信 2安卓 3IOS 4其他
+     *
+     * @mbggenerated
+     */
     private Integer accountEsb;
 
+    /**
+     * 用户类型 0普通用户 1企业用户
+     *
+     * @mbggenerated
+     */
     private Integer userType;
 
+    /**
+     * 缴费授权状态  0：未授权1：已授权
+     *
+     * @mbggenerated
+     */
     private Integer paymentAuthStatus;
 
+    /**
+     * 是否设置了交易密码 0未设置 1已设置
+     *
+     * @mbggenerated
+     */
     private Integer isSetPassword;
 
+    /**
+     * 是否银行开户,0未开户,1已开户
+     *
+     * @mbggenerated
+     */
     private Integer bankOpenAccount;
 
+    /**
+     * 银行开户平台
+     *
+     * @mbggenerated
+     */
     private Integer bankAccountEsb;
 
+    /**
+     * 是否已进行风险测评(0:未测评,1:已测评)
+     *
+     * @mbggenerated
+     */
     private Integer isEvaluationFlag;
 
+    /**
+     * 测评到期时间
+     *
+     * @mbggenerated
+     */
     private Date evaluationExpiredTime;
 
+    /**
+     * CA认证标识位(0:未认证,1:已认证)
+     *
+     * @mbggenerated
+     */
     private Integer isCaFlag;
 
+    /**
+     * 是否发送出借协议邮件 0发送 1不发送
+     *
+     * @mbggenerated
+     */
     private Integer isSmtp;
 
+    /**
+     * 注册ip
+     *
+     * @mbggenerated
+     */
     private String regIp;
 
+    /**
+     * 注册时间
+     *
+     * @mbggenerated
+     */
     private Date regTime;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;
