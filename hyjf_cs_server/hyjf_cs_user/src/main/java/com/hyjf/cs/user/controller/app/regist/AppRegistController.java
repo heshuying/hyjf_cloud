@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RestController;
 import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Base64;
 import java.util.Map;
 
 /**
@@ -94,6 +95,7 @@ public class AppRegistController extends BaseUserController {
         // 合规改造 add by huanghui 20181220 start
         String userTypeStr = request.getParameter("userType");
         Integer userType = Integer.valueOf(userTypeStr);
+        logger.info("手机号码:" + mobile + ";注册平台:" + platform + ";userType:" + userTypeStr + " : " + userType);
         // 合规改造 add by huanghui 20181220 end
 
         String jumpCommand = GetJumpCommand.getLinkJumpPrefix(request, version);
@@ -180,7 +182,7 @@ public class AppRegistController extends BaseUserController {
             ret.put(CustomConstants.APP_STATUS, 0);
             ret.put(CustomConstants.APP_STATUS_DESC, statusDesc);
             ret.put("successUrl", baseMapBean.getUrl());
-            logger.info("platform:" + platform + ";mobile:" + mobile + ";active:" + active +";注册成功:" + ret.toString());
+            logger.info("mobile:" + mobile + ";active:" + active +";注册成功:" + ret.toString());
             return ret;
         }else {
             AdsRequest adsRequest = new AdsRequest();
@@ -195,7 +197,19 @@ public class AppRegistController extends BaseUserController {
                 logger.info("获取活动信息失败...");
             }
             // 注册成功发券提示
-            String operationUrl = jumpCommand + "://jumpCouponsList/?";
+            String operationUrl = "";
+            String operationUrlBase = "";
+            try {
+                operationUrl = jumpCommand + "://jumpCouponsList/?";
+
+                /**
+                 * 对App 原生的指令进行Base64编码, 防止返回给App的url出现两个 ?
+                 * 赵成无法解析的情况出现
+                 */
+                operationUrlBase = Base64.getEncoder().encodeToString(operationUrl.getBytes("utf-8"));
+            }catch (UnsupportedEncodingException e){
+                e.printStackTrace();
+            }
             BaseMapBean baseMapBean = new BaseMapBean();
             baseMapBean.set("imageUrl", record.getImage());
             baseMapBean.set(CustomConstants.APP_STATUS, BaseResultBeanFrontEnd.SUCCESS);
@@ -204,7 +218,7 @@ public class AppRegistController extends BaseUserController {
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            baseMapBean.set("imageUrlOperation", operationUrl);
+            baseMapBean.set("imageUrlOperation", operationUrlBase);
 
             // 用户属性 0: 个人用户; 1,企业用户
             baseMapBean.set("userType", userTypeStr);
@@ -212,7 +226,7 @@ public class AppRegistController extends BaseUserController {
             ret.put(CustomConstants.APP_STATUS, 0);
             ret.put(CustomConstants.APP_STATUS_DESC, statusDesc);
             ret.put("successUrl", baseMapBean.getUrl());
-            logger.info("platform:" + platform + ";mobile:" + mobile + ";active:" + active +";注册成功:" + ret.toString());
+            logger.info("mobile:" + mobile + ";active:" + active +";注册成功:" + ret.toString());
             return ret;
         }
     }
