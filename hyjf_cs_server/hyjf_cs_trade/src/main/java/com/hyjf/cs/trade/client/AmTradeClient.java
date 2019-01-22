@@ -2616,5 +2616,19 @@ public interface AmTradeClient {
      * @return
      */
     Integer selectBorrowManInfoCount(String username);
+    /**
+     * 根据borrowNid，tenderNid，accedeOrderId查找放款记录
+     *
+     * @param borrowRecoverVO
+     * @return
+     */
+    BorrowRecoverVO getRecoverDateByTenderNid(BorrowRecoverVO borrowRecoverVO);
+    /**
+     * 获取投资红包金额
+     * add by nxl
+     * @param realTenderId
+     * @return
+     */
+    BigDecimal getRedPackageSum(String realTenderId);
 }
 

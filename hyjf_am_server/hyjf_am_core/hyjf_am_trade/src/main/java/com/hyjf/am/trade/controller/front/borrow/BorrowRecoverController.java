@@ -3,6 +3,7 @@
  */
 package com.hyjf.am.trade.controller.front.borrow;
 
+import com.hyjf.am.response.Response;
 import com.hyjf.am.response.trade.BorrowRecoverPlanResponse;
 import com.hyjf.am.response.trade.BorrowRecoverResponse;
 import com.hyjf.am.trade.controller.BaseController;
@@ -128,6 +129,24 @@ public class BorrowRecoverController extends BaseController {
 		BorrowRecoverPlan borrowRecover=borrowRecoverService.getPlanByBidTidPeriod(bidNid,creditTenderNid,periodNow);
 		if (Validator.isNotNull(borrowRecover)){
 			response.setResult(CommonUtils.convertBean(borrowRecover,BorrowRecoverPlanVO.class));
+		}
+		return response;
+	}
+
+	/**
+	 * 根据borrowNid，tenderNid，accedeOrderId查找放款记录
+	 * add by nxl(应急中心)
+	 * @param borrowRecoverRequest
+	 * @return
+	 */
+	@PostMapping("getRecoverDateByTenderNid")
+	public BorrowRecoverResponse getRecoverDateByTenderNid(@RequestBody BorrowRecoverVO borrowRecoverRequest) {
+		BorrowRecoverResponse response = new BorrowRecoverResponse();
+		response.setRtn(Response.FAIL);
+		BorrowRecover borrowRecover = borrowRecoverService.getRecoverDateByTenderNid(borrowRecoverRequest.getNid(),borrowRecoverRequest.getBorrowNid(),borrowRecoverRequest.getAccedeOrderId());
+		if(Validator.isNotNull(borrowRecover)){
+			response.setResult(CommonUtils.convertBean(borrowRecover,BorrowRecoverVO.class));
+			response.setRtn(Response.SUCCESS);
 		}
 		return response;
 	}

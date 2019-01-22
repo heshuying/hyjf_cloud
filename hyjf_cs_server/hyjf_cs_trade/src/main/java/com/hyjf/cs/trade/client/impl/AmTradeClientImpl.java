@@ -6356,4 +6356,35 @@ public class AmTradeClientImpl implements AmTradeClient {
         }
         return 0;
     }
+
+    /**
+     * 根据borrowNid，tenderNid，accedeOrderId查找放款记录
+     * add by nxl
+     * @param borrowRecoverVO
+     * @return
+     */
+    @Override
+    public BorrowRecoverVO getRecoverDateByTenderNid(BorrowRecoverVO borrowRecoverVO) {
+        String url = "http://AM-TRADE/am-trade/borrowRecover/getRecoverDateByTenderNid";
+        BorrowRecoverResponse response = restTemplate.postForEntity(url,borrowRecoverVO,BorrowRecoverResponse.class).getBody();
+        if (Validator.isNotNull(response)&&response.getRtn().equals(Response.SUCCESS)){
+            return response.getResult();
+        }
+        return null;
+    }
+    /**
+     * 获取投资红包金额
+     * add by nxl
+     * @param realTenderId
+     * @return
+     */
+    @Override
+    public BigDecimal getRedPackageSum(String realTenderId) {
+        String url = "http://AM-TRADE/am-trade/coupon/getRedPackageSum/"+realTenderId;
+        BigDecimalResponse response =restTemplate.getForEntity(url,BigDecimalResponse.class).getBody();
+        if (Validator.isNotNull(response)&&response.getRtn().equals(Response.SUCCESS)){
+            return response.getResultDec();
+        }
+        return null;
+    }
 }

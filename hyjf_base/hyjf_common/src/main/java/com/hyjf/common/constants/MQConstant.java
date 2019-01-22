@@ -526,6 +526,9 @@ public interface MQConstant {
 	String CERT_USER_INFO_TOPIC = "SELL_DAILY_TOPIC";
 	String CERT_USER_INFO_TAG = "CERT_USER_INFO_TAG";
 
+	/** 债权信息*/
+	String CERT_TENDER_INFO_GROUP = "CERT_TENDER_INFO_GROUP";
+	String CERT_TENDER_INFO_TOPIC = "CERT_TENDER_INFO_TOPIC";
 
 	/**--------------------------------- 应急中心 -------------------------------------*/
 
