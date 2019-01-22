@@ -8,6 +8,8 @@ import com.hyjf.am.vo.trade.borrow.BorrowCarinfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowHousesVO;
 import com.hyjf.am.vo.trade.borrow.BorrowManinfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
+import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.calculate.*;
@@ -111,7 +113,18 @@ public class ApiProjectListServiceImpl implements ApiProjectListService {
                 MsgEnum.ERR_SIGN);
         Map<String,Object> map  = new HashMap<>();
         map.put("borrowNid",borrowNid);
-        ProjectCustomeDetailVO projectCustomeDetailVO = amTradeClient.searchProjectDetail(map);
+        ProjectCustomeDetailVO tempProjectCustomeDetailVO = amTradeClient.searchProjectDetail(map);
+
+        // add by zyk  标的详情添加缓存 2019年1月22日13:52 begin
+        // 转换一次是排除业务操作对缓存的干扰
+        ProjectCustomeDetailVO projectCustomeDetailVO = CommonUtils.convertBean(tempProjectCustomeDetailVO,ProjectCustomeDetailVO.class);
+        // 添加缓存后希望能拿到实时的标的剩余金额
+        String investAccount = RedisUtils.get(RedisConstants.BORROW_NID + borrowNid);
+        if (org.apache.commons.lang.StringUtils.isNotBlank(investAccount)){
+            projectCustomeDetailVO.setInvestAccount(investAccount);
+        }
+        // add by zyk  标的详情添加缓存 2019年1月22日13:52 end
+
         ApiBorrowDetail borrow = CommonUtils.convertBean(projectCustomeDetailVO,ApiBorrowDetail.class);
         //项目不存在
         CheckUtil.check(Validator.isNotNull(borrow), MsgEnum.STATUS_ZT000009);

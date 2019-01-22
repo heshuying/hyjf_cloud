@@ -1517,5 +1517,7 @@ public class CustomConstants implements MessageConstants, PropertiesConstants {
     
     /** 首页列表缓存存活时间 秒 */
     public static final int HOME_CACHE_LIVE_TIME = 12*60*60;
+    /** 标的详情缓存刷新时间 秒 */
+    public static final int PROJECT_DETAIL_CACHE_TIME = 60 * 5;
 
 }
