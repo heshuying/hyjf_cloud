@@ -270,11 +270,17 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         CheckUtil.check(null != borrowNid, MsgEnum.ERR_OBJECT_REQUIRED, "借款编号");
         ProjectListRequest request = new ProjectListRequest();
         // ① 先查出标的基本信息  ② 根据是否是新标的，进行参数组装
-        ProjectCustomeDetailVO projectCustomeDetail = amTradeClient.searchProjectDetail(map);
-        if (projectCustomeDetail == null) {
+        ProjectCustomeDetailVO tempProjectCustomeDetail = amTradeClient.searchProjectDetail(map);
+        if (tempProjectCustomeDetail == null) {
             CheckUtil.check(false, MsgEnum.STATUS_CE000013);
         }
-
+        // 转换一次是排除业务操作对缓存的干扰
+        ProjectCustomeDetailVO projectCustomeDetail = CommonUtils.convertBean(tempProjectCustomeDetail,ProjectCustomeDetailVO.class);
+        // 添加缓存后希望能拿到实时的标的剩余金额
+        String investAccount = RedisUtils.get(RedisConstants.BORROW_NID + borrowNid);
+        if (StringUtils.isNotBlank(investAccount)){
+            projectCustomeDetail.setInvestAccount(investAccount);
+        }
         ProjectCustomeDetailCsVO detailCsVO = CommonUtils.convertBean(projectCustomeDetail, ProjectCustomeDetailCsVO.class);
 
         UserVO userVO = null;
@@ -1694,12 +1700,20 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         Map<String,Object> map = new HashMap<>();
         map.put("borrowNid",borrowNid);
         // 根据项目标号获取相应的项目信息
-        ProjectCustomeDetailVO borrowDetailVo = amTradeClient.searchProjectDetail(map);
+        ProjectCustomeDetailVO tempBorrowDetailVo = amTradeClient.searchProjectDetail(map);
         //没有标的信息
-        if (borrowDetailVo == null) {
+        if (tempBorrowDetailVo == null) {
             throw  new CheckException("标的信息不存在！");
         }
-
+        // add by zyk  标的详情添加缓存 2019年1月22日13:52 begin
+        // 转换一次是排除业务操作对缓存的干扰
+        ProjectCustomeDetailVO borrowDetailVo = CommonUtils.convertBean(tempBorrowDetailVo,ProjectCustomeDetailVO.class);
+        // 添加缓存后希望能拿到实时的标的剩余金额
+        String investAccount = RedisUtils.get(RedisConstants.BORROW_NID + borrowNid);
+        if (StringUtils.isNotBlank(investAccount)){
+            borrowDetailVo.setInvestAccount(investAccount);
+        }
+        // add by zyk  标的详情添加缓存 2019年1月22日13:52 end
         this.getPlanBorrowDetail(result,borrowDetailVo,userId);
         return result;
     }
