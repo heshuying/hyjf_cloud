@@ -47,4 +47,13 @@ public interface BorrowRecoverService extends BaseService {
      * @return
      */
     BorrowRecoverPlan getPlanByBidTidPeriod(String bidNid, String creditTenderNid, Integer periodNow);
+
+    /**
+     * 根据borrowNid，tenderNid，accedeOrderId查找放款记录
+     *
+     * @param tenderNid
+     * @param borrowNid
+     * @return
+     */
+    BorrowRecover getRecoverDateByTenderNid(String tenderNid, String borrowNid,String accedeOrderId);
 }
