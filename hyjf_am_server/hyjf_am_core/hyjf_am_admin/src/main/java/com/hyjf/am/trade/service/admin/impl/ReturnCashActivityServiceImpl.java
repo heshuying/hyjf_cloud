@@ -40,12 +40,12 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
     PerformanceReturnDetailMapper performanceReturnDetailMapper;
     @Autowired
     InviterReturnDetailMapper inviterReturnDetailMapper;
-    @Autowired
-    NmUserMapper nmUserMapper;
+
     @Autowired
     ActivityMidauInfoCustomizeMapper activityMidauInfoCustomizeMapper;
     @Override
-    public  boolean saveReturnCash(Integer userId, String orderId, Integer productType, BigDecimal investMoney,InviterReturnCashCustomize inviterReturnCashCustomize){
+    public  boolean selectReturnCash(Integer userId, String orderId, Integer productType,
+                                     BigDecimal investMoney,InviterReturnCashCustomize inviterReturnCashCustomize,List<NmUser> nmUserList){
         List<ActivityMidauInfo> tenderList = null;
         ActivityMidauInfo activityMidauInfo = null;
         PerformanceReturnDetail performanceReturnDetail = new PerformanceReturnDetail();
@@ -107,10 +107,10 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
             _log.info("用户年化投资金额小于或等于0 orderId:"+orderId+",userId:"+userId+",yearAmount="+yearAmount);
             return false;
         }
-        List<NmUser> nmUsers =  nmUserMapper.selectByExample(new NmUserExample());
+
         List<String> userNames = new ArrayList<>();
         int count =0;
-        for(NmUser nmUser:nmUsers){
+        for(NmUser nmUser:nmUserList){
             userNames.add(nmUser.getUserName());
         }
         //邀请人获得的投资返现金额
@@ -146,7 +146,7 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
         }
         performanceReturnDetail.setCreateTime(new Date());
         if(level>0) {
-            performanceReturnDetailMapper.insert(performanceReturnDetail);
+            this.savePerformanceReturnDetail(performanceReturnDetail);
         }
         //假如为纳觅员工逻辑比较特殊自己邀请自己
         if(level == 1){
@@ -160,7 +160,7 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
             inviterReturnDetail.setUserName(inviterReturnCashCustomize.getUserName());
             inviterReturnDetail.setTrueName(inviterReturnCashCustomize.getTrueName());
             inviterReturnDetail.setReturnAmount(yearAmount.multiply(new BigDecimal(0.005)).setScale(2,BigDecimal.ROUND_DOWN));
-            inviterReturnDetailMapper.insert(inviterReturnDetail);
+            this.saveInviterReturnDetail(inviterReturnDetail);
             return true;
         }
         //邀请人返现金额计算
@@ -179,11 +179,20 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
             inviterReturnDetail.setTrueName(inviterReturnCash.getTrueName());
             _log.info("返现金额打印=="+yearAmount+"=="+yearAmount.multiply(new BigDecimal(0.005)));
             inviterReturnDetail.setReturnAmount(yearAmount.multiply(new BigDecimal(0.005)).setScale(2,BigDecimal.ROUND_DOWN));
-            inviterReturnDetailMapper.insert(inviterReturnDetail);
+            this.saveInviterReturnDetail(inviterReturnDetail);
             refferId = inviterReturnCash.getRefferId();
         }
         return true;
     }
+
+    private int saveInviterReturnDetail(InviterReturnDetail inviterReturnDetail){
+        return inviterReturnDetailMapper.insert(inviterReturnDetail);
+    }
+
+    private int savePerformanceReturnDetail(PerformanceReturnDetail performanceReturnDetail){
+        return performanceReturnDetailMapper.insert(performanceReturnDetail);
+    }
+
     private int getLevel(Integer userId,int count,List<String> userNames){
         //计数器
         count++;
