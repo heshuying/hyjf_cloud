@@ -174,10 +174,13 @@ public class AppRegistController extends BaseUserController {
                 e.printStackTrace();
             }
             baseMapBean.set("imageUrlOperation", "");
+            // 用户属性 0: 个人用户; 1,企业用户
+            baseMapBean.set("userType", userTypeStr);
             baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+"/user/regist/result/success");
             ret.put(CustomConstants.APP_STATUS, 0);
             ret.put(CustomConstants.APP_STATUS_DESC, statusDesc);
             ret.put("successUrl", baseMapBean.getUrl());
+            logger.info("platform:" + platform + ";mobile:" + mobile + ";active:" + active +";注册成功:" + ret.toString());
             return ret;
         }else {
             AdsRequest adsRequest = new AdsRequest();
@@ -202,10 +205,14 @@ public class AppRegistController extends BaseUserController {
                 e.printStackTrace();
             }
             baseMapBean.set("imageUrlOperation", operationUrl);
+
+            // 用户属性 0: 个人用户; 1,企业用户
+            baseMapBean.set("userType", userTypeStr);
             baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+"/user/regist/result/success");
             ret.put(CustomConstants.APP_STATUS, 0);
             ret.put(CustomConstants.APP_STATUS_DESC, statusDesc);
             ret.put("successUrl", baseMapBean.getUrl());
+            logger.info("platform:" + platform + ";mobile:" + mobile + ";active:" + active +";注册成功:" + ret.toString());
             return ret;
         }
     }
