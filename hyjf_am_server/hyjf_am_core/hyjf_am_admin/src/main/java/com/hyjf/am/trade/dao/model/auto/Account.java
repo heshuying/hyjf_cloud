@@ -253,20 +253,6 @@ public class Account implements Serializable {
     private Integer delFlag;
 
     /**
-     * 创建人id
-     *
-     * @mbggenerated
-     */
-    private Integer createUser;
-
-    /**
-     * 更新人id
-     *
-     * @mbggenerated
-     */
-    private Integer updateUser;
-
-    /**
      * 创建时间
      *
      * @mbggenerated
@@ -568,22 +554,6 @@ public class Account implements Serializable {
 
     public void setDelFlag(Integer delFlag) {
         this.delFlag = delFlag;
-    }
-
-    public Integer getCreateUser() {
-        return createUser;
-    }
-
-    public void setCreateUser(Integer createUser) {
-        this.createUser = createUser;
-    }
-
-    public Integer getUpdateUser() {
-        return updateUser;
-    }
-
-    public void setUpdateUser(Integer updateUser) {
-        this.updateUser = updateUser;
     }
 
     public Date getCreateTime() {

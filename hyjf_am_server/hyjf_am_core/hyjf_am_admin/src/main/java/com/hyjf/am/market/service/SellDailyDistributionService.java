@@ -1,6 +1,6 @@
-package com.hyjf.am.config.service;
+package com.hyjf.am.market.service;
 
-import com.hyjf.am.config.dao.model.auto.SellDailyDistribution;
+import com.hyjf.am.market.dao.model.auto.SellDailyDistribution;
 import com.hyjf.am.resquest.admin.EmailRecipientRequest;
 
 import java.util.List;

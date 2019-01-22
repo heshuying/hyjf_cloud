@@ -1,9 +1,9 @@
-package com.hyjf.am.config.service.impl;
+package com.hyjf.am.market.service.impl;
 
-import com.hyjf.am.config.dao.mapper.auto.SellDailyDistributionMapper;
-import com.hyjf.am.config.dao.model.auto.SellDailyDistribution;
-import com.hyjf.am.config.dao.model.auto.SellDailyDistributionExample;
-import com.hyjf.am.config.service.SellDailyDistributionService;
+import com.hyjf.am.market.dao.mapper.auto.SellDailyDistributionMapper;
+import com.hyjf.am.market.dao.model.auto.SellDailyDistribution;
+import com.hyjf.am.market.dao.model.auto.SellDailyDistributionExample;
+import com.hyjf.am.market.service.SellDailyDistributionService;
 import com.hyjf.am.resquest.admin.EmailRecipientRequest;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
@@ -111,7 +111,7 @@ public class SellDailyDistributionServiceImpl implements SellDailyDistributionSe
         try {
             Date parse = format.parse(form.getSendTime());
             if (form.getSendTime()!=null) {
-                SellDailyDistribution.setSendTime(parse);
+                SellDailyDistribution.setCreateTime(parse);
             }
         } catch (ParseException e) {
             e.printStackTrace();
@@ -160,7 +160,7 @@ public class SellDailyDistributionServiceImpl implements SellDailyDistributionSe
             SimpleDateFormat format = new SimpleDateFormat("HH:mm:ss");
             Date parse = format.parse(form.getSendTime());
             if (form.getSendTime()!=null) {
-                SellDailyDistribution.setSendTime(parse);
+                SellDailyDistribution.setCreateTime(parse);
             }
         } catch (ParseException e) {
             e.printStackTrace();

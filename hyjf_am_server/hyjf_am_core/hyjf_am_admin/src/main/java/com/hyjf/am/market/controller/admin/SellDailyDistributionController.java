@@ -1,7 +1,7 @@
-package com.hyjf.am.config.controller.admin.config;
+package com.hyjf.am.market.controller.admin;
 
-import com.hyjf.am.config.dao.model.auto.SellDailyDistribution;
-import com.hyjf.am.config.service.SellDailyDistributionService;
+import com.hyjf.am.market.dao.model.auto.SellDailyDistribution;
+import com.hyjf.am.market.service.SellDailyDistributionService;
 import com.hyjf.am.response.EmailRecipientResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.resquest.admin.EmailRecipientRequest;

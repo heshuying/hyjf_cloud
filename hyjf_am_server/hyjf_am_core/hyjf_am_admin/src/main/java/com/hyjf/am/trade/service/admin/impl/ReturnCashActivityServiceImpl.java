@@ -209,16 +209,29 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
         InviterReturnCashCustomize inviterReturnCashCustomize = inviterReturnCashCustomizeMapper.selectReturnCashList(userId);
         return inviterReturnCashCustomize;
     }
-
     @Override
-    public void  updateJoinTime(String borrowNid,Integer nowTime){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    public List<InviterReturnDetail> selectInviterReturnDetailList(String borrowNid){
         InviterReturnDetailExample example = new InviterReturnDetailExample();
+        example.createCriteria().andProductNoEqualTo(borrowNid);
+        List<InviterReturnDetail> inviterReturnDetailList = inviterReturnDetailMapper.selectByExample(example);
+        return inviterReturnDetailList;
+    }
+    @Override
+    public List<PerformanceReturnDetail> selectPerformanceReturnDetailList(String borrowNid){
+        PerformanceReturnDetailExample performanceReturnDetailExample = new PerformanceReturnDetailExample();
+        performanceReturnDetailExample.createCriteria().andProductNoEqualTo(borrowNid);
+        List<PerformanceReturnDetail> performanceReturnDetailList =  performanceReturnDetailMapper.selectByExample(performanceReturnDetailExample);
+        return performanceReturnDetailList;
+    }
+    @Override
+    public void updateJoinTime(Integer nowTime,List<InviterReturnDetail> inviterReturnDetailList,List<PerformanceReturnDetail> performanceReturnDetailList){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+       /* InviterReturnDetailExample example = new InviterReturnDetailExample();
         example.createCriteria().andProductNoEqualTo(borrowNid);
         List<InviterReturnDetail> inviterReturnDetailList = inviterReturnDetailMapper.selectByExample(example);
         PerformanceReturnDetailExample performanceReturnDetailExample = new PerformanceReturnDetailExample();
         performanceReturnDetailExample.createCriteria().andProductNoEqualTo(borrowNid);
-        List<PerformanceReturnDetail> performanceReturnDetailList =  performanceReturnDetailMapper.selectByExample(performanceReturnDetailExample);
+        List<PerformanceReturnDetail> performanceReturnDetailList =  performanceReturnDetailMapper.selectByExample(performanceReturnDetailExample);*/
         for(InviterReturnDetail inviterReturnDetail:inviterReturnDetailList){
             inviterReturnDetail.setJoinTime(sdf.format(nowTime*1000L));
             inviterReturnDetailMapper.updateByPrimaryKey(inviterReturnDetail);
