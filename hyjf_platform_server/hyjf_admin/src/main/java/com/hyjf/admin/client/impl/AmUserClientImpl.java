@@ -1,6 +1,8 @@
 package com.hyjf.admin.client.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.beans.OpenAccountEnquiryDefineResultBean;
+import com.hyjf.admin.beans.request.OpenAccountEnquiryDefineRequestBean;
 import com.hyjf.admin.beans.request.SmsCodeRequestBean;
 import com.hyjf.admin.beans.request.WhereaboutsPageRequestBean;
 import com.hyjf.admin.client.AmUserClient;
@@ -2772,5 +2774,25 @@ public class AmUserClientImpl implements AmUserClient {
 			return response.getResult();
 		}
 		return null;
+	}
+
+	/***
+	 * 开户掉单，保存开户数据
+	 * @author Zha Daojian
+	 * @date 2019/1/22 9:48
+	 * @param requestBean
+	 * @return openAccountEnquiryDefineRequestBeanVO
+	 **/
+	@Override
+	public OpenAccountEnquiryDefineResultBeanVO updateUserAccount(OpenAccountEnquiryDefineResultBean requestBean){
+
+		OpenAccountEnquiryDefineRequest request = new OpenAccountEnquiryDefineRequest();
+		BeanUtils.copyProperties(requestBean, request);
+		OpenAccountEnquiryResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN/am-user/borrowOpenaccountenquiryException/updateUserAccount", request, OpenAccountEnquiryResponse.class).getBody();
+		if (response == null || !Response.isSuccess(response)) {
+			return null;
+		}
+		return response.getOpenAccountEnquiryDefineResultBeanVO();
 	}
 }

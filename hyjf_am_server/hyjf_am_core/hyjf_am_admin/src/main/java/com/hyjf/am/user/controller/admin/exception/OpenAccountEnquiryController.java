@@ -3,6 +3,8 @@ package com.hyjf.am.user.controller.admin.exception;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.user.BankOpenAccountLogResponse;
 import com.hyjf.am.response.user.OpenAccountEnquiryResponse;
+import com.hyjf.am.resquest.admin.BindCardExceptionRequest;
+import com.hyjf.am.resquest.admin.OpenAccountEnquiryDefineRequest;
 import com.hyjf.am.resquest.user.BankOpenAccountLogRequest;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.BankOpenAccountLog;
@@ -132,6 +134,13 @@ public class OpenAccountEnquiryController extends BaseController {
             response.setResultList(bankCardExceptionCustomizeVOList);
             response.setRtn(Response.SUCCESS);
         }
+        return response;
+    }
+
+    @ApiOperation(value = "开户掉单，同步保存开户数据", notes = "开户掉单，同步保存开户数据")
+    @GetMapping(value = "/updateUserAccount")
+    public OpenAccountEnquiryResponse updateUserAccount(@RequestBody OpenAccountEnquiryDefineRequest request){
+        OpenAccountEnquiryResponse response = bankOpenAccountLogSrvice.updateUserAccount(request);
         return response;
     }
 }

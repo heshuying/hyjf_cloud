@@ -1,5 +1,7 @@
 package com.hyjf.am.user.service.admin.exception;
 
+import com.hyjf.am.response.user.OpenAccountEnquiryResponse;
+import com.hyjf.am.resquest.admin.OpenAccountEnquiryDefineRequest;
 import com.hyjf.am.resquest.user.BankOpenAccountLogRequest;
 import com.hyjf.am.user.dao.model.auto.BankOpenAccountLog;
 import com.hyjf.am.user.dao.model.customize.OpenAccountEnquiryCustomize;
@@ -67,4 +69,11 @@ public interface BankOpenAccountLogService extends BaseService {
      * @return
      */
     List<BankOpenAccountLog> selectBankOpenAccountLogByUserId(Integer userId);
+
+    /**
+     * 开户掉单，同步保存开户数据
+     * @param requestBean
+     * @return
+     */
+    OpenAccountEnquiryResponse updateUserAccount(OpenAccountEnquiryDefineRequest requestBean);
 }
