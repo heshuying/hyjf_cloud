@@ -1,9 +1,9 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.message.mongo.mc;
+package com.hyjf.cs.message.mongo.hgreportdata.cert;
 
-import com.hyjf.cs.message.bean.mc.CertAccountList;
+import com.hyjf.cs.message.bean.hgreportdata.cert.CertAccountList;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;

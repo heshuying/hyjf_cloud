@@ -2,7 +2,6 @@ package com.hyjf.am.user.service.front.user.cert;
 
 import com.hyjf.am.user.dao.model.auto.CertUser;
 import com.hyjf.am.user.dao.model.customize.CertSendUserCustomize;
-import com.hyjf.am.vo.trade.cert.CertUserVO;
 
 import java.util.List;
 

@@ -5,7 +5,7 @@ package com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.creditor;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.trade.cert.CertReportEntityVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;

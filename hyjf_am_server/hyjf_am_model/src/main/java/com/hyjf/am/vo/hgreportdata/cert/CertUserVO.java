@@ -1,4 +1,4 @@
-package com.hyjf.am.vo.trade.cert;
+package com.hyjf.am.vo.hgreportdata.cert;
 
 import java.io.Serializable;
 import java.util.Date;
