@@ -10,6 +10,8 @@ import com.hyjf.am.vo.datacollect.AppUtmRegVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.account.AccountVO;
+import com.hyjf.am.vo.trade.cert.CertSendUserVO;
+import com.hyjf.am.vo.trade.cert.CertUserVO;
 import com.hyjf.am.vo.user.*;
 
 import java.util.List;
@@ -410,4 +412,37 @@ public interface AmUserClient {
 	 * @return
 	 */
 	AppUtmRegVO getAppChannelStatisticsDetailByUserId(Integer userId);
+
+	/**
+	 * 根据userId查询需要上报的用户信息
+	 * @param userId
+	 * @return
+	 */
+    CertSendUserVO getCertSendUserByUserId(int userId);
+
+	/**
+	 * 插入国家互联网应急中心已上送用户表
+	 * @param certUser
+	 */
+	Integer insertCertUser(CertUserVO certUser);
+
+	/**
+	 * 修改国家互联网应急中心已上送用户表
+	 * @param certUser
+	 */
+	Integer updateCertUser(CertUserVO certUser);
+
+	/**
+	 * 批量插入上报记录
+	 * @param certUsers
+	 */
+	Integer insertCertUserByList(List<CertUserVO> certUsers);
+
+	/**
+	 * 根据borrowNid userId查询
+	 * @param userId
+	 * @param borrowNid
+	 * @return
+	 */
+	CertUserVO getCertUserByUserIdBorrowNid(int userId, String borrowNid);
 }

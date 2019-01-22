@@ -52,8 +52,8 @@ public class BorrowRecoverController extends BaseController {
 		return response;
 	}
 
-	@RequestMapping("/select_by_borrownid/{borrowNid}")
-	public BorrowRecoverResponse selectByBorrowNid(String borrowNid) {
+	@GetMapping("/select_by_borrownid/{borrowNid}")
+	public BorrowRecoverResponse selectByBorrowNid(@PathVariable String borrowNid) {
 		BorrowRecoverResponse response = new BorrowRecoverResponse();
 		List<BorrowRecover> recoverList=borrowRecoverService.selectByBorrowNid(borrowNid);
 		if (recoverList != null){

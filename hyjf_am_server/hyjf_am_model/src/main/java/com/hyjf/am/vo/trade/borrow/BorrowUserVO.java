@@ -85,6 +85,8 @@ public class BorrowUserVO extends BaseVO {
 
     private String otherInfo;
 
+    private String city;
+
     public String getBorrowPreNid() {
         return borrowPreNid;
     }
@@ -399,5 +401,13 @@ public class BorrowUserVO extends BaseVO {
 
     public void setOtherInfo(String otherInfo) {
         this.otherInfo = otherInfo;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }
