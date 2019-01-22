@@ -47,8 +47,6 @@ public class CreditController {
     @Autowired
     private MyCreditListService creditListService;
     @Autowired
-    NifaContractEssenceMessageService nifaContractEssenceMessageService;
-    @Autowired
     private CommonProducer commonProducer;
     /**
      * 首页 > 账户中心 > 资产管理 > 我要转让列表
@@ -107,7 +105,7 @@ public class CreditController {
         request.setPlatform(Integer.parseInt(CommonConstant.CLIENT_PC));
         WebResult result =  creditListService.saveTenderToCredit(request,userId);
         //保存用户日志mq
-        BorrowAndInfoVO borrow = this.nifaContractEssenceMessageService.selectBorrowByBorrowNid(request.getBorrowNid());
+        BorrowAndInfoVO borrow = creditListService.getBorrowByNid(request.getBorrowNid());
         boolean isMonth = CustomConstants.BORROW_STYLE_PRINCIPAL.equals(borrow.getBorrowStyle()) || CustomConstants.BORROW_STYLE_MONTH.equals(borrow.getBorrowStyle())
                 || CustomConstants.BORROW_STYLE_ENDMONTH.equals(borrow.getBorrowStyle())|| CustomConstants.BORROW_STYLE_END.equals(borrow.getBorrowStyle());
 
