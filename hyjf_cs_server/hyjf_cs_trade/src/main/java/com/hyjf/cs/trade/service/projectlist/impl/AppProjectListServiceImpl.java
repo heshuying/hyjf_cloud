@@ -308,9 +308,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             jsonObject.put(ProjectConstant.RES_PROJECT_INFO, borrowProjectInfoBean);
 
             //借款人企业信息
-            BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers = getCacheBorrowUser(borrowNid);
             //借款人信息
-            BorrowManinfoVO borrowManinfo = amTradeClient.getBorrowManinfo(borrowNid);
+            BorrowManinfoVO borrowManinfo = getCacheBorrowMainInfo(borrowNid);
 
             //基础信息
             List<BorrowDetailBean> baseTableData = null;
@@ -1222,9 +1222,9 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             // 2.根据项目标号获取相应的项目信息
             BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(borrowNid);
             //借款人企业消息
-            BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers = getCacheBorrowUser(borrowNid);
             //借款人信息
-            BorrowManinfoVO borrowManinfoVO = amTradeClient.getBorrowManinfo(borrowNid);
+            BorrowManinfoVO borrowManinfoVO = getCacheBorrowMainInfo(borrowNid);
             //房产抵押信息
             List<BorrowHousesVO> borrowHousesList = amTradeClient.getBorrowHousesByNid(borrowNid);
             //车辆抵押信息

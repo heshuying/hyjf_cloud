@@ -3,6 +3,8 @@ package com.hyjf.cs.trade.service;
 import com.hyjf.am.vo.trade.account.AccountVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowManinfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.*;
 import com.hyjf.cs.common.service.BaseService;
@@ -100,4 +102,17 @@ public interface BaseTradeService extends BaseService{
     boolean verifyRequestSign(BaseBean paramBean, String methodName);
 
     boolean checkIsNewUserCanInvest2(Integer userId);
+
+    /**
+     * 封装借款人企业信息缓存方法
+     * @author zhangyk
+     * @date 2019/1/22 17:13
+     */
+    BorrowUserVO getCacheBorrowUser(String borrowNid);
+    /**
+     * 封装借款人主体信息缓存方法
+     * @author zhangyk
+     * @date 2019/1/22 17:13
+     */
+    BorrowManinfoVO getCacheBorrowMainInfo(String borrowNid);
 }

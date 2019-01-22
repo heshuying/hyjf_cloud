@@ -5,7 +5,6 @@ import com.alicp.jetcache.anno.CacheRefresh;
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.Cached;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
-import com.hyjf.am.response.trade.WechatProjectListResponse;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.DebtCreditRequest;
@@ -44,6 +43,7 @@ import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.home.WechatProjectListService;
+import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.repay.RepayPlanService;
 import com.hyjf.cs.trade.util.CdnUrlUtil;
 import com.hyjf.cs.trade.util.HomePageDefine;
@@ -65,7 +65,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class WechatProjectListServiceImpl implements WechatProjectListService {
+public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implements WechatProjectListService {
 
 
     private static Logger logger = LoggerFactory.getLogger(WechatProjectListServiceImpl.class);
@@ -266,9 +266,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 
             //获取项目详情信息
             //借款人企业信息
-            BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers =  getCacheBorrowUser(borrowNid);
             //借款人信息
-            BorrowManinfoVO borrowManinfo = amTradeClient.getBorrowManinfo(borrowNid);
+            BorrowManinfoVO borrowManinfo = getCacheBorrowMainInfo(borrowNid);
             //基础信息
             List<BorrowDetailBean> baseTableData = null;
             //项目介绍

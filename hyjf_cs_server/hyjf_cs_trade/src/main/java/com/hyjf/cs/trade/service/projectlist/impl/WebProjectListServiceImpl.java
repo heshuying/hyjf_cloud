@@ -496,9 +496,9 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
              */
             other.put(ProjectConstant.PARAM_BORROW_TYPE, borrow.getComOrPer());
             //借款人企业信息
-            BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers = getCacheBorrowUser(borrowNid);
             //借款人信息
-            BorrowManinfoVO borrowManinfo = amTradeClient.getBorrowManinfo(borrowNid);
+            BorrowManinfoVO borrowManinfo = getCacheBorrowMainInfo(borrowNid);
             //房产抵押信息
             List<BorrowHousesVO> borrowHousesList = amTradeClient.getBorrowHousesByNid(borrowNid);
             //车辆抵押信息
@@ -990,10 +990,10 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
              */
             result.put(ProjectConstant.PARAM_BORROW_TYPE, comOrPer);
             // 借款人企业信息
-            BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers = getCacheBorrowUser(borrowNid);
 
             //借款人信息
-            BorrowManinfoVO borrowManinfo = amTradeClient.getBorrowManinfo(borrowNid);
+            BorrowManinfoVO borrowManinfo = getCacheBorrowMainInfo(borrowNid);
             //房产抵押信息
             List<BorrowHousesVO> borrowHousesList = amTradeClient.getBorrowHousesByNid(borrowNid);
             //车辆抵押信息
@@ -1613,7 +1613,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         for (BorrowAndInfoVO planAccede : list) {
             String borrowNid = planAccede.getBorrowNid();
             if ("1".equals(planAccede.getCompanyOrPersonal())) {//如果类型是公司 huiyingdai_borrow_users
-                BorrowUserVO borrowUser = amTradeClient.getBorrowUser(borrowNid);
+                BorrowUserVO borrowUser = getCacheBorrowUser(borrowNid);
                 String trueName = borrowUser.getUsername();
                 String str = "******";
                 if (trueName != null && trueName != "") {
@@ -1627,7 +1627,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 planAccede.setBorrowUserName(trueName);
             } else if ("2".equals(planAccede.getCompanyOrPersonal())) {//类型是个人 huiyingdai_borrow_maninfo
                 //根据borrowNid查询查询个人的真实姓名
-                BorrowManinfoVO borrowManinfoVO = amTradeClient.getBorrowManinfo(borrowNid);
+                BorrowManinfoVO borrowManinfoVO =  getCacheBorrowMainInfo(borrowNid);
                 String trueName = borrowManinfoVO.getName();
                 String str = "**";
                 if (trueName != null && trueName != "") {
@@ -1730,9 +1730,9 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         info.put("borrowType",borrowDetailVo.getComOrPer());
 
         //借款人企业信息
-        BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
+        BorrowUserVO borrowUsers = getCacheBorrowUser(borrowNid);
         //借款人信息
-        BorrowManinfoVO borrowManinfo =amTradeClient.getBorrowManinfo(borrowNid);
+        BorrowManinfoVO borrowManinfo = getCacheBorrowMainInfo(borrowNid);
         //房产抵押信息
         List<BorrowHousesVO> borrowHousesList = amTradeClient.getBorrowHousesByNid(borrowNid);
         //车辆抵押信息
