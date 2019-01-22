@@ -2,10 +2,7 @@ package com.hyjf.cs.trade.service.consumer.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowManinfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
+import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.trade.cert.CertLogVO;
 import com.hyjf.am.vo.trade.cert.CertReportEntityVO;
 import com.hyjf.am.vo.trade.cert.CertUserVO;
@@ -460,7 +457,7 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
      * @return
      * @throws Exception
      */
-    protected String getUserHashValue(BorrowInfoVO borrow) throws Exception {
+    protected String getUserHashValue(BorrowAndInfoVO borrow) throws Exception {
         String userIdcard = "";
         if (borrow != null) {
             if ("1".equals(borrow.getCompanyOrPersonal())) {
