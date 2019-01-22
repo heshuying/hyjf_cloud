@@ -174,7 +174,7 @@ public class AppRegistController extends BaseUserController {
                 e.printStackTrace();
             }
             baseMapBean.set("imageUrlOperation", "");
-            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+"/user/regist/result/success");
+            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+"/user/regist/result/success?userType="+userType);
             ret.put(CustomConstants.APP_STATUS, 0);
             ret.put(CustomConstants.APP_STATUS_DESC, statusDesc);
             ret.put("successUrl", baseMapBean.getUrl());
@@ -202,7 +202,7 @@ public class AppRegistController extends BaseUserController {
                 e.printStackTrace();
             }
             baseMapBean.set("imageUrlOperation", operationUrl);
-            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+"/user/regist/result/success");
+            baseMapBean.setCallBackAction(systemConfig.getAppServerHost()+"/user/regist/result/success?userType=" + userType);
             ret.put(CustomConstants.APP_STATUS, 0);
             ret.put(CustomConstants.APP_STATUS_DESC, statusDesc);
             ret.put("successUrl", baseMapBean.getUrl());
