@@ -28,7 +28,6 @@ import com.hyjf.cs.trade.bean.app.AppInvestInfoResultVO;
 import com.hyjf.cs.trade.controller.BaseTradeController;
 import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
-import com.hyjf.cs.trade.service.consumer.NifaContractEssenceMessageService;
 import com.hyjf.cs.trade.service.hjh.HjhTenderService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -57,8 +56,6 @@ public class WechatjhPlanController extends BaseTradeController {
 
     @Autowired
     private HjhTenderService hjhTenderService;
-    @Autowired
-    private NifaContractEssenceMessageService nifaContractEssenceMessageService;
     @Autowired
     private CommonProducer commonProducer;
 
