@@ -1012,7 +1012,7 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/**
-	 * 批量插入上报记录
+	 * 批量插入上报记录  先不迁移
 	 *
 	 * @param certUsers
 	 */
