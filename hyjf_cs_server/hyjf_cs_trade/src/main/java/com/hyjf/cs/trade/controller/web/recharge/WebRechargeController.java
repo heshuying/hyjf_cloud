@@ -6,7 +6,7 @@ import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.am.vo.user.WebViewUserVO;
 import com.hyjf.common.constants.CommonConstant;
 import com.hyjf.common.enums.MsgEnum;
-import com.hyjf.common.exception.ReturnMessageException;
+import com.hyjf.common.exception.CheckException;
 import com.hyjf.common.util.ClientConstants;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomUtil;
@@ -97,14 +97,14 @@ public class WebRechargeController extends BaseTradeController{
 		directRechargeBean.setForgotPwdUrl(super.getForgotPwdUrl(CommonConstant.CLIENT_PC,request,systemConfig));
 		BankCallBean bean = userRechargeService.rechargeService(directRechargeBean,userId,ipAddr,bankRechargeVO.getMobile(),bankRechargeVO.getMoney());
 		if (null == bean) {
-			throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
+			throw new CheckException(MsgEnum.ERR_BANK_CALL);
 		}
 		try {
 			Map<String,Object> data =  BankCallUtils.callApiMap(bean);
 			result.setData(data);
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new ReturnMessageException(MsgEnum.ERR_BANK_CALL);
+			throw new CheckException(MsgEnum.ERR_BANK_CALL);
 		}
 		return result;
 	}
