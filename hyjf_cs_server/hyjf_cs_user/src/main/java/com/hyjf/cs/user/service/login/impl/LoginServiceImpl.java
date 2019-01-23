@@ -628,7 +628,8 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				// 开户url
 				result.setHuifuOpenAccountUrl("");
 				// 江西银行开户url add by huanghui
-				jxBankOpenUrl = systemConfig.getAppFrontHost() +  ClientConstants.BANKOPEN_OPEN_ACTION + ClientConstants.ENTERPRISEGUIDE + packageStr(request);
+				// 企业开户指南url 由前端提供.
+				jxBankOpenUrl = systemConfig.getAppFrontHost() +  "/open/enterpriseguide";
 				result.setOpenAccountUrl(jxBankOpenUrl);
 				logger.info("jxBankOpenUrl:" + jxBankOpenUrl);
 			}
