@@ -12,7 +12,7 @@ import com.hyjf.admin.service.cert.CertReportLogService;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CertReportLogResponse;
 import com.hyjf.am.resquest.admin.CertReportLogRequestBean;
-import com.hyjf.am.vo.trade.cert.CertLogVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertLogVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
