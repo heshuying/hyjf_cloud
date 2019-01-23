@@ -289,6 +289,9 @@ public class ClientConstants implements Serializable {
 
 	public static final String PAYMENT_AUTH_ACTION = "/bank/user/paymentAuth/authPage";
 
+	/** 企业用户开户 */
+	public static final String ENTERPRISEGUIDE = "/enterpriseguide";
+
 	/** 我的奖励Url */
 	public static final String REWARD_URL = "/user/reward";
 
