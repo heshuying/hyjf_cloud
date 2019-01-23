@@ -541,6 +541,12 @@ public interface MQConstant {
 	String CERT_BORROW_REPAYMENTPLAN_TOPIC = "CERT_BORROW_REPAYMENTPLAN_TOPIC";
 	String CERT_BORROW_REPAYMENTPLAN_TAG = "CERT_BORROW_REPAYMENTPLAN_TAG";
 
+    /** 散标状态信息*/
+    String CERT_BORROW_STATUS_GROUP = "CERT_BORROW_STATUS_GROUP";
+    String CERT_BORROW_STATUS_TOPIC = "CERT_BORROW_STATUS_TOPIC";
+    String CERT_BORROW_STATUS_TAG = "CERT_BORROW_STATUS_TAG";
+
+
 	/**--------------------------------- 应急中心 -------------------------------------*/
 
 }
