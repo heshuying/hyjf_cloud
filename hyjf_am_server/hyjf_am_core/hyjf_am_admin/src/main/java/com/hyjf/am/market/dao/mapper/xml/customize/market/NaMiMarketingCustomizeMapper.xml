@@ -89,11 +89,12 @@
 
     <select id="selectIdList" resultType="java.lang.Integer" parameterType="java.util.HashMap">
         select a.user_id from
-        (select
-        s1.user_id,s1.username as username,su.user_id referrer,from_unixtime(s1.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time
+        (
+        select
+        s1.user_id,s1.username as username,su.spreads_user_id referrer,from_unixtime(s1.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time
         from hyjf_user.ht_user s1
-        INNER JOIN hyjf_user.ht_spreads_user su on s1.user_id=su.spreads_user_id
-        where su.user_id in
+        INNER JOIN hyjf_user.ht_spreads_user su on s1.user_id=su.user_id
+        where su.spreads_user_id in
         <foreach collection="id0"  open="(" close=")" separator="," item="user">
             #{user.userId}
         </foreach>
@@ -104,11 +105,12 @@
         and s1.reg_time<![CDATA[>=]]> #{activityList.timeStart} and s1.reg_time<![CDATA[<=]]>#{activityList.timeEnd}
         UNION
         select
-        s2.user_id,s2.username as username,su.user_id referrer,from_unixtime(s2.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time
+        s2.user_id,s2.username as username,su.spreads_user_id referrer,from_unixtime(s2.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time
         from hyjf_user.ht_user s2
-        INNER JOIN hyjf_user.ht_spreads_user su on s2.user_id=su.spreads_user_id
-        inner JOIN hyjf_user.ht_user s1 ON su.user_id = s1.user_id
-        where su.spreads_user_id in
+        INNER JOIN hyjf_user.ht_spreads_user su on s2.user_id=su.user_id
+        inner JOIN hyjf_user.ht_user s1 ON su.spreads_user_id = s1.user_id
+        INNER JOIN hyjf_user.ht_spreads_user su2 on s1.user_id=su2.user_id
+        where su2.spreads_user_id in
         <foreach collection="id0"  open="(" close=")" separator="," item="user">
             #{user.userId}
         </foreach>
@@ -120,13 +122,14 @@
         and s2.reg_time<![CDATA[>=]]> #{activityList.timeStart} and s2.reg_time<![CDATA[<=]]>#{activityList.timeEnd}
         UNION
         select
-        s3.user_id,s3.username as username,su.user_id referrer,from_unixtime(s3.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time
+        s3.user_id,s3.username as username,su.spreads_user_id referrer,from_unixtime(s3.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time
         from hyjf_user.ht_user s3
-        INNER JOIN hyjf_user.ht_spreads_user su on s3.user_id=su.spreads_user_id
-        inner JOIN hyjf_user.ht_user s2 ON su.user_id = s2.user_id
+        INNER JOIN hyjf_user.ht_spreads_user su on s3.user_id=su.user_id
+        inner JOIN hyjf_user.ht_user s2 ON su.spreads_user_id = s2.user_id
         INNER JOIN hyjf_user.ht_spreads_user su2 on s2.user_id=su2.spreads_user_id
         inner JOIN hyjf_user.ht_user s1 ON su.user_id = s1.user_id
-        where s1.user_id in
+        INNER JOIN hyjf_user.ht_spreads_user su3 on s1.user_id=su3.spreads_user_id
+        where su3.spreads_user_id in
         <foreach collection="id0"  open="(" close=")" separator="," item="user">
             #{user.userId}
         </foreach>
@@ -160,10 +163,10 @@
 
     <select id="selectNaMiMarketingList" resultType="com.hyjf.am.vo.admin.NaMiMarketingVO" parameterType="java.util.HashMap">
         select u.user_id as id,u.username as username,u.mobile as mobile,u2.truename as truename,
-        (select u1.username from hyjf_user.ht_user u1 where u1.user_id=su.user_id) as refferName ,
+        (select u1.username from hyjf_user.ht_user u1 where u1.user_id=su.spreads_user_id) as refferName ,
         from_unixtime(u.reg_time,'%Y-%m-%d %H:%i:%s') as regTime
         from hyjf_user.ht_user u
-        INNER JOIN hyjf_user.ht_spreads_user su on u.user_id=su.spreads_user_id
+        INNER JOIN hyjf_user.ht_spreads_user su on u.user_id=su.user_id
         left join hyjf_user.ht_user_info u2 on u.user_id=u2.user_id
         where u.user_id in
         <foreach collection="ids"  open="(" close=")" separator="," item="userId">
