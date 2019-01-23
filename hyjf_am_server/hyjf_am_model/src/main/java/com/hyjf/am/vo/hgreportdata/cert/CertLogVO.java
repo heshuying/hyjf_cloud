@@ -1,10 +1,12 @@
-package com.hyjf.am.vo.trade.cert;
+package com.hyjf.am.vo.hgreportdata.cert;
 
 import java.io.Serializable;
 import java.util.Date;
 
-public class CertErrLogVO implements Serializable {
+public class CertLogVO implements Serializable {
     private Integer id;
+
+    private String mqContent;
 
     private String logOrdId;
 
@@ -13,8 +15,6 @@ public class CertErrLogVO implements Serializable {
     private Integer sendTime;
 
     private Integer sendStatus;
-
-    private Integer sendCount;
 
     private String resultCode;
 
@@ -36,6 +36,14 @@ public class CertErrLogVO implements Serializable {
 
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getMqContent() {
+        return mqContent;
+    }
+
+    public void setMqContent(String mqContent) {
+        this.mqContent = mqContent == null ? null : mqContent.trim();
     }
 
     public String getLogOrdId() {
@@ -68,14 +76,6 @@ public class CertErrLogVO implements Serializable {
 
     public void setSendStatus(Integer sendStatus) {
         this.sendStatus = sendStatus;
-    }
-
-    public Integer getSendCount() {
-        return sendCount;
-    }
-
-    public void setSendCount(Integer sendCount) {
-        this.sendCount = sendCount;
     }
 
     public String getResultCode() {

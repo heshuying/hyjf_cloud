@@ -1,31 +1,46 @@
 package com.hyjf.cs.trade.service.consumer.impl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.resquest.hgreportdata.cert.CertReportEntitRequest;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowManinfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
-import com.hyjf.am.vo.trade.cert.CertLogVO;
-import com.hyjf.am.vo.trade.cert.CertReportEntityVO;
-import com.hyjf.am.vo.trade.cert.CertUserVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertErrLogVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertLogVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
 import com.hyjf.am.vo.user.BankCardVO;
-import com.hyjf.am.vo.user.UserEvalationResultCustomizeVO;
+import com.hyjf.am.vo.user.UserEvalationResultVO;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.util.GetDate;
+import com.hyjf.cs.common.service.BaseClient;
+import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.client.AmUserClient;
+import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
+import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallUtil;
+import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertSendUtils;
 import com.hyjf.cs.trade.service.consumer.BaseHgCertReportService;
 import org.apache.commons.lang3.StringUtils;
 import org.cert.open.CertToolV1;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
+import redis.clients.jedis.Transaction;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 //import com.hyjf.mybatis.model.auto.*;
 
@@ -36,9 +51,16 @@ import java.util.Map;
 public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
 
     Logger logger = LoggerFactory.getLogger(BaseHgCertReportServiceImpl.class);
-
     @Autowired
-//    protected CertReportDao certReportDao;
+    SystemConfig systemConfig;
+    @Autowired
+    AmUserClient amUserClient;
+    @Autowired
+    AmTradeClient amTradeClient;
+    @Autowired
+    private BaseClient baseClient;
+
+    private String baseUrl = "http://CS-MESSAGE/cs-message/certStatistical/";
 
     /** Jedis  */
     public static JedisPool pool = RedisUtils.getPool();
@@ -56,16 +78,15 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
      */
     @Override
     public CertReportEntityVO insertAndSendPost(CertReportEntityVO bean) {
-       /* try {
+        try {
             // 设置共通参数
             bean = setCommonParam(bean);
-        } catch (Exception e) {
+        }catch (Exception e) {
             e.printStackTrace();
         }
-
         Map<String, String> params = getBankParam(bean);
-        // 插入mongo
-        this.certReportDao.insert(bean);
+        // todo 插入mongo
+        this.insertCertReport(bean);
         String rtnMsg = CertSendUtils.postRequest(bean.getUrl(), params );
         logger.info("返回结果为:"+rtnMsg);
         bean = setResult(bean,rtnMsg);
@@ -74,7 +95,7 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
             JSONObject resp = CertCallUtil.parseResult(rtnMsg);
             String retCode = resp.getString("code");
             String retMess = resp.getString("message");
-            CertErrLog errLog = new CertErrLog();
+            CertErrLogVO errLog = new CertErrLogVO();
             errLog.setInfType(Integer.parseInt(bean.getInfType()));
             errLog.setLogOrdId(bean.getLogOrdId());
             errLog.setSendCount(1);
@@ -87,8 +108,9 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
                 errLog.setResultCode("");
                 errLog.setResultMsg("");
             }
-            certErrLogMapper.insert(errLog);
-        }*/
+           // certErrLogMapper.insert(errLog);
+            // TODo 插入错误日志表
+        }
         return bean;
     }
 
@@ -125,12 +147,12 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
      * @return
      */
     protected CertReportEntityVO setResult(CertReportEntityVO bean, String rtnMsg) {
-      /*  // 上报结果  0初始，1成功，9失败 99 无响应
+        // 上报结果  0初始，1成功，9失败 99 无响应
         // 返回结果  例  {"resultMsg": {"code": "0000","message": "[调试]数据已成功上报，正在等待处理，请使用对账接口查看数据状态"}
         JSONObject resp = CertCallUtil.parseResult(rtnMsg);
         String retCode = resp.getString("code");
         String retMess = resp.getString("message");
-        CertLog certLog = new CertLog();
+        CertLogVO certLog = new CertLogVO();
         if(null == rtnMsg||rtnMsg.equals("")){
             //请求失败  无响应
             bean.setReportStatus(CertCallConstant.CERT_RETURN_STATUS_NO);
@@ -149,11 +171,12 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
         }
         bean.setRetMess(rtnMsg);
         // 操作数据库 修改
-        Query q1 = Query.query(Criteria.where("logOrdId").is(bean.getLogOrdId()));
-        Update u1 = new Update();
-        u1.set("reportStatus", bean.getReportStatus());
-        u1.set("retMess", resp);
-        this.certReportDao.update(q1, u1);
+        // todo 修改mongo
+
+        CertReportEntitRequest certReportEntitRequest = new CertReportEntitRequest();
+        BeanUtils.copyProperties(bean,certReportEntitRequest);
+        certReportEntitRequest.setResp(resp.toJSONString());
+        this.updateCertReport(certReportEntitRequest);
         // 插入发送记录表
         certLog.setResultCode(retCode);
         if(rtnMsg!=null &&rtnMsg.length()>200){
@@ -163,7 +186,7 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
             certLog.setResultMsg(rtnMsg);
         }
 
-        this.insertCertLog(certLog,bean);*/
+        this.insertCertLog(certLog,bean);
 
         return bean;
     }
@@ -187,7 +210,7 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
      * @return
      */
     protected CertReportEntityVO setCommonParam(CertReportEntityVO bean) throws Exception {
-       /* bean.setVersion(CertCallConstant.CERT_CALL_VERSION);
+        bean.setVersion(CertCallConstant.CERT_CALL_VERSION);
         JSONArray msg = bean.getDataList();
         long timestamp = System.currentTimeMillis();
         // seqId 规则  今天的递增字段+2位随机数
@@ -203,13 +226,13 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
         // num 说明：如果推送 2017-01-01 到 2017-01-07 七天的数据，则 num 为 7。
         String dateNum =  bean.getDateNum()==null?"0":bean.getDateNum();
         // 批次号 规则  平台编码+交易时间+交易范围数+自增长字段+2位随机数
-        String batchNum = tool.batchNumber(CertCallConstant.CERT_SOURCE_CODE, tradeDate ,dateNum,seqId);
+        String batchNum = tool.batchNumber(systemConfig.getCertSourceCode(), tradeDate ,dateNum,seqId);
         // 随机数
         String nonce = Integer.toHexString(new Random().nextInt());
-        String token = CertCallUtil.getApiKey(CertCallConstant.CERT_API_KEY, CertCallConstant.CERT_SOURCE_CODE, bean.getVersion(), timestamp, nonce);
-        String url = CertCallConstant.CERT_SEVER_PATH + CertCallUtil.getUrl(bean.getInfType());
+        String token = CertCallUtil.getApiKey(systemConfig.getCertApiKey(), systemConfig.getCertSourceCode(), bean.getVersion(), timestamp, nonce);
+        String url =systemConfig.getCertSeverPath()+ CertCallUtil.getUrl(bean.getInfType());
         // 判断是否测试环境
-        if (CertCallConstant.CERT_IS_TEST == null || "true".equals(CertCallConstant.CERT_IS_TEST)) {
+        if (systemConfig.getCertIsTest() == null || "true".equals(systemConfig.getCertIsTest())) {
             // 如果是测试环境
             url += CertCallConstant.CERT_TEST_URL;
             // 测试数据
@@ -223,7 +246,7 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
         // 设置共通的值
         bean.setTimestamp(timestamp+"");
         bean.setNonce(nonce);
-        bean.setSourceCode(CertCallConstant.CERT_SOURCE_CODE);
+        bean.setSourceCode(systemConfig.getCertSourceCode());
         bean.setApiKey(token);
         bean.setCheckCode(tool.checkCode(timestamp+""));
         bean.setTotalNum(msg.size()+"");
@@ -231,7 +254,7 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
         bean.setBatchNum(batchNum);
         bean.setLogOrdId(bean.getInfType()+"_"+batchNum);
         // 设置初始状态
-        bean.setReportStatus(CertCallConstant.CERT_RETURN_STATUS_INIT);*/
+        bean.setReportStatus(CertCallConstant.CERT_RETURN_STATUS_INIT);
         return bean;
     }
 
@@ -245,15 +268,8 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
      */
     @Override
     public CorpOpenAccountRecordVO getCorpOpenAccountRecord(Integer userId) {
-        /*CorpOpenAccountRecordExample example = new CorpOpenAccountRecordExample();
-        CorpOpenAccountRecordExample.Criteria cra = example.createCriteria();
-        cra.andUserIdEqualTo(userId);
-        cra.andIsBankEqualTo(1);//江西银行
-        List<CorpOpenAccountRecord> list = this.corpOpenAccountRecordMapper.selectByExample(example);
-        if(list != null && list.size() > 0){
-            return list.get(0);
-        }*/
-        return null;
+        CorpOpenAccountRecordVO corpOpenAccountRecordVO=amUserClient.getCorpOpenAccountRecord(userId);
+        return corpOpenAccountRecordVO;
     }
 
     /**
@@ -263,14 +279,8 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
      */
     @Override
     public BorrowUserVO getBorrowUsers(String borrowNid) {
-        /*BorrowUsersExample example = new BorrowUsersExample();
-        BorrowUsersExample.Criteria cra = example.createCriteria();
-        cra.andBorrowNidEqualTo(borrowNid);
-        List<BorrowUsers> list = this.borrowUsersMapper.selectByExample(example);
-        if(list!= null && list.size()>0){
-            return list.get(0);
-        }*/
-        return null;
+        BorrowUserVO borrowUserVO = amTradeClient.getBorrowUser(borrowNid);
+        return borrowUserVO;
     }
 
     /**
@@ -280,15 +290,8 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
      */
     @Override
     public BorrowManinfoVO getBorrowManInfo(String borrowNid) {
-        /*BorrowManinfoExample example = new BorrowManinfoExample();
-        BorrowManinfoExample.Criteria criteria = example.createCriteria();
-        criteria.andBorrowNidEqualTo(borrowNid);
-        List<BorrowManinfo> list = this.borrowManinfoMapper.selectByExample(example);
-
-        if (list != null && list.size() > 0 ){
-            return list.get(0);
-        }*/
-        return null;
+        BorrowManinfoVO borrowManinfoVO = amTradeClient.getBorrowManinfo(borrowNid);
+        return borrowManinfoVO;
     }
 
     /**
@@ -297,17 +300,9 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
      * @return
      */
     @Override
-    public UserEvalationResultCustomizeVO getUserEvalationResult(Integer userId) {
-        UserEvalationResultCustomizeVO userEvalationResultCustomize = null;
-       /* UserEvalationResultExampleCustomize creditExample = new UserEvalationResultExampleCustomize();
-        UserEvalationResultExampleCustomize.Criteria criteria = creditExample.createCriteria();
-        criteria.andUserIdEqualTo(userId);
-        List<UserEvalationResultCustomize> list = userEvalationResultCustomizeMapper.selectByExample(creditExample);
-
-        if(list != null && list.size() > 0){
-            userEvalationResultCustomize = list.get(0);
-        }*/
-        return userEvalationResultCustomize;
+    public UserEvalationResultVO getUserEvalationResult(Integer userId) {
+        UserEvalationResultVO userEvalationResultVO = amUserClient.selectUserEvalationResultByUserId(userId);
+        return userEvalationResultVO;
     }
 
 
@@ -319,15 +314,8 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
      */
     @Override
     public BankCardVO getBankCardById(Integer userId) {
-        /*BankCardExample example = new BankCardExample();
-        BankCardExample.Criteria cra = example.createCriteria();
-        cra.andUserIdEqualTo(userId).andStatusEqualTo(1);
-        List<BankCard> list = bankCardMapper.selectByExample(example);
-        if (list != null && list.size() > 0) {
-            return list.get(0);
-        }*/
-
-        return null;
+        BankCardVO bankCardVO = amUserClient.getBankCardByUserId(userId);
+        return bankCardVO;
     }
 
     /**
@@ -379,7 +367,7 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
      */
     private String getBathNum(){
         Jedis jedis = pool.getResource();
-       /* // 操作redis
+        // 操作redis
         while ("OK".equals(jedis.watch(RedisConstants.CERT_BATCH_NUMBER_SEQ_ID))) {
             String numberStr = RedisUtils.get(RedisConstants.CERT_BATCH_NUMBER_SEQ_ID);
             JSONObject number = JSONObject.parseObject(numberStr);
@@ -415,7 +403,7 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
                 }
             }
 
-        }*/
+        }
         return null;
     }
 
@@ -479,8 +467,7 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
                 userIdcard = borrowManinfo.getCardNo();
             }
         }
-        //return tool.idCardHash(userIdcard);
-        return null;
+        return tool.idCardHash(userIdcard);
     }
 
     /**
@@ -519,5 +506,25 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
             return true;
         }
         return false;
+    }
+    /**
+     * 插入mongo，保存报送记录
+     *
+     * @param certReportEntityVO
+     */
+    public boolean insertCertReport(CertReportEntityVO certReportEntityVO) {
+        String url = baseUrl + "insertAndSendPost";
+        BooleanResponse response = this.baseClient.postExe(url, certReportEntityVO, BooleanResponse.class);
+        return response.getResultBoolean();
+    }
+    /**
+     * 修改mongo，修改报送状态
+     *
+     * @param certReportEntityVO
+     */
+    public boolean updateCertReport(CertReportEntitRequest certReportEntityVO) {
+        String url = baseUrl + "updateCertReport";
+        BooleanResponse response = this.baseClient.postExe(url, certReportEntityVO, BooleanResponse.class);
+        return response.getResultBoolean();
     }
 }

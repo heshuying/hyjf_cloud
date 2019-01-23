@@ -1,8 +1,8 @@
 package com.hyjf.cs.trade.service.consumer.hgdatareport.cert.userinfo;
 
 import com.alibaba.fastjson.JSONArray;
-import com.hyjf.am.vo.trade.cert.CertSendUserVO;
-import com.hyjf.am.vo.trade.cert.CertUserVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertSendUserVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
 import com.hyjf.cs.trade.service.consumer.BaseHgCertReportService;
 
 import java.util.List;

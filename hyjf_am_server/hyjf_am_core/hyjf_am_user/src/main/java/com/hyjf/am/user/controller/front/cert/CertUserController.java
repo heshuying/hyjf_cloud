@@ -6,16 +6,13 @@ package com.hyjf.am.user.controller.front.cert;
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.user.CertSendUserResponse;
 import com.hyjf.am.response.user.CertUserResponse;
-import com.hyjf.am.resquest.user.UserAuthRequest;
 import com.hyjf.am.user.controller.BaseController;
 import com.hyjf.am.user.dao.model.auto.CertUser;
-import com.hyjf.am.user.dao.model.auto.HjhUserAuthLog;
 import com.hyjf.am.user.dao.model.customize.CertSendUserCustomize;
 import com.hyjf.am.user.service.front.user.cert.CertUserService;
-import com.hyjf.am.vo.trade.cert.CertSendUserVO;
-import com.hyjf.am.vo.trade.cert.CertUserVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertSendUserVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
 import com.hyjf.common.util.CommonUtils;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

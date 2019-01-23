@@ -5,10 +5,10 @@ import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.borrow.BorrowManinfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
 import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
-import com.hyjf.am.vo.trade.cert.CertReportEntityVO;
-import com.hyjf.am.vo.trade.cert.CertUserVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
 import com.hyjf.am.vo.user.BankCardVO;
-import com.hyjf.am.vo.user.UserEvalationResultCustomizeVO;
+import com.hyjf.am.vo.user.UserEvalationResultVO;
 
 import java.util.List;
 
@@ -56,7 +56,7 @@ public interface BaseHgCertReportService {
     * @param userId 用户ID
     * @return UserEvalationResult
     */
-   UserEvalationResultCustomizeVO getUserEvalationResult(Integer userId);
+   UserEvalationResultVO getUserEvalationResult(Integer userId);
 
    /**
     * 根据用户Id,查询用户银行卡信息

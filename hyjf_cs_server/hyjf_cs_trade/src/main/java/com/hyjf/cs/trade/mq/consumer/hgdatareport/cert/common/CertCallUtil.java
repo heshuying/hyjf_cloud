@@ -3,7 +3,7 @@ package com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
-import com.hyjf.am.vo.trade.cert.CertReportEntityVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
 import com.hyjf.common.util.GetDate;
 import org.apache.commons.lang3.StringUtils;
 import org.cert.open.CertException;
