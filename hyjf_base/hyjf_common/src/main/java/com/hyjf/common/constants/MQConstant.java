@@ -530,6 +530,12 @@ public interface MQConstant {
 	String CERT_TENDER_INFO_GROUP = "CERT_TENDER_INFO_GROUP";
 	String CERT_TENDER_INFO_TOPIC = "CERT_TENDER_INFO_TOPIC";
 
+	/**散标数据*/
+	String CERT_SCATTER_INVEST_GROUP = "CERT_SCATTER_INVEST_GROUP";
+	String CERT_SCATTER_INVEST_TOPIC = "CERT_SCATTER_INVEST_TOPIC";
+	String CERT_SCATTER_INVEST_TAG = "ERT_SCATTER_INVEST_TAG";
+
+
 	/**--------------------------------- 应急中心 -------------------------------------*/
 
 }

@@ -19,6 +19,7 @@ import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.BankInterfaceVO;
+import com.hyjf.am.vo.trade.cert.CertLogVO;
 import com.hyjf.am.vo.user.HjhUserAuthConfigVO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -1525,4 +1526,11 @@ public interface AmConfigClient {
 	AdminSystemResponse updatePasswordAction(AdminSystemRequest map);
 
 	Integer getAdminByUsername(String auditUser);
+
+	/**
+	 * 应急中心 上报日志列表
+	 * @param requestBean
+	 * @return
+	 */
+	CertReportLogResponse selectCertReportLogList(CertReportLogRequestBean requestBean);
 }
