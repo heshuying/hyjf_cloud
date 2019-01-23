@@ -5,10 +5,7 @@ import com.hyjf.admin.beans.request.DadaCenterCouponRequestBean;
 import com.hyjf.admin.beans.request.PlatformCountRequestBean;
 import com.hyjf.admin.beans.request.STZHWhiteListRequestBean;
 import com.hyjf.am.bean.admin.LockedConfig;
-import com.hyjf.am.response.AppPushManageResponse;
-import com.hyjf.am.response.BooleanResponse;
-import com.hyjf.am.response.EmailRecipientResponse;
-import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.*;
 import com.hyjf.am.response.admin.*;
 import com.hyjf.am.response.admin.locked.LockedUserMgrResponse;
 import com.hyjf.am.response.admin.promotion.ChannelReconciliationResponse;
@@ -28,7 +25,6 @@ import com.hyjf.am.resquest.config.AppBorrowImageRequest;
 import com.hyjf.am.resquest.config.SubmissionsRequest;
 import com.hyjf.am.resquest.config.VersionConfigBeanRequest;
 import com.hyjf.am.resquest.market.AppBannerRequest;
-import com.hyjf.am.resquest.trade.DadaCenterCouponCustomizeRequest;
 import com.hyjf.am.resquest.trade.DataSearchRequest;
 import com.hyjf.am.resquest.user.ChannelStatisticsDetailRequest;
 import com.hyjf.am.vo.admin.*;
@@ -1161,4 +1157,24 @@ public interface AmAdminClient {
      * @return
      */
     List<Integer> searchUserIdList(int sourceType);
+
+    /**
+     * 纳觅返现活动-修改加入时间
+     * @param borrowNid
+     * @param nowTime
+     */
+    void updateJoinTime(String borrowNid, Integer nowTime);
+
+    /**
+     * 纳觅返现活动-活动有效期校验
+     * @param activityId
+     * @return
+     */
+    StringResponse checkActivityIfAvailable(Integer activityId);
+
+    /**
+     * 纳觅返现活动-保存返现数据
+     * @param returnCashRequest
+     */
+    void saveReturnCash(ReturnCashRequest returnCashRequest);
 }
