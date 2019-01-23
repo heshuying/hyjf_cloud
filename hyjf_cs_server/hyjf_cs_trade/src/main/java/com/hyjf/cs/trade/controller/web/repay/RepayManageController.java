@@ -347,19 +347,11 @@ public class RepayManageController extends BaseTradeController {
 
         try {
             List<RepayListCustomizeVO> resultList = repayManageService.selectOrgRepayList(requestBean);
-
-            requestBean.setLimitStart(null);
-            requestBean.setLimitEnd(null);
-            List<RepayListCustomizeVO> resultListAll = repayManageService.selectOrgRepayList(requestBean);
-            BigDecimal repayMoneyTotal = BigDecimal.ZERO;
-            if(!CollectionUtils.isEmpty(resultListAll)){
-                for (RepayListCustomizeVO customize : resultListAll) {
-                    repayMoneyTotal=repayMoneyTotal.add(new BigDecimal(customize.getRealAccountYes()));
-                }
-                resultMap.put("repayMoneyTotal", repayMoneyTotal);
-                resultMap.put("repayMoneyNum", resultListAll.size());
-            }
             resultMap.put("recordList",resultList);
+
+            BigDecimal repayMoneyTotal = repayManageService.selectOrgRepayWaitTotalCurrent(requestBean);
+            resultMap.put("repayMoneyTotal", repayMoneyTotal);
+            resultMap.put("repayMoneyNum", repayCount);
             result.setData(resultMap);
         } catch (Exception e) {
             logger.error("获取垫付机构待还款列表异常", e);

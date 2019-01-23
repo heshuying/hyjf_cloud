@@ -159,6 +159,16 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
     }
 
     /**
+     * 垫付机构本期应还总额
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public BigDecimal selectOrgRepayWaitTotalCurrent(RepayListRequest requestBean) {
+        return amTradeClient.orgRepayWaitTotalCurrent(requestBean);
+    }
+
+    /**
      * 垫付机构已还款列表
      *
      * @param requestBean

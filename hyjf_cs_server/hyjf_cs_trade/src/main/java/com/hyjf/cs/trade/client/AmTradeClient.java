@@ -1444,6 +1444,8 @@ public interface AmTradeClient {
 
     int orgRepayedCount(RepayListRequest requestBean);
 
+    BigDecimal orgRepayWaitTotalCurrent(RepayListRequest requestBean);
+
     Boolean repayRequestUpdate(RepayRequestUpdateRequest requestBean);
 
     BorrowRecoverPlanVO selectRecoverPlanById(Integer id);

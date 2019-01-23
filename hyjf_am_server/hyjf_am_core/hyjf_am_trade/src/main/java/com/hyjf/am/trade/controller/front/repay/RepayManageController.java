@@ -171,6 +171,19 @@ public class RepayManageController extends BaseController {
     }
 
     /**
+     * 垫付机构本期应还总额
+     * @param requestBean
+     * @return
+     */
+    @RequestMapping(value = "/orgrepay_waittotal_current")
+    public BigDecimalResponse orgRepayWaitTotalCurrent(@RequestBody @Valid RepayListRequest requestBean) {
+        BigDecimalResponse responseBean = new BigDecimalResponse();
+        BigDecimal result = repayManageService.selectOrgRepayWaitCurrent(requestBean);
+        responseBean.setResultDec(result);
+        return responseBean;
+    }
+
+    /**
      * 还款详情页面数据获取
      * @param requestBean
      * @return
