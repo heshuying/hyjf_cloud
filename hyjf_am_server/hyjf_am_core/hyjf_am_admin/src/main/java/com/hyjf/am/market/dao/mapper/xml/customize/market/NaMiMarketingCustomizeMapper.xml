@@ -91,7 +91,7 @@
         select a.user_id from
         (
         select
-        s1.user_id,s1.username as username,su.spreads_user_id referrer,from_unixtime(s1.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time
+        s1.user_id,s1.username as username,su.spreads_user_id referrer,s1.reg_time as reg_time
         from hyjf_user.ht_user s1
         INNER JOIN hyjf_user.ht_spreads_user su on s1.user_id=su.user_id
         where su.spreads_user_id in
@@ -105,7 +105,7 @@
         and s1.reg_time<![CDATA[>=]]> #{activityList.timeStartT} and s1.reg_time<![CDATA[<=]]>#{activityList.timeEndT}
         UNION
         select
-        s2.user_id,s2.username as username,su.spreads_user_id referrer,from_unixtime(s2.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time
+        s2.user_id,s2.username as username,su.spreads_user_id referrer,s2.reg_time as reg_time
         from hyjf_user.ht_user s2
         INNER JOIN hyjf_user.ht_spreads_user su on s2.user_id=su.user_id
         inner JOIN hyjf_user.ht_user s1 ON su.spreads_user_id = s1.user_id
@@ -122,7 +122,7 @@
         and s2.reg_time<![CDATA[>=]]> #{activityList.timeStartT} and s2.reg_time<![CDATA[<=]]>#{activityList.timeEndT}
         UNION
         select
-        s3.user_id,s3.username as username,su.spreads_user_id referrer,from_unixtime(s3.reg_time,'%Y-%m-%d %H:%i:%s') as reg_time
+        s3.user_id,s3.username as username,su.spreads_user_id referrer,s3.reg_time as reg_time
         from hyjf_user.ht_user s3
         INNER JOIN hyjf_user.ht_spreads_user su on s3.user_id=su.user_id
         inner JOIN hyjf_user.ht_user s2 ON su.spreads_user_id = s2.user_id
@@ -164,7 +164,7 @@
     <select id="selectNaMiMarketingList" resultType="com.hyjf.am.vo.admin.NaMiMarketingVO" parameterType="java.util.HashMap">
         select u.user_id as id,u.username as username,u.mobile as mobile,u2.truename as truename,
         (select u1.username from hyjf_user.ht_user u1 where u1.user_id=su.spreads_user_id) as refferName ,
-        from_unixtime(u.reg_time,'%Y-%m-%d %H:%i:%s') as regTime
+        u.reg_time as regTime
         from hyjf_user.ht_user u
         INNER JOIN hyjf_user.ht_spreads_user su on u.user_id=su.user_id
         left join hyjf_user.ht_user_info u2 on u.user_id=u2.user_id
