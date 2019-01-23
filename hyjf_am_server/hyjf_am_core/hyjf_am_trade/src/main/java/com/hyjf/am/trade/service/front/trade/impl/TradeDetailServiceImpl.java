@@ -131,14 +131,13 @@ public class TradeDetailServiceImpl extends BaseServiceImpl implements TradeDeta
             params.put("limitEnd", request.getLimitEnd());
         }
         List<WebUserWithdrawListCustomize> list = userTradeDetailCustomizeMapper.selectUserWithdrawList(params);
-        logger.info("返回参数1:" +JSONObject.toJSON(list));
         for (WebUserWithdrawListCustomize customize:list) {
             customize.setBankFlag(CacheUtil.getParamName("BANK_TYPE",customize.getBankFlag()));
-            customize.setStatus(CacheUtil.getParamName("'WITHDRAW_STATUS'",customize.getStatus()));
+            customize.setStatus(CacheUtil.getParamName("WITHDRAW_STATUS",customize.getStatus()));
         }
-        logger.info("返回参数2:" +JSONObject.toJSON(list));
         return list;
     }
+
 
     @Override
     public int countUserWithdrawRecordTotal(TradeDetailBeanRequest request) {
