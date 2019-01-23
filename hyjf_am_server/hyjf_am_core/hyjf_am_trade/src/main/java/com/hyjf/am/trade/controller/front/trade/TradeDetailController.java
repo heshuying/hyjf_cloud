@@ -119,6 +119,7 @@ public class TradeDetailController extends BaseController {
             List<WebUserWithdrawListCustomizeVO> voList = CommonUtils.convertBeanList(list, WebUserWithdrawListCustomizeVO.class);
             response.setWithdrawList(voList);
         }
+        logger.info("返回参数:" +JSONObject.toJSON(response));
         return response;
     }
     /**
