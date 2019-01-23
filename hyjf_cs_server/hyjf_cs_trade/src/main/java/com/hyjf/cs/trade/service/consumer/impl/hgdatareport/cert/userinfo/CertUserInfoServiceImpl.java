@@ -6,8 +6,8 @@ import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowManinfoVO;
 import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
-import com.hyjf.am.vo.trade.cert.CertSendUserVO;
-import com.hyjf.am.vo.trade.cert.CertUserVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertSendUserVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
 import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
@@ -216,7 +216,7 @@ public class CertUserInfoServiceImpl extends BaseHgCertReportServiceImpl impleme
         // 用户注册时间
         param.put("userCreateTime", GetDate.timestamptoNUMStrYYYYMMDDHHMMSS(item.getRegTime()));
         // 平台编号
-        param.put("sourceCode", CertCallConstant.CERT_SOURCE_CODE);
+        param.put("sourceCode", systemConfig.getCertSourceCode());
         // 用户状态编码  1-新增／2-变更／3-失效
         param.put("userStatus", userStatus);
         // 用户类型  1-自然人／2-企业

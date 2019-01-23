@@ -1,10 +1,9 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.message.bean.mc;
+package com.hyjf.am.resquest.hgreportdata.cert;
 
 import com.alibaba.fastjson.JSONArray;
-import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.io.Serializable;
 
@@ -14,8 +13,7 @@ import java.io.Serializable;
  * @author sss
  * @version BaseHgDataReportEntity, v0.1 2018/6/27 10:06
  */
-@Document(collection = "ht_cert_report_send")
-public class CertReportEntity implements Serializable {
+public class CertReportEntitRequest implements Serializable {
 
     private static final long serialVersionUID = 1L;
     /**
@@ -112,38 +110,11 @@ public class CertReportEntity implements Serializable {
      */
     private String tradeDate;
 
-    public CertReportEntity() {
-        super();
-    }
+    //描述
+    private String resp;
 
-    /**
-     * 构造方法  不带logParm
-     *
-     * @param remark
-     * @param infType
-     * @param dataList
-     */
-    public CertReportEntity(String remark, String infType, JSONArray dataList) {
+    public CertReportEntitRequest() {
         super();
-        this.dataList = dataList;
-        this.remark = remark;
-        this.infType = infType;
-    }
-
-    /**
-     * 构造方法  带logParm
-     *
-     * @param remark
-     * @param infType
-     * @param logParm
-     * @param dataList
-     */
-    public CertReportEntity(String remark, String infType, String logParm, JSONArray dataList) {
-        super();
-        this.dataList = dataList;
-        this.remark = remark;
-        this.infType = infType;
-        this.logParm = logParm;
     }
 
     public String getVersion() {
@@ -312,5 +283,13 @@ public class CertReportEntity implements Serializable {
 
     public void setTradeDate(String tradeDate) {
         this.tradeDate = tradeDate;
+    }
+
+    public String getResp() {
+        return resp;
+    }
+
+    public void setResp(String resp) {
+        this.resp = resp;
     }
 }

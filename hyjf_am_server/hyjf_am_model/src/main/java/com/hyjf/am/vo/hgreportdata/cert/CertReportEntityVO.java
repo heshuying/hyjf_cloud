@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.vo.trade.cert;
+package com.hyjf.am.vo.hgreportdata.cert;
 
 import com.alibaba.fastjson.JSONArray;
 

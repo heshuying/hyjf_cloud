@@ -2,7 +2,7 @@ package com.hyjf.am.response.user;
 
 
 import com.hyjf.am.response.Response;
-import com.hyjf.am.vo.trade.cert.CertSendUserVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertSendUserVO;
 
 /**
  * @Description 应急中心上送用户表

@@ -2,17 +2,11 @@ package com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.userinfo;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.resquest.trade.CouponLoansBean;
-import com.hyjf.am.vo.trade.borrow.BorrowTenderCpnVO;
-import com.hyjf.am.vo.trade.cert.CertReportEntityVO;
-import com.hyjf.am.vo.trade.cert.CertSendUserVO;
-import com.hyjf.am.vo.trade.cert.CertUserVO;
-import com.hyjf.common.cache.RedisConstants;
-import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertSendUserVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
-import com.hyjf.common.util.GetOrderIdUtils;
-import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.userinfo.CertUserInfoService;
 import org.apache.commons.lang3.StringUtils;
@@ -30,7 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+
 /**
  * @Description 合规数据上报 CERT 用户数据推送上报（延时队列）
  * @Author sunss

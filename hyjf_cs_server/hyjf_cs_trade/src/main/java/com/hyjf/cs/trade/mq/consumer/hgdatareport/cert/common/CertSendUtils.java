@@ -1,5 +1,6 @@
 package com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common;
 
+import com.hyjf.cs.trade.config.SystemConfig;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.methods.DeleteMethod;
@@ -26,8 +27,9 @@ public class CertSendUtils {
 	public static PoolingHttpClientConnectionManager  poolConnManager=null;
 
 	public static String getReq(String url) {
+		SystemConfig systemConfig = new SystemConfig();
 		CertSSLProtocolSocketFactory certSSLProtocolSocketFactory = new CertSSLProtocolSocketFactory();
-		CertSSLProtocolSocketFactory.crtPath = CertCallConstant.CERT_CRT_PATH;
+		CertSSLProtocolSocketFactory.crtPath = systemConfig.getCertCrtpath();
 		Protocol myhttps = new Protocol("https",certSSLProtocolSocketFactory , 443);
 		Protocol.registerProtocol("https", myhttps);
 		String strResult = "";
@@ -58,8 +60,9 @@ public class CertSendUtils {
 	}
 
 	public static String postRequest(String url, Map<String,String> param ) {
+		SystemConfig systemConfig = new SystemConfig();
 		CertSSLProtocolSocketFactory certSSLProtocolSocketFactory = new CertSSLProtocolSocketFactory();
-		CertSSLProtocolSocketFactory.crtPath = CertCallConstant.CERT_CRT_PATH;
+		CertSSLProtocolSocketFactory.crtPath = systemConfig.getCertCrtpath();
 		Protocol myhttps = new Protocol("https",certSSLProtocolSocketFactory , 443);
 		Protocol.registerProtocol("https", myhttps);
 		String strResult = "";

@@ -1,10 +1,9 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.message.mongo.mc;
+package com.hyjf.cs.message.mongo.hgreportdata.cert;
 
-
-import com.hyjf.cs.message.bean.mc.CertReportEntity;
+import com.hyjf.cs.message.bean.hgreportdata.cert.CertReportEntity;
 import com.hyjf.cs.message.mongo.ic.BaseMongoDao;
 import org.springframework.stereotype.Repository;
 

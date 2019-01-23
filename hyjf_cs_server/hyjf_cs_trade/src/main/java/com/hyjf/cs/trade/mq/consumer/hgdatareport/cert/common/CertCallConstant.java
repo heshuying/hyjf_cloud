@@ -1,7 +1,5 @@
 package com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common;
 
-import com.hyjf.common.util.PropUtils;
-
 import java.io.Serializable;
 
 /**
@@ -103,21 +101,21 @@ public class CertCallConstant implements Serializable {
 
     //配置文件相关   start
     /** //合规数据上报 CERT 国家互联网应急中心 请求地址 https://api.ifcert.org.cn * 正式地址和测试地址区别 去掉【/test】 例 p2p/userInfo/test**/
-    public static final String CERT_SEVER_PATH = PropUtils.getSystem("hyjf.cert.sever.path");
+//    public static final String CERT_SEVER_PATH = PropUtils.getSystem("hyjf.cert.sever.path");
     /** 测试环境后缀 */
     public static final String CERT_TEST_URL = "/test";
     /** //合规数据上报 CERT 国家互联网应急中心是否测试环境 true 测试环境 false 生产环境 */
-    public static final String CERT_IS_TEST = PropUtils.getSystem("hyjf.cert.is.test");
-    /** //合规数据上报 CERT 国家互联网应急中心 企业自己的sourceCode*/
+/*    public static final String CERT_IS_TEST = PropUtils.getSystem("hyjf.cert.is.test");
+    *//** //合规数据上报 CERT 国家互联网应急中心 企业自己的sourceCode*//*
     public static final String CERT_SOURCE_CODE = PropUtils.getSystem("hyjf.cert.source.code");
-    /** //合规数据上报 CERT 国家互联网应急中心 企业自己的apiKey */
+    *//** //合规数据上报 CERT 国家互联网应急中心 企业自己的apiKey *//*
     public static final String CERT_API_KEY = PropUtils.getSystem("hyjf.cert.api.key");
-    /**合规数据上报 CERT 国家互联网应急中心 金协议地址*/
+    *//**合规数据上报 CERT 国家互联网应急中心 金协议地址*//*
     public static final String CERT_CRT_PATH= PropUtils.getSystem("hyjf.cert.crt.path");
-    /**合规数据上报 CERT web工程的路径 http://testweb3.hyjf.com*/
+    *//**合规数据上报 CERT web工程的路径 http://testweb3.hyjf.com*//*
     public static final String CERT_WEB_HOST= PropUtils.getSystem("hyjf.web.host");
-    /** 查询批次数据入库消息 */
-    public static final String CERT_WEB_YIBU= PropUtils.getSystem("hyjf.cert.yibu.path");
+    *//** 查询批次数据入库消息 *//*
+    public static final String CERT_WEB_YIBU= PropUtils.getSystem("hyjf.cert.yibu.path");*/
 
     //配置文件相关   end
 
