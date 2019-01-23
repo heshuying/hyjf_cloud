@@ -42,6 +42,7 @@ import com.hyjf.cs.user.service.synbalance.SynBalanceService;
 import com.hyjf.cs.user.vo.UserParameters;
 import com.hyjf.pay.lib.bank.util.BankCallConstant;
 import org.apache.commons.lang3.StringUtils;
+import org.omg.CORBA.UserException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -593,18 +594,36 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 
 		}
 		{
-			if (StringUtils.isNotEmpty(result.getMobile())) {
+			UserVO userInfoVO = this.getUsersById(userId);
+
+			// 初始 用户类型
+			Integer userType = 0;
+
+			if (userInfoVO != null){
+				userType = userInfoVO.getUserType();
+			}
+
+			// 非企业用户开户地址
+			if (userType != 1) {
+				if (StringUtils.isNotEmpty(result.getMobile())) {
+					// 开户url
+					result.setHuifuOpenAccountUrl("");
+					// 江西银行开户url
+					result.setOpenAccountUrl(systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION
+							+ packageStr(request) + "&mobile=" + result.getMobile());
+				} else {
+					// 开户url
+					result.setHuifuOpenAccountUrl("");
+					// 江西银行开户url
+					result.setOpenAccountUrl(systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION + packageStr(request));
+				}
+			}
+			// 企业用户开户地址
+			else {
 				// 开户url
 				result.setHuifuOpenAccountUrl("");
-				// 江西银行开户url
-				result.setOpenAccountUrl(systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION
-						+ packageStr(request) + "&mobile=" + result.getMobile());
-			} else {
-				// 开户url
-				result.setHuifuOpenAccountUrl("");
-				// 江西银行开户url
-				result.setOpenAccountUrl(
-						systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION + packageStr(request));
+				// 江西银行开户url add by huanghui 2018-11-26
+				result.setOpenAccountUrl(systemConfig.getAppFrontHost() +  ClientConstants.BANKOPEN_OPEN_ACTION + ClientConstants.ENTERPRISEGUIDE + packageStr(request));
 			}
 		}
 		{
