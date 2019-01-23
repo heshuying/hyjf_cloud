@@ -10,8 +10,11 @@ import com.hyjf.admin.controller.BaseController;
 import com.hyjf.admin.interceptor.AuthorityAnnotation;
 import com.hyjf.admin.service.cert.CertReportLogService;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.admin.CertErrorReportLogResponse;
 import com.hyjf.am.response.admin.CertReportLogResponse;
+import com.hyjf.am.resquest.admin.CertErrorReportLogRequestBean;
 import com.hyjf.am.resquest.admin.CertReportLogRequestBean;
+import com.hyjf.am.vo.hgreportdata.cert.CertErrLogVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertLogVO;
 import com.hyjf.common.util.CommonUtils;
 import io.swagger.annotations.Api;
@@ -63,8 +66,8 @@ public class CertReportLogController extends BaseController{
     @ApiOperation(value = "应急中心错误日志列表显示", notes = "应急中心错误日志列表显示")
     @PostMapping("/selectCertReportLogList")
     @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<CertLogVO>> selectCertErrorReportLogList(@RequestBody CertReportLogRequestBean requestBean){
-        CertReportLogResponse response = certReportLogService.selectCertErrorReportLogList(requestBean);
+    public AdminResult<ListResult<CertErrLogVO>> selectCertErrorReportLogList(@RequestBody CertErrorReportLogRequestBean requestBean){
+        CertErrorReportLogResponse response = certReportLogService.selectCertErrorReportLogList(requestBean);
         if(response==null) {
             return new AdminResult<>(FAIL, FAIL_DESC);
         }

@@ -2408,4 +2408,16 @@ public class AmConfigClientImpl implements AmConfigClient {
         String url = "http://AM-ADMIN/am-config/cert/selectCertReportLogList";
         return restTemplate.postForEntity(url,requestBean,CertReportLogResponse.class).getBody();
     }
+
+    /**
+     * 应急中心错误日志列表
+     *
+     * @param requestBean
+     * @return
+     */
+    @Override
+    public CertErrorReportLogResponse selectCertErrorReportLogList(CertErrorReportLogRequestBean requestBean) {
+        String url = "http://AM-ADMIN/am-config/cert/selectCertErrorReportLogList";
+        return restTemplate.postForEntity(url,requestBean,CertErrorReportLogResponse.class).getBody();
+    }
 }
