@@ -1,11 +1,11 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.trade.mq.consumer;
+package com.hyjf.admin.mq.consumer;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.common.constants.MQConstant;
-import com.hyjf.cs.trade.client.AmMarketClient;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -29,7 +29,7 @@ public class ReturnCashOneActivityMessageConsumer implements RocketMQListener<Me
 
     private Logger _log = LoggerFactory.getLogger(ReturnCashOneActivityMessageConsumer.class);
     @Autowired
-    AmMarketClient amMarketClient;
+    AmAdminClient amAdminClient;
     @Override
     public void prepareStart(DefaultMQPushConsumer defaultMQPushConsumer) {
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
@@ -62,7 +62,7 @@ public class ReturnCashOneActivityMessageConsumer implements RocketMQListener<Me
         }
 
         try {
-            amMarketClient.updateJoinTime(borrowNid,nowTime);
+            amAdminClient.updateJoinTime(borrowNid,nowTime);
         }catch (Exception e){
             _log.error("【散标放款时间】处理失败", e);
         }
