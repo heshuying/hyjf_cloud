@@ -1,0 +1,324 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.config.dao.mapper.auto.CertErrLogMapper" >
+  <resultMap id="BaseResultMap" type="com.hyjf.am.config.dao.model.auto.CertErrLog" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="log_ord_id" property="logOrdId" jdbcType="VARCHAR" />
+    <result column="inf_type" property="infType" jdbcType="INTEGER" />
+    <result column="send_time" property="sendTime" jdbcType="INTEGER" />
+    <result column="send_status" property="sendStatus" jdbcType="TINYINT" />
+    <result column="send_count" property="sendCount" jdbcType="TINYINT" />
+    <result column="result_code" property="resultCode" jdbcType="VARCHAR" />
+    <result column="result_msg" property="resultMsg" jdbcType="VARCHAR" />
+    <result column="query_result" property="queryResult" jdbcType="TINYINT" />
+    <result column="query_msg" property="queryMsg" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    id, log_ord_id, inf_type, send_time, send_status, send_count, result_code, result_msg, 
+    query_result, query_msg, create_time, update_time
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.hyjf.am.config.dao.model.auto.CertErrLogExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from ht_cert_err_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+    <if test="limitStart >= 0" >
+      limit #{limitStart} , #{limitEnd}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from ht_cert_err_log
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from ht_cert_err_log
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hyjf.am.config.dao.model.auto.CertErrLogExample" >
+    delete from ht_cert_err_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hyjf.am.config.dao.model.auto.CertErrLog" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_cert_err_log (log_ord_id, inf_type, send_time, 
+      send_status, send_count, result_code, 
+      result_msg, query_result, query_msg, 
+      create_time, update_time)
+    values (#{logOrdId,jdbcType=VARCHAR}, #{infType,jdbcType=INTEGER}, #{sendTime,jdbcType=INTEGER}, 
+      #{sendStatus,jdbcType=TINYINT}, #{sendCount,jdbcType=TINYINT}, #{resultCode,jdbcType=VARCHAR}, 
+      #{resultMsg,jdbcType=VARCHAR}, #{queryResult,jdbcType=TINYINT}, #{queryMsg,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hyjf.am.config.dao.model.auto.CertErrLog" >
+    <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into ht_cert_err_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="logOrdId != null" >
+        log_ord_id,
+      </if>
+      <if test="infType != null" >
+        inf_type,
+      </if>
+      <if test="sendTime != null" >
+        send_time,
+      </if>
+      <if test="sendStatus != null" >
+        send_status,
+      </if>
+      <if test="sendCount != null" >
+        send_count,
+      </if>
+      <if test="resultCode != null" >
+        result_code,
+      </if>
+      <if test="resultMsg != null" >
+        result_msg,
+      </if>
+      <if test="queryResult != null" >
+        query_result,
+      </if>
+      <if test="queryMsg != null" >
+        query_msg,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="logOrdId != null" >
+        #{logOrdId,jdbcType=VARCHAR},
+      </if>
+      <if test="infType != null" >
+        #{infType,jdbcType=INTEGER},
+      </if>
+      <if test="sendTime != null" >
+        #{sendTime,jdbcType=INTEGER},
+      </if>
+      <if test="sendStatus != null" >
+        #{sendStatus,jdbcType=TINYINT},
+      </if>
+      <if test="sendCount != null" >
+        #{sendCount,jdbcType=TINYINT},
+      </if>
+      <if test="resultCode != null" >
+        #{resultCode,jdbcType=VARCHAR},
+      </if>
+      <if test="resultMsg != null" >
+        #{resultMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="queryResult != null" >
+        #{queryResult,jdbcType=TINYINT},
+      </if>
+      <if test="queryMsg != null" >
+        #{queryMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hyjf.am.config.dao.model.auto.CertErrLogExample" resultType="java.lang.Integer" >
+    select count(*) from ht_cert_err_log
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update ht_cert_err_log
+    <set >
+      <if test="record.id != null" >
+        id = #{record.id,jdbcType=INTEGER},
+      </if>
+      <if test="record.logOrdId != null" >
+        log_ord_id = #{record.logOrdId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.infType != null" >
+        inf_type = #{record.infType,jdbcType=INTEGER},
+      </if>
+      <if test="record.sendTime != null" >
+        send_time = #{record.sendTime,jdbcType=INTEGER},
+      </if>
+      <if test="record.sendStatus != null" >
+        send_status = #{record.sendStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.sendCount != null" >
+        send_count = #{record.sendCount,jdbcType=TINYINT},
+      </if>
+      <if test="record.resultCode != null" >
+        result_code = #{record.resultCode,jdbcType=VARCHAR},
+      </if>
+      <if test="record.resultMsg != null" >
+        result_msg = #{record.resultMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.queryResult != null" >
+        query_result = #{record.queryResult,jdbcType=TINYINT},
+      </if>
+      <if test="record.queryMsg != null" >
+        query_msg = #{record.queryMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="record.createTime != null" >
+        create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.updateTime != null" >
+        update_time = #{record.updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update ht_cert_err_log
+    set id = #{record.id,jdbcType=INTEGER},
+      log_ord_id = #{record.logOrdId,jdbcType=VARCHAR},
+      inf_type = #{record.infType,jdbcType=INTEGER},
+      send_time = #{record.sendTime,jdbcType=INTEGER},
+      send_status = #{record.sendStatus,jdbcType=TINYINT},
+      send_count = #{record.sendCount,jdbcType=TINYINT},
+      result_code = #{record.resultCode,jdbcType=VARCHAR},
+      result_msg = #{record.resultMsg,jdbcType=VARCHAR},
+      query_result = #{record.queryResult,jdbcType=TINYINT},
+      query_msg = #{record.queryMsg,jdbcType=VARCHAR},
+      create_time = #{record.createTime,jdbcType=TIMESTAMP},
+      update_time = #{record.updateTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hyjf.am.config.dao.model.auto.CertErrLog" >
+    update ht_cert_err_log
+    <set >
+      <if test="logOrdId != null" >
+        log_ord_id = #{logOrdId,jdbcType=VARCHAR},
+      </if>
+      <if test="infType != null" >
+        inf_type = #{infType,jdbcType=INTEGER},
+      </if>
+      <if test="sendTime != null" >
+        send_time = #{sendTime,jdbcType=INTEGER},
+      </if>
+      <if test="sendStatus != null" >
+        send_status = #{sendStatus,jdbcType=TINYINT},
+      </if>
+      <if test="sendCount != null" >
+        send_count = #{sendCount,jdbcType=TINYINT},
+      </if>
+      <if test="resultCode != null" >
+        result_code = #{resultCode,jdbcType=VARCHAR},
+      </if>
+      <if test="resultMsg != null" >
+        result_msg = #{resultMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="queryResult != null" >
+        query_result = #{queryResult,jdbcType=TINYINT},
+      </if>
+      <if test="queryMsg != null" >
+        query_msg = #{queryMsg,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hyjf.am.config.dao.model.auto.CertErrLog" >
+    update ht_cert_err_log
+    set log_ord_id = #{logOrdId,jdbcType=VARCHAR},
+      inf_type = #{infType,jdbcType=INTEGER},
+      send_time = #{sendTime,jdbcType=INTEGER},
+      send_status = #{sendStatus,jdbcType=TINYINT},
+      send_count = #{sendCount,jdbcType=TINYINT},
+      result_code = #{resultCode,jdbcType=VARCHAR},
+      result_msg = #{resultMsg,jdbcType=VARCHAR},
+      query_result = #{queryResult,jdbcType=TINYINT},
+      query_msg = #{queryMsg,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
