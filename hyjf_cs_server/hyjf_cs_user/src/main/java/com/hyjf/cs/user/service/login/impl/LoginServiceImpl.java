@@ -603,27 +603,34 @@ public class LoginServiceImpl extends BaseUserServiceImpl implements LoginServic
 				userType = userInfoVO.getUserType();
 			}
 
+			// 江西银行 开户 URL
+			String jxBankOpenUrl = "";
 			// 非企业用户开户地址
 			if (userType != 1) {
 				if (StringUtils.isNotEmpty(result.getMobile())) {
 					// 开户url
 					result.setHuifuOpenAccountUrl("");
 					// 江西银行开户url
-					result.setOpenAccountUrl(systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION
-							+ packageStr(request) + "&mobile=" + result.getMobile());
+					jxBankOpenUrl = systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION + packageStr(request) + "&mobile=" + result.getMobile();
+					result.setOpenAccountUrl(jxBankOpenUrl);
+					logger.info("jxBankOpenUrl:" + jxBankOpenUrl);
 				} else {
 					// 开户url
 					result.setHuifuOpenAccountUrl("");
 					// 江西银行开户url
-					result.setOpenAccountUrl(systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION + packageStr(request));
+					jxBankOpenUrl = systemConfig.getAppFrontHost() + ClientConstants.BANKOPEN_OPEN_ACTION + packageStr(request);
+					result.setOpenAccountUrl(jxBankOpenUrl);
+					logger.info("jxBankOpenUrl:" + jxBankOpenUrl);
 				}
 			}
 			// 企业用户开户地址
 			else {
 				// 开户url
 				result.setHuifuOpenAccountUrl("");
-				// 江西银行开户url add by huanghui 2018-11-26
-				result.setOpenAccountUrl(systemConfig.getAppFrontHost() +  ClientConstants.BANKOPEN_OPEN_ACTION + ClientConstants.ENTERPRISEGUIDE + packageStr(request));
+				// 江西银行开户url add by huanghui
+				jxBankOpenUrl = systemConfig.getAppFrontHost() +  ClientConstants.BANKOPEN_OPEN_ACTION + ClientConstants.ENTERPRISEGUIDE + packageStr(request);
+				result.setOpenAccountUrl(jxBankOpenUrl);
+				logger.info("jxBankOpenUrl:" + jxBankOpenUrl);
 			}
 		}
 		{
