@@ -44,6 +44,7 @@ import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.home.WechatProjectListService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.projectlist.CacheService;
 import com.hyjf.cs.trade.service.repay.RepayPlanService;
 import com.hyjf.cs.trade.util.CdnUrlUtil;
 import com.hyjf.cs.trade.util.HomePageDefine;
@@ -86,6 +87,9 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
     private AuthService authService;
     @Autowired
     private BaseClient baseClient;
+
+    @Autowired
+    private CacheService cacheService;
 
 
     @Autowired
@@ -266,9 +270,9 @@ public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implement
 
             //获取项目详情信息
             //借款人企业信息
-            BorrowUserVO borrowUsers =  getCacheBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers =  cacheService.getCacheBorrowUser(borrowNid);
             //借款人信息
-            BorrowManinfoVO borrowManinfo = getCacheBorrowMainInfo(borrowNid);
+            BorrowManinfoVO borrowManinfo = cacheService.getCacheBorrowManInfo(borrowNid);
             //基础信息
             List<BorrowDetailBean> baseTableData = null;
             //项目介绍

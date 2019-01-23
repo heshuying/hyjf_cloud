@@ -153,9 +153,9 @@ public class ApiProjectListServiceImpl extends BaseTradeServiceImpl implements A
         }
 
         //借款人企业信息
-        BorrowUserVO borrowUsers = getCacheBorrowUser(borrowNid);
+        BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
         //借款人信息
-        BorrowManinfoVO borrowManinfo = getCacheBorrowMainInfo(borrowNid);
+        BorrowManinfoVO borrowManinfo = amTradeClient.getBorrowManinfo(borrowNid);
         //房产抵押信息
         List<BorrowHousesVO> borrowHousesList = amTradeClient.getBorrowHousesByNid(borrowNid);
         //车辆抵押信息
