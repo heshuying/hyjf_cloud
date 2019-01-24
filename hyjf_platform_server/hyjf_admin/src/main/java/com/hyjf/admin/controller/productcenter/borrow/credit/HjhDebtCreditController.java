@@ -230,11 +230,11 @@ public class HjhDebtCreditController extends BaseController{
         map.put("userName", "出让人");
         map.put("creditNid", "债转编号");
         map.put("borrowNid", "原项目编号");
-        map.put("borrowApr", "原项目收益率");
+        map.put("borrowApr", "原项目出借利率");
         map.put("repayStyleName", "还款方式");
         map.put("creditCapital", "债权本金");
         map.put("liquidationFairValue", "债权价值");
-        map.put("actualApr", "预期承接收益率");
+        map.put("actualApr", "预期承接出借利率");
         map.put("assignCapital", "已转让本金");
         map.put("assignAdvanceInterest", "垫付利息");
         map.put("remainCredit", "剩余债权价值");
