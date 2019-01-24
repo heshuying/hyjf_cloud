@@ -745,7 +745,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
         }
         // 服务费授权状态
         if(!checkPaymentAuthStatus(user.getUserId())){
-            throw new CheckException("请先进行服务费授权。");
+            throw new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
         }
         //服务费收取
         return users;
