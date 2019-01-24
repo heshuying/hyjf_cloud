@@ -20,8 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,12 +29,14 @@ import java.util.Map;
  * @Date
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.HJH_COUPON_LOAN_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.HJH_COUPON_LOAN_GROUP)
+@RocketMQMessageListener(topic = MQConstant.CERT_CERT_TRANSFER_PROJECT_GROUP, selectorExpression = "*", consumerGroup = MQConstant.CERT_CERT_TRANSFER_PROJECT_TOPIC)
 public class CertTransferProjectMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
     Logger logger = LoggerFactory.getLogger(CertTransferProjectMessageConsumer.class);
 
-    private String thisMessName = "转让项目信息";
+    private String thisMessName = "转让状态信息上报";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
+
+
 
 
     @Autowired
@@ -56,7 +56,6 @@ public class CertTransferProjectMessageConsumer implements RocketMQListener<Mess
     public void onMessage(MessageExt paramBean) {
         logger.info(logHeader + " 开始。");
         String msgBody = new String(paramBean.getBody());
-
         JSONObject jsonObject;
         try {
             jsonObject = JSONObject.parseObject(msgBody);
