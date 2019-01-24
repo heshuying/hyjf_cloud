@@ -41,14 +41,9 @@ public class ReturnCashController {
     }
     @PostMapping("/saveReturnCash")
     public void saveReturnCash(@RequestBody ReturnCashRequest request) {
-        logger.info("ReturnCashRequest==="+JSONObject.toJSONString(request));
         //查询用户提出来
         InviterReturnCashCustomize inviterReturnCashCustomize = returnCashActivityService.selectReturnCashList(request.getUserId());
-        logger.info("inviterReturnCashCustomize==="+JSONObject.toJSONString(inviterReturnCashCustomize));
-
         List<NmUser> nmUserList = nmUserService.selectNmUserList(null);
-        logger.info("nmUserList==="+JSONObject.toJSONString(nmUserList));
-
         returnCashActivityService.selectReturnCash(request.getUserId(),request.getOrderId(),
                 request.getProductType(),request.getInvestMoney(),inviterReturnCashCustomize,nmUserList);
     }
