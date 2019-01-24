@@ -47,6 +47,7 @@ import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.projectlist.CacheService;
 import com.hyjf.cs.trade.service.projectlist.WebProjectListService;
 import com.hyjf.cs.trade.service.repay.RepayPlanService;
 import com.hyjf.cs.trade.util.HomePageDefine;
@@ -101,6 +102,10 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
     private AuthService authService;
     @Autowired
     private BaseClient baseClient;
+
+
+    @Autowired
+    private CacheService cacheService;
 
 
     @Autowired
@@ -496,9 +501,9 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
              */
             other.put(ProjectConstant.PARAM_BORROW_TYPE, borrow.getComOrPer());
             //借款人企业信息
-            BorrowUserVO borrowUsers = getCacheBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers = cacheService.getCacheBorrowUser(borrowNid);
             //借款人信息
-            BorrowManinfoVO borrowManinfo = getCacheBorrowMainInfo(borrowNid);
+            BorrowManinfoVO borrowManinfo = cacheService.getCacheBorrowManInfo(borrowNid);
             //房产抵押信息
             List<BorrowHousesVO> borrowHousesList = amTradeClient.getBorrowHousesByNid(borrowNid);
             //车辆抵押信息
@@ -990,10 +995,10 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
              */
             result.put(ProjectConstant.PARAM_BORROW_TYPE, comOrPer);
             // 借款人企业信息
-            BorrowUserVO borrowUsers = getCacheBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers = cacheService.getCacheBorrowUser(borrowNid);
 
             //借款人信息
-            BorrowManinfoVO borrowManinfo = getCacheBorrowMainInfo(borrowNid);
+            BorrowManinfoVO borrowManinfo = cacheService.getCacheBorrowManInfo(borrowNid);
             //房产抵押信息
             List<BorrowHousesVO> borrowHousesList = amTradeClient.getBorrowHousesByNid(borrowNid);
             //车辆抵押信息
@@ -1613,7 +1618,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         for (BorrowAndInfoVO planAccede : list) {
             String borrowNid = planAccede.getBorrowNid();
             if ("1".equals(planAccede.getCompanyOrPersonal())) {//如果类型是公司 huiyingdai_borrow_users
-                BorrowUserVO borrowUser = getCacheBorrowUser(borrowNid);
+                BorrowUserVO borrowUser = cacheService.getCacheBorrowUser(borrowNid);
                 String trueName = borrowUser.getUsername();
                 String str = "******";
                 if (trueName != null && trueName != "") {
@@ -1627,7 +1632,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 planAccede.setBorrowUserName(trueName);
             } else if ("2".equals(planAccede.getCompanyOrPersonal())) {//类型是个人 huiyingdai_borrow_maninfo
                 //根据borrowNid查询查询个人的真实姓名
-                BorrowManinfoVO borrowManinfoVO =  getCacheBorrowMainInfo(borrowNid);
+                BorrowManinfoVO borrowManinfoVO =  cacheService.getCacheBorrowManInfo(borrowNid);
                 String trueName = borrowManinfoVO.getName();
                 String str = "**";
                 if (trueName != null && trueName != "") {
@@ -1730,9 +1735,9 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         info.put("borrowType",borrowDetailVo.getComOrPer());
 
         //借款人企业信息
-        BorrowUserVO borrowUsers = getCacheBorrowUser(borrowNid);
+        BorrowUserVO borrowUsers = cacheService.getCacheBorrowUser(borrowNid);
         //借款人信息
-        BorrowManinfoVO borrowManinfo = getCacheBorrowMainInfo(borrowNid);
+        BorrowManinfoVO borrowManinfo = cacheService.getCacheBorrowManInfo(borrowNid);
         //房产抵押信息
         List<BorrowHousesVO> borrowHousesList = amTradeClient.getBorrowHousesByNid(borrowNid);
         //车辆抵押信息

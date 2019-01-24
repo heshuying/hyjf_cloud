@@ -1,16 +1,16 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.cs.trade.mq.consumer;
+package com.hyjf.admin.mq.consumer;
 
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.am.response.StringResponse;
 import com.hyjf.am.resquest.admin.ReturnCashRequest;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.ActivityDateUtil;
-import com.hyjf.cs.trade.client.AmMarketClient;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
 import org.apache.rocketmq.common.consumer.ConsumeFromWhere;
 import org.apache.rocketmq.common.message.MessageExt;
@@ -35,8 +35,10 @@ import java.math.BigDecimal;
 public class ReturnCashActivityMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     private Logger _log = LoggerFactory.getLogger(ReturnCashActivityMessageConsumer.class);
+
     @Autowired
-    AmMarketClient amMarketClient;
+    AmAdminClient amAdminClient;
+
     @Override
     public void prepareStart(DefaultMQPushConsumer defaultMQPushConsumer) {
         // 设置Consumer第一次启动是从队列头部开始消费还是队列尾部开始消费
@@ -74,7 +76,7 @@ public class ReturnCashActivityMessageConsumer implements RocketMQListener<Messa
             return;
         }
         // 活动有效期校验
-        StringResponse response = amMarketClient.checkActivityIfAvailable(Integer.valueOf(ActivityDateUtil.RETURNCASH_ACTIVITY_ID));
+        StringResponse response = amAdminClient.checkActivityIfAvailable(Integer.valueOf(ActivityDateUtil.RETURNCASH_ACTIVITY_ID));
         //判断活动是否开始
         if (response==null||!"000".equals(response.getResultStr())) {
             _log.info("【纳觅返现活动】 活动有效期校验不对 orderId: " + orderId + "resultActivity:"+response.getResultStr());
@@ -92,7 +94,7 @@ public class ReturnCashActivityMessageConsumer implements RocketMQListener<Messa
             returnCashRequest.setOrderId(orderId);
             returnCashRequest.setProductType(productType);
             returnCashRequest.setInvestMoney(investMoney);
-            amMarketClient.saveReturnCash(returnCashRequest);
+            amAdminClient.saveReturnCash(returnCashRequest);
         } catch (Exception e) {
             _log.error("【纳觅返现活动】处理失败，userId："  + userId + " orderId:" + orderId+" productType:"+productType, e);
             return;

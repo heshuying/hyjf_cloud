@@ -1394,6 +1394,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
 
         //发送纳觅返现mq  add   tyy2018-12-25
         try {
+            logger.info("纳觅返现加入计划成功planOrderId"+planOrderId);
             sendReturnCashActivity(userId,planOrderId,new BigDecimal(accountStr),3);
 
         } catch (Exception e) {
@@ -1446,12 +1447,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
         params.put("orderId", order);
         params.put("investMoney", investMoney.toString());
         //来源,1=新手标，2=散标，3=汇计划
-        Integer productType = 2;
-        //4 新手标
-        if(4 == projectType){
-            productType = 1;
-        }
-        params.put("productType", productType);
+        params.put("productType", projectType);
         commonProducer.messageSend(new MessageContent(MQConstant.RETURN_CASH_ACTIVITY_SAVE_TOPIC, UUID.randomUUID().toString(), params));
     }
     /**

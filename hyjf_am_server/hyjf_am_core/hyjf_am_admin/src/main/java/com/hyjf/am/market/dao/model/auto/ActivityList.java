@@ -1,5 +1,7 @@
 package com.hyjf.am.market.dao.model.auto;
 
+import com.hyjf.common.util.GetDate;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -31,6 +33,17 @@ public class ActivityList implements Serializable {
      * @mbggenerated
      */
     private Integer timeEnd;
+
+    /**
+     *
+     * 格式化活动开始时间
+     */
+    private String timeStartT;
+
+    /**
+     * 格式化活动结束时间
+     */
+    private String timeEndT;
 
     private String imgPc;
 
@@ -244,5 +257,21 @@ public class ActivityList implements Serializable {
 
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    public String getTimeStartT() {
+        return timeStartT;
+    }
+
+    public void setTimeStartT(String timeStartT) {
+        this.timeStartT = timeStartT;
+    }
+
+    public String getTimeEndT() {
+        return timeEndT;
+    }
+
+    public void setTimeEndT(String timeEndT) {
+        this.timeEndT = timeEndT;
     }
 }

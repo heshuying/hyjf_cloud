@@ -1,8 +1,10 @@
 package com.hyjf.am.vo.admin;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.hyjf.am.vo.BaseVO;
 
 import java.math.BigDecimal;
+import java.util.Date;
 
 /**
  * @author lisheng
@@ -33,7 +35,8 @@ public class NaMiMarketingVO extends BaseVO {
     /**
      * 注册日期时间  检索条件
      */
-    private String regTime;
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
+    private Date regTime;
     /**
      * 投资订单号
      */
@@ -103,11 +106,11 @@ public class NaMiMarketingVO extends BaseVO {
         this.refferName = refferName;
     }
 
-    public String getRegTime() {
+    public Date getRegTime() {
         return regTime;
     }
 
-    public void setRegTime(String regTime) {
+    public void setRegTime(Date regTime) {
         this.regTime = regTime;
     }
 
