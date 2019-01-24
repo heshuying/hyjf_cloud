@@ -1177,4 +1177,12 @@ public interface AmAdminClient {
      * @param returnCashRequest
      */
     void saveReturnCash(ReturnCashRequest returnCashRequest);
+
+    /**
+     * 查询汇计划转让列表的求和
+     * add by cwyang 2019-01-24
+     * @param request
+     * @return
+     */
+    MapResponse queryHjhDebtCreditTotal(HjhDebtCreditListRequest request);
 }

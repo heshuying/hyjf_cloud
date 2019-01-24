@@ -1,5 +1,6 @@
 package com.hyjf.am.trade.controller.admin.productcenter.hjhcredit;
 
+import com.hyjf.am.response.MapResponse;
 import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
 import com.hyjf.am.trade.controller.BaseController;
@@ -9,6 +10,7 @@ import com.hyjf.am.vo.admin.HjhDebtCreditVo;
 import com.hyjf.common.paginator.Paginator;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.ConvertUtils;
+import com.sun.javafx.collections.MappingChange;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +74,19 @@ public class AdminHjhDebtCreditController extends BaseController{
         }
         reponse.setRecordTotal(total);
         reponse.setResultList(voList);
+        return reponse;
+    }
+
+    @ApiOperation(value = "转让列表求和查询")
+    @PostMapping("/getListSum")
+    public MapResponse getListSum(@RequestBody HjhDebtCreditListRequest request){
+        logger.info("adminHjhDebtCredit/getListTotal start, request is :{}", request);
+        MapResponse reponse = new MapResponse();
+
+        Map map = ConvertUtils.convertObjectToMap(request);
+        Map resultMap =  adminHjhDebtCreditService.getListSum(map);
+        reponse.setResultMap(resultMap);
+
         return reponse;
     }
 
