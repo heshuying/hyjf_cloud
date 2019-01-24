@@ -2777,19 +2777,39 @@ public class AmUserClientImpl implements AmUserClient {
 	}
 
 	/***
-	 * 开户掉单，保存开户数据
+	 * 开户掉单，保存开户(User)数据
 	 * @author Zha Daojian
 	 * @date 2019/1/22 9:48
 	 * @param requestBean
 	 * @return openAccountEnquiryDefineRequestBeanVO
 	 **/
 	@Override
-	public OpenAccountEnquiryDefineResultBeanVO updateUserAccount(OpenAccountEnquiryDefineResultBean requestBean){
+	public OpenAccountEnquiryDefineResultBeanVO updateUser(OpenAccountEnquiryDefineResultBean requestBean){
 
 		OpenAccountEnquiryDefineRequest request = new OpenAccountEnquiryDefineRequest();
 		BeanUtils.copyProperties(requestBean, request);
 		OpenAccountEnquiryResponse response = restTemplate
-				.postForEntity("http://AM-ADMIN/am-user/borrowOpenaccountenquiryException/updateUserAccount", request, OpenAccountEnquiryResponse.class).getBody();
+				.postForEntity("http://AM-ADMIN/am-user/borrowOpenaccountenquiryException/updateUser", request, OpenAccountEnquiryResponse.class).getBody();
+		if (response == null || !Response.isSuccess(response)) {
+			return null;
+		}
+		return response.getOpenAccountEnquiryDefineResultBeanVO();
+	}
+
+	/***
+	 * 开户掉单，保存开户(Account)数据
+	 * @author Zha Daojian
+	 * @date 2019/1/22 9:48
+	 * @param requestBean
+	 * @return openAccountEnquiryDefineRequestBeanVO
+	 **/
+	@Override
+	public OpenAccountEnquiryDefineResultBeanVO updateAccount(OpenAccountEnquiryDefineResultBean requestBean){
+
+		OpenAccountEnquiryDefineRequest request = new OpenAccountEnquiryDefineRequest();
+		BeanUtils.copyProperties(requestBean, request);
+		OpenAccountEnquiryResponse response = restTemplate
+				.postForEntity("http://AM-ADMIN//am-trade/bankOpenUpdateAccountLog/updateAccount", request, OpenAccountEnquiryResponse.class).getBody();
 		if (response == null || !Response.isSuccess(response)) {
 			return null;
 		}

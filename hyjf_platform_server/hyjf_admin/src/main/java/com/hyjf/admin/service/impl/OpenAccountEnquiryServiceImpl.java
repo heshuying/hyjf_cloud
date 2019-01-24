@@ -193,21 +193,29 @@ public class OpenAccountEnquiryServiceImpl extends BaseServiceImpl implements Op
         String channel =requestBean.getChannel();
         String accountId = requestBean.getAccountId();
         if(StringUtils.isEmpty(userid)){
-            resultBean.setStatus("n");
+            resultBean.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
             resultBean.setResult("用户id不能为空");
             return resultBean;
         }
         if(StringUtils.isEmpty(channel)){
-            resultBean.setStatus("n");
+            resultBean.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
             resultBean.setResult("交易渠道不能为空");
             return resultBean;
         }
         if(StringUtils.isEmpty(accountId)){
-            resultBean.setStatus("n");
+            resultBean.setStatus(BankCallConstant.BANKOPEN_USER_ACCOUNT_N);
             resultBean.setResult("电子账号不能为空");
             return resultBean;
         }
-        OpenAccountEnquiryDefineResultBeanVO openAccountEnquiryDefineRequestBeanVO =  amUserClient.updateUserAccount(requestBean);
+        //同步保存user信息
+        OpenAccountEnquiryDefineResultBeanVO openAccountEnquiryDefineRequestBeanVO =  amUserClient.updateUser(requestBean);
+        if(openAccountEnquiryDefineRequestBeanVO !=null){
+            ////同步保存user信息成
+            if(BankCallConstant.BANKOPEN_USER_ACCOUNT_Y.equals(openAccountEnquiryDefineRequestBeanVO.getStatus())){
+                //同步保存Account信息
+                openAccountEnquiryDefineRequestBeanVO =  amUserClient.updateAccount(requestBean);
+            }
+        }
         BeanUtils.copyProperties(requestBean, openAccountEnquiryDefineRequestBeanVO);
         return requestBean;
     }

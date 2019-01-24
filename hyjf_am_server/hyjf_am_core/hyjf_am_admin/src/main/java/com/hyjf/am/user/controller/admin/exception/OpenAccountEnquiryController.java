@@ -137,10 +137,17 @@ public class OpenAccountEnquiryController extends BaseController {
         return response;
     }
 
-    @ApiOperation(value = "开户掉单，同步保存开户数据", notes = "开户掉单，同步保存开户数据")
-    @GetMapping(value = "/updateUserAccount")
-    public OpenAccountEnquiryResponse updateUserAccount(@RequestBody OpenAccountEnquiryDefineRequest request){
-        OpenAccountEnquiryResponse response = bankOpenAccountLogSrvice.updateUserAccount(request);
+    @ApiOperation(value = "开户掉单，同步保存开户(user)数据", notes = "开户掉单，同步保存开户数据")
+    @PostMapping(value = "/updateUser")
+    public OpenAccountEnquiryResponse updateUser(@RequestBody OpenAccountEnquiryDefineRequest request){
+        OpenAccountEnquiryResponse response = bankOpenAccountLogSrvice.updateUser(request);
+        return response;
+    }
+
+    @ApiOperation(value = "开户掉单，同步保存开户(account)数据", notes = "开户掉单，同步保存开户数据")
+    @PostMapping(value = "/updateAccount")
+    public OpenAccountEnquiryResponse updateAccount(@RequestBody OpenAccountEnquiryDefineRequest request){
+        OpenAccountEnquiryResponse response = bankOpenAccountLogSrvice.updateAccount(request);
         return response;
     }
 }

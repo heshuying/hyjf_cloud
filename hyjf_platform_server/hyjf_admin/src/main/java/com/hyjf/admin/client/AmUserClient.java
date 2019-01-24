@@ -1368,11 +1368,20 @@ public interface AmUserClient {
     UserUtmInfoCustomizeVO getUserUtmInfo(Integer userId);
 
     /***
-     * 开户掉单，保存开户数据
-    * @author Zha Daojian
-    * @date 2019/1/22 9:48
-    * @param requestBean
-    * @return OpenAccountEnquiryDefineRequestBeanVO
-    **/
-    OpenAccountEnquiryDefineResultBeanVO updateUserAccount(OpenAccountEnquiryDefineResultBean requestBean);
+     * 开户掉单，保存开户User数据
+     * @author Zha Daojian
+     * @date 2019/1/22 9:48
+     * @param requestBean
+     * @return OpenAccountEnquiryDefineRequestBeanVO
+     **/
+    OpenAccountEnquiryDefineResultBeanVO updateUser(OpenAccountEnquiryDefineResultBean requestBean);
+
+    /***
+     * 开户掉单，保存开户Account数据
+     * @author Zha Daojian
+     * @date 2019/1/22 9:48
+     * @param requestBean
+     * @return OpenAccountEnquiryDefineRequestBeanVO
+     **/
+    OpenAccountEnquiryDefineResultBeanVO updateAccount(OpenAccountEnquiryDefineResultBean requestBean);
 }
