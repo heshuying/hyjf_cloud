@@ -91,7 +91,7 @@ public class BorrowAdminController  {
 		// 标签名称 new added
 		corrowCommonCustomize.setLabelNameSrch(form.getLabelNameSrch());
 		corrowCommonCustomize.setSort(form.getSort());
-		if(form.getCol().equals("recoverLastTime")) {
+		if(form.getCol()!= null &&form.getCol().equals("recoverLastTime")) {
 			corrowCommonCustomize.setCol("b.recover_last_time");
 		}else {
 			corrowCommonCustomize.setCol(form.getCol());
