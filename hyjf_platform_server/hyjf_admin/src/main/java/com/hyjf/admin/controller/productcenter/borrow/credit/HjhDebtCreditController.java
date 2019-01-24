@@ -100,6 +100,8 @@ public class HjhDebtCreditController extends BaseController{
                 jsonObject.put("汇计划转让列表","hjhDebtCreditVoList");
                 jsonObject.put("hjhDebtCreditVoList",hjhDebtCreditVoList);
                 jsonObject.put("hjhDebtCreditVoListTotal",creditDetail.get(TRCORD));
+                jsonObject.put("汇计划转让列表求和","hjhDebtCreditVoListSum");
+                jsonObject.put("hjhDebtCreditVoListSum",creditDetail.get("hjhDebtCreditVoListSum"));
             }
         }
         return jsonObject;
