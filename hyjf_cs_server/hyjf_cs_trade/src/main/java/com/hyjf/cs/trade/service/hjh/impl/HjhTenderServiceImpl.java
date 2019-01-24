@@ -1659,19 +1659,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
                 throw new CheckException(MsgEnum.ERR_AMT_TENDER_ONLY_LENDERS);
             }
         }
-        // 检查用户授权状态
-        HjhUserAuthVO userAuth = amUserClient.getHjhUserAuthVO(user.getUserId());
-        // 为空则无授权
-        if (userAuth == null) {
-            throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_AUTO_INVEST);
-        } else {
-            if (userAuth.getAutoInvesStatus() == 0) {
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_AUTO_INVEST);
-            }
-            if (userAuth.getAutoCreditStatus() == 0) {
-                throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_AUTO_DEBT);
-            }
-        }
+
         // 自动出借授权
         if (!authService.checkInvesAuthStatus(user.getUserId())) {
             throw new CheckException(MsgEnum.ERR_AMT_TENDER_NEED_AUTO_INVEST);
