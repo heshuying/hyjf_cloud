@@ -2,7 +2,7 @@ package com.hyjf.am.response.admin;
 
 
 import com.hyjf.am.response.AdminResponse;
-import com.hyjf.am.vo.trade.cert.CertLogVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertLogVO;
 
 /**
  * @Description 应急中心错误日志

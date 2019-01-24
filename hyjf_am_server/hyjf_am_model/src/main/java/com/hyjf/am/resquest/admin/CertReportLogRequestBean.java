@@ -4,7 +4,7 @@
 package com.hyjf.am.resquest.admin;
 
 import com.hyjf.am.vo.BasePage;
-import com.hyjf.am.vo.trade.cert.CertLogVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertLogVO;
 
 import java.io.Serializable;
 import java.util.List;

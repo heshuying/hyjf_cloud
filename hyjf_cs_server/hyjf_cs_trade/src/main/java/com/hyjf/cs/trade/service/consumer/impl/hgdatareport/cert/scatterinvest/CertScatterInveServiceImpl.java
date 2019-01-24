@@ -1,31 +1,24 @@
 package com.hyjf.cs.trade.service.consumer.impl.hgdatareport.cert.scatterinvest;
 
-import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.trade.borrow.*;
-import com.hyjf.am.vo.trade.cert.CertSendUserVO;
-import com.hyjf.am.vo.trade.cert.CertUserVO;
-import com.hyjf.am.vo.user.UserInfoVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertUserVO;
+import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
+import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRecoverVO;
+import com.hyjf.am.vo.trade.borrow.BorrowRepayVO;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.common.util.GetDate;
 import com.hyjf.cs.trade.client.AmTradeClient;
-import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallUtil;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.scatterinvest.CertScatterInveService;
-import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.userinfo.CertUserInfoService;
 import com.hyjf.cs.trade.service.consumer.impl.BaseHgCertReportServiceImpl;
-import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +37,8 @@ public class CertScatterInveServiceImpl extends BaseHgCertReportServiceImpl impl
 
     @Autowired
     private AmTradeClient borrowClient;
+    @Autowired
+    SystemConfig systemConfig;
 
     /**
      * 组装调用应急中心日志
@@ -129,7 +124,7 @@ public class CertScatterInveServiceImpl extends BaseHgCertReportServiceImpl impl
             param.put("productRegType", productRegType);
             // 散标名称  报送项目名称
             param.put("productName", borrow.getProjectName());
-            param.put("sourceCode", CertCallConstant.CERT_SOURCE_CODE);
+            param.put("sourceCode",systemConfig.getCertSourceCode());
             // 原散标编号  平台散标自有内部编号
             // 报送项目编号
             param.put("sourceProductCode", borrow.getBorrowNid());
@@ -182,7 +177,7 @@ public class CertScatterInveServiceImpl extends BaseHgCertReportServiceImpl impl
             param.put("projectSource", "3");
             // 原产品链接
             // 报送散标URL
-            param.put("sourceProductUrl", CertCallConstant.CERT_WEB_HOST + "/bank/web/borrow/getBorrowDetail.do?borrowNid=" + borrow.getBorrowNid());
+            param.put("sourceProductUrl",systemConfig.getWebHost()+ "/bank/web/borrow/getBorrowDetail.do?borrowNid=" + borrow.getBorrowNid());
             //旧数据上报分组用
             // groupByDate  旧数据上报排序 按月用yyyy-MM
             String groupByDate = "";

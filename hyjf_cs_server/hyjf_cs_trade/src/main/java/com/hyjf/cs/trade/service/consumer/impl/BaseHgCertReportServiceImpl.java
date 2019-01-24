@@ -5,10 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.resquest.hgreportdata.cert.CertReportEntitRequest;
 import com.hyjf.am.vo.trade.CorpOpenAccountRecordVO;
-import com.hyjf.am.vo.trade.borrow.BorrowInfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowManinfoVO;
-import com.hyjf.am.vo.trade.borrow.BorrowProjectTypeVO;
-import com.hyjf.am.vo.trade.borrow.BorrowUserVO;
+import com.hyjf.am.vo.trade.borrow.*;
 import com.hyjf.am.vo.hgreportdata.cert.CertErrLogVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertLogVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
@@ -448,7 +445,7 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
      * @return
      * @throws Exception
      */
-    protected String getUserHashValue(BorrowInfoVO borrow) throws Exception {
+    protected String getUserHashValue(BorrowAndInfoVO borrow) throws Exception {
         String userIdcard = "";
         if (borrow != null) {
             if ("1".equals(borrow.getCompanyOrPersonal())) {

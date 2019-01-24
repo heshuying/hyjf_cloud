@@ -19,7 +19,6 @@ import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.BankInterfaceVO;
-import com.hyjf.am.vo.trade.cert.CertLogVO;
 import com.hyjf.am.vo.user.HjhUserAuthConfigVO;
 
 import javax.servlet.http.HttpServletRequest;
