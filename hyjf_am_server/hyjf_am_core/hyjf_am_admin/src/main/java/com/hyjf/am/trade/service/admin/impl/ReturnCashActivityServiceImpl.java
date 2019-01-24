@@ -186,30 +186,8 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
         }
         return map;
     }
-    @Override
-    public void saveReutrnCash(Map<String,Object> map){
-        _log.info("返现参数=="+JSONObject.toJSONString(map));
-        int level = (int)map.get("level");
-        if(level>0) {
-            PerformanceReturnDetail performanceReturnDetail = (PerformanceReturnDetail)map.get("performanceReturnDetail");
-            this.savePerformanceReturnDetail(performanceReturnDetail);
-        }
-        if(level == 1){
-            InviterReturnDetail inviterReturnDetail = (InviterReturnDetail)map.get("inviterReturnDetail");
-            this.saveInviterReturnDetail(inviterReturnDetail);
-            return;
-        }
-        for(int i =1;i<level;i++){
-            this.saveInviterReturnDetail((InviterReturnDetail)map.get("inviterReturnDetail"+i));
-        }
-    }
-    private int saveInviterReturnDetail(InviterReturnDetail inviterReturnDetail){
-        return inviterReturnDetailMapper.insert(inviterReturnDetail);
-    }
 
-    private int savePerformanceReturnDetail(PerformanceReturnDetail performanceReturnDetail){
-        return performanceReturnDetailMapper.insert(performanceReturnDetail);
-    }
+
 
     private int getLevel(Integer userId,int count,List<String> userNames){
         //计数器
@@ -250,17 +228,4 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
         List<PerformanceReturnDetail> performanceReturnDetailList =  performanceReturnDetailMapper.selectByExample(performanceReturnDetailExample);
         return performanceReturnDetailList;
     }
-    @Override
-    public void updateJoinTime(Integer nowTime,List<InviterReturnDetail> inviterReturnDetailList,List<PerformanceReturnDetail> performanceReturnDetailList){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        for(InviterReturnDetail inviterReturnDetail:inviterReturnDetailList){
-            inviterReturnDetail.setJoinTime(sdf.format(nowTime*1000L));
-            inviterReturnDetailMapper.updateByPrimaryKey(inviterReturnDetail);
-        }
-        for(PerformanceReturnDetail performanceReturnDetail:performanceReturnDetailList){
-            performanceReturnDetail.setJoinTime(sdf.format(nowTime*1000L));
-            performanceReturnDetailMapper.updateByPrimaryKeySelective(performanceReturnDetail);
-        }
-    }
-
 }

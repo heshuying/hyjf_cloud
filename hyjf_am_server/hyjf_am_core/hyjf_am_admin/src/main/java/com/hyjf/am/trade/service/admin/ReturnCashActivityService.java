@@ -20,10 +20,11 @@ import java.util.Map;
 public interface ReturnCashActivityService {
 
     Map<String,Object> selectReturnCash(Integer userId, String orderId, Integer productType, BigDecimal investMoney, InviterReturnCashCustomize inviterReturnCashCustomize, List<NmUser> nmUserList);
-    void saveReutrnCash(Map<String,Object> map);
+
     InviterReturnCashCustomize selectReturnCashList(Integer userId);
+
     List<InviterReturnDetail> selectInviterReturnDetailList(String borrowNid);
+
     List<PerformanceReturnDetail> selectPerformanceReturnDetailList(String borrowNid);
-    void updateJoinTime(Integer nowTime,List<InviterReturnDetail> inviterReturnDetailList,List<PerformanceReturnDetail> performanceReturnDetailList);
 
 }

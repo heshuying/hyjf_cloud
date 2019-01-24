@@ -37,7 +37,7 @@ public class ReturnCashController {
         List<InviterReturnDetail> inviterReturnDetailList = returnCashActivityService.selectInviterReturnDetailList(borrowNid);
         List<PerformanceReturnDetail> performanceReturnDetailList = returnCashActivityService.selectPerformanceReturnDetailList(borrowNid);
         if(!CollectionUtils.isEmpty(inviterReturnDetailList)&&!CollectionUtils.isEmpty(performanceReturnDetailList)) {
-            returnCashActivityService.updateJoinTime(nowTime, inviterReturnDetailList, performanceReturnDetailList);
+            nmUserService.updateJoinTime(nowTime, inviterReturnDetailList, performanceReturnDetailList);
         }
     }
     @PostMapping("/saveReturnCash")
@@ -47,6 +47,6 @@ public class ReturnCashController {
         List<NmUser> nmUserList = nmUserService.selectNmUserList(null);
         Map<String,Object> map = returnCashActivityService.selectReturnCash(request.getUserId(),request.getOrderId(),
                 request.getProductType(),request.getInvestMoney(),inviterReturnCashCustomize,nmUserList);
-        returnCashActivityService.saveReutrnCash(map);
+        nmUserService.saveReutrnCash(map);
     }
 }
