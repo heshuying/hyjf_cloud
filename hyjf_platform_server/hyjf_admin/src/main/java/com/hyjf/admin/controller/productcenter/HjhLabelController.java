@@ -593,41 +593,48 @@ public class HjhLabelController extends BaseController{
 		JSONObject jsonObject = new JSONObject();
 		HjhLabelInfoRequest infoRequest = new HjhLabelInfoRequest();
 		HjhLabelRequest hjhLabelRequest = new HjhLabelRequest();
+		
 		// 前端必须传入标签编号
 		if (StringUtils.isNotEmpty(viewRequest.getLabelId())) {
 			// 修改状态
 			hjhLabelRequest.setLabelIdSrch(Integer.valueOf(viewRequest.getLabelId()));
+			// 通过传入的labelId查询标签表
 			List<HjhLabelCustomizeVO> list = this.labelService.getHjhLabelListById(hjhLabelRequest);
 			if (list != null && list.size() > 0) {
 				HjhLabelCustomizeVO resultVO = list.get(0);
+				//labelState启用状态 0：停用 1：启用
 				if(resultVO.getLabelState() == 1){
+					// 如果是启用，则改为停用
 					infoRequest.setLabelState(0);
-					// LabelName 用来检索
-					infoRequest.setLabelName(resultVO.getLabelName());
+					// 设置主键
 					infoRequest.setId(Integer.valueOf(viewRequest.getLabelId()));
-					
-					infoRequest.setLabelTermType(resultVO.getLabelTermType());
-					infoRequest.setIsCredit(resultVO.getIsCredit());
-					infoRequest.setIsLate(resultVO.getIsLate());
-					
+					// 更新者
+					infoRequest.setUpdateUserId(Integer.valueOf(this.getUser(request).getId()));
 				} else {
+					// 如果是停用，则改为启用
 					infoRequest.setLabelState(1);
-					// LabelName 用来检索
-					infoRequest.setLabelName(resultVO.getLabelName());
+					// 设置主键
 					infoRequest.setId(Integer.valueOf(viewRequest.getLabelId()));
-					
-					infoRequest.setLabelTermType(resultVO.getLabelTermType());
-					infoRequest.setIsCredit(resultVO.getIsCredit());
-					infoRequest.setIsLate(resultVO.getIsLate());
-					
+					// 更新者
+					infoRequest.setUpdateUserId(Integer.valueOf(this.getUser(request).getId()));
 				}
-				int flg = this.labelService.updateHjhLabelRecord(infoRequest);
+				// 使用主键更新
+				/*int flg = this.labelService.updateHjhLabelRecord(infoRequest);*/
+				int flg = this.labelService.updateHjhLabelRecordByIdAndLabelState(infoRequest);
 				if(flg > 0){
 					jsonObject.put("status", SUCCESS);
 				} else {
 					jsonObject.put("status", FAIL);
 				}
+			}else{
+				jsonObject.put("status", FAIL);
+				jsonObject.put("statusDesc", FAIL_DESC);
+				jsonObject.put("errorMsg", "通过传入的labelId未能查询到标签列表！"  );
 			}
+		} else {
+			jsonObject.put("status", FAIL);
+			jsonObject.put("statusDesc", FAIL_DESC);
+			jsonObject.put("errorMsg", "未获取到前端传入的labelId！");
 		}
 		return jsonObject;
 	}
