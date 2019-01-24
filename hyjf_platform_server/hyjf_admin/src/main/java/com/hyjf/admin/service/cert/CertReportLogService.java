@@ -27,4 +27,10 @@ public interface CertReportLogService extends BaseAdminService{
 	 * @return
 	 */
 	CertErrorReportLogResponse selectCertErrorReportLogList(CertErrorReportLogRequestBean requestBean);
+
+	/**
+	 * 重新跑批
+	 * @param id
+	 */
+	void updateErrorCount(Integer id);
 }

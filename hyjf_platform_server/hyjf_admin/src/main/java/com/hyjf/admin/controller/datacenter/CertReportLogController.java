@@ -62,23 +62,4 @@ public class CertReportLogController extends BaseController{
         }
         return new AdminResult<ListResult<CertLogVO>>(ListResult.build(certLogVOS, response.getRecordTotal())) ;
     }
-
-    @ApiOperation(value = "应急中心错误日志列表显示", notes = "应急中心错误日志列表显示")
-    @PostMapping("/selectCertReportLogList")
-    @AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
-    public AdminResult<ListResult<CertErrLogVO>> selectCertErrorReportLogList(@RequestBody CertErrorReportLogRequestBean requestBean){
-        CertErrorReportLogResponse response = certReportLogService.selectCertErrorReportLogList(requestBean);
-        if(response==null) {
-            return new AdminResult<>(FAIL, FAIL_DESC);
-        }
-        if (!Response.isSuccess(response)) {
-            return new AdminResult<>(FAIL, response.getMessage());
-        }
-        List<CertLogVO> certLogVOS = new ArrayList<CertLogVO>();
-        if(null!=response.getResultList()&&response.getResultList().size()>0){
-            certLogVOS = CommonUtils.convertBeanList(response.getResultList(),CertLogVO.class);
-        }
-        return new AdminResult<ListResult<CertLogVO>>(ListResult.build(certLogVOS, response.getRecordTotal())) ;
-    }
-
 }
