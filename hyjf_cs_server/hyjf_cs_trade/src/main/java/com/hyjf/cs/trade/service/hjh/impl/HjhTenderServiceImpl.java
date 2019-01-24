@@ -1394,6 +1394,7 @@ public class HjhTenderServiceImpl extends BaseTradeServiceImpl implements HjhTen
 
         //发送纳觅返现mq  add   tyy2018-12-25
         try {
+            logger.info("纳觅返现加入计划成功planOrderId"+planOrderId);
             sendReturnCashActivity(userId,planOrderId,new BigDecimal(accountStr),3);
 
         } catch (Exception e) {
