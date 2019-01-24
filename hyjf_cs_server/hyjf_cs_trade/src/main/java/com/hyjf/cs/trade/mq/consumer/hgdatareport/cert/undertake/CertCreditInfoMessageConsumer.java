@@ -18,7 +18,6 @@ import org.apache.rocketmq.common.protocol.heartbeat.MessageModel;
 import org.apache.rocketmq.spring.annotation.RocketMQMessageListener;
 import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
-import org.cert.open.CertToolV1;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +36,6 @@ public class CertCreditInfoMessageConsumer implements RocketMQListener<MessageEx
 
     private String thisMessName = "承接订单信息推送";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
-    public static CertToolV1 tool = new CertToolV1();
-
-  /*  @Autowired
-    private CertReportDao certReportDao;*/
 
     @Autowired
     private CertCreditInfoService certCreditInfoService;
@@ -52,8 +47,9 @@ public class CertCreditInfoMessageConsumer implements RocketMQListener<MessageEx
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         // 设置为集群消费(区别于广播消费)
         defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
-        logger.info(logHeader+"====start=====");
+        logger.info(logHeader + "====start=====");
     }
+
     @Override
     public void onMessage(MessageExt msg) {
         logger.info(logHeader + " 开始。");
@@ -77,13 +73,13 @@ public class CertCreditInfoMessageConsumer implements RocketMQListener<MessageEx
         String creditTenderNid = jsonObject.getString("assignOrderId");
         String flag = jsonObject.getString("flag");
         String tradeDate = jsonObject.getString("tradeDate");
-        if (StringUtils.isBlank(creditTenderNid)|| StringUtils.isBlank(flag)) {
+        if (StringUtils.isBlank(creditTenderNid) || StringUtils.isBlank(flag)) {
             logger.error(logHeader + "通知参数不全！！！");
             return;
         }
         // 检查redis的值是否允许运行 允许返回true  不允许返回false
         boolean canRun = certCreditInfoService.checkCanRun();
-        if(!canRun){
+        if (!canRun) {
             logger.info(logHeader + "redis不允许上报！");
             return;
         }
@@ -93,14 +89,14 @@ public class CertCreditInfoMessageConsumer implements RocketMQListener<MessageEx
             // --> 增加防重校验（根据不同平台不同上送方式校验不同）
 
             // --> 调用service组装数据
-            JSONArray listRepay  = certCreditInfoService.getBorrowTender(creditTenderNid,flag);
-            logger.info("数据："+listRepay.toString());
+            JSONArray listRepay = certCreditInfoService.getBorrowTender(creditTenderNid, flag);
+            logger.info("数据：" + listRepay.toString());
 
             // 上送数据
             CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_UNDER_TAKE, creditTenderNid, listRepay);
             try {
                 // 掉单用
-                if(tradeDate!=null&&!"".equals(tradeDate)){
+                if (tradeDate != null && !"".equals(tradeDate)) {
                     entity.setTradeDate(tradeDate);
                 }
                 certCreditInfoService.insertAndSendPost(entity);

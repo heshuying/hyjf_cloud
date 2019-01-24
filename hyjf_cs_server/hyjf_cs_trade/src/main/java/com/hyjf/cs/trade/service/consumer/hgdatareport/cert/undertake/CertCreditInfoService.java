@@ -23,14 +23,6 @@ public interface CertCreditInfoService extends BaseHgCertReportService {
     JSONArray getBorrowTender(String borrwoNid, String flg);
 
     /**
-     * 根据加入计划单号查找加入计划信息
-     *
-     * @param orderId
-     * @return
-     */
-    HjhAccedeVO getHjhAccedeByOrderId(String orderId);
-
-    /**
      * 获取散标承接信息
      *
      * @param creditTenderList
@@ -46,11 +38,4 @@ public interface CertCreditInfoService extends BaseHgCertReportService {
      */
     JSONArray getHjhDebtCreditInfo(List<HjhDebtCreditTenderVO> hjhDebtCreditTenderList, JSONArray json, boolean isOld);
 
-    /**
-     * 日期转换,数据存的int10的时间戳
-     *
-     * @param repayTime
-     * @return
-     */
-    String dateFormatTransformation(String repayTime, String flg);
 }

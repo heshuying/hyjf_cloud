@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.hyjf.am.vo.trade.BorrowCreditVO;
 import com.hyjf.am.vo.trade.CreditTenderVO;
 import com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO;
-import com.hyjf.am.vo.trade.hjh.HjhAccedeVO;
 import com.hyjf.am.vo.trade.hjh.HjhDebtCreditTenderVO;
 import com.hyjf.am.vo.trade.hjh.HjhPlanVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -47,6 +46,7 @@ public class CertCreditInfoServiceImpl extends BaseHgCertReportServiceImpl imple
     AmUserClient amUserClient;
     @Autowired
     SystemConfig systemConfig;
+
     /**
      * 获取标的的还款信息
      *
@@ -58,12 +58,12 @@ public class CertCreditInfoServiceImpl extends BaseHgCertReportServiceImpl imple
         JSONArray json = new JSONArray();
         if (flag.equals("1")) {
             //代表散标
-            List<CreditTenderVO> creditTenderList = getCreditTender(creditTenderNid);
-            json = getBorrowCreditTenderInfo(creditTenderList,new JSONArray(),false);
+            List<CreditTenderVO> creditTenderList = amTradeClient.selectCreditTender(creditTenderNid);
+            json = getBorrowCreditTenderInfo(creditTenderList, new JSONArray(), false);
         } else if (flag.equals("2")) {
             //智投服务
-            List<HjhDebtCreditTenderVO> hjhDebtCreditTenderList = getHjhDebetCerdeitByAssorderId(creditTenderNid);
-            json = getHjhDebtCreditInfo(hjhDebtCreditTenderList,new JSONArray(),false);
+            List<HjhDebtCreditTenderVO> hjhDebtCreditTenderList = amTradeClient.selectHjhCreditTenderListByAssignOrderId(creditTenderNid);
+            json = getHjhDebtCreditInfo(hjhDebtCreditTenderList, new JSONArray(), false);
         }
         return json;
     }
@@ -74,42 +74,38 @@ public class CertCreditInfoServiceImpl extends BaseHgCertReportServiceImpl imple
      * @param repayTime
      * @return
      */
-    @Override
-    public String dateFormatTransformation(String repayTime, String flg) {
+    private String dateFormatTransformation(String repayTime) {
         if (StringUtils.isNotBlank(repayTime)) {
             long intT = Long.parseLong(repayTime) * 1000;
             Date dateRapay = new Date(intT);
-            if (flg.equals("H")) {
-                //代表获取有时分秒
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                String dateStr = sdf.format(dateRapay);
-                return dateStr;
-            }
-            if (flg.equals("Y")) {
-                //代表只有年与日
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                String dateStr = sdf.format(dateRapay);
-                return dateStr;
-            }
-
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String dateStr = sdf.format(dateRapay);
+            return dateStr;
         }
         return null;
     }
 
-    private BorrowCreditVO getBorrowCreditByTenderNid(int creditTenderNid) {
-        BorrowCreditVO borrowCreditVO =amTradeClient.getBorrowCreditByCreditNid(String.valueOf(creditTenderNid));
-        return borrowCreditVO;
-    }
-
-    private List<CreditTenderVO> getCreditTender(String assignNid) {
-        /*CreditTenderRequest request = new CreditTenderRequest();
-        request.setAssignNid(assignNid);
-        List<CreditTenderVO> creditTenderVOList = amTradeClient.getCreditTenderList(request);
-        return creditTenderVOList;*/
+    /**
+     * 日期转换,数据存的int10的时间戳
+     *
+     * @param repayTime
+     * @return
+     */
+    public String dateFormatTransformationDate(Date repayTime, String flg) {
+        if (flg.equals("H")) {
+            //代表获取有时分秒
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            String dateStr = sdf.format(repayTime);
+            return dateStr;
+        }
+        if (flg.equals("Y")) {
+            //代表只有年与日
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            String dateStr = sdf.format(repayTime);
+            return dateStr;
+        }
         return null;
     }
-
-
     /**
      * 查询散标的承接信息
      *
@@ -117,67 +113,74 @@ public class CertCreditInfoServiceImpl extends BaseHgCertReportServiceImpl imple
      * @return
      */
     @Override
-    public JSONArray getBorrowCreditTenderInfo(List<CreditTenderVO> creditTenderList,JSONArray json,boolean isOld) {
-        if (null != creditTenderList && creditTenderList.size() > 0) {
-            for (CreditTenderVO creditTender : creditTenderList) {
-                Map<String, Object> param = new LinkedHashMap<String, Object>();
-                int intCredit = Integer.parseInt(creditTender.getCreditNid());
-                //查找汇转让标的表
-                BorrowCreditVO borrowCredit = getBorrowCreditByTenderNid(intCredit);
-                BigDecimal creditD = borrowCredit.getCreditDiscount().divide(new BigDecimal("100"));
-                //承接人用户标示 Hash
-                String idHash = getUserIdcardHash(creditTender.getUserId());
-                //6.承接浮动金额：散标转让算法 承接本金*折让率 智投的转让报送0  智投的转让报送0
-                BigDecimal bigDecimalCredit = creditTender.getAssignCapital().multiply(creditD);
-                bigDecimalCredit = bigDecimalCredit.setScale(2, BigDecimal.ROUND_DOWN);
-                //7.承接预期年华收益率：原项目预期年化收益率  智投报送智投产品年化收益率
-                BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(creditTender.getBidNid());
-                // 投资年化收益率
-                String rate = CertCallUtil.convertLoanRate(borrow.getBorrowApr(), borrow.getBorrowPeriod(), borrow.getBorrowStyle());
-                //8.承接时间：系统记录的承接时间
-                //代表获取有时分秒
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                String tenderDate = sdf.format(creditTender.getCreateTime());
-                //9.投资红包：抵扣券报送 红包面值 加息券报送加息券到期收益  没使用券报送0
-                //获取优惠券信息
-                BigDecimal bigDecimalCouponQuota = amTradeClient.getRedPackageSum(creditTender.getAssignNid());
+    public JSONArray getBorrowCreditTenderInfo(List<CreditTenderVO> creditTenderList, JSONArray json, boolean isOld) {
+        try {
+            if (null != creditTenderList && creditTenderList.size() > 0) {
+                for (CreditTenderVO creditTender : creditTenderList) {
+                    Map<String, Object> param = new LinkedHashMap<String, Object>();
+                    int intCredit = Integer.parseInt(creditTender.getCreditNid());
+                    //查找汇转让标的表
+                    BorrowCreditVO borrowCredit = amTradeClient.getBorrowCreditByCreditNid(String.valueOf(intCredit));
+                    if (null == borrowCredit) {
+                        throw new Exception("承接(散标)记录推送,标的转让信息为空！！债转编号:" + intCredit);
+                    }
+                    BigDecimal creditD = borrowCredit.getCreditDiscount().divide(new BigDecimal("100"));
+                    //承接人用户标示 Hash
+                    String idHash = getUserIdcardHash(creditTender.getUserId());
+                    //6.承接浮动金额：散标转让算法 承接本金*折让率 智投的转让报送0  智投的转让报送0
+                    BigDecimal bigDecimalCredit = creditTender.getAssignCapital().multiply(creditD);
+                    bigDecimalCredit = bigDecimalCredit.setScale(2, BigDecimal.ROUND_DOWN);
+                    //7.承接预期年华收益率：原项目预期年化收益率  智投报送智投产品年化收益率
+                    BorrowAndInfoVO borrow = amTradeClient.selectBorrowByNid(creditTender.getBidNid());
+                    // 投资年化收益率
+                    String rate = CertCallUtil.convertLoanRate(borrow.getBorrowApr(), borrow.getBorrowPeriod(), borrow.getBorrowStyle());
+                    //8.承接时间：系统记录的承接时间
+                    //代表获取有时分秒
+                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String tenderDate = sdf.format(creditTender.getCreateTime());
+                    //9.投资红包：抵扣券报送 红包面值 加息券报送加息券到期收益  没使用券报送0
+                    //获取优惠券信息
+                    BigDecimal bigDecimalCouponQuota = amTradeClient.getRedPackageSum(creditTender.getAssignNid());
 
-                //接口版本号
-                param.put("version", CertCallConstant.CERT_CALL_VERSION);
-                //平台编号
-                param.put("sourceCode",systemConfig.getCertSourceCode());
-                //1.承接信息编号：承接订单号
-                param.put("unFinClaimId", creditTender.getAssignNid());
-                //2.转让编号：债转编号
-                param.put("transferId", creditTender.getCreditNid());
-                //3.债权信息编号：该转让对应的原始投资订单编号
-                param.put("finClaimId", creditTender.getCreditTenderNid());
-                //承接人用户标示 Hash
-                param.put("userIdcardHash", idHash);
-                //4.承接人投资资金额：承接本金金额
-                param.put("takeAmount", creditTender.getAssignCapital().toString());
-                //5.承接利息金额：承接人承接本金对应的待收利息金额
-                param.put("takeInterest", creditTender.getAssignInterest().toString());
-                //6.承接浮动金额：散标转让算法承接本金*折让率 智投的转让报送0  智投的转让报送0
-                //承接本金*折让率  数值前加负
-                param.put("floatMoney", "-" + bigDecimalCredit.toString());
-                //7.承接预期年华收益率：原项目预期年化收益率  智投报送智投产品年化收益率
-                param.put("takeRate", rate);
-                //8.承接时间：系统记录的承接时间
-                param.put("takeTime", tenderDate);
-                //9.投资红包：抵扣券报送 红包面值 加息券报送加息券到期收益  没使用券报送0
-                param.put("redpackage", bigDecimalCouponQuota.toString());
-                //10.封闭截至时间：散标报送 到期日  智投报送承接日
-                param.put("lockTime", dateFormatTransformation(String.valueOf(borrow.getRepayLastTime()), "Y"));
-                //是否是历史数据
-                if(isOld){
+                    //接口版本号
+                    param.put("version", CertCallConstant.CERT_CALL_VERSION);
+                    //平台编号
+                    param.put("sourceCode", systemConfig.getCertSourceCode());
+                    //1.承接信息编号：承接订单号
+                    param.put("unFinClaimId", creditTender.getAssignNid());
+                    //2.转让编号：债转编号
+                    param.put("transferId", creditTender.getCreditNid());
+                    //3.债权信息编号：该转让对应的原始投资订单编号
+                    param.put("finClaimId", creditTender.getCreditTenderNid());
+                    //承接人用户标示 Hash
+                    param.put("userIdcardHash", idHash);
+                    //4.承接人投资资金额：承接本金金额
+                    param.put("takeAmount", creditTender.getAssignCapital().toString());
+                    //5.承接利息金额：承接人承接本金对应的待收利息金额
+                    param.put("takeInterest", creditTender.getAssignInterest().toString());
+                    //6.承接浮动金额：散标转让算法承接本金*折让率 智投的转让报送0  智投的转让报送0
+                    //承接本金*折让率  数值前加负
+                    param.put("floatMoney", "-" + bigDecimalCredit.toString());
+                    //7.承接预期年华收益率：原项目预期年化收益率  智投报送智投产品年化收益率
+                    param.put("takeRate", rate);
+                    //8.承接时间：系统记录的承接时间
+                    param.put("takeTime", tenderDate);
+                    //9.投资红包：抵扣券报送 红包面值 加息券报送加息券到期收益  没使用券报送0
+                    param.put("redpackage", bigDecimalCouponQuota.toString());
+                    //10.封闭截至时间：散标报送 到期日  智投报送承接日
+                    param.put("lockTime", dateFormatTransformation(String.valueOf(borrow.getRepayLastTime())));
+                    //是否是历史数据
+                /*if (isOld) {
                     //是否是历史数据
                     // groupByDate  旧数据上报排序 按月用
-                    String groupByDate= tenderDate.split("-")[0]+"-"+tenderDate.split("-")[1];
-                    param.put("groupByDate",groupByDate);
+                    String groupByDate = tenderDate.split("-")[0] + "-" + tenderDate.split("-")[1];
+                    param.put("groupByDate", groupByDate);
+                }*/
+                    json.add(param);
                 }
-                json.add(param);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return json;
     }
@@ -189,58 +192,65 @@ public class CertCreditInfoServiceImpl extends BaseHgCertReportServiceImpl imple
      * @return
      */
     @Override
-    public JSONArray getHjhDebtCreditInfo(List<HjhDebtCreditTenderVO> hjhDebtCreditTenderList,JSONArray json,boolean isOld) {
-        if (null != hjhDebtCreditTenderList && hjhDebtCreditTenderList.size() > 0) {
-            for (HjhDebtCreditTenderVO hjhDebtCreditTender : hjhDebtCreditTenderList) {
-                Map<String, Object> param = new LinkedHashMap<String, Object>();
-                //查找计划信息
-                HjhPlanVO hjhPlan = this.getHjhPlanInfoByPlanNid(hjhDebtCreditTender.getAssignPlanNid());
-                String userIdcardHash = getUserIdcardHash(hjhDebtCreditTender.getUserId());
-                //8.承接时间：系统记录的承接时间
-                String takeTime = dateFormatTransformation(hjhDebtCreditTender.getCreateTime().toString(), "H");
-                //9.投资红包：抵扣券报送 红包面值 加息券报送加息券到期收益  没使用券报送0
-                BigDecimal bigDecimalCouponQuota = amTradeClient.getRedPackageSum(hjhDebtCreditTender.getAssignPlanOrderId());
-                //10.封闭截至时间：散标报送 到期日  智投报送承接日
-                String lockTime = dateFormatTransformation(hjhDebtCreditTender.getCreateTime().toString(), "Y");
+    public JSONArray getHjhDebtCreditInfo(List<HjhDebtCreditTenderVO> hjhDebtCreditTenderList, JSONArray json, boolean isOld) {
+        try {
+            if (null != hjhDebtCreditTenderList && hjhDebtCreditTenderList.size() > 0) {
+                for (HjhDebtCreditTenderVO hjhDebtCreditTender : hjhDebtCreditTenderList) {
+                    Map<String, Object> param = new LinkedHashMap<String, Object>();
+                    //查找计划信息
+                    HjhPlanVO hjhPlan = amTradeClient.getHjhPlan(hjhDebtCreditTender.getAssignPlanNid());
+                    if (null == hjhPlan) {
+                        throw new Exception("承接(计划)记录推送,计划的信息为空！！承接的计划编号:" + hjhDebtCreditTender.getAssignPlanNid());
+                    }
+                    String userIdcardHash = getUserIdcardHash(hjhDebtCreditTender.getUserId());
+                    //8.承接时间：系统记录的承接时间
+                    String takeTime = dateFormatTransformationDate(hjhDebtCreditTender.getCreateTime(), "H");
+                    //9.投资红包：抵扣券报送 红包面值 加息券报送加息券到期收益  没使用券报送0
+                    BigDecimal bigDecimalCouponQuota = amTradeClient.getRedPackageSum(hjhDebtCreditTender.getAssignPlanOrderId());
+                    //10.封闭截至时间：散标报送 到期日  智投报送承接日
+                    String lockTime = dateFormatTransformationDate(hjhDebtCreditTender.getCreateTime(), "Y");
 
-                //接口版本号
-                param.put("version", CertCallConstant.CERT_CALL_VERSION);
-                //平台编号
-                param.put("sourceCode",systemConfig.getCertSourceCode());
-                //1.承接信息编号：承接订单号
-                param.put("unFinClaimId", hjhDebtCreditTender.getAssignOrderId());
-                //2.转让编号：债转编号
-                param.put("transferId", hjhDebtCreditTender.getCreditNid());
-                //3.债权信息编号：该转让对应的原始投资订单编号
-                param.put("finClaimId", hjhDebtCreditTender.getInvestOrderId());
-                //承接人用户标示 Hash
-                param.put("userIdcardHash", userIdcardHash);
-                //4.承接人投资资金额：承接本金金额
-                param.put("takeAmount", hjhDebtCreditTender.getAssignCapital());
-                //5.承接利息金额：承接人承接本金对应的待收利息金额
-                param.put("takeInterest", hjhDebtCreditTender.getAssignInterest());
-                //6.承接浮动金额：散标转让算法承接本金*折让率 智投的转让报送0  智投的转让报送0
-                param.put("floatMoney", "0");
-                //7.承接预期年华收益率：原项目预期年化收益率  智投报送智投产品年化收益率
-                String takeRate = CertCallUtil.convertLoanRate(hjhPlan.getExpectApr(),0,null);
-                param.put("takeRate", takeRate);
-                //8.承接时间：系统记录的承接时间
-                param.put("takeTime", takeTime);
-                //9.投资红包：抵扣券报送 红包面值 加息券报送加息券到期收益  没使用券报送0
+                    //接口版本号
+                    param.put("version", CertCallConstant.CERT_CALL_VERSION);
+                    //平台编号
+                    param.put("sourceCode", systemConfig.getCertSourceCode());
+                    //1.承接信息编号：承接订单号
+                    param.put("unFinClaimId", hjhDebtCreditTender.getAssignOrderId());
+                    //2.转让编号：债转编号
+                    param.put("transferId", hjhDebtCreditTender.getCreditNid());
+                    //3.债权信息编号：该转让对应的原始投资订单编号
+                    param.put("finClaimId", hjhDebtCreditTender.getInvestOrderId());
+                    //承接人用户标示 Hash
+                    param.put("userIdcardHash", userIdcardHash);
+                    //4.承接人投资资金额：承接本金金额
+                    param.put("takeAmount", hjhDebtCreditTender.getAssignCapital());
+                    //5.承接利息金额：承接人承接本金对应的待收利息金额
+                    param.put("takeInterest", hjhDebtCreditTender.getAssignInterest());
+                    //6.承接浮动金额：散标转让算法承接本金*折让率 智投的转让报送0  智投的转让报送0
+                    param.put("floatMoney", "0");
+                    //7.承接预期年华收益率：原项目预期年化收益率  智投报送智投产品年化收益率
+                    String takeRate = CertCallUtil.convertLoanRate(hjhPlan.getExpectApr(), 0, null);
+                    param.put("takeRate", takeRate);
+                    //8.承接时间：系统记录的承接时间
+                    param.put("takeTime", takeTime);
+                    //9.投资红包：抵扣券报送 红包面值 加息券报送加息券到期收益  没使用券报送0
 //                param.put("redpackage", bigDecimalCouponQuota.toString());
-                param.put("redpackage","0");
-                //10.封闭截至时间：散标报送 到期日  智投报送承接日
-                param.put("lockTime", lockTime);
-                //是否是历史数据
-                if(isOld){
+                    param.put("redpackage", "0");
+                    //10.封闭截至时间：散标报送 到期日  智投报送承接日
+                    param.put("lockTime", lockTime);
+                    //是否是历史数据
+                /*if (isOld) {
                     //是否是历史数据
                     // groupByDate  旧数据上报排序 按月用
-                    String groupByDate= takeTime.split("-")[0]+"-"+takeTime.split("-")[1];
-                    param.put("groupByDate",groupByDate);
+                    String groupByDate = takeTime.split("-")[0] + "-" + takeTime.split("-")[1];
+                    param.put("groupByDate", groupByDate);
+                }*/
+                    json.add(param);
                 }
-                json.add(param);
-            }
 
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return json;
     }
@@ -262,34 +272,6 @@ public class CertCreditInfoServiceImpl extends BaseHgCertReportServiceImpl imple
             }
         }
         return idHash;
-    }
-
-    private List<HjhDebtCreditTenderVO> getHjhDebetCerdeitByAssorderId(String assignOrderId) {
-        List<HjhDebtCreditTenderVO> hjhDebtCreditTenderVOList = amTradeClient.selectHjhCreditTenderListByAssignOrderId(assignOrderId);
-        return hjhDebtCreditTenderVOList;
-    }
-
-    /**
-     * 根据计划编号查找计划信息
-     *
-     * @param planNid
-     * @return
-     */
-    private HjhPlanVO getHjhPlanInfoByPlanNid(String planNid) {
-        HjhPlanVO hjhPlanVO = amTradeClient.getHjhPlan(planNid);
-        return hjhPlanVO;
-    }
-
-    /**
-     * 根据加入计划单号查找加入计划信息
-     *
-     * @param orderId
-     * @return
-     */
-    @Override
-    public HjhAccedeVO getHjhAccedeByOrderId(String orderId) {
-        HjhAccedeVO hjhAccedeVO = amTradeClient.getHjhAccedeByAccedeOrderId(orderId);
-        return hjhAccedeVO;
     }
 
 }
