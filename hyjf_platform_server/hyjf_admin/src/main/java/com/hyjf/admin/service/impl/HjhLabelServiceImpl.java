@@ -73,4 +73,10 @@ public class HjhLabelServiceImpl implements HjhLabelService{
 		int flg = amTradeClient.updateAllocationRecord(hjhLabelInfoRequest);
 		return flg;
 	}
+
+	@Override
+	public int updateHjhLabelRecordByIdAndLabelState(HjhLabelInfoRequest hjhLabelInfoRequest) {
+		int flg = amTradeClient.updateHjhLabelRecordByIdAndLabelState(hjhLabelInfoRequest);
+		return flg;
+	}
 }

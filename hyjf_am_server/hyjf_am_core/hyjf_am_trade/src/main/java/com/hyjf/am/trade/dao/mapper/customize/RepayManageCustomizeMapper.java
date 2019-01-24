@@ -28,4 +28,11 @@ public interface RepayManageCustomizeMapper {
     BigDecimal selectOrgRepayFeeWaitTotal(Map<String,Object> paraMap);
 
     BigDecimal selectRepayOrgRepaywait(Integer userId);
+
+    /**
+     * 垫付机构本期应还总额
+     * @param params
+     * @return
+     */
+    BigDecimal selectOrgRepayWaitTotal(Map<String, Object> params);
 }

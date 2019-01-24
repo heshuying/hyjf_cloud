@@ -19,6 +19,7 @@ import com.hyjf.cs.common.bean.result.ApiResult;
 import com.hyjf.cs.trade.bean.api.ApiBorrowDetail;
 import com.hyjf.cs.trade.bean.api.ApiBorrowReqBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
+import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.cs.trade.service.projectlist.ApiProjectListService;
 import com.hyjf.cs.trade.service.svrcheck.CommonSvrChkService;
 import com.hyjf.cs.trade.util.ProjectConstant;
@@ -37,7 +38,7 @@ import java.util.Map;
  * @date 2018/8/27 10:06
  */
 @Service
-public class ApiProjectListServiceImpl implements ApiProjectListService {
+public class ApiProjectListServiceImpl extends BaseTradeServiceImpl implements ApiProjectListService {
 
 
     @Autowired

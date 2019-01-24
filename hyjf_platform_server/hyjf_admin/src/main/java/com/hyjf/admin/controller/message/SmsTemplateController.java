@@ -64,7 +64,7 @@ public class SmsTemplateController extends BaseController {
 	 */
 	@ApiOperation(value = "根据条件查询所有短信模版", notes = "根据条件查询所有短信模版")
 	@PostMapping("/findSmsTemplate")
-	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_INFO)
+	@AuthorityAnnotation(key = PERMISSIONS, value = ShiroConstants.PERMISSION_VIEW)
 	public AdminResult<ListResult<SmsTemplateVO>> findSmsTemplate(@RequestBody SmsTemplateRequest request) {
 		SmsTemplateResponse response = smsTemplateService.findSmsTemplate(request);
 		if (response == null) {

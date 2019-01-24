@@ -5,7 +5,6 @@ package com.hyjf.am.trade.service.admin.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.market.dao.mapper.auto.InviterReturnDetailMapper;
-import com.hyjf.am.market.dao.mapper.auto.NmUserMapper;
 import com.hyjf.am.market.dao.mapper.auto.PerformanceReturnDetailMapper;
 import com.hyjf.am.market.dao.mapper.customize.market.ActivityMidauInfoCustomizeMapper;
 import com.hyjf.am.market.dao.mapper.customize.market.InviterReturnCashCustomizeMapper;
@@ -23,9 +22,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author tyy
@@ -40,12 +37,13 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
     PerformanceReturnDetailMapper performanceReturnDetailMapper;
     @Autowired
     InviterReturnDetailMapper inviterReturnDetailMapper;
-    @Autowired
-    NmUserMapper nmUserMapper;
+
     @Autowired
     ActivityMidauInfoCustomizeMapper activityMidauInfoCustomizeMapper;
     @Override
-    public  boolean saveReturnCash(Integer userId, String orderId, Integer productType, BigDecimal investMoney,InviterReturnCashCustomize inviterReturnCashCustomize){
+    public Map<String,Object> selectReturnCash(Integer userId, String orderId, Integer productType,
+                                BigDecimal investMoney, InviterReturnCashCustomize inviterReturnCashCustomize, List<NmUser> nmUserList){
+        Map<String,Object> map = new HashMap<>();
         List<ActivityMidauInfo> tenderList = null;
         ActivityMidauInfo activityMidauInfo = null;
         PerformanceReturnDetail performanceReturnDetail = new PerformanceReturnDetail();
@@ -58,7 +56,7 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
             tenderList = activityMidauInfoCustomizeMapper.queryPlanList(orderId,userId);
             if(CollectionUtils.isEmpty(tenderList)){
                 _log.error("【纳觅返现活动】用户加入汇计划信息为空，orderId:"+orderId+",userId:"+userId);
-                return true;
+                return null;
             }
             activityMidauInfo = tenderList.get(0);
 
@@ -68,7 +66,7 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
             tenderList = activityMidauInfoCustomizeMapper.queryTenderRecoverList(orderId,userId);
             if(CollectionUtils.isEmpty(tenderList)){
                 _log.error("【纳觅返现活动】用户投资的散标信息为空，orderId:"+orderId+",userId:"+userId);
-                return true;
+                return null;
             }
 
             activityMidauInfo = tenderList.get(0);
@@ -78,7 +76,7 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
             tenderList = activityMidauInfoCustomizeMapper.queryTenderRecoverList(orderId,userId);
             if(CollectionUtils.isEmpty(tenderList)){
                 _log.error("【纳觅返现活动】用户投资的散标信息为空，orderId:"+orderId+",userId:"+userId);
-                return true;
+                return null;
             }
 
             activityMidauInfo = tenderList.get(0);
@@ -90,7 +88,7 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
         if(activityMidauInfo.getProductStyle().contains("个月")){
             String number = StringUtils.substringBefore(activityMidauInfo.getProductStyle(),"个月");
             if(StringUtils.isEmpty(number)){
-                return false;
+                return null;
             }
             yearAmount = investMoney.multiply(new BigDecimal(number)).divide(new BigDecimal(12),2,BigDecimal.ROUND_DOWN);
         }
@@ -98,24 +96,25 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
         else if(activityMidauInfo.getProductStyle().contains("天")){
             String number = StringUtils.substringBefore(activityMidauInfo.getProductStyle(),"天");
             if(StringUtils.isEmpty(number)){
-                return false;
+                return null;
             }
             yearAmount = investMoney.multiply(new BigDecimal(number)).divide(new BigDecimal(360),2,BigDecimal.ROUND_DOWN);
         }
 
         if(yearAmount.compareTo(BigDecimal.ZERO) <= 0){
             _log.info("用户年化投资金额小于或等于0 orderId:"+orderId+",userId:"+userId+",yearAmount="+yearAmount);
-            return false;
+            return null;
         }
-        List<NmUser> nmUsers =  nmUserMapper.selectByExample(new NmUserExample());
+
         List<String> userNames = new ArrayList<>();
         int count =0;
-        for(NmUser nmUser:nmUsers){
+        for(NmUser nmUser:nmUserList){
             userNames.add(nmUser.getUserName());
         }
         //邀请人获得的投资返现金额
         int level =  getLevel(userId,count,userNames);
         _log.info("level为1是A,2是B,3是C,4是D,0不计入返现=="+level);
+        map.put("level",level);
         // 查询项目信息
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         performanceReturnDetail.setUserName(inviterReturnCashCustomize.getUserName());
@@ -146,7 +145,8 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
         }
         performanceReturnDetail.setCreateTime(new Date());
         if(level>0) {
-            performanceReturnDetailMapper.insert(performanceReturnDetail);
+            map.put("performanceReturnDetail",performanceReturnDetail);
+           // this.savePerformanceReturnDetail(performanceReturnDetail);
         }
         //假如为纳觅员工逻辑比较特殊自己邀请自己
         if(level == 1){
@@ -160,8 +160,9 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
             inviterReturnDetail.setUserName(inviterReturnCashCustomize.getUserName());
             inviterReturnDetail.setTrueName(inviterReturnCashCustomize.getTrueName());
             inviterReturnDetail.setReturnAmount(yearAmount.multiply(new BigDecimal(0.005)).setScale(2,BigDecimal.ROUND_DOWN));
-            inviterReturnDetailMapper.insert(inviterReturnDetail);
-            return true;
+            map.put("inviterReturnDetail",inviterReturnDetail);
+           // this.saveInviterReturnDetail(inviterReturnDetail);
+            return map;
         }
         //邀请人返现金额计算
         Integer refferId = inviterReturnCashCustomize.getRefferId();
@@ -179,11 +180,15 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
             inviterReturnDetail.setTrueName(inviterReturnCash.getTrueName());
             _log.info("返现金额打印=="+yearAmount+"=="+yearAmount.multiply(new BigDecimal(0.005)));
             inviterReturnDetail.setReturnAmount(yearAmount.multiply(new BigDecimal(0.005)).setScale(2,BigDecimal.ROUND_DOWN));
-            inviterReturnDetailMapper.insert(inviterReturnDetail);
+            map.put("inviterReturnDetail"+i,inviterReturnDetail);
+           // this.saveInviterReturnDetail(inviterReturnDetail);
             refferId = inviterReturnCash.getRefferId();
         }
-        return true;
+        return map;
     }
+
+
+
     private int getLevel(Integer userId,int count,List<String> userNames){
         //计数器
         count++;
@@ -223,23 +228,4 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
         List<PerformanceReturnDetail> performanceReturnDetailList =  performanceReturnDetailMapper.selectByExample(performanceReturnDetailExample);
         return performanceReturnDetailList;
     }
-    @Override
-    public void updateJoinTime(Integer nowTime,List<InviterReturnDetail> inviterReturnDetailList,List<PerformanceReturnDetail> performanceReturnDetailList){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-       /* InviterReturnDetailExample example = new InviterReturnDetailExample();
-        example.createCriteria().andProductNoEqualTo(borrowNid);
-        List<InviterReturnDetail> inviterReturnDetailList = inviterReturnDetailMapper.selectByExample(example);
-        PerformanceReturnDetailExample performanceReturnDetailExample = new PerformanceReturnDetailExample();
-        performanceReturnDetailExample.createCriteria().andProductNoEqualTo(borrowNid);
-        List<PerformanceReturnDetail> performanceReturnDetailList =  performanceReturnDetailMapper.selectByExample(performanceReturnDetailExample);*/
-        for(InviterReturnDetail inviterReturnDetail:inviterReturnDetailList){
-            inviterReturnDetail.setJoinTime(sdf.format(nowTime*1000L));
-            inviterReturnDetailMapper.updateByPrimaryKey(inviterReturnDetail);
-        }
-        for(PerformanceReturnDetail performanceReturnDetail:performanceReturnDetailList){
-            performanceReturnDetail.setJoinTime(sdf.format(nowTime*1000L));
-            performanceReturnDetailMapper.updateByPrimaryKeySelective(performanceReturnDetail);
-        }
-    }
-
 }

@@ -40,7 +40,6 @@ import com.hyjf.am.vo.user.HjhInstConfigVO;
 import com.hyjf.am.vo.user.UtmPlatVO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -1991,9 +1990,30 @@ public class AmAdminClientImpl implements AmAdminClient {
         }
         return null;
     }
+
     @Override
     public  NaMiMarketingResponse selectMonthList(){
         NaMiMarketingResponse response = restTemplate.getForEntity("http://AM-ADMIN/am-market/namimarketing/selectMonthList", NaMiMarketingResponse.class).getBody();
         return response;
+    }
+
+    @Override
+    public void  updateJoinTime(String borrowNid,Integer nowTime){
+        String url = "http://AM-ADMIN/am-market/returncash/updatejointime/"+borrowNid+"/"+nowTime;
+        restTemplate.getForEntity(url,String.class);
+
+    }
+
+    @Override
+    public StringResponse checkActivityIfAvailable(Integer activityId){
+        String url = "http://AM-ADMIN/am-market/activity/checkActivityIfAvailable/"+activityId;
+        StringResponse response = restTemplate.getForEntity(url,StringResponse.class).getBody();
+        return response;
+    }
+
+    @Override
+    public void saveReturnCash(ReturnCashRequest returnCashRequest){
+        String url = "http://AM-ADMIN/am-market/returncash/saveReturnCash";
+        restTemplate.postForEntity(url,returnCashRequest,String.class);
     }
 }

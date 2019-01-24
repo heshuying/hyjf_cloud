@@ -64,11 +64,13 @@ public class AutoIssueMessageServiceImpl extends BaseServiceImpl implements Auto
 		logger.info(borrow.getBorrowNid() + " 成功更新计划池" + planNid + "总额 + " + borrow.getAccount());
 
 		// 更新资产表
-		hjhPlanAsset.setPlanNid(planNid);
-		// 获取当前时间
-		hjhPlanAsset.setUpdateTime(new Date());
-		hjhPlanAsset.setUpdateUserId(1);
-		hjhPlanAssetMapper.updateByPrimaryKeySelective(hjhPlanAsset);
+		if(hjhPlanAsset != null){
+			hjhPlanAsset.setPlanNid(planNid);
+			// 获取当前时间
+			hjhPlanAsset.setUpdateTime(new Date());
+			hjhPlanAsset.setUpdateUserId(1);
+			hjhPlanAssetMapper.updateByPrimaryKeySelective(hjhPlanAsset);
+		}
 
 		// 增加redis相应计划可投金额
 		redisAdd(RedisConstants.HJH_PLAN + planNid, borrow.getAccount().toString());

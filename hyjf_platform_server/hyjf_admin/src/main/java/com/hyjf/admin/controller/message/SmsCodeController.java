@@ -70,7 +70,7 @@ public class SmsCodeController extends BaseController {
             }else{
                 Client c = SmsUtil.getClient();
                 remain_number = (int) c.getBalance() * 10;
-                remain_money = BigDecimal.valueOf(remain_number).multiply(BigDecimal.valueOf(0.06));
+                remain_money = BigDecimal.valueOf(remain_number).multiply(BigDecimal.valueOf(0.04));
                 RedisUtils.set(RedisConstants.REMAIN_NUMBER, remain_number + "", 5 * 60);
                 RedisUtils.set(RedisConstants.REMAIN_MONEY, remain_money.toString(), 5 * 60);
             }
