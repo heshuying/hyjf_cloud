@@ -11,6 +11,7 @@ import org.apache.ibatis.annotations.Param;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author tyy
@@ -18,11 +19,12 @@ import java.util.List;
  */
 public interface ReturnCashActivityService {
 
-    boolean selectReturnCash(Integer userId, String orderId, Integer productType, BigDecimal investMoney,InviterReturnCashCustomize inviterReturnCashCustomize, List<NmUser> nmUserList);
+    Map<String,Object> selectReturnCash(Integer userId, String orderId, Integer productType, BigDecimal investMoney, InviterReturnCashCustomize inviterReturnCashCustomize, List<NmUser> nmUserList);
 
     InviterReturnCashCustomize selectReturnCashList(Integer userId);
+
     List<InviterReturnDetail> selectInviterReturnDetailList(String borrowNid);
+
     List<PerformanceReturnDetail> selectPerformanceReturnDetailList(String borrowNid);
-    void updateJoinTime(Integer nowTime,List<InviterReturnDetail> inviterReturnDetailList,List<PerformanceReturnDetail> performanceReturnDetailList);
 
 }

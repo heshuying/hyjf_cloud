@@ -6964,4 +6964,20 @@ public class AmTradeClientImpl implements AmTradeClient {
         EvaluationBorrowLevelConfigLogResponse response = restTemplate.postForEntity("http://AM-ADMIN/am-trade/evaluation/getBorrowLevelConfigLogList", requestBean, EvaluationBorrowLevelConfigLogResponse.class).getBody();
         return response;
     }
+
+    /**
+     * admin修改标签状态
+     *
+     * @param HjhLabelInfoRequest
+     * @return
+     */
+	@Override
+	public int updateHjhLabelRecordByIdAndLabelState(HjhLabelInfoRequest request) {
+        String url = "http://AM-ADMIN/am-trade/hjhLabel/updateHjhLabelRecordByIdAndLabelState";
+        IntegerResponse updateFlag = restTemplate.postForEntity(url, request, IntegerResponse.class).getBody();
+        if (updateFlag == null || !Response.isSuccess(updateFlag)) {
+            return 0;
+        }
+        return updateFlag.getResultInt().intValue();
+	}
 }
