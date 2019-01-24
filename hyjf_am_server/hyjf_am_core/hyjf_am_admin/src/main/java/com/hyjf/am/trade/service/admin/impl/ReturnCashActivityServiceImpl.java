@@ -162,7 +162,7 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
             inviterReturnDetail.setReturnAmount(yearAmount.multiply(new BigDecimal(0.005)).setScale(2,BigDecimal.ROUND_DOWN));
             map.put("inviterReturnDetail",inviterReturnDetail);
            // this.saveInviterReturnDetail(inviterReturnDetail);
-            return null;
+            return map;
         }
         //邀请人返现金额计算
         Integer refferId = inviterReturnCashCustomize.getRefferId();
@@ -188,6 +188,7 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
     }
     @Override
     public void saveReutrnCash(Map<String,Object> map){
+        _log.info("返现参数=="+JSONObject.toJSONString(map));
         int level = (int)map.get("level");
         if(level>0) {
             PerformanceReturnDetail performanceReturnDetail = (PerformanceReturnDetail)map.get("performanceReturnDetail");
