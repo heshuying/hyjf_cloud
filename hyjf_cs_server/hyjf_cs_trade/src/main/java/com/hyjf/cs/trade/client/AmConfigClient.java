@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.client;
 import com.hyjf.am.response.config.DebtConfigResponse;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
+import com.hyjf.am.vo.hgreportdata.cert.CertErrLogVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
@@ -107,4 +108,10 @@ public interface AmConfigClient {
 	SmsConfigVO findSmsConfig();
 
 	void holidays();
+
+	/**
+	 * 获取待处理的异常
+	 * @return
+	 */
+    List<CertErrLogVO> getCertErrLogs();
 }

@@ -554,6 +554,11 @@ public interface MQConstant {
 	String CERT_CERT_TRANSFER_STATUS_TOPIC = "CERT_CERT_TRANSFER_STATUS_TOPIC";
 	String CERT_CERT_TRANSFER_STATUS_TAG = "CERT_CERT_TRANSFER_STATUS_TAG";
 
+	/**异常处理*/
+	String CERT_EXCEPTION_GROUP = "CERT_EXCEPTION_GROUP";
+	String CERT_EXCEPTION_TOPIC = "CERT_EXCEPTION_TOPIC";
+	String CERT_EXCEPTION_TAG = "CERT_EXCEPTION_TAG";
+
 	/**--------------------------------- 应急中心 -------------------------------------*/
 
 }
