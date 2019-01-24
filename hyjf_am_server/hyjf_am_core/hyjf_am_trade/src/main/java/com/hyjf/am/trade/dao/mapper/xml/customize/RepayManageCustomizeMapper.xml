@@ -492,7 +492,7 @@
 		hydbr.repay_fee AS all_repay_fee,
 		FROM
 		ht_borrow hydb
-		INNER JOIN ht_borrow_info hbi ON b.borrow_nid = hbi.borrow_nid
+		INNER JOIN ht_borrow_info hbi ON hydb.borrow_nid = hbi.borrow_nid
 		INNER JOIN ht_users u ON hbi.repay_org_user_id= u.user_id
 		LEFT JOIN ht_borrow_project_type hydbpt ON hydbpt.borrow_cd = hydb.project_type
 		LEFT JOIN ht_borrow_repay hydbr ON hydbr.borrow_nid = hydb.borrow_nid
