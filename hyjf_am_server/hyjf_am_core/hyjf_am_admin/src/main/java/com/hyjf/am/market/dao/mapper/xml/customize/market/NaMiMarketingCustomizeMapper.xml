@@ -126,9 +126,9 @@
         from hyjf_user.ht_user s3
         INNER JOIN hyjf_user.ht_spreads_user su on s3.user_id=su.user_id
         inner JOIN hyjf_user.ht_user s2 ON su.spreads_user_id = s2.user_id
-        INNER JOIN hyjf_user.ht_spreads_user su2 on s2.user_id=su2.spreads_user_id
-        inner JOIN hyjf_user.ht_user s1 ON su.user_id = s1.user_id
-        INNER JOIN hyjf_user.ht_spreads_user su3 on s1.user_id=su3.spreads_user_id
+        INNER JOIN hyjf_user.ht_spreads_user su2 on s2.user_id=su2.user_id
+        inner JOIN hyjf_user.ht_user s1 ON su2.spreads_user_id = s1.user_id
+        INNER JOIN hyjf_user.ht_spreads_user su3 on s1.user_id=su3.user_id
         where su3.spreads_user_id in
         <foreach collection="id0"  open="(" close=")" separator="," item="user">
             #{user.userId}
