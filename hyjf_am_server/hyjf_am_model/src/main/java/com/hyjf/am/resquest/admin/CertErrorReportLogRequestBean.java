@@ -13,7 +13,7 @@ import java.util.List;
  * @author nxl
  * @version NifaReportLogBean, v0.1 2018/7/6 15:35
  */
-public class CertReportLogRequestBean extends BasePage implements Serializable {
+public class CertErrorReportLogRequestBean extends BasePage implements Serializable {
 
     private List<CertLogVO> recordList;
     //id
