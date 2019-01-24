@@ -1541,4 +1541,11 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	CertErrorReportLogResponse selectCertErrorReportLogList(CertErrorReportLogRequestBean requestBean);
+
+	/**
+	 * 修改应急中心错误
+	 * @param id
+	 * @return
+	 */
+	Integer updateCertErrorCount(Integer id);
 }

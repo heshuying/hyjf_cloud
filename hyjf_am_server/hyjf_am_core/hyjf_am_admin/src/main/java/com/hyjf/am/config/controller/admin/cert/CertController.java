@@ -4,6 +4,7 @@ import com.hyjf.am.config.controller.BaseConfigController;
 import com.hyjf.am.config.dao.model.auto.CertErrLog;
 import com.hyjf.am.config.dao.model.auto.CertLog;
 import com.hyjf.am.config.service.cert.CertService;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.CertErrorReportLogResponse;
 import com.hyjf.am.response.admin.CertReportLogResponse;
@@ -93,4 +94,22 @@ public class CertController extends BaseConfigController {
         return response;
     }
 
+    /**
+     * 重新跑批
+     * @param id
+     * @return
+     */
+    @PostMapping("/updateCertErrorCount")
+    public IntegerResponse updateCertErrorCount(@RequestBody @Valid Integer id) {
+        IntegerResponse response =new IntegerResponse();
+        try{
+            certService.updateCertErrorCount(id);
+            response.setRtn(Response.SUCCESS);
+            response.setResultInt(1);
+        }catch (Exception e){
+            response.setRtn(Response.FAIL);
+            response.setResultInt(0);
+        }
+        return response;
+    }
 }

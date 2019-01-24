@@ -170,4 +170,17 @@ public class CertServiceImpl implements CertService {
         example.setOrderByClause(" send_time DESC");
         return certErrLogMapper.selectByExample(example);
     }
+
+    /**
+     * 重新跑批
+     *
+     * @param id
+     */
+    @Override
+    public void updateCertErrorCount(Integer id) {
+        CertErrLog certErrLog = new CertErrLog();
+        certErrLog.setSendCount(3);
+        certErrLog.setId(id);
+        certErrLogMapper.updateByPrimaryKeySelective(certErrLog);
+    }
 }

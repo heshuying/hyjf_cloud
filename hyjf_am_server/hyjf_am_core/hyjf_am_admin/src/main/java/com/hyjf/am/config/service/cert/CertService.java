@@ -42,4 +42,10 @@ public interface CertService {
      * @return
      */
     List<CertErrLog> selectCertErrorReportLogList(CertErrorReportLogRequestBean request);
+
+    /**
+     * 重新跑批
+     * @param id
+     */
+    void updateCertErrorCount(Integer id);
 }
