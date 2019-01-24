@@ -1,6 +1,5 @@
 package com.hyjf.cs.user.controller.app.bankopen;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.am.vo.admin.UserOperationLogEntityVO;
 import com.hyjf.am.vo.user.UserInfoVO;
@@ -70,6 +69,9 @@ public class AppBankOpenController extends BaseUserController {
             if (StringUtils.isEmpty(mobile)) {
                 mobile = "";
             }
+            // 合规审批 用以区分企业用户或者个人用户已达到企业用户跳转开户指南画面 add by huanghui start
+            result.put("userType", String.valueOf(userVO.getUserType()));
+            // 合规审批 用以区分企业用户或者个人用户已达到企业用户跳转开户指南画面 add by huanghui end
             result.put("phone",mobile);
             result.put("status","000");
             result.put("statusDesc","操作成功");

@@ -98,7 +98,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
 
 
     @Override
-   /* @HystrixCommand(commandKey = "提现(三端)-getUserBankWithdrawView",fallbackMethod = "fallBackWithdraw",ignoreExceptions = CheckException.class,commandProperties = {
+    @HystrixCommand(commandKey = "提现(三端)-getUserBankWithdrawView",fallbackMethod = "fallBackWithdraw",ignoreExceptions = CheckException.class,commandProperties = {
             //设置断路器生效
             @HystrixProperty(name = "circuitBreaker.enabled", value = "true"),
             //一个统计窗口内熔断触发的最小个数3/10s
@@ -108,7 +108,7 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             //熔断5秒后去尝试请求
             @HystrixProperty(name = "circuitBreaker.sleepWindowInMilliseconds", value = "5000"),
             //失败率达到30百分比后熔断
-            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})*/
+            @HystrixProperty(name = "circuitBreaker.errorThresholdPercentage", value = "30")})
     public BankCallBean getUserBankWithdrawView(UserVO user, String transAmt, String cardNo, String payAllianceCode, String platform, String channel, String ip, String retUrl, String bgRetUrl, String successfulUrl, String forgotPwdUrl) {
 
 
@@ -744,8 +744,8 @@ public class BankWithdrawServiceImpl extends BaseTradeServiceImpl implements Ban
             throw new CheckException(MsgEnum.ERR_AMT_WITHDRAW_BANK_MORETHEN_BANLANCE);
         }
         // 服务费授权状态
-        if(!checkPaymentAuthStatus(user.getUserId())){
-            throw new CheckException("请先进行服务费授权。");
+        if(!authService.checkPaymentAuthStatus(user.getUserId())){
+            throw new CheckException(MsgEnum.ERR_AUTH_USER_PAYMENT);
         }
         //服务费收取
         return users;
