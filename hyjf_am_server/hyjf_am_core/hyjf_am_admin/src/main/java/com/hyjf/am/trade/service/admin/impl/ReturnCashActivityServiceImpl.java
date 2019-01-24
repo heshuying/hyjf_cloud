@@ -188,6 +188,7 @@ public class ReturnCashActivityServiceImpl implements ReturnCashActivityService 
     }
     @Override
     public void saveReutrnCash(Map<String,Object> map){
+        _log.info("返现参数=="+JSONObject.toJSONString(map));
         int level = (int)map.get("level");
         if(level>0) {
             PerformanceReturnDetail performanceReturnDetail = (PerformanceReturnDetail)map.get("performanceReturnDetail");
