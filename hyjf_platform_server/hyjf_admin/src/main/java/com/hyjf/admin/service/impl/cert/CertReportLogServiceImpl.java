@@ -8,7 +8,10 @@ import com.hyjf.admin.controller.productcenter.plancenter.AccedeListController;
 import com.hyjf.admin.mq.base.CommonProducer;
 import com.hyjf.admin.service.cert.CertReportLogService;
 import com.hyjf.admin.service.impl.BaseAdminServiceImpl;
+import com.hyjf.am.response.IntegerResponse;
+import com.hyjf.am.response.admin.CertErrorReportLogResponse;
 import com.hyjf.am.response.admin.CertReportLogResponse;
+import com.hyjf.am.resquest.admin.CertErrorReportLogRequestBean;
 import com.hyjf.am.resquest.admin.CertReportLogRequestBean;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,5 +39,27 @@ public class CertReportLogServiceImpl extends BaseAdminServiceImpl implements Ce
 	public CertReportLogResponse selectCertReportLogList(CertReportLogRequestBean requestBean) {
 		CertReportLogResponse response =configClient.selectCertReportLogList(requestBean);
 		return response;
+	}
+
+	/**
+	 * 分页查询错误日志
+	 *
+	 * @param requestBean
+	 * @return
+	 */
+	@Override
+	public CertErrorReportLogResponse selectCertErrorReportLogList(CertErrorReportLogRequestBean requestBean) {
+		CertErrorReportLogResponse response =configClient.selectCertErrorReportLogList(requestBean);
+		return response;
+	}
+
+	/**
+	 * 重新跑批
+	 *
+	 * @param id
+	 */
+	@Override
+	public void updateErrorCount(Integer id) {
+		configClient.updateCertErrorCount(id);
 	}
 }

@@ -1,11 +1,13 @@
-package com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.scatterinvest;
+package com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.exception;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.hyjf.am.vo.hgreportdata.cert.CertErrLogVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
 import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.CustomConstants;
 import com.hyjf.cs.trade.mq.consumer.hgdatareport.cert.common.CertCallConstant;
+import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.exception.CertSendExceptionService;
 import com.hyjf.cs.trade.service.consumer.hgdatareport.cert.scatterinvest.CertScatterInveService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.rocketmq.client.consumer.DefaultMQPushConsumer;
@@ -20,23 +22,26 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Map;
 
 /**
- * @Description 合规数据上报 CERT 散标(标的)数据接口 （延时队列）
+ * @Description 合规数据上报 CERT 上报失败异常处理
  * @Author sunss
  * @Date 2019/1/21 10:23
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.CERT_SCATTER_INVEST_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.CERT_SCATTER_INVEST_GROUP)
-public class CertScatterInvestMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
-    private static final Logger logger = LoggerFactory.getLogger(CertScatterInvestMessageConsumer.class);
+@RocketMQMessageListener(topic = MQConstant.CERT_EXCEPTION_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.CERT_EXCEPTION_GROUP)
+public class CertSendErrorMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
+    private static final Logger logger = LoggerFactory.getLogger(CertSendErrorMessageConsumer.class);
 
-    private String thisMessName = "散标数据推送";
+    private String thisMessName = "上报失败异常处理";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
+    // 是否正在运行
+    private static boolean isRun = false;
 
     @Autowired
-    private CertScatterInveService certScatterInveService;
+    private CertSendExceptionService certSendExceptionService;
 
     @Override
     public void prepareStart(DefaultMQPushConsumer defaultMQPushConsumer) {
@@ -57,54 +62,36 @@ public class CertScatterInvestMessageConsumer implements RocketMQListener<Messag
             logger.error(logHeader + "接收到的消息为null！！！");
             return;
         }
+        if(isRun){
+            logger.error(logHeader + "正在运行！");
+            return;
+        }
         String msgBody = new String(message.getBody());
         logger.info(logHeader + "接收到的消息：" + msgBody);
-        JSONObject jsonObject;
-        try {
-            jsonObject = JSONObject.parseObject(msgBody);
-        } catch (Exception e) {
-            logger.error(logHeader + "解析消息体失败！！！", e);
-            return;
-        }
-
-        String borrowNid = jsonObject.getString("borrowNid");
-        String tradeDate = jsonObject.getString("tradeDate");
-        if (StringUtils.isBlank(borrowNid)) {
-            logger.error(logHeader + "通知参数不全！！！");
-            return;
-        }
         // 检查redis的值是否允许运行 允许返回true  不允许返回false
-        boolean canRun = certScatterInveService.checkCanRun();
+        boolean canRun = certSendExceptionService.checkCanRun();
         if(!canRun){
             logger.info(logHeader + "redis不允许上报！");
             return;
         }
+        isRun = true;
+
         // --> 消息处理
         try {
             // --> 调用service组装数据
-            JSONArray data = new JSONArray();
-            Map<String, Object> param = certScatterInveService.getSendData(borrowNid,"");
-            param.remove("groupByDate");
-            data.add(param);
-            logger.info(logHeader+"组装数据为："+data.toString());
-
-            // 上送数据
-            CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_SCATTER_INVEST, borrowNid, data);
-            try {
-                // 掉单用
-                if(tradeDate!=null&&!"".equals(tradeDate)){
-                    entity.setTradeDate(tradeDate);
-                }
-                entity = certScatterInveService.insertAndSendPost(entity);
-            } catch (Exception e) {
-                throw e;
+            // 查询待处理的异常
+            List<CertErrLogVO> errLogs = certSendExceptionService.getCertErrLogs();
+            for (CertErrLogVO item: errLogs) {
+                certSendExceptionService.insertData(item);
             }
             return;
         } catch (Exception e) {
             logger.error(logHeader + " 处理失败！！" + msgBody, e);
+            isRun = false;
             return;
         }finally {
             logger.info(logHeader + " 结束。");
+            isRun = false;
             return;
         }
     }

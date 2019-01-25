@@ -12,14 +12,15 @@ import com.hyjf.am.response.trade.BankReturnCodeConfigResponse;
 import com.hyjf.am.response.user.UtmPlatResponse;
 import com.hyjf.am.resquest.admin.*;
 import com.hyjf.am.resquest.config.*;
-import com.hyjf.am.vo.admin.*;
+import com.hyjf.am.vo.admin.CategoryVO;
+import com.hyjf.am.vo.admin.ContentHelpVO;
+import com.hyjf.am.vo.admin.HjhUserAuthConfigLogCustomizeVO;
 import com.hyjf.am.vo.admin.VersionVO;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
 import com.hyjf.am.vo.trade.account.BankInterfaceVO;
-import com.hyjf.am.vo.trade.cert.CertLogVO;
 import com.hyjf.am.vo.user.HjhUserAuthConfigVO;
 
 import javax.servlet.http.HttpServletRequest;
@@ -1533,4 +1534,18 @@ public interface AmConfigClient {
 	 * @return
 	 */
 	CertReportLogResponse selectCertReportLogList(CertReportLogRequestBean requestBean);
+
+	/**
+	 * 应急中心错误日志列表
+	 * @param requestBean
+	 * @return
+	 */
+	CertErrorReportLogResponse selectCertErrorReportLogList(CertErrorReportLogRequestBean requestBean);
+
+	/**
+	 * 修改应急中心错误
+	 * @param id
+	 * @return
+	 */
+	Integer updateCertErrorCount(Integer id);
 }

@@ -1,7 +1,9 @@
 package com.hyjf.admin.service.cert;
 
 import com.hyjf.admin.service.BaseAdminService;
+import com.hyjf.am.response.admin.CertErrorReportLogResponse;
 import com.hyjf.am.response.admin.CertReportLogResponse;
+import com.hyjf.am.resquest.admin.CertErrorReportLogRequestBean;
 import com.hyjf.am.resquest.admin.CertReportLogRequestBean;
 
 /**
@@ -18,4 +20,17 @@ public interface CertReportLogService extends BaseAdminService{
 	 * @return
 	 */
 	CertReportLogResponse selectCertReportLogList(CertReportLogRequestBean requestBean);
+
+	/**
+	 * 分页查询错误日志
+	 * @param requestBean
+	 * @return
+	 */
+	CertErrorReportLogResponse selectCertErrorReportLogList(CertErrorReportLogRequestBean requestBean);
+
+	/**
+	 * 重新跑批
+	 * @param id
+	 */
+	void updateErrorCount(Integer id);
 }
