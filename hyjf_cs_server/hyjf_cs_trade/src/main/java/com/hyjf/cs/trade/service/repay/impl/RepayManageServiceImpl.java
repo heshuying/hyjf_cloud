@@ -99,7 +99,7 @@ public class RepayManageServiceImpl extends BaseTradeServiceImpl implements Repa
      */
     @Override
     public BigDecimal getOrgRepayFeeWaitTotal(Integer userId) {
-        return amTradeClient.getUserRepayFeeWaitTotal(userId);
+        return amTradeClient.getOrgRepayFeeWaitTotal(userId);
     }
 
     /**

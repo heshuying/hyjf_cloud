@@ -1,5 +1,6 @@
-package com.hyjf.admin.beans;
+package com.hyjf.am.resquest.admin;
 
+import com.hyjf.am.vo.BasePage;
 import io.swagger.annotations.ApiModelProperty;
 
 import java.io.Serializable;
@@ -9,7 +10,7 @@ import java.io.Serializable;
  * @version OpenAccountEnquiryDefineResultBean, v0.1 2018/8/20 15:42
  * @Author: Zha Daojian
  */
-public class OpenAccountEnquiryDefineResultBean implements Serializable {
+public class OpenAccountEnquiryDefineRequest extends BasePage implements Serializable{
 
     @ApiModelProperty(value = "手机号")
     private String mobile;

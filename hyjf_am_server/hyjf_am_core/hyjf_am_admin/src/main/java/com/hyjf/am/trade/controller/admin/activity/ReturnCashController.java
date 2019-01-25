@@ -15,6 +15,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author tyy
@@ -36,7 +37,7 @@ public class ReturnCashController {
         List<InviterReturnDetail> inviterReturnDetailList = returnCashActivityService.selectInviterReturnDetailList(borrowNid);
         List<PerformanceReturnDetail> performanceReturnDetailList = returnCashActivityService.selectPerformanceReturnDetailList(borrowNid);
         if(!CollectionUtils.isEmpty(inviterReturnDetailList)&&!CollectionUtils.isEmpty(performanceReturnDetailList)) {
-            returnCashActivityService.updateJoinTime(nowTime, inviterReturnDetailList, performanceReturnDetailList);
+            nmUserService.updateJoinTime(nowTime, inviterReturnDetailList, performanceReturnDetailList);
         }
     }
     @PostMapping("/saveReturnCash")
@@ -44,7 +45,8 @@ public class ReturnCashController {
         //查询用户提出来
         InviterReturnCashCustomize inviterReturnCashCustomize = returnCashActivityService.selectReturnCashList(request.getUserId());
         List<NmUser> nmUserList = nmUserService.selectNmUserList(null);
-        returnCashActivityService.selectReturnCash(request.getUserId(),request.getOrderId(),
+        Map<String,Object> map = returnCashActivityService.selectReturnCash(request.getUserId(),request.getOrderId(),
                 request.getProductType(),request.getInvestMoney(),inviterReturnCashCustomize,nmUserList);
+        nmUserService.saveReutrnCash(map);
     }
 }

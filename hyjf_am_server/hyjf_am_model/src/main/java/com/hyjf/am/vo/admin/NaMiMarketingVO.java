@@ -35,8 +35,7 @@ public class NaMiMarketingVO extends BaseVO {
     /**
      * 注册日期时间  检索条件
      */
-    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss",timezone="GMT+8")
-    private Date regTime;
+    private String regTime;
     /**
      * 投资订单号
      */
@@ -106,11 +105,11 @@ public class NaMiMarketingVO extends BaseVO {
         this.refferName = refferName;
     }
 
-    public Date getRegTime() {
+    public String getRegTime() {
         return regTime;
     }
 
-    public void setRegTime(Date regTime) {
+    public void setRegTime(String regTime) {
         this.regTime = regTime;
     }
 

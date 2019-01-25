@@ -89,8 +89,6 @@ public class AuthServiceImpl extends BaseTradeServiceImpl implements AuthService
 			return true;
 		}
 		// 检查开关是否打开 没打开 不用校验
-		logger.info("this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus() - 1 != 0 :{}", this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus() - 1 != 0);
-		logger.info("this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus() :{}", this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
 		if (this.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus() - 1 != 0) {
 			return true;
 		}
