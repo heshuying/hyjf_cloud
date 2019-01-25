@@ -54,4 +54,30 @@ public class CertErrorLogServiceImpl implements CertErrorLogService {
 	public void insertCertErrorLog(CertErrLog log) {
 		certErrLogMapper.insert(log);
 	}
+
+	/**
+	 * 删除错误日志
+	 *
+	 * @param oldLogOrdId
+	 */
+	@Override
+	public void deleteCertErrByLogOrdId(String oldLogOrdId) {
+		CertErrLogExample example = new CertErrLogExample();
+		CertErrLogExample.Criteria cra = example.createCriteria();
+		cra.andLogOrdIdEqualTo(oldLogOrdId);
+		certErrLogMapper.deleteByExample(example);
+	}
+
+	/**
+	 * 修改错误次数加1
+	 *
+	 * @param log
+	 */
+	@Override
+	public void updateErrorLogCount(CertErrLog log) {
+		CertErrLogExample example = new CertErrLogExample();
+		CertErrLogExample.Criteria cra = example.createCriteria();
+		cra.andLogOrdIdEqualTo(log.getLogOrdId());
+		certErrLogMapper.updateByExampleSelective(log,example);
+	}
 }

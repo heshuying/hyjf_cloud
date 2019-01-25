@@ -55,4 +55,39 @@ public class CertErrLogController extends BaseConfigController{
         }
         return response;
     }
+
+    /**
+     * 删除错误日志
+     * @param oldLogOrdId
+     * @return
+     */
+    @GetMapping("/deleteCertErrByLogOrdId/{oldLogOrdId}")
+    public BooleanResponse deleteCertErrByLogOrdId(@PathVariable("oldLogOrdId") String oldLogOrdId){
+        BooleanResponse response = new BooleanResponse();
+        try{
+            certErrorLogService.deleteCertErrByLogOrdId(oldLogOrdId);
+            response.setResultBoolean(true);
+        }catch (Exception e){
+            response.setResultBoolean(false);
+        }
+        return response;
+    }
+
+    /**
+     * 修改错误次数加1
+     * @param logVO
+     * @return
+     */
+    @PostMapping("/updateErrorLogCount")
+    public BooleanResponse updateErrorLogCount(@RequestBody CertErrLogVO logVO){
+        BooleanResponse response = new BooleanResponse();
+        try{
+            CertErrLog log = CommonUtils.convertBean(logVO,CertErrLog.class);
+            certErrorLogService.updateErrorLogCount(log);
+            response.setResultBoolean(true);
+        }catch (Exception e){
+            response.setResultBoolean(false);
+        }
+        return response;
+    }
 }

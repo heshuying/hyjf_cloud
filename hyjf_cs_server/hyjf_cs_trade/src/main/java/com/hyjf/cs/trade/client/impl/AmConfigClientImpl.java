@@ -3,8 +3,8 @@ package com.hyjf.cs.trade.client.impl;
 import com.alicp.jetcache.anno.CacheRefresh;
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.Cached;
-import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.BooleanResponse;
+import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
 import com.hyjf.am.response.admin.CertReportLogResponse;
@@ -13,7 +13,6 @@ import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.admin.CertLogRequestBean;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
-import com.hyjf.am.vo.hgreportdata.cert.CertLogVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertErrLogVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertLogVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
@@ -357,6 +356,35 @@ public class AmConfigClientImpl implements AmConfigClient {
 	public boolean insertCertErrorLog(CertErrLogVO errLog) {
 		String url = "http://AM-CONFIG/am-config/certError/insertCertErrorLog";
 		BooleanResponse response = restTemplate.postForEntity(url,errLog,BooleanResponse.class).getBody();
+		if (Response.isSuccess(response)){
+			return response.getResultBoolean();
+		}
+		return false;
+	}
+
+	/**
+	 * 根据订单号删除错误日志
+	 *
+	 * @param oldLogOrdId
+	 */
+	@Override
+	public boolean deleteCertErrByLogOrdId(String oldLogOrdId) {
+		String url = "http://AM-CONFIG/am-config/certError/deleteCertErrByLogOrdId/"+oldLogOrdId;
+		BooleanResponse response = restTemplate.getForEntity(url,BooleanResponse.class).getBody();
+		if (Response.isSuccess(response)){
+			return response.getResultBoolean();
+		}
+		return false;
+	}
+
+	/**
+	 * 修改错误次数加1
+	 *
+	 */
+	@Override
+	public boolean updateErrorLogCount(CertErrLogVO logVO) {
+		String url = "http://AM-CONFIG/am-config/certError/updateErrorLogCount";
+		BooleanResponse response = restTemplate.postForEntity(url,logVO,BooleanResponse.class).getBody();
 		if (Response.isSuccess(response)){
 			return response.getResultBoolean();
 		}

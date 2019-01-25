@@ -5,8 +5,10 @@ package com.hyjf.cs.trade.client.impl;
 
 import com.hyjf.am.response.IntegerResponse;
 import com.hyjf.am.response.Response;
+import com.hyjf.am.response.trade.CertReportEntityResponse;
 import com.hyjf.am.response.trade.ChinapnrExclusiveLogWithBLOBsResponse;
 import com.hyjf.am.response.trade.ChinapnrLogResponse;
+import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
 import com.hyjf.am.vo.trade.ChinapnrExclusiveLogWithBLOBsVO;
 import com.hyjf.am.vo.trade.ChinapnrLogVO;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,6 +92,22 @@ public class CsMessageClientImpl implements CsMessageClient {
         ChinapnrLogResponse response = restTemplate.getForEntity(url,ChinapnrLogResponse.class).getBody();
         if (Response.isSuccess(response)){
             return response.getResultList();
+        }
+        return null;
+    }
+
+    /**
+     * 根据订单号查询
+     *
+     * @param logOrdId
+     * @return
+     */
+    @Override
+    public CertReportEntityVO getCertSendLogByLogOrdId(String logOrdId) {
+        String url = "http://CS-MESSAGE/cs-message/certStatistical/getCertSendLogByLogOrdId/"+logOrdId ;
+        CertReportEntityResponse response = restTemplate.getForEntity(url,CertReportEntityResponse.class).getBody();
+        if (Response.isSuccess(response)){
+            return response.getResult();
         }
         return null;
     }

@@ -28,4 +28,16 @@ public interface CertErrorLogService {
 	 * @param log
 	 */
 	void insertCertErrorLog(CertErrLog log);
+
+	/**
+	 * 删除错误日志
+	 * @param oldLogOrdId
+	 */
+    void deleteCertErrByLogOrdId(String oldLogOrdId);
+
+	/**
+	 * 修改错误次数加1
+	 * @param log
+	 */
+	void updateErrorLogCount(CertErrLog log);
 }

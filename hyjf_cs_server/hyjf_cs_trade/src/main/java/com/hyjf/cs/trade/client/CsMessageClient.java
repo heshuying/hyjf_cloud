@@ -5,6 +5,7 @@ package com.hyjf.cs.trade.client;
 
 import com.hyjf.am.vo.datacollect.AccountWebListVO;
 import com.hyjf.am.vo.datacollect.AppUtmRegVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertReportEntityVO;
 import com.hyjf.am.vo.trade.ChinapnrExclusiveLogWithBLOBsVO;
 import com.hyjf.am.vo.trade.ChinapnrLogVO;
 
@@ -46,4 +47,11 @@ public interface CsMessageClient {
      * @return
      */
     List<ChinapnrLogVO> getChinapnrLog(String ordId);
+
+    /**
+     * 根据订单号查询
+     * @param logOrdId
+     * @return
+     */
+    CertReportEntityVO getCertSendLogByLogOrdId(String logOrdId);
 }

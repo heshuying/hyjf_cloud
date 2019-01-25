@@ -152,4 +152,15 @@ public interface AmConfigClient {
 	 * @param errLog
 	 */
 	boolean insertCertErrorLog(CertErrLogVO errLog);
+
+	/**
+	 * 根据订单号删除错误日志
+	 * @param oldLogOrdId
+	 */
+	boolean deleteCertErrByLogOrdId(String oldLogOrdId);
+
+	/**
+	 * 修改错误次数加1
+	 */
+	boolean updateErrorLogCount(CertErrLogVO logVO);
 }
