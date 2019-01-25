@@ -65,7 +65,7 @@
 		FROM
 		 <choose>
             <when test='whereFlag == "0"'>
-                (SELECT * FROM ht_account_list
+                (SELECT * FROM ht_account_list l
 				where 1=1
                 <include refid="where-all-page-condition"/>
                 ORDER BY id DESC
