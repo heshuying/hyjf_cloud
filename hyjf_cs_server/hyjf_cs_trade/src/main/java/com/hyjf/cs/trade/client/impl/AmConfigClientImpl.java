@@ -13,6 +13,7 @@ import com.hyjf.am.resquest.admin.CertLogRequestBean;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.hgreportdata.cert.CertLogVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertErrLogVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
@@ -264,6 +265,21 @@ public class AmConfigClientImpl implements AmConfigClient {
 	@Override
 	public void holidays() {
 		restTemplate.getForEntity("http://AM-CONFIG/am-config/holidays/save", String.class);
+	}
+
+	/**
+	 * 获取待处理的异常
+	 *
+	 * @return
+	 */
+	@Override
+	public List<CertErrLogVO> getCertErrLogs() {
+		String url = "http://AM-CONFIG/am-config/certError/getCertErrLogs";
+		CertErrLogResponse response = restTemplate.getForEntity(url,CertErrLogResponse.class).getBody();
+		if (Response.isSuccess(response)){
+			return response.getResultList();
+		}
+		return null;
 	}
 
 	/**

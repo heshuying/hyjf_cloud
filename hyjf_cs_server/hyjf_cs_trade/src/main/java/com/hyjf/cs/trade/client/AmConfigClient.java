@@ -4,6 +4,7 @@ import com.hyjf.am.response.config.DebtConfigResponse;
 import com.hyjf.am.resquest.admin.CertLogRequestBean;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
+import com.hyjf.am.vo.hgreportdata.cert.CertErrLogVO;
 import com.hyjf.am.vo.hgreportdata.cert.CertLogVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
@@ -109,6 +110,12 @@ public interface AmConfigClient {
 	SmsConfigVO findSmsConfig();
 
 	void holidays();
+
+	/**
+	 * 获取待处理的异常
+	 * @return
+	 */
+    List<CertErrLogVO> getCertErrLogs();
 
 	/**
 	 * 应急中心 查找上报记录
