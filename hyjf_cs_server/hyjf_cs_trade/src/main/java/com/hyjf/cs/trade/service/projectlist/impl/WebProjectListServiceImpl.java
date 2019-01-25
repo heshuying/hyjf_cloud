@@ -1107,12 +1107,19 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 result.put("setPwdFlag", userVO.getIsSetPassword()); // 是否设置交易密码
                 result.put("isUserValid", userVO.getStatus());
                 //update by jijun 2018/04/09 合规接口改造一期
-                //自动投标授权
-                result.put("autoTenderAuthStatus", "");
-                //自动债转授权
-                result.put("autoCreditAuthStatus", "");
-                //缴费授权
-                result.put("paymentAuthStatus", "");
+                HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(Integer.valueOf(userId));
+                //自动投标授权状态 0未授权  1已授权
+                result.put("autoTenderAuthStatus", hjhUserAuth.getAutoInvesStatus());
+                //自动债转授权状态
+                result.put("autoCreditAuthStatus", hjhUserAuth.getAutoCreditStatus());
+                //服务费授权状态
+                result.put("paymentAuthStatus", hjhUserAuth.getAutoPaymentStatus());
+                //是否开启自动投标授权校验 0未开启 1已开启
+                result.put("autoTenderAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+                //是否进行自动债转~~
+                result.put("autoCreditAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+                //是否进行缴费~~
+                result.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
                 UserInfoVO userInfoVO = amUserClient.findUsersInfoById(Integer.valueOf(userId));
                 result.put("roleId",userInfoVO  !=null ? userInfoVO.getRoleId() : "");
 

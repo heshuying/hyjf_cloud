@@ -2016,4 +2016,21 @@ public class AmAdminClientImpl implements AmAdminClient {
         String url = "http://AM-ADMIN/am-market/returncash/saveReturnCash";
         restTemplate.postForEntity(url,returnCashRequest,String.class);
     }
+
+    /**
+     * 查询汇计划装让列表的求和
+     * add by cwyang 2018-01-24
+     * @param request
+     * @return
+     */
+    @Override
+    public MapResponse queryHjhDebtCreditTotal(HjhDebtCreditListRequest request) {
+        MapResponse response = restTemplate.
+                postForEntity("http://AM-ADMIN/am-trade/adminHjhDebtCredit/getListSum", request, MapResponse.class).
+                getBody();
+        if (response != null && Response.SUCCESS.equals(response.getRtn())) {
+            return response;
+        }
+        return null;
+    }
 }

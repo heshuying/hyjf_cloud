@@ -145,4 +145,10 @@ public class BankCallStatusConstant extends BankCallParamConstant implements Ser
 	/** 批次详情交易状态 F失败 */
 	public static final String BATCH_TXSTATE_TYPE_FAIL = "F";
 
+	/** 同步开户点单处理结果 n失败 */
+	public static final String BANKOPEN_USER_ACCOUNT_N = "n";
+
+	/** 同步开户点单处理结果 Y成功 */
+	public static final String BANKOPEN_USER_ACCOUNT_Y = "y";
+
 }

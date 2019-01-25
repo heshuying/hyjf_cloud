@@ -212,9 +212,9 @@
     </select>
 
     <select id="selectReturnDetail" resultType="com.hyjf.am.market.dao.model.auto.PerformanceReturnDetail" parameterType="java.lang.String">
-      select d.username userName,u.username refferName
-        from hyjf_user.ht_user d INNER JOIN hyjf_user.ht_spreads_user d1 on d1.spreads_user_id=d1.user_id
-	  INNER  JOIN   hyjf_user.ht_user u on d1.spreads_user_id=u.user_id
+        select d.username userName,u.username refferName
+        from hyjf_user.ht_user d left JOIN hyjf_user.ht_spreads_user d1 on d1.user_id=d.user_id
+	    left  JOIN   hyjf_user.ht_user u on d1.spreads_user_id=u.user_id
         where d.username =#{referName}
         limit 1
     </select>

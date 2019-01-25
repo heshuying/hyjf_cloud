@@ -36,6 +36,8 @@ public class SmsLogVO extends BaseVO {
 
     private String content;
 
+    private Integer isDisplay;
+
     private static final long serialVersionUID = 1L;
 
     public String getId() {
@@ -140,5 +142,13 @@ public class SmsLogVO extends BaseVO {
 
     public void setContent(String content) {
         this.content = content == null ? null : content.trim();
+    }
+
+    public Integer getIsDisplay() {
+        return isDisplay;
+    }
+
+    public void setIsDisplay(Integer isDisplay) {
+        this.isDisplay = isDisplay;
     }
 }

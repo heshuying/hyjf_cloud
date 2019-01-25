@@ -38,6 +38,7 @@ import com.hyjf.cs.common.util.Page;
 import com.hyjf.cs.trade.bean.*;
 import com.hyjf.cs.trade.bean.app.AppBorrowProjectInfoBeanVO;
 import com.hyjf.cs.trade.bean.app.AppTransferDetailBean;
+import com.hyjf.cs.trade.bean.repay.RepayPlanBean;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
@@ -1314,7 +1315,7 @@ public class AppProjectListServiceImpl extends BaseTradeServiceImpl implements A
             projectDetail.add(otherTableDataJson);
             resultMap.put(ProjectConstant.RES_PROJECT_DETAIL, projectDetail);
             // 查询相应的还款计划
-            List<BorrowRepayPlanCsVO> repayPlanList = repayPlanService.getRepayPlan(borrowNid);
+            List<RepayPlanBean> repayPlanList = repayPlanService.getAppRepayPlan(borrowNid);
             resultMap.put("repayPlan", repayPlanList);
             // 风控信息
             BorrowInfoWithBLOBsVO borrowInfoWithBLOBsVO = amTradeClient.selectBorrowInfoWithBLOBSVOByBorrowId(borrowNid);
