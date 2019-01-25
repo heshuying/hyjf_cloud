@@ -872,7 +872,7 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 		CertUserVO certUser=this.getCertUserByUserIdBorrowNid(borrow.getUserId(),accountList.getRemark());
 		if(certUser==null){
 			certUser=new CertUserVO();
-			certUser.setUserIdCardHash(getUserHashValue(borrow));
+			certUser.setUserIdCardHash(getUserHashValue(borrowAndInfoVO));
 		}
 
 		if("end".equals(borrowAndInfoVO.getBorrowStyle())||"endday".equals(borrowAndInfoVO.getBorrowStyle())){
@@ -1163,13 +1163,14 @@ public class CertTransactServiceImpl extends BaseHgCertReportServiceImpl impleme
 	}
 
 	private void borrowSuccess(CertAccountListCustomizeVO accountList, List<Map<String,Object>> list) throws Exception {
+		BorrowAndInfoVO borrowAndInfoVO = amTradeClient.selectBorrowByNid(accountList.getRemark());
 		BorrowInfoVO borrow = amTradeClient.getBorrowInfoByNid(accountList.getRemark());
 		Map<String, Object> param = new HashMap<String, Object>();
 		Map<String, Object> param1 = new HashMap<String, Object>();
 		CertUserVO certUser=this.getCertUserByUserIdBorrowNid(borrow.getUserId(),accountList.getRemark());
 		if(certUser==null){
 			certUser=new CertUserVO();
-			certUser.setUserIdCardHash(getUserHashValue(borrow));
+			certUser.setUserIdCardHash(getUserHashValue(borrowAndInfoVO));
 		}
 		/******************发送 发送1放款******************/
 		//接口版本号
