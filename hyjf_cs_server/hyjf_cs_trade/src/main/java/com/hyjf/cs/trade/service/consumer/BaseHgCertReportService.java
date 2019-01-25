@@ -74,13 +74,6 @@ public interface BaseHgCertReportService {
    CertUserVO getCertUserByUserId(Integer userId) ;
 
    /**
-    * 获取项目类型
-    * @param projectType
-    * @return
-    */
-   BorrowProjectTypeVO getBorrowProjectType(String projectType) ;
-
-   /**
     * 根据用户哈希值查询是否已经上报过了
     * @param userIdcardHash
     * @return

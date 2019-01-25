@@ -47,7 +47,7 @@ public class CertRepayPlanMessageConsumer implements RocketMQListener<MessageExt
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         // 设置为集群消费(区别于广播消费)
         defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
-        logger.info(logHeader+"====start=====");
+        logger.info(logHeader + "====start=====");
     }
 
     @Override
@@ -80,7 +80,7 @@ public class CertRepayPlanMessageConsumer implements RocketMQListener<MessageExt
 
         // 检查redis的值是否允许运行 允许返回true  不允许返回false
         boolean canRun = certRepayPlanService.checkCanRun();
-        if(!canRun){
+        if (!canRun) {
             logger.info(logHeader + "redis不允许上报！");
             return;
         }
@@ -88,14 +88,14 @@ public class CertRepayPlanMessageConsumer implements RocketMQListener<MessageExt
         // --> 消息处理
         try {
             // --> 调用service组装数据
-            JSONArray listRepay  = certRepayPlanService.getBorrowReyapPlan(borrowNid,new JSONArray(),false);
-            logger.info("数据："+listRepay.toString());
+            JSONArray listRepay = certRepayPlanService.getBorrowReyapPlan(borrowNid, new JSONArray(), false);
+            logger.info("数据：" + listRepay.toString());
 
             // 上送数据
             CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_REPAY_PLAN, borrowNid, listRepay);
             try {
                 // 掉单用
-                if(tradeDate!=null&&!"".equals(tradeDate)){
+                if (tradeDate != null && !"".equals(tradeDate)) {
                     entity.setTradeDate(tradeDate);
                 }
                 certRepayPlanService.insertAndSendPost(entity);

@@ -45,4 +45,17 @@ public class CertStatisticalServiceImpl extends BaseServiceImpl implements CertS
         u1.set("retMess", bean.getResp());
         this.certReportDao.update(q1, u1);
     }
+
+    /**
+     * 根据订单号查询
+     *
+     * @param logOrdId
+     * @return
+     */
+    @Override
+    public CertReportEntity getCertSendLogByLogOrdId(String logOrdId) {
+        Query q1 = Query.query(Criteria.where("logOrdId").is(logOrdId));
+        CertReportEntity entity = certReportDao.findOne(q1);
+        return entity;
+    }
 }

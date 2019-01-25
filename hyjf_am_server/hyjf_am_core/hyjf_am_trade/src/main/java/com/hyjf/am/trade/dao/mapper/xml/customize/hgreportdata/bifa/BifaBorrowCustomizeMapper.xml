@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hyjf.am.trade.dao.mapper.customize.hgreportdata.bifa.BifaBorrowCustomizeMapper" >
+
+	<select id="selectBorrowUserInfo" resultType="com.hyjf.am.vo.trade.borrow.BorrowAndInfoVO">
+		select
+		CASE
+		WHEN hbi.company_or_personal = '1' THEN ''
+		WHEN hbi.company_or_personal = '2' THEN hbm.name
+		ELSE '' END truename,
+		CASE
+		WHEN hbi.company_or_personal = '1' and hbu.social_credit_code is not null and hbu.social_credit_code!=''
+		THEN hbu.social_credit_code
+		WHEN hbi.company_or_personal = '1' and (hbu.social_credit_code is null or hbu.social_credit_code='')
+		THEN hbu.regist_code
+		WHEN hbi.company_or_personal = '2' THEN hbm.card_no
+		ELSE '' END idCard,
+		hb.recover_last_time recoverLastTime,
+		hbi.company_or_personal companyOrPersonal,
+		hb.borrow_nid borrowNid,
+		hb.repay_last_time repayLastTime
+		from ht_borrow hb
+		INNER JOIN ht_borrow_info hbi ON hb.borrow_nid = hbi.borrow_nid
+		left join ht_borrow_user hbu on hb.borrow_nid = hbu.borrow_nid
+		left join ht_borrow_maninfo hbm on hb.borrow_nid = hbm.borrow_nid
+		where hb.recover_last_time BETWEEN #{startDate} AND #{endDate}
+	</select>
+
+</mapper>

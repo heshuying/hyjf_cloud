@@ -489,6 +489,18 @@ public class RedisConstants {
      * 关联计划 borrowissue + creditNid/borrowNid
      */
     public final static String BORROW_ISSUE ="borrowissue:";
+    /**
+     * 北互金历史上报定时任务执行开关(0:关闭；1：开启)
+     */
+    public static final String BIFA_HISTORY_OPEN_FLAG = "bifa_history_open_flag";
+    /**
+     * 北互金历史上报定时任务开始时间
+     */
+    public static final String BIFA_HISTORY_START_YYYYMMDD = "bifa_history_start_yyyymmdd";
+    /**
+     * 北互金历史上报定时任务结束时间
+     */
+    public static final String BIFA_HISTORY_END_YYYYMMDD = "bifa_history_end_yyyymmdd";
 
     /**
      * 邮件发送key

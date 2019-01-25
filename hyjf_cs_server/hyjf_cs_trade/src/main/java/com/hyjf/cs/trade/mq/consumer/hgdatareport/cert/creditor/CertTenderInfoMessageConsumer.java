@@ -38,6 +38,7 @@ public class CertTenderInfoMessageConsumer implements RocketMQListener<MessageEx
 
     private String thisMessName = "债权信息信息推送";
     private String logHeader = "【" + CustomConstants.HG_DATAREPORT + CustomConstants.UNDERLINE + CustomConstants.HG_DATAREPORT_CERT + " " + thisMessName + "】";
+
     @Autowired
     private CertTenderInfoService certTenderInfoService;
 
@@ -48,11 +49,11 @@ public class CertTenderInfoMessageConsumer implements RocketMQListener<MessageEx
         defaultMQPushConsumer.setConsumeFromWhere(ConsumeFromWhere.CONSUME_FROM_LAST_OFFSET);
         // 设置为集群消费(区别于广播消费)
         defaultMQPushConsumer.setMessageModel(MessageModel.CLUSTERING);
-        logger.info(logHeader+"====start=====");
+        logger.info(logHeader + "====start=====");
     }
 
     @Override
-    public void  onMessage(MessageExt msg)  {
+    public void onMessage(MessageExt msg) {
         logger.info(logHeader + " 开始。");
         // --> 消息内容校验
         if (msg == null || msg.getBody() == null) {
@@ -73,7 +74,7 @@ public class CertTenderInfoMessageConsumer implements RocketMQListener<MessageEx
 
         // 检查redis的值是否允许运行 允许返回true  不允许返回false
         boolean canRun = certTenderInfoService.checkCanRun();
-        if(!canRun){
+        if (!canRun) {
             logger.info(logHeader + "redis不允许上报！");
             return;
         }
@@ -89,15 +90,15 @@ public class CertTenderInfoMessageConsumer implements RocketMQListener<MessageEx
         try {
 
             // --> 调用service组装数据
-            JSONArray listRepay  = new JSONArray();
-            listRepay = certTenderInfoService.getBorrowTender(borrowNid,new JSONArray(),false);
-            logger.info("数据："+listRepay.toString());
+            JSONArray listRepay = new JSONArray();
+            listRepay = certTenderInfoService.getBorrowTender(borrowNid, new JSONArray(), false);
+            logger.info("数据：" + listRepay.toString());
 
             // 上送数据
             CertReportEntityVO entity = new CertReportEntityVO(thisMessName, CertCallConstant.CERT_INF_TYPE_CREDITOR, borrowNid, listRepay);
             try {
                 // 掉单用
-                if(tradeDate!=null&&!"".equals(tradeDate)){
+                if (tradeDate != null && !"".equals(tradeDate)) {
                     entity.setTradeDate(tradeDate);
                 }
                 certTenderInfoService.insertAndSendPost(entity);

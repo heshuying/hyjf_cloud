@@ -553,14 +553,32 @@ public interface MQConstant {
 	String CERT_CERT_TRANSFER_STATUS_GROUP = "CERT_CERT_TRANSFER_STATUS_GROUP";
 	String CERT_CERT_TRANSFER_STATUS_TOPIC = "CERT_CERT_TRANSFER_STATUS_TOPIC";
 	String CERT_CERT_TRANSFER_STATUS_TAG = "CERT_CERT_TRANSFER_STATUS_TAG";
+	/**转让状态*/
+	String CERT_CERT_TRANSACT_GROUP = "CERT_CERT_TRANSACT_GROUP";
+	String CERT_CERT_TRANSACT_TOPIC = "CERT_CERT_TRANSACT_TOPIC";
+	String CERT_CERT_TRANSACT_TAG = "CERT_CERT_TRANSACT_TAG";
+
+	/** 承接信息*/
+	String CERT_CREDITTENDERINFO_GROUP = "CERT_CREDITTENDERINFO_GROUP";
+	String CERT_CREDITTENDERINFO_TOPIC = "CERT_CREDITTENDERINFO_TOPIC";
+	String CERT_CREDITTENDERINFO_TAG = "CERT_CREDITTENDERINFO_TAG";
 
 	/**异常处理*/
 	String CERT_EXCEPTION_GROUP = "CERT_EXCEPTION_GROUP";
 	String CERT_EXCEPTION_TOPIC = "CERT_EXCEPTION_TOPIC";
 	String CERT_EXCEPTION_TAG = "CERT_EXCEPTION_TAG";
 
+	/**查询批次数据入库消息*/
+	String CERT_GETYIBU_MESSAGE_GROUP = "CERT_GETYIBU_MESSAGE_GROUP";
+	String CERT_GETYIBU_MESSAGE_TOPIC = "CERT_GETYIBU_MESSAGE_TOPIC";
+	String CERT_GETYIBU_MESSAGE_TAG = "CERT_GETYIBU_MESSAGE_TAG";
 	/**--------------------------------- 应急中心 -------------------------------------*/
 
+	/**--------------------------------- 北互金start -------------------------------------*/
+	String BIFA_BORROW_STATUS_GROUP = "BIFA_BORROW_STATUS_GROUP";
+	String BIFA_CREDITTENDERINFO_GROUP = "BIFA_CREDITTENDERINFO_GROUP";
+
+	/**--------------------------------- 北互金end -------------------------------------*/
 
 	/**--------------------------------- 平台公用RocketMQ常量 -------------------------------------*/
 	// TOPIC：开户

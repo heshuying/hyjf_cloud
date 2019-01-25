@@ -101,6 +101,12 @@
 			<artifactId>wsdl4j</artifactId>
 			<version>1.4</version>
 		</dependency>
+
+		<dependency>
+			<groupId>commons-logging</groupId>
+			<artifactId>commons-logging</artifactId>
+			<version>1.0.4</version>
+		</dependency>
 		<!-- axis 1.4 jar end -->
 
 		<dependency>
