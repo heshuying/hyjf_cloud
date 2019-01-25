@@ -329,30 +329,6 @@ public class BaseHgCertReportServiceImpl  implements BaseHgCertReportService {
     }
 
     /**
-     * 获取项目类型
-     *
-     * @param projectType
-     * @return
-     */
-    @Override
-    public BorrowProjectTypeVO getBorrowProjectType(String projectType) {
-        if (StringUtils.isBlank(projectType)) {
-            return null;
-        }
-        BorrowProjectTypeVO borrowProjectType = null;
-        /*// 查找用户
-        BorrowProjectTypeExample borrowProjectTypeExample = new BorrowProjectTypeExample();
-        BorrowProjectTypeExample.Criteria criteria2 = borrowProjectTypeExample.createCriteria();
-        criteria2.andBorrowCdEqualTo(projectType);
-        List<BorrowProjectType> list = borrowProjectTypeMapper.selectByExample(borrowProjectTypeExample);
-        if (list != null && !list.isEmpty()) {
-            borrowProjectType = list.get(0);
-
-        }*/
-        return borrowProjectType;
-    }
-
-    /**
      * 获得批次号
      * @return
      */
