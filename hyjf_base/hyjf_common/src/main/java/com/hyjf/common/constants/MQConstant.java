@@ -549,4 +549,52 @@ public interface MQConstant {
 
 	/**--------------------------------- 应急中心 -------------------------------------*/
 
+
+	/**--------------------------------- 平台公用RocketMQ常量 -------------------------------------*/
+	// TOPIC：开户
+	String HYJF_TOPIC = "HYJF_TOPIC";
+	// TAG：开户--成功
+	String OPEN_ACCOUNT_SUCCESS_GROUP = "OPEN_ACCOUNT_SUCCESS_GROUP";
+	String OPEN_ACCOUNT_SUCCESS_TAG = "OPEN_ACCOUNT_SUCCESS_TAG";
+
+	// TAG：用户信息--修改
+	String USERINFO_CHANGE_GROUP = "USERINFO_CHANGE_GROUP";
+	String USERINFO_CHANGE_TAG = "USERINFO_CHANGE_TAG";
+
+	// TAG：发标--投资中
+	String ISSUE_INVESTING_GROUP = "ISSUE_INVESTING_GROUP";
+	String ISSUE_INVESTING_TAG = "ISSUE_INVESTING_TAG";
+	/** TAG：发标--投资完成(满标) */
+	String ISSUE_INVESTED_GROUP = "ISSUE_INVESTED_GROUP";
+	String ISSUE_INVESTED_TAG = "ISSUE_INVESTED_TAG";
+
+	// TAG：放款--放款成功
+	String LOAN_SUCCESS_GROUP = "LOAN_SUCCESS_GROUP";
+	String LOAN_SUCCESS_TAG = "LOAN_SUCCESS_TAG";
+
+	// TAG：转让--转让成功
+	String TRANSFER_SUCCESS_GROUP = "TRANSFER_SUCCESS_GROUP";
+	String TRANSFER_SUCCESS_TAG = "TRANSFER_SUCCESS_TAG";
+
+	// TAG：承接--单笔承接成功
+	String UNDERTAKE_SINGLE_SUCCESS_GROUP = "UNDERTAKE_SINGLE_SUCCESS_GROUP";
+	String UNDERTAKE_SINGLE_SUCCESS_TAG = "UNDERTAKE_SINGLE_SUCCESS_TAG";
+	// TAG：承接--全部承接失败
+	String UNDERTAKE_ALL_FAIL_GROUP = "UNDERTAKE_ALL_FAIL_GROUP";
+	String UNDERTAKE_ALL_FAIL_TAG = "UNDERTAKE_ALL_FAIL_TAG";
+	// TAG：承接--全部承接成功
+	String UNDERTAKE_ALL_SUCCESS_GROUP = "UNDERTAKE_ALL_SUCCESS_GROUP";
+	String UNDERTAKE_ALL_SUCCESS_TAG = "UNDERTAKE_ALL_SUCCESS_TAG";
+
+	// TAG：还款--单笔还款成功
+	String REPAY_SINGLE_SUCCESS_GROUP = "REPAY_SINGLE_SUCCESS_GROUP";
+	String REPAY_SINGLE_SUCCESS_TAG = "REPAY_SINGLE_SUCCESS_TAG";
+	// TAG：还款--全部还款成功
+	String REPAY_ALL_SUCCESS_GROUP = "REPAY_ALL_SUCCESS_GROUP";
+	String REPAY_ALL_SUCCESS_TAG = "REPAY_ALL_SUCCESS_TAG";
+	/**--------------------------------- 平台公用RocketMQ常量 -------------------------------------*/
+
+	// 合规互金上报用MQ延迟发送等级（30s）
+	int HG_REPORT_DELAY_LEVEL = 4;
+
 }
