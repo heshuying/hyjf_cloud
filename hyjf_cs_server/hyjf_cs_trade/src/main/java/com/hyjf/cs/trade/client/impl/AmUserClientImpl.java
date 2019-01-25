@@ -1043,4 +1043,55 @@ public class AmUserClientImpl implements AmUserClient {
 		}
 		return null;
 	}
+
+	/**
+	 * 查询是否已经上送了
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public CertUserVO getCertUserByUserId(Integer userId) {
+		CertUserResponse response = restTemplate.getForEntity(
+				userService+"certUser/getCertUserByUserId/" + userId ,
+				CertUserResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据用户哈希值查询是否已经上报过了
+	 *
+	 * @param userIdcardHash
+	 * @return
+	 */
+	@Override
+	public CertUserVO getCertUserByUserIdcardHash(String userIdcardHash) {
+		CertUserResponse response = restTemplate.getForEntity(
+				userService+"certUser/getCertUserByUserIdcardHash/" + userIdcardHash ,
+				CertUserResponse.class).getBody();
+		if (response != null) {
+			return response.getResult();
+		}
+		return null;
+	}
+
+	/**
+	 * 根据用户ID查询上报的用户
+	 *
+	 * @param userId
+	 * @return
+	 */
+	@Override
+	public List<CertUserVO> getCertUsersByUserId(int userId) {
+		CertUserResponse response = restTemplate.getForEntity(
+				userService+"certUser/getCertUsersByUserId/" + userId ,
+				CertUserResponse.class).getBody();
+		if (response != null) {
+			return response.getResultList();
+		}
+		return null;
+	}
 }

@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.client.impl;
 import com.alicp.jetcache.anno.CacheRefresh;
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.Cached;
+import com.hyjf.am.response.BooleanResponse;
 import com.hyjf.am.response.Response;
 import com.hyjf.am.response.admin.AdminBankConfigResponse;
 import com.hyjf.am.response.config.*;
@@ -10,6 +11,7 @@ import com.hyjf.am.response.trade.*;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.hgreportdata.cert.CertErrLogVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertLogVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
@@ -276,5 +278,36 @@ public class AmConfigClientImpl implements AmConfigClient {
 			return response.getResultList();
 		}
 		return null;
+	}
+
+	/**
+	 * 插入发送记录表
+	 *
+	 * @param certLog
+	 * @return
+	 */
+	@Override
+	public boolean insertCertLog(CertLogVO certLog) {
+		String url = "http://AM-CONFIG/am-config/certLog/insertCertLog";
+		BooleanResponse response = restTemplate.postForEntity(url,certLog,BooleanResponse.class).getBody();
+		if (Response.isSuccess(response)){
+			return response.getResultBoolean();
+		}
+		return false;
+	}
+
+	/**
+	 * 插入错误日志表
+	 *
+	 * @param errLog
+	 */
+	@Override
+	public boolean insertCertErrorLog(CertErrLogVO errLog) {
+		String url = "http://AM-CONFIG/am-config/certError/insertCertErrorLog";
+		BooleanResponse response = restTemplate.postForEntity(url,errLog,BooleanResponse.class).getBody();
+		if (Response.isSuccess(response)){
+			return response.getResultBoolean();
+		}
+		return false;
 	}
 }

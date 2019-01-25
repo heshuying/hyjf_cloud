@@ -4,6 +4,7 @@ import com.hyjf.am.response.config.DebtConfigResponse;
 import com.hyjf.am.resquest.trade.ContentArticleRequest;
 import com.hyjf.am.vo.config.*;
 import com.hyjf.am.vo.hgreportdata.cert.CertErrLogVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertLogVO;
 import com.hyjf.am.vo.trade.BankConfigVO;
 import com.hyjf.am.vo.trade.BankReturnCodeConfigVO;
 import com.hyjf.am.vo.trade.JxBankConfigVO;
@@ -114,4 +115,17 @@ public interface AmConfigClient {
 	 * @return
 	 */
     List<CertErrLogVO> getCertErrLogs();
+
+	/**
+	 * 插入发送记录表
+	 * @param certLog
+	 * @return
+	 */
+	boolean insertCertLog(CertLogVO certLog);
+
+	/**
+	 * 插入错误日志表
+	 * @param errLog
+	 */
+	boolean insertCertErrorLog(CertErrLogVO errLog);
 }

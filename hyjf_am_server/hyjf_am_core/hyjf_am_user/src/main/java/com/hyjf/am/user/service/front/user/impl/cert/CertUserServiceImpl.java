@@ -75,4 +75,41 @@ public class CertUserServiceImpl extends BaseServiceImpl implements CertUserServ
 
         return null;
     }
+
+    /**
+     * userId查询
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<CertUser> getCertUserByUserId(Integer userId) {
+        CertUserExample example = new CertUserExample();
+        CertUserExample.Criteria cra = example.createCriteria();
+        cra.andUserIdEqualTo(userId);
+        List<CertUser> list = certUserMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list;
+        }
+
+        return null;
+    }
+
+    /**
+     * 根据用户哈希值查询是否已经上报过了
+     *
+     * @param userIdcardHash
+     * @return
+     */
+    @Override
+    public List<CertUser> getCertUserByUserIdcardHash(String userIdcardHash) {
+        CertUserExample example = new CertUserExample();
+        CertUserExample.Criteria cra = example.createCriteria();
+        cra.andUserIdCardHashEqualTo(userIdcardHash);
+        List<CertUser> list = certUserMapper.selectByExample(example);
+        if (list != null && list.size() > 0) {
+            return list;
+        }
+        return null;
+    }
 }

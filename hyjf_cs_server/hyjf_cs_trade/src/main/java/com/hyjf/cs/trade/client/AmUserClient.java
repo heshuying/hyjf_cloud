@@ -445,4 +445,25 @@ public interface AmUserClient {
 	 * @return
 	 */
 	CertUserVO getCertUserByUserIdBorrowNid(int userId, String borrowNid);
+
+	/**
+	 * 查询是否已经上送了
+	 * @param userId
+	 * @return
+	 */
+    CertUserVO getCertUserByUserId(Integer userId);
+
+	/**
+	 * 根据用户哈希值查询是否已经上报过了
+	 * @param userIdcardHash
+	 * @return
+	 */
+	CertUserVO getCertUserByUserIdcardHash(String userIdcardHash);
+
+	/**
+	 * 根据用户ID查询上报的用户
+	 * @param userId
+	 * @return
+	 */
+	List<CertUserVO> getCertUsersByUserId(int userId);
 }
