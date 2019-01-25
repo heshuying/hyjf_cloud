@@ -279,11 +279,16 @@ public class BorrowRegistExceptionServiceImpl extends BaseServiceImpl implements
                                                 // 非受托支付传5
                                                 amTradeClient.updateBorrowAsset(borrowVO,5);
                                             } else {
-                                                logger.debug("@@19@@");
+                                                logger.debug("@@state@@");
                                                 result.put("success", "1");
-                                                result.put("msg", "备案成功后，更新相应的状态失败,请联系客服！");
+                                                result.put("msg", "标的状态为" + state + ",不做异常处理");
                                             }
                                         }
+                                    }else{
+                                        // state为其他数值
+                                        logger.debug("@@19@@");
+                                        result.put("success", "1");
+                                        result.put("msg", "备案成功后，更新相应的状态失败,请联系客服！");
                                     }
                                 } else {
                                     logger.debug("@@20@@");
