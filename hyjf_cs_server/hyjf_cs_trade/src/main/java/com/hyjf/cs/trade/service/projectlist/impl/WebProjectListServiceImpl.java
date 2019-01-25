@@ -1131,16 +1131,17 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 // 风险测评标识
                 result.put("riskFlag", String.valueOf(userVO.getIsEvaluationFlag()));
                 // 风险测评改造 mod by liuyang 20180111 end
-            } else {
-                result.put("loginFlag", "0");// 判断是否登录
-                result.put("openFlag", "0");
-                result.put("loginFlag", "0");
-                result.put("setPwdFlag", "0");
-                result.put("isUserValid", "0");
-                result.put("riskFlag", "0");// 是否进行过风险测评 0未测评 1已测评
+                } else {
+                    result.put("loginFlag", "0");// 判断是否登录
+                    result.put("openFlag", "0");
+                    result.put("loginFlag", "0");
+                    result.put("setPwdFlag", "0");
+                    result.put("isUserValid", "0");
+                    result.put("riskFlag", "0");// 是否进行过风险测评 0未测评 1已测评
+                }
+            } catch (Exception e) {
+                logger.warn("散标专区债权转让详情异常:["+ e +"]");
             }
-        } catch (Exception e) {
-        }
         webResult.setData(result);
         return webResult;
     }
@@ -1276,11 +1277,6 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         // 阀值
         Integer threshold = 1000;
         result.put("threshold", threshold);
-        // 缴费授权
-        //update by jijun 2018/04/09 合规接口改造一期
-        result.put("autoTenderAuthStatus", "");
-        result.put("autoCreditAuthStatus", "");
-        result.put("paymentAuthStatus", "");
 
         //加入总人数
         Map<String, Object> params = new HashMap<String, Object>();
@@ -1472,23 +1468,13 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                     //服务费授权状态
                     result.put("paymentAuthStatus", "0");
                 }
-                //是否开启自动投标授权校验 0未开启 1已开启
-                result.put("autoTenderAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
-                //是否进行自动债转~~
-                result.put("autoCreditAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
-                //是否进行缴费~~
-                result.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
-
                 // 合规三期
                 result.put("isCheckUserRole",systemConfig.getRoleIsopen());
             } else {
                 //状态位用于判断tab的是否可见
                 result.put("autoTenderAuthStatus", "0");
-                result.put("autoTenderAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
                 result.put("autoCreditAuthStatus", "0");
-                result.put("autoCreditAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
                 result.put("paymentAuthStatus", "0");
-                result.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
                 //状态位用于判断tab的是否可见
                 result.put("loginFlag", "0");//登录状态 0未登陆 1已登录
                 result.put("openFlag", "0"); //开户状态 0未开户 1已开户
@@ -1497,6 +1483,12 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 result.put("setPwdFlag", "0");//是否设置过交易密码 0未设置 1已设置
                 result.put("forbiddenFlag", "0");//是否禁用 0未禁用 1已禁用
             }
+            //是否开启自动投标授权校验 0未开启 1已开启
+            result.put("autoTenderAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+            //是否进行自动债转~~
+            result.put("autoCreditAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+            //是否进行缴费~~
+            result.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
         }
         webResult.setData(result);
         return webResult;
