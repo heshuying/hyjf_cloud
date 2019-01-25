@@ -13,6 +13,7 @@ import com.hyjf.am.resquest.api.AsseStatusRequest;
 import com.hyjf.am.resquest.api.AutoTenderComboRequest;
 import com.hyjf.am.resquest.app.AppTradeDetailBeanRequest;
 import com.hyjf.am.resquest.assetpush.InfoBean;
+import com.hyjf.am.resquest.hgreportdata.cert.CertRequest;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.*;
 import com.hyjf.am.resquest.user.BankAccountBeanRequest;
@@ -31,6 +32,7 @@ import com.hyjf.am.vo.app.AppTradeListCustomizeVO;
 import com.hyjf.am.vo.bank.BankCallBeanVO;
 import com.hyjf.am.vo.callcenter.CallCenterAccountDetailVO;
 import com.hyjf.am.vo.config.ContentArticleVO;
+import com.hyjf.am.vo.hgreportdata.cert.CertAccountListCustomizeVO;
 import com.hyjf.am.vo.market.AppAdsCustomizeVO;
 import com.hyjf.am.vo.market.AppReapyCalendarResultVO;
 import com.hyjf.am.vo.task.autoreview.BorrowCommonCustomizeVO;
@@ -2630,5 +2632,31 @@ public interface AmTradeClient {
      * @return
      */
     BigDecimal getRedPackageSum(String realTenderId);
+
+    List<CertAccountListCustomizeVO> queryCertAccountList(CertRequest request);
+
+    List<AccountListVO> getAccountListVOListByRequest(CertRequest certTransactRequest);
+
+    List<BorrowRepayVO> getBorrowRepayListByRequest(CertRequest certRequest);
+
+    List<BorrowRepayPlanVO> getBorrowRepayPlanListByRequest(CertRequest certRequest);
+
+    List<CouponRecoverVO> getCouponRecoverListByCertRequest(CertRequest certRequest);
+
+    List<BorrowTenderCpnVO> getBorrowTenderCpnListByCertRequest(CertRequest certRequest);
+
+    List<CouponRealTenderVO> getCouponRealTenderListByCertRequest(CertRequest certRequest);
+
+    List<BorrowRecoverVO> selectBorrowRecoverListByRequest(CertRequest certRequest);
+
+    List<HjhDebtCreditRepayVO> getHjhDebtCreditRepayListByRequest(CertRequest certRequest);
+
+    List<CreditRepayVO> getCreditRepayListByRequest(CertRequest certRequest);
+
+    List<BorrowRecoverPlanVO> selectBorrowRecoverPlanListByRequest(CertRequest certRequest);
+
+    List<HjhDebtCreditRepayVO> getHjhDebtCreditRepayListByRepayOrdId(CertRequest certRequest);
+
+    List<CreditRepayVO> getCreditRepayListByRepayOrdId(CertRequest certRequest);
 }
 
