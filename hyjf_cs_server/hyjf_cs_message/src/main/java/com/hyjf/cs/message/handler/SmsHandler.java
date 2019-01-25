@@ -143,6 +143,67 @@ public class SmsHandler {
 	}
 
 	/**
+	 *
+	 * 根据电话号码,消息内容发送消息
+	 *
+	 * @param mobile
+	 *            电话号码,多个号码拿逗号分隔
+	 * @param messageStr
+	 *            发送的消息内容
+	 * @param type
+	 *            短信发送类型
+	 * @param sender
+	 *            发送者,默认为【汇盈金服】
+	 * @return 返回结果,0表示发送成功
+	 * @throws Exception   AAAAAAAAAAAAAAA
+	 */
+	public Integer sendMessage(String mobile, String messageStr, String type, String sender, String channelType, Integer isDisplay)
+			throws Exception {
+		String smsSendUrl = smsProperties.getUrl();
+		Map<String, String> paramMap = getParamMap(channelType);
+		paramMap.put("phone", mobile);
+		if (CustomConstants.CHANNEL_TYPE_MARKETING.equals(channelType)) {
+			paramMap.put("message", smsProperties.getTitle() + messageStr + smsProperties.getSuffix());
+			smsSendUrl = smsProperties.getMarketUrl();
+		} else {
+			paramMap.put("message", smsProperties.getTitle() + messageStr);
+		}
+
+		String result = null;
+		int status = 0;
+		if (!PropertiesConfig.isPassSend(mobile)) {
+			logger.info("测试环境非白名单内不发送短信, mobile is : {}", mobile);
+			status = 1;
+		} else {
+			result = HttpDeal.post(smsSendUrl, paramMap).trim();
+			logger.info("短信发送结果: {}", result);
+			if (StringUtils.isBlank(result)) {
+				logger.error("调用短信平台失败...parmMap is：{}", JSONObject.toJSONString(paramMap));
+				return 0;
+			}
+			XStream xStream = new XStream();
+			xStream.alias("response", SmsResponse.class);
+			status = ((SmsResponse) xStream.fromXML(result)).getError();
+		}
+
+		SmsLog smsLog = new SmsLog();
+		smsLog.setType(type);
+		smsLog.setContent(messageStr);// 短信内容
+		smsLog.setPosttime(GetDate.getNowTime10());
+		smsLog.setMobile(mobile);
+		smsLog.setIsDisplay(isDisplay);
+		if (StringUtils.isEmpty(sender)) {
+			smsLog.setSender(smsProperties.getTitle());
+		} else {
+			smsLog.setSender(sender);
+		}
+		smsLog.setStatus(status);
+		// 入库
+		smsLogDao.save(smsLog);
+		return status;
+	}
+
+	/**
 	 * 通知配置,根据模版给指定管理员手机号发送消息（满标，标到期等）
 	 *
 	 * @param tplCode
