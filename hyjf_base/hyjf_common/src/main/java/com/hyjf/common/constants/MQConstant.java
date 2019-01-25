@@ -568,6 +568,10 @@ public interface MQConstant {
 	String CERT_EXCEPTION_TOPIC = "CERT_EXCEPTION_TOPIC";
 	String CERT_EXCEPTION_TAG = "CERT_EXCEPTION_TAG";
 
+	/**查询批次数据入库消息*/
+	String CERT_GETYIBU_MESSAGE_GROUP = "CERT_GETYIBU_MESSAGE_GROUP";
+	String CERT_GETYIBU_MESSAGE_TOPIC = "CERT_GETYIBU_MESSAGE_TOPIC";
+	String CERT_GETYIBU_MESSAGE_TAG = "CERT_GETYIBU_MESSAGE_TAG";
 	/**--------------------------------- 应急中心 -------------------------------------*/
 
 	/**--------------------------------- 北互金start -------------------------------------*/

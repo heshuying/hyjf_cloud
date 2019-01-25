@@ -30,7 +30,7 @@ import java.util.List;
  * @Date 2018/12/25 17:57
  */
 @Service
-@RocketMQMessageListener(topic = MQConstant.CERT_BORROW_REPAYMENTPLAN_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.CERT_BORROW_REPAYMENTPLAN_GROUP)
+@RocketMQMessageListener(topic = MQConstant.CERT_GETYIBU_MESSAGE_TOPIC, selectorExpression = "*", consumerGroup = MQConstant.CERT_GETYIBU_MESSAGE_GROUP)
 public class CertGetYiBuMessageMessageConsumer implements RocketMQListener<MessageExt>, RocketMQPushConsumerLifecycleListener {
 
     Logger logger = LoggerFactory.getLogger(CertGetYiBuMessageMessageConsumer.class);
