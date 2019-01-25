@@ -4,50 +4,165 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 public class ProductList implements Serializable {
+    /**
+     * id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 产品ID
+     *
+     * @mbggenerated
+     */
     private Integer productId;
 
+    /**
+     * 投资金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal amount;
 
+    /**
+     * 投资时间
+     *
+     * @mbggenerated
+     */
     private Integer investTime;
 
+    /**
+     * 计息时间
+     *
+     * @mbggenerated
+     */
     private Integer interestTime;
 
+    /**
+     * 有效天数
+     *
+     * @mbggenerated
+     */
     private Integer validDays;
 
+    /**
+     * 已赎回金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal redeemed;
 
+    /**
+     * 剩余金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal restAmount;
 
+    /**
+     * 推荐人ID
+     *
+     * @mbggenerated
+     */
     private Integer referee;
 
+    /**
+     * 大区ID
+     *
+     * @mbggenerated
+     */
     private Integer area;
 
+    /**
+     * 分公司ID
+     *
+     * @mbggenerated
+     */
     private Integer company;
 
+    /**
+     * 部门ID
+     *
+     * @mbggenerated
+     */
     private Integer department;
 
+    /**
+     * 投资资金状态
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 订单号
+     *
+     * @mbggenerated
+     */
     private String orderId;
 
+    /**
+     * 订单日期
+     *
+     * @mbggenerated
+     */
     private String orderDate;
 
+    /**
+     * 利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal interest;
 
+    /**
+     * 客户端0PC，1微信2安卓APP，3IOS APP，4其他
+     *
+     * @mbggenerated
+     */
     private Integer client;
 
+    /**
+     * 当前汇天利账户可用本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal balance;
 
+    /**
+     * 放款id
+     *
+     * @mbggenerated
+     */
     private String loansId;
 
+    /**
+     * 放款order_date
+     *
+     * @mbggenerated
+     */
     private String loansDate;
 
+    /**
+     * 是否为对公账户投资 0：否 1：是
+     *
+     * @mbggenerated
+     */
     private Integer isNew;
 
+    /**
+     * 投资状态：0成功，1未付款，2失败    默认0
+     *
+     * @mbggenerated
+     */
     private Integer investStatus;
 
     private static final long serialVersionUID = 1L;

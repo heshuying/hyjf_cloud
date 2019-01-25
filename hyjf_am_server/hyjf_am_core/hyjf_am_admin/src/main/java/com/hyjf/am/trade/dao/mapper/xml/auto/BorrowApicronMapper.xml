@@ -37,6 +37,7 @@
     <result column="plan_nid" property="planNid" jdbcType="VARCHAR" />
     <result column="ordid" property="ordid" jdbcType="VARCHAR" />
     <result column="is_allrepay" property="isAllrepay" jdbcType="TINYINT" />
+    <result column="agreement_status" property="agreementStatus" jdbcType="TINYINT" />
     <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
     <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
   </resultMap>
@@ -107,7 +108,7 @@
     user_name, borrow_account, borrow_period, batch_no, batch_amount, batch_counts, batch_service_fee, 
     tx_amount, tx_counts, fail_times, suc_counts, suc_amount, fail_counts, fail_amount, 
     service_fee, tx_date, tx_time, seq_no, bank_seq_no, plan_nid, ordid, is_allrepay, 
-    create_time, update_time
+    agreement_status, create_time, update_time
   </sql>
   <sql id="Blob_Column_List" >
     `data`
@@ -181,8 +182,9 @@
       suc_amount, fail_counts, fail_amount, 
       service_fee, tx_date, tx_time, 
       seq_no, bank_seq_no, plan_nid, 
-      ordid, is_allrepay, create_time, 
-      update_time, `data`)
+      ordid, is_allrepay, agreement_status, 
+      create_time, update_time, `data`
+      )
     values (#{nid,jdbcType=VARCHAR}, #{userId,jdbcType=INTEGER}, #{borrowNid,jdbcType=VARCHAR}, 
       #{status,jdbcType=TINYINT}, #{webStatus,jdbcType=TINYINT}, #{apiType,jdbcType=TINYINT}, 
       #{repayStatus,jdbcType=TINYINT}, #{periodNow,jdbcType=INTEGER}, #{creditRepayStatus,jdbcType=TINYINT}, 
@@ -194,8 +196,9 @@
       #{sucAmount,jdbcType=DECIMAL}, #{failCounts,jdbcType=INTEGER}, #{failAmount,jdbcType=DECIMAL}, 
       #{serviceFee,jdbcType=DECIMAL}, #{txDate,jdbcType=INTEGER}, #{txTime,jdbcType=INTEGER}, 
       #{seqNo,jdbcType=INTEGER}, #{bankSeqNo,jdbcType=VARCHAR}, #{planNid,jdbcType=VARCHAR}, 
-      #{ordid,jdbcType=VARCHAR}, #{isAllrepay,jdbcType=TINYINT}, #{createTime,jdbcType=TIMESTAMP}, 
-      #{updateTime,jdbcType=TIMESTAMP}, #{data,jdbcType=LONGVARCHAR})
+      #{ordid,jdbcType=VARCHAR}, #{isAllrepay,jdbcType=TINYINT}, #{agreementStatus,jdbcType=TINYINT}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{data,jdbcType=LONGVARCHAR}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.hyjf.am.trade.dao.model.auto.BorrowApicron" >
     <selectKey resultType="java.lang.Integer" keyProperty="id" order="AFTER" >
@@ -304,6 +307,9 @@
       </if>
       <if test="isAllrepay != null" >
         is_allrepay,
+      </if>
+      <if test="agreementStatus != null" >
+        agreement_status,
       </if>
       <if test="createTime != null" >
         create_time,
@@ -417,6 +423,9 @@
       </if>
       <if test="isAllrepay != null" >
         #{isAllrepay,jdbcType=TINYINT},
+      </if>
+      <if test="agreementStatus != null" >
+        #{agreementStatus,jdbcType=TINYINT},
       </if>
       <if test="createTime != null" >
         #{createTime,jdbcType=TIMESTAMP},
@@ -543,6 +552,9 @@
       <if test="record.isAllrepay != null" >
         is_allrepay = #{record.isAllrepay,jdbcType=TINYINT},
       </if>
+      <if test="record.agreementStatus != null" >
+        agreement_status = #{record.agreementStatus,jdbcType=TINYINT},
+      </if>
       <if test="record.createTime != null" >
         create_time = #{record.createTime,jdbcType=TIMESTAMP},
       </if>
@@ -594,6 +606,7 @@
       plan_nid = #{record.planNid,jdbcType=VARCHAR},
       ordid = #{record.ordid,jdbcType=VARCHAR},
       is_allrepay = #{record.isAllrepay,jdbcType=TINYINT},
+      agreement_status = #{record.agreementStatus,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP},
       `data` = #{record.data,jdbcType=LONGVARCHAR}
@@ -638,6 +651,7 @@
       plan_nid = #{record.planNid,jdbcType=VARCHAR},
       ordid = #{record.ordid,jdbcType=VARCHAR},
       is_allrepay = #{record.isAllrepay,jdbcType=TINYINT},
+      agreement_status = #{record.agreementStatus,jdbcType=TINYINT},
       create_time = #{record.createTime,jdbcType=TIMESTAMP},
       update_time = #{record.updateTime,jdbcType=TIMESTAMP}
     <if test="_parameter != null" >
@@ -749,6 +763,9 @@
       <if test="isAllrepay != null" >
         is_allrepay = #{isAllrepay,jdbcType=TINYINT},
       </if>
+      <if test="agreementStatus != null" >
+        agreement_status = #{agreementStatus,jdbcType=TINYINT},
+      </if>
       <if test="createTime != null" >
         create_time = #{createTime,jdbcType=TIMESTAMP},
       </if>
@@ -797,6 +814,7 @@
       plan_nid = #{planNid,jdbcType=VARCHAR},
       ordid = #{ordid,jdbcType=VARCHAR},
       is_allrepay = #{isAllrepay,jdbcType=TINYINT},
+      agreement_status = #{agreementStatus,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP},
       `data` = #{data,jdbcType=LONGVARCHAR}
@@ -838,6 +856,7 @@
       plan_nid = #{planNid,jdbcType=VARCHAR},
       ordid = #{ordid,jdbcType=VARCHAR},
       is_allrepay = #{isAllrepay,jdbcType=TINYINT},
+      agreement_status = #{agreementStatus,jdbcType=TINYINT},
       create_time = #{createTime,jdbcType=TIMESTAMP},
       update_time = #{updateTime,jdbcType=TIMESTAMP}
     where id = #{id,jdbcType=INTEGER}

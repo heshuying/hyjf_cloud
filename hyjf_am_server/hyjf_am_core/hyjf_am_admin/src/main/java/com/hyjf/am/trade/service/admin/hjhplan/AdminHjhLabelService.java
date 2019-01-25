@@ -79,4 +79,11 @@ public interface AdminHjhLabelService {
     * 获取最优标签
     */
 	HjhLabel getBestLabel(Borrow borrow , BorrowInfo borrowInfo, HjhPlanAsset hjhPlanAsset);
+	
+	/**
+    * 更新标签配置列表ByIdAndLabelState
+    *
+    * @param request
+    */
+   int updateHjhLabelRecordByIdAndLabelState(HjhLabelInfoRequest request);
 }

@@ -5,7 +5,6 @@ import com.alicp.jetcache.anno.CacheRefresh;
 import com.alicp.jetcache.anno.CacheType;
 import com.alicp.jetcache.anno.Cached;
 import com.hyjf.am.response.datacollect.TotalInvestAndInterestResponse;
-import com.hyjf.am.response.trade.WechatProjectListResponse;
 import com.hyjf.am.resquest.market.AdsRequest;
 import com.hyjf.am.resquest.trade.AppProjectListRequest;
 import com.hyjf.am.resquest.trade.DebtCreditRequest;
@@ -26,6 +25,7 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.am.vo.user.UserVO;
 import com.hyjf.common.cache.CacheUtil;
 import com.hyjf.common.cache.RedisConstants;
+import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.enums.MsgEnum;
 import com.hyjf.common.util.CommonUtils;
 import com.hyjf.common.util.CustomConstants;
@@ -43,6 +43,8 @@ import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.home.WechatProjectListService;
+import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.projectlist.CacheService;
 import com.hyjf.cs.trade.service.repay.RepayPlanService;
 import com.hyjf.cs.trade.util.CdnUrlUtil;
 import com.hyjf.cs.trade.util.HomePageDefine;
@@ -64,7 +66,7 @@ import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
-public class WechatProjectListServiceImpl implements WechatProjectListService {
+public class WechatProjectListServiceImpl extends BaseTradeServiceImpl implements WechatProjectListService {
 
 
     private static Logger logger = LoggerFactory.getLogger(WechatProjectListServiceImpl.class);
@@ -85,6 +87,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
     private AuthService authService;
     @Autowired
     private BaseClient baseClient;
+
+    @Autowired
+    private CacheService cacheService;
 
 
     @Autowired
@@ -181,7 +186,7 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
         AppBorrowProjectInfoBeanVO borrowProjectInfoBean = new AppBorrowProjectInfoBeanVO();
         Map<String, Object> map = new HashMap<>();
         map.put(ProjectConstant.PARAM_BORROW_NID, borrowNid);
-        ProjectCustomeDetailVO borrow = amTradeClient.searchProjectDetail(map);
+        ProjectCustomeDetailVO tempBorrow = amTradeClient.searchProjectDetail(map);
         // 获取还款信息 add by jijun 2018/04/27
         BorrowRepayVO borrowRepay = null;
         List<BorrowRepayVO> list = amTradeClient.selectBorrowRepayList(borrowNid, null);
@@ -209,12 +214,22 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 
 
         //获取标的信息
-        if (borrow == null) {
+        if (tempBorrow == null) {
             borrowDetailResultBean.put("status", "100");
             borrowDetailResultBean.put("statusDesc", "标的信息不存在");
             //weChatResult = new WeChatResult().buildErrorResponse(MsgEnum.ERR_AMT_TENDER_BORROW_NOT_EXIST);
             return borrowDetailResultBean;
         } else {
+            // add by zyk  标的详情添加缓存 2019年1月22日13:52 begin
+            // 转换一次是排除业务操作对缓存的干扰
+            ProjectCustomeDetailVO borrow = CommonUtils.convertBean(tempBorrow,ProjectCustomeDetailVO.class);
+            // 添加缓存后希望能拿到实时的标的剩余金额
+            String investAccount = RedisUtils.get(RedisConstants.BORROW_NID + borrowNid);
+            if (StringUtils.isNotBlank(investAccount)){
+                borrow.setInvestAccount(investAccount);
+            }
+            // add by zyk  标的详情添加缓存 2019年1月22日13:52 end
+
             borrowDetailResultBean.put("status", WeChatResult.SUCCESS);
             borrowDetailResultBean.put("statusDesc", WeChatResult.SUCCESS_DESC);
             borrowProjectInfoBean.setBorrowRemain(borrow.getInvestAccount());
@@ -255,9 +270,9 @@ public class WechatProjectListServiceImpl implements WechatProjectListService {
 
             //获取项目详情信息
             //借款人企业信息
-            BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers =  cacheService.getCacheBorrowUser(borrowNid);
             //借款人信息
-            BorrowManinfoVO borrowManinfo = amTradeClient.getBorrowManinfo(borrowNid);
+            BorrowManinfoVO borrowManinfo = cacheService.getCacheBorrowManInfo(borrowNid);
             //基础信息
             List<BorrowDetailBean> baseTableData = null;
             //项目介绍

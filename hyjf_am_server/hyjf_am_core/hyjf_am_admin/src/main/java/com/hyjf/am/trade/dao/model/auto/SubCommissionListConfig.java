@@ -6,36 +6,116 @@ import java.util.Date;
 public class SubCommissionListConfig implements Serializable {
     private Integer id;
 
+    /**
+     * 用户id
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 姓名
+     *
+     * @mbggenerated
+     */
     private String truename;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String username;
 
+    /**
+     * 用户角色
+     *
+     * @mbggenerated
+     */
     private String roleName;
 
+    /**
+     * 用户类型
+     *
+     * @mbggenerated
+     */
     private String userType;
 
+    /**
+     * 银行开户状态
+     *
+     * @mbggenerated
+     */
     private String bankOpenAccount;
 
+    /**
+     * 江西银行电子账号
+     *
+     * @mbggenerated
+     */
     private String account;
 
+    /**
+     * 用户状态 0-启用 1-禁用
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 说明
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 创建用户id
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 创建用户名
+     *
+     * @mbggenerated
+     */
     private String createUserName;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 更新用户名
+     *
+     * @mbggenerated
+     */
     private String updateUserName;
 
+    /**
+     * 合作机构编号
+     *
+     * @mbggenerated
+     */
     private String cooperateNum;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

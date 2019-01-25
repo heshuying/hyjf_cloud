@@ -6,16 +6,46 @@ import java.util.Date;
 public class UserCorner implements Serializable {
     private Integer id;
 
+    /**
+     * 角标数
+     *
+     * @mbggenerated
+     */
     private Integer corner;
 
+    /**
+     * 设备唯一标识
+     *
+     * @mbggenerated
+     */
     private String sign;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 修改时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

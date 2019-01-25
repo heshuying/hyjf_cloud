@@ -7,94 +7,319 @@ import java.util.Date;
 public class BorrowTender implements Serializable {
     private Integer id;
 
+    /**
+     * 用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 投资人用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
+    /**
+     * 借款人ID
+     *
+     * @mbggenerated
+     */
     private Integer borrowUserId;
 
+    /**
+     * 借款人用户名
+     *
+     * @mbggenerated
+     */
     private String borrowUserName;
 
+    /**
+     * 状态(0:初始,1:已放款,2:放款失败)
+     *
+     * @mbggenerated
+     */
     private Integer status;
 
+    /**
+     * 标的编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 投资订单号
+     *
+     * @mbggenerated
+     */
     private String nid;
 
+    /**
+     * 汇计划加入订单号
+     *
+     * @mbggenerated
+     */
     private String accedeOrderId;
 
+    /**
+     * 投资人投标成功的授权号
+     *
+     * @mbggenerated
+     */
     private String authCode;
 
+    /**
+     * 投资金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal account;
 
+    /**
+     * 满标状态(0:初始,1:满标)记录哪一笔是最后一笔满标
+     *
+     * @mbggenerated
+     */
     private Integer recoverFullStatus;
 
+    /**
+     * 管理费
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverFee;
 
+    /**
+     * 收款总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAccountAll;
 
+    /**
+     * 收款总利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAccountInterest;
 
+    /**
+     * 已收总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAccountYes;
 
+    /**
+     * 已收利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAccountInterestYes;
 
+    /**
+     * 已收本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAccountCapitalYes;
 
+    /**
+     * 待收总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAccountWait;
 
+    /**
+     * 待收利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAccountInterestWait;
 
+    /**
+     * 待收本金
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAccountCapitalWait;
 
+    /**
+     * 已收期数
+     *
+     * @mbggenerated
+     */
     private Integer recoverTimes;
 
+    /**
+     * 提前还款费用
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverAdvanceFee;
 
+    /**
+     * 逾期还款费用
+     *
+     * @mbggenerated
+     */
     private BigDecimal recoverLateFee;
 
+    /**
+     * 放款金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal loanAmount;
 
+    /**
+     * 服务费
+     *
+     * @mbggenerated
+     */
     private BigDecimal loanFee;
 
+    /**
+     * create ip
+     *
+     * @mbggenerated
+     */
     private String addIp;
 
+    /**
+     * 客户端0PC，1微信2安卓APP，3IOS APP，4其他
+     *
+     * @mbggenerated
+     */
     private Integer client;
 
+    /**
+     * 推荐人用户名(投资时)
+     *
+     * @mbggenerated
+     */
     private String inviteUserName;
 
+    /**
+     * 推荐人用户id(投资时)
+     *
+     * @mbggenerated
+     */
     private Integer inviteUserId;
 
+    /**
+     * 一级部门id(投资时)
+     *
+     * @mbggenerated
+     */
     private Integer inviteRegionId;
 
+    /**
+     * 一级部门名称(投资时)
+     *
+     * @mbggenerated
+     */
     private String inviteRegionName;
 
+    /**
+     * 二级部门id(投资时)
+     *
+     * @mbggenerated
+     */
     private Integer inviteBranchId;
 
+    /**
+     * 二级部门名称(投资时)
+     *
+     * @mbggenerated
+     */
     private String inviteBranchName;
 
+    /**
+     * 三级部门id(投资时)
+     *
+     * @mbggenerated
+     */
     private Integer inviteDepartmentId;
 
+    /**
+     * 三级部门名称(投资时)
+     *
+     * @mbggenerated
+     */
     private String inviteDepartmentName;
 
+    /**
+     * 投资人用户属性
+     *
+     * @mbggenerated
+     */
     private Integer tenderUserAttribute;
 
+    /**
+     * 推荐人用户属性
+     *
+     * @mbggenerated
+     */
     private Integer inviteUserAttribute;
 
+    /**
+     * 投资订单日期
+     *
+     * @mbggenerated
+     */
     private String orderDate;
 
+    /**
+     * 放款订单日期
+     *
+     * @mbggenerated
+     */
     private String loanOrderDate;
 
+    /**
+     * 放款订单号
+     *
+     * @mbggenerated
+     */
     private String loanOrdid;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
+    /**
+     * 投资类型 0手动投标 1预约投标 2自动投标
+     *
+     * @mbggenerated
+     */
     private Integer investType;
 
+    /**
+     * 0投资1复投
+     *
+     * @mbggenerated
+     */
     private Integer tenderType;
 
+    /**
+     * 投资来源:默认-hyjf,wrb-风车理财
+     *
+     * @mbggenerated
+     */
     private String tenderFrom;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
     private static final long serialVersionUID = 1L;

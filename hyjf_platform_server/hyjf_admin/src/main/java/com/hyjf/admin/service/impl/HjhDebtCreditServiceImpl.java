@@ -3,6 +3,7 @@ package com.hyjf.admin.service.impl;
 import com.hyjf.admin.client.AmAdminClient;
 import com.hyjf.admin.common.service.BaseServiceImpl;
 import com.hyjf.admin.service.HjhDebtCreditService;
+import com.hyjf.am.response.MapResponse;
 import com.hyjf.am.response.admin.HjhDebtCreditReponse;
 import com.hyjf.am.resquest.admin.HjhDebtCreditListRequest;
 import com.hyjf.am.vo.admin.HjhDebtCreditVo;
@@ -70,7 +71,17 @@ public class HjhDebtCreditServiceImpl extends BaseServiceImpl implements HjhDebt
         }
     }
 
+    /**
+     * 查询汇计划转让列表的求和
+     * @param request
+     * @return
+     */
+    @Override
+    public Map<String, Object> selectDebtCreditTotal(HjhDebtCreditListRequest request) {
 
+        MapResponse mapResponse = amAdminClient.queryHjhDebtCreditTotal(request);
+        return mapResponse.getResultMap();
+    }
 
 
 }

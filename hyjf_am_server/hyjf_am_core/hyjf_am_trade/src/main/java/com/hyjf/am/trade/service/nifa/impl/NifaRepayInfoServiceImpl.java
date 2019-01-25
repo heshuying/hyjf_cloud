@@ -47,7 +47,7 @@ public class NifaRepayInfoServiceImpl extends BaseServiceImpl implements NifaRep
     public boolean insertNifaRepayInfo(String borrowNid, Integer repayPeriod) {
 
         // 查询借款详情
-        Borrow borrow = this.getBorrow(borrowNid);
+        Borrow borrow = this.getBorrowByNid(borrowNid);
         if (null == borrow) {
             logger.error(thisMessName + "未查询到相应的借款详情数据！！borrowNid:" + borrowNid + " repayPeriod:" + repayPeriod);
             return false;
@@ -160,7 +160,7 @@ public class NifaRepayInfoServiceImpl extends BaseServiceImpl implements NifaRep
     public boolean insertNifaContractStatus(String borrowNid, Integer repayPeriod) {
 
         // 获取标的详情
-        Borrow borrow = this.getBorrow(borrowNid);
+        Borrow borrow = this.getBorrowByNid(borrowNid);
         if (null == borrow) {
             logger.error(thisMessName + "未获取到用户标的详情，borrowNid:" + borrowNid);
             return false;
@@ -260,7 +260,7 @@ public class NifaRepayInfoServiceImpl extends BaseServiceImpl implements NifaRep
     public boolean insertNifaReceivedPayments(String borrowNid, Integer repayPeriod) {
 
         // 获取标的详情
-        Borrow borrow = this.getBorrow(borrowNid);
+        Borrow borrow = this.getBorrowByNid(borrowNid);
         if (null == borrow) {
             logger.error(thisMessName + "未获取到借款详细信息，borrowNid:" + borrowNid + " repayPeriod:" + repayPeriod);
             return false;

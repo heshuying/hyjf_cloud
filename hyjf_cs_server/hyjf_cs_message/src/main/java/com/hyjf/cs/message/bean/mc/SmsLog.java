@@ -40,6 +40,8 @@ public class SmsLog implements Serializable {
 
     private String content;
 
+    private Integer isDisplay;
+
     private static final long serialVersionUID = 1L;
 
     public String getId() {
@@ -146,4 +148,11 @@ public class SmsLog implements Serializable {
         this.content = content == null ? null : content.trim();
     }
 
+    public Integer getIsDisplay() {
+        return isDisplay;
+    }
+
+    public void setIsDisplay(Integer isDisplay) {
+        this.isDisplay = isDisplay;
+    }
 }

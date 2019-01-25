@@ -6,22 +6,62 @@ import java.util.Date;
 public class RUser implements Serializable {
     private Integer userId;
 
+    /**
+     * 用户名
+     *
+     * @mbggenerated
+     */
     private String username;
 
+    /**
+     * 手机号
+     *
+     * @mbggenerated
+     */
     private String mobile;
 
+    /**
+     * 用户角色1投资人2借款人3担保机构
+     *
+     * @mbggenerated
+     */
     private Integer roleId;
 
+    /**
+     * 真实姓名
+     *
+     * @mbggenerated
+     */
     private String truename;
 
+    /**
+     * 用户属性 0=>无主单 1=>有主单 2=>线下员工 3=>线上员工
+     *
+     * @mbggenerated
+     */
     private Integer attribute;
 
     private Integer spreadsUserId;
 
+    /**
+     * 用户类型 0普通用户 1企业用户
+     *
+     * @mbggenerated
+     */
     private Integer userType;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;

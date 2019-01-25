@@ -47,6 +47,7 @@ import com.hyjf.cs.trade.mq.base.CommonProducer;
 import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.service.auth.AuthService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
+import com.hyjf.cs.trade.service.projectlist.CacheService;
 import com.hyjf.cs.trade.service.projectlist.WebProjectListService;
 import com.hyjf.cs.trade.service.repay.RepayPlanService;
 import com.hyjf.cs.trade.util.HomePageDefine;
@@ -101,6 +102,10 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
     private AuthService authService;
     @Autowired
     private BaseClient baseClient;
+
+
+    @Autowired
+    private CacheService cacheService;
 
 
     @Autowired
@@ -270,11 +275,17 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         CheckUtil.check(null != borrowNid, MsgEnum.ERR_OBJECT_REQUIRED, "借款编号");
         ProjectListRequest request = new ProjectListRequest();
         // ① 先查出标的基本信息  ② 根据是否是新标的，进行参数组装
-        ProjectCustomeDetailVO projectCustomeDetail = amTradeClient.searchProjectDetail(map);
-        if (projectCustomeDetail == null) {
+        ProjectCustomeDetailVO tempProjectCustomeDetail = amTradeClient.searchProjectDetail(map);
+        if (tempProjectCustomeDetail == null) {
             CheckUtil.check(false, MsgEnum.STATUS_CE000013);
         }
-
+        // 转换一次是排除业务操作对缓存的干扰
+        ProjectCustomeDetailVO projectCustomeDetail = CommonUtils.convertBean(tempProjectCustomeDetail,ProjectCustomeDetailVO.class);
+        // 添加缓存后希望能拿到实时的标的剩余金额
+        String investAccount = RedisUtils.get(RedisConstants.BORROW_NID + borrowNid);
+        if (StringUtils.isNotBlank(investAccount)){
+            projectCustomeDetail.setInvestAccount(investAccount);
+        }
         ProjectCustomeDetailCsVO detailCsVO = CommonUtils.convertBean(projectCustomeDetail, ProjectCustomeDetailCsVO.class);
 
         UserVO userVO = null;
@@ -291,15 +302,24 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
             getProjectDetailNew(other, projectCustomeDetail, userVO);
         }
 
+        other.put("autoTenderAuthStatus", "");
+        other.put("autoCreditAuthStatus", "");
         other.put("paymentAuthStatus", "");
 
         if (userId != null) {
             HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(Integer.valueOf(userId));
-            // 服务费授权状态
-            other.put("paymentAuthStatus", hjhUserAuth == null ? "" : hjhUserAuth.getAutoPaymentStatus());
-            // 是否开启服务费授权 0未开启 1已开启
-            other.put("paymentAuthOn",
-                    authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
+            //自动投标授权状态 0未授权  1已授权
+            other.put("autoTenderAuthStatus", hjhUserAuth.getAutoInvesStatus());
+            //自动债转授权~~
+            other.put("autoCreditAuthStatus", hjhUserAuth.getAutoCreditStatus());
+            //服务费授权~~
+            other.put("paymentAuthStatus", hjhUserAuth.getAutoPaymentStatus());
+            //是否开启自动投标授权校验 0未开启 1已开启
+            other.put("autoTenderAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+            //是否进行自动债转~~
+            other.put("autoCreditAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+            //是否进行缴费~~
+            other.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
             other.put("isCheckUserRole",systemConfig.getRoleIsopen());
         }
         WebResult webResult = new WebResult();
@@ -481,9 +501,9 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
              */
             other.put(ProjectConstant.PARAM_BORROW_TYPE, borrow.getComOrPer());
             //借款人企业信息
-            BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers = cacheService.getCacheBorrowUser(borrowNid);
             //借款人信息
-            BorrowManinfoVO borrowManinfo = amTradeClient.getBorrowManinfo(borrowNid);
+            BorrowManinfoVO borrowManinfo = cacheService.getCacheBorrowManInfo(borrowNid);
             //房产抵押信息
             List<BorrowHousesVO> borrowHousesList = amTradeClient.getBorrowHousesByNid(borrowNid);
             //车辆抵押信息
@@ -975,10 +995,10 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
              */
             result.put(ProjectConstant.PARAM_BORROW_TYPE, comOrPer);
             // 借款人企业信息
-            BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
+            BorrowUserVO borrowUsers = cacheService.getCacheBorrowUser(borrowNid);
 
             //借款人信息
-            BorrowManinfoVO borrowManinfo = amTradeClient.getBorrowManinfo(borrowNid);
+            BorrowManinfoVO borrowManinfo = cacheService.getCacheBorrowManInfo(borrowNid);
             //房产抵押信息
             List<BorrowHousesVO> borrowHousesList = amTradeClient.getBorrowHousesByNid(borrowNid);
             //车辆抵押信息
@@ -1087,7 +1107,19 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 result.put("setPwdFlag", userVO.getIsSetPassword()); // 是否设置交易密码
                 result.put("isUserValid", userVO.getStatus());
                 //update by jijun 2018/04/09 合规接口改造一期
-                result.put("paymentAuthStatus", ""); // 缴费授权
+                HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(Integer.valueOf(userId));
+                //自动投标授权状态 0未授权  1已授权
+                result.put("autoTenderAuthStatus", hjhUserAuth.getAutoInvesStatus());
+                //自动债转授权状态
+                result.put("autoCreditAuthStatus", hjhUserAuth.getAutoCreditStatus());
+                //服务费授权状态
+                result.put("paymentAuthStatus", hjhUserAuth.getAutoPaymentStatus());
+                //是否开启自动投标授权校验 0未开启 1已开启
+                result.put("autoTenderAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+                //是否进行自动债转~~
+                result.put("autoCreditAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+                //是否进行缴费~~
+                result.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
                 UserInfoVO userInfoVO = amUserClient.findUsersInfoById(Integer.valueOf(userId));
                 result.put("roleId",userInfoVO  !=null ? userInfoVO.getRoleId() : "");
 
@@ -1246,6 +1278,8 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         result.put("threshold", threshold);
         // 缴费授权
         //update by jijun 2018/04/09 合规接口改造一期
+        result.put("autoTenderAuthStatus", "");
+        result.put("autoCreditAuthStatus", "");
         result.put("paymentAuthStatus", "");
 
         //加入总人数
@@ -1425,25 +1459,34 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 // 用户是否完成自动授权标识
                 HjhUserAuthVO hjhUserAuth = amUserClient.getHjhUserAuthVO(Integer.valueOf(userId));
                 if (Validator.isNotNull(hjhUserAuth)) {
-                    String autoInvesFlag = hjhUserAuth.getAutoInvesStatus().toString();
-                    result.put("autoInvesFlag", autoInvesFlag);
+                    //自动投标授权状态 0未授权  1已授权
+                    result.put("autoTenderAuthStatus", hjhUserAuth.getAutoInvesStatus());
+                    //自动债转授权状态
+                    result.put("autoCreditAuthStatus", hjhUserAuth.getAutoCreditStatus());
+                    //服务费授权状态
+                    result.put("paymentAuthStatus", hjhUserAuth.getAutoPaymentStatus());
                 } else {
-                    result.put("autoInvesFlag", "0");//自动投标授权状态 0: 未授权    1:已授权
+                    result.put("autoTenderAuthStatus", "0");
+                    //自动债转授权状态
+                    result.put("autoCreditAuthStatus", "0");
+                    //服务费授权状态
+                    result.put("paymentAuthStatus", "0");
                 }
-                // 合规三期
-                // 是否开启 自动投标授权、自动债转授权、服务费授权 0未开启  1已开启
-                if(hjhUserAuth != null &&
-                   hjhUserAuth.getAutoInvesStatus() == 1 &&
-                   hjhUserAuth.getAutoCreditStatus() == 1 &&
-                   hjhUserAuth.getAutoPaymentStatus() == 1){
-                    result.put("paymentAuthStatus", 1);
-                }else {
-                    result.put("paymentAuthStatus", 0);
-                }
+                //是否开启自动投标授权校验 0未开启 1已开启
+                result.put("autoTenderAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+                //是否进行自动债转~~
+                result.put("autoCreditAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
+                //是否进行缴费~~
                 result.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
+
+                // 合规三期
                 result.put("isCheckUserRole",systemConfig.getRoleIsopen());
             } else {
                 //状态位用于判断tab的是否可见
+                result.put("autoTenderAuthStatus", "0");
+                result.put("autoTenderAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_TENDER_AUTH).getEnabledStatus());
+                result.put("autoCreditAuthStatus", "0");
+                result.put("autoCreditAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_AUTO_CREDIT_AUTH).getEnabledStatus());
                 result.put("paymentAuthStatus", "0");
                 result.put("paymentAuthOn", authService.getAuthConfigFromCache(RedisConstants.KEY_PAYMENT_AUTH).getEnabledStatus());
                 //状态位用于判断tab的是否可见
@@ -1582,7 +1625,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         for (BorrowAndInfoVO planAccede : list) {
             String borrowNid = planAccede.getBorrowNid();
             if ("1".equals(planAccede.getCompanyOrPersonal())) {//如果类型是公司 huiyingdai_borrow_users
-                BorrowUserVO borrowUser = amTradeClient.getBorrowUser(borrowNid);
+                BorrowUserVO borrowUser = cacheService.getCacheBorrowUser(borrowNid);
                 String trueName = borrowUser.getUsername();
                 String str = "******";
                 if (trueName != null && trueName != "") {
@@ -1596,7 +1639,7 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
                 planAccede.setBorrowUserName(trueName);
             } else if ("2".equals(planAccede.getCompanyOrPersonal())) {//类型是个人 huiyingdai_borrow_maninfo
                 //根据borrowNid查询查询个人的真实姓名
-                BorrowManinfoVO borrowManinfoVO = amTradeClient.getBorrowManinfo(borrowNid);
+                BorrowManinfoVO borrowManinfoVO =  cacheService.getCacheBorrowManInfo(borrowNid);
                 String trueName = borrowManinfoVO.getName();
                 String str = "**";
                 if (trueName != null && trueName != "") {
@@ -1669,12 +1712,20 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         Map<String,Object> map = new HashMap<>();
         map.put("borrowNid",borrowNid);
         // 根据项目标号获取相应的项目信息
-        ProjectCustomeDetailVO borrowDetailVo = amTradeClient.searchProjectDetail(map);
+        ProjectCustomeDetailVO tempBorrowDetailVo = amTradeClient.searchProjectDetail(map);
         //没有标的信息
-        if (borrowDetailVo == null) {
+        if (tempBorrowDetailVo == null) {
             throw  new CheckException("标的信息不存在！");
         }
-
+        // add by zyk  标的详情添加缓存 2019年1月22日13:52 begin
+        // 转换一次是排除业务操作对缓存的干扰
+        ProjectCustomeDetailVO borrowDetailVo = CommonUtils.convertBean(tempBorrowDetailVo,ProjectCustomeDetailVO.class);
+        // 添加缓存后希望能拿到实时的标的剩余金额
+        String investAccount = RedisUtils.get(RedisConstants.BORROW_NID + borrowNid);
+        if (StringUtils.isNotBlank(investAccount)){
+            borrowDetailVo.setInvestAccount(investAccount);
+        }
+        // add by zyk  标的详情添加缓存 2019年1月22日13:52 end
         this.getPlanBorrowDetail(result,borrowDetailVo,userId);
         return result;
     }
@@ -1691,9 +1742,9 @@ public class WebProjectListServiceImpl extends BaseTradeServiceImpl implements W
         info.put("borrowType",borrowDetailVo.getComOrPer());
 
         //借款人企业信息
-        BorrowUserVO borrowUsers = amTradeClient.getBorrowUser(borrowNid);
+        BorrowUserVO borrowUsers = cacheService.getCacheBorrowUser(borrowNid);
         //借款人信息
-        BorrowManinfoVO borrowManinfo =amTradeClient.getBorrowManinfo(borrowNid);
+        BorrowManinfoVO borrowManinfo = cacheService.getCacheBorrowManInfo(borrowNid);
         //房产抵押信息
         List<BorrowHousesVO> borrowHousesList = amTradeClient.getBorrowHousesByNid(borrowNid);
         //车辆抵押信息

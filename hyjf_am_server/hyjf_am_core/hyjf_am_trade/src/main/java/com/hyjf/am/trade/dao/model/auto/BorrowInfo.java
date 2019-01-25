@@ -143,14 +143,14 @@ public class BorrowInfo implements Serializable {
     private Integer trusteePayTime;
 
     /**
-     * 最小的出借额
+     * 最小的投资额
      *
      * @mbggenerated
      */
     private Integer tenderAccountMin;
 
     /**
-     * 最大的出借额
+     * 最大的投资额
      *
      * @mbggenerated
      */
@@ -171,28 +171,28 @@ public class BorrowInfo implements Serializable {
     private Integer projectType;
 
     /**
-     * 可出借平台_PC
+     * 可投资平台_PC
      *
      * @mbggenerated
      */
     private String canTransactionPc;
 
     /**
-     * 可出借平台_微网站
+     * 可投资平台_微网站
      *
      * @mbggenerated
      */
     private String canTransactionWei;
 
     /**
-     * 可出借平台_IOS
+     * 可投资平台_IOS
      *
      * @mbggenerated
      */
     private String canTransactionIos;
 
     /**
-     * 可出借平台_Android
+     * 可投资平台_Android
      *
      * @mbggenerated
      */

@@ -4,7 +4,6 @@
 package com.hyjf.am.trade.service.front.consumer.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.hyjf.am.bean.fdd.FddGenerateContractBean;
 import com.hyjf.am.trade.dao.model.auto.*;
 import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
@@ -713,17 +712,6 @@ public class RealTimeBorrowLoanServiceImpl extends BaseServiceImpl implements Re
 		}
 
 		return userFee;
-	}
-
-	private Borrow getBorrowByNid(String borrowNid) {
-		BorrowExample example = new BorrowExample();
-		BorrowExample.Criteria criteria = example.createCriteria();
-		criteria.andBorrowNidEqualTo(borrowNid);
-		List<Borrow> list = borrowMapper.selectByExample(example);
-		if (list != null && !list.isEmpty()) {
-			return list.get(0);
-		}
-		return null;
 	}
 
 

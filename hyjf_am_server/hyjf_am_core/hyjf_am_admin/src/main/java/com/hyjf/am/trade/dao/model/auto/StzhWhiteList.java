@@ -6,46 +6,151 @@ import java.util.Date;
 public class StzhWhiteList implements Serializable {
     private Integer id;
 
+    /**
+     * 机构/个人userid
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 机构/个人 用户名
+     *
+     * @mbggenerated
+     */
     private String userName;
 
-    private String accountid;
+    /**
+     * 电子账号
+     *
+     * @mbggenerated
+     */
+    private String accountId;
 
+    /**
+     * 手机号
+     *
+     * @mbggenerated
+     */
     private String mobile;
 
+    /**
+     * 姓名
+     *
+     * @mbggenerated
+     */
     private String customerName;
 
+    /**
+     * 受托支付收款人userid
+     *
+     * @mbggenerated
+     */
     private Integer stUserId;
 
+    /**
+     * 受托支付收款人用户名
+     *
+     * @mbggenerated
+     */
     private String stUserName;
 
-    private String stAccountid;
+    /**
+     * 收款人电子账号
+     *
+     * @mbggenerated
+     */
+    private String stAccountId;
 
+    /**
+     * 收款人  手机号
+     *
+     * @mbggenerated
+     */
     private String stMobile;
 
+    /**
+     * 收款人名称/姓名
+     *
+     * @mbggenerated
+     */
     private String stCustomerName;
 
+    /**
+     * 审批人
+     *
+     * @mbggenerated
+     */
     private String approvalName;
 
+    /**
+     * 审批时间
+     *
+     * @mbggenerated
+     */
     private String approvalTime;
 
+    /**
+     * 备注
+     *
+     * @mbggenerated
+     */
     private String remark;
 
-    private String instcode;
+    /**
+     * 机构编号
+     *
+     * @mbggenerated
+     */
+    private String instCode;
 
-    private String instname;
+    /**
+     * 机构名称
+     *
+     * @mbggenerated
+     */
+    private String instName;
 
+    /**
+     * 状态 1启用  0禁用
+     *
+     * @mbggenerated
+     */
     private Integer state;
 
+    /**
+     * 删除标识
+     *
+     * @mbggenerated
+     */
     private Integer delFlag;
 
+    /**
+     * 创建人
+     *
+     * @mbggenerated
+     */
     private Integer createUserId;
 
+    /**
+     * 修改人
+     *
+     * @mbggenerated
+     */
     private Integer updateUserId;
 
+    /**
+     * 创建时间
+     *
+     * @mbggenerated
+     */
     private Date createTime;
 
+    /**
+     * 更新时间
+     *
+     * @mbggenerated
+     */
     private Date updateTime;
 
     private static final long serialVersionUID = 1L;
@@ -74,12 +179,12 @@ public class StzhWhiteList implements Serializable {
         this.userName = userName == null ? null : userName.trim();
     }
 
-    public String getAccountid() {
-        return accountid;
+    public String getAccountId() {
+        return accountId;
     }
 
-    public void setAccountid(String accountid) {
-        this.accountid = accountid == null ? null : accountid.trim();
+    public void setAccountId(String accountId) {
+        this.accountId = accountId == null ? null : accountId.trim();
     }
 
     public String getMobile() {
@@ -114,12 +219,12 @@ public class StzhWhiteList implements Serializable {
         this.stUserName = stUserName == null ? null : stUserName.trim();
     }
 
-    public String getStAccountid() {
-        return stAccountid;
+    public String getStAccountId() {
+        return stAccountId;
     }
 
-    public void setStAccountid(String stAccountid) {
-        this.stAccountid = stAccountid == null ? null : stAccountid.trim();
+    public void setStAccountId(String stAccountId) {
+        this.stAccountId = stAccountId == null ? null : stAccountId.trim();
     }
 
     public String getStMobile() {
@@ -162,20 +267,20 @@ public class StzhWhiteList implements Serializable {
         this.remark = remark == null ? null : remark.trim();
     }
 
-    public String getInstcode() {
-        return instcode;
+    public String getInstCode() {
+        return instCode;
     }
 
-    public void setInstcode(String instcode) {
-        this.instcode = instcode == null ? null : instcode.trim();
+    public void setInstCode(String instCode) {
+        this.instCode = instCode == null ? null : instCode.trim();
     }
 
-    public String getInstname() {
-        return instname;
+    public String getInstName() {
+        return instName;
     }
 
-    public void setInstname(String instname) {
-        this.instname = instname == null ? null : instname.trim();
+    public void setInstName(String instName) {
+        this.instName = instName == null ? null : instName.trim();
     }
 
     public Integer getState() {

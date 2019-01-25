@@ -34,6 +34,8 @@ public interface RepayManageService extends BaseService {
 
     List<RepayListCustomizeVO> selectOrgRepayList(RepayListRequest requestBean);
 
+    BigDecimal selectOrgRepayWaitCurrent(RepayListRequest requestBean);
+
     Integer selectOrgRepayCount(RepayListRequest requestBean);
 
     List<RepayListCustomizeVO> selectOrgRepayedList(RepayListRequest requestBean);

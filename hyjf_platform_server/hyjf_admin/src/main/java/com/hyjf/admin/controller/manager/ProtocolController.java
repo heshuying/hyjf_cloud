@@ -50,7 +50,7 @@ public class ProtocolController extends BaseController{
      */
     @ApiOperation(value = "分页显示", notes = "分页显示")
     @PostMapping("/search")
-    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_VIEW , ShiroConstants.PERMISSION_SEARCH})
+    @AuthorityAnnotation(key = PERMISSIONS, value = {ShiroConstants.PERMISSION_VIEW })
     public AdminResult<ListResult<ProtocolTemplateCommonVO>> search(@RequestBody AdminProtocolRequest request){
         AdminProtocolResponse response = new AdminProtocolResponse();
         response = protocolService.searchPage(request);

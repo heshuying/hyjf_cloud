@@ -5,32 +5,102 @@ import java.io.Serializable;
 public class DebtCompanyInfo implements Serializable {
     private Integer id;
 
+    /**
+     * 借款编号
+     *
+     * @mbggenerated
+     */
     private String borrowNid;
 
+    /**
+     * 借款预编号
+     *
+     * @mbggenerated
+     */
     private Integer borrowPreNid;
 
+    /**
+     * 用户id
+     *
+     * @mbggenerated
+     */
     private String username;
 
+    /**
+     * 公司所在地:省
+     *
+     * @mbggenerated
+     */
     private String province;
 
+    /**
+     * 公司所在地:市
+     *
+     * @mbggenerated
+     */
     private String city;
 
+    /**
+     * 公司所在地:区
+     *
+     * @mbggenerated
+     */
     private String area;
 
+    /**
+     * 注册资本
+     *
+     * @mbggenerated
+     */
     private Integer regCaptial;
 
+    /**
+     * 行业
+     *
+     * @mbggenerated
+     */
     private String industry;
 
+    /**
+     * 涉诉
+     *
+     * @mbggenerated
+     */
     private String litigation;
 
+    /**
+     * 征信
+     *
+     * @mbggenerated
+     */
     private String creReport;
 
+    /**
+     * 信用额度
+     *
+     * @mbggenerated
+     */
     private Integer credit;
 
+    /**
+     * 员工人数
+     *
+     * @mbggenerated
+     */
     private Integer staff;
 
+    /**
+     * 企业注册时间
+     *
+     * @mbggenerated
+     */
     private String comRegTime;
 
+    /**
+     * 其他资料
+     *
+     * @mbggenerated
+     */
     private String otherInfo;
 
     private static final long serialVersionUID = 1L;

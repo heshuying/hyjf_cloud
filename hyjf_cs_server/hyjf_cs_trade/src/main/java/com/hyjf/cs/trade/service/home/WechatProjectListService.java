@@ -3,6 +3,7 @@ package com.hyjf.cs.trade.service.home;
 import com.alibaba.fastjson.JSONObject;
 import com.hyjf.cs.trade.bean.WechatHomePageResult;
 import com.hyjf.cs.trade.bean.WechatPlanBorrowResultBean;
+import com.hyjf.cs.trade.service.BaseTradeService;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author zhangyk
  * @date 2018/7/2 11:24
  */
-public interface WechatProjectListService {
+public interface WechatProjectListService extends BaseTradeService {
 
     /**
      * 获取散标详情

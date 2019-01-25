@@ -22,8 +22,6 @@ public interface CouponRepayMonitorService {
      */
     List<CouponRepayMonitor> selectCouponRepayMonitor(String nowDay);
 
-    List<AdminCouponRepayMonitorCustomize> selectCouponRepayMonitorPage(Map<String, Object> paraMap);
-
     /**
      * 插入表
      * @param couponRepayMonitor

@@ -121,9 +121,9 @@ public class AppHomeServiceImpl implements AppHomeService {
 
         // 协议数组
         List<Object> arrList = new ArrayList<>();
-        registrationAgreement.put("name", "《注册协议》");
+        registrationAgreement.put("name", "《平台隐私条款》");
         registrationAgreement.put("url", HOST + "/agreement/privacyClauseAgreement?" + urlSplice);
-        registrationAgreement2.put("name", "《平台隐私条款》");
+        registrationAgreement2.put("name", "《注册协议》");
         registrationAgreement2.put("url", HOST + "/agreement/RegisterRuleAgreement?" + urlSplice);
         arrList.add(registrationAgreement);
         arrList.add(registrationAgreement2);

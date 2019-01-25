@@ -4,32 +4,97 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 public class ProductRedeemFail implements Serializable {
+    /**
+     * Id
+     *
+     * @mbggenerated
+     */
     private Integer id;
 
+    /**
+     * 用户ID
+     *
+     * @mbggenerated
+     */
     private Integer userId;
 
+    /**
+     * 赎回订单ID
+     *
+     * @mbggenerated
+     */
     private String listId;
 
+    /**
+     * 订单号
+     *
+     * @mbggenerated
+     */
     private String orderId;
 
+    /**
+     * 赎回金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal amount;
 
+    /**
+     * 时间
+     *
+     * @mbggenerated
+     */
     private Integer redeemTime;
 
+    /**
+     * 利息
+     *
+     * @mbggenerated
+     */
     private BigDecimal interest;
 
+    /**
+     * 总额
+     *
+     * @mbggenerated
+     */
     private BigDecimal total;
 
+    /**
+     * 推荐人ID
+     *
+     * @mbggenerated
+     */
     private Integer referee;
 
+    /**
+     * 大区ID
+     *
+     * @mbggenerated
+     */
     private Integer area;
 
+    /**
+     * 分公司ID
+     *
+     * @mbggenerated
+     */
     private Integer company;
 
+    /**
+     * 部门ID
+     *
+     * @mbggenerated
+     */
     private Integer department;
 
     private String remark;
 
+    /**
+     * 赎回操作金额
+     *
+     * @mbggenerated
+     */
     private BigDecimal amountAll;
 
     private String error;

@@ -7,8 +7,7 @@ import com.hyjf.am.trade.dao.model.auto.HjhAssetBorrowtype;
 import com.hyjf.am.trade.dao.model.auto.HjhPlanAsset;
 import com.hyjf.am.trade.mq.base.CommonProducer;
 import com.hyjf.am.trade.mq.base.MessageContent;
-import com.hyjf.am.trade.service.task.issuerecover.AutoPreAuditMessageService;
-import com.hyjf.am.trade.service.task.issuerecover.AutoRecordService;
+import com.hyjf.am.trade.service.issuerecover.AutoRecordService;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
 import com.hyjf.common.constants.MQConstant;
@@ -23,7 +22,6 @@ import org.apache.rocketmq.spring.core.RocketMQListener;
 import org.apache.rocketmq.spring.core.RocketMQPushConsumerLifecycleListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -43,8 +41,6 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 	private AutoRecordService autoRecordService;
 	@Resource
 	private CommonProducer commonProducer;
-	@Autowired
-	private AutoPreAuditMessageService autoPreAuditMessageService;
 
 	@Override
 	public void onMessage(MessageExt msg) {
@@ -65,21 +61,19 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 				logger.warn("参数不全, msgId is: {}", msg.getMsgId());
 				return;
 			}
-			this.doRecordBorrowByAuto(assetId, instCode);
+			this.doRecordBorrow(assetId, instCode);
 		}
 
 		// 2. admin手工录入标的
 		else if (MQConstant.AUTO_BORROW_RECORD_ADMIN_TAG.equals(msg.getTags())) {
 			logger.info("自动备案来源: admin手工录入标的...");
 			String borrowNid = params.getString("borrowNid");
-			String instCode = params.getString("instCode");
-
 			if (StringUtils.isBlank(borrowNid)) {
 				logger.warn("参数不全, msgId is: {}", msg.getMsgId());
 				return;
 			}
 
-			this.doRecordBorrowByHand(borrowNid, instCode);
+			this.doRecordBorrow(borrowNid);
 		}
 
 		// 3. 汇计划发标修复定时任务录标
@@ -92,7 +86,7 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 				logger.warn("参数不全, msgId is: {}", msg.getMsgId());
 				return;
 			}
-			this.doRecordBorrowByAuto(assetId, instCode);
+			this.doRecordBorrow(assetId, instCode);
 		}
 
 		// 4. 错误消息
@@ -113,8 +107,8 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 		logger.info("====AutoRecordMessageConsumer start=====");
 	}
 
-	private void doRecordBorrowByAuto(String assetId, String instCode) {
-		HjhPlanAsset hjhPlanAsset = autoPreAuditMessageService.selectPlanAsset(assetId, instCode);
+	private void doRecordBorrow(String assetId, String instCode) {
+		HjhPlanAsset hjhPlanAsset = autoRecordService.selectPlanAsset(assetId, instCode);
 		if (hjhPlanAsset == null) {
 			logger.warn("该资产不存在！！");
 			return;
@@ -139,7 +133,7 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 		BorrowInfo borrowInfo = new BorrowInfo();
 		borrowInfo.setInstCode(hjhPlanAsset.getInstCode());
 		borrowInfo.setAssetType(hjhPlanAsset.getAssetType());
-		HjhAssetBorrowtype hjhAssetBorrowType = autoRecordService.selectAssetBorrowType(borrowInfo);
+		HjhAssetBorrowtype hjhAssetBorrowType = autoRecordService.selectAssetBorrowType(hjhPlanAsset.getBorrowNid());
 		if (hjhAssetBorrowType == null || hjhAssetBorrowType.getAutoRecord() == null
 				|| hjhAssetBorrowType.getAutoRecord() != 1) {
 			logger.warn(hjhPlanAsset.getAssetId() + " 该资产不能自动备案,原因自动备案未配置");
@@ -171,7 +165,12 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 		logger.info(hjhPlanAsset.getAssetId() + " 成功发送到初审队列, 自动备案处理结束");
 	}
 
-	private void doRecordBorrowByHand(String borrowNid, String instCode) {
+	private void doRecordBorrow(String borrowNid) {
+		// 获取当前标的详情
+		Borrow borrow = autoRecordService.getBorrowByNid(borrowNid);
+		BorrowInfo borrowInfo = autoRecordService.getBorrowInfoByNid(borrow.getBorrowNid());
+		String instCode = borrowInfo.getInstCode();
+
 		// admin手动录入标的
 		logger.info(borrowNid + " 开始自动备案 " + instCode);
 		// redis 防重复检查
@@ -181,9 +180,7 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 			logger.info(instCode + " 正在备案(redis) " + borrowNid);
 			return;
 		}
-		// 获取当前标的详情
-		Borrow borrow = autoRecordService.getBorrowByBorrowNid(borrowNid);
-		BorrowInfo borrowInfo = autoRecordService.getBorrowInfoById(borrow.getBorrowNid());
+
 		// 标的状态位判断
 		if (null == borrow.getStatus() || borrow.getStatus() != 0 || null == borrow.getRegistStatus()
 				|| borrow.getRegistStatus() != 0) {
@@ -191,7 +188,7 @@ public class AutoRecordMessageConsumer implements RocketMQListener<MessageExt>, 
 			return;
 		}
 		// 判断该资产是否可以自动备案，是否关联计划
-		HjhAssetBorrowtype hjhAssetBorrowType = autoRecordService.selectAssetBorrowType(borrowInfo);
+		HjhAssetBorrowtype hjhAssetBorrowType = autoRecordService.selectAssetBorrowType(borrowInfo.getBorrowNid());
 		if (hjhAssetBorrowType == null || hjhAssetBorrowType.getAutoRecord() == null
 				|| hjhAssetBorrowType.getAutoRecord() != 1) {
 			logger.warn(borrow.getBorrowNid() + " 标的不能自动备案,原因自动备案未配置");

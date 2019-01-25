@@ -34,7 +34,7 @@ public class BorrowFinserCharge implements Serializable {
     private String remark;
 
     /**
-     * 出借类型:borrow_cd
+     * 投资类型:borrow_cd
      *
      * @mbggenerated
      */

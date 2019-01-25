@@ -8,7 +8,7 @@ public class CouponRecover implements Serializable {
     private Integer id;
 
     /**
-     * 出借订单编号
+     * 投资订单编号
      *
      * @mbggenerated
      */
@@ -64,7 +64,7 @@ public class CouponRecover implements Serializable {
     private Integer recoverYestime;
 
     /**
-     * 相关联的真实本金出借的还款时间，用于体验金收益过期判断
+     * 相关联的真实本金投资的还款时间，用于体验金收益过期判断
      *
      * @mbggenerated
      */
