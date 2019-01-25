@@ -7,6 +7,7 @@ import com.hyjf.am.trade.dao.model.auto.BorrowRecover;
 import com.hyjf.am.trade.dao.model.auto.BorrowRecoverPlan;
 import com.hyjf.am.trade.service.BaseService;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -56,4 +57,12 @@ public interface BorrowRecoverService extends BaseService {
      * @return
      */
     BorrowRecover getRecoverDateByTenderNid(String tenderNid, String borrowNid,String accedeOrderId);
+
+    /**
+     * 服务费=放款服务费+还款服务费
+     * @param borrowNid
+     * @return
+     */
+    BigDecimal selectServiceCostSum(String borrowNid);
+
 }

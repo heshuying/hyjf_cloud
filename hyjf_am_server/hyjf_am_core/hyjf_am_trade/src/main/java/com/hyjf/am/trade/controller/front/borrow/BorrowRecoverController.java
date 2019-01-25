@@ -18,6 +18,7 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -149,6 +150,15 @@ public class BorrowRecoverController extends BaseController {
 			response.setRtn(Response.SUCCESS);
 		}
 		return response;
+	}
+
+	/**
+	 * 服务费=放款服务费+还款服务费
+	 */
+	@GetMapping("/selectServiceCostSum/{borrowNid}")
+	public String selectServiceCostSum(@PathVariable String borrowNid){
+		BigDecimal serviceFee=borrowRecoverService.selectServiceCostSum(borrowNid);
+		return serviceFee.toString();
 	}
 
 
