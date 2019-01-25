@@ -1,7 +1,7 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.config.service.hgreportdata.cert;
+package com.hyjf.am.config.service;
 
 import com.hyjf.am.config.dao.model.auto.CertLog;
 

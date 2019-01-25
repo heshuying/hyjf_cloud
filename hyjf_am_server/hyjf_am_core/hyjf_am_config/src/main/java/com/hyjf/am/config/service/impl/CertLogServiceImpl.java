@@ -1,12 +1,12 @@
 /*
  * @Copyright: 2005-2018 www.hyjf.com. All rights reserved.
  */
-package com.hyjf.am.config.service.impl.hgreportdata.cert;
+package com.hyjf.am.config.service.impl;
 
 import com.hyjf.am.config.dao.mapper.auto.CertLogMapper;
 import com.hyjf.am.config.dao.model.auto.CertLog;
 import com.hyjf.am.config.dao.model.auto.CertLogExample;
-import com.hyjf.am.config.service.hgreportdata.cert.CertLogService;
+import com.hyjf.am.config.service.CertLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
