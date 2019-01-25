@@ -17,11 +17,14 @@ import com.hyjf.am.vo.user.UserInfoVO;
 import com.hyjf.common.bean.RedisBorrow;
 import com.hyjf.common.cache.RedisConstants;
 import com.hyjf.common.cache.RedisUtils;
+import com.hyjf.common.constants.MQConstant;
 import com.hyjf.common.util.*;
 import com.hyjf.common.validator.Validator;
 import com.hyjf.cs.trade.client.AmTradeClient;
 import com.hyjf.cs.trade.client.AmUserClient;
 import com.hyjf.cs.trade.config.SystemConfig;
+import com.hyjf.cs.trade.mq.base.CommonProducer;
+import com.hyjf.cs.trade.mq.base.MessageContent;
 import com.hyjf.cs.trade.service.batch.AutoTenderService;
 import com.hyjf.cs.trade.service.impl.BaseTradeServiceImpl;
 import com.hyjf.pay.lib.bank.bean.BankCallBean;
@@ -35,6 +38,7 @@ import org.springframework.util.StringUtils;
 import java.math.BigDecimal;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * 自动出借
@@ -49,6 +53,8 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
     @Value("${hyjf.bank.bankcode}")
     private String bankCode;
 
+    @Autowired
+    private CommonProducer commonProducer;
     @Autowired
     private AmTradeClient amTradeClient;
     @Autowired
@@ -389,6 +395,16 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     }
                     logger.info("[" + accedeOrderId + "]" + " 银行自动购买债权接口成功调用后  " + credit.getBorrowNid());
 
+                    // add 合规数据上报 埋点 liubin 20181122 start
+                    JSONObject params = new JSONObject();
+                    params.put("assignOrderId", bean.getOrderId());
+                    params.put("flag", "2");//1（散）2（智投）
+                    params.put("status", "1"); //1承接（每笔）
+                    // 推送数据到MQ 承接（每笔）
+                    commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_SINGLE_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+                                                    MQConstant.HG_REPORT_DELAY_LEVEL);
+                    // add 合规数据上报 埋点 liubin 20181122 end
+
                     /** 4.5. 减去被投标的可投金额，部分承接时，余额推回队列	 */
                     ketouplanAmoust = setRedisList(ketouplanAmoust, redisBorrow, queueName, assignPay, "R");
                     // result = true 后继操作不再操作队列
@@ -411,6 +427,16 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
 
                     /** 4.7. 完全承接时，结束债券  */
                     if (redisBorrow.getBorrowAccountWait().compareTo(BigDecimal.ZERO) == 0) {
+                        // add 合规数据上报 埋点 liubin 20181122 start
+                        // 推送数据到MQ 承接（完全）
+                        params = new JSONObject();
+                        params.put("creditNid", credit.getCreditNid());
+                        params.put("flag", "2"); //1（散）2（智投）
+                        params.put("status", "2"); //2承接（完全）
+                        commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_ALL_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+                                MQConstant.HG_REPORT_DELAY_LEVEL);
+                        // add 合规数据上报 埋点 liubin 20181122 end
+
                         //获取出让人投标成功的授权号
                         String sellerAuthCode = this.amTradeClient.getSellerAuthCode(credit.getSellOrderId(), credit.getSourceType());
                         if (sellerAuthCode == null) {
@@ -500,6 +526,17 @@ public class AutoTenderServiceImpl extends BaseTradeServiceImpl implements AutoT
                     }
 
                     logger.info("[" + accedeOrderId + "]" + " 银行自动投标申请接口成功调用后  " + borrow.getBorrowNid());
+
+                    // add by liushouyi nifa2 20181204 start
+                    if(redisBorrow.getBorrowAccountWait().compareTo(realAmoust) == 0){
+                        // 满标发送满标状态埋点
+                        // 发送发标成功的消息队列到互金上报数据
+                        JSONObject params = new JSONObject();
+                        params.put("borrowNid", borrow.getBorrowNid());
+                        commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.ISSUE_INVESTED_TAG, UUID.randomUUID().toString(), params),
+                                MQConstant.HG_REPORT_DELAY_LEVEL);
+                    }
+                    // add by liushouyi nifa2 20181204 end
 
                     /** 5.5. 减去被投标的可投金额，部分出借时，余额推回队列	 */
                     // add 汇计划三期 汇计划自动出借(分散出借) liubin 20180515 start

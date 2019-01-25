@@ -367,6 +367,16 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 				borrowCredit.setAssignNum(borrowCredit.getAssignNum() + 1);// 出借次数
 				// 完全承接的情况
 				if (borrowCredit.getCreditCapitalAssigned().compareTo(borrowCredit.getCreditCapital()) == 0) {
+						// add 合规数据上报 埋点 liubin 20181122 start
+						// 推送数据到MQ 承接（完全）散
+						JSONObject params = new JSONObject();
+						params.put("creditNid", borrowCredit.getCreditNid()+"");
+						params.put("flag", "1"); //1（散）2（智投）
+						params.put("status", "2"); //2承接（完全）
+						commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_ALL_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+								MQConstant.HG_REPORT_DELAY_LEVEL);
+						// add 合规数据上报 埋点 liubin 20181122 end
+
 					if (borrowRecoverList != null && borrowRecoverList.size() == 1) {
 						BorrowRecover borrowRecover = borrowRecoverList.get(0);
 						// 调用银行结束债权接口
@@ -788,6 +798,15 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 					if (!borrowRecoverFlag) {
 						throw new Exception("更新相应的放款信息表borrowrecover失败!" + "[出借订单号：" + tenderOrderId + "]");
 					}
+					// add 合规数据上报 埋点 liubin 20181122 start
+					JSONObject params = new JSONObject();
+					params.put("assignOrderId", creditTender.getAssignNid());
+					params.put("flag", "1");//1（散）2（智投）
+					params.put("status", "1"); //1承接（每笔）
+					// 推送数据到MQ 承接（每笔）散
+					commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_SINGLE_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+							MQConstant.HG_REPORT_DELAY_LEVEL);
+					// add 合规数据上报 埋点 liubin 20181122 end
 
 					//向承接人推送承接成功消息
 					this.sendCreditSuccessMessage(creditTender,request.getWebUser(),request.getUserInfo());
@@ -1470,7 +1489,28 @@ public class BankCreditTenderServiceImpl extends BaseServiceImpl implements Bank
 		Integer borrowCreditResult = this.borrowCreditMapper.updateByPrimaryKeySelective(borrowCredit);
 		logger.info("更新borrowCredit结果:{}",borrowCreditResult);
 		logger.info("borrowCredit.getCreditCapitalAssigned():{}    borrowCredit.getCreditCapital():{} ",borrowCredit.getCreditCapitalAssigned(),borrowCredit.getCreditCapital());
+
+		// add 合规数据上报 埋点 liubin 20181122 start
+		JSONObject params = new JSONObject();
+		params.put("assignOrderId", creditTender.getAssignNid());
+		params.put("flag", "1");//1（散）2（智投）
+		params.put("status", "1"); //1承接（每笔）
+		// 推送数据到MQ 承接（每笔）散
+		commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_SINGLE_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+				MQConstant.HG_REPORT_DELAY_LEVEL);
+		// add 合规数据上报 埋点 liubin 20181122 end
+
 		if (borrowCredit.getCreditCapitalAssigned().compareTo(borrowCredit.getCreditCapital()) == 0) {
+			// add 合规数据上报 埋点 liubin 20181122 start
+			// 推送数据到MQ 承接（完全）散
+			params = new JSONObject();
+			params.put("creditNid", borrowCredit.getCreditNid()+"");
+			params.put("flag", "1"); //1（散）2（智投）
+			params.put("status", "2"); //2承接（完全）
+			commonProducer.messageSendDelay2(new MessageContent(MQConstant.HYJF_TOPIC, MQConstant.UNDERTAKE_ALL_SUCCESS_TAG, UUID.randomUUID().toString(), params),
+					MQConstant.HG_REPORT_DELAY_LEVEL);
+			// add 合规数据上报 埋点 liubin 20181122 end
+
 			logger.info("调用银行结束债转接口");
 			this.requestDebtEnd(borrowRecover, request.getSellerBankAccount().getAccount());
 		}
