@@ -49,11 +49,6 @@ public class WebServiceUtil {
                 return jsonMessage("传入的参数名与参数个数不一致！！", "999999").toString();
             }
 
-//            // 不需要协议证书的跳过
-//            if (StringUtils.isNotBlank(crtPath)) {
-//                System.setProperty("javax.net.ssl.trustStore", crtPath);
-//            }
-
             AxisProperties.setProperty("axis.socketSecureFactory","com.hyjf.common.util.MySocketFactory");
 
             // 直接引用远程的wsdl文件
