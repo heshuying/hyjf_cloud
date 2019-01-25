@@ -30,4 +30,15 @@ public class CertSendExceptionServiceImpl extends BaseHgCertReportServiceImpl im
     public List<CertErrLogVO> getCertErrLogs() {
         return amConfigClient.getCertErrLogs();
     }
+
+    /**
+     * 重新上报  并修改数据库
+     *
+     * @param item
+     */
+    @Override
+    public void insertData(CertErrLogVO item) {
+        // todo
+
+    }
 }

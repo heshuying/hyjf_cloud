@@ -17,4 +17,10 @@ public interface CertSendExceptionService extends BaseHgCertReportService {
      * @return
      */
     List<CertErrLogVO> getCertErrLogs();
+
+    /**
+     * 重新上报  并修改数据库
+     * @param item
+     */
+    void insertData(CertErrLogVO item);
 }

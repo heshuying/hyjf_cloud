@@ -81,6 +81,9 @@ public class CertSendErrorMessageConsumer implements RocketMQListener<MessageExt
             // --> 调用service组装数据
             // 查询待处理的异常
             List<CertErrLogVO> errLogs = certSendExceptionService.getCertErrLogs();
+            for (CertErrLogVO item: errLogs) {
+                certSendExceptionService.insertData(item);
+            }
             return;
         } catch (Exception e) {
             logger.error(logHeader + " 处理失败！！" + msgBody, e);
